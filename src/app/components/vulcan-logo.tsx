@@ -1,11 +1,17 @@
-import React from 'react';
+import React from "react";
 
 /**
  * Vulcan V — Playfair-inspired serif "V" with top serifs merged
  * into a curved pizza-slice cornicione arc.
  * Pure SVG, no external font dependency.
  */
-export function VulcanMark({ size = 24, className }: { size?: number; className?: string }) {
+export function VulcanMark({
+  size = 24,
+  className,
+}: {
+  size?: number;
+  className?: string;
+}) {
   return (
     <svg
       width={size}
@@ -34,9 +40,27 @@ export function VulcanMark({ size = 24, className }: { size?: number; className?
         fill="var(--background, #FDFBF7)"
       />
       {/* Small leopard spots on the crust for texture */}
-      <circle cx="10" cy="5.5" r="0.6" fill="var(--background, #FDFBF7)" opacity="0.5" />
-      <circle cx="16" cy="4.2" r="0.5" fill="var(--background, #FDFBF7)" opacity="0.4" />
-      <circle cx="22" cy="5.5" r="0.6" fill="var(--background, #FDFBF7)" opacity="0.5" />
+      <circle
+        cx="10"
+        cy="5.5"
+        r="0.6"
+        fill="var(--background, #FDFBF7)"
+        opacity="0.5"
+      />
+      <circle
+        cx="16"
+        cy="4.2"
+        r="0.5"
+        fill="var(--background, #FDFBF7)"
+        opacity="0.4"
+      />
+      <circle
+        cx="22"
+        cy="5.5"
+        r="0.6"
+        fill="var(--background, #FDFBF7)"
+        opacity="0.5"
+      />
     </svg>
   );
 }
