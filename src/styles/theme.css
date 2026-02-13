@@ -1,0 +1,351 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+
+  /* ═══ CUCINA EDITORIALE — Vivid Warm Palette ═══ */
+  --background: #FDFBF7;
+  --foreground: #1C1917;
+  --card: #FFFFFF;
+  --card-foreground: #1C1917;
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1917;
+  --primary: #D04A2F;
+  --primary-foreground: #FFFFFF;
+  --secondary: #857568;
+  --secondary-foreground: #FFFFFF;
+  --muted: #F5F1EC;
+  --muted-foreground: #786A5C;
+  --accent: #F5F1EC;
+  --accent-foreground: #1C1917;
+  --destructive: #C42B2B;
+  --destructive-foreground: #FFFFFF;
+  --border: #E4DCD2;
+  --border-muted: #EDE7DF;
+  --input: transparent;
+  --input-background: #F5F1EC;
+  --switch-background: #D2C9BF;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: #C24A2F;
+  --chart-1: #D04A2F;
+  --chart-2: #CC8844;
+  --chart-3: #2B7B55;
+  --chart-4: #857568;
+  --chart-5: #E06A35;
+  --radius: 1rem;
+  --sidebar: #F5F1EC;
+  --sidebar-foreground: #1C1917;
+  --sidebar-primary: #C24A2F;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F5F1EC;
+  --sidebar-accent-foreground: #1C1917;
+  --sidebar-border: #E6DFD6;
+  --sidebar-ring: #C24A2F;
+
+  /* Surfaces — warm parchment tonal system */
+  --surface: #FDFBF7;
+  --surface-dim: #EFEBE4;
+  --surface-bright: #FFFFFF;
+  --surface-container-lowest: #FFFFFF;
+  --surface-container-low: #FAF7F2;
+  --surface-container: #F4F0EA;
+  --surface-container-high: #E4DCD2;
+  --surface-container-highest: #D2C9BF;
+  --on-surface: #1C1917;
+  --on-surface-variant: #807568;
+  --outline: #D2C9BF;
+  --outline-variant: #E6DFD6;
+
+  /* Containers — M3 Expressive tonal */
+  --primary-container: #FFEFD8;
+  --on-primary-container: #7A3210;
+  --secondary-container: #F5F1EC;
+  --on-secondary-container: #1C1917;
+  --tertiary: #CC8844;
+  --tertiary-container: #FDF4EA;
+  --on-tertiary-container: #6B4424;
+  --error-container: #FEF2F2;
+  --on-error-container: #7F1D1D;
+
+  /* Brand — editorial vivid */
+  --warm-terracotta: #D04A2F;
+  --warm-sienna: #E06A35;
+  --warm-oak: #CC8844;
+  --warm-mocha: #857568;
+  --warm-sage: #4F9466;
+  --warm-forest: #2B7B55;
+  --warm-olive: #7BA05B;
+  --warm-cream: #FDFBF7;
+  --warm-linen: #F5F1EC;
+  --warm-stone: #D2C9BF;
+
+  /* Time-of-day palette */
+  --time-tonight: #1E3655;
+  --time-tonight-soft: #2B4A72;
+  --time-lunch: #C48A12;
+  --time-lunch-soft: #D4A030;
+  --time-dinner: #B85528;
+  --time-dinner-soft: #D06A38;
+  --time-dayafter: #2D6A4F;
+  --time-dayafter-soft: #3D8B6A;
+  --time-weekend: #6B52A0;
+  --time-weekend-soft: #8268B8;
+
+  /* CTA — deep sage */
+  --cta: #2B7B55;
+  --cta-foreground: #FFFFFF;
+  --cta-hover: #1D6B46;
+  --cta-shadow: 0 4px 14px rgba(43, 123, 85, 0.28);
+
+  /* Gradients — sophisticated */
+  --grad-ember: linear-gradient(135deg, #D04A2F 0%, #E07A3E 50%, #CC9A4A 100%);
+  --grad-warm: linear-gradient(160deg, #FDFBF7 0%, #FFF0E4 50%, #FDF4EA 100%);
+  --grad-sage: linear-gradient(135deg, #2B7B55 0%, #3D9B6E 100%);
+  --grad-surface: none;
+
+  /* Shadows — editorial softness */
+  --shadow-xs: 0 1px 2px rgba(28,25,23,0.03);
+  --shadow-sm: 0 1px 3px rgba(28,25,23,0.05), 0 1px 2px rgba(28,25,23,0.03);
+  --shadow-md: 0 4px 8px -1px rgba(28,25,23,0.06), 0 2px 4px -2px rgba(28,25,23,0.04);
+  --shadow-lg: 0 12px 20px -4px rgba(28,25,23,0.08), 0 4px 8px -4px rgba(28,25,23,0.04);
+  --shadow-xl: 0 24px 32px -8px rgba(28,25,23,0.10), 0 8px 12px -6px rgba(28,25,23,0.04);
+  --shadow-glow: 0 0 0 3px rgba(194, 74, 47, 0.14);
+  --shadow-cta: 0 4px 14px rgba(45, 106, 79, 0.2);
+
+  --elevation-0: none;
+  --elevation-1: var(--shadow-sm);
+  --elevation-2: var(--shadow-md);
+  --elevation-3: var(--shadow-lg);
+  --elevation-glow: var(--shadow-glow);
+  --elevation-glow-lg: 0 0 0 4px rgba(194, 74, 47, 0.18);
+  --elevation-cta: var(--shadow-cta);
+
+  --border-w: 1px;
+  --border-w-thick: 1px;
+}
+
+.dark {
+  --background: #131211;
+  --foreground: #FAF8F5;
+  --card: #1E1B19;
+  --card-foreground: #FAF8F5;
+  --popover: #1E1B19;
+  --popover-foreground: #FAF8F5;
+  --primary: #F4926A;
+  --primary-foreground: #3A0F04;
+  --secondary: #B0A69C;
+  --secondary-foreground: #1C1917;
+  --muted: #282320;
+  --muted-foreground: #B5AAA0;
+  --accent: #282320;
+  --accent-foreground: #FAF8F5;
+  --destructive: #F87171;
+  --destructive-foreground: #7F1D1D;
+  --border: #383230;
+  --border-muted: #2E2926;
+  --input: #282320;
+  --input-background: #282320;
+  --switch-background: #484240;
+  --ring: #F4926A;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: #F4926A;
+  --chart-2: #E0A866;
+  --chart-3: #72C8A6;
+  --chart-4: #B5AAA0;
+  --chart-5: #F4926A;
+  --sidebar: #1E1B19;
+  --sidebar-foreground: #FAF8F5;
+  --sidebar-primary: #F4926A;
+  --sidebar-primary-foreground: #3A0F04;
+  --sidebar-accent: #282320;
+  --sidebar-accent-foreground: #FAF8F5;
+  --sidebar-border: #383230;
+  --sidebar-ring: #F4926A;
+
+  --surface: #131211;
+  --surface-dim: #131211;
+  --surface-bright: #3A3533;
+  --surface-container-lowest: #0B0A09;
+  --surface-container-low: #1A1816;
+  --surface-container: #252220;
+  --surface-container-high: #353230;
+  --surface-container-highest: #454240;
+  --on-surface: #FAF8F5;
+  --on-surface-variant: #B5AAA0;
+  --outline: #484240;
+  --outline-variant: #353230;
+  --primary-container: #4A1808;
+  --on-primary-container: #FFD8C0;
+  --secondary-container: #353230;
+  --on-secondary-container: #FAF8F5;
+  --tertiary: #E0A866;
+  --tertiary-container: #402D10;
+  --on-tertiary-container: #FFF2DD;
+  --error-container: #7F1D1D;
+  --on-error-container: #FEE2E2;
+
+  --warm-terracotta: #F4926A;
+  --warm-sienna: #F4926A;
+  --warm-oak: #E0A866;
+  --warm-mocha: #B5AAA0;
+  --warm-sage: #72C8A6;
+  --warm-forest: #72C8A6;
+  --warm-olive: #A0D48A;
+  --warm-cream: #131211;
+  --warm-linen: #1E1B19;
+  --warm-stone: #454240;
+
+  --cta: #72C8A6;
+  --cta-foreground: #042E16;
+  --cta-hover: #60B895;
+  --cta-shadow: 0 4px 14px rgba(114, 200, 166, 0.18);
+
+  /* Time-of-day palette (dark mode — vivid) */
+  --time-tonight: #3D6090;
+  --time-tonight-soft: #4E78B0;
+  --time-lunch: #D8A830;
+  --time-lunch-soft: #E4BC48;
+  --time-dinner: #D87040;
+  --time-dinner-soft: #E88050;
+  --time-dayafter: #50B880;
+  --time-dayafter-soft: #62CA95;
+  --time-weekend: #9078C8;
+  --time-weekend-soft: #A890E0;
+
+  --grad-ember: linear-gradient(135deg, #F4926A 0%, #E0A866 100%);
+  --grad-warm: linear-gradient(160deg, #1E1B19 0%, #252220 100%);
+  --grad-sage: linear-gradient(135deg, #72C8A6 0%, #60B895 100%);
+  --grad-surface: none;
+
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.35), 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.25);
+  --shadow-lg: 0 12px 20px rgba(0,0,0,0.45), 0 4px 8px rgba(0,0,0,0.25);
+  --shadow-xl: 0 24px 32px rgba(0,0,0,0.45), 0 8px 12px rgba(0,0,0,0.3);
+  --shadow-glow: 0 0 0 3px rgba(244, 146, 106, 0.25);
+  --shadow-cta: 0 4px 14px rgba(114, 200, 166, 0.18);
+
+  --elevation-0: none;
+  --elevation-1: var(--shadow-sm);
+  --elevation-2: var(--shadow-md);
+  --elevation-3: var(--shadow-lg);
+  --elevation-glow: var(--shadow-glow);
+  --elevation-glow-lg: 0 0 0 4px rgba(244, 146, 106, 0.3);
+  --elevation-cta: var(--shadow-cta);
+
+  --border-w: 1px;
+  --border-w-thick: 1px;
+}
+
+@theme inline {
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+  --font-mono: 'DM Mono', monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* Hide scrollbar for horizontal tip carousels */
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--foreground);
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--foreground);
+  }
+
+  h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: 1rem;
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
+}
