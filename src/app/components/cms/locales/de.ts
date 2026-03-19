@@ -1,0 +1,1041 @@
+import type { CmsContent } from "../cms-context";
+import {
+  PRE_FERMENT_DE,
+  DIETARY_DE,
+  TROUBLESHOOTING_DE,
+  GLOSSARY_TERMS_DE,
+} from "./domain-de";
+
+/** German locale bundle */
+export const DE_LOCALE: CmsContent = {
+  locale: { id: "de", name: "Deutsch" },
+  ui: {
+    copy: "Kopieren",
+    copied: "Kopiert!",
+    share: "Teilen",
+    back: "Zur\u00FCck",
+    reset: "Zur\u00FCcksetzen",
+    close: "Schlie\u00DFen",
+    modify: "Bearbeiten",
+    disable: "Deaktivieren",
+    restore: "Wiederherstellen",
+    generate: "Rezept erstellen",
+    chooseStyle: "Stil w\u00E4hlen",
+    customizeParams: "Parameter anpassen",
+    changeStyle: "Stil \u00E4ndern",
+    newPizza: "Neue Pizza",
+    ingredients: "Zutaten",
+    procedure: "Zubereitung",
+    steps_count: "{n} Schritte",
+    doughBalls: "Teiglinge",
+    doughBallsFrom: "\u00E0 {w}g",
+    totalDough: "gesamt",
+    startTime: "Start",
+    endTime: "Ende",
+    clipboardTitle: "{style} \u2014 Vulcan Pizza Lab",
+    clipboardBalls: "{n} Teiglinge \u00E0 {w}g",
+    clipboardTotal: "Gesamt: {g}g",
+    clipboardProcedure: "{style} \u2014 Zubereitung",
+    flour: "Mehl",
+    water: "Wasser",
+    salt: "Salz",
+    sugar: "Zucker",
+    oilEvo: "Oliven\u00F6l",
+    compTitle: "Anpassungen",
+    compTitleNerd: "Ofen-Kompensationen",
+    compHydration:
+      "H\u00F6here Hydration zum Ausgleich deines Ofens",
+    compOil: "Etwas mehr \u00D6l f\u00FCr eine weiche Pizza",
+    compSugar: "Mehr Zucker f\u00FCr eine gute Br\u00E4unung",
+    compCookTime:
+      "L\u00E4ngere Backzeit f\u00FCr ein perfektes Ergebnis",
+    compThickness:
+      "D\u00FCnner ausgerollt f\u00FCr gleichm\u00E4\u00DFiges Backen",
+    compDefault: "Parameter an dein Setup angepasst",
+    ariaReduceBalls: "Teiglinge reduzieren",
+    ariaAddBalls: "Teiglinge erh\u00F6hen",
+    ariaEarlier: "Fr\u00FCher starten",
+    ariaLater: "Sp\u00E4ter starten",
+    statHydration: "Hydration",
+    statOven: "Ofen",
+    statCookTime: "Backzeit",
+    statFermentation: "G\u00E4rung",
+    statTempSuffix: "bei {t}\u00B0C",
+    nerdTitle: "Technische Daten",
+    nerdFlourW: "Mehl W",
+    nerdPL: "P/L",
+    nerdYeast: "Hefe",
+    nerdHoursAt18: "Std @18\u00B0C",
+    nerdQ10: "Q\u2081\u2080",
+    nerdAw: "Aw",
+    seconds: "Sekunden",
+    minutes: "Minuten",
+    minute: "Minute",
+    hours: "Stunden",
+    hour: "Stunde",
+    recipeScore: "Rezeptbewertung",
+    nerdToggle: "PizzaNerd",
+    nerdActive: "PizzaNerd aktivieren",
+    scienceTitle: "Vulcan Science",
+    ariaCloseScores: "Bewertungspanel schlie\u00DFen",
+    ariaViewScores: "Bewertungsdetails anzeigen",
+    tapForDetails: "Tippen f\u00FCr Details",
+    styleEditorActive: "Style Editor aktiv",
+    cmsActive: "CMS aktiv",
+    fieldsModified: "Felder ge\u00E4ndert",
+    fieldModified: "Feld ge\u00E4ndert",
+    editOven: "Ofen bearbeiten",
+    weatherCity: "Deine Stadt",
+    weatherOutdoor: "{t}\u00B0C drau\u00DFen",
+    weatherKitchen: "K\u00FCchentemperatur",
+    badgeIdeal: "IDEAL",
+    badgeRecent: "ZULETZT",
+    autoLabel: "Auto",
+    cancel: "Abbrechen",
+    changeOven: "\u00C4ndern",
+    ovenFallback: "Ofen",
+    pantryFlours: "Mehle",
+    pantryYeasts: "Hefen",
+    equipMixer: "Knetmaschine",
+    equipStone: "Pizzastein",
+    equipSteel: "Backstahl",
+    equipPan: "Backblech",
+    equipKneading: "Kneten",
+    equipSurface: "Backfläche",
+    kitchenTitle: "Deine Küche",
+    pantryOptional: "optional",
+    specialFlours: "Spezialmehle",
+    brandSuggest: "Kennst du die Marke?",
+    badgeSelected: "Ausgewählt",
+    otherCompatibleFlours: "Weitere kompatible Mehle",
+    flourSelectHint:
+      "Wähle ein Mehl, um W und P/L im Rezept automatisch zu aktualisieren.",
+    flourSelected: "Angewendet",
+    autolysisSuggested: "Autolyse empfohlen",
+    dietGlutenFree: "Glutenfrei",
+    dietLactoseFree: "Laktosefrei",
+    dietVegan: "Vegan",
+    dietLowFodmap: "Low FODMAP",
+    dietHistamine: "Histaminarm",
+    dietNickel: "Nickelarm",
+  },
+  tips: {
+    timeSlot:
+      "Die K\u00FCchentemperatur beeinflusst die Gehzeiten. Je mehr Zeit du hast, desto mehr M\u00F6glichkeiten f\u00FCr leichte und bek\u00F6mmliche Teige.",
+    skill:
+      "Wir passen die Rezeptkomplexit\u00E4t an dein Erfahrungsniveau an.",
+    equipment:
+      "Ein Stein oder Stahl ver\u00E4ndert die Kruste. Ein Backblech ist f\u00FCr Stile wie Teglia Romana oder Detroit unverzichtbar.",
+    oven: "Die Maximaltemperatur deines Ofens bestimmt, welche Stile du zu Hause nachbilden kannst.",
+    pantry:
+      "Wir passen das Rezept an deine tats\u00E4chliche Vorratskammer an: kompatibles Mehl und Hefeart.",
+  },
+  hero: {
+    title_line1: "Deine",
+    title_line2: "perfekte Pizza.",
+    subtitle:
+      "Erz\u00E4hl uns, was du hast, und wir f\u00FChren dich zum idealen Stil.",
+  },
+  steps: {
+    context: {
+      number: "01 \u2014 Kontext",
+      title: "Wann & wo",
+      subtitle: "Zeit, Temperatur, Umgebung",
+    },
+    setup: {
+      number: "02 \u2014 Setup",
+      title: "Deine K\u00FCche",
+      subtitle: "Werkzeuge, Erfahrung, Vorr\u00E4te",
+    },
+    styles: {
+      number: "03 \u2014 Stil",
+      title: "W\u00E4hle deinen Stil",
+      subtitle: "Ausgew\u00E4hlt f\u00FCr dich",
+    },
+  },
+  sections: {
+    when: {
+      title: "Wann m\u00F6chtest du Pizza?",
+      description:
+        "W\u00E4hle den Zeitpunkt zur Berechnung der Gehzeiten",
+    },
+    skill: {
+      title: "Erfahrungsstufe",
+      description:
+        "Hilft uns, die Rezeptkomplexit\u00E4t zu kalibrieren",
+    },
+    oven: {
+      title: "Dein Ofen",
+      description: "Typ und Maximaltemperatur",
+    },
+    pantry: {
+      title: "Vorratskammer",
+      description: "Mehle und Hefen, die du zu Hause hast",
+    },
+    dietary: {
+      title: "Ern\u00E4hrungsbed\u00FCrfnisse",
+      description: "Optionale Filter",
+    },
+    equipment: {
+      title: "Ausstattung",
+      description: "Was du in deiner K\u00FCche hast",
+    },
+  },
+  timeSlots: {
+    tonight: {
+      label: "Heute Abend",
+      sublabel: "4\u20136 Stunden",
+      emoji: "\u{1F319}",
+      hours: 5,
+    },
+    tomorrow_lunch: {
+      label: "Morgen Mittag",
+      sublabel: "16\u201320 Stunden",
+      emoji: "\u2600\uFE0F",
+      hours: 18,
+    },
+    tomorrow_dinner: {
+      label: "Morgen Abend",
+      sublabel: "24\u201328 Stunden",
+      emoji: "\u{1F306}",
+      hours: 26,
+    },
+    day_after: {
+      label: "\u00DCbermorgen",
+      sublabel: "40\u201348 Stunden",
+      emoji: "\u{1F4C5}",
+      hours: 44,
+    },
+    weekend: {
+      label: "Wochenende",
+      sublabel: "72+ Stunden",
+      emoji: "\u{1F389}",
+      hours: 72,
+    },
+  },
+  ovenPresets: {
+    home: { name: "Heimofen", maxTemp: 250, icon: "home" },
+    electric_standard: {
+      name: "Standard-Elektroofen",
+      maxTemp: 300,
+      icon: "zap",
+    },
+    gas: { name: "Profi-Gasofen", maxTemp: 350, icon: "flame" },
+    electric_high: {
+      name: "Hochtemperatur-Elektro",
+      maxTemp: 450,
+      icon: "thermometer",
+    },
+    wood: {
+      name: "Holzofen",
+      maxTemp: 500,
+      icon: "flame-kindling",
+    },
+  },
+  skillLevels: {
+    "1": {
+      name: "Anf\u00E4nger",
+      description: "Erste Pizza-Erfahrungen",
+    },
+    "2": {
+      name: "Fortgeschritten",
+      description: "Ich habe schon mehrmals Pizza gemacht",
+    },
+    "3": {
+      name: "Erfahren",
+      description: "Ich kenne Techniken und Parameter",
+    },
+    "4": {
+      name: "Experte",
+      description:
+        "Vollst\u00E4ndige Beherrschung der Techniken",
+    },
+  },
+  families: {
+    napoletana: {
+      name: "Neapolitanisch",
+      description:
+        "Leichtigkeit, nat\u00FCrliche G\u00E4rung, ultraschnelles Backen bei extremer Hitze",
+      emoji: "\u{1F1EE}\u{1F1F9}",
+    },
+    romana: {
+      name: "R\u00F6misch",
+      description:
+        "Von der extremen Knusprigkeit der Scrocchiarella zur hohen Hydration der Teglia",
+      emoji: "\u{1F3DB}\uFE0F",
+    },
+    americana: {
+      name: "Amerikanisch",
+      description:
+        "Italo-amerikanische Adaption: Praktikabilit\u00E4t, Street Food, regionale Vielfalt",
+      emoji: "\u{1F5FD}",
+    },
+    contemporanea: {
+      name: "Zeitgen\u00F6ssisch",
+      description:
+        "Bek\u00F6mmlichkeit, Experimentierung, hohe Hydration, fortgeschrittene Techniken",
+      emoji: "\u{1F52C}",
+    },
+  },
+  allFamiliesLabel: "Alle Familien",
+  tiers: {
+    perfect: {
+      label: "Perfekt",
+      subtitle: "maximale Kompatibilit\u00E4t",
+    },
+    good: { label: "Gut", subtitle: "tolle Wahl" },
+    challenging: {
+      label: "Herausfordernd",
+      subtitle: "f\u00FCr Mutige",
+    },
+  },
+  scoreDimensions: {
+    authenticity: {
+      label: "Authentizit\u00E4t",
+      short: "Auth",
+      weight: 0.3,
+    },
+    feasibility: {
+      label: "Machbarkeit",
+      short: "Mach",
+      weight: 0.25,
+    },
+    digestibility: {
+      label: "Bek\u00F6mmlichkeit",
+      short: "Bek",
+      weight: 0.2,
+    },
+    sustainability: {
+      label: "Nachhaltigkeit",
+      short: "Nach",
+      weight: 0.15,
+    },
+    experimentation: {
+      label: "Experimentierung",
+      short: "Exp",
+      weight: 0.1,
+    },
+  },
+  recommendationWeights: {
+    time: 0.25,
+    oven: 0.25,
+    skill: 0.2,
+    equipment: 0.1,
+    pantry: 0.2,
+  },
+  media: {
+    stylePhotos: {
+      napoletana_stg:
+        "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      napoletana_canotto:
+        "https://images.unsplash.com/photo-1770670644186-b3d930f75f5a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      teglia_romana:
+        "https://images.unsplash.com/photo-1650327381366-c6dc88f8b9fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      tonda_romana:
+        "https://images.unsplash.com/photo-1695457207327-2fe494a5aab8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      pinsa_romana:
+        "https://images.unsplash.com/photo-1602658015824-b49d35094837?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      new_york:
+        "https://images.unsplash.com/photo-1616141032335-7e6b413f93ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      detroit:
+        "https://images.unsplash.com/photo-1684823906761-30fd02a961cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      chicago_deep:
+        "https://images.unsplash.com/photo-1595378833483-c995dbe4d74f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      bonci_teglia:
+        "https://images.unsplash.com/photo-1624323210664-3659370c9346?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      focaccia_genovese:
+        "https://images.unsplash.com/photo-1770833047669-2db01dd791e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      sfincione:
+        "https://images.unsplash.com/photo-1711805064484-a77096f599a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      pala_romana:
+        "https://images.unsplash.com/photo-1614936686354-a490b8d90478?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      grandma_style:
+        "https://images.unsplash.com/photo-1601387448308-66ae6aa1f1f7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      focaccia_recco:
+        "https://images.unsplash.com/photo-1751183295754-9cff9577a44e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+      padellino_torino:
+        "https://images.unsplash.com/photo-1626108962941-61b46dd705a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+    },
+    fallbackPhoto:
+      "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
+  },
+  result: {
+    breadcrumb: "Deine perfekte Pizza",
+    heading: "Hier ist dein Rezept",
+    backLabel: "Zur\u00FCck zur Auswahl",
+  },
+  yeastLabels: {
+    fresh: "Frischhefe",
+    dry: "Trockenhefe",
+    sourdough: "Sauerteig",
+  },
+  yeastDetails: {
+    fresh: "Klassischer W\u00FCrfel",
+    dry: "Praktisch, lange haltbar",
+    sourdough: "Komplexer Geschmack, lange Reifung",
+  },
+  flourLabels: {
+    "00": "Tipo 00",
+    "0": "Tipo 0",
+    manitoba: "Manitoba (Brotmehl)",
+    integrale: "Vollkorn",
+    semola: "Hartweizengrie\u00DF",
+  },
+  flourDetails: {
+    "00": "Klassisch, vielseitig",
+    "0": "Mittlere St\u00E4rke",
+    manitoba: "Hohe St\u00E4rke, lange Reifung",
+    integrale: "Mehr Ballaststoffe und Geschmack",
+    semola: "Knusprigkeit, goldene Farbe",
+  },
+  filters: {
+    advancedLabel: "Erweiterte Filter",
+    removeFilters: "Filter entfernen",
+    brandedFlours: "Markenmehl",
+    settingsOpen: "Einstellungen",
+    settingsClosed: "Deine Einstellungen",
+    hydrationLabel: "💧 Hydratation",
+    hydrationLow: "Niedrig <60%",
+    hydrationMedium: "Mittel 60-70%",
+    hydrationHigh: "Hoch 70-85%",
+    hydrationExtreme: "Extrem >85%",
+    textureLabel: "🎯 Textur",
+    textureCrispyThin: "D\u00FCnn & knusprig",
+    textureThickAiry: "Dick & luftig",
+    textureAiryCrumb: "Gro\u00DFporig",
+    textureDeepDish: "Deep Dish",
+    skillLabel: "👨‍🍳 Niveau",
+    skillBeginner: "Anf\u00E4nger",
+    skillIntermediate: "Fortgeschritten",
+    skillAdvanced: "Erfahren",
+    skillExpert: "Experte",
+    ovenLabel: "🔥 Backen",
+    ovenHome: "Heimofen",
+    ovenWood: "Holzofen",
+    ovenElectricHigh: "Elektro >350\u00B0C",
+    ovenPan: "Pfanne",
+  },
+  glossary: {
+    pageTitle: "Technisches Glossar",
+    searchPlaceholder:
+      "Begriff, Symbol oder Definition suchen...",
+    cancelSearch: "L\u00F6schen",
+    noResults: 'Keine Begriffe f\u00FCr "{query}" gefunden',
+    allCategories: "Alle",
+    formulaLabel: "Formel",
+    rangesLabel: "Typische Bereiche",
+    whyImportantLabel: "Warum wichtig",
+    relatedLabel: "Verwandt",
+    backToHome: "Zur\u00FCck zur Startseite",
+    termCount: "{count} Begriffe",
+    catRheology: "Rheologie",
+    catRheologyDesc:
+      "Mechanische Eigenschaften von Mehl und Teig",
+    catFermentation: "Fermentation",
+    catFermentationDesc:
+      "G\u00E4rung, Reifung und biologische Prozesse",
+    catThermal: "Thermik",
+    catThermalDesc: "W\u00E4rme\u00FCbertragung und Backen",
+    catChemistry: "Chemie",
+    catChemistryDesc:
+      "Zusammensetzung und chemische Reaktionen",
+    catMechanics: "Mechanik",
+    catMechanicsDesc: "Verarbeitung, Ger\u00E4te und Messungen",
+    catScoring: "Bewertung",
+    catScoringDesc: "Vulcan-Qualit\u00E4tsmetriken",
+  },
+  engineMessages: {
+    "auth.hydrationOff":
+      "Hydration außerhalb der Mitte (-{penalty}%)",
+    "auth.wOutOfRange":
+      "Mehl-W außerhalb des Bereichs (-{penalty}%)",
+    "auth.plOutOfRange":
+      "P/L {pl} außerhalb {plMin}-{plMax} (-{penalty}%)",
+    "auth.notWoodOven": "Kein Holzofen (-15%)",
+    "auth.tempVsIdeal":
+      "Temperatur {temp}°C vs {ideal}°C (-{penalty}%)",
+    "auth.tempBelowMin":
+      "Temperatur unter Minimum (-{penalty}%)",
+    "auth.fermentTooShort": "Gärung zu kurz (-{penalty}%)",
+    "auth.fermentTooLong": "Gärung zu lang (-{penalty}%)",
+    "feas.ovenSuboptimal":
+      "Ofen suboptimal: {temp}°C vs ideal {ideal}°C",
+    "feas.ovenTooCold":
+      "Ofen zu kalt: {temp}°C < Minimum {min}°C",
+    "feas.wTooLow": "W zu niedrig: {w} < {wMin}",
+    "feas.wTooHigh": "W sehr hoch ({w}). Zäher Teig.",
+    "feas.hydrationBeginnerHigh":
+      "Hydration >75% für Anfänger nicht empfohlen",
+    "feas.hydrationNeedsPractice":
+      "Hohe Hydration erfordert Übung",
+    "feas.hydrationMedBeginner":
+      "Mittlere bis hohe Hydration für Anfänger",
+    "feas.flourTooWeakForHydration":
+      "Mehl zu schwach für diese Hydration",
+    "feas.prefermentNeedsExperience":
+      "Vorteig erfordert Erfahrung",
+    "dig.fermentTooShort":
+      "Gärung zu kurz: Stärke nicht abgebaut",
+    "dig.fermentShort":
+      "Kurze Gärung: begrenzte Verdaulichkeit",
+    "dig.fodmapReduced": "FODMAPs reduziert ~{pct}%",
+    "dig.fodmapHighReduction": "FODMAPs reduziert >80%",
+    "dig.extremeMaturation":
+      "Extreme Reifung: maximale Aromenkomplexität",
+    "dig.highYeastDosage":
+      "Hohe Hefedosierung ({pct}%): -{penalty}% Verdaulichkeit",
+    "dig.coldFermentation":
+      "Kalte Gärung: optimale Enzymaktivität",
+    "sust.quickCook":
+      "Schnelles Backen: geringer Energieverbrauch",
+    "sust.longCook": "Langes Backen: hoher Energieverbrauch",
+    "sust.ambientFerment":
+      "Raumtemperatur-Gärung: kein Kühlschrankverbrauch",
+    "sust.pureDough":
+      "Reiner Teig: nur Mehl, Wasser, Salz, Hefe",
+    "sust.sourdoughZeroImpact":
+      "Sauerteig: selbst hergestellt, null Auswirkung",
+    "rec.timeCompatible":
+      "Gärung {fMin}-{fMax}h: passt zu deiner Zeit",
+    "rec.timeAdaptable": "Gärung anpassbar auf ~{hours}h",
+    "rec.timeInsufficient":
+      "Benötigt mindestens {fMin}h, du hast {available}h",
+    "rec.needsWoodOven": "Erfordert Holzofen",
+    "rec.ovenIdeal":
+      "Dein Ofen erreicht die ideale Temperatur ({ideal}°C)",
+    "rec.ovenAdequate":
+      "Ofen ausreichend (automatische Zeit/Temperatur-Kompensation)",
+    "rec.ovenTooCold": "Ofen zu kalt: {temp}°C < min {min}°C",
+    "rec.skillMatch": "Passt zu deinem Niveau",
+    "rec.skillExpert": "Dein Niveau erlaubt jeden Stil",
+    "rec.hydrationNeedsPractice":
+      "Hohe Hydration erfordert Übung",
+    "rec.advancedForBeginner":
+      "Fortgeschrittener Stil für Anfänger",
+    "rec.noKneadNoMixer": "Keine Knetmaschine nötig (no-knead)",
+    "rec.handsHighHydration":
+      "Hohe Hydration: Handkneten sehr schwierig",
+    "rec.handsMedHydration":
+      "Mittlere Hydration: Handkneten erfordert Übung",
+    "rec.forkIdealHighH":
+      "Gabelkneter ideal für hohe Hydration",
+    "rec.forkLowFriction":
+      "Gabelkneter: geringe thermische Reibung",
+    "rec.spiralOptimal":
+      "Professionelle Spirale: optimales Kneten",
+    "rec.domesticStrugglesHighH":
+      "Haushaltskneter: kann bei >80% Hydration Schwierigkeiten haben",
+    "rec.mixerHelps":
+      "Deine Knetmaschine erleichtert den Prozess",
+    "rec.mixerRecommended":
+      "Hohe Hydration: Knetmaschine empfohlen",
+    "rec.castIronPerfect": "Gusseisen perfekt für diesen Stil",
+    "rec.panFits": "Blech geeignet für diesen Stil",
+    "rec.needsPan": "Blech für diesen Stil benötigt",
+    "rec.refractoryIdeal":
+      "Schamottstein: ideal für neapolitanische Pizza",
+    "rec.steelPlateCrispy":
+      "Stahlplatte: knuspriger Boden in Sekunden",
+    "rec.panPerfect": "Dein Blech ist perfekt für diesen Stil",
+    "rec.flourMatch": "Mehl im Vorrat kompatibel",
+    "rec.flourPartial":
+      "Mehl teilweise geeignet (W nicht ideal)",
+    "rec.flourNoMatch":
+      "Kein Mehl im Vorrat im erforderlichen W-Bereich",
+    "rec.sourdoughLongFerment":
+      "Sauerteig ideal für lange Reifung",
+    "rec.sourdoughOnlyShort":
+      "Nur Sauerteig: kurze Gärung schwierig",
+    "tip.waterTempCold":
+      "55er-Regel: Wasser aus dem Kühlschrank verwenden ({temp}°C). Maschinelles Kneten erhitzt den Teig.",
+    "tip.waterTempNormal":
+      "55er-Regel: Wasser mit {temp}°C verwenden, um {ddt}°C Teigtemperatur zu erreichen.",
+    "tip.frictionNote":
+      "Reibungskompensation der Knetmaschine: {friction}°C",
+  },
+  scienceLabels: {
+    yeastBaker: "B\u00E4ckerhefe",
+    effectiveHours: "Effektive Stunden",
+    q10Factor: "Q\u2081\u2080-Faktor",
+    q10Cold: "kalt",
+    q10Sourdough: "Sauerteig",
+    q10Standard: "Standard",
+    waterActivity: "Wasseraktivit\u00E4t",
+    glutenNetwork: "Glutennetzwerk",
+    proteolysis: "Proteolyse",
+    starchDegradation: "St\u00E4rkeabbau",
+    fodmapReduction: "FODMAP-Reduktion",
+    plEstimated: "P/L gesch\u00E4tzt",
+    bakingEnergy: "Backenergie",
+    waterTemp: "Wassertemperatur",
+    desiredDoughTemp: "Teigtemperatur",
+    frictionFactor: "Reibungsfaktor",
+    deviationCategory: "Abweichung",
+    deviationScore: "Eff. Abweichung",
+  },
+  timelineLabels: {
+    preferment: {
+      title: "Vorstufe",
+      desc: "{type} mischen und reifen lassen",
+      tipBeginner:
+        'Die Vorstufe ist wie ein "Appetizer" f\u00FCr die Hefe. Mischen und abgedeckt ruhen lassen.',
+      tipNerd:
+        "Die Vorstufe produziert organische S\u00E4uren (Milch-/Essigs\u00E4ure), die den pH auf ~4,5 senken und das Glutennetzwerk verbessern.",
+    },
+    mix: {
+      title: "Kneten",
+      desc: "Kneten bis der Teig glatt und elastisch ist.",
+      descAlt:
+        "Zutaten ohne Kneten mischen. Serie von Falttechniken.",
+      tipBeginner:
+        "Der Teig ist fertig, wenn er glatt ist und sich von den H\u00E4nden l\u00F6st. Wenn er zu klebrig ist, 5 Min. warten und erneut versuchen.",
+      tipNerd:
+        "Die Fensterprobe best\u00E4tigt die Glutenentwicklung: Glutenin und Gliadin bilden stabile Disulfidbr\u00FCcken.",
+    },
+    mix_noknead: {
+      title: "Mischen",
+      desc: "Zutaten ohne Kneten mischen. Serie von Falttechniken.",
+      tipBeginner:
+        "Kein Kneten n\u00F6tig! Mit einem Spatel mischen, bis keine trockenen Mehlklumpen mehr vorhanden sind.",
+      tipNerd:
+        "Die Autolyse nutzt endogene Proteinasen des Mehls, um Gluten ohne mechanische Arbeit zu entwickeln.",
+    },
+    bulk: {
+      title: "Stockgare",
+      desc: "Stockgare bei {temp}\u00B0C",
+      tipBeginner:
+        "Der Teig sollte sein Volumen verdoppeln. Bei W\u00E4rme h\u00E4ufiger kontrollieren!",
+      tipNerd:
+        "Bei {temp}\u00B0C betr\u00E4gt die G\u00E4rgeschwindigkeit {factor}\u00D7 gegen\u00FCber dem 18\u00B0C-Referenzwert.",
+    },
+    bulk_cold: {
+      title: "Stockgare",
+      desc: "Stockgare bei {temp}\u00B0C",
+      tipBeginner:
+        "Im K\u00FChlschrank w\u00E4chst der Teig langsam, gewinnt aber an Geschmack. Gut mit Kontaktfolie abdecken.",
+      tipNerd:
+        "Bei {temp}\u00B0C verlangsamt Q\u2081\u2080\u22482,0 die G\u00E4rung. Proteolytische Aktivit\u00E4t dominiert und baut FODMAP ab.",
+    },
+    divide: {
+      title: "Teilen",
+      desc: "In Teiglinge des richtigen Gewichts teilen. Kugel formen.",
+      tipBeginner:
+        "Benutze eine Waage! Mit einer Teigkarte schneiden und jedes St\u00FCck zu einer glatten Kugel formen.",
+      tipNerd:
+        "Das Teilen erzeugt Oberfl\u00E4chenspannung, die CO\u2082 w\u00E4hrend der Stuckgare einschlie\u00DFt.",
+    },
+    proof: {
+      title: "Stuckgare",
+      desc: "Endg\u00E4rung bei {temp}\u00B0C",
+      tipBeginner:
+        "Die Teiglinge sollten weich sein. Wenn du mit dem Finger dr\u00FCckst, kommen sie langsam zur\u00FCck.",
+      tipNerd:
+        "Fingertest: langsame R\u00FCckkehr = optimale G\u00E4rung. Zu schnell = unterg\u00E4rig. Keine R\u00FCckkehr = \u00FCberg\u00E4rig.",
+    },
+    shape: {
+      title: "Formen",
+      desc: "Von der Mitte aus von Hand ausziehen, Rand erhalten",
+      descAlt: "Im ge\u00F6lten Blech von Hand ausbreiten",
+    },
+    shape_thin: {
+      title: "Formen",
+      desc: "Mit Nudelholz ausrollen, hauchd\u00FCnn",
+    },
+    top: {
+      title: "Belegen",
+      desc: "Pizza nach Geschmack belegen",
+    },
+    bake: {
+      title: "Backen",
+      desc: "Bei {temp}\u00B0C backen",
+      tipBeginner:
+        "Der Ofen muss sehr hei\u00DF sein. Mindestens 30 Minuten vorheizen.",
+      tipNerd:
+        "Die Maillard-Reaktion beginnt bei ~140\u00B0C und beschleunigt exponentiell. Bei {temp}\u00B0C entstehen ~600 Aromaverbindungen.",
+    },
+  },
+  timelineUi: {
+    startLabel: "Start",
+    beforeSuffix: "vorher",
+  },
+  parametricTips: {
+    pillHydration: "Hydratation",
+    pillFlour: "Mehl",
+    pillPL: "P/L",
+    pillFermentation: "G\u00E4rung",
+    pillThickness: "Dicke",
+    pillLevel: "Niveau",
+    pillExperimentation: "Experimentell",
+    pillLevelBeginner: "Anf\u00E4nger",
+    pillLevelExpert: "Experte",
+    sheetSectionTitle: "Backdetails",
+    sheetOvenLabel: "Idealer Ofen",
+    sheetOvenPreheat: "Vorheizen: {min} Min.",
+    sheetBakeLabel: "Backzeit",
+    sheetBakeTurns: "{n} Drehung(en)",
+    sheetBakeNoTurns: "Keine Drehung",
+    sheetDoughLabel: "Teigling",
+    sheetSaltLabel: "Salz",
+    sheetFoldLabel: "Falten",
+    sheetFoldInterval: "Alle {min} Min.",
+    sheetGenerateBtn: "Rezept generieren",
+    sheetTechniquesLabel: "Kompatible Autortechniken",
+    mixBeginner: "{mixer} (~{time} Min. Kneten). {equipment}",
+    bulkBeginner:
+      "F\u00FChre {count} Falten ({type}) alle {interval} Minuten durch, um die Struktur aufzubauen.",
+    shapeBeginner: "{note}",
+    topBeginner: "Reihenfolge: {order}. {note}",
+    bakeBeginner: "Zeit: {minM}\u2013{maxM} Min. {turnsNote}",
+    mixNerd: "{mixer} \u00B7 Kneten ~{time} Min. \u00B7 {note}",
+    bulkNerd:
+      "Falten: {count}\u00D7 {type} alle {interval} Min. \u00B7 {note}",
+    shapeNerd:
+      "Einschnitt: {type} \u00B7 Tiefe {depth}mm \u00B7 {timing} \u00B7 {note}",
+    topNerd:
+      "Belag-Reihenfolge: {order} \u00B7 So\u00DFe {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
+    bakeNerd:
+      "Ideales Backen: {idealSec}s (Bereich {minM}\u2013{maxM} Min.) \u00B7 {turns} Drehungen \u00B7 {note}",
+    mixerPlanetaria: "K\u00FCchenmaschine empfohlen",
+    mixerHand: "Handkneten m\u00F6glich",
+    turnsSingle:
+      "{n}-mal drehen f\u00FCr gleichm\u00E4\u00DFiges Backen.",
+    turnsNone: "W\u00E4hrend des Backens nicht drehen.",
+  },
+  styleDescriptions: {
+    napoletana_stg:
+      "Goldstandard gem\u00E4\u00DF AVPN-Disziplin. Aufgeblasener Rand, d\u00FCnne Mitte, Leopardenmuster.",
+    napoletana_canotto:
+      'Explosiver "Luft-Canotto"-Rand, extreme Porung, hohe Verdaulichkeit.',
+    teglia_romana:
+      "Hohe Hydratation, ohne Kneten mit Falten. Knusprige Basis, wolkige Krume.",
+    tonda_romana:
+      'Hauchdnn, Nudelholz erforderlich, extrem knusprig. "Scrocchiarella".',
+    pinsa_romana:
+      "70% Weizen / 15% Soja / 15% Reis-Mischung. Ovale Form, glasige Kruste.",
+    pala_romana:
+      "L\u00E4ngliches Oval auf Schaufel serviert. Zwischen rund und Blech: knusprig au\u00DFen, wolkig innen.",
+    new_york:
+      "Gro\u00DFes faltbares St\u00FCck, knusprige aber flexible Kruste. Street Food.",
+    detroit:
+      "Knusprige K\u00E4sekrone, Blue-Steel-Pfanne. K\u00E4se bis zum Rand.",
+    chicago_deep:
+      "Tiefe Pizza wie eine herzhafte Torte. Umgekehrte Schichten: K\u00E4se-F\u00FCllung-So\u00DFe.",
+    bonci_teglia:
+      "Ohne Kneten mit Falten, extreme Hydratation, Meister Bonci. Hohe Verdaulichkeit.",
+    focaccia_genovese:
+      "Weich und \u00F6lig, mit goldener Kruste und charakteristischen Kratern. \u00D6l-Wasser-Sole auf der Oberfl\u00E4che.",
+    sfincione:
+      "Dicke sizilianische Pizza mit Tomate, Zwiebel, Sardellen, Caciocavallo und Semmelbröseln. Palermo Street Food.",
+    grandma_style:
+      "D\u00FCnn, knusprig, ge\u00F6ltes Blech. Italo-amerikanische Oma-Pizza. Mozzarella unter, So\u00DFe oben.",
+    focaccia_recco:
+      "Zwei hauchdnne Bl\u00E4tter mit geschmolzenem Stracchino. IGP seit 2015. Goldene Blasen.",
+    padellino_torino:
+      "In Eisenpfanne gebacken, im Ofen fertiggestellt. Knuspriger Butter-\u00D6l-Boden, weiche Mitte. Turiner Spezialit\u00E4t.",
+  },
+  styleChars: {
+    napoletana_stg:
+      "Rand 1-2cm aufgeblasen|Mitte 3-4mm d\u00FCnn|Leopardenkruste|Backzeit 60-90s",
+    napoletana_canotto:
+      'Rand 3-4cm "Canotto"|Extreme Porung|Reifung 24-72h|Hohe Verdaulichkeit',
+    teglia_romana:
+      "H\u00F6he 2-3cm|Hydratation 80-100%|Ohne Kneten + Falten|Wolkenkrume",
+    tonda_romana:
+      "Dicke 1-2mm|Nudelholz erforderlich|Extrem knusprig|Schwaches Mehl W<210",
+    pinsa_romana:
+      "Multi-Getreide-Mix|Ovale Form|Glasige Kruste|Reifung 24-72h",
+    pala_romana:
+      "L\u00E4ngliche Ovalform|Hohe Hydratation|Auf Schaufel serviert|Knusprig-wolkige Kruste",
+    new_york:
+      "Faltbares St\u00FCck|Zucker + \u00D6l|Backzeit 12-15min|Charakteristische \u00D6ligkeit",
+    detroit:
+      "K\u00E4sekrone|Tiefe Pfanne|K\u00E4se am Rand|Karamellisierte Kruste",
+    chicago_deep:
+      "Tiefe 5cm|Butter 18%|Umgekehrte Schichten|Backzeit 35min",
+    bonci_teglia:
+      "Ohne Kneten + Falten|Extreme Hydratation|Reifung 24-72h|Wolkenporung",
+    focaccia_genovese:
+      "Gro\u00DFz\u00FCgig Oliven\u00F6l|Oberfl\u00E4chenkrater|\u00D6l-Wasser-Sole|Backzeit 15-20min",
+    sfincione:
+      "Dick und fluffig|Ger\u00F6stete Semmelbr\u00F6sel|Zwiebel + Sardellen|Caciocavallo",
+    grandma_style:
+      "D\u00FCnn und knusprig|Mozzarella unter So\u00DFe|Gut ge\u00F6ltes Blech|Backzeit 12-16min",
+    focaccia_recco:
+      "Fast transparentes Blatt|Stracchino-F\u00FCllung|Goldene Blasen|Keine G\u00E4rung",
+    padellino_torino:
+      "Eisenpfanne|Ultra-knuspriger Boden|Weiche Mitte|Einzelportion",
+  },
+  deviationLabels: {
+    canonical: "Kanonisch",
+    parameter_variant: "Parametervariation",
+    technique_variant: "Technikvariante",
+    hybrid: "Hybridisierung",
+    experimental: "Experimentell",
+  },
+  authorNames: {
+    bonci_no_knead: "No-Knead Hohe Hydratation",
+    martucci_biga_ibrida: "Hybrid-Biga 50% + Autolyse",
+    martucci_biga_100: "100% Biga mit Auffrischung",
+    pepe_sensoriale: "Sensorische Hydratation",
+    bosco_idrolisi: "Hydrolyse-Methode (Spontang\u00E4rung)",
+    capuano_forbici: "Scheren-Methode (Milchprodukte)",
+    pepe_sensory_layering: "Getrennte Zutatenzubereitung",
+    bianco_long_ferment: "5-Tage-G\u00E4rung",
+    forkish_saturday: "Samstags-Pizza (Kaltg\u00E4rung)",
+  },
+  authorAuthors: {
+    bonci_no_knead: "Gabriele Bonci",
+    martucci_biga_ibrida: "Francesco Martucci",
+    martucci_biga_100: "Francesco Martucci",
+    pepe_sensoriale: "Franco Pepe",
+    bosco_idrolisi: "Renato Bosco",
+    capuano_forbici: "Vincenzo Capuano",
+    pepe_sensory_layering: "Franco Pepe",
+    bianco_long_ferment: "Chris Bianco",
+    forkish_saturday: "Ken Forkish",
+  },
+  profile: {
+    pageTitle: "Dein Profil",
+    pageSubtitle: "Deine Einstellungen, immer griffbereit.",
+    ovenTitle: "Dein Ofen",
+    ovenSubtitle: "Bestimmt Temperaturen und verfügbare Stile",
+    ovenStep: "01 — Ausstattung",
+    tempLabel: "Maximaltemperatur",
+    tempAria: "Maximale Ofentemperatur",
+    skillTitle: "Deine Erfahrung",
+    skillSubtitle: "Wir passen die Rezeptkomplexität an",
+    skillStep: "02 — Können",
+    pantryTitle: "Deine Vorratskammer",
+    pantrySubtitle: "Mehle und Hefen, die du zuhause hast",
+    pantryStep: "03 — Zutaten",
+    dietTitle: "Ernährungspräferenzen",
+    dietSubtitle: "Filtere inkompatible Stile und Zutaten",
+    dietStep: "04 — Diät",
+    noDietNote: "Keine Einschränkungen — alle Stile verfügbar.",
+    prefsTitle: "Sprache & Design",
+    prefsSubtitle: "Passe die Oberfläche an",
+    prefsStep: "05 — Einstellungen",
+    langLabel: "Sprache",
+    themeLabel: "Design",
+    themeLight: "Hell",
+    themeDark: "Dunkel",
+    resetProfile: "Profil zurücksetzen",
+    devModeOn: "Entwicklermodus aktiv",
+    devModeOff: "Entwicklermodus aktivieren",
+    ftuWelcome: "Willkommen",
+    ftuOvenTitle: "Welchen Ofen hast du?",
+    ftuOvenSubtitle: "Der Ofen bestimmt die möglichen Stile",
+    ftuSkillTitle: "Wie viel Erfahrung?",
+    ftuSkillSubtitle:
+      "Wir führen dich auf dem richtigen Niveau",
+    ftuPantryTitle: "Was ist in deiner Vorratskammer?",
+    ftuPantrySubtitle: "Verfügbare Mehle und Hefen",
+    ftuBack: "Zurück",
+    ftuNext: "Weiter",
+    ftuStart: "Los geht's",
+    localeModalTitle: "Sprache ändern?",
+    localeModalDesc:
+      "Alle Oberflächentexte wechseln von {from} zu {to}.",
+    localeModalCancel: "Abbrechen",
+    localeModalConfirm: "Best\u00E4tigen",
+    flour00: "Typ 00",
+    flour0: "Typ 0",
+    flourManitoba: "Manitoba",
+    flourIntegrale: "Vollkorn",
+    flourSemola: "Hartweizenmehl",
+    yeastFresh: "Frischhefe",
+    yeastDry: "Trockenhefe",
+    yeastSourdough: "Sauerteig",
+    dietGlutenFree: "Glutenfrei",
+    dietLactoseFree: "Laktosefrei",
+    dietVegan: "Vegan",
+    dietLowFodmap: "Low FODMAP",
+    dietHistamine: "Histaminarm",
+    dietNickel: "Nickelarm",
+    equipTitle: "Ausstattung",
+    equipSubtitle: "Was hast du in der Küche",
+    equipStep: "03 — Ausstattung",
+    equipMixerTitle: "Kneten",
+    equipSurfaceTitle: "Backfläche",
+    equipToolsTitle: "Werkzeuge",
+    equipSummaryNone: "Nicht ausgewählt",
+    equipSummarySelected: "{count} ausgewählt",
+    mixerHands: "Von Hand",
+    mixerHandsDesc: "Manuelles Kneten, keine Ausrüstung",
+    mixerStandDomestic: "Küchenmaschine (Haushalt)",
+    mixerStandDomesticDesc:
+      "KitchenAid, Kenwood, Smeg — 4-7 L, Knethaken",
+    mixerPlanetary: "Planetenmixer (Semi-Pro)",
+    mixerPlanetaryDesc: "10-20 L, Spiralhaken, Motor 500W+",
+    mixerSpiral: "Spiralkneter",
+    mixerSpiralDesc: "Feste/kippbare Schüssel, professionell",
+    mixerFork: "Gabelkneter",
+    mixerForkDesc:
+      "Langsam, geringe Reibung — ideal für hohe Hydration",
+    mixerLevelHome: "Heim",
+    mixerLevelSemiPro: "Semi-Pro",
+    mixerLevelPro: "Pro",
+    surfaceRefractory: "Schamottestein",
+    surfaceRefractoryDesc:
+      "3 cm, hohe thermische Masse — Holz- und Prosumer-Öfen",
+    surfaceCordierite: "Cordieritstein",
+    surfaceCordieriteDesc:
+      "1.5 cm, Masse/Geschwindigkeits-Kompromiss — Effeuno, Ooni",
+    surfaceSteel: "Stahlplatte",
+    surfaceSteelDesc:
+      "5-10 mm, ultraschneller Transfer — knusprige Basis in Sekunden",
+    surfaceAluminum: "Aluminiumblech",
+    surfaceAluminumDesc:
+      "Leicht, extreme Leitfähigkeit — Detroit, römische Teglia",
+    surfaceBlueSteel: "Blaustahl-Blech",
+    surfaceBlueSteelDesc:
+      "Natürlich antihaftend, hoher Rand — Teglia, Focaccia",
+    surfaceCastIron: "Gusseisenpfanne",
+    surfaceCastIronDesc:
+      "Hohe thermische Masse, hoher Rand — Chicago, Padellino",
+    surfaceOvenRack: "Ofenrost",
+    surfaceOvenRackDesc:
+      "Keine zusätzliche Fläche — nur Standard-Ofenrost",
+    toolCatEssential: "Grundausstattung",
+    toolCatPrecision: "Präzision",
+    toolCatHandling: "Handhabung",
+    toolCatContainment: "Aufbewahrung",
+    toolDigitalScale: "Digitalwaage",
+    toolDigitalScaleDesc: "1g Präzision, 5kg+ Kapazität",
+    toolThermometer: "Thermometer",
+    toolThermometerDesc: "IR oder Sonde, für Teig und Ofen",
+    toolScraper: "Teigschaber",
+    toolScraperDesc:
+      "Flexible Plastik für Falten und Schneiden",
+    toolContainers: "Gärbehälter",
+    toolContainersDesc:
+      "Stapelbare Boxen oder Schüsseln mit Deckel",
+    toolDoughCutter: "Teigteiler",
+    toolDoughCutterDesc: "Edelstahl, für präzises Portionieren",
+    toolBenchKnife: "Bankspachtel",
+    toolBenchKnifeDesc:
+      "Edelstahl, zum Wenden hochhydratisierter Teige",
+    toolScoringBlade: "Einschneideklinge",
+    toolScoringBladeDesc:
+      "Für dekorative Oberflächeneinschnitte",
+    toolPeelWood: "Holzschaufel",
+    toolPeelWoodDesc:
+      "Zum Einschießen — geringe Reibung mit Grieß",
+    toolPeelMetal: "Aluminiumschaufel",
+    toolPeelMetalDesc:
+      "Zum Drehen und Herausholen — dünn und reaktiv",
+    toolPizzaScreen: "Lochblech",
+    toolPizzaScreenDesc:
+      "Perforiertes Aluminium für knuspriges Backen",
+    toolProofingBoxes: "Gärkästen",
+    toolProofingBoxesDesc:
+      "Stapelbar mit Deckel — 30×40 oder 40×60 cm",
+    toolBannetons: "Gärkörbe",
+    toolBannetonsDesc: "Für runde Formen, mit Leinentuch",
+  },
+  pages: {
+    navCreate: "Erstellen",
+    navExplore: "Stile",
+    navLearn: "Lernen",
+    navProfile: "Profil",
+    navSearch: "Suchen",
+    exploreStepNum: "15 Stile \u2014 4 Familien",
+    exploreTitle: "Stile entdecken",
+    exploreSubtitle:
+      "Von Napoletana STG bis Focaccia di Recco.",
+    learnTitle: "Lernen",
+    learnSubtitle:
+      "Wissenschaft und Kunst der Pizza, gut erkl\u00E4rt.",
+    learnGlossary: "Glossar",
+    learnGlossaryDesc: "30+ technische Backbegriffe",
+    learnTroubleshooting: "Probleme & L\u00F6sungen",
+    learnTroubleshootingDesc:
+      "20 h\u00E4ufige Probleme und ihre L\u00F6sungen",
+    learnPreFerments: "Vorteige",
+    learnPreFermentsDesc:
+      "Leitfaden zu Biga, Poolish und Autolyse",
+    recipeLabel: "Rezept",
+    recipeBackToStyles: "Stile",
+    recipeStyleNotFound: "Stil nicht gefunden",
+    recipeStyleNotFoundDesc:
+      'Der Stil "{id}" existiert nicht in der Datenbank.',
+    recipeExploreStyles: "Stile entdecken",
+    recipeCopyLinkAria: "Rezeptlink kopieren",
+    notFoundTitle: "Seite nicht gefunden",
+    notFoundSubtitle:
+      "Diese Pizza gibt es nicht auf unserer Speisekarte.",
+    notFoundBack: "Zur\u00FCck zur Startseite",
+    searchPlaceholder:
+      "Stil, Mehl, Begriff, Problem suchen\u2026",
+    searchCatStyles: "Stile",
+    searchCatFlours: "Mehle",
+    searchCatGlossary: "Glossar",
+    searchCatProblems: "Probleme",
+    searchCatGuides: "Anleitungen",
+    searchNoResults: 'Keine Ergebnisse f\u00FCr "{query}"',
+    searchHint:
+      "Tippe, um Stile, Mehle, Glossar und Probleme zu durchsuchen",
+    searchSuggestions: "Vorschl\u00E4ge",
+    searchFlourWheat: "Weizenmehl",
+    searchFlourManitoba: "Manitoba",
+    searchFlourSemola: "Hartweizenmehl",
+    searchFlourWholegrain: "Vollkorn",
+    searchFlourGlutenFree: "Glutenfrei",
+    searchFlourSpecial: "Spezial",
+    skipToContent: "Zum Inhalt springen",
+    navMainLabel: "Hauptnavigation",
+    searchCloseLabel: "Suche schlie\u00DFen",
+    searchFieldLabel: "Globales Suchfeld",
+    searchClearLabel: "Suche l\u00F6schen",
+    dietaryWarningsTitle: "Ern\u00E4hrungshinweise",
+    troubleshootingTitle: "Probleme mit dem Rezept?",
+    troubleshootingDesc:
+      "Schau dir den Leitfaden zu 20 h\u00E4ufigen Problemen und L\u00F6sungen an",
+  },
+  configurator: {
+    hydrationLabel: "Hydratation",
+    hydrationTip:
+      "Wasseranteil bezogen auf das Mehl. H\u00F6her = weicherer Teig und offene Porung, aber schwieriger zu verarbeiten.",
+    flourWLabel: "Mehlst\u00E4rke (W)",
+    flourWTip:
+      "Misst die F\u00E4higkeit, Wasser aufzunehmen und Gas zu halten. H\u00F6herer W = l\u00E4ngere G\u00E4rung und st\u00E4rkere Struktur.",
+    plLabel: "P/L-Verh\u00E4ltnis",
+    plTip:
+      "Alveographisches Verh\u00E4ltnis Z\u00E4higkeit/Dehnbarkeit. Niedriger P/L = dehnbarer Teig (runde Pizza). Hoher P/L = z\u00E4her Teig (lange G\u00E4rung). Gesch\u00E4tzt aus W, wenn nicht manuell ge\u00E4ndert.",
+    fermentLabel: "G\u00E4rung",
+    fermentTip:
+      "Gesamte G\u00E4rzeit. Mehr Stunden bei niedrigen Temperaturen = komplexerer Geschmack und bessere Verdaulichkeit.",
+    tempFridge: "4\u00B0C K\u00FChlschrank",
+    tempCool: "12\u00B0C",
+    tempAmbient: "22\u00B0C Raum",
+    preFermentLabel: "Vorteig",
+    preFermentTip:
+      "Ein Vorteig (Biga, Poolish) ist ein vorfermentierter Teiganteil. Verbessert Geschmack, Verdaulichkeit und Haltbarkeit. Erfordert 12\u201324 h zus\u00E4tzliche Planung.",
+    ovenLabel: "Ofen",
+    ovenTip:
+      "Typ w\u00E4hlen und Temperatur einstellen. H\u00F6here Temperaturen = schnelleres Backen und bessere Kruste.",
+    panLabel: "Backblech",
+    panTipRect:
+      "Form und Gr\u00F6\u00DFe des Blechs beeinflussen die Teigmenge und das Endergebnis. Der Standard f\u00FCr diesen Stil ist rechteckig.",
+    panTipRound:
+      "Form und Gr\u00F6\u00DFe des Blechs beeinflussen die Teigmenge und das Endergebnis. Der Standard f\u00FCr diesen Stil ist rund.",
+    panRectangular: "Rechteckig",
+    panRound: "Rund",
+    panLength: "L\u00E4nge",
+    panWidth: "Breite",
+    panDiameter: "Durchmesser",
+    panArea: "Blechfl\u00E4che",
+    thicknessLabel: "Dicke",
+    thicknessTip:
+      "Die Dicke beeinflusst direkt das Teiggewicht pro Kugel, das Backen und die Textur. Niedrige Werte = d\u00FCnn und knusprig. Hohe Werte = weich und dick.",
+    thicknessThin: "D\u00FCnn und knusprig",
+    thicknessThick: "Dick und fluffig",
+    thicknessStandard: "Standard f\u00FCr diesen Stil",
+    backLabel: "Zur\u00FCck",
+    sliderOptimal: "optimal",
+  },
+  preFerment: PRE_FERMENT_DE as any,
+  dietaryI18n: DIETARY_DE as any,
+  troubleshootingI18n: TROUBLESHOOTING_DE as any,
+  glossaryTerms: GLOSSARY_TERMS_DE as any,
+};
