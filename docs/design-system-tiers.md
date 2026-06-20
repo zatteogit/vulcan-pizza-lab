@@ -137,7 +137,10 @@ dipendenza: una sblocca la successiva.
   - ✅ Creato `ds/SegmentedControl.tsx` + token `--segmented-*`; prima migrazione: toggle formato prompt in `sync-tab`, selettore modalità Engine Lab e tab header in `dev-tools`.
   - ✅ Migrato `recipe-configurator.tsx` (selettore temperatura fermentazione migrato a `SegmentedControl`).
   - ✅ Il filtro lievito Q10 di `dev-tools` è passato a `FilterChip` (filtro, non segmented control).
-  - ⏳ Rimangono candidati: `RecipeSectionTabs` e tab profilo. Non forzare finché non è chiara la variante mobile/sticky/dock.
+  - ✅ Residuo tab risolto (decisione per candidato):
+    - `RecipeSectionTabs` → **resta T5** (pattern specializzato): due varianti (inline sticky + navbar dock fisso mobile con search abbinato), pill attivo scorrevole via `layoutId`, chrome liquid-glass, scroll-on-change. Forzarlo in `SegmentedControl` perderebbe queste proprietà. Token già puliti, nessuna violazione.
+    - Selettore **tema** profilo (light/dark/auto) → **migrato a `ds/SegmentedControl`** (`tone="brand"`): è un mode-switch identico a quelli già migrati (sync-tab, dev-tools). Verificato in browser (track + segmento attivo terracotta, interazione applica il tema, light+default). Miglioramento UX: ora differenziato visivamente dalla lista lingue.
+    - Selettore **lingua** profilo (6 lingue con bandiere) → **resta a pill**: è una lista, non un mode-switch; 6 opzioni in un track segmentato sarebbero strette.
 - **F5-7 ✅ Policy decisa: T2 semantico TOLLERATO in app code.** `var(--primary)`, `var(--surface-container)`, `var(--text-*)`, ecc. restano consumabili direttamente. Razionale: la linea dura del modello (niente T1/hex/valori hardcoded) è già enforced; forzare ogni T2→T3 sarebbe churn enorme per beneficio marginale. Linea guida (non bloccante): **dove esiste un token T3 per il ruolo esatto** (es. chip → `--chip-*`, cta → `--cta-btn-*`) preferirlo. Il guard F5-6 **non** blocca il consumo T2 per scelta.
 - **F2-3 ✅ `ds/Heading` prima passata (build verde)** — applica `.type-heading-xl/lg/md/sm` + `.type-display` oltre a `.type-title-page`.
   - ✅ Esteso `ds/Heading.tsx` con livelli `display/page/xl/lg/md/sm` e tag semantici default.
@@ -161,7 +164,7 @@ dipendenza: una sblocca la successiva.
   - ✅ Verifica mirata sui composti catalogati: 0 `#[hex]`, 0 `var(--color-*)`, 0 literal `"DM Mono"`, 0 classi legacy `surface-card`/`surface-glass`/`badge-base`/`--cta-btn-*`.
   - ✅ Seconda passata: introdotto `FilterChip` e applicato a `RecommendedStyles` e `TroubleshootingGuide`, togliendo duplicazione inline dei chip filtro.
   - ✅ Terza passata: introdotto `SegmentedControl` e applicato ai controlli a selezione singola piu' lineari (`sync-tab` prompt mode, `dev-tools` Engine Lab mode + header tabs); Q10 yeast filter usa `FilterChip`.
-  - ⏳ Da decidere nel pass successivo: `RecipeSectionTabs` e tab custom sono semanticamente candidati a `ds/SegmentedControl`; non forzarli in `Chip`.
+  - ✅ Deciso (vedi F2-2b): `RecipeSectionTabs` resta T5 (dock specializzato); il selettore tema profilo è passato a `SegmentedControl`; il selettore lingua resta a pill. Nessun tab forzato in `Chip`.
   *Accettazione:* ogni T5 importa da `ds/` e da token T3; 0 violazioni token interne.
 
 ### Fase 4 — T6 Template — ✅ formalizzata (verifica, no over-engineering)

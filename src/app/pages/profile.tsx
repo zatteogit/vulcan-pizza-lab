@@ -37,7 +37,7 @@ import { useCallback,useEffect,useMemo,useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { CMS_DEFAULTS,useCms } from "../components/cms/cms-context";
-import { Chip, CtaButton, Heading } from "../components/ds";
+import { Chip, CtaButton, Heading, SegmentedControl } from "../components/ds";
 import {
 createFormatter,
 getPreferredUnitSystem,
@@ -1923,38 +1923,17 @@ export function ProfilePage() {
               >
                 {p.themeLabel}
               </div>
-              <div className="flex gap-2">
-                {([
-                  { mode: "light" as const, icon: Sun, label: p.themeLight },
-                  { mode: "dark" as const, icon: Moon, label: p.themeDark },
-                  { mode: "auto" as const, icon: Monitor, label: p.themeAuto },
-                ]).map(({ mode, icon: Icon, label }) => {
-                  const active = themeMode === mode;
-                  return (
-                    <motion.button
-                      key={mode}
-                      onClick={() => setThemeMode(mode)}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl active:scale-95"
-                      initial={false}
-                      animate={{
-                        backgroundColor: active ? "var(--chip-bg-active)" : "var(--chip-bg)",
-                        color: active ? "var(--chip-text-active)" : "var(--chip-text)",
-                        borderColor: active ? "var(--chip-bg-active)" : "var(--chip-border)",
-                      }}
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                      style={{
-                        borderWidth: 1,
-                        borderStyle: "solid",
-                        fontSize: "var(--font-size-md)",
-                        fontWeight: "var(--weight-medium)" as any,
-                        cursor: "pointer",
-                      }}
-                    >
-                      <Icon size={14} /> {label}
-                    </motion.button>
-                  );
-                })}
-              </div>
+              <SegmentedControl
+                ariaLabel={p.themeLabel}
+                tone="brand"
+                value={themeMode}
+                onValueChange={setThemeMode}
+                options={[
+                  { value: "light", label: p.themeLight, icon: <Sun size={14} /> },
+                  { value: "dark", label: p.themeDark, icon: <Moon size={14} /> },
+                  { value: "auto", label: p.themeAuto, icon: <Monitor size={14} /> },
+                ]}
+              />
             </div>
 
           </div>
