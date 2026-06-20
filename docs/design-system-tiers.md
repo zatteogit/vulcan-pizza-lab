@@ -145,7 +145,11 @@ dipendenza: una sblocca la successiva.
 - **F2-3 ✅ `ds/Heading` prima passata (build verde)** — applica `.type-heading-xl/lg/md/sm` + `.type-display` oltre a `.type-title-page`.
   - ✅ Esteso `ds/Heading.tsx` con livelli `display/page/xl/lg/md/sm` e tag semantici default.
   - ✅ Migrati page/screen title: `not-found`, `home` (hero + step stili), `profile` (FTU + pagina + section/modal title), `recipe` fallback, `pre-ferments` (page + sezioni), `explore` (page + anteprime), più gli usi già presenti in `learn` e `recipe-view`.
-  - ⏳ Residui intenzionali: heading card/modal/utility non ancora classificati (`learn` card, `explore` card, `cms`, setup modal ricetta). Da trattare in F3/F5-5, non forzare se non combaciano con le composite.
+  - ✅ Residui heading classificati con precisione (giu 2026):
+    - **17 `font-serif italic`** = sottotitoli/descrizioni editoriali, **NON heading** → restano (token-compliant via `font-serif`=`var(--font-serif)`), non vanno in `ds/Heading`.
+    - **~19 heading responsive bespoke** (card/section title, `clamp(...)`, alcuni con rem hardcoded) → le composite a **size fissa** non li coprono; migrarli cambierebbe i pixel. Inoltre mismatch sistematico: le schermate usano `--leading-snug` (1.1), le composite `--leading-compact`/`--leading-title` → **decisione bidirezionale aperta** (vedi sotto), non forzata.
+    - **1 caso pulito migrato**: `learn.tsx` h2 "Risorse" (5xl=20px fisso) → `ds/Heading level="md" as="h2"` con override `lineHeight: --leading-snug` (pixel-identico).
+  - 🔶 **Decisione bidirezionale da prendere (DS→schermate):** allineare il `line-height` delle composite heading a `--leading-snug` (convenzione dominante nelle schermate)? Sbloccherebbe la migrazione dei ~19 heading, ma cambia i pixel sui titoli già migrati → richiede l'occhio dell'utente. Lasciato in sospeso di proposito.
   *Accettazione:* i titoli delle pagine passano per `Heading`; le composite heading risultano usate.
 - **F2-4 ✅ `ds/CtaButton`, `ds/Surface`, `ds/Badge`, `ds/Switch` completati (build verde)** — wrappano `--cta-btn-*`, `.surface-*`, `.badge-base`, `--switch-*`.
   - ✅ Creati `ds/CtaButton.tsx`, `ds/Surface.tsx`, `ds/Badge.tsx`, `ds/Switch.tsx`; esportati dal barrel `ds/index.ts`.
@@ -225,7 +229,7 @@ Finding del primo audit, ricondotti al modello:
   *Resta opzionale:* aggancio a CI / pre-commit hook (non installato un dep husky in questa fase).
 
 ### Showcase (`design-system/*`)
-- **F6-1** Lo showcase deve **consumare** i token come le schermate (stesso standard): F5-4 è completata per i primitivi colore; restano F1-1/F5-3 sul fronte literal font e il pass `rgba`/zero-alpha dove non è pura documentazione. Eccezione esplicita: i blocchi che **documentano** un primitivo (es. swatch di palette) possono citarlo.
+- **F6-1 ✅ Verificato: i 21 font-literal residui nello showcase NON sono violazioni.** Sono tutti **documentazione**: righe della tabella type-scale (`{ name:"Display L", font:"Playfair Display", token:"--font-size-10xl" }`) e l'helper `fontFamilyCSS` che renderizza i campioni nel font documentato. Lo showcase **esiste per documentare i primitivi**: mostrarli letterali è corretto (per questo è escluso dal guard). Nessuna azione: tokenizzarli degraderebbe la documentazione. F5-4 (primitivi colore) già completata.
 
 ---
 

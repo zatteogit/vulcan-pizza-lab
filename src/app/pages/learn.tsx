@@ -461,18 +461,14 @@ export function LearnPage() {
         <div>
           {/* Section heading with decorative trailing rule */}
           <div className="flex items-center gap-3" style={{ marginBottom: "var(--space-6)" }}>
-            <h2
-              className="font-serif flex-shrink-0"
-              style={{
-                fontSize: "var(--font-size-5xl)",
-                fontWeight: "var(--weight-bold)" as any,
-                color: "var(--text-default)",
-                margin: 0,
-                lineHeight: "var(--leading-snug)",
-              }}
+            <Heading
+              level="md"
+              as="h2"
+              className="flex-shrink-0"
+              style={{ margin: 0, lineHeight: "var(--leading-snug)" }}
             >
               {cms.misc.learnResources}
-            </h2>
+            </Heading>
             <div
               className="flex-1"
               style={{
