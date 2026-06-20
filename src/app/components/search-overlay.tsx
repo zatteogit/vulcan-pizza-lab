@@ -4,29 +4,29 @@
    navigazione da tastiera, highlight testo matchato, e animazioni spring.
    Cerca in: stili, glossario, problemi, guide, farine. */
 
-import { useState, useMemo, useRef, useEffect, useCallback } from "react";
-import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "motion/react";
-import { useNavigate } from "react-router";
 import {
-  Search,
-  X,
-  BookOpen,
-  AlertTriangle,
-  ChefHat,
-  Wheat,
-  ArrowLeft,
-  CornerDownLeft,
-  CircleDot,
+AlertTriangle,
+BookOpen,
+ChefHat,
+CircleDot,
+CornerDownLeft,
+Search,
+Wheat,
+X
 } from "lucide-react";
-import { STYLES_DB, PIZZA_FAMILIES } from "./pizza-engine";
-import { GLOSSARY_TERMS, getLocalizedTerm } from "./glossary-data";
-import { ISSUES_DB, getLocalizedIssue } from "./troubleshooting-data";
-import { PRE_FERMENT_DB } from "./pre-ferment-guide";
-import { FLOURS_DB } from "./flour-database";
-import { STYLE_PHOTOS } from "./recommended-styles";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { AnimatePresence,motion } from "motion/react";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
+import { createPortal } from "react-dom";
+import { useNavigate } from "react-router";
 import { useCms } from "./cms/cms-context";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { FLOURS_DB } from "./flour-database";
+import { GLOSSARY_TERMS,getLocalizedTerm } from "./glossary-data";
+import { PIZZA_FAMILIES,STYLES_DB } from "./pizza-engine";
+import { PRE_FERMENT_DB } from "./pre-ferment-guide";
+import { STYLE_PHOTOS } from "./recommended-styles";
+import { ISSUES_DB,getLocalizedIssue } from "./troubleshooting-data";
+import { useIsMobile } from "./ui/use-mobile";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
@@ -153,7 +153,7 @@ function buildResults(query: string, cms: any): SearchResult[] {
         type: "style",
         title: style.name,
         subtitle: familyName,
-        link: `/recipe/${style.id}`,
+        link: `/recipe/${style.id}?mode=canonical`,
         photo: STYLE_PHOTOS[style.id] || FALLBACK,
       });
     }
@@ -238,10 +238,12 @@ export function SearchOverlay({
   open: boolean;
   onClose: () => void;
 }) {
+  const isMobile = useIsMobile();
   const { cms } = useCms();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'styles' | 'recipes' | 'toppings' | 'articles'>('all');
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
@@ -250,6 +252,7 @@ export function SearchOverlay({
     if (open) {
       setQuery("");
       setActiveIndex(0);
+      setActiveFilter("all");
       requestAnimationFrame(() => {
         inputRef.current?.focus();
       });
@@ -257,7 +260,31 @@ export function SearchOverlay({
   }, [open]);
 
   /* Results */
-  const results = useMemo(() => buildResults(query, cms), [query, cms]);
+  const rawResults = useMemo(() => buildResults(query, cms), [query, cms]);
+
+  const results = useMemo(() => {
+    if (activeFilter === "all") return rawResults;
+    return rawResults.filter((r) => {
+      if (activeFilter === "styles") return r.type === "style";
+      if (activeFilter === "recipes") return r.type === "guide";
+      if (activeFilter === "toppings") return r.type === "flour";
+      if (activeFilter === "articles") return r.type === "glossary" || r.type === "problem";
+      return false;
+    });
+  }, [rawResults, activeFilter]);
+
+  const handleFilterClick = (filterId: typeof activeFilter) => {
+    setActiveFilter(filterId);
+    setActiveIndex(0);
+  };
+
+  const filterOptions = [
+    { id: "all", label: "Tutto", icon: Search },
+    { id: "styles", label: "Stili", icon: ChefHat },
+    { id: "recipes", label: "Guide", icon: Wheat },
+    { id: "toppings", label: "Farine", icon: CircleDot },
+    { id: "articles", label: "Glossario", icon: BookOpen },
+  ] as const;
 
   /* Grouped + ordered for display */
   const groupedResults = useMemo(() => {
@@ -342,9 +369,10 @@ export function SearchOverlay({
             inset: 0,
             zIndex: 9999,
             display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            paddingTop: "min(12vh, 80px)",
+            alignItems: "flex-end",
+            justifyContent: isMobile ? "center" : "flex-start",
+            paddingLeft: isMobile ? undefined : 112,
+            paddingBottom: isMobile ? 80 : 100,
           }}
           onKeyDown={handleKeyDown}
         >
@@ -359,7 +387,7 @@ export function SearchOverlay({
               position: "fixed",
               inset: 0,
               background:
-                "color-mix(in srgb, var(--container-page) 65%, rgba(0,0,0,0))",
+                "color-mix(in srgb, var(--container-page) 65%, transparent)",
               backdropFilter: "blur(20px) saturate(1.4)",
               WebkitBackdropFilter: "blur(20px) saturate(1.4)",
             }}
@@ -367,10 +395,10 @@ export function SearchOverlay({
 
           {/* Panel */}
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.96 }}
+            initial={{ opacity: 0, y: 60, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -12, scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            exit={{ opacity: 0, y: 40, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 450, damping: 28 }}
             className="relative w-full mx-4 sm:mx-0 overflow-hidden"
             style={{
               maxWidth: 640,
@@ -381,9 +409,28 @@ export function SearchOverlay({
               border: "1px solid var(--container-border)",
               borderRadius: 20,
               boxShadow:
-                "0 24px 80px -12px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.04)",
+                "0 24px 80px -12px color-mix(in srgb, var(--shadow-color) 25%, transparent), 0 0 0 1px color-mix(in srgb, var(--shadow-color) 4%, transparent)",
+              transformOrigin: isMobile ? "bottom center" : "bottom left",
             }}
           >
+            {/* Drag Handle per Mobile */}
+            {isMobile && (
+              <div 
+                className="flex justify-center items-center pt-3 pb-1" 
+                style={{ flexShrink: 0 }}
+              >
+                <div 
+                  className="rounded-full"
+                  style={{
+                    width: 36,
+                    height: 5,
+                    background: "var(--container-border)",
+                    opacity: 0.4
+                  }}
+                />
+              </div>
+            )}
+
             {/* Search input row */}
             <div
               className="flex items-center gap-3 px-5"
@@ -393,24 +440,15 @@ export function SearchOverlay({
                 flexShrink: 0,
               }}
             >
-              {/* M3 Search view: leading back arrow dismisses the search */}
-              <motion.button
-                onClick={onClose}
-                className="flex items-center justify-center rounded-full active:scale-95"
+              {/* Icona lente statica a sinistra */}
+              <Search
+                size={20}
+                className="flex-shrink-0"
                 style={{
-                  width: 40,
-                  height: 40,
-                  flexShrink: 0,
-                  color: "var(--text-default)",
-                  background: "rgba(0,0,0,0)",
-                  border: "none",
-                  cursor: "pointer",
-                  marginLeft: -8,
+                  color: "var(--text-muted)",
+                  opacity: 0.7,
                 }}
-                aria-label={cms.pages.searchCloseLabel}
-              >
-                <ArrowLeft size={20} />
-              </motion.button>
+              />
               <input
                 ref={inputRef}
                 type="text"
@@ -422,7 +460,7 @@ export function SearchOverlay({
                 placeholder={cms.pages.searchPlaceholder}
                 className="flex-1"
                 style={{
-                  background: "rgba(0,0,0,0)",
+                  background: "transparent",
                   border: "none",
                   outline: "none",
                   color: "var(--text-default)",
@@ -434,28 +472,81 @@ export function SearchOverlay({
                 autoCorrect="off"
                 spellCheck={false}
               />
-              {query ? (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 28 }}
-                  onClick={() => {
-                    setQuery("");
-                    inputRef.current?.focus();
-                  }}
-                  className="p-1.5 rounded-lg active:scale-95"
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {query && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 28 }}
+                    onClick={() => {
+                      setQuery("");
+                      inputRef.current?.focus();
+                    }}
+                    className="p-1.5 rounded-lg active:scale-95"
+                    style={{
+                      color: "var(--text-muted)",
+                      background: "var(--container-bg)",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                    aria-label={cms.pages.searchClearLabel}
+                  >
+                    <X size={14} />
+                  </motion.button>
+                )}
+                <button
+                  onClick={onClose}
+                  className="px-2.5 py-1.5 rounded-lg text-sm font-semibold transition-colors active:scale-95"
                   style={{
-                    color: "var(--text-muted)",
-                    background: "var(--container-bg)",
-                    flexShrink: 0,
+                    color: "var(--primary)",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
                   }}
-                  aria-label={cms.pages.searchClearLabel}
+                  aria-label={cms.pages.searchCloseLabel}
                 >
-                  <X size={14} />
-                </motion.button>
-              ) : (
-                null
-              )}
+                  {cms.ui.cancel}
+                </button>
+              </div>
+            </div>
+
+            {/* Filter pills bar (directly below input) */}
+            <div
+              className="flex items-center gap-2 px-5 py-2.5 overflow-x-auto hide-scrollbar"
+              style={{
+                borderBottom: "1px solid var(--container-border-subtle)",
+                background: "color-mix(in srgb, var(--container-bg-low) 50%, transparent)",
+                flexShrink: 0,
+                WebkitOverflowScrolling: "touch",
+              }}
+            >
+              {filterOptions.map((opt) => {
+                const Icon = opt.icon;
+                const isActive = activeFilter === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    onClick={() => handleFilterClick(opt.id)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full active:scale-95 transition-all text-xs font-medium shrink-0"
+                    style={{
+                      cursor: "pointer",
+                      border: "1px solid",
+                      borderColor: isActive
+                        ? "var(--primary)"
+                        : "var(--container-border-subtle)",
+                      background: isActive
+                        ? "color-mix(in srgb, var(--primary) 12%, transparent)"
+                        : "transparent",
+                      color: isActive ? "var(--primary)" : "var(--text-muted)",
+                      outline: "none",
+                    }}
+                    aria-label={opt.id === "all" ? "Mostra tutto" : `Filtra per ${opt.label}`}
+                  >
+                    <Icon size={12} />
+                    <span>{opt.label}</span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* Results area */}
@@ -555,8 +646,8 @@ export function SearchOverlay({
                                 className="flex items-center gap-3 mx-2 px-3 py-2.5 rounded-xl cursor-pointer active:scale-[0.98] transition-transform"
                                 style={{
                                   background: isActive
-                                    ? "color-mix(in srgb, var(--primary) 8%, rgba(0,0,0,0))"
-                                    : "rgba(0,0,0,0)",
+                                    ? "color-mix(in srgb, var(--primary) 8%, transparent)"
+                                    : "transparent",
                                   transition: "background 0.1s ease",
                                 }}
                               >
@@ -689,58 +780,7 @@ export function SearchOverlay({
               </AnimatePresence>
             </div>
 
-            {/* Footer — keyboard hints */}
-            <div
-              className="flex items-center justify-between px-5 py-3"
-              style={{
-                borderTop: "1px solid var(--container-border-subtle)",
-                flexShrink: 0,
-              }}
-            >
-              <p
-                className="font-serif italic"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
-                  opacity: 0.65,
-                }}
-              >
-                {cms.pages.searchHint}
-              </p>
-              <div className="flex items-center gap-2">
-                <span
-                  className="flex items-center gap-1"
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    color: "var(--text-muted)",
-                    opacity: 0.65,
-                  }}
-                >
-                  <ArrowLeft size={14} />
-                  <ArrowLeft size={14} />
-                </span>
-                <span
-                  className="flex items-center gap-1"
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    color: "var(--text-muted)",
-                    opacity: 0.65,
-                  }}
-                >
-                  <ArrowLeft size={14} />
-                </span>
-                <span
-                  className="flex items-center gap-1"
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    color: "var(--text-muted)",
-                    opacity: 0.65,
-                  }}
-                >
-                  <X size={14} />
-                </span>
-              </div>
-            </div>
+
           </motion.div>
         </div>
       )}

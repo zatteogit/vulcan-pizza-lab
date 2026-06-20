@@ -8,6 +8,16 @@
      Naming: --{category}-{scale}  — hue+lightness for color,
      t-shirt sizes or numeric for everything else.
      Ref: namedesigntokens.guide (CTI taxonomy)
+
+     DTCG-ready ($type per categoria — vedi docs/design-system-tiers.md §2.2):
+       --color-*      → $type color      (futuro: {colorSpace,components,alpha,hex})
+       --font-size-*  → $type dimension  (futuro: {value,unit})
+       --space-*      → $type dimension
+       --radius-*     → $type dimension
+       --border-*     → $type dimension
+       --weight-*     → $type fontWeight (1-1000 o keyword)
+       --leading-*    → $type number
+       --tracking-*   → $type dimension
      ═══════════════════════════════════════════════════════════════════ */
 
   /* ── Color Primitives · Terracotta ── */
@@ -232,6 +242,7 @@
   --border-width-thin: 1px;
   --border-width-medium: 2px;
   --border-width-thick: 3px;
+  --scrollbar-width-thin: thin;
 
   /* ── Radius Primitives ── */
   --radius-none: 0;
@@ -273,9 +284,17 @@
   --switch-background: var(--color-parchment-700);
   --ring: var(--color-terracotta-600);
 
-  /* ── Color · Semantic Font Weights (legacy compat) ── */
-  --font-weight-medium: var(--weight-medium);
-  --font-weight-normal: var(--weight-regular);
+  /* ── Color · Accents (semantic, domain) ──
+     Ruoli che prima erano rgba/primitive sparsi nei componenti:
+     · nerd   → modalità PizzaNerd (gradiente terracotta→ambra, glow)
+     · smart  → suggerimenti "intelligenti" e limiti raggiunti (ambra)
+     · severity → warning contestuali (critico/attenzione/info) */
+  --accent-nerd: var(--primary);
+  --accent-nerd-2: var(--color-amber-500);
+  --accent-smart: var(--color-amber-500);
+  --severity-critical: var(--color-red-500);
+  --severity-warning: var(--color-amber-500);
+  --severity-info: var(--color-mocha-500);
 
   /* ── Color · Chart ── */
   --chart-1: var(--color-terracotta-500);
@@ -284,18 +303,6 @@
   --chart-4: var(--color-mocha-500);
   --chart-5: var(--color-sienna-400);
 
-  /* ── Radius · Semantic (legacy compat) ── */
-  --radius: var(--radius-lg);
-
-  /* ── Sidebar (component-level, kept for shadcn compat) ── */
-  --sidebar: var(--color-parchment-200);
-  --sidebar-foreground: var(--color-night-1000);
-  --sidebar-primary: var(--color-terracotta-600);
-  --sidebar-primary-foreground: var(--color-white);
-  --sidebar-accent: var(--color-parchment-200);
-  --sidebar-accent-foreground: var(--color-night-1000);
-  --sidebar-border: var(--color-parchment-500);
-  --sidebar-ring: var(--color-terracotta-600);
 
   /* ── Color · Surface Tones (M3 tonal system) ── */
   --surface: var(--color-parchment-50);
@@ -374,6 +381,7 @@
     var(--color-sage-500) 100%
   );
   --grad-surface: none;
+  --shadow-color: var(--color-black);
 
   /* ── Elevation / Shadows ── */
   --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.03);
@@ -425,6 +433,13 @@
   --forge-deep: var(--color-terracotta-600);
   --forge-abyss: var(--color-terracotta-700);
 
+  /* ── Gradiente PizzaNerd (consumato da explore/badge nerd) ── */
+  --gradient-nerd: linear-gradient(
+    135deg,
+    var(--accent-nerd) 0%,
+    var(--accent-nerd-2) 100%
+  );
+
   /* ═══════════════════════════════════════════════════════════════════
      TIER 3 — COMPONENT TOKENS  (consumed by app code)
      Naming: --{component}-{property}
@@ -471,9 +486,25 @@
   --chip-weight: var(--weight-medium);
   --chip-weight-active: var(--weight-semibold);
 
+  /* ── C2. Segmented Control ── */
+  --segmented-bg: var(--surface-container);
+  --segmented-bg-active: var(--background);
+  --segmented-bg-active-brand: var(--primary);
+  --segmented-text: var(--muted-foreground);
+  --segmented-text-active: var(--foreground);
+  --segmented-text-active-brand: var(--primary-foreground);
+  --segmented-border: var(--outline-variant);
+  --segmented-border-active: var(--primary);
+  --segmented-shadow-active: var(--shadow-sm);
+  --segmented-font-size: var(--font-size-base);
+  --segmented-font-size-sm: var(--font-size-sm);
+  --segmented-weight: var(--weight-medium);
+  --segmented-weight-active: var(--weight-semibold);
+
   /* ── D. Switch ── */
   --switch-on: var(--primary);
   --switch-off: var(--switch-background);
+  --switch-thumb: var(--surface-bright);
 
   /* ── E. CTA Button ── */
   --cta-btn-bg: var(--grad-sage);
@@ -727,6 +758,11 @@
   --logo-glow: var(--primary);
 
   /* ── T. Hero effects ── */
+  --recipe-hero-card-bg: color-mix(in srgb, var(--container-page) 88%, transparent);
+  --recipe-hero-card-shadow: var(--shadow-lg);
+  --recipe-hero-badge-bg: color-mix(in srgb, var(--text-accent) 8%, transparent);
+  --recipe-hero-badge-text: var(--text-accent);
+
   --hero-glow-warm: radial-gradient(
     ellipse at 48% 52%,
     var(--forge-mid) 0%,
@@ -799,6 +835,8 @@
   /* ── V. Photo Overlay (always on dark imagery, theme-agnostic) ── */
   --overlay-backdrop: rgba(0, 0, 0, 0.45);
   --overlay-text: var(--color-white);
+  /* Superficie chiara per chip/bottoni sopra hero colorati (fissa nei due temi) */
+  --overlay-surface: var(--color-parchment-0);
   --overlay-text-muted: rgba(255, 255, 255, 0.6);
   --overlay-text-subtle: rgba(255, 255, 255, 0.5);
   --overlay-text-warm: color-mix(
@@ -886,6 +924,7 @@
 
   /* ── Z. Sheet / lighter backdrop ── */
   --sheet-backdrop: rgba(0, 0, 0, 0.35);
+  --sheet-shadow: 0 -8px 40px rgba(0, 0, 0, 0.15);
 
   /* ── AA. Slider / form control ── */
   --slider-thumb-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
@@ -919,6 +958,9 @@
 
   /* ── AE. Dialog / Confirm scrim (M3 spec 32% black) ── */
   --dialog-scrim: rgba(0, 0, 0, 0.32);
+  --dialog-scrim-strong: var(--overlay-backdrop);
+  --dialog-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  --dialog-shadow-compact: 0 24px 48px rgba(0, 0, 0, 0.18);
 }
 
 .dark {
@@ -945,21 +987,11 @@
   --input-background: var(--color-night-500);
   --switch-background: var(--color-mocha-800);
   --ring: var(--color-terracotta-300);
-  --font-weight-medium: var(--weight-medium);
-  --font-weight-normal: var(--weight-regular);
   --chart-1: var(--color-terracotta-300);
   --chart-2: var(--color-amber-300);
   --chart-3: var(--color-sage-300);
   --chart-4: var(--color-parchment-900);
   --chart-5: var(--color-terracotta-300);
-  --sidebar: var(--color-night-700);
-  --sidebar-foreground: var(--color-night-0);
-  --sidebar-primary: var(--color-terracotta-300);
-  --sidebar-primary-foreground: var(--color-terracotta-900);
-  --sidebar-accent: var(--color-night-500);
-  --sidebar-accent-foreground: var(--color-night-0);
-  --sidebar-border: var(--color-night-200);
-  --sidebar-ring: var(--color-terracotta-300);
 
   --surface: var(--color-night-900);
   --surface-dim: var(--color-night-900);
@@ -1098,15 +1130,22 @@
 
   /* ── Tier 3 dark overrides (new groups X–AD) ── */
   --sheet-backdrop: rgba(0, 0, 0, 0.5);
+  --sheet-shadow: 0 -8px 40px rgba(0, 0, 0, 0.35);
   --slider-thumb-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   --image-check-overlay: rgba(0, 0, 0, 0.55);
   --card-scrim-subtle: rgba(0, 0, 0, 0.14);
+  --dialog-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  --dialog-shadow-compact: 0 24px 48px rgba(0, 0, 0, 0.28);
 }
 
 @theme inline {
   --font-sans: "DM Sans", sans-serif;
   --font-serif: "Playfair Display", serif;
   --font-mono: "DM Mono", monospace;
+  /* Semantic body alias — body copy voice. Referenced by app code
+     (feedback-analysis, search-overlay, app-shell, recipe-feedback, learn).
+     Kept as alias of --font-sans so it can diverge later without touching call sites. */
+  --font-body: var(--font-sans);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -1138,18 +1177,6 @@
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
   --radius-xl: var(--radius-xl);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(
-    --sidebar-primary-foreground
-  );
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(
-    --sidebar-accent-foreground
-  );
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 @layer base {
@@ -1159,7 +1186,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-kerning: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -1168,6 +1195,29 @@
       "kern" 1,
       "liga" 1;
     hanging-punctuation: first allow-end last;
+  }
+
+  /* I18n resilience: German compounds, long product names and CJK strings must
+     wrap inside chips/cards instead of overflowing their containers. */
+  :where(h1, h2, h3, h4, h5, h6, p, li, dd, dt, figcaption, button, [role="button"], a, span) {
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  :where(button, [role="button"], a, span, p) {
+    min-width: 0;
+  }
+
+  html[data-locale="it"] :where(h1, h2, h3, h4, h5, h6, p, li, dd, dt, button, [role="button"], a, span) {
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: manual;
+  }
+
+  html[data-locale="ja"] :where(h1, h2, h3, h4, h5, h6, p, li, dd, dt, button, [role="button"], a, span) {
+    line-break: strict;
+    word-break: normal;
+    hyphens: manual;
   }
 
   /* Hide scrollbar for horizontal tip carousels */
@@ -1191,8 +1241,12 @@
     word-spacing: -0.02em;
   }
 
+  html[data-locale="ja"] :where(h1, h2, h3, h4, h5, h6) {
+    word-spacing: normal;
+  }
+
   h1 {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-serif);
     font-size: var(--font-size-10xl);
     font-weight: var(--weight-bold);
     line-height: var(--leading-tight);
@@ -1205,7 +1259,7 @@
   }
 
   h2 {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-serif);
     font-size: var(--font-size-9xl);
     font-weight: var(--weight-bold);
     line-height: var(--leading-snug);
@@ -1218,7 +1272,7 @@
   }
 
   h3 {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-5xl);
     font-weight: var(--weight-semibold);
     line-height: var(--leading-normal);
@@ -1227,7 +1281,7 @@
   }
 
   h4 {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-3xl);
     font-weight: var(--weight-semibold);
     line-height: var(--leading-relaxed);
@@ -1315,7 +1369,7 @@
 
   /** Step numbers: 01, 02, 03 — uppercase DM Sans (editorial, not nerdy) */
   .type-step-num {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-base); /* 11px */
     font-weight: var(--weight-semibold);
     letter-spacing: var(--tracking-extreme); /* 0.18em */
@@ -1325,7 +1379,7 @@
 
   /** Functional label: group headers, category tags — uppercase DM Sans */
   .type-mono-label {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-md); /* 12px */
     font-weight: var(--weight-semibold);
     letter-spacing: var(--tracking-caps); /* 0.08em */
@@ -1336,7 +1390,7 @@
 
   /** Inline code: CSS tokens, var() refs, code snippets */
   .type-code {
-    font-family: "DM Mono", monospace;
+    font-family: var(--font-mono);
     font-size: var(--font-size-base); /* 11px */
     letter-spacing: var(--tracking-spread); /* 0.04em */
     font-feature-settings:
@@ -1344,9 +1398,39 @@
       "tnum" 1;
   }
 
+  /** Small inline code/data annotation */
+  .type-code-sm {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm); /* 10px */
+    letter-spacing: var(--tracking-spread);
+    font-feature-settings:
+      "kern" 1,
+      "tnum" 1;
+  }
+
+  /** Micro inline code/data annotation */
+  .type-code-xs {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs); /* 9px */
+    letter-spacing: var(--tracking-spread);
+    font-feature-settings:
+      "kern" 1,
+      "tnum" 1;
+  }
+
   /** Raw data values: W320, 68%, temperatures — tabular nums, DM Sans */
+  .type-data-base {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base); /* 11px */
+    letter-spacing: var(--tracking-spread);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings:
+      "kern" 1,
+      "tnum" 1;
+  }
+
   .type-data {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-md); /* 12px */
     letter-spacing: var(--tracking-spread); /* 0.04em */
     font-variant-numeric: tabular-nums;
@@ -1355,9 +1439,42 @@
       "tnum" 1;
   }
 
+  /** Compact data label: dense tables, file paths, small metrics */
+  .type-data-sm {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm); /* 10px */
+    letter-spacing: var(--tracking-spread);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings:
+      "kern" 1,
+      "tnum" 1;
+  }
+
+  /** Micro data label: dense secondary metadata */
+  .type-data-xs {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-xs); /* 9px */
+    letter-spacing: var(--tracking-spread);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings:
+      "kern" 1,
+      "tnum" 1;
+  }
+
+  /** Dense form/control data: editor inputs, selects and compact UI controls */
+  .type-data-field {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-lg); /* 13px */
+    letter-spacing: var(--tracking-spread);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings:
+      "kern" 1,
+      "tnum" 1;
+  }
+
   /** Large data values: stat strip, score numbers — DM Sans */
   .type-data-lg {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-xl); /* 14px */
     font-weight: var(--weight-semibold);
     font-variant-numeric: tabular-nums;
@@ -1368,7 +1485,7 @@
 
   /** Nerd/technical data: PizzaNerd mode, engine values, formulas — DM Mono */
   .type-nerd {
-    font-family: "DM Mono", monospace;
+    font-family: var(--font-mono);
     font-size: var(--font-size-md); /* 12px */
     letter-spacing: var(--tracking-spread); /* 0.04em */
     font-feature-settings:
@@ -1380,7 +1497,7 @@
 
   /** Hero / decorative display: giant background text */
   .type-display {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-serif);
     font-size: var(--font-size-11xl); /* 64px */
     font-weight: var(--weight-bold);
     line-height: var(--leading-tight); /* 1.05 */
@@ -1392,7 +1509,7 @@
 
   /** Heading XL: main page title (h1-level) */
   .type-heading-xl {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-serif);
     font-size: var(--font-size-9xl); /* 40px */
     font-weight: var(--weight-bold);
     line-height: var(--leading-tight); /* 1.05 */
@@ -1404,7 +1521,7 @@
 
   /** Heading LG: section title (sectionTitleStyle equiv) */
   .type-heading-lg {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-serif);
     font-size: var(--font-size-8xl); /* 32px */
     font-weight: var(--weight-bold);
     line-height: var(--leading-title); /* 1.25 */
@@ -1416,7 +1533,7 @@
 
   /** Heading MD: dialog/card section title */
   .type-heading-md {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-serif);
     font-size: var(--font-size-5xl); /* 20px */
     font-weight: var(--weight-bold);
     line-height: var(--leading-compact); /* 1.3 */
@@ -1428,7 +1545,7 @@
 
   /** Heading SM: card title, small dialog title */
   .type-heading-sm {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-serif);
     font-size: var(--font-size-3xl); /* 18px */
     font-weight: var(--weight-bold);
     line-height: var(--leading-compact); /* 1.3 */
@@ -1438,9 +1555,40 @@
       "calt" 1;
   }
 
+  /** Heading XS: compact dialog/card title */
+  .type-heading-xs {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-2xl); /* 16px */
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-display); /* 1.2 */
+    font-feature-settings:
+      "kern" 1,
+      "liga" 1,
+      "calt" 1;
+  }
+
+  /** Page title (h1): titolo di pagina RESPONSIVE — scala dominante app (8×
+      call-site con clamp(6xl,6vw,8xl) + leading-heading). Promosso a composite
+      dal pattern delle schermate (vedi docs/design-system-tiers.md F2-3).
+      Colore escluso: applicare via ds/Heading o inline. */
+  .type-title-page {
+    font-family: var(--font-serif);
+    font-size: clamp(
+      var(--font-size-6xl),
+      6vw,
+      var(--font-size-8xl)
+    ); /* 22 → 32px */
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-heading); /* 1.15 */
+    font-feature-settings:
+      "kern" 1,
+      "liga" 1,
+      "calt" 1;
+  }
+
   /** Editorial quote: Playfair italic for citations */
   .type-editorial-quote {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-serif);
     font-style: italic;
     font-size: var(--font-size-2xl); /* 16px */
     line-height: var(--leading-reading); /* 1.6 */
@@ -1454,23 +1602,37 @@
 
   /** Body: standard descriptive text, metadata */
   .type-body {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-md); /* 12px */
     line-height: var(--leading-relaxed); /* 1.5 */
   }
 
+  /** Body LG: readable dialog/panel copy */
+  .type-body-lg {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-lg); /* 13px */
+    line-height: var(--leading-relaxed);
+  }
+
   /** Body SM: fine-print, annotations, helper text */
   .type-body-sm {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-base); /* 11px */
     line-height: var(--leading-body); /* 1.4 */
+  }
+
+  /** Body XS: dense helper text, quiet metadata */
+  .type-body-xs {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm); /* 10px */
+    line-height: var(--leading-relaxed);
   }
 
   /** Numeric value: tabular-aligned numbers in UI (amounts, %%, temperatures)
       Base is DM Sans at body size. Override font-size/font-weight inline
       when used for larger stat values. */
   .type-numeric {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-variant-numeric: tabular-nums;
     font-feature-settings:
       "kern" 1,
@@ -1479,16 +1641,43 @@
 
   /** Label: uppercase UI labels, category tags (labelStyle equiv) */
   .type-label {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-lg); /* 13px */
     font-weight: var(--weight-semibold);
     letter-spacing: var(--tracking-widest); /* 0.1em */
     text-transform: uppercase;
   }
 
+  /** Label compact: dense uppercase UI labels */
+  .type-label-compact {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm); /* 10px */
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+  }
+
+  /** Label SM: compact uppercase UI labels */
+  .type-label-sm {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base); /* 11px */
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+  }
+
+  /** Label XS: dense uppercase UI labels */
+  .type-label-xs {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-xs); /* 9px */
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+  }
+
   /** Subheading: sub-section heading (subheadingStyle equiv) */
   .type-subheading {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-2xl); /* 16px */
     font-weight: var(--weight-semibold);
     line-height: var(--leading-relaxed); /* 1.5 */
@@ -1497,7 +1686,7 @@
 
   /** Section description: sectionDescStyle equiv */
   .type-section-desc {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--font-size-2xl); /* 16px */
     font-weight: var(--weight-regular);
     line-height: var(--leading-reading); /* 1.6 */
@@ -1511,12 +1700,6 @@
     border: var(--border-width-thin) solid
       var(--outline-variant);
     border-radius: var(--radius-lg); /* 16px */
-  }
-
-  /** Panel: inset content block inside cards */
-  .surface-panel {
-    background: var(--surface-container);
-    border-radius: var(--radius-sm); /* 8px */
   }
 
   /** Glass: sticky header / overlay glassmorphism */
@@ -1538,7 +1721,7 @@
       style={{ background: `color-mix(in srgb, ${color} 15%, transparent)`, color }}
   */
   .badge-base {
-    font-family: "DM Mono", monospace;
+    font-family: var(--font-mono);
     font-size: var(--font-size-sm); /* 10px */
     font-weight: var(--weight-semibold);
     letter-spacing: var(--tracking-spread); /* 0.04em */
@@ -1549,15 +1732,22 @@
     gap: 4px;
   }
 
-  /** Tag / kbd: small inline badge (temperature, keyboard hint) */
-  .interactive-tag {
-    font-family: "DM Mono", monospace;
-    font-size: var(--font-size-sm); /* 10px */
-    font-weight: var(--weight-semibold);
-    padding: 1px 5px;
-    border-radius: var(--radius-xs); /* 4px */
-    font-feature-settings:
-      "kern" 1,
-      "tnum" 1;
+  .badge-size-xs {
+    font-size: var(--font-size-xs); /* 9px */
   }
+
+  /* ── Active Cook Widget Responsive Positioning ── */
+  .active-cook-widget {
+    right: 16px;
+    transition: right 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 200ms ease;
+  }
+
+  .active-cook-widget.has-profile {
+    right: 68px; /* 44px (ProfileButton) + 24px */
+  }
+
+  .active-cook-widget.has-profile.is-compact {
+    right: 64px; /* 40px (ProfileButton) + 24px */
+  }
+
 }

@@ -33,12 +33,13 @@ import {
   type CmsSectionDef,
   type CmsFieldDef,
 } from "../components/cms/cms-context";
+import { Badge, Surface } from "../components/ds";
 import { LOCALE_META } from "../components/cms/locales";
 
 /* ═══ ICON MAP ═══ */
 const ICON_MAP: Record<
   string,
-  React.ComponentType<{ size?: number }>
+  React.ComponentType<{ size?: number | string }>
 > = {
   type: Type,
   "list-ordered": ListOrdered,
@@ -162,7 +163,7 @@ export function CmsPage() {
         className="sticky top-0 z-50 px-4 sm:px-6 py-3 flex items-center gap-3"
         style={{
           background:
-            "color-mix(in srgb, var(--container-page) 88%, rgba(0,0,0,0))",
+            "color-mix(in srgb, var(--container-page) 88%, transparent)",
           backdropFilter: "blur(24px) saturate(1.6)",
           borderBottom: "1px solid var(--border-muted)",
         }}
@@ -203,18 +204,10 @@ export function CmsPage() {
 
         {/* Status badge */}
         {modifiedCount > 0 && (
-          <span
-            className="badge-base"
-            style={{
-              fontSize: "var(--font-size-xs)",
-              background:
-                "color-mix(in srgb, var(--tertiary) 15%, rgba(0,0,0,0))",
-              color: "var(--tertiary)",
-            }}
-          >
+          <Badge size="xs" tone="tertiary">
             {modifiedCount} modific
             {modifiedCount === 1 ? "a" : "he"}
-          </span>
+          </Badge>
         )}
 
         {/* Actions */}
@@ -485,17 +478,9 @@ export function CmsPage() {
               })()}
               {currentSection.label}
               {sectionModifiedCounts[currentSection.id] > 0 && (
-                <span
-                  className="badge-base"
-                  style={{
-                    fontSize: "var(--font-size-xs)",
-                    background:
-                      "color-mix(in srgb, var(--tertiary) 15%, rgba(0,0,0,0))",
-                    color: "var(--tertiary)",
-                  }}
-                >
+                <Badge size="xs" tone="tertiary">
                   {sectionModifiedCounts[currentSection.id]}
-                </span>
+                </Badge>
               )}
             </div>
             {mobileSidebarOpen ? (
@@ -602,7 +587,7 @@ function SidebarContent({
             style={{
               background: isActive
                 ? "var(--container-page)"
-                : "rgba(0,0,0,0)",
+                : "transparent",
               color: isActive
                 ? "var(--text-default)"
                 : "var(--text-muted)",
@@ -627,18 +612,15 @@ function SidebarContent({
             )}
             <span className="flex-1 truncate">{s.label}</span>
             {modCount > 0 && (
-              <span
-                className="badge-base"
+              <Badge
+                tone="tertiary"
                 style={{
-                  fontSize: "10px",
+                  fontSize: "var(--font-size-xs)",
                   padding: "1px 6px",
-                  background:
-                    "color-mix(in srgb, var(--tertiary) 15%, rgba(0,0,0,0))",
-                  color: "var(--tertiary)",
                 }}
               >
                 {modCount}
-              </span>
+              </Badge>
             )}
           </button>
         );
@@ -704,24 +686,16 @@ function SectionEditor({
             {section.id}
           </span>
           {hasModified && (
-            <span
-              className="badge-base"
-              style={{
-                fontSize: "var(--font-size-xs)",
-                background:
-                  "color-mix(in srgb, var(--tertiary) 15%, rgba(0,0,0,0))",
-                color: "var(--tertiary)",
-              }}
-            >
+            <Badge size="xs" tone="tertiary">
               modificato
-            </span>
+            </Badge>
           )}
         </div>
         <h2
           className="font-serif"
           style={{
-            fontSize: "clamp(1.5rem, 4vw, 2rem)",
-            lineHeight: 1.1,
+            fontSize: "clamp(var(--font-size-5xl), 4vw, var(--font-size-6-5xl))",
+            lineHeight: "var(--leading-tight)",
           }}
         >
           {section.label}
@@ -753,9 +727,9 @@ function SectionEditor({
 
       {/* Field groups */}
       {groups.map(([groupKey, fields]) => (
-        <div
+        <Surface
           key={groupKey}
-          className="surface-card p-4 flex flex-col gap-4"
+          className="p-4 flex flex-col gap-4"
         >
           {fields.map((field) => (
             <FieldEditor
@@ -768,7 +742,7 @@ function SectionEditor({
               onReset={() => onReset(field.path)}
             />
           ))}
-        </div>
+        </Surface>
       ))}
     </div>
   );
@@ -789,8 +763,8 @@ function WeightSumBanner({
       className="flex items-center gap-3 px-4 py-3 rounded-xl"
       style={{
         background: isGood
-          ? "color-mix(in srgb, var(--cta) 10%, rgba(0,0,0,0))"
-          : "color-mix(in srgb, var(--text-warning) 10%, rgba(0,0,0,0))",
+          ? "color-mix(in srgb, var(--cta) 10%, transparent)"
+          : "color-mix(in srgb, var(--text-warning) 10%, transparent)",
         border: `1px solid ${isGood ? "var(--cta)" : "var(--text-warning)"}`,
       }}
     >
@@ -1226,7 +1200,7 @@ function LocaleSwitcher() {
   const currentLocale = cms.locale.id;
 
   return (
-    <div className="surface-card p-4 flex flex-col gap-3">
+    <Surface className="p-4 flex flex-col gap-3">
       <div className="flex items-center gap-2 mb-1">
         <Globe size={14} style={{ color: "var(--primary)" }} />
         <span
@@ -1272,7 +1246,7 @@ function LocaleSwitcher() {
                 meta.available ? { scale: 1.02 } : undefined
               }
             >
-              <span style={{ fontSize: "1.25rem" }}>
+              <span style={{ fontSize: "var(--font-size-3xl)" }}>
                 {meta.flag}
               </span>
               <div className="flex flex-col min-w-0">
@@ -1315,6 +1289,6 @@ function LocaleSwitcher() {
           );
         })}
       </div>
-    </div>
+    </Surface>
   );
 }

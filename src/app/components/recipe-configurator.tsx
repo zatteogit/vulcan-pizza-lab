@@ -1,21 +1,252 @@
-import React, { useState, useRef } from "react";
-import { motion } from "motion/react";
-import { Thermometer, Snowflake, Sun, RectangleHorizontal, Layers, Link, Unlink } from "lucide-react";
-import {
-  PizzaStyle,
-  UserConstraints,
-  OvenType,
-  OVEN_PRESETS,
-  PanConfig,
-  PanShape,
-  needsPan,
-  supportsThickness,
-  defaultPanShape,
-} from "./pizza-engine";
-import { InfoTip } from "./info-tip";
-import { GlossaryLink } from "./glossary-link";
+import { Check,ChevronDown,Layers,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import React,{ useEffect,useMemo,useRef,useState } from "react";
 import { useCms } from "./cms/cms-context";
-import { t } from "./cms/i18n";
+import { createFormatter,t } from "./cms/i18n";
+import { InfoTip } from "./info-tip";
+import {
+OVEN_PRESETS,
+OvenType,
+PanConfig,
+PanShape,
+PizzaStyle,
+UserConstraints,
+defaultPanShape,
+needsPan,
+supportsThickness,
+} from "./pizza-engine";
+import { StyleVersion } from "./style-versions";
+import { SegmentedControl, Switch } from "./ds";
+
+export interface PremiumSelectOption {
+  value: string;
+  label: string;
+  subLabel?: string;
+  icon?: string | React.ReactNode;
+  suggested?: boolean;
+}
+
+export interface PremiumSelectGroup {
+  label: string;
+  options: PremiumSelectOption[];
+}
+
+/* ═══ PREMIUM ANIME SELECT COMPONENT ═══ */
+export function PremiumSelect({
+  value,
+  onChange,
+  options,
+  groups,
+  placeholder = "Seleziona...",
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  options?: PremiumSelectOption[];
+  groups?: PremiumSelectGroup[];
+  placeholder?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  const allOptions = useMemo(() => {
+    const list: PremiumSelectOption[] = [];
+    if (options) list.push(...options);
+    if (groups) {
+      groups.forEach((g) => list.push(...g.options));
+    }
+    return list;
+  }, [options, groups]);
+
+  const activeOption = allOptions.find((o) => o.value === value);
+
+  return (
+    <div ref={containerRef} className="relative w-full">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className={`w-full flex items-center gap-2.5 px-4 py-3 rounded-xl text-left active:scale-[0.99] transition-all border
+          ${open 
+            ? "border-[var(--tertiary)] shadow-[0_0_0_1px_color-mix(in_srgb,var(--tertiary)_15%,transparent)]" 
+            : "border-[var(--outline-variant)] hover:border-[var(--tertiary)]"
+          }
+          bg-[var(--surface-container)] hover:bg-[color-mix(in srgb,var(--surface-container)_96%,var(--text-default))]`}
+        style={{
+          color: "var(--text-default)",
+          fontSize: "var(--font-size-md)",
+          fontWeight: "var(--weight-semibold)" as any,
+          cursor: "pointer",
+        }}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        {activeOption?.icon && (
+          <span style={{ fontSize: "1.1rem" }} className="flex-shrink-0">
+            {activeOption.icon}
+          </span>
+        )}
+        <div className="flex-1 min-w-0">
+          <span className="block truncate">{activeOption?.label || placeholder}</span>
+          {activeOption?.subLabel && (
+            <span className="block text-xs truncate" style={{ color: "var(--text-muted)", marginTop: 1 }}>
+              {activeOption.subLabel}
+            </span>
+          )}
+        </div>
+        <ChevronDown
+          size={16}
+          style={{
+            color: "var(--text-muted)",
+            transform: open ? "rotate(180deg)" : "none",
+            transition: "transform 0.2s ease",
+          }}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 450, damping: 30 }}
+            className="absolute left-0 right-0 z-50 mt-1.5 max-h-60 overflow-y-auto rounded-xl p-1.5 flex flex-col gap-0.5"
+            style={{
+              background: "var(--popover-surface)",
+              border: "1px solid var(--popover-border-color)",
+              boxShadow: "var(--popover-shadow)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+            }}
+            role="listbox"
+          >
+            {options &&
+              options.map((opt) => (
+                <PremiumSelectRow
+                  key={opt.value}
+                  option={opt}
+                  active={value === opt.value}
+                  onClick={() => {
+                    onChange(opt.value);
+                    setOpen(false);
+                  }}
+                />
+              ))}
+            {groups &&
+              groups.map((g, idx) => (
+                <div key={idx} className="flex flex-col gap-0.5">
+                  {idx > 0 && (
+                    <div
+                      className="my-1"
+                      style={{ borderTop: "1px solid var(--container-border-subtle)" }}
+                    />
+                  )}
+                  <div
+                    className="px-3 py-1 text-[10px] font-bold tracking-wider"
+                    style={{
+                      color: "var(--text-muted)",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {g.label}
+                  </div>
+                  {g.options.map((opt) => (
+                    <PremiumSelectRow
+                      key={opt.value}
+                      option={opt}
+                      active={value === opt.value}
+                      onClick={() => {
+                        onChange(opt.value);
+                        setOpen(false);
+                      }}
+                    />
+                  ))}
+                </div>
+              ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function PremiumSelectRow({
+  option,
+  active,
+  onClick,
+}: {
+  option: PremiumSelectOption;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-colors"
+      style={{
+        background: active ? "var(--chip-bg-active)" : "transparent",
+        color: active ? "var(--chip-text-active)" : "var(--text-default)",
+        fontSize: "var(--font-size-md)",
+        fontWeight: active ? "var(--weight-semibold)" : "var(--weight-medium)" as any,
+        border: "none",
+        cursor: "pointer",
+      }}
+      whileHover={{
+        backgroundColor: active
+          ? "var(--chip-bg-active)"
+          : "color-mix(in srgb, var(--text-default) 6%, transparent)",
+      }}
+      whileTap={{ scale: 0.985 }}
+      transition={{ duration: 0.1 }}
+      role="option"
+      aria-selected={active}
+    >
+      {option.icon && (
+        <span style={{ fontSize: "1.1rem" }} className="flex-shrink-0">
+          {option.icon}
+        </span>
+      )}
+      <div className="flex-1 min-w-0">
+        <span className="block truncate">{option.label}</span>
+        {option.subLabel && (
+          <span
+            className="block text-xs truncate"
+            style={{
+              color: active ? "var(--recipe-setup-choice-meta-active)" : "var(--text-muted)",
+              opacity: 0.9,
+              marginTop: 1,
+            }}
+          >
+            {option.subLabel}
+          </span>
+        )}
+      </div>
+      {option.suggested && (
+        <span
+          className="px-1.5 py-0.5 rounded text-[10px] font-semibold flex-shrink-0 mr-1"
+          style={{
+            background: active ? "color-mix(in srgb, var(--overlay-text) 20%, transparent)" : "color-mix(in srgb, var(--tertiary) 15%, transparent)",
+            color: active ? "inherit" : "var(--tertiary)",
+          }}
+        >
+          Consigliato
+        </span>
+      )}
+      {active && <Check size={14} className="ml-auto flex-shrink-0" />}
+    </motion.button>
+  );
+}
 
 interface RecipeConfiguratorProps {
   style: PizzaStyle;
@@ -153,7 +384,7 @@ function computeAdaptiveHints(
   return hints;
 }
 
-/* ═══ ADAPTIVE HINT COMPONENT ═══ */
+/* ═══ ADAPTIVE HINT COMPONENT — estremamente compatto e inline ═══ */
 function AdaptiveHint({ hint, adaptiveMin, adaptiveMax, unit, label }: {
   hint?: string;
   adaptiveMin?: number;
@@ -162,53 +393,32 @@ function AdaptiveHint({ hint, adaptiveMin, adaptiveMax, unit, label }: {
   label: string;
 }) {
   if (!hint) return null;
-  const isLimit = (adaptiveMin !== undefined && adaptiveMax === undefined) || (adaptiveMax !== undefined && adaptiveMin === undefined);
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -4 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="flex items-start gap-2 px-3 py-2 mt-2 rounded-lg"
+    <div
+      className="flex items-start gap-1.5 px-1 py-0.5 mt-1 rounded-lg"
       style={{
-        background: isLimit ? "rgba(204,136,68,0.06)" : "var(--surface-container)",
-        border: isLimit ? "1px solid rgba(204,136,68,0.25)" : "1px solid var(--outline-variant)",
+        color: "var(--tertiary)",
+        fontSize: "var(--font-size-sm)",
+        lineHeight: 1.3,
       }}
     >
-      {isLimit ? (
-        <svg width="14" height="14" viewBox="0 0 14 14" style={{ marginTop: 2, flexShrink: 0 }}>
-          <line x1="7" y1="1" x2="7" y2="13" stroke="var(--tertiary)" strokeWidth="2" strokeDasharray="3 2" strokeLinecap="round" />
-          <line x1="3" y1="12" x2="11" y2="12" stroke="var(--tertiary)" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      ) : (
-        <span style={{ color: "var(--tertiary)", fontSize: "var(--font-size-base)", lineHeight: 1 }}>◆</span>
-      )}
-      <div className="flex flex-col gap-0.5">
-        {adaptiveMin !== undefined || adaptiveMax !== undefined ? (
-          <span
-            className="font-mono"
-            style={{
-              color: "var(--tertiary)",
-              fontSize: "var(--font-size-sm)",
-              letterSpacing: "0.05em",
-              textTransform: "uppercase" as const,
-            }}
-          >
-            {label} {adaptiveMin !== undefined && adaptiveMax !== undefined
-              ? `${adaptiveMin}–${adaptiveMax}${unit || ""}`
-              : adaptiveMin !== undefined
-                ? `≥ ${adaptiveMin}${unit || ""}`
-                : `≤ ${adaptiveMax}${unit || ""}`}
-          </span>
-        ) : null}
-        <span style={{
-          color: "var(--text-muted)",
-          fontSize: "var(--font-size-sm)",
-          lineHeight: 1.4,
-        }}>
-          {hint}
-        </span>
-      </div>
-    </motion.div>
+      <Sparkles size={12} className="flex-shrink-0 mt-0.5" />
+      <span className="flex-1">
+        <strong>
+          {label}
+          {adaptiveMin !== undefined || adaptiveMax !== undefined ? " " : ""}
+          {adaptiveMin !== undefined && adaptiveMax !== undefined
+            ? `(${adaptiveMin}–${adaptiveMax}${unit || ""})`
+            : adaptiveMin !== undefined
+              ? `(≥ ${adaptiveMin}${unit || ""})`
+              : adaptiveMax !== undefined
+                ? `(≤ ${adaptiveMax}${unit || ""})`
+                : ""}
+          :
+        </strong>{" "}
+        {hint}
+      </span>
+    </div>
   );
 }
 
@@ -219,6 +429,27 @@ const SLIDER_GRADIENTS = {
   fermentation: "var(--grad-slider-ferment)",
   temperature: "var(--grad-slider-temp)",
 };
+
+export function applyVersionParams(
+  version: StyleVersion,
+  callbacks: {
+    onHydrationChange: (v: number) => void;
+    onFlourWChange: (v: number) => void;
+    onFlourPLChange: (v: number | undefined) => void;
+    onFermentHoursChange: (v: number) => void;
+    onFermentTempChange: (v: number) => void;
+    onPreFermentChange: (v: boolean) => void;
+    onVersionChange: (v: string) => void;
+  }
+) {
+  callbacks.onHydrationChange(version.params.hydration_pct);
+  callbacks.onFlourWChange(version.params.flour_w);
+  callbacks.onFlourPLChange(version.params.flour_pl);
+  callbacks.onFermentHoursChange(version.params.fermentation_hours);
+  callbacks.onFermentTempChange(version.params.fermentation_temp_c);
+  callbacks.onPreFermentChange(version.params.use_pre_ferment);
+  callbacks.onVersionChange(version.id);
+}
 
 export function RecipeConfigurator({
   style,
@@ -249,22 +480,15 @@ export function RecipeConfigurator({
     });
   };
 
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const cfg = cms.configurator;
+  const fmt = createFormatter(cms.ui, bcp47);
+  /* Temperature di riferimento per i tre regimi di fermentazione (°C),
+     formattate secondo il sistema di unità dell'utente. */
+  const fridgeTemp = fmt.celsius(4);
+  const coolTemp = fmt.celsius(12);
+  const ambientTemp = fmt.celsius(22);
 
-  /* ═══ SMART LINK — Style-aware proportional parameter lock ═══
-     Core idea: if H is at X% of its style range, W/P-L/fermentation
-     should also be at X% of their style range. This guarantees that
-     "in range" for one parameter ⇒ "in range" for all others.
-
-     Correlation directions (within style ranges):
-       H ↑  →  W ↑  (positive: wetter dough needs stronger flour)
-       H ↑  →  P/L ↓ (negative: wetter dough needs more extensibility)
-       H ↑  →  Ferm ↑ (positive: wetter dough needs more time)
-       Ferm ↑ → Temp ↓ (discrete: long→fridge, medium→cool, short→ambient)
-
-     Outside style ranges we extrapolate proportionally with a soft margin
-     of ±20% of the range width, then hard-clamp to slider bounds. */
   const [smartLink, setSmartLink] = useState(true);
   const propagatingRef = useRef(false);
 
@@ -275,11 +499,9 @@ export function RecipeConfigurator({
 
   const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
-  /** Compute ratio 0–1 of value within [lo, hi], with soft extrapolation */
   const ratio = (v: number, lo: number, hi: number) =>
     hi === lo ? 0.5 : (v - lo) / (hi - lo);
 
-  /** Map a ratio into target range, with ±20% margin beyond, then hard-clamp to slider bounds */
   const mapTo = (r: number, tLo: number, tHi: number, sliderMin: number, sliderMax: number, step: number) => {
     const margin = (tHi - tLo) * 0.2;
     const raw = tLo + r * (tHi - tLo);
@@ -288,12 +510,10 @@ export function RecipeConfigurator({
     return clamp(snapped, sliderMin, sliderMax);
   };
 
-  /** Map ratio inversely (high ratio → low value) for negative correlations */
   const mapToInverse = (r: number, tLo: number, tHi: number, sliderMin: number, sliderMax: number, step: number) => {
     return mapTo(1 - r, tLo, tHi, sliderMin, sliderMax, step);
   };
 
-  /** Fermentation hours → discrete temp */
   const tempFromHours = (hours: number): number => {
     const midF = (sF[0] + sF[1]) / 2;
     if (hours >= midF + (sF[1] - midF) * 0.3) return 4;    // upper third → fridge
@@ -301,7 +521,6 @@ export function RecipeConfigurator({
     return 22;                                                // lower third → ambient
   };
 
-  /** Discrete temp → fermentation hours (place in corresponding third of style range) */
   const hoursFromTemp = (temp: number): number => {
     if (temp <= 6) return Math.round(sF[0] + (sF[1] - sF[0]) * 0.8);    // fridge → 80% of range
     if (temp <= 16) return Math.round(sF[0] + (sF[1] - sF[0]) * 0.5);   // cool → 50% of range
@@ -313,7 +532,6 @@ export function RecipeConfigurator({
     propagatingRef.current = true;
 
     if (source === "fermentTemp") {
-      // Temp is discrete — map to hours first, then propagate from hours
       const hours = hoursFromTemp(value);
       onFermentHoursChange(hours);
       const r = ratio(hours, sF[0], sF[1]);
@@ -321,7 +539,6 @@ export function RecipeConfigurator({
       onFlourWChange(mapTo(r, sW[0], sW[1], 100, 420, 10));
       if (onFlourPLChange) onFlourPLChange(mapToInverse(r, sPL[0], sPL[1], 0.30, 0.90, 0.01));
     } else {
-      // Compute the ratio from the source parameter's style range
       let r: number;
       switch (source) {
         case "hydration":    r = ratio(value, sH[0], sH[1]); break;
@@ -331,7 +548,6 @@ export function RecipeConfigurator({
         default: r = 0.5;
       }
 
-      // Propagate to all OTHER parameters using the same ratio
       if (source !== "hydration")    onHydrationChange(mapTo(r, sH[0], sH[1], 45, 105, 1));
       if (source !== "flourW")       onFlourWChange(mapTo(r, sW[0], sW[1], 100, 420, 10));
       if (source !== "flourPL" && onFlourPLChange)
@@ -364,584 +580,591 @@ export function RecipeConfigurator({
     cfg,
   );
 
+  const suggestedTemp = adaptiveHints.fermentTemp?.suggestedTemp;
+
   return (
-    <div className="flex flex-col gap-8 pb-4">
-      {/* Smart Link Toggle */}
-      <div
-        className="flex items-center gap-3 px-4 py-3 rounded-xl"
+    <div className="flex flex-col gap-4 lg:gap-5 pb-4">
+      {/* Smart Link — barra compatta, singolo tap-target */}
+      <button
+        onClick={() => setSmartLink(!smartLink)}
+        className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left active:scale-[0.99] transition-all"
         style={{
-          background: smartLink ? "rgba(204,136,68,0.08)" : "var(--surface-container)",
+          background: smartLink ? "color-mix(in srgb, var(--tertiary) 8%, transparent)" : "var(--surface-container)",
           border: smartLink ? "1.5px solid var(--tertiary)" : "1px solid var(--outline-variant)",
-          transition: "all 0.2s",
+          cursor: "pointer",
         }}
+        aria-pressed={smartLink}
+        aria-label={smartLink ? "Disattiva Smart Link" : "Attiva Smart Link"}
       >
-        <motion.button
-          onClick={() => setSmartLink(!smartLink)}
-          className="flex items-center justify-center w-8 h-8 rounded-lg active:scale-95"
-          style={{
-            background: smartLink ? "var(--tertiary)" : "var(--surface-container-low)",
-            color: smartLink ? "#fff" : "var(--text-muted)",
-          }}
-          aria-label={smartLink ? "Disattiva Smart Link" : "Attiva Smart Link"}
-          aria-pressed={smartLink}
-        >
+        <span style={{ color: smartLink ? "var(--tertiary)" : "var(--text-muted)" }} className="flex-shrink-0">
           {smartLink ? <Link size={16} /> : <Unlink size={16} />}
-        </motion.button>
-        <div className="flex-1">
-          <div style={{
-            color: smartLink ? "var(--tertiary)" : "var(--text-default)",
-            fontSize: "var(--font-size-lg)",
-            fontWeight: "var(--weight-semibold)" as any,
-          }}>
-            Smart Link
-          </div>
-          <div style={{
-            color: "var(--text-muted)",
-            fontSize: "var(--font-size-sm)",
-            lineHeight: 1.3,
-          }}>
-            {smartLink
-              ? "Parametri collegati — muovi uno slider, gli altri si adattano"
-              : "Collega tutti i parametri per regolazione automatica"}
-          </div>
-        </div>
-        <button
-          onClick={() => setSmartLink(!smartLink)}
-          className="relative w-12 h-7 rounded-full transition-all flex-shrink-0"
+        </span>
+        <span
+          className="flex-shrink-0"
           style={{
-            background: smartLink ? "var(--tertiary)" : "var(--switch-off)",
+            color: smartLink ? "var(--tertiary)" : "var(--text-default)",
+            fontSize: "var(--font-size-md)",
+            fontWeight: "var(--weight-semibold)" as any,
           }}
         >
-          <motion.div
-            className="absolute top-0.5 w-6 h-6 rounded-full bg-white"
+          Smart Link
+        </span>
+        <span
+          className="hidden sm:block truncate flex-1"
+          style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}
+        >
+          {smartLink ? "i parametri si adattano fra loro" : "regolazione indipendente"}
+        </span>
+        <span
+          className="relative w-11 h-6 rounded-full transition-all flex-shrink-0 ml-auto sm:ml-0"
+          style={{ background: smartLink ? "var(--tertiary)" : "var(--switch-off)" }}
+        >
+          <motion.span
+            className="absolute top-0.5 left-0 w-5 h-5 rounded-full bg-white block"
             style={{ boxShadow: "var(--shadow-sm)" }}
             animate={{ x: smartLink ? 22 : 2 }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           />
-        </button>
-      </div>
+        </span>
+      </button>
 
-      {/* Hydration */}
-      <div>
-        <div className="flex items-center gap-2">
-          <Label>{cfg.hydrationLabel}</Label>
-          <GlossaryLink termId="hydration" inline={false} />
-          <InfoTip>{cfg.hydrationTip}</InfoTip>
-        </div>
-        <GradientSlider
-          value={customHydration}
-          onChange={handleH}
-          min={45}
-          max={105}
-          step={1}
-          unit="%"
-          rangeMin={style.dough.hydration_pct_range[0]}
-          rangeMax={style.dough.hydration_pct_range[1]}
-          gradient={SLIDER_GRADIENTS.hydration}
-          adaptiveMin={adaptiveHints.hydration?.adaptiveMin}
-          adaptiveMax={adaptiveHints.hydration?.adaptiveMax}
-          optimalValue={Math.round((style.dough.hydration_pct_range[0] + style.dough.hydration_pct_range[1]) / 2)}
-        />
-        {adaptiveHints.hydration && (
-          <AdaptiveHint
-            hint={adaptiveHints.hydration.hint}
-            adaptiveMin={adaptiveHints.hydration.adaptiveMin}
-            adaptiveMax={adaptiveHints.hydration.adaptiveMax}
-            unit="%"
-            label={
-              adaptiveHints.hydration.adaptiveMax != null && adaptiveHints.hydration.adaptiveMin == null
-                ? (cfg.hintLimitMaxLabel || "limite max")
-                : adaptiveHints.hydration.adaptiveMin != null && adaptiveHints.hydration.adaptiveMax == null
-                  ? (cfg.hintLimitMinLabel || "limite min")
-                  : cfg.hintAdaptiveLabel
-            }
-          />
-        )}
-      </div>
-
-      {/* Flour W */}
-      <div>
-        <div className="flex items-center gap-2">
-          <Label>{cfg.flourWLabel}</Label>
-          <GlossaryLink termId="w_alveograph" label="W" inline={false} />
-          <InfoTip>{cfg.flourWTip}</InfoTip>
-        </div>
-        <GradientSlider
-          value={customFlourW}
-          onChange={handleW}
-          min={100}
-          max={420}
-          step={10}
-          unit=""
-          rangeMin={style.dough.flour_w_range[0]}
-          rangeMax={style.dough.flour_w_range[1]}
-          gradient={SLIDER_GRADIENTS.flourW}
-          adaptiveMin={adaptiveHints.flourW?.adaptiveMin}
-          adaptiveMax={adaptiveHints.flourW?.adaptiveMax}
-          optimalValue={Math.round((style.dough.flour_w_range[0] + style.dough.flour_w_range[1]) / 2 / 10) * 10}
-        />
-        {adaptiveHints.flourW && (
-          <AdaptiveHint
-            hint={adaptiveHints.flourW.hint}
-            adaptiveMin={adaptiveHints.flourW.adaptiveMin}
-            adaptiveMax={adaptiveHints.flourW.adaptiveMax}
-            unit=""
-            label={
-              adaptiveHints.flourW.adaptiveMax != null && adaptiveHints.flourW.adaptiveMin == null
-                ? (cfg.hintLimitMaxLabel || "limite max")
-                : adaptiveHints.flourW.adaptiveMin != null && adaptiveHints.flourW.adaptiveMax == null
-                  ? (cfg.hintLimitMinLabel || "limite min")
-                  : cfg.hintAdaptiveLabel
-            }
-          />
-        )}
-      </div>
-
-      {/* VPL-012: P/L Slider — visible only when onFlourPLChange is provided (nerdMode) */}
-      {customFlourPL !== undefined && onFlourPLChange && (
-        <div>
-          <div className="flex items-center gap-2">
-            <Label>{cfg.plLabel}</Label>
-            <GlossaryLink termId="pl_ratio" label="P/L" inline={false} />
-            <InfoTip>{cfg.plTip}</InfoTip>
-          </div>
-          <GradientSlider
-            value={Math.round(customFlourPL * 100) / 100}
-            onChange={handlePL}
-            min={0.30}
-            max={0.90}
-            step={0.01}
-            unit=""
-            rangeMin={style.dough.flour_pl_range[0]}
-            rangeMax={style.dough.flour_pl_range[1]}
-            gradient={SLIDER_GRADIENTS.flourW}
-            adaptiveMin={adaptiveHints.flourPL?.adaptiveMin}
-            adaptiveMax={adaptiveHints.flourPL?.adaptiveMax}
-            optimalValue={Math.round((style.dough.flour_pl_range[0] + style.dough.flour_pl_range[1]) / 2 * 100) / 100}
-          />
-          {adaptiveHints.flourPL && (
-            <AdaptiveHint
-              hint={adaptiveHints.flourPL.hint}
-              adaptiveMin={adaptiveHints.flourPL.adaptiveMin}
-              adaptiveMax={adaptiveHints.flourPL.adaptiveMax}
-              unit=""
-              label={
-                adaptiveHints.flourPL.adaptiveMax != null && adaptiveHints.flourPL.adaptiveMin == null
-                  ? (cfg.hintLimitMaxLabel || "limite max")
-                  : adaptiveHints.flourPL.adaptiveMin != null && adaptiveHints.flourPL.adaptiveMax == null
-                    ? (cfg.hintLimitMinLabel || "limite min")
-                    : cfg.hintAdaptiveLabel
-              }
-            />
-          )}
-        </div>
-      )}
-
-      {/* Fermentation */}
-      <div>
-        <div className="flex items-center gap-2">
-          <Label>{cfg.fermentLabel}</Label>
-          <GlossaryLink termId="ball_fermentation" inline={false} />
-          <InfoTip>{cfg.fermentTip}</InfoTip>
-        </div>
-        <div className="flex flex-col gap-5 mt-1">
-          <GradientSlider
-            value={customFermentHours}
-            onChange={handleFH}
-            min={1}
-            max={96}
-            step={1}
-            unit="h"
-            rangeMin={style.dough.fermentation_hours_range[0]}
-            rangeMax={style.dough.fermentation_hours_range[1]}
-            gradient={SLIDER_GRADIENTS.fermentation}
-            adaptiveMin={adaptiveHints.fermentation?.adaptiveMin}
-            adaptiveMax={adaptiveHints.fermentation?.adaptiveMax}
-            optimalValue={Math.round((style.dough.fermentation_hours_range[0] + style.dough.fermentation_hours_range[1]) / 2)}
-          />
-          {adaptiveHints.fermentation && (
-            <AdaptiveHint
-              hint={adaptiveHints.fermentation.hint}
-              adaptiveMin={adaptiveHints.fermentation.adaptiveMin}
-              adaptiveMax={adaptiveHints.fermentation.adaptiveMax}
-              unit="h"
-              label={
-                adaptiveHints.fermentation.adaptiveMax != null && adaptiveHints.fermentation.adaptiveMin == null
-                  ? (cfg.hintLimitMaxLabel || "limite max")
-                  : adaptiveHints.fermentation.adaptiveMin != null && adaptiveHints.fermentation.adaptiveMax == null
-                    ? (cfg.hintLimitMinLabel || "limite min")
-                    : cfg.hintAdaptiveLabel
-              }
-            />
-          )}
-
-          <div className="flex gap-2">
-            <TempPill
-              active={customFermentTemp <= 6}
-              onClick={() => handleFT(4)}
-              icon={<Snowflake size={14} />}
-              label={cfg.tempFridge}
-              suggested={adaptiveHints.fermentTemp?.suggestedTemp === "fridge"}
-            />
-            <TempPill
-              active={
-                customFermentTemp > 6 && customFermentTemp <= 16
-              }
-              onClick={() => handleFT(12)}
-              icon={<Thermometer size={14} />}
-              label={cfg.tempCool}
-              suggested={adaptiveHints.fermentTemp?.suggestedTemp === "cool"}
-            />
-            <TempPill
-              active={customFermentTemp > 16}
-              onClick={() => handleFT(22)}
-              icon={<Sun size={14} />}
-              label={cfg.tempAmbient}
-              suggested={adaptiveHints.fermentTemp?.suggestedTemp === "ambient"}
-            />
-          </div>
-          {adaptiveHints.fermentTemp && (
-            <AdaptiveHint
-              hint={
-                adaptiveHints.fermentTemp.suggestedTemp === "fridge"
-                  ? t(cfg.hintLongFermentUseFridge, { hours: String(customFermentHours) })
-                  : adaptiveHints.fermentTemp.suggestedTemp === "ambient"
-                    ? t(cfg.hintShortFermentUseWarm, { hours: String(customFermentHours) })
-                    : t(cfg.hintMediumFermentUseCool, { hours: String(customFermentHours) })
-              }
-              label={cfg.hintAdaptiveLabel}
-            />
-          )}
-
-          {/* Pre-ferment — grouped label + toggle + info */}
-          <div
-            className="flex items-center gap-3 px-4 py-3 rounded-xl"
-            style={{
-              background: "var(--config-bg)",
-              border: "1px solid var(--config-border)",
-            }}
-          >
-            <div className="flex-1 flex items-center gap-2">
-              <span
-                style={{
-                  color: "var(--text-default)",
-                  fontSize: "var(--font-size-xl)",
-                  fontWeight: "var(--weight-medium)" as any,
-                }}
-              >
-                {cfg.preFermentLabel}
-              </span>
-              <InfoTip size={14}>{cfg.preFermentTip}</InfoTip>
-            </div>
-            <button
-              onClick={() => onPreFermentChange(!usePreFerment)}
-              className="relative w-12 h-7 rounded-full transition-all flex-shrink-0"
-              style={{
-                background: usePreFerment
-                  ? "var(--switch-on)"
-                  : "var(--switch-off)",
-              }}
-            >
-              <motion.div
-                className="absolute top-0.5 w-6 h-6 rounded-full bg-white"
-                style={{ boxShadow: "var(--shadow-sm)" }}
-                animate={{ x: usePreFerment ? 22 : 2 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 30,
-                }}
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Oven — fixed single-call update */}
-      <div>
-        <div className="flex items-center gap-2">
-          <Label>{cfg.ovenLabel}</Label>
-          <InfoTip>{cfg.ovenTip}</InfoTip>
-        </div>
-        <div className="flex flex-wrap gap-2 mt-3">
-          {OVEN_PRESETS.map((preset) => {
-            const active = constraints.oven_type === preset.id;
-            return (
-              <button
-                key={preset.id}
-                onClick={() =>
-                  handleOvenSelect(preset.id, preset.maxTemp)
-                }
-                className="px-4 py-2.5 rounded-xl transition-all active:scale-95"
-                style={{
-                  background: active
-                    ? "var(--chip-bg-active)"
-                    : "var(--chip-bg)",
-                  color: active
-                    ? "var(--chip-text-active)"
-                    : "var(--chip-text)",
-                  border: active
-                    ? "1px solid transparent"
-                    : "1px solid var(--chip-border)",
-                  fontSize: "var(--font-size-lg)",
-                  fontWeight: active ? "var(--weight-semibold)" : "var(--weight-medium)" as any,
-                }}
-              >
-                {preset.name}
-              </button>
-            );
-          })}
-        </div>
-        <div className="mt-4">
-          <GradientSlider
-            value={constraints.oven_max_temp_c}
-            onChange={(v) =>
-              onConstraintsChange({
-                ...constraints,
-                oven_max_temp_c: v,
-              })
-            }
-            min={200}
-            max={550}
-            step={5}
-            unit="°C"
-            rangeMin={style.baking.temp_c_range[0]}
-            rangeMax={style.baking.temp_c_range[1]}
-            gradient={SLIDER_GRADIENTS.temperature}
-            optimalValue={Math.round((style.baking.temp_c_range[0] + style.baking.temp_c_range[1]) / 2 / 5) * 5}
-          />
-        </div>
-      </div>
-
-      {/* Pan — visible only when needed */}
-      {needsPan(style) && panConfig && onPanConfigChange && (() => {
-        const currentShape = panConfig.panShape ?? defaultPanShape(style);
-        const handleShapeChange = (shape: PanShape) => {
-          if (shape === currentShape) return;
-          // Reset dimensions to style defaults when switching shape
-          if (shape === "rectangular") {
-            onPanConfigChange({
-              ...panConfig,
-              panShape: "rectangular",
-              panLength: style.shape.length_cm ?? 30,
-              panWidth: style.shape.width_cm ?? 20,
-            });
-          } else {
-            onPanConfigChange({
-              ...panConfig,
-              panShape: "round",
-              panDiameter: style.shape.diameter_cm ?? 26,
-            });
-          }
-        };
-        const area = currentShape === "rectangular"
-          ? (panConfig.panLength ?? style.shape.length_cm ?? 30) * (panConfig.panWidth ?? style.shape.width_cm ?? 20)
-          : Math.round(Math.PI * Math.pow((panConfig.panDiameter ?? style.shape.diameter_cm ?? 26) / 2, 2));
-
-        return (
+      {/* 3-Column Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-4 lg:gap-6">
+        
+        {/* Column 1: Formula */}
+        <div
+          className="flex flex-col gap-4 bg-transparent sm:bg-[var(--surface-container-low)] border-0 sm:border border-[var(--config-border)] p-0 sm:p-5 rounded-2xl"
+        >
+          {/* Hydration */}
           <div>
-            <div className="flex items-center gap-2">
-              <Label>{cfg.panLabel}</Label>
-              <InfoTip>
-                {defaultPanShape(style) === "rectangular" ? cfg.panTipRect : cfg.panTipRound}
-              </InfoTip>
-            </div>
-
-            {/* Shape selector chips */}
-            <div className="flex gap-2 mt-3 mb-4">
-              <button
-                onClick={() => handleShapeChange("rectangular")}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl transition-all active:scale-95"
-                style={{
-                  background: currentShape === "rectangular"
-                    ? "var(--chip-bg-active)"
-                    : "var(--chip-bg)",
-                  color: currentShape === "rectangular"
-                    ? "var(--chip-text-active)"
-                    : "var(--chip-text)",
-                  border: currentShape === "rectangular"
-                    ? "1px solid rgba(0,0,0,0)"
-                    : "1px solid var(--chip-border)",
-                  fontSize: "var(--font-size-lg)",
-                  fontWeight: "var(--weight-medium)" as any,
-                }}
-              >
-                <RectangleHorizontal size={14} />
-                {cfg.panRectangular}
-              </button>
-              <button
-                onClick={() => handleShapeChange("round")}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl transition-all active:scale-95"
-                style={{
-                  background: currentShape === "round"
-                    ? "var(--chip-bg-active)"
-                    : "var(--chip-bg)",
-                  color: currentShape === "round"
-                    ? "var(--chip-text-active)"
-                    : "var(--chip-text)",
-                  border: currentShape === "round"
-                    ? "1px solid rgba(0,0,0,0)"
-                    : "1px solid var(--chip-border)",
-                  fontSize: "var(--font-size-lg)",
-                  fontWeight: "var(--weight-medium)" as any,
-                }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/></svg>
-                {cfg.panRound}
-              </button>
-            </div>
-
-            {/* Rectangular dimensions */}
-            {currentShape === "rectangular" && (
-              <div className="flex flex-col gap-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span style={{
-                      color: "var(--text-muted)",
-                      fontSize: "var(--font-size-lg)",
-                      fontWeight: "var(--weight-medium)" as any,
-                    }}>{cfg.panLength}</span>
-                  </div>
-                  <GradientSlider
-                    value={panConfig.panLength ?? style.shape.length_cm ?? 30}
-                    onChange={(v) => onPanConfigChange({ ...panConfig, panLength: v })}
-                    min={20}
-                    max={60}
-                    step={1}
-                    unit=" cm"
-                    rangeMin={style.shape.length_cm ? style.shape.length_cm - 5 : undefined}
-                    rangeMax={style.shape.length_cm ? style.shape.length_cm + 5 : undefined}
-                    gradient={SLIDER_GRADIENTS.flourW}
-                    optimalValue={style.shape.length_cm ?? undefined}
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span style={{
-                      color: "var(--text-muted)",
-                      fontSize: "var(--font-size-lg)",
-                      fontWeight: "var(--weight-medium)" as any,
-                    }}>{cfg.panWidth}</span>
-                  </div>
-                  <GradientSlider
-                    value={panConfig.panWidth ?? style.shape.width_cm ?? 20}
-                    onChange={(v) => onPanConfigChange({ ...panConfig, panWidth: v })}
-                    min={15}
-                    max={45}
-                    step={1}
-                    unit=" cm"
-                    rangeMin={style.shape.width_cm ? style.shape.width_cm - 5 : undefined}
-                    rangeMax={style.shape.width_cm ? style.shape.width_cm + 5 : undefined}
-                    gradient={SLIDER_GRADIENTS.flourW}
-                    optimalValue={style.shape.width_cm ?? undefined}
-                  />
-                </div>
-              </div>
+            <GradientSlider
+              label={<><Label>{cfg.hydrationLabel}</Label><InfoTip termId="hydration">{cfg.hydrationTip}</InfoTip></>}
+              value={customHydration}
+              onChange={handleH}
+              min={45}
+              max={105}
+              step={1}
+              unit="%"
+              rangeMin={style.dough.hydration_pct_range[0]}
+              rangeMax={style.dough.hydration_pct_range[1]}
+              gradient={SLIDER_GRADIENTS.hydration}
+              adaptiveMin={adaptiveHints.hydration?.adaptiveMin}
+              adaptiveMax={adaptiveHints.hydration?.adaptiveMax}
+              optimalValue={Math.round((style.dough.hydration_pct_range[0] + style.dough.hydration_pct_range[1]) / 2)}
+            />
+            {adaptiveHints.hydration && (
+              <AdaptiveHint
+                hint={adaptiveHints.hydration.hint}
+                adaptiveMin={adaptiveHints.hydration.adaptiveMin}
+                adaptiveMax={adaptiveHints.hydration.adaptiveMax}
+                unit="%"
+                label={
+                  adaptiveHints.hydration.adaptiveMax != null && adaptiveHints.hydration.adaptiveMin == null
+                    ? (cfg.hintLimitMaxLabel || "limite max")
+                    : adaptiveHints.hydration.adaptiveMin != null && adaptiveHints.hydration.adaptiveMax == null
+                      ? (cfg.hintLimitMinLabel || "limite min")
+                      : cfg.hintAdaptiveLabel
+                }
+              />
             )}
+          </div>
 
-            {/* Round dimension */}
-            {currentShape === "round" && (
+          {/* Flour W */}
+          <div>
+            <GradientSlider
+              label={<><Label>{cfg.flourWLabel}</Label><InfoTip termId="w_alveograph">{cfg.flourWTip}</InfoTip></>}
+              value={customFlourW}
+              onChange={handleW}
+              min={100}
+              max={420}
+              step={10}
+              unit=""
+              rangeMin={style.dough.flour_w_range[0]}
+              rangeMax={style.dough.flour_w_range[1]}
+              gradient={SLIDER_GRADIENTS.flourW}
+              adaptiveMin={adaptiveHints.flourW?.adaptiveMin}
+              adaptiveMax={adaptiveHints.flourW?.adaptiveMax}
+              optimalValue={Math.round((style.dough.flour_w_range[0] + style.dough.flour_w_range[1]) / 2 / 10) * 10}
+            />
+            {adaptiveHints.flourW && (
+              <AdaptiveHint
+                hint={adaptiveHints.flourW.hint}
+                adaptiveMin={adaptiveHints.flourW.adaptiveMin}
+                adaptiveMax={adaptiveHints.flourW.adaptiveMax}
+                unit=""
+                label={
+                  adaptiveHints.flourW.adaptiveMax != null && adaptiveHints.flourW.adaptiveMin == null
+                    ? (cfg.hintLimitMaxLabel || "limite max")
+                    : adaptiveHints.flourW.adaptiveMin != null && adaptiveHints.flourW.adaptiveMax == null
+                      ? (cfg.hintLimitMinLabel || "limite min")
+                      : cfg.hintAdaptiveLabel
+                }
+              />
+            )}
+          </div>
+
+          {/* Flour P/L */}
+          {customFlourPL !== undefined && onFlourPLChange && (
+            <div>
+              <GradientSlider
+                label={<><Label>{cfg.plLabel}</Label><InfoTip termId="pl_ratio">{cfg.plTip}</InfoTip></>}
+                value={Math.round(customFlourPL * 100) / 100}
+                onChange={handlePL}
+                min={0.30}
+                max={0.90}
+                step={0.01}
+                unit=""
+                rangeMin={style.dough.flour_pl_range[0]}
+                rangeMax={style.dough.flour_pl_range[1]}
+                gradient={SLIDER_GRADIENTS.flourW}
+                adaptiveMin={adaptiveHints.flourPL?.adaptiveMin}
+                adaptiveMax={adaptiveHints.flourPL?.adaptiveMax}
+                optimalValue={Math.round((style.dough.flour_pl_range[0] + style.dough.flour_pl_range[1]) / 2 * 100) / 100}
+              />
+              {adaptiveHints.flourPL && (
+                <AdaptiveHint
+                  hint={adaptiveHints.flourPL.hint}
+                  adaptiveMin={adaptiveHints.flourPL.adaptiveMin}
+                  adaptiveMax={adaptiveHints.flourPL.adaptiveMax}
+                  unit=""
+                  label={
+                    adaptiveHints.flourPL.adaptiveMax != null && adaptiveHints.flourPL.adaptiveMin == null
+                      ? (cfg.hintLimitMaxLabel || "limite max")
+                      : adaptiveHints.flourPL.adaptiveMin != null && adaptiveHints.flourPL.adaptiveMax == null
+                        ? (cfg.hintLimitMinLabel || "limite min")
+                        : cfg.hintAdaptiveLabel
+                  }
+                />
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Divider visible only on mobile */}
+        <div className="md:hidden h-px bg-[var(--container-border-subtle)] my-3" />
+
+        {/* Column 2: Processo */}
+        <div
+          className="flex flex-col gap-4 bg-transparent sm:bg-[var(--surface-container-low)] border-0 sm:border border-[var(--config-border)] p-0 sm:p-5 rounded-2xl"
+        >
+          <div>
+            <div className="flex flex-col gap-4">
+              {/* Lievitazione */}
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span style={{
-                    color: "var(--text-muted)",
-                    fontSize: "var(--font-size-lg)",
-                    fontWeight: "var(--weight-medium)" as any,
-                  }}>{cfg.panDiameter}</span>
-                </div>
                 <GradientSlider
-                  value={panConfig.panDiameter ?? style.shape.diameter_cm ?? 26}
-                  onChange={(v) => onPanConfigChange({ ...panConfig, panDiameter: v })}
-                  min={15}
-                  max={45}
+                  label={<><Label>{cfg.fermentLabel}</Label><InfoTip>{cfg.fermentTip}</InfoTip></>}
+                  value={customFermentHours}
+                  onChange={handleFH}
+                  min={1}
+                  max={96}
                   step={1}
-                  unit=" cm"
-                  rangeMin={style.shape.diameter_cm ? style.shape.diameter_cm - 3 : undefined}
-                  rangeMax={style.shape.diameter_cm ? style.shape.diameter_cm + 3 : undefined}
-                  gradient={SLIDER_GRADIENTS.flourW}
-                  optimalValue={style.shape.diameter_cm ?? undefined}
+                  unit="h"
+                  rangeMin={style.dough.fermentation_hours_range[0]}
+                  rangeMax={style.dough.fermentation_hours_range[1]}
+                  gradient={SLIDER_GRADIENTS.fermentation}
+                  adaptiveMin={adaptiveHints.fermentation?.adaptiveMin}
+                  adaptiveMax={adaptiveHints.fermentation?.adaptiveMax}
+                  optimalValue={Math.round((style.dough.fermentation_hours_range[0] + style.dough.fermentation_hours_range[1]) / 2)}
+                />
+                {adaptiveHints.fermentation && (
+                  <AdaptiveHint
+                    hint={adaptiveHints.fermentation.hint}
+                    adaptiveMin={adaptiveHints.fermentation.adaptiveMin}
+                    adaptiveMax={adaptiveHints.fermentation.adaptiveMax}
+                    unit="h"
+                    label={
+                      adaptiveHints.fermentation.adaptiveMax != null && adaptiveHints.fermentation.adaptiveMin == null
+                        ? (cfg.hintLimitMaxLabel || "limite max")
+                        : adaptiveHints.fermentation.adaptiveMin != null && adaptiveHints.fermentation.adaptiveMax == null
+                          ? (cfg.hintLimitMinLabel || "limite min")
+                          : cfg.hintAdaptiveLabel
+                    }
+                  />
+                )}
+              </div>
+
+              {/* Pre-fermento */}
+              <div
+                className="flex items-center gap-3 px-4 py-3 rounded-xl"
+                style={{
+                  background: "var(--config-bg)",
+                  border: "1px solid var(--config-border)",
+                }}
+              >
+                <div className="flex-1 flex items-center gap-2">
+                  <span
+                    style={{
+                      color: "var(--text-default)",
+                      fontSize: "var(--font-size-xl)",
+                      fontWeight: "var(--weight-medium)" as any,
+                    }}
+                  >
+                    {cfg.preFermentLabel}
+                  </span>
+                  <InfoTip size={14}>{cfg.preFermentTip}</InfoTip>
+                </div>
+                <Switch
+                  checked={usePreFerment}
+                  onCheckedChange={onPreFermentChange}
                 />
               </div>
-            )}
 
-            {/* Area summary */}
-            <div
-              className="flex items-center gap-3 px-4 py-3 mt-3 rounded-xl"
-              style={{
-                background: "var(--config-bg)",
-                border: "1px solid var(--config-border)",
-              }}
-            >
-              {currentShape === "rectangular"
-                ? <RectangleHorizontal size={14} style={{ color: "var(--text-muted)" }} />
-                : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2"><circle cx="12" cy="12" r="10"/></svg>
-              }
-              <span style={{
-                fontSize: "var(--font-size-lg)",
-                color: "var(--text-muted)",
-                fontWeight: "var(--weight-medium)" as any,
-              }}>
-                {cfg.panArea}
-              </span>
-              <span className="type-numeric ml-auto" style={{
-                fontSize: "var(--font-size-xl-5)",
-                fontWeight: "var(--weight-bold)" as any,
-                color: "var(--config-value-color)",
-              }}>
-                {area} cm²
-              </span>
+              {/* Temperatura di fermentazione */}
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <Label>Temperatura</Label>
+                    <InfoTip>Temperatura di fermentazione dell'impasto</InfoTip>
+                  </div>
+                  {suggestedTemp && (
+                    <span
+                      className="px-2 py-0.5 rounded-full text-xs font-semibold"
+                      style={{
+                        background: "color-mix(in srgb, var(--tertiary) 15%, transparent)",
+                        color: "var(--tertiary)",
+                        border: "1px solid color-mix(in srgb, var(--tertiary) 30%, transparent)",
+                      }}
+                    >
+                      Consigliato: {
+                        suggestedTemp === "fridge"
+                          ? "Frigo"
+                          : suggestedTemp === "cool"
+                            ? "Fresco"
+                            : "Ambiente"
+                      }
+                    </span>
+                  )}
+                </div>
+
+                {(() => {
+                  const activeVal = customFermentTemp <= 6 ? "fridge" : customFermentTemp <= 16 ? "cool" : "ambient";
+                  const tempMap = { fridge: 4, cool: 12, ambient: 22 };
+                  return (
+                    <SegmentedControl
+                      value={activeVal}
+                      onValueChange={(val) => handleFT(tempMap[val])}
+                      ariaLabel="Temperatura di fermentazione"
+                      size="sm"
+                      fullWidth
+                      options={[
+                        {
+                          value: "fridge",
+                          label: (
+                            <span className="relative z-10 flex items-center justify-center gap-1">
+                              {t(cfg.tempFridge, { fridgeTemp })}
+                              {suggestedTemp === "fridge" && (
+                                <span
+                                  className="w-1.5 h-1.5 rounded-full"
+                                  style={{
+                                    background: activeVal === "fridge" ? "var(--chip-text-active)" : "var(--tertiary)",
+                                  }}
+                                  title="Consigliato"
+                                />
+                              )}
+                            </span>
+                          ),
+                        },
+                        {
+                          value: "cool",
+                          label: (
+                            <span className="relative z-10 flex items-center justify-center gap-1">
+                              {t(cfg.tempCool, { coolTemp })}
+                              {suggestedTemp === "cool" && (
+                                <span
+                                  className="w-1.5 h-1.5 rounded-full"
+                                  style={{
+                                    background: activeVal === "cool" ? "var(--chip-text-active)" : "var(--tertiary)",
+                                  }}
+                                  title="Consigliato"
+                                />
+                              )}
+                            </span>
+                          ),
+                        },
+                        {
+                          value: "ambient",
+                          label: (
+                            <span className="relative z-10 flex items-center justify-center gap-1">
+                              {t(cfg.tempAmbient, { ambientTemp })}
+                              {suggestedTemp === "ambient" && (
+                                <span
+                                  className="w-1.5 h-1.5 rounded-full"
+                                  style={{
+                                    background: activeVal === "ambient" ? "var(--chip-text-active)" : "var(--tertiary)",
+                                  }}
+                                  title="Consigliato"
+                                />
+                              )}
+                            </span>
+                          ),
+                        },
+                      ]}
+                    />
+                  );
+                })()}
+              </div>
             </div>
           </div>
-        );
-      })()}
-
-      {/* Thickness — visible only when style supports it */}
-      {supportsThickness(style) && panConfig && onPanConfigChange && (
-        <div>
-          <div className="flex items-center gap-2">
-            <Label>{cfg.thicknessLabel}</Label>
-            <InfoTip>{cfg.thicknessTip}</InfoTip>
-          </div>
-          <GradientSlider
-            value={Math.round((panConfig.thickness ?? style.shape.thickness_factor) * 100) / 100}
-            onChange={(v) => onPanConfigChange({ ...panConfig, thickness: Math.round(v * 100) / 100 })}
-            min={Math.max(0.05, Math.round((style.shape.thickness_factor * 0.4) * 100) / 100)}
-            max={Math.round((style.shape.thickness_factor * 2.0) * 100) / 100}
-            step={0.02}
-            unit=""
-            rangeMin={Math.round((style.shape.thickness_factor * 0.8) * 100) / 100}
-            rangeMax={Math.round((style.shape.thickness_factor * 1.2) * 100) / 100}
-            gradient={SLIDER_GRADIENTS.fermentation}
-            optimalValue={Math.round(style.shape.thickness_factor * 100) / 100}
-          />
-          <div
-            className="flex items-center gap-3 px-4 py-3 mt-3 rounded-xl"
-            style={{
-              background: "var(--config-bg)",
-              border: "1px solid var(--config-border)",
-            }}
-          >
-            <Layers size={14} style={{ color: "var(--text-muted)" }} />
-            <span style={{
-              fontSize: "var(--font-size-lg)",
-              color: "var(--text-muted)",
-              fontWeight: "var(--weight-medium)" as any,
-            }}>
-              {(panConfig.thickness ?? style.shape.thickness_factor) < style.shape.thickness_factor * 0.7
-                ? cfg.thicknessThin
-                : (panConfig.thickness ?? style.shape.thickness_factor) > style.shape.thickness_factor * 1.3
-                  ? cfg.thicknessThick
-                  : cfg.thicknessStandard}
-            </span>
-          </div>
         </div>
-      )}
+
+        {/* Divider visible only on mobile */}
+        <div className="md:hidden h-px bg-[var(--container-border-subtle)] my-3" />
+
+        {/* Column 3: Cottura */}
+        <div
+          className="flex flex-col gap-4 bg-transparent sm:bg-[var(--surface-container-low)] border-0 sm:border border-[var(--config-border)] p-0 sm:p-5 rounded-2xl"
+        >
+          {/* Temperatura di cottura */}
+          <div>
+            <GradientSlider
+              label={<Label>Temperatura di cottura</Label>}
+              value={constraints.oven_max_temp_c}
+              onChange={(v) =>
+                onConstraintsChange({
+                  ...constraints,
+                  oven_max_temp_c: v,
+                })
+              }
+              min={200}
+              max={550}
+              step={5}
+              unit="°C"
+              rangeMin={style.baking.temp_c_range[0]}
+              rangeMax={style.baking.temp_c_range[1]}
+              gradient={SLIDER_GRADIENTS.temperature}
+              optimalValue={Math.round((style.baking.temp_c_range[0] + style.baking.temp_c_range[1]) / 2 / 5) * 5}
+            />
+          </div>
+
+          {/* Oven Selector */}
+          <div>
+            <PremiumSelect
+              value={constraints.oven_type}
+              onChange={(val) => {
+                const preset = OVEN_PRESETS.find((p) => p.id === val);
+                if (preset) {
+                  handleOvenSelect(preset.id, preset.maxTemp);
+                }
+              }}
+              options={OVEN_PRESETS.map((preset) => {
+                const name = preset.name.toLowerCase().startsWith("forno")
+                  ? preset.name
+                  : `Forno ${preset.name.toLowerCase()}`;
+                return {
+                  value: preset.id,
+                  label: name,
+                  subLabel: `max ${preset.maxTemp}°C`,
+                };
+              })}
+            />
+          </div>
+
+          {/* Pan — visible only when needed */}
+          {needsPan(style) && panConfig && onPanConfigChange && (() => {
+            const currentShape = panConfig.panShape ?? defaultPanShape(style);
+            const handleShapeChange = (shape: PanShape) => {
+              if (shape === currentShape) return;
+              if (shape === "rectangular") {
+                onPanConfigChange({
+                  ...panConfig,
+                  panShape: "rectangular",
+                  panLength: style.shape.length_cm ?? 30,
+                  panWidth: style.shape.width_cm ?? 20,
+                });
+              } else {
+                onPanConfigChange({
+                  ...panConfig,
+                  panShape: "round",
+                  panDiameter: style.shape.diameter_cm ?? 26,
+                });
+              }
+            };
+            const area = currentShape === "rectangular"
+              ? (panConfig.panLength ?? style.shape.length_cm ?? 30) * (panConfig.panWidth ?? style.shape.width_cm ?? 20)
+              : Math.round(Math.PI * Math.pow((panConfig.panDiameter ?? style.shape.diameter_cm ?? 26) / 2, 2));
+
+            return (
+              <div className="flex flex-col gap-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <Label>{cfg.panLabel}</Label>
+                    <InfoTip>
+                      {defaultPanShape(style) === "rectangular" ? cfg.panTipRect : cfg.panTipRound}
+                    </InfoTip>
+                  </div>
+
+                  {/* Shape selector dropdown */}
+                  <PremiumSelect
+                    value={currentShape}
+                    onChange={(val) => handleShapeChange(val as PanShape)}
+                    options={[
+                      { value: "rectangular", label: cfg.panRectangular },
+                      { value: "round", label: cfg.panRound },
+                    ]}
+                  />
+                </div>
+
+                {/* Rectangular dimensions */}
+                {currentShape === "rectangular" && (
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span style={{
+                          color: "var(--text-muted)",
+                          fontSize: "var(--font-size-lg)",
+                          fontWeight: "var(--weight-medium)" as any,
+                        }}>{cfg.panLength}</span>
+                      </div>
+                      <GradientSlider
+                        value={panConfig.panLength ?? style.shape.length_cm ?? 30}
+                        onChange={(v) => onPanConfigChange({ ...panConfig, panLength: v })}
+                        min={20}
+                        max={60}
+                        step={1}
+                        unit=" cm"
+                        rangeMin={style.shape.length_cm ? style.shape.length_cm - 5 : undefined}
+                        rangeMax={style.shape.length_cm ? style.shape.length_cm + 5 : undefined}
+                        gradient={SLIDER_GRADIENTS.flourW}
+                        optimalValue={style.shape.length_cm ?? undefined}
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span style={{
+                          color: "var(--text-muted)",
+                          fontSize: "var(--font-size-lg)",
+                          fontWeight: "var(--weight-medium)" as any,
+                        }}>{cfg.panWidth}</span>
+                      </div>
+                      <GradientSlider
+                        value={panConfig.panWidth ?? style.shape.width_cm ?? 20}
+                        onChange={(v) => onPanConfigChange({ ...panConfig, panWidth: v })}
+                        min={15}
+                        max={45}
+                        step={1}
+                        unit=" cm"
+                        rangeMin={style.shape.width_cm ? style.shape.width_cm - 5 : undefined}
+                        rangeMax={style.shape.width_cm ? style.shape.width_cm + 5 : undefined}
+                        gradient={SLIDER_GRADIENTS.flourW}
+                        optimalValue={style.shape.width_cm ?? undefined}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Round dimension */}
+                {currentShape === "round" && (
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span style={{
+                        color: "var(--text-muted)",
+                        fontSize: "var(--font-size-lg)",
+                        fontWeight: "var(--weight-medium)" as any,
+                      }}>{cfg.panDiameter}</span>
+                    </div>
+                    <GradientSlider
+                      value={panConfig.panDiameter ?? style.shape.diameter_cm ?? 26}
+                      onChange={(v) => onPanConfigChange({ ...panConfig, panDiameter: v })}
+                      min={15}
+                      max={45}
+                      step={1}
+                      unit=" cm"
+                      rangeMin={style.shape.diameter_cm ? style.shape.diameter_cm - 3 : undefined}
+                      rangeMax={style.shape.diameter_cm ? style.shape.diameter_cm + 3 : undefined}
+                      gradient={SLIDER_GRADIENTS.flourW}
+                      optimalValue={style.shape.diameter_cm ?? undefined}
+                    />
+                  </div>
+                )}
+
+                {/* Area summary */}
+                <div
+                  className="flex items-center gap-3 px-4 py-3 mt-3 rounded-xl"
+                  style={{
+                    background: "var(--config-bg)",
+                    border: "1px solid var(--config-border)",
+                  }}
+                >
+                  {currentShape === "rectangular"
+                    ? <RectangleHorizontal size={14} style={{ color: "var(--text-muted)" }} />
+                    : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2"><circle cx="12" cy="12" r="10"/></svg>
+                  }
+                  <span style={{
+                    fontSize: "var(--font-size-lg)",
+                    color: "var(--text-muted)",
+                    fontWeight: "var(--weight-medium)" as any,
+                  }}>
+                    {cfg.panArea}
+                  </span>
+                  <span className="type-numeric ml-auto" style={{
+                    fontSize: "var(--font-size-xl-5)",
+                    fontWeight: "var(--weight-bold)" as any,
+                    color: "var(--config-value-color)",
+                  }}>
+                    {area} cm²
+                  </span>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Thickness — visible only when style supports it */}
+          {supportsThickness(style) && panConfig && onPanConfigChange && (
+            <div>
+              <div className="flex items-center gap-2">
+                <Label>{cfg.thicknessLabel}</Label>
+                <InfoTip>{cfg.thicknessTip}</InfoTip>
+              </div>
+              <GradientSlider
+                value={Math.round((panConfig.thickness ?? style.shape.thickness_factor) * 100) / 100}
+                onChange={(v) => onPanConfigChange({ ...panConfig, thickness: Math.round(v * 100) / 100 })}
+                min={Math.max(0.05, Math.round((style.shape.thickness_factor * 0.4) * 100) / 100)}
+                max={Math.round((style.shape.thickness_factor * 2.0) * 100) / 100}
+                step={0.02}
+                unit=""
+                rangeMin={Math.round((style.shape.thickness_factor * 0.8) * 100) / 100}
+                rangeMax={Math.round((style.shape.thickness_factor * 1.2) * 100) / 100}
+                gradient={SLIDER_GRADIENTS.fermentation}
+                optimalValue={Math.round(style.shape.thickness_factor * 100) / 100}
+              />
+              <div
+                className="flex items-center gap-3 px-4 py-3 mt-3 rounded-xl"
+                style={{
+                  background: "var(--config-bg)",
+                  border: "1px solid var(--config-border)",
+                }}
+              >
+                <Layers size={14} style={{ color: "var(--text-muted)" }} />
+                <span style={{
+                  fontSize: "var(--font-size-lg)",
+                  color: "var(--text-muted)",
+                  fontWeight: "var(--weight-medium)" as any,
+                }}>
+                  {(panConfig.thickness ?? style.shape.thickness_factor) < style.shape.thickness_factor * 0.7
+                    ? cfg.thicknessThin
+                    : (panConfig.thickness ?? style.shape.thickness_factor) > style.shape.thickness_factor * 1.3
+                      ? cfg.thicknessThick
+                      : cfg.thicknessStandard}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+        
+      </div>
     </div>
   );
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <h3 style={{ fontSize: "var(--font-size-2xl)" }}>{children}</h3>;
+  return (
+    <span
+      className="truncate"
+      style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any }}
+    >
+      {children}
+    </span>
+  );
 }
 
 /* ═══ GRADIENT SLIDER ═══ */
@@ -958,6 +1181,7 @@ function GradientSlider({
   adaptiveMin,
   adaptiveMax,
   optimalValue,
+  label,
 }: {
   value: number;
   onChange: (v: number) => void;
@@ -971,8 +1195,8 @@ function GradientSlider({
   adaptiveMin?: number;
   adaptiveMax?: number;
   optimalValue?: number;
+  label?: React.ReactNode;
 }) {
-  const { cms } = useCms();
   const pct = ((value - min) / (max - min)) * 100;
   const inRange =
     rangeMin !== undefined && rangeMax !== undefined
@@ -989,13 +1213,17 @@ function GradientSlider({
       : 100;
 
   return (
-    <div className="flex flex-col gap-2 mt-3">
-      <div className="flex items-baseline justify-between">
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-baseline justify-between gap-3">
+        {label && (
+          <div className="flex items-center gap-1.5 min-w-0">{label}</div>
+        )}
         <span
-          className="type-numeric"
+          className="type-numeric ml-auto flex-shrink-0"
           style={{
-            fontSize: "var(--font-size-6xl)",
+            fontSize: "var(--font-size-3xl)",
             fontWeight: "var(--weight-bold)" as any,
+            lineHeight: 1,
             color: inRange
               ? "var(--config-value-color)"
               : "var(--config-value-oor)",
@@ -1004,21 +1232,9 @@ function GradientSlider({
           {value}
           {unit}
         </span>
-        {rangeMin !== undefined && rangeMax !== undefined && (
-          <span
-            className="type-numeric"
-            style={{
-              color: "var(--text-muted)",
-              fontSize: "var(--font-size-base)",
-            }}
-          >
-            {cms.configurator.sliderOptimal} {rangeMin}–{rangeMax}
-            {unit}
-          </span>
-        )}
       </div>
 
-      <div className="relative h-10 flex items-center">
+      <div className="relative h-9 flex items-center">
         {/* Track background */}
         <div className="absolute left-0 right-0 h-2 rounded-full overflow-hidden">
           <div
@@ -1091,7 +1307,7 @@ function GradientSlider({
           >
             <div style={{
               width: 2, height: 16,
-              background: `repeating-linear-gradient(to bottom, var(--tertiary) 0px, var(--tertiary) 3px, rgba(0,0,0,0) 3px, rgba(0,0,0,0) 5px)`,
+              background: `repeating-linear-gradient(to bottom, var(--tertiary) 0px, var(--tertiary) 3px, transparent 3px, transparent 5px)`,
               borderRadius: 1,
               opacity: 0.8,
             }} />
@@ -1111,7 +1327,7 @@ function GradientSlider({
           >
             <div style={{
               width: 2, height: 16,
-              background: `repeating-linear-gradient(to bottom, var(--tertiary) 0px, var(--tertiary) 3px, rgba(0,0,0,0) 3px, rgba(0,0,0,0) 5px)`,
+              background: `repeating-linear-gradient(to bottom, var(--tertiary) 0px, var(--tertiary) 3px, transparent 3px, transparent 5px)`,
               borderRadius: 1,
               opacity: 0.8,
             }} />
@@ -1152,8 +1368,12 @@ function GradientSlider({
             [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6
             [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-md
             [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-[3px] [&::-webkit-slider-thumb]:border-primary
+            [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-100
+            hover:[&::-webkit-slider-thumb]:scale-110 active:[&::-webkit-slider-thumb]:scale-95
             [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:rounded-full
             [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-[3px] [&::-moz-range-thumb]:border-primary
+            [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:duration-100
+            hover:[&::-moz-range-thumb]:scale-110 active:[&::-moz-range-thumb]:scale-95
             [&::-moz-range-track]:bg-transparent"
         />
       </div>
@@ -1186,61 +1406,5 @@ function GradientSlider({
         </div>
       )}
     </div>
-  );
-}
-
-function TempPill({
-  active,
-  onClick,
-  icon,
-  label,
-  suggested,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: React.ReactNode;
-  label: string;
-  suggested?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl transition-all active:scale-95 relative"
-      style={{
-        background: active
-          ? "var(--chip-bg-active)"
-          : "var(--chip-bg)",
-        color: active
-          ? "var(--chip-text-active)"
-          : "var(--chip-text)",
-        border: active
-          ? "1px solid rgba(0,0,0,0)"
-          : suggested && !active
-            ? "1.5px solid var(--tertiary)"
-            : "1px solid var(--chip-border)",
-        fontSize: "var(--font-size-lg)",
-        fontWeight: "var(--weight-medium)" as any,
-        boxShadow: suggested && !active
-          ? "0 0 0 1px rgba(204,136,68,0.15), 0 0 8px rgba(204,136,68,0.1)"
-          : "none",
-      }}
-    >
-      {icon}
-      {label}
-      {suggested && !active && (
-        <span
-          className="absolute -top-1 -right-1 flex items-center justify-center"
-          style={{
-            width: 14,
-            height: 14,
-            borderRadius: 2,
-            transform: "rotate(45deg)",
-            background: "var(--tertiary)",
-          }}
-        >
-          <span style={{ transform: "rotate(-45deg)", fontSize: 8, color: "#fff", lineHeight: 1 }}>◆</span>
-        </span>
-      )}
-    </button>
   );
 }

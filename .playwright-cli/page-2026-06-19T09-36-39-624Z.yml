@@ -1,0 +1,7 @@
+- generic [ref=e6]:
+  - heading "Stile non trovato" [level=1] [ref=e7]
+  - paragraph [ref=e8]: Lo stile "napoletana-stg" non esiste nel database.
+  - link "Esplora stili" [ref=e9] [cursor=pointer]:
+    - /url: /explore
+    - img [ref=e10]
+    - text: Esplora stili

@@ -1,0 +1,128 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - link "Scopri" [ref=e7] [cursor=pointer]:
+      - /url: /explore
+      - img [ref=e8]
+      - generic [ref=e10]: Scopri
+    - generic [ref=e13]: Napoletana STG
+    - button "Cerca" [ref=e14]:
+      - img [ref=e15]
+  - img "Napoletana STG" [ref=e23]
+  - generic [ref=e27]:
+    - text: Ricetta canonica
+    - generic [ref=e28]:
+      - heading "Napoletana STG" [level=1] [ref=e29]
+      - button "Copia link ricetta" [ref=e30] [cursor=pointer]:
+        - img [ref=e31]
+        - generic [ref=e37]: Condividi
+    - generic [ref=e38]:
+      - generic [ref=e39]: Cornicione 1-2 cm gonfio
+      - generic [ref=e40]: Centro 3-4 mm sottile
+      - generic [ref=e41]: Crosta leopardata
+    - paragraph [ref=e42]: Standard aureo secondo disciplinare AVPN. Cornicione gonfio, centro sottile, leopardatura.
+    - button "Approfondisci" [ref=e44] [cursor=pointer]
+  - generic [ref=e48]:
+    - button "Inizia la pizzata" [ref=e50] [cursor=pointer]:
+      - img [ref=e51]
+      - generic [ref=e53]: Inizia
+    - generic [ref=e240]:
+      - generic [ref=e241]:
+        - generic [ref=e242]:
+          - img "Margherita" [ref=e244]
+          - generic [ref=e246]:
+            - generic [ref=e247]: Condimento
+            - heading "Margherita" [level=3] [ref=e248]
+            - generic [ref=e249]:
+              - generic [ref=e250]: Da disciplinare
+              - generic [ref=e251]: Verace AVPN
+            - paragraph [ref=e252]: Pomodoro, mozzarella, basilico. La regina, l'origine, l'evergreen.
+            - paragraph [ref=e253]: Dosi totali per 4 panetti; sotto ogni riga trovi anche la dose per panetto.
+        - generic [ref=e255]:
+          - generic [ref=e256]:
+            - generic [ref=e257]: Gusti
+            - button "Condimento precedente" [disabled] [ref=e258]:
+              - img [ref=e259]
+            - button "Condimento successivo" [ref=e261] [cursor=pointer]:
+              - img [ref=e262]
+            - button "Vedi tutti" [expanded] [active] [ref=e264] [cursor=pointer]:
+              - img [ref=e265]
+              - text: Vedi tutti
+          - generic "Scegli condimento" [ref=e268]:
+            - button "Margherita Da disciplinare" [pressed] [ref=e269] [cursor=pointer]:
+              - generic [ref=e271]:
+                - generic [ref=e272]: Margherita
+                - generic [ref=e273]: Da disciplinare
+            - button "Marinara Tradizionale" [ref=e274] [cursor=pointer]:
+              - generic [ref=e276]:
+                - generic [ref=e277]: Marinara
+                - generic [ref=e278]: Tradizionale
+            - button "Boscaiola Tradizionale" [ref=e279] [cursor=pointer]:
+              - generic [ref=e281]:
+                - generic [ref=e282]: Boscaiola
+                - generic [ref=e283]: Tradizionale
+            - button "Diavola Tradizionale" [ref=e284] [cursor=pointer]:
+              - generic [ref=e286]:
+                - generic [ref=e287]: Diavola
+                - generic [ref=e288]: Tradizionale
+            - button "Capricciosa Tradizionale" [ref=e289] [cursor=pointer]:
+              - generic [ref=e291]:
+                - generic [ref=e292]: Capricciosa
+                - generic [ref=e293]: Tradizionale
+            - button "Quattro Stagioni Tradizionale" [ref=e294] [cursor=pointer]:
+              - generic [ref=e296]:
+                - generic [ref=e297]: Quattro Stagioni
+                - generic [ref=e298]: Tradizionale
+      - generic [ref=e299]:
+        - generic [ref=e300]:
+          - generic [ref=e301]:
+            - generic [ref=e302]: Pelati San Marzano DOP schiacciati a mano
+            - generic [ref=e303]: 320g
+          - generic [ref=e304]: 80g per panetto
+        - generic [ref=e305]:
+          - generic [ref=e306]:
+            - generic [ref=e307]: Fior di latte campano (o mozzarella di bufala)
+            - generic [ref=e308]: 360g
+          - generic [ref=e309]: 90g per panetto
+        - generic [ref=e310]:
+          - generic [ref=e311]:
+            - generic [ref=e312]: Basilico fresco
+            - generic [ref=e313]: 16 pz
+          - generic [ref=e314]: 4 pz per panetto · foglie intere
+        - generic [ref=e315]:
+          - generic [ref=e316]:
+            - generic [ref=e317]: Olio EVO a filo
+            - generic [ref=e318]: 20ml
+          - generic [ref=e319]: 5ml per panetto
+        - generic [ref=e320]:
+          - generic [ref=e321]:
+            - generic [ref=e322]: Sale fino sulla salsa
+            - generic [ref=e323]: 4g
+          - generic [ref=e324]: 1g per panetto
+      - generic [ref=e325]:
+        - generic [ref=e326]: Accorgimenti condimento
+        - generic [ref=e328]:
+          - img [ref=e329]
+          - generic [ref=e331]:
+            - generic [ref=e332]: Condimento Margherita Verace
+            - generic [ref=e333]: Stendere i pelati schiacciati a mano in modo uniforme. Disporre il fior di latte a strisce o cubetti. Basilico fresco e olio EVO a filo PRIMA del forno (cottura 90s, regge).
+    - generic [ref=e205]:
+      - generic [ref=e206]:
+        - generic [ref=e207]: Hai provato questa ricetta?
+        - generic [ref=e208]: Il tuo feedback aiuta a calibrare il motore di Vulcan.
+      - generic [ref=e209]:
+        - button "Riuscita" [ref=e210] [cursor=pointer]:
+          - img [ref=e211]
+          - generic [ref=e213]: Riuscita
+        - button "Non riuscita" [ref=e214] [cursor=pointer]:
+          - img [ref=e215]
+          - generic [ref=e217]: Non riuscita
+  - tablist "Sezioni della ricetta" [ref=e219]:
+    - tab "Ricetta" [ref=e220] [cursor=pointer]:
+      - img [ref=e223]
+      - generic [ref=e226]: Ricetta
+    - tab "Procedimento" [ref=e227] [cursor=pointer]:
+      - img [ref=e229]
+      - generic [ref=e232]: Procedimento
+    - tab "Condimento" [selected] [ref=e233] [cursor=pointer]:
+      - img [ref=e235]
+      - generic [ref=e238]: Condimento

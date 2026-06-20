@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Check, Flame, Moon, Sun, Timer, Star, Lightbulb, ArrowRight } from "lucide-react";
-import { SectionHeader, AnatomyRow, SubSectionLabel, Panoramica, LineeGuida, AccessibilitaInfo } from "./shared";
-import type { SectionEntry } from "./shared";
+import { ArrowRight,Check,Flame,Lightbulb,Moon,Star,Sun,Timer } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import { useState } from "react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import type { SectionEntry } from "./shared";
+import { AccessibilitaInfo,LineeGuida,Panoramica,SectionHeader,SubSectionLabel } from "./shared";
 
 /* ═══ C01: BUTTONS ═══ */
 const BTN_V = [

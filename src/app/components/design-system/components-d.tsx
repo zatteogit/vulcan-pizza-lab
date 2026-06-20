@@ -33,7 +33,7 @@ const DEMO_SLIDERS = [
     icon: Droplets,
     unit: "%",
     min: 45, max: 100, step: 1, defaultValue: 65,
-    gradient: "linear-gradient(90deg, var(--color-amber-400) 0%, var(--color-water-500) 50%, var(--color-water-700) 100%)",
+    gradient: "var(--grad-slider-hydration)",
     tip: "Percentuale di acqua rispetto alla farina. Più alta = impasto più morbido e alveolato.",
   },
   {
@@ -42,7 +42,7 @@ const DEMO_SLIDERS = [
     icon: Wheat,
     unit: "",
     min: 150, max: 420, step: 10, defaultValue: 280,
-    gradient: "linear-gradient(90deg, var(--color-parchment-700) 0%, var(--color-amber-600) 50%, var(--color-amber-800) 100%)",
+    gradient: "var(--grad-slider-flour)",
     tip: "Indice di forza alveografico. W alto = più glutine, regge idratazioni alte.",
   },
   {
@@ -51,7 +51,7 @@ const DEMO_SLIDERS = [
     icon: Clock,
     unit: "h",
     min: 2, max: 72, step: 1, defaultValue: 24,
-    gradient: "linear-gradient(90deg, var(--color-olive-400) 0%, var(--color-amber-600) 50%, var(--color-terracotta-600) 100%)",
+    gradient: "var(--grad-slider-ferment)",
     tip: "Durata totale della lievitazione. Più lunga = più sapore e digeribilità.",
   },
   {
@@ -60,7 +60,7 @@ const DEMO_SLIDERS = [
     icon: Thermometer,
     unit: "°C",
     min: 2, max: 30, step: 1, defaultValue: 4,
-    gradient: "linear-gradient(90deg, var(--color-water-500) 0%, var(--color-amber-600) 40%, var(--color-terracotta-600) 70%, var(--color-terracotta-700) 100%)",
+    gradient: "var(--grad-slider-temp)",
     tip: "Temperatura di fermentazione. Frigo (2-6°C) per maturazioni lunghe, ambiente (18-24°C) per brevi.",
   },
 ];
@@ -276,7 +276,7 @@ export function RecipeTimelineSpec() {
   const zoneBg = (zone: string) => {
     if (zone === "cold") return "color-mix(in srgb, var(--time-tonight) 8%, transparent)";
     if (zone === "hot") return "color-mix(in srgb, var(--primary) 8%, transparent)";
-    return "rgba(0,0,0,0)";
+    return "transparent";
   };
 
   return (
@@ -395,7 +395,7 @@ export function RecipeTimelineSpec() {
                   className="flex gap-4 pl-0 cursor-pointer"
                   onClick={() => setExpandedStep(isExpanded ? null : i)}
                   style={{
-                    background: isExpanded ? zoneBg(step.zone) : "rgba(0,0,0,0)",
+                    background: isExpanded ? zoneBg(step.zone) : "transparent",
                     borderRadius: 12,
                     padding: isExpanded ? "8px 8px 8px 0" : "0",
                     transition: "background 0.2s, padding 0.2s",

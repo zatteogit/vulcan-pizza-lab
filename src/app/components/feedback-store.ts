@@ -48,21 +48,24 @@ export interface PredictedScores {
 }
 
 /** Problemi specifici riscontrati durante la cottura */
+/* `correction`: VPL-C11 — cosa correggerebbe l'engine la prossima volta a fronte
+ * di quel problema. Mostrato nella chiusura del feedback come output di valore.
+ * IT-only come `label` (questo layer issue è IT-only, vedi recipe-feedback). */
 export const RECIPE_ISSUES = [
-  { id: "overproofed", label: "Sovra-lievitato", icon: "↑", category: "fermentation" },
-  { id: "underproofed", label: "Sotto-lievitato", icon: "↓", category: "fermentation" },
-  { id: "burnt_top", label: "Bruciata sopra", icon: "🔥", category: "baking" },
-  { id: "burnt_bottom", label: "Bruciata sotto", icon: "⬇️", category: "baking" },
-  { id: "raw_center", label: "Cruda al centro", icon: "❄️", category: "baking" },
-  { id: "too_dry", label: "Troppo secca", icon: "🏜️", category: "hydration" },
-  { id: "too_wet", label: "Troppo umida/gommosa", icon: "💧", category: "hydration" },
-  { id: "too_salty", label: "Troppo salata", icon: "🧂", category: "taste" },
-  { id: "bland", label: "Insipida", icon: "😐", category: "taste" },
-  { id: "too_dense", label: "Troppo densa", icon: "🧱", category: "texture" },
-  { id: "too_sticky", label: "Impasto appiccicoso", icon: "🫠", category: "handling" },
-  { id: "hard_to_shape", label: "Difficile da stendere", icon: "💪", category: "handling" },
-  { id: "no_rise", label: "Non è lievitata", icon: "📉", category: "fermentation" },
-  { id: "collapsed", label: "Sgonfiata in cottura", icon: "📦", category: "baking" },
+  { id: "overproofed", label: "Sovra-lievitato", icon: "↑", category: "fermentation", correction: "riduco il lievito e accorcio i tempi" },
+  { id: "underproofed", label: "Sotto-lievitato", icon: "↓", category: "fermentation", correction: "allungo i tempi o aumento il lievito" },
+  { id: "burnt_top", label: "Bruciata sopra", icon: "🔥", category: "baking", correction: "abbasso la temperatura del forno" },
+  { id: "burnt_bottom", label: "Bruciata sotto", icon: "⬇️", category: "baking", correction: "alzo il ripiano e riduco il preriscaldo della base" },
+  { id: "raw_center", label: "Cruda al centro", icon: "❄️", category: "baking", correction: "allungo la cottura a temperatura un po' più bassa" },
+  { id: "too_dry", label: "Troppo secca", icon: "🏜️", category: "hydration", correction: "aumento l'idratazione" },
+  { id: "too_wet", label: "Troppo umida/gommosa", icon: "💧", category: "hydration", correction: "riduco l'idratazione o allungo la cottura" },
+  { id: "too_salty", label: "Troppo salata", icon: "🧂", category: "taste", correction: "riduco il sale" },
+  { id: "bland", label: "Insipida", icon: "😐", category: "taste", correction: "aumento il sale e allungo la maturazione" },
+  { id: "too_dense", label: "Troppo densa", icon: "🧱", category: "texture", correction: "aumento idratazione e lievitazione" },
+  { id: "too_sticky", label: "Impasto appiccicoso", icon: "🫠", category: "handling", correction: "riduco l'idratazione e aggiungo pieghe" },
+  { id: "hard_to_shape", label: "Difficile da stendere", icon: "💪", category: "handling", correction: "più riposo e idratazione più gestibile" },
+  { id: "no_rise", label: "Non è lievitata", icon: "📉", category: "fermentation", correction: "ricontrollo lievito e temperatura di lievitazione" },
+  { id: "collapsed", label: "Sgonfiata in cottura", icon: "📦", category: "baking", correction: "riduco l'idratazione e accorcio l'appretto" },
 ] as const;
 
 export type RecipeIssueId = typeof RECIPE_ISSUES[number]["id"];
@@ -167,11 +170,6 @@ export function saveFeedback(entry: RecipeFeedback): void {
   }
 }
 
-export function deleteFeedback(id: string): void {
-  const existing = loadFeedback();
-  const filtered = existing.filter((e) => e.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-}
 
 export function clearAllFeedback(): void {
   localStorage.removeItem(STORAGE_KEY);
@@ -449,7 +447,7 @@ export const ADVERSARIAL_FINDINGS: AdversarialFinding[] = [
     suggestedFix: "Rimuovere asse 'forma' dal calcolo (ridistribuire peso) oppure implementare penalità forma reali (es: panetto troppo pesante/leggero per lo stile).",
     confirmedByFeedback: false,
     feedbackCount: 0,
-    fixed: false,
+    fixed: true,
   },
   {
     id: "ADV-08",
@@ -493,7 +491,7 @@ export const ADVERSARIAL_FINDINGS: AdversarialFinding[] = [
     suggestedFix: "Skippare oil compensation se style.dough.fat_type === 'butter' e oil_pct >= 10% (già molto grasso).",
     confirmedByFeedback: false,
     feedbackCount: 0,
-    fixed: false,
+    fixed: true,
   },
   {
     id: "ADV-06",
@@ -504,7 +502,7 @@ export const ADVERSARIAL_FINDINGS: AdversarialFinding[] = [
     suggestedFix: "Correlare ovenEfficiency con cookTime: se il deficit causa cookTime > 2x ideale, ridurre ovenEfficiency proporzionalmente.",
     confirmedByFeedback: false,
     feedbackCount: 0,
-    fixed: false,
+    fixed: true,
   },
 ];
 

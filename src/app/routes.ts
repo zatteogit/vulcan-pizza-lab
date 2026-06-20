@@ -7,50 +7,74 @@
 
 import { createBrowserRouter, redirect } from "react-router";
 import { AppShell } from "./components/app-shell";
-import { HomePage } from "./pages/home";
-import { ExplorePage } from "./pages/explore";
-import { LearnPage } from "./pages/learn";
-import { ProfilePage } from "./pages/profile";
-import { RecipePage } from "./pages/recipe";
-import { DevToolsPage } from "./pages/dev";
-import { DesignSystemPage } from "./pages/design-system";
-import { NotFoundPage } from "./pages/not-found";
-import { CmsPage } from "./pages/cms";
-import TroubleshootingPage from "./pages/troubleshooting";
-import { GlossaryPage } from "./pages/glossary";
-import { PreFermentsPage } from "./pages/pre-ferments";
+
+function RouteHydrateFallback() {
+  return null;
+}
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: AppShell,
+    HydrateFallback: RouteHydrateFallback,
     children: [
       /* ═══ TAB ROUTES ═══ */
-      { index: true, Component: HomePage },
-      { path: "explore", Component: ExplorePage },
-      { path: "learn", Component: LearnPage },
-      { path: "learn/glossary", Component: GlossaryPage },
+      {
+        index: true,
+        lazy: async () => ({ Component: (await import("./pages/home")).HomePage }),
+      },
+      {
+        path: "explore",
+        lazy: async () => ({ Component: (await import("./pages/explore")).ExplorePage }),
+      },
+      {
+        path: "learn",
+        lazy: async () => ({ Component: (await import("./pages/learn")).LearnPage }),
+      },
+      {
+        path: "learn/glossary",
+        lazy: async () => ({ Component: (await import("./pages/glossary")).GlossaryPage }),
+      },
       {
         path: "learn/troubleshooting",
-        Component: TroubleshootingPage,
+        lazy: async () => ({ Component: (await import("./pages/troubleshooting")).default }),
       },
       {
         path: "learn/pre-ferments",
-        Component: PreFermentsPage,
+        lazy: async () => ({ Component: (await import("./pages/pre-ferments")).PreFermentsPage }),
       },
-      { path: "profile", Component: ProfilePage },
+      {
+        path: "profile",
+        lazy: async () => ({ Component: (await import("./pages/profile")).ProfilePage }),
+      },
 
       /* ═══ DETAIL ROUTES ═══ */
-      { path: "recipe/:styleId", Component: RecipePage },
+      {
+        path: "recipe/:styleId",
+        lazy: async () => ({ Component: (await import("./pages/recipe")).RecipePage }),
+      },
 
       /* ═══ TOOL ROUTES (hidden from tab bar) ═══ */
-      { path: "dev", Component: DevToolsPage },
-      { path: "dev/:tab", Component: DevToolsPage },
-      { path: "design-system", Component: DesignSystemPage },
-      { path: "cms", Component: CmsPage },
+      {
+        path: "dev",
+        lazy: async () => ({ Component: (await import("./pages/dev")).DevToolsPage }),
+      },
+      {
+        path: "dev/:tab",
+        lazy: async () => ({ Component: (await import("./pages/dev")).DevToolsPage }),
+      },
+      {
+        path: "design-system",
+        lazy: async () => ({ Component: (await import("./pages/design-system")).DesignSystemPage }),
+      },
+      {
+        path: "cms",
+        lazy: async () => ({ Component: (await import("./pages/cms")).CmsPage }),
+      },
 
       /* ═══ LEGACY REDIRECTS ═══ */
       { path: "search", loader: () => redirect("/") },
+      { path: "styles", loader: () => redirect("/explore") },
       {
         path: "troubleshooting",
         loader: () => redirect("/learn/troubleshooting"),
@@ -61,7 +85,10 @@ export const router = createBrowserRouter([
       },
 
       /* ═══ CATCH-ALL ═══ */
-      { path: "*", Component: NotFoundPage },
+      {
+        path: "*",
+        lazy: async () => ({ Component: (await import("./pages/not-found")).NotFoundPage }),
+      },
     ],
   },
 ]);

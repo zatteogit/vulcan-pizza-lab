@@ -5,82 +5,11 @@
 /* i18n: getLocalizedDietaryInfo/Conflicts/Warnings accept CmsContent */
 
 import type { CmsContent } from './cms/cms-context';
+import { DIETARY_I18N_DEFAULTS } from './cms/domain-i18n-defaults';
 import { t } from './cms/i18n';
 
-export type DietarySeverity = 'mild' | 'moderate' | 'severe';
-
-export interface DietaryInfo {
-  id: string;
-  name: string;
-  emoji: string;
-  description: string;
-  scienceNote: string;
-}
-
-export const DIETARY_INFO: Record<string, DietaryInfo> = {
-  low_fodmap: {
-    id: 'low_fodmap',
-    name: 'Low FODMAP',
-    emoji: '🫧',
-    description: 'Riduce fruttani e oligosaccaridi fermentabili',
-    scienceNote: 'Fermentazione ≥24h riduce FODMAP 70% (Costabile 2014)',
-  },
-  histamine: {
-    id: 'histamine',
-    name: 'Bassa istamina',
-    emoji: '⏱️',
-    description: 'Limita accumulo istamina da fermentazione lunga',
-    scienceNote: 'Istamina si accumula linearmente. Lievito fresco <6h: safe (<5 mg/kg)',
-  },
-  gluten_free: {
-    id: 'gluten_free',
-    name: 'Senza glutine',
-    emoji: '🌾',
-    description: 'Per celiachia o sensibilita al glutine',
-    scienceNote: 'Soglia EU: <20 ppm. Richiede mix GF (riso/mais/quinoa + xantana 1.5%)',
-  },
-  lactose_free: {
-    id: 'lactose_free',
-    name: 'Senza lattosio',
-    emoji: '🥛',
-    description: 'Per intolleranza al lattosio',
-    scienceNote: 'Cottura >200°C degrada 90%+ lattosio. Solo SEVERE richiede sostituzione',
-  },
-  nickel: {
-    id: 'nickel',
-    name: 'Basso nichel',
-    emoji: '🔩',
-    description: 'Per allergia sistemica al nichel (SNAS)',
-    scienceNote: 'Farina 00 (~50 µg/100g) vs integrale (~200 µg/100g). Soglia <200 µg/die',
-  },
-  vegan: {
-    id: 'vegan',
-    name: 'Vegano',
-    emoji: '🌱',
-    description: 'Nessun derivato animale',
-    scienceNote: 'Impasto base e gia vegano. Attenzione a topping e grassi (burro -> olio)',
-  },
-};
-
-/* === i18n: LOCALIZED DIETARY INFO === */
-export function getLocalizedDietaryInfo(cms: CmsContent): Record<string, DietaryInfo> {
-  const cmsInfo = cms.dietaryI18n?.info;
-  if (!cmsInfo) return DIETARY_INFO;
-  const result: Record<string, DietaryInfo> = {};
-  for (const [id, fallback] of Object.entries(DIETARY_INFO)) {
-    const loc = cmsInfo[id];
-    result[id] = loc ? {
-      ...fallback,
-      name: loc.name ?? fallback.name,
-      description: loc.description ?? fallback.description,
-      scienceNote: loc.scienceNote ?? fallback.scienceNote,
-    } : fallback;
-  }
-  return result;
-}
-
 /* === FODMAP REDUCTION === */
-export function calculateFodmapReduction(
+function calculateFodmapReduction(
   fermentationHours: number,
   fermentationTempC: number,
   hasSourdough: boolean
@@ -99,7 +28,7 @@ export function calculateFodmapReduction(
 }
 
 /* === HISTAMINE ACCUMULATION === */
-export function calculateHistamine(
+function calculateHistamine(
   fermentationHours: number,
   fermentationTempC: number,
   yeastType: string
@@ -111,68 +40,6 @@ export function calculateHistamine(
       ? 1.0 + (fermentationTempC - 25) * 0.1
       : 0.5;
   return baseRate * fermentationHours * tempFactor;
-}
-
-/* === CONFLICT DETECTION === */
-export interface DietaryConflict {
-  severity: 'none' | 'mild' | 'severe' | 'impossible';
-  involvedA: string;
-  involvedB: string;
-  message: string;
-  compromiseTip?: string;
-}
-
-export function detectDietaryConflicts(
-  activeFilters: string[],
-  cms?: CmsContent
-): DietaryConflict[] {
-  const conflicts: DietaryConflict[] = [];
-  const cmsC = cms?.dietaryI18n?.conflicts;
-
-  const hasFodmap = activeFilters.includes('low_fodmap');
-  const hasHistamine = activeFilters.includes('histamine');
-  const hasGF = activeFilters.includes('gluten_free');
-  const hasNickel = activeFilters.includes('nickel');
-
-  /* FODMAP + Istamina: conflitto principale */
-  if (hasFodmap && hasHistamine) {
-    const loc = cmsC?.fodmap_histamine;
-    conflicts.push({
-      severity: 'severe',
-      involvedA: 'low_fodmap',
-      involvedB: 'histamine',
-      message: loc?.message ??
-        'FODMAP richiede fermentazione lunga (≥24h), istamina richiede fermentazione breve (≤12h)',
-      compromiseTip: loc?.compromiseTip ??
-        'Compromesso: 8-12h con lievito fresco a 18°C. FODMAP ridotti ~40% (sub-ottimale), istamina ~8 mg/kg (accettabile)',
-    });
-  }
-
-  /* GF + FODMAP: compatibili (bonus) */
-  if (hasGF && hasFodmap) {
-    const loc = cmsC?.gf_fodmap;
-    conflicts.push({
-      severity: 'none',
-      involvedA: 'gluten_free',
-      involvedB: 'low_fodmap',
-      message: loc?.message ??
-        'Compatibili! Il mix GF elimina la fonte principale di FODMAP (fruttani del grano)',
-    });
-  }
-
-  /* Nickel + integrale (warning informativo) */
-  if (hasNickel) {
-    const loc = cmsC?.nickel_general;
-    conflicts.push({
-      severity: 'mild',
-      involvedA: 'nickel',
-      involvedB: '',
-      message: loc?.message ??
-        'Per basso nichel preferisci farina 00 (50 µg/100g) rispetto a integrale (200 µg/100g)',
-    });
-  }
-
-  return conflicts;
 }
 
 /* === CONTEXTUAL DIETARY WARNINGS (based on recipe params) === */
@@ -195,7 +62,7 @@ export function getDietaryWarnings(
   cms?: CmsContent
 ): DietaryWarning[] {
   const warnings: DietaryWarning[] = [];
-  const cmsW = cms?.dietaryI18n?.warnings;
+  const cmsW = cms?.dietaryI18n?.warnings ?? DIETARY_I18N_DEFAULTS.warnings;
 
   if (activeFilters.includes('low_fodmap')) {
     const reduction = calculateFodmapReduction(
@@ -204,21 +71,19 @@ export function getDietaryWarnings(
       params.yeastType === 'sourdough'
     );
     if (reduction < 50) {
-      const loc = cmsW?.fodmap_low;
+      const loc = cmsW?.fodmap_low ?? DIETARY_I18N_DEFAULTS.warnings.fodmap_low;
       warnings.push({
         filterId: 'low_fodmap',
-        message: loc ? t(loc.message, { pct: reduction.toFixed(0) })
-          : `FODMAP ridotti solo ${reduction.toFixed(0)}% — fermentazione troppo breve`,
-        tip: loc?.tip ?? `Aumenta a ≥24h per raggiungere 70%+ di riduzione`,
+        message: t(loc.message, { pct: reduction.toFixed(0) }),
+        tip: loc.tip,
         severity: 'warning',
       });
     } else if (reduction >= 70) {
-      const loc = cmsW?.fodmap_good;
+      const loc = cmsW?.fodmap_good ?? DIETARY_I18N_DEFAULTS.warnings.fodmap_good;
       warnings.push({
         filterId: 'low_fodmap',
-        message: loc ? t(loc.message, { pct: reduction.toFixed(0) })
-          : `FODMAP ridotti ${reduction.toFixed(0)}% — buon livello per IBS`,
-        tip: loc?.tip ?? 'La fermentazione e sufficientemente lunga per degradare i fruttani',
+        message: t(loc.message, { pct: reduction.toFixed(0) }),
+        tip: loc.tip,
         severity: 'info',
       });
     }
@@ -231,42 +96,40 @@ export function getDietaryWarnings(
       params.yeastType
     );
     if (histamine > 10) {
-      const loc = cmsW?.histamine_high;
+      const loc = cmsW?.histamine_high ?? DIETARY_I18N_DEFAULTS.warnings.histamine_high;
       warnings.push({
         filterId: 'histamine',
-        message: loc ? t(loc.message, { val: histamine.toFixed(0) })
-          : `Istamina stimata ~${histamine.toFixed(0)} mg/kg — livello alto`,
-        tip: loc?.tip ?? `Riduci fermentazione a ≤12h o usa lievito fresco a ≤20°C`,
+        message: t(loc.message, { val: histamine.toFixed(0) }),
+        tip: loc.tip,
         severity: 'critical',
       });
     } else if (histamine > 5) {
-      const loc = cmsW?.histamine_moderate;
+      const loc = cmsW?.histamine_moderate ?? DIETARY_I18N_DEFAULTS.warnings.histamine_moderate;
       warnings.push({
         filterId: 'histamine',
-        message: loc ? t(loc.message, { val: histamine.toFixed(0) })
-          : `Istamina stimata ~${histamine.toFixed(0)} mg/kg — livello moderato`,
-        tip: loc?.tip ?? 'Monitora i sintomi. Per sicurezza, riduci tempo o temperatura',
+        message: t(loc.message, { val: histamine.toFixed(0) }),
+        tip: loc.tip,
         severity: 'warning',
       });
     }
   }
 
   if (activeFilters.includes('gluten_free')) {
-    const loc = cmsW?.gluten_free;
+    const loc = cmsW?.gluten_free ?? DIETARY_I18N_DEFAULTS.warnings.gluten_free;
     warnings.push({
       filterId: 'gluten_free',
-      message: loc?.message ?? 'Ricetta usa farina di grano — incompatibile con celiachia',
-      tip: loc?.tip ?? 'Sostituisci con mix GF (riso 40% + mais 30% + quinoa 10% + sorgo 10% + amido 10%) + xantana 1.5%',
+      message: loc.message,
+      tip: loc.tip,
       severity: 'critical',
     });
   }
 
   if (activeFilters.includes('nickel') && params.flourW > 300) {
-    const loc = cmsW?.nickel_highW;
+    const loc = cmsW?.nickel_highW ?? DIETARY_I18N_DEFAULTS.warnings.nickel_highW;
     warnings.push({
       filterId: 'nickel',
-      message: loc?.message ?? 'Farine forti (W alto) tendono ad essere meno raffinate, con piu nichel',
-      tip: loc?.tip ?? 'Preferisci farina 00 raffinata (W 200-260) per minimizzare nichel',
+      message: loc.message,
+      tip: loc.tip,
       severity: 'info',
     });
   }

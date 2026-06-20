@@ -3,41 +3,39 @@
    Mostra: calibrazione pesi, frequenza problemi, success rate per stile,
    adversarial findings confermati/smentiti dal feedback utente. */
 
-import React, { useState, useMemo, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
-  AlertTriangle,
-  CheckCircle2,
-  Info,
-  Download,
-  Upload,
-  Trash2,
-  ChevronDown,
-  Bug,
-  Target,
-  Activity,
-  XCircle,
-  Copy,
-  Check,
-  HelpCircle,
+Activity,
+AlertTriangle,
+BarChart3,
+Bug,
+Check,
+CheckCircle2,
+ChevronDown,
+Copy,
+Download,
+HelpCircle,
+Info,
+Target,
+Trash2,
+TrendingDown,
+TrendingUp,
+Upload
 } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import React,{ useCallback,useMemo,useState } from "react";
 import {
-  loadFeedback,
-  clearAllFeedback,
-  exportFeedbackJSON,
-  exportFeedbackCSV,
-  importFeedbackJSON,
-  analyzeCalibration,
-  analyzeIssueFrequency,
-  analyzeStyleSuccessRate,
-  crossReferenceAdversarialWithFeedback,
-  ADVERSARIAL_FINDINGS,
-  type RecipeFeedback,
-  type CalibrationResult,
-  type AdversarialFinding,
+analyzeCalibration,
+analyzeIssueFrequency,
+analyzeStyleSuccessRate,
+clearAllFeedback,
+crossReferenceAdversarialWithFeedback,
+exportFeedbackCSV,
+exportFeedbackJSON,
+importFeedbackJSON,
+loadFeedback,
+type AdversarialFinding,
+type CalibrationResult,
+type RecipeFeedback
 } from "./feedback-store";
 
 export function FeedbackAnalysisPanel() {
@@ -111,18 +109,18 @@ export function FeedbackAnalysisPanel() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <div style={{ fontSize: "1rem", fontWeight: 700, color: "var(--text-default)" }}>
+          <div style={{ fontSize: "var(--font-size-2xl)", fontWeight: "var(--weight-bold)", color: "var(--text-default)" }}>
             Feedback & Calibrazione
           </div>
-          <div style={{ fontSize: "0.75rem", color: "var(--muted-foreground)" }}>
+          <div className="type-body" style={{ color: "var(--muted-foreground)" }}>
             {feedback.length} feedback · {attempted.length} tentati · {successCount} riusciti
           </div>
         </div>
         <div className="flex gap-2">
-          <SmallButton icon={copyDone ? <Check style={{ width: 12, height: 12 }} /> : <Copy style={{ width: 12, height: 12 }} />} label="Export" onClick={handleExport} />
-          <SmallButton icon={<Download style={{ width: 12, height: 12 }} />} label="Export CSV" onClick={handleExportCSV} />
-          <SmallButton icon={<Upload style={{ width: 12, height: 12 }} />} label="Import" onClick={handleImport} />
-          <SmallButton icon={<Trash2 style={{ width: 12, height: 12 }} />} label="Reset" onClick={handleClear} danger />
+          <SmallButton icon={copyDone ? <Check style={{ width: "var(--space-3)", height: "var(--space-3)" }} /> : <Copy style={{ width: "var(--space-3)", height: "var(--space-3)" }} />} label="Export" onClick={handleExport} />
+          <SmallButton icon={<Download style={{ width: "var(--space-3)", height: "var(--space-3)" }} />} label="Export CSV" onClick={handleExportCSV} />
+          <SmallButton icon={<Upload style={{ width: "var(--space-3)", height: "var(--space-3)" }} />} label="Import" onClick={handleImport} />
+          <SmallButton icon={<Trash2 style={{ width: "var(--space-3)", height: "var(--space-3)" }} />} label="Reset" onClick={handleClear} danger />
         </div>
       </div>
 
@@ -130,7 +128,7 @@ export function FeedbackAnalysisPanel() {
       <Section
         id="overview"
         title="Panoramica Calibrazione"
-        icon={<Target style={{ width: 14, height: 14 }} />}
+        icon={<Target style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />}
         active={activeSection}
         onToggle={setActiveSection}
       >
@@ -148,7 +146,7 @@ export function FeedbackAnalysisPanel() {
       <Section
         id="issues"
         title="Problemi Frequenti"
-        icon={<AlertTriangle style={{ width: 14, height: 14 }} />}
+        icon={<AlertTriangle style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />}
         active={activeSection}
         onToggle={setActiveSection}
         badge={issueFreq.length > 0 ? issueFreq.length : undefined}
@@ -164,21 +162,21 @@ export function FeedbackAnalysisPanel() {
                 style={{ background: "var(--surface-container)" }}
               >
                 <div>
-                  <span style={{ fontSize: "0.8125rem", color: "var(--text-default)" }}>
+                  <span className="type-body-lg" style={{ color: "var(--text-default)" }}>
                     {issue.label}
                   </span>
-                  <span style={{ fontSize: "0.6875rem", color: "var(--muted-foreground)", marginLeft: 8 }}>
+                  <span className="type-body-sm" style={{ color: "var(--muted-foreground)", marginLeft: "var(--space-2)" }}>
                     H̄={issue.avgParams.hydration}% · T̄={issue.avgParams.ovenTemp}°C · t̄={issue.avgParams.fermentHours}h
                   </span>
                 </div>
                 <div
                   className="rounded-lg px-2 py-0.5"
                   style={{
-                    fontSize: "0.75rem",
+                    fontSize: "var(--font-size-md)",
                     fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
+                    fontWeight: "var(--weight-bold)",
                     background: issue.count >= 3 ? "var(--primary)" : "var(--surface-container-high)",
-                    color: issue.count >= 3 ? "#ffffff" : "var(--text-default)",
+                    color: issue.count >= 3 ? "var(--overlay-text)" : "var(--text-default)",
                   }}
                 >
                   {issue.count}×
@@ -192,7 +190,7 @@ export function FeedbackAnalysisPanel() {
       <Section
         id="styles"
         title="Success Rate per Stile"
-        icon={<BarChart3 style={{ width: 14, height: 14 }} />}
+        icon={<BarChart3 style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />}
         active={activeSection}
         onToggle={setActiveSection}
       >
@@ -207,10 +205,10 @@ export function FeedbackAnalysisPanel() {
                 style={{ background: "var(--surface-container)" }}
               >
                 <div className="flex flex-col">
-                  <span style={{ fontSize: "0.8125rem", color: "var(--text-default)", fontWeight: 600 }}>
+                  <span className="type-body-lg" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" }}>
                     {s.styleName}
                   </span>
-                  <span style={{ fontSize: "0.6875rem", color: "var(--muted-foreground)" }}>
+                  <span className="type-body-sm" style={{ color: "var(--muted-foreground)" }}>
                     {s.attempts} tentativi · predicted {s.avgPredictedComposite}
                     {s.calibrationGap !== 0 && (
                       <span style={{ color: s.calibrationGap > 10 ? "var(--primary)" : "var(--cta)" }}>
@@ -222,9 +220,9 @@ export function FeedbackAnalysisPanel() {
                 <div className="flex items-center gap-2">
                   <SuccessBar rate={s.successRate} />
                   <span style={{
-                    fontSize: "0.75rem",
+                    fontSize: "var(--font-size-md)",
                     fontFamily: "var(--font-mono)",
-                    fontWeight: 700,
+                    fontWeight: "var(--weight-bold)",
                     color: s.successRate >= 70 ? "var(--cta)" : s.successRate >= 40 ? "var(--tertiary)" : "var(--primary)",
                   }}>
                     {s.successRate}%
@@ -239,12 +237,12 @@ export function FeedbackAnalysisPanel() {
       <Section
         id="adversarial"
         title="Audit Adversarial"
-        icon={<Bug style={{ width: 14, height: 14 }} />}
+        icon={<Bug style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />}
         active={activeSection}
         onToggle={setActiveSection}
         badge={adversarial.filter((f) => f.confirmedByFeedback).length || undefined}
       >
-        <div style={{ fontSize: "0.75rem", color: "var(--muted-foreground)", marginBottom: 8 }}>
+        <div className="type-body" style={{ color: "var(--muted-foreground)", marginBottom: "var(--space-2)" }}>
           Problemi noti nel motore, incrociati con feedback utente per conferma/smentita.
         </div>
         <div className="flex flex-col gap-2">
@@ -269,8 +267,8 @@ function SmallButton({
       className="rounded-lg px-2.5 py-1.5 flex items-center gap-1.5 active:scale-95"
       onClick={onClick}
       style={{
-        fontSize: "0.6875rem",
-        border: `1px solid ${danger ? "var(--primary)" : "var(--outline-variant)"}`,
+        fontSize: "var(--font-size-base)",
+        border: `var(--border-width-thin) solid ${danger ? "var(--primary)" : "var(--outline-variant)"}`,
         background: "var(--surface-container)",
         color: danger ? "var(--primary)" : "var(--text-default)",
         cursor: "pointer",
@@ -296,7 +294,7 @@ function Section({
       className="rounded-2xl overflow-hidden"
       style={{
         background: "var(--surface-container-low)",
-        border: "1px solid var(--outline-variant)",
+        border: "var(--border-width-thin) solid var(--outline-variant)",
       }}
     >
       <motion.button
@@ -307,18 +305,18 @@ function Section({
       >
         <div className="flex items-center gap-2">
           <span style={{ color: "var(--primary)" }}>{icon}</span>
-          <span style={{ fontSize: "0.8125rem", fontWeight: 600, color: "var(--text-default)" }}>
+          <span className="type-body-lg" style={{ fontWeight: "var(--weight-semibold)", color: "var(--text-default)" }}>
             {title}
           </span>
           {badge !== undefined && badge > 0 && (
             <span
               className="rounded-full px-1.5 py-0.5"
               style={{
-                fontSize: "0.625rem",
+                fontSize: "var(--font-size-sm)",
                 fontFamily: "var(--font-mono)",
-                fontWeight: 700,
+                fontWeight: "var(--weight-bold)",
                 background: "var(--primary)",
-                color: "#ffffff",
+                color: "var(--overlay-text)",
               }}
             >
               {badge}
@@ -329,7 +327,7 @@ function Section({
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
         >
-          <ChevronDown style={{ color: "var(--muted-foreground)", width: 14, height: 14 }} />
+          <ChevronDown style={{ color: "var(--muted-foreground)", width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />
         </motion.div>
       </motion.button>
       <AnimatePresence>
@@ -384,16 +382,16 @@ function CalibrationRow({ cal }: { cal: CalibrationResult }) {
       style={{ background: "var(--surface-container)" }}
     >
       <div className="flex flex-col">
-        <span style={{ fontSize: "0.8125rem", fontWeight: 600, color: "var(--text-default)" }}>
+        <span className="type-body-lg" style={{ fontWeight: "var(--weight-semibold)", color: "var(--text-default)" }}>
           {dimLabels[cal.dimension] ?? cal.dimension}
         </span>
-        <span style={{ fontSize: "0.6875rem", color: "var(--muted-foreground)", fontFamily: "var(--font-mono)" }}>
+        <span style={{ fontSize: "var(--font-size-base)", color: "var(--muted-foreground)", fontFamily: "var(--font-mono)" }}>
           bias={cal.meanBias > 0 ? "+" : ""}{cal.meanBias} · σ={cal.stdDev} · r={cal.correlation} · n={cal.sampleCount}
         </span>
       </div>
       <div className="flex items-center gap-1.5">
-        <VerdictIcon style={{ width: 14, height: 14, color: verdictColors[cal.verdict] }} />
-        <span style={{ fontSize: "0.75rem", fontWeight: 600, color: verdictColors[cal.verdict] }}>
+        <VerdictIcon style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)", color: verdictColors[cal.verdict] }} />
+        <span className="type-body" style={{ fontWeight: "var(--weight-semibold)", color: verdictColors[cal.verdict] }}>
           {verdictLabels[cal.verdict]}
         </span>
       </div>
@@ -405,7 +403,7 @@ function SuccessBar({ rate }: { rate: number }) {
   return (
     <div
       className="rounded-full overflow-hidden"
-      style={{ width: 48, height: 6, background: "var(--surface-container-high)" }}
+      style={{ width: "var(--space-12)", height: "var(--space-1-5)", background: "var(--surface-container-high)" }}
     >
       <div
         className="h-full rounded-full"
@@ -448,12 +446,12 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
         <span
           className="rounded px-1.5 py-0.5 shrink-0"
           style={{
-            fontSize: "0.5625rem",
+            fontSize: "var(--font-size-xs)",
             fontFamily: "var(--font-mono)",
             fontWeight: 800,
             letterSpacing: "0.08em",
             background: severityColors[finding.severity],
-            color: "#ffffff",
+            color: "var(--overlay-text)",
           }}
         >
           {severityLabels[finding.severity]}
@@ -461,26 +459,26 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
         <span
           className="rounded px-1 py-0.5 shrink-0"
           style={{
-            fontSize: "0.5625rem",
+            fontSize: "var(--font-size-xs)",
             fontFamily: "var(--font-mono)",
-            fontWeight: 700,
+            fontWeight: "var(--weight-bold)",
             background: "var(--surface-container-high)",
             color: "var(--muted-foreground)",
           }}
         >
           {finding.id}
         </span>
-        <span style={{ fontSize: "0.75rem", color: "var(--text-default)", flex: 1 }}>
+        <span className="type-body" style={{ color: "var(--text-default)", flex: 1 }}>
           {finding.title}
         </span>
         {finding.fixed && (
           <span
             className="rounded-full px-1.5 py-0.5 shrink-0"
             style={{
-              fontSize: "0.5625rem",
-              fontWeight: 700,
+              fontSize: "var(--font-size-xs)",
+              fontWeight: "var(--weight-bold)",
               background: "var(--cta)",
-              color: "#ffffff",
+              color: "var(--overlay-text)",
             }}
           >
             FIXED
@@ -490,17 +488,17 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
           <span
             className="rounded-full px-1.5 py-0.5 shrink-0"
             style={{
-              fontSize: "0.5625rem",
-              fontWeight: 700,
+              fontSize: "var(--font-size-xs)",
+              fontWeight: "var(--weight-bold)",
               background: "var(--primary)",
-              color: "#ffffff",
+              color: "var(--overlay-text)",
             }}
           >
             CONFERMATO
           </span>
         )}
         {finding.feedbackCount > 0 && !finding.confirmedByFeedback && (
-          <span style={{ fontSize: "0.625rem", color: "var(--muted-foreground)", fontFamily: "var(--font-mono)" }}>
+          <span style={{ fontSize: "var(--font-size-sm)", color: "var(--muted-foreground)", fontFamily: "var(--font-mono)" }}>
             {finding.feedbackCount}fb
           </span>
         )}
@@ -516,7 +514,7 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
           >
             <div
               className="px-3 pb-3 flex flex-col gap-2"
-              style={{ borderTop: "1px solid var(--outline-variant)", fontSize: "0.75rem" }}
+              style={{ borderTop: "var(--border-width-thin) solid var(--outline-variant)", fontSize: "var(--font-size-md)" }}
             >
               <div className="pt-2" style={{ color: "var(--text-default)" }}>
                 {finding.description}
@@ -539,8 +537,8 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="py-4 text-center" style={{ color: "var(--muted-foreground)", fontSize: "0.8125rem" }}>
-      <Info style={{ width: 20, height: 20, margin: "0 auto 8px", opacity: 0.5 }} />
+    <div className="py-4 text-center" style={{ color: "var(--muted-foreground)", fontSize: "var(--font-size-lg)" }}>
+      <Info style={{ width: "var(--space-5)", height: "var(--space-5)", margin: "var(--space-0) auto var(--space-2)", opacity: 0.5 }} />
       {message}
     </div>
   );

@@ -175,7 +175,7 @@ export function ColorSwatch({
               className="absolute inset-0 flex items-center justify-center"
               style={{ background: "var(--image-check-overlay)" }}
             >
-              <Check size={14} style={{ color: "var(--color-white)" }} />
+              <Check size={14} style={{ color: "var(--overlay-text)" }} />
             </motion.div>
           )}
         </AnimatePresence>

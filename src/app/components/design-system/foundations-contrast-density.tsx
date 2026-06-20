@@ -1,16 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { AlertTriangle, Check, X, Eye, Ruler, Minus } from "lucide-react";
-import {
-  SectionHeader,
-  AnatomyRow,
-  SubSectionLabel,
-  Panoramica,
-  LineeGuida,
-  AccessibilitaInfo,
-  useDSContext,
-} from "./shared";
+import { AlertTriangle,Check,Eye,Ruler,X } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import React,{ useEffect,useRef,useState } from "react";
 import type { SectionEntry } from "./shared";
+import {
+AnatomyRow,
+SectionHeader,
+useDSContext
+} from "./shared";
 
 /* ═══════════════════════════════════════════════════════════
    UTILITY — WCAG Contrast ratio at runtime
@@ -177,7 +173,7 @@ export function ContrastRulesSection() {
   const categories = ["semantic", "container", "inverse", "cross"] as const;
 
   return (
-    <div className="flex flex-col gap-8" ref={ref}>
+    <div className="flex flex-col gap-8" ref={ref as any}>
       <SectionHeader
         title="Regole Contrasto M3"
         description="Il sistema M3 definisce coppie cromatiche safe: ogni container ha il suo on-container, ogni ruolo il suo -foreground. L'audit live calcola il rapporto WCAG in tempo reale sui token risolti, catturando bug come coppie identiche o contrasto insufficiente."

@@ -1,27 +1,27 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  Heart,
-  Star,
-  Settings,
-  Info,
-  Wheat,
-  Flame,
-  AlertTriangle,
-  X,
-  Search,
-  Copy,
-  Trash2,
+AlertTriangle,
+Copy,
+Flame,
+Heart,
+Info,
+Search,
+Settings,
+Star,
+Trash2,
+Wheat,
+X,
 } from "lucide-react";
-import {
-  SectionHeader,
-  AnatomyRow,
-  SubSectionLabel,
-  Panoramica,
-  LineeGuida,
-  AccessibilitaInfo,
-} from "./shared";
+import { AnimatePresence,motion } from "motion/react";
+import { useState } from "react";
 import type { SectionEntry } from "./shared";
+import {
+AccessibilitaInfo,
+AnatomyRow,
+LineeGuida,
+Panoramica,
+SectionHeader,
+SubSectionLabel,
+} from "./shared";
 
 /* ═══════════════════════════════════════════════════════════
    C26 — TOOLTIP  (M3 Expressive)

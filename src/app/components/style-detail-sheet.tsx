@@ -1,32 +1,88 @@
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
-import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff } from "lucide-react";
+import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { STYLE_PHOTOS } from "./recommended-styles";
-import { PizzaStyle, PIZZA_FAMILIES } from "./pizza-engine";
-import { getStyleDeviation, DEVIATION_CATEGORY_LABELS, getCompatibleVariants } from "./deviation-tags";
+import { STYLE_PHOTOS, reasonDimension, MATCH_DIMENSION_ICON } from "./recommended-styles";
+import { STYLE_VIDEOS } from "./style-photos";
+import {
+  PizzaStyle,
+  PIZZA_FAMILIES,
+  recommendStyles,
+  resolveEngineMsgs,
+  type EngineMsg,
+  type UserConstraints,
+} from "./pizza-engine";
+import { getStyleDeviation, DEVIATION_CATEGORY_LABELS } from "./deviation-tags";
+import { getInterpretationsForStyle } from "./interpretation-library";
 import { getStyleParametrics } from "./parametric-databases";
 import { useCms } from "./cms/cms-context";
-import { t } from "./cms/i18n";
+import { t, createFormatter } from "./cms/i18n";
+import { CtaButton } from "./ds";
+import { isFavoriteStyle, toggleFavoriteStyle } from "./saved-recipes";
 
 interface StyleDetailSheetProps {
   style: PizzaStyle;
+  /** VPL-C3 — vincoli utente per spiegare in modo articolato perché lo stile combacia. */
+  constraints?: UserConstraints;
   onGenerate: () => void;
   onDismiss: () => void;
 }
 
+/* VPL: video di cottura che sfuma in ingresso sopra la foto-poster (effetto wow). */
+function BlurInVideo({ src }: { src: string }) {
+  const [ready, setReady] = useState(false);
+  return (
+    <video
+      src={src}
+      muted
+      loop
+      playsInline
+      autoPlay
+      preload="auto"
+      onLoadedData={() => setReady(true)}
+      className="absolute inset-0 w-full h-full object-cover"
+      style={{
+        opacity: ready ? 1 : 0,
+        filter: ready ? "blur(0px)" : "blur(16px)",
+        transform: ready ? "scale(1)" : "scale(1.06)",
+        transition: "opacity 0.9s ease, filter 0.9s ease, transform 0.9s ease",
+      }}
+      aria-hidden="true"
+    />
+  );
+}
+
 export function StyleDetailSheet({
   style,
+  constraints,
   onGenerate,
   onDismiss,
 }: StyleDetailSheetProps) {
   const photo = STYLE_PHOTOS[style.id] || STYLE_PHOTOS.napoletana_stg;
-  const { cms } = useCms();
+  const video = STYLE_VIDEOS[style.id];
+  const { cms, bcp47 } = useCms();
+  /* VPL-C3: motivazioni di match articolate (lista completa, con dimensione). */
+  const matchReasons = React.useMemo(() => {
+    if (!constraints) return [] as { text: string; dim: ReturnType<typeof reasonDimension> }[];
+    const rec = recommendStyles(constraints).find((r) => r.style.id === style.id);
+    if (!rec || rec.tier === "not_feasible") return [];
+    const fmt = createFormatter(cms.ui, bcp47);
+    const texts = resolveEngineMsgs(
+      rec.reasons,
+      cms.engineMessages,
+      (_m: EngineMsg, key: string, value: string | number) =>
+        typeof value === "number" && ["temp", "ideal", "min"].includes(key)
+          ? fmt.celsius(value)
+          : value,
+    );
+    return texts.map((text, i) => ({ text, dim: reasonDimension(rec.reasons[i].key) }));
+  }, [constraints, style.id, cms.engineMessages, cms.ui, bcp47]);
   const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "").toUpperCase();
   const pt = cms.parametricTips;
   const prefersReducedMotion = useReducedMotion();
   const [showNerd, setShowNerd] = useState(false);
+  const [fav, setFav] = useState(() => isFavoriteStyle(style.id));
 
   const hRange = `${style.dough.hydration_pct_range[0]}–${style.dough.hydration_pct_range[1]}%`;
   const wRange = `W ${style.dough.flour_w_range[0]}–${style.dough.flour_w_range[1]}`;
@@ -36,7 +92,9 @@ export function StyleDetailSheet({
   const dev = getStyleDeviation(style.id);
   const devCmsLabel = cms.deviationLabels[dev.category] ?? DEVIATION_CATEGORY_LABELS[dev.category].label;
   const devEmoji = DEVIATION_CATEGORY_LABELS[dev.category].emoji;
-  const compatVariants = getCompatibleVariants(style.id);
+  /* Audit motore 2026-05: ex getCompatibleVariants (AUTHOR_VARIANTS legacy) →
+     ora deriva dalla Interpretation library (unica fonte di verità). */
+  const compatVariants = getInterpretationsForStyle(style.id);
   const params = getStyleParametrics(style.id);
 
   /* CMS-backed description & characteristics */
@@ -74,7 +132,7 @@ export function StyleDetailSheet({
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(0,0,0,0.25)",
+          background: "var(--sheet-backdrop)",
           pointerEvents: "auto",
         }}
       />
@@ -98,7 +156,7 @@ export function StyleDetailSheet({
           borderTopRightRadius: "1.25rem",
           background: "var(--surface-container-low)",
           borderTop: "1px solid var(--outline-variant)",
-          boxShadow: "0 -8px 40px rgba(0,0,0,0.15)",
+          boxShadow: "var(--sheet-shadow)",
         }}
       >
         {/* Handle bar */}
@@ -113,6 +171,33 @@ export function StyleDetailSheet({
             }}
           />
         </div>
+
+        {/* Preferito (canonico) — il bookmark marca lo STILE che ami, non la tua
+            versione su misura (quella si salva dalla scheda ricetta). */}
+        <motion.button
+          onClick={() => setFav(toggleFavoriteStyle(style.id).includes(style.id))}
+          whileTap={{ scale: 0.8 }}
+          className="absolute top-3 right-14 w-9 h-9 rounded-full flex items-center justify-center"
+          style={{
+            background: fav
+              ? "color-mix(in srgb, var(--primary) 14%, var(--surface-container))"
+              : "var(--surface-container)",
+            color: fav ? "var(--primary)" : "var(--text-muted)",
+            border: `1px solid ${fav ? "color-mix(in srgb, var(--primary) 35%, transparent)" : "var(--outline-variant)"}`,
+          }}
+          aria-label={fav ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+          aria-pressed={fav}
+        >
+          <motion.span
+            key={String(fav)}
+            initial={{ scale: 0.6 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 600, damping: 18 }}
+            style={{ display: "inline-flex" }}
+          >
+            <Bookmark size={15} fill={fav ? "currentColor" : "none"} />
+          </motion.span>
+        </motion.button>
 
         {/* Close button */}
         <motion.button
@@ -129,21 +214,27 @@ export function StyleDetailSheet({
         </motion.button>
 
         <div className="px-5 sm:px-6 pb-6 pt-2">
-          {/* ── Header row: Photo thumb + title ── */}
-          <div className="flex gap-4 items-start">
-            {/* Photo thumbnail */}
+          {/* ── Hero media (foto, o video di cottura con blur-in) ── */}
+          <div
+            className="relative w-full overflow-hidden rounded-2xl"
+            style={{ height: "clamp(160px, 38vw, 220px)" }}
+          >
+            <ImageWithFallback
+              src={photo}
+              alt={style.name}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            {video && <BlurInVideo src={video} />}
+            {/* scrim per leggibilità di eventuali badge */}
             <div
-              className="shrink-0 rounded-xl overflow-hidden"
-              style={{ width: 80, height: 80 }}
-            >
-              <ImageWithFallback
-                src={photo}
-                alt={style.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: "linear-gradient(to top, color-mix(in srgb, var(--overlay-backdrop) 62%, transparent), transparent 55%)" }}
+            />
+          </div>
 
-            <div className="flex-1 min-w-0">
+          {/* ── Title block ── */}
+          <div className="mt-3.5">
+            <div className="min-w-0">
               {/* Family label */}
               <span
                 style={{
@@ -230,8 +321,8 @@ export function StyleDetailSheet({
                 fontSize: "var(--font-size-sm)",
                 color: showNerd ? "var(--primary)" : "var(--text-muted)",
                 background: showNerd
-                  ? "color-mix(in srgb, var(--primary) 8%, rgba(0,0,0,0))"
-                  : "rgba(0,0,0,0)",
+                  ? "color-mix(in srgb, var(--primary) 8%, transparent)"
+                  : "transparent",
                 border: `1px solid ${showNerd ? "color-mix(in srgb, var(--primary) 20%, var(--outline-variant))" : "var(--outline-variant)"}`,
                 cursor: "pointer",
                 fontWeight: "var(--weight-medium)" as any,
@@ -267,8 +358,9 @@ export function StyleDetailSheet({
                     </span>
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {compatVariants.map((v) => {
-                        const cmsAuthor = cms.authorAuthors[v.id] ?? v.author;
-                        const cmsName = cms.authorNames[v.id] ?? v.name;
+                        /* Etichetta autore: maestro/pizzeria/ente, + firma tecnica. */
+                        const who = v.author ?? v.pizzeria ?? v.organization ?? "";
+                        const what = v.signature_name ?? "";
                         return (
                           <span
                             key={v.id}
@@ -281,7 +373,7 @@ export function StyleDetailSheet({
                               border: "1px solid color-mix(in srgb, var(--primary) 15%, var(--outline-variant))",
                             }}
                           >
-                            {v.emoji} {cmsAuthor} — {cmsName}
+                            {v.emoji ? `${v.emoji} ` : ""}{who}{what ? ` — ${what}` : ""}
                           </span>
                         );
                       })}
@@ -416,22 +508,65 @@ export function StyleDetailSheet({
             )}
           </AnimatePresence>
 
+          {/* ── VPL-C3: motivazioni di match articolate ── */}
+          {matchReasons.length > 0 && (
+            <div className="mt-6">
+              <h3
+                style={{
+                  fontSize: "var(--font-size-sm)",
+                  fontWeight: "var(--weight-bold)" as any,
+                  letterSpacing: "var(--tracking-caps)",
+                  textTransform: "uppercase",
+                  color: "var(--text-muted)",
+                  marginBottom: "var(--space-3)",
+                }}
+              >
+                {pt.sheetMatchTitle}
+              </h3>
+              <div className="flex flex-col gap-2.5">
+                {matchReasons.map((r, i) => {
+                  const DimIcon = MATCH_DIMENSION_ICON[r.dim];
+                  return (
+                    <div key={i} className="flex items-start gap-2.5">
+                      <span
+                        className="flex items-center justify-center rounded-full shrink-0"
+                        style={{
+                          width: 24,
+                          height: 24,
+                          background: "var(--surface-container)",
+                          color: "var(--text-accent)",
+                          marginTop: 1,
+                        }}
+                      >
+                        <DimIcon size={13} strokeWidth={2.5} aria-hidden="true" />
+                      </span>
+                      <span
+                        style={{
+                          fontSize: "var(--font-size-md)",
+                          lineHeight: "var(--leading-normal)",
+                          color: "var(--text-default)",
+                        }}
+                      >
+                        {r.text}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* ── CTA — Genera ricetta ── */}
-          <motion.button
+          <CtaButton
+            as={motion.button}
             onClick={onGenerate}
             whileHover={{ scale: 1.02 }}
-            className="w-full flex items-center justify-center gap-2.5 h-13 rounded-full mt-6 active:scale-[0.97] transition-transform"
-            style={{
-              background: "var(--cta-btn-bg)",
-              color: "var(--cta-btn-text)",
-              boxShadow: "var(--cta-btn-shadow-deep)",
-              fontWeight: "var(--weight-semibold)" as any,
-              fontSize: "var(--font-size-xl-5)",
-            }}
+            deepShadow
+            className="w-full h-13 mt-6 active:scale-[0.97]"
           >
             <Sparkles size={15} />
             {pt.sheetGenerateBtn}
-          </motion.button>
+          </CtaButton>
         </div>
       </motion.div>
     </div>

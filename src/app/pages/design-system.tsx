@@ -1,9 +1,9 @@
-import React from "react";
-import { DesignSystemTab } from "../components/design-system";
-import { useDarkMode } from "../components/root-layout";
+import { ArrowLeft,Moon,Sun } from "lucide-react";
 import { motion } from "motion/react";
-import { ArrowLeft, Moon, Sun } from "lucide-react";
 import { useNavigate } from "react-router";
+import { DesignSystemTab } from "../components/design-system";
+import { Surface } from "../components/ds";
+import { useDarkMode } from "../components/root-layout";
 
 /**
  * Standalone Design System page at /design-system
@@ -23,7 +23,7 @@ export function DesignSystemPage() {
       }}
     >
       {/* Minimal sticky header */}
-      <header className="sticky top-0 z-50 surface-glass">
+      <Surface as="header" variant="glass" className="sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <motion.button
@@ -80,7 +80,7 @@ export function DesignSystemPage() {
             {darkMode ? <Sun size={16} /> : <Moon size={16} />}
           </motion.button>
         </div>
-      </header>
+      </Surface>
 
       {/* Full-width spec sheet */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-24">

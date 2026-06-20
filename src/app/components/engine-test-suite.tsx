@@ -11,7 +11,6 @@ import {
   AlertTriangle,
   CircleX,
   ChevronDown,
-  Timer,
   Zap,
   BarChart3,
   Database,
@@ -55,7 +54,9 @@ import {
   getScoringByStyle,
   getEquipmentByStyle,
 } from "./parametric-databases";
-import { STYLE_DEVIATIONS, AUTHOR_VARIANTS, getStyleDeviation, getCompatibleVariants } from "./deviation-tags";
+import { getStyleDeviation } from "./deviation-tags";
+import { Badge, Surface } from "./ds";
+import { getAllInterpretations, getInterpretationsForStyle } from "./interpretation-library";
 import { FLOURS_DB, getCompatibleFlours, getEffectiveWRange } from "./flour-database";
 
 /* ═══ TYPES ═══ */
@@ -109,9 +110,7 @@ function timed<T>(fn: () => T): { result: T; ms: number } {
   return { result, ms: Math.round((performance.now() - t0) * 100) / 100 };
 }
 
-function assert(cond: boolean, passMsg: string, failMsg: string): { ok: boolean; msg: string } {
-  return cond ? { ok: true, msg: passMsg } : { ok: false, msg: failMsg };
-}
+
 
 /* ═══ T01: DB INTEGRITY ═══ */
 function runDbIntegrity(): TestResult[] {
@@ -407,7 +406,6 @@ function runGenerationMatrix(): TestResult[] {
 
   // T02-10: Topping info present (styles with TOPPING_DB)
   {
-    const errs: string[] = [];
     const withTopping: string[] = [];
     const { ms } = timed(() => {
       for (const s of styles) {
@@ -488,7 +486,7 @@ function runScoreBounds(): TestResult[] {
     const min = Math.min(...composites);
     const max = Math.max(...composites);
     const spread = max - min;
-    results.push({ id: "T03-05", name: "Distribuzione score (varianza)", status: spread > 5 ? "pass" : "warn", detail: `Range: ${min}-${max} (spread=${spread})`, ms: 0 });
+    results.push({ id: "T03-05", name: "Distribuzione score (varianza)", status: spread > 5 ? "pass" : "warn", detail: `Range: ${min}-${max} (spread=${spread})`, ms });
   }
 
   // T03-06: Authenticity monotonicity — closer params → higher score
@@ -1159,22 +1157,22 @@ function runDeviationFlour(): TestResult[] {
     results.push({ id: "T12-01", name: "Deviation signatures complete", status: missing.length === 0 ? "pass" : "warn", detail: missing.length ? `Mancanti: ${missing.join(", ")}` : `${ids.length}/${ids.length}`, ms });
   }
 
-  // T12-02: Author variants exist
+  // T12-02: Interpretazioni presenti (ex Author variants, ora migrate)
   {
     const { ms } = timed(() => null);
-    const count = Object.keys(AUTHOR_VARIANTS).length;
-    results.push({ id: "T12-02", name: "Author variants presenti", status: count >= 9 ? "pass" : count >= 6 ? "warn" : "fail", detail: `${count} varianti autore`, ms });
+    const count = getAllInterpretations().length;
+    results.push({ id: "T12-02", name: "Interpretazioni presenti", status: count >= 12 ? "pass" : count >= 8 ? "warn" : "fail", detail: `${count} interpretazioni`, ms });
   }
 
-  // T12-03: Compatible variants don't crash
+  // T12-03: getInterpretationsForStyle non crasha
   {
     let errors = 0;
     const { ms } = timed(() => {
       for (const id of ids) {
-        try { getCompatibleVariants(id); } catch { errors++; }
+        try { getInterpretationsForStyle(id); } catch { errors++; }
       }
     });
-    results.push({ id: "T12-03", name: "getCompatibleVariants() stabile", status: errors === 0 ? "pass" : "fail", detail: errors ? `${errors} errori` : "OK", ms });
+    results.push({ id: "T12-03", name: "getInterpretationsForStyle() stabile", status: errors === 0 ? "pass" : "fail", detail: errors ? `${errors} errori` : "OK", ms });
   }
 
   // T12-04: Flour DB count
@@ -1373,7 +1371,7 @@ export function EngineTestSuite() {
             <div className="type-data" style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>
               Engine Test Suite
             </div>
-            <div className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+            <div className="type-data-sm" style={{ color: "var(--text-muted)" }}>
               {categories.length} categorie · auto-adattivo · {STYLE_IDS().length} stili
             </div>
           </div>
@@ -1411,17 +1409,17 @@ export function EngineTestSuite() {
           className="flex items-center gap-4 p-4 rounded-2xl"
           style={{
             background: summary.fail > 0
-              ? "rgba(220,60,60,0.08)"
+              ? "color-mix(in srgb, var(--text-error) 8%, transparent)"
               : summary.warn > 0
-              ? "rgba(204,136,68,0.08)"
-              : "rgba(43,123,85,0.08)",
-            border: `1px solid ${summary.fail > 0 ? "rgba(220,60,60,0.2)" : summary.warn > 0 ? "rgba(204,136,68,0.2)" : "rgba(43,123,85,0.2)"}`,
+              ? "color-mix(in srgb, var(--tertiary) 8%, transparent)"
+              : "color-mix(in srgb, var(--cta) 8%, transparent)",
+            border: `1px solid ${summary.fail > 0 ? "color-mix(in srgb, var(--text-error) 20%, transparent)" : summary.warn > 0 ? "color-mix(in srgb, var(--tertiary) 20%, transparent)" : "color-mix(in srgb, var(--cta) 20%, transparent)"}`,
           }}
         >
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center"
             style={{
-              background: summary.fail > 0 ? "rgba(220,60,60,0.15)" : summary.warn > 0 ? "rgba(204,136,68,0.15)" : "rgba(43,123,85,0.15)",
+              background: summary.fail > 0 ? "color-mix(in srgb, var(--text-error) 15%, transparent)" : summary.warn > 0 ? "color-mix(in srgb, var(--tertiary) 15%, transparent)" : "color-mix(in srgb, var(--cta) 15%, transparent)",
               color: summary.fail > 0 ? "var(--text-error)" : summary.warn > 0 ? "var(--tertiary)" : "var(--cta)",
             }}
           >
@@ -1431,7 +1429,7 @@ export function EngineTestSuite() {
             <div className="type-data" style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>
               {summary.fail > 0 ? `${summary.fail} test falliti` : summary.warn > 0 ? `${summary.warn} avvisi` : "Tutti i test superati"}
             </div>
-            <div className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+            <div className="type-data-sm" style={{ color: "var(--text-muted)" }}>
               {summary.total} test · {summary.pass} pass · {summary.warn} warn · {summary.fail} fail · {runMs}ms
             </div>
           </div>
@@ -1467,9 +1465,9 @@ export function EngineTestSuite() {
               onClick={() => handleCopyReport("issues")}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
               style={{
-                background: copied === "issues" ? "rgba(43,123,85,0.12)" : "var(--surface-container)",
+                background: copied === "issues" ? "color-mix(in srgb, var(--cta) 12%, transparent)" : "var(--surface-container)",
                 color: copied === "issues" ? "var(--cta)" : "var(--text-default)",
-                border: `1px solid ${copied === "issues" ? "rgba(43,123,85,0.3)" : "var(--container-border)"}`,
+                border: `1px solid ${copied === "issues" ? "color-mix(in srgb, var(--cta) 30%, transparent)" : "var(--container-border)"}`,
                 fontWeight: "var(--weight-semibold)" as any,
                 fontSize: "var(--font-size-base)",
                 cursor: "pointer",
@@ -1483,9 +1481,9 @@ export function EngineTestSuite() {
               onClick={() => handleCopyReport("full")}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
               style={{
-                background: copied === "full" ? "rgba(43,123,85,0.12)" : "var(--surface-container)",
+                background: copied === "full" ? "color-mix(in srgb, var(--cta) 12%, transparent)" : "var(--surface-container)",
                 color: copied === "full" ? "var(--cta)" : "var(--text-default)",
-                border: `1px solid ${copied === "full" ? "rgba(43,123,85,0.3)" : "var(--container-border)"}`,
+                border: `1px solid ${copied === "full" ? "color-mix(in srgb, var(--cta) 30%, transparent)" : "var(--container-border)"}`,
                 fontWeight: "var(--weight-semibold)" as any,
                 fontSize: "var(--font-size-base)",
                 cursor: "pointer",
@@ -1495,7 +1493,7 @@ export function EngineTestSuite() {
               {copied === "full" ? <Check size={14} /> : <Copy size={14} />}
               {copied === "full" ? "Copiato!" : "Copia report completo"}
             </button>
-            <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", marginLeft: 4 }}>
+            <span className="type-data-xs" style={{ color: "var(--text-muted)", marginLeft: 4 }}>
               Incolla in chat per analisi e fix
             </span>
           </div>
@@ -1513,18 +1511,18 @@ export function EngineTestSuite() {
           const hasResults = catResults.length > 0;
 
           return (
-            <div key={cat.id} className="surface-card overflow-hidden" style={{ borderLeft: `3px solid ${cat.color}` }}>
+            <Surface key={cat.id} className="overflow-hidden" style={{ borderLeft: `3px solid ${cat.color}` }}>
               {/* Category header */}
               <button
                 onClick={() => hasResults && toggleCat(cat.id)}
                 className="w-full flex items-center justify-between p-4 active:scale-[0.99] transition-transform"
-                style={{ background: "rgba(0,0,0,0)", cursor: hasResults ? "pointer" : "default" }}
+                style={{ background: "transparent", cursor: hasResults ? "pointer" : "default" }}
                 disabled={!hasResults}
               >
                 <div className="flex items-center gap-2.5">
                   <div
                     className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ background: `color-mix(in srgb, ${cat.color} 12%, rgba(0,0,0,0))`, color: cat.color }}
+                    style={{ background: `color-mix(in srgb, ${cat.color} 12%, transparent)`, color: cat.color }}
                   >
                     {cat.icon}
                   </div>
@@ -1534,19 +1532,19 @@ export function EngineTestSuite() {
                   {hasResults && (
                     <div className="flex items-center gap-1.5 ml-2">
                       {catPass > 0 && (
-                        <span className="badge-base" style={{ background: "rgba(43,123,85,0.12)", color: "var(--cta)", fontSize: "var(--font-size-xs)" }}>
+                        <Badge size="xs" tone="cta" background="color-mix(in srgb, var(--cta) 12%, transparent)">
                           {catPass} ✓
-                        </span>
+                        </Badge>
                       )}
                       {catWarn > 0 && (
-                        <span className="badge-base" style={{ background: "rgba(204,136,68,0.12)", color: "var(--tertiary)", fontSize: "var(--font-size-xs)" }}>
+                        <Badge size="xs" tone="tertiary" background="color-mix(in srgb, var(--tertiary) 12%, transparent)">
                           {catWarn} ⚠
-                        </span>
+                        </Badge>
                       )}
                       {catFail > 0 && (
-                        <span className="badge-base" style={{ background: "rgba(220,60,60,0.12)", color: "var(--text-error)", fontSize: "var(--font-size-xs)" }}>
+                        <Badge size="xs" tone="error" background="color-mix(in srgb, var(--text-error) 12%, transparent)">
                           {catFail} ✗
-                        </span>
+                        </Badge>
                       )}
                     </div>
                   )}
@@ -1578,7 +1576,7 @@ export function EngineTestSuite() {
                             key={r.id}
                             className="flex items-start gap-2.5 p-2.5 rounded-lg"
                             style={{
-                              background: r.status === "fail" ? "rgba(220,60,60,0.05)" : "rgba(0,0,0,0)",
+                              background: r.status === "fail" ? "color-mix(in srgb, var(--text-error) 5%, transparent)" : "transparent",
                             }}
                           >
                             {/* Status icon */}
@@ -1605,7 +1603,7 @@ export function EngineTestSuite() {
                                   style={{
                                     fontSize: "var(--font-size-xs)",
                                     color: "var(--text-muted)",
-                                    fontFamily: "'DM Mono', monospace",
+                                    fontFamily: "var(--font-mono)",
                                     fontFeatureSettings: "'tnum'",
                                     opacity: 0.6,
                                   }}
@@ -1631,7 +1629,7 @@ export function EngineTestSuite() {
                               style={{
                                 fontSize: "var(--font-size-xs)",
                                 color: "var(--text-muted)",
-                                fontFamily: "'DM Mono', monospace",
+                                fontFamily: "var(--font-mono)",
                                 fontFeatureSettings: "'tnum'",
                                 opacity: 0.5,
                               }}
@@ -1645,7 +1643,7 @@ export function EngineTestSuite() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </Surface>
           );
         })}
       </div>

@@ -1158,7 +1158,7 @@ export function LogoConstructionSection() {
               },
               {
                 label: "Su scuro",
-                bg: "var(--color-night-900)",
+                bg: "var(--inverse-surface)",
                 cls: "text-[var(--primary)]",
                 gradient: false,
                 glow: true,
@@ -1368,7 +1368,7 @@ export function LogoConstructionSection() {
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(45deg, var(--color-red-400), var(--color-water-500), var(--color-sage-300), var(--color-lunch-300))",
+                    "linear-gradient(45deg, var(--text-error), var(--data-water), var(--cta), var(--data-warmth-light))",
                 }}
               />
               <VulcanMark

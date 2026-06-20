@@ -1,22 +1,30 @@
 /* === EXPLORE PAGE — VPL-059 ===
-   Catalogo completo 15 stili pizza con filtri famiglia.
-   Card template unificato con lo stile editoriale di Crea.
+   Catalogo completo stili pizza con filtri famiglia e ricette iconiche.
+   Layout editoriale e filtri flessibili (Spotify/Pinterest style).
    Tab: Stili — /explore */
 
-import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { ArrowRight } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import { useMemo,useState } from "react";
 import { Link } from "react-router";
+import { Heading } from "../components/ds";
+import { useCms } from "../components/cms/cms-context";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { FireGlow } from "../components/fire-glow";
+import { getInterpretationById } from "../components/interpretation-library";
 import {
-  STYLES_DB,
-  PIZZA_FAMILIES,
-  type FamilyId,
-  type PizzaStyle,
+PIZZA_FAMILIES,
+STYLES_DB,
+type FamilyId,
+type PizzaStyle,
 } from "../components/pizza-engine";
 import { STYLE_PHOTOS } from "../components/recommended-styles";
-import { useCms } from "../components/cms/cms-context";
+import {
+SIGNATURE_RECIPES,
+type SignatureRecipe,
+} from "../components/signature-recipes";
 import { useStylesOverride } from "../components/styles-override-context";
-import { getCompatibleVariants } from "../components/deviation-tags";
+import { TiltCard } from "../components/tilt-card";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
@@ -29,33 +37,166 @@ const FAMILY_IDS: (FamilyId | "all")[] = [
   "contemporanea",
 ];
 
-const FAMILY_EMOJIS: Record<string, string> = {
-  all: "",
-  napoletana: "",
-  romana: "",
-  americana: "",
-  contemporanea: "",
-};
+/* ── Componente Editoriale per la Ricetta in Primo Piano ── */
+function FeaturedRecipeCard({
+  recipe,
+  isNerd,
+}: {
+  recipe: SignatureRecipe;
+  isNerd?: boolean;
+}) {
+  const { cms } = useCms();
+  const photo =
+    recipe.photo ||
+    STYLE_PHOTOS[recipe.style_id] ||
+    FALLBACK;
+  const styleName = STYLES_DB[recipe.style_id]?.name ?? recipe.style_id;
+
+  const interpretation = recipe.interpretation_id
+    ? getInterpretationById(recipe.interpretation_id)
+    : undefined;
+  const authorLabel = interpretation
+    ? interpretation.author ?? interpretation.pizzeria ?? interpretation.organization ?? null
+    : null;
+
+  const linkParams = new URLSearchParams();
+  linkParams.set("mode", "canonical");
+  linkParams.set("tab", "condimento");
+  linkParams.set("topping", recipe.topping_concept_id);
+  if (recipe.interpretation_id)
+    linkParams.set("interpretation", recipe.interpretation_id);
+  const linkTo = `/recipe/${recipe.style_id}?${linkParams.toString()}`;
+
+  return (
+    <Link
+      to={linkTo}
+      className="flex flex-col md:flex-row overflow-hidden rounded-3xl active:scale-[0.99] transition-all duration-300 group"
+      style={{
+        textDecoration: "none",
+        color: "inherit",
+        background:
+          "linear-gradient(135deg, color-mix(in srgb, var(--container-page) 76%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 34%, transparent))",
+        border: isNerd ? "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)" : "1px solid color-mix(in srgb, var(--container-border) 72%, transparent)",
+        boxShadow: isNerd
+          ? "0 0 25px color-mix(in srgb, var(--accent-nerd) 15%, transparent), 0 12px 40px -12px color-mix(in srgb, var(--shadow-color) 12%, transparent)"
+          : "0 18px 56px -18px color-mix(in srgb, var(--shadow-color) 22%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)",
+        backdropFilter: "blur(22px) saturate(1.55)",
+        WebkitBackdropFilter: "blur(22px) saturate(1.55)",
+      }}
+    >
+      {/* Colonna Immagine */}
+      <div
+        className="w-full md:w-[45%] relative overflow-hidden"
+        style={{ height: "min(280px, 40vh)" }}
+      >
+        <ImageWithFallback
+          src={photo}
+          alt={recipe.name}
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          loading="lazy"
+        />
+        {/* Badge autenticità posizionato sull'immagine */}
+        {recipe.authenticity_badge && (
+          <div
+            className="absolute top-4 left-4 px-2.5 py-1 rounded-lg text-white"
+            style={{
+              background: "color-mix(in srgb, var(--primary) 90%, transparent)",
+              backdropFilter: "blur(8px)",
+              fontSize: "var(--font-size-base)",
+              fontWeight: "var(--weight-semibold)",
+            }}
+          >
+            {recipe.authenticity_badge}
+          </div>
+        )}
+      </div>
+
+      {/* Colonna Testo Solido */}
+      <div
+        className="w-full md:w-[55%] flex flex-col justify-between p-6 sm:p-8"
+        style={{
+          background:
+            "linear-gradient(135deg, color-mix(in srgb, var(--container-page) 58%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 22%, transparent))",
+        }}
+      >
+        <div className="flex flex-col gap-2">
+          <span
+            style={{
+              fontSize: "var(--font-size-sm)",
+              color: "var(--primary)",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              fontWeight: "var(--weight-semibold)" as any,
+            }}
+          >
+            {cms.pages.recipeLabel} · {styleName}
+          </span>
+          <h3
+            className="font-serif"
+            style={{
+              color: "var(--text-default)",
+              lineHeight: "var(--leading-snug)",
+              fontWeight: "var(--weight-bold)" as any,
+              margin: 0,
+            }}
+          >
+            {recipe.name}
+          </h3>
+          <p
+            className="mt-2"
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "var(--font-size-lg)",
+              lineHeight: 1.55,
+            }}
+          >
+            Una delle combinazioni più celebri per lo stile{" "}
+            <strong style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>{styleName}</strong>
+            {authorLabel ? ` via ${authorLabel}` : ""}. Scopri i parametri dell'impasto consigliati, i tempi e il condimento autentico.
+          </p>
+        </div>
+
+        <div
+          className="mt-6 flex items-center gap-1 text-[var(--primary)] group-hover:translate-x-1 transition-transform"
+          style={{
+            fontSize: "var(--font-size-lg)",
+            fontWeight: "var(--weight-semibold)",
+          }}
+        >
+          <span>{cms.pages.exploreRecipe}</span>
+          <ArrowRight size={14} />
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export function ExplorePage() {
   const { cms } = useCms();
   const { effectiveStyles } = useStylesOverride();
-  const [activeFamily, setActiveFamily] = useState<
-    FamilyId | "all"
-  >("all");
+  const [activeFilter, setActiveFilter] = useState<"all" | "styles" | "recipes">("all");
+  const [activeFamily, setActiveFamily] = useState<FamilyId | "all">("all");
+
+  const isNerd = useMemo(() => {
+    try {
+      return localStorage.getItem("vulcan_nerd_on") === "true";
+    } catch {
+      return false;
+    }
+  }, []);
 
   const styles = useMemo(() => {
     const db = effectiveStyles ?? STYLES_DB;
     return Object.values(db);
   }, [effectiveStyles]);
 
-  const filtered = useMemo(() => {
+  const filteredStyles = useMemo(() => {
     if (activeFamily === "all") return styles;
     return styles.filter((s) => s.family === activeFamily);
   }, [styles, activeFamily]);
 
-  /* Group by family for display */
-  const grouped = useMemo(() => {
+  /* Group styles by family for "all" and style tab when no family filter is applied */
+  const groupedStyles = useMemo(() => {
     if (activeFamily !== "all") return null;
     const groups: Record<FamilyId, PizzaStyle[]> = {
       napoletana: [],
@@ -82,12 +223,13 @@ export function ExplorePage() {
 
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen relative overflow-hidden"
       style={{
         background: "var(--container-page)",
         color: "var(--text-default)",
       }}
     >
+      {isNerd && <FireGlow intensity={0.3} variant="warm" />}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -96,190 +238,385 @@ export function ExplorePage() {
           stiffness: 400,
           damping: 30,
         }}
-        className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12"
+        className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 pb-28 relative z-10"
       >
-        {/* Header */}
-        <div className="text-center mb-8">
-          <span
-            style={{
-              fontSize: "0.6875rem",
-              color: "var(--primary)",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase" as any,
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
-          >
-            {cms.pages.exploreStepNum}
-          </span>
-          <h1
-            className="font-serif mt-2"
-            style={{
-              fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-              lineHeight: "var(--leading-snug)",
-              color: "var(--text-default)",
-            }}
-          >
-            {cms.pages.exploreTitle}
-          </h1>
+        {/* Header a grande respiro */}
+        <div style={{ marginBottom: "var(--space-10)" }}>
+          <Heading level="page">
+            {cms.misc.exploreHeroTitle1}
+            <span
+              style={{
+                display: "block",
+                background: isNerd
+                  ? "var(--gradient-nerd)"
+                  : "none",
+                color: isNerd ? "transparent" : "var(--text-accent)",
+                WebkitBackgroundClip: isNerd ? "text" : "unset",
+                WebkitTextFillColor: isNerd ? "transparent" : "unset",
+                fontWeight: "var(--weight-bold)" as any,
+                transition: "all 0.3s ease"
+              }}
+            >
+              {cms.misc.exploreHeroTitle2}
+            </span>
+          </Heading>
           <p
-            className="font-serif italic mt-1"
+            className="font-serif italic mt-3"
             style={{
-              fontSize: "var(--font-size-xl-5)",
+              fontSize: "var(--font-size-2xl)",
               color: "var(--text-muted)",
-              opacity: 0.65,
+              opacity: 0.75,
+              lineHeight: 1.45,
+              maxWidth: 480,
             }}
           >
-            {cms.pages.exploreSubtitle}
+            {cms.pages.exploreHeroDesc}
           </p>
         </div>
 
-        {/* Family filter chips */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {FAMILY_IDS.map((fam) => {
-            const active = activeFamily === fam;
-            const label =
-              fam === "all"
-                ? cms.allFamiliesLabel || "Tutte"
-                : cms.families[fam]?.name ||
-                  PIZZA_FAMILIES[fam]?.name ||
-                  fam;
-            const count = familyCounts[fam] || 0;
+        {/* Filtri Principali a Chips Flessibili (Spotify/Pinterest style) */}
+        <div className="flex gap-2 mb-8 overflow-x-auto pb-1 hide-scrollbar">
+          {[
+            { id: "all", label: cms.pages.exploreFilterFeatured },
+            { id: "styles", label: cms.pages.exploreFilterStyles },
+            { id: "recipes", label: cms.pages.exploreFilterRecipes },
+          ].map((item) => {
+            const active = activeFilter === item.id;
             return (
-              <motion.button
-                key={fam}
-                onClick={() => setActiveFamily(fam)}
-                className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveFilter(item.id as any);
+                  setActiveFamily("all");
+                }}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl active:scale-95 transition-transform shrink-0"
                 style={{
                   background: active
-                    ? "var(--primary)"
+                    ? (isNerd ? "var(--gradient-nerd)" : "var(--primary)")
                     : "var(--container-bg)",
-                  color: active
-                    ? "white"
-                    : "var(--text-default)",
-                  border: `1px solid ${active ? "var(--primary)" : "var(--container-border)"}`,
-                  fontSize: "0.8125rem",
-                  fontWeight: "var(--weight-medium)" as any,
+                  color: active ? "white" : "var(--text-default)",
+                  border: `1px solid ${active ? (isNerd ? "transparent" : "var(--primary)") : "var(--container-border)"}`,
+                  boxShadow: active && isNerd ? "0 0 12px color-mix(in srgb, var(--accent-nerd) 40%, transparent)" : "none",
+                  fontSize: "var(--font-size-lg)",
+                  fontWeight: "var(--weight-semibold)",
                   cursor: "pointer",
+                  outline: "none",
+                  transition: "all 0.3s ease",
                 }}
               >
-                {label}
-                <span
-                  style={{
-                    fontSize: "var(--font-size-xs)",
-                    opacity: 0.7,
-                    fontFeatureSettings: "'tnum'",
-                  }}
-                >
-                  {count}
-                </span>
-              </motion.button>
+                {item.label}
+              </button>
             );
           })}
         </div>
 
-        {/* Grid */}
+        {/* Vista Condizionata con AnimatePresence */}
         <AnimatePresence mode="wait">
-          <motion.div
-            key={activeFamily}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 30,
-            }}
-          >
-            {activeFamily === "all" && grouped ? (
-              /* Grouped by family */
-              Object.entries(grouped).map(
-                ([familyId, familyStyles]) => {
-                  if (familyStyles.length === 0) return null;
-                  const fam =
-                    PIZZA_FAMILIES[familyId as FamilyId];
-                  const cmsFam =
-                    cms.families[familyId as FamilyId];
-                  return (
-                    <div key={familyId} className="mb-10">
-                      <div className="flex items-center gap-2 mb-4">
-                        <span style={{ fontSize: "1.25rem" }}>
-                          {fam?.emoji}
-                        </span>
-                        <h2
-                          className="font-serif"
-                          style={{
-                            fontSize:
-                              "clamp(1.25rem, 3vw, 1.5rem)",
-                            color: "var(--text-default)",
-                          }}
-                        >
-                          {cmsFam?.name || fam?.name}
-                        </h2>
-                        <span
-                          className="type-data"
-                          style={{
-                            fontSize: "var(--font-size-xs)",
-                            color: "var(--text-muted)",
-                            fontFeatureSettings: "'tnum'",
-                          }}
-                        >
-                          {familyStyles.length}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                        {familyStyles.map((style, i) => (
-                          <StyleCatalogCard
-                            key={style.id}
-                            style={style}
-                            index={i}
-                            cms={cms}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  );
-                },
-              )
-            ) : (
-              /* Filtered flat grid */
+          {activeFilter === "all" && (
+            <motion.div
+              key="all-section"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              className="flex flex-col gap-10"
+            >
+              {/* 1. Hero Card "In primo piano" */}
+              {SIGNATURE_RECIPES.length > 0 && (
+                <FeaturedRecipeCard recipe={SIGNATURE_RECIPES[0]} isNerd={isNerd} />
+              )}
+
+              {/* 2. Anteprima Ricette Iconiche */}
+              <div>
+                <div className="flex items-baseline justify-between mb-4">
+                  <Heading level="md" as="h2">
+                    {cms.pages.exploreFilterRecipes}
+                  </Heading>
+                  <button
+                    onClick={() => setActiveFilter("recipes")}
+                    className="flex items-center gap-1 hover:underline cursor-pointer bg-none border-none outline-none"
+                    style={{
+                      color: "var(--primary)",
+                      fontSize: "var(--font-size-base)",
+                      fontWeight: "var(--weight-semibold)",
+                    }}
+                  >
+                    Vedi tutte ({SIGNATURE_RECIPES.length}) <ArrowRight size={12} />
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+                  {SIGNATURE_RECIPES.slice(1, 5).map((recipe, i) => (
+                    <SignatureRecipeCard
+                      key={recipe.id}
+                      recipe={recipe}
+                      index={i}
+                      cms={cms}
+                      isNerd={isNerd}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* 3. Anteprima Stili Tradizionali */}
+              <div>
+                <div className="flex items-baseline justify-between mb-4">
+                  <Heading level="md" as="h2">
+                    {cms.misc.exploreSectionTraditional}
+                  </Heading>
+                  <button
+                    onClick={() => setActiveFilter("styles")}
+                    className="flex items-center gap-1 hover:underline cursor-pointer bg-none border-none outline-none"
+                    style={{
+                      color: "var(--primary)",
+                      fontSize: "var(--font-size-base)",
+                      fontWeight: "var(--weight-semibold)",
+                    }}
+                  >
+                    Esplora tutti ({styles.length}) <ArrowRight size={12} />
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+                  {styles.slice(0, 4).map((style, i) => (
+                    <StyleCatalogCard
+                      key={style.id}
+                      style={style}
+                      index={i}
+                      cms={cms}
+                      isNerd={isNerd}
+                    />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeFilter === "recipes" && (
+            <motion.div
+              key="recipes-section"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+            >
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                {filtered.map((style, i) => (
-                  <StyleCatalogCard
-                    key={style.id}
-                    style={style}
+                {SIGNATURE_RECIPES.map((recipe, i) => (
+                  <SignatureRecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
                     index={i}
                     cms={cms}
+                    isNerd={isNerd}
                   />
                 ))}
               </div>
-            )}
-          </motion.div>
+            </motion.div>
+          )}
+
+          {activeFilter === "styles" && (
+            <motion.div
+              key="styles-section"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+            >
+              {/* Family filter chips in linea allineati a sinistra */}
+              <div className="flex flex-wrap gap-1.5 mb-6">
+                {FAMILY_IDS.map((fam) => {
+                  const active = activeFamily === fam;
+                  const label =
+                    fam === "all"
+                      ? "Tutti"
+                      : cms.families[fam]?.name ||
+                        PIZZA_FAMILIES[fam]?.name ||
+                        fam;
+                  const count = familyCounts[fam] || 0;
+                  /* VPL-A6: niente chip per famiglie senza stili (eviterebbero
+                   * una tab che porta a una griglia vuota). "Tutti" resta sempre. */
+                  if (fam !== "all" && count === 0) return null;
+                  return (
+                    <button
+                      key={fam}
+                      onClick={() => setActiveFamily(fam)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg active:scale-95 transition-transform"
+                      style={{
+                        background: active
+                          ? (isNerd ? "var(--gradient-nerd)" : "var(--primary)")
+                          : "var(--container-bg)",
+                        color: active
+                          ? "white"
+                          : "var(--text-default)",
+                        border: `1px solid ${active ? (isNerd ? "transparent" : "var(--primary)") : "var(--container-border)"}`,
+                        boxShadow: active && isNerd ? "0 0 12px color-mix(in srgb, var(--accent-nerd) 40%, transparent)" : "none",
+                        fontSize: "var(--font-size-base)",
+                        fontWeight: "var(--weight-semibold)",
+                        cursor: "pointer",
+                        outline: "none",
+                        transition: "all 0.3s ease",
+                      }}
+                    >
+                      {label}
+                      <span
+                        style={{
+                          fontSize: "var(--font-size-xs)",
+                          opacity: 0.7,
+                          fontFeatureSettings: "'tnum'",
+                        }}
+                      >
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Grid Stili con AnimatePresence interno */}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeFamily}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 30,
+                  }}
+                >
+                  {activeFamily === "all" && groupedStyles ? (
+                    /* Raggruppati per famiglia */
+                    Object.entries(groupedStyles).map(([familyId, familyStyles]) => {
+                      if (familyStyles.length === 0) return null;
+                      const fam = PIZZA_FAMILIES[familyId as FamilyId];
+                      const cmsFam = cms.families[familyId as FamilyId];
+                      return (
+                        <div key={familyId} style={{ marginBottom: "var(--space-10)" }}>
+                          <div className="flex items-center gap-2 mb-4">
+                            <h3
+                              className="font-serif"
+                              style={{
+                                color: "var(--text-default)",
+                                fontSize: "var(--font-size-2-5xl)",
+                                fontWeight: "var(--weight-bold)" as any,
+                                margin: 0,
+                              }}
+                            >
+                              {cmsFam?.name || fam?.name}
+                            </h3>
+                            <span
+                              className="type-data"
+                              style={{
+                                fontSize: "var(--font-size-xs)",
+                                color: "var(--text-muted)",
+                                fontFeatureSettings: "'tnum'",
+                              }}
+                            >
+                              ({familyStyles.length})
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                            {familyStyles.map((style, i) => (
+                              <StyleCatalogCard
+                                key={style.id}
+                                style={style}
+                                index={i}
+                                cms={cms}
+                                isNerd={isNerd}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : filteredStyles.length === 0 ? (
+                    /* VPL-A6: empty-state esplicito invece della griglia vuota */
+                    <div
+                      className="flex items-center justify-center text-center"
+                      style={{
+                        minHeight: "var(--space-40, 200px)",
+                        padding: "var(--space-8)",
+                        color: "var(--text-muted)",
+                        fontSize: "var(--font-size-base)",
+                      }}
+                    >
+                      {cms.misc.noStyleInFamily}
+                    </div>
+                  ) : (
+                    /* Griglia piatta filtrata */
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                      {filteredStyles.map((style, i) => (
+                        <StyleCatalogCard
+                          key={style.id}
+                          style={style}
+                          index={i}
+                          cms={cms}
+                          isNerd={isNerd}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
+          )}
         </AnimatePresence>
       </motion.div>
     </div>
   );
 }
 
-/* ═══ STYLE CATALOG CARD — Editorial magazine style (unified with Create) ═══ */
-function StyleCatalogCard({
-  style,
+/* ═══ SIGNATURE RECIPE CARD — Sprint 12 Fase 5 ═══
+   Card per ricetta iconica. Eredita foto dallo Style di parent, mostra
+   nome ricetta + badge "Disciplinare AVPN" / "Stile panaria romana" / ecc.
+   Click → /recipe/{style_id}?topping={concept_id} (chip topping pre-selezionato). */
+function SignatureRecipeCard({
+  recipe,
   index,
   cms,
+  isNerd,
 }: {
-  style: PizzaStyle;
+  recipe: SignatureRecipe;
   index: number;
   cms: any;
+  isNerd?: boolean;
 }) {
   const photo =
-    cms.media?.stylePhotos?.[style.id] ||
-    STYLE_PHOTOS[style.id] ||
+    recipe.photo ||
+    cms.media?.stylePhotos?.[recipe.style_id] ||
+    STYLE_PHOTOS[recipe.style_id] ||
     FALLBACK;
-  const cmsFamilyName = (
-    cms.families?.[style.family]?.name ||
-    PIZZA_FAMILIES[style.family]?.name ||
-    ""
-  ).toUpperCase();
-  const variants = getCompatibleVariants(style.id);
+  const styleName =
+    STYLES_DB[recipe.style_id]?.name ?? recipe.style_id;
+
+  /* Autore/locale dall'interpretazione (se mappata): mostrato come "via X"
+   * sopra al titolo, e propagato come deep-link ?interpretation=<id>.
+   * Audit motore 2026-05: dedup vs authenticity_badge — se il badge in alto
+   * già contiene il nome dell'organizzazione (es. badge "Disciplinare AVPN"
+   * + organization "AVPN — Associazione Verace Pizza Napoletana"),
+   * sopprime "via X" perché ridondante. */
+  const interpretation = recipe.interpretation_id
+    ? getInterpretationById(recipe.interpretation_id)
+    : undefined;
+  let authorLabel: string | null = interpretation
+    ? interpretation.author ??
+      interpretation.pizzeria ??
+      interpretation.organization ??
+      null
+    : null;
+  if (authorLabel && recipe.authenticity_badge) {
+    const orgKeyword = (interpretation?.organization ?? "").split(/[\s—]/)[0];
+    if (orgKeyword && recipe.authenticity_badge.toLowerCase().includes(orgKeyword.toLowerCase())) {
+      authorLabel = null;
+    }
+  }
+
+  const linkParams = new URLSearchParams();
+  linkParams.set("mode", "canonical");
+  linkParams.set("tab", "condimento");
+  linkParams.set("topping", recipe.topping_concept_id);
+  if (recipe.interpretation_id)
+    linkParams.set("interpretation", recipe.interpretation_id);
+  const linkTo = `/recipe/${recipe.style_id}?${linkParams.toString()}`;
 
   return (
     <motion.div
@@ -292,17 +629,148 @@ function StyleCatalogCard({
         delay: index * 0.04,
       }}
     >
-      <Link
-        to={`/recipe/${style.id}`}
-        className="block rounded-2xl overflow-hidden active:scale-[0.97] transition-transform group"
-        style={{
-          background: "var(--container-card)",
-          border: "1px solid var(--container-border-ghost)",
-          textDecoration: "none",
-          color: "inherit",
-        }}
-      >
-        {/* Photo area — 3/4 aspect like Create cards */}
+      <TiltCard className="relative rounded-2xl">
+        <Link
+          to={linkTo}
+          className="block rounded-2xl overflow-hidden active:scale-[0.97] transition-transform group"
+          style={{
+            background: "var(--container-card)",
+            border: isNerd ? "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)" : "1px solid var(--container-border-ghost)",
+            textDecoration: "none",
+            color: "inherit",
+          }}
+        >
+          <div
+            className="relative overflow-hidden"
+          style={{ aspectRatio: "3/4" }}
+        >
+          <ImageWithFallback
+            src={photo}
+            alt={recipe.name}
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+            loading="lazy"
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: "var(--overlay-scrim)" }}
+          />
+
+          {/* Badge autenticità — top right */}
+          {recipe.authenticity_badge && (
+            <div
+              className="absolute top-3 right-3 px-2 py-1 rounded-lg"
+              style={{
+                background:
+                  "color-mix(in srgb, var(--primary) 90%, transparent)",
+                fontSize: "var(--font-size-xs)",
+                fontWeight: "var(--weight-semibold)" as any,
+                color: "white",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              {recipe.authenticity_badge}
+            </div>
+          )}
+
+          {/* Title + sotto-titolo stile */}
+          <div className="absolute bottom-0 left-0 right-0 px-4 pb-3.5 sm:pb-4 pt-16">
+            <div
+              style={{
+                fontSize: "var(--font-size-sm)",
+                fontWeight: "var(--weight-semibold)" as any,
+                letterSpacing: "var(--tracking-label)",
+                textTransform: "uppercase" as const,
+                color: "var(--overlay-text-warm)",
+                textShadow: "var(--overlay-shadow-text-sm)",
+                marginBottom: 4,
+              }}
+            >
+              {cms.pages.recipeLabel} · {styleName}
+            </div>
+            <span
+              className="font-serif"
+              style={{
+                fontSize:
+                  "clamp(var(--font-size-2xl), 3vw, var(--font-size-5xl))",
+                fontWeight: "var(--weight-bold)" as any,
+                lineHeight: "var(--leading-snug)",
+                color: "var(--overlay-text)",
+                textShadow: "var(--overlay-shadow-text)",
+                display: "block",
+                letterSpacing: "var(--tracking-snug)",
+              }}
+            >
+              {recipe.name}
+            </span>
+            {/* Sprint 12 — autore/locale dell'interpretazione (se mappata). */}
+            {authorLabel && (
+              <div
+                style={{
+                  marginTop: 4,
+                  fontSize: "var(--font-size-xs)",
+                  fontWeight: "var(--weight-medium)" as any,
+                  letterSpacing: "var(--tracking-snug)",
+                  color: "var(--overlay-text-warm)",
+                  textShadow: "var(--overlay-shadow-text-sm)",
+                  opacity: 0.92,
+                }}
+              >
+                via {authorLabel}
+              </div>
+            )}
+          </div>
+        </div>
+      </Link>
+      </TiltCard>
+    </motion.div>
+  );
+}
+
+/* ═══ STYLE CATALOG CARD — Editorial magazine style (unified with Create) ═══ */
+function StyleCatalogCard({
+  style,
+  index,
+  cms,
+  isNerd,
+}: {
+  style: PizzaStyle;
+  index: number;
+  cms: any;
+  isNerd?: boolean;
+}) {
+  const photo =
+    cms.media?.stylePhotos?.[style.id] ||
+    STYLE_PHOTOS[style.id] ||
+    FALLBACK;
+  const cmsFamilyName = (
+    cms.families?.[style.family]?.name ||
+    PIZZA_FAMILIES[style.family]?.name ||
+    ""
+  ).toUpperCase();
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 28,
+        delay: index * 0.04,
+      }}
+    >
+      <TiltCard className="relative rounded-2xl">
+        <Link
+          to={`/recipe/${style.id}?mode=canonical`}
+          className="block rounded-2xl overflow-hidden active:scale-[0.97] transition-transform group"
+          style={{
+            background: "var(--container-card)",
+            border: isNerd ? "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)" : "1px solid var(--container-border-ghost)",
+            textDecoration: "none",
+            color: "inherit",
+          }}
+        >
+          {/* Photo area — 3/4 aspect like Create cards */}
         <div
           className="relative overflow-hidden"
           style={{ aspectRatio: "3/4" }}
@@ -326,60 +794,14 @@ function StyleCatalogCard({
               className="absolute top-3 right-3 px-2 py-1 rounded-lg"
               style={{
                 background:
-                  "color-mix(in srgb, var(--cta) 90%, rgba(0,0,0,0))",
+                  "color-mix(in srgb, var(--cta) 90%, transparent)",
                 fontSize: "var(--font-size-xs)",
                 fontWeight: "var(--weight-semibold)" as any,
                 color: "white",
                 backdropFilter: "blur(8px)",
               }}
             >
-              Principianti
-            </div>
-          )}
-
-          {/* Author variant badges — top left */}
-          {variants.length > 0 && (
-            <div
-              className="absolute top-3 left-3 flex flex-wrap gap-1"
-              style={{ maxWidth: "60%" }}
-            >
-              {variants.slice(0, 2).map((v) => (
-                <div
-                  key={v.id}
-                  className="px-1.5 py-0.5 rounded-md"
-                  style={{
-                    fontSize: "var(--font-size-2xs)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    letterSpacing: "0.04em",
-                    color: "var(--overlay-text)",
-                    background:
-                      "color-mix(in srgb, var(--tertiary) 80%, rgba(0,0,0,0))",
-                    backdropFilter: "blur(6px)",
-                    whiteSpace: "nowrap" as const,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    maxWidth: "100%",
-                  }}
-                  title={`${v.emoji} ${v.author} — ${v.name}`}
-                >
-                  {v.emoji} {v.author.split(" ").pop()}
-                </div>
-              ))}
-              {variants.length > 2 && (
-                <div
-                  className="px-1.5 py-0.5 rounded-md"
-                  style={{
-                    fontSize: "var(--font-size-2xs)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    color: "var(--overlay-text)",
-                    background:
-                      "color-mix(in srgb, var(--tertiary) 70%, rgba(0,0,0,0))",
-                    backdropFilter: "blur(6px)",
-                  }}
-                >
-                  +{variants.length - 2}
-                </div>
-              )}
+              {cms.misc.badgeBeginnerFriendly}
             </div>
           )}
 
@@ -405,7 +827,7 @@ function StyleCatalogCard({
                 marginTop: 6,
                 fontSize: "var(--font-size-sm)",
                 fontWeight: "var(--weight-semibold)" as any,
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "var(--font-sans)",
                 letterSpacing: "var(--tracking-label)",
                 textTransform: "uppercase" as const,
                 color: "var(--overlay-text-warm)",
@@ -418,6 +840,7 @@ function StyleCatalogCard({
           </div>
         </div>
       </Link>
+      </TiltCard>
     </motion.div>
   );
 }

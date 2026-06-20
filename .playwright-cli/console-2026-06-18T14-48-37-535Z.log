@@ -1,0 +1,27 @@
+[     109ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:21564
+[    9348ms] ReferenceError: handleTabChange is not defined
+    at onClick (http://127.0.0.1:5174/src/app/components/recipe-section-tabs.tsx:211:28)
+    at HTMLUnknownElement.callCallback2 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3680:22)
+    at Object.invokeGuardedCallbackDev (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3705:24)
+    at invokeGuardedCallback (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3739:39)
+    at invokeGuardedCallbackAndCatchFirstError (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3742:33)
+    at executeDispatch (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7046:11)
+    at processDispatchQueueItemsInOrder (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7066:15)
+    at processDispatchQueue (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7075:13)
+    at dispatchEventsForPlugins (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7083:11)
+    at http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7206:20
+[    9349ms] ReferenceError: handleTabChange is not defined
+    at onClick (http://127.0.0.1:5174/src/app/components/recipe-section-tabs.tsx:211:28)
+    at HTMLUnknownElement.callCallback2 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3680:22)
+    at Object.invokeGuardedCallbackDev (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3705:24)
+    at invokeGuardedCallback (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3739:39)
+    at invokeGuardedCallbackAndCatchFirstError (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3742:33)
+    at executeDispatch (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7046:11)
+    at processDispatchQueueItemsInOrder (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7066:15)
+    at processDispatchQueue (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7075:13)
+    at dispatchEventsForPlugins (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7083:11)
+    at http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:7206:20
+[  291845ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:21564
+[  357554ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:21564
+[  370561ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:5174/@vite/client:963
+[  370561ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034

@@ -18,6 +18,7 @@ const SKILL_STORAGE_KEY = "vulcan_skill_level";
 const DIETARY_STORAGE_KEY = "vulcan_dietary";
 const EQUIPMENT_STORAGE_KEY = "vulcan_equipment";
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
+const NERD_STORAGE_KEY = "vulcan_nerd_on";
 
 function loadJson<T>(key: string): T | null {
   try {
@@ -30,6 +31,7 @@ function loadJson<T>(key: string): T | null {
 export interface ProfileDefaults {
   constraints: UserConstraints;
   isProfileComplete: boolean;
+  pizzaNerdEnabled: boolean;
   /** Summary label: "Forno elettrico 250°C · Intermedio" */
   summaryLabel: string;
 }
@@ -56,9 +58,11 @@ export function loadProfileDefaults(): ProfileDefaults {
   let pantryFlours: string[] = [];
   let pantryYeasts: string[] = [];
   let isProfileComplete = false;
+  let pizzaNerdEnabled = false;
 
   try {
     isProfileComplete = localStorage.getItem(PROFILE_COMPLETE_KEY) === "true";
+    pizzaNerdEnabled = localStorage.getItem(NERD_STORAGE_KEY) === "true";
     const oven = loadJson<{ ovenType?: OvenType; maxTemp?: number }>(OVEN_STORAGE_KEY);
     if (oven) {
       ovenType = oven.ovenType ?? ovenType;
@@ -102,8 +106,16 @@ export function loadProfileDefaults(): ProfileDefaults {
       if (equip.baking_pan) constraints.has_baking_pan = true;
       // Advanced fields (new format only)
       if ("mixer_type" in equip) {
-        constraints.mixer_type = equip.mixer_type ?? null;
+        /* Migrazione: "hand" (valore storico errato) → "hands" canonico */
+        constraints.mixer_type =
+          equip.mixer_type === "hand" ? "hands" : (equip.mixer_type ?? null);
         constraints.surfaces = Array.isArray(equip.surfaces) ? equip.surfaces : [];
+        
+        // Deriva dinamicamente i flag legacy basandosi sul formato avanzato
+        constraints.has_mixer = constraints.mixer_type !== null && constraints.mixer_type !== "hands";
+        constraints.has_pizza_stone = constraints.surfaces.includes("refractory_brick") || constraints.surfaces.includes("cordierite_stone");
+        constraints.has_pizza_steel = constraints.surfaces.includes("steel_plate");
+        constraints.has_baking_pan = constraints.surfaces.includes("aluminum_pan") || constraints.surfaces.includes("blue_steel_pan") || constraints.surfaces.includes("cast_iron");
       }
     }
   } catch { /* */ }
@@ -112,9 +124,22 @@ export function loadProfileDefaults(): ProfileDefaults {
   const skillLabel = SKILL_LABELS[skillLevel] ?? `Skill ${skillLevel}`;
   const summaryLabel = `${ovenLabel} ${ovenTemp}°C · ${skillLabel}`;
 
-  return { constraints, isProfileComplete, summaryLabel };
+  return { constraints, isProfileComplete, pizzaNerdEnabled, summaryLabel };
 }
 
 export function useProfileDefaults(): ProfileDefaults {
   return useMemo(() => loadProfileDefaults(), []);
+}
+
+export function loadSkill(): SkillLevel {
+  try {
+    const raw = localStorage.getItem(SKILL_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed === "number" && (parsed === 1 || parsed === 2 || parsed === 3 || parsed === 4)) {
+        return parsed as SkillLevel;
+      }
+    }
+  } catch { /* */ }
+  return 2;
 }

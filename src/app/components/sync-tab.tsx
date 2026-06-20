@@ -22,6 +22,7 @@ import {
   HelpCircle,
   BookOpen,
 } from "lucide-react";
+import { Badge, SegmentedControl, Surface } from "./ds";
 
 /* ═══ TYPES ═══ */
 interface SyncBundle {
@@ -348,10 +349,10 @@ function CopyBtn({ text, label, fullWidth }: { text: string; label: string; full
       className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl active:scale-95 transition-transform ${fullWidth ? "w-full" : ""}`}
       style={{
         background: copied ? "var(--text-success)" : "var(--chip-bg-active)",
-        color: copied ? "#fff" : "var(--chip-text-active)",
+        color: copied ? "var(--text-on-cta)" : "var(--chip-text-active)",
         border: "none", cursor: "pointer",
         fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any,
-        fontFamily: "'DM Sans', sans-serif",
+        fontFamily: "var(--font-sans)",
       }}
       aria-label={label}
     >
@@ -374,7 +375,7 @@ function CmdCopy({ cmd, note }: { cmd: string; note?: string }) {
       style={{ background: "var(--container-bg)" }}
     >
       <div className="flex items-center gap-2 overflow-hidden">
-        <span style={{ color: "var(--text-success)", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-sm)" }}>$</span>
+        <span style={{ color: "var(--text-success)", fontFamily: "var(--font-mono)", fontSize: "var(--font-size-sm)" }}>$</span>
         <span
           className="type-data truncate"
           style={{ fontSize: "var(--font-size-sm)", color: "var(--text-default)" }}
@@ -382,7 +383,7 @@ function CmdCopy({ cmd, note }: { cmd: string; note?: string }) {
           {cmd}
         </span>
         {note && (
-          <span className="type-data hidden sm:inline" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>
+          <span className="type-data-xs hidden sm:inline" style={{ color: "var(--text-muted)" }}>
             {note}
           </span>
         )}
@@ -392,7 +393,7 @@ function CmdCopy({ cmd, note }: { cmd: string; note?: string }) {
         className="shrink-0 p-1.5 rounded-md active:scale-90 transition-transform"
         style={{
           background: copied ? "var(--text-success)" : "color-mix(in srgb, var(--text-muted) 15%, transparent)",
-          color: copied ? "#fff" : "var(--text-muted)",
+          color: copied ? "var(--text-on-cta)" : "var(--text-muted)",
           border: "none", cursor: "pointer",
         }}
         aria-label={`Copia comando: ${cmd}`}
@@ -412,9 +413,14 @@ function StatusBadge({ status }: { status: DiffEntry["status"] }) {
   };
   const c = config[status];
   return (
-    <span className="badge-base inline-flex items-center gap-1 px-2 py-0.5 rounded-lg" style={{ color: c.color, background: c.bg, fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace" }}>
+    <Badge
+      color={c.color}
+      background={c.bg}
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg"
+      style={{ fontSize: "var(--font-size-sm)" }}
+    >
       {c.icon}{c.label}
-    </span>
+    </Badge>
   );
 }
 
@@ -426,7 +432,7 @@ function StepNum({ n, active }: { n: number; active?: boolean }) {
       style={{
         background: active ? "var(--chip-bg-active)" : "color-mix(in srgb, var(--text-muted) 15%, transparent)",
         color: active ? "var(--chip-text-active)" : "var(--text-muted)",
-        fontFamily: "'DM Mono', monospace",
+        fontFamily: "var(--font-mono)",
         fontSize: "var(--font-size-sm)",
         fontWeight: "var(--weight-bold)" as any,
       }}
@@ -448,10 +454,10 @@ function OsCommands({ commands }: { commands: { os: string; icon: React.ReactNod
             onClick={() => setSelected(i)}
             className="flex items-center gap-1 px-2.5 py-1 rounded-lg active:scale-95 transition-transform"
             style={{
-              background: selected === i ? "var(--chip-bg-active)" : "rgba(0,0,0,0)",
+              background: selected === i ? "var(--chip-bg-active)" : "transparent",
               color: selected === i ? "var(--chip-text-active)" : "var(--text-muted)",
               border: "none", cursor: "pointer",
-              fontSize: "var(--font-size-sm)", fontFamily: "'DM Sans', sans-serif",
+              fontSize: "var(--font-size-sm)", fontFamily: "var(--font-sans)",
             }}
           >
             {c.icon}
@@ -530,7 +536,7 @@ export function SyncTab() {
     <div className="flex flex-col gap-6">
 
       {/* ═══ HERO INTRO ═══ */}
-      <div className="surface-card p-5">
+      <Surface className="p-5">
         <div className="flex items-start gap-3 mb-4">
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -541,11 +547,11 @@ export function SyncTab() {
           <div>
             <h3
               className="type-label"
-              style={{ color: "var(--text-default)", fontSize: "var(--font-size-lg)", marginBottom: "4px" }}
+              style={{ color: "var(--text-default)", fontSize: "var(--font-size-lg)", marginBottom: "var(--space-1)" }}
             >
               Sync Make ↔ Locale
             </h3>
-            <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-base)", lineHeight: 1.5, margin: 0 }}>
+            <p className="type-body-sm" style={{ color: "var(--text-muted)", lineHeight: 1.5, margin: 0 }}>
               Lavora su Vulcan in Figma Make E nel tuo editor preferito (Cursor, VS Code, Windsurf...).
               Questo tool ti permette di portare il codice fuori e poi rimetterlo dentro.
             </p>
@@ -559,7 +565,7 @@ export function SyncTab() {
         >
           <div
             className="type-label"
-            style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", marginBottom: "10px", letterSpacing: "0.08em", textTransform: "uppercase" as any }}
+            style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", marginBottom: "var(--space-2-5)", letterSpacing: "0.08em", textTransform: "uppercase" as any }}
           >
             Come funziona (in 30 secondi)
           </div>
@@ -568,24 +574,24 @@ export function SyncTab() {
           <div className="flex flex-col gap-3 mb-4">
             <div className="flex items-center gap-2 mb-1">
               <Download size={13} style={{ color: "var(--text-success)" }} />
-              <span style={{ color: "var(--text-success)", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any }}>
+              <span style={{ color: "var(--text-success)", fontFamily: "var(--font-mono)", fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any }}>
                 DA QUI → AL TUO PC
               </span>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 pl-5">
-              <span className="badge-base px-2 py-1 rounded-lg" style={{ background: "color-mix(in srgb, var(--text-accent) 10%, transparent)", color: "var(--text-accent)", fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace", whiteSpace: "nowrap" as any }}>
+              <Badge color="var(--text-accent)" background="color-mix(in srgb, var(--text-accent) 10%, transparent)" className="px-2 py-1 rounded-lg whitespace-nowrap">
                 Scansiona + Copia
-              </span>
+              </Badge>
               <ArrowRight size={14} className="hidden sm:block" style={{ color: "var(--text-muted)" }} />
               <ArrowDown size={14} className="block sm:hidden ml-4" style={{ color: "var(--text-muted)" }} />
-              <span className="badge-base px-2 py-1 rounded-lg" style={{ background: "color-mix(in srgb, var(--text-success) 10%, transparent)", color: "var(--text-success)", fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace", whiteSpace: "nowrap" as any }}>
+              <Badge color="var(--text-success)" background="color-mix(in srgb, var(--text-success) 10%, transparent)" className="px-2 py-1 rounded-lg whitespace-nowrap">
                 Incolla nel terminale
-              </span>
+              </Badge>
               <ArrowRight size={14} className="hidden sm:block" style={{ color: "var(--text-muted)" }} />
               <ArrowDown size={14} className="block sm:hidden ml-4" style={{ color: "var(--text-muted)" }} />
-              <span className="badge-base px-2 py-1 rounded-lg" style={{ background: "color-mix(in srgb, var(--text-muted) 10%, transparent)", color: "var(--text-default)", fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace", whiteSpace: "nowrap" as any }}>
+              <Badge color="var(--text-default)" background="color-mix(in srgb, var(--text-muted) 10%, transparent)" className="px-2 py-1 rounded-lg whitespace-nowrap">
                 Tutti i file sul tuo PC!
-              </span>
+              </Badge>
             </div>
           </div>
 
@@ -593,35 +599,35 @@ export function SyncTab() {
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 mb-1">
               <Upload size={13} style={{ color: "var(--text-warning)" }} />
-              <span style={{ color: "var(--text-warning)", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any }}>
+              <span style={{ color: "var(--text-warning)", fontFamily: "var(--font-mono)", fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any }}>
                 DAL TUO PC → QUI DENTRO
               </span>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 pl-5">
-              <span className="badge-base px-2 py-1 rounded-lg" style={{ background: "color-mix(in srgb, var(--text-warning) 10%, transparent)", color: "var(--text-warning)", fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace", whiteSpace: "nowrap" as any }}>
+              <Badge color="var(--text-warning)" background="color-mix(in srgb, var(--text-warning) 10%, transparent)" className="px-2 py-1 rounded-lg whitespace-nowrap">
                 Export dal terminale
-              </span>
+              </Badge>
               <ArrowRight size={14} className="hidden sm:block" style={{ color: "var(--text-muted)" }} />
               <ArrowDown size={14} className="block sm:hidden ml-4" style={{ color: "var(--text-muted)" }} />
-              <span className="badge-base px-2 py-1 rounded-lg" style={{ background: "color-mix(in srgb, var(--text-accent) 10%, transparent)", color: "var(--text-accent)", fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace", whiteSpace: "nowrap" as any }}>
+              <Badge color="var(--text-accent)" background="color-mix(in srgb, var(--text-accent) 10%, transparent)" className="px-2 py-1 rounded-lg whitespace-nowrap">
                 Incolla qui + Diff
-              </span>
+              </Badge>
               <ArrowRight size={14} className="hidden sm:block" style={{ color: "var(--text-muted)" }} />
               <ArrowDown size={14} className="block sm:hidden ml-4" style={{ color: "var(--text-muted)" }} />
-              <span className="badge-base px-2 py-1 rounded-lg" style={{ background: "color-mix(in srgb, var(--text-muted) 10%, transparent)", color: "var(--text-default)", fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace", whiteSpace: "nowrap" as any }}>
+              <Badge color="var(--text-default)" background="color-mix(in srgb, var(--text-muted) 10%, transparent)" className="px-2 py-1 rounded-lg whitespace-nowrap">
                 Copia prompt → Claude applica
-              </span>
+              </Badge>
             </div>
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* ═══ FIRST TIME SETUP ═══ */}
-      <div className="surface-card overflow-hidden">
+      <Surface className="overflow-hidden">
         <button
           onClick={() => setShowSetup(!showSetup)}
           className="w-full flex items-center justify-between p-5 active:scale-[0.995] transition-transform"
-          style={{ background: "rgba(0,0,0,0)", border: "none", cursor: "pointer", textAlign: "left" }}
+          style={{ background: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
         >
           <div className="flex items-center gap-3">
             <div
@@ -631,10 +637,10 @@ export function SyncTab() {
               <BookOpen size={16} />
             </div>
             <div>
-              <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
+              <span className="type-label-sm" style={{ color: "var(--text-default)" }}>
                 Prima volta? Setup in 2 minuti
               </span>
-              <span className="block type-data" style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}>
+              <span className="block type-data-sm" style={{ color: "var(--text-muted)" }}>
                 Clona il repo e installa lo script sync
               </span>
             </div>
@@ -660,10 +666,10 @@ export function SyncTab() {
                   <div className="flex items-start gap-3 mb-4">
                     <StepNum n={0} />
                     <div className="flex-1">
-                      <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "6px" }}>
+                      <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1-5)" }}>
                         Prerequisiti
                       </div>
-                      <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: "0 0 8px", lineHeight: 1.5 }}>
+                      <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "0 0 var(--space-2)", lineHeight: 1.5 }}>
                         Servono solo <span style={{ color: "var(--text-default)" }}>Node.js 18+</span> e <span style={{ color: "var(--text-default)" }}>Git</span>.
                         Se non li hai: <span className="type-data" style={{ color: "var(--text-accent)" }}>nodejs.org</span> e <span className="type-data" style={{ color: "var(--text-accent)" }}>git-scm.com</span>
                       </p>
@@ -672,7 +678,7 @@ export function SyncTab() {
                         style={{ background: "color-mix(in srgb, var(--text-success) 8%, transparent)" }}
                       >
                         <Check size={13} style={{ color: "var(--text-success)" }} />
-                        <span style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}>
+                        <span className="type-body-xs" style={{ color: "var(--text-muted)" }}>
                           Verifica: apri il terminale e scrivi <span className="type-data" style={{ color: "var(--text-default)" }}>node -v</span> — deve dire v18 o superiore
                         </span>
                       </div>
@@ -683,10 +689,10 @@ export function SyncTab() {
                   <div className="flex items-start gap-3 mb-4">
                     <StepNum n={1} />
                     <div className="flex-1">
-                      <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "6px" }}>
+                      <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1-5)" }}>
                         Clona il repository
                       </div>
-                      <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: "0 0 8px", lineHeight: 1.5 }}>
+                      <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "0 0 var(--space-2)", lineHeight: 1.5 }}>
                         Apri il terminale, vai nella cartella dove tieni i progetti, e lancia:
                       </p>
                       <div className="flex flex-col gap-1.5">
@@ -700,10 +706,10 @@ export function SyncTab() {
                   <div className="flex items-start gap-3 mb-4">
                     <StepNum n={2} />
                     <div className="flex-1">
-                      <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "6px" }}>
+                      <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1-5)" }}>
                         Installa le dipendenze
                       </div>
-                      <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: "0 0 8px", lineHeight: 1.5 }}>
+                      <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "0 0 var(--space-2)", lineHeight: 1.5 }}>
                         Lancia UNO di questi comandi (quello che preferisci):
                       </p>
                       <div className="flex flex-col gap-1.5">
@@ -717,10 +723,10 @@ export function SyncTab() {
                   <div className="flex items-start gap-3">
                     <StepNum n={3} active />
                     <div className="flex-1">
-                      <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "6px" }}>
+                      <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1-5)" }}>
                         Fatto! Ora puoi usare sync
                       </div>
-                      <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: "0 0 8px", lineHeight: 1.5 }}>
+                      <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "0 0 var(--space-2)", lineHeight: 1.5 }}>
                         Il file <span className="type-data" style={{ color: "var(--text-accent)" }}>sync.mjs</span> e gia nella cartella del progetto.
                         Prova con:
                       </p>
@@ -732,7 +738,7 @@ export function SyncTab() {
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </Surface>
 
       {/* ═════════════════════════════════════════════════════════════════ */}
       {/* DIRECTION A: Make → Locale                                      */}
@@ -752,7 +758,7 @@ export function SyncTab() {
           >
             Portare il codice sul tuo PC
           </span>
-          <span style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}>
+          <span className="type-body-xs" style={{ color: "var(--text-muted)" }}>
             (Figma Make → Editor locale)
           </span>
         </div>
@@ -763,10 +769,10 @@ export function SyncTab() {
           <div className="flex items-start gap-3">
             <StepNum n={1} active={!!makeFiles} />
             <div className="flex-1">
-              <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "4px" }}>
+              <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1)" }}>
                 Scansiona il progetto
               </div>
-              <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: "0 0 10px", lineHeight: 1.5 }}>
+              <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "0 0 var(--space-2-5)", lineHeight: 1.5 }}>
                 Raccoglie tutti i file sorgente e li prepara per l'esportazione.
               </p>
               <motion.button
@@ -777,7 +783,7 @@ export function SyncTab() {
                   background: "var(--chip-bg-active)", color: "var(--chip-text-active)",
                   border: "none", cursor: loading ? "wait" : "pointer",
                   fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any,
-                  fontFamily: "'DM Sans', sans-serif", opacity: loading ? 0.6 : 1,
+                  fontFamily: "var(--font-sans)", opacity: loading ? 0.6 : 1,
                 }}
                 aria-label="Scansiona i file del progetto"
               >
@@ -801,8 +807,8 @@ export function SyncTab() {
                       { label: "Bundle", value: exportBundle ? `${(exportBundle.length / 1024).toFixed(0)} KB` : "—", color: "var(--text-warning)" },
                     ].map((s) => (
                       <div key={s.label} className="p-2.5 rounded-lg" style={{ background: "var(--container-bg)" }}>
-                        <span className="type-label" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>{s.label}</span>
-                        <div className="type-data" style={{ fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-bold)" as any, color: s.color, fontFeatureSettings: "'tnum'" }}>{s.value}</div>
+                        <span className="type-label-xs" style={{ color: "var(--text-muted)" }}>{s.label}</span>
+                        <div className="type-data-lg" style={{ fontWeight: "var(--weight-bold)" as any, color: s.color, fontFeatureSettings: "'tnum'" }}>{s.value}</div>
                       </div>
                     ))}
                   </div>
@@ -811,11 +817,11 @@ export function SyncTab() {
                       <ChevronDown size={12} />
                       <span>Mostra {Object.keys(makeFiles).length} file</span>
                     </summary>
-                    <div className="flex flex-col gap-px px-3 pb-2" style={{ maxHeight: "200px", overflowY: "auto" }}>
+                    <div className="flex flex-col gap-px px-3 pb-2" style={{ maxHeight: "calc(var(--space-10) * 5)", overflowY: "auto" }}>
                       {Object.entries(makeFiles).sort(([a], [b]) => a.localeCompare(b)).map(([path, data]) => (
                         <div key={path} className="flex items-center justify-between py-1">
-                          <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-default)" }}>{path}</span>
-                          <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>{data.lines}L</span>
+                          <span className="type-data-xs" style={{ color: "var(--text-default)" }}>{path}</span>
+                          <span className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>{data.lines}L</span>
                         </div>
                       ))}
                     </div>
@@ -832,10 +838,10 @@ export function SyncTab() {
           <div className="flex items-start gap-3">
             <StepNum n={2} active={!!exportBundle} />
             <div className="flex-1">
-              <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "4px" }}>
+              <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1)" }}>
                 Copia il bundle
               </div>
-              <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: "0 0 10px", lineHeight: 1.5 }}>
+              <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "0 0 var(--space-2-5)", lineHeight: 1.5 }}>
                 Clicca il bottone qui sotto. Il bundle JSON (tutti i file del progetto) viene copiato negli appunti.
               </p>
               {exportBundle ? (
@@ -846,7 +852,7 @@ export function SyncTab() {
                   style={{ background: "color-mix(in srgb, var(--text-muted) 8%, transparent)" }}
                 >
                   <HelpCircle size={13} style={{ color: "var(--text-muted)" }} />
-                  <span style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", fontStyle: "italic" }}>
+                  <span className="type-body-xs" style={{ color: "var(--text-muted)", fontStyle: "italic" }}>
                     Prima completa lo step 1 (Scansiona)
                   </span>
                 </div>
@@ -861,10 +867,10 @@ export function SyncTab() {
           <div className="flex items-start gap-3">
             <StepNum n={3} />
             <div className="flex-1">
-              <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "4px" }}>
+              <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1)" }}>
                 Incolla nel terminale del tuo PC
               </div>
-              <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: "0 0 10px", lineHeight: 1.5 }}>
+              <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "0 0 var(--space-2-5)", lineHeight: 1.5 }}>
                 Apri il terminale nella cartella del progetto (<span className="type-data" style={{ color: "var(--text-default)" }}>cd vulcan-pizza-lab</span>) e lancia il comando per il tuo sistema operativo:
               </p>
               <OsCommands commands={[
@@ -872,7 +878,7 @@ export function SyncTab() {
                 { os: "Linux", icon: <Terminal size={12} />, cmd: "xclip -selection clipboard -o | node sync.mjs import", note: "incolla da clipboard" },
                 { os: "Windows", icon: <Monitor size={12} />, cmd: "powershell -c \"Get-Clipboard\" | node sync.mjs import", note: "incolla da clipboard" },
               ]} />
-              <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-xs)", margin: "8px 0 0", lineHeight: 1.4 }}>
+              <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-xs)", margin: "var(--space-2) 0 0", lineHeight: 1.4 }}>
                 In alternativa, puoi salvare il bundle in un file e poi importarlo:
               </p>
               <div className="mt-1.5">
@@ -884,12 +890,12 @@ export function SyncTab() {
                 className="flex items-start gap-2 mt-3 p-3 rounded-lg"
                 style={{ background: "color-mix(in srgb, var(--text-success) 8%, transparent)" }}
               >
-                <Check size={14} style={{ color: "var(--text-success)", marginTop: "1px" }} />
+                <Check size={14} style={{ color: "var(--text-success)", marginTop: "var(--space-px)" }} />
                 <div>
-                  <span style={{ color: "var(--text-success)", fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any }}>
+                  <span className="type-body-xs" style={{ color: "var(--text-success)", fontWeight: "var(--weight-semibold)" as any }}>
                     Finito!
                   </span>
-                  <span style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}>
+                  <span className="type-body-xs" style={{ color: "var(--text-muted)" }}>
                     {" "}Tutti i file del progetto sono ora sul tuo PC. Aprili con il tuo editor preferito e lavora come vuoi.
                   </span>
                 </div>
@@ -917,7 +923,7 @@ export function SyncTab() {
           >
             Riportare le modifiche qui dentro
           </span>
-          <span style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}>
+          <span className="type-body-xs" style={{ color: "var(--text-muted)" }}>
             (Editor locale → Figma Make)
           </span>
         </div>
@@ -928,10 +934,10 @@ export function SyncTab() {
           <div className="flex items-start gap-3">
             <StepNum n={1} />
             <div className="flex-1">
-              <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "4px" }}>
+              <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1)" }}>
                 Esporta dal tuo PC
               </div>
-              <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: "0 0 10px", lineHeight: 1.5 }}>
+              <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "0 0 var(--space-2-5)", lineHeight: 1.5 }}>
                 Dopo aver fatto le tue modifiche in locale, torna nel terminale e lancia:
               </p>
               <OsCommands commands={[
@@ -939,7 +945,7 @@ export function SyncTab() {
                 { os: "Linux", icon: <Terminal size={12} />, cmd: "node sync.mjs export | xclip -selection clipboard", note: "copia in clipboard" },
                 { os: "Windows", icon: <Monitor size={12} />, cmd: "node sync.mjs export | clip", note: "copia in clipboard" },
               ]} />
-              <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-xs)", margin: "6px 0 0", lineHeight: 1.4 }}>
+              <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-xs)", margin: "var(--space-1-5) 0 0", lineHeight: 1.4 }}>
                 Tip: prima di esportare puoi vedere cosa hai cambiato con <span className="type-data" style={{ color: "var(--text-default)" }}>node sync.mjs diff</span>
               </p>
             </div>
@@ -952,10 +958,10 @@ export function SyncTab() {
           <div className="flex items-start gap-3">
             <StepNum n={2} active={!!diffs} />
             <div className="flex-1">
-              <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "4px" }}>
+              <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1)" }}>
                 Incolla qui e analizza le differenze
               </div>
-              <p style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: "0 0 10px", lineHeight: 1.5 }}>
+              <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "0 0 var(--space-2-5)", lineHeight: 1.5 }}>
                 {!makeFiles
                   ? "⚠️ Prima clicca 'Scansiona' nella sezione verde qui sopra, poi incolla qui il bundle dal terminale."
                   : "Incolla il bundle JSON che hai appena copiato dal terminale:"}
@@ -974,7 +980,7 @@ export function SyncTab() {
                       background: "var(--container-bg)", color: "var(--text-default)",
                       border: "1px solid var(--container-border)",
                       fontSize: "var(--font-size-sm)", resize: "vertical", outline: "none",
-                      fontFamily: "'DM Mono', monospace",
+                      fontFamily: "var(--font-mono)",
                     }}
                   />
                   {importText && (
@@ -998,7 +1004,7 @@ export function SyncTab() {
                     style={{
                       background: "color-mix(in srgb, var(--text-muted) 12%, transparent)",
                       color: "var(--text-default)", border: "none", cursor: "pointer",
-                      fontSize: "var(--font-size-base)", fontFamily: "'DM Sans', sans-serif",
+                      fontSize: "var(--font-size-base)", fontFamily: "var(--font-sans)",
                     }}
                     aria-label="Incolla da clipboard"
                   >
@@ -1009,10 +1015,10 @@ export function SyncTab() {
                     onClick={handleImport}
                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
                     style={{
-                      background: "var(--text-warning)", color: "#fff",
+                      background: "var(--text-warning)", color: "var(--text-on-accent)",
                       border: "none", cursor: "pointer",
                       fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any,
-                      fontFamily: "'DM Sans', sans-serif",
+                      fontFamily: "var(--font-sans)",
                     }}
                     aria-label="Analizza le differenze"
                   >
@@ -1046,13 +1052,13 @@ export function SyncTab() {
                   <StepNum n={3} active={changedCount > 0} />
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-3">
-                      <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any }}>
+                      <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>
                         Risultato: cosa e cambiato
                       </div>
                       {changedCount === 0 && (
-                        <span className="badge-base px-2 py-0.5 rounded-lg" style={{ background: "color-mix(in srgb, var(--text-success) 14%, transparent)", color: "var(--text-success)", fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace" }}>
+                        <Badge color="var(--text-success)" background="color-mix(in srgb, var(--text-success) 14%, transparent)" className="px-2 py-0.5 rounded-lg">
                           Tutto sincronizzato!
-                        </span>
+                        </Badge>
                       )}
                     </div>
 
@@ -1065,10 +1071,10 @@ export function SyncTab() {
                           { label: "Eliminati", count: diffs.filter((d) => d.status === "deleted").length, color: "var(--text-accent)" },
                           { label: "Invariati", count: unchangedCount, color: "var(--text-muted)" },
                         ].filter((p) => p.count > 0).map((pill) => (
-                          <span key={pill.label} className="badge-base inline-flex items-center gap-1.5 px-3 py-1 rounded-xl" style={{ background: `color-mix(in srgb, ${pill.color} 10%, transparent)`, color: pill.color, fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace" }}>
+                          <Badge key={pill.label} color={pill.color} background={`color-mix(in srgb, ${pill.color} 10%, transparent)`} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl">
                             <span style={{ fontWeight: "var(--weight-bold)" as any, fontFeatureSettings: "'tnum'" }}>{pill.count}</span>
                             {pill.label}
-                          </span>
+                          </Badge>
                         ))}
                       </div>
                     )}
@@ -1080,9 +1086,9 @@ export function SyncTab() {
                           <button
                             onClick={() => setExpandedFile(expandedFile === diff.path ? null : diff.path)}
                             className="w-full flex items-center justify-between py-2 px-3 rounded-lg active:scale-[0.99] transition-transform"
-                            style={{ background: expandedFile === diff.path ? "var(--container-bg)" : "rgba(0,0,0,0)", border: "none", cursor: diff.status !== "unchanged" ? "pointer" : "default", textAlign: "left" }}
+                            style={{ background: expandedFile === diff.path ? "var(--container-bg)" : "transparent", border: "none", cursor: diff.status !== "unchanged" ? "pointer" : "default", textAlign: "left" }}
                           >
-                            <span className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-default)" }}>{diff.path}</span>
+                            <span className="type-data-sm" style={{ color: "var(--text-default)" }}>{diff.path}</span>
                             <StatusBadge status={diff.status} />
                           </button>
                           <AnimatePresence>
@@ -1092,10 +1098,10 @@ export function SyncTab() {
                                 exit={{ height: 0, opacity: 0 }} transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                 className="overflow-hidden"
                               >
-                                <div className="mx-3 mb-2 p-3 rounded-lg overflow-auto type-data" style={{ background: "var(--container-bg)", maxHeight: "250px", fontSize: "var(--font-size-xs)", lineHeight: 1.6, whiteSpace: "pre-wrap", wordBreak: "break-all", color: "var(--text-muted)", fontFamily: "'DM Mono', monospace" }}>
+                                <div className="mx-3 mb-2 p-3 rounded-lg overflow-auto type-data-xs" style={{ background: "var(--container-bg)", maxHeight: "calc(var(--space-10) * 6.25)", lineHeight: 1.6, whiteSpace: "pre-wrap", wordBreak: "break-all", color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>
                                   {(diff.localContent || diff.makeContent || "—").slice(0, 3000)}
                                   {((diff.localContent?.length || 0) > 3000 || (diff.makeContent?.length || 0) > 3000) && (
-                                    <span style={{ color: "var(--text-accent)", display: "block", marginTop: "8px" }}>... troncato (contenuto completo nel prompt)</span>
+                                    <span style={{ color: "var(--text-accent)", display: "block", marginTop: "var(--space-2)" }}>... troncato (contenuto completo nel prompt)</span>
                                   )}
                                 </div>
                               </motion.div>
@@ -1108,7 +1114,7 @@ export function SyncTab() {
                         <button
                           onClick={() => setShowUnchanged(!showUnchanged)}
                           className="flex items-center gap-1.5 px-3 py-2 type-data active:scale-95 transition-transform"
-                          style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", background: "rgba(0,0,0,0)", border: "none", cursor: "pointer", textAlign: "left" }}
+                          style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", background: "transparent", border: "none", cursor: "pointer", textAlign: "left" }}
                         >
                           <ChevronDown size={12} style={{ transform: showUnchanged ? "rotate(180deg)" : "rotate(0)", transition: "transform 0.2s" }} />
                           {showUnchanged ? "Nascondi" : `Mostra ${unchangedCount} file invariati`}
@@ -1133,7 +1139,7 @@ export function SyncTab() {
                 <div className="flex items-start gap-3">
                   <StepNum n={4} active />
                   <div className="flex-1">
-                    <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "4px" }}>
+                    <div className="type-body-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, marginBottom: "var(--space-1)" }}>
                       Ultimo passo: fai applicare le modifiche a Claude
                     </div>
 
@@ -1149,27 +1155,18 @@ export function SyncTab() {
                       return (
                         <div className="flex flex-col gap-3 mb-3">
                           {/* Mode toggle */}
-                          <div className="flex items-center gap-1 p-1 rounded-xl" style={{ background: "var(--container-bg)", display: "inline-flex", alignSelf: "flex-start" }}>
-                            {([
-                              { id: "compact" as PromptMode, label: "Diff compatto", sub: `~${(compactTokens / 1000).toFixed(1)}K tok` },
-                              { id: "full" as PromptMode, label: "File interi", sub: `~${(fullTokens / 1000).toFixed(1)}K tok` },
-                            ]).map((m) => (
-                              <button
-                                key={m.id}
-                                onClick={() => setPromptMode(m.id)}
-                                className="flex flex-col items-center px-3 py-1.5 rounded-lg active:scale-95 transition-transform"
-                                style={{
-                                  background: promptMode === m.id ? "var(--chip-bg-active)" : "rgba(0,0,0,0)",
-                                  color: promptMode === m.id ? "var(--chip-text-active)" : "var(--text-muted)",
-                                  border: "none", cursor: "pointer", fontSize: "var(--font-size-sm)",
-                                  fontFamily: "'DM Sans', sans-serif",
-                                }}
-                              >
-                                <span style={{ fontWeight: "var(--weight-semibold)" as any }}>{m.label}</span>
-                                <span className="type-data" style={{ fontSize: "var(--font-size-xs)", opacity: 0.7, fontFeatureSettings: "'tnum'" }}>{m.sub}</span>
-                              </button>
-                            ))}
-                          </div>
+                          <SegmentedControl
+                            ariaLabel="Formato prompt"
+                            value={promptMode}
+                            onValueChange={setPromptMode}
+                            tone="brand"
+                            size="sm"
+                            options={[
+                              { value: "compact" as const, label: "Diff compatto", subLabel: `~${(compactTokens / 1000).toFixed(1)}K tok` },
+                              { value: "full" as const, label: "File interi", subLabel: `~${(fullTokens / 1000).toFixed(1)}K tok` },
+                            ]}
+                            style={{ alignSelf: "flex-start" }}
+                          />
 
                           {/* Savings metric */}
                           {savedPct > 5 && (
@@ -1184,34 +1181,33 @@ export function SyncTab() {
                               <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
                                 <div className="flex items-center gap-4">
                                   <div>
-                                    <span className="type-label" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>Compatto</span>
+                                    <span className="type-label-xs" style={{ color: "var(--text-muted)" }}>Compatto</span>
                                     <div className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-success)", fontFeatureSettings: "'tnum'" }}>
                                       {(compactTokens / 1000).toFixed(1)}K
-                                      <span style={{ fontSize: "var(--font-size-xs)", fontWeight: "var(--weight-normal)" as any, color: "var(--text-muted)", marginLeft: "2px" }}>tok</span>
+                                      <span style={{ fontSize: "var(--font-size-xs)", fontWeight: "var(--weight-normal)" as any, color: "var(--text-muted)", marginLeft: "var(--space-0-5)" }}>tok</span>
                                     </div>
                                   </div>
                                   <div style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}>vs</div>
                                   <div>
-                                    <span className="type-label" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>File interi</span>
+                                    <span className="type-label-xs" style={{ color: "var(--text-muted)" }}>File interi</span>
                                     <div className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-muted)", fontFeatureSettings: "'tnum'", textDecoration: "line-through", opacity: 0.5 }}>
                                       {(fullTokens / 1000).toFixed(1)}K
-                                      <span style={{ fontSize: "var(--font-size-xs)", fontWeight: "var(--weight-normal)" as any, marginLeft: "2px" }}>tok</span>
+                                      <span style={{ fontSize: "var(--font-size-xs)", fontWeight: "var(--weight-normal)" as any, marginLeft: "var(--space-0-5)" }}>tok</span>
                                     </div>
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                  <span
-                                    className="badge-base px-2 py-0.5 rounded-lg"
+                                  <Badge
+                                    color="var(--text-success)"
+                                    background="color-mix(in srgb, var(--text-success) 14%, transparent)"
+                                    className="px-2 py-0.5 rounded-lg"
                                     style={{
-                                      background: "color-mix(in srgb, var(--text-success) 14%, transparent)",
-                                      color: "var(--text-success)",
                                       fontSize: "var(--font-size-sm)",
-                                      fontFamily: "'DM Mono', monospace",
                                       fontWeight: "var(--weight-bold)" as any,
                                     }}
                                   >
                                     -{savedPct}%
-                                  </span>
+                                  </Badge>
                                   <span style={{ color: "var(--text-muted)", fontSize: "var(--font-size-xs)" }}>
                                     ~{compactTurns === 1 ? "1 turno" : `${compactTurns} turni`}
                                     {compactTurns < fullTurns && (
@@ -1224,7 +1220,7 @@ export function SyncTab() {
                           )}
 
                           {/* Instructions */}
-                          <ol style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", margin: 0, paddingLeft: "18px", lineHeight: 1.8 }}>
+                          <ol className="type-body-xs" style={{ color: "var(--text-muted)", margin: 0, paddingLeft: "calc(var(--space-1-5) * 3)", lineHeight: 1.8 }}>
                             <li>Clicca <span style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>il bottone verde qui sotto</span> per copiare il prompt</li>
                             <li><span style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>Torna alla chat di Figma Make</span> (chiudi i DevTools)</li>
                             <li><span style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>Incolla</span> (Ctrl+V / Cmd+V) e premi Invio</li>
@@ -1234,7 +1230,7 @@ export function SyncTab() {
                           {/* Preview */}
                           <div
                             className="p-3 rounded-xl type-data"
-                            style={{ background: "var(--container-bg)", fontSize: "var(--font-size-xs)", color: "var(--text-muted)", maxHeight: "150px", overflowY: "auto", whiteSpace: "pre-wrap", lineHeight: 1.5, fontFamily: "'DM Mono', monospace" }}
+                            style={{ background: "var(--container-bg)", fontSize: "var(--font-size-xs)", color: "var(--text-muted)", maxHeight: "calc(var(--space-10) * 3.75)", overflowY: "auto", whiteSpace: "pre-wrap", lineHeight: 1.5, fontFamily: "var(--font-mono)" }}
                           >
                             {activePrompt.slice(0, 1000)}
                             {activePrompt.length > 1000 && (
@@ -1262,10 +1258,10 @@ export function SyncTab() {
       </div>
 
       {/* ═══ QUICK REFERENCE ═══ */}
-      <div className="surface-card p-5">
+      <Surface className="p-5">
         <div className="flex items-center gap-2 mb-3">
           <Terminal size={14} style={{ color: "var(--text-muted)" }} />
-          <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
+          <span className="type-label-sm" style={{ color: "var(--text-default)" }}>
             Comandi rapidi (da copiare)
           </span>
         </div>
@@ -1275,7 +1271,7 @@ export function SyncTab() {
           <CmdCopy cmd="node sync.mjs export > bundle.json" note="salva bundle in un file" />
           <CmdCopy cmd="node sync.mjs import bundle.json" note="importa bundle da file" />
         </div>
-      </div>
+      </Surface>
     </div>
   );
 }

@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Check, Minus, ChevronDown } from "lucide-react";
-import {
-  SectionHeader,
-  AnatomyRow,
-  SubSectionLabel,
-  Panoramica,
-  LineeGuida,
-  AccessibilitaInfo,
-} from "./shared";
+import { Check,ChevronDown,Minus } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import { useEffect,useRef,useState } from "react";
 import type { SectionEntry } from "./shared";
+import {
+AccessibilitaInfo,
+AnatomyRow,
+LineeGuida,
+Panoramica,
+SectionHeader,
+SubSectionLabel,
+} from "./shared";
 
 /* ═══════════════════════════════════════════════════════════
    C23 — CHECKBOX  (M3 Expressive)

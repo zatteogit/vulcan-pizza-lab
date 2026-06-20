@@ -31,7 +31,7 @@ export const MIXER_OPTIONS: MixerOption[] = [
     id: "stand_domestic",
     label: "Planetaria domestica",
     description: "KitchenAid, Kenwood, Smeg — 4-7 L, gancio K",
-    emoji: "🍳",
+    emoji: "🥣",
     level: "domestic",
     frictionK: 22,
     frictionDegMin: 0.4,

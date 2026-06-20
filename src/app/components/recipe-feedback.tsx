@@ -3,29 +3,28 @@
    Si mostra in fondo alla ricetta generata.
    Design: stile editoriale Cucina Editoriale, card collassabile. */
 
-import React, { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  MessageSquarePlus,
-  ChevronDown,
-  Star,
-  ThumbsUp,
-  ThumbsDown,
-  Send,
-  Check,
-  X,
-  HelpCircle,
+Check,
+Send,
+Sparkles,
+Star,
+ThumbsDown,
+ThumbsUp,
+X
 } from "lucide-react";
-import type { GeneratedRecipe } from "./pizza-engine";
+import { motion } from "motion/react";
+import { useCallback,useState } from "react";
+import { useCms } from "./cms/cms-context";
 import {
-  type RecipeFeedback,
-  type RecipeSnapshot,
-  type PredictedScores,
-  type RecipeIssueId,
-  RECIPE_ISSUES,
-  generateFeedbackId,
-  saveFeedback,
+type PredictedScores,
+type RecipeFeedback,
+type RecipeIssueId,
+type RecipeSnapshot,
+RECIPE_ISSUES,
+generateFeedbackId,
+saveFeedback,
 } from "./feedback-store";
+import type { GeneratedRecipe } from "./pizza-engine";
 
 interface RecipeFeedbackFormProps {
   recipe: GeneratedRecipe;
@@ -33,12 +32,15 @@ interface RecipeFeedbackFormProps {
 }
 
 export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const { cms } = useCms();
   const [submitted, setSubmitted] = useState(false);
 
-  // Form state
-  const [attempted, setAttempted] = useState<boolean | null>(null);
+  // Progressive flow states
   const [success, setSuccess] = useState<boolean | null>(null);
+  const [hasDecision, setHasDecision] = useState(false);
+  const [showFullForm, setShowFullForm] = useState(false);
+
+  // Form details state
   const [overall, setOverall] = useState<number | null>(null);
   const [taste, setTaste] = useState<number | null>(null);
   const [texture, setTexture] = useState<number | null>(null);
@@ -53,6 +55,57 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   }, []);
+
+  const handleSubmitBasic = useCallback(() => {
+    const snapshot: RecipeSnapshot = {
+      styleId: recipe.style.id,
+      styleName: recipe.style.name,
+      hydration: recipe.hydration_pct,
+      flourW: recipe.flour_w,
+      flourPL: recipe.flour_pl,
+      fermentHours: recipe.fermentation_hours,
+      fermentTemp: recipe.fermentation_temp_c,
+      ovenTemp: recipe.oven_temp_c,
+      ovenType: recipe.style.baking.oven_type_required,
+      yeastType: recipe.yeast_type,
+      yeastPct: recipe.science.yeast_baker_pct,
+      skillLevel: skillLevel as 1 | 2 | 3 | 4,
+      hasPreFerment: recipe.has_pre_ferment,
+      compensationCount: recipe.science.compensations.length,
+      doughBalls: recipe.dough_balls,
+    };
+
+    const predicted: PredictedScores = {
+      authenticity: recipe.scores.authenticity,
+      feasibility: recipe.scores.feasibility,
+      digestibility: recipe.scores.digestibility,
+      sustainability: recipe.scores.sustainability,
+      experimentation: recipe.scores.experimentation,
+      composite: recipe.scores.composite,
+    };
+
+    const entry: RecipeFeedback = {
+      id: generateFeedbackId(),
+      timestamp: new Date().toISOString(),
+      recipe: snapshot,
+      predicted,
+      attempted: true,
+      success,
+      ratings: {
+        overall: null,
+        taste: null,
+        texture: null,
+        difficulty: null,
+        authenticity_felt: null,
+        digestibility_felt: null,
+      },
+      issues: [],
+      notes: "",
+    };
+
+    saveFeedback(entry);
+    setSubmitted(true);
+  }, [recipe, skillLevel, success]);
 
   const handleSubmit = useCallback(() => {
     const snapshot: RecipeSnapshot = {
@@ -87,7 +140,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
       timestamp: new Date().toISOString(),
       recipe: snapshot,
       predicted,
-      attempted: attempted === true,
+      attempted: true,
       success,
       ratings: {
         overall,
@@ -103,7 +156,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
 
     saveFeedback(entry);
     setSubmitted(true);
-  }, [recipe, skillLevel, attempted, success, overall, taste, texture, difficulty, authFelt, digFelt, issues, notes]);
+  }, [recipe, skillLevel, success, overall, taste, texture, difficulty, authFelt, digFelt, issues, notes]);
 
   if (submitted) {
     return (
@@ -118,211 +171,291 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
         }}
       >
         <div className="flex items-center justify-center gap-2 mb-2">
-          <Check style={{ color: "var(--cta)", width: 20, height: 20 }} />
-          <span style={{ color: "var(--text-default)", fontSize: "0.9375rem" }}>
-            Feedback salvato — grazie!
+          <Check style={{ color: "var(--cta)", width: "var(--space-5)", height: "var(--space-5)" }} />
+          <span style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)" }}>
+            {cms.feedback.savedTitle}
           </span>
         </div>
-        <span style={{ color: "var(--muted-foreground)", fontSize: "0.8125rem" }}>
-          I tuoi dati aiutano a calibrare il motore. Puoi analizzarli in DevTools → Engine Lab.
+        <span className="type-body" style={{ color: "var(--muted-foreground)" }}>
+          {cms.feedback.savedBody}
         </span>
+
+        {/* VPL-C11: chiusura di valore — cosa correggerà l'engine la prossima
+            volta, in base ai problemi segnalati (correzioni deduplicate). */}
+        {(() => {
+          const corrections = Array.from(
+            new Set(
+              issues.flatMap((id) => {
+                const c = RECIPE_ISSUES.find((i) => i.id === id)?.correction;
+                return c ? [c as string] : [];
+              }),
+            ),
+          );
+          if (corrections.length === 0) return null;
+          return (
+            <div
+              className="mt-5 text-left rounded-xl p-4"
+              style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)" }}
+            >
+              <div
+                className="flex items-center gap-1.5"
+                style={{
+                  color: "var(--text-accent)",
+                  fontSize: "var(--font-size-xs)",
+                  fontWeight: "var(--weight-bold)" as any,
+                  letterSpacing: "var(--tracking-caps)",
+                  textTransform: "uppercase",
+                  marginBottom: "var(--space-2)",
+                }}
+              >
+                <Sparkles size={13} aria-hidden="true" />
+                {cms.feedback.nextTimeTitle}
+              </div>
+              <ul className="flex flex-col gap-1.5">
+                {corrections.map((c, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-2"
+                    style={{ color: "var(--text-default)", fontSize: "var(--font-size-md)", lineHeight: "var(--leading-normal)" }}
+                  >
+                    <span style={{ color: "var(--text-accent)", flexShrink: 0 }}>·</span>
+                    <span>{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })()}
       </motion.div>
     );
   }
 
+  // State 1: Condensed initial question
+  if (!hasDecision) {
+    return (
+      <div
+        className="rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-left"
+        style={{
+          background: "var(--surface-container-low)",
+          border: "1px solid var(--outline-variant)",
+        }}
+      >
+        <div>
+          <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)", fontWeight: 600 }}>
+            {cms.feedback.triedQuestion}
+          </div>
+          <div className="type-body" style={{ color: "var(--muted-foreground)", marginTop: "var(--space-0-5)" }}>
+            {cms.feedback.triedSubtitle}
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              setSuccess(true);
+              setHasDecision(true);
+            }}
+            className="flex items-center justify-center gap-2 h-9 px-4 rounded-xl transition-all active:scale-95"
+            style={{
+              background: "var(--surface-container)",
+              border: "1px solid var(--outline-variant)",
+              color: "var(--text-default)",
+              fontSize: "0.8125rem",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            <ThumbsUp size={14} className="text-success" style={{ color: "var(--text-success)" }} />
+            <span>{cms.feedback.success}</span>
+          </button>
+          <button
+            onClick={() => {
+              setSuccess(false);
+              setHasDecision(true);
+            }}
+            className="flex items-center justify-center gap-2 h-9 px-4 rounded-xl transition-all active:scale-95"
+            style={{
+              background: "var(--surface-container)",
+              border: "1px solid var(--outline-variant)",
+              color: "var(--text-default)",
+              fontSize: "0.8125rem",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            <ThumbsDown size={14} style={{ color: "var(--primary)" }} />
+            <span>{cms.feedback.fail}</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // State 2: Prompt for detailed review
+  if (hasDecision && !showFullForm) {
+    return (
+      <div
+        className="rounded-2xl p-5 flex flex-col gap-4 text-left"
+        style={{
+          background: "var(--surface-container-low)",
+          border: "1px solid var(--outline-variant)",
+        }}
+      >
+        <div>
+          <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)", fontWeight: 600 }}>
+            {cms.feedback.detailedPrompt}
+          </div>
+          <div className="type-body" style={{ color: "var(--muted-foreground)", marginTop: "var(--space-0-5)" }}>
+            {cms.feedback.detailedSubtitle}
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowFullForm(true)}
+            className="h-9 px-4 rounded-xl"
+            style={{
+              background: "var(--cta)",
+              color: "var(--overlay-text)",
+              fontSize: "var(--font-size-md)",
+              fontWeight: 600,
+              cursor: "pointer",
+              border: "none",
+            }}
+          >
+            {cms.misc.feedbackYes}
+          </button>
+          <button
+            onClick={handleSubmitBasic}
+            className="h-9 px-4 rounded-xl"
+            style={{
+              background: "var(--surface-container)",
+              border: "1px solid var(--outline-variant)",
+              color: "var(--text-muted)",
+              fontSize: "var(--font-size-md)",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            {cms.misc.feedbackNo}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // State 3: Show full review questionnaire
   return (
     <div
-      className="rounded-2xl overflow-hidden"
+      className="rounded-2xl overflow-hidden text-left"
       style={{
         background: "var(--surface-container-low)",
         border: "1px solid var(--outline-variant)",
       }}
     >
-      {/* Header — toggle */}
-      <motion.button
-        className="w-full flex items-center justify-between px-5 py-4 active:scale-95"
-        onClick={() => setIsOpen(!isOpen)}
-        style={{ background: "none", border: "none", cursor: "pointer" }}
-        aria-expanded={isOpen}
-        aria-label="Apri form feedback ricetta"
+      <div className="px-5 py-4 flex items-center justify-between"
+        style={{ borderBottom: "1px solid var(--outline-variant)" }}
       >
-        <div className="flex items-center gap-3">
-          <MessageSquarePlus
-            style={{ color: "var(--primary)", width: 18, height: 18 }}
-          />
-          <div className="text-left">
-            <div style={{ color: "var(--text-default)", fontSize: "0.875rem", fontWeight: 600 }}>
-              Hai provato questa ricetta?
-            </div>
-            <div style={{ color: "var(--muted-foreground)", fontSize: "0.75rem" }}>
-              Il tuo feedback calibra il motore scientifico
-            </div>
+        <div>
+          <span className="type-body-lg" style={{ color: "var(--text-default)", fontWeight: 600 }}>
+            {cms.feedback.detailedTitle}
+          </span>
+          <span className="type-body-sm" style={{ display: "block", color: "var(--muted-foreground)", marginTop: "var(--space-0-5)" }}>
+            {success ? cms.feedback.recipeSuccess : cms.feedback.recipeFail}
+          </span>
+        </div>
+        <button
+          onClick={() => setShowFullForm(false)}
+          style={{
+            background: "none",
+            border: "none",
+            color: "var(--text-muted)",
+            cursor: "pointer",
+            padding: 4,
+          }}
+          title={cms.ui.back}
+          aria-label={cms.ui.back}
+        >
+          <X size={16} />
+        </button>
+      </div>
+
+      <div className="px-5 pb-5 pt-4 flex flex-col gap-5">
+        {/* Rating questions */}
+        <StarRating label={cms.feedback.ratingOverall} value={overall} onChange={setOverall} required />
+        <StarRating label={cms.feedback.ratingTaste} value={taste} onChange={setTaste} />
+        <StarRating label={cms.feedback.ratingTexture} value={texture} onChange={setTexture} />
+        <StarRating label={cms.feedback.ratingDifficulty} value={difficulty} onChange={setDifficulty} hint={cms.feedback.ratingDifficultyHint} />
+        <StarRating label={cms.feedback.ratingAuth} value={authFelt} onChange={setAuthFelt} hint={cms.feedback.ratingAuthHint} />
+        <StarRating label={cms.feedback.ratingDig} value={digFelt} onChange={setDigFelt} hint={cms.feedback.ratingDigHint} />
+
+        {/* Issues checklist */}
+        <div>
+          <FieldLabel label={cms.feedback.issuesLabel} optional />
+          <div className="flex flex-wrap gap-2 mt-2">
+            {RECIPE_ISSUES.map((issue) => (
+              <motion.button
+                key={issue.id}
+                className="rounded-xl px-3 py-1.5 active:scale-95"
+                onClick={() => toggleIssue(issue.id)}
+                style={{
+                  fontSize: "0.75rem",
+                  border: `1px solid ${issues.includes(issue.id) ? "var(--primary)" : "var(--outline-variant)"}`,
+                  background: issues.includes(issue.id)
+                    ? "var(--primary)"
+                    : "var(--surface-container)",
+                  color: issues.includes(issue.id)
+                    ? "var(--overlay-text)"
+                    : "var(--text-default)",
+                  cursor: "pointer",
+                  transition: "background 0.15s, border-color 0.15s, color 0.15s",
+                }}
+                aria-pressed={issues.includes(issue.id)}
+              >
+                {issue.icon} {issue.label}
+              </motion.button>
+            ))}
           </div>
         </div>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+
+        {/* Text area notes */}
+        <div>
+          <FieldLabel label={cms.feedback.notesLabel} optional />
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder={cms.misc.feedbackPlaceholder}
+            rows={2}
+            className="w-full rounded-xl px-4 py-3 mt-2 resize-none"
+            style={{
+              fontSize: "0.8125rem",
+              background: "var(--surface-container)",
+              border: "1px solid var(--outline-variant)",
+              color: "var(--text-default)",
+              outline: "none",
+              fontFamily: "inherit",
+            }}
+          />
+        </div>
+
+        {/* Submit */}
+        <motion.button
+          className="w-full rounded-xl py-3 px-4 flex items-center justify-center gap-2 active:scale-95"
+          onClick={handleSubmit}
+          disabled={overall === null}
+          style={{
+            background: overall !== null ? "var(--cta)" : "var(--surface-container)",
+            color: overall !== null ? "var(--overlay-text)" : "var(--muted-foreground)",
+            border: "none",
+            cursor: overall !== null ? "pointer" : "not-allowed",
+            fontSize: "var(--font-size-lg)",
+            fontWeight: 600,
+            opacity: overall !== null ? 1 : 0.5,
+            transition: "background 0.15s, opacity 0.15s",
+          }}
         >
-          <ChevronDown style={{ color: "var(--muted-foreground)", width: 18, height: 18 }} />
-        </motion.div>
-      </motion.button>
-
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="overflow-hidden"
-          >
-            <div className="px-5 pb-5 flex flex-col gap-5"
-              style={{ borderTop: "1px solid var(--outline-variant)" }}
-            >
-              {/* Step 1: Attempted? */}
-              <div className="pt-4">
-                <FieldLabel label="Hai provato la ricetta?" />
-                <div className="flex gap-3 mt-2">
-                  <ToggleButton
-                    active={attempted === true}
-                    onClick={() => setAttempted(true)}
-                    icon={<ThumbsUp style={{ width: 14, height: 14 }} />}
-                    label="Sì, l'ho fatta"
-                  />
-                  <ToggleButton
-                    active={attempted === false}
-                    onClick={() => { setAttempted(false); setSuccess(null); }}
-                    icon={<ThumbsDown style={{ width: 14, height: 14 }} />}
-                    label="No, solo salvata"
-                  />
-                </div>
-              </div>
-
-              {/* Step 2: Success? (only if attempted) */}
-              {attempted === true && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                >
-                  <FieldLabel label="Come è andata?" />
-                  <div className="flex gap-3 mt-2">
-                    <ToggleButton
-                      active={success === true}
-                      onClick={() => setSuccess(true)}
-                      icon={<Check style={{ width: 14, height: 14 }} />}
-                      label="Riuscita"
-                      color="var(--cta)"
-                    />
-                    <ToggleButton
-                      active={success === false}
-                      onClick={() => setSuccess(false)}
-                      icon={<X style={{ width: 14, height: 14 }} />}
-                      label="Non riuscita"
-                      color="var(--primary)"
-                    />
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Step 3: Ratings (only if attempted) */}
-              {attempted === true && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  className="flex flex-col gap-4"
-                >
-                  <StarRating label="Giudizio complessivo" value={overall} onChange={setOverall} required />
-                  <StarRating label="Gusto" value={taste} onChange={setTaste} />
-                  <StarRating label="Consistenza / alveolatura" value={texture} onChange={setTexture} />
-                  <StarRating label="Difficoltà" value={difficulty} onChange={setDifficulty} hint="1=facile, 5=impossibile" />
-                  <StarRating label="Quanto sembra autentica" value={authFelt} onChange={setAuthFelt} hint="calibra A-Score" />
-                  <StarRating label="Quanto è stata digeribile" value={digFelt} onChange={setDigFelt} hint="calibra D-Score" />
-                </motion.div>
-              )}
-
-              {/* Step 4: Issues (only if attempted) */}
-              {attempted === true && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                >
-                  <FieldLabel label="Problemi riscontrati" optional />
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {RECIPE_ISSUES.map((issue) => (
-                      <motion.button
-                        key={issue.id}
-                        className="rounded-xl px-3 py-1.5 active:scale-95"
-                        onClick={() => toggleIssue(issue.id)}
-                        style={{
-                          fontSize: "0.75rem",
-                          border: `1px solid ${issues.includes(issue.id) ? "var(--primary)" : "var(--outline-variant)"}`,
-                          background: issues.includes(issue.id)
-                            ? "var(--primary)"
-                            : "var(--surface-container)",
-                          color: issues.includes(issue.id)
-                            ? "#ffffff"
-                            : "var(--text-default)",
-                          cursor: "pointer",
-                          transition: "background 0.15s, border-color 0.15s, color 0.15s",
-                        }}
-                        aria-pressed={issues.includes(issue.id)}
-                      >
-                        {issue.icon} {issue.label}
-                      </motion.button>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Step 5: Notes */}
-              <div>
-                <FieldLabel label="Note" optional />
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Cosa hai cambiato? Come è venuta? Dettagli utili..."
-                  rows={2}
-                  className="w-full rounded-xl px-4 py-3 mt-2 resize-none"
-                  style={{
-                    fontSize: "0.8125rem",
-                    background: "var(--surface-container)",
-                    border: "1px solid var(--outline-variant)",
-                    color: "var(--text-default)",
-                    outline: "none",
-                    fontFamily: "inherit",
-                  }}
-                />
-              </div>
-
-              {/* Submit */}
-              <motion.button
-                className="w-full rounded-xl py-3 px-4 flex items-center justify-center gap-2 active:scale-95"
-                onClick={handleSubmit}
-                disabled={attempted === null || (attempted === true && overall === null)}
-                style={{
-                  background: (attempted !== null && (attempted === false || overall !== null))
-                    ? "var(--cta)" : "var(--surface-container)",
-                  color: (attempted !== null && (attempted === false || overall !== null))
-                    ? "#ffffff" : "var(--muted-foreground)",
-                  border: "none",
-                  cursor: (attempted !== null && (attempted === false || overall !== null))
-                    ? "pointer" : "not-allowed",
-                  fontSize: "0.875rem",
-                  fontWeight: 600,
-                  opacity: (attempted !== null && (attempted === false || overall !== null)) ? 1 : 0.5,
-                  transition: "background 0.15s, opacity 0.15s",
-                }}
-              >
-                <Send style={{ width: 14, height: 14 }} />
-                Invia feedback
-              </motion.button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          <Send style={{ width: "var(--font-size-lg)", height: "var(--font-size-lg)" }} />
+          {cms.feedback.submit}
+        </motion.button>
+      </div>
     </div>
   );
 }
@@ -330,57 +463,23 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
 // ═══ SUB-COMPONENTS ═══
 
 function FieldLabel({ label, optional, hint }: { label: string; optional?: boolean; hint?: string }) {
+  const { cms } = useCms();
   return (
     <div className="flex items-center gap-2">
-      <span style={{ color: "var(--text-default)", fontSize: "0.8125rem", fontWeight: 600 }}>
+      <span className="type-body" style={{ color: "var(--text-default)", fontWeight: 600 }}>
         {label}
       </span>
       {optional && (
-        <span style={{ color: "var(--muted-foreground)", fontSize: "0.6875rem", fontStyle: "italic" }}>
-          opzionale
+        <span className="type-body-xs" style={{ color: "var(--muted-foreground)", fontStyle: "italic" }}>
+          {cms.ui.pantryOptional}
         </span>
       )}
       {hint && (
-        <span style={{ color: "var(--muted-foreground)", fontSize: "0.6875rem" }}>
+        <span className="type-body-xs" style={{ color: "var(--muted-foreground)" }}>
           ({hint})
         </span>
       )}
     </div>
-  );
-}
-
-function ToggleButton({
-  active,
-  onClick,
-  icon,
-  label,
-  color,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: React.ReactNode;
-  label: string;
-  color?: string;
-}) {
-  const activeColor = color ?? "var(--primary)";
-  return (
-    <motion.button
-      className="rounded-xl px-4 py-2.5 flex items-center gap-2 active:scale-95"
-      onClick={onClick}
-      style={{
-        fontSize: "0.8125rem",
-        fontWeight: active ? 600 : 400,
-        border: `1.5px solid ${active ? activeColor : "var(--outline-variant)"}`,
-        background: active ? activeColor : "var(--surface-container)",
-        color: active ? "#ffffff" : "var(--text-default)",
-        cursor: "pointer",
-        transition: "background 0.15s, border-color 0.15s, color 0.15s",
-      }}
-      aria-pressed={active}
-    >
-      {icon}
-      {label}
-    </motion.button>
   );
 }
 
@@ -412,7 +511,7 @@ function StarRating({
               cursor: "pointer",
               lineHeight: 1,
             }}
-            aria-label={`${n} stella${n > 1 ? "e" : ""}`}
+            aria-label={`${n} ${n === 1 ? "stella" : "stelle"}`}
           >
             <Star
               style={{

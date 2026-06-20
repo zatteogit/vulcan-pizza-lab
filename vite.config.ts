@@ -33,7 +33,8 @@ export default defineConfig({
 
   /* === Dev server === */
   server: {
-    port: 5173,
+    port: 5174,
+    strictPort: true,
     open: true,
     /* SPA fallback: serve index.html per qualsiasi route (React Router) */
     historyApiFallback: true,
@@ -60,7 +61,6 @@ export default defineConfig({
             "react-router",
           ],
           "vendor-motion": ["motion"],
-          "vendor-recharts": ["recharts"],
         },
       },
     },

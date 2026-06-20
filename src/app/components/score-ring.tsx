@@ -60,7 +60,7 @@ export function ScoreRing({ score, color, size = 36 }: ScoreRingProps) {
           fill="var(--score-ring-text)"
           fontSize={size * 0.33}
           fontWeight="700"
-          fontFamily="'DM Sans', sans-serif"
+          fontFamily="var(--font-sans)"
           style={{ fontFeatureSettings: "'tnum'" }}
         >
           {score}

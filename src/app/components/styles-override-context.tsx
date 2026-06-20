@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import { type PizzaStyle, STYLES_DB } from "./pizza-engine";
+import React,{ createContext,useCallback,useContext,useState } from "react";
+import { type PizzaStyle,STYLES_DB } from "./pizza-engine";
 
 /* ═══ STYLES OVERRIDE CONTEXT ═══
  * Provides a mutable styles map that overrides STYLES_DB globally.
@@ -9,10 +9,6 @@ import { type PizzaStyle, STYLES_DB } from "./pizza-engine";
  */
 
 const STORAGE_KEY = "vulcan_styles_override";
-
-function deepClone<T>(obj: T): T {
-  return JSON.parse(JSON.stringify(obj));
-}
 
 function loadOverride(): Record<string, PizzaStyle> | null {
   try {

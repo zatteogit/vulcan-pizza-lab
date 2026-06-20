@@ -6,7 +6,17 @@
 //          sustainability score documented, fat_type model
 
 import { STYLE_DEVIATIONS } from "./deviation-tags";
+import {
+getImpasto,
+mergeImpastoIntoDough,
+type ImpastoRecipe,
+} from "./impasto-library";
 import { getToppingByStyle } from "./parametric-databases";
+import {
+getToppingForStyle,
+type TimelineInsertPoint,
+type ToppingRecipe
+} from "./topping-library";
 
 // ═══ TYPES ═══
 
@@ -48,6 +58,16 @@ export interface DoughParameters {
   sugar_pct: number;
   fermentation_hours_range: [number, number];
   process_type: string;
+  /** Impasto non lievitato (es. Focaccia di Recco): nessun lievito, le ore di
+   *  "fermentazione" rappresentano solo il riposo della sfoglia. VPL-B2. */
+  unleavened?: boolean;
+  /** Miscela di farine in percentuale (es. Pinsa frumento/soia/riso, o un mix
+   *  di più farine di frumento alla Bonci). Ogni componente ha la sua quota
+   *  (`pct`, sommano a 100) e, se è una farina di frumento, la sua forza (`w`);
+   *  i componenti senza `w` sono senza glutine. L'output mostra il breakdown in
+   *  grammi con la W di ciascuna farina; la forza efficace dell'impasto è la
+   *  media delle W di frumento pesata sulle quote. Modificabile dall'utente. VPL-B2. */
+  flour_blend?: { name: string; pct: number; w?: number }[];
 }
 
 export interface ShapeParameters {
@@ -67,6 +87,68 @@ export interface BakingParameters {
   cook_time_sec_ideal: number;
 }
 
+/** Struttura geometrica della preparazione — Sprint 11 Fase 1.
+ *
+ * Una pizza "single" è la classica: un solo disco/panetto/teglia monostrato.
+ * Le altre permettono di modellare preparazioni complesse senza duplicare l'impasto:
+ *
+ * - "stacked"           → 2 dischi sovrapposti con olio in mezzo (Baciata, Marinella)
+ * - "closed_stuffed"    → 2 dischi sigillati con ripieno interno (Ciaccino Senese)
+ * - "folded_layers"     → 1 sfoglia ripiegata in N strati (Scaccia Ragusana)
+ * - "double_thin_sheet" → 2 sfoglie sottilissime con ripieno tra esse (Focaccia di Recco)
+ */
+export type LayoutType =
+  | "single"
+  | "stacked"
+  | "closed_stuffed"
+  | "folded_layers"
+  | "double_thin_sheet";
+
+export interface LayoutSpec {
+  type: LayoutType;
+  /** Quanti pezzi compongono UNA unità servita (default 1, Baciata = 2, ecc.) */
+  pieces_per_unit?: number;
+  /** Cosa va tra i pezzi quando pieces_per_unit > 1 */
+  interlayer?: "none" | "oil_brush" | "sealed_edges" | "internal_filling";
+  /** Quando avviene la farcitura principale */
+  filling_timing?: "pre_bake" | "post_bake_split" | "post_bake_external" | "pre_bake_internal";
+  /** Modalità di cottura */
+  cook_mode?: "topped" | "white_then_top" | "bianca_only";
+  /** Numero di pieghe (solo folded_layers) */
+  folds?: number;
+}
+
+/** Default layout = pizza tradizionale a singolo disco/teglia, topping pre-cottura. */
+const DEFAULT_LAYOUT: Required<Omit<LayoutSpec, "folds">> = {
+  type: "single",
+  pieces_per_unit: 1,
+  interlayer: "none",
+  filling_timing: "pre_bake",
+  cook_mode: "topped",
+};
+
+/** Layout effettivo dello stile con default applicati. */
+export function getLayoutSpec(style: PizzaStyle): Required<Omit<LayoutSpec, "folds">> & { folds?: number } {
+  if (!style.layout) return { ...DEFAULT_LAYOUT };
+  return { ...DEFAULT_LAYOUT, ...style.layout };
+}
+
+/** Unità di servizio per l'UI: come si chiama un pezzo di questa pizza. */
+export type ServingUnit = "panetto" | "teglia" | "pala" | "padellino" | "focaccia";
+
+export interface ServingUnitLabel {
+  singular: string;
+  plural: string;
+}
+
+export const SERVING_UNIT_LABELS: Record<ServingUnit, ServingUnitLabel> = {
+  panetto: { singular: "Panetto", plural: "Panetti" },
+  teglia: { singular: "Teglia", plural: "Teglie" },
+  pala: { singular: "Pala", plural: "Pale" },
+  padellino: { singular: "Padellino", plural: "Padellini" },
+  focaccia: { singular: "Focaccia", plural: "Focacce" },
+};
+
 export interface PizzaStyle {
   id: string;
   name: string;
@@ -84,6 +166,76 @@ export interface PizzaStyle {
   key_characteristics: string[];
   hydration_category: HydrationCategory;
   emoji: string;
+  image?: string; // URL o data URL base64
+  /** Unità di servizio per l'UI ("Panetti" / "Teglie" / "Padellini"...). Se omesso, derivato da shape_type. */
+  serving_unit?: ServingUnit;
+  /** Numero predefinito di pezzi nel wizard. Tipico: 4 per panetti, 1 per teglie/pale/padellini. */
+  default_dough_balls?: number;
+  /** Quante persone serve UNA porzione (un panetto, una teglia, ecc.). Range [min, max]. */
+  servings_per_unit?: [number, number];
+  /** Sprint 11 Fase 1 — struttura geometrica (stacked/closed/folded/double_sheet).
+   * Opzionale: omesso = single (pizza/teglia/panetto monostrato classico). */
+  layout?: LayoutSpec;
+  /** Sprint 11 Fase 2 — id del topping di default (cercato in TOPPING_LIBRARY).
+   * Le sue pre_prep, assembly_steps e bake_adjustments si iniettano nella timeline. */
+  default_topping_ref?: string;
+  /** Sprint 11 Fase 3 — id dell'impasto di default (cercato in IMPASTO_LIBRARY).
+   * I suoi dough_overrides si applicano al dough base dello stile.
+   * Le versioni possono offrire impasti alternativi tramite impasto_ref. */
+  default_impasto_ref?: string;
+  /** Sprint 12 Fase 1 (#82) — id del formato canonico (cercato in FORMATS).
+   * Se presente, l'UI può offrire formati alternativi mantenendo l'impasto.
+   * Se omesso, il motore usa `shape` inline come formato (retrocompat). */
+  default_format_id?: string;
+  /** Sprint 12 Fase 1 (#82) — id del metodo di cottura canonico (in COOKINGS).
+   * Se omesso, il motore usa `baking` inline come cottura (retrocompat). */
+  default_cooking_id?: string;
+}
+
+/** Deriva l'unità di servizio dallo stile, con override esplicito o fallback shape-based. */
+export function getServingUnit(style: PizzaStyle): ServingUnit {
+  if (style.serving_unit) return style.serving_unit;
+  // Eccezioni note
+  if (style.id === "padellino_torino") return "padellino";
+  if (style.id === "focaccia_recco" || style.id === "focaccia_genovese") return "focaccia";
+  // Default da shape_type
+  if (style.shape.shape_type === "rectangular") return "teglia";
+  if (style.shape.shape_type === "oval") return "pala";
+  return "panetto";
+}
+
+/** Quante persone serve una unità (panetto/teglia/pala/...).
+ * Derivato da servings_per_unit esplicito, oppure stimato dalla shape e dalle dimensioni.
+ * Restituisce [min, max]. */
+export function getServingsRange(style: PizzaStyle): [number, number] {
+  if (style.servings_per_unit) return style.servings_per_unit;
+  // Stima da dimensioni + shape_type
+  const s = style.shape;
+  if (s.shape_type === "round") {
+    const d = s.diameter_cm ?? 30;
+    if (d <= 22) return [1, 1];           // padellino, tonda piccola
+    if (d <= 30) return [1, 2];           // tonda standard
+    if (d <= 35) return [2, 3];           // tonda grande / NY
+    return [3, 4];
+  }
+  if (s.shape_type === "oval") {
+    const area = (s.length_cm ?? 35) * (s.width_cm ?? 20);
+    if (area <= 500) return [1, 1];       // pala piccola
+    if (area <= 800) return [1, 2];
+    return [2, 3];
+  }
+  // rectangular
+  const area = (s.length_cm ?? 40) * (s.width_cm ?? 30);
+  if (area <= 600) return [3, 4];         // teglia piccola
+  if (area <= 900) return [4, 5];         // teglia media (30x30)
+  if (area <= 1200) return [4, 6];        // teglia standard 40x30
+  return [6, 8];
+}
+
+/** Default dough_balls per l'UI in base allo serving_unit. */
+export function getDefaultDoughBalls(style: PizzaStyle): number {
+  if (style.default_dough_balls !== undefined) return style.default_dough_balls;
+  return getServingUnit(style) === "panetto" ? 4 : 1;
 }
 
 export interface UserConstraints {
@@ -122,14 +274,13 @@ function em(key: string, fallback: string, params?: Record<string, string | numb
 export function resolveEngineMsgs(
   msgs: EngineMsg[],
   templates?: Record<string, string>,
+  formatParam?: (msg: EngineMsg, key: string, value: string | number) => string | number,
 ): string[] {
-  if (!templates) return msgs.map((m) => m.fallback);
   return msgs.map((m) => {
-    const tpl = templates[m.key];
-    if (!tpl) return m.fallback;
+    const tpl = templates?.[m.key] ?? m.fallback;
     if (!m.params) return tpl;
     return Object.entries(m.params).reduce(
-      (s, [k, v]) => s.replace(`{${k}}`, String(v)),
+      (s, [k, v]) => s.replace(`{${k}}`, String(formatParam ? formatParam(m, k, v) : v)),
       tpl,
     );
   });
@@ -164,11 +315,9 @@ export interface ScoreDimension {
 }
 
 export const SCORE_DIMENSIONS: ScoreDimension[] = [
-  { key: "authenticity",    label: "Autenticità",     short: "Aut", color: "var(--primary)",    weight: 0.30 },
-  { key: "feasibility",     label: "Fattibilità",     short: "Fat", color: "var(--tertiary)",   weight: 0.25 },
-  { key: "digestibility",   label: "Digeribilità",    short: "Dig", color: "var(--cta)",        weight: 0.20 },
-  { key: "sustainability",  label: "Sostenibilità",   short: "Sos", color: "var(--warm-olive)", weight: 0.15 },
-  { key: "experimentation", label: "Sperimentazione", short: "Spe", color: "var(--secondary)",  weight: 0.10 },
+  { key: "authenticity",    label: "Autenticità",     short: "Aut", color: "var(--primary)",    weight: 0.45 },
+  { key: "feasibility",     label: "Fattibilità",     short: "Fat", color: "var(--tertiary)",   weight: 0.30 },
+  { key: "digestibility",   label: "Digeribilità",    short: "Dig", color: "var(--cta)",        weight: 0.25 },
 ];
 
 /* ═══ YEAST LABELS — single source of truth ═══ */
@@ -177,6 +326,35 @@ export const YEAST_LABELS: Record<string, string> = {
   dry: "Lievito secco",
   sourdough: "Lievito madre",
 };
+
+/* ═══ ENUM LABELS — mai mostrare enum crudi ("extreme", "thick_airy") in UI ═══ */
+export const HYDRATION_CATEGORY_LABELS: Record<HydrationCategory, string> = {
+  low: "Bassa idratazione",
+  medium: "Media idratazione",
+  high: "Alta idratazione",
+  extreme: "Estrema idratazione",
+};
+
+export const CRUST_TYPE_LABELS: Record<CrustType, string> = {
+  leopard_soft: "Leopardata morbida",
+  crispy_thin: "Sottile croccante",
+  thick_airy: "Alta soffice",
+  cheese_crown: "Bordo al formaggio",
+  deep_dish: "Deep dish",
+  focaccia_soft: "Focaccia soffice",
+  stuffed_thin: "Ripiena sottile",
+  pan_crispy: "Padellino croccante",
+};
+
+export function localizeHydrationCategory(cat: string): string {
+  return HYDRATION_CATEGORY_LABELS[cat as HydrationCategory] ?? cat;
+}
+
+export function localizeCrustType(crust: string): string {
+  return (
+    CRUST_TYPE_LABELS[crust as CrustType] ?? crust.replace(/_/g, " ")
+  );
+}
 
 export interface GeneratedRecipe {
   schema_version: string; // Notion Pag.09: recipe data schema version
@@ -194,6 +372,12 @@ export interface GeneratedRecipe {
   hydration_pct: number;
   flour_w: number;
   flour_pl: number; // P/L stimato
+  /** VPL-B2 — mix di farine risolto (con grammi per componente). Presente solo
+   * per le ricette a blend (es. Pinsa, Bonci). */
+  flour_blend?: { name: string; pct: number; w?: number; grams: number }[];
+  /** VPL-B2 — forza glutinica efficace del mix (W frumento diluita dalla quota
+   * senza glutine). Informativa; presente solo per blend con farine prive di W. */
+  effective_gluten_w?: number;
   fermentation_hours: number;
   fermentation_temp_c: number;
   has_pre_ferment: boolean;
@@ -306,7 +490,10 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       flour_w_range: [250, 320], // Aggiornato da AVPN 2024 (era 220-280) — Audit Maestro S3
       flour_pl_range: [0.55, 0.70], // AVPN 2024 disciplinare — Audit Maestro P0-1
       hydration_pct_range: [55, 62],
-      salt_pct: 2.8,
+      // Audit motore 2026-05: era 2.8 (storico, 50g/L acqua). Modernizzato a
+      // 2.5% (Caputo/AVPN moderno, ~45 g/L con H 60%) per coerenza con Canotto
+      // e Teglia Romana. Differenza pratica trascurabile al palato.
+      salt_pct: 2.5,
       oil_pct: 0.0,
       fat_type: "none",
       sugar_pct: 0.0,
@@ -341,6 +528,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🍕",
+    servings_per_unit: [1, 1], // Napoletana = 1 pizza a testa
+    default_topping_ref: "margherita", // resolver → margherita_napoletana_avpn
   },
   napoletana_canotto: {
     id: "napoletana_canotto",
@@ -386,6 +575,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🎈",
+    servings_per_unit: [1, 1], // Canotto = 1 pizza a testa
+    default_topping_ref: "margherita", // resolver → margherita_napoletana_avpn
   },
   teglia_romana: {
     id: "teglia_romana",
@@ -393,8 +584,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "romana",
     origin: "Roma, Italia",
     dough: {
-      flour_w_range: [280, 340], // Teglia classica non-Bonci: farina 0 forte — era [300,350]
-      flour_pl_range: [0.50, 0.70], // Estensibile per stesura in teglia
+      flour_w_range: [300, 360], // Disciplinare APITER (Confraternita) W300-380 — Audit Maggio 2026
+      flour_pl_range: [0.50, 0.60], // APITER: 0.50-0.60 stretto
       hydration_pct_range: [75, 90], // Teglia tradizionale 75-85%, moderna 85-90% — era [80,100]
       salt_pct: 2.5,
       oil_pct: 2.5,
@@ -426,12 +617,13 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       "Alta idratazione, no-knead con pieghe. Base croccante, mollica nuvola.",
     key_characteristics: [
       "Altezza 2-3cm",
-      "Idratazione 80-100%",
+      "Idratazione 75-90%",
       "No-knead + pieghe",
       "Mollica nuvola",
     ],
     hydration_category: "extreme",
     emoji: "📐",
+    default_topping_ref: "margherita", // resolver → margherita_romana
   },
   tonda_romana: {
     id: "tonda_romana",
@@ -439,9 +631,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "romana",
     origin: "Roma, Italia",
     dough: {
-      flour_w_range: [180, 240], // Farina 0 romana W180-220, tipo 1 fino W240 — era [160,210]
+      flour_w_range: [170, 230], // Farina debole W170-220, max W230 — Audit Maggio 2026 (La Verace, Molino Vigevano)
       flour_pl_range: [0.40, 0.60], // Bassa tenacità: si stende col mattarello senza resistenza
-      hydration_pct_range: [55, 62], // Scrocchiarella classica 55-60%, moderna 60-62% — era [55,60]
+      hydration_pct_range: [55, 60], // Scrocchiarella tradizionale 55-60% — Audit Maggio 2026
       salt_pct: 2.5, // Standard romano — era 2.8
       oil_pct: 2.5,
       fat_type: "oil",
@@ -477,6 +669,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "💥",
+    servings_per_unit: [1, 1], // Scrocchiarella = 1 pizza a testa
+    default_topping_ref: "margherita", // resolver → margherita_romana
   },
   pinsa_romana: {
     id: "pinsa_romana",
@@ -493,6 +687,12 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       sugar_pct: 0.0,
       fermentation_hours_range: [24, 72],
       process_type: "direct",
+      // VPL-B2: mix multicereale tipico della pinsa (non una farina "W305" singola)
+      flour_blend: [
+        { name: "Farina di frumento", pct: 70, w: 290 },
+        { name: "Farina di soia", pct: 15 },
+        { name: "Farina di riso", pct: 15 },
+      ],
     },
     shape: {
       shape_type: "oval",
@@ -523,6 +723,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🥖",
+    servings_per_unit: [1, 1], // Pinsa = formato individuale ovale
+    default_topping_ref: "margherita", // resolver → margherita_romana
   },
   new_york: {
     id: "new_york",
@@ -568,6 +770,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🗽",
+    default_topping_ref: "margherita", // resolver → margherita_americana
   },
   detroit: {
     id: "detroit",
@@ -581,7 +784,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       salt_pct: 2.0, // Standard USA — era 2.5
       oil_pct: 3.0,
       fat_type: "oil",
-      sugar_pct: 1.0,
+      sugar_pct: 0.5, // Standard Detroit 0.3-0.5% — era 1.0 (PizzaBlab, PizzaLogic)
       fermentation_hours_range: [18, 48],
       process_type: "direct",
     },
@@ -614,6 +817,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🚗",
+    default_topping_ref: "detroit", // VPL-B2: era "diavola" — assembly cheese-crown + salsa sopra
   },
   chicago_deep: {
     id: "chicago_deep",
@@ -659,6 +863,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "low",
     emoji: "🏙️",
+    default_topping_ref: "chicago", // VPL-B2: era "diavola" — strati invertiti, salsa sopra
   },
   bonci_teglia: {
     id: "bonci_teglia",
@@ -705,6 +910,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "extreme",
     emoji: "☁️",
+    default_topping_ref: "margherita", // resolver → margherita_romana
   },
 
   /* ═══ EXPANSION WAVE 1 — 6 nuovi stili (marzo 2026) ═══ */
@@ -754,6 +960,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🫒",
+    default_topping_ref: "bianca", // resolver → bianca_olio_rosmarino
   },
   sfincione: {
     id: "sfincione",
@@ -763,7 +970,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     dough: {
       flour_w_range: [250, 300],
       flour_pl_range: [0.50, 0.65],
-      hydration_pct_range: [65, 70], // Tradizione palermitana 65-70% — era [65,72]
+      hydration_pct_range: [68, 75], // "Molto idratato" da tradizione palermitana — Audit Maggio 2026
       salt_pct: 2.5,
       oil_pct: 3.0,
       fat_type: "oil",
@@ -800,6 +1007,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🏺",
+    default_topping_ref: "sfincione", // VPL-B2: era assente (fallback generico)
   },
   pala_romana: {
     id: "pala_romana",
@@ -807,15 +1015,15 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "romana",
     origin: "Roma (formato contemporaneo)",
     dough: {
-      flour_w_range: [280, 340],
+      flour_w_range: [280, 340], // Consultapizza W260-350 — Audit Maggio 2026
       flour_pl_range: [0.50, 0.65],
       hydration_pct_range: [70, 80],
       salt_pct: 2.5,
-      oil_pct: 1.5,
+      oil_pct: 2.5, // Pala tradizionale 2-3% olio EVO — era 1.5 (Consultapizza)
       fat_type: "oil",
       sugar_pct: 0.0,
-      fermentation_hours_range: [24, 72],
-      process_type: "biga|poolish",
+      fermentation_hours_range: [18, 48], // Pala tradizionale 18-48h, prolungabile — Audit Maggio 2026
+      process_type: "direct|biga|poolish", // Pala può essere diretta o con pre-fermento
     },
     shape: {
       shape_type: "oval",
@@ -834,7 +1042,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     crust_type: "leopard_soft",
     requires_wood_oven: false,
     allows_additives: true,
-    requires_pre_ferment: true,
+    requires_pre_ferment: false, // Può essere diretta o con biga — non più obbligatorio
     suitable_for_beginner: false,
     description:
       "Formato ovale allungato servito su pala. Via di mezzo tra tonda e teglia: croccante fuori, nuvola dentro.",
@@ -846,6 +1054,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🏓",
+    default_topping_ref: "bianca_mortazza", // resolver → bianca_mortazza_romana (signature pala)
   },
   grandma_style: {
     id: "grandma_style",
@@ -892,6 +1101,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "👵",
+    default_topping_ref: "margherita", // resolver → margherita_americana
   },
   focaccia_recco: {
     id: "focaccia_recco",
@@ -899,15 +1109,16 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "contemporanea",
     origin: "Recco, Liguria",
     dough: {
-      flour_w_range: [170, 210], // Farina debole tipo 00/0 — era [180,220]
-      flour_pl_range: [0.40, 0.55], // Farina debole per sfoglia sottilissima
+      flour_w_range: [280, 360], // Disciplinare IGP focaccia di Recco: W ≥ 300 — era [170,210] ERRATO
+      flour_pl_range: [0.55, 0.70], // Forza alta = P/L bilanciato/forte
       hydration_pct_range: [45, 52], // Sfoglia non lievitata, disciplinare IGP 45-50% — era [50,55]
       salt_pct: 2.0,
       oil_pct: 4.0, // 3-4% nell'impasto, resto in teglia — era 5.0
       fat_type: "oil",
       sugar_pct: 0.0,
-      fermentation_hours_range: [0.5, 2], // Nessuna lievitazione — sfoglia diretta
+      fermentation_hours_range: [0.5, 2], // Solo riposo della sfoglia — non lievitata
       process_type: "direct",
+      unleavened: true, // VPL-B2: sfoglia senza lievito (farina/acqua/olio/sale)
     },
     shape: {
       shape_type: "round",
@@ -927,6 +1138,13 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     allows_additives: false,
     requires_pre_ferment: false,
     suitable_for_beginner: false,
+    layout: {
+      type: "double_thin_sheet",
+      pieces_per_unit: 2,
+      interlayer: "internal_filling",
+      filling_timing: "pre_bake_internal",
+      cook_mode: "topped",
+    },
     description:
       "Due sfoglie sottilissime con stracchino fuso. IGP dal 2015. Bolle dorate caratteristiche.",
     key_characteristics: [
@@ -937,6 +1155,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "low",
     emoji: "🧀",
+    default_topping_ref: "crescenza_recco", // resolver → crescenza_recco (single variant IGP)
   },
   padellino_torino: {
     id: "padellino_torino",
@@ -956,9 +1175,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     shape: {
       shape_type: "round",
-      dough_weight_g: 250,
+      dough_weight_g: 180, // Padellino tradizionale 160-200g per padellino 20cm — era 250
       thickness_factor: 0.5,
-      diameter_cm: 22,
+      diameter_cm: 20, // Padellino in ferro/alluminio standard 20cm — era 22
     },
     baking: {
       oven_type_required: "electric_standard",
@@ -972,6 +1191,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     allows_additives: true,
     requires_pre_ferment: false,
     suitable_for_beginner: true,
+    default_dough_balls: 4, // Padellini sono individuali: default 4 (uno a testa per 4 persone)
     description:
       "Cotta in padellino di ferro e finita in forno. Fondo croccante burro-olio, soffice al centro. Specialità torinese.",
     key_characteristics: [
@@ -982,6 +1202,694 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🍳",
+    default_topping_ref: "margherita", // resolver → margherita_romana (contemporanea match)
+  },
+
+  /* ═══ SPRINT 11 Fase 1 — Stili con layout speciale ═══ */
+  pizza_baciata: {
+    id: "pizza_baciata",
+    name: "Pizza Baciata",
+    family: "romana",
+    origin: "Roma (tradizione panaria)",
+    dough: {
+      flour_w_range: [280, 340],
+      flour_pl_range: [0.50, 0.60],
+      hydration_pct_range: [75, 85],
+      salt_pct: 2.5,
+      oil_pct: 2.5,
+      fat_type: "oil",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [24, 48],
+      process_type: "direct|biga",
+    },
+    shape: {
+      shape_type: "rectangular",
+      dough_weight_g: 800, // 2 panetti da 400g per teglia 40x30
+      thickness_factor: 0.55,
+      length_cm: 40,
+      width_cm: 30,
+    },
+    baking: {
+      oven_type_required: "electric_standard",
+      temp_c_range: [270, 300],
+      temp_c_ideal: 285,
+      cook_time_sec_range: [840, 1200],
+      cook_time_sec_ideal: 960,
+    },
+    crust_type: "thick_airy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: false,
+    layout: {
+      type: "stacked",
+      pieces_per_unit: 2,
+      interlayer: "oil_brush",
+      filling_timing: "post_bake_split",
+      cook_mode: "white_then_top",
+    },
+    default_impasto_ref: "teglia_romana_classica",
+    default_dough_balls: 1,
+    servings_per_unit: [4, 6],
+    description:
+      "Doppio strato in teglia: due dischi sovrapposti spennellati d'olio, cotti in bianco, poi sdoppiati e farciti a freddo. Stile romano da panificio.",
+    key_characteristics: [
+      "Doppio disco con olio in mezzo",
+      "Cottura in bianco",
+      "Farcitura post-cottura a freddo",
+      "Stile panaria romana",
+    ],
+    hydration_category: "high",
+    emoji: "💋",
+    default_topping_ref: "margherita", // resolver → margherita_romana
+  },
+
+  ciaccino_senese: {
+    id: "ciaccino_senese",
+    name: "Ciaccino Senese",
+    family: "contemporanea",
+    origin: "Siena, Toscana",
+    dough: {
+      flour_w_range: [220, 280],
+      flour_pl_range: [0.50, 0.65],
+      hydration_pct_range: [60, 65],
+      salt_pct: 2.0,
+      oil_pct: 5.0,
+      fat_type: "lard",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [4, 12],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 700, // 2 dischi da 350g
+      thickness_factor: 0.40,
+      diameter_cm: 30,
+    },
+    baking: {
+      oven_type_required: "electric_standard",
+      temp_c_range: [230, 270],
+      temp_c_ideal: 250,
+      cook_time_sec_range: [900, 1200],
+      cook_time_sec_ideal: 1020,
+    },
+    crust_type: "stuffed_thin",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    layout: {
+      type: "closed_stuffed",
+      pieces_per_unit: 2,
+      interlayer: "sealed_edges",
+      filling_timing: "pre_bake_internal",
+      cook_mode: "topped",
+    },
+    default_dough_balls: 1,
+    servings_per_unit: [4, 6],
+    description:
+      "Pizza ripiena toscana: due dischi sigillati con prosciutto cotto e formaggio filante all'interno. Tipico dei panifici senesi.",
+    key_characteristics: [
+      "Due dischi sigillati ai bordi",
+      "Ripieno interno pre-cottura",
+      "Strutto/olio nell'impasto",
+      "Tradizione senese",
+    ],
+    hydration_category: "medium",
+    emoji: "🥪",
+  },
+
+  /* Sprint 11 Fase 2 — Variante d'autore: Baciata con topping signature */
+  pizza_patate_porchetta: {
+    id: "pizza_patate_porchetta",
+    name: "Pizza Patate e Porchetta",
+    family: "romana",
+    origin: "Roma (Bonci & tradizione laziale)",
+    dough: {
+      flour_w_range: [280, 340],
+      flour_pl_range: [0.50, 0.60],
+      hydration_pct_range: [75, 85],
+      salt_pct: 2.5,
+      oil_pct: 2.5,
+      fat_type: "oil",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [24, 48],
+      process_type: "direct|biga",
+    },
+    shape: {
+      shape_type: "rectangular",
+      dough_weight_g: 800,
+      thickness_factor: 0.55,
+      length_cm: 40,
+      width_cm: 30,
+    },
+    baking: {
+      oven_type_required: "electric_standard",
+      temp_c_range: [270, 300],
+      temp_c_ideal: 285,
+      cook_time_sec_range: [900, 1320],
+      cook_time_sec_ideal: 1020,
+    },
+    crust_type: "thick_airy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: false,
+    layout: {
+      type: "stacked",
+      pieces_per_unit: 2,
+      interlayer: "oil_brush",
+      filling_timing: "post_bake_split",
+      cook_mode: "white_then_top",
+    },
+    default_topping_ref: "patate_porchetta",
+    default_impasto_ref: "teglia_romana_classica",
+    default_dough_balls: 1,
+    servings_per_unit: [4, 6],
+    description:
+      "Doppio strato in teglia: patate a scaglie arricciate in superficie, porchetta nel ripieno dopo lo sdoppiamento. Il piatto del weekend per i romani.",
+    key_characteristics: [
+      "Patate sottili arricciate sopra",
+      "Porchetta nel ripieno post-bake",
+      "Stile Baciata con topping signature",
+      "Tradizione laziale",
+    ],
+    hydration_category: "high",
+    emoji: "🥔",
+  },
+
+  /* ═══ Sprint 11 — Espansione catalogo (2 nuovi stili) ═══ */
+  trancio_milanese: {
+    id: "trancio_milanese",
+    name: "Trancio Milanese",
+    family: "contemporanea",
+    origin: "Milano, Lombardia",
+    dough: {
+      flour_w_range: [280, 340], // Farina forte 0/1 — pizzerie Spontini, Cocco, Di Gennaro
+      flour_pl_range: [0.50, 0.65],
+      hydration_pct_range: [65, 75], // Medio-alta, mollica soffice
+      salt_pct: 2.2,
+      oil_pct: 4.0, // Generoso olio nella teglia per fondo dorato
+      fat_type: "oil",
+      sugar_pct: 0.5, // Spinta minima per colorazione
+      fermentation_hours_range: [18, 36],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "rectangular",
+      dough_weight_g: 600,
+      thickness_factor: 0.5, // ~2cm di mollica
+      length_cm: 33,
+      width_cm: 25,
+    },
+    baking: {
+      oven_type_required: "electric_standard",
+      temp_c_range: [220, 260],
+      temp_c_ideal: 240,
+      cook_time_sec_range: [840, 1080],
+      cook_time_sec_ideal: 960,
+    },
+    crust_type: "thick_airy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    description:
+      "Trancio rettangolare tipico delle pizzerie milanesi a taglio. Soffice all'interno, fondo dorato dall'olio in teglia. Servito al banco a pranzo.",
+    key_characteristics: [
+      "Trancio rettangolare al taglio",
+      "Cottura in teglia oliata",
+      "Mollica soffice ~2cm",
+      "Stile tavola calda milanese",
+    ],
+    hydration_category: "high",
+    emoji: "🥪",
+    default_topping_ref: "margherita", // resolver → margherita_romana (contemporanea match)
+  },
+
+  chicago_tavern: {
+    id: "chicago_tavern",
+    name: "Chicago Tavern Cut",
+    family: "americana",
+    origin: "Chicago, USA",
+    dough: {
+      flour_w_range: [240, 290], // Bread flour standard USA
+      flour_pl_range: [0.55, 0.70],
+      hydration_pct_range: [50, 58], // Bassa idratazione per crocantezza estrema cracker-like
+      salt_pct: 2.0,
+      oil_pct: 4.0, // Olio nell'impasto + nella teglia
+      fat_type: "oil",
+      sugar_pct: 1.5, // Tipico USA, per colorazione e crocantezza
+      fermentation_hours_range: [18, 36],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 380,
+      thickness_factor: 0.22, // Sottilissima (cracker thin)
+      diameter_cm: 35,
+    },
+    baking: {
+      oven_type_required: "electric_standard",
+      temp_c_range: [240, 280],
+      temp_c_ideal: 260,
+      cook_time_sec_range: [600, 840],
+      cook_time_sec_ideal: 720,
+    },
+    crust_type: "crispy_thin",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    servings_per_unit: [2, 3],
+    description:
+      "Sottilissima e croccante tagliata a quadrotti (party cut), alternativa al deep dish di Chicago. Servita nei tavern con birra ghiacciata.",
+    key_characteristics: [
+      "Sottile cracker-like",
+      "Taglio a quadrotti (party cut)",
+      "Bordo croccante",
+      "Stile tavern di quartiere",
+    ],
+    hydration_category: "low",
+    emoji: "🟫",
+    default_topping_ref: "diavola", // resolver → diavola_americana
+  },
+
+  /* ═══ NUOVI STILI — Audit motore 2026-05 (italiani minori + internazionali) ═══ */
+
+  focaccia_barese: {
+    id: "focaccia_barese",
+    name: "Focaccia Barese",
+    family: "contemporanea",
+    origin: "Bari, Puglia",
+    dough: {
+      flour_w_range: [220, 280], // Farina media + semola rimacinata
+      flour_pl_range: [0.45, 0.55],
+      hydration_pct_range: [70, 80], // Impasto morbido con patata lessa
+      salt_pct: 2.0,
+      oil_pct: 4.0, // EVO generoso nell'impasto e nel ruoto
+      fat_type: "oil",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [8, 24],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 500,
+      thickness_factor: 0.55,
+      diameter_cm: 32, // Ruoto tondo
+    },
+    baking: {
+      oven_type_required: "electric_standard",
+      temp_c_range: [220, 250],
+      temp_c_ideal: 240,
+      cook_time_sec_range: [1200, 1500],
+      cook_time_sec_ideal: 1320,
+    },
+    crust_type: "focaccia_soft",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    serving_unit: "teglia",
+    default_dough_balls: 1,
+    servings_per_unit: [3, 4],
+    description:
+      "Soffice e umida grazie alla patata nell'impasto. Pomodorini schiacciati, olive baresane, origano e tanto olio EVO. Cotta nel ruoto tondo.",
+    key_characteristics: [
+      "Patata lessa nell'impasto",
+      "Pomodorini e olive baresane",
+      "Mollica umida e soffice",
+      "Crosta inferiore dorata nell'olio",
+    ],
+    hydration_category: "high",
+    emoji: "🫒",
+    default_topping_ref: "focaccia_barese", // VPL-B2: era "marinara" (errato)
+  },
+
+  pizza_fritta: {
+    id: "pizza_fritta",
+    name: "Pizza Fritta / Montanara",
+    family: "napoletana",
+    origin: "Napoli",
+    dough: {
+      flour_w_range: [220, 280],
+      flour_pl_range: [0.50, 0.60],
+      hydration_pct_range: [60, 65],
+      salt_pct: 2.5,
+      oil_pct: 0.0,
+      fat_type: "none",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [4, 8], // Lievitazione breve, frittura veloce
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 100, // Dischetto piccolo da friggere
+      thickness_factor: 0.5,
+      diameter_cm: 14,
+    },
+    baking: {
+      oven_type_required: "home", // Frittura in olio, non forno
+      temp_c_range: [180, 190], // VPL-B2: olio di frittura 180-190°C — era [170,180]
+      temp_c_ideal: 185,
+      cook_time_sec_range: [60, 120],
+      cook_time_sec_ideal: 90,
+    },
+    crust_type: "pan_crispy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    serving_unit: "panetto",
+    default_dough_balls: 4,
+    servings_per_unit: [1, 2],
+    description:
+      "Dischetto di impasto fritto in olio bollente, poi condito a crudo con pomodoro, ricotta, basilico e pecorino. Street food partenopeo.",
+    key_characteristics: [
+      "Cottura in frittura (no forno)",
+      "Condimento a crudo dopo la frittura",
+      "Ricotta + pomodoro + basilico",
+      "Veloce, lievitazione breve",
+    ],
+    hydration_category: "medium",
+    emoji: "🍳",
+    default_topping_ref: "montanara", // VPL-B2: era "margherita" — montanara condita a crudo
+  },
+
+  calzone_napoletano: {
+    id: "calzone_napoletano",
+    name: "Calzone Napoletano",
+    family: "napoletana",
+    origin: "Napoli",
+    dough: {
+      flour_w_range: [250, 320],
+      flour_pl_range: [0.55, 0.70],
+      hydration_pct_range: [58, 62],
+      salt_pct: 2.5,
+      oil_pct: 0.0,
+      fat_type: "none",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [8, 24],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 280,
+      thickness_factor: 0.4,
+      diameter_cm: 30, // Disco prima della chiusura
+    },
+    baking: {
+      oven_type_required: "electric_high",
+      temp_c_range: [400, 470],
+      temp_c_ideal: 430, // Leggermente sotto la pizza per cuocere il ripieno
+      cook_time_sec_range: [120, 240],
+      cook_time_sec_ideal: 180,
+    },
+    crust_type: "leopard_soft",
+    requires_wood_oven: false,
+    allows_additives: false,
+    requires_pre_ferment: false,
+    suitable_for_beginner: false,
+    layout: {
+      type: "closed_stuffed",
+      pieces_per_unit: 1,
+      interlayer: "internal_filling",
+      filling_timing: "pre_bake_internal",
+      cook_mode: "topped",
+    },
+    serving_unit: "panetto",
+    default_dough_balls: 4,
+    servings_per_unit: [1, 1],
+    description:
+      "Mezzaluna chiusa e sigillata con ripieno di ricotta, fior di latte, salame o cicoli e pepe. Cornicione gonfio, cotto in forno ad alta temperatura.",
+    key_characteristics: [
+      "Chiuso a mezzaluna sigillata",
+      "Ripieno ricotta + fior di latte",
+      "Impasto napoletano STG",
+      "Cottura alta T per gonfiare",
+    ],
+    hydration_category: "medium",
+    emoji: "🥟",
+    default_topping_ref: "margherita",
+  },
+
+  pizza_al_metro: {
+    id: "pizza_al_metro",
+    name: "Pizza al Metro",
+    family: "napoletana",
+    origin: "Vico Equense (NA)",
+    dough: {
+      flour_w_range: [260, 320],
+      flour_pl_range: [0.55, 0.65],
+      hydration_pct_range: [62, 70],
+      salt_pct: 2.5,
+      oil_pct: 1.0,
+      fat_type: "oil",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [12, 36],
+      process_type: "direct|biga",
+    },
+    shape: {
+      shape_type: "rectangular",
+      dough_weight_g: 700,
+      thickness_factor: 0.45,
+      length_cm: 70, // Servita "a metri"
+      width_cm: 30,
+    },
+    baking: {
+      oven_type_required: "electric_high",
+      temp_c_range: [300, 380],
+      temp_c_ideal: 340,
+      cook_time_sec_range: [240, 360],
+      cook_time_sec_ideal: 300,
+    },
+    crust_type: "leopard_soft",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: false,
+    serving_unit: "teglia",
+    default_dough_balls: 1,
+    servings_per_unit: [4, 6],
+    description:
+      "Formato rettangolare lungo nato a Vico Equense, servito a metri con più condimenti affiancati. Impasto napoletano morbido, alveolato.",
+    key_characteristics: [
+      "Formato lungo servito a metri",
+      "Più gusti sulla stessa base",
+      "Impasto napoletano morbido",
+      "Conviviale, da condividere",
+    ],
+    hydration_category: "medium",
+    emoji: "📏",
+    default_topping_ref: "margherita",
+  },
+
+  new_haven_apizza: {
+    id: "new_haven_apizza",
+    name: "New Haven Apizza",
+    family: "americana",
+    origin: "New Haven, Connecticut",
+    dough: {
+      flour_w_range: [240, 300], // Bread flour
+      flour_pl_range: [0.55, 0.65],
+      hydration_pct_range: [60, 66],
+      salt_pct: 2.0,
+      oil_pct: 1.0,
+      fat_type: "oil",
+      sugar_pct: 0.0, // Niente zucchero, a differenza della NY
+      fermentation_hours_range: [24, 72], // Maturazione fredda
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 300,
+      thickness_factor: 0.25, // Sottile e irregolare
+      diameter_cm: 38,
+    },
+    baking: {
+      oven_type_required: "wood", // Forno a carbone (coal-fired)
+      temp_c_range: [340, 400],
+      temp_c_ideal: 370,
+      cook_time_sec_range: [240, 360],
+      cook_time_sec_ideal: 300,
+    },
+    crust_type: "crispy_thin",
+    requires_wood_oven: true,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: false,
+    serving_unit: "panetto",
+    default_dough_balls: 2,
+    servings_per_unit: [2, 3],
+    description:
+      "Cotta in forno a carbone, sottile, irregolare e carbonizzata sui bordi. L'icona è la white clam pie (vongole, aglio, origano, niente pomodoro).",
+    key_characteristics: [
+      "Forno a carbone, bordi carbonizzati",
+      "Sottile e irregolare",
+      "Niente zucchero nell'impasto",
+      "White clam pie iconica",
+    ],
+    hydration_category: "medium",
+    emoji: "🦪",
+    default_topping_ref: "marinara",
+  },
+
+  fugazzeta: {
+    id: "fugazzeta",
+    name: "Fugazzeta Argentina",
+    family: "americana",
+    origin: "Buenos Aires, Argentina",
+    dough: {
+      flour_w_range: [200, 260],
+      flour_pl_range: [0.50, 0.60],
+      hydration_pct_range: [55, 62],
+      salt_pct: 2.0,
+      oil_pct: 3.0,
+      fat_type: "oil",
+      sugar_pct: 1.0,
+      fermentation_hours_range: [4, 12], // Spesso giornaliera, lievito generoso
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 600,
+      thickness_factor: 0.7, // Alta, "al molde"
+      diameter_cm: 30,
+    },
+    baking: {
+      oven_type_required: "electric_standard",
+      temp_c_range: [220, 260],
+      temp_c_ideal: 240,
+      cook_time_sec_range: [900, 1200],
+      cook_time_sec_ideal: 1020,
+    },
+    crust_type: "pan_crispy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    layout: {
+      type: "closed_stuffed",
+      pieces_per_unit: 2,
+      interlayer: "internal_filling",
+      filling_timing: "pre_bake_internal",
+      cook_mode: "topped",
+    },
+    serving_unit: "teglia",
+    default_dough_balls: 1,
+    servings_per_unit: [4, 6],
+    description:
+      "Pizza alta 'al molde' a doppio strato, ripiena di abbondante mozzarella e ricoperta di cipolla. Niente pomodoro. Icona della pizza porteña.",
+    key_characteristics: [
+      "Doppio strato ripieno di mozzarella",
+      "Cipolla in superficie, niente pomodoro",
+      "Alta e morbida (al molde)",
+      "Origano e olio EVO finale",
+    ],
+    hydration_category: "medium",
+    emoji: "🧅",
+    default_topping_ref: "fugazzeta", // VPL-B2: era "bianca" (generico)
+  },
+
+  california_style: {
+    id: "california_style",
+    name: "California Style",
+    family: "americana",
+    origin: "California, USA",
+    dough: {
+      flour_w_range: [240, 300],
+      flour_pl_range: [0.55, 0.65],
+      hydration_pct_range: [60, 65],
+      salt_pct: 2.0,
+      oil_pct: 2.0,
+      fat_type: "oil",
+      sugar_pct: 0.5,
+      fermentation_hours_range: [24, 48],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 230,
+      thickness_factor: 0.25, // Base sottile
+      diameter_cm: 30,
+    },
+    baking: {
+      oven_type_required: "electric_high",
+      temp_c_range: [280, 340],
+      temp_c_ideal: 300,
+      cook_time_sec_range: [300, 420],
+      cook_time_sec_ideal: 360,
+    },
+    crust_type: "crispy_thin",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    serving_unit: "panetto",
+    default_dough_balls: 2,
+    servings_per_unit: [1, 2],
+    description:
+      "Base sottile con ingredienti gourmet non convenzionali (pollo BBQ, capra, fichi, rucola). Nata da Chez Panisse e Wolfgang Puck negli anni '80.",
+    key_characteristics: [
+      "Base sottile artigianale",
+      "Ingredienti gourmet stagionali",
+      "Combinazioni non tradizionali",
+      "Approccio chef-driven",
+    ],
+    hydration_category: "medium",
+    emoji: "🥑",
+    default_topping_ref: "ortolana",
+  },
+
+  greek_pan: {
+    id: "greek_pan",
+    name: "Greek Pan Pizza",
+    family: "americana",
+    origin: "New England, USA (greco-americana)",
+    dough: {
+      flour_w_range: [220, 280],
+      flour_pl_range: [0.50, 0.60],
+      hydration_pct_range: [60, 68],
+      salt_pct: 2.0,
+      oil_pct: 5.0, // Teglia molto unta → fondo quasi fritto
+      fat_type: "oil",
+      sugar_pct: 1.0,
+      fermentation_hours_range: [4, 12],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 400,
+      thickness_factor: 0.5,
+      diameter_cm: 30,
+    },
+    baking: {
+      oven_type_required: "electric_standard",
+      temp_c_range: [230, 260],
+      temp_c_ideal: 245,
+      cook_time_sec_range: [720, 1020],
+      cook_time_sec_ideal: 840,
+    },
+    crust_type: "pan_crispy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    serving_unit: "teglia",
+    default_dough_balls: 1,
+    servings_per_unit: [3, 4],
+    description:
+      "Cotta in teglia tonda generosamente oliata: fondo croccante quasi fritto, mollica soffice. Mix mozzarella + cheddar. Classico dei diner greco-americani.",
+    key_characteristics: [
+      "Teglia molto unta, fondo fritto",
+      "Mollica soffice e spessa",
+      "Mix mozzarella + cheddar",
+      "Diner greco-americano",
+    ],
+    hydration_category: "medium",
+    emoji: "🫓",
+    default_topping_ref: "margherita",
   },
 };
 
@@ -1047,7 +1955,7 @@ export function calculateOvenCompensations(
 
   // ── Oil: +2% per deficit > 150°C (Modernist Pizza empirico) ──
   let oilDelta = 0;
-  if (deficit > 150 && style.allows_additives) {
+  if (deficit > 150 && style.allows_additives && style.dough.fat_type !== "butter") {
     oilDelta = Math.min(3, Math.round((deficit - 150) * 0.02 * 10) / 10 + 2);
     compensations.push({
       type: "oil",
@@ -1138,6 +2046,19 @@ export function estimatePL(flourW: number, stylePlRange: [number, number]): numb
 
 // ═══ SCORING ALGORITHMS ═══
 
+/**
+ * Override puntuali per il centro dell'auth score quando un'interpretazione
+ * è attiva (Maestro/Disciplinare/Community). Il "canone" non è più il centro
+ * del range dello stile, ma il valore preciso dell'interpretazione.
+ * Tolleranza simmetrica più stretta: ±3% H / ±25W / ±0.07 P/L / ±4h.
+ */
+export interface AuthenticityCenter {
+  hydration_pct?: number;
+  flour_w?: number;
+  flour_pl?: number;
+  fermentation_hours?: number;
+}
+
 export function calculateAuthenticityScore(
   style: PizzaStyle,
   hydration: number,
@@ -1146,6 +2067,8 @@ export function calculateAuthenticityScore(
   flourW: number,
   flourPL: number,
   fermentationHours: number,
+  /** Centro auth da interpretazione attiva (override sul centro range). */
+  interpretationCenter?: AuthenticityCenter,
 ): {
   score: number;
   penalties: EngineMsg[];
@@ -1156,16 +2079,17 @@ export function calculateAuthenticityScore(
     ingredienti: 100,
     processo: 100,
     attrezzatura: 100,
-    forma: 100,
   };
 
   // Ingredient axis (30%) — include idratazione, W, P/L
   const hCenter =
+    interpretationCenter?.hydration_pct ??
     (style.dough.hydration_pct_range[0] +
       style.dough.hydration_pct_range[1]) /
-    2;
+      2;
+  const hTolerance = interpretationCenter?.hydration_pct !== undefined ? 3 : 5;
   const hDeviation = Math.abs(hydration - hCenter);
-  if (hDeviation > 5) {
+  if (hDeviation > hTolerance) {
     const penalty = Math.min(25, hDeviation * 2.5);
     breakdown.ingredienti -= penalty;
     penalties.push(
@@ -1175,12 +2099,14 @@ export function calculateAuthenticityScore(
 
   // Flour W check
   const wCenter =
+    interpretationCenter?.flour_w ??
     (style.dough.flour_w_range[0] +
       style.dough.flour_w_range[1]) /
-    2;
+      2;
+  const wTolerance = interpretationCenter?.flour_w !== undefined ? 25 : 30;
   const wDeviation = Math.abs(flourW - wCenter);
-  if (wDeviation > 30) {
-    const penalty = Math.min(20, (wDeviation - 30) * 0.5);
+  if (wDeviation > wTolerance) {
+    const penalty = Math.min(20, (wDeviation - wTolerance) * 0.5);
     breakdown.ingredienti -= penalty;
     penalties.push(
       em("auth.wOutOfRange", `W farina fuori range (-${penalty.toFixed(1)}%)`, { penalty: penalty.toFixed(1) }),
@@ -1189,6 +2115,7 @@ export function calculateAuthenticityScore(
 
   // P/L check — Audit Maestro P0-1: critico per autenticità
   const plCenter =
+    interpretationCenter?.flour_pl ??
     (style.dough.flour_pl_range[0] + style.dough.flour_pl_range[1]) / 2;
   const plDeviation = Math.abs(flourPL - plCenter);
   if (plDeviation > 0.15) {
@@ -1208,7 +2135,7 @@ export function calculateAuthenticityScore(
     if (tempPenalty > 0) {
       breakdown.attrezzatura -= tempPenalty;
       penalties.push(
-        em("auth.tempVsIdeal", `Temperatura ${ovenTemp}°C vs ${style.baking.temp_c_ideal}°C (-${tempPenalty.toFixed(1)}%)`, { temp: ovenTemp, ideal: style.baking.temp_c_ideal, penalty: tempPenalty.toFixed(1) }),
+        em("auth.tempVsIdeal", `Temperatura {temp} vs {ideal} (-${tempPenalty.toFixed(1)}%)`, { temp: ovenTemp, ideal: style.baking.temp_c_ideal, penalty: tempPenalty.toFixed(1) }),
       );
     }
   } else {
@@ -1223,21 +2150,34 @@ export function calculateAuthenticityScore(
   }
 
   // Process axis (25%)
-  const [fMin, fMax] = style.dough.fermentation_hours_range;
-  if (fermentationHours < fMin) {
-    const deficit = fMin - fermentationHours;
-    const penalty = Math.min(15, deficit * 2);
-    breakdown.processo -= penalty;
-    penalties.push(
-      em("auth.fermentTooShort", `Fermentazione troppo breve (-${penalty.toFixed(1)}%)`, { penalty: penalty.toFixed(1) }),
-    );
-  } else if (fermentationHours > fMax * 1.5) {
-    const excess = fermentationHours - fMax;
-    const penalty = Math.min(10, excess * 0.5);
-    breakdown.processo -= penalty;
-    penalties.push(
-      em("auth.fermentTooLong", `Fermentazione troppo lunga (-${penalty.toFixed(1)}%)`, { penalty: penalty.toFixed(1) }),
-    );
+  if (interpretationCenter?.fermentation_hours !== undefined) {
+    // Centro = ore canoniche dell'interpretazione, tolleranza ±4h
+    const fCenter = interpretationCenter.fermentation_hours;
+    const fDeviation = Math.abs(fermentationHours - fCenter);
+    if (fDeviation > 4) {
+      const penalty = Math.min(15, (fDeviation - 4) * 1.5);
+      breakdown.processo -= penalty;
+      penalties.push(
+        em("auth.fermentOffCenter", `Fermentazione lontana dal canone (-${penalty.toFixed(1)}%)`, { penalty: penalty.toFixed(1) }),
+      );
+    }
+  } else {
+    const [fMin, fMax] = style.dough.fermentation_hours_range;
+    if (fermentationHours < fMin) {
+      const deficit = fMin - fermentationHours;
+      const penalty = Math.min(15, deficit * 2);
+      breakdown.processo -= penalty;
+      penalties.push(
+        em("auth.fermentTooShort", `Fermentazione troppo breve (-${penalty.toFixed(1)}%)`, { penalty: penalty.toFixed(1) }),
+      );
+    } else if (fermentationHours > fMax * 1.5) {
+      const excess = fermentationHours - fMax;
+      const penalty = Math.min(10, excess * 0.5);
+      breakdown.processo -= penalty;
+      penalties.push(
+        em("auth.fermentTooLong", `Fermentazione troppo lunga (-${penalty.toFixed(1)}%)`, { penalty: penalty.toFixed(1) }),
+      );
+    }
   }
 
   const score = Math.round(
@@ -1245,10 +2185,9 @@ export function calculateAuthenticityScore(
       0,
       Math.min(
         100,
-        breakdown.ingredienti * 0.3 +
-          breakdown.processo * 0.25 +
-          breakdown.attrezzatura * 0.35 +
-          breakdown.forma * 0.1,
+        breakdown.ingredienti * 0.35 +
+          breakdown.processo * 0.30 +
+          breakdown.attrezzatura * 0.35,
       ),
     ),
   );
@@ -1256,7 +2195,7 @@ export function calculateAuthenticityScore(
   return { score, penalties, breakdown };
 }
 
-export function calculateFeasibilityScore(
+function calculateFeasibilityScore(
   style: PizzaStyle,
   ovenMaxTemp: number,
   flourW: number,
@@ -1275,7 +2214,7 @@ export function calculateFeasibilityScore(
     const position = ovenMaxTemp - style.baking.temp_c_range[0];
     ovenScore = 60 + (position / range) * 35;
     warnings.push(
-      em("feas.ovenSuboptimal", `Forno sotto-ottimale: ${ovenMaxTemp}°C vs ideale ${style.baking.temp_c_ideal}°C`, { temp: ovenMaxTemp, ideal: style.baking.temp_c_ideal }),
+      em("feas.ovenSuboptimal", "Forno sotto-ottimale: {temp} vs ideale {ideal}", { temp: ovenMaxTemp, ideal: style.baking.temp_c_ideal }),
     );
   } else {
     const deficit = style.baking.temp_c_range[0] - ovenMaxTemp;
@@ -1284,7 +2223,7 @@ export function calculateFeasibilityScore(
     const floor = deficit > 200 ? 5 : deficit > 100 ? 10 : 20;
     ovenScore = Math.max(floor, 60 - deficit * 0.5);
     warnings.push(
-      em("feas.ovenTooCold", `Forno troppo freddo: ${ovenMaxTemp}°C < minimo ${style.baking.temp_c_range[0]}°C`, { temp: ovenMaxTemp, min: style.baking.temp_c_range[0] }),
+      em("feas.ovenTooCold", "Forno troppo freddo: {temp} < minimo {min}", { temp: ovenMaxTemp, min: style.baking.temp_c_range[0] }),
     );
   }
 
@@ -1304,15 +2243,16 @@ export function calculateFeasibilityScore(
   // Skill factor (30%) — Audit Scientifico S3: deve considerare W, metodo, non solo H+skill
   let skillScore = 90;
 
-  // Hydration × skill interaction
+  // Hydration × skill interaction — soglie più alte per Intermedio/Avanzato
   if (hydration > 75 && skillLevel === 1) {
     skillScore = 30;
     warnings.push(
       em("feas.hydrationBeginnerHigh", "Idratazione >75% sconsigliata per principianti"),
     );
-  } else if (hydration > 75 && skillLevel === 2) {
-    skillScore = 55;
-    warnings.push(em("feas.hydrationNeedsPractice", "Idratazione alta richiede pratica"));
+  } else if (hydration > 85 && skillLevel === 2) {
+    // Solo idratazioni davvero estreme (>85%) generano warning per Intermedio
+    skillScore = 65;
+    warnings.push(em("feas.hydrationNeedsPractice", "Idratazione estrema (>85%) richiede pratica"));
   } else if (hydration > 65 && skillLevel === 1) {
     skillScore = 50;
     warnings.push(em("feas.hydrationMedBeginner", "Idratazione media-alta per principiante"));
@@ -1351,7 +2291,7 @@ export function calculateFeasibilityScore(
   return { score, warnings };
 }
 
-export function calculateDigestibilityScore(
+function calculateDigestibilityScore(
   fermentationHours: number,
   fermentationTempC: number,
   hasPreFerment: boolean,
@@ -1449,7 +2389,7 @@ export function calculateDigestibilityScore(
  *   4. Process deviations: pre-ferment, oven swap (20%)
  *   5. Compensation count & severity (15%) — NEW: oven compensations = forced deviations
  */
-export function calculateExperimentationScore(
+function calculateExperimentationScore(
   style: PizzaStyle,
   hydration: number,
   fermentationHours: number,
@@ -1619,14 +2559,21 @@ function calculateYeastPercentage(
   // Focaccia di Recco [0.5, 2]h — Arrhenius model produces 3% (absurd for sfoglia diretta)
   // Cap at 0.5% max with gentle linear ramp instead of exponential blowup
   if (fermentationHours <= 2) return Math.max(0.01, Math.min(0.5, fermentationHours * 0.2));
-  // Arrhenius-based model con Q10 variabile — Audit Database V1
-  const referenceRate = 0.25; // % fresh yeast at 18°C for 24h (Audit Maestro: 0.1-0.2 è range, 0.25 conservativo per home)
+  // Arrhenius-based model con Q10 variabile — Audit Database V2
+  // Audit motore 2026-05: ricalibrato dopo verifica empirica vs disciplinari.
+  //   - referenceRate 0.25→0.10: il vecchio 0.25 sovrastimava di 2-3x rispetto
+  //     a Caputo/AVPN/Pizzarium/Shawn Randazzo (Detroit). Ora ancorato a Caputo
+  //     standard (0.1% fresh yeast a 18°C per 24h).
+  //   - timeFactor lineare (24/h) → sub-lineare (24/h)^0.7: il lievito si
+  //     RIPRODUCE durante la fermentazione, non si consuma. Curva log-like.
+  //     Verificato su Napoletana 8h, 12h, 24h, Bonci 48h, Detroit 24h.
+  const referenceRate = 0.10; // % fresh yeast a 18°C per 24h (Caputo standard)
   const { q10 } = getQ10(yeastType, fermentationTempC);
   const tempFactor = Math.pow(
     q10,
     (fermentationTempC - 18) / 10,
   );
-  const timeFactor = 24 / fermentationHours;
+  const timeFactor = Math.pow(24 / fermentationHours, 0.7);
 
   let pct = (referenceRate * timeFactor) / tempFactor;
   if (yeastType === "dry") pct *= 0.33; // dry = 1/3 of fresh
@@ -1639,7 +2586,7 @@ function calculateYeastPercentage(
 /* ═══ PAN/SHAPE HELPERS ═══ */
 
 /** Calculate default area for a style shape (cm²) */
-export function getDefaultShapeArea(shape: ShapeParameters): number {
+function getDefaultShapeArea(shape: ShapeParameters): number {
   if (shape.shape_type === "rectangular" || shape.shape_type === "oval") {
     const l = shape.length_cm ?? 30;
     const w = shape.width_cm ?? 20;
@@ -1650,7 +2597,7 @@ export function getDefaultShapeArea(shape: ShapeParameters): number {
 }
 
 /** Recalculate dough weight from custom pan dimensions + thickness */
-export function calcDoughWeight(
+function calcDoughWeight(
   style: PizzaStyle,
   panConfig?: PanConfig,
 ): number {
@@ -1719,6 +2666,19 @@ export interface RecWeightsOverride {
   pantry?: number;
 }
 
+/** Override opzionali dei range di stile, applicati da una versione attiva.
+ * Quando passati a generateRecipe, sostituiscono i range corrispondenti dello
+ * stile per tutta la durata del calcolo (scoring inclusi). */
+export interface VersionRangeOverrides {
+  hydration_pct_range?: [number, number];
+  flour_w_range?: [number, number];
+  flour_pl_range?: [number, number];
+  fermentation_hours_range?: [number, number];
+  /** Override del peso totale impasto a parità di teglia/area.
+   * Usato per versioni con coefficiente diverso (es. Sottile 0.5 vs Bonci 0.75 g/cm²). */
+  dough_weight_g?: number;
+}
+
 export function generateRecipe(
   style: PizzaStyle,
   constraints: UserConstraints,
@@ -1730,8 +2690,59 @@ export function generateRecipe(
   customFlourPL?: number,
   panConfig?: PanConfig,
   scoreWeights?: ScoreWeightsOverride,
+  versionRanges?: VersionRangeOverrides,
+  /** Sprint 11 Fase 3 — id impasto attivo (da version.impasto_ref). Se omesso,
+   * usa style.default_impasto_ref. Se entrambi assenti, no-op (retrocompat). */
+  activeImpastoRef?: string,
+  /** Audit motore 2026-05 — centro auth score quando un'interpretazione (Maestro/
+   * Disciplinare/Community) è attiva. Se presente, il punteggio non è più
+   * "distanza dal centro range stile" ma "distanza dai parametri canonici
+   * di quell'interpretazione" con tolleranza simmetrica più stretta. */
+  interpretationCenter?: AuthenticityCenter,
+  /** VPL-B2 — mix di farine modificato dall'utente (quote/W per componente).
+   * Se omesso si usa `style.dough.flour_blend`. */
+  customFlourBlend?: { name: string; pct: number; w?: number }[],
 ): GeneratedRecipe {
   const doughBalls = constraints.dough_balls;
+
+  // Sprint 11 Fase 3 — Risolvi impasto effettivo e applica dough_overrides.
+  // Priorità: activeImpastoRef (esplicito da versione) > style.default_impasto_ref.
+  // I dough_overrides dell'impasto sovrascrivono i campi corrispondenti del dough
+  // base; gli altri campi restano identici allo stile.
+  const effectiveImpastoId = activeImpastoRef ?? style.default_impasto_ref;
+  const impasto: ImpastoRecipe | undefined = effectiveImpastoId
+    ? getImpasto(effectiveImpastoId)
+    : undefined;
+  if (impasto) {
+    style = {
+      ...style,
+      dough: mergeImpastoIntoDough(style.dough, impasto),
+      requires_pre_ferment:
+        impasto.requires_pre_ferment ?? style.requires_pre_ferment,
+    };
+  }
+
+  // Apply version range overrides on top of the impasto-merged style.
+  // Tutti i campi non-range restano identici allo stile originario.
+  if (versionRanges) {
+    style = {
+      ...style,
+      dough: {
+        ...style.dough,
+        hydration_pct_range:
+          versionRanges.hydration_pct_range ?? style.dough.hydration_pct_range,
+        flour_w_range:
+          versionRanges.flour_w_range ?? style.dough.flour_w_range,
+        flour_pl_range:
+          versionRanges.flour_pl_range ?? style.dough.flour_pl_range,
+        fermentation_hours_range:
+          versionRanges.fermentation_hours_range ?? style.dough.fermentation_hours_range,
+      },
+      shape: versionRanges.dough_weight_g
+        ? { ...style.shape, dough_weight_g: versionRanges.dough_weight_g }
+        : style.shape,
+    };
+  }
 
   // Defensive: normalize inverted ranges (Style Editor may temporarily produce them)
   const safeRange = (r: [number, number]): [number, number] =>
@@ -1745,8 +2756,30 @@ export function generateRecipe(
   const baseHydration =
     customHydration ?? (hRange[0] + hRange[1]) / 2;
 
-  const flourW =
-    customFlourW ?? (wRange[0] + wRange[1]) / 2;
+  // VPL-B2: mix di farine. La forza efficace dell'impasto è la media delle W
+  // delle farine di frumento pesata sulle quote (le farine senza glutine non
+  // contribuiscono alla maglia glutinica). Per i blend questa sostituisce la W
+  // singola dello slider; altrimenti vale customFlourW / midpoint.
+  const flourBlend = customFlourBlend ?? style.dough.flour_blend;
+  let flourW = customFlourW ?? (wRange[0] + wRange[1]) / 2;
+  // VPL-B2 — forza glutinica EFFICACE del mix: la W del frumento diluita dalla
+  // frazione senza glutine (gluten ∝ proteina del frumento ∝ quota di frumento).
+  // È fisica di primo ordine, INFORMATIVA: la mostriamo ma NON la diamo in pasto
+  // alle euristiche calibrate sul frumento puro (identità/scoring/P/L usano la W
+  // del frumento, perché le farine senza glutine cambiano la reologia, non solo
+  // diluiscono la forza). Per i blend a solo frumento coincide con flourW.
+  let effectiveGlutenW: number | undefined;
+  if (flourBlend && flourBlend.length > 0) {
+    const totalPct = flourBlend.reduce((s, c) => s + c.pct, 0) || 100;
+    const wheat = flourBlend.filter((c) => c.w != null && c.pct > 0);
+    const wheatPct = wheat.reduce((s, c) => s + c.pct, 0);
+    if (wheatPct > 0) {
+      flourW = Math.round(
+        wheat.reduce((s, c) => s + (c.w as number) * c.pct, 0) / wheatPct,
+      );
+      effectiveGlutenW = Math.round((flourW * wheatPct) / totalPct);
+    }
+  }
 
   // P/L estimation from W — Audit Maestro P0-1 (VPL-012: accept custom P/L)
   const flourPL = customFlourPL ?? estimatePL(flourW, plRange);
@@ -1754,8 +2787,9 @@ export function generateRecipe(
   let fermentationHours =
     customFermentationHours ?? (fermRange[0] + fermRange[1]) / 2;
 
-  // Clamp fermentation to available time
-  if (constraints.available_hours > 0) {
+  // Clamp fermentation a available_hours SOLO se l'utente non ha esplicitato un valore custom.
+  // Rispettiamo la scelta dell'utente (es. scelta versione "Tradizionale 48h" non va clampata a 24h).
+  if (customFermentationHours === undefined && constraints.available_hours > 0) {
     fermentationHours = Math.min(
       fermentationHours,
       constraints.available_hours,
@@ -1788,12 +2822,15 @@ export function generateRecipe(
     : Math.round((baseHydration + ovenCompensations.hydration_delta_pct) * 10) / 10;
 
   // Effective oil/sugar with compensations
-  const effectiveOilPct = style.allows_additives
-    ? style.dough.oil_pct + ovenCompensations.oil_delta_pct
-    : 0;
-  const effectiveSugarPct = style.allows_additives
-    ? style.dough.sugar_pct + ovenCompensations.sugar_delta_pct
-    : 0;
+  // VPL-B2: il grasso/zucchero BASE dello stile è un ingrediente sempre presente
+  // (es. EVO nell'impasto della Focaccia di Recco); allows_additives governa solo
+  // se la compensazione forno può AGGIUNGERne, non azzera la dose di ricetta.
+  const effectiveOilPct =
+    style.dough.oil_pct +
+    (style.allows_additives ? ovenCompensations.oil_delta_pct : 0);
+  const effectiveSugarPct =
+    style.dough.sugar_pct +
+    (style.allows_additives ? ovenCompensations.sugar_delta_pct : 0);
 
   // ── Auto yeast selection based on pantry ──
   let yeastType: "fresh" | "dry" | "sourdough";
@@ -1819,7 +2856,10 @@ export function generateRecipe(
 
   // Yeast calculation (sourdough uses a different model)
   let yeastPct: number;
-  if (yeastType === "sourdough") {
+  if (style.dough.unleavened) {
+    // VPL-B2: impasto non lievitato (Focaccia di Recco) → nessun lievito
+    yeastPct = 0;
+  } else if (yeastType === "sourdough") {
     // Sourdough: ~15-20% of flour weight as starter, expressed as baker's %
     // Less starter for longer fermentations
     yeastPct =
@@ -1887,6 +2927,7 @@ export function generateRecipe(
     flourW,
     flourPL,
     fermentationHours,
+    interpretationCenter,
   );
   const feasResult = calculateFeasibilityScore(
     style,
@@ -1922,18 +2963,16 @@ export function generateRecipe(
   );
 
   const sw = {
-    authenticity: scoreWeights?.authenticity ?? 0.3,
-    feasibility: scoreWeights?.feasibility ?? 0.25,
-    digestibility: scoreWeights?.digestibility ?? 0.2,
-    sustainability: scoreWeights?.sustainability ?? 0.15,
-    experimentation: scoreWeights?.experimentation ?? 0.1,
+    authenticity: scoreWeights?.authenticity ?? 0.45,
+    feasibility: scoreWeights?.feasibility ?? 0.30,
+    digestibility: scoreWeights?.digestibility ?? 0.25,
+    sustainability: scoreWeights?.sustainability ?? 0.0,
+    experimentation: scoreWeights?.experimentation ?? 0.0,
   };
   const composite = Math.round(
     authResult.score * sw.authenticity +
       feasResult.score * sw.feasibility +
-      digestResult.score * sw.digestibility +
-      sustResult.score * sw.sustainability +
-      expResult.score * sw.experimentation,
+      digestResult.score * sw.digestibility
   );
 
   const scores: RecipeScores = {
@@ -1956,7 +2995,14 @@ export function generateRecipe(
     claims: [...digestResult.claims, ...sustResult.claims],
   };
 
-  // Generate timeline
+  // Generate timeline — risolve il topping con il resolver Sprint 12 Fase 2.
+  // Se default_topping_ref è un concept_id (es. "margherita"), il resolver sceglie
+  // la variante più adatta allo Style (es. margherita_napoletana_avpn per STG,
+  // margherita_romana per Tonda Romana, margherita_americana per NY).
+  // Se è una recipe_id specifica (es. "patate_porchetta"), usa quella direttamente.
+  const defaultTopping = style.default_topping_ref
+    ? getToppingForStyle(style.default_topping_ref, style)
+    : undefined;
   const timeline = generateTimeline(
     style,
     fermentationHours,
@@ -1964,6 +3010,7 @@ export function generateRecipe(
     hasPreFerment,
     cookTime,
     ovenTemp,
+    defaultTopping,
   );
 
   // Generate tips
@@ -2124,6 +3171,28 @@ export function generateRecipe(
     hydration_pct: hydration,
     flour_w: flourW,
     flour_pl: flourPL,
+    flour_blend: (() => {
+      if (!flourBlend || flourBlend.length === 0) return undefined;
+      const resolved = flourBlend.map((c) => ({
+        ...c,
+        grams: Math.round((flourG * c.pct) / 100),
+      }));
+      // I grammi dei componenti devono sommare esattamente alla farina totale:
+      // il drift di arrotondamento va al componente più grande.
+      const drift = flourG - resolved.reduce((s, c) => s + c.grams, 0);
+      if (drift !== 0) {
+        let idx = 0;
+        resolved.forEach((c, i) => {
+          if (c.grams > resolved[idx].grams) idx = i;
+        });
+        resolved[idx] = { ...resolved[idx], grams: resolved[idx].grams + drift };
+      }
+      return resolved;
+    })(),
+    effective_gluten_w:
+      effectiveGlutenW != null && effectiveGlutenW !== flourW
+        ? effectiveGlutenW
+        : undefined,
     fermentation_hours: fermentationHours,
     fermentation_temp_c: fermentationTempC,
     has_pre_ferment: hasPreFerment,
@@ -2177,8 +3246,52 @@ function generateTimeline(
   hasPreFerment: boolean,
   cookTimeSec: number,
   actualOvenTemp?: number,
+  topping?: ToppingRecipe,
 ): TimelineStep[] {
   const steps: TimelineStep[] = [];
+
+  // Helper per iniettare assembly_steps del topping in un certo punto.
+  // Restituisce true se uno step "replaces_generic" è già stato iniettato
+  // (così la pipeline non aggiunge anche il suo step generico).
+  const injectToppingAt = (point: TimelineInsertPoint): boolean => {
+    if (!topping?.assembly_steps) return false;
+    let replacedGeneric = false;
+    topping.assembly_steps
+      .filter((s) => s.insert_at === point)
+      .forEach((s) => {
+        steps.push({
+          id: s.id,
+          title: s.title,
+          description: s.description,
+          duration_minutes: s.duration_minutes,
+          icon: "chef-hat",
+          timing_label: `${s.duration_minutes} min`,
+          tip: s.tip,
+        });
+        if (s.replaces_generic) replacedGeneric = true;
+      });
+    return replacedGeneric;
+  };
+
+  // Topping pre_prep: hours_before_start (es. marinatura 12h prima),
+  // just_before_assembly (es. patate in ammollo prima dell'assemblaggio),
+  // during_bulk (raramente).
+  // Per ora aggiungiamo come step iniziali; in futuro si può schedulare in punti più precisi.
+  if (topping?.pre_prep_steps) {
+    topping.pre_prep_steps
+      .filter((p) => p.timing === "hours_before_start")
+      .forEach((p) => {
+        steps.push({
+          id: p.id,
+          title: p.title,
+          description: p.description,
+          duration_minutes: p.duration_minutes,
+          icon: "beaker",
+          timing_label: p.hours_before ? `${p.hours_before}h prima` : "preparazione",
+          tip: p.tip,
+        });
+      });
+  }
 
   if (hasPreFerment) {
     steps.push({
@@ -2200,7 +3313,7 @@ function generateTimeline(
     id: "mix",
     title: "Impasto",
     description: style.dough.process_type.includes("no_knead")
-      ? "Mescolare gli ingredienti senza impastare. Serie di pieghe."
+      ? "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min nelle prime 1,5–2 ore."
       : "Impastare fino a incordatura. Liscio e elastico.",
     duration_minutes: style.dough.process_type.includes(
       "no_knead",
@@ -2212,8 +3325,8 @@ function generateTimeline(
     tip: style.dough.process_type.includes("no_knead")
       ? {
           beginner:
-            "Non serve impastare! Mescola con una spatola finché non ci sono più grumi di farina asciutta.",
-          nerd: "L'autolisi sfrutta le proteinasi endogene della farina per sviluppare il glutine senza lavoro meccanico.",
+            "Non serve impastare! Mescola finché non ci sono grumi asciutti. Poi, ogni ~30 min, bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro ruotando la ciotola: bastano 3 giri da 4 pieghe.",
+          nerd: "L'autolisi sviluppa il glutine senza lavoro meccanico; le pieghe a intervalli (stretch & fold) allineano e tendono le fibrille di glutine e redistribuiscono i gas, dando forza senza degassare.",
         }
       : {
           beginner:
@@ -2224,7 +3337,7 @@ function generateTimeline(
 
   steps.push({
     id: "bulk",
-    title: "Puntata (Bulk)",
+    title: "Puntata",
     description: `Lievitazione in massa a ${fermentTemp}°C`,
     duration_minutes: Math.round(
       fermentHours * 60 * (hasPreFerment ? 0.4 : 0.6),
@@ -2247,31 +3360,62 @@ function generateTimeline(
           },
   });
 
+  // ─── STAGLIO (layout-aware: descrizione cambia con pieces_per_unit) ───
+  const layout = getLayoutSpec(style);
+  const isMultiPiece = (layout.pieces_per_unit ?? 1) > 1;
+  // Teglia/pala/focaccia: staglio delicato senza pirlatura stretta — l'alveolatura
+  // costruita in puntata non va sgonfiata (coerente con divide_teglia del CMS).
+  const servingUnitForDivide = getServingUnit(style);
+  const isGentleDivide =
+    !isMultiPiece &&
+    (servingUnitForDivide === "teglia" ||
+      servingUnitForDivide === "pala" ||
+      servingUnitForDivide === "focaccia");
   steps.push({
     id: "divide",
     title: "Staglio",
-    description:
-      "Dividere in panetti del peso corretto. Formare pallina.",
+    description: isMultiPiece
+      ? `Dividere in ${layout.pieces_per_unit} pezzi uguali per ogni unità. Formare pallina o disco.`
+      : isGentleDivide
+        ? "Dividere con delicatezza, senza sgonfiare l'impasto."
+        : "Dividere in panetti del peso corretto. Formare pallina.",
     duration_minutes: 15,
     icon: "scissors",
     timing_label: "15 min",
-    tip: {
-      beginner:
-        "Usa una bilancia! Taglia con un tarocco e arrotonda ogni pezzo in una palla liscia.",
-      nerd: "Lo staglio crea tensione superficiale che intrappola CO₂ durante l'appretto e definisce la struttura alveolare finale.",
-    },
+    tip: isGentleDivide
+      ? {
+          beginner:
+            "Mani delicate! Le bolle nell'impasto sono preziose: piega i lembi sotto, senza schiacciare.",
+          nerd: "Con idratazione >75% lo staglio aggressivo collassa gli alveoli formati in puntata: tensione minima, degassamento quasi nullo.",
+        }
+      : {
+          beginner:
+            "Usa una bilancia! Taglia con un tarocco e arrotonda ogni pezzo in una palla liscia.",
+          nerd: "Lo staglio crea tensione superficiale che intrappola CO₂ durante l'appretto e definisce la struttura alveolare finale.",
+        },
   });
+
+  /* ─── APPRETTO + PRERISCALDO (audit roleplay giugno 2026) ───
+   * Nessuna timeline diceva di ACCENDERE IL FORNO: si infornava a freddo.
+   * Il preriscaldo ruba i minuti finali dell'appretto (avviene in parallelo:
+   * i panetti finiscono di lievitare mentre il forno va in temperatura),
+   * così il totale resta identico e l'orario del promemoria è esatto. */
+  const proofMinutes = Math.round(
+    fermentHours * 60 * (hasPreFerment ? 0.2 : 0.4),
+  );
+  const ovenTempForPreheat = Math.round(actualOvenTemp ?? style.baking.temp_c_ideal);
+  const idealPreheat =
+    ovenTempForPreheat >= 400 ? 60 : ovenTempForPreheat >= 300 ? 45 : 30;
+  const preheatMinutes = Math.min(idealPreheat, Math.max(0, proofMinutes - 30));
 
   steps.push({
     id: "proof",
     title: "Appretto",
     description: `Lievitazione finale a ${Math.max(fermentTemp, 18)}°C`,
-    duration_minutes: Math.round(
-      fermentHours * 60 * (hasPreFerment ? 0.2 : 0.4),
-    ),
+    duration_minutes: proofMinutes - preheatMinutes,
     icon: "timer",
     timing_label: formatDuration(
-      Math.round(fermentHours * (hasPreFerment ? 0.2 : 0.4)),
+      Math.round((proofMinutes - preheatMinutes) / 60),
     ),
     tip: {
       beginner:
@@ -2280,42 +3424,201 @@ function generateTimeline(
     },
   });
 
-  steps.push({
-    id: "shape",
-    title: "Stesura",
-    description:
+  if (preheatMinutes > 0) {
+    steps.push({
+      id: "preheat",
+      title: "Forno al massimo",
+      description: `Accendi ora il forno a ${ovenTempForPreheat}°C${preheatMinutes >= 45 ? " (pietra o acciaio già dentro)" : ""}. Intanto i panetti finiscono l'appretto.`,
+      duration_minutes: preheatMinutes,
+      icon: "flame",
+      timing_label: `${preheatMinutes} min`,
+      tip: {
+        beginner:
+          "Forno ben caldo = base che si stacca e cornicione che spinge. Non avere fretta: aspetta che arrivi a temperatura.",
+        nerd: `La massa termica della superficie domina il primo minuto di cottura: ${preheatMinutes} min di soak assicurano che pietra/acciaio siano saturi, non solo l'aria del forno.`,
+      },
+    });
+  }
+
+  // ─── STESURA (layout-aware) ───
+  let shapeDesc: string;
+  if (layout.type === "folded_layers") {
+    shapeDesc = `Stendere una sfoglia sottilissima e ripiegare ${layout.folds ?? 4} volte a libro, distribuendo la farcitura tra le pieghe.`;
+  } else if (layout.type === "double_thin_sheet") {
+    shapeDesc = "Stendere due sfoglie sottilissime quasi trasparenti col mattarello.";
+  } else if (layout.type === "stacked") {
+    shapeDesc = "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.";
+  } else if (layout.type === "closed_stuffed") {
+    shapeDesc = "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.";
+  } else {
+    shapeDesc =
       style.shape.shape_type === "rectangular"
         ? "Stendere nella teglia oliata con le mani"
         : style.crust_type === "crispy_thin"
           ? "Stendere con mattarello, sottilissima"
-          : "Allargare a mano dal centro, preservare il cornicione",
-    duration_minutes: 5,
+          : "Allargare a mano dal centro, preservare il cornicione";
+  }
+  steps.push({
+    id: "shape",
+    title: "Stesura",
+    description: shapeDesc,
+    duration_minutes: layout.type === "folded_layers" ? 10 : 5,
     icon: "expand",
-    timing_label: "5 min",
+    timing_label: layout.type === "folded_layers" ? "10 min" : "5 min",
   });
 
-  steps.push({
-    id: "top",
-    title: "Farcitura",
-    description: "Condire la pizza secondo gusto",
-    duration_minutes: 5,
-    icon: "chef-hat",
-    timing_label: "5 min",
-  });
+  // VPL-A1: i pre_prep "just_before_assembly" (es. saltare i funghi, patate in
+  // ammollo) NON sono più step separati della timeline: cambiare condimento deve
+  // modificare solo lo step "Condimento", non inserire passaggi sopra. Vengono
+  // mostrati come note di preparazione dentro lo step Condimento (recipe-output).
+  // I pre_prep "hours_before_start" (marinature ore prima) restano schedulati.
 
-  steps.push({
-    id: "bake",
-    title: "Cottura",
-    description: `Cuocere a ${Math.round(actualOvenTemp ?? style.baking.temp_c_ideal)}°C`,
-    duration_minutes: Math.round(cookTimeSec / 60),
-    icon: "flame",
-    timing_label: formatCookTime(cookTimeSec),
-    tip: {
-      beginner:
-        "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
-      nerd: `La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A ${Math.round(actualOvenTemp ?? style.baking.temp_c_ideal)}°C la caramellizzazione crea ~600 composti aromatici.`,
-    },
-  });
+  // Topping step in after_shape (es. condimento margherita classica)
+  const toppingReplacesGenericTop = injectToppingAt("after_shape");
+
+  // ─── FARCITURA / ASSEMBLAGGIO (layout-aware) ───
+  if (layout.type === "stacked" && layout.interlayer === "oil_brush") {
+    // Baciata / Marinella: spennellatura olio + sovrapposizione del secondo disco
+    steps.push({
+      id: "stack",
+      title: "Sovrapposizione",
+      description:
+        "Spennellare il primo disco con olio EVO; adagiare sopra il secondo disco e sigillare leggermente i bordi.",
+      duration_minutes: 3,
+      icon: "layers",
+      timing_label: "3 min",
+      tip: {
+        beginner:
+          "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli.",
+        nerd: "L'olio crea un layer idrofobo che impedisce la coalescenza dei due strati di glutine: facilita lo sdoppiamento post-bake.",
+      },
+    });
+    // Topping step in after_stack (es. patate sopra per Patate e Porchetta)
+    injectToppingAt("after_stack");
+  } else if (layout.type === "closed_stuffed" && layout.filling_timing === "pre_bake_internal") {
+    // Ciaccino: ripieno + chiusura sigillata
+    steps.push({
+      id: "fill_internal",
+      title: "Ripieno e chiusura",
+      description:
+        "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.",
+      duration_minutes: 8,
+      icon: "chef-hat",
+      timing_label: "8 min",
+      tip: {
+        beginner:
+          "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce.",
+        nerd: "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow).",
+      },
+    });
+    injectToppingAt("after_fill_internal");
+  } else if (layout.type === "double_thin_sheet") {
+    // Recco: sfoglia inferiore + stracchino + sfoglia superiore
+    steps.push({
+      id: "fill_internal",
+      title: "Farcitura tra sfoglie",
+      description:
+        "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.",
+      duration_minutes: 5,
+      icon: "chef-hat",
+      timing_label: "5 min",
+    });
+    injectToppingAt("after_fill_internal");
+  } else if (layout.filling_timing === "pre_bake" || layout.cook_mode === "topped") {
+    // Default: farcitura pre-cottura classica
+    // Se il topping ha già inserito uno step "replaces_generic" in after_shape, non aggiungere il generico
+    if (!toppingReplacesGenericTop) {
+      steps.push({
+        id: "top",
+        title: "Farcitura",
+        description: topping
+          ? `Condire con ${topping.name} secondo la ricetta.`
+          : "Condire la pizza secondo gusto",
+        duration_minutes: 5,
+        icon: "chef-hat",
+        timing_label: "5 min",
+      });
+    }
+  }
+  // Se cook_mode = "white_then_top": niente farcitura ora, va dopo la prima cottura
+
+  // ─── COTTURA (layout-aware: singola o doppia) ───
+  // Applica bake_adjustments del topping (es. patate richiedono +5 min)
+  const baseTempC = actualOvenTemp ?? style.baking.temp_c_ideal;
+  const ovenTempLabel = Math.round(baseTempC + (topping?.bake_adjustments?.temperature_delta_c ?? 0));
+  const effectiveCookSec = cookTimeSec + (topping?.bake_adjustments?.additional_minutes ?? 0) * 60;
+  if (layout.cook_mode === "white_then_top") {
+    // Baciata: cottura in bianco
+    const firstBakeMin = Math.max(8, Math.round((effectiveCookSec / 60) * 0.65));
+    const secondBakeMin = Math.max(3, Math.round((effectiveCookSec / 60) * 0.35));
+    steps.push({
+      id: "bake",
+      title: "Prima cottura (in bianco)",
+      description: `Cuocere a ${ovenTempLabel}°C senza farcitura. La pizza deve essere dorata ma non bruciata.${topping?.bake_adjustments?.note ? ` ${topping.bake_adjustments.note}` : ""}`,
+      duration_minutes: firstBakeMin,
+      icon: "flame",
+      timing_label: `${firstBakeMin} min`,
+      tip: {
+        beginner: "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti.",
+        nerd: "La cottura in bianco completa la gelatinizzazione dell'amido prima di introdurre umidità del topping.",
+      },
+    });
+    injectToppingAt("after_bake");
+    const splitReplaced = injectToppingAt("after_split_fill");
+    if (!splitReplaced) {
+      steps.push({
+        id: "split_fill",
+        title: "Sdoppiamento e farcitura",
+        description:
+          "Estrarre dal forno. Con un coltello a sega tagliare orizzontalmente in due metà. Farcire l'interno con i condimenti scelti e richiudere.",
+        duration_minutes: 7,
+        icon: "scissors",
+        timing_label: "7 min",
+        tip: {
+          beginner:
+            "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle.",
+          nerd: "Sdoppiamento post-bake = ricetta cold-filled: la matrice amidacea è già stabile, le farciture non vengono cotte oltre i 60°C interni.",
+        },
+      });
+    }
+    steps.push({
+      id: "bake2",
+      title: "Seconda cottura (breve)",
+      description: `Riportare in forno a ${ovenTempLabel}°C solo per asciugare e amalgamare. Pochi minuti.`,
+      duration_minutes: secondBakeMin,
+      icon: "flame",
+      timing_label: `${secondBakeMin} min`,
+    });
+    injectToppingAt("after_bake2");
+  } else {
+    // Cottura singola classica
+    steps.push({
+      id: "bake",
+      title: "Cottura",
+      description: `Cuocere a ${ovenTempLabel}°C${topping?.bake_adjustments?.note ? `. ${topping.bake_adjustments.note}` : ""}`,
+      duration_minutes: Math.round(effectiveCookSec / 60),
+      icon: "flame",
+      timing_label: formatCookTime(effectiveCookSec),
+      tip: {
+        beginner:
+          "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
+        nerd: `La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A ${ovenTempLabel}°C la caramellizzazione crea ~600 composti aromatici.`,
+      },
+    });
+
+    // Farcitura post-cottura esterna (es. Marinella ma non sdoppiata)
+    if (layout.filling_timing === "post_bake_external") {
+      steps.push({
+        id: "top_post",
+        title: "Farcitura post-cottura",
+        description: "Aggiungere i condimenti a freddo direttamente sulla superficie cotta.",
+        duration_minutes: 3,
+        icon: "chef-hat",
+        timing_label: "3 min",
+      });
+    }
+    injectToppingAt("after_bake");
+  }
 
   return steps;
 }
@@ -2471,7 +3774,7 @@ export interface StyleRecommendation {
   compatibilityScore: number;
   feasibilityScore: number;
   digestibilityEstimate: number;
-  tier: "perfect" | "good" | "challenging";
+  tier: "perfect" | "good" | "challenging" | "not_feasible";
   reasons: EngineMsg[];
   warnings: EngineMsg[];
 }
@@ -2540,6 +3843,8 @@ const MEAL_HOURS: Record<string, number> = { lunch: 12.5, dinner: 20 };
 const MIN_PREP_HOURS = 3;
 
 function formatHoursLabel(h: number): string {
+  // Difensivo: se il calcolo dà un valore negativo (slot nel passato), skip.
+  if (h <= 0) return "passato";
   if (h < 1) return "<1 ora";
   if (h < 2) return "~1 ora";
   return `~${Math.round(h)} ore`;
@@ -2616,13 +3921,31 @@ export const DEFAULT_KITCHEN_TEMP = 21;
  */
 export const RECIPE_SCHEMA_VERSION = "1.4" as const;
 
-/** Minimum schema version that can be imported without migration */
-export const RECIPE_SCHEMA_MIN_COMPAT = "1.2" as const;
+
 
 export function outdoorToKitchenTemp(outdoor: number): number {
   if (outdoor <= 25) return Math.round(Math.max(19, Math.min(23, 21 + (outdoor - 15) * 0.1)));
   return Math.round(Math.min(outdoor - 2, 30));
 }
+
+/** Prior di rappresentatività: punti extra per gli stili iconici che il
+ * pubblico riconosce. Le rarità regionali (Ciaccino, Scaccia, Fugazzeta...)
+ * restano consigliabili ma non scavalcano i classici a parità di punteggio. */
+const ICONIC_BOOST: Record<string, number> = {
+  napoletana_stg: 6,
+  teglia_romana: 6,
+  tonda_romana: 5,
+  new_york: 5,
+  napoletana_canotto: 4,
+  bonci_teglia: 4,
+  focaccia_genovese: 4,
+  pinsa_romana: 3,
+  detroit: 3,
+  pala_romana: 3,
+  padellino_torino: 2,
+  chicago_deep: 2,
+  calzone_napoletano: 2,
+};
 
 export function recommendStyles(
   constraints: UserConstraints,
@@ -2653,6 +3976,12 @@ export function recommendStyles(
     ) {
       timeScore = 95;
       reasons.push(em("rec.timeCompatible", `Fermentazione ${fMin}-${fMax}h: compatibile con il tuo tempo`, { fMin, fMax }));
+    } else if (constraints.available_hours >= fMin * 0.85) {
+      /* Audit roleplay giugno 2026: il gradino 95→65 era brutale — 21h vs
+       * 24h minime (-12%) non deve far sparire i classici dai consigli. */
+      timeScore = 85;
+      const optimalHours = Math.min(constraints.available_hours, fMax);
+      reasons.push(em("rec.timeAdaptable", `Fermentazione adattabile a ~${optimalHours}h`, { hours: optimalHours }));
     } else if (constraints.available_hours >= fMin * 0.7) {
       timeScore = 65;
       const optimalHours = Math.min(constraints.available_hours, fMax);
@@ -2669,13 +3998,13 @@ export function recommendStyles(
       warnings.push(em("rec.needsWoodOven", "Richiede forno a legna"));
     } else if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
       ovenScore = 95;
-      reasons.push(em("rec.ovenIdeal", `Il tuo forno raggiunge la temperatura ideale (${style.baking.temp_c_ideal}°C)`, { ideal: style.baking.temp_c_ideal }));
+      reasons.push(em("rec.ovenIdeal", "Il tuo forno raggiunge la temperatura ideale ({ideal})", { ideal: style.baking.temp_c_ideal }));
     } else if (constraints.oven_max_temp_c >= style.baking.temp_c_range[0]) {
       ovenScore = 70;
       reasons.push(em("rec.ovenAdequate", "Forno adeguato (compensazione automatica tempo/temperatura)"));
     } else {
       ovenScore = 30;
-      warnings.push(em("rec.ovenTooCold", `Forno troppo freddo: ${constraints.oven_max_temp_c}°C < min ${style.baking.temp_c_range[0]}°C`, { temp: constraints.oven_max_temp_c, min: style.baking.temp_c_range[0] }));
+      warnings.push(em("rec.ovenTooCold", "Forno troppo freddo: {temp} < min {min}", { temp: constraints.oven_max_temp_c, min: style.baking.temp_c_range[0] }));
     }
 
     // ── Skill compatibility (20%) ──
@@ -2911,6 +4240,7 @@ export function recommendStyles(
         pantryScore * rw.pantry,
     );
 
+
     // ── Digestibility estimate ──
     const estFermentHours = Math.min(
       constraints.available_hours,
@@ -2924,9 +4254,17 @@ export function recommendStyles(
       0.3,
     );
 
-    // ── Tier classification ──
-    let tier: "perfect" | "good" | "challenging";
-    if (score >= 78) tier = "perfect";
+    // ── Tier classification — Audit Sprint 12:
+    //    Aggiunto "not_feasible" per stili con incompatibilità dura (es. wood-oven
+    //    richiesto ma utente ha elettrico) o score molto basso. Permette di mostrare
+    //    cosa NON puoi fare e perché, oltre a cosa puoi fare. ──
+    let tier: "perfect" | "good" | "challenging" | "not_feasible";
+    const hasHardBlocker =
+      (style.requires_wood_oven && constraints.oven_type !== "wood") ||
+      (style.requires_pre_ferment === true &&
+        constraints.skill_level === 1);
+    if (score < 30 || hasHardBlocker) tier = "not_feasible";
+    else if (score >= 78) tier = "perfect";
     else if (score >= 55) tier = "good";
     else tier = "challenging";
 
@@ -2943,16 +4281,23 @@ export function recommendStyles(
     });
   }
 
-  // Sort by compatibility descending
+  // Sort by compatibility descending.
+  // Prior di rappresentatività (audit giugno 2026): il boost iconico pesa SOLO
+  // sull'ordinamento — punteggi e tier restano onesti. A parità di vincoli i
+  // classici emergono sulle rarità regionali (senza prior, "Perfetti per te"
+  // proponeva Ciaccino Senese e Pizza Fritta prima di Napoletana e Teglia).
   recommendations.sort(
-    (a, b) => b.compatibilityScore - a.compatibilityScore,
+    (a, b) =>
+      b.compatibilityScore +
+      (ICONIC_BOOST[b.style.id] ?? 0) -
+      (a.compatibilityScore + (ICONIC_BOOST[a.style.id] ?? 0)),
   );
   return recommendations;
 }
 
 // ═══ SUSTAINABILITY CALCULATION ═══
 
-export function calculateSustainabilityScore(
+function calculateSustainabilityScore(
   style: PizzaStyle,
   ovenTemp: number,
   cookTimeSec: number,
@@ -2978,6 +4323,14 @@ export function calculateSustainabilityScore(
   // Normalize: 250°C home oven is more sustainable than 485°C wood
   const tempNorm = Math.max(0, 1 - (ovenTemp - 200) / 300);
   ovenEfficiency = ovenEfficiency * 0.5 + tempNorm * 100 * 0.5;
+
+  // Correlazione con cookTime (ADV-06): se il tempo di cottura raddoppia rispetto all'ideale
+  // per deficit termico, l'efficienza reale del forno diminuisce a causa dell'esposizione prolungata.
+  const cookRatio = cookTimeSec / style.baking.cook_time_sec_ideal;
+  if (cookRatio > 2) {
+    const reduction = Math.min(40, (cookRatio - 2) * 15);
+    ovenEfficiency = Math.max(10, ovenEfficiency - reduction);
+  }
 
   // ── Cook time axis (25%): shorter = less energy ──
   let cookEfficiency: number;

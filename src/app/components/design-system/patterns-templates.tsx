@@ -1,30 +1,30 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  Check,
-  ChevronDown,
-  Lightbulb,
-  X,
-  Sparkles,
-  ArrowRight,
-  RotateCcw,
-  Palette,
-  SlidersHorizontal,
-  HelpCircle,
-  Moon,
-  Sun,
-  Flame,
+ArrowRight,
+Check,
+ChevronDown,
+Flame,
+HelpCircle,
+Lightbulb,
+Moon,
+Palette,
+RotateCcw,
+SlidersHorizontal,
+Sparkles,
+Sun,
+X,
 } from "lucide-react";
-import {
-  SectionHeader,
-  SubSectionLabel,
-  AnatomyRow,
-  SectionTabs,
-  Panoramica,
-  LineeGuida,
-  AccessibilitaInfo,
-} from "./shared";
+import { AnimatePresence,motion } from "motion/react";
+import { useState } from "react";
 import type { SectionEntry } from "./shared";
+import {
+AccessibilitaInfo,
+AnatomyRow,
+LineeGuida,
+Panoramica,
+SectionHeader,
+SectionTabs,
+SubSectionLabel,
+} from "./shared";
 
 /* ═══════════════════════════════════════════════════════════
    P01 — SELECTION PATTERN
@@ -247,7 +247,7 @@ function SelectionPatternSpec() {
                             >
                               <Check
                                 size={12}
-                                style={{ color: "var(--color-white)" }}
+                                style={{ color: "var(--overlay-text)" }}
                               />
                             </motion.div>
                           )}

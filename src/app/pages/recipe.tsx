@@ -4,42 +4,128 @@
    Legge il profilo da localStorage, override opzionali da URL params.
    "Copia link" genera URL condivisibile con parametri correnti. */
 
-import { useState, useMemo, useCallback } from "react";
-import { useParams, Link, useSearchParams } from "react-router";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  ChevronLeft,
-  SlidersHorizontal,
-  ChevronDown,
-  LinkIcon,
-  Check,
+ChevronDown,
+ChevronLeft,
+Heart,
+HeartCrack,
+Sparkles,
+X
 } from "lucide-react";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { AnimatePresence,motion } from "motion/react";
 import {
-  STYLES_DB,
-  PIZZA_FAMILIES,
-  OVEN_PRESETS,
-  generateRecipe,
-  defaultPanShape,
-  type PizzaStyle,
-  type UserConstraints,
-  type GeneratedRecipe,
-  type PanConfig,
-  type OvenType,
-  type SkillLevel,
+useCallback,
+useEffect,
+useMemo,
+useRef,
+useState,
+type ReactNode,
+} from "react";
+import { Link,useParams,useSearchParams } from "react-router";
+import { useCms,type CmsContent } from "../components/cms/cms-context";
+import { createFormatter } from "../components/cms/i18n";
+import {
+getInterpretationById,
+getInterpretationsForStyle,
+type Interpretation
+} from "../components/interpretation-library";
+import {
+OVEN_PRESETS,
+PIZZA_FAMILIES,
+SCORE_DIMENSIONS,
+STYLES_DB,
+defaultPanShape,
+generateRecipe,
+getDefaultDoughBalls,
+type GeneratedRecipe,
+type OvenType,
+type PanConfig,
+type PizzaStyle,
+type RecipeScores,
+type SkillLevel,
+type UserConstraints
 } from "../components/pizza-engine";
-import { STYLE_PHOTOS } from "../components/recommended-styles";
-import { RecipeConfigurator } from "../components/recipe-configurator";
-import { RecipeOutput } from "../components/recipe-output";
+import {
+PremiumSelect,
+RecipeConfigurator,
+applyVersionParams,
+} from "../components/recipe-configurator";
+import { RecipeLearningPanel } from "../components/recipe-learning-panel";
+import { RecipeMatchCard,matchTone } from "../components/recipe-match-card";
+import {
+type RecipePrimaryTab,
+} from "../components/recipe-section-tabs";
 import { RecipeStatStrip } from "../components/recipe-stat-strip";
-import { ScoreDashboard } from "../components/score-dashboard";
-import { useCms } from "../components/cms/cms-context";
+import { RecipeView } from "../components/recipe-view";
+import { STYLE_PHOTOS } from "../components/recommended-styles";
+import { CtaButton, Heading } from "../components/ds";
+import {
+getDefaultVersion,
+getVersionById,
+getVersions,
+type StyleVersion,
+} from "../components/style-versions";
 import { useStylesOverride } from "../components/styles-override-context";
+import { TOPPING_CONCEPTS } from "../components/topping-library";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
 
 const VALID_OVEN_TYPES = new Set(OVEN_PRESETS.map((p) => p.id));
+const TAILORING_PARAM_KEYS = [
+  "h",
+  "w",
+  "pl",
+  "f",
+  "t",
+  "n",
+  "pf",
+  "oven",
+  "temp",
+  "v",
+] as const;
+
+type RecipeMode = "canonical" | "adapted" | "lab";
+
+function hasTailoringParams(params: URLSearchParams): boolean {
+  return TAILORING_PARAM_KEYS.some((key) => params.has(key));
+}
+
+function readRecipeMode(params: URLSearchParams): RecipeMode {
+  const mode = params.get("mode");
+  if (mode === "canonical" || mode === "adapted" || mode === "lab") {
+    return mode;
+  }
+  return hasTailoringParams(params) ? "adapted" : "canonical";
+}
+
+function getCanonicalVersion(styleId: string): StyleVersion | null {
+  const versions = getVersions(styleId);
+  if (versions.length === 0) return null;
+
+  return versions.reduce((best, version) => {
+    if (version.skill_hint !== best.skill_hint) {
+      return version.skill_hint > best.skill_hint ? version : best;
+    }
+    return version.params.fermentation_hours > best.params.fermentation_hours
+      ? version
+      : best;
+  }, versions[0]);
+}
+
+function cmsMessage(cms: CmsContent, key: string, fallback: string): string {
+  return cms.engineMessages?.[key] ?? fallback;
+}
+
+function localizedVersionLabel(cms: CmsContent, label: string): string {
+  return cmsMessage(cms, `version.label.${label}`, label);
+}
+
+function localizedFermentTempLabel(cms: CmsContent, tempC: number): string {
+  if (tempC <= 6) return cmsMessage(cms, "recipeSetup.temp.fridge", "frigo");
+  if (tempC <= 16) return cmsMessage(cms, "recipeSetup.temp.cool", "fresco");
+  return cmsMessage(cms, "recipeSetup.temp.room", "ambiente");
+}
 
 /* ═══ STORAGE HELPERS ═══ */
 function loadJson<T>(key: string): T | null {
@@ -80,6 +166,22 @@ function numParam(
   return n;
 }
 
+function replaceRecipeSearchParams(
+  update: (params: URLSearchParams) => void,
+) {
+  const next = new URLSearchParams(window.location.search);
+  update(next);
+  const query = next.toString();
+  const url = `${window.location.pathname}${query ? `?${query}` : ""}${
+    window.location.hash
+  }`;
+  window.history.replaceState(window.history.state, "", url);
+}
+
+/* ═══ Localizzazione tag supersintesi — Sprint 11 ═══
+   Le label vivono in pizza-engine (HYDRATION_CATEGORY_LABELS / CRUST_TYPE_LABELS)
+   e sono condivise con home.tsx. */
+
 /* ═══ RECIPE PAGE ═══ */
 export function RecipePage() {
   const { styleId } = useParams<{ styleId: string }>();
@@ -117,43 +219,94 @@ function RecipeContent({
     yeasts: string[];
   }>("vulcan_pantry");
   const savedDietary = loadJson<string[]>("vulcan_dietary");
+  const nerdAvailable = localStorage.getItem("vulcan_nerd_on") === "true";
+  const initialRecipeMode = readRecipeMode(searchParams);
+  const [recipeMode, setRecipeMode] = useState<RecipeMode>(initialRecipeMode);
+  const useTailoredUrlParams = initialRecipeMode !== "canonical";
 
-  /* ── Compute style defaults ── */
-  const hCenter = Math.round(
-    (style.dough.hydration_pct_range[0] +
-      style.dough.hydration_pct_range[1]) /
-      2,
-  );
-  const wCenter = Math.round(
-    (style.dough.flour_w_range[0] +
-      style.dough.flour_w_range[1]) /
-      2,
-  );
+  /* ── Compute style defaults ──
+   * Versione attiva: URL param ?v=... ha priorità, poi default skill-aware.
+   * Fallback al centro del range quando lo stile non ha versioni. */
+  const skillLevel = savedSkill ?? 2;
+  const urlInterpretationId = searchParams.get("interpretation");
+  const initialInterpretation: Interpretation | null = urlInterpretationId
+    ? (getInterpretationById(urlInterpretationId) ?? null)
+    : null;
+  const interpOverrides = initialInterpretation?.parameter_overrides;
+  const urlVersionId = useTailoredUrlParams ? searchParams.get("v") : null;
+  const initialVersion: StyleVersion | null =
+    (urlVersionId && getVersionById(urlVersionId)) ||
+    (initialInterpretation
+      ? null
+      : initialRecipeMode === "canonical"
+        ? getCanonicalVersion(style.id)
+        : getDefaultVersion(style.id, skillLevel));
+
+  const hCenter =
+    interpOverrides?.hydration_pct ??
+    (initialVersion
+      ? initialVersion.params.hydration_pct
+      : Math.round(
+          (style.dough.hydration_pct_range[0] +
+            style.dough.hydration_pct_range[1]) /
+            2,
+        ));
+  const wCenter =
+    interpOverrides?.flour_w ??
+    (initialVersion
+      ? initialVersion.params.flour_w
+      : Math.round(
+          (style.dough.flour_w_range[0] + style.dough.flour_w_range[1]) / 2,
+        ));
   const fMax = style.dough.fermentation_hours_range[1];
   const fMin = style.dough.fermentation_hours_range[0];
-  const fOptimal = Math.min(Math.round((fMin + fMax) / 2), 48);
+  const fOptimal =
+    interpOverrides?.fermentation_hours ??
+    (initialVersion
+      ? initialVersion.params.fermentation_hours
+      : Math.min(Math.round((fMin + fMax) / 2), 48));
+  const fTempDefault =
+    interpOverrides?.fermentation_temp_c ??
+    (initialVersion
+      ? initialVersion.params.fermentation_temp_c
+      : fOptimal > 12
+        ? 4
+        : 22);
+  const plDefault =
+    interpOverrides?.flour_pl ??
+    initialVersion?.params.flour_pl ??
+    defaultPL(style);
+  const preFermentDefault =
+    interpOverrides?.use_pre_ferment ??
+    initialVersion?.params.use_pre_ferment ??
+    style.requires_pre_ferment;
 
-  /* ── URL params override (VPL-064) ── */
-  const urlOven = searchParams.get("oven");
+  /* ── URL params override (VPL-064) ──
+   * La modalità canonica è una scheda cristallizzata: forno e parametri ideali
+   * dello stile, indipendenti dal profilo. La modalità adattata/lab usa invece
+   * forno salvato, oppure un default casalingo esplicito. */
+  const urlOven = useTailoredUrlParams ? searchParams.get("oven") : null;
+  const adaptedFallbackOvenType = savedOven?.ovenType ?? "home";
+  const adaptedFallbackOvenTemp = savedOven?.maxTemp ?? 250;
   const resolvedOvenType: OvenType =
-    urlOven && VALID_OVEN_TYPES.has(urlOven)
+    initialRecipeMode === "canonical"
+      ? style.baking.oven_type_required
+      : urlOven && VALID_OVEN_TYPES.has(urlOven as OvenType)
       ? (urlOven as OvenType)
-      : (savedOven?.ovenType ?? "home");
-  const resolvedOvenTemp = numParam(
-    searchParams,
-    "temp",
-    savedOven?.maxTemp ?? 250,
-    180,
-    500,
-  );
+      : adaptedFallbackOvenType;
+  const resolvedOvenTemp =
+    initialRecipeMode === "canonical"
+      ? style.baking.temp_c_ideal
+      : numParam(searchParams, "temp", adaptedFallbackOvenTemp, 180, 500);
 
   /* ── State: constraints (from profile + URL override) ── */
-  const [constraints] = useState<UserConstraints>(() => ({
+  const [constraints, setConstraints] = useState<UserConstraints>(() => ({
     oven_type: resolvedOvenType,
     oven_max_temp_c: resolvedOvenTemp,
-    skill_level: savedSkill ?? 2,
+    skill_level: skillLevel,
     available_hours: 24,
-    dough_balls: 4,
+    // Default contestuale: 4 panetti per tonde, 1 teglia/pala/focaccia, 4 padellini.
+    dough_balls: getDefaultDoughBalls(style),
     has_mixer: false,
     has_pizza_stone: false,
     has_pizza_steel: false,
@@ -163,27 +316,29 @@ function RecipeContent({
     pantry_yeasts: savedPantry?.yeasts ?? [],
   }));
 
-  /* ── State: recipe params (from style defaults + URL override) ── */
+  /* ── State: recipe params (from style preset/center + URL override) ── */
   const [customHydration, setCustomHydration] = useState(
-    numParam(searchParams, "h", hCenter, 30, 120),
+    useTailoredUrlParams ? numParam(searchParams, "h", hCenter, 30, 120) : hCenter,
   );
   const [customFlourW, setCustomFlourW] = useState(
-    numParam(searchParams, "w", wCenter, 100, 500),
+    useTailoredUrlParams ? numParam(searchParams, "w", wCenter, 100, 500) : wCenter,
   );
+  /* VPL-B2 — mix di farine editabile (quote/W per componente). Copia dallo stile. */
+  const [customFlourBlend] = useState<
+    { name: string; pct: number; w?: number }[] | undefined
+  >(() => style.dough.flour_blend?.map((c) => ({ ...c })));
   const [customFlourPL, setCustomFlourPL] = useState(
-    numParam(searchParams, "pl", defaultPL(style), 0.2, 1.5),
+    useTailoredUrlParams ? numParam(searchParams, "pl", plDefault, 0.2, 1.5) : plDefault,
   );
   const [customFermentHours, setCustomFermentHours] = useState(
-    numParam(searchParams, "f", fOptimal, 1, 120),
+    useTailoredUrlParams ? numParam(searchParams, "f", fOptimal, 1, 120) : fOptimal,
   );
   const [customFermentTemp, setCustomFermentTemp] = useState(
-    numParam(searchParams, "t", fOptimal > 12 ? 4 : 22, 0, 35),
+    useTailoredUrlParams ? numParam(searchParams, "t", fTempDefault, 0, 35) : fTempDefault,
   );
   const [usePreFerment, setUsePreFerment] = useState(() => {
     const pf = searchParams.get("pf");
-    return pf !== null
-      ? pf === "1"
-      : style.requires_pre_ferment;
+    return useTailoredUrlParams && pf !== null ? pf === "1" : preFermentDefault;
   });
   const [panConfig, setPanConfig] = useState<PanConfig>({
     panShape: defaultPanShape(style),
@@ -193,71 +348,240 @@ function RecipeContent({
     thickness: style.shape.thickness_factor,
   });
   const [doughBalls, setDoughBalls] = useState(
-    numParam(searchParams, "n", 4, 1, 20),
+    useTailoredUrlParams
+      ? numParam(searchParams, "n", getDefaultDoughBalls(style), 1, 20)
+      : getDefaultDoughBalls(style),
   );
-  const [showFineTuning, setShowFineTuning] = useState(
-    searchParams.has("h") || searchParams.has("w"),
-  );
+  const openPersonalizeByDefault = false;
+  const [setupPanelOpen, setSetupPanelOpen] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    subText?: string;
+    actionLabel?: string;
+    onAction?: () => void;
+  } | null>(null);
+  const [activeRecipeTab, setActiveRecipeTab] = useState<RecipePrimaryTab>(() => {
+    const tab = searchParams.get("tab");
+    return tab === "procedimento" || tab === "condimento" ? tab : "ricetta";
+  });
+  const handleRecipeTabChange = useCallback((tab: RecipePrimaryTab) => {
+    setActiveRecipeTab(tab);
+    replaceRecipeSearchParams((next) => {
+      if (tab === "ricetta") next.delete("tab");
+      else next.set("tab", tab);
+    });
+  }, []);
   const [nerdMode, setNerdMode] = useState(false);
+  const effectiveNerdMode = nerdAvailable && nerdMode;
 
-  /* ── Copy link (VPL-064) ── */
-  const [linkCopied, setLinkCopied] = useState(false);
-  const handleCopyLink = useCallback(() => {
-    const params = new URLSearchParams();
-    params.set("h", String(customHydration));
-    params.set("w", String(customFlourW));
-    params.set("pl", String(customFlourPL));
-    params.set("f", String(customFermentHours));
-    params.set("t", String(customFermentTemp));
-    params.set("n", String(doughBalls));
-    if (usePreFerment) params.set("pf", "1");
-    if (constraints.oven_type !== "home")
+  const [setupNotice, setSetupNotice] = useState<string | null>(null);
+  const [learningOpen, setLearningOpen] = useState(false);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = window.setTimeout(() => setToast(null), 5000);
+    return () => window.clearTimeout(timer);
+  }, [toast]);
+  const searchSyncTimeoutRef = useRef<number | null>(null);
+  const [activeVersionId, setActiveVersionId] = useState<string | null>(
+    initialVersion?.id ?? null,
+  );
+  const activeVersion: StyleVersion | null = activeVersionId
+    ? getVersionById(activeVersionId)
+    : null;
+
+  /* Sprint 12 Fase 3 — Topping concept selezionato dall'utente via chip strip.
+   * Default = il default_topping_ref dello Style (margherita / patate_porchetta / ecc.).
+   * Fase 5: deep-link ?topping=<concept_id> per atterraggio diretto da Scopri/Iconiche.
+   * Se non c'è ?topping ma c'è ?interpretation con un topping firmato, eredita quello.
+   * Quando cambia, viene iniettato nella generateRecipe come override. */
+  const [selectedToppingConcept, setSelectedToppingConcept] = useState<string | null>(
+    searchParams.get("topping") ??
+      initialInterpretation?.base_topping_concept_id ??
+      style.default_topping_ref ??
+      null,
+  );
+
+  /* Sprint 12 Fase 4 — Interpretazione attiva (Maestro/Pizzeria/Community/Disciplinare).
+   * Deep-link ?interpretation=<id>: pre-selezionata al primo render. */
+  const [activeInterpretationId, setActiveInterpretationId] = useState<string | null>(
+    initialInterpretation?.id ?? null,
+  );
+
+  const applyVersionToState = useCallback(
+    (version: StyleVersion) => {
+      applyVersionParams(version, {
+        onHydrationChange: setCustomHydration,
+        onFlourWChange: setCustomFlourW,
+        onFlourPLChange: (value) => setCustomFlourPL(value ?? plDefault),
+        onFermentHoursChange: setCustomFermentHours,
+        onFermentTempChange: setCustomFermentTemp,
+        onPreFermentChange: setUsePreFerment,
+        onVersionChange: setActiveVersionId,
+      });
+    },
+    [plDefault],
+  );
+
+  const resetToBaseRecipe = useCallback(() => {
+    if (activeVersion) {
+      applyVersionToState(activeVersion);
+      return;
+    }
+    setCustomHydration(
+      Math.round(
+        (style.dough.hydration_pct_range[0] +
+          style.dough.hydration_pct_range[1]) /
+          2,
+      ),
+    );
+    setCustomFlourW(
+      Math.round(
+        (style.dough.flour_w_range[0] + style.dough.flour_w_range[1]) / 2,
+      ),
+    );
+    setCustomFlourPL(defaultPL(style));
+    setCustomFermentHours(
+      Math.min(
+        Math.round(
+          (style.dough.fermentation_hours_range[0] +
+            style.dough.fermentation_hours_range[1]) /
+            2,
+        ),
+        48,
+      ),
+    );
+    setCustomFermentTemp(style.dough.fermentation_hours_range[1] > 12 ? 4 : 22);
+    setUsePreFerment(style.requires_pre_ferment);
+  }, [activeVersion, applyVersionToState, style]);
+
+  const syncSearchParamsAfterFeedback = useCallback(
+    (update: (params: URLSearchParams) => void) => {
+      if (searchSyncTimeoutRef.current !== null) {
+        window.clearTimeout(searchSyncTimeoutRef.current);
+      }
+      searchSyncTimeoutRef.current = window.setTimeout(() => {
+        replaceRecipeSearchParams(update);
+        searchSyncTimeoutRef.current = null;
+      }, 900);
+    },
+    [],
+  );
+
+  useEffect(
+    () => () => {
+      if (searchSyncTimeoutRef.current !== null) {
+        window.clearTimeout(searchSyncTimeoutRef.current);
+      }
+    },
+    [],
+  );
+
+  const handleVersionSelect = useCallback(
+    (version: StyleVersion) => {
+      setActiveInterpretationId(null);
+      syncSearchParamsAfterFeedback((next) => {
+        next.set("v", version.id);
+        next.delete("interpretation");
+      });
+      applyVersionToState(version);
+    },
+    [applyVersionToState, syncSearchParamsAfterFeedback],
+  );
+
+  /* Applica parameter_overrides di un'interpretazione (callbacks pattern come applyVersionParams).
+   * Sincronizza anche l'URL con ?interpretation=<id> così la scheda è condivisibile. */
+  const handleInterpretationSelect = useCallback(
+    (interpretation: Interpretation | null) => {
+      /* Sync URL: aggiunge o rimuove ?interpretation= preservando gli altri param. */
+      syncSearchParamsAfterFeedback((next) => {
+        if (interpretation) next.set("interpretation", interpretation.id);
+        else next.delete("interpretation");
+      });
+
+      if (!interpretation) {
+        setActiveInterpretationId(null);
+        resetToBaseRecipe();
+        return;
+      }
+      setActiveInterpretationId(interpretation.id);
+      const o = interpretation.parameter_overrides;
+      if (!o) return;
+      if (o.hydration_pct !== undefined) setCustomHydration(o.hydration_pct);
+      if (o.flour_w !== undefined) setCustomFlourW(o.flour_w);
+      if (o.flour_pl !== undefined) setCustomFlourPL(o.flour_pl);
+      if (o.fermentation_hours !== undefined) setCustomFermentHours(o.fermentation_hours);
+      if (o.fermentation_temp_c !== undefined) setCustomFermentTemp(o.fermentation_temp_c);
+      if (o.use_pre_ferment !== undefined) setUsePreFerment(o.use_pre_ferment);
+      // L'override topping è opzionale: se l'interpretazione include un topping firmato,
+      // pre-selezionalo (es. da Michele → Margherita).
+      if (interpretation.base_topping_concept_id) {
+        setSelectedToppingConcept(interpretation.base_topping_concept_id);
+      }
+    },
+    [resetToBaseRecipe, syncSearchParamsAfterFeedback],
+  );
+
+  /* Audit Sprint 12 — Scroll a inizio pagina quando si atterra sulla scheda
+   * (era a metà perché il browser ripristina la posizione di scroll precedente). */
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  }, [style.id]);
+
+  const writeTailoredParams = useCallback(
+    (params: URLSearchParams) => {
+      if (recipeMode !== "canonical") params.set("mode", recipeMode);
+      params.set("h", String(customHydration));
+      params.set("w", String(customFlourW));
+      params.set("pl", String(customFlourPL));
+      params.set("f", String(customFermentHours));
+      params.set("t", String(customFermentTemp));
+      params.set("n", String(doughBalls));
+      if (usePreFerment) params.set("pf", "1");
+      else params.delete("pf");
       params.set("oven", constraints.oven_type);
-    if (constraints.oven_max_temp_c !== 250)
       params.set("temp", String(constraints.oven_max_temp_c));
+    },
+    [
+      recipeMode,
+      customHydration,
+      customFlourW,
+      customFlourPL,
+      customFermentHours,
+      customFermentTemp,
+      doughBalls,
+      usePreFerment,
+      constraints.oven_type,
+      constraints.oven_max_temp_c,
+    ],
+  );
 
-    const url = `${window.location.origin}/recipe/${style.id}?${params.toString()}`;
+  /* ── Computed share URL (VPL-064) ── */
+  const shareUrl = useMemo(() => {
+    const params = new URLSearchParams();
+    if (recipeMode !== "canonical" && activeVersionId) params.set("v", activeVersionId);
+    if (activeInterpretationId) params.set("interpretation", activeInterpretationId);
+    if (selectedToppingConcept && selectedToppingConcept !== style.default_topping_ref)
+      params.set("topping", selectedToppingConcept);
 
-    /* Clipboard: double path (API + textarea fallback) */
-    if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(url).then(
-        () => {
-          setLinkCopied(true);
-          setTimeout(() => setLinkCopied(false), 2000);
-        },
-        () => fallbackCopy(url),
-      );
-    } else {
-      fallbackCopy(url);
+    if (recipeMode !== "canonical") {
+      writeTailoredParams(params);
     }
 
-    function fallbackCopy(text: string) {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.left = "-9999px";
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      setLinkCopied(true);
-      setTimeout(() => setLinkCopied(false), 2000);
-    }
+    const query = params.toString();
+    return `${window.location.origin}/recipe/${style.id}${query ? `?${query}` : ""}`;
   }, [
-    customHydration,
-    customFlourW,
-    customFlourPL,
-    customFermentHours,
-    customFermentTemp,
-    doughBalls,
-    usePreFerment,
-    constraints.oven_type,
-    constraints.oven_max_temp_c,
+    recipeMode,
+    activeVersionId,
+    activeInterpretationId,
+    selectedToppingConcept,
+    writeTailoredParams,
     style.id,
+    style.default_topping_ref,
   ]);
 
-  /* ── Generate recipe ── */
-  const recipe: GeneratedRecipe | null = useMemo(() => {
+  const buildRecipe = useCallback(
+    (recipeConstraints: UserConstraints): GeneratedRecipe => {
     const scoreWeights = {
       authenticity: cms.scoreDimensions?.authenticity?.weight,
       feasibility: cms.scoreDimensions?.feasibility?.weight,
@@ -267,9 +591,37 @@ function RecipeContent({
       experimentation:
         cms.scoreDimensions?.experimentation?.weight,
     };
+    // Combina range della versione + eventuale override del peso impasto
+    const versionOverrides = activeVersion
+      ? {
+          ...activeVersion.ranges,
+          ...(activeVersion.params.dough_weight_g !== undefined
+            ? { dough_weight_g: activeVersion.params.dough_weight_g }
+            : {}),
+        }
+      : undefined;
+    // Sprint 12 Fase 3: clona lo style con il topping selezionato dall'utente
+    const styleWithTopping =
+      selectedToppingConcept && selectedToppingConcept !== style.default_topping_ref
+        ? { ...style, default_topping_ref: selectedToppingConcept }
+        : style;
+    // Audit motore 2026-05 — quando un'interpretazione è attiva, i suoi
+    // parameter_overrides diventano il "canone" per il punteggio auth.
+    const activeInterpretation = activeInterpretationId
+      ? getInterpretationById(activeInterpretationId)
+      : undefined;
+    const interpretationCenter = activeInterpretation?.parameter_overrides
+      ? {
+          hydration_pct: activeInterpretation.parameter_overrides.hydration_pct,
+          flour_w: activeInterpretation.parameter_overrides.flour_w,
+          flour_pl: activeInterpretation.parameter_overrides.flour_pl,
+          fermentation_hours:
+            activeInterpretation.parameter_overrides.fermentation_hours,
+      }
+      : undefined;
     return generateRecipe(
-      style,
-      { ...constraints, dough_balls: doughBalls },
+      styleWithTopping,
+      recipeConstraints,
       customHydration,
       customFlourW,
       customFermentHours,
@@ -278,20 +630,65 @@ function RecipeContent({
       customFlourPL,
       panConfig,
       scoreWeights,
+      versionOverrides,
+      activeVersion?.impasto_ref,
+      interpretationCenter,
+      customFlourBlend,
     );
+    },
+    [
+      style,
+      customHydration,
+      customFlourW,
+      customFermentHours,
+      customFermentTemp,
+      usePreFerment,
+      customFlourPL,
+      panConfig,
+      cms.scoreDimensions,
+      activeVersion,
+      activeInterpretationId,
+      selectedToppingConcept,
+      customFlourBlend,
+    ],
+  );
+
+  /* ── Generate recipe ── */
+  const recipe: GeneratedRecipe | null = useMemo(
+    () => buildRecipe({ ...constraints, dough_balls: doughBalls }),
+    [buildRecipe, constraints, doughBalls],
+  );
+
+  const matchConstraints = useMemo<UserConstraints>(() => {
+    if (recipeMode !== "canonical") {
+      return { ...constraints, dough_balls: doughBalls };
+    }
+    return {
+      ...constraints,
+      oven_type: savedOven?.ovenType ?? "home",
+      oven_max_temp_c: savedOven?.maxTemp ?? 250,
+      dough_balls: doughBalls,
+    };
   }, [
-    style,
+    recipeMode,
     constraints,
     doughBalls,
-    customHydration,
-    customFlourW,
-    customFermentHours,
-    customFermentTemp,
-    usePreFerment,
-    customFlourPL,
-    panConfig,
-    cms.scoreDimensions,
+    savedOven?.ovenType,
+    savedOven?.maxTemp,
   ]);
+
+  const matchRecipe = useMemo(
+    () => buildRecipe(matchConstraints),
+    [buildRecipe, matchConstraints],
+  );
+
+  const styleVersions = useMemo(() => getVersions(style.id), [style.id]);
+  const recipeTabLabel =
+    recipeMode === "canonical"
+      ? cmsMessage(cms, "recipeMode.canonical", "Ricetta canonica")
+      : recipeMode === "lab"
+        ? cmsMessage(cms, "recipeMode.lab", "Laboratorio")
+        : cms.cooking.tabRecipeTailored;
 
   /* Photo */
   const photo =
@@ -304,325 +701,854 @@ function RecipeContent({
     PIZZA_FAMILIES[style.family]?.name ||
     "";
 
+  /* Adattamento "silenzioso": calibra modalità e vincoli per la cucina dell'utente,
+     senza toast né cambi di tab. Usato sia dal flusso esplicito (con toast) sia
+     dall'apertura diretta della dashboard. */
+  const applyKitchenAdaptation = useCallback(() => {
+    const personalOvenType = savedOven?.ovenType ?? "home";
+    const personalOvenTemp = savedOven?.maxTemp ?? 250;
+
+    setRecipeMode("adapted");
+    setConstraints((current) => ({
+      ...current,
+      oven_type: personalOvenType,
+      oven_max_temp_c: personalOvenTemp,
+      dough_balls: doughBalls,
+    }));
+
+    replaceRecipeSearchParams((next) => {
+      next.set("mode", "adapted");
+      next.delete("tab");
+      if (activeVersionId) next.set("v", activeVersionId);
+      else next.delete("v");
+      if (activeInterpretationId) next.set("interpretation", activeInterpretationId);
+      else next.delete("interpretation");
+      if (selectedToppingConcept && selectedToppingConcept !== style.default_topping_ref)
+        next.set("topping", selectedToppingConcept);
+      else next.delete("topping");
+      next.set("h", String(customHydration));
+      next.set("w", String(customFlourW));
+      next.set("pl", String(customFlourPL));
+      next.set("f", String(customFermentHours));
+      next.set("t", String(customFermentTemp));
+      next.set("n", String(doughBalls));
+      if (usePreFerment) next.set("pf", "1");
+      else next.delete("pf");
+      next.set("oven", personalOvenType);
+      next.set("temp", String(personalOvenTemp));
+    });
+  }, [
+    savedOven?.ovenType,
+    savedOven?.maxTemp,
+    doughBalls,
+    activeVersionId,
+    activeInterpretationId,
+    selectedToppingConcept,
+    style.default_topping_ref,
+    customHydration,
+    customFlourW,
+    customFlourPL,
+    customFermentHours,
+    customFermentTemp,
+    usePreFerment,
+  ]);
+
+  /* Flusso esplicito dalla MatchCard: adatta + conferma con toast. */
+  const handleAdaptToKitchen = useCallback(() => {
+    applyKitchenAdaptation();
+    setActiveRecipeTab("ricetta");
+    setToast({
+      message: cmsMessage(cms, "recipeSetup.adaptedToast", "Calibrazione cucina completata!"),
+      subText: cmsMessage(cms, "recipeSetup.adaptedToastSub", "I parametri dell'impasto e le temperature sono stati ricalibrati per il tuo ambiente e forno."),
+      actionLabel: cms.ui.customizeParams,
+      onAction: () => setSetupPanelOpen(true),
+    });
+  }, [applyKitchenAdaptation, cms]);
+
+  /* Scorciatoia sempre disponibile: apre la dashboard, adattando in silenzio
+     se la ricetta è ancora canonica (nessun toast). */
+  const handleOpenPersonalization = useCallback(() => {
+    if (recipeMode === "canonical") applyKitchenAdaptation();
+    setSetupPanelOpen(true);
+  }, [recipeMode, applyKitchenAdaptation]);
+
+  const handleResetToCanonical = useCallback(() => {
+    const canonicalVersion = activeInterpretationId
+      ? null
+      : getCanonicalVersion(style.id);
+    const overrides = activeInterpretationId
+      ? getInterpretationById(activeInterpretationId)?.parameter_overrides
+      : undefined;
+
+    setRecipeMode("canonical");
+    setConstraints((current) => ({
+      ...current,
+      oven_type: style.baking.oven_type_required,
+      oven_max_temp_c: style.baking.temp_c_ideal,
+      dough_balls: getDefaultDoughBalls(style),
+    }));
+    setDoughBalls(getDefaultDoughBalls(style));
+    setSetupNotice(null);
+
+    if (overrides) {
+      if (overrides.hydration_pct !== undefined) setCustomHydration(overrides.hydration_pct);
+      if (overrides.flour_w !== undefined) setCustomFlourW(overrides.flour_w);
+      if (overrides.flour_pl !== undefined) setCustomFlourPL(overrides.flour_pl);
+      if (overrides.fermentation_hours !== undefined) setCustomFermentHours(overrides.fermentation_hours);
+      if (overrides.fermentation_temp_c !== undefined) setCustomFermentTemp(overrides.fermentation_temp_c);
+      if (overrides.use_pre_ferment !== undefined) setUsePreFerment(overrides.use_pre_ferment);
+      setActiveVersionId(null);
+    } else if (canonicalVersion) {
+      applyVersionToState(canonicalVersion);
+    } else {
+      resetToBaseRecipe();
+    }
+
+    replaceRecipeSearchParams((next) => {
+      next.set("mode", "canonical");
+      next.delete("tab");
+      next.delete("h");
+      next.delete("w");
+      next.delete("pl");
+      next.delete("f");
+      next.delete("t");
+      next.delete("n");
+      next.delete("pf");
+      next.delete("oven");
+      next.delete("temp");
+      next.delete("v");
+      if (activeInterpretationId) next.set("interpretation", activeInterpretationId);
+      else next.delete("interpretation");
+      if (selectedToppingConcept && selectedToppingConcept !== style.default_topping_ref)
+        next.set("topping", selectedToppingConcept);
+      else next.delete("topping");
+    });
+  }, [
+    activeInterpretationId,
+    style,
+    selectedToppingConcept,
+    applyVersionToState,
+    resetToBaseRecipe,
+  ]);
+
+  if (!recipe) return null;
+
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
-    >
-      {/* ── Header ── */}
-      <header
-        className="sticky top-0 z-40"
-        style={{
-          background:
-            "color-mix(in srgb, var(--container-page) 88%, rgba(0,0,0,0))",
-          backdropFilter: "blur(24px) saturate(1.6)",
-          WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-          borderBottom:
-            "1px solid var(--container-border-subtle)",
+    <>
+      <RecipeView
+        recipe={recipe}
+        style={style}
+        photo={photo}
+        cms={cms}
+        constraints={constraints}
+        onConstraintsChange={(c) => {
+          if (recipeMode === "canonical") setRecipeMode("adapted");
+          setConstraints(c);
+          if (c.dough_balls !== doughBalls) setDoughBalls(c.dough_balls);
         }}
-      >
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center gap-3">
-          <Link
-            to="/explore"
-            className="flex items-center gap-1 active:scale-95 transition-transform"
+        panConfig={panConfig}
+        activeTab={activeRecipeTab}
+        onTabChange={handleRecipeTabChange}
+        back={{ label: (cms.pages as any).navExplore || cms.pages.recipeBackToStyles, to: "/explore" }}
+        recipeTabLabel={cms.cooking.tabRecipe}
+        eyebrow={recipeTabLabel}
+        shareUrl={shareUrl}
+        showStickyHeader={false}
+        hideFloatingActions={false}
+        isPersonalized={recipeMode !== "canonical"}
+        onRequestPersonalization={handleAdaptToKitchen}
+        selectedToppingConcept={selectedToppingConcept}
+        onSelectTopping={(conceptId) => {
+          setSetupNotice(`${TOPPING_CONCEPTS[conceptId]?.name ?? "Condimento"}: ingredienti aggiornati`);
+          setSelectedToppingConcept(conceptId);
+        }}
+        nerdMode={effectiveNerdMode}
+        nerdAvailable={nerdAvailable}
+        onNerdModeChange={setNerdMode}
+        matchSlot={
+          <RecipeMatchCard
+            scores={matchRecipe.scores}
+            ovenTemp={matchConstraints.oven_max_temp_c}
+            idealTemp={style.baking.temp_c_ideal}
+            minTemp={style.baking.temp_c_range[0]}
+            mode={recipeMode}
+            onAdapt={handleAdaptToKitchen}
+            onReset={recipeMode !== "canonical" ? handleResetToCanonical : undefined}
+          />
+        }
+        introExtraSlot={
+          <button
+            type="button"
+            onClick={() => setLearningOpen(true)}
             style={{
               color: "var(--text-accent)",
-              fontSize: "var(--font-size-xl)",
+              textDecoration: "underline",
+              fontStyle: "normal",
               fontWeight: "var(--weight-semibold)" as any,
-              textDecoration: "none",
-            }}
-          >
-            <ChevronLeft size={18} />
-            <span>{cms.pages.recipeBackToStyles}</span>
-          </Link>
-          <div className="flex-1" />
-
-          {/* Copy link button (VPL-064) */}
-          <motion.button
-            onClick={handleCopyLink}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg active:scale-95 transition-transform"
-            style={{
-              background: linkCopied
-                ? "color-mix(in srgb, var(--cta) 15%, rgba(0,0,0,0))"
-                : "var(--container-bg)",
-              border: `1px solid ${linkCopied ? "var(--cta)" : "var(--container-border)"}`,
-              color: linkCopied
-                ? "var(--cta)"
-                : "var(--text-muted)",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--weight-medium)" as any,
+              background: "none",
+              border: "none",
               cursor: "pointer",
-            }}
-            aria-label={cms.pages.recipeCopyLinkAria}
-          >
-            {linkCopied ? (
-              <Check size={14} />
-            ) : (
-              <LinkIcon size={14} />
-            )}
-            <span>
-              {linkCopied ? cms.ui.copied : cms.ui.share}
-            </span>
-          </motion.button>
-
-          <span
-            className="type-data hidden sm:inline"
-            style={{
-              fontSize: "var(--font-size-xs)",
-              color: "var(--text-muted)",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase" as any,
+              padding: 0,
+              fontSize: "inherit",
             }}
           >
-            {cmsFamilyName}
-          </span>
-        </div>
-      </header>
+            {cms.cooking.learnMore}
+          </button>
+        }
+        recipeControls={
+          <div className="flex flex-col gap-5 sm:gap-6">
+            <RecipeStatStrip
+              recipe={recipe}
+              nerdMode={effectiveNerdMode}
+              nerdAvailable={nerdAvailable}
+              onNerdModeChange={setNerdMode}
+            />
+            <RecipeSetupPanel
+                style={style}
+                versions={styleVersions}
+                activeVersion={activeVersion}
+                customHydration={customHydration}
+                customFlourW={customFlourW}
+                customFermentHours={customFermentHours}
+                customFermentTemp={customFermentTemp}
+                activeInterpretationId={activeInterpretationId}
+                onSelectVersion={handleVersionSelect}
+                onSelectInterpretation={handleInterpretationSelect}
+                notice={setupNotice}
+                onNotice={setSetupNotice}
+                open={setupPanelOpen}
+                onOpenChange={setSetupPanelOpen}
+                onRequestOpen={handleOpenPersonalization}
+                isCanonical={recipeMode === "canonical"}
+                openDefault={openPersonalizeByDefault}
+                scores={matchRecipe.scores}
+              >
+                <RecipeConfigurator
+                  style={style}
+                  constraints={constraints}
+                  onConstraintsChange={(c) => {
+                    setConstraints(c);
+                    if (c.dough_balls !== doughBalls) setDoughBalls(c.dough_balls);
+                  }}
+                  customHydration={customHydration}
+                  onHydrationChange={setCustomHydration}
+                  customFlourW={customFlourW}
+                  onFlourWChange={setCustomFlourW}
+                  customFermentHours={customFermentHours}
+                  onFermentHoursChange={setCustomFermentHours}
+                  customFermentTemp={customFermentTemp}
+                  onFermentTempChange={setCustomFermentTemp}
+                  usePreFerment={usePreFerment}
+                  onPreFermentChange={setUsePreFerment}
+                  panConfig={panConfig}
+                  onPanConfigChange={setPanConfig}
+                />
+              </RecipeSetupPanel>
+          </div>
+        }
+      />
+      <RecipeLearningPanel
+        open={learningOpen}
+        style={style}
+        familyName={cmsFamilyName}
+        onClose={() => setLearningOpen(false)}
+      />
 
-      {/* ── Hero photo ── */}
-      <div
-        className="relative"
-        style={{ height: "clamp(200px, 30vh, 320px)" }}
-      >
-        <ImageWithFallback
-          src={photo}
-          alt={style.name}
-          className="w-full h-full"
-          style={{ objectFit: "cover" }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to top, var(--container-page) 0%, rgba(0,0,0,0) 60%)",
-          }}
-        />
-        <div className="absolute bottom-0 left-0 right-0 px-4 sm:px-6 pb-6">
-          <div className="max-w-5xl mx-auto">
-            <span
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 350, damping: 28 }}
+            className="fixed bottom-24 left-4 right-4 md:left-auto md:right-6 md:bottom-6 z-[100] max-w-sm"
+          >
+            <div
+              className="relative overflow-hidden rounded-2xl p-4 pr-9 flex items-start gap-3.5"
               style={{
-                fontSize: "0.6875rem",
-                color: "var(--primary)",
-                letterSpacing: "0.18em",
-                textTransform: "uppercase" as any,
-                fontWeight: "var(--weight-semibold)" as any,
-              }}
-            >
-              Ricetta
-            </span>
-            <h1
-              className="font-serif"
-              style={{
-                fontSize: "clamp(2rem, 5vw, 3rem)",
-                lineHeight: "var(--leading-tight)",
+                background: "color-mix(in srgb, var(--container-page) 88%, transparent)",
+                backdropFilter: "blur(24px) saturate(1.6)",
+                WebkitBackdropFilter: "blur(24px) saturate(1.6)",
+                border: "1px solid var(--container-border)",
+                borderLeft: "4px solid var(--tertiary)",
+                boxShadow: "0 16px 44px color-mix(in srgb, var(--shadow-color) 22%, transparent)",
                 color: "var(--text-default)",
               }}
             >
-              {style.name}
-            </h1>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Content ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 py-6">
-          {/* Main column */}
-          <div className="flex-1 min-w-0">
-            {/* Stat strip */}
-            {recipe && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 30,
-                }}
-              >
-                <RecipeStatStrip
-                  recipe={recipe}
-                  nerdMode={nerdMode}
-                />
-              </motion.div>
-            )}
-
-            {/* Dough balls control */}
-            <div className="flex items-center gap-3 mt-5 mb-2 px-1">
-              <span
-                className="type-data"
+              <div
+                className="flex items-center justify-center rounded-xl flex-shrink-0"
                 style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
+                  width: 40,
+                  height: 40,
+                  background: "var(--recipe-setup-icon-bg)",
+                  color: "var(--recipe-setup-icon)",
                 }}
               >
-                {cms.ui.doughBalls}
-              </span>
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 6, 8].map((n) => (
-                  <motion.button
-                    key={n}
-                    onClick={() => setDoughBalls(n)}
-                    className="px-2.5 py-1.5 rounded-lg active:scale-95 transition-transform"
+                <Sparkles size={18} />
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <h4 style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-bold)" as any, margin: 0, lineHeight: "var(--leading-tight)" }}>
+                  {toast.message}
+                </h4>
+                {toast.subText && (
+                  <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "3px 0 0 0", lineHeight: "var(--leading-normal)" }}>
+                    {toast.subText}
+                  </p>
+                )}
+
+                {toast.actionLabel && toast.onAction && (
+                  <button
+                    onClick={() => {
+                      toast.onAction?.();
+                      setToast(null);
+                    }}
+                    className="mt-3 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full active:scale-95 transition-all"
                     style={{
-                      background:
-                        doughBalls === n
-                          ? "var(--primary)"
-                          : "var(--container-bg)",
-                      color:
-                        doughBalls === n
-                          ? "white"
-                          : "var(--text-default)",
-                      border: `1px solid ${doughBalls === n ? "var(--primary)" : "var(--container-border)"}`,
+                      background: "var(--recipe-setup-action-bg)",
+                      color: "var(--recipe-setup-action-text)",
                       fontSize: "var(--font-size-sm)",
-                      fontWeight: "var(--weight-medium)" as any,
-                      fontFeatureSettings: "'tnum'",
+                      fontWeight: "var(--weight-semibold)" as any,
                       cursor: "pointer",
-                      minWidth: 36,
                     }}
                   >
-                    {n}
-                  </motion.button>
-                ))}
+                    {toast.actionLabel}
+                    <ChevronDown size={13} style={{ transform: "rotate(-90deg)" }} />
+                  </button>
+                )}
               </div>
-            </div>
 
-            {/* Fine-tuning toggle */}
-            <motion.button
-              onClick={() => setShowFineTuning(!showFineTuning)}
-              className="flex items-center gap-2 w-full px-4 py-3 rounded-xl mt-3 mb-4 active:scale-[0.98] transition-transform"
+              <button
+                onClick={() => setToast(null)}
+                className="absolute top-3 right-3 flex items-center justify-center rounded-full active:scale-90 transition-transform"
+                style={{ width: 24, height: 24, background: "var(--container-bg-low)", border: "1px solid var(--container-border-subtle)", color: "var(--text-muted)", cursor: "pointer", padding: 0 }}
+                aria-label={cms.ui.close}
+              >
+                <X size={13} />
+              </button>
+
+              <motion.div
+                initial={{ width: "100%" }}
+                animate={{ width: "0%" }}
+                transition={{ duration: 5, ease: "linear" }}
+                className="absolute bottom-0 left-0 h-[3px] rounded-full"
+                style={{ background: "var(--tertiary)", opacity: 0.55 }}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+function useBodyScrollLock(locked: boolean) {
+  const scrollYRef = useRef(0);
+
+  useEffect(() => {
+    if (!locked) return;
+
+    const { body, documentElement } = document;
+    const previous = {
+      bodyOverflow: body.style.overflow,
+      bodyPaddingRight: body.style.paddingRight,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyWidth: body.style.width,
+      htmlOverflow: documentElement.style.overflow,
+      htmlOverscroll: documentElement.style.overscrollBehavior,
+    };
+
+    scrollYRef.current = window.scrollY;
+    const scrollbarWidth = window.innerWidth - documentElement.clientWidth;
+
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollYRef.current}px`;
+    body.style.width = "100%";
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    documentElement.style.overflow = "hidden";
+    documentElement.style.overscrollBehavior = "none";
+
+    return () => {
+      body.style.overflow = previous.bodyOverflow;
+      body.style.paddingRight = previous.bodyPaddingRight;
+      body.style.position = previous.bodyPosition;
+      body.style.top = previous.bodyTop;
+      body.style.width = previous.bodyWidth;
+      documentElement.style.overflow = previous.htmlOverflow;
+      documentElement.style.overscrollBehavior = previous.htmlOverscroll;
+      window.scrollTo(0, scrollYRef.current);
+    };
+  }, [locked]);
+}
+
+/* ═══ SETUP RICETTA — compatto, contestuale, con feedback immediato ═══ */
+function RecipeSetupPanel({
+  style,
+  versions,
+  activeVersion,
+  customHydration,
+  customFlourW,
+  customFermentHours,
+  customFermentTemp,
+  activeInterpretationId,
+  onSelectVersion,
+  onSelectInterpretation,
+  notice,
+  onNotice,
+  openDefault = false,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  onRequestOpen,
+  isCanonical = false,
+  scores,
+  children,
+}: {
+  style: PizzaStyle;
+  versions: StyleVersion[];
+  activeVersion: StyleVersion | null;
+  customHydration: number;
+  customFlourW: number;
+  customFermentHours: number;
+  customFermentTemp: number;
+  activeInterpretationId: string | null;
+  onSelectVersion: (version: StyleVersion) => void;
+  onSelectInterpretation: (interpretation: Interpretation | null) => void;
+  notice: string | null;
+  onNotice: (message: string | null) => void;
+  openDefault?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Apertura "intelligente": adatta in silenzio se canonica, poi apre. */
+  onRequestOpen?: () => void;
+  isCanonical?: boolean;
+  scores: RecipeScores;
+  children?: ReactNode;
+}) {
+  const { cms, bcp47 } = useCms();
+  const fmt = createFormatter(cms.ui, bcp47);
+  const [localOpen, setLocalOpen] = useState(openDefault);
+  const open = controlledOpen !== undefined ? controlledOpen : localOpen;
+  const setOpen = controlledOnOpenChange !== undefined ? controlledOnOpenChange : setLocalOpen;
+
+  useBodyScrollLock(open);
+
+  useEffect(() => {
+    const attr = "data-recipe-setup-open";
+    if (!open) return;
+    const previous = document.body.getAttribute(attr);
+    document.body.setAttribute(attr, "true");
+    return () => {
+      if (previous === null) {
+        document.body.removeAttribute(attr);
+      } else {
+        document.body.setAttribute(attr, previous);
+      }
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!notice) return;
+    const timeout = window.setTimeout(() => onNotice(null), 2200);
+    return () => window.clearTimeout(timeout);
+  }, [notice, onNotice]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, setOpen]);
+
+  const interpretations = useMemo(
+    () => getInterpretationsForStyle(style.id),
+    [style.id],
+  );
+  const activeInterpretation = activeInterpretationId
+    ? interpretations.find((item) => item.id === activeInterpretationId) ??
+      getInterpretationById(activeInterpretationId)
+    : null;
+
+  const tempLabel = localizedFermentTempLabel(cms, customFermentTemp);
+  const durationLabel = fmt.durationMinutes(customFermentHours * 60);
+  const activeVersionLabel = activeVersion
+    ? localizedVersionLabel(cms, activeVersion.label)
+    : cmsMessage(cms, "recipeSetup.styleBase", "stile base");
+  const summary = [
+    activeVersionLabel,
+    activeInterpretation ? interpretationName(activeInterpretation) : null,
+    `${fmt.percent(customHydration)} · W${customFlourW} · ${durationLabel} · ${tempLabel}`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  const triggerSubtitle = notice
+    ? notice
+    : isCanonical
+      ? cmsMessage(cms, "recipeSetup.triggerCanonical", "Adatta idratazione, lievitazione e cottura alla tua cucina")
+      : summary;
+  const triggerAction = isCanonical ? cms.ui.customizeParams : cms.ui.modify;
+
+  return (
+    <section>
+      <div
+        className="overflow-hidden rounded-2xl border border-[var(--recipe-setup-border)] transition-all duration-200 hover:border-[var(--tertiary)] hover:shadow-sm"
+        style={{
+          background: "var(--recipe-setup-bg)",
+        }}
+      >
+        <button
+          onClick={() => (onRequestOpen ? onRequestOpen() : setOpen(true))}
+          className="w-full flex items-center gap-3 px-5 py-4 text-left active:scale-[0.99] transition-all duration-200 hover:bg-[color-mix(in srgb,var(--text-default)_2%,transparent)] group"
+          style={{
+            background: "transparent",
+            border: "none",
+            color: "var(--text-default)",
+            cursor: "pointer",
+          }}
+          aria-expanded={open}
+          aria-haspopup="dialog"
+        >
+          <span
+            className="flex items-center justify-center rounded-xl flex-shrink-0 group-hover:scale-110 transition-transform duration-200"
+            style={{
+              width: 38,
+              height: 38,
+              background: "var(--recipe-setup-icon-bg)",
+              color: "var(--recipe-setup-icon)",
+            }}
+          >
+            <Sparkles size={17} />
+          </span>
+          <span className="flex-1 min-w-0">
+            <span
+              className="block"
               style={{
-                background: "var(--container-bg-low)",
-                border: "1px solid var(--container-border)",
-                cursor: "pointer",
-                fontSize: "var(--font-size-base)",
-                fontWeight: "var(--weight-medium)" as any,
-                color: "var(--text-default)",
+                fontSize: "var(--font-size-lg)",
+                fontWeight: "var(--weight-semibold)" as any,
+                lineHeight: "var(--leading-tight)",
               }}
             >
-              <SlidersHorizontal
-                size={16}
-                style={{ color: "var(--primary)" }}
-              />
-              <span
-                className="flex-1"
-                style={{ textAlign: "left" as any }}
-              >
-                {cms.ui.customizeParams}
-              </span>
-              <motion.div
-                animate={{ rotate: showFineTuning ? 180 : 0 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 30,
-                }}
-              >
-                <ChevronDown
-                  size={16}
-                  style={{ color: "var(--text-muted)" }}
-                />
-              </motion.div>
-            </motion.button>
-
-            {/* Fine-tuning sliders */}
-            <AnimatePresence>
-              {showFineTuning && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 25,
-                  }}
-                  className="overflow-hidden mb-6"
-                >
-                  <RecipeConfigurator
-                    style={style}
-                    constraints={constraints}
-                    onConstraintsChange={() => {}}
-                    customHydration={customHydration}
-                    onHydrationChange={setCustomHydration}
-                    customFlourW={customFlourW}
-                    onFlourWChange={setCustomFlourW}
-                    customFermentHours={customFermentHours}
-                    onFermentHoursChange={setCustomFermentHours}
-                    customFermentTemp={customFermentTemp}
-                    onFermentTempChange={setCustomFermentTemp}
-                    usePreFerment={usePreFerment}
-                    onPreFermentChange={setUsePreFerment}
-                    customFlourPL={
-                      nerdMode ? customFlourPL : undefined
-                    }
-                    onFlourPLChange={
-                      nerdMode ? setCustomFlourPL : undefined
-                    }
-                    panConfig={panConfig}
-                    onPanConfigChange={setPanConfig}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Recipe output */}
-            {recipe && (
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 30,
-                  delay: 0.1,
-                }}
-              >
-                <RecipeOutput
-                  recipe={recipe}
-                  constraints={constraints}
-                  onConstraintsChange={() => {}}
-                  nerdMode={nerdMode}
-                />
-              </motion.div>
-            )}
-          </div>
-
-          {/* Sidebar — score dashboard (desktop) */}
-          {recipe && (
-            <div
-              className="hidden lg:block flex-shrink-0"
-              style={{ width: 320 }}
+              {cms.ui.customizeParams}
+            </span>
+            <motion.span
+              key={triggerSubtitle}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="block truncate"
+              style={{
+                fontSize: "var(--font-size-md)",
+                color: notice ? "var(--text-accent)" : "var(--text-muted)",
+                lineHeight: "var(--leading-normal)",
+                marginTop: 2,
+              }}
             >
-              <div className="sticky" style={{ top: 72 }}>
-                <ScoreDashboard
-                  scores={recipe.scores}
-                  science={recipe.science}
-                  desktopMode
-                  nerdMode={nerdMode}
-                  onNerdToggle={() => setNerdMode(!nerdMode)}
-                />
+              {triggerSubtitle}
+            </motion.span>
+          </span>
+          <span
+            className="hidden sm:inline-flex rounded-full px-3 py-1"
+            style={{
+              color: "var(--recipe-setup-action-text)",
+              background: "var(--recipe-setup-action-bg)",
+              fontSize: "var(--font-size-md)",
+              fontWeight: "var(--weight-semibold)" as any,
+            }}
+          >
+            {triggerAction}
+          </span>
+          <span
+            className="inline-flex"
+            style={{ color: "var(--text-muted)" }}
+          >
+            <ChevronDown size={17} style={{ transform: "rotate(-90deg)" }} />
+          </span>
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="fixed inset-0 z-[80] flex items-end justify-center overscroll-contain sm:items-center sm:px-4 sm:py-5"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              background: "var(--dialog-scrim-strong)",
+              backdropFilter: "blur(20px) saturate(1.4)",
+              WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+            }}
+            onClick={() => setOpen(false)}
+          >
+            <motion.section
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="recipe-setup-title"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 350, damping: 34 }}
+              className="w-full h-[92dvh] max-h-[92dvh] sm:h-[min(760px,88vh)] sm:max-h-[88vh] sm:max-w-[1160px] rounded-t-[2.5rem] sm:rounded-[2rem] border-0 sm:border overflow-hidden flex flex-col"
+              style={{
+                background: "color-mix(in srgb, var(--container-page) 92%, transparent)",
+                color: "var(--text-default)",
+                borderColor: "var(--container-border)",
+                boxShadow: "var(--dialog-shadow)",
+                backdropFilter: "blur(24px) saturate(1.6)",
+                WebkitBackdropFilter: "blur(24px) saturate(1.6)",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header — stable toolbar */}
+              <div
+                className="flex-shrink-0 px-5 py-3 sm:px-7 sm:py-3.5 border-b"
+                style={{ borderColor: "var(--container-border-subtle)" }}
+              >
+                <div className="flex items-start gap-3">
+                  <div className="min-w-0 flex-1">
+                    <h2
+                      id="recipe-setup-title"
+                      className="truncate"
+                      style={{
+                        fontSize: "clamp(1.125rem, 4.6vw, var(--font-size-2xl))",
+                        fontWeight: "var(--weight-bold)" as any,
+                        margin: 0,
+                        lineHeight: "var(--leading-tight)",
+                      }}
+                    >
+                      {cms.ui.customizeParams}
+                    </h2>
+                    {scores && (
+                      <div className="mt-2 sm:hidden">
+                        <MatchSummary scores={scores} />
+                      </div>
+                    )}
+                  </div>
+
+                  {scores && (
+                    <MatchSummary
+                      scores={scores}
+                      className="hidden min-w-0 flex-1 justify-end sm:flex"
+                    />
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-center rounded-full hover:bg-[color-mix(in srgb,var(--text-default)_10%,transparent)] hover:text-[var(--text-default)] active:scale-90 transition-all duration-150 flex-shrink-0"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      background: "var(--container-bg-low)",
+                      border: "1px solid var(--container-border)",
+                      color: "var(--text-muted)",
+                      cursor: "pointer",
+                    }}
+                    aria-label={cms.ui.close}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Body */}
+              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 sm:px-8 sm:py-5 flex flex-col gap-4">
+                {notice && (
+                  <div
+                    className="rounded-xl px-3 py-2"
+                    style={{
+                      background: "var(--recipe-setup-feedback-bg)",
+                      color: "var(--recipe-setup-feedback-text)",
+                      fontSize: "var(--font-size-md)",
+                      fontWeight: "var(--weight-semibold)" as any,
+                    }}
+                  >
+                    {notice}
+                  </div>
+                )}
+
+                <div
+                  className="rounded-2xl p-4 sm:p-5 flex flex-col gap-3.5"
+                  style={{
+                    background: "color-mix(in srgb, var(--tertiary) 4%, var(--surface-container-low))",
+                    border: "1px solid color-mix(in srgb, var(--tertiary) 10%, var(--container-border-subtle))",
+                  }}
+                >
+                  <div className="flex flex-col gap-1">
+                    <span
+                      style={{
+                        color: "var(--tertiary)",
+                        fontSize: "var(--font-size-xs)",
+                        fontWeight: "var(--weight-bold)" as any,
+                        letterSpacing: "var(--tracking-spread)",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {cmsMessage(cms, "recipeSetup.profileLabel", "Profilo impasto")}
+                    </span>
+                    <span className="type-body" style={{ color: "var(--text-muted)", lineHeight: "1.4" }}>
+                      Scegli un preset bilanciato dai nostri pizzaioli o un'interpretazione d'autore per configurare l'impasto.
+                    </span>
+                  </div>
+                  <PremiumSelect
+                    value={
+                      activeInterpretationId
+                        ? `interpretation-${activeInterpretationId}`
+                        : activeVersion
+                          ? `version-${activeVersion.id}`
+                          : ""
+                    }
+                    onChange={(val) => {
+                      if (val.startsWith("version-")) {
+                        const versionId = val.replace("version-", "");
+                        const version = versions.find((v) => v.id === versionId);
+                        if (version) {
+                          onSelectVersion(version);
+                        }
+                      } else if (val.startsWith("interpretation-")) {
+                        const interpretationId = val.replace("interpretation-", "");
+                        const interpretation = interpretations.find((i) => i.id === interpretationId);
+                        if (interpretation) {
+                          onSelectInterpretation(interpretation);
+                        }
+                      }
+                    }}
+                    groups={[
+                      {
+                        label: cmsMessage(cms, "recipeSetup.dough", "Impasto"),
+                        options: versions.map((version) => ({
+                          value: `version-${version.id}`,
+                          label: localizedVersionLabel(cms, version.label),
+                          subLabel: `${fmt.percent(version.params.hydration_pct)} idr. · W${version.params.flour_w}`,
+                        })),
+                      },
+                      ...(interpretations.length > 0
+                        ? [
+                            {
+                              label: cms.misc.signatureLabel || "Firma",
+                              options: interpretations.map((interpretation) => ({
+                                value: `interpretation-${interpretation.id}`,
+                                label: interpretationName(interpretation),
+                              })),
+                            },
+                          ]
+                        : []),
+                    ]}
+                  />
+                </div>
+
+                {children && (
+                  <div
+                    className="pt-4"
+                    style={{ borderTop: "1px solid var(--recipe-setup-border-subtle)" }}
+                  >
+                    {children}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer — azione di conferma sempre raggiungibile */}
+              <div
+                className="flex-shrink-0 flex items-center justify-end gap-3 px-5 pt-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:px-8 sm:pb-3.5 border-t"
+                style={{ borderColor: "var(--container-border-subtle)" }}
+              >
+                <CtaButton
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="w-full sm:w-auto px-7 py-3 active:scale-[0.98]"
+                  style={{ fontSize: "var(--font-size-lg)" }}
+                >
+                  {cmsMessage(cms, "recipeSetup.done", "Fatto")}
+                </CtaButton>
+              </div>
+            </motion.section>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
+
+/* ═══ MATCH SUMMARY — punteggio compatto per l'header della modale ═══ */
+function MatchSummary({
+  scores,
+  className,
+}: {
+  scores: RecipeScores;
+  className?: string;
+}) {
+  const { cms } = useCms();
+  const roundedScore = Math.round(scores.composite);
+  const tone = matchTone(roundedScore, "adapted");
+  const axes = SCORE_DIMENSIONS.map((dimension) => ({
+    key: dimension.key,
+    color: dimension.color,
+    label: cms.scoreDimensions[dimension.key]?.label ?? dimension.label,
+    shortLabel: cms.scoreDimensions[dimension.key]?.short ?? dimension.short,
+    value: scores[dimension.key],
+  }));
+
+  const toneColor = tone.low ? "var(--text-warning)" : "var(--text-accent)";
+  const MatchIcon = tone.low ? HeartCrack : Heart;
+
+  return (
+    <div className={`flex items-center gap-2.5 sm:gap-3 ${className ?? ""}`}>
+      {/* Label "Match" */}
+      <div className="flex items-center" style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}>
+        <span style={{ fontWeight: "var(--weight-semibold)" as any, textTransform: "uppercase", fontSize: "var(--font-size-xs)", letterSpacing: "var(--tracking-spread)" }}>Match</span>
+      </div>
+
+      {/* Punteggio — chip colorato per lettura immediata */}
+      <span
+        className="flex items-center gap-1.5 rounded-full px-2.5 py-1.5 flex-shrink-0 type-numeric"
+        style={{
+          background: `color-mix(in srgb, ${toneColor} 14%, transparent)`,
+          color: toneColor,
+          fontWeight: "var(--weight-bold)" as any,
+          lineHeight: 1,
+        }}
+        title={tone.title}
+      >
+        <MatchIcon size={14} style={{ color: toneColor }} fill={tone.low ? "none" : toneColor} />
+        <span style={{ fontSize: "var(--font-size-xl)" }}>{roundedScore}</span>
+      </span>
+
+      {/* Assi — da lg in su */}
+      <div
+        className="hidden lg:flex items-center gap-3 pl-3"
+        style={{ borderLeft: "1px solid var(--container-border-subtle)" }}
+      >
+        {axes.map((axis) => {
+          const val = Math.round(axis.value);
+          return (
+            <div key={axis.key} className="flex flex-col gap-1 min-w-[64px]">
+              <div className="flex items-center justify-between" style={{ fontSize: "var(--font-size-xs)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-muted)" }}>
+                <span title={axis.label}>{axis.shortLabel}</span>
+                <span className="type-numeric">{val}</span>
+              </div>
+              <div className="h-1 rounded-full overflow-hidden" style={{ background: "var(--container-bg-high)" }}>
+                <div className="h-full rounded-full" style={{ background: axis.color, width: `${val}%` }} />
               </div>
             </div>
-          )}
-        </div>
-
-        {/* Mobile score dashboard */}
-        {recipe && (
-          <div className="lg:hidden pb-6">
-            <ScoreDashboard
-              scores={recipe.scores}
-              science={recipe.science}
-              nerdMode={nerdMode}
-              onNerdToggle={() => setNerdMode(!nerdMode)}
-            />
-          </div>
-        )}
+          );
+        })}
       </div>
     </div>
+  );
+}
+
+function interpretationName(interpretation: Interpretation): string {
+  return (
+    interpretation.author ??
+    interpretation.pizzeria ??
+    interpretation.organization ??
+    interpretation.signature_name ??
+    "Interpretazione"
   );
 }
 
@@ -647,15 +1573,9 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
         }}
         className="text-center"
       >
-        <h1
-          className="font-serif"
-          style={{
-            fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-            lineHeight: "var(--leading-snug)",
-          }}
-        >
+        <Heading level="page">
           {cms.pages.recipeStyleNotFound}
-        </h1>
+        </Heading>
         <p
           className="font-serif italic mt-2"
           style={{
@@ -669,20 +1589,15 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
             styleId || "?",
           )}
         </p>
-        <Link
+        <CtaButton
+          as={Link}
           to="/explore"
-          className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-full active:scale-95 transition-transform"
-          style={{
-            background: "var(--cta-btn-bg)",
-            color: "var(--cta-btn-text)",
-            fontWeight: "var(--weight-semibold)" as any,
-            fontSize: "var(--font-size-xl)",
-            textDecoration: "none",
-          }}
+          className="mt-6 px-5 py-2.5"
+          style={{ fontSize: "var(--font-size-xl)" }}
         >
           <ChevronLeft size={16} />
           {cms.pages.recipeExploreStyles}
-        </Link>
+        </CtaButton>
       </motion.div>
     </div>
   );

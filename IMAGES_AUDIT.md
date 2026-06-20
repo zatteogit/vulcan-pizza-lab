@@ -1,0 +1,280 @@
+# Audit Visivo e Piano di Sostituzione Immagini (Giugno 2026)
+
+Questo documento contiene l'analisi dello stato delle immagini all'interno di **Vulcan Pizza Lab**, con l'elenco dettagliato degli asset necessari per eliminare i segnaposto remoti (Unsplash) e i file stub di Figma. 
+
+Per ciascun elemento viene fornito il dettaglio su **dimensioni**, **proporzioni**, **descrizione visiva** e un **prompt ottimizzato** per generatori di immagini (es. Midjourney v6 o DALL-E 3) coerente con la direzione artistica del progetto (*dark mode, drammatico, editoriale, contrastato, close-up*).
+
+---
+
+## Indice
+1. [Linee Guida della Direzione Artistica (VPL Aesthetic)](#1-linee-guida-della-direzione-artistica-vpl-aesthetic)
+2. [Stato Attuale degli Asset Visivi](#2-stato-attuale-degli-asset-visivi)
+3. [Elenco Stili Pizza da Sostituire (22 stili)](#3-elenco-stili-pizza-da-sostituire-22-stili)
+4. [Elenco Condimenti da Sostituire (14 Toppings)](#4-elenco-condimenti-da-sostituire-14-toppings)
+5. [Asset per Fondamenta del Design System (5 stili)](#5-asset-per-fondamenta-del-design-system-5-stili)
+6. [Linee Guida Tecniche per l'Integrazione](#6-linee-guida-tecniche-per-lintegrazione)
+
+---
+
+## 1. Linee Guida della Direzione Artistica (VPL Aesthetic)
+
+Per mantenere la coerenza visiva con gli asset già approvati e definiti "curati e locali" (come `verace.png` o `tegliaromana.png`), tutte le nuove immagini devono rispettare i seguenti canoni estetici:
+
+* **Stile Fotografico:** Fotografia gastronomica editoriale (*food photography*), rustica ma premium. Niente look da "banca dati stock commerciale" con luci asettiche.
+* **Illuminazione:** Chiara-scura, drammatica (*moody lighting*), luce direzionale morbida dal lato o da dietro (controluce), ombre calde e profonde.
+* **Sfondo:** Superfici scure e materiche (legno rustico bruciato o scuro, ardesia, pietra nera, metallo vissuto). Eventuale bagliore caldo del forno a legna nello sfondo sfuocato.
+* **Inquadratura:** Close-up ravvicinati o macro, angolazione a 45 gradi o ripresa dall'alto (flat lay), profondità di campo ridotta (*shallow depth of field*) per isolare il dettaglio dell'impasto o dell'ingrediente.
+* **Soggetto:** La pizza deve apparire calda, appena sfornata, con formaggio filante (ove presente), crosta alveolata e texture dell'impasto ben definita.
+
+---
+
+## 2. Stato Attuale degli Asset Visivi
+
+La situazione delle immagini all'interno della codebase è la seguente:
+
+| Categoria | Totale | Locali Curati (Definitivi) | Placeholder / Stub (Da Sostituire) |
+| :--- | :---: | :---: | :--- |
+| **Stili Pizza** | 28 | 6 (`verace`, `canotto`, `tegliaromana`, `romanatonda`, `pinsa`, `bonci`) | **22** (21 URL Unsplash + 1 riuso temporaneo per `grandma_style`) |
+| **Condimenti (Toppings)** | 15 | 1 (`margherita`, che riusa `verace.png`) | **14** (Attualmente sprovvisti di thumbnail visiva nella selezione ricetta) |
+| **Figma Design System** | 5 | 0 | **5** (Attualmente intercettati da plugin stub e renderizzati come SVG vuoti) |
+| **Mascotte & Timeline** | - | - | Già coperti da illustrazioni SVG dinamiche scritte a mano. |
+
+---
+
+## 3. Elenco Stili Pizza da Sostituire (22 stili)
+
+Queste immagini verranno utilizzate sia nella galleria stili (`/explore`) con proporzione **3:4**, sia come banner hero delle ricette con proporzione libera (gestite tramite `object-cover` su contenitori flessibili). 
+
+* **Formato Consigliato:** PNG o WebP ad alta risoluzione.
+* **Proporzioni target:** **3:2** (consistente con gli asset locali correnti) o **4:3**.
+* **Risoluzione consigliata:** **1536 × 1024 pixel** (3:2) o **1448 × 1086 pixel** (4:3).
+
+### 1. New York Style (`new_york`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Un tipico trancio extra-large di pizza stile New York, sottile e pieghevole (foldable slice). Crosta dorata ben cotta, salsa di pomodoro visibile sotto uno strato abbondante di mozzarella filante e unto arancione traslucido. Inquadrato a 45 gradi su carta oleata tipica da asporto, sfondo di un bancone scuro di pizzeria.
+* **Prompt:** `Close-up editorial food photography of a classic New York style cheese pizza slice, foldable slice, greasy orange sheen on melted mozzarella cheese, thin crispy charred crust, served on white parchment paper on a dark wood pizzeria counter, dramatic side lighting, dark moody background, shallow depth of field, 8k --ar 3:2`
+
+### 2. Detroit Style (`detroit`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza rettangolare alta, con la tipica "cheese crown" (bordo di formaggio bruciato e caramellato) scura e croccante lungo i lati. Condita con pepperoni a coppetta (cup-and-char pepperoni) arricciati e pieni del loro olio, strisce verticali di salsa di pomodoro rossa accesa versata sopra il formaggio.
+* **Prompt:** `A rectangular Detroit-style pizza in a dark steel pan, thick airy crust, crispy caramelized dark cheese crown on the edges, topped with cupped pepperoni and thick racing stripes of vibrant red tomato sauce on top, close-up, dramatic side lighting, dark rustic setting, professional food styling --ar 3:2`
+
+### 3. Chicago Deep Dish (`chicago_deep`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza a mo' di torta salata con bordi altissimi e burrosi. Il ripieno mostra uno strato spesso di salsiccia e formaggio fuso coperto da una ricca e densa passata di pomodoro a pezzi grossolani, spolverata di parmigiano. Inquadratura che mostra una fetta sollevata con il formaggio filante che si allunga.
+* **Prompt:** `Editorial food photo of a Chicago deep dish pizza in a deep metal pan, tall buttery crust walls, filled with thick layers of molten mozzarella cheese, sausage, topped with chunky rustic tomato sauce and grated parmesan, one slice being pulled up showing long cheese pull, dark moody background, warm lighting --ar 3:2`
+
+### 4. Focaccia Genovese (`focaccia_genovese`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Focaccia dorata e lucida, caratterizzata dai tipici "buchi" (in dialetto *coilli*) profondi colmi di emulsione di olio EVO e sale grosso. Texture superficiale morbida e bagnata dall'olio, spolverata di aghi di rosmarino fresco. Appoggiata su un tagliere di legno scuro.
+* **Prompt:** `Close-up of traditional Italian Focaccia Genovese, golden and shiny crust, deep finger dimples filled with olive oil and coarse sea salt, fresh rosemary needles, soft crumb texture visible on the side, dark rustic wooden board, cinematic lighting, moody atmosphere --ar 3:2`
+
+### 5. Sfincione Palermitano (`sfincione`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza alta e spugnosa condita con un sugo denso a base di pomodoro, cipolle stufate, acciughe e origano, coperto da una pioggia di caciocavallo grattugiato e pangrattato tostato che crea una superficie rustica e dorata.
+* **Prompt:** `Palermitano Sfincione pizza, thick spongy dough, rich red tomato sauce with stewed onions and anchovies, topped with toasted breadcrumbs and caciocavallo cheese, rustic Italian bakery setting, dark moody background, high contrast, warm lighting --ar 3:2`
+
+### 6. Pala Romana (`pala_romana`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Una lunga pizza alla pala rettangolare, adagiata su una pala di legno scuro. Superficie alveolata, condita in modo semplice a crudo con mortadella IGP adagiata a fette ondulate e ciuffi di stracciatella di burrata.
+* **Prompt:** `A long artisanal Roman Pizza alla Pala on a dark wooden peel, rustic open crumb crust, topped with folded mortadella slices and dollops of white stracciatella cheese, close-up details, dark atmosphere, warm backlighting, food editorial style --ar 3:2`
+
+### 7. Grandma Style (`grandma_style`)
+* **Stato Attuale:** Riusa temporaneamente l'immagine `tegliaromana.png`.
+* **Descrizione Visiva:** Pizza rettangolare cotta in teglia sottile, crosta croccante e dorata. Condita con mozzarella a fette (posizionata sotto) e striature diagonali di sugo all'aglio cotto lentamente. Aspetto casalingo, rustico.
+* **Prompt:** `Grandma style pizza in a thin rectangular baking sheet, crispy golden bottom crust, sliced fresh mozzarella melted underneath diagonal stripes of rich marinara garlic tomato sauce, fresh basil leaves, home kitchen moody lighting, dark background --ar 3:2`
+
+### 8. Focaccia di Recco (`focaccia_recco`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Due sfoglie di pasta sottilissime come veli, senza lievito, cotte ad altissima temperatura. Bolle dorate e bruciacchiate in superficie che lasciano intravedere la crescenza fusa caldissima che cola dalle fessure della sfoglia.
+* **Prompt:** `Focaccia di Recco, paper-thin double layers of unleavened dough, golden charred bubbles on top, molten white crescenza cheese oozing out from the cracks, close-up macro shot, dark stone background, dramatic directional light --ar 3:2`
+
+### 9. Pizza al Padellino Torino (`padellino_torino`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza tonda di piccole dimensioni (circa 20cm) cotta in un padellino di ferro nero ben oliato. Bordi alti e quasi "fritti", croccanti all'esterno e morbidissimi all'interno. Condimento classico Margherita con pomodoro rosso e mozzarella fusa lucida.
+* **Prompt:** `Small round Pizza al Padellino inside a black cast iron pan, high crispy fried edges, soft interior, melted mozzarella and red tomato sauce bubbling, single basil leaf, dark rustic kitchen background, warm moody lighting --ar 3:2`
+
+### 10. Pizza Baciata (`pizza_baciata`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Due dischi di pizza sovrapposti e cotti insieme ("baciati" con olio nel mezzo) a formare una tasca. Aperta a panino e farcita abbondantemente con prosciutto crudo di Parma e fette di fior di latte fresco. Tagliata a metà per mostrare l'alveolatura interna e la ricchezza del ripieno.
+* **Prompt:** `Pizza Baciata cut in half, crispy double-layered Roman flatbread sandwich, filled with fresh Parma prosciutto and mozzarella slices, open pocket texture, crumbs on a dark slate table, moody lighting, editorial food shot --ar 3:2`
+
+### 11. Ciaccino Senese (`ciaccino_senese`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Focaccia ripiena tipica toscana, chiusa e dorata in superficie con una spolverata di sale e aghi di rosmarino. Dal taglio fuoriesce un ripieno filante di prosciutto cotto toscano e scamorza fusa.
+* **Prompt:** `Tuscan Ciaccino Senese, closed stuffed flatbread, golden baked crust with coarse salt, sliced open showing melted scamorza cheese and cooked ham filling, dark rustic background, cozy warm lighting --ar 3:2`
+
+### 12. Pizza Patate e Porchetta (`pizza_patate_porchetta`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza in teglia o baciata aperta e farcita con patate tagliate finissime a sfoglia croccanti sui bordi e fette di porchetta tiepida con la sua crosta croccante (*cotica*) spolverata di rosmarino e pepe nero.
+* **Prompt:** `Roman pizza stuffed with sliced crispy roasted potatoes, savory porchetta pork roast with crackling skin, black pepper, rosemary, close-up, dramatic shadows, dark moody background, high contrast --ar 3:2`
+
+### 13. Trancio Milanese (`trancio_milanese`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Un trancio triangolare molto alto e soffice, con una base croccante quasi fritta. La superficie è letteralmente sommersa da un mare di mozzarella fusa dorata che cola lungo i lati del trancio, coprendo quasi del tutto il pomodoro.
+* **Prompt:** `A thick triangular slice of Milanese-style pizza, very tall spongy dough, crispy fried crust base, overflowing with a thick blanket of melted bubbling mozzarella cheese dripping down the sides, dark mood, warm side light --ar 3:2`
+
+### 14. Chicago Tavern Style (`chicago_tavern`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza tonda, stesa finissima e cotta fino a diventare rigida e croccante ("cracker thin crust"). Tagliata a quadratini (party cut). Condita con salsiccia a pezzi, cipolla e peperoni, adagiata su una tavola di legno scuro in un ambiente da pub vintage.
+* **Prompt:** `Chicago tavern-style pizza, cracker-thin crispy crust, cut into small squares, topped with fennel sausage chunks and green peppers, served on a dark weathered wooden board, vintage bar atmosphere, moody warm lighting --ar 3:2`
+
+### 15. Focaccia Barese (`focaccia_barese`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Focaccia tonda con bordi alti e bruciacchiati, cotta in teglia di ferro. Condita con pomodori ciliegini freschi spaccati con le mani e schiacciati nell'impasto, olive nere baresi con nocciolo, origano abbondante e un filo generoso d'olio.
+* **Prompt:** `Traditional Focaccia Barese in a metal pan, high caramelized edges, embedded roasted cherry tomatoes, black olives with pits, dry oregano, olive oil gloss, close-up macro, dark moody lighting, rustic Italian feel --ar 3:2`
+
+### 16. Pizza Fritta (`pizza_fritta`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Un calzone fritto gonfio e dorato, con la superficie asciutta e cosparsa di piccole bolle da frittura. Tagliato a metà per rivelare l'interno caldissimo e fumante ripieno di ricotta cremosa, provola filante e cicoli (o pepe nero).
+* **Prompt:** `Neapolitan Pizza Fritta, golden-brown deep-fried dough pocket, cut open showing steaming hot ricotta cheese, melted provola, and black pepper filling, crispy blistered surface, dark background, dramatic warm lighting --ar 3:2`
+
+### 17. Calzone Napoletano (`calzone_napoletano`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza piegata a mezzaluna cotta nel forno a legna, con il cornicione maculato di bruciature tipiche (*leopardatura*). Spennellata di pomodoro e parmigiano sulla superficie esterna. Al taglio rivela un ripieno di ricotta, salame napoletano e mozzarella filante.
+* **Prompt:** `Baked Neapolitan Calzone pizza, half-moon shaped, charred leopard spots on the crust, brushed with tomato sauce and basil on top, sliced open showing ricotta and salami filling, wood-fired oven glow in background, moody lighting --ar 3:2`
+
+### 18. Pizza al Metro (`pizza_al_metro`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Un lunghissimo asse di legno scuro che ospita una pizza "al metro" divisa in tre sezioni con condimenti diversi (es. Margherita, Bianca con Prosciutto, Ortolana). Crosta alveolata ma compatta, adatta alla condivisione.
+* **Prompt:** `A long rectangular Pizza al Metro on a giant wooden board, divided into three different toppings sections, rustic Italian style, family dinner setting, dark moody overhead shot, high contrast, warm editorial lighting --ar 3:2`
+
+### 19. New Haven Apizza (`new_haven_apizza`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza tonda asimmetrica, sottilissima e con una crosta visibilmente carbonizzata nei punti giusti ("charred soot"). Condimento bianco con vongole fresche aperte nel guscio, aglio, origano, pecorino romano grattugiato e olio EVO.
+* **Prompt:** `New Haven style white clam apizza, thin charred coal-fired crust, topped with fresh littleneck clams, garlic, oregano, olive oil, pecorino cheese, dark moody environment, dramatic side light, food photography --ar 3:2`
+
+### 20. Fugazzeta Argentina (`fugazzeta`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza ripiena doppia, alta e straripante di formaggio fuso (mozzarella e provolone). La superficie superiore è ricoperta da un letto abbondante di cipolle tagliate sottili, caramellate e leggermente bruciacchiate sui bordi, spolverate di origano.
+* **Prompt:** `Argentinian Fugazzeta, double crust stuffed pizza overflowing with melted mozzarella cheese, topped with sweet caramelized slivered onions charred on the edges, oregano, close-up showing cheese pull, dark rustic setting --ar 3:2`
+
+### 21. California Style (`california_style`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza gourmet a crosta sottile stile pizza-boutique. Condita a crudo con ingredienti freschi e colorati disposti in modo elegante: fette di avocado, striscioline di salmone affumicato, ciuffi di aneto e burrata fresca al centro.
+* **Prompt:** `California-style gourmet pizza, thin light crust, elegant toppings of fresh avocado slices, smoked salmon, dill, and a ball of fresh burrata cheese in the center, bright fresh ingredients, dark moody background contrast, cinematic lighting --ar 3:2`
+
+### 22. Greek Pan Pizza (`greek_pan`)
+* **Stato Attuale:** URL Unsplash generico.
+* **Descrizione Visiva:** Pizza cotta in un padellino di metallo basso, con un impasto soffice ma unto sul fondo. Condita con salsa di pomodoro ricca, origano, formaggio feta sbriciolato, olive kalamata e cipolle rosse.
+* **Prompt:** `Greek pan pizza in a shallow metal dish, oily puffy crust, topped with rich tomato sauce, crumbled feta cheese, kalamata olives, red onion rings, close-up, dark background, warm directional light --ar 3:2`
+
+---
+
+## 4. Elenco Condimenti da Sostituire (14 Toppings)
+
+Queste immagini sono necessarie come icone di selezione nel widget di condimento della ricetta (`recipe-output.tsx`). Per consentire un rendering pulito a griglia o a chip, devono essere quadrate e focalizzarsi sul dettaglio degli ingredienti caratterizzanti.
+
+* **Formato Consigliato:** PNG o WebP.
+* **Proporzioni target:** **1:1** (Quadrato).
+* **Risoluzione consigliata:** **400 × 400 pixel**.
+
+| ID Condimento | Nome | Descrizione Visiva | Prompt per Generazione |
+| :--- | :--- | :--- | :--- |
+| `marinara` | Marinara | Primo piano di passata di pomodoro densa con fettine sottili di aglio dorato, origano selvatico e un filo d'olio. | `Square macro photo of fresh marinara sauce, garlic slivers, dry oregano, extra virgin olive oil swirl, top down, dark slate background --ar 1:1` |
+| `bianca` | Bianca | Dettaglio della crosta dorata di una focaccia romana bianca, unta d'olio EVO con aghi di rosmarino e grani di sale. | `Square flatlay macro photo of Italian pizza bianca crust, glistening olive oil, rosemary needles, coarse salt, dark background --ar 1:1` |
+| `boscaiola` | Boscaiola | Primo piano di funghi porcini e champignon saltati misti a pezzi di salsiccia sgranata su base di formaggio fuso. | `Square close-up of sautéed mushrooms and browned Italian sausage chunks on melted cheese, rustic food shot, dark background --ar 1:1` |
+| `diavola` | Diavola | Fette di salame piccante (pepperoni) arricciate dal calore con bordi croccanti e gocce di olio piccante arancione. | `Square macro of crispy curled spicy pepperoni slices, red pepper flakes, melted mozzarella, dark moody lighting --ar 1:1` |
+| `capricciosa` | Capricciosa | Composizione ordinata di carciofini sott'olio a spicchi, funghi prataioli, prosciutto cotto e olive nere. | `Square food photo of pizza toppings: artichoke hearts, mushrooms, cooked ham, black olives on melted cheese, dark backdrop --ar 1:1` |
+| `quattro_stagioni` | Quattro Stagioni | I quattro ingredienti della capricciosa divisi nettamente in quattro quadranti distinti su base margherita. | `Square overhead shot of a slice of four seasons pizza showing separate sections of artichokes, ham, mushrooms, olives --ar 1:1` |
+| `quattro_formaggi` | Quattro Formaggi | Texture cremosa e variegata di formaggi fusi: gorgonzola erborinato, mozzarella, fontina e parmigiano. | `Square macro photo of melted four cheese blend, blue cheese veins, bubbling mozzarella and provolone, dark background --ar 1:1` |
+| `ortolana` | Ortolana | Grigliata mista di verdure fresche: strisce di zucchine, melanzane e peperoni colorati adagiati su mozzarella. | `Square close-up of grilled zucchini, eggplant, and bell peppers on pizza crust, vibrant colors, dark slate, moody lighting --ar 1:1` |
+| `patate_porchetta` | Patate & Porchetta | Sottili fettine arricciate di patate al forno dorate sovrapposte a fette di porchetta con pepe nero. | `Square close-up of thinly sliced roasted potatoes and savory porchetta pork on pizza dough, rosemary, dark rustic table --ar 1:1` |
+| `bianca_mortazza` | Mortadella e Pistacchio | Fette soffici e ondulate di mortadella IGP cosparse di granella verde di pistacchio di Bronte. | `Square macro of folded pink mortadella slices, green pistachio crumbs on warm flatbread, dark moody backdrop --ar 1:1` |
+| `cacio_e_pepe` | Cacio e Pepe | Crema densa e vellutata di pecorino romano fuso cosparsa di pepe nero macinato grosso al momento. | `Square macro of creamy melted pecorino romano cheese sauce, freshly cracked black pepper, rustic dark table --ar 1:1` |
+| `salsiccia_friarielli` | Salsiccia & Friarielli | Foglie verdi scure e saltate di friarielli (cime di rapa) accostate a pezzi di salsiccia di maiale. | `Square close-up of sautéed green turnip tops (friarielli) and rustic Italian sausage pieces, dark stone surface --ar 1:1` |
+| `hawaiiana` | Hawaiiana | Cubetti di ananas caramellato e fette di prosciutto cotto su base di mozzarella fusa filante. | `Square food photo of caramelized pineapple chunks and cooked ham slices on melted cheese, high contrast, dark slate --ar 1:1` |
+| `crescenza_recco` | Crescenza | Formaggio crescenza caldissimo, fuso, bianco e cremoso che cola tra due sfoglie di pasta dorata. | `Square macro photo of melted hot oozing crescenza cheese, thin crispy dough layers, dark rustic setting --ar 1:1` |
+
+---
+
+## 5. Asset per Fondamenta del Design System (5 stili)
+
+All'interno di `/src/app/components/design-system/foundations-ext.tsx`, cinque asset Figma sono importati direttamente ma rimangono "nascosti" in ambiente locale a causa del plugin `figmaAssetStub` di Vite. 
+
+Questi file fisicamente esistono nella cartella `src/assets/` con nomi hash ma sono a bassa risoluzione e incompleti. Dovrebbero essere sostituiti con file di produzione locali ad alta risoluzione ed eliminati dal meccanismo di stubbing di Vite.
+
+| Import nel Codice | File Fisico Corrente | Tipo | Dimensioni Attuali | Risoluzione di Produzione Target | Descrizione per Rigenerazione |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| `imgPizzaNapoletana` | `cc55b62333cd34778c13305abc97846ece76d0f1.png` | **4:3** | 400 × 300 px | **800 × 600 px** | Pizza Napoletana STG con cornicione gonfio maculato, basilico al centro, inquadratura dall'alto, fondo scuro. |
+| `imgPizzaMargherita` | `55a2423eacc2481327d4b95178875906ba678936.png` | **4:3** | 400 × 300 px | **800 × 600 px** | Trancio o intera Margherita classica, dettagli del formaggio fuso lucido e della passata di pomodoro. |
+| `imgImpasto` | `4f29f2bf05841844acdfa17d5c6d4823ce4ea351.png` | **1:1** | 200 × 200 px | **600 × 600 px** | Dettaglio macro di un panetto di impasto di pizza tondo, liscio ed elastico, spolverato di farina. |
+| `imgPizzaAlForno` | `063bec0118b053149e9fff6d65b9df94925fd876.png` | **16:9** | 600 × 340 px | **1200 × 675 px** | Inquadratura suggestiva dell'interno di un forno a legna con una pizza in cottura vicino alle fiamme vive. |
+| `imgPizzaTeglia` | `a832636853506b6329c43025470758beb48bdfc5.png` | **16:9** | 600 × 340 px | **1200 × 675 px** | Pizza in teglia romana quadrata/rettangolare, crosta alveolata e condimento di pomodoro lucido. |
+
+---
+
+## 6. Linee Guida Tecniche per l'Integrazione
+
+Una volta generati i file fisici, l'integrazione a livello di codice avverrà seguendo questi passaggi:
+
+### A. Salvataggio e Naming
+Salvare i file all'interno della cartella `src/assets/` con nomi descrittivi e puliti (evitando gli hash esadecimali lunghi per i nuovi stili dell'applicazione). Ad esempio:
+* `src/assets/detroit.png`
+* `src/assets/chicago_deep.png`
+* `src/assets/topping_marinara.png`
+
+### B. Registrazione degli Stili Pizza (`recommended-styles.tsx`)
+Aggiornare il dizionario `STYLE_PHOTOS` importando i nuovi file locali e sostituendo gli URL di Unsplash:
+
+```typescript
+// Esempio di modifica in src/app/components/recommended-styles.tsx
+import photoVerace from "../../assets/verace.png";
+import photoDetroit from "../../assets/detroit.png"; // Nuovo
+import photoChicagoDeep from "../../assets/chicago_deep.png"; // Nuovo
+// ...
+
+export const STYLE_PHOTOS: Record<string, string> = {
+  napoletana_stg: photoVerace,
+  detroit: photoDetroit,           // Sostituito URL Unsplash
+  chicago_deep: photoChicagoDeep,  // Sostituito URL Unsplash
+  // ...
+};
+```
+
+### C. Registrazione dei Condimenti (`topping-library.ts`)
+Configurare i nuovi thumbnail importandoli in `topping-library.ts` e associandoli ai concetti corrispondenti:
+
+```typescript
+// Esempio di modifica in src/app/components/topping-library.ts
+import thumbnailMargherita from "../../assets/verace.png";
+import thumbnailMarinara from "../../assets/topping_marinara.png"; // Nuovo
+// ...
+
+export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
+  margherita: {
+    id: "margherita",
+    name: "Margherita",
+    thumbnail: thumbnailMargherita,
+    // ...
+  },
+  marinara: {
+    id: "marinara",
+    name: "Marinara",
+    thumbnail: thumbnailMarinara, // Aggiunto thumbnail
+    // ...
+  },
+};
+```
+
+### D. Disattivazione dello Stub di Vite per le Fondamenta del Design System
+Nel file `vite.config.ts`, per consentire a Vite di caricare i file reali invece di generare SVG vuoti per le importazioni del design system, è consigliabile aggiornare il plugin `figmaAssetStub` affinché non intercetti gli asset presenti localmente:
+
+```typescript
+// In vite.config.ts
+function figmaAssetStub(): Plugin {
+  return {
+    name: "figma-asset-stub",
+    resolveId(source) {
+      // Intercetta solo se non esiste una risoluzione locale o se si desidera forzare lo stub di file mancanti
+      if (source.startsWith("figma:asset/")) {
+        // Logica per verificare se il file è presente in src/assets
+        // Altrimenti esegue il fallback dello stub
+        return `\0figma-stub:${source}`;
+      }
+    },
+    // ...
+  };
+}
+```
+*Nota: Alternativamente, si consiglia di rinominare gli import in `foundations-ext.tsx` modificando il prefisso da `figma:asset/` a `../../assets/` per caricare direttamente i file reali di produzione.*

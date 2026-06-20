@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import { Flame,Moon,Sun,Timer,Wheat,Zap } from "lucide-react";
 import { motion } from "motion/react";
-import { Flame, Wheat, Timer, Zap, Sun, Moon } from "lucide-react";
-import {
-  SectionHeader,
-  AnatomyRow,
-  SubSectionLabel,
-  Panoramica,
-  LineeGuida,
-  AccessibilitaInfo,
-} from "./shared";
+import { useState } from "react";
 import type { SectionEntry } from "./shared";
+import {
+AccessibilitaInfo,
+AnatomyRow,
+LineeGuida,
+Panoramica,
+SectionHeader,
+SubSectionLabel,
+} from "./shared";
 
 /* ═══════════════════════════════════════════════════════════
    FONDAMENTA — GLASSMORPHISM & LIQUID GLASS
@@ -311,6 +311,38 @@ export function GlassmorphismLiquidGlassSection() {
       </div>
 
       <div>
+        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Recipe Hero Card Glassmorphism</h3>
+        <div className="relative h-56 rounded-2xl overflow-hidden" style={{ border: "1px solid var(--outline-variant)" }}>
+          <div className="absolute inset-0" style={{ background: "var(--grad-ember)" }} />
+          <div
+            className="absolute inset-x-4 top-4 bottom-4 p-5 rounded-2xl flex flex-col justify-between"
+            style={{
+              background: "var(--recipe-hero-card-bg)",
+              backdropFilter: "blur(24px) saturate(1.7)",
+              WebkitBackdropFilter: "blur(24px) saturate(1.7)",
+              border: "1px solid var(--container-border)",
+              boxShadow: "var(--recipe-hero-card-shadow)",
+            }}
+          >
+            <div>
+              <span style={{ fontSize: "var(--font-size-md)", color: "var(--text-accent)", textTransform: "uppercase", fontWeight: "var(--weight-semibold)" }}>Procedimento</span>
+              <h1 className="font-serif mt-1" style={{ fontSize: "var(--font-size-6xl)", color: "var(--text-default)", fontWeight: "var(--weight-bold)", margin: 0 }}>Napoletana STG</h1>
+            </div>
+            <code
+              style={{
+                fontFamily: "'DM Mono', monospace",
+                fontSize: "var(--font-size-md)",
+                color: "var(--muted-foreground)",
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              {`background: var(--recipe-hero-card-bg);\nbackdrop-filter: blur(24px) saturate(1.7);\nborder: 1px solid var(--container-border);\nbox-shadow: var(--recipe-hero-card-shadow);`}
+            </code>
+          </div>
+        </div>
+      </div>
+
+      <div>
         <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Riferimento iOS 26 — composizione materiale</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {GLASS_LAYERS.map((layer) => (
@@ -341,7 +373,7 @@ export function GlassmorphismLiquidGlassSection() {
         <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Playground interattivo</h3>
         <div className="surface-card p-5">
           <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-base)", color: "var(--text-default)", marginBottom: "12px", display: "block" }}>
-            Trascina i cursori per esplorare il materiale glass. Il pannello "Vulcan" usa <code style={{ fontFamily: "'DM Mono', monospace", color: "var(--primary)" }}>var(--radius)</code> (1rem), il "Pill" e riferimento iOS.
+            Trascina i cursori per esplorare il materiale glass. Il pannello "Vulcan" usa <code style={{ fontFamily: "'DM Mono', monospace", color: "var(--primary)" }}>var(--radius-lg)</code> (1rem), il "Pill" e riferimento iOS.
           </span>
           <BlurPlayground />
         </div>
@@ -424,7 +456,7 @@ export function GlassmorphismLiquidGlassSection() {
             { prop: "Backdrop", val: "blur(24px) saturate(1.6)" },
             { prop: "Background", val: "color-mix(bg 88%)" },
             { prop: "Border", val: "1px solid var(--border-muted)" },
-            { prop: "Radius", val: "var(--radius) -> 1rem / 16px" },
+            { prop: "Radius", val: "var(--radius-lg) -> 1rem / 16px" },
             { prop: "iOS ref blur", val: "40px (non usato in Vulcan)" },
             { prop: "iOS blend", val: "plus-lighter (non usato)" },
             { prop: "Vulcan blend", val: "color-mix + saturate" },

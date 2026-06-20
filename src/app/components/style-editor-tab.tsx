@@ -1,52 +1,53 @@
-import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  ChevronDown,
-  RotateCcw,
-  Copy,
-  Plus,
-  Trash2,
-  Check,
-  FlaskConical,
-  Flame,
-  Wheat,
-  Timer,
-  CircleDot,
-  Square,
-  RectangleHorizontal,
-  Upload,
-  X,
-  AlertTriangle,
-  Zap,
-  Info,
-  CircleAlert,
-  Wrench,
-  Database,
-  BookOpen,
-  ArrowRight,
-  Link2,
-  FileJson,
-  ChevronRight,
-  GitCompareArrows,
-  ClipboardPaste,
-  Sparkles,
-  ArrowDown,
-  Eye,
+AlertTriangle,
+ArrowDown,
+ArrowRight,
+BookOpen,
+Check,
+ChevronDown,
+ChevronRight,
+CircleAlert,
+CircleDot,
+ClipboardPaste,
+Copy,
+Database,
+Eye,
+FileJson,
+Flame,
+FlaskConical,
+GitCompareArrows,
+Info,
+Link2,
+Plus,
+RectangleHorizontal,
+RotateCcw,
+Sparkles,
+Square,
+Timer,
+Trash2,
+Upload,
+Wheat,
+Wrench,
+X,
+Zap,
 } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import React,{ useCallback,useEffect,useMemo,useState } from "react";
 import {
-  STYLES_DB,
-  PIZZA_FAMILIES,
-  generateRecipe,
-  type PizzaStyle,
-  type DoughParameters,
-  type OvenType,
-  type CrustType,
-  type ShapeType,
-  type HydrationCategory,
-  type FamilyId,
-  type UserConstraints,
-  type SkillLevel,
+PIZZA_FAMILIES,
+STYLES_DB,
+generateRecipe,
+type CrustType,
+type DoughParameters,
+type FamilyId,
+type HydrationCategory,
+type OvenType,
+type PizzaStyle,
+type ShapeType,
+type SkillLevel,
+type UserConstraints,
 } from "./pizza-engine";
+import { Badge, Surface } from "./ds";
 import { useStylesOverride } from "./styles-override-context";
 
 /* ═══ CONSTANTS ═══ */
@@ -273,13 +274,12 @@ function AutoCalcBtn({ label, onClick }: { label: string; onClick: () => void })
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-1 px-2 py-0.5 rounded-md type-data active:scale-95 transition-transform"
+      className="flex items-center gap-1 px-2 py-0.5 rounded-md type-data-xs active:scale-95 transition-transform"
       style={{
-        fontSize: "var(--font-size-xs)",
         fontWeight: "var(--weight-medium)" as any,
-        background: "color-mix(in srgb, var(--tertiary) 12%, rgba(0,0,0,0))",
+        background: "color-mix(in srgb, var(--tertiary) 12%, transparent)",
         color: "var(--tertiary)",
-        border: "1px solid color-mix(in srgb, var(--tertiary) 25%, rgba(0,0,0,0))",
+        border: "1px solid color-mix(in srgb, var(--tertiary) 25%, transparent)",
       }}
       aria-label={label}
     >
@@ -291,22 +291,22 @@ function AutoCalcBtn({ label, onClick }: { label: string; onClick: () => void })
 /* ═══ ISSUE SEVERITY STYLING ═══ */
 const ISSUE_STYLE: Record<IssueSeverity, { bg: string; border: string; color: string; badge: string; icon: React.ReactNode }> = {
   error: {
-    bg: "color-mix(in srgb, var(--text-error) 6%, rgba(0,0,0,0))",
-    border: "color-mix(in srgb, var(--text-error) 20%, rgba(0,0,0,0))",
+    bg: "color-mix(in srgb, var(--text-error) 6%, transparent)",
+    border: "color-mix(in srgb, var(--text-error) 20%, transparent)",
     color: "var(--text-error)",
     badge: "ERR",
     icon: <CircleAlert size={11} />,
   },
   warn: {
-    bg: "color-mix(in srgb, var(--text-warning) 6%, rgba(0,0,0,0))",
-    border: "color-mix(in srgb, var(--text-warning) 20%, rgba(0,0,0,0))",
+    bg: "color-mix(in srgb, var(--text-warning) 6%, transparent)",
+    border: "color-mix(in srgb, var(--text-warning) 20%, transparent)",
     color: "var(--text-warning)",
     badge: "WARN",
     icon: <AlertTriangle size={11} />,
   },
   info: {
-    bg: "color-mix(in srgb, var(--secondary) 6%, rgba(0,0,0,0))",
-    border: "color-mix(in srgb, var(--secondary) 20%, rgba(0,0,0,0))",
+    bg: "color-mix(in srgb, var(--secondary) 6%, transparent)",
+    border: "color-mix(in srgb, var(--secondary) 20%, transparent)",
     color: "var(--secondary)",
     badge: "INFO",
     icon: <Info size={11} />,
@@ -318,17 +318,16 @@ const ISSUE_STYLE: Record<IssueSeverity, { bg: string; border: string; color: st
 function FieldLabel({ children, required, hint }: { children: React.ReactNode; required?: boolean; hint?: string }) {
   return (
     <label
-      className="type-label flex items-center gap-1"
+      className="type-label-compact flex items-center gap-1"
       style={{
-        fontSize: "var(--font-size-sm)",
         color: "var(--text-muted)",
         display: "flex",
-        marginBottom: 4,
+        marginBottom: "var(--space-1)",
       }}
     >
       {children}
       {required && (
-        <span style={{ color: "var(--text-error)", fontSize: "var(--font-size-sm)" }} title="Obbligatorio">*</span>
+        <span className="type-body-xs" style={{ color: "var(--text-error)" }} title="Obbligatorio">*</span>
       )}
       {hint && (
         <span title={hint} style={{ color: "var(--text-muted)", cursor: "help", opacity: 0.6 }}>
@@ -368,7 +367,7 @@ function NumberInput({
         <FieldLabel required={required} hint={hint}>
           {label}
           {unit && (
-            <span style={{ color: "var(--text-accent)", marginLeft: 4 }}>
+            <span style={{ color: "var(--text-accent)", marginLeft: "var(--space-1)" }}>
               {unit}
             </span>
           )}
@@ -382,12 +381,11 @@ function NumberInput({
         max={max}
         step={step}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full p-2 rounded-lg type-data"
+        className="w-full p-2 rounded-lg type-data-field"
         style={{
           background: "var(--container-bg)",
           border: "1px solid var(--container-border)",
           color: "var(--text-default)",
-          fontSize: "var(--font-size-lg)",
           fontFeatureSettings: "'tnum'",
         }}
       />
@@ -428,7 +426,7 @@ function RangeInput({
         <FieldLabel required={required} hint={hint}>
           {label}
           {unit && (
-            <span style={{ color: "var(--text-accent)", marginLeft: 4 }}>
+            <span style={{ color: "var(--text-accent)", marginLeft: "var(--space-1)" }}>
               {unit}
             </span>
           )}
@@ -443,18 +441,17 @@ function RangeInput({
           max={max}
           step={step}
           onChange={(e) => onChangeLow(Number(e.target.value))}
-          className="flex-1 p-2 rounded-lg type-data"
+          className="flex-1 p-2 rounded-lg type-data-field"
           style={{
             background: "var(--container-bg)",
             border: "1px solid var(--container-border)",
             color: "var(--text-default)",
-            fontSize: "var(--font-size-lg)",
             fontFeatureSettings: "'tnum'",
           }}
         />
         <span
-          className="type-data"
-          style={{ color: "var(--text-muted)", fontSize: "var(--font-size-lg)" }}
+          className="type-data-field"
+          style={{ color: "var(--text-muted)" }}
         >
           —
         </span>
@@ -465,12 +462,11 @@ function RangeInput({
           max={max}
           step={step}
           onChange={(e) => onChangeHigh(Number(e.target.value))}
-          className="flex-1 p-2 rounded-lg type-data"
+          className="flex-1 p-2 rounded-lg type-data-field"
           style={{
             background: "var(--container-bg)",
             border: "1px solid var(--container-border)",
             color: "var(--text-default)",
-            fontSize: "var(--font-size-lg)",
             fontFeatureSettings: "'tnum'",
           }}
         />
@@ -502,12 +498,11 @@ function TextInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full p-2 rounded-lg type-data"
+        className="w-full p-2 rounded-lg type-data-field"
         style={{
           background: "var(--container-bg)",
           border: "1px solid var(--container-border)",
           color: "var(--text-default)",
-          fontSize: "var(--font-size-lg)",
         }}
       />
     </div>
@@ -532,12 +527,11 @@ function TextAreaInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         rows={rows}
-        className="w-full p-2 rounded-lg type-data resize-y"
+        className="w-full p-2 rounded-lg type-data-field resize-y"
         style={{
           background: "var(--container-bg)",
           border: "1px solid var(--container-border)",
           color: "var(--text-default)",
-          fontSize: "var(--font-size-lg)",
           lineHeight: "var(--leading-relaxed)",
         }}
       />
@@ -571,12 +565,11 @@ function SelectInput<T extends string>({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
-        className="w-full p-2 rounded-lg type-data"
+        className="w-full p-2 rounded-lg type-data-field"
         style={{
           background: "var(--container-bg)",
           border: "1px solid var(--container-border)",
           color: "var(--text-default)",
-          fontSize: "var(--font-size-lg)",
         }}
       >
         {options.map((o) => (
@@ -604,10 +597,10 @@ function ToggleField({
       className="flex items-center gap-3 p-2.5 rounded-lg w-full active:scale-[0.98] transition-transform"
       style={{
         background: value
-          ? "color-mix(in srgb, var(--cta) 12%, rgba(0,0,0,0))"
+          ? "color-mix(in srgb, var(--cta) 12%, transparent)"
           : "var(--container-bg)",
         border: value
-          ? "1px solid color-mix(in srgb, var(--cta) 30%, rgba(0,0,0,0))"
+          ? "1px solid color-mix(in srgb, var(--cta) 30%, transparent)"
           : "1px solid var(--container-border)",
       }}
     >
@@ -624,9 +617,8 @@ function ToggleField({
         />
       </div>
       <span
-        className="type-data"
+        className="type-data-base"
         style={{
-          fontSize: "var(--font-size-base)",
           color: value ? "var(--cta)" : "var(--text-muted)",
           fontWeight: "var(--weight-medium)" as any,
         }}
@@ -661,8 +653,8 @@ function Section({
       style={{
         border: hasIssues
           ? issueCount.errors > 0
-            ? "1px solid color-mix(in srgb, var(--text-error) 40%, rgba(0,0,0,0))"
-            : "1px solid color-mix(in srgb, var(--text-warning) 40%, rgba(0,0,0,0))"
+            ? "1px solid color-mix(in srgb, var(--text-error) 40%, transparent)"
+            : "1px solid color-mix(in srgb, var(--text-warning) 40%, transparent)"
           : "1px solid var(--container-border)",
         background: "var(--surface-container-low)",
       }}
@@ -670,22 +662,21 @@ function Section({
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between p-3.5 active:scale-[0.99] transition-transform"
-        style={{ background: "rgba(0,0,0,0)" }}
+        style={{ background: "transparent" }}
       >
         <div className="flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center"
             style={{
-              background: `color-mix(in srgb, ${color} 14%, rgba(0,0,0,0))`,
+              background: `color-mix(in srgb, ${color} 14%, transparent)`,
               color,
             }}
           >
             {icon}
           </div>
           <span
-            className="type-data"
+            className="type-data-field"
             style={{
-              fontSize: "var(--font-size-lg)",
               fontWeight: "var(--weight-semibold)" as any,
               color: "var(--text-default)",
             }}
@@ -695,14 +686,14 @@ function Section({
           {hasIssues && (
             <div className="flex items-center gap-1">
               {issueCount.errors > 0 && (
-                <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--text-error) 15%, rgba(0,0,0,0))", color: "var(--text-error)" }}>
+                <Badge size="xs" tone="error">
                   {issueCount.errors}
-                </span>
+                </Badge>
               )}
               {issueCount.warnings > 0 && (
-                <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--text-warning) 15%, rgba(0,0,0,0))", color: "var(--text-warning)" }}>
+                <Badge size="xs" tone="warning">
                   {issueCount.warnings}
-                </span>
+                </Badge>
               )}
             </div>
           )}
@@ -761,13 +752,11 @@ function TagsEditor({
       <FieldLabel>{label}</FieldLabel>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {tags.map((t, i) => (
-          <span
+          <Badge
             key={`${t}-${i}`}
-            className="badge-base flex items-center gap-1.5"
-            style={{
-              background: "color-mix(in srgb, var(--text-muted) 15%, rgba(0,0,0,0))",
-              color: "var(--text-default)",
-            }}
+            className="flex items-center gap-1.5"
+            color="var(--text-default)"
+            background="color-mix(in srgb, var(--text-muted) 15%, transparent)"
           >
             {t}
             <button
@@ -777,7 +766,7 @@ function TagsEditor({
             >
               <X size={10} style={{ color: "var(--text-muted)" }} />
             </button>
-          </span>
+          </Badge>
         ))}
       </div>
       <div className="flex gap-2">
@@ -787,12 +776,11 @@ function TagsEditor({
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), add())}
           placeholder="Aggiungi..."
-          className="flex-1 p-2 rounded-lg type-data"
+          className="flex-1 p-2 rounded-lg type-data-base"
           style={{
             background: "var(--container-bg)",
             border: "1px solid var(--container-border)",
             color: "var(--text-default)",
-            fontSize: "var(--font-size-base)",
           }}
         />
         <button
@@ -816,9 +804,8 @@ function ScoreBar({ label, value, color }: { label: string; value: number; color
   return (
     <div className="flex items-center gap-2">
       <span
-        className="type-data"
+        className="type-data-sm"
         style={{
-          fontSize: "var(--font-size-sm)",
           color: "var(--text-muted)",
           minWidth: 80,
         }}
@@ -838,9 +825,8 @@ function ScoreBar({ label, value, color }: { label: string; value: number; color
         />
       </div>
       <span
-        className="type-data"
+        className="type-data-base"
         style={{
-          fontSize: "var(--font-size-base)",
           fontWeight: "var(--weight-bold)" as any,
           color,
           fontFeatureSettings: "'tnum'",
@@ -1041,18 +1027,17 @@ function CodeBlock({ code, label, maxHeight = 300 }: { code: string; label: stri
         }}
       >
         <span
-          className="type-data"
-          style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "var(--tracking-caps)" }}
+          className="type-data-xs"
+          style={{ color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "var(--tracking-caps)" }}
         >
           {label}
         </span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1 px-2 py-1 rounded-lg type-data active:scale-95 transition-transform"
+          className="flex items-center gap-1 px-2 py-1 rounded-lg type-data-xs active:scale-95 transition-transform"
           style={{
-            fontSize: "var(--font-size-xs)",
             fontWeight: "var(--weight-semibold)" as any,
-            background: copied ? "color-mix(in srgb, var(--cta) 15%, rgba(0,0,0,0))" : "rgba(0,0,0,0)",
+            background: copied ? "color-mix(in srgb, var(--cta) 15%, transparent)" : "transparent",
             color: copied ? "var(--cta)" : "var(--text-muted)",
             border: "1px solid " + (copied ? "var(--cta)" : "var(--container-border)"),
           }}
@@ -1063,11 +1048,9 @@ function CodeBlock({ code, label, maxHeight = 300 }: { code: string; label: stri
         </button>
       </div>
       <pre
-        className="overflow-auto p-3"
+        className="overflow-auto p-3 type-code-sm"
         style={{
           background: "var(--container-bg)",
-          fontSize: "var(--font-size-sm)",
-          fontFamily: "'DM Mono', monospace",
           lineHeight: "var(--leading-relaxed)",
           color: "var(--text-default)",
           maxHeight,
@@ -1103,28 +1086,28 @@ function PipelineNode({
       className="flex items-center gap-2.5 px-3 py-2 rounded-xl flex-shrink-0"
       style={{
         background: active
-          ? `color-mix(in srgb, ${color} 10%, rgba(0,0,0,0))`
+          ? `color-mix(in srgb, ${color} 10%, transparent)`
           : "var(--surface-container-low)",
-        border: `1px solid ${active ? `color-mix(in srgb, ${color} 30%, rgba(0,0,0,0))` : "var(--container-border)"}`,
+        border: `1px solid ${active ? `color-mix(in srgb, ${color} 30%, transparent)` : "var(--container-border)"}`,
       }}
     >
       <div
         className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
         style={{
-          background: `color-mix(in srgb, ${color} 15%, rgba(0,0,0,0))`,
+          background: `color-mix(in srgb, ${color} 15%, transparent)`,
           color,
         }}
       >
         {icon}
       </div>
       <div className="min-w-0">
-        <div className="type-data" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)", whiteSpace: "nowrap" }}>
+        <div className="type-data-sm" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)", whiteSpace: "nowrap" }}>
           {label}
           {count !== undefined && (
-            <span style={{ fontFeatureSettings: "'tnum'", color, marginLeft: 4 }}>{count}</span>
+            <span style={{ fontFeatureSettings: "'tnum'", color, marginLeft: "var(--space-1)" }}>{count}</span>
           )}
         </div>
-        <div className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", whiteSpace: "nowrap" }}>
+        <div className="type-data-xs" style={{ color: "var(--text-muted)", whiteSpace: "nowrap" }}>
           {sublabel}
         </div>
       </div>
@@ -1362,7 +1345,7 @@ const DIFF_SECTION_LABELS: Record<DiffRow["section"], { label: string; icon: Rea
 
 /* ═══ MAIN EXPORT ═══ */
 export function StyleEditorTab() {
-  const { stylesOverride, setStylesOverride, isOverrideActive } = useStylesOverride();
+  const { stylesOverride, setStylesOverride } = useStylesOverride();
 
   /* Local editing state — initialized from context or STYLES_DB */
   const [stylesMap, setStylesMapLocal] = useState<Record<string, PizzaStyle>>(() =>
@@ -1644,8 +1627,8 @@ export function StyleEditorTab() {
   return (
     <div className="flex flex-col gap-5">
       {/* ═══ Live Sync Banner ═══ */}
-      <div
-        className="surface-card p-4 flex items-center justify-between"
+      <Surface
+        className="p-4 flex items-center justify-between"
         style={{
           borderLeft: liveSync
             ? "3px solid var(--cta)"
@@ -1662,9 +1645,8 @@ export function StyleEditorTab() {
           />
           <div>
             <div
-              className="type-data"
+              className="type-data-field"
               style={{
-                fontSize: "var(--font-size-lg)",
                 fontWeight: "var(--weight-semibold)" as any,
                 color: "var(--text-default)",
               }}
@@ -1672,9 +1654,8 @@ export function StyleEditorTab() {
               {liveSync ? "Sincronizzazione attiva" : "Modalita isolata"}
             </div>
             <div
-              className="type-data"
+              className="type-data-sm"
               style={{
-                fontSize: "var(--font-size-sm)",
                 color: "var(--text-muted)",
               }}
             >
@@ -1692,12 +1673,11 @@ export function StyleEditorTab() {
           {liveSync ? (
             <button
               onClick={pullFromApp}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl type-data active:scale-95 transition-transform"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl type-data-base active:scale-95 transition-transform"
               style={{
-                background: "color-mix(in srgb, var(--text-error) 10%, rgba(0,0,0,0))",
+                background: "color-mix(in srgb, var(--text-error) 10%, transparent)",
                 color: "var(--text-error)",
-                border: "1px solid color-mix(in srgb, var(--text-error) 25%, rgba(0,0,0,0))",
-                fontSize: "var(--font-size-base)",
+                border: "1px solid color-mix(in srgb, var(--text-error) 25%, transparent)",
                 fontWeight: "var(--weight-semibold)" as any,
               }}
               aria-label="Disattiva sincronizzazione"
@@ -1707,12 +1687,11 @@ export function StyleEditorTab() {
           ) : (
             <button
               onClick={pushToApp}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl type-data active:scale-95 transition-transform"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl type-data-base active:scale-95 transition-transform"
               style={{
                 background: "var(--cta)",
                 color: "white",
                 border: "none",
-                fontSize: "var(--font-size-base)",
                 fontWeight: "var(--weight-semibold)" as any,
               }}
               aria-label="Attiva sincronizzazione con app"
@@ -1721,7 +1700,7 @@ export function StyleEditorTab() {
             </button>
           )}
         </div>
-      </div>
+      </Surface>
 
       {/* ═══ MODE SELECTOR ═══ */}
       <div className="flex gap-1.5 p-1.5 rounded-2xl" style={{ background: "var(--surface-container)" }}>
@@ -1732,27 +1711,26 @@ export function StyleEditorTab() {
           <button
             key={m.id}
             onClick={() => setEditorMode(m.id)}
-            className="flex items-center gap-2 flex-1 justify-center px-4 py-3 rounded-xl type-data active:scale-[0.98] transition-transform"
+            className="flex items-center gap-2 flex-1 justify-center px-4 py-3 rounded-xl type-data-base active:scale-[0.98] transition-transform"
             style={{
-              background: editorMode === m.id ? "var(--container-page)" : "rgba(0,0,0,0)",
+              background: editorMode === m.id ? "var(--container-page)" : "transparent",
               color: editorMode === m.id ? "var(--text-default)" : "var(--text-muted)",
               fontWeight: editorMode === m.id ? "var(--weight-semibold)" : "var(--weight-medium)" as any,
-              fontSize: "var(--font-size-base)",
               boxShadow: editorMode === m.id ? "var(--shadow-sm)" : "none",
-              borderBottom: editorMode === m.id ? `2px solid ${m.color}` : "2px solid rgba(0,0,0,0)",
+              borderBottom: editorMode === m.id ? `2px solid ${m.color}` : "2px solid transparent",
             }}
           >
             <span style={{ color: editorMode === m.id ? m.color : "var(--text-muted)" }}>{m.icon}</span>
             {m.label}
             {m.id === "tools" && (stylesSummary.modified > 0 || stylesSummary.customs > 0) && (
-              <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--tertiary) 15%, rgba(0,0,0,0))", color: "var(--tertiary)" }}>
+              <Badge size="xs" tone="tertiary">
                 {stylesSummary.modified + stylesSummary.customs}
-              </span>
+              </Badge>
             )}
             {m.id === "edit" && validationIssues.length > 0 && (
-              <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: errorCount > 0 ? "color-mix(in srgb, var(--text-error) 15%, rgba(0,0,0,0))" : "color-mix(in srgb, var(--text-warning) 15%, rgba(0,0,0,0))", color: errorCount > 0 ? "var(--text-error)" : "var(--text-warning)" }}>
+              <Badge size="xs" tone={errorCount > 0 ? "error" : "warning"}>
                 {validationIssues.length}
-              </span>
+              </Badge>
             )}
           </button>
         ))}
@@ -1775,33 +1753,33 @@ export function StyleEditorTab() {
         <div
           className="flex items-center gap-3 px-4 py-2.5 rounded-xl"
           style={{
-            background: "color-mix(in srgb, var(--tertiary) 8%, rgba(0,0,0,0))",
-            border: "1px solid color-mix(in srgb, var(--tertiary) 20%, rgba(0,0,0,0))",
+            background: "color-mix(in srgb, var(--tertiary) 8%, transparent)",
+            border: "1px solid color-mix(in srgb, var(--tertiary) 20%, transparent)",
           }}
         >
           <div className="flex items-center gap-2 flex-1 flex-wrap">
-            <span className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>
+            <span className="type-data-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>
               {stylesSummary.total} stili totali:
             </span>
-            <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--cta) 15%, rgba(0,0,0,0))", color: "var(--cta)" }}>
+            <Badge size="xs" tone="cta">
               {stylesSummary.originals} originali
-            </span>
+            </Badge>
             {stylesSummary.modified > 0 && (
-              <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--tertiary) 15%, rgba(0,0,0,0))", color: "var(--tertiary)" }}>
+              <Badge size="xs" tone="tertiary">
                 {stylesSummary.modified} modificati
-              </span>
+              </Badge>
             )}
             {stylesSummary.customs > 0 && (
-              <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--primary) 15%, rgba(0,0,0,0))", color: "var(--primary)" }}>
+              <Badge size="xs" tone="primary">
                 {stylesSummary.customs} custom
-              </span>
+              </Badge>
             )}
           </div>
           {stylesSummary.modified > 0 && (
             <button
               onClick={resetAll}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg type-data active:scale-95 transition-transform flex-shrink-0"
-              style={{ fontSize: "var(--font-size-xs)", fontWeight: "var(--weight-semibold)" as any, background: "color-mix(in srgb, var(--text-error) 10%, rgba(0,0,0,0))", color: "var(--text-error)", border: "1px solid color-mix(in srgb, var(--text-error) 20%, rgba(0,0,0,0))" }}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg type-data-xs active:scale-95 transition-transform flex-shrink-0"
+              style={{ fontWeight: "var(--weight-semibold)" as any, background: "color-mix(in srgb, var(--text-error) 10%, transparent)", color: "var(--text-error)", border: "1px solid color-mix(in srgb, var(--text-error) 20%, transparent)" }}
               aria-label="Ripristina tutti gli stili originali"
             >
               <RotateCcw size={10} /> Reset tutti
@@ -1813,23 +1791,23 @@ export function StyleEditorTab() {
       {/* ═══ DB Pipeline + Schema ═══ */}
       <div className="flex flex-col gap-3">
         {/* DB Pipeline visualization */}
-        <div
-          className="surface-card p-4"
+        <Surface
+          className="p-4"
           style={{ borderLeft: "3px solid var(--secondary)" }}
         >
           <button
             onClick={() => setShowPipeline(!showPipeline)}
             className="w-full flex items-center justify-between active:scale-[0.99] transition-transform"
-            style={{ background: "rgba(0,0,0,0)" }}
+            style={{ background: "transparent" }}
           >
             <div className="flex items-center gap-2.5">
               <Link2 size={14} style={{ color: "var(--secondary)" }} />
-              <span className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+              <span className="type-data-field" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                 Pipeline dati
               </span>
-              <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: liveSync ? "color-mix(in srgb, var(--cta) 15%, rgba(0,0,0,0))" : "color-mix(in srgb, var(--text-muted) 15%, rgba(0,0,0,0))", color: liveSync ? "var(--cta)" : "var(--text-muted)" }}>
+              <Badge size="xs" tone={liveSync ? "cta" : "muted"}>
                 {liveSync ? "LIVE" : "OFF"}
-              </span>
+              </Badge>
             </div>
             <motion.div
               animate={{ rotate: showPipeline ? 180 : 0 }}
@@ -1849,7 +1827,7 @@ export function StyleEditorTab() {
               >
                 <div className="pt-4">
                   {/* Pipeline diagram */}
-                  <div className="flex items-center gap-1.5 overflow-x-auto pb-2" style={{ scrollbarWidth: "thin" }}>
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-2" style={{ scrollbarWidth: "var(--scrollbar-width-thin)" as any }}>
                     <PipelineNode
                       icon={<Database size={13} />}
                       label="STYLES_DB"
@@ -1891,17 +1869,17 @@ export function StyleEditorTab() {
                     style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}
                   >
                     <div className="flex flex-col gap-1.5">
-                      <div className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>
+                      <div className="type-data-sm" style={{ color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>
                         <span style={{ fontWeight: "var(--weight-semibold)" as any }}>Come funziona:</span>{" "}
                         I {Object.keys(STYLES_DB).length} stili in <span className="font-mono" style={{ color: "var(--secondary)" }}>STYLES_DB</span> sono
                         il database immutabile di riferimento (pizza-engine.ts). L'editor carica una copia locale modificabile.
                       </div>
-                      <div className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>
+                      <div className="type-data-sm" style={{ color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>
                         <span style={{ fontWeight: "var(--weight-semibold)" as any }}>Sync attivo:</span>{" "}
                         ogni modifica viene pushata al <span className="font-mono" style={{ color: "var(--cta)" }}>StylesOverrideContext</span>,
                         che la Home e RecommendedStyles leggono al posto di STYLES_DB. Persistenza in localStorage.
                       </div>
-                      <div className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>
+                      <div className="type-data-sm" style={{ color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>
                         <span style={{ fontWeight: "var(--weight-semibold)" as any }}>Ripristino:</span>{" "}
                         ogni stile core ha il bottone "Ripristina originale" che lo riporta alla versione in STYLES_DB.
                         "Reset tutti" ripristina tutti i core ma preserva i custom.
@@ -1912,21 +1890,21 @@ export function StyleEditorTab() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Surface>
 
         {/* Schema & Instructions */}
-        <div
-          className="surface-card p-4"
+        <Surface
+          className="p-4"
           style={{ borderLeft: "3px solid var(--tertiary)" }}
         >
           <button
             onClick={() => setShowSchema(!showSchema)}
             className="w-full flex items-center justify-between active:scale-[0.99] transition-transform"
-            style={{ background: "rgba(0,0,0,0)" }}
+            style={{ background: "transparent" }}
           >
             <div className="flex items-center gap-2.5">
               <FileJson size={14} style={{ color: "var(--tertiary)" }} />
-              <span className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+              <span className="type-data-field" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                 Schema JSON &amp; Istruzioni
               </span>
             </div>
@@ -1949,8 +1927,8 @@ export function StyleEditorTab() {
                 <div className="pt-4 flex flex-col gap-4">
                   {/* Schema block */}
                   <div>
-                    <div className="type-data mb-2" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
-                      <BookOpen size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: 6 }} />
+                    <div className="type-data-sm mb-2" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                      <BookOpen size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: "var(--space-1-5)" }} />
                       Schema PizzaStyle completo
                     </div>
                     <CodeBlock code={PIZZA_STYLE_SCHEMA} label="schema — PizzaStyle" maxHeight={320} />
@@ -1958,8 +1936,8 @@ export function StyleEditorTab() {
 
                   {/* Validation rules summary */}
                   <div>
-                    <div className="type-data mb-2" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
-                      <AlertTriangle size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: 6 }} />
+                    <div className="type-data-sm mb-2" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                      <AlertTriangle size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: "var(--space-1-5)" }} />
                       Regole di coerenza (validate automaticamente)
                     </div>
                     <div
@@ -1989,19 +1967,17 @@ export function StyleEditorTab() {
                           ]},
                         ].map(({ sev, rules }) => (
                           <div key={sev} className="flex flex-col gap-0.5 mb-1.5">
-                            <span
-                              className="badge-base"
+                            <Badge
+                              tone={sev === "error" ? "error" : sev === "warn" ? "warning" : "cta"}
+                              size="xs"
                               style={{
-                                fontSize: "var(--font-size-xs)",
                                 alignSelf: "flex-start",
-                                background: sev === "error" ? "color-mix(in srgb, var(--text-error) 15%, rgba(0,0,0,0))" : sev === "warn" ? "color-mix(in srgb, var(--text-warning) 15%, rgba(0,0,0,0))" : "color-mix(in srgb, var(--cta) 15%, rgba(0,0,0,0))",
-                                color: sev === "error" ? "var(--text-error)" : sev === "warn" ? "var(--text-warning)" : "var(--cta)",
                               }}
                             >
                               {sev === "error" ? "ERRORI" : sev === "warn" ? "WARNING" : "INFO"}
-                            </span>
+                            </Badge>
                             {rules.map((r, i) => (
-                              <div key={i} className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", paddingLeft: 8, lineHeight: "var(--leading-relaxed)" }}>
+                              <div key={i} className="type-data-sm" style={{ color: "var(--text-muted)", paddingLeft: "var(--space-2)", lineHeight: "var(--leading-relaxed)" }}>
                                 • {r}
                               </div>
                             ))}
@@ -2013,8 +1989,8 @@ export function StyleEditorTab() {
 
                   {/* Example */}
                   <div>
-                    <div className="type-data mb-2" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
-                      <Database size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: 6 }} />
+                    <div className="type-data-sm mb-2" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                      <Database size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: "var(--space-1-5)" }} />
                       Esempio completo — Pizza Fritta Napoletana
                     </div>
                     <CodeBlock code={PIZZA_STYLE_EXAMPLE} label="esempio — pizza_fritta_napoletana" maxHeight={280} />
@@ -2022,13 +1998,13 @@ export function StyleEditorTab() {
 
                   {/* AI Prompt */}
                   <div>
-                    <div className="type-data mb-2" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
-                      <Zap size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: 6 }} />
+                    <div className="type-data-sm mb-2" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                      <Zap size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: "var(--space-1-5)" }} />
                       Prompt per creare nuovi stili (AI-ready)
                     </div>
                     <div
-                      className="type-data mb-2 p-3 rounded-lg"
-                      style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", background: "color-mix(in srgb, var(--tertiary) 5%, rgba(0,0,0,0))", border: "1px solid color-mix(in srgb, var(--tertiary) 15%, rgba(0,0,0,0))", lineHeight: "var(--leading-relaxed)" }}
+                      className="type-data-sm mb-2 p-3 rounded-lg"
+                      style={{ color: "var(--text-muted)", background: "color-mix(in srgb, var(--tertiary) 5%, transparent)", border: "1px solid color-mix(in srgb, var(--tertiary) 15%, transparent)", lineHeight: "var(--leading-relaxed)" }}
                     >
                       Copia questo prompt, incollalo in ChatGPT/Claude/Gemini e sostituisci "[DESCRIVI QUI LO STILE]" con la pizza desiderata. Il JSON risultante può essere importato direttamente nell'editor.
                     </div>
@@ -2037,8 +2013,8 @@ export function StyleEditorTab() {
 
                   {/* Current style export */}
                   <div>
-                    <div className="type-data mb-2" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
-                      <Copy size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: 6 }} />
+                    <div className="type-data-sm mb-2" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                      <Copy size={12} style={{ display: "inline", verticalAlign: "-1px", marginRight: "var(--space-1-5)" }} />
                       Stile corrente come JSON (singolo)
                     </div>
                     <CodeBlock
@@ -2058,21 +2034,21 @@ export function StyleEditorTab() {
                           ? "2px solid var(--text-error)"
                           : "2px dashed var(--outline-variant)",
                       background: smartImportDone
-                        ? "color-mix(in srgb, var(--cta) 5%, rgba(0,0,0,0))"
+                        ? "color-mix(in srgb, var(--cta) 5%, transparent)"
                         : "var(--surface-container-low)",
                     }}
                   >
                     <div className="p-4">
                       <div className="flex items-center gap-2 mb-3">
                         <Sparkles size={14} style={{ color: "var(--tertiary)" }} />
-                        <span className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                        <span className="type-data-field" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                           Importa stile da JSON
                         </span>
                       </div>
 
                       <div
-                        className="type-data mb-3 p-2.5 rounded-lg"
-                        style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", background: "var(--container-bg)", lineHeight: "var(--leading-relaxed)", border: "1px solid var(--container-border)" }}
+                        className="type-data-sm mb-3 p-2.5 rounded-lg"
+                        style={{ color: "var(--text-muted)", background: "var(--container-bg)", lineHeight: "var(--leading-relaxed)", border: "1px solid var(--container-border)" }}
                       >
                         Incolla il JSON generato dall'AI (o scritto a mano). Lo parser gestisce automaticamente: code fences markdown, wrapper oggetto, array, campi mancanti, ID duplicati.
                       </div>
@@ -2082,12 +2058,11 @@ export function StyleEditorTab() {
                         <div className="flex gap-2">
                           <button
                             onClick={handleSmartImportPaste}
-                            className="flex items-center gap-1.5 px-3 py-2 rounded-lg type-data active:scale-95 transition-transform"
+                            className="flex items-center gap-1.5 px-3 py-2 rounded-lg type-data-base active:scale-95 transition-transform"
                             style={{
-                              background: "color-mix(in srgb, var(--tertiary) 10%, rgba(0,0,0,0))",
+                              background: "color-mix(in srgb, var(--tertiary) 10%, transparent)",
                               color: "var(--tertiary)",
-                              border: "1px solid color-mix(in srgb, var(--tertiary) 25%, rgba(0,0,0,0))",
-                              fontSize: "var(--font-size-base)",
+                              border: "1px solid color-mix(in srgb, var(--tertiary) 25%, transparent)",
                               fontWeight: "var(--weight-semibold)" as any,
                             }}
                             aria-label="Incolla dagli appunti"
@@ -2097,12 +2072,11 @@ export function StyleEditorTab() {
                           {smartImportJson && (
                             <button
                               onClick={() => { setSmartImportJson(""); setSmartImportResult(null); setSmartImportDone(false); }}
-                              className="flex items-center gap-1 px-2.5 py-2 rounded-lg type-data active:scale-95 transition-transform"
+                              className="flex items-center gap-1 px-2.5 py-2 rounded-lg type-data-base active:scale-95 transition-transform"
                               style={{
                                 background: "var(--container-bg)",
                                 color: "var(--text-muted)",
                                 border: "1px solid var(--container-border)",
-                                fontSize: "var(--font-size-base)",
                               }}
                               aria-label="Pulisci"
                             >
@@ -2119,13 +2093,11 @@ export function StyleEditorTab() {
                           }}
                           placeholder='{ "id": "...", "name": "...", "family": "...", ... }'
                           rows={5}
-                          className="w-full p-3 rounded-lg type-data"
+                          className="w-full p-3 rounded-lg type-code-sm"
                           style={{
                             background: "var(--container-bg)",
                             border: "1px solid var(--container-border)",
                             color: "var(--text-default)",
-                            fontSize: "var(--font-size-sm)",
-                            fontFamily: "'DM Mono', monospace",
                             resize: "vertical",
                             lineHeight: "var(--leading-relaxed)",
                           }}
@@ -2137,12 +2109,11 @@ export function StyleEditorTab() {
                         <div className="mt-3">
                           <button
                             onClick={handleSmartImportParse}
-                            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl type-data active:scale-95 transition-transform"
+                            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl type-data-base active:scale-95 transition-transform"
                             style={{
                               background: "var(--tertiary)",
                               color: "white",
                               border: "none",
-                              fontSize: "var(--font-size-base)",
                               fontWeight: "var(--weight-semibold)" as any,
                             }}
                             aria-label="Analizza e valida JSON"
@@ -2167,10 +2138,10 @@ export function StyleEditorTab() {
                               {!smartImportResult.ok && (
                                 <div
                                   className="flex items-start gap-2 p-3 rounded-lg"
-                                  style={{ background: "color-mix(in srgb, var(--text-error) 8%, rgba(0,0,0,0))", border: "1px solid color-mix(in srgb, var(--text-error) 20%, rgba(0,0,0,0))" }}
+                                  style={{ background: "color-mix(in srgb, var(--text-error) 8%, transparent)", border: "1px solid color-mix(in srgb, var(--text-error) 20%, transparent)" }}
                                 >
-                                  <CircleAlert size={14} style={{ color: "var(--text-error)", flexShrink: 0, marginTop: 2 }} />
-                                  <span className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-error)", lineHeight: "var(--leading-relaxed)" }}>
+                                  <CircleAlert size={14} style={{ color: "var(--text-error)", flexShrink: 0, marginTop: "var(--space-0-5)" }} />
+                                  <span className="type-data-sm" style={{ color: "var(--text-error)", lineHeight: "var(--leading-relaxed)" }}>
                                     {smartImportResult.error}
                                   </span>
                                 </div>
@@ -2180,17 +2151,17 @@ export function StyleEditorTab() {
                               {smartImportResult.autoFixes.length > 0 && (
                                 <div
                                   className="p-3 rounded-lg"
-                                  style={{ background: "color-mix(in srgb, var(--cta) 5%, rgba(0,0,0,0))", border: "1px solid color-mix(in srgb, var(--cta) 15%, rgba(0,0,0,0))" }}
+                                  style={{ background: "color-mix(in srgb, var(--cta) 5%, transparent)", border: "1px solid color-mix(in srgb, var(--cta) 15%, transparent)" }}
                                 >
                                   <div className="flex items-center gap-1.5 mb-1.5">
                                     <Zap size={11} style={{ color: "var(--cta)" }} />
-                                    <span className="type-data" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--cta)" }}>
+                                    <span className="type-data-sm" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--cta)" }}>
                                       {smartImportResult.autoFixes.length} correzioni automatiche
                                     </span>
                                   </div>
                                   <div className="flex flex-col gap-0.5">
                                     {smartImportResult.autoFixes.map((f, i) => (
-                                      <div key={i} className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", paddingLeft: 4, fontFamily: "'DM Mono', monospace" }}>
+                                      <div key={i} className="type-data-xs" style={{ color: "var(--text-muted)", paddingLeft: "var(--space-1)", fontFamily: "var(--font-mono)" }}>
                                         {f}
                                       </div>
                                     ))}
@@ -2202,16 +2173,16 @@ export function StyleEditorTab() {
                               {smartImportResult.warnings.length > 0 && (
                                 <div
                                   className="p-3 rounded-lg"
-                                  style={{ background: "color-mix(in srgb, var(--text-warning) 5%, rgba(0,0,0,0))", border: "1px solid color-mix(in srgb, var(--text-warning) 15%, rgba(0,0,0,0))" }}
+                                  style={{ background: "color-mix(in srgb, var(--text-warning) 5%, transparent)", border: "1px solid color-mix(in srgb, var(--text-warning) 15%, transparent)" }}
                                 >
                                   <div className="flex items-center gap-1.5 mb-1">
                                     <AlertTriangle size={11} style={{ color: "var(--text-warning)" }} />
-                                    <span className="type-data" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-warning)" }}>
+                                    <span className="type-data-sm" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-warning)" }}>
                                       Avvisi
                                     </span>
                                   </div>
                                   {smartImportResult.warnings.map((w, i) => (
-                                    <div key={i} className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", paddingLeft: 4 }}>
+                                    <div key={i} className="type-data-xs" style={{ color: "var(--text-muted)", paddingLeft: "var(--space-1)" }}>
                                       • {w}
                                     </div>
                                   ))}
@@ -2222,28 +2193,27 @@ export function StyleEditorTab() {
                               {smartImportResult.ok && smartImportResult.style && !smartImportDone && (
                                 <div
                                   className="p-3 rounded-lg"
-                                  style={{ background: "color-mix(in srgb, var(--cta) 5%, rgba(0,0,0,0))", border: "1px solid color-mix(in srgb, var(--cta) 20%, rgba(0,0,0,0))" }}
+                                  style={{ background: "color-mix(in srgb, var(--cta) 5%, transparent)", border: "1px solid color-mix(in srgb, var(--cta) 20%, transparent)" }}
                                 >
                                   <div className="flex items-center justify-between mb-2">
                                     <div className="flex items-center gap-2">
-                                      <span style={{ fontSize: "1.25rem" }}>{smartImportResult.style.emoji}</span>
+                                      <span style={{ fontSize: "var(--font-size-5xl)" }}>{smartImportResult.style.emoji}</span>
                                       <div>
-                                        <div className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>
+                                        <div className="type-data-field" style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>
                                           {smartImportResult.style.name}
                                         </div>
-                                        <div className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+                                        <div className="type-data-sm" style={{ color: "var(--text-muted)" }}>
                                           {smartImportResult.style.family} · {smartImportResult.style.id}
                                         </div>
                                       </div>
                                     </div>
                                     <button
                                       onClick={handleSmartImportApply}
-                                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl type-data active:scale-95 transition-transform"
+                                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl type-data-base active:scale-95 transition-transform"
                                       style={{
                                         background: "var(--cta)",
                                         color: "white",
                                         border: "none",
-                                        fontSize: "var(--font-size-base)",
                                         fontWeight: "var(--weight-bold)" as any,
                                       }}
                                       aria-label="Importa stile e seleziona"
@@ -2260,8 +2230,8 @@ export function StyleEditorTab() {
                                       { l: "Ferm.", v: `${smartImportResult.style.dough.fermentation_hours_range[0]}-${smartImportResult.style.dough.fermentation_hours_range[1]}h` },
                                     ].map((m) => (
                                       <div key={m.l} className="p-2 rounded-lg" style={{ background: "var(--container-bg)" }}>
-                                        <div className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>{m.l}</div>
-                                        <div className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)", fontFeatureSettings: "'tnum'" }}>{m.v}</div>
+                                        <div className="type-data-xs" style={{ color: "var(--text-muted)" }}>{m.l}</div>
+                                        <div className="type-data-field" style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)", fontFeatureSettings: "'tnum'" }}>{m.v}</div>
                                       </div>
                                     ))}
                                   </div>
@@ -2272,10 +2242,10 @@ export function StyleEditorTab() {
                               {smartImportDone && (
                                 <div
                                   className="flex items-center gap-2 p-3 rounded-lg"
-                                  style={{ background: "color-mix(in srgb, var(--cta) 10%, rgba(0,0,0,0))", border: "1px solid var(--cta)" }}
+                                  style={{ background: "color-mix(in srgb, var(--cta) 10%, transparent)", border: "1px solid var(--cta)" }}
                                 >
                                   <Check size={14} style={{ color: "var(--cta)" }} />
-                                  <span className="type-data" style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, color: "var(--cta)" }}>
+                                  <span className="type-data-base" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--cta)" }}>
                                     Stile importato e selezionato! Puoi modificarlo nell'editor.
                                   </span>
                                 </div>
@@ -2290,28 +2260,28 @@ export function StyleEditorTab() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Surface>
       </div>
 
       {/* ═══ Diff Viewer — only for modified core styles ═══ */}
       {currentStatus === "modified" && changedRows.length > 0 && (
-        <div
-          className="surface-card p-4"
+        <Surface
+          className="p-4"
           style={{ borderLeft: "3px solid var(--tertiary)" }}
         >
           <button
             onClick={() => setShowDiff(!showDiff)}
             className="w-full flex items-center justify-between active:scale-[0.99] transition-transform"
-            style={{ background: "rgba(0,0,0,0)" }}
+            style={{ background: "transparent" }}
           >
             <div className="flex items-center gap-2.5">
               <GitCompareArrows size={14} style={{ color: "var(--tertiary)" }} />
-              <span className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+              <span className="type-data-field" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                 Diff vs originale
               </span>
-              <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--tertiary) 15%, rgba(0,0,0,0))", color: "var(--tertiary)" }}>
+              <Badge size="xs" tone="tertiary">
                 {changedRows.length} campi modificati
-              </span>
+              </Badge>
             </div>
             <motion.div
               animate={{ rotate: showDiff ? 180 : 0 }}
@@ -2338,12 +2308,16 @@ export function StyleEditorTab() {
                       <div key={section}>
                         <div className="flex items-center gap-1.5 mb-2">
                           <span style={{ color: "var(--text-muted)" }}>{meta.icon}</span>
-                          <span className="type-data" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                          <span className="type-data-sm" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                             {meta.label}
                           </span>
-                          <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--tertiary) 12%, rgba(0,0,0,0))", color: "var(--tertiary)" }}>
+                          <Badge
+                            size="xs"
+                            tone="tertiary"
+                            background="color-mix(in srgb, var(--tertiary) 12%, transparent)"
+                          >
                             {sectionRows.length}
-                          </span>
+                          </Badge>
                         </div>
                         <div
                           className="rounded-xl overflow-hidden"
@@ -2358,9 +2332,9 @@ export function StyleEditorTab() {
                               borderBottom: "1px solid var(--container-border)",
                             }}
                           >
-                            <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "var(--tracking-caps)" }}>Campo</span>
-                            <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "var(--tracking-caps)" }}>Originale</span>
-                            <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "var(--tracking-caps)" }}>Corrente</span>
+                            <span className="type-data-xs" style={{ color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "var(--tracking-caps)" }}>Campo</span>
+                            <span className="type-data-xs" style={{ color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "var(--tracking-caps)" }}>Originale</span>
+                            <span className="type-data-xs" style={{ color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "var(--tracking-caps)" }}>Corrente</span>
                           </div>
                           {/* Rows */}
                           {sectionRows.map((row, i) => (
@@ -2373,32 +2347,28 @@ export function StyleEditorTab() {
                                 borderBottom: i < sectionRows.length - 1 ? "1px solid var(--container-border)" : "none",
                               }}
                             >
-                              <span className="type-data" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                              <span className="type-data-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
                                 {row.label}
                               </span>
                               <span
-                                className="type-data"
+                                className="type-code-sm"
                                 style={{
-                                  fontSize: "var(--font-size-sm)",
-                                  fontFamily: "'DM Mono', monospace",
                                   color: "var(--text-error)",
-                                  background: "color-mix(in srgb, var(--text-error) 6%, rgba(0,0,0,0))",
+                                  background: "color-mix(in srgb, var(--text-error) 6%, transparent)",
                                   padding: "2px 6px",
                                   borderRadius: 6,
                                   wordBreak: "break-all",
                                   textDecoration: "line-through",
-                                  textDecorationColor: "color-mix(in srgb, var(--text-error) 40%, rgba(0,0,0,0))",
+                                  textDecorationColor: "color-mix(in srgb, var(--text-error) 40%, transparent)",
                                 }}
                               >
                                 {row.original}
                               </span>
                               <span
-                                className="type-data"
+                                className="type-code-sm"
                                 style={{
-                                  fontSize: "var(--font-size-sm)",
-                                  fontFamily: "'DM Mono', monospace",
                                   color: "var(--cta)",
-                                  background: "color-mix(in srgb, var(--cta) 6%, rgba(0,0,0,0))",
+                                  background: "color-mix(in srgb, var(--cta) 6%, transparent)",
                                   padding: "2px 6px",
                                   borderRadius: 6,
                                   wordBreak: "break-all",
@@ -2417,12 +2387,11 @@ export function StyleEditorTab() {
                   <div className="flex items-center gap-2 pt-1">
                     <button
                       onClick={resetStyle}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl type-data active:scale-95 transition-transform"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl type-data-base active:scale-95 transition-transform"
                       style={{
-                        background: "color-mix(in srgb, var(--text-error) 8%, rgba(0,0,0,0))",
+                        background: "color-mix(in srgb, var(--text-error) 8%, transparent)",
                         color: "var(--text-error)",
-                        border: "1px solid color-mix(in srgb, var(--text-error) 20%, rgba(0,0,0,0))",
-                        fontSize: "var(--font-size-base)",
+                        border: "1px solid color-mix(in srgb, var(--text-error) 20%, transparent)",
                         fontWeight: "var(--weight-semibold)" as any,
                       }}
                       aria-label="Ripristina tutti i campi all'originale"
@@ -2437,12 +2406,11 @@ export function StyleEditorTab() {
                         }, {} as Record<string, { da: string; a: string }>);
                         copyToClipboard(JSON.stringify(diffJson, null, 2));
                       }}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl type-data active:scale-95 transition-transform"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl type-data-base active:scale-95 transition-transform"
                       style={{
                         background: "var(--container-bg)",
                         color: "var(--text-muted)",
                         border: "1px solid var(--container-border)",
-                        fontSize: "var(--font-size-base)",
                       }}
                       aria-label="Copia diff come JSON"
                     >
@@ -2453,19 +2421,19 @@ export function StyleEditorTab() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </Surface>
       )}
 
       {/* Export/Import bar in tools */}
       <div className="flex gap-2">
         <button
           onClick={exportJson}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl type-data active:scale-95 transition-transform"
+          className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl type-data-base active:scale-95 transition-transform"
           style={{
-            background: copied ? "color-mix(in srgb, var(--cta) 15%, rgba(0,0,0,0))" : "var(--container-bg)",
+            background: copied ? "color-mix(in srgb, var(--cta) 15%, transparent)" : "var(--container-bg)",
             border: copied ? "1px solid var(--cta)" : "1px solid var(--container-border)",
             color: copied ? "var(--cta)" : "var(--text-default)",
-            fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any,
+            fontWeight: "var(--weight-semibold)" as any,
           }}
           aria-label="Esporta JSON negli appunti"
         >
@@ -2474,8 +2442,8 @@ export function StyleEditorTab() {
         </button>
         <button
           onClick={() => setImportOpen(!importOpen)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl type-data active:scale-95 transition-transform"
-          style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)", color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-medium)" as any }}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl type-data-base active:scale-95 transition-transform"
+          style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)", color: "var(--text-default)", fontWeight: "var(--weight-medium)" as any }}
           aria-label="Importa JSON"
         >
           <Upload size={14} /> Importa DB
@@ -2492,25 +2460,25 @@ export function StyleEditorTab() {
             transition={{ type: "spring", stiffness: 500, damping: 28 }}
             className="overflow-hidden"
           >
-            <div className="surface-card p-4 flex flex-col gap-3">
+            <Surface className="p-4 flex flex-col gap-3">
               <FieldLabel>Incolla JSON STYLES_DB completo</FieldLabel>
               <textarea
                 value={importJson}
                 onChange={(e) => setImportJson(e.target.value)}
                 rows={6}
                 placeholder='{"napoletana_stg": { ... }, ...}'
-                className="w-full p-2.5 rounded-lg type-data resize-y"
-                style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)", color: "var(--text-default)", fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace" }}
+                className="w-full p-2.5 rounded-lg type-code-sm resize-y"
+                style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)", color: "var(--text-default)" }}
               />
               <div className="flex gap-2">
-                <button onClick={doImport} className="flex-1 py-2 rounded-lg type-data active:scale-95 transition-transform" style={{ background: "var(--cta)", color: "white", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, border: "none" }}>
+                <button onClick={doImport} className="flex-1 py-2 rounded-lg type-data-base active:scale-95 transition-transform" style={{ background: "var(--cta)", color: "white", fontWeight: "var(--weight-semibold)" as any, border: "none" }}>
                   Applica
                 </button>
-                <button onClick={() => { setImportOpen(false); setImportJson(""); }} className="px-4 py-2 rounded-lg type-data active:scale-95 transition-transform" style={{ background: "var(--container-bg)", color: "var(--text-muted)", fontSize: "var(--font-size-base)", border: "1px solid var(--container-border)" }}>
+                <button onClick={() => { setImportOpen(false); setImportJson(""); }} className="px-4 py-2 rounded-lg type-data-base active:scale-95 transition-transform" style={{ background: "var(--container-bg)", color: "var(--text-muted)", border: "1px solid var(--container-border)" }}>
                   Annulla
                 </button>
               </div>
-            </div>
+            </Surface>
           </motion.div>
         )}
       </AnimatePresence>
@@ -2530,7 +2498,7 @@ export function StyleEditorTab() {
       >
 
       {/* Top bar — style selector + actions */}
-      <div className="surface-card p-4">
+      <Surface className="p-4">
         <div className="flex flex-col gap-3">
           {/* Selector row */}
           <div className="flex flex-col sm:flex-row gap-3">
@@ -2539,12 +2507,11 @@ export function StyleEditorTab() {
               <select
                 value={selectedId}
                 onChange={(e) => setSelectedId(e.target.value)}
-                className="w-full p-2.5 rounded-xl type-data"
+                className="w-full p-2.5 rounded-xl type-data-field"
                 style={{
                   background: "var(--container-bg)",
                   border: "1px solid var(--container-border)",
                   color: "var(--text-default)",
-                  fontSize: "var(--font-size-lg)",
                 }}
               >
                 {styleIds.map((id) => {
@@ -2562,12 +2529,11 @@ export function StyleEditorTab() {
             <div className="flex items-end gap-2 flex-wrap">
               <button
                 onClick={addNewStyle}
-                className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl type-data active:scale-95 transition-transform"
+                className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl type-data-base active:scale-95 transition-transform"
                 style={{
-                  background: "color-mix(in srgb, var(--cta) 12%, rgba(0,0,0,0))",
+                  background: "color-mix(in srgb, var(--cta) 12%, transparent)",
                   color: "var(--cta)",
-                  border: "1px solid color-mix(in srgb, var(--cta) 25%, rgba(0,0,0,0))",
-                  fontSize: "var(--font-size-base)",
+                  border: "1px solid color-mix(in srgb, var(--cta) 25%, transparent)",
                   fontWeight: "var(--weight-semibold)" as any,
                 }}
                 aria-label="Aggiungi nuovo stile"
@@ -2577,12 +2543,11 @@ export function StyleEditorTab() {
               {currentStatus === "modified" && (
                 <button
                   onClick={resetStyle}
-                  className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl type-data active:scale-95 transition-transform"
+                  className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl type-data-base active:scale-95 transition-transform"
                   style={{
-                    background: "color-mix(in srgb, var(--tertiary) 10%, rgba(0,0,0,0))",
+                    background: "color-mix(in srgb, var(--tertiary) 10%, transparent)",
                     color: "var(--tertiary)",
-                    border: "1px solid color-mix(in srgb, var(--tertiary) 25%, rgba(0,0,0,0))",
-                    fontSize: "var(--font-size-base)",
+                    border: "1px solid color-mix(in srgb, var(--tertiary) 25%, transparent)",
                     fontWeight: "var(--weight-semibold)" as any,
                   }}
                   aria-label="Ripristina stile originale"
@@ -2593,12 +2558,11 @@ export function StyleEditorTab() {
               {isCustom && (
                 <button
                   onClick={deleteStyle}
-                  className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl type-data active:scale-95 transition-transform"
+                  className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl type-data-base active:scale-95 transition-transform"
                   style={{
-                    background: "color-mix(in srgb, var(--text-error) 10%, rgba(0,0,0,0))",
+                    background: "color-mix(in srgb, var(--text-error) 10%, transparent)",
                     color: "var(--text-error)",
-                    border: "1px solid color-mix(in srgb, var(--text-error) 25%, rgba(0,0,0,0))",
-                    fontSize: "var(--font-size-base)",
+                    border: "1px solid color-mix(in srgb, var(--text-error) 25%, transparent)",
                     fontWeight: "var(--weight-medium)" as any,
                   }}
                   aria-label="Elimina stile custom"
@@ -2613,51 +2577,48 @@ export function StyleEditorTab() {
           <div
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg"
             style={{
-              background: `color-mix(in srgb, ${STATUS_META[currentStatus].color} 6%, rgba(0,0,0,0))`,
-              border: `1px solid color-mix(in srgb, ${STATUS_META[currentStatus].color} 18%, rgba(0,0,0,0))`,
+              background: `color-mix(in srgb, ${STATUS_META[currentStatus].color} 6%, transparent)`,
+              border: `1px solid color-mix(in srgb, ${STATUS_META[currentStatus].color} 18%, transparent)`,
             }}
           >
             <div
               className="w-2 h-2 rounded-full flex-shrink-0"
               style={{ background: STATUS_META[currentStatus].dotColor }}
             />
-            <span
-              className="badge-base"
-              style={{
-                fontSize: "var(--font-size-xs)",
-                background: `color-mix(in srgb, ${STATUS_META[currentStatus].color} 15%, rgba(0,0,0,0))`,
-                color: STATUS_META[currentStatus].color,
-              }}
+            <Badge
+              size="xs"
+              color={STATUS_META[currentStatus].color}
+              background={`color-mix(in srgb, ${STATUS_META[currentStatus].color} 15%, transparent)`}
             >
               {STATUS_META[currentStatus].label}
-            </span>
+            </Badge>
             {currentStatus === "modified" && modifiedFields.length > 0 && (
               <span
-                className="type-data"
-                style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}
+                className="type-data-sm"
+                style={{ color: "var(--text-muted)" }}
               >
                 Campi modificati: {modifiedFields.join(", ")}
               </span>
             )}
             {currentStatus === "original" && (
               <span
-                className="type-data"
-                style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}
+                className="type-data-sm"
+                style={{ color: "var(--text-muted)" }}
               >
                 Stile core protetto — puoi modificarlo e ripristinare in qualsiasi momento
               </span>
             )}
             {currentStatus === "custom" && (
               <span
-                className="type-data"
-                style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}
+                className="type-data-sm"
+                style={{ color: "var(--text-muted)" }}
               >
                 Stile personalizzato — eliminabile
               </span>
             )}
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Two-column layout: editor + preview */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
@@ -2845,9 +2806,8 @@ export function StyleEditorTab() {
                 <button
                   key={st.id}
                   onClick={() => update((s) => { s.shape.shape_type = st.id; })}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg type-data active:scale-95 transition-transform"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg type-data-base active:scale-95 transition-transform"
                   style={{
-                    fontSize: "var(--font-size-base)",
                     fontWeight: "var(--weight-medium)" as any,
                     background:
                       style.shape.shape_type === st.id
@@ -3049,9 +3009,9 @@ export function StyleEditorTab() {
               className="rounded-xl overflow-hidden"
               style={{
                 border: errorCount > 0
-                  ? "1px solid color-mix(in srgb, var(--text-error) 35%, rgba(0,0,0,0))"
+                  ? "1px solid color-mix(in srgb, var(--text-error) 35%, transparent)"
                   : warnCount > 0
-                    ? "1px solid color-mix(in srgb, var(--text-warning) 35%, rgba(0,0,0,0))"
+                    ? "1px solid color-mix(in srgb, var(--text-warning) 35%, transparent)"
                     : "1px solid var(--container-border)",
                 background: "var(--surface-container-low)",
               }}
@@ -3067,17 +3027,16 @@ export function StyleEditorTab() {
                     className="w-7 h-7 rounded-lg flex items-center justify-center"
                     style={{
                       background: errorCount > 0
-                        ? "color-mix(in srgb, var(--text-error) 14%, rgba(0,0,0,0))"
-                        : "color-mix(in srgb, var(--text-warning) 14%, rgba(0,0,0,0))",
+                        ? "color-mix(in srgb, var(--text-error) 14%, transparent)"
+                        : "color-mix(in srgb, var(--text-warning) 14%, transparent)",
                       color: errorCount > 0 ? "var(--text-error)" : "var(--text-warning)",
                     }}
                   >
                     <AlertTriangle size={14} />
                   </div>
                   <span
-                    className="type-data"
+                    className="type-data-field"
                     style={{
-                      fontSize: "var(--font-size-lg)",
                       fontWeight: "var(--weight-semibold)" as any,
                       color: "var(--text-default)",
                     }}
@@ -3086,19 +3045,19 @@ export function StyleEditorTab() {
                   </span>
                   <div className="flex items-center gap-1.5">
                     {errorCount > 0 && (
-                      <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--text-error) 15%, rgba(0,0,0,0))", color: "var(--text-error)" }}>
+                      <Badge size="xs" tone="error">
                         {errorCount} err
-                      </span>
+                      </Badge>
                     )}
                     {warnCount > 0 && (
-                      <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--text-warning) 15%, rgba(0,0,0,0))", color: "var(--text-warning)" }}>
+                      <Badge size="xs" tone="warning">
                         {warnCount} warn
-                      </span>
+                      </Badge>
                     )}
                     {infoCount > 0 && (
-                      <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: "color-mix(in srgb, var(--secondary) 15%, rgba(0,0,0,0))", color: "var(--secondary)" }}>
+                      <Badge size="xs" tone="secondary">
                         {infoCount} info
-                      </span>
+                      </Badge>
                     )}
                   </div>
                 </div>
@@ -3111,9 +3070,8 @@ export function StyleEditorTab() {
                         }
                       });
                     }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg type-data active:scale-95 transition-transform"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg type-data-sm active:scale-95 transition-transform"
                     style={{
-                      fontSize: "var(--font-size-sm)",
                       fontWeight: "var(--weight-semibold)" as any,
                       background: "var(--cta)",
                       color: "white",
@@ -3142,9 +3100,8 @@ export function StyleEditorTab() {
                       </span>
                       <div className="flex-1 min-w-0">
                         <div
-                          className="type-data"
+                          className="type-data-sm"
                           style={{
-                            fontSize: "var(--font-size-sm)",
                             color: "var(--text-default)",
                             lineHeight: "var(--leading-relaxed)",
                           }}
@@ -3152,11 +3109,10 @@ export function StyleEditorTab() {
                           {issue.message}
                         </div>
                         <div
-                          className="type-label"
+                          className="type-label-xs"
                           style={{
-                            fontSize: "var(--font-size-xs)",
                             color: "var(--text-muted)",
-                            marginTop: 2,
+                            marginTop: "var(--space-0-5)",
                           }}
                         >
                           {issue.field}
@@ -3165,9 +3121,8 @@ export function StyleEditorTab() {
                       {issue.fix && (
                         <button
                           onClick={() => update((s) => { issue.fix!.apply(s); })}
-                          className="flex items-center gap-1 px-2 py-1 rounded-md type-data active:scale-95 transition-transform flex-shrink-0"
+                          className="flex items-center gap-1 px-2 py-1 rounded-md type-data-xs active:scale-95 transition-transform flex-shrink-0"
                           style={{
-                            fontSize: "var(--font-size-xs)",
                             fontWeight: "var(--weight-semibold)" as any,
                             background: sty.color,
                             color: "white",
@@ -3192,11 +3147,10 @@ export function StyleEditorTab() {
             className="lg:sticky lg:top-20 flex flex-col gap-3"
           >
             {/* Preview controls */}
-            <div className="surface-card p-4">
+            <Surface className="p-4">
               <div
-                className="type-label"
+                className="type-label-compact"
                 style={{
-                  fontSize: "var(--font-size-sm)",
                   color: "var(--text-accent)",
                   letterSpacing: "var(--tracking-caps)",
                   textTransform: "uppercase",
@@ -3211,12 +3165,11 @@ export function StyleEditorTab() {
                   <select
                     value={previewOven}
                     onChange={(e) => setPreviewOven(e.target.value as OvenType)}
-                    className="w-full p-1.5 rounded-lg type-data"
+                    className="w-full p-1.5 rounded-lg type-data-base"
                     style={{
                       background: "var(--container-bg)",
                       border: "1px solid var(--container-border)",
                       color: "var(--text-default)",
-                      fontSize: "var(--font-size-base)",
                     }}
                   >
                     {OVEN_TYPES.map((o) => (
@@ -3251,16 +3204,15 @@ export function StyleEditorTab() {
                   />
                 </div>
               </div>
-            </div>
+            </Surface>
 
             {/* Score preview */}
             {recipe ? (
-              <div className="surface-card p-4">
+              <Surface className="p-4">
                 <div className="flex items-center justify-between mb-3">
                   <span
-                    className="type-data"
+                    className="type-data-field"
                     style={{
-                      fontSize: "var(--font-size-lg)",
                       fontWeight: "var(--weight-semibold)" as any,
                       color: "var(--text-default)",
                     }}
@@ -3295,36 +3247,26 @@ export function StyleEditorTab() {
                     value={recipe.scores.digestibility}
                     color="var(--axis-digestibility)"
                   />
-                  <ScoreBar
-                    label="Sostenibilita"
-                    value={recipe.scores.sustainability}
-                    color="var(--axis-sustainability)"
-                  />
-                  <ScoreBar
-                    label="Sperimentaz."
-                    value={recipe.scores.experimentation}
-                    color="var(--axis-experimentation)"
-                  />
+
                 </div>
-              </div>
+              </Surface>
             ) : (
-              <div
-                className="surface-card p-4 text-center"
+              <Surface
+                className="p-4 text-center"
                 style={{ color: "var(--text-error)" }}
               >
-                <span className="type-data" style={{ fontSize: "var(--font-size-base)" }}>
+                <span className="type-data-base">
                   Errore nella generazione ricetta. Controlla i parametri.
                 </span>
-              </div>
+              </Surface>
             )}
 
             {/* Recipe quick data */}
             {recipe && (
-              <div className="surface-card p-4">
+              <Surface className="p-4">
                 <div
-                  className="type-label"
+                  className="type-label-compact"
                   style={{
-                    fontSize: "var(--font-size-sm)",
                     color: "var(--text-muted)",
                     marginBottom: 8,
                   }}
@@ -3348,9 +3290,8 @@ export function StyleEditorTab() {
                       style={{ background: "var(--container-bg)" }}
                     >
                       <div
-                        className="type-label"
+                        className="type-label-xs"
                         style={{
-                          fontSize: "var(--font-size-xs)",
                           color: "var(--text-muted)",
                           marginBottom: 2,
                         }}
@@ -3358,9 +3299,8 @@ export function StyleEditorTab() {
                         {d.label}
                       </div>
                       <div
-                        className="type-data"
+                        className="type-data-base"
                         style={{
-                          fontSize: "var(--font-size-base)",
                           fontWeight: "var(--weight-semibold)" as any,
                           color: "var(--text-default)",
                           fontFeatureSettings: "'tnum'",
@@ -3371,16 +3311,15 @@ export function StyleEditorTab() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </Surface>
             )}
 
             {/* Science quick data */}
             {recipe && (
-              <div className="surface-card p-4">
+              <Surface className="p-4">
                 <div
-                  className="type-label flex items-center gap-1.5"
+                  className="type-label-compact flex items-center gap-1.5"
                   style={{
-                    fontSize: "var(--font-size-sm)",
                     color: "var(--text-accent)",
                     marginBottom: 8,
                   }}
@@ -3406,9 +3345,8 @@ export function StyleEditorTab() {
                       style={{ background: "var(--container-bg)" }}
                     >
                       <div
-                        className="type-label"
+                        className="type-label-xs"
                         style={{
-                          fontSize: "var(--font-size-xs)",
                           color: "var(--text-muted)",
                           marginBottom: 2,
                         }}
@@ -3416,9 +3354,8 @@ export function StyleEditorTab() {
                         {d.label}
                       </div>
                       <div
-                        className="type-data"
+                        className="type-data-base"
                         style={{
-                          fontSize: "var(--font-size-base)",
                           fontWeight: "var(--weight-semibold)" as any,
                           color: "var(--text-default)",
                           fontFeatureSettings: "'tnum'",
@@ -3434,9 +3371,8 @@ export function StyleEditorTab() {
                 {recipe.science.authenticity_breakdown && Object.keys(recipe.science.authenticity_breakdown).length > 0 && (
                   <div className="mt-3">
                     <div
-                      className="type-label"
+                      className="type-label-xs"
                       style={{
-                        fontSize: "var(--font-size-xs)",
                         color: "var(--text-muted)",
                         marginBottom: 6,
                         textTransform: "uppercase",
@@ -3449,9 +3385,8 @@ export function StyleEditorTab() {
                       {Object.entries(recipe.science.authenticity_breakdown).map(([axis, value]) => (
                         <div key={axis} className="flex items-center gap-2">
                           <div
-                            className="type-data"
+                            className="type-data-sm"
                             style={{
-                              fontSize: "var(--font-size-sm)",
                               color: "var(--text-muted)",
                               minWidth: 80,
                               textTransform: "capitalize",
@@ -3469,9 +3404,8 @@ export function StyleEditorTab() {
                             />
                           </div>
                           <div
-                            className="type-data"
+                            className="type-data-sm"
                             style={{
-                              fontSize: "var(--font-size-sm)",
                               fontWeight: "var(--weight-semibold)" as any,
                               color: "var(--text-default)",
                               fontFeatureSettings: "'tnum'",
@@ -3491,9 +3425,8 @@ export function StyleEditorTab() {
                 {recipe.science.compensations && recipe.science.compensations.length > 0 && (
                   <div className="mt-3">
                     <div
-                      className="type-label"
+                      className="type-label-xs"
                       style={{
-                        fontSize: "var(--font-size-xs)",
                         color: "var(--text-warning)",
                         marginBottom: 6,
                         textTransform: "uppercase",
@@ -3507,30 +3440,28 @@ export function StyleEditorTab() {
                         <div
                           key={i}
                           className="p-2 rounded-lg flex items-start gap-2"
-                          style={{ background: "color-mix(in srgb, var(--text-warning) 6%, rgba(0,0,0,0))" }}
+                          style={{ background: "color-mix(in srgb, var(--text-warning) 6%, transparent)" }}
                         >
-                          <span
-                            className="badge-base flex-shrink-0"
+                          <Badge
+                            size="xs"
+                            tone="warning"
+                            className="flex-shrink-0"
                             style={{
-                              fontSize: "var(--font-size-xs)",
-                              background: "color-mix(in srgb, var(--text-warning) 15%, rgba(0,0,0,0))",
-                              color: "var(--text-warning)",
                               textTransform: "uppercase",
                             }}
                           >
                             {c.type}
-                          </span>
+                          </Badge>
                           <div className="flex-1">
-                            <div className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-default)" }}>
+                            <div className="type-data-sm" style={{ color: "var(--text-default)" }}>
                               {c.reason}
                             </div>
                             <div
-                              className="type-data"
+                              className="type-data-xs"
                               style={{
-                                fontSize: "var(--font-size-xs)",
                                 color: "var(--text-muted)",
                                 fontFeatureSettings: "'tnum'",
-                                marginTop: 2,
+                                marginTop: "var(--space-0-5)",
                               }}
                             >
                               {c.original} → {c.compensated}
@@ -3541,16 +3472,15 @@ export function StyleEditorTab() {
                     </div>
                   </div>
                 )}
-              </div>
+              </Surface>
             )}
 
             {/* Messages */}
             {recipe && (recipe.scores.penalties.length > 0 || recipe.scores.warnings.length > 0 || recipe.scores.claims.length > 0) && (
-              <div className="surface-card p-4">
+              <Surface className="p-4">
                 <div
-                  className="type-label"
+                  className="type-label-compact"
                   style={{
-                    fontSize: "var(--font-size-sm)",
                     color: "var(--text-muted)",
                     marginBottom: 8,
                   }}
@@ -3569,36 +3499,29 @@ export function StyleEditorTab() {
                       style={{
                         background:
                           item.type === "penalty"
-                            ? "color-mix(in srgb, var(--text-error) 8%, rgba(0,0,0,0))"
+                            ? "color-mix(in srgb, var(--text-error) 8%, transparent)"
                             : item.type === "warning"
-                              ? "color-mix(in srgb, var(--text-warning) 8%, rgba(0,0,0,0))"
-                              : "color-mix(in srgb, var(--cta) 8%, rgba(0,0,0,0))",
+                              ? "color-mix(in srgb, var(--text-warning) 8%, transparent)"
+                              : "color-mix(in srgb, var(--cta) 8%, transparent)",
                       }}
                     >
-                      <span
-                        className="badge-base flex-shrink-0"
-                        style={{
-                          fontSize: "var(--font-size-xs)",
-                          background:
-                            item.type === "penalty"
-                              ? "color-mix(in srgb, var(--text-error) 18%, rgba(0,0,0,0))"
-                              : item.type === "warning"
-                                ? "color-mix(in srgb, var(--text-warning) 18%, rgba(0,0,0,0))"
-                                : "color-mix(in srgb, var(--cta) 18%, rgba(0,0,0,0))",
-                          color:
-                            item.type === "penalty"
-                              ? "var(--text-error)"
-                              : item.type === "warning"
-                                ? "var(--text-warning)"
-                                : "var(--cta)",
-                        }}
+                      <Badge
+                        size="xs"
+                        tone={item.type === "penalty" ? "error" : item.type === "warning" ? "warning" : "cta"}
+                        className="flex-shrink-0"
+                        background={
+                          item.type === "penalty"
+                            ? "color-mix(in srgb, var(--text-error) 18%, transparent)"
+                            : item.type === "warning"
+                              ? "color-mix(in srgb, var(--text-warning) 18%, transparent)"
+                              : "color-mix(in srgb, var(--cta) 18%, transparent)"
+                        }
                       >
                         {item.type === "penalty" ? "PEN" : item.type === "warning" ? "WARN" : "OK"}
-                      </span>
+                      </Badge>
                       <span
-                        className="type-data"
+                        className="type-data-sm"
                         style={{
-                          fontSize: "var(--font-size-sm)",
                           color: "var(--text-default)",
                           lineHeight: "var(--leading-relaxed)",
                         }}
@@ -3608,7 +3531,7 @@ export function StyleEditorTab() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </Surface>
             )}
 
           </div>

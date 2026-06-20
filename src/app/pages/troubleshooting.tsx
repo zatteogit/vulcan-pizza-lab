@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { TroubleshootingGuide } from "../components/troubleshooting-panel";
 import { VulcanMark } from "../components/vulcan-logo";
 import { useCms } from "../components/cms/cms-context";
+import { Surface } from "../components/ds";
 
 export default function TroubleshootingPage() {
   const { cms } = useCms();
@@ -19,10 +20,11 @@ export default function TroubleshootingPage() {
       }}
     >
       {/* Header */}
-      <header className="sticky top-0 z-50 h-14 sm:h-16 surface-glass">
+      <Surface as="header" variant="glass" className="sticky top-0 z-50 h-14 sm:h-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-full flex items-center justify-between">
           <Link
             to="/learn"
+            data-back-button="true"
             className="flex items-center gap-1 -ml-1 active:scale-95 transition-transform"
             style={{
               color: "var(--text-accent)",
@@ -43,7 +45,7 @@ export default function TroubleshootingPage() {
             <VulcanMark size={16} decorative />
           </div>
         </div>
-      </header>
+      </Surface>
 
       {/* Content */}
       <motion.main

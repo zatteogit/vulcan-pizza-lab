@@ -1,0 +1,206 @@
+{
+  "lastUpdated": "2026-06-19T15:22:55.000Z",
+  "project": "Vulcan",
+  "sourceStats": {
+    "srcFilesTsTsx": 108,
+    "appFilesExcludingUi": 105,
+    "pizzaEngineExports": 64,
+    "pizzaEngineLines": 4402,
+    "cmsContextLines": 3143,
+    "stylesInDb": 28
+  },
+  "coveragePercent": 100,
+  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-19 applicato a dead code cleanup, dipendenze UI e pannello Personalizza parametri.",
+  "filesMappedCount": 106,
+  "nextRecommendedScan": null,
+  "nextRecommendedScanMessage": "KB sincronizzata \u2014 usare kipi update dopo modifiche codice",
+  "lastScannedChapter": "kipi-update-2026-06-19",
+  "chapters": [
+    {
+      "id": "pizza-engine",
+      "title": "Motore pizza e ricetta",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/components/pizza-engine.ts",
+        "src/app/components/engine-test-suite.tsx",
+        "src/app/components/deviation-tags.ts",
+        "src/app/components/parametric-databases.ts",
+        "src/app/components/topping-library.ts",
+        "src/app/components/impasto-library.ts"
+      ],
+      "lastWorked": "2026-06-19"
+    },
+    {
+      "id": "recipe-flow",
+      "title": "Flusso ricetta e UI",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/pages/recipe.tsx",
+        "src/app/components/recipe-configurator.tsx",
+        "src/app/components/recipe-output.tsx",
+        "src/app/components/recipe-stat-strip.tsx",
+        "src/app/pages/home.tsx",
+        "src/app/components/cook-session.tsx",
+        "src/app/components/active-cook-widget.tsx",
+        "src/app/components/cooking-mode.tsx",
+        "src/app/components/step-illustrations.tsx",
+        "src/app/components/recipe-view.tsx",
+        "src/app/components/recipe-section-tabs.tsx",
+        "src/app/components/recipe-match-card.tsx",
+        "src/app/components/recipe-learning-panel.tsx"
+      ],
+      "lastWorked": "2026-06-19"
+    },
+    {
+      "id": "scoring-feedback",
+      "title": "Score e feedback utente",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/components/recipe-match-card.tsx",
+        "src/app/components/score-ring.tsx",
+        "src/app/components/recipe-feedback.tsx",
+        "src/app/components/feedback-analysis.tsx",
+        "src/app/components/feedback-store.ts"
+      ],
+      "lastWorked": "2026-06-19"
+    },
+    {
+      "id": "styles-versions",
+      "title": "Stili, versioni e override",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/components/style-versions.ts",
+        "src/app/components/style-photos.ts",
+        "src/app/components/recommended-styles.tsx",
+        "src/app/components/style-editor-tab.tsx",
+        "src/app/components/styles-override-context.tsx",
+        "src/app/components/style-detail-sheet.tsx",
+        "src/app/components/sync-tab.tsx",
+        "src/app/components/interpretation-library.ts",
+        "src/app/components/signature-recipes.ts",
+        "src/app/pages/explore.tsx",
+        "src/app/components/tilt-card.tsx"
+      ],
+      "lastWorked": "2026-06-19"
+    },
+    {
+      "id": "cms-i18n",
+      "title": "CMS e localizzazione",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/components/cms/cms-context.tsx",
+        "src/app/components/cms/i18n.ts",
+        "src/app/components/cms/domain-i18n-defaults.ts",
+        "src/app/components/cms/locales/index.ts",
+        "src/app/components/cms/locales/en.ts",
+        "src/app/components/cms/locales/domain-en.ts",
+        "src/app/components/cms/locales/de.ts",
+        "src/app/components/cms/locales/domain-de.ts",
+        "src/app/components/cms/locales/es.ts",
+        "src/app/components/cms/locales/domain-es.ts",
+        "src/app/components/cms/locales/fr.ts",
+        "src/app/components/cms/locales/domain-fr.ts",
+        "src/app/components/cms/locales/ja.ts",
+        "src/app/components/cms/locales/domain-ja.ts",
+        "src/app/components/cms/locales/pt.ts",
+        "src/app/components/cms/locales/domain-pt.ts",
+        "src/app/pages/cms.tsx"
+      ],
+      "lastWorked": "2026-06-19"
+    },
+    {
+      "id": "routing-shell",
+      "title": "Routing e shell app",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/routes.ts",
+        "src/app/App.tsx",
+        "src/main.tsx",
+        "src/app/components/app-shell.tsx",
+        "src/app/components/root-layout.tsx",
+        "src/app/components/search-overlay.tsx",
+        "src/app/pages/not-found.tsx",
+        "src/vite-env.d.ts"
+      ],
+      "lastWorked": "2026-06-19"
+    },
+    {
+      "id": "pages-learn",
+      "title": "Impara, glossario, troubleshooting",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/pages/learn.tsx",
+        "src/app/pages/glossary.tsx",
+        "src/app/components/glossary-data.ts",
+        "src/app/pages/troubleshooting.tsx",
+        "src/app/components/troubleshooting-data.ts",
+        "src/app/components/troubleshooting-panel.tsx",
+        "src/app/pages/pre-ferments.tsx",
+        "src/app/components/pre-ferment-guide.tsx"
+      ],
+      "lastWorked": "2026-06-19"
+    },
+    {
+      "id": "data-databases",
+      "title": "Database parametrici e dati",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/components/equipment-data.ts",
+        "src/app/components/flour-database.ts",
+        "src/app/components/parametric-databases.ts",
+        "src/app/components/dietary-data.ts",
+        "src/app/components/deviation-tags.ts"
+      ],
+      "lastWorked": "2026-06-19"
+    },
+    {
+      "id": "profile-user",
+      "title": "Profilo e vincoli utente",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/pages/profile.tsx",
+        "src/app/components/use-profile-defaults.ts",
+        "src/app/components/user-needs.tsx",
+        "src/app/components/saved-recipes.ts"
+      ],
+      "lastWorked": "2026-06-18"
+    },
+    {
+      "id": "design-system",
+      "title": "Design system e dev UI",
+      "status": "completed",
+      "filesDocumented": [
+        "src/app/pages/design-system.tsx",
+        "src/app/pages/dev.tsx",
+        "src/app/components/dev-tools.tsx",
+        "src/app/components/design-system/index.tsx",
+        "src/app/components/design-system/shared.tsx",
+        "src/app/components/design-system/foundations.tsx",
+        "src/app/components/design-system/foundations-dynamics.tsx",
+        "src/app/components/design-system/foundations-glass.tsx",
+        "src/app/components/design-system/foundations-logo.tsx",
+        "src/app/components/design-system/foundations-logo-brand.tsx",
+        "src/app/components/design-system/foundations-ext.tsx",
+        "src/app/components/design-system/foundations-m3e.tsx",
+        "src/app/components/design-system/foundations-contrast-density.tsx",
+        "src/app/components/design-system/components-a.tsx",
+        "src/app/components/design-system/components-b.tsx",
+        "src/app/components/design-system/components-c.tsx",
+        "src/app/components/design-system/components-d.tsx",
+        "src/app/components/design-system/components-f.tsx",
+        "src/app/components/design-system/components-g.tsx",
+        "src/app/components/design-system/components-g2.tsx",
+        "src/app/components/design-system/components-h.tsx",
+        "src/app/components/design-system/carousel-variants.tsx",
+        "src/app/components/design-system/patterns-templates.tsx",
+        "src/app/components/dough-mascot.tsx",
+        "src/app/components/fire-glow.tsx",
+        "src/app/components/figma/ImageWithFallback.tsx",
+        "src/app/components/info-tip.tsx",
+        "src/app/components/vulcan-hero.tsx",
+        "src/app/components/vulcan-logo.tsx"
+      ],
+      "lastWorked": "2026-06-19"
+    }
+  ]
+}

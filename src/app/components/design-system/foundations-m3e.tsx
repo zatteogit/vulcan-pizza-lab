@@ -1,14 +1,11 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Star, Bell, Heart, Flame, ChevronRight } from "lucide-react";
+import { Flame,Heart,Star } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import { useState } from "react";
 import type { SectionEntry } from "./shared";
 import {
-  SectionHeader,
-  AnatomyRow,
-  SubSectionLabel,
-  Panoramica,
-  LineeGuida,
-  AccessibilitaInfo,
+Panoramica,
+SectionHeader,
+SubSectionLabel
 } from "./shared";
 
 /* ═══════════════════════════════════════════════════════════

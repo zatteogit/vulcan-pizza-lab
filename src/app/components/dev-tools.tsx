@@ -1,57 +1,58 @@
-import React, { useState, useMemo, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  FlaskConical,
-  Thermometer,
-  BarChart3,
-  ClipboardCheck,
-  Bug,
-  ChevronDown,
-  CheckCircle2,
-  AlertTriangle,
-  Info,
-  Flame,
-  Timer,
-  Beaker,
-  Leaf,
-  Sparkles,
-  Shield,
-  Activity,
-  ArrowLeft,
-  Sun,
-  Moon,
-  RefreshCw,
-  PenTool,
-  TestTubes,
-  FolderGit2,
-  GitBranch,
-  ExternalLink,
-  Copy,
-  Check,
-  GitCommitHorizontal,
-  Play,
-  FileCode2,
-  LoaderCircle,
-  CircleX,
-  Clock,
-  Package,
-  Circle,
+Activity,
+AlertTriangle,
+ArrowLeft,
+BarChart3,
+Beaker,
+Bug,
+Check,
+CheckCircle2,
+ChevronDown,
+Circle,
+CircleX,
+ClipboardCheck,
+Clock,
+Copy,
+ExternalLink,
+FileCode2,
+Flame,
+FlaskConical,
+FolderGit2,
+GitBranch,
+GitCommitHorizontal,
+Info,
+Leaf,
+LoaderCircle,
+Moon,
+Package,
+PenTool,
+Play,
+RefreshCw,
+Shield,
+Sparkles,
+Sun,
+TestTubes,
+Thermometer,
+Timer,
 } from "lucide-react";
-import {
-  STYLES_DB,
-  calculateOvenCompensations,
-  getQ10,
-  generateRecipe,
-  estimatePL,
-  recommendStyles,
-  type OvenType,
-  type UserConstraints,
-} from "./pizza-engine";
+import { AnimatePresence,motion } from "motion/react";
+import React,{ useCallback,useMemo,useState } from "react";
 import { DesignSystemTab } from "./design-system";
-import { SyncTab } from "./sync-tab";
-import { StyleEditorTab } from "./style-editor-tab";
+import { Badge, FilterChip, SegmentedControl, Surface } from "./ds";
 import { EngineTestSuite } from "./engine-test-suite";
 import { FeedbackAnalysisPanel } from "./feedback-analysis";
+import {
+STYLES_DB,
+calculateOvenCompensations,
+estimatePL,
+generateRecipe,
+getQ10,
+recommendStyles,
+type OvenType,
+type UserConstraints,
+} from "./pizza-engine";
+import { StyleEditorTab } from "./style-editor-tab";
+import { SyncTab } from "./sync-tab";
 
 /* ═══ TYPES ═══ */
 type TabId = "project" | "editor" | "engine" | "design" | "sync";
@@ -122,10 +123,10 @@ function CopyCmd({ cmd, label }: { cmd: string; label?: string }) {
       className="flex items-center gap-2 p-2.5 rounded-lg overflow-x-auto"
       style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}
     >
-      <span className="type-data" style={{ color: "var(--cta)", flexShrink: 0, fontSize: "var(--font-size-sm)" }}>$</span>
+      <span className="type-data-sm" style={{ color: "var(--cta)", flexShrink: 0 }}>$</span>
       <code
         className="type-data flex-1 min-w-0"
-        style={{ fontSize: "var(--font-size-sm)", fontFamily: "'DM Mono', monospace", color: "var(--text-default)", whiteSpace: "nowrap" }}
+        style={{ fontSize: "var(--font-size-sm)", fontFamily: "var(--font-mono)", color: "var(--text-default)", whiteSpace: "nowrap" }}
       >
         {label || cmd}
       </code>
@@ -134,7 +135,7 @@ function CopyCmd({ cmd, label }: { cmd: string; label?: string }) {
         className="flex items-center gap-1 px-2 py-1 rounded-md type-data active:scale-95 transition-transform flex-shrink-0"
         style={{
           fontSize: "var(--font-size-xs)",
-          background: copied ? "color-mix(in srgb, var(--cta) 15%, rgba(0,0,0,0))" : "rgba(0,0,0,0)",
+          background: copied ? "color-mix(in srgb, var(--cta) 15%, transparent)" : "transparent",
           color: copied ? "var(--cta)" : "var(--text-muted)",
           border: "1px solid " + (copied ? "var(--cta)" : "var(--container-border)"),
         }}
@@ -153,7 +154,7 @@ function DataCell({ label, value, highlight }: { label: string; value: string; h
       className="p-2.5 rounded-lg"
       style={{
         background: highlight
-          ? "color-mix(in srgb, var(--axis-authenticity) 10%, rgba(0,0,0,0))"
+          ? "color-mix(in srgb, var(--axis-authenticity) 10%, transparent)"
           : "var(--container-bg)",
       }}
     >
@@ -192,16 +193,16 @@ function LabSection({
 }) {
   const [open, setOpen] = useState(defaultOpen ?? false);
   return (
-    <div className="surface-card overflow-hidden" style={{ borderLeft: `3px solid ${color}` }}>
+    <Surface className="overflow-hidden" style={{ borderLeft: `3px solid ${color}` }}>
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between p-4 active:scale-[0.99] transition-transform"
-        style={{ background: "rgba(0,0,0,0)" }}
+        style={{ background: "transparent" }}
       >
         <div className="flex items-center gap-2.5">
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ background: `color-mix(in srgb, ${color} 12%, rgba(0,0,0,0))`, color }}
+            style={{ background: `color-mix(in srgb, ${color} 12%, transparent)`, color }}
           >
             {icon}
           </div>
@@ -232,7 +233,7 @@ function LabSection({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </Surface>
   );
 }
 
@@ -275,8 +276,6 @@ interface BundleStats {
 
 /* ═══ PROJECT TAB ═══ */
 function ProjectTab() {
-  const styles = Object.values(STYLES_DB);
-  const families = [...new Set(styles.map((s) => s.family))];
   const REPO_URL = "https://github.com/zatteogit/vulcan-pizza-lab";
 
   /* ── Health check state ── */
@@ -568,12 +567,12 @@ function ProjectTab() {
         color={healthResults ? (healthFailCount > 0 ? "var(--text-error)" : "var(--cta)") : "var(--cta)"}
         defaultOpen
         badge={healthResults ? (
-          <span className="badge-base" style={{
-            background: healthFailCount > 0 ? "color-mix(in srgb, var(--text-error) 15%, rgba(0,0,0,0))" : "color-mix(in srgb, var(--cta) 15%, rgba(0,0,0,0))",
-            color: healthFailCount > 0 ? "var(--text-error)" : "var(--cta)",
-          }}>
+          <Badge
+            tone={healthFailCount > 0 ? "error" : "cta"}
+            background={healthFailCount > 0 ? "color-mix(in srgb, var(--text-error) 15%, transparent)" : "color-mix(in srgb, var(--cta) 15%, transparent)"}
+          >
             {healthPassCount}/{healthResults.length} OK · {healthTotalMs}ms
-          </span>
+          </Badge>
         ) : undefined}
       >
         {/* Run button */}
@@ -596,7 +595,7 @@ function ProjectTab() {
             {healthRunning ? "Esecuzione..." : healthResults ? "Riesegui diagnostica" : "Esegui diagnostica"}
           </button>
           {!healthResults && !healthRunning && (
-            <span className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+            <span className="type-data-sm" style={{ color: "var(--text-muted)" }}>
               Testa tutti i moduli su 15 stili con timing
             </span>
           )}
@@ -621,10 +620,10 @@ function ProjectTab() {
                 <span className="type-data" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, minWidth: 180 }}>
                   {r.name}
                 </span>
-                <span className="type-data flex-1" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+                <span className="type-data-sm flex-1" style={{ color: "var(--text-muted)" }}>
                   {r.detail}
                 </span>
-                <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'", flexShrink: 0 }}>
+                <span className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'", flexShrink: 0 }}>
                   {r.ms}ms
                 </span>
               </div>
@@ -651,9 +650,9 @@ function ProjectTab() {
         icon={<Package size={13} />}
         color="var(--tertiary)"
         badge={bundleStats ? (
-          <span className="badge-base" style={{ background: "color-mix(in srgb, var(--tertiary) 15%, rgba(0,0,0,0))", color: "var(--tertiary)" }}>
+          <Badge tone="tertiary" background="color-mix(in srgb, var(--tertiary) 15%, transparent)">
             {bundleStats.totalFiles} file · {(bundleStats.totalLines / 1000).toFixed(1)}k righe
-          </span>
+          </Badge>
         ) : undefined}
       >
         <div className="flex items-center gap-3 mb-4">
@@ -675,7 +674,7 @@ function ProjectTab() {
             {bundleLoading ? "Scansione..." : bundleStats ? "Riscansiona" : "Scansiona progetto"}
           </button>
           {!bundleStats && !bundleLoading && (
-            <span className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+            <span className="type-data-sm" style={{ color: "var(--text-muted)" }}>
               Conta file, righe e dimensioni (esclude ui/)
             </span>
           )}
@@ -686,19 +685,19 @@ function ProjectTab() {
             {/* Summary cards */}
             <div className="grid grid-cols-3 gap-3">
               <div className="p-3 rounded-lg" style={{ background: "var(--container-bg)" }}>
-                <div className="type-label" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", marginBottom: 2 }}>File</div>
+                <div className="type-label-xs" style={{ color: "var(--text-muted)", marginBottom: 2 }}>File</div>
                 <div className="type-data" style={{ fontSize: "var(--font-size-3xl)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)", fontFeatureSettings: "'tnum'" }}>
                   {bundleStats.totalFiles}
                 </div>
               </div>
               <div className="p-3 rounded-lg" style={{ background: "var(--container-bg)" }}>
-                <div className="type-label" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", marginBottom: 2 }}>Righe</div>
+                <div className="type-label-xs" style={{ color: "var(--text-muted)", marginBottom: 2 }}>Righe</div>
                 <div className="type-data" style={{ fontSize: "var(--font-size-3xl)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)", fontFeatureSettings: "'tnum'" }}>
                   {bundleStats.totalLines.toLocaleString("it-IT")}
                 </div>
               </div>
               <div className="p-3 rounded-lg" style={{ background: "var(--container-bg)" }}>
-                <div className="type-label" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", marginBottom: 2 }}>Dimensione</div>
+                <div className="type-label-xs" style={{ color: "var(--text-muted)", marginBottom: 2 }}>Dimensione</div>
                 <div className="type-data" style={{ fontSize: "var(--font-size-3xl)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)", fontFeatureSettings: "'tnum'" }}>
                   {(bundleStats.totalChars / 1024).toFixed(0)} KB
                 </div>
@@ -707,12 +706,12 @@ function ProjectTab() {
 
             {/* By extension */}
             <div>
-              <div className="type-label mb-2" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>Per estensione</div>
+              <div className="type-label-xs mb-2" style={{ color: "var(--text-muted)" }}>Per estensione</div>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(bundleStats.byExt).sort((a, b) => b[1].lines - a[1].lines).map(([ext, data]) => (
                   <div key={ext} className="flex items-center gap-2 px-3 py-2 rounded-lg" style={{ background: "var(--container-bg)" }}>
-                    <span className="type-data" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)", fontSize: "var(--font-size-sm)" }}>.{ext}</span>
-                    <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
+                    <span className="type-data-sm" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>.{ext}</span>
+                    <span className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
                       {data.files}f · {(data.lines / 1000).toFixed(1)}k
                     </span>
                   </div>
@@ -722,22 +721,22 @@ function ProjectTab() {
 
             {/* Biggest files */}
             <div>
-              <div className="type-label mb-2" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>File più grandi</div>
+              <div className="type-label-xs mb-2" style={{ color: "var(--text-muted)" }}>File più grandi</div>
               <div className="flex flex-col gap-1">
                 {bundleStats.biggest.map((f) => {
                   const pct = Math.round((f.lines / bundleStats.totalLines) * 100);
                   return (
                     <div key={f.path} className="flex items-center gap-3 py-1.5 px-2.5 rounded-lg" style={{ background: "var(--container-bg)" }}>
-                      <span className="type-data flex-1" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-default)", fontFamily: "'DM Mono', monospace" }}>
+                      <span className="type-data-sm flex-1" style={{ color: "var(--text-default)", fontFamily: "var(--font-mono)" }}>
                         {f.path.replace("/src/app/", "")}
                       </span>
-                      <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
+                      <span className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
                         {f.lines} righe
                       </span>
                       <div className="w-16 h-1.5 rounded-full overflow-hidden" style={{ background: "var(--surface-container)" }}>
                         <div className="h-full rounded-full" style={{ width: `${Math.min(pct * 2, 100)}%`, background: "var(--tertiary)" }} />
                       </div>
-                      <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'", minWidth: 28, textAlign: "right" }}>
+                      <span className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'", minWidth: 28, textAlign: "right" }}>
                         {pct}%
                       </span>
                     </div>
@@ -757,14 +756,14 @@ function ProjectTab() {
           style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "color-mix(in srgb, var(--text-default) 8%, rgba(0,0,0,0))" }}>
+            <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "color-mix(in srgb, var(--text-default) 8%, transparent)" }}>
               <FolderGit2 size={16} style={{ color: "var(--text-default)" }} />
             </div>
             <div>
               <div className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                 zatteogit/vulcan-pizza-lab
               </div>
-              <div className="flex items-center gap-2 type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+              <div className="flex items-center gap-2 type-data-sm" style={{ color: "var(--text-muted)" }}>
                 <span>main · React + Vite + Tailwind v4</span>
                 {lastSyncAgo && (
                   <span className="flex items-center gap-1">
@@ -780,7 +779,7 @@ function ProjectTab() {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-2 rounded-lg type-data active:scale-95 transition-transform"
-            style={{ background: "color-mix(in srgb, var(--text-default) 8%, rgba(0,0,0,0))", color: "var(--text-default)", border: "1px solid var(--container-border)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, textDecoration: "none" }}
+            style={{ background: "color-mix(in srgb, var(--text-default) 8%, transparent)", color: "var(--text-default)", border: "1px solid var(--container-border)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, textDecoration: "none" }}
           >
             <ExternalLink size={12} /> Apri repo
           </a>
@@ -812,8 +811,8 @@ function ProjectTab() {
         {/* Workflows */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
           {/* Make → Git */}
-          <div className="p-3 rounded-xl" style={{ background: "color-mix(in srgb, var(--cta) 4%, rgba(0,0,0,0))", border: "1px solid color-mix(in srgb, var(--cta) 10%, rgba(0,0,0,0))" }}>
-            <div className="type-data mb-2" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--cta)" }}>
+          <div className="p-3 rounded-xl" style={{ background: "color-mix(in srgb, var(--cta) 4%, transparent)", border: "1px solid color-mix(in srgb, var(--cta) 10%, transparent)" }}>
+            <div className="type-data-sm mb-2" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--cta)" }}>
               Make → GitHub
             </div>
             <div className="flex flex-col gap-1.5">
@@ -823,8 +822,8 @@ function ProjectTab() {
             </div>
           </div>
           {/* Git → Make */}
-          <div className="p-3 rounded-xl" style={{ background: "color-mix(in srgb, var(--tertiary) 4%, rgba(0,0,0,0))", border: "1px solid color-mix(in srgb, var(--tertiary) 10%, rgba(0,0,0,0))" }}>
-            <div className="type-data mb-2" style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--tertiary)" }}>
+          <div className="p-3 rounded-xl" style={{ background: "color-mix(in srgb, var(--tertiary) 4%, transparent)", border: "1px solid color-mix(in srgb, var(--tertiary) 10%, transparent)" }}>
+            <div className="type-data-sm mb-2" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--tertiary)" }}>
               GitHub → Make
             </div>
             <div className="flex flex-col gap-1.5">
@@ -836,7 +835,7 @@ function ProjectTab() {
         </div>
 
         {/* Cycle diagram */}
-        <div className="flex flex-wrap items-center gap-1.5 type-data px-1" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+        <div className="flex flex-wrap items-center gap-1.5 type-data-sm px-1" style={{ color: "var(--text-muted)" }}>
           {[
             { t: "Make Export", c: "var(--cta)" }, { t: "→" },
             { t: "sync import", c: "var(--tertiary)" }, { t: "→" },
@@ -847,7 +846,9 @@ function ProjectTab() {
             { t: "Make Import", c: "var(--cta)" },
           ].map((step, i) =>
             step.c ? (
-              <span key={i} className="badge-base" style={{ background: `color-mix(in srgb, ${step.c} 12%, rgba(0,0,0,0))`, color: step.c }}>{step.t}</span>
+              <Badge key={i} color={step.c} background={`color-mix(in srgb, ${step.c} 12%, transparent)`}>
+                {step.t}
+              </Badge>
             ) : (
               <span key={i} style={{ color: "var(--text-muted)", fontSize: "var(--font-size-xs)" }}>{step.t}</span>
             )
@@ -862,18 +863,18 @@ function ProjectTab() {
         color="var(--text-success)"
         badge={
           <div className="flex items-center gap-1.5">
-            <span className="badge-base" style={{ background: "color-mix(in srgb, var(--text-success) 15%, rgba(0,0,0,0))", color: "var(--text-success)" }}>
+            <Badge tone="success" background="color-mix(in srgb, var(--text-success) 15%, transparent)">
               {closedCount} chiuse
-            </span>
+            </Badge>
             {openCount > 0 && (
-              <span className="badge-base" style={{ background: "color-mix(in srgb, var(--primary) 15%, rgba(0,0,0,0))", color: "var(--primary)" }}>
+              <Badge tone="primary" background="color-mix(in srgb, var(--primary) 15%, transparent)">
                 {openCount} open
-              </span>
+              </Badge>
             )}
             {blockedCount > 0 && (
-              <span className="badge-base" style={{ background: "color-mix(in srgb, var(--text-warning) 15%, rgba(0,0,0,0))", color: "var(--text-warning)" }}>
+              <Badge tone="warning" background="color-mix(in srgb, var(--text-warning) 15%, transparent)">
                 {blockedCount} blocked
-              </span>
+              </Badge>
             )}
           </div>
         }
@@ -912,15 +913,13 @@ function ProjectTab() {
               <div className="flex flex-col gap-1">
                 {issues.map((issue) => (
                   <div key={issue.id} className="flex items-center gap-2 py-1.5 px-2.5 rounded-lg" style={{ opacity: issue.status === "closed" ? 0.5 : issue.status === "open" ? 1 : 0.7 }}>
-                    <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'", minWidth: 32, flexShrink: 0 }}>#{issue.id}</span>
-                    <span className="badge-base flex-shrink-0" style={{
+                    <span className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'", minWidth: 32, flexShrink: 0 }}>#{issue.id}</span>
+                    <Badge className="flex-shrink-0" color={issue.severity === "alta" ? "var(--axis-authenticity)" : issue.severity === "media" ? "var(--axis-feasibility)" : issue.severity === "bassa" ? "var(--axis-digestibility)" : "var(--text-muted)"} background={`color-mix(in srgb, ${issue.severity === "alta" ? "var(--axis-authenticity)" : issue.severity === "media" ? "var(--axis-feasibility)" : issue.severity === "bassa" ? "var(--axis-digestibility)" : "var(--text-muted)"} 15%, transparent)`} style={{
                       fontSize: "var(--font-size-xs)",
-                      background: `color-mix(in srgb, ${issue.severity === "alta" ? "var(--axis-authenticity)" : issue.severity === "media" ? "var(--axis-feasibility)" : issue.severity === "bassa" ? "var(--axis-digestibility)" : "var(--text-muted)"} 15%, rgba(0,0,0,0))`,
-                      color: issue.severity === "alta" ? "var(--axis-authenticity)" : issue.severity === "media" ? "var(--axis-feasibility)" : issue.severity === "bassa" ? "var(--axis-digestibility)" : "var(--text-muted)",
                     }}>
                       {issue.severity}
-                    </span>
-                    <span className="type-data flex-1" style={{ fontSize: "var(--font-size-sm)", color: issue.status === "open" ? "var(--text-default)" : "var(--text-muted)", textDecoration: issue.status === "closed" ? "line-through" : "none" }}>{issue.desc}</span>
+                    </Badge>
+                    <span className="type-data-sm flex-1" style={{ color: issue.status === "open" ? "var(--text-default)" : "var(--text-muted)", textDecoration: issue.status === "closed" ? "line-through" : "none" }}>{issue.desc}</span>
                     {issue.status === "closed" ? (
                       <CheckCircle2 size={11} style={{ color: "var(--text-success)", flexShrink: 0 }} />
                     ) : issue.status === "open" ? (
@@ -966,30 +965,26 @@ function EngineLabTab() {
   return (
     <div className="flex flex-col gap-5">
       {/* ═══ MODE SELECTOR ═══ */}
-      <div className="flex gap-1.5 p-1.5 rounded-2xl" style={{ background: "var(--surface-container)" }}>
-        {ENGINE_MODES.map((m) => (
-          <button
-            key={m.id}
-            onClick={() => setMode(m.id)}
-            className="flex items-center gap-2 flex-1 justify-center px-4 py-3 rounded-xl type-data active:scale-[0.98] transition-transform"
-            style={{
-              background: mode === m.id ? "var(--container-page)" : "rgba(0,0,0,0)",
-              color: mode === m.id ? "var(--text-default)" : "var(--text-muted)",
-              fontWeight: mode === m.id ? "var(--weight-semibold)" : "var(--weight-medium)" as any,
-              fontSize: "var(--font-size-base)",
-              boxShadow: mode === m.id ? "var(--shadow-sm)" : "none",
-              borderBottom: mode === m.id ? `2px solid ${m.color}` : "2px solid rgba(0,0,0,0)",
-            }}
-          >
-            <span style={{ color: mode === m.id ? m.color : "var(--text-muted)" }}>{m.icon}</span>
-            {m.label}
-          </button>
-        ))}
-      </div>
+      <SegmentedControl
+        role="tablist"
+        ariaLabel="Modalita Engine Lab"
+        value={mode}
+        onValueChange={setMode}
+        options={ENGINE_MODES.map((m) => ({
+          value: m.id,
+          label: m.label,
+          icon: m.icon,
+          accentColor: m.color,
+        }))}
+        fullWidth
+        radius="2xl"
+        itemClassName="type-data"
+        style={{ padding: "var(--space-1-5)" }}
+      />
 
       {/* ═══ CONTROLS (adaptive) ═══ */}
       {mode !== "q10" && mode !== "tests" && mode !== "feedback" && (
-        <div className="surface-card p-4">
+        <Surface className="p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Style — always */}
             <div>
@@ -1011,7 +1006,7 @@ function EngineLabTab() {
                 Forno: {ovenTemp}°C
               </label>
               <input type="range" min={150} max={500} step={10} value={ovenTemp} onChange={(e) => setOvenTemp(Number(e.target.value))} className="mt-3 w-full accent-[var(--text-accent)]" />
-              <div className="flex justify-between mt-1 type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>
+              <div className="flex justify-between mt-1 type-data-xs" style={{ color: "var(--text-muted)" }}>
                 <span>150°C</span>
                 <span>Ideale: {style.baking.temp_c_ideal}°C</span>
                 <span>500°C</span>
@@ -1041,7 +1036,7 @@ function EngineLabTab() {
               </div>
             )}
           </div>
-        </div>
+        </Surface>
       )}
 
       {/* ═══ MODE CONTENT ═══ */}
@@ -1076,11 +1071,9 @@ function ScoresContent({ styleId, ovenTemp, ovenType, skillLevel }: { styleId: s
   const recipe = useMemo(() => generateRecipe(style, constraints), [style, constraints]);
 
   const axes = [
-    { key: "authenticity", label: "Autenticità", value: recipe.scores.authenticity, weight: "0.30", cat: recipe.scores.authenticity_category, color: "var(--axis-authenticity)", icon: <Shield size={14} /> },
-    { key: "feasibility", label: "Fattibilità", value: recipe.scores.feasibility, weight: "0.25", cat: recipe.scores.feasibility_category, color: "var(--axis-feasibility)", icon: <CheckCircle2 size={14} /> },
-    { key: "digestibility", label: "Digeribilità", value: recipe.scores.digestibility, weight: "0.20", cat: recipe.scores.digestibility_category, color: "var(--axis-digestibility)", icon: <Leaf size={14} /> },
-    { key: "sustainability", label: "Sostenibilità", value: recipe.scores.sustainability, weight: "0.15", cat: recipe.scores.sustainability_category, color: "var(--axis-sustainability)", icon: <Leaf size={14} /> },
-    { key: "experimentation", label: "Sperimentazione", value: recipe.scores.experimentation, weight: "0.10", cat: recipe.scores.experimentation_category, color: "var(--axis-experimentation)", icon: <FlaskConical size={14} /> },
+    { key: "authenticity", label: "Autenticità", value: recipe.scores.authenticity, weight: "0.45", cat: recipe.scores.authenticity_category, color: "var(--axis-authenticity)", icon: <Shield size={14} /> },
+    { key: "feasibility", label: "Fattibilità", value: recipe.scores.feasibility, weight: "0.30", cat: recipe.scores.feasibility_category, color: "var(--axis-feasibility)", icon: <CheckCircle2 size={14} /> },
+    { key: "digestibility", label: "Digeribilità", value: recipe.scores.digestibility, weight: "0.25", cat: recipe.scores.digestibility_category, color: "var(--axis-digestibility)", icon: <Leaf size={14} /> },
   ];
 
   return (
@@ -1093,7 +1086,7 @@ function ScoresContent({ styleId, ovenTemp, ovenType, skillLevel }: { styleId: s
             {recipe.scores.composite}
           </div>
         </div>
-        <div className="flex flex-col items-end gap-1 type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--overlay-text-subtle)" }}>
+        <div className="flex flex-col items-end gap-1 type-data-sm" style={{ color: "var(--overlay-text-subtle)" }}>
           <span>P/L: {recipe.flour_pl}</span>
           <span>H: {recipe.hydration_pct}%</span>
           <span>W: {recipe.flour_w}</span>
@@ -1104,15 +1097,17 @@ function ScoresContent({ styleId, ovenTemp, ovenType, skillLevel }: { styleId: s
       <div className="flex flex-col gap-3">
         {axes.map((axis) => (
           <div key={axis.key} className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0" style={{ background: `color-mix(in srgb, ${axis.color} 12%, rgba(0,0,0,0))`, color: axis.color }}>
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg flex-shrink-0" style={{ background: `color-mix(in srgb, ${axis.color} 12%, transparent)`, color: axis.color }}>
               {axis.icon}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
-                <span className="type-data" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, fontSize: "var(--font-size-sm)" }}>{axis.label}</span>
+                <span className="type-data-sm" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>{axis.label}</span>
                 <div className="flex items-center gap-2">
-                  <span className="badge-base" style={{ fontSize: "var(--font-size-xs)", background: `color-mix(in srgb, ${axis.color} 15%, rgba(0,0,0,0))`, color: axis.color }}>{axis.cat}</span>
-                  <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>×{axis.weight}</span>
+                  <Badge size="xs" color={axis.color} background={`color-mix(in srgb, ${axis.color} 15%, transparent)`}>
+                    {axis.cat}
+                  </Badge>
+                  <span className="type-data-xs" style={{ color: "var(--text-muted)" }}>×{axis.weight}</span>
                 </div>
               </div>
               <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: "var(--container-bg)" }}>
@@ -1125,7 +1120,7 @@ function ScoresContent({ styleId, ovenTemp, ovenType, skillLevel }: { styleId: s
       </div>
 
       {/* Scientific layer */}
-      <div className="surface-card p-4">
+      <Surface className="p-4">
         <div className="type-label mb-3" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>Scientific Layer</div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           <DataCell label="Lievito (%)" value={`${recipe.science.yeast_baker_pct}%`} />
@@ -1138,7 +1133,7 @@ function ScoresContent({ styleId, ovenTemp, ovenType, skillLevel }: { styleId: s
           <DataCell label="P/L stimato" value={`${recipe.science.flour_pl_estimated}`} />
           <DataCell label="Energia" value={`${recipe.science.baking_energy_kj} kJ`} />
         </div>
-      </div>
+      </Surface>
     </div>
   );
 }
@@ -1154,13 +1149,13 @@ function CompensationsContent({ style, ovenTemp }: { style: any; ovenTemp: numbe
       <div
         className="flex items-center gap-3 px-4 py-3 rounded-xl"
         style={{
-          background: deficit > 100 ? "color-mix(in srgb, var(--text-error) 10%, rgba(0,0,0,0))" : deficit > 20 ? "color-mix(in srgb, var(--axis-authenticity) 10%, rgba(0,0,0,0))" : "color-mix(in srgb, var(--axis-feasibility) 10%, rgba(0,0,0,0))",
-          border: `1px solid ${deficit > 100 ? "color-mix(in srgb, var(--text-error) 30%, rgba(0,0,0,0))" : deficit > 20 ? "color-mix(in srgb, var(--axis-authenticity) 30%, rgba(0,0,0,0))" : "color-mix(in srgb, var(--axis-feasibility) 30%, rgba(0,0,0,0))"}`,
+          background: deficit > 100 ? "color-mix(in srgb, var(--text-error) 10%, transparent)" : deficit > 20 ? "color-mix(in srgb, var(--axis-authenticity) 10%, transparent)" : "color-mix(in srgb, var(--axis-feasibility) 10%, transparent)",
+          border: `1px solid ${deficit > 100 ? "color-mix(in srgb, var(--text-error) 30%, transparent)" : deficit > 20 ? "color-mix(in srgb, var(--axis-authenticity) 30%, transparent)" : "color-mix(in srgb, var(--axis-feasibility) 30%, transparent)"}`,
         }}
       >
         <Thermometer size={16} style={{ color: deficit > 100 ? "var(--text-error)" : deficit > 20 ? "var(--axis-authenticity)" : "var(--axis-feasibility)" }} />
         <span className="type-data" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, fontFeatureSettings: "'tnum'" }}>Deficit: {deficit}°C</span>
-        <span className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+        <span className="type-data-sm" style={{ color: "var(--text-muted)" }}>
           ({ovenTemp}°C vs ideale {style.baking.temp_c_ideal}°C)
         </span>
       </div>
@@ -1174,7 +1169,7 @@ function CompensationsContent({ style, ovenTemp }: { style: any; ovenTemp: numbe
           { label: "Tempo Cottura", icon: <Timer size={14} />, value: formatSec(compResult.cook_time_sec), active: deficit > 20, detail: `Arrhenius: t×e^(0.0065×${deficit})` },
           { label: "Spessore", icon: <Activity size={14} />, value: compResult.thickness_factor < 1 ? `${Math.round((1 - compResult.thickness_factor) * 100)}% sottile` : "—", active: compResult.thickness_factor < 1, detail: "-10%>100°C, -20%>200°C" },
         ].map((c) => (
-          <div key={c.label} className="surface-card p-4" style={{ opacity: c.active ? 1 : 0.4 }}>
+          <Surface key={c.label} className="p-4" style={{ opacity: c.active ? 1 : 0.4 }}>
             <div className="flex items-center gap-2 mb-2" style={{ color: c.active ? "var(--text-accent)" : "var(--text-muted)" }}>
               {c.icon}
               <span className="type-label" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>{c.label}</span>
@@ -1182,27 +1177,29 @@ function CompensationsContent({ style, ovenTemp }: { style: any; ovenTemp: numbe
             <div className="type-data" style={{ fontSize: "var(--font-size-3xl)", fontWeight: "var(--weight-bold)" as any, color: c.active ? "var(--text-default)" : "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
               {c.value}
             </div>
-            <p className="mt-1.5 type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", lineHeight: "var(--leading-relaxed)" }}>{c.detail}</p>
-          </div>
+            <p className="mt-1.5 type-data-xs" style={{ color: "var(--text-muted)", lineHeight: "var(--leading-relaxed)" }}>{c.detail}</p>
+          </Surface>
         ))}
       </div>
 
       {/* Log */}
       {compResult.compensations.length > 0 && (
-        <div className="surface-card p-4">
+        <Surface className="p-4">
           <div className="type-label mb-2" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>Log compensazioni ({compResult.compensations.length})</div>
           <div className="flex flex-col gap-2">
             {compResult.compensations.map((c: any, i: number) => (
               <div key={i} className="p-3 rounded-lg" style={{ background: "var(--container-bg)" }}>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="badge-base" style={{ background: "color-mix(in srgb, var(--axis-authenticity) 15%, rgba(0,0,0,0))", color: "var(--axis-authenticity)" }}>{c.type}</span>
-                  <span className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>{c.original} → {c.compensated}</span>
+                  <Badge color="var(--axis-authenticity)" background="color-mix(in srgb, var(--axis-authenticity) 15%, transparent)">
+                    {c.type}
+                  </Badge>
+                  <span className="type-data-sm" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>{c.original} → {c.compensated}</span>
                 </div>
-                <p className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>{c.reason}</p>
+                <p className="type-data-sm" style={{ color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>{c.reason}</p>
               </div>
             ))}
           </div>
-        </div>
+        </Surface>
       )}
     </div>
   );
@@ -1243,39 +1240,38 @@ function Q10Content({
           { condition: "Madre T≤15°C", q10: "1.9", model: "sourdough", color: "var(--axis-digestibility)" },
         ].map((m) => (
           <div key={m.condition} className="p-3 rounded-xl" style={{ background: "var(--surface-container)" }}>
-            <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>{m.condition}</span>
+            <span className="type-data-xs" style={{ color: "var(--text-muted)" }}>{m.condition}</span>
             <div className="type-data" style={{ fontSize: "var(--font-size-5xl)", fontWeight: "var(--weight-bold)" as any, color: m.color, fontFeatureSettings: "'tnum'" }}>{m.q10}</div>
-            <span className="badge-base" style={{ background: `color-mix(in srgb, ${m.color} 15%, rgba(0,0,0,0))`, color: m.color }}>{m.model}</span>
+            <Badge color={m.color} background={`color-mix(in srgb, ${m.color} 15%, transparent)`}>
+              {m.model}
+            </Badge>
           </div>
         ))}
       </div>
 
       {/* Filter */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {([{ id: "all", label: "Tutti" }, { id: "fresh", label: "Fresco" }, { id: "dry", label: "Secco" }, { id: "sourdough", label: "Madre" }] as const).map((opt) => (
-          <button
+          <FilterChip
             key={opt.id}
             onClick={() => setSelectedYeast(opt.id)}
-            className="px-3 py-1.5 rounded-lg type-data active:scale-95 transition-transform"
-            style={{
-              fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any,
-              background: selectedYeast === opt.id ? "var(--chip-bg-active)" : "var(--container-bg)",
-              color: selectedYeast === opt.id ? "var(--chip-text-active)" : "var(--text-muted)",
-              border: "1px solid var(--container-border)",
-            }}
+            active={selectedYeast === opt.id}
+            radius="lg"
+            size="sm"
+            className="type-data"
           >
             {opt.label}
-          </button>
+          </FilterChip>
         ))}
       </div>
 
       {/* Table */}
       <div className="overflow-x-auto rounded-xl" style={{ border: "1px solid var(--container-border)" }}>
-        <table className="w-full type-data" style={{ fontSize: "var(--font-size-sm)" }}>
+        <table className="w-full type-data-sm">
           <thead>
             <tr style={{ borderBottom: "1px solid var(--container-border)" }}>
               {["Lievito", "T (°C)", "Q10", "Modello", "Vel. 18°C"].map((h) => (
-                <th key={h} className="type-label px-3 py-2.5 text-left" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", background: "var(--surface-container)" }}>{h}</th>
+                <th key={h} className="type-label-xs px-3 py-2.5 text-left" style={{ color: "var(--text-muted)", background: "var(--surface-container)" }}>{h}</th>
               ))}
             </tr>
           </thead>
@@ -1285,19 +1281,19 @@ function Q10Content({
                 key={`${p.yeast}-${p.temp}`}
                 style={{
                   borderBottom: i < filtered.length - 1 ? "1px solid var(--container-border)" : "none",
-                  background: p.temp === 18 ? "color-mix(in srgb, var(--axis-feasibility) 8%, rgba(0,0,0,0))" : "rgba(0,0,0,0)",
+                  background: p.temp === 18 ? "color-mix(in srgb, var(--axis-feasibility) 8%, transparent)" : "transparent",
                 }}
               >
                 <td className="px-3 py-2" style={{ color: "var(--text-default)" }}>{p.yeast}</td>
                 <td className="px-3 py-2" style={{ color: "var(--text-default)", fontFeatureSettings: "'tnum'" }}>{p.temp}°C</td>
                 <td className="px-3 py-2" style={{ color: "var(--text-accent)", fontWeight: "var(--weight-semibold)" as any, fontFeatureSettings: "'tnum'" }}>{p.q10}</td>
                 <td className="px-3 py-2">
-                  <span className="badge-base" style={{
-                    background: `color-mix(in srgb, ${p.model === "standard" ? "var(--axis-feasibility)" : p.model === "cold_adapted" ? "var(--time-tonight)" : "var(--axis-authenticity)"} 15%, rgba(0,0,0,0))`,
-                    color: p.model === "standard" ? "var(--axis-feasibility)" : p.model === "cold_adapted" ? "var(--time-tonight)" : "var(--axis-authenticity)",
-                  }}>
+                  <Badge
+                    color={p.model === "standard" ? "var(--axis-feasibility)" : p.model === "cold_adapted" ? "var(--time-tonight)" : "var(--axis-authenticity)"}
+                    background={`color-mix(in srgb, ${p.model === "standard" ? "var(--axis-feasibility)" : p.model === "cold_adapted" ? "var(--time-tonight)" : "var(--axis-authenticity)"} 15%, transparent)`}
+                  >
                     {p.model}
-                  </span>
+                  </Badge>
                 </td>
                 <td className="px-3 py-2" style={{ fontFeatureSettings: "'tnum'", color: p.speedVs18 > 1 ? "var(--axis-authenticity)" : p.speedVs18 < 1 ? "var(--time-tonight)" : "var(--text-default)" }}>
                   {p.speedVs18}×
@@ -1311,7 +1307,7 @@ function Q10Content({
       {/* Reference */}
       <div className="flex items-start gap-2 p-3 rounded-xl" style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}>
         <Info size={14} style={{ color: "var(--text-muted)", marginTop: "2px", flexShrink: 0 }} />
-        <p className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", lineHeight: "var(--leading-reading)" }}>
+        <p className="type-data-xs" style={{ color: "var(--text-muted)", lineHeight: "var(--leading-reading)" }}>
           Rif: PMC7146123. S. cerevisiae Q10=2.1±0.3 (15-30°C), 1.6 sotto 10°C. LAB Q10 1.9-2.4.
         </p>
       </div>
@@ -1385,8 +1381,8 @@ export function DevTools({
               <Bug size={16} />
             </div>
             <div>
-              <span className="type-data" style={{ color: "var(--text-default)", fontWeight: "var(--weight-bold)" as any, fontSize: "var(--font-size-xl)" }}>Dev Tools</span>
-              <span className="hidden sm:inline type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", marginLeft: "8px" }}>v2.0</span>
+              <span className="type-data-lg" style={{ color: "var(--text-default)", fontWeight: "var(--weight-bold)" as any }}>Dev Tools</span>
+              <span className="hidden sm:inline type-data-xs" style={{ color: "var(--text-muted)", marginLeft: "8px" }}>v2.0</span>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -1400,29 +1396,28 @@ export function DevTools({
                 {darkMode ? <Sun size={16} /> : <Moon size={16} />}
               </button>
             )}
-            <span className="hidden sm:inline type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>Ctrl+Shift+D</span>
+            <span className="hidden sm:inline type-data-xs" style={{ color: "var(--text-muted)" }}>Ctrl+Shift+D</span>
           </div>
         </div>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="flex gap-1 overflow-x-auto pb-2 -mb-px">
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg whitespace-nowrap type-data active:scale-95 transition-transform"
-                style={{
-                  fontSize: "var(--font-size-base)",
-                  fontWeight: activeTab === tab.id ? "var(--weight-bold)" : "var(--weight-medium)" as any,
-                  background: activeTab === tab.id ? "var(--chip-bg-active)" : "rgba(0,0,0,0)",
-                  color: activeTab === tab.id ? "var(--chip-text-active)" : "var(--text-muted)",
-                  border: activeTab === tab.id ? "none" : "1px solid rgba(0,0,0,0)",
-                }}
-              >
-                {tab.icon}
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl
+            role="tablist"
+            ariaLabel="Sezioni Dev Tools"
+            value={activeTab}
+            onValueChange={setActiveTab}
+            options={TABS.map((tab) => ({
+              value: tab.id,
+              label: tab.label,
+              icon: tab.icon,
+            }))}
+            tone="brand"
+            chrome="ghost"
+            size="sm"
+            radius="lg"
+            className="max-w-full overflow-x-auto p-0 pb-2 -mb-px"
+            itemClassName="type-data whitespace-nowrap"
+            style={{ padding: "0 0 var(--space-2) 0" }}
+          />
         </div>
       </header>
 

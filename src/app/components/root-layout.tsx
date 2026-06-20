@@ -15,6 +15,8 @@ export interface DarkModeContext {
   setThemeMode: (v: ThemeMode) => void;
   devMode: boolean;
   setDevMode: (v: boolean) => void;
+  hideNavbar?: boolean;
+  setHideNavbar?: (v: boolean) => void;
 }
 
 export function useDarkMode() {

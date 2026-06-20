@@ -8,7 +8,7 @@ import { motion } from 'motion/react';
  * Very lightweight: no blur, no filters, just opacity + translation.
  * Respects prefers-reduced-motion.
  */
-export function FireGlow({ intensity = 0.5 }: { intensity?: number }) {
+export function FireGlow({ intensity = 0.5, variant = 'warm' }: { intensity?: number; variant?: 'warm' | 'neural' }) {
   const baseOpacity = Math.min(0.35, intensity * 0.4);
 
   const [reducedMotion, setReducedMotion] = React.useState(false);
@@ -19,6 +19,10 @@ export function FireGlow({ intensity = 0.5 }: { intensity?: number }) {
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
+
+  const glowPrimary = variant === 'neural' ? 'var(--glow-primary-neural)' : 'var(--glow-primary)';
+  const glowSecondary = variant === 'neural' ? 'var(--glow-secondary-neural)' : 'var(--glow-secondary)';
+  const glowWarm = variant === 'neural' ? 'var(--glow-warm-neural)' : 'var(--glow-warm)';
 
   // When reduced motion is preferred, render a static warm wash instead
   if (reducedMotion) {
@@ -35,7 +39,7 @@ export function FireGlow({ intensity = 0.5 }: { intensity?: number }) {
             width: '70vw',
             height: '70vh',
             borderRadius: '50%',
-            background: 'radial-gradient(ellipse at center, var(--glow-primary) 0%, transparent 70%)',
+            background: `radial-gradient(ellipse at center, ${glowPrimary} 0%, transparent 70%)`,
             opacity: baseOpacity * 0.4,
           }}
         />
@@ -67,7 +71,7 @@ export function FireGlow({ intensity = 0.5 }: { intensity?: number }) {
           width: '70vw',
           height: '70vh',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse at center, var(--glow-primary) 0%, transparent 70%)',
+          background: `radial-gradient(ellipse at center, ${glowPrimary} 0%, transparent 70%)`,
           opacity: baseOpacity * 0.4,
         }}
       />
@@ -92,7 +96,7 @@ export function FireGlow({ intensity = 0.5 }: { intensity?: number }) {
           width: '60vw',
           height: '60vh',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse at center, var(--glow-secondary) 0%, transparent 65%)',
+          background: `radial-gradient(ellipse at center, ${glowSecondary} 0%, transparent 65%)`,
           opacity: baseOpacity * 0.45,
         }}
       />
@@ -117,7 +121,7 @@ export function FireGlow({ intensity = 0.5 }: { intensity?: number }) {
           width: '80vw',
           height: '50vh',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse at center, var(--glow-warm) 0%, transparent 60%)',
+          background: `radial-gradient(ellipse at center, ${glowWarm} 0%, transparent 60%)`,
           opacity: baseOpacity * 0.3,
         }}
       />

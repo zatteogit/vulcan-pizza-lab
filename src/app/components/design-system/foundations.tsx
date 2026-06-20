@@ -1,39 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  SectionHeader,
-  ColorSwatch,
-  useDSContext,
-  resolveVar,
-  SubSectionLabel,
-  Panoramica,
-  LineeGuida,
-  AccessibilitaInfo,
-} from "./shared";
+import { useEffect,useRef,useState } from "react";
 import type { SectionEntry } from "./shared";
-import { motion } from "motion/react";
 import {
-  Flame,
-  Timer,
-  Wheat,
-  MapPin,
-  Sun,
-  Moon,
-  Heart,
-  Settings,
-  Search,
-  Eye,
-  Copy,
-  HelpCircle,
-  Lightbulb,
-  Zap,
-  ChevronDown,
-  ChevronRight,
-  Plus,
-  X,
-  Check,
-  Home,
-  Star,
-} from "lucide-react";
+AccessibilitaInfo,
+ColorSwatch,
+LineeGuida,
+Panoramica,
+resolveVar,
+SectionHeader,
+SubSectionLabel,
+useDSContext,
+} from "./shared";
 
 /* ═══════════════════════════════════════════════════════════
    FOUNDATION SECTIONS 01–11
@@ -539,7 +515,7 @@ export function TypographySection() {
               <div key={t.name} className="flex items-center gap-4 px-4 py-3" style={{ borderBottom: i < TYPE_SCALE.length - 1 ? "1px solid var(--outline-variant)" : "none" }}>
                 <div className="w-20 flex-shrink-0 type-data" style={{ color: "var(--muted-foreground)" }}>{t.name}</div>
                 <div className="flex-1 min-w-0 overflow-hidden">
-                  <span style={{ fontFamily: fontFamilyCSS(t.font), fontSize: t.size, fontWeight: t.weight, lineHeight: t.lh, letterSpacing: t.ls, color: "var(--text-default)", textTransform: t.uppercase ? "uppercase" : "none", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", display: "block", paddingBottom: "0.15em", fontKerning: "normal", fontFeatureSettings: t.font === "Playfair Display" ? "'kern' 1, 'liga' 1, 'calt' 1" : "'kern' 1, 'liga' 1" }}>{t.sample}</span>
+                  <span style={{ fontFamily: fontFamilyCSS(t.font), fontSize: t.size, fontWeight: t.weight, lineHeight: t.lh, letterSpacing: t.ls, color: "var(--text-default)", textTransform: (t as any).uppercase ? "uppercase" : "none", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", display: "block", paddingBottom: "0.15em", fontKerning: "normal", fontFeatureSettings: t.font === "Playfair Display" ? "'kern' 1, 'liga' 1, 'calt' 1" : "'kern' 1, 'liga' 1" }}>{t.sample}</span>
                 </div>
                 <div className="hidden sm:flex flex-shrink-0 items-center gap-1.5 type-code" style={{ color: "var(--muted-foreground)" }}>
                   <span style={{ color: "var(--primary)" }}>{t.sizeLabel}</span>

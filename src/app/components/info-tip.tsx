@@ -5,12 +5,16 @@ import React, {
   useCallback,
 } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, BookOpen } from "lucide-react";
+import { useCms } from "./cms/cms-context";
+import { getTermById } from "./glossary-data";
 
 interface InfoTipProps {
   children: React.ReactNode;
   /** Size of the ? button */
   size?: number;
+  /** Optional glossary term ID to unify explanation + glossary definition */
+  termId?: string;
 }
 
 /**
@@ -18,7 +22,8 @@ interface InfoTipProps {
  * without layout shift. Uses HelpCircle for universal affordance.
  * Positions above or below depending on viewport space.
  */
-export function InfoTip({ children, size = 15 }: InfoTipProps) {
+export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
+  const { cms } = useCms();
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -26,13 +31,15 @@ export function InfoTip({ children, size = 15 }: InfoTipProps) {
     "below",
   );
 
+  const term = termId ? getTermById(termId, cms) : null;
+
   const toggle = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
       if (!open && triggerRef.current) {
         const rect = triggerRef.current.getBoundingClientRect();
         const spaceBelow = window.innerHeight - rect.bottom;
-        setPlacement(spaceBelow < 200 ? "above" : "below");
+        setPlacement(spaceBelow < 250 ? "above" : "below");
       }
       setOpen((o) => !o);
     },
@@ -72,6 +79,7 @@ export function InfoTip({ children, size = 15 }: InfoTipProps) {
     <span className="relative inline-flex items-center">
       <button
         ref={triggerRef}
+        type="button"
         onClick={toggle}
         className="inline-flex items-center justify-center rounded-full transition-all flex-shrink-0"
         style={{
@@ -79,14 +87,16 @@ export function InfoTip({ children, size = 15 }: InfoTipProps) {
           height: size + 6,
           background: open
             ? "var(--popover-trigger-bg)"
-            : "rgba(0,0,0,0)",
+            : "transparent",
           color: open
             ? "var(--popover-trigger-active)"
             : "var(--popover-trigger-idle)",
           cursor: "pointer",
           opacity: open ? 1 : 0.55,
+          border: "none",
+          padding: 0,
         }}
-        aria-label="Più informazioni"
+        aria-label={cms.misc.moreInfo}
         aria-expanded={open}
       >
         <HelpCircle size={size} />
@@ -118,7 +128,8 @@ export function InfoTip({ children, size = 15 }: InfoTipProps) {
                 "calc(100% + 8px)",
               left: "50%",
               transform: "translateX(-50%)",
-              width: "clamp(220px, 60vw, 280px)",
+              width: "clamp(240px, 65vw, 300px)",
+              pointerEvents: "auto",
             }}
           >
             <div
@@ -133,12 +144,54 @@ export function InfoTip({ children, size = 15 }: InfoTipProps) {
             >
               <div
                 style={{
-                  fontSize: "var(--font-size-lg)",
-                  lineHeight: "var(--leading-loose)",
+                  fontSize: "var(--font-size-md)",
+                  lineHeight: "1.4",
                   color: "var(--popover-text)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
                 }}
               >
-                {children}
+                <div>{children}</div>
+
+                {term && (
+                  <div
+                    style={{
+                      marginTop: "0.5rem",
+                      paddingTop: "0.5rem",
+                      borderTop: "1px solid var(--popover-border-color)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.25rem",
+                    }}
+                  >
+                    <div
+                      className="flex items-center gap-1.5"
+                      style={{
+                        color: "var(--primary)",
+                        fontWeight: "var(--weight-semibold)" as any,
+                        fontSize: "var(--font-size-xs)",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                      }}
+                    >
+                      <BookOpen size={11} />
+                      <span>
+                        {term.name} {term.symbol ? `(${term.symbol})` : ""}
+                      </span>
+                    </div>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "var(--font-size-sm)",
+                        color: "var(--text-muted)",
+                        lineHeight: "1.4",
+                      }}
+                    >
+                      {term.definition}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>

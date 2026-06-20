@@ -1,0 +1,156 @@
+- generic [ref=e3]:
+  - generic [ref=e5]:
+    - link "Scopri" [ref=e6] [cursor=pointer]:
+      - /url: /explore
+      - img [ref=e7]
+    - img "Napoletana STG" [ref=e14]
+    - generic [ref=e18]:
+      - text: Ricetta canonica
+      - generic [ref=e19]:
+        - heading "Napoletana STG" [level=1] [ref=e20]
+        - button "Copia link ricetta" [ref=e21] [cursor=pointer]:
+          - img [ref=e22]
+          - generic [ref=e28]: Condividi
+      - generic [ref=e29]:
+        - generic [ref=e30]: Cornicione 1-2 cm gonfio
+        - generic [ref=e31]: Centro 3-4 mm sottile
+        - generic [ref=e32]: Crosta leopardata
+      - paragraph [ref=e33]: Standard aureo secondo disciplinare AVPN. Cornicione gonfio, centro sottile, leopardatura.
+      - button "Approfondisci" [ref=e35] [cursor=pointer]
+    - generic [ref=e39]:
+      - complementary "Match" [ref=e41]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - img [ref=e45]
+            - generic [ref=e47]:
+              - generic [ref=e48]: Match
+              - text: 74/100
+          - generic [ref=e49]:
+            - generic [ref=e50]: Ci vuole un po' di corteggiamento
+            - paragraph [ref=e51]: "Si può fare bene: sblocchiamola e Vulcan sistema tempi e cottura."
+            - generic [ref=e52]:
+              - img [ref=e53]
+              - generic [ref=e55]: "Richiede adattamento temperatura: 250°C · ideale 485°C"
+          - button "Adatta alla mia cucina" [ref=e57] [cursor=pointer]:
+            - img [ref=e58]
+            - text: Adatta alla mia cucina
+        - generic [ref=e60]:
+          - generic [ref=e62]:
+            - generic "Autenticità" [ref=e63]
+            - generic [ref=e64]: "91"
+          - generic [ref=e68]:
+            - generic "Fattibilità" [ref=e69]
+            - generic [ref=e70]: "60"
+          - generic [ref=e74]:
+            - generic "Digeribilità" [ref=e75]
+            - generic [ref=e76]: "86"
+          - generic [ref=e80]:
+            - generic "Sostenibilità" [ref=e81]
+            - generic [ref=e82]: "74"
+          - generic [ref=e86]:
+            - generic "Sperimentazione" [ref=e87]
+            - generic [ref=e88]: "31"
+      - generic [ref=e91]:
+        - generic [ref=e94]:
+          - generic [ref=e95]:
+            - generic [ref=e96]:
+              - img [ref=e98]
+              - generic [ref=e101]: Idratazione
+            - generic [ref=e102]:
+              - generic [ref=e103]: "60"
+              - generic [ref=e104]: "%"
+            - generic [ref=e106]: 55%–62%
+          - generic [ref=e107]:
+            - generic [ref=e108]:
+              - img [ref=e110]
+              - generic [ref=e112]: Forno
+            - generic [ref=e113]:
+              - generic [ref=e114]: "485"
+              - generic [ref=e115]: °C
+            - generic [ref=e117]: 430°C–500°C · ideale 485°C
+          - generic [ref=e118]:
+            - generic [ref=e119]:
+              - img [ref=e121]
+              - generic [ref=e124]: Cottura
+            - generic [ref=e125]:
+              - generic [ref=e126]: "75"
+              - generic [ref=e127]: secondi
+            - generic [ref=e129]: 1 minuto–2 minuti
+          - generic [ref=e130]:
+            - generic [ref=e131]:
+              - img [ref=e133]
+              - generic [ref=e136]: Lievitazione
+            - generic [ref=e137]:
+              - generic [ref=e138]: "24"
+              - generic [ref=e139]: ore
+            - generic [ref=e141]: 8 ore–1 giorno · 22°C
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - heading "Ingredienti" [level=3] [ref=e144]
+            - button "Copia" [ref=e146]:
+              - img [ref=e147]
+              - text: Copia
+          - generic [ref=e150]:
+            - generic [ref=e151]: Panetti
+            - generic [ref=e152]:
+              - button "Riduci il numero di panetti" [ref=e153]:
+                - img [ref=e154]
+              - generic [ref=e155]: "4"
+              - button "Aumenta il numero di panetti" [ref=e156]:
+                - img [ref=e157]
+            - generic [ref=e158]: da 270g
+            - generic "Stima indicativa basata sulla pezzatura tradizionale dello stile" [ref=e159]: ≈ 4 persone
+          - generic [ref=e160]:
+            - generic [ref=e161]:
+              - generic [ref=e162]:
+                - generic [ref=e163]: Farina
+                - generic [ref=e164]: farina forte (per pizza) · W300
+              - generic [ref=e165]: 664g
+            - generic [ref=e166]:
+              - generic [ref=e167]:
+                - generic [ref=e168]: Acqua
+                - generic [ref=e169]: 60% · 30°C
+              - generic [ref=e170]: 398g
+            - generic [ref=e171]:
+              - generic [ref=e173]: Sale
+              - generic [ref=e174]: 16,6g
+            - generic [ref=e175]:
+              - generic [ref=e176]:
+                - generic [ref=e177]: Lievito fresco
+                - generic [ref=e178]: ≈ mezzo cece
+              - generic [ref=e179]: 0,5g
+          - generic [ref=e180]: 4 × 270g = 1080g di impasto totale
+          - 'generic "Regola empirica: T_ambiente + T_farina + T_acqua ≈ 55°C, per ottenere ~25°C di impasto finale. Se impasti a macchina, l''attrito aggiunge 1°C-3°C in più." [ref=e181]':
+            - generic [ref=e182]: H2O
+            - generic [ref=e184]:
+              - generic [ref=e185]: "Regola 55: usa acqua a 30°C per raggiungere 24°C di impasto."
+              - button "Cos'è la Regola 55" [ref=e186]:
+                - img [ref=e187]
+      - generic [ref=e191]:
+        - generic [ref=e192]:
+          - generic [ref=e193]: Hai provato questa ricetta?
+          - generic [ref=e194]: Il tuo feedback aiuta a calibrare il motore di Vulcan.
+        - generic [ref=e195]:
+          - button "Riuscita" [ref=e196] [cursor=pointer]:
+            - img [ref=e197]
+            - generic [ref=e199]: Riuscita
+          - button "Non riuscita" [ref=e200] [cursor=pointer]:
+            - img [ref=e201]
+            - generic [ref=e203]: Non riuscita
+    - generic:
+      - generic:
+        - tablist "Sezioni della ricetta" [ref=e205]:
+          - tab "Ricetta" [selected] [ref=e206] [cursor=pointer]:
+            - generic [ref=e208]: Ricetta
+          - tab "Procedimento" [ref=e209] [cursor=pointer]:
+            - generic [ref=e210]: Procedimento
+          - tab "Condimento" [ref=e211] [cursor=pointer]:
+            - generic [ref=e212]: Condimento
+        - button "Cerca" [ref=e213]:
+          - img [ref=e214]
+  - button "Riapri la pizzata in corso" [ref=e285] [cursor=pointer]:
+    - generic [ref=e286]:
+      - img [ref=e287]
+      - img [ref=e290]
+    - generic [ref=e292]: In corso
+    - generic [ref=e293]: 1h1

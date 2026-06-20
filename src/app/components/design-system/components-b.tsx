@@ -264,6 +264,69 @@ const TOAST_ANATOMY = [
   { prop: "Entrance", val: "spring stiffness 400 damping 25" },
 ];
 
+/* ═══ SINGLE TOAST (With Hover Pause/Resume) ═══ */
+function SingleToast({
+  toast,
+  cfg,
+  onDismiss,
+}: {
+  toast: { id: number; type: string; message: string; action?: string };
+  cfg: any;
+  onDismiss: () => void;
+}) {
+  const [paused, setPaused] = useState(false);
+  const timeLeft = useRef(4000);
+  const lastTick = useRef(Date.now());
+  const timerRef = useRef<any>(null);
+
+  React.useEffect(() => {
+    if (!paused) {
+      lastTick.current = Date.now();
+      timerRef.current = setTimeout(() => {
+        onDismiss();
+      }, timeLeft.current);
+    } else {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      const elapsed = Date.now() - lastTick.current;
+      timeLeft.current = Math.max(0, timeLeft.current - elapsed);
+    }
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [paused, onDismiss]);
+
+  const Icon = cfg.icon;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, x: 80, scale: 0.9 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className="flex items-center gap-3 px-4 py-3 rounded-2xl"
+      style={{
+        background: cfg.bg,
+        border: "1px solid var(--outline-variant)",
+        boxShadow: "var(--shadow-lg)",
+        maxWidth: "440px",
+        cursor: "pointer",
+      }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <Icon size={16} style={{ color: cfg.color, flexShrink: 0 }} />
+      <p className="flex-1" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", color: "var(--text-default)", lineHeight: "var(--leading-body)" }}>{toast.message}</p>
+      {toast.action && (
+        <button className="active:scale-95 transition-transform" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, color: cfg.color, background: "none", border: "none", cursor: "pointer", outline: "none", whiteSpace: "nowrap", textTransform: "uppercase", letterSpacing: "var(--tracking-label)" }}>{toast.action}</button>
+      )}
+      <button onClick={onDismiss} className="active:scale-[0.85] transition-transform" style={{ color: "var(--muted-foreground)", opacity: 0.5, cursor: "pointer", background: "none", border: "none", outline: "none", flexShrink: 0, padding: "2px" }} aria-label="Chiudi toast">
+        <X size={14} />
+      </button>
+    </motion.div>
+  );
+}
+
 export function SnackbarToastSpec() {
   const [toasts, setToasts] = useState<{ id: number; type: string; message: string; action?: string }[]>([]);
   const nextId = useRef(0);
@@ -272,7 +335,6 @@ export function SnackbarToastSpec() {
   const addToast = (type: string, message: string, action?: string) => {
     const id = nextId.current++;
     setToasts((prev) => [...prev, { id, type, message, action }]);
-    setTimeout(() => { setToasts((prev) => prev.filter((t) => t.id !== id)); }, 4000);
   };
   const dismissToast = (id: number) => { setToasts((prev) => prev.filter((t) => t.id !== id)); };
 
@@ -287,7 +349,7 @@ export function SnackbarToastSpec() {
           "4 varianti: info, success, warning, error — colore e icona derivati dal tipo",
           "Entrance: spring (stiffness 400, damping 25) con y +12 e scale 0.95",
           "Exit: opacity 0, x +80, scale 0.9 per effetto 'swipe away'",
-          "Auto-dismiss: 4000ms — il timer si resetta al hover (TODO)",
+          "Auto-dismiss: 4000ms — il timer si mette in pausa al hover (Completato)",
         ]}
         anatomia={[
           { parte: "Container", desc: "rounded-2xl, shadow-lg, max-width 440px" },
@@ -328,18 +390,13 @@ export function SnackbarToastSpec() {
           <AnimatePresence>
             {toasts.map((toast) => {
               const cfg = TOAST_CONFIG[toast.type] || TOAST_CONFIG.info;
-              const Icon = cfg.icon;
               return (
-                <motion.div key={toast.id} initial={{ opacity: 0, y: 12, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, x: 80, scale: 0.9 }} transition={{ type: "spring", stiffness: 400, damping: 25 }} className="flex items-center gap-3 px-4 py-3 rounded-2xl" style={{ background: cfg.bg, border: "1px solid var(--outline-variant)", boxShadow: "var(--shadow-lg)", maxWidth: "440px" }}>
-                  <Icon size={16} style={{ color: cfg.color, flexShrink: 0 }} />
-                  <p className="flex-1" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", color: "var(--text-default)", lineHeight: "var(--leading-body)" }}>{toast.message}</p>
-                  {toast.action && (
-                    <button className="active:scale-95 transition-transform" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, color: cfg.color, background: "none", border: "none", cursor: "pointer", outline: "none", whiteSpace: "nowrap", textTransform: "uppercase", letterSpacing: "var(--tracking-label)" }}>{toast.action}</button>
-                  )}
-                  <button onClick={() => dismissToast(toast.id)} className="active:scale-[0.85] transition-transform" style={{ color: "var(--muted-foreground)", opacity: 0.5, cursor: "pointer", background: "none", border: "none", outline: "none", flexShrink: 0, padding: "2px" }} aria-label="Chiudi toast">
-                    <X size={14} />
-                  </button>
-                </motion.div>
+                <SingleToast
+                  key={toast.id}
+                  toast={toast}
+                  cfg={cfg}
+                  onDismiss={() => dismissToast(toast.id)}
+                />
               );
             })}
           </AnimatePresence>

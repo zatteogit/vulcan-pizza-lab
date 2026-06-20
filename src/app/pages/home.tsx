@@ -1,63 +1,53 @@
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-  useRef,
-} from "react";
 import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-  useReducedMotion,
+ChevronDown,
+ChevronLeft,
+Heart,
+SlidersHorizontal,
+Sparkles
+} from "lucide-react";
+import {
+motion,
+useReducedMotion,
+useScroll,
+useTransform,
 } from "motion/react";
 import {
-  ChevronLeft,
-  Moon,
-  Sun,
-  Sparkles,
-  RotateCcw,
-  SlidersHorizontal,
-  ChevronDown,
-  Palette,
-  Bug,
-  FilePen,
-  ArrowRight,
-  ArrowLeft,
-  AlertTriangle,
-} from "lucide-react";
+useCallback,
+useEffect,
+useMemo,
+useRef,
+useState,
+} from "react";
 import { Link } from "react-router";
-import { UserNeeds } from "../components/user-needs";
-import { RecommendedStyles } from "../components/recommended-styles";
-import { RecipeConfigurator } from "../components/recipe-configurator";
-import { ScoreDashboard } from "../components/score-dashboard";
-import { RecipeOutput } from "../components/recipe-output";
-import { RecipeStatStrip } from "../components/recipe-stat-strip";
-import { VulcanMark } from "../components/vulcan-logo";
 import { FireGlow } from "../components/fire-glow";
 import {
-  PizzaStyle,
-  UserConstraints,
-  GeneratedRecipe,
-  TimeSlot,
-  generateRecipe,
-  PanConfig,
-  defaultPanShape,
-  STYLES_DB,
+defaultPanShape,
+GeneratedRecipe,
+generateRecipe,
+getDefaultDoughBalls,
+PanConfig,
+PizzaStyle,
+STYLES_DB,
+TimeSlot,
+UserConstraints,
 } from "../components/pizza-engine";
-import { STYLE_PHOTOS } from "../components/recommended-styles";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-import { moodFromScore } from "../components/dough-mascot";
-import { VulcanHero } from "../components/vulcan-hero";
+import { RecipeConfigurator } from "../components/recipe-configurator";
+import { RecipeMatchCard } from "../components/recipe-match-card";
+import { RecipeStatStrip } from "../components/recipe-stat-strip";
+import { RecipeView } from "../components/recipe-view";
+import { RecommendedStyles,STYLE_PHOTOS } from "../components/recommended-styles";
 import { useDarkMode } from "../components/root-layout";
+import { SettingsSummaryBar,UserNeeds } from "../components/user-needs";
+import { VulcanHero } from "../components/vulcan-hero";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
+import { useCms } from "../components/cms/cms-context";
+import { getDietaryWarnings } from "../components/dietary-data";
+import { RecipePrimaryTab } from "../components/recipe-section-tabs";
 import { StyleDetailSheet } from "../components/style-detail-sheet";
 import { useStylesOverride } from "../components/styles-override-context";
-import { useCms } from "../components/cms/cms-context";
 import { ContextualWarnings } from "../components/troubleshooting-panel";
-import { getDietaryWarnings } from "../components/dietary-data";
 import { useProfileDefaults } from "../components/use-profile-defaults";
+import { CtaButton, Heading, Surface } from "../components/ds";
 
 type AppStep = "settings" | "styles" | "result";
 
@@ -74,71 +64,8 @@ function defaultPL(style: PizzaStyle | null): number {
   );
 }
 
-/* ═══ IntersectionObserver for scroll section tracking (build step) ═══ */
-function useActiveScrollSection(
-  containerRef: React.RefObject<HTMLDivElement | null>,
-  enabled: boolean,
-) {
-  const [active, setActive] = useState<string>("context");
-  const ratioMap = useRef<Map<string, number>>(new Map());
-
-  useEffect(() => {
-    if (!enabled || !containerRef.current) return;
-    const container = containerRef.current;
-    ratioMap.current.clear();
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const id = (entry.target as HTMLElement).dataset
-            .section;
-          if (id)
-            ratioMap.current.set(id, entry.intersectionRatio);
-        });
-        let bestId = "context";
-        let bestRatio = -1;
-        ratioMap.current.forEach((ratio, id) => {
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestId = id;
-          }
-        });
-        if (bestRatio > 0.05) setActive(bestId);
-      },
-      {
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1],
-        rootMargin: "-12% 0px -30% 0px",
-      },
-    );
-
-    const observe = () => {
-      const sections =
-        container.querySelectorAll<HTMLElement>(
-          "[data-section]",
-        );
-      sections.forEach((s) => observer.observe(s));
-    };
-    observe();
-    const mutation = new MutationObserver(() => {
-      observer.disconnect();
-      observe();
-    });
-    mutation.observe(container, {
-      childList: true,
-      subtree: true,
-    });
-
-    return () => {
-      observer.disconnect();
-      mutation.disconnect();
-    };
-  }, [enabled, containerRef]);
-
-  return active;
-}
-
 export function HomePage() {
-  const { darkMode, setDarkMode, devMode } = useDarkMode();
+  const { setHideNavbar } = useDarkMode();
   const { isOverrideActive, clearOverride, effectiveStyles } =
     useStylesOverride();
   const {
@@ -161,20 +88,12 @@ export function HomePage() {
 
   /* ═══ Generate recipe — clean crossfade, no overlay ═══ */
   const handleGenerateRecipe = useCallback(() => {
+    setCreateRecipeMode("adapted");
     window.scrollTo({
       top: 0,
       behavior: "instant" as ScrollBehavior,
     });
     setCurrentStep("result");
-  }, []);
-
-  /* ═══ Navigate to styles step ═══ */
-  const handleGoToStyles = useCallback(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "instant" as ScrollBehavior,
-    });
-    setCurrentStep("styles");
   }, []);
 
   /* ═══ Back navigation ═══ */
@@ -199,6 +118,8 @@ export function HomePage() {
 
   /* ═══ VPL-067: Profile data bridge — load constraints from profile ═══ */
   const profileDefaults = useProfileDefaults();
+  const nerdAvailable = profileDefaults.pizzaNerdEnabled;
+  const effectiveNerdMode = nerdAvailable && nerdMode;
   const [constraints, setConstraints] =
     useState<UserConstraints>(profileDefaults.constraints);
 
@@ -215,6 +136,49 @@ export function HomePage() {
   const [selectedFlourId, setSelectedFlourId] = useState<
     string | null
   >(null);
+  const [selectedToppingConcept, setSelectedToppingConcept] = useState<
+    string | null
+  >(null);
+
+  const [createRecipeTab, setCreateRecipeTab] = useState<RecipePrimaryTab>("ricetta");
+  const [createRecipeMode, setCreateRecipeMode] = useState<"adapted" | "canonical">("adapted");
+
+  const shareUrl = useMemo(() => {
+    if (!selectedStyle) return "";
+    const params = new URLSearchParams();
+    params.set("mode", createRecipeMode);
+    params.set("h", String(customHydration));
+    params.set("w", String(customFlourW));
+    params.set("pl", String(customFlourPL));
+    params.set("f", String(customFermentHours));
+    params.set("t", String(customFermentTemp));
+    params.set("n", String(constraints.dough_balls));
+    if (usePreFerment) params.set("pf", "1");
+    if (constraints.oven_type !== "home")
+      params.set("oven", constraints.oven_type);
+    if (constraints.oven_max_temp_c !== 250)
+      params.set("temp", String(constraints.oven_max_temp_c));
+    if (
+      selectedToppingConcept &&
+      selectedStyle.default_topping_ref !== selectedToppingConcept
+    )
+      params.set("topping", selectedToppingConcept);
+
+    return `${window.location.origin}/recipe/${selectedStyle.id}?${params.toString()}`;
+  }, [
+    selectedStyle,
+    customHydration,
+    customFlourW,
+    customFlourPL,
+    customFermentHours,
+    customFermentTemp,
+    constraints.dough_balls,
+    usePreFerment,
+    constraints.oven_type,
+    constraints.oven_max_temp_c,
+    selectedToppingConcept,
+    createRecipeMode,
+  ]);
 
   const handleTimeSlotChange = useCallback((slot: TimeSlot) => {
     setSelectedTimeSlot(slot.id);
@@ -222,11 +186,22 @@ export function HomePage() {
       ...c,
       available_hours: slot.hours,
     }));
-  }, []);
+    /* La scelta della tempistica è il gesto che fa partire il flusso: niente
+       bottone "Scegli lo stile". Avanziamo subito allo step stili, dove la
+       scelta "atterra" come chip nella barra parametri in alto. Un attimo di
+       respiro perché la card mostri il check prima della transizione. */
+    const advance = () => {
+      window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+      setCurrentStep("styles");
+    };
+    if (prefersReducedMotion) advance();
+    else window.setTimeout(advance, 280);
+  }, [prefersReducedMotion]);
 
   const handleSelectStyle = useCallback(
     (style: PizzaStyle) => {
       setSelectedStyle(style);
+      setCreateRecipeMode("adapted");
       const hCenter = Math.round(
         (style.dough.hydration_pct_range[0] +
           style.dough.hydration_pct_range[1]) /
@@ -258,9 +233,53 @@ export function HomePage() {
         thickness: style.shape.thickness_factor,
       });
       setSelectedFlourId(null);
+      setSelectedToppingConcept(style.default_topping_ref ?? null);
     },
     [constraints.available_hours],
   );
+
+  const handleResetCreateToCanonical = useCallback(() => {
+    if (!selectedStyle) return;
+    const hCenter = Math.round(
+      (selectedStyle.dough.hydration_pct_range[0] +
+        selectedStyle.dough.hydration_pct_range[1]) /
+        2,
+    );
+    const wCenter = Math.round(
+      (selectedStyle.dough.flour_w_range[0] +
+        selectedStyle.dough.flour_w_range[1]) /
+        2,
+    );
+    const fCenter = Math.round(
+      (selectedStyle.dough.fermentation_hours_range[0] +
+        selectedStyle.dough.fermentation_hours_range[1]) /
+        2,
+    );
+    setCreateRecipeMode("canonical");
+    setCustomHydration(hCenter);
+    setCustomFlourW(wCenter);
+    setCustomFermentHours(fCenter);
+    setCustomFermentTemp(fCenter > 12 ? 4 : 22);
+    setUsePreFerment(selectedStyle.requires_pre_ferment);
+    setCustomFlourPL(defaultPL(selectedStyle));
+    setPanConfig({
+      panShape: defaultPanShape(selectedStyle),
+      panLength: selectedStyle.shape.length_cm,
+      panWidth: selectedStyle.shape.width_cm,
+      panDiameter: selectedStyle.shape.diameter_cm,
+      thickness: selectedStyle.shape.thickness_factor,
+    });
+    setSelectedFlourId(null);
+    setSelectedToppingConcept(selectedStyle.default_topping_ref ?? null);
+    setSelectedTimeSlot(null);
+    setConstraints((current) => ({
+      ...current,
+      available_hours: fCenter,
+      dough_balls: getDefaultDoughBalls(selectedStyle),
+      oven_type: selectedStyle.baking.oven_type_required,
+      oven_max_temp_c: selectedStyle.baking.temp_c_ideal,
+    }));
+  }, [selectedStyle]);
 
   const recipe: GeneratedRecipe | null = useMemo(() => {
     if (!selectedStyle) return null;
@@ -274,8 +293,13 @@ export function HomePage() {
       experimentation:
         cms.scoreDimensions.experimentation?.weight,
     };
+    const styleWithTopping =
+      selectedToppingConcept &&
+      selectedToppingConcept !== selectedStyle.default_topping_ref
+        ? { ...selectedStyle, default_topping_ref: selectedToppingConcept }
+        : selectedStyle;
     return generateRecipe(
-      selectedStyle,
+      styleWithTopping,
       constraints,
       customHydration,
       customFlourW,
@@ -297,17 +321,8 @@ export function HomePage() {
     customFlourPL,
     panConfig,
     cms.scoreDimensions,
+    selectedToppingConcept,
   ]);
-
-  const handleReset = () => {
-    setCurrentStep("settings");
-    setSelectedStyle(null);
-    setSelectedTimeSlot(null);
-    setShowFineTuning(false);
-    setNerdMode(false);
-    setSelectedFlourId(null);
-    cmsResetAll();
-  };
 
   /* VPL-068: time slot is optional — styles always visible */
   const canGenerateRecipe = selectedStyle !== null;
@@ -317,13 +332,6 @@ export function HomePage() {
   const titleOpacity = useTransform(scrollY, [0, 160], [1, 0]);
   const titleY = useTransform(scrollY, [0, 160], [0, -14]);
 
-  /* Section tracking */
-  const buildContainerRef = useRef<HTMLDivElement | null>(null);
-  const activeSection = useActiveScrollSection(
-    buildContainerRef,
-    currentStep === "settings",
-  );
-
   /* Scroll-to-top on step change */
   useEffect(() => {
     window.scrollTo({
@@ -331,6 +339,14 @@ export function HomePage() {
       behavior: "instant" as ScrollBehavior,
     });
   }, [currentStep]);
+
+  /* Sul result la scheda è una vista focalizzata identica a Scopri: nascondiamo
+     la chrome dell'app (rail/tab bar/profilo) così la navbar delle sezioni è
+     l'unica barra in basso. Ripristino uscendo o smontando. */
+  useEffect(() => {
+    setHideNavbar?.(currentStep === "result");
+    return () => setHideNavbar?.(false);
+  }, [currentStep, setHideNavbar]);
 
   /* VPL-068: scroll-snap removed — single continuous flow */
 
@@ -350,15 +366,8 @@ export function HomePage() {
         ? 55
         : 25;
 
-  const doughVariant =
-    currentStep === "result" && recipe
-      ? moodFromScore(recipe.scores.composite)
-      : currentStep === "styles"
-        ? "stretch"
-        : "rest";
-
   /* ═══ VPL-008: Focus management on step transitions ═══ */
-  const resultHeadingRef = useRef<HTMLHeadingElement | null>(
+  const resultHeadingRef = useRef<HTMLElement | null>(
     null,
   );
   const prevStepRef = useRef<AppStep>(currentStep);
@@ -366,7 +375,7 @@ export function HomePage() {
   useEffect(() => {
     if (prevStepRef.current !== currentStep) {
       prevStepRef.current = currentStep;
-      /* Delay slightly so DOM is mounted after AnimatePresence */
+      /* Delay slightly so DOM is mounted after the step transition */
       const t = setTimeout(() => {
         if (
           currentStep === "result" &&
@@ -381,22 +390,9 @@ export function HomePage() {
     }
   }, [currentStep]);
 
-  /* ═══ Scroll-driven hero shrink in result step ═══ */
-  const heroHeightVh = useTransform(
-    scrollY,
-    [0, 350],
-    [45, 16],
-  );
-  const heroHeight = useTransform(
-    heroHeightVh,
-    (v) => `max(${v}vh, 140px)`,
-  );
-  const heroImageY = useTransform(scrollY, [0, 400], [0, 60]);
-  const heroOverlayOpacity = useTransform(
-    scrollY,
-    [0, 300],
-    [0, 0.55],
-  );
+  const styleStepTimeLabel = selectedTimeSlot
+    ? cms.timeSlots[selectedTimeSlot]?.label ?? selectedTimeSlot
+    : null;
 
   return (
     <div
@@ -407,130 +403,30 @@ export function HomePage() {
       }}
     >
       {/* ═══ VPL-009: Skip-to-content link for screen readers ═══ */}
-      <a
+      <CtaButton
+        as="a"
         href="#main-content"
+        radius="lg"
+        elevated={false}
         className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg"
         style={{
-          background: "var(--cta-btn-bg)",
-          color: "var(--cta-btn-text)",
           fontSize: "var(--font-size-lg)",
           fontWeight: "var(--weight-semibold)" as any,
         }}
       >
         {cms.pages.skipToContent}
-      </a>
+      </CtaButton>
 
       {/* ═══ FIRE GLOW — ambient background ═══ */}
       <FireGlow intensity={fireIntensity} />
 
-      {/* ═══ TOP BAR ═══ */}
-      <header className="sticky top-0 z-50 h-14 sm:h-16 surface-glass">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 h-full flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {currentStep !== "settings" ? (
-              <motion.button
-                initial={{ opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                onClick={
-                  currentStep === "result"
-                    ? handleBackToStyles
-                    : handleBackToSettings
-                }
-                className="flex items-center gap-1 -ml-1 active:scale-95 transition-transform"
-                style={{
-                  color: "var(--text-accent)",
-                  fontSize: "var(--font-size-xl)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                }}
-              >
-                <ChevronLeft size={18} />
-                <span>{cms.configurator.backLabel}</span>
-              </motion.button>
-            ) : (
-              <div className="flex items-center gap-2.5">
-                {/* Logo badge — hidden on desktop where sidebar rail already shows it (M3 pattern) */}
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center md:hidden"
-                  style={{
-                    background: "var(--hero-brand-gradient)",
-                    boxShadow: "var(--logo-badge-shadow)",
-                    color: "var(--overlay-text)",
-                  }}
-                >
-                  <VulcanMark size={20} decorative />
-                </div>
-                <div className="flex items-baseline gap-1.5">
-                  <span
-                    className="font-serif"
-                    style={{
-                      color: "var(--text-default)",
-                      fontSize: "var(--font-size-4xl)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      letterSpacing: "var(--tracking-tight)",
-                    }}
-                  >
-                    Vulcan
-                  </span>
-                  <span
-                    className="hidden sm:inline"
-                    style={{
-                      color: "var(--text-muted)",
-                      fontSize: "var(--font-size-sm)",
-                      fontWeight:
-                        "var(--weight-semibold)" as any,
-                      letterSpacing: "var(--tracking-ultra)",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Pizza Lab
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            {/* Dev tools — only in dev mode */}
-            {devMode && (
-              <div className="flex items-center gap-1">
-                {/* CMS link */}
-                <Link
-                  to="/cms"
-                  className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[var(--container-bg)] transition-colors"
-                  style={{ color: "var(--text-muted)" }}
-                  aria-label="Content Manager"
-                >
-                  <FilePen size={14} />
-                </Link>
-                {/* Dev tools link */}
-                <Link
-                  to="/dev"
-                  className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[var(--container-bg)] transition-colors"
-                  style={{ color: "var(--text-muted)" }}
-                  aria-label="Dev tools"
-                >
-                  <Bug size={14} />
-                </Link>
-              </div>
-            )}
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-[var(--container-bg)] active:scale-95 transition-transform"
-              aria-label={darkMode ? "Light mode" : "Dark mode"}
-            >
-              {darkMode ? (
-                <Sun size={16} />
-              ) : (
-                <Moon size={16} />
-              )}
-            </button>
-          </div>
-        </div>
-      </header>
+      {/* VPL-080: header rimosso dalla sezione Crea — la navigazione vive già
+          nella shell (sidebar rail / tab bar / pulsante Profilo). La sezione
+          parte diretta dai parametri (cucina/dispensa/tu) + logo + tempistiche.
+          Dark mode → Profilo. Back tra gli step → CTA in basso / back inline. */}
 
       {/* ═══ STYLE OVERRIDE BANNER ═══ */}
-      <AnimatePresence>
-        {isOverrideActive && (
+      {isOverrideActive && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -540,7 +436,7 @@ export function HomePage() {
               stiffness: 500,
               damping: 28,
             }}
-            className="overflow-hidden sticky top-14 sm:top-16 z-40"
+            className="overflow-hidden sticky top-0 z-40"
           >
             <div
               className="flex items-center justify-center gap-3 px-4 py-2"
@@ -548,7 +444,7 @@ export function HomePage() {
                 background:
                   "color-mix(in srgb, var(--tertiary) 12%, var(--container-page))",
                 borderBottom:
-                  "1px solid color-mix(in srgb, var(--tertiary) 25%, rgba(0,0,0,0))",
+                  "1px solid color-mix(in srgb, var(--tertiary) 25%, transparent)",
               }}
             >
               <div
@@ -587,11 +483,11 @@ export function HomePage() {
                     }
                     const parts = [];
                     if (mod > 0)
-                      parts.push(`${mod} modificati`);
-                    if (cust > 0) parts.push(`${cust} custom`);
+                      parts.push(`${mod} ${cms.pages.stylesModified}`);
+                    if (cust > 0) parts.push(`${cust} ${cms.pages.stylesCustom}`);
                     return parts.length > 0
                       ? parts.join(", ")
-                      : "nessuna modifica";
+                      : cms.pages.noChanges;
                   })()}
                 </span>
               </span>
@@ -606,7 +502,7 @@ export function HomePage() {
                   textUnderlineOffset: 2,
                 }}
               >
-                Modifica
+                {cms.ui.modify}
               </Link>
               <button
                 onClick={clearOverride}
@@ -615,18 +511,16 @@ export function HomePage() {
                   fontSize: "var(--font-size-sm)",
                   color: "var(--text-muted)",
                 }}
-                aria-label="Disattiva stili custom"
+                aria-label={cms.pages.deactivateCustomStyles}
               >
-                Disattiva
+                {cms.pages.deactivate}
               </button>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+      )}
 
       {/* ═══ CMS OVERRIDE BANNER ═══ */}
-      <AnimatePresence>
-        {modifiedCount > 0 && (
+      {modifiedCount > 0 && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -636,7 +530,7 @@ export function HomePage() {
               stiffness: 500,
               damping: 28,
             }}
-            className="overflow-hidden sticky top-14 sm:top-16 z-40"
+            className="overflow-hidden sticky top-0 z-40"
             style={{
               marginTop: isOverrideActive ? 0 : undefined,
             }}
@@ -647,7 +541,7 @@ export function HomePage() {
                 background:
                   "color-mix(in srgb, var(--cta) 10%, var(--container-page))",
                 borderBottom:
-                  "1px solid color-mix(in srgb, var(--cta) 20%, rgba(0,0,0,0))",
+                  "1px solid color-mix(in srgb, var(--cta) 20%, transparent)",
               }}
             >
               <div
@@ -688,7 +582,7 @@ export function HomePage() {
                   textUnderlineOffset: 2,
                 }}
               >
-                Modifica
+                {cms.ui.modify}
               </Link>
               <button
                 onClick={cmsResetAll}
@@ -697,33 +591,30 @@ export function HomePage() {
                   fontSize: "var(--font-size-sm)",
                   color: "var(--text-muted)",
                 }}
-                aria-label="Ripristina contenuti CMS"
+                aria-label={cms.misc.cmsRestoreContent}
               >
-                Ripristina
+                {cms.ui.restore}
               </button>
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+      )}
 
       {/* ═══ CONTENT ═══ */}
-      <AnimatePresence mode="wait">
-        {/* ─── STEP 1 — SETTINGS: Hero + UserNeeds ─── */}
+      {/* ─── STEP 1 — SETTINGS: Hero + UserNeeds ─── */}
         {currentStep === "settings" && (
           <motion.main
             key="settings"
             id="main-content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -18 }}
             transition={{
               type: "spring",
-              stiffness: 400,
-              damping: 25,
+              stiffness: 320,
+              damping: 30,
             }}
             className="relative pb-32"
             style={{ zIndex: 2 }}
-            ref={buildContainerRef}
           >
             <div className="relative">
               <div className="relative max-w-2xl mx-auto px-4 sm:px-6 w-full">
@@ -743,20 +634,23 @@ export function HomePage() {
                       {/* VulcanHero — harmonized blob + mark composition */}
                       <div
                         className="relative flex items-center justify-center mb-6"
-                        style={{ width: 160, height: 160 }}
+                        style={{
+                          width: "var(--hero-mark-size, 160px)",
+                          height: "var(--hero-mark-size, 160px)",
+                        }}
                       >
                         {/* Radiant warmth — large soft glow irradiated outward */}
                         <motion.div
                           aria-hidden="true"
                           style={{
                             position: "absolute",
-                            width: 420,
-                            height: 420,
+                            width: "var(--hero-glow-size, 420px)",
+                            height: "var(--hero-glow-size, 420px)",
                             top: "50%",
                             left: "50%",
-                            marginTop: -210,
-                            marginLeft: -210,
-                            borderRadius: "50%",
+                            marginTop: "calc(var(--hero-glow-size, 420px) / -2)",
+                            marginLeft: "calc(var(--hero-glow-size, 420px) / -2)",
+                            borderRadius: "var(--radius-full)",
                             background: "var(--hero-glow-warm)",
                             filter: "blur(40px)",
                             pointerEvents: "none",
@@ -853,13 +747,7 @@ export function HomePage() {
                           markRatio={0.32}
                         />
                       </div>
-                      <h1
-                        style={{
-                          fontSize:
-                            "clamp(2.25rem, 7vw, 3.5rem)",
-                          lineHeight: 1.05,
-                        }}
-                      >
+                      <Heading level="page">
                         {cms.hero.title_line1}{" "}
                         <span
                           style={{
@@ -869,7 +757,7 @@ export function HomePage() {
                         >
                           {cms.hero.title_line2}
                         </span>
-                      </h1>
+                      </Heading>
                       <p
                         className="font-serif italic mt-3 max-w-md"
                         style={{
@@ -893,21 +781,20 @@ export function HomePage() {
           <motion.main
             key="styles"
             id="main-content"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
             transition={{
               type: "spring",
-              stiffness: 400,
-              damping: 25,
+              stiffness: 320,
+              damping: 30,
             }}
             className="relative pb-32"
             style={{ zIndex: 2 }}
           >
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-8 sm:py-12">
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-5 sm:py-7">
               <div className="max-w-2xl lg:max-w-none mx-auto">
-                {/* Lightweight header — no StepHeader, just title + back */}
-                <div className="mb-8 sm:mb-10">
+                <div className="mb-5 sm:mb-6">
                   <motion.button
                     onClick={handleBackToSettings}
                     initial={{ opacity: 0, x: -8 }}
@@ -917,37 +804,41 @@ export function HomePage() {
                       stiffness: 400,
                       damping: 25,
                     }}
-                    className="flex items-center gap-2 mb-4 px-3 py-1.5 rounded-lg active:scale-95 transition-transform"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full active:scale-95 transition-transform"
                     style={{
-                      color: "var(--text-accent)",
-                      fontSize: "var(--font-size-base)",
-                      fontWeight:
-                        "var(--weight-semibold)" as any,
-                      background:
-                        "color-mix(in srgb, var(--primary) 6%, rgba(0,0,0,0))",
-                      border:
-                        "1px solid color-mix(in srgb, var(--primary) 15%, var(--outline-variant))",
-                    }}
-                  >
-                    <ArrowLeft size={14} />
-                    {cms.configurator.backLabel}
-                  </motion.button>
-                  <h2
-                    className="font-serif"
-                    style={{
-                      fontSize: "clamp(1.5rem, 4vw, 2.25rem)",
-                      lineHeight: "var(--leading-snug)",
                       color: "var(--text-default)",
+                      background: "color-mix(in srgb, var(--container-bg) 85%, transparent)",
+                      border: "1px solid var(--container-border)",
+                      boxShadow: "0 8px 24px color-mix(in srgb, var(--shadow-color) 12%, transparent)",
+                      backdropFilter: "blur(12px)",
+                      WebkitBackdropFilter: "blur(12px)",
                     }}
+                    aria-label={cms.configurator.backLabel}
+                    title={cms.configurator.backLabel}
                   >
+                    <ChevronLeft size={20} />
+                  </motion.button>
+                  <div className="mt-4 max-w-2xl">
+                    <SettingsSummaryBar
+                      activeTab={null}
+                      onTabSelect={() => handleBackToSettings()}
+                      constraints={constraints}
+                      kitchenTemp={constraints.kitchen_temp_c ?? 21}
+                      cms={cms}
+                      selectedTimeLabel={styleStepTimeLabel}
+                      onChangeTime={handleBackToSettings}
+                    />
+                  </div>
+                  <Heading level="page" className="mt-5">
                     {cms.steps.styles.title}
-                  </h2>
+                  </Heading>
                   <p
-                    className="font-serif italic mt-1"
+                    className="font-serif italic mt-1 max-w-2xl"
                     style={{
-                      fontSize: "var(--font-size-xl-5)",
+                      fontSize: "var(--font-size-xl)",
                       color: "var(--text-muted)",
-                      opacity: 0.65,
+                      opacity: 0.72,
+                      lineHeight: "var(--leading-normal)",
                     }}
                   >
                     {cms.steps.styles.subtitle}
@@ -963,562 +854,362 @@ export function HomePage() {
           </motion.main>
         )}
 
-        {/* ─── STEP 3 — RESULT ─── */}
-        {currentStep === "result" &&
-          recipe &&
-          selectedStyle && (
-            <motion.main
-              key="result"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 25,
+        {/* ─── STEP 3 — RESULT: scheda unificata (RecipeView) ─── */}
+        {currentStep === "result" && recipe && selectedStyle && (
+          <motion.main
+            key="result"
+            ref={resultHeadingRef}
+            tabIndex={-1}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            className="relative outline-none"
+            style={{ zIndex: 2 }}
+          >
+            <RecipeView
+              recipe={recipe}
+              style={selectedStyle}
+              photo={
+                STYLE_PHOTOS[selectedStyle.id] ||
+                "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1200&q=80"
+              }
+              cms={cms}
+              constraints={constraints}
+              onConstraintsChange={(next) => {
+                setCreateRecipeMode("adapted");
+                setConstraints(next);
               }}
-              className="relative pb-28 sm:pb-32"
-              style={{ zIndex: 2 }}
-            >
-              {/* ── Cinematic photo header ── */}
-              <motion.div
-                className="relative overflow-hidden"
-                style={{
-                  height: heroHeight,
-                  minHeight: "120px",
-                }}
-              >
-                <motion.div
-                  className="absolute inset-0"
-                  style={{ y: heroImageY }}
-                >
-                  <ImageWithFallback
-                    src={
-                      STYLE_PHOTOS[selectedStyle.id] ||
-                      "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1200&q=80"
-                    }
-                    alt={selectedStyle.name}
-                    className="w-full h-full object-cover"
-                    style={{ minHeight: "45vh" }}
-                  />
-                </motion.div>
-                {/* Darkening overlay on scroll */}
-                <motion.div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background: "var(--container-page)",
-                    opacity: heroOverlayOpacity,
-                  }}
+              panConfig={panConfig}
+              activeTab={createRecipeTab}
+              onTabChange={setCreateRecipeTab}
+              back={{ label: cms.ui.changeStyle, onClick: handleBackToStyles, positionClassName: "top-4 left-4" }}
+              recipeTabLabel={
+                createRecipeMode === "canonical"
+                  ? cms.cooking.tabRecipe
+                  : cms.cooking.tabRecipeTailored
+              }
+              eyebrow={
+                createRecipeMode === "canonical"
+                  ? "Ricetta canonica"
+                  : "Ricetta adattata"
+              }
+              shareUrl={shareUrl}
+              selectedToppingConcept={selectedToppingConcept}
+              onSelectTopping={(conceptId) => {
+                setCreateRecipeMode("adapted");
+                setSelectedToppingConcept(conceptId);
+              }}
+              nerdMode={effectiveNerdMode}
+              nerdAvailable={nerdAvailable}
+              onNerdModeChange={setNerdMode}
+              selectedFlourId={selectedFlourId}
+              onSelectFlour={(flour) => {
+                setCreateRecipeMode("adapted");
+                if (flour) {
+                  setSelectedFlourId(flour.id);
+                  setCustomFlourW(flour.w);
+                  setCustomFlourPL(flour.pl);
+                } else {
+                  setSelectedFlourId(null);
+                  if (selectedStyle) {
+                    setCustomFlourW(
+                      Math.round(
+                        (selectedStyle.dough.flour_w_range[0] +
+                          selectedStyle.dough.flour_w_range[1]) /
+                          2,
+                      ),
+                    );
+                    setCustomFlourPL(defaultPL(selectedStyle));
+                  }
+                }
+              }}
+              selectedTimeSlotId={selectedTimeSlot}
+              isPersonalized={createRecipeMode !== "canonical"}
+              matchSlot={
+                <RecipeMatchCard
+                  scores={recipe.scores}
+                  ovenTemp={constraints.oven_max_temp_c}
+                  idealTemp={selectedStyle.baking.temp_c_ideal}
+                  minTemp={selectedStyle.baking.temp_c_range[0]}
+                  mode={createRecipeMode}
+                  onReset={
+                    createRecipeMode !== "canonical"
+                      ? handleResetCreateToCanonical
+                      : undefined
+                  }
                 />
-                {/* Bottom scrim for text legibility */}
-                <div
-                  className="absolute inset-x-0 bottom-0"
-                  style={{
-                    height: "40%",
-                    background:
-                      "linear-gradient(to top, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 100%)",
-                  }}
-                />
-              </motion.div>
-
-              {/* ── Rising sheet — title + content ── */}
-              <div
-                className="relative -mt-8 sm:-mt-10 rounded-t-3xl"
-                style={{
-                  background: "var(--container-page)",
-                  zIndex: 2,
-                }}
-              >
-                {/* Subtle top edge highlight */}
-                <div
-                  className="absolute top-0 left-6 right-6 sm:left-8 sm:right-8 h-px"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, rgba(0,0,0,0) 0%, var(--outline-variant) 30%, var(--outline-variant) 70%, rgba(0,0,0,0) 100%)",
-                    opacity: 0.5,
-                  }}
-                />
-
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-7 sm:pt-9">
-                  {/* ── Title block — on page surface, clean typography ── */}
-                  <div className="mb-6 sm:mb-8">
-                    <p
-                      className="type-label"
+              }
+              recipeControls={
+                <div className="flex flex-col gap-5 sm:gap-6">
+                  <div
+                    className="rounded-2xl px-4 py-3"
+                    style={{
+                      background: "var(--container-bg-low)",
+                      border: "1px solid var(--container-border-subtle)",
+                    }}
+                  >
+                    <span
+                      className="block"
                       style={{
-                        color: "var(--text-accent)",
-                      }}
-                    >
-                      {cms.result.breadcrumb}
-                    </p>
-                    <h2
-                      ref={resultHeadingRef}
-                      tabIndex={-1}
-                      className="font-serif mt-1 outline-none"
-                      style={{
-                        fontSize: "clamp(2rem, 6vw, 3.25rem)",
                         color: "var(--text-default)",
-                        lineHeight: 1.1,
+                        fontSize: "var(--font-size-lg)",
+                        fontWeight: "var(--weight-semibold)" as any,
                       }}
                     >
-                      {selectedStyle.name}
-                    </h2>
-                    <p
-                      className="mt-1.5"
+                      {createRecipeMode === "canonical"
+                        ? "Versione canonica"
+                        : "Versione adattata alla tua cucina"}
+                    </span>
+                    <span
+                      className="block mt-1"
                       style={{
                         color: "var(--text-muted)",
-                        fontSize: "var(--font-size-lg)",
-                        fontStyle: "italic",
-                        fontFamily: "'Playfair Display', serif",
+                        fontSize: "var(--font-size-md)",
+                        lineHeight: "var(--leading-normal)",
                       }}
                     >
-                      {cms.families[selectedStyle.family]
-                        ?.name ?? selectedStyle.family}{" "}
-                      · {selectedStyle.origin}
-                    </p>
+                      {createRecipeMode === "canonical"
+                        ? "Stai guardando la ricetta ideale dello stile, con forno e tempi al massimo della sua espressione."
+                        : "Vulcan ha gia tradotto la ricetta sui tuoi vincoli: forno, tempo, quantita e strumenti disponibili."}
+                    </span>
                   </div>
+                  <RecipeStatStrip recipe={recipe} nerdMode={effectiveNerdMode} />
 
-                  {/* ── Main layout grid ── */}
-                  <div className="lg:grid lg:grid-cols-[1fr_340px] lg:gap-12 xl:gap-16">
-                    <div className="max-w-2xl md:max-w-3xl lg:max-w-none mx-auto lg:mx-0">
-                      {/* Mobile score dashboard — card treatment */}
-                      <div className="lg:hidden mb-6">
-                        <div
-                          className="rounded-2xl overflow-hidden"
+                  {/* Personalizza parametri — accordion (su misura sui tuoi vincoli) */}
+                  <Surface className="overflow-hidden">
+                    <button
+                      onClick={() => setShowFineTuning(!showFineTuning)}
+                      className="w-full flex items-center justify-between px-5 py-3.5 text-left active:scale-[0.99] transition-transform"
+                      aria-expanded={showFineTuning}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <SlidersHorizontal
+                          size={14}
+                          style={{ color: showFineTuning ? "var(--text-accent)" : "var(--text-muted)" }}
+                        />
+                        <span
                           style={{
-                            background:
-                              "var(--surface-container-low)",
-                            border:
-                              "1px solid var(--outline-variant)",
+                            color: "var(--text-default)",
+                            fontSize: "var(--font-size-xl)",
+                            fontWeight: "var(--weight-semibold)" as any,
                           }}
                         >
-                          <div className="px-4 py-4 sm:px-5 sm:py-5">
-                            <ScoreDashboard
-                              scores={recipe.scores}
-                              nerdMode={nerdMode}
-                              onNerdToggle={() =>
-                                setNerdMode(!nerdMode)
-                              }
-                              science={recipe.science}
-                            />
-                          </div>
-                        </div>
+                          {cms.ui.customizeParams}
+                        </span>
                       </div>
-
-                      {/* ── Stat strip — key metrics ── */}
-                      <div>
-                        <RecipeStatStrip
-                          recipe={recipe}
-                          nerdMode={nerdMode}
-                        />
-                      </div>
-
-                      {/* ── Integrated fine-tuning — seamless below stat strip ── */}
-                      <div className="mt-4 surface-card overflow-hidden">
-                        <button
-                          onClick={() =>
-                            setShowFineTuning(!showFineTuning)
-                          }
-                          className="w-full flex items-center justify-between px-5 py-3.5 text-left active:scale-[0.99] transition-transform"
-                          aria-expanded={showFineTuning}
+                      <motion.div
+                        animate={{ rotate: showFineTuning ? 180 : 0 }}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      >
+                        <ChevronDown size={14} style={{ color: "var(--text-muted)" }} />
+                      </motion.div>
+                    </button>
+                    {showFineTuning && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                          className="overflow-hidden"
                         >
-                          <div className="flex items-center gap-2.5">
-                            <SlidersHorizontal
-                              size={14}
-                              style={{
-                                color: showFineTuning
-                                  ? "var(--text-accent)"
-                                  : "var(--text-muted)",
-                              }}
-                            />
-                            <span
-                              style={{
-                                color: "var(--text-default)",
-                                fontSize: "var(--font-size-xl)",
-                                fontWeight:
-                                  "var(--weight-semibold)" as any,
-                              }}
-                            >
-                              {cms.ui.customizeParams}
-                            </span>
-                          </div>
-                          <motion.div
-                            animate={{
-                              rotate: showFineTuning ? 180 : 0,
-                            }}
-                            transition={{
-                              type: "spring",
-                              stiffness: 500,
-                              damping: 30,
-                            }}
+                          <div
+                            className="px-5 pb-5"
+                            style={{ borderTop: "1px solid var(--container-border)" }}
                           >
-                            <ChevronDown
-                              size={14}
-                              style={{
-                                color: "var(--text-muted)",
-                              }}
-                            />
-                          </motion.div>
-                        </button>
-                        <AnimatePresence>
-                          {showFineTuning && (
-                            <motion.div
-                              initial={{
-                                height: 0,
-                                opacity: 0,
-                              }}
-                              animate={{
-                                height: "auto",
-                                opacity: 1,
-                              }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{
-                                type: "spring",
-                                stiffness: 400,
-                                damping: 25,
-                              }}
-                              className="overflow-hidden"
-                            >
-                              <div
-                                className="px-5 pb-5"
-                                style={{
-                                  borderTop:
-                                    "1px solid var(--container-border)",
+                            <div className="pt-4">
+                              <RecipeConfigurator
+                                style={selectedStyle}
+                                constraints={constraints}
+                                onConstraintsChange={(next) => {
+                                  setCreateRecipeMode("adapted");
+                                  setConstraints(next);
                                 }}
-                              >
-                                <div className="pt-4">
-                                  <RecipeConfigurator
-                                    style={selectedStyle}
-                                    constraints={constraints}
-                                    onConstraintsChange={
-                                      setConstraints
-                                    }
-                                    customHydration={
-                                      customHydration
-                                    }
-                                    onHydrationChange={
-                                      setCustomHydration
-                                    }
-                                    customFlourW={customFlourW}
-                                    onFlourWChange={
-                                      setCustomFlourW
-                                    }
-                                    customFermentHours={
-                                      customFermentHours
-                                    }
-                                    onFermentHoursChange={
-                                      setCustomFermentHours
-                                    }
-                                    customFermentTemp={
-                                      customFermentTemp
-                                    }
-                                    onFermentTempChange={
-                                      setCustomFermentTemp
-                                    }
-                                    usePreFerment={
-                                      usePreFerment
-                                    }
-                                    onPreFermentChange={
-                                      setUsePreFerment
-                                    }
-                                    customFlourPL={
-                                      nerdMode
-                                        ? customFlourPL
-                                        : undefined
-                                    }
-                                    onFlourPLChange={
-                                      nerdMode
-                                        ? setCustomFlourPL
-                                        : undefined
-                                    }
-                                    science={recipe.science}
-                                    panConfig={panConfig}
-                                    onPanConfigChange={
-                                      setPanConfig
-                                    }
-                                  />
-                                </div>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-
-                      {/* ── Recipe content: ingredients + timeline ── */}
-                      <div className="mt-8 sm:mt-10">
-                        {/* Contextual troubleshooting warnings */}
-                        <div className="mb-6">
-                          <ContextualWarnings
-                            hydration={customHydration}
-                            flourW={customFlourW}
-                            flourPL={customFlourPL}
-                            fermentHours={customFermentHours}
-                            fermentTemp={customFermentTemp}
-                            ovenTemp={
-                              constraints.oven_max_temp_c
-                            }
-                            skillLevel={constraints.skill_level}
-                            usePreFerment={usePreFerment}
-                          />
-                          {/* Dietary-specific warnings */}
-                          {constraints.dietary_filters.length >
-                            0 &&
-                            (() => {
-                              const dw = getDietaryWarnings(
-                                constraints.dietary_filters,
-                                {
-                                  fermentHours:
-                                    customFermentHours,
-                                  fermentTemp:
-                                    customFermentTemp,
-                                  yeastType:
-                                    constraints.pantry_yeasts.includes(
-                                      "sourdough",
-                                    )
-                                      ? "sourdough"
-                                      : constraints.pantry_yeasts.includes(
-                                            "fresh",
-                                          )
-                                        ? "fresh"
-                                        : "dry",
-                                  hydration: customHydration,
-                                  flourW: customFlourW,
-                                },
-                                cms,
-                              );
-                              if (dw.length === 0) return null;
-                              return (
-                                <div
-                                  className="mt-3"
-                                  style={{
-                                    background:
-                                      "var(--surface-container-low)",
-                                    border:
-                                      "1px solid var(--outline-variant)",
-                                    borderRadius: "1rem",
-                                    padding: "1rem 1.25rem",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "0.625rem",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                      gap: "0.5rem",
-                                    }}
-                                  >
-                                    <span
-                                      style={{
-                                        fontSize: "0.75rem",
-                                      }}
-                                    >
-                                      🩺
-                                    </span>
-                                    <span
-                                      style={{
-                                        fontSize: "0.6875rem",
-                                        letterSpacing: "0.18em",
-                                        textTransform:
-                                          "uppercase",
-                                        color: "var(--primary)",
-                                        fontWeight:
-                                          "var(--weight-semibold)",
-                                      }}
-                                    >
-                                      {
-                                        cms.pages
-                                          .dietaryWarningsTitle
+                                customHydration={customHydration}
+                                onHydrationChange={(value) => {
+                                  setCreateRecipeMode("adapted");
+                                  setCustomHydration(value);
+                                }}
+                                customFlourW={customFlourW}
+                                onFlourWChange={(value) => {
+                                  setCreateRecipeMode("adapted");
+                                  setCustomFlourW(value);
+                                }}
+                                customFermentHours={customFermentHours}
+                                onFermentHoursChange={(value) => {
+                                  setCreateRecipeMode("adapted");
+                                  setCustomFermentHours(value);
+                                }}
+                                customFermentTemp={customFermentTemp}
+                                onFermentTempChange={(value) => {
+                                  setCreateRecipeMode("adapted");
+                                  setCustomFermentTemp(value);
+                                }}
+                                usePreFerment={usePreFerment}
+                                onPreFermentChange={(value) => {
+                                  setCreateRecipeMode("adapted");
+                                  setUsePreFerment(value);
+                                }}
+                                customFlourPL={effectiveNerdMode ? customFlourPL : undefined}
+                                onFlourPLChange={
+                                  effectiveNerdMode
+                                    ? (value) => {
+                                        setCreateRecipeMode("adapted");
+                                        setCustomFlourPL(value);
                                       }
-                                    </span>
-                                  </div>
-                                  {dw.map((w, i) => (
-                                    <div
-                                      key={w.filterId + i}
-                                      className="flex items-start gap-2"
-                                      style={{
-                                        background:
-                                          w.severity ===
-                                          "critical"
-                                            ? "rgba(211,47,47,0.08)"
-                                            : w.severity ===
-                                                "warning"
-                                              ? "rgba(204,136,68,0.08)"
-                                              : "rgba(133,117,104,0.06)",
-                                        border: `1px solid ${w.severity === "critical" ? "rgba(211,47,47,0.2)" : w.severity === "warning" ? "rgba(204,136,68,0.2)" : "rgba(133,117,104,0.12)"}`,
-                                        borderRadius: "0.75rem",
-                                        padding:
-                                          "0.625rem 0.875rem",
-                                      }}
-                                    >
-                                      <span
-                                        style={{
-                                          flexShrink: 0,
-                                          fontSize: "0.75rem",
-                                          marginTop: 1,
-                                        }}
-                                      >
-                                        {w.severity ===
-                                        "critical"
-                                          ? "🛑"
-                                          : w.severity ===
-                                              "warning"
-                                            ? "⚠️"
-                                            : "ℹ️"}
-                                      </span>
-                                      <div>
-                                        <div
-                                          style={{
-                                            fontSize:
-                                              "0.8125rem",
-                                            color:
-                                              "var(--text-default)",
-                                            lineHeight: 1.4,
-                                          }}
-                                        >
-                                          {w.message}
-                                        </div>
-                                        <div
-                                          style={{
-                                            fontSize: "0.75rem",
-                                            color:
-                                              "var(--muted-foreground)",
-                                            lineHeight: 1.4,
-                                            marginTop: 2,
-                                          }}
-                                        >
-                                          💡 {w.tip}
-                                        </div>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              );
-                            })()}
-                        </div>
-                        <RecipeOutput
-                          recipe={recipe}
-                          constraints={constraints}
-                          onConstraintsChange={setConstraints}
-                          nerdMode={nerdMode}
-                          selectedFlourId={selectedFlourId}
-                          onSelectFlour={(flour) => {
-                            if (flour) {
-                              setSelectedFlourId(flour.id);
-                              setCustomFlourW(flour.w);
-                              setCustomFlourPL(flour.pl);
-                            } else {
-                              setSelectedFlourId(null);
-                              if (selectedStyle) {
-                                setCustomFlourW(
-                                  Math.round(
-                                    (selectedStyle.dough
-                                      .flour_w_range[0] +
-                                      selectedStyle.dough
-                                        .flour_w_range[1]) /
-                                      2,
-                                  ),
-                                );
-                                setCustomFlourPL(
-                                  defaultPL(selectedStyle),
-                                );
-                              }
-                            }
-                          }}
-                          selectedTimeSlotId={selectedTimeSlot}
-                        />
-
-                        {/* ── Troubleshooting link — contextual to recipe ── */}
-                        <div className="mt-8">
-                          <Link
-                            to="/learn/troubleshooting"
-                            className="flex items-center gap-3 p-4 rounded-2xl active:scale-[0.98] transition-transform"
-                            style={{
-                              background:
-                                "color-mix(in srgb, var(--tertiary) 6%, var(--surface-container-low))",
-                              border:
-                                "1px solid color-mix(in srgb, var(--tertiary) 15%, var(--outline-variant))",
-                              textDecoration: "none",
-                              color: "inherit",
-                            }}
-                          >
-                            <div
-                              className="flex items-center justify-center flex-shrink-0"
-                              style={{
-                                width: 36,
-                                height: 36,
-                                borderRadius: 10,
-                                background:
-                                  "color-mix(in srgb, var(--tertiary) 12%, rgba(0,0,0,0))",
-                              }}
-                            >
-                              <AlertTriangle
-                                size={18}
-                                style={{
-                                  color: "var(--tertiary)",
+                                    : undefined
+                                }
+                                science={recipe.science}
+                                panConfig={panConfig}
+                                onPanConfigChange={(next) => {
+                                  setCreateRecipeMode("adapted");
+                                  setPanConfig(next);
                                 }}
                               />
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div
-                                style={{
-                                  fontSize:
-                                    "var(--font-size-base)",
-                                  fontWeight:
-                                    "var(--weight-semibold)" as any,
-                                  color: "var(--text-default)",
-                                }}
-                              >
-                                {cms.pages.troubleshootingTitle}
-                              </div>
-                              <div
-                                className="type-data"
-                                style={{
-                                  fontSize:
-                                    "var(--font-size-sm)",
-                                  color: "var(--text-muted)",
-                                  marginTop: 2,
-                                }}
-                              >
-                                {cms.pages.troubleshootingDesc}
-                              </div>
-                            </div>
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
+                          </div>
+                        </motion.div>
+                    )}
+                  </Surface>
 
-                    {/* Desktop sidebar */}
-                    <div className="hidden lg:block">
-                      <div className="sticky top-20">
-                        <ScoreDashboard
-                          scores={recipe.scores}
-                          desktopMode
-                          nerdMode={nerdMode}
-                          onNerdToggle={() =>
-                            setNerdMode(!nerdMode)
-                          }
-                          science={recipe.science}
-                        />
-                      </div>
-                    </div>
+                  {/* Warning contestuali + dieta */}
+                  <div>
+                    <ContextualWarnings
+                      hydration={customHydration}
+                      flourW={customFlourW}
+                      flourPL={customFlourPL}
+                      fermentHours={customFermentHours}
+                      fermentTemp={customFermentTemp}
+                      ovenTemp={constraints.oven_max_temp_c}
+                      skillLevel={constraints.skill_level}
+                      usePreFerment={usePreFerment}
+                    />
+                    {constraints.dietary_filters.length > 0 &&
+                      (() => {
+                        const dw = getDietaryWarnings(
+                          constraints.dietary_filters,
+                          {
+                            fermentHours: customFermentHours,
+                            fermentTemp: customFermentTemp,
+                            yeastType: constraints.pantry_yeasts.includes("sourdough")
+                              ? "sourdough"
+                              : constraints.pantry_yeasts.includes("fresh")
+                                ? "fresh"
+                                : "dry",
+                            hydration: customHydration,
+                            flourW: customFlourW,
+                          },
+                          cms,
+                        );
+                        if (dw.length === 0) return null;
+                        return (
+                          <div
+                            className="mt-3"
+                            style={{
+                              background: "var(--surface-container-low)",
+                              border: "var(--border-width-thin) solid var(--outline-variant)",
+                              borderRadius: "var(--radius-lg)",
+                              padding: "var(--space-4) var(--space-5)",
+                              display: "flex",
+                              flexDirection: "column",
+                              gap: "var(--space-2-5)",
+                            }}
+                          >
+                            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+                              <span style={{ fontSize: "var(--font-size-base)" }}>🩺</span>
+                              <span
+                                style={{
+                                  fontSize: "var(--font-size-sm)",
+                                  letterSpacing: "0.18em",
+                                  textTransform: "uppercase",
+                                  color: "var(--primary)",
+                                  fontWeight: "var(--weight-semibold)",
+                                }}
+                              >
+                                {cms.pages.dietaryWarningsTitle}
+                              </span>
+                            </div>
+                            {dw.map((w, i) => (
+                              <div
+                                key={w.filterId + i}
+                                className="flex items-start gap-2"
+                                style={{
+                                  background:
+                                    w.severity === "critical"
+                                      ? "color-mix(in srgb, var(--severity-critical) 8%, transparent)"
+                                      : w.severity === "warning"
+                                        ? "color-mix(in srgb, var(--severity-warning) 8%, transparent)"
+                                        : "color-mix(in srgb, var(--severity-info) 6%, transparent)",
+                                  border: `1px solid ${
+                                    w.severity === "critical"
+                                      ? "color-mix(in srgb, var(--severity-critical) 20%, transparent)"
+                                      : w.severity === "warning"
+                                        ? "color-mix(in srgb, var(--severity-warning) 20%, transparent)"
+                                        : "color-mix(in srgb, var(--severity-info) 12%, transparent)"
+                                  }`,
+                                  borderRadius: "var(--radius-md)",
+                                  padding: "var(--space-2-5) var(--font-size-lg)",
+                                }}
+                              >
+                                <span style={{ flexShrink: 0, fontSize: "var(--font-size-base)", marginTop: "var(--space-px)" }}>
+                                  {w.severity === "critical" ? "🛑" : w.severity === "warning" ? "⚠️" : "ℹ️"}
+                                </span>
+                                <div>
+                                  <div className="type-body" style={{ color: "var(--text-default)", lineHeight: 1.4 }}>
+                                    {w.message}
+                                  </div>
+                                  <div className="type-body-sm" style={{ color: "var(--muted-foreground)", lineHeight: 1.4, marginTop: "var(--space-0-5)" }}>
+                                    💡 {w.tip}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
                   </div>
                 </div>
-              </div>
-            </motion.main>
-          )}
-      </AnimatePresence>
+              }
+            />
+          </motion.main>
+        )}
 
       {/* VPL-068: Scroll indicators removed — single continuous flow */}
 
-      {/* ═══ FLOATING CTA ═══ */}
+      {currentStep !== "result" && (
+        <footer
+          className="relative mx-auto flex max-w-7xl justify-center px-4 pb-36 pt-4 sm:px-6 md:pb-12 lg:px-8"
+          style={{ zIndex: 2 }}
+          aria-label="Vulcan motto"
+        >
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-3.5 py-2"
+            style={{
+              background: "color-mix(in srgb, var(--container-page) 72%, transparent)",
+              border: "1px solid var(--container-border-subtle)",
+              color: "var(--text-muted)",
+              boxShadow: "0 10px 28px color-mix(in srgb, var(--shadow-color) 6%, transparent)",
+              backdropFilter: "blur(18px) saturate(1.25)",
+              WebkitBackdropFilter: "blur(18px) saturate(1.25)",
+              fontSize: "var(--font-size-md)",
+              fontWeight: "var(--weight-semibold)" as any,
+            }}
+          >
+            <Heart size={14} fill="currentColor" style={{ color: "var(--primary)" }} />
+            Make pizza, not war
+          </div>
+        </footer>
+      )}
+
+      {/* ═══ FLOATING CTA ═══ (non sul result: lì c'è solo back + navbar sezioni) */}
+      {currentStep !== "result" && (
       <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
         {/* M3: bottom scrim — gives floating CTA visual grounding */}
         <div
-          className="absolute inset-x-0 bottom-0"
+          className="absolute inset-x-0 bottom-0 md:hidden"
           style={{
-            height: "140px",
-            background: `linear-gradient(to top, var(--container-page) 0%, color-mix(in srgb, var(--container-page) 85%, transparent) 45%, rgba(0,0,0,0) 100%)`,
+            height: "108px",
+            background: `linear-gradient(to top, var(--container-page) 0%, color-mix(in srgb, var(--container-page) 72%, transparent) 52%, transparent 100%)`,
           }}
         />
         {/* pb-20 on mobile to clear the 64px bottom tab bar; md:pb-6 on desktop */}
@@ -1526,38 +1217,13 @@ export function HomePage() {
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-6 flex justify-center"
           style={{ zIndex: 1 }}
         >
-          <AnimatePresence mode="wait">
-            {/* Settings → go to styles */}
-            {currentStep === "settings" && (
-              <motion.button
-                key="cta-styles"
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 25,
-                }}
-                onClick={handleGoToStyles}
-                whileHover={{ scale: 1.03, y: -1 }}
-                className="pointer-events-auto flex items-center gap-2.5 h-12 sm:h-13 px-8 sm:px-10 rounded-full active:scale-[0.97] transition-transform"
-                style={{
-                  background: "var(--cta-btn-bg)",
-                  color: "var(--cta-btn-text)",
-                  boxShadow: "var(--cta-btn-shadow-deep)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  fontSize: "var(--font-size-xl-5)",
-                }}
-              >
-                {cms.ui.chooseStyle}
-                <ArrowRight size={15} />
-              </motion.button>
-            )}
+            {/* VPL-080: nessuna CTA "Scegli lo stile" nello step settings —
+                la scelta della tempistica avanza da sola allo step stili. */}
 
             {/* Styles → generate recipe */}
             {currentStep === "styles" && canGenerateRecipe && (
-              <motion.button
+              <CtaButton
+                as={motion.button}
                 key="cta-generate"
                 initial={{ opacity: 0, y: 20, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -1569,78 +1235,29 @@ export function HomePage() {
                 }}
                 onClick={handleGenerateRecipe}
                 whileHover={{ scale: 1.03, y: -1 }}
-                className="pointer-events-auto flex items-center gap-2.5 h-12 sm:h-13 px-8 sm:px-10 rounded-full active:scale-[0.97] transition-transform"
-                style={{
-                  background: "var(--cta-btn-bg)",
-                  color: "var(--cta-btn-text)",
-                  boxShadow: "var(--cta-btn-shadow-deep)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  fontSize: "var(--font-size-xl-5)",
-                }}
+                deepShadow
+                className="pointer-events-auto h-12 sm:h-13 px-8 sm:px-10 active:scale-[0.97]"
               >
                 <Sparkles size={15} />
                 {cms.ui.generate}
-              </motion.button>
+              </CtaButton>
             )}
 
-            {/* Result → change style / new pizza */}
-            {currentStep === "result" && (
-              <motion.div
-                key="cta-result"
-                initial={{ opacity: 0, y: 12, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 12, scale: 0.95 }}
-                className="pointer-events-auto flex items-center gap-2.5"
-              >
-                <motion.button
-                  onClick={handleBackToStyles}
-                  whileHover={{ scale: 1.03 }}
-                  className="flex items-center gap-2 h-12 sm:h-13 px-6 sm:px-7 rounded-full active:scale-[0.97] transition-transform"
-                  style={{
-                    background: "var(--btn-secondary-bg)",
-                    color: "var(--btn-secondary-text)",
-                    boxShadow: "var(--btn-secondary-shadow)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    fontSize: "var(--font-size-xl)",
-                    border:
-                      "1px solid var(--btn-secondary-border)",
-                  }}
-                >
-                  <Palette size={14} />
-                  {cms.ui.changeStyle}
-                </motion.button>
-                <motion.button
-                  onClick={handleReset}
-                  whileHover={{ scale: 1.03 }}
-                  className="flex items-center gap-2 h-12 sm:h-13 px-6 sm:px-7 rounded-full active:scale-[0.97] transition-transform"
-                  style={{
-                    background: "var(--btn-ghost-bg)",
-                    color: "var(--btn-ghost-text)",
-                    boxShadow: "var(--btn-ghost-shadow)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    fontSize: "var(--font-size-xl)",
-                  }}
-                >
-                  <RotateCcw size={14} />
-                  {cms.ui.newPizza}
-                </motion.button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            {/* Result: nessuna CTA — back in alto a sinistra + navbar sezioni in basso */}
         </div>
       </div>
+      )}
 
       {/* ═══ STYLE DETAIL SHEET — bottom sheet with selected style details ═══ */}
-      <AnimatePresence>
-        {currentStep === "styles" && selectedStyle && (
+      {currentStep === "styles" && selectedStyle && (
           <StyleDetailSheet
             key={selectedStyle.id}
             style={selectedStyle}
+            constraints={constraints}
             onGenerate={handleGenerateRecipe}
             onDismiss={() => setSelectedStyle(null)}
           />
-        )}
-      </AnimatePresence>
+      )}
     </div>
   );
 }

@@ -1,13 +1,18 @@
+import { Droplets,Flame,FlaskConical,Hourglass,Sparkles,Timer } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
 import React from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Droplets, Flame, Timer, Clock, FlaskConical } from "lucide-react";
-import { GeneratedRecipe } from "./pizza-engine";
 import { useCms } from "./cms/cms-context";
-import { createFormatter } from "./cms/i18n";
+import { createFormatter,formatTemperatureCopy,t } from "./cms/i18n";
+import { Badge } from "./ds";
+import { GeneratedRecipe } from "./pizza-engine";
 
 interface RecipeStatStripProps {
   recipe: GeneratedRecipe;
   nerdMode?: boolean;
+  /** Vista Semplice (giugno 2026): niente range tecnici sotto i valori. */
+  simple?: boolean;
+  nerdAvailable?: boolean;
+  onNerdModeChange?: (nerd: boolean) => void;
 }
 
 /**
@@ -17,47 +22,138 @@ interface RecipeStatStripProps {
 export function RecipeStatStrip({
   recipe,
   nerdMode,
+  simple,
+  nerdAvailable = false,
+  onNerdModeChange,
 }: RecipeStatStripProps) {
   const science = recipe.science;
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
+  const idealLabel = ui.statIdeal;
+  const nerdRefTempVars = { refTemp: fmt.celsius(18) };
 
   return (
-    <div
-      className="rounded-2xl overflow-hidden"
-      style={{
-        border: "1px solid var(--container-border)",
-      }}
-    >
-      {/* Main 4-stat row */}
-      <div className="grid grid-cols-4 gap-0">
+    <div className="flex flex-col gap-3">
+      {/* ═══ Intestazione della Sezione e Nerd Toggle incorporato ═══ */}
+      <div className="flex items-center justify-between px-0.5 min-h-[36px]">
+        <span
+          className="type-data"
+          style={{
+            color: "var(--text-default)",
+            fontSize: "var(--font-size-md)",
+            fontWeight: "var(--weight-bold)" as any,
+            textTransform: "uppercase",
+            letterSpacing: "var(--tracking-spread)",
+            opacity: 0.9,
+          }}
+        >
+          {cms.ui.nerdTitle || "Parametri Impasto"}
+        </span>
+
+        {nerdAvailable && onNerdModeChange && (
+          <div
+            className="flex items-center p-0.5 rounded-full"
+            style={{
+              background: "color-mix(in srgb, var(--container-page) 82%, transparent)",
+              border: "1px solid var(--container-border)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => onNerdModeChange(false)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs transition-all active:scale-[0.98]"
+              style={{
+                background: !nerdMode ? "var(--container-bg-high)" : "transparent",
+                color: !nerdMode ? "var(--text-default)" : "var(--text-muted)",
+                border: "none",
+                boxShadow: !nerdMode ? "0 2px 6px color-mix(in srgb, var(--shadow-color) 6%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 12%, transparent)" : "none",
+                fontWeight: !nerdMode ? "var(--weight-semibold)" as any : "var(--weight-medium)" as any,
+                cursor: "pointer",
+                lineHeight: 1,
+              }}
+            >
+              <Sparkles size={12} style={{ color: !nerdMode ? "var(--primary)" : "var(--text-muted)" }} />
+              <span>Easy</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onNerdModeChange(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs transition-all active:scale-[0.98]"
+              style={{
+                background: nerdMode ? "var(--primary)" : "transparent",
+                color: nerdMode ? "var(--text-on-accent)" : "var(--text-muted)",
+                border: "none",
+                boxShadow: nerdMode ? "0 2px 6px color-mix(in srgb, var(--primary) 24%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)" : "none",
+                fontWeight: nerdMode ? "var(--weight-semibold)" as any : "var(--weight-medium)" as any,
+                cursor: "pointer",
+                lineHeight: 1,
+              }}
+            >
+              <FlaskConical size={12} style={{ color: nerdMode ? "var(--text-on-accent)" : "var(--text-muted)" }} />
+              <span>Nerd</span>
+            </button>
+          </div>
+        )}
+      </div>
+      {/* ═══ Capsule espressive (M3 Expressive, giugno 2026) ═══
+          Niente più griglia da tabella: quattro contenitori tonali con
+          forme CONTRASTANTI (raggi asimmetrici alternati), numeri oversize
+          e ingresso a molla scaglionato. Il tocco le fa "respirare". */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatCell
           label={ui.statHydration}
-          value={`${recipe.hydration_pct}%`}
-          icon={<Droplets size={16} />}
+          value={fmt.percent(recipe.hydration_pct)}
+          detail={simple ? undefined : `${fmt.percent(recipe.style.dough.hydration_pct_range[0])}–${fmt.percent(recipe.style.dough.hydration_pct_range[1])}`}
+          icon={<Droplets size={18} />}
           color="var(--stat-hydration)"
-          first
+          toneBg="var(--stat-hydration-bg)"
+          index={0}
         />
+        {/* Su misura vs ideale (feedback giugno 2026): quando il TUO forno
+            impone una compensazione, mostriamo il canonico dello stile —
+            chiaro senza essere fuorviante. In nerd: il range completo. */}
         <StatCell
           label={ui.statOven}
-          value={`${recipe.oven_temp_c}°C`}
-          icon={<Flame size={16} />}
+          value={fmt.celsius(recipe.oven_temp_c)}
+          detail={
+            simple
+              ? Math.abs(recipe.oven_temp_c - recipe.style.baking.temp_c_ideal) > 15
+                ? `${idealLabel} ${fmt.celsius(recipe.style.baking.temp_c_ideal)}`
+                : undefined
+              : `${fmt.celsius(recipe.style.baking.temp_c_range[0])}–${fmt.celsius(recipe.style.baking.temp_c_range[1])} · ${idealLabel} ${fmt.celsius(recipe.style.baking.temp_c_ideal)}`
+          }
+          icon={<Flame size={18} />}
           color="var(--stat-oven)"
+          toneBg="var(--stat-oven-bg)"
+          index={1}
         />
         <StatCell
           label={ui.statCookTime}
           value={fmt.cookTime(recipe.cook_time_sec)}
-          icon={<Timer size={16} />}
+          detail={
+            simple
+              ? Math.abs(recipe.cook_time_sec - recipe.style.baking.cook_time_sec_ideal) >
+                recipe.style.baking.cook_time_sec_ideal * 0.25
+                ? `${idealLabel} ${fmt.cookTime(recipe.style.baking.cook_time_sec_ideal)}`
+                : undefined
+              : `${fmt.durationMinutes(Math.round(recipe.style.baking.cook_time_sec_range[0]/60))}–${fmt.durationMinutes(Math.round(recipe.style.baking.cook_time_sec_range[1]/60))}`
+          }
+          icon={<Timer size={18} />}
           color="var(--stat-cook)"
+          toneBg="var(--stat-cook-bg)"
+          index={2}
         />
         <StatCell
           label={ui.statFermentation}
           value={fmt.fermentTime(recipe.fermentation_hours)}
-          detail={fmt.tempSuffix(recipe.fermentation_temp_c)}
-          icon={<Clock size={16} />}
+          detail={simple ? undefined : `${fmt.durationMinutes(recipe.style.dough.fermentation_hours_range[0] * 60)}–${fmt.durationMinutes(recipe.style.dough.fermentation_hours_range[1] * 60)} · ${fmt.celsius(recipe.fermentation_temp_c)}`}
+          icon={<Hourglass size={18} />}
           color="var(--stat-ferment)"
-          last
+          toneBg="var(--stat-ferment-bg)"
+          index={3}
         />
       </div>
 
@@ -72,20 +168,21 @@ export function RecipeStatStrip({
             className="overflow-hidden"
           >
             <div
+              className="mt-3 overflow-hidden"
               style={{
-                borderTop: "1px solid var(--recipe-tip-nerd-border)",
                 background: "var(--recipe-tip-nerd-bg)",
-                borderLeft: "3px solid var(--score-accent)",
+                border: "1px solid var(--recipe-tip-nerd-border)",
+                borderRadius: "12px 28px 28px 28px",
               }}
             >
-              <div className="flex items-center gap-1.5 px-4 pt-3 pb-1.5">
+              <div className="flex items-center gap-2 px-5 pt-4 pb-2">
                 <FlaskConical
-                  size={10}
+                  size={12}
                   style={{ color: "var(--score-accent)" }}
                 />
                 <span
                   style={{
-                    fontSize: "var(--font-size-sm)",
+                    fontSize: "var(--font-size-md)",
                     fontWeight: "var(--weight-bold)" as any,
                     letterSpacing: "var(--tracking-caps)",
                     textTransform: "uppercase",
@@ -94,20 +191,20 @@ export function RecipeStatStrip({
                 >
                   {ui.nerdTitle}
                 </span>
-                <span
+                <Badge
                   className="px-2 py-0.5 rounded-md"
+                  color="var(--score-accent)"
+                  background="var(--stat-nerd-pill-bg)"
                   style={{
-                    fontSize: "var(--font-size-sm)",
+                    fontSize: "var(--font-size-md)",
                     fontWeight: "var(--weight-bold)" as any,
                     letterSpacing: "var(--tracking-caps)",
                     textTransform: "uppercase",
-                    color: "var(--score-accent)",
-                    background: "color-mix(in srgb, var(--score-accent) 12%, rgba(0,0,0,0))",
-                    fontFamily: "'DM Mono', monospace",
+                    fontFamily: "var(--font-mono)",
                   }}
                 >
                   Nerd
-                </span>
+                </Badge>
               </div>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-0">
                 <NerdCell
@@ -120,20 +217,19 @@ export function RecipeStatStrip({
                 />
                 <NerdCell
                   label={ui.nerdYeast}
-                  value={`${science.yeast_baker_pct}%`}
+                  value={fmt.percent(science.yeast_baker_pct)}
                 />
                 <NerdCell
-                  label={ui.nerdHoursAt18}
-                  value={`${science.effective_hours_18c}h`}
+                  label={t(formatTemperatureCopy(ui.nerdHoursAt18, fmt), nerdRefTempVars)}
+                  value={fmt.fermentTime(Number(science.effective_hours_18c))}
                 />
                 <NerdCell
-                  label={ui.nerdQ10}
+                  label={t(formatTemperatureCopy(ui.nerdQ10, fmt), nerdRefTempVars)}
                   value={`${science.q10_factor}×`}
                 />
                 <NerdCell
                   label={ui.nerdAw}
                   value={`${science.water_activity}`}
-                  last
                 />
               </div>
             </div>
@@ -150,93 +246,157 @@ function StatCell({
   detail,
   icon,
   color,
-  last,
-  first,
+  toneBg,
+  index = 0,
 }: {
   label: string;
   value: string;
   detail?: string;
   icon?: React.ReactNode;
   color: string;
-  first?: boolean;
-  last?: boolean;
+  toneBg: string;
+  index?: number;
 }) {
+  const statValue = splitStatValue(value);
+  const detailRows = [statValue.extra, detail].filter(Boolean);
+
   return (
-    <div
-      className="flex-1 flex flex-col items-center justify-center py-5 px-2 sm:px-3 text-center relative"
+    <motion.div
+      initial={{ opacity: 0, y: 18, scale: 0.92 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{
+        delay: 0.06 + index * 0.07,
+        type: "spring",
+        stiffness: 380,
+        damping: 24,
+      }}
+      whileTap={{ scale: 0.96 }}
+      className="grid items-start py-4 px-4 text-left select-none border"
       style={{
-        background: "var(--container-page)",
+        background: "var(--container-bg)",
+        border: "1px solid var(--container-border)",
+        borderRadius: "16px",
+        cursor: "default",
+        minHeight: 124,
+        gridTemplateRows: "auto minmax(42px, 1fr) auto",
+        rowGap: "var(--space-2)",
+        alignContent: "start",
       }}
     >
-      {/* Divider on left side for all except first cell */}
-      {!first && (
-        <div
-          className="absolute left-0 top-3 bottom-3 w-px"
-          style={{ background: "var(--container-divider)" }}
-        />
-      )}
-      {icon && (
-        <div className="mb-2" style={{ color, opacity: 0.6 }}>
-          {icon}
-        </div>
-      )}
-      <span
-        className="type-numeric"
-        style={{
-          fontSize: "clamp(var(--font-size-2xl), 3vw, var(--font-size-5xl))",
-          fontWeight: "var(--weight-bold)" as any,
-          color,
-          lineHeight: "var(--leading-display)",
-        }}
-      >
-        {value}
-      </span>
-      <span
-        className="mt-1.5"
-        style={{
-          color: "var(--text-muted)",
-          fontSize: "var(--font-size-base)",
-          fontWeight: "var(--weight-semibold)" as any,
-          letterSpacing: "var(--tracking-spread)",
-          textTransform: "uppercase",
-        }}
-      >
-        {label}
-      </span>
-      {detail && (
+      <div className="flex items-center gap-2 min-w-0">
+        <span style={{ color }}>{icon}</span>
         <span
-          className="mt-0.5"
           style={{
-            color: "var(--text-muted)",
             fontSize: "var(--font-size-sm)",
+            fontWeight: "var(--weight-bold)" as any,
+            letterSpacing: "var(--tracking-spread)",
+            textTransform: "uppercase",
+            color: "var(--text-muted)",
           }}
         >
-          {detail}
+          {label}
         </span>
+      </div>
+      <div
+        className="type-numeric flex items-baseline gap-1 min-w-0 w-full"
+        style={{
+          color: "var(--text-default)",
+          fontFeatureSettings: "'tnum'",
+          lineHeight: "var(--leading-none)",
+          alignSelf: "start",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <AnimatePresence initial={false}>
+          <motion.span
+            key={value}
+            className="inline-block"
+            initial={{ opacity: 0, y: 16, filter: "blur(3px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ opacity: 0, y: -16, filter: "blur(3px)" }}
+            transition={{ type: "spring", stiffness: 420, damping: 30 }}
+            style={{
+              fontSize: "clamp(var(--font-size-6xl), 4.8vw, var(--font-size-7xl))",
+              fontWeight: 760,
+              letterSpacing: 0,
+              lineHeight: "0.95",
+            }}
+          >
+            {statValue.main}
+          </motion.span>
+        </AnimatePresence>
+        {statValue.unit && (
+          <span
+            style={{
+              fontSize: "clamp(var(--font-size-xl-5), 1.8vw, var(--font-size-3xl))",
+              fontWeight: "var(--weight-bold)" as any,
+              letterSpacing: 0,
+              lineHeight: 1,
+              flexShrink: 0,
+            }}
+          >
+            {statValue.unit}
+          </span>
+        )}
+      </div>
+      {detailRows.length > 0 && (
+        <div
+          style={{
+            color: "var(--text-muted)",
+            fontSize: "var(--font-size-md)",
+            lineHeight: "var(--leading-normal)",
+            alignSelf: "start",
+          }}
+        >
+          {detailRows.map((row, rowIndex) => (
+            <span
+              key={rowIndex}
+              className="block"
+            >
+              {row}
+            </span>
+          ))}
+        </div>
       )}
-    </div>
+    </motion.div>
   );
+}
+
+function splitStatValue(value: string): {
+  main: string;
+  unit?: string;
+  extra?: string;
+} {
+  const normalized = value.trim();
+  const compact = normalized.match(/^([\d.,]+)(°C|%)$/);
+  if (compact) return { main: compact[1], unit: compact[2] };
+
+  const words = normalized.match(/^([\d.,]+)\s+(.+)$/);
+  if (words) return { main: words[1], unit: words[2] };
+
+  const hoursMinutes = normalized.match(/^(\d+h)\s+(.+)$/);
+  if (hoursMinutes) return { main: hoursMinutes[1], extra: hoursMinutes[2] };
+
+  return { main: normalized };
 }
 
 /* ═══ Compact nerd metric cell ═══ */
 function NerdCell({
   label,
   value,
-  last,
 }: {
   label: string;
   value: string;
-  last?: boolean;
 }) {
   return (
     <div
-      className="flex flex-col items-center justify-center py-3 px-1.5 text-center relative"
+      className="flex flex-col items-center justify-center py-4 px-2 text-center relative"
       style={{ background: "var(--container-page)" }}
     >
       <span
         className="type-data"
         style={{
-          fontSize: "var(--font-size-lg)",
+          fontSize: "var(--font-size-xl)",
           fontWeight: "var(--weight-bold)" as any,
           color: "var(--score-accent)",
           fontFeatureSettings: "'tnum'",
@@ -247,7 +407,7 @@ function NerdCell({
       <span
         style={{
           color: "var(--text-muted)",
-          fontSize: "var(--font-size-sm)",
+          fontSize: "var(--font-size-md)",
           fontWeight: "var(--weight-medium)" as any,
           lineHeight: "var(--leading-compact)",
           marginTop: 2,

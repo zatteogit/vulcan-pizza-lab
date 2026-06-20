@@ -1,75 +1,104 @@
+// TODO consumer leggono ancora ovens[0] — propagare in seguito
 /* === PROFILE PAGE — VPL-057 ===
    Setup utente: forno, skill, pantry, dieta, lingua, dark mode.
    Tab: Profilo — /profile
    Include FTU (First Time Use) onboarding al primo accesso. */
 
-import { useState, useCallback, useEffect, useMemo } from "react";
-import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  User,
-  Sun,
-  Moon,
-  Check,
-  ChevronRight,
-  Flame,
-  Zap,
-  Home,
-  Thermometer,
-  WheatOff,
-  Milk,
-  Egg,
-  Beaker,
-  Timer,
-  CircleDot,
-  Sparkles,
-  Bug,
-  Globe,
-  MapPin,
-  Navigation,
-  Search,
-  X,
-  Loader2,
-  Monitor,
-  ChevronDown,
+Beaker,
+Bug,
+Check,
+ChevronDown,
+ChevronRight,
+CircleDot,
+Egg,
+Flame,
+Globe,
+Home,
+Loader2,
+MapPin,
+Milk,
+Monitor,
+Moon,
+Navigation,
+Search,
+Sparkles,
+Sun,
+Thermometer,
+Timer,
+Trees,
+User,
+WheatOff,
+X,
+Zap,
 } from "lucide-react";
-import { useDarkMode } from "../components/root-layout";
-import { useCms, CMS_DEFAULTS } from "../components/cms/cms-context";
-import type { OvenType, SkillLevel } from "../components/pizza-engine";
+import { AnimatePresence,motion } from "motion/react";
+import { useCallback,useEffect,useMemo,useState } from "react";
+import { createPortal } from "react-dom";
+import { useNavigate } from "react-router";
+import { CMS_DEFAULTS,useCms } from "../components/cms/cms-context";
+import { Chip, CtaButton, Heading } from "../components/ds";
 import {
-  OVEN_PRESETS,
-  SKILL_LEVELS,
-} from "../components/pizza-engine";
-import { LOCALE_META, LOCALE_BUNDLES } from "../components/cms/locales/index";
-import {
-  MIXER_OPTIONS,
-  SURFACE_OPTIONS,
-  TOOL_OPTIONS,
-  TOOL_CATEGORIES,
-  DEFAULT_EQUIPMENT,
-  migrateEquipment,
-  syncLegacyFlags,
-  getLocalizedMixerOptions,
-  getLocalizedSurfaceOptions,
-  getLocalizedToolOptions,
-  getLocalizedToolCategories,
-  getLocalizedMixerLevel,
-} from "../components/equipment-data";
-import type {
-  EquipmentState,
-  MixerType,
-  SurfaceType,
-  ToolCategory,
-} from "../components/equipment-data";
+createFormatter,
+getPreferredUnitSystem,
+savePreferredUnitSystem,
+type UnitSystem,
+} from "../components/cms/i18n";
 import type { LocaleMeta } from "../components/cms/locales/index";
+import { LOCALE_BUNDLES,LOCALE_META } from "../components/cms/locales/index";
+import type {
+EquipmentState,
+MixerType,
+SurfaceType,
+ToolCategory,
+} from "../components/equipment-data";
+import {
+DEFAULT_EQUIPMENT,
+getLocalizedMixerOptions,
+getLocalizedSurfaceOptions,
+getLocalizedToolCategories,
+getLocalizedToolOptions,
+migrateEquipment,
+syncLegacyFlags
+} from "../components/equipment-data";
+import type { OvenType,SkillLevel } from "../components/pizza-engine";
+import {
+OVEN_PRESETS,
+SKILL_LEVELS,
+} from "../components/pizza-engine";
+import { useDarkMode } from "../components/root-layout";
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
 const OVEN_STORAGE_KEY = "vulcan_oven_pref";
 const SKILL_STORAGE_KEY = "vulcan_skill_level";
+const PANTRY_STORAGE_KEY = "vulcan_pantry";
 const DIETARY_STORAGE_KEY = "vulcan_dietary";
 const LOCATION_STORAGE_KEY = "vulcan_location";
 const EQUIPMENT_STORAGE_KEY = "vulcan_equipment";
+const NERD_STORAGE_KEY = "vulcan_nerd_on";
+
+/* ═══ FTU pantry options — versione semplificata per onboarding ═══ */
+const FTU_FLOURS = [
+  { id: "00", labelKey: "flour00" as const },
+  { id: "0", labelKey: "flour0" as const },
+  { id: "manitoba", labelKey: "flourManitoba" as const },
+  { id: "integrale", labelKey: "flourIntegrale" as const },
+  { id: "semola", labelKey: "flourSemola" as const },
+];
+const FTU_FLOURS_SPECIAL = [
+  { id: "farro", labelKey: "flourFarro" as const },
+  { id: "kamut", labelKey: "flourKamut" as const },
+  { id: "segale", labelKey: "flourSegale" as const },
+  { id: "tipo_1", labelKey: "flourTipo1" as const },
+  { id: "tipo_2", labelKey: "flourTipo2" as const },
+  { id: "macinata_pietra", labelKey: "flourMacinataPietra" as const },
+];
+const FTU_YEASTS = [
+  { id: "fresh", labelKey: "yeastFresh" as const },
+  { id: "dry", labelKey: "yeastDry" as const },
+  { id: "sourdough", labelKey: "yeastSourdough" as const },
+];
 
 /* ═══ EQUIPMENT DATA — imported from equipment-data.ts ═══ */
 
@@ -123,7 +152,7 @@ const OVEN_ICONS: Record<string, typeof Flame> = {
   electric_standard: Zap,
   electric_high: Thermometer,
   gas: Flame,
-  wood: Flame,
+  wood: Trees, // Differenziato da gas (Flame) — gruppo di alberi più riconoscibile
 };
 
 /* Pantry data removed — managed in user-needs.tsx */
@@ -137,57 +166,6 @@ const DIETARY_OPTIONS = [
   { id: "nickel", labelKey: "dietNickel" as const, icon: CircleDot },
 ];
 
-/* ═══ CHIP COMPONENT ═══ */
-function ProfileChip({
-  label,
-  active,
-  icon,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  icon?: React.ReactNode;
-  onClick: () => void;
-}) {
-  return (
-    <motion.button
-      onClick={onClick}
-      className="flex items-center px-4 py-2.5 rounded-xl active:scale-95"
-      initial={false}
-      animate={{
-        backgroundColor: active ? "var(--primary)" : "var(--container-bg)",
-        color: active ? "#ffffff" : "var(--text-default)",
-        borderColor: active ? "var(--primary)" : "var(--container-border)",
-        gap: active ? 8 : 8,
-      }}
-      transition={{ type: "spring", stiffness: 500, damping: 35 }}
-      style={{
-        borderWidth: 1,
-        borderStyle: "solid",
-        fontSize: "0.8125rem",
-        fontWeight: "var(--weight-medium)" as any,
-        cursor: "pointer",
-      }}
-      aria-pressed={active}
-    >
-      {icon}
-      {label}
-      <motion.div
-        initial={false}
-        animate={{
-          scale: active ? 1 : 0,
-          opacity: active ? 1 : 0,
-          width: active ? 14 : 0,
-          marginLeft: active ? 0 : -8,
-        }}
-        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        style={{ flexShrink: 0, display: "flex", alignItems: "center", originX: 0.5, originY: 0.5 }}
-      >
-        <Check size={14} />
-      </motion.div>
-    </motion.button>
-  );
-}
 
 /* ═══ SECTION WRAPPER ═══ */
 function ProfileSection({
@@ -214,8 +192,8 @@ function ProfileSection({
       <div className="mb-4">
         {stepNum && (
           <span
+            className="type-label-compact"
             style={{
-              fontSize: "0.6875rem",
               color: "var(--primary)",
               letterSpacing: "0.18em",
               textTransform: "uppercase" as any,
@@ -225,17 +203,13 @@ function ProfileSection({
             {stepNum}
           </span>
         )}
-        <h2
-          className="font-serif"
-          style={{
-            fontSize: "clamp(1.25rem, 3vw, 1.5rem)",
-            lineHeight: "var(--leading-snug)",
-            color: "var(--text-default)",
-            marginTop: stepNum ? 4 : 0,
-          }}
+        <Heading
+          level="md"
+          as="h2"
+          style={{ marginTop: stepNum ? 4 : 0 }}
         >
           {title}
-        </h2>
+        </Heading>
         {subtitle && (
           <p
             className="font-serif italic mt-1"
@@ -287,7 +261,7 @@ function EquipmentCategory({
         className="w-full flex items-center gap-3 px-4 py-3.5 active:scale-[0.99] transition-transform"
         style={{ textAlign: "left" as any, cursor: "pointer" }}
       >
-        <span style={{ fontSize: "1.125rem", flexShrink: 0 }}>{emoji}</span>
+        <span style={{ fontSize: "var(--font-size-2-5xl)", flexShrink: 0 }}>{emoji}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span
@@ -303,8 +277,8 @@ function EquipmentCategory({
             </span>
           </div>
           <span
+            className="type-data-base"
             style={{
-              fontSize: "var(--font-size-base)",
               fontWeight: "var(--weight-medium)" as any,
               color: "var(--text-default)",
             }}
@@ -312,9 +286,8 @@ function EquipmentCategory({
             {title}
           </span>
           <div
-            className="type-data"
+            className="type-data-xs"
             style={{
-              fontSize: "var(--font-size-xs)",
               color: hasSelection ? "var(--text-default)" : "var(--text-muted)",
               marginTop: 1,
               opacity: hasSelection ? 1 : 0.6,
@@ -364,75 +337,43 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
   const [ovenType, setOvenType] = useState<OvenType>("home");
   const [ovenTemp, setOvenTemp] = useState(250);
   const [skillLevel, setSkillLevel] = useState<SkillLevel>(2);
-  /* Pantry (flours/yeasts) removed from FTU — managed in wizard */
-  /* Location state for FTU */
-  const [ftuLocation, setFtuLocation] = useState<SavedLocation | null>(null);
-  const [ftuLocationDetecting, setFtuLocationDetecting] = useState(false);
-  const [ftuLocationQuery, setFtuLocationQuery] = useState("");
-  const [ftuLocationResults, setFtuLocationResults] = useState<GeoSearchResult[]>([]);
-  const [ftuLocationSearching, setFtuLocationSearching] = useState(false);
+  /* Pantry: farine e lieviti per onboarding */
+  const [ftuFlours, setFtuFlours] = useState<string[]>([]);
+  const [ftuYeasts, setFtuYeasts] = useState<string[]>([]);
+  /* Pantry: accordion farine speciali */
+  const [showSpecialFlours, setShowSpecialFlours] = useState(false);
 
+  /* Audit UX giugno 2026 — FTU ridotto a 3 domande + congedo.
+   * Strumenti, superfici, dieta e posizione vivono nella pagina Profilo:
+   * nessuna domanda tecnica prima di aver mostrato il valore dell'app. */
   const steps = [
-    { num: "01", title: p.ftuOvenTitle, subtitle: p.ftuOvenSubtitle },
-    { num: "02", title: p.ftuSkillTitle, subtitle: p.ftuSkillSubtitle },
-    { num: "03", title: p.locationTitle || "La tua posizione", subtitle: p.locationSubtitle || "Per la temperatura ambiente e i calcoli di fermentazione" },
+    { num: "01", title: p.ftuOvenTitle, subtitle: p.ftuOvenSubtitle, optional: false },
+    { num: "02", title: p.ftuSkillTitle, subtitle: p.ftuSkillSubtitle, optional: false },
+    { num: "03", title: p.ftuPantryTitle, subtitle: p.ftuPantrySubtitle, optional: true },
+    { num: "04", title: "Tutto pronto!", subtitle: "Creiamo la tua prima pizza", optional: false },
   ];
+  const lastStep = steps.length - 1;
 
-  /* FTU location search */
-  useEffect(() => {
-    if (ftuLocationQuery.length < 2) { setFtuLocationResults([]); return; }
-    const timer = setTimeout(async () => {
-      setFtuLocationSearching(true);
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(ftuLocationQuery)}&format=json&addressdetails=1&limit=5`);
-        if (res.ok) setFtuLocationResults(await res.json());
-      } catch { /* */ }
-      setFtuLocationSearching(false);
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [ftuLocationQuery]);
-
-  const ftuDetectLocation = useCallback(() => {
-    if (!("geolocation" in navigator)) return;
-    setFtuLocationDetecting(true);
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const { latitude: lat, longitude: lon } = pos.coords;
-        let city = "";
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=10`);
-          if (res.ok) { const d = await res.json(); city = d.address?.city || d.address?.town || d.address?.village || d.address?.municipality || ""; }
-        } catch { /* */ }
-        setFtuLocation({ lat, lon, city });
-        setFtuLocationDetecting(false);
-      },
-      () => setFtuLocationDetecting(false),
-      { timeout: 8000, maximumAge: 300000 },
-    );
-  }, []);
-
-  const ftuSelectLocation = useCallback((result: GeoSearchResult) => {
-    const addr = result.address;
-    const city = addr?.city || addr?.town || addr?.village || addr?.municipality || result.name || "";
-    setFtuLocation({ lat: parseFloat(result.lat), lon: parseFloat(result.lon), city });
-    setFtuLocationQuery("");
-    setFtuLocationResults([]);
-  }, []);
+  const toggleArrayItem = (arr: string[], id: string): string[] =>
+    arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
 
   const handleFinish = useCallback(() => {
     saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp });
     saveJson(SKILL_STORAGE_KEY, skillLevel);
-    if (ftuLocation) saveJson(LOCATION_STORAGE_KEY, ftuLocation);
+    // Pantry: salviamo solo se valorizzata
+    if (ftuFlours.length > 0 || ftuYeasts.length > 0) {
+      saveJson(PANTRY_STORAGE_KEY, { flours: ftuFlours, yeasts: ftuYeasts });
+    }
     try {
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     } catch { /* */ }
     onComplete();
-  }, [ovenType, ovenTemp, skillLevel, ftuLocation, onComplete]);
+  }, [ovenType, ovenTemp, skillLevel, ftuFlours, ftuYeasts, onComplete]);
 
   const handleNext = useCallback(() => {
-    if (step < 2) setStep((s) => s + 1);
+    if (step < lastStep) setStep((s) => s + 1);
     else handleFinish();
-  }, [step, handleFinish]);
+  }, [step, lastStep, handleFinish]);
 
   return (
     <div
@@ -444,7 +385,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         className="w-full"
-        style={{ maxWidth: 480 }}
+        style={{ maxWidth: "var(--profile-card-max-width, 30rem)" }}
       >
         {/* Progress dots */}
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -452,9 +393,9 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
             <div
               key={i}
               style={{
-                width: i === step ? 24 : 8,
-                height: 8,
-                borderRadius: 4,
+                width: i === step ? "var(--space-6)" : "var(--space-2)",
+                height: "var(--space-2)",
+                borderRadius: "var(--radius-xs)",
                 background: i <= step ? "var(--primary)" : "var(--container-bg-high)",
                 transition: "all 0.3s ease",
               }}
@@ -465,8 +406,8 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
         {/* Step header */}
         <div className="text-center mb-8">
           <span
+            className="type-label-compact"
             style={{
-              fontSize: "0.6875rem",
               color: "var(--primary)",
               letterSpacing: "0.18em",
               textTransform: "uppercase" as any,
@@ -475,15 +416,9 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
           >
             {steps[step].num} — {p.ftuWelcome}
           </span>
-          <h1
-            className="font-serif mt-2"
-            style={{
-              fontSize: "clamp(1.75rem, 4vw, 2.25rem)",
-              lineHeight: "var(--leading-snug)",
-            }}
-          >
+          <Heading level="page" className="mt-2">
             {steps[step].title}
-          </h1>
+          </Heading>
           <p
             className="font-serif italic mt-1"
             style={{
@@ -553,7 +488,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                         <div style={{ fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                           {preset.name}
                         </div>
-                        <div className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
+                        <div className="type-data-sm" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
                           Max {preset.maxTemp}°C
                         </div>
                       </div>
@@ -604,7 +539,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                           width: 40,
                           height: 40,
                           borderRadius: 12,
-                          fontSize: "0.875rem",
+                          fontSize: "var(--font-size-lg)",
                           fontWeight: "var(--weight-bold)" as any,
                           fontFeatureSettings: "'tnum'",
                         }}
@@ -615,7 +550,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                         <div style={{ fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                           {skill.name}
                         </div>
-                        <div className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+                        <div className="type-data-sm" style={{ color: "var(--text-muted)" }}>
                           {skill.description}
                         </div>
                       </div>
@@ -636,42 +571,132 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
 
             {step === 2 && (
               <div className="flex flex-col gap-4">
-                {/* Saved location */}
-                {ftuLocation && (
-                  <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "var(--surface-container)", border: "1px solid var(--primary)" }}>
-                    <MapPin size={16} style={{ color: "var(--primary)", flexShrink: 0 }} />
-                    <div className="flex-1 min-w-0">
-                      <div style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
-                        {ftuLocation.city || `${ftuLocation.lat.toFixed(2)}, ${ftuLocation.lon.toFixed(2)}`}
-                      </div>
+                {/* Pantry: farine */}
+                <div>
+                  <div className="type-label-compact" style={{ color: "var(--text-muted)", marginBottom: "var(--space-2)", letterSpacing: "0.05em", textTransform: "uppercase" as any }}>
+                    {cms.ui.pantryFlours}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {FTU_FLOURS.map((f) => (
+                      <Chip
+                        key={f.id}
+                        label={(p as any)[f.labelKey] || f.id}
+                        active={ftuFlours.includes(f.id)}
+                        onToggle={() => setFtuFlours((arr) => toggleArrayItem(arr, f.id))}
+                      />
+                    ))}
+                  </div>
+                  {/* Accordion farine speciali */}
+                  <button
+                    onClick={() => setShowSpecialFlours((v) => !v)}
+                    className="flex items-center gap-1 mt-3 type-data-sm active:scale-95 transition-transform"
+                    style={{
+                      color: "var(--text-accent)",
+                      fontWeight: "var(--weight-medium)" as any,
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                    aria-expanded={showSpecialFlours}
+                  >
+                    <ChevronDown
+                      size={14}
+                      style={{
+                        transform: showSpecialFlours ? "rotate(180deg)" : "rotate(0deg)",
+                        transition: "transform 0.2s",
+                      }}
+                    />
+                    {p.specialFloursOnboarding}
+                  </button>
+                  {showSpecialFlours && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {FTU_FLOURS_SPECIAL.map((f) => (
+                        <Chip
+                          key={f.id}
+                          label={(p as any)[f.labelKey] || f.id}
+                          active={ftuFlours.includes(f.id)}
+                          onToggle={() => setFtuFlours((arr) => toggleArrayItem(arr, f.id))}
+                        />
+                      ))}
                     </div>
-                    <button onClick={() => setFtuLocation(null)} className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center active:scale-95 transition-transform" style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }} aria-label="Rimuovi posizione">
-                      <X size={12} style={{ color: "var(--text-muted)" }} />
-                    </button>
-                  </div>
-                )}
-                {/* Search */}
-                <div className="relative">
-                  <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl" style={{ background: "var(--container-bg-low)", border: "1px solid var(--container-border)" }}>
-                    {ftuLocationSearching ? (<Loader2 size={14} className="animate-spin" style={{ color: "var(--text-muted)", flexShrink: 0 }} />) : (<Search size={14} style={{ color: "var(--text-muted)", flexShrink: 0 }} />)}
-                    <input type="text" value={ftuLocationQuery} onChange={(e) => setFtuLocationQuery(e.target.value)} placeholder={p.locationPlaceholder || "Cerca città..."} className="flex-1 bg-transparent outline-none" style={{ fontSize: "var(--font-size-base)", color: "var(--text-default)", border: "none" }} />
-                  </div>
-                  <AnimatePresence>
-                    {ftuLocationResults.length > 0 && (
-                      <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ type: "spring", stiffness: 500, damping: 30 }} className="absolute left-0 right-0 mt-1 rounded-xl overflow-hidden" style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)", boxShadow: "0 8px 24px rgba(0,0,0,0.12)", zIndex: 10 }}>
-                        {ftuLocationResults.map((result, i) => { const addr = result.address; const city = addr?.city || addr?.town || addr?.village || addr?.municipality || result.name || ""; const region = addr?.state || ""; const country = addr?.country || ""; return (<button key={`${result.lat}-${result.lon}-${i}`} onClick={() => ftuSelectLocation(result)} className="w-full flex items-center gap-3 px-3.5 py-2.5 text-left active:scale-[0.99] transition-transform" style={{ borderBottom: i < ftuLocationResults.length - 1 ? "1px solid var(--container-border-subtle)" : "none" }}><MapPin size={13} style={{ color: "var(--text-muted)", flexShrink: 0 }} /><div className="flex-1 min-w-0"><div style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>{city || result.display_name.split(",")[0]}</div>{(region || country) && (<div style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>{[region, country].filter(Boolean).join(", ")}</div>)}</div></button>); })}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  )}
                 </div>
-                {/* Auto-detect */}
-                <motion.button onClick={ftuDetectLocation} disabled={ftuLocationDetecting} className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl active:scale-95 transition-transform" style={{ background: "var(--container-bg-low)", border: "1px solid var(--container-border)", color: "var(--text-default)", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-medium)" as any, cursor: ftuLocationDetecting ? "wait" : "pointer", opacity: ftuLocationDetecting ? 0.6 : 1 }}>
-                  {ftuLocationDetecting ? (<Loader2 size={14} className="animate-spin" />) : (<Navigation size={14} />)}
-                  {p.locationAuto || "Rileva posizione"}
-                </motion.button>
-                {!ftuLocation && (
-                  <p className="type-data text-center" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", opacity: 0.6 }}>{p.locationNone || "Puoi anche saltare — useremo un valore standard."}</p>
+                {/* Pantry: lieviti */}
+                <div>
+                  <div className="type-label-compact" style={{ color: "var(--text-muted)", marginBottom: "var(--space-2)", letterSpacing: "0.05em", textTransform: "uppercase" as any }}>
+                    {cms.ui.pantryYeasts}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {FTU_YEASTS.map((y) => (
+                      <Chip
+                        key={y.id}
+                        label={(p as any)[y.labelKey] || y.id}
+                        active={ftuYeasts.includes(y.id)}
+                        onToggle={() => setFtuYeasts((arr) => toggleArrayItem(arr, y.id))}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {ftuFlours.length === 0 && ftuYeasts.length === 0 && (
+                  <p className="type-data-sm text-center" style={{ color: "var(--text-muted)", opacity: 0.6 }}>
+                    {p.ftuSkipMessage}
+                  </p>
                 )}
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="flex flex-col gap-5">
+                <div className="text-center" style={{ fontSize: "var(--font-size-8xl)" }}>🎉</div>
+                <p style={{ fontSize: "var(--font-size-xl)", color: "var(--text-default)", textAlign: "center", lineHeight: 1.5 }}>
+                  {p.ftuDoneTitle}
+                </p>
+                <ul style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)", paddingLeft: 0 }}>
+                  <li className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "var(--container-bg-low)", border: "1px solid var(--container-border)", listStyle: "none" }}>
+                    <span style={{ fontSize: "var(--font-size-3xl)", flexShrink: 0 }}>🍕</span>
+                    <div>
+                      <div style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                        {p.ftuDoneCreateTitle}
+                      </div>
+                      <div
+                        className="type-body-xs"
+                        style={{ color: "var(--text-muted)" }}
+                        dangerouslySetInnerHTML={{ __html: p.ftuDoneCreateDesc }}
+                      />
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "var(--container-bg-low)", border: "1px solid var(--container-border)", listStyle: "none" }}>
+                    <span style={{ fontSize: "var(--font-size-3xl)", flexShrink: 0 }}>📚</span>
+                    <div>
+                      <div style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                        {p.ftuDoneExploreTitle}
+                      </div>
+                      <div
+                        className="type-body-xs"
+                        style={{ color: "var(--text-muted)" }}
+                        dangerouslySetInnerHTML={{ __html: p.ftuDoneExploreDesc }}
+                      />
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "var(--container-bg-low)", border: "1px solid var(--container-border)", listStyle: "none" }}>
+                    <span style={{ fontSize: "var(--font-size-3xl)", flexShrink: 0 }}>🎓</span>
+                    <div>
+                      <div style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                        {p.ftuDoneLearnTitle}
+                      </div>
+                      <div
+                        className="type-body-xs"
+                        style={{ color: "var(--text-muted)" }}
+                        dangerouslySetInnerHTML={{ __html: p.ftuDoneLearnDesc }}
+                      />
+                    </div>
+                  </li>
+                </ul>
+                <p
+                  className="type-body-xs"
+                  style={{ color: "var(--text-muted)", textAlign: "center", opacity: 0.7 }}
+                  dangerouslySetInnerHTML={{ __html: p.ftuDoneProfileNote }}
+                />
               </div>
             )}
           </motion.div>
@@ -697,22 +722,15 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
           ) : (
             <div />
           )}
-          <motion.button
+          <CtaButton
+            as={motion.button}
             onClick={handleNext}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-full active:scale-95 transition-transform"
-            style={{
-              background: "var(--cta-btn-bg)",
-              color: "var(--cta-btn-text)",
-              fontSize: "var(--font-size-xl)",
-              fontWeight: "var(--weight-semibold)" as any,
-              boxShadow: "var(--cta-btn-shadow)",
-              border: "none",
-              cursor: "pointer",
-            }}
+            className="px-6 py-2.5"
+            style={{ fontSize: "var(--font-size-xl)" }}
           >
-            {step < 2 ? p.ftuNext : p.ftuStart}
-            {step < 2 ? <ChevronRight size={16} /> : <Sparkles size={16} />}
-          </motion.button>
+            {step < lastStep ? p.ftuNext : p.ftuStart}
+            {step < lastStep ? <ChevronRight size={16} /> : <Sparkles size={16} />}
+          </CtaButton>
         </div>
       </motion.div>
     </div>
@@ -770,7 +788,7 @@ function LocaleConfirmModal({
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(0,0,0,0.45)",
+          background: "var(--dialog-scrim)",
           backdropFilter: "blur(8px)",
         }}
       />
@@ -786,7 +804,7 @@ function LocaleConfirmModal({
           border: "1px solid var(--container-border)",
           width: "100%",
           maxWidth: 380,
-          boxShadow: "0 24px 48px rgba(0,0,0,0.18)",
+          boxShadow: "var(--dialog-shadow-compact)",
         }}
       >
         <div className="px-6 pt-6 pb-2 text-center">
@@ -801,16 +819,9 @@ function LocaleConfirmModal({
           >
             <Globe size={22} style={{ color: "var(--primary)" }} />
           </div>
-          <h3
-            className="font-serif"
-            style={{
-              fontSize: "clamp(1.125rem, 3vw, 1.25rem)",
-              lineHeight: "var(--leading-snug)",
-              color: "var(--text-default)",
-            }}
-          >
+          <Heading level="sm">
             {srcProfile.localeModalTitle}
-          </h3>
+          </Heading>
           {/* Target language echo */}
           {tgtProfile.localeModalTitle !== srcProfile.localeModalTitle && (
             <p
@@ -826,8 +837,8 @@ function LocaleConfirmModal({
             </p>
           )}
           <p
+            className="type-body-sm"
             style={{
-              fontSize: "var(--font-size-base)",
               color: "var(--text-muted)",
               marginTop: 8,
               lineHeight: 1.5,
@@ -856,33 +867,25 @@ function LocaleConfirmModal({
         <div className="flex gap-3 px-6 pb-6 pt-4">
           <button
             onClick={onCancel}
-            className="flex-1 px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
+            className="flex-1 px-4 py-2.5 rounded-xl type-data-base active:scale-95 transition-transform"
             style={{
               background: "var(--surface-container)",
               border: "1px solid var(--container-border)",
               color: "var(--text-default)",
-              fontSize: "var(--font-size-base)",
               fontWeight: "var(--weight-medium)" as any,
               cursor: "pointer",
             }}
           >
             {srcProfile.localeModalCancel}
           </button>
-          <button
+          <CtaButton
             onClick={onConfirm}
-            className="flex-1 px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
-            style={{
-              background: "var(--cta-btn-bg)",
-              color: "var(--cta-btn-text)",
-              border: "none",
-              fontSize: "var(--font-size-base)",
-              fontWeight: "var(--weight-semibold)" as any,
-              cursor: "pointer",
-              boxShadow: "var(--cta-btn-shadow)",
-            }}
+            radius="xl"
+            className="flex-1 px-4 py-2.5"
+            style={{ fontSize: "var(--font-size-base)" }}
           >
             {tgtProfile.localeModalConfirm}
-          </button>
+          </CtaButton>
         </div>
       </motion.div>
     </div>,
@@ -892,8 +895,9 @@ function LocaleConfirmModal({
 
 /* ═══ PROFILE PAGE (MAIN) ═══ */
 export function ProfilePage() {
-  const { darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode } = useDarkMode();
-  const { cms, switchLocale } = useCms();
+  const { themeMode, setThemeMode, devMode, setDevMode } = useDarkMode();
+  const { cms, switchLocale, bcp47 } = useCms();
+  const navigate = useNavigate();
   const p = cms.profile;
 
   /* CMS-localized equipment data */
@@ -910,19 +914,92 @@ export function ProfilePage() {
   /* Locale confirmation modal */
   const [pendingLocale, setPendingLocale] = useState<LocaleMeta | null>(null);
 
-  /* Profile state — loaded from localStorage */
-  const [ovenType, setOvenType] = useState<OvenType>(() => {
-    const saved = loadJson<{ ovenType: OvenType; maxTemp: number }>(OVEN_STORAGE_KEY);
-    return saved?.ovenType ?? "home";
+  const [ovens, setOvens] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem("vulcan_ovens");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+      const legacyOven = localStorage.getItem("vulcan_oven");
+      if (legacyOven) {
+        localStorage.removeItem("vulcan_oven");
+        const val = [legacyOven];
+        localStorage.setItem("vulcan_ovens", JSON.stringify(val));
+        return val;
+      }
+      const savedPref = localStorage.getItem(OVEN_STORAGE_KEY);
+      if (savedPref) {
+        const parsed = JSON.parse(savedPref);
+        if (parsed?.ovenType) {
+          const val = [parsed.ovenType];
+          localStorage.setItem("vulcan_ovens", JSON.stringify(val));
+          return val;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+    return ["home"];
   });
+
+  const ovenType = ovens[0] as OvenType;
+
   const [ovenTemp, setOvenTemp] = useState(() => {
     const saved = loadJson<{ ovenType: OvenType; maxTemp: number }>(OVEN_STORAGE_KEY);
     return saved?.maxTemp ?? 250;
+  });
+
+  const [mixers, setMixers] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem("vulcan_mixers");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+      const legacyMixer = localStorage.getItem("vulcan_mixer");
+      if (legacyMixer) {
+        localStorage.removeItem("vulcan_mixer");
+        const val = [legacyMixer];
+        localStorage.setItem("vulcan_mixers", JSON.stringify(val));
+        return val;
+      }
+      const savedEquip = localStorage.getItem(EQUIPMENT_STORAGE_KEY);
+      if (savedEquip) {
+        const parsed = JSON.parse(savedEquip);
+        if (parsed?.mixer_type) {
+          const val = [parsed.mixer_type];
+          localStorage.setItem("vulcan_mixers", JSON.stringify(val));
+          return val;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+    /* Audit roleplay giugno 2026: era ["hand"] (singolare) — non matchava il
+     * MixerType canonico "hands" e faceva risultare un'impastatrice a chi
+     * impasta a mano. */
+    return ["hands"];
   });
   const [skillLevel, setSkillLevel] = useState<SkillLevel>(() => {
     const saved = loadJson<SkillLevel>(SKILL_STORAGE_KEY);
     return saved ?? 2;
   });
+  const [pizzaNerd, setPizzaNerd] = useState<boolean>(() => {
+    try {
+      return (
+        localStorage.getItem(NERD_STORAGE_KEY) === "true" ||
+        localStorage.getItem("vulcan_view_mode") === "nerd"
+      );
+    } catch {
+      return false;
+    }
+  });
+  const [unitSystem, setUnitSystem] = useState<UnitSystem>(() => getPreferredUnitSystem());
+  const fmt = useMemo(
+    () => createFormatter(cms.ui, bcp47, unitSystem),
+    [cms.ui, bcp47, unitSystem],
+  );
   /* Pantry state removed — managed in wizard Crea (user-needs.tsx) */
   const [dietary, setDietary] = useState<string[]>(() => {
     const saved = loadJson<string[]>(DIETARY_STORAGE_KEY);
@@ -944,13 +1021,16 @@ export function ProfilePage() {
     });
   }, []);
 
-  const selectMixer = useCallback((id: MixerType) => {
-    updateEquipment((prev) => {
-      const mixer = MIXER_OPTIONS.find((m) => m.id === id);
-      if (prev.mixer_type === id) return { ...prev, mixer_type: null, mixer_level: null };
-      return { ...prev, mixer_type: id, mixer_level: mixer?.level ?? null };
+  const toggleMixer = useCallback((id: string) => {
+    setMixers((prev) => {
+      if (prev.includes(id)) {
+        if (prev.length === 1) return prev;
+        return prev.filter((x) => x !== id);
+      } else {
+        return [...prev, id];
+      }
     });
-  }, [updateEquipment]);
+  }, []);
 
   const toggleSurface = useCallback((id: SurfaceType) => {
     updateEquipment((prev) => {
@@ -1050,7 +1130,30 @@ export function ProfilePage() {
   /* Auto-save on change */
   useEffect(() => {
     saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp });
-  }, [ovenType, ovenTemp]);
+    try {
+      localStorage.setItem("vulcan_ovens", JSON.stringify(ovens));
+    } catch (e) {
+      // ignore
+    }
+  }, [ovens, ovenType, ovenTemp]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("vulcan_mixers", JSON.stringify(mixers));
+    } catch (e) {
+      // ignore
+    }
+    setEquipment((prev) => {
+      const primaryMixer = mixers[0] as MixerType;
+      const next = {
+        ...prev,
+        mixer_type: primaryMixer,
+        mixers_owned: mixers as MixerType[],
+      };
+      saveJson(EQUIPMENT_STORAGE_KEY, next);
+      return next;
+    });
+  }, [mixers]);
 
   useEffect(() => {
     saveJson(SKILL_STORAGE_KEY, skillLevel);
@@ -1059,6 +1162,16 @@ export function ProfilePage() {
   useEffect(() => {
     saveJson(DIETARY_STORAGE_KEY, dietary);
   }, [dietary]);
+  useEffect(() => {
+    try {
+      localStorage.setItem(NERD_STORAGE_KEY, String(pizzaNerd));
+      localStorage.removeItem("vulcan_view_mode");
+    } catch { /* */ }
+  }, [pizzaNerd]);
+
+  useEffect(() => {
+    savePreferredUnitSystem(unitSystem);
+  }, [unitSystem]);
   const toggleDietary = (id: string) =>
     setDietary((prev) =>
       prev.includes(id) ? prev.filter((d) => d !== id) : [...prev, id],
@@ -1077,13 +1190,16 @@ export function ProfilePage() {
           /* Reload state from localStorage after FTU writes */
           const oven = loadJson<{ ovenType: OvenType; maxTemp: number }>(OVEN_STORAGE_KEY);
           if (oven) {
-            setOvenType(oven.ovenType);
+            setOvens([oven.ovenType]);
             setOvenTemp(oven.maxTemp);
           }
           const skill = loadJson<SkillLevel>(SKILL_STORAGE_KEY);
           if (skill) setSkillLevel(skill);
           const loc = loadJson<SavedLocation>(LOCATION_STORAGE_KEY);
           if (loc) setSavedLocation(loc);
+          /* Audit UX giugno 2026 — "Inizia" mantiene la promessa: si atterra
+           * su Crea, non sulla pagina impostazioni. */
+          navigate("/");
         }}
       />
     );
@@ -1113,16 +1229,9 @@ export function ProfilePage() {
           >
             <User size={26} style={{ color: "var(--primary)" }} />
           </div>
-          <h1
-            className="font-serif"
-            style={{
-              fontSize: "clamp(1.75rem, 4vw, 2.25rem)",
-              lineHeight: "var(--leading-snug)",
-              color: "var(--text-default)",
-            }}
-          >
+          <Heading level="page">
             {p.pageTitle}
-          </h1>
+          </Heading>
           <p
             className="font-serif italic mt-1"
             style={{
@@ -1145,14 +1254,23 @@ export function ProfilePage() {
           <div className="flex flex-col gap-2">
             {OVEN_PRESETS.map((preset) => {
               const Icon = OVEN_ICONS[preset.id] || Flame;
-              const active = ovenType === preset.id;
+              const active = ovens.includes(preset.id);
               return (
                 <motion.button
                   key={preset.id}
                   layout
                   onClick={() => {
-                    setOvenType(preset.id);
-                    setOvenTemp(preset.maxTemp);
+                    setOvens((prev) => {
+                      let next;
+                      if (prev.includes(preset.id)) {
+                        if (prev.length === 1) return prev;
+                        next = prev.filter((x) => x !== preset.id);
+                      } else {
+                        next = [...prev, preset.id];
+                        setOvenTemp(preset.maxTemp);
+                      }
+                      return next;
+                    });
                   }}
                   className="flex items-center gap-3 p-3 sm:p-4 rounded-xl active:scale-[0.98]"
                   animate={{
@@ -1177,7 +1295,7 @@ export function ProfilePage() {
                     <Icon size={18} />
                   </motion.div>
                   <div className="flex-1 min-w-0">
-                    <span style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                    <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
                       {preset.name}
                     </span>
                   </div>
@@ -1185,7 +1303,7 @@ export function ProfilePage() {
                     className="type-data flex-shrink-0"
                     style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}
                   >
-                    {preset.maxTemp}°C
+                    {fmt.celsius(preset.maxTemp)}
                   </span>
                   <AnimatePresence>
                     {active && (
@@ -1208,7 +1326,7 @@ export function ProfilePage() {
           {/* Temperature override */}
           <div className="mt-4 px-1">
             <div className="flex items-center justify-between mb-2">
-              <span className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+              <span className="type-data-sm" style={{ color: "var(--text-muted)" }}>
                 {p.tempLabel}
               </span>
               <span
@@ -1220,7 +1338,7 @@ export function ProfilePage() {
                   fontFeatureSettings: "'tnum'",
                 }}
               >
-                {ovenTemp}°C
+                {fmt.celsius(ovenTemp)}
               </span>
             </div>
             <input
@@ -1271,14 +1389,14 @@ export function ProfilePage() {
                       animate={{ color: active ? "var(--primary)" : "var(--text-muted)" }}
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
                       style={{
-                        fontSize: "0.75rem",
+                        fontSize: "var(--font-size-base)",
                         fontWeight: "var(--weight-bold)" as any,
                         fontFeatureSettings: "'tnum'",
                       }}
                     >
                       LV{skill.level}
                     </motion.span>
-                    <span style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                    <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
                       {skill.name}
                     </span>
                     <AnimatePresence>
@@ -1295,7 +1413,7 @@ export function ProfilePage() {
                       )}
                     </AnimatePresence>
                   </div>
-                  <span className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>
+                  <span className="type-data-xs" style={{ color: "var(--text-muted)" }}>
                     {skill.description}
                   </span>
                 </motion.button>
@@ -1308,43 +1426,43 @@ export function ProfilePage() {
 
         {/* ── ATTREZZATURA AVANZATA ── */}
         <ProfileSection
-          title={p.equipTitle || "Attrezzatura"}
-          subtitle={p.equipSubtitle || "Cosa hai in cucina"}
-          stepNum={p.equipStep || "03 — Attrezzatura"}
+          title={p.equipTitle}
+          subtitle={p.equipSubtitle}
+          stepNum={p.equipStep}
           delay={0.15}
         >
           <div className="flex flex-col gap-3">
             {/* ── Impastamento ── */}
             <EquipmentCategory
-              title={p.equipMixerTitle || "Impastamento"}
+              title={p.equipMixerTitle}
               emoji="🤲"
-              stepLabel={(p.equipMixerTitle || "IMPASTAMENTO").toUpperCase()}
+              stepLabel={p.equipMixerTitle.toUpperCase()}
               expanded={equipExpandedCat === "mixer"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "mixer" ? null : "mixer")}
-              summary={equipment.mixer_type
-                ? localMixers.find((m) => m.id === equipment.mixer_type)?.label ?? ""
-                : p.equipSummaryNone || "Non selezionato"}
-              hasSelection={equipment.mixer_type !== null}
+              summary={mixers.length > 0
+                ? mixers.map(id => localMixers.find((m) => m.id === id)?.label ?? "").filter(Boolean).join(", ")
+                : p.equipSummaryNone}
+              hasSelection={mixers.length > 0}
             >
               <div className="flex flex-col gap-1.5">
                 {localMixers.map((mixer) => {
-                  const active = equipment.mixer_type === mixer.id;
+                  const active = mixers.includes(mixer.id);
                   return (
                     <motion.button
                       key={mixer.id}
-                      onClick={() => selectMixer(mixer.id)}
+                      onClick={() => toggleMixer(mixer.id)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg active:scale-[0.98]"
                       animate={{
-                        backgroundColor: active ? "var(--surface-container)" : "rgba(0,0,0,0)",
+                        backgroundColor: active ? "var(--surface-container)" : "transparent",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
                       style={{ borderWidth: 1, borderStyle: "solid", cursor: "pointer", textAlign: "left" as any }}
                     >
-                      <span style={{ fontSize: "1rem", flexShrink: 0 }}>{mixer.emoji}</span>
+                      <span style={{ fontSize: "var(--font-size-xl-5)", flexShrink: 0 }}>{mixer.emoji}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                          <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
                             {mixer.label}
                           </span>
                           <span
@@ -1365,7 +1483,7 @@ export function ProfilePage() {
                             {mixer.level === "professional" ? "Pro" : mixer.level === "semi_pro" ? "Semi-Pro" : "Casa"}
                           </span>
                         </div>
-                        <div className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", marginTop: 1 }}>
+                        <div className="type-data-xs" style={{ color: "var(--text-muted)", marginTop: 1 }}>
                           {mixer.description}
                         </div>
                       </div>
@@ -1390,14 +1508,14 @@ export function ProfilePage() {
 
             {/* ── Superficie di cottura ── */}
             <EquipmentCategory
-              title={p.equipSurfaceTitle || "Superficie di cottura"}
+              title={p.equipSurfaceTitle}
               emoji="♨️"
-              stepLabel={(p.equipSurfaceTitle || "SUPERFICIE").toUpperCase()}
+              stepLabel={p.equipSurfaceTitle.toUpperCase()}
               expanded={equipExpandedCat === "surface"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "surface" ? null : "surface")}
               summary={equipment.surfaces.length > 0
                 ? equipment.surfaces.map((s) => localSurfaces.find((o) => o.id === s)?.label ?? s).join(", ")
-                : p.equipSummaryNone || "Nessuna selezionata"}
+                : p.equipSummaryNone}
               hasSelection={equipment.surfaces.length > 0}
             >
               <div className="flex flex-col gap-1.5">
@@ -1409,16 +1527,16 @@ export function ProfilePage() {
                       onClick={() => toggleSurface(surface.id)}
                       className="flex items-center gap-3 px-3 py-2.5 rounded-lg active:scale-[0.98]"
                       animate={{
-                        backgroundColor: active ? "var(--surface-container)" : "rgba(0,0,0,0)",
+                        backgroundColor: active ? "var(--surface-container)" : "transparent",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
                       style={{ borderWidth: 1, borderStyle: "solid", cursor: "pointer", textAlign: "left" as any }}
                     >
-                      <span style={{ fontSize: "1rem", flexShrink: 0 }}>{surface.emoji}</span>
+                      <span style={{ fontSize: "var(--font-size-xl-5)", flexShrink: 0 }}>{surface.emoji}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <span style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                          <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
                             {surface.label}
                           </span>
                           <span
@@ -1433,7 +1551,7 @@ export function ProfilePage() {
                             k={surface.conductivity}
                           </span>
                         </div>
-                        <div className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", marginTop: 1 }}>
+                        <div className="type-data-xs" style={{ color: "var(--text-muted)", marginTop: 1 }}>
                           {surface.description}
                         </div>
                       </div>
@@ -1458,14 +1576,14 @@ export function ProfilePage() {
 
             {/* ── Utensili ── */}
             <EquipmentCategory
-              title={p.equipToolsTitle || "Utensili"}
+              title={p.equipToolsTitle}
               emoji="🔧"
-              stepLabel={(p.equipToolsTitle || "UTENSILI").toUpperCase()}
+              stepLabel={(p.equipToolsTitle).toUpperCase()}
               expanded={equipExpandedCat === "tools"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "tools" ? null : "tools")}
               summary={equipment.tools.length > 0
-                ? (p.equipSummarySelected || "{count} selezionati").replace("{count}", String(equipment.tools.length))
-                : p.equipSummaryNone || "Nessuno selezionato"}
+                ? (p.equipSummarySelected).replace("{count}", String(equipment.tools.length))
+                : p.equipSummaryNone}
               hasSelection={equipment.tools.length > 0}
             >
               <div className="flex flex-col gap-4">
@@ -1488,12 +1606,12 @@ export function ProfilePage() {
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {catTools.map((tool) => (
-                          <ProfileChip
+                          <Chip
                             key={tool.id}
                             label={tool.label}
                             active={equipment.tools.includes(tool.id)}
-                            onClick={() => toggleTool(tool.id)}
-                            icon={<span style={{ fontSize: "0.75rem" }}>{tool.emoji}</span>}
+                            onToggle={() => toggleTool(tool.id)}
+                            icon={<span style={{ fontSize: "var(--font-size-base)" }}>{tool.emoji}</span>}
                           />
                         ))}
                       </div>
@@ -1517,20 +1635,20 @@ export function ProfilePage() {
               >
                 <div className="flex flex-wrap gap-1.5">
                   {equipment.mixer_type && (
-                    <span className="type-data px-2 py-0.5 rounded-md" style={{ fontSize: "var(--font-size-xs)", background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-default)" }}>
+                    <span className="type-data-xs px-2 py-0.5 rounded-md" style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-default)" }}>
                       {localMixers.find((m) => m.id === equipment.mixer_type)?.emoji} {localMixers.find((m) => m.id === equipment.mixer_type)?.label}
                     </span>
                   )}
                   {equipment.surfaces.map((s) => {
                     const opt = localSurfaces.find((o) => o.id === s);
                     return (
-                      <span key={s} className="type-data px-2 py-0.5 rounded-md" style={{ fontSize: "var(--font-size-xs)", background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-default)" }}>
+                      <span key={s} className="type-data-xs px-2 py-0.5 rounded-md" style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-default)" }}>
                         {opt?.emoji} {opt?.label}
                       </span>
                     );
                   })}
                   {equipment.tools.length > 0 && (
-                    <span className="type-data px-2 py-0.5 rounded-md" style={{ fontSize: "var(--font-size-xs)", background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-muted)" }}>
+                    <span className="type-data-xs px-2 py-0.5 rounded-md" style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-muted)" }}>
                       🔧 {equipment.tools.length} utensili
                     </span>
                   )}
@@ -1551,18 +1669,18 @@ export function ProfilePage() {
             {DIETARY_OPTIONS.map((d) => {
               const Icon = d.icon;
               return (
-                <ProfileChip
+                <Chip
                   key={d.id}
                   label={(p as any)[d.labelKey] || d.labelKey}
                   active={dietary.includes(d.id)}
-                  onClick={() => toggleDietary(d.id)}
+                  onToggle={() => toggleDietary(d.id)}
                   icon={<Icon size={14} />}
                 />
               );
             })}
           </div>
           {dietary.length === 0 && (
-            <p className="type-data mt-3" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", opacity: 0.6 }}>
+            <p className="type-data-sm mt-3" style={{ color: "var(--text-muted)", opacity: 0.6 }}>
               {p.noDietNote}
             </p>
           )}
@@ -1570,9 +1688,9 @@ export function ProfilePage() {
 
         {/* ── POSIZIONE ── */}
         <ProfileSection
-          title={p.locationTitle || "La tua posizione"}
-          subtitle={p.locationSubtitle || "Per la temperatura ambiente e i calcoli di fermentazione"}
-          stepNum={p.locationStep || "06 — Posizione"}
+          title={p.locationTitle}
+          subtitle={p.locationSubtitle}
+          stepNum={p.locationStep}
           delay={0.22}
         >
           <div className="flex flex-col gap-3">
@@ -1591,18 +1709,18 @@ export function ProfilePage() {
               >
                 <MapPin size={16} style={{ color: "var(--primary)", flexShrink: 0 }} />
                 <div className="flex-1 min-w-0">
-                  <div style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                  <div className="type-body-sm" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                     {savedLocation.city || `${savedLocation.lat.toFixed(2)}, ${savedLocation.lon.toFixed(2)}`}
                   </div>
-                  <div className="type-data" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
-                    {p.locationSaved || "Posizione salvata"} · {savedLocation.lat.toFixed(4)}, {savedLocation.lon.toFixed(4)}
+                  <div className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
+                    {p.locationSaved} · {savedLocation.lat.toFixed(4)}, {savedLocation.lon.toFixed(4)}
                   </div>
                 </div>
                 <button
                   onClick={clearLocation}
                   className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center active:scale-95 transition-transform"
                   style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}
-                  aria-label="Rimuovi posizione"
+                  aria-label={p.locationRemove}
                 >
                   <X size={12} style={{ color: "var(--text-muted)" }} />
                 </button>
@@ -1627,7 +1745,7 @@ export function ProfilePage() {
                   type="text"
                   value={locationQuery}
                   onChange={(e) => setLocationQuery(e.target.value)}
-                  placeholder={p.locationPlaceholder || "Cerca città..."}
+                  placeholder={p.locationPlaceholder}
                   className="flex-1 bg-transparent outline-none"
                   style={{
                     fontSize: "var(--font-size-base)",
@@ -1639,7 +1757,7 @@ export function ProfilePage() {
                   <button
                     onClick={() => { setLocationQuery(""); setLocationResults([]); }}
                     className="flex-shrink-0 active:scale-95"
-                    aria-label="Cancella ricerca"
+                    aria-label={cms.pages.searchClearLabel}
                   >
                     <X size={14} style={{ color: "var(--text-muted)" }} />
                   </button>
@@ -1658,7 +1776,7 @@ export function ProfilePage() {
                     style={{
                       background: "var(--container-bg)",
                       border: "1px solid var(--container-border)",
-                      boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                      boxShadow: "0 8px 24px color-mix(in srgb, var(--shadow-color) 12%, transparent)",
                       zIndex: 10,
                     }}
                   >
@@ -1678,7 +1796,7 @@ export function ProfilePage() {
                         >
                           <MapPin size={13} style={{ color: "var(--text-muted)", flexShrink: 0 }} />
                           <div className="flex-1 min-w-0">
-                            <div style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                            <div className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
                               {city || result.display_name.split(",")[0]}
                             </div>
                             {(region || country) && (
@@ -1700,7 +1818,7 @@ export function ProfilePage() {
                   className="mt-1 px-3.5 py-2 rounded-xl"
                   style={{ background: "var(--container-bg-low)", fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}
                 >
-                  {p.locationNoResults || "Nessun risultato"}
+                  {p.locationNoResults}
                 </div>
               )}
             </div>
@@ -1725,13 +1843,13 @@ export function ProfilePage() {
               ) : (
                 <Navigation size={14} />
               )}
-              {p.locationAuto || "Rileva posizione"}
+              {p.locationAuto}
             </motion.button>
 
             {/* Hint when no location */}
             {!savedLocation && (
-              <p className="type-data" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", opacity: 0.6 }}>
-                {p.locationNone || "Nessuna posizione impostata — useremo un valore standard."}
+              <p className="type-data-sm" style={{ color: "var(--text-muted)", opacity: 0.6 }}>
+                {p.locationNone}
               </p>
             )}
           </div>
@@ -1771,15 +1889,15 @@ export function ProfilePage() {
                     className="flex items-center gap-2 px-4 py-2.5 rounded-xl active:scale-95"
                     initial={false}
                     animate={{
-                      backgroundColor: currentLocale.id === locale.id ? "var(--primary)" : "var(--container-bg)",
-                      color: currentLocale.id === locale.id ? "#ffffff" : "var(--text-default)",
-                      borderColor: currentLocale.id === locale.id ? "var(--primary)" : "var(--container-border)",
+                      backgroundColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-bg)",
+                      color: currentLocale.id === locale.id ? "var(--chip-text-active)" : "var(--chip-text)",
+                      borderColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-border)",
                     }}
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
                     style={{
                       borderWidth: 1,
                       borderStyle: "solid",
-                      fontSize: "0.8125rem",
+                      fontSize: "var(--font-size-md)",
                       fontWeight: "var(--weight-medium)" as any,
                       cursor: "pointer",
                     }}
@@ -1809,7 +1927,7 @@ export function ProfilePage() {
                 {([
                   { mode: "light" as const, icon: Sun, label: p.themeLight },
                   { mode: "dark" as const, icon: Moon, label: p.themeDark },
-                  { mode: "auto" as const, icon: Monitor, label: p.themeAuto || "Auto" },
+                  { mode: "auto" as const, icon: Monitor, label: p.themeAuto },
                 ]).map(({ mode, icon: Icon, label }) => {
                   const active = themeMode === mode;
                   return (
@@ -1819,15 +1937,15 @@ export function ProfilePage() {
                       className="flex items-center gap-2 px-4 py-2.5 rounded-xl active:scale-95"
                       initial={false}
                       animate={{
-                        backgroundColor: active ? "var(--primary)" : "var(--container-bg)",
-                        color: active ? "#ffffff" : "var(--text-default)",
-                        borderColor: active ? "var(--primary)" : "var(--container-border)",
+                        backgroundColor: active ? "var(--chip-bg-active)" : "var(--chip-bg)",
+                        color: active ? "var(--chip-text-active)" : "var(--chip-text)",
+                        borderColor: active ? "var(--chip-bg-active)" : "var(--chip-border)",
                       }}
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
                       style={{
                         borderWidth: 1,
                         borderStyle: "solid",
-                        fontSize: "0.8125rem",
+                        fontSize: "var(--font-size-md)",
                         fontWeight: "var(--weight-medium)" as any,
                         cursor: "pointer",
                       }}
@@ -1838,13 +1956,175 @@ export function ProfilePage() {
                 })}
               </div>
             </div>
+
           </div>
         </ProfileSection>
 
-        {/* Reset profile */}
+        {/* ── MISURE ── */}
+        <ProfileSection
+          title={p.unitTitle}
+          subtitle={p.unitSubtitle}
+          stepNum={p.unitStep}
+          delay={0.3}
+        >
+          <div>
+            <div
+              className="type-data mb-2"
+              style={{
+                fontSize: "var(--font-size-sm)",
+                color: "var(--text-muted)",
+                fontWeight: "var(--weight-semibold)" as any,
+                textTransform: "uppercase" as any,
+                letterSpacing: "0.08em",
+              }}
+            >
+              {p.unitSystemLabel}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {([
+                {
+                  id: "metric" as UnitSystem,
+                  label: p.unitMetric,
+                  desc: p.unitMetricDesc,
+                },
+                {
+                  id: "imperial" as UnitSystem,
+                  label: p.unitImperial,
+                  desc: p.unitImperialDesc,
+                },
+              ]).map((option) => {
+                const active = unitSystem === option.id;
+                return (
+                  <motion.button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setUnitSystem(option.id)}
+                    className="flex items-start gap-3 p-3 sm:p-4 rounded-xl text-left active:scale-[0.98]"
+                    initial={false}
+                    animate={{
+                      backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
+                      borderColor: active ? "var(--primary)" : "var(--container-border)",
+                    }}
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    style={{
+                      borderWidth: 1.5,
+                      borderStyle: "solid",
+                      cursor: "pointer",
+                    }}
+                    aria-pressed={active}
+                  >
+                    <Thermometer
+                      size={17}
+                      style={{
+                        color: active ? "var(--primary)" : "var(--text-muted)",
+                        flexShrink: 0,
+                        marginTop: 1,
+                      }}
+                    />
+                    <span className="flex-1 min-w-0">
+                      <span className="type-body-sm" style={{ display: "block", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                        {option.label}
+                      </span>
+                      <span className="type-data-xs" style={{ display: "block", marginTop: 3, color: "var(--text-muted)", lineHeight: "var(--leading-normal)" }}>
+                        {option.desc}
+                      </span>
+                    </span>
+                    {active && <Check size={15} style={{ color: "var(--primary)", flexShrink: 0 }} />}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
+        </ProfileSection>
+
+        {/* ── PIZZANERD ── */}
+        <ProfileSection
+          title={p.pizzaNerdTitle}
+          subtitle={p.pizzaNerdSubtitle}
+          stepNum={p.pizzaNerdStep}
+          delay={0.35}
+        >
+          <button
+            type="button"
+            onClick={() => setPizzaNerd((value) => !value)}
+            className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left active:scale-[0.99] transition-transform"
+            style={{
+              background: pizzaNerd
+                ? "color-mix(in srgb, var(--primary) 10%, var(--container-bg))"
+                : "var(--container-bg-low)",
+              border: pizzaNerd
+                ? "1px solid color-mix(in srgb, var(--primary) 32%, var(--container-border))"
+                : "1px solid var(--container-border)",
+              color: "var(--text-default)",
+              cursor: "pointer",
+            }}
+            aria-pressed={pizzaNerd}
+          >
+            <span
+              className="flex items-center justify-center rounded-xl flex-shrink-0"
+              style={{
+                width: 38,
+                height: 38,
+                background: pizzaNerd
+                  ? "color-mix(in srgb, var(--primary) 14%, var(--container-bg))"
+                  : "var(--surface-container)",
+                color: pizzaNerd ? "var(--primary)" : "var(--text-muted)",
+              }}
+            >
+              <Beaker size={17} />
+            </span>
+            <span className="flex-1 min-w-0">
+              <span
+                className="block"
+                style={{
+                  fontSize: "var(--font-size-lg)",
+                  fontWeight: "var(--weight-semibold)" as any,
+                  lineHeight: "var(--leading-tight)",
+                }}
+              >
+                {p.pizzaNerdCardTitle}
+              </span>
+              <span
+                className="block"
+                style={{
+                  color: "var(--text-muted)",
+                  fontSize: "var(--font-size-md)",
+                  lineHeight: "var(--leading-normal)",
+                  marginTop: 2,
+                }}
+              >
+                {p.pizzaNerdCardDesc}
+              </span>
+            </span>
+            <span
+              className="relative rounded-full flex-shrink-0"
+              style={{
+                width: 44,
+                height: 26,
+                background: pizzaNerd ? "var(--primary)" : "var(--container-border)",
+              }}
+            >
+              <motion.span
+                className="absolute top-1 rounded-full"
+                animate={{ left: pizzaNerd ? 22 : 4 }}
+                transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                style={{
+                  width: 18,
+                  height: 18,
+                  background: "var(--container-bg)",
+                  boxShadow: "0 1px 3px color-mix(in srgb, var(--shadow-color) 18%, transparent)",
+                }}
+              />
+            </span>
+          </button>
+        </ProfileSection>
+
+        {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}
         <div className="mt-8 flex flex-col items-center gap-3">
           <button
             onClick={() => {
+              const ok = window.confirm(p.resetConfirmMessage);
+              if (!ok) return;
               try {
                 localStorage.removeItem(PROFILE_COMPLETE_KEY);
               } catch { /* */ }
@@ -1854,7 +2134,7 @@ export function ProfilePage() {
             style={{
               fontSize: "var(--font-size-sm)",
               color: "var(--text-muted)",
-              background: "rgba(0,0,0,0)",
+              background: "transparent",
               border: "1px solid var(--container-border)",
               cursor: "pointer",
             }}
@@ -1867,7 +2147,7 @@ export function ProfilePage() {
             onClick={() => setDevMode(!devMode)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg active:scale-95"
             animate={{
-              backgroundColor: devMode ? "var(--surface-container)" : "rgba(0,0,0,0)",
+              backgroundColor: devMode ? "var(--surface-container)" : "transparent",
               color: devMode ? "var(--primary)" : "var(--text-muted)",
               borderColor: devMode ? "var(--primary)" : "var(--container-border)",
               opacity: devMode ? 1 : 0.5,

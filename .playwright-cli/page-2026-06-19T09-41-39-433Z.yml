@@ -1,0 +1,222 @@
+- generic [ref=e5]:
+  - link "Scopri" [ref=e6] [cursor=pointer]:
+    - /url: /explore
+    - img [ref=e7]
+  - img "Napoletana STG" [ref=e14]
+  - generic [ref=e18]:
+    - text: Ricetta canonica
+    - generic [ref=e19]:
+      - heading "Napoletana STG" [level=1] [ref=e20]
+      - button "Copia link ricetta" [ref=e21] [cursor=pointer]:
+        - img [ref=e22]
+        - generic [ref=e28]: Condividi
+    - generic [ref=e29]:
+      - generic [ref=e30]: Cornicione 1-2 cm gonfio
+      - generic [ref=e31]: Centro 3-4 mm sottile
+      - generic [ref=e32]: Crosta leopardata
+    - paragraph [ref=e33]: Standard aureo secondo disciplinare AVPN. Cornicione gonfio, centro sottile, leopardatura.
+    - button "Approfondisci" [ref=e35] [cursor=pointer]
+  - generic [ref=e39]:
+    - button "Inizia la pizzata" [ref=e41] [cursor=pointer]:
+      - img [ref=e42]
+      - generic [ref=e44]: Inizia
+    - generic [ref=e228]:
+      - generic [ref=e230]:
+        - img [ref=e231]
+        - heading "Tabella di marcia" [level=3] [ref=e233]
+      - generic [ref=e234]:
+        - generic [ref=e235]:
+          - generic [ref=e236]: Inizio
+          - generic [ref=e237]:
+            - button "Inizia prima" [ref=e238]:
+              - img [ref=e239]
+            - button "11:45" [ref=e240] [cursor=pointer]:
+              - generic [ref=e241]: 11:45
+            - button "Inizia più tardi" [ref=e242]:
+              - img [ref=e243]
+        - generic [ref=e244]:
+          - generic [ref=e245]: Fine
+          - generic [ref=e246]:
+            - button "Inizia prima" [ref=e247]:
+              - img [ref=e248]
+            - button "~12:29 domani" [ref=e249] [cursor=pointer]:
+              - generic [ref=e250]: ~12:29
+              - generic [ref=e251]: domani
+            - button "Inizia più tardi" [ref=e252]:
+              - img [ref=e253]
+      - generic [ref=e254]:
+        - generic [ref=e255]:
+          - generic [ref=e256]: Timeline comoda
+          - generic [ref=e257]: Ottimizza gli orari se serve.
+        - switch [ref=e258]
+    - generic [ref=e263]:
+      - generic [ref=e264]:
+        - img [ref=e266]:
+          - img [ref=e267]
+        - generic [ref=e273]:
+          - generic [ref=e275]: 11:45
+          - text: Impasto
+          - paragraph [ref=e276]: Impastare fino a incordatura. Liscio e elastico.
+          - generic [ref=e277]: "Durata: 20 minuti"
+          - button "Come si fa · 2 consigli" [ref=e279] [cursor=pointer]:
+            - img [ref=e281]
+            - text: Come si fa
+            - generic [ref=e283]: · 2 consigli
+      - generic [ref=e284]:
+        - img [ref=e286]:
+          - img [ref=e287]
+        - generic [ref=e293]:
+          - generic [ref=e295]: ~12:00
+          - text: Puntata
+          - paragraph [ref=e296]: Lievitazione in massa a 22°C
+          - generic [ref=e297]: "Durata: 14 ore 24 minuti"
+          - button "Come si fa · 1 consiglio" [ref=e299] [cursor=pointer]:
+            - img [ref=e301]
+            - text: Come si fa
+            - generic [ref=e303]: · 1 consiglio
+      - generic [ref=e304]:
+        - img [ref=e306]:
+          - img [ref=e307]
+        - generic [ref=e313]:
+          - generic [ref=e315]: 02:29 domani
+          - text: Staglio
+          - paragraph [ref=e316]: Dividere in panetti del peso corretto. Formare pallina.
+          - generic [ref=e317]: "Durata: 15 minuti"
+          - button "Come si fa · 1 consiglio" [ref=e319] [cursor=pointer]:
+            - img [ref=e321]
+            - text: Come si fa
+            - generic [ref=e323]: · 1 consiglio
+      - generic [ref=e324]:
+        - img [ref=e326]:
+          - img [ref=e327]
+        - generic [ref=e334]:
+          - generic [ref=e336]: ~02:45 domani
+          - text: Appretto
+          - paragraph [ref=e337]: Lievitazione finale a 22°C
+          - generic [ref=e338]: "Durata: 8 ore 36 minuti"
+          - button "Come si fa · 1 consiglio" [ref=e340] [cursor=pointer]:
+            - img [ref=e342]
+            - text: Come si fa
+            - generic [ref=e344]: · 1 consiglio
+      - generic [ref=e345]:
+        - img [ref=e347]:
+          - img [ref=e348]
+        - generic [ref=e352]:
+          - generic [ref=e354]: 11:20 domani
+          - text: Forno al massimo
+          - paragraph [ref=e355]: Accendi ora il forno a 485°C (pietra o acciaio già dentro). Intanto i panetti finiscono l'appretto.
+          - generic [ref=e356]: "Durata: 1 ora"
+          - button "Come si fa · 1 consiglio" [ref=e358] [cursor=pointer]:
+            - img [ref=e360]
+            - text: Come si fa
+            - generic [ref=e362]: · 1 consiglio
+      - generic [ref=e363]:
+        - img [ref=e365]:
+          - img [ref=e366]
+        - generic [ref=e371]:
+          - generic [ref=e373]: 12:20 domani
+          - text: Stesura
+          - paragraph [ref=e374]: Allargare a mano dal centro, preservare il cornicione
+          - generic [ref=e375]: "Durata: 5 minuti"
+      - generic [ref=e376]:
+        - img [ref=e378]:
+          - img [ref=e379]
+        - generic [ref=e385]:
+          - generic [ref=e387]: 12:25 domani
+          - text: Condimento
+          - generic "Scegli condimento" [ref=e390]:
+            - button "Margherita Da disciplinare" [pressed] [ref=e391] [cursor=pointer]:
+              - generic [ref=e393]:
+                - generic [ref=e394]: Margherita
+                - generic [ref=e395]: Da disciplinare
+            - button "Marinara Tradizionale" [ref=e396] [cursor=pointer]:
+              - generic [ref=e398]:
+                - generic [ref=e399]: Marinara
+                - generic [ref=e400]: Tradizionale
+            - button "Boscaiola Tradizionale" [ref=e401] [cursor=pointer]:
+              - generic [ref=e403]:
+                - generic [ref=e404]: Boscaiola
+                - generic [ref=e405]: Tradizionale
+            - button "Diavola Tradizionale" [ref=e406] [cursor=pointer]:
+              - generic [ref=e408]:
+                - generic [ref=e409]: Diavola
+                - generic [ref=e410]: Tradizionale
+            - button "Capricciosa Tradizionale" [ref=e411] [cursor=pointer]:
+              - generic [ref=e413]:
+                - generic [ref=e414]: Capricciosa
+                - generic [ref=e415]: Tradizionale
+            - button "Quattro Stagioni Tradizionale" [ref=e416] [cursor=pointer]:
+              - generic [ref=e418]:
+                - generic [ref=e419]: Quattro Stagioni
+                - generic [ref=e420]: Tradizionale
+            - button "Quattro Formaggi Tradizionale" [ref=e421] [cursor=pointer]:
+              - generic [ref=e423]:
+                - generic [ref=e424]: Quattro Formaggi
+                - generic [ref=e425]: Tradizionale
+            - button "Ortolana Tradizionale" [ref=e426] [cursor=pointer]:
+              - generic [ref=e428]:
+                - generic [ref=e429]: Ortolana
+                - generic [ref=e430]: Tradizionale
+            - button "Cacio e Pepe Tradizionale" [ref=e431] [cursor=pointer]:
+              - generic [ref=e433]:
+                - generic [ref=e434]: Cacio e Pepe
+                - generic [ref=e435]: Tradizionale
+            - button "Salsiccia e Friarielli Tradizionale" [ref=e436] [cursor=pointer]:
+              - generic [ref=e438]:
+                - generic [ref=e439]: Salsiccia e Friarielli
+                - generic [ref=e440]: Tradizionale
+            - button "Pomodorini e olive baresane Alternativa" [ref=e441] [cursor=pointer]:
+              - generic [ref=e443]:
+                - generic [ref=e444]: Pomodorini e olive baresane
+                - generic [ref=e445]: Alternativa
+            - button "Detroit (cheese crown) Alternativa" [ref=e446] [cursor=pointer]:
+              - generic [ref=e448]:
+                - generic [ref=e449]: Detroit (cheese crown)
+                - generic [ref=e450]: Alternativa
+            - button "Chicago deep dish Alternativa" [ref=e451] [cursor=pointer]:
+              - generic [ref=e453]:
+                - generic [ref=e454]: Chicago deep dish
+                - generic [ref=e455]: Alternativa
+          - paragraph [ref=e456]: Stendere i pelati schiacciati a mano in modo uniforme. Disporre il fior di latte a strisce o cubetti. Basilico fresco e olio EVO a filo PRIMA del forno (cottura 90s, regge).
+          - generic [ref=e457]: "Durata: 3 minuti"
+          - button "Come si fa · 1 consiglio" [ref=e459] [cursor=pointer]:
+            - img [ref=e461]
+            - text: Come si fa
+            - generic [ref=e463]: · 1 consiglio
+      - generic [ref=e464]:
+        - img [ref=e466]:
+          - img [ref=e467]
+        - generic [ref=e471]:
+          - generic [ref=e473]: 12:28 domani
+          - text: Cottura
+          - paragraph [ref=e474]: Cuocere a 485°C
+          - generic [ref=e475]: "Durata: 1 minuto"
+          - button "Come si fa · 2 consigli" [ref=e477] [cursor=pointer]:
+            - img [ref=e479]
+            - text: Come si fa
+            - generic [ref=e481]: · 2 consigli
+    - generic [ref=e196]:
+      - generic [ref=e197]:
+        - generic [ref=e198]: Hai provato questa ricetta?
+        - generic [ref=e199]: Il tuo feedback aiuta a calibrare il motore di Vulcan.
+      - generic [ref=e200]:
+        - button "Riuscita" [ref=e201] [cursor=pointer]:
+          - img [ref=e202]
+          - generic [ref=e204]: Riuscita
+        - button "Non riuscita" [ref=e205] [cursor=pointer]:
+          - img [ref=e206]
+          - generic [ref=e208]: Non riuscita
+  - generic:
+    - generic:
+      - link "Scopri" [ref=e210] [cursor=pointer]:
+        - /url: /explore
+        - img [ref=e211]
+      - tablist "Sezioni della ricetta" [ref=e215]:
+        - tab "Ricetta" [ref=e216] [cursor=pointer]:
+          - generic [ref=e218]: Ricetta
+        - tab "Procedimento" [active] [selected] [ref=e219] [cursor=pointer]:
+          - generic [ref=e220]: Procedimento
+        - tab "Condimento" [ref=e221] [cursor=pointer]:
+          - generic [ref=e222]: Condimento
+      - button "Cerca" [ref=e223]:
+        - img [ref=e224]

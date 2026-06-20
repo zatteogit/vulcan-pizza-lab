@@ -13,7 +13,7 @@ export interface OvenTempParams {
   note: string;
 }
 
-export const OVEN_TEMPS_DB: OvenTempParams[] = [
+const OVEN_TEMPS_DB: OvenTempParams[] = [
   { styleId: "napoletana_stg", idealTemp_c: 485, minTemp_c: 430, maxTemp_c: 500, ovenType: "legna", preheatingMin: 60, note: "AVPN 2024: 430-485°C, 60-90 secondi cottura. Forno a cupola con piano refrattario." },
   { styleId: "napoletana_canotto", idealTemp_c: 450, minTemp_c: 400, maxTemp_c: 480, ovenType: "elettrico_alto", preheatingMin: 45, note: "Temp più bassa della STG per cornicione alto — evitare bruciature esterne." },
   { styleId: "teglia_romana", idealTemp_c: 280, minTemp_c: 250, maxTemp_c: 320, ovenType: "elettrico_std", preheatingMin: 30, note: "Teglia unta, temp media per cottura uniforme del fondo. Pietra refrattaria consigliata." },
@@ -41,7 +41,7 @@ export interface BakingTimeParams {
   note: string;
 }
 
-export const BAKING_TIMES_DB: BakingTimeParams[] = [
+const BAKING_TIMES_DB: BakingTimeParams[] = [
   { styleId: "napoletana_stg", minSeconds: 60, maxSeconds: 90, idealSeconds: 75, turns: 3, note: "60-90s a 485°C. 3 rotazioni con pala per cottura uniforme." },
   { styleId: "napoletana_canotto", minSeconds: 90, maxSeconds: 150, idealSeconds: 120, turns: 2, note: "Poco più lunga per sviluppare il cornicione." },
   { styleId: "teglia_romana", minSeconds: 900, maxSeconds: 1200, idealSeconds: 1020, turns: 1, note: "15-20 min. Rotazione teglia a metà cottura." },
@@ -70,7 +70,7 @@ export interface DoughBaseParams {
   restAfterBall_min: number;
 }
 
-export const DOUGH_BASE_DB: DoughBaseParams[] = [
+const DOUGH_BASE_DB: DoughBaseParams[] = [
   { styleId: "napoletana_stg", ballWeight_g: 250, thickness_mm: 3, stretchMethod: "Stesura a mano (schiaffo napoletano)", restAfterBall_min: 120 },
   { styleId: "napoletana_canotto", ballWeight_g: 280, thickness_mm: 4, stretchMethod: "Stesura a mano delicata, bordo alto", restAfterBall_min: 180 },
   { styleId: "teglia_romana", ballWeight_g: 800, panSize_cm: 40, panShape: "rectangular", thickness_mm: 15, stretchMethod: "Stesura in teglia con olio (3 stesure)", restAfterBall_min: 0 },
@@ -97,7 +97,7 @@ export interface SaltParams {
   note: string;
 }
 
-export const SALT_DB: SaltParams[] = [
+const SALT_DB: SaltParams[] = [
   { styleId: "napoletana_stg", saltPct: 3.0, saltType: "Marino fino", additionTiming: "Dopo farina+acqua (5 min mixing)", note: "AVPN: 3% su farina. Aggiungere dopo idratazione iniziale." },
   { styleId: "napoletana_canotto", saltPct: 2.8, saltType: "Marino fino", additionTiming: "Dopo farina+acqua", note: "Leggermente meno per non frenare la lievitazione del canotto." },
   { styleId: "teglia_romana", saltPct: 2.5, saltType: "Fino", additionTiming: "Con farina", note: "Sale standard. Puoi aggiungerlo all'inizio senza problemi." },
@@ -125,7 +125,7 @@ export interface WaterParams {
   hardnessNote: string;
 }
 
-export const WATER_DB: WaterParams[] = [
+const WATER_DB: WaterParams[] = [
   { styleId: "napoletana_stg", idealTempC: 18, minTempC: 14, maxTempC: 22, phIdeal: 7.0, hardnessNote: "Media durezza (150-250 ppm). Napoli: acqua del Serino ideale." },
   { styleId: "napoletana_canotto", idealTempC: 16, minTempC: 12, maxTempC: 20, phIdeal: 7.0, hardnessNote: "Acqua fredda per impasti ad alta idratazione." },
   { styleId: "teglia_romana", idealTempC: 16, minTempC: 12, maxTempC: 20, phIdeal: 7.0, hardnessNote: "Acqua fredda: impasto idratato scalda durante mixing." },
@@ -156,7 +156,7 @@ export interface MaturationParams {
   note: string;
 }
 
-export const MATURATION_DB: MaturationParams[] = [
+const MATURATION_DB: MaturationParams[] = [
   { styleId: "napoletana_stg", bulkHours: [0.5, 2], bulkTempC: 22, ballHours: [4, 8], ballTempC: 22, totalHoursMin: 6, totalHoursMax: 24, method: "diretto", note: "AVPN: 6-24h a temp ambiente. No frigo per STG classica." },
   { styleId: "napoletana_canotto", bulkHours: [1, 4], bulkTempC: 22, ballHours: [12, 24], ballTempC: 4, totalHoursMin: 18, totalHoursMax: 72, method: "diretto", note: "Lunga maturazione a freddo per alveolatura canotto." },
   { styleId: "teglia_romana", bulkHours: [12, 24], bulkTempC: 4, ballHours: [2, 4], ballTempC: 22, totalHoursMin: 24, totalHoursMax: 72, method: "diretto", note: "Bulk lungo a freddo, poi stesura in teglia e lievitazione finale." },
@@ -184,7 +184,7 @@ export interface ToppingParams {
   note: string;
 }
 
-export const TOPPING_DB: ToppingParams[] = [
+const TOPPING_DB: ToppingParams[] = [
   { styleId: "napoletana_stg", toppingOrder: ["salsa", "mozzarella", "basilico", "olio"], saucePosition: "sotto", cheeseType: "Mozzarella di bufala / Fior di latte", cheesePosition: "sopra_salsa", note: "AVPN: pomodoro San Marzano, mozzarella a pezzi, basilico fresco." },
   { styleId: "napoletana_canotto", toppingOrder: ["salsa", "mozzarella", "basilico", "olio"], saucePosition: "sotto", cheeseType: "Fior di latte / Bufala", cheesePosition: "sopra_salsa", note: "Come STG ma formaggio meno abbondante per non schiacciare il cornicione." },
   { styleId: "teglia_romana", toppingOrder: ["olio", "salsa", "condimento"], saucePosition: "sotto", cheeseType: "Mozzarella a cubetti", cheesePosition: "sopra_salsa", note: "Condire dopo prima cottura (metodo in bianco + condimento)." },
@@ -211,7 +211,7 @@ export interface FoldingParams {
   note: string;
 }
 
-export const FOLDING_DB: FoldingParams[] = [
+const FOLDING_DB: FoldingParams[] = [
   { styleId: "napoletana_stg", foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Impasto a bassa idratazione — mixing standard sufficiente, no pieghe." },
   { styleId: "napoletana_canotto", foldType: "stretch_fold", foldCount: 2, foldInterval_min: 30, note: "2 pieghe durante bulk per sviluppare struttura canotto." },
   { styleId: "teglia_romana", foldType: "stretch_fold", foldCount: 3, foldInterval_min: 45, note: "3 pieghe durante bulk lungo. Sviluppo glutine senza mixing intensivo." },
@@ -239,7 +239,7 @@ export interface ScoringParams {
   note: string;
 }
 
-export const SCORING_DB: ScoringParams[] = [
+const SCORING_DB: ScoringParams[] = [
   { styleId: "napoletana_stg", scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Nessun taglio. La pizza napoletana non viene incisa." },
   { styleId: "napoletana_canotto", scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Come STG: nessun taglio." },
   { styleId: "teglia_romana", scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Nessun taglio prima della cottura." },
@@ -268,7 +268,7 @@ export interface EquipmentCompat {
   note: string;
 }
 
-export const EQUIPMENT_DB: EquipmentCompat[] = [
+const EQUIPMENT_DB: EquipmentCompat[] = [
   { styleId: "napoletana_stg", mixerRequired: false, mixerType: "manuale", mixingTime_min: 20, surfaceType: "pietra_refrattaria", specialEquipment: ["Forno a legna/gas >430°C", "Pala da forno", "Piano refrattario"], note: "Tradizione: impasto a mano. Planetaria accettabile ma non necessaria." },
   { styleId: "napoletana_canotto", mixerRequired: false, mixerType: "planetaria", mixingTime_min: 15, surfaceType: "pietra_refrattaria", specialEquipment: ["Forno elettrico >400°C", "Pietra/acciaio refrattario"], note: "Planetaria consigliata per alta idratazione." },
   { styleId: "teglia_romana", mixerRequired: true, mixerType: "planetaria", mixingTime_min: 25, surfaceType: "teglia", specialEquipment: ["Teglia alluminio/acciaio", "Pietra refrattaria (opzionale)"], note: "Alta idratazione richiede planetaria o spirale." },

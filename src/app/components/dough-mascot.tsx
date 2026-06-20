@@ -17,7 +17,7 @@ import { motion } from 'motion/react';
  * - energy 75–100 → intense morph, strong glow, satellite
  */
 
-export type DoughVariant = 'stretch' | 'rise' | 'rest' | 'spin' | 'fold' | 'forge';
+export type DoughVariant = 'stretch' | 'rise' | 'rest' | 'spin' | 'fold' | 'forge' | 'neural';
 
 interface DoughBlobProps {
   variant?: DoughVariant;
@@ -76,6 +76,13 @@ const BLOB_RADII: Record<DoughVariant, string[]> = {
     '45% 55% 55% 45% / 55% 45% 45% 55%',
     '70% 30% 30% 70% / 70% 70% 30% 30%',
   ],
+  neural: [
+    '45% 55% 38% 62% / 28% 28% 72% 72%',
+    '50% 50% 45% 55% / 45% 45% 55% 55%',
+    '38% 62% 52% 48% / 55% 28% 72% 45%',
+    '50% 50% 50% 50% / 50% 50% 50% 50%',
+    '45% 55% 38% 62% / 28% 28% 72% 72%',
+  ],
 };
 
 /* Accent layer — inner blob with offset phase */
@@ -114,6 +121,12 @@ const ACCENT_RADII: Record<DoughVariant, string[]> = {
     '55% 45% 45% 55% / 45% 55% 55% 45%',
     '50% 50% 50% 50% / 50% 50% 50% 50%',
     '45% 55% 55% 45% / 55% 45% 45% 55%',
+  ],
+  neural: [
+    '50% 50% 45% 55% / 45% 45% 55% 55%',
+    '45% 55% 55% 45% / 55% 45% 45% 55%',
+    '55% 45% 45% 55% / 45% 55% 55% 45%',
+    '50% 50% 45% 55% / 45% 45% 55% 55%',
   ],
 };
 
@@ -175,41 +188,58 @@ export function DoughBlob({
   const mainRadii = BLOB_RADII[variant];
   const accentRadii = ACCENT_RADII[variant];
   const isForge = variant === 'forge';
+  const isNeural = variant === 'neural';
 
   /* Layer sizes */
   const mainSize = size * 0.82;
-  const accentSize = isForge ? size * 0.62 : size * 0.58;
-  const highlightSize = isForge ? size * 0.28 : size * 0.3;
+  const accentSize = isForge || isNeural ? size * 0.62 : size * 0.58;
+  const highlightSize = isForge || isNeural ? size * 0.28 : size * 0.3;
   const satelliteSize = size * 0.1;
 
   /* Static border-radius for reduced-motion */
   const staticRadius = mainRadii[0];
 
-  /* ═══ MAGMA vs DOUGH visual layer config ═══
+  /* ═══ MAGMA vs NEURAL vs DOUGH visual layer config ═══
    * Forge: saturated lava gradients, higher opacity, solid crust,
    *        bright molten core, ember satellites.
+   * Neural: glowing fluid gradients (indigo, violet, pink), glassmorphic opacity,
+   *         bright white/indigo core, soft glowing satellite.
    * Dough: soft pastels, low opacity, dashed ring, gentle glow. */
   const layer = {
     glow: isForge
       ? 'var(--blob-glow-forge)'
-      : 'var(--blob-glow)',
+      : isNeural
+        ? 'var(--blob-glow-neural)'
+        : 'var(--blob-glow)',
     main: isForge
       ? 'var(--blob-body-forge)'
-      : 'var(--blob-body)',
-    mainOpacity: isForge ? 0.28 : 0.16,
+      : isNeural
+        ? 'var(--blob-body-neural)'
+        : 'var(--blob-body)',
+    mainOpacity: isForge ? 0.28 : isNeural ? 0.35 : 0.16,
     accent: isForge
       ? 'var(--blob-accent-forge)'
-      : 'var(--blob-accent)',
-    accentOpacity: isForge ? 0.32 : 0.2,
+      : isNeural
+        ? 'var(--blob-accent-neural)'
+        : 'var(--blob-accent)',
+    accentOpacity: isForge ? 0.32 : isNeural ? 0.4 : 0.2,
     core: isForge
       ? 'var(--blob-core-forge)'
-      : 'var(--blob-core)',
-    coreOpacity: isForge ? 0.25 : 0.14,
+      : isNeural
+        ? 'var(--blob-core-neural)'
+        : 'var(--blob-core)',
+    coreOpacity: isForge ? 0.25 : isNeural ? 0.3 : 0.14,
     edge: isForge
       ? 'var(--blob-edge-forge)'
-      : 'var(--blob-edge)',
-    satellite: isForge ? 'var(--blob-satellite-forge)' : 'var(--blob-satellite)',
-    satelliteOpacity: isForge ? 0.5 : 0.35,
+      : isNeural
+        ? 'var(--blob-edge-neural)'
+        : 'var(--blob-edge)',
+    satellite: isForge
+      ? 'var(--blob-satellite-forge)'
+      : isNeural
+        ? 'var(--blob-satellite-neural)'
+        : 'var(--blob-satellite)',
+    satelliteOpacity: isForge ? 0.5 : isNeural ? 0.75 : 0.35,
   };
 
   return (

@@ -1,15 +1,13 @@
-/* === PRE-FERMENTS PAGE — VPL-069 ===
-   Guida educativa completa: Biga, Poolish, Autolisi.
-   Route: /learn/pre-ferments */
-
+import { ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
-import { FlaskConical, ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
+import { Heading } from "../components/ds";
+import { useCms } from "../components/cms/cms-context";
 import {
-  PreFermentCard,
-  PRE_FERMENT_DB,
-  COMPARISON_ROWS,
+COMPARISON_ROWS,
+PreFermentCard
 } from "../components/pre-ferment-guide";
+import { Flask } from "../components/step-illustrations";
 
 const PRE_FERMENT_ORDER = [
   "biga",
@@ -18,6 +16,8 @@ const PRE_FERMENT_ORDER = [
 ] as const;
 
 export function PreFermentsPage() {
+  const { cms } = useCms();
+  const pg = cms.pages;
   return (
     <div
       className="min-h-screen"
@@ -34,7 +34,7 @@ export function PreFermentsPage() {
           stiffness: 400,
           damping: 30,
         }}
-        className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16"
+        className="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-20"
       >
         {/* Back link */}
         <Link
@@ -48,51 +48,41 @@ export function PreFermentsPage() {
           }}
         >
           <ArrowLeft size={14} />
-          <span>Impara</span>
+          <span>{pg.navLearn}</span>
         </Link>
 
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-14">
           <div
             className="inline-flex items-center justify-center mb-4"
             style={{
-              width: 56,
-              height: 56,
+              width: 76,
+              height: 60,
               borderRadius: 16,
               background:
-                "color-mix(in srgb, var(--cta) 12%, rgba(0,0,0,0))",
+                "color-mix(in srgb, var(--cta) 12%, transparent)",
             }}
           >
-            <FlaskConical
-              size={28}
-              style={{ color: "var(--cta)" }}
-            />
+            <Flask size={58} />
           </div>
-          <h1
-            className="font-serif"
-            style={{
-              fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-              lineHeight: "var(--leading-snug)",
-              color: "var(--text-default)",
-            }}
-          >
-            Pre-fermenti
-          </h1>
+          <Heading level="page">
+            {pg.learnPreFerments}
+          </Heading>
           <p
             className="font-serif italic mt-2"
             style={{
-              fontSize: "var(--font-size-xl-5)",
+              fontSize: "var(--font-size-2xl)",
               color: "var(--text-muted)",
               opacity: 0.65,
             }}
           >
-            Biga, Poolish e Autolisi: quando e perche usarli.
+            {pg.preFermentsSubtitle}
           </p>
         </div>
 
         {/* Intro paragraph */}
         <div
-          className="rounded-2xl px-5 py-4 mb-8"
+            className="rounded-2xl px-6 sm:px-8 py-6 sm:py-7 mb-10"
           style={{
             background: "var(--container-bg-low)",
             border: "1px solid var(--container-border)",
@@ -100,25 +90,18 @@ export function PreFermentsPage() {
         >
           <p
             style={{
-              fontSize: "var(--font-size-lg)",
+              fontSize: "var(--font-size-2xl)",
               lineHeight: "var(--leading-relaxed)",
               color: "var(--text-default)",
               margin: 0,
             }}
           >
-            I pre-fermenti sono impasti preliminari che maturano
-            prima dell'impasto finale. Migliorano sapore,
-            struttura e digeribilita della pizza. Ogni tecnica
-            ha caratteristiche uniche: la <strong>Biga</strong>{" "}
-            (asciutta) dona complessita aromatica, il{" "}
-            <strong>Poolish</strong> (liquido) regala leggerezza
-            e crosta dorata, l'<strong>Autolisi</strong> (solo
-            farina+acqua) sviluppa il glutine senza sforzo.
+            <span dangerouslySetInnerHTML={{ __html: pg.preFermentsDescription }} />
           </p>
         </div>
 
         {/* Pre-ferment cards */}
-        <div className="flex flex-col gap-4 mb-10">
+        <div className="flex flex-col gap-5 mb-14">
           {PRE_FERMENT_ORDER.map((id, i) => (
             <motion.div
               key={id}
@@ -147,25 +130,25 @@ export function PreFermentsPage() {
             delay: 0.3,
           }}
         >
-          <h2
-            className="font-serif mb-4"
-            style={{
-              fontSize: "clamp(1.25rem, 3vw, 1.75rem)",
-              lineHeight: "var(--leading-snug)",
-            }}
-          >
-            Confronto rapido
-          </h2>
+          <Heading level="lg" className="mb-4">
+            {cms.misc.preFermentCompare}
+          </Heading>
           <div
             className="rounded-2xl overflow-hidden"
             style={{
               border: "1px solid var(--outline-variant)",
             }}
           >
-            <div style={{ overflowX: "auto" }}>
+            <div
+              style={{
+                overflowX: "auto",
+                "--pre-ferment-cell-x": "clamp(var(--space-2), 2vw, var(--space-3))",
+              } as React.CSSProperties}
+            >
               <table
                 style={{
                   width: "100%",
+                  tableLayout: "fixed",
                   borderCollapse: "collapse",
                   fontSize: "var(--font-size-md)",
                 }}
@@ -205,7 +188,7 @@ export function PreFermentsPage() {
                       <td
                         style={{
                           ...tdStyle,
-                          fontSize: "var(--font-size-xs)",
+                          fontSize: "var(--font-size-sm)",
                           letterSpacing: "0.08em",
                           textTransform: "uppercase" as const,
                           color: "var(--muted-foreground)",
@@ -214,7 +197,7 @@ export function PreFermentsPage() {
                           background:
                             i % 2 === 0
                               ? "var(--surface-container-low)"
-                              : "rgba(0,0,0,0)",
+                              : "transparent",
                         }}
                       >
                         {row.label}
@@ -225,7 +208,7 @@ export function PreFermentsPage() {
                           background:
                             i % 2 === 0
                               ? "var(--surface-container-low)"
-                              : "rgba(0,0,0,0)",
+                              : "transparent",
                         }}
                       >
                         {row.biga}
@@ -236,7 +219,7 @@ export function PreFermentsPage() {
                           background:
                             i % 2 === 0
                               ? "var(--surface-container-low)"
-                              : "rgba(0,0,0,0)",
+                              : "transparent",
                         }}
                       >
                         {row.poolish}
@@ -247,7 +230,7 @@ export function PreFermentsPage() {
                           background:
                             i % 2 === 0
                               ? "var(--surface-container-low)"
-                              : "rgba(0,0,0,0)",
+                              : "transparent",
                         }}
                       >
                         {row.autolisi}
@@ -272,35 +255,29 @@ export function PreFermentsPage() {
           }}
           className="mt-8"
         >
-          <h2
-            className="font-serif mb-4"
-            style={{
-              fontSize: "clamp(1.25rem, 3vw, 1.75rem)",
-              lineHeight: "var(--leading-snug)",
-            }}
-          >
-            Quale scegliere?
-          </h2>
+          <Heading level="lg" className="mb-4">
+            {pg.preFermentsChoiceTitle}
+          </Heading>
           <div className="flex flex-col gap-3">
             <DecisionCard
               emoji="🍞"
-              title="Biga"
-              when="Quando vuoi sapore complesso e crosta friabile"
-              best="Napoletana classica, Pinsa, Pizza al taglio"
+              title={pg.preFermentsBigaTitle}
+              when={pg.preFermentsBigaWhen}
+              best={pg.preFermentsBigaBest}
               color="var(--primary)"
             />
             <DecisionCard
               emoji="💧"
-              title="Poolish"
-              when="Quando vuoi leggerezza e crosta dorata intensa"
-              best="Teglia Romana, NY Style, Focacce"
+              title={pg.preFermentsPoolishTitle}
+              when={pg.preFermentsPoolishWhen}
+              best={pg.preFermentsPoolishBest}
               color="var(--cta)"
             />
             <DecisionCard
               emoji="💦"
-              title="Autolisi"
-              when="Quando vuoi ridurre il tempo di impasto e migliorare l'estensibilita"
-              best="Tutti gli stili — tecnica universale, combinabile con Biga/Poolish"
+              title={pg.preFermentsAutolisiTitle}
+              when={pg.preFermentsAutolisiWhen}
+              best={pg.preFermentsAutolisiBest}
               color="var(--tertiary)"
             />
           </div>
@@ -371,17 +348,19 @@ function DecisionCard({
 
 /* === TABLE STYLES === */
 const thStyle: React.CSSProperties = {
-  padding: "0.625rem 0.75rem",
+  padding: "var(--space-2) var(--pre-ferment-cell-x, var(--space-3))",
   textAlign: "left",
-  fontSize: "var(--font-size-xs)",
+  fontSize: "var(--font-size-sm)",
   letterSpacing: "0.1em",
   textTransform: "uppercase",
   fontWeight: "var(--weight-semibold)" as any,
   borderBottom: "1px solid var(--outline-variant)",
+  overflowWrap: "break-word",
 };
 
 const tdStyle: React.CSSProperties = {
-  padding: "0.5rem 0.75rem",
+  padding: "var(--space-2) var(--pre-ferment-cell-x, var(--space-3))",
   color: "var(--text-default)",
   borderBottom: "1px solid var(--outline-variant)",
+  overflowWrap: "break-word",
 };

@@ -1,0 +1,10 @@
+#!/bin/sh
+# Pre-commit: guard anti-regressione design tokens (F5-6).
+# Attivazione (una tantum):  git config core.hooksPath .githooks
+# Veloce di proposito (solo grep dei token); il typecheck gira in CI via `npm run verify`.
+npm run check:tokens || {
+  echo ""
+  echo "✗ Commit bloccato: violazioni di tier nei design token (vedi sopra)."
+  echo "  Bypass d'emergenza: git commit --no-verify"
+  exit 1
+}

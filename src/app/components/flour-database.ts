@@ -23,7 +23,7 @@ export interface FlourEntry {
   note: string;
 }
 
-/* === FARINE DATABASE (da Notion — 6 entries iniziali, espandibile) === */
+/* === FARINE DATABASE (da Notion — 25 entries, allineate a marzo 2026) === */
 export const FLOURS_DB: FlourEntry[] = [
   {
     id: "caputo_pizzeria",
@@ -562,20 +562,6 @@ export function getCompatibleFlours(styleId: string): FlourEntry[] {
   return FLOURS_DB.filter((f) => f.stili_compatibili.includes(styleId));
 }
 
-/** Trova farine nel range W specificato */
-export function getFloursByWRange(wMin: number, wMax: number): FlourEntry[] {
-  return FLOURS_DB.filter((f) => f.w >= wMin && f.w <= wMax);
-}
-
-/** Raggruppa farine per produttore */
-export function getFloursByProducer(): Record<string, FlourEntry[]> {
-  const map: Record<string, FlourEntry[]> = {};
-  for (const f of FLOURS_DB) {
-    if (!map[f.producer]) map[f.producer] = [];
-    map[f.producer].push(f);
-  }
-  return map;
-}
 
 /** Etichetta categoria farina */
 export const FLOUR_CATEGORY_LABELS: Record<string, { label: string; emoji: string }> = {

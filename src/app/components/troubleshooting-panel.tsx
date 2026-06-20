@@ -2,43 +2,48 @@
 /* Pannello contestuale con avvisi basati sulla ricetta generata */
 /* + database completo 20 problemi espandibile */
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import {
-  AlertTriangle, Info, XCircle, ChevronDown, ChevronUp,
-  Wrench, Lightbulb, ShieldCheck, Search,
+AlertTriangle,
+ChevronDown,ChevronUp,
+Info,
+Lightbulb,
+Search,
+Wrench,
+XCircle
 } from 'lucide-react';
+import { AnimatePresence,motion } from 'motion/react';
+import { useState } from 'react';
 import { useCms } from './cms/cms-context';
+import { FilterChip } from './ds';
 import {
-  type ContextualWarning,
-  type TroubleshootingIssue,
-  ISSUES_DB,
-  CATEGORY_LABELS,
-  getContextualWarnings,
-  getLocalizedIssue,
-  getLocalizedCategoryLabel,
+type TroubleshootingIssue,
+CATEGORY_LABELS,
+getContextualWarnings,
+getLocalizedCategoryLabel,
+getLocalizedIssue,
+ISSUES_DB
 } from './troubleshooting-data';
 
 /* === SEVERITY ICON MAP === */
 const SeverityIcon = ({ severity }: { severity: string }) => {
-  if (severity === 'critical') return <XCircle style={{ width: 16, height: 16, color: 'var(--error, #d32f2f)' }} />;
-  if (severity === 'warning') return <AlertTriangle style={{ width: 16, height: 16, color: 'var(--tertiary)' }} />;
-  return <Info style={{ width: 16, height: 16, color: 'var(--secondary)' }} />;
+  if (severity === 'critical') return <XCircle style={{ width: 'var(--space-4)', height: 'var(--space-4)', color: 'var(--destructive)' }} />;
+  if (severity === 'warning') return <AlertTriangle style={{ width: 'var(--space-4)', height: 'var(--space-4)', color: 'var(--tertiary)' }} />;
+  return <Info style={{ width: 'var(--space-4)', height: 'var(--space-4)', color: 'var(--secondary)' }} />;
 };
 
 const severityBg = (s: string) =>
   s === 'critical'
-    ? 'rgba(211, 47, 47, 0.08)'
+    ? 'color-mix(in srgb, var(--destructive) 8%, transparent)'
     : s === 'warning'
-      ? 'rgba(204, 136, 68, 0.08)'
-      : 'rgba(133, 117, 104, 0.06)';
+      ? 'color-mix(in srgb, var(--tertiary) 8%, transparent)'
+      : 'color-mix(in srgb, var(--secondary) 6%, transparent)';
 
 const severityBorder = (s: string) =>
   s === 'critical'
-    ? 'rgba(211, 47, 47, 0.2)'
+    ? 'color-mix(in srgb, var(--destructive) 20%, transparent)'
     : s === 'warning'
-      ? 'rgba(204, 136, 68, 0.2)'
-      : 'rgba(133, 117, 104, 0.12)';
+      ? 'color-mix(in srgb, var(--tertiary) 20%, transparent)'
+      : 'color-mix(in srgb, var(--secondary) 12%, transparent)';
 
 /* === CONTEXTUAL WARNINGS (inline in recipe) === */
 interface ContextualWarningsProps {
@@ -70,16 +75,16 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
       style={{
         background: 'var(--surface-container-low)',
         border: '1px solid var(--outline-variant)',
-        borderRadius: '1rem',
-        padding: '1rem 1.25rem',
+        borderRadius: 'var(--radius-lg)',
+        padding: 'var(--space-4) var(--space-5)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.75rem',
+        gap: 'var(--space-3)',
       }}
     >
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <Lightbulb style={{ width: 16, height: 16, color: 'var(--tertiary)' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        <Lightbulb style={{ width: 'var(--space-4)', height: 'var(--space-4)', color: 'var(--tertiary)' }} />
         <span
           style={{
             fontSize: '0.6875rem',
@@ -114,22 +119,22 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
             style={{
               background: severityBg(w.severity),
               border: `1px solid ${severityBorder(w.severity)}`,
-              borderRadius: '0.75rem',
-              padding: '0.75rem 1rem',
+              borderRadius: 'var(--radius-md)',
+              padding: 'var(--space-1-5) var(--space-4)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.375rem',
+              gap: 'var(--space-1-5)',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-              <div style={{ marginTop: 2, flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-2)' }}>
+              <div style={{ marginTop: 'var(--space-0-5)', flexShrink: 0 }}>
                 <SeverityIcon severity={w.severity} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: '0.8125rem', color: 'var(--text-default)', lineHeight: 1.4 }}>
+                <div style={{ fontSize: 'var(--font-size-lg)', color: 'var(--text-default)', lineHeight: 1.4 }}>
                   {w.message}
                 </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--muted-foreground)', lineHeight: 1.4, marginTop: 2 }}>
+                <div style={{ fontSize: 'var(--font-size-md)', color: 'var(--muted-foreground)', lineHeight: 1.4, marginTop: 'var(--space-0-5)' }}>
                   💡 {w.tip}
                 </div>
               </div>
@@ -144,7 +149,7 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
           className="active:scale-95"
           onClick={() => setExpanded(!expanded)}
           style={{
-            background: 'rgba(0,0,0,0)',
+            background: 'transparent',
             border: 'none',
             cursor: 'pointer',
             display: 'flex',
@@ -157,12 +162,12 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
           }}
         >
           {expanded ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <ChevronUp style={{ width: 14, height: 14 }} /> Mostra meno
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
+              <ChevronUp style={{ width: 'var(--font-size-xl)', height: 'var(--font-size-xl)' }} /> Mostra meno
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <ChevronDown style={{ width: 14, height: 14 }} /> +{warnings.length - 2} altr{warnings.length - 2 === 1 ? 'o' : 'i'}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
+              <ChevronDown style={{ width: 'var(--font-size-xl)', height: 'var(--font-size-xl)' }} /> +{warnings.length - 2} altr{warnings.length - 2 === 1 ? 'o' : 'i'}
             </div>
           )}
         </motion.button>
@@ -199,11 +204,11 @@ export function TroubleshootingGuide({ filterCategory }: TroubleshootingGuidePro
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
       {/* Title */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <Wrench style={{ width: 18, height: 18, color: 'var(--primary)' }} />
-        <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', color: 'var(--text-default)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+        <Wrench style={{ width: 'var(--font-size-3xl)', height: 'var(--font-size-3xl)', color: 'var(--primary)' }} />
+        <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--font-size-5xl)', color: 'var(--text-default)' }}>
           Guida Troubleshooting
         </span>
         
@@ -211,21 +216,21 @@ export function TroubleshootingGuide({ filterCategory }: TroubleshootingGuidePro
 
       {/* Search */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: '0.5rem',
+        display: 'flex', alignItems: 'center', gap: 'var(--space-2)',
         background: 'var(--surface-container)',
-        border: '1px solid var(--outline-variant)',
-        borderRadius: '0.75rem',
-        padding: '0.5rem 0.75rem',
+        border: 'var(--border-width-thin) solid var(--outline-variant)',
+        borderRadius: 'var(--radius-md)',
+        padding: 'var(--space-2) var(--space-3)',
       }}>
-        <Search style={{ width: 14, height: 14, color: 'var(--muted-foreground)', flexShrink: 0 }} />
+        <Search style={{ width: 'var(--font-size-xl)', height: 'var(--font-size-xl)', color: 'var(--muted-foreground)', flexShrink: 0 }} />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Cerca sintomo o causa..."
           style={{
-            flex: 1, border: 'none', background: 'rgba(0,0,0,0)', outline: 'none',
-            fontSize: '0.8125rem', color: 'var(--text-default)',
+            flex: 1, border: 'none', background: 'transparent', outline: 'none',
+            fontSize: 'var(--font-size-lg)', color: 'var(--text-default)',
             fontFamily: 'inherit',
           }}
         />
@@ -233,7 +238,7 @@ export function TroubleshootingGuide({ filterCategory }: TroubleshootingGuidePro
 
       {/* Category chips */}
       <motion.div
-        style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}
+        style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1-5)' }}
         initial="hidden"
         animate="visible"
         variants={{
@@ -241,56 +246,39 @@ export function TroubleshootingGuide({ filterCategory }: TroubleshootingGuidePro
           visible: { transition: { staggerChildren: 0.04 } },
         }}
       >
-        <motion.button
-          className="active:scale-95"
+        <FilterChip
+          active={!activeCategory}
           onClick={() => setActiveCategory(null)}
+          radius="md"
           variants={{
             hidden: { opacity: 0, y: 8, scale: 0.95 },
             visible: { opacity: 1, y: 0, scale: 1 },
           }}
           transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-          style={{
-            background: !activeCategory ? 'var(--primary)' : 'var(--surface-container)',
-            color: !activeCategory ? '#fff' : 'var(--text-default)',
-            border: `1px solid ${!activeCategory ? 'var(--primary)' : 'var(--outline-variant)'}`,
-            borderRadius: '0.75rem',
-            padding: '0.375rem 0.75rem',
-            fontSize: '0.75rem',
-            cursor: 'pointer',
-            fontFamily: 'inherit',
-          }}
         >
           Tutti
-        </motion.button>
-        {categories.map(([key, { label, emoji }]) => (
-          <motion.button
+        </FilterChip>
+        {categories.map(([key, { emoji }]) => (
+          <FilterChip
             key={key}
-            className="active:scale-95"
+            active={activeCategory === key}
             onClick={() => setActiveCategory(activeCategory === key ? null : key)}
+            size="sm"
+            radius="lg"
             variants={{
               hidden: { opacity: 0, y: 8, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
             }}
             transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-            style={{
-              background: activeCategory === key ? 'var(--primary)' : 'var(--surface-container)',
-              color: activeCategory === key ? '#fff' : 'var(--text-default)',
-              border: `1px solid ${activeCategory === key ? 'var(--primary)' : 'var(--outline-variant)'}`,
-              borderRadius: '0.75rem',
-              padding: '0.375rem 0.75rem',
-              fontSize: '0.75rem',
-              cursor: 'pointer',
-              fontFamily: 'inherit',
-            }}
           >
-            {emoji} {label}
-          </motion.button>
+            {emoji} {getLocalizedCategoryLabel(key, cms)}
+          </FilterChip>
         ))}
       </motion.div>
 
       {/* Issues list */}
       <AnimatePresence mode="popLayout">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
           {filtered.length === 0 && (
             <motion.div
               key="empty"
@@ -299,11 +287,11 @@ export function TroubleshootingGuide({ filterCategory }: TroubleshootingGuidePro
               exit={{ opacity: 0, y: -6 }}
               transition={{ type: 'spring', stiffness: 500, damping: 30 }}
               style={{
-                textAlign: 'center', padding: '2rem',
-                color: 'var(--muted-foreground)', fontSize: '0.8125rem',
+                textAlign: 'center', padding: 'var(--space-8)',
+                color: 'var(--muted-foreground)', fontSize: 'var(--font-size-lg)',
               }}
             >
-              Nessun problema trovato per questa ricerca
+              {cms.misc.noTroubleshootingResults}
             </motion.div>
           )}
           {filtered.map((issue, i) => (
@@ -338,14 +326,15 @@ function IssueCard({
   expanded: boolean;
   onToggle: () => void;
 }) {
-  const cat = CATEGORY_LABELS[issue.category];
+  const { cms } = useCms();
+  const catLabel = getLocalizedCategoryLabel(issue.category, cms);
 
   return (
     <motion.div
       style={{
         background: 'var(--surface-container-low)',
-        border: '1px solid var(--outline-variant)',
-        borderRadius: '1rem',
+        border: 'var(--border-width-thin) solid var(--outline-variant)',
+        borderRadius: 'var(--radius-lg)',
         overflow: 'hidden',
       }}
     >
@@ -357,9 +346,9 @@ function IssueCard({
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.625rem',
-          padding: '0.875rem 1rem',
-          background: 'rgba(0,0,0,0)',
+          gap: 'var(--space-2-5)',
+          padding: 'var(--font-size-xl) var(--space-4)',
+          background: 'transparent',
           border: 'none',
           cursor: 'pointer',
           textAlign: 'left',
@@ -368,24 +357,24 @@ function IssueCard({
       >
         <SeverityIcon severity={issue.severity} />
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1-5)', flexWrap: 'wrap' }}>
             
             <span style={{
-              fontSize: '0.5625rem', color: 'var(--muted-foreground)',
+              fontSize: 'var(--font-size-xs)', color: 'var(--muted-foreground)',
               background: 'var(--surface-container)',
-              padding: '1px 6px', borderRadius: '4px',
+              padding: 'var(--space-px) var(--space-1-5)', borderRadius: 'var(--radius-xs)',
             }}>
-              {cat?.label}
+              {catLabel}
             </span>
           </div>
-          <div style={{ fontSize: '0.8125rem', color: 'var(--text-default)', lineHeight: 1.4, marginTop: 4 }}>
+          <div style={{ fontSize: 'var(--font-size-lg)', color: 'var(--text-default)', lineHeight: 1.4, marginTop: 'var(--space-1)' }}>
             {issue.symptom}
           </div>
         </div>
         <div style={{ flexShrink: 0, color: 'var(--muted-foreground)' }}>
           {expanded
-            ? <ChevronUp style={{ width: 16, height: 16 }} />
-            : <ChevronDown style={{ width: 16, height: 16 }} />
+            ? <ChevronUp style={{ width: 'var(--space-4)', height: 'var(--space-4)' }} />
+            : <ChevronDown style={{ width: 'var(--space-4)', height: 'var(--space-4)' }} />
           }
         </div>
       </motion.button>
@@ -401,12 +390,12 @@ function IssueCard({
             style={{ overflow: 'hidden' }}
           >
             <div style={{
-              padding: '0 1rem 1rem',
+              padding: 'var(--space-0) var(--space-4) var(--space-4)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.75rem',
-              borderTop: '1px solid var(--outline-variant)',
-              paddingTop: '0.75rem',
+              gap: 'var(--space-3)',
+              borderTop: 'var(--border-width-thin) solid var(--outline-variant)',
+              paddingTop: 'var(--space-3)',
             }}>
               {/* Causa */}
               <DetailRow icon="🔍" label="Causa" value={issue.cause} />
@@ -436,30 +425,30 @@ function DetailRow({
 }) {
   return (
     <div style={{
-      display: 'flex', gap: '0.5rem',
+      display: 'flex', gap: 'var(--space-2)',
       ...(highlight ? {
-        background: 'rgba(211, 47, 47, 0.06)',
-        borderRadius: '0.5rem',
-        padding: '0.5rem 0.625rem',
-        margin: '0 -0.625rem',
+        background: 'color-mix(in srgb, var(--destructive) 6%, transparent)',
+        borderRadius: 'var(--radius-sm)',
+        padding: 'var(--space-2) var(--space-2-5)',
+        margin: 'var(--space-0) calc(-1 * var(--space-2-5))',
       } : {}),
     }}>
-      <span style={{ flexShrink: 0, fontSize: '0.8125rem' }}>{icon}</span>
+      <span style={{ flexShrink: 0, fontSize: 'var(--font-size-lg)' }}>{icon}</span>
       <div>
         <span
           style={{
-            fontSize: '0.5625rem',
+            fontSize: 'var(--font-size-xs)',
             letterSpacing: '0.12em',
             textTransform: 'uppercase' as const,
             color: 'var(--muted-foreground)',
             display: 'block',
-            marginBottom: 2,
+            marginBottom: 'var(--space-0-5)',
             fontWeight: 'var(--weight-semibold)' as any,
           }}
         >
           {label}
         </span>
-        <span style={{ fontSize: '0.8125rem', color: 'var(--text-default)', lineHeight: 1.5 }}>
+        <span style={{ fontSize: 'var(--font-size-lg)', color: 'var(--text-default)', lineHeight: 1.5 }}>
           {value}
         </span>
       </div>

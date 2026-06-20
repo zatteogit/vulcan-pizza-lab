@@ -5,8 +5,9 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, ChevronUp, Beaker, Clock, Droplets, Thermometer } from 'lucide-react';
+import { ChevronDown, ChevronUp, Clock, Droplets, Thermometer } from 'lucide-react';
 import { useCms } from './cms/cms-context';
+import { Flask } from './step-illustrations';
 
 /* === PRE-FERMENT DATA (Italian fallback) === */
 export interface PreFermentInfo {
@@ -99,7 +100,7 @@ export const PRE_FERMENT_DB: Record<string, PreFermentInfo> = {
       'Farine integrali: autolisi piu lunga (60-90min) per ammorbidire la crusca',
       'Acqua tiepida (30-35°C) accelera gli enzimi',
       'SEMPRE prima di aggiungere sale (il sale inibisce gli enzimi)',
-      'Riduce il tempo di impasto del 30% perche il glutine si sviluppa da solo',
+      'Riduce il tempo di impasto del 30% perché il glutine si sviluppa da solo',
       'Combinabile con Biga o Poolish per risultati superiori',
     ],
   },
@@ -123,10 +124,9 @@ export const COMPARISON_ROWS = [
 /* === COMPONENT === */
 interface PreFermentCardProps {
   preFermentType?: string;
-  compact?: boolean;
 }
 
-export function PreFermentCard({ preFermentType = 'poolish', compact = false }: PreFermentCardProps) {
+export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
   const { cms } = useCms();
@@ -188,21 +188,23 @@ export function PreFermentCard({ preFermentType = 'poolish', compact = false }: 
           width: '100%',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.625rem',
-          padding: '0.875rem 1.25rem',
-          background: 'rgba(0,0,0,0)',
+          gap: '0.875rem',
+          padding: '1.1rem 1.5rem',
+          background: 'transparent',
           border: 'none',
           cursor: 'pointer',
           textAlign: 'left',
           fontFamily: 'inherit',
         }}
       >
-        <Beaker style={{ width: 16, height: 16, color: 'var(--primary)', flexShrink: 0 }} />
+        <span style={{ width: "var(--space-8)", height: "var(--space-6)", flexShrink: 0, color: 'var(--primary)' }}>
+          <Flask size={32} />
+        </span>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             <span
               style={{
-                fontSize: '0.625rem',
+                fontSize: 'var(--font-size-xs)',
                 letterSpacing: '0.14em',
                 textTransform: 'uppercase' as const,
                 color: 'var(--primary)',
@@ -213,9 +215,9 @@ export function PreFermentCard({ preFermentType = 'poolish', compact = false }: 
               {pf.sectionLabel.toUpperCase()}
             </span>
           </div>
-          <div style={{ fontSize: '0.8125rem', color: 'var(--text-default)', lineHeight: 1.4, marginTop: 2 }}>
+          <div style={{ fontSize: 'var(--font-size-xl)', color: 'var(--text-default)', lineHeight: 'var(--leading-normal)', marginTop: "var(--space-1)" }}>
             {info.emoji} <span style={{ fontFamily: 'var(--font-serif)' }}>{info.name}</span>
-            <span style={{ color: 'var(--muted-foreground)', fontSize: '0.75rem' }}> — {info.origin}</span>
+            <span style={{ color: 'var(--muted-foreground)', fontSize: 'var(--font-size-base)' }}> — {info.origin}</span>
           </div>
         </div>
         <div style={{ color: 'var(--muted-foreground)', flexShrink: 0 }}>
@@ -234,7 +236,7 @@ export function PreFermentCard({ preFermentType = 'poolish', compact = false }: 
             style={{ overflow: 'hidden' }}
           >
             <div style={{
-              padding: '0 1.25rem 1.25rem',
+              padding: '0 1.5rem 1.5rem',
               display: 'flex',
               flexDirection: 'column',
               gap: '1rem',
@@ -242,7 +244,7 @@ export function PreFermentCard({ preFermentType = 'poolish', compact = false }: 
               paddingTop: '1rem',
             }}>
               {/* Description */}
-              <p style={{ fontSize: '0.8125rem', color: 'var(--text-default)', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: 'var(--font-size-xl)', color: 'var(--text-default)', lineHeight: 'var(--leading-reading)', margin: 0 }}>
                 {info.description}
               </p>
 
@@ -251,11 +253,11 @@ export function PreFermentCard({ preFermentType = 'poolish', compact = false }: 
                 <ParamBadge icon={<Droplets size={12} />} label={pf.paramHydration} value={info.hydration} />
                 <ParamBadge icon={<Clock size={12} />} label={pf.paramDuration} value={info.duration} />
                 <ParamBadge icon={<Thermometer size={12} />} label={pf.paramTemperature} value={info.temperature} />
-                <ParamBadge icon={<Beaker size={12} />} label={pf.paramPh} value={info.phFinal} />
+                <ParamBadge icon={<Flask size={18} />} label={pf.paramPh} value={info.phFinal} />
               </div>
 
               {/* Result characteristics */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1-5)' }}>
                 <DetailLine label={pf.detailFermentation} value={info.fermentationType} />
                 <DetailLine label={pf.detailFlavor} value={info.flavor} />
                 <DetailLine label={pf.detailCrust} value={info.crustResult} />
@@ -265,13 +267,13 @@ export function PreFermentCard({ preFermentType = 'poolish', compact = false }: 
 
               {/* Tips */}
               <div style={{
-                background: 'rgba(204,136,68,0.06)',
+                background: 'color-mix(in srgb, var(--accent-smart) 6%, transparent)',
                 borderRadius: '0.75rem',
                 padding: '0.75rem 1rem',
               }}>
                 <div
                   style={{
-                    fontSize: '0.5625rem',
+                    fontSize: 'var(--font-size-sm)',
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase' as const,
                     color: 'var(--tertiary)',
@@ -281,9 +283,9 @@ export function PreFermentCard({ preFermentType = 'poolish', compact = false }: 
                 >
                   {`💡 ${pf.tipsLabel.toUpperCase()}`}
                 </div>
-                <ul style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                <ul style={{ margin: 0, paddingLeft: 'var(--space-5)', display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
                   {info.tips.map((tip, i) => (
-                    <li key={i} style={{ fontSize: '0.75rem', color: 'var(--text-default)', lineHeight: 1.5 }}>
+                    <li key={i} style={{ fontSize: 'var(--font-size-md)', color: 'var(--text-default)', lineHeight: 1.55 }}>
                       {tip}
                     </li>
                   ))}
@@ -304,7 +306,7 @@ export function PreFermentCard({ preFermentType = 'poolish', compact = false }: 
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.375rem',
-                  fontSize: '0.75rem',
+                  fontSize: 'var(--font-size-md)',
                   color: 'var(--primary)',
                   fontFamily: 'inherit',
                 }}
@@ -349,17 +351,17 @@ export function PreFermentCard({ preFermentType = 'poolish', compact = false }: 
                                 textTransform: 'uppercase' as const,
                                 color: 'var(--muted-foreground)',
                                 fontWeight: 'var(--weight-semibold)' as any,
-                                background: i % 2 === 0 ? 'var(--surface-container-low)' : 'rgba(0,0,0,0)',
+                                background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent',
                               }}>
                                 {row.label}
                               </td>
-                              <td style={{ ...tdStyle, background: i % 2 === 0 ? 'var(--surface-container-low)' : 'rgba(0,0,0,0)' }}>
+                              <td style={{ ...tdStyle, background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
                                 {row.biga}
                               </td>
-                              <td style={{ ...tdStyle, background: i % 2 === 0 ? 'var(--surface-container-low)' : 'rgba(0,0,0,0)' }}>
+                              <td style={{ ...tdStyle, background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
                                 {row.poolish}
                               </td>
-                              <td style={{ ...tdStyle, background: i % 2 === 0 ? 'var(--surface-container-low)' : 'rgba(0,0,0,0)' }}>
+                              <td style={{ ...tdStyle, background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
                                 {row.autolisi}
                               </td>
                             </tr>
@@ -385,16 +387,16 @@ function ParamBadge({ icon, label, value }: { icon: React.ReactNode; label: stri
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '0.375rem',
+        gap: '0.5rem',
         background: 'var(--surface-container)',
-        borderRadius: '0.5rem',
-        padding: '0.5rem 0.625rem',
+        borderRadius: '0.75rem',
+        padding: '0.75rem 0.875rem',
       }}
     >
       <span style={{ color: 'var(--secondary)', flexShrink: 0 }}>{icon}</span>
       <div>
         <div style={{
-          fontSize: '0.5rem',
+          fontSize: 'var(--font-size-2xs)',
           letterSpacing: '0.12em',
           textTransform: 'uppercase' as const,
           color: 'var(--muted-foreground)',
@@ -402,7 +404,7 @@ function ParamBadge({ icon, label, value }: { icon: React.ReactNode; label: stri
         }}>
           {label}
         </div>
-        <div style={{ fontSize: '0.75rem', color: 'var(--text-default)', lineHeight: 1.3 }}>
+        <div style={{ fontSize: 'var(--font-size-md)', color: 'var(--text-default)', lineHeight: 1.35 }}>
           {value}
         </div>
       </div>
@@ -413,14 +415,14 @@ function ParamBadge({ icon, label, value }: { icon: React.ReactNode; label: stri
 /* === DETAIL LINE === */
 function DetailLine({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ display: 'flex', gap: '0.5rem', fontSize: '0.8125rem', lineHeight: 1.5 }}>
+    <div style={{ display: 'flex', gap: 'var(--space-2)', fontSize: 'var(--font-size-md)', lineHeight: 1.5 }}>
       <span style={{
-        fontSize: '0.5625rem',
+        fontSize: 'var(--font-size-2xs)',
         letterSpacing: '0.1em',
         textTransform: 'uppercase' as const,
         color: 'var(--muted-foreground)',
         minWidth: '5rem',
-        paddingTop: 2,
+        paddingTop: "var(--space-0-5)",
         flexShrink: 0,
         fontWeight: 'var(--weight-semibold)' as any,
       }}>

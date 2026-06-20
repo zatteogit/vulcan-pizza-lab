@@ -91,7 +91,7 @@ function Dots({ count, active, onSelect, id }: { count: number; active: number; 
             key={i}
             onClick={() => onSelect(i)}
             className="relative rounded-full overflow-hidden active:scale-[0.8] transition-transform"
-            style={{ border: "none", cursor: "pointer", outline: "none", padding: 0, background: "rgba(0,0,0,0)" }}
+            style={{ border: "none", cursor: "pointer", outline: "none", padding: 0, background: "transparent" }}
             animate={{ width: isActive ? 24 : 8, height: 8 }}
             transition={SP.dot}
             aria-label={`Slide ${i + 1}`}
@@ -157,7 +157,7 @@ export function HeroDemo() {
             className="relative overflow-hidden"
             style={{ flex: `0 0 ${HERO_LARGE_PCT}`, height: "100%", borderRadius: R_LARGE }}
           >
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence>
               <motion.div
                 key={heroItem.id + "-hero"}
                 className="absolute inset-0"
@@ -188,7 +188,7 @@ export function HeroDemo() {
                       fontFamily: "'Playfair Display', serif",
                       fontSize: "var(--font-size-4xl)",
                       fontWeight: "var(--weight-bold)" as any,
-                      color: "var(--color-parchment-50)",
+                      color: "var(--overlay-text)",
                       display: "block",
                       lineHeight: "var(--leading-display)",
                     }}
@@ -199,7 +199,7 @@ export function HeroDemo() {
                     style={{
                       fontFamily: "'DM Mono', monospace",
                       fontSize: "var(--font-size-base)",
-                      color: "var(--color-parchment-50)",
+                      color: "var(--overlay-text)",
                       opacity: 0.75,
                       letterSpacing: "var(--tracking-spread)",
                       fontFeatureSettings: "'tnum'",
@@ -225,7 +225,7 @@ export function HeroDemo() {
             }}
             onClick={next}
           >
-            <AnimatePresence mode="popLayout">
+            <AnimatePresence>
               <motion.div
                 key={peekItem.id + "-peek"}
                 className="absolute inset-0"
@@ -252,7 +252,7 @@ export function HeroDemo() {
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: "var(--font-size-md)",
                       fontWeight: "var(--weight-semibold)" as any,
-                      color: "var(--color-parchment-50)",
+                      color: "var(--overlay-text)",
                       display: "block",
                     }}
                   >
@@ -338,10 +338,10 @@ export function MultiBrowseDemo() {
                   className="absolute bottom-0 left-0 right-0 p-3"
                   style={{ background: "var(--card-scrim-heavy)" }}
                 >
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--color-parchment-50)", display: "block" }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--overlay-text)", display: "block" }}>
                     {item.title}
                   </span>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--color-parchment-50)", opacity: 0.75, fontFeatureSettings: "'tnum'", letterSpacing: "var(--tracking-spread)" }}>
+                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--overlay-text)", opacity: 0.75, fontFeatureSettings: "'tnum'", letterSpacing: "var(--tracking-spread)" }}>
                     {item.sub}
                   </span>
                 </div>
@@ -447,7 +447,7 @@ export function UncontainedDemo() {
                       fontFamily: "'Playfair Display', serif",
                       fontSize: "var(--font-size-2xl)",
                       fontWeight: "var(--weight-bold)" as any,
-                      color: "var(--color-parchment-50)",
+                      color: "var(--overlay-text)",
                       display: "block",
                       lineHeight: "var(--leading-display)",
                     }}
@@ -458,7 +458,7 @@ export function UncontainedDemo() {
                     style={{
                       fontFamily: "'DM Mono', monospace",
                       fontSize: "var(--font-size-base)",
-                      color: "var(--color-parchment-50)",
+                      color: "var(--overlay-text)",
                       opacity: 0.7,
                       fontFeatureSettings: "'tnum'",
                       letterSpacing: "var(--tracking-spread)",
@@ -567,7 +567,7 @@ export function UncontainedMultiAspectDemo() {
                     className="absolute bottom-0 left-0 right-0 p-2.5"
                     style={{ background: "var(--card-scrim)" }}
                   >
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-semibold)" as any, color: "var(--color-parchment-50)" }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-semibold)" as any, color: "var(--overlay-text)" }}>
                       {item.title}
                     </span>
                   </div>
@@ -661,10 +661,10 @@ export function FullScreenDemo() {
               />
               {/* Label */}
               <div className="absolute bottom-0 left-0 right-0 p-5">
-                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "var(--font-size-6xl)", fontWeight: "var(--weight-bold)" as any, color: "var(--color-parchment-50)", display: "block", lineHeight: "var(--leading-heading)" }}>
+                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "var(--font-size-6xl)", fontWeight: "var(--weight-bold)" as any, color: "var(--overlay-text)", display: "block", lineHeight: "var(--leading-heading)" }}>
                   {ITEMS[focus].title}
                 </span>
-                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-md)", color: "var(--color-parchment-50)", opacity: 0.7, letterSpacing: "var(--tracking-spread)", fontFeatureSettings: "'tnum'", display: "block", marginTop: "var(--space-1)" }}>
+                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-md)", color: "var(--overlay-text)", opacity: 0.7, letterSpacing: "var(--tracking-spread)", fontFeatureSettings: "'tnum'", display: "block", marginTop: "var(--space-1)" }}>
                   {ITEMS[focus].sub}
                 </span>
               </div>
@@ -673,7 +673,7 @@ export function FullScreenDemo() {
 
           {/* Counter overlay */}
           <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-lg" style={{ background: "var(--overlay-backdrop)", backdropFilter: "blur(8px)" }}>
-            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--color-parchment-50)", fontFeatureSettings: "'tnum'", letterSpacing: "var(--tracking-label)" }}>
+            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--overlay-text)", fontFeatureSettings: "'tnum'", letterSpacing: "var(--tracking-label)" }}>
               {String(focus + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
             </span>
           </div>

@@ -4,21 +4,24 @@
    Desktop: sidebar rail + search icon.
    ⌘K / Ctrl+K apre la command palette (SearchOverlay). */
 
-import { useState, useCallback, useEffect } from "react";
-import { Outlet, useNavigate, useLocation, Link } from "react-router";
-import { motion } from "motion/react";
 import {
-  Flame,
-  BookOpen,
-  GraduationCap,
-  User,
-  Search,
+Compass,
+Flame,
+GraduationCap,
+Search,
+User,
 } from "lucide-react";
-import { CmsProvider, useCms } from "./cms/cms-context";
-import { StylesOverrideProvider } from "./styles-override-context";
-import type { DarkModeContext, ThemeMode } from "./root-layout";
-import { VulcanMark } from "./vulcan-logo";
+import { AnimatePresence,motion,useReducedMotion } from "motion/react";
+import { useCallback,useEffect,useState } from "react";
+import { Link,Outlet,useLocation,useNavigate } from "react-router";
+import { ActiveCookWidget } from "./active-cook-widget";
+import { CmsProvider,useCms } from "./cms/cms-context";
+import { CookSessionProvider,useCookSession } from "./cook-session";
+import { CookingMode } from "./cooking-mode";
+import type { DarkModeContext,ThemeMode } from "./root-layout";
 import { SearchOverlay } from "./search-overlay";
+import { StylesOverrideProvider } from "./styles-override-context";
+import { VulcanMark } from "./vulcan-logo";
 
 /* ═══ DARK MODE — tri-state: light / dark / auto ═══ */
 const DARK_MODE_KEY = "vulcan_dark_mode";
@@ -84,13 +87,17 @@ interface TabDef {
   match: string[];
 }
 
+/* Audit Sprint 12 — Profilo NON è una tab pari ad altre: è impostazione utente.
+   Spostato dalla tab bar all'header top-right (vedi ProfileButton in AppShell). */
 const TABS: TabDef[] = [
   { id: "create", labelKey: "navCreate", labelFallback: "Crea", icon: Flame, path: "/", match: ["/"] },
   {
     id: "explore",
     labelKey: "navExplore",
-    labelFallback: "Stili",
-    icon: BookOpen,
+    /* "Scopri", non "Stili": la sezione contiene ricette iconiche E stili
+       (feedback giugno 2026). */
+    labelFallback: "Scopri",
+    icon: Compass,
     path: "/explore",
     match: ["/explore"],
   },
@@ -102,20 +109,45 @@ const TABS: TabDef[] = [
     path: "/learn",
     match: ["/learn"],
   },
-  {
-    id: "profile",
-    labelKey: "navProfile",
-    labelFallback: "Profilo",
-    icon: User,
-    path: "/profile",
-    match: ["/profile"],
-  },
 ];
+
+/* Profile tab kept separate — render come pulsante top-right, non come tab. */
+const PROFILE_TAB: TabDef = {
+  id: "profile",
+  labelKey: "navProfile",
+  labelFallback: "Profilo",
+  icon: User,
+  path: "/profile",
+  match: ["/profile"],
+};
+
+const navSpring = {
+  type: "spring",
+  stiffness: 360,
+  damping: 31,
+  mass: 0.72,
+} as const;
+
+const navQuickSpring = {
+  type: "spring",
+  stiffness: 520,
+  damping: 36,
+  mass: 0.62,
+} as const;
+
+const premiumGlassStyle: React.CSSProperties = {
+  background: "color-mix(in srgb, var(--container-page) 82%, transparent)",
+  backdropFilter: "blur(24px) saturate(1.7)",
+  WebkitBackdropFilter: "blur(24px) saturate(1.7)",
+  border: "1px solid color-mix(in srgb, var(--text-default) 8%, transparent)",
+  boxShadow: "0 10px 30px color-mix(in srgb, var(--shadow-color) 6%, transparent), 0 1px 3px color-mix(in srgb, var(--shadow-color) 2%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 15%, transparent)",
+};
 
 function getActiveTab(pathname: string): string | null {
   /* Exact match for "/" to avoid matching everything */
   if (pathname === "/") return "create";
-  for (const tab of TABS) {
+  /* PROFILE_TAB checked too — usato per highlight pulsante top-right. */
+  for (const tab of [...TABS, PROFILE_TAB]) {
     if (tab.id === "create") continue;
     if (tab.match.some((m) => pathname === m || pathname.startsWith(m + "/")))
       return tab.id;
@@ -136,12 +168,13 @@ function TabItem({
   const Icon = tab.icon;
   /* Resolve label from CMS pages section */
   const { cms } = useCms();
+  const prefersReducedMotion = useReducedMotion();
   const label = (cms.pages as any)?.[tab.labelKey] || tab.labelFallback;
 
   return (
     <Link
       to={tab.path}
-      className="flex items-center justify-center relative active:scale-95 transition-transform"
+      className="flex items-center justify-center relative group"
       style={{
         flexDirection: "column",
         gap: layout === "bottom" ? 4 : 4,
@@ -149,25 +182,39 @@ function TabItem({
         minWidth: layout === "bottom" ? 0 : 56,
         minHeight: layout === "bottom" ? 0 : 56,
         textDecoration: "none",
-        WebkitTapHighlightColor: "rgba(0,0,0,0)",
+        WebkitTapHighlightColor: "transparent",
       }}
       aria-label={label}
       aria-current={active ? "page" : undefined}
     >
       {/* Active indicator pill (M3 style) */}
-      <div
+      <motion.div
         className="relative flex items-center justify-center"
-        style={{ width: 64, height: 32, borderRadius: 16 }}
+        whileHover={prefersReducedMotion ? undefined : { scale: 1.045 }}
+        whileTap={prefersReducedMotion ? undefined : { scale: 0.94 }}
+        transition={navQuickSpring}
+        style={{
+          width: "var(--space-16)",
+          height: "var(--space-8)",
+          borderRadius: "var(--radius-lg)",
+        }}
       >
         {active && (
           <motion.div
-            layoutId="tab-indicator"
+            layoutId={`tab-indicator-${layout}`}
             className="absolute inset-0"
             style={{
-              borderRadius: 16,
-              background: "rgba(208,74,47,0.12)",
+              borderRadius: "var(--radius-lg)",
+              background:
+                "linear-gradient(145deg, color-mix(in srgb, var(--container-page) 86%, transparent), color-mix(in srgb, var(--primary) 18%, transparent))",
+              border: "1px solid color-mix(in srgb, var(--primary) 18%, transparent)",
+              boxShadow:
+                "0 8px 18px color-mix(in srgb, var(--primary) 12%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 22%, transparent)",
+              willChange: "transform",
+              WebkitBackfaceVisibility: "hidden",
+              backfaceVisibility: "hidden",
             }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            transition={navSpring}
           />
         )}
         <Icon
@@ -179,7 +226,7 @@ function TabItem({
             transition: "color 0.15s ease",
           }}
         />
-      </div>
+      </motion.div>
 
       {/* Label */}
       <span
@@ -192,6 +239,7 @@ function TabItem({
           color: active ? "var(--primary)" : "var(--text-muted)",
           letterSpacing: "0.02em",
           lineHeight: 1,
+          opacity: active ? 1 : 0.88,
           transition: "color 0.15s ease",
         }}
       >
@@ -201,170 +249,353 @@ function TabItem({
   );
 }
 
+type LiquidNavState = {
+  hidden: boolean;
+  scrolled: boolean;
+};
+
+/* ═══ Barre dinamiche (feedback giugno 2026, stile liquid glass) ═══
+   La chrome fluttua sopra al contenuto: si ritira quando leggi, riemerge
+   appena risali e cambia densità quando c'è contenuto che scorre sotto. */
+function useLiquidNavState(threshold = 28): LiquidNavState {
+  const [state, setState] = useState<LiquidNavState>({
+    hidden: false,
+    scrolled: false,
+  });
+  useEffect(() => {
+    let lastY = window.scrollY;
+    let acc = 0;
+    let frame = 0;
+
+    const readScroll = () => {
+      frame = 0;
+      const y = window.scrollY;
+      const dy = y - lastY;
+      lastY = y;
+      const isScrolled = y > 24;
+      const nearBottom =
+        window.innerHeight + y >= document.documentElement.scrollHeight - 120;
+
+      if (y < 96 || nearBottom) {
+        setState((prev) => {
+          const next = { hidden: false, scrolled: isScrolled };
+          return prev.hidden === next.hidden && prev.scrolled === next.scrolled ? prev : next;
+        });
+        acc = 0;
+        return;
+      }
+
+      if (Math.abs(dy) < 0.5) return;
+      acc = Math.sign(dy) === Math.sign(acc) ? acc + dy : dy;
+
+      setState((prev) => {
+        const hide = y > 140 && acc > threshold;
+        const show = acc < -threshold * 0.72;
+        const hidden = hide ? true : show ? false : prev.hidden;
+        const next = { hidden, scrolled: isScrolled };
+        if (hidden !== prev.hidden) acc = 0;
+        return prev.hidden === next.hidden && prev.scrolled === next.scrolled ? prev : next;
+      });
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(readScroll);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("scroll", onScroll, { passive: true, capture: true });
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      document.removeEventListener("scroll", onScroll, { capture: true } as EventListenerOptions);
+    };
+  }, [threshold]);
+  return state;
+}
+
 /* ═══ MOBILE BOTTOM BAR ═══ */
-function BottomTabBar({ activeTab, onSearchOpen }: { activeTab: string | null; onSearchOpen: () => void }) {
+function BottomTabBar({
+  activeTab,
+  onSearchOpen,
+  navState,
+}: {
+  activeTab: string | null;
+  onSearchOpen: () => void;
+  navState: LiquidNavState;
+}) {
   const { cms } = useCms();
+  const prefersReducedMotion = useReducedMotion();
+  const { hidden } = navState;
   return (
-    <nav
-      className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
-      style={{
-        background:
-          "color-mix(in srgb, var(--container-page) 88%, rgba(0,0,0,0))",
-        backdropFilter: "blur(24px) saturate(1.6)",
-        WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-        borderTop: "1px solid var(--container-border-subtle)",
-        paddingBottom: "env(safe-area-inset-bottom, 0px)",
+    <motion.div
+      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 md:hidden flex items-center gap-3"
+      initial={{ y: 0, scale: 1, opacity: 1 }}
+      animate={{
+        y: hidden && !prefersReducedMotion ? 92 : 0,
+        scale: hidden && !prefersReducedMotion ? 0.96 : 1,
+        opacity: hidden ? 0 : 1,
       }}
-      aria-label={cms.pages.navMainLabel}
+      transition={
+        prefersReducedMotion
+          ? { duration: 0.16, ease: "easeOut" }
+          : {
+              y: navSpring,
+              scale: navSpring,
+              opacity: { duration: hidden ? 0.14 : 0.24, ease: "easeOut" },
+            }
+      }
+      style={{
+        width: "min(352px, 92vw)",
+        transformOrigin: "bottom center",
+        willChange: "transform, opacity",
+      }}
     >
-      <div
-        className="flex items-center justify-around"
-        style={{ height: 64 }}
+      {/* Tabs Capsule */}
+      <nav
+        className="relative flex-1 overflow-hidden"
+        style={{
+          ...premiumGlassStyle,
+          borderRadius: "var(--radius-2xl)",
+        }}
+        aria-label={cms.pages.navMainLabel}
       >
-        {/* First 2 tabs */}
-        {TABS.slice(0, 2).map((tab) => (
-          <TabItem
-            key={tab.id}
-            tab={tab}
-            active={activeTab === tab.id}
-            layout="bottom"
-          />
-        ))}
-
-        {/* Central search button */}
-        <button
-          onClick={onSearchOpen}
-          className="flex items-center justify-center active:scale-95 transition-transform"
-          style={{
-            width: 48,
-            height: 48,
-            borderRadius: 16,
-            background: "color-mix(in srgb, var(--primary) 10%, rgba(0,0,0,0))",
-            border: "1.5px solid color-mix(in srgb, var(--primary) 20%, rgba(0,0,0,0))",
-            color: "var(--primary)",
-            WebkitTapHighlightColor: "rgba(0,0,0,0)",
-          }}
-          aria-label="Cerca (⌘K)"
+        <motion.span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-5 top-0 h-px"
+          animate={{ opacity: 0.44 }}
+          style={{ background: "color-mix(in srgb, var(--overlay-text) 42%, transparent)" }}
+        />
+        <div
+          className="flex items-center justify-around px-2"
+          style={{ height: "var(--space-14, 56px)" }}
         >
-          <Search size={22} />
-        </button>
+          {TABS.map((tab) => (
+            <TabItem
+              key={tab.id}
+              tab={tab}
+              active={activeTab === tab.id}
+              layout="bottom"
+            />
+          ))}
+        </div>
+      </nav>
 
-        {/* Last 2 tabs */}
-        {TABS.slice(2).map((tab) => (
-          <TabItem
-            key={tab.id}
-            tab={tab}
-            active={activeTab === tab.id}
-            layout="bottom"
-          />
-        ))}
-      </div>
-    </nav>
+      {/* Floating Search Circle next to it */}
+      <motion.button
+        type="button"
+        onClick={onSearchOpen}
+        className="flex items-center justify-center shrink-0"
+        whileHover={prefersReducedMotion ? undefined : { scale: 1.045 }}
+        whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
+        transition={navQuickSpring}
+        style={{
+          width: "var(--space-14, 56px)",
+          height: "var(--space-14, 56px)",
+          borderRadius: "var(--radius-full)",
+          ...premiumGlassStyle,
+          color: "var(--text-default)",
+          cursor: "pointer",
+          WebkitTapHighlightColor: "transparent",
+        }}
+        aria-label={`${cms.pages.navSearch} (⌘K)`}
+      >
+        <Search size={20} />
+      </motion.button>
+    </motion.div>
   );
 }
 
 /* ═══ DESKTOP SIDEBAR RAIL ═══ */
-function SidebarRail({ activeTab, devMode, onSearchOpen }: { activeTab: string | null; devMode: boolean; onSearchOpen: () => void }) {
+function SidebarRail({
+  activeTab,
+  devMode,
+  onSearchOpen,
+  navState,
+}: {
+  activeTab: string | null;
+  devMode: boolean;
+  onSearchOpen: () => void;
+  navState: LiquidNavState;
+}) {
   const { cms } = useCms();
   return (
-    <nav
-      className="fixed left-0 top-0 bottom-0 hidden md:flex flex-col items-center z-50"
-      style={{
-        width: 80,
-        background:
-          "color-mix(in srgb, var(--container-page) 92%, rgba(0,0,0,0))",
-        backdropFilter: "blur(24px) saturate(1.6)",
-        WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-        borderRight: "1px solid var(--container-border-subtle)",
-        paddingTop: 16,
-        paddingBottom: 16,
-      }}
-      aria-label={cms.pages.navMainLabel}
+    <div
+      className="fixed left-4 top-4 bottom-4 hidden md:flex flex-col gap-3 z-50"
+      style={{ width: "var(--space-18, 72px)" }}
     >
-      {/* Logo */}
-      <Link
-        to="/"
-        className="flex items-center justify-center mb-4 active:scale-95 transition-transform"
+      {/* Navigation Capsule (Logo + Tabs) */}
+      <motion.nav
+        className="relative flex flex-col items-center overflow-hidden py-5 flex-1"
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 280, damping: 28, mass: 0.8 }}
         style={{
-          width: 40,
-          height: 40,
-          borderRadius: 12,
-          background: "var(--hero-brand-gradient)",
-          color: "var(--overlay-text)",
+          ...premiumGlassStyle,
+          borderRadius: "var(--radius-2xl)",
+          transformOrigin: "center left",
         }}
-        aria-label="Vulcan Pizza Lab — Home"
+        aria-label={cms.pages.navMainLabel}
       >
-        <VulcanMark size={20} decorative />
-      </Link>
+        <motion.span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-3 right-3 top-0 h-px"
+          animate={{ opacity: 0.42 }}
+          style={{ background: "color-mix(in srgb, var(--overlay-text) 42%, transparent)" }}
+        />
+        {/* Logo */}
+        <Link
+          to="/"
+          className="flex items-center justify-center mb-5 active:scale-95 transition-transform"
+          style={{
+            width: "var(--space-10)",
+            height: "var(--space-10)",
+            borderRadius: "var(--radius-md)",
+            background: "var(--hero-brand-gradient)",
+            color: "var(--overlay-text)",
+          }}
+          aria-label="Vulcan Pizza Lab — Home"
+        >
+          <VulcanMark size={20} decorative />
+        </Link>
 
-      {/* Search button */}
-      <button
+        {/* Tabs */}
+        <div className="flex flex-col items-center gap-1.5 flex-1">
+          {TABS.map((tab) => (
+            <TabItem
+              key={tab.id}
+              tab={tab}
+              active={activeTab === tab.id}
+              layout="rail"
+            />
+          ))}
+        </div>
+
+        {/* Dev shortcut (subtle) */}
+        {devMode && (
+          <div
+            className="flex flex-col items-center gap-1 mt-auto pt-2"
+            style={{ borderTop: "1px solid var(--container-border-subtle)", width: "var(--space-8)" }}
+          >
+            <Link
+              to="/dev"
+              className="flex items-center justify-center active:scale-95 transition-transform"
+              style={{
+                width: "var(--space-8)",
+                height: "var(--space-8)",
+                borderRadius: "var(--radius-sm)",
+                color: "var(--text-muted)",
+                opacity: 0.5,
+                fontSize: "var(--font-size-xs)",
+                fontFamily: "var(--font-mono)",
+              }}
+              aria-label="Developer Tools"
+              title="Ctrl+Shift+D"
+            >
+              <span style={{ fontFeatureSettings: "'tnum'" }}>{"</>"}</span>
+            </Link>
+          </div>
+        )}
+      </motion.nav>
+
+      {/* Floating Search Circle below the capsule */}
+      <motion.button
         onClick={onSearchOpen}
-        className="flex items-center justify-center mb-2 active:scale-95 transition-transform"
+        whileHover={{ scale: 1.04, y: -1 }}
+        whileTap={{ scale: 0.94 }}
+        transition={navQuickSpring}
+        className="flex items-center justify-center shrink-0 cursor-pointer"
         style={{
-          width: 40,
-          height: 40,
-          borderRadius: 12,
-          background: "color-mix(in srgb, var(--primary) 8%, rgba(0,0,0,0))",
-          border: "1px solid color-mix(in srgb, var(--primary) 15%, rgba(0,0,0,0))",
-          color: "var(--text-muted)",
+          width: 72,
+          height: 72,
+          borderRadius: "50%",
+          ...premiumGlassStyle,
+          color: "var(--text-default)",
           cursor: "pointer",
-          transition: "color 0.15s ease, background 0.15s ease",
+          willChange: "transform",
         }}
-        aria-label="Cerca (⌘K)"
+        aria-label={`${cms.pages.navSearch} (⌘K)`}
         title="⌘K"
       >
-        <Search size={18} />
-      </button>
+        <Search size={22} />
+      </motion.button>
+    </div>
+  );
+}
 
-      {/* Divider */}
-      <div
-        style={{
-          width: 32,
-          height: 1,
-          background: "var(--container-border-subtle)",
-          marginBottom: 8,
-        }}
-      />
+/* ═══ PROFILE BUTTON — fixed top-right, sostituisce la tab Profilo ═══
+   Audit Sprint 12: Profilo è impostazione utente, non una tab di navigazione. */
+function ProfileButton({ active, navState }: { active: boolean; navState: LiquidNavState }) {
+  const { cms } = useCms();
+  const label = (cms.pages as any)?.navProfile || "Profilo";
+  const { scrolled } = navState;
+  const size = scrolled ? 40 : 44;
+  return (
+    <Link
+      to="/profile"
+      className="fixed top-4 right-4 flex items-center justify-center active:scale-90 hover:scale-105"
+      style={{
+        /* z-index 60 per stare SOPRA gli header sticky z-50 delle pagine. */
+        zIndex: 60,
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        background: active
+          ? "color-mix(in srgb, var(--primary) 16%, var(--container-page))"
+          : scrolled
+            ? "color-mix(in srgb, var(--container-page) 72%, transparent)"
+            : "color-mix(in srgb, var(--container-page) 86%, transparent)",
+        backdropFilter: "blur(22px) saturate(1.55)",
+        WebkitBackdropFilter: "blur(22px) saturate(1.55)",
+        border: `1px solid ${
+          active
+            ? "color-mix(in srgb, var(--primary) 24%, transparent)"
+            : "color-mix(in srgb, var(--text-default) 10%, transparent)"
+        }`,
+        color: active ? "var(--primary)" : "var(--text-default)",
+        boxShadow: active
+          ? "0 10px 24px color-mix(in srgb, var(--primary) 16%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)"
+          : "0 10px 24px color-mix(in srgb, var(--shadow-color) 8%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 12%, transparent)",
+        textDecoration: "none",
+        transition:
+          "width 180ms ease, height 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease",
+        willChange: "transform",
+      }}
+      aria-label={label}
+      aria-current={active ? "page" : undefined}
+      title={label}
+    >
+      <User size={18} />
+    </Link>
+  );
+}
 
-      {/* Tabs */}
-      <div className="flex flex-col items-center gap-1 flex-1">
-        {TABS.map((tab) => (
-          <TabItem
-            key={tab.id}
-            tab={tab}
-            active={activeTab === tab.id}
-            layout="rail"
-          />
-        ))}
-      </div>
-
-      {/* Dev shortcut (subtle) */}
-      {devMode && (
-        <div
-          className="flex flex-col items-center gap-1 mt-auto pt-2"
-          style={{ borderTop: "1px solid var(--container-border-subtle)" }}
-        >
-          <Link
-            to="/dev"
-            className="flex items-center justify-center active:scale-95 transition-transform"
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              color: "var(--text-muted)",
-              opacity: 0.5,
-              fontSize: "0.625rem",
-              fontFamily: "var(--font-mono)",
-            }}
-            aria-label="Developer Tools"
-            title="Ctrl+Shift+D"
-          >
-            <span style={{ fontFeatureSettings: "'tnum'" }}>{"</>"}</span>
-          </Link>
-        </div>
+/* ═══ COOK SESSION UI — widget flottante + overlay full-screen ═══
+   La "pizzata attiva" vive a livello di shell: segue l'utente su ogni pagina. */
+function CookSessionUI({
+  canStartRecipe,
+  hasProfileButton,
+  showAction,
+  compact,
+}: {
+  canStartRecipe: boolean;
+  hasProfileButton: boolean;
+  showAction: boolean;
+  compact: boolean;
+}) {
+  const { session, overlayOpen } = useCookSession();
+  return (
+    <>
+      {showAction && (
+        <ActiveCookWidget
+          canStartRecipe={canStartRecipe}
+          hasProfileButton={hasProfileButton}
+          compact={compact}
+        />
       )}
-    </nav>
+      <AnimatePresence>{overlayOpen && session && <CookingMode />}</AnimatePresence>
+    </>
   );
 }
 
@@ -374,8 +605,14 @@ export function AppShell() {
   const [darkMode, setDarkModeState] = useState(() => resolveThemeMode(loadThemeMode()));
   const [devMode, setDevModeState] = useState(loadDevMode);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [hideNavbar, setHideNavbar] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const navState = useLiquidNavState();
+
+  useEffect(() => {
+    setHideNavbar(false);
+  }, [location.pathname]);
 
   const setThemeMode = useCallback((v: ThemeMode) => {
     setThemeModeState(v);
@@ -406,6 +643,12 @@ export function AppShell() {
 
   const openSearch = useCallback(() => setSearchOpen(true), []);
   const closeSearch = useCallback(() => setSearchOpen(false), []);
+
+  useEffect(() => {
+    const handler = () => setSearchOpen(true);
+    window.addEventListener("vulcan:open-search", handler);
+    return () => window.removeEventListener("vulcan:open-search", handler);
+  }, []);
 
   /* Apply .dark on <html> so portals inherit tokens */
   useEffect(() => {
@@ -441,15 +684,20 @@ export function AppShell() {
   const activeTab = getActiveTab(location.pathname);
 
   /* Determine if tab bar should be visible
-     Hidden on: /dev, /design-system, /cms (tool pages) */
+     Hidden on: /dev, /design-system, /cms (tool pages) or /recipe/:styleId or when hideNavbar is true */
   const isToolPage =
     location.pathname.startsWith("/dev") ||
     location.pathname.startsWith("/design-system") ||
     location.pathname.startsWith("/cms");
+  const isRecipePage = location.pathname.startsWith("/recipe/");
+  const showNav = !isToolPage && !isRecipePage && !hideNavbar;
+  const showCookAction = !isToolPage && !hideNavbar;
+  const hasProfileButton = showNav && activeTab !== "profile";
 
   return (
     <CmsProvider>
       <StylesOverrideProvider>
+        <CookSessionProvider>
         <div
           style={{
             minHeight: "100vh",
@@ -457,27 +705,50 @@ export function AppShell() {
           }}
         >
           {/* Sidebar rail — desktop */}
-          {!isToolPage && <SidebarRail activeTab={activeTab} devMode={devMode} onSearchOpen={openSearch} />}
+          {showNav && (
+            <SidebarRail
+              activeTab={activeTab}
+              devMode={devMode}
+              onSearchOpen={openSearch}
+              navState={navState}
+            />
+          )}
+
+          {/* Audit Sprint 12 — Profilo top-right (sostituisce la tab Profilo). */}
+          {showNav && activeTab !== "profile" && (
+            <ProfileButton active={activeTab === "profile"} navState={navState} />
+          )}
 
           {/* Main content area */}
           <div
             style={{
-              marginLeft: !isToolPage ? undefined : 0,
-              paddingBottom: !isToolPage ? undefined : 0,
+              marginLeft: showNav ? undefined : 0,
+              paddingBottom: showNav ? undefined : 0,
             }}
-            className={!isToolPage ? "md:ml-20 pb-20 md:pb-0" : ""}
+            className={showNav ? "md:ml-28 pb-20 md:pb-0" : ""}
           >
             <Outlet
-              context={{ darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode } satisfies DarkModeContext}
+              context={{ darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode, hideNavbar, setHideNavbar } satisfies DarkModeContext}
             />
           </div>
 
           {/* Bottom tab bar — mobile */}
-          {!isToolPage && <BottomTabBar activeTab={activeTab} onSearchOpen={openSearch} />}
+          {showNav && (
+            <BottomTabBar activeTab={activeTab} onSearchOpen={openSearch} navState={navState} />
+          )}
 
           {/* Command palette search overlay */}
           <SearchOverlay open={searchOpen} onClose={closeSearch} />
+
+          {/* Pizzata attiva: sticky action + overlay (cross-page) */}
+          <CookSessionUI
+            canStartRecipe={isRecipePage}
+            hasProfileButton={hasProfileButton}
+            showAction={showCookAction}
+            compact={navState.scrolled}
+          />
         </div>
+        </CookSessionProvider>
       </StylesOverrideProvider>
     </CmsProvider>
   );

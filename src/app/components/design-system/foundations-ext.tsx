@@ -1,20 +1,18 @@
-import React, { useState } from "react";
-import { motion } from "motion/react";
-import { Flame, Wheat, Image as ImageIcon, Sparkles } from "lucide-react";
-import {
-  SectionHeader,
-  SubSectionLabel,
-  Panoramica,
-  LineeGuida,
-  AccessibilitaInfo,
-} from "./shared";
-import type { SectionEntry } from "./shared";
-import { imgDivXshape, imgDivXshape1, imgDivXshape2, imgDivXshape3, imgDivShapeIlloBg } from "../../../imports/svg-21qef";
-import imgPizzaNapoletana from "figma:asset/cc55b62333cd34778c13305abc97846ece76d0f1.png";
-import imgPizzaMargherita from "figma:asset/55a2423eacc2481327d4b95178875906ba678936.png";
-import imgImpasto from "figma:asset/4f29f2bf05841844acdfa17d5c6d4823ce4ea351.png";
 import imgPizzaAlForno from "figma:asset/063bec0118b053149e9fff6d65b9df94925fd876.png";
+import imgImpasto from "figma:asset/4f29f2bf05841844acdfa17d5c6d4823ce4ea351.png";
+import imgPizzaMargherita from "figma:asset/55a2423eacc2481327d4b95178875906ba678936.png";
 import imgPizzaTeglia from "figma:asset/a832636853506b6329c43025470758beb48bdfc5.png";
+import imgPizzaNapoletana from "figma:asset/cc55b62333cd34778c13305abc97846ece76d0f1.png";
+import { Flame,Image as ImageIcon,Sparkles,Wheat } from "lucide-react";
+import { motion } from "motion/react";
+import React,{ useState } from "react";
+import { imgDivShapeIlloBg,imgDivXshape,imgDivXshape1,imgDivXshape2,imgDivXshape3 } from "../../../imports/svg-21qef";
+import type { SectionEntry } from "./shared";
+import {
+Panoramica,
+SectionHeader,
+SubSectionLabel
+} from "./shared";
 
 /* ═══════════════════════════════════════════════════════════
    FONDAMENTA 13 — EXPRESSIVE SHAPES (M3 Expressive)
@@ -583,7 +581,7 @@ export function ImageTreatmentSection() {
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: "var(--font-size-base)",
                       fontWeight: "var(--weight-semibold)" as any,
-                      color: "var(--color-white)",
+                      color: "var(--overlay-text)",
                     }}>
                       {photo.label}
                     </span>

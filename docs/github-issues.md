@@ -616,6 +616,84 @@ L'audit di verifica implementativa ha identificato 5 correzioni da applicare man
 
 ---
 
+### VPL-018 — [feature] Aggiungere nuovi stili di pizza regionali, internazionali e progenitori antici
+
+**Labels:** `enhancement`, `engine`, `priority:medium`
+**KB Ref:** Feature Backlog #11 (Dati/Stili)
+
+#### Descrizione
+
+Implementare nel database statico degli stili (`STYLES_DB` in `pizza-engine.ts`) una selezione di stili regionali, internazionali e storici pronti per essere elaborati dagli algoritmi di idratazione, fermentazione e scoring di Vulcan.
+
+#### Stili da mappare
+
+1. **Chicago Tavern Style (`chicago_tavern`)**: Idratazione bassa (50-55%), grassi nell'impasto, stesa molto sottile (crosta cracker), taglio a quadratini, temperature moderate.
+2. **Trancio Milanese (`trancio_milanese`)**: Idratazione medio-bassa (60%), stesa alta in padella tonda di ferro con strato generoso d'olio sul fondo (effetto frittura in cottura), mozzarella abbondante.
+3. **Focaccia Barese (`focaccia_barese`)**: Alta idratazione (75-80%), farina + semola rimacinata + patate bollite schiacciate, cotta in teglia rotonda con pomodorini premuti crudi.
+4. **Rianata Trapanese (`rianata_trapanese`)**: Idratazione 65%, semola, condimento massiccio a base di sarde e origano, cotta direttamente su piastra.
+5. **Sardenaira / Pizza all'Andrea (`sardenaira`)**: Focaccia soffice ligure ad idratazione media (65%), ricca di olio EVO, salsa, sarde, taggiasche e capperi (senza formaggio).
+6. **Pizza Rossini (`pizza_rossini`)**: Base tonda sottile stesa a mano (simile a tonda romana) condita in uscita con uova sode a fette e maionese.
+7. **Mastunicola (`mastunicola`)**: Stile napoletano arcaico (pre-pomodoro). Impasto diretto, grasso primario lardo/strutto (`fat_type: "lard"` a 4-5%), condito con cigoli di maiale, pecorino e pepe nero.
+8. **S'Anguli 'e cibudda (`anguli_cibudda`)**: Antica pizza sarda cotta su foglie di cavolo verza. Richiede un modello termodinamico di trasferimento calore modificato ($k_{\text{verza}} \approx 0.15\ W/mK$ al posto del $k_{\text{pietra}} \approx 1.2\ W/mK$), con conseguente incremento dei tempi di cottura del +40% (scudo termico naturale).
+9. **Pizzolo Siracusano (`pizzolo_siracusano`)**: Focaccia tonda chiusa, la cui superficie superiore viene cosparsa di Pecorino e origano in cottura, formando una crosta di formaggio fuso croccante.
+10. **Scaccia Ragusana (`scaccia_ragusana`)**: Sfoglia stesa sottilissima di semola rimacinata a libro, ripiegata più volte inframezzando ogni piega con condimenti densi.
+11. **Ciaccino Senese (`ciaccino_senese`)**: Focaccia a doppio strato ripiena senese, oliata e farcita di cotto e galbanino filante.
+12. **Pizza Tatin (`pizza_tatin`)**: Stile gourmet cotto interamente capovolto in padella di ferro. I condimenti caramellano sul fondo a contatto diretto col metallo caldo, mentre l'impasto steso sopra funge da coperchio trattenendo l'umidità; capovolta post-cottura.
+
+#### Criteri di accettazione
+
+- [ ] Definizione di ognuno degli 12 stili in `STYLES_DB` con i rispettivi range di W, H%, P/L, tempi e temperature.
+- [ ] Implementazione del modello fisico "cabbage shield" per `anguli_cibudda` nel motore di compensazione del forno.
+- [ ] Aggiunta di `"lard"` (strutto) all'enum `fat_type` in `pizza-engine.ts` per lo stile `mastunicola`.
+- [ ] Integrazione dei condimenti tipici, utensili richiesti e tecniche di piega nei 10 database di `parametric-databases.ts`.
+- [ ] Calcolo corretto dei composite score (in particolare A-Score e F-Score) per tutti i nuovi stili.
+- [ ] Foto di presentazione Unsplash dedicate in `STYLE_PHOTOS`.
+
+---
+
+### VPL-019 — [feature] Implementare varianti d'autore e tecniche avanzate (Style Versions)
+
+**Labels:** `enhancement`, `engine`, `priority:high`
+**KB Ref:** Feature Backlog #12 (Dati/Varianti)
+
+#### Descrizione
+
+Implementare varianti e tecniche d'autore avanzate all'interno del sistema `STYLE_VERSIONS` (in `style-versions.ts`), estendendo la flessibilità del calcolo e offrendo timeline specifiche.
+
+#### Varianti da mappare
+
+1. **Pizza Baciata / Ripiena (`pizza_baciata`)**:
+   - Variante tecnica della *Teglia Romana* o *Metodo Bonci*.
+   - Richiede di spennellare d'olio due strati di impasto stesi e cuocerli sovrapposti, per poi separarli e farcirli a freddo.
+   - **Logica Geometrica**: Il configuratore deve dimezzare il peso del panetto e indicare lo staglio di **due** panetti gemelli per ogni teglia impostata (es. 2 x 350g anziché 1 x 700g).
+   - **Timeline**: Step procedurali dedicati per stesura sovrapposta, "bacio" d'olio, separazione post-cottura e farcitura.
+2. **Margherita Sbagliata (`margherita_sbagliata`)**:
+   - Variante d'autore (*Franco Pepe*) per *Napoletana Contemporanea*.
+   - Cottura in bianco con sola mozzarella, con riduzioni di pomodoro e basilico messe a crudo a freddo in uscita.
+   - **Timeline**: Inserire passaggi specifici per la gestione delle riduzioni in uscita per preservare le proprietà organolettiche.
+3. **DoppioCrunch® (`doppio_crunch`)**:
+   - Versione speciale della *Teglia Romana* (*Renato Bosco*) ad idratazione estrema (85-90%), con raddoppio delle fasi di piega e dimezzamento dei tempi di cottura per step.
+4. **La Marinella (`marinella_bonci`)**:
+   - Variante della *Pizza Baciata* (*Gabriele Bonci*), in cui lo strato superiore viene spalmato di salsa di pomodoro prima della cottura baciata, per poi essere aperto a caldo e imbottito di mortadella.
+5. **La Scarpetta (`scarpetta_pepe`)**:
+   - Variante d'autore (*Franco Pepe*), base pizza in bianco con mozzarella, arricchita all'uscita dal forno con crema di pomodoro crudo, basilico disidratato e scaglie di Grana Padano.
+6. **Tonda a Fermentazione Naturale (Idrolisi) (`tonda_idrolisi`)**:
+   - Variante di lievitazione (*Renato Bosco*) che non usa lievito aggiunto ma la fermentazione spontanea data dall'idrolisi del grano spezzato, imponendo un tempo di maturazione obbligatorio di 48-72h a temperatura ambiente controllata (22-26°C).
+7. **Pizza Patate e Porchetta (`patate_porchetta`)**:
+   - Variante classica della *Teglia Romana*, con stesa e cottura in-bake di patate a fette sottilissime condite con rosmarino e olio, e l'aggiunta di fette di porchetta rigorosamente post-bake (fuori forno) per preservarne la morbidezza e sciogliere il grasso con il calore residuo.
+8. **Cacio e Pepe col Ghiaccio (`cacio_pepe_ghiaccio`)**:
+   - Tecnica contemporanea (*Stefano Callegari*), con cottura in-bake di cubetti di ghiaccio sull'impasto bianco per mantenerlo umido e creare una tasca d'aria vuota, sormontata post-bake da crema fredda di Pecorino Romano DOP e pepe nero tostato.
+
+#### Criteri di accettazione
+
+- [ ] Varianti registrate stabilmente in `STYLE_VERSIONS` sotto gli ID stile padri.
+- [ ] Logica geometrica per "Pizza Baciata" implementata nel calcolatore dei panetti (gestione 2 x panetto per teglia).
+- [ ] Fasi manuali della timeline (`timelineLabels` e `parametricTips` in `cms-context.tsx`) allineate con le procedure di baciatura e farcitura a freddo.
+- [ ] Implementazione del tipo di fermentazione per idrolisi spontanea (`"hydrolysis"`) in `pizza-engine.ts` con i relativi controlli di temperatura e ore di lievitazione.
+- [ ] Corretto calcolo dei pesi e dello score di autenticità in base alle specifiche varianti.
+
+---
+
 ## Issue CLOSED — Storico risolto
 
 Queste issue vanno create come **closed** (`state: "closed"`, `state_reason: "completed"`) per avere lo storico completo.
@@ -773,3 +851,5 @@ Tabella di corrispondenza per mantenere sincronizzati Guidelines.md e GitHub Iss
 | (nuovo)          | VPL-015   | Sub-route Dev Tools              | OPEN   |
 | (nuovo)          | VPL-016   | Aggiornare Guidelines.md routing | OPEN   |
 | (nuovo)          | VPL-017   | Correzioni Notion manuali        | OPEN   |
+| (nuovo)          | VPL-018   | Aggiungere 6 nuovi stili pizza   | OPEN   |
+| (nuovo)          | VPL-019   | Varianti d'autore e Baciata      | OPEN   |

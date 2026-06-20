@@ -480,17 +480,3 @@ export function getLocalizedTerm(term: GlossaryTerm, cms?: CmsContent): Glossary
     ranges: loc.ranges?.length ? loc.ranges : term.ranges,
   };
 }
-
-/** Return localized category labels */
-export function getLocalizedCategories(cms?: CmsContent): Record<GlossaryCategory, { label: string; emoji: string; description: string }> {
-  const g = cms?.glossary;
-  if (!g) return GLOSSARY_CATEGORIES;
-  return {
-    rheology: { ...GLOSSARY_CATEGORIES.rheology, label: g.catRheology ?? GLOSSARY_CATEGORIES.rheology.label, description: g.catRheologyDesc ?? GLOSSARY_CATEGORIES.rheology.description },
-    fermentation: { ...GLOSSARY_CATEGORIES.fermentation, label: g.catFermentation ?? GLOSSARY_CATEGORIES.fermentation.label, description: g.catFermentationDesc ?? GLOSSARY_CATEGORIES.fermentation.description },
-    thermal: { ...GLOSSARY_CATEGORIES.thermal, label: g.catThermal ?? GLOSSARY_CATEGORIES.thermal.label, description: g.catThermalDesc ?? GLOSSARY_CATEGORIES.thermal.description },
-    chemistry: { ...GLOSSARY_CATEGORIES.chemistry, label: g.catChemistry ?? GLOSSARY_CATEGORIES.chemistry.label, description: g.catChemistryDesc ?? GLOSSARY_CATEGORIES.chemistry.description },
-    mechanics: { ...GLOSSARY_CATEGORIES.mechanics, label: g.catMechanics ?? GLOSSARY_CATEGORIES.mechanics.label, description: g.catMechanicsDesc ?? GLOSSARY_CATEGORIES.mechanics.description },
-    scoring: { ...GLOSSARY_CATEGORIES.scoring, label: g.catScoring ?? GLOSSARY_CATEGORIES.scoring.label, description: g.catScoringDesc ?? GLOSSARY_CATEGORIES.scoring.description },
-  };
-}

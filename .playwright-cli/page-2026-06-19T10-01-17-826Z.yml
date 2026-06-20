@@ -1,0 +1,78 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - navigation "Navigazione principale" [ref=e5]:
+      - link "Vulcan Pizza Lab — Home" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+      - generic [ref=e9]:
+        - link "Crea" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e13]
+          - generic [ref=e15]: Crea
+        - link "Scopri" [ref=e16] [cursor=pointer]:
+          - /url: /explore
+          - img [ref=e18]
+          - generic [ref=e21]: Scopri
+        - link "Impara" [ref=e22] [cursor=pointer]:
+          - /url: /learn
+          - img [ref=e24]
+          - generic [ref=e27]: Impara
+    - button "Cerca (⌘K)" [ref=e28] [cursor=pointer]:
+      - img [ref=e29]
+  - link "Profilo" [ref=e32] [cursor=pointer]:
+    - /url: /profile
+    - img [ref=e33]
+  - generic [ref=e37]:
+    - link "Salta al contenuto" [ref=e38] [cursor=pointer]:
+      - /url: "#main-content"
+    - main [ref=e39]:
+      - generic [ref=e44]:
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - button "Forno Domestico · 21°C" [ref=e48]:
+              - img [ref=e49]
+              - generic [ref=e53]: Forno Domestico · 21°C
+            - button "Dispensa vuota" [ref=e54]:
+              - img [ref=e55]
+              - generic [ref=e59]: Dispensa vuota
+            - button "Intermedio" [ref=e60]:
+              - img [ref=e61]
+              - generic [ref=e63]: Intermedio
+          - paragraph [ref=e64]: Questi dati aiutano Vulcan ad adattare tempi e ricetta.
+        - generic [ref=e66]:
+          - img [ref=e73]
+          - heading "La tua pizza perfetta." [level=1] [ref=e75]:
+            - text: La tua
+            - generic [ref=e76]: pizza perfetta.
+          - paragraph [ref=e77]: Seleziona il momento per calcolare i tempi di preparazione.
+        - generic [ref=e79]:
+          - button "Più rapido Stasera 4-6 ore" [ref=e80]:
+            - generic [ref=e82]: Più rapido
+            - img [ref=e84]
+            - generic [ref=e86]:
+              - generic [ref=e87]: Stasera
+              - generic [ref=e88]: 4-6 ore
+          - button "Domani pranzo 16-20 ore" [ref=e89]:
+            - img [ref=e91]
+            - generic [ref=e97]:
+              - generic [ref=e98]: Domani pranzo
+              - generic [ref=e99]: 16-20 ore
+          - button "Domani sera 24-28 ore" [ref=e100]:
+            - img [ref=e102]
+            - generic [ref=e107]:
+              - generic [ref=e108]: Domani sera
+              - generic [ref=e109]: 24-28 ore
+          - button "Domenica pranzo ~48 ore" [ref=e110]:
+            - img [ref=e112]
+            - generic [ref=e114]:
+              - generic [ref=e115]: Domenica pranzo
+              - generic [ref=e116]: ~48 ore
+          - button "Nessuna preferenza il motore sceglie" [ref=e117]:
+            - img [ref=e119]
+            - generic [ref=e122]:
+              - generic [ref=e123]: Nessuna preferenza
+              - generic [ref=e124]: il motore sceglie
+    - contentinfo "Vulcan motto" [ref=e125]:
+      - generic [ref=e126]:
+        - img [ref=e127]
+        - text: Make pizza, not war

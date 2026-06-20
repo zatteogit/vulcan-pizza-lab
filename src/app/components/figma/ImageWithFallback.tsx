@@ -1,27 +1,99 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 
-const ERROR_IMG_SRC =
-  'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODgiIGhlaWdodD0iODgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBvcGFjaXR5PSIuMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIzLjciPjxyZWN0IHg9IjE2IiB5PSIxNiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjU2IiByeD0iNiIvPjxwYXRoIGQ9Im0xNiA1OCAxNi0xOCAzMiAzMiIvPjxjaXJjbGUgY3g9IjUzIiBjeT0iMzUiIHI9IjciLz48L3N2Zz4KCg=='
+/* ═══ ImageWithFallback (VPL-A4) ═══
+ * - Skeleton (pulse) finché l'immagine non è caricata.
+ * - Fallback EDITORIALE (superficie calda a token + glifo pizza) in caso di
+ *   errore, non più il box grigio "Error loading image".
+ * - Sizing dal className/style del chiamante (sul wrapper); l'img riempie. */
+
+function FallbackGlyph() {
+  return (
+    <svg
+      width="40"
+      height="40"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      style={{ color: "var(--text-muted)", opacity: 0.45 }}
+    >
+      <path d="M12 3c4.97 0 9 3.2 9 5L12 21 3 8c0-1.8 4.03-5 9-5Z" />
+      <path d="M3 8c3 1.2 15 1.2 18 0" />
+      <circle cx="10" cy="9.5" r="0.6" fill="currentColor" />
+      <circle cx="14" cy="10" r="0.6" fill="currentColor" />
+      <circle cx="12" cy="13" r="0.6" fill="currentColor" />
+    </svg>
+  );
+}
 
 export function ImageWithFallback(props: React.ImgHTMLAttributes<HTMLImageElement>) {
-  const [didError, setDidError] = useState(false)
+  const [didError, setDidError] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
-  const handleError = () => {
-    setDidError(true)
+  const { src, alt, style, className, onLoad, ...rest } = props;
+  const objectFit =
+    (style as React.CSSProperties | undefined)?.objectFit ?? "cover";
+
+  if (didError) {
+    return (
+      <div
+        className={className}
+        style={{
+          ...style,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "var(--surface-container)",
+        }}
+        role="img"
+        aria-label={alt || undefined}
+      >
+        <FallbackGlyph />
+      </div>
+    );
   }
 
-  const { src, alt, style, className, ...rest } = props
-
-  return didError ? (
+  return (
     <div
-      className={`inline-block bg-gray-100 text-center align-middle ${className ?? ''}`}
-      style={style}
+      className={className}
+      style={{
+        ...style,
+        position: "relative",
+        overflow: "hidden",
+        background: "var(--surface-container)",
+      }}
     >
-      <div className="flex items-center justify-center w-full h-full">
-        <img src={ERROR_IMG_SRC} alt="Error loading image" {...rest} data-original-url={src} />
-      </div>
+      {!loaded && (
+        <div
+          className="absolute inset-0 animate-pulse"
+          style={{
+            background:
+              "var(--surface-container-high, var(--surface-container))",
+          }}
+          aria-hidden="true"
+        />
+      )}
+      <img
+        src={src}
+        alt={alt}
+        {...rest}
+        onError={() => setDidError(true)}
+        onLoad={(e) => {
+          setLoaded(true);
+          onLoad?.(e);
+        }}
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit,
+          display: "block",
+          opacity: loaded ? 1 : 0,
+          transition: "opacity 0.3s ease",
+        }}
+      />
     </div>
-  ) : (
-    <img src={src} alt={alt} className={className} style={style} {...rest} onError={handleError} />
-  )
+  );
 }

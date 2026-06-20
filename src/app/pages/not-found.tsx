@@ -1,8 +1,8 @@
-import React from "react";
-import { Link } from "react-router";
-import { motion } from "motion/react";
 import { ArrowLeft } from "lucide-react";
+import { motion } from "motion/react";
+import { Link } from "react-router";
 import { useCms } from "../components/cms/cms-context";
+import { CtaButton, Heading } from "../components/ds";
 
 export function NotFoundPage() {
   const { cms } = useCms();
@@ -33,16 +33,9 @@ export function NotFoundPage() {
         >
           404
         </span>
-        <h1
-          className="font-serif mt-2"
-          style={{
-            fontSize: "clamp(2rem, 5vw, 3rem)",
-            lineHeight: "var(--leading-snug)",
-            color: "var(--text-default)",
-          }}
-        >
+        <Heading level="page" className="mt-2">
           {cms.pages.notFoundTitle}
-        </h1>
+        </Heading>
         <p
           className="font-serif italic mt-2"
           style={{
@@ -53,20 +46,14 @@ export function NotFoundPage() {
         >
           {cms.pages.notFoundSubtitle}
         </p>
-        <Link
+        <CtaButton
+          as={Link}
           to="/"
-          className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-full"
-          style={{
-            background: "var(--cta-btn-bg)",
-            color: "var(--cta-btn-text)",
-            fontWeight: "var(--weight-semibold)" as any,
-            fontSize: "var(--font-size-xl)",
-            boxShadow: "var(--cta-btn-shadow)",
-          }}
+          className="mt-6 px-6 py-3"
         >
           <ArrowLeft size={14} />
           {cms.pages.notFoundBack}
-        </Link>
+        </CtaButton>
       </motion.div>
     </div>
   );

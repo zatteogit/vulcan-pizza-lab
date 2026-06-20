@@ -213,10 +213,12 @@ export function getLocalizedIssue(issue: TroubleshootingIssue, cms?: CmsContent)
   };
 }
 
-/** Return localized category label (falls back to Italian hardcoded) */
-export function getLocalizedCategoryLabel(catId: string, cms?: CmsContent): string {
-  return cms?.troubleshootingI18n?.categories?.[catId] ?? CATEGORY_LABELS[catId]?.label ?? catId;
+export function getLocalizedCategoryLabel(category: string, cms?: CmsContent): string {
+  const loc = cms?.troubleshootingI18n?.categories?.[category];
+  if (loc) return loc;
+  return CATEGORY_LABELS[category]?.label ?? category;
 }
+
 
 /* === CONTEXTUAL WARNINGS === */
 /* Genera avvisi contestuali basati sui parametri della ricetta */
@@ -301,13 +303,17 @@ export function getContextualWarnings(params: {
     });
   }
 
-  /* Idratazione alta + principiante */
-  if (params.hydration > 70 && params.skillLevel <= 2) {
+  /* Idratazione alta + principiante (skill-aware): solo skill 1 mostra warning a 70+
+   * Skill 2 (Intermedio) lo mostra solo se davvero estrema (>85). Skill 3/4 mai. */
+  const hydrationWarnThreshold = params.skillLevel === 1 ? 70 : 85;
+  if (params.hydration > hydrationWarnThreshold && params.skillLevel <= 2) {
     const loc = cmsCtx?.beginner_hydration;
     warnings.push({
       issueId: 'P01',
       message: loc ? t(loc.message, { h: String(params.hydration) })
-        : `Idratazione ${params.hydration}% e impegnativa per principianti`,
+        : params.skillLevel === 1
+          ? `Idratazione ${params.hydration}% è impegnativa per principianti`
+          : `Idratazione ${params.hydration}% è estrema, richiede pratica`,
       tip: loc?.tip ?? 'Inizia con 60-65% e aumenta gradualmente con esperienza',
       severity: 'warning',
     });

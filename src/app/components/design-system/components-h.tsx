@@ -565,7 +565,7 @@ export function CarouselSpec() {
               }}
               onClick={prev}
             >
-              <AnimatePresence mode="popLayout" custom={dir} initial={false}>
+              <AnimatePresence custom={dir} initial={false}>
                 <motion.div
                   key={leftItem.id + "-left"}
                   className="absolute inset-0"
@@ -591,7 +591,7 @@ export function CarouselSpec() {
               className="relative overflow-hidden flex-1 min-w-0"
               style={{ borderRadius: ITEM_RADIUS }}
             >
-              <AnimatePresence mode="popLayout" custom={dir} initial={false}>
+              <AnimatePresence custom={dir} initial={false}>
                 <motion.div
                   key={heroItem.id + "-hero"}
                   className="absolute inset-0"
@@ -624,7 +624,7 @@ export function CarouselSpec() {
                         fontFamily: "'Playfair Display', serif",
                         fontSize: "var(--font-size-4xl)",
                         fontWeight: "var(--weight-bold)" as any,
-                        color: "var(--color-parchment-50)",
+                        color: "var(--overlay-text)",
                         display: "block",
                         lineHeight: "var(--leading-display)",
                       }}
@@ -635,7 +635,7 @@ export function CarouselSpec() {
                       style={{
                         fontFamily: "'DM Mono', monospace",
                         fontSize: "var(--font-size-base)",
-                        color: "var(--color-parchment-50)",
+                        color: "var(--overlay-text)",
                         opacity: 0.75,
                         letterSpacing: "var(--tracking-spread)",
                         fontFeatureSettings: "'tnum'",
@@ -660,7 +660,7 @@ export function CarouselSpec() {
               }}
               onClick={next}
             >
-              <AnimatePresence mode="popLayout" custom={dir} initial={false}>
+              <AnimatePresence custom={dir} initial={false}>
                 <motion.div
                   key={rightItem.id + "-right"}
                   className="absolute inset-0"

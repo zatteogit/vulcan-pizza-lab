@@ -15,9 +15,7 @@ import { JA_LOCALE } from "./ja";
  */
 
 /** Available locale bundles (Italian defaults live in CMS_DEFAULTS) */
-export const LOCALE_BUNDLES: Partial<
-  Record<LocaleId, CmsContent>
-> = {
+export const LOCALE_BUNDLES: Partial<Record<LocaleId, CmsContent>> = {
   en: EN_LOCALE,
   es: ES_LOCALE,
   de: DE_LOCALE,

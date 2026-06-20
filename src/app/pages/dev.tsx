@@ -1,5 +1,4 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate,useParams } from "react-router";
 import { DevTools } from "../components/dev-tools";
 import { useDarkMode } from "../components/root-layout";
 

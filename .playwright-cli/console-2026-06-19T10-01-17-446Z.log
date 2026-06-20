@@ -1,0 +1,139 @@
+[     103ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:21564
+[   44758ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:21564
+[  111519ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:21564
+[  358121ms] ReferenceError: getActionLead is not defined
+    at ActiveCookWidget (http://127.0.0.1:5174/src/app/components/active-cook-widget.tsx?t=1781863635490:51:23)
+    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:12199:26)
+    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:14605:28)
+    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:15940:22)
+    at HTMLUnknownElement.callCallback2 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3680:22)
+    at Object.invokeGuardedCallbackDev (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3705:24)
+    at invokeGuardedCallback (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3739:39)
+    at beginWork$1 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19786:15)
+    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19219:20)
+    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19158:13)
+[  358123ms] [ERROR] Error handled by React Router default ErrorBoundary: ReferenceError: getActionLead is not defined
+    at ActiveCookWidget (http://127.0.0.1:5174/src/app/components/active-cook-widget.tsx?t=1781863635490:51:23)
+    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:12199:26)
+    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:14605:28)
+    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:15940:22)
+    at beginWork$1 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19774:22)
+    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19219:20)
+    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19158:13)
+    at renderRootSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19137:15)
+    at performSyncWorkOnRoot (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:18895:28)
+    at flushSyncCallbacks (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:9166:30) @ http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:6197
+[  358123ms] [ERROR] Error handled by React Router default ErrorBoundary: ReferenceError: getActionLead is not defined
+    at ActiveCookWidget (http://127.0.0.1:5174/src/app/components/active-cook-widget.tsx?t=1781863635490:51:23)
+    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:12199:26)
+    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:14605:28)
+    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:15940:22)
+    at beginWork$1 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19774:22)
+    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19219:20)
+    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19158:13)
+    at renderRootSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19137:15)
+    at performSyncWorkOnRoot (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:18895:28)
+    at flushSyncCallbacks (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:9166:30) @ http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:6197
+[  358124ms] ReferenceError: getActionLead is not defined
+    at ActiveCookWidget (http://127.0.0.1:5174/src/app/components/active-cook-widget.tsx?t=1781863635490:51:23)
+    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:12199:26)
+    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:14605:28)
+    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:15940:22)
+    at HTMLUnknownElement.callCallback2 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3680:22)
+    at Object.invokeGuardedCallbackDev (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3705:24)
+    at invokeGuardedCallback (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:3739:39)
+    at beginWork$1 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19786:15)
+    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19219:20)
+    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19158:13)
+[  358124ms] [ERROR] Error handled by React Router default ErrorBoundary: ReferenceError: getActionLead is not defined
+    at ActiveCookWidget (http://127.0.0.1:5174/src/app/components/active-cook-widget.tsx?t=1781863635490:51:23)
+    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:12199:26)
+    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:14605:28)
+    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:15940:22)
+    at beginWork$1 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19774:22)
+    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19219:20)
+    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19158:13)
+    at renderRootSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19137:15)
+    at recoverFromConcurrentError (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:18754:28)
+    at performSyncWorkOnRoot (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:18900:28) @ http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:6197
+[  358124ms] [ERROR] Error handled by React Router default ErrorBoundary: ReferenceError: getActionLead is not defined
+    at ActiveCookWidget (http://127.0.0.1:5174/src/app/components/active-cook-widget.tsx?t=1781863635490:51:23)
+    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:12199:26)
+    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:14605:28)
+    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:15940:22)
+    at beginWork$1 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19774:22)
+    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19219:20)
+    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19158:13)
+    at renderRootSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19137:15)
+    at recoverFromConcurrentError (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:18754:28)
+    at performSyncWorkOnRoot (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:18900:28) @ http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:6197
+[  358127ms] [ERROR] The above error occurred in the <ActiveCookWidget> component:
+
+    at ActiveCookWidget (http://127.0.0.1:5174/src/app/components/active-cook-widget.tsx?t=1781863635490:30:3)
+    at CookSessionUI (http://127.0.0.1:5174/src/app/components/app-shell.tsx?t=1781863374525:726:3)
+    at div
+    at CookSessionProvider (http://127.0.0.1:5174/src/app/components/cook-session.tsx:90:39)
+    at StylesOverrideProvider (http://127.0.0.1:5174/src/app/components/styles-override-context.tsx:61:42)
+    at CmsProvider (http://127.0.0.1:5174/src/app/components/cms/cms-context.tsx:1271:31)
+    at AppShell (http://127.0.0.1:5174/src/app/components/app-shell.tsx?t=1781863374525:769:42)
+    at RenderedRoute (http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:6299:26)
+    at RenderErrorBoundary (http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:6209:5)
+    at DataRoutes (http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:6997:3)
+    at Router (http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:7089:13)
+    at RouterProvider (http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:6763:3)
+    at App
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary. @ http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:14063
+[  358127ms] [ERROR] React Router caught the following error during render ReferenceError: getActionLead is not defined
+    at ActiveCookWidget (http://127.0.0.1:5174/src/app/components/active-cook-widget.tsx?t=1781863635490:51:23)
+    at renderWithHooks (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:12199:26)
+    at updateFunctionComponent (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:14605:28)
+    at beginWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:15940:22)
+    at beginWork$1 (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19774:22)
+    at performUnitOfWork (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19219:20)
+    at workLoopSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19158:13)
+    at renderRootSync (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:19137:15)
+    at recoverFromConcurrentError (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:18754:28)
+    at performSyncWorkOnRoot (http://127.0.0.1:5174/node_modules/.vite/deps/chunk-LV6VSOYG.js?v=207232ae:18900:28) @ http://127.0.0.1:5174/node_modules/.vite/deps/react-router.js?v=207232ae:6236
+[  774755ms] [LOG] [vite] server connection lost. Polling for restart... @ http://127.0.0.1:5174/@vite/client:963
+[  774756ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  775758ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  776760ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  777763ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  778768ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  779773ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  780784ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  781809ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  782826ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  783909ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  785061ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  786185ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  787517ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  788935ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  791618ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  796327ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  800460ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  802835ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  805700ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  807947ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  813827ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  817336ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  820577ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  823677ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  826286ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  831064ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  833386ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  838827ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  840968ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  846692ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  850686ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  856531ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  859850ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  864704ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  869715ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  874215ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  879483ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  884250ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  886920ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  891522ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:5174/@vite/client:1034
+[  892662ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:5174/' failed:  @ http://127.0.0.1:5174/@vite/client:1034

@@ -1,10 +1,7 @@
-import React, { useState } from "react";
 import { motion } from "motion/react";
-import {
-  AnatomyRow,
-} from "./shared";
+import { useState } from "react";
+import { DoughBlob,type DoughVariant } from "../dough-mascot";
 import { VulcanHero } from "../vulcan-hero";
-import { DoughBlob } from "../dough-mascot";
 import type { VulcanVariant } from "../vulcan-logo";
 
 /* ═══════════════════════════════════════════════════════════
@@ -208,14 +205,16 @@ export function LogoFireGlowSubSection() {
 /* ── 10. DOUGHBLOB — Forma organica energy-reactive ── */
 export function LogoDoughBlobSubSection() {
   const [blobEnergy, setBlobEnergy] = useState(50);
-  const [blobVariant, setBlobVariant] = useState<"stretch" | "rise" | "rest" | "spin" | "fold">("stretch");
+  const [blobVariant, setBlobVariant] = useState<DoughVariant>("stretch");
 
-  const BLOB_VARIANTS: { id: "stretch" | "rise" | "rest" | "spin" | "fold"; label: string; energy: number }[] = [
+  const BLOB_VARIANTS: { id: DoughVariant; label: string; energy: number }[] = [
     { id: "rest", label: "Rest", energy: 15 },
     { id: "stretch", label: "Stretch", energy: 40 },
     { id: "fold", label: "Fold", energy: 55 },
     { id: "rise", label: "Rise", energy: 75 },
     { id: "spin", label: "Spin", energy: 90 },
+    { id: "forge", label: "Forge (Magma)", energy: 80 },
+    { id: "neural", label: "Neural (AI)", energy: 95 },
   ];
 
   return (

@@ -1,19 +1,24 @@
-import React, { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { Check, Award, Sparkles, Triangle, Filter, SlidersHorizontal } from "lucide-react";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
-import { ScoreRing } from "./score-ring";
-import {
-  PizzaStyle,
-  UserConstraints,
-  StyleRecommendation,
-  PIZZA_FAMILIES,
-  recommendStyles,
-  type FamilyId,
-} from "./pizza-engine";
-import { useStylesOverride } from "./styles-override-context";
+import { Award,Check,ChefHat,Clock,Flame,SlidersHorizontal,Sparkles,Triangle,Wheat } from "lucide-react";
+import { AnimatePresence,motion } from "motion/react";
+import { useMemo,useState } from "react";
 import { useCms } from "./cms/cms-context";
-import { getStyleDeviation, DEVIATION_CATEGORY_LABELS, getStyleTags } from "./deviation-tags";
+import { createFormatter,formatTemperatureCopy } from "./cms/i18n";
+import { FilterChip, Surface } from "./ds";
+import { getStyleTags } from "./deviation-tags";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import {
+PIZZA_FAMILIES,
+PizzaStyle,
+recommendStyles,
+StyleRecommendation,
+UserConstraints,
+type FamilyId,
+} from "./pizza-engine";
+import { ScoreRing } from "./score-ring";
+import { useStylesOverride } from "./styles-override-context";
+import { TiltCard } from "./tilt-card";
+
+import { STYLE_PHOTOS } from "./style-photos";
 
 interface RecommendedStylesProps {
   constraints: UserConstraints;
@@ -21,41 +26,36 @@ interface RecommendedStylesProps {
   onSelectStyle: (style: PizzaStyle) => void;
 }
 
-/* ═══ CURATED EDITORIAL PHOTOS — dramatic, dark, close-up ═══ */
-export const STYLE_PHOTOS: Record<string, string> = {
-  napoletana_stg:
-    "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  napoletana_canotto:
-    "https://images.unsplash.com/photo-1770670644186-b3d930f75f5a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  teglia_romana:
-    "https://images.unsplash.com/photo-1650327381366-c6dc88f8b9fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  tonda_romana:
-    "https://images.unsplash.com/photo-1695457207327-2fe494a5aab8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  pinsa_romana:
-    "https://images.unsplash.com/photo-1602658015824-b49d35094837?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  new_york:
-    "https://images.unsplash.com/photo-1616141032335-7e6b413f93ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  detroit:
-    "https://images.unsplash.com/photo-1684823906761-30fd02a961cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  chicago_deep:
-    "https://images.unsplash.com/photo-1595378833483-c995dbe4d74f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  bonci_teglia:
-    "https://images.unsplash.com/photo-1624323210664-3659370c9346?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  focaccia_genovese:
-    "https://images.unsplash.com/photo-1770833047669-2db01dd791e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  sfincione:
-    "https://images.unsplash.com/photo-1711805064484-a77096f599a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  pala_romana:
-    "https://images.unsplash.com/photo-1614936686354-a490b8d90478?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  grandma_style:
-    "https://images.unsplash.com/photo-1601387448308-66ae6aa1f1f7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  focaccia_recco:
-    "https://images.unsplash.com/photo-1751183295754-9cff9577a44e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-  padellino_torino:
-    "https://images.unsplash.com/photo-1626108962941-61b46dd705a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80",
-};
+export { STYLE_PHOTOS };
 const FALLBACK =
   "https://images.unsplash.com/photo-1717883235373-ef10b2a745a3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80";
+
+/* VPL-C3: dimensione del match da una reason key (rec.*). Serve a scegliere
+ * l'icona sintetica sulla tile e a raggruppare/visualizzare i reasons nel
+ * dettaglio. Esportata per riuso in style-detail-sheet. */
+export type MatchDimension = "time" | "oven" | "skill" | "equipment" | "pantry";
+export function reasonDimension(key: string): MatchDimension {
+  if (key.includes("time")) return "time";
+  if (key.includes("oven") || key.includes("Wood") || key.includes("refractory"))
+    return "oven";
+  if (
+    key.includes("skill") ||
+    key.includes("hydration") ||
+    key.includes("hands") ||
+    key.includes("domestic") ||
+    key.includes("Beginner")
+  )
+    return "skill";
+  if (key.includes("flour") || key.includes("sourdough")) return "pantry";
+  return "equipment"; // pan, mixer, fork, spiral, cast, steel, knead, needsPan
+}
+export const MATCH_DIMENSION_ICON: Record<MatchDimension, typeof Clock> = {
+  time: Clock,
+  oven: Flame,
+  skill: ChefHat,
+  equipment: SlidersHorizontal,
+  pantry: Wheat,
+};
 
 const TIER_META: Record<
   string,
@@ -67,21 +67,27 @@ const TIER_META: Record<
   }
 > = {
   perfect: {
-    label: "Perfetti",
-    subtitle: "massima compatibilit\u00e0",
+    label: "Perfetti per te",
+    subtitle: "ideali con il tuo forno e livello",
     color: "var(--text-success)",
     Icon: Award,
   },
   good: {
-    label: "Buoni",
-    subtitle: "ottima scelta",
+    label: "Fattibili",
+    subtitle: "richiedono qualche compromesso",
     color: "var(--text-warning)",
     Icon: Sparkles,
   },
   challenging: {
     label: "Sfidanti",
-    subtitle: "per chi osa",
+    subtitle: "richiedono pi\u00f9 attrezzatura o esperienza",
     color: "var(--text-accent)",
+    Icon: Triangle,
+  },
+  not_feasible: {
+    label: "Non fattibili",
+    subtitle: "mancano requisiti chiave",
+    color: "var(--text-muted)",
     Icon: Triangle,
   },
 };
@@ -92,7 +98,8 @@ export function RecommendedStyles({
   onSelectStyle,
 }: RecommendedStylesProps) {
   const { effectiveStyles, isOverrideActive } = useStylesOverride();
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
+  const fmt = createFormatter(cms.ui, bcp47);
   const recommendations = useMemo(
     () =>
       recommendStyles(
@@ -154,9 +161,7 @@ export function RecommendedStyles({
     [
       {
         key: "perfect",
-        items: filtered.filter(
-          (r) => r.tier === "perfect",
-        ),
+        items: filtered.filter((r) => r.tier === "perfect"),
       },
       {
         key: "good",
@@ -164,9 +169,14 @@ export function RecommendedStyles({
       },
       {
         key: "challenging",
-        items: filtered.filter(
-          (r) => r.tier === "challenging",
-        ),
+        items: filtered.filter((r) => r.tier === "challenging"),
+      },
+      {
+        // Audit Sprint 12 — Sezione "Non fattibili": stili con incompatibilità
+        // hard (forno legna assente, ecc.) o score molto basso. Mostrati per
+        // trasparenza ("cosa non puoi fare e perché"), in stile muted.
+        key: "not_feasible",
+        items: filtered.filter((r) => r.tier === "not_feasible"),
       },
     ].filter((t) => t.items.length > 0);
 
@@ -177,7 +187,7 @@ export function RecommendedStyles({
   };
 
   const FAMILY_FILTERS: { id: FamilyId | "all"; label: string }[] = [
-    { id: "all", label: cms.allFamiliesLabel ?? "Tutte" },
+    { id: "all", label: "Tutti" },
     { id: "napoletana", label: cms.families.napoletana?.name ?? PIZZA_FAMILIES.napoletana.name },
     { id: "romana", label: cms.families.romana?.name ?? PIZZA_FAMILIES.romana.name },
     { id: "americana", label: cms.families.americana?.name ?? PIZZA_FAMILIES.americana.name },
@@ -185,62 +195,28 @@ export function RecommendedStyles({
   ];
 
   return (
-    <div className="flex flex-col gap-10 sm:gap-12">
+    <div className="flex flex-col gap-6 sm:gap-8">
       {/* ═══ Family filter chips ═══ */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-2">
-          <Filter
-            size={13}
-            style={{ color: "var(--text-muted)", flexShrink: 0 }}
-          />
-          <span
-            className="type-label"
-            style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}
-          >
-            Filtra per famiglia
-          </span>
-        </div>
-        <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
           {FAMILY_FILTERS.map((f) => {
             const isActive = familyFilter === f.id;
             const count = familyCounts[f.id] || 0;
             return (
-              <motion.button
+              <FilterChip
                 key={f.id}
+                active={isActive}
                 onClick={() => setFamilyFilter(f.id)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl active:scale-95 transition-transform"
-                style={{
-                  background: isActive
-                    ? "var(--chip-bg-active)"
-                    : "var(--surface-container)",
-                  color: isActive
-                    ? "var(--chip-text-active)"
-                    : "var(--text-default)",
-                  border: `1px solid ${isActive ? "rgba(0,0,0,0)" : "var(--outline-variant)"}`,
-                  fontSize: "var(--font-size-lg)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                }}
-                whileHover={{ y: -1 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                radius="lg"
+                count={count}
               >
                 {f.label}
-                <span
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    opacity: 0.6,
-                    fontFeatureSettings: "'tnum'",
-                  }}
-                >
-                  {count}
-                </span>
-              </motion.button>
+              </FilterChip>
             );
           })}
-        </div>
       </div>
 
       {/* ═══ Advanced faceted filters (tag-based) ═══ */}
-      <div className="flex flex-col gap-3 -mt-6">
+      <div className="flex flex-col gap-2 -mt-3">
         <motion.button
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="flex items-center gap-2 px-1 py-1 active:scale-95 self-start"
@@ -272,7 +248,7 @@ export function RecommendedStyles({
               className="overflow-hidden"
             >
               <div
-                className="p-4 rounded-2xl flex flex-col gap-4"
+                className="p-3 rounded-2xl flex flex-col gap-3"
                 style={{
                   background: "var(--surface-container-low)",
                   border: "1px solid var(--outline-variant)",
@@ -320,7 +296,7 @@ export function RecommendedStyles({
                   options={[
                     { id: "home_oven_compatible", label: cms.filters.ovenHome },
                     { id: "wood_fired", label: cms.filters.ovenWood },
-                    { id: "electric_high_temp", label: cms.filters.ovenElectricHigh },
+                    { id: "electric_high_temp", label: formatTemperatureCopy(cms.filters.ovenElectricHigh, fmt) },
                     { id: "pan_baked", label: cms.filters.ovenPan },
                   ]}
                   active={ovenFilter}
@@ -354,11 +330,12 @@ export function RecommendedStyles({
 
       {/* ═══ Tier groups ═══ */}
       {tiers.length === 0 && (
-        <motion.div
+        <Surface
+          as={motion.div}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="surface-card p-8 text-center"
+          className="p-8 text-center"
         >
           <p
             className="font-serif italic"
@@ -367,7 +344,7 @@ export function RecommendedStyles({
               fontSize: "var(--font-size-2xl)",
             }}
           >
-            Nessuno stile in questa famiglia per i tuoi parametri.
+            {cms.misc.noStyleInFamily}
           </p>
           <motion.button
             onClick={() => setFamilyFilter("all")}
@@ -379,9 +356,9 @@ export function RecommendedStyles({
               fontWeight: "var(--weight-semibold)" as any,
             }}
           >
-            Mostra tutte
+            {cms.misc.showAllStyles}
           </motion.button>
-        </motion.div>
+        </Surface>
       )}
       {tiers.map(({ key, items }) => {
         const meta = TIER_META[key];
@@ -407,21 +384,21 @@ export function RecommendedStyles({
             }}
           >
             {/* Tier header */}
-            <div className="flex items-center gap-3 mb-5">
+            <div className="flex items-center gap-3 mb-3">
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center"
+                className="w-7 h-7 rounded-full flex items-center justify-center"
                 style={{
                   background: `color-mix(in srgb, ${meta.color} 12%, transparent)`,
                   color: meta.color,
                 }}
               >
-                <TierIcon size={15} />
+                <TierIcon size={14} />
               </div>
               <div className="flex items-baseline gap-2">
                 <span
                   style={{
                     color: "var(--text-default)",
-                    fontSize: "var(--font-size-2-5xl)",
+                    fontSize: "var(--font-size-2xl)",
                     fontWeight: "var(--weight-bold)" as any,
                   }}
                 >
@@ -429,7 +406,7 @@ export function RecommendedStyles({
                 </span>
                 <span
                   className="font-serif italic"
-                  style={{ color: "var(--text-muted)", fontSize: "var(--font-size-xl-5)" }}
+                  style={{ color: "var(--text-muted)", fontSize: "var(--font-size-lg)" }}
                 >
                   {tierSubtitle}
                 </span>
@@ -445,7 +422,24 @@ export function RecommendedStyles({
               </span>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 items-start">
+            {/* Audit Sprint 12 — Not feasible: nota in cima alla griglia che chiarisce
+                perché questi stili non sono praticabili al momento. */}
+            {key === "not_feasible" && items.length > 0 && (
+              <p
+                className="mb-4 italic"
+                style={{
+                  fontSize: "var(--font-size-sm)",
+                  color: "var(--text-muted)",
+                  lineHeight: 1.5,
+                }}
+              >
+                {cms.misc.notFeasibleExplainer}
+              </p>
+            )}
+            <div
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3 items-start"
+              style={key === "not_feasible" ? { opacity: 0.7 } : undefined}
+            >
               {items.map((rec) => {
                 const i = idx++;
                 return (
@@ -488,6 +482,22 @@ function StyleCard({
 }) {
   const { cms } = useCms();
   const { style, compatibilityScore } = rec;
+  /* VPL-C3 (rev): badge "difficoltà · impegno" — info che DIFFERENZIA le tile
+   * (a parità di momento il match è uguale per tutte). La motivazione di match
+   * completa vive nel pannello di dettaglio. */
+  const skillKey = getStyleTags(style.id)?.skill_required ??
+    (style.suitable_for_beginner ? "beginner" : "intermediate");
+  const difficultyLabel =
+    skillKey === "beginner"
+      ? cms.filters.skillBeginner
+      : skillKey === "intermediate"
+        ? cms.filters.skillIntermediate
+        : skillKey === "advanced"
+          ? cms.filters.skillAdvanced
+          : cms.filters.skillExpert;
+  const [fMin, fMax] = style.dough.fermentation_hours_range;
+  const timeLabel =
+    fMax <= 8 ? cms.filters.timeFast : `${Math.round(fMin)}–${Math.round(fMax)}h`;
   const cmsPhoto = cms.media.stylePhotos[style.id];
   const photo = cmsPhoto || STYLE_PHOTOS[style.id] || cms.media.fallbackPhoto || FALLBACK;
   const cmsFamilyName = cms.families[style.family]?.name;
@@ -533,6 +543,8 @@ function StyleCard({
         className="relative text-left group w-full active:scale-[0.97]"
         style={{ transformOrigin: "center bottom" }}
       >
+        {/* Tilt 3D: la card si inclina verso il puntatore col riflesso caldo */}
+        <TiltCard className="relative rounded-2xl">
         {/* Card shell with warm border */}
         <motion.div
           animate={{
@@ -640,7 +652,7 @@ function StyleCard({
                   marginTop: 6,
                   fontSize: "var(--font-size-sm)",
                   fontWeight: "var(--weight-semibold)" as any,
-                  fontFamily: "'DM Sans', sans-serif",
+                  fontFamily: "var(--font-sans)",
                   letterSpacing: "var(--tracking-label)",
                   textTransform: "uppercase" as const,
                   color: "var(--overlay-text-warm)",
@@ -650,9 +662,33 @@ function StyleCard({
               >
                 {familyName} — {style.origin.toUpperCase()}
               </div>
+
+              {/* VPL-C3 (rev): badge "difficoltà · impegno" — differenzia le tile
+                  (la motivazione di match completa è nel pannello di dettaglio). */}
+              <div
+                className="inline-flex items-center gap-1.5 mt-2 rounded-full"
+                style={{
+                  padding: "4px 10px 4px 8px",
+                  background: "var(--overlay-backdrop)",
+                  backdropFilter: "blur(6px)",
+                  WebkitBackdropFilter: "blur(6px)",
+                  border: `1px solid color-mix(in srgb, ${tierColor} 60%, transparent)`,
+                  fontSize: "var(--font-size-xs)",
+                  fontWeight: "var(--weight-semibold)" as any,
+                  fontFamily: "var(--font-sans)",
+                  color: "var(--overlay-text)",
+                  lineHeight: "var(--leading-none)",
+                }}
+              >
+                <ChefHat size={13} strokeWidth={2.5} style={{ color: tierColor, flexShrink: 0 }} aria-hidden="true" />
+                <span>
+                  {difficultyLabel} · {timeLabel}
+                </span>
+              </div>
             </div>
           </div>
         </motion.div>
+        </TiltCard>
       </motion.button>
     </div>
   );
@@ -682,26 +718,13 @@ function FacetRow({
         {options.map((o) => {
           const isActive = active === o.id;
           return (
-            <motion.button
+            <FilterChip
               key={o.id}
+              active={isActive}
               onClick={() => onToggle(o.id)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl active:scale-95 transition-transform"
-              style={{
-                background: isActive
-                  ? "var(--chip-bg-active)"
-                  : "var(--surface-container)",
-                color: isActive
-                  ? "var(--chip-text-active)"
-                  : "var(--text-default)",
-                border: `1px solid ${isActive ? "rgba(0,0,0,0)" : "var(--outline-variant)"}`,
-                fontSize: "var(--font-size-lg)",
-                fontWeight: "var(--weight-semibold)" as any,
-              }}
-              whileHover={{ y: -1 }}
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
             >
               {o.label}
-            </motion.button>
+            </FilterChip>
           );
         })}
       </div>

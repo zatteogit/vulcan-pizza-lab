@@ -1,24 +1,25 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  Search,
-  BookOpen,
-  ArrowLeft,
-  ChevronDown,
+ArrowLeft,
+BookOpen,
+ChevronDown,
+Search,
 } from "lucide-react";
-import { useNavigate, useLocation } from "react-router";
-import {
-  GLOSSARY_TERMS,
-  GLOSSARY_CATEGORIES,
-  getTermsByCategory,
-  getTermById,
-} from "../components/glossary-data";
-import type {
-  GlossaryCategory,
-  GlossaryTerm,
-} from "../components/glossary-data";
+import { AnimatePresence,motion } from "motion/react";
+import { useEffect,useMemo,useState } from "react";
+import { useLocation,useNavigate } from "react-router";
 import { useCms } from "../components/cms/cms-context";
 import { t } from "../components/cms/i18n";
+import { FilterChip } from "../components/ds";
+import type {
+GlossaryCategory,
+GlossaryTerm,
+} from "../components/glossary-data";
+import {
+GLOSSARY_CATEGORIES,
+GLOSSARY_TERMS,
+getTermById,
+getTermsByCategory,
+} from "../components/glossary-data";
 
 export function GlossaryPage() {
   const navigate = useNavigate();
@@ -199,7 +200,7 @@ export function GlossaryPage() {
               style={{
                 color: "var(--text-default)",
                 fontSize: "var(--font-size-lg)",
-                fontFamily: "'DM Sans', sans-serif",
+                fontFamily: "var(--font-sans)",
               }}
             />
             {search && (
@@ -240,14 +241,14 @@ export function GlossaryPage() {
                 damping: 28,
               }}
             >
-              <CategoryChip
-                id="all"
-                label={gl.allCategories}
-                emoji=""
-                count={categoryCounts.all}
-                isActive={activeCategory === "all"}
+              <FilterChip
+                active={activeCategory === "all"}
                 onClick={() => setActiveCategory("all")}
-              />
+                radius="xl"
+                count={categoryCounts.all}
+              >
+                {gl.allCategories}
+              </FilterChip>
             </motion.div>
             {(
               Object.entries(GLOSSARY_CATEGORIES) as [
@@ -267,14 +268,15 @@ export function GlossaryPage() {
                   damping: 28,
                 }}
               >
-                <CategoryChip
-                  id={id}
-                  label={catLabel(id, gl)}
-                  emoji={meta.emoji}
-                  count={categoryCounts[id] || 0}
-                  isActive={activeCategory === id}
+                <FilterChip
+                  active={activeCategory === id}
                   onClick={() => setActiveCategory(id)}
-                />
+                  radius="xl"
+                  count={categoryCounts[id] || 0}
+                >
+                  {meta.emoji && <span>{meta.emoji} </span>}
+                  {catLabel(id, gl)}
+                </FilterChip>
               </motion.div>
             ))}
           </motion.div>
@@ -637,7 +639,7 @@ function TermCard({
                           background:
                             i % 2 === 0
                               ? "var(--surface-container)"
-                              : "rgba(0,0,0,0)",
+                              : "transparent",
                         }}
                       >
                         <span
@@ -753,57 +755,5 @@ function TermCard({
   );
 }
 
-/* ═══ CATEGORY CHIP ═══ */
-function CategoryChip({
-  id,
-  label,
-  emoji,
-  count,
-  isActive,
-  onClick,
-}: {
-  id: string;
-  label: string;
-  emoji: string;
-  count: number;
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <motion.button
-      onClick={onClick}
-      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl active:scale-95 transition-transform"
-      style={{
-        background: isActive
-          ? "var(--chip-bg-active)"
-          : "var(--surface-container)",
-        color: isActive
-          ? "var(--chip-text-active)"
-          : "var(--text-default)",
-        border: `1px solid ${isActive ? "rgba(0,0,0,0)" : "var(--outline-variant)"}`,
-        fontSize: "var(--font-size-lg)",
-        fontWeight: "var(--weight-semibold)" as any,
-      }}
-      whileHover={{ y: -1 }}
-      transition={{
-        type: "spring",
-        stiffness: 500,
-        damping: 30,
-      }}
-    >
-      {emoji && <span>{emoji}</span>}
-      {label}
-      <span
-        style={{
-          fontSize: "var(--font-size-sm)",
-          opacity: 0.6,
-          fontFeatureSettings: "'tnum'",
-        }}
-      >
-        {count}
-      </span>
-    </motion.button>
-  );
-}
 
 export default GlossaryPage;

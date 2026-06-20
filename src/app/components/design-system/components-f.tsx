@@ -1,28 +1,25 @@
-import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import {
-  Plus,
-  Flame,
-  Wheat,
-  Timer,
-  ChefHat,
-  Check,
-  X,
-  Home,
-  Star,
-  Settings,
-  FlaskConical,
-  TrendingUp,
+Check,
+ChefHat,
+Flame,
+FlaskConical,
+Home,
+Plus,
+Star,
+Timer,
+Wheat
 } from "lucide-react";
-import {
-  SectionHeader,
-  AnatomyRow,
-  SubSectionLabel,
-  Panoramica,
-  LineeGuida,
-  AccessibilitaInfo,
-} from "./shared";
+import { AnimatePresence,motion } from "motion/react";
+import { useEffect,useRef,useState } from "react";
 import type { SectionEntry } from "./shared";
+import {
+AccessibilitaInfo,
+AnatomyRow,
+LineeGuida,
+Panoramica,
+SectionHeader,
+SubSectionLabel,
+} from "./shared";
 
 /* ═══════════════════════════════════════════════════════════
    C17 — FAB / EXTENDED FAB  (M3 Expressive)
@@ -589,7 +586,6 @@ export function SwitchSpec() {
 
 export function ProgressIndicatorSpec() {
   const [progress, setProgress] = useState(65);
-  const [indeterminate, setIndeterminate] = useState(false);
 
   return (
     <div className="flex flex-col gap-8">
