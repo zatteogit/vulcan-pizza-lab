@@ -56,13 +56,18 @@ import { StepIllustration } from "./step-illustrations";
 import {
 AUTHENTICITY_META,
 getConceptsByAuthenticity,
+getRecipesByAuthenticity,
 getToppingForStyle,
 TOPPING_CONCEPTS,
+TOPPING_LIBRARY,
 type AuthenticityScore,
 type FlavorProfile,
 type ToppingConcept,
+type ToppingRecipe,
+type IngredientSection,
+type ToppingIngredient,
 } from "./topping-library";
-import { CtaButton, Heading, Surface, Switch } from "./ds";
+import { Badge, CtaButton, Heading, IconButton, Stepper, Surface, Switch } from "./ds";
 
 /* ═══ PARAMETRIC CONTEXT TIPS ═══ */
 function getParametricTip(
@@ -177,9 +182,21 @@ interface RecipeOutputProps {
 type PagerTabId = "ricetta" | "procedimento" | "condimento";
 
 const panelVariants = {
-  enter: () => ({ y: 10, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: () => ({ y: -8, opacity: 0 }),
+  enter: (custom?: { direction: number; reduceMotion: boolean }) => ({
+    x: custom?.reduceMotion ? 0 : (custom?.direction ?? 0) > 0 ? 120 : -120,
+    y: custom?.reduceMotion ? 8 : 0,
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+  },
+  exit: (custom?: { direction: number; reduceMotion: boolean }) => ({
+    x: custom?.reduceMotion ? 0 : (custom?.direction ?? 0) < 0 ? 120 : -120,
+    y: custom?.reduceMotion ? -6 : 0,
+    opacity: 0,
+  }),
 };
 
 const TOPPING_TIMELINE_STEP_IDS = new Set([
@@ -229,10 +246,10 @@ function CondimentChoiceStrip({
   onSelect,
   mode,
 }: {
-  choices: Array<{ concept: ToppingConcept; authenticity: AuthenticityScore }>;
-  allChoices?: Array<{ concept: ToppingConcept; authenticity: AuthenticityScore }>;
+  choices: Array<{ recipe: ToppingRecipe; authenticity: AuthenticityScore }>;
+  allChoices?: Array<{ recipe: ToppingRecipe; authenticity: AuthenticityScore }>;
   activeConceptId: string;
-  onSelect?: (conceptId: string) => void;
+  onSelect?: (recipeId: string) => void;
   mode?: "ingredients" | "timeline";
 }) {
   const { cms } = useCms();
@@ -249,13 +266,16 @@ function CondimentChoiceStrip({
     : choices;
   const railChoices = useMemo(() => {
     if (isTimeline) return choices;
-    const featured = choices.slice(0, 6);
-    const activeChoice = choices.find((choice) => choice.concept.id === activeConceptId);
-    if (!activeChoice || featured.some((choice) => choice.concept.id === activeConceptId)) {
-      return featured;
+    const list = [...choices];
+    const hasActive = list.some((choice) => choice.recipe.id === activeConceptId);
+    if (!hasActive && allChoices) {
+      const activeChoice = allChoices.find((choice) => choice.recipe.id === activeConceptId);
+      if (activeChoice) {
+        list.push(activeChoice);
+      }
     }
-    return [activeChoice, ...featured].slice(0, 7);
-  }, [activeConceptId, choices, isTimeline]);
+    return list;
+  }, [activeConceptId, choices, allChoices, isTimeline]);
   const showExpandedPicker = !isTimeline && pickerChoices.length > railChoices.length;
   const updateFades = () => {
     const el = scrollRef.current;
@@ -275,6 +295,22 @@ function CondimentChoiceStrip({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [railChoices.length]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+      const activeBtn = el.querySelector('[aria-pressed="true"]');
+      if (activeBtn) {
+        activeBtn.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [activeConceptId]);
+
   const scrollByPage = (direction: -1 | 1) => {
     const el = scrollRef.current;
     if (!el) return;
@@ -287,24 +323,30 @@ function CondimentChoiceStrip({
   const flavorFilters = useMemo(
     () =>
       FLAVOR_PROFILE_ORDER.filter((profile) =>
-        pickerChoices.some((choice) => choice.concept.flavor_profile === profile),
+        pickerChoices.some((choice) => {
+          const concept = TOPPING_CONCEPTS[choice.recipe.concept_ref];
+          return concept?.flavor_profile === profile;
+        }),
       ),
     [pickerChoices],
   );
 
   const filteredPickerChoices = useMemo(() => {
     const q = normalizeSearch(query.trim());
-    return pickerChoices.filter(({ concept, authenticity }) => {
-      if (activeFlavor !== "all" && concept.flavor_profile !== activeFlavor) {
+    return pickerChoices.filter(({ recipe, authenticity }) => {
+      const concept = TOPPING_CONCEPTS[recipe.concept_ref];
+      if (activeFlavor !== "all" && concept?.flavor_profile !== activeFlavor) {
         return false;
       }
       if (!q) return true;
       const searchable = normalizeSearch(
         [
-          concept.name,
-          concept.description,
-          concept.occasions?.join(" "),
-          FLAVOR_PROFILE_LABELS[concept.flavor_profile],
+          recipe.name,
+          recipe.description,
+          concept?.name,
+          concept?.description,
+          concept?.occasions?.join(" "),
+          concept ? FLAVOR_PROFILE_LABELS[concept.flavor_profile] : "",
           authenticityLabel(authenticity, cms),
         ]
           .filter(Boolean)
@@ -315,171 +357,167 @@ function CondimentChoiceStrip({
   }, [activeFlavor, cms, pickerChoices, query]);
 
   if (!onSelect || pickerChoices.length <= 1) return null;
-  const selectFromSheet = (conceptId: string) => {
-    onSelect(conceptId);
+  const selectFromSheet = (recipeId: string) => {
+    onSelect(recipeId);
     setPickerOpen(false);
     setQuery("");
     setActiveFlavor("all");
   };
 
   return (
-    <div
-      className={`relative ${isTimeline ? "mt-4" : "rounded-[1.35rem] p-2"}`}
-      style={
-        isTimeline
-          ? undefined
-          : {
-              background: "var(--container-bg-low)",
-              border: "1px solid var(--container-border-subtle)",
-            }
-      }
-    >
-      {!isTimeline && (
-        <div className="mb-2 flex items-center justify-between gap-2 pl-2">
-            <span
-              className="type-data-sm"
-              style={{
-                color: "var(--text-muted)",
-                fontWeight: "var(--weight-semibold)" as any,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-              }}
-            >
-              Gusti
-            </span>
-            <span className="ml-auto" />
-            <button
-              type="button"
-              onClick={() => scrollByPage(-1)}
-              disabled={!fade.start}
-              className="flex h-9 w-9 items-center justify-center rounded-full active:scale-95 transition-transform disabled:opacity-35"
-              style={{
-                background: "var(--container-bg-low)",
-                border: "1px solid var(--container-border-subtle)",
-                color: "var(--text-muted)",
-                cursor: fade.start ? "pointer" : "default",
-              }}
-              aria-label="Condimento precedente"
-            >
-              <ChevronLeft size={15} />
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollByPage(1)}
-              disabled={!fade.end}
-              className="flex h-9 w-9 items-center justify-center rounded-full active:scale-95 transition-transform disabled:opacity-35"
-              style={{
-                background: "var(--container-bg-low)",
-                border: "1px solid var(--container-border-subtle)",
-                color: "var(--text-muted)",
-                cursor: fade.end ? "pointer" : "default",
-              }}
-              aria-label="Condimento successivo"
-            >
-              <ChevronRight size={15} />
-            </button>
-            {showExpandedPicker && (
+    <div className="relative">
+      <div
+        ref={scrollRef}
+        onScroll={updateFades}
+        className={`flex gap-2 overflow-x-auto pb-1.5 hide-scrollbar ${
+          isTimeline ? "topping-strip-timeline" : ""
+        }`}
+        aria-label={cms.cooking.chooseTopping}
+      >
+        {railChoices.map(({ recipe, authenticity }) => {
+          const concept = TOPPING_CONCEPTS[recipe.concept_ref];
+          const active = activeConceptId === recipe.id;
+          const thumbnail = concept?.thumbnail;
+          
+          if (isTimeline) {
+            return (
               <button
+                key={recipe.id}
                 type="button"
-                onClick={() => setPickerOpen((open) => !open)}
-                className="inline-flex h-9 items-center gap-1.5 rounded-full px-3 type-data active:scale-95 transition-transform"
+                onClick={() => onSelect(recipe.id)}
+                className="flex-shrink-0 rounded-2xl px-3 py-2 active:scale-95 transition-transform"
                 style={{
-                  background: pickerOpen
-                    ? "var(--recipe-hero-badge-bg)"
-                    : "var(--container-bg-low)",
-                  border: pickerOpen
+                  minHeight: 56,
+                  minWidth: thumbnail ? 164 : 124,
+                  background: active ? "var(--chip-bg-active)" : "var(--surface-container)",
+                  color: active ? "var(--chip-text-active)" : "var(--text-default)",
+                  border: active
                     ? "1px solid transparent"
-                    : "1px solid var(--container-border-subtle)",
-                  color: pickerOpen
-                    ? "var(--recipe-hero-badge-text)"
-                    : "var(--text-muted)",
-                  fontWeight: "var(--weight-semibold)" as any,
+                    : "1px solid var(--outline-variant)",
                   cursor: "pointer",
                 }}
-                aria-expanded={pickerOpen}
+                aria-pressed={active}
               >
-                <Utensils size={14} />
-                {engineMessage(cms, "topping.viewAll", "Vedi tutti")}
+                <span className="flex items-center gap-3 text-left">
+                  {thumbnail && (
+                    <img
+                      src={thumbnail}
+                      alt=""
+                      className="h-12 w-12 rounded-xl object-cover"
+                      loading="lazy"
+                    />
+                  )}
+                  <span className="min-w-0">
+                    <span
+                      className="block truncate type-data"
+                      style={{
+                        fontWeight: "var(--weight-semibold)" as any,
+                        lineHeight: "var(--leading-tight)",
+                      }}
+                    >
+                      {recipe.name ?? concept?.name}
+                    </span>
+                    <span
+                      className="block mt-0.5 type-data-sm"
+                      style={{
+                        color: active ? "inherit" : "var(--text-muted)",
+                        fontWeight: "var(--weight-medium)" as any,
+                        lineHeight: "var(--leading-normal)",
+                        opacity: active ? 0.82 : 1,
+                      }}
+                    >
+                      {authenticityLabel(authenticity, cms)}
+                    </span>
+                  </span>
+                </span>
               </button>
-            )}
-        </div>
-      )}
-    <div
-      ref={scrollRef}
-      onScroll={updateFades}
-      className={`flex gap-2 overflow-x-auto pb-1 hide-scrollbar ${
-        isTimeline ? "topping-strip-timeline" : ""
-      }`}
-      aria-label={cms.cooking.chooseTopping}
-    >
-      {railChoices.map(({ concept, authenticity }) => {
-        const active = activeConceptId === concept.id;
-        const thumbnail = concept.thumbnail;
-        return (
-          <button
-            key={concept.id}
-            type="button"
-            onClick={() => onSelect(concept.id)}
-            className="flex-shrink-0 rounded-2xl px-3 py-2 active:scale-95 transition-transform"
-            style={{
-              minHeight: 56,
-              minWidth: thumbnail ? 164 : 124,
-              background: active ? "var(--chip-bg-active)" : "var(--surface-container)",
-              color: active ? "var(--chip-text-active)" : "var(--text-default)",
-              border: active
-                ? "1px solid transparent"
-                : "1px solid var(--outline-variant)",
-              cursor: "pointer",
-            }}
-            aria-pressed={active}
-          >
-            <span className="flex items-center gap-3 text-left">
+            );
+          }
+
+          return (
+            <button
+              key={recipe.id}
+              type="button"
+              onClick={() => onSelect(recipe.id)}
+              className="flex-shrink-0 rounded-full pl-2 pr-5 py-2 active:scale-95 transition-transform flex items-center gap-3 text-left"
+              style={{
+                height: 56,
+                background: active ? "var(--primary)" : "color-mix(in srgb, var(--container-bg-low) 50%, transparent)",
+                color: active ? "var(--overlay-text)" : "var(--text-default)",
+                border: active
+                  ? "1px solid transparent"
+                  : "1px solid var(--container-border-subtle)",
+                cursor: "pointer",
+                boxShadow: active ? "0 4px 14px color-mix(in srgb, var(--primary) 30%, transparent)" : "none",
+              }}
+              aria-pressed={active}
+            >
               {thumbnail && (
                 <img
                   src={thumbnail}
                   alt=""
-                  className="h-11 w-11 rounded-xl object-cover"
+                  className="h-10 w-10 rounded-full object-cover flex-shrink-0"
                   loading="lazy"
                 />
               )}
-              <span className="min-w-0">
+              <div className="min-w-0 flex flex-col justify-center">
                 <span
                   className="block truncate type-data"
                   style={{
                     fontWeight: "var(--weight-semibold)" as any,
-                    lineHeight: "var(--leading-tight)",
+                    lineHeight: "var(--leading-none)",
                   }}
                 >
-                  {concept.name}
+                  {recipe.name ?? concept?.name}
                 </span>
                 <span
                   className="block mt-0.5 type-data-sm"
                   style={{
-                    color: active ? "inherit" : "var(--text-muted)",
+                    color: active ? "rgba(255, 255, 255, 0.8)" : "var(--text-muted)",
                     fontWeight: "var(--weight-medium)" as any,
-                    lineHeight: "var(--leading-normal)",
-                    opacity: active ? 0.82 : 1,
+                    lineHeight: "var(--leading-none)",
                   }}
                 >
                   {authenticityLabel(authenticity, cms)}
                 </span>
-              </span>
+              </div>
+            </button>
+          );
+        })}
+
+        {/* Action button "Vedi tutti" as a pill at the end of the scroll list */}
+        {!isTimeline && showExpandedPicker && (
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="flex-shrink-0 rounded-full px-5 py-2 active:scale-95 transition-transform type-data flex items-center gap-2"
+            style={{
+              height: 56,
+              background: "var(--surface-container)",
+              color: "var(--text-default)",
+              border: "1px solid var(--outline-variant)",
+              cursor: "pointer",
+              fontWeight: "var(--weight-semibold)" as any,
+            }}
+          >
+            <Utensils size={14} />
+            <span>
+              {engineMessage(cms, "topping.viewAll", "Vedi tutti")}
             </span>
           </button>
-        );
-      })}
-    </div>
+        )}
+      </div>
       {fade.start && (
         <div
           className="pointer-events-none absolute inset-y-0 left-0 w-8"
-          style={{ background: "linear-gradient(to right, var(--container-bg-low), transparent)" }}
+          style={{ background: "linear-gradient(to right, var(--container-page), transparent)" }}
           aria-hidden="true"
         />
       )}
       {fade.end && (
         <div
           className="pointer-events-none absolute inset-y-0 right-0 w-10"
-          style={{ background: "linear-gradient(to left, var(--container-bg-low), transparent)" }}
+          style={{ background: "linear-gradient(to left, var(--container-page), transparent)" }}
           aria-hidden="true"
         />
       )}
@@ -547,20 +585,21 @@ function CondimentChoiceStrip({
                         {engineMessage(cms, "topping.chooseAllHint", "Scegli un condimento: torni subito al dettaglio.")}
                       </p>
                     </div>
-                    <button
+                    <IconButton
                       type="button"
                       onClick={() => setPickerOpen(false)}
-                      className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full active:scale-95 transition-transform"
+                      size="md"
+                      variant="ghost"
+                      className="flex-shrink-0 active:scale-95 transition-transform"
                       style={{
                         background: "var(--container-bg-low)",
                         border: "1px solid var(--container-border-subtle)",
                         color: "var(--text-muted)",
-                        cursor: "pointer",
                       }}
                       aria-label={cms.ui.close}
                     >
                       <X size={16} />
-                    </button>
+                    </IconButton>
                   </div>
 
                   <div className="px-4 pb-4 sm:px-5 sm:pb-5">
@@ -572,7 +611,7 @@ function CondimentChoiceStrip({
                         border: "1px solid var(--container-border-subtle)",
                       }}
                     >
-                      <Search size={16} style={{ color: "var(--text-muted)", flexShrink: 0 }} />
+                      <Search size={16} style={{ color: "var(--icon-muted)", flexShrink: 0 }} />
                       <input
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
@@ -585,15 +624,17 @@ function CondimentChoiceStrip({
                         autoFocus
                       />
                       {query && (
-                        <button
+                        <IconButton
                           type="button"
                           onClick={() => setQuery("")}
-                          className="flex h-8 w-8 items-center justify-center rounded-full active:scale-95"
-                          style={{ color: "var(--text-muted)", cursor: "pointer" }}
-                          aria-label="Cancella ricerca"
+                          size="sm"
+                          variant="ghost"
+                          className="active:scale-95"
+                          style={{ color: "var(--text-muted)" }}
+                          aria-label={cms.pages.searchClearLabel}
                         >
                           <X size={14} />
-                        </button>
+                        </IconButton>
                       )}
                     </div>
 
@@ -638,13 +679,14 @@ function CondimentChoiceStrip({
                     <div className="mt-3 max-h-[48vh] overflow-y-auto pr-1 sm:max-h-[440px]">
                       <div className="grid gap-2 sm:grid-cols-2">
                         {filteredPickerChoices.length > 0 ? (
-                          filteredPickerChoices.map(({ concept, authenticity }) => {
-                            const active = activeConceptId === concept.id;
+                          filteredPickerChoices.map(({ recipe, authenticity }) => {
+                            const concept = TOPPING_CONCEPTS[recipe.concept_ref];
+                            const active = activeConceptId === recipe.id;
                             return (
                               <button
-                                key={concept.id}
+                                key={recipe.id}
                                 type="button"
-                                onClick={() => selectFromSheet(concept.id)}
+                                onClick={() => selectFromSheet(recipe.id)}
                                 className="flex items-center gap-3 rounded-2xl p-2.5 text-left active:scale-[0.99] transition-transform"
                                 style={{
                                   background: active
@@ -660,7 +702,7 @@ function CondimentChoiceStrip({
                                 }}
                                 aria-pressed={active}
                               >
-                                {concept.thumbnail && (
+                                {concept?.thumbnail && (
                                   <img
                                     src={concept.thumbnail}
                                     alt=""
@@ -676,7 +718,7 @@ function CondimentChoiceStrip({
                                       lineHeight: "var(--leading-tight)",
                                     }}
                                   >
-                                    {concept.name}
+                                    {recipe.name ?? concept?.name}
                                   </span>
                                   <span
                                     className="mt-0.5 block truncate type-data-sm"
@@ -1186,6 +1228,26 @@ function localizeStep(
   return { title, description: desc, longDesc, tip };
 }
 
+function ScrollToTopOnMount() {
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    let frameId: number;
+    let count = 0;
+    const scroll = () => {
+      window.scrollTo(0, 0);
+      count++;
+      if (count < 12) {
+        frameId = requestAnimationFrame(scroll);
+      }
+    };
+    frameId = requestAnimationFrame(scroll);
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, []);
+  return null;
+}
+
 export function RecipeOutput({
   recipe,
   constraints,
@@ -1210,6 +1272,7 @@ export function RecipeOutput({
   isPersonalized = true,
   onRequestPersonalization,
 }: RecipeOutputProps) {
+  const reduceMotion = useReducedMotion();
   const [copiedIng, setCopiedIng] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
@@ -1275,8 +1338,8 @@ export function RecipeOutput({
   const servingLabel = getServingUnitLabel(cms, servingUnit, 2);
   const allToppingChoices = React.useMemo(
     () =>
-      getConceptsByAuthenticity(recipe.style).filter(
-        (item) => item.authenticity !== "taboo" && !!item.resolved,
+      getRecipesByAuthenticity(recipe.style).filter(
+        (item) => item.authenticity !== "taboo",
       ),
     [recipe.style],
   );
@@ -1291,10 +1354,10 @@ export function RecipeOutput({
       selectedToppingConcept ?? recipe.style.default_topping_ref ?? null;
     if (
       activeConceptId &&
-      !featured.some((item) => item.concept.id === activeConceptId)
+      !featured.some((item) => item.recipe.id === activeConceptId)
     ) {
       const activeChoice = allToppingChoices.find(
-        (item) => item.concept.id === activeConceptId,
+        (item) => item.recipe.id === activeConceptId,
       );
       if (activeChoice) return [activeChoice, ...featured];
     }
@@ -1460,6 +1523,30 @@ export function RecipeOutput({
     }
   }, [comfortToggled, currentComfortPlan, startTime]);
 
+  const isFirstRender = React.useRef(true);
+  React.useEffect(() => {
+    if (hidePager) return;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const timer = setTimeout(() => {
+      const element = document.getElementById("recipe-content-tabs-anchor");
+      if (element) {
+        const isMobile = window.innerWidth < 768;
+        const hasStickyHeader = document.querySelector(".sticky.top-0") !== null;
+        const yOffset = isMobile 
+          ? (hasStickyHeader ? -64 : -20)
+          : -100;
+        const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [activeTabView, hidePager]);
+
   /* ── Pizzata attiva: step localizzati + temporizzati per la sessione ── */
   const { session, startSession, openOverlay } = useCookSession();
   const hasActiveSession = !!session;
@@ -1599,7 +1686,7 @@ export function RecipeOutput({
           <div className="mt-2 flex items-center gap-1 sm:gap-1.5">
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, -1))}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
+              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
               style={{
                 background: "var(--recipe-bg)",
                 border: "1px solid var(--recipe-border)",
@@ -1670,7 +1757,7 @@ export function RecipeOutput({
             )}
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, 1))}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
+              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
               style={{
                 background: "var(--recipe-bg)",
                 border: "1px solid var(--recipe-border)",
@@ -1702,7 +1789,7 @@ export function RecipeOutput({
           <div className="mt-2 flex items-center gap-1 sm:gap-1.5">
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, -1))}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
+              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
               style={{
                 background: "var(--recipe-bg)",
                 border: "1px solid var(--recipe-border)",
@@ -1775,7 +1862,7 @@ export function RecipeOutput({
             )}
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, 1))}
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
+              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
               style={{
                 background: "var(--recipe-bg)",
                 border: "1px solid var(--recipe-border)",
@@ -1973,8 +2060,16 @@ export function RecipeOutput({
 
   const renderToppingSection = (mode: "ingredients" | "timeline") => {
     const toppingRefId = recipe.style.default_topping_ref;
-    if (!toppingRefId) return null;
-    const topping = getToppingForStyle(toppingRefId, recipe.style);
+    /* Difesa in profondità (R1): se il default_topping_ref non risolve a una
+       ricetta concreta (ref legacy `<concept>_<stile>` mai mappato), NON lasciare
+       la tab vuota — ricadi sul topping più autentico disponibile per lo stile.
+       Così nessuno stile resta senza sezione Condimento. */
+    const topping =
+      (toppingRefId
+        ? getToppingForStyle(toppingRefId, recipe.style)
+        : undefined) ??
+      toppingChoices[0]?.recipe ??
+      allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe;
     if (!topping || !topping.ingredients || topping.ingredients.length === 0) return null;
 
     const concept = TOPPING_CONCEPTS[topping.concept_ref];
@@ -2071,197 +2166,326 @@ export function RecipeOutput({
     }
 
     const activeChoice = toppingChoices.find(
-      (choice) => choice.concept.id === activeConceptId,
+      (choice) => choice.recipe.id === activeConceptId,
     );
-    const activeConcept = activeChoice?.concept ?? concept;
-    const toppingName = activeConcept?.name ?? topping.name ?? cms.cooking.toppingTitle;
-    const toppingDescription = activeConcept?.description ?? topping.description;
+    const activeRecipe = activeChoice?.recipe ?? topping;
+    const activeConcept = TOPPING_CONCEPTS[activeRecipe.concept_ref];
+    const toppingName = activeRecipe.name ?? activeConcept?.name ?? cms.cooking.toppingTitle;
+    const toppingDescription = activeRecipe.description ?? activeConcept?.description;
     const toppingThumbnail = activeConcept?.thumbnail;
 
+    const currentIndex = toppingChoices.findIndex(
+      (choice) => choice.recipe.id === activeConceptId,
+    );
+
+    const prevTopping = () => {
+      if (toppingChoices.length <= 1 || !onSelectTopping) return;
+      const prevIndex = (currentIndex - 1 + toppingChoices.length) % toppingChoices.length;
+      onSelectTopping(toppingChoices[prevIndex].recipe.id);
+    };
+
+    const nextTopping = () => {
+      if (toppingChoices.length <= 1 || !onSelectTopping) return;
+      const nextIndex = (currentIndex + 1) % toppingChoices.length;
+      onSelectTopping(toppingChoices[nextIndex].recipe.id);
+    };
+
     return (
-      <section>
-        <div
-          className="overflow-hidden rounded-[1.75rem] p-3 sm:p-4"
-          style={{
-            background: "color-mix(in srgb, var(--container-page) 92%, transparent)",
-            border: "1px solid var(--container-border)",
-            boxShadow: "0 18px 46px color-mix(in srgb, var(--shadow-color) 7%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 16%, transparent)",
-          }}
-        >
-          <div className="grid gap-4 lg:grid-cols-[minmax(220px,300px)_1fr] lg:items-stretch">
-            {toppingThumbnail && (
-              <div className="relative min-h-[220px] overflow-hidden rounded-[1.35rem] lg:min-h-full">
+      <section className="flex flex-col gap-6">
+        {/* Carousel image with title & badges overlayed */}
+        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-[var(--surface-container)] shadow-md">
+          <AnimatePresence initial={false} mode="popLayout">
+            <motion.div
+              key={activeConceptId}
+              initial={{ opacity: 0, x: 80 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -80 }}
+              transition={{ type: "spring", stiffness: 350, damping: 30 }}
+              className="absolute inset-0 w-full h-full"
+            >
+              {toppingThumbnail ? (
                 <img
                   src={toppingThumbnail}
                   alt={toppingName}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(to top, color-mix(in srgb, var(--overlay-backdrop) 49%, transparent), transparent 58%)",
-                  }}
-                  aria-hidden="true"
-                />
-              </div>
-            )}
-            <div className="flex min-w-0 flex-col p-1 sm:p-2 lg:py-3">
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-8xl">
+                  {activeConcept?.emoji || "🍕"}
+                </div>
+              )}
+              
+              {/* Scrim overlay */}
               <div
-                className="type-data"
+                className="absolute inset-0 z-0"
                 style={{
-                  color: "var(--text-muted)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
+                  background: "linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.25) 45%, transparent 75%)",
                 }}
-              >
-                Condimento
-              </div>
-              <h3
-                className="font-serif mt-1"
-                style={{
-                  color: "var(--text-default)",
-                  fontSize: "clamp(1.65rem, 3.5vw, 2.25rem)",
-                  lineHeight: "var(--leading-heading)",
-                }}
-              >
-                {toppingName}
-              </h3>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {activeChoice?.authenticity && (
-                  <span
-                    className="rounded-full px-3 py-1 type-data"
-                    style={{
-                      background: "var(--recipe-hero-badge-bg)",
-                      color: "var(--recipe-hero-badge-text)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                    }}
-                  >
-                    {authenticityLabel(activeChoice.authenticity, cms)}
-                  </span>
-                )}
-                {topping.variant_name && (
-                  <span
-                    className="rounded-full px-3 py-1 type-data"
-                    style={{
-                      background: "var(--container-bg-low)",
-                      color: "var(--text-muted)",
-                      border: "1px solid var(--container-border-subtle)",
-                      fontWeight: "var(--weight-medium)" as any,
-                    }}
-                  >
-                    {topping.variant_name}
-                  </span>
-                )}
-              </div>
-              {toppingDescription && (
-                <p
-                  className="mt-4 type-body-lg"
+                aria-hidden="true"
+              />
+
+              {/* Text overlay on image */}
+              <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-1 text-left z-10">
+                <div
+                  className="type-data-sm"
                   style={{
-                    color: "var(--text-muted)",
-                    lineHeight: "var(--leading-reading)",
-                    maxWidth: 720,
+                    color: "rgba(255, 255, 255, 0.7)",
+                    fontWeight: "var(--weight-semibold)" as any,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
                   }}
                 >
-                  {toppingDescription}
-                </p>
-              )}
-              <p
-                className="mt-4 type-body"
-                style={{
-                  color: "var(--text-muted)",
-                  lineHeight: "var(--leading-normal)",
-                  maxWidth: 720,
-                }}
+                  Condimento
+                </div>
+                
+                <Heading level="page" color="var(--overlay-text)" className="font-serif !text-white mt-0.5">
+                  {toppingName}
+                </Heading>
+
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {activeChoice?.authenticity && (
+                    <Badge tone="primary" size="sm" style={{ background: "rgba(255, 255, 255, 0.22)", color: "var(--overlay-text)" }}>
+                      {authenticityLabel(activeChoice.authenticity, cms)}
+                    </Badge>
+                  )}
+                  {topping.variant_name && (
+                    <Badge tone="muted" size="sm" style={{ background: "rgba(255, 255, 255, 0.18)", color: "rgba(255, 255, 255, 0.9)" }}>
+                      {topping.variant_name}
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Chevrons overlaid on the image */}
+          {toppingChoices.length > 1 && (
+            <>
+              <IconButton
+                type="button"
+                onClick={(e) => { e.stopPropagation(); prevTopping(); }}
+                size="md"
+                variant="bare"
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white backdrop-blur-sm border border-white/10 hover:bg-black/60 active:scale-95 transition-all"
+                aria-label={cms.cooking.toppingPrevAria}
               >
-                {t(cms.cooking.toppingAmountsNote, {
-                  n: multiplier,
-                  unit: totalUnitName,
-                  perUnit: unitName,
-                })}
-              </p>
-            </div>
-          </div>
-          <div
-            className="mt-3 pt-3"
-            style={{ borderTop: "1px solid var(--container-border-subtle)" }}
-          >
-            <CondimentChoiceStrip
-              choices={toppingChoices}
-              allChoices={allToppingChoices}
-              activeConceptId={activeConceptId}
-              onSelect={onSelectTopping}
-              mode="ingredients"
-            />
-          </div>
+                <ChevronLeft size={20} />
+              </IconButton>
+              <IconButton
+                type="button"
+                onClick={(e) => { e.stopPropagation(); nextTopping(); }}
+                size="md"
+                variant="bare"
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white backdrop-blur-sm border border-white/10 hover:bg-black/60 active:scale-95 transition-all"
+                aria-label={cms.cooking.toppingNextAria}
+              >
+                <ChevronRight size={20} />
+              </IconButton>
+            </>
+          )}
         </div>
 
-        <div className="mt-7 grid gap-3 sm:grid-cols-2">
-          {topping.ingredients.map((ing, i) => {
-            const totalAmount = Math.round(ing.amount.value * multiplier * 10) / 10;
-            const displayAmount = formatToppingAmountForLocale(totalAmount, ing.amount.unit, fmt);
-            const perUnitAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
-            const detailParts: string[] = [];
-            if (multiplier > 1) {
-              detailParts.push(t(cms.cooking.toppingPerUnit, { amount: perUnitAmount, unit: unitName }));
-            }
-            if (ing.notes) detailParts.push(ing.notes);
-            if (ing.optional) detailParts.push(ui.pantryOptional);
+        {/* Thumbnails selector strip */}
+        <div className="w-full">
+          <CondimentChoiceStrip
+            choices={toppingChoices}
+            allChoices={allToppingChoices}
+            activeConceptId={activeConceptId}
+            onSelect={onSelectTopping}
+            mode="ingredients"
+          />
+        </div>
+
+        {/* Details section */}
+        <div className="flex flex-col px-1">
+          {toppingDescription && (
+            <p
+              className="type-body-lg text-left"
+              style={{
+                color: "var(--text-default)",
+                lineHeight: "var(--leading-reading)",
+                maxWidth: 720,
+              }}
+            >
+              {toppingDescription}
+            </p>
+          )}
+
+          <p
+            className="mt-2 type-body text-left"
+            style={{
+              color: "var(--text-muted)",
+              lineHeight: "var(--leading-normal)",
+              maxWidth: 720,
+            }}
+          >
+            {t(cms.cooking.toppingAmountsNote, {
+              n: multiplier,
+              unit: totalUnitName,
+              perUnit: unitName,
+            })}
+          </p>
+        </div>
+
+        {/* Separator line */}
+        <div
+          style={{ borderTop: "1px solid var(--container-border-subtle)" }}
+        />
+
+        {(() => {
+          const hasSections = topping.ingredients.some((ing) => ing.section !== undefined);
+          if (hasSections) {
+            const sectionOrder: IngredientSection[] = ["ripieno", "base", "crosta", "superficie"];
+            const grouped: Record<IngredientSection, ToppingIngredient[]> = {
+              ripieno: [],
+              base: [],
+              crosta: [],
+              superficie: [],
+            };
+            topping.ingredients.forEach((ing) => {
+              const sec = ing.section ?? "superficie";
+              grouped[sec].push(ing);
+            });
+
             return (
-              <div
-                key={`${ing.name}-${i}`}
-                className="rounded-2xl p-4 sm:p-5"
-                style={{
-                  background: "var(--container-bg-low)",
-                  border: "1px solid var(--container-border-subtle)",
-                }}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <span
-                    style={{
-                      color: ing.optional ? "var(--text-muted)" : "var(--text-default)",
-                      fontSize: "var(--font-size-xl)",
-                      fontStyle: ing.optional ? "italic" : "normal",
-                      lineHeight: "var(--leading-normal)",
-                    }}
-                  >
-                    {ing.name}
-                  </span>
-                  <span
-                    className="type-numeric"
-                    style={{
-                      color: "var(--text-default)",
-                      fontSize: "var(--font-size-2xl)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      lineHeight: "var(--leading-tight)",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {displayAmount}
-                  </span>
-                </div>
-                {detailParts.length > 0 && (
-                  <div
-                    className="mt-3 type-numeric"
-                    style={{
-                      color: "var(--text-muted)",
-                      fontSize: "var(--font-size-md)",
-                      lineHeight: "var(--leading-normal)",
-                    }}
-                  >
-                    {detailParts.join(" · ")}
-                  </div>
-                )}
+              <div className="flex flex-col gap-8">
+                {sectionOrder.map((sec) => {
+                  const list = grouped[sec];
+                  if (list.length === 0) return null;
+                  const headerText = getSectionHeader(sec, cms.locale.id);
+                  return (
+                    <div key={sec} className="flex flex-col gap-4">
+                      <div className="flex items-center gap-3">
+                        <span className="w-1 h-5 rounded-full" style={{ background: "var(--text-accent)" }} />
+                        <Heading level="xl" className="!my-0 font-serif text-left" style={{ fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)", color: "var(--text-default)" }}>
+                          {headerText}
+                        </Heading>
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {list.map((ing, i) => {
+                          const displayAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
+                          const detailParts: string[] = [];
+                          if (ing.notes) detailParts.push(ing.notes);
+                          if (ing.optional) detailParts.push(ui.pantryOptional);
+                          return (
+                            <div
+                              key={`${ing.name}-${i}`}
+                              className="rounded-2xl p-4 sm:p-5 text-left"
+                              style={{
+                                background: "var(--container-bg-low)",
+                                border: "1px solid var(--container-border-subtle)",
+                              }}
+                            >
+                              <div className="flex items-start justify-between gap-4">
+                                <span
+                                  style={{
+                                    color: ing.optional ? "var(--text-muted)" : "var(--text-default)",
+                                    fontSize: "var(--font-size-xl)",
+                                    fontStyle: ing.optional ? "italic" : "normal",
+                                    lineHeight: "var(--leading-normal)",
+                                  }}
+                                >
+                                  {ing.name}
+                                </span>
+                                <span
+                                  className="type-numeric"
+                                  style={{
+                                    color: "var(--text-default)",
+                                    fontSize: "var(--font-size-2xl)",
+                                    fontWeight: "var(--weight-semibold)" as any,
+                                    lineHeight: "var(--leading-tight)",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {displayAmount}
+                                </span>
+                              </div>
+                              {detailParts.length > 0 && (
+                                <div
+                                  className="mt-3 type-numeric text-left"
+                                  style={{
+                                    color: "var(--text-muted)",
+                                    fontSize: "var(--font-size-md)",
+                                    lineHeight: "var(--leading-normal)",
+                                  }}
+                                >
+                                  {detailParts.join(" · ")}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             );
-          })}
-        </div>
+          } else {
+            return (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {topping.ingredients.map((ing, i) => {
+                  const displayAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
+                  const detailParts: string[] = [];
+                  if (ing.notes) detailParts.push(ing.notes);
+                  if (ing.optional) detailParts.push(ui.pantryOptional);
+                  return (
+                    <div
+                      key={`${ing.name}-${i}`}
+                      className="rounded-2xl p-4 sm:p-5 text-left"
+                      style={{
+                        background: "var(--container-bg-low)",
+                        border: "1px solid var(--container-border-subtle)",
+                      }}
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <span
+                          style={{
+                            color: ing.optional ? "var(--text-muted)" : "var(--text-default)",
+                            fontSize: "var(--font-size-xl)",
+                            fontStyle: ing.optional ? "italic" : "normal",
+                            lineHeight: "var(--leading-normal)",
+                          }}
+                        >
+                          {ing.name}
+                        </span>
+                        <span
+                          className="type-numeric"
+                          style={{
+                            color: "var(--text-default)",
+                            fontSize: "var(--font-size-2xl)",
+                            fontWeight: "var(--weight-semibold)" as any,
+                            lineHeight: "var(--leading-tight)",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {displayAmount}
+                        </span>
+                      </div>
+                      {detailParts.length > 0 && (
+                        <div
+                          className="mt-3 type-numeric text-left"
+                          style={{
+                            color: "var(--text-muted)",
+                            fontSize: "var(--font-size-md)",
+                            lineHeight: "var(--leading-normal)",
+                          }}
+                        >
+                          {detailParts.join(" · ")}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          }
+        })()}
 
         {technicalNotes.length > 0 && (
           <div
-            className="mt-8 rounded-3xl overflow-hidden"
+            className="rounded-3xl overflow-hidden"
             style={{
               border: "1px solid var(--recipe-tip-border)",
               background: "var(--recipe-tip-beginner-bg)",
@@ -2467,7 +2691,7 @@ export function RecipeOutput({
               }}
               role="alertdialog"
               aria-modal="true"
-              aria-label="Ricetta non ancora personalizzata"
+              aria-label={cms.cooking.notPersonalizedAria}
             >
               <div
                 className="flex items-center justify-center"
@@ -2577,7 +2801,7 @@ export function RecipeOutput({
             boxShadow: "var(--recipe-pager-shadow)",
           }}
           role="tablist"
-          aria-label="Sezioni ricetta"
+          aria-label={cms.cooking.sectionsAria}
         >
           {pagerTabs.map((t) => {
             const active = activeTabView === t.id;
@@ -2617,12 +2841,15 @@ export function RecipeOutput({
           })}
         </div>
         {shareUrl && (
-          <motion.button
+          <IconButton
+            as={motion.button}
             type="button"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleCopyLink}
-            className="flex items-center justify-center w-[54px] h-[54px] rounded-full active:scale-95 transition-transform flex-shrink-0"
+            size="lg"
+            variant="ghost"
+            className="active:scale-95 transition-transform"
             style={{
               background: linkCopied
                 ? "var(--recipe-header-action-bg-active)"
@@ -2637,45 +2864,22 @@ export function RecipeOutput({
               color: linkCopied
                 ? "var(--recipe-header-action-text-active)"
                 : "var(--text-muted)",
-              cursor: "pointer",
               boxShadow: "var(--recipe-pager-shadow)",
             }}
             title={linkCopied ? cms.ui.copied : cms.ui.share}
             aria-label={cms.pages.recipeCopyLinkAria}
           >
             {linkCopied ? <Check size={16} /> : <Share2 size={15} />}
-          </motion.button>
+          </IconButton>
         )}
       </div>
       )}
 
-      {activeTabView === "ricetta" && matchSlot && (
-        <motion.div
-          key="recipe-match-under-tabs"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 420, damping: 32 }}
-        >
-          {matchSlot}
-        </motion.div>
-      )}
-
-      {activeTabView === "procedimento" && (
-        <motion.div
-          key="recipe-timeline-under-tabs"
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 420, damping: 32 }}
-        >
-          {procedureHeroControls}
-        </motion.div>
-      )}
-
-      <AnimatePresence initial={false} custom={pagerDir}>
+      <AnimatePresence initial={false} custom={{ direction: pagerDir, reduceMotion }} mode="wait">
       {activeTabView === "ricetta" && (
       <motion.div
         key="panel-ricetta"
-        custom={pagerDir}
+        custom={{ direction: pagerDir, reduceMotion }}
         variants={panelVariants}
         initial="enter"
         animate="center"
@@ -2688,6 +2892,8 @@ export function RecipeOutput({
         style={{ touchAction: "pan-y" }}
         className="flex flex-col gap-14 sm:gap-16"
       >
+      <ScrollToTopOnMount />
+      {matchSlot}
       {recipeControls}
       {/* ── Ingredients + panetti stepper ── */}
       <div>
@@ -2740,51 +2946,23 @@ export function RecipeOutput({
           >
             {servingLabel}
           </span>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() =>
-                updateBalls(constraints.dough_balls - 1)
-              }
-              disabled={constraints.dough_balls <= 1}
-              className="w-9 h-9 rounded-xl flex items-center justify-center disabled:opacity-20 active:scale-[0.88] transition-transform"
-              style={{
-                background: "var(--recipe-bg)",
-                border: "1px solid var(--recipe-border)",
-              }}
-              aria-label={ui.ariaReduceBalls}
-            >
-              <Minus size={14} />
-            </button>
-            <motion.span
-              key={constraints.dough_balls}
-              initial={{ scale: 0.85 }}
-              animate={{ scale: 1 }}
-              style={{
-                fontSize: "var(--font-size-2-5xl)",
-                fontWeight: "var(--weight-bold)" as any,
-                minWidth: 28,
-                textAlign: "center",
-                color: "var(--recipe-highlight)",
-              }}
-              className="type-numeric"
-            >
-              {constraints.dough_balls}
-            </motion.span>
-            <button
-              onClick={() =>
-                updateBalls(constraints.dough_balls + 1)
-              }
-              disabled={constraints.dough_balls >= 20}
-              className="w-9 h-9 rounded-xl flex items-center justify-center disabled:opacity-20 active:scale-[0.88] transition-transform"
-              style={{
-                background: "var(--recipe-bg)",
-                border: "1px solid var(--recipe-border)",
-              }}
-              aria-label={ui.ariaAddBalls}
-            >
-              <Plus size={14} />
-            </button>
-          </div>
+          <Stepper
+            value={constraints.dough_balls}
+            min={1}
+            max={20}
+            onChange={updateBalls}
+            decrementLabel={ui.ariaReduceBalls}
+            incrementLabel={ui.ariaAddBalls}
+            buttonStyle={{
+              background: "var(--recipe-bg)",
+              border: "1px solid var(--recipe-border)",
+            }}
+            valueStyle={{
+              fontSize: "var(--font-size-2-5xl)",
+              fontWeight: "var(--weight-bold)" as any,
+              color: "var(--recipe-highlight)",
+            }}
+          />
           <span
             className="type-body"
             style={{ color: "var(--text-muted)" }}
@@ -2816,7 +2994,7 @@ export function RecipeOutput({
                   background: "var(--container-bg-low)",
                   border: "1px solid var(--container-border)",
                 }}
-                title="Stima indicativa basata sulla pezzatura tradizionale dello stile"
+                title={cms.cooking.ballEstimateTooltip}
               >
                 {peopleLabel}
               </span>
@@ -3115,7 +3293,7 @@ export function RecipeOutput({
       {activeTabView === "procedimento" && (
       <motion.div
         key="panel-procedimento"
-        custom={pagerDir}
+        custom={{ direction: pagerDir, reduceMotion }}
         variants={panelVariants}
         initial="enter"
         animate="center"
@@ -3128,6 +3306,10 @@ export function RecipeOutput({
         style={{ touchAction: "pan-y" }}
         className="flex flex-col gap-2"
       >
+      <ScrollToTopOnMount />
+      <div className="mb-4 sm:mb-6">
+        {procedureHeroControls}
+      </div>
 
       {/* ── Procedure / Timeline with inline tips ── */}
       <div>
@@ -3241,7 +3423,7 @@ export function RecipeOutput({
                 >
                   {/* Node */}
                   <div
-                    className="relative z-10 w-[42px] h-[42px] rounded-full flex items-center justify-center flex-shrink-0"
+                    className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
                     style={{
                       background: isFirst
                         ? "var(--recipe-node-first-bg)"
@@ -3375,7 +3557,7 @@ export function RecipeOutput({
       {activeTabView === "condimento" && (
       <motion.div
         key="panel-condimento"
-        custom={pagerDir}
+        custom={{ direction: pagerDir, reduceMotion }}
         variants={panelVariants}
         initial="enter"
         animate="center"
@@ -3388,7 +3570,8 @@ export function RecipeOutput({
         style={{ touchAction: "pan-y" }}
         className="flex flex-col gap-8"
       >
-        {renderToppingSection("ingredients")}
+      <ScrollToTopOnMount />
+      {renderToppingSection("ingredients")}
       </motion.div>
       )}
 
@@ -3653,6 +3836,47 @@ function getServingUnitLabel(
   return lowercase ? label.toLocaleLowerCase(cms.locale.id) : label;
 }
 
+function getSectionHeader(section: string, locale: string): string {
+  const isIt = locale.toLowerCase().startsWith("it");
+  const isDe = locale.toLowerCase().startsWith("de");
+  const isJa = locale.toLowerCase().startsWith("ja");
+
+  if (isIt) {
+    switch (section) {
+      case "ripieno": return "Ripieno Interno";
+      case "base": return "Sulla Base";
+      case "crosta": return "Bordo / Crosta";
+      case "superficie": return "In Superficie";
+      default: return "Ingredienti";
+    }
+  } else if (isDe) {
+    switch (section) {
+      case "ripieno": return "Füllung";
+      case "base": return "Auf dem Boden";
+      case "crosta": return "Rand / Kruste";
+      case "superficie": return "Belag / Oberfläche";
+      default: return "Zutaten";
+    }
+  } else if (isJa) {
+    switch (section) {
+      case "ripieno": return "中の具材（フィリング）";
+      case "base": return "生地のベース";
+      case "crosta": return "生地の端・耳";
+      case "superficie": return "トッピング・表面";
+      default: return "材料";
+    }
+  } else {
+    // English default
+    switch (section) {
+      case "ripieno": return "Internal Filling";
+      case "base": return "On the Base";
+      case "crosta": return "Crust / Edge";
+      case "superficie": return "On the Surface";
+      default: return "Ingredients";
+    }
+  }
+}
+
 function formatIngredientsText(r: GeneratedRecipe, cms: CmsContent, bcp47: string) {
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
@@ -3668,20 +3892,45 @@ function formatIngredientsText(r: GeneratedRecipe, cms: CmsContent, bcp47: strin
   if (!topping?.ingredients?.length) return doughText;
 
   const concept = TOPPING_CONCEPTS[topping.concept_ref];
-  const unitName = getServingUnitLabel(cms, getServingUnit(r.style), 1, true);
-  const toppingTitle = concept?.name ?? topping.name ?? cms.cooking.toppingTitle;
-  const toppingLines = topping.ingredients.map((ing) => {
-    const totalAmount = formatToppingAmountForLocale(ing.amount.value * r.dough_balls, ing.amount.unit, fmt);
-    const perUnit =
-      r.dough_balls > 1
-        ? ` (${t(cms.cooking.toppingPerUnit, {
-            amount: formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt),
-            unit: unitName,
-          })})`
-        : "";
-    const notes = [ing.notes, ing.optional ? ui.pantryOptional : null].filter(Boolean).join(" · ");
-    return `${ing.name}: ${totalAmount}${perUnit}${notes ? ` — ${notes}` : ""}`;
-  });
+  const toppingTitle = topping.name ?? concept?.name ?? cms.cooking.toppingTitle;
 
-  return `${doughText}\n\n${cms.cooking.toppingTitle} — ${toppingTitle}\n${toppingLines.join("\n")}`;
+  const hasSections = topping.ingredients.some((ing) => ing.section !== undefined);
+  let toppingDetailsText = "";
+
+  if (hasSections) {
+    const sectionOrder: IngredientSection[] = ["ripieno", "base", "crosta", "superficie"];
+    const grouped: Record<IngredientSection, ToppingIngredient[]> = {
+      ripieno: [],
+      base: [],
+      crosta: [],
+      superficie: [],
+    };
+    topping.ingredients.forEach((ing) => {
+      const sec = ing.section ?? "superficie";
+      grouped[sec].push(ing);
+    });
+
+    const sectionsText: string[] = [];
+    sectionOrder.forEach((sec) => {
+      const list = grouped[sec];
+      if (list.length === 0) return;
+      const header = getSectionHeader(sec, bcp47);
+      const lines = list.map((ing) => {
+        const singleAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
+        const notes = [ing.notes, ing.optional ? ui.pantryOptional : null].filter(Boolean).join(" · ");
+        return `- ${ing.name}: ${singleAmount}${notes ? ` — ${notes}` : ""}`;
+      });
+      sectionsText.push(`[${header}]\n${lines.join("\n")}`);
+    });
+    toppingDetailsText = sectionsText.join("\n\n");
+  } else {
+    const lines = topping.ingredients.map((ing) => {
+      const singleAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
+      const notes = [ing.notes, ing.optional ? ui.pantryOptional : null].filter(Boolean).join(" · ");
+      return `${ing.name}: ${singleAmount}${notes ? ` — ${notes}` : ""}`;
+    });
+    toppingDetailsText = lines.join("\n");
+  }
+
+  return `${doughText}\n\n${cms.cooking.toppingTitle} — ${toppingTitle}\n${toppingDetailsText}\n\n${cms.cooking.toppingAmountsNote}`;
 }

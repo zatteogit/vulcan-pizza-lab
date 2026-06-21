@@ -529,7 +529,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     hydration_category: "medium",
     emoji: "🍕",
     servings_per_unit: [1, 1], // Napoletana = 1 pizza a testa
-    default_topping_ref: "margherita", // resolver → margherita_napoletana_avpn
+    default_topping_ref: "margherita_napoletana_avpn",
   },
   napoletana_canotto: {
     id: "napoletana_canotto",
@@ -576,7 +576,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     hydration_category: "high",
     emoji: "🎈",
     servings_per_unit: [1, 1], // Canotto = 1 pizza a testa
-    default_topping_ref: "margherita", // resolver → margherita_napoletana_avpn
+    default_topping_ref: "margherita_napoletana_avpn",
   },
   teglia_romana: {
     id: "teglia_romana",
@@ -623,7 +623,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "extreme",
     emoji: "📐",
-    default_topping_ref: "margherita", // resolver → margherita_romana
+    default_topping_ref: "margherita",
   },
   tonda_romana: {
     id: "tonda_romana",
@@ -670,7 +670,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     hydration_category: "medium",
     emoji: "💥",
     servings_per_unit: [1, 1], // Scrocchiarella = 1 pizza a testa
-    default_topping_ref: "margherita", // resolver → margherita_romana
+    default_topping_ref: "margherita_romana",
   },
   pinsa_romana: {
     id: "pinsa_romana",
@@ -724,7 +724,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     hydration_category: "high",
     emoji: "🥖",
     servings_per_unit: [1, 1], // Pinsa = formato individuale ovale
-    default_topping_ref: "margherita", // resolver → margherita_romana
+    default_topping_ref: "margherita",
   },
   new_york: {
     id: "new_york",
@@ -770,7 +770,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🗽",
-    default_topping_ref: "margherita", // resolver → margherita_americana
+    default_topping_ref: "margherita_new_york",
   },
   detroit: {
     id: "detroit",
@@ -817,7 +817,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🚗",
-    default_topping_ref: "detroit", // VPL-B2: era "diavola" — assembly cheese-crown + salsa sopra
+    default_topping_ref: "detroit_brick",
   },
   chicago_deep: {
     id: "chicago_deep",
@@ -863,7 +863,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "low",
     emoji: "🏙️",
-    default_topping_ref: "chicago", // VPL-B2: era "diavola" — strati invertiti, salsa sopra
+    default_topping_ref: "chicago_deep_classic",
   },
   bonci_teglia: {
     id: "bonci_teglia",
@@ -910,7 +910,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "extreme",
     emoji: "☁️",
-    default_topping_ref: "margherita", // resolver → margherita_romana
+    default_topping_ref: "margherita",
   },
 
   /* ═══ EXPANSION WAVE 1 — 6 nuovi stili (marzo 2026) ═══ */
@@ -960,7 +960,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🫒",
-    default_topping_ref: "bianca", // resolver → bianca_olio_rosmarino
+    default_topping_ref: "bianca",
   },
   sfincione: {
     id: "sfincione",
@@ -1007,7 +1007,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🏺",
-    default_topping_ref: "sfincione", // VPL-B2: era assente (fallback generico)
+    default_topping_ref: "sfincione_palermitano",
   },
   pala_romana: {
     id: "pala_romana",
@@ -1054,7 +1054,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🏓",
-    default_topping_ref: "bianca_mortazza", // resolver → bianca_mortazza_romana (signature pala)
+    default_topping_ref: "bianca_mortazza_romana",
   },
   grandma_style: {
     id: "grandma_style",
@@ -1101,7 +1101,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "👵",
-    default_topping_ref: "margherita", // resolver → margherita_americana
+    default_topping_ref: "margherita",
   },
   focaccia_recco: {
     id: "focaccia_recco",
@@ -1155,7 +1155,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "low",
     emoji: "🧀",
-    default_topping_ref: "crescenza_recco", // resolver → crescenza_recco (single variant IGP)
+    default_topping_ref: "crescenza_recco",
   },
   padellino_torino: {
     id: "padellino_torino",
@@ -1202,7 +1202,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🍳",
-    default_topping_ref: "margherita", // resolver → margherita_romana (contemporanea match)
+    default_topping_ref: "margherita",
   },
 
   /* ═══ SPRINT 11 Fase 1 — Stili con layout speciale ═══ */
@@ -1261,7 +1261,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "💋",
-    default_topping_ref: "margherita", // resolver → margherita_romana
+    default_topping_ref: "bianca_mortazza",
   },
 
   ciaccino_senese: {
@@ -1317,6 +1317,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🥪",
+    default_topping_ref: "ciaccino",
   },
 
   /* Sprint 11 Fase 2 — Variante d'autore: Baciata con topping signature */
@@ -1424,7 +1425,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🥪",
-    default_topping_ref: "margherita", // resolver → margherita_romana (contemporanea match)
+    default_topping_ref: "margherita",
   },
 
   chicago_tavern: {
@@ -1472,7 +1473,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "low",
     emoji: "🟫",
-    default_topping_ref: "diavola", // resolver → diavola_americana
+    default_topping_ref: "diavola",
   },
 
   /* ═══ NUOVI STILI — Audit motore 2026-05 (italiani minori + internazionali) ═══ */
@@ -1524,7 +1525,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🫒",
-    default_topping_ref: "focaccia_barese", // VPL-B2: era "marinara" (errato)
+    default_topping_ref: "focaccia_barese_classica",
   },
 
   pizza_fritta: {
@@ -1574,7 +1575,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🍳",
-    default_topping_ref: "montanara", // VPL-B2: era "margherita" — montanara condita a crudo
+    default_topping_ref: "montanara_classica",
   },
 
   calzone_napoletano: {
@@ -1631,7 +1632,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🥟",
-    default_topping_ref: "margherita",
+    default_topping_ref: "calzone_napoletano_classico",
   },
 
   pizza_al_metro: {
@@ -1732,7 +1733,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🦪",
-    default_topping_ref: "marinara",
+    default_topping_ref: "white_clam",
   },
 
   fugazzeta: {
@@ -1789,7 +1790,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🧅",
-    default_topping_ref: "fugazzeta", // VPL-B2: era "bianca" (generico)
+    default_topping_ref: "fugazzeta",
   },
 
   california_style: {
@@ -3497,32 +3498,42 @@ function generateTimeline(
     injectToppingAt("after_stack");
   } else if (layout.type === "closed_stuffed" && layout.filling_timing === "pre_bake_internal") {
     // Ciaccino: ripieno + chiusura sigillata
-    steps.push({
-      id: "fill_internal",
-      title: "Ripieno e chiusura",
-      description:
-        "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.",
-      duration_minutes: 8,
-      icon: "chef-hat",
-      timing_label: "8 min",
-      tip: {
-        beginner:
-          "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce.",
-        nerd: "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow).",
-      },
-    });
+    const internalFillReplaced = topping?.assembly_steps?.some(
+      (s) => s.insert_at === "after_fill_internal" && s.replaces_generic,
+    );
+    if (!internalFillReplaced) {
+      steps.push({
+        id: "fill_internal",
+        title: "Ripieno e chiusura",
+        description:
+          "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.",
+        duration_minutes: 8,
+        icon: "chef-hat",
+        timing_label: "8 min",
+        tip: {
+          beginner:
+            "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce.",
+          nerd: "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow).",
+        },
+      });
+    }
     injectToppingAt("after_fill_internal");
   } else if (layout.type === "double_thin_sheet") {
     // Recco: sfoglia inferiore + stracchino + sfoglia superiore
-    steps.push({
-      id: "fill_internal",
-      title: "Farcitura tra sfoglie",
-      description:
-        "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.",
-      duration_minutes: 5,
-      icon: "chef-hat",
-      timing_label: "5 min",
-    });
+    const internalFillReplaced = topping?.assembly_steps?.some(
+      (s) => s.insert_at === "after_fill_internal" && s.replaces_generic,
+    );
+    if (!internalFillReplaced) {
+      steps.push({
+        id: "fill_internal",
+        title: "Farcitura tra sfoglie",
+        description:
+          "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.",
+        duration_minutes: 5,
+        icon: "chef-hat",
+        timing_label: "5 min",
+      });
+    }
     injectToppingAt("after_fill_internal");
   } else if (layout.filling_timing === "pre_bake" || layout.cook_mode === "topped") {
     // Default: farcitura pre-cottura classica
@@ -3798,7 +3809,7 @@ export const TIME_SLOTS: TimeSlot[] = [
   },
   {
     id: "tomorrow_lunch",
-    label: "Domani pranzo",
+    label: "Domani a pranzo",
     sublabel: "16-20 ore",
     hours: 18,
     emoji: "☀️",
@@ -3854,16 +3865,16 @@ function getDayLabel(dayOffset: number, meal: string, now: Date): string {
   const weekday = now.getDay();
   const DAYS_IT = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
   if (dayOffset === 0) return "Stasera";
-  if (dayOffset === 1) return meal === "lunch" ? "Domani pranzo" : "Domani sera";
+  if (dayOffset === 1) return meal === "lunch" ? "Domani a pranzo" : "Domani sera";
   const targetDay = DAYS_IT[(weekday + dayOffset) % 7];
-  return meal === "lunch" ? `${targetDay} pranzo` : `${targetDay} sera`;
+  return meal === "lunch" ? `${targetDay} a pranzo` : `${targetDay} sera`;
 }
 
 /** No-preference virtual slot: engine uses 24h @ kitchen temp */
 export const NO_PREFERENCE_SLOT: TimeSlot = {
   id: "no_preference",
   label: "Nessuna preferenza",
-  sublabel: "il motore sceglie",
+  sublabel: "ci pensa Vulcan",
   hours: 24,
   emoji: "⏳",
 };
@@ -3891,7 +3902,7 @@ export function generateTimeSlots(now: Date = new Date()): TimeSlot[] {
   if (slots.length === 0) {
     slots.push({
       id: "tomorrow_lunch",
-      label: "Domani pranzo",
+      label: "Domani a pranzo",
       sublabel: formatHoursLabel(24 - nowHour + 12.5),
       hours: Math.round(24 - nowHour + 12.5),
       emoji: "☀️",
