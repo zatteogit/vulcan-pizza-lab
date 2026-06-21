@@ -28,6 +28,8 @@ export const JA_LOCALE: CmsContent = {
     back: "\u623B\u308B",
     reset: "\u30EA\u30BB\u30C3\u30C8",
     close: "\u9589\u3058\u308B",
+    closeDetails: "\u8A73\u7D30\u3092\u9589\u3058\u308B",
+    closeInsight: "\u9589\u3058\u308B",
     modify: "\u7DE8\u96C6",
     disable: "\u7121\u52B9\u5316",
     restore: "\u5FA9\u5143",
@@ -135,6 +137,7 @@ export const JA_LOCALE: CmsContent = {
     ovenFallback: "\u30AA\u30FC\u30D6\u30F3",
     pantryFlours: "\u5C0F\u9EA6\u7C89",
     pantryYeasts: "\u30A4\u30FC\u30B9\u30C8",
+    equipByHand: "\u624B\u3054\u306D",
     equipMixer:
       "\u30B9\u30BF\u30F3\u30C9\u30DF\u30AD\u30B5\u30FC",
     equipStone: "\u30D4\u30B6\u30B9\u30C8\u30FC\u30F3",
@@ -1264,6 +1267,10 @@ export const JA_LOCALE: CmsContent = {
     searchFieldLabel:
       "\u30B0\u30ED\u30FC\u30D0\u30EB\u691C\u7D22\u30D5\u30A3\u30FC\u30EB\u30C9",
     searchClearLabel: "\u691C\u7D22\u3092\u30AF\u30EA\u30A2",
+    homeAria: "Vulcan Pizza Lab — \u30DB\u30FC\u30E0",
+    devToolsAria: "\u958B\u767A\u8005\u30C4\u30FC\u30EB",
+    mottoAria: "Vulcan \u30E2\u30C3\u30C8\u30FC",
+    troubleshootSearchPlaceholder: "\u75C7\u72B6\u3084\u539F\u56E0\u3092\u691C\u7D22...",
     dietaryWarningsTitle:
       "\u98DF\u4E8B\u306B\u95A2\u3059\u308B\u6CE8\u610F",
     troubleshootingTitle:
@@ -1389,7 +1396,7 @@ export const JA_LOCALE: CmsContent = {
       "{style}\u306E\u624B\u9806\uFF1A{steps}\u3001\u5408\u8A08{duration}\u3001{oven}\u3002",
     toppingNotesTitle: "\u30C8\u30C3\u30D4\u30F3\u30B0\u306E\u6CE8\u610F",
     toppingAmountsNote:
-      "{n}{unit}\u5206\u306E\u5408\u8A08\u91CF\u3067\u3059\u3002\u5404\u884C\u306B{perUnit}\u3042\u305F\u308A\u306E\u91CF\u3082\u8868\u793A\u3057\u307E\u3059\u3002",
+      "注意：材料の量は生地1個/単位あたりで調整されています。トッピングは下から上への重ねる順（生地の上の最初の層から表面の最後の層まで）で表示されています。",
     toppingPerUnit: "{unit}\u3042\u305F\u308A{amount}",
     durationLabel: "\u6240\u8981\u6642\u9593\uFF1A{duration}",
     comfortLabel: "\u4F59\u88D5\u3042\u308A {duration}",
