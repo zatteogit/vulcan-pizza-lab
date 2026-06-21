@@ -3167,8 +3167,9 @@ export function RecipeOutput({
           {fmt.grams(recipe.total_dough_g)} {ui.totalDough}
         </div>
 
-        {/* ── Regola 55 — una riga discreta, spiegazione al tocco ── */}
-        {recipe.water_temp_c != null && (
+        {/* ── Regola 55 (temperatura acqua / DDT) — dettaglio tecnico: vive nel
+             nerd mode insieme agli altri parametri avanzati (R19). ── */}
+        {isNerd && recipe.water_temp_c != null && (
           <div
             className="mt-5 flex items-start gap-3 px-1 py-1"
             title={rule55Description}
