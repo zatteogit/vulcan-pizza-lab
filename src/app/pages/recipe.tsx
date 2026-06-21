@@ -66,7 +66,7 @@ getVersions,
 type StyleVersion,
 } from "../components/style-versions";
 import { useStylesOverride } from "../components/styles-override-context";
-import { TOPPING_CONCEPTS } from "../components/topping-library";
+import { TOPPING_CONCEPTS, resolveTopping, TOPPING_LIBRARY } from "../components/topping-library";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
@@ -379,7 +379,7 @@ function RecipeContent({
 
   useEffect(() => {
     if (!toast) return;
-    const timer = window.setTimeout(() => setToast(null), 5000);
+    const timer = window.setTimeout(() => setToast(null), 8000);
     return () => window.clearTimeout(timer);
   }, [toast]);
   const searchSyncTimeoutRef = useRef<number | null>(null);
@@ -396,10 +396,16 @@ function RecipeContent({
    * Se non c'è ?topping ma c'è ?interpretation con un topping firmato, eredita quello.
    * Quando cambia, viene iniettato nella generateRecipe come override. */
   const [selectedToppingConcept, setSelectedToppingConcept] = useState<string | null>(
-    searchParams.get("topping") ??
-      initialInterpretation?.base_topping_concept_id ??
-      style.default_topping_ref ??
-      null,
+    (() => {
+      const raw =
+        searchParams.get("topping") ??
+        initialInterpretation?.base_topping_concept_id ??
+        style.default_topping_ref ??
+        null;
+      if (!raw) return null;
+      const resolved = resolveTopping(raw, style);
+      return resolved ? resolved.id : raw;
+    })(),
   );
 
   /* Sprint 12 Fase 4 — Interpretazione attiva (Maestro/Pizzeria/Community/Disciplinare).
@@ -516,10 +522,11 @@ function RecipeContent({
       // L'override topping è opzionale: se l'interpretazione include un topping firmato,
       // pre-selezionalo (es. da Michele → Margherita).
       if (interpretation.base_topping_concept_id) {
-        setSelectedToppingConcept(interpretation.base_topping_concept_id);
+        const resolved = resolveTopping(interpretation.base_topping_concept_id, style);
+        setSelectedToppingConcept(resolved ? resolved.id : interpretation.base_topping_concept_id);
       }
     },
-    [resetToBaseRecipe, syncSearchParamsAfterFeedback],
+    [resetToBaseRecipe, syncSearchParamsAfterFeedback, style],
   );
 
   /* Audit Sprint 12 — Scroll a inizio pagina quando si atterra sulla scheda
@@ -601,9 +608,13 @@ function RecipeContent({
         }
       : undefined;
     // Sprint 12 Fase 3: clona lo style con il topping selezionato dall'utente
+    const isToppingValid =
+      selectedToppingConcept && style
+        ? resolveTopping(selectedToppingConcept, style) !== undefined
+        : false;
     const styleWithTopping =
-      selectedToppingConcept && selectedToppingConcept !== style.default_topping_ref
-        ? { ...style, default_topping_ref: selectedToppingConcept }
+      isToppingValid && selectedToppingConcept !== style.default_topping_ref
+        ? { ...style, default_topping_ref: selectedToppingConcept ?? undefined }
         : style;
     // Audit motore 2026-05 — quando un'interpretazione è attiva, i suoi
     // parameter_overrides diventano il "canone" per il punteggio auth.
@@ -858,9 +869,10 @@ function RecipeContent({
         isPersonalized={recipeMode !== "canonical"}
         onRequestPersonalization={handleAdaptToKitchen}
         selectedToppingConcept={selectedToppingConcept}
-        onSelectTopping={(conceptId) => {
-          setSetupNotice(`${TOPPING_CONCEPTS[conceptId]?.name ?? "Condimento"}: ingredienti aggiornati`);
-          setSelectedToppingConcept(conceptId);
+        onSelectTopping={(recipeId) => {
+          const toppingRecipe = TOPPING_LIBRARY[recipeId];
+          setSetupNotice(`${toppingRecipe?.name ?? "Condimento"}: ingredienti aggiornati`);
+          setSelectedToppingConcept(recipeId);
         }}
         nerdMode={effectiveNerdMode}
         nerdAvailable={nerdAvailable}
@@ -970,7 +982,7 @@ function RecipeContent({
                 backdropFilter: "blur(24px) saturate(1.6)",
                 WebkitBackdropFilter: "blur(24px) saturate(1.6)",
                 border: "1px solid var(--container-border)",
-                borderLeft: "4px solid var(--tertiary)",
+                borderLeft: "4px solid var(--cta)",
                 boxShadow: "0 16px 44px color-mix(in srgb, var(--shadow-color) 22%, transparent)",
                 color: "var(--text-default)",
               }}
@@ -1030,9 +1042,9 @@ function RecipeContent({
               <motion.div
                 initial={{ width: "100%" }}
                 animate={{ width: "0%" }}
-                transition={{ duration: 5, ease: "linear" }}
+                transition={{ duration: 8, ease: "linear" }}
                 className="absolute bottom-0 left-0 h-[3px] rounded-full"
-                style={{ background: "var(--tertiary)", opacity: 0.55 }}
+                style={{ background: "var(--cta)", opacity: 0.6 }}
               />
             </div>
           </motion.div>

@@ -37,8 +37,12 @@ export const liquidDockButtonStyle: CSSProperties = {
 
 export const liquidDockStartButtonStyle: CSSProperties = {
   ...liquidDockButtonStyle,
+  /* R3: --cta-btn-bg è già un gradiente (--grad-sage); annidarlo come color-stop
+     dentro un altro linear-gradient produce CSS invalido → il background veniva
+     scartato e restava il vetro sottostante (bottone "vetroso" invece di verde).
+     Usiamo il colore solido --cta nel gradiente: valido e fedele all'intento sage→primary. */
   background:
-    "linear-gradient(135deg, var(--cta-btn-bg), color-mix(in srgb, var(--cta-btn-bg) 84%, var(--primary)))",
+    "linear-gradient(135deg, var(--cta), color-mix(in srgb, var(--cta) 84%, var(--primary)))",
   color: "var(--cta-btn-text)",
   boxShadow:
     "0 14px 34px color-mix(in srgb, var(--cta) 24%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.26)",

@@ -45,10 +45,16 @@ interface UserNeedsProps {
   onTimeSlotChange: (slot: TimeSlot) => void;
   hero?: React.ReactNode;
   hideTimeSlots?: boolean;
+  compact?: boolean;
+  showWeather?: boolean;
+  activeTab?: SettingsTab | null;
+  onActiveTabChange?: (tab: SettingsTab | null) => void;
   /** Quando i tempi sono nascosti (step stili), il chip "Quando" nella barra
    *  parametri richiama questa callback per tornare a cambiare la tempistica. */
   onChangeTime?: () => void;
 }
+
+export type SettingsTab = "cucina" | "pantry" | "tu";
 
 /* ═══ TIME-OF-DAY COLORS (VPL-065: extended for dynamic slots) ═══ */
 const TIME_COLORS: Record<
@@ -66,6 +72,10 @@ const TIME_COLORS: Record<
   long_ferment: { bg: "var(--time-weekend)", text: "var(--overlay-text)" },
   no_preference: { bg: "var(--secondary)", text: "var(--overlay-text)" },
 };
+
+function getTimeColors(slotId?: string | null) {
+  return slotId ? TIME_COLORS[slotId] ?? TIME_COLORS.no_preference : TIME_COLORS.no_preference;
+}
 
 const TIME_ICONS: Record<
   string,
@@ -337,20 +347,26 @@ function SectionHeader({
   title,
   subtitle,
   icon,
+  compact = false,
 }: {
   title: string;
   subtitle: string;
   icon?: React.ReactNode;
+  compact?: boolean;
 }) {
   return (
     <div className="flex flex-col items-center lg:items-start gap-0.5">
       <div className="flex items-center gap-2.5">
         {icon}
-        <h3 style={{ fontSize: "var(--font-size-3xl)" }}>{title}</h3>
+        <h3 style={{ fontSize: compact ? "var(--font-size-xl)" : "var(--font-size-3xl)" }}>{title}</h3>
       </div>
       <span
         className="font-serif italic"
-        style={{ color: "var(--text-muted)", fontSize: "var(--font-size-lg)", opacity: 0.7 }}
+        style={{
+          color: "var(--text-muted)",
+          fontSize: compact ? "var(--font-size-md)" : "var(--font-size-lg)",
+          opacity: 0.7,
+        }}
       >
         {subtitle}
       </span>
@@ -360,13 +376,15 @@ function SectionHeader({
 
 /* ═══ MAIN EXPORT ═══ */
 interface SettingsSummaryBarProps {
-  activeTab: 'cucina' | 'pantry' | 'tu' | null;
-  onTabSelect: (tab: 'cucina' | 'pantry' | 'tu' | null) => void;
+  activeTab: SettingsTab | null;
+  onTabSelect: (tab: SettingsTab | null) => void;
   constraints: UserConstraints;
   kitchenTemp: number;
   cms: any;
   /** Tempistica scelta — mostrata come chip accentato "atterrato" dalla scelta. */
   selectedTimeLabel?: string | null;
+  selectedTimeSlotId?: string | null;
+  timeActive?: boolean;
   /** Click sul chip "Quando" → torna a cambiare la tempistica. */
   onChangeTime?: () => void;
 }
@@ -378,17 +396,16 @@ export function SettingsSummaryBar({
   kitchenTemp,
   cms,
   selectedTimeLabel,
+  selectedTimeSlotId,
+  timeActive = false,
   onChangeTime,
 }: SettingsSummaryBarProps) {
-  const OVEN_NAMES: Record<string, string> = {
-    home: "Casa", electric_standard: "Elettrico", electric_high: "Elett. alta T", gas: "Gas", wood: "Legna",
-  };
-  const ovenLabel = cms.ovenPresets[constraints.oven_type]?.name ?? OVEN_NAMES[constraints.oven_type] ?? constraints.oven_type;
-  /* Minimal: solo il valore, niente prefisso "Cucina:" (l'icona dice già cosa è). */
-  const cucinaText = `${ovenLabel} · ${kitchenTemp}°C`;
+  /* R10: la chip rappresenta la cucina nel suo insieme, non solo il forno.
+     Label "La tua cucina"; il tipo di forno e la temperatura vivono nel drawer. */
+  const cucinaText = cms.ui?.kitchenTitle ?? "La tua cucina";
 
   const count = constraints.pantry_flours.length + constraints.pantry_yeasts.length;
-  const pantryText = count > 0 ? `${count} ingredienti` : "Dispensa vuota";
+  const pantryText = count > 0 ? `Dispensa (${count})` : "Dispensa";
 
   const SKILL_NAMES: Record<number, string> = { 1: "Principiante", 2: "Intermedio", 3: "Esperto" };
   const skillLabel = cms.skillLevels[String(constraints.skill_level)]?.name ?? SKILL_NAMES[constraints.skill_level] ?? `Skill ${constraints.skill_level}`;
@@ -399,6 +416,7 @@ export function SettingsSummaryBar({
     { id: 'pantry' as const, text: pantryText, icon: Package },
     { id: 'tu' as const, text: tuText, icon: ChefHat },
   ];
+  const timeColors = getTimeColors(selectedTimeSlotId);
 
   return (
     <div className="flex flex-col items-center gap-2 w-full">
@@ -446,8 +464,8 @@ export function SettingsSummaryBar({
               y: 0,
               scale: 1,
               boxShadow: [
-                "0 0 0 0 color-mix(in srgb, var(--time-tonight, var(--primary)) 55%, transparent)",
-                "0 0 0 10px color-mix(in srgb, var(--time-tonight, var(--primary)) 0%, transparent)",
+                `0 0 0 0 color-mix(in srgb, ${timeColors.bg} 55%, transparent)`,
+                `0 0 0 10px color-mix(in srgb, ${timeColors.bg} 0%, transparent)`,
               ],
             }}
             exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.15 } }}
@@ -456,11 +474,16 @@ export function SettingsSummaryBar({
               boxShadow: { duration: 0.7, ease: "easeOut", delay: 0.1 },
             }}
             onClick={onChangeTime}
+            aria-pressed={timeActive}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full active:scale-[0.97]"
             style={{
-              background: "var(--time-tonight, var(--primary))",
-              color: "var(--overlay-text)",
+              background: timeColors.bg,
+              color: timeColors.text,
               border: "1px solid transparent",
+              outline: timeActive
+                ? `2px solid color-mix(in srgb, ${timeColors.bg} 35%, transparent)`
+                : "none",
+              outlineOffset: 2,
               fontSize: "var(--font-size-sm)",
               fontWeight: "var(--weight-semibold)" as any,
             }}
@@ -498,6 +521,10 @@ export function UserNeeds({
   onTimeSlotChange,
   hero,
   hideTimeSlots = false,
+  compact = false,
+  showWeather = true,
+  activeTab: controlledActiveTab,
+  onActiveTabChange,
   onChangeTime,
 }: UserNeedsProps) {
   const { cms, bcp47 } = useCms();
@@ -523,13 +550,13 @@ export function UserNeeds({
   const [kitchenTempManual, setKitchenTempManual] =
     useState(false);
   const [kitchenTemp, setKitchenTemp] = useState(
-    weather.data?.kitchenTemp ?? DEFAULT_KITCHEN_TEMP,
+    constraints.kitchen_temp_c ?? weather.data?.kitchenTemp ?? DEFAULT_KITCHEN_TEMP,
   );
 
   useEffect(() => {
-    if (weather.data && !kitchenTempManual)
+    if (weather.data && !kitchenTempManual && !compact)
       setKitchenTemp(weather.data.kitchenTemp);
-  }, [weather.data, kitchenTempManual]);
+  }, [weather.data, kitchenTempManual, compact]);
 
   useEffect(() => {
     update("kitchen_temp_c", kitchenTemp);
@@ -592,29 +619,44 @@ export function UserNeeds({
     );
   };
 
-  const [activeTab, setActiveTab] = useState<'cucina' | 'pantry' | 'tu' | null>(null);
+  const [internalActiveTab, setInternalActiveTab] = useState<SettingsTab | null>(null);
+  const activeTab =
+    controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
+  const setActiveTab = onActiveTabChange ?? setInternalActiveTab;
   const [showTempTip, setShowTempTip] = useState(false);
+  const drawerClassName = compact
+    ? "overflow-hidden mt-2 w-full rounded-xl p-3 sm:p-3.5"
+    : "overflow-hidden mt-3 rounded-2xl p-5";
+  const drawerStyle: React.CSSProperties = {
+    background: "var(--surface-container)",
+    border: "1px solid var(--outline-variant)",
+  };
+  const drawerTransition = {
+    type: "spring" as const,
+    stiffness: 400,
+    damping: compact ? 30 : 25,
+  };
 
   return (
     <div className="flex flex-col">
       {/* ═══ VPL-068: Single continuous flow ═══ */}
       <div
         data-section="context"
-        className="pt-6 sm:pt-10 pb-6"
+        className={compact ? "pt-0 pb-0" : "pt-20 sm:pt-24 pb-6"}
       >
-        <div className="flex flex-col gap-7 sm:gap-9">
+        <div className={compact ? "flex flex-col gap-4" : "flex flex-col gap-7 sm:gap-9"}>
           {/* ═══ PRIMA COSA: parametri cucina/dispensa/tu ═══
               Minimal e in cima, come estensione del pulsante Profilo: chi sei e
               cosa hai. Il meteo (se disponibile) li precede, sottilissimo. */}
           <div className="flex flex-col w-full items-center gap-2">
-            {weather.data.city && (
+            {showWeather && weather.data.city && (
               <div className="flex items-center gap-2">
-                <MapPin size={11} className="flex-shrink-0" style={{ color: "var(--text-muted)", opacity: 0.45 }} />
+                <MapPin size={11} className="flex-shrink-0" style={{ color: "var(--icon-muted)", opacity: 0.45 }} />
                 <span className="type-body-xs" style={{ color: "var(--text-muted)", opacity: 0.65 }}>
                   {weather.data.city}
                 </span>
                 <span style={{ opacity: 0.15, color: "var(--text-muted)" }}>·</span>
-                <CloudSun size={11} style={{ color: "var(--text-muted)", opacity: 0.45 }} />
+                <CloudSun size={11} style={{ color: "var(--icon-muted)", opacity: 0.45 }} />
                 <span className="type-body-xs" style={{ color: "var(--text-muted)", opacity: 0.65 }}>
                   {formatTemperatureCopy(t(cms.ui.weatherOutdoor, { t: weather.data.temp }), fmt)}
                 </span>
@@ -627,6 +669,8 @@ export function UserNeeds({
               kitchenTemp={kitchenTemp}
               cms={cms}
               selectedTimeLabel={selectedTimeLabel}
+              selectedTimeSlotId={selectedTimeSlot}
+              timeActive={compact && !hideTimeSlots}
               onChangeTime={onChangeTime}
             />
 
@@ -637,16 +681,17 @@ export function UserNeeds({
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  className="overflow-hidden mt-3 rounded-2xl p-5"
-                  style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)" }}
+                  transition={drawerTransition}
+                  className={drawerClassName}
+                  style={drawerStyle}
                 >
-                  <div className="flex flex-col gap-6">
+                  <div className={compact ? "flex flex-col gap-4" : "flex flex-col gap-6"}>
                     {/* Kitchen Temperature */}
                     <div>
                       <SectionHeader
                         title={cms.misc.kitchenTempLabel}
                         subtitle={cms.misc.kitchenTempSubtitle}
+                        compact={compact}
                       />
                       <div className="flex items-center gap-3 mt-3">
                         <Thermometer size={16} style={{ color: "var(--needs-pantry-accent)" }} />
@@ -680,7 +725,7 @@ export function UserNeeds({
                           </motion.button>
                         )}
                         <button onClick={() => setShowTempTip(!showTempTip)} className="ml-auto active:scale-90 transition-transform">
-                          <HelpCircle size={16} style={{ color: "var(--text-muted)", opacity: showTempTip ? 0.8 : 0.3 }} />
+                          <HelpCircle size={16} style={{ color: "var(--icon-muted)", opacity: showTempTip ? 0.8 : 0.3 }} />
                         </button>
                       </div>
                       <AnimatePresence>
@@ -692,10 +737,13 @@ export function UserNeeds({
                       </AnimatePresence>
                     </div>
 
+                    {/* ── Divider ── */}
+                    <div style={{ height: 1, background: "var(--outline-variant)", opacity: 0.5 }} />
+
                     {/* Oven Preset */}
                     <div>
-                      <SectionHeader title={cms.sections.oven.title} subtitle={ovenSet ? cms.ui.editOven : cms.sections.oven.description} />
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mt-3">
+                      <SectionHeader title={cms.sections.oven.title} subtitle={ovenSet ? cms.ui.editOven : cms.sections.oven.description} compact={compact} />
+                      <div className={compact ? "grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2" : "grid grid-cols-2 sm:grid-cols-3 gap-2.5 mt-3"}>
                         {OVEN_PRESETS.map((preset) => {
                           const active = constraints.oven_type === preset.id;
                           const Icon = OVEN_ICONS[preset.id] || Thermometer;
@@ -705,7 +753,7 @@ export function UserNeeds({
                             <motion.button
                               key={preset.id}
                               onClick={() => handleOvenSelect(preset.id, preset.maxTemp)}
-                              className="flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all text-left active:scale-[0.96]"
+                              className={compact ? "flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left active:scale-[0.96]" : "flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all text-left active:scale-[0.96]"}
                               style={{
                                 background: active ? "var(--chip-bg-active)" : "var(--chip-bg)",
                                 color: active ? "var(--chip-text-active)" : "var(--chip-text)",
@@ -724,17 +772,21 @@ export function UserNeeds({
                       </div>
                     </div>
 
+                    {/* ── Divider ── */}
+                    <div style={{ height: 1, background: "var(--outline-variant)", opacity: 0.5 }} />
+
                     {/* Equipment */}
                     <div>
-                      <SectionHeader title={cms.sections.equipment.title} subtitle={cms.sections.equipment.description} />
-                      <div className="flex flex-col gap-4 mt-3">
+                      <SectionHeader title={cms.sections.equipment.title} subtitle={cms.sections.equipment.description} compact={compact} />
+                      <div className={compact ? "flex flex-col gap-3 mt-2" : "flex flex-col gap-4 mt-3"}>
                         {/* Impastamento */}
                         <div>
                           <div className="flex items-center gap-2 mb-2">
                             <span className="type-data-sm" style={{ color: "var(--text-muted)", letterSpacing: "0.06em", textTransform: "uppercase" as any }}>{cms.ui.equipKneading}</span>
                           </div>
                           <div className="flex flex-wrap justify-center lg:justify-start gap-2">
-                            <Chip label={cms.ui.equipMixer} active={constraints.has_mixer} onToggle={() => update("has_mixer", !constraints.has_mixer)} />
+                            <Chip label={cms.ui.equipByHand} active={!constraints.has_mixer} onToggle={() => update("has_mixer", false)} />
+                            <Chip label={cms.ui.equipMixer} active={constraints.has_mixer} onToggle={() => update("has_mixer", true)} />
                           </div>
                         </div>
                         {/* Superficie cottura */}
@@ -760,11 +812,11 @@ export function UserNeeds({
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  className="overflow-hidden mt-3 rounded-2xl p-5"
-                  style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)" }}
+                  transition={drawerTransition}
+                  className={drawerClassName}
+                  style={drawerStyle}
                 >
-                  <div className="flex flex-col gap-6">
+                  <div className={compact ? "flex flex-col gap-4" : "flex flex-col gap-6"}>
                     {/* Flours */}
                     <div>
                       <div className="flex items-center gap-2 mb-3">
@@ -785,7 +837,7 @@ export function UserNeeds({
                           const active = constraints.pantry_yeasts.includes(y.id);
                           const isRecent = !active && recentYeasts.includes(y.id);
                           return (
-                            <motion.button key={y.id} onClick={() => toggleYeast(y.id)} className="relative flex flex-col items-start gap-0.5 px-4 py-2.5 rounded-xl transition-all active:scale-95" style={{ background: active ? "var(--needs-yeast-bg-active)" : "var(--chip-bg)", color: active ? "var(--needs-yeast-text-active)" : "var(--chip-text)", border: active ? "1px solid transparent" : isRecent ? "1px solid var(--needs-pantry-border-active)" : "1px solid var(--chip-border)", fontSize: "var(--font-size-lg)" }}>
+                            <motion.button key={y.id} onClick={() => toggleYeast(y.id)} className="relative flex flex-col items-start gap-0.5 px-4 py-2.5 rounded-xl transition-all active:scale-95" style={{ background: active ? "var(--chip-bg-active)" : "var(--chip-bg)", color: active ? "var(--chip-text-active)" : "var(--chip-text)", border: active ? "1px solid transparent" : isRecent ? "1px solid var(--needs-pantry-border-active)" : "1px solid var(--chip-border)", fontSize: "var(--font-size-lg)" }}>
                               {isRecent && (<div className="absolute -top-1.5 right-2 px-1.5 py-0.5 rounded-full" style={{ background: "var(--needs-pantry-accent)", fontSize: "var(--font-size-xs)", fontWeight: "var(--weight-bold)" as any, color: "var(--overlay-text)", letterSpacing: "var(--tracking-spread)", lineHeight: "var(--leading-none)" }}>{cms.ui.badgeRecent}</div>)}
                               <div className="flex items-center gap-2">
                                 <AnimatePresence>{active && (<motion.span initial={{ scale: 0, width: 0 }} animate={{ scale: 1, width: 14 }} exit={{ scale: 0, width: 0 }} transition={{ type: "spring", stiffness: 500, damping: 25 }}><Check size={14} /></motion.span>)}</AnimatePresence>
@@ -807,13 +859,13 @@ export function UserNeeds({
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  className="overflow-hidden mt-3 rounded-2xl p-5"
-                  style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)" }}
+                  transition={drawerTransition}
+                  className={drawerClassName}
+                  style={drawerStyle}
                 >
                   <div>
-                    <SectionHeader title={cms.sections.skill.title} subtitle={cms.sections.skill.description} />
-                    <div className="flex flex-wrap justify-center lg:justify-start gap-2 mt-3">
+                    <SectionHeader title={cms.sections.skill.title} subtitle={cms.sections.skill.description} compact={compact} />
+                    <div className={compact ? "flex flex-wrap justify-center lg:justify-start gap-2 mt-2" : "flex flex-wrap justify-center lg:justify-start gap-2 mt-3"}>
                       {SKILL_LEVELS.map((sl) => {
                         const cmsSkill = cms.skillLevels[String(sl.level)];
                         return (<Chip key={sl.level} label={cmsSkill?.name ?? sl.name} active={constraints.skill_level === sl.level} onToggle={() => update("skill_level", sl.level)} />);
@@ -822,221 +874,320 @@ export function UserNeeds({
                   </div>
                 </motion.div>
               )}
+
+              {compact && !hideTimeSlots && (
+                <motion.div
+                  key="time"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={drawerTransition}
+                  className={drawerClassName}
+                  style={drawerStyle}
+                >
+                  <TimeSlotPicker
+                    slots={dynamicSlots}
+                    suggestedSlot={suggestedSlot}
+                    selectedTimeSlot={selectedTimeSlot}
+                    onTimeSlotChange={onTimeSlotChange}
+                    cms={cms}
+                    compact
+                  />
+                </motion.div>
+              )}
             </AnimatePresence>
           </div>
 
           {/* ═══ LOGO ANIMATO + TITOLO ═══ (hero passato dal genitore) */}
           {hero && <div>{hero}</div>}
 
-          {!hideTimeSlots && (
+          {!compact && !hideTimeSlots && (
             <>
               {/* When — niente titolone: il sottotitolo dell'hero ("Seleziona il
                   momento...") è già l'istruzione. Le card SONO l'azione. */}
-              <div>
-                {/* Mobile version: vertical list of horizontal rows */}
-                <div className="flex flex-col gap-3 w-full mt-4 sm:hidden">
-                  {dynamicSlots.map((slot) => {
-                    const active = selectedTimeSlot === slot.id;
-                    const suggested =
-                      slot.id === suggestedSlot && !selectedTimeSlot;
-                    const Icon = TIME_ICONS[slot.id] || Moon;
-                    const colors = TIME_COLORS[slot.id];
-                    const cmsSlot = cms.timeSlots[slot.id];
-                    const displayLabel = cmsSlot?.label ?? slot.label;
-                    const displaySublabel = cmsSlot?.sublabel ?? slot.sublabel;
-                    return (
-                      <button
-                        key={slot.id}
-                        onClick={() => onTimeSlotChange(slot)}
-                        className="relative flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all active:scale-[0.98] text-left w-full"
-                        style={{
-                          background: active
-                            ? `linear-gradient(155deg, ${colors.bg}, color-mix(in srgb, ${colors.bg} 75%, var(--overlay-backdrop)))`
-                            : "var(--surface-container-low, var(--chip-bg))",
-                          color: active ? colors.text : "var(--text-default)",
-                          border: active
-                            ? "1px solid transparent"
-                            : `1px solid color-mix(in srgb, ${colors.bg} 22%, var(--chip-border))`,
-                          boxShadow: active
-                            ? `0 12px 28px color-mix(in srgb, ${colors.bg} 40%, transparent)`
-                            : "none",
-                        }}
-                      >
-                        <div className="flex items-center gap-3.5">
-                          <div
-                            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                            style={{
-                              background: active ? "color-mix(in srgb, var(--overlay-text) 18%, transparent)" : `color-mix(in srgb, ${colors.bg} 14%, transparent)`,
-                              color: active ? colors.text : colors.bg,
-                            }}
-                          >
-                            <Icon size={18} />
-                          </div>
-                          <div className="flex flex-col">
-                            <span style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, lineHeight: 1.2 }}>
-                              {displayLabel}
-                            </span>
-                            <span className="type-numeric" style={{ fontSize: "var(--font-size-base)", opacity: active ? 0.8 : 0.5, marginTop: 2 }}>
-                              {displaySublabel}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          {suggested && (
-                            <span
-                              className="px-2 py-0.5 rounded-full"
-                              style={{
-                                background: active ? "color-mix(in srgb, var(--overlay-text) 20%, transparent)" : colors.bg,
-                                color: "var(--overlay-text)",
-                                fontSize: "10px",
-                                fontWeight: "var(--weight-bold)" as any,
-                                textTransform: "uppercase",
-                                letterSpacing: "0.05em"
-                              }}
-                            >
-                              {cms.ui.badgeIdeal}
-                            </span>
-                          )}
-                          {active && (
-                            <span
-                              className="px-2 py-0.5 rounded-full text-[10px] flex-shrink-0"
-                              style={{
-                                background: "color-mix(in srgb, var(--overlay-text) 25%, transparent)",
-                                color: "var(--overlay-text)",
-                                fontWeight: "var(--weight-bold)" as any,
-                                textTransform: "uppercase",
-                                letterSpacing: "0.05em",
-                                border: "1px solid color-mix(in srgb, var(--overlay-text) 40%, transparent)",
-                              }}
-                            >
-                              {cms.misc.current}
-                            </span>
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Desktop version: grid — card espressive, tinta time-of-day */}
-                <div className="hidden sm:grid sm:grid-cols-5 gap-3 w-full mt-4">
-                  {dynamicSlots.map((slot) => {
-                    const active = selectedTimeSlot === slot.id;
-                    const suggested =
-                      slot.id === suggestedSlot && !selectedTimeSlot;
-                    const Icon = TIME_ICONS[slot.id] || Moon;
-                    const colors = TIME_COLORS[slot.id];
-                    const cmsSlot = cms.timeSlots[slot.id];
-                    const displayLabel = cmsSlot?.label ?? slot.label;
-                    const displaySublabel = cmsSlot?.sublabel ?? slot.sublabel;
-                    return (
-                      <motion.button
-                        key={slot.id}
-                        onClick={() => onTimeSlotChange(slot)}
-                        whileHover={{ y: -4 }}
-                        whileTap={{ scale: 0.97 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 26 }}
-                        className="relative flex flex-col items-center text-center px-3 py-6 rounded-2xl w-full gap-3 overflow-hidden"
-                        style={{
-                          background: active
-                            ? `linear-gradient(155deg, ${colors.bg}, color-mix(in srgb, ${colors.bg} 75%, var(--overlay-backdrop)))`
-                            : "var(--surface-container-low, var(--chip-bg))",
-                          color: active ? colors.text : "var(--text-default)",
-                          border: active
-                            ? "1px solid transparent"
-                            : `1px solid color-mix(in srgb, ${colors.bg} 22%, var(--chip-border))`,
-                          boxShadow: active
-                            ? `0 14px 32px color-mix(in srgb, ${colors.bg} 42%, transparent)`
-                            : "none",
-                          transition: "background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
-                        }}
-                      >
-                        {/* Tinta morbida del momento, anche da spento */}
-                        {!active && (
-                          <span
-                            aria-hidden="true"
-                            style={{
-                              position: "absolute",
-                              top: -34,
-                              left: "50%",
-                              width: 130,
-                              height: 130,
-                              marginLeft: -65,
-                              borderRadius: "50%",
-                              background: colors.bg,
-                              opacity: 0.12,
-                              filter: "blur(26px)",
-                              pointerEvents: "none",
-                            }}
-                          />
-                        )}
-                        {suggested && (
-                          <div className="absolute top-2 inset-x-0 flex justify-center z-10">
-                            <span
-                              className="px-2 py-0.5 rounded-full text-[10px]"
-                              style={{
-                                background: colors.bg,
-                                color: "var(--overlay-text)",
-                                fontWeight: "var(--weight-bold)" as any,
-                                textTransform: "uppercase",
-                                letterSpacing: "0.05em",
-                                boxShadow: `0 2px 8px color-mix(in srgb, ${colors.bg} 45%, transparent)`,
-                              }}
-                            >
-                              {cms.ui.badgeIdeal}
-                            </span>
-                          </div>
-                        )}
-                        <div
-                          className="w-12 h-12 rounded-2xl flex items-center justify-center relative"
-                          style={{
-                            background: active
-                              ? "color-mix(in srgb, var(--overlay-text) 18%, transparent)"
-                              : `color-mix(in srgb, ${colors.bg} 14%, transparent)`,
-                            color: active ? colors.text : colors.bg,
-                          }}
-                        >
-                          <Icon size={20} />
-                        </div>
-                        <div className="flex flex-col items-center relative">
-                          <span style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, lineHeight: 1.2 }}>
-                            {displayLabel}
-                          </span>
-                          <span className="type-numeric" style={{ fontSize: "var(--font-size-base)", opacity: active ? 0.85 : 0.5, marginTop: 4 }}>
-                            {displaySublabel}
-                          </span>
-                        </div>
-
-                        {active && (
-                          <div className="absolute top-2.5 right-2.5">
-                            <span
-                              className="px-2 py-0.5 rounded-full text-[10px]"
-                              style={{
-                                background: "color-mix(in srgb, var(--overlay-text) 25%, transparent)",
-                                color: "var(--overlay-text)",
-                                fontWeight: "var(--weight-bold)" as any,
-                                textTransform: "uppercase",
-                                letterSpacing: "0.05em",
-                                border: "1px solid color-mix(in srgb, var(--overlay-text) 40%, transparent)",
-                              }}
-                            >
-                              {cms.misc.current}
-                            </span>
-                          </div>
-                        )}
-                      </motion.button>
-                    );
-                  })}
-                </div>
-
-                <InlineTip>
-                  {cms.tips.timeSlot}
-                </InlineTip>
-              </div>
+              <TimeSlotPicker
+                slots={dynamicSlots}
+                suggestedSlot={suggestedSlot}
+                selectedTimeSlot={selectedTimeSlot}
+                onTimeSlotChange={onTimeSlotChange}
+                cms={cms}
+              />
+              <InlineTip>
+                {cms.tips.timeSlot}
+              </InlineTip>
             </>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function TimeSlotPicker({
+  slots,
+  suggestedSlot,
+  selectedTimeSlot,
+  onTimeSlotChange,
+  cms,
+  compact = false,
+}: {
+  slots: TimeSlot[];
+  suggestedSlot: string;
+  selectedTimeSlot: string | null;
+  onTimeSlotChange: (slot: TimeSlot) => void;
+  cms: any;
+  compact?: boolean;
+}) {
+  return (
+    <div>
+      <div
+        className={
+          compact
+            ? "flex flex-col gap-2 w-full sm:hidden"
+            : "flex flex-col gap-3 w-full mt-4 sm:hidden"
+        }
+      >
+        {slots.map((slot) => {
+          const active = selectedTimeSlot === slot.id;
+          const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
+          const Icon = TIME_ICONS[slot.id] || Moon;
+          const colors = getTimeColors(slot.id);
+          const cmsSlot = cms.timeSlots[slot.id];
+          const displayLabel = cmsSlot?.label ?? slot.label;
+          const displaySublabel = cmsSlot?.sublabel ?? slot.sublabel;
+          return (
+            <button
+              key={slot.id}
+              onClick={() => onTimeSlotChange(slot)}
+              className={
+                compact
+                  ? "relative flex items-center justify-between px-3 py-2.5 rounded-xl transition-all active:scale-[0.98] text-left w-full"
+                  : "relative flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all active:scale-[0.98] text-left w-full"
+              }
+              style={{
+                background: active
+                  ? `linear-gradient(155deg, ${colors.bg}, color-mix(in srgb, ${colors.bg} 75%, var(--overlay-backdrop)))`
+                  : "var(--surface-container-low, var(--chip-bg))",
+                color: active ? colors.text : "var(--text-default)",
+                border: active
+                  ? "1px solid transparent"
+                  : `1px solid color-mix(in srgb, ${colors.bg} 22%, var(--chip-border))`,
+                boxShadow: active
+                  ? `0 ${compact ? 8 : 12}px ${compact ? 18 : 28}px color-mix(in srgb, ${colors.bg} 40%, transparent)`
+                  : "none",
+              }}
+            >
+              <div className={compact ? "flex items-center gap-2.5" : "flex items-center gap-3.5"}>
+                <div
+                  className={
+                    compact
+                      ? "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                      : "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                  }
+                  style={{
+                    background: active
+                      ? "color-mix(in srgb, var(--overlay-text) 18%, transparent)"
+                      : `color-mix(in srgb, ${colors.bg} 14%, transparent)`,
+                    color: active ? colors.text : colors.bg,
+                  }}
+                >
+                  <Icon size={compact ? 15 : 18} />
+                </div>
+                <div className="flex flex-col">
+                  <span
+                    style={{
+                      fontSize: compact ? "var(--font-size-md)" : "var(--font-size-lg)",
+                      fontWeight: "var(--weight-semibold)" as any,
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {displayLabel}
+                  </span>
+                  <span
+                    className="type-numeric"
+                    style={{
+                      fontSize: compact ? "var(--font-size-sm)" : "var(--font-size-base)",
+                      opacity: active ? 0.8 : 0.5,
+                      marginTop: 2,
+                    }}
+                  >
+                    {displaySublabel}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {suggested && (
+                  <span
+                    className="px-2 py-0.5 rounded-full"
+                    style={{
+                      background: active
+                        ? "color-mix(in srgb, var(--overlay-text) 20%, transparent)"
+                        : colors.bg,
+                      color: "var(--overlay-text)",
+                      fontSize: "10px",
+                      fontWeight: "var(--weight-bold)" as any,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    {cms.ui.badgeIdeal}
+                  </span>
+                )}
+                {active && (
+                  <span
+                    className="px-2 py-0.5 rounded-full text-[10px] flex-shrink-0"
+                    style={{
+                      background: "color-mix(in srgb, var(--overlay-text) 25%, transparent)",
+                      color: "var(--overlay-text)",
+                      fontWeight: "var(--weight-bold)" as any,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      border: "1px solid color-mix(in srgb, var(--overlay-text) 40%, transparent)",
+                    }}
+                  >
+                    {cms.misc.current}
+                  </span>
+                )}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      <div
+        className={
+          compact
+            ? "hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full"
+            : "hidden sm:grid sm:grid-cols-5 gap-3 w-full mt-4"
+        }
+      >
+        {slots.map((slot) => {
+          const active = selectedTimeSlot === slot.id;
+          const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
+          const Icon = TIME_ICONS[slot.id] || Moon;
+          const colors = getTimeColors(slot.id);
+          const cmsSlot = cms.timeSlots[slot.id];
+          const displayLabel = cmsSlot?.label ?? slot.label;
+          const displaySublabel = cmsSlot?.sublabel ?? slot.sublabel;
+          return (
+            <motion.button
+              key={slot.id}
+              onClick={() => onTimeSlotChange(slot)}
+              whileHover={{ y: compact ? -2 : -4 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 400, damping: 26 }}
+              className={
+                compact
+                  ? "relative flex items-center text-left px-3 py-2.5 rounded-xl w-full gap-2.5 overflow-hidden"
+                  : "relative flex flex-col items-center text-center px-3 py-6 rounded-2xl w-full gap-3 overflow-hidden"
+              }
+              style={{
+                background: active
+                  ? `linear-gradient(155deg, ${colors.bg}, color-mix(in srgb, ${colors.bg} 75%, var(--overlay-backdrop)))`
+                  : "var(--surface-container-low, var(--chip-bg))",
+                color: active ? colors.text : "var(--text-default)",
+                border: active
+                  ? "1px solid transparent"
+                  : `1px solid color-mix(in srgb, ${colors.bg} 22%, var(--chip-border))`,
+                boxShadow: active
+                  ? `0 ${compact ? 8 : 14}px ${compact ? 18 : 32}px color-mix(in srgb, ${colors.bg} 42%, transparent)`
+                  : "none",
+                transition: "background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
+              }}
+            >
+              {!active && (
+                <span
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    top: compact ? -44 : -34,
+                    left: "50%",
+                    width: compact ? 100 : 130,
+                    height: compact ? 100 : 130,
+                    marginLeft: compact ? -50 : -65,
+                    borderRadius: "50%",
+                    background: colors.bg,
+                    opacity: compact ? 0.1 : 0.12,
+                    filter: "blur(26px)",
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
+              {suggested && !compact && (
+                <div className="absolute top-2 inset-x-0 flex justify-center z-10">
+                  <span
+                    className="px-2 py-0.5 rounded-full text-[10px]"
+                    style={{
+                      background: colors.bg,
+                      color: "var(--overlay-text)",
+                      fontWeight: "var(--weight-bold)" as any,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      boxShadow: `0 2px 8px color-mix(in srgb, ${colors.bg} 45%, transparent)`,
+                    }}
+                  >
+                    {cms.ui.badgeIdeal}
+                  </span>
+                </div>
+              )}
+              <div
+                className={
+                  compact
+                    ? "w-8 h-8 rounded-xl flex items-center justify-center relative flex-shrink-0"
+                    : "w-12 h-12 rounded-2xl flex items-center justify-center relative"
+                }
+                style={{
+                  background: active
+                    ? "color-mix(in srgb, var(--overlay-text) 18%, transparent)"
+                    : `color-mix(in srgb, ${colors.bg} 14%, transparent)`,
+                  color: active ? colors.text : colors.bg,
+                }}
+              >
+                <Icon size={compact ? 16 : 20} />
+              </div>
+              <div className={compact ? "flex flex-col items-start relative min-w-0" : "flex flex-col items-center relative"}>
+                <span
+                  style={{
+                    fontSize: compact ? "var(--font-size-md)" : "var(--font-size-lg)",
+                    fontWeight: "var(--weight-semibold)" as any,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {displayLabel}
+                </span>
+                <span
+                  className="type-numeric"
+                  style={{
+                    fontSize: compact ? "var(--font-size-sm)" : "var(--font-size-base)",
+                    opacity: active ? 0.85 : 0.5,
+                    marginTop: compact ? 1 : 4,
+                  }}
+                >
+                  {displaySublabel}
+                </span>
+              </div>
+
+              {active && (
+                <div className={compact ? "absolute top-2 right-2" : "absolute top-2.5 right-2.5"}>
+                  <span
+                    className="px-2 py-0.5 rounded-full text-[10px]"
+                    style={{
+                      background: "color-mix(in srgb, var(--overlay-text) 25%, transparent)",
+                      color: "var(--overlay-text)",
+                      fontWeight: "var(--weight-bold)" as any,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      border: "1px solid color-mix(in srgb, var(--overlay-text) 40%, transparent)",
+                    }}
+                  >
+                    {cms.misc.current}
+                  </span>
+                </div>
+              )}
+            </motion.button>
+          );
+        })}
       </div>
     </div>
   );

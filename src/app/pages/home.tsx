@@ -1,8 +1,6 @@
 import {
-ChevronDown,
 ChevronLeft,
 Heart,
-SlidersHorizontal,
 Sparkles
 } from "lucide-react";
 import {
@@ -21,11 +19,10 @@ useState,
 import { Link } from "react-router";
 import { FireGlow } from "../components/fire-glow";
 import {
-defaultPanShape,
-GeneratedRecipe,
-generateRecipe,
 getDefaultDoughBalls,
-PanConfig,
+generateTimeSlots,
+NO_PREFERENCE_SLOT,
+type PanConfig,
 PizzaStyle,
 STYLES_DB,
 TimeSlot,
@@ -33,35 +30,294 @@ UserConstraints,
 } from "../components/pizza-engine";
 import { RecipeConfigurator } from "../components/recipe-configurator";
 import { RecipeMatchCard } from "../components/recipe-match-card";
+import { RecipeSetupPanel } from "../components/recipe-setup-panel";
 import { RecipeStatStrip } from "../components/recipe-stat-strip";
 import { RecipeView } from "../components/recipe-view";
 import { RecommendedStyles,STYLE_PHOTOS } from "../components/recommended-styles";
 import { useDarkMode } from "../components/root-layout";
-import { SettingsSummaryBar,UserNeeds } from "../components/user-needs";
+import { type SettingsTab, UserNeeds } from "../components/user-needs";
 import { VulcanHero } from "../components/vulcan-hero";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
 import { useCms } from "../components/cms/cms-context";
 import { getDietaryWarnings } from "../components/dietary-data";
+import {
+  getInterpretationById,
+  type Interpretation,
+} from "../components/interpretation-library";
 import { RecipePrimaryTab } from "../components/recipe-section-tabs";
 import { StyleDetailSheet } from "../components/style-detail-sheet";
+import {
+  getVersions,
+  type StyleVersion,
+} from "../components/style-versions";
 import { useStylesOverride } from "../components/styles-override-context";
 import { ContextualWarnings } from "../components/troubleshooting-panel";
 import { useProfileDefaults } from "../components/use-profile-defaults";
-import { CtaButton, Heading, Surface } from "../components/ds";
+import {
+  defaultRecipePL,
+  type RecipeInitialState,
+  type RecipeMode,
+  useRecipeState,
+} from "../components/use-recipe-state";
+import { CtaButton, Heading, IconButton } from "../components/ds";
 
 type AppStep = "settings" | "styles" | "result";
+type StyleSettingsPanel = SettingsTab | "time";
 
-/* ═══ VPL-012: Custom P/L state default from style ═══ */
-function defaultPL(style: PizzaStyle | null): number {
-  if (!style) return 0.55;
-  return (
-    Math.round(
-      ((style.dough.flour_pl_range[0] +
-        style.dough.flour_pl_range[1]) /
-        2) *
-        100,
-    ) / 100
-  );
+const CREATE_DRAFT_KEY = "vulcan_create_draft";
+const HOUR_MS = 60 * 60 * 1000;
+const TIME_REVIEW_BEFORE_TARGET_MS = 3 * HOUR_MS;
+const TIME_SLOT_TARGET_TOLERANCE_MS = 2 * HOUR_MS;
+
+interface SelectedTimeMeta {
+  selectedAt: number;
+  hours: number;
+  targetAt: number | null;
+}
+
+interface PersistedCreateDraft {
+  version: 1;
+  updatedAt: number;
+  step: AppStep;
+  selectedTimeSlot: string | null;
+  selectedTimeAt: number | null;
+  selectedTimeHours: number | null;
+  selectedTimeTargetAt?: number | null;
+  selectedStyleId: string | null;
+  recipeGenerated: boolean;
+  constraints: UserConstraints;
+  recipe: {
+    mode: RecipeMode;
+    activeVersionId: string | null;
+    activeInterpretationId: string | null;
+    customHydration: number;
+    customFlourW: number;
+    customFlourPL: number;
+    customFermentHours: number;
+    customFermentTemp: number;
+    usePreFerment: boolean;
+    panConfig: PanConfig;
+    selectedToppingConcept: string | null;
+  } | null;
+}
+
+interface ResolvedCreateDraft {
+  step: AppStep;
+  selectedStyle: PizzaStyle | null;
+  selectedTimeSlot: string | null;
+  selectedTimeMeta: SelectedTimeMeta | null;
+  styleSettingsPanel: StyleSettingsPanel | null;
+  constraints: UserConstraints;
+  recipeInitial: RecipeInitialState | null;
+}
+
+interface ResolvedTimeChoice {
+  selectedTimeSlot: string | null;
+  selectedTimeMeta: SelectedTimeMeta | null;
+  stale: boolean;
+  needsReview: boolean;
+}
+
+function removeCreateDraft() {
+  try {
+    localStorage.removeItem(CREATE_DRAFT_KEY);
+  } catch {
+    /* */
+  }
+}
+
+function readCreateDraft(): PersistedCreateDraft | null {
+  try {
+    const raw = localStorage.getItem(CREATE_DRAFT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<PersistedCreateDraft>;
+    if (parsed.version !== 1 || typeof parsed.updatedAt !== "number") {
+      return null;
+    }
+    return parsed as PersistedCreateDraft;
+  } catch {
+    return null;
+  }
+}
+
+function writeCreateDraft(draft: PersistedCreateDraft) {
+  try {
+    localStorage.setItem(CREATE_DRAFT_KEY, JSON.stringify(draft));
+  } catch {
+    /* */
+  }
+}
+
+function getDraftTargetAt(draft: PersistedCreateDraft): number | null {
+  if (
+    !draft.selectedTimeSlot ||
+    draft.selectedTimeSlot === "no_preference" ||
+    typeof draft.selectedTimeHours !== "number"
+  ) {
+    return null;
+  }
+  if (typeof draft.selectedTimeTargetAt === "number") {
+    return draft.selectedTimeTargetAt;
+  }
+  if (typeof draft.selectedTimeAt !== "number") return null;
+  return draft.selectedTimeAt + draft.selectedTimeHours * HOUR_MS;
+}
+
+function getSlotTargetAt(now: number, slot: TimeSlot) {
+  return now + slot.hours * HOUR_MS;
+}
+
+function resolveSavedTimeChoice(
+  draft: PersistedCreateDraft,
+  now: number,
+): ResolvedTimeChoice {
+  if (!draft.selectedTimeSlot) {
+    return {
+      selectedTimeSlot: null,
+      selectedTimeMeta: null,
+      stale: false,
+      needsReview: false,
+    };
+  }
+
+  if (draft.selectedTimeSlot === NO_PREFERENCE_SLOT.id) {
+    return {
+      selectedTimeSlot: NO_PREFERENCE_SLOT.id,
+      selectedTimeMeta: {
+        selectedAt: draft.selectedTimeAt ?? now,
+        hours: draft.selectedTimeHours ?? NO_PREFERENCE_SLOT.hours,
+        targetAt: null,
+      },
+      stale: false,
+      needsReview: false,
+    };
+  }
+
+  const targetAt = getDraftTargetAt(draft);
+  if (!targetAt) {
+    return {
+      selectedTimeSlot: null,
+      selectedTimeMeta: null,
+      stale: true,
+      needsReview: true,
+    };
+  }
+
+  const matchingSlot = generateTimeSlots(new Date(now))
+    .map((slot) => ({
+      slot,
+      distance: Math.abs(getSlotTargetAt(now, slot) - targetAt),
+    }))
+    .sort((a, b) => a.distance - b.distance)
+    .find(({ distance }) => distance <= TIME_SLOT_TARGET_TOLERANCE_MS)?.slot;
+
+  if (!matchingSlot) {
+    return {
+      selectedTimeSlot: null,
+      selectedTimeMeta: null,
+      stale: true,
+      needsReview: true,
+    };
+  }
+
+  return {
+    selectedTimeSlot: matchingSlot.id,
+    selectedTimeMeta: {
+      selectedAt: now,
+      hours: matchingSlot.hours,
+      targetAt,
+    },
+    stale: false,
+    needsReview: targetAt - now <= TIME_REVIEW_BEFORE_TARGET_MS,
+  };
+}
+
+function resolveRecipeInitial(
+  draft: PersistedCreateDraft,
+  style: PizzaStyle | null,
+): RecipeInitialState | null {
+  if (!style || !draft.recipe) return null;
+  const version = draft.recipe.activeVersionId
+    ? getVersions(style.id).find((v) => v.id === draft.recipe?.activeVersionId) ??
+      null
+    : null;
+  const interpretation = draft.recipe.activeInterpretationId
+    ? getInterpretationById(draft.recipe.activeInterpretationId) ?? null
+    : null;
+  return {
+    mode: draft.recipe.mode,
+    version,
+    interpretation,
+    hydration: draft.recipe.customHydration,
+    flourW: draft.recipe.customFlourW,
+    flourPL: draft.recipe.customFlourPL,
+    fermentHours: draft.recipe.customFermentHours,
+    fermentTemp: draft.recipe.customFermentTemp,
+    usePreFerment: draft.recipe.usePreFerment,
+    panConfig: draft.recipe.panConfig,
+    toppingConcept: draft.recipe.selectedToppingConcept,
+  };
+}
+
+function resolveCreateDraft(
+  profileConstraints: UserConstraints,
+  styles: Record<string, PizzaStyle>,
+): ResolvedCreateDraft {
+  const fallback: ResolvedCreateDraft = {
+    step: "settings",
+    selectedStyle: null,
+    selectedTimeSlot: null,
+    selectedTimeMeta: null,
+    styleSettingsPanel: null,
+    constraints: profileConstraints,
+    recipeInitial: null,
+  };
+  const draft = readCreateDraft();
+  if (!draft) return fallback;
+
+  const now = Date.now();
+  const draftStyle = draft.selectedStyleId ? styles[draft.selectedStyleId] ?? null : null;
+  const timeChoice = resolveSavedTimeChoice(draft, now);
+
+  if (timeChoice.stale && !draftStyle) {
+    removeCreateDraft();
+    return fallback;
+  }
+
+  const selectedStyle = draftStyle;
+  const selectedTimeSlot = timeChoice.selectedTimeSlot;
+  const selectedTimeMeta = timeChoice.selectedTimeMeta;
+  const restoredConstraints = {
+    ...profileConstraints,
+    ...(draft.constraints ?? {}),
+  };
+  if (selectedTimeMeta) {
+    restoredConstraints.available_hours = selectedTimeMeta.hours;
+  } else if (timeChoice.stale) {
+    restoredConstraints.available_hours = profileConstraints.available_hours;
+  }
+  const recipeGenerated =
+    draft.recipeGenerated && draftStyle !== null && !timeChoice.stale;
+  const step: AppStep = recipeGenerated
+    ? "result"
+    : selectedStyle || selectedTimeSlot
+      ? "styles"
+      : "settings";
+
+  return {
+    step,
+    selectedStyle,
+    selectedTimeSlot,
+    selectedTimeMeta,
+    styleSettingsPanel:
+      step === "styles" && (timeChoice.stale || timeChoice.needsReview)
+        ? "time"
+        : null,
+    constraints: restoredConstraints,
+    recipeInitial: timeChoice.stale
+      ? null
+      : resolveRecipeInitial(draft, selectedStyle),
+  };
 }
 
 export function HomePage() {
@@ -73,14 +329,31 @@ export function HomePage() {
     modifiedCount,
     resetAll: cmsResetAll,
   } = useCms();
+  /* ═══ VPL-067: Profile data bridge — load constraints from profile ═══ */
+  const profileDefaults = useProfileDefaults();
+  const initialCreateDraftRef = useRef<ResolvedCreateDraft | null>(null);
+  if (initialCreateDraftRef.current === null) {
+    initialCreateDraftRef.current = resolveCreateDraft(
+      profileDefaults.constraints,
+      effectiveStyles,
+    );
+  }
+  const initialCreateDraft = initialCreateDraftRef.current;
   const [currentStep, setCurrentStep] =
-    useState<AppStep>("settings");
+    useState<AppStep>(initialCreateDraft.step);
   const [selectedStyle, setSelectedStyle] =
-    useState<PizzaStyle | null>(null);
+    useState<PizzaStyle | null>(initialCreateDraft.selectedStyle);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<
     string | null
-  >(null);
-  const [showFineTuning, setShowFineTuning] = useState(false);
+  >(initialCreateDraft.selectedTimeSlot);
+  const [selectedTimeMeta, setSelectedTimeMeta] =
+    useState<SelectedTimeMeta | null>(initialCreateDraft.selectedTimeMeta);
+  const [styleSettingsPanel, setStyleSettingsPanel] =
+    useState<StyleSettingsPanel | null>(
+      initialCreateDraft.styleSettingsPanel,
+    );
+  const [setupPanelOpen, setSetupPanelOpen] = useState(false);
+  const [setupNotice, setSetupNotice] = useState<string | null>(null);
   const [nerdMode, setNerdMode] = useState(false);
 
   /* ═══ VPL-023: Respect prefers-reduced-motion ═══ */
@@ -98,6 +371,11 @@ export function HomePage() {
 
   /* ═══ Back navigation ═══ */
   const handleBackToSettings = useCallback(() => {
+    removeCreateDraft();
+    setSelectedStyle(null);
+    setSelectedTimeSlot(null);
+    setSelectedTimeMeta(null);
+    setStyleSettingsPanel(null);
     window.scrollTo({
       top: 0,
       behavior: "instant" as ScrollBehavior,
@@ -107,8 +385,10 @@ export function HomePage() {
 
   const handleBackToStyles = useCallback(() => {
     setSelectedStyle(null);
-    setShowFineTuning(false);
+    setSetupPanelOpen(false);
+    setSetupNotice(null);
     setNerdMode(false);
+    setStyleSettingsPanel(null);
     window.scrollTo({
       top: 0,
       behavior: "instant" as ScrollBehavior,
@@ -116,37 +396,59 @@ export function HomePage() {
     setCurrentStep("styles");
   }, []);
 
-  /* ═══ VPL-067: Profile data bridge — load constraints from profile ═══ */
-  const profileDefaults = useProfileDefaults();
   const nerdAvailable = profileDefaults.pizzaNerdEnabled;
   const effectiveNerdMode = nerdAvailable && nerdMode;
   const [constraints, setConstraints] =
-    useState<UserConstraints>(profileDefaults.constraints);
+    useState<UserConstraints>(initialCreateDraft.constraints);
 
-  const [customHydration, setCustomHydration] = useState(60);
-  const [customFlourW, setCustomFlourW] = useState(250);
-  const [customFermentHours, setCustomFermentHours] =
-    useState(16);
-  const [customFermentTemp, setCustomFermentTemp] = useState(4);
-  const [usePreFerment, setUsePreFerment] = useState(false);
-  const [customFlourPL, setCustomFlourPL] = useState(
-    defaultPL(selectedStyle),
-  );
-  const [panConfig, setPanConfig] = useState<PanConfig>({});
   const [selectedFlourId, setSelectedFlourId] = useState<
-    string | null
-  >(null);
-  const [selectedToppingConcept, setSelectedToppingConcept] = useState<
     string | null
   >(null);
 
   const [createRecipeTab, setCreateRecipeTab] = useState<RecipePrimaryTab>("ricetta");
-  const [createRecipeMode, setCreateRecipeMode] = useState<"adapted" | "canonical">("adapted");
+  const recipeState = useRecipeState({
+    style: selectedStyle,
+    cms,
+    initial: initialCreateDraft.recipeInitial,
+    defaultAvailableHours: constraints.available_hours,
+  });
+  const {
+    recipeMode: createRecipeMode,
+    setRecipeMode: setCreateRecipeMode,
+    customHydration,
+    setCustomHydration,
+    customFlourW,
+    setCustomFlourW,
+    customFlourPL,
+    setCustomFlourPL,
+    customFermentHours,
+    setCustomFermentHours,
+    customFermentTemp,
+    setCustomFermentTemp,
+    usePreFerment,
+    setUsePreFerment,
+    panConfig,
+    setPanConfig,
+    activeVersionId,
+    activeVersion,
+    activeInterpretationId,
+    selectedToppingConcept,
+    setSelectedToppingConcept,
+    styleVersions,
+    selectVersion,
+    applyInterpretationToState,
+    resetToBaseRecipe,
+    resetForStyle,
+    buildRecipe,
+  } = recipeState;
 
   const shareUrl = useMemo(() => {
     if (!selectedStyle) return "";
     const params = new URLSearchParams();
     params.set("mode", createRecipeMode);
+    if (activeVersionId) params.set("v", activeVersionId);
+    if (activeInterpretationId)
+      params.set("interpretation", activeInterpretationId);
     params.set("h", String(customHydration));
     params.set("w", String(customFlourW));
     params.set("pl", String(customFlourPL));
@@ -167,6 +469,8 @@ export function HomePage() {
     return `${window.location.origin}/recipe/${selectedStyle.id}?${params.toString()}`;
   }, [
     selectedStyle,
+    activeVersionId,
+    activeInterpretationId,
     customHydration,
     customFlourW,
     customFlourPL,
@@ -181,11 +485,24 @@ export function HomePage() {
   ]);
 
   const handleTimeSlotChange = useCallback((slot: TimeSlot) => {
+    const selectedAt = Date.now();
     setSelectedTimeSlot(slot.id);
+    setSelectedTimeMeta({
+      selectedAt,
+      hours: slot.hours,
+      targetAt:
+        slot.id === NO_PREFERENCE_SLOT.id
+          ? null
+          : selectedAt + slot.hours * HOUR_MS,
+    });
     setConstraints((c) => ({
       ...c,
       available_hours: slot.hours,
     }));
+    if (currentStep === "styles") {
+      setStyleSettingsPanel(null);
+      return;
+    }
     /* La scelta della tempistica è il gesto che fa partire il flusso: niente
        bottone "Scegli lo stile". Avanziamo subito allo step stili, dove la
        scelta "atterra" come chip nella barra parametri in alto. Un attimo di
@@ -196,82 +513,35 @@ export function HomePage() {
     };
     if (prefersReducedMotion) advance();
     else window.setTimeout(advance, 280);
-  }, [prefersReducedMotion]);
+  }, [currentStep, prefersReducedMotion]);
 
   const handleSelectStyle = useCallback(
     (style: PizzaStyle) => {
+      resetForStyle(style, { mode: "adapted" }, constraints.available_hours);
       setSelectedStyle(style);
-      setCreateRecipeMode("adapted");
-      const hCenter = Math.round(
-        (style.dough.hydration_pct_range[0] +
-          style.dough.hydration_pct_range[1]) /
-          2,
-      );
-      const wCenter = Math.round(
-        (style.dough.flour_w_range[0] +
-          style.dough.flour_w_range[1]) /
-          2,
-      );
-      const fMax = style.dough.fermentation_hours_range[1];
-      const fMin = style.dough.fermentation_hours_range[0];
-      const fOptimal = Math.min(
-        Math.round((fMin + fMax) / 2),
-        constraints.available_hours,
-      );
-      setCustomHydration(hCenter);
-      setCustomFlourW(wCenter);
-      setCustomFermentHours(fOptimal);
-      setCustomFermentTemp(fOptimal > 12 ? 4 : 22);
-      setUsePreFerment(style.requires_pre_ferment);
-      setCustomFlourPL(defaultPL(style));
-      // Initialize pan config with style defaults
-      setPanConfig({
-        panShape: defaultPanShape(style),
-        panLength: style.shape.length_cm,
-        panWidth: style.shape.width_cm,
-        panDiameter: style.shape.diameter_cm,
-        thickness: style.shape.thickness_factor,
-      });
+      setSetupPanelOpen(false);
+      setSetupNotice(null);
       setSelectedFlourId(null);
-      setSelectedToppingConcept(style.default_topping_ref ?? null);
+      setStyleSettingsPanel(null);
     },
-    [constraints.available_hours],
+    [constraints.available_hours, resetForStyle],
   );
 
   const handleResetCreateToCanonical = useCallback(() => {
     if (!selectedStyle) return;
-    const hCenter = Math.round(
-      (selectedStyle.dough.hydration_pct_range[0] +
-        selectedStyle.dough.hydration_pct_range[1]) /
-        2,
-    );
-    const wCenter = Math.round(
-      (selectedStyle.dough.flour_w_range[0] +
-        selectedStyle.dough.flour_w_range[1]) /
-        2,
-    );
     const fCenter = Math.round(
       (selectedStyle.dough.fermentation_hours_range[0] +
         selectedStyle.dough.fermentation_hours_range[1]) /
         2,
     );
-    setCreateRecipeMode("canonical");
-    setCustomHydration(hCenter);
-    setCustomFlourW(wCenter);
-    setCustomFermentHours(fCenter);
-    setCustomFermentTemp(fCenter > 12 ? 4 : 22);
-    setUsePreFerment(selectedStyle.requires_pre_ferment);
-    setCustomFlourPL(defaultPL(selectedStyle));
-    setPanConfig({
-      panShape: defaultPanShape(selectedStyle),
-      panLength: selectedStyle.shape.length_cm,
-      panWidth: selectedStyle.shape.width_cm,
-      panDiameter: selectedStyle.shape.diameter_cm,
-      thickness: selectedStyle.shape.thickness_factor,
+    resetToBaseRecipe({
+      mode: "canonical",
+      availableHours: selectedStyle.dough.fermentation_hours_range[1],
     });
+    setSetupNotice(null);
     setSelectedFlourId(null);
-    setSelectedToppingConcept(selectedStyle.default_topping_ref ?? null);
     setSelectedTimeSlot(null);
+    setSelectedTimeMeta(null);
     setConstraints((current) => ({
       ...current,
       available_hours: fCenter,
@@ -279,50 +549,41 @@ export function HomePage() {
       oven_type: selectedStyle.baking.oven_type_required,
       oven_max_temp_c: selectedStyle.baking.temp_c_ideal,
     }));
-  }, [selectedStyle]);
+  }, [resetToBaseRecipe, selectedStyle]);
 
-  const recipe: GeneratedRecipe | null = useMemo(() => {
-    if (!selectedStyle) return null;
-    // Build score weights from CMS overrides
-    const scoreWeights = {
-      authenticity: cms.scoreDimensions.authenticity?.weight,
-      feasibility: cms.scoreDimensions.feasibility?.weight,
-      digestibility: cms.scoreDimensions.digestibility?.weight,
-      sustainability:
-        cms.scoreDimensions.sustainability?.weight,
-      experimentation:
-        cms.scoreDimensions.experimentation?.weight,
-    };
-    const styleWithTopping =
-      selectedToppingConcept &&
-      selectedToppingConcept !== selectedStyle.default_topping_ref
-        ? { ...selectedStyle, default_topping_ref: selectedToppingConcept }
-        : selectedStyle;
-    return generateRecipe(
-      styleWithTopping,
-      constraints,
-      customHydration,
-      customFlourW,
-      customFermentHours,
-      customFermentTemp,
-      usePreFerment,
-      customFlourPL,
-      panConfig,
-      scoreWeights,
-    );
-  }, [
-    selectedStyle,
-    constraints,
-    customHydration,
-    customFlourW,
-    customFermentHours,
-    customFermentTemp,
-    usePreFerment,
-    customFlourPL,
-    panConfig,
-    cms.scoreDimensions,
-    selectedToppingConcept,
-  ]);
+  const resetCreateBaseRecipe = useCallback(() => {
+    resetToBaseRecipe({ availableHours: constraints.available_hours });
+  }, [constraints.available_hours, resetToBaseRecipe]);
+
+  const handleCreateVersionSelect = useCallback(
+    (version: StyleVersion) => {
+      setSetupNotice(null);
+      selectVersion(version);
+    },
+    [selectVersion],
+  );
+
+  const handleCreateInterpretationSelect = useCallback(
+    (interpretation: Interpretation | null) => {
+      if (!interpretation) {
+        resetCreateBaseRecipe();
+        return;
+      }
+      setSetupNotice(null);
+      applyInterpretationToState(interpretation);
+    },
+    [applyInterpretationToState, resetCreateBaseRecipe],
+  );
+
+  const handleOpenCreatePersonalization = useCallback(() => {
+    if (createRecipeMode === "canonical") setCreateRecipeMode("adapted");
+    setSetupPanelOpen(true);
+  }, [createRecipeMode, setCreateRecipeMode]);
+
+  const recipe = useMemo(
+    () => buildRecipe(constraints),
+    [buildRecipe, constraints],
+  );
 
   /* VPL-068: time slot is optional — styles always visible */
   const canGenerateRecipe = selectedStyle !== null;
@@ -390,9 +651,64 @@ export function HomePage() {
     }
   }, [currentStep]);
 
-  const styleStepTimeLabel = selectedTimeSlot
-    ? cms.timeSlots[selectedTimeSlot]?.label ?? selectedTimeSlot
-    : null;
+  useEffect(() => {
+    const hasCreateDraft =
+      selectedTimeSlot !== null ||
+      selectedStyle !== null ||
+      currentStep === "result";
+
+    if (!hasCreateDraft) {
+      removeCreateDraft();
+      return;
+    }
+
+    writeCreateDraft({
+      version: 1,
+      updatedAt: Date.now(),
+      step: currentStep,
+      selectedTimeSlot,
+      selectedTimeAt: selectedTimeMeta?.selectedAt ?? null,
+      selectedTimeHours: selectedTimeMeta?.hours ?? null,
+      selectedTimeTargetAt: selectedTimeMeta?.targetAt ?? null,
+      selectedStyleId: selectedStyle?.id ?? null,
+      recipeGenerated: currentStep === "result" && selectedStyle !== null,
+      constraints,
+      recipe: selectedStyle
+        ? {
+            mode: createRecipeMode,
+            activeVersionId,
+            activeInterpretationId,
+            customHydration,
+            customFlourW,
+            customFlourPL,
+            customFermentHours,
+            customFermentTemp,
+            usePreFerment,
+            panConfig,
+            selectedToppingConcept,
+          }
+        : null,
+    });
+  }, [
+    activeInterpretationId,
+    activeVersionId,
+    constraints,
+    createRecipeMode,
+    currentStep,
+    customFermentHours,
+    customFermentTemp,
+    customFlourPL,
+    customFlourW,
+    customHydration,
+    panConfig,
+    selectedStyle,
+    selectedTimeMeta?.hours,
+    selectedTimeMeta?.selectedAt,
+    selectedTimeMeta?.targetAt,
+    selectedTimeSlot,
+    selectedToppingConcept,
+    usePreFerment,
+  ]);
 
   return (
     <div
@@ -613,7 +929,7 @@ export function HomePage() {
               stiffness: 320,
               damping: 30,
             }}
-            className="relative pb-32"
+            className="relative pb-40"
             style={{ zIndex: 2 }}
           >
             <div className="relative">
@@ -625,7 +941,7 @@ export function HomePage() {
                   onTimeSlotChange={handleTimeSlotChange}
                   hero={
                     <motion.div
-                      className="flex flex-col items-center text-center pb-6 sm:pb-8"
+                      className="flex flex-col items-center text-center pb-4 sm:pb-5"
                       style={{
                         opacity: titleOpacity,
                         y: titleY,
@@ -633,7 +949,7 @@ export function HomePage() {
                     >
                       {/* VulcanHero — harmonized blob + mark composition */}
                       <div
-                        className="relative flex items-center justify-center mb-6"
+                        className="relative flex items-center justify-center mb-3"
                         style={{
                           width: "var(--hero-mark-size, 160px)",
                           height: "var(--hero-mark-size, 160px)",
@@ -747,6 +1063,19 @@ export function HomePage() {
                           markRatio={0.32}
                         />
                       </div>
+                      {/* R8: wordmark — il nome del brand accanto al logo */}
+                      <span
+                        style={{
+                          fontSize: "var(--font-size-sm)",
+                          letterSpacing: "0.34em",
+                          textTransform: "uppercase",
+                          fontWeight: "var(--weight-bold)",
+                          color: "var(--primary)",
+                          marginBottom: "var(--space-3)",
+                        }}
+                      >
+                        Vulcan
+                      </span>
                       <Heading level="page">
                         {cms.hero.title_line1}{" "}
                         <span
@@ -789,14 +1118,17 @@ export function HomePage() {
               stiffness: 320,
               damping: 30,
             }}
-            className="relative pb-32"
+            className="relative pb-40"
             style={{ zIndex: 2 }}
           >
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-5 sm:py-7">
               <div className="max-w-2xl lg:max-w-none mx-auto">
                 <div className="mb-5 sm:mb-6">
-                  <motion.button
+                  <IconButton
+                    as={motion.button}
                     onClick={handleBackToSettings}
+                    size="md"
+                    variant="ghost"
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{
@@ -804,7 +1136,7 @@ export function HomePage() {
                       stiffness: 400,
                       damping: 25,
                     }}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-full active:scale-95 transition-transform"
+                    className="active:scale-95 transition-transform"
                     style={{
                       color: "var(--text-default)",
                       background: "color-mix(in srgb, var(--container-bg) 85%, transparent)",
@@ -817,16 +1149,25 @@ export function HomePage() {
                     title={cms.configurator.backLabel}
                   >
                     <ChevronLeft size={20} />
-                  </motion.button>
+                  </IconButton>
                   <div className="mt-4 max-w-2xl">
-                    <SettingsSummaryBar
-                      activeTab={null}
-                      onTabSelect={() => handleBackToSettings()}
+                    <UserNeeds
                       constraints={constraints}
-                      kitchenTemp={constraints.kitchen_temp_c ?? 21}
-                      cms={cms}
-                      selectedTimeLabel={styleStepTimeLabel}
-                      onChangeTime={handleBackToSettings}
+                      onConstraintsChange={setConstraints}
+                      selectedTimeSlot={selectedTimeSlot}
+                      onTimeSlotChange={handleTimeSlotChange}
+                      hideTimeSlots={styleSettingsPanel !== "time"}
+                      compact
+                      showWeather={false}
+                      activeTab={
+                        styleSettingsPanel === "time" ? null : styleSettingsPanel
+                      }
+                      onActiveTabChange={setStyleSettingsPanel}
+                      onChangeTime={() =>
+                        setStyleSettingsPanel((panel) =>
+                          panel === "time" ? null : "time",
+                        )
+                      }
                     />
                   </div>
                   <Heading level="page" className="mt-5">
@@ -920,12 +1261,13 @@ export function HomePage() {
                           2,
                       ),
                     );
-                    setCustomFlourPL(defaultPL(selectedStyle));
+                    setCustomFlourPL(defaultRecipePL(selectedStyle));
                   }
                 }
               }}
               selectedTimeSlotId={selectedTimeSlot}
               isPersonalized={createRecipeMode !== "canonical"}
+              onRequestPersonalization={handleOpenCreatePersonalization}
               matchSlot={
                 <RecipeMatchCard
                   scores={recipe.scores}
@@ -971,106 +1313,79 @@ export function HomePage() {
                     >
                       {createRecipeMode === "canonical"
                         ? "Stai guardando la ricetta ideale dello stile, con forno e tempi al massimo della sua espressione."
-                        : "Vulcan ha gia tradotto la ricetta sui tuoi vincoli: forno, tempo, quantita e strumenti disponibili."}
+                        : "Vulcan ha già tradotto la ricetta sui tuoi vincoli: forno, tempo, quantità e strumenti disponibili."}
                     </span>
                   </div>
                   <RecipeStatStrip recipe={recipe} nerdMode={effectiveNerdMode} />
 
-                  {/* Personalizza parametri — accordion (su misura sui tuoi vincoli) */}
-                  <Surface className="overflow-hidden">
-                    <button
-                      onClick={() => setShowFineTuning(!showFineTuning)}
-                      className="w-full flex items-center justify-between px-5 py-3.5 text-left active:scale-[0.99] transition-transform"
-                      aria-expanded={showFineTuning}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <SlidersHorizontal
-                          size={14}
-                          style={{ color: showFineTuning ? "var(--text-accent)" : "var(--text-muted)" }}
-                        />
-                        <span
-                          style={{
-                            color: "var(--text-default)",
-                            fontSize: "var(--font-size-xl)",
-                            fontWeight: "var(--weight-semibold)" as any,
-                          }}
-                        >
-                          {cms.ui.customizeParams}
-                        </span>
-                      </div>
-                      <motion.div
-                        animate={{ rotate: showFineTuning ? 180 : 0 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                      >
-                        <ChevronDown size={14} style={{ color: "var(--text-muted)" }} />
-                      </motion.div>
-                    </button>
-                    {showFineTuning && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                          className="overflow-hidden"
-                        >
-                          <div
-                            className="px-5 pb-5"
-                            style={{ borderTop: "1px solid var(--container-border)" }}
-                          >
-                            <div className="pt-4">
-                              <RecipeConfigurator
-                                style={selectedStyle}
-                                constraints={constraints}
-                                onConstraintsChange={(next) => {
-                                  setCreateRecipeMode("adapted");
-                                  setConstraints(next);
-                                }}
-                                customHydration={customHydration}
-                                onHydrationChange={(value) => {
-                                  setCreateRecipeMode("adapted");
-                                  setCustomHydration(value);
-                                }}
-                                customFlourW={customFlourW}
-                                onFlourWChange={(value) => {
-                                  setCreateRecipeMode("adapted");
-                                  setCustomFlourW(value);
-                                }}
-                                customFermentHours={customFermentHours}
-                                onFermentHoursChange={(value) => {
-                                  setCreateRecipeMode("adapted");
-                                  setCustomFermentHours(value);
-                                }}
-                                customFermentTemp={customFermentTemp}
-                                onFermentTempChange={(value) => {
-                                  setCreateRecipeMode("adapted");
-                                  setCustomFermentTemp(value);
-                                }}
-                                usePreFerment={usePreFerment}
-                                onPreFermentChange={(value) => {
-                                  setCreateRecipeMode("adapted");
-                                  setUsePreFerment(value);
-                                }}
-                                customFlourPL={effectiveNerdMode ? customFlourPL : undefined}
-                                onFlourPLChange={
-                                  effectiveNerdMode
-                                    ? (value) => {
-                                        setCreateRecipeMode("adapted");
-                                        setCustomFlourPL(value);
-                                      }
-                                    : undefined
-                                }
-                                science={recipe.science}
-                                panConfig={panConfig}
-                                onPanConfigChange={(next) => {
-                                  setCreateRecipeMode("adapted");
-                                  setPanConfig(next);
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </motion.div>
-                    )}
-                  </Surface>
+                  <RecipeSetupPanel
+                    style={selectedStyle}
+                    versions={styleVersions}
+                    activeVersion={activeVersion}
+                    customHydration={customHydration}
+                    customFlourW={customFlourW}
+                    customFermentHours={customFermentHours}
+                    customFermentTemp={customFermentTemp}
+                    activeInterpretationId={activeInterpretationId}
+                    onSelectVersion={handleCreateVersionSelect}
+                    onSelectInterpretation={handleCreateInterpretationSelect}
+                    notice={setupNotice}
+                    onNotice={setSetupNotice}
+                    open={setupPanelOpen}
+                    onOpenChange={setSetupPanelOpen}
+                    onRequestOpen={handleOpenCreatePersonalization}
+                    isCanonical={createRecipeMode === "canonical"}
+                    scores={recipe.scores}
+                  >
+                    <RecipeConfigurator
+                      style={selectedStyle}
+                      constraints={constraints}
+                      onConstraintsChange={(next) => {
+                        setCreateRecipeMode("adapted");
+                        setConstraints(next);
+                      }}
+                      customHydration={customHydration}
+                      onHydrationChange={(value) => {
+                        setCreateRecipeMode("adapted");
+                        setCustomHydration(value);
+                      }}
+                      customFlourW={customFlourW}
+                      onFlourWChange={(value) => {
+                        setCreateRecipeMode("adapted");
+                        setCustomFlourW(value);
+                      }}
+                      customFermentHours={customFermentHours}
+                      onFermentHoursChange={(value) => {
+                        setCreateRecipeMode("adapted");
+                        setCustomFermentHours(value);
+                      }}
+                      customFermentTemp={customFermentTemp}
+                      onFermentTempChange={(value) => {
+                        setCreateRecipeMode("adapted");
+                        setCustomFermentTemp(value);
+                      }}
+                      usePreFerment={usePreFerment}
+                      onPreFermentChange={(value) => {
+                        setCreateRecipeMode("adapted");
+                        setUsePreFerment(value);
+                      }}
+                      customFlourPL={effectiveNerdMode ? customFlourPL : undefined}
+                      onFlourPLChange={
+                        effectiveNerdMode
+                          ? (value) => {
+                              setCreateRecipeMode("adapted");
+                              setCustomFlourPL(value);
+                            }
+                          : undefined
+                      }
+                      science={recipe.science}
+                      panConfig={panConfig}
+                      onPanConfigChange={(next) => {
+                        setCreateRecipeMode("adapted");
+                        setPanConfig(next);
+                      }}
+                    />
+                  </RecipeSetupPanel>
 
                   {/* Warning contestuali + dieta */}
                   <div>
@@ -1178,72 +1493,53 @@ export function HomePage() {
 
       {currentStep !== "result" && (
         <footer
-          className="relative mx-auto flex max-w-7xl justify-center px-4 pb-36 pt-4 sm:px-6 md:pb-12 lg:px-8"
+          className="relative mx-auto flex max-w-7xl justify-center px-4 pb-36 pt-8 sm:px-6 md:pb-12 lg:px-8"
           style={{ zIndex: 2 }}
-          aria-label="Vulcan motto"
+          aria-label={cms.pages.mottoAria}
         >
-          <div
-            className="inline-flex items-center gap-2 rounded-full px-3.5 py-2"
+          <span
+            className="inline-flex items-center gap-1.5"
             style={{
-              background: "color-mix(in srgb, var(--container-page) 72%, transparent)",
-              border: "1px solid var(--container-border-subtle)",
               color: "var(--text-muted)",
-              boxShadow: "0 10px 28px color-mix(in srgb, var(--shadow-color) 6%, transparent)",
-              backdropFilter: "blur(18px) saturate(1.25)",
-              WebkitBackdropFilter: "blur(18px) saturate(1.25)",
-              fontSize: "var(--font-size-md)",
-              fontWeight: "var(--weight-semibold)" as any,
+              fontSize: "var(--font-size-xs)",
+              fontWeight: "var(--weight-medium)" as any,
+              opacity: 0.35,
+              letterSpacing: "0.04em",
             }}
           >
-            <Heart size={14} fill="currentColor" style={{ color: "var(--primary)" }} />
+            <Heart size={10} fill="currentColor" style={{ color: "var(--primary)", opacity: 0.6 }} />
             Make pizza, not war
-          </div>
+          </span>
         </footer>
       )}
 
       {/* ═══ FLOATING CTA ═══ (non sul result: lì c'è solo back + navbar sezioni) */}
-      {currentStep !== "result" && (
+      {currentStep === "styles" && canGenerateRecipe && (
       <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
-        {/* M3: bottom scrim — gives floating CTA visual grounding */}
-        <div
-          className="absolute inset-x-0 bottom-0 md:hidden"
-          style={{
-            height: "108px",
-            background: `linear-gradient(to top, var(--container-page) 0%, color-mix(in srgb, var(--container-page) 72%, transparent) 52%, transparent 100%)`,
-          }}
-        />
         {/* pb-20 on mobile to clear the 64px bottom tab bar; md:pb-6 on desktop */}
         <div
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-6 flex justify-center"
           style={{ zIndex: 1 }}
         >
-            {/* VPL-080: nessuna CTA "Scegli lo stile" nello step settings —
-                la scelta della tempistica avanza da sola allo step stili. */}
-
-            {/* Styles → generate recipe */}
-            {currentStep === "styles" && canGenerateRecipe && (
-              <CtaButton
-                as={motion.button}
-                key="cta-generate"
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 20, scale: 0.9 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 25,
-                }}
-                onClick={handleGenerateRecipe}
-                whileHover={{ scale: 1.03, y: -1 }}
-                deepShadow
-                className="pointer-events-auto h-12 sm:h-13 px-8 sm:px-10 active:scale-[0.97]"
-              >
-                <Sparkles size={15} />
-                {cms.ui.generate}
-              </CtaButton>
-            )}
-
-            {/* Result: nessuna CTA — back in alto a sinistra + navbar sezioni in basso */}
+            <CtaButton
+              as={motion.button}
+              key="cta-generate"
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.9 }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 25,
+              }}
+              onClick={handleGenerateRecipe}
+              whileHover={{ scale: 1.03, y: -1 }}
+              deepShadow
+              className="pointer-events-auto h-12 sm:h-13 px-8 sm:px-10 active:scale-[0.97]"
+            >
+              <Sparkles size={15} />
+              {cms.ui.generate}
+            </CtaButton>
         </div>
       </div>
       )}
