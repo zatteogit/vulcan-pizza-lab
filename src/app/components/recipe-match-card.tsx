@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import { Heart, HeartCrack, RotateCcw, TriangleAlert } from "lucide-react";
+import { Bookmark, BookmarkCheck, Heart, HeartCrack, RotateCcw, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, type RecipeScores } from "./pizza-engine";
 import { useCms } from "./cms/cms-context";
 import { createFormatter } from "./cms/i18n";
@@ -66,6 +66,8 @@ export function RecipeMatchCard({
   mode = "adapted",
   onAdapt,
   onReset,
+  onSave,
+  saved = false,
   className = "",
 }: {
   scores: RecipeScores;
@@ -75,6 +77,8 @@ export function RecipeMatchCard({
   mode?: RecipeMatchMode;
   onAdapt?: () => void;
   onReset?: () => void;
+  onSave?: () => void;
+  saved?: boolean;
   className?: string;
 }) {
   const { cms, bcp47 } = useCms();
@@ -99,6 +103,7 @@ export function RecipeMatchCard({
   const MatchIcon = tone.low ? HeartCrack : Heart;
   const showAdaptAction = mode === "canonical" && Boolean(onAdapt);
   const showResetAction = mode !== "canonical" && Boolean(onReset);
+  const showSaveAction = mode !== "canonical" && Boolean(onSave);
   const actionLabel = tone.low ? "Rendila possibile" : "Adatta alla mia cucina";
 
   return (
@@ -301,6 +306,31 @@ export function RecipeMatchCard({
               </motion.button>
             )}
           </AnimatePresence>
+          {showSaveAction && (
+            <button
+              type="button"
+              onClick={onSave}
+              aria-pressed={saved}
+              className="inline-flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 active:scale-95 transition-transform"
+              style={{
+                alignSelf: "flex-start",
+                background: saved
+                  ? "color-mix(in srgb, var(--primary) 12%, var(--container-page))"
+                  : "color-mix(in srgb, var(--container-page) 76%, transparent)",
+                border: saved
+                  ? "1px solid color-mix(in srgb, var(--primary) 30%, var(--container-border))"
+                  : "1px solid var(--container-border-subtle)",
+                color: saved ? "var(--primary)" : "var(--text-accent)",
+                cursor: "pointer",
+                fontSize: "var(--font-size-sm)",
+                fontWeight: "var(--weight-semibold)" as any,
+                lineHeight: "var(--leading-tight)",
+              }}
+            >
+              {saved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
+              {saved ? "Salvata nel ricettario" : "Salva la mia versione"}
+            </button>
+          )}
         </div>
       </div>
 

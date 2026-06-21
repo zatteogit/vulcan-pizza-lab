@@ -13,6 +13,7 @@ ChevronRight,
 CircleDot,
 Egg,
 Flame,
+Bookmark,
 Globe,
 Heart,
 Home,
@@ -71,7 +72,14 @@ STYLES_DB,
 } from "../components/pizza-engine";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { STYLE_PHOTOS } from "../components/recommended-styles";
-import { loadFavoriteStyles, toggleFavoriteStyle } from "../components/saved-recipes";
+import {
+  formatSavedDate,
+  loadFavoriteStyles,
+  loadSavedRecipes,
+  removeRecipe,
+  toggleFavoriteStyle,
+  type SavedRecipe,
+} from "../components/saved-recipes";
 import { useDarkMode } from "../components/root-layout";
 
 /* ═══ STORAGE KEYS ═══ */
@@ -319,6 +327,126 @@ function FavoriteStylesSection() {
             </button>
           </div>
         ))}
+      </div>
+    </ProfileSection>
+  );
+}
+
+/* ═══ LE MIE RICETTE — ricettario personale (R31) ═══
+ * saveRecipe era codice morto: nessuna UI lo invocava né mostrava i salvati.
+ * Qui le ricette salvate (parametri, non risultato) tornano visibili e
+ * riapribili tramite deep-link che ne rigenera la versione su misura. */
+function buildSavedRecipeUrl(r: SavedRecipe): string {
+  const pr = r.params;
+  const q = new URLSearchParams();
+  q.set("mode", "adapted");
+  q.set("h", String(pr.hydration));
+  q.set("w", String(pr.flourW));
+  q.set("pl", String(pr.flourPL));
+  q.set("f", String(pr.fermentHours));
+  q.set("t", String(pr.fermentTemp));
+  q.set("n", String(pr.doughBalls));
+  if (pr.usePreFerment) q.set("pf", "1");
+  if (pr.selectedToppingConcept) q.set("topping", pr.selectedToppingConcept);
+  if (r.versionId) q.set("v", r.versionId);
+  return `/recipe/${r.styleId}?${q.toString()}`;
+}
+
+function SavedRecipesSection() {
+  const { cms } = useCms();
+  const p = cms.profile;
+  const [recipes, setRecipes] = useState<SavedRecipe[]>(() => loadSavedRecipes());
+
+  useEffect(() => {
+    const sync = () => setRecipes(loadSavedRecipes());
+    window.addEventListener("focus", sync);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      window.removeEventListener("focus", sync);
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, []);
+
+  if (recipes.length === 0) return null;
+
+  return (
+    <ProfileSection
+      title={p.savedRecipesTitle}
+      subtitle={p.savedRecipesSubtitle}
+      delay={0.03}
+    >
+      <div className="flex flex-col gap-2">
+        {recipes.map((r) => {
+          const styleName = STYLES_DB[r.styleId]?.name ?? r.styleName;
+          const meta = [
+            formatSavedDate(r.createdAt),
+            r.score != null ? `${r.score}/100` : null,
+          ]
+            .filter(Boolean)
+            .join(" · ");
+          return (
+            <div
+              key={r.id}
+              className="relative flex items-center rounded-2xl"
+              style={{
+                background: "var(--surface-container-low)",
+                border: "1px solid var(--outline-variant)",
+              }}
+            >
+              <Link
+                to={buildSavedRecipeUrl(r)}
+                className="flex items-center gap-3 flex-1 min-w-0 px-3.5 py-3 active:scale-[0.99] transition-transform"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <span
+                  className="flex items-center justify-center rounded-xl flex-shrink-0"
+                  style={{
+                    width: 38,
+                    height: 38,
+                    background: "color-mix(in srgb, var(--primary) 10%, transparent)",
+                    color: "var(--primary)",
+                  }}
+                >
+                  <Bookmark size={17} fill="currentColor" />
+                </span>
+                <div className="flex flex-col min-w-0">
+                  <span
+                    className="truncate"
+                    style={{
+                      fontSize: "var(--font-size-lg)",
+                      fontWeight: "var(--weight-semibold)" as any,
+                      color: "var(--text-default)",
+                    }}
+                  >
+                    {styleName}
+                  </span>
+                  <span
+                    className="type-data"
+                    style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}
+                  >
+                    {meta}
+                  </span>
+                </div>
+              </Link>
+              <button
+                onClick={() => setRecipes(removeRecipe(r.id))}
+                className="flex items-center justify-center flex-shrink-0 mr-2 rounded-full active:scale-90 transition-transform"
+                style={{
+                  width: 30,
+                  height: 30,
+                  background: "transparent",
+                  border: "none",
+                  color: "var(--text-muted)",
+                  cursor: "pointer",
+                }}
+                aria-label={t(p.savedRecipeRemoveAria, { name: styleName })}
+                title={p.savedRecipeRemove}
+              >
+                <X size={16} />
+              </button>
+            </div>
+          );
+        })}
       </div>
     </ProfileSection>
   );
@@ -1340,8 +1468,9 @@ export function ProfilePage() {
           </p>
         </div>
 
-        {/* ── STILI PREFERITI (R31) — visibile solo se ne hai ── */}
+        {/* ── STILI PREFERITI + RICETTARIO (R31) — visibili solo se ne hai ── */}
         <FavoriteStylesSection />
+        <SavedRecipesSection />
 
         {/* ── FORNO ── */}
         <ProfileSection

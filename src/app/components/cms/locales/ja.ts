@@ -984,6 +984,10 @@ export const JA_LOCALE: CmsContent = {
     favoritesSubtitle: "ãã¼ããä»ããã¹ã¿ã¤ã«",
     favoriteRemove: "ãæ°ã«å¥ãããåé¤",
     favoriteRemoveAria: "{name}ããæ°ã«å¥ãããåé¤",
+    savedRecipesTitle: "ä¿å­ããã¬ã·ã",
+    savedRecipesSubtitle: "ããªãå¥½ã¿ã«èª¿æ´ãããã¼ã¸ã§ã³",
+    savedRecipeRemove: "ã¬ã·ãå¸³ããåé¤",
+    savedRecipeRemoveAria: "{name}ãã¬ã·ãå¸³ããåé¤",
     ovenTitle:
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3",
     ovenSubtitle:

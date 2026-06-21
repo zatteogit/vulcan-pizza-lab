@@ -920,6 +920,10 @@ export const FR_LOCALE: CmsContent = {
     favoritesSubtitle: "Les styles que vous avez aimÃ©s",
     favoriteRemove: "Retirer des favoris",
     favoriteRemoveAria: "Retirer {name} des favoris",
+    savedRecipesTitle: "Vos recettes enregistrÃ©es",
+    savedRecipesSubtitle: "Les versions sur mesure que vous avez gardÃ©es",
+    savedRecipeRemove: "Retirer du carnet",
+    savedRecipeRemoveAria: "Retirer {name} du carnet",
     ovenTitle: "Votre four",
     ovenSubtitle:
       "Détermine les températures et styles disponibles",

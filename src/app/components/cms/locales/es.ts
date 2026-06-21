@@ -921,6 +921,10 @@ export const ES_LOCALE: CmsContent = {
     favoritesSubtitle: "Los estilos que marcaste con el corazÃ³n",
     favoriteRemove: "Quitar de favoritos",
     favoriteRemoveAria: "Quitar {name} de favoritos",
+    savedRecipesTitle: "Tus recetas guardadas",
+    savedRecipesSubtitle: "Las versiones a medida que guardaste",
+    savedRecipeRemove: "Quitar del recetario",
+    savedRecipeRemoveAria: "Quitar {name} del recetario",
     ovenTitle: "Tu horno",
     ovenSubtitle:
       "Determina temperaturas y estilos disponibles",

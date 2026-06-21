@@ -321,6 +321,10 @@ export interface CmsProfile {
   favoritesSubtitle: string;
   favoriteRemove: string;
   favoriteRemoveAria: string;
+  savedRecipesTitle: string;
+  savedRecipesSubtitle: string;
+  savedRecipeRemove: string;
+  savedRecipeRemoveAria: string;
   // Sections
   ovenTitle: string;
   ovenSubtitle: string;
@@ -1866,6 +1870,10 @@ export const CMS_DEFAULTS: CmsContent = {
     favoritesSubtitle: "Gli stili a cui hai messo il cuore",
     favoriteRemove: "Rimuovi dai preferiti",
     favoriteRemoveAria: "Rimuovi {name} dai preferiti",
+    savedRecipesTitle: "Le tue ricette salvate",
+    savedRecipesSubtitle: "Le versioni su misura che hai messo da parte",
+    savedRecipeRemove: "Rimuovi dal ricettario",
+    savedRecipeRemoveAria: "Rimuovi {name} dal ricettario",
     ovenTitle: "Il tuo forno",
     ovenSubtitle: "Determina temperature e stili disponibili",
     ovenStep: "01 — Forno",

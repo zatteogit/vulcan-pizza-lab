@@ -67,6 +67,12 @@ type StyleVersion,
 } from "../components/style-versions";
 import { useStylesOverride } from "../components/styles-override-context";
 import { TOPPING_CONCEPTS, resolveTopping, TOPPING_LIBRARY } from "../components/topping-library";
+import {
+  findSavedRecipe,
+  removeRecipe,
+  saveRecipe,
+  type SavedRecipeParams,
+} from "../components/saved-recipes";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
@@ -693,6 +699,53 @@ function RecipeContent({
     [buildRecipe, matchConstraints],
   );
 
+  /* R31 — salvataggio della versione corrente nel ricettario personale.
+     Salviamo i parametri (non il risultato): al riapri la ricetta si rigenera. */
+  const currentSaveParams = useMemo<SavedRecipeParams>(
+    () => ({
+      hydration: customHydration,
+      flourW: customFlourW,
+      flourPL: customFlourPL,
+      fermentHours: customFermentHours,
+      fermentTemp: customFermentTemp,
+      usePreFerment,
+      doughBalls,
+      panConfig,
+      selectedToppingConcept,
+    }),
+    [
+      customHydration,
+      customFlourW,
+      customFlourPL,
+      customFermentHours,
+      customFermentTemp,
+      usePreFerment,
+      doughBalls,
+      panConfig,
+      selectedToppingConcept,
+    ],
+  );
+  const [savedTick, setSavedTick] = useState(0);
+  const savedEntry = useMemo(
+    () => findSavedRecipe(style.id, currentSaveParams),
+    // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
+    [style.id, currentSaveParams, savedTick],
+  );
+  const handleToggleSaveRecipe = useCallback(() => {
+    if (savedEntry) {
+      removeRecipe(savedEntry.id);
+    } else {
+      saveRecipe({
+        styleId: style.id,
+        styleName: style.name,
+        versionId: activeVersionId,
+        params: currentSaveParams,
+        score: Math.round(matchRecipe.scores.composite),
+      });
+    }
+    setSavedTick((v) => v + 1);
+  }, [savedEntry, style.id, style.name, activeVersionId, currentSaveParams, matchRecipe]);
+
   const styleVersions = useMemo(() => getVersions(style.id), [style.id]);
   const recipeTabLabel =
     recipeMode === "canonical"
@@ -886,6 +939,8 @@ function RecipeContent({
             mode={recipeMode}
             onAdapt={handleAdaptToKitchen}
             onReset={recipeMode !== "canonical" ? handleResetToCanonical : undefined}
+            onSave={handleToggleSaveRecipe}
+            saved={Boolean(savedEntry)}
           />
         }
         introExtraSlot={
