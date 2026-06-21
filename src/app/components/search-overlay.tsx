@@ -10,7 +10,9 @@ BookOpen,
 ChefHat,
 CircleDot,
 CornerDownLeft,
+Pizza,
 Search,
+UtensilsCrossed,
 Wheat,
 X
 } from "lucide-react";
@@ -25,6 +27,8 @@ import { GLOSSARY_TERMS,getLocalizedTerm } from "./glossary-data";
 import { PIZZA_FAMILIES,STYLES_DB } from "./pizza-engine";
 import { PRE_FERMENT_DB } from "./pre-ferment-guide";
 import { STYLE_PHOTOS } from "./recommended-styles";
+import { SIGNATURE_RECIPES } from "./signature-recipes";
+import { TOPPING_CONCEPTS, getVariantsForConcept } from "./topping-library";
 import { ISSUES_DB,getLocalizedIssue } from "./troubleshooting-data";
 import { useIsMobile } from "./ui/use-mobile";
 
@@ -32,7 +36,7 @@ const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
 
 /* ═══ TYPES ═══ */
-type ResultType = "style" | "glossary" | "problem" | "guide" | "flour";
+type ResultType = "style" | "recipe" | "topping" | "glossary" | "problem" | "guide" | "flour";
 
 interface SearchResult {
   id: string;
@@ -45,6 +49,8 @@ interface SearchResult {
 
 const TYPE_ICONS: Record<ResultType, { icon: typeof Search; color: string }> = {
   style: { icon: ChefHat, color: "var(--primary)" },
+  recipe: { icon: UtensilsCrossed, color: "var(--primary)" },
+  topping: { icon: Pizza, color: "var(--tertiary)" },
   flour: { icon: CircleDot, color: "var(--tertiary)" },
   glossary: { icon: BookOpen, color: "var(--cta)" },
   problem: { icon: AlertTriangle, color: "var(--tertiary)" },
@@ -54,6 +60,8 @@ const TYPE_ICONS: Record<ResultType, { icon: typeof Search; color: string }> = {
 function getCategoryLabels(pages: any): Record<ResultType, string> {
   return {
     style: pages?.searchCatStyles || "Stili",
+    recipe: pages?.searchCatRecipes || "Ricette",
+    topping: pages?.searchCatToppings || "Condimenti",
     flour: pages?.searchCatFlours || "Farine",
     glossary: pages?.searchCatGlossary || "Glossario",
     problem: pages?.searchCatProblems || "Problemi",
@@ -64,6 +72,8 @@ function getCategoryLabels(pages: any): Record<ResultType, string> {
 /* Deterministic group order */
 const GROUP_ORDER: ResultType[] = [
   "style",
+  "recipe",
+  "topping",
   "flour",
   "glossary",
   "guide",
@@ -155,6 +165,42 @@ function buildResults(query: string, cms: any): SearchResult[] {
         subtitle: familyName,
         link: `/recipe/${style.id}?mode=canonical`,
         photo: STYLE_PHOTOS[style.id] || FALLBACK,
+      });
+    }
+  }
+
+  /* Signature recipes (ricette iconiche) — deep-link a stile + condimento */
+  for (const rec of SIGNATURE_RECIPES) {
+    const styleName = STYLES_DB[rec.style_id]?.name ?? "";
+    const searchText =
+      `${rec.name} ${rec.description} ${styleName} ${rec.topping_concept_id} ${(rec.occasion_tags || []).join(" ")}`.toLowerCase();
+    if (searchText.includes(q)) {
+      hits.push({
+        id: `recipe-${rec.id}`,
+        type: "recipe",
+        title: rec.name,
+        subtitle: styleName,
+        link: `/recipe/${rec.style_id}?mode=canonical&tab=condimento&topping=${rec.topping_concept_id}`,
+        photo: rec.photo || STYLE_PHOTOS[rec.style_id] || FALLBACK,
+      });
+    }
+  }
+
+  /* Topping concepts (condimenti & farciture) — es. "boscaiola", "diavola" */
+  for (const concept of Object.values(TOPPING_CONCEPTS) as any[]) {
+    const searchText =
+      `${concept.name} ${concept.description} ${concept.id} ${(concept.occasions || []).join(" ")}`.toLowerCase();
+    if (searchText.includes(q)) {
+      const variants = getVariantsForConcept(concept.id);
+      const targetStyle = variants[0]?.preferred_for_styles?.[0] ?? "napoletana_stg";
+      hits.push({
+        id: `topping-${concept.id}`,
+        type: "topping",
+        title: concept.name,
+        subtitle:
+          concept.description.slice(0, 70) +
+          (concept.description.length > 70 ? "…" : ""),
+        link: `/recipe/${targetStyle}?mode=canonical&tab=condimento&topping=${concept.id}`,
       });
     }
   }
@@ -266,9 +312,10 @@ export function SearchOverlay({
     if (activeFilter === "all") return rawResults;
     return rawResults.filter((r) => {
       if (activeFilter === "styles") return r.type === "style";
-      if (activeFilter === "recipes") return r.type === "guide";
-      if (activeFilter === "toppings") return r.type === "flour";
-      if (activeFilter === "articles") return r.type === "glossary" || r.type === "problem";
+      if (activeFilter === "recipes") return r.type === "recipe";
+      if (activeFilter === "toppings") return r.type === "topping";
+      if (activeFilter === "articles")
+        return r.type === "glossary" || r.type === "problem" || r.type === "guide" || r.type === "flour";
       return false;
     });
   }, [rawResults, activeFilter]);
@@ -281,9 +328,9 @@ export function SearchOverlay({
   const filterOptions = [
     { id: "all", label: "Tutto", icon: Search },
     { id: "styles", label: "Stili", icon: ChefHat },
-    { id: "recipes", label: "Guide", icon: Wheat },
-    { id: "toppings", label: "Farine", icon: CircleDot },
-    { id: "articles", label: "Glossario", icon: BookOpen },
+    { id: "recipes", label: "Ricette", icon: UtensilsCrossed },
+    { id: "toppings", label: "Condimenti", icon: Pizza },
+    { id: "articles", label: "Teoria", icon: BookOpen },
   ] as const;
 
   /* Grouped + ordered for display */
