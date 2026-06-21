@@ -1200,7 +1200,7 @@ export const CMS_DEFAULTS: CmsContent = {
   steps: {
     context: { number: "01 — Contesto", title: "Quando e dove", subtitle: "Tempo, temperatura, ambiente" },
     setup: { number: "02 — Setup", title: "La tua cucina", subtitle: "Strumenti, esperienza, dispensa" },
-    styles: { number: "03 — Stile", title: "Scegli il tuo stile", subtitle: "I migliori per il tuo profilo" },
+    styles: { number: "03 — Stile", title: "Scegli il tuo stile", subtitle: "In base al tuo forno, tempo e livello" },
   },
   sections: {
     when: { title: "Quando vuoi la pizza?", description: "Seleziona il momento per calcolare i tempi di lievitazione" },
@@ -1780,7 +1780,7 @@ export const CMS_DEFAULTS: CmsContent = {
     sheetFoldLabel: "Pieghe",
     sheetFoldInterval: "Ogni {min} min",
     sheetGenerateBtn: "Genera ricetta",
-    sheetMatchTitle: "Perché combacia col tuo setup",
+    sheetMatchTitle: "Perché è adatta alla tua cucina",
     sheetTechniquesLabel: "Tecniche d'autore compatibili",
     // Timeline — beginner
     mixBeginner: "{mixer} (~{time} min di impasto). {equipment}",

@@ -793,7 +793,7 @@ export const FR_LOCALE: CmsContent = {
     sheetFoldLabel: "Pliages",
     sheetFoldInterval: "Toutes les {min} min",
     sheetGenerateBtn: "G\u00E9n\u00E9rer la recette",
-    sheetMatchTitle: "Pourquoi il correspond \u00E0 ton mat\u00E9riel",
+    sheetMatchTitle: "Pourquoi elle convient à votre cuisine",
     sheetTechniquesLabel:
       "Techniques d\u2019auteur compatibles",
     mixBeginner:

@@ -790,7 +790,7 @@ export const PT_LOCALE: CmsContent = {
     sheetFoldLabel: "Dobras",
     sheetFoldInterval: "A cada {min} min",
     sheetGenerateBtn: "Gerar receita",
-    sheetMatchTitle: "Por que combina com o teu setup",
+    sheetMatchTitle: "Por que combina com a sua cozinha",
     sheetTechniquesLabel:
       "T\u00E9cnicas de autor compat\u00EDveis",
     mixBeginner: "{mixer} (~{time} min de sova). {equipment}",

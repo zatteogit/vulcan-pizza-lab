@@ -781,7 +781,7 @@ export const DE_LOCALE: CmsContent = {
     sheetFoldLabel: "Falten",
     sheetFoldInterval: "Alle {min} Min.",
     sheetGenerateBtn: "Rezept generieren",
-    sheetMatchTitle: "Warum es zu deinem Setup passt",
+    sheetMatchTitle: "Warum sie zu deiner Küche passt",
     sheetTechniquesLabel: "Kompatible Autortechniken",
     mixBeginner: "{mixer} (~{time} Min. Kneten). {equipment}",
     bulkBeginner:

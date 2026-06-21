@@ -835,7 +835,7 @@ export const JA_LOCALE: CmsContent = {
     sheetFoldLabel: "\u6298\u308A\u305F\u305F\u307F",
     sheetFoldInterval: "{min}\u5206\u3054\u3068",
     sheetGenerateBtn: "\u30EC\u30B7\u30D4\u3092\u751F\u6210",
-    sheetMatchTitle: "\u3042\u306A\u305F\u306E\u74B0\u5883\u306B\u5408\u3046\u7406\u7531",
+    sheetMatchTitle: "あなたのキッチンに合う理由",
     sheetTechniquesLabel:
       "\u5BFE\u5FDC\u3059\u308B\u8457\u540D\u6280\u6CD5",
     mixBeginner:

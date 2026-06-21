@@ -793,7 +793,7 @@ export const ES_LOCALE: CmsContent = {
     sheetFoldLabel: "Pliegues",
     sheetFoldInterval: "Cada {min} min",
     sheetGenerateBtn: "Generar receta",
-    sheetMatchTitle: "Por qué encaja con tu configuración",
+    sheetMatchTitle: "Por qué encaja con tu cocina",
     sheetTechniquesLabel: "T\u00E9cnicas de autor compatibles",
     mixBeginner:
       "{mixer} (~{time} min de amasado). {equipment}",
