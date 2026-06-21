@@ -14,6 +14,7 @@ CircleDot,
 Egg,
 Flame,
 Globe,
+Heart,
 Home,
 Loader2,
 MapPin,
@@ -35,13 +36,14 @@ Zap,
 import { AnimatePresence,motion } from "motion/react";
 import { useCallback,useEffect,useMemo,useState } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { CMS_DEFAULTS,useCms } from "../components/cms/cms-context";
-import { Chip, CtaButton, Heading, SegmentedControl } from "../components/ds";
+import { Chip, CtaButton, Heading, IconButton, SegmentedControl } from "../components/ds";
 import {
 createFormatter,
 getPreferredUnitSystem,
 savePreferredUnitSystem,
+t,
 type UnitSystem,
 } from "../components/cms/i18n";
 import type { LocaleMeta } from "../components/cms/locales/index";
@@ -65,7 +67,11 @@ import type { OvenType,SkillLevel } from "../components/pizza-engine";
 import {
 OVEN_PRESETS,
 SKILL_LEVELS,
+STYLES_DB,
 } from "../components/pizza-engine";
+import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { STYLE_PHOTOS } from "../components/recommended-styles";
+import { loadFavoriteStyles, toggleFavoriteStyle } from "../components/saved-recipes";
 import { useDarkMode } from "../components/root-layout";
 
 /* ═══ STORAGE KEYS ═══ */
@@ -228,6 +234,96 @@ function ProfileSection({
   );
 }
 
+/* ═══ STILI PREFERITI — chiude il loop del cuore (R31) ═══
+ * Il cuore (toggleFavoriteStyle) è da sempre persistito in localStorage ma
+ * non era mostrato da nessuna parte: qui i preferiti diventano finalmente
+ * visibili e riapribili dal profilo. NB: testi IT inline da spostare nel CMS. */
+function FavoriteStylesSection() {
+  const { cms } = useCms();
+  const p = cms.profile;
+  const [favs, setFavs] = useState<string[]>(() => loadFavoriteStyles());
+
+  /* Risincronizza quando si torna sulla pagina (i preferiti cambiano altrove). */
+  useEffect(() => {
+    const sync = () => setFavs(loadFavoriteStyles());
+    window.addEventListener("focus", sync);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      window.removeEventListener("focus", sync);
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, []);
+
+  const styles = favs
+    .map((id) => STYLES_DB[id])
+    .filter((s): s is NonNullable<typeof s> => Boolean(s));
+
+  if (styles.length === 0) return null;
+
+  return (
+    <ProfileSection
+      title={p.favoritesTitle}
+      subtitle={p.favoritesSubtitle}
+      delay={0.02}
+    >
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+        {styles.map((style) => (
+          <div key={style.id} className="relative">
+            <Link
+              to={`/recipe/${style.id}?mode=canonical`}
+              className="block rounded-2xl overflow-hidden active:scale-[0.97] transition-transform group"
+              style={{
+                background: "var(--container-card)",
+                border: "1px solid var(--container-border-ghost)",
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
+              <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
+                <ImageWithFallback
+                  src={STYLE_PHOTOS[style.id]}
+                  alt={style.name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0" style={{ background: "var(--overlay-scrim)" }} />
+                <span
+                  className="font-serif absolute bottom-0 left-0 right-0 px-3 pb-2.5 pt-10"
+                  style={{
+                    fontSize: "var(--font-size-lg)",
+                    fontWeight: "var(--weight-bold)" as any,
+                    color: "var(--overlay-text)",
+                    textShadow: "var(--overlay-shadow-text)",
+                    lineHeight: "var(--leading-snug)",
+                  }}
+                >
+                  {style.name}
+                </span>
+              </div>
+            </Link>
+            <button
+              onClick={() => setFavs(toggleFavoriteStyle(style.id))}
+              className="absolute top-2 right-2 flex items-center justify-center rounded-full active:scale-90 transition-transform"
+              style={{
+                width: 30,
+                height: 30,
+                background: "color-mix(in srgb, var(--container-page) 70%, transparent)",
+                backdropFilter: "blur(8px)",
+                border: "1px solid var(--container-border-subtle)",
+                cursor: "pointer",
+              }}
+              aria-label={t(p.favoriteRemoveAria, { name: style.name })}
+              title={p.favoriteRemove}
+            >
+              <Heart size={15} fill="var(--primary)" style={{ color: "var(--primary)" }} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </ProfileSection>
+  );
+}
+
 /* ═══ EQUIPMENT CATEGORY ACCORDION ═══ */
 function EquipmentCategory({
   title,
@@ -301,7 +397,7 @@ function EquipmentCategory({
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
           style={{ flexShrink: 0 }}
         >
-          <ChevronDown size={16} style={{ color: "var(--text-muted)" }} />
+          <ChevronDown size={16} style={{ color: "var(--icon-muted)" }} />
         </motion.div>
       </motion.button>
 
@@ -1244,6 +1340,9 @@ export function ProfilePage() {
           </p>
         </div>
 
+        {/* ── STILI PREFERITI (R31) — visibile solo se ne hai ── */}
+        <FavoriteStylesSection />
+
         {/* ── FORNO ── */}
         <ProfileSection
           title={p.ovenTitle}
@@ -1716,14 +1815,17 @@ export function ProfilePage() {
                     {p.locationSaved} · {savedLocation.lat.toFixed(4)}, {savedLocation.lon.toFixed(4)}
                   </div>
                 </div>
-                <button
+                <IconButton
                   onClick={clearLocation}
-                  className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center active:scale-95 transition-transform"
+                  size="sm"
+                  radius="lg"
+                  variant="ghost"
+                  className="flex-shrink-0 active:scale-95 transition-transform"
                   style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}
                   aria-label={p.locationRemove}
                 >
-                  <X size={12} style={{ color: "var(--text-muted)" }} />
-                </button>
+                  <X size={12} style={{ color: "var(--icon-muted)" }} />
+                </IconButton>
               </motion.div>
             )}
 
@@ -1737,9 +1839,9 @@ export function ProfilePage() {
                 }}
               >
                 {locationSearching ? (
-                  <Loader2 size={14} className="animate-spin" style={{ color: "var(--text-muted)", flexShrink: 0 }} />
+                  <Loader2 size={14} className="animate-spin" style={{ color: "var(--icon-muted)", flexShrink: 0 }} />
                 ) : (
-                  <Search size={14} style={{ color: "var(--text-muted)", flexShrink: 0 }} />
+                  <Search size={14} style={{ color: "var(--icon-muted)", flexShrink: 0 }} />
                 )}
                 <input
                   type="text"
@@ -1759,7 +1861,7 @@ export function ProfilePage() {
                     className="flex-shrink-0 active:scale-95"
                     aria-label={cms.pages.searchClearLabel}
                   >
-                    <X size={14} style={{ color: "var(--text-muted)" }} />
+                    <X size={14} style={{ color: "var(--icon-muted)" }} />
                   </button>
                 )}
               </div>
@@ -1794,7 +1896,7 @@ export function ProfilePage() {
                             borderBottom: i < locationResults.length - 1 ? "1px solid var(--container-border-subtle)" : "none",
                           }}
                         >
-                          <MapPin size={13} style={{ color: "var(--text-muted)", flexShrink: 0 }} />
+                          <MapPin size={13} style={{ color: "var(--icon-muted)", flexShrink: 0 }} />
                           <div className="flex-1 min-w-0">
                             <div className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
                               {city || result.display_name.split(",")[0]}

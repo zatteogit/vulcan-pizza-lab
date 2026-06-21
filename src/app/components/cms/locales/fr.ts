@@ -17,6 +17,8 @@ export const FR_LOCALE: CmsContent = {
     back: "Retour",
     reset: "R\u00E9initialiser",
     close: "Fermer",
+    closeDetails: "Fermer les d\u00E9tails",
+    closeInsight: "Fermer",
     modify: "Modifier",
     disable: "D\u00E9sactiver",
     restore: "Restaurer",
@@ -104,6 +106,7 @@ export const FR_LOCALE: CmsContent = {
     ovenFallback: "Four",
     pantryFlours: "Farines",
     pantryYeasts: "Levures",
+    equipByHand: "\u00C0 la main",
     equipMixer: "P\u00E9trin",
     equipStone: "Pierre r\u00E9fractaire",
     equipSteel: "Plaque en acier",
@@ -447,7 +450,7 @@ export const FR_LOCALE: CmsContent = {
     semola: "Croustillant, couleur dor\u00E9e",
   },
   filters: {
-    advancedLabel: "Filtres avanc\u00E9s",
+    advancedLabel: "Plus",
     removeFilters: "Supprimer les filtres",
     brandedFlours: "Farines de marque",
     settingsOpen: "Param\u00E8tres",
@@ -913,6 +916,10 @@ export const FR_LOCALE: CmsContent = {
   profile: {
     pageTitle: "Votre Profil",
     pageSubtitle: "Vos préférences, toujours à portée de main.",
+    favoritesTitle: "Vos styles favoris",
+    favoritesSubtitle: "Les styles que vous avez aimÃ©s",
+    favoriteRemove: "Retirer des favoris",
+    favoriteRemoveAria: "Retirer {name} des favoris",
     ovenTitle: "Votre four",
     ovenSubtitle:
       "Détermine les températures et styles disponibles",
@@ -1151,6 +1158,10 @@ export const FR_LOCALE: CmsContent = {
     searchCloseLabel: "Fermer la recherche",
     searchFieldLabel: "Champ de recherche global",
     searchClearLabel: "Effacer la recherche",
+    homeAria: "Vulcan Pizza Lab — Accueil",
+    devToolsAria: "Outils d\u00E9veloppeur",
+    mottoAria: "Devise Vulcan",
+    troubleshootSearchPlaceholder: "Rechercher un sympt\u00F4me ou une cause...",
     dietaryWarningsTitle:
       "Avertissements diététiques",
     troubleshootingTitle:

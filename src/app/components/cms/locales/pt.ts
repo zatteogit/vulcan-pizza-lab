@@ -912,6 +912,10 @@ export const PT_LOCALE: CmsContent = {
   profile: {
     pageTitle: "Seu Perfil",
     pageSubtitle: "Suas preferências, sempre à mão.",
+    favoritesTitle: "Seus estilos favoritos",
+    favoritesSubtitle: "Os estilos que vocÃª curtiu",
+    favoriteRemove: "Remover dos favoritos",
+    favoriteRemoveAria: "Remover {name} dos favoritos",
     ovenTitle: "Seu forno",
     ovenSubtitle:
       "Determina temperaturas e estilos disponíveis",

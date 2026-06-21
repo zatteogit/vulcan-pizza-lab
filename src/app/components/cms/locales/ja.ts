@@ -980,6 +980,10 @@ export const JA_LOCALE: CmsContent = {
     pageTitle: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB",
     pageSubtitle:
       "\u3042\u306A\u305F\u306E\u8A2D\u5B9A\u3001\u3044\u3064\u3067\u3082\u624B\u306E\u5C4A\u304F\u3068\u3053\u308D\u306B\u3002",
+    favoritesTitle: "ãæ°ã«å¥ãã®ã¹ã¿ã¤ã«",
+    favoritesSubtitle: "ãã¼ããä»ããã¹ã¿ã¤ã«",
+    favoriteRemove: "ãæ°ã«å¥ãããåé¤",
+    favoriteRemoveAria: "{name}ããæ°ã«å¥ãããåé¤",
     ovenTitle:
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3",
     ovenSubtitle:

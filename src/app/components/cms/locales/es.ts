@@ -20,6 +20,8 @@ export const ES_LOCALE: CmsContent = {
     back: "Volver",
     reset: "Reiniciar",
     close: "Cerrar",
+    closeDetails: "Cerrar detalles",
+    closeInsight: "Cerrar",
     modify: "Editar",
     disable: "Desactivar",
     restore: "Restaurar",
@@ -107,6 +109,7 @@ export const ES_LOCALE: CmsContent = {
     ovenFallback: "Horno",
     pantryFlours: "Harinas",
     pantryYeasts: "Levaduras",
+    equipByHand: "A mano",
     equipMixer: "Amasadora",
     equipStone: "Piedra refractaria",
     equipSteel: "Plancha de acero",
@@ -202,7 +205,7 @@ export const ES_LOCALE: CmsContent = {
       hours: 5,
     },
     tomorrow_lunch: {
-      label: "Ma\u00F1ana almuerzo",
+      label: "Ma\u00F1ana al almuerzo",
       sublabel: "16\u201320 horas",
       emoji: "\u2600\uFE0F",
       hours: 18,
@@ -450,8 +453,8 @@ export const ES_LOCALE: CmsContent = {
     semola: "Crujiente, color dorado",
   },
   filters: {
-    advancedLabel: "Filtros avanzados",
-    removeFilters: "Quitar filtros avanzados",
+    advancedLabel: "M\u00E1s",
+    removeFilters: "Quitar filtros",
     brandedFlours: "Harinas de marca",
     settingsOpen: "Ajustes",
     settingsClosed: "Tus ajustes",
@@ -914,6 +917,10 @@ export const ES_LOCALE: CmsContent = {
   profile: {
     pageTitle: "Tu Perfil",
     pageSubtitle: "Tus preferencias, siempre a mano.",
+    favoritesTitle: "Tus estilos favoritos",
+    favoritesSubtitle: "Los estilos que marcaste con el corazÃ³n",
+    favoriteRemove: "Quitar de favoritos",
+    favoriteRemoveAria: "Quitar {name} de favoritos",
     ovenTitle: "Tu horno",
     ovenSubtitle:
       "Determina temperaturas y estilos disponibles",
@@ -1147,6 +1154,10 @@ export const ES_LOCALE: CmsContent = {
     searchCloseLabel: "Cerrar b\u00FAsqueda",
     searchFieldLabel: "Campo de b\u00FAsqueda global",
     searchClearLabel: "Borrar b\u00FAsqueda",
+    homeAria: "Vulcan Pizza Lab — Inicio",
+    devToolsAria: "Herramientas de desarrollo",
+    mottoAria: "Lema Vulcan",
+    troubleshootSearchPlaceholder: "Busca s\u00EDntoma o causa...",
     dietaryWarningsTitle: "Avisos dietéticos",
     troubleshootingTitle: "¿Problemas con la receta?",
     troubleshootingDesc:

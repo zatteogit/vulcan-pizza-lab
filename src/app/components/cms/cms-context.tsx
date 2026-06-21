@@ -39,6 +39,8 @@ export interface CmsUiStrings {
   back: string;
   reset: string;
   close: string;
+  closeDetails: string;
+  closeInsight: string;
   modify: string;
   disable: string;
   restore: string;
@@ -138,6 +140,7 @@ export interface CmsUiStrings {
   pantryFlours: string;
   pantryYeasts: string;
   // Equipment labels
+  equipByHand: string;
   equipMixer: string;
   equipStone: string;
   equipSteel: string;
@@ -313,6 +316,11 @@ export interface CmsGlossaryTerms {
 export interface CmsProfile {
   pageTitle: string;
   pageSubtitle: string;
+  // Favorites (R31)
+  favoritesTitle: string;
+  favoritesSubtitle: string;
+  favoriteRemove: string;
+  favoriteRemoveAria: string;
   // Sections
   ovenTitle: string;
   ovenSubtitle: string;
@@ -540,6 +548,10 @@ export interface CmsPages {
   searchCloseLabel: string;
   searchFieldLabel: string;
   searchClearLabel: string;
+  homeAria: string;
+  devToolsAria: string;
+  mottoAria: string;
+  troubleshootSearchPlaceholder: string;
   // Home result section
   dietaryWarningsTitle: string;
   troubleshootingTitle: string;
@@ -679,6 +691,10 @@ export interface CmsContent {
    *  cooking-mode, active-cook-widget). Template con {placeholder} via t(). */
   cooking: {
     sectionsAria: string;
+    toppingPrevAria: string;
+    toppingNextAria: string;
+    notPersonalizedAria: string;
+    ballEstimateTooltip: string;
     tabRecipe: string;
     tabRecipeTailored: string;
     tabProcedure: string;
@@ -1035,6 +1051,8 @@ export const CMS_DEFAULTS: CmsContent = {
     back: "Indietro",
     reset: "Resetta",
     close: "Chiudi",
+    closeDetails: "Chiudi dettagli",
+    closeInsight: "Chiudi approfondimento",
     modify: "Modifica",
     disable: "Disattiva",
     restore: "Ripristina",
@@ -1137,6 +1155,7 @@ export const CMS_DEFAULTS: CmsContent = {
     pantryFlours: "Farine",
     pantryYeasts: "Lieviti",
     // Equipment labels
+    equipByHand: "A mano",
     equipMixer: "Impastatrice",
     equipStone: "Pietra refrattaria",
     equipSteel: "Piastra in acciaio",
@@ -1189,7 +1208,7 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   timeSlots: {
     tonight:         { label: "Stasera",        sublabel: "4-6 ore",   emoji: "\u{1F319}", hours: 5 },
-    tomorrow_lunch:  { label: "Domani pranzo",  sublabel: "16-20 ore", emoji: "\u2600\uFE0F",  hours: 18 },
+    tomorrow_lunch:  { label: "Domani a pranzo",  sublabel: "16-20 ore", emoji: "\u2600\uFE0F",  hours: 18 },
     tomorrow_dinner: { label: "Domani sera",    sublabel: "24-28 ore", emoji: "\u{1F306}", hours: 26 },
     day_after:       { label: "Dopodomani",     sublabel: "40-48 ore", emoji: "\u{1F4C5}", hours: 44 },
     weekend:         { label: "Nel weekend",    sublabel: "72+ ore",   emoji: "\u{1F389}", hours: 72 },
@@ -1249,6 +1268,10 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   cooking: {
     sectionsAria: "Sezioni della ricetta",
+    toppingPrevAria: "Condimento precedente",
+    toppingNextAria: "Condimento successivo",
+    notPersonalizedAria: "Ricetta non ancora personalizzata",
+    ballEstimateTooltip: "Stima indicativa basata sulla pezzatura tradizionale dello stile",
     tabRecipe: "Ricetta",
     tabRecipeTailored: "Ricetta su misura",
     tabProcedure: "Procedimento",
@@ -1331,7 +1354,7 @@ export const CMS_DEFAULTS: CmsContent = {
     ovenNeedsAdaptation: "Richiede adattamento temperatura",
     procedureHeroDescription: "Procedimento guidato per {style}: {steps}, {duration} totali e {oven}.",
     toppingNotesTitle: "Accorgimenti condimento",
-    toppingAmountsNote: "Dosi totali per {n} {unit}; sotto ogni riga trovi anche la dose per {perUnit}.",
+    toppingAmountsNote: "Nota: le dosi sono calibrate per singolo panetto/unità. Gli ingredienti sono elencati in ordine di stesura (dal primo strato sulla base all'ultimo in superficie).",
     toppingPerUnit: "{amount} per {unit}",
     durationLabel: "Durata: {duration}",
     comfortLabel: "{duration} comfort",
@@ -1456,8 +1479,8 @@ export const CMS_DEFAULTS: CmsContent = {
     semola: "Croccantezza, colore dorato",
   },
   filters: {
-    advancedLabel: "Filtri avanzati",
-    removeFilters: "Rimuovi filtri avanzati",
+    advancedLabel: "Altro",
+    removeFilters: "Rimuovi filtri",
     brandedFlours: "Farine di marca",
     settingsOpen: "Impostazioni",
     settingsClosed: "Le tue impostazioni",
@@ -1839,6 +1862,10 @@ export const CMS_DEFAULTS: CmsContent = {
   profile: {
     pageTitle: "Il tuo Profilo",
     pageSubtitle: "Le tue preferenze, sempre a portata di mano.",
+    favoritesTitle: "I tuoi stili preferiti",
+    favoritesSubtitle: "Gli stili a cui hai messo il cuore",
+    favoriteRemove: "Rimuovi dai preferiti",
+    favoriteRemoveAria: "Rimuovi {name} dai preferiti",
     ovenTitle: "Il tuo forno",
     ovenSubtitle: "Determina temperature e stili disponibili",
     ovenStep: "01 — Forno",
@@ -2045,6 +2072,10 @@ export const CMS_DEFAULTS: CmsContent = {
     searchCloseLabel: "Chiudi ricerca",
     searchFieldLabel: "Campo di ricerca globale",
     searchClearLabel: "Cancella ricerca",
+    homeAria: "Vulcan Pizza Lab — Home",
+    devToolsAria: "Developer Tools",
+    mottoAria: "Vulcan motto",
+    troubleshootSearchPlaceholder: "Cerca sintomo o causa...",
     dietaryWarningsTitle: "Avvisi dietetici",
     troubleshootingTitle: "Problemi con la ricetta?",
     troubleshootingDesc: "Consulta la guida a 20 problemi comuni e soluzioni",
