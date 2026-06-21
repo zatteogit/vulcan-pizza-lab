@@ -5,3 +5,7 @@ dist/
 .env
 .env.*
 vulcan.command
+
+# Asset di lavoro / dati locali — non versionare (binari pesanti)
+temp/
+user-data/
