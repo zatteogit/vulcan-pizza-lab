@@ -1008,6 +1008,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "classico",
     preferred_for_styles: ["calzone_napoletano"],
     preferred_for_families: ["napoletana"],
+    compatible_layouts: ["closed_stuffed"],
     ingredients: [
       { name: "Ricotta fresca (siero di latte, sale)", amount: { value: 100, unit: "g" }, section: "ripieno" },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" }, section: "ripieno" },
@@ -1391,20 +1392,40 @@ export function getRecipesByAuthenticity(style: PizzaStyle): Array<{
     experimental: 3,
     taboo: 4,
   };
+  /* R30 (layout-aware): gli stili farciti/chiusi accettano solo topping pensati
+     per quel layout. Un topping "da superficie" (margherita, boscaiola…) su un
+     ciaccino sigillato o una focaccia di Recco è fuori contesto: lo si tiene
+     fuori dai "featured" declassandolo a experimental. */
+  const SEALED_LAYOUTS = new Set<LayoutType>(["closed_stuffed", "double_thin_sheet"]);
+  const styleLayout = style.layout?.type as LayoutType | undefined;
+  const layoutIncompatible = (recipe: ToppingRecipe): boolean => {
+    if (!styleLayout) return false;
+    if (recipe.compatible_layouts) return !recipe.compatible_layouts.includes(styleLayout);
+    // topping universale (nessuna dichiarazione) → non adatto ai layout sigillati
+    return SEALED_LAYOUTS.has(styleLayout);
+  };
   return Object.values(TOPPING_LIBRARY)
     .map((recipe) => {
       let authenticity: AuthenticityScore = "experimental";
       if (recipe.taboo_for_styles?.includes(style.id) || recipe.taboo_for_families?.includes(style.family)) {
         authenticity = "taboo";
+      } else if (layoutIncompatible(recipe)) {
+        authenticity = "experimental";
       } else if (recipe.preferred_for_styles?.includes(style.id)) {
         authenticity = "canonical";
       } else if (recipe.preferred_for_families?.includes(style.family)) {
         authenticity = "natural";
       } else if (
-        recipe.variant_name === "classica" ||
-        recipe.variant_name === "generica" ||
-        recipe.id.endsWith("_generica") ||
-        recipe.id.endsWith("_classica")
+        (recipe.variant_name === "classica" ||
+          recipe.variant_name === "generica" ||
+          recipe.id.endsWith("_generica") ||
+          recipe.id.endsWith("_classica")) &&
+        /* R30: un topping "classico" è un'alternativa universale solo se NON è
+           ancorato a stili specifici. Le ricette regionali (detroit_brick,
+           chicago_deep_classic, montanara_classica, focaccia_barese_classica…)
+           hanno preferred_for_styles: fuori dai loro stili sono sperimentali,
+           non vanno proposte come "Alternativa" (es. Detroit sotto Napoletana). */
+        !(recipe.preferred_for_styles && recipe.preferred_for_styles.length > 0)
       ) {
         authenticity = "common";
       }
