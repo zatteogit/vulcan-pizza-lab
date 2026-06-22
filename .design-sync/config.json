@@ -1,0 +1,21 @@
+{
+  "pkg": "@figma/my-make-file",
+  "globalName": "VulcanDS",
+  "shape": "package",
+  "srcDir": "src",
+  "tsconfig": "tsconfig.json",
+  "cssEntry": ".design-sync/compiled-styles.css",
+  "componentSrcMap": {
+    "Chip": "src/app/components/ds/Chip.tsx",
+    "Badge": "src/app/components/ds/Badge.tsx",
+    "CtaButton": "src/app/components/ds/CtaButton.tsx",
+    "FilterChip": "src/app/components/ds/FilterChip.tsx",
+    "Heading": "src/app/components/ds/Heading.tsx",
+    "IconButton": "src/app/components/ds/IconButton.tsx",
+    "Stepper": "src/app/components/ds/Stepper.tsx",
+    "SegmentedControl": "src/app/components/ds/SegmentedControl.tsx",
+    "Surface": "src/app/components/ds/Surface.tsx",
+    "Switch": "src/app/components/ds/Switch.tsx"
+  },
+  "readmeHeader": ".design-sync/conventions.md"
+}

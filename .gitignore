@@ -9,3 +9,8 @@ vulcan.command
 # Asset di lavoro / dati locali — non versionare (binari pesanti)
 temp/
 user-data/
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
