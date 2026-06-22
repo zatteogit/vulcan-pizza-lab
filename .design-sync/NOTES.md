@@ -40,3 +40,17 @@ Repo is a **Vite app**, not a packaged component library. The synced design syst
 - Build entry is a **source barrel**, so `.d.ts` contracts come from ts-morph over source (no shipped
   types). Generic components (Badge/CtaButton/Surface/IconButton use `<T extends ElementType>`;
   SegmentedControl `<TValue extends string>`) may need `cfg.dtsPropsFor` if extraction degrades.
+
+## Onda 1 — B-free (2026-06-22)
+Aggiunti 5 componenti context-free fuori da `ds/`, via entry barrel dedicato.
+- **Entry**: `cfg.entry = src/app/components/ds/_sync-entry.ts` (re-esporta `ds/*` + i B-free).
+  Tiene pulita l'API pubblica `ds/index.ts`. Le prossime onde crescono qui.
+- **Aggiunti (gruppo `app/`)**: ScoreRing, TiltCard, DoughBlob, VulcanMark, StepIllustration → 15 totali.
+- **FireGlow ESCLUSO di proposito**: è un layer ambient `fixed inset-0` a bassa opacità.
+  Senza box di layout misurabile l'harness lo cattura blank/thin (provato Frame + dark Stage:
+  inservibile). Non è un componente componibile → fuori dal DS. Se mai servisse, va ripensato
+  come effetto contenibile (`position: absolute` dentro un parent), non `fixed`.
+- **StepIllustration `[RENDER_THIN]` è benigno**: gli SVG illustrativi si disegnano (verificato
+  a schermo), ma non hanno testo → l'euristica lo flagga. Non bloccante, non rilavorare.
+- **DoughBlob**: la variante `neural` renderizza vuota in static → nelle preview usare
+  rest/rise/forge/stretch/spin/fold (non `neural`).

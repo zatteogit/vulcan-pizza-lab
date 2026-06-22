@@ -5,6 +5,7 @@
   "shape": "package",
   "srcDir": "src",
   "tsconfig": "tsconfig.json",
+  "entry": "src/app/components/ds/_sync-entry.ts",
   "cssEntry": ".design-sync/compiled-styles.css",
   "componentSrcMap": {
     "Chip": "src/app/components/ds/Chip.tsx",
@@ -16,7 +17,12 @@
     "Stepper": "src/app/components/ds/Stepper.tsx",
     "SegmentedControl": "src/app/components/ds/SegmentedControl.tsx",
     "Surface": "src/app/components/ds/Surface.tsx",
-    "Switch": "src/app/components/ds/Switch.tsx"
+    "Switch": "src/app/components/ds/Switch.tsx",
+    "ScoreRing": "src/app/components/score-ring.tsx",
+    "TiltCard": "src/app/components/tilt-card.tsx",
+    "DoughBlob": "src/app/components/dough-mascot.tsx",
+    "VulcanMark": "src/app/components/vulcan-logo.tsx",
+    "StepIllustration": "src/app/components/step-illustrations.tsx"
   },
   "readmeHeader": ".design-sync/conventions.md"
 }
