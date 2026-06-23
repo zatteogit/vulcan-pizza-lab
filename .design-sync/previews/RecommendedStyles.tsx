@@ -17,7 +17,7 @@ const constraints = {
 
 export function Recommendations() {
   return (
-    <div style={{ width: 520 }}>
+    <div style={{ width: "100%", maxWidth: 520 }}>
       <RecommendedStyles constraints={constraints as any} selectedStyle={null} onSelectStyle={() => {}} />
     </div>
   );

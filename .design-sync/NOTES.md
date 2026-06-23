@@ -94,3 +94,17 @@ Aggiunti 4 componenti che usano `useCms` → 19 totali. Approccio chiave:
   - **RecommendedStyles** è l'UNICO componente che usa le foto stile → con l'override le slot
     foto sono grigie (placeholder). Accettabile: in un design l'agente fornisce le proprie immagini.
   - RecipeConfigurator NON sincronizzato: 15+ prop + PizzaStyle fixture pesante, basso ROI.
+
+## Guard multi-breakpoint (2026-06-23) — CANCELLO prima di pushare
+`node .design-sync/verify-breakpoints.mjs` (richiede playwright in .ds-sync/node_modules).
+Renderizza ogni componente con gli artefatti REALI (`components/<g>/<Name>/<Name>.html` →
+styles.css + _ds_bundle.js + closure, gli stessi che claude.ai/design carica) a **375/768/1280px**.
+Segnala: **overflow** documento, **clip** per-cella (cella ha `overflow:hidden` → un preview troppo
+largo viene TAGLIATO senza overflow del documento — era la causa degli svarioni a mobile), render
+**vuoti**, **errori** veri (i Warning React dev sono filtrati). Exit 1 se flag → **non pushare**.
+Output: `.design-sync/.cache/breakpoints/<Name>__<w>.png` + `_sheet__<w>.png` (contact sheet per review).
+- **Lezione**: le preview con `width: N` fisso vengono tagliate nelle card strette → usare sempre
+  `width: "100%"` + `maxWidth: N`. Corrette: Dialog, BottomSheet, ContextualWarnings,
+  RecommendedStyles, Carousel, Divider.
+- **Allowlist nota**: RecommendedStyles ha `ERR_FILE_NOT_FOUND` (foto stile stubate dall'override) →
+  fallback grigio, accettato, non bloccante.

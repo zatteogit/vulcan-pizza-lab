@@ -2,7 +2,7 @@ import { Divider } from "@figma/my-make-file";
 
 export function Horizontal() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20, width: 320 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, width: "100%", maxWidth: 320 }}>
       <Divider />
       <Divider label="oppure" />
     </div>

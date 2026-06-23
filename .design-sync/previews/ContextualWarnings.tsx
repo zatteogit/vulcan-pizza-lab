@@ -2,7 +2,7 @@ import { ContextualWarnings } from "@figma/my-make-file";
 
 export function Warnings() {
   return (
-    <div style={{ width: 460 }}>
+    <div style={{ width: "100%", maxWidth: 460 }}>
       <ContextualWarnings
         hydration={82}
         flourW={250}

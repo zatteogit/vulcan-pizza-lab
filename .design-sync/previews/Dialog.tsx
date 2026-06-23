@@ -5,7 +5,8 @@ export function Confirm() {
     <div
       style={{
         position: "relative",
-        width: 400,
+        width: "100%",
+        maxWidth: 400,
         height: 260,
         borderRadius: 16,
         overflow: "hidden",

@@ -5,7 +5,8 @@ export function Open() {
     <div
       style={{
         position: "relative",
-        width: 380,
+        width: "100%",
+        maxWidth: 380,
         height: 280,
         borderRadius: 16,
         overflow: "hidden",

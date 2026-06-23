@@ -8,8 +8,8 @@ const STYLES = [
 
 export function Styles() {
   return (
-    <div style={{ width: 320 }}>
-      <Carousel itemWidth={240}>
+    <div style={{ width: "100%", maxWidth: 340 }}>
+      <Carousel itemWidth={220}>
         {STYLES.map((s) => (
           <Surface key={s.name} variant="card" style={{ padding: 16 }}>
             <Heading level="sm">{s.name}</Heading>
