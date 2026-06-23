@@ -42,7 +42,9 @@
     "Snackbar": "src/app/components/ds/Snackbar.tsx",
     "Dialog": "src/app/components/ds/Dialog.tsx",
     "BottomSheet": "src/app/components/ds/BottomSheet.tsx",
-    "Carousel": "src/app/components/ds/Carousel.tsx"
+    "Carousel": "src/app/components/ds/Carousel.tsx",
+    "RecommendedStyles": "src/app/components/recommended-styles.tsx",
+    "ContextualWarnings": "src/app/components/troubleshooting-panel.tsx"
   },
   "readmeHeader": ".design-sync/conventions.md"
 }

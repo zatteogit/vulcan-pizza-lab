@@ -36,3 +36,7 @@ export { Snackbar } from "./Snackbar";
 export { Dialog } from "./Dialog";
 export { BottomSheet } from "./BottomSheet";
 export { Carousel } from "./Carousel";
+
+/* ── Onda 4 — feature/pattern riusabili (curati, app-coupled) ── */
+export { RecommendedStyles } from "../recommended-styles";
+export { ContextualWarnings } from "../troubleshooting-panel";

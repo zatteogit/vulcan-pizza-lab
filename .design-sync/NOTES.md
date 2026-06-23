@@ -77,3 +77,20 @@ Aggiunti 4 componenti che usano `useCms` → 19 totali. Approccio chiave:
   update della skill, ri-verificare che il fork non sia divergente (il converter stampa
   `[OVERRIDE] using …`; dichiarato in cfg.libOverrides).
 - **FireGlow** resta escluso (vedi onda 1).
+
+## Onda 3 + 4 — primitive nuove + pattern curati (2026-06-23)
+- **Onda 3 (demo-only, 13 primitive scritte da zero)**: Checkbox, RadioButton, Divider,
+  Slider, Select, Fab, StepHeader, Progress, Spinner, Snackbar, Dialog, BottomSheet, Carousel.
+  Veri componenti `ds/`, context-free, token-driven, estratti dalle demo dei `*Spec`.
+  - **Font via token** `--font-sans/--font-mono/--font-serif` — MAI `'DM Sans'` hardcoded
+    (il pre-commit `check:tokens` blocca, F5-6).
+  - **Nomi PascalCase**: `Fab`, non `FAB` (all-caps → il converter lo tratta come costante,
+    niente card).
+  - **Overlay (Dialog/BottomSheet)**: prop `inline` → overlay `absolute` nel parent invece di
+    `fixed`, così l'harness di preview li cattura (il `fixed` rende blank, come FireGlow).
+- **Onda 4 (feature/pattern curati, scelta dell'utente "2-3 più riusabili")**: RecommendedStyles,
+  ContextualWarnings (da troubleshooting-panel). Le altre 6 feature screen restano backlog
+  (sono schermate T6, non building block — vedi docs/design-system-sync-gap.md).
+  - **RecommendedStyles** è l'UNICO componente che usa le foto stile → con l'override le slot
+    foto sono grigie (placeholder). Accettabile: in un design l'agente fornisce le proprie immagini.
+  - RecipeConfigurator NON sincronizzato: 15+ prop + PizzaStyle fixture pesante, basso ROI.
