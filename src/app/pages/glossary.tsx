@@ -7,19 +7,19 @@ Search,
 import { AnimatePresence,motion } from "motion/react";
 import { useEffect,useMemo,useState } from "react";
 import { useLocation,useNavigate } from "react-router";
-import { useCms } from "../components/cms/cms-context";
-import { t } from "../components/cms/i18n";
-import { FilterChip, IconButton } from "../components/ds";
+import { useCms } from "../features/cms/cms-context";
+import { t } from "../features/cms/i18n";
+import { FilterChip, IconButton } from "../components/ds/index";
 import type {
 GlossaryCategory,
 GlossaryTerm,
-} from "../components/glossary-data";
+} from "../data/glossary-data";
 import {
 GLOSSARY_CATEGORIES,
 GLOSSARY_TERMS,
 getTermById,
 getTermsByCategory,
-} from "../components/glossary-data";
+} from "../data/glossary-data";
 
 export function GlossaryPage() {
   const navigate = useNavigate();

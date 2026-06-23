@@ -14,11 +14,11 @@ Vulcan è una **SPA React Router 7** (`createBrowserRouter`): entry `main.tsx` �
 | `src/main.tsx` | 13 | `createRoot` + `StrictMode` → `App` |
 | `src/app/App.tsx` | 6 | `RouterProvider` con `router` da `routes.ts` |
 | `src/app/routes.ts` | 94 | Definizione route lazy, redirect legacy, catch-all |
-| `src/app/components/app-shell.tsx` | 755 | Layout principale, barre liquid-glass a 3 tab, trigger ricerca integrato, ProfileButton top-right, provider e sessione cucina globale |
-| `src/app/components/search-overlay.tsx` | 791 | Command palette: stili, glossario, problemi, guide, farine |
+| `src/app/components/shared/app-shell.tsx` | 755 | Layout principale, barre liquid-glass a 3 tab, trigger ricerca integrato, ProfileButton top-right, provider e sessione cucina globale |
+| `src/app/components/shared/search-overlay.tsx` | 791 | Command palette: stili, glossario, problemi, guide, farine |
 | `src/app/pages/not-found.tsx` | 73 | Pagina 404 personalizzata con fallback CMS ed animazioni spring |
-| `src/app/components/root-layout.tsx` | 82 | **@deprecated** — stesso pattern provider, dark mode booleano legacy |
-| `src/app/components/search-button.tsx` | 65 | Bottone circolare standardizzato "apri ricerca" (T5) con icona e dimensioni calcolate proporzionalmente |
+| `src/app/components/shared/root-layout.tsx` | 82 | **@deprecated** — stesso pattern provider, dark mode booleano legacy |
+| `src/app/components/shared/search-button.tsx` | 65 | Bottone circolare standardizzato "apri ricerca" (T5) con icona e dimensioni calcolate proporzionalmente |
 | `src/vite-env.d.ts` | 1 | File di dichiarazione dei tipi client di Vite (asset statici, import.meta.env) |
 
 **Config build**: `vite.config.ts` — porta dev **5174**, `historyApiFallback`, alias `@` → `src/`, chunk manuali (`vendor-react`, `vendor-motion`), plugin Tailwind e stub per import `figma:asset/...`.

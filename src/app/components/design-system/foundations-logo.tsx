@@ -10,8 +10,8 @@ import {
   AccessibilitaInfo,
 } from "./shared";
 import type { SectionEntry } from "./shared";
-import { VulcanMark } from "../vulcan-logo";
-import type { VulcanVariant } from "../vulcan-logo";
+import { VulcanMark } from "../shared/vulcan-logo";
+import type { VulcanVariant } from "../shared/vulcan-logo";
 import { LogoHeroSubSection, LogoFireGlowSubSection, LogoDoughBlobSubSection } from "./foundations-logo-brand";
 
 /* ═══════════════════════════════════════════════════════════

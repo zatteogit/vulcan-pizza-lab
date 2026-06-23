@@ -6,7 +6,7 @@
    Tool: /dev, /design-system, /cms (nascosti dalla tab bar) */
 
 import { createBrowserRouter, redirect } from "react-router";
-import { AppShell } from "./components/app-shell";
+import { AppShell } from "./components/shared/app-shell";
 
 function RouteHydrateFallback() {
   return null;

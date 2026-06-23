@@ -1,8 +1,8 @@
 import { motion } from "motion/react";
 import { useState } from "react";
-import { DoughBlob,type DoughVariant } from "../dough-mascot";
-import { VulcanHero } from "../vulcan-hero";
-import type { VulcanVariant } from "../vulcan-logo";
+import { DoughBlob,type DoughVariant } from "../../features/cooking/dough-mascot";
+import { VulcanHero } from "../shared/vulcan-hero";
+import type { VulcanVariant } from "../shared/vulcan-logo";
 
 /* ═══════════════════════════════════════════════════════════
    Logo Brand Sub-sections (extracted from foundations-logo.tsx)

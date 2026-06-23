@@ -39,47 +39,36 @@ npm run check:tokens # Design token compliance only
 
 All pages are **lazy-loaded** via React Router's `lazy()` for code-splitting.
 
-### Core Components (`src/app/components/`)
+### Code Structure (`src/app/`)
 
-**Domain Logic:**
-- `pizza-engine.ts` — Parametric pizza calculation engine (hydration, fermentation, baking times, temperatures)
-- `recipe-configurator.tsx` — UI for adjusting recipe parameters
-- `recipe-output.tsx` — Display calculated recipe results and step-by-step instructions
-- `recipe-view.tsx` — Recipe detail layout and navigation
-- `recipe-match-card.tsx`, `recommended-styles.tsx` — Match and recommendations UI
-- `style-editor-tab.tsx` — Edit/create pizza styles (in dev tools)
-- `sync-tab.tsx` — Vulcan Cloud sync dashboard
-
-**Data & Databases:**
-- `pizza-engine.ts` — Also contains pizza style definitions and lookup tables
-- `topping-library.ts` — Topping database (80+ toppings with metadata)
-- `flour-database.ts` — Flour types with hydration/extensibility profiles
-- `equipment-data.ts` — Oven types, temperatures, baking methods
-- `parametric-databases.ts` — Fermentation schedules, baking curves, guidelines
-- `style-versions.ts` — Version history for pizza styles
-- `glossary-data.ts`, `troubleshooting-data.ts`, `pre-ferment-guide.tsx` — Educational content
-- `dietary-data.ts`, `saved-recipes.ts`, `signature-recipes.ts` — User data
-
-**UI & Utilities:**
-- `app-shell.tsx` — Root layout with tab bar (Create, Explore, Learn, Profile) + search overlay
-- `search-overlay.tsx` — Command palette (⌘K)
-- `design-system/` — UI components (modals, buttons, cards, etc.)
-- `ds/` — Reusable design system components (not for raw usage, prefer `design-system/`)
-- `ui/` — Dead code (see sync.mjs EXCLUDE_PATTERNS)
-
-**Feature Modules:**
-- `active-cook-widget.tsx` — Current cook session display
-- `cooking-mode.tsx` — Guided cooking interface
-- `recipe-feedback.tsx` — Feedback collection and analysis
-- `recipe-setup-panel.tsx`, `recipe-learning-panel.tsx` — Contextual help
-- `style-detail-sheet.tsx` — Pizza style information panel
-- `user-needs.tsx` — User preference capture
-
-**Utilities:**
-- `use-recipe-state.ts` — React hook for recipe state management
-- `use-profile-defaults.ts` — User profile hook
-- `impasto-library.ts`, `interpretation-library.ts` — Pizza terminology/knowledge base
-- `deviation-tags.ts`, `liquid-dock.ts` — Internal utilities
+- **`domain/`** — Core non-UI logic, math, and engine formulas
+  - `pizza-engine.ts` — Parametric pizza calculation engine
+  - `deviation-tags.ts` — Recipe deviations computation
+  - `liquid-dock.ts` — Mathematical calculations for liquids
+- **`data/`** — Static databases and preset list values
+  - `flour-database.ts` — Flour types and profiles
+  - `topping-library.ts` — Topping database
+  - `equipment-data.ts` — Ovens and baking methods
+  - `parametric-databases.ts` — Fermentation scales and baking curves
+  - `glossary-data.ts`, `troubleshooting-data.ts` — Educational lists
+  - `signature-recipes.ts`, `saved-recipes.ts` — User and signature recipe databases
+  - `style-versions.ts` — Version history of pizza styles
+- **`hooks/`** — Shared custom React hooks
+  - `use-recipe-state.ts` — Core state management for the config engine
+  - `use-profile-defaults.ts` — Hook for profile settings
+  - `use-mobile.ts` — Media query check
+- **`context/`** — Shared React contexts
+  - `styles-override-context.tsx` — Override custom style settings
+- **`components/`** — Global components and UI layout
+  - `shared/` — Shell layout, command search (`app-shell.tsx`, `search-overlay.tsx`)
+  - `ds/` — Tier 4 reusable design system tokens (CtaButton, Badge)
+  - `design-system/`, `foundations/` — Design token interactive showcase pages
+  - `cms/` — Locales context and translation helpers
+  - `media/` — Media wrappers (`ImageWithFallback.tsx`)
+- **`features/`** — Feature-specific component groups
+  - `recipe/` — Recipe creation UI (`recipe-configurator.tsx`, `recipe-output.tsx`, `recipe-view.tsx`)
+  - `cooking/` — Active cook dashboard (`cooking-mode.tsx`, `active-cook-widget.tsx`, `dough-mascot.tsx`)
+  - `dev-tools/` — Diagnostics (`dev-tools.tsx`, `engine-test-suite.tsx`, `sync-tab.tsx`)
 
 ### Styling (`src/styles/`)
 - `theme.css` — Design tokens (Tier 1–4, semantic colors, typography)
@@ -163,12 +152,12 @@ Edit `src/app/routes.ts`:
 
 ## Key Files to Know
 
-- **`pizza-engine.ts`** — Most important file. Contains pizza style DB, calculation logic, parametric models.
-- **`recipe-output.tsx`** — Large, transforms engine output to UI. Split into smaller components if editing.
-- **`app-shell.tsx`** — Root layout, tab navigation, search integration.
-- **`style-editor-tab.tsx`** — Complex dev tool for creating/editing pizza styles.
-- **`theme.css`** — Source of truth for design tokens. Changes trigger `check:tokens` linting.
-- **`vite.config.ts`** — Dev server config, build output, plugin order matters.
+- **`src/app/domain/pizza-engine.ts`** — Core pizza styles DB, calculation engine, and formulas.
+- **`src/app/features/recipe/recipe-output.tsx`** — Key output sheet, transforms engine results to interactive UI instructions.
+- **`src/app/components/shared/app-shell.tsx`** — Root layout, navigation tabs, command palette integration.
+- **`src/app/features/dev-tools/style-editor-tab.tsx`** — Interactive manager for creating/editing pizza styles.
+- **`src/styles/theme.css`** — Design tokens source of truth (enforced via `npm run check:tokens`).
+- **`vite.config.ts`** — Build settings, dev server configuration, and rollup manual chunking logic.
 
 ## Notes
 

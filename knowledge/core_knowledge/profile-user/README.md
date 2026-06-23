@@ -1,5 +1,5 @@
 # Profilo e vincoli utente
-> Aggiornamento: 2026-06-18 | Stato: ✅ | File documentati: 4
+> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 4
 
 ## Sommario
 
@@ -10,9 +10,9 @@ Persistenza preferenze utente in **localStorage** e bridge verso `UserConstraint
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
 | `src/app/pages/profile.tsx` | 2280 | UI profilo, FTU 3 domande + congedo, preferenze unità, PizzaNerd, salvataggio preferenze, reset confermato |
-| `src/app/components/use-profile-defaults.ts` | 145 | `loadProfileDefaults()` / `useProfileDefaults()` → `UserConstraints` + `pizzaNerdEnabled` |
-| `src/app/components/user-needs.tsx` | 1366 | Wizard home: constraints live, weather, time slots con sublabel dinamico e nuova sezione "Tu" |
-| `src/app/components/saved-recipes.ts` | 155 | Ricettario personale, preferiti stile, dedup parametri, date relative |
+| `src/app/hooks/use-profile-defaults.ts` | 145 | `loadProfileDefaults()` / `useProfileDefaults()` → `UserConstraints` + `pizzaNerdEnabled` |
+| `src/app/features/recipe/user-needs.tsx` | 1366 | Wizard home: constraints live, weather, time slots con sublabel dinamico e nuova sezione "Tu" |
+| `src/app/data/saved-recipes.ts` | 155 | Ricettario personale, preferiti stile, dedup parametri, date relative |
 
 **Integrazioni:** `home.tsx` (`useProfileDefaults` + `UserNeeds`), `recipe.tsx` (carica direttamente oven/skill/pantry/dietary da localStorage), `equipment-data.ts` (picker attrezzatura), `pizza-engine` (`UserConstraints`, `OVEN_PRESETS`, `SKILL_LEVELS`, `generateTimeSlots`).
 

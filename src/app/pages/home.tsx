@@ -17,7 +17,7 @@ useRef,
 useState,
 } from "react";
 import { Link } from "react-router";
-import { FireGlow } from "../components/fire-glow";
+import { FireGlow } from "../features/cooking/fire-glow";
 import {
 getDefaultDoughBalls,
 generateTimeSlots,
@@ -27,39 +27,39 @@ PizzaStyle,
 STYLES_DB,
 TimeSlot,
 UserConstraints,
-} from "../components/pizza-engine";
-import { RecipeConfigurator } from "../components/recipe-configurator";
-import { RecipeMatchCard } from "../components/recipe-match-card";
-import { RecipeSetupPanel } from "../components/recipe-setup-panel";
-import { RecipeStatStrip } from "../components/recipe-stat-strip";
-import { RecipeView } from "../components/recipe-view";
-import { RecommendedStyles,STYLE_PHOTOS } from "../components/recommended-styles";
-import { useDarkMode } from "../components/root-layout";
-import { type SettingsTab, UserNeeds } from "../components/user-needs";
-import { VulcanHero } from "../components/vulcan-hero";
+} from "../domain/pizza-engine";
+import { RecipeConfigurator } from "../features/recipe/recipe-configurator";
+import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
+import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
+import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
+import { RecipeView } from "../features/recipe/recipe-view";
+import { RecommendedStyles,STYLE_PHOTOS } from "../features/recipe/recommended-styles";
+import { useDarkMode } from "../components/shared/root-layout";
+import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
+import { VulcanHero } from "../components/shared/vulcan-hero";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
-import { useCms } from "../components/cms/cms-context";
-import { getDietaryWarnings } from "../components/dietary-data";
+import { useCms } from "../features/cms/cms-context";
+import { getDietaryWarnings } from "../data/dietary-data";
 import {
   getInterpretationById,
   type Interpretation,
-} from "../components/interpretation-library";
-import { RecipePrimaryTab } from "../components/recipe-section-tabs";
-import { StyleDetailSheet } from "../components/style-detail-sheet";
+} from "../data/interpretation-library";
+import { RecipePrimaryTab } from "../features/recipe/recipe-section-tabs";
+import { StyleDetailSheet } from "../features/recipe/style-detail-sheet";
 import {
   getVersions,
   type StyleVersion,
-} from "../components/style-versions";
-import { useStylesOverride } from "../components/styles-override-context";
-import { ContextualWarnings } from "../components/troubleshooting-panel";
-import { useProfileDefaults } from "../components/use-profile-defaults";
+} from "../data/style-versions";
+import { useStylesOverride } from "../context/styles-override-context";
+import { ContextualWarnings } from "../features/recipe/troubleshooting-panel";
+import { useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
   defaultRecipePL,
   type RecipeInitialState,
   type RecipeMode,
   useRecipeState,
-} from "../components/use-recipe-state";
-import { CtaButton, Heading, IconButton } from "../components/ds";
+} from "../hooks/use-recipe-state";
+import { CtaButton, Heading, IconButton } from "../components/ds/index";
 
 type AppStep = "settings" | "styles" | "result";
 type StyleSettingsPanel = SettingsTab | "time";

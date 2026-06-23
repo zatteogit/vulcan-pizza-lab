@@ -11,11 +11,11 @@ Integrazione: `recipe.tsx` e `home.tsx` montano `RecipeMatchCard`; `recipe.tsx` 
 
 | File | Ruolo |
 |------|--------|
-| `src/app/components/recipe-match-card.tsx` | 371 righe; card compatibilità/fattibilità con composite score, stato forno e barre dei 5 assi |
-| `src/app/components/score-ring.tsx` | 71 righe; anello SVG compatto (score 0–100) per liste stili |
-| `src/app/components/recipe-feedback.tsx` | 542 righe; form progressivo post-ricetta: tentativo, riuscita, dettagli opzionali, issues, note → `saveFeedback` |
-| `src/app/components/feedback-store.ts` | 548 righe; tipi, `localStorage` (`vulcan_recipe_feedback`), analisi calibrazione, export/import CSV/JSON, `ADVERSARIAL_FINDINGS` |
-| `src/app/components/feedback-analysis.tsx` | 544 righe; pannello DevTools (Engine Lab → Feedback): panoramica, issues, success per stile, audit adversarial |
+| `src/app/features/recipe/recipe-match-card.tsx` | 371 righe; card compatibilità/fattibilità con composite score, stato forno e barre dei 5 assi |
+| `src/app/features/recipe/score-ring.tsx` | 71 righe; anello SVG compatto (score 0–100) per liste stili |
+| `src/app/features/recipe/recipe-feedback.tsx` | 542 righe; form progressivo post-ricetta: tentativo, riuscita, dettagli opzionali, issues, note → `saveFeedback` |
+| `src/app/features/recipe/feedback-store.ts` | 548 righe; tipi, `localStorage` (`vulcan_recipe_feedback`), analisi calibrazione, export/import CSV/JSON, `ADVERSARIAL_FINDINGS` |
+| `src/app/features/recipe/feedback-analysis.tsx` | 544 righe; pannello DevTools (Engine Lab → Feedback): panoramica, issues, success per stile, audit adversarial |
 
 **Motore (riferimento):** `SCORE_DIMENSIONS`, `calculate*Score`, `resolveEngineMsgs` in `pizza-engine.ts`.
 

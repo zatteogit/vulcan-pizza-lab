@@ -1,8 +1,10 @@
 {
-  "name": "@vulcan/ds",
-  "private": true,
+  "name": "@zatteogit/vulcan",
   "version": "0.0.1",
   "type": "module",
+  "files": [
+    "ds-bundle/"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -43,5 +45,9 @@
     "overrides": {
       "vite": "6.3.5"
     }
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   }
 }

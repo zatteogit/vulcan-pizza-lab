@@ -13,12 +13,12 @@ Il pannello `TroubleshootingPanel` è riusato anche nel **flusso ricetta** (`Con
 |------|----------------|--------|
 | `src/app/pages/learn.tsx` | 573 | Hub Impara: hero editoriale, percorso skill-aware, risorse e 3 card verso sotto-route con passaggio del parametro `?style=` |
 | `src/app/pages/glossary.tsx` | 809 | UI glossario: ricerca, categorie, espansione, deeplink hash |
-| `src/app/components/glossary-data.ts` | 482 | `GLOSSARY_TERMS` (32 termini), 6 categorie, getter i18n |
+| `src/app/data/glossary-data.ts` | 482 | `GLOSSARY_TERMS` (32 termini), 6 categorie, getter i18n |
 | `src/app/pages/troubleshooting.tsx` | 63 | Pagina full-page con header sticky + `TroubleshootingGuide` |
-| `src/app/components/troubleshooting-data.ts` | 347 | `ISSUES_DB` (18 issue), `getContextualWarnings` |
-| `src/app/components/troubleshooting-panel.tsx` | 469 | `ContextualWarnings` + `TroubleshootingGuide` espandibile |
+| `src/app/data/troubleshooting-data.ts` | 347 | `ISSUES_DB` (18 issue), `getContextualWarnings` |
+| `src/app/features/recipe/troubleshooting-panel.tsx` | 469 | `ContextualWarnings` + `TroubleshootingGuide` espandibile |
 | `src/app/pages/pre-ferments.tsx` | 388 | Pagina guida pre-fermenti + tabella confronto CMS |
-| `src/app/components/pre-ferment-guide.tsx` | 451 | `PRE_FERMENT_DB`, `PreFermentCard`, uso in `recipe-output` quando PizzaNerd + pre-fermento |
+| `src/app/features/recipe/pre-ferment-guide.tsx` | 451 | `PRE_FERMENT_DB`, `PreFermentCard`, uso in `recipe-output` quando PizzaNerd + pre-fermento |
 
 **Integrazione search**: `search-overlay.tsx` indicizza termini glossario, issue e guide pre-fermenti con link diretti.
 

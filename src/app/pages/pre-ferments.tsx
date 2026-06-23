@@ -1,13 +1,13 @@
 import { ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
 import { Link } from "react-router";
-import { Heading } from "../components/ds";
-import { useCms } from "../components/cms/cms-context";
+import { Heading } from "../components/ds/index";
+import { useCms } from "../features/cms/cms-context";
 import {
 COMPARISON_ROWS,
 PreFermentCard
-} from "../components/pre-ferment-guide";
-import { Flask } from "../components/step-illustrations";
+} from "../features/recipe/pre-ferment-guide";
+import { Flask } from "../features/cooking/step-illustrations";
 
 const PRE_FERMENT_ORDER = [
   "biga",

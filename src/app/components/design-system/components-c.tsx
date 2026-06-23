@@ -21,7 +21,7 @@ import {
   AccessibilitaInfo,
 } from "./shared";
 import type { SectionEntry } from "./shared";
-import { SCORE_DIMENSIONS } from "../pizza-engine";
+import { SCORE_DIMENSIONS } from "../../domain/pizza-engine";
 
 /* ═══════════════════════════════════════════════════════════
    COMPONENT SPEC SHEETS C11–C13

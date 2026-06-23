@@ -16,19 +16,19 @@ Componenti condivisi: `RecipeView`, `RecipeSectionTabs`, `RecipeConfigurator`, `
 |------|--------|
 | `src/app/pages/recipe.tsx` | Route `/recipe/:styleId`; URL query per caricamento parametri/versioni; gestisce parallax scroll su hero ed effettua il mount di `RecipeSetupPanel` |
 | `src/app/pages/home.tsx` | Wizard `AppStep`: `settings` \| `styles` \| `result`; instanzia `useRecipeState` per la configurazione live dei parametri; redirect a `/profile` se onboarding incompleto |
-| `src/app/components/use-recipe-state.ts` | Custom Hook che incapsula lo stato reattivo della ricetta (parametri custom, versione attiva, interpretazione e pan) per Home e RecipePage |
-| `src/app/components/recipe-setup-panel.tsx` | Pannello di setup/customizzazione ricetta estratto da `recipe.tsx`; gestisce la selezione delle versioni d'autore (via `PremiumSelect`) e dei parametri con scroll lock del body |
-| `src/app/components/recipe-view.tsx` | Shell condivisa della scheda ricetta per Home e Detail: hero, back/share, tab Ricetta/Procedimento, slot match/intro/controlli e render di `RecipeOutput` |
-| `src/app/components/recipe-section-tabs.tsx` | Tab primary `ricetta` / `procedimento`, inline o navbar mobile, con label CMS e ARIA tablist |
-| `src/app/components/recipe-match-card.tsx` | Card compatibilità/fattibilità: composite score, stato forno e barre dei 5 assi con label estese CMS |
-| `src/app/components/recipe-learning-panel.tsx` | Dialog "Approfondimento" su stile: descrizione, famiglia/origine e caratteristiche chiave |
-| `src/app/components/recipe-configurator.tsx` | Slider parametri, Smart Link, adaptive hints, `PremiumSelect`; export `VersionChips` e `applyVersionParams` |
-| `src/app/components/recipe-output.tsx` | Procedimento e ingredienti; timeline con orari e descrizione estesa; proximity UI #54 per teglie; stima persone; toggle sub-pannello regola 55; condimenti riscalati; comfort time alert con ricalcolo suggestedStart locale BCP-47 |
-| `src/app/components/recipe-stat-strip.tsx` | 4 KPI (idratazione, forno, cottura, lievitazione) + riga nerd opzionale |
-| `src/app/components/cook-session.tsx` | Context provider e gestore dello stato persistente della sessione di cottura attiva (`vulcan_cook_session` in `localStorage`), inclusi i countdown e le notifiche di sistema |
-| `src/app/components/active-cook-widget.tsx` | Widget mobile-friendly galleggiante (Live Activity su web) visibile globalmente in tutta l'applicazione per monitorare il progresso dello step corrente |
-| `src/app/components/cooking-mode.tsx` | Overlay immersivo a schermo intero per la guida passo-passo durante la preparazione, integrato con Wake Lock API per mantenere lo schermo active |
-| `src/app/components/step-illustrations.tsx` | Componente per il rendering di grafiche line-art SVG ottimizzate per il responsive e il tema (dark/light mode), che funge da fallback per futuri video |
+| `src/app/hooks/use-recipe-state.ts` | Custom Hook che incapsula lo stato reattivo della ricetta (parametri custom, versione attiva, interpretazione e pan) per Home e RecipePage |
+| `src/app/features/recipe/recipe-setup-panel.tsx` | Pannello di setup/customizzazione ricetta estratto da `recipe.tsx`; gestisce la selezione delle versioni d'autore (via `PremiumSelect`) e dei parametri con scroll lock del body |
+| `src/app/features/recipe/recipe-view.tsx` | Shell condivisa della scheda ricetta per Home e Detail: hero, back/share, tab Ricetta/Procedimento, slot match/intro/controlli e render di `RecipeOutput` |
+| `src/app/features/recipe/recipe-section-tabs.tsx` | Tab primary `ricetta` / `procedimento`, inline o navbar mobile, con label CMS e ARIA tablist |
+| `src/app/features/recipe/recipe-match-card.tsx` | Card compatibilità/fattibilità: composite score, stato forno e barre dei 5 assi con label estese CMS |
+| `src/app/features/recipe/recipe-learning-panel.tsx` | Dialog "Approfondimento" su stile: descrizione, famiglia/origine e caratteristiche chiave |
+| `src/app/features/recipe/recipe-configurator.tsx` | Slider parametri, Smart Link, adaptive hints, `PremiumSelect`; export `VersionChips` e `applyVersionParams` |
+| `src/app/features/recipe/recipe-output.tsx` | Procedimento e ingredienti; timeline con orari e descrizione estesa; proximity UI #54 per teglie; stima persone; toggle sub-pannello regola 55; condimenti riscalati; comfort time alert con ricalcolo suggestedStart locale BCP-47 |
+| `src/app/features/recipe/recipe-stat-strip.tsx` | 4 KPI (idratazione, forno, cottura, lievitazione) + riga nerd opzionale |
+| `src/app/features/cooking/cook-session.tsx` | Context provider e gestore dello stato persistente della sessione di cottura attiva (`vulcan_cook_session` in `localStorage`), inclusi i countdown e le notifiche di sistema |
+| `src/app/features/cooking/active-cook-widget.tsx` | Widget mobile-friendly galleggiante (Live Activity su web) visibile globalmente in tutta l'applicazione per monitorare il progresso dello step corrente |
+| `src/app/features/cooking/cooking-mode.tsx` | Overlay immersivo a schermo intero per la guida passo-passo durante la preparazione, integrato con Wake Lock API per mantenere lo schermo active |
+| `src/app/features/cooking/step-illustrations.tsx` | Componente per il rendering di grafiche line-art SVG ottimizzate per il responsive e il tema (dark/light mode), che funge da fallback per futuri video |
 
 **Route:** `src/app/routes.ts` — `{ path: "recipe/:styleId", Component: RecipePage }`.
 

@@ -7,24 +7,24 @@ import { ArrowRight } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useMemo,useState } from "react";
 import { Link } from "react-router";
-import { Heading } from "../components/ds";
-import { useCms } from "../components/cms/cms-context";
+import { Heading } from "../components/ds/index";
+import { useCms } from "../features/cms/cms-context";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
-import { FireGlow } from "../components/fire-glow";
-import { getInterpretationById } from "../components/interpretation-library";
+import { FireGlow } from "../features/cooking/fire-glow";
+import { getInterpretationById } from "../data/interpretation-library";
 import {
 PIZZA_FAMILIES,
 STYLES_DB,
 type FamilyId,
 type PizzaStyle,
-} from "../components/pizza-engine";
-import { STYLE_PHOTOS } from "../components/recommended-styles";
+} from "../domain/pizza-engine";
+import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import {
 SIGNATURE_RECIPES,
 type SignatureRecipe,
-} from "../components/signature-recipes";
-import { useStylesOverride } from "../components/styles-override-context";
-import { TiltCard } from "../components/tilt-card";
+} from "../data/signature-recipes";
+import { useStylesOverride } from "../context/styles-override-context";
+import { TiltCard } from "../features/recipe/tilt-card";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";

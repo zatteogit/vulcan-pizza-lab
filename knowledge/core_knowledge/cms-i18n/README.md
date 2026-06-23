@@ -1,5 +1,5 @@
 # CMS e localizzazione
-> Aggiornamento: 2026-06-19 | Stato: ✅ | File documentati: 17
+> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 17
 
 ## Sommario
 
@@ -15,22 +15,22 @@ Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazi
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/components/cms/cms-context.tsx` | 3143 | Schema `CmsContent`, `CMS_DEFAULTS` con `cooking`, `misc`, `feedback`, `longDesc`/`tipNerd`, `CmsProvider`, merge, persistenza, rimozione pulita degli override ritornati a default |
-| `src/app/components/cms/i18n.ts` | 286 | `t()`, `createFormatter()`, `formatTemperatureCopy`, `formatLengthCopy`, conversioni metric/imperial, `vulcan_unit_system` |
-| `src/app/components/cms/domain-i18n-defaults.ts` | 598 | Default IT: `PRE_FERMENT_DEFAULTS`, `DIETARY_I18N_DEFAULTS`, `TROUBLESHOOTING_I18N_DEFAULTS`, `GLOSSARY_TERMS_DEFAULTS` |
-| `src/app/components/cms/locales/index.ts` | 88 | `LOCALE_BUNDLES`, `LOCALE_META`, `LOCALE_BCP47` |
-| `src/app/components/cms/locales/en.ts` | 1362 | Bundle EN completo (`EN_LOCALE: CmsContent`) |
-| `src/app/components/cms/locales/domain-en.ts` | 817 | Override dominio EN (pre-fermenti, dietary, troubleshooting, glossario) |
-| `src/app/components/cms/locales/de.ts` | 1291 | Bundle DE (Tedesco) completo (`DE_LOCALE`) |
-| `src/app/components/cms/locales/domain-de.ts` | 481 | Override dominio DE (Vorteig, Dietary, Troubleshooting, Glossary) |
-| `src/app/components/cms/locales/es.ts` | 1258 | Bundle ES (Spagnolo) completo (`ES_LOCALE`) |
-| `src/app/components/cms/locales/domain-es.ts` | 480 | Override dominio ES (Vorteig, Dietary, Troubleshooting, Glossary) |
-| `src/app/components/cms/locales/fr.ts` | 1264 | Bundle FR (Francese) completo (`FR_LOCALE`) |
-| `src/app/components/cms/locales/domain-fr.ts` | 480 | Override dominio FR (Vorteig, Dietary, Troubleshooting, Glossary) |
-| `src/app/components/cms/locales/ja.ts` | 1427 | Bundle JA (Giapponese) completo (`JA_LOCALE`) |
-| `src/app/components/cms/locales/domain-ja.ts` | 480 | Override dominio JA (Vorteig, Dietary, Troubleshooting, Glossary) |
-| `src/app/components/cms/locales/pt.ts` | 1255 | Bundle PT (Portoghese) completo (`PT_LOCALE`) |
-| `src/app/components/cms/locales/domain-pt.ts` | 480 | Override dominio PT (Vorteig, Dietary, Troubleshooting, Glossary) |
+| `src/app/features/cms/cms-context.tsx` | 3143 | Schema `CmsContent`, `CMS_DEFAULTS` con `cooking`, `misc`, `feedback`, `longDesc`/`tipNerd`, `CmsProvider`, merge, persistenza, rimozione pulita degli override ritornati a default |
+| `src/app/features/cms/i18n.ts` | 286 | `t()`, `createFormatter()`, `formatTemperatureCopy`, `formatLengthCopy`, conversioni metric/imperial, `vulcan_unit_system` |
+| `src/app/features/cms/domain-i18n-defaults.ts` | 598 | Default IT: `PRE_FERMENT_DEFAULTS`, `DIETARY_I18N_DEFAULTS`, `TROUBLESHOOTING_I18N_DEFAULTS`, `GLOSSARY_TERMS_DEFAULTS` |
+| `src/app/features/cms/locales/index.ts` | 88 | `LOCALE_BUNDLES`, `LOCALE_META`, `LOCALE_BCP47` |
+| `src/app/features/cms/locales/en.ts` | 1362 | Bundle EN completo (`EN_LOCALE: CmsContent`) |
+| `src/app/features/cms/locales/domain-en.ts` | 817 | Override dominio EN (pre-fermenti, dietary, troubleshooting, glossario) |
+| `src/app/features/cms/locales/de.ts` | 1291 | Bundle DE (Tedesco) completo (`DE_LOCALE`) |
+| `src/app/features/cms/locales/domain-de.ts` | 481 | Override dominio DE (Vorteig, Dietary, Troubleshooting, Glossary) |
+| `src/app/features/cms/locales/es.ts` | 1258 | Bundle ES (Spagnolo) completo (`ES_LOCALE`) |
+| `src/app/features/cms/locales/domain-es.ts` | 480 | Override dominio ES (Vorteig, Dietary, Troubleshooting, Glossary) |
+| `src/app/features/cms/locales/fr.ts` | 1264 | Bundle FR (Francese) completo (`FR_LOCALE`) |
+| `src/app/features/cms/locales/domain-fr.ts` | 480 | Override dominio FR (Vorteig, Dietary, Troubleshooting, Glossary) |
+| `src/app/features/cms/locales/ja.ts` | 1427 | Bundle JA (Giapponese) completo (`JA_LOCALE`) |
+| `src/app/features/cms/locales/domain-ja.ts` | 480 | Override dominio JA (Vorteig, Dietary, Troubleshooting, Glossary) |
+| `src/app/features/cms/locales/pt.ts` | 1255 | Bundle PT (Portoghese) completo (`PT_LOCALE`) |
+| `src/app/features/cms/locales/domain-pt.ts` | 480 | Override dominio PT (Vorteig, Dietary, Troubleshooting, Glossary) |
 | `src/app/pages/cms.tsx` | 1320 | Editor: sezioni, import/export JSON, switch lingua, dark mode |
 
 **Bundle lingua** (oltre EN): `es.ts`, `de.ts`, `fr.ts`, `pt.ts`, `ja.ts` + rispettivi `domain-*.ts`.

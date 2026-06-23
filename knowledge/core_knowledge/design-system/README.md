@@ -14,7 +14,7 @@ Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modell
 | `src/app/components/foundations/` | Cartella contenente le showcase cards per visualizzare i token reali delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) (Tier 4) |
 | `src/app/pages/design-system.tsx` | Route `/design-system`: header sticky, toggle dark, render `DesignSystemTab` |
 | `src/app/pages/dev.tsx` | Route `/dev` e `/dev/:tab` → wrapper `DevTools` |
-| `src/app/components/dev-tools.tsx` | Tab dev incluso `design` → `DesignSystemTab` |
+| `src/app/features/dev-tools/dev-tools.tsx` | Tab dev incluso `design` → `DesignSystemTab` |
 | `src/app/components/design-system/index.tsx` | Registry `ALL_ENTRIES`, ordini `FOUNDATION_ORDER` / `COMPONENT_ORDER` / `PATTERN_ORDER`, navigazione sidebar |
 | `src/app/components/design-system/shared.tsx` | `SectionEntry`, `DSCtx`, `resolveVar`, `useResolvedVars`, componenti showcase comuni |
 | `src/app/components/design-system/foundations.tsx` | Token core: colori, tipografia, spacing, shape, elevation, states |
@@ -28,12 +28,12 @@ Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modell
 | `src/app/components/design-system/components-a.tsx` … `components-h.tsx` | Specimen componenti UI (bottoni, input, score, carousel, …) |
 | `src/app/components/design-system/carousel-variants.tsx` | Varianti carousel M3 |
 | `src/app/components/design-system/patterns-templates.tsx` | Pattern P01–P06, template pagina build/result |
-| `src/app/components/dough-mascot.tsx` | `DoughBlob` reattivo all'energia con 7 varianti (`stretch`, `rise`, `rest`, `spin`, `fold`, `forge`, `neural`) |
-| `src/app/components/fire-glow.tsx` | Sfondo a gradiente radiale animato con varianti `warm` e `neural` |
+| `src/app/features/cooking/dough-mascot.tsx` | `DoughBlob` reattivo all'energia con 7 varianti (`stretch`, `rise`, `rest`, `spin`, `fold`, `forge`, `neural`) |
+| `src/app/features/cooking/fire-glow.tsx` | Sfondo a gradiente radiale animato con varianti `warm` e `neural` |
 | `src/app/components/media/ImageWithFallback.tsx` | Image component con fallback SVG se caricamento fallisce |
-| `src/app/components/info-tip.tsx` | M3 Rich Tooltip fluttuante per info ed errori contestuali |
-| `src/app/components/vulcan-hero.tsx` | Composizione brand-identity vulcan: DoughBlob ("forge") + VulcanMark centralizzato |
-| `src/app/components/vulcan-logo.tsx` | `VulcanMark` geometrico del brand con 5 scale ottiche per viewBox 32x32 |
+| `src/app/components/shared/info-tip.tsx` | M3 Rich Tooltip fluttuante per info ed errori contestuali |
+| `src/app/components/shared/vulcan-hero.tsx` | Composizione brand-identity vulcan: DoughBlob ("forge") + VulcanMark centralizzato |
+| `src/app/components/shared/vulcan-logo.tsx` | `VulcanMark` geometrico del brand con 5 scale ottiche per viewBox 32x32 |
 
 ## Flusso dati
 

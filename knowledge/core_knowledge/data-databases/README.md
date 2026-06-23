@@ -1,5 +1,5 @@
 # Database parametrici e dati
-> Aggiornamento: 2026-06-19 | Stato: ✅ | File documentati: 5
+> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 5
 
 ## Sommario
 
@@ -11,11 +11,11 @@ Fonte dichiarata nel codice: export Notion (marzo 2026). I DB parametrici copron
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/components/parametric-databases.ts` | 344 | 10 DB + lookup per `styleId`; `getStyleParametrics()` aggrega tutto |
-| `src/app/components/flour-database.ts` | 619 | `FLOURS_DB` (25 farine), helper W/stile/suggerimento |
-| `src/app/components/equipment-data.ts` | 385 | Mixer, superfici, utensili; `EquipmentState`, migrazione, localizzazione CMS |
-| `src/app/components/dietary-data.ts` | 138 | Warning contestuali FODMAP/istamina/gluten-free/nickel localizzati via CMS |
-| `src/app/components/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, tag multi-dimensionali; rimosso `AUTHOR_VARIANTS` migrato in `interpretation-library.ts` |
+| `src/app/data/parametric-databases.ts` | 344 | 10 DB + lookup per `styleId`; `getStyleParametrics()` aggrega tutto |
+| `src/app/data/flour-database.ts` | 619 | `FLOURS_DB` (25 farine), helper W/stile/suggerimento |
+| `src/app/data/equipment-data.ts` | 385 | Mixer, superfici, utensili; `EquipmentState`, migrazione, localizzazione CMS |
+| `src/app/data/dietary-data.ts` | 138 | Warning contestuali FODMAP/istamina/gluten-free/nickel localizzati via CMS |
+| `src/app/domain/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, tag multi-dimensionali; rimosso `AUTHOR_VARIANTS` migrato in `interpretation-library.ts` |
 
 **Consumatori principali:** `pizza-engine.ts` (`STYLE_DEVIATIONS`, `getToppingByStyle`), `recipe-output.tsx` (parametriche in output), `style-detail-sheet.tsx`, `engine-test-suite.tsx`, `explore.tsx`, `recommended-styles.tsx`, `search-overlay.tsx`, `home.tsx` (`getDietaryWarnings`), `profile.tsx` (equipment), `recipe-configurator.tsx` (tipo `FlourEntry`).
 

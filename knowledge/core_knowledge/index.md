@@ -2,7 +2,7 @@
 
 > Ultimo aggiornamento: 2026-06-23 | Comando: `kipi update` | Stato globale: **completo (10/10 capitoli)**
 
-Applicazione React/Vite per ricette pizza: motore parametrico (`pizza-engine`), flusso ricetta, CMS/i18n, stili e versioni, scoring e contenuti didattici. L'update 2026-06-23 registra la ristrutturazione del Design System in un modello a tier T1-T6 (DTCG-ready), l'unificazione del visual showcase, l'estrazione di `useRecipeState` e `RecipeSetupPanel`, e l'aggiornamento dei parametri fisici degli stili pizza.
+Applicazione React/Vite per ricette pizza: motore parametrico (`pizza-engine`), flusso ricetta, CMS/i18n, stili e versioni, scoring e contenuti didattici. L'update 2026-06-23 registra la ristrutturazione del Design System in un modello a tier T1-T6 (DTCG-ready), l'unificazione del visual showcase, l'estrazione di `useRecipeState` e `RecipeSetupPanel`, l'aggiornamento dei parametri fisici degli stili pizza, e la configurazione di pubblicazione npm su GitHub Packages.
 
 ## Metriche (da codice reale)
 

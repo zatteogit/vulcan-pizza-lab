@@ -22,13 +22,13 @@ useState,
 type ReactNode,
 } from "react";
 import { Link,useParams,useSearchParams } from "react-router";
-import { useCms,type CmsContent } from "../components/cms/cms-context";
-import { createFormatter } from "../components/cms/i18n";
+import { useCms,type CmsContent } from "../features/cms/cms-context";
+import { createFormatter } from "../features/cms/i18n";
 import {
 getInterpretationById,
 getInterpretationsForStyle,
 type Interpretation
-} from "../components/interpretation-library";
+} from "../data/interpretation-library";
 import {
 OVEN_PRESETS,
 PIZZA_FAMILIES,
@@ -44,35 +44,35 @@ type PizzaStyle,
 type RecipeScores,
 type SkillLevel,
 type UserConstraints
-} from "../components/pizza-engine";
+} from "../domain/pizza-engine";
 import {
 PremiumSelect,
 RecipeConfigurator,
 applyVersionParams,
-} from "../components/recipe-configurator";
-import { RecipeLearningPanel } from "../components/recipe-learning-panel";
-import { RecipeMatchCard,matchTone } from "../components/recipe-match-card";
+} from "../features/recipe/recipe-configurator";
+import { RecipeLearningPanel } from "../features/recipe/recipe-learning-panel";
+import { RecipeMatchCard,matchTone } from "../features/recipe/recipe-match-card";
 import {
 type RecipePrimaryTab,
-} from "../components/recipe-section-tabs";
-import { RecipeStatStrip } from "../components/recipe-stat-strip";
-import { RecipeView } from "../components/recipe-view";
-import { STYLE_PHOTOS } from "../components/recommended-styles";
-import { CtaButton, Heading } from "../components/ds";
+} from "../features/recipe/recipe-section-tabs";
+import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
+import { RecipeView } from "../features/recipe/recipe-view";
+import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
+import { CtaButton, Heading } from "../components/ds/index";
 import {
 getDefaultVersion,
 getVersionById,
 getVersions,
 type StyleVersion,
-} from "../components/style-versions";
-import { useStylesOverride } from "../components/styles-override-context";
-import { TOPPING_CONCEPTS, resolveTopping, TOPPING_LIBRARY } from "../components/topping-library";
+} from "../data/style-versions";
+import { useStylesOverride } from "../context/styles-override-context";
+import { TOPPING_CONCEPTS, resolveTopping, TOPPING_LIBRARY } from "../data/topping-library";
 import {
   findSavedRecipe,
   removeRecipe,
   saveRecipe,
   type SavedRecipeParams,
-} from "../components/saved-recipes";
+} from "../data/saved-recipes";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";

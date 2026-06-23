@@ -4,7 +4,7 @@
    Deep-link ?style=<id>: pre-filtra contestualmente (invariato). */
 
 import { useMemo } from "react";
-import { t } from "../components/cms/i18n";
+import { t } from "../features/cms/i18n";
 import { motion } from "motion/react";
 import {
   X,
@@ -12,23 +12,23 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
-import { Heading } from "../components/ds";
-import { useCms } from "../components/cms/cms-context";
-import { STYLES_DB, SKILL_LEVELS, type SkillLevel } from "../components/pizza-engine";
+import { Heading } from "../components/ds/index";
+import { useCms } from "../features/cms/cms-context";
+import { STYLES_DB, SKILL_LEVELS, type SkillLevel } from "../domain/pizza-engine";
 import {
   GLOSSARY_TERMS,
   GLOSSARY_CATEGORIES,
   getLocalizedTerm,
-} from "../components/glossary-data";
-import { FireGlow } from "../components/fire-glow";
+} from "../data/glossary-data";
+import { FireGlow } from "../features/cooking/fire-glow";
 import {
   Bowl,
   Flask,
   RisingDough,
   Oven as OvenIllustration,
   Slice,
-} from "../components/step-illustrations";
-import { loadSkill } from "../components/use-profile-defaults";
+} from "../features/cooking/step-illustrations";
+import { loadSkill } from "../hooks/use-profile-defaults";
 
 /* ── Percorsi consigliati per livello ── */
 const PATHS: Record<

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-23T12:33:00.000Z",
+  "lastUpdated": "2026-06-23T14:30:47.262Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 141,
@@ -10,10 +10,10 @@
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-23 applicato a modello tier DS, useRecipeState, RecipeSetupPanel, SearchButton e calibrazioni fisiche stili.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-23 (2a passata) registra la configurazione per la pubblicazione del pacchetto npm su GitHub Packages (@zatteogit/vulcan).",
   "filesMappedCount": 140,
   "nextRecommendedScan": null,
-  "nextRecommendedScanMessage": "KB sincronizzata \u2014 usare kipi update dopo modifiche codice",
+  "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
   "lastScannedChapter": "kipi-update-2026-06-23",
   "chapters": [
     {
@@ -21,12 +21,12 @@
       "title": "Motore pizza e ricetta",
       "status": "completed",
       "filesDocumented": [
-        "src/app/components/pizza-engine.ts",
-        "src/app/components/engine-test-suite.tsx",
-        "src/app/components/deviation-tags.ts",
-        "src/app/components/parametric-databases.ts",
-        "src/app/components/topping-library.ts",
-        "src/app/components/impasto-library.ts"
+        "src/app/domain/pizza-engine.ts",
+        "src/app/features/dev-tools/engine-test-suite.tsx",
+        "src/app/domain/deviation-tags.ts",
+        "src/app/data/parametric-databases.ts",
+        "src/app/data/topping-library.ts",
+        "src/app/data/impasto-library.ts"
       ],
       "lastWorked": "2026-06-23"
     },
@@ -36,20 +36,20 @@
       "status": "completed",
       "filesDocumented": [
         "src/app/pages/recipe.tsx",
-        "src/app/components/recipe-configurator.tsx",
-        "src/app/components/recipe-output.tsx",
-        "src/app/components/recipe-stat-strip.tsx",
+        "src/app/features/recipe/recipe-configurator.tsx",
+        "src/app/features/recipe/recipe-output.tsx",
+        "src/app/features/recipe/recipe-stat-strip.tsx",
         "src/app/pages/home.tsx",
-        "src/app/components/cook-session.tsx",
-        "src/app/components/active-cook-widget.tsx",
-        "src/app/components/cooking-mode.tsx",
-        "src/app/components/step-illustrations.tsx",
-        "src/app/components/recipe-view.tsx",
-        "src/app/components/recipe-section-tabs.tsx",
-        "src/app/components/recipe-match-card.tsx",
-        "src/app/components/recipe-learning-panel.tsx",
-        "src/app/components/use-recipe-state.ts",
-        "src/app/components/recipe-setup-panel.tsx"
+        "src/app/features/cooking/cook-session.tsx",
+        "src/app/features/cooking/active-cook-widget.tsx",
+        "src/app/features/cooking/cooking-mode.tsx",
+        "src/app/features/cooking/step-illustrations.tsx",
+        "src/app/features/recipe/recipe-view.tsx",
+        "src/app/features/recipe/recipe-section-tabs.tsx",
+        "src/app/features/recipe/recipe-match-card.tsx",
+        "src/app/features/recipe/recipe-learning-panel.tsx",
+        "src/app/hooks/use-recipe-state.ts",
+        "src/app/features/recipe/recipe-setup-panel.tsx"
       ],
       "lastWorked": "2026-06-23"
     },
@@ -58,11 +58,11 @@
       "title": "Score e feedback utente",
       "status": "completed",
       "filesDocumented": [
-        "src/app/components/recipe-match-card.tsx",
-        "src/app/components/score-ring.tsx",
-        "src/app/components/recipe-feedback.tsx",
-        "src/app/components/feedback-analysis.tsx",
-        "src/app/components/feedback-store.ts"
+        "src/app/features/recipe/recipe-match-card.tsx",
+        "src/app/features/recipe/score-ring.tsx",
+        "src/app/features/recipe/recipe-feedback.tsx",
+        "src/app/features/recipe/feedback-analysis.tsx",
+        "src/app/features/recipe/feedback-store.ts"
       ],
       "lastWorked": "2026-06-23"
     },
@@ -71,17 +71,17 @@
       "title": "Stili, versioni e override",
       "status": "completed",
       "filesDocumented": [
-        "src/app/components/style-versions.ts",
-        "src/app/components/style-photos.ts",
-        "src/app/components/recommended-styles.tsx",
-        "src/app/components/style-editor-tab.tsx",
-        "src/app/components/styles-override-context.tsx",
-        "src/app/components/style-detail-sheet.tsx",
-        "src/app/components/sync-tab.tsx",
-        "src/app/components/interpretation-library.ts",
-        "src/app/components/signature-recipes.ts",
+        "src/app/data/style-versions.ts",
+        "src/app/data/style-photos.ts",
+        "src/app/features/recipe/recommended-styles.tsx",
+        "src/app/features/dev-tools/style-editor-tab.tsx",
+        "src/app/context/styles-override-context.tsx",
+        "src/app/features/recipe/style-detail-sheet.tsx",
+        "src/app/features/dev-tools/sync-tab.tsx",
+        "src/app/data/interpretation-library.ts",
+        "src/app/data/signature-recipes.ts",
         "src/app/pages/explore.tsx",
-        "src/app/components/tilt-card.tsx"
+        "src/app/features/recipe/tilt-card.tsx"
       ],
       "lastWorked": "2026-06-23"
     },
@@ -90,25 +90,25 @@
       "title": "CMS e localizzazione",
       "status": "completed",
       "filesDocumented": [
-        "src/app/components/cms/cms-context.tsx",
-        "src/app/components/cms/i18n.ts",
-        "src/app/components/cms/domain-i18n-defaults.ts",
-        "src/app/components/cms/locales/index.ts",
-        "src/app/components/cms/locales/en.ts",
-        "src/app/components/cms/locales/domain-en.ts",
-        "src/app/components/cms/locales/de.ts",
-        "src/app/components/cms/locales/domain-de.ts",
-        "src/app/components/cms/locales/es.ts",
-        "src/app/components/cms/locales/domain-es.ts",
-        "src/app/components/cms/locales/fr.ts",
-        "src/app/components/cms/locales/domain-fr.ts",
-        "src/app/components/cms/locales/ja.ts",
-        "src/app/components/cms/locales/domain-ja.ts",
-        "src/app/components/cms/locales/pt.ts",
-        "src/app/components/cms/locales/domain-pt.ts",
+        "src/app/features/cms/cms-context.tsx",
+        "src/app/features/cms/i18n.ts",
+        "src/app/features/cms/domain-i18n-defaults.ts",
+        "src/app/features/cms/locales/index.ts",
+        "src/app/features/cms/locales/en.ts",
+        "src/app/features/cms/locales/domain-en.ts",
+        "src/app/features/cms/locales/de.ts",
+        "src/app/features/cms/locales/domain-de.ts",
+        "src/app/features/cms/locales/es.ts",
+        "src/app/features/cms/locales/domain-es.ts",
+        "src/app/features/cms/locales/fr.ts",
+        "src/app/features/cms/locales/domain-fr.ts",
+        "src/app/features/cms/locales/ja.ts",
+        "src/app/features/cms/locales/domain-ja.ts",
+        "src/app/features/cms/locales/pt.ts",
+        "src/app/features/cms/locales/domain-pt.ts",
         "src/app/pages/cms.tsx"
       ],
-      "lastWorked": "2026-06-19"
+      "lastWorked": "2026-06-23"
     },
     {
       "id": "routing-shell",
@@ -118,11 +118,11 @@
         "src/app/routes.ts",
         "src/app/App.tsx",
         "src/main.tsx",
-        "src/app/components/app-shell.tsx",
-        "src/app/components/root-layout.tsx",
-        "src/app/components/search-overlay.tsx",
+        "src/app/components/shared/app-shell.tsx",
+        "src/app/components/shared/root-layout.tsx",
+        "src/app/components/shared/search-overlay.tsx",
         "src/app/pages/not-found.tsx",
-        "src/app/components/search-button.tsx",
+        "src/app/components/shared/search-button.tsx",
         "src/vite-env.d.ts"
       ],
       "lastWorked": "2026-06-23"
@@ -134,12 +134,12 @@
       "filesDocumented": [
         "src/app/pages/learn.tsx",
         "src/app/pages/glossary.tsx",
-        "src/app/components/glossary-data.ts",
+        "src/app/data/glossary-data.ts",
         "src/app/pages/troubleshooting.tsx",
-        "src/app/components/troubleshooting-data.ts",
-        "src/app/components/troubleshooting-panel.tsx",
+        "src/app/data/troubleshooting-data.ts",
+        "src/app/features/recipe/troubleshooting-panel.tsx",
         "src/app/pages/pre-ferments.tsx",
-        "src/app/components/pre-ferment-guide.tsx"
+        "src/app/features/recipe/pre-ferment-guide.tsx"
       ],
       "lastWorked": "2026-06-23"
     },
@@ -148,13 +148,13 @@
       "title": "Database parametrici e dati",
       "status": "completed",
       "filesDocumented": [
-        "src/app/components/equipment-data.ts",
-        "src/app/components/flour-database.ts",
-        "src/app/components/parametric-databases.ts",
-        "src/app/components/dietary-data.ts",
-        "src/app/components/deviation-tags.ts"
+        "src/app/data/equipment-data.ts",
+        "src/app/data/flour-database.ts",
+        "src/app/data/parametric-databases.ts",
+        "src/app/data/dietary-data.ts",
+        "src/app/domain/deviation-tags.ts"
       ],
-      "lastWorked": "2026-06-19"
+      "lastWorked": "2026-06-23"
     },
     {
       "id": "profile-user",
@@ -162,11 +162,11 @@
       "status": "completed",
       "filesDocumented": [
         "src/app/pages/profile.tsx",
-        "src/app/components/use-profile-defaults.ts",
-        "src/app/components/user-needs.tsx",
-        "src/app/components/saved-recipes.ts"
+        "src/app/hooks/use-profile-defaults.ts",
+        "src/app/features/recipe/user-needs.tsx",
+        "src/app/data/saved-recipes.ts"
       ],
-      "lastWorked": "2026-06-18"
+      "lastWorked": "2026-06-23"
     },
     {
       "id": "design-system",
@@ -174,11 +174,11 @@
       "status": "completed",
       "filesDocumented": [
         "src/styles/theme.css",
-        "src/app/components/foundations/ColorPalette.tsx",
-        "src/app/components/foundations/Elevation.tsx",
-        "src/app/components/foundations/RadiusScale.tsx",
-        "src/app/components/foundations/SpacingScale.tsx",
-        "src/app/components/foundations/TypeScale.tsx",
+        "src/app/components/design-system/foundations-ui/ColorPalette.tsx",
+        "src/app/components/design-system/foundations-ui/Elevation.tsx",
+        "src/app/components/design-system/foundations-ui/RadiusScale.tsx",
+        "src/app/components/design-system/foundations-ui/SpacingScale.tsx",
+        "src/app/components/design-system/foundations-ui/TypeScale.tsx",
         "src/app/components/ds/index.ts",
         "src/app/components/ds/Badge.tsx",
         "src/app/components/ds/BottomSheet.tsx",
@@ -205,7 +205,7 @@
         "src/app/components/ds/Switch.tsx",
         "src/app/pages/design-system.tsx",
         "src/app/pages/dev.tsx",
-        "src/app/components/dev-tools.tsx",
+        "src/app/features/dev-tools/dev-tools.tsx",
         "src/app/components/design-system/index.tsx",
         "src/app/components/design-system/shared.tsx",
         "src/app/components/design-system/foundations.tsx",
@@ -226,12 +226,12 @@
         "src/app/components/design-system/components-h.tsx",
         "src/app/components/design-system/carousel-variants.tsx",
         "src/app/components/design-system/patterns-templates.tsx",
-        "src/app/components/dough-mascot.tsx",
-        "src/app/components/fire-glow.tsx",
+        "src/app/features/cooking/dough-mascot.tsx",
+        "src/app/features/cooking/fire-glow.tsx",
         "src/app/components/media/ImageWithFallback.tsx",
-        "src/app/components/info-tip.tsx",
-        "src/app/components/vulcan-hero.tsx",
-        "src/app/components/vulcan-logo.tsx"
+        "src/app/components/shared/info-tip.tsx",
+        "src/app/components/shared/vulcan-hero.tsx",
+        "src/app/components/shared/vulcan-logo.tsx"
       ],
       "lastWorked": "2026-06-23"
     }

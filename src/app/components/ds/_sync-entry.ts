@@ -10,17 +10,17 @@
 export * from "./index";
 
 /* ── Onda 1 — context-free, già pronti (bucket "B-free") ── */
-export { ScoreRing } from "../score-ring";
-export { TiltCard } from "../tilt-card";
-export { DoughBlob } from "../dough-mascot";
-export { VulcanMark } from "../vulcan-logo";
-export { StepIllustration } from "../step-illustrations";
+export { ScoreRing } from "../../features/recipe/score-ring";
+export { TiltCard } from "../../features/recipe/tilt-card";
+export { DoughBlob } from "../../features/cooking/dough-mascot";
+export { VulcanMark } from "../shared/vulcan-logo";
+export { StepIllustration } from "../../features/cooking/step-illustrations";
 
 /* ── Onda 2 — app-coupled: renderizzano dal default CMS context (nessun provider) ── */
-export { InfoTip } from "../info-tip";
-export { RecipeSectionTabs } from "../recipe-section-tabs";
-export { RecipeStatStrip } from "../recipe-stat-strip";
-export { RecipeMatchCard } from "../recipe-match-card";
+export { InfoTip } from "../shared/info-tip";
+export { RecipeSectionTabs } from "../../features/recipe/recipe-section-tabs";
+export { RecipeStatStrip } from "../../features/recipe/recipe-stat-strip";
+export { RecipeMatchCard } from "../../features/recipe/recipe-match-card";
 
 /* ── Onda 3 — primitive nuove, estratte dalle demo dei Spec (context-free) ── */
 export { Checkbox } from "./Checkbox";
@@ -38,12 +38,12 @@ export { BottomSheet } from "./BottomSheet";
 export { Carousel } from "./Carousel";
 
 /* ── Onda 4 — feature/pattern riusabili (curati, app-coupled) ── */
-export { RecommendedStyles } from "../recommended-styles";
-export { ContextualWarnings } from "../troubleshooting-panel";
+export { RecommendedStyles } from "../../features/recipe/recommended-styles";
+export { ContextualWarnings } from "../../features/recipe/troubleshooting-panel";
 
 /* ── Foundation — card di riferimento dei token ── */
-export { ColorPalette } from "../foundations/ColorPalette";
-export { TypeScale } from "../foundations/TypeScale";
-export { SpacingScale } from "../foundations/SpacingScale";
-export { RadiusScale } from "../foundations/RadiusScale";
-export { Elevation } from "../foundations/Elevation";
+export { ColorPalette } from "../design-system/foundations-ui/ColorPalette";
+export { TypeScale } from "../design-system/foundations-ui/TypeScale";
+export { SpacingScale } from "../design-system/foundations-ui/SpacingScale";
+export { RadiusScale } from "../design-system/foundations-ui/RadiusScale";
+export { Elevation } from "../design-system/foundations-ui/Elevation";

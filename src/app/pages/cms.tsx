@@ -24,7 +24,7 @@ import {
   TextCursorInput,
   Lightbulb,
 } from "lucide-react";
-import { useDarkMode } from "../components/root-layout";
+import { useDarkMode } from "../components/shared/root-layout";
 import {
   useCms,
   CMS_SECTIONS,
@@ -32,9 +32,9 @@ import {
   getByPath,
   type CmsSectionDef,
   type CmsFieldDef,
-} from "../components/cms/cms-context";
-import { Badge, Surface } from "../components/ds";
-import { LOCALE_META } from "../components/cms/locales";
+} from "../features/cms/cms-context";
+import { Badge, Surface } from "../components/ds/index";
+import { LOCALE_META } from "../features/cms/locales/index";
 
 /* ═══ ICON MAP ═══ */
 const ICON_MAP: Record<

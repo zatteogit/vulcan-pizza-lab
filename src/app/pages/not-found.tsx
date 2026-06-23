@@ -1,8 +1,8 @@
 import { ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
 import { Link } from "react-router";
-import { useCms } from "../components/cms/cms-context";
-import { CtaButton, Heading } from "../components/ds";
+import { useCms } from "../features/cms/cms-context";
+import { CtaButton, Heading } from "../components/ds/index";
 
 export function NotFoundPage() {
   const { cms } = useCms();

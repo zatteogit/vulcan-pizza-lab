@@ -43,7 +43,6 @@ const ROOT_FILES = [
 
 /** Patterns to exclude */
 const EXCLUDE_PATTERNS = [
-  "src/app/components/ui/", // VPL-032 dead code
   "node_modules/",
   "dist/",
   ".git/",

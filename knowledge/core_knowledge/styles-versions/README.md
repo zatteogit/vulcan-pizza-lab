@@ -15,17 +15,17 @@ La versione attiva fluisce in `generateRecipe` come `versionOverrides` e nei ran
 
 | File | Ruolo |
 |------|--------|
-| `src/app/components/style-versions.ts` | `STYLE_VERSIONS`, API `getVersions`, `getDefaultVersion`, `getVersionById` |
-| `src/app/components/style-photos.ts` | Fonte canonica delle foto locali per 28 stili e dei 6 video hero serviti da `public/videos/` |
-| `src/app/components/styles-override-context.tsx` | Provider React: `effectiveStyles = override ?? STYLES_DB`, persistenza `vulcan_styles_override` |
-| `src/app/components/recommended-styles.tsx` | `recommendStyles` + filtri; re-export `STYLE_PHOTOS`; card con `ScoreRing` |
-| `src/app/components/style-detail-sheet.tsx` | Bottom sheet portal: foto poster, video blur-in se disponibile, range stile, deviazione, parametriche, CTA genera |
+| `src/app/data/style-versions.ts` | `STYLE_VERSIONS`, API `getVersions`, `getDefaultVersion`, `getVersionById` |
+| `src/app/data/style-photos.ts` | Fonte canonica delle foto locali per 28 stili e dei 6 video hero serviti da `public/videos/` |
+| `src/app/context/styles-override-context.tsx` | Provider React: `effectiveStyles = override ?? STYLES_DB`, persistenza `vulcan_styles_override` |
+| `src/app/features/recipe/recommended-styles.tsx` | `recommendStyles` + filtri; re-export `STYLE_PHOTOS`; card con `ScoreRing` |
+| `src/app/features/recipe/style-detail-sheet.tsx` | Bottom sheet portal: foto poster, video blur-in se disponibile, range stile, deviazione, parametriche, CTA genera |
 | `src/app/pages/explore.tsx` | Route `/explore` (Tab Scopri): ricette iconiche, preferiti, filtri famiglia e catalogo completo 28 stili |
-| `src/app/components/style-editor-tab.tsx` | DevTools: editor CRUD stili dev con componente `ImageInput` per caricamento/gestione file grafici locali (Base64) o URL esterni |
-| `src/app/components/sync-tab.tsx` | Diff bundle sorgenti Vulcan Cloud ↔ locale (non modifica stili direttamente) |
-| `src/app/components/interpretation-library.ts` | Database delle Interpretazioni d'Autore: 14 voci tra Maestri, Pizzerie, Community e Disciplinari con parameter overrides e narrativa |
-| `src/app/components/signature-recipes.ts` | Database delle Ricette Iconiche: 12 combinazioni pre-impostate di Stile e Topping Concept collegate tramite deep-links URL (Sprint 12) |
-| `src/app/components/tilt-card.tsx` | Componente UI per l'effetto di inclinazione 3D interattivo e riflesso speculare sensibile al puntatore del mouse delle card degli stili |
+| `src/app/features/dev-tools/style-editor-tab.tsx` | DevTools: editor CRUD stili dev con componente `ImageInput` per caricamento/gestione file grafici locali (Base64) o URL esterni |
+| `src/app/features/dev-tools/sync-tab.tsx` | Diff bundle sorgenti Vulcan Cloud ↔ locale (non modifica stili direttamente) |
+| `src/app/data/interpretation-library.ts` | Database delle Interpretazioni d'Autore: 14 voci tra Maestri, Pizzerie, Community e Disciplinari con parameter overrides e narrativa |
+| `src/app/data/signature-recipes.ts` | Database delle Ricette Iconiche: 12 combinazioni pre-impostate di Stile e Topping Concept collegate tramite deep-links URL (Sprint 12) |
+| `src/app/features/recipe/tilt-card.tsx` | Componente UI per l'effetto di inclinazione 3D interattivo e riflesso speculare sensibile al puntatore del mouse delle card degli stili |
 
 **Consumer principali:** `recipe.tsx`, `home.tsx`, `explore.tsx` (`useStylesOverride`); `recipe-configurator.tsx` (`getVersions`, range versione).
 

@@ -38,23 +38,23 @@ import { AnimatePresence,motion } from "motion/react";
 import { useCallback,useEffect,useMemo,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router";
-import { CMS_DEFAULTS,useCms } from "../components/cms/cms-context";
-import { Chip, CtaButton, Heading, IconButton, SegmentedControl } from "../components/ds";
+import { CMS_DEFAULTS,useCms } from "../features/cms/cms-context";
+import { Chip, CtaButton, Heading, IconButton, SegmentedControl } from "../components/ds/index";
 import {
 createFormatter,
 getPreferredUnitSystem,
 savePreferredUnitSystem,
 t,
 type UnitSystem,
-} from "../components/cms/i18n";
-import type { LocaleMeta } from "../components/cms/locales/index";
-import { LOCALE_BUNDLES,LOCALE_META } from "../components/cms/locales/index";
+} from "../features/cms/i18n";
+import type { LocaleMeta } from "../features/cms/locales/index";
+import { LOCALE_BUNDLES,LOCALE_META } from "../features/cms/locales/index";
 import type {
 EquipmentState,
 MixerType,
 SurfaceType,
 ToolCategory,
-} from "../components/equipment-data";
+} from "../data/equipment-data";
 import {
 DEFAULT_EQUIPMENT,
 getLocalizedMixerOptions,
@@ -63,15 +63,15 @@ getLocalizedToolCategories,
 getLocalizedToolOptions,
 migrateEquipment,
 syncLegacyFlags
-} from "../components/equipment-data";
-import type { OvenType,SkillLevel } from "../components/pizza-engine";
+} from "../data/equipment-data";
+import type { OvenType,SkillLevel } from "../domain/pizza-engine";
 import {
 OVEN_PRESETS,
 SKILL_LEVELS,
 STYLES_DB,
-} from "../components/pizza-engine";
+} from "../domain/pizza-engine";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
-import { STYLE_PHOTOS } from "../components/recommended-styles";
+import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import {
   formatSavedDate,
   loadFavoriteStyles,
@@ -79,8 +79,8 @@ import {
   removeRecipe,
   toggleFavoriteStyle,
   type SavedRecipe,
-} from "../components/saved-recipes";
-import { useDarkMode } from "../components/root-layout";
+} from "../data/saved-recipes";
+import { useDarkMode } from "../components/shared/root-layout";
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";

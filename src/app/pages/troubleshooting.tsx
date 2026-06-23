@@ -4,10 +4,10 @@
 import { Link } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import { motion } from "motion/react";
-import { TroubleshootingGuide } from "../components/troubleshooting-panel";
-import { VulcanMark } from "../components/vulcan-logo";
-import { useCms } from "../components/cms/cms-context";
-import { Surface } from "../components/ds";
+import { TroubleshootingGuide } from "../features/recipe/troubleshooting-panel";
+import { VulcanMark } from "../components/shared/vulcan-logo";
+import { useCms } from "../features/cms/cms-context";
+import { Surface } from "../components/ds/index";
 
 export default function TroubleshootingPage() {
   const { cms } = useCms();

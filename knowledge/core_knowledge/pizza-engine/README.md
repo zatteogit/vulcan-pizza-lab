@@ -11,12 +11,12 @@ Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica I
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/components/pizza-engine.ts` | 4402 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
-| `src/app/components/engine-test-suite.tsx` | 1651 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
-| `src/app/components/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, `STYLE_TAGS`, `DEVIATION_CATEGORY_LABELS` per E-Score |
-| `src/app/components/topping-library.ts` | 1313 | Libreria topping: 21 concetti, 28 ricette, autenticità per stile e timeline injection |
-| `src/app/components/impasto-library.ts` | 336 | Libreria impasti riusabili: 7 metodi incl. `senza_glutine` e `integrale_multicereali` |
-| `src/app/components/parametric-databases.ts` | — | `getToppingByStyle(style.id)` → `topping_info` e tip in `generateRecipe` / `generateTips` |
+| `src/app/domain/pizza-engine.ts` | 4402 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
+| `src/app/features/dev-tools/engine-test-suite.tsx` | 1651 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
+| `src/app/domain/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, `STYLE_TAGS`, `DEVIATION_CATEGORY_LABELS` per E-Score |
+| `src/app/data/topping-library.ts` | 1313 | Libreria topping: 21 concetti, 28 ricette, autenticità per stile e timeline injection |
+| `src/app/data/impasto-library.ts` | 336 | Libreria impasti riusabili: 7 metodi incl. `senza_glutine` e `integrale_multicereali` |
+| `src/app/data/parametric-databases.ts` | — | `getToppingByStyle(style.id)` → `topping_info` e tip in `generateRecipe` / `generateTips` |
 
 **Consumatori principali** (capitolo `recipe-flow` / altri): `recipe.tsx`, `recipe-configurator.tsx`, `recipe-output.tsx`, `home.tsx`, `profile.tsx`, `recommended-styles.tsx`, `style-editor-tab.tsx`, `recipe-match-card.tsx`, `styles-override-context.tsx`, `use-profile-defaults.ts`, `dev-tools.tsx`, `explore.tsx`, `search-overlay.tsx`.
 

@@ -1,9 +1,9 @@
 import { ArrowLeft,Moon,Sun } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router";
-import { DesignSystemTab } from "../components/design-system";
-import { Surface } from "../components/ds";
-import { useDarkMode } from "../components/root-layout";
+import { DesignSystemTab } from "../components/design-system/index";
+import { Surface } from "../components/ds/index";
+import { useDarkMode } from "../components/shared/root-layout";
 
 /**
  * Standalone Design System page at /design-system
