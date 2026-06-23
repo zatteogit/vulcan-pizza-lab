@@ -21,3 +21,10 @@ export { InfoTip } from "../info-tip";
 export { RecipeSectionTabs } from "../recipe-section-tabs";
 export { RecipeStatStrip } from "../recipe-stat-strip";
 export { RecipeMatchCard } from "../recipe-match-card";
+
+/* ── Onda 3 — primitive nuove, estratte dalle demo dei Spec (context-free) ── */
+export { Checkbox } from "./Checkbox";
+export { RadioButton } from "./RadioButton";
+export { Divider } from "./Divider";
+export { Slider } from "./Slider";
+export { Select } from "./Select";

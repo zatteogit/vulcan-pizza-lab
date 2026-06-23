@@ -29,7 +29,12 @@
     "InfoTip": "src/app/components/info-tip.tsx",
     "RecipeSectionTabs": "src/app/components/recipe-section-tabs.tsx",
     "RecipeStatStrip": "src/app/components/recipe-stat-strip.tsx",
-    "RecipeMatchCard": "src/app/components/recipe-match-card.tsx"
+    "RecipeMatchCard": "src/app/components/recipe-match-card.tsx",
+    "Checkbox": "src/app/components/ds/Checkbox.tsx",
+    "RadioButton": "src/app/components/ds/RadioButton.tsx",
+    "Divider": "src/app/components/ds/Divider.tsx",
+    "Slider": "src/app/components/ds/Slider.tsx",
+    "Select": "src/app/components/ds/Select.tsx"
   },
   "readmeHeader": ".design-sync/conventions.md"
 }
