@@ -51,5 +51,10 @@
     "RadiusScale": "src/app/components/foundations/RadiusScale.tsx",
     "Elevation": "src/app/components/foundations/Elevation.tsx"
   },
-  "readmeHeader": ".design-sync/conventions.md"
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "RecipeStatStrip": {
+      "cardMode": "column"
+    }
+  }
 }

@@ -118,3 +118,15 @@ trigger+scrim), RecipeSectionTabs. Verificato via playwright (click → cambia s
 Display-only (nessuno stato): Badge, Heading, Surface, Divider, Progress, Spinner, StepHeader,
 ScoreRing, VulcanMark, DoughBlob, StepIllustration, TiltCard, Carousel (scroll), Fab/CtaButton/
 IconButton (azione senza stato), InfoTip (stato interno già nel componente).
+
+## Gruppi unificati + cardMode (2026-06-23)
+- **`.design-sync/regroup.mjs`** (post-build): unifica i gruppi `ds`+`app` → **"componenti"**
+  riscrivendo il commento `<!-- @dsCard group="…" -->` (emit lo tiene fuori dall'hash → "pure
+  regroup", non un cambio di contratto). `foundations` resta separato. **Flusso: build → regroup
+  → guard → push.** Senza regroup il DS pane mostra 3 sezioni (ds/app/foundations) invece di 2.
+- **Side-by-side cramming**: i componenti larghi con 2+ storie venivano stretti nella griglia a 2
+  colonne (es. RecipeStatStrip: numeri+unità sovrapposti). Fix: `cfg.overrides.<Name>.cardMode:
+  "column"` → una storia per riga, full-width. Applicato a **RecipeStatStrip**. (Verificati
+  SegmentedControl/Progress side-by-side: ok, non serve.)
+- **Nota**: il `category` da docsMap NON sovrascrive un gruppo già derivato-da-cartella
+  (ds/app/foundations sono "meaningful") → serve il regroup, non il docsMap.
