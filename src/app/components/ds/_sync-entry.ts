@@ -32,3 +32,7 @@ export { Fab } from "./Fab";
 export { StepHeader } from "./StepHeader";
 export { Progress } from "./Progress";
 export { Spinner } from "./Spinner";
+export { Snackbar } from "./Snackbar";
+export { Dialog } from "./Dialog";
+export { BottomSheet } from "./BottomSheet";
+export { Carousel } from "./Carousel";

@@ -38,7 +38,11 @@
     "StepHeader": "src/app/components/ds/StepHeader.tsx",
     "Progress": "src/app/components/ds/Progress.tsx",
     "Spinner": "src/app/components/ds/Spinner.tsx",
-    "Fab": "src/app/components/ds/Fab.tsx"
+    "Fab": "src/app/components/ds/Fab.tsx",
+    "Snackbar": "src/app/components/ds/Snackbar.tsx",
+    "Dialog": "src/app/components/ds/Dialog.tsx",
+    "BottomSheet": "src/app/components/ds/BottomSheet.tsx",
+    "Carousel": "src/app/components/ds/Carousel.tsx"
   },
   "readmeHeader": ".design-sync/conventions.md"
 }
