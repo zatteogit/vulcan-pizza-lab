@@ -22,6 +22,7 @@ Panoramica,
 SectionHeader,
 SubSectionLabel,
 } from "./shared";
+import { Dialog, CtaButton } from "../ds/index";
 
 /* ═══════════════════════════════════════════════════════════
    C26 — TOOLTIP  (M3 Expressive)
@@ -293,144 +294,37 @@ export function DialogSpec() {
       </div>
 
       {/* Alert Dialog */}
-      <AnimatePresence>
-        {alertOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: "var(--dialog-scrim)" }}
-            onClick={() => setAlertOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.85, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.85, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="p-6 rounded-3xl"
-              style={{
-                background: "var(--surface-container-high)",
-                maxWidth: "360px",
-                width: "100%",
-                boxShadow: "var(--shadow-lg)",
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-center mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "color-mix(in srgb, var(--destructive) 12%, transparent)" }}>
-                  <AlertTriangle size={24} style={{ color: "var(--destructive)" }} />
-                </div>
-              </div>
-              <h2 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "var(--font-size-5xl)",
-                fontWeight: "var(--weight-bold)" as any,
-                color: "var(--text-default)",
-                textAlign: "center",
-                lineHeight: "var(--leading-display)",
-              }}>
-                Temperatura insufficiente
-              </h2>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-lg)",
-                color: "var(--muted-foreground)",
-                textAlign: "center",
-                lineHeight: "var(--leading-body)",
-                marginTop: "8px",
-              }}>
-                Il forno casalingo a 250°C non raggiunge la temperatura ideale per la Napoletana STG (450°C). Verranno applicate compensazioni automatiche.
-              </p>
-              <div className="flex justify-center mt-5">
-                <motion.button
-                  onClick={() => setAlertOpen(false)}
-                  className="px-6 py-2.5 rounded-xl active:scale-95 transition-transform"
-                  style={{
-                    background: "var(--primary)", color: "var(--primary-foreground)",
-                    border: "none", cursor: "pointer", outline: "none",
-                    fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any,
-                  }}
-                >
-                  Ho capito
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Dialog
+        open={alertOpen}
+        onClose={() => setAlertOpen(false)}
+        title="Temperatura insufficiente"
+        actions={
+          <CtaButton variant="primary" onClick={() => setAlertOpen(false)}>
+            Ho capito
+          </CtaButton>
+        }
+      >
+        Il forno casalingo a 250°C non raggiunge la temperatura ideale per la Napoletana STG (450°C). Verranno applicate compensazioni automatiche.
+      </Dialog>
 
       {/* Confirmation Dialog */}
-      <AnimatePresence>
-        {confirmOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: "var(--dialog-scrim)" }}
-            onClick={() => setConfirmOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.85, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.85, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="p-6 rounded-3xl"
-              style={{
-                background: "var(--surface-container-high)",
-                maxWidth: "400px",
-                width: "100%",
-                boxShadow: "var(--shadow-lg)",
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "var(--font-size-5xl)",
-                fontWeight: "var(--weight-bold)" as any,
-                color: "var(--text-default)",
-                lineHeight: "var(--leading-display)",
-              }}>
-                Cambiare stile?
-              </h2>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-lg)",
-                color: "var(--muted-foreground)",
-                lineHeight: "var(--leading-body)",
-                marginTop: "8px",
-              }}>
-                Passando da Napoletana a Teglia Romana, i parametri del fine-tuning verranno resettati ai valori raccomandati per il nuovo stile.
-              </p>
-              <div className="flex justify-end gap-2 mt-5">
-                <motion.button
-                  onClick={() => setConfirmOpen(false)}
-                  className="px-5 py-2.5 rounded-xl active:scale-95 transition-transform"
-                  style={{
-                    background: "rgba(0,0,0,0)", color: "var(--primary)",
-                    border: "none", cursor: "pointer", outline: "none",
-                    fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any,
-                  }}
-                >
-                  Annulla
-                </motion.button>
-                <motion.button
-                  onClick={() => setConfirmOpen(false)}
-                  className="px-5 py-2.5 rounded-xl active:scale-95 transition-transform"
-                  style={{
-                    background: "var(--primary)", color: "var(--primary-foreground)",
-                    border: "none", cursor: "pointer", outline: "none",
-                    fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any,
-                  }}
-                >
-                  Cambia stile
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Dialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        title="Cambiare stile?"
+        actions={
+          <>
+            <CtaButton variant="secondary" onClick={() => setConfirmOpen(false)}>
+              Annulla
+            </CtaButton>
+            <CtaButton variant="primary" onClick={() => setConfirmOpen(false)}>
+              Cambia stile
+            </CtaButton>
+          </>
+        }
+      >
+        Passando da Napoletana a Teglia Romana, i parametri del fine-tuning verranno resettati ai valori raccomandati per il nuovo stile.
+      </Dialog>
 
       {/* Full-screen Dialog */}
       <AnimatePresence>

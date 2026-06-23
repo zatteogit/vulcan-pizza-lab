@@ -19,6 +19,7 @@ import {
   AccessibilitaInfo,
 } from "./shared";
 import type { SectionEntry } from "./shared";
+import { Surface, Slider, CtaButton } from "../ds/index";
 
 /* ═══════════════════════════════════════════════════════════
    COMPONENT SPEC SHEETS C08–C10
@@ -94,7 +95,7 @@ export function ScoreRingSpec() {
       />
 
       <SubSectionLabel label="Specifiche" />
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Valori esempio — 5 assi composite (hover per ingrandire)</span>
         <div className="mt-4 flex flex-wrap justify-center gap-6">
           <AnimatedRing score={85} label="Autenticità" color="var(--warm-sienna)" />
@@ -103,9 +104,9 @@ export function ScoreRingSpec() {
           <AnimatedRing score={68} label="Sostenibilità" color="var(--warm-sage)" />
           <AnimatedRing score={45} label="Sperimentazione" color="var(--secondary)" />
         </div>
-      </div>
+      </Surface>
 
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Controllo interattivo — Trascina lo slider</span>
         <div className="mt-4 flex items-center gap-8 justify-center">
           <AnimatedRing
@@ -113,28 +114,28 @@ export function ScoreRingSpec() {
             color={customScore >= 80 ? "var(--cta)" : customScore >= 60 ? "var(--tertiary)" : customScore >= 40 ? "var(--warm-sienna)" : "var(--destructive)"}
             size={96} strokeWidth={6}
           />
-          <div className="flex flex-col gap-2" style={{ width: "200px" }}>
-            <div className="relative w-full h-6 flex items-center">
-              <div className="absolute w-full h-2 rounded-full" style={{ background: "var(--surface-container-high)" }} />
-              <div className="absolute h-2 rounded-full" style={{ width: `${customScore}%`, background: "var(--primary)" }} />
-              <input type="range" min={0} max={100} value={customScore} onChange={(e) => setCustomScore(Number(e.target.value))} className="absolute w-full h-6 cursor-pointer" style={{ opacity: 0, margin: 0 }} />
-              <div className="absolute w-5 h-5 rounded-full pointer-events-none" style={{ left: `calc(${customScore}% - 10px)`, background: "var(--primary)", border: "2.5px solid var(--primary-foreground)", boxShadow: "var(--shadow-sm)" }} />
-            </div>
-            <span className="type-data" style={{ fontSize: "var(--font-size-lg)", color: "var(--muted-foreground)", textAlign: "center", fontFeatureSettings: "'tnum'" }}>Score: {customScore}/100</span>
-          </div>
+          <Slider
+            style={{ width: "200px" }}
+            value={customScore}
+            min={0}
+            max={100}
+            onValueChange={setCustomScore}
+            label="Score"
+            unit="/100"
+          />
         </div>
-      </div>
+      </Surface>
 
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Taglie — Small / Medium / Large</span>
         <div className="mt-4 flex items-end justify-center gap-8">
           <AnimatedRing score={78} label="Small" color="var(--primary)" size={56} strokeWidth={4} />
           <AnimatedRing score={78} label="Medium" color="var(--primary)" size={72} strokeWidth={5} />
           <AnimatedRing score={78} label="Large" color="var(--primary)" size={96} strokeWidth={6} />
         </div>
-      </div>
+      </Surface>
 
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Range cromatici per tier</span>
         <div className="mt-4 flex flex-wrap justify-center gap-6">
           <AnimatedRing score={92} label="Perfetto" color="var(--cta)" />
@@ -142,7 +143,7 @@ export function ScoreRingSpec() {
           <AnimatedRing score={45} label="Sfidante" color="var(--warm-sienna)" />
           <AnimatedRing score={20} label="Critico" color="var(--destructive)" />
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida
@@ -192,7 +193,7 @@ export function StatStripSpec() {
       />
 
       <SubSectionLabel label="Specifiche" />
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)", marginBottom: "12px", display: "block" }}>Specimen — Strip completa (hover sui singoli stat)</span>
         <div className="flex gap-3">
           {STAT_DATA.map((stat) => {
@@ -212,7 +213,7 @@ export function StatStripSpec() {
             );
           })}
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida
@@ -361,28 +362,27 @@ export function SnackbarToastSpec() {
       />
 
       <SubSectionLabel label="Specifiche" />
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Triggera una Toast (clicca!)</span>
         <div className="mt-3 flex flex-wrap gap-2">
           {TOAST_TRIGGERS.map((t) => (
-            <motion.button
+            <CtaButton
               key={t.type}
+              variant="secondary"
+              radius="lg"
               onClick={() => addToast(t.type, t.msg, t.action)}
               onPointerEnter={() => setHoveredType(t.type)}
               onPointerLeave={() => setHoveredType(null)}
-              className="active:scale-95 transition-transform"
+              className="px-4 py-2"
               style={{
-                display: "inline-flex", alignItems: "center", gap: "6px", padding: "8px 16px", borderRadius: "0.75rem",
-                background: "var(--surface-container)", border: "1px solid var(--outline-variant)",
                 color: TOAST_CONFIG[t.type]?.color || "var(--text-default)",
-                fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-semibold)" as any, cursor: "pointer", outline: "none",
                 transition: "filter 0.15s ease",
                 filter: hoveredType === t.type ? "brightness(0.92)" : undefined,
               }}
             >
               {React.createElement(TOAST_CONFIG[t.type]?.icon || Info, { size: 14 })}
               {t.label}
-            </motion.button>
+            </CtaButton>
           ))}
         </div>
 
@@ -406,10 +406,10 @@ export function SnackbarToastSpec() {
             </div>
           )}
         </div>
-      </div>
+      </Surface>
 
       {/* Static specimens */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Specimen — Tutte le varianti</span>
         <div className="mt-3 flex flex-col gap-2">
           {TOAST_TRIGGERS.map((t) => {
@@ -425,14 +425,14 @@ export function SnackbarToastSpec() {
             );
           })}
         </div>
-      </div>
+      </Surface>
 
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Anatomia Snackbar</span>
         <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
           {TOAST_ANATOMY.map((a) => <AnatomyRow key={a.prop} {...a} />)}
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida

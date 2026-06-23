@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ImageWithFallback } from "../media/ImageWithFallback";
 import type { SectionEntry } from "./shared";
 import { AccessibilitaInfo,LineeGuida,Panoramica,SectionHeader,SubSectionLabel } from "./shared";
+import { CtaButton, Badge, StepHeader, Chip, Surface, Slider } from "../ds/index";
 
 /* ═══ C01: BUTTONS ═══ */
 const BTN_V = [
@@ -34,17 +35,15 @@ export function ButtonsSpec() {
       />
 
       <SubSectionLabel label="Specifiche" />
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Varianti</span>
         <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {BTN_V.map((btn) => (
-            <motion.button key={btn.v} className="rounded-xl px-5 py-2.5 cursor-pointer active:scale-95" style={{ background: btn.bg, color: btn.c, border: btn.b, fontFamily: "'DM Sans',sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, outline: "none", transition: "background 0.15s" }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = btn.h; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = btn.bg; }}
-            >{btn.v}</motion.button>
-          ))}
+          <CtaButton variant="primary" radius="xl" className="px-5 py-2.5">Primary</CtaButton>
+          <CtaButton variant="secondary" radius="xl" className="px-5 py-2.5">Secondary</CtaButton>
+          <CtaButton variant="secondary" radius="xl" className="px-5 py-2.5" style={{ background: "rgba(0,0,0,0)", border: "none", color: "var(--primary)" }}>Ghost</CtaButton>
+          <CtaButton variant="primary" radius="xl" className="px-5 py-2.5" style={{ background: "var(--destructive)", color: "var(--destructive-foreground)", boxShadow: "none" }}>Destructive</CtaButton>
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida
@@ -93,30 +92,30 @@ export function BadgesSpec() {
       />
 
       <SubSectionLabel label="Specifiche" />
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Tier Badge</span>
         <div className="mt-4 flex flex-wrap gap-3">
           {[
-            { l: "Perfect Match", c: "var(--cta)" },
-            { l: "Buona Scelta", c: "var(--tertiary)" },
-            { l: "Challenging", c: "var(--secondary)" },
+            { l: "Perfect Match", c: "var(--cta)", t: "cta" },
+            { l: "Buona Scelta", c: "var(--tertiary)", t: "tertiary" },
+            { l: "Challenging", c: "var(--secondary)", t: "secondary" },
           ].map(b => (
-            <span key={b.l} className="px-3 py-1.5 rounded-lg flex items-center gap-1.5" style={{ background: `color-mix(in srgb,${b.c} 12%,transparent)`, border: `1px solid color-mix(in srgb,${b.c} 25%,transparent)` }}>
+            <Badge key={b.l} tone={b.t as any} color={b.c} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg">
               <div className="w-2 h-2 rounded-full" style={{ background: b.c }} />
-              <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-semibold)" as any, color: b.c }}>{b.l}</span>
-            </span>
+              {b.l}
+            </Badge>
           ))}
         </div>
-      </div>
-      <div className="surface-card p-5">
+      </Surface>
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Data Badge</span>
         <div className="mt-4 flex flex-wrap gap-2">
           {["W 280","H 65%","24h","250\u00b0C","P/L 0.58"].map(l => (
-            <span key={l} className="px-2 py-1 rounded-md" style={{ fontFamily: "'DM Mono',monospace", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, fontFeatureSettings: "'tnum'", color: "var(--primary)", background: "color-mix(in srgb,var(--primary) 10%,transparent)", border: "1px solid color-mix(in srgb,var(--primary) 20%,transparent)" }}>{l}</span>
+            <Badge key={l} tone="primary" style={{ fontFamily: "'DM Mono',monospace", fontFeatureSettings: "'tnum'" }}>{l}</Badge>
           ))}
         </div>
-      </div>
-      <div className="surface-card p-5">
+      </Surface>
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>InlineTip</span>
         <div className="mt-4 flex gap-3 p-3 rounded-xl" style={{ background: "color-mix(in srgb,var(--tertiary) 8%,transparent)", border: "1px solid color-mix(in srgb,var(--tertiary) 20%,transparent)" }}>
           <Lightbulb size={16} style={{ color: "var(--tertiary)", flexShrink: 0, marginTop: "2px" }} />
@@ -124,7 +123,7 @@ export function BadgesSpec() {
             <span style={{ fontWeight: "var(--weight-semibold)" as any }}>Suggerimento:</span> Con 65% di idratazione e W280, la Napoletana risulta perfetta per principianti.
           </p>
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida
@@ -172,22 +171,17 @@ export function StepHeaderSpec() {
       />
 
       <SubSectionLabel label="Specifiche" />
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <div className="flex flex-col gap-8">
           {[
             { num: "01", cat: "Contesto", title: "Quando e dove", sub: "Tempo, luogo, stagione" },
             { num: "02", cat: "Setup", title: "Cosa hai a disposizione", sub: "Attrezzatura, dispensa, esperienza" },
             { num: "03", cat: "Stili", title: "Scopri il tuo stile", sub: "Le ricette che fanno per te" },
           ].map(s => (
-            <motion.div key={s.num} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 300, damping: 24 }} className="flex flex-col gap-1">
-              <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, letterSpacing: "var(--tracking-extreme)", textTransform: "uppercase", color: "var(--primary)" }}>{s.num} — {s.cat}</span>
-              <span style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(1.5rem,4vw,2.5rem)", fontWeight: "var(--weight-bold)" as any, lineHeight: "var(--leading-snug)", color: "var(--text-default)" }}>{s.title}</span>
-              <span style={{ fontFamily: "'Playfair Display',serif", fontStyle: "italic", fontSize: "var(--font-size-2xl)", color: "var(--muted-foreground)", opacity: 0.65 }}>{s.sub}</span>
-              <div style={{ width: "2rem", height: "2px", background: "var(--primary)", opacity: 0.35, marginTop: "8px" }} />
-            </motion.div>
+            <StepHeader key={s.num} num={s.num} category={s.cat} title={s.title} subtitle={s.sub} />
           ))}
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida
@@ -243,24 +237,17 @@ export function ChipsSpec() {
       />
 
       <SubSectionLabel label="Specifiche" />
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Quando prepari?</span>
         <div className="mt-4 flex flex-wrap gap-2.5">
           {CHIPS.map(c => {
             const a = sel.has(c.id); const I = c.icon;
             return (
-              <motion.button key={c.id} onClick={() => toggle(c.id)} className="flex items-center gap-2 rounded-xl px-4 py-2.5 cursor-pointer active:scale-95"
-                style={{ background: a ? "var(--primary)" : "var(--surface-container)", color: a ? "var(--primary-foreground)" : "var(--text-default)", border: a ? "1px solid var(--primary)" : "1px solid var(--outline-variant)", fontFamily: "'DM Sans',sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-medium)" as any, outline: "none", transition: "background .15s,color .15s,border-color .15s" }}>
-                <AnimatePresence mode="wait">
-                  {a ? <motion.div key="ck" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} transition={{ type: "spring", stiffness: 500, damping: 25 }}><Check size={14} /></motion.div>
-                     : <motion.div key="ic" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} transition={{ type: "spring", stiffness: 500, damping: 25 }}><I size={14} /></motion.div>}
-                </AnimatePresence>
-                {c.label}
-              </motion.button>
+              <Chip key={c.id} label={c.label} active={a} onToggle={() => toggle(c.id)} icon={<I size={14} />} />
             );
           })}
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida
@@ -313,19 +300,19 @@ export function CardsSpec() {
       />
 
       <SubSectionLabel label="Specifiche" />
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Varianti base</span>
         <div className="mt-4 grid grid-cols-3 gap-3">
           {CARD_V.map(c => (
             <div key={c.v} className="flex flex-col gap-2">
               <span className="type-label" style={{ color: c.c }}>{c.v}</span>
-              <motion.div className="p-4 rounded-2xl cursor-pointer active:scale-[0.98]" style={{ background: c.bg, border: "1px solid var(--outline-variant)", boxShadow: c.s || "none" }} whileHover={{ boxShadow: c.hs || "none", y: -2 }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
+              <Surface variant="card" className="p-4 rounded-2xl cursor-pointer active:scale-[0.98] transition-all hover:-translate-y-0.5 hover:shadow-md" style={{ background: c.bg, border: "1px solid var(--outline-variant)", boxShadow: c.s || "none" }}>
                 <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "var(--font-size-lg)", color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>{c.d}</p>
-              </motion.div>
+              </Surface>
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
       <div className="surface-card p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Media Card</span>
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -410,28 +397,25 @@ export function InputsSpec() {
       />
 
       <SubSectionLabel label="Specifiche" />
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Slider</span>
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-6">
           {SL.map(s => {
-            const v = sv[s.l]; const p = ((v - s.min) / (s.max - s.min)) * 100;
+            const v = sv[s.l];
             return (
-              <div key={s.l}>
-                <div className="flex items-center justify-between mb-2">
-                  <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>{s.l}</span>
-                  <span className="type-data-lg" style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--primary)", fontFeatureSettings: "'tnum'" }}>{v}{s.u}</span>
-                </div>
-                <div className="relative h-8 flex items-center">
-                  <div className="absolute left-0 right-0 h-1.5 rounded-full" style={{ background: "var(--surface-container-high)" }} />
-                  <div className="absolute left-0 h-1.5 rounded-full" style={{ width: `${p}%`, background: "var(--primary)" }} />
-                  <input type="range" min={s.min} max={s.max} value={v} onChange={e => setSv(prev => ({ ...prev, [s.l]: +e.target.value }))} className="absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer" style={{ margin: 0 }} />
-                  <div className="absolute w-4 h-4 rounded-full" style={{ left: `calc(${p}% - 8px)`, background: "var(--primary)", boxShadow: "var(--shadow-sm)", pointerEvents: "none" }} />
-                </div>
-              </div>
+              <Slider
+                key={s.l}
+                label={s.l}
+                min={s.min}
+                max={s.max}
+                value={v}
+                unit={s.u}
+                onValueChange={val => setSv(prev => ({ ...prev, [s.l]: val }))}
+              />
             );
           })}
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida

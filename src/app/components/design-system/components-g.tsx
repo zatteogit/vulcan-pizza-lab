@@ -10,6 +10,7 @@ Panoramica,
 SectionHeader,
 SubSectionLabel,
 } from "./shared";
+import { Checkbox, RadioButton, Select } from "../ds/index";
 
 /* ═══════════════════════════════════════════════════════════
    C23 — CHECKBOX  (M3 Expressive)
@@ -68,84 +69,15 @@ export function CheckboxSpec() {
           Stili preferiti — Interattivo
         </span>
         <div className="mt-4 flex flex-col gap-1">
-          {ITEMS.map((item) => {
-            const v = checks[item.id];
-            const isChecked = v === true;
-            const isIndeterminate = v === "indeterminate";
-            const isActive = isChecked || isIndeterminate;
-
-            return (
-              <motion.button
-                key={item.id}
-                onClick={() => toggle(item.id)}
-                className="flex items-start gap-3 py-3 px-2 rounded-xl w-full text-left active:scale-[0.98] transition-transform"
-                style={{
-                  background: "rgba(0,0,0,0)",
-                  border: "none",
-                  cursor: "pointer",
-                  outline: "none",
-                }}
-              >
-                {/* Checkbox box */}
-                <div
-                  className="flex-shrink-0 w-5 h-5 rounded-sm flex items-center justify-center mt-0.5"
-                  style={{
-                    border: "2px solid",
-                    borderColor: isActive ? "var(--primary)" : "var(--outline)",
-                    backgroundColor: isActive ? "var(--primary)" : "rgba(0,0,0,0)",
-                    transition: "background-color 0.2s, border-color 0.2s",
-                  }}
-                >
-                  <AnimatePresence mode="wait">
-                    {isChecked && (
-                      <motion.div
-                        key="check"
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 600, damping: 20 }}
-                      >
-                        <Check size={14} style={{ color: "var(--primary-foreground)" }} />
-                      </motion.div>
-                    )}
-                    {isIndeterminate && (
-                      <motion.div
-                        key="minus"
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0, opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 600, damping: 20 }}
-                      >
-                        <Minus size={14} style={{ color: "var(--primary-foreground)" }} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Label */}
-                <div>
-                  <div style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-lg)",
-                    fontWeight: isActive ? "var(--weight-semibold)" : "var(--weight-regular)" as any,
-                    color: "var(--text-default)",
-                    lineHeight: "var(--leading-compact)",
-                  }}>
-                    {item.label}
-                  </div>
-                  <div style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-base)",
-                    color: "var(--muted-foreground)",
-                    lineHeight: "var(--leading-body)",
-                    marginTop: "2px",
-                  }}>
-                    {item.desc}
-                  </div>
-                </div>
-              </motion.button>
-            );
-          })}
+          {ITEMS.map((item) => (
+            <Checkbox
+              key={item.id}
+              checked={checks[item.id]}
+              onCheckedChange={() => toggle(item.id)}
+              label={item.label}
+              description={item.desc}
+            />
+          ))}
         </div>
       </div>
 
@@ -261,59 +193,15 @@ export function RadioButtonSpec() {
           Tipo forno — con descrizione
         </span>
         <div className="mt-4 flex flex-col gap-1" role="radiogroup" aria-label="Tipo forno">
-          {OVEN_OPTIONS.map((opt) => {
-            const isSelected = selectedOven === opt.id;
-            return (
-              <motion.button
-                key={opt.id}
-                onClick={() => setSelectedOven(opt.id)}
-                className="flex items-start gap-3 py-3 px-2 rounded-xl w-full text-left active:scale-[0.98] transition-transform"
-                style={{ background: "rgba(0,0,0,0)", border: "none", cursor: "pointer", outline: "none" }}
-                role="radio"
-                aria-checked={isSelected}
-              >
-                {/* Radio circle */}
-                <div
-                  className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
-                  style={{
-                    border: `2px solid ${isSelected ? "var(--primary)" : "var(--outline)"}`,
-                  }}
-                >
-                  <motion.div
-                    animate={{
-                      scale: isSelected ? 1 : 0,
-                      opacity: isSelected ? 1 : 0,
-                    }}
-                    transition={{ type: "spring", stiffness: 600, damping: 18 }}
-                    className="w-2.5 h-2.5 rounded-full"
-                    style={{ background: "var(--primary)" }}
-                  />
-                </div>
-
-                {/* Label */}
-                <div>
-                  <div style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-lg)",
-                    fontWeight: isSelected ? "var(--weight-semibold)" : "var(--weight-regular)" as any,
-                    color: "var(--text-default)",
-                    lineHeight: "var(--leading-compact)",
-                  }}>
-                    {opt.label}
-                  </div>
-                  <div style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-base)",
-                    color: "var(--muted-foreground)",
-                    lineHeight: "var(--leading-body)",
-                    marginTop: "2px",
-                  }}>
-                    {opt.desc}
-                  </div>
-                </div>
-              </motion.button>
-            );
-          })}
+          {OVEN_OPTIONS.map((opt) => (
+            <RadioButton
+              key={opt.id}
+              checked={selectedOven === opt.id}
+              onSelect={() => setSelectedOven(opt.id)}
+              label={opt.label}
+              description={opt.desc}
+            />
+          ))}
         </div>
       </div>
 
@@ -323,39 +211,14 @@ export function RadioButtonSpec() {
           Tipo lievito — orizzontale compatto
         </span>
         <div className="mt-4 flex flex-wrap gap-4" role="radiogroup" aria-label="Tipo lievito">
-          {YEAST_OPTIONS.map((opt) => {
-            const isSelected = selectedYeast === opt.id;
-            return (
-              <motion.button
-                key={opt.id}
-                onClick={() => setSelectedYeast(opt.id)}
-                className="flex items-center gap-2 active:scale-95 transition-transform"
-                style={{ background: "rgba(0,0,0,0)", border: "none", cursor: "pointer", outline: "none" }}
-                role="radio"
-                aria-checked={isSelected}
-              >
-                <div
-                  className="w-5 h-5 rounded-full flex items-center justify-center"
-                  style={{ border: `2px solid ${isSelected ? "var(--primary)" : "var(--outline)"}` }}
-                >
-                  <motion.div
-                    animate={{ scale: isSelected ? 1 : 0 }}
-                    transition={{ type: "spring", stiffness: 600, damping: 18 }}
-                    className="w-2.5 h-2.5 rounded-full"
-                    style={{ background: "var(--primary)" }}
-                  />
-                </div>
-                <span style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: "var(--font-size-lg)",
-                  fontWeight: isSelected ? "var(--weight-semibold)" : "var(--weight-regular)" as any,
-                  color: "var(--text-default)",
-                }}>
-                  {opt.label}
-                </span>
-              </motion.button>
-            );
-          })}
+          {YEAST_OPTIONS.map((opt) => (
+            <RadioButton
+              key={opt.id}
+              checked={selectedYeast === opt.id}
+              onSelect={() => setSelectedYeast(opt.id)}
+              label={opt.label}
+            />
+          ))}
         </div>
       </div>
 
@@ -475,136 +338,14 @@ export function SelectSpec() {
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
           Tipo farina — Interattivo
         </span>
-        <div className="mt-4 relative" ref={containerRef} style={{ maxWidth: "320px" }}>
-          {/* Trigger */}
-          <motion.button
-            onClick={() => setIsOpen((p) => !p)}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-xl active:scale-[0.98] transition-transform"
-            style={{
-              background: "var(--surface-container)",
-              border: isOpen ? "2px solid var(--primary)" : "1px solid var(--outline-variant)",
-              cursor: "pointer",
-              outline: "none",
-              boxShadow: isOpen ? "var(--shadow-glow)" : "none",
-            }}
-          >
-            <div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-lg)",
-                fontWeight: "var(--weight-medium)" as any,
-                color: "var(--primary)",
-                letterSpacing: "var(--tracking-spread)",
-                marginBottom: "2px",
-              }}>
-                Tipo farina
-              </div>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-xl)",
-                fontWeight: "var(--weight-medium)" as any,
-                color: selectedOption ? "var(--text-default)" : "var(--muted-foreground)",
-              }}>
-                {selectedOption ? selectedOption.label : "Seleziona..."}
-              </div>
-            </div>
-            <motion.div
-              animate={{ rotate: isOpen ? 180 : 0 }}
-              transition={{ type: "spring", stiffness: 500, damping: 25 }}
-            >
-              <ChevronDown size={18} style={{ color: "var(--muted-foreground)" }} />
-            </motion.div>
-          </motion.button>
-
-          {/* Dropdown menu */}
-          <AnimatePresence>
-            {isOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -8, scaleY: 0.95 }}
-                animate={{ opacity: 1, y: 4, scaleY: 1 }}
-                exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
-                transition={{ type: "spring", stiffness: 500, damping: 28 }}
-                className="absolute z-50 w-full rounded-xl overflow-hidden"
-                style={{
-                  background: "var(--surface-container)",
-                  border: "1px solid var(--outline-variant)",
-                  boxShadow: "var(--shadow-lg)",
-                  transformOrigin: "top",
-                  maxHeight: "280px",
-                  overflowY: "auto",
-                }}
-              >
-                {FLOUR_OPTIONS.map((opt, i) => {
-                  const isSelected = selected === opt.id;
-                  const prevGroup = i > 0 ? FLOUR_OPTIONS[i - 1].group : null;
-                  const showGroupHeader = opt.group !== prevGroup;
-
-                  return (
-                    <div style={{ display: "contents" }} key={opt.id}>
-                      {showGroupHeader && (
-                        <div className="px-4 pt-3 pb-1" style={{
-                          fontFamily: "'DM Mono', monospace",
-                          fontSize: "var(--font-size-md)",
-                          fontWeight: "var(--weight-semibold)" as any,
-                          letterSpacing: "var(--tracking-caps)",
-                          textTransform: "uppercase" as const,
-                          color: "var(--primary)",
-                        }}>
-                          {opt.group}
-                        </div>
-                      )}
-                      <motion.button
-                        onClick={() => { setSelected(opt.id); setIsOpen(false); }}
-                        className="w-full flex items-center justify-between px-4 py-2.5 text-left active:scale-[0.98] transition-transform"
-                        style={{
-                          background: isSelected
-                            ? "color-mix(in srgb, var(--primary) 10%, rgba(0,0,0,0))"
-                            : "rgba(0,0,0,0)",
-                          border: "none",
-                          cursor: "pointer",
-                          outline: "none",
-                        }}
-                        onMouseEnter={(e) => {
-                          if (!isSelected) e.currentTarget.style.background = "color-mix(in srgb, var(--primary) 5%, rgba(0,0,0,0))";
-                        }}
-                        onMouseLeave={(e) => {
-                          if (!isSelected) e.currentTarget.style.background = "rgba(0,0,0,0)";
-                        }}
-                      >
-                        <div>
-                          <div style={{
-                            fontFamily: "'DM Sans', sans-serif",
-                            fontSize: "var(--font-size-lg)",
-                            fontWeight: isSelected ? "var(--weight-semibold)" : "var(--weight-regular)" as any,
-                            color: "var(--text-default)",
-                          }}>
-                            {opt.label}
-                          </div>
-                          <div style={{
-                            fontFamily: "'DM Mono', monospace",
-                            fontSize: "var(--font-size-lg)",
-                            color: "var(--muted-foreground)",
-                            fontFeatureSettings: "'tnum'",
-                          }}>
-                            {opt.desc}
-                          </div>
-                        </div>
-                        {isSelected && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                          >
-                            <Check size={16} style={{ color: "var(--primary)" }} />
-                          </motion.div>
-                        )}
-                      </motion.button>
-                    </div>
-                  );
-                })}
-              </motion.div>
-            )}
-          </AnimatePresence>
+        <div className="mt-4">
+          <Select
+            options={FLOUR_OPTIONS}
+            value={selected}
+            onValueChange={setSelected}
+            label="Tipo farina"
+            style={{ maxWidth: "320px" }}
+          />
         </div>
       </div>
 

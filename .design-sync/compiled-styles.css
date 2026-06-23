@@ -69,6 +69,7 @@
     --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
     --animate-spin: spin 1s linear infinite;
     --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -1263,9 +1264,6 @@
       background-color: color-mix(in oklab, var(--color-black) 40%, transparent);
     }
   }
-  .bg-card {
-    background-color: var(--card);
-  }
   .bg-transparent {
     background-color: transparent;
   }
@@ -1904,23 +1902,10 @@
       padding-block: calc(var(--spacing) * 2);
     }
   }
-  .focus-visible\:border-ring {
-    &:focus-visible {
-      border-color: var(--ring);
-    }
-  }
   .focus-visible\:ring-\[3px\] {
     &:focus-visible {
       --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-    }
-  }
-  .focus-visible\:ring-ring\/50 {
-    &:focus-visible {
-      --tw-ring-color: var(--ring);
-      @supports (color: color-mix(in lab, red, red)) {
-        --tw-ring-color: color-mix(in oklab, var(--ring) 50%, transparent);
-      }
     }
   }
   .active\:scale-90 {
@@ -2020,20 +2005,10 @@
       translate: var(--tw-translate-x) var(--tw-translate-y);
     }
   }
-  .data-\[state\=checked\]\:bg-primary {
-    &[data-state="checked"] {
-      background-color: var(--primary);
-    }
-  }
   .data-\[state\=unchecked\]\:translate-x-0 {
     &[data-state="unchecked"] {
       --tw-translate-x: 0;
       translate: var(--tw-translate-x) var(--tw-translate-y);
-    }
-  }
-  .data-\[state\=unchecked\]\:bg-switch-background {
-    &[data-state="unchecked"] {
-      background-color: var(--switch-background);
     }
   }
   .sm\:col-span-2 {
@@ -2576,30 +2551,6 @@
   .xl\:gap-16 {
     @media (width >= 80rem) {
       gap: calc(var(--spacing) * 16);
-    }
-  }
-  .dark\:data-\[state\=checked\]\:bg-primary-foreground {
-    &:is(.dark *) {
-      &[data-state="checked"] {
-        background-color: var(--primary-foreground);
-      }
-    }
-  }
-  .dark\:data-\[state\=unchecked\]\:bg-card-foreground {
-    &:is(.dark *) {
-      &[data-state="unchecked"] {
-        background-color: var(--card-foreground);
-      }
-    }
-  }
-  .dark\:data-\[state\=unchecked\]\:bg-input\/80 {
-    &:is(.dark *) {
-      &[data-state="unchecked"] {
-        background-color: var(--input);
-        @supports (color: color-mix(in lab, red, red)) {
-          background-color: color-mix(in oklab, var(--input) 80%, transparent);
-        }
-      }
     }
   }
   .\[\&\:\:-moz-range-thumb\]\:h-6 {

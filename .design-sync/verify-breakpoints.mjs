@@ -7,7 +7,7 @@
 // Esegui:  NODE_PATH="$PWD/.ds-sync/node_modules" node .design-sync/verify-breakpoints.mjs
 // Output:  .design-sync/.cache/breakpoints/<Name>__<width>.png + report.json
 // Exit:    0 = nessun flag; 1 = almeno un componente segnalato (è il cancello).
-import { readdirSync, mkdirSync, writeFileSync, existsSync, rmSync } from 'node:fs';
+import { readdirSync, mkdirSync, writeFileSync, existsSync, rmSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createRequire } from 'node:module';
@@ -30,8 +30,11 @@ const WIDTHS = [375, 768, 1280];
 const comps = [];
 for (const g of readdirSync(COMP)) {
   const gp = join(COMP, g);
+  if (!statSync(gp).isDirectory()) continue;
   for (const name of readdirSync(gp)) {
-    const html = join(gp, name, `${name}.html`);
+    const np = join(gp, name);
+    if (!statSync(np).isDirectory()) continue;
+    const html = join(np, `${name}.html`);
     if (existsSync(html)) comps.push({ group: g, name, html });
   }
 }

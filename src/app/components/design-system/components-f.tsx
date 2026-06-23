@@ -10,7 +10,7 @@ Timer,
 Wheat
 } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
-import { useEffect,useRef,useState } from "react";
+import React, { useEffect,useRef,useState } from "react";
 import type { SectionEntry } from "./shared";
 import {
 AccessibilitaInfo,
@@ -20,6 +20,7 @@ Panoramica,
 SectionHeader,
 SubSectionLabel,
 } from "./shared";
+import { Switch, Divider, Fab, SegmentedControl, Progress, Surface, CtaButton } from "../ds/index";
 
 /* ═══════════════════════════════════════════════════════════
    C17 — FAB / EXTENDED FAB  (M3 Expressive)
@@ -66,42 +67,41 @@ export function FABSpec() {
       <SubSectionLabel label="Specifiche" />
 
       {/* Variant selector */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Varianti FAB</span>
         <div className="mt-3 flex flex-wrap gap-2">
           {FAB_VARIANTS.map((v) => (
-            <button
+            <CtaButton
               key={v.id}
+              variant="secondary"
+              radius="xl"
               onClick={() => setActiveVariant(v.id)}
-              className="px-4 py-2.5 rounded-xl active:scale-95"
+              className="px-4 py-2"
               style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", fontWeight: activeVariant === v.id ? "var(--weight-bold)" as any : "var(--weight-medium)" as any,
                 background: activeVariant === v.id ? "var(--primary)" : "var(--surface-container)",
                 color: activeVariant === v.id ? "var(--primary-foreground)" : "var(--muted-foreground)",
                 border: activeVariant === v.id ? "1px solid var(--primary)" : "1px solid var(--outline-variant)",
-                cursor: "pointer", outline: "none",
-                transition: "background 0.15s, color 0.15s, border-color 0.15s",
               }}
             >
               {v.label}
-            </button>
+            </CtaButton>
           ))}
         </div>
 
         {/* Color selector */}
         <div className="mt-4 flex flex-wrap gap-2">
           {FAB_COLORS.map((c) => (
-            <button
+            <CtaButton
               key={c.id}
+              variant="secondary"
+              radius="lg"
               onClick={() => setActiveColor(c.id)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg active:scale-95"
+              className="px-3 py-1.5 flex items-center gap-2"
               style={{
                 background: activeColor === c.id ? c.bg : "var(--surface-container)",
                 color: activeColor === c.id ? c.fg : "var(--muted-foreground)",
                 border: activeColor === c.id ? `1px solid ${c.fg}` : "1px solid var(--outline-variant)",
-                cursor: "pointer", outline: "none",
-                fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any,
-                transition: "background 0.15s, color 0.15s, border-color 0.15s",
               }}
             >
               <div className="w-3 h-3 rounded-full" style={{
@@ -109,82 +109,42 @@ export function FABSpec() {
                 border: activeColor === c.id ? `2px solid ${c.fg}` : "1px solid var(--outline-variant)",
               }} />
               {c.label}
-            </button>
+            </CtaButton>
           ))}
         </div>
 
         {/* FAB preview */}
         <div className="mt-6 flex items-center justify-center" style={{ minHeight: "140px" }}>
-          <motion.button
-            onMouseDown={() => setFabPressed(true)}
-            onMouseUp={() => setFabPressed(false)}
-            onMouseLeave={() => setFabPressed(false)}
-            whileHover={{ scale: 1.04 }}
-            transition={{ type: "spring", stiffness: 500, damping: 25 }}
-            className="flex items-center justify-center gap-3 active:scale-[0.92] transition-transform"
-            style={{
-              width: variant.showLabel ? "auto" : variant.size,
-              height: variant.size,
-              minWidth: variant.showLabel ? "120px" : undefined,
-              paddingLeft: variant.showLabel ? "20px" : undefined,
-              paddingRight: variant.showLabel ? "24px" : undefined,
-              borderRadius: variant.radius,
-              background: color.bg,
-              color: color.fg,
-              border: "none",
-              cursor: "pointer",
-              outline: "none",
-              boxShadow: fabPressed ? "var(--shadow-sm)" : color.shadow,
-              transition: "box-shadow 0.15s, background 0.15s, color 0.15s",
-            }}
-          >
-            <Plus size={variant.iconSize} />
-            {variant.showLabel && (
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any, letterSpacing: "var(--tracking-wide)" }}>
-                Nuova ricetta
-              </span>
-            )}
-          </motion.button>
+          <Fab
+            variant={activeVariant as any}
+            color={activeColor as any}
+            icon={<Plus size={variant.iconSize} />}
+            label="Nuova ricetta"
+          />
         </div>
-      </div>
+      </Surface>
 
       {/* All FAB sizes side by side */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Scala completa</span>
         <div className="mt-4 flex items-end gap-6 justify-center flex-wrap">
           {FAB_VARIANTS.map((v) => (
             <div key={v.id} className="flex flex-col items-center gap-2">
-              <motion.div
-                className="flex items-center justify-center gap-2 cursor-pointer active:scale-[0.92] transition-transform"
-                style={{
-                  width: v.showLabel ? "auto" : v.size,
-                  height: v.size,
-                  minWidth: v.showLabel ? "120px" : undefined,
-                  paddingLeft: v.showLabel ? "16px" : undefined,
-                  paddingRight: v.showLabel ? "20px" : undefined,
-                  borderRadius: v.radius,
-                  background: "var(--primary-container)",
-                  color: "var(--on-primary-container)",
-                  boxShadow: "var(--shadow-md)",
-                }}
-              >
-                <Plus size={v.iconSize} />
-                {v.showLabel && (
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any }}>
-                    Crea
-                  </span>
-                )}
-              </motion.div>
+              <Fab
+                variant={v.id as any}
+                icon={<Plus size={v.iconSize} />}
+                label="Crea"
+              />
               <span className="type-code" style={{ color: "var(--muted-foreground)" }}>
                 {v.label} · {v.size}px
               </span>
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
 
       {/* Anatomy */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Anatomia FAB</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <AnatomyRow prop="Container" val="primary-container (default), surface-container-high, tertiary-container" />
@@ -194,7 +154,7 @@ export function FABSpec() {
           <AnatomyRow prop="Label (ext)" val="DM Sans, 0.875rem, weight 600, letterSpacing 0.01em" />
           <AnatomyRow prop="Icon" val="Lucide, 24px standard, 20px small/ext, 36px large" />
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida
@@ -275,63 +235,26 @@ export function SegmentedButtonSpec() {
 
       {/* Demo groups */}
       {SEGMENT_DEMOS.map((group) => (
-        <div key={group.id} className="surface-card p-5">
+        <Surface variant="card" className="p-5" key={group.id}>
           <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>{group.label}</span>
-          <div className="mt-4 flex rounded-2xl overflow-hidden" style={{ border: "1px solid var(--outline-variant)" }}>
-            {group.options.map((opt, i) => {
-              const isActive = selections[group.id] === opt.id;
-              const Icon = opt.icon;
-              return (
-                <button
-                  key={opt.id}
-                  onClick={() => select(group.id, opt.id)}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 px-4 relative active:scale-[0.97]"
-                  style={{
-                    background: isActive ? "var(--primary)" : "var(--surface-container-low)",
-                    color: isActive ? "var(--primary-foreground)" : "var(--on-surface-variant)",
-                    cursor: "pointer",
-                    outline: "none",
-                    border: "none",
-                    borderRight: i < group.options.length - 1 ? "1px solid var(--outline-variant)" : "none",
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-md)",
-                    fontWeight: isActive ? "var(--weight-bold)" as any : "var(--weight-medium)" as any,
-                    transition: "background 0.15s, color 0.15s",
-                  }}
-                >
-                  <AnimatePresence mode="wait">
-                    {isActive ? (
-                      <motion.div
-                        key="check"
-                        initial={{ scale: 0, rotate: -90 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        exit={{ scale: 0 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                      >
-                        <Check size={16} />
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="icon"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        exit={{ scale: 0 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                      >
-                        <Icon size={16} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                  <span className="hidden sm:inline">{opt.label}</span>
-                </button>
-              );
-            })}
+          <div className="mt-4">
+            <SegmentedControl
+              value={selections[group.id]}
+              options={group.options.map(opt => ({
+                value: opt.id,
+                label: <span className="hidden sm:inline">{opt.label}</span>,
+                icon: React.createElement(opt.icon, { size: 16 })
+              }))}
+              onValueChange={val => select(group.id, val)}
+              ariaLabel={group.label}
+              fullWidth
+            />
           </div>
-        </div>
+        </Surface>
       ))}
 
       {/* States */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Stati Segmento</span>
         <div className="mt-4 grid grid-cols-4 gap-3">
           {[
@@ -357,10 +280,10 @@ export function SegmentedButtonSpec() {
             </div>
           ))}
         </div>
-      </div>
+      </Surface>
 
       {/* Anatomy */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Anatomia</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <AnatomyRow prop="Container" val="outline-variant border, rounded-2xl outer, nessun gap interno" />
@@ -368,7 +291,7 @@ export function SegmentedButtonSpec() {
           <AnatomyRow prop="Typography" val="DM Sans, 0.75rem, weight 500→700 on select" />
           <AnatomyRow prop="Divider" val="1px outline-variant tra segmenti (nascosto quando adiacente al selezionato)" />
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida
@@ -436,7 +359,7 @@ export function SwitchSpec() {
       <SubSectionLabel label="Specifiche" />
 
       {/* Interactive switches */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Switch interattivi</span>
         <div className="mt-4 flex flex-col gap-1">
           {SWITCH_DEMOS.map((sw) => {
@@ -447,62 +370,16 @@ export function SwitchSpec() {
                   <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>{sw.label}</div>
                   <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-base)", color: "var(--muted-foreground)" }}>{sw.desc}</div>
                 </div>
-                <button
-                  onClick={() => toggle(sw.id)}
-                  className="flex-shrink-0 flex items-center active:scale-95"
-                  style={{
-                    width: "52px",
-                    height: "32px",
-                    borderRadius: "16px",
-                    background: isOn ? "var(--primary)" : "var(--switch-background)",
-                    border: isOn ? "2px solid var(--primary)" : "2px solid var(--outline)",
-                    cursor: "pointer",
-                    outline: "none",
-                    padding: 0,
-                    transition: "background 0.15s, border-color 0.15s",
-                  }}
-                  role="switch"
-                  aria-checked={isOn}
+                <Switch
+                  checked={isOn}
+                  onCheckedChange={() => toggle(sw.id)}
                   aria-label={sw.label}
-                >
-                  <motion.div
-                    initial={false}
-                    animate={{
-                      x: isOn ? 22 : 4,
-                      width: isOn ? 24 : 16,
-                      height: isOn ? 24 : 16,
-                    }}
-                    transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                    className="relative flex-shrink-0 flex items-center justify-center rounded-full"
-                  >
-                    <div
-                      className="absolute inset-0 rounded-full"
-                      style={{
-                        background: isOn ? "var(--primary-foreground)" : "var(--on-surface-variant)",
-                        boxShadow: "var(--shadow-xs)",
-                      }}
-                    />
-                    <AnimatePresence mode="wait">
-                      {isOn && (
-                        <motion.div
-                          key="check"
-                          initial={{ scale: 0, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={{ scale: 0, opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 600, damping: 20 }}
-                          className="relative z-10"
-                        >
-                          <Check size={14} style={{ color: "var(--primary)" }} />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                </button>
+                />
               </div>
             );
           })}
         </div>
-      </div>
+      </Surface>
 
       {/* States grid */}
       <div className="surface-card p-5">
@@ -546,7 +423,7 @@ export function SwitchSpec() {
       </div>
 
       {/* Anatomy */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Anatomia</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <AnatomyRow prop="Track" val="52×32px, radius-full. Off: switch-background + outline 2px. On: primary." />
@@ -554,7 +431,7 @@ export function SwitchSpec() {
           <AnatomyRow prop="Motion" val="spring stiffness:500 damping:25 — thumb + icon separati" />
           <AnatomyRow prop="A11y" val="role='switch', aria-checked, aria-label. Focus ring 3px primary." />
         </div>
-      </div>
+      </Surface>
 
       <SubSectionLabel label="Linee guida" />
       <LineeGuida
@@ -607,21 +484,10 @@ export function ProgressIndicatorSpec() {
       <SubSectionLabel label="Specifiche" />
 
       {/* Linear — determinate */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Linear — Determinato</span>
         <div className="mt-4">
-          <div className="flex items-center justify-between mb-2">
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>Completamento ricetta</span>
-            <span className="type-data" style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--primary)", fontFeatureSettings: "'tnum'" }}>{progress}%</span>
-          </div>
-          <div className="relative h-1 rounded-full overflow-hidden" style={{ background: "var(--surface-container-high)" }}>
-            <motion.div
-              className="absolute inset-y-0 left-0 rounded-full"
-              style={{ background: "var(--primary)" }}
-              animate={{ width: `${progress}%` }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            />
-          </div>
+          <Progress value={progress} label="Completamento ricetta" />
           <input
             type="range"
             min={0}
@@ -631,82 +497,35 @@ export function ProgressIndicatorSpec() {
             className="w-full mt-3 accent-[var(--primary)]"
           />
         </div>
-      </div>
+      </Surface>
 
       {/* Linear — indeterminate */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Linear — Indeterminato</span>
-        <div className="mt-4 relative h-1 rounded-full overflow-hidden" style={{ background: "var(--surface-container-high)" }}>
-          <motion.div
-            className="absolute inset-y-0 rounded-full"
-            style={{ background: "var(--primary)", width: "40%" }}
-            animate={{ left: ["-40%", "100%"] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: [0.4, 0, 0.2, 1] }}
-          />
+        <div className="mt-4">
+          <Progress indeterminate />
         </div>
-      </div>
+      </Surface>
 
       {/* Circular */}
-      <div className="surface-card p-5">
+      <Surface variant="card" className="p-5">
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Circular</span>
         <div className="mt-4 flex items-center gap-8 justify-center flex-wrap">
           {/* Determinate */}
-          {[25, 50, 75, 100].map((pct) => {
-            const r = 18;
-            const c = 2 * Math.PI * r;
-            const offset = c - (pct / 100) * c;
-            return (
-              <div key={pct} className="flex flex-col items-center gap-2">
-                <div className="relative" style={{ width: 48, height: 48 }}>
-                  <svg width="48" height="48" viewBox="0 0 48 48">
-                    <circle cx="24" cy="24" r={r} fill="none" stroke="var(--surface-container-high)" strokeWidth="4" />
-                    <motion.circle
-                      cx="24" cy="24" r={r} fill="none"
-                      stroke="var(--primary)"
-                      strokeWidth="4"
-                      strokeLinecap="round"
-                      strokeDasharray={c}
-                      initial={{ strokeDashoffset: c }}
-                      animate={{ strokeDashoffset: offset }}
-                      transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                      style={{ transform: "rotate(-90deg)", transformOrigin: "center" }}
-                    />
-                  </svg>
-                  <span
-                    className="absolute inset-0 flex items-center justify-center type-data"
-                    style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--primary)", fontFeatureSettings: "'tnum'" }}
-                  >
-                    {pct}
-                  </span>
-                </div>
-                <span className="type-code" style={{ color: "var(--muted-foreground)" }}>{pct}%</span>
-              </div>
-            );
-          })}
+          {[25, 50, 75, 100].map((pct) => (
+            <div key={pct} className="flex flex-col items-center gap-2">
+              <Progress variant="circular" value={pct} size={48} />
+              <span className="type-code" style={{ color: "var(--muted-foreground)" }}>{pct}%</span>
+            </div>
+          ))}
 
           {/* Indeterminate spinner */}
           <div className="flex flex-col items-center gap-2">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1.4, repeat: Infinity, ease: "linear" }}
-              style={{ width: 48, height: 48 }}
-            >
-              <svg width="48" height="48" viewBox="0 0 48 48">
-                <circle cx="24" cy="24" r={18} fill="none" stroke="var(--surface-container-high)" strokeWidth="4" />
-                <circle
-                  cx="24" cy="24" r={18} fill="none"
-                  stroke="var(--primary)"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  strokeDasharray={`${2 * Math.PI * 18 * 0.25} ${2 * Math.PI * 18 * 0.75}`}
-                  style={{ transform: "rotate(-90deg)", transformOrigin: "center" }}
-                />
-              </svg>
-            </motion.div>
+            <Progress variant="circular" indeterminate size={48} />
             <span className="type-code" style={{ color: "var(--muted-foreground)" }}>Indet.</span>
           </div>
         </div>
-      </div>
+      </Surface>
 
       {/* Anatomy */}
       <div className="surface-card p-5">
@@ -966,7 +785,7 @@ export function DividerSpec() {
             <span className="type-mono-label" style={{ color: "var(--primary)" }}>Full-bleed</span>
             <div className="mt-2 p-4 rounded-xl" style={{ background: "var(--surface-container)" }}>
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)", padding: "8px 0" }}>Elemento sopra</div>
-              <div style={{ height: "1px", background: "var(--outline-variant)" }} />
+              <Divider />
               <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)", padding: "8px 0" }}>Elemento sotto</div>
             </div>
           </div>
@@ -979,7 +798,7 @@ export function DividerSpec() {
                 <div className="w-8 h-8 rounded-full" style={{ background: "var(--primary-container)" }} />
                 <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)" }}>Napoletana STG</span>
               </div>
-              <div style={{ height: "1px", background: "var(--outline-variant)", marginLeft: "44px" }} />
+              <Divider inset />
               <div className="flex items-center gap-3 py-2">
                 <div className="w-8 h-8 rounded-full" style={{ background: "var(--tertiary-container)" }} />
                 <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)" }}>Teglia Romana</span>
@@ -992,11 +811,11 @@ export function DividerSpec() {
             <span className="type-mono-label" style={{ color: "var(--primary)" }}>Verticale</span>
             <div className="mt-2 p-4 rounded-xl flex items-center gap-0" style={{ background: "var(--surface-container)" }}>
               <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)", padding: "0 12px" }}>65%</span>
-              <div style={{ width: "1px", height: "24px", background: "var(--outline-variant)" }} />
+              <Divider orientation="vertical" style={{ height: "24px" }} />
               <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)", padding: "0 12px" }}>W280</span>
-              <div style={{ width: "1px", height: "24px", background: "var(--outline-variant)" }} />
+              <Divider orientation="vertical" style={{ height: "24px" }} />
               <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)", padding: "0 12px" }}>24h</span>
-              <div style={{ width: "1px", height: "24px", background: "var(--outline-variant)" }} />
+              <Divider orientation="vertical" style={{ height: "24px" }} />
               <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)", padding: "0 12px" }}>4°C</span>
             </div>
           </div>
