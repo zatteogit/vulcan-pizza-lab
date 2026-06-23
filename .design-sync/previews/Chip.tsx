@@ -1,33 +1,24 @@
 import { Chip } from "@figma/my-make-file";
 import { CookingPot, Package } from "lucide-react";
-
-const noop = () => {};
+import { useState } from "react";
 
 export function States() {
+  const [on, setOn] = useState({ legna: true, teglia: false });
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Chip label="Forno a legna" active={true} onToggle={noop} />
-      <Chip label="Teglia" active={false} onToggle={noop} />
+      <Chip label="Forno a legna" active={on.legna} onToggle={() => setOn((p) => ({ ...p, legna: !p.legna }))} />
+      <Chip label="Teglia" active={on.teglia} onToggle={() => setOn((p) => ({ ...p, teglia: !p.teglia }))} />
     </div>
   );
 }
 
 export function WithIcon() {
+  const [sel, setSel] = useState("dispensa");
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Chip label="Dispensa" active={true} onToggle={noop} />
-      <Chip
-        label="La tua cucina"
-        active={false}
-        onToggle={noop}
-        icon={<CookingPot size={15} />}
-      />
-      <Chip
-        label="Tutto pronto"
-        active={false}
-        onToggle={noop}
-        icon={<Package size={15} />}
-      />
+      <Chip label="Dispensa" active={sel === "dispensa"} onToggle={() => setSel("dispensa")} />
+      <Chip label="La tua cucina" active={sel === "cucina"} onToggle={() => setSel("cucina")} icon={<CookingPot size={15} />} />
+      <Chip label="Tutto pronto" active={sel === "pronto"} onToggle={() => setSel("pronto")} icon={<Package size={15} />} />
     </div>
   );
 }

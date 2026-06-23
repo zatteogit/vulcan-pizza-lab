@@ -1,27 +1,11 @@
 import { RecipeSectionTabs } from "@figma/my-make-file";
+import { useState } from "react";
 
 export function Inline() {
+  const [tab, setTab] = useState("ricetta");
   return (
-    <div style={{ maxWidth: 440 }}>
-      <RecipeSectionTabs
-        activeTab="ricetta"
-        recipeLabel="Napoletana"
-        onChange={() => {}}
-        sticky={false}
-      />
-    </div>
-  );
-}
-
-export function Procedure() {
-  return (
-    <div style={{ maxWidth: 440 }}>
-      <RecipeSectionTabs
-        activeTab="procedimento"
-        recipeLabel="Romana"
-        onChange={() => {}}
-        sticky={false}
-      />
+    <div style={{ width: "100%", maxWidth: 440 }}>
+      <RecipeSectionTabs activeTab={tab as any} recipeLabel="Napoletana" onChange={(t) => setTab(t)} sticky={false} />
     </div>
   );
 }

@@ -1,38 +1,30 @@
 import { FilterChip } from "@figma/my-make-file";
-
-const noop = () => {};
+import { useState } from "react";
 
 export function Filters() {
+  const [sel, setSel] = useState("tutti");
+  const items = ["Tutti", "Napoletana", "Romana", "Americana"];
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <FilterChip active={true} onClick={noop}>
-        Tutti
-      </FilterChip>
-      <FilterChip active={false} onClick={noop}>
-        Napoletana
-      </FilterChip>
-      <FilterChip active={false} onClick={noop}>
-        Romana
-      </FilterChip>
-      <FilterChip active={false} onClick={noop}>
-        Americana
-      </FilterChip>
+    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+      {items.map((x) => (
+        <FilterChip key={x} active={sel === x.toLowerCase()} onClick={() => setSel(x.toLowerCase())}>
+          {x}
+        </FilterChip>
+      ))}
     </div>
   );
 }
 
 export function WithCount() {
+  const [sel, setSel] = useState("tutti");
+  const items: [string, number][] = [["Tutti", 28], ["Napoletana", 5], ["Romana", 6]];
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <FilterChip active={true} count={28} onClick={noop}>
-        Tutti
-      </FilterChip>
-      <FilterChip active={false} count={5} onClick={noop}>
-        Napoletana
-      </FilterChip>
-      <FilterChip active={false} count={6} onClick={noop}>
-        Romana
-      </FilterChip>
+    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+      {items.map(([l, c]) => (
+        <FilterChip key={l} active={sel === l.toLowerCase()} count={c} onClick={() => setSel(l.toLowerCase())}>
+          {l}
+        </FilterChip>
+      ))}
     </div>
   );
 }

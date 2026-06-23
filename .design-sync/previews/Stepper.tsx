@@ -1,42 +1,12 @@
 import { Stepper } from "@figma/my-make-file";
+import { useState } from "react";
 
-const noop = () => {};
-
-export function Default() {
+export function Interactive() {
+  const [v, setV] = useState(4);
   return (
-    <Stepper
-      value={4}
-      min={1}
-      max={20}
-      onChange={noop}
-      decrementLabel="Meno panetti"
-      incrementLabel="Più panetti"
-    />
-  );
-}
-
-export function AtMin() {
-  return (
-    <Stepper
-      value={1}
-      min={1}
-      max={20}
-      onChange={noop}
-      decrementLabel="Meno panetti"
-      incrementLabel="Più panetti"
-    />
-  );
-}
-
-export function AtMax() {
-  return (
-    <Stepper
-      value={20}
-      min={1}
-      max={20}
-      onChange={noop}
-      decrementLabel="Meno panetti"
-      incrementLabel="Più panetti"
-    />
+    <div style={{ display: "flex", flexDirection: "column", gap: 10, alignItems: "flex-start" }}>
+      <span style={{ fontSize: "var(--font-size-base)", color: "var(--text-muted)" }}>Panetti: {v}</span>
+      <Stepper value={v} min={1} max={20} onChange={setV} decrementLabel="Meno panetti" incrementLabel="Più panetti" />
+    </div>
   );
 }

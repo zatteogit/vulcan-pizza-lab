@@ -1,21 +1,30 @@
 import { RadioButton } from "@figma/my-make-file";
+import { useState } from "react";
+
+const OVENS = [
+  { id: "home", label: "Forno casalingo", desc: "Elettrico standard, max 250°C" },
+  { id: "wood", label: "Forno a legna", desc: "450–500°C, fiamma diretta" },
+  { id: "ooni", label: "Forno portatile (Ooni)", desc: "Gas o legna, 400–500°C" },
+];
 
 export function Group() {
+  const [sel, setSel] = useState("home");
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4, maxWidth: 340 }} role="radiogroup">
-      <RadioButton checked label="Forno casalingo" description="Elettrico standard, max 250°C" />
-      <RadioButton label="Forno a legna" description="450–500°C, fiamma diretta" />
-      <RadioButton label="Forno portatile (Ooni)" description="Gas o legna, 400–500°C" />
+    <div style={{ display: "flex", flexDirection: "column", gap: 4, width: "100%", maxWidth: 340 }} role="radiogroup">
+      {OVENS.map((o) => (
+        <RadioButton key={o.id} checked={sel === o.id} onSelect={() => setSel(o.id)} label={o.label} description={o.desc} />
+      ))}
     </div>
   );
 }
 
 export function Compact() {
+  const [sel, setSel] = useState("fresco");
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <RadioButton checked label="Fresco" />
-      <RadioButton label="Secco" />
-      <RadioButton label="Madre" />
+      {["Fresco", "Secco", "Madre"].map((l) => (
+        <RadioButton key={l} checked={sel === l.toLowerCase()} onSelect={() => setSel(l.toLowerCase())} label={l} />
+      ))}
     </div>
   );
 }

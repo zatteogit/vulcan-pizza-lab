@@ -1,4 +1,5 @@
 import { Select } from "@figma/my-make-file";
+import { useState } from "react";
 
 const OPTS = [
   { id: "00", label: "Farina 00", desc: "W 260–290", group: "Raffinate" },
@@ -6,18 +7,11 @@ const OPTS = [
   { id: "integrale", label: "Integrale", desc: "W 200–240", group: "Integrali" },
 ];
 
-export function Selected() {
+export function Interactive() {
+  const [v, setV] = useState<string | null>("00");
   return (
-    <div style={{ width: 300 }}>
-      <Select label="Tipo farina" options={OPTS} value="00" />
-    </div>
-  );
-}
-
-export function Placeholder() {
-  return (
-    <div style={{ width: 300 }}>
-      <Select label="Tipo farina" options={OPTS} value={null} placeholder="Seleziona..." />
+    <div style={{ width: "100%", maxWidth: 300 }}>
+      <Select label="Tipo farina" options={OPTS} value={v} onValueChange={setV} />
     </div>
   );
 }

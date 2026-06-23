@@ -1,14 +1,14 @@
 import { SegmentedControl } from "@figma/my-make-file";
 import { Flame, Compass, GraduationCap } from "lucide-react";
-
-const noop = () => {};
+import { useState } from "react";
 
 export function Modes() {
+  const [v, setV] = useState("crea");
   return (
     <SegmentedControl
       ariaLabel="Sezione"
-      value="crea"
-      onValueChange={noop}
+      value={v}
+      onValueChange={setV}
       options={[
         { value: "crea", label: "Crea" },
         { value: "scopri", label: "Scopri" },
@@ -19,11 +19,12 @@ export function Modes() {
 }
 
 export function WithIcons() {
+  const [v, setV] = useState("scopri");
   return (
     <SegmentedControl
       ariaLabel="Sezione"
-      value="scopri"
-      onValueChange={noop}
+      value={v}
+      onValueChange={setV}
       options={[
         { value: "crea", label: "Crea", icon: <Flame size={15} /> },
         { value: "scopri", label: "Scopri", icon: <Compass size={15} /> },
@@ -33,29 +34,14 @@ export function WithIcons() {
   );
 }
 
-export function Tabs() {
-  return (
-    <SegmentedControl
-      ariaLabel="Sezioni ricetta"
-      role="tablist"
-      value="ricetta"
-      onValueChange={noop}
-      options={[
-        { value: "ricetta", label: "Ricetta" },
-        { value: "procedimento", label: "Procedimento" },
-        { value: "condimento", label: "Condimento" },
-      ]}
-    />
-  );
-}
-
 export function Brand() {
+  const [v, setV] = useState("adattata");
   return (
     <SegmentedControl
       ariaLabel="Modalità"
       tone="brand"
-      value="adattata"
-      onValueChange={noop}
+      value={v}
+      onValueChange={setV}
       options={[
         { value: "canonica", label: "Canonica" },
         { value: "adattata", label: "La mia versione" },
