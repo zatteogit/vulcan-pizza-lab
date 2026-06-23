@@ -130,3 +130,10 @@ IconButton (azione senza stato), InfoTip (stato interno già nel componente).
   SegmentedControl/Progress side-by-side: ok, non serve.)
 - **Nota**: il `category` da docsMap NON sovrascrive un gruppo già derivato-da-cartella
   (ds/app/foundations sono "meaningful") → serve il regroup, non il docsMap.
+
+## Descrizioni showcase → doc componenti (2026-06-23)
+`.design-sync/docs/<Componente>.md` estratti dai `*Spec` del catalogo (description +
+Principi + Fai + Non fare), wired via `cfg.docsMap`. Il body finisce in `<Name>.prompt.md`
+("Usage notes for Claude" sulla card). 25/39 componenti hanno una Spec corrispondente.
+Rigenerare: `node /tmp/extract-docs.mjs`-style (mapping componente→Spec nello script).
+NB: docsMap NON cambia il gruppo (lo fa regroup.mjs); fornisce solo il corpo del doc.

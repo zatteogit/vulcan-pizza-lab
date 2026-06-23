@@ -56,5 +56,32 @@
     "RecipeStatStrip": {
       "cardMode": "column"
     }
+  },
+  "docsMap": {
+    "Badge": ".design-sync/docs/Badge.md",
+    "BottomSheet": ".design-sync/docs/BottomSheet.md",
+    "Carousel": ".design-sync/docs/Carousel.md",
+    "Checkbox": ".design-sync/docs/Checkbox.md",
+    "Chip": ".design-sync/docs/Chip.md",
+    "CtaButton": ".design-sync/docs/CtaButton.md",
+    "Dialog": ".design-sync/docs/Dialog.md",
+    "Divider": ".design-sync/docs/Divider.md",
+    "Fab": ".design-sync/docs/Fab.md",
+    "FilterChip": ".design-sync/docs/FilterChip.md",
+    "IconButton": ".design-sync/docs/IconButton.md",
+    "InfoTip": ".design-sync/docs/InfoTip.md",
+    "Progress": ".design-sync/docs/Progress.md",
+    "RadioButton": ".design-sync/docs/RadioButton.md",
+    "RecipeSectionTabs": ".design-sync/docs/RecipeSectionTabs.md",
+    "RecipeStatStrip": ".design-sync/docs/RecipeStatStrip.md",
+    "ScoreRing": ".design-sync/docs/ScoreRing.md",
+    "SegmentedControl": ".design-sync/docs/SegmentedControl.md",
+    "Select": ".design-sync/docs/Select.md",
+    "Slider": ".design-sync/docs/Slider.md",
+    "Snackbar": ".design-sync/docs/Snackbar.md",
+    "Spinner": ".design-sync/docs/Spinner.md",
+    "StepHeader": ".design-sync/docs/StepHeader.md",
+    "Surface": ".design-sync/docs/Surface.md",
+    "Switch": ".design-sync/docs/Switch.md"
   }
 }
