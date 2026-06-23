@@ -28,3 +28,7 @@ export { RadioButton } from "./RadioButton";
 export { Divider } from "./Divider";
 export { Slider } from "./Slider";
 export { Select } from "./Select";
+export { Fab } from "./Fab";
+export { StepHeader } from "./StepHeader";
+export { Progress } from "./Progress";
+export { Spinner } from "./Spinner";

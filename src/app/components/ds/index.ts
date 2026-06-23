@@ -15,6 +15,10 @@ export { FilterChip } from "./FilterChip";
 export type { FilterChipProps } from "./FilterChip";
 export { Heading } from "./Heading";
 export type { HeadingProps } from "./Heading";
+export { IconButton } from "./IconButton";
+export type { IconButtonProps } from "./IconButton";
+export { Stepper } from "./Stepper";
+export type { StepperProps } from "./Stepper";
 export { SegmentedControl } from "./SegmentedControl";
 export type {
   SegmentedControlOption,

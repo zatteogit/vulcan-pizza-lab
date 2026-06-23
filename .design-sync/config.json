@@ -34,7 +34,11 @@
     "RadioButton": "src/app/components/ds/RadioButton.tsx",
     "Divider": "src/app/components/ds/Divider.tsx",
     "Slider": "src/app/components/ds/Slider.tsx",
-    "Select": "src/app/components/ds/Select.tsx"
+    "Select": "src/app/components/ds/Select.tsx",
+    "StepHeader": "src/app/components/ds/StepHeader.tsx",
+    "Progress": "src/app/components/ds/Progress.tsx",
+    "Spinner": "src/app/components/ds/Spinner.tsx",
+    "Fab": "src/app/components/ds/Fab.tsx"
   },
   "readmeHeader": ".design-sync/conventions.md"
 }
