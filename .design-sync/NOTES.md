@@ -54,3 +54,26 @@ Aggiunti 5 componenti context-free fuori da `ds/`, via entry barrel dedicato.
   a schermo), ma non hanno testo → l'euristica lo flagga. Non bloccante, non rilavorare.
 - **DoughBlob**: la variante `neural` renderizza vuota in static → nelle preview usare
   rest/rise/forge/stretch/spin/fold (non `neural`).
+
+## Onda 2 — app-coupled (2026-06-23)
+Aggiunti 4 componenti che usano `useCms` → 19 totali. Approccio chiave:
+- **Nessun provider necessario.** `useCms()` ha un default context (cms-context.tsx ~L2335)
+  che fornisce `CMS_DEFAULTS` completo → i componenti renderizzano gli st_string i18n senza
+  `CmsProvider`. (CmsProvider chiamerebbe `loadCms()`→localStorage, rischioso headless.)
+  `cfg.provider` resta unset.
+- **Aggiunti**: InfoTip, RecipeSectionTabs, RecipeStatStrip, RecipeMatchCard.
+- **Dati di dominio nelle preview = fixture statica.** RecipeStatStrip/RecipeMatchCard vogliono
+  un `GeneratedRecipe`/`RecipeScores`. NON chiamare `generateRecipe` nella preview e NON
+  re-esportare il motore dal barrel: tira dentro pizza-engine→topping-library→PNG e gonfia il
+  bundle. La ricetta è **precalcolata una volta** (esbuild+node su pizza-engine) e congelata come
+  literal dentro `.design-sync/previews/RecipeStatStrip.tsx` / `RecipeMatchCard.tsx`.
+  Per rigenerarla: `/tmp/recipe-entry.ts` + esbuild `--loader:.png=empty` → node → JSON.
+- **OVERRIDE bundle.mjs (importante).** `.design-sync/overrides/bundle.mjs` forka il converter
+  per stubbare i raster (`.png/.jpg → loader 'empty'`). Motivo: `cms-context` importa staticamente
+  `STYLE_PHOTOS` (~100MB di PNG via `../style-photos`) — nell'app è innocuo (Vite serve i file),
+  ma il loader `dataurl` del converter li inlinava → bundle 103MB > limite 5MB upload. Nessun
+  componente sincronizzato mostra quelle foto, quindi 'empty' è sicuro. **Manutenzione**: è una
+  copia di lib/bundle.mjs con 2 patch (inline di IIFE_IMPORT_META_DEFINE + loader). Ad ogni
+  update della skill, ri-verificare che il fork non sia divergente (il converter stampa
+  `[OVERRIDE] using …`; dichiarato in cfg.libOverrides).
+- **FireGlow** resta escluso (vedi onda 1).

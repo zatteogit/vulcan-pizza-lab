@@ -7,6 +7,9 @@
   "tsconfig": "tsconfig.json",
   "entry": "src/app/components/ds/_sync-entry.ts",
   "cssEntry": ".design-sync/compiled-styles.css",
+  "libOverrides": {
+    "bundle.mjs": "PNG/JPG → loader 'empty': cms-context importa STYLE_PHOTOS (~100MB di foto) che nessun componente sincronizzato renderizza; il dataurl di default sforava il limite di 5MB upload."
+  },
   "componentSrcMap": {
     "Chip": "src/app/components/ds/Chip.tsx",
     "Badge": "src/app/components/ds/Badge.tsx",
@@ -22,7 +25,11 @@
     "TiltCard": "src/app/components/tilt-card.tsx",
     "DoughBlob": "src/app/components/dough-mascot.tsx",
     "VulcanMark": "src/app/components/vulcan-logo.tsx",
-    "StepIllustration": "src/app/components/step-illustrations.tsx"
+    "StepIllustration": "src/app/components/step-illustrations.tsx",
+    "InfoTip": "src/app/components/info-tip.tsx",
+    "RecipeSectionTabs": "src/app/components/recipe-section-tabs.tsx",
+    "RecipeStatStrip": "src/app/components/recipe-stat-strip.tsx",
+    "RecipeMatchCard": "src/app/components/recipe-match-card.tsx"
   },
   "readmeHeader": ".design-sync/conventions.md"
 }

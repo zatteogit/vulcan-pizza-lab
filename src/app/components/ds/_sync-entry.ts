@@ -15,3 +15,9 @@ export { TiltCard } from "../tilt-card";
 export { DoughBlob } from "../dough-mascot";
 export { VulcanMark } from "../vulcan-logo";
 export { StepIllustration } from "../step-illustrations";
+
+/* ── Onda 2 — app-coupled: renderizzano dal default CMS context (nessun provider) ── */
+export { InfoTip } from "../info-tip";
+export { RecipeSectionTabs } from "../recipe-section-tabs";
+export { RecipeStatStrip } from "../recipe-stat-strip";
+export { RecipeMatchCard } from "../recipe-match-card";
