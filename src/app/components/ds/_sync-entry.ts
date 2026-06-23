@@ -40,3 +40,10 @@ export { Carousel } from "./Carousel";
 /* ── Onda 4 — feature/pattern riusabili (curati, app-coupled) ── */
 export { RecommendedStyles } from "../recommended-styles";
 export { ContextualWarnings } from "../troubleshooting-panel";
+
+/* ── Foundation — card di riferimento dei token ── */
+export { ColorPalette } from "../foundations/ColorPalette";
+export { TypeScale } from "../foundations/TypeScale";
+export { SpacingScale } from "../foundations/SpacingScale";
+export { RadiusScale } from "../foundations/RadiusScale";
+export { Elevation } from "../foundations/Elevation";

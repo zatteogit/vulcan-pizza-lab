@@ -44,7 +44,12 @@
     "BottomSheet": "src/app/components/ds/BottomSheet.tsx",
     "Carousel": "src/app/components/ds/Carousel.tsx",
     "RecommendedStyles": "src/app/components/recommended-styles.tsx",
-    "ContextualWarnings": "src/app/components/troubleshooting-panel.tsx"
+    "ContextualWarnings": "src/app/components/troubleshooting-panel.tsx",
+    "ColorPalette": "src/app/components/foundations/ColorPalette.tsx",
+    "TypeScale": "src/app/components/foundations/TypeScale.tsx",
+    "SpacingScale": "src/app/components/foundations/SpacingScale.tsx",
+    "RadiusScale": "src/app/components/foundations/RadiusScale.tsx",
+    "Elevation": "src/app/components/foundations/Elevation.tsx"
   },
   "readmeHeader": ".design-sync/conventions.md"
 }
