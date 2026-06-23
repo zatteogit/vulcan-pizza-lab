@@ -1,30 +1,10 @@
-import { defineConfig, type Plugin } from "vite";
+import { defineConfig } from "vite";
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
-/**
- * Stub per gli import `figma:asset/...` — restituisce una stringa placeholder
- * SVG vuota per qualsiasi asset Figma non ancora disponibile localmente.
- */
-function figmaAssetStub(): Plugin {
-  return {
-    name: "figma-asset-stub",
-    resolveId(source) {
-      if (source.startsWith("figma:asset/")) {
-        return `\0figma-stub:${source}`;
-      }
-    },
-    load(id) {
-      if (id.startsWith("\0figma-stub:")) {
-        return `export default "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";`;
-      }
-    },
-  };
-}
-
 export default defineConfig({
-  plugins: [react(), tailwindcss(), figmaAssetStub()],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

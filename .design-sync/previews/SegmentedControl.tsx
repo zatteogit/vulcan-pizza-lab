@@ -1,4 +1,4 @@
-import { SegmentedControl } from "@figma/my-make-file";
+import { SegmentedControl } from "@vulcan/ds";
 import { Flame, Compass, GraduationCap } from "lucide-react";
 import { useState } from "react";
 

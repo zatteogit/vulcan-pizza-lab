@@ -1,4 +1,4 @@
-import { Stepper } from "@figma/my-make-file";
+import { Stepper } from "@vulcan/ds";
 import { useState } from "react";
 
 export function Interactive() {

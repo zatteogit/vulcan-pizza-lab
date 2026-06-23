@@ -1,4 +1,4 @@
-import { ColorPalette } from "@figma/my-make-file";
+import { ColorPalette } from "@vulcan/ds";
 
 export function Default() {
   return <ColorPalette />;

@@ -1,5 +1,5 @@
 # Score e feedback utente
-> Aggiornamento: 2026-06-19 | Stato: ✅ | File documentati: 5
+> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 5
 
 ## Sommario
 
@@ -70,7 +70,7 @@ flowchart LR
 | `RECIPE_ISSUES[].correction` | Copy IT-only mostrato dopo submit per spiegare cosa verrebbe corretto "la prossima volta" |
 | `ADVERSARIAL_FINDINGS` | 8 voci ADV-02 … ADV-12 documentate nel codice |
 | Soglie calibrazione | `meanBias > 15` → overestimates; `< -15` → underestimates; `|r| < 0.3` → uncorrelated |
-| Token CSS score | Colori asse da `SCORE_DIMENSIONS`; i blocchi UI usano token tema (`--text-accent`, `--text-warning`, `--container-*`) |
+| Token CSS score | Colori asse da `SCORE_DIMENSIONS`; i blocchi UI usano token tema (`--text-accent`, `--text-warning`, `--container-*`) e token allineati per icone di stato (`--icon-success`, `--icon-accent`, `--icon-muted`) |
 
 **Pesi score da CMS:** in `generateRecipe`, parent passa `scoreWeights` da `cms.scoreDimensions.*.weight` (recipe + home).
 

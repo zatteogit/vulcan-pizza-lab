@@ -1,4 +1,4 @@
-import { RecipeSectionTabs } from "@figma/my-make-file";
+import { RecipeSectionTabs } from "@vulcan/ds";
 import { useState } from "react";
 
 export function Inline() {

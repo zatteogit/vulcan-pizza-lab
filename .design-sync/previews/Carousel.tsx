@@ -1,4 +1,4 @@
-import { Carousel, Surface, Heading, Badge } from "@figma/my-make-file";
+import { Carousel, Surface, Heading, Badge } from "@vulcan/ds";
 
 const STYLES = [
   { name: "Napoletana STG", note: "Cornicione gonfio, leopardatura", tag: "65% idratazione" },

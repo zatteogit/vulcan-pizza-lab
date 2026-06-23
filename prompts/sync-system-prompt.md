@@ -1,10 +1,10 @@
-# Prompt: Sistema Sync bidirezionale Figma Make <-> Locale
+# Prompt: Sistema Sync bidirezionale Vulcan Cloud <-> Locale
 
-> Copia tutto il contenuto sotto la linea e incollalo nella chat di un altro progetto Figma Make.
+> Copia tutto il contenuto sotto la linea e incollalo nella chat di un altro progetto Vulcan Cloud.
 
 ---
 
-Implementa un sistema di sincronizzazione bidirezionale tra Figma Make e un ambiente di sviluppo locale (Cursor, Windsurf, VS Code, ecc.). Il sistema ha due componenti:
+Implementa un sistema di sincronizzazione bidirezionale tra Vulcan Cloud e un ambiente di sviluppo locale (Cursor, Windsurf, VS Code, ecc.). Il sistema ha due componenti:
 
 ## 1. Componente browser: SyncTab (`src/app/components/sync-tab.tsx`)
 
@@ -57,7 +57,7 @@ function djb2(str: string): string {
 {
   "figma_sync": "1.0",
   "timestamp": "2026-03-14T...",
-  "source": "figma-make" | "local",
+  "source": "cloud" | "local",
   "files": {
     "/src/app/App.tsx": { "hash": "a1b2c3d4", "lines": 42, "content": "..." }
   },
@@ -120,7 +120,7 @@ Mostrare nella UI:
 
 Struttura a sezioni con step numerati:
 
-1. **Intro** con diagramma visuale del flusso (Figma Make -> JSON -> Locale e viceversa)
+1. **Intro** con diagramma visuale del flusso (Vulcan Cloud -> JSON -> Locale e viceversa)
 2. **"Prima volta?"** accordion collapsabile con setup guidato (prerequisiti, clone, install)
 3. **Sezione "Portare il codice sul tuo PC"** (colore verde/successo):
    - Step 1: Bottone "Scansiona progetto" (chiama `loadAllFiles()`)
@@ -226,7 +226,7 @@ Adatta i glob patterns (`import.meta.glob`) e le esclusioni alla struttura speci
 
 ## 5. Setup gitignore
 
-Aggiungi queste due voci al `.gitignore` del progetto (o crealo se non esiste). Se in Figma Make non hai accesso al `.gitignore`, includi una nota nel README o nei commenti del `sync.mjs`:
+Aggiungi queste due voci al `.gitignore` del progetto (o crealo se non esiste). Se in Vulcan Cloud non hai accesso al `.gitignore`, includi una nota nel README o nei commenti del `sync.mjs`:
 
 ```
 # Sync system
@@ -235,4 +235,4 @@ sync.mjs
 ```
 
 - `.sync-snapshot.json` e l'ultimo snapshot usato dal comando `diff` — e un artefatto locale, non va committato
-- `sync.mjs` e lo script CLI che vive solo nell'ambiente locale — in Figma Make non serve (la logica equivalente e nel SyncTab browser-side)
+- `sync.mjs` e lo script CLI che vive solo nell'ambiente locale — in Vulcan Cloud non serve (la logica equivalente e nel SyncTab browser-side)

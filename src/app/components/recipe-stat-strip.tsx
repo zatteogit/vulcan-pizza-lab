@@ -75,7 +75,7 @@ export function RecipeStatStrip({
                 lineHeight: 1,
               }}
             >
-              <Sparkles size={12} style={{ color: !nerdMode ? "var(--primary)" : "var(--text-muted)" }} />
+              <Sparkles size={12} style={{ color: !nerdMode ? "var(--icon-accent)" : "var(--icon-muted)" }} />
               <span>Easy</span>
             </button>
             <button
@@ -92,7 +92,7 @@ export function RecipeStatStrip({
                 lineHeight: 1,
               }}
             >
-              <FlaskConical size={12} style={{ color: nerdMode ? "var(--text-on-accent)" : "var(--text-muted)" }} />
+              <FlaskConical size={12} style={{ color: nerdMode ? "var(--icon-on-accent)" : "var(--icon-muted)" }} />
               <span>Nerd</span>
             </button>
           </div>

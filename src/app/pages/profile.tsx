@@ -70,7 +70,7 @@ OVEN_PRESETS,
 SKILL_LEVELS,
 STYLES_DB,
 } from "../components/pizza-engine";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { STYLE_PHOTOS } from "../components/recommended-styles";
 import {
   formatSavedDate,

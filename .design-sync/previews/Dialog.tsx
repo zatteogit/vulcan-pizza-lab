@@ -1,4 +1,4 @@
-import { Dialog, CtaButton } from "@figma/my-make-file";
+import { Dialog, CtaButton } from "@vulcan/ds";
 import { useState } from "react";
 
 export function Confirm() {

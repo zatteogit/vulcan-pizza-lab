@@ -286,7 +286,7 @@ export function DesignSystemTab({
                 color: "var(--primary)",
               }}
             >
-              Figma Design Spec Sheet
+              Design Spec Sheet
             </span>
           </div>
           <div className="flex items-center gap-3 flex-wrap">

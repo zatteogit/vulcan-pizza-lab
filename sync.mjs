@@ -3,7 +3,7 @@
 /**
  * Vulcan Pizza Lab — Sync CLI
  *
- * Script per sincronizzare il progetto tra Figma Make e l'ambiente locale.
+ * Script per sincronizzare il progetto tra Vulcan Cloud e l'ambiente locale.
  * Richiede Node.js 18+ (per clipboard, fs/promises, structuredClone).
  *
  * Comandi:
@@ -422,7 +422,7 @@ switch (command) {
     console.log(`
 ${c.bold}${c.cyan}Vulcan Pizza Lab — Sync CLI${c.reset}
 
-  Sincronizza il progetto tra Figma Make e l'ambiente locale.
+  Sincronizza il progetto tra Vulcan Cloud e l'ambiente locale.
 
 ${c.bold}Comandi:${c.reset}
 

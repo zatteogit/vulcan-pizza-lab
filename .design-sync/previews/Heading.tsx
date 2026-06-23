@@ -1,4 +1,4 @@
-import { Heading } from "@figma/my-make-file";
+import { Heading } from "@vulcan/ds";
 
 export function Scale() {
   return (

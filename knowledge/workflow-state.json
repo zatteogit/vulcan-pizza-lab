@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-06-19T15:22:55.000Z",
+  "lastUpdated": "2026-06-23T12:33:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
-    "srcFilesTsTsx": 108,
-    "appFilesExcludingUi": 105,
+    "srcFilesTsTsx": 141,
+    "appFilesExcludingUi": 138,
     "pizzaEngineExports": 64,
-    "pizzaEngineLines": 4402,
-    "cmsContextLines": 3143,
+    "pizzaEngineLines": 4413,
+    "cmsContextLines": 3182,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-19 applicato a dead code cleanup, dipendenze UI e pannello Personalizza parametri.",
-  "filesMappedCount": 106,
+  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-23 applicato a modello tier DS, useRecipeState, RecipeSetupPanel, SearchButton e calibrazioni fisiche stili.",
+  "filesMappedCount": 140,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata \u2014 usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-06-19",
+  "lastScannedChapter": "kipi-update-2026-06-23",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -28,7 +28,7 @@
         "src/app/components/topping-library.ts",
         "src/app/components/impasto-library.ts"
       ],
-      "lastWorked": "2026-06-19"
+      "lastWorked": "2026-06-23"
     },
     {
       "id": "recipe-flow",
@@ -47,9 +47,11 @@
         "src/app/components/recipe-view.tsx",
         "src/app/components/recipe-section-tabs.tsx",
         "src/app/components/recipe-match-card.tsx",
-        "src/app/components/recipe-learning-panel.tsx"
+        "src/app/components/recipe-learning-panel.tsx",
+        "src/app/components/use-recipe-state.ts",
+        "src/app/components/recipe-setup-panel.tsx"
       ],
-      "lastWorked": "2026-06-19"
+      "lastWorked": "2026-06-23"
     },
     {
       "id": "scoring-feedback",
@@ -62,7 +64,7 @@
         "src/app/components/feedback-analysis.tsx",
         "src/app/components/feedback-store.ts"
       ],
-      "lastWorked": "2026-06-19"
+      "lastWorked": "2026-06-23"
     },
     {
       "id": "styles-versions",
@@ -81,7 +83,7 @@
         "src/app/pages/explore.tsx",
         "src/app/components/tilt-card.tsx"
       ],
-      "lastWorked": "2026-06-19"
+      "lastWorked": "2026-06-23"
     },
     {
       "id": "cms-i18n",
@@ -120,9 +122,10 @@
         "src/app/components/root-layout.tsx",
         "src/app/components/search-overlay.tsx",
         "src/app/pages/not-found.tsx",
+        "src/app/components/search-button.tsx",
         "src/vite-env.d.ts"
       ],
-      "lastWorked": "2026-06-19"
+      "lastWorked": "2026-06-23"
     },
     {
       "id": "pages-learn",
@@ -138,7 +141,7 @@
         "src/app/pages/pre-ferments.tsx",
         "src/app/components/pre-ferment-guide.tsx"
       ],
-      "lastWorked": "2026-06-19"
+      "lastWorked": "2026-06-23"
     },
     {
       "id": "data-databases",
@@ -170,6 +173,36 @@
       "title": "Design system e dev UI",
       "status": "completed",
       "filesDocumented": [
+        "src/styles/theme.css",
+        "src/app/components/foundations/ColorPalette.tsx",
+        "src/app/components/foundations/Elevation.tsx",
+        "src/app/components/foundations/RadiusScale.tsx",
+        "src/app/components/foundations/SpacingScale.tsx",
+        "src/app/components/foundations/TypeScale.tsx",
+        "src/app/components/ds/index.ts",
+        "src/app/components/ds/Badge.tsx",
+        "src/app/components/ds/BottomSheet.tsx",
+        "src/app/components/ds/Carousel.tsx",
+        "src/app/components/ds/Checkbox.tsx",
+        "src/app/components/ds/Chip.tsx",
+        "src/app/components/ds/CtaButton.tsx",
+        "src/app/components/ds/Dialog.tsx",
+        "src/app/components/ds/Divider.tsx",
+        "src/app/components/ds/Fab.tsx",
+        "src/app/components/ds/FilterChip.tsx",
+        "src/app/components/ds/Heading.tsx",
+        "src/app/components/ds/IconButton.tsx",
+        "src/app/components/ds/Progress.tsx",
+        "src/app/components/ds/RadioButton.tsx",
+        "src/app/components/ds/SegmentedControl.tsx",
+        "src/app/components/ds/Select.tsx",
+        "src/app/components/ds/Slider.tsx",
+        "src/app/components/ds/Snackbar.tsx",
+        "src/app/components/ds/Spinner.tsx",
+        "src/app/components/ds/StepHeader.tsx",
+        "src/app/components/ds/Stepper.tsx",
+        "src/app/components/ds/Surface.tsx",
+        "src/app/components/ds/Switch.tsx",
         "src/app/pages/design-system.tsx",
         "src/app/pages/dev.tsx",
         "src/app/components/dev-tools.tsx",
@@ -195,12 +228,12 @@
         "src/app/components/design-system/patterns-templates.tsx",
         "src/app/components/dough-mascot.tsx",
         "src/app/components/fire-glow.tsx",
-        "src/app/components/figma/ImageWithFallback.tsx",
+        "src/app/components/media/ImageWithFallback.tsx",
         "src/app/components/info-tip.tsx",
         "src/app/components/vulcan-hero.tsx",
         "src/app/components/vulcan-logo.tsx"
       ],
-      "lastWorked": "2026-06-19"
+      "lastWorked": "2026-06-23"
     }
   ]
 }

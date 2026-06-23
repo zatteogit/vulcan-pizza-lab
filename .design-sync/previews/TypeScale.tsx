@@ -1,4 +1,4 @@
-import { TypeScale } from "@figma/my-make-file";
+import { TypeScale } from "@vulcan/ds";
 
 export function Default() {
   return <TypeScale />;

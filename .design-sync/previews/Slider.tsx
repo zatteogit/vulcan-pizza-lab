@@ -1,4 +1,4 @@
-import { Slider } from "@figma/my-make-file";
+import { Slider } from "@vulcan/ds";
 import { useState } from "react";
 
 export function Sliders() {

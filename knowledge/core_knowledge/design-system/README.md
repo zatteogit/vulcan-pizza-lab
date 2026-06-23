@@ -1,14 +1,17 @@
 # Design system e dev UI
-> Aggiornamento: 2026-06-19 | Stato: ✅ | File documentati: 29
+> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 64
 
 ## Sommario
 
-Showcase interattivo del design M3/M3 Expressive di Vulcan: **registry a sezioni** in `design-system/index.tsx` (~900 righe), moduli `foundations-*` / `components-*` / `patterns-templates`, utilità in `shared.tsx`. Accesso in due modi: route standalone `/design-system` (pagina full-bleed per screenshot/Figma) e tab **Design** dentro `/dev` (`DevTools` → `DesignSystemTab`). I pochi primitivi rimasti in `components/ui/` (`switch`, `use-mobile`, `utils`) sono fuori scope — questo capitolo documenta token, pattern e composizioni app-specifiche.
+Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modello a 6 tier (T1–T6)**: registry a sezioni in `design-system/index.tsx`, moduli `foundations-*` / `components-*` / `patterns-templates`, utilità in `shared.tsx`. Include i componenti atomo/molecola context-free in `src/app/components/ds/` (Tier 4) e le card visive delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) in `src/app/components/foundations/` (Tier 4). Accesso tramite route standalone `/design-system` e tab **Design** dentro `/dev` (`DevTools` → `DesignSystemTab`). I file di stile core vivono in `theme.css` (Tier 1-3.5) con tool di enforcement (`npm run check:tokens`).
 
 ## File chiave
 
-| File | Ruolo |
+| File / Cartella | Ruolo |
 |------|--------|
+| `src/styles/theme.css` | File CSS centrale dei token e delle classi composite (Tier 1-3.5); supporta l'enforcement automatico |
+| `src/app/components/ds/` | Barrel directory contenente 24 componenti atomo/molecola context-free (Tier 4) come `CtaButton`, `Checkbox`, `Dialog`, etc. |
+| `src/app/components/foundations/` | Cartella contenente le showcase cards per visualizzare i token reali delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) (Tier 4) |
 | `src/app/pages/design-system.tsx` | Route `/design-system`: header sticky, toggle dark, render `DesignSystemTab` |
 | `src/app/pages/dev.tsx` | Route `/dev` e `/dev/:tab` → wrapper `DevTools` |
 | `src/app/components/dev-tools.tsx` | Tab dev incluso `design` → `DesignSystemTab` |
@@ -27,12 +30,10 @@ Showcase interattivo del design M3/M3 Expressive di Vulcan: **registry a sezioni
 | `src/app/components/design-system/patterns-templates.tsx` | Pattern P01–P06, template pagina build/result |
 | `src/app/components/dough-mascot.tsx` | `DoughBlob` reattivo all'energia con 7 varianti (`stretch`, `rise`, `rest`, `spin`, `fold`, `forge`, `neural`) |
 | `src/app/components/fire-glow.tsx` | Sfondo a gradiente radiale animato con varianti `warm` e `neural` |
-| `src/app/components/figma/ImageWithFallback.tsx` | Image component con fallback SVG se caricamento fallisce |
+| `src/app/components/media/ImageWithFallback.tsx` | Image component con fallback SVG se caricamento fallisce |
 | `src/app/components/info-tip.tsx` | M3 Rich Tooltip fluttuante per info ed errori contestuali |
 | `src/app/components/vulcan-hero.tsx` | Composizione brand-identity vulcan: DoughBlob ("forge") + VulcanMark centralizzato |
 | `src/app/components/vulcan-logo.tsx` | `VulcanMark` geometrico del brand con 5 scale ottiche per viewBox 32x32 |
-
-**Stili globali:** token CSS in `theme.css` (riferimento da sezioni foundations); non duplicati qui.
 
 ## Flusso dati
 
@@ -97,7 +98,9 @@ flowchart TD
 - Specimen importano componenti produzione (`ScoreRing`, `RecipeStatStrip`, …): modifiche UI app possono rompere lo showcase.
 - `/design-system` ottimizzato per export visivo (minimo chrome); `/dev` include altre tab (CMS, engine test, feedback).
 - Non documentare i primitivi `components/ui/*` in questo capitolo; dopo la pulizia 2026-06-19 resta solo lo stretto necessario (`switch`, hook mobile, helper classi).
-- `step-header.tsx` è stato rimosso: eventuali riferimenti a StepHeader/ScrollSection dentro `patterns-templates.tsx` sono testo di specimen storici, non file runtime da importare.
+- `step-header.tsx` è stato rimosso ed integrato in `ds/StepHeader.tsx` (Tier 4).
+- **Modello a 6 Tier**: Rispettare sempre la direzione di consumo `Schermata → T6 → T5 → T4 → T3/T3.5 → (T2 → T1)`. Non consumare mai token primitivi T1 (`--color-*`) o literal hex direttamente nel codice app; consumare solo token semantici T2 o componenti T4.
+- **Enforcement automatico**: L'enforcement dei token e l'integrità del design system sono monitorati tramite `npm run check:tokens` e `npm run verify` integrati nei pre-commit hooks e nella CI.
 
 ## Neural Expressive Design & Sfondi Ambientali
 

@@ -458,7 +458,7 @@ export function DensitySection() {
     <div className="flex flex-col gap-8">
       <SectionHeader
         title="Densità"
-        description="M3 Expressive definisce una scala di densità che regola target area, padding, gap e icon size in modo coordinato. Vulcan usa 'Comfortable' come default (scale -1), con 'Compact' per l'iframe Figma e 'Expanded' per touch-first."
+        description="M3 Expressive definisce una scala di densità che regola target area, padding, gap e icon size in modo coordinato. Vulcan usa 'Comfortable' come default (scale -1), con 'Compact' per l'iframe e 'Expanded' per touch-first."
       />
 
       {/* ── Density toggle ── */}
@@ -696,7 +696,7 @@ export function DensitySection() {
         <span className="type-label" style={{ color: "var(--text-default)" }}>Note implementazione</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
           <AnatomyRow prop="Default" val="Comfortable (-1): Vulcan standard. Bilancia leggibilità e densità informativa." />
-          <AnatomyRow prop="Iframe" val="Compact (-2): usare per widget Figma. Riduce altezza di ~20% su tutti i componenti." />
+          <AnatomyRow prop="Iframe" val="Compact (-2): usare per widget embedded. Riduce altezza di ~20% su tutti i componenti." />
           <AnatomyRow prop="Touch" val="Expanded (0): M3 default. 48px touch target rispetta i 44px minimi Apple HIG." />
           <AnatomyRow prop="Scaling" val="Tutti i valori scalano linearmente. Il gap tra livelli e costante: ~8px per step." />
         </div>

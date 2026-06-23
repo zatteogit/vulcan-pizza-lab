@@ -1,4 +1,4 @@
-import { CtaButton } from "@figma/my-make-file";
+import { CtaButton } from "@vulcan/ds";
 import { Flame } from "lucide-react";
 
 export function Variants() {

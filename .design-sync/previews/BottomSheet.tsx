@@ -1,4 +1,4 @@
-import { BottomSheet, CtaButton } from "@figma/my-make-file";
+import { BottomSheet, CtaButton } from "@vulcan/ds";
 import { useState } from "react";
 
 export function Open() {

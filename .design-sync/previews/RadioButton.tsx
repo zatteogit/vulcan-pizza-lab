@@ -1,4 +1,4 @@
-import { RadioButton } from "@figma/my-make-file";
+import { RadioButton } from "@vulcan/ds";
 import { useState } from "react";
 
 const OVENS = [

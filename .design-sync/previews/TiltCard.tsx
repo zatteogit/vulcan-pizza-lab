@@ -1,4 +1,4 @@
-import { TiltCard, Heading, Badge } from "@figma/my-make-file";
+import { TiltCard, Heading, Badge } from "@vulcan/ds";
 
 export function Default() {
   return (

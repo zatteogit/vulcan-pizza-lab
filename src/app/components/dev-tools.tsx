@@ -136,7 +136,7 @@ function CopyCmd({ cmd, label }: { cmd: string; label?: string }) {
         style={{
           fontSize: "var(--font-size-xs)",
           background: copied ? "color-mix(in srgb, var(--cta) 15%, transparent)" : "transparent",
-          color: copied ? "var(--cta)" : "var(--text-muted)",
+          color: copied ? "var(--cta)" : "var(--icon-muted)",
           border: "1px solid " + (copied ? "var(--cta)" : "var(--container-border)"),
         }}
         aria-label={`Copia comando ${cmd}`}
@@ -215,7 +215,7 @@ function LabSection({
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
         >
-          <ChevronDown size={14} style={{ color: "var(--text-muted)" }} />
+          <ChevronDown size={14} style={{ color: "var(--icon-muted)" }} />
         </motion.div>
       </button>
       <AnimatePresence>
@@ -483,7 +483,7 @@ function ProjectTab() {
     { id: "001", severity: "media", desc: "a11y: DoughBlob prefers-reduced-motion (VPL-001)", status: "closed" },
     { id: "002", severity: "bassa", desc: "ux: Dark mode localStorage persist (VPL-002)", status: "closed" },
     { id: "003", severity: "media", desc: "feat: Geolocation + Open-Meteo (VPL-003)", status: "closed" },
-    { id: "004", severity: "info", desc: "cleanup: artefatto Figma rimosso (VPL-004)", status: "closed" },
+    { id: "004", severity: "info", desc: "cleanup: artefatto di import rimosso (VPL-004)", status: "closed" },
     { id: "005", severity: "media", desc: "refactor: scroll-companion 3 sezioni (VPL-005)", status: "closed" },
     { id: "006", severity: "bassa", desc: "refactor: ScoreRing DRY (VPL-006)", status: "closed" },
     { id: "007", severity: "bassa", desc: "perf: Lazy loading immagini (VPL-007)", status: "closed" },
@@ -611,11 +611,11 @@ function ProjectTab() {
                 style={{ background: "var(--container-bg)" }}
               >
                 {r.status === "pass" ? (
-                  <CheckCircle2 size={14} style={{ color: "var(--text-success)", flexShrink: 0 }} />
+                  <CheckCircle2 size={14} style={{ color: "var(--icon-success)", flexShrink: 0 }} />
                 ) : r.status === "fail" ? (
-                  <CircleX size={14} style={{ color: "var(--text-error)", flexShrink: 0 }} />
+                  <CircleX size={14} style={{ color: "var(--icon-error)", flexShrink: 0 }} />
                 ) : (
-                  <AlertTriangle size={14} style={{ color: "var(--text-warning)", flexShrink: 0 }} />
+                  <AlertTriangle size={14} style={{ color: "var(--icon-warning)", flexShrink: 0 }} />
                 )}
                 <span className="type-data" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, minWidth: 180 }}>
                   {r.name}
@@ -757,7 +757,7 @@ function ProjectTab() {
         >
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "color-mix(in srgb, var(--text-default) 8%, transparent)" }}>
-              <FolderGit2 size={16} style={{ color: "var(--text-default)" }} />
+              <FolderGit2 size={16} style={{ color: "var(--icon-default)" }} />
             </div>
             <div>
               <div className="type-data" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
@@ -801,9 +801,9 @@ function ProjectTab() {
               className="flex items-center gap-2 px-3 py-2.5 rounded-lg type-data active:scale-95 transition-transform"
               style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)", color: "var(--text-default)", fontSize: "var(--font-size-base)", textDecoration: "none" }}
             >
-              <span style={{ color: "var(--text-muted)" }}>{link.icon}</span>
+              <span style={{ color: "var(--icon-muted)" }}>{link.icon}</span>
               {link.label}
-              <ExternalLink size={9} style={{ color: "var(--text-muted)", marginLeft: "auto" }} />
+              <ExternalLink size={9} style={{ color: "var(--icon-muted)", marginLeft: "auto" }} />
             </a>
           ))}
         </div>
@@ -887,7 +887,7 @@ function ProjectTab() {
             className="flex items-center gap-2 px-3 py-2 rounded-lg type-data active:scale-95 transition-transform"
             style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)", color: "var(--text-default)", fontSize: "var(--font-size-sm)", textDecoration: "none" }}
           >
-            <Bug size={12} /> Vedi su GitHub <ExternalLink size={9} style={{ color: "var(--text-muted)" }} />
+            <Bug size={12} /> Vedi su GitHub <ExternalLink size={9} style={{ color: "var(--icon-muted)" }} />
           </a>
           <button
             onClick={() => setShowIssues(!showIssues)}
@@ -921,11 +921,11 @@ function ProjectTab() {
                     </Badge>
                     <span className="type-data-sm flex-1" style={{ color: issue.status === "open" ? "var(--text-default)" : "var(--text-muted)", textDecoration: issue.status === "closed" ? "line-through" : "none" }}>{issue.desc}</span>
                     {issue.status === "closed" ? (
-                      <CheckCircle2 size={11} style={{ color: "var(--text-success)", flexShrink: 0 }} />
+                      <CheckCircle2 size={11} style={{ color: "var(--icon-success)", flexShrink: 0 }} />
                     ) : issue.status === "open" ? (
                       <Circle size={11} style={{ color: "var(--primary)", flexShrink: 0 }} />
                     ) : (
-                      <AlertTriangle size={11} style={{ color: "var(--text-warning)", flexShrink: 0 }} />
+                      <AlertTriangle size={11} style={{ color: "var(--icon-warning)", flexShrink: 0 }} />
                     )}
                   </div>
                 ))}
@@ -1153,7 +1153,7 @@ function CompensationsContent({ style, ovenTemp }: { style: any; ovenTemp: numbe
           border: `1px solid ${deficit > 100 ? "color-mix(in srgb, var(--text-error) 30%, transparent)" : deficit > 20 ? "color-mix(in srgb, var(--axis-authenticity) 30%, transparent)" : "color-mix(in srgb, var(--axis-feasibility) 30%, transparent)"}`,
         }}
       >
-        <Thermometer size={16} style={{ color: deficit > 100 ? "var(--text-error)" : deficit > 20 ? "var(--axis-authenticity)" : "var(--axis-feasibility)" }} />
+        <Thermometer size={16} style={{ color: deficit > 100 ? "var(--icon-error)" : deficit > 20 ? "var(--axis-authenticity)" : "var(--axis-feasibility)" }} />
         <span className="type-data" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any, fontFeatureSettings: "'tnum'" }}>Deficit: {deficit}°C</span>
         <span className="type-data-sm" style={{ color: "var(--text-muted)" }}>
           ({ovenTemp}°C vs ideale {style.baking.temp_c_ideal}°C)
@@ -1306,7 +1306,7 @@ function Q10Content({
 
       {/* Reference */}
       <div className="flex items-start gap-2 p-3 rounded-xl" style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}>
-        <Info size={14} style={{ color: "var(--text-muted)", marginTop: "2px", flexShrink: 0 }} />
+        <Info size={14} style={{ color: "var(--icon-muted)", marginTop: "2px", flexShrink: 0 }} />
         <p className="type-data-xs" style={{ color: "var(--text-muted)", lineHeight: "var(--leading-reading)" }}>
           Rif: PMC7146123. S. cerevisiae Q10=2.1±0.3 (15-30°C), 1.6 sotto 10°C. LAB Q10 1.9-2.4.
         </p>

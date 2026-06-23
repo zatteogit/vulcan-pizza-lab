@@ -1,4 +1,4 @@
-import { StepHeader } from "@figma/my-make-file";
+import { StepHeader } from "@vulcan/ds";
 
 export function Editorial() {
   return (

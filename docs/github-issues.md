@@ -135,7 +135,7 @@ Bonus: rispettare `prefers-color-scheme` come default iniziale quando non c'e va
 
 - La temp cucina viene usata da `getQ10()` che ora ha modello variabile (standard/cold_adapted/sourdough)
 - Un errore di +-5C sulla temp ambiente puo spostare il dosaggio lievito del 20-30%
-- L'app gira in iframe Figma — la Geolocation API potrebbe non essere disponibile (sandbox restrictions)
+- L'app gira in iframe — la Geolocation API potrebbe non essere disponibile (sandbox restrictions)
 - Serve un graceful fallback robusto
 
 #### Implementazione suggerita
@@ -156,7 +156,7 @@ Bonus: rispettare `prefers-color-scheme` come default iniziale quando non c'e va
 - [ ] Indicazione visiva chiara quando la temp e stimata vs reale
 - [ ] Nessun API key richiesta (Open-Meteo e gratuita)
 - [ ] Cache ragionevole per non spammare API
-- [ ] Funziona in iframe Figma (graceful degradation)
+- [ ] Funziona in iframe (graceful degradation)
 
 ---
 
@@ -289,7 +289,7 @@ useEffect(() => {
 - [ ] Immagini stili caricate solo quando visibili (o quasi visibili, rootMargin 200px)
 - [ ] Width/height espliciti per evitare CLS
 - [ ] Placeholder/skeleton visibile durante il caricamento
-- [ ] Funziona in iframe Figma
+- [ ] Funziona in iframe
 
 ---
 

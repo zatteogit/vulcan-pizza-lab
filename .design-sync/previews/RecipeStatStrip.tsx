@@ -1,4 +1,4 @@
-import { RecipeStatStrip } from "@figma/my-make-file";
+import { RecipeStatStrip } from "@vulcan/ds";
 
 // Ricetta reale precalcolata dal motore (generateRecipe) e congelata come
 // fixture statica — così il motore NON entra nel bundle del DS.

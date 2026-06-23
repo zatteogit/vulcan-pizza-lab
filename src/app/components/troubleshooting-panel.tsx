@@ -227,7 +227,7 @@ export function TroubleshootingGuide({ filterCategory }: TroubleshootingGuidePro
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Cerca sintomo o causa..."
+          placeholder={cms.pages.troubleshootSearchPlaceholder}
           style={{
             flex: 1, border: 'none', background: 'transparent', outline: 'none',
             fontSize: 'var(--font-size-lg)', color: 'var(--text-default)',

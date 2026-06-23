@@ -1,4 +1,4 @@
-import { Chip } from "@figma/my-make-file";
+import { Chip } from "@vulcan/ds";
 import { CookingPot, Package } from "lucide-react";
 import { useState } from "react";
 

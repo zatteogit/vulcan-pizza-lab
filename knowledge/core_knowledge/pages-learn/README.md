@@ -1,5 +1,5 @@
 # Impara, glossario, troubleshooting
-> Aggiornamento: 2026-06-19 | Stato: ✅ | File documentati: 8
+> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 8
 
 ## Sommario
 
@@ -95,7 +95,8 @@ flowchart TD
 - Glossario in ricerca filtra su `name`, `definition`, `symbol`, `id` — non su testo localizzato se diverso dall’ID.
 - `ContextualWarnings` ritorna `null` se nessuna regola scatta — niente placeholder vuoti.
 - **Pulizia pre-fermenti (Sprint 12)**: Rimosso il prop e parametro inutilizzato `compact` da `PreFermentCard` per aderenza rigorosa a `--noUnusedLocals`.
-- **Audit Accenti Italiani**: Corrette tutte le occorrenze UI non accentate in italiano (es. `perche` $\rightarrow$ `perché`) all'interno di `pre-ferment-guide.tsx` e `pre-ferments.tsx`.
+- **Audit Accenti Italiani**: Corrette tutte le occorrenze UI non accentate in italiano (es. `perche` $\rightarrow$ `perché`, `attivita` $\rightarrow$ `attività`) all'interno di `pre-ferment-guide.tsx`, `pre-ferments.tsx` e `troubleshooting-data.ts`.
+- **Localizzazione ricerca**: Il placeholder dell'input di ricerca in `TroubleshootingGuide` è interamente localizzato tramite CMS (`cms.pages.troubleshootSearchPlaceholder`).
 - Pagina pre-fermenti non usa `useCms` direttamente nella page shell; i testi card passano da `PreFermentCard` + CMS.
 - **Passaggio di Contesto tramite Query Param**: `learn.tsx` supporta il parametro di query `?style=` e lo propaga dinamicamente ai link delle sotto-sezioni (glossario, troubleshooting, pre-fermenti) per guidare l'utente verso contenuti adatti allo stile selezionato.
 - **Percorso skill-aware**: `learn.tsx` legge `vulcan_skill_level` e costruisce un percorso consigliato con label del livello (`SKILL_LEVELS`) e link localizzati verso glossario, troubleshooting o pre-fermenti.

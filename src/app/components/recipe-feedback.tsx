@@ -264,7 +264,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
               cursor: "pointer",
             }}
           >
-            <ThumbsUp size={14} className="text-success" style={{ color: "var(--text-success)" }} />
+            <ThumbsUp size={14} className="text-success" style={{ color: "var(--icon-success)" }} />
             <span>{cms.feedback.success}</span>
           </button>
           <button

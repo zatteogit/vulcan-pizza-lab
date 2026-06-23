@@ -1,4 +1,4 @@
-import { Checkbox } from "@figma/my-make-file";
+import { Checkbox } from "@vulcan/ds";
 import { useState } from "react";
 
 export function Interactive() {

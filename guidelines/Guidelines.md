@@ -1,13 +1,13 @@
 # Vulcan Pizza Lab — Knowledge Base
 
 > Ultimo audit: 18 marzo 2026
-> Stato: MVP completo, estetica editoriale premium, Figma iframe-ready, 15 stili pizza, routing multi-pagina, CMS 7-lingue, Style Editor con liveSync, 10 DB parametrici, 25 farine, glossario i18n, i18n stili/deviazioni/autori, deviation tracking in ScientificLayer, E-Score enhanced, schema versioning 1.4, Regola 55 water temp, topping awareness nel solver, flour variability (W±std+stagionale), 9 author variants (Pepe Layering/Bianco/Forkish aggiunti), TOPPING_DB completo 15 stili, color-mix() safety su motion.\*
+> Stato: MVP completo, estetica editoriale premium, iframe-ready, 15 stili pizza, routing multi-pagina, CMS 7-lingue, Style Editor con liveSync, 10 DB parametrici, 25 farine, glossario i18n, i18n stili/deviazioni/autori, deviation tracking in ScientificLayer, E-Score enhanced, schema versioning 1.4, Regola 55 water temp, topping awareness nel solver, flour variability (W±std+stagionale), 9 author variants (Pepe Layering/Bianco/Forkish aggiunti), TOPPING_DB completo 15 stili, color-mix() safety su motion.\*
 
 ---
 
 ## 1. Identita e visione
 
-Vulcan Pizza Lab e un configuratore di ricette pizza che gira come iframe Figma. Lo stile e **editoriale premium** ispirato a riviste food di alto livello. Non e un tool tecnico con UI fredda: e un'esperienza narrativa dove l'utente viene guidato con calore verso la "pizza perfetta".
+Vulcan Pizza Lab e un configuratore di ricette pizza che gira come iframe. Lo stile e **editoriale premium** ispirato a riviste food di alto livello. Non e un tool tecnico con UI fredda: e un'esperienza narrativa dove l'utente viene guidato con calore verso la "pizza perfetta".
 
 **Principi guida:**
 
@@ -1256,7 +1256,7 @@ node server.mjs
 {
   "vulcan_sync": "1.0",
   "timestamp": "2026-03-15T...",
-  "source": "figma-make" | "local",
+  "source": "cloud" | "local",
   "files": {
     "/src/app/components/pizza-engine.ts": {
       "hash": "a1b2c3d4",
@@ -1287,7 +1287,7 @@ Hash: djb2 (identico browser/CLI per confronto coerente).
    - **macOS:** `node sync.mjs export | pbcopy`
    - **Linux:** `node sync.mjs export | xclip -selection clipboard`
    - **Windows:** `node sync.mjs export | clip`
-3. In Figma Make: DevTools -> Sync -> incolla il bundle -> "Analizza diff"
+3. In Vulcan Cloud: DevTools -> Sync -> incolla il bundle -> "Analizza diff"
 4. Scegli modalita prompt (compatto o file interi) -> "Copia prompt" -> incolla nella chat -> Claude applica le modifiche
 
 ### Generazione prompt — modalita "Diff compatto" vs "File interi"

@@ -1,4 +1,4 @@
-import { SpacingScale } from "@figma/my-make-file";
+import { SpacingScale } from "@vulcan/ds";
 
 export function Default() {
   return <SpacingScale />;

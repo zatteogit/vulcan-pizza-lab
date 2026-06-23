@@ -1,4 +1,4 @@
-import { ScoreRing } from "@figma/my-make-file";
+import { ScoreRing } from "@vulcan/ds";
 
 export function Tiers() {
   return (

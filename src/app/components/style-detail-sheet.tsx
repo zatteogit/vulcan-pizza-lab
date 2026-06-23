@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark } from "lucide-react";
 import { createPortal } from "react-dom";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "./media/ImageWithFallback";
 import { STYLE_PHOTOS, reasonDimension, MATCH_DIMENSION_ICON } from "./recommended-styles";
 import { STYLE_VIDEOS } from "./style-photos";
 import {
@@ -18,7 +18,7 @@ import { getInterpretationsForStyle } from "./interpretation-library";
 import { getStyleParametrics } from "./parametric-databases";
 import { useCms } from "./cms/cms-context";
 import { t, createFormatter } from "./cms/i18n";
-import { CtaButton } from "./ds";
+import { CtaButton, IconButton } from "./ds";
 import { isFavoriteStyle, toggleFavoriteStyle } from "./saved-recipes";
 
 interface StyleDetailSheetProps {
@@ -174,11 +174,14 @@ export function StyleDetailSheet({
 
         {/* Preferito (canonico) — il bookmark marca lo STILE che ami, non la tua
             versione su misura (quella si salva dalla scheda ricetta). */}
-        <motion.button
+        <IconButton
+          as={motion.button}
+          size="md"
           onClick={() => setFav(toggleFavoriteStyle(style.id).includes(style.id))}
           whileTap={{ scale: 0.8 }}
-          className="absolute top-3 right-14 w-9 h-9 rounded-full flex items-center justify-center"
+          className="absolute top-3 right-16"
           style={{
+            zIndex: 3,
             background: fav
               ? "color-mix(in srgb, var(--primary) 14%, var(--surface-container))"
               : "var(--surface-container)",
@@ -197,23 +200,20 @@ export function StyleDetailSheet({
           >
             <Bookmark size={15} fill={fav ? "currentColor" : "none"} />
           </motion.span>
-        </motion.button>
+        </IconButton>
 
         {/* Close button */}
-        <motion.button
+        <IconButton
+          size="md"
           onClick={onDismiss}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center active:scale-95 transition-transform"
-          style={{
-            background: "var(--surface-container)",
-            color: "var(--text-muted)",
-            border: "1px solid var(--outline-variant)",
-          }}
-          aria-label="Chiudi dettagli"
+          className="absolute top-3 right-3 active:scale-95 transition-transform"
+          style={{ zIndex: 3 }}
+          aria-label={cms.ui.closeDetails}
         >
-          <X size={14} />
-        </motion.button>
+          <X size={15} />
+        </IconButton>
 
-        <div className="px-5 sm:px-6 pb-6 pt-2">
+        <div className="px-5 sm:px-6 pb-6 pt-9">
           {/* ── Hero media (foto, o video di cottura con blur-in) ── */}
           <div
             className="relative w-full overflow-hidden rounded-2xl"

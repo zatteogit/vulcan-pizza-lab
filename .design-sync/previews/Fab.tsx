@@ -1,4 +1,4 @@
-import { Fab } from "@figma/my-make-file";
+import { Fab } from "@vulcan/ds";
 import { Plus, Flame } from "lucide-react";
 
 export function Variants() {

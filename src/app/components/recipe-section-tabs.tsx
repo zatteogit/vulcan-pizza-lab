@@ -1,7 +1,8 @@
 import { motion } from "motion/react";
-import { ListChecks, ScrollText, Search, Utensils } from "lucide-react";
-import { type CSSProperties, type ReactNode } from "react";
+import { ListChecks, ScrollText, Utensils } from "lucide-react";
+import { type CSSProperties } from "react";
 import { useCms } from "./cms/cms-context";
+import { SearchButton } from "./search-button";
 import {
   liquidDockButtonStyle,
   liquidDockQuickSpring,
@@ -73,16 +74,6 @@ export function RecipeSectionTabs({
 
   const handleTabChange = (tab: RecipePrimaryTab) => {
     onChange(tab);
-    if (window.innerWidth < 768) {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    } else {
-      const element = document.getElementById("recipe-content-tabs-anchor");
-      if (element) {
-        const yOffset = -100;
-        const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
-        window.scrollTo({ top: y, behavior: "smooth" });
-      }
-    }
   };
 
   const openSearch = () => {
@@ -112,9 +103,12 @@ export function RecipeSectionTabs({
             />
           </div>
 
-          <RoundDockButton label={cms.pages.navSearch} title={cms.pages.navSearch} onClick={openSearch}>
-            <Search size={24} strokeWidth={2.35} />
-          </RoundDockButton>
+          <SearchButton
+            diameter={52}
+            onOpen={openSearch}
+            surfaceStyle={roundDockButtonStyle}
+            className="pointer-events-auto"
+          />
         </div>
       </motion.div>
     );
@@ -143,37 +137,6 @@ export function RecipeSectionTabs({
         ariaLabel={cms.cooking.sectionsAria}
       />
     </div>
-  );
-}
-
-function RoundDockButton({
-  label,
-  title,
-  onClick,
-  children,
-}: {
-  label: string;
-  title: string;
-  onClick: () => void;
-  children: ReactNode;
-}) {
-  return (
-    <motion.button
-      type="button"
-      className="pointer-events-auto flex items-center justify-center rounded-full"
-      style={{
-        ...roundDockButtonStyle,
-        color: "var(--text-default)",
-      }}
-      aria-label={label}
-      title={title}
-      onClick={onClick}
-      whileHover={{ scale: 1.035 }}
-      whileTap={{ scale: 0.92 }}
-      transition={liquidDockQuickSpring}
-    >
-      {children}
-    </motion.button>
   );
 }
 

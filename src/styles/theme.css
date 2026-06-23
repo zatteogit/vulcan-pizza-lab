@@ -459,7 +459,17 @@
   --text-on-cta: var(--cta-foreground);
   --text-on-bg: var(--background);
 
-  /* ── B. Container / Surface ── */
+  /* ── B. Icon Color Roles ── */
+  --icon-default: var(--foreground);
+  --icon-muted: var(--muted-foreground);
+  --icon-subtle: var(--on-surface-variant);
+  --icon-accent: var(--primary);
+  --icon-success: var(--cta);
+  --icon-warning: var(--tertiary);
+  --icon-error: var(--destructive);
+  --icon-on-accent: var(--primary-foreground);
+
+  /* ── C. Container / Surface ── */
   --container-bg: var(--surface-container);
   --container-bg-low: var(--surface-container-low);
   --container-bg-high: var(--surface-container-high);
@@ -475,6 +485,18 @@
     transparent
   );
   --container-page: var(--background);
+
+  /* ── Premium Glass tokens ── */
+  --premium-glass-bg: color-mix(in srgb, var(--container-page) 86%, transparent);
+  --premium-glass-border: color-mix(in srgb, var(--text-default) 8%, transparent);
+  --premium-glass-shadow: 0 10px 30px color-mix(in srgb, var(--shadow-color) 6%, transparent),
+                          0 1px 3px color-mix(in srgb, var(--shadow-color) 2%, transparent),
+                          inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 15%, transparent);
+
+  /* ── Tab Indicator tokens ── */
+  --tab-indicator-bg: linear-gradient(145deg, color-mix(in srgb, var(--color-white) 92%, transparent), color-mix(in srgb, var(--primary) 22%, transparent));
+  --tab-indicator-border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
+  --tab-indicator-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 10%, transparent), inset 0 1px 0 color-mix(in srgb, var(--color-white) 60%, transparent);
 
   /* ── C. Chip (UnifiedChip) ── */
   --chip-bg: var(--surface-container);
@@ -983,6 +1005,18 @@
   --destructive-foreground: var(--color-red-800);
   --border: var(--color-night-200);
   --border-muted: var(--color-night-400);
+
+  /* ── Premium Glass tokens ── */
+  --premium-glass-bg: color-mix(in srgb, var(--container-page) 86%, transparent);
+  --premium-glass-border: color-mix(in srgb, var(--text-default) 8%, transparent);
+  --premium-glass-shadow: 0 10px 30px color-mix(in srgb, var(--shadow-color) 6%, transparent),
+                          0 1px 3px color-mix(in srgb, var(--shadow-color) 2%, transparent),
+                          inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 15%, transparent);
+
+  /* ── Tab Indicator tokens ── */
+  --tab-indicator-bg: linear-gradient(145deg, color-mix(in srgb, var(--container-page) 86%, transparent), color-mix(in srgb, var(--primary) 18%, transparent));
+  --tab-indicator-border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+  --tab-indicator-shadow: 0 8px 18px color-mix(in srgb, var(--primary) 12%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 22%, transparent);
   --input: var(--color-night-500);
   --input-background: var(--color-night-500);
   --switch-background: var(--color-mocha-800);
@@ -1186,6 +1220,7 @@
 
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
     font-family: var(--font-sans);
     font-kerning: normal;
     -webkit-font-smoothing: antialiased;
@@ -1736,18 +1771,8 @@
     font-size: var(--font-size-xs); /* 9px */
   }
 
-  /* ── Active Cook Widget Responsive Positioning ── */
-  .active-cook-widget {
-    right: 16px;
-    transition: right 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 200ms ease;
-  }
 
-  .active-cook-widget.has-profile {
-    right: 68px; /* 44px (ProfileButton) + 24px */
-  }
 
-  .active-cook-widget.has-profile.is-compact {
-    right: 64px; /* 40px (ProfileButton) + 24px */
-  }
+
 
 }

@@ -1,4 +1,4 @@
-import { Elevation } from "@figma/my-make-file";
+import { Elevation } from "@vulcan/ds";
 
 export function Default() {
   return <Elevation />;

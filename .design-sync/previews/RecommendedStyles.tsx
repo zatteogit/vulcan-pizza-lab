@@ -1,4 +1,4 @@
-import { RecommendedStyles } from "@figma/my-make-file";
+import { RecommendedStyles } from "@vulcan/ds";
 
 const constraints = {
   oven_type: "home",

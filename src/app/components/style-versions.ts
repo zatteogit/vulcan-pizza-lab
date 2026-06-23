@@ -116,6 +116,10 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       emoji: "🌊",
       description: "Al limite: 92%, 72h, ~960g/teglia (Pizzarium spinto)",
       skill_hint: 3,
+      ranges: {
+        hydration_pct_range: [85, 95],
+        flour_w_range: [320, 360],
+      },
       params: {
         hydration_pct: 92,
         flour_w: 340,
@@ -191,6 +195,10 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       emoji: "💧",
       description: "Mollica nuvola, 48h in frigo",
       skill_hint: 3,
+      ranges: {
+        hydration_pct_range: [82, 92],
+        flour_w_range: [310, 350],
+      },
       params: {
         hydration_pct: 88,
         flour_w: 330,
@@ -239,6 +247,10 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       emoji: "🌊",
       description: "72h frigo, idratazione 78%, farina molto forte",
       skill_hint: 3,
+      ranges: {
+        hydration_pct_range: [72, 80],
+        flour_w_range: [320, 360],
+      },
       params: {
         hydration_pct: 78,
         flour_w: 340,
@@ -309,6 +321,10 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       emoji: "💥",
       description: "18h frigo per croccantezza estrema",
       skill_hint: 2,
+      ranges: {
+        hydration_pct_range: [55, 62],
+        flour_w_range: [200, 240],
+      },
       params: {
         hydration_pct: 60,
         flour_w: 220,
@@ -329,6 +345,7 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       skill_hint: 1,
       ranges: {
         hydration_pct_range: [58, 68],
+        flour_w_range: [200, 250],
         fermentation_hours_range: [4, 14],
       },
       params: {
@@ -346,6 +363,9 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       emoji: "✨",
       description: "16h frigo per alveolatura più aperta",
       skill_hint: 2,
+      ranges: {
+        hydration_pct_range: [65, 72],
+      },
       params: {
         hydration_pct: 70,
         flour_w: 240,
@@ -488,6 +508,9 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       emoji: "🌆",
       description: "24h frigo, farina più forte, alveolatura più sviluppata",
       skill_hint: 2,
+      ranges: {
+        hydration_pct_range: [50, 56],
+      },
       params: {
         hydration_pct: 54,
         flour_w: 260,
@@ -526,6 +549,9 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       emoji: "🏺",
       description: "70% idratazione, 18h frigo, mollica più sviluppata",
       skill_hint: 2,
+      ranges: {
+        flour_w_range: [270, 310],
+      },
       params: {
         hydration_pct: 70,
         flour_w: 290,
@@ -544,6 +570,9 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       emoji: "🏓",
       description: "72% idratazione + biga, 36h frigo",
       skill_hint: 2,
+      ranges: {
+        hydration_pct_range: [70, 76],
+      },
       params: {
         hydration_pct: 72,
         flour_w: 300,
@@ -635,6 +664,10 @@ export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       emoji: "🍳",
       description: "72% idratazione, 36h frigo, fondo ultra-croccante",
       skill_hint: 2,
+      ranges: {
+        hydration_pct_range: [68, 75],
+        flour_w_range: [280, 320],
+      },
       params: {
         hydration_pct: 72,
         flour_w: 300,

@@ -702,7 +702,7 @@ function Section({
           animate={{ rotate: open ? 180 : 0 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
         >
-          <ChevronDown size={14} style={{ color: "var(--text-muted)" }} />
+          <ChevronDown size={14} style={{ color: "var(--icon-muted)" }} />
         </motion.div>
       </button>
       <AnimatePresence>
@@ -764,7 +764,7 @@ function TagsEditor({
               className="active:scale-90 transition-transform"
               aria-label={`Rimuovi ${t}`}
             >
-              <X size={10} style={{ color: "var(--text-muted)" }} />
+              <X size={10} style={{ color: "var(--icon-muted)" }} />
             </button>
           </Badge>
         ))}
@@ -1813,7 +1813,7 @@ export function StyleEditorTab() {
               animate={{ rotate: showPipeline ? 180 : 0 }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             >
-              <ChevronDown size={14} style={{ color: "var(--text-muted)" }} />
+              <ChevronDown size={14} style={{ color: "var(--icon-muted)" }} />
             </motion.div>
           </button>
           <AnimatePresence>
@@ -1912,7 +1912,7 @@ export function StyleEditorTab() {
               animate={{ rotate: showSchema ? 180 : 0 }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             >
-              <ChevronDown size={14} style={{ color: "var(--text-muted)" }} />
+              <ChevronDown size={14} style={{ color: "var(--icon-muted)" }} />
             </motion.div>
           </button>
           <AnimatePresence>
@@ -2140,7 +2140,7 @@ export function StyleEditorTab() {
                                   className="flex items-start gap-2 p-3 rounded-lg"
                                   style={{ background: "color-mix(in srgb, var(--text-error) 8%, transparent)", border: "1px solid color-mix(in srgb, var(--text-error) 20%, transparent)" }}
                                 >
-                                  <CircleAlert size={14} style={{ color: "var(--text-error)", flexShrink: 0, marginTop: "var(--space-0-5)" }} />
+                                  <CircleAlert size={14} style={{ color: "var(--icon-error)", flexShrink: 0, marginTop: "var(--space-0-5)" }} />
                                   <span className="type-data-sm" style={{ color: "var(--text-error)", lineHeight: "var(--leading-relaxed)" }}>
                                     {smartImportResult.error}
                                   </span>
@@ -2176,7 +2176,7 @@ export function StyleEditorTab() {
                                   style={{ background: "color-mix(in srgb, var(--text-warning) 5%, transparent)", border: "1px solid color-mix(in srgb, var(--text-warning) 15%, transparent)" }}
                                 >
                                   <div className="flex items-center gap-1.5 mb-1">
-                                    <AlertTriangle size={11} style={{ color: "var(--text-warning)" }} />
+                                    <AlertTriangle size={11} style={{ color: "var(--icon-warning)" }} />
                                     <span className="type-data-sm" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-warning)" }}>
                                       Avvisi
                                     </span>
@@ -2287,7 +2287,7 @@ export function StyleEditorTab() {
               animate={{ rotate: showDiff ? 180 : 0 }}
               transition={{ type: "spring", stiffness: 500, damping: 30 }}
             >
-              <ChevronDown size={14} style={{ color: "var(--text-muted)" }} />
+              <ChevronDown size={14} style={{ color: "var(--icon-muted)" }} />
             </motion.div>
           </button>
           <AnimatePresence>

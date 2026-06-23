@@ -21,7 +21,7 @@ import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { useCms } from "./cms/cms-context";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "./media/ImageWithFallback";
 import { FLOURS_DB } from "./flour-database";
 import { GLOSSARY_TERMS,getLocalizedTerm } from "./glossary-data";
 import { PIZZA_FAMILIES,STYLES_DB } from "./pizza-engine";

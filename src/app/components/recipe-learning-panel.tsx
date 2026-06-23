@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { X, GraduationCap } from "lucide-react";
 import type { PizzaStyle } from "./pizza-engine";
+import { useCms } from "./cms/cms-context";
 
 export function RecipeLearningPanel({
   open,
@@ -13,6 +14,7 @@ export function RecipeLearningPanel({
   familyName: string;
   onClose: () => void;
 }) {
+  const { cms } = useCms();
   return (
     <AnimatePresence>
       {open && (
@@ -95,7 +97,7 @@ export function RecipeLearningPanel({
                   color: "var(--text-muted)",
                   cursor: "pointer",
                 }}
-                aria-label="Chiudi approfondimento"
+                aria-label={cms.ui.closeInsight}
               >
                 <X size={17} />
               </button>

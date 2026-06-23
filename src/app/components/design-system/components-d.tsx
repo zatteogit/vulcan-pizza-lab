@@ -289,7 +289,7 @@ export function RecipeTimelineSpec() {
         principi={[
           "Ingredienti: barre proporzionali al baker's %, con colore semantico per tipo",
           "Timeline: step verticali con nodi 40×40px, zone termiche colorate, step espandibili",
-          "Clipboard: doppio path (API + textarea fallback) per iframe Figma",
+          "Clipboard: doppio path (API + textarea fallback) per iframe",
         ]}
       />
 
@@ -519,7 +519,7 @@ export function RecipeTimelineSpec() {
 
       <SubSectionLabel label="Accessibilità" />
       <AccessibilitaInfo items={[
-        { label: "Clipboard", desc: "Doppio path (API + textarea fallback) per compatibilità iframe Figma." },
+        { label: "Clipboard", desc: "Doppio path (API + textarea fallback) per compatibilità iframe." },
         { label: "Timeline", desc: "role='list' con role='listitem' per ogni step. aria-expanded per i dettagli." },
         { label: "Contrasto", desc: "I colori zona hanno contrasto ≥3:1 contro il background (non-text)." },
       ]} />

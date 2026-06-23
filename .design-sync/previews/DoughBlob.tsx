@@ -1,4 +1,4 @@
-import { DoughBlob } from "@figma/my-make-file";
+import { DoughBlob } from "@vulcan/ds";
 
 export function Variants() {
   return (

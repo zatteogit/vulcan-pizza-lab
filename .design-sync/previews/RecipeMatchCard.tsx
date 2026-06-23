@@ -1,4 +1,4 @@
-import { RecipeMatchCard } from "@figma/my-make-file";
+import { RecipeMatchCard } from "@vulcan/ds";
 
 // Punteggi reali precalcolati dal motore, congelati come fixture statica.
 const scores = {

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Vulcan** is a React + Vite web application for designing, learning, and optimizing pizza recipes. It's built as a Figma Make file and syncs between Figma and a local React codebase.
+**Vulcan** is a React + Vite web application for designing, learning, and optimizing pizza recipes. It's built as a Vulcan Cloud file and syncs between Figma and a local React codebase.
 
 Core features:
 - **Create**: Configure pizza recipes with parametric engine (hydration, fermentation, baking, equipment)
@@ -48,7 +48,7 @@ All pages are **lazy-loaded** via React Router's `lazy()` for code-splitting.
 - `recipe-view.tsx` — Recipe detail layout and navigation
 - `recipe-match-card.tsx`, `recommended-styles.tsx` — Match and recommendations UI
 - `style-editor-tab.tsx` — Edit/create pizza styles (in dev tools)
-- `sync-tab.tsx` — Figma Make sync dashboard
+- `sync-tab.tsx` — Vulcan Cloud sync dashboard
 
 **Data & Databases:**
 - `pizza-engine.ts` — Also contains pizza style definitions and lookup tables
@@ -101,7 +101,7 @@ See `scripts/check-design-tokens.mjs` for enforcement rules.
 - `postcss.config.mjs` — PostCSS (for Tailwind)
 
 ### Sync System
-- `sync.mjs` — Node.js CLI for bidirectional syncing with Figma Make
+- `sync.mjs` — Node.js CLI for bidirectional syncing with Vulcan Cloud
   ```bash
   node sync.mjs scan                # List all files with hashes
   node sync.mjs export [file]       # Export to JSON (clipboard or file)
@@ -146,7 +146,7 @@ Edit `src/app/routes.ts`:
 - Profile/user data: managed via `use-profile-defaults.ts` hook
 
 ### Figma Asset Imports
-- Assets in Figma Make are stubbed locally with `figma:asset/<id>` imports
+- Assets in Vulcan Cloud are stubbed locally with `figma:asset/<id>` imports
 - Vite's `figmaAssetStub()` plugin resolves them to empty SVG placeholders
 - Local assets go in `src/assets/` and imported normally: `import pizza from '@/assets/pizza.png'`
 

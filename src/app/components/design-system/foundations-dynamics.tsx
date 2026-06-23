@@ -312,7 +312,7 @@ export function IconographySection() {
                   whileHover={{ scale: 1.15 }}
                   transition={{ type: "spring", stiffness: 500, damping: 25 }}
                 >
-                  <Icon size={18} style={{ color: "var(--text-default)" }} />
+                  <Icon size={18} style={{ color: "var(--icon-default)" }} />
                 </motion.div>
               ))}
             </div>

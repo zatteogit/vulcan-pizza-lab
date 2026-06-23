@@ -8,7 +8,6 @@ import {
 Compass,
 Flame,
 GraduationCap,
-Search,
 User,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
@@ -19,9 +18,13 @@ import { CmsProvider,useCms } from "./cms/cms-context";
 import { CookSessionProvider,useCookSession } from "./cook-session";
 import { CookingMode } from "./cooking-mode";
 import type { DarkModeContext,ThemeMode } from "./root-layout";
+import { SearchButton } from "./search-button";
 import { SearchOverlay } from "./search-overlay";
 import { StylesOverrideProvider } from "./styles-override-context";
 import { VulcanMark } from "./vulcan-logo";
+import { liquidDockQuickSpring } from "./liquid-dock";
+
+const MotionLink = motion(Link);
 
 /* ═══ DARK MODE — tri-state: light / dark / auto ═══ */
 const DARK_MODE_KEY = "vulcan_dark_mode";
@@ -136,11 +139,11 @@ const navQuickSpring = {
 } as const;
 
 const premiumGlassStyle: React.CSSProperties = {
-  background: "color-mix(in srgb, var(--container-page) 82%, transparent)",
-  backdropFilter: "blur(24px) saturate(1.7)",
-  WebkitBackdropFilter: "blur(24px) saturate(1.7)",
-  border: "1px solid color-mix(in srgb, var(--text-default) 8%, transparent)",
-  boxShadow: "0 10px 30px color-mix(in srgb, var(--shadow-color) 6%, transparent), 0 1px 3px color-mix(in srgb, var(--shadow-color) 2%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 15%, transparent)",
+  background: "var(--premium-glass-bg)",
+  backdropFilter: "blur(32px) saturate(1.8)",
+  WebkitBackdropFilter: "blur(32px) saturate(1.8)",
+  border: "1px solid var(--premium-glass-border)",
+  boxShadow: "var(--premium-glass-shadow)",
 };
 
 function getActiveTab(pathname: string): string | null {
@@ -205,11 +208,9 @@ function TabItem({
             className="absolute inset-0"
             style={{
               borderRadius: "var(--radius-lg)",
-              background:
-                "linear-gradient(145deg, color-mix(in srgb, var(--container-page) 86%, transparent), color-mix(in srgb, var(--primary) 18%, transparent))",
-              border: "1px solid color-mix(in srgb, var(--primary) 18%, transparent)",
-              boxShadow:
-                "0 8px 18px color-mix(in srgb, var(--primary) 12%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 22%, transparent)",
+              background: "var(--tab-indicator-bg)",
+              border: "var(--tab-indicator-border)",
+              boxShadow: "var(--tab-indicator-shadow)",
               willChange: "transform",
               WebkitBackfaceVisibility: "hidden",
               backfaceVisibility: "hidden",
@@ -220,7 +221,7 @@ function TabItem({
         <Icon
           size={24}
           style={{
-            color: active ? "var(--primary)" : "var(--text-muted)",
+            color: active ? "var(--icon-accent)" : "var(--icon-muted)",
             position: "relative",
             zIndex: 1,
             transition: "color 0.15s ease",
@@ -383,26 +384,12 @@ function BottomTabBar({
       </nav>
 
       {/* Floating Search Circle next to it */}
-      <motion.button
-        type="button"
-        onClick={onSearchOpen}
-        className="flex items-center justify-center shrink-0"
-        whileHover={prefersReducedMotion ? undefined : { scale: 1.045 }}
-        whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
-        transition={navQuickSpring}
-        style={{
-          width: "var(--space-14, 56px)",
-          height: "var(--space-14, 56px)",
-          borderRadius: "var(--radius-full)",
-          ...premiumGlassStyle,
-          color: "var(--text-default)",
-          cursor: "pointer",
-          WebkitTapHighlightColor: "transparent",
-        }}
-        aria-label={`${cms.pages.navSearch} (⌘K)`}
-      >
-        <Search size={20} />
-      </motion.button>
+      <SearchButton
+        diameter={56}
+        iconSize={24}
+        onOpen={onSearchOpen}
+        surfaceStyle={premiumGlassStyle}
+      />
     </motion.div>
   );
 }
@@ -455,7 +442,7 @@ function SidebarRail({
             background: "var(--hero-brand-gradient)",
             color: "var(--overlay-text)",
           }}
-          aria-label="Vulcan Pizza Lab — Home"
+          aria-label={cms.pages.homeAria}
         >
           <VulcanMark size={20} decorative />
         </Link>
@@ -490,7 +477,7 @@ function SidebarRail({
                 fontSize: "var(--font-size-xs)",
                 fontFamily: "var(--font-mono)",
               }}
-              aria-label="Developer Tools"
+              aria-label={cms.pages.devToolsAria}
               title="Ctrl+Shift+D"
             >
               <span style={{ fontFeatureSettings: "'tnum'" }}>{"</>"}</span>
@@ -500,26 +487,12 @@ function SidebarRail({
       </motion.nav>
 
       {/* Floating Search Circle below the capsule */}
-      <motion.button
-        onClick={onSearchOpen}
-        whileHover={{ scale: 1.04, y: -1 }}
-        whileTap={{ scale: 0.94 }}
-        transition={navQuickSpring}
-        className="flex items-center justify-center shrink-0 cursor-pointer"
-        style={{
-          width: 72,
-          height: 72,
-          borderRadius: "50%",
-          ...premiumGlassStyle,
-          color: "var(--text-default)",
-          cursor: "pointer",
-          willChange: "transform",
-        }}
-        aria-label={`${cms.pages.navSearch} (⌘K)`}
-        title="⌘K"
-      >
-        <Search size={22} />
-      </motion.button>
+      <SearchButton
+        diameter={72}
+        iconSize={24}
+        onOpen={onSearchOpen}
+        surfaceStyle={premiumGlassStyle}
+      />
     </div>
   );
 }
@@ -532,15 +505,20 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
   const { scrolled } = navState;
   const size = scrolled ? 40 : 44;
   return (
-    <Link
+    <MotionLink
       to="/profile"
-      className="fixed top-4 right-4 flex items-center justify-center active:scale-90 hover:scale-105"
+      className="fixed top-4 right-4 flex items-center justify-center"
+      animate={{
+        width: size,
+        height: size,
+        borderRadius: scrolled ? "14px" : "16px",
+      }}
+      transition={liquidDockQuickSpring}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.92 }}
       style={{
         /* z-index 60 per stare SOPRA gli header sticky z-50 delle pagine. */
         zIndex: 60,
-        width: size,
-        height: size,
-        borderRadius: "50%",
         background: active
           ? "color-mix(in srgb, var(--primary) 16%, var(--container-page))"
           : scrolled
@@ -559,15 +537,15 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
           : "0 10px 24px color-mix(in srgb, var(--shadow-color) 8%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 12%, transparent)",
         textDecoration: "none",
         transition:
-          "width 180ms ease, height 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease",
-        willChange: "transform",
+          "background 180ms ease, border-color 180ms ease, box-shadow 180ms ease",
+        willChange: "transform, width, height",
       }}
       aria-label={label}
       aria-current={active ? "page" : undefined}
       title={label}
     >
       <User size={18} />
-    </Link>
+    </MotionLink>
   );
 }
 
@@ -610,9 +588,12 @@ export function AppShell() {
   const location = useLocation();
   const navState = useLiquidNavState();
 
-  useEffect(() => {
+  // Reset hideNavbar state during render when the pathname changes to avoid race conditions with children
+  const [prevPathname, setPrevPathname] = useState(location.pathname);
+  if (location.pathname !== prevPathname) {
+    setPrevPathname(location.pathname);
     setHideNavbar(false);
-  }, [location.pathname]);
+  }
 
   const setThemeMode = useCallback((v: ThemeMode) => {
     setThemeModeState(v);
@@ -734,7 +715,17 @@ export function AppShell() {
 
           {/* Bottom tab bar — mobile */}
           {showNav && (
-            <BottomTabBar activeTab={activeTab} onSearchOpen={openSearch} navState={navState} />
+            <>
+              {/* Bottom scrim — visually grounds the floating tab bar on mobile */}
+              <div
+                className="fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden"
+                style={{
+                  height: "96px",
+                  background: "linear-gradient(to top, var(--container-page) 0%, color-mix(in srgb, var(--container-page) 76%, transparent) 40%, transparent 100%)",
+                }}
+              />
+              <BottomTabBar activeTab={activeTab} onSearchOpen={openSearch} navState={navState} />
+            </>
           )}
 
           {/* Command palette search overlay */}

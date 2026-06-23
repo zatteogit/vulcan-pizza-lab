@@ -7,7 +7,7 @@ IconButton, SegmentedControl, Stepper, Surface, Switch**. Warm editorial brand
 ## Setup — no provider, just tokens
 Components need **no provider/context wrapper**. Import and render directly:
 ```tsx
-import { CtaButton } from "@figma/my-make-file";
+import { CtaButton } from "@vulcan/ds";
 ```
 They style themselves from **CSS custom properties** (the `--*` tokens). The design
 must load the DS `styles.css` closure (tokens + Google Fonts + utilities) — without
@@ -43,7 +43,7 @@ Pass a `style` for one-off layout; don't reach for utility classes to restyle th
 
 ## Idiomatic snippet
 ```tsx
-import { Surface, Heading, Badge, CtaButton } from "@figma/my-make-file";
+import { Surface, Heading, Badge, CtaButton } from "@vulcan/ds";
 
 <Surface variant="card" style={{ padding: "var(--space-5)", display: "flex",
   flexDirection: "column", gap: "var(--space-3)", maxWidth: 360 }}>

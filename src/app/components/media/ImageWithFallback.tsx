@@ -14,11 +14,11 @@ function FallbackGlyph() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.5"
+      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      style={{ color: "var(--text-muted)", opacity: 0.45 }}
+      style={{ color: "var(--icon-muted)", opacity: 0.45 }}
     >
       <path d="M12 3c4.97 0 9 3.2 9 5L12 21 3 8c0-1.8 4.03-5 9-5Z" />
       <path d="M3 8c3 1.2 15 1.2 18 0" />

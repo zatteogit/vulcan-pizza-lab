@@ -11,7 +11,7 @@ import {
 import { useCms } from "./cms/cms-context";
 import { t } from "./cms/i18n";
 import { CtaButton } from "./ds";
-import { liquidDockButtonStyle, liquidDockQuickSpring, liquidDockSpring } from "./liquid-dock";
+import { liquidDockButtonStyle, liquidDockQuickSpring, liquidDockSpring, liquidDockStartButtonStyle } from "./liquid-dock";
 
 export function ActiveCookWidget({
   canStartRecipe = false,
@@ -48,6 +48,8 @@ export function ActiveCookWidget({
   const actionHeight = compact ? 40 : 44;
   const iconBox = compact ? 24 : 28;
 
+  const rightVal = hasProfileButton ? (compact ? 64 : 68) : 16;
+
   const handleClick = () => {
     if (session) {
       openOverlay();
@@ -58,25 +60,23 @@ export function ActiveCookWidget({
 
   return (
     <AnimatePresence>
-      <CtaButton
-        as={motion.button}
+      <motion.button
+        layout
         key={active ? "cook-active-action" : "cook-start-action"}
         type="button"
-        radius="pill"
-        deepShadow
-        initial={{ opacity: 0, y: -8, scale: 0.98, height: actionHeight }}
-        animate={{ opacity: 1, y: 0, scale: 1, height: actionHeight }}
+        initial={{ opacity: 0, y: -8, scale: 0.98, height: actionHeight, right: rightVal }}
+        animate={{ opacity: 1, y: 0, scale: 1, height: actionHeight, right: rightVal }}
         exit={{ opacity: 0, y: -6, scale: 0.98 }}
         whileHover={prefersReducedMotion ? undefined : { scale: 1.018, y: -1 }}
         whileTap={{ scale: 0.96 }}
-        transition={liquidDockQuickSpring}
+        transition={liquidDockSpring}
         onClick={handleClick}
         className={`fixed top-4 z-[70] inline-flex items-center rounded-full active-cook-widget ${
-          hasProfileButton ? "has-profile" : ""
+          active ? "is-active" : ""
         } ${compact ? "is-compact" : ""}`}
         style={{
-          ...liquidDockButtonStyle,
-          ...(active ? { background: "var(--primary)" } : {}),
+          ...(active ? liquidDockButtonStyle : liquidDockStartButtonStyle),
+          ...(active ? { background: "var(--primary)", color: "var(--text-on-accent)" } : {}),
           border: active
             ? due
               ? "1.5px solid color-mix(in srgb, var(--primary) 74%, white)"
@@ -85,7 +85,6 @@ export function ActiveCookWidget({
           boxShadow: active
             ? "0 8px 22px color-mix(in srgb, var(--primary) 28%, transparent)"
             : "0 12px 30px color-mix(in srgb, var(--cta) 28%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 28%, transparent)",
-          ...(active ? { color: "var(--text-on-accent)" } : {}),
           fontSize: "var(--font-size-md)",
           fontWeight: "var(--weight-bold)",
           lineHeight: 1,
@@ -94,6 +93,7 @@ export function ActiveCookWidget({
           gap: compact ? 8 : 10,
           paddingLeft: compact ? 12 : 14,
           paddingRight: compact ? 12 : 14,
+          maxWidth: hasProfileButton ? "calc(100vw - 84px)" : "calc(100vw - 32px)",
           willChange: "transform, opacity, height, right",
           WebkitTapHighlightColor: "transparent",
         }}
@@ -134,7 +134,7 @@ export function ActiveCookWidget({
         </span>
 
         <span
-          className="relative whitespace-nowrap"
+          className="active-cook-label relative whitespace-nowrap"
           style={{
             fontSize: compact ? "var(--font-size-sm)" : "var(--font-size-md)",
             maxWidth: compact ? "min(44vw, 132px)" : "min(52vw, 168px)",
@@ -146,7 +146,7 @@ export function ActiveCookWidget({
         </span>
         {active && (
           <span
-            className="relative type-data whitespace-nowrap"
+            className="active-cook-countdown relative type-data whitespace-nowrap"
             style={{
               color: "color-mix(in srgb, var(--overlay-text) 78%, transparent)",
               fontWeight: "var(--weight-semibold)",
@@ -157,7 +157,7 @@ export function ActiveCookWidget({
             {metrics?.finished ? cms.cooking.completed : countdown}
           </span>
         )}
-      </CtaButton>
+      </motion.button>
     </AnimatePresence>
   );
 }

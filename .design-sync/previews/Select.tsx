@@ -1,4 +1,4 @@
-import { Select } from "@figma/my-make-file";
+import { Select } from "@vulcan/ds";
 import { useState } from "react";
 
 const OPTS = [

@@ -1,22 +1,22 @@
 # Vulcan — Core Knowledge (Kipi)
 
-> Ultimo aggiornamento: 2026-06-19 | Comando: `kipi update` | Stato globale: **completo (10/10 capitoli)**
+> Ultimo aggiornamento: 2026-06-23 | Comando: `kipi update` | Stato globale: **completo (10/10 capitoli)**
 
-Applicazione React/Vite per ricette pizza: motore parametrico (`pizza-engine`), flusso ricetta, CMS/i18n, stili e versioni, scoring e contenuti didattici. L'update 2026-06-19 registra la pulizia del dead code UI e il riallineamento del pannello "Personalizza parametri".
+Applicazione React/Vite per ricette pizza: motore parametrico (`pizza-engine`), flusso ricetta, CMS/i18n, stili e versioni, scoring e contenuti didattici. L'update 2026-06-23 registra la ristrutturazione del Design System in un modello a tier T1-T6 (DTCG-ready), l'unificazione del visual showcase, l'estrazione di `useRecipeState` e `RecipeSetupPanel`, e l'aggiornamento dei parametri fisici degli stili pizza.
 
 ## Metriche (da codice reale)
 
 | Metrica | Valore | Fonte |
 |--------|--------|--------|
-| File `.ts`/`.tsx` in `src/` | 108 | `find src` |
-| File app (escluso `components/ui/`) | 105 | stesso, escluso `ui/` |
+| File `.ts`/`.tsx` in `src/` | 141 | `find src` |
+| File app (escluso `components/ui/`) | 138 | stesso, escluso `ui/` |
 | Capitoli KB | 10 | init + scan |
-| File chiave mappati | 106 | `workflow-state.json` |
+| File chiave mappati | 140 | `workflow-state.json` |
 | Copertura documentazione | **100%** | 10 capitoli scan completo |
 | Export pubblici in `pizza-engine.ts` | **64** | `rg '^export '` |
 | Stili in `STYLES_DB` | **28** | `pizza-engine.ts` |
-| Righe `pizza-engine.ts` | **4402** | `wc -l` |
-| Righe `cms-context.tsx` | 3143 | `wc -l` |
+| Righe `pizza-engine.ts` | **4413** | `wc -l` |
+| Righe `cms-context.tsx` | 3182 | `wc -l` |
 | Dipendenze runtime | 9 | `package.json` |
 
 ## Capitoli

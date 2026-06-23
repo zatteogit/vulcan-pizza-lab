@@ -1,4 +1,4 @@
-import { RadiusScale } from "@figma/my-make-file";
+import { RadiusScale } from "@vulcan/ds";
 
 export function Default() {
   return <RadiusScale />;

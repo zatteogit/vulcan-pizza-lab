@@ -8,7 +8,7 @@ import { useDarkMode } from "../components/root-layout";
 /**
  * Standalone Design System page at /design-system
  * Full-page view without Dev Tools chrome — optimised for
- * screenshotting / importing into Figma as a spec sheet.
+ * screenshotting.
  */
 export function DesignSystemPage() {
   const { darkMode, setDarkMode } = useDarkMode();

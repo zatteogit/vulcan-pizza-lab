@@ -1,4 +1,4 @@
-import { Progress } from "@figma/my-make-file";
+import { Progress } from "@vulcan/ds";
 
 export function Linear() {
   return (

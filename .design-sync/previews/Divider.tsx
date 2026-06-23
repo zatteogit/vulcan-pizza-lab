@@ -1,4 +1,4 @@
-import { Divider } from "@figma/my-make-file";
+import { Divider } from "@vulcan/ds";
 
 export function Horizontal() {
   return (

@@ -1,4 +1,4 @@
-import { Badge } from "@figma/my-make-file";
+import { Badge } from "@vulcan/ds";
 
 export function Tones() {
   return (

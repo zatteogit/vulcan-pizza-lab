@@ -1,6 +1,6 @@
 {
   "projectId": "ec72a8c8-be9b-4b2d-b2d0-ef61f9133688",
-  "pkg": "@figma/my-make-file",
+  "pkg": "@vulcan/ds",
   "globalName": "VulcanDS",
   "shape": "package",
   "srcDir": "src",

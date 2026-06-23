@@ -10,12 +10,12 @@
  * Il selettore tab (RecipeSectionTabs) qui è finalmente montato: il layer
  * PizzaNerd vive dentro Ricetta/Procedimento quando abilitato dal Profilo. */
 
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { Link } from "react-router";
-import { motion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import { Check, ChevronLeft, Share2 } from "lucide-react";
-import { Heading } from "./ds";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { Heading, IconButton } from "./ds";
+import { ImageWithFallback } from "./media/ImageWithFallback";
 import { RecipeOutput } from "./recipe-output";
 import { RecipeSectionTabs, type RecipePrimaryTab } from "./recipe-section-tabs";
 import { useIsMobile } from "./ui/use-mobile";
@@ -119,7 +119,24 @@ export function RecipeView({
   const cardY = useTransform(scrollY, [0, 400], [0, -20]);
 
   const [linkCopied, setLinkCopied] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
+
+  const isHeroReduced = activeTab !== "ricetta";
+  const resolvedMarginTop = isHeroReduced
+    ? (showStickyHeader ? "var(--space-4, 16px)" : "var(--space-20, 80px)")
+    : "calc(-1 * var(--space-19, 4.75rem))";
   
+  const floatingBackStyle = {
+    background: "color-mix(in srgb, var(--container-page) 85%, transparent)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    color: "var(--text-default)",
+    border: "1px solid var(--container-border)",
+  };
+
   const handleShare = () => {
     if (!shareUrl) return;
     if (navigator.share) {
@@ -221,30 +238,39 @@ export function RecipeView({
           </div>
         </header>
       ) : back.to ? (
-        <Link
+        <IconButton
+          as={Link}
           to={back.to}
-          className={`fixed ${back.positionClassName ?? "top-4 left-4"} z-50 flex h-11 w-11 items-center justify-center rounded-full active:scale-90 transition-transform`}
+          size="lg"
+          variant="ghost"
+          className={`fixed ${back.positionClassName ?? "top-4 left-4"} z-50 active:scale-90 transition-transform`}
           style={floatingBackStyle}
           aria-label={back.label}
           title={back.label}
         >
           <ChevronLeft size={20} />
-        </Link>
+        </IconButton>
       ) : (
-        <button
+        <IconButton
           type="button"
           onClick={back.onClick}
-          className={`fixed ${back.positionClassName ?? "top-4 left-4"} z-50 flex h-11 w-11 items-center justify-center rounded-full active:scale-90 transition-transform`}
+          size="lg"
+          variant="ghost"
+          className={`fixed ${back.positionClassName ?? "top-4 left-4"} z-50 active:scale-90 transition-transform`}
           style={floatingBackStyle}
           aria-label={back.label}
           title={back.label}
         >
           <ChevronLeft size={20} />
-        </button>
+        </IconButton>
       )}
 
       {/* ── Hero photo ── */}
-      <div className="relative" style={{ height: "clamp(220px, 32vh, 400px)" }}>
+      <motion.div
+        className="relative overflow-hidden"
+        animate={{ height: isHeroReduced ? 0 : "clamp(220px, 32vh, 400px)" }}
+        transition={{ type: "spring", stiffness: 280, damping: 28 }}
+      >
         <div className="h-full max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
           <div className="relative h-full overflow-hidden sm:rounded-b-3xl">
             <motion.div
@@ -271,121 +297,155 @@ export function RecipeView({
             />
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* ── Glassmorphic title card (ottimizzato su 2 colonne per desktop) ── */}
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 relative z-10" style={{ marginTop: "calc(-1 * var(--space-19, 4.75rem))" }}>
+      {/* ── Glassmorphic title card / Header ── */}
+      <motion.div
+        layout
+        className="max-w-6xl mx-auto px-5 sm:px-8 relative z-10"
+        animate={{ marginTop: resolvedMarginTop }}
+        transition={{ type: "spring", stiffness: 280, damping: 28 }}
+      >
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 350, damping: 25 }}
-          className="rounded-2xl p-5 sm:p-8 transition-all duration-300"
+          layout
+          className="rounded-2xl text-left"
           style={{
-            background: "var(--recipe-hero-card-bg)",
-            backdropFilter: "blur(24px) saturate(1.7)",
-            WebkitBackdropFilter: "blur(24px) saturate(1.7)",
-            border: "1px solid var(--container-border)",
-            boxShadow: "var(--recipe-hero-card-shadow)",
-            y: cardY,
+            background: isHeroReduced ? "rgba(0, 0, 0, 0)" : "var(--recipe-hero-card-bg)",
+            backdropFilter: isHeroReduced ? "blur(0px) saturate(1)" : "blur(24px) saturate(1.7)",
+            WebkitBackdropFilter: isHeroReduced ? "blur(0px) saturate(1)" : "blur(24px) saturate(1.7)",
+            border: isHeroReduced ? "1px solid rgba(0, 0, 0, 0)" : "1px solid var(--container-border)",
+            boxShadow: isHeroReduced ? "none" : "var(--recipe-hero-card-shadow)",
+            y: isHeroReduced ? 0 : cardY,
+            // Transition responsive padding in-place
+            paddingTop: isHeroReduced ? 0 : (isMobile ? "var(--space-5)" : "var(--space-8)"),
+            paddingBottom: isHeroReduced ? 0 : (isMobile ? "var(--space-5)" : "var(--space-8)"),
+            paddingLeft: isHeroReduced ? "4px" : (isMobile ? "var(--space-5)" : "var(--space-8)"),
+            paddingRight: isHeroReduced ? 0 : (isMobile ? "var(--space-5)" : "var(--space-8)"),
+            transition: "background 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), -webkit-backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
           }}
+          transition={{ type: "spring", stiffness: 280, damping: 28 }}
         >
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 md:gap-8">
+          <div 
+            className="flex flex-col"
+            style={{
+              gap: isHeroReduced ? "var(--space-1, 4px)" : "var(--space-4, 16px)",
+              transition: "gap 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
+            {/* Eyebrow */}
+            <motion.div layout transition={{ type: "spring", stiffness: 280, damping: 28 }}>
+              <span
+                style={{
+                  display: "inline-block",
+                  fontSize: "var(--font-size-md)",
+                  color: "var(--text-accent)",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase" as any,
+                  fontWeight: "var(--weight-semibold)" as any,
+                }}
+              >
+                {heroEyebrow}
+              </span>
+            </motion.div>
+
+            {/* Title + Share button */}
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ type: "spring", stiffness: 430, damping: 34 }}
-              className="flex-1 min-w-0 text-left"
+              layout
+              className="flex items-center gap-3 flex-wrap"
+              transition={{ type: "spring", stiffness: 280, damping: 28 }}
             >
-                <span
+              <Heading level="page" style={{ margin: 0 }}>
+                {heroTitle}
+              </Heading>
+              {shareUrl && (
+                <button
+                  onClick={handleShare}
+                  className="inline-flex h-8 items-center gap-1.5 rounded-full border px-2.5 transition-all active:scale-90"
                   style={{
-                    fontSize: "var(--font-size-md)",
-                    color: "var(--text-accent)",
-                    letterSpacing: "0.18em",
-                    textTransform: "uppercase" as any,
+                    background: "color-mix(in srgb, var(--container-bg) 85%, transparent)",
+                    color: linkCopied ? "var(--recipe-success)" : "var(--text-muted)",
+                    borderColor: linkCopied ? "var(--recipe-success)" : "var(--container-border)",
+                    boxShadow: "0 2px 8px color-mix(in srgb, var(--shadow-color) 6%, transparent)",
+                    cursor: "pointer",
+                    fontSize: "var(--font-size-sm)",
                     fontWeight: "var(--weight-semibold)" as any,
                   }}
+                  title={linkCopied ? cms.ui.copied : cms.ui.share}
+                  aria-label={cms.pages.recipeCopyLinkAria}
                 >
-                  {heroEyebrow}
-                </span>
-                
-                <div className="flex items-center gap-3 flex-wrap mt-1">
-                  <Heading level="page" style={{ margin: 0 }}>
-                    {heroTitle}
-                  </Heading>
-                  {shareUrl && (
-                    <button
-                      onClick={handleShare}
-                      className="inline-flex h-8 items-center gap-1.5 rounded-full border px-2.5 transition-all active:scale-90"
-                      style={{
-                        background: "color-mix(in srgb, var(--container-bg) 85%, transparent)",
-                        color: linkCopied ? "var(--recipe-success)" : "var(--text-muted)",
-                        borderColor: linkCopied ? "var(--recipe-success)" : "var(--container-border)",
-                        boxShadow: "0 2px 8px color-mix(in srgb, var(--shadow-color) 6%, transparent)",
-                        cursor: "pointer",
-                        fontSize: "var(--font-size-sm)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                      }}
-                      title={linkCopied ? cms.ui.copied : cms.ui.share}
-                      aria-label={cms.pages.recipeCopyLinkAria}
-                    >
-                      {linkCopied ? (
-                        <Check size={13} className="stroke-[2.5]" />
-                      ) : (
-                        <Share2 size={13} />
-                      )}
-                      <span>{linkCopied ? cms.ui.copied : cms.ui.share}</span>
-                    </button>
+                  {linkCopied ? (
+                    <Check size={13} className="stroke-[2.5]" />
+                  ) : (
+                    <Share2 size={13} />
                   )}
-                </div>
+                  <span>{linkCopied ? cms.ui.copied : cms.ui.share}</span>
+                </button>
+              )}
+            </motion.div>
 
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  {heroTags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="inline-flex min-h-7 items-center rounded-full px-3"
-                      style={{
-                        fontSize: "var(--font-size-md)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                        background: "var(--recipe-hero-badge-bg)",
-                        color: "var(--recipe-hero-badge-text)",
-                        letterSpacing: "0.02em",
-                        textTransform: "none",
-                      }}
-                    >
-                      {/* VPL-D5: solo la prima lettera maiuscola (niente Title Case
-                          che capitalizzava unità/preposizioni: "Cm", "Ai", "Knead"). */}
-                      {tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : tag}
-                    </span>
-                  ))}
-                </div>
-
-                <p
-                  className="mt-4"
-                  style={{
-                    color: "var(--text-default)",
-                    fontSize: "clamp(var(--font-size-xl), 4vw, var(--font-size-2xl))",
-                    lineHeight: "var(--leading-reading)",
-                    maxWidth: 840,
-                    opacity: 0.95,
+            {/* Description + Tags inside the card (rendered only in Ricetta tab) */}
+            <AnimatePresence>
+              {!isHeroReduced && (
+                <motion.div
+                  key="expanded-card-content"
+                  initial={{ opacity: 0, y: 8, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
+                  exit={{ opacity: 0, y: -8, height: 0 }}
+                  transition={{
+                    height: { type: "spring", stiffness: 280, damping: 28 },
+                    y: { type: "spring", stiffness: 280, damping: 28 },
+                    opacity: { duration: 0.18, ease: "easeInOut" }
                   }}
+                  className="flex flex-col gap-4 overflow-hidden"
                 >
-                  {heroDescription}
-                </p>
+                  <div className="flex flex-wrap items-center gap-2 mt-2">
+                    {heroTags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex min-h-7 items-center rounded-full px-3"
+                        style={{
+                          fontSize: "var(--font-size-md)",
+                          fontWeight: "var(--weight-semibold)" as any,
+                          background: "var(--recipe-hero-badge-bg)",
+                          color: "var(--recipe-hero-badge-text)",
+                          letterSpacing: "0.02em",
+                          textTransform: "none",
+                        }}
+                      >
+                        {tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : tag}
+                      </span>
+                    ))}
+                  </div>
 
-                {introExtraSlot && (
-                  <div
-                    className="mt-2"
+                  <p
                     style={{
+                      color: "var(--text-default)",
                       fontSize: "clamp(var(--font-size-xl), 4vw, var(--font-size-2xl))",
+                      lineHeight: "var(--leading-reading)",
+                      maxWidth: 840,
+                      opacity: 0.95,
+                      margin: 0,
                     }}
                   >
-                    {introExtraSlot}
-                  </div>
-                )}
-            </motion.div>
+                    {heroDescription}
+                  </p>
+
+                  {introExtraSlot && (
+                    <div
+                      style={{
+                        fontSize: "clamp(var(--font-size-xl), 4vw, var(--font-size-2xl))",
+                        margin: 0,
+                      }}
+                    >
+                      {introExtraSlot}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* ── Contenuto ── */}
       <div id="recipe-content-tabs-anchor" className="max-w-6xl mx-auto px-5 sm:px-8">
@@ -452,11 +512,3 @@ export function RecipeView({
   );
 }
 
-const floatingBackStyle: React.CSSProperties = {
-  background: "color-mix(in srgb, var(--container-bg) 85%, transparent)",
-  border: "1px solid var(--container-border)",
-  boxShadow: "0 8px 24px color-mix(in srgb, var(--shadow-color) 15%, transparent)",
-  backdropFilter: "blur(12px)",
-  WebkitBackdropFilter: "blur(12px)",
-  color: "var(--text-default)",
-};

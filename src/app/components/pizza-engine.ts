@@ -537,9 +537,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "napoletana",
     origin: "Napoli (evoluzione moderna)",
     dough: {
-      flour_w_range: [280, 350], // Martucci Caputo Saccorosso W300 — era [300,350]
+      flour_w_range: [280, 340], // Martucci Caputo Saccorosso W300 — era [300,350]
       flour_pl_range: [0.50, 0.65], // Più estensibile per cornicione esplosivo
-      hydration_pct_range: [65, 78], // Martucci 68%, Salvo 70%, pro 75% — era [70,80]
+      hydration_pct_range: [65, 75], // Martucci 68%, Salvo 70%, pro 75% — era [70,80]
       salt_pct: 2.5,
       oil_pct: 0.0,
       fat_type: "none",
@@ -555,10 +555,10 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     baking: {
       oven_type_required: "electric_high",
-      temp_c_range: [380, 450],
-      temp_c_ideal: 410,
-      cook_time_sec_range: [90, 140],
-      cook_time_sec_ideal: 110,
+      temp_c_range: [400, 480],
+      temp_c_ideal: 450,
+      cook_time_sec_range: [90, 150],
+      cook_time_sec_ideal: 120,
     },
     crust_type: "leopard_soft",
     requires_wood_oven: false,
@@ -584,9 +584,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "romana",
     origin: "Roma, Italia",
     dough: {
-      flour_w_range: [300, 360], // Disciplinare APITER (Confraternita) W300-380 — Audit Maggio 2026
+      flour_w_range: [280, 320], // Disciplinare APITER (Confraternita) W300-380 — Audit Maggio 2026
       flour_pl_range: [0.50, 0.60], // APITER: 0.50-0.60 stretto
-      hydration_pct_range: [75, 90], // Teglia tradizionale 75-85%, moderna 85-90% — era [80,100]
+      hydration_pct_range: [75, 85], // Teglia tradizionale 75-85%, moderna 85-90% — era [80,100]
       salt_pct: 2.5,
       oil_pct: 2.5,
       fat_type: "oil",
@@ -603,10 +603,10 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     baking: {
       oven_type_required: "electric_standard",
-      temp_c_range: [270, 310],
-      temp_c_ideal: 290,
+      temp_c_range: [260, 300],
+      temp_c_ideal: 280,
       cook_time_sec_range: [780, 1080],
-      cook_time_sec_ideal: 900,
+      cook_time_sec_ideal: 1020,
     },
     crust_type: "thick_airy",
     requires_wood_oven: false,
@@ -631,9 +631,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "romana",
     origin: "Roma, Italia",
     dough: {
-      flour_w_range: [170, 230], // Farina debole W170-220, max W230 — Audit Maggio 2026 (La Verace, Molino Vigevano)
+      flour_w_range: [200, 240], // Farina debole W170-220, max W230 — Audit Maggio 2026 (La Verace, Molino Vigevano)
       flour_pl_range: [0.40, 0.60], // Bassa tenacità: si stende col mattarello senza resistenza
-      hydration_pct_range: [55, 60], // Scrocchiarella tradizionale 55-60% — Audit Maggio 2026
+      hydration_pct_range: [50, 55], // Scrocchiarella tradizionale 55-60% — Audit Maggio 2026
       salt_pct: 2.5, // Standard romano — era 2.8
       oil_pct: 2.5,
       fat_type: "oil",
@@ -649,8 +649,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     baking: {
       oven_type_required: "electric_standard",
-      temp_c_range: [300, 330],
-      temp_c_ideal: 315,
+      temp_c_range: [300, 340],
+      temp_c_ideal: 320,
       cook_time_sec_range: [300, 480],
       cook_time_sec_ideal: 360,
     },
@@ -678,7 +678,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "romana",
     origin: "Roma (marchio contemporaneo)",
     dough: {
-      flour_w_range: [280, 330],
+      flour_w_range: [280, 340],
       flour_pl_range: [0.55, 0.75], // Mix multicereale: P/L variabile
       hydration_pct_range: [75, 85],
       salt_pct: 2.5,
@@ -705,8 +705,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       oven_type_required: "electric_high",
       temp_c_range: [350, 420],
       temp_c_ideal: 380,
-      cook_time_sec_range: [120, 240],
-      cook_time_sec_ideal: 180,
+      cook_time_sec_range: [180, 300],
+      cook_time_sec_ideal: 240,
     },
     crust_type: "thick_airy",
     requires_wood_oven: false,
@@ -732,9 +732,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "americana",
     origin: "New York City, USA",
     dough: {
-      flour_w_range: [260, 310], // Bread flour USA (KA ~W280, KABF ~W300) — era [280,340]
+      flour_w_range: [280, 340], // Bread flour USA (KA ~W280, KABF ~W300) — era [280,340]
       flour_pl_range: [0.55, 0.70], // Bread flour americana: bilanciata
-      hydration_pct_range: [60, 66], // Reinhart 62%, Kenji 63%, tradizionale 60% — era [62,68]
+      hydration_pct_range: [58, 65], // Reinhart 62%, Kenji 63%, tradizionale 60% — era [62,68]
       salt_pct: 2.0, // Standard USA 1.5-2% — era 2.8 (troppo per tradizione americana)
       oil_pct: 2.5,
       fat_type: "oil",
@@ -750,10 +750,10 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     baking: {
       oven_type_required: "electric_standard",
-      temp_c_range: [260, 300],
-      temp_c_ideal: 280,
-      cook_time_sec_range: [660, 900],
-      cook_time_sec_ideal: 780,
+      temp_c_range: [270, 310],
+      temp_c_ideal: 290,
+      cook_time_sec_range: [540, 720],
+      cook_time_sec_ideal: 600,
     },
     crust_type: "crispy_thin",
     requires_wood_oven: false,
@@ -778,9 +778,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "americana",
     origin: "Detroit, Michigan, USA",
     dough: {
-      flour_w_range: [260, 320], // Bread flour USA standard — era [290,350]
+      flour_w_range: [280, 320], // Bread flour USA standard — era [290,350]
       flour_pl_range: [0.55, 0.70], // Bread flour standard
-      hydration_pct_range: [68, 78],
+      hydration_pct_range: [70, 75],
       salt_pct: 2.0, // Standard USA — era 2.5
       oil_pct: 3.0,
       fat_type: "oil",
@@ -799,8 +799,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       oven_type_required: "electric_standard",
       temp_c_range: [250, 290], // Serve calore per caramellizzazione brick cheese — era [230,260]
       temp_c_ideal: 270, // 500°F+ per frico ai bordi — era 245
-      cook_time_sec_range: [720, 960], // 12-16 min a temp più alta — era [840,1140]
-      cook_time_sec_ideal: 840, // 14 min — era 1020 (fuori range)
+      cook_time_sec_range: [660, 900], // 12-16 min a temp più alta — era [840,1140]
+      cook_time_sec_ideal: 780, // 14 min — era 1020 (fuori range)
     },
     crust_type: "cheese_crown",
     requires_wood_oven: false,
@@ -825,9 +825,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "americana",
     origin: "Chicago, Illinois, USA",
     dough: {
-      flour_w_range: [200, 270], // AP flour USA W200-250, bread flour max W270 — era [230,290]
+      flour_w_range: [220, 260], // AP flour USA W200-250, bread flour max W270 — era [230,290]
       flour_pl_range: [0.45, 0.60], // Shortcrust-like: burro riduce tenacità
-      hydration_pct_range: [48, 56], // Impasto corto col burro, 50-55% tipico — era [48,58]
+      hydration_pct_range: [48, 52], // Impasto corto col burro, 50-55% tipico — era [48,58]
       salt_pct: 2.0, // Ripieno e formaggi aggiungono sapidità — era 2.5
       oil_pct: 18.0, // FIX Audit: era 0.0 — Chicago Deep Dish usa ~18% burro sulla farina
       fat_type: "butter", // Burro, non olio — Audit KB Bug #4
@@ -871,9 +871,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "contemporanea",
     origin: "Roma (Gabriele Bonci)",
     dough: {
-      flour_w_range: [280, 350], // Caputo Cuoco W300-320, tipo 1 W280-320 — era [320,380] troppo alto
+      flour_w_range: [300, 340], // Caputo Cuoco W300-320, tipo 1 W280-320 — era [320,380] troppo alto
       flour_pl_range: [0.50, 0.65], // Alta estensibilità per idratazione estrema
-      hydration_pct_range: [78, 95], // "Pizza Hero" 80%, corsi pro 85-90%, estremi 95% — era [85,100]
+      hydration_pct_range: [80, 90], // "Pizza Hero" 80%, corsi pro 85-90%, estremi 95% — era [85,100]
       salt_pct: 2.5,
       oil_pct: 3.0,
       fat_type: "oil",
@@ -892,8 +892,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       oven_type_required: "electric_standard",
       temp_c_range: [250, 300], // Casalingo 250-280, pro 280-300 — era [270,310]
       temp_c_ideal: 280, // era 290
-      cook_time_sec_range: [780, 1200],
-      cook_time_sec_ideal: 960,
+      cook_time_sec_range: [840, 1200],
+      cook_time_sec_ideal: 1020,
     },
     crust_type: "thick_airy",
     requires_wood_oven: false,
@@ -921,9 +921,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "contemporanea",
     origin: "Genova, Liguria",
     dough: {
-      flour_w_range: [200, 260], // Farina 0 standard ligure W200-250 — era [220,280]
+      flour_w_range: [240, 280], // Farina 0 standard ligure W200-250 — era [220,280]
       flour_pl_range: [0.45, 0.65],
-      hydration_pct_range: [60, 72], // Tradizionale 60-65%, moderna 68-72% — era [65,75]
+      hydration_pct_range: [55, 62], // Tradizionale 60-65%, moderna 68-72% — era [65,75]
       salt_pct: 2.5,
       oil_pct: 8.0, // Generoso olio EVO nella teglia e sull'impasto
       fat_type: "oil",
@@ -942,8 +942,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       oven_type_required: "electric_standard",
       temp_c_range: [210, 250], // Focaccia vuole calore per bolle dorate — era [200,230]
       temp_c_ideal: 230, // era 220
-      cook_time_sec_range: [900, 1200],
-      cook_time_sec_ideal: 1020,
+      cook_time_sec_range: [1140, 1440],
+      cook_time_sec_ideal: 1320,
     },
     crust_type: "focaccia_soft",
     requires_wood_oven: false,
@@ -968,9 +968,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "contemporanea",
     origin: "Palermo, Sicilia",
     dough: {
-      flour_w_range: [250, 300],
+      flour_w_range: [240, 280],
       flour_pl_range: [0.50, 0.65],
-      hydration_pct_range: [68, 75], // "Molto idratato" da tradizione palermitana — Audit Maggio 2026
+      hydration_pct_range: [60, 70], // "Molto idratato" da tradizione palermitana — Audit Maggio 2026
       salt_pct: 2.5,
       oil_pct: 3.0,
       fat_type: "oil",
@@ -989,8 +989,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       oven_type_required: "electric_standard",
       temp_c_range: [200, 240], // Sfincione cuoce a temp media — era [220,260]
       temp_c_ideal: 220, // era 240
-      cook_time_sec_range: [900, 1500],
-      cook_time_sec_ideal: 1200,
+      cook_time_sec_range: [1200, 1500],
+      cook_time_sec_ideal: 1380,
     },
     crust_type: "thick_airy",
     requires_wood_oven: false,
@@ -1015,9 +1015,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "romana",
     origin: "Roma (formato contemporaneo)",
     dough: {
-      flour_w_range: [280, 340], // Consultapizza W260-350 — Audit Maggio 2026
+      flour_w_range: [280, 320], // Consultapizza W260-350 — Audit Maggio 2026
       flour_pl_range: [0.50, 0.65],
-      hydration_pct_range: [70, 80],
+      hydration_pct_range: [75, 82],
       salt_pct: 2.5,
       oil_pct: 2.5, // Pala tradizionale 2-3% olio EVO — era 1.5 (Consultapizza)
       fat_type: "oil",
@@ -1036,8 +1036,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       oven_type_required: "electric_high",
       temp_c_range: [330, 380],
       temp_c_ideal: 350,
-      cook_time_sec_range: [120, 240],
-      cook_time_sec_ideal: 180,
+      cook_time_sec_range: [240, 360],
+      cook_time_sec_ideal: 300,
     },
     crust_type: "leopard_soft",
     requires_wood_oven: false,
@@ -1062,9 +1062,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "americana",
     origin: "Long Island, New York, USA",
     dough: {
-      flour_w_range: [240, 300], // Bread flour USA — era [260,320]
+      flour_w_range: [240, 280], // Bread flour USA — era [260,320]
       flour_pl_range: [0.55, 0.70],
-      hydration_pct_range: [60, 66], // Tradizione italo-americana 60-65% — era [60,68]
+      hydration_pct_range: [60, 65], // Tradizione italo-americana 60-65% — era [60,68]
       salt_pct: 2.0, // Standard USA — era 2.5
       oil_pct: 4.0, // Teglia generosamente oliata
       fat_type: "oil",
@@ -1083,8 +1083,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       oven_type_required: "electric_standard",
       temp_c_range: [230, 260],
       temp_c_ideal: 250,
-      cook_time_sec_range: [720, 960],
-      cook_time_sec_ideal: 840,
+      cook_time_sec_range: [840, 1020],
+      cook_time_sec_ideal: 900,
     },
     crust_type: "crispy_thin",
     requires_wood_oven: false,
@@ -1109,9 +1109,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "contemporanea",
     origin: "Recco, Liguria",
     dough: {
-      flour_w_range: [280, 360], // Disciplinare IGP focaccia di Recco: W ≥ 300 — era [170,210] ERRATO
+      flour_w_range: [300, 340], // Disciplinare IGP focaccia di Recco: W ≥ 300 — era [170,210] ERRATO
       flour_pl_range: [0.55, 0.70], // Forza alta = P/L bilanciato/forte
-      hydration_pct_range: [45, 52], // Sfoglia non lievitata, disciplinare IGP 45-50% — era [50,55]
+      hydration_pct_range: [45, 50], // Sfoglia non lievitata, disciplinare IGP 45-50% — era [50,55]
       salt_pct: 2.0,
       oil_pct: 4.0, // 3-4% nell'impasto, resto in teglia — era 5.0
       fat_type: "oil",
@@ -1128,10 +1128,10 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     baking: {
       oven_type_required: "electric_high",
-      temp_c_range: [280, 320],
-      temp_c_ideal: 300,
-      cook_time_sec_range: [300, 480],
-      cook_time_sec_ideal: 420,
+      temp_c_range: [300, 340],
+      temp_c_ideal: 320,
+      cook_time_sec_range: [480, 600],
+      cook_time_sec_ideal: 540,
     },
     crust_type: "stuffed_thin",
     requires_wood_oven: false,
@@ -1163,9 +1163,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "contemporanea",
     origin: "Torino, Piemonte",
     dough: {
-      flour_w_range: [260, 320], // Farina 0/1 forte — era [280,330]
+      flour_w_range: [220, 260], // Farina 0/1 forte — era [280,330]
       flour_pl_range: [0.50, 0.65],
-      hydration_pct_range: [65, 75],
+      hydration_pct_range: [60, 65],
       salt_pct: 2.5,
       oil_pct: 2.0,
       fat_type: "oil",
@@ -1181,10 +1181,10 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     baking: {
       oven_type_required: "electric_standard",
-      temp_c_range: [220, 260],
-      temp_c_ideal: 240,
-      cook_time_sec_range: [600, 900],
-      cook_time_sec_ideal: 720,
+      temp_c_range: [220, 240],
+      temp_c_ideal: 230,
+      cook_time_sec_range: [600, 720],
+      cook_time_sec_ideal: 660,
     },
     crust_type: "pan_crispy",
     requires_wood_oven: false,

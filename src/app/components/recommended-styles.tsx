@@ -5,7 +5,7 @@ import { useCms } from "./cms/cms-context";
 import { createFormatter,formatTemperatureCopy } from "./cms/i18n";
 import { FilterChip, Surface } from "./ds";
 import { getStyleTags } from "./deviation-tags";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { ImageWithFallback } from "./media/ImageWithFallback";
 import {
 PIZZA_FAMILIES,
 PizzaStyle,
@@ -196,7 +196,7 @@ export function RecommendedStyles({
 
   return (
     <div className="flex flex-col gap-6 sm:gap-8">
-      {/* ═══ Family filter chips ═══ */}
+      {/* ═══ Family filter chips + "Altro" inline ═══ */}
       <div className="flex flex-wrap gap-1.5">
           {FAMILY_FILTERS.map((f) => {
             const isActive = familyFilter === f.id;
@@ -213,120 +213,108 @@ export function RecommendedStyles({
               </FilterChip>
             );
           })}
+
+          {/* "Altro" chip — inline con le chip di famiglia */}
+          <FilterChip
+            active={showAdvanced || hasActiveAdvanced}
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            radius="lg"
+            count={hasActiveAdvanced ? [hydrationFilter, textureFilter, skillFilter, ovenFilter].filter(Boolean).length : undefined}
+          >
+            <SlidersHorizontal size={13} style={{ flexShrink: 0 }} />
+            {cms.filters.advancedLabel}
+          </FilterChip>
       </div>
 
-      {/* ═══ Advanced faceted filters (tag-based) ═══ */}
-      <div className="flex flex-col gap-2 -mt-3">
-        <motion.button
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="flex items-center gap-2 px-1 py-1 active:scale-95 self-start"
-          style={{ color: hasActiveAdvanced ? "var(--primary)" : "var(--text-muted)" }}
-        >
-          <SlidersHorizontal size={13} style={{ flexShrink: 0 }} />
-          <span
-            className="type-label"
-            style={{ fontSize: "var(--font-size-sm)" }}
+      {/* ═══ Advanced faceted filters panel (collapsible) ═══ */}
+      <AnimatePresence>
+        {showAdvanced && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="overflow-hidden -mt-3"
           >
-            {cms.filters.advancedLabel}{hasActiveAdvanced ? ` (${[hydrationFilter, textureFilter, skillFilter, ovenFilter].filter(Boolean).length})` : ""}
-          </span>
-          <motion.span
-            animate={{ rotate: showAdvanced ? 180 : 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            style={{ fontSize: "var(--font-size-xs)" }}
-          >
-            ▼
-          </motion.span>
-        </motion.button>
-
-        <AnimatePresence>
-          {showAdvanced && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              className="overflow-hidden"
+            <div
+              className="p-3 rounded-2xl flex flex-col gap-3"
+              style={{
+                background: "var(--surface-container-low)",
+                border: "1px solid var(--outline-variant)",
+              }}
             >
-              <div
-                className="p-3 rounded-2xl flex flex-col gap-3"
-                style={{
-                  background: "var(--surface-container-low)",
-                  border: "1px solid var(--outline-variant)",
-                }}
-              >
-                {/* Hydration */}
-                <FacetRow
-                  label={cms.filters.hydrationLabel}
-                  options={[
-                    { id: "low", label: cms.filters.hydrationLow },
-                    { id: "medium", label: cms.filters.hydrationMedium },
-                    { id: "high", label: cms.filters.hydrationHigh },
-                    { id: "extreme", label: cms.filters.hydrationExtreme },
-                  ]}
-                  active={hydrationFilter}
-                  onToggle={(v) => setHydrationFilter(hydrationFilter === v ? null : v)}
-                />
-                {/* Texture */}
-                <FacetRow
-                  label={cms.filters.textureLabel}
-                  options={[
-                    { id: "crispy_thin", label: cms.filters.textureCrispyThin },
-                    { id: "thick_airy", label: cms.filters.textureThickAiry },
-                    { id: "airy_crumb", label: cms.filters.textureAiryCrumb },
-                    { id: "deep_dish", label: cms.filters.textureDeepDish },
-                  ]}
-                  active={textureFilter}
-                  onToggle={(v) => setTextureFilter(textureFilter === v ? null : v)}
-                />
-                {/* Skill */}
-                <FacetRow
-                  label={cms.filters.skillLabel}
-                  options={[
-                    { id: "beginner", label: cms.filters.skillBeginner },
-                    { id: "intermediate", label: cms.filters.skillIntermediate },
-                    { id: "advanced", label: cms.filters.skillAdvanced },
-                    { id: "expert", label: cms.filters.skillExpert },
-                  ]}
-                  active={skillFilter}
-                  onToggle={(v) => setSkillFilter(skillFilter === v ? null : v)}
-                />
-                {/* Oven */}
-                <FacetRow
-                  label={cms.filters.ovenLabel}
-                  options={[
-                    { id: "home_oven_compatible", label: cms.filters.ovenHome },
-                    { id: "wood_fired", label: cms.filters.ovenWood },
-                    { id: "electric_high_temp", label: formatTemperatureCopy(cms.filters.ovenElectricHigh, fmt) },
-                    { id: "pan_baked", label: cms.filters.ovenPan },
-                  ]}
-                  active={ovenFilter}
-                  onToggle={(v) => setOvenFilter(ovenFilter === v ? null : v)}
-                />
+              {/* Hydration */}
+              <FacetRow
+                label={cms.filters.hydrationLabel}
+                options={[
+                  { id: "low", label: cms.filters.hydrationLow },
+                  { id: "medium", label: cms.filters.hydrationMedium },
+                  { id: "high", label: cms.filters.hydrationHigh },
+                  { id: "extreme", label: cms.filters.hydrationExtreme },
+                ]}
+                active={hydrationFilter}
+                onToggle={(v) => setHydrationFilter(hydrationFilter === v ? null : v)}
+              />
+              {/* Texture */}
+              <FacetRow
+                label={cms.filters.textureLabel}
+                options={[
+                  { id: "crispy_thin", label: cms.filters.textureCrispyThin },
+                  { id: "thick_airy", label: cms.filters.textureThickAiry },
+                  { id: "airy_crumb", label: cms.filters.textureAiryCrumb },
+                  { id: "deep_dish", label: cms.filters.textureDeepDish },
+                ]}
+                active={textureFilter}
+                onToggle={(v) => setTextureFilter(textureFilter === v ? null : v)}
+              />
+              {/* Skill */}
+              <FacetRow
+                label={cms.filters.skillLabel}
+                options={[
+                  { id: "beginner", label: cms.filters.skillBeginner },
+                  { id: "intermediate", label: cms.filters.skillIntermediate },
+                  { id: "advanced", label: cms.filters.skillAdvanced },
+                  { id: "expert", label: cms.filters.skillExpert },
+                ]}
+                active={skillFilter}
+                onToggle={(v) => setSkillFilter(skillFilter === v ? null : v)}
+              />
+              {/* Oven */}
+              <FacetRow
+                label={cms.filters.ovenLabel}
+                options={[
+                  { id: "home_oven_compatible", label: cms.filters.ovenHome },
+                  { id: "wood_fired", label: cms.filters.ovenWood },
+                  { id: "electric_high_temp", label: formatTemperatureCopy(cms.filters.ovenElectricHigh, fmt) },
+                  { id: "pan_baked", label: cms.filters.ovenPan },
+                ]}
+                active={ovenFilter}
+                onToggle={(v) => setOvenFilter(ovenFilter === v ? null : v)}
+              />
 
-                {hasActiveAdvanced && (
-                  <motion.button
-                    onClick={() => {
-                      setHydrationFilter(null);
-                      setTextureFilter(null);
-                      setSkillFilter(null);
-                      setOvenFilter(null);
-                    }}
-                    className="self-start px-3 py-1.5 rounded-lg active:scale-95"
-                    style={{
-                      fontSize: "var(--font-size-sm)",
-                      color: "var(--primary)",
-                      background: "color-mix(in srgb, var(--primary) 8%, var(--surface-container))",
-                      border: "1px solid color-mix(in srgb, var(--primary) 20%, var(--outline-variant))",
-                    }}
-                  >
-                    {cms.filters.removeFilters}
-                  </motion.button>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+              {hasActiveAdvanced && (
+                <motion.button
+                  onClick={() => {
+                    setHydrationFilter(null);
+                    setTextureFilter(null);
+                    setSkillFilter(null);
+                    setOvenFilter(null);
+                  }}
+                  className="self-start px-3 py-1.5 rounded-lg active:scale-95"
+                  style={{
+                    fontSize: "var(--font-size-sm)",
+                    color: "var(--primary)",
+                    background: "color-mix(in srgb, var(--primary) 8%, var(--surface-container))",
+                    border: "1px solid color-mix(in srgb, var(--primary) 20%, var(--outline-variant))",
+                  }}
+                >
+                  {cms.filters.removeFilters}
+                </motion.button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ═══ Tier groups ═══ */}
       {tiers.length === 0 && (
@@ -386,7 +374,7 @@ export function RecommendedStyles({
             {/* Tier header */}
             <div className="flex items-center gap-3 mb-3">
               <div
-                className="w-7 h-7 rounded-full flex items-center justify-center"
+                className="w-8 h-8 rounded-full flex items-center justify-center"
                 style={{
                   background: `color-mix(in srgb, ${meta.color} 12%, transparent)`,
                   color: meta.color,
@@ -612,7 +600,7 @@ function StyleCard({
                     stiffness: 500,
                     damping: 25,
                   }}
-                  className="absolute top-3 left-3 w-7 h-7 rounded-full flex items-center justify-center"
+                  className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center"
                   style={{
                     background: tierColor,
                     boxShadow: "var(--style-card-badge-shadow)",

@@ -1,5 +1,5 @@
 # Flusso ricetta e UI
-> Aggiornamento: 2026-06-19 | Stato: ✅ | File documentati: 13
+> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 15
 
 ## Sommario
 
@@ -14,8 +14,10 @@ Componenti condivisi: `RecipeView`, `RecipeSectionTabs`, `RecipeConfigurator`, `
 
 | File | Ruolo |
 |------|--------|
-| `src/app/pages/recipe.tsx` | Route `/recipe/:styleId`; URL query per versioni/condimenti/interpretazioni; pannello `RecipeSetupPanel` per parametri, versioni e firme; effetti di scroll parallax su hero |
-| `src/app/pages/home.tsx` | Wizard `AppStep`: `settings` \| `styles` \| `result`; redirect a `/profile` se onboarding incompleto; selettore `activeVersionId` e chip configurazione live |
+| `src/app/pages/recipe.tsx` | Route `/recipe/:styleId`; URL query per caricamento parametri/versioni; gestisce parallax scroll su hero ed effettua il mount di `RecipeSetupPanel` |
+| `src/app/pages/home.tsx` | Wizard `AppStep`: `settings` \| `styles` \| `result`; instanzia `useRecipeState` per la configurazione live dei parametri; redirect a `/profile` se onboarding incompleto |
+| `src/app/components/use-recipe-state.ts` | Custom Hook che incapsula lo stato reattivo della ricetta (parametri custom, versione attiva, interpretazione e pan) per Home e RecipePage |
+| `src/app/components/recipe-setup-panel.tsx` | Pannello di setup/customizzazione ricetta estratto da `recipe.tsx`; gestisce la selezione delle versioni d'autore (via `PremiumSelect`) e dei parametri con scroll lock del body |
 | `src/app/components/recipe-view.tsx` | Shell condivisa della scheda ricetta per Home e Detail: hero, back/share, tab Ricetta/Procedimento, slot match/intro/controlli e render di `RecipeOutput` |
 | `src/app/components/recipe-section-tabs.tsx` | Tab primary `ricetta` / `procedimento`, inline o navbar mobile, con label CMS e ARIA tablist |
 | `src/app/components/recipe-match-card.tsx` | Card compatibilità/fattibilità: composite score, stato forno e barre dei 5 assi con label estese CMS |
@@ -25,7 +27,7 @@ Componenti condivisi: `RecipeView`, `RecipeSectionTabs`, `RecipeConfigurator`, `
 | `src/app/components/recipe-stat-strip.tsx` | 4 KPI (idratazione, forno, cottura, lievitazione) + riga nerd opzionale |
 | `src/app/components/cook-session.tsx` | Context provider e gestore dello stato persistente della sessione di cottura attiva (`vulcan_cook_session` in `localStorage`), inclusi i countdown e le notifiche di sistema |
 | `src/app/components/active-cook-widget.tsx` | Widget mobile-friendly galleggiante (Live Activity su web) visibile globalmente in tutta l'applicazione per monitorare il progresso dello step corrente |
-| `src/app/components/cooking-mode.tsx` | Overlay immersivo a schermo intero per la guida passo-passo durante la preparazione, integrato con Wake Lock API per mantenere lo schermo attivo |
+| `src/app/components/cooking-mode.tsx` | Overlay immersivo a schermo intero per la guida passo-passo durante la preparazione, integrato con Wake Lock API per mantenere lo schermo active |
 | `src/app/components/step-illustrations.tsx` | Componente per il rendering di grafiche line-art SVG ottimizzate per il responsive e il tema (dark/light mode), che funge da fallback per futuri video |
 
 **Route:** `src/app/routes.ts` — `{ path: "recipe/:styleId", Component: RecipePage }`.
@@ -123,7 +125,7 @@ generateRecipe(
 - `RecipePage` usa `effectiveStyles ?? STYLES_DB` (override dev attivo).
 - `handleOvenSelect` aggiorna `oven_type` e `maxTemp` in **una** chiamata (evita doppio update).
 - Smart Link: `propagatingRef` evita loop; disattivato durante `applyVersionParams` (evita propagazioni indesiderate).
-- **Pannello personalizzazione**: `RecipeSetupPanel` usa una modale `aria-modal` con altezza deterministica, header `flex-shrink-0`, titolo troncabile e score compatto responsive. Quando è aperto imposta `body` fixed/hidden e `html` hidden + `overscrollBehavior: none`, così lo scroll sottostante resta bloccato ma il corpo della modale resta scrollabile.
+- **Pannello personalizzazione**: `RecipeSetupPanel` (estratto come componente autonomo) usa una modale `aria-modal` con altezza deterministica, header `flex-shrink-0`, titolo troncabile e score compatto responsive. Quando è aperto imposta `body` fixed/hidden e `html` hidden + `overscrollBehavior: none`, così lo scroll sottostante resta bloccato ma il corpo della modale resta scrollabile.
 - **Versioni e firme**: il selettore compatto vive nel pannello e combina versioni di impasto e interpretazioni d'autore tramite `PremiumSelect`, invece di dipendere da file chip dedicati.
 - **Timeline UX**: badge orario allineato dinamicamente. Supporto per la descrizione estesa `longDesc`. Rimozione del badge ridondante "giorno dopo".
 - **Gestione Layout e Panetti Gemelli**: In `RecipeOutput` la ricetta calcola dinamicamente lo sdoppiamento del peso se `pieces_per_unit > 1`, indicando ad esempio "2 x Panetti gemelli da 400g" per una teglia di Pizza Baciata.

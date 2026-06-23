@@ -1,4 +1,4 @@
-import { Check,ChevronDown,Layers,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
+import { Check,ChevronDown,Circle,Layers,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import React,{ useEffect,useMemo,useRef,useState } from "react";
 import { useCms } from "./cms/cms-context";
@@ -1086,8 +1086,8 @@ export function RecipeConfigurator({
                   }}
                 >
                   {currentShape === "rectangular"
-                    ? <RectangleHorizontal size={14} style={{ color: "var(--text-muted)" }} />
-                    : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2"><circle cx="12" cy="12" r="10"/></svg>
+                    ? <RectangleHorizontal size={14} style={{ color: "var(--icon-muted)" }} />
+                    : <Circle size={14} style={{ color: "var(--icon-muted)" }} />
                   }
                   <span style={{
                     fontSize: "var(--font-size-lg)",
@@ -1134,7 +1134,7 @@ export function RecipeConfigurator({
                   border: "1px solid var(--config-border)",
                 }}
               >
-                <Layers size={14} style={{ color: "var(--text-muted)" }} />
+                <Layers size={14} style={{ color: "var(--icon-muted)" }} />
                 <span style={{
                   fontSize: "var(--font-size-lg)",
                   color: "var(--text-muted)",

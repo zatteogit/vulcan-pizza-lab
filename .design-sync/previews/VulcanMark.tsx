@@ -1,4 +1,4 @@
-import { VulcanMark } from "@figma/my-make-file";
+import { VulcanMark } from "@vulcan/ds";
 
 export function Variants() {
   return (

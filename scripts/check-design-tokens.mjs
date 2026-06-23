@@ -19,7 +19,27 @@ const ROOT = "src/app";
 const EXCLUDE_SEGMENTS = ["design-system"]; // showcase
 const DS_SEGMENT = "components/ds"; // T4: può usare composite/token-componente
 
-/** @typedef {{ id: string, desc: string, excludeDs?: boolean, test: (line: string) => string[] | null }} Rule */
+/** @typedef {{ id: string, desc: string, severity?: "error"|"warn", excludeDs?: boolean, excludeFiles?: string[], test: (line: string) => string[] | null }} Rule */
+
+/* Tooling/interni esenti dalla regola sul sizing (non flusso utente): la
+ * migrazione a IconButton copre solo le schermate dell'app. */
+const SIZING_TOOLING_EXEMPT = [
+  "dev-tools",
+  "engine-test-suite",
+  "sync-tab",
+  "style-editor-tab",
+];
+
+/* Esenti dalla regola sui testi hard-written: tooling/admin e i file che
+ * DEFINISCONO le stringhe (CMS, showcase). Il CMS è la source-of-truth i18n. */
+const TEXT_EXEMPT = [
+  ...SIZING_TOOLING_EXEMPT,
+  "feedback-analysis",
+  "cms",
+  "design-system.tsx",
+  "dev.tsx",
+  "engine-test-suite",
+];
 
 /** @type {Rule[]} */
 const RULES = [
@@ -58,6 +78,43 @@ const RULES = [
     excludeDs: true,
     test: (l) => l.match(/\b(?:surface-card|surface-glass|badge-base)\b/g),
   },
+  {
+    id: "offscale-square-size",
+    desc: "Dimensione quadrata fuori scala --space (w-7/9/11 = 28/36/44px) → <IconButton> (ds/, per i bottoni-icona) oppure w-8/10/12 (32/40/48px).",
+    excludeDs: true,
+    excludeFiles: SIZING_TOOLING_EXEMPT,
+    test: (l) =>
+      l.match(/\b(?:w-7 h-7|w-9 h-9|w-11 h-11|h-7 w-7|h-9 w-9|h-11 w-11)\b/g),
+  },
+  {
+    id: "fixed-px-size",
+    desc: "Dimensione fissa in px hardcoded (w-[Npx]/h-[Npx], 8–80px) → scala --space (token) o utility w-N/h-N; per i bottoni-icona usa <IconButton>. (min-/max-/basis di layout esenti; hairline <8px esenti.)",
+    excludeDs: true,
+    excludeFiles: SIZING_TOOLING_EXEMPT,
+    test: (l) => {
+      const m = [...l.matchAll(/(?<![-a-zA-Z])[wh]-\[(\d+)px\]/g)];
+      const bad = m.filter((x) => {
+        const n = Number(x[1]);
+        return n >= 8 && n <= 80;
+      });
+      return bad.length ? bad.map((x) => x[0]) : null;
+    },
+  },
+  {
+    id: "hardcoded-text",
+    desc: "Testo user-facing hardcoded in aria-label/placeholder/title/alt → spostalo nel CMS (cms.*).",
+    excludeDs: true,
+    excludeFiles: TEXT_EXEMPT,
+    test: (l) => {
+      const m = [...l.matchAll(/\b(?:aria-label|placeholder|title|alt)="([^"{}]+)"/g)];
+      const bad = m
+        .map((x) => x[1])
+        // naturale = contiene lettere e (uno spazio o una vocale accentata o lunghezza ≥ 6)
+        .filter((s) => /[A-Za-zÀ-ÿ]/.test(s) && /\s/.test(s.trim()) && !/^https?:/.test(s))
+        .filter((s) => !/^[\s⌘⌥⇧⌃+\->Kk]+$/.test(s));
+      return bad.length ? bad : null;
+    },
+  },
 ];
 
 /** Rimuove commenti di riga (`// ...`, evitando `https://`) e blocchi inline (`/* ... *\/`). */
@@ -81,15 +138,23 @@ const files = walk(ROOT);
 const violations = [];
 
 for (const file of files) {
-  const isDs = file.replace(/\\/g, "/").includes(DS_SEGMENT);
+  const normFile = file.replace(/\\/g, "/");
+  const isDs = normFile.includes(DS_SEGMENT);
   const lines = readFileSync(file, "utf8").split("\n");
   lines.forEach((raw, i) => {
     const line = stripComments(raw);
     for (const rule of RULES) {
       if (rule.excludeDs && isDs) continue;
+      if (rule.excludeFiles?.some((seg) => normFile.includes(seg))) continue;
       const hits = rule.test(line);
       if (hits) {
-        violations.push({ file, line: i + 1, rule: rule.id, hits: [...new Set(hits)] });
+        violations.push({
+          file,
+          line: i + 1,
+          rule: rule.id,
+          severity: rule.severity ?? "error",
+          hits: [...new Set(hits)],
+        });
       }
     }
   });
@@ -108,6 +173,7 @@ try {
         file: CSS_FILE,
         line: i + 1,
         rule: "css-font-literal",
+        severity: "error",
         hits: [raw.trim().slice(0, 60)],
       });
     }
@@ -116,28 +182,40 @@ try {
   /* theme.css assente: ignora */
 }
 
-if (violations.length === 0) {
-  console.log(`✓ check:tokens — ${files.length} file app + theme.css, 0 violazioni di tier.`);
-  process.exit(0);
-}
-
-console.error(`✗ check:tokens — ${violations.length} violazioni di tier:\n`);
-const byRule = new Map();
-for (const v of violations) {
-  if (!byRule.has(v.rule)) byRule.set(v.rule, []);
-  byRule.get(v.rule).push(v);
-}
+const errors = violations.filter((v) => v.severity !== "warn");
+const warnings = violations.filter((v) => v.severity === "warn");
 const EXTRA_DESC = {
   "css-font-literal": "theme.css: famiglia font letterale → usare var(--font-sans|-serif|-mono)",
 };
-for (const [ruleId, list] of byRule) {
-  const desc = RULES.find((r) => r.id === ruleId)?.desc ?? EXTRA_DESC[ruleId] ?? ruleId;
-  console.error(`▸ ${ruleId} — ${desc}`);
+
+function report(list, stream) {
+  const byRule = new Map();
   for (const v of list) {
-    console.error(`    ${v.file}:${v.line}  ${v.hits.join("  ")}`);
+    if (!byRule.has(v.rule)) byRule.set(v.rule, []);
+    byRule.get(v.rule).push(v);
   }
-  console.error("");
+  for (const [ruleId, items] of byRule) {
+    const desc = RULES.find((r) => r.id === ruleId)?.desc ?? EXTRA_DESC[ruleId] ?? ruleId;
+    stream(`▸ ${ruleId} — ${desc}`);
+    for (const v of items) stream(`    ${v.file}:${v.line}  ${v.hits.join("  ")}`);
+    stream("");
+  }
 }
+
+/* Warning (non bloccanti): debito noto, da migrare nel tempo. */
+if (warnings.length) {
+  console.warn(`⚠ check:tokens — ${warnings.length} warning (non bloccanti):\n`);
+  report(warnings, (s) => console.warn(s));
+}
+
+if (errors.length === 0) {
+  const tail = warnings.length ? ` (${warnings.length} warning, non bloccanti)` : "";
+  console.log(`✓ check:tokens — ${files.length} file app + theme.css, 0 violazioni bloccanti${tail}.`);
+  process.exit(0);
+}
+
+console.error(`✗ check:tokens — ${errors.length} violazioni di tier:\n`);
+report(errors, (s) => console.error(s));
 console.error(
   "Le composite e i primitivi vanno SOLO in src/styles/theme.css; lo showcase è esente.\nVedi docs/design-system-tiers.md (F5-6).",
 );

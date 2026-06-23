@@ -1,4 +1,4 @@
-import { FilterChip } from "@figma/my-make-file";
+import { FilterChip } from "@vulcan/ds";
 import { useState } from "react";
 
 export function Filters() {

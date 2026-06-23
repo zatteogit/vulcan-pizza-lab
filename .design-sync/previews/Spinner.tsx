@@ -1,4 +1,4 @@
-import { Spinner } from "@figma/my-make-file";
+import { Spinner } from "@vulcan/ds";
 
 export function Sizes() {
   return (

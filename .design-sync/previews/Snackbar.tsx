@@ -1,4 +1,4 @@
-import { Snackbar } from "@figma/my-make-file";
+import { Snackbar } from "@vulcan/ds";
 import { useState } from "react";
 
 export function Variants() {

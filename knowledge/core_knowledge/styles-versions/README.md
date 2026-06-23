@@ -1,11 +1,11 @@
 # Stili, versioni e override
-> Aggiornamento: 2026-06-19 | Stato: ✅ | File documentati: 11
+> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 11
 
 ## Sommario
 
 Gli **stili canonici** vivono in `STYLES_DB` (`pizza-engine.ts`, **28 stili**). Questo capitolo aggiunge:
 
-- **Versioni interpretative** (`StyleVersion`) — preset parametri + range per slider/score, skill-aware.
+- **Versioni interpretative** (`StyleVersion`) — preset parametri + range per slider/score, skill-aware. Ora supportano anche un blocco `ranges` specifico a livello di versione impasto (es. W farina e idratazione localizzati) che sovrascrive i range dello stile genitore.
 - **Override runtime** — intero DB sostituibile via `localStorage` (editor dev).
 - **UI scoperta stile** — raccomandazioni, sheet dettaglio, foto editoriali.
 
@@ -22,7 +22,7 @@ La versione attiva fluisce in `generateRecipe` come `versionOverrides` e nei ran
 | `src/app/components/style-detail-sheet.tsx` | Bottom sheet portal: foto poster, video blur-in se disponibile, range stile, deviazione, parametriche, CTA genera |
 | `src/app/pages/explore.tsx` | Route `/explore` (Tab Scopri): ricette iconiche, preferiti, filtri famiglia e catalogo completo 28 stili |
 | `src/app/components/style-editor-tab.tsx` | DevTools: editor CRUD stili dev con componente `ImageInput` per caricamento/gestione file grafici locali (Base64) o URL esterni |
-| `src/app/components/sync-tab.tsx` | Diff bundle sorgenti Figma Make ↔ locale (non modifica stili direttamente) |
+| `src/app/components/sync-tab.tsx` | Diff bundle sorgenti Vulcan Cloud ↔ locale (non modifica stili direttamente) |
 | `src/app/components/interpretation-library.ts` | Database delle Interpretazioni d'Autore: 14 voci tra Maestri, Pizzerie, Community e Disciplinari con parameter overrides e narrativa |
 | `src/app/components/signature-recipes.ts` | Database delle Ricette Iconiche: 12 combinazioni pre-impostate di Stile e Topping Concept collegate tramite deep-links URL (Sprint 12) |
 | `src/app/components/tilt-card.tsx` | Componente UI per l'effetto di inclinazione 3D interattivo e riflesso speculare sensibile al puntatore del mouse delle card degli stili |

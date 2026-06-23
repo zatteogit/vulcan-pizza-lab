@@ -1,5 +1,5 @@
 # Motore pizza e ricetta
-> Aggiornamento: 2026-06-19 | Stato: ✅ | File documentati: 6
+> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 6
 
 ## Sommario
 
@@ -115,7 +115,7 @@ flowchart TD
 - **Porzioni e default**: Pinsa romana supporta `servings_per_unit: [1, 1]` (formato monoporzione individuale ovale), Padellino di Torino imposta `default_dough_balls: 4` (individuali per default). Anche napoletana, napoletana_canotto, scrocchiarella hanno `servings_per_unit: [1, 1]` (pizza individuale).
 - **Feasibility forno**: floor 5/10/20 per deficit estremo (>200°C / >100°C) — ADV-08.
 
-### STYLES_DB — Correzioni Audit Maggio 2026
+### STYLES_DB — Correzioni Audit Maggio/Giugno 2026
 
 Valori rettificati da fonti autorevoli (disciplinari IGP/APITER, Consultapizza, PizzaBlab/PizzaLogic):
 
@@ -126,15 +126,28 @@ Valori rettificati da fonti autorevoli (disciplinari IGP/APITER, Consultapizza, 
 | `tonda_romana` (scrocchiarella) | `flour_w_range` | [180, 240] | [170, 230] | La Verace, Molino Vigevano |
 | `tonda_romana` | `hydration_pct_range` | [55, 62] | [55, 60] | audit |
 | `detroit` | `sugar_pct` | 1.0% | 0.5% | PizzaBlab, PizzaLogic |
-| `sfincione` | `hydration_pct_range` | [65, 70] | [68, 75] | tradizione palermitana |
+| `sfincione` | `hydration_pct_range` | [65, 70] | [60, 70] | tradizione palermitana (giu 2026: era [68,75]) |
+| `sfincione` | `flour_w_range` | [250, 300] | [240, 280] | tradizione palermitana (giu 2026) |
 | `pala_romana` | `oil_pct` | 1.5% | 2.5% | Consultapizza |
+| `pala_romana` | `hydration_pct_range` | [70, 80] | [75, 82] | Consultapizza (giu 2026) |
 | `pala_romana` | `fermentation_hours_range` | [24, 72] | [18, 48] | audit |
 | `pala_romana` | `process_type` | `"biga\|poolish"` | `"direct\|biga\|poolish"` | può essere diretta |
 | `pala_romana` | `requires_pre_ferment` | `true` | `false` | può essere diretta |
-| `focaccia_recco` | `flour_w_range` | [170, 210] | [280, 360] | **Disciplinare IGP** (era errato) |
+| `focaccia_recco` | `flour_w_range` | [280, 360] | [300, 340] | Disciplinare IGP (giu 2026: era [170,210] errato) |
 | `focaccia_recco` | `flour_pl_range` | [0.40, 0.55] | [0.55, 0.70] | IGP: sfoglia richiede farina forte |
+| `focaccia_recco` | `hydration_pct_range` | [45, 52] | [45, 50] | IGP (giu 2026) |
+| `chicago_deep` | `hydration_pct_range` | [48, 56] | [48, 52] | audit (giu 2026) |
+| `chicago_deep` | `flour_w_range` | [230, 290] | [220, 260] | audit (giu 2026) |
+| `bonci_teglia` | `hydration_pct_range` | [78, 95] | [80, 90] | corsi pro Bonci (giu 2026) |
+| `bonci_teglia` | `flour_w_range` | [280, 350] | [300, 340] | corsi pro Bonci (giu 2026) |
+| `focaccia_genovese` | `hydration_pct_range` | [60, 72] | [55, 62] | tradizione genovese (giu 2026) |
+| `focaccia_genovese` | `flour_w_range` | [200, 260] | [240, 280] | tradizione genovese (giu 2026) |
+| `grandma_style` | `hydration_pct_range` | [60, 66] | [60, 65] | italo-americana (giu 2026) |
+| `grandma_style` | `flour_w_range` | [260, 320] | [240, 280] | italo-americana (giu 2026) |
+| `padellino_torino` | `hydration_pct_range` | [65, 75] | [60, 65] | tradizione torinese (giu 2026) |
+| `padellino_torino` | `flour_w_range` | [260, 320] | [220, 260] | tradizione torinese (giu 2026) |
 
-> ⚠️ La correzione `focaccia_recco` è la più rilevante: il W era sbagliato di +100 punti rispetto al disciplinare IGP; impatta feasibility score e selezione farine dalla dispensa.
+> ⚠️ La correzione `focaccia_recco` resta una delle più rilevanti: il W è stato riallineato al disciplinare IGP impattando il feasibility score e la selezione farine.
 - **Idratazione custom**: non somma Δ compensazione idratazione.
 
 ## Bug noti e fix

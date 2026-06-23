@@ -1,4 +1,4 @@
-import { ContextualWarnings } from "@figma/my-make-file";
+import { ContextualWarnings } from "@vulcan/ds";
 
 export function Warnings() {
   return (

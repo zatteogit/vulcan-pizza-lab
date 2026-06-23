@@ -1,4 +1,4 @@
-import { Switch } from "@figma/my-make-file";
+import { Switch } from "@vulcan/ds";
 import { useState } from "react";
 
 export function States() {

@@ -1,4 +1,4 @@
-import { IconButton } from "@figma/my-make-file";
+import { IconButton } from "@vulcan/ds";
 import { Heart, Share2, Plus, ChevronLeft } from "lucide-react";
 
 export function Sizes() {

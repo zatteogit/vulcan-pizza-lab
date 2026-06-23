@@ -1,8 +1,8 @@
-import imgPizzaAlForno from "figma:asset/063bec0118b053149e9fff6d65b9df94925fd876.png";
-import imgImpasto from "figma:asset/4f29f2bf05841844acdfa17d5c6d4823ce4ea351.png";
-import imgPizzaMargherita from "figma:asset/55a2423eacc2481327d4b95178875906ba678936.png";
-import imgPizzaTeglia from "figma:asset/a832636853506b6329c43025470758beb48bdfc5.png";
-import imgPizzaNapoletana from "figma:asset/cc55b62333cd34778c13305abc97846ece76d0f1.png";
+const imgPizzaAlForno = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
+const imgImpasto = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
+const imgPizzaMargherita = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
+const imgPizzaTeglia = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
+const imgPizzaNapoletana = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
 import { Flame,Image as ImageIcon,Sparkles,Wheat } from "lucide-react";
 import { motion } from "motion/react";
 import React,{ useState } from "react";
@@ -218,7 +218,7 @@ export function ExpressiveShapesSection() {
                     WebkitMaskMode: "alpha",
                   } as React.CSSProperties}
                 >
-                  <Flame size={24} style={{ color: "var(--text-default)", opacity: 0.5 }} />
+                  <Flame size={24} style={{ color: "var(--icon-default)", opacity: 0.5 }} />
                 </div>
                 <span style={{
                   fontFamily: "'DM Sans', sans-serif",

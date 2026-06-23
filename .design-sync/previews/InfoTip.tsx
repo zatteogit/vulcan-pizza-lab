@@ -1,4 +1,4 @@
-import { InfoTip } from "@figma/my-make-file";
+import { InfoTip } from "@vulcan/ds";
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (

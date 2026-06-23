@@ -9,7 +9,7 @@ import { useEffect,useMemo,useState } from "react";
 import { useLocation,useNavigate } from "react-router";
 import { useCms } from "../components/cms/cms-context";
 import { t } from "../components/cms/i18n";
-import { FilterChip } from "../components/ds";
+import { FilterChip, IconButton } from "../components/ds";
 import type {
 GlossaryCategory,
 GlossaryTerm,
@@ -127,20 +127,18 @@ export function GlossaryPage() {
         }}
       >
         <div className="max-w-4xl mx-auto flex items-center gap-3">
-          <motion.button
+          <IconButton
+            as={motion.button}
             onClick={() => navigate("/learn")}
-            className="w-8 h-8 rounded-full flex items-center justify-center active:scale-95"
-            style={{
-              background: "var(--surface-container)",
-              border: "1px solid var(--outline-variant)",
-            }}
+            size="sm"
+            className="active:scale-95"
             aria-label={gl.backToHome}
           >
             <ArrowLeft
               size={15}
               style={{ color: "var(--text-default)" }}
             />
-          </motion.button>
+          </IconButton>
 
           <div className="flex items-center gap-2">
             <BookOpen

@@ -1,7 +1,7 @@
 import { ArrowRight,Check,Flame,Lightbulb,Moon,Star,Sun,Timer } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useState } from "react";
-import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { ImageWithFallback } from "../media/ImageWithFallback";
 import type { SectionEntry } from "./shared";
 import { AccessibilitaInfo,LineeGuida,Panoramica,SectionHeader,SubSectionLabel } from "./shared";
 
@@ -330,8 +330,8 @@ export function CardsSpec() {
         <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Media Card</span>
         <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
-            { t: "Napoletana STG", s: "AVPN", b: "Forno legna 450\u00b0C, 60-90s.", img: "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZWFwb2xpdGFuJTIwcGl6emElMjBtYXJnaGVyaXRhJTIwd29vZCUyMGZpcmV8ZW58MXx8fHwxNzcxMjMwNTM5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral", badge: "W 250\u2013320", bc: "var(--primary)" },
-            { t: "Lunga Maturazione", s: "72h frigo", b: "Fermentazione 4\u00b0C, alveolatura aperta.", img: "https://images.unsplash.com/photo-1738717201744-9faf699eea3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMGRvdWdoJTIwZmVybWVudGF0aW9uJTIwc291cmRvdWdofGVufDF8fHx8MTc3MTIzMDU0Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral", badge: "72h frigo", bc: "var(--cta)" },
+            { t: "Napoletana STG", s: "AVPN", b: "Forno legna 450\u00b0C, 60-90s.", img: "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZWFwb2xpdGFuJTIwcGl6emElMjBtYXJnaGVyaXRhJTIwd29vZCUyMGZpcmV8ZW58MXx8fHwxNzcxMjMwNTM5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral", badge: "W 250\u2013320", bc: "var(--primary)" },
+            { t: "Lunga Maturazione", s: "72h frigo", b: "Fermentazione 4\u00b0C, alveolatura aperta.", img: "https://images.unsplash.com/photo-1738717201744-9faf699eea3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMGRvdWdoJTIwZmVybWVudGF0aW9uJTIwc291cmRvdWdofGVufDF8fHx8MTc3MTIzMDU0Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral", badge: "72h frigo", bc: "var(--cta)" },
           ].map(c => (
             <motion.div key={c.t} className="rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98]" style={{ background: "var(--surface-container-low)", border: "1px solid var(--outline-variant)" }} whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
               <div className="relative" style={{ aspectRatio: "16/9", overflow: "hidden" }}>

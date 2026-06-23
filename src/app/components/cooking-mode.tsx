@@ -335,7 +335,7 @@ export function CookingMode() {
               background: "var(--container-bg)",
               border: "1px solid var(--container-border)",
               cursor: "pointer",
-              color: "var(--text-muted)",
+              color: "var(--icon-muted)",
             }}
             aria-label={cms.cooking.interrupt}
             title={cms.cooking.interrupt}
@@ -640,7 +640,7 @@ export function CookingMode() {
                   borderRadius: 20,
                   background: "var(--container-bg)",
                   border: "1px solid var(--container-border)",
-                  color: viewIndex === 0 ? "var(--text-muted)" : "var(--text-default)",
+                  color: viewIndex === 0 ? "var(--icon-muted)" : "var(--icon-default)",
                   opacity: viewIndex === 0 ? 0.4 : 1,
                   cursor: viewIndex === 0 ? "default" : "pointer",
                 }}

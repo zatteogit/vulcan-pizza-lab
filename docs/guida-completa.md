@@ -30,7 +30,7 @@
 
 ### Cos'e Vulcan Pizza Lab
 
-Vulcan Pizza Lab e un **configuratore interattivo di ricette pizza** progettato per funzionare come iframe all'interno di Figma. L'utente viene guidato — attraverso un flusso narrativo in 3 sezioni — dalla scelta del contesto (quando mangiare, che forno ha, che farine ha in dispensa) fino alla generazione di una ricetta completa con ingredienti pesati al grammo e timeline procedurale passo-passo.
+Vulcan Pizza Lab e un **configuratore interattivo di ricette pizza** progettato per funzionare come iframe. L'utente viene guidato — attraverso un flusso narrativo in 3 sezioni — dalla scelta del contesto (quando mangiare, che forno ha, che farine ha in dispensa) fino alla generazione di una ricetta completa con ingredienti pesati al grammo e timeline procedurale passo-passo.
 
 ### Filosofia
 
@@ -683,7 +683,7 @@ Editor completo per tutti i 15 stili pizza:
 
 ### Panoramica
 
-Il sistema permette di sincronizzare il codice tra Figma Make (browser) e un ambiente di sviluppo locale (Cursor, Windsurf, VS Code). Due componenti:
+Il sistema permette di sincronizzare il codice tra Vulcan Cloud (browser) e un ambiente di sviluppo locale (Cursor, Windsurf, VS Code). Due componenti:
 
 | Componente   | Posizione                         | Funzione                                        |
 | ------------ | --------------------------------- | ----------------------------------------------- |
@@ -696,7 +696,7 @@ Il sistema permette di sincronizzare il codice tra Figma Make (browser) e un amb
 {
   "vulcan_sync": "1.0",
   "timestamp": "2026-03-15T...",
-  "source": "figma-make" | "local",
+  "source": "cloud" | "local",
   "files": {
     "/src/app/components/pizza-engine.ts": {
       "hash": "a1b2c3d4",
@@ -723,7 +723,7 @@ Hash: djb2 (identico browser/CLI).
 
 1. Lavori nell'IDE locale
 2. `node sync.mjs export | pbcopy` (macOS) o equivalente
-3. Figma Make: DevTools -> Sync -> incolla -> "Analizza diff"
+3. Vulcan Cloud: DevTools -> Sync -> incolla -> "Analizza diff"
 4. Scegli modalita prompt -> "Copia prompt" -> incolla nella chat
 
 ### Due modalita di prompt
@@ -850,7 +850,7 @@ L'app e una **SPA statica** — funziona su qualsiasi hosting statico.
 
 | ID      | Titolo                           | Motivo                               |
 | ------- | -------------------------------- | ------------------------------------ |
-| VPL-032 | 46 file `ui/` shadcn — dead code | File protetti dal sandbox Figma Make |
+| VPL-032 | 46 file `ui/` shadcn — dead code | File protetti dal sandbox Vulcan Cloud |
 | VPL-033 | ~35 npm packages orfani          | Richiede `pnpm remove` manuale       |
 
 #### Highlights per area
@@ -1062,7 +1062,7 @@ L'app e una **SPA statica** — funziona su qualsiasi hosting statico.
 
 L'app funziona completamente offline dopo il caricamento (tranne Google Fonts e meteo).
 
-### Vincoli iframe Figma
+### Vincoli iframe
 
 | Area             | Soluzione                                                                                           |
 | ---------------- | --------------------------------------------------------------------------------------------------- |

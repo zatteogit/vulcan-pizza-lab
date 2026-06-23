@@ -1,4 +1,4 @@
-import { Surface, Heading, Badge } from "@figma/my-make-file";
+import { Surface, Heading, Badge } from "@vulcan/ds";
 
 export function Card() {
   return (

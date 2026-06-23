@@ -122,7 +122,7 @@ function BlurPlayground() {
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `url("https://images.unsplash.com/photo-1689010039458-c605ea68c0b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b29kJTIwZmlyZWQlMjBwaXp6YSUyMG92ZW4lMjBmbGFtZXMlMjBkYXJrfGVufDF8fHx8MTc3MTIyNjI2Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral")`,
+            backgroundImage: `url("https://images.unsplash.com/photo-1689010039458-c605ea68c0b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b29kJTIwZmlyZWQlMjBwaXp6YSUyMG92ZW4lMjBmbGFtZXMlMjBkYXJrfGVufDF8fHx8MTc3MTIyNjI2Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral")`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}

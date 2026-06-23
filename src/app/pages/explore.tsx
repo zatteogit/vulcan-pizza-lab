@@ -9,7 +9,7 @@ import { useMemo,useState } from "react";
 import { Link } from "react-router";
 import { Heading } from "../components/ds";
 import { useCms } from "../components/cms/cms-context";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { FireGlow } from "../components/fire-glow";
 import { getInterpretationById } from "../components/interpretation-library";
 import {

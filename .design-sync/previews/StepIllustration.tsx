@@ -1,4 +1,4 @@
-import { StepIllustration } from "@figma/my-make-file";
+import { StepIllustration } from "@vulcan/ds";
 
 export function Steps() {
   return (

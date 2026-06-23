@@ -8,7 +8,7 @@
 
 ## Sommario Esecutivo
 
-Il workspace Notion contiene la **knowledge base teorico-scientifica** del Progetto Vulcan, scritta prima dell'implementazione. Il codebase su Figma Make e il repo GitHub contengono l'**implementazione reale** come SPA React. Ci sono **divergenze significative** dovute all'evoluzione del progetto durante lo sviluppo.
+Il workspace Notion contiene la **knowledge base teorico-scientifica** del Progetto Vulcan, scritta prima dell'implementazione. Il codebase su Vulcan Cloud e il repo GitHub contengono l'**implementazione reale** come SPA React. Ci sono **divergenze significative** dovute all'evoluzione del progetto durante lo sviluppo.
 
 ### Stato sincronia: DIVERGENTE
 
