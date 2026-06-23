@@ -108,3 +108,13 @@ Output: `.design-sync/.cache/breakpoints/<Name>__<w>.png` + `_sheet__<w>.png` (c
   RecommendedStyles, Carousel, Divider.
 - **Allowlist nota**: RecommendedStyles ha `ERR_FILE_NOT_FOUND` (foto stile stubate dall'override) →
   fallback grigio, accettato, non bloccante.
+
+## Preview interattive (2026-06-23)
+Le preview POSSONO usare hook: `import { useState } from "react"` si risolve allo shim
+(window.React) nel build delle preview. I controlli vanno resi **stateful** o restano statici
+(non rispondono al click). Resi interattivi: Checkbox, RadioButton, Switch, Chip, FilterChip,
+SegmentedControl, Stepper, Select, Slider, Snackbar (dismiss), Dialog/BottomSheet (open/close via
+trigger+scrim), RecipeSectionTabs. Verificato via playwright (click → cambia stato/DOM).
+Display-only (nessuno stato): Badge, Heading, Surface, Divider, Progress, Spinner, StepHeader,
+ScoreRing, VulcanMark, DoughBlob, StepIllustration, TiltCard, Carousel (scroll), Fab/CtaButton/
+IconButton (azione senza stato), InfoTip (stato interno già nel componente).
