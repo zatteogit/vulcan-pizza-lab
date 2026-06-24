@@ -17,7 +17,7 @@ import { Checkbox, RadioButton, Select } from "../ds/index";
    Animated checkmark, indeterminate state, label alignment.
    ═══════════════════════════════════════════════════════════ */
 
-export function CheckboxSpec() {
+function CheckboxSpec() {
   const [checks, setChecks] = useState<Record<string, boolean | "indeterminate">>({
     napo: true,
     teglia: false,
@@ -151,7 +151,7 @@ export function CheckboxSpec() {
    C24 — RADIO BUTTON  (M3 Expressive)
    ═══════════════════════════════════════════════════════════ */
 
-export function RadioButtonSpec() {
+function RadioButtonSpec() {
   const [selectedOven, setSelectedOven] = useState("home");
   const [selectedYeast, setSelectedYeast] = useState("fresh");
 
@@ -297,7 +297,7 @@ const FLOUR_OPTIONS = [
   { id: "integrale", label: "Integrale", desc: "W 120–180", group: "Speciale" },
 ];
 
-export function SelectSpec() {
+function SelectSpec() {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>("00");
   const containerRef = useRef<HTMLDivElement>(null);

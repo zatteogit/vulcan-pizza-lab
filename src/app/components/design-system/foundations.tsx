@@ -191,7 +191,7 @@ function useColorMap() {
 }
 
 /* ═══ 01: SISTEMA CROMATICO ═══ */
-export function ColorSystemSection() {
+function ColorSystemSection() {
   const { ref, map } = useColorMap();
 
   const specsContent = (
@@ -470,7 +470,7 @@ function fontFamilyCSS(font: string): string {
   return "'DM Sans', sans-serif";
 }
 
-export function TypographySection() {
+function TypographySection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader
@@ -600,7 +600,7 @@ const RADIUS_SCALE = [
   { name: "full", token: "--radius-full", value: "9999px" },
 ];
 
-export function SpacingSection() {
+function SpacingSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Spaziatura" description="13 step da --space-px a --space-16. Token primitivi Tier 1." />
@@ -648,7 +648,7 @@ export function SpacingSection() {
   );
 }
 
-export function ShapeSection() {
+function ShapeSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Forma (Border Radius)" description="8 step da --radius-none a --radius-full. Token primitivi Tier 1." />

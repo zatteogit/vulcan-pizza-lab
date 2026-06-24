@@ -71,7 +71,7 @@ function AnimatedRing({
 }
 
 /* ═══ C08: SCORE RING ═══ */
-export function ScoreRingSpec() {
+function ScoreRingSpec() {
   const [customScore, setCustomScore] = useState(75);
 
   return (
@@ -177,7 +177,7 @@ const STAT_DATA = [
   { icon: Zap, label: "Cottura", value: "90s", color: "var(--warm-sienna)" },
 ];
 
-export function StatStripSpec() {
+function StatStripSpec() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="RecipeStatStrip" description="Strip orizzontale con 4 metriche chiave — hover per evidenziare! DM Sans tabular-nums per numeri, icone tematiche, sfondo surface-container." />
@@ -328,7 +328,7 @@ function SingleToast({
   );
 }
 
-export function SnackbarToastSpec() {
+function SnackbarToastSpec() {
   const [toasts, setToasts] = useState<{ id: number; type: string; message: string; action?: string }[]>([]);
   const nextId = useRef(0);
   const [hoveredType, setHoveredType] = React.useState<string | null>(null);

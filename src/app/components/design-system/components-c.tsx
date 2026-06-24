@@ -37,7 +37,7 @@ const NAV_DEMO_ITEMS = [
 ];
 
 /* ═══ C11: NAVIGATION BAR ═══ */
-export function NavigationBarSpec() {
+function NavigationBarSpec() {
   const [activeNavDesktop, setActiveNavDesktop] = useState("home");
   const [activeNavMobile, setActiveNavMobile] = useState("home");
 
@@ -184,7 +184,7 @@ const SNAP_SPECS = [
   { name: "Full", height: "85%", use: "Lista lunga, dettaglio completo", color: "var(--cta)" },
 ];
 
-export function BottomSheetSpec() {
+function BottomSheetSpec() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [sheetSnap, setSheetSnap] = useState<"peek" | "half" | "full">("half");
 
@@ -459,7 +459,7 @@ function MiniRing({ score, label, color, size = 64 }: { score: number; label: st
   );
 }
 
-export function ModalScoreDashboardSpec() {
+function ModalScoreDashboardSpec() {
   const [modalOpen, setModalOpen] = useState(false);
   const [nerdMode, setNerdMode] = useState(false);
 

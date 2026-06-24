@@ -70,7 +70,7 @@ export interface DoughParameters {
   flour_blend?: { name: string; pct: number; w?: number }[];
 }
 
-export interface ShapeParameters {
+interface ShapeParameters {
   shape_type: ShapeType;
   dough_weight_g: number;
   thickness_factor: number;
@@ -79,7 +79,7 @@ export interface ShapeParameters {
   width_cm?: number;
 }
 
-export interface BakingParameters {
+interface BakingParameters {
   oven_type_required: OvenType;
   temp_c_range: [number, number];
   temp_c_ideal: number;
@@ -328,14 +328,14 @@ export const YEAST_LABELS: Record<string, string> = {
 };
 
 /* ═══ ENUM LABELS — mai mostrare enum crudi ("extreme", "thick_airy") in UI ═══ */
-export const HYDRATION_CATEGORY_LABELS: Record<HydrationCategory, string> = {
+const HYDRATION_CATEGORY_LABELS: Record<HydrationCategory, string> = {
   low: "Bassa idratazione",
   medium: "Media idratazione",
   high: "Alta idratazione",
   extreme: "Estrema idratazione",
 };
 
-export const CRUST_TYPE_LABELS: Record<CrustType, string> = {
+const CRUST_TYPE_LABELS: Record<CrustType, string> = {
   leopard_soft: "Leopardata morbida",
   crispy_thin: "Sottile croccante",
   thick_airy: "Alta soffice",
@@ -401,14 +401,14 @@ export interface GeneratedRecipe {
   };
 }
 
-export interface CompensationApplied {
+interface CompensationApplied {
   type: string;
   original: number;
   compensated: number;
   reason: string;
 }
 
-export interface ScientificLayer {
+interface ScientificLayer {
   yeast_baker_pct: number;
   effective_hours_18c: number;
   fodmap_reduction_pct: number | null;
@@ -2060,7 +2060,7 @@ export interface AuthenticityCenter {
   fermentation_hours?: number;
 }
 
-export function calculateAuthenticityScore(
+function calculateAuthenticityScore(
   style: PizzaStyle,
   hydration: number,
   ovenTemp: number,
@@ -3799,7 +3799,7 @@ export interface TimeSlot {
 }
 
 /** VPL-065: Kept as legacy fallback — consumers should prefer generateTimeSlots() */
-export const TIME_SLOTS: TimeSlot[] = [
+const TIME_SLOTS: TimeSlot[] = [
   {
     id: "tonight",
     label: "Stasera",

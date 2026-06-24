@@ -191,18 +191,3 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     interpretation_id: "igp_recco",
   },
 ];
-
-/** Filtro per famiglia. */
-export function getSignatureRecipesByFamily(family: FamilyId): SignatureRecipe[] {
-  return SIGNATURE_RECIPES.filter((r) => r.family === family);
-}
-
-/** Tutte le ricette. */
-export function getAllSignatureRecipes(): SignatureRecipe[] {
-  return SIGNATURE_RECIPES;
-}
-
-/** Lookup per id. */
-export function getSignatureRecipeById(id: string): SignatureRecipe | undefined {
-  return SIGNATURE_RECIPES.find((r) => r.id === id);
-}

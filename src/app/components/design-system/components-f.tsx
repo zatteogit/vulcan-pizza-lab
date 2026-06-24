@@ -39,7 +39,7 @@ const FAB_COLORS = [
   { id: "tertiary", label: "Tertiary", bg: "var(--tertiary-container)", fg: "var(--on-tertiary-container)", shadow: "var(--shadow-md)" },
 ];
 
-export function FABSpec() {
+function FABSpec() {
   const [activeVariant, setActiveVariant] = useState("standard");
   const [activeColor, setActiveColor] = useState("primary");
   const [fabPressed, setFabPressed] = useState(false);
@@ -204,7 +204,7 @@ const SEGMENT_DEMOS = [
   },
 ];
 
-export function SegmentedButtonSpec() {
+function SegmentedButtonSpec() {
   const [selections, setSelections] = useState<Record<string, string>>({
     oven: "home",
     view: "ingredients",
@@ -320,7 +320,7 @@ export function SegmentedButtonSpec() {
    C19 — SWITCH  (M3 Expressive)
    ═══════════════════════════════════════════════════════════ */
 
-export function SwitchSpec() {
+function SwitchSpec() {
   const [switches, setSwitches] = useState<Record<string, boolean>>({
     nerd: false,
     dark: true,
@@ -461,7 +461,7 @@ export function SwitchSpec() {
    C20 — PROGRESS INDICATORS  (M3 Expressive)
    ═══════════════════════════════════════════════════════════ */
 
-export function ProgressIndicatorSpec() {
+function ProgressIndicatorSpec() {
   const [progress, setProgress] = useState(65);
 
   return (
@@ -574,7 +574,7 @@ const TAB_DEMOS = [
   { id: "science", label: "Scienza", icon: FlaskConical },
 ];
 
-export function TabsSpec() {
+function TabsSpec() {
   const [activeTab, setActiveTab] = useState("config");
   const [activeSecondary, setActiveSecondary] = useState("config");
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -756,7 +756,7 @@ export function TabsSpec() {
    C22 — DIVIDER  (M3 Expressive)
    ═══════════════════════════════════════════════════════════ */
 
-export function DividerSpec() {
+function DividerSpec() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader

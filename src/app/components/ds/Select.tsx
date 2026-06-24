@@ -10,7 +10,7 @@ import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 
-export interface SelectOption {
+interface SelectOption {
   id: string;
   label: string;
   desc?: string;

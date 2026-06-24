@@ -238,7 +238,7 @@ function BlurPlayground() {
 }
 
 /* ═══ EXPORTED SECTION ═══ */
-export function GlassmorphismLiquidGlassSection() {
+function GlassmorphismLiquidGlassSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader

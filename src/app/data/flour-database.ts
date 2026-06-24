@@ -563,47 +563,6 @@ export function getCompatibleFlours(styleId: string): FlourEntry[] {
 }
 
 
-/** Etichetta categoria farina */
-export const FLOUR_CATEGORY_LABELS: Record<string, { label: string; emoji: string }> = {
-  grano_tenero: { label: "Grano tenero", emoji: "🌾" },
-  manitoba: { label: "Manitoba", emoji: "💪" },
-  semola: { label: "Semola", emoji: "🌻" },
-  integrale: { label: "Integrale", emoji: "🟤" },
-  gluten_free: { label: "Gluten-Free", emoji: "🚫" },
-  speciale: { label: "Speciale", emoji: "✨" },
-};
-
-/** Suggerisci farine per una ricetta (by style + W + fermentation hours) */
-export function suggestFlours(
-  styleId: string,
-  recipeW: number,
-  fermentationHours: number,
-  maxResults: number = 3,
-): FlourEntry[] {
-  // Priority: style-compatible first, then W-compatible, sorted by distance
-  const scored = FLOURS_DB
-    .filter((f) => f.w > 0) // exclude GF/non-W flours
-    .map((f) => {
-      let score = 0;
-      // Style match bonus
-      if (f.stili_compatibili.includes(styleId)) score += 50;
-      // W distance penalty (closer = better)
-      const wDist = Math.abs(f.w - recipeW);
-      score -= wDist * 0.1;
-      // Fermentation time compatibility bonus
-      if (fermentationHours >= f.fermentazione_min_h && fermentationHours <= f.fermentazione_max_h) {
-        score += 25;
-      }
-      // Brand bonus (non-generic preferred for suggestions)
-      if (f.producer !== "Generico") score += 10;
-      return { flour: f, score };
-    })
-    .sort((a, b) => b.score - a.score)
-    .slice(0, maxResults)
-    .map((s) => s.flour);
-  return scored;
-}
-
 /**
  * Calcola il range W effettivo considerando variabilita batch-to-batch e stagionale.
  * Audit DB Engineer: "W=260-280 variabile, ±10% batch, ±5% stagione"

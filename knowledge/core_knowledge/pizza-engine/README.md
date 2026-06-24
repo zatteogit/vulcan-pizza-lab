@@ -3,7 +3,7 @@
 
 ## Sommario
 
-`pizza-engine.ts` (4402 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **64 simboli pubblici**; è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
+`pizza-engine.ts` (4413 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **56 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
 
 Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica Implementativa v1* (feb 2026) e fix successivi (ADV-02, ADV-04, ADV-08, ADV-11). Schema ricetta versione **1.4** (`RECIPE_SCHEMA_VERSION`).
 
@@ -14,8 +14,8 @@ Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica I
 | `src/app/domain/pizza-engine.ts` | 4402 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
 | `src/app/features/dev-tools/engine-test-suite.tsx` | 1651 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
 | `src/app/domain/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, `STYLE_TAGS`, `DEVIATION_CATEGORY_LABELS` per E-Score |
-| `src/app/data/topping-library.ts` | 1313 | Libreria topping: 21 concetti, 28 ricette, autenticità per stile e timeline injection |
-| `src/app/data/impasto-library.ts` | 336 | Libreria impasti riusabili: 7 metodi incl. `senza_glutine` e `integrale_multicereali` |
+| `src/app/data/topping-library.ts` | ~2100 | Libreria topping: 34 concetti, 40 ricette, autenticità per stile e timeline injection (integrati nuovi topping premium Wave 1 e Wave 2) |
+| `src/app/data/impasto-library.ts` | ~320 | Libreria impasti riusabili: 7 metodi (rimossi gli helper inutilizzati `getAllImpasti` e `getImpastiCompatibleWith`) |
 | `src/app/data/parametric-databases.ts` | — | `getToppingByStyle(style.id)` → `topping_info` e tip in `generateRecipe` / `generateTips` |
 
 **Consumatori principali** (capitolo `recipe-flow` / altri): `recipe.tsx`, `recipe-configurator.tsx`, `recipe-output.tsx`, `home.tsx`, `profile.tsx`, `recommended-styles.tsx`, `style-editor-tab.tsx`, `recipe-match-card.tsx`, `styles-override-context.tsx`, `use-profile-defaults.ts`, `dev-tools.tsx`, `explore.tsx`, `search-overlay.tsx`.
@@ -66,7 +66,7 @@ flowchart TD
 | `calculateOvenCompensations` | Δ idratazione (log), olio/zucchero, tempo cottura (exp), thickness factor |
 | `getQ10` | Q10 per lievito/temperatura (`standard` / `cold_adapted` / `sourdough`) |
 | `estimatePL` | P/L da W clampato nel range stile |
-| `calculateAuthenticityScore` | Assi ingredienti/processo/attrezzatura/forma + penalità `EngineMsg` |
+| `calculateAuthenticityScore` | [Interna] Assi ingredienti/processo/attrezzatura/forma + penalità `EngineMsg` |
 | `calculateFeasibilityScore` | [Interna] Forno 40%, farina W 30%, skill×idratazione 30% |
 | `calculateDigestibilityScore` | [Interna] Ore equivalenti 18°C, FODMAP stimato, claims |
 | `calculateExperimentationScore` | [Interna] Deviazione stile + parametri + conteggio compensazioni |
@@ -94,7 +94,7 @@ flowchart TD
 | `SERVING_UNIT_LABELS` | panetto, teglia, pala, padellino, focaccia |
 | `DEFAULT_KITCHEN_TEMP` | 21 °C |
 | `RECIPE_SCHEMA_VERSION` | `"1.4"` |
-| `TIME_SLOTS` / `NO_PREFERENCE_SLOT` | Target pasti statici + `generateTimeSlots` dinamico |
+| `TIME_SLOTS` / `NO_PREFERENCE_SLOT` | [Interne] Target pasti statici + `generateTimeSlots` dinamico |
 
 **Dipendenze import**: `./deviation-tags` (`STYLE_DEVIATIONS`, `STYLE_TAGS`), `./parametric-databases` (`getToppingByStyle`).
 

@@ -23,7 +23,7 @@ import { STYLE_PHOTOS } from "../../data/style-photos";
 /** Locale metadata — i18n ready */
 export type LocaleId = "it" | "en" | "es" | "de" | "fr" | "pt" | "ja";
 
-export interface CmsLocale {
+interface CmsLocale {
   /** Active locale code */
   id: LocaleId;
   /** Display name */
@@ -166,7 +166,7 @@ export interface CmsUiStrings {
   dietNickel: string;
 };
 
-export interface CmsInlineTips {
+interface CmsInlineTips {
   timeSlot: string;
   skill: string;
   equipment: string;
@@ -175,59 +175,59 @@ export interface CmsInlineTips {
   kitchenTemp: string;
 }
 
-export interface CmsHero {
+interface CmsHero {
   title_line1: string;
   title_line2: string;
   subtitle: string;
 }
 
-export interface CmsStepHeader {
+interface CmsStepHeader {
   number: string;
   title: string;
   subtitle: string;
 }
 
-export interface CmsSectionHeader {
+interface CmsSectionHeader {
   title: string;
   description: string;
 }
 
-export interface CmsTimeSlot {
+interface CmsTimeSlot {
   label: string;
   sublabel: string;
   emoji: string;
   hours: number;
 }
 
-export interface CmsOvenPreset {
+interface CmsOvenPreset {
   name: string;
   maxTemp: number;
   icon: string;
 }
 
-export interface CmsSkillLevel {
+interface CmsSkillLevel {
   name: string;
   description: string;
 }
 
-export interface CmsFamily {
+interface CmsFamily {
   name: string;
   description: string;
   emoji: string;
 }
 
-export interface CmsTier {
+interface CmsTier {
   label: string;
   subtitle: string;
 }
 
-export interface CmsScoreDimension {
+interface CmsScoreDimension {
   label: string;
   short: string;
   weight: number;
 }
 
-export interface CmsRecommendationWeights {
+interface CmsRecommendationWeights {
   time: number;
   oven: number;
   skill: number;
@@ -313,7 +313,7 @@ export interface CmsGlossaryTerms {
 }
 
 /** Profile page strings — sections, FTU, locale modal */
-export interface CmsProfile {
+interface CmsProfile {
   pageTitle: string;
   pageSubtitle: string;
   // Favorites (R31)
@@ -498,7 +498,7 @@ export interface CmsProfile {
 }
 
 /** Page-level strings for nav, explore, learn, recipe, not-found, search */
-export interface CmsPages {
+interface CmsPages {
   // Navigation tab labels
   navCreate: string;
   navExplore: string;
@@ -605,7 +605,7 @@ export interface CmsPages {
 }
 
 /** Recipe configurator slider labels and tooltips */
-export interface CmsConfigurator {
+interface CmsConfigurator {
   hydrationLabel: string;
   hydrationTip: string;
   flourWLabel: string;
@@ -2189,7 +2189,7 @@ export function getByPath(obj: any, path: string): any {
 }
 
 /** Set a nested value by dot-path, returning a new object (immutable) */
-export function setByPath(obj: any, path: string, value: any): any {
+function setByPath(obj: any, path: string, value: any): any {
   const clone = deepClone(obj);
   const keys = path.split(".");
   let cur = clone;
@@ -2202,7 +2202,7 @@ export function setByPath(obj: any, path: string, value: any): any {
 }
 
 /** Deep diff: returns paths that differ between two objects */
-export function deepDiffPaths(a: any, b: any, prefix = ""): string[] {
+function deepDiffPaths(a: any, b: any, prefix = ""): string[] {
   const paths: string[] = [];
   const allKeys = new Set([
     ...Object.keys(a || {}),
@@ -2305,7 +2305,7 @@ function fallbackBaseFor(overrides: Partial<CmsContent> | null): CmsContent {
 
 // ═══ CONTEXT ═══
 
-export interface CmsContextValue {
+interface CmsContextValue {
   /** Effective content (defaults + overrides merged) */
   cms: CmsContent;
   /** Raw overrides (only user-changed values) */
@@ -2512,7 +2512,7 @@ function cleanEmpty(obj: any): any {
 
 // ═══ CMS FIELD REGISTRY ═══
 
-export type CmsFieldType = "text" | "textarea" | "number" | "url" | "slider" | "image";
+type CmsFieldType = "text" | "textarea" | "number" | "url" | "slider" | "image";
 
 export interface CmsFieldDef {
   path: string;

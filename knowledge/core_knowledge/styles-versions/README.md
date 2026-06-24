@@ -24,7 +24,7 @@ La versione attiva fluisce in `generateRecipe` come `versionOverrides` e nei ran
 | `src/app/features/dev-tools/style-editor-tab.tsx` | DevTools: editor CRUD stili dev con componente `ImageInput` per caricamento/gestione file grafici locali (Base64) o URL esterni |
 | `src/app/features/dev-tools/sync-tab.tsx` | Diff bundle sorgenti Vulcan Cloud ↔ locale (non modifica stili direttamente) |
 | `src/app/data/interpretation-library.ts` | Database delle Interpretazioni d'Autore: 14 voci tra Maestri, Pizzerie, Community e Disciplinari con parameter overrides e narrativa |
-| `src/app/data/signature-recipes.ts` | Database delle Ricette Iconiche: 12 combinazioni pre-impostate di Stile e Topping Concept collegate tramite deep-links URL (Sprint 12) |
+| `src/app/data/signature-recipes.ts` | Database delle Ricette Iconiche: 12 combinazioni pre-impostate di Stile e Topping (rimossi gli helper `getSignatureRecipesByFamily`/`getSignatureRecipeById`) |
 | `src/app/features/recipe/tilt-card.tsx` | Componente UI per l'effetto di inclinazione 3D interattivo e riflesso speculare sensibile al puntatore del mouse delle card degli stili |
 
 **Consumer principali:** `recipe.tsx`, `home.tsx`, `explore.tsx` (`useStylesOverride`); `recipe-configurator.tsx` (`getVersions`, range versione).
@@ -92,6 +92,8 @@ flowchart TD
 - **Media locali canonici**: `STYLE_PHOTOS` non deve più vivere duplicato in componenti UI; `recommended-styles.tsx` lo re-esporta solo per compatibilità. I video restano lazy via tag `<video>` e hanno fallback automatico alla foto poster.
 - `StyleEditorTab` + live sync: ogni modifica può riscrivere `localStorage` — solo ambiente dev.
 - `SyncTab` esclude `src/app/components/ui/` dal bundle.
+- `STYLE_VERSIONS` e `VersionRanges` in `style-versions.ts` sono ora dettagli interni (non esportati). L'accesso alle versioni avviene esclusivamente tramite le API pubbliche `getVersions`, `getVersionById` e `getDefaultVersion`.
+- `StylesOverrideContext` in `styles-override-context.tsx` è ora un dettaglio interno (non esportato) e consumato unicamente all'interno del modulo.
 
 ## Integrazioni e Varianti d'Autore Implementate (Sprint 11)
 
@@ -131,7 +133,7 @@ La libreria `signature-recipes.ts` introduce il concetto di "Ricette Iconiche" p
 - **Astrazione di Deep-Linking**: Sotto al cofano, le ricette iconiche non richiedono motori procedurali separati. Esse agiscono come deep-links intelligenti che reindirizzano l'utente alla pagina principale della ricetta dello stile genitore (`style_id`) iniettando automaticamente il condimento pre-selezionato tramite il parametro di query `?topping=<concept_id>`.
 - **Interfaccia SignatureRecipe**: Mappa proprietà avanzate: nome, descrizione narrativa, emoji, eventuale override della fotografia di copertina (`photo`), stile di base, topping associato, famiglia cached e tag di occasione (es. `"street food"`, `"comfort"`).
 - **12 Ricette Selezionate**: Il database pre-imposta 12 piatti iconici che rappresentano la tradizione e l'evoluzione della pizza italiana ed estera (es. *Margherita Verace AVPN*, *Patate e Porchetta alla Baciata*, *Mortazza alla Pala Romana*, *Scrocchiarella Boscaiola*, *Detroit Pepperoni*, *Focaccia di Recco col Formaggio IGP*).
-- **API di Filtro e Lookup**: Fornisce helper ottimizzati per recuperare le ricette per famiglia (`getSignatureRecipesByFamily`) o tramite ricerca puntuale dell'ID (`getSignatureRecipeById`).
+- **Lookup e Filtro**: La UI consuma direttamente `SIGNATURE_RECIPES` per visualizzare ed esplorare le combinazioni, delegando la ricerca al catalogo globale dell'applicazione (rimossi gli helper `getSignatureRecipesByFamily` e `getSignatureRecipeById` perché inutilizzati).
 
 ## Visual Depth & Interactive Tilt Card
 

@@ -61,7 +61,7 @@ function safeStore(recipes: SavedRecipe[]) {
 }
 
 /** Chiave identità: stesso stile + stessi parametri = stessa ricetta. */
-export function recipeKey(styleId: string, p: SavedRecipeParams): string {
+function recipeKey(styleId: string, p: SavedRecipeParams): string {
   return [
     styleId,
     p.hydration,

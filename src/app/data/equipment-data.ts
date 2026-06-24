@@ -5,7 +5,7 @@
 /* ═══ MIXER (Impastatrici & Planetarie) ═══ */
 
 export type MixerType = "hands" | "planetary" | "spiral" | "fork" | "stand_domestic";
-export type MixerLevel = "domestic" | "semi_pro" | "professional";
+type MixerLevel = "domestic" | "semi_pro" | "professional";
 
 export interface MixerOption {
   id: MixerType;
@@ -19,7 +19,7 @@ export interface MixerOption {
   frictionDegMin?: number;
 }
 
-export const MIXER_OPTIONS: MixerOption[] = [
+const MIXER_OPTIONS: MixerOption[] = [
   {
     id: "hands",
     label: "A mano",
@@ -89,7 +89,7 @@ export interface SurfaceOption {
   bestFor: string[];
 }
 
-export const SURFACE_OPTIONS: SurfaceOption[] = [
+const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: "refractory_brick",
     label: "Biscotto refrattario",
@@ -167,7 +167,7 @@ export interface ToolOption {
   description: string;
 }
 
-export const TOOL_OPTIONS: ToolOption[] = [
+const TOOL_OPTIONS: ToolOption[] = [
   /* Essential */
   { id: "digital_scale", label: "Bilancia digitale", emoji: "⚖️", category: "essential", description: "Precisione 1g, capacità 5kg+" },
   { id: "thermometer", label: "Termometro", emoji: "🌡️", category: "essential", description: "IR o a sonda, per impasto e forno" },
@@ -186,7 +186,7 @@ export const TOOL_OPTIONS: ToolOption[] = [
   { id: "bannetons", label: "Cestini lievitazione", emoji: "🧺", category: "containment", description: "Per forme tonde, con telo in lino" },
 ];
 
-export const TOOL_CATEGORIES: Record<ToolCategory, { label: string; emoji: string }> = {
+const TOOL_CATEGORIES: Record<ToolCategory, { label: string; emoji: string }> = {
   essential: { label: "Essenziali", emoji: "⭐" },
   precision: { label: "Precisione", emoji: "🎯" },
   handling: { label: "Movimentazione", emoji: "🖐️" },
@@ -378,9 +378,4 @@ export function getLocalizedToolCategories(cms: EquipCmsLabels): Record<ToolCate
     handling: { ...TOOL_CATEGORIES.handling, label: (cms[CAT_CMS_MAP.handling] as string) || TOOL_CATEGORIES.handling.label },
     containment: { ...TOOL_CATEGORIES.containment, label: (cms[CAT_CMS_MAP.containment] as string) || TOOL_CATEGORIES.containment.label },
   };
-}
-
-/** Return localized mixer level label */
-export function getLocalizedMixerLevel(level: MixerLevel, cms: EquipCmsLabels): string {
-  return (cms[LEVEL_CMS_MAP[level]] as string) || (level === "domestic" ? "Casa" : level === "semi_pro" ? "Semi-Pro" : "Pro");
 }

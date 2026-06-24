@@ -53,7 +53,7 @@ export interface ToppingIngredient {
   section?: IngredientSection;
 }
 
-export interface ToppingPrepStep {
+interface ToppingPrepStep {
   id: string;
   title: string;
   description: string;
@@ -74,7 +74,7 @@ export type TimelineInsertPoint =
   | "after_split_fill"   // dopo sdoppiamento (sostituisce farcitura generica)
   | "after_bake2";       // dopo seconda cottura
 
-export interface ToppingAssemblyStep {
+interface ToppingAssemblyStep {
   id: string;
   title: string;
   description: string;
@@ -318,6 +318,88 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     emoji: "🦪",
     flavor_profile: "salty_savory",
     occasions: ["new haven", "frutti di mare"],
+  },
+  // ─── Wave 1: firme napoletane (de-genericizzazione per stile) ───
+  cosacca: {
+    id: "cosacca",
+    name: "Cosacca",
+    description: "L'antenata della Margherita: pomodoro, pecorino (o parmigiano stagionato) e basilico. Niente mozzarella.",
+    emoji: "🧀",
+    flavor_profile: "salty_savory",
+    occasions: ["napoletana storica", "tradizione", "asciutta"],
+  },
+  provola_pepe: {
+    id: "provola_pepe",
+    name: "Provola e Pepe",
+    description: "Provola affumicata fusa e pepe nero macinato fresco. Affumicato avvolgente, su base rossa o bianca.",
+    emoji: "🌫️",
+    flavor_profile: "salty_savory",
+    occasions: ["comfort", "affumicato", "napoletana"],
+  },
+  nduja: {
+    id: "nduja",
+    name: "'Nduja di Spilinga",
+    description: "Salume spalmabile calabrese piccantissimo che si scioglie sulla pizza rilasciando grasso speziato.",
+    emoji: "🔥",
+    flavor_profile: "spicy",
+    occasions: ["piccante", "calabrese", "comfort"],
+  },
+  nerano: {
+    id: "nerano",
+    name: "Nerano",
+    description: "Crema di zucchine, zucchine fritte, provolone del Monaco DOP e menta. Omaggio alla Costiera.",
+    emoji: "🥒",
+    flavor_profile: "creamy",
+    occasions: ["estate", "costiera", "vegetariano"],
+  },
+  margherita_sbagliata: {
+    id: "margherita_sbagliata",
+    name: "Margherita Sbagliata",
+    description: "Ordine invertito: solo bufala fusa in cottura, poi passata a crudo fredda e basilico aggiunti DOPO il forno.",
+    emoji: "🔄",
+    flavor_profile: "fresh",
+    occasions: ["contemporanea", "gourmet", "canotto"],
+  },
+  scarpetta: {
+    id: "scarpetta",
+    name: "Scarpetta",
+    description: "Bufala e fonduta di grana in cottura; fuori dal forno composta di pomodoro a crudo, pesto e scaglie di grana 24 mesi.",
+    emoji: "🥄",
+    flavor_profile: "rich",
+    occasions: ["d'autore", "contemporanea"],
+  },
+  // ─── Wave 2: firme romane (teglia, tonda, pinsa, pala) ───
+  patate_rosmarino: {
+    id: "patate_rosmarino",
+    name: "Patate e Rosmarino",
+    description: "Fette sottili di patate al forno, rosmarino, sale e olio EVO. Il taglio bianco dei forni romani.",
+    emoji: "🌿",
+    flavor_profile: "rich",
+    occasions: ["taglio romano", "comfort", "vegetariano"],
+  },
+  hot_honey: {
+    id: "hot_honey",
+    name: "Hot Honey",
+    description: "Provola affumicata, pepperoni e miele piccante alla 'nduja. Dolce-piccante che spopola.",
+    emoji: "🍯",
+    flavor_profile: "sweet_savory",
+    occasions: ["dolce-piccante", "casual", "trendy"],
+  },
+  bresaola_rucola: {
+    id: "bresaola_rucola",
+    name: "Bresaola, Rucola e Grana",
+    description: "Bianca base mozzarella; dopo cottura bresaola IGP, rucola selvatica, scaglie di grana e zest di limone.",
+    emoji: "🥩",
+    flavor_profile: "fresh",
+    occasions: ["estate", "leggera", "post-cottura"],
+  },
+  stracciata_bottarga: {
+    id: "stracciata_bottarga",
+    name: "Stracciatella e Bottarga",
+    description: "Stracciatella di burrata a crudo, zucchine alla scapece e bottarga di muggine grattugiata. Gourmet romano.",
+    emoji: "🐟",
+    flavor_profile: "salty_savory",
+    occasions: ["gourmet", "pala romana", "estate"],
   },
 };
 
@@ -1193,6 +1275,610 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       replaces_generic: true,
     }],
   },
+
+  /* ═══════════════════════════════════════════════════════════════════════
+   * WAVE 1 — TOPPING PER STILE: FAMIGLIA NAPOLETANA
+   * Ogni stile napoletano riceve i propri classici (varianti napoletane, non
+   * fallback cross-family) + le firme dai cataloghi (Pepe in Grani, 50 Kalò,
+   * Da Lioniello). Ancorati con preferred_for_styles così vincono sul resolver.
+   * ═══════════════════════════════════════════════════════════════════════ */
+
+  /* ─── Classici in versione napoletana (battono il fallback cross-family) ─── */
+  capricciosa_napoletana: {
+    id: "capricciosa_napoletana",
+    concept_ref: "capricciosa",
+    variant_name: "alla napoletana",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
+      { name: "Prosciutto cotto a fette (carne di suino, sale, aromi)", amount: { value: 35, unit: "g" } },
+      { name: "Funghi champignon saltati", amount: { value: 30, unit: "g" } },
+      { name: "Carciofini di Paestum sottolio (carciofi, olio, sale)", amount: { value: 30, unit: "g" } },
+      { name: "Olive caiazzane (o nere di Gaeta)", amount: { value: 20, unit: "g" } },
+      { name: "Alici di Cetara (opzionali)", amount: { value: 10, unit: "g" }, optional: true },
+      { name: "Olio EVO delle Colline Salernitane a filo", amount: { value: 5, unit: "ml" } },
+    ],
+    pre_prep_steps: [{
+      id: "champignon_nap_capricciosa",
+      title: "Saltare champignon",
+      description: "Affettare gli champignon e saltarli 5 min in padella con un filo d'olio finché perdono acqua. Salare a fine.",
+      duration_minutes: 8,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_capricciosa_nap",
+      title: "Condimento Capricciosa napoletana",
+      description: "Pelati schiacciati + fior di latte alla base. Distribuire prosciutto cotto, champignon saltati, carciofini di Paestum scolati e olive caiazzane. Alici di Cetara per la versione del Sud. Filo d'olio EVO.",
+      insert_at: "after_shape",
+      duration_minutes: 6,
+      replaces_generic: true,
+    }],
+  },
+
+  quattro_stagioni_napoletana: {
+    id: "quattro_stagioni_napoletana",
+    concept_ref: "quattro_stagioni",
+    variant_name: "alla napoletana",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
+      { name: "Prosciutto cotto (carne di suino, sale, aromi)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Funghi champignon saltati", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Carciofini di Paestum sottolio (carciofi, olio, sale)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Alici di Cetara e olive", amount: { value: 25, unit: "g" }, notes: "per un quadrante" },
+    ],
+    assembly_steps: [{
+      id: "spread_4stagioni_nap",
+      title: "Condimento 4 Stagioni napoletana",
+      description: "Pelati + fior di latte alla base. DIVIDERE in 4 quadranti: prosciutto cotto, champignon saltati, carciofini di Paestum, alici di Cetara con olive. Ogni quadrante isolato.",
+      insert_at: "after_shape",
+      duration_minutes: 6,
+      replaces_generic: true,
+    }],
+  },
+
+  quattro_formaggi_napoletana: {
+    id: "quattro_formaggi_napoletana",
+    concept_ref: "quattro_formaggi",
+    variant_name: "alla napoletana",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Fior di latte campano", amount: { value: 70, unit: "g" } },
+      { name: "Provolone del Monaco DOP a scaglie", amount: { value: 25, unit: "g" } },
+      { name: "Gorgonzola dolce a cubetti", amount: { value: 25, unit: "g" } },
+      { name: "Parmigiano Reggiano grattugiato", amount: { value: 15, unit: "g" } },
+    ],
+    assembly_steps: [{
+      id: "spread_4formaggi_nap",
+      title: "Condimento 4 Formaggi napoletana",
+      description: "Base bianca. Distribuire il fior di latte; aggiungere provolone del Monaco e gorgonzola a tocchetti. Parmigiano in superficie. Cottura flash che fonde senza bruciare.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+      tip: {
+        beginner: "Il provolone del Monaco al posto della fontina dà la nota campana: più dolce-piccante e meno burrosa.",
+        nerd: "Provolone del Monaco DOP: pasta semidura da latte di vacca agerolese, stagionatura ≥6 mesi → fonde filando ma tiene la scaglia, regge i 450°C del forno a legna.",
+      },
+    }],
+  },
+
+  ortolana_napoletana: {
+    id: "ortolana_napoletana",
+    concept_ref: "ortolana",
+    variant_name: "alla napoletana (vegetariana)",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    ingredients: [
+      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 70, unit: "g" } },
+      { name: "Fior di latte campano", amount: { value: 70, unit: "g" } },
+      { name: "Melanzane fritte a cubetti", amount: { value: 45, unit: "g" } },
+      { name: "Zucchine fritte", amount: { value: 45, unit: "g" } },
+      { name: "Peperoni grigliati", amount: { value: 40, unit: "g" } },
+      { name: "Basilico fresco", amount: { value: 3, unit: "pcs" } },
+      { name: "Olio EVO delle Colline Salernitane", amount: { value: 5, unit: "ml" } },
+    ],
+    pre_prep_steps: [{
+      id: "verdure_fritte_nap",
+      title: "Friggere melanzane e zucchine",
+      description: "Tagliare melanzane a cubetti e zucchine a fette, friggerle in olio caldo finché dorate, scolare su carta. Grigliare i peperoni e spellarli.",
+      duration_minutes: 20,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_ortolana_nap",
+      title: "Condimento Ortolana napoletana",
+      description: "Pomodoro schiacciato + fior di latte. Distribuire melanzane e zucchine fritte e i peperoni grigliati. Basilico e olio EVO. (Versione vegetariana napoletana, con verdure fritte non grigliate).",
+      insert_at: "after_shape",
+      duration_minutes: 5,
+      replaces_generic: true,
+    }],
+  },
+
+  /* ─── Firme napoletane dai cataloghi ─── */
+  cosacca_napoletana: {
+    id: "cosacca_napoletana",
+    concept_ref: "cosacca",
+    variant_name: "tradizionale",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
+    preferred_for_families: ["napoletana"],
+    ingredients: [
+      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 90, unit: "g" } },
+      { name: "Sale fino", amount: { value: 1, unit: "g" } },
+      { name: "Parmigiano Reggiano DOP 24 mesi grattugiato", amount: { value: 25, unit: "g" }, notes: "o pecorino" },
+      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" } },
+      { name: "Olio EVO delle Colline Salernitane", amount: { value: 6, unit: "ml" } },
+    ],
+    assembly_steps: [{
+      id: "spread_cosacca",
+      title: "Condimento Cosacca",
+      description: "Stendere il pomodoro schiacciato salato. Spolverare abbondante parmigiano (o pecorino). Basilico e olio EVO. NIENTE mozzarella: è la pizza pre-Margherita.",
+      insert_at: "after_shape",
+      duration_minutes: 2,
+      replaces_generic: true,
+      tip: {
+        beginner: "La Cosacca è l'antenata della Margherita: solo pomodoro, formaggio stagionato e basilico. Più sapida e asciutta.",
+        nerd: "Senza mozzarella manca l'acqua di latte: la base resta più asciutta e croccante. Il parmigiano grattugiato fonde nel pomodoro creando crosticine sapide (Maillard sui bordi del formaggio).",
+      },
+    }],
+  },
+
+  provola_pepe_napoletana: {
+    id: "provola_pepe_napoletana",
+    concept_ref: "provola_pepe",
+    variant_name: "alla napoletana",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
+    preferred_for_families: ["napoletana"],
+    ingredients: [
+      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 70, unit: "g" }, notes: "ombra di pomodoro, leggera" },
+      { name: "Provola affumicata campana a cubetti", amount: { value: 90, unit: "g" } },
+      { name: "Pepe nero macinato fresco", amount: { value: 2, unit: "g" }, section: "superficie" },
+      { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
+      { name: "Olio EVO delle Colline Salernitane", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_provola_pepe",
+      title: "Condimento Provola e Pepe",
+      description: "Velo di pomodoro schiacciato (l'ombra). Distribuire la provola affumicata a cubetti. Dopo cottura, generosa macinata di pepe nero, basilico e filo d'olio.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  nduja_napoletana: {
+    id: "nduja_napoletana",
+    concept_ref: "nduja",
+    variant_name: "di Spilinga",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
+    preferred_for_families: ["napoletana"],
+    ingredients: [
+      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 80, unit: "g" } },
+      { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
+      { name: "'Nduja piccante di Spilinga (carne di maiale, peperoncino, sale)", amount: { value: 40, unit: "g" }, notes: "a fiocchi" },
+      { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
+      { name: "Olio EVO delle Colline Salernitane", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_nduja_nap",
+      title: "Condimento 'Nduja di Spilinga",
+      description: "Pomodoro schiacciato + fior di latte. Distribuire la 'nduja a piccoli fiocchi (non spalmata): in cottura si scioglie rilasciando grasso rosso piccante. Basilico e olio a fine.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+      tip: {
+        beginner: "Mettila a fiocchetti piccoli e distanziati: si scioglie e si distribuisce da sola. Troppa = piccantezza che copre tutto.",
+        nerd: "La 'nduja è ~30-40% grasso suino: a 450°C il grasso fonde e veicola la capsaicina e la paprika, colorando la pizza di rosso aranciato.",
+      },
+    }],
+  },
+
+  nerano_napoletana: {
+    id: "nerano_napoletana",
+    concept_ref: "nerano",
+    variant_name: "alla napoletana",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    preferred_for_families: ["napoletana"],
+    ingredients: [
+      { name: "Crema di zucchine (zucchine, olio EVO, sale)", amount: { value: 80, unit: "g" }, section: "base" },
+      { name: "Fior di latte campano", amount: { value: 70, unit: "g" }, section: "base" },
+      { name: "Zucchine fritte a julienne", amount: { value: 60, unit: "g" }, section: "base" },
+      { name: "Provolone del Monaco DOP a scaglie", amount: { value: 20, unit: "g" }, section: "superficie" },
+      { name: "Mentuccia fresca", amount: { value: 3, unit: "pcs" }, section: "superficie" },
+      { name: "Olio EVO delle Colline Salernitane", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    pre_prep_steps: [{
+      id: "nerano_prep",
+      title: "Crema e zucchine fritte",
+      description: "Friggere metà delle zucchine a julienne finché dorate. Frullare l'altra metà (saltata) con olio EVO, poca menta e sale per la crema. Tenere da parte.",
+      duration_minutes: 20,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_nerano",
+      title: "Condimento Nerano",
+      description: "Base bianca con crema di zucchine. Distribuire il fior di latte e le zucchine fritte. Dopo cottura: scaglie di provolone del Monaco e mentuccia fresca. Filo d'olio.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  margherita_sbagliata_canotto: {
+    id: "margherita_sbagliata_canotto",
+    concept_ref: "margherita_sbagliata",
+    variant_name: "contemporanea",
+    preferred_for_styles: ["napoletana_canotto"],
+    ingredients: [
+      { name: "Mozzarella di bufala campana DOP a fette (fusa in cottura)", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Passata di pomodoro riccio a crudo, fredda (pomodoro, sale)", amount: { value: 80, unit: "g" }, section: "superficie" },
+      { name: "Basilico fresco (o riduzione di basilico)", amount: { value: 4, unit: "pcs" }, section: "superficie" },
+      { name: "Olio EVO a filo", amount: { value: 6, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [
+      {
+        id: "sbagliata_bake",
+        title: "Solo bufala in cottura",
+        description: "Sul disco condire SOLO con la mozzarella di bufala a fette. Infornare e cuocere finché il cornicione gonfia e la bufala fonde. Niente pomodoro nel forno.",
+        insert_at: "after_shape",
+        duration_minutes: 2,
+        replaces_generic: true,
+      },
+      {
+        id: "sbagliata_post",
+        title: "Pomodoro a crudo dopo il forno",
+        description: "Appena sfornata, distribuire a cucchiaiate la passata di pomodoro a crudo fredda, il basilico e un filo d'olio. Il contrasto caldo/freddo e il pomodoro fresco sono la firma della 'sbagliata'.",
+        insert_at: "after_bake",
+        duration_minutes: 2,
+      },
+    ],
+    bake_adjustments: {
+      note: "Il pomodoro va aggiunto solo a fine cottura: resta crudo, acidulo e profumato.",
+    },
+  },
+
+  scarpetta_canotto: {
+    id: "scarpetta_canotto",
+    concept_ref: "scarpetta",
+    variant_name: "Da Lioniello",
+    preferred_for_styles: ["napoletana_canotto"],
+    ingredients: [
+      { name: "Mozzarella di bufala campana DOP (fusa in cottura)", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Fonduta di Grana Padano DOP 12 mesi", amount: { value: 40, unit: "g" }, section: "base" },
+      { name: "Composta di pomodoro a crudo, fredda (pomodoro, sale)", amount: { value: 70, unit: "g" }, section: "superficie" },
+      { name: "Pesto di basilico", amount: { value: 10, unit: "g" }, section: "superficie" },
+      { name: "Scaglie di Grana Padano DOP 24 mesi", amount: { value: 15, unit: "g" }, section: "superficie" },
+    ],
+    pre_prep_steps: [{
+      id: "scarpetta_fonduta",
+      title: "Fonduta di grana",
+      description: "Scaldare dolcemente il Grana Padano 12 mesi con poca panna/latte fino a crema liscia. Tenere in caldo.",
+      duration_minutes: 10,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [
+      {
+        id: "scarpetta_bake",
+        title: "Bufala e fonduta in cottura",
+        description: "Condire con la bufala e ciuffi di fonduta di grana. Infornare fino a cornicione gonfio e formaggi fusi.",
+        insert_at: "after_shape",
+        duration_minutes: 3,
+        replaces_generic: true,
+      },
+      {
+        id: "scarpetta_post",
+        title: "Composta, pesto e grana a fine",
+        description: "Fuori dal forno, distribuire la composta di pomodoro a crudo fredda, puntini di pesto di basilico e scaglie di Grana 24 mesi. Firma 'Scarpetta' di Lioniello.",
+        insert_at: "after_bake",
+        duration_minutes: 3,
+      },
+    ],
+  },
+
+  /* ═══════════════════════════════════════════════════════════════════════
+   * WAVE 2 — TOPPING PER STILE: FAMIGLIA ROMANA
+   * teglia_romana, tonda_romana, pinsa_romana, pala_romana (+ baciata/patate
+   * già coperti). Classici in versione romana (la "margherita romana" è diversa
+   * dalla napoletana: passata, fior di latte fuso, basilico) + firme dai menù
+   * (180g per la tonda, Pinsere per la pinsa, Roscioli per la pala).
+   * ═══════════════════════════════════════════════════════════════════════ */
+
+  /* ─── Classici in versione romana (battono il fallback cross-family) ─── */
+  capricciosa_romana: {
+    id: "capricciosa_romana",
+    concept_ref: "capricciosa",
+    variant_name: "alla romana",
+    preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Prosciutto cotto alla brace a fette (carne di suino, sale, aromi)", amount: { value: 40, unit: "g" } },
+      { name: "Funghi champignon freschi affettati", amount: { value: 30, unit: "g" } },
+      { name: "Carciofini sottolio alla romana (carciofi, olio, sale)", amount: { value: 30, unit: "g" } },
+      { name: "Olive nere", amount: { value: 20, unit: "g" } },
+      { name: "Uovo sodo (opzionale, alla romana)", amount: { value: 1, unit: "pcs" }, optional: true },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    assembly_steps: [{
+      id: "spread_capricciosa_rom",
+      title: "Condimento Capricciosa romana",
+      description: "Passata + fior di latte. Distribuire prosciutto cotto, champignon affettati, carciofini romani e olive nere. Spicchi di uovo sodo per la versione romana classica. Olio a filo.",
+      insert_at: "after_shape",
+      duration_minutes: 6,
+      replaces_generic: true,
+    }],
+  },
+
+  quattro_stagioni_romana: {
+    id: "quattro_stagioni_romana",
+    concept_ref: "quattro_stagioni",
+    variant_name: "alla romana",
+    preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Prosciutto cotto (carne di suino, sale, aromi)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Funghi champignon", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Carciofini sottolio (carciofi, olio, sale)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Olive nere", amount: { value: 20, unit: "g" }, notes: "per un quadrante" },
+    ],
+    assembly_steps: [{
+      id: "spread_4stagioni_rom",
+      title: "Condimento 4 Stagioni romana",
+      description: "Passata + fior di latte. DIVIDERE in 4 quadranti: prosciutto cotto, champignon, carciofini, olive nere. Quadranti netti.",
+      insert_at: "after_shape",
+      duration_minutes: 6,
+      replaces_generic: true,
+    }],
+  },
+
+  quattro_formaggi_romana: {
+    id: "quattro_formaggi_romana",
+    concept_ref: "quattro_formaggi",
+    variant_name: "alla romana",
+    preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
+    ingredients: [
+      { name: "Fior di latte", amount: { value: 70, unit: "g" } },
+      { name: "Gorgonzola dolce DOP a cubetti", amount: { value: 30, unit: "g" } },
+      { name: "Provola affumicata a cubetti", amount: { value: 25, unit: "g" } },
+      { name: "Pecorino romano DOP grattugiato", amount: { value: 15, unit: "g" } },
+    ],
+    assembly_steps: [{
+      id: "spread_4formaggi_rom",
+      title: "Condimento 4 Formaggi romana",
+      description: "Base bianca. Fior di latte, gorgonzola dolce e provola affumicata a tocchetti. Pecorino romano in superficie: la nota sapida laziale al posto del parmigiano.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  ortolana_romana: {
+    id: "ortolana_romana",
+    concept_ref: "ortolana",
+    variant_name: "alla romana",
+    preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
+    ingredients: [
+      { name: "Fior di latte", amount: { value: 70, unit: "g" } },
+      { name: "Fette di patate al forno", amount: { value: 50, unit: "g" } },
+      { name: "Melanzane grigliate", amount: { value: 45, unit: "g" } },
+      { name: "Zucchine grigliate", amount: { value: 45, unit: "g" } },
+      { name: "Pomodorini datterini freschi", amount: { value: 40, unit: "g" } },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
+    ],
+    pre_prep_steps: [{
+      id: "grigliare_verdure_rom",
+      title: "Grigliare le verdure",
+      description: "Grigliare melanzane e zucchine a fette; cuocere al forno le fette di patate. Salare a fine.",
+      duration_minutes: 22,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_ortolana_rom",
+      title: "Condimento Ortolana romana",
+      description: "Base bianca con fior di latte. Distribuire patate al forno, melanzane e zucchine grigliate, pomodorini datterini. Olio a filo. (Versione romana con patate e verdure grigliate).",
+      insert_at: "after_shape",
+      duration_minutes: 5,
+      replaces_generic: true,
+    }],
+  },
+
+  /* ─── Firme romane dai menù ─── */
+  diavola_romana: {
+    id: "diavola_romana",
+    concept_ref: "diavola",
+    variant_name: "alla romana (Pepperoni)",
+    preferred_for_styles: ["tonda_romana", "pala_romana"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
+      { name: "Fior di latte", amount: { value: 80, unit: "g" } },
+      { name: "Salame piccante a fette (carne di maiale, sale, peperoncino)", amount: { value: 50, unit: "g" } },
+      { name: "Origano secco", amount: { value: 1, unit: "g" }, section: "superficie" },
+      { name: "Pecorino romano DOP grattugiato", amount: { value: 8, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_diavola_rom",
+      title: "Condimento Diavola romana",
+      description: "Passata + fior di latte. Fette di salame piccante distribuite. Origano e pecorino romano spolverati, filo d'olio. Sulla tonda scrocchiarella il salame diventa croccante.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  provola_pepe_tonda: {
+    id: "provola_pepe_tonda",
+    concept_ref: "provola_pepe",
+    variant_name: "alla romana",
+    preferred_for_styles: ["tonda_romana"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 85, unit: "g" } },
+      { name: "Provola affumicata campana a cubetti", amount: { value: 85, unit: "g" } },
+      { name: "Pepe nero macinato fresco", amount: { value: 2, unit: "g" }, section: "superficie" },
+      { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_provola_pepe_tonda",
+      title: "Condimento Provola e Pepe (tonda)",
+      description: "Passata + provola affumicata a cubetti sulla base sottilissima. Dopo cottura, macinata di pepe nero e basilico. La scrocchiarella regge l'affumicato senza ammollarsi.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  hot_honey_tonda: {
+    id: "hot_honey_tonda",
+    concept_ref: "hot_honey",
+    variant_name: "alla romana",
+    preferred_for_styles: ["tonda_romana"],
+    ingredients: [
+      { name: "Passata di pomodoro speziata (pomodoro, sale, peperoncino)", amount: { value: 85, unit: "g" } },
+      { name: "Provola affumicata campana a cubetti", amount: { value: 80, unit: "g" } },
+      { name: "Salame piccante tipo pepperoni a fette", amount: { value: 45, unit: "g" } },
+      { name: "Miele aromatizzato alla 'nduja", amount: { value: 12, unit: "g" }, notes: "a filo dopo cottura", section: "superficie" },
+      { name: "Pecorino romano DOP grattugiato", amount: { value: 10, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_hot_honey",
+      title: "Condimento Hot Honey",
+      description: "Passata speziata + provola + pepperoni. Cuocere. Fuori dal forno, filo di miele alla 'nduja e pecorino romano: dolce-piccante sul croccante della tonda.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+      tip: {
+        beginner: "Il miele va SEMPRE dopo il forno: a caldo si caramella e diventa amaro. A filo sulla pizza calda resta lucido e dolce.",
+        nerd: "Lo zucchero del miele (fruttosio) imbrunisce già a ~110°C: in forno a 320°C brucerebbe. Aggiunto post-bake sfrutta solo il calore residuo (~70°C) restando fluido.",
+      },
+    }],
+  },
+
+  bresaola_rucola_tonda: {
+    id: "bresaola_rucola_tonda",
+    concept_ref: "bresaola_rucola",
+    variant_name: "alla romana",
+    preferred_for_styles: ["tonda_romana"],
+    ingredients: [
+      { name: "Fior di latte", amount: { value: 85, unit: "g" }, section: "base" },
+      { name: "Bresaola della Valtellina IGP a fette (carne di manzo, sale)", amount: { value: 50, unit: "g" }, section: "superficie" },
+      { name: "Rucola selvatica fresca", amount: { value: 20, unit: "g" }, section: "superficie" },
+      { name: "Scaglie di Parmigiano Reggiano 24 mesi", amount: { value: 15, unit: "g" }, section: "superficie" },
+      { name: "Zest di limone grattugiato", amount: { value: 1, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [
+      {
+        id: "bresaola_bake",
+        title: "Cottura in bianco con mozzarella",
+        description: "Condire solo con fior di latte e cuocere la tonda finché croccante e il formaggio è fuso.",
+        insert_at: "after_shape",
+        duration_minutes: 2,
+        replaces_generic: true,
+      },
+      {
+        id: "bresaola_post",
+        title: "Bresaola, rucola e grana a crudo",
+        description: "Fuori dal forno, adagiare la bresaola a fette, la rucola, le scaglie di grana, una grattata di zest di limone e un filo d'olio. Tutto a crudo per restare fresco.",
+        insert_at: "after_bake",
+        duration_minutes: 3,
+      },
+    ],
+  },
+
+  nduja_pinsa: {
+    id: "nduja_pinsa",
+    concept_ref: "nduja",
+    variant_name: "Sapori del Sole (pinsa)",
+    preferred_for_styles: ["pinsa_romana"],
+    ingredients: [
+      { name: "'Nduja piccante di Spilinga (carne di maiale, peperoncino, sale)", amount: { value: 40, unit: "g" }, section: "base", notes: "a fiocchi, fusa in cottura" },
+      { name: "Stracciatella di burrata fresca (mozzarella, panna)", amount: { value: 70, unit: "g" }, section: "superficie", notes: "a crudo dopo cottura" },
+      { name: "Pomodorini datterini freschi", amount: { value: 50, unit: "g" }, section: "superficie", notes: "a crudo dopo cottura" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [
+      {
+        id: "nduja_pinsa_bake",
+        title: "'Nduja in cottura",
+        description: "Sulla pinsa stesa distribuire la 'nduja a fiocchi e infornare: si scioglie e insaporisce la base croccante.",
+        insert_at: "after_shape",
+        duration_minutes: 2,
+        replaces_generic: true,
+      },
+      {
+        id: "nduja_pinsa_post",
+        title: "Stracciatella e datterini a freddo",
+        description: "Fuori dal forno, ciuffi di stracciatella e datterini freschi disposti a crudo. Il fresco-cremoso bilancia il piccante. Filo d'olio.",
+        insert_at: "after_bake",
+        duration_minutes: 2,
+      },
+    ],
+  },
+
+  patate_rosmarino_romana: {
+    id: "patate_rosmarino_romana",
+    concept_ref: "patate_rosmarino",
+    variant_name: "alla romana",
+    preferred_for_styles: ["teglia_romana", "pala_romana", "pinsa_romana"],
+    ingredients: [
+      { name: "Fior di latte (opzionale, su pinsa/teglia)", amount: { value: 60, unit: "g" }, optional: true, section: "base" },
+      { name: "Patate gialle a fette sottili", amount: { value: 180, unit: "g" }, section: "superficie" },
+      { name: "Rosmarino fresco", amount: { value: 3, unit: "pcs" }, notes: "aghi", section: "superficie" },
+      { name: "Fior di sale", amount: { value: 2, unit: "g" }, notes: "a fine cottura", section: "superficie" },
+      { name: "Olio EVO", amount: { value: 12, unit: "ml" }, section: "superficie" },
+    ],
+    pre_prep_steps: [{
+      id: "patate_mandolina_rom",
+      title: "Affettare e ammollare le patate",
+      description: "Affettare le patate a 1-2 mm con la mandolina, ammollarle 20 min in acqua fredda per togliere l'amido, scolare e asciugare bene.",
+      duration_minutes: 25,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_patate_rosmarino",
+      title: "Condimento Patate e Rosmarino",
+      description: "Su base (bianca o con velo di fior di latte) disporre le patate a scaglie sovrapposte. Olio EVO e rosmarino. Salare SOLO a fine cottura per non bagnare la base.",
+      insert_at: "after_shape",
+      duration_minutes: 5,
+      replaces_generic: true,
+    }],
+    bake_adjustments: {
+      additional_minutes: 4,
+      note: "Le patate richiedono qualche minuto in più per dorarsi e arricciarsi ai bordi.",
+    },
+  },
+
+  stracciata_bottarga_pala: {
+    id: "stracciata_bottarga_pala",
+    concept_ref: "stracciata_bottarga",
+    variant_name: "alla pala (Roscioli)",
+    preferred_for_styles: ["pala_romana"],
+    ingredients: [
+      { name: "Stracciatella di burrata fresca pugliese (mozzarella, panna)", amount: { value: 90, unit: "g" }, section: "superficie", notes: "a crudo dopo cottura" },
+      { name: "Zucchine romanesche alla scapece (zucchine, aceto, menta)", amount: { value: 60, unit: "g" }, section: "superficie" },
+      { name: "Bottarga di muggine grattugiata", amount: { value: 8, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 6, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [
+      {
+        id: "stracciata_bake",
+        title: "Pala bianca in cottura",
+        description: "Cuocere la pala in bianco (solo olio e sale) fino a doratura e alveolatura aperta.",
+        insert_at: "after_shape",
+        duration_minutes: 2,
+        replaces_generic: true,
+      },
+      {
+        id: "stracciata_post",
+        title: "Stracciatella, scapece e bottarga",
+        description: "Fuori dal forno, ciuffi di stracciatella, zucchine alla scapece e una pioggia di bottarga di muggine grattugiata. Filo d'olio. Tutto a crudo.",
+        insert_at: "after_bake",
+        duration_minutes: 3,
+      },
+    ],
+  },
+
 };
 
 export function resolveTopping(
@@ -1230,24 +1916,6 @@ export function resolveTopping(
 
 /* ═══ API esistenti (backward compat) ═══ */
 
-/** Risolve un topping per ID (recipe id o concept id).
- *  Se è un concept id, ritorna la prima variante (per retrocompat). */
-export function getTopping(id: string): ToppingRecipe | undefined {
-  // 1. Match diretto su recipe id
-  const direct = TOPPING_LIBRARY[id];
-  if (direct) return direct;
-
-  // 2. Match su concept id → prima variante
-  if (TOPPING_CONCEPTS[id]) {
-    const firstVariant = Object.values(TOPPING_LIBRARY).find(
-      (r) => r.concept_ref === id,
-    );
-    return firstVariant;
-  }
-
-  return undefined;
-}
-
 /** Risolve un topping per ID nel contesto di uno Style.
  *  Se ID è un concept, usa il resolver per scegliere la variante giusta.
  *  Se ID è una recipe specifica, ritorna quella. */
@@ -1267,18 +1935,12 @@ export function getToppingForStyle(
   return undefined;
 }
 
-export function getAllToppings(): ToppingRecipe[] {
+function getAllToppings(): ToppingRecipe[] {
   return Object.values(TOPPING_LIBRARY);
 }
 
-export function getAllConcepts(): ToppingConcept[] {
+function getAllConcepts(): ToppingConcept[] {
   return Object.values(TOPPING_CONCEPTS);
-}
-
-export function getToppingsCompatibleWith(layoutType: LayoutType): ToppingRecipe[] {
-  return getAllToppings().filter(
-    (t) => !t.compatible_layouts || t.compatible_layouts.includes(layoutType),
-  );
 }
 
 /** Tutte le varianti per un concept. Utile per debug e per UI "vedi varianti". */
@@ -1306,7 +1968,7 @@ export type AuthenticityScore =
  *  4. variante "generica/classica" come fallback → "common"
  *  5. varianti esistenti ma per altre family → "experimental"
  */
-export function computeAuthenticity(
+function computeAuthenticity(
   conceptId: string,
   style: PizzaStyle,
 ): AuthenticityScore {

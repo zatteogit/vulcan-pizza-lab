@@ -278,3 +278,63 @@ function figmaAssetStub(): Plugin {
 }
 ```
 *Nota: Alternativamente, si consiglia di rinominare gli import in `foundations-ext.tsx` modificando il prefisso da `figma:asset/` a `../../assets/` per caricare direttamente i file reali di produzione.*
+
+---
+
+## 7. Toppings per-stile — nuovi asset da generare (Refactor «ogni stile ha i suoi topping», Giugno 2026)
+
+> **Contesto.** Con il refactor che rende i condimenti **specifici per stile** (es. *Margherita romana ≠ Margherita napoletana*, *Capricciosa napoletana ≠ romana*), la libreria `topping-library.ts` ha guadagnato nuovi **concept** firma. I thumbnail nella codebase sono **a livello di concept** (`ToppingConcept.thumbnail`), non di ricetta: per ora tutte le varianti per-stile di uno stesso concept condividono **una** immagine.
+
+### 7.0 Problemi noti di immagini «messe a caso» (da correggere)
+
+Asset attualmente riusati in modo improprio o mancanti, da sostituire con immagini dedicate:
+
+| Concept | Problema attuale | Azione |
+| :--- | :--- | :--- |
+| `margherita` | Riusa `verace.png` (foto *stile*, non *topping*) come thumbnail. | Generare `topping_margherita.png` 1:1 dedicato. |
+| `quattro_stagioni` | Riusa `topping_4formaggi`→ no: riusa **`topping_capricciosa.png`** (commento esplicito nel codice). | Generare `topping_4stagioni.png` con i 4 quadranti separati. |
+| `hawaiiana` | Elencato in §4 ma **nessun file** presente. | Generare `topping_hawaiiana.png`. |
+| `sfincione`, `focaccia_barese`, `fugazzeta`, `detroit`, `chicago`, `montanara`, `calzone`, `ciaccino`, `white_clam` | Concept regionali **senza thumbnail** (chip mostrato senza immagine). | Generare i thumbnail dedicati (vedi §7.1). |
+
+> **Decisione architetturale aperta (per differenziazione visiva piena per-stile).** Per mostrare immagini diverse tra *Margherita napoletana* e *Margherita romana* servirebbe un campo opzionale `thumbnail` su `ToppingRecipe` (con fallback al `concept.thumbnail`). Finché non viene introdotto, generare **un'immagine per concept** è sufficiente; in un secondo momento si potranno aggiungere foto per-ricetta per i casi più iconici (margherita, capricciosa, diavola).
+
+### 7.1 Concept regionali esistenti senza thumbnail
+
+Specifiche come §4: **1:1, 400×400 px, PNG/WebP**, food photography dark/moody, `--ar 1:1`.
+
+| ID Concept | Nome | Descrizione visiva | Prompt |
+| :--- | :--- | :--- | :--- |
+| `sfincione` | Sfincione Palermitano | Quadrotto alto e spugnoso: sugo denso di pomodoro e cipolla, acciughe, caciocavallo a dadini, pioggia di pangrattato tostato e origano. | `Square macro of Sicilian sfincione slice, thick spongy crumb, tomato-onion sauce, anchovies, caciocavallo cubes, toasted breadcrumbs, dark moody background --ar 1:1` |
+| `focaccia_barese` | Pomodorini e olive baresane | Mollica umida con pomodorini ciliegino schiacciati a mano affondati nell'impasto, olive baresane col nocciolo, origano, olio EVO lucido. | `Square macro of Focaccia Barese, hand-crushed cherry tomatoes pressed into dough, baresane olives with pits, oregano, olive oil sheen, dark rustic background --ar 1:1` |
+| `fugazzeta` | Mozzarella e cipolla | Superficie ricoperta di cipolla bianca a velo leggermente bruciacchiata su un letto di mozzarella fusa che cola; niente pomodoro. | `Square close-up of Argentinian fugazzeta, thin charred white onion blanket over melting mozzarella, oregano, no tomato, dark moody lighting --ar 1:1` |
+| `detroit` | Detroit (cheese crown) | Angolo di teglia con bordo di formaggio caramellato scuro (frico), pepperoni a coppetta, due strisce verticali di salsa rossa sopra. | `Square macro of Detroit pizza corner, dark caramelized cheese crown frico edge, cupped pepperoni, two red sauce racing stripes on top, dark steel pan --ar 1:1` |
+| `chicago` | Chicago deep dish | Sezione che mostra gli strati invertiti: mozzarella sul fondo, salsiccia, salsa di pomodoro a pezzi grossi e parmigiano in superficie. | `Square cross-section of Chicago deep dish, inverted layers, mozzarella base, sausage, chunky tomato sauce and parmesan on top, tall buttery crust, dark background --ar 1:1` |
+| `montanara` | Montanara (a crudo) | Dischetto fritto dorato e bolloso condito a crudo: pomodoro cotto, fiocchi di ricotta, pecorino e basilico. | `Square macro of fried Neapolitan montanara, golden blistered dough, cooked tomato, ricotta dollops, pecorino, basil, dark moody background --ar 1:1` |
+| `calzone` | Calzone Napoletano | Mezzaluna chiusa maculata dal forno a legna, velo di pomodoro e basilico sopra, vapore che esce dal taglio con ricotta e salame. | `Square photo of Neapolitan calzone, half-moon, leopard-charred crust, tomato brushed top, steam from cut showing ricotta and salami, wood-fired glow, dark background --ar 1:1` |
+| `ciaccino` | Farcitura senese | Schiacciata toscana sigillata e dorata, sale e rosmarino in superficie, taglio con prosciutto cotto e pecorino fuso. | `Square macro of Tuscan ciaccino senese, golden sealed flatbread, coarse salt, sliced open showing ham and melted pecorino, dark rustic table --ar 1:1` |
+| `white_clam` | White Clam (vongole) | Base bianca carbonizzata coal-fired con vongole sgusciate, aglio tritato, origano, pecorino e olio. Niente pomodoro. | `Square close-up of New Haven white clam apizza, charred coal-fired crust, shucked clams, minced garlic, oregano, pecorino, olive oil, dark moody background --ar 1:1` |
+| `hawaiiana` | Hawaiiana | Cubetti di ananas caramellato e prosciutto cotto su mozzarella fusa filante. | `Square food photo of caramelized pineapple chunks and cooked ham on melted cheese, high contrast, dark slate --ar 1:1` |
+
+### 7.2 Nuovi concept firma — Wave 1 (Napoletana)
+
+| ID Concept | Nome | Descrizione visiva | Prompt |
+| :--- | :--- | :--- | :--- |
+| `cosacca` | Cosacca | Pizza rossa **senza mozzarella**: pomodoro schiacciato, pioggia di parmigiano/pecorino stagionato grattugiato e basilico. Asciutta e sapida. | `Square macro of Neapolitan cosacca pizza, crushed tomato base, no mozzarella, heavy grated aged pecorino/parmesan, basil leaves, olive oil, dark moody background --ar 1:1` |
+| `provola_pepe` | Provola e Pepe | Provola affumicata fusa a cubetti su velo di pomodoro, generosa macinata di pepe nero, basilico. Nota affumicata. | `Square close-up of smoked provola pizza, melted cubed smoked cheese, cracked black pepper, light tomato base, basil, dark moody lighting --ar 1:1` |
+| `nduja` | 'Nduja di Spilinga | Fior di latte e fiocchi di 'nduja calabrese che si sciolgono in chiazze rosso-arancio piccanti, basilico. | `Square macro of pizza with Calabrian 'nduja, fior di latte, molten spicy orange-red nduja blobs, basil, dark moody background --ar 1:1` |
+| `nerano` | Nerano | Base bianca con crema di zucchine, zucchine fritte a julienne, scaglie di provolone del Monaco e mentuccia. | `Square close-up of Nerano pizza, zucchine cream base, fried julienne zucchini, provolone del Monaco shavings, mint, dark moody lighting --ar 1:1` |
+| `margherita_sbagliata` | Margherita Sbagliata | Bufala fusa con cucchiaiate di **passata a crudo fredda** aggiunte dopo il forno e basilico: contrasto caldo/freddo, rosso vivo non cotto. | `Square macro of 'wrong' margherita, melted buffalo mozzarella with dollops of fresh cold uncooked tomato passata added after baking, basil, vivid raw red, dark moody background --ar 1:1` |
+| `scarpetta` | Scarpetta | Bufala e fonduta di grana con composta di pomodoro a crudo, puntini di pesto e scaglie di grana 24 mesi sopra. | `Square close-up of Lioniello scarpetta pizza, buffalo mozzarella, grana fondue, fresh tomato compote, basil pesto dots, aged grana shards, dark moody lighting --ar 1:1` |
+
+### 7.3 Nuovi concept firma — Wave 2 (Romana)
+
+| ID Concept | Nome | Descrizione visiva | Prompt |
+| :--- | :--- | :--- | :--- |
+| `patate_rosmarino` | Patate e Rosmarino | Scaglie di patate gialle sottili sovrapposte e dorate ai bordi, aghi di rosmarino, olio EVO, fior di sale. Bianca. | `Square macro of potato-rosemary white pizza, overlapping thin golden potato slices curling at edges, rosemary needles, olive oil, sea salt, dark rustic background --ar 1:1` |
+| `hot_honey` | Hot Honey | Provola affumicata e pepperoni a coppetta lucidi di grasso, filo di miele piccante che cola, pecorino. | `Square close-up of hot honey pizza, smoked provola, cupped greasy pepperoni, drizzle of chili honey glistening, pecorino, dark moody lighting --ar 1:1` |
+| `bresaola_rucola` | Bresaola, Rucola e Grana | Base bianca con fette di bresaola a crudo, ciuffo di rucola selvatica, scaglie di grana e zest di limone. | `Square food photo of bresaola arugula pizza, white mozzarella base, draped bresaola slices, wild arugula, parmesan shards, lemon zest, dark slate --ar 1:1` |
+| `stracciata_bottarga` | Stracciatella e Bottarga | Pala bianca alveolata con ciuffi di stracciatella, zucchine alla scapece e pioggia ambrata di bottarga di muggine grattugiata. | `Square macro of stracciatella and bottarga pala, open crumb white crust, burrata stracciatella dollops, scapece zucchini, grated amber mullet bottarga, dark moody background --ar 1:1` |
+
+### 7.4 Integrazione
+
+Salvare in `src/assets/toppings/` con naming `topping_<concept_id>.png` (es. `topping_cosacca.png`, `topping_hot_honey.png`), importare in `topping-library.ts` e assegnare a `ToppingConcept.thumbnail`. Riepilogo asset da generare in questo refactor: **§7.0** (correzioni: margherita, 4 stagioni, hawaiiana) **+ §7.1** (9 regionali) **+ §7.2** (6 napoletani) **+ §7.3** (4 romani). Le wave Americana e Contemporanea aggiungeranno ulteriori concept (sezioni 7.5+ da compilare a refactor avanzato).

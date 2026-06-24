@@ -1336,13 +1336,23 @@ export function RecipeOutput({
   /* Label contestuale per il selettore di porzioni ("Panetti" / "Teglie" / ...). */
   const servingUnit = getServingUnit(recipe.style);
   const servingLabel = getServingUnitLabel(cms, servingUnit, 2);
-  const allToppingChoices = React.useMemo(
-    () =>
-      getRecipesByAuthenticity(recipe.style).filter(
-        (item) => item.authenticity !== "taboo",
-      ),
-    [recipe.style],
-  );
+  const allToppingChoices = React.useMemo(() => {
+    const ranked = getRecipesByAuthenticity(recipe.style).filter(
+      (item) => item.authenticity !== "taboo",
+    );
+    /* «Ogni stile ha i suoi topping»: una sola voce per concept, tenendo la
+       variante più specifica per questo stile. La lista è già ordinata per
+       autenticità (canonical → natural → common → …), quindi il primo match
+       per concept è quello giusto: evita doppioni tipo "Margherita Verace" +
+       "Margherita classica" o "Capricciosa napoletana" + "Capricciosa classica". */
+    const seen = new Set<string>();
+    return ranked.filter((item) => {
+      const key = item.recipe.concept_ref;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [recipe.style]);
   const toppingChoices = React.useMemo(() => {
     const featured = allToppingChoices.filter(
       (item) =>

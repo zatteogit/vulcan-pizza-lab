@@ -65,7 +65,7 @@ const DEMO_SLIDERS = [
   },
 ];
 
-export function RecipeConfiguratorSpec() {
+function RecipeConfiguratorSpec() {
   const [values, setValues] = useState<Record<string, number>>(() => {
     const init: Record<string, number> = {};
     DEMO_SLIDERS.forEach((s) => { init[s.id] = s.defaultValue; });
@@ -258,7 +258,7 @@ const DEMO_TIMELINE = [
   { icon: Flame, label: "Cottura", duration: "8-10 min", desc: "Forno 250°C, pietra refrattaria", time: "19:00+1", zone: "hot" as const, temp: "250°C", detail: "Preriscaldare forno al massimo con pietra refrattaria per almeno 45 minuti. Stendere il panetto a mano (no mattarello) lasciando il cornicione. Condire velocemente, infornare direttamente sulla pietra. Rotare la pizza a metà cottura per uniformità." },
 ];
 
-export function RecipeTimelineSpec() {
+function RecipeTimelineSpec() {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
 

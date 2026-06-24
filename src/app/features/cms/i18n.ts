@@ -21,7 +21,7 @@ export function t(template: string | undefined, vars: Record<string, string | nu
 }
 
 export type UnitSystem = "metric" | "imperial";
-export const UNIT_SYSTEM_STORAGE_KEY = "vulcan_unit_system";
+const UNIT_SYSTEM_STORAGE_KEY = "vulcan_unit_system";
 
 type MeasureUnit =
   | "gram"

@@ -43,7 +43,7 @@ const SHADOWS = [
   { name: "cta", desc: "Bottone CTA", value: "var(--shadow-cta)" },
 ];
 
-export function ElevationSection() {
+function ElevationSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Elevazione" description="Ombre editoriali morbide. Light mode usa rgba(28,25,23), dark mode rgba(0,0,0) per profondità reale. Glow separati per focus e CTA." />
@@ -101,7 +101,7 @@ const STATE_LAYERS = [
   { name: "Dragged", opacity: "16%", color: "var(--primary)" },
 ];
 
-export function StateLayersSection() {
+function StateLayersSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="State Layers" description="Overlay tonali M3 per feedback interazione. Il colore dell'overlay è sempre il colore on-surface del componente." />
@@ -183,7 +183,7 @@ const MOTION_PATTERNS = [
   { pattern: "layoutId", code: "'tabIndicator'", desc: "Shared layout per tab/nav pill" },
 ];
 
-export function MotionSection() {
+function MotionSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Motion System" description="Spring Physics + curve Emphasized. Le animazioni comunicano peso, urgenza e personalità. Sempre motion/react, mai CSS transitions per entrance." />
@@ -274,7 +274,7 @@ const ICON_SIZES = [
   { size: 24, name: "Large", use: "Header, nav" },
 ];
 
-export function IconographySection() {
+function IconographySection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Iconografia" description="Lucide React, stroke 2px, 4 taglie standard. Colore via CSS custom property, mai fill di default." />
@@ -356,7 +356,7 @@ const TIME_SLOTS = [
   { name: "weekend", label: "Weekend", cssVar: "--time-weekend", softVar: "--time-weekend-soft" },
 ];
 
-export function GradientsSection() {
+function GradientsSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Gradienti" description="3 gradienti semantici: ember per brand, sage per CTA, warm per background. Tutti duali Light/Dark." />
@@ -398,7 +398,7 @@ export function GradientsSection() {
   );
 }
 
-export function TimePaletteSection() {
+function TimePaletteSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Time-of-Day Palette" description="5 colori unici per time slot con variante -soft. Usati nei chip di selezione oraria e nelle illustrazioni contestuali." />
@@ -447,7 +447,7 @@ export function TimePaletteSection() {
 }
 
 /* ═══ 12: ACCESSIBILITÀ ═══ */
-export function AccessibilitySection() {
+function AccessibilitySection() {
   const [focusSource, setFocusSource] = useState<Record<string, "keyboard" | "click" | null>>({});
 
   const CONTRAST_PAIRS = [

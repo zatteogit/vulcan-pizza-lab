@@ -31,7 +31,7 @@ import {
   type PanConfig,
 } from "../../domain/pizza-engine";
 
-export interface RecipeViewBack {
+interface RecipeViewBack {
   label: string;
   /** Navigazione (Scopri → /explore) */
   to?: string;

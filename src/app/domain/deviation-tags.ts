@@ -2,7 +2,7 @@
 /* Basato su Notion Pagina 05 · Tassonomia Pizza — Modello a 3 Assi */
 
 /* === DEVIATION POINTS === */
-export type DeviationPoint =
+type DeviationPoint =
   | "dough_composition"
   | "dough_structure"
   | "fermentation_extreme"
@@ -141,7 +141,7 @@ export const STYLE_DEVIATIONS: Record<string, DeviationSignature> = {
 };
 
 /* === TAG DB PER STILE === */
-export const STYLE_TAGS: Record<string, RecipeTags> = {
+const STYLE_TAGS: Record<string, RecipeTags> = {
   napoletana_stg: {
     geographic_origin: ["napoli", "campania"],
     philosophy: ["tradizionale", "stg_certified"],

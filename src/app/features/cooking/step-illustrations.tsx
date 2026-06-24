@@ -81,7 +81,7 @@ export function RisingDough({ size }: { size: number }) {
   );
 }
 
-export function Cutter({ size }: { size: number }) {
+function Cutter({ size }: { size: number }) {
   /* Tarocco che divide due panetti — staglio */
   return (
     <svg width={size} height={size * 0.78} viewBox="0 0 120 94" fill="none" aria-hidden="true">
@@ -94,7 +94,7 @@ export function Cutter({ size }: { size: number }) {
   );
 }
 
-export function ProofBox({ size }: { size: number }) {
+function ProofBox({ size }: { size: number }) {
   /* Cassetta con panetti gonfi — appretto */
   return (
     <svg width={size} height={size * 0.78} viewBox="0 0 120 94" fill="none" aria-hidden="true">
@@ -108,7 +108,7 @@ export function ProofBox({ size }: { size: number }) {
   );
 }
 
-export function Hands({ size }: { size: number }) {
+function Hands({ size }: { size: number }) {
   /* Disco steso con mani — stesura */
   return (
     <svg width={size} height={size * 0.78} viewBox="0 0 120 94" fill="none" aria-hidden="true">
@@ -120,7 +120,7 @@ export function Hands({ size }: { size: number }) {
   );
 }
 
-export function Ladle({ size }: { size: number }) {
+function Ladle({ size }: { size: number }) {
   /* Spirale di pomodoro col mestolo — farcitura */
   return (
     <svg width={size} height={size * 0.78} viewBox="0 0 120 94" fill="none" aria-hidden="true">

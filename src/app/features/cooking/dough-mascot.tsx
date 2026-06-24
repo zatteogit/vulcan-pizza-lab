@@ -417,26 +417,10 @@ export function DoughBlob({
 }
 
 // ═══ HELPERS ═══
-export function moodFromScore(score: number): DoughVariant {
+function moodFromScore(score: number): DoughVariant {
   if (score >= 80) return 'rise';
   if (score >= 60) return 'stretch';
   if (score >= 40) return 'fold';
   return 'rest';
 }
 
-export function moodFromTier(tier: 'perfect' | 'good' | 'challenging'): DoughVariant {
-  switch (tier) {
-    case 'perfect': return 'rise';
-    case 'good': return 'stretch';
-    case 'challenging': return 'rest';
-  }
-}
-
-export function moodFromCount(count: number): DoughVariant {
-  if (count <= 2) return 'rest';
-  if (count <= 6) return 'stretch';
-  if (count <= 12) return 'rise';
-  return 'spin';
-}
-
-export const DoughMascot = DoughBlob;

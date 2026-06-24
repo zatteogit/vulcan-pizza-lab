@@ -389,7 +389,7 @@ interface SettingsSummaryBarProps {
   onChangeTime?: () => void;
 }
 
-export function SettingsSummaryBar({
+function SettingsSummaryBar({
   activeTab,
   onTabSelect,
   constraints,

@@ -43,7 +43,7 @@ function saveDarkMode(value: boolean) {
 
 /* ═══ ROOT LAYOUT ═══ */
 /** @deprecated — AppShell is the active layout. RootLayout kept for legacy reference. */
-export function RootLayout() {
+function RootLayout() {
   const [darkMode, setDarkModeState] = useState(loadDarkMode);
   const navigate = useNavigate();
 

@@ -37,7 +37,7 @@ function saveOverride(map: Record<string, PizzaStyle> | null) {
   }
 }
 
-export interface StylesOverrideContextValue {
+interface StylesOverrideContextValue {
   /** The custom styles map, or null if using defaults */
   stylesOverride: Record<string, PizzaStyle> | null;
   /** Set the full override map (null to clear) */

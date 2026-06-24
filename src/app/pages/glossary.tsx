@@ -752,6 +752,3 @@ function TermCard({
     </motion.div>
   );
 }
-
-
-export default GlossaryPage;

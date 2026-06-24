@@ -22,7 +22,7 @@
 import type { DoughParameters } from "../domain/pizza-engine";
 
 /** Metodo di lavorazione dell'impasto. */
-export type KneadingMethod =
+type KneadingMethod =
   | "no_knead_folds"        // no-knead con pieghe (Bonci, Teglia Romana moderna)
   | "direct_short"          // impasto diretto breve (Tonda Romana, Napoletana STG)
   | "direct_long"           // impasto diretto + maturazione lunga (Padellino, NY)
@@ -79,7 +79,7 @@ export interface ImpastoRecipe {
  * `default_impasto_ref` su PizzaStyle, e le sue versioni possono offrire
  * impasti alternativi tramite `impasto_ref` su StyleVersion.
  */
-export const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
+const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
   teglia_romana_classica: {
     id: "teglia_romana_classica",
     name: "Teglia Romana classica",
@@ -310,19 +310,6 @@ export const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
 /** Risolve impasto da id, undefined se non trovato. */
 export function getImpasto(id: string): ImpastoRecipe | undefined {
   return IMPASTO_LIBRARY[id];
-}
-
-/** Tutti gli impasti come array (per UI listing). */
-export function getAllImpasti(): ImpastoRecipe[] {
-  return Object.values(IMPASTO_LIBRARY);
-}
-
-/** Impasti compatibili con uno stile. Se compatible_styles è omesso,
- *  l'impasto è considerato compatibile con tutti (filtro generico). */
-export function getImpastiCompatibleWith(styleId: string): ImpastoRecipe[] {
-  return getAllImpasti().filter(
-    (i) => !i.compatible_styles || i.compatible_styles.includes(styleId),
-  );
 }
 
 /** Merge utility: applica i dough_overrides di un impasto sopra il dough base.

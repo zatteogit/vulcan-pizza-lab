@@ -590,7 +590,7 @@ function UsageSpecimen({
 }
 
 /* ═══ MAIN SECTION ═══ */
-export function LogoConstructionSection() {
+function LogoConstructionSection() {
   const [activeVariant, setActiveVariant] =
     useState<VulcanVariant>("naturale");
   const [showGrid, setShowGrid] = useState(true);

@@ -20,13 +20,13 @@
  */
 import type { SkillLevel } from "../domain/pizza-engine";
 
-export type InterpretationType =
+type InterpretationType =
   | "master"
   | "pizzeria"
   | "community"
   | "disciplinare";
 
-export interface InterpretationParameterOverrides {
+interface InterpretationParameterOverrides {
   hydration_pct?: number;
   flour_w?: number;
   flour_pl?: number;
@@ -86,7 +86,7 @@ export interface Interpretation {
 }
 
 /* ═══ LIBRERIA — 10 voci iniziali ═══ */
-export const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
+const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
   /* ─── DISCIPLINARI (3) ─── */
   avpn_disciplinare: {
     id: "avpn_disciplinare",
@@ -459,14 +459,3 @@ export function getInterpretationsForStyle(styleId: string): Interpretation[] {
     (i) => i.base_style_id === styleId || i.compatible_style_ids?.includes(styleId),
   );
 }
-
-/** Etichette UI per i 4 type. */
-export const INTERPRETATION_TYPE_LABELS: Record<
-  InterpretationType,
-  { label: string; icon: string }
-> = {
-  disciplinare: { label: "Disciplinare", icon: "📜" },
-  master: { label: "Maestro", icon: "👨‍🍳" },
-  pizzeria: { label: "Pizzeria storica", icon: "🏛️" },
-  community: { label: "Community", icon: "👥" },
-};

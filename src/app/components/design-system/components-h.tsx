@@ -84,7 +84,7 @@ function PulsingDot({ delay, color }: { delay: number; color: string }) {
   );
 }
 
-export function LoadingIndicatorSpec() {
+function LoadingIndicatorSpec() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader
@@ -497,7 +497,7 @@ function SpringArrow({ direction, onClick, disabled }: { direction: "left" | "ri
  * piatto. Gap uniforme ITEM_GAP tra tutti gli slot.
  * Il contenuto di ogni slot crossfade con spring + slide direzionale.
  */
-export function CarouselSpec() {
+function CarouselSpec() {
   const N = CAROUSEL_ITEMS.length;
   const [focus, setFocus] = useState(0);
   const [dir, setDir] = useState(0);

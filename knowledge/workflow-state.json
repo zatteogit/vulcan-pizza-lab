@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-06-23T14:30:47.262Z",
+  "lastUpdated": "2026-06-24T14:15:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
-    "srcFilesTsTsx": 141,
-    "appFilesExcludingUi": 138,
-    "pizzaEngineExports": 64,
+    "srcFilesTsTsx": 139,
+    "appFilesExcludingUi": 139,
+    "pizzaEngineExports": 56,
     "pizzaEngineLines": 4413,
     "cmsContextLines": 3182,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-23 (2a passata) registra la configurazione per la pubblicazione del pacchetto npm su GitHub Packages (@zatteogit/vulcan).",
-  "filesMappedCount": 140,
+  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-24 registra l'allineamento dello showcase del Design System con i componenti ds, l'integrazione di 10 nuovi topping premium, e una profonda pulizia di dead code ed esportazioni inutilizzate.",
+  "filesMappedCount": 139,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-06-23",
+  "lastScannedChapter": "kipi-update-2026-06-24",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -28,7 +28,7 @@
         "src/app/data/topping-library.ts",
         "src/app/data/impasto-library.ts"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     },
     {
       "id": "recipe-flow",
@@ -51,7 +51,7 @@
         "src/app/hooks/use-recipe-state.ts",
         "src/app/features/recipe/recipe-setup-panel.tsx"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     },
     {
       "id": "scoring-feedback",
@@ -64,7 +64,7 @@
         "src/app/features/recipe/feedback-analysis.tsx",
         "src/app/features/recipe/feedback-store.ts"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     },
     {
       "id": "styles-versions",
@@ -83,7 +83,7 @@
         "src/app/pages/explore.tsx",
         "src/app/features/recipe/tilt-card.tsx"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     },
     {
       "id": "cms-i18n",
@@ -108,7 +108,7 @@
         "src/app/features/cms/locales/domain-pt.ts",
         "src/app/pages/cms.tsx"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     },
     {
       "id": "routing-shell",
@@ -125,7 +125,7 @@
         "src/app/components/shared/search-button.tsx",
         "src/vite-env.d.ts"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     },
     {
       "id": "pages-learn",
@@ -141,7 +141,7 @@
         "src/app/pages/pre-ferments.tsx",
         "src/app/features/recipe/pre-ferment-guide.tsx"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     },
     {
       "id": "data-databases",
@@ -154,7 +154,7 @@
         "src/app/data/dietary-data.ts",
         "src/app/domain/deviation-tags.ts"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     },
     {
       "id": "profile-user",
@@ -166,7 +166,7 @@
         "src/app/features/recipe/user-needs.tsx",
         "src/app/data/saved-recipes.ts"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     },
     {
       "id": "design-system",
@@ -233,7 +233,7 @@
         "src/app/components/shared/vulcan-hero.tsx",
         "src/app/components/shared/vulcan-logo.tsx"
       ],
-      "lastWorked": "2026-06-23"
+      "lastWorked": "2026-06-24"
     }
   ]
 }

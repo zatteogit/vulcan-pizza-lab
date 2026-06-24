@@ -72,7 +72,7 @@ const EMPHASIS_MAPPING = [
   { prop: "Motion", high: "spring bouncy", medium: "spring smooth", low: "spring gentle", lowest: "nessuna" },
 ];
 
-export function EmphasisSystemSection() {
+function EmphasisSystemSection() {
   const [activeLevel, setActiveLevel] = useState(0);
 
   return (
@@ -284,7 +284,7 @@ const MORPH_DEMOS = [
   },
 ];
 
-export function ContainerTransformSection() {
+function ContainerTransformSection() {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   const toggle = (id: string) => {

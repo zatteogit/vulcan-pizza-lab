@@ -415,7 +415,7 @@ export function analyzeStyleSuccessRate(feedback: RecipeFeedback[]): Array<{
 
 // ═══ ADVERSARIAL AUDIT FINDINGS ═══
 
-export const ADVERSARIAL_FINDINGS: AdversarialFinding[] = [
+const ADVERSARIAL_FINDINGS: AdversarialFinding[] = [
   {
     id: "ADV-02",
     severity: "bug",

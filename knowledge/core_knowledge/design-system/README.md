@@ -3,7 +3,7 @@
 
 ## Sommario
 
-Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modello a 6 tier (T1–T6)**: registry a sezioni in `design-system/index.tsx`, moduli `foundations-*` / `components-*` / `patterns-templates`, utilità in `shared.tsx`. Include i componenti atomo/molecola context-free in `src/app/components/ds/` (Tier 4) e le card visive delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) in `src/app/components/foundations/` (Tier 4). Accesso tramite route standalone `/design-system` e tab **Design** dentro `/dev` (`DevTools` → `DesignSystemTab`). I file di stile core vivono in `theme.css` (Tier 1-3.5) con tool di enforcement (`npm run check:tokens`).
+Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modello a 6 tier (T1–T6)**: registry a sezioni in `design-system/index.tsx`, moduli `foundations-*` / `components-*` / `patterns-templates`, utilità in `shared.tsx`. Include i componenti atomo/molecola context-free in `src/app/components/ds/` (Tier 4) e le card visive delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) in `src/app/components/design-system/foundations-ui/` (Tier 4). Accesso tramite route standalone `/design-system` e tab **Design** dentro `/dev` (`DevTools` → `DesignSystemTab`). I file di stile core vivono in `theme.css` (Tier 1-3.5) con tool di enforcement (`npm run check:tokens`). Le pagine showcase dei componenti sono state allineate per importare ed utilizzare i veri componenti ds (Tier 4) riducendo la duplicazione di markup inline.
 
 ## File chiave
 
@@ -11,7 +11,7 @@ Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modell
 |------|--------|
 | `src/styles/theme.css` | File CSS centrale dei token e delle classi composite (Tier 1-3.5); supporta l'enforcement automatico |
 | `src/app/components/ds/` | Barrel directory contenente 24 componenti atomo/molecola context-free (Tier 4) come `CtaButton`, `Checkbox`, `Dialog`, etc. |
-| `src/app/components/foundations/` | Cartella contenente le showcase cards per visualizzare i token reali delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) (Tier 4) |
+| `src/app/components/design-system/foundations-ui/` | Cartella contenente le showcase cards per visualizzare i token reali delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) (Tier 4) |
 | `src/app/pages/design-system.tsx` | Route `/design-system`: header sticky, toggle dark, render `DesignSystemTab` |
 | `src/app/pages/dev.tsx` | Route `/dev` e `/dev/:tab` → wrapper `DevTools` |
 | `src/app/features/dev-tools/dev-tools.tsx` | Tab dev incluso `design` → `DesignSystemTab` |
@@ -25,7 +25,7 @@ Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modell
 | `src/app/components/design-system/foundations-ext.tsx` | Gradienti, time palette, immagini, emphasis |
 | `src/app/components/design-system/foundations-m3e.tsx` | Expressive shapes, container transform |
 | `src/app/components/design-system/foundations-contrast-density.tsx` | Contrasto M3, densità, a11y |
-| `src/app/components/design-system/components-a.tsx` … `components-h.tsx` | Specimen componenti UI (bottoni, input, score, carousel, …) |
+| `src/app/components/design-system/components-a.tsx` … `components-h.tsx` | Specimen componenti UI allineati ai componenti ds reali (esportazioni secondarie inutilizzate rimosse) |
 | `src/app/components/design-system/carousel-variants.tsx` | Varianti carousel M3 |
 | `src/app/components/design-system/patterns-templates.tsx` | Pattern P01–P06, template pagina build/result |
 | `src/app/features/cooking/dough-mascot.tsx` | `DoughBlob` reattivo all'energia con 7 varianti (`stretch`, `rise`, `rest`, `spin`, `fold`, `forge`, `neural`) |
@@ -72,7 +72,7 @@ flowchart TD
 | `DesignSystemTab` | `index.tsx` | UI completa: sidebar, scroll-spy, ricerca sezioni, toggle tema |
 | `buildSections()` | `index.tsx` | Numerazione automatica da ordini array |
 | `SectionEntry` | `shared.tsx` | Tipo registry |
-| `resolveVar` / `useResolvedVars` | `shared.tsx` | Campionatura token runtime |
+| `resolveVar` / `useResolvedVars` | `shared.tsx` | Campionatura token runtime (`useResolvedVars` rimossa perché inutilizzata) |
 | `DSCtx` / `useDSContext` | `shared.tsx` | Dark mode per specimen |
 | `LogoConstructionSection` | `foundations-logo.tsx` | Blueprint logo |
 | `RecipeConfiguratorSpec` / `RecipeTimelineSpec` | `components-d.tsx` | Specimen app-specific |
@@ -95,7 +95,7 @@ flowchart TD
 
 - Id mancanti in registry → `console.warn('[DS] Foundation/Component/Pattern "…" not found')` e sezione omessa.
 - `DesignSystemPage` e `DevTools` passano `darkMode`/`setDarkMode` da `useDarkMode()` (`root-layout`) — specimen devono usare `DSCtx` o props, non tema hardcoded.
-- Specimen importano componenti produzione (`ScoreRing`, `RecipeStatStrip`, …): modifiche UI app possono rompere lo showcase.
+- Specimen importano componenti produzione (`ScoreRing`, `RecipeStatStrip`, …) e componenti ds reali (`CtaButton`, `Badge`, ecc.): lo showcase è ora un reale consumatore del Design System, evitando duplicazioni visive.
 - `/design-system` ottimizzato per export visivo (minimo chrome); `/dev` include altre tab (CMS, engine test, feedback).
 - Non documentare i primitivi `components/ui/*` in questo capitolo; dopo la pulizia 2026-06-19 resta solo lo stretto necessario (`switch`, hook mobile, helper classi).
 - `step-header.tsx` è stato rimosso ed integrato in `ds/StepHeader.tsx` (Tier 4).

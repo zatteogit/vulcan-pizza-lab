@@ -29,7 +29,7 @@ import { Dialog, CtaButton } from "../ds/index";
    Plain tooltip + Rich tooltip
    ═══════════════════════════════════════════════════════════ */
 
-export function TooltipSpec() {
+function TooltipSpec() {
   const [hoveredPlain, setHoveredPlain] = useState<string | null>(null);
   const [openRich, setOpenRich] = useState<string | null>(null);
 
@@ -229,7 +229,7 @@ export function TooltipSpec() {
    Alert dialog + Confirmation dialog
    ═══════════════════════════════════════════════════════════ */
 
-export function DialogSpec() {
+function DialogSpec() {
   const [alertOpen, setAlertOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [fullOpen, setFullOpen] = useState(false);
@@ -437,7 +437,7 @@ export function DialogSpec() {
    Standard, Filled, Filled Tonal, Outlined
    ═══════════════════════════════════════════════════════════ */
 
-export function IconButtonSpec() {
+function IconButtonSpec() {
   const [toggled, setToggled] = useState<Record<string, boolean>>({
     heart: false,
     star: false,

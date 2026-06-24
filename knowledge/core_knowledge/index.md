@@ -1,19 +1,19 @@
 # Vulcan — Core Knowledge (Kipi)
 
-> Ultimo aggiornamento: 2026-06-23 | Comando: `kipi update` | Stato globale: **completo (10/10 capitoli)**
+> Ultimo aggiornamento: 2026-06-24 | Comando: `kipi update` | Stato globale: **completo (10/10 capitoli)**
 
-Applicazione React/Vite per ricette pizza: motore parametrico (`pizza-engine`), flusso ricetta, CMS/i18n, stili e versioni, scoring e contenuti didattici. L'update 2026-06-23 registra la ristrutturazione del Design System in un modello a tier T1-T6 (DTCG-ready), l'unificazione del visual showcase, l'estrazione di `useRecipeState` e `RecipeSetupPanel`, l'aggiornamento dei parametri fisici degli stili pizza, e la configurazione di pubblicazione npm su GitHub Packages.
+Applicazione React/Vite per ricette pizza: motore parametrico (`pizza-engine`), flusso ricetta, CMS/i18n, stili e versioni, scoring e contenuti didattici. L'update 2026-06-24 registra l'allineamento delle pagine dello showcase del Design System con i veri componenti ds (Tier 4), l'integrazione di 10 nuovi topping premium (Wave 1 e Wave 2) in `topping-library.ts` a seguito dell'audit visivo delle immagini, e una profonda pulizia del dead code ed esportazioni inutilizzate in tutto il codebase.
 
 ## Metriche (da codice reale)
 
 | Metrica | Valore | Fonte |
 |--------|--------|--------|
-| File `.ts`/`.tsx` in `src/` | 141 | `find src` |
-| File app (escluso `components/ui/`) | 138 | stesso, escluso `ui/` |
+| File `.ts`/`.tsx` in `src/` | **139** | `find src` |
+| File app (escluso `components/ui/`) | **139** | stesso, escluso `ui/` (rimossa del tutto) |
 | Capitoli KB | 10 | init + scan |
-| File chiave mappati | 140 | `workflow-state.json` |
+| File chiave mappati | **139** | `workflow-state.json` |
 | Copertura documentazione | **100%** | 10 capitoli scan completo |
-| Export pubblici in `pizza-engine.ts` | **64** | `rg '^export '` |
+| Export pubblici in `pizza-engine.ts` | **56** | `rg '^export '` |
 | Stili in `STYLES_DB` | **28** | `pizza-engine.ts` |
 | Righe `pizza-engine.ts` | **4413** | `wc -l` |
 | Righe `cms-context.tsx` | 3182 | `wc -l` |

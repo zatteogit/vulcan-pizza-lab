@@ -3,7 +3,7 @@
 
 ## Sommario
 
-Layer dati statici che alimentano motore, configuratore, profilo e contenuti esplorativi: **10 tabelle parametriche per stile** (`parametric-databases.ts`), **catalogo farine** con W/P/L (`flour-database.ts`), **attrezzatura** con migrazione legacy e i18n CMS (`equipment-data.ts`), **vincoli dietetici** con modelli FODMAP/istamina (`dietary-data.ts`) e **tassonomia deviazioni** per E-Score (`deviation-tags.ts`).
+Layer dati statici che alimentano motore, configuratore, profilo e contenuti esplorativi: **10 tabelle parametriche per stile** (`parametric-databases.ts`), **catalogo farine** con W/P/L (`flour-database.ts`, rimosso `suggestFlours` inutilizzato), **attrezzatura** con migrazione legacy e i18n CMS (`equipment-data.ts`), **vincoli dietetici** con modelli FODMAP/istamina (`dietary-data.ts`) e **tassonomia deviazioni** per E-Score (`deviation-tags.ts`).
 
 Fonte dichiarata nel codice: export Notion (marzo 2026). I DB parametrici coprono **15 `styleId`** allineati a `STYLES_DB` in `pizza-engine.ts` (mancano voci solo dove uno stile non ha riga in una tabella specifica).
 
@@ -52,7 +52,7 @@ flowchart TD
 ```
 
 1. **Parametriche per stile:** `getToppingByStyle(style.id)` → `topping_info` e tip in `generateRecipe` / `generateTips`. `getStyleParametrics(id)` usato in sheet stile e test suite.
-2. **Farine:** `suggestFlours(styleId, recipeW, hours)` e `getCompatibleFlours` restano API dati per UX/search; il motore usa W da stile/override, non legge direttamente `FLOURS_DB` in generazione grammi.
+2. **Farine:** `getCompatibleFlours` resta l'API dati per UX/search (`suggestFlours` rimossa perché inutilizzata); il motore usa W da stile/override, non legge direttamente `FLOURS_DB` in generazione grammi.
 3. **Equipment:** profilo salva `vulcan_equipment` → `use-profile-defaults` → flag `has_mixer`, `has_pizza_stone`, ecc. in `UserConstraints` → `recommendStyles` / feasibility.
 4. **Dietary:** profilo salva `vulcan_dietary` → constraints → warning su home quando si genera anteprima; logica FODMAP anche in digestibility del motore (capitolo `pizza-engine`).
 5. **Deviazioni:** ogni stile ha `deviation_score` 0–1; motore calcola `deviation_score_effective` per experimentation score.
@@ -73,10 +73,9 @@ flowchart TD
 | Export | Scopo |
 |--------|--------|
 | `getCompatibleFlours(styleId)` | Filtra `stili_compatibili` |
-| `suggestFlours(style, recipeW, hours, maxResults)` | Ranking stile + distanza W + finestra fermentazione |
 | `getEffectiveWRange(flour)` | W ± batch ± stagione (audit DB Engineer) |
 
-**Rimossi nell'allineamento**: `getFloursByProducer` e `getFloursByWRange` (rimossi poiché ridondanti e non utilizzati).
+**Rimossi nell'allineamento**: `getFloursByProducer`, `getFloursByWRange` e `suggestFlours` (rimossi poiché ridondanti e non utilizzati).
 
 ### `equipment-data.ts`
 

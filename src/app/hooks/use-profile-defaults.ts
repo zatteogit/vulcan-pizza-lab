@@ -50,7 +50,7 @@ const OVEN_LABELS: Record<string, string> = {
   wood: "Forno a legna",
 };
 
-export function loadProfileDefaults(): ProfileDefaults {
+function loadProfileDefaults(): ProfileDefaults {
   let ovenType: OvenType = "home";
   let ovenTemp = 250;
   let skillLevel: SkillLevel = 2;

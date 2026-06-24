@@ -55,37 +55,6 @@ export function resolveVar(
   return raw;
 }
 
-/**
- * Hook that returns a Map of cssVar → resolved hex.
- * Re-evaluates when `trigger` changes (e.g. darkMode).
- */
-export function useResolvedVars(
-  cssVars: string[],
-  trigger?: unknown
-): { map: Map<string, string>; containerRef: React.RefObject<HTMLDivElement | null> } {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [map, setMap] = useState<Map<string, string>>(new Map());
-
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      if (!containerRef.current) return;
-      const style = getComputedStyle(containerRef.current);
-      const m = new Map<string, string>();
-      for (const v of cssVars) {
-        const raw = style.getPropertyValue(v).trim();
-        if (raw.startsWith("rgb")) m.set(v, rgbToHex(raw));
-        else if (raw.startsWith("#")) m.set(v, raw.toUpperCase());
-        else m.set(v, raw || "—");
-      }
-      setMap(m);
-    });
-    return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cssVars.join(","), trigger]);
-
-  return { map, containerRef };
-}
-
 /* ── Dark Mode Context (forwarded from page) ── */
 export interface DSContext {
   darkMode: boolean;

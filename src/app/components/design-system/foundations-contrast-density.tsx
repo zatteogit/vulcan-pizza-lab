@@ -160,7 +160,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   cross: "Cross-Component (pattern reali)",
 };
 
-export function ContrastRulesSection() {
+function ContrastRulesSection() {
   const { darkMode } = useDSContext();
   const { results, ref } = useContrastAudit(ALL_PAIRS, darkMode);
   const [filterFails, setFilterFails] = useState(false);
@@ -450,7 +450,7 @@ const COMPONENT_DENSITY_MAPPING = [
   { component: "Card padding", expanded: "p:20", comfortable: "p:16", compact: "p:12" },
 ];
 
-export function DensitySection() {
+function DensitySection() {
   const [active, setActive] = useState<DensityLevel>("comfortable");
   const spec = DENSITY_SPECS[active];
 

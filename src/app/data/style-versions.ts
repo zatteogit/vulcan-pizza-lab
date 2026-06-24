@@ -14,7 +14,7 @@
 import type { SkillLevel } from "../domain/pizza-engine";
 
 /** Range override opzionali. Quando undefined, il consumer usa il range dello stile. */
-export interface VersionRanges {
+interface VersionRanges {
   hydration_pct_range?: [number, number];
   flour_w_range?: [number, number];
   flour_pl_range?: [number, number];
@@ -51,7 +51,7 @@ export interface StyleVersion {
   };
 }
 
-export const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
+const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
   bonci_teglia: [
     {
       id: "bonci_leggerissima",

@@ -13,7 +13,7 @@ const BTN_V = [
   { v: "Ghost", bg: "rgba(0,0,0,0)", c: "var(--primary)", b: "none", h: "color-mix(in srgb,var(--primary) 8%,transparent)" },
   { v: "Destructive", bg: "var(--destructive)", c: "var(--destructive-foreground)", b: "none", h: "color-mix(in srgb,var(--destructive) 88%,black)" },
 ];
-export function ButtonsSpec() {
+function ButtonsSpec() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Bottoni" description="4 varianti x 3 taglie. active:scale-95, hover CSS transition." />
@@ -71,7 +71,7 @@ export function ButtonsSpec() {
 }
 
 /* ═══ C02: BADGES ═══ */
-export function BadgesSpec() {
+function BadgesSpec() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Badge & InlineTip" description="Badge tier, data badge (DM Mono nerd-only), InlineTip con Lightbulb." />
@@ -149,7 +149,7 @@ export function BadgesSpec() {
 }
 
 /* ═══ C03: STEPHEADER ═══ */
-export function StepHeaderSpec() {
+function StepHeaderSpec() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="StepHeader" description="Titolone editoriale: DM Sans step number, Playfair title + italic sub, linea decorativa." />
@@ -214,7 +214,7 @@ const CHIPS = [
   { id: "dayafter", label: "Dopodomani", icon: Timer },
   { id: "weekend", label: "Weekend", icon: Star },
 ];
-export function ChipsSpec() {
+function ChipsSpec() {
   const [sel, setSel] = useState<Set<string>>(new Set(["tonight"]));
   const toggle = (id: string) => setSel(p => { const n = new Set(p); n.has(id) ? n.delete(id) : n.add(id); return n; });
   return (
@@ -278,7 +278,7 @@ const CARD_V = [
   { v: "Elevated", bg: "var(--surface-container-low)", s: "var(--shadow-md)", hs: "var(--shadow-lg)", c: "var(--tertiary)", d: "Card elevata. Hover intensifica ombra." },
   { v: "Filled", bg: "var(--surface-container)", c: "var(--cta)", d: "Card riempita. Background piu denso." },
 ];
-export function CardsSpec() {
+function CardsSpec() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader title="Card / Container" description="3 varianti base + Media Card con foto. Hover per transizioni!" />
@@ -374,7 +374,7 @@ const SL = [
   { l: "Farina W", min: 150, max: 400, u: "" },
   { l: "Fermentazione", min: 2, max: 72, u: "h" },
 ];
-export function InputsSpec() {
+function InputsSpec() {
   const [sv, setSv] = useState<Record<string, number>>({ Idratazione: 65, "Farina W": 280, Fermentazione: 24 });
   return (
     <div className="flex flex-col gap-8">

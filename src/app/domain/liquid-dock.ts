@@ -47,27 +47,3 @@ export const liquidDockStartButtonStyle: CSSProperties = {
   boxShadow:
     "0 14px 34px color-mix(in srgb, var(--cta) 24%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.26)",
 };
-
-export const liquidDockHaloStyle: CSSProperties = {
-  background:
-    "radial-gradient(ellipse at center, color-mix(in srgb, var(--container-page) 82%, transparent) 0%, transparent 68%)",
-  filter: "blur(18px)",
-};
-
-export const liquidDockActiveIndicatorStyle: CSSProperties = {
-  borderRadius: "var(--radius-lg)",
-  background:
-    "linear-gradient(145deg, color-mix(in srgb, var(--container-page) 86%, transparent), color-mix(in srgb, var(--primary) 18%, transparent))",
-  border: "1px solid color-mix(in srgb, var(--primary) 18%, transparent)",
-  boxShadow:
-    "0 8px 18px color-mix(in srgb, var(--primary) 12%, transparent), inset 0 1px 0 rgba(255,255,255,0.22)",
-};
-
-export const liquidDockWidgetStyle: CSSProperties = {
-  ...liquidDockButtonStyle,
-  background:
-    "linear-gradient(135deg, color-mix(in srgb, var(--container-page) 88%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 42%, var(--container-page)))",
-  border: "1px solid color-mix(in srgb, var(--primary) 22%, var(--container-border))",
-  boxShadow:
-    "0 18px 48px rgba(0,0,0,0.18), 0 0 34px color-mix(in srgb, var(--primary) 14%, transparent), inset 0 1px 0 rgba(255,255,255,0.22)",
-};

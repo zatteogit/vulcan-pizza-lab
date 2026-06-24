@@ -87,7 +87,7 @@ export function defaultRecipePL(style: PizzaStyle | null): number {
   );
 }
 
-export function defaultRecipePanConfig(style: PizzaStyle): PanConfig {
+function defaultRecipePanConfig(style: PizzaStyle): PanConfig {
   return {
     panShape: defaultPanShape(style),
     panLength: style.shape.length_cm,
@@ -177,7 +177,7 @@ function resolveInitialState(
   };
 }
 
-export function buildGeneratedRecipe({
+function buildGeneratedRecipe({
   style,
   cms,
   constraints,

@@ -102,7 +102,7 @@ const LOADER_SIZES = [
   },
 ];
 
-export function ExpressiveShapesSection() {
+function ExpressiveShapesSection() {
   const [hoveredShape, setHoveredShape] = useState<string | null>(null);
 
   return (
@@ -512,7 +512,7 @@ const ASPECT_RATIOS = [
   { ratio: "3:2", css: "aspect-[3/2]", use: "Forno preview, equipment photo" },
 ];
 
-export function ImageTreatmentSection() {
+function ImageTreatmentSection() {
   const [activeAspect, setActiveAspect] = useState("4:3");
 
   return (
