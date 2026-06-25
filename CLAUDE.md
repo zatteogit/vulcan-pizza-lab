@@ -63,12 +63,12 @@ All pages are **lazy-loaded** via React Router's `lazy()` for code-splitting.
   - `shared/` — Shell layout, command search (`app-shell.tsx`, `search-overlay.tsx`)
   - `ds/` — Tier 4 reusable design system tokens (CtaButton, Badge)
   - `design-system/`, `foundations/` — Design token interactive showcase pages
-  - `cms/` — Locales context and translation helpers
   - `media/` — Media wrappers (`ImageWithFallback.tsx`)
 - **`features/`** — Feature-specific component groups
   - `recipe/` — Recipe creation UI (`recipe-configurator.tsx`, `recipe-output.tsx`, `recipe-view.tsx`)
   - `cooking/` — Active cook dashboard (`cooking-mode.tsx`, `active-cook-widget.tsx`, `dough-mascot.tsx`)
   - `dev-tools/` — Diagnostics (`dev-tools.tsx`, `engine-test-suite.tsx`, `sync-tab.tsx`)
+  - `cms/` — Locales context, i18n and translation helpers (merged from components)
 
 ### Styling (`src/styles/`)
 - `theme.css` — Design tokens (Tier 1–4, semantic colors, typography)

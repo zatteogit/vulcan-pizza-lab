@@ -828,28 +828,28 @@ Tabella di corrispondenza per mantenere sincronizzati Guidelines.md e GitHub Iss
 
 | KB Ref           | GitHub ID | Titolo breve                     | Stato  |
 | ---------------- | --------- | -------------------------------- | ------ |
-| Bug #1           | VPL-001   | DoughBlob prefers-reduced-motion | OPEN   |
-| Bug #2 + Feat #4 | VPL-002   | Dark mode persistence            | OPEN   |
-| Bug #3 + Feat #5 | VPL-003   | Geolocation + meteo              | OPEN   |
+| Bug #1           | VPL-001   | DoughBlob prefers-reduced-motion | CLOSED |
+| Bug #2 + Feat #4 | VPL-002   | Dark mode persistence            | CLOSED |
+| Bug #3 + Feat #5 | VPL-003   | Geolocation + meteo              | CLOSED |
 | Bug #4 + Feat #6 | VPL-C01   | Chicago Deep Dish fat            | CLOSED |
-| Bug #5           | VPL-004   | Rimuovere 1024WDefault.tsx       | OPEN   |
-| Bug #6 + Feat #2 | VPL-005   | scroll-companion allineamento    | OPEN   |
-| Bug #7 + Feat #8 | VPL-006   | ScoreRing DRY                    | OPEN   |
-| Bug #8 + Feat #7 | VPL-007   | Lazy loading immagini            | OPEN   |
-| Bug #9           | VPL-008   | Focus management                 | OPEN   |
-| Bug #10          | VPL-009   | Skip-to-content                  | OPEN   |
+| Bug #5           | VPL-004   | Rimuovere 1024WDefault.tsx       | CLOSED |
+| Bug #6 + Feat #2 | VPL-005   | scroll-companion allineamento    | CLOSED |
+| Bug #7 + Feat #8 | VPL-006   | ScoreRing DRY                    | CLOSED |
+| Bug #8 + Feat #7 | VPL-007   | Lazy loading immagini            | CLOSED |
+| Bug #9           | VPL-008   | Focus management                 | CLOSED |
+| Bug #10          | VPL-009   | Skip-to-content                  | CLOSED |
 | Bug #11          | VPL-C02   | Q10 variabile                    | CLOSED |
 | Bug #12          | VPL-C03   | P/L ratio                        | CLOSED |
 | Bug #13          | VPL-C04   | Compensazioni 5 assi             | CLOSED |
 | Bug #14          | VPL-C05   | STG W AVPN 2024                  | CLOSED |
 | Bug #15          | VPL-C06   | Feasibility W/metodo             | CLOSED |
-| Feat #1          | VPL-010   | Illustrazioni sfondi             | OPEN   |
-| Feat #3          | VPL-011   | ScrollSection soft-focus         | OPEN   |
-| Feat #9          | VPL-012   | Slider P/L                       | OPEN   |
-| Feat #10         | VPL-013   | UI compensazioni                 | OPEN   |
-| (nuovo)          | VPL-014   | Verificare pnpm build            | OPEN   |
-| (nuovo)          | VPL-015   | Sub-route Dev Tools              | OPEN   |
-| (nuovo)          | VPL-016   | Aggiornare Guidelines.md routing | OPEN   |
-| (nuovo)          | VPL-017   | Correzioni Notion manuali        | OPEN   |
-| (nuovo)          | VPL-018   | Aggiungere 6 nuovi stili pizza   | OPEN   |
-| (nuovo)          | VPL-019   | Varianti d'autore e Baciata      | OPEN   |
+| Feat #1          | VPL-010   | Illustrazioni sfondi             | CLOSED |
+| Feat #3          | VPL-011   | ScrollSection soft-focus         | CLOSED |
+| Feat #9          | VPL-012   | Slider P/L                       | CLOSED |
+| Feat #10         | VPL-013   | UI compensazioni                 | CLOSED |
+| (nuovo)          | VPL-014   | Verificare pnpm build            | CLOSED |
+| (nuovo)          | VPL-015   | Sub-route Dev Tools              | CLOSED |
+| (nuovo)          | VPL-016   | Aggiornare Guidelines.md routing | CLOSED |
+| (nuovo)          | VPL-017   | Correzioni Notion manuali        | CLOSED |
+| (nuovo)          | VPL-018   | Aggiungere 6 nuovi stili pizza   | CLOSED |
+| (nuovo)          | VPL-019   | Varianti d'autore e Baciata      | CLOSED |
