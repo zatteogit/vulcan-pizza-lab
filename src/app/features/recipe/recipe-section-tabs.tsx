@@ -54,6 +54,7 @@ export function RecipeSectionTabs({
   variant = "inline",
   stickyTop,
   onSearchOpen,
+  fillingMode = false,
 }: {
   activeTab: RecipePrimaryTab;
   recipeLabel: string;
@@ -62,14 +63,19 @@ export function RecipeSectionTabs({
   variant?: "inline" | "navbar";
   stickyTop?: number;
   onSearchOpen?: () => void;
+  /** Stili farciti → la tab "Condimento" diventa "Farcitura". */
+  fillingMode?: boolean;
 }) {
   const navbar = variant === "navbar";
   const { cms } = useCms();
 
+  const toppingLabel = fillingMode
+    ? cms.cooking.fillingTitle ?? cms.cooking.toppingTitle
+    : cms.cooking.toppingTitle;
   const tabs: RecipeTabMeta[] = [
     { id: "ricetta", label: navbar ? cms.cooking.tabRecipe : recipeLabel, icon: ScrollText },
     { id: "procedimento", label: cms.cooking.tabProcedure, icon: ListChecks },
-    { id: "condimento", label: cms.cooking.toppingTitle, icon: Utensils },
+    { id: "condimento", label: toppingLabel, icon: Utensils },
   ];
 
   const handleTabChange = (tab: RecipePrimaryTab) => {

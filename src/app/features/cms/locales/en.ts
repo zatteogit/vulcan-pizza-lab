@@ -376,6 +376,7 @@ export const EN_LOCALE: CmsContent = {
     tabRecipeTailored: "Tailored recipe",
     tabProcedure: "Steps",
     toppingTitle: "Topping",
+    fillingTitle: "Filling",
     chooseTopping: "Choose topping",
     learnMore: "Learn more",
     tailoredEyebrow: "Your tailored recipe",

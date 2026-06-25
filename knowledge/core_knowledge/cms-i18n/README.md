@@ -1,5 +1,5 @@
 # CMS e localizzazione
-> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 17
+> Aggiornamento: 2026-06-25 | Stato: ✅ | File documentati: 17
 
 ## Sommario
 
@@ -114,6 +114,7 @@ flowchart TD
 - **Switch lingua resetta override numerici custom** (pesi, URL) — comportamento intenzionale post-fix merge.
 - **Unit system separato dal CMS**: la scelta metrica/imperiale non è un override CMS, ma una preferenza profilo salvata in `vulcan_unit_system`; i componenti devono usare `createFormatter` per mostrare unità.
 - **Rimozione degli Override a Default**: La funzione `update` ora rimuove ricorsivamente le chiavi del dot-path dall'oggetto `overrides` locale e le cancella se il loro valore riallinea con quello predefinito in `CMS_DEFAULTS`, evitando il salvataggio di duplicati non modificati.
+- **Etichetta Farcitura (cooking.fillingTitle)**: Introdotto il campo `fillingTitle` nella sezione `cooking` del CMS (con default italiano "Farcitura" e inglese "Filling") per supportare stili con layout farcito o ripieno.
 - **Array**: `deepMerge` non fa merge profondo su array — sostituzione intera.
 - **`RootLayout`** duplica logica dark mode obsoleta; provider attivi sono in **`AppShell`**.
 - Consumatori devono usare `cms.*` o getter localizzati; dati strutturali (ID stili, ID issue `P01`…) restano nei file `*-data.ts`.

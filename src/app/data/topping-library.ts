@@ -202,6 +202,14 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     flavor_profile: "rich",
     occasions: ["weekend", "tradizione laziale", "comfort"],
   },
+  crudo: {
+    id: "crudo",
+    name: "Crudo",
+    description: "Bianca spaccata e farcita a freddo con prosciutto crudo stagionato. Semplice e nobile.",
+    emoji: "🍖",
+    flavor_profile: "salty_savory",
+    occasions: ["spaccata", "spuntino", "tradizione"],
+  },
   bianca_mortazza: {
     id: "bianca_mortazza",
     name: "Bianca con Mortadella",
@@ -246,6 +254,31 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     flavor_profile: "creamy",
     occasions: ["ligure", "tradizione IGP"],
   },
+  // Farciture approvate Focaccia di Recco (oltre alla classica + 'nduja)
+  recco_culatello: {
+    id: "recco_culatello",
+    name: "Crescenza e Culatello",
+    description: "Classica crescenza, dopo cottura coperta da fette di Culatello di Zibello DOP.",
+    emoji: "🍖",
+    flavor_profile: "salty_savory",
+    occasions: ["ligure", "gourmet"],
+  },
+  recco_cotto: {
+    id: "recco_cotto",
+    name: "Crescenza e Cotto Millefiori",
+    description: "Crescenza con prosciutto cotto artigianale Millefiori adagiato in uscita dal forno.",
+    emoji: "🐷",
+    flavor_profile: "salty_savory",
+    occasions: ["ligure", "delicato"],
+  },
+  recco_pizzata: {
+    id: "recco_pizzata",
+    name: "Focaccia Pizzata",
+    description: "Crescenza con passata di pomodoro, acciughe, olive taggiasche e capperi. La Recco 'pizzata'.",
+    emoji: "🍅",
+    flavor_profile: "salty_savory",
+    occasions: ["ligure", "mediterraneo"],
+  },
   // VPL-B1/B2: condimenti regionali specifici (de-genericizzazione)
   sfincione: {
     id: "sfincione",
@@ -289,11 +322,19 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
   },
   montanara: {
     id: "montanara",
-    name: "Montanara (a crudo)",
-    description: "Dischetto fritto condito a crudo: pomodoro, ricotta, pecorino e basilico. Niente forno.",
+    name: "Montanara",
+    description: "Dischetto fritto e poi condito A CRUDO SOPRA: pomodoro cotto, ricotta, pecorino e basilico. Aperta, non ripiena.",
     emoji: "🍅",
     flavor_profile: "fresh",
-    occasions: ["napoletano", "street food"],
+    occasions: ["napoletano", "street food", "a crudo"],
+  },
+  pizza_fritta: {
+    id: "pizza_fritta",
+    name: "Pizza Fritta ripiena",
+    description: "Tasca di impasto RIPIENA e sigillata, poi fritta: ricotta, provola, cicoli (o pepe). Chiusa, non aperta.",
+    emoji: "🥟",
+    flavor_profile: "rich",
+    occasions: ["napoletano", "street food", "ripiena"],
   },
   calzone: {
     id: "calzone",
@@ -401,6 +442,136 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     flavor_profile: "salty_savory",
     occasions: ["gourmet", "pala romana", "estate"],
   },
+  // ─── Wave 3: classici e firme americane ───
+  cheese_pizza: {
+    id: "cheese_pizza",
+    name: "Cheese Pizza",
+    description: "La plain cheese americana: salsa di pomodoro speziata e mozzarella low-moisture fusa fino al bordo.",
+    emoji: "🧀",
+    flavor_profile: "creamy",
+    occasions: ["americano", "classico", "slice"],
+  },
+  supreme: {
+    id: "supreme",
+    name: "Supreme",
+    description: "La ricca americana: pepperoni, salsiccia, peperoni verdi, cipolla e funghi su mozzarella.",
+    emoji: "🎪",
+    flavor_profile: "rich",
+    occasions: ["americano", "abbondante", "condivisione"],
+  },
+  white_pizza: {
+    id: "white_pizza",
+    name: "White Pizza",
+    description: "Senza pomodoro: mozzarella, ricotta montata, aglio e spinaci. La white pie americana.",
+    emoji: "🤍",
+    flavor_profile: "creamy",
+    occasions: ["americano", "senza pomodoro", "vegetariano"],
+  },
+  vodka_pizza: {
+    id: "vodka_pizza",
+    name: "Vodka",
+    description: "Salsa vodka cremosa (pomodoro, panna, vodka), basilico e pecorino. Trend italo-americano.",
+    emoji: "🌸",
+    flavor_profile: "creamy",
+    occasions: ["americano", "trendy", "cremoso"],
+  },
+  bbq_chicken: {
+    id: "bbq_chicken",
+    name: "BBQ Chicken",
+    description: "Pollo glassato alla barbecue, cipolla rossa e coriandolo. Firma californiana di Wolfgang Puck.",
+    emoji: "🍗",
+    flavor_profile: "sweet_savory",
+    occasions: ["california", "gourmet", "dolce-affumicato"],
+  },
+  smoked_salmon: {
+    id: "smoked_salmon",
+    name: "Salmone affumicato",
+    description: "Base bianca con crème fraîche; a crudo salmone affumicato, aneto, cipolla rossa e capperi.",
+    emoji: "🍣",
+    flavor_profile: "salty_savory",
+    occasions: ["california", "gourmet", "brunch"],
+  },
+  italian_beef: {
+    id: "italian_beef",
+    name: "Italian Beef",
+    description: "Straccetti di manzo brasato nel suo brodo e giardiniera piccante. La specialità di Chicago.",
+    emoji: "🥩",
+    flavor_profile: "rich",
+    occasions: ["chicago", "abbondante", "carne"],
+  },
+  tomato_pie: {
+    id: "tomato_pie",
+    name: "Tomato Pie",
+    description: "La apizza di New Haven senza mozzarella: solo salsa di San Marzano, aglio, origano e pecorino.",
+    emoji: "🍅",
+    flavor_profile: "fresh",
+    occasions: ["new haven", "senza mozzarella", "asciutta"],
+  },
+  greek_feta: {
+    id: "greek_feta",
+    name: "Greca (feta e olive)",
+    description: "Pan pizza dei diner greci: feta sbriciolata, olive kalamata, cipolla rossa e origano.",
+    emoji: "🫒",
+    flavor_profile: "salty_savory",
+    occasions: ["greek pan", "mediterraneo", "diner"],
+  },
+  // ─── Wave 4: classici e firme contemporanee/regionali ───
+  zucca_speck: {
+    id: "zucca_speck",
+    name: "Zucca, Speck e Caciocavallo",
+    description: "Crema di zucca arrosto, speck a freddo e scaglie di caciocavallo. Il gourmet d'autunno di Bonci.",
+    emoji: "🎃",
+    flavor_profile: "earthy",
+    occasions: ["autunno", "bonci", "gourmet"],
+  },
+  burrata_salmone: {
+    id: "burrata_salmone",
+    name: "Burrata e Salmone",
+    description: "Stracciatella di burrata a crudo, salmone affumicato, zest di limone e aneto. Abbinamento freddo.",
+    emoji: "🐟",
+    flavor_profile: "salty_savory",
+    occasions: ["gourmet", "freddo", "bonci"],
+  },
+  focaccia_cipolle: {
+    id: "focaccia_cipolle",
+    name: "Focaccia alle cipolle",
+    description: "Fette sottili di cipolla dorata stufate in cottura con abbondante olio sulla focaccia ligure.",
+    emoji: "🧅",
+    flavor_profile: "light",
+    occasions: ["ligure", "aperitivo", "vegetariano"],
+  },
+  sardenaira: {
+    id: "sardenaira",
+    name: "Sardenaira",
+    description: "La focaccia condita di Sanremo: salsa di pomodoro e cipolla, acciughe, olive taggiasche, capperi e aglio.",
+    emoji: "🍅",
+    flavor_profile: "salty_savory",
+    occasions: ["sanremo", "ponente ligure", "De.Co."],
+  },
+  sfincione_bianco: {
+    id: "sfincione_bianco",
+    name: "Sfincione bianco (bagherese)",
+    description: "La variante di Bagheria senza pomodoro: tuma, acciughe, cipolle stufate, caciocavallo e mollica tostata.",
+    emoji: "🧅",
+    flavor_profile: "salty_savory",
+    occasions: ["bagheria", "siciliano", "senza pomodoro"],
+  },
+  gorgonzola_pere: {
+    id: "gorgonzola_pere",
+    name: "Gorgonzola e Pere",
+    description: "Base bianca con fette di pera dolce e gorgonzola cremoso. Il dolce-salato del padellino.",
+    emoji: "🍐",
+    flavor_profile: "sweet_savory",
+    occasions: ["autunno", "dolce-salato", "padellino"],
+  },
+  tonno_cipolla: {
+    id: "tonno_cipolla",
+    name: "Tonno e Cipolla",
+    description: "Pomodoro, mozzarella, tonno sott'olio e cipolla rossa di Tropea. Un classico semplice e saporito.",
+    emoji: "🐟",
+    flavor_profile: "salty_savory",
+    occasions: ["classico", "estate", "semplice"],
+  },
 };
 
 /* ═══ ToppingRecipe — la realizzazione concreta ═══ */
@@ -418,6 +589,15 @@ export interface ToppingRecipe {
   /** Combinazione esplicitamente sconsigliata (taboo). */
   taboo_for_styles?: string[];
   taboo_for_families?: FamilyId[];
+
+  /** Tier di autenticità DISPLAY esplicito, indipendente dal match di stile.
+   *  Default (se omesso) per un topping pertinente = "natural" (Tradizionale).
+   *  - "canonical"  → "Da disciplinare": SOLO ricette da disciplinare ufficiale
+   *                   (AVPN, IGP, DOP, De.Co.).
+   *  - "signature"  → "Specialità": firma moderna/gourmet/d'autore (es. Hot Honey,
+   *                   Scarpetta, Nerano), pertinente allo stile ma non un canone.
+   *  Non usare "common"/"experimental"/"taboo" qui (derivano dal match). */
+  authenticity?: AuthenticityScore;
 
   /** Layout compatibili. Se omesso = compatibile con tutti. */
   compatible_layouts?: LayoutType[];
@@ -452,8 +632,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "margherita_napoletana_avpn",
     concept_ref: "margherita",
     variant_name: "Verace AVPN",
-    preferred_for_styles: ["napoletana_stg"],
-    preferred_for_families: ["napoletana"],
+    authenticity: "canonical", // disciplinare AVPN
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pelati San Marzano DOP schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
       { name: "Sale fino sulla salsa", amount: { value: 1, unit: "g" } },
@@ -478,8 +658,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   margherita_romana: {
     id: "margherita_romana",
     concept_ref: "margherita",
-    variant_name: "alla romana",
-    preferred_for_families: ["romana", "contemporanea"],
+    preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana", "bonci_teglia"],
     ingredients: [
       { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 100, unit: "g" } },
       { name: "Sale sulla passata", amount: { value: 1, unit: "g" } },
@@ -504,8 +683,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   margherita_americana: {
     id: "margherita_americana",
     concept_ref: "margherita",
-    variant_name: "all'americana",
-    preferred_for_families: ["americana"],
+    preferred_for_styles: ["california_style"],
     ingredients: [
       { name: "Salsa di pomodoro (passata di pomodoro, origano, zucchero, sale)", amount: { value: 100, unit: "g" } },
       { name: "Low-moisture mozzarella shredded", amount: { value: 100, unit: "g" } },
@@ -522,34 +700,14 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     }],
   },
 
-  margherita_generica: {
-    id: "margherita_generica",
-    concept_ref: "margherita",
-    variant_name: "classica",
-    // fallback per qualsiasi style non coperto sopra
-    ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
-      { name: "Sale", amount: { value: 1, unit: "g" } },
-      { name: "Mozzarella fior di latte", amount: { value: 80, unit: "g" } },
-      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" } },
-      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
-    ],
-    assembly_steps: [{
-      id: "spread_margherita_gen",
-      title: "Condimento Margherita classica",
-      description: "Salsa + mozzarella + basilico + olio. La più amata di sempre.",
-      insert_at: "after_shape",
-      duration_minutes: 4,
-      replaces_generic: true,
-    }],
-  },
 
   /* ─── MARINARA — 2 varianti ─── */
   marinara_avpn: {
     id: "marinara_avpn",
     concept_ref: "marinara",
     variant_name: "AVPN",
-    preferred_for_families: ["napoletana"],
+    authenticity: "canonical", // disciplinare AVPN
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pelati San Marzano DOP (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
       { name: "Sale", amount: { value: 1, unit: "g" } },
@@ -570,8 +728,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   marinara_romana: {
     id: "marinara_romana",
     concept_ref: "marinara",
-    variant_name: "alla romana",
-    preferred_for_families: ["romana"],
+    preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
       { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 100, unit: "g" } },
       { name: "Sale", amount: { value: 1, unit: "g" } },
@@ -595,6 +752,9 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "bianca_olio_rosmarino",
     concept_ref: "bianca",
     variant_name: "olio e rosmarino",
+    // La bianca/schiacciata è una base tradizionale italiana trasversale
+    // (focaccia, pala, teglia, sfincione bianco, schiacciata napoletana).
+    preferred_for_styles: ["focaccia_genovese", "focaccia_barese", "pala_romana", "teglia_romana", "bonci_teglia"],
     ingredients: [
       { name: "Olio EVO", amount: { value: 15, unit: "ml" } },
       { name: "Rosmarino fresco", amount: { value: 2, unit: "pcs" }, notes: "rametti" },
@@ -614,8 +774,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   boscaiola_napoletana: {
     id: "boscaiola_napoletana",
     concept_ref: "boscaiola",
-    variant_name: "alla napoletana",
-    preferred_for_families: ["napoletana"],
+    variant_name: "porcini e salsiccia",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pelati San Marzano (pomodoro, succo di pomodoro)", amount: { value: 60, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
@@ -641,8 +801,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   boscaiola_romana: {
     id: "boscaiola_romana",
     concept_ref: "boscaiola",
-    variant_name: "alla romana",
-    preferred_for_families: ["romana", "contemporanea"],
+    variant_name: "salsiccia e funghi",
+    preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
       { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 70, unit: "g" } },
       { name: "Fior di latte", amount: { value: 80, unit: "g" } },
@@ -676,8 +836,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   diavola_napoletana: {
     id: "diavola_napoletana",
     concept_ref: "diavola",
-    variant_name: "alla napoletana",
-    preferred_for_families: ["napoletana"],
+    variant_name: "salame napoletano",
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pelati San Marzano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
       { name: "Fior di latte", amount: { value: 80, unit: "g" } },
@@ -698,7 +858,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "diavola_americana",
     concept_ref: "diavola",
     variant_name: "Pepperoni",
-    preferred_for_families: ["americana"],
+    preferred_for_styles: ["new_york", "chicago_tavern", "grandma_style", "california_style"],
     ingredients: [
       { name: "Salsa di pomodoro (passata di pomodoro, sale, zucchero, origano, aglio in polvere)", amount: { value: 100, unit: "g" } },
       { name: "Low-moisture mozzarella shredded", amount: { value: 100, unit: "g" } },
@@ -720,120 +880,17 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   },
 
   /* ─── CAPRICCIOSA — 1 classica ─── */
-  capricciosa_classica: {
-    id: "capricciosa_classica",
-    concept_ref: "capricciosa",
-    variant_name: "classica",
-    preferred_for_families: ["romana", "napoletana", "contemporanea"],
-    ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 80, unit: "g" } },
-      { name: "Mozzarella fior di latte", amount: { value: 80, unit: "g" } },
-      { name: "Prosciutto cotto a fette (carne di suino, sale, aromi)", amount: { value: 40, unit: "g" } },
-      { name: "Funghi champignon", amount: { value: 30, unit: "g" } },
-      { name: "Carciofini sottolio (carciofi, olio, sale)", amount: { value: 30, unit: "g" } },
-      { name: "Olive nere", amount: { value: 20, unit: "g" } },
-      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
-    ],
-    pre_prep_steps: [{
-      id: "champignon_quick",
-      title: "Saltare champignon (rapido)",
-      description: "Affettare champignon e saltare 5 min in padella con olio. Niente aglio (non interferisce con prosciutto).",
-      duration_minutes: 8,
-      timing: "just_before_assembly",
-    }],
-    assembly_steps: [{
-      id: "spread_capricciosa",
-      title: "Condimento Capricciosa",
-      description: "Salsa + mozzarella alla base. Distribuire prosciutto, funghi (saltati 5 min prima), carciofini scolati, olive nere. Filo d'olio.",
-      insert_at: "after_shape",
-      duration_minutes: 6,
-      replaces_generic: true,
-    }],
-  },
 
   /* ─── QUATTRO STAGIONI — 1 classica ─── */
-  quattro_stagioni_classica: {
-    id: "quattro_stagioni_classica",
-    concept_ref: "quattro_stagioni",
-    variant_name: "classica",
-    preferred_for_families: ["romana", "napoletana", "contemporanea"],
-    ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 80, unit: "g" } },
-      { name: "Mozzarella fior di latte", amount: { value: 80, unit: "g" } },
-      { name: "Prosciutto cotto (carne di suino, sale, aromi)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
-      { name: "Funghi saltati", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
-      { name: "Carciofini sottolio (carciofi, olio, sale)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
-      { name: "Olive nere", amount: { value: 20, unit: "g" }, notes: "per un quadrante" },
-    ],
-    assembly_steps: [{
-      id: "spread_4stagioni",
-      title: "Condimento 4 Stagioni",
-      description: "Salsa + mozzarella alla base. DIVIDERE in 4 quadranti immaginari: prosciutto in alto-sx, funghi in alto-dx, carciofi in basso-sx, olive in basso-dx. Effetto scenografico.",
-      insert_at: "after_shape",
-      duration_minutes: 6,
-      replaces_generic: true,
-    }],
-  },
 
   /* ─── QUATTRO FORMAGGI — 1 classica ─── */
-  quattro_formaggi_classica: {
-    id: "quattro_formaggi_classica",
-    concept_ref: "quattro_formaggi",
-    variant_name: "classica",
-    preferred_for_families: ["romana", "napoletana", "contemporanea"],
-    ingredients: [
-      { name: "Mozzarella fior di latte", amount: { value: 60, unit: "g" } },
-      { name: "Fontina", amount: { value: 30, unit: "g" }, notes: "a fette sottili" },
-      { name: "Gorgonzola dolce", amount: { value: 30, unit: "g" }, notes: "a cubetti" },
-      { name: "Parmigiano grattugiato", amount: { value: 15, unit: "g" } },
-    ],
-    assembly_steps: [{
-      id: "spread_4formaggi",
-      title: "Condimento 4 Formaggi",
-      description: "Base bianca o rossa a scelta. Distribuire mozzarella; aggiungere gorgonzola e fontina a tocchetti. Parmigiano in superficie post-bake (resta cremoso, non bruciato).",
-      insert_at: "after_shape",
-      duration_minutes: 4,
-      replaces_generic: true,
-    }],
-  },
 
   /* ─── ORTOLANA — 1 classica ─── */
-  ortolana_classica: {
-    id: "ortolana_classica",
-    concept_ref: "ortolana",
-    variant_name: "classica",
-    preferred_for_families: ["romana", "napoletana", "contemporanea"],
-    ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 70, unit: "g" } },
-      { name: "Mozzarella fior di latte", amount: { value: 70, unit: "g" } },
-      { name: "Zucchine grigliate", amount: { value: 50, unit: "g" } },
-      { name: "Melanzane grigliate", amount: { value: 50, unit: "g" } },
-      { name: "Peperoni grigliati", amount: { value: 50, unit: "g" } },
-      { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
-    ],
-    pre_prep_steps: [{
-      id: "grigliare_verdure",
-      title: "Grigliare verdure",
-      description: "Tagliare zucchine, melanzane e peperoni a fette di 5mm. Grigliare in padella o piastra calda con poco olio finché morbide e segnate. Salare a fine.",
-      duration_minutes: 25,
-      timing: "just_before_assembly",
-    }],
-    assembly_steps: [{
-      id: "spread_ortolana",
-      title: "Condimento Ortolana",
-      description: "Salsa + mozzarella. Distribuire le verdure grigliate alternandole. Olio a filo.",
-      insert_at: "after_shape",
-      duration_minutes: 4,
-      replaces_generic: true,
-    }],
-  },
 
   patate_porchetta: {
     id: "patate_porchetta",
     concept_ref: "patate_porchetta",
-    variant_name: "alla romana",
     preferred_for_styles: ["pizza_baciata", "pizza_patate_porchetta"],
-    preferred_for_families: ["romana"],
     compatible_layouts: ["stacked"],
     ingredients: [
       { name: "Porchetta affettata sottile (carne di maiale, sale, pepe, aglio, rosmarino)", amount: { value: 200, unit: "g" }, section: "ripieno" },
@@ -891,9 +948,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   bianca_mortazza_romana: {
     id: "bianca_mortazza_romana",
     concept_ref: "bianca_mortazza",
-    variant_name: "alla romana",
-    preferred_for_styles: ["pala_romana", "teglia_romana", "bonci_teglia"],
-    preferred_for_families: ["romana", "contemporanea"],
+    variant_name: "Mortadella IGP",
+    preferred_for_styles: ["pizza_spaccata", "pala_romana", "teglia_romana", "bonci_teglia"],
     ingredients: [
       { name: "Olio EVO per spennellare", amount: { value: 12, unit: "ml" }, section: "base" },
       { name: "Fior di sale", amount: { value: 2, unit: "g" }, section: "base" },
@@ -920,12 +976,86 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
   },
 
+  /* ─── Farciture della Spaccata (base singola cotta e spaccata a metà) ─── */
+  crudo_spaccata: {
+    id: "crudo_spaccata",
+    concept_ref: "crudo",
+    preferred_for_styles: ["pizza_spaccata"],
+    ingredients: [
+      { name: "Olio EVO per spennellare", amount: { value: 10, unit: "ml" }, section: "base" },
+      { name: "Fior di sale", amount: { value: 2, unit: "g" }, section: "base" },
+      { name: "Prosciutto crudo stagionato a fette (es. Parma 24 mesi)", amount: { value: 90, unit: "g" }, section: "ripieno" },
+    ],
+    assembly_steps: [
+      {
+        id: "crudo_bianca",
+        title: "Cottura in bianco",
+        description: "Spennellare con olio EVO e fior di sale. Cuocere la base finché dorata e alveolata. Niente altro prima del forno.",
+        insert_at: "after_shape",
+        duration_minutes: 2,
+        replaces_generic: true,
+      },
+      {
+        id: "crudo_spacca_farci",
+        title: "Spaccare e farcire col crudo",
+        description: "Estrarre dal forno, spaccare a metà col coltello e farcire con le fette di prosciutto crudo. Il calore residuo ammorbidisce appena il grasso del crudo.",
+        insert_at: "after_bake",
+        duration_minutes: 2,
+      },
+    ],
+  },
+
+  /* Patate e Porchetta ALLA SANCHO: base singola con patate in crosta (sopra),
+     poi spaccata a metà e farcita di porchetta. È una spaccata, non una baciata. */
+  patate_porchetta_sancho: {
+    id: "patate_porchetta_sancho",
+    concept_ref: "patate_porchetta",
+    variant_name: "alla Sancho (in crosta di patate)",
+    preferred_for_styles: ["pizza_spaccata"],
+    ingredients: [
+      { name: "Patate gialle a fette sottilissime (mandolina)", amount: { value: 220, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 18, unit: "ml" }, section: "superficie" },
+      { name: "Rosmarino fresco", amount: { value: 3, unit: "pcs" }, notes: "aghi", section: "superficie" },
+      { name: "Fior di sale", amount: { value: 2, unit: "g" }, notes: "a fine cottura", section: "superficie" },
+      { name: "Porchetta di Ariccia IGP affettata sottile", amount: { value: 120, unit: "g" }, section: "ripieno" },
+      { name: "Pepe nero", amount: { value: 1, unit: "g" }, optional: true, section: "ripieno" },
+    ],
+    pre_prep_steps: [{
+      id: "patate_sancho_prep",
+      title: "Affettare e ammollare le patate",
+      description: "Affettare le patate a 1-2 mm con la mandolina, ammollarle 20 min in acqua fredda per togliere l'amido, scolare e asciugare.",
+      duration_minutes: 25,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [
+      {
+        id: "patate_sancho_top",
+        title: "Patate a scaglie in superficie",
+        description: "Disporre le patate a scaglie sovrapposte sulla base (la 'crosta di patate'). Olio EVO e rosmarino. Niente sale ora. Cuocere finché le patate si arricciano e dorano.",
+        insert_at: "after_shape",
+        duration_minutes: 6,
+        replaces_generic: true,
+      },
+      {
+        id: "patate_sancho_split",
+        title: "Spaccare e farcire di porchetta",
+        description: "Fuori dal forno, salare le patate. Spaccare la teglia a metà (le patate restano fuori) e farcire l'interno con la porchetta di Ariccia a fette e una macinata di pepe. Richiudere. Alla Sancho.",
+        insert_at: "after_bake",
+        duration_minutes: 4,
+      },
+    ],
+    bake_adjustments: {
+      additional_minutes: 4,
+      note: "Le patate in superficie richiedono qualche minuto in più per arricciarsi.",
+    },
+  },
+
   crescenza_recco: {
     id: "crescenza_recco",
     concept_ref: "crescenza_recco",
     variant_name: "IGP",
+    authenticity: "canonical", // disciplinare IGP Focaccia di Recco
     preferred_for_styles: ["focaccia_recco"],
-    taboo_for_families: ["napoletana", "romana", "americana"],
     compatible_layouts: ["double_thin_sheet"],
     ingredients: [
       { name: "Crescenza fresca (formaggio molle)", amount: { value: 250, unit: "g" }, section: "ripieno" },
@@ -944,9 +1074,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   sfincione_palermitano: {
     id: "sfincione_palermitano",
     concept_ref: "sfincione",
-    variant_name: "tradizionale",
     preferred_for_styles: ["sfincione"],
-    taboo_for_families: ["napoletana"],
     ingredients: [
       { name: "Acciughe sott'olio", amount: { value: 30, unit: "g" }, notes: "Filetti" },
       { name: "Caciocavallo (o primosale)", amount: { value: 150, unit: "g" }, notes: "A dadini" },
@@ -976,7 +1104,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   focaccia_barese_classica: {
     id: "focaccia_barese_classica",
     concept_ref: "focaccia_barese",
-    variant_name: "tradizionale",
     preferred_for_styles: ["focaccia_barese"],
     ingredients: [
       { name: "Pomodorini freschi (ciliegino)", amount: { value: 300, unit: "g" }, notes: "Schiacciati a mano, non San Marzano" },
@@ -994,10 +1121,61 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       replaces_generic: true,
     }],
   },
+
+  /* Varianti tradizionali della focaccia barese (non è mono-gusto). */
+  focaccia_barese_patate: {
+    id: "focaccia_barese_patate",
+    concept_ref: "patate_rosmarino",
+    variant_name: "alla barese",
+    preferred_for_styles: ["focaccia_barese"],
+    ingredients: [
+      { name: "Patate gialle a fette di ~5 mm", amount: { value: 300, unit: "g" }, notes: "a coprire tutta la superficie", section: "superficie" },
+      { name: "Rosmarino fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
+      { name: "Sale grosso", amount: { value: 4, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 25, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "barese_patate",
+      title: "Coperta di patate",
+      description: "Coprire interamente la focaccia con le fette di patata sovrapposte (~5 mm). Rosmarino, abbondante olio EVO e sale grosso. Le patate si arricciano e dorano in cottura.",
+      insert_at: "after_shape",
+      duration_minutes: 5,
+      replaces_generic: true,
+    }],
+    bake_adjustments: { additional_minutes: 4, note: "Le patate richiedono qualche minuto in più." },
+  },
+
+  focaccia_barese_cipolla: {
+    id: "focaccia_barese_cipolla",
+    concept_ref: "focaccia_cipolle",
+    variant_name: "cipolla di Acquaviva",
+    preferred_for_styles: ["focaccia_barese"],
+    ingredients: [
+      { name: "Cipolla rossa di Acquaviva (o di Tropea) stufata", amount: { value: 200, unit: "g" }, section: "superficie" },
+      { name: "Origano secco", amount: { value: 2, unit: "g" }, section: "superficie" },
+      { name: "Sale grosso", amount: { value: 4, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 25, unit: "ml" }, section: "superficie" },
+    ],
+    pre_prep_steps: [{
+      id: "barese_cipolla_prep",
+      title: "Stufare la cipolla",
+      description: "Affettare la cipolla rossa dolce e stufarla dolcemente in olio finché morbida e appena dorata.",
+      duration_minutes: 20,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "barese_cipolla",
+      title: "Cipolla stufata sulla focaccia",
+      description: "Distribuire la cipolla stufata sull'impasto lievitato. Origano, olio EVO e sale grosso. La dolcezza della cipolla di Acquaviva è la firma di questa variante.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
   fugazzeta_rellena: {
     id: "fugazzeta_rellena",
     concept_ref: "fugazzeta",
-    variant_name: "rellena",
     preferred_for_styles: ["fugazzeta"],
     compatible_layouts: ["closed_stuffed"],
     ingredients: [
@@ -1027,7 +1205,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   detroit_brick: {
     id: "detroit_brick",
     concept_ref: "detroit",
-    variant_name: "classica",
     preferred_for_styles: ["detroit"],
     ingredients: [
       { name: "Brick cheese del Wisconsin (o mozzarella low-moisture)", amount: { value: 250, unit: "g" }, notes: "Fino ai bordi: forma il cheese crown / frico", section: "crosta" },
@@ -1057,7 +1234,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   chicago_deep_classic: {
     id: "chicago_deep_classic",
     concept_ref: "chicago",
-    variant_name: "classica",
     preferred_for_styles: ["chicago_deep"],
     ingredients: [
       { name: "Mozzarella a fette", amount: { value: 200, unit: "g" }, notes: "Sul fondo, a contatto con l'impasto", section: "base" },
@@ -1087,9 +1263,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   calzone_napoletano_classico: {
     id: "calzone_napoletano_classico",
     concept_ref: "calzone",
-    variant_name: "classico",
+    variant_name: "ricotta e salame",
     preferred_for_styles: ["calzone_napoletano"],
-    preferred_for_families: ["napoletana"],
     compatible_layouts: ["closed_stuffed"],
     ingredients: [
       { name: "Ricotta fresca (siero di latte, sale)", amount: { value: 100, unit: "g" }, section: "ripieno" },
@@ -1113,7 +1288,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   margherita_new_york: {
     id: "margherita_new_york",
     concept_ref: "margherita",
-    variant_name: "New York",
     preferred_for_styles: ["new_york"],
     ingredients: [
       { name: "Salsa di pomodoro (passata di pomodoro, sale, zucchero, origano)", amount: { value: 110, unit: "g" }, section: "base" },
@@ -1133,7 +1307,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   montanara_classica: {
     id: "montanara_classica",
     concept_ref: "montanara",
-    variant_name: "classica",
     preferred_for_styles: ["pizza_fritta"],
     ingredients: [
       { name: "Pomodoro (pelati schiacciati o passata, sale)", amount: { value: 40, unit: "g" }, section: "base" },
@@ -1152,11 +1325,38 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     }],
   },
 
+  /* Pizza Fritta RIPIENA — distinta dalla Montanara: qui si farcisce e si
+     sigilla PRIMA di friggere (tasca chiusa), non si condisce sopra a crudo. */
+  pizza_fritta_ripiena: {
+    id: "pizza_fritta_ripiena",
+    concept_ref: "pizza_fritta",
+    variant_name: "ricotta, provola e cicoli",
+    preferred_for_styles: ["pizza_fritta"],
+    ingredients: [
+      { name: "Ricotta di pecora (siero di latte, sale)", amount: { value: 80, unit: "g" }, section: "ripieno" },
+      { name: "Provola affumicata a cubetti", amount: { value: 70, unit: "g" }, section: "ripieno" },
+      { name: "Cicoli napoletani (o ciccioli di maiale)", amount: { value: 40, unit: "g" }, notes: "in alternativa: solo pepe nero", section: "ripieno" },
+      { name: "Pepe nero macinato fresco", amount: { value: 2, unit: "g" }, section: "ripieno" },
+      { name: "Pomodoro San Marzano (poco, dentro)", amount: { value: 30, unit: "g" }, optional: true, section: "ripieno" },
+    ],
+    assembly_steps: [{
+      id: "pizza_fritta_fill_seal",
+      title: "Farcire e sigillare prima di friggere",
+      description: "Stendere il dischetto, distribuire ricotta, provola, cicoli e pepe su metà (eventuale velo di pomodoro). Ripiegare a mezzaluna e sigillare bene i bordi. Friggere in olio bollente finché gonfia e dora. NON si condisce sopra: il ripieno è dentro.",
+      insert_at: "after_shape",
+      duration_minutes: 5,
+      replaces_generic: true,
+      tip: {
+        beginner: "È diversa dalla montanara: la montanara è aperta e condita sopra dopo la frittura; la pizza fritta è chiusa e ripiena prima di friggere.",
+        nerd: "Sigillare bene i bordi è critico: una tasca aperta fa entrare olio e fa fuoriuscire il ripieno. Il vapore interno cuoce a vapore ricotta e provola mentre l'esterno frigge.",
+      },
+    }],
+  },
+
   /* ─── R1/R29: farciture & condimenti regionali prima mancanti ─── */
   ciaccino_senese_farcito: {
     id: "ciaccino_senese_farcito",
     concept_ref: "ciaccino",
-    variant_name: "tradizionale",
     preferred_for_styles: ["ciaccino_senese"],
     compatible_layouts: ["closed_stuffed"],
     ingredients: [
@@ -1180,9 +1380,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   white_clam_new_haven: {
     id: "white_clam_new_haven",
     concept_ref: "white_clam",
-    variant_name: "apizza",
     preferred_for_styles: ["new_haven_apizza"],
-    taboo_for_families: ["napoletana"],
     ingredients: [
       { name: "Vongole fresche sgusciate (littleneck)", amount: { value: 150, unit: "g" }, notes: "Con poco del loro liquido", section: "base" },
       { name: "Aglio fresco tritato", amount: { value: 12, unit: "g" }, section: "base" },
@@ -1203,9 +1401,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   salsiccia_friarielli_napoletana: {
     id: "salsiccia_friarielli_napoletana",
     concept_ref: "salsiccia_friarielli",
-    variant_name: "alla napoletana",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
-    preferred_for_families: ["napoletana"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Friarielli (cime di rapa) puliti", amount: { value: 120, unit: "g" }, notes: "Saltati aglio e peperoncino", section: "base" },
       { name: "Salsiccia napoletana sbriciolata (carne di maiale, sale, pepe)", amount: { value: 100, unit: "g" }, notes: "Cruda, a tocchetti", section: "base" },
@@ -1232,7 +1428,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "cacio_e_pepe_crema",
     concept_ref: "cacio_e_pepe",
     variant_name: "post-bake",
-    preferred_for_families: ["napoletana", "contemporanea"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pecorino romano grattugiato", amount: { value: 60, unit: "g" }, notes: "Per la crema", section: "superficie" },
       { name: "Pepe nero in grani macinato fresco", amount: { value: 3, unit: "g" }, section: "superficie" },
@@ -1257,9 +1453,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   hawaiiana_classica: {
     id: "hawaiiana_classica",
     concept_ref: "hawaiiana",
-    variant_name: "classica",
-    preferred_for_families: ["americana"],
-    taboo_for_families: ["napoletana"],
+    preferred_for_styles: ["new_york", "grandma_style"],
+    authenticity: "experimental", // l'ananas: innovazione/eresia, tenuta in coda
     ingredients: [
       { name: "Salsa di pomodoro (passata, sale, origano)", amount: { value: 80, unit: "g" }, section: "base" },
       { name: "Mozzarella low-moisture", amount: { value: 90, unit: "g" }, section: "base" },
@@ -1287,7 +1482,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   capricciosa_napoletana: {
     id: "capricciosa_napoletana",
     concept_ref: "capricciosa",
-    variant_name: "alla napoletana",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
@@ -1319,7 +1513,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   quattro_stagioni_napoletana: {
     id: "quattro_stagioni_napoletana",
     concept_ref: "quattro_stagioni",
-    variant_name: "alla napoletana",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
@@ -1342,7 +1535,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   quattro_formaggi_napoletana: {
     id: "quattro_formaggi_napoletana",
     concept_ref: "quattro_formaggi",
-    variant_name: "alla napoletana",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Fior di latte campano", amount: { value: 70, unit: "g" } },
@@ -1367,7 +1559,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   ortolana_napoletana: {
     id: "ortolana_napoletana",
     concept_ref: "ortolana",
-    variant_name: "alla napoletana (vegetariana)",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 70, unit: "g" } },
@@ -1399,9 +1590,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   cosacca_napoletana: {
     id: "cosacca_napoletana",
     concept_ref: "cosacca",
-    variant_name: "tradizionale",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
-    preferred_for_families: ["napoletana"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 90, unit: "g" } },
       { name: "Sale fino", amount: { value: 1, unit: "g" } },
@@ -1426,9 +1615,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   provola_pepe_napoletana: {
     id: "provola_pepe_napoletana",
     concept_ref: "provola_pepe",
-    variant_name: "alla napoletana",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
-    preferred_for_families: ["napoletana"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 70, unit: "g" }, notes: "ombra di pomodoro, leggera" },
       { name: "Provola affumicata campana a cubetti", amount: { value: 90, unit: "g" } },
@@ -1449,9 +1636,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   nduja_napoletana: {
     id: "nduja_napoletana",
     concept_ref: "nduja",
-    variant_name: "di Spilinga",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
-    preferred_for_families: ["napoletana"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 80, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
@@ -1476,9 +1661,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   nerano_napoletana: {
     id: "nerano_napoletana",
     concept_ref: "nerano",
-    variant_name: "alla napoletana",
+    authenticity: "signature",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
-    preferred_for_families: ["napoletana"],
     ingredients: [
       { name: "Crema di zucchine (zucchine, olio EVO, sale)", amount: { value: 80, unit: "g" }, section: "base" },
       { name: "Fior di latte campano", amount: { value: 70, unit: "g" }, section: "base" },
@@ -1507,7 +1691,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   margherita_sbagliata_canotto: {
     id: "margherita_sbagliata_canotto",
     concept_ref: "margherita_sbagliata",
-    variant_name: "contemporanea",
+    authenticity: "signature",
     preferred_for_styles: ["napoletana_canotto"],
     ingredients: [
       { name: "Mozzarella di bufala campana DOP a fette (fusa in cottura)", amount: { value: 100, unit: "g" }, section: "base" },
@@ -1541,6 +1725,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "scarpetta_canotto",
     concept_ref: "scarpetta",
     variant_name: "Da Lioniello",
+    authenticity: "signature",
     preferred_for_styles: ["napoletana_canotto"],
     ingredients: [
       { name: "Mozzarella di bufala campana DOP (fusa in cottura)", amount: { value: 90, unit: "g" }, section: "base" },
@@ -1587,7 +1772,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   capricciosa_romana: {
     id: "capricciosa_romana",
     concept_ref: "capricciosa",
-    variant_name: "alla romana",
     preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
       { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
@@ -1612,7 +1796,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   quattro_stagioni_romana: {
     id: "quattro_stagioni_romana",
     concept_ref: "quattro_stagioni",
-    variant_name: "alla romana",
     preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
       { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
@@ -1635,7 +1818,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   quattro_formaggi_romana: {
     id: "quattro_formaggi_romana",
     concept_ref: "quattro_formaggi",
-    variant_name: "alla romana",
     preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
       { name: "Fior di latte", amount: { value: 70, unit: "g" } },
@@ -1656,7 +1838,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   ortolana_romana: {
     id: "ortolana_romana",
     concept_ref: "ortolana",
-    variant_name: "alla romana",
     preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
       { name: "Fior di latte", amount: { value: 70, unit: "g" } },
@@ -1687,7 +1868,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   diavola_romana: {
     id: "diavola_romana",
     concept_ref: "diavola",
-    variant_name: "alla romana (Pepperoni)",
+    variant_name: "salame piccante",
     preferred_for_styles: ["tonda_romana", "pala_romana"],
     ingredients: [
       { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
@@ -1710,7 +1891,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   provola_pepe_tonda: {
     id: "provola_pepe_tonda",
     concept_ref: "provola_pepe",
-    variant_name: "alla romana",
     preferred_for_styles: ["tonda_romana"],
     ingredients: [
       { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 85, unit: "g" } },
@@ -1731,7 +1911,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   hot_honey_tonda: {
     id: "hot_honey_tonda",
     concept_ref: "hot_honey",
-    variant_name: "alla romana",
+    authenticity: "signature",
     preferred_for_styles: ["tonda_romana"],
     ingredients: [
       { name: "Passata di pomodoro speziata (pomodoro, sale, peperoncino)", amount: { value: 85, unit: "g" } },
@@ -1757,7 +1937,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   bresaola_rucola_tonda: {
     id: "bresaola_rucola_tonda",
     concept_ref: "bresaola_rucola",
-    variant_name: "alla romana",
+    authenticity: "signature",
     preferred_for_styles: ["tonda_romana"],
     ingredients: [
       { name: "Fior di latte", amount: { value: 85, unit: "g" }, section: "base" },
@@ -1789,7 +1969,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   nduja_pinsa: {
     id: "nduja_pinsa",
     concept_ref: "nduja",
-    variant_name: "Sapori del Sole (pinsa)",
+    variant_name: "Sapori del Sole",
+    authenticity: "signature",
     preferred_for_styles: ["pinsa_romana"],
     ingredients: [
       { name: "'Nduja piccante di Spilinga (carne di maiale, peperoncino, sale)", amount: { value: 40, unit: "g" }, section: "base", notes: "a fiocchi, fusa in cottura" },
@@ -1819,7 +2000,6 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   patate_rosmarino_romana: {
     id: "patate_rosmarino_romana",
     concept_ref: "patate_rosmarino",
-    variant_name: "alla romana",
     preferred_for_styles: ["teglia_romana", "pala_romana", "pinsa_romana"],
     ingredients: [
       { name: "Fior di latte (opzionale, su pinsa/teglia)", amount: { value: 60, unit: "g" }, optional: true, section: "base" },
@@ -1852,7 +2032,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   stracciata_bottarga_pala: {
     id: "stracciata_bottarga_pala",
     concept_ref: "stracciata_bottarga",
-    variant_name: "alla pala (Roscioli)",
+    variant_name: "Roscioli",
+    authenticity: "signature",
     preferred_for_styles: ["pala_romana"],
     ingredients: [
       { name: "Stracciatella di burrata fresca pugliese (mozzarella, panna)", amount: { value: 90, unit: "g" }, section: "superficie", notes: "a crudo dopo cottura" },
@@ -1879,39 +2060,695 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
   },
 
+
+  /* ═══════════════════════════════════════════════════════════════════════
+   * WAVE 3 — TOPPING PER STILE: FAMIGLIA AMERICANA
+   * Gli stili USA usano classici AMERICANI (cheese, pepperoni, supreme, white
+   * pie) + firme dai menù (Joe's, Emmy Squared, Giordano's, Prince St, Spago),
+   * non i classici italiani. Pepperoni/Margherita americane già esistono.
+   * ═══════════════════════════════════════════════════════════════════════ */
+
+  cheese_ny: {
+    id: "cheese_ny",
+    concept_ref: "cheese_pizza",
+    preferred_for_styles: ["new_york"],
+    ingredients: [
+      { name: "Salsa di pomodoro stile Santa Barbara (passata, origano, zucchero, aglio)", amount: { value: 110, unit: "g" }, section: "base" },
+      { name: "Mozzarella low-moisture grattugiata", amount: { value: 130, unit: "g" }, section: "base" },
+      { name: "Pecorino romano grattugiato", amount: { value: 8, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 4, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_cheese_ny",
+      title: "Salsa e mozzarella fino al bordo",
+      description: "Stendere la salsa lasciando 1 cm di bordo. Coprire con abbondante mozzarella low-moisture quasi fino al cornicione. Pecorino e filo d'olio. La slice deve restare grande e pieghevole.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  white_pizza_ny: {
+    id: "white_pizza_ny",
+    concept_ref: "white_pizza",
+    preferred_for_styles: ["new_york"],
+    ingredients: [
+      { name: "Mozzarella low-moisture", amount: { value: 110, unit: "g" }, section: "base" },
+      { name: "Ricotta vaccina montata", amount: { value: 60, unit: "g" }, notes: "a ciuffi", section: "base" },
+      { name: "Spinaci freschi saltati", amount: { value: 40, unit: "g" }, section: "base" },
+      { name: "Aglio fresco tritato", amount: { value: 6, unit: "g" }, section: "base" },
+      { name: "Pecorino romano grattugiato", amount: { value: 8, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_white_ny",
+      title: "White pie senza pomodoro",
+      description: "Niente salsa. Distribuire mozzarella, ciuffi di ricotta montata, spinaci saltati e aglio. Pecorino e olio. Cottura su pietra/acciaio.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  supreme_ny: {
+    id: "supreme_ny",
+    concept_ref: "supreme",
+    preferred_for_styles: ["new_york"],
+    ingredients: [
+      { name: "Salsa di pomodoro Santa Barbara (passata, origano, aglio)", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Mozzarella low-moisture", amount: { value: 110, unit: "g" }, section: "base" },
+      { name: "Salame pepperoni a fette", amount: { value: 40, unit: "g" }, section: "base" },
+      { name: "Salsiccia di maiale sbriciolata", amount: { value: 40, unit: "g" }, section: "base" },
+      { name: "Peperoni verdi a rondelle", amount: { value: 30, unit: "g" }, section: "base" },
+      { name: "Cipolla bianca affettata", amount: { value: 25, unit: "g" }, section: "base" },
+      { name: "Funghi champignon affettati", amount: { value: 30, unit: "g" }, section: "base" },
+    ],
+    assembly_steps: [{
+      id: "spread_supreme_ny",
+      title: "Condimento Supreme",
+      description: "Salsa + mozzarella. Distribuire pepperoni, salsiccia cruda sbriciolata, peperoni verdi, cipolla e funghi. Il classico carico americano completo.",
+      insert_at: "after_shape",
+      duration_minutes: 5,
+      replaces_generic: true,
+    }],
+  },
+
+  vodka_detroit: {
+    id: "vodka_detroit",
+    concept_ref: "vodka_pizza",
+    preferred_for_styles: ["detroit"],
+    authenticity: "signature",
+    ingredients: [
+      { name: "Brick cheese del Wisconsin a cubetti", amount: { value: 200, unit: "g" }, notes: "fino ai bordi: cheese crown / frico", section: "crosta" },
+      { name: "Salsa vodka (pomodoro, panna, vodka, cipolla)", amount: { value: 100, unit: "g" }, notes: "a strisce in superficie", section: "superficie" },
+      { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
+      { name: "Pecorino romano grattugiato", amount: { value: 12, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_vodka_detroit",
+      title: "Cheese crown e strisce di vodka",
+      description: "Brick cheese fino ai bordi della teglia (caramella in frico). Dopo cottura, strisce di salsa vodka calda, basilico e pecorino. La salsa va SOPRA, come da stile Detroit.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  italian_beef_chicago: {
+    id: "italian_beef_chicago",
+    concept_ref: "italian_beef",
+    preferred_for_styles: ["chicago_deep"],
+    authenticity: "signature",
+    ingredients: [
+      { name: "Mozzarella a fette", amount: { value: 180, unit: "g" }, notes: "sul fondo, protegge l'impasto", section: "base" },
+      { name: "Straccetti di manzo brasato (Italian beef) nel proprio brodo", amount: { value: 120, unit: "g" }, section: "ripieno" },
+      { name: "Giardiniera piccante tritata (verdure sott'aceto)", amount: { value: 40, unit: "g" }, section: "ripieno" },
+      { name: "Polpa di pomodoro a pezzi (San Marzano)", amount: { value: 200, unit: "g" }, notes: "salsa grezza in superficie", section: "superficie" },
+      { name: "Parmigiano grattugiato", amount: { value: 15, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_italian_beef",
+      title: "Strati invertiti con Italian beef",
+      description: "Foderare lo stampo profondo. Mozzarella a fette sul fondo, poi l'Italian beef e la giardiniera. Coprire con la polpa di pomodoro a pezzi e parmigiano. Cottura lunga.",
+      insert_at: "after_shape",
+      duration_minutes: 6,
+      replaces_generic: true,
+    }],
+  },
+
+  supreme_tavern: {
+    id: "supreme_tavern",
+    concept_ref: "supreme",
+    variant_name: "party cut",
+    preferred_for_styles: ["chicago_tavern"],
+    ingredients: [
+      { name: "Salsa di pomodoro", amount: { value: 70, unit: "g" }, section: "base" },
+      { name: "Mozzarella low-moisture", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Salsiccia di maiale al finocchietto sbriciolata", amount: { value: 50, unit: "g" }, section: "base" },
+      { name: "Salame pepperoni", amount: { value: 30, unit: "g" }, section: "base" },
+      { name: "Peperoni verdi a rondelle", amount: { value: 25, unit: "g" }, section: "base" },
+    ],
+    assembly_steps: [{
+      id: "spread_supreme_tavern",
+      title: "Carico leggero su base cracker",
+      description: "Sulla base sottilissima, salsa e mozzarella fino al bordo. Distribuire salsiccia, pepperoni e peperoni in modo uniforme (si taglia a quadrotti). Pochi strati per restare croccante.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  margherita_grandma: {
+    id: "margherita_grandma",
+    concept_ref: "margherita",
+    preferred_for_styles: ["grandma_style"],
+    ingredients: [
+      { name: "Mozzarella fior di latte fresca", amount: { value: 110, unit: "g" }, notes: "alla base, a contatto con la teglia oliata", section: "base" },
+      { name: "Salsa marinara densa di pomodori confit (pomodoro, aglio, olio)", amount: { value: 90, unit: "g" }, notes: "a cucchiaiate sopra il formaggio", section: "superficie" },
+      { name: "Pecorino romano grattugiato", amount: { value: 12, unit: "g" }, section: "superficie" },
+      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 6, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_margherita_grandma",
+      title: "Formaggio sotto, salsa a cucchiaiate sopra",
+      description: "Sulla teglia oliata distribuire la mozzarella a contatto con la base (frico sul fondo). Sopra, cucchiaiate asimmetriche di marinara densa. Pecorino, basilico e olio. Stile Grandma di Long Island.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  vodka_grandma: {
+    id: "vodka_grandma",
+    concept_ref: "vodka_pizza",
+    variant_name: "Buzzy",
+    preferred_for_styles: ["grandma_style"],
+    authenticity: "signature",
+    ingredients: [
+      { name: "Mozzarella fior di latte fresca", amount: { value: 110, unit: "g" }, section: "base" },
+      { name: "Salsa vodka (pomodoro, panna, prosciutto, vodka)", amount: { value: 100, unit: "g" }, notes: "a cucchiaiate sopra", section: "superficie" },
+      { name: "Pecorino romano grattugiato", amount: { value: 12, unit: "g" }, section: "superficie" },
+      { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_vodka_grandma",
+      title: "Grandma alla vodka",
+      description: "Mozzarella alla base, cucchiaiate di salsa vodka cremosa sopra, pecorino e basilico. Fondo croccante grazie all'olio in teglia.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  tomato_pie_newhaven: {
+    id: "tomato_pie_newhaven",
+    concept_ref: "tomato_pie",
+    preferred_for_styles: ["new_haven_apizza"],
+    ingredients: [
+      { name: "Polpa di pomodoro San Marzano (pomodoro, sale)", amount: { value: 130, unit: "g" }, section: "base" },
+      { name: "Aglio fresco tritato", amount: { value: 8, unit: "g" }, section: "base" },
+      { name: "Origano secco", amount: { value: 2, unit: "g" }, section: "superficie" },
+      { name: "Pecorino romano grattugiato", amount: { value: 18, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 12, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_tomato_pie",
+      title: "Tomato pie senza mozzarella",
+      description: "Solo pomodoro San Marzano e aglio sulla base sottile. Origano, abbondante pecorino e olio. Niente mozzarella (è il famoso 'plain tomato pie'). Cottura a carbone fino a crosta annerita.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  bbq_chicken_california: {
+    id: "bbq_chicken_california",
+    concept_ref: "bbq_chicken",
+    variant_name: "Wolfgang Puck",
+    preferred_for_styles: ["california_style"],
+    authenticity: "signature",
+    ingredients: [
+      { name: "Salsa barbecue", amount: { value: 80, unit: "g" }, notes: "al posto del pomodoro", section: "base" },
+      { name: "Mozzarella (o mix con gouda affumicato)", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Pollo cotto glassato alla barbecue", amount: { value: 80, unit: "g" }, section: "base" },
+      { name: "Cipolla rossa affettata sottile", amount: { value: 30, unit: "g" }, section: "base" },
+      { name: "Coriandolo fresco", amount: { value: 4, unit: "pcs" }, notes: "a crudo dopo cottura", section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_bbq_chicken",
+      title: "BBQ chicken alla californiana",
+      description: "Salsa barbecue al posto del pomodoro. Mozzarella, pollo glassato e cipolla rossa. Dopo cottura, coriandolo fresco. La pizza gourmet anni '80 di Wolfgang Puck.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  smoked_salmon_california: {
+    id: "smoked_salmon_california",
+    concept_ref: "smoked_salmon",
+    variant_name: "Spago",
+    preferred_for_styles: ["california_style"],
+    authenticity: "signature",
+    ingredients: [
+      { name: "Crème fraîche", amount: { value: 50, unit: "g" }, section: "base" },
+      { name: "Mozzarella", amount: { value: 60, unit: "g" }, section: "base" },
+      { name: "Salmone affumicato", amount: { value: 60, unit: "g" }, notes: "a crudo dopo cottura", section: "superficie" },
+      { name: "Aneto fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
+      { name: "Cipolla rossa a velo", amount: { value: 20, unit: "g" }, section: "superficie" },
+      { name: "Capperi", amount: { value: 8, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [
+      {
+        id: "salmon_bake",
+        title: "Base bianca con crème fraîche",
+        description: "Cuocere la base sottile con crème fraîche e mozzarella, senza salmone.",
+        insert_at: "after_shape",
+        duration_minutes: 2,
+        replaces_generic: true,
+      },
+      {
+        id: "salmon_post",
+        title: "Salmone a crudo dopo il forno",
+        description: "Fuori dal forno, adagiare il salmone affumicato, aneto, cipolla rossa a velo e capperi. Il salmone resta crudo: la firma di Spago.",
+        insert_at: "after_bake",
+        duration_minutes: 3,
+      },
+    ],
+  },
+
+  greek_feta_pan: {
+    id: "greek_feta_pan",
+    concept_ref: "greek_feta",
+    preferred_for_styles: ["greek_pan"],
+    ingredients: [
+      { name: "Salsa di pomodoro all'origano", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Mix mozzarella e cheddar", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Feta sbriciolata", amount: { value: 50, unit: "g" }, section: "superficie" },
+      { name: "Olive kalamata denocciolate", amount: { value: 30, unit: "g" }, section: "superficie" },
+      { name: "Cipolla rossa a rondelle", amount: { value: 25, unit: "g" }, section: "superficie" },
+      { name: "Origano secco", amount: { value: 2, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_greek",
+      title: "Feta, kalamata e cipolla",
+      description: "Nel padellino unto, salsa e mix mozzarella-cheddar. Distribuire feta, olive kalamata e cipolla rossa. Origano. Fondo fritto e croccante dall'abbondante olio.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  /* ═══════════════════════════════════════════════════════════════════════
+   * WAVE 4 — TOPPING PER STILE: FAMIGLIA CONTEMPORANEA / REGIONALE
+   * bonci_teglia, focaccia_genovese (+ Sardenaira De.Co.), sfincione (+
+   * bagherese bianco), focaccia_recco, padellino_torino, trancio_milanese.
+   * Ciaccino e Barese sono mono-topping già coperti.
+   * ═══════════════════════════════════════════════════════════════════════ */
+
+  zucca_speck_bonci: {
+    id: "zucca_speck_bonci",
+    concept_ref: "zucca_speck",
+    variant_name: "Pizzarium",
+    preferred_for_styles: ["bonci_teglia"],
+    authenticity: "signature",
+    ingredients: [
+      { name: "Crema di zucca arrosto (zucca, noce moscata, sale)", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Speck artigianale a fette", amount: { value: 50, unit: "g" }, notes: "a freddo dopo cottura", section: "superficie" },
+      { name: "Caciocavallo campano a scaglie", amount: { value: 30, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [
+      {
+        id: "zucca_speck_bake",
+        title: "Crema di zucca in cottura",
+        description: "Stendere la crema di zucca sulla teglia ad alta idratazione e cuocere fino a base dorata e mollica spumosa.",
+        insert_at: "after_shape",
+        duration_minutes: 3,
+        replaces_generic: true,
+      },
+      {
+        id: "zucca_speck_post",
+        title: "Speck e caciocavallo a freddo",
+        description: "Fuori dal forno, adagiare lo speck a fette e le scaglie di caciocavallo sul caldo. Filo d'olio. Lo speck resta morbido, non cotto.",
+        insert_at: "after_bake",
+        duration_minutes: 2,
+      },
+    ],
+  },
+
+  burrata_salmone_bonci: {
+    id: "burrata_salmone_bonci",
+    concept_ref: "burrata_salmone",
+    variant_name: "Pizzarium",
+    preferred_for_styles: ["bonci_teglia"],
+    authenticity: "signature",
+    ingredients: [
+      { name: "Olio EVO e sale per la cottura in bianco", amount: { value: 10, unit: "ml" }, section: "base" },
+      { name: "Stracciatella di burrata pugliese (mozzarella, panna)", amount: { value: 80, unit: "g" }, notes: "a crudo dopo cottura", section: "superficie" },
+      { name: "Salmone scozzese affumicato a freddo", amount: { value: 60, unit: "g" }, section: "superficie" },
+      { name: "Zest di limone e aneto fresco", amount: { value: 3, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [
+      {
+        id: "burrata_salmone_bake",
+        title: "Teglia in bianco",
+        description: "Cuocere la teglia in bianco (olio e sale) fino a doratura e alveolatura aperta.",
+        insert_at: "after_shape",
+        duration_minutes: 2,
+        replaces_generic: true,
+      },
+      {
+        id: "burrata_salmone_post",
+        title: "Stracciatella e salmone a freddo",
+        description: "Fuori dal forno, ciuffi di stracciatella, fette di salmone affumicato, zest di limone e aneto. Tutto a crudo.",
+        insert_at: "after_bake",
+        duration_minutes: 3,
+      },
+    ],
+  },
+
+  focaccia_cipolle_genovese: {
+    id: "focaccia_cipolle_genovese",
+    concept_ref: "focaccia_cipolle",
+    preferred_for_styles: ["focaccia_genovese"],
+    ingredients: [
+      { name: "Cipolle dorate a fette sottili", amount: { value: 120, unit: "g" }, section: "superficie" },
+      { name: "Salamoia (acqua, olio EVO, sale)", amount: { value: 30, unit: "ml" }, section: "superficie" },
+      { name: "Olio EVO ligure", amount: { value: 15, unit: "ml" }, section: "superficie" },
+      { name: "Sale grosso", amount: { value: 3, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_cipolle_genovese",
+      title: "Cipolle e salamoia nelle fossette",
+      description: "Distribuire le cipolle a fette sulla focaccia prima della lievitazione finale. Versare la salamoia nelle fossette dei polpastrelli, olio EVO e sale grosso. Le cipolle stufano in cottura.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  sardenaira_sanremo: {
+    id: "sardenaira_sanremo",
+    concept_ref: "sardenaira",
+    variant_name: "De.Co. di Sanremo",
+    preferred_for_styles: ["focaccia_genovese"],
+    authenticity: "canonical",
+    ingredients: [
+      { name: "Salsa densa di pomodoro cotta con cipolla (pomodoro, cipolla, olio)", amount: { value: 150, unit: "g" }, section: "base" },
+      { name: "Acciughe salate dissalate", amount: { value: 25, unit: "g" }, section: "base" },
+      { name: "Aglio in camicia schiacciato", amount: { value: 3, unit: "pcs" }, section: "base" },
+      { name: "Olive taggiasche in salamoia", amount: { value: 40, unit: "g" }, section: "superficie" },
+      { name: "Capperi dissalati", amount: { value: 15, unit: "g" }, section: "superficie" },
+      { name: "Origano selvatico secco", amount: { value: 2, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO ligure", amount: { value: 20, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_sardenaira",
+      title: "Condire la Sardenaira",
+      description: "Stendere la salsa densa di pomodoro e cipolla sull'impasto alto e soffice. Affondare le acciughe e gli spicchi d'aglio in camicia. Distribuire olive taggiasche, capperi e origano; abbondante olio EVO. Cottura lenta in teglia. Non è una pizza: è una focaccia condita.",
+      insert_at: "after_shape",
+      duration_minutes: 6,
+      replaces_generic: true,
+    }],
+  },
+
+  sfincione_bianco_bagherese: {
+    id: "sfincione_bianco_bagherese",
+    concept_ref: "sfincione_bianco",
+    variant_name: "bagherese",
+    preferred_for_styles: ["sfincione"],
+    ingredients: [
+      { name: "Acciughe salate sciolte in olio EVO", amount: { value: 25, unit: "g" }, section: "base" },
+      { name: "Tuma fresca (o primosale) a fette", amount: { value: 120, unit: "g" }, notes: "affondata nell'impasto", section: "base" },
+      { name: "Cipolle bianche stufate lentamente", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Caciocavallo stagionato grattugiato", amount: { value: 40, unit: "g" }, section: "superficie" },
+      { name: "Mollica di pane tostata all'origano", amount: { value: 40, unit: "g" }, section: "superficie" },
+      { name: "Pepe nero e olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    pre_prep_steps: [{
+      id: "bagherese_prep",
+      title: "Cipolle stufate e mollica tostata",
+      description: "Stufare le cipolle bianche dolcemente in olio. A parte, tostare la mollica di pane in padella con origano e un filo d'olio.",
+      duration_minutes: 25,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_sfincione_bianco",
+      title: "Sfincione bianco senza pomodoro",
+      description: "Niente pomodoro. Affondare nell'impasto le fette di tuma e le acciughe sciolte. Coprire con le cipolle stufate, il caciocavallo grattugiato e la mollica tostata. Pepe e olio. La variante di Bagheria.",
+      insert_at: "after_shape",
+      duration_minutes: 6,
+      replaces_generic: true,
+    }],
+  },
+
+  recco_nduja: {
+    id: "recco_nduja",
+    concept_ref: "nduja",
+    preferred_for_styles: ["focaccia_recco"],
+    authenticity: "signature",
+    compatible_layouts: ["double_thin_sheet"],
+    ingredients: [
+      { name: "Crescenza ligure fresca", amount: { value: 230, unit: "g" }, section: "ripieno" },
+      { name: "'Nduja piccante di Spilinga", amount: { value: 40, unit: "g" }, notes: "a pezzetti, prima della chiusura", section: "ripieno" },
+      { name: "Olio EVO ligure", amount: { value: 10, unit: "ml" }, section: "superficie" },
+      { name: "Sale fino", amount: { value: 2, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "recco_nduja_fill",
+      title: "Crescenza e 'nduja tra le sfoglie",
+      description: "Tra la sfoglia inferiore e superiore distribuire la crescenza a pezzetti e, qua e là, la 'nduja. Sigillare i bordi, bucherellare. Olio e sale in superficie. La 'nduja si scioglie nel ripieno fondente.",
+      insert_at: "after_fill_internal",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
+  recco_culatello_recipe: {
+    id: "recco_culatello_recipe",
+    concept_ref: "recco_culatello",
+    preferred_for_styles: ["focaccia_recco"],
+    authenticity: "signature",
+    compatible_layouts: ["double_thin_sheet"],
+    ingredients: [
+      { name: "Crescenza ligure fresca", amount: { value: 230, unit: "g" }, section: "ripieno" },
+      { name: "Olio EVO ligure", amount: { value: 8, unit: "ml" }, section: "superficie" },
+      { name: "Culatello di Zibello DOP a fette sottili", amount: { value: 60, unit: "g" }, notes: "a crudo dopo cottura", section: "superficie" },
+    ],
+    assembly_steps: [
+      {
+        id: "recco_culatello_fill",
+        title: "Crescenza tra le sfoglie",
+        description: "Distribuire la crescenza tra le due sfoglie sottilissime, sigillare i bordi, bucherellare, olio e sale. Cuocere a 300-320°C.",
+        insert_at: "after_fill_internal",
+        duration_minutes: 4,
+        replaces_generic: true,
+      },
+      {
+        id: "recco_culatello_post",
+        title: "Culatello a crudo dopo il forno",
+        description: "Appena sfornata, adagiare le fette di Culatello di Zibello DOP sulla focaccia caldissima: si scalda appena e resta morbido.",
+        insert_at: "after_bake",
+        duration_minutes: 2,
+      },
+    ],
+  },
+
+  recco_cotto_recipe: {
+    id: "recco_cotto_recipe",
+    concept_ref: "recco_cotto",
+    preferred_for_styles: ["focaccia_recco"],
+    compatible_layouts: ["double_thin_sheet"],
+    ingredients: [
+      { name: "Crescenza ligure fresca", amount: { value: 230, unit: "g" }, section: "ripieno" },
+      { name: "Olio EVO ligure", amount: { value: 8, unit: "ml" }, section: "superficie" },
+      { name: "Prosciutto cotto artigianale Millefiori a fette", amount: { value: 60, unit: "g" }, notes: "a crudo dopo cottura", section: "superficie" },
+    ],
+    assembly_steps: [
+      {
+        id: "recco_cotto_fill",
+        title: "Crescenza tra le sfoglie",
+        description: "Crescenza tra le due sfoglie, sigillare, bucherellare, olio e sale. Cuocere fino a bolle dorate.",
+        insert_at: "after_fill_internal",
+        duration_minutes: 4,
+        replaces_generic: true,
+      },
+      {
+        id: "recco_cotto_post",
+        title: "Cotto Millefiori in uscita dal forno",
+        description: "Adagiare le fette di prosciutto cotto Millefiori sulla focaccia appena sfornata.",
+        insert_at: "after_bake",
+        duration_minutes: 2,
+      },
+    ],
+  },
+
+  recco_pizzata_recipe: {
+    id: "recco_pizzata_recipe",
+    concept_ref: "recco_pizzata",
+    preferred_for_styles: ["focaccia_recco"],
+    compatible_layouts: ["double_thin_sheet"],
+    ingredients: [
+      { name: "Crescenza ligure fresca", amount: { value: 200, unit: "g" }, section: "ripieno" },
+      { name: "Passata di pomodoro biologico", amount: { value: 60, unit: "g" }, section: "superficie" },
+      { name: "Acciughe salate dissalate", amount: { value: 15, unit: "g" }, section: "superficie" },
+      { name: "Olive taggiasche", amount: { value: 25, unit: "g" }, section: "superficie" },
+      { name: "Capperi di Pantelleria dissalati", amount: { value: 10, unit: "g" }, section: "superficie" },
+      { name: "Olio EVO ligure", amount: { value: 8, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "recco_pizzata_fill",
+      title: "Crescenza dentro, pomodoro e acciughe sopra",
+      description: "Crescenza tra le due sfoglie sottili, sigillare e bucherellare. In superficie qualche cucchiaio di passata, acciughe, olive taggiasche e capperi. Olio EVO. La versione 'pizzata' della Recco.",
+      insert_at: "after_fill_internal",
+      duration_minutes: 5,
+      replaces_generic: true,
+    }],
+  },
+
+  margherita_padellino: {
+    id: "margherita_padellino",
+    concept_ref: "margherita",
+    preferred_for_styles: ["padellino_torino"],
+    ingredients: [
+      { name: "Passata di pomodoro pelato italiano (pomodoro, sale)", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Mozzarella fior di latte fusa", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_margherita_padellino",
+      title: "Condimento Margherita al padellino",
+      description: "Sull'impasto lievitato nel padellino oliato, stendere la passata e il fior di latte. Basilico e olio. Il fondo frigge nell'olio del tegamino restando croccante, l'interno soffice.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  diavola_padellino: {
+    id: "diavola_padellino",
+    concept_ref: "diavola",
+    preferred_for_styles: ["padellino_torino"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Mozzarella fior di latte fusa", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Salame piccante a fette", amount: { value: 50, unit: "g" }, section: "base" },
+      { name: "Basilico fresco", amount: { value: 2, unit: "pcs" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_diavola_padellino",
+      title: "Condimento Diavola al padellino",
+      description: "Passata e fior di latte nel padellino. Distribuire il salame piccante a fette. Basilico e olio. Il salame si fa croccante in cottura.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  capricciosa_padellino: {
+    id: "capricciosa_padellino",
+    concept_ref: "capricciosa",
+    preferred_for_styles: ["padellino_torino"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 85, unit: "g" }, section: "base" },
+      { name: "Mozzarella fior di latte fusa", amount: { value: 95, unit: "g" }, section: "base" },
+      { name: "Prosciutto cotto di alta qualità", amount: { value: 35, unit: "g" }, section: "base" },
+      { name: "Funghi champignon freschi affettati", amount: { value: 30, unit: "g" }, section: "base" },
+      { name: "Carciofini cotti sott'olio", amount: { value: 30, unit: "g" }, section: "base" },
+      { name: "Olive nere", amount: { value: 20, unit: "g" }, section: "base" },
+      { name: "Capperi e olio EVO", amount: { value: 8, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_capricciosa_padellino",
+      title: "Condimento Capricciosa al padellino",
+      description: "Passata + fior di latte. Distribuire prosciutto cotto, champignon, carciofini, olive nere e capperi. Olio a filo. Versione torinese ricca.",
+      insert_at: "after_shape",
+      duration_minutes: 5,
+      replaces_generic: true,
+    }],
+  },
+
+  tonno_cipolla_padellino: {
+    id: "tonno_cipolla_padellino",
+    concept_ref: "tonno_cipolla",
+    preferred_for_styles: ["padellino_torino"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Mozzarella fior di latte fusa", amount: { value: 95, unit: "g" }, section: "base" },
+      { name: "Tonno sott'olio di qualità sgocciolato", amount: { value: 60, unit: "g" }, section: "base" },
+      { name: "Cipolla rossa di Tropea affettata", amount: { value: 30, unit: "g" }, section: "base" },
+      { name: "Origano e olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_tonno_padellino",
+      title: "Condimento Tonno e Cipolla",
+      description: "Passata + fior di latte. Distribuire il tonno sgocciolato e la cipolla rossa a velo. Origano e olio. Semplice e saporito.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  gorgonzola_pere_padellino: {
+    id: "gorgonzola_pere_padellino",
+    concept_ref: "gorgonzola_pere",
+    preferred_for_styles: ["padellino_torino"],
+    authenticity: "signature",
+    ingredients: [
+      { name: "Mozzarella fior di latte fusa", amount: { value: 95, unit: "g" }, notes: "base bianca", section: "base" },
+      { name: "Pere fresche dolci a fette sottili", amount: { value: 60, unit: "g" }, section: "base" },
+      { name: "Gorgonzola DOP cremoso", amount: { value: 40, unit: "g" }, notes: "a tocchetti", section: "base" },
+      { name: "Olio EVO", amount: { value: 4, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_gorgo_pere",
+      title: "Condimento Gorgonzola e Pere",
+      description: "Base bianca: fior di latte, fette sottili di pera e gorgonzola a tocchetti. Niente pomodoro. In cottura le pere si ammorbidiscono e il gorgonzola fonde: dolce-salato.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  margherita_trancio: {
+    id: "margherita_trancio",
+    concept_ref: "margherita",
+    preferred_for_styles: ["trancio_milanese"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Mozzarella fior di latte abbondante", amount: { value: 120, unit: "g" }, notes: "cola sui lati del trancio alto", section: "base" },
+      { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_margherita_trancio",
+      title: "Condimento Margherita al trancio",
+      description: "Sull'impasto alto e soffice in teglia, passata e abbondante mozzarella che in cottura cola lungo i lati. Basilico e olio. Fondo dorato e croccante dall'olio in teglia.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  diavola_trancio: {
+    id: "diavola_trancio",
+    concept_ref: "diavola",
+    preferred_for_styles: ["trancio_milanese"],
+    ingredients: [
+      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Mozzarella fior di latte abbondante", amount: { value: 120, unit: "g" }, section: "base" },
+      { name: "Salame piccante a fette", amount: { value: 50, unit: "g" }, section: "base" },
+      { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_diavola_trancio",
+      title: "Condimento Diavola al trancio",
+      description: "Passata e abbondante mozzarella, salame piccante a fette. Olio a filo. Il trancio milanese spesso e soffice con fondo croccante.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
 };
 
 export function resolveTopping(
   conceptId: string,
   style: PizzaStyle,
 ): ToppingRecipe | undefined {
-  const variants = Object.values(TOPPING_LIBRARY).filter(
-    (r) => r.concept_ref === conceptId,
+  /* Per-stile, punto: la variante di un concept per uno stile è SOLO quella
+   * esplicitamente assegnata a quello stile (preferred_for_styles). Niente
+   * fallback per famiglia o "generico": ogni stile ha i suoi condimenti. */
+  return Object.values(TOPPING_LIBRARY).find(
+    (r) =>
+      r.concept_ref === conceptId &&
+      (r.preferred_for_styles?.includes(style.id) ?? false) &&
+      !r.taboo_for_styles?.includes(style.id),
   );
-  if (variants.length === 0) return undefined;
-
-  // 1. Esatto su style.id
-  const exact = variants.find((v) => v.preferred_for_styles?.includes(style.id));
-  if (exact) return exact;
-
-  // 2. Family match
-  const familyMatch = variants.find((v) =>
-    v.preferred_for_families?.includes(style.family),
-  );
-  if (familyMatch) return familyMatch;
-
-  // 3. Variante "generica/classica" come fallback esplicito
-  const generic = variants.find(
-    (v) =>
-      v.variant_name === "classica" ||
-      v.variant_name === "generica" ||
-      v.id.endsWith("_generica") ||
-      v.id.endsWith("_classica"),
-  );
-  if (generic) return generic;
-
-  // 4. Prima disponibile
-  return variants[0];
 }
 
 /* ═══ API esistenti (backward compat) ═══ */
@@ -1951,60 +2788,43 @@ export function getVariantsForConcept(conceptId: string): ToppingRecipe[] {
 /* ═══ Pairing Engine — Sprint 12 Fase 3 ═══ */
 
 export type AuthenticityScore =
-  | "canonical"     // 🟢 100% — variante per questo style esatto
-  | "natural"       // 🟢 ~85% — variante per questa family
-  | "common"        // 🟡 ~65% — fallback con variante generica disponibile
-  | "experimental"  // 🟠 ~50% — esiste variante ma per altre family
+  | "canonical"     // 🟢 "Da disciplinare" — SOLO disciplinari ufficiali (AVPN, IGP, DOP, De.Co.)
+  | "natural"       // 🟢 "Tradizionale" — classico consolidato per lo stile/famiglia
+  | "signature"     // 🟡 "Specialità" — firma moderna/gourmet/d'autore (non un canone)
+  | "common"        // ⚪️ "Alternativa" — fallback generico non ancorato allo stile
+  | "experimental"  // 🟠 "Da provare" — variante esistente ma per altri stili/famiglie
   | "taboo";        // 🔴 — esplicito taboo (style o family)
 
-/** Calcola l'autenticità della coppia (conceptId, style) usando regole computate
- *  dalle preferred_for_* e taboo_for_* delle varianti. Niente PAIRING_MATRIX
- *  esplicita: l'autenticità emerge dalla configurazione delle varianti.
+/** Una ricetta è "generica" se è un fallback classico NON ancorato a stili. */
+function isGenericRecipe(r: ToppingRecipe): boolean {
+  return (
+    (r.variant_name === "classica" ||
+      r.variant_name === "generica" ||
+      r.id.endsWith("_generica") ||
+      r.id.endsWith("_classica")) &&
+    !(r.preferred_for_styles && r.preferred_for_styles.length > 0)
+  );
+}
+
+/** Tier di autenticità DISPLAY della coppia (conceptId, style).
  *
- *  Priorità:
- *  1. taboo esplicito (style o family) → "taboo"
- *  2. variante preferred per questo style.id → "canonical"
- *  3. variante preferred per style.family → "natural"
- *  4. variante "generica/classica" come fallback → "common"
- *  5. varianti esistenti ma per altre family → "experimental"
+ *  IMPORTANTE — separazione dei due assi:
+ *  - `preferred_for_styles` / `preferred_for_families` dicono SE il topping è
+ *    pertinente allo stile (e quale variante usare): NON dicono quanto è
+ *    "da disciplinare".
+ *  - Il tier mostrato di default per un topping pertinente è "natural"
+ *    (Tradizionale). Le singole ricette possono dichiarare `authenticity`
+ *    esplicito per salire a "canonical" (disciplinare ufficiale: AVPN/IGP/…)
+ *    o a "signature" (firma moderna/gourmet, es. Hot Honey, Scarpetta).
  */
 function computeAuthenticity(
   conceptId: string,
   style: PizzaStyle,
 ): AuthenticityScore {
-  const variants = getVariantsForConcept(conceptId);
-  if (variants.length === 0) return "common"; // no info, assume neutro
-
-  // 1. Taboo esplicito blocca tutto
-  for (const v of variants) {
-    if (v.taboo_for_styles?.includes(style.id)) return "taboo";
-    if (v.taboo_for_families?.includes(style.family)) return "taboo";
-  }
-
-  // 2. Canonical: variante per questo style esatto
-  const canonical = variants.some((v) =>
-    v.preferred_for_styles?.includes(style.id),
-  );
-  if (canonical) return "canonical";
-
-  // 3. Natural: variante per questa family
-  const natural = variants.some((v) =>
-    v.preferred_for_families?.includes(style.family),
-  );
-  if (natural) return "natural";
-
-  // 4. Fallback generico esiste
-  const hasGeneric = variants.some(
-    (v) =>
-      v.variant_name === "classica" ||
-      v.variant_name === "generica" ||
-      v.id.endsWith("_generica") ||
-      v.id.endsWith("_classica"),
-  );
-  if (hasGeneric) return "common";
-
-  // 5. Varianti esistono solo per altre family → sperimentale
-  return "experimental";
+  // Per-stile: il tier è quello della ricetta assegnata a questo stile.
+  const resolved = resolveTopping(conceptId, style);
+  if (!resolved) return "experimental"; // concept non offerto da questo stile
+  return resolved.authenticity ?? "natural";
 }
 
 /** Metadata visiva per ogni livello di autenticità (color/icona/label).
@@ -2015,9 +2835,19 @@ export const AUTHENTICITY_META: Record<
 > = {
   canonical: { label: "Da disciplinare", icon: "", hue: "green" },
   natural: { label: "Tradizionale", icon: "", hue: "green" },
-  common: { label: "Alternativa", icon: "", hue: "amber" },
+  signature: { label: "Specialità", icon: "", hue: "amber" },
+  common: { label: "Alternativa", icon: "", hue: "gray" },
   experimental: { label: "Da provare", icon: "", hue: "orange" },
   taboo: { label: "Sconsigliato", icon: "", hue: "red" },
+};
+
+const AUTHENTICITY_ORDER: Record<AuthenticityScore, number> = {
+  canonical: 0,
+  natural: 1,
+  signature: 2,
+  common: 3,
+  experimental: 4,
+  taboo: 5,
 };
 
 /** Restituisce tutti i concept ordinati per autenticità rispetto a uno style.
@@ -2027,72 +2857,48 @@ export function getConceptsByAuthenticity(style: PizzaStyle): Array<{
   authenticity: AuthenticityScore;
   resolved: ToppingRecipe | undefined;
 }> {
-  const order: Record<AuthenticityScore, number> = {
-    canonical: 0,
-    natural: 1,
-    common: 2,
-    experimental: 3,
-    taboo: 4,
-  };
   return getAllConcepts()
     .map((concept) => ({
       concept,
       authenticity: computeAuthenticity(concept.id, style),
       resolved: resolveTopping(concept.id, style),
     }))
-    .sort((a, b) => order[a.authenticity] - order[b.authenticity]);
+    .sort((a, b) => AUTHENTICITY_ORDER[a.authenticity] - AUTHENTICITY_ORDER[b.authenticity]);
 }
 
 export function getRecipesByAuthenticity(style: PizzaStyle): Array<{
   recipe: ToppingRecipe;
   authenticity: AuthenticityScore;
 }> {
-  const order: Record<AuthenticityScore, number> = {
-    canonical: 0,
-    natural: 1,
-    common: 2,
-    experimental: 3,
-    taboo: 4,
-  };
   /* R30 (layout-aware): gli stili farciti/chiusi accettano solo topping pensati
      per quel layout. Un topping "da superficie" (margherita, boscaiola…) su un
      ciaccino sigillato o una focaccia di Recco è fuori contesto: lo si tiene
      fuori dai "featured" declassandolo a experimental. */
+  /* Per-stile, punto: la lista condimenti di uno stile è ESATTAMENTE l'insieme
+     delle ricette assegnate a quello stile (preferred_for_styles). Nessun
+     fallback per famiglia o "generico": la boscaiola romana NON sborda sulla
+     focaccia genovese. L'autenticità è solo un tag per ordinamento/ricerca. */
   const SEALED_LAYOUTS = new Set<LayoutType>(["closed_stuffed", "double_thin_sheet"]);
   const styleLayout = style.layout?.type as LayoutType | undefined;
   const layoutIncompatible = (recipe: ToppingRecipe): boolean => {
     if (!styleLayout) return false;
     if (recipe.compatible_layouts) return !recipe.compatible_layouts.includes(styleLayout);
-    // topping universale (nessuna dichiarazione) → non adatto ai layout sigillati
     return SEALED_LAYOUTS.has(styleLayout);
   };
   return Object.values(TOPPING_LIBRARY)
-    .map((recipe) => {
-      let authenticity: AuthenticityScore = "experimental";
-      if (recipe.taboo_for_styles?.includes(style.id) || recipe.taboo_for_families?.includes(style.family)) {
-        authenticity = "taboo";
-      } else if (layoutIncompatible(recipe)) {
-        authenticity = "experimental";
-      } else if (recipe.preferred_for_styles?.includes(style.id)) {
-        authenticity = "canonical";
-      } else if (recipe.preferred_for_families?.includes(style.family)) {
-        authenticity = "natural";
-      } else if (
-        (recipe.variant_name === "classica" ||
-          recipe.variant_name === "generica" ||
-          recipe.id.endsWith("_generica") ||
-          recipe.id.endsWith("_classica")) &&
-        /* R30: un topping "classico" è un'alternativa universale solo se NON è
-           ancorato a stili specifici. Le ricette regionali (detroit_brick,
-           chicago_deep_classic, montanara_classica, focaccia_barese_classica…)
-           hanno preferred_for_styles: fuori dai loro stili sono sperimentali,
-           non vanno proposte come "Alternativa" (es. Detroit sotto Napoletana). */
-        !(recipe.preferred_for_styles && recipe.preferred_for_styles.length > 0)
-      ) {
-        authenticity = "common";
-      }
-      return { recipe, authenticity };
-    })
-    .sort((a, b) => order[a.authenticity] - order[b.authenticity]);
+    .filter(
+      (recipe) =>
+        (recipe.preferred_for_styles?.includes(style.id) ?? false) &&
+        !recipe.taboo_for_styles?.includes(style.id) &&
+        !layoutIncompatible(recipe),
+    )
+    .map((recipe) => ({
+      recipe,
+      authenticity: recipe.authenticity ?? "natural",
+    }))
+    .sort(
+      (a, b) =>
+        AUTHENTICITY_ORDER[a.authenticity] - AUTHENTICITY_ORDER[b.authenticity],
+    );
 }
 

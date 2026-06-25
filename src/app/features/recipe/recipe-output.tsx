@@ -20,6 +20,7 @@ X
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
 import React,{ useEffect,useMemo,useRef,useState,type ReactNode } from "react";
+import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { createPortal } from "react-dom";
 import type { CmsContent,CmsTimelineStep } from "../cms/cms-context";
 import { useCms } from "../cms/cms-context";
@@ -43,12 +44,14 @@ generateTimeSlots,
 getLayoutSpec,
 getServingsRange,
 getServingUnit,
+isFillingStyle,
 needsPan,
 SERVING_UNIT_LABELS,
 TimelineStep,
 UserConstraints,
 YEAST_LABELS,
 type PanConfig,
+type PizzaStyle,
 } from "../../domain/pizza-engine";
 import { PreFermentCard } from "./pre-ferment-guide";
 import { RecipeFeedbackForm } from "./recipe-feedback";
@@ -377,7 +380,7 @@ function CondimentChoiceStrip({
         {railChoices.map(({ recipe, authenticity }) => {
           const concept = TOPPING_CONCEPTS[recipe.concept_ref];
           const active = activeConceptId === recipe.id;
-          const thumbnail = concept?.thumbnail;
+          const thumbnail = concept?.thumbnail ?? toppingPlaceholder;
           
           if (isTimeline) {
             return (
@@ -426,7 +429,7 @@ function CondimentChoiceStrip({
                         opacity: active ? 0.82 : 1,
                       }}
                     >
-                      {authenticityLabel(authenticity, cms)}
+                      {recipe.variant_name ?? ""}
                     </span>
                   </span>
                 </span>
@@ -478,7 +481,7 @@ function CondimentChoiceStrip({
                     lineHeight: "var(--leading-none)",
                   }}
                 >
-                  {authenticityLabel(authenticity, cms)}
+                  {recipe.variant_name ?? ""}
                 </span>
               </div>
             </button>
@@ -702,14 +705,12 @@ function CondimentChoiceStrip({
                                 }}
                                 aria-pressed={active}
                               >
-                                {concept?.thumbnail && (
-                                  <img
-                                    src={concept.thumbnail}
-                                    alt=""
-                                    className="h-12 w-12 rounded-xl object-cover"
-                                    loading="lazy"
-                                  />
-                                )}
+                                <img
+                                  src={concept?.thumbnail ?? toppingPlaceholder}
+                                  alt=""
+                                  className="h-12 w-12 rounded-xl object-cover"
+                                  loading="lazy"
+                                />
                                 <span className="min-w-0 flex-1">
                                   <span
                                     className="block truncate type-data"
@@ -728,7 +729,7 @@ function CondimentChoiceStrip({
                                       opacity: active ? 0.82 : 1,
                                     }}
                                   >
-                                    {authenticityLabel(authenticity, cms)}
+                                    {recipe.variant_name ?? ""}
                                   </span>
                                 </span>
                               </button>
@@ -991,6 +992,13 @@ function engineMessage(cms: CmsContent | undefined, key: string, fallback: strin
 
 function authenticityLabel(score: AuthenticityScore, cms: CmsContent | undefined): string {
   return engineMessage(cms, `topping.auth.${score}`, AUTHENTICITY_META[score].label);
+}
+
+/** "Condimento" per le pizze normali, "Farcitura" per quelle farcite. */
+function toppingSectionLabel(style: PizzaStyle, cms: CmsContent): string {
+  return isFillingStyle(style)
+    ? cms.cooking.fillingTitle ?? cms.cooking.toppingTitle
+    : cms.cooking.toppingTitle;
 }
 
 function flourStrengthLabel(w: number, cms: CmsContent | undefined): string {
@@ -1354,11 +1362,12 @@ export function RecipeOutput({
     });
   }, [recipe.style]);
   const toppingChoices = React.useMemo(() => {
+    /* Modello per-stile: getRecipesByAuthenticity ritorna SOLO i condimenti
+       assegnati a questo stile (già esclusi i taboo). Sono tutti il "menù"
+       dello stile → li mostriamo tutti, incluse le innovazioni/sperimentazioni
+       (tier "experimental"), che l'ordinamento tiene comunque in coda. */
     const featured = allToppingChoices.filter(
-      (item) =>
-        item.authenticity === "canonical" ||
-        item.authenticity === "natural" ||
-        item.authenticity === "common",
+      (item) => item.authenticity !== "taboo",
     );
     const activeConceptId =
       selectedToppingConcept ?? recipe.style.default_topping_ref ?? null;
@@ -1460,13 +1469,15 @@ export function RecipeOutput({
     () => [
       { id: "ricetta" as PagerTabId, label: forcedTab ? cms.cooking.tabRecipe : cms.cooking.tabRecipeTailored, icon: CookingPot },
       { id: "procedimento" as PagerTabId, label: cms.cooking.tabProcedure, icon: ListChecks },
-      { id: "condimento" as PagerTabId, label: cms.cooking.toppingTitle, icon: Utensils },
+      { id: "condimento" as PagerTabId, label: toppingSectionLabel(recipe.style, cms), icon: Utensils },
     ],
     [
       cms.cooking.tabProcedure,
       cms.cooking.tabRecipe,
       cms.cooking.tabRecipeTailored,
       cms.cooking.toppingTitle,
+      cms.cooking.fillingTitle,
+      recipe.style,
       forcedTab,
     ],
   );
@@ -2182,7 +2193,7 @@ export function RecipeOutput({
     const activeConcept = TOPPING_CONCEPTS[activeRecipe.concept_ref];
     const toppingName = activeRecipe.name ?? activeConcept?.name ?? cms.cooking.toppingTitle;
     const toppingDescription = activeRecipe.description ?? activeConcept?.description;
-    const toppingThumbnail = activeConcept?.thumbnail;
+    const toppingThumbnail = activeConcept?.thumbnail ?? toppingPlaceholder;
 
     const currentIndex = toppingChoices.findIndex(
       (choice) => choice.recipe.id === activeConceptId,
@@ -2213,18 +2224,12 @@ export function RecipeOutput({
               transition={{ type: "spring", stiffness: 350, damping: 30 }}
               className="absolute inset-0 w-full h-full"
             >
-              {toppingThumbnail ? (
-                <img
-                  src={toppingThumbnail}
-                  alt={toppingName}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-8xl">
-                  {activeConcept?.emoji || "🍕"}
-                </div>
-              )}
+              <img
+                src={toppingThumbnail}
+                alt={toppingName}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
               
               {/* Scrim overlay */}
               <div
@@ -2246,25 +2251,20 @@ export function RecipeOutput({
                     textTransform: "uppercase",
                   }}
                 >
-                  Condimento
+                  {toppingSectionLabel(recipe.style, cms)}
                 </div>
                 
                 <Heading level="page" color="var(--overlay-text)" className="font-serif !text-white mt-0.5">
                   {toppingName}
                 </Heading>
 
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {activeChoice?.authenticity && (
-                    <Badge tone="primary" size="sm" style={{ background: "rgba(255, 255, 255, 0.22)", color: "var(--overlay-text)" }}>
-                      {authenticityLabel(activeChoice.authenticity, cms)}
-                    </Badge>
-                  )}
-                  {topping.variant_name && (
+                {activeRecipe.variant_name && (
+                  <div className="mt-2 flex flex-wrap gap-2">
                     <Badge tone="muted" size="sm" style={{ background: "rgba(255, 255, 255, 0.18)", color: "rgba(255, 255, 255, 0.9)" }}>
-                      {topping.variant_name}
+                      {activeRecipe.variant_name}
                     </Badge>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>

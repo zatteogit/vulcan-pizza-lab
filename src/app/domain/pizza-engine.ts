@@ -133,6 +133,21 @@ export function getLayoutSpec(style: PizzaStyle): Required<Omit<LayoutSpec, "fol
   return { ...DEFAULT_LAYOUT, ...style.layout };
 }
 
+/** True se lo stile è "farcito" (ripieno/sdoppiato a libro): l'UI mostra
+ *  "Farcitura" al posto di "Condimento". Es. calzone, ciaccino, focaccia di
+ *  Recco, fugazzeta, baciata/spaccata. */
+export function isFillingStyle(style: PizzaStyle): boolean {
+  const t = style.layout?.type;
+  return (
+    t === "closed_stuffed" ||
+    t === "double_thin_sheet" ||
+    t === "stacked" ||
+    t === "folded_layers" ||
+    // Spaccata: base singola cotta e poi spaccata/farcita a caldo.
+    style.layout?.filling_timing === "post_bake_split"
+  );
+}
+
 /** Unità di servizio per l'UI: come si chiama un pezzo di questa pizza. */
 export type ServingUnit = "panetto" | "teglia" | "pala" | "padellino" | "focaccia";
 
@@ -1368,15 +1383,73 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 1,
     servings_per_unit: [4, 6],
     description:
-      "Doppio strato in teglia: patate a scaglie arricciate in superficie, porchetta nel ripieno dopo lo sdoppiamento. Il piatto del weekend per i romani.",
+      "Teglia con patate a scaglie arricciate in superficie, spaccata a metà dopo la cottura e farcita di porchetta (le patate restano fuori, 'in crosta di patate' alla Sancho). È una spaccata, non una baciata a due dischi.",
     key_characteristics: [
-      "Patate sottili arricciate sopra",
-      "Porchetta nel ripieno post-bake",
-      "Stile Baciata con topping signature",
+      "Patate sottili arricciate sopra (in crosta)",
+      "Spaccata a metà, porchetta nel ripieno",
+      "Stile Spaccata (interpretazione Sancho)",
       "Tradizione laziale",
     ],
     hydration_category: "high",
     emoji: "🥔",
+  },
+
+  pizza_spaccata: {
+    id: "pizza_spaccata",
+    name: "Pizza Spaccata",
+    family: "romana",
+    origin: "Roma (forni e pizza al taglio)",
+    dough: {
+      flour_w_range: [280, 340],
+      flour_pl_range: [0.50, 0.60],
+      hydration_pct_range: [72, 80],
+      salt_pct: 2.5,
+      oil_pct: 2.5,
+      fat_type: "oil",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [24, 48],
+      process_type: "direct|biga",
+    },
+    shape: {
+      shape_type: "rectangular",
+      dough_weight_g: 700,
+      thickness_factor: 0.6,
+      length_cm: 40,
+      width_cm: 30,
+    },
+    baking: {
+      oven_type_required: "electric_standard",
+      temp_c_range: [270, 300],
+      temp_c_ideal: 285,
+      cook_time_sec_range: [840, 1200],
+      cook_time_sec_ideal: 1020,
+    },
+    crust_type: "thick_airy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    layout: {
+      type: "single",
+      pieces_per_unit: 1,
+      interlayer: "none",
+      filling_timing: "post_bake_split",
+      cook_mode: "bianca_only",
+    },
+    default_topping_ref: "bianca_mortazza_romana",
+    default_impasto_ref: "teglia_romana_classica",
+    default_dough_balls: 1,
+    servings_per_unit: [2, 4],
+    description:
+      "UN SOLO disco/teglia di pizza bianca cotto e poi SPACCATO a metà col coltello e farcito a freddo. Diversa dalla Baciata (che parte da due dischi sovrapposti cotti insieme). Farciture: mortazza, crudo, e la patate e porchetta 'in crosta di patate' alla Sancho.",
+    key_characteristics: [
+      "Base singola cotta in bianco",
+      "Spaccata a metà dopo la cottura",
+      "Farcita a freddo (mortazza, crudo, patate&porchetta)",
+      "Tradizione romana da forno / al taglio",
+    ],
+    hydration_category: "high",
+    emoji: "🔪",
   },
 
   /* ═══ Sprint 11 — Espansione catalogo (2 nuovi stili) ═══ */
@@ -1530,7 +1603,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
 
   pizza_fritta: {
     id: "pizza_fritta",
-    name: "Pizza Fritta / Montanara",
+    name: "Pizza Fritta",
     family: "napoletana",
     origin: "Napoli",
     dough: {
@@ -1566,16 +1639,16 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 4,
     servings_per_unit: [1, 2],
     description:
-      "Dischetto di impasto fritto in olio bollente, poi condito a crudo con pomodoro, ricotta, basilico e pecorino. Street food partenopeo.",
+      "Disco di impasto fritto in olio bollente. Due scuole distinte: RIPIENA — farcita di ricotta, provola e cicoli e sigillata PRIMA di friggere; oppure MONTANARA — fritta vuota e poi condita A CRUDO sopra con pomodoro, ricotta e basilico.",
     key_characteristics: [
       "Cottura in frittura (no forno)",
-      "Condimento a crudo dopo la frittura",
-      "Ricotta + pomodoro + basilico",
+      "Ripiena (chiusa) oppure Montanara (aperta, condita sopra)",
+      "Ricotta + provola/cicoli o pomodoro + basilico",
       "Veloce, lievitazione breve",
     ],
     hydration_category: "medium",
     emoji: "🍳",
-    default_topping_ref: "montanara_classica",
+    default_topping_ref: "pizza_fritta_ripiena",
   },
 
   calzone_napoletano: {

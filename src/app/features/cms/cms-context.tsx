@@ -703,6 +703,9 @@ export interface CmsContent {
     tabRecipeTailored: string;
     tabProcedure: string;
     toppingTitle: string;
+    /** Etichetta sezione condimento per gli stili FARCITI (es. "Farcitura").
+     *  Se assente, si usa toppingTitle. */
+    fillingTitle?: string;
     chooseTopping: string;
     learnMore: string;
     tailoredEyebrow: string;
@@ -1280,6 +1283,7 @@ export const CMS_DEFAULTS: CmsContent = {
     tabRecipeTailored: "Ricetta su misura",
     tabProcedure: "Procedimento",
     toppingTitle: "Condimento",
+    fillingTitle: "Farcitura",
     chooseTopping: "Scegli condimento",
     learnMore: "Approfondisci",
     tailoredEyebrow: "La tua ricetta su misura",

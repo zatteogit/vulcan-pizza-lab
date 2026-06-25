@@ -1,0 +1,21 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Immagine condimento non disponibile">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#3a2f29"/>
+      <stop offset="60%" stop-color="#2a221d"/>
+      <stop offset="100%" stop-color="#1c1714"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <g stroke="#b08a6a" stroke-opacity="0.55" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" fill="none">
+    <!-- pizza slice -->
+    <path d="M200 96 L286 286 Q200 320 114 286 Z"/>
+    <path d="M150 250 L130 290" stroke-opacity="0.0"/>
+  </g>
+  <g fill="#b08a6a" fill-opacity="0.5">
+    <circle cx="186" cy="214" r="11"/>
+    <circle cx="222" cy="244" r="10"/>
+    <circle cx="200" cy="270" r="9"/>
+  </g>
+  <circle cx="200" cy="120" r="9" fill="#b08a6a" fill-opacity="0.45"/>
+</svg>

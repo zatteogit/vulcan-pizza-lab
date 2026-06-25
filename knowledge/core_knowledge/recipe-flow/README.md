@@ -1,5 +1,5 @@
 # Flusso ricetta e UI
-> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 15
+> Aggiornamento: 2026-06-25 | Stato: ✅ | File documentati: 15
 
 ## Sommario
 
@@ -131,6 +131,8 @@ generateRecipe(
 - **Gestione Layout e Panetti Gemelli**: In `RecipeOutput` la ricetta calcola dinamicamente lo sdoppiamento del peso se `pieces_per_unit > 1`, indicando ad esempio "2 x Panetti gemelli da 400g" per una teglia di Pizza Baciata.
 - **Iniezione Toppings**: La UI mostra selettori dedicati per la selezione dei condimenti (Toppings). La timeline visualizza i passaggi specifici (es. mandolina patate o sdoppiamento e farcitura porchetta post-cottura) prelevandoli dinamicamente da `TOPPING_LIBRARY` e iniettandoli nei giusti slot temporali.
 - **Serving Units**: I testi e i pulsanti della ricetta si adattano dinamicamente all'unità di servizio dello stile (es. "Panetti", "Teglie", "Padellini", "Focacce") anziché usare la dicitura fissa "Panetti".
+- **Etichette Sezione Dinamiche (Condimento vs Farcitura)**: La tab e l'header della sezione del condimento si adattano dinamicamente in base allo stile tramite `isFillingStyle`. Se lo stile è farcito/ripieno (es. calzone, spaccata, baciata), la label viene convertita in "Farcitura" (o "Filling" in EN) usando il valore `fillingTitle` del CMS.
+- **Placeholder Grafico per Topping**: In `RecipeOutput`, se un condimento non dispone di una miniatura nel catalogo (`TOPPING_CONCEPTS`), viene applicato un file vettoriale SVG di default (`_placeholder.svg`) al posto di mostrare un fallback testuale/emoji.
 - **UX Proximity #54 (Dimensioni Teglia)**: Se lo stile richiede una teglia, le dimensioni attive (es. `40×30 cm` o `Ø28 cm`) vengono visualizzate a fianco del selettore di porzioni, risolvendo la co-locazione delle info.
 - **Stima Persone**: Calcolo dinamico del numero stimato di persone servite basato sullo stile e sul numero di porzioni (es. `≈ 4-6 persone`), visualizzato a fianco del contatore porzioni con riscalamento ingredienti e topping condimenti.
 - **Pannello Regola 55**: Sub-pannello spiegazione formula attivabile con un click su pulsante help per chiarire il calcolo della temperatura dell'acqua, gestito dallo stato locale `showRule55Tip`.
@@ -159,7 +161,9 @@ generateRecipe(
 | Orari notturni | ✅ UX | Allerta euristica in `RecipeOutput` se fasi manuali cadono tra 23:00 e 07:00, con suggerimento orario alternativo e pulsante per spostare l'inizio |
 
 ### 3. Selezione del Topping e Visualizzazione Autenticità (Sprint 12 Fase 3)
-La selezione del condimento passa dal flusso ricetta e dalla libreria `topping-library.ts`, classificando i topping in base all'autenticità rispetto allo stile attivo:
+La selezione del condimento passa dal flusso ricetta e dalla libreria `topping-library.ts`.
+- **Modello Stretto Per-Stile**: Risolto tramite `getRecipesByAuthenticity(style)` di `topping-library.ts` che restituisce *esclusivamente* i condimenti esplicitamente assegnati a quello stile (senza fallback generici o di famiglia).
+- **Nome Variante in UI**: Nel selettore rapido dei condimenti (`CondimentChoiceStrip`), l'etichetta visualizzata non mostra più il livello di autenticità teorico, bensì il nome specifico della variante (`recipe.variant_name`).
 - **Color-Coding Psicologico ed Autenticità**: Risolve il livello di autenticità (`AuthenticityScore` e colore associato) tramite `getConceptsByAuthenticity(style)` di `topping-library.ts`:
   - `🟢 canonical / natural` (Verde, corrispondenza classica/naturale)
   - `🟡 common` (Ambra, corrispondenza comune)

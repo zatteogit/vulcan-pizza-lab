@@ -335,6 +335,51 @@ Specifiche come §4: **1:1, 400×400 px, PNG/WebP**, food photography dark/moody
 | `bresaola_rucola` | Bresaola, Rucola e Grana | Base bianca con fette di bresaola a crudo, ciuffo di rucola selvatica, scaglie di grana e zest di limone. | `Square food photo of bresaola arugula pizza, white mozzarella base, draped bresaola slices, wild arugula, parmesan shards, lemon zest, dark slate --ar 1:1` |
 | `stracciata_bottarga` | Stracciatella e Bottarga | Pala bianca alveolata con ciuffi di stracciatella, zucchine alla scapece e pioggia ambrata di bottarga di muggine grattugiata. | `Square macro of stracciatella and bottarga pala, open crumb white crust, burrata stracciatella dollops, scapece zucchini, grated amber mullet bottarga, dark moody background --ar 1:1` |
 
+### 7.4a Nuovi concept firma — Wave 3 (Americana)
+
+| ID Concept | Nome | Descrizione visiva | Prompt |
+| :--- | :--- | :--- | :--- |
+| `cheese_pizza` | Cheese Pizza | Slice NY plain cheese: salsa rossa sotto un manto uniforme di mozzarella low-moisture lucida e unta, bordo sottile. | `Square macro of New York plain cheese pizza slice, glossy greasy low-moisture mozzarella, thin crust, dark pizzeria counter, moody lighting --ar 1:1` |
+| `supreme` | Supreme | Carico americano: pepperoni, salsiccia, peperoni verdi, cipolla e funghi su mozzarella fusa. | `Square close-up of supreme pizza, pepperoni, sausage, green peppers, onions, mushrooms on melted cheese, dark background --ar 1:1` |
+| `white_pizza` | White Pizza | Senza pomodoro: mozzarella, ciuffi di ricotta, spinaci e aglio, pecorino. | `Square macro of white pizza, no tomato, mozzarella, ricotta dollops, spinach, garlic, pecorino, dark moody lighting --ar 1:1` |
+| `vodka_pizza` | Vodka | Salsa vodka rosa-cremosa a cucchiaiate, basilico e pecorino. | `Square close-up of vodka sauce pizza, creamy pink-orange sauce dollops, basil, grated pecorino, dark background --ar 1:1` |
+| `bbq_chicken` | BBQ Chicken | Pollo glassato BBQ, cipolla rossa e coriandolo su formaggio fuso, salsa barbecue lucida. | `Square macro of BBQ chicken pizza, glazed bbq chicken, red onion, cilantro, melted cheese, glossy barbecue sauce, dark moody lighting --ar 1:1` |
+| `smoked_salmon` | Salmone affumicato | Base bianca con crème fraîche, fette di salmone affumicato a crudo, aneto, cipolla rossa e capperi. | `Square close-up of smoked salmon pizza, crème fraîche base, draped smoked salmon, dill, red onion, capers, dark elegant background --ar 1:1` |
+| `italian_beef` | Italian Beef | Straccetti di manzo brasato lucidi di brodo e giardiniera piccante su formaggio fuso. | `Square macro of Chicago Italian beef pizza, shredded braised beef in jus, spicy giardiniera, melted cheese, dark moody background --ar 1:1` |
+| `tomato_pie` | Tomato Pie | New Haven senza mozzarella: solo salsa San Marzano lucida, aglio, origano e pecorino su crosta annerita. | `Square macro of New Haven tomato pie, no mozzarella, glossy San Marzano sauce, garlic, oregano, pecorino, charred coal-fired crust, dark background --ar 1:1` |
+| `greek_feta` | Greca (feta e olive) | Pan pizza con feta sbriciolata, olive kalamata, cipolla rossa e origano su mix mozzarella-cheddar. | `Square close-up of Greek pan pizza, crumbled feta, kalamata olives, red onion, oregano, oily puffy crust, dark moody lighting --ar 1:1` |
+
+### 7.4b Nuovi concept firma — Wave 4 (Contemporanea / regionale)
+
+| ID Concept | Nome | Descrizione visiva | Prompt |
+| :--- | :--- | :--- | :--- |
+| `zucca_speck` | Zucca, Speck e Caciocavallo | Crema di zucca arancione, fette di speck a crudo e scaglie di caciocavallo su teglia alta alveolata. | `Square macro of pumpkin cream pizza al taglio, orange squash cream, draped speck, caciocavallo shavings, airy crumb, dark background --ar 1:1` |
+| `burrata_salmone` | Burrata e Salmone | Teglia bianca con ciuffi di stracciatella, salmone affumicato, zest di limone e aneto a crudo. | `Square close-up of burrata and smoked salmon focaccia al taglio, stracciatella dollops, smoked salmon, lemon zest, dill, dark moody lighting --ar 1:1` |
+| `focaccia_cipolle` | Focaccia alle cipolle | Focaccia genovese dorata con cipolle stufate dolci nelle fossette unte di salamoia. | `Square macro of Genovese onion focaccia, golden dimpled surface, sweet stewed onions, olive oil brine pools, coarse salt, dark rustic board --ar 1:1` |
+| `sardenaira` | Sardenaira | Focaccia di Sanremo: salsa densa di pomodoro e cipolla, acciughe, olive taggiasche, capperi e aglio in camicia. | `Square close-up of Sanremo sardenaira, thick tomato-onion sauce, anchovies, taggiasca olives, capers, whole garlic cloves, oregano, dark moody background --ar 1:1` |
+| `sfincione_bianco` | Sfincione bianco (bagherese) | Sfincione di Bagheria senza pomodoro: tuma affondata, cipolle stufate, caciocavallo e mollica tostata. | `Square macro of white Bagheria sfincione, no tomato, melted tuma cheese, stewed onions, grated caciocavallo, toasted breadcrumbs, dark rustic setting --ar 1:1` |
+| `gorgonzola_pere` | Gorgonzola e Pere | Base bianca con fette di pera dolce e gorgonzola cremoso fuso. Dolce-salato. | `Square close-up of gorgonzola and pear pizza, white base, thin sweet pear slices, melted creamy blue cheese, dark moody lighting --ar 1:1` |
+| `tonno_cipolla` | Tonno e Cipolla | Classico: tonno sott'olio e cipolla rossa di Tropea a velo su mozzarella e pomodoro. | `Square macro of tuna and onion pizza, flaked oil-packed tuna, thin red Tropea onion, mozzarella, tomato, oregano, dark background --ar 1:1` |
+
+### 7.4c Recco — farciture aggiuntive (Wave farcite)
+
+| ID Concept | Nome | Descrizione visiva | Prompt |
+| :--- | :--- | :--- | :--- |
+| `recco_culatello` | Crescenza e Culatello | Recco classica con fette di Culatello di Zibello DOP adagiate a crudo dopo cottura. | `Square macro of focaccia di Recco topped with draped Culatello di Zibello DOP slices over molten crescenza, dark moody background --ar 1:1` |
+| `recco_cotto` | Crescenza e Cotto Millefiori | Recco con prosciutto cotto artigianale a fette in uscita dal forno. | `Square close-up of Recco focaccia with artisanal cooked ham slices over oozing crescenza, dark moody lighting --ar 1:1` |
+| `recco_pizzata` | Focaccia Pizzata | Recco con passata, acciughe, olive taggiasche e capperi sopra la crescenza. | `Square macro of focaccia Recco 'pizzata', crescenza, tomato passata, anchovies, taggiasca olives, capers, dark background --ar 1:1` |
+| `pizza_fritta` | Pizza Fritta ripiena | Tasca fritta dorata e gonfia, sezione che mostra ricotta, provola filante e cicoli. | `Square macro of Neapolitan fried stuffed pizza fritta, golden blistered pocket cut open showing ricotta, melted provola and cicoli, dark background --ar 1:1` |
+
+### 7.5 Meccanismo placeholder + lista DEFINITIVA da produrre
+
+**Placeholder attivo:** i topping concept senza `thumbnail` ora mostrano `src/assets/toppings/_placeholder.svg` (icona spicchio su fondo scuro), **non più l'emoji**. Appena prodotta l'immagine reale, importarla in `topping-library.ts` e assegnarla a `ToppingConcept.thumbnail` (il placeholder sparisce da solo).
+
+**Stato:** 14 concept hanno già una foto reale; **40 usano il placeholder** e vanno prodotti (1:1, 400×400, food photography dark/moody, prompt nelle sezioni §7.1–§7.4c sopra):
+
+`hawaiiana`, `recco_culatello`, `recco_cotto`, `recco_pizzata`, `sfincione`, `focaccia_barese`, `fugazzeta`, `detroit`, `chicago`, `montanara`, `pizza_fritta`, `calzone`, `ciaccino`, `white_clam`, `cosacca`, `provola_pepe`, `nduja`, `nerano`, `margherita_sbagliata`, `scarpetta`, `patate_rosmarino`, `hot_honey`, `bresaola_rucola`, `stracciata_bottarga`, `cheese_pizza`, `supreme`, `white_pizza`, `vodka_pizza`, `bbq_chicken`, `smoked_salmon`, `italian_beef`, `tomato_pie`, `greek_feta`, `zucca_speck`, `burrata_salmone`, `focaccia_cipolle`, `sardenaira`, `sfincione_bianco`, `gorgonzola_pere`, `tonno_cipolla`.
+
+> Rigenera questo elenco con: per ogni concept in `TOPPING_CONCEPTS` senza `thumbnail`. (14 con foto: margherita, marinara, bianca, boscaiola, diavola, capricciosa, quattro_stagioni, quattro_formaggi, ortolana, patate_porchetta, bianca_mortazza, cacio_e_pepe, salsiccia_friarielli, crescenza_recco.)
+
 ### 7.4 Integrazione
 
-Salvare in `src/assets/toppings/` con naming `topping_<concept_id>.png` (es. `topping_cosacca.png`, `topping_hot_honey.png`), importare in `topping-library.ts` e assegnare a `ToppingConcept.thumbnail`. Riepilogo asset da generare in questo refactor: **§7.0** (correzioni: margherita, 4 stagioni, hawaiiana) **+ §7.1** (9 regionali) **+ §7.2** (6 napoletani) **+ §7.3** (4 romani). Le wave Americana e Contemporanea aggiungeranno ulteriori concept (sezioni 7.5+ da compilare a refactor avanzato).
+Salvare in `src/assets/toppings/` con naming `topping_<concept_id>.png` (es. `topping_cosacca.png`, `topping_hot_honey.png`), importare in `topping-library.ts` e assegnare a `ToppingConcept.thumbnail`. Riepilogo asset da generare: **§7.0** (correzioni: margherita, 4 stagioni, hawaiiana) **+ §7.1–§7.4c** (regionali, napoletani, romani, americani, contemporanei, Recco). **Totale concept da produrre: 40** (vedi lista §7.5).

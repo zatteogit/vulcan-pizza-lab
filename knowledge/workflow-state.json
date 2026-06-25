@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-06-24T14:15:00.000Z",
+  "lastUpdated": "2026-06-25T14:43:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 139,
     "appFilesExcludingUi": 139,
-    "pizzaEngineExports": 56,
-    "pizzaEngineLines": 4413,
+    "pizzaEngineExports": 57,
+    "pizzaEngineLines": 4486,
     "cmsContextLines": 3182,
-    "stylesInDb": 28
+    "stylesInDb": 29
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-24 registra l'allineamento dello showcase del Design System con i componenti ds, l'integrazione di 10 nuovi topping premium, e una profonda pulizia di dead code ed esportazioni inutilizzate.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-25 registra l'allineamento con lo stile Pizza Spaccata, il supporto per le farciture (layout ripieni/sdoppiati) e l'introduzione dei placeholder per i topping.",
   "filesMappedCount": 139,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-06-24",
+  "lastScannedChapter": "kipi-update-2026-06-25",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -28,7 +28,7 @@
         "src/app/data/topping-library.ts",
         "src/app/data/impasto-library.ts"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-06-25"
     },
     {
       "id": "recipe-flow",
@@ -51,7 +51,7 @@
         "src/app/hooks/use-recipe-state.ts",
         "src/app/features/recipe/recipe-setup-panel.tsx"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-06-25"
     },
     {
       "id": "scoring-feedback",
@@ -108,7 +108,7 @@
         "src/app/features/cms/locales/domain-pt.ts",
         "src/app/pages/cms.tsx"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-06-25"
     },
     {
       "id": "routing-shell",

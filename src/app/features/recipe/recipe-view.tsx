@@ -25,6 +25,7 @@ import { createFormatter, formatLengthCopy } from "../cms/i18n";
 import {
   localizeHydrationCategory,
   localizeCrustType,
+  isFillingStyle,
   type PizzaStyle,
   type UserConstraints,
   type GeneratedRecipe,
@@ -461,6 +462,7 @@ export function RecipeView({
                 activeTab={activeTab}
                 recipeLabel={recipeTabLabel}
                 onChange={onTabChange}
+                fillingMode={isFillingStyle(recipe.style)}
                 /* VPL-A3: senza sticky header restano i controlli flottanti
                  * (back + Inizia) a top-4 / h-10 → bottom ~56px. Il pill sticky
                  * (z-30, sotto i controlli z-50) deve fissarsi sotto di essi per
@@ -505,6 +507,7 @@ export function RecipeView({
           activeTab={activeTab}
           recipeLabel={recipeTabLabel}
           onChange={onTabChange}
+          fillingMode={isFillingStyle(recipe.style)}
           onSearchOpen={() => {}}
         />
       )}

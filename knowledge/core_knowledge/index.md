@@ -1,8 +1,8 @@
 # Vulcan — Core Knowledge (Kipi)
 
-> Ultimo aggiornamento: 2026-06-24 | Comando: `kipi update` | Stato globale: **completo (10/10 capitoli)**
+> Ultimo aggiornamento: 2026-06-25 | Comando: `kipi update` | Stato globale: **completo (10/10 capitoli)**
 
-Applicazione React/Vite per ricette pizza: motore parametrico (`pizza-engine`), flusso ricetta, CMS/i18n, stili e versioni, scoring e contenuti didattici. L'update 2026-06-24 registra l'allineamento delle pagine dello showcase del Design System con i veri componenti ds (Tier 4), l'integrazione di 10 nuovi topping premium (Wave 1 e Wave 2) in `topping-library.ts` a seguito dell'audit visivo delle immagini, e una profonda pulizia del dead code ed esportazioni inutilizzate in tutto il codebase.
+Applicazione React/Vite per ricette pizza: motore parametrico (`pizza-engine`), flusso ricetta, CMS/i18n, stili e versioni, scoring e contenuti didattici. L'update 2026-06-25 registra l'integrazione del nuovo stile Pizza Spaccata, la gestione delle farciture per i layout ripieni/sdoppiati, l'uso dei placeholder SVG per i condimenti e una più rigida categorizzazione dei topping per stile.
 
 ## Metriche (da codice reale)
 
@@ -13,9 +13,9 @@ Applicazione React/Vite per ricette pizza: motore parametrico (`pizza-engine`), 
 | Capitoli KB | 10 | init + scan |
 | File chiave mappati | **139** | `workflow-state.json` |
 | Copertura documentazione | **100%** | 10 capitoli scan completo |
-| Export pubblici in `pizza-engine.ts` | **56** | `rg '^export '` |
-| Stili in `STYLES_DB` | **28** | `pizza-engine.ts` |
-| Righe `pizza-engine.ts` | **4413** | `wc -l` |
+| Export pubblici in `pizza-engine.ts` | **57** | `rg '^export '` |
+| Stili in `STYLES_DB` | **29** | `pizza-engine.ts` |
+| Righe `pizza-engine.ts` | **4486** | `wc -l` |
 | Righe `cms-context.tsx` | 3182 | `wc -l` |
 | Dipendenze runtime | 9 | `package.json` |
 
