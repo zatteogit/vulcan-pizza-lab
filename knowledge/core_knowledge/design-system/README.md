@@ -97,7 +97,8 @@ flowchart TD
 - `DesignSystemPage` e `DevTools` passano `darkMode`/`setDarkMode` da `useDarkMode()` (`root-layout`) — specimen devono usare `DSCtx` o props, non tema hardcoded.
 - Specimen importano componenti produzione (`ScoreRing`, `RecipeStatStrip`, …) e componenti ds reali (`CtaButton`, `Badge`, ecc.): lo showcase è ora un reale consumatore del Design System, evitando duplicazioni visive.
 - `/design-system` ottimizzato per export visivo (minimo chrome); `/dev` include altre tab (CMS, engine test, feedback).
-- Non documentare i primitivi `components/ui/*` in questo capitolo; dopo la pulizia 2026-06-19 resta solo lo stretto necessario (`switch`, hook mobile, helper classi).
+- Non documentare i primitivi `components/ui/*` in this capitolo; dopo la pulizia 2026-06-19 resta solo lo stretto necessario (`switch`, hook mobile, helper classi).
+- **Gestione Placeholder Immagini**: `ImageWithFallback.tsx` intercetta esplicitamente la stringa `"placeholder"` (o sorgenti nulli/vuoti) per forzare il rendering immediato del layout di fallback SVG, prevenendo errori di caricamento del browser o visualizzazioni vuote.
 - `step-header.tsx` è stato rimosso ed integrato in `ds/StepHeader.tsx` (Tier 4).
 - **Modello a 6 Tier**: Rispettare sempre la direzione di consumo `Schermata → T6 → T5 → T4 → T3/T3.5 → (T2 → T1)`. Non consumare mai token primitivi T1 (`--color-*`) o literal hex direttamente nel codice app; consumare solo token semantici T2 o componenti T4.
 - **Enforcement automatico**: L'enforcement dei token e l'integrità del design system sono monitorati tramite `npm run check:tokens` e `npm run verify` integrati nei pre-commit hooks e nella CI.

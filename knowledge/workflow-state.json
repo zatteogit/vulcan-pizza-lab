@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-06-25T14:43:00.000Z",
+  "lastUpdated": "2026-06-26T21:20:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 139,
     "appFilesExcludingUi": 139,
     "pizzaEngineExports": 57,
-    "pizzaEngineLines": 4486,
+    "pizzaEngineLines": 4433,
     "cmsContextLines": 3182,
-    "stylesInDb": 29
+    "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; update 2026-06-25 registra l'allineamento con lo stile Pizza Spaccata, il supporto per le farciture (layout ripieni/sdoppiati) e l'introduzione dei placeholder per i topping.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-06-26 registra il refactoring della pagina Explore con query-string state, l'ordinamento culturale/rappresentativo del Topping Engine, e la grafica degli ingredienti con indici.",
   "filesMappedCount": 139,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-06-25",
+  "lastScannedChapter": "kipi-update-2026-06-26",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -28,7 +28,7 @@
         "src/app/data/topping-library.ts",
         "src/app/data/impasto-library.ts"
       ],
-      "lastWorked": "2026-06-25"
+      "lastWorked": "2026-06-26"
     },
     {
       "id": "recipe-flow",
@@ -51,7 +51,7 @@
         "src/app/hooks/use-recipe-state.ts",
         "src/app/features/recipe/recipe-setup-panel.tsx"
       ],
-      "lastWorked": "2026-06-25"
+      "lastWorked": "2026-06-26"
     },
     {
       "id": "scoring-feedback",
@@ -83,7 +83,7 @@
         "src/app/pages/explore.tsx",
         "src/app/features/recipe/tilt-card.tsx"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-06-26"
     },
     {
       "id": "cms-i18n",

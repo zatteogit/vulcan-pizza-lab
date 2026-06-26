@@ -17,6 +17,13 @@
  * finita più che la tecnica.
  */
 import type { FamilyId } from "../domain/pizza-engine";
+import signatureBonciMargherita from "../../assets/signatures/signature_bonci_margherita.jpg";
+import signatureCacioEPepe from "../../assets/signatures/signature_cacio_e_pepe.jpg";
+import signatureDetroitPepperoni from "../../assets/signatures/signature_detroit_pepperoni.jpg";
+import signatureMarinaraAvpn from "../../assets/signatures/signature_marinara_avpn.jpg";
+import signatureNyPepperoni from "../../assets/signatures/signature_ny_pepperoni.jpg";
+import signatureSalsicciaFriarielli from "../../assets/signatures/signature_salsiccia_friarielli.jpg";
+import signatureSfincioneBianco from "../../assets/signatures/signature_sfincione_bianco.jpg";
 
 export interface SignatureRecipe {
   id: string;
@@ -70,6 +77,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     name: "Marinara",
     description: "Niente formaggio. Pomodoro, aglio, origano, olio EVO. La pizza dei marinai partenopei.",
     emoji: "🌿",
+    photo: signatureMarinaraAvpn,
     style_id: "napoletana_stg",
     topping_concept_id: "marinara",
     family: "napoletana",
@@ -82,6 +90,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     name: "Cacio e Pepe",
     description: "Crema di pecorino romano stesa sul calore residuo. Trucco dei pizzaioli gourmet napoletani.",
     emoji: "⚫",
+    photo: signatureCacioEPepe,
     style_id: "napoletana_canotto",
     topping_concept_id: "cacio_e_pepe",
     family: "napoletana",
@@ -93,6 +102,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     name: "Salsiccia & Friarielli",
     description: "Classico napoletano DOC. Cime di rapa amarognole, salsiccia rosolata, provola affumicata.",
     emoji: "🥬",
+    photo: signatureSalsicciaFriarielli,
     style_id: "napoletana_stg",
     topping_concept_id: "salsiccia_friarielli",
     family: "napoletana",
@@ -103,9 +113,9 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   {
     id: "patate_e_porchetta",
     name: "Patate e Porchetta",
-    description: "Doppio strato in teglia: patate a scaglie arricciate sopra, porchetta nel ripieno post-cottura.",
+    description: "Spaccata in crosta di patate: base unica, patate a scaglie arricciate sopra, poi spaccata e farcita di porchetta post-cottura.",
     emoji: "🥔",
-    style_id: "pizza_baciata",
+    style_id: "pizza_spaccata",
     topping_concept_id: "patate_porchetta",
     family: "romana",
     occasion_tags: ["weekend", "comfort", "tradizione laziale"],
@@ -137,6 +147,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     name: "Bonci al Taglio Margherita",
     description: "Teglia 40×30 metodo Bonci: idratazione 85%, no-knead, 24-48h frigo. Margherita classica.",
     emoji: "☁️",
+    photo: signatureBonciMargherita,
     style_id: "bonci_teglia",
     topping_concept_id: "margherita",
     family: "contemporanea",
@@ -151,6 +162,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     name: "Sfincione bianco",
     description: "Pizza palermitana alta e soffice con olio EVO, rosmarino e fior di sale.",
     emoji: "🏺",
+    photo: signatureSfincioneBianco,
     style_id: "sfincione",
     topping_concept_id: "bianca",
     family: "contemporanea",
@@ -163,6 +175,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     name: "New York Pepperoni",
     description: "Fetta XL pieghevole. Pepperoni a fette coppette che si arricciano in cottura. Stile street USA.",
     emoji: "🗽",
+    photo: signatureNyPepperoni,
     style_id: "new_york",
     topping_concept_id: "diavola",
     family: "americana",
@@ -173,6 +186,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     name: "Detroit Pepperoni",
     description: "Pan pizza profonda con cheese crown caramellato ai bordi e pepperoni distribuiti.",
     emoji: "🚗",
+    photo: signatureDetroitPepperoni,
     style_id: "detroit",
     topping_concept_id: "diavola",
     family: "americana",

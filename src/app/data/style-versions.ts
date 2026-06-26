@@ -736,12 +736,12 @@ const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
     },
   ],
 
-  pizza_patate_porchetta: [
+  pizza_spaccata: [
     {
-      id: "patate_tradizionale",
+      id: "spaccata_tradizionale",
       label: "Tradizionale",
       emoji: "📐",
-      description: "Impasto Teglia Romana classica, 80%, 24h frigo. Versione del weekend.",
+      description: "Impasto Teglia Romana classica, 80%, 24h frigo. Base unica da spaccare.",
       skill_hint: 2,
       params: {
         hydration_pct: 80,
@@ -753,7 +753,7 @@ const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       },
     },
     {
-      id: "patate_bonci",
+      id: "spaccata_bonci",
       label: "Metodo Bonci",
       emoji: "☁️",
       description: "Idratazione 85%, no-knead spinto, 48h frigo. Stile pizza al taglio Bonci.",

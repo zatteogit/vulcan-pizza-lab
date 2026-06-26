@@ -1,5 +1,5 @@
 # Stili, versioni e override
-> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 11
+> Aggiornamento: 2026-06-26 | Stato: ✅ | File documentati: 11
 
 ## Sommario
 
@@ -90,6 +90,8 @@ flowchart TD
 - **Rendering Robusto Varianti Autore:** `StyleDetailSheet` effettua il rendering condizionale delle varianti d'autore (`compatVariants`) verificando se l'emoji associata è presente o meno (evitando spazi vuoti o gap grafici dovuti alla rimozione delle emoji dalle tabelle tassonomiche).
 - **ImageInput in Dev**: Lo `StyleEditorTab` dispone del componente `ImageInput` che consente di caricare immagini dal disco (convertite in Base64 DataURL) o inserire URL Web, salvando il risultato in `style.image` per le card dello stile.
 - **Media locali canonici**: `STYLE_PHOTOS` non deve più vivere duplicato in componenti UI; `recommended-styles.tsx` lo re-esporta solo per compatibilità. I video restano lazy via tag `<video>` e hanno fallback automatico alla foto poster.
+- **Persistenza Filtri in ExplorePage**: La visualizzazione attiva e i filtri di famiglia della pagina Explore sono serializzati nei parametri URL (`view` e `family`). La navigazione verso una ricetta passa lo stato `exploreBackTo` per permettere al pulsante indietro della scheda ricetta di ripristinare esattamente lo stato della navigazione.
+- **Asset Grafici Locali**: Le ricette signature in `signature-recipes.ts` importano ed utilizzano immagini reali `.jpg` dal disco al posto del vecchio fallback `"placeholder"`.
 - `StyleEditorTab` + live sync: ogni modifica può riscrivere `localStorage` — solo ambiente dev.
 - `SyncTab` esclude `src/app/components/ui/` dal bundle.
 - `STYLE_VERSIONS` e `VersionRanges` in `style-versions.ts` sono ora dettagli interni (non esportati). L'accesso alle versioni avviene esclusivamente tramite le API pubbliche `getVersions`, `getVersionById` e `getDefaultVersion`.
@@ -99,7 +101,7 @@ flowchart TD
 
 Le seguenti varianti tecniche avanzate e stili con layout speciale sono stati integrati pienamente in `STYLE_VERSIONS` ed in `STYLES_DB`:
 - **Pizza Baciata (`pizza_baciata`)**: Gestione geometrica dei panetti sdoppiati (2 panetti gemelli per unità) e timeline con step speciali per la stesura sovrapposta con spennellatura d'olio, cottura in bianco, sdoppiamento post-bake e farcitura a freddo.
-- **Pizza Patate e Porchetta (`pizza_patate_porchetta`)**: Variante della Baciata con topping signature (`patate_porchetta`). Associa le fette sottilissime di patate cotte sopra l'impasto pre-bake e l'aggiunta di porchetta a crudo post-cottura all'apertura dello strato.
+- **Pizza Spaccata (`pizza_spaccata`)**: Stile romano cotto in bianco come base singola, spaccato a metà dopo la cottura e farcito a freddo. Eredita le versioni d'autore (tradizionale/Bonci) e ospita la ricetta signature con patate e porchetta in crosta alla Sancho.
 - **Ciaccino Senese (`ciaccino_senese`)**: Focaccia ripiena con layout `closed_stuffed`. Richiede due dischi sigillati con ripieno pre-bake e impasto caratteristico a base di strutto (`lard`).
 
 ## Sistema di Interpretazioni d'Autore (Sprint 12 Fase 4)

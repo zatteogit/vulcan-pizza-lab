@@ -48,7 +48,7 @@ export const STYLE_PHOTOS: Record<string, string> = {
   padellino_torino: photoPadellinoTorino,
   pizza_baciata: photoPizzaBaciata,
   ciaccino_senese: photoCiaccinoSenese,
-  pizza_patate_porchetta: photoPizzaPatatePorchetta,
+  pizza_spaccata: photoPizzaPatatePorchetta,
   trancio_milanese: photoTrancioMilanese,
   chicago_tavern: photoChicagoTavern,
   focaccia_barese: photoFocacciaBarese,

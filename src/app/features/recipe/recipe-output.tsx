@@ -61,6 +61,7 @@ AUTHENTICITY_META,
 getConceptsByAuthenticity,
 getRecipesByAuthenticity,
 getToppingForStyle,
+getToppingThumbnail,
 TOPPING_CONCEPTS,
 TOPPING_LIBRARY,
 type AuthenticityScore,
@@ -380,7 +381,7 @@ function CondimentChoiceStrip({
         {railChoices.map(({ recipe, authenticity }) => {
           const concept = TOPPING_CONCEPTS[recipe.concept_ref];
           const active = activeConceptId === recipe.id;
-          const thumbnail = concept?.thumbnail ?? toppingPlaceholder;
+          const thumbnail = getToppingThumbnail(recipe) ?? toppingPlaceholder;
           
           if (isTimeline) {
             return (
@@ -685,6 +686,7 @@ function CondimentChoiceStrip({
                           filteredPickerChoices.map(({ recipe, authenticity }) => {
                             const concept = TOPPING_CONCEPTS[recipe.concept_ref];
                             const active = activeConceptId === recipe.id;
+                            const thumbnail = getToppingThumbnail(recipe) ?? toppingPlaceholder;
                             return (
                               <button
                                 key={recipe.id}
@@ -706,7 +708,7 @@ function CondimentChoiceStrip({
                                 aria-pressed={active}
                               >
                                 <img
-                                  src={concept?.thumbnail ?? toppingPlaceholder}
+                                  src={thumbnail}
                                   alt=""
                                   className="h-12 w-12 rounded-xl object-cover"
                                   loading="lazy"
@@ -1369,8 +1371,7 @@ export function RecipeOutput({
     const featured = allToppingChoices.filter(
       (item) => item.authenticity !== "taboo",
     );
-    const activeConceptId =
-      selectedToppingConcept ?? recipe.style.default_topping_ref ?? null;
+    const activeConceptId = selectedToppingConcept ?? null;
     if (
       activeConceptId &&
       !featured.some((item) => item.recipe.id === activeConceptId)
@@ -1381,7 +1382,7 @@ export function RecipeOutput({
       if (activeChoice) return [activeChoice, ...featured];
     }
     return featured;
-  }, [allToppingChoices, recipe.style.default_topping_ref, selectedToppingConcept]);
+  }, [allToppingChoices, selectedToppingConcept]);
 
   /* UI proximity #54 — dimensioni teglia accanto al conteggio: solo per gli
      stili che usano una teglia/contenitore. Usa la config attiva (se
@@ -2080,21 +2081,26 @@ export function RecipeOutput({
   const compensations = recipe.science?.compensations ?? [];
 
   const renderToppingSection = (mode: "ingredients" | "timeline") => {
-    const toppingRefId = recipe.style.default_topping_ref;
+    const selectedTopping = selectedToppingConcept
+      ? getToppingForStyle(selectedToppingConcept, recipe.style)
+      : undefined;
+    const fallbackToppingRefId = recipe.style.default_topping_ref;
     /* Difesa in profondità (R1): se il default_topping_ref non risolve a una
        ricetta concreta (ref legacy `<concept>_<stile>` mai mappato), NON lasciare
        la tab vuota — ricadi sul topping più autentico disponibile per lo stile.
        Così nessuno stile resta senza sezione Condimento. */
     const topping =
-      (toppingRefId
-        ? getToppingForStyle(toppingRefId, recipe.style)
-        : undefined) ??
+      selectedTopping ??
       toppingChoices[0]?.recipe ??
+      (fallbackToppingRefId
+        ? getToppingForStyle(fallbackToppingRefId, recipe.style)
+        : undefined) ??
       allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe;
     if (!topping || !topping.ingredients || topping.ingredients.length === 0) return null;
 
     const concept = TOPPING_CONCEPTS[topping.concept_ref];
-    const activeConceptId = selectedToppingConcept ?? topping.concept_ref;
+    const activeToppingId =
+      selectedTopping?.id ?? topping.id;
     const multiplier = recipe.dough_balls;
     const unitName = getServingUnitLabel(cms, servingUnit, 1, true);
     const totalUnitName =
@@ -2140,7 +2146,7 @@ export function RecipeOutput({
           <CondimentChoiceStrip
             choices={toppingChoices}
             allChoices={allToppingChoices}
-            activeConceptId={activeConceptId}
+            activeConceptId={activeToppingId}
             onSelect={onSelectTopping}
             mode="timeline"
           />
@@ -2187,27 +2193,28 @@ export function RecipeOutput({
     }
 
     const activeChoice = toppingChoices.find(
-      (choice) => choice.recipe.id === activeConceptId,
+      (choice) => choice.recipe.id === activeToppingId,
     );
     const activeRecipe = activeChoice?.recipe ?? topping;
     const activeConcept = TOPPING_CONCEPTS[activeRecipe.concept_ref];
     const toppingName = activeRecipe.name ?? activeConcept?.name ?? cms.cooking.toppingTitle;
     const toppingDescription = activeRecipe.description ?? activeConcept?.description;
-    const toppingThumbnail = activeConcept?.thumbnail ?? toppingPlaceholder;
+    const toppingThumbnail = getToppingThumbnail(activeRecipe) ?? toppingPlaceholder;
 
     const currentIndex = toppingChoices.findIndex(
-      (choice) => choice.recipe.id === activeConceptId,
+      (choice) => choice.recipe.id === activeToppingId,
     );
+    const safeCurrentIndex = currentIndex >= 0 ? currentIndex : 0;
 
     const prevTopping = () => {
       if (toppingChoices.length <= 1 || !onSelectTopping) return;
-      const prevIndex = (currentIndex - 1 + toppingChoices.length) % toppingChoices.length;
+      const prevIndex = (safeCurrentIndex - 1 + toppingChoices.length) % toppingChoices.length;
       onSelectTopping(toppingChoices[prevIndex].recipe.id);
     };
 
     const nextTopping = () => {
       if (toppingChoices.length <= 1 || !onSelectTopping) return;
-      const nextIndex = (currentIndex + 1) % toppingChoices.length;
+      const nextIndex = (safeCurrentIndex + 1) % toppingChoices.length;
       onSelectTopping(toppingChoices[nextIndex].recipe.id);
     };
 
@@ -2217,7 +2224,7 @@ export function RecipeOutput({
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-[var(--surface-container)] shadow-md">
           <AnimatePresence initial={false} mode="popLayout">
             <motion.div
-              key={activeConceptId}
+              key={activeToppingId}
               initial={{ opacity: 0, x: 80 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -80 }}
@@ -2301,7 +2308,7 @@ export function RecipeOutput({
           <CondimentChoiceStrip
             choices={toppingChoices}
             allChoices={allToppingChoices}
-            activeConceptId={activeConceptId}
+            activeConceptId={activeToppingId}
             onSelect={onSelectTopping}
             mode="ingredients"
           />
@@ -2346,16 +2353,16 @@ export function RecipeOutput({
         {(() => {
           const hasSections = topping.ingredients.some((ing) => ing.section !== undefined);
           if (hasSections) {
-            const sectionOrder: IngredientSection[] = ["ripieno", "base", "crosta", "superficie"];
-            const grouped: Record<IngredientSection, ToppingIngredient[]> = {
+            const sectionOrder = getToppingIngredientSectionOrder(topping.ingredients);
+            const grouped: Record<IngredientSection, Array<{ ing: ToppingIngredient; index: number }>> = {
               ripieno: [],
               base: [],
               crosta: [],
               superficie: [],
             };
-            topping.ingredients.forEach((ing) => {
+            topping.ingredients.forEach((ing, index) => {
               const sec = ing.section ?? "superficie";
-              grouped[sec].push(ing);
+              grouped[sec].push({ ing, index });
             });
 
             return (
@@ -2373,14 +2380,14 @@ export function RecipeOutput({
                         </Heading>
                       </div>
                       <div className="grid gap-3 sm:grid-cols-2">
-                        {list.map((ing, i) => {
+                        {list.map(({ ing, index }) => {
                           const displayAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
                           const detailParts: string[] = [];
                           if (ing.notes) detailParts.push(ing.notes);
                           if (ing.optional) detailParts.push(ui.pantryOptional);
                           return (
                             <div
-                              key={`${ing.name}-${i}`}
+                              key={`${ing.name}-${index}`}
                               className="rounded-2xl p-4 sm:p-5 text-left"
                               style={{
                                 background: "var(--container-bg-low)",
@@ -2388,16 +2395,32 @@ export function RecipeOutput({
                               }}
                             >
                               <div className="flex items-start justify-between gap-4">
-                                <span
-                                  style={{
-                                    color: ing.optional ? "var(--text-muted)" : "var(--text-default)",
-                                    fontSize: "var(--font-size-xl)",
-                                    fontStyle: ing.optional ? "italic" : "normal",
-                                    lineHeight: "var(--leading-normal)",
-                                  }}
-                                >
-                                  {ing.name}
-                                </span>
+                                <div className="flex min-w-0 items-center gap-3">
+                                  <span
+                                    aria-hidden="true"
+                                    className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full type-numeric"
+                                    style={{
+                                      background: "color-mix(in srgb, var(--text-accent) 10%, transparent)",
+                                      border: "1px solid color-mix(in srgb, var(--text-accent) 22%, transparent)",
+                                      color: "var(--text-accent)",
+                                      fontSize: "var(--font-size-sm)",
+                                      fontWeight: "var(--weight-semibold)" as any,
+                                      lineHeight: 1,
+                                    }}
+                                  >
+                                    {index + 1}
+                                  </span>
+                                  <span
+                                    style={{
+                                      color: ing.optional ? "var(--text-muted)" : "var(--text-default)",
+                                      fontSize: "var(--font-size-xl)",
+                                      fontStyle: ing.optional ? "italic" : "normal",
+                                      lineHeight: "var(--leading-normal)",
+                                    }}
+                                  >
+                                    {ing.name}
+                                  </span>
+                                </div>
                                 <span
                                   className="type-numeric"
                                   style={{
@@ -2450,16 +2473,32 @@ export function RecipeOutput({
                       }}
                     >
                       <div className="flex items-start justify-between gap-4">
-                        <span
-                          style={{
-                            color: ing.optional ? "var(--text-muted)" : "var(--text-default)",
-                            fontSize: "var(--font-size-xl)",
-                            fontStyle: ing.optional ? "italic" : "normal",
-                            lineHeight: "var(--leading-normal)",
-                          }}
-                        >
-                          {ing.name}
-                        </span>
+                        <div className="flex min-w-0 items-center gap-3">
+                          <span
+                            aria-hidden="true"
+                            className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full type-numeric"
+                            style={{
+                              background: "color-mix(in srgb, var(--text-accent) 10%, transparent)",
+                              border: "1px solid color-mix(in srgb, var(--text-accent) 22%, transparent)",
+                              color: "var(--text-accent)",
+                              fontSize: "var(--font-size-sm)",
+                              fontWeight: "var(--weight-semibold)" as any,
+                              lineHeight: 1,
+                            }}
+                          >
+                            {i + 1}
+                          </span>
+                          <span
+                            style={{
+                              color: ing.optional ? "var(--text-muted)" : "var(--text-default)",
+                              fontSize: "var(--font-size-xl)",
+                              fontStyle: ing.optional ? "italic" : "normal",
+                              lineHeight: "var(--leading-normal)",
+                            }}
+                          >
+                            {ing.name}
+                          </span>
+                        </div>
                         <span
                           className="type-numeric"
                           style={{
@@ -3888,6 +3927,19 @@ function getSectionHeader(section: string, locale: string): string {
   }
 }
 
+function getToppingIngredientSectionOrder(ingredients: ToppingIngredient[]): IngredientSection[] {
+  const seen = new Set<IngredientSection>();
+  const order: IngredientSection[] = [];
+  ingredients.forEach((ing) => {
+    const section = ing.section ?? "superficie";
+    if (!seen.has(section)) {
+      seen.add(section);
+      order.push(section);
+    }
+  });
+  return order;
+}
+
 function formatIngredientsText(r: GeneratedRecipe, cms: CmsContent, bcp47: string) {
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
@@ -3909,7 +3961,7 @@ function formatIngredientsText(r: GeneratedRecipe, cms: CmsContent, bcp47: strin
   let toppingDetailsText = "";
 
   if (hasSections) {
-    const sectionOrder: IngredientSection[] = ["ripieno", "base", "crosta", "superficie"];
+    const sectionOrder = getToppingIngredientSectionOrder(topping.ingredients);
     const grouped: Record<IngredientSection, ToppingIngredient[]> = {
       ripieno: [],
       base: [],

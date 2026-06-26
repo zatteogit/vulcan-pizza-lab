@@ -75,6 +75,12 @@ export const router = createBrowserRouter([
       /* ═══ LEGACY REDIRECTS ═══ */
       { path: "search", loader: () => redirect("/") },
       { path: "styles", loader: () => redirect("/explore") },
+      /* "Pizza Patate e Porchetta" non è più uno stile: è la Spaccata con la
+         farcitura patate&porchetta. Vecchi link → spaccata con topping pre-scelto. */
+      {
+        path: "recipe/pizza_patate_porchetta",
+        loader: () => redirect("/recipe/pizza_spaccata?topping=patate_porchetta"),
+      },
       {
         path: "troubleshooting",
         loader: () => redirect("/learn/troubleshooting"),

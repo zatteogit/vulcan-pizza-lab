@@ -107,7 +107,7 @@ const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
     compatible_styles: [
       "teglia_romana",
       "pizza_baciata",
-      "pizza_patate_porchetta",
+      "pizza_spaccata",
       "pala_romana",
     ],
     tip: {
@@ -146,7 +146,7 @@ const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
       "bonci_teglia",
       "teglia_romana",
       "pizza_baciata",
-      "pizza_patate_porchetta",
+      "pizza_spaccata",
     ],
     tip: {
       beginner:

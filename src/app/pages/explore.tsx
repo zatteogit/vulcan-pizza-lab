@@ -5,8 +5,8 @@
 
 import { ArrowRight } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
-import { useMemo,useState } from "react";
-import { Link } from "react-router";
+import { useMemo } from "react";
+import { Link,useSearchParams } from "react-router";
 import { Heading } from "../components/ds/index";
 import { useCms } from "../features/cms/cms-context";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
@@ -37,13 +37,27 @@ const FAMILY_IDS: (FamilyId | "all")[] = [
   "contemporanea",
 ];
 
+type ExploreFilter = "all" | "styles" | "recipes";
+
+const EXPLORE_FILTERS: ExploreFilter[] = ["all", "styles", "recipes"];
+
+function isExploreFilter(value: string | null): value is ExploreFilter {
+  return EXPLORE_FILTERS.includes(value as ExploreFilter);
+}
+
+function isFamilyFilter(value: string | null): value is FamilyId | "all" {
+  return FAMILY_IDS.includes(value as FamilyId | "all");
+}
+
 /* ── Componente Editoriale per la Ricetta in Primo Piano ── */
 function FeaturedRecipeCard({
   recipe,
   isNerd,
+  exploreBackTo,
 }: {
   recipe: SignatureRecipe;
   isNerd?: boolean;
+  exploreBackTo: string;
 }) {
   const { cms } = useCms();
   const photo =
@@ -70,6 +84,7 @@ function FeaturedRecipeCard({
   return (
     <Link
       to={linkTo}
+      state={{ exploreBackTo }}
       className="flex flex-col md:flex-row overflow-hidden rounded-3xl active:scale-[0.99] transition-all duration-300 group"
       style={{
         textDecoration: "none",
@@ -174,8 +189,33 @@ function FeaturedRecipeCard({
 export function ExplorePage() {
   const { cms } = useCms();
   const { effectiveStyles } = useStylesOverride();
-  const [activeFilter, setActiveFilter] = useState<"all" | "styles" | "recipes">("all");
-  const [activeFamily, setActiveFamily] = useState<FamilyId | "all">("all");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlFilter = searchParams.get("view");
+  const activeFilter: ExploreFilter = isExploreFilter(urlFilter) ? urlFilter : "all";
+  const urlFamily = searchParams.get("family");
+  const activeFamily: FamilyId | "all" =
+    activeFilter === "styles" && isFamilyFilter(urlFamily) ? urlFamily : "all";
+  const exploreBackTo = useMemo(() => {
+    const query = searchParams.toString();
+    return `/explore${query ? `?${query}` : ""}`;
+  }, [searchParams]);
+
+  const setExploreFilters = (
+    filter: ExploreFilter,
+    family: FamilyId | "all" = "all",
+  ) => {
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        if (filter === "all") next.delete("view");
+        else next.set("view", filter);
+        if (filter === "styles" && family !== "all") next.set("family", family);
+        else next.delete("family");
+        return next;
+      },
+      { replace: true },
+    );
+  };
 
   const isNerd = useMemo(() => {
     try {
@@ -285,10 +325,7 @@ export function ExplorePage() {
             return (
               <button
                 key={item.id}
-                onClick={() => {
-                  setActiveFilter(item.id as any);
-                  setActiveFamily("all");
-                }}
+                onClick={() => setExploreFilters(item.id as ExploreFilter)}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl active:scale-95 transition-transform shrink-0"
                 style={{
                   background: active
@@ -323,7 +360,11 @@ export function ExplorePage() {
             >
               {/* 1. Hero Card "In primo piano" */}
               {SIGNATURE_RECIPES.length > 0 && (
-                <FeaturedRecipeCard recipe={SIGNATURE_RECIPES[0]} isNerd={isNerd} />
+                <FeaturedRecipeCard
+                  recipe={SIGNATURE_RECIPES[0]}
+                  isNerd={isNerd}
+                  exploreBackTo={exploreBackTo}
+                />
               )}
 
               {/* 2. Anteprima Ricette Iconiche */}
@@ -333,7 +374,7 @@ export function ExplorePage() {
                     {cms.pages.exploreFilterRecipes}
                   </Heading>
                   <button
-                    onClick={() => setActiveFilter("recipes")}
+                    onClick={() => setExploreFilters("recipes")}
                     className="flex items-center gap-1 hover:underline cursor-pointer bg-none border-none outline-none"
                     style={{
                       color: "var(--primary)",
@@ -352,6 +393,7 @@ export function ExplorePage() {
                       index={i}
                       cms={cms}
                       isNerd={isNerd}
+                      exploreBackTo={exploreBackTo}
                     />
                   ))}
                 </div>
@@ -364,7 +406,7 @@ export function ExplorePage() {
                     {cms.misc.exploreSectionTraditional}
                   </Heading>
                   <button
-                    onClick={() => setActiveFilter("styles")}
+                    onClick={() => setExploreFilters("styles")}
                     className="flex items-center gap-1 hover:underline cursor-pointer bg-none border-none outline-none"
                     style={{
                       color: "var(--primary)",
@@ -383,6 +425,7 @@ export function ExplorePage() {
                       index={i}
                       cms={cms}
                       isNerd={isNerd}
+                      exploreBackTo={exploreBackTo}
                     />
                   ))}
                 </div>
@@ -406,6 +449,7 @@ export function ExplorePage() {
                     index={i}
                     cms={cms}
                     isNerd={isNerd}
+                    exploreBackTo={exploreBackTo}
                   />
                 ))}
               </div>
@@ -437,7 +481,7 @@ export function ExplorePage() {
                   return (
                     <button
                       key={fam}
-                      onClick={() => setActiveFamily(fam)}
+                      onClick={() => setExploreFilters("styles", fam)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg active:scale-95 transition-transform"
                       style={{
                         background: active
@@ -522,6 +566,7 @@ export function ExplorePage() {
                                 index={i}
                                 cms={cms}
                                 isNerd={isNerd}
+                                exploreBackTo={exploreBackTo}
                               />
                             ))}
                           </div>
@@ -551,6 +596,7 @@ export function ExplorePage() {
                           index={i}
                           cms={cms}
                           isNerd={isNerd}
+                          exploreBackTo={exploreBackTo}
                         />
                       ))}
                     </div>
@@ -574,11 +620,13 @@ function SignatureRecipeCard({
   index,
   cms,
   isNerd,
+  exploreBackTo,
 }: {
   recipe: SignatureRecipe;
   index: number;
   cms: any;
   isNerd?: boolean;
+  exploreBackTo: string;
 }) {
   const photo =
     recipe.photo ||
@@ -632,6 +680,7 @@ function SignatureRecipeCard({
       <TiltCard className="relative rounded-2xl">
         <Link
           to={linkTo}
+          state={{ exploreBackTo }}
           className="block rounded-2xl overflow-hidden active:scale-[0.97] transition-transform group"
           style={{
             background: "var(--container-card)",
@@ -732,11 +781,13 @@ function StyleCatalogCard({
   index,
   cms,
   isNerd,
+  exploreBackTo,
 }: {
   style: PizzaStyle;
   index: number;
   cms: any;
   isNerd?: boolean;
+  exploreBackTo: string;
 }) {
   const photo =
     cms.media?.stylePhotos?.[style.id] ||
@@ -762,6 +813,7 @@ function StyleCatalogCard({
       <TiltCard className="relative rounded-2xl">
         <Link
           to={`/recipe/${style.id}?mode=canonical`}
+          state={{ exploreBackTo }}
           className="block rounded-2xl overflow-hidden active:scale-[0.97] transition-transform group"
           style={{
             background: "var(--container-card)",

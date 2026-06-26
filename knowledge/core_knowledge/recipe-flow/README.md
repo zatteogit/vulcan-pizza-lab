@@ -1,5 +1,5 @@
 # Flusso ricetta e UI
-> Aggiornamento: 2026-06-25 | Stato: ✅ | File documentati: 15
+> Aggiornamento: 2026-06-26 | Stato: ✅ | File documentati: 15
 
 ## Sommario
 
@@ -133,6 +133,9 @@ generateRecipe(
 - **Serving Units**: I testi e i pulsanti della ricetta si adattano dinamicamente all'unità di servizio dello stile (es. "Panetti", "Teglie", "Padellini", "Focacce") anziché usare la dicitura fissa "Panetti".
 - **Etichette Sezione Dinamiche (Condimento vs Farcitura)**: La tab e l'header della sezione del condimento si adattano dinamicamente in base allo stile tramite `isFillingStyle`. Se lo stile è farcito/ripieno (es. calzone, spaccata, baciata), la label viene convertita in "Farcitura" (o "Filling" in EN) usando il valore `fillingTitle` del CMS.
 - **Placeholder Grafico per Topping**: In `RecipeOutput`, se un condimento non dispone di una miniatura nel catalogo (`TOPPING_CONCEPTS`), viene applicato un file vettoriale SVG di default (`_placeholder.svg`) al posto di mostrare un fallback testuale/emoji.
+- **Apertura Automatica Tab Condimento**: Se la pagina ricetta viene caricata con un condimento pre-selezionato nella query string (`?topping=`), lo stato iniziale della scheda imposta automaticamente la tab attiva su "Condimento" anziché "Ricetta".
+- **Indici Numerati degli Ingredienti**: La lista ingredienti dei condimenti in `RecipeOutput` mostra ora un badge circolare con l'indice numerico progressivo per facilitare la sequenzialità dei passaggi.
+- **Ordinamento Dinamico Sezioni Ingredienti**: Le sezioni degli ingredienti del topping (base, ripieno, superficie, ecc.) vengono disposte dinamicamente nell'ordine esatto in cui compaiono nella ricetta tramite `getToppingIngredientSectionOrder` (anziché seguire una sequenza statica predefinita).
 - **UX Proximity #54 (Dimensioni Teglia)**: Se lo stile richiede una teglia, le dimensioni attive (es. `40×30 cm` o `Ø28 cm`) vengono visualizzate a fianco del selettore di porzioni, risolvendo la co-locazione delle info.
 - **Stima Persone**: Calcolo dinamico del numero stimato di persone servite basato sullo stile e sul numero di porzioni (es. `≈ 4-6 persone`), visualizzato a fianco del contatore porzioni con riscalamento ingredienti e topping condimenti.
 - **Pannello Regola 55**: Sub-pannello spiegazione formula attivabile con un click su pulsante help per chiarire il calcolo della temperatura dell'acqua, gestito dallo stato locale `showRule55Tip`.

@@ -285,18 +285,36 @@ function figmaAssetStub(): Plugin {
 
 > **Contesto.** Con il refactor che rende i condimenti **specifici per stile** (es. *Margherita romana ≠ Margherita napoletana*, *Capricciosa napoletana ≠ romana*), la libreria `topping-library.ts` ha guadagnato nuovi **concept** firma. I thumbnail nella codebase sono **a livello di concept** (`ToppingConcept.thumbnail`), non di ricetta: per ora tutte le varianti per-stile di uno stesso concept condividono **una** immagine.
 
+> **⚠️ REGOLA IMMAGINI TOPPING — devono essere TEXTURE, non pizze intere.** Il thumbnail di un condimento è un **primo piano / macro della texture degli ingredienti** (come `topping_marinara.png` o `topping_boscaiola.png`: salsa, funghi+salsiccia ravvicinati), **NON** una foto di pizza intera. Una foto di pizza intera (es. `verace.png` usata per la margherita) è **sbagliata**: in quel caso si **lascia il placeholder** finché non esiste la texture dedicata. Formato 1:1, 400×400, sfondo dark/moody. Margherita: risolta con `topping_margherita.jpg` (macro di pomodoro+fiordilatte+basilico, non una pizza intera).
+
 ### 7.0 Problemi noti di immagini «messe a caso» (da correggere)
 
 Asset attualmente riusati in modo improprio o mancanti, da sostituire con immagini dedicate:
 
 | Concept | Problema attuale | Azione |
 | :--- | :--- | :--- |
-| `margherita` | Riusa `verace.png` (foto *stile*, non *topping*) come thumbnail. | Generare `topping_margherita.png` 1:1 dedicato. |
-| `quattro_stagioni` | Riusa `topping_4formaggi`→ no: riusa **`topping_capricciosa.png`** (commento esplicito nel codice). | Generare `topping_4stagioni.png` con i 4 quadranti separati. |
-| `hawaiiana` | Elencato in §4 ma **nessun file** presente. | Generare `topping_hawaiiana.png`. |
-| `sfincione`, `focaccia_barese`, `fugazzeta`, `detroit`, `chicago`, `montanara`, `calzone`, `ciaccino`, `white_clam` | Concept regionali **senza thumbnail** (chip mostrato senza immagine). | Generare i thumbnail dedicati (vedi §7.1). |
+| `margherita` | **Risolto:** non riusa più `verace.png` (foto *stile*, non *topping*). | Integrato `topping_margherita.jpg` 1:1 dedicato. |
+| `cacio_e_pepe` | **Risolto:** l'asset precedente era un duplicato visuale della mortadella/pistacchio. | Sostituito `topping_cacioepepe.png` con una texture cacio e pepe corretta. |
+| `quattro_stagioni` | **Risolto:** non riusa più `topping_capricciosa.png`. | Integrato `topping_4stagioni.jpg` dedicato. |
+| `hawaiiana` | **Risolto:** era elencato in §4 ma senza file. | Integrato `topping_hawaiiana.jpg`. |
+| `crescenza_recco` | **Risolto in QA preesistenti:** il vecchio asset era una foto di focaccia intera, meno coerente con le thumbnail macro e molto pesante. | Generato `topping_crescenzarecco.jpg` come macro di crescenza tra sfoglie sottili; rimosso `topping_crescenzarecco.png`. |
+| `signature_ny_pepperoni`, `signature_detroit_pepperoni` | **Risolto in QA preesistenti:** le immagini precedenti contenevano insegne/testo visibile, una con branding riconoscibile. | Sostituiti con JPEG generati senza testo, loghi o insegne, mantenendo autenticità New York slice e Detroit pan. |
+| Duplicati per-stile e ripiene/spaccate | **Risolto in QA duplicati:** il thumbnail concept-level era troppo generico per ricette diverse dello stesso concept (es. Margherita) e per alcune preparazioni farcite/spaccate. | Introdotto `ToppingRecipe.thumbnail` con fallback al concept; aggiunti 18 thumbnail variante in `src/assets/toppings/variants/` per Margherite per-stile, baciata/spaccata, fugazzeta ripiena, calzoni alternativi e Recco farcite. |
+| `sfincione`, `focaccia_barese`, `fugazzeta`, `detroit`, `prosciutto_funghi` | **Risolto:** concept ora con thumbnail dedicato da `temp/`. | Integrati asset JPEG compressi in `src/assets/toppings/`. |
+| `chicago`, `montanara`, `pizza_fritta`, `calzone`, `ciaccino`, `white_clam` | **Risolto:** concept regionali senza thumbnail. | Generati e integrati asset JPEG dedicati. |
+| Wave 1-4 + arricchimenti senza thumbnail | **Risolto:** tutti i `ToppingConcept` ora hanno `thumbnail`. | Generati e integrati asset JPEG dedicati; controllo script: `missingCount: 0`. |
 
-> **Decisione architetturale aperta (per differenziazione visiva piena per-stile).** Per mostrare immagini diverse tra *Margherita napoletana* e *Margherita romana* servirebbe un campo opzionale `thumbnail` su `ToppingRecipe` (con fallback al `concept.thumbnail`). Finché non viene introdotto, generare **un'immagine per concept** è sufficiente; in un secondo momento si potranno aggiungere foto per-ricetta per i casi più iconici (margherita, capricciosa, diavola).
+**QA asset preesistenti, 26 giugno 2026:** ricontrollati gli asset non generati nella wave dei thumbnail mancanti: `src/assets/pizzas/*.png`, vecchi thumbnail topping, asset importati da `temp/` e signature. Gli style-photo sono risultati coerenti e sufficientemente autentici; nessuna sostituzione necessaria. Interventi effettuati solo dove l'immagine poteva ingannare o introdurre branding visibile.
+
+> **Decisione architetturale implementata (differenziazione visiva per ricetta).** `ToppingRecipe` ora supporta `thumbnail` opzionale con fallback a `concept.thumbnail`. Questo permette di differenziare visualmente ricette dello stesso concept quando la differenza è culturalmente o strutturalmente importante: per esempio Margherita AVPN, Romana, New York, Grandma, Padellino e Trancio; oppure preparazioni in cui il close-up del concept non rende evidente la struttura farcita/spaccata.
+
+**QA duplicati — stato wave 1.**
+
+| Area | Stato | Note |
+| :--- | :--- | :--- |
+| `margherita` | **Risolta:** 7/7 ricette con thumbnail variante. | AVPN, Romana, Americana, New York, Grandma, Padellino, Trancio. |
+| Ripiene/spaccate critiche | **Risolte:** 11 thumbnail variante aggiunti. | Baciata patate/porchetta, spaccata crudo, spaccata mortazza, Sancho, fugazzeta rellena, calzoni scarola/ricotta-cicoli, Recco 'nduja/culatello/cotto/pizzata. |
+| Duplicati residui non strutturali | **Da fare in wave 2 se si vuole differenziare tutto per ricetta.** | `diavola` (5), `capricciosa` (4), `quattro_formaggi` (3), `cheese_pizza` (3), `supreme` (3), più coppie come `marinara`, `boscaiola`, `ortolana`, `hot_honey`, `vodka_pizza`, ecc. Il fallback concept resta valido finché non si aggiungono asset dedicati. |
 
 ### 7.1 Concept regionali esistenti senza thumbnail
 
@@ -374,12 +392,10 @@ Specifiche come §4: **1:1, 400×400 px, PNG/WebP**, food photography dark/moody
 
 **Placeholder attivo:** i topping concept senza `thumbnail` ora mostrano `src/assets/toppings/_placeholder.svg` (icona spicchio su fondo scuro), **non più l'emoji**. Appena prodotta l'immagine reale, importarla in `topping-library.ts` e assegnarla a `ToppingConcept.thumbnail` (il placeholder sparisce da solo).
 
-**Stato:** 14 concept hanno già una foto reale; **40 usano il placeholder** e vanno prodotti (1:1, 400×400, food photography dark/moody, prompt nelle sezioni §7.1–§7.4c sopra):
-
-`hawaiiana`, `recco_culatello`, `recco_cotto`, `recco_pizzata`, `sfincione`, `focaccia_barese`, `fugazzeta`, `detroit`, `chicago`, `montanara`, `pizza_fritta`, `calzone`, `ciaccino`, `white_clam`, `cosacca`, `provola_pepe`, `nduja`, `nerano`, `margherita_sbagliata`, `scarpetta`, `patate_rosmarino`, `hot_honey`, `bresaola_rucola`, `stracciata_bottarga`, `cheese_pizza`, `supreme`, `white_pizza`, `vodka_pizza`, `bbq_chicken`, `smoked_salmon`, `italian_beef`, `tomato_pie`, `greek_feta`, `zucca_speck`, `burrata_salmone`, `focaccia_cipolle`, `sardenaira`, `sfincione_bianco`, `gorgonzola_pere`, `tonno_cipolla`.
+**Stato aggiornato:** tutti i `ToppingConcept` hanno una foto reale. Il placeholder rimane solo come fallback difensivo per nuovi concept futuri; controllo script: `missingCount: 0`.
 
 > Rigenera questo elenco con: per ogni concept in `TOPPING_CONCEPTS` senza `thumbnail`. (14 con foto: margherita, marinara, bianca, boscaiola, diavola, capricciosa, quattro_stagioni, quattro_formaggi, ortolana, patate_porchetta, bianca_mortazza, cacio_e_pepe, salsiccia_friarielli, crescenza_recco.)
 
 ### 7.4 Integrazione
 
-Salvare in `src/assets/toppings/` con naming `topping_<concept_id>.png` (es. `topping_cosacca.png`, `topping_hot_honey.png`), importare in `topping-library.ts` e assegnare a `ToppingConcept.thumbnail`. Riepilogo asset da generare: **§7.0** (correzioni: margherita, 4 stagioni, hawaiiana) **+ §7.1–§7.4c** (regionali, napoletani, romani, americani, contemporanei, Recco). **Totale concept da produrre: 40** (vedi lista §7.5).
+Salvare in `src/assets/toppings/` con naming `topping_<concept_id>.jpg` per gli asset compressi nuovi, importare in `topping-library.ts` e assegnare a `ToppingConcept.thumbnail`. La lista di produzione §7.1–§7.4c resta come storico/prompt bank; lo stato corrente è completo.

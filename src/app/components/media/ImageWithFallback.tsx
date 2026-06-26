@@ -37,7 +37,9 @@ export function ImageWithFallback(props: React.ImgHTMLAttributes<HTMLImageElemen
   const objectFit =
     (style as React.CSSProperties | undefined)?.objectFit ?? "cover";
 
-  if (didError) {
+  const isPlaceholder = src === "placeholder" || !src;
+
+  if (didError || isPlaceholder) {
     return (
       <div
         className={className}

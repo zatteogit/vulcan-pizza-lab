@@ -21,7 +21,7 @@ useRef,
 useState,
 type ReactNode,
 } from "react";
-import { Link,useParams,useSearchParams } from "react-router";
+import { Link,useLocation,useParams,useSearchParams } from "react-router";
 import { useCms,type CmsContent } from "../features/cms/cms-context";
 import { createFormatter } from "../features/cms/i18n";
 import {
@@ -103,6 +103,20 @@ function readRecipeMode(params: URLSearchParams): RecipeMode {
     return mode;
   }
   return hasTailoringParams(params) ? "adapted" : "canonical";
+}
+
+function readExploreBackTo(state: unknown): string {
+  if (!state || typeof state !== "object" || !("exploreBackTo" in state)) {
+    return "/explore";
+  }
+  const value = (state as { exploreBackTo?: unknown }).exploreBackTo;
+  if (
+    typeof value === "string" &&
+    (value === "/explore" || value.startsWith("/explore?") || value.startsWith("/explore#"))
+  ) {
+    return value;
+  }
+  return "/explore";
 }
 
 function getCanonicalVersion(styleId: string): StyleVersion | null {
@@ -213,6 +227,8 @@ function RecipeContent({
   cms: any;
 }) {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const exploreBackTo = readExploreBackTo(location.state);
 
   /* ── Load profile from localStorage ── */
   const savedOven = loadJson<{
@@ -367,8 +383,12 @@ function RecipeContent({
     onAction?: () => void;
   } | null>(null);
   const [activeRecipeTab, setActiveRecipeTab] = useState<RecipePrimaryTab>(() => {
-    const tab = searchParams.get("tab");
-    return tab === "procedimento" || tab === "condimento" ? tab : "ricetta";
+    const hasTopping = !!searchParams.get("topping");
+    if (hasTopping) {
+      const tab = searchParams.get("tab");
+      return tab === "procedimento" || tab === "condimento" || tab === "ricetta" ? tab : "condimento";
+    }
+    return "ricetta";
   });
   const handleRecipeTabChange = useCallback((tab: RecipePrimaryTab) => {
     setActiveRecipeTab(tab);
@@ -396,8 +416,9 @@ function RecipeContent({
     ? getVersionById(activeVersionId)
     : null;
 
-  /* Sprint 12 Fase 3 — Topping concept selezionato dall'utente via chip strip.
-   * Default = il default_topping_ref dello Style (margherita / patate_porchetta / ecc.).
+  /* Sprint 12 Fase 3 — Topping selezionato esplicitamente dall'utente via chip strip.
+   * Senza deep-link parte il primo item del carousel condimenti; il default_topping_ref
+   * resta il fallback del motore ricetta, non una selezione UI iniziale.
    * Fase 5: deep-link ?topping=<concept_id> per atterraggio diretto da Scopri/Iconiche.
    * Se non c'è ?topping ma c'è ?interpretation con un topping firmato, eredita quello.
    * Quando cambia, viene iniettato nella generateRecipe come override. */
@@ -406,7 +427,6 @@ function RecipeContent({
       const raw =
         searchParams.get("topping") ??
         initialInterpretation?.base_topping_concept_id ??
-        style.default_topping_ref ??
         null;
       if (!raw) return null;
       const resolved = resolveTopping(raw, style);
@@ -913,7 +933,7 @@ function RecipeContent({
         panConfig={panConfig}
         activeTab={activeRecipeTab}
         onTabChange={handleRecipeTabChange}
-        back={{ label: (cms.pages as any).navExplore || cms.pages.recipeBackToStyles, to: "/explore" }}
+        back={{ label: (cms.pages as any).navExplore || cms.pages.recipeBackToStyles, to: exploreBackTo }}
         recipeTabLabel={cms.cooking.tabRecipe}
         eyebrow={recipeTabLabel}
         shareUrl={shareUrl}
@@ -1622,6 +1642,8 @@ function interpretationName(interpretation: Interpretation): string {
 /* ═══ NOT FOUND ═══ */
 function RecipeNotFound({ styleId }: { styleId?: string }) {
   const { cms } = useCms();
+  const location = useLocation();
+  const exploreBackTo = readExploreBackTo(location.state);
   return (
     <div
       className="min-h-screen flex items-center justify-center px-6"
@@ -1658,7 +1680,7 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
         </p>
         <CtaButton
           as={Link}
-          to="/explore"
+          to={exploreBackTo}
           className="mt-6 px-5 py-2.5"
           style={{ fontSize: "var(--font-size-xl)" }}
         >

@@ -1,9 +1,9 @@
 # Motore pizza e ricetta
-> Aggiornamento: 2026-06-25 | Stato: ✅ | File documentati: 6
+> Aggiornamento: 2026-06-26 | Stato: ✅ | File documentati: 6
 
 ## Sommario
 
-`pizza-engine.ts` (4486 righe) è il nucleo di dominio di Vulcan: tipi, database di **29 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **57 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
+`pizza-engine.ts` (4433 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **57 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
 
 Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica Implementativa v1* (feb 2026) e fix successivi (ADV-02, ADV-04, ADV-08, ADV-11). Schema ricetta versione **1.4** (`RECIPE_SCHEMA_VERSION`).
 
@@ -11,7 +11,7 @@ Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica I
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/domain/pizza-engine.ts` | 4486 | Motore completo: tipi, DB (29 stili), generazione, score, timeline, preset |
+| `src/app/domain/pizza-engine.ts` | 4433 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
 | `src/app/features/dev-tools/engine-test-suite.tsx` | 1651 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
 | `src/app/domain/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, `STYLE_TAGS`, `DEVIATION_CATEGORY_LABELS` per E-Score |
 | `src/app/data/topping-library.ts` | ~2100 | Libreria topping: 34 concetti, 40 ricette, autenticità per stile e timeline injection (integrati nuovi topping premium Wave 1 e Wave 2) |
@@ -85,7 +85,7 @@ flowchart TD
 
 | Costante | Valore / contenuto |
 |----------|-------------------|
-| `STYLES_DB` | **29 stili** — storici (15): `napoletana_stg`, `napoletana_canotto`, `teglia_romana`, `tonda_romana`, `pinsa_romana`, `new_york`, `detroit`, `chicago_deep`, `bonci_teglia`, `focaccia_genovese`, `sfincione`, `pala_romana`, `grandma_style`, `focaccia_recco`, `padellino_torino` — Sprint 11 (3): `pizza_baciata`, `ciaccino_senese`, `pizza_patate_porchetta` — Audit 2026 italiani (6): `trancio_milanese`, `focaccia_barese`, `pizza_fritta`, `calzone_napoletano`, `pizza_al_metro`, `pizza_spaccata` — Audit 2026 internazionali (5): `new_haven_apizza`, `fugazzeta`, `california_style`, `greek_pan`, `chicago_tavern` |
+| `STYLES_DB` | **28 stili** — storici (15): `napoletana_stg`, `napoletana_canotto`, `teglia_romana`, `tonda_romana`, `pinsa_romana`, `new_york`, `detroit`, `chicago_deep`, `bonci_teglia`, `focaccia_genovese`, `sfincione`, `pala_romana`, `grandma_style`, `focaccia_recco`, `padellino_torino` — Sprint 11 (2): `pizza_baciata`, `ciaccino_senese` — Audit 2026 italiani (6): `trancio_milanese`, `focaccia_barese`, `pizza_fritta`, `calzone_napoletano`, `pizza_al_metro`, `pizza_spaccata` — Audit 2026 internazionali (5): `new_haven_apizza`, `fugazzeta`, `california_style`, `greek_pan`, `chicago_tavern` |
 | `PIZZA_FAMILIES` | 4 famiglie: napoletana, romana, americana, contemporanea |
 | `SCORE_DIMENSIONS` | Pesi composite default: Aut 30%, Fat 25%, Dig 20%, Sos 15%, Spe 10% |
 | `FLOUR_W_RANGES` | Tipi dispensa + farine brand (Caputo, Petra, 5 Stagioni, …) |
@@ -110,6 +110,8 @@ flowchart TD
 - **Lievito da dispensa**: priorità sourdough se fermentazione ≥24h o pre-fermento; fallback fresh/dry; sourdough con % impasto 15–20% (non baker % commerciale).
 - **Fermentazione ≤2h**: cap lievito 0.01–0.5% (ADV-02, es. Focaccia di Recco).
 - **Fermentazione ≤0h**: 0% lievito.
+- **Ordinamento Rappresentativo dei Topping**: `getRecipesByAuthenticity` ordina i condimenti del carousel posizionando per primi la ricetta di default dello stile, seguita dai concetti più rappresentativi per rilevanza culturale (`REPRESENTATIVE_CONCEPT_ORDER_BY_STYLE` e `REPRESENTATIVE_CONCEPT_ORDER_BY_FAMILY`), e infine per autenticità e indice di sorgente.
+- **Thumbnail Fallback**: Introdotto l'helper `getToppingThumbnail` per risolvere l'immagine del condimento, con fallback automatico a quella del concetto generale se la ricetta specifica ne è sprovvista.
 - **Temperatura acqua (Regola 55)**: `T_acqua = DDT×3 − T_amb − T_farina − friction`; `null` se fuori 2–40 °C.
 - **Burro Chicago**: `fat_type: "butter"`, `oil_g = 0`, `fat_g` da percentuale burro (~18%).
 - **Interazione idratazione × skill**: calcolata in `calculateFeasibilityScore`. Idratazione >75% sconsigliata per principianti (skill 1). Per gli intermedi (skill 2) la soglia di warning sale a >85% (idratazione estrema).

@@ -57,7 +57,7 @@ flowchart TD
 | `/cms` | `CmsPage` | Tool |
 | `*` | `NotFoundPage` | 404 |
 
-**Redirect legacy**: `/search` → `/`; `/styles` → `/explore`; `/troubleshooting` → `/learn/troubleshooting`; `/glossary` → `/learn/glossary`.
+**Redirect legacy**: `/search` → `/`; `/styles` → `/explore`; `/troubleshooting` → `/learn/troubleshooting`; `/glossary` → `/learn/glossary`; `/recipe/pizza_patate_porchetta` → `/recipe/pizza_spaccata?topping=patate_porchetta` (lo stile patate e porchetta è stato rimosso e condotto a signature della Spaccata).
 
 ## Funzioni principali
 

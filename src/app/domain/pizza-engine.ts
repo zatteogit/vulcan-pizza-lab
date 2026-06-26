@@ -1336,64 +1336,11 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   },
 
   /* Sprint 11 Fase 2 — Variante d'autore: Baciata con topping signature */
-  pizza_patate_porchetta: {
-    id: "pizza_patate_porchetta",
-    name: "Pizza Patate e Porchetta",
-    family: "romana",
-    origin: "Roma (Bonci & tradizione laziale)",
-    dough: {
-      flour_w_range: [280, 340],
-      flour_pl_range: [0.50, 0.60],
-      hydration_pct_range: [75, 85],
-      salt_pct: 2.5,
-      oil_pct: 2.5,
-      fat_type: "oil",
-      sugar_pct: 0.0,
-      fermentation_hours_range: [24, 48],
-      process_type: "direct|biga",
-    },
-    shape: {
-      shape_type: "rectangular",
-      dough_weight_g: 800,
-      thickness_factor: 0.55,
-      length_cm: 40,
-      width_cm: 30,
-    },
-    baking: {
-      oven_type_required: "electric_standard",
-      temp_c_range: [270, 300],
-      temp_c_ideal: 285,
-      cook_time_sec_range: [900, 1320],
-      cook_time_sec_ideal: 1020,
-    },
-    crust_type: "thick_airy",
-    requires_wood_oven: false,
-    allows_additives: true,
-    requires_pre_ferment: false,
-    suitable_for_beginner: false,
-    layout: {
-      type: "stacked",
-      pieces_per_unit: 2,
-      interlayer: "oil_brush",
-      filling_timing: "post_bake_split",
-      cook_mode: "white_then_top",
-    },
-    default_topping_ref: "patate_porchetta",
-    default_impasto_ref: "teglia_romana_classica",
-    default_dough_balls: 1,
-    servings_per_unit: [4, 6],
-    description:
-      "Teglia con patate a scaglie arricciate in superficie, spaccata a metà dopo la cottura e farcita di porchetta (le patate restano fuori, 'in crosta di patate' alla Sancho). È una spaccata, non una baciata a due dischi.",
-    key_characteristics: [
-      "Patate sottili arricciate sopra (in crosta)",
-      "Spaccata a metà, porchetta nel ripieno",
-      "Stile Spaccata (interpretazione Sancho)",
-      "Tradizione laziale",
-    ],
-    hydration_category: "high",
-    emoji: "🥔",
-  },
-
+  /* Nota: "Pizza Patate e Porchetta" NON è uno stile a sé: è la `pizza_spaccata`
+     con la farcitura patate&porchetta (ricetta `patate_porchetta_sancho`,
+     "in crosta di patate" alla Sancho). La combinazione iconica vive come
+     Ricetta Iconica (signature `patate_e_porchetta` → pizza_spaccata). Lo stile
+     dedicato è stato rimosso; /recipe/pizza_patate_porchetta redirige alla spaccata. */
   pizza_spaccata: {
     id: "pizza_spaccata",
     name: "Pizza Spaccata",
