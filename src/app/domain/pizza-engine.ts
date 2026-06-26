@@ -505,10 +505,11 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       flour_w_range: [250, 320], // Aggiornato da AVPN 2024 (era 220-280) — Audit Maestro S3
       flour_pl_range: [0.55, 0.70], // AVPN 2024 disciplinare — Audit Maestro P0-1
       hydration_pct_range: [55, 62],
-      // Audit motore 2026-05: era 2.8 (storico, 50g/L acqua). Modernizzato a
-      // 2.5% (Caputo/AVPN moderno, ~45 g/L con H 60%) per coerenza con Canotto
-      // e Teglia Romana. Differenza pratica trascurabile al palato.
-      salt_pct: 2.5,
+      // Audit motore 2026-06: ripristinato a 2.8% (disciplinare AVPN ~50 g/L
+      // acqua → a H58-62 ≈ 2.6-3.0% sulla farina). Lo stile è certificato STG:
+      // l'omogeneità con Canotto/Teglia NON deve prevalere sul disciplinare per
+      // lo stile-bandiera. (Audit role-play — finding F9.)
+      salt_pct: 2.8,
       oil_pct: 0.0,
       fat_type: "none",
       sugar_pct: 0.0,
@@ -1938,6 +1939,41 @@ export function getQ10(
   return { q10: 2.0, model: "standard" };
 }
 
+// ═══ FERMENTATION TEMPERATURE DEFAULT ═══
+// Audit role-play giugno 2026 (finding F4): il vecchio default binario
+// `hours > 12 ? 4 : 22` forzava il FRIGO su qualsiasi maturazione lunga, anche
+// sugli stili tradizionalmente a temperatura ambiente. Per la Napoletana STG —
+// impasto diretto a TA per disciplinare — questo dava digeribilità "Media" su
+// 24h a lievito madre (anti-disciplinare e controintuitivo). Ora gli stili
+// diretti a TA restano in ambiente anche a lunga maturazione; gli altri lunghi
+// mantengono il frigo. Usato come DEFAULT quando l'utente non sceglie la temp.
+const ROOM_TEMP_DIRECT_STYLES = new Set<string>([
+  "napoletana_stg",
+  "tonda_romana",
+]);
+
+export function defaultFermentTempC(style: PizzaStyle, fermentationHours: number): number {
+  if (style.dough.unleavened) return 20; // sfoglia: solo riposo a TA
+  if (ROOM_TEMP_DIRECT_STYLES.has(style.id)) return 22; // diretto a TA anche se lungo
+  return fermentationHours > 12 ? 4 : 22;
+}
+
+// ═══ THERMAL VIABILITY — "il forno ce la fa?" (Audit role-play giugno 2026) ═══
+// Per gli stili in cui la cottura È l'identità (forno a legna richiesto, o minimo
+// stile ≥ 350°C: Napoletana, Canotto, Pinsa, Pala), scendere sotto il minimo
+// significa che leopardatura, cornicione e struttura canonici sono FISICAMENTE
+// irraggiungibili. Restituisce 1 (nessun impatto) quando il forno basta, altrimenti
+// un fattore 0.25–1 che fa crollare l'autenticità e la fattibilità (rompe il
+// pavimento strutturale ~65 dell'A-Score). Per gli stili da forno domestico
+// (teglia, detroit, focacce…) ritorna sempre 1: la loro temperatura è raggiungibile.
+export function thermalViability(style: PizzaStyle, ovenTemp: number): number {
+  const styleMinTemp = style.baking.temp_c_range[0];
+  const tempCritical = style.requires_wood_oven || styleMinTemp >= 350;
+  if (!tempCritical || ovenTemp >= styleMinTemp) return 1;
+  const deficitFrac = (styleMinTemp - ovenTemp) / styleMinTemp; // 0..1
+  return Math.max(0.25, 1 - deficitFrac * 1.6);
+}
+
 // ═══ COMPENSATION ENGINE ═══
 // Audit Maestro P0-4: 8 compensazioni parametriche per deficit forno
 // Audit Database: formula idratazione deve essere logaritmica (Modernist Pizza 2021)
@@ -2201,7 +2237,7 @@ function calculateAuthenticityScore(
     }
   }
 
-  const score = Math.round(
+  let score = Math.round(
     Math.max(
       0,
       Math.min(
@@ -2212,6 +2248,24 @@ function calculateAuthenticityScore(
       ),
     ),
   );
+
+  // ── Cap di VIABILITÀ TERMICA (Audit role-play giugno 2026, finding "ottimismo") ──
+  // Problema: con la media a 3 assi, l'autenticità ha un pavimento strutturale ~65
+  // se l'impasto è canonico — anche cuocendo una Napoletana a 250°C (impossibile da
+  // leopardare). Ma per gli stili ad altissima temperatura la cottura È l'identità:
+  // sotto il minimo dello stile l'aspetto/struttura canonici sono fisicamente
+  // irraggiungibili, quindi l'autenticità deve crollare, non fermarsi a 65.
+  const viability = thermalViability(style, ovenTemp);
+  if (viability < 1) {
+    score = Math.round(score * viability);
+    penalties.push(
+      em(
+        "auth.thermalUnviable",
+        `Forno troppo freddo per lo stile ({oven}°C < {min}°C): leopardatura, cornicione e struttura canonici non raggiungibili (×{factor})`,
+        { oven: ovenTemp, min: style.baking.temp_c_range[0], factor: viability.toFixed(2) },
+      ),
+    );
+  }
 
   return { score, penalties, breakdown };
 }
@@ -2810,16 +2864,19 @@ export function generateRecipe(
 
   // Clamp fermentation a available_hours SOLO se l'utente non ha esplicitato un valore custom.
   // Rispettiamo la scelta dell'utente (es. scelta versione "Tradizionale 48h" non va clampata a 24h).
+  // Audit role-play giugno 2026 (finding F8): se il clamp porta SOTTO la finestra
+  // minima dello stile, non è una scelta dell'utente ma un vincolo di tempo →
+  // lo segnaliamo onestamente invece di limitarci a penalizzare l'autenticità.
+  let timeClampedBelowMin = false;
   if (customFermentationHours === undefined && constraints.available_hours > 0) {
-    fermentationHours = Math.min(
-      fermentationHours,
-      constraints.available_hours,
-    );
+    const clamped = Math.min(fermentationHours, constraints.available_hours);
+    if (clamped < fermRange[0]) timeClampedBelowMin = true;
+    fermentationHours = clamped;
   }
 
   const fermentationTempC =
     customFermentationTempC ??
-    (fermentationHours > 12 ? 4 : 22);
+    defaultFermentTempC(style, fermentationHours);
 
   const hasPreFerment =
     usePreFerment ?? style.requires_pre_ferment;
@@ -2957,6 +3014,24 @@ export function generateRecipe(
     hydration,
     constraints.skill_level,
   );
+
+  // ── Tono onesto (Audit role-play giugno 2026): se il forno non regge lo stile
+  // ad alta temperatura, non basta che l'A-Score crolli — anche la fattibilità
+  // (= "verrà come deve?") va abbassata e va detto in chiaro. Fattore
+  // moltiplicativo: preserva l'ordinamento per skill ma segnala il problema. ──
+  const ovenViability = thermalViability(style, ovenTemp);
+  if (ovenViability < 1) {
+    feasResult.score = Math.round(feasResult.score * (0.5 + 0.5 * ovenViability));
+    if (ovenViability <= 0.6) {
+      feasResult.warnings.unshift(
+        em(
+          "feas.thermalUnviable",
+          `Con {oven}°C non otterrai una vera {style}: niente leopardatura né cornicione spinto. Per questo stile serve un forno da almeno {min}°C.`,
+          { oven: ovenTemp, style: style.name, min: style.baking.temp_c_range[0] },
+        ),
+      );
+    }
+  }
   const digestResult = calculateDigestibilityScore(
     fermentationHours,
     fermentationTempC,
@@ -2990,10 +3065,21 @@ export function generateRecipe(
     sustainability: scoreWeights?.sustainability ?? 0.0,
     experimentation: scoreWeights?.experimentation ?? 0.0,
   };
+  // Audit role-play giugno 2026 (finding F1): il composite sommava SOLO 3 dei 5
+  // pesi. Sul path di default (sust/exp = 0, Σ = 1.0) era corretto, ma se una
+  // versione/CMS passava un peso a sustainability o experimentation quel peso
+  // spariva e i restanti non sommavano più a 1 → scala distorta. Ora include
+  // tutti e cinque i termini e rinormalizza per la somma dei pesi: identico sul
+  // path di default, corretto su qualsiasi override.
+  const totalScoreWeight =
+    sw.authenticity + sw.feasibility + sw.digestibility + sw.sustainability + sw.experimentation;
   const composite = Math.round(
-    authResult.score * sw.authenticity +
+    (authResult.score * sw.authenticity +
       feasResult.score * sw.feasibility +
-      digestResult.score * sw.digestibility
+      digestResult.score * sw.digestibility +
+      sustResult.score * sw.sustainability +
+      expResult.score * sw.experimentation) /
+      (totalScoreWeight || 1),
   );
 
   const scores: RecipeScores = {
@@ -3012,7 +3098,16 @@ export function generateRecipe(
     experimentation_category: expResult.category,
     sustainability_category: sustResult.category,
     penalties: authResult.penalties,
-    warnings: feasResult.warnings,
+    warnings: timeClampedBelowMin
+      ? [
+          em(
+            "gen.timeBelowStyleWindow",
+            `Con {available}h non rientri nella finestra di questo stile (min {fMin}h): fermentazione accorciata. Per l'autenticità piena servono almeno {fMin}h.`,
+            { available: constraints.available_hours, fMin: fermRange[0] },
+          ),
+          ...feasResult.warnings,
+        ]
+      : feasResult.warnings,
     claims: [...digestResult.claims, ...sustResult.claims],
   };
 
@@ -3032,6 +3127,12 @@ export function generateRecipe(
     cookTime,
     ovenTemp,
     defaultTopping,
+    {
+      mixerType: constraints.mixer_type,
+      hasMixer: constraints.has_mixer,
+      ovenType: constraints.oven_type,
+      surfaces: constraints.surfaces,
+    },
   );
 
   // Generate tips
@@ -3260,6 +3361,408 @@ const MIXER_FRICTION_K: Record<string, number> = {
   fork: 2,
 };
 
+// ═══ RECIPE OPTIMIZER — "genera la pizza perfetta per il TUO setup" ═══
+// Audit role-play giugno 2026 (finding §1): generateRecipe VALUTA i parametri che
+// gli passi e, in assenza, usa il punto-medio del range. Non cerca mai la
+// combinazione MIGLIORE per i tuoi vincoli. optimizeRecipe colma il gap: esplora
+// uno spazio parametri vincolato (idratazione, ore/temperatura di fermentazione,
+// forza farina, pre-fermento) e restituisce la ricetta che massimizza l'obiettivo
+// rispettando forno, ore disponibili e livello dell'utente.
+
+/** Pesi dell'obiettivo da massimizzare. Se omessi, si usano i pesi di scoring
+ *  (default 0.45 / 0.30 / 0.25) così l'ottimo coincide col composite mostrato. */
+export interface OptimizeObjectiveWeights {
+  authenticity?: number;
+  feasibility?: number;
+  digestibility?: number;
+  sustainability?: number;
+  experimentation?: number;
+}
+
+export interface OptimizedCandidate {
+  hydration: number;
+  flour_w: number;
+  fermentation_hours: number;
+  fermentation_temp_c: number;
+  use_pre_ferment: boolean;
+  /** Valore dell'obiettivo (0-100) per questa combinazione. */
+  objective_score: number;
+  composite: number;
+}
+
+export interface OptimizedRecipe {
+  /** Ricetta pronta da mostrare, generata con i parametri ottimi. */
+  recipe: GeneratedRecipe;
+  /** I parametri scelti dall'ottimizzatore. */
+  params: {
+    hydration: number;
+    flour_w: number;
+    fermentation_hours: number;
+    fermentation_temp_c: number;
+    use_pre_ferment: boolean;
+  };
+  /** Valore dell'obiettivo massimizzato (0-100). */
+  objective_score: number;
+  /** Perché questi parametri — spiegazione human-readable (i18n-ready). */
+  rationale: EngineMsg[];
+  /** Migliori alternative (runner-up), per dare scelta all'utente. */
+  alternatives: OptimizedCandidate[];
+  /** Quante combinazioni sono state valutate. */
+  evaluated: number;
+}
+
+function _uniqRounded(nums: number[], decimals = 2): number[] {
+  const f = Math.pow(10, decimals);
+  return Array.from(new Set(nums.map((n) => Math.round(n * f) / f))).sort((a, b) => a - b);
+}
+
+/** Tetto d'idratazione gestibile per livello: evita di "ottimizzare" verso impasti
+ *  che l'utente non sa gestire (un principiante non deve ricevere 85%). */
+function _hydrationCeilingForSkill(skill: SkillLevel): number {
+  switch (skill) {
+    case 1: return 68;
+    case 2: return 78;
+    case 3: return 88;
+    default: return 200; // esperto: nessun tetto pratico
+  }
+}
+
+export function optimizeRecipe(
+  style: PizzaStyle,
+  constraints: UserConstraints,
+  objective?: OptimizeObjectiveWeights,
+  panConfig?: PanConfig,
+  scoreWeights?: ScoreWeightsOverride,
+  versionRanges?: VersionRangeOverrides,
+  activeImpastoRef?: string,
+  interpretationCenter?: AuthenticityCenter,
+): OptimizedRecipe {
+  const safeRange = (r: [number, number]): [number, number] =>
+    r[0] <= r[1] ? r : [r[1], r[0]];
+
+  // Applichiamo gli stessi merge che farebbe generateRecipe per leggere i range
+  // effettivi (impasto + versione), così lo spazio di ricerca è coerente.
+  let effStyle = style;
+  const impastoId = activeImpastoRef ?? style.default_impasto_ref;
+  const impasto = impastoId ? getImpasto(impastoId) : undefined;
+  if (impasto) {
+    effStyle = { ...effStyle, dough: mergeImpastoIntoDough(effStyle.dough, impasto) };
+  }
+  if (versionRanges) {
+    effStyle = {
+      ...effStyle,
+      dough: {
+        ...effStyle.dough,
+        hydration_pct_range: versionRanges.hydration_pct_range ?? effStyle.dough.hydration_pct_range,
+        flour_w_range: versionRanges.flour_w_range ?? effStyle.dough.flour_w_range,
+        fermentation_hours_range: versionRanges.fermentation_hours_range ?? effStyle.dough.fermentation_hours_range,
+      },
+    };
+  }
+
+  const [hMin, hMax] = safeRange(effStyle.dough.hydration_pct_range);
+  const [wMin, wMax] = safeRange(effStyle.dough.flour_w_range);
+  const [fMin, fMax] = safeRange(effStyle.dough.fermentation_hours_range);
+
+  // ── Spazio ore: dentro la finestra dello stile, capato alle ore disponibili ──
+  const avail = constraints.available_hours > 0 ? constraints.available_hours : Infinity;
+  let hourCands = _uniqRounded(
+    [fMin, (fMin + fMax) / 2, fMax, fMax * 1.25].filter((h) => h <= avail),
+    0,
+  );
+  if (hourCands.length === 0) {
+    // Anche il minimo dello stile è oltre il tempo disponibile: si fa il meglio possibile.
+    hourCands = [Math.max(2, Math.min(fMin, avail === Infinity ? fMin : avail))];
+  }
+
+  // ── Spazio temperatura: frigo / cantina / ambiente (sfoglia non lievitata: TA) ──
+  const tempCands = effStyle.dough.unleavened ? [20] : [4, 18, 22];
+
+  // ── Spazio idratazione: range stile, capato dal livello dell'utente ──
+  const hCeil = Math.min(hMax, _hydrationCeilingForSkill(constraints.skill_level));
+  const hLo = Math.min(hMin, hCeil);
+  const hydrCands = _uniqRounded([hLo, (hLo + hCeil) / 2, hCeil], 0);
+
+  // ── Spazio farina: midpoint stile + match con la dispensa (se compatibile) ──
+  const wMid = Math.round((wMin + wMax) / 2);
+  const wCandSet: number[] = [wMid];
+  for (const id of constraints.pantry_flours) {
+    const r = FLOUR_W_RANGES[id];
+    if (!r) continue;
+    const w = Math.round(Math.max(wMin, Math.min(wMax, (r[0] + r[1]) / 2)));
+    if (r[0] <= wMax && r[1] >= wMin) wCandSet.push(w); // overlap col range stile
+  }
+  const wCands = _uniqRounded(wCandSet, 0);
+
+  // ── Spazio pre-fermento ──
+  const allowsPreferment = /biga|poolish/.test(effStyle.dough.process_type);
+  let prefCands: boolean[];
+  if (effStyle.requires_pre_ferment) prefCands = [true];
+  else if (allowsPreferment && constraints.skill_level >= 2) prefCands = [false, true];
+  else prefCands = [false];
+
+  // ── Pesi obiettivo: default = pesi di scoring, così l'ottimo = composite mostrato ──
+  const obj = {
+    authenticity: objective?.authenticity ?? scoreWeights?.authenticity ?? 0.45,
+    feasibility: objective?.feasibility ?? scoreWeights?.feasibility ?? 0.30,
+    digestibility: objective?.digestibility ?? scoreWeights?.digestibility ?? 0.25,
+    sustainability: objective?.sustainability ?? scoreWeights?.sustainability ?? 0.0,
+    experimentation: objective?.experimentation ?? scoreWeights?.experimentation ?? 0.0,
+  };
+  const objTotal =
+    obj.authenticity + obj.feasibility + obj.digestibility + obj.sustainability + obj.experimentation || 1;
+
+  let best: { cand: OptimizedCandidate; recipe: GeneratedRecipe } | null = null;
+  const all: OptimizedCandidate[] = [];
+  let evaluated = 0;
+
+  for (const hours of hourCands) {
+    for (const temp of tempCands) {
+      for (const hydr of hydrCands) {
+        for (const w of wCands) {
+          for (const pref of prefCands) {
+            const recipe = generateRecipe(
+              style,
+              constraints,
+              hydr,
+              w,
+              hours,
+              temp,
+              pref,
+              undefined,
+              panConfig,
+              scoreWeights,
+              versionRanges,
+              activeImpastoRef,
+              interpretationCenter,
+            );
+            evaluated++;
+            const s = recipe.scores;
+            const objScore =
+              (s.authenticity * obj.authenticity +
+                s.feasibility * obj.feasibility +
+                s.digestibility * obj.digestibility +
+                s.sustainability * obj.sustainability +
+                s.experimentation * obj.experimentation) /
+              objTotal;
+            const cand: OptimizedCandidate = {
+              hydration: hydr,
+              flour_w: w,
+              fermentation_hours: hours,
+              fermentation_temp_c: temp,
+              use_pre_ferment: pref,
+              objective_score: Math.round(objScore * 10) / 10,
+              composite: s.composite,
+            };
+            all.push(cand);
+            // Selezione: massimo obiettivo; a pari merito preferisci più
+            // fattibile, poi più digeribile (pizze "perfette" ma eseguibili).
+            if (
+              best === null ||
+              objScore > best.cand.objective_score ||
+              (Math.abs(objScore - best.cand.objective_score) < 0.05 &&
+                (s.feasibility > best.recipe.scores.feasibility ||
+                  (s.feasibility === best.recipe.scores.feasibility &&
+                    s.digestibility > best.recipe.scores.digestibility)))
+            ) {
+              best = { cand: { ...cand, objective_score: objScore }, recipe };
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // best è garantito non-null: gli spazi candidati hanno sempre ≥1 elemento.
+  const chosen = best as { cand: OptimizedCandidate; recipe: GeneratedRecipe };
+  const r = chosen.recipe;
+
+  // ── Rationale: spiega le scelte che si discostano dal banale midpoint ──
+  const rationale: EngineMsg[] = [];
+  if (r.fermentation_temp_c <= 4 && r.fermentation_hours >= 24) {
+    rationale.push(
+      em(
+        "opt.coldLongFerment",
+        `Maturazione ${r.fermentation_hours}h in frigo (${r.fermentation_temp_c}°C): massima digeribilità entro le tue ${constraints.available_hours}h.`,
+        { hours: r.fermentation_hours, temp: r.fermentation_temp_c, available: constraints.available_hours },
+      ),
+    );
+  } else if (r.fermentation_temp_c >= 18) {
+    rationale.push(
+      em(
+        "opt.roomFerment",
+        `Fermentazione ${r.fermentation_hours}h a temperatura ambiente (${r.fermentation_temp_c}°C): coerente con lo stile e senza frigo.`,
+        { hours: r.fermentation_hours, temp: r.fermentation_temp_c },
+      ),
+    );
+  }
+  const hMidStyle = Math.round((hMin + hMax) / 2);
+  if (r.hydration_pct < hMidStyle && constraints.skill_level <= 2) {
+    rationale.push(
+      em(
+        "opt.hydrationForSkill",
+        `Idratazione ${r.hydration_pct}% scelta per restare gestibile al tuo livello.`,
+        { h: r.hydration_pct },
+      ),
+    );
+  } else if (r.hydration_pct >= hMidStyle) {
+    rationale.push(
+      em("opt.hydrationForStyle", `Idratazione ${r.hydration_pct}% nel cuore dello stile.`, { h: r.hydration_pct }),
+    );
+  }
+  if (r.has_pre_ferment) {
+    rationale.push(
+      em("opt.preferment", `Pre-fermento (${r.pre_ferment_type}): più struttura, alveolatura e aroma.`, {
+        type: r.pre_ferment_type ?? "",
+      }),
+    );
+  }
+  if (r.oven_temp_c < style.baking.temp_c_ideal) {
+    rationale.push(
+      em("opt.ovenAdapted", `Cottura adattata al tuo forno (${r.oven_temp_c}°C) con compensazioni automatiche.`, {
+        temp: r.oven_temp_c,
+      }),
+    );
+  }
+  const fromPantry = constraints.pantry_flours.some((id) => {
+    const range = FLOUR_W_RANGES[id];
+    return range && r.flour_w >= range[0] - 1 && r.flour_w <= range[1] + 1;
+  });
+  if (fromPantry) {
+    rationale.push(em("opt.pantryFlour", `Forza farina W${r.flour_w} compatibile con la tua dispensa.`, { w: r.flour_w }));
+  }
+
+  const alternatives = all
+    .map((c) => ({ ...c, objective_score: Math.round(c.objective_score * 10) / 10 }))
+    .filter(
+      (c) =>
+        !(
+          c.hydration === chosen.cand.hydration &&
+          c.flour_w === chosen.cand.flour_w &&
+          c.fermentation_hours === chosen.cand.fermentation_hours &&
+          c.fermentation_temp_c === chosen.cand.fermentation_temp_c &&
+          c.use_pre_ferment === chosen.cand.use_pre_ferment
+        ),
+    )
+    .sort((a, b) => b.objective_score - a.objective_score)
+    .slice(0, 3);
+
+  return {
+    recipe: r,
+    params: {
+      hydration: r.hydration_pct,
+      flour_w: r.flour_w,
+      fermentation_hours: r.fermentation_hours,
+      fermentation_temp_c: r.fermentation_temp_c,
+      use_pre_ferment: r.has_pre_ferment,
+    },
+    objective_score: Math.round(chosen.cand.objective_score * 10) / 10,
+    rationale,
+    alternatives,
+    evaluated,
+  };
+}
+
+// ═══ EQUIPMENT-AWARE PROCEDURE (Audit role-play giugno 2026, punto 2) ═══
+// L'utente imposta impastatrice e forno ma la procedura li ignorava (step "Impasto"
+// generico, "Cuocere a X°C" senza setup). Questi helper rendono Impasto e Cottura
+// specifici per l'attrezzatura dichiarata.
+
+export interface EquipmentContext {
+  mixerType?: string | null;
+  hasMixer?: boolean;
+  ovenType?: OvenType;
+  surfaces?: string[];
+}
+
+interface KneadGuidance {
+  description: string;
+  duration_minutes: number;
+  tip: { beginner: string; nerd: string };
+}
+
+function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
+  switch (eq?.mixerType) {
+    case "spiral":
+      return {
+        description: "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura.",
+        duration_minutes: 9,
+        tip: {
+          beginner: "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte.",
+          nerd: "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare.",
+        },
+      };
+    case "fork":
+      return {
+        description: "Impastatrice a forcella: 12-15 min a velocità unica. Incordatura lenta, maglia molto estensibile.",
+        duration_minutes: 14,
+        tip: {
+          beginner: "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza.",
+          nerd: "Movimento lento e ossigenante: ideale per impasti molli; incorda meno aggressivamente, estensibilità elevata.",
+        },
+      };
+    case "planetary":
+      return {
+        description: "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo).",
+        duration_minutes: 10,
+        tip: {
+          beginner: "Parti in 1ª per amalgamare, poi passa in 2ª. Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
+          nerd: "Sorveglia la temperatura impasto: oltre 26-28°C il glutine si indebolisce. Usa acqua fredda se la ciotola scalda.",
+        },
+      };
+    case "stand_domestic":
+      return {
+        description: "Planetaria domestica (tipo KitchenAid): gancio a velocità 1-2, ~10-12 min. Pause di 1-2 min se la ciotola si scalda.",
+        duration_minutes: 12,
+        tip: {
+          beginner: "Non superare la 2ª velocità: il motore domestico fatica e scalda. Pronto = impasto liscio che si stacca dal fondo.",
+          nerd: "Trasferisce più calore per attrito (K~0.25): parti con acqua a frigo e impasti corti, non sovraccaricare il motore.",
+        },
+      };
+    case "hands":
+      break; // gestito sotto
+    default:
+      if (eq?.hasMixer) {
+        return {
+          description: "Con l'impastatrice: gancio a bassa velocità ~10 min fino a incordatura. Liscio ed elastico.",
+          duration_minutes: 10,
+          tip: {
+            beginner: "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
+            nerd: "Controlla la temperatura finale dell'impasto (~24°C): oltre, il glutine si degrada.",
+          },
+        };
+      }
+  }
+  // A mano (default)
+  return {
+    description: "Impastare a mano fino a incordatura (~15-20 min): pieghe sul piano, slap & fold se l'idratazione è alta.",
+    duration_minutes: 20,
+    tip: {
+      beginner: "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
+      nerd: "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica.",
+    },
+  };
+}
+
+/** Setup forno specifico per tipo: "a quanto metto le resistenze". */
+function ovenBakeSetup(eq: EquipmentContext | undefined, _ovenTemp: number): string {
+  const hasStone = (eq?.surfaces ?? []).some((s) =>
+    ["refractory_brick", "cordierite_stone", "steel_plate"].includes(s),
+  );
+  switch (eq?.ovenType) {
+    case "wood":
+      return " Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.";
+    case "electric_high":
+      return " Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.";
+    case "gas":
+      return " Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.";
+    case "home":
+    case "electric_standard":
+    default:
+      return ` Forno statico (resistenza sopra + sotto) al massimo${hasStone ? ", pietra/acciaio già caldi sul ripiano medio-alto" : ", ripiano medio-alto"}. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.`;
+  }
+}
+
 function generateTimeline(
   style: PizzaStyle,
   fermentHours: number,
@@ -3268,6 +3771,7 @@ function generateTimeline(
   cookTimeSec: number,
   actualOvenTemp?: number,
   topping?: ToppingRecipe,
+  equipment?: EquipmentContext,
 ): TimelineStep[] {
   const steps: TimelineStep[] = [];
 
@@ -3330,30 +3834,26 @@ function generateTimeline(
     });
   }
 
+  const isNoKnead = style.dough.process_type.includes("no_knead");
+  // No-knead: l'impastatrice è irrilevante (mescola + pieghe a mano). Altrimenti
+  // la descrizione/durata/consigli cambiano col tipo di impastatrice dichiarato.
+  const knead = isNoKnead ? null : mixerKneadGuidance(equipment);
   steps.push({
     id: "mix",
     title: "Impasto",
-    description: style.dough.process_type.includes("no_knead")
+    description: isNoKnead
       ? "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min nelle prime 1,5–2 ore."
-      : "Impastare fino a incordatura. Liscio e elastico.",
-    duration_minutes: style.dough.process_type.includes(
-      "no_knead",
-    )
-      ? 10
-      : 20,
+      : (knead as KneadGuidance).description,
+    duration_minutes: isNoKnead ? 10 : (knead as KneadGuidance).duration_minutes,
     icon: "hand",
     timing_label: "Inizio",
-    tip: style.dough.process_type.includes("no_knead")
+    tip: isNoKnead
       ? {
           beginner:
             "Non serve impastare! Mescola finché non ci sono grumi asciutti. Poi, ogni ~30 min, bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro ruotando la ciotola: bastano 3 giri da 4 pieghe.",
           nerd: "L'autolisi sviluppa il glutine senza lavoro meccanico; le pieghe a intervalli (stretch & fold) allineano e tendono le fibrille di glutine e redistribuiscono i gas, dando forza senza degassare.",
         }
-      : {
-          beginner:
-            "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
-          nerd: "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica.",
-        },
+      : (knead as KneadGuidance).tip,
   });
 
   steps.push({
@@ -3585,7 +4085,7 @@ function generateTimeline(
     steps.push({
       id: "bake",
       title: "Prima cottura (in bianco)",
-      description: `Cuocere a ${ovenTempLabel}°C senza farcitura. La pizza deve essere dorata ma non bruciata.${topping?.bake_adjustments?.note ? ` ${topping.bake_adjustments.note}` : ""}`,
+      description: `Cuocere a ${ovenTempLabel}°C senza farcitura. La pizza deve essere dorata ma non bruciata.${topping?.bake_adjustments?.note ? ` ${topping.bake_adjustments.note}` : ""}${ovenBakeSetup(equipment, ovenTempLabel)}`,
       duration_minutes: firstBakeMin,
       icon: "flame",
       timing_label: `${firstBakeMin} min`,
@@ -3626,7 +4126,7 @@ function generateTimeline(
     steps.push({
       id: "bake",
       title: "Cottura",
-      description: `Cuocere a ${ovenTempLabel}°C${topping?.bake_adjustments?.note ? `. ${topping.bake_adjustments.note}` : ""}`,
+      description: `Cuocere a ${ovenTempLabel}°C${topping?.bake_adjustments?.note ? `. ${topping.bake_adjustments.note}` : ""}.${ovenBakeSetup(equipment, ovenTempLabel)}`,
       duration_minutes: Math.round(effectiveCookSec / 60),
       icon: "flame",
       timing_label: formatCookTime(effectiveCookSec),
@@ -4277,7 +4777,7 @@ export function recommendStyles(
       constraints.available_hours,
       fMax,
     );
-    const estTemp = estFermentHours > 12 ? 4 : 22;
+    const estTemp = defaultFermentTempC(style, estFermentHours);
     const digestResult = calculateDigestibilityScore(
       estFermentHours,
       estTemp,

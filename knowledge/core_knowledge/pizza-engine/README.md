@@ -3,7 +3,7 @@
 
 ## Sommario
 
-`pizza-engine.ts` (4433 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **57 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
+`pizza-engine.ts` (4933 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **59 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
 
 Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica Implementativa v1* (feb 2026) e fix successivi (ADV-02, ADV-04, ADV-08, ADV-11). Schema ricetta versione **1.4** (`RECIPE_SCHEMA_VERSION`).
 
@@ -11,8 +11,8 @@ Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica I
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/domain/pizza-engine.ts` | 4433 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
-| `src/app/features/dev-tools/engine-test-suite.tsx` | 1651 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
+| `src/app/domain/pizza-engine.ts` | 4933 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
+| `src/app/features/dev-tools/engine-test-suite.tsx` | 1783 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
 | `src/app/domain/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, `STYLE_TAGS`, `DEVIATION_CATEGORY_LABELS` per E-Score |
 | `src/app/data/topping-library.ts` | ~2100 | Libreria topping: 34 concetti, 40 ricette, autenticità per stile e timeline injection (integrati nuovi topping premium Wave 1 e Wave 2) |
 | `src/app/data/impasto-library.ts` | ~320 | Libreria impasti riusabili: 7 metodi (rimossi gli helper inutilizzati `getAllImpasti` e `getImpastiCompatibleWith`) |
@@ -73,6 +73,8 @@ flowchart TD
 | `calculateSustainabilityScore` | [Interna] Energia forno, tempo cottura, fermentazione, ingredienti, lievito |
 | `recommendStyles` | Ranking stili per vincoli utente |
 | `resolveEngineMsgs` | Localizzazione messaggi motore |
+| `defaultFermentTempC` | Temperatura di fermentazione di default style-aware |
+| `thermalViability` | Calcolo compatibilità termica dello stile col forno |
 | `calcDoughWeight` / `getDefaultShapeArea` | [Interne] Peso impasto da teglia custom / area |
 | `getServingUnit`, `getServingsRange`, `getDefaultDoughBalls` | UX porzioni |
 | `isFillingStyle` | Restituisce true se lo stile della pizza prevede una farcitura o un layout chiuso/sdoppiato (es. calzone, spaccata, baciata). |
@@ -117,6 +119,10 @@ flowchart TD
 - **Interazione idratazione × skill**: calcolata in `calculateFeasibilityScore`. Idratazione >75% sconsigliata per principianti (skill 1). Per gli intermedi (skill 2) la soglia di warning sale a >85% (idratazione estrema).
 - **Porzioni e default**: Pinsa romana supporta `servings_per_unit: [1, 1]` (formato monoporzione individuale ovale), Padellino di Torino imposta `default_dough_balls: 4` (individuali per default). Anche napoletana, napoletana_canotto, scrocchiarella hanno `servings_per_unit: [1, 1]` (pizza individuale).
 - **Feasibility forno**: floor 5/10/20 per deficit estremo (>200°C / >100°C) — ADV-08.
+- **Ripristino sale Napoletana STG**: Ripristinata la percentuale di sale al 2.8% (disciplinare AVPN) per lo stile Napoletana STG per salvaguardare l'autenticità dello stile-bandiera rispetto a uniformità arbitrarie.
+- **Default fermentazione style-aware**: La funzione `defaultFermentTempC` gestisce la temperatura di default: per gli stili diretti a temperatura ambiente (`napoletana_stg`, `tonda_romana`) imposta 22°C anche a lunga lievitazione evitando la forzatura automatica del frigo (4°C), mentre gli altri stili mantengono il frigo sopra le 12 ore.
+- **Viabilità termica (Thermal Viability)**: La funzione `thermalViability` verifica se l'efficacia termica del forno soddisfa lo stile ad alta temperatura (minimo >= 350°C o forno a legna richiesto). In caso di deficit, restituisce un moltiplicatore di penalità che riduce drasticamente l'Autenticità ed emette un warning di fattibilità (`feas.thermalUnviable`) riducendo la fattibilità complessiva.
+- **Rinormalizzazione composite score a 5 pesi**: Il punteggio composite in `generateRecipe` somma tutti e 5 i pesi (`authenticity`, `feasibility`, `digestibility`, `sustainability`, `experimentation`) e normalizza dividendo per la loro somma totale, rimuovendo le distorsioni provocate da override specifici su sostenibilità o sperimentazione.
 
 ### STYLES_DB — Correzioni Audit Maggio/Giugno 2026
 
@@ -168,7 +174,7 @@ Valori rettificati da fonti autorevoli (disciplinari IGP/APITER, Consultapizza, 
 | Deviation signature E-Score | 🟡 Parziale | `calculateExperimentationScore` usa deviazioni; Notion Pag.08 TODO ancora citato in commento |
 | `_calculateEffectiveDeviation` | 🟡 MVP | Implementato in 1.4; commento “Notion Pag.04 TODO” residuo |
 
-**Test**: `engine-test-suite.tsx` (1651 righe, pagina dev) esegue asserzioni dinamiche su tutti gli stili, Q10, compensazioni, score, schema version — utile regressione manuale, non CI automatica nel repo.
+**Test**: `engine-test-suite.tsx` (1783 righe, pagina dev) esegue asserzioni dinamiche su tutti gli stili, Q10, compensazioni, score, schema version — utile regressione manuale, non CI automatica nel repo. Lo Sprint 12/Audit Giugno 2026 introduce la categoria "Optimizer" (T13) con 8 test case di regressione (midpoint optimization, available hours, beginner limit, ordinamento alternative, rationale e verifiche per F4/F1).
 
 ## Tipi dati essenziali
 

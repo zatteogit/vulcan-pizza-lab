@@ -27,12 +27,15 @@ import {
   Copy,
   Check,
   ClipboardList,
+  Sparkles,
 } from "lucide-react";
 import {
   STYLES_DB,
   calculateOvenCompensations,
   getQ10,
   generateRecipe,
+  optimizeRecipe,
+  defaultFermentTempC,
   estimatePL,
   recommendStyles,
   SCORE_DIMENSIONS,
@@ -1214,6 +1217,133 @@ function runDeviationFlour(): TestResult[] {
 }
 
 /* ═══ CATEGORY DEFINITIONS ═══ */
+/* ═══ T13: OPTIMIZER — "genera la pizza perfetta" (Audit role-play giugno 2026) ═══ */
+function runOptimizer(): TestResult[] {
+  const results: TestResult[] = [];
+  const styles = ALL_STYLES();
+
+  // T13-01: optimizeRecipe produce una ricetta valida per ogni stile
+  {
+    const errs: string[] = [];
+    const { ms } = timed(() => {
+      for (const s of styles) {
+        try {
+          const o = optimizeRecipe(s, makeConstraints());
+          if (!o.recipe || o.evaluated < 1) errs.push(`${s.id}: vuoto`);
+          if (o.objective_score < 0 || o.objective_score > 100) errs.push(`${s.id}: obj=${o.objective_score}`);
+        } catch (e) {
+          errs.push(`${s.id}: throw ${(e as Error).message}`);
+        }
+      }
+    });
+    results.push({ id: "T13-01", name: `Optimizer valido (${styles.length} stili)`, status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 3).join("; ") : `${styles.length} ottimizzazioni OK`, ms });
+  }
+
+  // T13-02: l'ottimo non è mai PEGGIO del default midpoint (composite)
+  {
+    const errs: string[] = [];
+    const { ms } = timed(() => {
+      const c = makeConstraints({ oven_max_temp_c: 300, skill_level: 3, available_hours: 72 });
+      for (const s of styles) {
+        const def = generateRecipe(s, c);
+        const opt = optimizeRecipe(s, c);
+        if (opt.recipe.scores.composite < def.scores.composite - 1) {
+          errs.push(`${s.id}: opt=${opt.recipe.scores.composite} < def=${def.scores.composite}`);
+        }
+      }
+    });
+    results.push({ id: "T13-02", name: "Ottimo ≥ default midpoint (composite)", status: errs.length === 0 ? "pass" : "warn", detail: errs.length ? errs.slice(0, 3).join("; ") : "Ottimo sempre ≥ default", ms });
+  }
+
+  // T13-03: rispetta le ore disponibili (fermentazione ≤ available_hours)
+  {
+    const errs: string[] = [];
+    const { ms } = timed(() => {
+      const c = makeConstraints({ available_hours: 10 });
+      for (const s of styles) {
+        const o = optimizeRecipe(s, c);
+        if (o.recipe.fermentation_hours > 10.01) errs.push(`${s.id}: ${o.recipe.fermentation_hours}h > 10h`);
+      }
+    });
+    results.push({ id: "T13-03", name: "Rispetta ore disponibili (≤10h)", status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 3).join("; ") : "Tutti ≤ 10h", ms });
+  }
+
+  // T13-04: rispetta il tetto d'idratazione per principiante (skill 1 → ≤68%)
+  {
+    const errs: string[] = [];
+    const { ms } = timed(() => {
+      const c = makeConstraints({ skill_level: 1 });
+      for (const s of styles) {
+        const o = optimizeRecipe(s, c);
+        if (o.recipe.hydration_pct > 68) errs.push(`${s.id}: H=${o.recipe.hydration_pct}% > 68%`);
+      }
+    });
+    results.push({ id: "T13-04", name: "Tetto idratazione principiante (≤68%)", status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 3).join("; ") : "Principiante mai oltre 68%", ms });
+  }
+
+  // T13-05: alternative ordinate desc, distinte dalla scelta
+  {
+    const errs: string[] = [];
+    const { ms } = timed(() => {
+      for (const s of styles) {
+        const o = optimizeRecipe(s, makeConstraints());
+        if (o.alternatives.length > 3) errs.push(`${s.id}: ${o.alternatives.length} alt`);
+        for (let i = 1; i < o.alternatives.length; i++) {
+          if (o.alternatives[i].objective_score > o.alternatives[i - 1].objective_score + 0.01) {
+            errs.push(`${s.id}: alt non ordinate`);
+            break;
+          }
+        }
+        if (o.alternatives.some((a) => a.objective_score > o.objective_score + 0.01)) {
+          errs.push(`${s.id}: alt batte la scelta`);
+        }
+      }
+    });
+    results.push({ id: "T13-05", name: "Alternative ordinate e coerenti", status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 3).join("; ") : "OK", ms });
+  }
+
+  // T13-06: rationale non vuota
+  {
+    const errs: string[] = [];
+    const { ms } = timed(() => {
+      for (const s of styles) {
+        const o = optimizeRecipe(s, makeConstraints());
+        if (o.rationale.length === 0) errs.push(s.id);
+      }
+    });
+    results.push({ id: "T13-06", name: "Rationale presente", status: errs.length === 0 ? "pass" : "warn", detail: errs.length ? `Vuota: ${errs.slice(0, 5).join(", ")}` : "OK", ms });
+  }
+
+  // T13-07: F4 — default temp fermentazione style-aware (regressione)
+  {
+    const stg = STYLES_DB["napoletana_stg"];
+    const teglia = STYLES_DB["teglia_romana"];
+    const okStgLong = defaultFermentTempC(stg, 24) === 22; // diretto a TA anche a 24h
+    const okStgShort = defaultFermentTempC(stg, 8) === 22;
+    const okTegliaLong = defaultFermentTempC(teglia, 24) === 4; // frigo per lungo
+    const { ms } = timed(() => null);
+    const ok = okStgLong && okStgShort && okTegliaLong;
+    results.push({ id: "T13-07", name: "F4: temp fermentazione style-aware", status: ok ? "pass" : "fail", detail: `STG@24h=${defaultFermentTempC(stg, 24)}°C (att.22), STG@8h=${defaultFermentTempC(stg, 8)}°C, Teglia@24h=${defaultFermentTempC(teglia, 24)}°C (att.4)`, ms });
+  }
+
+  // T13-08: F1 — composite include sustainability/experimentation se pesati (regressione)
+  {
+    const { ms } = timed(() => null);
+    const s = STYLES_DB["teglia_romana"];
+    const w = { authenticity: 0.3, feasibility: 0.3, digestibility: 0.2, sustainability: 0.2, experimentation: 0.0 };
+    const r = generateRecipe(s, makeConstraints(), undefined, undefined, undefined, undefined, undefined, undefined, undefined, w);
+    const expected = Math.round(
+      (r.scores.authenticity * 0.3 + r.scores.feasibility * 0.3 + r.scores.digestibility * 0.2 + r.scores.sustainability * 0.2) / 1.0,
+    );
+    // Il bug F1 avrebbe ignorato il peso sustainability → composite diverso (e ≠ scala 0-100).
+    const bugValue = Math.round(r.scores.authenticity * 0.3 + r.scores.feasibility * 0.3 + r.scores.digestibility * 0.2);
+    const ok = Math.abs(r.scores.composite - expected) <= 1 && r.scores.composite !== bugValue;
+    results.push({ id: "T13-08", name: "F1: composite a 5 pesi normalizzato", status: ok ? "pass" : "fail", detail: `composite=${r.scores.composite}, atteso=${expected}, bug-sarebbe=${bugValue}`, ms });
+  }
+
+  return results;
+}
+
 function buildCategories(): TestCategory[] {
   return [
     { id: "db", label: "DB Integrity", icon: <Database size={14} />, color: "var(--primary)", run: runDbIntegrity },
@@ -1228,6 +1358,7 @@ function buildCategories(): TestCategory[] {
     { id: "xval", label: "Cross-Validation", icon: <Shuffle size={14} />, color: "var(--warm-sienna)", run: runCrossValidation },
     { id: "pdb", label: "Parametric DB", icon: <Layers size={14} />, color: "var(--secondary)", run: runParametricDb },
     { id: "dev", label: "Deviation & Flour", icon: <GitBranch size={14} />, color: "var(--time-dinner)", run: runDeviationFlour },
+    { id: "opt", label: "Optimizer", icon: <Sparkles size={14} />, color: "var(--cta)", run: runOptimizer },
   ];
 }
 

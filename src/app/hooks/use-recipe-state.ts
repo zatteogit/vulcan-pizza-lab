@@ -14,6 +14,7 @@ import {
 } from "../data/interpretation-library";
 import {
   defaultPanShape,
+  defaultFermentTempC,
   generateRecipe,
   type GeneratedRecipe,
   type PanConfig,
@@ -112,7 +113,10 @@ function centerParamsForStyle(style: PizzaStyle, availableHours: number) {
     ),
     flourPL: defaultRecipePL(style),
     fermentHours,
-    fermentTemp: fermentHours > 12 ? 4 : 22,
+    // Audit role-play giugno 2026 (F4): usa il default style-aware del motore —
+    // la UI duplicava `hours>12?4:22` e scavalcava il fix, mostrando 4°C anche
+    // sugli stili diretti a TA (Napoletana STG). Ora coerente col motore.
+    fermentTemp: defaultFermentTempC(style, fermentHours),
     usePreFerment: style.requires_pre_ferment,
   };
 }

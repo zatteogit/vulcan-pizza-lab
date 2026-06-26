@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-06-26T21:20:00.000Z",
+  "lastUpdated": "2026-06-26T23:05:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 139,
     "appFilesExcludingUi": 139,
-    "pizzaEngineExports": 57,
-    "pizzaEngineLines": 4433,
+    "pizzaEngineExports": 59,
+    "pizzaEngineLines": 4933,
     "cmsContextLines": 3182,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-06-26 registra il refactoring della pagina Explore con query-string state, l'ordinamento culturale/rappresentativo del Topping Engine, e la grafica degli ingredienti con indici.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-06-26 registra la rimozione delle forzature termiche UI, BeginnerFlourPicker, warning viabilità termica e bypass traduzioni mixer/forno.",
   "filesMappedCount": 139,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-06-26",
+  "lastScannedChapter": "kipi-update-2026-06-26-v2",
   "chapters": [
     {
       "id": "pizza-engine",

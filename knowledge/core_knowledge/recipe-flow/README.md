@@ -151,6 +151,10 @@ generateRecipe(
 - Output null se `generateRecipe` fallisce — UI score/output non renderizzata.
 - **RecipeView unica**: Home e pagina dettaglio non devono divergere nel layout principale; eventuali differenze passano da props (`tailored`, `back`, `matchSlot`, `introExtraSlot`, `recipeControls`).
 - **PizzaNerd**: non esiste più un file `view-mode.tsx`. Il profilo salva `vulcan_nerd_on`; Home e Detail tengono uno stato locale `nerdMode`, attivo solo se il profilo abilita PizzaNerd.
+- **Beginner Flour Picker**: Quando `skill_level === 1` (principianti), lo slider alveografico W/P/L viene nascosto in `recipe-configurator.tsx` e sostituito da `BeginnerFlourPicker` con scelte in linguaggio naturale ("Debole" [W 185], "Media" [W 250], "Forte" [W 350]) associate a feedback dinamico sull'idoneità per lo stile.
+- **Warning termico in RecipeMatchCard**: Se il forno non raggiunge la temperatura minima dello stile, viene mostrato il warning termico (`feas.thermalUnviable`) sotto le statistiche del forno risolvendo l'omissione precedente.
+- **Bypass traduzioni generiche per mixer e forno**: In `RecipeOutput` (funzione `localizeStep`), per la fase `"mix"` (se non no-knead) e per la fase `"bake"` viene bypassata la localizzazione statica del CMS. Questo permette di renderizzare i passaggi dettagliati prodotti dinamicamente dal motore, specificando tempi/consigli per impastatrici (spirale, planetaria, forcella, a mano) e configurazioni specifiche del forno (resistenze, ripiano, grill).
+- **Default fermentazione style-aware in useRecipeState**: Lo stato di default reattivo usa `defaultFermentTempC(style, hours)` per allinearsi al comportamento del motore ed evitare forzature a 4°C sugli stili a TA.
 
 ## Bug noti e fix
 

@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Bookmark, BookmarkCheck, Heart, HeartCrack, RotateCcw, TriangleAlert } from "lucide-react";
-import { SCORE_DIMENSIONS, type RecipeScores } from "../../domain/pizza-engine";
+import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { Surface } from "../../components/ds/index";
@@ -90,6 +90,14 @@ export function RecipeMatchCard({
       : ovenTemp >= minTemp
         ? cms.cooking.ovenLimited
         : cms.cooking.ovenNeedsAdaptation;
+
+  // Audit role-play giugno 2026: per gli stili ad alta temperatura sotto il
+  // minimo, il motore emette un warning netto ("non otterrai una vera X").
+  // Lo rendiamo qui — prima era calcolato ma mai mostrato.
+  const unviableWarning = scores.warnings?.find((w) => w.key === "feas.thermalUnviable");
+  const unviableText = unviableWarning
+    ? resolveEngineMsgs([unviableWarning], cms.engineMessages)[0]
+    : null;
 
   const axes = SCORE_DIMENSIONS.map((dimension) => ({
     ...dimension,
@@ -243,6 +251,20 @@ export function RecipeMatchCard({
               {ovenGap > 0 ? ` · ${cms.ui.statIdeal} ${fmt.celsius(idealTemp)}` : ""}
             </span>
           </div>
+          {unviableText && (
+            <p
+              className="mt-1.5 text-left"
+              style={{
+                margin: "6px 0 0",
+                color: "var(--text-warning)",
+                fontSize: "var(--font-size-sm)",
+                lineHeight: "var(--leading-normal)",
+                fontWeight: "var(--weight-semibold)" as any,
+              }}
+            >
+              {unviableText}
+            </p>
+          )}
         </div>
 
         <div className="flex shrink-0 flex-col gap-2 lg:items-end min-h-[44px] justify-center">

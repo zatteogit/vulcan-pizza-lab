@@ -669,6 +669,17 @@ export function RecipeConfigurator({
             )}
           </div>
 
+          {/* F11 beginner mode: il principiante sceglie la farina in linguaggio
+              naturale (W derivata), niente slider alveografici W/P/L. */}
+          {constraints.skill_level === 1 ? (
+            <BeginnerFlourPicker
+              value={customFlourW}
+              onChange={handleW}
+              styleRange={style.dough.flour_w_range}
+              label={<Label>{cfg.flourWLabel}</Label>}
+            />
+          ) : (
+          <>
           {/* Flour W */}
           <div>
             <GradientSlider
@@ -737,6 +748,8 @@ export function RecipeConfigurator({
                 />
               )}
             </div>
+          )}
+          </>
           )}
         </div>
 
@@ -1164,6 +1177,75 @@ function Label({ children }: { children: React.ReactNode }) {
     >
       {children}
     </span>
+  );
+}
+
+/* ═══ BEGINNER FLOUR PICKER (Audit role-play giugno 2026, F11) ═══
+   Per il principiante, W e P/L alveografici sono una barriera: non conosce la
+   forza della sua farina. Qui sceglie in linguaggio naturale (debole/media/forte
+   con esempi reali) e il motore deriva la W. Mostrato solo a skill_level === 1. */
+const BEGINNER_FLOURS: { label: string; sub: string; w: number }[] = [
+  { label: "Debole", sub: "00 supermercato", w: 185 },
+  { label: "Media", sub: "0 / per pizza", w: 250 },
+  { label: "Forte", sub: "Manitoba", w: 350 },
+];
+
+function BeginnerFlourPicker({
+  value,
+  onChange,
+  styleRange,
+  label,
+}: {
+  value: number;
+  onChange: (w: number) => void;
+  styleRange: [number, number];
+  label: React.ReactNode;
+}) {
+  const selected = BEGINNER_FLOURS.reduce((best, f) =>
+    Math.abs(f.w - value) < Math.abs(best.w - value) ? f : best,
+  );
+  const [wMin, wMax] = styleRange;
+  const fit = value >= wMin - 25 && value <= wMax + 25 ? "ideal" : value < wMin ? "weak" : "strong";
+  return (
+    <div>
+      <div className="mb-2">{label}</div>
+      <div className="flex gap-2">
+        {BEGINNER_FLOURS.map((f) => {
+          const active = f === selected;
+          return (
+            <button
+              key={f.label}
+              type="button"
+              onClick={() => onChange(f.w)}
+              className="flex-1 rounded-xl px-2 py-2.5 text-left transition-all active:scale-[0.98]"
+              style={{
+                background: active ? "color-mix(in srgb, var(--tertiary) 12%, transparent)" : "var(--surface-container)",
+                border: active ? "1.5px solid var(--tertiary)" : "1px solid var(--outline-variant)",
+                cursor: "pointer",
+              }}
+              aria-pressed={active}
+            >
+              <span
+                className="block"
+                style={{ fontSize: "var(--font-size-md)", fontWeight: "var(--weight-semibold)" as any, color: active ? "var(--tertiary)" : "var(--text-default)" }}
+              >
+                {f.label}
+              </span>
+              <span className="block truncate" style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>
+                {f.sub}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-1.5" style={{ fontSize: "var(--font-size-sm)", color: fit === "ideal" ? "var(--text-accent)" : "var(--text-muted)" }}>
+        {fit === "ideal"
+          ? "Perfetta per questo stile."
+          : fit === "weak"
+            ? "Un po' debole per questo stile: l'impasto reggerà meno."
+            : "Più forte del necessario: nessun problema."}
+      </p>
+    </div>
   );
 }
 

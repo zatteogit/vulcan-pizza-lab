@@ -1137,7 +1137,12 @@ function localizeStep(
       entry = labels.preferment;
       break;
     case "mix":
-      entry = isNoKnead ? (labels.mix_noknead || labels.mix) : labels.mix;
+      // Audit role-play giugno 2026 (punto 2): per gli impasti lavorati il motore
+      // genera testo specifico per l'impastatrice scelta (planetaria/spirale/
+      // forcella/a mano), con tempi e consigli diversi. Bypassiamo il CMS — che
+      // ha solo una stringa generica — per non perderlo. No-knead resta da CMS.
+      if (!isNoKnead) return formatRawStep(step);
+      entry = labels.mix_noknead || labels.mix;
       break;
     case "bulk":
       entry = isCold ? (labels.bulk_cold || labels.bulk) : labels.bulk;
@@ -1198,8 +1203,10 @@ function localizeStep(
     case "bake":
       // Con cook_mode "white_then_top", il motore genera "Prima cottura (in bianco)" custom
       if (layout.cook_mode === "white_then_top") return formatRawStep(step);
-      entry = labels.bake;
-      break;
+      // Audit role-play giugno 2026 (punto 2): il motore aggiunge il setup forno
+      // specifico per tipo (resistenze, ripiano, grill finale, pietra). Bypassiamo
+      // il CMS per mostrarlo invece del solo "Cuocere a {temp}".
+      return formatRawStep(step);
     default:
       return formatRawStep(step);
   }
@@ -1211,7 +1218,7 @@ function localizeStep(
   // il sottotitolo dice "a 4°C" mentre il testo dice "temperatura ambiente".
   const proofTemp = Math.max(fermTemp, 18);
   const vars: Record<string, string | number> = {
-    temp: formatTemp(step.id === "bake" ? bakeTemp : step.id === "proof" ? proofTemp : fermTemp),
+    temp: formatTemp(step.id === "proof" ? proofTemp : fermTemp),
     refTemp: formatTemp(18),
     fridgeTemp: formatTemp(4),
     type: prefType,
