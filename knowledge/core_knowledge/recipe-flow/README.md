@@ -1,5 +1,5 @@
 # Flusso ricetta e UI
-> Aggiornamento: 2026-06-26 | Stato: ✅ | File documentati: 15
+> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 15
 
 ## Sommario
 
@@ -155,6 +155,9 @@ generateRecipe(
 - **Warning termico in RecipeMatchCard**: Se il forno non raggiunge la temperatura minima dello stile, viene mostrato il warning termico (`feas.thermalUnviable`) sotto le statistiche del forno risolvendo l'omissione precedente.
 - **Bypass traduzioni generiche per mixer e forno**: In `RecipeOutput` (funzione `localizeStep`), per la fase `"mix"` (se non no-knead) e per la fase `"bake"` viene bypassata la localizzazione statica del CMS. Questo permette di renderizzare i passaggi dettagliati prodotti dinamicamente dal motore, specificando tempi/consigli per impastatrici (spirale, planetaria, forcella, a mano) e configurazioni specifiche del forno (resistenze, ripiano, grill).
 - **Default fermentazione style-aware in useRecipeState**: Lo stato di default reattivo usa `defaultFermentTempC(style, hours)` per allinearsi al comportamento del motore ed evitare forzature a 4°C sugli stili a TA.
+- **Inizializzazione e Auto-Ottimizzazione in Home**: In modalità "adapted", all'apertura dello stile viene eseguita automaticamente un'ottimizzazione (`optimizeForConstraints`) se non ci sono versioni/interpretazioni caricate, fornendo istantaneamente una ricetta su misura. La valutazione della ricetta "canonica" avviene ora sul forno effettivo dell'utente invece di forzare il forno ideale dello stile (che nascondeva la reale fattibilità).
+- **Pulsante e rationale di ottimizzazione**: Il pulsante "Ottimizza per me" e la rationale associata sono controllati dinamicamente. Se la ricetta corrente coincide esattamente con l'ottimo teorico calcolato, il pulsante viene nascosto (evitando ridondanze) e viene visualizzata la spiegazione delle scelte effettuate (rationale localizzata). Se l'utente modifica i parametri con gli slider, il pulsante riappare.
+- **Stati della Ricetta in Home**: Il badge dello stato mostra "Ricetta canonica", "Su misura per te" (se ottimizzata) o "Personalizzata" (se modificata manualmente).
 
 ## Bug noti e fix
 

@@ -1,9 +1,9 @@
 # Motore pizza e ricetta
-> Aggiornamento: 2026-06-26 | Stato: ✅ | File documentati: 6
+> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 6
 
 ## Sommario
 
-`pizza-engine.ts` (4933 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **59 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
+`pizza-engine.ts` (4959 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **59 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
 
 Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica Implementativa v1* (feb 2026) e fix successivi (ADV-02, ADV-04, ADV-08, ADV-11). Schema ricetta versione **1.4** (`RECIPE_SCHEMA_VERSION`).
 
@@ -11,7 +11,7 @@ Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica I
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/domain/pizza-engine.ts` | 4933 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
+| `src/app/domain/pizza-engine.ts` | 4959 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
 | `src/app/features/dev-tools/engine-test-suite.tsx` | 1783 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
 | `src/app/domain/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, `STYLE_TAGS`, `DEVIATION_CATEGORY_LABELS` per E-Score |
 | `src/app/data/topping-library.ts` | ~2100 | Libreria topping: 34 concetti, 40 ricette, autenticità per stile e timeline injection (integrati nuovi topping premium Wave 1 e Wave 2) |
@@ -123,6 +123,7 @@ flowchart TD
 - **Default fermentazione style-aware**: La funzione `defaultFermentTempC` gestisce la temperatura di default: per gli stili diretti a temperatura ambiente (`napoletana_stg`, `tonda_romana`) imposta 22°C anche a lunga lievitazione evitando la forzatura automatica del frigo (4°C), mentre gli altri stili mantengono il frigo sopra le 12 ore.
 - **Viabilità termica (Thermal Viability)**: La funzione `thermalViability` verifica se l'efficacia termica del forno soddisfa lo stile ad alta temperatura (minimo >= 350°C o forno a legna richiesto). In caso di deficit, restituisce un moltiplicatore di penalità che riduce drasticamente l'Autenticità ed emette un warning di fattibilità (`feas.thermalUnviable`) riducendo la fattibilità complessiva.
 - **Rinormalizzazione composite score a 5 pesi**: Il punteggio composite in `generateRecipe` somma tutti e 5 i pesi (`authenticity`, `feasibility`, `digestibility`, `sustainability`, `experimentation`) e normalizza dividendo per la loro somma totale, rimuovendo le distorsioni provocate da override specifici su sostenibilità o sperimentazione.
+- **Trasparenza delle motivazioni dell'Optimizer**: In `optimizeRecipe`, le descrizioni dei motivi della ricetta ottimizzata (rationale) segnalano in modo esplicito le variazioni rispetto al midpoint canonico dello stile: la riduzione dell'idratazione include la percentuale canonica di confronto, le modifiche della farina W e l'aggiunta di pre-fermenti non richiesti dallo stile base sono tracciate come deviazioni dal default.
 
 ### STYLES_DB — Correzioni Audit Maggio/Giugno 2026
 

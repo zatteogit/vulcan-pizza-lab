@@ -1,5 +1,5 @@
 # Stili, versioni e override
-> Aggiornamento: 2026-06-26 | Stato: ✅ | File documentati: 11
+> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 11
 
 ## Sommario
 
@@ -92,6 +92,8 @@ flowchart TD
 - **Media locali canonici**: `STYLE_PHOTOS` non deve più vivere duplicato in componenti UI; `recommended-styles.tsx` lo re-esporta solo per compatibilità. I video restano lazy via tag `<video>` e hanno fallback automatico alla foto poster.
 - **Persistenza Filtri in ExplorePage**: La visualizzazione attiva e i filtri di famiglia della pagina Explore sono serializzati nei parametri URL (`view` e `family`). La navigazione verso una ricetta passa lo stato `exploreBackTo` per permettere al pulsante indietro della scheda ricetta di ripristinare esattamente lo stato della navigazione.
 - **Asset Grafici Locali**: Le ricette signature in `signature-recipes.ts` importano ed utilizzano immagini reali `.jpg` dal disco al posto del vecchio fallback `"placeholder"`.
+- **Visualizzazione del match e del margine ottimizzabile in Explore**: In `ExplorePage`, ciascuna card di stile mostra il match canonico ($M_c$) sul proprio forno all'interno di uno `ScoreRing`. Inoltre, se ottimizzando si può ottenere un incremento reale del punteggio (headroom $\ge 8$), viene mostrata una pillola verde con `ChevronUp +Δ` indicante il margine di ottimizzazione.
+- **Visualizzazione del punteggio ottimizzato in RecommendedStyles**: Per riflettere il punteggio effettivo che l'utente può ottenere con i suoi vincoli, le card degli stili raccomandati nella Home mostrano sul badge `ScoreRing` il composite score della ricetta ottimizzata per il loro setup (calcolato tramite `optimizeRecipe` con i pesi del CMS), mentre il ranking e il tier restano calcolati sulla compatibilità.
 - `StyleEditorTab` + live sync: ogni modifica può riscrivere `localStorage` — solo ambiente dev.
 - `SyncTab` esclude `src/app/components/ui/` dal bundle.
 - `STYLE_VERSIONS` e `VersionRanges` in `style-versions.ts` sono ora dettagli interni (non esportati). L'accesso alle versioni avviene esclusivamente tramite le API pubbliche `getVersions`, `getVersionById` e `getDefaultVersion`.

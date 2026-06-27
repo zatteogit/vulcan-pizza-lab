@@ -9,6 +9,7 @@ import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import {
 PIZZA_FAMILIES,
 PizzaStyle,
+optimizeRecipe,
 recommendStyles,
 StyleRecommendation,
 UserConstraints,
@@ -100,8 +101,19 @@ export function RecommendedStyles({
   const { effectiveStyles, isOverrideActive } = useStylesOverride();
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
+  const scoreWeights = {
+    authenticity: cms.scoreDimensions?.authenticity?.weight,
+    feasibility: cms.scoreDimensions?.feasibility?.weight,
+    digestibility: cms.scoreDimensions?.digestibility?.weight,
+    sustainability: cms.scoreDimensions?.sustainability?.weight,
+    experimentation: cms.scoreDimensions?.experimentation?.weight,
+  };
   const recommendations = useMemo(
     () =>
+      // Audit role-play giugno 2026: il badge della card mostra il composite della
+      // ricetta OTTIMIZZATA per i tuoi vincoli — coerente con ciò che ottieni
+      // aprendo lo stile (~0.1ms/stile, costo trascurabile). Ranking/tier restano
+      // sulla compatibilità.
       recommendStyles(
         constraints,
         isOverrideActive ? effectiveStyles : undefined,
@@ -112,8 +124,17 @@ export function RecommendedStyles({
           equipment: cms.recommendationWeights.equipment,
           pantry: cms.recommendationWeights.pantry,
         },
-      ),
-    [constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights],
+      ).map((rec) => ({
+        ...rec,
+        optimizedComposite: optimizeRecipe(
+          rec.style,
+          constraints,
+          undefined,
+          undefined,
+          scoreWeights,
+        ).recipe.scores.composite,
+      })),
+    [constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
   );
   const [familyFilter, setFamilyFilter] = useState<FamilyId | "all">("all");
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -469,7 +490,10 @@ function StyleCard({
   index: number;
 }) {
   const { cms } = useCms();
-  const { style, compatibilityScore } = rec;
+  const { style, compatibilityScore, optimizedComposite } = rec;
+  // Badge = punteggio della ricetta ottimizzata per i tuoi vincoli (ciò che
+  // otterrai aprendo lo stile). Fallback alla compatibilità se non calcolato.
+  const displayScore = optimizedComposite ?? compatibilityScore;
   /* VPL-C3 (rev): badge "difficoltà · impegno" — info che DIFFERENZIA le tile
    * (a parità di momento il match è uguale per tutte). La motivazione di match
    * completa vive nel pannello di dettaglio. */
@@ -582,7 +606,7 @@ function StyleCard({
             {/* ── Score ring badge — top right ── */}
             <div className="absolute top-3 right-3">
               <ScoreRing
-                score={compatibilityScore}
+                score={displayScore}
                 color={ringColor}
                 size={38}
               />

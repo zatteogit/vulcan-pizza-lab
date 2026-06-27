@@ -22,6 +22,11 @@ import {
 getDefaultDoughBalls,
 generateTimeSlots,
 NO_PREFERENCE_SLOT,
+optimizeRecipe,
+thermalViability,
+FLOUR_W_RANGES,
+YEAST_LABELS,
+resolveEngineMsgs,
 type PanConfig,
 PizzaStyle,
 STYLES_DB,
@@ -440,6 +445,8 @@ export function HomePage() {
     resetToBaseRecipe,
     resetForStyle,
     buildRecipe,
+    optimizeForConstraints,
+    lastOptimization,
   } = recipeState;
 
   const shareUrl = useMemo(() => {
@@ -542,18 +549,47 @@ export function HomePage() {
     setSelectedFlourId(null);
     setSelectedTimeSlot(null);
     setSelectedTimeMeta(null);
+    // Audit role-play giugno 2026: il canonico va valutato sul TUO forno, non su
+    // quello ideale. Prima forzava oven=ideale → il canonico mostrava ~95 e
+    // nascondeva la verità ("la vera Napoletana a casa tua fa 44"). Ora il forno
+    // resta il tuo: la canonica è onesta e i due livelli (canonica↔su misura)
+    // hanno senso. La "versione del maestro" a 485° resta un riferimento futuro.
     setConstraints((current) => ({
       ...current,
       available_hours: fCenter,
       dough_balls: getDefaultDoughBalls(selectedStyle),
-      oven_type: selectedStyle.baking.oven_type_required,
-      oven_max_temp_c: selectedStyle.baking.temp_c_ideal,
     }));
   }, [resetToBaseRecipe, selectedStyle]);
 
   const resetCreateBaseRecipe = useCallback(() => {
     resetToBaseRecipe({ availableHours: constraints.available_hours });
   }, [constraints.available_hours, resetToBaseRecipe]);
+
+  // Audit role-play giugno 2026: la ricetta del "Crea" deve essere GIÀ su misura,
+  // non il midpoint. Quando entri in uno stile in modalità adattata (senza versione
+  // o interpretazione attiva), il motore ottimizza una volta per stile+vincoli.
+  // Il midpoint canonico resta accessibile via "Torna all'originale".
+  const autoOptSigRef = useRef<string>("");
+  useEffect(() => {
+    if (!selectedStyle) {
+      autoOptSigRef.current = "";
+      return;
+    }
+    if (createRecipeMode !== "adapted") return; // canonico: lascia il riferimento da manuale
+    if (activeVersionId || activeInterpretationId) return; // rispetta la scelta dell'utente
+    const c = constraints;
+    const sig = `${selectedStyle.id}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}`;
+    if (autoOptSigRef.current === sig) return;
+    autoOptSigRef.current = sig;
+    optimizeForConstraints(constraints);
+  }, [
+    selectedStyle,
+    createRecipeMode,
+    activeVersionId,
+    activeInterpretationId,
+    constraints,
+    optimizeForConstraints,
+  ]);
 
   const handleCreateVersionSelect = useCallback(
     (version: StyleVersion) => {
@@ -584,6 +620,66 @@ export function HomePage() {
     () => buildRecipe(constraints),
     [buildRecipe, constraints],
   );
+
+  // Soffitto (M_o) + diagnosi del collo di bottiglia. Calcolato sui vincoli correnti
+  // (~0.1ms). HARD = forno (abbassa il soffitto, viabilità termica < 1). SOFT =
+  // farina/lievito non in dispensa (NON abbassano il soffitto — l'optimizer assume
+  // tu li prenda — ma sono precondizioni per raggiungerlo → lista della spesa).
+  const ceilingInfo = useMemo(() => {
+    if (!selectedStyle) return undefined;
+    const opt = optimizeRecipe(selectedStyle, constraints, undefined, undefined, {
+      authenticity: cms.scoreDimensions?.authenticity?.weight,
+      feasibility: cms.scoreDimensions?.feasibility?.weight,
+      digestibility: cms.scoreDimensions?.digestibility?.weight,
+      sustainability: cms.scoreDimensions?.sustainability?.weight,
+      experimentation: cms.scoreDimensions?.experimentation?.weight,
+    }).recipe;
+    const hard = thermalViability(selectedStyle, opt.oven_temp_c) < 1;
+    const softNeeds: string[] = [];
+    if (constraints.pantry_flours.length > 0) {
+      const covered = constraints.pantry_flours.some((id) => {
+        const rng = FLOUR_W_RANGES[id];
+        return rng && opt.flour_w >= rng[0] - 1 && opt.flour_w <= rng[1] + 1;
+      });
+      if (!covered) softNeeds.push(`una farina ~W${opt.flour_w}`);
+    }
+    if (
+      constraints.pantry_yeasts.length > 0 &&
+      !constraints.pantry_yeasts.includes(opt.yeast_type)
+    ) {
+      softNeeds.push((YEAST_LABELS[opt.yeast_type] ?? opt.yeast_type).toLowerCase());
+    }
+    return { value: opt.scores.composite, hard, softNeeds };
+  }, [selectedStyle, constraints, cms.scoreDimensions]);
+
+  // La ricetta è "già ottimizzata" se siamo in modalità adattata, senza versione/
+  // interpretazione, e i parametri correnti coincidono con l'ultimo ottimo. In quel
+  // caso mostriamo la rationale e NASCONDIAMO il pulsante (sarebbe ridondante). Se
+  // l'utente è su canonico o ha spostato gli slider, il pulsante riappare.
+  const createRecipeOptimized = useMemo(() => {
+    const p = lastOptimization?.params;
+    return (
+      createRecipeMode === "adapted" &&
+      !activeVersionId &&
+      !activeInterpretationId &&
+      p != null &&
+      customHydration === p.hydration &&
+      customFlourW === p.flour_w &&
+      customFermentHours === p.fermentation_hours &&
+      customFermentTemp === p.fermentation_temp_c &&
+      usePreFerment === p.use_pre_ferment
+    );
+  }, [
+    lastOptimization,
+    createRecipeMode,
+    activeVersionId,
+    activeInterpretationId,
+    customHydration,
+    customFlourW,
+    customFermentHours,
+    customFermentTemp,
+    usePreFerment,
+  ]);
 
   /* VPL-068: time slot is optional — styles always visible */
   const canGenerateRecipe = selectedStyle !== null;
@@ -1280,6 +1376,19 @@ export function HomePage() {
                       ? handleResetCreateToCanonical
                       : undefined
                   }
+                  onOptimize={
+                    createRecipeOptimized
+                      ? undefined
+                      : () => optimizeForConstraints(constraints)
+                  }
+                  optimizationRationale={
+                    createRecipeOptimized && lastOptimization
+                      ? resolveEngineMsgs(lastOptimization.rationale, cms.engineMessages)
+                      : undefined
+                  }
+                  ceiling={ceilingInfo?.value}
+                  hardLimited={ceilingInfo?.hard}
+                  softNeeds={ceilingInfo?.softNeeds}
                 />
               }
               recipeControls={
@@ -1300,8 +1409,10 @@ export function HomePage() {
                       }}
                     >
                       {createRecipeMode === "canonical"
-                        ? "Versione canonica"
-                        : "Versione adattata alla tua cucina"}
+                        ? "Ricetta canonica"
+                        : createRecipeOptimized
+                          ? "Su misura per te"
+                          : "Personalizzata"}
                     </span>
                     <span
                       className="block mt-1"
@@ -1312,8 +1423,10 @@ export function HomePage() {
                       }}
                     >
                       {createRecipeMode === "canonical"
-                        ? "Stai guardando la ricetta ideale dello stile, con forno e tempi al massimo della sua espressione."
-                        : "Vulcan ha già tradotto la ricetta sui tuoi vincoli: forno, tempo, quantità e strumenti disponibili."}
+                        ? "La ricetta da manuale, valutata sul tuo forno. Ottimizzala per il meglio possibile col tuo setup."
+                        : createRecipeOptimized
+                          ? "Vulcan ha scelto i parametri migliori per il tuo forno, tempo e livello."
+                          : "Hai messo mano ai parametri. Ri-ottimizza per tornare al massimo per te."}
                     </span>
                   </div>
                   <RecipeStatStrip recipe={recipe} nerdMode={effectiveNerdMode} />

@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-06-26T23:05:00.000Z",
+  "lastUpdated": "2026-06-27T14:35:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 139,
     "appFilesExcludingUi": 139,
     "pizzaEngineExports": 59,
-    "pizzaEngineLines": 4933,
+    "pizzaEngineLines": 4959,
     "cmsContextLines": 3182,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-06-26 registra la rimozione delle forzature termiche UI, BeginnerFlourPicker, warning viabilità termica e bypass traduzioni mixer/forno.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-06-27 registra l'ottimizzazione automatica al cambio stile in Home, il confronto match vs soffitto (M_o - M_c) con diagnosi bottleneck in MatchCard, i badge ottimizzati in RecommendedStyles ed Explore.",
   "filesMappedCount": 139,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-06-26-v2",
+  "lastScannedChapter": "kipi-update-2026-06-27",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -28,7 +28,7 @@
         "src/app/data/topping-library.ts",
         "src/app/data/impasto-library.ts"
       ],
-      "lastWorked": "2026-06-26"
+      "lastWorked": "2026-06-27"
     },
     {
       "id": "recipe-flow",
@@ -51,7 +51,7 @@
         "src/app/hooks/use-recipe-state.ts",
         "src/app/features/recipe/recipe-setup-panel.tsx"
       ],
-      "lastWorked": "2026-06-26"
+      "lastWorked": "2026-06-27"
     },
     {
       "id": "scoring-feedback",
@@ -64,7 +64,7 @@
         "src/app/features/recipe/feedback-analysis.tsx",
         "src/app/features/recipe/feedback-store.ts"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-06-27"
     },
     {
       "id": "styles-versions",
@@ -83,7 +83,7 @@
         "src/app/pages/explore.tsx",
         "src/app/features/recipe/tilt-card.tsx"
       ],
-      "lastWorked": "2026-06-26"
+      "lastWorked": "2026-06-27"
     },
     {
       "id": "cms-i18n",

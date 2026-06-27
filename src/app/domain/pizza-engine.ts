@@ -3596,13 +3596,15 @@ export function optimizeRecipe(
       ),
     );
   }
+  // Audit role-play giugno 2026 (#3 trasparenza): la rationale dichiara cosa
+  // l'optimizer ha CAMBIATO rispetto alla canonica (midpoint), non solo le scelte.
   const hMidStyle = Math.round((hMin + hMax) / 2);
-  if (r.hydration_pct < hMidStyle && constraints.skill_level <= 2) {
+  if (r.hydration_pct < hMidStyle - 1 && constraints.skill_level <= 2) {
     rationale.push(
       em(
-        "opt.hydrationForSkill",
-        `Idratazione ${r.hydration_pct}% scelta per restare gestibile al tuo livello.`,
-        { h: r.hydration_pct },
+        "opt.hydrationLowered",
+        `Idratazione abbassata a ${r.hydration_pct}% (canonica ${hMidStyle}%) per restare gestibile al tuo livello.`,
+        { h: r.hydration_pct, canonical: hMidStyle },
       ),
     );
   } else if (r.hydration_pct >= hMidStyle) {
@@ -3610,11 +3612,29 @@ export function optimizeRecipe(
       em("opt.hydrationForStyle", `Idratazione ${r.hydration_pct}% nel cuore dello stile.`, { h: r.hydration_pct }),
     );
   }
-  if (r.has_pre_ferment) {
+  if (r.has_pre_ferment && !style.requires_pre_ferment) {
+    rationale.push(
+      em("opt.prefermentAdded", `Pre-fermento (${r.pre_ferment_type}) aggiunto: più struttura, alveolatura e aroma.`, {
+        type: r.pre_ferment_type ?? "",
+      }),
+    );
+  } else if (r.has_pre_ferment) {
     rationale.push(
       em("opt.preferment", `Pre-fermento (${r.pre_ferment_type}): più struttura, alveolatura e aroma.`, {
         type: r.pre_ferment_type ?? "",
       }),
+    );
+  }
+  // Farina: se l'optimizer ha scelto una W diversa dalla canonica (di norma per
+  // sfruttare la tua dispensa), dichiaralo come cambiamento.
+  const wMidStyle = Math.round((wMin + wMax) / 2);
+  if (Math.abs(r.flour_w - wMidStyle) >= 15) {
+    rationale.push(
+      em(
+        "opt.flourChanged",
+        `Farina cambiata a W${r.flour_w} (canonica W${wMidStyle}).`,
+        { w: r.flour_w, canonical: wMidStyle },
+      ),
     );
   }
   if (r.oven_temp_c < style.baking.temp_c_ideal) {
@@ -3628,7 +3648,8 @@ export function optimizeRecipe(
     const range = FLOUR_W_RANGES[id];
     return range && r.flour_w >= range[0] - 1 && r.flour_w <= range[1] + 1;
   });
-  if (fromPantry) {
+  if (fromPantry && Math.abs(r.flour_w - wMidStyle) < 15) {
+    // Farina della dispensa che coincide già con la canonica (nessun cambiamento).
     rationale.push(em("opt.pantryFlour", `Forza farina W${r.flour_w} compatibile con la tua dispensa.`, { w: r.flour_w }));
   }
 
@@ -4308,6 +4329,11 @@ export interface StyleRecommendation {
   tier: "perfect" | "good" | "challenging" | "not_feasible";
   reasons: EngineMsg[];
   warnings: EngineMsg[];
+  /** Audit role-play giugno 2026: composite della ricetta OTTIMIZZATA per i vincoli
+   *  dell'utente — il punteggio che otterrai davvero aprendo lo stile. Popolato
+   *  dalla UI (recommended-styles) via optimizeRecipe; il ranking/tier resta sulla
+   *  compatibilità, ma il badge mostra questo. */
+  optimizedComposite?: number;
 }
 
 export interface TimeSlot {

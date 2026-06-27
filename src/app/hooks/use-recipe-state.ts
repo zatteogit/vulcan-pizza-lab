@@ -16,6 +16,8 @@ import {
   defaultPanShape,
   defaultFermentTempC,
   generateRecipe,
+  optimizeRecipe,
+  type OptimizedRecipe,
   type GeneratedRecipe,
   type PanConfig,
   type PizzaStyle,
@@ -408,11 +410,44 @@ export function useRecipeState({
       setCustomFermentTemp(centered.fermentTemp);
       setUsePreFerment(centered.usePreFerment);
       setPanConfig(defaultRecipePanConfig(style));
+      setLastOptimization(null);
       if (options.clearTopping !== false) {
         setSelectedToppingConcept(style.default_topping_ref ?? null);
       }
     },
     [activeVersion, applyVersionToState, defaultAvailableHours, style],
+  );
+
+  // Audit role-play giugno 2026: esito dell'ultima ottimizzazione ("Ottimizza per
+  // me"). Tiene la rationale da mostrare in UI; si azzera al reset/cambio stile.
+  const [lastOptimization, setLastOptimization] = useState<OptimizedRecipe | null>(null);
+
+  // "Ottimizza per me": cerca i parametri che massimizzano il punteggio dati i
+  // vincoli (forno/ore/skill/dispensa) e li applica allo stato, scartando
+  // versione/interpretazione attive (l'ottimizzatore sceglie liberamente).
+  const optimizeForConstraints = useCallback(
+    (constraints: UserConstraints): OptimizedRecipe | null => {
+      if (!style) return null;
+      const scoreWeights: ScoreWeightsOverride = {
+        authenticity: cms.scoreDimensions?.authenticity?.weight,
+        feasibility: cms.scoreDimensions?.feasibility?.weight,
+        digestibility: cms.scoreDimensions?.digestibility?.weight,
+        sustainability: cms.scoreDimensions?.sustainability?.weight,
+        experimentation: cms.scoreDimensions?.experimentation?.weight,
+      };
+      const result = optimizeRecipe(style, constraints, undefined, panConfig, scoreWeights);
+      setActiveVersionId(null);
+      setActiveInterpretationId(null);
+      setRecipeMode("adapted");
+      setCustomHydration(result.params.hydration);
+      setCustomFlourW(result.params.flour_w);
+      setCustomFermentHours(result.params.fermentation_hours);
+      setCustomFermentTemp(result.params.fermentation_temp_c);
+      setUsePreFerment(result.params.use_pre_ferment);
+      setLastOptimization(result);
+      return result;
+    },
+    [cms, panConfig, style],
   );
 
   const buildRecipe = useCallback(
@@ -485,6 +520,9 @@ export function useRecipeState({
     resetToBaseRecipe,
     resetForStyle,
     buildRecipe,
+    optimizeForConstraints,
+    lastOptimization,
+    setLastOptimization,
   } satisfies {
     recipeMode: RecipeMode;
     setRecipeMode: Dispatch<SetStateAction<RecipeMode>>;
@@ -527,5 +565,8 @@ export function useRecipeState({
       availableHours?: number,
     ) => void;
     buildRecipe: (constraints: UserConstraints) => GeneratedRecipe | null;
+    optimizeForConstraints: (constraints: UserConstraints) => OptimizedRecipe | null;
+    lastOptimization: OptimizedRecipe | null;
+    setLastOptimization: Dispatch<SetStateAction<OptimizedRecipe | null>>;
   };
 }

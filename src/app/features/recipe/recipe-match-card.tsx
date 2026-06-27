@@ -1,11 +1,14 @@
 import { motion, AnimatePresence } from "motion/react";
-import { Bookmark, BookmarkCheck, Heart, HeartCrack, RotateCcw, TriangleAlert } from "lucide-react";
+import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, RotateCcw, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { Surface } from "../../components/ds/index";
 
 export type RecipeMatchMode = "canonical" | "adapted" | "lab";
+
+/** Icona cuore per stato di match — 5 stati distinti (audit role-play giugno 2026). */
+export type MatchIconKey = "handshake" | "heart" | "pulse" | "crack" | "off";
 
 export function matchTone(score: number, mode: RecipeMatchMode) {
   if (score >= 90) {
@@ -16,6 +19,7 @@ export function matchTone(score: number, mode: RecipeMatchMode) {
           ? "La canonica e la tua cucina parlano già la stessa lingua."
           : "Questa versione è nata per il tuo setup.",
       low: false,
+      icon: "handshake" as MatchIconKey,
     };
   }
   if (score >= 75) {
@@ -26,6 +30,7 @@ export function matchTone(score: number, mode: RecipeMatchMode) {
           ? "Qualche micro-compromesso, ma la scintilla c'è."
           : "Pochi aggiustamenti, tanta sostanza.",
       low: false,
+      icon: "heart" as MatchIconKey,
     };
   }
   if (score >= 60) {
@@ -36,6 +41,7 @@ export function matchTone(score: number, mode: RecipeMatchMode) {
           ? "Si può fare bene: sblocchiamola e Vulcan sistema tempi e cottura."
           : "La ricetta funziona, ma chiede un minimo di attenzione.",
       low: false,
+      icon: "pulse" as MatchIconKey,
     };
   }
   if (score >= 40) {
@@ -46,6 +52,7 @@ export function matchTone(score: number, mode: RecipeMatchMode) {
           ? "La ricetta è seria: meglio adattarla al tuo forno prima di provarci."
           : "Buona direzione, ma serve ancora qualche compromesso.",
       low: true,
+      icon: "crack" as MatchIconKey,
     };
   }
   return {
@@ -55,6 +62,7 @@ export function matchTone(score: number, mode: RecipeMatchMode) {
         ? "Bellissima, ma oggi chiede più fuoco di quello che hai. La rendiamo possibile?"
         : "Troppo per questo setup: alleggeriamo tempi, forno o ambizione.",
     low: true,
+    icon: "off" as MatchIconKey,
   };
 }
 
@@ -67,6 +75,11 @@ export function RecipeMatchCard({
   onAdapt,
   onReset,
   onSave,
+  onOptimize,
+  optimizationRationale,
+  ceiling,
+  hardLimited,
+  softNeeds,
   saved = false,
   className = "",
 }: {
@@ -78,6 +91,20 @@ export function RecipeMatchCard({
   onAdapt?: () => void;
   onReset?: () => void;
   onSave?: () => void;
+  /** "Ottimizza per me": cerca i parametri migliori per il setup dell'utente. */
+  onOptimize?: () => void;
+  /** Rationale dell'ultima ottimizzazione (stringhe già risolte) da mostrare. */
+  optimizationRationale?: string[];
+  /** Soffitto: composite della ricetta OTTIMIZZATA per i vincoli dell'utente —
+   *  il massimo raggiungibile. Abilita i "due livelli": +Δ sul pulsante, riga
+   *  onesta sul margine, e il verdetto "non vale la pena" se < 40. */
+  ceiling?: number;
+  /** Limite HARD: il forno non raggiunge lo stile (viabilità termica < 1). Abbassa
+   *  il soffitto → messaggio di resa/redirect, non "lista della spesa". */
+  hardLimited?: boolean;
+  /** Limiti SOFT acquisibili (farina/lievito non in dispensa): non abbassano il
+   *  soffitto ma sono precondizioni per raggiungerlo → "ti serve X". */
+  softNeeds?: string[];
   saved?: boolean;
   className?: string;
 }) {
@@ -107,8 +134,62 @@ export function RecipeMatchCard({
   }));
 
   const roundedScore = Math.round(scores.composite);
+
+  // ── Due livelli: match corrente vs SOFFITTO (M_o) ───────────────────────────
+  // Audit role-play giugno 2026. Il soffitto è il massimo raggiungibile ottimizzando.
+  // Δ = quanto guadagni con un tap. Soglia onesta 40 SUL SOFFITTO: se anche al
+  // massimo sei sotto 40 → "non vale la pena" (sotto 40 fallisci su ≥2 assi, non è
+  // una "buona pizza solo non autentica"). Il muro quasi sempre è il forno.
+  const ceilingRounded = ceiling != null ? Math.round(ceiling) : null;
+  const headroom = ceilingRounded != null ? Math.max(0, ceilingRounded - roundedScore) : 0;
+  const ovenIsWall = hardLimited ?? false;
+  const needs = softNeeds ?? [];
+  const atCeiling = headroom < 2;
+  // Cascata di messaggi HARD/SOFT/path-aware (audit role-play giugno 2026).
+  // Priorità: muro hard < cap hard < buco soft (lista spesa) < margine da ottimizzare
+  //           < rassicurazione path-aware < compromesso generico.
+  let headroomLine: { text: string; tone: "warn" | "accent" | "muted" | "ok" } | null = null;
+  if (ceilingRounded != null) {
+    if (ceilingRounded < 40) {
+      // HARD: anche al massimo è sotto soglia → non vale la pena.
+      headroomLine = {
+        tone: "warn",
+        text: ovenIsWall
+          ? `Anche al massimo arrivi a ${ceilingRounded}/100: il tuo forno non ci arriva. Meglio uno stile fatto per casa.`
+          : `Anche al massimo arrivi a ${ceilingRounded}/100 con questo setup: non vale la pena.`,
+      };
+    } else if (ovenIsWall && ceilingRounded < 65) {
+      // HARD: il forno è il tetto, ma una pizza la fai → compromesso onesto.
+      headroomLine = {
+        tone: "muted",
+        text: `Il forno ti ferma a ${ceilingRounded}/100: niente leopardatura, ma una buona pizza sì.`,
+      };
+    } else if (needs.length > 0) {
+      // SOFT: lista della spesa — la ricetta mostrata assume qualcosa che non hai.
+      headroomLine = {
+        tone: "accent",
+        text: `Per arrivare a ${ceilingRounded}/100 ti serve: ${needs.join(", ")}.`,
+      };
+    } else if (headroom >= 8 && onOptimize) {
+      // Hai tutto: basta ottimizzare.
+      headroomLine = { tone: "accent", text: `Puoi portarla a ${ceilingRounded}/100 ottimizzando — hai già tutto.` };
+    } else if (atCeiling && mode === "canonical" && ceilingRounded >= 60) {
+      // PATH-AWARE: sei sul canonico e regge col tuo setup.
+      headroomLine = { tone: "ok", text: `Anche la ricetta canonica resta fattibile col tuo setup.` };
+    } else if (ceilingRounded < 60) {
+      headroomLine = { tone: "muted", text: `Il tuo massimo per questo setup è ${ceilingRounded}/100: una versione di compromesso.` };
+    }
+  }
+
   const tone = matchTone(roundedScore, mode);
-  const MatchIcon = tone.low ? HeartCrack : Heart;
+  const MATCH_ICONS = {
+    handshake: HeartHandshake,
+    heart: Heart,
+    pulse: HeartPulse,
+    crack: HeartCrack,
+    off: HeartOff,
+  } as const;
+  const MatchIcon = MATCH_ICONS[tone.icon];
   const showAdaptAction = mode === "canonical" && Boolean(onAdapt);
   const showResetAction = mode !== "canonical" && Boolean(onReset);
   const showSaveAction = mode !== "canonical" && Boolean(onSave);
@@ -251,7 +332,7 @@ export function RecipeMatchCard({
               {ovenGap > 0 ? ` · ${cms.ui.statIdeal} ${fmt.celsius(idealTemp)}` : ""}
             </span>
           </div>
-          {unviableText && (
+          {unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
             <p
               className="mt-1.5 text-left"
               style={{
@@ -263,6 +344,28 @@ export function RecipeMatchCard({
               }}
             >
               {unviableText}
+            </p>
+          )}
+          {headroomLine && (
+            <p
+              className="mt-1.5 text-left"
+              style={{
+                margin: "6px 0 0",
+                color:
+                  headroomLine.tone === "warn"
+                    ? "var(--text-warning)"
+                    : headroomLine.tone === "accent" || headroomLine.tone === "ok"
+                      ? "var(--text-accent)"
+                      : "var(--text-muted)",
+                fontSize: "var(--font-size-sm)",
+                lineHeight: "var(--leading-normal)",
+                fontWeight:
+                  headroomLine.tone === "muted"
+                    ? ("var(--weight-medium)" as any)
+                    : ("var(--weight-semibold)" as any),
+              }}
+            >
+              {headroomLine.text}
             </p>
           )}
         </div>
@@ -328,6 +431,30 @@ export function RecipeMatchCard({
               </motion.button>
             )}
           </AnimatePresence>
+          {onOptimize && (
+            <motion.button
+              type="button"
+              onClick={onOptimize}
+              whileHover={{ scale: 1.025, y: -1 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 450, damping: 28 }}
+              className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5"
+              style={{
+                alignSelf: "flex-start",
+                background: "var(--cta)",
+                color: "var(--cta-foreground)",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "var(--font-size-sm)",
+                fontWeight: "var(--weight-bold)" as any,
+                lineHeight: "var(--leading-tight)",
+                boxShadow: "0 10px 22px color-mix(in srgb, var(--cta) 22%, transparent)",
+              }}
+            >
+              <Sparkles size={15} />
+              Ottimizza per me{headroom >= 2 ? ` +${headroom}` : ""}
+            </motion.button>
+          )}
           {showSaveAction && (
             <button
               type="button"
@@ -374,6 +501,34 @@ export function RecipeMatchCard({
           />
         ))}
       </div>
+
+      {optimizationRationale && optimizationRationale.length > 0 && (
+        <div
+          className="mt-3 pt-3 w-full"
+          style={{ borderTop: "1px solid var(--container-border-subtle)" }}
+        >
+          <div className="flex items-center gap-1.5 mb-1.5" style={{ color: "var(--cta)" }}>
+            <Sparkles size={14} />
+            <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
+              Ottimizzata per il tuo setup
+            </span>
+          </div>
+          <ul className="flex flex-col gap-1">
+            {optimizationRationale.map((reason, i) => (
+              <li
+                key={i}
+                style={{
+                  fontSize: "var(--font-size-sm)",
+                  color: "var(--text-muted)",
+                  lineHeight: "var(--leading-normal)",
+                }}
+              >
+                • {reason}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </Surface>
   );
 }

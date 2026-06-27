@@ -3,7 +3,7 @@
    Layout editoriale e filtri flessibili (Spotify/Pinterest style).
    Tab: Stili — /explore */
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronUp } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useMemo } from "react";
 import { Link,useSearchParams } from "react-router";
@@ -13,12 +13,17 @@ import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { FireGlow } from "../features/cooking/fire-glow";
 import { getInterpretationById } from "../data/interpretation-library";
 import {
+generateRecipe,
+optimizeRecipe,
 PIZZA_FAMILIES,
 STYLES_DB,
 type FamilyId,
 type PizzaStyle,
+type UserConstraints,
 } from "../domain/pizza-engine";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
+import { ScoreRing } from "../features/recipe/score-ring";
+import { useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
 SIGNATURE_RECIPES,
 type SignatureRecipe,
@@ -189,6 +194,9 @@ function FeaturedRecipeCard({
 export function ExplorePage() {
   const { cms } = useCms();
   const { effectiveStyles } = useStylesOverride();
+  // Fase 4: Scopri è il polo CANONICO. Le card mostrano il match canonico sul tuo
+  // forno (M_c) con una scia fantasma fino al soffitto ottimizzabile (M_o).
+  const { constraints: profileConstraints } = useProfileDefaults();
   const [searchParams, setSearchParams] = useSearchParams();
   const urlFilter = searchParams.get("view");
   const activeFilter: ExploreFilter = isExploreFilter(urlFilter) ? urlFilter : "all";
@@ -426,6 +434,7 @@ export function ExplorePage() {
                       cms={cms}
                       isNerd={isNerd}
                       exploreBackTo={exploreBackTo}
+                      constraints={profileConstraints}
                     />
                   ))}
                 </div>
@@ -567,6 +576,7 @@ export function ExplorePage() {
                                 cms={cms}
                                 isNerd={isNerd}
                                 exploreBackTo={exploreBackTo}
+                                constraints={profileConstraints}
                               />
                             ))}
                           </div>
@@ -597,6 +607,7 @@ export function ExplorePage() {
                           cms={cms}
                           isNerd={isNerd}
                           exploreBackTo={exploreBackTo}
+                          constraints={profileConstraints}
                         />
                       ))}
                     </div>
@@ -782,17 +793,31 @@ function StyleCatalogCard({
   cms,
   isNerd,
   exploreBackTo,
+  constraints,
 }: {
   style: PizzaStyle;
   index: number;
   cms: any;
   isNerd?: boolean;
   exploreBackTo: string;
+  constraints: UserConstraints;
 }) {
   const photo =
     cms.media?.stylePhotos?.[style.id] ||
     STYLE_PHOTOS[style.id] ||
     FALLBACK;
+  // Fase 4: match canonico (M_c) sul tuo forno + margine ottimizzabile (M_o − M_c).
+  // La pill "↗+Δ" compare solo se il margine è reale (Δ ≥ 8): auto-regolante,
+  // così il 70-80% delle card resta pulito. (La scia fantasma a 32px era illeggibile.)
+  const match = useMemo(() => {
+    try {
+      const mc = generateRecipe(style, constraints).scores.composite;
+      const mo = optimizeRecipe(style, constraints).recipe.scores.composite;
+      return { mc, headroom: mo - mc >= 8 ? mo - mc : 0 };
+    } catch {
+      return null;
+    }
+  }, [style, constraints]);
   const cmsFamilyName = (
     cms.families?.[style.family]?.name ||
     PIZZA_FAMILIES[style.family]?.name ||
@@ -840,10 +865,10 @@ function StyleCatalogCard({
             style={{ background: "var(--overlay-scrim)" }}
           />
 
-          {/* Beginner badge — top right */}
+          {/* Beginner badge — top left */}
           {style.suitable_for_beginner && (
             <div
-              className="absolute top-3 right-3 px-2 py-1 rounded-lg"
+              className="absolute top-3 left-3 px-2 py-1 rounded-lg"
               style={{
                 background:
                   "color-mix(in srgb, var(--cta) 90%, transparent)",
@@ -854,6 +879,41 @@ function StyleCatalogCard({
               }}
             >
               {cms.misc.badgeBeginnerFriendly}
+            </div>
+          )}
+
+          {/* Match canonico + margine ottimizzabile — top right (Fase 4) */}
+          {match && (
+            <div className="absolute top-3 right-3 flex flex-col items-end gap-1">
+              <div
+                className="flex items-center justify-center rounded-full"
+                style={{
+                  width: 38,
+                  height: 38,
+                  background: "color-mix(in srgb, var(--container-page) 70%, transparent)",
+                  backdropFilter: "blur(8px)",
+                  WebkitBackdropFilter: "blur(8px)",
+                }}
+              >
+                <ScoreRing score={match.mc} color="var(--cta)" size={32} />
+              </div>
+              {match.headroom > 0 && (
+                <div
+                  className="flex items-center gap-0.5 rounded-full px-1.5 py-0.5"
+                  style={{
+                    background: "var(--cta)",
+                    color: "var(--cta-foreground)",
+                    fontSize: "var(--font-size-xs)",
+                    fontWeight: "var(--weight-bold)" as any,
+                    backdropFilter: "blur(8px)",
+                    WebkitBackdropFilter: "blur(8px)",
+                  }}
+                  title={`Ottimizzabile: +${match.headroom} col tuo setup`}
+                >
+                  <ChevronUp size={11} strokeWidth={3} />
+                  {match.headroom}
+                </div>
+              )}
             </div>
           )}
 
