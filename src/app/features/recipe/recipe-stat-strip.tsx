@@ -1,4 +1,4 @@
-import { Droplets,Flame,FlaskConical,Hourglass,Sparkles,Timer } from "lucide-react";
+import { ChevronDown,ChevronUp,Droplets,Flame,FlaskConical,Hourglass,Sparkles,Timer } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import React from "react";
 import { useCms } from "../cms/cms-context";
@@ -32,6 +32,32 @@ export function RecipeStatStrip({
   const fmt = createFormatter(ui, bcp47);
   const idealLabel = ui.statIdeal;
   const nerdRefTempVars = { refTemp: fmt.celsius(18) };
+
+  // #3(b) trasparenza: marca i parametri che SI DISCOSTANO dalla canonica (il
+  // centro range dello stile) — di norma le scelte dell'ottimizzatore. Easy mode:
+  // idratazione e lievitazione. Nerd: anche W farina. Oven/cottura no (sono il
+  // tuo forno / derivati, non scelte).
+  const hMid = Math.round(
+    (recipe.style.dough.hydration_pct_range[0] + recipe.style.dough.hydration_pct_range[1]) / 2,
+  );
+  const hChanged =
+    Math.abs(recipe.hydration_pct - hMid) >= 2
+      ? { dir: recipe.hydration_pct > hMid ? "up" : ("down" as "up" | "down"), canonical: fmt.percent(hMid) }
+      : undefined;
+  const fMid = Math.round(
+    (recipe.style.dough.fermentation_hours_range[0] + recipe.style.dough.fermentation_hours_range[1]) / 2,
+  );
+  const fChanged =
+    Math.abs(recipe.fermentation_hours - fMid) >= 2
+      ? { dir: recipe.fermentation_hours > fMid ? "up" : ("down" as "up" | "down"), canonical: fmt.fermentTime(fMid) }
+      : undefined;
+  const wMid = Math.round(
+    (recipe.style.dough.flour_w_range[0] + recipe.style.dough.flour_w_range[1]) / 2,
+  );
+  const wChanged =
+    Math.abs(recipe.flour_w - wMid) >= 15
+      ? { dir: recipe.flour_w > wMid ? "up" : ("down" as "up" | "down"), canonical: `W${wMid}` }
+      : undefined;
 
   return (
     <div className="flex flex-col gap-3">
@@ -111,6 +137,7 @@ export function RecipeStatStrip({
           color="var(--stat-hydration)"
           toneBg="var(--stat-hydration-bg)"
           index={0}
+          changed={hChanged}
         />
         {/* Su misura vs ideale (feedback giugno 2026): quando il TUO forno
             impone una compensazione, mostriamo il canonico dello stile —
@@ -154,6 +181,7 @@ export function RecipeStatStrip({
           color="var(--stat-ferment)"
           toneBg="var(--stat-ferment-bg)"
           index={3}
+          changed={fChanged}
         />
       </div>
 
@@ -210,6 +238,7 @@ export function RecipeStatStrip({
                 <NerdCell
                   label={ui.nerdFlourW}
                   value={`${recipe.flour_w}`}
+                  changed={wChanged}
                 />
                 <NerdCell
                   label={ui.nerdPL}
@@ -248,6 +277,7 @@ function StatCell({
   color,
   toneBg,
   index = 0,
+  changed,
 }: {
   label: string;
   value: string;
@@ -256,6 +286,8 @@ function StatCell({
   color: string;
   toneBg: string;
   index?: number;
+  /** #3(b): segnala che il valore è stato cambiato vs canonica (su misura). */
+  changed?: { dir: "up" | "down"; canonical: string };
 }) {
   const statValue = splitStatValue(value);
   const detailRows = [statValue.extra, detail].filter(Boolean);
@@ -296,6 +328,16 @@ function StatCell({
         >
           {label}
         </span>
+        {changed && (
+          <span
+            className="inline-flex items-center rounded-full"
+            style={{ color: "var(--cta)", marginLeft: -2 }}
+            title={`Su misura per te · canonica ${changed.canonical}`}
+            aria-label={`Modificato dall'ottimizzazione. Canonica: ${changed.canonical}`}
+          >
+            {changed.dir === "up" ? <ChevronUp size={14} strokeWidth={3} /> : <ChevronDown size={14} strokeWidth={3} />}
+          </span>
+        )}
       </div>
       <div
         className="type-numeric flex items-baseline gap-1 min-w-0 w-full"
@@ -384,9 +426,11 @@ function splitStatValue(value: string): {
 function NerdCell({
   label,
   value,
+  changed,
 }: {
   label: string;
   value: string;
+  changed?: { dir: "up" | "down"; canonical: string };
 }) {
   return (
     <div
@@ -394,7 +438,7 @@ function NerdCell({
       style={{ background: "var(--container-page)" }}
     >
       <span
-        className="type-data"
+        className="type-data inline-flex items-center gap-0.5"
         style={{
           fontSize: "var(--font-size-xl)",
           fontWeight: "var(--weight-bold)" as any,
@@ -403,6 +447,14 @@ function NerdCell({
         }}
       >
         {value}
+        {changed && (
+          <span
+            style={{ color: "var(--cta)" }}
+            title={`Su misura per te · canonica ${changed.canonical}`}
+          >
+            {changed.dir === "up" ? <ChevronUp size={12} strokeWidth={3} /> : <ChevronDown size={12} strokeWidth={3} />}
+          </span>
+        )}
       </span>
       <span
         style={{

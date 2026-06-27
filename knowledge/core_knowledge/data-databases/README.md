@@ -1,18 +1,20 @@
 # Database parametrici e dati
-> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 5
+> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 5
 
 ## Sommario
 
 Layer dati statici che alimentano motore, configuratore, profilo e contenuti esplorativi: **10 tabelle parametriche per stile** (`parametric-databases.ts`), **catalogo farine** con W/P/L (`flour-database.ts`, rimosso `suggestFlours` inutilizzato), **attrezzatura** con migrazione legacy e i18n CMS (`equipment-data.ts`), **vincoli dietetici** con modelli FODMAP/istamina (`dietary-data.ts`) e **tassonomia deviazioni** per E-Score (`deviation-tags.ts`).
 
 Fonte dichiarata nel codice: export Notion (marzo 2026). I DB parametrici coprono **15 `styleId`** allineati a `STYLES_DB` in `pizza-engine.ts` (mancano voci solo dove uno stile non ha riga in una tabella specifica).
+- **Asset Grafici Topping**: La visualizzazione del condimento in output ricetta visualizza immagini vettoriali locali `.svg` o foto della ricetta condimento se definite, risolvendo robustamente i placeholder.
+- **Derivazione Dinamica Parametriche Stile**: In `parametric-databases.ts`, se uno stile recente (come `greek_pan`, `new_haven_apizza`, `fugazzeta`, ecc.) non è presente fisicamente nelle tabelle statiche del database parametriche (es. `WATER_DB`, `SALT_DB`, `MATURATION_DB`), i valori vengono derivati dinamicamente tramite `DERIVED_STYLE_SEEDS` (utilizzando le proprietà geometriche e di idratazione del record in `STYLES_DB`), evitando ritorni `undefined` e crash della UI del Pannello Regola 55 o dei blocchi nerd.
 
 ## File chiave
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/data/parametric-databases.ts` | 344 | 10 DB + lookup per `styleId`; `getStyleParametrics()` aggrega tutto |
-| `src/app/data/flour-database.ts` | 619 | `FLOURS_DB` (25 farine), helper W/stile/suggerimento |
+| `src/app/data/parametric-databases.ts` | 727 | 10 DB + lookup per `styleId`; `getStyleParametrics()` aggrega tutto con derivazione dinamica stili recenti |
+| `src/app/data/flour-database.ts` | 595 | `FLOURS_DB` (25 farine), helper W/stile/suggerimento |
 | `src/app/data/equipment-data.ts` | 385 | Mixer, superfici, utensili; `EquipmentState`, migrazione, localizzazione CMS |
 | `src/app/data/dietary-data.ts` | 138 | Warning contestuali FODMAP/istamina/gluten-free/nickel localizzati via CMS |
 | `src/app/domain/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, tag multi-dimensionali; rimosso `AUTHOR_VARIANTS` migrato in `interpretation-library.ts` |
@@ -72,7 +74,7 @@ flowchart TD
 
 | Export | Scopo |
 |--------|--------|
-| `getCompatibleFlours(styleId)` | Filtra `stili_compatibili` |
+| `getCompatibleFlours(styleId)` | Filtra `stili_compatibili`; se vuoto, esegue fallback dinamico interrogando `STYLES_DB` per trovare farine incluse nel W range dello stile, ordinate per prossimità al midpoint W dello stile |
 | `getEffectiveWRange(flour)` | W ± batch ± stagione (audit DB Engineer) |
 
 **Rimossi nell'allineamento**: `getFloursByProducer`, `getFloursByWRange` e `suggestFlours` (rimossi poiché ridondanti e non utilizzati).

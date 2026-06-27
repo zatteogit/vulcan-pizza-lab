@@ -4326,6 +4326,8 @@ export interface StyleRecommendation {
   compatibilityScore: number;
   feasibilityScore: number;
   digestibilityEstimate: number;
+  /** Score effettivo usato per ordinare la lista, inclusi piccoli prior iconici. */
+  rankingScore: number;
   tier: "perfect" | "good" | "challenging" | "not_feasible";
   reasons: EngineMsg[];
   warnings: EngineMsg[];
@@ -4825,9 +4827,12 @@ export function recommendStyles(
     else if (score >= 55) tier = "good";
     else tier = "challenging";
 
+    const rankingScore = score + (ICONIC_BOOST[style.id] ?? 0);
+
     recommendations.push({
       style,
       compatibilityScore: score,
+      rankingScore,
       feasibilityScore: Math.round(
         ovenScore * 0.5 + skillScore * 0.3 + equipScore * 0.2,
       ),
@@ -4845,9 +4850,8 @@ export function recommendStyles(
   // proponeva Ciaccino Senese e Pizza Fritta prima di Napoletana e Teglia).
   recommendations.sort(
     (a, b) =>
-      b.compatibilityScore +
-      (ICONIC_BOOST[b.style.id] ?? 0) -
-      (a.compatibilityScore + (ICONIC_BOOST[a.style.id] ?? 0)),
+      b.rankingScore - a.rankingScore ||
+      b.compatibilityScore - a.compatibilityScore,
   );
   return recommendations;
 }

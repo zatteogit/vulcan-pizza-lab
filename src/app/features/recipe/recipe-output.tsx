@@ -879,6 +879,15 @@ function displayStepTime(
   return `~${clockWithDay(rounded, reference, bcp47, copy)}`;
 }
 
+function normalizeTemperatureUnitSuffixes(text: string): string {
+  return text.replace(/(°[CF])\s*(?:°C|℃)\b/g, "$1");
+}
+
+function normalizeMeasureUnitSuffixes(text: string): string {
+  return normalizeTemperatureUnitSuffixes(text)
+    .replace(/(\d+(?:[.,]\d+)?\s*g)\s*g\b/g, "$1");
+}
+
 /* ═══ OTTIMIZZATORE COMODITÀ (feedback giugno 2026) ═══
  * "A volte non fa niente se l'impasto resta in frigo un'ora in più, ma magari
  * non ti devi alzare alle 5." Le fasi flessibili si stirano/accorciano entro
@@ -1097,11 +1106,11 @@ function localizeStep(
     if (!fmt) return raw;
     return {
       ...raw,
-      description: formatTemperatureCopy(raw.description, fmt),
+      description: normalizeTemperatureUnitSuffixes(formatTemperatureCopy(raw.description, fmt)),
       tip: raw.tip
         ? {
-            beginner: formatTemperatureCopy(raw.tip.beginner, fmt),
-            nerd: formatTemperatureCopy(raw.tip.nerd, fmt),
+            beginner: normalizeTemperatureUnitSuffixes(formatTemperatureCopy(raw.tip.beginner, fmt)),
+            nerd: normalizeTemperatureUnitSuffixes(formatTemperatureCopy(raw.tip.nerd, fmt)),
           }
         : undefined,
     };
@@ -1233,14 +1242,19 @@ function localizeStep(
   }
 
   // Replace template vars
-  desc = t(desc, vars);
+  desc = normalizeTemperatureUnitSuffixes(t(desc, vars));
 
   const tip = (entry.tipBeginner && entry.tipNerd)
-    ? { beginner: t(entry.tipBeginner, vars), nerd: t(entry.tipNerd, vars) }
+    ? {
+        beginner: normalizeTemperatureUnitSuffixes(t(entry.tipBeginner, vars)),
+        nerd: normalizeTemperatureUnitSuffixes(t(entry.tipNerd, vars)),
+      }
     : step.tip;
 
   // Spiegazione estesa opzionale (interpolata con le stesse vars)
-  const longDesc = entry.longDesc ? t(entry.longDesc, vars) : undefined;
+  const longDesc = entry.longDesc
+    ? normalizeTemperatureUnitSuffixes(t(entry.longDesc, vars))
+    : undefined;
 
   return { title, description: desc, longDesc, tip };
 }
@@ -1772,16 +1786,17 @@ export function RecipeOutput({
                   </span>
                 </span>
                 <span
+                  aria-hidden="true"
                   className="type-data-sm"
                   style={{
+                    display: "block",
                     fontWeight: "var(--weight-medium)" as any,
                     lineHeight: "var(--leading-none)",
                     marginTop: "var(--space-0-5)",
+                    minHeight: "1em",
                     visibility: "hidden",
                   }}
-                >
-                  placeholder
-                </span>
+                />
               </button>
             )}
             <button
@@ -1878,14 +1893,16 @@ export function RecipeOutput({
                 <span
                   className="type-data-sm"
                   style={{
+                    display: "block",
                     fontWeight: "var(--weight-medium)" as any,
                     color: "var(--text-muted)",
                     lineHeight: "var(--leading-none)",
                     marginTop: "var(--space-0-5)",
+                    minHeight: "1em",
                     visibility: dayOffset(startTime, endTime) > 0 ? "visible" : "hidden",
                   }}
                 >
-                  {daySuffix(startTime, endTime).trim() || "placeholder"}
+                  {daySuffix(startTime, endTime, cms.cooking).trim() || " "}
                 </span>
               </button>
             )}
@@ -2821,7 +2838,7 @@ export function RecipeOutput({
               fontWeight: "var(--weight-semibold)" as any,
             }}
           >
-            {cms.cooking.recipeAdapted}
+            {isPersonalized ? cms.cooking.recipeAdapted : "Ricetta canonica"}
           </span>
           <span
             className="min-w-0"
@@ -3023,7 +3040,7 @@ export function RecipeOutput({
             className="type-body"
             style={{ color: "var(--text-muted)" }}
           >
-            {t(ui.doughBallsFrom, { w: fmt.grams(recipe.ball_weight_g) })}
+            {normalizeMeasureUnitSuffixes(t(ui.doughBallsFrom, { w: fmt.grams(recipe.ball_weight_g) }))}
             {panSizeLabel ? ` · ${panSizeLabel}` : ""}
           </span>
           {/* Stima persone (range) accanto al counter */}
@@ -3952,8 +3969,8 @@ function formatIngredientsText(r: GeneratedRecipe, cms: CmsContent, bcp47: strin
   const fmt = createFormatter(ui, bcp47);
   const yeastName = cms.yeastLabels[r.yeast_type] || YEAST_LABELS[r.yeast_type] || r.yeast_type;
   const title = t(ui.clipboardTitle, { style: r.style.name });
-  const balls = t(ui.clipboardBalls, { n: r.dough_balls, w: fmt.grams(r.ball_weight_g) });
-  const total = t(ui.clipboardTotal, { g: fmt.grams(r.total_dough_g) });
+  const balls = normalizeMeasureUnitSuffixes(t(ui.clipboardBalls, { n: r.dough_balls, w: fmt.grams(r.ball_weight_g) }));
+  const total = normalizeMeasureUnitSuffixes(t(ui.clipboardTotal, { g: fmt.grams(r.total_dough_g) }));
   const doughText = `${title}\n${balls}\n\n${ui.flour} W${r.flour_w} · P/L ${r.flour_pl}: ${fmt.grams(r.flour_g)}\n${ui.water}: ${fmt.grams(r.water_g)} (${fmt.percent(r.hydration_pct)})\n${ui.salt}: ${fmt.grams(r.salt_g)}${r.yeast_g > 0 ? `\n${yeastName}: ${fmt.grams(r.yeast_g)}` : ""}${r.fat_g > 0 ? `\n${r.fat_label || ui.oilEvo}: ${fmt.grams(r.fat_g)}` : ""}\n\n${total}`;
 
   const toppingRefId = r.style.default_topping_ref;

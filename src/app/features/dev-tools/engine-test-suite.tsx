@@ -829,25 +829,26 @@ function runRecommendation(): TestResult[] {
     results.push({ id: "T08-02", name: "Tutti gli stili raccomandati", status: missing.length === 0 ? "pass" : "warn", detail: missing.length ? `Mancanti: ${missing.join(", ")}` : `${recs.length}/${STYLE_IDS().length}`, ms });
   }
 
-  // T08-03: Tiers are valid (perfect/good/challenging)
+  // T08-03: Tiers are valid (perfect/good/challenging/not_feasible)
   {
     const { ms } = timed(() => null);
     const recs = recommendStyles(makeConstraints());
-    const validTiers = ["perfect", "good", "challenging"];
+    const validTiers = ["perfect", "good", "challenging", "not_feasible"];
     const invalid = recs.filter((r: any) => !validTiers.includes(r.tier));
     const tiers = recs.reduce((acc: any, r: any) => { acc[r.tier] = (acc[r.tier] || 0) + 1; return acc; }, {});
-    results.push({ id: "T08-03", name: "Tier validi (perfect/good/challenging)", status: invalid.length === 0 ? "pass" : "fail", detail: `Perfect:${tiers.perfect || 0}, Good:${tiers.good || 0}, Challenging:${tiers.challenging || 0}`, ms });
+    results.push({ id: "T08-03", name: "Tier validi", status: invalid.length === 0 ? "pass" : "fail", detail: `Perfect:${tiers.perfect || 0}, Good:${tiers.good || 0}, Challenging:${tiers.challenging || 0}, Not feasible:${tiers.not_feasible || 0}`, ms });
   }
 
-  // T08-04: Sorted descending by score
+  // T08-04: Sorted descending by ranking score
   {
     const { ms } = timed(() => null);
     const recs = recommendStyles(makeConstraints());
+    const rank = (rec: any) => rec.rankingScore ?? rec.compatibilityScore;
     let sorted = true;
     for (let i = 1; i < recs.length; i++) {
-      if ((recs[i] as any).compatibilityScore > (recs[i - 1] as any).compatibilityScore + 0.1) { sorted = false; break; }
+      if (rank(recs[i]) > rank(recs[i - 1]) + 0.1) { sorted = false; break; }
     }
-    results.push({ id: "T08-04", name: "Raccomandazioni ordinate per score↓", status: sorted ? "pass" : "warn", detail: `Top 3: ${recs.slice(0, 3).map((r: any) => `${r.style.id}(${r.compatibilityScore})`).join(", ")}`, ms });
+    results.push({ id: "T08-04", name: "Raccomandazioni ordinate per ranking↓", status: sorted ? "pass" : "warn", detail: `Top 3: ${recs.slice(0, 3).map((r: any) => `${r.style.id}(rank ${rank(r)}, compat ${r.compatibilityScore})`).join(", ")}`, ms });
   }
 
   // T08-05: Wood oven boosts napoletana_stg

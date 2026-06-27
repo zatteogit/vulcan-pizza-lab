@@ -1,6 +1,8 @@
 /* === DATABASE FARINE ESPANSO === */
 /* Dati da Notion Database 🌾 Database Farine — allineato 15 marzo 2026 */
 
+import { STYLES_DB } from "../domain/pizza-engine";
+
 export interface FlourEntry {
   id: string;
   name: string;
@@ -559,7 +561,21 @@ export const FLOURS_DB: FlourEntry[] = [
 
 /** Trova farine compatibili con uno stile */
 export function getCompatibleFlours(styleId: string): FlourEntry[] {
-  return FLOURS_DB.filter((f) => f.stili_compatibili.includes(styleId));
+  const explicit = FLOURS_DB.filter((f) => f.stili_compatibili.includes(styleId));
+  if (explicit.length > 0) return explicit;
+
+  const style = STYLES_DB[styleId];
+  if (!style) return [];
+
+  const [styleMinW, styleMaxW] = style.dough.flour_w_range;
+  const styleCenter = (styleMinW + styleMaxW) / 2;
+  return FLOURS_DB
+    .filter((flour) => {
+      const [flourMinW, flourMaxW] = getEffectiveWRange(flour);
+      if (flourMinW === 0 && flourMaxW === 0) return false;
+      return flourMinW <= styleMaxW && flourMaxW >= styleMinW;
+    })
+    .sort((a, b) => Math.abs(a.w - styleCenter) - Math.abs(b.w - styleCenter));
 }
 
 

@@ -1,5 +1,5 @@
 # Impara, glossario, troubleshooting
-> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 8
+> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 8
 
 ## Sommario
 
@@ -11,7 +11,7 @@ Il pannello `TroubleshootingPanel` è riusato anche nel **flusso ricetta** (`Con
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/pages/learn.tsx` | 573 | Hub Impara: hero editoriale, percorso skill-aware, risorse e 3 card verso sotto-route con passaggio del parametro `?style=` |
+| `src/app/pages/learn.tsx` | 571 | Hub Impara: hero editoriale, percorso skill-aware, risorse e 3 card verso sotto-route con passaggio del parametro `?style=` |
 | `src/app/pages/glossary.tsx` | 809 | UI glossario: ricerca, categorie, espansione, deeplink hash |
 | `src/app/data/glossary-data.ts` | 482 | `GLOSSARY_TERMS` (32 termini), 6 categorie, getter i18n |
 | `src/app/pages/troubleshooting.tsx` | 63 | Pagina full-page con header sticky + `TroubleshootingGuide` |
@@ -98,6 +98,7 @@ flowchart TD
 - **Audit Accenti Italiani**: Corrette tutte le occorrenze UI non accentate in italiano (es. `perche` $\rightarrow$ `perché`, `attivita` $\rightarrow$ `attività`) all'interno di `pre-ferment-guide.tsx`, `pre-ferments.tsx` e `troubleshooting-data.ts`.
 - **Localizzazione ricerca**: Il placeholder dell'input di ricerca in `TroubleshootingGuide` è interamente localizzato tramite CMS (`cms.pages.troubleshootSearchPlaceholder`).
 - Pagina pre-fermenti non usa `useCms` direttamente nella page shell; i testi card passano da `PreFermentCard` + CMS.
+- **Percorso di apprendimento contestuale in LearnPage**: Se all'apertura dell'Hub Impara viene passato il parametro di query `?style=styleId` indicante lo stile attivo che si sta personalizzando/visualizzando, il box del percorso suggerito si adatta dinamicamente mostrando le informazioni e la descrizione di quello stile specifico anziché il percorso generico basato sul livello skill dell'utente.
 - **Passaggio di Contesto tramite Query Param**: `learn.tsx` supporta il parametro di query `?style=` e lo propaga dinamicamente ai link delle sotto-sezioni (glossario, troubleshooting, pre-fermenti) per guidare l'utente verso contenuti adatti allo stile selezionato.
 - **Percorso skill-aware**: `learn.tsx` legge `vulcan_skill_level` e costruisce un percorso consigliato con label del livello (`SKILL_LEVELS`) e link localizzati verso glossario, troubleshooting o pre-fermenti.
 - **Pulizia dead code 2026-06-19:** `glossary-link.tsx` è stato rimosso; i deeplink e l'esperienza glossario passano dalla pagina `/learn/glossary` e dalla command palette.

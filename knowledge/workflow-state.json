@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-06-27T14:35:00.000Z",
+  "lastUpdated": "2026-06-27T23:36:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 139,
     "appFilesExcludingUi": 139,
     "pizzaEngineExports": 59,
     "pizzaEngineLines": 4959,
-    "cmsContextLines": 3182,
+    "cmsContextLines": 3186,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-06-27 registra l'ottimizzazione automatica al cambio stile in Home, il confronto match vs soffitto (M_o - M_c) con diagnosi bottleneck in MatchCard, i badge ottimizzati in RecommendedStyles ed Explore.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-06-27 v2 registra l'adattamento e l'ottimizzazione del dettaglio ricette (parità Home-Page shell), la rimozione dei doppi suffissi di misura/temperatura, la derivazione dinamica dei database parametrici per stili recenti e gli indicatori ChevronUp/Down degli scostamenti.",
   "filesMappedCount": 139,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-06-27",
+  "lastScannedChapter": "kipi-update-2026-06-27-v2",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -108,7 +108,7 @@
         "src/app/features/cms/locales/domain-pt.ts",
         "src/app/pages/cms.tsx"
       ],
-      "lastWorked": "2026-06-25"
+      "lastWorked": "2026-06-27"
     },
     {
       "id": "routing-shell",
@@ -141,7 +141,7 @@
         "src/app/pages/pre-ferments.tsx",
         "src/app/features/recipe/pre-ferment-guide.tsx"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-06-27"
     },
     {
       "id": "data-databases",
@@ -154,7 +154,7 @@
         "src/app/data/dietary-data.ts",
         "src/app/domain/deviation-tags.ts"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-06-27"
     },
     {
       "id": "profile-user",

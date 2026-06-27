@@ -101,8 +101,17 @@ export function LearnPage() {
     };
   }, [pg]);
 
-  const path = localizedPaths[skill];
+  const path = activeStyle
+    ? {
+        title: activeStyle.name,
+        copy: activeStyle.description,
+        styleId: activeStyle.id,
+      }
+    : localizedPaths[skill];
   const skillName = SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
+  const pathContextLabel = activeStyle
+    ? `${pg.learnPathLabel} · ${activeStyle.name}`
+    : `Il percorso su misura per te · Livello ${skillName}`;
   const term = getLocalizedTerm(termOfTheDay(), cms);
   const termCat = GLOSSARY_CATEGORIES[term.category];
 
@@ -241,7 +250,7 @@ export function LearnPage() {
               marginBottom: "var(--space-3)",
             }}
           >
-            Il percorso su misura per te · Livello {skillName}
+            {pathContextLabel}
           </div>
           <Link
             to={`/recipe/${path.styleId}?mode=adapted`}

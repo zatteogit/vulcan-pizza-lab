@@ -1355,7 +1355,7 @@ export const CMS_DEFAULTS: CmsContent = {
     prevStep: "Passo precedente",
     replaceTitle: "Hai già una pizzata in corso",
     confirmNewAria: "Conferma nuova pizzata",
-    recipeAdapted: "Ricetta adattata",
+    recipeAdapted: "Su misura per te",
     ovenSummary: "forno {temp}",
     ovenOptimal: "Temperatura forno ottimale",
     ovenLimited: "Fattibile (temperatura limite)",

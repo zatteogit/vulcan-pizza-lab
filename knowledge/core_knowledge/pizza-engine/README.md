@@ -124,6 +124,7 @@ flowchart TD
 - **Viabilità termica (Thermal Viability)**: La funzione `thermalViability` verifica se l'efficacia termica del forno soddisfa lo stile ad alta temperatura (minimo >= 350°C o forno a legna richiesto). In caso di deficit, restituisce un moltiplicatore di penalità che riduce drasticamente l'Autenticità ed emette un warning di fattibilità (`feas.thermalUnviable`) riducendo la fattibilità complessiva.
 - **Rinormalizzazione composite score a 5 pesi**: Il punteggio composite in `generateRecipe` somma tutti e 5 i pesi (`authenticity`, `feasibility`, `digestibility`, `sustainability`, `experimentation`) e normalizza dividendo per la loro somma totale, rimuovendo le distorsioni provocate da override specifici su sostenibilità o sperimentazione.
 - **Trasparenza delle motivazioni dell'Optimizer**: In `optimizeRecipe`, le descrizioni dei motivi della ricetta ottimizzata (rationale) segnalano in modo esplicito le variazioni rispetto al midpoint canonico dello stile: la riduzione dell'idratazione include la percentuale canonica di confronto, le modifiche della farina W e l'aggiunta di pre-fermenti non richiesti dallo stile base sono tracciate come deviazioni dal default.
+- **Ordinamento delle raccomandazioni per rankingScore**: In `recommendStyles`, la lista di raccomandazioni viene ordinata in base al `rankingScore` (che include l'iconic boost), con fallback a `compatibilityScore` per i pareggi. Questo allinea la logica di ranking con l'ordinamento reale visualizzato.
 
 ### STYLES_DB — Correzioni Audit Maggio/Giugno 2026
 

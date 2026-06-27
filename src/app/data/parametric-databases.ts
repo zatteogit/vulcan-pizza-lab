@@ -286,46 +286,428 @@ const EQUIPMENT_DB: EquipmentCompat[] = [
   { styleId: "padellino_torino", mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 10, surfaceType: "padella", specialEquipment: ["Tegamino individuale 18cm", "Forno domestico"], note: "Tegamino specifico, impasto semplice." },
 ];
 
+interface DerivedStyleSeed {
+  styleId: string;
+  name: string;
+  doughWeight_g: number;
+  panSize_cm?: number;
+  panShape?: "round" | "rectangular";
+  thickness_mm: number;
+  stretchMethod: string;
+  restAfterBall_min: number;
+  saltPct: number;
+  hydrationCenter: number;
+  fermentation: [number, number];
+  processType: string;
+  coldMaturation?: boolean;
+  oven: Omit<OvenTempParams, "styleId">;
+  baking: Omit<BakingTimeParams, "styleId">;
+  topping: Omit<ToppingParams, "styleId">;
+  folding: Omit<FoldingParams, "styleId">;
+  scoring: Omit<ScoringParams, "styleId">;
+  equipment: Omit<EquipmentCompat, "styleId">;
+}
+
+const DERIVED_STYLE_SEEDS: DerivedStyleSeed[] = [
+  {
+    styleId: "pizza_baciata",
+    name: "Pizza Baciata",
+    doughWeight_g: 800,
+    panSize_cm: 40,
+    panShape: "rectangular",
+    thickness_mm: 17,
+    stretchMethod: "Doppio disco in teglia con velo d'olio tra gli strati",
+    restAfterBall_min: 0,
+    saltPct: 2.5,
+    hydrationCenter: 80,
+    fermentation: [24, 48],
+    processType: "direct|biga",
+    coldMaturation: true,
+    oven: { idealTemp_c: 285, minTemp_c: 270, maxTemp_c: 300, ovenType: "elettrico_std", preheatingMin: 30, note: "Derivato da STYLES_DB: cottura in bianco da teglia romana farcita a freddo." },
+    baking: { minSeconds: 840, maxSeconds: 1200, idealSeconds: 960, turns: 1, note: "Cottura in bianco; sdoppiare e farcire dopo il forno." },
+    topping: { toppingOrder: ["olio", "cottura_bianca", "farcitura_post"], saucePosition: "nessuna", cheeseType: "Variabile post-cottura", cheesePosition: "interno", note: "Due basi baciate dall'olio, aperte dopo cottura e farcite a freddo." },
+    folding: { foldType: "stretch_fold", foldCount: 3, foldInterval_min: 45, note: "Alta idratazione: pieghe delicate per trattenere gas senza strappare." },
+    scoring: { scoringRequired: false, scoringType: "taglio_porzioni", scoringDepth_mm: 0, scoringTiming: "Dopo cottura", note: "Nessun taglio prima del forno; si apre e porziona a cottura finita." },
+    equipment: { mixerRequired: true, mixerType: "planetaria", mixingTime_min: 20, surfaceType: "teglia", specialEquipment: ["Teglia rettangolare", "Spatola", "Coltello da pane"], note: "Impasto idratato da teglia: planetaria o spirale consigliata." },
+  },
+  {
+    styleId: "ciaccino_senese",
+    name: "Ciaccino Senese",
+    doughWeight_g: 700,
+    panSize_cm: 30,
+    panShape: "round",
+    thickness_mm: 12,
+    stretchMethod: "Due dischi tondi sigillati con ripieno interno",
+    restAfterBall_min: 45,
+    saltPct: 2.0,
+    hydrationCenter: 62.5,
+    fermentation: [4, 12],
+    processType: "direct",
+    oven: { idealTemp_c: 250, minTemp_c: 230, maxTemp_c: 270, ovenType: "elettrico_std", preheatingMin: 25, note: "Derivato da STYLES_DB: ripiena toscana a temperatura media." },
+    baking: { minSeconds: 900, maxSeconds: 1200, idealSeconds: 1020, turns: 0, note: "Cottura lunga per scaldare il ripieno e dorare le superfici." },
+    topping: { toppingOrder: ["ripieno", "sigillatura"], saucePosition: "nessuna", cheeseType: "Formaggio filante", cheesePosition: "interno", note: "Ripieno interno pre-cottura, tipicamente prosciutto e formaggio." },
+    folding: { foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Impasto medio: sviluppo sufficiente con impasto diretto." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Sigillare bene i bordi; nessuna incisione richiesta." },
+    equipment: { mixerRequired: false, mixerType: "manuale", mixingTime_min: 12, surfaceType: "teglia", specialEquipment: ["Teglia o pietra", "Mattarello"], note: "Bassa complessita: lavorabile anche a mano." },
+  },
+  {
+    styleId: "pizza_spaccata",
+    name: "Pizza Spaccata",
+    doughWeight_g: 700,
+    panSize_cm: 40,
+    panShape: "rectangular",
+    thickness_mm: 18,
+    stretchMethod: "Teglia bianca singola, poi spaccata e farcita",
+    restAfterBall_min: 0,
+    saltPct: 2.5,
+    hydrationCenter: 76,
+    fermentation: [24, 48],
+    processType: "direct|biga",
+    coldMaturation: true,
+    oven: { idealTemp_c: 285, minTemp_c: 270, maxTemp_c: 300, ovenType: "elettrico_std", preheatingMin: 30, note: "Derivato da STYLES_DB: base bianca in teglia da farcire post-cottura." },
+    baking: { minSeconds: 840, maxSeconds: 1200, idealSeconds: 1020, turns: 1, note: "Cuocere in bianco, poi aprire e farcire a caldo o a freddo." },
+    topping: { toppingOrder: ["olio", "cottura_bianca", "farcitura_post"], saucePosition: "nessuna", cheeseType: "Variabile post-cottura", cheesePosition: "interno", note: "Base singola cotta e spaccata: mortazza, crudo o patate e porchetta." },
+    folding: { foldType: "stretch_fold", foldCount: 3, foldInterval_min: 45, note: "Pieghe morbide per alveolatura da pizza bianca." },
+    scoring: { scoringRequired: false, scoringType: "taglio_apertura", scoringDepth_mm: 0, scoringTiming: "Dopo cottura", note: "Il taglio e l'apertura avvengono solo dopo il forno." },
+    equipment: { mixerRequired: true, mixerType: "planetaria", mixingTime_min: 20, surfaceType: "teglia", specialEquipment: ["Teglia rettangolare", "Spatola", "Coltello seghettato"], note: "Serve una teglia ben oliata e una gestione delicata." },
+  },
+  {
+    styleId: "trancio_milanese",
+    name: "Trancio Milanese",
+    doughWeight_g: 600,
+    panSize_cm: 33,
+    panShape: "rectangular",
+    thickness_mm: 15,
+    stretchMethod: "Stesura in teglia oliata, spessore uniforme",
+    restAfterBall_min: 0,
+    saltPct: 2.2,
+    hydrationCenter: 70,
+    fermentation: [18, 36],
+    processType: "direct",
+    coldMaturation: true,
+    oven: { idealTemp_c: 240, minTemp_c: 220, maxTemp_c: 260, ovenType: "elettrico_std", preheatingMin: 25, note: "Derivato da STYLES_DB: trancio alto da teglia milanese." },
+    baking: { minSeconds: 840, maxSeconds: 1080, idealSeconds: 960, turns: 1, note: "Fondo dorato e mollica soffice, ruotare a meta cottura." },
+    topping: { toppingOrder: ["salsa", "mozzarella", "olio"], saucePosition: "sotto", cheeseType: "Mozzarella filante", cheesePosition: "sopra_salsa", note: "Condimento classico da trancio: salsa e mozzarella generosa." },
+    folding: { foldType: "stretch_fold", foldCount: 2, foldInterval_min: 30, note: "Due pieghe leggere aiutano la struttura senza asciugare il trancio." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Taglio in tranci dopo la cottura." },
+    equipment: { mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 12, surfaceType: "teglia", specialEquipment: ["Teglia rettangolare", "Olio per il fondo"], note: "La teglia oliata e stabile e piu importante dell'impastatrice." },
+  },
+  {
+    styleId: "chicago_tavern",
+    name: "Chicago Tavern Cut",
+    doughWeight_g: 380,
+    panSize_cm: 35,
+    panShape: "round",
+    thickness_mm: 3,
+    stretchMethod: "Stesura sottilissima, anche con mattarello",
+    restAfterBall_min: 60,
+    saltPct: 2.0,
+    hydrationCenter: 54,
+    fermentation: [18, 36],
+    processType: "direct",
+    coldMaturation: true,
+    oven: { idealTemp_c: 260, minTemp_c: 240, maxTemp_c: 280, ovenType: "elettrico_std", preheatingMin: 30, note: "Derivato da STYLES_DB: cracker-thin croccante da forno domestico spinto." },
+    baking: { minSeconds: 600, maxSeconds: 840, idealSeconds: 720, turns: 1, note: "Cuocere fino a bordo asciutto e croccante; taglio a quadrotti." },
+    topping: { toppingOrder: ["salsa", "mozzarella", "topping"], saucePosition: "sotto", cheeseType: "Low-moisture mozzarella", cheesePosition: "sopra_salsa", note: "Condimento sottile e uniforme per non ammorbidire la base." },
+    folding: { foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Idratazione bassa: impasto diretto e riposo sono sufficienti." },
+    scoring: { scoringRequired: false, scoringType: "party_cut", scoringDepth_mm: 0, scoringTiming: "Dopo cottura", note: "Taglio a quadrotti solo dopo cottura." },
+    equipment: { mixerRequired: false, mixerType: "manuale", mixingTime_min: 10, surfaceType: "acciaio", specialEquipment: ["Baking steel o pietra", "Mattarello", "Rotella"], note: "Superficie rovente e stesura sottile fanno la differenza." },
+  },
+  {
+    styleId: "focaccia_barese",
+    name: "Focaccia Barese",
+    doughWeight_g: 500,
+    panSize_cm: 32,
+    panShape: "round",
+    thickness_mm: 17,
+    stretchMethod: "Stesura nel ruoto con dita unte e pomodorini affondati",
+    restAfterBall_min: 30,
+    saltPct: 2.0,
+    hydrationCenter: 75,
+    fermentation: [8, 24],
+    processType: "direct",
+    oven: { idealTemp_c: 240, minTemp_c: 220, maxTemp_c: 250, ovenType: "elettrico_std", preheatingMin: 25, note: "Derivato da STYLES_DB: focaccia morbida nel ruoto tondo." },
+    baking: { minSeconds: 1200, maxSeconds: 1500, idealSeconds: 1320, turns: 1, note: "Cottura lunga per asciugare pomodorini e dorare il fondo oliato." },
+    topping: { toppingOrder: ["pomodorini", "olive", "origano", "olio"], saucePosition: "integrata", cheeseType: "Nessuno", cheesePosition: "sopra_salsa", note: "Pomodorini schiacciati nell'impasto, olive, origano e olio EVO." },
+    folding: { foldType: "stretch_fold", foldCount: 2, foldInterval_min: 30, note: "Impasto morbido: pieghe delicate prima della stesura nel ruoto." },
+    scoring: { scoringRequired: true, scoringType: "fossette", scoringDepth_mm: 8, scoringTiming: "Prima del condimento", note: "Fossette e pomodorini schiacciati creano la superficie tipica." },
+    equipment: { mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 12, surfaceType: "teglia", specialEquipment: ["Ruoto tondo", "Olio EVO", "Semola"], note: "Teglia tonda ben oliata; impasto gestibile anche a mano." },
+  },
+  {
+    styleId: "pizza_fritta",
+    name: "Pizza Fritta",
+    doughWeight_g: 100,
+    panSize_cm: 14,
+    panShape: "round",
+    thickness_mm: 8,
+    stretchMethod: "Dischetti piccoli, chiusi se ripieni oppure fritti aperti",
+    restAfterBall_min: 30,
+    saltPct: 2.5,
+    hydrationCenter: 62.5,
+    fermentation: [4, 8],
+    processType: "direct",
+    oven: { idealTemp_c: 185, minTemp_c: 180, maxTemp_c: 190, ovenType: "frittura", preheatingMin: 15, note: "Derivato da STYLES_DB: temperatura dell'olio, non del forno." },
+    baking: { minSeconds: 60, maxSeconds: 120, idealSeconds: 90, turns: 1, note: "Girare in olio caldo fino a gonfiore e doratura." },
+    topping: { toppingOrder: ["ripieno", "sigillatura", "frittura"], saucePosition: "nessuna", cheeseType: "Ricotta/provola", cheesePosition: "interno", note: "Ripiena sigillata prima della frittura o montanara condita dopo." },
+    folding: { foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Impasto diretto breve: non servono pieghe." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Sigillare bene se ripiena; niente incisioni." },
+    equipment: { mixerRequired: false, mixerType: "manuale", mixingTime_min: 10, surfaceType: "padella", specialEquipment: ["Pentola alta", "Termometro olio", "Schiumarola"], note: "Controllo della temperatura olio fondamentale." },
+  },
+  {
+    styleId: "calzone_napoletano",
+    name: "Calzone Napoletano",
+    doughWeight_g: 280,
+    panSize_cm: 30,
+    panShape: "round",
+    thickness_mm: 12,
+    stretchMethod: "Disco tondo chiuso a mezzaluna e sigillato",
+    restAfterBall_min: 90,
+    saltPct: 2.5,
+    hydrationCenter: 60,
+    fermentation: [8, 24],
+    processType: "direct",
+    oven: { idealTemp_c: 430, minTemp_c: 400, maxTemp_c: 470, ovenType: "elettrico_alto", preheatingMin: 45, note: "Derivato da STYLES_DB: alta temperatura per gonfiare e cuocere il ripieno." },
+    baking: { minSeconds: 120, maxSeconds: 240, idealSeconds: 180, turns: 1, note: "Cottura breve ma piu lunga della pizza aperta per il ripieno." },
+    topping: { toppingOrder: ["ripieno", "sigillatura", "pomodoro"], saucePosition: "sopra", cheeseType: "Ricotta e fior di latte", cheesePosition: "interno", note: "Ripieno interno, bordo sigillato, eventuale pomodoro sopra." },
+    folding: { foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Impasto napoletano medio: sviluppo da impasto e appretto." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Sigillare i bordi per trattenere il ripieno." },
+    equipment: { mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 12, surfaceType: "pietra_refrattaria", specialEquipment: ["Pietra o biscotto", "Pala", "Forno alto"], note: "Serve calore alto e superficie refrattaria." },
+  },
+  {
+    styleId: "pizza_al_metro",
+    name: "Pizza al Metro",
+    doughWeight_g: 700,
+    panSize_cm: 70,
+    panShape: "rectangular",
+    thickness_mm: 14,
+    stretchMethod: "Stesura lunga rettangolare su pala o teglia",
+    restAfterBall_min: 90,
+    saltPct: 2.5,
+    hydrationCenter: 66,
+    fermentation: [12, 36],
+    processType: "direct|biga",
+    coldMaturation: true,
+    oven: { idealTemp_c: 340, minTemp_c: 300, maxTemp_c: 380, ovenType: "elettrico_alto", preheatingMin: 40, note: "Derivato da STYLES_DB: formato lungo da cuocere su pala/pietra." },
+    baking: { minSeconds: 240, maxSeconds: 360, idealSeconds: 300, turns: 1, note: "Cottura rapida per formato lungo, con possibile rotazione." },
+    topping: { toppingOrder: ["salsa", "mozzarella", "gusti_affiancati"], saucePosition: "sotto", cheeseType: "Fior di latte", cheesePosition: "sopra_salsa", note: "Piu gusti affiancati sulla stessa base lunga." },
+    folding: { foldType: "stretch_fold", foldCount: 2, foldInterval_min: 30, note: "Pieghe moderate per reggere la stesura lunga." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Taglio in porzioni dopo cottura." },
+    equipment: { mixerRequired: true, mixerType: "planetaria", mixingTime_min: 16, surfaceType: "pala", specialEquipment: ["Pala lunga", "Pietra refrattaria", "Forno ampio"], note: "Formato lungo: serve pala o teglia compatibile." },
+  },
+  {
+    styleId: "new_haven_apizza",
+    name: "New Haven Apizza",
+    doughWeight_g: 300,
+    panSize_cm: 38,
+    panShape: "round",
+    thickness_mm: 4,
+    stretchMethod: "Stesura sottile irregolare con bordo carbonizzato",
+    restAfterBall_min: 120,
+    saltPct: 2.0,
+    hydrationCenter: 63,
+    fermentation: [24, 72],
+    processType: "direct",
+    coldMaturation: true,
+    oven: { idealTemp_c: 370, minTemp_c: 340, maxTemp_c: 400, ovenType: "carbone/legna", preheatingMin: 60, note: "Derivato da STYLES_DB: apizza cotta molto calda, tradizionalmente a carbone." },
+    baking: { minSeconds: 240, maxSeconds: 360, idealSeconds: 300, turns: 2, note: "Cottura intensa con charring controllato sui bordi." },
+    topping: { toppingOrder: ["olio", "vongole", "aglio", "origano"], saucePosition: "nessuna", cheeseType: "Pecorino grattugiato", cheesePosition: "sopra_salsa", note: "White clam pie: vongole, aglio, origano, senza pomodoro." },
+    folding: { foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Maturazione lunga e impasto diretto, niente pieghe necessarie." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Forma irregolare; taglio dopo cottura." },
+    equipment: { mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 12, surfaceType: "pietra_refrattaria", specialEquipment: ["Forno a carbone/legna", "Pietra o biscotto", "Pala"], note: "Il limite reale e il calore del forno, non l'impastatrice." },
+  },
+  {
+    styleId: "fugazzeta",
+    name: "Fugazzeta Argentina",
+    doughWeight_g: 600,
+    panSize_cm: 30,
+    panShape: "round",
+    thickness_mm: 21,
+    stretchMethod: "Doppio disco alto al molde con mozzarella interna",
+    restAfterBall_min: 45,
+    saltPct: 2.0,
+    hydrationCenter: 58.5,
+    fermentation: [4, 12],
+    processType: "direct",
+    oven: { idealTemp_c: 240, minTemp_c: 220, maxTemp_c: 260, ovenType: "elettrico_std", preheatingMin: 25, note: "Derivato da STYLES_DB: pizza al molde ripiena di mozzarella." },
+    baking: { minSeconds: 900, maxSeconds: 1200, idealSeconds: 1020, turns: 0, note: "Cottura media-lunga per sciogliere il ripieno e dorare la cipolla." },
+    topping: { toppingOrder: ["mozzarella_interna", "cipolla", "origano"], saucePosition: "nessuna", cheeseType: "Mozzarella abbondante", cheesePosition: "interno", note: "Ripiena di mozzarella e coperta di cipolla, senza pomodoro." },
+    folding: { foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Impasto al molde, sviluppo diretto e riposo." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Sigillare i bordi; nessuna incisione." },
+    equipment: { mixerRequired: false, mixerType: "manuale", mixingTime_min: 10, surfaceType: "teglia", specialEquipment: ["Teglia tonda alta", "Mandolina per cipolle"], note: "Teglia alta e ben oliata per lo stile al molde." },
+  },
+  {
+    styleId: "california_style",
+    name: "California Style",
+    doughWeight_g: 230,
+    panSize_cm: 30,
+    panShape: "round",
+    thickness_mm: 4,
+    stretchMethod: "Base sottile tonda, topping gourmet leggeri",
+    restAfterBall_min: 90,
+    saltPct: 2.0,
+    hydrationCenter: 62.5,
+    fermentation: [24, 48],
+    processType: "direct",
+    coldMaturation: true,
+    oven: { idealTemp_c: 300, minTemp_c: 280, maxTemp_c: 340, ovenType: "elettrico_alto", preheatingMin: 35, note: "Derivato da STYLES_DB: base sottile con cottura vivace." },
+    baking: { minSeconds: 300, maxSeconds: 420, idealSeconds: 360, turns: 1, note: "Cottura rapida; aggiungere ingredienti delicati anche post-forno." },
+    topping: { toppingOrder: ["salsa", "mozzarella", "ingredienti_gourmet"], saucePosition: "sotto", cheeseType: "Mozzarella o formaggi freschi", cheesePosition: "sopra_salsa", note: "Ingredienti stagionali e topping non convenzionali, senza sovraccaricare." },
+    folding: { foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Impasto medio e sottile: non servono pieghe." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Taglio a spicchi dopo cottura." },
+    equipment: { mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 12, surfaceType: "acciaio", specialEquipment: ["Baking steel o pietra", "Pala"], note: "Acciaio o pietra aiutano una base asciutta e croccante." },
+  },
+  {
+    styleId: "greek_pan",
+    name: "Greek Pan Pizza",
+    doughWeight_g: 400,
+    panSize_cm: 30,
+    panShape: "round",
+    thickness_mm: 15,
+    stretchMethod: "Stesura in teglia tonda molto oliata",
+    restAfterBall_min: 30,
+    saltPct: 2.0,
+    hydrationCenter: 64,
+    fermentation: [4, 12],
+    processType: "direct",
+    oven: { idealTemp_c: 245, minTemp_c: 230, maxTemp_c: 260, ovenType: "elettrico_std", preheatingMin: 25, note: "Derivato da STYLES_DB: pan pizza greco-americana in teglia oliata." },
+    baking: { minSeconds: 720, maxSeconds: 1020, idealSeconds: 840, turns: 0, note: "Fondo quasi fritto e bordo soffice, niente rotazioni obbligatorie." },
+    topping: { toppingOrder: ["salsa", "mozzarella_cheddar", "origano"], saucePosition: "sotto", cheeseType: "Mozzarella + cheddar", cheesePosition: "sopra_salsa", note: "Formaggi abbondanti e fondo croccante grazie all'olio in teglia." },
+    folding: { foldType: "none", foldCount: 0, foldInterval_min: 0, note: "Impasto diretto da teglia, sviluppo sufficiente con riposo." },
+    scoring: { scoringRequired: false, scoringType: "nessuno", scoringDepth_mm: 0, scoringTiming: "", note: "Taglio dopo cottura." },
+    equipment: { mixerRequired: false, mixerType: "manuale", mixingTime_min: 10, surfaceType: "teglia", specialEquipment: ["Teglia tonda pesante", "Olio abbondante"], note: "La teglia oliata crea il fondo quasi fritto." },
+  },
+];
+
+function derivedSeed(styleId: string): DerivedStyleSeed | undefined {
+  return DERIVED_STYLE_SEEDS.find((seed) => seed.styleId === styleId);
+}
+
+function deriveOvenTemp(styleId: string): OvenTempParams | undefined {
+  const seed = derivedSeed(styleId);
+  return seed ? { styleId, ...seed.oven } : undefined;
+}
+
+function deriveBakingTime(styleId: string): BakingTimeParams | undefined {
+  const seed = derivedSeed(styleId);
+  return seed ? { styleId, ...seed.baking } : undefined;
+}
+
+function deriveDoughBase(styleId: string): DoughBaseParams | undefined {
+  const seed = derivedSeed(styleId);
+  if (!seed) return undefined;
+  return {
+    styleId,
+    ballWeight_g: seed.doughWeight_g,
+    ...(seed.panSize_cm ? { panSize_cm: seed.panSize_cm } : {}),
+    ...(seed.panShape ? { panShape: seed.panShape } : {}),
+    thickness_mm: seed.thickness_mm,
+    stretchMethod: seed.stretchMethod,
+    restAfterBall_min: seed.restAfterBall_min,
+  };
+}
+
+function deriveWater(styleId: string): WaterParams | undefined {
+  const seed = derivedSeed(styleId);
+  if (!seed) return undefined;
+  const ideal = seed.hydrationCenter >= 75 ? 14 : seed.hydrationCenter >= 68 ? 16 : 18;
+  return {
+    styleId,
+    idealTempC: ideal,
+    minTempC: Math.max(8, ideal - 4),
+    maxTempC: ideal + 4,
+    phIdeal: seed.styleId === "new_haven_apizza" ? 7.2 : 7.0,
+    hardnessNote: `Derivato da STYLES_DB per ${seed.name}: acqua ${ideal <= 16 ? "fredda" : "a temperatura ambiente"} per idratazione media ${seed.hydrationCenter}%.`,
+  };
+}
+
+function maturationMethod(processType: string): MaturationParams["method"] {
+  if (processType.includes("poolish")) return "indiretto_poolish";
+  if (processType.includes("biga")) return "indiretto_biga";
+  if (processType.includes("autolisi")) return "autolisi_diretto";
+  return "diretto";
+}
+
+function deriveMaturation(styleId: string): MaturationParams | undefined {
+  const seed = derivedSeed(styleId);
+  if (!seed) return undefined;
+  const [minHours, maxHours] = seed.fermentation;
+  const cold = seed.coldMaturation ?? maxHours > 24;
+  const bulkHours: [number, number] = cold
+    ? [Math.max(1, Math.round(minHours * 0.4)), Math.max(4, Math.round(maxHours * 0.5))]
+    : [0.5, Math.max(1, Math.min(3, Math.round(maxHours * 0.25)))];
+  const ballHours: [number, number] = cold
+    ? [Math.max(2, Math.round(minHours * 0.25)), Math.max(4, Math.round(maxHours * 0.35))]
+    : [Math.max(0.5, Math.round(minHours * 0.4)), Math.max(2, Math.min(8, Math.round(maxHours * 0.7)))];
+  return {
+    styleId,
+    bulkHours,
+    bulkTempC: cold ? 4 : 22,
+    ballHours,
+    ballTempC: 22,
+    totalHoursMin: minHours,
+    totalHoursMax: maxHours,
+    method: maturationMethod(seed.processType),
+    note: `Derivato da STYLES_DB per ${seed.name}: finestra ${minHours}-${maxHours}h, ${cold ? "maturazione a freddo + appretto a temperatura ambiente" : "fermentazione diretta a temperatura ambiente"}.`,
+  };
+}
+
+function deriveSalt(styleId: string): SaltParams | undefined {
+  const seed = derivedSeed(styleId);
+  return seed
+    ? {
+        styleId,
+        saltPct: seed.saltPct,
+        saltType: "Fino",
+        additionTiming: seed.hydrationCenter >= 75 ? "Dopo idratazione" : "Con farina",
+        note: `Derivato da STYLES_DB per ${seed.name}.`,
+      }
+    : undefined;
+}
+
 /* ═══ LOOKUP HELPERS ═══ */
 
 export function getOvenTempByStyle(styleId: string): OvenTempParams | undefined {
-  return OVEN_TEMPS_DB.find((p) => p.styleId === styleId);
+  return OVEN_TEMPS_DB.find((p) => p.styleId === styleId) ?? deriveOvenTemp(styleId);
 }
 
 export function getBakingTimeByStyle(styleId: string): BakingTimeParams | undefined {
-  return BAKING_TIMES_DB.find((p) => p.styleId === styleId);
+  return BAKING_TIMES_DB.find((p) => p.styleId === styleId) ?? deriveBakingTime(styleId);
 }
 
 export function getDoughBaseByStyle(styleId: string): DoughBaseParams | undefined {
-  return DOUGH_BASE_DB.find((p) => p.styleId === styleId);
+  return DOUGH_BASE_DB.find((p) => p.styleId === styleId) ?? deriveDoughBase(styleId);
 }
 
 export function getSaltByStyle(styleId: string): SaltParams | undefined {
-  return SALT_DB.find((p) => p.styleId === styleId);
+  return SALT_DB.find((p) => p.styleId === styleId) ?? deriveSalt(styleId);
 }
 
 export function getWaterByStyle(styleId: string): WaterParams | undefined {
-  return WATER_DB.find((p) => p.styleId === styleId);
+  return WATER_DB.find((p) => p.styleId === styleId) ?? deriveWater(styleId);
 }
 
 export function getMaturationByStyle(styleId: string): MaturationParams | undefined {
-  return MATURATION_DB.find((p) => p.styleId === styleId);
+  return MATURATION_DB.find((p) => p.styleId === styleId) ?? deriveMaturation(styleId);
 }
 
 export function getToppingByStyle(styleId: string): ToppingParams | undefined {
-  return TOPPING_DB.find((p) => p.styleId === styleId);
+  const seed = derivedSeed(styleId);
+  return TOPPING_DB.find((p) => p.styleId === styleId) ?? (seed ? { styleId, ...seed.topping } : undefined);
 }
 
 export function getFoldingByStyle(styleId: string): FoldingParams | undefined {
-  return FOLDING_DB.find((p) => p.styleId === styleId);
+  const seed = derivedSeed(styleId);
+  return FOLDING_DB.find((p) => p.styleId === styleId) ?? (seed ? { styleId, ...seed.folding } : undefined);
 }
 
 export function getScoringByStyle(styleId: string): ScoringParams | undefined {
-  return SCORING_DB.find((p) => p.styleId === styleId);
+  const seed = derivedSeed(styleId);
+  return SCORING_DB.find((p) => p.styleId === styleId) ?? (seed ? { styleId, ...seed.scoring } : undefined);
 }
 
 export function getEquipmentByStyle(styleId: string): EquipmentCompat | undefined {
-  return EQUIPMENT_DB.find((p) => p.styleId === styleId);
+  const seed = derivedSeed(styleId);
+  return EQUIPMENT_DB.find((p) => p.styleId === styleId) ?? (seed ? { styleId, ...seed.equipment } : undefined);
 }
 
 /** Get all parametric data for a style in one call */

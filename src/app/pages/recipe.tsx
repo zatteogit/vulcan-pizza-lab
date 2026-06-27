@@ -30,13 +30,20 @@ getInterpretationsForStyle,
 type Interpretation
 } from "../data/interpretation-library";
 import {
+FLOUR_W_RANGES,
 OVEN_PRESETS,
 PIZZA_FAMILIES,
 SCORE_DIMENSIONS,
 STYLES_DB,
+YEAST_LABELS,
+defaultFermentTempC,
 defaultPanShape,
 generateRecipe,
 getDefaultDoughBalls,
+optimizeRecipe,
+resolveEngineMsgs,
+thermalViability,
+type EngineMsg,
 type GeneratedRecipe,
 type OvenType,
 type PanConfig,
@@ -383,12 +390,12 @@ function RecipeContent({
     onAction?: () => void;
   } | null>(null);
   const [activeRecipeTab, setActiveRecipeTab] = useState<RecipePrimaryTab>(() => {
-    const hasTopping = !!searchParams.get("topping");
-    if (hasTopping) {
-      const tab = searchParams.get("tab");
-      return tab === "procedimento" || tab === "condimento" || tab === "ricetta" ? tab : "condimento";
+    const tab = searchParams.get("tab");
+    if (tab === "procedimento" || tab === "condimento" || tab === "ricetta") {
+      return tab;
     }
-    return "ricetta";
+    const hasTopping = !!searchParams.get("topping");
+    return hasTopping ? "condimento" : "ricetta";
   });
   const handleRecipeTabChange = useCallback((tab: RecipePrimaryTab) => {
     setActiveRecipeTab(tab);
@@ -483,7 +490,15 @@ function RecipeContent({
         48,
       ),
     );
-    setCustomFermentTemp(style.dough.fermentation_hours_range[1] > 12 ? 4 : 22);
+    // F4: usa il default style-aware del motore (STG/Tonda restano a TA anche lunghi).
+    setCustomFermentTemp(
+      defaultFermentTempC(
+        style,
+        Math.round(
+          (style.dough.fermentation_hours_range[0] + style.dough.fermentation_hours_range[1]) / 2,
+        ),
+      ),
+    );
     setUsePreFerment(style.requires_pre_ferment);
   }, [activeVersion, applyVersionToState, style]);
 
@@ -691,25 +706,28 @@ function RecipeContent({
   );
 
   /* ── Generate recipe ── */
+  const effectiveConstraints = useMemo<UserConstraints>(
+    () => ({ ...constraints, dough_balls: doughBalls }),
+    [constraints, doughBalls],
+  );
+
   const recipe: GeneratedRecipe | null = useMemo(
-    () => buildRecipe({ ...constraints, dough_balls: doughBalls }),
-    [buildRecipe, constraints, doughBalls],
+    () => buildRecipe(effectiveConstraints),
+    [buildRecipe, effectiveConstraints],
   );
 
   const matchConstraints = useMemo<UserConstraints>(() => {
     if (recipeMode !== "canonical") {
-      return { ...constraints, dough_balls: doughBalls };
+      return effectiveConstraints;
     }
     return {
-      ...constraints,
+      ...effectiveConstraints,
       oven_type: savedOven?.ovenType ?? "home",
       oven_max_temp_c: savedOven?.maxTemp ?? 250,
-      dough_balls: doughBalls,
     };
   }, [
     recipeMode,
-    constraints,
-    doughBalls,
+    effectiveConstraints,
     savedOven?.ovenType,
     savedOven?.maxTemp,
   ]);
@@ -718,6 +736,63 @@ function RecipeContent({
     () => buildRecipe(matchConstraints),
     [buildRecipe, matchConstraints],
   );
+
+  // #2 path-aware: porta il modello due-livelli + hard/soft + "Ottimizza per me"
+  // anche al dettaglio di Scopri (polo CANONICO). Soffitto M_o + diagnosi, sui
+  // vincoli di match (in canonico = il tuo forno reale).
+  const optScoreWeights = {
+    authenticity: cms.scoreDimensions?.authenticity?.weight,
+    feasibility: cms.scoreDimensions?.feasibility?.weight,
+    digestibility: cms.scoreDimensions?.digestibility?.weight,
+    sustainability: cms.scoreDimensions?.sustainability?.weight,
+    experimentation: cms.scoreDimensions?.experimentation?.weight,
+  };
+  const ceilingInfo = useMemo(() => {
+    const opt = optimizeRecipe(style, matchConstraints, undefined, undefined, optScoreWeights).recipe;
+    const hard = thermalViability(style, opt.oven_temp_c) < 1;
+    const softNeeds: string[] = [];
+    if (matchConstraints.pantry_flours.length > 0) {
+      const covered = matchConstraints.pantry_flours.some((id) => {
+        const rng = FLOUR_W_RANGES[id];
+        return rng && opt.flour_w >= rng[0] - 1 && opt.flour_w <= rng[1] + 1;
+      });
+      if (!covered) softNeeds.push(`una farina ~W${opt.flour_w}`);
+    }
+    if (
+      matchConstraints.pantry_yeasts.length > 0 &&
+      !matchConstraints.pantry_yeasts.includes(opt.yeast_type)
+    ) {
+      softNeeds.push((YEAST_LABELS[opt.yeast_type] ?? opt.yeast_type).toLowerCase());
+    }
+    return { value: opt.scores.composite, hard, softNeeds };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [style, matchConstraints, cms.scoreDimensions]);
+
+  const [lastOptimization, setLastOptimization] = useState<{
+    params: { hydration: number; flour_w: number; fermentation_hours: number; fermentation_temp_c: number; use_pre_ferment: boolean };
+    rationale: EngineMsg[];
+  } | null>(null);
+
+  const handleOptimize = useCallback(() => {
+    const o = optimizeRecipe(style, matchConstraints, undefined, undefined, optScoreWeights);
+    setRecipeMode("adapted");
+    setCustomHydration(o.params.hydration);
+    setCustomFlourW(o.params.flour_w);
+    setCustomFermentHours(o.params.fermentation_hours);
+    setCustomFermentTemp(o.params.fermentation_temp_c);
+    setUsePreFerment(o.params.use_pre_ferment);
+    setLastOptimization({ params: o.params, rationale: o.rationale });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [style, matchConstraints, cms.scoreDimensions]);
+
+  const isOptimized =
+    recipeMode !== "canonical" &&
+    lastOptimization != null &&
+    customHydration === lastOptimization.params.hydration &&
+    customFlourW === lastOptimization.params.flour_w &&
+    customFermentHours === lastOptimization.params.fermentation_hours &&
+    customFermentTemp === lastOptimization.params.fermentation_temp_c &&
+    usePreFerment === lastOptimization.params.use_pre_ferment;
 
   /* R31 — salvataggio della versione corrente nel ricettario personale.
      Salviamo i parametri (non il risultato): al riapri la ricetta si rigenera. */
@@ -924,7 +999,7 @@ function RecipeContent({
         style={style}
         photo={photo}
         cms={cms}
-        constraints={constraints}
+        constraints={effectiveConstraints}
         onConstraintsChange={(c) => {
           if (recipeMode === "canonical") setRecipeMode("adapted");
           setConstraints(c);
@@ -959,6 +1034,15 @@ function RecipeContent({
             mode={recipeMode}
             onAdapt={handleAdaptToKitchen}
             onReset={recipeMode !== "canonical" ? handleResetToCanonical : undefined}
+            onOptimize={isOptimized ? undefined : handleOptimize}
+            optimizationRationale={
+              isOptimized && lastOptimization
+                ? resolveEngineMsgs(lastOptimization.rationale, cms.engineMessages)
+                : undefined
+            }
+            ceiling={ceilingInfo.value}
+            hardLimited={ceilingInfo.hard}
+            softNeeds={ceilingInfo.softNeeds}
             onSave={handleToggleSaveRecipe}
             saved={Boolean(savedEntry)}
           />
@@ -1220,6 +1304,7 @@ function RecipeSetupPanel({
   const [localOpen, setLocalOpen] = useState(openDefault);
   const open = controlledOpen !== undefined ? controlledOpen : localOpen;
   const setOpen = controlledOnOpenChange !== undefined ? controlledOnOpenChange : setLocalOpen;
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useBodyScrollLock(open);
 
@@ -1235,6 +1320,14 @@ function RecipeSetupPanel({
         document.body.setAttribute(attr, previous);
       }
     };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const frame = window.requestAnimationFrame(() => {
+      closeButtonRef.current?.focus();
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [open]);
 
   useEffect(() => {
@@ -1425,6 +1518,7 @@ function RecipeSetupPanel({
                   )}
 
                   <button
+                    ref={closeButtonRef}
                     type="button"
                     onClick={() => setOpen(false)}
                     className="flex items-center justify-center rounded-full hover:bg-[color-mix(in srgb,var(--text-default)_10%,transparent)] hover:text-[var(--text-default)] active:scale-90 transition-all duration-150 flex-shrink-0"
