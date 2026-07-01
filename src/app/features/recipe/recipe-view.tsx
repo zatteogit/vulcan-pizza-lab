@@ -10,7 +10,7 @@
  * Il selettore tab (RecipeSectionTabs) qui è finalmente montato: il layer
  * PizzaNerd vive dentro Ricetta/Procedimento quando abilitato dal Profilo. */
 
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, useMemo, type ReactNode } from "react";
 import { Link } from "react-router";
 import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import { Check, ChevronLeft, Share2 } from "lucide-react";
@@ -18,6 +18,7 @@ import { Heading, IconButton } from "../../components/ds/index";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { RecipeOutput } from "./recipe-output";
 import { RecipeSectionTabs, type RecipePrimaryTab } from "./recipe-section-tabs";
+import { TOPPING_LIBRARY, getToppingForStyle, getRecipesByAuthenticity, TOPPING_CONCEPTS } from "../../data/topping-library";
 import { useIsMobile } from "../../hooks/use-mobile";
 import { FireGlow } from "../cooking/fire-glow";
 import { useCms, type CmsContent } from "../cms/cms-context";
@@ -126,6 +127,68 @@ export function RecipeView({
   }, [activeTab]);
 
   const isHeroReduced = activeTab !== "ricetta";
+
+  // Resolve topping using the exact same fallback hierarchy as recipe-output.tsx
+  const allToppingChoices = useMemo(() => {
+    const ranked = getRecipesByAuthenticity(style).filter(
+      (item) => item.authenticity !== "taboo"
+    );
+    const seen = new Set<string>();
+    return ranked.filter((item) => {
+      const key = item.recipe.concept_ref;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [style]);
+
+  const toppingChoices = useMemo(() => {
+    const featured = allToppingChoices.filter(
+      (item) => item.authenticity !== "taboo"
+    );
+    const activeConceptId = selectedToppingConcept ?? null;
+    if (
+      activeConceptId &&
+      !featured.some((item) => item.recipe.id === activeConceptId)
+    ) {
+      const activeChoice = allToppingChoices.find(
+        (item) => item.recipe.id === activeConceptId
+      );
+      if (activeChoice) return [activeChoice, ...featured];
+    }
+    return featured;
+  }, [allToppingChoices, selectedToppingConcept]);
+
+  const toppingSubtitle = useMemo(() => {
+    const selectedTopping = selectedToppingConcept
+      ? getToppingForStyle(selectedToppingConcept, style)
+      : undefined;
+    
+    const fallbackToppingRefId = style.default_topping_ref;
+    
+    const resolvedTopping =
+      selectedTopping ??
+      toppingChoices[0]?.recipe ??
+      (fallbackToppingRefId
+        ? getToppingForStyle(fallbackToppingRefId, style)
+        : undefined) ??
+      allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe;
+      
+    const conceptName = resolvedTopping ? TOPPING_CONCEPTS[resolvedTopping.concept_ref]?.name : undefined;
+    const recipeName = resolvedTopping ? (resolvedTopping as any).name : undefined;
+    
+    return recipeName || conceptName || resolvedTopping?.variant_name || (cms.cooking.toppingTitle ?? "Condimento");
+  }, [selectedToppingConcept, style, toppingChoices, allToppingChoices, cms.cooking.toppingTitle]);
+
+  const preFermentText = recipe.has_pre_ferment
+    ? (recipe.pre_ferment_type 
+        ? recipe.pre_ferment_type.charAt(0).toUpperCase() + recipe.pre_ferment_type.slice(1) 
+        : "Prefermento")
+    : "Diretto";
+  const procedureSubtitle = `${preFermentText} • ${recipe.fermentation_hours}h`;
+
+  const recipeSubtitle = style.name;
+
   const resolvedMarginTop = isHeroReduced
     ? (showStickyHeader ? "var(--space-4, 16px)" : "var(--space-20, 80px)")
     : "calc(-1 * var(--space-19, 4.75rem))";
@@ -468,6 +531,9 @@ export function RecipeView({
                  * (z-30, sotto i controlli z-50) deve fissarsi sotto di essi per
                  * non finirgli sotto sui bordi a larghezza tablet. */
                 stickyTop={showStickyHeader ? 56 : 64}
+                recipeSubtitle={recipeSubtitle}
+                procedureSubtitle={procedureSubtitle}
+                toppingSubtitle={toppingSubtitle}
               />
             )}
 
@@ -509,6 +575,9 @@ export function RecipeView({
           onChange={onTabChange}
           fillingMode={isFillingStyle(recipe.style)}
           onSearchOpen={() => {}}
+          recipeSubtitle={recipeSubtitle}
+          procedureSubtitle={procedureSubtitle}
+          toppingSubtitle={toppingSubtitle}
         />
       )}
     </div>

@@ -1445,6 +1445,21 @@ export function RecipeOutput({
     return featured;
   }, [allToppingChoices, selectedToppingConcept]);
 
+  const activeTopping = React.useMemo(() => {
+    const selectedTopping = selectedToppingConcept
+      ? getToppingForStyle(selectedToppingConcept, recipe.style)
+      : undefined;
+    const fallbackToppingRefId = recipe.style.default_topping_ref;
+    return (
+      selectedTopping ??
+      toppingChoices[0]?.recipe ??
+      (fallbackToppingRefId
+        ? getToppingForStyle(fallbackToppingRefId, recipe.style)
+        : undefined) ??
+      allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe
+    );
+  }, [selectedToppingConcept, recipe.style, toppingChoices, allToppingChoices]);
+
   /* UI proximity #54 — dimensioni teglia accanto al conteggio: solo per gli
      stili che usano una teglia/contenitore. Usa la config attiva (se
      personalizzata) altrimenti i default dello stile. Es. "40×30 cm" o "Ø28 cm". */
@@ -2145,26 +2160,11 @@ export function RecipeOutput({
   const compensations = recipe.science?.compensations ?? [];
 
   const renderToppingSection = (mode: "ingredients" | "timeline") => {
-    const selectedTopping = selectedToppingConcept
-      ? getToppingForStyle(selectedToppingConcept, recipe.style)
-      : undefined;
-    const fallbackToppingRefId = recipe.style.default_topping_ref;
-    /* Difesa in profondità (R1): se il default_topping_ref non risolve a una
-       ricetta concreta (ref legacy `<concept>_<stile>` mai mappato), NON lasciare
-       la tab vuota — ricadi sul topping più autentico disponibile per lo stile.
-       Così nessuno stile resta senza sezione Condimento. */
-    const topping =
-      selectedTopping ??
-      toppingChoices[0]?.recipe ??
-      (fallbackToppingRefId
-        ? getToppingForStyle(fallbackToppingRefId, recipe.style)
-        : undefined) ??
-      allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe;
+    const topping = activeTopping;
     if (!topping || !topping.ingredients || topping.ingredients.length === 0) return null;
 
     const concept = TOPPING_CONCEPTS[topping.concept_ref];
-    const activeToppingId =
-      selectedTopping?.id ?? topping.id;
+    const activeToppingId = topping.id;
     const multiplier = recipe.dough_balls;
     const unitName = getServingUnitLabel(cms, servingUnit, 1, true);
     const totalUnitName =
@@ -3515,7 +3515,29 @@ export function RecipeOutput({
               const isFirst = i === 0;
               const isLast = i === recipe.timeline.length - 1;
               const times = stepTimes[i];
-              const localizedStep = localizeStep(step, recipe, cms, fmt);
+              
+              let displayStep = step;
+              if (isToppingTimelineStep(step.id) && activeTopping) {
+                // Find the original step to check its insert_at timing
+                const originalToppingRecipe = Object.values(TOPPING_LIBRARY).find(r => 
+                  r.assembly_steps?.some(s => s.id === step.id)
+                );
+                const originalStep = originalToppingRecipe?.assembly_steps?.find(s => s.id === step.id);
+                
+                const activeStep = activeTopping.assembly_steps?.find(s => 
+                  s.insert_at === originalStep?.insert_at
+                ) || activeTopping.assembly_steps?.[0];
+                
+                if (activeStep) {
+                  displayStep = {
+                    ...step,
+                    title: activeStep.title,
+                    description: activeStep.description,
+                    tip: activeStep.tip,
+                  };
+                }
+              }
+              const localizedStep = localizeStep(displayStep, recipe, cms, fmt);
               const tipText = localizedStep.tip
                 ? isNerd
                   ? localizedStep.tip.nerd

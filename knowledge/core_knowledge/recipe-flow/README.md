@@ -168,6 +168,8 @@ generateRecipe(
 - **Semantica HTML5 e Accessibilità delle Pagine**: I componenti di route principali (`recipe.tsx`, `profile.tsx`, `explore.tsx`, `learn.tsx`, `home.tsx`) avvolgono ora il loro layout principale all'interno del tag semantico `<main id="main-content">` per garantire la corretta interpretazione e l'accessibilità da parte dei lettori di schermo.
 - **Slider del Sale nel Configuratore**: In `recipe-configurator.tsx` è stato introdotto uno slider per la percentuale di sale (`customSalt`) visibile a tutti gli utenti (in quanto parametro basilare e non gergo nerd alveografico). Consente di regolare il sale tra l'1.5% e il 3.5% con step di 0.1% e mostra l'ottimo consigliato per lo stile.
 - **Integrazione della Leva del Sale nei Flussi Ricetta**: `home.tsx` e `recipe.tsx` espongono e sincronizzano il nuovo stato del sale (`customSalt`) legandolo al configuratore, agli URL parametrici e al pannello delle correzioni suggerite dai feedback.
+- **Sottotitoli Informativi nelle Tab del Configuratore**: `RecipeSectionTabs` e `TabsCapsule` supportano la visualizzazione di sottotitoli descrittivi sotto le etichette delle tab (es. `"Napoletana STG"` per la Ricetta, `"Biga • 24h"` per il Procedimento, e il nome del condimento per `"Condimento"`). La UI adatta le altezze e i margini del capsule dock per ospitare il layout a doppia riga.
+- **Risoluzione Dinamica dei Passaggi del Condimento in Timeline**: In `RecipeOutput`, quando l'utente seleziona o cambia il condimento, i passaggi del condimento attivo (`assembly_steps`) sostituiscono dinamicamente le descrizioni generiche dei condimenti della libreria nella timeline di preparazione, allineando i passaggi con il condimento selezionato.
 
 ## Bug noti e fix
 

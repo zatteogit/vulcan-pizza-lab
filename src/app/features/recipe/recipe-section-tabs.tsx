@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
-import { ListChecks, ScrollText, Utensils } from "lucide-react";
-import { type CSSProperties } from "react";
+import { ListChecks, ScrollText, Utensils, ChefHat } from "lucide-react";
+import { type CSSProperties, type ComponentType } from "react";
 import { useCms } from "../cms/cms-context";
 import { SearchButton } from "../../components/shared/search-button";
 import {
@@ -15,7 +15,8 @@ export type RecipePrimaryTab = "ricetta" | "procedimento" | "condimento";
 type RecipeTabMeta = {
   id: RecipePrimaryTab;
   label: string;
-  icon: typeof ScrollText;
+  subtitle?: string;
+  icon: ComponentType<any>;
 };
 
 const roundDockButtonStyle: CSSProperties = {
@@ -55,6 +56,9 @@ export function RecipeSectionTabs({
   stickyTop,
   onSearchOpen,
   fillingMode = false,
+  recipeSubtitle,
+  procedureSubtitle,
+  toppingSubtitle,
 }: {
   activeTab: RecipePrimaryTab;
   recipeLabel: string;
@@ -65,6 +69,9 @@ export function RecipeSectionTabs({
   onSearchOpen?: () => void;
   /** Stili farciti → la tab "Condimento" diventa "Farcitura". */
   fillingMode?: boolean;
+  recipeSubtitle?: string;
+  procedureSubtitle?: string;
+  toppingSubtitle?: string;
 }) {
   const navbar = variant === "navbar";
   const { cms } = useCms();
@@ -73,9 +80,24 @@ export function RecipeSectionTabs({
     ? cms.cooking.fillingTitle ?? cms.cooking.toppingTitle
     : cms.cooking.toppingTitle;
   const tabs: RecipeTabMeta[] = [
-    { id: "ricetta", label: navbar ? cms.cooking.tabRecipe : recipeLabel, icon: ScrollText },
-    { id: "procedimento", label: cms.cooking.tabProcedure, icon: ListChecks },
-    { id: "condimento", label: toppingLabel, icon: Utensils },
+    { 
+      id: "ricetta", 
+      label: navbar ? cms.cooking.tabRecipe : recipeLabel, 
+      icon: ChefHat,
+      subtitle: recipeSubtitle
+    },
+    { 
+      id: "procedimento", 
+      label: cms.cooking.tabProcedure, 
+      icon: ListChecks,
+      subtitle: procedureSubtitle
+    },
+    { 
+      id: "condimento", 
+      label: toppingLabel, 
+      icon: Utensils,
+      subtitle: toppingSubtitle
+    },
   ];
 
   const handleTabChange = (tab: RecipePrimaryTab) => {
@@ -115,6 +137,9 @@ export function RecipeSectionTabs({
                 navbar
                 onTabChange={handleTabChange}
                 ariaLabel={cms.cooking.sectionsAria}
+                recipeSubtitle={recipeSubtitle}
+                procedureSubtitle={procedureSubtitle}
+                toppingSubtitle={toppingSubtitle}
               />
             </div>
 
@@ -151,6 +176,9 @@ export function RecipeSectionTabs({
         navbar={navbar}
         onTabChange={handleTabChange}
         ariaLabel={cms.cooking.sectionsAria}
+        recipeSubtitle={recipeSubtitle}
+        procedureSubtitle={procedureSubtitle}
+        toppingSubtitle={toppingSubtitle}
       />
     </div>
   );
@@ -162,33 +190,37 @@ function TabsCapsule({
   navbar,
   onTabChange,
   ariaLabel,
+  recipeSubtitle,
+  procedureSubtitle,
+  toppingSubtitle,
 }: {
   tabs: RecipeTabMeta[];
   activeTab: RecipePrimaryTab;
   navbar: boolean;
   onTabChange: (tab: RecipePrimaryTab) => void;
   ariaLabel: string;
+  recipeSubtitle?: string;
+  procedureSubtitle?: string;
+  toppingSubtitle?: string;
 }) {
+  const hasSubtitles = Boolean(recipeSubtitle || procedureSubtitle || toppingSubtitle);
+
   return (
     <nav
       className="relative flex w-full items-center overflow-hidden rounded-full"
       style={{
         ...tabsDockSurfaceStyle,
-        minHeight: navbar ? 52 : undefined,
+        minHeight: navbar ? (hasSubtitles ? 58 : 52) : undefined,
         padding: navbar ? 4 : "var(--space-1)",
         borderRadius: "999px",
       }}
       role="tablist"
       aria-label={ariaLabel}
     >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-7 top-0 h-px"
-        style={{ background: "color-mix(in srgb, var(--overlay-text) 46%, transparent)", opacity: 0.44 }}
-      />
       {tabs.map((tab) => {
         const active = activeTab === tab.id;
         const TabIcon = tab.icon;
+        
         return (
           <motion.button
             key={tab.id}
@@ -196,16 +228,15 @@ function TabsCapsule({
             onClick={() => onTabChange(tab.id)}
             role="tab"
             aria-selected={active}
-            whileHover={{ scale: 1.012 }}
+            whileHover={{ scale: 1.015 }}
             whileTap={{ scale: 0.965 }}
             transition={liquidDockQuickSpring}
             className="relative flex flex-1 items-center justify-center rounded-full"
             style={{
-              minHeight: navbar ? 44 : "clamp(42px, 6vw, 48px)",
+              minHeight: navbar ? (hasSubtitles ? 48 : 44) : (hasSubtitles ? "clamp(52px, 8vw, 60px)" : "clamp(42px, 6vw, 48px)"),
               minWidth: 0,
               overflow: "hidden",
-              gap: navbar ? 0 : "var(--space-1-5)",
-              padding: navbar ? "0 1px" : "0 clamp(var(--space-1), 2vw, var(--space-2-5))",
+              padding: navbar ? "0 1px" : "var(--space-1) clamp(var(--space-1-5), 2vw, var(--space-3))",
               border: "none",
               background: "transparent",
               color: active ? "var(--text-default)" : "var(--text-muted)",
@@ -213,7 +244,7 @@ function TabsCapsule({
               fontSize: navbar
                 ? "clamp(0.63rem, 2.65vw, 0.8rem)"
                 : "clamp(var(--font-size-md), 2.8vw, var(--font-size-lg))",
-              fontWeight: "var(--weight-medium)" as CSSProperties["fontWeight"],
+              fontWeight: (active ? "var(--weight-semibold)" : "var(--weight-medium)") as CSSProperties["fontWeight"],
               lineHeight: 1,
               textDecoration: "none",
               WebkitTapHighlightColor: "transparent",
@@ -227,8 +258,48 @@ function TabsCapsule({
                 transition={liquidDockSpring}
               />
             )}
-            {!navbar && <TabIcon size={14} style={{ flexShrink: 0, position: "relative" }} />}
-            <span className="relative truncate max-w-full">{tab.label}</span>
+            <div 
+              className="relative z-10 flex items-center justify-center min-w-0" 
+              style={{
+                flexDirection: navbar ? "column" : "row",
+                gap: navbar ? "1px" : "var(--space-2, 8px)",
+                textAlign: navbar ? "center" : "left",
+              }}
+            >
+              {!navbar && (
+                <TabIcon 
+                  size={14} 
+                  style={{ 
+                    flexShrink: 0, 
+                    position: "relative",
+                    opacity: active ? 0.9 : 0.6 
+                  }} 
+                />
+              )}
+              <div 
+                className="flex flex-col min-w-0"
+                style={{ 
+                  alignItems: navbar ? "center" : "flex-start",
+                  lineHeight: 1.15
+                }}
+              >
+                <span className="truncate max-w-full font-semibold">
+                  {tab.label}
+                </span>
+                {hasSubtitles && tab.subtitle && (
+                  <span 
+                    className="truncate max-w-full font-normal"
+                    style={{ 
+                      fontSize: navbar ? "0.58rem" : "clamp(var(--font-size-xs), 1.8vw, var(--font-size-sm))",
+                      opacity: active ? 0.85 : 0.55,
+                      marginTop: "1px"
+                    }}
+                  >
+                    {tab.subtitle}
+                  </span>
+                )}
+              </div>
+            </div>
           </motion.button>
         );
       })}
