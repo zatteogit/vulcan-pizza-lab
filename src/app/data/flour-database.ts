@@ -87,7 +87,7 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_min_h: 24,
     fermentazione_max_h: 72,
     prezzo_eur_kg: 1.8,
-    stili_compatibili: ["napoletana_canotto", "teglia_romana", "pinsa_romana", "bonci_teglia", "pala_romana"],
+    stili_compatibili: ["napoletana_canotto", "teglia_romana", "pinsa_romana", "pala_romana"],
     note: "Altissimo assorbimento (85%+). Ideale per lunghe maturazioni e alta idratazione. Teglia romana metodo Bonci.",
   },
   {
@@ -214,7 +214,7 @@ export const FLOURS_DB: FlourEntry[] = [
     fermentazione_min_h: 8,
     fermentazione_max_h: 36,
     prezzo_eur_kg: 1.5,
-    stili_compatibili: ["teglia_romana", "focaccia_genovese", "bonci_teglia"],
+    stili_compatibili: ["teglia_romana", "focaccia_genovese"],
     note: "Ricca di fibre e nutrienti. Alveolatura rustica. Mix 30-50% con farina bianca consigliato.",
   },
   {

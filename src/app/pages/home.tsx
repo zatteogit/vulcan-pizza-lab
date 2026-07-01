@@ -1596,6 +1596,7 @@ export function HomePage() {
                       ovenTemp={constraints.oven_max_temp_c}
                       skillLevel={constraints.skill_level}
                       usePreFerment={usePreFerment}
+                      flourG={recipe.flour_g}
                     />
                     {constraints.dietary_filters.length > 0 &&
                       (() => {

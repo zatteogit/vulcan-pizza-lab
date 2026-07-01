@@ -228,7 +228,7 @@ function runDbIntegrity(): TestResult[] {
     const { ms } = timed(() => {
       for (const s of styles) {
         if (!s.name) errs.push(`${s.id}: name vuoto`);
-        if (!s.origin) errs.push(`${s.id}: origin vuoto`);
+        if (!s.origin?.city) errs.push(`${s.id}: origin vuoto`);
         if (!s.emoji) errs.push(`${s.id}: emoji vuoto`);
         if (!s.crust_type) errs.push(`${s.id}: crust_type vuoto`);
         if (s.key_characteristics.length === 0) errs.push(`${s.id}: key_characteristics vuoto`);
@@ -867,8 +867,8 @@ function runRecommendation(): TestResult[] {
     const { ms } = timed(() => null);
     const recsShort = recommendStyles(makeConstraints({ available_hours: 4 }));
     const recsLong = recommendStyles(makeConstraints({ available_hours: 48 }));
-    const bonciShort = recsShort.find((r: any) => r.style.id === "bonci_teglia");
-    const bonciLong = recsLong.find((r: any) => r.style.id === "bonci_teglia");
+    const bonciShort = recsShort.find((r: any) => r.style.id === "teglia_romana");
+    const bonciLong = recsLong.find((r: any) => r.style.id === "teglia_romana");
     const ok = bonciShort && bonciLong && (bonciLong as any).compatibilityScore >= (bonciShort as any).compatibilityScore;
     results.push({ id: "T08-06", name: "Bonci penalizzato con sole 4h", status: ok ? "pass" : "warn", detail: `4h=${(bonciShort as any)?.compatibilityScore ?? "?"}, 48h=${(bonciLong as any)?.compatibilityScore ?? "?"}`, ms });
   }

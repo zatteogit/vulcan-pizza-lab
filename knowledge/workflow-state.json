@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-07-01T15:05:00.000Z",
+  "lastUpdated": "2026-07-01T20:15:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
-    "srcFilesTsTsx": 139,
-    "appFilesExcludingUi": 139,
+    "srcFilesTsTsx": 140,
+    "appFilesExcludingUi": 140,
     "pizzaEngineExports": 59,
-    "pizzaEngineLines": 4990,
+    "pizzaEngineLines": 4975,
     "cmsContextLines": 3186,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-01 v2 registra la leva utente del sale (customSalt in configuratore e generateRecipe) e la chiusura del loop di feedback con variazioni automatiche +/-0.2% sale per impasti insipidi/salati.",
-  "filesMappedCount": 139,
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-01 v3 registra l'introduzione di StyleOrigin come oggetto strutturato (città, regione, paese) al posto della stringa piatta, l'unificazione del Bonci Teglia con Teglia Romana, l'arrotondamento per magnitudine in output ricetta (step 1/5/10g) con visualizzazione dell'approssimato '~', le note di pesatura del lievito (es. cucchiaini per secco, grammi per fresco) e la card narrativa dell'interpretazione attiva.",
+  "filesMappedCount": 140,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-01-v2",
+  "lastScannedChapter": "kipi-update-2026-07-01-v3",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -81,9 +81,10 @@
         "src/app/data/interpretation-library.ts",
         "src/app/data/signature-recipes.ts",
         "src/app/pages/explore.tsx",
-        "src/app/features/recipe/tilt-card.tsx"
+        "src/app/features/recipe/tilt-card.tsx",
+        "src/app/features/recipe/interpretation-narrative-card.tsx"
       ],
-      "lastWorked": "2026-06-27"
+      "lastWorked": "2026-07-01"
     },
     {
       "id": "cms-i18n",

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { X, GraduationCap } from "lucide-react";
 import type { PizzaStyle } from "../../domain/pizza-engine";
+import { formatOrigin } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
 
 export function RecipeLearningPanel({
@@ -82,7 +83,7 @@ export function RecipeLearningPanel({
                     lineHeight: "var(--leading-normal)",
                   }}
                 >
-                  {familyName} · {style.origin}
+                  {familyName} · {formatOrigin(style.origin)}
                 </p>
               </div>
               <button

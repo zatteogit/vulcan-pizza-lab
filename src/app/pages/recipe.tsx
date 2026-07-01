@@ -60,6 +60,7 @@ applyVersionParams,
 import { RecipeLearningPanel } from "../features/recipe/recipe-learning-panel";
 import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
 import { RecipeMatchCard,matchTone } from "../features/recipe/recipe-match-card";
+import { InterpretationNarrativeCard } from "../features/recipe/interpretation-narrative-card";
 import {
 type RecipePrimaryTab,
 } from "../features/recipe/recipe-section-tabs";
@@ -1097,26 +1098,32 @@ function RecipeContent({
         nerdAvailable={nerdAvailable}
         onNerdModeChange={setNerdMode}
         matchSlot={
-          <RecipeMatchCard
-            scores={matchRecipe.scores}
-            ovenTemp={matchConstraints.oven_max_temp_c}
-            idealTemp={style.baking.temp_c_ideal}
-            minTemp={style.baking.temp_c_range[0]}
-            mode={recipeMode}
-            onAdapt={handleAdaptToKitchen}
-            onReset={recipeMode !== "canonical" ? handleResetToCanonical : undefined}
-            onOptimize={isOptimized ? undefined : handleOptimize}
-            optimizationRationale={
-              isOptimized && lastOptimization
-                ? resolveEngineMsgs(lastOptimization.rationale, cms.engineMessages)
-                : undefined
-            }
-            ceiling={ceilingInfo.value}
-            hardLimited={ceilingInfo.hard}
-            softNeeds={ceilingInfo.softNeeds}
-            onSave={handleToggleSaveRecipe}
-            saved={Boolean(savedEntry)}
-          />
+          <>
+            <RecipeMatchCard
+              scores={matchRecipe.scores}
+              ovenTemp={matchConstraints.oven_max_temp_c}
+              idealTemp={style.baking.temp_c_ideal}
+              minTemp={style.baking.temp_c_range[0]}
+              mode={recipeMode}
+              onAdapt={handleAdaptToKitchen}
+              onReset={recipeMode !== "canonical" ? handleResetToCanonical : undefined}
+              onOptimize={isOptimized ? undefined : handleOptimize}
+              optimizationRationale={
+                isOptimized && lastOptimization
+                  ? resolveEngineMsgs(lastOptimization.rationale, cms.engineMessages)
+                  : undefined
+              }
+              ceiling={ceilingInfo.value}
+              hardLimited={ceilingInfo.hard}
+              softNeeds={ceilingInfo.softNeeds}
+              onSave={handleToggleSaveRecipe}
+              saved={Boolean(savedEntry)}
+            />
+            {activeInterpretationId && (() => {
+              const it = getInterpretationById(activeInterpretationId);
+              return it ? <InterpretationNarrativeCard interpretation={it} /> : null;
+            })()}
+          </>
         }
         introExtraSlot={
           <button

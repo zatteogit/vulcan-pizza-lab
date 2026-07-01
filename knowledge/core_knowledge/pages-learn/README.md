@@ -1,5 +1,5 @@
 # Impara, glossario, troubleshooting
-> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 8
+> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 8
 
 ## Sommario
 
@@ -15,7 +15,7 @@ Il pannello `TroubleshootingPanel` è riusato anche nel **flusso ricetta** (`Con
 | `src/app/pages/glossary.tsx` | 809 | UI glossario: ricerca, categorie, espansione, deeplink hash |
 | `src/app/data/glossary-data.ts` | 482 | `GLOSSARY_TERMS` (32 termini), 6 categorie, getter i18n |
 | `src/app/pages/troubleshooting.tsx` | 63 | Pagina full-page con header sticky + `TroubleshootingGuide` |
-| `src/app/data/troubleshooting-data.ts` | 347 | `ISSUES_DB` (18 issue), `getContextualWarnings` |
+| `src/app/data/troubleshooting-data.ts` | 368 | `ISSUES_DB` (19 issue), `getContextualWarnings` con quantità dinamiche in grammi |
 | `src/app/features/recipe/troubleshooting-panel.tsx` | 469 | `ContextualWarnings` + `TroubleshootingGuide` espandibile |
 | `src/app/pages/pre-ferments.tsx` | 388 | Pagina guida pre-fermenti + tabella confronto CMS |
 | `src/app/features/recipe/pre-ferment-guide.tsx` | 451 | `PRE_FERMENT_DB`, `PreFermentCard`, uso in `recipe-output` quando PizzaNerd + pre-fermento |
@@ -74,7 +74,7 @@ flowchart TD
 | Dataset | Conteggio | Categorie |
 |---------|-----------|-----------|
 | `GLOSSARY_TERMS` | 32 termini | `rheology`, `fermentation`, `thermal`, `chemistry`, `mechanics`, `scoring` |
-| `ISSUES_DB` | 18 problemi (`P01`–`P20` con alcuni ID non contigui) | `dough`, `fermentation`, `shaping`, `baking`, `solver`, `false_positive` |
+| `ISSUES_DB` | 19 problemi (`P01`–`P21` con alcuni ID non contigui) | `dough`, `fermentation`, `shaping`, `baking`, `solver`, `false_positive` |
 | `PRE_FERMENT_DB` | 3 voci | `poolish`, `biga`, `autolisi` |
 | `COMPARISON_ROWS` | tabella confronto | Usata in `pre-ferments.tsx` |
 
@@ -98,6 +98,8 @@ flowchart TD
 - **Audit Accenti Italiani**: Corrette tutte le occorrenze UI non accentate in italiano (es. `perche` $\rightarrow$ `perché`, `attivita` $\rightarrow$ `attività`) all'interno di `pre-ferment-guide.tsx`, `pre-ferments.tsx` e `troubleshooting-data.ts`.
 - **Localizzazione ricerca**: Il placeholder dell'input di ricerca in `TroubleshootingGuide` è interamente localizzato tramite CMS (`cms.pages.troubleshootSearchPlaceholder`).
 - Pagina pre-fermenti non usa `useCms` direttamente nella page shell; i testi card passano da `PreFermentCard` + CMS.
+- **Quantità Dinamiche nei Warning Contestuali**: Se disponibili i grammi di farina della ricetta corrente (`flourG`), `getContextualWarnings` calcola ed appende automaticamente nei suggerimenti testuali (es. P10, P19) le grammi corrispondenti alle percentuali o proporzioni indicate (es. da `"0.5-1% zucchero"` a `"0.5-1% zucchero → ≈ 8-15g"`), rendendo le istruzioni pronte da pesare in cucina.
+- **Problema P21 (Frigo di Casa)**: Aggiunta l'instabilità del frigo domestico come problema catalogato (`P21`), suggerendo il trucco di Bonci (0.5-1% zucchero come booster nutrizionale per fermentazioni più prevedibili) sugli stili che lo ammettono.
 - **Percorso di apprendimento contestuale in LearnPage**: Se all'apertura dell'Hub Impara viene passato il parametro di query `?style=styleId` indicante lo stile attivo che si sta personalizzando/visualizzando, il box del percorso suggerito si adatta dinamicamente mostrando le informazioni e la descrizione di quello stile specifico anziché il percorso generico basato sul livello skill dell'utente.
 - **Passaggio di Contesto tramite Query Param**: `learn.tsx` supporta il parametro di query `?style=` e lo propaga dinamicamente ai link delle sotto-sezioni (glossario, troubleshooting, pre-fermenti) per guidare l'utente verso contenuti adatti allo stile selezionato.
 - **Percorso skill-aware**: `learn.tsx` legge `vulcan_skill_level` e costruisce un percorso consigliato con label del livello (`SKILL_LEVELS`) e link localizzati verso glossario, troubleshooting o pre-fermenti.

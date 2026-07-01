@@ -143,7 +143,6 @@ const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
       bulk_at_room_minutes: 90,
     },
     compatible_styles: [
-      "bonci_teglia",
       "teglia_romana",
       "pizza_baciata",
       "pizza_spaccata",

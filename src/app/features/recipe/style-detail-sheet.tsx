@@ -10,6 +10,7 @@ import {
   PIZZA_FAMILIES,
   recommendStyles,
   resolveEngineMsgs,
+  formatOrigin,
   type EngineMsg,
   type UserConstraints,
 } from "../../domain/pizza-engine";
@@ -263,7 +264,7 @@ export function StyleDetailSheet({
                   color: "var(--text-muted)",
                 }}
               >
-                {style.origin}
+                {formatOrigin(style.origin)}
               </span>
 
               {/* Title */}

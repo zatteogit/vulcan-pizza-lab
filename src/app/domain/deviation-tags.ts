@@ -108,12 +108,6 @@ export const STYLE_DEVIATIONS: Record<string, DeviationSignature> = {
     category: "parameter_variant",
     description: "Tradizione italo-americana casalinga, teglia rettangolare, stesura minima",
   },
-  bonci_teglia: {
-    deviation_points: ["fermentation_extreme"],
-    deviation_score: 0.2,
-    category: "parameter_variant",
-    description: "Metodo Bonci: idratazione estrema 85-100%, pieghe al posto dell'impastamento",
-  },
   focaccia_genovese: {
     deviation_points: [],
     deviation_score: 0.0,
@@ -270,19 +264,6 @@ const STYLE_TAGS: Record<string, RecipeTags> = {
     skill_required: "beginner",
     author_methods: [],
     community_labels: ["beginner_friendly", "comfort_food"],
-    equipment_required: ["baking_pan"],
-  },
-  bonci_teglia: {
-    geographic_origin: ["roma", "lazio"],
-    philosophy: ["contemporanea"],
-    dough_technique: ["no_knead", "long_fermentation"],
-    hydration_category: "extreme",
-    baking_method: ["electric_any", "home_oven_compatible"],
-    texture_profile: ["thick_airy", "cloud_crumb", "crispy_base"],
-    dietary_tags: ["high_digestibility"],
-    skill_required: "beginner",
-    author_methods: ["bonci_no_knead"],
-    community_labels: ["beginner_friendly", "party_size"],
     equipment_required: ["baking_pan"],
   },
   focaccia_genovese: {

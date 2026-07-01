@@ -24,7 +24,7 @@ import { useCms } from "../../features/cms/cms-context";
 import { ImageWithFallback } from "../media/ImageWithFallback";
 import { FLOURS_DB } from "../../data/flour-database";
 import { GLOSSARY_TERMS,getLocalizedTerm } from "../../data/glossary-data";
-import { PIZZA_FAMILIES,STYLES_DB } from "../../domain/pizza-engine";
+import { formatOrigin,PIZZA_FAMILIES,STYLES_DB } from "../../domain/pizza-engine";
 import { PRE_FERMENT_DB } from "../../features/recipe/pre-ferment-guide";
 import { STYLE_PHOTOS } from "../../features/recipe/recommended-styles";
 import { SIGNATURE_RECIPES } from "../../data/signature-recipes";
@@ -155,8 +155,10 @@ function buildResults(query: string, cms: any): SearchResult[] {
       PIZZA_FAMILIES[style.family as keyof typeof PIZZA_FAMILIES]?.name ||
       "";
     const cmsDesc = cms.styleDescriptions?.[style.id] || "";
+    // origin indicizzato (lug 2026): fa emergere ricerche per luogo/maestro
+    // es. "Gabriele Bonci", "Napoli", "Genova" su tutti gli stili.
     const searchText =
-      `${style.name} ${style.id} ${familyName} ${cmsDesc}`.toLowerCase();
+      `${style.name} ${style.id} ${familyName} ${formatOrigin(style.origin)} ${cmsDesc}`.toLowerCase();
     if (searchText.includes(q)) {
       hits.push({
         id: `style-${style.id}`,

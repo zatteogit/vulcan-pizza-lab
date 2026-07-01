@@ -4,7 +4,6 @@ import photoCanotto from "../../assets/pizzas/canotto.png";
 import photoTegliaRomana from "../../assets/pizzas/tegliaromana.png";
 import photoRomanaTonda from "../../assets/pizzas/romanatonda.png";
 import photoPinsa from "../../assets/pizzas/pinsa.png";
-import photoBonci from "../../assets/pizzas/bonci.png";
 
 // Nuove foto locali importate da temp/
 import photoNewYork from "../../assets/pizzas/new_york.png";
@@ -39,7 +38,6 @@ export const STYLE_PHOTOS: Record<string, string> = {
   new_york: photoNewYork,
   detroit: photoDetroit,
   chicago_deep: photoChicagoDeep,
-  bonci_teglia: photoBonci,
   focaccia_genovese: photoFocacciaGenovese,
   sfincione: photoSfincione,
   pala_romana: photoPalaRomana,

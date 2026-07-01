@@ -613,9 +613,9 @@ export const DE_LOCALE: CmsContent = {
     "hint.yeastDryQuarterTsp": "≈ ¼ Teelöffel",
     "hint.yeastDryHalfTsp": "≈ ½ Teelöffel",
     "hint.yeastDryOneTsp": "≈ 1 gestrichener Teelöffel",
-    "hint.yeastFreshSmall": "≈ eine halbe Kichererbse",
-    "hint.yeastFreshMedium": "≈ eine Kichererbse",
-    "hint.yeastFreshLarge": "≈ eine Haselnuss",
+    "hint.yeastDryOneHalfTsp": "≈ 1½ Teelöffel",
+    "hint.yeastFreshPinch": "≈ eine Messerspitze",
+    "hint.yeastFreshWeighable": "≈ {g} g auf der Küchenwaage",
     "serving.peopleOne": "≈ {n} Person",
     "serving.peopleMany": "≈ {n} Personen",
     "serving.peopleRange": "≈ {min}-{max} Personen",
@@ -823,8 +823,6 @@ export const DE_LOCALE: CmsContent = {
       "Knusprige K\u00E4sekrone, Blue-Steel-Pfanne. K\u00E4se bis zum Rand.",
     chicago_deep:
       "Tiefe Pizza wie eine herzhafte Torte. Umgekehrte Schichten: K\u00E4se-F\u00FCllung-So\u00DFe.",
-    bonci_teglia:
-      "Ohne Kneten mit Falten, extreme Hydratation, Meister Bonci. Hohe Verdaulichkeit.",
     focaccia_genovese:
       "Weich und \u00F6lig, mit goldener Kruste und charakteristischen Kratern. \u00D6l-Wasser-Sole auf der Oberfl\u00E4che.",
     sfincione:
@@ -855,8 +853,6 @@ export const DE_LOCALE: CmsContent = {
       "K\u00E4sekrone|Tiefe Pfanne|K\u00E4se am Rand|Karamellisierte Kruste",
     chicago_deep:
       "Tiefe 5cm|Butter 18%|Umgekehrte Schichten|Backzeit 35min",
-    bonci_teglia:
-      "Ohne Kneten + Falten|Extreme Hydratation|Reifung 24-72h|Wolkenporung",
     focaccia_genovese:
       "Gro\u00DFz\u00FCgig Oliven\u00F6l|Oberfl\u00E4chenkrater|\u00D6l-Wasser-Sole|Backzeit 15-20min",
     sfincione:

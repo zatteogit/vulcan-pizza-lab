@@ -1,5 +1,5 @@
 # Stili, versioni e override
-> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 11
+> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 12
 
 ## Sommario
 
@@ -26,6 +26,7 @@ La versione attiva fluisce in `generateRecipe` come `versionOverrides` e nei ran
 | `src/app/data/interpretation-library.ts` | Database delle Interpretazioni d'Autore: 14 voci tra Maestri, Pizzerie, Community e Disciplinari con parameter overrides e narrativa |
 | `src/app/data/signature-recipes.ts` | Database delle Ricette Iconiche: 12 combinazioni pre-impostate di Stile e Topping (rimossi gli helper `getSignatureRecipesByFamily`/`getSignatureRecipeById`) |
 | `src/app/features/recipe/tilt-card.tsx` | Componente UI per l'effetto di inclinazione 3D interattivo e riflesso speculare sensibile al puntatore del mouse delle card degli stili |
+| `src/app/features/recipe/interpretation-narrative-card.tsx` | Card narrativa dell'interpretazione attiva (maestro/disciplinare/community) con storia e dettagli storici |
 
 **Consumer principali:** `recipe.tsx`, `home.tsx`, `explore.tsx` (`useStylesOverride`); `recipe-configurator.tsx` (`getVersions`, range versione).
 
@@ -115,8 +116,9 @@ La libreria `interpretation-library.ts` (472 righe) introduce una ricca astrazio
   - `pizzeria` (1): `da_michele_napoli`.
   - `community` (2): `malati_di_pizza`, `confraternita_pinsa`.
 - **Parameter Overrides e Iniezione**: Consente ad ogni interpretazione di sovrascrivere selettivamente i parametri fisici dell'impasto (idratazione, W farina, P/L, ore e temperatura di fermentazione, uso di pre-fermento o override dell'impasto tramite `impasto_ref`).
-- **Narrativa e Story Card**: Ogni interpretazione è corredata da dati storici, anno di codificazione, biografia, link al sito originale e una "firma tecnica" (es. descrizione stesura o dots geometrici post-cottura). La selezione UI attuale passa dal `PremiumSelect` dentro `RecipeSetupPanel`.
-- **Relazione con Legacy**: Questa libreria rappresenta la nuova astrazione modulare che sostituisce e amplia la logica legacy di `AUTHOR_VARIANTS` precedentemente ospitata in `deviation-tags.ts`.
+- **Narrativa e Story Card**: Ogni interpretazione è corredata da dati storici, anno di codificazione, biografia, link al sito originale e una "firma tecnica". La selezione UI passa dal `PremiumSelect` in `RecipeSetupPanel`, e la card narrativa `InterpretationNarrativeCard` viene visualizzata in primo piano sotto la card match.
+- **Visualizzazione Origine e Layout Safe nelle Card**: Nelle card stile (`StyleCard` in `recommended-styles.tsx` e `StyleCatalogCard` in `explore.tsx`), l'etichetta sotto-titolo visualizza solo la città di origine (`shortOrigin` es. `"ROMA"`) invece del formato famiglia + origine, ed ha regole di troncamento (`whiteSpace: "nowrap"`, `overflow: "hidden"`, `textOverflow: "ellipsis"`) per evitare rotture di layout.
+- **Filtro Famiglie Non Esclusivo**: Gli stili possono ora appartenere a più famiglie (es. Canotto ha primaria `napoletana` e secondaria `contemporanea`). I filtri e i conteggi badge nelle pagine Scopri e Consigliati usano `styleMatchesFamily` per includere gli stili nelle ricerche di tutte le rispettive famiglie.
 - **Pulizia dead code 2026-06-19**: il file `interpretation-chips.tsx` non è più presente; il dato resta canonico in `interpretation-library.ts`.
 
 ## Bug noti e fix

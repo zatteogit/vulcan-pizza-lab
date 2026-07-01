@@ -740,9 +740,9 @@ export const EN_LOCALE: CmsContent = {
     "hint.yeastDryQuarterTsp": "≈ ¼ teaspoon",
     "hint.yeastDryHalfTsp": "≈ ½ teaspoon",
     "hint.yeastDryOneTsp": "≈ 1 level teaspoon",
-    "hint.yeastFreshSmall": "≈ half a chickpea",
-    "hint.yeastFreshMedium": "≈ one chickpea",
-    "hint.yeastFreshLarge": "≈ one hazelnut",
+    "hint.yeastDryOneHalfTsp": "≈ 1½ teaspoons",
+    "hint.yeastFreshPinch": "≈ a pinch",
+    "hint.yeastFreshWeighable": "≈ {g} g on a kitchen scale",
     "serving.peopleOne": "≈ {n} person",
     "serving.peopleMany": "≈ {n} people",
     "serving.peopleRange": "≈ {min}-{max} people",
@@ -949,8 +949,6 @@ export const EN_LOCALE: CmsContent = {
       "Crispy cheese crown, Blue Steel pan. Cheese pushed to the edges.",
     chicago_deep:
       "Deep-dish like a savoury pie. Inverted layers: cheese-filling-sauce.",
-    bonci_teglia:
-      "No-knead with folds, extreme hydration, maestro Bonci. High digestibility.",
     focaccia_genovese:
       "Soft and oily, with golden crust and signature dimples. Oil-water brine on top.",
     sfincione:
@@ -981,8 +979,6 @@ export const EN_LOCALE: CmsContent = {
       "Cheese crown|Deep pan|Cheese to edges|Caramelised crust",
     chicago_deep:
       "5cm depth|18% butter|Inverted layers|Bake 35min",
-    bonci_teglia:
-      "No-knead + folds|Extreme hydration|24-72h maturation|Cloud alveolation",
     focaccia_genovese:
       "Generous EVO oil|Surface dimples|Oil-water brine|Bake 15-20min",
     sfincione:

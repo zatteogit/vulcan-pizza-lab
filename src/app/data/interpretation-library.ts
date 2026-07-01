@@ -171,8 +171,8 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     pizzeria: "Pizzarium",
     location: "Roma",
     year_codified: 2003,
-    base_style_id: "bonci_teglia",
-    compatible_style_ids: ["teglia_romana", "pala_romana", "pizza_baciata"],
+    base_style_id: "teglia_romana",
+    compatible_style_ids: ["pala_romana", "pizza_baciata"],
     parameter_overrides: {
       hydration_pct: 82,
       flour_w: 320,
@@ -273,8 +273,8 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     pizzeria: "Saporè",
     location: "San Martino Buon Albergo (VR)",
     year_codified: 2010,
-    base_style_id: "bonci_teglia",
-    compatible_style_ids: ["pala_romana", "pinsa_romana", "teglia_romana"],
+    base_style_id: "teglia_romana",
+    compatible_style_ids: ["pala_romana", "pinsa_romana"],
     parameter_overrides: {
       hydration_pct: 85,
       flour_w: 320,
@@ -348,7 +348,7 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     location: "Portland, Oregon",
     year_codified: 2006,
     base_style_id: "new_york",
-    compatible_style_ids: ["teglia_romana", "bonci_teglia"],
+    compatible_style_ids: ["teglia_romana"],
     parameter_overrides: {
       hydration_pct: 68,
       flour_w: 280,
@@ -397,8 +397,8 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     type: "community",
     organization: "Malati di Pizza (community)",
     year_codified: 2010,
-    base_style_id: "bonci_teglia",
-    compatible_style_ids: ["teglia_romana", "pala_romana", "pinsa_romana"],
+    base_style_id: "teglia_romana",
+    compatible_style_ids: ["pala_romana", "pinsa_romana"],
     parameter_overrides: {
       hydration_pct: 75,
       flour_w: 280,

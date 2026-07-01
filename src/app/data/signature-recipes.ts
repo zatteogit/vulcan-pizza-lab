@@ -148,9 +148,9 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     description: "Teglia 40×30 metodo Bonci: idratazione 85%, no-knead, 24-48h frigo. Margherita classica.",
     emoji: "☁️",
     photo: signatureBonciMargherita,
-    style_id: "bonci_teglia",
+    style_id: "teglia_romana",
     topping_concept_id: "margherita",
-    family: "contemporanea",
+    family: "romana", // Allineato allo stile bonci_teglia, ricollocato in "romana" (lug 2026)
     occasion_tags: ["pizza al taglio", "casual"],
     authenticity_badge: "Metodo Bonci",
     interpretation_id: "bonci_pizzarium",

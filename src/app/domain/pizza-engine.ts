@@ -164,11 +164,22 @@ export const SERVING_UNIT_LABELS: Record<ServingUnit, ServingUnitLabel> = {
   focaccia: { singular: "Focaccia", plural: "Focacce" },
 };
 
+export interface StyleOrigin {
+  city: string;
+  region?: string;   // regione italiana o stato USA
+  country?: string;  // es. "Italia", "USA", "Argentina"
+}
+
 export interface PizzaStyle {
   id: string;
   name: string;
+  /** Famiglia primaria (per grouping/badge). */
   family: FamilyId;
-  origin: string;
+  /** Famiglie secondarie: uno stile può appartenere a più tradizioni (es. il
+   * Canotto è napoletano MA contemporaneo). Il filtro le considera, il grouping
+   * usa solo `family` per non duplicare le card (lug 2026). */
+  families?: FamilyId[];
+  origin: StyleOrigin;
   dough: DoughParameters;
   shape: ShapeParameters;
   baking: BakingParameters;
@@ -495,12 +506,31 @@ export const PIZZA_FAMILIES: Record<
   },
 };
 
+/** Uno stile appartiene a una famiglia se è la sua primaria O una secondaria.
+ * Usato dai filtri (non esclusivi) — il grouping usa solo `style.family`. */
+export function styleMatchesFamily(style: PizzaStyle, family: FamilyId): boolean {
+  return style.family === family || (style.families?.includes(family) ?? false);
+}
+
+/** Origine "corta" per le card: la città, senza regione/stato/paese né note fra
+ * parentesi. "Chicago, Illinois, USA" → "Chicago"; "Roma (Gabriele Bonci)" →
+ * "Roma"; "Napoli (evoluzione moderna)" → "Napoli". La stringa piena resta nel
+ * DB per la pagina di dettaglio. */
+/** Città sola, per le card. */
+export function shortOrigin(origin: StyleOrigin): string {
+  return origin.city;
+}
+/** Origine completa per viste di dettaglio: "Napoli, Campania, Italia". */
+export function formatOrigin(origin: StyleOrigin): string {
+  return [origin.city, origin.region, origin.country].filter(Boolean).join(", ");
+}
+
 export const STYLES_DB: Record<string, PizzaStyle> = {
   napoletana_stg: {
     id: "napoletana_stg",
     name: "Napoletana STG",
     family: "napoletana",
-    origin: "Napoli, Italia",
+    origin: { city: "Napoli", region: "Campania", country: "Italia" },
     dough: {
       flour_w_range: [250, 320], // Aggiornato da AVPN 2024 (era 220-280) — Audit Maestro S3
       flour_pl_range: [0.55, 0.70], // AVPN 2024 disciplinare — Audit Maestro P0-1
@@ -551,7 +581,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "napoletana_canotto",
     name: "Canotto Contemporanea",
     family: "napoletana",
-    origin: "Napoli (evoluzione moderna)",
+    families: ["contemporanea"], // Napoletano d'origine ma tecnica contemporanea
+    origin: { city: "Napoli", region: "Campania", country: "Italia" },
     dough: {
       flour_w_range: [280, 340], // Martucci Caputo Saccorosso W300 — era [300,350]
       flour_pl_range: [0.50, 0.65], // Più estensibile per cornicione esplosivo
@@ -598,7 +629,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "teglia_romana",
     name: "Teglia Romana",
     family: "romana",
-    origin: "Roma, Italia",
+    origin: { city: "Roma", region: "Lazio", country: "Italia" },
     dough: {
       flour_w_range: [280, 320], // Disciplinare APITER (Confraternita) W300-380 — Audit Maggio 2026
       flour_pl_range: [0.50, 0.60], // APITER: 0.50-0.60 stretto
@@ -645,7 +676,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "tonda_romana",
     name: "Tonda Romana",
     family: "romana",
-    origin: "Roma, Italia",
+    origin: { city: "Roma", region: "Lazio", country: "Italia" },
     dough: {
       flour_w_range: [200, 240], // Farina debole W170-220, max W230 — Audit Maggio 2026 (La Verace, Molino Vigevano)
       flour_pl_range: [0.40, 0.60], // Bassa tenacità: si stende col mattarello senza resistenza
@@ -692,7 +723,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "pinsa_romana",
     name: "Pinsa Romana",
     family: "romana",
-    origin: "Roma (marchio contemporaneo)",
+    origin: { city: "Roma", region: "Lazio", country: "Italia" },
     dough: {
       flour_w_range: [280, 340],
       flour_pl_range: [0.55, 0.75], // Mix multicereale: P/L variabile
@@ -746,7 +777,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "new_york",
     name: "New York Style",
     family: "americana",
-    origin: "New York City, USA",
+    origin: { city: "New York", region: "New York", country: "USA" },
     dough: {
       flour_w_range: [280, 340], // Bread flour USA (KA ~W280, KABF ~W300) — era [280,340]
       flour_pl_range: [0.55, 0.70], // Bread flour americana: bilanciata
@@ -792,7 +823,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "detroit",
     name: "Detroit Style",
     family: "americana",
-    origin: "Detroit, Michigan, USA",
+    origin: { city: "Detroit", region: "Michigan", country: "USA" },
     dough: {
       flour_w_range: [280, 320], // Bread flour USA standard — era [290,350]
       flour_pl_range: [0.55, 0.70], // Bread flour standard
@@ -839,7 +870,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "chicago_deep",
     name: "Chicago Deep Dish",
     family: "americana",
-    origin: "Chicago, Illinois, USA",
+    origin: { city: "Chicago", region: "Illinois", country: "USA" },
     dough: {
       flour_w_range: [220, 260], // AP flour USA W200-250, bread flour max W270 — era [230,290]
       flour_pl_range: [0.45, 0.60], // Shortcrust-like: burro riduce tenacità
@@ -881,53 +912,6 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     emoji: "🏙️",
     default_topping_ref: "chicago_deep_classic",
   },
-  bonci_teglia: {
-    id: "bonci_teglia",
-    name: "Metodo Bonci",
-    family: "contemporanea",
-    origin: "Roma (Gabriele Bonci)",
-    dough: {
-      flour_w_range: [300, 340], // Caputo Cuoco W300-320, tipo 1 W280-320 — era [320,380] troppo alto
-      flour_pl_range: [0.50, 0.65], // Alta estensibilità per idratazione estrema
-      hydration_pct_range: [80, 90], // "Pizza Hero" 80%, corsi pro 85-90%, estremi 95% — era [85,100]
-      salt_pct: 2.5,
-      oil_pct: 3.0,
-      fat_type: "oil",
-      sugar_pct: 0.0,
-      fermentation_hours_range: [24, 72],
-      process_type: "no_knead",
-    },
-    shape: {
-      shape_type: "rectangular",
-      dough_weight_g: 900,
-      thickness_factor: 0.65,
-      length_cm: 40,
-      width_cm: 30,
-    },
-    baking: {
-      oven_type_required: "electric_standard",
-      temp_c_range: [250, 300], // Casalingo 250-280, pro 280-300 — era [270,310]
-      temp_c_ideal: 280, // era 290
-      cook_time_sec_range: [840, 1200],
-      cook_time_sec_ideal: 1020,
-    },
-    crust_type: "thick_airy",
-    requires_wood_oven: false,
-    allows_additives: true,
-    requires_pre_ferment: false,
-    suitable_for_beginner: true,
-    description:
-      "No-knead con pieghe, idratazione estrema, maestro Bonci. Alta digeribilità.",
-    key_characteristics: [
-      "No-knead + pieghe",
-      "Idratazione estrema",
-      "Maturazione 24-72h",
-      "Alveolatura nuvola",
-    ],
-    hydration_category: "extreme",
-    emoji: "☁️",
-    default_topping_ref: "margherita",
-  },
 
   /* ═══ EXPANSION WAVE 1 — 6 nuovi stili (marzo 2026) ═══ */
 
@@ -935,7 +919,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "focaccia_genovese",
     name: "Focaccia Genovese",
     family: "contemporanea",
-    origin: "Genova, Liguria",
+    origin: { city: "Genova", region: "Liguria", country: "Italia" },
     dough: {
       flour_w_range: [240, 280], // Farina 0 standard ligure W200-250 — era [220,280]
       flour_pl_range: [0.45, 0.65],
@@ -982,7 +966,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "sfincione",
     name: "Sfincione Palermitano",
     family: "contemporanea",
-    origin: "Palermo, Sicilia",
+    origin: { city: "Palermo", region: "Sicilia", country: "Italia" },
     dough: {
       flour_w_range: [240, 280],
       flour_pl_range: [0.50, 0.65],
@@ -1029,7 +1013,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "pala_romana",
     name: "Pala Romana",
     family: "romana",
-    origin: "Roma (formato contemporaneo)",
+    origin: { city: "Roma", region: "Lazio", country: "Italia" },
     dough: {
       flour_w_range: [280, 320], // Consultapizza W260-350 — Audit Maggio 2026
       flour_pl_range: [0.50, 0.65],
@@ -1076,7 +1060,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "grandma_style",
     name: "Grandma Style",
     family: "americana",
-    origin: "Long Island, New York, USA",
+    origin: { city: "Long Island", region: "New York", country: "USA" },
     dough: {
       flour_w_range: [240, 280], // Bread flour USA — era [260,320]
       flour_pl_range: [0.55, 0.70],
@@ -1123,7 +1107,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "focaccia_recco",
     name: "Focaccia di Recco",
     family: "contemporanea",
-    origin: "Recco, Liguria",
+    origin: { city: "Recco", region: "Liguria", country: "Italia" },
     dough: {
       flour_w_range: [300, 340], // Disciplinare IGP focaccia di Recco: W ≥ 300 — era [170,210] ERRATO
       flour_pl_range: [0.55, 0.70], // Forza alta = P/L bilanciato/forte
@@ -1177,7 +1161,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "padellino_torino",
     name: "Pizza al Padellino",
     family: "contemporanea",
-    origin: "Torino, Piemonte",
+    origin: { city: "Torino", region: "Piemonte", country: "Italia" },
     dough: {
       flour_w_range: [220, 260], // Farina 0/1 forte — era [280,330]
       flour_pl_range: [0.50, 0.65],
@@ -1226,7 +1210,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "pizza_baciata",
     name: "Pizza Baciata",
     family: "romana",
-    origin: "Roma (tradizione panaria)",
+    origin: { city: "Roma", region: "Lazio", country: "Italia" },
     dough: {
       flour_w_range: [280, 340],
       flour_pl_range: [0.50, 0.60],
@@ -1284,7 +1268,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "ciaccino_senese",
     name: "Ciaccino Senese",
     family: "contemporanea",
-    origin: "Siena, Toscana",
+    origin: { city: "Siena", region: "Toscana", country: "Italia" },
     dough: {
       flour_w_range: [220, 280],
       flour_pl_range: [0.50, 0.65],
@@ -1346,7 +1330,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "pizza_spaccata",
     name: "Pizza Spaccata",
     family: "romana",
-    origin: "Roma (forni e pizza al taglio)",
+    origin: { city: "Roma", region: "Lazio", country: "Italia" },
     dough: {
       flour_w_range: [280, 340],
       flour_pl_range: [0.50, 0.60],
@@ -1405,7 +1389,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "trancio_milanese",
     name: "Trancio Milanese",
     family: "contemporanea",
-    origin: "Milano, Lombardia",
+    origin: { city: "Milano", region: "Lombardia", country: "Italia" },
     dough: {
       flour_w_range: [280, 340], // Farina forte 0/1 — pizzerie Spontini, Cocco, Di Gennaro
       flour_pl_range: [0.50, 0.65],
@@ -1453,7 +1437,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "chicago_tavern",
     name: "Chicago Tavern Cut",
     family: "americana",
-    origin: "Chicago, USA",
+    origin: { city: "Chicago", region: "Illinois", country: "USA" },
     dough: {
       flour_w_range: [240, 290], // Bread flour standard USA
       flour_pl_range: [0.55, 0.70],
@@ -1503,7 +1487,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "focaccia_barese",
     name: "Focaccia Barese",
     family: "contemporanea",
-    origin: "Bari, Puglia",
+    origin: { city: "Bari", region: "Puglia", country: "Italia" },
     dough: {
       flour_w_range: [220, 280], // Farina media + semola rimacinata
       flour_pl_range: [0.45, 0.55],
@@ -1553,7 +1537,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "pizza_fritta",
     name: "Pizza Fritta",
     family: "napoletana",
-    origin: "Napoli",
+    origin: { city: "Napoli", region: "Campania", country: "Italia" },
     dough: {
       flour_w_range: [220, 280],
       flour_pl_range: [0.50, 0.60],
@@ -1603,7 +1587,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "calzone_napoletano",
     name: "Calzone Napoletano",
     family: "napoletana",
-    origin: "Napoli",
+    origin: { city: "Napoli", region: "Campania", country: "Italia" },
     dough: {
       flour_w_range: [250, 320],
       flour_pl_range: [0.55, 0.70],
@@ -1660,7 +1644,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "pizza_al_metro",
     name: "Pizza al Metro",
     family: "napoletana",
-    origin: "Vico Equense (NA)",
+    origin: { city: "Vico Equense", region: "Campania", country: "Italia" },
     dough: {
       flour_w_range: [260, 320],
       flour_pl_range: [0.55, 0.65],
@@ -1711,7 +1695,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "new_haven_apizza",
     name: "New Haven Apizza",
     family: "americana",
-    origin: "New Haven, Connecticut",
+    origin: { city: "New Haven", region: "Connecticut", country: "USA" },
     dough: {
       flour_w_range: [240, 300], // Bread flour
       flour_pl_range: [0.55, 0.65],
@@ -1761,7 +1745,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "fugazzeta",
     name: "Fugazzeta Argentina",
     family: "americana",
-    origin: "Buenos Aires, Argentina",
+    origin: { city: "Buenos Aires", country: "Argentina" },
     dough: {
       flour_w_range: [200, 260],
       flour_pl_range: [0.50, 0.60],
@@ -1818,7 +1802,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "california_style",
     name: "California Style",
     family: "americana",
-    origin: "California, USA",
+    origin: { city: "California", country: "USA" },
     dough: {
       flour_w_range: [240, 300],
       flour_pl_range: [0.55, 0.65],
@@ -1868,7 +1852,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "greek_pan",
     name: "Greek Pan Pizza",
     family: "americana",
-    origin: "New England, USA (greco-americana)",
+    origin: { city: "New England", country: "USA" },
     dough: {
       flour_w_range: [220, 280],
       flour_pl_range: [0.50, 0.60],
@@ -2698,14 +2682,14 @@ function calcDoughWeight(
 
 /** Styles that support thickness customization */
 export function supportsThickness(style: PizzaStyle): boolean {
-  return ["teglia_romana", "detroit", "bonci_teglia", "focaccia_genovese",
+  return ["teglia_romana", "detroit", "focaccia_genovese",
     "sfincione", "grandma_style", "padellino_torino", "chicago_deep"].includes(style.id);
 }
 
 /** Styles that use a baking pan/vessel (rectangular or round) */
 export function needsPan(style: PizzaStyle): boolean {
   return [
-    "teglia_romana", "detroit", "bonci_teglia", "focaccia_genovese",
+    "teglia_romana", "detroit", "focaccia_genovese",
     "sfincione", "grandma_style", "chicago_deep", "padellino_torino",
   ].includes(style.id);
 }
@@ -3004,12 +2988,14 @@ export function generateRecipe(
 
   const flourG = Math.round(totalDough / totalPct);
   const waterG = Math.round((flourG * hydration) / 100);
-  const saltG =
-    Math.round(((flourG * effectiveSaltPct) / 100) * 10) / 10;
+  // Sale/olio/zucchero: arrotondati all'intero. A casa la bilancia legge 1g e
+  // 0.3g di sale sono gustativamente invisibili — mostrare i decimali era una
+  // precisione fittizia (audit precisione, luglio 2026). Il lievito resta a 0.1g
+  // sotto, perché lì il sotto-grammo conta davvero.
+  const saltG = Math.round((flourG * effectiveSaltPct) / 100);
   const fatG = Math.round((flourG * effectiveOilPct) / 100); // Grasso totale (olio O burro)
   const oilG = style.dough.fat_type === "butter" ? 0 : fatG; // oilG = 0 se è burro
-  const sugarG =
-    Math.round(((flourG * effectiveSugarPct) / 100) * 10) / 10;
+  const sugarG = Math.round((flourG * effectiveSugarPct) / 100);
   const yeastG =
     yeastType === "sourdough"
       ? Math.round((flourG * yeastPct) / 100)
@@ -4523,7 +4509,6 @@ const ICONIC_BOOST: Record<string, number> = {
   tonda_romana: 5,
   new_york: 5,
   napoletana_canotto: 4,
-  bonci_teglia: 4,
   focaccia_genovese: 4,
   pinsa_romana: 3,
   detroit: 3,
@@ -4672,7 +4657,7 @@ export function recommendStyles(
       const styleId = style.id;
       const panStyles = [
         "teglia_romana", "detroit", "chicago_deep", "grandma_style",
-        "bonci_teglia", "focaccia_genovese", "sfincione", "padellino_torino",
+        "focaccia_genovese", "sfincione", "padellino_torino",
       ];
       const stoneStyles = [
         "napoletana_stg", "napoletana_canotto", "tonda_romana",

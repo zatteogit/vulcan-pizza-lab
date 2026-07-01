@@ -626,9 +626,9 @@ export const FR_LOCALE: CmsContent = {
     "hint.yeastDryQuarterTsp": "≈ ¼ de cuillère à café",
     "hint.yeastDryHalfTsp": "≈ ½ cuillère à café",
     "hint.yeastDryOneTsp": "≈ 1 cuillère à café rase",
-    "hint.yeastFreshSmall": "≈ un demi-pois chiche",
-    "hint.yeastFreshMedium": "≈ un pois chiche",
-    "hint.yeastFreshLarge": "≈ une noisette",
+    "hint.yeastDryOneHalfTsp": "≈ 1½ cuillère à café",
+    "hint.yeastFreshPinch": "≈ une pincée",
+    "hint.yeastFreshWeighable": "≈ {g} g sur la balance de cuisine",
     "serving.peopleOne": "≈ {n} personne",
     "serving.peopleMany": "≈ {n} personnes",
     "serving.peopleRange": "≈ {min}-{max} personnes",
@@ -838,8 +838,6 @@ export const FR_LOCALE: CmsContent = {
       "Couronne de fromage croustillante, moule Blue Steel. Fromage jusqu\u2019aux bords.",
     chicago_deep:
       "Pizza profonde comme une tourte sal\u00E9e. Couches invers\u00E9es\u00A0: fromage-garniture-sauce.",
-    bonci_teglia:
-      "Sans p\u00E9trissage avec pliages, hydratation extr\u00EAme, maestro Bonci. Haute digestibilit\u00E9.",
     focaccia_genovese:
       "Moelleuse et huil\u00E9e, cro\u00FBte dor\u00E9e et crat\u00E8res caract\u00E9ristiques. Saumure huile-eau en surface.",
     sfincione:
@@ -870,8 +868,6 @@ export const FR_LOCALE: CmsContent = {
       "Couronne de fromage|Moule profond|Fromage aux bords|Cro\u00FBte caram\u00E9lis\u00E9e",
     chicago_deep:
       "Profondeur 5cm|Beurre 18%|Couches invers\u00E9es|Cuisson 35min",
-    bonci_teglia:
-      "Sans p\u00E9trissage + pliages|Hydratation extr\u00EAme|Maturation 24-72h|Alv\u00E9olage nuage",
     focaccia_genovese:
       "Huile d\u2019olive g\u00E9n\u00E9reuse|Crat\u00E8res de surface|Saumure huile-eau|Cuisson 15-20min",
     sfincione:

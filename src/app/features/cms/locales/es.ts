@@ -627,9 +627,9 @@ export const ES_LOCALE: CmsContent = {
     "hint.yeastDryQuarterTsp": "≈ ¼ de cucharadita",
     "hint.yeastDryHalfTsp": "≈ ½ cucharadita",
     "hint.yeastDryOneTsp": "≈ 1 cucharadita rasa",
-    "hint.yeastFreshSmall": "≈ medio garbanzo",
-    "hint.yeastFreshMedium": "≈ un garbanzo",
-    "hint.yeastFreshLarge": "≈ una avellana",
+    "hint.yeastDryOneHalfTsp": "≈ 1½ cucharaditas",
+    "hint.yeastFreshPinch": "≈ una pizca",
+    "hint.yeastFreshWeighable": "≈ {g} g en la balanza de cocina",
     "serving.peopleOne": "≈ {n} persona",
     "serving.peopleMany": "≈ {n} personas",
     "serving.peopleRange": "≈ {min}-{max} personas",
@@ -836,8 +836,6 @@ export const ES_LOCALE: CmsContent = {
       "Corona de queso crujiente, bandeja Blue Steel. Queso hasta los bordes.",
     chicago_deep:
       "Pizza profunda como un pastel salado. Capas invertidas: queso-relleno-salsa.",
-    bonci_teglia:
-      "Sin amasado con pliegues, hidrataci\u00F3n extrema, maestro Bonci. Alta digestibilidad.",
     focaccia_genovese:
       "Suave y aceitosa, con corteza dorada y cr\u00E1teres caracter\u00EDsticos. Salmuera aceite-agua en superficie.",
     sfincione:
@@ -868,8 +866,6 @@ export const ES_LOCALE: CmsContent = {
       "Corona de queso|Bandeja profunda|Queso en bordes|Corteza caramelizada",
     chicago_deep:
       "Profundidad 5cm|Mantequilla 18%|Capas invertidas|Cocci\u00F3n 35min",
-    bonci_teglia:
-      "Sin amasado + pliegues|Hidrataci\u00F3n extrema|Maduraci\u00F3n 24-72h|Alveolado nube",
     focaccia_genovese:
       "Aceite EVO generoso|Cr\u00E1teres superficiales|Salmuera aceite-agua|Cocci\u00F3n 15-20min",
     sfincione:

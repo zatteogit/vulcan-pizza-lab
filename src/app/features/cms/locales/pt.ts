@@ -627,9 +627,9 @@ export const PT_LOCALE: CmsContent = {
     "hint.yeastDryQuarterTsp": "≈ ¼ de colher de chá",
     "hint.yeastDryHalfTsp": "≈ ½ colher de chá",
     "hint.yeastDryOneTsp": "≈ 1 colher de chá rasa",
-    "hint.yeastFreshSmall": "≈ meio grão-de-bico",
-    "hint.yeastFreshMedium": "≈ um grão-de-bico",
-    "hint.yeastFreshLarge": "≈ uma avelã",
+    "hint.yeastDryOneHalfTsp": "≈ 1½ colheres de chá",
+    "hint.yeastFreshPinch": "≈ uma pitada",
+    "hint.yeastFreshWeighable": "≈ {g} g na balança de cozinha",
     "serving.peopleOne": "≈ {n} pessoa",
     "serving.peopleMany": "≈ {n} pessoas",
     "serving.peopleRange": "≈ {min}-{max} pessoas",
@@ -832,8 +832,6 @@ export const PT_LOCALE: CmsContent = {
       "Coroa de queijo crocante, assadeira Blue Steel. Queijo at\u00E9 as bordas.",
     chicago_deep:
       "Pizza profunda como torta salgada. Camadas invertidas: queijo-recheio-molho.",
-    bonci_teglia:
-      "Sem sovar com dobras, hidrata\u00E7\u00E3o extrema, mestre Bonci. Alta digestibilidade.",
     focaccia_genovese:
       "Macia e oleosa, com crosta dourada e crateras caracter\u00EDsticas. Salmoura \u00F3leo-\u00E1gua na superf\u00EDcie.",
     sfincione:
@@ -864,8 +862,6 @@ export const PT_LOCALE: CmsContent = {
       "Coroa de queijo|Assadeira profunda|Queijo nas bordas|Crosta caramelizada",
     chicago_deep:
       "Profundidade 5cm|Manteiga 18%|Camadas invertidas|Cozimento 35min",
-    bonci_teglia:
-      "Sem sovar + dobras|Hidrata\u00E7\u00E3o extrema|Matura\u00E7\u00E3o 24-72h|Alveolagem nuvem",
     focaccia_genovese:
       "\u00D3leo EVO generoso|Crateras superficiais|Salmoura \u00F3leo-\u00E1gua|Cozimento 15-20min",
     sfincione:

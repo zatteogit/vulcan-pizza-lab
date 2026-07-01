@@ -36,6 +36,7 @@ import React,{ useCallback,useEffect,useMemo,useState } from "react";
 import {
 PIZZA_FAMILIES,
 STYLES_DB,
+formatOrigin,
 generateRecipe,
 type CrustType,
 type DoughParameters,
@@ -1189,7 +1190,7 @@ function parseAndValidateImport(raw: string, existingIds: string[]): ImportParse
 
   // Auto-fill missing optional fields
   if (!parsed.emoji) { parsed.emoji = "🧪"; autoFixes.push("Emoji default: 🧪"); }
-  if (!parsed.origin) { parsed.origin = ""; autoFixes.push("Origine impostata a stringa vuota"); }
+  if (!parsed.origin?.city) { parsed.origin = { city: "" }; autoFixes.push("Origine impostata a oggetto vuoto"); }
   if (!parsed.description) { parsed.description = ""; autoFixes.push("Descrizione impostata a stringa vuota"); }
   if (!parsed.key_characteristics) { parsed.key_characteristics = []; autoFixes.push("Caratteristiche chiave: array vuoto"); }
   if (parsed.hydration_category === undefined) {
@@ -1294,7 +1295,7 @@ function buildDiffRows(id: string, current: PizzaStyle): DiffRow[] {
   // Identity
   add("Nome", "name", original.name, current.name, "identity");
   add("Famiglia", "family", original.family, current.family, "identity");
-  add("Origine", "origin", original.origin, current.origin, "identity");
+  add("Origine", "origin", formatOrigin(original.origin), formatOrigin(current.origin), "identity");
   add("Emoji", "emoji", original.emoji, current.emoji, "identity");
   add("Descrizione", "description", original.description, current.description, "identity");
 
@@ -2658,10 +2659,23 @@ export function StyleEditorTab() {
                 required
               />
               <TextInput
-                label="Origine"
-                value={style.origin}
-                onChange={(v) => update((s) => { s.origin = v; })}
-                hint="Opzionale, info geografica"
+                label="Città"
+                value={style.origin.city}
+                onChange={(v) => update((s) => { s.origin.city = v; })}
+                hint="Città d'origine"
+                required
+              />
+              <TextInput
+                label="Regione"
+                value={style.origin.region ?? ""}
+                onChange={(v) => update((s) => { s.origin.region = v || undefined; })}
+                hint="Regione italiana o stato USA (opzionale)"
+              />
+              <TextInput
+                label="Paese"
+                value={style.origin.country ?? ""}
+                onChange={(v) => update((s) => { s.origin.country = v || undefined; })}
+                hint="Es. Italia, USA (opzionale)"
               />
             </div>
             <TextAreaInput

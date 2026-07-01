@@ -16,7 +16,9 @@ import {
 generateRecipe,
 optimizeRecipe,
 PIZZA_FAMILIES,
+shortOrigin,
 STYLES_DB,
+styleMatchesFamily,
 type FamilyId,
 type PizzaStyle,
 type UserConstraints,
@@ -240,7 +242,8 @@ export function ExplorePage() {
 
   const filteredStyles = useMemo(() => {
     if (activeFamily === "all") return styles;
-    return styles.filter((s) => s.family === activeFamily);
+    // Filtro non esclusivo: include chi ha activeFamily come primaria O secondaria.
+    return styles.filter((s) => styleMatchesFamily(s, activeFamily as FamilyId));
   }, [styles, activeFamily]);
 
   /* Group styles by family for "all" and style tab when no family filter is applied */
@@ -258,13 +261,16 @@ export function ExplorePage() {
     return groups;
   }, [styles, activeFamily]);
 
-  /* Family counts for badges */
+  /* Family counts for badges — coerenti col filtro non esclusivo: uno stile
+   * conta nella primaria e in ogni secondaria (la somma può superare il totale). */
   const familyCounts = useMemo(() => {
     const counts: Record<string, number> = {
       all: styles.length,
     };
     for (const s of styles) {
-      counts[s.family] = (counts[s.family] || 0) + 1;
+      for (const fam of [s.family, ...(s.families ?? [])]) {
+        counts[fam] = (counts[fam] || 0) + 1;
+      }
     }
     return counts;
   }, [styles]);
@@ -819,11 +825,6 @@ function StyleCatalogCard({
       return null;
     }
   }, [style, constraints]);
-  const cmsFamilyName = (
-    cms.families?.[style.family]?.name ||
-    PIZZA_FAMILIES[style.family]?.name ||
-    ""
-  ).toUpperCase();
 
   return (
     <motion.div
@@ -946,9 +947,12 @@ function StyleCatalogCard({
                 color: "var(--overlay-text-warm)",
                 textShadow: "var(--overlay-shadow-text-sm)",
                 lineHeight: "var(--leading-normal)",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
               }}
             >
-              {cmsFamilyName} — {style.origin.toUpperCase()}
+              {shortOrigin(style.origin).toUpperCase()}
             </div>
           </div>
         </div>

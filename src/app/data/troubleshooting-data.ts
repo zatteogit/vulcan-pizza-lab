@@ -1,6 +1,6 @@
 /* === TROUBLESHOOTING DATABASE === */
 /* Basato su Notion Pagina 11 · Troubleshooting & Testing */
-/* 20 problemi comuni, 6 categorie, diagnostica contestuale */
+/* 21 problemi comuni, 6 categorie, diagnostica contestuale */
 /* i18n: getLocalizedIssue/CategoryLabel/ContextualWarnings accept CmsContent */
 
 import type { CmsContent } from "../features/cms/cms-context";
@@ -73,6 +73,15 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     fixImmediate: 'Aggiungi 0.5-1% zucchero per mascherare acidita',
     prevention: 'Fermentazioni >24h sempre a 4-8°C',
     severity: 'warning',
+  },
+  {
+    id: 'P21', category: 'fermentation',
+    symptom: 'Fermentazione incostante tra un impasto e l\'altro (frigo di casa)',
+    cause: 'Il frigo domestico non ha temperatura stabile: sbrinamenti, aperture e ripiani diversi fanno oscillare la maturazione a freddo, a differenza di una cella professionale',
+    testRapido: 'Stesso stile, stessa dose di lievito: la lievitazione cambia parecchio tra una volta e l\'altra?',
+    fixImmediate: 'Sposta l\'impasto sul ripiano più basso/centrale (più stabile) e valuta lo stesso panetto a vista, non solo a orologio',
+    prevention: 'Trucco di Bonci per il casalingo: 0.5-1% di zucchero dà al lievito nutrimento pronto e rende la fermentazione più prevedibile quando il frigo è instabile. Solo su stili che ammettono additivi — mai su Napoletana STG/AVPN a disciplinare',
+    severity: 'info',
   },
   /* === CATEGORIA 3: Stesura === */
   {
@@ -239,6 +248,9 @@ export function getContextualWarnings(params: {
   ovenTemp: number;
   skillLevel: number;
   usePreFerment: boolean;
+  /** Grammi di farina della ricetta corrente: se presenti, i tip in % diventano
+   * dinamici (es. "0.5-1% zucchero → ≈ 8-15g"). */
+  flourG?: number;
 }, cms?: CmsContent): ContextualWarning[] {
   const warnings: ContextualWarning[] = [];
   const cmsCtx = cms?.troubleshootingI18n?.contextual;
@@ -282,11 +294,16 @@ export function getContextualWarnings(params: {
   /* Fermentazione breve = rischio P10 + D-Score basso */
   if (params.fermentHours < 6) {
     const loc = cmsCtx?.pale_crust;
+    // Quantità precisa di zucchero per la farina corrente (0.5-1%), appesa al tip
+    // così resta corretta in tutte le lingue senza toccare le stringhe CMS.
+    const sugarNote = params.flourG
+      ? ` → ≈ ${Math.round(params.flourG * 0.005)}-${Math.round(params.flourG * 0.01)}g`
+      : '';
     warnings.push({
       issueId: 'P10',
       message: loc ? t(loc.message, { h: String(params.fermentHours) })
         : `Fermentazione breve (${params.fermentHours}h): crosta pallida e digeribilita limitata`,
-      tip: loc?.tip ?? 'Aggiungi 0.5-1% zucchero per favorire la doratura Maillard',
+      tip: (loc?.tip ?? 'Aggiungi 0.5-1% zucchero per favorire la doratura Maillard') + sugarNote,
       severity: 'info',
     });
   }
@@ -322,11 +339,15 @@ export function getContextualWarnings(params: {
   /* W molto alto = difficile da stendere P19 */
   if (params.flourW > 360) {
     const loc = cmsCtx?.high_w;
+    // Mix 50:50 → grammi di ciascuna metà per la farina corrente.
+    const halfNote = params.flourG
+      ? ` (≈ ${Math.round(params.flourG / 2)}g + ${Math.round(params.flourG / 2)}g)`
+      : '';
     warnings.push({
       issueId: 'P19',
       message: loc ? t(loc.message, { w: String(params.flourW) })
         : `W ${params.flourW} molto alto: impasto difficile da stendere`,
-      tip: loc?.tip ?? 'Mixa 50:50 con farina W 200 oppure prevedi autolisi lunga',
+      tip: (loc?.tip ?? 'Mixa 50:50 con farina W 200 oppure prevedi autolisi lunga') + halfNote,
       severity: 'warning',
     });
   }

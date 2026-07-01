@@ -536,7 +536,7 @@ const ADVERSARIAL_FINDINGS: AdversarialFinding[] = [
     severity: "bug",
     title: "Lievito madre non selezionato per stili no-knead a lunga fermentazione",
     description: "La selezione lievito madre richiede (fermentationHours >= 12 AND (hasPreFerment OR style.requires_pre_ferment)). Ma teglia_romana (no_knead, 24-48h, requires_pre_ferment=false) con utente che ha sourdough in pantry → seleziona 'fresh' invece di 'sourdough'. Il lievito madre è perfettamente adatto per no-knead lunghi.",
-    affectedStyles: ["teglia_romana", "bonci_teglia", "focaccia_genovese", "sfincione", "grandma_style"],
+    affectedStyles: ["teglia_romana", "focaccia_genovese", "sfincione", "grandma_style"],
     suggestedFix: "Cambiare condizione: sourdough se fermentationHours >= 12 AND (hasPreFerment OR style.requires_pre_ferment OR fermentationHours >= 24).",
     confirmedByFeedback: false,
     feedbackCount: 0,

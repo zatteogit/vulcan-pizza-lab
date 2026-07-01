@@ -824,7 +824,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "margherita_romana",
     concept_ref: "margherita",
     thumbnail: thumbnailVariantMargheritaRomana,
-    preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana", "bonci_teglia"],
+    preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
       { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 100, unit: "g" } },
       { name: "Sale sulla passata", amount: { value: 1, unit: "g" } },
@@ -921,7 +921,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "olio e rosmarino",
     // La bianca/schiacciata è una base tradizionale italiana trasversale
     // (focaccia, pala, teglia, sfincione bianco, schiacciata napoletana).
-    preferred_for_styles: ["focaccia_genovese", "focaccia_barese", "pala_romana", "teglia_romana", "bonci_teglia"],
+    preferred_for_styles: ["focaccia_genovese", "focaccia_barese", "pala_romana", "teglia_romana"],
     ingredients: [
       { name: "Olio EVO", amount: { value: 15, unit: "ml" } },
       { name: "Rosmarino fresco", amount: { value: 2, unit: "pcs" }, notes: "rametti" },
@@ -1118,7 +1118,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "bianca_mortazza",
     variant_name: "IGP di Bologna",
     thumbnail: thumbnailVariantBiancaMortazzaRomana,
-    preferred_for_styles: ["pizza_spaccata", "pala_romana", "teglia_romana", "bonci_teglia"],
+    preferred_for_styles: ["pizza_spaccata", "pala_romana", "teglia_romana"],
     ingredients: [
       { name: "Olio EVO per spennellare", amount: { value: 12, unit: "ml" }, section: "base" },
       { name: "Fior di sale", amount: { value: 2, unit: "g" }, section: "base" },
@@ -2632,7 +2632,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "zucca_speck_bonci",
     concept_ref: "zucca_speck",
     variant_name: "Pizzarium",
-    preferred_for_styles: ["bonci_teglia"],
+    preferred_for_styles: ["teglia_romana"],
     authenticity: "signature",
     ingredients: [
       { name: "Crema di zucca arrosto (zucca, noce moscata, sale)", amount: { value: 100, unit: "g" }, section: "base" },
@@ -2663,7 +2663,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "burrata_salmone_bonci",
     concept_ref: "burrata_salmone",
     variant_name: "Pizzarium",
-    preferred_for_styles: ["bonci_teglia"],
+    preferred_for_styles: ["teglia_romana"],
     authenticity: "signature",
     ingredients: [
       { name: "Olio EVO e sale per la cottura in bianco", amount: { value: 10, unit: "ml" }, section: "base" },
@@ -3439,13 +3439,6 @@ const REPRESENTATIVE_CONCEPT_ORDER_BY_STYLE: Record<string, readonly string[]> =
     "boscaiola",
     "capricciosa",
     "stracciata_bottarga",
-  ],
-  bonci_teglia: [
-    "margherita",
-    "bianca",
-    "bianca_mortazza",
-    "zucca_speck",
-    "burrata_salmone",
   ],
   focaccia_genovese: ["bianca", "focaccia_cipolle", "sardenaira"],
   sfincione: ["sfincione", "sfincione_bianco"],

@@ -1019,23 +1019,63 @@ function flourStrengthLabel(w: number, cms: CmsContent | undefined): string {
   return engineMessage(cms, "hint.flourVeryStrong", "farina molto forte (manitoba)");
 }
 
-/** Equivalenza pratica per il lievito: 0.2g non si pesa con la bilancia di
- * casa — diamo un riferimento visivo (audit roleplay giugno 2026).
- * Secco: 1 cucchiaino raso ≈ 3g. Fresco: una nocciola ≈ 5g, un cece ≈ 1g. */
+/** Arrotondamento "caso per caso" dei numeri grandi (farina/acqua/totale).
+ * La risoluzione scala con la grandezza: <100g al grammo, <1kg a 5g, ≥1kg a 10g.
+ * Nessuno pesa 1346g di farina — 1350g è più leggibile e l'errore è <0.3%.
+ * `approx` è true quando l'arrotondamento ha semplificato il numero, così la UI
+ * può anteporre "~" (Q1+Q3, audit precisione lug 2026). Il lievito NON passa di
+ * qui: mantiene 0.1g, dove il sotto-grammo conta. */
+function roundGramsMagnitude(grams: number): { value: number; approx: boolean } {
+  if (grams <= 0) return { value: 0, approx: false };
+  const step = grams < 100 ? 1 : grams < 1000 ? 5 : 10;
+  const value = Math.round(grams / step) * step;
+  return { value, approx: value !== Math.round(grams) };
+}
+
+/** Formatta un peso grande con "~" se arrotondato. */
+function gramsApprox(grams: number, fmt: ReturnType<typeof createFormatter>): string {
+  const { value, approx } = roundGramsMagnitude(grams);
+  return `${approx ? "~" : ""}${fmt.grams(value)}`;
+}
+
+/** Delta in grammi di una compensazione forno espressa in % sulla farina
+ * (idratazione/olio/zucchero) — rende dinamico il "+X%" mostrando anche la
+ * quantità reale, come per il tip zucchero (lug 2026). Vuoto per compensazioni
+ * non additive (tempo cottura, spessore). */
+function compGramsSuffix(
+  c: { type: string; original: number; compensated: number },
+  flourG: number,
+): string {
+  if (!["hydration", "oil", "sugar"].includes(c.type)) return "";
+  const g = Math.round((flourG * (c.compensated - c.original)) / 100);
+  return g > 0 ? ` · ≈ +${g}g` : "";
+}
+
+/** "Versione misurabile" del lievito, mostrata come sottotitolo accanto al peso
+ * preciso (che resta sempre a 0.1g). Serve a chi NON ha la bilancia di precisione
+ * (decisione owner lug 2026: preciso + misurabile insieme).
+ * - Secco: frazioni di cucchiaino (idiomatiche, coprono tutto il range reale).
+ * - Fresco: sotto il grammo "un pizzico" (la bilancia da 1g non lo legge); da 1g
+ *   in su il target al grammo intero sulla bilancia da cucina — ma solo se il
+ *   valore preciso ha un decimale (se è già intero è già pesabile, niente nota).
+ * - Madre / ≥10g: nessuna nota (già pesabile e intero). */
 function yeastPracticalHint(grams: number, type: string, cms: CmsContent | undefined): string | undefined {
-  if (grams >= 3) return undefined; // pesabile senza problemi
+  if (grams <= 0) return undefined;
   if (type === "dry") {
+    if (grams >= 5) return undefined; // pesabile con precisione sufficiente
     if (grams <= 0.4) return engineMessage(cms, "hint.yeastDryPinch", "≈ una punta di cucchiaino");
     if (grams <= 0.9) return engineMessage(cms, "hint.yeastDryQuarterTsp", "≈ ¼ di cucchiaino");
     if (grams <= 1.8) return engineMessage(cms, "hint.yeastDryHalfTsp", "≈ ½ cucchiaino");
-    return engineMessage(cms, "hint.yeastDryOneTsp", "≈ 1 cucchiaino raso");
+    if (grams <= 3.5) return engineMessage(cms, "hint.yeastDryOneTsp", "≈ 1 cucchiaino raso");
+    return engineMessage(cms, "hint.yeastDryOneHalfTsp", "≈ 1 cucchiaino e ½");
   }
   if (type === "fresh") {
-    if (grams <= 0.6) return engineMessage(cms, "hint.yeastFreshSmall", "≈ mezzo cece");
-    if (grams <= 1.4) return engineMessage(cms, "hint.yeastFreshMedium", "≈ un cece");
-    return engineMessage(cms, "hint.yeastFreshLarge", "≈ una nocciola");
+    if (grams < 1) return engineMessage(cms, "hint.yeastFreshPinch", "≈ un pizzico");
+    const whole = Math.round(grams);
+    if (grams >= 10 || whole === grams) return undefined; // già pesabile/intero
+    return t(engineMessage(cms, "hint.yeastFreshWeighable", "≈ {g} g sulla bilancia da cucina"), { g: whole });
   }
-  return undefined;
+  return undefined; // madre: pesabile, nessuna nota
 }
 
 /** Unified duration formatter: "15 min" / "1h 30min" / "16h" / "1g 4h" / "2g 3h" */
@@ -3085,7 +3125,7 @@ export function RecipeOutput({
                   ? `${flourStrengthLabel(recipe.flour_w, cms)} · W${recipe.flour_w}`
                   : `W${recipe.flour_w} · P/L ${recipe.flour_pl}`
             }
-            amount={fmt.grams(recipe.flour_g)}
+            amount={gramsApprox(recipe.flour_g, fmt)}
           />
           {recipe.flour_blend && recipe.flour_blend.length > 0 && (
             /* VPL-B2: breakdown del mix risolto. Ogni farina di frumento mostra la
@@ -3140,7 +3180,7 @@ export function RecipeOutput({
           <IngRow
             name={ui.water}
             detail={`${fmt.percent(recipe.hydration_pct)}${recipe.water_temp_c != null ? ` · ${fmt.celsius(recipe.water_temp_c)}` : ""}`}
-            amount={fmt.grams(recipe.water_g)}
+            amount={gramsApprox(recipe.water_g, fmt)}
           />
           <IngRow name={ui.salt} amount={fmt.grams(recipe.salt_g)} />
           {recipe.yeast_g > 0 && (
@@ -3444,7 +3484,7 @@ export function RecipeOutput({
                     className="flex items-baseline justify-between gap-3 type-body"
                   >
                     <span style={{ color: "var(--text-default)" }}>
-                      {c.reason}
+                      {c.reason}{compGramsSuffix(c, recipe.flour_g)}
                     </span>
                     <span
                       className="type-numeric flex-shrink-0"
@@ -3971,7 +4011,7 @@ function formatIngredientsText(r: GeneratedRecipe, cms: CmsContent, bcp47: strin
   const title = t(ui.clipboardTitle, { style: r.style.name });
   const balls = normalizeMeasureUnitSuffixes(t(ui.clipboardBalls, { n: r.dough_balls, w: fmt.grams(r.ball_weight_g) }));
   const total = normalizeMeasureUnitSuffixes(t(ui.clipboardTotal, { g: fmt.grams(r.total_dough_g) }));
-  const doughText = `${title}\n${balls}\n\n${ui.flour} W${r.flour_w} · P/L ${r.flour_pl}: ${fmt.grams(r.flour_g)}\n${ui.water}: ${fmt.grams(r.water_g)} (${fmt.percent(r.hydration_pct)})\n${ui.salt}: ${fmt.grams(r.salt_g)}${r.yeast_g > 0 ? `\n${yeastName}: ${fmt.grams(r.yeast_g)}` : ""}${r.fat_g > 0 ? `\n${r.fat_label || ui.oilEvo}: ${fmt.grams(r.fat_g)}` : ""}\n\n${total}`;
+  const doughText = `${title}\n${balls}\n\n${ui.flour} W${r.flour_w} · P/L ${r.flour_pl}: ${gramsApprox(r.flour_g, fmt)}\n${ui.water}: ${gramsApprox(r.water_g, fmt)} (${fmt.percent(r.hydration_pct)})\n${ui.salt}: ${fmt.grams(r.salt_g)}${r.yeast_g > 0 ? `\n${yeastName}: ${fmt.grams(r.yeast_g)}` : ""}${r.fat_g > 0 ? `\n${r.fat_label || ui.oilEvo}: ${fmt.grams(r.fat_g)}` : ""}\n\n${total}`;
 
   const toppingRefId = r.style.default_topping_ref;
   if (!toppingRefId) return doughText;

@@ -53,7 +53,7 @@ const PATHS: Record<
   4: {
     title: "Maestro del metodo Bonci",
     copy: "Idratazione estrema, pieghe, pazienza. La teglia da maestro che trasforma acqua e farina in una nuvola.",
-    styleId: "bonci_teglia",
+    styleId: "teglia_romana",
   },
 };
 

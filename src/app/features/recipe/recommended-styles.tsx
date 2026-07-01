@@ -11,6 +11,8 @@ PIZZA_FAMILIES,
 PizzaStyle,
 optimizeRecipe,
 recommendStyles,
+shortOrigin,
+styleMatchesFamily,
 StyleRecommendation,
 UserConstraints,
 type FamilyId,
@@ -145,11 +147,14 @@ export function RecommendedStyles({
   const hasActiveAdvanced = !!(hydrationFilter || textureFilter || skillFilter || ovenFilter);
   const hasSelection = selectedStyle !== null;
 
-  /* Family counts for filter badges */
+  /* Family counts for filter badges — includono le famiglie secondarie,
+   * coerenti col filtro non esclusivo. */
   const familyCounts = useMemo(() => {
     const counts: Record<string, number> = { all: recommendations.length };
     for (const r of recommendations) {
-      counts[r.style.family] = (counts[r.style.family] || 0) + 1;
+      for (const fam of [r.style.family, ...(r.style.families ?? [])]) {
+        counts[fam] = (counts[fam] || 0) + 1;
+      }
     }
     return counts;
   }, [recommendations]);
@@ -159,7 +164,7 @@ export function RecommendedStyles({
     () => {
       let result = familyFilter === "all"
         ? recommendations
-        : recommendations.filter((r) => r.style.family === familyFilter);
+        : recommendations.filter((r) => styleMatchesFamily(r.style, familyFilter as FamilyId));
 
       /* Apply tag-based faceted filters */
       if (hydrationFilter || textureFilter || skillFilter || ovenFilter) {
@@ -512,10 +517,6 @@ function StyleCard({
     fMax <= 8 ? cms.filters.timeFast : `${Math.round(fMin)}–${Math.round(fMax)}h`;
   const cmsPhoto = cms.media.stylePhotos[style.id];
   const photo = cmsPhoto || STYLE_PHOTOS[style.id] || cms.media.fallbackPhoto || FALLBACK;
-  const cmsFamilyName = cms.families[style.family]?.name;
-  const familyName = (
-    cmsFamilyName ?? PIZZA_FAMILIES[style.family]?.name ?? ""
-  ).toUpperCase();
   const springT = {
     type: "spring" as const,
     stiffness: 400,
@@ -670,9 +671,12 @@ function StyleCard({
                   color: "var(--overlay-text-warm)",
                   textShadow: "var(--overlay-shadow-text-sm)",
                   lineHeight: "var(--leading-normal)",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
                 }}
               >
-                {familyName} — {style.origin.toUpperCase()}
+                {shortOrigin(style.origin).toUpperCase()}
               </div>
 
               {/* VPL-C3 (rev): badge "difficoltà · impegno" — differenzia le tile
