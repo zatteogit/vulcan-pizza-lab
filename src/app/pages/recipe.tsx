@@ -360,6 +360,7 @@ function RecipeContent({
   const [customFlourPL, setCustomFlourPL] = useState(
     useTailoredUrlParams ? numParam(searchParams, "pl", plDefault, 0.2, 1.5) : plDefault,
   );
+  const [customSalt, setCustomSalt] = useState(style.dough.salt_pct);
   const [customFermentHours, setCustomFermentHours] = useState(
     useTailoredUrlParams ? numParam(searchParams, "f", fOptimal, 1, 120) : fOptimal,
   );
@@ -679,6 +680,7 @@ function RecipeContent({
       customFermentationTempC: customFermentTemp,
       usePreFerment,
       customFlourPL,
+      customSalt,
       panConfig,
       scoreWeights,
       versionRanges: versionOverrides,
@@ -695,6 +697,7 @@ function RecipeContent({
       customFermentTemp,
       usePreFerment,
       customFlourPL,
+      customSalt,
       panConfig,
       cms.scoreDimensions,
       activeVersion,
@@ -850,6 +853,9 @@ function RecipeContent({
     }
     if (feedbackCorrection.fermentMultiplier !== 1) {
       setCustomFermentHours((f) => Math.max(1, Math.round(f * feedbackCorrection.fermentMultiplier)));
+    }
+    if (feedbackCorrection.saltDelta !== 0) {
+      setCustomSalt((s) => Math.max(1.5, Math.min(3.5, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
     }
     setFeedbackAppliedStyle(style.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1226,6 +1232,11 @@ function RecipeContent({
                   onFermentTempChange={setCustomFermentTemp}
                   usePreFerment={usePreFerment}
                   onPreFermentChange={setUsePreFerment}
+                  customSalt={customSalt}
+                  onSaltChange={(v) => {
+                    if (recipeMode === "canonical") setRecipeMode("adapted");
+                    setCustomSalt(v);
+                  }}
                   panConfig={panConfig}
                   onPanConfigChange={setPanConfig}
                 />

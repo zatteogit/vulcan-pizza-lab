@@ -166,6 +166,8 @@ generateRecipe(
 - **Accessibilità del focus in RecipeSetupPanel**: All'apertura del pannello personalizzazione ricetta, il focus viene spostato via `closeButtonRef` in un frame di animazione (`requestAnimationFrame`) per garantire l'accessibilità da tastiera.
 - **Miglioramento Contrasto Dock Tab su Mobile**: In `RecipeSectionTabs` (bottom mobile tabs) e `BottomTabBar` (app shell mobile nav bar) è stato introdotto un gradiente di sfondo semitrasparente (`fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden`) per migliorare il contrasto visivo e prevenire sovrapposizioni grafiche tra il contenuto in scorrimento e il dock delle tab.
 - **Semantica HTML5 e Accessibilità delle Pagine**: I componenti di route principali (`recipe.tsx`, `profile.tsx`, `explore.tsx`, `learn.tsx`, `home.tsx`) avvolgono ora il loro layout principale all'interno del tag semantico `<main id="main-content">` per garantire la corretta interpretazione e l'accessibilità da parte dei lettori di schermo.
+- **Slider del Sale nel Configuratore**: In `recipe-configurator.tsx` è stato introdotto uno slider per la percentuale di sale (`customSalt`) visibile a tutti gli utenti (in quanto parametro basilare e non gergo nerd alveografico). Consente di regolare il sale tra l'1.5% e il 3.5% con step di 0.1% e mostra l'ottimo consigliato per lo stile.
+- **Integrazione della Leva del Sale nei Flussi Ricetta**: `home.tsx` e `recipe.tsx` espongono e sincronizzano il nuovo stato del sale (`customSalt`) legandolo al configuratore, agli URL parametrici e al pannello delle correzioni suggerite dai feedback.
 
 ## Bug noti e fix
 

@@ -427,6 +427,8 @@ export function HomePage() {
     setCustomFlourW,
     customFlourPL,
     setCustomFlourPL,
+    customSalt,
+    setCustomSalt,
     customFermentHours,
     setCustomFermentHours,
     customFermentTemp,
@@ -703,8 +705,11 @@ export function HomePage() {
     if (feedbackCorrection.fermentMultiplier !== 1) {
       setCustomFermentHours((f) => Math.max(1, Math.round(f * feedbackCorrection.fermentMultiplier)));
     }
+    if (feedbackCorrection.saltDelta !== 0) {
+      setCustomSalt((s) => Math.max(1.5, Math.min(3.5, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
+    }
     setFeedbackAppliedStyle(selectedStyle.id);
-  }, [feedbackCorrection, selectedStyle, setCustomHydration, setCustomFermentHours]);
+  }, [feedbackCorrection, selectedStyle, setCustomHydration, setCustomFermentHours, setCustomSalt]);
 
   /* Scroll-driven title fade */
   const { scrollY } = useScroll();
@@ -1566,6 +1571,11 @@ export function HomePage() {
                             }
                           : undefined
                       }
+                      customSalt={customSalt}
+                      onSaltChange={(value) => {
+                        setCreateRecipeMode("adapted");
+                        setCustomSalt(value);
+                      }}
                       science={recipe.science}
                       panConfig={panConfig}
                       onPanConfigChange={(next) => {

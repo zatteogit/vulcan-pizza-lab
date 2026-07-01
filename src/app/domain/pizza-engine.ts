@@ -2764,6 +2764,9 @@ export interface GenerateRecipeOptions {
   customFermentationTempC?: number;
   usePreFerment?: boolean;
   customFlourPL?: number;
+  /** F3 — sale come leva utente (% sulla farina). Se omesso usa style.dough.salt_pct.
+   *  Usato dal loop di feedback ("troppo salata" → −0.2%) e dallo slider config. */
+  customSalt?: number;
   panConfig?: PanConfig;
   scoreWeights?: ScoreWeightsOverride;
   versionRanges?: VersionRangeOverrides;
@@ -2789,6 +2792,7 @@ export function generateRecipe(
     customFermentationTempC,
     usePreFerment,
     customFlourPL,
+    customSalt,
     panConfig,
     scoreWeights,
     versionRanges,
@@ -2899,6 +2903,13 @@ export function generateRecipe(
   const hasPreFerment =
     usePreFerment ?? style.requires_pre_ferment;
 
+  // F3 — sale effettivo: leva utente (customSalt) con fallback allo stile. Clampato
+  // a un range sensato (1.5–3.5%) per non uscire dal ragionevole.
+  const effectiveSaltPct =
+    customSalt != null
+      ? Math.max(1.5, Math.min(3.5, customSalt))
+      : style.dough.salt_pct;
+
   // Oven temperature
   let ovenTemp = Math.min(
     constraints.oven_max_temp_c,
@@ -2986,7 +2997,7 @@ export function generateRecipe(
   const totalPct =
     1 +
     hydration / 100 +
-    style.dough.salt_pct / 100 +
+    effectiveSaltPct / 100 +
     effectiveOilPct / 100 +
     effectiveSugarPct / 100 +
     yeastPct / 100;
@@ -2994,7 +3005,7 @@ export function generateRecipe(
   const flourG = Math.round(totalDough / totalPct);
   const waterG = Math.round((flourG * hydration) / 100);
   const saltG =
-    Math.round(((flourG * style.dough.salt_pct) / 100) * 10) / 10;
+    Math.round(((flourG * effectiveSaltPct) / 100) * 10) / 10;
   const fatG = Math.round((flourG * effectiveOilPct) / 100); // Grasso totale (olio O burro)
   const oilG = style.dough.fat_type === "butter" ? 0 : fatG; // oilG = 0 se è burro
   const sugarG =
@@ -3203,7 +3214,7 @@ export function generateRecipe(
 
   // Water activity: bread dough is typically 0.96–0.99
   // Salt and sugar reduce aw, higher hydration increases it
-  const saltEffect = style.dough.salt_pct * 0.006;
+  const saltEffect = effectiveSaltPct * 0.006;
   const sugarEffect =
     (style.allows_additives ? style.dough.sugar_pct : 0) *
     0.004;

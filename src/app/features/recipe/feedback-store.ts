@@ -366,6 +366,8 @@ export interface FeedbackCorrection {
   hydrationDelta: number;
   /** Moltiplicatore sulle ore di fermentazione (1 = nessuna). */
   fermentMultiplier: number;
+  /** F3 — punti % da sommare al sale (0 = nessuna). Ora è una leva reale. */
+  saltDelta: number;
   /** Note human-readable (IT), una per correzione applicata o suggerita. */
   notes: string[];
   /** Quanti tentativi con problemi hanno informato la correzione. */
@@ -386,6 +388,7 @@ export function deriveFeedbackCorrections(
 
   let hydrationDelta = 0;
   let fermentMultiplier = 1;
+  let saltDelta = 0;
   const notes: string[] = [];
 
   if (count("too_dry") >= 2) {
@@ -408,16 +411,17 @@ export function deriveFeedbackCorrections(
     fermentMultiplier *= 0.8;
     notes.push("Sovra-lievitata/sgonfiata: fermentazione ~20% più corta.");
   }
-  // Onestà: sale e cottura non sono leve automatiche → suggerimento, non auto-fix.
+  // F3 — il sale ora è una leva reale (customSalt): correzione applicabile.
   if (count("too_salty") >= 2) {
-    notes.push("Troppo salata: riduci il sale a mano (non ancora regolabile qui).");
-  }
-  if (count("bland") >= 2) {
-    notes.push("Insipida: alza leggermente il sale a mano e allunga la maturazione.");
+    saltDelta -= 0.2;
+    notes.push("Troppo salata: −0,2% di sale.");
+  } else if (count("bland") >= 2) {
+    saltDelta += 0.2;
+    notes.push("Insipida: +0,2% di sale (e allunga un po' la maturazione).");
   }
 
   if (notes.length === 0) return null;
-  return { hydrationDelta, fermentMultiplier, notes, sampleSize: relevant.length };
+  return { hydrationDelta, fermentMultiplier, saltDelta, notes, sampleSize: relevant.length };
 }
 
 /**

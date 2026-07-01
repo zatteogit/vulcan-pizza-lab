@@ -73,6 +73,7 @@ interface RecipeBuildParams {
   customFermentTemp: number;
   usePreFerment: boolean;
   customFlourPL: number;
+  customSalt: number;
   panConfig: PanConfig;
   activeVersion: StyleVersion | null;
   activeInterpretationId: string | null;
@@ -150,6 +151,7 @@ function resolveInitialState(
       overrides?.flour_pl ??
       version?.params.flour_pl ??
       centered.flourPL,
+    customSalt: style.dough.salt_pct,
     customFermentHours:
       initial?.fermentHours ??
       overrides?.fermentation_hours ??
@@ -193,6 +195,7 @@ function buildGeneratedRecipe({
   customFermentTemp,
   usePreFerment,
   customFlourPL,
+  customSalt,
   panConfig,
   activeVersion,
   activeInterpretationId,
@@ -242,6 +245,7 @@ function buildGeneratedRecipe({
     customFermentationTempC: customFermentTemp,
     usePreFerment,
     customFlourPL,
+    customSalt,
     panConfig,
     scoreWeights,
     versionRanges: versionOverrides,
@@ -271,6 +275,9 @@ export function useRecipeState({
   );
   const [customFlourPL, setCustomFlourPL] = useState(
     resolvedInitial?.customFlourPL ?? defaultRecipePL(style),
+  );
+  const [customSalt, setCustomSalt] = useState(
+    resolvedInitial?.customSalt ?? style?.dough.salt_pct ?? 2.5,
   );
   const [customFermentHours, setCustomFermentHours] = useState(
     resolvedInitial?.customFermentHours ?? 16,
@@ -461,6 +468,7 @@ export function useRecipeState({
         customFermentTemp,
         usePreFerment,
         customFlourPL,
+        customSalt,
         panConfig,
         activeVersion,
         activeInterpretationId,
@@ -476,6 +484,7 @@ export function useRecipeState({
       customFermentTemp,
       customFlourBlend,
       customFlourPL,
+      customSalt,
       customFlourW,
       customHydration,
       panConfig,
@@ -494,6 +503,8 @@ export function useRecipeState({
     setCustomFlourW,
     customFlourPL,
     setCustomFlourPL,
+    customSalt,
+    setCustomSalt,
     customFermentHours,
     setCustomFermentHours,
     customFermentTemp,
@@ -530,6 +541,8 @@ export function useRecipeState({
     setCustomFlourW: Dispatch<SetStateAction<number>>;
     customFlourPL: number;
     setCustomFlourPL: Dispatch<SetStateAction<number>>;
+    customSalt: number;
+    setCustomSalt: Dispatch<SetStateAction<number>>;
     customFermentHours: number;
     setCustomFermentHours: Dispatch<SetStateAction<number>>;
     customFermentTemp: number;

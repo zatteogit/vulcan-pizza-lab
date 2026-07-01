@@ -265,6 +265,9 @@ interface RecipeConfiguratorProps {
   onPreFermentChange: (v: boolean) => void;
   customFlourPL?: number;
   onFlourPLChange?: (v: number) => void;
+  /** F3 — sale come leva (% sulla farina). */
+  customSalt?: number;
+  onSaltChange?: (v: number) => void;
   science?: unknown;
   panConfig?: PanConfig;
   onPanConfigChange?: (p: PanConfig) => void;
@@ -468,6 +471,8 @@ export function RecipeConfigurator({
   onPreFermentChange,
   customFlourPL,
   onFlourPLChange,
+  customSalt,
+  onSaltChange,
   science,
   panConfig,
   onPanConfigChange,
@@ -763,6 +768,25 @@ export function RecipeConfigurator({
             </div>
           )}
           </>
+          )}
+
+          {/* F3 — Sale come leva (visibile a tutti: non è gergo alveografico) */}
+          {customSalt !== undefined && onSaltChange && (
+            <div>
+              <GradientSlider
+                label={<Label>Sale</Label>}
+                value={Math.round(customSalt * 10) / 10}
+                onChange={onSaltChange}
+                min={1.5}
+                max={3.5}
+                step={0.1}
+                unit="%"
+                rangeMin={Math.max(1.5, style.dough.salt_pct - 0.3)}
+                rangeMax={Math.min(3.5, style.dough.salt_pct + 0.3)}
+                gradient={SLIDER_GRADIENTS.flourW}
+                optimalValue={style.dough.salt_pct}
+              />
+            </div>
           )}
         </div>
 
