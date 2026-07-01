@@ -143,7 +143,8 @@ export function LearnPage() {
   ];
 
   return (
-    <div
+    <main
+      id="main-content"
       className="min-h-screen relative overflow-hidden"
       style={{
         background: "var(--container-page)",
@@ -565,6 +566,6 @@ export function LearnPage() {
           </div>
         </div>
       </motion.div>
-    </div>
+    </main>
   );
 }

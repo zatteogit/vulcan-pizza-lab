@@ -146,6 +146,11 @@ const premiumGlassStyle: React.CSSProperties = {
   boxShadow: "var(--premium-glass-shadow)",
 };
 
+const mobileDockGlassStyle: React.CSSProperties = {
+  ...premiumGlassStyle,
+  background: "color-mix(in srgb, var(--container-page) 94%, transparent)",
+};
+
 function getActiveTab(pathname: string): string | null {
   /* Exact match for "/" to avoid matching everything */
   if (pathname === "/") return "create";
@@ -357,7 +362,7 @@ function BottomTabBar({
       <nav
         className="relative flex-1 overflow-hidden"
         style={{
-          ...premiumGlassStyle,
+          ...mobileDockGlassStyle,
           borderRadius: "var(--radius-2xl)",
         }}
         aria-label={cms.pages.navMainLabel}
@@ -388,7 +393,7 @@ function BottomTabBar({
         diameter={56}
         iconSize={24}
         onOpen={onSearchOpen}
-        surfaceStyle={premiumGlassStyle}
+        surfaceStyle={mobileDockGlassStyle}
       />
     </motion.div>
   );
@@ -720,8 +725,8 @@ export function AppShell() {
               <div
                 className="fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden"
                 style={{
-                  height: "96px",
-                  background: "linear-gradient(to top, var(--container-page) 0%, color-mix(in srgb, var(--container-page) 76%, transparent) 40%, transparent 100%)",
+                  height: "112px",
+                  background: "linear-gradient(to top, var(--container-page) 0%, var(--container-page) 46%, color-mix(in srgb, var(--container-page) 88%, transparent) 72%, transparent 100%)",
                 }}
               />
               <BottomTabBar activeTab={activeTab} onSearchOpen={openSearch} navState={navState} />

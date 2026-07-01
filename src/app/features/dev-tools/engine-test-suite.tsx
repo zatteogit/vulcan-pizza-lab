@@ -1332,7 +1332,7 @@ function runOptimizer(): TestResult[] {
     const { ms } = timed(() => null);
     const s = STYLES_DB["teglia_romana"];
     const w = { authenticity: 0.3, feasibility: 0.3, digestibility: 0.2, sustainability: 0.2, experimentation: 0.0 };
-    const r = generateRecipe(s, makeConstraints(), undefined, undefined, undefined, undefined, undefined, undefined, undefined, w);
+    const r = generateRecipe(s, makeConstraints(), { scoreWeights: w });
     const expected = Math.round(
       (r.scores.authenticity * 0.3 + r.scores.feasibility * 0.3 + r.scores.digestibility * 0.2 + r.scores.sustainability * 0.2) / 1.0,
     );

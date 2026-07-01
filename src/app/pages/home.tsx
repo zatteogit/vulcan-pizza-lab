@@ -35,6 +35,7 @@ UserConstraints,
 } from "../domain/pizza-engine";
 import { RecipeConfigurator } from "../features/recipe/recipe-configurator";
 import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
+import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
 import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
 import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
@@ -683,6 +684,27 @@ export function HomePage() {
 
   /* VPL-068: time slot is optional — styles always visible */
   const canGenerateRecipe = selectedStyle !== null;
+
+  // F2 — loop di apprendimento: se hai riportato problemi RICORRENTI su questo stile,
+  // Vulcan propone una correzione (opt-in, trasparente). Applicazione manuale, non
+  // silenziosa: modificare la ricetta in automatico su feedback rumoroso è pericoloso.
+  const [feedbackAppliedStyle, setFeedbackAppliedStyle] = useState<string | null>(null);
+  const feedbackCorrection = useMemo(
+    () => (selectedStyle ? deriveFeedbackCorrections(selectedStyle.id, loadFeedback()) : null),
+    [selectedStyle],
+  );
+  const showFeedbackPanel =
+    Boolean(feedbackCorrection) && selectedStyle != null && feedbackAppliedStyle !== selectedStyle.id;
+  const applyFeedbackCorrection = useCallback(() => {
+    if (!feedbackCorrection || !selectedStyle) return;
+    if (feedbackCorrection.hydrationDelta !== 0) {
+      setCustomHydration((h) => Math.max(40, Math.min(105, h + feedbackCorrection.hydrationDelta)));
+    }
+    if (feedbackCorrection.fermentMultiplier !== 1) {
+      setCustomFermentHours((f) => Math.max(1, Math.round(f * feedbackCorrection.fermentMultiplier)));
+    }
+    setFeedbackAppliedStyle(selectedStyle.id);
+  }, [feedbackCorrection, selectedStyle, setCustomHydration, setCustomFermentHours]);
 
   /* Scroll-driven title fade */
   const { scrollY } = useScroll();
@@ -1393,6 +1415,55 @@ export function HomePage() {
               }
               recipeControls={
                 <div className="flex flex-col gap-5 sm:gap-6">
+                  {/* F2 — "Vulcan ha imparato dai tuoi tentativi" (opt-in, trasparente) */}
+                  {showFeedbackPanel && feedbackCorrection && (
+                    <div
+                      className="rounded-2xl px-4 py-3.5"
+                      style={{
+                        background: "color-mix(in srgb, var(--cta) 8%, var(--container-bg-low))",
+                        border: "1px solid color-mix(in srgb, var(--cta) 30%, transparent)",
+                      }}
+                    >
+                      <div className="flex items-center gap-2 mb-1.5" style={{ color: "var(--cta)" }}>
+                        <Sparkles size={15} />
+                        <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
+                          Ho imparato dai tuoi {feedbackCorrection.sampleSize} tentativi
+                        </span>
+                      </div>
+                      <ul className="flex flex-col gap-1 mb-2.5">
+                        {feedbackCorrection.notes.map((n, i) => (
+                          <li
+                            key={i}
+                            style={{
+                              fontSize: "var(--font-size-sm)",
+                              color: "var(--text-muted)",
+                              lineHeight: "var(--leading-normal)",
+                            }}
+                          >
+                            • {n}
+                          </li>
+                        ))}
+                      </ul>
+                      {(feedbackCorrection.hydrationDelta !== 0 ||
+                        feedbackCorrection.fermentMultiplier !== 1) && (
+                        <button
+                          type="button"
+                          onClick={applyFeedbackCorrection}
+                          className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 active:scale-95 transition-transform"
+                          style={{
+                            background: "var(--cta)",
+                            color: "var(--cta-foreground)",
+                            fontSize: "var(--font-size-sm)",
+                            fontWeight: "var(--weight-bold)" as any,
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Sparkles size={14} /> Applica le correzioni
+                        </button>
+                      )}
+                    </div>
+                  )}
                   <div
                     className="rounded-2xl px-4 py-3"
                     style={{
@@ -1429,7 +1500,11 @@ export function HomePage() {
                           : "Hai messo mano ai parametri. Ri-ottimizza per tornare al massimo per te."}
                     </span>
                   </div>
-                  <RecipeStatStrip recipe={recipe} nerdMode={effectiveNerdMode} />
+                  <RecipeStatStrip
+                    recipe={recipe}
+                    nerdMode={effectiveNerdMode}
+                    isPersonalized={createRecipeMode !== "canonical"}
+                  />
 
                   <RecipeSetupPanel
                     style={selectedStyle}

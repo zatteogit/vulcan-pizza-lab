@@ -190,7 +190,10 @@ export function RecipeMatchCard({
     off: HeartOff,
   } as const;
   const MatchIcon = MATCH_ICONS[tone.icon];
-  const showAdaptAction = mode === "canonical" && Boolean(onAdapt);
+  // Un solo "movimento in avanti" verso su-misura: quando l'ottimizzatore è
+  // disponibile, è LUI l'azione (subentra al vecchio "adatta alla cucina", che era
+  // il midpoint ricalibrato — dominato dall'ottimo). Evita il doppio pulsante.
+  const showAdaptAction = mode === "canonical" && Boolean(onAdapt) && !onOptimize;
   const showResetAction = mode !== "canonical" && Boolean(onReset);
   const showSaveAction = mode !== "canonical" && Boolean(onSave);
   const actionLabel = tone.low ? "Rendila possibile" : "Adatta alla mia cucina";
@@ -355,7 +358,7 @@ export function RecipeMatchCard({
                   headroomLine.tone === "warn"
                     ? "var(--text-warning)"
                     : headroomLine.tone === "accent" || headroomLine.tone === "ok"
-                      ? "var(--text-accent)"
+                      ? "var(--cta)"
                       : "var(--text-muted)",
                 fontSize: "var(--font-size-sm)",
                 lineHeight: "var(--leading-normal)",
@@ -452,7 +455,7 @@ export function RecipeMatchCard({
               }}
             >
               <Sparkles size={15} />
-              Ottimizza per me{headroom >= 2 ? ` +${headroom}` : ""}
+              {tone.low ? "Rendila possibile" : "Ottimizza per me"}{headroom >= 2 ? ` +${headroom}` : ""}
             </motion.button>
           )}
           {showSaveAction && (

@@ -1,5 +1,5 @@
 # Flusso ricetta e UI
-> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 15
+> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 15
 
 ## Sommario
 
@@ -164,6 +164,8 @@ generateRecipe(
 - **Prevenzione Suffixi Doppi ed Errori di Unità**: In `RecipeOutput` (funzioni `localizeStep`, `formatIngredientsText`), regex di normalizzazione (`normalizeTemperatureUnitSuffixes` e `normalizeMeasureUnitSuffixes`) ripuliscono il testo da suffixi duplicati (come `°C °C` o `g g`) generati da interpolazioni del CMS e del formatter.
 - **Indicatori Visivi dei Parametri Adattati (Chevron di scostamento)**: In `RecipeStatStrip`, le celle principali (idratazione, lievitazione) e la cella nerd (forza W farina) visualizzano una piccola freccia `ChevronUp` o `ChevronDown` colorata in `--cta` se il valore devia dal midpoint dello stile, indicando con un tooltip il valore canonico di confronto dello stile.
 - **Accessibilità del focus in RecipeSetupPanel**: All'apertura del pannello personalizzazione ricetta, il focus viene spostato via `closeButtonRef` in un frame di animazione (`requestAnimationFrame`) per garantire l'accessibilità da tastiera.
+- **Miglioramento Contrasto Dock Tab su Mobile**: In `RecipeSectionTabs` (bottom mobile tabs) e `BottomTabBar` (app shell mobile nav bar) è stato introdotto un gradiente di sfondo semitrasparente (`fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden`) per migliorare il contrasto visivo e prevenire sovrapposizioni grafiche tra il contenuto in scorrimento e il dock delle tab.
+- **Semantica HTML5 e Accessibilità delle Pagine**: I componenti di route principali (`recipe.tsx`, `profile.tsx`, `explore.tsx`, `learn.tsx`, `home.tsx`) avvolgono ora il loro layout principale all'interno del tag semantico `<main id="main-content">` per garantire la corretta interpretazione e l'accessibilità da parte dei lettori di schermo.
 
 ## Bug noti e fix
 

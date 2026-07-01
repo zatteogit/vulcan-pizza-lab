@@ -1,18 +1,18 @@
 # Profilo e vincoli utente
-> Aggiornamento: 2026-06-23 | Stato: ✅ | File documentati: 4
+> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 4
 
 ## Sommario
 
-Persistenza preferenze utente in **localStorage** e bridge verso `UserConstraints` del motore. `profile.tsx` (2280 righe) è la pagina **Profilo** con FTU (First Time Use) ridotto a 3 domande + congedo, forno, skill, dispensa, attrezzatura avanzata, dieta, geolocalizzazione, tema, unità metric/imperial e gate PizzaNerd. `use-profile-defaults.ts` (VPL-067) legge le stesse chiavi per home e wizard. `user-needs.tsx` (1366 righe) è il pannello **Step 1** della home: slot tempo, forno, porzioni, T cucina (meteo), dispensa sessione e sezione "Tu".
+Persistenza preferenze utente in **localStorage** e bridge verso `UserConstraints` del motore. `profile.tsx` (2400 righe) è la pagina **Profilo** con FTU (First Time Use) ridotto a 3 domande + congedo, forno, skill, dispensa, attrezzatura avanzata, dieta, geolocalizzazione, tema, unità metric/imperial e gate PizzaNerd. `use-profile-defaults.ts` (VPL-067) legge le stesse chiavi per home e wizard. `user-needs.tsx` (1366 righe) è il pannello **Step 1** della home: slot tempo, forno, porzioni, T cucina (meteo), dispensa sessione e sezione "Tu".
 
 ## File chiave
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/pages/profile.tsx` | 2280 | UI profilo, FTU 3 domande + congedo, preferenze unità, PizzaNerd, salvataggio preferenze, reset confermato |
+| `src/app/pages/profile.tsx` | 2400 | UI profilo, FTU 3 domande + congedo, preferenze unità, PizzaNerd, salvataggio preferenze, reset confermato |
 | `src/app/hooks/use-profile-defaults.ts` | 145 | `loadProfileDefaults()` / `useProfileDefaults()` → `UserConstraints` + `pizzaNerdEnabled` |
 | `src/app/features/recipe/user-needs.tsx` | 1366 | Wizard home: constraints live, weather, time slots con sublabel dinamico e nuova sezione "Tu" |
-| `src/app/data/saved-recipes.ts` | 155 | Ricettario personale, preferiti stile, dedup parametri, date relative |
+| `src/app/data/saved-recipes.ts` | 159 | Ricettario personale, preferiti stile, dedup parametri, date relative |
 
 **Integrazioni:** `home.tsx` (`useProfileDefaults` + `UserNeeds`), `recipe.tsx` (carica direttamente oven/skill/pantry/dietary da localStorage), `equipment-data.ts` (picker attrezzatura), `pizza-engine` (`UserConstraints`, `OVEN_PRESETS`, `SKILL_LEVELS`, `generateTimeSlots`).
 
@@ -111,7 +111,8 @@ Nota: filtri dietetici in wizard sono stati spostati verso `recommended-styles` 
 - **Sezione "Tu" e Livello Esperienza**: Il selettore del livello di esperienza (skill) è stato spostato in una nuova sezione comprimibile denominata "Tu" sotto la dispensa. Mostra un riepilogo inline con il formato numerico e testuale del livello (es. `LV2 · Intermedio`) per una migliore contestualizzazione.
 - **Multi-select e validazione attrezzatura (Sprint 12)**: Forni (`ovens`) e impastatrici (`mixers`) sono salvati come array nel profilo, con il vincolo che almeno uno di ciascun gruppo deve rimanere selezionato (l'ultimo non è deselezionabile).
 - **Migrazione legacy**: Al primo caricamento, le vecchie chiavi stringa singola (`vulcan_oven` e `vulcan_mixer`) vengono migrate rispettivamente ad array di 1 elemento (`vulcan_ovens` e `vulcan_mixers`) e rimosse dallo storage.
-- **Nota di drift consumatori**: I consumatori esterni leggono ancora la posizione `[0]` dell'array, indicata da un commento `// TODO consumer leggono ancora ovens[0] — propagare in seguito` in cima a `profile.tsx`.
+- **Ordinamento Forni nel Profilo**: Quando l'utente seleziona un nuovo forno nella lista dei forni posseduti in `ProfilePage`, quest'ultimo viene posizionato come primo elemento dell'array `ovens` (`[preset.id, ...prev.filter(...)]`) e le relative temperature vengono allineate. Questo garantisce che i componenti consumatori (che leggono l'array per intero o tramite `ovens[0]`) ricevano correttamente il forno attivo.
+- **Bypass FTU per Utenti Ricorrenti**: Se il profilo utente non è completo in `localStorage` ma in precedenza sono state salvate ricette o preferiti, la schermata di onboarding FTU viene automaticamente bypassata per non bloccare l'accesso al servizio.
 - **Unità di misura**: il profilo salva `vulcan_unit_system` tramite `savePreferredUnitSystem`; i componenti devono passare da `createFormatter`, non concatenare unità hard-coded.
 - **PizzaNerd**: il profilo salva `vulcan_nerd_on` e rimuove il legacy `vulcan_view_mode`; Home e Recipe usano il gate per mostrare i toggle locali.
 - **Chiavi condivise:** qualsiasi modifica a nomi chiavi richiede aggiornamento parallelo in `profile.tsx`, `use-profile-defaults.ts`, `user-needs.tsx`, `recipe.tsx`.
@@ -139,7 +140,7 @@ A differenza di un approccio ingenuo che memorizzerebbe l'intero output della ri
 
 ### 2. Logica di Identità e Rilevamento Duplicati
 Per evitare di riempire la memoria con copie identiche, l'identità di una ricetta salvata viene determinata mediante la funzione `recipeKey`:
-- Viene creata una stringa concatenata dei parametri salienti: `styleId|hydration|flourW|flourPL|fermentHours|fermentTemp|usePreFerment|doughBalls`.
+- Viene creata una stringa concatenata dei parametri salienti: `styleId|hydration|flourW|flourPL|fermentHours|fermentTemp|usePreFerment|doughBalls|ovenType|ovenTemp`.
 - All'atto del salvataggio (`saveRecipe`), eventuali ricette preesistenti con lo stesso hash vengono sovrascritte, spostando la ricetta in cima alla lista (ordinamento cronologico decrescente).
 - **Limite di capacità**: Lo store limita l'archiviazione a un massimo di **30 ricette** (`MAX_SAVED`) per evitare degradazione delle prestazioni del browser.
 

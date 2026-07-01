@@ -132,7 +132,7 @@ export const FR_LOCALE: CmsContent = {
   },
   tips: {
     kitchenTemp:
-      "La tempÃ©rature de la cuisine influence la vitesse de la levÃ©e. Le moteur adapte automatiquement les temps et les quantitÃ©s.",
+      "La température de la cuisine influence la vitesse de la levée. Le moteur adapte automatiquement les temps et les quantités.",
     timeSlot:
       "La temp\u00E9rature de la cuisine influence les temps de fermentation. Plus vous avez de temps, plus d\u2019options pour des p\u00E2tes l\u00E9g\u00E8res et digestibles.",
     skill:
@@ -917,11 +917,11 @@ export const FR_LOCALE: CmsContent = {
     pageTitle: "Votre Profil",
     pageSubtitle: "Vos préférences, toujours à portée de main.",
     favoritesTitle: "Vos styles favoris",
-    favoritesSubtitle: "Les styles que vous avez aimÃ©s",
+    favoritesSubtitle: "Les styles que vous avez aimés",
     favoriteRemove: "Retirer des favoris",
     favoriteRemoveAria: "Retirer {name} des favoris",
-    savedRecipesTitle: "Vos recettes enregistrÃ©es",
-    savedRecipesSubtitle: "Les versions sur mesure que vous avez gardÃ©es",
+    savedRecipesTitle: "Vos recettes enregistrées",
+    savedRecipesSubtitle: "Les versions sur mesure que vous avez gardées",
     savedRecipeRemove: "Retirer du carnet",
     savedRecipeRemoveAria: "Retirer {name} du carnet",
     ovenTitle: "Votre four",

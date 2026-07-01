@@ -1781,22 +1781,23 @@ export function RecipeOutput({
                   }}
                 >
                   {fmt.clockTime(startTime)}
-                  <span className="text-xs font-semibold text-muted ml-1 lowercase">
-                    {daySuffix(new Date(), startTime, cms.cooking)}
-                  </span>
                 </span>
                 <span
-                  aria-hidden="true"
                   className="type-data-sm"
                   style={{
                     display: "block",
                     fontWeight: "var(--weight-medium)" as any,
-                    lineHeight: "var(--leading-none)",
+                    color: "var(--text-muted)",
+                    lineHeight: "var(--leading-tight)",
                     marginTop: "var(--space-0-5)",
-                    minHeight: "1em",
-                    visibility: "hidden",
+                    minHeight: "2.2em",
+                    maxWidth: "100%",
+                    whiteSpace: "normal",
+                    visibility: dayOffset(new Date(), startTime) > 0 ? "visible" : "hidden",
                   }}
-                />
+                >
+                  {daySuffix(new Date(), startTime, cms.cooking).trim() || " "}
+                </span>
               </button>
             )}
             <button
@@ -1886,9 +1887,6 @@ export function RecipeOutput({
                 >
                   {hasFlexiblePhases ? "~" : ""}
                   {fmt.clockTime(endTime)}
-                  <span className="text-xs font-semibold text-muted ml-1 lowercase">
-                    {daySuffix(new Date(), endTime, cms.cooking)}
-                  </span>
                 </span>
                 <span
                   className="type-data-sm"
@@ -1896,13 +1894,15 @@ export function RecipeOutput({
                     display: "block",
                     fontWeight: "var(--weight-medium)" as any,
                     color: "var(--text-muted)",
-                    lineHeight: "var(--leading-none)",
+                    lineHeight: "var(--leading-tight)",
                     marginTop: "var(--space-0-5)",
-                    minHeight: "1em",
-                    visibility: dayOffset(startTime, endTime) > 0 ? "visible" : "hidden",
+                    minHeight: "2.2em",
+                    maxWidth: "100%",
+                    whiteSpace: "normal",
+                    visibility: dayOffset(new Date(), endTime) > 0 ? "visible" : "hidden",
                   }}
                 >
-                  {daySuffix(startTime, endTime, cms.cooking).trim() || " "}
+                  {daySuffix(new Date(), endTime, cms.cooking).trim() || " "}
                 </span>
               </button>
             )}

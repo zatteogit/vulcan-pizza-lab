@@ -135,7 +135,7 @@ export const ES_LOCALE: CmsContent = {
   },
   tips: {
     kitchenTemp:
-      "La temperatura de la cocina influye en la velocidad de fermentaciÃ³n. El motor adapta automÃ¡ticamente tiempos y cantidades.",
+      "La temperatura de la cocina influye en la velocidad de fermentación. El motor adapta automáticamente tiempos y cantidades.",
     timeSlot:
       "La temperatura de la cocina afecta los tiempos de fermentaci\u00F3n. Cuanto m\u00E1s tiempo tengas, m\u00E1s opciones para masas ligeras y digestivas.",
     skill:
@@ -246,7 +246,7 @@ export const ES_LOCALE: CmsContent = {
       icon: "flame",
     },
     electric_high: {
-      name: "El\u00E9ctrico Alta T",
+      name: "El\u00E9ctrico alta temperatura",
       maxTemp: 450,
       icon: "thermometer",
     },
@@ -918,7 +918,7 @@ export const ES_LOCALE: CmsContent = {
     pageTitle: "Tu Perfil",
     pageSubtitle: "Tus preferencias, siempre a mano.",
     favoritesTitle: "Tus estilos favoritos",
-    favoritesSubtitle: "Los estilos que marcaste con el corazÃ³n",
+    favoritesSubtitle: "Los estilos que marcaste con el corazón",
     favoriteRemove: "Quitar de favoritos",
     favoriteRemoveAria: "Quitar {name} de favoritos",
     savedRecipesTitle: "Tus recetas guardadas",

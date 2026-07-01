@@ -353,6 +353,73 @@ export function analyzeIssueFrequency(feedback: RecipeFeedback[]): IssueFrequenc
     .sort((a, b) => b.count - a.count);
 }
 
+// ═══ FEEDBACK → GENERAZIONE (F2 — chiude il loop di apprendimento) ═══
+// Prima il feedback era SOLO raccolto: i "correction" degli issue promettevano
+// "riduco il sale / aumento l'idratazione" ma nulla rientrava nella generazione.
+// Qui deriviamo correzioni CONCRETE dai problemi RICORRENTI (≥2 volte) sullo
+// stesso stile, ma SOLO sulle leve che abbiamo davvero (idratazione, durata
+// fermentazione). Per il sale (non ancora una leva) restiamo onesti: nota, non
+// finto auto-fix. L'applicazione è opt-in e trasparente (vedi UI), non silenziosa.
+
+export interface FeedbackCorrection {
+  /** Punti % da sommare all'idratazione (0 = nessuna correzione). */
+  hydrationDelta: number;
+  /** Moltiplicatore sulle ore di fermentazione (1 = nessuna). */
+  fermentMultiplier: number;
+  /** Note human-readable (IT), una per correzione applicata o suggerita. */
+  notes: string[];
+  /** Quanti tentativi con problemi hanno informato la correzione. */
+  sampleSize: number;
+}
+
+/** Deriva correzioni dai problemi ricorrenti (≥2) per uno stile. null se non c'è
+ *  abbastanza segnale o nessuna correzione mappabile. */
+export function deriveFeedbackCorrections(
+  styleId: string,
+  feedback: RecipeFeedback[],
+): FeedbackCorrection | null {
+  const relevant = feedback.filter(
+    (f) => f.attempted && f.recipe.styleId === styleId && f.issues.length > 0,
+  );
+  if (relevant.length < 2) return null; // serve un minimo di segnale
+  const count = (id: RecipeIssueId) => relevant.filter((f) => f.issues.includes(id)).length;
+
+  let hydrationDelta = 0;
+  let fermentMultiplier = 1;
+  const notes: string[] = [];
+
+  if (count("too_dry") >= 2) {
+    hydrationDelta += 2;
+    notes.push("Le ultime volte è venuta troppo secca: +2% idratazione.");
+  }
+  if (count("too_wet") >= 2 || count("too_sticky") >= 2) {
+    hydrationDelta -= 2;
+    notes.push("Impasto troppo umido/appiccicoso: −2% idratazione.");
+  }
+  if (count("too_dense") >= 2 && hydrationDelta === 0) {
+    hydrationDelta += 2;
+    notes.push("Troppo densa: +2% idratazione per una mollica più aperta.");
+  }
+  if (count("underproofed") >= 2 || count("no_rise") >= 2) {
+    fermentMultiplier *= 1.2;
+    notes.push("Poco lievitata: fermentazione ~20% più lunga.");
+  }
+  if (count("overproofed") >= 2 || count("collapsed") >= 2) {
+    fermentMultiplier *= 0.8;
+    notes.push("Sovra-lievitata/sgonfiata: fermentazione ~20% più corta.");
+  }
+  // Onestà: sale e cottura non sono leve automatiche → suggerimento, non auto-fix.
+  if (count("too_salty") >= 2) {
+    notes.push("Troppo salata: riduci il sale a mano (non ancora regolabile qui).");
+  }
+  if (count("bland") >= 2) {
+    notes.push("Insipida: alza leggermente il sale a mano e allunga la maturazione.");
+  }
+
+  if (notes.length === 0) return null;
+  return { hydrationDelta, fermentMultiplier, notes, sampleSize: relevant.length };
+}
+
 /**
  * Success rate per stile: quali stili hanno più fallimenti.
  */

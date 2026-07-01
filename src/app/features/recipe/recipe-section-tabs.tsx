@@ -89,34 +89,44 @@ export function RecipeSectionTabs({
 
   if (navbar && onSearchOpen) {
     return (
-      <motion.div
-        className="fixed bottom-6 left-0 right-0 z-50 px-2 pointer-events-none md:hidden"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={liquidDockSpring}
-      >
+      <>
         <div
-          className="mx-auto grid w-full max-w-[440px] items-center gap-1.5"
-          style={{ gridTemplateColumns: "minmax(0, 1fr) 52px" }}
+          className="fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden"
+          style={{
+            height: "112px",
+            background:
+              "linear-gradient(to top, var(--container-page) 0%, var(--container-page) 46%, color-mix(in srgb, var(--container-page) 88%, transparent) 72%, transparent 100%)",
+          }}
+        />
+        <motion.div
+          className="fixed bottom-6 left-0 right-0 z-50 px-2 pointer-events-none md:hidden"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={liquidDockSpring}
         >
-          <div className="pointer-events-auto min-w-0">
-            <TabsCapsule
-              tabs={tabs}
-              activeTab={activeTab}
-              navbar
-              onTabChange={handleTabChange}
-              ariaLabel={cms.cooking.sectionsAria}
+          <div
+            className="mx-auto grid w-full max-w-[440px] items-center gap-1.5"
+            style={{ gridTemplateColumns: "minmax(0, 1fr) 52px" }}
+          >
+            <div className="pointer-events-auto min-w-0">
+              <TabsCapsule
+                tabs={tabs}
+                activeTab={activeTab}
+                navbar
+                onTabChange={handleTabChange}
+                ariaLabel={cms.cooking.sectionsAria}
+              />
+            </div>
+
+            <SearchButton
+              diameter={52}
+              onOpen={openSearch}
+              surfaceStyle={roundDockButtonStyle}
+              className="pointer-events-auto"
             />
           </div>
-
-          <SearchButton
-            diameter={52}
-            onOpen={openSearch}
-            surfaceStyle={roundDockButtonStyle}
-            className="pointer-events-auto"
-          />
-        </div>
-      </motion.div>
+        </motion.div>
+      </>
     );
   }
 

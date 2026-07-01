@@ -58,6 +58,7 @@ RecipeConfigurator,
 applyVersionParams,
 } from "../features/recipe/recipe-configurator";
 import { RecipeLearningPanel } from "../features/recipe/recipe-learning-panel";
+import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
 import { RecipeMatchCard,matchTone } from "../features/recipe/recipe-match-card";
 import {
 type RecipePrimaryTab,
@@ -671,22 +672,20 @@ function RecipeContent({
             activeInterpretation.parameter_overrides.fermentation_hours,
       }
       : undefined;
-    return generateRecipe(
-      styleWithTopping,
-      recipeConstraints,
+    return generateRecipe(styleWithTopping, recipeConstraints, {
       customHydration,
       customFlourW,
-      customFermentHours,
-      customFermentTemp,
+      customFermentationHours: customFermentHours,
+      customFermentationTempC: customFermentTemp,
       usePreFerment,
       customFlourPL,
       panConfig,
       scoreWeights,
-      versionOverrides,
-      activeVersion?.impasto_ref,
+      versionRanges: versionOverrides,
+      activeImpastoRef: activeVersion?.impasto_ref,
       interpretationCenter,
       customFlourBlend,
-    );
+    });
     },
     [
       style,
@@ -706,10 +705,22 @@ function RecipeContent({
   );
 
   /* ── Generate recipe ── */
-  const effectiveConstraints = useMemo<UserConstraints>(
-    () => ({ ...constraints, dough_balls: doughBalls }),
-    [constraints, doughBalls],
-  );
+  // Canonico ONESTO (unificato con Crea, round 11→12): anche su Scopri il canonico
+  // è valutato e mostrato sul TUO forno, non su quello ideale. Prima il display
+  // usava il forno ideale (485°) mentre il match il tuo (250°) → incoerenza. Ora
+  // un'unica fonte: in canonico forziamo savedOven. L'ideale resta come annotazione
+  // ("· ideale 485°C") nei parametri.
+  const effectiveConstraints = useMemo<UserConstraints>(() => {
+    const base = { ...constraints, dough_balls: doughBalls };
+    if (recipeMode === "canonical") {
+      return {
+        ...base,
+        oven_type: savedOven?.ovenType ?? "home",
+        oven_max_temp_c: savedOven?.maxTemp ?? 250,
+      };
+    }
+    return base;
+  }, [constraints, doughBalls, recipeMode, savedOven?.ovenType, savedOven?.maxTemp]);
 
   const recipe: GeneratedRecipe | null = useMemo(
     () => buildRecipe(effectiveConstraints),
@@ -775,15 +786,36 @@ function RecipeContent({
 
   const handleOptimize = useCallback(() => {
     const o = optimizeRecipe(style, matchConstraints, undefined, undefined, optScoreWeights);
+    // "Ottimizza per me" = il movimento completo verso su-misura: porta il forno
+    // alla TUA cucina (come faceva il vecchio "adatta") E sceglie i parametri
+    // migliori. Così il forno mostrato nei parametri = il tuo, non l'ideale.
+    const personalOvenType = savedOven?.ovenType ?? "home";
+    const personalOvenTemp = savedOven?.maxTemp ?? 250;
     setRecipeMode("adapted");
+    setConstraints((current) => ({
+      ...current,
+      oven_type: personalOvenType,
+      oven_max_temp_c: personalOvenTemp,
+    }));
     setCustomHydration(o.params.hydration);
     setCustomFlourW(o.params.flour_w);
     setCustomFermentHours(o.params.fermentation_hours);
     setCustomFermentTemp(o.params.fermentation_temp_c);
     setUsePreFerment(o.params.use_pre_ferment);
     setLastOptimization({ params: o.params, rationale: o.rationale });
+    replaceRecipeSearchParams((next) => {
+      next.set("mode", "adapted");
+      next.set("h", String(o.params.hydration));
+      next.set("w", String(o.params.flour_w));
+      next.set("f", String(o.params.fermentation_hours));
+      next.set("t", String(o.params.fermentation_temp_c));
+      if (o.params.use_pre_ferment) next.set("pf", "1");
+      else next.delete("pf");
+      next.set("oven", personalOvenType);
+      next.set("temp", String(personalOvenTemp));
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [style, matchConstraints, cms.scoreDimensions]);
+  }, [style, matchConstraints, cms.scoreDimensions, savedOven?.ovenType, savedOven?.maxTemp]);
 
   const isOptimized =
     recipeMode !== "canonical" &&
@@ -793,6 +825,35 @@ function RecipeContent({
     customFermentHours === lastOptimization.params.fermentation_hours &&
     customFermentTemp === lastOptimization.params.fermentation_temp_c &&
     usePreFerment === lastOptimization.params.use_pre_ferment;
+
+  // F2 (parità con Crea): "Vulcan ha imparato dai tuoi tentativi" anche su Scopri.
+  const [feedbackAppliedStyle, setFeedbackAppliedStyle] = useState<string | null>(null);
+  const feedbackCorrection = useMemo(
+    () => deriveFeedbackCorrections(style.id, loadFeedback()),
+    [style.id],
+  );
+  const showFeedbackPanel =
+    Boolean(feedbackCorrection) && feedbackAppliedStyle !== style.id;
+  const applyFeedbackCorrection = useCallback(() => {
+    if (!feedbackCorrection) return;
+    // Applicare una correzione = personalizzare: esci dal canonico e tieni il TUO
+    // forno (come handleOptimize), così l'occhiello passa da "canonica" a su-misura
+    // e il forno non salta all'ideale.
+    setRecipeMode("adapted");
+    setConstraints((c) => ({
+      ...c,
+      oven_type: savedOven?.ovenType ?? "home",
+      oven_max_temp_c: savedOven?.maxTemp ?? 250,
+    }));
+    if (feedbackCorrection.hydrationDelta !== 0) {
+      setCustomHydration((h) => Math.max(40, Math.min(105, h + feedbackCorrection.hydrationDelta)));
+    }
+    if (feedbackCorrection.fermentMultiplier !== 1) {
+      setCustomFermentHours((f) => Math.max(1, Math.round(f * feedbackCorrection.fermentMultiplier)));
+    }
+    setFeedbackAppliedStyle(style.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [feedbackCorrection, style.id, savedOven?.ovenType, savedOven?.maxTemp]);
 
   /* R31 — salvataggio della versione corrente nel ricettario personale.
      Salviamo i parametri (non il risultato): al riapri la ricetta si rigenera. */
@@ -805,6 +866,8 @@ function RecipeContent({
       fermentTemp: customFermentTemp,
       usePreFerment,
       doughBalls,
+      ovenType: effectiveConstraints.oven_type,
+      ovenTemp: effectiveConstraints.oven_max_temp_c,
       panConfig,
       selectedToppingConcept,
     }),
@@ -816,6 +879,8 @@ function RecipeContent({
       customFermentTemp,
       usePreFerment,
       doughBalls,
+      effectiveConstraints.oven_type,
+      effectiveConstraints.oven_max_temp_c,
       panConfig,
       selectedToppingConcept,
     ],
@@ -993,7 +1058,7 @@ function RecipeContent({
   if (!recipe) return null;
 
   return (
-    <>
+    <main id="main-content">
       <RecipeView
         recipe={recipe}
         style={style}
@@ -1068,9 +1133,59 @@ function RecipeContent({
         }
         recipeControls={
           <div className="flex flex-col gap-5 sm:gap-6">
+            {/* F2 — "Vulcan ha imparato dai tuoi tentativi" (opt-in, trasparente) */}
+            {showFeedbackPanel && feedbackCorrection && (
+              <div
+                className="rounded-2xl px-4 py-3.5"
+                style={{
+                  background: "color-mix(in srgb, var(--cta) 8%, var(--container-bg-low))",
+                  border: "1px solid color-mix(in srgb, var(--cta) 30%, transparent)",
+                }}
+              >
+                <div className="flex items-center gap-2 mb-1.5" style={{ color: "var(--cta)" }}>
+                  <Sparkles size={15} />
+                  <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
+                    Ho imparato dai tuoi {feedbackCorrection.sampleSize} tentativi
+                  </span>
+                </div>
+                <ul className="flex flex-col gap-1 mb-2.5">
+                  {feedbackCorrection.notes.map((n, i) => (
+                    <li
+                      key={i}
+                      style={{
+                        fontSize: "var(--font-size-sm)",
+                        color: "var(--text-muted)",
+                        lineHeight: "var(--leading-normal)",
+                      }}
+                    >
+                      • {n}
+                    </li>
+                  ))}
+                </ul>
+                {(feedbackCorrection.hydrationDelta !== 0 ||
+                  feedbackCorrection.fermentMultiplier !== 1) && (
+                  <button
+                    type="button"
+                    onClick={applyFeedbackCorrection}
+                    className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 active:scale-95 transition-transform"
+                    style={{
+                      background: "var(--cta)",
+                      color: "var(--cta-foreground)",
+                      fontSize: "var(--font-size-sm)",
+                      fontWeight: "var(--weight-bold)" as any,
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <Sparkles size={14} /> Applica le correzioni
+                  </button>
+                )}
+              </div>
+            )}
             <RecipeStatStrip
               recipe={recipe}
               nerdMode={effectiveNerdMode}
+              isPersonalized={recipeMode !== "canonical"}
               nerdAvailable={nerdAvailable}
               onNerdModeChange={setNerdMode}
             />
@@ -1209,7 +1324,7 @@ function RecipeContent({
           </motion.div>
         )}
       </AnimatePresence>
-    </>
+    </main>
   );
 }
 
@@ -1739,7 +1854,8 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
   const location = useLocation();
   const exploreBackTo = readExploreBackTo(location.state);
   return (
-    <div
+    <main
+      id="main-content"
       className="min-h-screen flex items-center justify-center px-6"
       style={{
         background: "var(--container-page)",
@@ -1782,6 +1898,6 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
           {cms.pages.recipeExploreStyles}
         </CtaButton>
       </motion.div>
-    </div>
+    </main>
   );
 }

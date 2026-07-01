@@ -1224,7 +1224,7 @@ export const CMS_DEFAULTS: CmsContent = {
     home:              { name: "Forno Domestico",    maxTemp: 250, icon: "home" },
     electric_standard: { name: "Elettrico Standard", maxTemp: 300, icon: "zap" },
     gas:               { name: "Gas Professionale",  maxTemp: 350, icon: "flame" },
-    electric_high:     { name: "Elettrico Alta T",   maxTemp: 450, icon: "thermometer" },
+    electric_high:     { name: "Elettrico alta temperatura", maxTemp: 450, icon: "thermometer" },
     wood:              { name: "Forno a Legna",      maxTemp: 500, icon: "flame-kindling" },
   },
   skillLevels: {
@@ -2847,8 +2847,8 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "ovenPresets.electric_standard.maxTemp", label: "Elettrico std — Max T", type: "number", min: 250, max: 400 },
       { path: "ovenPresets.gas.name", label: "Gas — Nome", type: "text" },
       { path: "ovenPresets.gas.maxTemp", label: "Gas — Max T", type: "number", min: 300, max: 450 },
-      { path: "ovenPresets.electric_high.name", label: "Elettrico alta T — Nome", type: "text" },
-      { path: "ovenPresets.electric_high.maxTemp", label: "Elettrico alta T — Max T", type: "number", min: 350, max: 550 },
+      { path: "ovenPresets.electric_high.name", label: "Elettrico alta temperatura — Nome", type: "text" },
+      { path: "ovenPresets.electric_high.maxTemp", label: "Elettrico alta temperatura — Max T", type: "number", min: 350, max: 550 },
       { path: "ovenPresets.wood.name", label: "Legna — Nome", type: "text" },
       { path: "ovenPresets.wood.maxTemp", label: "Legna — Max T", type: "number", min: 400, max: 600 },
       // Skill levels

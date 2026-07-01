@@ -1,4 +1,3 @@
-// TODO consumer leggono ancora ovens[0] — propagare in seguito
 /* === PROFILE PAGE — VPL-057 ===
    Setup utente: forno, skill, pantry, dieta, lingua, dark mode.
    Tab: Profilo — /profile
@@ -346,6 +345,8 @@ function buildSavedRecipeUrl(r: SavedRecipe): string {
   q.set("f", String(pr.fermentHours));
   q.set("t", String(pr.fermentTemp));
   q.set("n", String(pr.doughBalls));
+  if (pr.ovenType) q.set("oven", pr.ovenType);
+  if (pr.ovenTemp !== undefined) q.set("temp", String(pr.ovenTemp));
   if (pr.usePreFerment) q.set("pf", "1");
   if (pr.selectedToppingConcept) q.set("topping", pr.selectedToppingConcept);
   if (r.versionId) q.set("v", r.versionId);
@@ -600,7 +601,8 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
   }, [step, lastStep, handleFinish]);
 
   return (
-    <div
+    <main
+      id="main-content"
       className="min-h-screen flex flex-col items-center justify-center px-6 py-12"
       style={{ background: "var(--container-page)", color: "var(--text-default)" }}
     >
@@ -957,7 +959,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
           </CtaButton>
         </div>
       </motion.div>
-    </div>
+    </main>
   );
 }
 
@@ -1132,7 +1134,11 @@ export function ProfilePage() {
 
   /* FTU detection */
   const [showFtu, setShowFtu] = useState(() => {
-    return loadString(PROFILE_COMPLETE_KEY) !== "true";
+    return (
+      loadString(PROFILE_COMPLETE_KEY) !== "true" &&
+      loadSavedRecipes().length === 0 &&
+      loadFavoriteStyles().length === 0
+    );
   });
 
   /* Locale confirmation modal */
@@ -1430,7 +1436,8 @@ export function ProfilePage() {
   }
 
   return (
-    <div
+    <main
+      id="main-content"
       className="min-h-screen"
       style={{ background: "var(--container-page)", color: "var(--text-default)" }}
     >
@@ -1489,15 +1496,13 @@ export function ProfilePage() {
                   layout
                   onClick={() => {
                     setOvens((prev) => {
-                      let next;
                       if (prev.includes(preset.id)) {
                         if (prev.length === 1) return prev;
-                        next = prev.filter((x) => x !== preset.id);
-                      } else {
-                        next = [...prev, preset.id];
-                        setOvenTemp(preset.maxTemp);
+                        return prev.filter((x) => x !== preset.id);
                       }
-                      return next;
+
+                      setOvenTemp(preset.maxTemp);
+                      return [preset.id, ...prev.filter((x) => x !== preset.id)];
                     });
                   }}
                   className="flex items-center gap-3 p-3 sm:p-4 rounded-xl active:scale-[0.98]"
@@ -2390,6 +2395,6 @@ export function ProfilePage() {
           )}
         </AnimatePresence>
       </motion.div>
-    </div>
+    </main>
   );
 }

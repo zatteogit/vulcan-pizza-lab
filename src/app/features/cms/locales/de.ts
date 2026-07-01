@@ -131,7 +131,7 @@ export const DE_LOCALE: CmsContent = {
   },
   tips: {
     kitchenTemp:
-      "Die KÃ¼chentemperatur beeinflusst, wie schnell der Teig geht. Die Engine passt Zeiten und Mengen automatisch an.",
+      "Die Küchentemperatur beeinflusst, wie schnell der Teig geht. Die Engine passt Zeiten und Mengen automatisch an.",
     timeSlot:
       "Die K\u00FCchentemperatur beeinflusst die Gehzeiten. Je mehr Zeit du hast, desto mehr M\u00F6glichkeiten f\u00FCr leichte und bek\u00F6mmliche Teige.",
     skill:
@@ -905,7 +905,7 @@ export const DE_LOCALE: CmsContent = {
     favoriteRemove: "Aus Favoriten entfernen",
     favoriteRemoveAria: "{name} aus Favoriten entfernen",
     savedRecipesTitle: "Deine gespeicherten Rezepte",
-    savedRecipesSubtitle: "Die maÃgeschneiderten Versionen, die du gespeichert hast",
+    savedRecipesSubtitle: "Die maßgeschneiderten Versionen, die du gespeichert hast",
     savedRecipeRemove: "Aus dem Rezeptbuch entfernen",
     savedRecipeRemoveAria: "{name} aus dem Rezeptbuch entfernen",
     ovenTitle: "Dein Ofen",

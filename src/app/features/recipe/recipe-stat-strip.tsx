@@ -9,6 +9,7 @@ import { GeneratedRecipe } from "../../domain/pizza-engine";
 interface RecipeStatStripProps {
   recipe: GeneratedRecipe;
   nerdMode?: boolean;
+  isPersonalized?: boolean;
   /** Vista Semplice (giugno 2026): niente range tecnici sotto i valori. */
   simple?: boolean;
   nerdAvailable?: boolean;
@@ -22,6 +23,7 @@ interface RecipeStatStripProps {
 export function RecipeStatStrip({
   recipe,
   nerdMode,
+  isPersonalized = true,
   simple,
   nerdAvailable = false,
   onNerdModeChange,
@@ -41,21 +43,21 @@ export function RecipeStatStrip({
     (recipe.style.dough.hydration_pct_range[0] + recipe.style.dough.hydration_pct_range[1]) / 2,
   );
   const hChanged =
-    Math.abs(recipe.hydration_pct - hMid) >= 2
+    isPersonalized && Math.abs(recipe.hydration_pct - hMid) >= 2
       ? { dir: recipe.hydration_pct > hMid ? "up" : ("down" as "up" | "down"), canonical: fmt.percent(hMid) }
       : undefined;
   const fMid = Math.round(
     (recipe.style.dough.fermentation_hours_range[0] + recipe.style.dough.fermentation_hours_range[1]) / 2,
   );
   const fChanged =
-    Math.abs(recipe.fermentation_hours - fMid) >= 2
+    isPersonalized && Math.abs(recipe.fermentation_hours - fMid) >= 2
       ? { dir: recipe.fermentation_hours > fMid ? "up" : ("down" as "up" | "down"), canonical: fmt.fermentTime(fMid) }
       : undefined;
   const wMid = Math.round(
     (recipe.style.dough.flour_w_range[0] + recipe.style.dough.flour_w_range[1]) / 2,
   );
   const wChanged =
-    Math.abs(recipe.flour_w - wMid) >= 15
+    isPersonalized && Math.abs(recipe.flour_w - wMid) >= 15
       ? { dir: recipe.flour_w > wMid ? "up" : ("down" as "up" | "down"), canonical: `W${wMid}` }
       : undefined;
 
@@ -333,7 +335,7 @@ function StatCell({
             className="inline-flex items-center rounded-full"
             style={{ color: "var(--cta)", marginLeft: -2 }}
             title={`Su misura per te · canonica ${changed.canonical}`}
-            aria-label={`Modificato dall'ottimizzazione. Canonica: ${changed.canonical}`}
+            aria-label={`Valore su misura. Canonica: ${changed.canonical}`}
           >
             {changed.dir === "up" ? <ChevronUp size={14} strokeWidth={3} /> : <ChevronDown size={14} strokeWidth={3} />}
           </span>

@@ -1,9 +1,9 @@
 # Motore pizza e ricetta
-> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 6
+> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 6
 
 ## Sommario
 
-`pizza-engine.ts` (4959 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **59 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
+`pizza-engine.ts` (4979 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **59 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
 
 Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica Implementativa v1* (feb 2026) e fix successivi (ADV-02, ADV-04, ADV-08, ADV-11). Schema ricetta versione **1.4** (`RECIPE_SCHEMA_VERSION`).
 
@@ -11,8 +11,8 @@ Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica I
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/domain/pizza-engine.ts` | 4959 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
-| `src/app/features/dev-tools/engine-test-suite.tsx` | 1783 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
+| `src/app/domain/pizza-engine.ts` | 4979 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
+| `src/app/features/dev-tools/engine-test-suite.tsx` | 1784 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
 | `src/app/domain/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, `STYLE_TAGS`, `DEVIATION_CATEGORY_LABELS` per E-Score |
 | `src/app/data/topping-library.ts` | ~2100 | Libreria topping: 34 concetti, 40 ricette, autenticità per stile e timeline injection (integrati nuovi topping premium Wave 1 e Wave 2) |
 | `src/app/data/impasto-library.ts` | ~320 | Libreria impasti riusabili: 7 metodi (rimossi gli helper inutilizzati `getAllImpasti` e `getImpastiCompatibleWith`) |
@@ -62,7 +62,7 @@ flowchart TD
 
 | Funzione / export | Scopo |
 |-------------------|--------|
-| `generateRecipe` | Entry point: grammi, score, timeline, science, topping; applica `versionRanges`, `panConfig`, compensazioni forno |
+| `generateRecipe` | Entry point: grammi, score, timeline, science, topping; prende `GenerateRecipeOptions` (options object) per evitare swaps accidentali |
 | `calculateOvenCompensations` | Δ idratazione (log), olio/zucchero, tempo cottura (exp), thickness factor |
 | `getQ10` | Q10 per lievito/temperatura (`standard` / `cold_adapted` / `sourdough`) |
 | `estimatePL` | P/L da W clampato nel range stile |
@@ -125,6 +125,8 @@ flowchart TD
 - **Rinormalizzazione composite score a 5 pesi**: Il punteggio composite in `generateRecipe` somma tutti e 5 i pesi (`authenticity`, `feasibility`, `digestibility`, `sustainability`, `experimentation`) e normalizza dividendo per la loro somma totale, rimuovendo le distorsioni provocate da override specifici su sostenibilità o sperimentazione.
 - **Trasparenza delle motivazioni dell'Optimizer**: In `optimizeRecipe`, le descrizioni dei motivi della ricetta ottimizzata (rationale) segnalano in modo esplicito le variazioni rispetto al midpoint canonico dello stile: la riduzione dell'idratazione include la percentuale canonica di confronto, le modifiche della farina W e l'aggiunta di pre-fermenti non richiesti dallo stile base sono tracciate come deviazioni dal default.
 - **Ordinamento delle raccomandazioni per rankingScore**: In `recommendStyles`, la lista di raccomandazioni viene ordinata in base al `rankingScore` (che include l'iconic boost), con fallback a `compatibilityScore` per i pareggi. Questo allinea la logica di ranking con l'ordinamento reale visualizzato.
+- **Rifattorizzazione options object per generateRecipe**: Per evitare bug di swap di parametri posizionali di tipo scalare simili, la firma di `generateRecipe` è stata convertita in un oggetto opzioni `options: GenerateRecipeOptions = {}` contenente tutti i parametri opzionali ed override.
+- **F7 allineamento no-knead**: Rimosso il malus di `-8` in `glutenNetwork` per i processi no-knead. Poiché l'autolisi prolungata e le pieghe (stretch & fold) a intervalli sviluppano una maglia glutinica eccellente, il no-knead riceve ora `kneadBonus: 3` (rispetto a `5` dell'impasto lavorato standard), non venendo più ingiustamente penalizzato.
 
 ### STYLES_DB — Correzioni Audit Maggio/Giugno 2026
 

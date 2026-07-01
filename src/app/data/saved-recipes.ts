@@ -8,7 +8,7 @@
  * di eventuali fix/ricalibrazioni successive del motore stesso.
  */
 
-import type { PanConfig } from "../domain/pizza-engine";
+import type { OvenType, PanConfig } from "../domain/pizza-engine";
 
 const STORAGE_KEY = "vulcan_saved_recipes";
 const MAX_SAVED = 30;
@@ -21,6 +21,8 @@ export interface SavedRecipeParams {
   fermentTemp: number;
   usePreFerment: boolean;
   doughBalls: number;
+  ovenType?: OvenType;
+  ovenTemp?: number;
   panConfig?: PanConfig;
   selectedFlourId?: string | null;
   selectedToppingConcept?: string | null;
@@ -71,6 +73,8 @@ function recipeKey(styleId: string, p: SavedRecipeParams): string {
     p.fermentTemp,
     p.usePreFerment ? 1 : 0,
     p.doughBalls,
+    p.ovenType ?? "",
+    p.ovenTemp ?? "",
     p.selectedToppingConcept ?? "",
   ].join("|");
 }

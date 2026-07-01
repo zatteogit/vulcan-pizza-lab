@@ -171,7 +171,7 @@ export const JA_LOCALE: CmsContent = {
   },
   tips: {
     kitchenTemp:
-      "ã­ããã³ã®æ¸©åº¦ã¯çºéµã®éãã«å½±é¿ãã¾ããã¨ã³ã¸ã³ãæéã¨åéãèªåçã«èª¿æ´ãã¾ãã",
+      "キッチンの温度は発酵の速さに影響します。エンジンが時間と分量を自動的に調整します。",
     timeSlot:
       "\u30AD\u30C3\u30C1\u30F3\u306E\u6E29\u5EA6\u306F\u767A\u9175\u6642\u9593\u306B\u5F71\u97FF\u3057\u307E\u3059\u3002\u6642\u9593\u304C\u3042\u308B\u307B\u3069\u3001\u8EFD\u304F\u3066\u6D88\u5316\u306E\u826F\u3044\u751F\u5730\u306E\u9078\u629E\u80A2\u304C\u5897\u3048\u307E\u3059\u3002",
     skill:
@@ -980,14 +980,14 @@ export const JA_LOCALE: CmsContent = {
     pageTitle: "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB",
     pageSubtitle:
       "\u3042\u306A\u305F\u306E\u8A2D\u5B9A\u3001\u3044\u3064\u3067\u3082\u624B\u306E\u5C4A\u304F\u3068\u3053\u308D\u306B\u3002",
-    favoritesTitle: "ãæ°ã«å¥ãã®ã¹ã¿ã¤ã«",
-    favoritesSubtitle: "ãã¼ããä»ããã¹ã¿ã¤ã«",
-    favoriteRemove: "ãæ°ã«å¥ãããåé¤",
-    favoriteRemoveAria: "{name}ããæ°ã«å¥ãããåé¤",
-    savedRecipesTitle: "ä¿å­ããã¬ã·ã",
-    savedRecipesSubtitle: "ããªãå¥½ã¿ã«èª¿æ´ãããã¼ã¸ã§ã³",
-    savedRecipeRemove: "ã¬ã·ãå¸³ããåé¤",
-    savedRecipeRemoveAria: "{name}ãã¬ã·ãå¸³ããåé¤",
+    favoritesTitle: "お気に入りのスタイル",
+    favoritesSubtitle: "ハートを付けたスタイル",
+    favoriteRemove: "お気に入りから削除",
+    favoriteRemoveAria: "{name}をお気に入りから削除",
+    savedRecipesTitle: "保存したレシピ",
+    savedRecipesSubtitle: "あなた好みに調整したバージョン",
+    savedRecipeRemove: "レシピ帳から削除",
+    savedRecipeRemoveAria: "{name}をレシピ帳から削除",
     ovenTitle:
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3",
     ovenSubtitle:

@@ -2754,30 +2754,48 @@ export interface VersionRangeOverrides {
   dough_weight_g?: number;
 }
 
+/** Opzioni di generateRecipe. Audit role-play giugno 2026: rifattorizzate da 12
+ *  parametri posizionali a un options object — l'ordine di 6 `custom*` scalari
+ *  in fila era un footgun (il compilatore non becca uno swap). */
+export interface GenerateRecipeOptions {
+  customHydration?: number;
+  customFlourW?: number;
+  customFermentationHours?: number;
+  customFermentationTempC?: number;
+  usePreFerment?: boolean;
+  customFlourPL?: number;
+  panConfig?: PanConfig;
+  scoreWeights?: ScoreWeightsOverride;
+  versionRanges?: VersionRangeOverrides;
+  /** Sprint 11 Fase 3 — id impasto attivo (da version.impasto_ref). Se omesso,
+   * usa style.default_impasto_ref. Se entrambi assenti, no-op (retrocompat). */
+  activeImpastoRef?: string;
+  /** Audit motore 2026-05 — centro auth score quando un'interpretazione (Maestro/
+   * Disciplinare/Community) è attiva. */
+  interpretationCenter?: AuthenticityCenter;
+  /** VPL-B2 — mix di farine modificato dall'utente (quote/W per componente). */
+  customFlourBlend?: { name: string; pct: number; w?: number }[];
+}
+
 export function generateRecipe(
   style: PizzaStyle,
   constraints: UserConstraints,
-  customHydration?: number,
-  customFlourW?: number,
-  customFermentationHours?: number,
-  customFermentationTempC?: number,
-  usePreFerment?: boolean,
-  customFlourPL?: number,
-  panConfig?: PanConfig,
-  scoreWeights?: ScoreWeightsOverride,
-  versionRanges?: VersionRangeOverrides,
-  /** Sprint 11 Fase 3 — id impasto attivo (da version.impasto_ref). Se omesso,
-   * usa style.default_impasto_ref. Se entrambi assenti, no-op (retrocompat). */
-  activeImpastoRef?: string,
-  /** Audit motore 2026-05 — centro auth score quando un'interpretazione (Maestro/
-   * Disciplinare/Community) è attiva. Se presente, il punteggio non è più
-   * "distanza dal centro range stile" ma "distanza dai parametri canonici
-   * di quell'interpretazione" con tolleranza simmetrica più stretta. */
-  interpretationCenter?: AuthenticityCenter,
-  /** VPL-B2 — mix di farine modificato dall'utente (quote/W per componente).
-   * Se omesso si usa `style.dough.flour_blend`. */
-  customFlourBlend?: { name: string; pct: number; w?: number }[],
+  options: GenerateRecipeOptions = {},
 ): GeneratedRecipe {
+  const {
+    customHydration,
+    customFlourW,
+    customFermentationHours,
+    customFermentationTempC,
+    usePreFerment,
+    customFlourPL,
+    panConfig,
+    scoreWeights,
+    versionRanges,
+    activeImpastoRef,
+    interpretationCenter,
+    customFlourBlend,
+  } = options;
   const doughBalls = constraints.dough_balls;
 
   // Sprint 11 Fase 3 — Risolvi impasto effettivo e applica dough_overrides.
@@ -3154,11 +3172,12 @@ export function generateRecipe(
   const wNorm = Math.min(1, Math.max(0, (flourW - 150) / 250)); // 0 at W150, 1 at W400
   const hydrationPenalty =
     hydration > 85 ? (hydration - 85) * 0.8 : 0; // very high hydration weakens network
-  const kneadBonus = style.dough.process_type.includes(
-    "no_knead",
-  )
-    ? -8
-    : 5;
+  // F7 (audit role-play): il no-knead NON va penalizzato. Con autolisi + pieghe a
+  // intervalli (stretch & fold) su lunga maturazione la maglia glutinica finale è
+  // ottima — spesso pari o superiore all'impasto lavorato. Il vecchio -8 era al
+  // contrario. Ora leggermente sotto l'impasto intensivo (+3 vs +5) solo per la
+  // maggiore variabilità del metodo, non come penalità.
+  const kneadBonus = style.dough.process_type.includes("no_knead") ? 3 : 5;
   const glutenNetwork = Math.round(
     Math.min(
       100,
@@ -3521,21 +3540,18 @@ export function optimizeRecipe(
       for (const hydr of hydrCands) {
         for (const w of wCands) {
           for (const pref of prefCands) {
-            const recipe = generateRecipe(
-              style,
-              constraints,
-              hydr,
-              w,
-              hours,
-              temp,
-              pref,
-              undefined,
+            const recipe = generateRecipe(style, constraints, {
+              customHydration: hydr,
+              customFlourW: w,
+              customFermentationHours: hours,
+              customFermentationTempC: temp,
+              usePreFerment: pref,
               panConfig,
               scoreWeights,
               versionRanges,
               activeImpastoRef,
               interpretationCenter,
-            );
+            });
             evaluated++;
             const s = recipe.scores;
             const objScore =
@@ -4280,7 +4296,7 @@ export const OVEN_PRESETS: {
   },
   {
     id: "electric_high",
-    name: "Elettrico Alta T",
+    name: "Elettrico alta temperatura",
     maxTemp: 450,
     icon: "thermometer",
   },

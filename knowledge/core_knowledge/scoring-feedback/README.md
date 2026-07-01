@@ -1,5 +1,5 @@
 # Score e feedback utente
-> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 5
+> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 5
 
 ## Sommario
 
@@ -14,7 +14,7 @@ Integrazione: `recipe.tsx` e `home.tsx` montano `RecipeMatchCard`; `recipe.tsx` 
 | `src/app/features/recipe/recipe-match-card.tsx` | 580 righe; card compatibilità/fattibilità con composite score, diagnosi del soffitto, pulsante ottimizza, e indicatori di tono estesi |
 | `src/app/features/recipe/score-ring.tsx` | 71 righe; anello SVG compatto (score 0–100) per liste stili |
 | `src/app/features/recipe/recipe-feedback.tsx` | 542 righe; form progressivo post-ricetta: tentativo, riuscita, dettagli opzionali, issues, note → `saveFeedback` |
-| `src/app/features/recipe/feedback-store.ts` | 548 righe; tipi, `localStorage` (`vulcan_recipe_feedback`), analisi calibrazione, export/import CSV/JSON, `ADVERSARIAL_FINDINGS` |
+| `src/app/features/recipe/feedback-store.ts` | 615 righe; tipi, `localStorage` (`vulcan_recipe_feedback`), analisi calibrazione, export/import CSV/JSON, `ADVERSARIAL_FINDINGS` |
 | `src/app/features/recipe/feedback-analysis.tsx` | 544 righe; pannello DevTools (Engine Lab → Feedback): panoramica, issues, success per stile, audit adversarial |
 
 **Motore (riferimento):** `SCORE_DIMENSIONS`, `calculate*Score`, `resolveEngineMsgs` in `pizza-engine.ts`.
@@ -82,6 +82,7 @@ flowchart LR
 - **Confronto a Due Livelli e Diagnostica Bottleneck**: `RecipeMatchCard` confronta il punteggio composite corrente con il soffitto teorico raggiungibile tramite ottimizzazione ($M_o$). Visualizza una linea diagnostica di avviso: se $M_o < 40$ segnala che la preparazione non è fattibile con quel setup (limite hard del forno); se il forno è un collo di bottiglia parziale ma consente una pizza ($M_o < 65$) mostra un compromesso onesto; se mancano ingredienti/lieviti in dispensa (vincoli soft) genera una lista della spesa; se c'è margine significativo ($\ge 8$ punti) consiglia l'ottimizzazione.
 - **Pulsante e Rationale di Ottimizzazione**: Se abilitato e non già al soffitto, mostra il pulsante "Ottimizza per me +Δ" con la differenza di punti guadagnabili. In calce alla card viene renderizzato l'elenco dei passaggi e delle scelte prese dall'ottimizzatore (rationale).
 - **Stati Tono e Icone Match**: Il tono del match mappa il punteggio su 5 icone e colori diversi: `HeartHandshake` ($\ge 90$), `Heart` ($75-89$), `HeartPulse` ($60-74$), `HeartCrack` ($< 60$ o low) e `HeartOff` per fallimento.
+- **Loop di Apprendimento tramite Feedback (F2)**: Introdotta la funzione `deriveFeedbackCorrections` in `feedback-store.ts` che analizza la cronologia dei feedback post-cottura per rilevare problemi ricorrenti (con occorrenza $\ge 2$) legati a uno stile specifico (es. impasto troppo asciutto, troppo umido, collassato o poco lievitato). Ne deriva correzioni concrete in modalità opt-in e trasparente (+2% o -2% idratazione, e moltiplicatore $\pm 20\%$ sul tempo di fermentazione) che l'utente può applicare manualmente tramite un pannello dedicato ("Ho imparato dai tuoi X tentativi") visualizzato sia nella Home che nella pagina ricetta di dettaglio. Per problemi non direttamente modificabili dal motore (es. troppo salato), fornisce suggerimenti testuali invece di correzioni automatiche.
 - **Accessibilità Score**: i pulsanti e toggle PizzaNerd vivono nei componenti ricetta/output e usano label descrittive; `ScoreRing` è SVG decorativo con valore testuale centrale.
 - Feedback submit: il flusso base salva anche senza rating completo; il form dettagliato rende `overall` obbligatorio prima del submit.
 - **Copy Feedback**: la CTA del form di feedback invita alla compilazione spiegando che il feedback "aiuta a migliorare la ricetta" (copy human-friendly, semplificato dal precedente "calibra il motore scientifico").

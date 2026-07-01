@@ -235,22 +235,20 @@ function buildGeneratedRecipe({
       }
     : undefined;
 
-  return generateRecipe(
-    styleWithTopping,
-    constraints,
+  return generateRecipe(styleWithTopping, constraints, {
     customHydration,
     customFlourW,
-    customFermentHours,
-    customFermentTemp,
+    customFermentationHours: customFermentHours,
+    customFermentationTempC: customFermentTemp,
     usePreFerment,
     customFlourPL,
     panConfig,
     scoreWeights,
-    versionOverrides,
-    activeVersion?.impasto_ref,
+    versionRanges: versionOverrides,
+    activeImpastoRef: activeVersion?.impasto_ref,
     interpretationCenter,
     customFlourBlend,
-  );
+  });
 }
 
 export function useRecipeState({

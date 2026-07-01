@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-06-27T23:36:00.000Z",
+  "lastUpdated": "2026-07-01T12:00:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 139,
     "appFilesExcludingUi": 139,
     "pizzaEngineExports": 59,
-    "pizzaEngineLines": 4959,
+    "pizzaEngineLines": 4979,
     "cmsContextLines": 3186,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-06-27 v2 registra l'adattamento e l'ottimizzazione del dettaglio ricette (parità Home-Page shell), la rimozione dei doppi suffissi di misura/temperatura, la derivazione dinamica dei database parametrici per stili recenti e gli indicatori ChevronUp/Down degli scostamenti.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-01 registra la rifattorizzazione options object per generateRecipe, l'allineamento F7 no-knead, la ricetta su misura F2 integrata coi feedback, l'ordinamento forni in Profile e miglioramenti di contrasto/accessibilità.",
   "filesMappedCount": 139,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-06-27-v2",
+  "lastScannedChapter": "kipi-update-2026-07-01",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -28,7 +28,7 @@
         "src/app/data/topping-library.ts",
         "src/app/data/impasto-library.ts"
       ],
-      "lastWorked": "2026-06-27"
+      "lastWorked": "2026-07-01"
     },
     {
       "id": "recipe-flow",
@@ -51,7 +51,7 @@
         "src/app/hooks/use-recipe-state.ts",
         "src/app/features/recipe/recipe-setup-panel.tsx"
       ],
-      "lastWorked": "2026-06-27"
+      "lastWorked": "2026-07-01"
     },
     {
       "id": "scoring-feedback",
@@ -64,7 +64,7 @@
         "src/app/features/recipe/feedback-analysis.tsx",
         "src/app/features/recipe/feedback-store.ts"
       ],
-      "lastWorked": "2026-06-27"
+      "lastWorked": "2026-07-01"
     },
     {
       "id": "styles-versions",
@@ -166,7 +166,7 @@
         "src/app/features/recipe/user-needs.tsx",
         "src/app/data/saved-recipes.ts"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-07-01"
     },
     {
       "id": "design-system",

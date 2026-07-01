@@ -13,6 +13,7 @@ PizzaStyle,
 UserConstraints,
 defaultPanShape,
 needsPan,
+optimizeRecipe,
 supportsThickness,
 } from "../../domain/pizza-engine";
 import { StyleVersion } from "../../data/style-versions";
@@ -497,6 +498,18 @@ export function RecipeConfigurator({
   const sPL = style.dough.flour_pl_range;
   const sF = style.dough.fermentation_hours_range;
 
+  // F12 (audit role-play): la tacca "ottimale" degli slider puntava al MIDPOINT
+  // del range. Ora che il default generato è già ottimizzato, il midpoint è
+  // fuorviante. Puntiamo la tacca all'OTTIMO reale per il tuo setup (idratazione,
+  // W, fermentazione). ~0.1ms, memoizzato su stile+vincoli.
+  const optimum = useMemo(() => {
+    try {
+      return optimizeRecipe(style, constraints).params;
+    } catch {
+      return null;
+    }
+  }, [style, constraints]);
+
   const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
   const ratio = (v: number, lo: number, hi: number) =>
@@ -650,7 +663,7 @@ export function RecipeConfigurator({
               gradient={SLIDER_GRADIENTS.hydration}
               adaptiveMin={adaptiveHints.hydration?.adaptiveMin}
               adaptiveMax={adaptiveHints.hydration?.adaptiveMax}
-              optimalValue={Math.round((style.dough.hydration_pct_range[0] + style.dough.hydration_pct_range[1]) / 2)}
+              optimalValue={optimum?.hydration ?? Math.round((sH[0] + sH[1]) / 2)}
             />
             {adaptiveHints.hydration && (
               <AdaptiveHint
@@ -695,7 +708,7 @@ export function RecipeConfigurator({
               gradient={SLIDER_GRADIENTS.flourW}
               adaptiveMin={adaptiveHints.flourW?.adaptiveMin}
               adaptiveMax={adaptiveHints.flourW?.adaptiveMax}
-              optimalValue={Math.round((style.dough.flour_w_range[0] + style.dough.flour_w_range[1]) / 2 / 10) * 10}
+              optimalValue={optimum?.flour_w ?? Math.round((sW[0] + sW[1]) / 2 / 10) * 10}
             />
             {adaptiveHints.flourW && (
               <AdaptiveHint
@@ -777,7 +790,7 @@ export function RecipeConfigurator({
                   gradient={SLIDER_GRADIENTS.fermentation}
                   adaptiveMin={adaptiveHints.fermentation?.adaptiveMin}
                   adaptiveMax={adaptiveHints.fermentation?.adaptiveMax}
-                  optimalValue={Math.round((style.dough.fermentation_hours_range[0] + style.dough.fermentation_hours_range[1]) / 2)}
+                  optimalValue={optimum?.fermentation_hours ?? Math.round((sF[0] + sF[1]) / 2)}
                 />
                 {adaptiveHints.fermentation && (
                   <AdaptiveHint

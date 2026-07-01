@@ -270,7 +270,8 @@ export function ExplorePage() {
   }, [styles]);
 
   return (
-    <div
+    <main
+      id="main-content"
       className="min-h-screen relative overflow-hidden"
       style={{
         background: "var(--container-page)",
@@ -618,7 +619,7 @@ export function ExplorePage() {
           )}
         </AnimatePresence>
       </motion.div>
-    </div>
+    </main>
   );
 }
 
