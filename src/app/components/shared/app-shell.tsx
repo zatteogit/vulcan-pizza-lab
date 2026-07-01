@@ -336,7 +336,7 @@ function BottomTabBar({
   const { hidden } = navState;
   return (
     <motion.div
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 md:hidden flex items-center gap-3"
+      className="fixed left-1/2 -translate-x-1/2 z-50 md:hidden flex items-center gap-3"
       initial={{ y: 0, scale: 1, opacity: 1 }}
       animate={{
         y: hidden && !prefersReducedMotion ? 92 : 0,
@@ -353,6 +353,7 @@ function BottomTabBar({
             }
       }
       style={{
+        bottom: "calc(var(--space-6, 24px) + env(safe-area-inset-bottom, 0px))",
         width: "min(352px, 92vw)",
         transformOrigin: "bottom center",
         willChange: "transform, opacity",
@@ -512,7 +513,7 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
   return (
     <MotionLink
       to="/profile"
-      className="fixed top-4 right-4 flex items-center justify-center"
+      className="fixed right-4 flex items-center justify-center"
       animate={{
         width: size,
         height: size,
@@ -522,6 +523,7 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.92 }}
       style={{
+        top: "calc(var(--space-4, 16px) + env(safe-area-inset-top, 0px))",
         /* z-index 60 per stare SOPRA gli header sticky z-50 delle pagine. */
         zIndex: 60,
         background: active
@@ -686,8 +688,11 @@ export function AppShell() {
         <CookSessionProvider>
         <div
           style={{
-            minHeight: "100vh",
+            minHeight: "100dvh",
             background: "var(--container-page)",
+            overflowX: "hidden",
+            width: "100%",
+            position: "relative",
           }}
         >
           {/* Sidebar rail — desktop */}
@@ -709,9 +714,9 @@ export function AppShell() {
           <div
             style={{
               marginLeft: showNav ? undefined : 0,
-              paddingBottom: showNav ? undefined : 0,
+              paddingBottom: showNav ? "calc(80px + env(safe-area-inset-bottom, 0px))" : 0,
             }}
-            className={showNav ? "md:ml-28 pb-20 md:pb-0" : ""}
+            className={showNav ? "md:ml-28 md:pb-0 overflow-x-hidden" : "overflow-x-hidden"}
           >
             <Outlet
               context={{ darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode, hideNavbar, setHideNavbar } satisfies DarkModeContext}
@@ -725,7 +730,7 @@ export function AppShell() {
               <div
                 className="fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden"
                 style={{
-                  height: "112px",
+                  height: "calc(112px + env(safe-area-inset-bottom, 0px))",
                   background: "linear-gradient(to top, var(--container-page) 0%, var(--container-page) 46%, color-mix(in srgb, var(--container-page) 88%, transparent) 72%, transparent 100%)",
                 }}
               />

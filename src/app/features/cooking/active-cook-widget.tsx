@@ -71,10 +71,11 @@ export function ActiveCookWidget({
         whileTap={{ scale: 0.96 }}
         transition={liquidDockSpring}
         onClick={handleClick}
-        className={`fixed top-4 z-[70] inline-flex items-center rounded-full active-cook-widget ${
+        className={`fixed z-[70] inline-flex items-center rounded-full active-cook-widget ${
           active ? "is-active" : ""
         } ${compact ? "is-compact" : ""}`}
         style={{
+          top: "calc(var(--space-4, 16px) + env(safe-area-inset-top, 0px))",
           ...(active ? liquidDockButtonStyle : liquidDockStartButtonStyle),
           ...(active ? { background: "var(--primary)", color: "var(--text-on-accent)" } : {}),
           border: active

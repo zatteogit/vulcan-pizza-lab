@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-01T22:50:00.000Z",
+  "lastUpdated": "2026-07-01T23:50:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 140,
@@ -10,11 +10,11 @@
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-01 v4 registra l'introduzione dei sottotitoli informativi sotto le tab del configuratore ricetta (doppio layout con altezza dinamica per ricetta/lievitazione/condimento) e la risoluzione dinamica dei passaggi del condimento attivo (assembly_steps) nella timeline della ricetta.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-01 v5 registra il supporto safe-area env() per togliere collisioni su dispositivi borderless, viewport-fit=cover, altezza dinamica 100dvh, protezione per scroll orizzontale in AppShell/CSS, e dimensionamento font fluido su mobile in theme.css.",
   "filesMappedCount": 140,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-01-v4",
+  "lastScannedChapter": "kipi-update-2026-07-01-v5",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -126,7 +126,7 @@
         "src/app/components/shared/search-button.tsx",
         "src/vite-env.d.ts"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-07-01"
     },
     {
       "id": "pages-learn",
@@ -234,7 +234,7 @@
         "src/app/components/shared/vulcan-hero.tsx",
         "src/app/components/shared/vulcan-logo.tsx"
       ],
-      "lastWorked": "2026-06-24"
+      "lastWorked": "2026-07-01"
     }
   ]
 }

@@ -299,7 +299,11 @@ export function CookingMode() {
       {/* ── Header ── */}
       <div
         className="flex items-center justify-between px-4 sm:px-6 flex-shrink-0"
-        style={{ height: "var(--space-15, 60px)", borderBottom: "1px solid var(--container-border-subtle)" }}
+        style={{
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          height: "calc(var(--space-15, 60px) + env(safe-area-inset-top, 0px))",
+          borderBottom: "1px solid var(--container-border-subtle)",
+        }}
       >
         <div className="min-w-0">
           <div
