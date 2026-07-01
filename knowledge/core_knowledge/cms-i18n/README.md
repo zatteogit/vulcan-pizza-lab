@@ -1,11 +1,11 @@
 # CMS e localizzazione
-> Aggiornamento: 2026-06-27 | Stato: ✅ | File documentati: 17
+> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 17
 
 ## Sommario
 
 Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazione, media, stringhe di dominio (glossario, troubleshooting, pre-fermenti, dietary), copy cucina/feedback e preferenze di formattazione in un unico schema tipizzato `CmsContent`. Il pattern è **override su default** (come `StylesOverrideContext`): `cms = deepMerge(CMS_DEFAULTS, overrides)` esposto da `useCms()`.
 
-- **Default italiano**: `CMS_DEFAULTS` in `cms-context.tsx` (3186 righe, schema + default + registry campi CMS).
+- **Default italiano**: `CMS_DEFAULTS` in `cms-context.tsx` (3266 righe, schema + default + registry campi CMS).
 - **Altre lingue**: bundle completi in `locales/{en,es,de,fr,pt,ja}.ts` + dati dominio in `locales/domain-{lang}.ts`.
 - **Persistenza**: `localStorage` chiave `vulcan_cms` (oggetto JSON parziale, solo override).
 - **UI admin**: `/cms` (`cms.tsx`, ~1320 righe) guidata da `CMS_SECTIONS` (~18 sezioni, centinaia di campi dot-path).
@@ -15,7 +15,7 @@ Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazi
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/features/cms/cms-context.tsx` | 3186 | Schema `CmsContent`, `CMS_DEFAULTS` con `cooking`, `misc`, `feedback`, `longDesc`/`tipNerd`, `CmsProvider`, merge, persistenza, rimozione pulita degli override ritornati a default (esportazioni secondarie inutilizzate rimosse) |
+| `src/app/features/cms/cms-context.tsx` | 3266 | Schema `CmsContent`, `CMS_DEFAULTS` con `cooking`, `misc`, `feedback`, `longDesc`/`tipNerd`, `CmsProvider`, merge, persistenza, rimozione pulita degli override ritornati a default (esportazioni secondarie inutilizzate rimosse) |
 | `src/app/features/cms/i18n.ts` | 286 | `t()`, `createFormatter()`, `formatTemperatureCopy`, `formatLengthCopy`, conversioni metric/imperial, `vulcan_unit_system` |
 | `src/app/features/cms/domain-i18n-defaults.ts` | 598 | Default IT: `PRE_FERMENT_DEFAULTS`, `DIETARY_I18N_DEFAULTS`, `TROUBLESHOOTING_I18N_DEFAULTS`, `GLOSSARY_TERMS_DEFAULTS` |
 | `src/app/features/cms/locales/index.ts` | 88 | `LOCALE_BUNDLES`, `LOCALE_META`, `LOCALE_BCP47` |
@@ -119,6 +119,7 @@ flowchart TD
 - **`RootLayout`** duplica logica dark mode obsoleta; provider attivi sono in **`AppShell`**.
 - Consumatori devono usare `cms.*` o getter localizzati; dati strutturali (ID stili, ID issue `P01`…) restano nei file `*-data.ts`.
 - **Esportazioni Pulite**: Le interfacce e i helper interni non più importati esternamente in `cms-context.tsx` sono stati resi privati al modulo rimuovendo la keyword `export`.
+- **Localizzazione delle Diagnostiche di Match e Azioni**: Le stringhe di testo per le diagnostiche a due livelli, le rationales dell'ottimizzatore, i toni di match relazionali (`matchTones`), la lista di ingredienti/farine mancanti (`needFlour`) e le azioni della card match (es. torna all'originale, ottimizza, rendila possibile, salva la mia versione) sono state interamente integrate all'interno dello schema `CmsContent` (`cms-context.tsx`) e tradotte nei bundle multilingua (`en.ts`, `de.ts`, `ja.ts` etc.), rimuovendo ogni copy hardcoded.
 
 ## Bug noti e fix
 

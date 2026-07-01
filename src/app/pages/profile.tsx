@@ -1945,8 +1945,9 @@ export function ProfilePage() {
                   <div className="type-body-sm" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
                     {savedLocation.city || `${savedLocation.lat.toFixed(2)}, ${savedLocation.lon.toFixed(2)}`}
                   </div>
+                  {/* Il titolo mostra già città o coordinate: qui solo lo stato. */}
                   <div className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
-                    {p.locationSaved} · {savedLocation.lat.toFixed(4)}, {savedLocation.lon.toFixed(4)}
+                    {p.locationSaved}
                   </div>
                 </div>
                 <IconButton

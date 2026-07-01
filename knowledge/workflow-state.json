@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-07-01T23:50:00.000Z",
+  "lastUpdated": "2026-07-02T01:30:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 140,
     "appFilesExcludingUi": 140,
     "pizzaEngineExports": 59,
     "pizzaEngineLines": 4975,
-    "cmsContextLines": 3186,
+    "cmsContextLines": 3266,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-01 v5 registra il supporto safe-area env() per togliere collisioni su dispositivi borderless, viewport-fit=cover, altezza dinamica 100dvh, protezione per scroll orizzontale in AppShell/CSS, e dimensionamento font fluido su mobile in theme.css.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-02 registra la localizzazione completa delle diagnostiche MatchCard nel CMS, la modale pre-cooking per ricette canoniche, e l'occultamento dinamico a scorrimento del ProfileButton in AppShell.",
   "filesMappedCount": 140,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-01-v5",
+  "lastScannedChapter": "kipi-update-2026-07-02",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -51,7 +51,7 @@
         "src/app/hooks/use-recipe-state.ts",
         "src/app/features/recipe/recipe-setup-panel.tsx"
       ],
-      "lastWorked": "2026-07-01"
+      "lastWorked": "2026-07-02"
     },
     {
       "id": "scoring-feedback",
@@ -64,7 +64,7 @@
         "src/app/features/recipe/feedback-analysis.tsx",
         "src/app/features/recipe/feedback-store.ts"
       ],
-      "lastWorked": "2026-07-01"
+      "lastWorked": "2026-07-02"
     },
     {
       "id": "styles-versions",
@@ -109,7 +109,7 @@
         "src/app/features/cms/locales/domain-pt.ts",
         "src/app/pages/cms.tsx"
       ],
-      "lastWorked": "2026-06-27"
+      "lastWorked": "2026-07-02"
     },
     {
       "id": "routing-shell",
@@ -126,7 +126,7 @@
         "src/app/components/shared/search-button.tsx",
         "src/vite-env.d.ts"
       ],
-      "lastWorked": "2026-07-01"
+      "lastWorked": "2026-07-02"
     },
     {
       "id": "pages-learn",

@@ -201,7 +201,9 @@ export function RecipeSetupPanel({
           "Adatta idratazione, lievitazione e cottura alla tua cucina",
         )
       : summary;
-  const triggerAction = isCanonical ? cms.ui.customizeParams : cms.ui.modify;
+  /* Il titolo del trigger dice già "Personalizza parametri": la pill
+     ripete il verbo breve, non il titolo (duplicava su desktop). */
+  const triggerAction = cms.ui.modify;
 
   return (
     <section>
@@ -506,7 +508,7 @@ function MatchSummary({
 }) {
   const { cms } = useCms();
   const roundedScore = Math.round(scores.composite);
-  const tone = matchTone(roundedScore, "adapted");
+  const tone = matchTone(roundedScore, "adapted", cms.cooking.matchTones);
   const axes = SCORE_DIMENSIONS.map((dimension) => ({
     key: dimension.key,
     color: dimension.color,

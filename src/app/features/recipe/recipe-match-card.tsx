@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, RotateCcw, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
-import { createFormatter } from "../cms/i18n";
+import { createFormatter, t } from "../cms/i18n";
 import { Surface } from "../../components/ds/index";
 
 export type RecipeMatchMode = "canonical" | "adapted" | "lab";
@@ -10,59 +10,75 @@ export type RecipeMatchMode = "canonical" | "adapted" | "lab";
 /** Icona cuore per stato di match — 5 stati distinti (audit role-play giugno 2026). */
 export type MatchIconKey = "handshake" | "heart" | "pulse" | "crack" | "off";
 
-export function matchTone(score: number, mode: RecipeMatchMode) {
-  if (score >= 90) {
-    return {
-      title: "Amore a prima vista",
-      body:
-        mode === "canonical"
-          ? "La canonica e la tua cucina parlano già la stessa lingua."
-          : "Questa versione è nata per il tuo setup.",
-      low: false,
-      icon: "handshake" as MatchIconKey,
-    };
-  }
-  if (score >= 75) {
-    return {
-      title: "Ottima intesa",
-      body:
-        mode === "canonical"
-          ? "Qualche micro-compromesso, ma la scintilla c'è."
-          : "Pochi aggiustamenti, tanta sostanza.",
-      low: false,
-      icon: "heart" as MatchIconKey,
-    };
-  }
-  if (score >= 60) {
-    return {
-      title: "Ci vuole un po' di corteggiamento",
-      body:
-        mode === "canonical"
-          ? "Si può fare bene: sblocchiamola e Vulcan sistema tempi e cottura."
-          : "La ricetta funziona, ma chiede un minimo di attenzione.",
-      low: false,
-      icon: "pulse" as MatchIconKey,
-    };
-  }
-  if (score >= 40) {
-    return {
-      title: "Per le cose buone ci vuole tempo",
-      body:
-        mode === "canonical"
-          ? "La ricetta è seria: meglio adattarla al tuo forno prima di provarci."
-          : "Buona direzione, ma serve ancora qualche compromesso.",
-      low: true,
-      icon: "crack" as MatchIconKey,
-    };
-  }
-  return {
+/** Copy CMS per fascia di match (cms.cooking.matchTones). */
+export interface MatchToneCopy {
+  title: string;
+  canonical: string;
+  adapted: string;
+}
+export interface MatchTonesCopy {
+  t90: MatchToneCopy;
+  t75: MatchToneCopy;
+  t60: MatchToneCopy;
+  t40: MatchToneCopy;
+  t0: MatchToneCopy;
+}
+
+/* Fallback italiani — usati solo se il chiamante non passa il copy CMS. */
+const TONE_FALLBACKS: Record<
+  keyof MatchTonesCopy,
+  MatchToneCopy & { low: boolean; icon: MatchIconKey }
+> = {
+  t90: {
+    title: "Amore a prima vista",
+    canonical: "La canonica e la tua cucina parlano già la stessa lingua.",
+    adapted: "Questa versione è nata per il tuo setup.",
+    low: false,
+    icon: "handshake",
+  },
+  t75: {
+    title: "Ottima intesa",
+    canonical: "Qualche micro-compromesso, ma la scintilla c'è.",
+    adapted: "Pochi aggiustamenti, tanta sostanza.",
+    low: false,
+    icon: "heart",
+  },
+  t60: {
+    title: "Ci vuole un po' di corteggiamento",
+    canonical: "Si può fare bene: sblocchiamola e Vulcan sistema tempi e cottura.",
+    adapted: "La ricetta funziona, ma chiede un minimo di attenzione.",
+    low: false,
+    icon: "pulse",
+  },
+  t40: {
+    title: "Per le cose buone ci vuole tempo",
+    canonical: "La ricetta è seria: meglio adattarla al tuo forno prima di provarci.",
+    adapted: "Buona direzione, ma serve ancora qualche compromesso.",
+    low: true,
+    icon: "crack",
+  },
+  t0: {
     title: "Cuore spezzato",
+    canonical: "Bellissima, ma oggi chiede più fuoco di quello che hai. La rendiamo possibile?",
+    adapted: "Troppo per questo setup: alleggeriamo tempi, forno o ambizione.",
+    low: true,
+    icon: "off",
+  },
+};
+
+export function matchTone(score: number, mode: RecipeMatchMode, tones?: MatchTonesCopy) {
+  const band: keyof MatchTonesCopy =
+    score >= 90 ? "t90" : score >= 75 ? "t75" : score >= 60 ? "t60" : score >= 40 ? "t40" : "t0";
+  const fallback = TONE_FALLBACKS[band];
+  const copy = tones?.[band];
+  return {
+    title: copy?.title ?? fallback.title,
     body:
       mode === "canonical"
-        ? "Bellissima, ma oggi chiede più fuoco di quello che hai. La rendiamo possibile?"
-        : "Troppo per questo setup: alleggeriamo tempi, forno o ambizione.",
-    low: true,
-    icon: "off" as MatchIconKey,
+        ? (copy?.canonical ?? fallback.canonical)
+        : (copy?.adapted ?? fallback.adapted),
+    low: fallback.low,
+    icon: fallback.icon,
   };
 }
 
@@ -154,34 +170,34 @@ export function RecipeMatchCard({
       // HARD: anche al massimo è sotto soglia → non vale la pena.
       headroomLine = {
         tone: "warn",
-        text: ovenIsWall
-          ? `Anche al massimo arrivi a ${ceilingRounded}/100: il tuo forno non ci arriva. Meglio uno stile fatto per casa.`
-          : `Anche al massimo arrivi a ${ceilingRounded}/100 con questo setup: non vale la pena.`,
+        text: t(ovenIsWall ? cms.cooking.ceilingUnviableOven : cms.cooking.ceilingUnviable, {
+          ceiling: ceilingRounded,
+        }),
       };
     } else if (ovenIsWall && ceilingRounded < 65) {
       // HARD: il forno è il tetto, ma una pizza la fai → compromesso onesto.
       headroomLine = {
         tone: "muted",
-        text: `Il forno ti ferma a ${ceilingRounded}/100: niente leopardatura, ma una buona pizza sì.`,
+        text: t(cms.cooking.ceilingOvenWall, { ceiling: ceilingRounded }),
       };
     } else if (needs.length > 0) {
       // SOFT: lista della spesa — la ricetta mostrata assume qualcosa che non hai.
       headroomLine = {
         tone: "accent",
-        text: `Per arrivare a ${ceilingRounded}/100 ti serve: ${needs.join(", ")}.`,
+        text: t(cms.cooking.ceilingNeeds, { ceiling: ceilingRounded, needs: needs.join(", ") }),
       };
     } else if (headroom >= 8 && onOptimize) {
       // Hai tutto: basta ottimizzare.
-      headroomLine = { tone: "accent", text: `Puoi portarla a ${ceilingRounded}/100 ottimizzando — hai già tutto.` };
+      headroomLine = { tone: "accent", text: t(cms.cooking.ceilingOptimize, { ceiling: ceilingRounded }) };
     } else if (atCeiling && mode === "canonical" && ceilingRounded >= 60) {
       // PATH-AWARE: sei sul canonico e regge col tuo setup.
-      headroomLine = { tone: "ok", text: `Anche la ricetta canonica resta fattibile col tuo setup.` };
+      headroomLine = { tone: "ok", text: cms.cooking.ceilingCanonicalOk };
     } else if (ceilingRounded < 60) {
-      headroomLine = { tone: "muted", text: `Il tuo massimo per questo setup è ${ceilingRounded}/100: una versione di compromesso.` };
+      headroomLine = { tone: "muted", text: t(cms.cooking.ceilingCompromise, { ceiling: ceilingRounded }) };
     }
   }
 
-  const tone = matchTone(roundedScore, mode);
+  const tone = matchTone(roundedScore, mode, cms.cooking.matchTones);
   const MATCH_ICONS = {
     handshake: HeartHandshake,
     heart: Heart,
@@ -196,13 +212,13 @@ export function RecipeMatchCard({
   const showAdaptAction = mode === "canonical" && Boolean(onAdapt) && !onOptimize;
   const showResetAction = mode !== "canonical" && Boolean(onReset);
   const showSaveAction = mode !== "canonical" && Boolean(onSave);
-  const actionLabel = tone.low ? "Rendila possibile" : "Adatta alla mia cucina";
+  const actionLabel = tone.low ? cms.cooking.makePossible : cms.cooking.adaptToKitchen;
 
   return (
     <Surface
       as={motion.aside}
       layout
-      className={`relative w-full max-w-[900px] overflow-hidden rounded-[1.65rem] px-4 py-4 sm:px-5 sm:py-5 ${className}`}
+      className={`relative w-full max-w-[900px] overflow-hidden rounded-3xl px-4 py-4 sm:px-5 sm:py-5 ${className}`}
       style={{
         background:
           "color-mix(in srgb, var(--container-page) 88%, transparent)",
@@ -430,7 +446,7 @@ export function RecipeMatchCard({
                 }}
               >
                 <RotateCcw size={14} />
-                Torna all'originale
+                {cms.cooking.resetToOriginal}
               </motion.button>
             )}
           </AnimatePresence>
@@ -455,7 +471,7 @@ export function RecipeMatchCard({
               }}
             >
               <Sparkles size={15} />
-              {tone.low ? "Rendila possibile" : "Ottimizza per me"}{headroom >= 2 ? ` +${headroom}` : ""}
+              {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}{headroom >= 2 ? ` +${headroom}` : ""}
             </motion.button>
           )}
           {showSaveAction && (
@@ -480,7 +496,7 @@ export function RecipeMatchCard({
               }}
             >
               {saved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
-              {saved ? "Salvata nel ricettario" : "Salva la mia versione"}
+              {saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
             </button>
           )}
         </div>
@@ -513,7 +529,7 @@ export function RecipeMatchCard({
           <div className="flex items-center gap-1.5 mb-1.5" style={{ color: "var(--cta)" }}>
             <Sparkles size={14} />
             <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
-              Ottimizzata per il tuo setup
+              {cms.cooking.optimizedForSetup}
             </span>
           </div>
           <ul className="flex flex-col gap-1">

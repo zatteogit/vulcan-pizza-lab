@@ -453,8 +453,8 @@ function SidebarRail({
           <VulcanMark size={20} decorative />
         </Link>
 
-        {/* Tabs */}
-        <div className="flex flex-col items-center gap-1.5 flex-1">
+        {/* Tabs — centrate verticalmente nella capsula (M3 rail) */}
+        <div className="flex flex-col items-center justify-center gap-1.5 flex-1">
           {TABS.map((tab) => (
             <TabItem
               key={tab.id}
@@ -507,8 +507,9 @@ function SidebarRail({
    Audit Sprint 12: Profilo è impostazione utente, non una tab di navigazione. */
 function ProfileButton({ active, navState }: { active: boolean; navState: LiquidNavState }) {
   const { cms } = useCms();
+  const prefersReducedMotion = useReducedMotion();
   const label = (cms.pages as any)?.navProfile || "Profilo";
-  const { scrolled } = navState;
+  const { scrolled, hidden } = navState;
   const size = scrolled ? 40 : 44;
   return (
     <MotionLink
@@ -518,6 +519,8 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
         width: size,
         height: size,
         borderRadius: scrolled ? "14px" : "16px",
+        y: hidden && !prefersReducedMotion ? -(size + 24) : 0,
+        opacity: hidden ? 0 : 1,
       }}
       transition={liquidDockQuickSpring}
       whileHover={{ scale: 1.05 }}
@@ -539,6 +542,7 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
             : "color-mix(in srgb, var(--text-default) 10%, transparent)"
         }`,
         color: active ? "var(--primary)" : "var(--text-default)",
+        pointerEvents: hidden ? "none" : "auto",
         boxShadow: active
           ? "0 10px 24px color-mix(in srgb, var(--primary) 16%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)"
           : "0 10px 24px color-mix(in srgb, var(--shadow-color) 8%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 12%, transparent)",

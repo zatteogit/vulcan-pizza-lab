@@ -2820,10 +2820,10 @@ export function RecipeOutput({
               </div>
               <div className="flex flex-col gap-1.5">
                 <Heading level="sm" color="var(--text-default)" style={{ lineHeight: 1.15 }}>
-                  Prima di accendere il forno
+                  {cms.cooking.preCookTitle}
                 </Heading>
                 <p className="type-body-lg" style={{ color: "var(--text-muted)", lineHeight: 1.5 }}>
-                  Questa è ancora la ricetta originale. Puoi partire così, oppure adattarla al tuo forno e ai tuoi tempi prima di iniziare la pizzata.
+                  {cms.cooking.preCookBody}
                 </p>
               </div>
               <div className="flex flex-col w-full gap-2.5 mt-1">
@@ -2840,7 +2840,7 @@ export function RecipeOutput({
                       boxShadow: "0 12px 28px color-mix(in srgb, var(--primary) 24%, transparent)",
                     }}
                   >
-                    Adattala alla mia cucina
+                    {cms.cooking.preCookAdapt}
                   </button>
                 )}
                 <button
@@ -2854,7 +2854,7 @@ export function RecipeOutput({
                     cursor: "pointer",
                   }}
                 >
-                  Inizia comunque
+                  {cms.cooking.preCookStart}
                 </button>
               </div>
             </motion.div>
@@ -2878,7 +2878,7 @@ export function RecipeOutput({
               fontWeight: "var(--weight-semibold)" as any,
             }}
           >
-            {isPersonalized ? cms.cooking.recipeAdapted : "Ricetta canonica"}
+            {isPersonalized ? cms.cooking.recipeAdapted : cms.cooking.recipeCanonical}
           </span>
           <span
             className="min-w-0"

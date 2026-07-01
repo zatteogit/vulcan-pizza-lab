@@ -701,6 +701,39 @@ export interface CmsContent {
     ballEstimateTooltip: string;
     tabRecipe: string;
     tabRecipeTailored: string;
+    /** Etichetta stato ricetta non personalizzata (pill contesto + occhiello). */
+    recipeCanonical: string;
+    /** Dialog pre-cottura: la ricetta canonica non è ancora adattata. */
+    preCookTitle: string;
+    preCookBody: string;
+    preCookAdapt: string;
+    preCookStart: string;
+    /** Match card — tono relazionale per fascia di punteggio (≥90/75/60/40/resto). */
+    matchTones: {
+      t90: { title: string; canonical: string; adapted: string };
+      t75: { title: string; canonical: string; adapted: string };
+      t60: { title: string; canonical: string; adapted: string };
+      t40: { title: string; canonical: string; adapted: string };
+      t0: { title: string; canonical: string; adapted: string };
+    };
+    /** Match card — riga soffitto/margine. Template con {ceiling} e {needs} via t(). */
+    ceilingUnviableOven: string;
+    ceilingUnviable: string;
+    ceilingOvenWall: string;
+    ceilingNeeds: string;
+    ceilingOptimize: string;
+    ceilingCanonicalOk: string;
+    ceilingCompromise: string;
+    /** Match card — voce "lista della spesa" farina ({w} = W ottimale). */
+    needFlour: string;
+    /** Match card — azioni. */
+    makePossible: string;
+    adaptToKitchen: string;
+    optimizeForMe: string;
+    resetToOriginal: string;
+    saveVersion: string;
+    savedVersion: string;
+    optimizedForSetup: string;
     tabProcedure: string;
     toppingTitle: string;
     /** Etichetta sezione condimento per gli stili FARCITI (es. "Farcitura").
@@ -1281,6 +1314,58 @@ export const CMS_DEFAULTS: CmsContent = {
     ballEstimateTooltip: "Stima indicativa basata sulla pezzatura tradizionale dello stile",
     tabRecipe: "Ricetta",
     tabRecipeTailored: "Ricetta su misura",
+    recipeCanonical: "Ricetta canonica",
+    preCookTitle: "Prima di accendere il forno",
+    preCookBody:
+      "Questa è ancora la ricetta originale. Puoi partire così, oppure adattarla al tuo forno e ai tuoi tempi prima di iniziare la pizzata.",
+    preCookAdapt: "Adattala alla mia cucina",
+    preCookStart: "Inizia comunque",
+    matchTones: {
+      t90: {
+        title: "Amore a prima vista",
+        canonical: "La canonica e la tua cucina parlano già la stessa lingua.",
+        adapted: "Questa versione è nata per il tuo setup.",
+      },
+      t75: {
+        title: "Ottima intesa",
+        canonical: "Qualche micro-compromesso, ma la scintilla c'è.",
+        adapted: "Pochi aggiustamenti, tanta sostanza.",
+      },
+      t60: {
+        title: "Ci vuole un po' di corteggiamento",
+        canonical: "Si può fare bene: sblocchiamola e Vulcan sistema tempi e cottura.",
+        adapted: "La ricetta funziona, ma chiede un minimo di attenzione.",
+      },
+      t40: {
+        title: "Per le cose buone ci vuole tempo",
+        canonical: "La ricetta è seria: meglio adattarla al tuo forno prima di provarci.",
+        adapted: "Buona direzione, ma serve ancora qualche compromesso.",
+      },
+      t0: {
+        title: "Cuore spezzato",
+        canonical: "Bellissima, ma oggi chiede più fuoco di quello che hai. La rendiamo possibile?",
+        adapted: "Troppo per questo setup: alleggeriamo tempi, forno o ambizione.",
+      },
+    },
+    ceilingUnviableOven:
+      "Anche al massimo arrivi a {ceiling}/100: il tuo forno non ci arriva. Meglio uno stile fatto per casa.",
+    ceilingUnviable:
+      "Anche al massimo arrivi a {ceiling}/100 con questo setup: non vale la pena.",
+    ceilingOvenWall:
+      "Il forno ti ferma a {ceiling}/100: niente leopardatura, ma una buona pizza sì.",
+    ceilingNeeds: "Per arrivare a {ceiling}/100 ti serve: {needs}.",
+    ceilingOptimize: "Puoi portarla a {ceiling}/100 ottimizzando — hai già tutto.",
+    ceilingCanonicalOk: "Anche la ricetta canonica resta fattibile col tuo setup.",
+    ceilingCompromise:
+      "Il tuo massimo per questo setup è {ceiling}/100: una versione di compromesso.",
+    needFlour: "una farina ~W{w}",
+    makePossible: "Rendila possibile",
+    adaptToKitchen: "Adatta alla mia cucina",
+    optimizeForMe: "Ottimizza per me",
+    resetToOriginal: "Torna all'originale",
+    saveVersion: "Salva la mia versione",
+    savedVersion: "Salvata nel ricettario",
+    optimizedForSetup: "Ottimizzata per il tuo setup",
     tabProcedure: "Procedimento",
     toppingTitle: "Condimento",
     fillingTitle: "Farcitura",

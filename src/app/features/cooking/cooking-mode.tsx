@@ -385,7 +385,7 @@ export function CookingMode() {
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-sm flex flex-col items-center text-center gap-4 p-6"
               style={{
-                borderRadius: 28,
+                borderRadius: "var(--radius-3xl)",
                 background: "var(--container-page)",
                 border: "1px solid var(--container-border)",
                 boxShadow: "0 24px 60px color-mix(in srgb, var(--shadow-color) 28%, transparent)",
@@ -399,7 +399,7 @@ export function CookingMode() {
                 style={{
                   width: 56,
                   height: 56,
-                  borderRadius: 20,
+                  borderRadius: "var(--radius-xl)",
                   background: "color-mix(in srgb, var(--destructive) 12%, transparent)",
                   color: "var(--destructive)",
                 }}
@@ -641,7 +641,7 @@ export function CookingMode() {
                 style={{
                   width: 56,
                   height: 56,
-                  borderRadius: 20,
+                  borderRadius: "var(--radius-xl)",
                   background: "var(--container-bg)",
                   border: "1px solid var(--container-border)",
                   color: viewIndex === 0 ? "var(--icon-muted)" : "var(--icon-default)",
@@ -662,7 +662,7 @@ export function CookingMode() {
                 className="flex-1 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
                 style={{
                   height: 56,
-                  borderRadius: 20,
+                  borderRadius: "var(--radius-xl)",
                   fontSize: "var(--font-size-xl-5)",
                   fontWeight: "var(--weight-semibold)" as any,
                   cursor: waiting ? "default" : "pointer",

@@ -45,6 +45,7 @@ import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 import { VulcanHero } from "../components/shared/vulcan-hero";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
 import { useCms } from "../features/cms/cms-context";
+import { t as tpl } from "../features/cms/i18n";
 import { getDietaryWarnings } from "../data/dietary-data";
 import {
   getInterpretationById,
@@ -644,16 +645,18 @@ export function HomePage() {
         const rng = FLOUR_W_RANGES[id];
         return rng && opt.flour_w >= rng[0] - 1 && opt.flour_w <= rng[1] + 1;
       });
-      if (!covered) softNeeds.push(`una farina ~W${opt.flour_w}`);
+      if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: opt.flour_w }));
     }
     if (
       constraints.pantry_yeasts.length > 0 &&
       !constraints.pantry_yeasts.includes(opt.yeast_type)
     ) {
-      softNeeds.push((YEAST_LABELS[opt.yeast_type] ?? opt.yeast_type).toLowerCase());
+      softNeeds.push(
+        (cms.yeastLabels?.[opt.yeast_type] ?? YEAST_LABELS[opt.yeast_type] ?? opt.yeast_type).toLowerCase(),
+      );
     }
     return { value: opt.scores.composite, hard, softNeeds };
-  }, [selectedStyle, constraints, cms.scoreDimensions]);
+  }, [selectedStyle, constraints, cms.scoreDimensions, cms.cooking.needFlour, cms.yeastLabels]);
 
   // La ricetta è "già ottimizzata" se siamo in modalità adattata, senza versione/
   // interpretazione, e i parametri correnti coincidono con l'ultimo ottimo. In quel
@@ -1355,8 +1358,8 @@ export function HomePage() {
               }
               eyebrow={
                 createRecipeMode === "canonical"
-                  ? "Ricetta canonica"
-                  : "Ricetta adattata"
+                  ? cms.cooking.recipeCanonical
+                  : cms.cooking.tabRecipeTailored
               }
               shareUrl={shareUrl}
               selectedToppingConcept={selectedToppingConcept}

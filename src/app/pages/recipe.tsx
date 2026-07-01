@@ -23,7 +23,7 @@ type ReactNode,
 } from "react";
 import { Link,useLocation,useParams,useSearchParams } from "react-router";
 import { useCms,type CmsContent } from "../features/cms/cms-context";
-import { createFormatter } from "../features/cms/i18n";
+import { createFormatter, t as tpl } from "../features/cms/i18n";
 import {
 getInterpretationById,
 getInterpretationsForStyle,
@@ -771,17 +771,19 @@ function RecipeContent({
         const rng = FLOUR_W_RANGES[id];
         return rng && opt.flour_w >= rng[0] - 1 && opt.flour_w <= rng[1] + 1;
       });
-      if (!covered) softNeeds.push(`una farina ~W${opt.flour_w}`);
+      if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: opt.flour_w }));
     }
     if (
       matchConstraints.pantry_yeasts.length > 0 &&
       !matchConstraints.pantry_yeasts.includes(opt.yeast_type)
     ) {
-      softNeeds.push((YEAST_LABELS[opt.yeast_type] ?? opt.yeast_type).toLowerCase());
+      softNeeds.push(
+        (cms.yeastLabels?.[opt.yeast_type] ?? YEAST_LABELS[opt.yeast_type] ?? opt.yeast_type).toLowerCase(),
+      );
     }
     return { value: opt.scores.composite, hard, softNeeds };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [style, matchConstraints, cms.scoreDimensions]);
+  }, [style, matchConstraints, cms.scoreDimensions, cms.cooking.needFlour, cms.yeastLabels]);
 
   const [lastOptimization, setLastOptimization] = useState<{
     params: { hydration: number; flour_w: number; fermentation_hours: number; fermentation_temp_c: number; use_pre_ferment: boolean };
@@ -916,7 +918,7 @@ function RecipeContent({
   const styleVersions = useMemo(() => getVersions(style.id), [style.id]);
   const recipeTabLabel =
     recipeMode === "canonical"
-      ? cmsMessage(cms, "recipeMode.canonical", "Ricetta canonica")
+      ? cmsMessage(cms, "recipeMode.canonical", cms.cooking.recipeCanonical)
       : recipeMode === "lab"
         ? cmsMessage(cms, "recipeMode.lab", "Laboratorio")
         : cms.cooking.tabRecipeTailored;
@@ -1505,7 +1507,9 @@ function RecipeSetupPanel({
     : isCanonical
       ? cmsMessage(cms, "recipeSetup.triggerCanonical", "Adatta idratazione, lievitazione e cottura alla tua cucina")
       : summary;
-  const triggerAction = isCanonical ? cms.ui.customizeParams : cms.ui.modify;
+  /* Il titolo del trigger dice già "Personalizza parametri": la pill
+     ripete il verbo breve, non il titolo (duplicava su desktop). */
+  const triggerAction = cms.ui.modify;
 
   return (
     <section>
@@ -1798,7 +1802,7 @@ function MatchSummary({
 }) {
   const { cms } = useCms();
   const roundedScore = Math.round(scores.composite);
-  const tone = matchTone(roundedScore, "adapted");
+  const tone = matchTone(roundedScore, "adapted", cms.cooking.matchTones);
   const axes = SCORE_DIMENSIONS.map((dimension) => ({
     key: dimension.key,
     color: dimension.color,

@@ -58,7 +58,7 @@ export function Dialog({
             className={className}
             style={{
               background: "var(--container-card)",
-              borderRadius: 28,
+              borderRadius: "var(--radius-3xl)",
               padding: 24,
               maxWidth: 400,
               width: "100%",

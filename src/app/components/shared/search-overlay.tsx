@@ -456,7 +456,7 @@ export function SearchOverlay({
               flexDirection: "column",
               background: "var(--container-bg-low)",
               border: "1px solid var(--container-border)",
-              borderRadius: 20,
+              borderRadius: "var(--radius-3xl)",
               boxShadow:
                 "0 24px 80px -12px color-mix(in srgb, var(--shadow-color) 25%, transparent), 0 0 0 1px color-mix(in srgb, var(--shadow-color) 4%, transparent)",
               transformOrigin: isMobile ? "bottom center" : "bottom left",
