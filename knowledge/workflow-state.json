@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-02T10:15:00.000Z",
+  "lastUpdated": "2026-07-02T17:10:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 142,
@@ -10,11 +10,11 @@
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-02 v3 registra l'introduzione dei componenti condivisi ConfirmDialog (conferma modale T4 unificata con scrim e blur) e SubPageHeader (barra sticky standardizzata per le sotto-pagine), e l'eliminazione dei blocchi di codice duplicati (es. RecipeSetupPanel in recipe.tsx).",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-02 v4 registra l'uso di container queries (cqw) e hyphens per titoli card resilienti a colonne strette, il limite minimo max(rem, px) sui micro-font mobili in theme.css, la rimozione dei parametri ridondanti in RecipeSetupPanel summary e l'allineamento baseline in TimeSlotPicker.",
   "filesMappedCount": 142,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-02-v3",
+  "lastScannedChapter": "kipi-update-2026-07-02-v4",
   "chapters": [
     {
       "id": "pizza-engine",

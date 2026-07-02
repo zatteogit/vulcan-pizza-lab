@@ -158,10 +158,13 @@
   --color-amber-75: #fff2dd;
 
   /* ── Typography Primitives · Size ── */
-  --font-size-2xs: 0.5rem; /*  8px — micro captions */
-  --font-size-xs: 0.5625rem; /*  9px — spec labels */
-  --font-size-sm: 0.625rem; /* 10px — badges, tag */
-  --font-size-base: 0.6875rem; /* 11px — DM Mono labels, chips */
+  /* max(rem, px): i micro-corpi NON scalano col root font-size ridotto dei
+     viewport stretti (15px ≤768, 14.25px ≤390) — 2xs arriverebbe a 7.1px,
+     sotto ogni soglia di leggibilità. Il pavimento è la dimensione desktop. */
+  --font-size-2xs: max(0.5rem, 8px); /*  8px — micro captions */
+  --font-size-xs: max(0.5625rem, 9px); /*  9px — spec labels */
+  --font-size-sm: max(0.625rem, 10px); /* 10px — badges, tag */
+  --font-size-base: max(0.6875rem, 11px); /* 11px — DM Mono labels, chips */
   --font-size-md: 0.75rem; /* 12px — body small, metadata */
   --font-size-lg: 0.8125rem; /* 13px — body, UI text */
   --font-size-xl: 0.875rem; /* 14px — body large, buttons */

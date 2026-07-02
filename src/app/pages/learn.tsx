@@ -414,19 +414,26 @@ export function LearnPage() {
                     color: "var(--text-default)",
                     lineHeight: "var(--leading-snug)",
                     margin: 0,
+                    /* Nomi lunghi ("Estensibilità") a 320px: meglio sillabare
+                       che traboccare — override del hyphens:manual di locale it. */
+                    hyphens: "auto",
+                    overflowWrap: "break-word",
                   }}
                 >
                   {term.name}
                   {term.symbol && (
+                    /*  : il simbolo resta agganciato all'ultima parola del
+                       termine — mai da solo su una riga (vedova). */
                     <span
-                      className="ml-2"
                       style={{
                         fontSize: "var(--font-size-xl)",
                         color: "var(--text-muted)",
                         fontFamily: "var(--font-mono)",
                         fontWeight: "var(--weight-regular)" as any,
+                        whiteSpace: "nowrap",
                       }}
                     >
+                      {"\u00A0"}
                       {term.symbol}
                     </span>
                   )}

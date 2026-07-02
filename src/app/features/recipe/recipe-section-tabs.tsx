@@ -115,16 +115,17 @@ export function RecipeSectionTabs({
         <div
           className="fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden"
           style={{
-            height: "112px",
+            height: "calc(112px + env(safe-area-inset-bottom, 0px))",
             background:
               "linear-gradient(to top, var(--container-page) 0%, var(--container-page) 46%, color-mix(in srgb, var(--container-page) 88%, transparent) 72%, transparent 100%)",
           }}
         />
         <motion.div
-          className="fixed bottom-6 left-0 right-0 z-50 px-2 pointer-events-none md:hidden"
+          className="fixed left-0 right-0 z-50 px-2 pointer-events-none md:hidden"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={liquidDockSpring}
+          style={{ bottom: "calc(var(--space-6, 24px) + env(safe-area-inset-bottom, 0px))" }}
         >
           <div
             className="mx-auto grid w-full max-w-[440px] items-center gap-1.5"
@@ -159,12 +160,16 @@ export function RecipeSectionTabs({
     <div
       className={
         navbar
-          ? "fixed bottom-6 left-1/2 z-50"
+          ? "fixed left-1/2 z-50"
           : `max-w-4xl mx-auto pt-4 sm:pt-5 mb-6 md:mb-8 ${sticky ? "sticky z-30" : ""}`
       }
       style={
         navbar
-          ? { transform: "translateX(-50%)", width: "min(360px, calc(100vw - 32px))" }
+          ? {
+              transform: "translateX(-50%)",
+              width: "min(360px, calc(100vw - 32px))",
+              bottom: "calc(var(--space-6, 24px) + env(safe-area-inset-bottom, 0px))",
+            }
           : sticky
             ? { top: stickyTop ?? 44 }
             : undefined

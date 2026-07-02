@@ -38,12 +38,6 @@ function localizedVersionLabel(cms: CmsContent, label: string): string {
   return cmsMessage(cms, `version.label.${label}`, label);
 }
 
-function localizedFermentTempLabel(cms: CmsContent, tempC: number): string {
-  if (tempC <= 6) return cmsMessage(cms, "recipeSetup.temp.fridge", "frigo");
-  if (tempC <= 16) return cmsMessage(cms, "recipeSetup.temp.cool", "fresco");
-  return cmsMessage(cms, "recipeSetup.temp.room", "ambiente");
-}
-
 function useBodyScrollLock(locked: boolean) {
   const scrollYRef = useRef(0);
 
@@ -189,15 +183,15 @@ export function RecipeSetupPanel({
       getInterpretationById(activeInterpretationId)
     : null;
 
-  const tempLabel = localizedFermentTempLabel(cms, customFermentTemp);
-  const durationLabel = fmt.durationMinutes(customFermentHours * 60);
   const activeVersionLabel = activeVersion
     ? localizedVersionLabel(cms, activeVersion.label)
     : cmsMessage(cms, "recipeSetup.styleBase", "stile base");
+  /* Ridondanza: i numeri (idratazione, W, ore, temperatura) vivono già nelle
+     stat card immediatamente sopra il trigger. Qui solo ciò che la strip non
+     dice: il preset e l'interpretazione attivi. */
   const summary = [
     activeVersionLabel,
     activeInterpretation ? interpretationName(activeInterpretation) : null,
-    `${fmt.percent(customHydration)} · W${customFlourW} · ${durationLabel} · ${tempLabel}`,
   ]
     .filter(Boolean)
     .join(" · ");

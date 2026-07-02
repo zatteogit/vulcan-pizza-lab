@@ -387,6 +387,9 @@ interface SettingsSummaryBarProps {
   timeActive?: boolean;
   /** Click sul chip "Quando" → torna a cambiare la tempistica. */
   onChangeTime?: () => void;
+  /** Microcopy sotto i chip. Solo al primo incontro (step 1): allo step
+   *  successivo il sottotitolo di pagina dice già la stessa cosa. */
+  showHelp?: boolean;
 }
 
 function SettingsSummaryBar({
@@ -399,6 +402,7 @@ function SettingsSummaryBar({
   selectedTimeSlotId,
   timeActive = false,
   onChangeTime,
+  showHelp = true,
 }: SettingsSummaryBarProps) {
   /* R10: la chip rappresenta la cucina nel suo insieme, non solo il forno.
      Label "La tua cucina"; il tipo di forno e la temperatura vivono nel drawer. */
@@ -497,18 +501,20 @@ function SettingsSummaryBar({
     </div>
 
       {/* VPL-C1: microcopy — spiega a cosa servono questi dati */}
-      <p
-        className="text-center"
-        style={{
-          color: "var(--text-muted)",
-          fontSize: "var(--font-size-xs)",
-          lineHeight: "var(--leading-normal)",
-          opacity: 0.85,
-          margin: 0,
-        }}
-      >
-        {cms.misc.settingsHelp}
-      </p>
+      {showHelp && (
+        <p
+          className="text-center"
+          style={{
+            color: "var(--text-muted)",
+            fontSize: "var(--font-size-xs)",
+            lineHeight: "var(--leading-normal)",
+            opacity: 0.85,
+            margin: 0,
+          }}
+        >
+          {cms.misc.settingsHelp}
+        </p>
+      )}
     </div>
   );
 }
@@ -672,6 +678,7 @@ export function UserNeeds({
               selectedTimeSlotId={selectedTimeSlot}
               timeActive={compact && !hideTimeSlots}
               onChangeTime={onChangeTime}
+              showHelp={!compact}
             />
 
             <AnimatePresence mode="wait">
@@ -1152,6 +1159,17 @@ function TimeSlotPicker({
                     fontSize: compact ? "var(--font-size-md)" : "var(--font-size-lg)",
                     fontWeight: "var(--weight-semibold)" as any,
                     lineHeight: 1.2,
+                    /* Griglia: le label variano tra 1 e 2 righe ("Tonight" vs
+                       "Tomorrow at lunch"); riservare sempre 2 righe allinea
+                       i sottotitoli orari sulla stessa baseline in tutte le card. */
+                    ...(compact
+                      ? {}
+                      : {
+                          minHeight: "2.4em",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }),
                   }}
                 >
                   {displayLabel}

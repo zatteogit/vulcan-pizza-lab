@@ -418,8 +418,10 @@ export function RecommendedStyles({
                 >
                   {tierLabel}
                 </span>
+                {/* Densità mobile: etichetta+icona+conteggio bastano; la
+                    spiegazione del tier entra da sm in su. */}
                 <span
-                  className="font-serif italic"
+                  className="font-serif italic hidden sm:inline"
                   style={{ color: "var(--text-muted)", fontSize: "var(--font-size-lg)" }}
                 >
                   {tierSubtitle}
@@ -576,7 +578,7 @@ function StyleCard({
           {/* ── Photo area ── */}
           <div
             className="relative overflow-hidden"
-            style={{ aspectRatio: "3/4" }}
+            style={{ aspectRatio: "3/4", containerType: "inline-size" }}
           >
             {/* Image with zoom on select */}
             <motion.div
@@ -646,7 +648,12 @@ function StyleCard({
               <span
                 className="font-serif"
                 style={{
-                  fontSize: "clamp(var(--font-size-3xl), 3.5vw, var(--font-size-6-5xl))",
+                  /* min(…, cqw): nelle colonne strette il titolo scala con la
+                     card — "Contemporanea" non si spezza né viene clippato. */
+                  fontSize:
+                    "min(clamp(var(--font-size-3xl), 3.5vw, var(--font-size-6-5xl)), 10.5cqw)",
+                  hyphens: "auto",
+                  overflowWrap: "break-word",
                   fontWeight: "var(--weight-bold)" as any,
                   lineHeight: "var(--leading-snug)",
                   color: "var(--overlay-text)",

@@ -709,7 +709,7 @@ function SignatureRecipeCard({
         >
           <div
             className="relative overflow-hidden"
-          style={{ aspectRatio: "3/4" }}
+          style={{ aspectRatio: "3/4", containerType: "inline-size" }}
         >
           <ImageWithFallback
             src={photo}
@@ -757,8 +757,13 @@ function SignatureRecipeCard({
             <span
               className="font-serif"
               style={{
+                /* min(…, cqw): nelle colonne strette (griglie 4-col a ~768px)
+                   il titolo scala con la larghezza reale della card, così
+                   "Friarielli"/"Porchetta" non si spezzano né vengono clippati. */
                 fontSize:
-                  "clamp(var(--font-size-2xl), 3vw, var(--font-size-5xl))",
+                  "min(clamp(var(--font-size-2xl), 3vw, var(--font-size-5xl)), 12cqw)",
+                hyphens: "auto",
+                overflowWrap: "break-word",
                 fontWeight: "var(--weight-bold)" as any,
                 lineHeight: "var(--leading-snug)",
                 color: "var(--overlay-text)",
@@ -852,7 +857,7 @@ function StyleCatalogCard({
           {/* Photo area — 3/4 aspect like Create cards */}
         <div
           className="relative overflow-hidden"
-          style={{ aspectRatio: "3/4" }}
+          style={{ aspectRatio: "3/4", containerType: "inline-size" }}
         >
           <ImageWithFallback
             src={photo}
@@ -924,8 +929,13 @@ function StyleCatalogCard({
             <span
               className="font-serif"
               style={{
+                /* min(…, cqw): nelle colonne strette (griglie 4-col a ~768px)
+                   il titolo scala con la card: "Contemporanea" non viene più
+                   spezzato ("Contemporane/a") né clippato in locale it. */
                 fontSize:
-                  "clamp(var(--font-size-3xl), 3.5vw, var(--font-size-6-5xl))",
+                  "min(clamp(var(--font-size-3xl), 3.5vw, var(--font-size-6-5xl)), 10.5cqw)",
+                hyphens: "auto",
+                overflowWrap: "break-word",
                 fontWeight: "var(--weight-bold)" as any,
                 lineHeight: "var(--leading-snug)",
                 color: "var(--overlay-text)",

@@ -276,6 +276,8 @@ export function RecipeView({
             WebkitBackdropFilter: "blur(24px) saturate(1.6)",
             borderBottom:
               "1px solid var(--container-border-subtle)",
+            /* Notch / status bar (Safari iOS, PWA, landscape) */
+            paddingTop: "env(safe-area-inset-top, 0px)",
           }}
         >
           <div className="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center gap-3">
@@ -324,7 +326,11 @@ export function RecipeView({
             opacity: backHidden ? 0 : 1,
           }}
           transition={{ type: "spring", stiffness: 360, damping: 31, mass: 0.72 }}
-          style={{ pointerEvents: backHidden ? "none" : "auto" }}
+          style={{
+            pointerEvents: backHidden ? "none" : "auto",
+            /* Notch / status bar: allineato al ProfileButton della shell. */
+            top: "calc(var(--space-4, 16px) + env(safe-area-inset-top, 0px))",
+          }}
         >
           {back.to ? (
             <IconButton

@@ -26,10 +26,15 @@ export function SubPageHeader({
   meta?: ReactNode;
 }) {
   return (
-    <Surface as="header" variant="glass" className="sticky top-0 z-40 h-14 sm:h-16">
+    <Surface
+      as="header"
+      variant="glass"
+      className="sticky top-0 z-40"
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+    >
       {/* pr-16: riserva la corsia del ProfileButton fisso della shell,
           che a viewport stretti tocca il bordo del contenitore. */}
-      <div className="max-w-4xl mx-auto pl-4 pr-16 sm:pl-6 sm:pr-16 h-full flex items-center gap-3">
+      <div className="max-w-4xl mx-auto pl-4 pr-16 sm:pl-6 sm:pr-16 h-14 sm:h-16 flex items-center gap-3">
         <Link
           to={backTo}
           data-back-button="true"
