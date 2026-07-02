@@ -1610,7 +1610,7 @@ function RecipeSetupPanel({
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 350, damping: 34 }}
-              className="w-full h-[92dvh] max-h-[92dvh] sm:h-[min(760px,88vh)] sm:max-h-[88vh] sm:max-w-[1160px] rounded-t-[2.5rem] sm:rounded-[2rem] border-0 sm:border overflow-hidden flex flex-col"
+              className="w-full h-[92dvh] max-h-[92dvh] sm:h-[min(760px,88vh)] sm:max-h-[88vh] sm:max-w-[1160px] rounded-t-4xl sm:rounded-4xl border-0 sm:border overflow-hidden flex flex-col"
               style={{
                 background: "color-mix(in srgb, var(--container-page) 92%, transparent)",
                 color: "var(--text-default)",

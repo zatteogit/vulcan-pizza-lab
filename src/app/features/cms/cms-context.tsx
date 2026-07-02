@@ -734,6 +734,8 @@ export interface CmsContent {
     saveVersion: string;
     savedVersion: string;
     optimizedForSetup: string;
+    /** Chiusura pizzata completata ({style} = nome dello stile). */
+    doneBody: string;
     tabProcedure: string;
     toppingTitle: string;
     /** Etichetta sezione condimento per gli stili FARCITI (es. "Farcitura").
@@ -1366,6 +1368,7 @@ export const CMS_DEFAULTS: CmsContent = {
     saveVersion: "Salva la mia versione",
     savedVersion: "Salvata nel ricettario",
     optimizedForSetup: "Ottimizzata per il tuo setup",
+    doneBody: "Hai completato tutti i passaggi della tua {style}. Buon appetito!",
     tabProcedure: "Procedimento",
     toppingTitle: "Condimento",
     fillingTitle: "Farcitura",

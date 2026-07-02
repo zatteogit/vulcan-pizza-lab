@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-07-02T01:30:00.000Z",
+  "lastUpdated": "2026-07-02T09:40:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 140,
     "appFilesExcludingUi": 140,
     "pizzaEngineExports": 59,
     "pizzaEngineLines": 4975,
-    "cmsContextLines": 3266,
+    "cmsContextLines": 3268,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-02 registra la localizzazione completa delle diagnostiche MatchCard nel CMS, la modale pre-cooking per ricette canoniche, e l'occultamento dinamico a scorrimento del ProfileButton in AppShell.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-02 v2 registra lo splash screen nativo, lo script anti-FOUC sincrono in index.html, la sincronizzazione del colore di overscroll su cambi tema, il rolling spring del punteggio, la ritirata del widget e del bottone indietro al scroll, e i coriandoli CelebrationBurst a fine sessione.",
   "filesMappedCount": 140,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-02",
+  "lastScannedChapter": "kipi-update-2026-07-02-v2",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -116,6 +116,7 @@
       "title": "Routing e shell app",
       "status": "completed",
       "filesDocumented": [
+        "index.html",
         "src/app/routes.ts",
         "src/app/App.tsx",
         "src/main.tsx",

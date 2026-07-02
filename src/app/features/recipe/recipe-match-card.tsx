@@ -1,4 +1,5 @@
-import { motion, AnimatePresence } from "motion/react";
+import { useEffect } from "react";
+import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, RotateCcw, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
@@ -80,6 +81,30 @@ export function matchTone(score: number, mode: RecipeMatchMode, tones?: MatchTon
     low: fallback.low,
     icon: fallback.icon,
   };
+}
+
+/* ═══ ANIMATED SCORE — il numero "rolla" verso il valore con una spring.
+   Al mount parte da 0 (rivelazione), poi insegue ogni ricalcolo. Con
+   prefers-reduced-motion salta direttamente al valore. tnum evita jitter. */
+function AnimatedScore({ value, style }: { value: number; style?: React.CSSProperties }) {
+  const prefersReducedMotion = useReducedMotion();
+  const spring = useSpring(prefersReducedMotion ? value : 0, {
+    stiffness: 90,
+    damping: 22,
+  });
+  useEffect(() => {
+    if (prefersReducedMotion) spring.jump(value);
+    else spring.set(value);
+  }, [value, spring, prefersReducedMotion]);
+  const display = useTransform(spring, (v) => String(Math.round(v)));
+  return (
+    <motion.span
+      className="type-numeric inline-block"
+      style={{ ...style, fontFeatureSettings: "'tnum'" }}
+    >
+      {display}
+    </motion.span>
+  );
 }
 
 export function RecipeMatchCard({
@@ -262,24 +287,15 @@ export function RecipeMatchCard({
               Match
             </span>
             <div className="flex items-baseline">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.span
-                  key={roundedScore}
-                  className="type-numeric inline-block"
-                  initial={{ opacity: 0.3, y: 5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0.3, y: -5 }}
-                  transition={{ type: "spring", stiffness: 380, damping: 26 }}
-                  style={{
-                    color: "var(--text-default)",
-                    fontSize: "var(--font-size-4xl)",
-                    fontWeight: "var(--weight-bold)" as any,
-                    lineHeight: 1.1,
-                  }}
-                >
-                  {roundedScore}
-                </motion.span>
-              </AnimatePresence>
+              <AnimatedScore
+                value={roundedScore}
+                style={{
+                  color: "var(--text-default)",
+                  fontSize: "var(--font-size-4xl)",
+                  fontWeight: "var(--weight-bold)" as any,
+                  lineHeight: 1.1,
+                }}
+              />
               <span
                 className="type-numeric ml-0.5"
                 style={{

@@ -138,8 +138,18 @@ export function RecipeSetupPanel({
   const open = controlledOpen !== undefined ? controlledOpen : localOpen;
   const setOpen =
     controlledOnOpenChange !== undefined ? controlledOnOpenChange : setLocalOpen;
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useBodyScrollLock(open);
+
+  /* All'apertura il focus va sul pulsante di chiusura (a11y: tastiera/VO). */
+  useEffect(() => {
+    if (!open) return;
+    const frame = window.requestAnimationFrame(() => {
+      closeButtonRef.current?.focus();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open]);
 
   useEffect(() => {
     const attr = "data-recipe-setup-open";
@@ -301,7 +311,7 @@ export function RecipeSetupPanel({
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 350, damping: 34 }}
-              className="w-full h-[92dvh] max-h-[92dvh] sm:h-[min(760px,88vh)] sm:max-h-[88vh] sm:max-w-[1160px] rounded-t-[2.5rem] sm:rounded-[2rem] border-0 sm:border overflow-hidden flex flex-col"
+              className="w-full h-[92dvh] max-h-[92dvh] sm:h-[min(760px,88vh)] sm:max-h-[88vh] sm:max-w-[1160px] rounded-t-4xl sm:rounded-4xl border-0 sm:border overflow-hidden flex flex-col"
               style={{
                 background:
                   "color-mix(in srgb, var(--container-page) 92%, transparent)",
@@ -347,6 +357,7 @@ export function RecipeSetupPanel({
                   )}
 
                   <button
+                    ref={closeButtonRef}
                     type="button"
                     onClick={() => setOpen(false)}
                     className="flex items-center justify-center rounded-full hover:bg-[color-mix(in srgb,var(--text-default)_10%,transparent)] hover:text-[var(--text-default)] active:scale-90 transition-all duration-150 flex-shrink-0"
@@ -409,8 +420,11 @@ export function RecipeSetupPanel({
                       className="type-body"
                       style={{ color: "var(--text-muted)", lineHeight: "1.4" }}
                     >
-                      Scegli un preset bilanciato dai nostri pizzaioli o
-                      un'interpretazione d'autore per configurare l'impasto.
+                      {cmsMessage(
+                        cms,
+                        "recipeSetup.profileHint",
+                        "Scegli un preset bilanciato dai nostri pizzaioli o un'interpretazione d'autore per configurare l'impasto.",
+                      )}
                     </span>
                   </div>
                   <PremiumSelect

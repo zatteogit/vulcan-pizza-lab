@@ -14,11 +14,10 @@ ChevronLeft,
 ChevronRight,
 Clock,
 Lightbulb,
-PartyPopper,
 Trash2,
 X,
 } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
+import { AnimatePresence,motion,useReducedMotion } from "motion/react";
 import { useCallback,useEffect,useMemo,useState } from "react";
 import { createPortal } from "react-dom";
 import { useCms,type CmsContent } from "../cms/cms-context";
@@ -31,6 +30,7 @@ useCookSession,
 type CookSessionStep
 } from "./cook-session";
 import { CtaButton, Heading } from "../../components/ds/index";
+import { DoughBlob } from "./dough-mascot";
 import { StepIllustration } from "./step-illustrations";
 
 type CookingCopy = CmsContent["cooking"];
@@ -474,23 +474,23 @@ export function CookingMode() {
                 exit={{ opacity: 0, y: -12 }}
                 className="flex flex-col items-center text-center gap-5 pt-12"
               >
-                <div
-                  className="flex items-center justify-center"
-                  style={{
-                    width: "var(--space-22, 88px)",
-                    height: "var(--space-22, 88px)",
-                    borderRadius: "var(--radius-2xl)",
-                    background: "color-mix(in srgb, var(--recipe-success) 14%, transparent)",
-                    color: "var(--recipe-success)",
-                  }}
-                >
-                  <PartyPopper size={40} />
+                {/* La mascotte festeggia con te: blob ad alta energia + burst
+                    di coriandoli una tantum (niente con reduced-motion). */}
+                <div className="relative flex items-center justify-center" style={{ width: 168, height: 168 }}>
+                  <CelebrationBurst />
+                  <motion.div
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.05 }}
+                  >
+                    <DoughBlob variant="rise" size={124} energy={92} />
+                  </motion.div>
                 </div>
                 <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 6vw, 2.75rem)", lineHeight: 1.1 }}>
                   {cms.cooking.completed}
                 </h2>
                 <p style={{ fontSize: "var(--font-size-xl)", color: "var(--text-muted)", maxWidth: "var(--cooking-done-max-width, 380px)", lineHeight: 1.5 }}>
-                  Hai completato tutti i passaggi della tua {session.styleName}. Buon appetito!
+                  {t(cms.cooking.doneBody, { style: session.styleName })}
                 </p>
                 <CtaButton
                   onClick={endSession}
@@ -709,4 +709,57 @@ export function CookingMode() {
   );
 
   return createPortal(overlay, document.body);
+}
+
+/* ═══ CELEBRATION BURST — coriandoli one-shot per la pizzata completata ═══
+   Particelle deterministiche (niente random → niente re-render jitter),
+   solo colori token, nulla con prefers-reduced-motion. */
+const BURST_COLORS = [
+  "var(--primary)",
+  "var(--tertiary)",
+  "var(--recipe-success)",
+  "var(--text-accent)",
+];
+
+function CelebrationBurst() {
+  const prefersReducedMotion = useReducedMotion();
+  if (prefersReducedMotion) return null;
+  const particles = Array.from({ length: 14 }, (_, i) => {
+    const angle = (i / 14) * Math.PI * 2 - Math.PI / 2;
+    const distance = 74 + (i % 3) * 24;
+    return {
+      x: Math.cos(angle) * distance,
+      y: Math.sin(angle) * distance - 12,
+      color: BURST_COLORS[i % BURST_COLORS.length],
+      delay: 0.18 + (i % 5) * 0.045,
+      rotate: (i % 2 ? 1 : -1) * (140 + i * 16),
+      size: i % 3 === 0 ? 10 : 7,
+      round: i % 2 === 0,
+    };
+  });
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      {particles.map((p, i) => (
+        <motion.span
+          key={i}
+          className="absolute"
+          initial={{ x: 0, y: 0, scale: 0, opacity: 0, rotate: 0 }}
+          animate={{
+            x: p.x,
+            y: p.y,
+            scale: [0, 1, 0.85],
+            opacity: [0, 1, 0],
+            rotate: p.rotate,
+          }}
+          transition={{ duration: 1.15, delay: p.delay, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            width: p.size,
+            height: p.size,
+            borderRadius: p.round ? "50%" : "var(--radius-xs)",
+            background: p.color,
+          }}
+        />
+      ))}
+    </div>
+  );
 }

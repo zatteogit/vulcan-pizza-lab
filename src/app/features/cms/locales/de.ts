@@ -1294,6 +1294,7 @@ export const DE_LOCALE: CmsContent = {
     saveVersion: "Meine Version speichern",
     savedVersion: "Im Rezeptbuch gespeichert",
     optimizedForSetup: "F\u00FCr dein Setup optimiert",
+    doneBody: "Du hast alle Schritte deiner {style} abgeschlossen. Guten Appetit!",
     tabProcedure: "Zubereitung",
     toppingTitle: "Belag",
     chooseTopping: "Belag w\u00E4hlen",

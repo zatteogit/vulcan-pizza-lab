@@ -1,7 +1,7 @@
 /**
  * Foundation — Scala dei raggi. Box con ogni token `--radius-*`.
  */
-const RADII = ["--radius-xs", "--radius-sm", "--radius-md", "--radius-lg", "--radius-xl", "--radius-2xl", "--radius-full"];
+const RADII = ["--radius-xs", "--radius-sm", "--radius-md", "--radius-lg", "--radius-xl", "--radius-2xl", "--radius-3xl", "--radius-4xl", "--radius-full"];
 
 export function RadiusScale() {
   return (

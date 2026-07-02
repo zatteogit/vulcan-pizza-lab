@@ -423,6 +423,7 @@ export const EN_LOCALE: CmsContent = {
     saveVersion: "Save my version",
     savedVersion: "Saved to your recipe book",
     optimizedForSetup: "Optimized for your setup",
+    doneBody: "You’ve completed every step of your {style}. Enjoy!",
     tabProcedure: "Steps",
     toppingTitle: "Topping",
     fillingTitle: "Filling",

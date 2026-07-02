@@ -89,6 +89,10 @@ export const router = createBrowserRouter([
         path: "glossary",
         loader: () => redirect("/learn/glossary"),
       },
+      {
+        path: "pre-ferments",
+        loader: () => redirect("/learn/pre-ferments"),
+      },
 
       /* ═══ CATCH-ALL ═══ */
       {

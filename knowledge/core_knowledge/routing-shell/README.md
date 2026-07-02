@@ -1,5 +1,5 @@
 # Routing e shell app
-> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 9
+> Aggiornamento: 2026-07-02 | Stato: ✅ | File documentati: 10
 
 ## Sommario
 
@@ -11,9 +11,10 @@ Vulcan è una **SPA React Router 7** (`createBrowserRouter`): entry `main.tsx` �
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
+| `index.html` | 92 | Entry point HTML, caricamento viewport-fit, anti-FOUC script sincrono e splash screen Vulcan |
 | `src/main.tsx` | 13 | `createRoot` + `StrictMode` → `App` |
 | `src/app/App.tsx` | 6 | `RouterProvider` con `router` da `routes.ts` |
-| `src/app/routes.ts` | 94 | Definizione route lazy, redirect legacy, catch-all |
+| `src/app/routes.ts` | 98 | Definizione route lazy, redirect legacy (incluso prefermenti), catch-all |
 | `src/app/components/shared/app-shell.tsx` | 756 | Layout principale, barre liquid-glass a 3 tab, trigger ricerca integrato, ProfileButton top-right, provider e sessione cucina globale |
 | `src/app/components/shared/search-overlay.tsx` | 791 | Command palette: stili, glossario, problemi, guide, farine |
 | `src/app/pages/not-found.tsx` | 73 | Pagina 404 personalizzata con fallback CMS ed animazioni spring |
@@ -109,6 +110,10 @@ Questo design lascia l'header superiore completamente libero per i loghi, titoli
 - **Un solo layout root** con provider: evitare annidare `CmsProvider` nelle pagine figlie.
 - **Portali** (search overlay): `createPortal` su `document.body`; classe `.dark` deve stare su `<html>` (gestito in shell).
 - **Supporto Safe Area e Viewport Dinamico**: In `app-shell.tsx`, `active-cook-widget.tsx` e `cooking-mode.tsx`, il posizionamento degli elementi (es. `BottomTabBar`, `ProfileButton`, `ActiveCookWidget`, `CookingMode` header) utilizza i margini calcolati via CSS `env(safe-area-inset-top)` e `env(safe-area-inset-bottom)` combinati con `viewport-fit=cover` (in `index.html`). Questo garantisce la sicurezza di tocco ed evita sovrapposizioni o tagli causati da notch, fotocamere o navigatori di sistema sui telefoni borderless. L'altezza minima dello schermo è gestita via `100dvh` (viewport dinamico) per impedire instabilità grafiche quando la barra degli indirizzi del browser mobile compare o scompare.
+- **Splash Screen e Anti-FOUC (T1)**: In `index.html`, è stato inserito uno script sincrono in `<head>` per applicare immediatamente la classe `.dark` e il colore di sfondo corretto dal `localStorage` prima del primo rendering grafico (Anti-FOUC). All'interno del tag `#root` è presente `#vulcan-splash` con il logo `VulcanMark` in SVG e animazione di respirazione, che intrattiene l'utente durante il bootstrap dell'app.
+- **Sincronizzazione Colore Sfondo Overscroll**: In `app-shell.tsx`, ad ogni variazione del tema scuro viene aggiornato il colore di sfondo di `document.documentElement` (`var(--container-page)`) per evitare flash grafici di colore contrastante durante lo scorrimento elastico (overscroll) su iOS e macOS.
+- **Ritirata del Pulsante Indietro Flottante**: In `recipe-view.tsx`, il pulsante `ChevronLeft` flottante si ritira verso l'alto (`y: -72`, opacity: 0) durante lo scorrimento verso il basso e riemerge quando si risale o si raggiunge la cima (y < 96), per non sovrapporsi ai contenuti.
+- **Roll del Punteggio Animato (Spring-based)**: In `recipe-match-card.tsx`, il punteggio principale della ricetta viene animato al mount o al variare dei parametri usando il componente `AnimatedScore` con motion spring e font tabular (`'tnum'`) per impedire jitter di layout, rispettando le preferenze `prefers-reduced-motion`.
 - **Filtro Risultati di Ricerca (Sprint 12)**: La Command Palette (`SearchOverlay`) ospita direttamente sotto l'input di ricerca una barra orizzontale a scorrimento con tab testuali dotati di icone per filtrare dinamicamente i risultati in base alla tipologia:
   - **Tutto** (`all`, icona `Search`): Mostra l'intera lista di risultati.
   - **Stili** (`styles`, icona `ChefHat`): Filtra gli stili di pizza (`type === 'style'`).

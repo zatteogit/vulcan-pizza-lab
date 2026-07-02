@@ -545,7 +545,7 @@ function CondimentChoiceStrip({
                   animate={{ y: 0, opacity: 1, scale: 1 }}
                   exit={{ y: 20, opacity: 0, scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                  className="w-full max-w-2xl overflow-hidden rounded-[2rem]"
+                  className="w-full max-w-2xl overflow-hidden rounded-4xl"
                   style={{
                     maxHeight: "min(760px, calc(100vh - 32px))",
                     background: "color-mix(in srgb, var(--container-page) 94%, transparent)",
@@ -775,7 +775,7 @@ function NerdAuraBlock({
     <div className={`relative ${className}`} style={{ isolation: "isolate" }}>
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute rounded-[2rem]"
+        className="pointer-events-none absolute rounded-4xl"
         initial={false}
         animate={
           reduceMotion
@@ -2717,7 +2717,7 @@ export function RecipeOutput({
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-sm flex flex-col items-center text-center gap-4 p-6"
               style={{
-                borderRadius: 28,
+                borderRadius: "var(--radius-3xl)",
                 background: "var(--container-page)",
                 border: "1px solid var(--container-border)",
                 boxShadow: "0 24px 60px color-mix(in srgb, var(--shadow-color) 28%, transparent)",
@@ -2731,7 +2731,7 @@ export function RecipeOutput({
                 style={{
                   width: 56,
                   height: 56,
-                  borderRadius: 20,
+                  borderRadius: "var(--radius-xl)",
                   background: "color-mix(in srgb, var(--primary) 12%, transparent)",
                   color: "var(--primary)",
                 }}
@@ -2796,7 +2796,7 @@ export function RecipeOutput({
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-md flex flex-col items-center text-center gap-4 p-6"
               style={{
-                borderRadius: 28,
+                borderRadius: "var(--radius-3xl)",
                 background:
                   "linear-gradient(145deg, color-mix(in srgb, var(--container-page) 92%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 38%, var(--container-page)))",
                 border: "1px solid color-mix(in srgb, var(--primary) 24%, var(--container-border))",
@@ -2811,7 +2811,7 @@ export function RecipeOutput({
                 style={{
                   width: 58,
                   height: 58,
-                  borderRadius: 22,
+                  borderRadius: "var(--radius-xl)",
                   background: "color-mix(in srgb, var(--primary) 13%, var(--container-page))",
                   color: "var(--primary)",
                 }}

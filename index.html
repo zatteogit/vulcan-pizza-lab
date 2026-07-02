@@ -3,12 +3,82 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#FDFBF7" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FDFBF7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#131211" />
     <title>Vulcan Pizza Lab</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌋</text></svg>" />
+    <script>
+      /* Anti-FOUC: applica il tema salvato PRIMA del primo paint, così gli
+         utenti dark non vedono il flash bianco. Stessa chiave/semantica di
+         app-shell.tsx (vulcan_dark_mode: light | dark | auto, legacy true/false). */
+      (function () {
+        try {
+          var mode = localStorage.getItem("vulcan_dark_mode");
+          var dark =
+            mode === "dark" ||
+            mode === "true" ||
+            ((mode === null || mode === "auto") &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var el = document.documentElement;
+          if (dark) el.classList.add("dark");
+          /* Colore diretto: copre il gap prima che theme.css sia caricato. */
+          el.style.backgroundColor = dark ? "#131211" : "#fdfbf7";
+        } catch (e) {
+          /* storage inaccessibile: resta il default chiaro */
+        }
+      })();
+    </script>
+    <style>
+      /* Splash di avvio — vive dentro #root: al mount React lo sostituisce
+         da solo, nessuno script di rimozione. Valori hardcoded a ragion
+         veduta: theme.css non è ancora arrivato. */
+      #vulcan-splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fdfbf7;
+      }
+      html.dark #vulcan-splash {
+        background: #131211;
+      }
+      #vulcan-splash svg {
+        width: 52px;
+        height: 52px;
+        color: #c24a2f;
+        animation: vulcan-splash-breathe 1.7s ease-in-out infinite;
+      }
+      @keyframes vulcan-splash-breathe {
+        0%,
+        100% {
+          opacity: 0.35;
+          transform: scale(0.94);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #vulcan-splash svg {
+          animation: none;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="vulcan-splash" aria-hidden="true">
+        <!-- VulcanMark, variante NATURALE (vulcan-logo.tsx) -->
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <path
+            d="M5 1.5H7.5L13 27ZM23 1.5H30L20 27C20 30 15.5 30 15.5 27Z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

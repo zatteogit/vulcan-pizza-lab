@@ -567,11 +567,13 @@ function CookSessionUI({
   hasProfileButton,
   showAction,
   compact,
+  hidden,
 }: {
   canStartRecipe: boolean;
   hasProfileButton: boolean;
   showAction: boolean;
   compact: boolean;
+  hidden: boolean;
 }) {
   const { session, overlayOpen } = useCookSession();
   return (
@@ -581,6 +583,7 @@ function CookSessionUI({
           canStartRecipe={canStartRecipe}
           hasProfileButton={hasProfileButton}
           compact={compact}
+          hidden={hidden}
         />
       )}
       <AnimatePresence>{overlayOpen && session && <CookingMode />}</AnimatePresence>
@@ -647,6 +650,9 @@ export function AppShell() {
     const cl = document.documentElement.classList;
     if (darkMode) cl.add("dark");
     else cl.remove("dark");
+    /* Mantiene coerente il colore impostato dallo script anti-FOUC di
+       index.html anche quando il tema cambia in-app (overscroll/rubber-band). */
+    document.documentElement.style.backgroundColor = "var(--container-page)";
   }, [darkMode]);
 
   /* Ctrl+Shift+D shortcut + ⌘K / Ctrl+K search */
@@ -751,6 +757,7 @@ export function AppShell() {
             hasProfileButton={hasProfileButton}
             showAction={showCookAction}
             compact={navState.scrolled}
+            hidden={navState.hidden}
           />
         </div>
         </CookSessionProvider>

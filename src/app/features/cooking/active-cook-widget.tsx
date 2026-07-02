@@ -17,10 +17,14 @@ export function ActiveCookWidget({
   canStartRecipe = false,
   hasProfileButton = false,
   compact = false,
+  hidden = false,
 }: {
   canStartRecipe?: boolean;
   hasProfileButton?: boolean;
   compact?: boolean;
+  /** Chrome liquida ritirata (scroll verso il basso). Il widget idle si ritira
+   *  con lei; una pizzata ATTIVA resta sempre visibile (è un timer live). */
+  hidden?: boolean;
 }) {
   const { session, overlayOpen, openOverlay } = useCookSession();
   const { cms } = useCms();
@@ -38,6 +42,7 @@ export function ActiveCookWidget({
   if (!session && !canStartRecipe) return null;
 
   const active = Boolean(session);
+  const retracted = hidden && !active;
   const metrics = session ? getSessionMetrics(session) : null;
   const due = Boolean(metrics?.isDue);
   const countdown = metrics ? getCompactCountdown(metrics.actionAt, cms.cooking) : "";
@@ -65,7 +70,13 @@ export function ActiveCookWidget({
         key={active ? "cook-active-action" : "cook-start-action"}
         type="button"
         initial={{ opacity: 0, y: -8, scale: 0.98, height: actionHeight, right: rightVal }}
-        animate={{ opacity: 1, y: 0, scale: 1, height: actionHeight, right: rightVal }}
+        animate={{
+          opacity: retracted ? 0 : 1,
+          y: retracted && !prefersReducedMotion ? -(actionHeight + 28) : 0,
+          scale: 1,
+          height: actionHeight,
+          right: rightVal,
+        }}
         exit={{ opacity: 0, y: -6, scale: 0.98 }}
         whileHover={prefersReducedMotion ? undefined : { scale: 1.018, y: -1 }}
         whileTap={{ scale: 0.96 }}
@@ -95,6 +106,7 @@ export function ActiveCookWidget({
           paddingLeft: compact ? 12 : 14,
           paddingRight: compact ? 12 : 14,
           maxWidth: hasProfileButton ? "calc(100vw - 84px)" : "calc(100vw - 32px)",
+          pointerEvents: retracted ? "none" : "auto",
           willChange: "transform, opacity, height, right",
           WebkitTapHighlightColor: "transparent",
         }}

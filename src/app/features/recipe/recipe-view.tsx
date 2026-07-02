@@ -12,7 +12,7 @@
 
 import { useState, useEffect, useMemo, type ReactNode } from "react";
 import { Link } from "react-router";
-import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Check, ChevronLeft, Share2 } from "lucide-react";
 import { Heading, IconButton } from "../../components/ds/index";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
@@ -119,6 +119,21 @@ export function RecipeView({
   const heroImageScale = useTransform(scrollY, [0, 400], [1.02, 1.15]);
   const heroOverlayOpacity = useTransform(scrollY, [0, 300], [0, 0.65]);
   const cardY = useTransform(scrollY, [0, 400], [0, -20]);
+  const prefersReducedMotion = useReducedMotion();
+
+  /* Il back flottante segue la chrome liquida: si ritira mentre leggi
+     (altrimenti resta sovrapposto ai contenuti), riemerge appena risali. */
+  const [backHidden, setBackHidden] = useState(false);
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const prev = scrollY.getPrevious() ?? y;
+    const dy = y - prev;
+    if (y < 96) {
+      setBackHidden(false);
+      return;
+    }
+    if (dy > 6) setBackHidden(true);
+    else if (dy < -6) setBackHidden(false);
+  });
 
   const [linkCopied, setLinkCopied] = useState(false);
 
@@ -301,32 +316,44 @@ export function RecipeView({
             <div id="recipe-header-actions" className="flex items-center gap-2" />
           </div>
         </header>
-      ) : back.to ? (
-        <IconButton
-          as={Link}
-          to={back.to}
-          size="lg"
-          variant="ghost"
-          className={`fixed ${back.positionClassName ?? "top-4 left-4"} z-50 active:scale-90 transition-transform`}
-          style={floatingBackStyle}
-          aria-label={back.label}
-          title={back.label}
-        >
-          <ChevronLeft size={20} />
-        </IconButton>
       ) : (
-        <IconButton
-          type="button"
-          onClick={back.onClick}
-          size="lg"
-          variant="ghost"
-          className={`fixed ${back.positionClassName ?? "top-4 left-4"} z-50 active:scale-90 transition-transform`}
-          style={floatingBackStyle}
-          aria-label={back.label}
-          title={back.label}
+        <motion.div
+          className={`fixed ${back.positionClassName ?? "top-4 left-4"} z-50`}
+          animate={{
+            y: backHidden && !prefersReducedMotion ? -72 : 0,
+            opacity: backHidden ? 0 : 1,
+          }}
+          transition={{ type: "spring", stiffness: 360, damping: 31, mass: 0.72 }}
+          style={{ pointerEvents: backHidden ? "none" : "auto" }}
         >
-          <ChevronLeft size={20} />
-        </IconButton>
+          {back.to ? (
+            <IconButton
+              as={Link}
+              to={back.to}
+              size="lg"
+              variant="ghost"
+              className="active:scale-90 transition-transform"
+              style={floatingBackStyle}
+              aria-label={back.label}
+              title={back.label}
+            >
+              <ChevronLeft size={20} />
+            </IconButton>
+          ) : (
+            <IconButton
+              type="button"
+              onClick={back.onClick}
+              size="lg"
+              variant="ghost"
+              className="active:scale-90 transition-transform"
+              style={floatingBackStyle}
+              aria-label={back.label}
+              title={back.label}
+            >
+              <ChevronLeft size={20} />
+            </IconButton>
+          )}
+        </motion.div>
       )}
 
       {/* ── Hero photo ── */}
