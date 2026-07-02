@@ -1,7 +1,6 @@
-import { ArrowLeft } from "lucide-react";
 import { motion } from "motion/react";
-import { Link } from "react-router";
 import { Heading } from "../components/ds/index";
+import { SubPageHeader } from "../components/shared/sub-page-header";
 import { useCms } from "../features/cms/cms-context";
 import {
 COMPARISON_ROWS,
@@ -26,6 +25,9 @@ export function PreFermentsPage() {
         color: "var(--text-default)",
       }}
     >
+      {/* Header — pattern condiviso (il titolo vive nell'hero sotto) */}
+      <SubPageHeader backTo="/learn" backLabel={pg.navLearn} />
+
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -34,23 +36,8 @@ export function PreFermentsPage() {
           stiffness: 400,
           damping: 30,
         }}
-        className="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-20"
+        className="max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-14"
       >
-        {/* Back link */}
-        <Link
-          to="/learn"
-          className="inline-flex items-center gap-1.5 mb-8 active:scale-95 transition-transform"
-          style={{
-            color: "var(--text-muted)",
-            fontSize: "var(--font-size-md)",
-            fontWeight: "var(--weight-medium)" as any,
-            textDecoration: "none",
-          }}
-        >
-          <ArrowLeft size={14} />
-          <span>{pg.navLearn}</span>
-        </Link>
-
         {/* Header */}
         <div className="text-center mb-14">
           <div

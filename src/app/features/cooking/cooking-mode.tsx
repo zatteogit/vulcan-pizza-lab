@@ -29,7 +29,7 @@ formatStepClock,
 useCookSession,
 type CookSessionStep
 } from "./cook-session";
-import { CtaButton, Heading } from "../../components/ds/index";
+import { ConfirmDialog, CtaButton } from "../../components/ds/index";
 import { DoughBlob } from "./dough-mascot";
 import { StepIllustration } from "./step-illustrations";
 
@@ -367,91 +367,37 @@ export function CookingMode() {
       </div>
 
       {/* ── Conferma interruzione ── */}
-      <AnimatePresence>
-        {confirmAbort && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 flex items-end sm:items-center justify-center p-4"
-            style={{ zIndex: 10, background: "color-mix(in srgb, var(--container-page) 70%, transparent)", backdropFilter: "blur(4px)" }}
-            onClick={() => setConfirmAbort(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 24, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 24, scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-sm flex flex-col items-center text-center gap-4 p-6"
-              style={{
-                borderRadius: "var(--radius-3xl)",
-                background: "var(--container-page)",
-                border: "1px solid var(--container-border)",
-                boxShadow: "0 24px 60px color-mix(in srgb, var(--shadow-color) 28%, transparent)",
-              }}
-              role="alertdialog"
-              aria-modal="true"
-              aria-label={cms.cooking.abortConfirmTitle}
-            >
-              <div
-                className="flex items-center justify-center"
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: "var(--radius-xl)",
-                  background: "color-mix(in srgb, var(--destructive) 12%, transparent)",
-                  color: "var(--destructive)",
-                }}
-              >
-                <AlertTriangle size={26} />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <Heading level="xs" color="var(--text-default)">
-                  {cms.cooking.abortConfirmTitle}
-                </Heading>
-                <p className="type-body" style={{ color: "var(--text-muted)", lineHeight: 1.5 }}>
-                  {t(cms.cooking.abortBody, { style: session.styleName })}
-                </p>
-              </div>
-              <div className="flex flex-col w-full gap-2.5 mt-1">
-                <button
-                  onClick={() => {
-                    setConfirmAbort(false);
-                    endSession();
-                  }}
-                  className="w-full h-12 rounded-full active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
-                  style={{
-                    background: "var(--destructive)",
-                    color: "var(--overlay-text)",
-                    fontSize: "var(--font-size-lg)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    border: "none",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Trash2 size={16} />
-                  {cms.cooking.abortYes}
-                </button>
-                <button
-                  onClick={() => setConfirmAbort(false)}
-                  className="w-full h-12 rounded-full active:scale-[0.98] transition-transform"
-                  style={{
-                    background: "var(--container-bg)",
-                    color: "var(--text-default)",
-                    fontSize: "var(--font-size-lg)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    border: "1px solid var(--container-border)",
-                    cursor: "pointer",
-                  }}
-                >
-                  {cms.cooking.abortNo}
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ConfirmDialog
+        open={confirmAbort}
+        onDismiss={() => setConfirmAbort(false)}
+        ariaLabel={cms.cooking.abortConfirmTitle}
+        icon={<AlertTriangle size={26} />}
+        tone="destructive"
+        position="absolute"
+        zIndex={10}
+        title={cms.cooking.abortConfirmTitle}
+        body={t(cms.cooking.abortBody, { style: session.styleName })}
+        actions={[
+          {
+            label: (
+              <>
+                <Trash2 size={16} />
+                {cms.cooking.abortYes}
+              </>
+            ),
+            onClick: () => {
+              setConfirmAbort(false);
+              endSession();
+            },
+            variant: "destructive",
+          },
+          {
+            label: cms.cooking.abortNo,
+            onClick: () => setConfirmAbort(false),
+            variant: "secondary",
+          },
+        ]}
+      />
 
       {/* ── Progress ── */}
       <div style={{ height: "var(--border-width-thick, 3px)", background: "var(--container-bg)" }} className="flex-shrink-0">

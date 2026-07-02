@@ -1,15 +1,15 @@
 import {
-ArrowLeft,
 BookOpen,
 ChevronDown,
 Search,
 } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useEffect,useMemo,useState } from "react";
-import { useLocation,useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { useCms } from "../features/cms/cms-context";
 import { t } from "../features/cms/i18n";
-import { FilterChip, IconButton } from "../components/ds/index";
+import { FilterChip } from "../components/ds/index";
+import { SubPageHeader } from "../components/shared/sub-page-header";
 import type {
 GlossaryCategory,
 GlossaryTerm,
@@ -22,7 +22,6 @@ getTermsByCategory,
 } from "../data/glossary-data";
 
 export function GlossaryPage() {
-  const navigate = useNavigate();
   const location = useLocation();
   const { cms } = useCms();
   const gl = cms.glossary;
@@ -116,47 +115,13 @@ export function GlossaryPage() {
         color: "var(--text-default)",
       }}
     >
-      {/* ── Header ── */}
-      <div
-        className="sticky top-0 z-30 px-4 sm:px-6 py-3"
-        style={{
-          background:
-            "color-mix(in srgb, var(--background) 88%, transparent)",
-          backdropFilter: "blur(24px) saturate(1.6)",
-          borderBottom: "1px solid var(--border-muted)",
-        }}
-      >
-        <div className="max-w-4xl mx-auto flex items-center gap-3">
-          <IconButton
-            as={motion.button}
-            onClick={() => navigate("/learn")}
-            size="sm"
-            className="active:scale-95"
-            aria-label={gl.backToHome}
-          >
-            <ArrowLeft
-              size={15}
-              style={{ color: "var(--text-default)" }}
-            />
-          </IconButton>
-
-          <div className="flex items-center gap-2">
-            <BookOpen
-              size={16}
-              style={{ color: "var(--primary)" }}
-            />
-            <span
-              className="font-serif"
-              style={{
-                fontSize: "var(--font-size-2xl)",
-                fontWeight: "var(--weight-bold)" as any,
-                color: "var(--text-default)",
-              }}
-            >
-              {gl.pageTitle}
-            </span>
-          </div>
-
+      {/* ── Header — pattern condiviso delle sotto-pagine ── */}
+      <SubPageHeader
+        backTo="/learn"
+        backLabel={cms.pages.navLearn}
+        icon={<BookOpen size={16} />}
+        title={gl.pageTitle}
+        meta={
           <span
             style={{
               fontSize: "var(--font-size-sm)",
@@ -169,8 +134,8 @@ export function GlossaryPage() {
               count: String(filteredTerms.length),
             })}
           </span>
-        </div>
-      </div>
+        }
+      />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
         {/* ── Search ── */}

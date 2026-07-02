@@ -7,6 +7,8 @@
  */
 export { Chip } from "./Chip";
 export type { ChipProps } from "./Chip";
+export { ConfirmDialog } from "./ConfirmDialog";
+export type { ConfirmDialogAction, ConfirmDialogProps } from "./ConfirmDialog";
 export { Badge } from "./Badge";
 export type { BadgeProps, BadgeTone } from "./Badge";
 export { CtaButton } from "./CtaButton";

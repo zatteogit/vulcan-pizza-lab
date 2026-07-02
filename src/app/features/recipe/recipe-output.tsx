@@ -71,7 +71,7 @@ type ToppingRecipe,
 type IngredientSection,
 type ToppingIngredient,
 } from "../../data/topping-library";
-import { Badge, CtaButton, Heading, IconButton, Stepper, Surface, Switch } from "../../components/ds/index";
+import { Badge, ConfirmDialog, CtaButton, Heading, IconButton, Stepper, Surface, Switch } from "../../components/ds/index";
 
 /* ═══ PARAMETRIC CONTEXT TIPS ═══ */
 function getParametricTip(
@@ -2699,168 +2699,65 @@ export function RecipeOutput({
 
 
       {/* ── Conferma: nuova pizzata sovrascrive quella in corso ── */}
-      <AnimatePresence>
-        {confirmReplace && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 flex items-end sm:items-center justify-center p-4"
-            style={{ zIndex: 210, background: "color-mix(in srgb, var(--container-page) 70%, transparent)", backdropFilter: "blur(4px)" }}
-            onClick={() => setConfirmReplace(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 24, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 24, scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-sm flex flex-col items-center text-center gap-4 p-6"
-              style={{
-                borderRadius: "var(--radius-3xl)",
-                background: "var(--container-page)",
-                border: "1px solid var(--container-border)",
-                boxShadow: "0 24px 60px color-mix(in srgb, var(--shadow-color) 28%, transparent)",
-              }}
-              role="alertdialog"
-              aria-modal="true"
-              aria-label={cms.cooking.confirmNewAria}
-            >
-              <div
-                className="flex items-center justify-center"
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: "var(--radius-xl)",
-                  background: "color-mix(in srgb, var(--primary) 12%, transparent)",
-                  color: "var(--primary)",
-                }}
-              >
-                <Flame size={26} />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <Heading level="xs" color="var(--text-default)">
-                  {cms.cooking.replaceTitle}
-                </Heading>
-                <p className="type-body" style={{ color: "var(--text-muted)", lineHeight: 1.5 }}>
-                  {t(cms.cooking.replaceBody, {
-                    current: session?.styleName ?? "",
-                    next: recipe.style.name,
-                  })}
-                </p>
-              </div>
-              <div className="flex flex-col w-full gap-2.5 mt-1">
-                <CtaButton
-                  onClick={confirmStartCooking}
-                  className="w-full h-12 active:scale-[0.98]"
-                  style={{ fontSize: "var(--font-size-lg)" }}
-                >
-                  <Flame size={16} />
-                  {t(cms.cooking.replaceStart, { style: recipe.style.name })}
-                </CtaButton>
-                <button
-                  onClick={() => { setConfirmReplace(false); openOverlay(); }}
-                  className="w-full h-12 rounded-full type-data-field active:scale-[0.98] transition-transform"
-                  style={{
-                    background: "var(--container-bg)",
-                    color: "var(--text-default)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    border: "1px solid var(--container-border)",
-                    cursor: "pointer",
-                  }}
-                >
-                  {t(cms.cooking.replaceResume, { style: session?.styleName ?? "" })}
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ConfirmDialog
+        open={confirmReplace}
+        onDismiss={() => setConfirmReplace(false)}
+        ariaLabel={cms.cooking.confirmNewAria}
+        icon={<Flame size={26} />}
+        title={cms.cooking.replaceTitle}
+        body={t(cms.cooking.replaceBody, {
+          current: session?.styleName ?? "",
+          next: recipe.style.name,
+        })}
+        actions={[
+          {
+            label: (
+              <>
+                <Flame size={16} />
+                {t(cms.cooking.replaceStart, { style: recipe.style.name })}
+              </>
+            ),
+            onClick: confirmStartCooking,
+            variant: "cta",
+          },
+          {
+            label: t(cms.cooking.replaceResume, { style: session?.styleName ?? "" }),
+            onClick: () => {
+              setConfirmReplace(false);
+              openOverlay();
+            },
+            variant: "secondary",
+          },
+        ]}
+      />
 
       {/* ── Promemoria: la ricetta canonica non è ancora adattata ── */}
-      <AnimatePresence>
-        {confirmPersonalize && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 flex items-end sm:items-center justify-center p-4"
-            style={{ zIndex: 210, background: "color-mix(in srgb, var(--container-page) 72%, transparent)", backdropFilter: "blur(6px)" }}
-            onClick={() => setConfirmPersonalize(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 24, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 24, scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md flex flex-col items-center text-center gap-4 p-6"
-              style={{
-                borderRadius: "var(--radius-3xl)",
-                background:
-                  "linear-gradient(145deg, color-mix(in srgb, var(--container-page) 92%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 38%, var(--container-page)))",
-                border: "1px solid color-mix(in srgb, var(--primary) 24%, var(--container-border))",
-                boxShadow: "0 24px 70px color-mix(in srgb, var(--shadow-color) 26%, transparent), 0 0 48px color-mix(in srgb, var(--primary) 16%, transparent)",
-              }}
-              role="alertdialog"
-              aria-modal="true"
-              aria-label={cms.cooking.notPersonalizedAria}
-            >
-              <div
-                className="flex items-center justify-center"
-                style={{
-                  width: 58,
-                  height: 58,
-                  borderRadius: "var(--radius-xl)",
-                  background: "color-mix(in srgb, var(--primary) 13%, var(--container-page))",
-                  color: "var(--primary)",
-                }}
-              >
-                <Flame size={26} />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <Heading level="sm" color="var(--text-default)" style={{ lineHeight: 1.15 }}>
-                  {cms.cooking.preCookTitle}
-                </Heading>
-                <p className="type-body-lg" style={{ color: "var(--text-muted)", lineHeight: 1.5 }}>
-                  {cms.cooking.preCookBody}
-                </p>
-              </div>
-              <div className="flex flex-col w-full gap-2.5 mt-1">
-                {onRequestPersonalization && (
-                  <button
-                    onClick={handlePersonalizeBeforeCooking}
-                    className="w-full h-12 rounded-full type-data-field active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
-                    style={{
-                      background: "var(--primary)",
-                      color: "var(--text-on-accent)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      border: "1px solid var(--primary)",
-                      cursor: "pointer",
-                      boxShadow: "0 12px 28px color-mix(in srgb, var(--primary) 24%, transparent)",
-                    }}
-                  >
-                    {cms.cooking.preCookAdapt}
-                  </button>
-                )}
-                <button
-                  onClick={confirmStartCooking}
-                  className="w-full h-12 rounded-full type-data-field active:scale-[0.98] transition-transform"
-                  style={{
-                    background: "var(--container-bg)",
-                    color: "var(--text-default)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    border: "1px solid var(--container-border)",
-                    cursor: "pointer",
-                  }}
-                >
-                  {cms.cooking.preCookStart}
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ConfirmDialog
+        open={confirmPersonalize}
+        onDismiss={() => setConfirmPersonalize(false)}
+        ariaLabel={cms.cooking.notPersonalizedAria}
+        icon={<Flame size={26} />}
+        emphasis="brand"
+        size="md"
+        title={cms.cooking.preCookTitle}
+        body={cms.cooking.preCookBody}
+        actions={[
+          ...(onRequestPersonalization
+            ? [
+                {
+                  label: cms.cooking.preCookAdapt,
+                  onClick: handlePersonalizeBeforeCooking,
+                  variant: "primary" as const,
+                },
+              ]
+            : []),
+          {
+            label: cms.cooking.preCookStart,
+            onClick: confirmStartCooking,
+            variant: "secondary" as const,
+          },
+        ]}
+      />
 
       {/* ── Contesto: questa ricetta è SU MISURA, non quella canonica ──
           (feedback giugno 2026: "non è chiaro che parametri e punteggio si

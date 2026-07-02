@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-07-02T09:40:00.000Z",
+  "lastUpdated": "2026-07-02T10:15:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
-    "srcFilesTsTsx": 140,
-    "appFilesExcludingUi": 140,
+    "srcFilesTsTsx": 142,
+    "appFilesExcludingUi": 142,
     "pizzaEngineExports": 59,
     "pizzaEngineLines": 4975,
-    "cmsContextLines": 3268,
+    "cmsContextLines": 3271,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-02 v2 registra lo splash screen nativo, lo script anti-FOUC sincrono in index.html, la sincronizzazione del colore di overscroll su cambi tema, il rolling spring del punteggio, la ritirata del widget e del bottone indietro al scroll, e i coriandoli CelebrationBurst a fine sessione.",
-  "filesMappedCount": 140,
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-02 v3 registra l'introduzione dei componenti condivisi ConfirmDialog (conferma modale T4 unificata con scrim e blur) e SubPageHeader (barra sticky standardizzata per le sotto-pagine), e l'eliminazione dei blocchi di codice duplicati (es. RecipeSetupPanel in recipe.tsx).",
+  "filesMappedCount": 142,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-02-v2",
+  "lastScannedChapter": "kipi-update-2026-07-02-v3",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -125,6 +125,7 @@
         "src/app/components/shared/search-overlay.tsx",
         "src/app/pages/not-found.tsx",
         "src/app/components/shared/search-button.tsx",
+        "src/app/components/shared/sub-page-header.tsx",
         "src/vite-env.d.ts"
       ],
       "lastWorked": "2026-07-02"
@@ -187,6 +188,7 @@
         "src/app/components/ds/Carousel.tsx",
         "src/app/components/ds/Checkbox.tsx",
         "src/app/components/ds/Chip.tsx",
+        "src/app/components/ds/ConfirmDialog.tsx",
         "src/app/components/ds/CtaButton.tsx",
         "src/app/components/ds/Dialog.tsx",
         "src/app/components/ds/Divider.tsx",
