@@ -1327,6 +1327,17 @@ export const DE_LOCALE: CmsContent = {
       "Faustregel: Raumtemperatur + Mehltemperatur + Wassertemperatur \u2248 55\u00B0C, um etwa 25\u00B0C Endteigtemperatur zu erreichen. Beim Kneten mit Maschine kommen durch Reibung weitere 1-3\u00B0C hinzu.",
     stepDetailsShow: "So geht es",
     stepDetailsHide: "Details ausblenden",
+    matchDetailsShow: "Match-Details",
+    draftResumeEyebrow: "Rezept in Arbeit",
+    draftResumeCta: "Fortsetzen",
+    draftReplaceTitle: "Laufendes Rezept ersetzen?",
+    draftReplaceBody:
+      "{current} ist bereits auf deinen Zeitplan abgestimmt. Mit {next} ersetzt du es und die Einstellungen gehen verloren.",
+    draftReplaceConfirm: "Zu {next} wechseln",
+    prefermentSaltNote:
+      "Salz gehört nur in den Hauptteig: im Vorteig würde es die Hefe ausbremsen.",
+    learnedFromAttempts: "Ich habe aus deinen {n} Versuchen gelernt",
+    applyCorrections: "Korrekturen anwenden",
     learnInlineTitle: "Mehr erfahren: {label}",
     learnInlineBody:
       "{label}: Lies den Begriff hier, ohne das Rezept zu verlassen. Die praktischen Details f\u00FCr diesen Schritt stehen oben; die vollst\u00E4ndige Theorie findest du unter Lernen.",

@@ -40,7 +40,9 @@ export default defineConfig({
             "react-dom",
             "react-router",
           ],
-          "vendor-motion": ["motion"],
+          /* "motion" è un wrapper: senza framer-motion qui, i ~120 kB veri
+             finivano nel chunk principale (audit bundle lug 2026). */
+          "vendor-motion": ["motion", "framer-motion"],
         },
       },
     },

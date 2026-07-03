@@ -1,5 +1,10 @@
-import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from "react";
-import { LOCALE_BUNDLES, LOCALE_BCP47 } from "./locales/index";
+import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from "react";
+import {
+  LOCALE_BCP47,
+  getCachedLocaleBundle,
+  isKnownLocale,
+  loadLocaleBundle,
+} from "./locales/index";
 import {
   PRE_FERMENT_DEFAULTS,
   DIETARY_I18N_DEFAULTS,
@@ -834,6 +839,22 @@ export interface CmsContent {
     rule55Description: string;
     stepDetailsShow: string;
     stepDetailsHide: string;
+    /** Toggle dettagli della match card (barre punteggio, stato forno).
+     *  Opzionale: i locale non ancora tradotti cadono sul default. */
+    matchDetailsShow?: string;
+    /** Ondata 1 (audit lug 2026) — ricetta parcheggiata: card Riprendi negli
+     *  step precedenti + conferma prima di sostituirla con un nuovo stile.
+     *  Opzionali: i locale non ancora tradotti cadono sul default. */
+    draftResumeEyebrow?: string;
+    draftResumeCta?: string;
+    draftReplaceTitle?: string;
+    draftReplaceBody?: string;
+    draftReplaceConfirm?: string;
+    /** Nota sotto lo scorporo biga/poolish (prima hardcoded in italiano). */
+    prefermentSaltNote?: string;
+    /** Pannello F2 "Vulcan ha imparato dai tuoi tentativi" (prima hardcoded). */
+    learnedFromAttempts?: string;
+    applyCorrections?: string;
     learnInlineTitle: string;
     learnInlineBody: string;
     tipsCountOne: string;
@@ -1462,6 +1483,17 @@ export const CMS_DEFAULTS: CmsContent = {
     rule55Description: "Regola empirica: T_ambiente + T_farina + T_acqua ≈ {target}, per ottenere ~{final} di impasto finale. Se impasti a macchina, l'attrito aggiunge {frictionMin}-{frictionMax} in più.",
     stepDetailsShow: "Come si fa",
     stepDetailsHide: "Nascondi dettagli",
+    matchDetailsShow: "Dettagli punteggio",
+    draftResumeEyebrow: "Ricetta in corso",
+    draftResumeCta: "Riprendi",
+    draftReplaceTitle: "Sostituire la ricetta in corso?",
+    draftReplaceBody:
+      "Hai già {current} pronta e regolata sui tuoi tempi. Scegliendo {next} la sostituisci e i suoi parametri vanno persi.",
+    draftReplaceConfirm: "Passa a {next}",
+    prefermentSaltNote:
+      "Il sale va sempre e solo nell'impasto finale: nel pre-fermento frenerebbe i lieviti.",
+    learnedFromAttempts: "Ho imparato dai tuoi {n} tentativi",
+    applyCorrections: "Applica le correzioni",
     learnInlineTitle: "Approfondisci: {label}",
     learnInlineBody: "{label}: consulta il concetto qui mentre resti nella ricetta. I dettagli operativi di questo passaggio sono nel blocco sopra; la teoria completa vive nella sezione Impara.",
     tipsCountOne: "{n} consiglio",
@@ -2323,7 +2355,7 @@ function detectBrowserLocale(): LocaleId | null {
     for (const lang of langs) {
       const code = lang.split("-")[0].toLowerCase();
       if (code === "it") return null; /* Italian = default, no override needed */
-      if (code in LOCALE_BUNDLES) return code as LocaleId;
+      if (isKnownLocale(code)) return code;
     }
     /* No match found — fallback to English */
     return "en";
@@ -2341,16 +2373,8 @@ function loadCms(): Partial<CmsContent> | null {
     }
   } catch { /* storage restricted */ }
 
-  /* First launch: auto-detect browser language */
-  const detectedLocale = detectBrowserLocale();
-  if (detectedLocale) {
-    const bundle = LOCALE_BUNDLES[detectedLocale];
-    if (bundle) {
-      const initial = { ...bundle } as Partial<CmsContent>;
-      saveCms(initial);
-      return initial;
-    }
-  }
+  /* Primo avvio: il rilevamento lingua avviene nel provider (il bundle è
+     lazy e va caricato in modo asincrono — audit lug 2026). */
   return null;
 }
 
@@ -2386,9 +2410,18 @@ function fallbackBaseFor(overrides: Partial<CmsContent> | null): CmsContent {
     return CMS_DEFAULTS;
   }
 
-  let base = deepMerge(CMS_DEFAULTS, LOCALE_BUNDLES.en) as CmsContent;
+  /* Bundle lazy: finché non sono in cache si usa il default IT come base —
+     le stringhe salvate negli overrides coprono comunque la UI; il provider
+     ricalcola appena i bundle arrivano (localeTick). */
+  const enBundle = getCachedLocaleBundle("en");
+  let base = enBundle
+    ? (deepMerge(CMS_DEFAULTS, enBundle) as CmsContent)
+    : CMS_DEFAULTS;
   if (localeId !== "en") {
-    base = deepMerge(base, LOCALE_BUNDLES[localeId]) as CmsContent;
+    const localeBundle = getCachedLocaleBundle(localeId);
+    if (localeBundle) {
+      base = deepMerge(base, localeBundle) as CmsContent;
+    }
   }
   return base;
 }
@@ -2443,10 +2476,54 @@ export function useCms() {
 
 export function CmsProvider({ children }: { children: React.ReactNode }) {
   const [overrides, setOverrides] = useState<Partial<CmsContent> | null>(loadCms);
+  /* Bump quando un bundle locale arriva dal lazy-load: fa ricalcolare la base. */
+  const [localeTick, setLocaleTick] = useState(0);
+  /* Primo avvio = nessuno stato salvato AL BOOT (non dopo un reset a IT). */
+  const firstLaunchRef = useRef(overrides === null);
+
+  /* Primo avvio: rileva la lingua del browser e carica il bundle on demand. */
+  useEffect(() => {
+    if (!firstLaunchRef.current) return;
+    firstLaunchRef.current = false;
+    const detected = detectBrowserLocale();
+    if (!detected) return;
+    let cancelled = false;
+    void loadLocaleBundle(detected).then((bundle) => {
+      if (cancelled || !bundle) return;
+      setOverrides((prev) => {
+        if (prev !== null) return prev; /* l'utente ha già fatto scelte */
+        const initial = { ...bundle } as Partial<CmsContent>;
+        saveCms(initial);
+        return initial;
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  /* Lingua attiva non-IT: assicura in cache EN (fallback intermedio) e il
+     bundle della lingua, poi fa ricalcolare la base. */
+  const activeLocaleId = overrides?.locale?.id;
+  useEffect(() => {
+    if (!activeLocaleId || activeLocaleId === "it") return;
+    let cancelled = false;
+    void Promise.all([
+      loadLocaleBundle("en"),
+      loadLocaleBundle(activeLocaleId),
+    ]).then(() => {
+      if (!cancelled) setLocaleTick((value) => value + 1);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeLocaleId]);
 
   const fallbackBase = useMemo(
     () => fallbackBaseFor(overrides),
-    [overrides],
+    // localeTick: la base dipende dalla cache dei bundle, non solo dagli overrides
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [overrides, localeTick],
   );
 
   const cms = useMemo(
@@ -2526,16 +2603,17 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
       saveCms(null);
       return;
     }
-    const bundle = LOCALE_BUNDLES[localeId];
-    if (!bundle) return;
-    // Replace overrides entirely with the new locale bundle.
+    // Bundle lazy: carica on demand, poi sostituisce interamente gli overrides.
     // Previous approach deepMerge(bundle, prev) caused old locale strings
     // to persist because prev (old language) won over bundle (new language).
     // User-specific numeric overrides (e.g. custom weights) are intentionally
     // reset on locale switch — they can be reconfigured after.
-    const newOverrides = { ...bundle } as Partial<CmsContent>;
-    setOverrides(newOverrides);
-    saveCms(newOverrides);
+    void loadLocaleBundle(localeId).then((bundle) => {
+      if (!bundle) return;
+      const newOverrides = { ...bundle } as Partial<CmsContent>;
+      setOverrides(newOverrides);
+      saveCms(newOverrides);
+    });
   }, []);
 
   const exportJSON = useCallback(() => {

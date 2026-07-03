@@ -1,9 +1,9 @@
 # Motore pizza e ricetta
-> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 6
+> Aggiornamento: 2026-07-03 | Stato: ✅ | File documentati: 10
 
 ## Sommario
 
-`pizza-engine.ts` (4990 righe) è il nucleo di dominio di Vulcan: tipi, database di **28 stili pizza** (`STYLES_DB`), generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Il file esporta **59 simboli pubblici** (dopo la pulizia delle esportazioni interne inutilizzate); è importato dai moduli UI di ricetta, home, profilo, score, stili, CMS e dev.
+`pizza-engine.ts` (~3566 righe) è il nucleo di dominio di Vulcan: tipi, generazione parametrica della ricetta (`generateRecipe`), motore di compensazione forno, cinque dimensioni di score, timeline operativa, layer scientifico (Q10, P/L, Regola 55) e raccomandazione stili (`recommendStyles`). Per ragioni di chunk-splitting e performance di avvio, il database degli stili e le relative utility geografiche sono state separate in `styles-db.ts` (1431 righe) per consentirne l'importazione sincrona nella shell senza trascinare il motore. I calcoli chimico-matematici dello scorporo dei pre-fermenti (biga e poolish) sono isolati in `pre-ferment-split.ts`. L'intero motore è ora coperto da una suite di test unitari Vitest (`pizza-engine.test.ts` e `pre-ferment-split.test.ts`) eseguiti nel comando `verify` e nei pre-commit hooks.
 
 Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica Implementativa v1* (feb 2026) e fix successivi (ADV-02, ADV-04, ADV-08, ADV-11). Schema ricetta versione **1.4** (`RECIPE_SCHEMA_VERSION`).
 
@@ -11,7 +11,11 @@ Allineamento audit: commenti in testa e nel codice riferiscono *Audit Verifica I
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/domain/pizza-engine.ts` | 4990 | Motore completo: tipi, DB (28 stili), generazione, score, timeline, preset |
+| `src/app/domain/pizza-engine.ts` | 3566 | Motore di calcolo: tipi, generazione, score, timeline, compensazioni, ottimizzazioni, presets |
+| `src/app/domain/styles-db.ts` | 1431 | Database statico stili (28 stili) e relative funzioni origin (scorporato per performance di chunk) |
+| `src/app/domain/pre-ferment-split.ts` | 43 | Calcolo separato e testabile dello split di biga e poolish (farina, acqua, sale) |
+| `src/app/domain/pizza-engine.test.ts` | 162 | Test unitari Vitest su range stili, Regola 55 (temperatura acqua) ed ottimizzatore |
+| `src/app/domain/pre-ferment-split.test.ts` | 70 | Test unitari Vitest per la correttezza matematica del pre-fermento |
 | `src/app/features/dev-tools/engine-test-suite.tsx` | 1784 | Suite dev VPL-073: asserzioni dinamiche su `STYLES_DB` e score |
 | `src/app/domain/deviation-tags.ts` | 372 | `STYLE_DEVIATIONS`, `STYLE_TAGS`, `DEVIATION_CATEGORY_LABELS` per E-Score |
 | `src/app/data/topping-library.ts` | ~2100 | Libreria topping: 34 concetti, 40 ricette, autenticità per stile e timeline injection (integrati nuovi topping premium Wave 1 e Wave 2) |
@@ -256,3 +260,7 @@ La pulizia 2026-06-19 ha rimosso i riferimenti a registri separati `format-libra
 
 ### 8. Default Topping per Stile (VPL-B2)
 Ogni stile canonico dispone ora di `default_topping_ref`, risolto da `getToppingForStyle()` verso il concetto o la variante più adatta allo stile. Questo evita fallback generici: Detroit usa `detroit`, Chicago Deep usa `chicago`, Sfincione usa `sfincione`, Focaccia Barese usa `focaccia_barese`, Pizza Fritta usa `montanara` e Fugazzeta usa `fugazzeta`. Il riferimento viene anche serializzato nelle URL come `?topping=` solo se diverso dal default dello stile.
+
+### 9. Test Unitari ed Esecuzione in CI
+- **Vitest**: Introdotto il test runner `vitest` per velocizzare e automatizzare i test di regressione del dominio.
+- **Verifica Automatica**: Il comando `verify` integra `vitest run` garantendo la validazione ad ogni commit della matematica di fermentazione e ricetta.

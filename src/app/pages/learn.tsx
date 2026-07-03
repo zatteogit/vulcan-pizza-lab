@@ -409,7 +409,13 @@ export function LearnPage() {
                 <h3
                   className="font-serif transition-colors duration-200 group-hover:text-[var(--primary)]"
                   style={{
-                    fontSize: "clamp(var(--font-size-6xl), 5vw, var(--font-size-8xl))",
+                    /* Audit lug 2026: i termini lunghi ("P/L (Rapporto
+                       Tenacità/Estensibilità)") a 8xl traboccano dalla card su
+                       mobile — sopra ~18 caratteri si scende di scala. */
+                    fontSize:
+                      term.name.length > 18
+                        ? "clamp(var(--font-size-3xl), 4vw, var(--font-size-6xl))"
+                        : "clamp(var(--font-size-6xl), 5vw, var(--font-size-8xl))",
                     fontWeight: "var(--weight-bold)" as any,
                     color: "var(--text-default)",
                     lineHeight: "var(--leading-snug)",

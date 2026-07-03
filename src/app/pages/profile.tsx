@@ -37,7 +37,7 @@ import { AnimatePresence,motion } from "motion/react";
 import { useCallback,useEffect,useMemo,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router";
-import { CMS_DEFAULTS,useCms } from "../features/cms/cms-context";
+import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
 import { Chip, CtaButton, Heading, IconButton, SegmentedControl } from "../components/ds/index";
 import {
 createFormatter,
@@ -47,7 +47,11 @@ t,
 type UnitSystem,
 } from "../features/cms/i18n";
 import type { LocaleMeta } from "../features/cms/locales/index";
-import { LOCALE_BUNDLES,LOCALE_META } from "../features/cms/locales/index";
+import {
+  LOCALE_META,
+  getCachedLocaleBundle,
+  loadLocaleBundle,
+} from "../features/cms/locales/index";
 import type {
 EquipmentState,
 MixerType,
@@ -977,8 +981,22 @@ function LocaleConfirmModal({
 }) {
   const { cms } = useCms();
   const srcProfile = cms.profile;
-  /* Resolve the target locale's profile bundle for bilingual display */
-  const tgtBundle = target.id === "it" ? CMS_DEFAULTS : LOCALE_BUNDLES[target.id];
+  /* Resolve the target locale's profile bundle for bilingual display.
+     Bundle lazy (audit lug 2026): se non è in cache lo si carica al volo —
+     nel frattempo la modale mostra il fallback IT per una frazione di secondo. */
+  const [tgtBundle, setTgtBundle] = useState<CmsContent | undefined>(() =>
+    target.id === "it" ? CMS_DEFAULTS : getCachedLocaleBundle(target.id),
+  );
+  useEffect(() => {
+    if (target.id === "it" || tgtBundle) return;
+    let cancelled = false;
+    void loadLocaleBundle(target.id).then((bundle) => {
+      if (!cancelled && bundle) setTgtBundle(bundle);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [target.id, tgtBundle]);
   const tgtProfile = tgtBundle?.profile ?? CMS_DEFAULTS.profile;
 
   const fromLabel = `${current.flag} ${current.name}`;

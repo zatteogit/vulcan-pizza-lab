@@ -1,5 +1,8 @@
 import React,{ createContext,useCallback,useContext,useState } from "react";
-import { type PizzaStyle,STYLES_DB } from "../domain/pizza-engine";
+/* STYLES_DB dal modulo dati: questo provider vive nella shell e NON deve
+   trascinare il motore nel chunk d'ingresso (audit bundle lug 2026). */
+import type { PizzaStyle } from "../domain/pizza-engine";
+import { STYLES_DB } from "../domain/styles-db";
 
 /* ═══ STYLES OVERRIDE CONTEXT ═══
  * Provides a mutable styles map that overrides STYLES_DB globally.

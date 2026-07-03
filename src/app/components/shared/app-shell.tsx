@@ -11,15 +11,25 @@ GraduationCap,
 User,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
-import { useCallback,useEffect,useState } from "react";
+import { Suspense,lazy,useCallback,useEffect,useState } from "react";
 import { Link,Outlet,useLocation,useNavigate } from "react-router";
 import { ActiveCookWidget } from "../../features/cooking/active-cook-widget";
 import { CmsProvider,useCms } from "../../features/cms/cms-context";
 import { CookSessionProvider,useCookSession } from "../../features/cooking/cook-session";
-import { CookingMode } from "../../features/cooking/cooking-mode";
 import type { DarkModeContext,ThemeMode } from "./root-layout";
 import { SearchButton } from "./search-button";
-import { SearchOverlay } from "./search-overlay";
+
+/* Audit bundle lug 2026: CookingMode e SearchOverlay trascinavano motore,
+   topping, glossario e troubleshooting nel chunk d'ingresso (~400 kB di
+   sorgente) pur montandosi solo su richiesta → lazy. */
+const CookingMode = lazy(() =>
+  import("../../features/cooking/cooking-mode").then((m) => ({
+    default: m.CookingMode,
+  })),
+);
+const SearchOverlay = lazy(() =>
+  import("./search-overlay").then((m) => ({ default: m.SearchOverlay })),
+);
 import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { VulcanMark } from "./vulcan-logo";
 import { liquidDockQuickSpring } from "../../domain/liquid-dock";
@@ -257,6 +267,9 @@ function TabItem({
 
 type LiquidNavState = {
   hidden: boolean;
+  /** Fondo pagina raggiunto: il dock in basso si mostra, ma l'avatar in alto
+   *  NON deve ricomparire sopra i contenuti (audit lug 2026). */
+  nearBottom: boolean;
   scrolled: boolean;
 };
 
@@ -267,6 +280,7 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
   const [state, setState] = useState<LiquidNavState>({
     hidden: false,
     scrolled: false,
+    nearBottom: false,
   });
   useEffect(() => {
     let lastY = window.scrollY;
@@ -284,8 +298,12 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
 
       if (y < 96 || nearBottom) {
         setState((prev) => {
-          const next = { hidden: false, scrolled: isScrolled };
-          return prev.hidden === next.hidden && prev.scrolled === next.scrolled ? prev : next;
+          const next = { hidden: false, scrolled: isScrolled, nearBottom };
+          return prev.hidden === next.hidden &&
+            prev.scrolled === next.scrolled &&
+            prev.nearBottom === next.nearBottom
+            ? prev
+            : next;
         });
         acc = 0;
         return;
@@ -298,9 +316,13 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
         const hide = y > 140 && acc > threshold;
         const show = acc < -threshold * 0.72;
         const hidden = hide ? true : show ? false : prev.hidden;
-        const next = { hidden, scrolled: isScrolled };
+        const next = { hidden, scrolled: isScrolled, nearBottom };
         if (hidden !== prev.hidden) acc = 0;
-        return prev.hidden === next.hidden && prev.scrolled === next.scrolled ? prev : next;
+        return prev.hidden === next.hidden &&
+          prev.scrolled === next.scrolled &&
+          prev.nearBottom === next.nearBottom
+          ? prev
+          : next;
       });
     };
 
@@ -509,7 +531,10 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
   const { cms } = useCms();
   const prefersReducedMotion = useReducedMotion();
   const label = (cms.pages as any)?.navProfile || "Profilo";
-  const { scrolled, hidden } = navState;
+  const { scrolled, nearBottom } = navState;
+  /* A fondo pagina il force-show serve al dock di navigazione, non a questo
+     avatar: qui ricomparirebbe SOPRA i contenuti (badge card, titoli). */
+  const hidden = navState.hidden || (nearBottom && scrolled);
   const size = scrolled ? 40 : 44;
   return (
     <MotionLink
@@ -586,7 +611,13 @@ function CookSessionUI({
           hidden={hidden}
         />
       )}
-      <AnimatePresence>{overlayOpen && session && <CookingMode />}</AnimatePresence>
+      <AnimatePresence>
+        {overlayOpen && session && (
+          <Suspense fallback={null}>
+            <CookingMode />
+          </Suspense>
+        )}
+      </AnimatePresence>
     </>
   );
 }
@@ -597,6 +628,9 @@ export function AppShell() {
   const [darkMode, setDarkModeState] = useState(() => resolveThemeMode(loadThemeMode()));
   const [devMode, setDevModeState] = useState(loadDevMode);
   const [searchOpen, setSearchOpen] = useState(false);
+  /* Il chunk della palette si scarica alla prima apertura e resta montato
+     (le animazioni open/close continuano a passare dalla prop `open`). */
+  const [searchMounted, setSearchMounted] = useState(false);
   const [hideNavbar, setHideNavbar] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -636,11 +670,17 @@ export function AppShell() {
     saveDevMode(v);
   }, []);
 
-  const openSearch = useCallback(() => setSearchOpen(true), []);
+  const openSearch = useCallback(() => {
+    setSearchMounted(true);
+    setSearchOpen(true);
+  }, []);
   const closeSearch = useCallback(() => setSearchOpen(false), []);
 
   useEffect(() => {
-    const handler = () => setSearchOpen(true);
+    const handler = () => {
+      setSearchMounted(true);
+      setSearchOpen(true);
+    };
     window.addEventListener("vulcan:open-search", handler);
     return () => window.removeEventListener("vulcan:open-search", handler);
   }, []);
@@ -661,6 +701,7 @@ export function AppShell() {
       /* ⌘K / Ctrl+K — open search */
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
+        setSearchMounted(true);
         setSearchOpen((prev) => !prev);
         return;
       }
@@ -748,8 +789,12 @@ export function AppShell() {
             </>
           )}
 
-          {/* Command palette search overlay */}
-          <SearchOverlay open={searchOpen} onClose={closeSearch} />
+          {/* Command palette search overlay — chunk caricato alla prima apertura */}
+          {searchMounted && (
+            <Suspense fallback={null}>
+              <SearchOverlay open={searchOpen} onClose={closeSearch} />
+            </Suspense>
+          )}
 
           {/* Pizzata attiva: sticky action + overlay (cross-page) */}
           <CookSessionUI
@@ -757,7 +802,10 @@ export function AppShell() {
             hasProfileButton={hasProfileButton}
             showAction={showCookAction}
             compact={navState.scrolled}
-            hidden={navState.hidden}
+            /* Come il ProfileButton: a fondo pagina il force-show serve al
+               dock in basso, non ai flottanti in alto (audit lug 2026). Una
+               pizzata ATTIVA resta comunque visibile (gestito nel widget). */
+            hidden={navState.hidden || (navState.nearBottom && navState.scrolled)}
           />
         </div>
         </CookSessionProvider>

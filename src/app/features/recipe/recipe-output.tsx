@@ -22,6 +22,8 @@ import { AnimatePresence,motion,useReducedMotion } from "motion/react";
 import React,{ useEffect,useMemo,useRef,useState,type ReactNode } from "react";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { createPortal } from "react-dom";
+import { Link } from "react-router";
+import { computePreFermentSplit } from "../../domain/pre-ferment-split";
 import type { CmsContent,CmsTimelineStep } from "../cms/cms-context";
 import { useCms } from "../cms/cms-context";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
@@ -1395,6 +1397,11 @@ export function RecipeOutput({
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
+  /* Baker's % sul totale farina — mostrata nel layer nerd accanto ai grammi. */
+  const bakerPct = (grams: number, maxDecimals = 1) =>
+    `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: maxDecimals }).format(
+      (grams / recipe.flour_g) * 100,
+    )}%`;
   const rule55Description = t(cms.cooking.rule55Description, {
     target: fmt.unitSystem === "imperial"
       ? (bcp47.toLowerCase().startsWith("it") ? "55 in scala Celsius" : "55 on the Celsius scale")
@@ -2900,11 +2907,10 @@ export function RecipeOutput({
         dragElastic={0.12}
         onDragEnd={onPanelDragEnd}
         style={{ touchAction: "pan-y" }}
-        className="flex flex-col gap-14 sm:gap-16"
+        className="flex flex-col gap-8 sm:gap-10"
       >
       <ScrollToTopOnMount />
       {matchSlot}
-      {recipeControls}
       {/* ── Ingredients + panetti stepper ── */}
       <div>
         <div className="flex items-center gap-3 sm:gap-4 mb-5">
@@ -3019,8 +3025,17 @@ export function RecipeOutput({
               recipe.flour_blend && recipe.flour_blend.length > 0
                 ? ui.flourMix
                 : simple
-                  ? `${flourStrengthLabel(recipe.flour_w, cms)} · W${recipe.flour_w}`
-                  : `W${recipe.flour_w} · P/L ${recipe.flour_pl}`
+                  ? (
+                      <>
+                        {flourStrengthLabel(recipe.flour_w, cms)} ·{" "}
+                        <GlossaryWLink w={recipe.flour_w} />
+                      </>
+                    )
+                  : (
+                      <>
+                        <GlossaryWLink w={recipe.flour_w} /> · P/L {recipe.flour_pl}
+                      </>
+                    )
             }
             amount={gramsApprox(recipe.flour_g, fmt)}
           />
@@ -3079,30 +3094,53 @@ export function RecipeOutput({
             detail={`${fmt.percent(recipe.hydration_pct)}${recipe.water_temp_c != null ? ` · ${fmt.celsius(recipe.water_temp_c)}` : ""}`}
             amount={gramsApprox(recipe.water_g, fmt)}
           />
-          <IngRow name={ui.salt} amount={fmt.grams(recipe.salt_g)} />
+          {/* Audit lug 2026 (nerd): baker's % accanto ai grammi — il linguaggio
+              con cui si confrontano le ricette. Easy resta pulito. */}
+          <IngRow
+            name={ui.salt}
+            detail={isNerd ? bakerPct(recipe.salt_g) : undefined}
+            amount={fmt.grams(recipe.salt_g)}
+          />
           {recipe.yeast_g > 0 && (
             <IngRow
               name={cms.yeastLabels[recipe.yeast_type] || YEAST_LABELS[recipe.yeast_type] || recipe.yeast_type}
-              detail={yeastPracticalHint(recipe.yeast_g, recipe.yeast_type, cms)}
+              detail={[
+                yeastPracticalHint(recipe.yeast_g, recipe.yeast_type, cms),
+                isNerd ? bakerPct(recipe.yeast_g, 2) : null,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
               amount={fmt.grams(recipe.yeast_g)}
             />
           )}
           {recipe.fat_g > 0 && (
-            <IngRow name={recipe.fat_label || ui.oilEvo} amount={fmt.grams(recipe.fat_g)} />
+            <IngRow
+              name={recipe.fat_label || ui.oilEvo}
+              detail={isNerd ? bakerPct(recipe.fat_g) : undefined}
+              amount={fmt.grams(recipe.fat_g)}
+            />
           )}
           {recipe.sugar_g > 0 && (
-            <IngRow name={ui.sugar} amount={fmt.grams(recipe.sugar_g)} />
+            <IngRow
+              name={ui.sugar}
+              detail={isNerd ? bakerPct(recipe.sugar_g) : undefined}
+              amount={fmt.grams(recipe.sugar_g)}
+            />
           )}
         </div>
 
         {/* ── Scorporo pre-fermento (audit roleplay giugno 2026) ──
             Una ricetta con biga/poolish senza dosi separate non è eseguibile:
-            qui lo split canonico (biga 45% idro, poolish 1:1, mai sale dentro). */}
+            split canonico in domain/pre-ferment-split (testato). */}
         {recipe.has_pre_ferment && (() => {
-          const isPoolish = (recipe.pre_ferment_type ?? "").toLowerCase().includes("poolish");
-          const prefFlour = Math.round(recipe.flour_g * (isPoolish ? 0.3 : 0.4));
-          const prefWater = Math.round(prefFlour * (isPoolish ? 1.0 : 0.45));
-          const name = isPoolish ? "Poolish" : "Biga";
+          const split = computePreFermentSplit({
+            flourG: recipe.flour_g,
+            waterG: recipe.water_g,
+            preFermentType: recipe.pre_ferment_type,
+          });
+          const { isPoolish, name } = split;
+          const prefFlour = split.prefermentFlourG;
+          const prefWater = split.prefermentWaterG;
           return (
             <div
               className="mt-5 rounded-2xl overflow-hidden"
@@ -3144,9 +3182,9 @@ export function RecipeOutput({
                     2 · {cms.cooking.finalDoughStageTitle}
                   </div>
                   <div className="type-data" style={{ color: "var(--text-default)", lineHeight: 1.75, fontFeatureSettings: "'tnum'" }}>
-                    {ui.flour}: <b>{fmt.grams(recipe.flour_g - prefFlour)}</b>
+                    {ui.flour}: <b>{fmt.grams(split.mainFlourG)}</b>
                     <br />
-                    {ui.water}: <b>{fmt.grams(recipe.water_g - prefWater)}</b>
+                    {ui.water}: <b>{fmt.grams(split.mainWaterG)}</b>
                     <br />
                     {ui.salt}: <b>{fmt.grams(recipe.salt_g)}</b>
                     {recipe.fat_g > 0 ? <> · {recipe.fat_label || ui.oilEvo}: <b>{fmt.grams(recipe.fat_g)}</b></> : null}
@@ -3161,7 +3199,8 @@ export function RecipeOutput({
                   lineHeight: 1.45,
                 }}
               >
-                Il sale va sempre e solo nell'impasto finale: nel pre-fermento frenerebbe i lieviti.
+                {cms.cooking.prefermentSaltNote ??
+                  "Il sale va sempre e solo nell'impasto finale: nel pre-fermento frenerebbe i lieviti."}
               </div>
             </div>
           );
@@ -3177,9 +3216,11 @@ export function RecipeOutput({
           {fmt.grams(recipe.total_dough_g)} {ui.totalDough}
         </div>
 
-        {/* ── Regola 55 (temperatura acqua / DDT) — dettaglio tecnico: vive nel
-             nerd mode insieme agli altri parametri avanzati (R19). ── */}
-        {isNerd && recipe.water_temp_c != null && (
+        {/* ── Regola 55 (temperatura acqua / DDT) — la riga pratica ("acqua a
+             28°C") è per tutti: il numero senza criterio si sbaglia col primo
+             caldo (audit lug 2026, persona pizzaiolo). Il dettaglio completo
+             resta dietro il toggle "?". ── */}
+        {recipe.water_temp_c != null && (
           <div
             className="mt-5 flex items-start gap-3 px-1 py-1"
             title={rule55Description}
@@ -3297,6 +3338,10 @@ export function RecipeOutput({
           </NerdAuraBlock>
         )}
       </div>
+
+      {/* Parametri + Personalizza vivono DOPO gli ingredienti: prima il "cosa
+          serve", poi il "come è calcolato" (audit fruibilità luglio 2026). */}
+      {recipeControls}
 
       </motion.div>
       )}
@@ -3610,8 +3655,9 @@ export function RecipeOutput({
 
       </AnimatePresence>
 
-      {/* ── Feedback form ── */}
-      {showFeedback && (
+      {/* ── Feedback form — solo nel tab Ricetta: ripetuto in tutti e tre i
+          tab era rumore (audit fruibilità luglio 2026). ── */}
+      {showFeedback && activeTabView === "ricetta" && (
         <div className="mt-6">
           <RecipeFeedbackForm recipe={recipe} skillLevel={constraints.skill_level} />
         </div>
@@ -3799,7 +3845,7 @@ function IngRow({
   amount,
 }: {
   name: string;
-  detail?: string;
+  detail?: ReactNode;
   amount: string;
 }) {
   return (
@@ -3843,6 +3889,24 @@ function IngRow({
         {amount}
       </span>
     </div>
+  );
+}
+
+/* Deeplink discreto al glossario: la W della farina smette di essere gergo
+   muto (audit lug 2026 — persona casalinga). */
+function GlossaryWLink({ w }: { w: number }) {
+  return (
+    <Link
+      to="/learn/glossary#w_alveograph"
+      style={{
+        color: "inherit",
+        textDecoration: "underline",
+        textDecorationStyle: "dotted",
+        textUnderlineOffset: 3,
+      }}
+    >
+      W{w}
+    </Link>
   );
 }
 

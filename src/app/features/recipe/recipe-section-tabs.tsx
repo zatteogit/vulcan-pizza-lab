@@ -294,9 +294,11 @@ function TabsCapsule({
                 {hasSubtitles && tab.subtitle && (
                   <span 
                     className="truncate max-w-full font-normal"
-                    style={{ 
-                      fontSize: navbar ? "0.58rem" : "clamp(var(--font-size-xs), 1.8vw, var(--font-size-sm))",
-                      opacity: active ? 0.85 : 0.55,
+                    style={{
+                      /* Audit lug 2026: 0.58rem (~9px) era sotto ogni soglia di
+                         leggibilità — 0.68rem è il pavimento accettabile. */
+                      fontSize: navbar ? "0.68rem" : "clamp(var(--font-size-xs), 1.8vw, var(--font-size-sm))",
+                      opacity: active ? 0.85 : 0.6,
                       marginTop: "1px"
                     }}
                   >

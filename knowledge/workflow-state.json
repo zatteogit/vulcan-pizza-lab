@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-07-02T17:10:00.000Z",
+  "lastUpdated": "2026-07-03T12:10:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 142,
     "appFilesExcludingUi": 142,
     "pizzaEngineExports": 59,
-    "pizzaEngineLines": 4975,
+    "pizzaEngineLines": 3566,
     "cmsContextLines": 3271,
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-02 v4 registra l'uso di container queries (cqw) e hyphens per titoli card resilienti a colonne strette, il limite minimo max(rem, px) sui micro-font mobili in theme.css, la rimozione dei parametri ridondanti in RecipeSetupPanel summary e l'allineamento baseline in TimeSlotPicker.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-03 registra lo scorporo del database stili in styles-db.ts per chunk-splitting, l'isolamento dello split pre-fermenti in pre-ferment-split.ts con test unitari Vitest, il caricamento lazy on-demand dei bundle CMS multilingua (risparmiati ~440 kB all'avvio), i dettagli collassabili della MatchCard, i Baker's % nel layer nerd e la card Riprendi per le ricette parcheggiate.",
   "filesMappedCount": 142,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-02-v4",
+  "lastScannedChapter": "kipi-update-2026-07-03",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -22,13 +22,17 @@
       "status": "completed",
       "filesDocumented": [
         "src/app/domain/pizza-engine.ts",
+        "src/app/domain/styles-db.ts",
+        "src/app/domain/pre-ferment-split.ts",
+        "src/app/domain/pizza-engine.test.ts",
+        "src/app/domain/pre-ferment-split.test.ts",
         "src/app/features/dev-tools/engine-test-suite.tsx",
         "src/app/domain/deviation-tags.ts",
         "src/app/data/parametric-databases.ts",
         "src/app/data/topping-library.ts",
         "src/app/data/impasto-library.ts"
       ],
-      "lastWorked": "2026-07-01"
+      "lastWorked": "2026-07-03"
     },
     {
       "id": "recipe-flow",
@@ -51,7 +55,7 @@
         "src/app/hooks/use-recipe-state.ts",
         "src/app/features/recipe/recipe-setup-panel.tsx"
       ],
-      "lastWorked": "2026-07-02"
+      "lastWorked": "2026-07-03"
     },
     {
       "id": "scoring-feedback",
@@ -64,7 +68,7 @@
         "src/app/features/recipe/feedback-analysis.tsx",
         "src/app/features/recipe/feedback-store.ts"
       ],
-      "lastWorked": "2026-07-02"
+      "lastWorked": "2026-07-03"
     },
     {
       "id": "styles-versions",
@@ -109,7 +113,7 @@
         "src/app/features/cms/locales/domain-pt.ts",
         "src/app/pages/cms.tsx"
       ],
-      "lastWorked": "2026-07-02"
+      "lastWorked": "2026-07-03"
     },
     {
       "id": "routing-shell",
@@ -128,7 +132,7 @@
         "src/app/components/shared/sub-page-header.tsx",
         "src/vite-env.d.ts"
       ],
-      "lastWorked": "2026-07-02"
+      "lastWorked": "2026-07-03"
     },
     {
       "id": "pages-learn",

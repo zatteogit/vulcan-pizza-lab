@@ -517,6 +517,17 @@ export const EN_LOCALE: CmsContent = {
     rule55Description: "Rule of thumb: room temperature + flour temperature + water temperature \u2248 {target}, to land around {final} final dough temperature. If you use a mixer, friction adds another {frictionMin}-{frictionMax}.",
     stepDetailsShow: "How to do it",
     stepDetailsHide: "Hide details",
+    matchDetailsShow: "Score details",
+    draftResumeEyebrow: "Recipe in progress",
+    draftResumeCta: "Resume",
+    draftReplaceTitle: "Replace the recipe in progress?",
+    draftReplaceBody:
+      "{current} is already dialed in for your schedule. Choosing {next} replaces it and its settings are lost.",
+    draftReplaceConfirm: "Switch to {next}",
+    prefermentSaltNote:
+      "Salt goes in the final dough only: in the pre-ferment it would hold back the yeast.",
+    learnedFromAttempts: "I learned from your {n} attempts",
+    applyCorrections: "Apply the corrections",
     learnInlineTitle: "Learn more: {label}",
     learnInlineBody: "{label}: review the concept here without leaving the recipe. The practical details for this step are in the block above; the full theory lives in Learn.",
     tipsCountOne: "{n} tip",

@@ -1,7 +1,10 @@
 import {
 ChevronLeft,
+ChevronRight,
+Flame,
 Heart,
-Sparkles
+Sparkles,
+TriangleAlert
 } from "lucide-react";
 import {
 motion,
@@ -47,6 +50,7 @@ import { VulcanHero } from "../components/shared/vulcan-hero";
 import { useCms } from "../features/cms/cms-context";
 import { t as tpl } from "../features/cms/i18n";
 import { getDietaryWarnings } from "../data/dietary-data";
+import { findSavedRecipe, removeRecipe, saveRecipe } from "../data/saved-recipes";
 import {
   getInterpretationById,
   type Interpretation,
@@ -66,7 +70,7 @@ import {
   type RecipeMode,
   useRecipeState,
 } from "../hooks/use-recipe-state";
-import { CtaButton, Heading, IconButton } from "../components/ds/index";
+import { ConfirmDialog, CtaButton, Heading, IconButton } from "../components/ds/index";
 
 type AppStep = "settings" | "styles" | "result";
 type StyleSettingsPanel = SettingsTab | "time";
@@ -116,6 +120,9 @@ interface ResolvedCreateDraft {
   styleSettingsPanel: StyleSettingsPanel | null;
   constraints: UserConstraints;
   recipeInitial: RecipeInitialState | null;
+  /** Ondata 1 (audit lug 2026): ricetta generata ma "parcheggiata" — l'utente
+   *  è uscito dal result senza sceglierne un'altra. Alimenta la card Riprendi. */
+  parkedStyleId: string | null;
 }
 
 interface ResolvedTimeChoice {
@@ -278,6 +285,7 @@ function resolveCreateDraft(
     styleSettingsPanel: null,
     constraints: profileConstraints,
     recipeInitial: null,
+    parkedStyleId: null,
   };
   const draft = readCreateDraft();
   if (!draft) return fallback;
@@ -305,15 +313,21 @@ function resolveCreateDraft(
   }
   const recipeGenerated =
     draft.recipeGenerated && draftStyle !== null && !timeChoice.stale;
+  /* Ondata 1 (audit lug 2026): una ricetta generata non muore uscendo dal
+     result. Se il draft ricorda uno step precedente, la ricetta resta
+     "parcheggiata" e riemerge come card Riprendi. */
   const step: AppStep = recipeGenerated
-    ? "result"
+    ? draft.step === "styles" || draft.step === "settings"
+      ? draft.step
+      : "result"
     : selectedStyle || selectedTimeSlot
       ? "styles"
       : "settings";
+  const parked = recipeGenerated && step !== "result";
 
   return {
     step,
-    selectedStyle,
+    selectedStyle: parked ? null : selectedStyle,
     selectedTimeSlot,
     selectedTimeMeta,
     styleSettingsPanel:
@@ -323,8 +337,76 @@ function resolveCreateDraft(
     constraints: restoredConstraints,
     recipeInitial: timeChoice.stale
       ? null
-      : resolveRecipeInitial(draft, selectedStyle),
+      : resolveRecipeInitial(draft, draftStyle),
+    parkedStyleId: parked ? (draftStyle?.id ?? null) : null,
   };
+}
+
+/* Firma dei vincoli per l'auto-ottimizzazione una-tantum per stile: condivisa
+   tra l'effect e la ripresa di una ricetta parcheggiata (che NON deve
+   ri-ottimizzare, o sovrascriverebbe i ritocchi manuali dell'utente). */
+function computeAutoOptSig(style: PizzaStyle, c: UserConstraints): string {
+  return `${style.id}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}`;
+}
+
+/* ═══ Pill "Riprendi" — la ricetta parcheggiata riemerge negli step
+   precedenti invece di sparire (Ondata 1, audit lug 2026). Sobria per
+   scelta: una riga discreta, niente foto né CTA piena. ═══ */
+function ResumeRecipeCard({
+  styleName,
+  eyebrow,
+  cta,
+  onResume,
+  className = "",
+}: {
+  styleName: string;
+  eyebrow: string;
+  cta: string;
+  onResume: () => void;
+  className?: string;
+}) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onResume}
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 380, damping: 28 }}
+      whileTap={{ scale: 0.98 }}
+      className={`mx-auto flex max-w-full items-center gap-2 rounded-full px-4 py-2 ${className}`}
+      style={{
+        background: "color-mix(in srgb, var(--container-bg) 72%, transparent)",
+        border: "1px solid var(--container-border-subtle)",
+        color: "var(--text-muted)",
+        fontSize: "var(--font-size-sm)",
+        lineHeight: 1.2,
+        cursor: "pointer",
+      }}
+    >
+      <Flame size={13} style={{ color: "var(--text-accent)", flexShrink: 0 }} />
+      <span className="truncate min-w-0">
+        {eyebrow}:{" "}
+        <span
+          style={{
+            color: "var(--text-default)",
+            fontWeight: "var(--weight-semibold)" as any,
+          }}
+        >
+          {styleName}
+        </span>
+      </span>
+      <span
+        className="flex items-center gap-0.5 flex-shrink-0"
+        style={{
+          color: "var(--text-accent)",
+          fontWeight: "var(--weight-semibold)" as any,
+        }}
+      >
+        {cta}
+        <ChevronRight size={13} />
+      </span>
+    </motion.button>
+  );
 }
 
 export function HomePage() {
@@ -362,6 +444,14 @@ export function HomePage() {
   const [setupPanelOpen, setSetupPanelOpen] = useState(false);
   const [setupNotice, setSetupNotice] = useState<string | null>(null);
   const [nerdMode, setNerdMode] = useState(false);
+  /* Ondata 1: ricetta generata e poi lasciata — resta parcheggiata finché
+     l'utente non la riprende o la sostituisce (previa conferma). */
+  const [parkedStyleId, setParkedStyleId] = useState<string | null>(
+    initialCreateDraft.parkedStyleId,
+  );
+  const [confirmStyleReplace, setConfirmStyleReplace] =
+    useState<PizzaStyle | null>(null);
+  const autoOptSigRef = useRef<string>("");
 
   /* ═══ VPL-023: Respect prefers-reduced-motion ═══ */
   const prefersReducedMotion = useReducedMotion();
@@ -376,9 +466,15 @@ export function HomePage() {
     setCurrentStep("result");
   }, []);
 
-  /* ═══ Back navigation ═══ */
+  /* ═══ Back navigation — MAI distruttiva (Ondata 1, audit lug 2026).
+     Uscire da una ricetta generata la parcheggia: draft intatto, card
+     "Riprendi" negli step precedenti. Si perde solo sostituendola, previa
+     conferma esplicita. ═══ */
   const handleBackToSettings = useCallback(() => {
-    removeCreateDraft();
+    if (parkedStyleId === null) {
+      /* Niente da preservare: la landing riparte pulita come prima. */
+      removeCreateDraft();
+    }
     setSelectedStyle(null);
     setSelectedTimeSlot(null);
     setSelectedTimeMeta(null);
@@ -388,9 +484,12 @@ export function HomePage() {
       behavior: "instant" as ScrollBehavior,
     });
     setCurrentStep("settings");
-  }, []);
+  }, [parkedStyleId]);
 
   const handleBackToStyles = useCallback(() => {
+    if (currentStep === "result" && selectedStyle) {
+      setParkedStyleId(selectedStyle.id);
+    }
     setSelectedStyle(null);
     setSetupPanelOpen(false);
     setSetupNotice(null);
@@ -401,7 +500,7 @@ export function HomePage() {
       behavior: "instant" as ScrollBehavior,
     });
     setCurrentStep("styles");
-  }, []);
+  }, [currentStep, selectedStyle]);
 
   const nerdAvailable = profileDefaults.pizzaNerdEnabled;
   const effectiveNerdMode = nerdAvailable && nerdMode;
@@ -526,10 +625,12 @@ export function HomePage() {
     else window.setTimeout(advance, 280);
   }, [currentStep, prefersReducedMotion]);
 
-  const handleSelectStyle = useCallback(
+  /* Applica davvero la scelta di uno stile (reset dei parametri ricetta). */
+  const applySelectStyle = useCallback(
     (style: PizzaStyle) => {
       resetForStyle(style, { mode: "adapted" }, constraints.available_hours);
       setSelectedStyle(style);
+      setParkedStyleId(null);
       setSetupPanelOpen(false);
       setSetupNotice(null);
       setSelectedFlourId(null);
@@ -537,6 +638,48 @@ export function HomePage() {
     },
     [constraints.available_hours, resetForStyle],
   );
+
+  /* Riprende la ricetta parcheggiata SENZA reset né ri-ottimizzazione:
+     i parametri vivono ancora nello stato (o nel draft, dopo un reload). */
+  const handleResumeRecipe = useCallback(() => {
+    if (!parkedStyleId) return;
+    const style = effectiveStyles[parkedStyleId];
+    if (!style) {
+      setParkedStyleId(null);
+      return;
+    }
+    autoOptSigRef.current = computeAutoOptSig(style, constraints);
+    setSelectedStyle(style);
+    setParkedStyleId(null);
+    setSetupPanelOpen(false);
+    setSetupNotice(null);
+    setStyleSettingsPanel(null);
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    setCurrentStep("result");
+  }, [parkedStyleId, effectiveStyles, constraints]);
+
+  const handleSelectStyle = useCallback(
+    (style: PizzaStyle) => {
+      if (parkedStyleId && style.id === parkedStyleId) {
+        /* Stesso stile della ricetta parcheggiata: è una ripresa, non un reset. */
+        handleResumeRecipe();
+        return;
+      }
+      if (parkedStyleId) {
+        /* C'è una ricetta pronta di un altro stile: chiedi prima di buttarla. */
+        setConfirmStyleReplace(style);
+        return;
+      }
+      applySelectStyle(style);
+    },
+    [parkedStyleId, handleResumeRecipe, applySelectStyle],
+  );
+
+  const parkedStyle = parkedStyleId
+    ? effectiveStyles[parkedStyleId] ?? null
+    : null;
+  const resumeEyebrow = cms.cooking.draftResumeEyebrow ?? "Ricetta in corso";
+  const resumeCta = cms.cooking.draftResumeCta ?? "Riprendi";
 
   const handleResetCreateToCanonical = useCallback(() => {
     if (!selectedStyle) return;
@@ -573,7 +716,6 @@ export function HomePage() {
   // non il midpoint. Quando entri in uno stile in modalità adattata (senza versione
   // o interpretazione attiva), il motore ottimizza una volta per stile+vincoli.
   // Il midpoint canonico resta accessibile via "Torna all'originale".
-  const autoOptSigRef = useRef<string>("");
   useEffect(() => {
     if (!selectedStyle) {
       autoOptSigRef.current = "";
@@ -581,8 +723,7 @@ export function HomePage() {
     }
     if (createRecipeMode !== "adapted") return; // canonico: lascia il riferimento da manuale
     if (activeVersionId || activeInterpretationId) return; // rispetta la scelta dell'utente
-    const c = constraints;
-    const sig = `${selectedStyle.id}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}`;
+    const sig = computeAutoOptSig(selectedStyle, constraints);
     if (autoOptSigRef.current === sig) return;
     autoOptSigRef.current = sig;
     optimizeForConstraints(constraints);
@@ -624,6 +765,59 @@ export function HomePage() {
     () => buildRecipe(constraints),
     [buildRecipe, constraints],
   );
+
+  /* ═══ Ondata 1: salva la ricetta su misura anche dal flusso Crea (stesso
+     store e stessa firma-parametri della pagina dettaglio). ═══ */
+  const currentSaveParams = useMemo(
+    () => ({
+      hydration: customHydration,
+      flourW: customFlourW,
+      flourPL: customFlourPL,
+      fermentHours: customFermentHours,
+      fermentTemp: customFermentTemp,
+      usePreFerment,
+      doughBalls: constraints.dough_balls,
+      ovenType: constraints.oven_type,
+      ovenTemp: constraints.oven_max_temp_c,
+      panConfig,
+      selectedToppingConcept,
+    }),
+    [
+      customHydration,
+      customFlourW,
+      customFlourPL,
+      customFermentHours,
+      customFermentTemp,
+      usePreFerment,
+      constraints.dough_balls,
+      constraints.oven_type,
+      constraints.oven_max_temp_c,
+      panConfig,
+      selectedToppingConcept,
+    ],
+  );
+  const [savedTick, setSavedTick] = useState(0);
+  const savedEntry = useMemo(
+    () =>
+      selectedStyle ? findSavedRecipe(selectedStyle.id, currentSaveParams) : null,
+    // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
+    [selectedStyle, currentSaveParams, savedTick],
+  );
+  const handleToggleSaveRecipe = useCallback(() => {
+    if (!selectedStyle || !recipe) return;
+    if (savedEntry) {
+      removeRecipe(savedEntry.id);
+    } else {
+      saveRecipe({
+        styleId: selectedStyle.id,
+        styleName: selectedStyle.name,
+        versionId: activeVersionId,
+        params: currentSaveParams,
+        score: Math.round(recipe.scores.composite),
+      });
+    }
+    setSavedTick((v) => v + 1);
+  }, [selectedStyle, recipe, savedEntry, activeVersionId, currentSaveParams]);
 
   // Soffitto (M_o) + diagnosi del collo di bottiglia. Calcolato sui vincoli correnti
   // (~0.1ms). HARD = forno (abbassa il soffitto, viabilità termica < 1). SOFT =
@@ -781,6 +975,7 @@ export function HomePage() {
     const hasCreateDraft =
       selectedTimeSlot !== null ||
       selectedStyle !== null ||
+      parkedStyleId !== null ||
       currentStep === "result";
 
     if (!hasCreateDraft) {
@@ -796,9 +991,14 @@ export function HomePage() {
       selectedTimeAt: selectedTimeMeta?.selectedAt ?? null,
       selectedTimeHours: selectedTimeMeta?.hours ?? null,
       selectedTimeTargetAt: selectedTimeMeta?.targetAt ?? null,
-      selectedStyleId: selectedStyle?.id ?? null,
-      recipeGenerated: currentStep === "result" && selectedStyle !== null,
+      selectedStyleId: selectedStyle?.id ?? parkedStyleId,
+      recipeGenerated:
+        (currentStep === "result" && selectedStyle !== null) ||
+        parkedStyleId !== null,
       constraints,
+      /* Parcheggiata (selectedStyle null): NON riscrivere i parametri con lo
+         stato del hook — a ogni remount (reload, HMR) è ai default e
+         clobbererebbe la ricetta vera. Si preserva ciò che è già nel draft. */
       recipe: selectedStyle
         ? {
             mode: createRecipeMode,
@@ -813,7 +1013,9 @@ export function HomePage() {
             panConfig,
             selectedToppingConcept,
           }
-        : null,
+        : parkedStyleId
+          ? readCreateDraft()?.recipe ?? null
+          : null,
     });
   }, [
     activeInterpretationId,
@@ -827,6 +1029,7 @@ export function HomePage() {
     customFlourW,
     customHydration,
     panConfig,
+    parkedStyleId,
     selectedStyle,
     selectedTimeMeta?.hours,
     selectedTimeMeta?.selectedAt,
@@ -1063,6 +1266,15 @@ export function HomePage() {
           >
             <div className="relative">
               <div className="relative max-w-2xl mx-auto px-4 sm:px-6 w-full">
+                {parkedStyle && (
+                  <ResumeRecipeCard
+                    styleName={parkedStyle.name}
+                    eyebrow={resumeEyebrow}
+                    cta={resumeCta}
+                    onResume={handleResumeRecipe}
+                    className="mt-4 mb-1"
+                  />
+                )}
                 <UserNeeds
                   constraints={constraints}
                   onConstraintsChange={setConstraints}
@@ -1314,6 +1526,15 @@ export function HomePage() {
                     {cms.steps.styles.subtitle}
                   </p>
                 </div>
+                {parkedStyle && (
+                  <ResumeRecipeCard
+                    styleName={parkedStyle.name}
+                    eyebrow={resumeEyebrow}
+                    cta={resumeCta}
+                    onResume={handleResumeRecipe}
+                    className="mb-5"
+                  />
+                )}
                 <RecommendedStyles
                   constraints={constraints}
                   selectedStyle={selectedStyle}
@@ -1422,6 +1643,8 @@ export function HomePage() {
                   ceiling={ceilingInfo?.value}
                   hardLimited={ceilingInfo?.hard}
                   softNeeds={ceilingInfo?.softNeeds}
+                  onSave={handleToggleSaveRecipe}
+                  saved={Boolean(savedEntry)}
                 />
               }
               recipeControls={
@@ -1438,7 +1661,11 @@ export function HomePage() {
                       <div className="flex items-center gap-2 mb-1.5" style={{ color: "var(--cta)" }}>
                         <Sparkles size={15} />
                         <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
-                          Ho imparato dai tuoi {feedbackCorrection.sampleSize} tentativi
+                          {tpl(
+                            cms.cooking.learnedFromAttempts ??
+                              "Ho imparato dai tuoi {n} tentativi",
+                            { n: feedbackCorrection.sampleSize },
+                          )}
                         </span>
                       </div>
                       <ul className="flex flex-col gap-1 mb-2.5">
@@ -1470,51 +1697,27 @@ export function HomePage() {
                             cursor: "pointer",
                           }}
                         >
-                          <Sparkles size={14} /> Applica le correzioni
+                          <Sparkles size={14} />{" "}
+                          {cms.cooking.applyCorrections ?? "Applica le correzioni"}
                         </button>
                       )}
                     </div>
                   )}
-                  <div
-                    className="rounded-2xl px-4 py-3"
-                    style={{
-                      background: "var(--container-bg-low)",
-                      border: "1px solid var(--container-border-subtle)",
-                    }}
-                  >
-                    <span
-                      className="block"
-                      style={{
-                        color: "var(--text-default)",
-                        fontSize: "var(--font-size-lg)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                      }}
-                    >
-                      {createRecipeMode === "canonical"
-                        ? "Ricetta canonica"
-                        : createRecipeOptimized
-                          ? "Su misura per te"
-                          : "Personalizzata"}
-                    </span>
-                    <span
-                      className="block mt-1"
-                      style={{
-                        color: "var(--text-muted)",
-                        fontSize: "var(--font-size-md)",
-                        lineHeight: "var(--leading-normal)",
-                      }}
-                    >
-                      {createRecipeMode === "canonical"
-                        ? "La ricetta da manuale, valutata sul tuo forno. Ottimizzala per il meglio possibile col tuo setup."
-                        : createRecipeOptimized
-                          ? "Vulcan ha scelto i parametri migliori per il tuo forno, tempo e livello."
-                          : "Hai messo mano ai parametri. Ri-ottimizza per tornare al massimo per te."}
-                    </span>
-                  </div>
+                  {/* Audit fruibilità luglio 2026: la card di contesto
+                      ("Ricetta canonica" / "Su misura per te") è diventata un
+                      badge nella testata della strip — stessa informazione,
+                      una schermata in meno. */}
                   <RecipeStatStrip
                     recipe={recipe}
                     nerdMode={effectiveNerdMode}
                     isPersonalized={createRecipeMode !== "canonical"}
+                    nerdAvailable={nerdAvailable}
+                    onNerdModeChange={setNerdMode}
+                    modeBadge={
+                      createRecipeMode === "canonical"
+                        ? cms.cooking.recipeCanonical
+                        : cms.cooking.recipeAdapted
+                    }
                   />
 
                   <RecipeSetupPanel
@@ -1759,6 +1962,42 @@ export function HomePage() {
             onDismiss={() => setSelectedStyle(null)}
           />
       )}
+
+      {/* ═══ Conferma sostituzione ricetta parcheggiata (Ondata 1) ═══ */}
+      <ConfirmDialog
+        open={confirmStyleReplace !== null}
+        onDismiss={() => setConfirmStyleReplace(null)}
+        ariaLabel={cms.cooking.draftReplaceTitle ?? "Sostituire la ricetta in corso?"}
+        icon={<TriangleAlert size={26} />}
+        tone="destructive"
+        title={cms.cooking.draftReplaceTitle ?? "Sostituire la ricetta in corso?"}
+        body={tpl(
+          cms.cooking.draftReplaceBody ??
+            "Hai già {current} pronta e regolata sui tuoi tempi. Scegliendo {next} la sostituisci e i suoi parametri vanno persi.",
+          {
+            current: parkedStyle?.name ?? "",
+            next: confirmStyleReplace?.name ?? "",
+          },
+        )}
+        actions={[
+          {
+            label: tpl(cms.cooking.draftReplaceConfirm ?? "Passa a {next}", {
+              next: confirmStyleReplace?.name ?? "",
+            }),
+            onClick: () => {
+              const next = confirmStyleReplace;
+              setConfirmStyleReplace(null);
+              if (next) applySelectStyle(next);
+            },
+            variant: "destructive",
+          },
+          {
+            label: cms.ui.cancel,
+            onClick: () => setConfirmStyleReplace(null),
+            variant: "secondary",
+          },
+        ]}
+      />
     </div>
   );
 }

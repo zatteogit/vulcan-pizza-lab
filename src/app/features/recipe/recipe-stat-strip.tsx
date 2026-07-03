@@ -14,6 +14,9 @@ interface RecipeStatStripProps {
   simple?: boolean;
   nerdAvailable?: boolean;
   onNerdModeChange?: (nerd: boolean) => void;
+  /** Badge di stato accanto al titolo ("Ricetta canonica" / "Su misura per
+   *  te"): sostituisce la vecchia card di contesto sopra la strip. */
+  modeBadge?: string;
 }
 
 /**
@@ -27,6 +30,7 @@ export function RecipeStatStrip({
   simple,
   nerdAvailable = false,
   onNerdModeChange,
+  modeBadge,
 }: RecipeStatStripProps) {
   const science = recipe.science;
   const { cms, bcp47 } = useCms();
@@ -65,18 +69,35 @@ export function RecipeStatStrip({
     <div className="flex flex-col gap-3">
       {/* ═══ Intestazione della Sezione e Nerd Toggle incorporato ═══ */}
       <div className="flex items-center justify-between px-0.5 min-h-[36px]">
-        <span
-          className="type-data"
-          style={{
-            color: "var(--text-default)",
-            fontSize: "var(--font-size-md)",
-            fontWeight: "var(--weight-bold)" as any,
-            textTransform: "uppercase",
-            letterSpacing: "var(--tracking-spread)",
-            opacity: 0.9,
-          }}
-        >
-          {cms.ui.nerdTitle || "Parametri Impasto"}
+        <span className="inline-flex items-center gap-2 min-w-0">
+          <span
+            className="type-data"
+            style={{
+              color: "var(--text-default)",
+              fontSize: "var(--font-size-md)",
+              fontWeight: "var(--weight-bold)" as any,
+              textTransform: "uppercase",
+              letterSpacing: "var(--tracking-spread)",
+              opacity: 0.9,
+            }}
+          >
+            {cms.ui.nerdTitle || "Parametri Impasto"}
+          </span>
+          {modeBadge && (
+            <Badge
+              className="px-2 py-0.5 rounded-full flex-shrink-0"
+              color="var(--text-accent)"
+              background="color-mix(in srgb, var(--primary) 10%, transparent)"
+              style={{
+                fontSize: "var(--font-size-xs)",
+                fontWeight: "var(--weight-semibold)" as any,
+                letterSpacing: "var(--tracking-caps)",
+                textTransform: "uppercase",
+              }}
+            >
+              {modeBadge}
+            </Badge>
+          )}
         </span>
 
         {nerdAvailable && onNerdModeChange && (
@@ -305,15 +326,17 @@ function StatCell({
         damping: 24,
       }}
       whileTap={{ scale: 0.96 }}
-      className="grid items-start py-4 px-4 text-left select-none border"
+      className="grid items-start py-3 px-3.5 text-left select-none border"
       style={{
         background: "var(--container-bg)",
         border: "1px solid var(--container-border)",
         borderRadius: "16px",
         cursor: "default",
-        minHeight: 124,
-        gridTemplateRows: "auto minmax(42px, 1fr) auto",
-        rowGap: "var(--space-2)",
+        /* Audit fruibilità luglio 2026: celle più basse e numeri meno oversize
+           — la strip deve leggersi in un colpo d'occhio, non dominare il tab. */
+        minHeight: 88,
+        gridTemplateRows: "auto minmax(28px, 1fr) auto",
+        rowGap: "var(--space-1)",
         alignContent: "start",
       }}
     >
@@ -360,7 +383,7 @@ function StatCell({
             exit={{ opacity: 0, y: -16, filter: "blur(3px)" }}
             transition={{ type: "spring", stiffness: 420, damping: 30 }}
             style={{
-              fontSize: "clamp(var(--font-size-6xl), 4.8vw, var(--font-size-7xl))",
+              fontSize: "clamp(var(--font-size-4xl), 3.4vw, var(--font-size-5xl))",
               fontWeight: 760,
               letterSpacing: 0,
               lineHeight: "0.95",
@@ -372,7 +395,7 @@ function StatCell({
         {statValue.unit && (
           <span
             style={{
-              fontSize: "clamp(var(--font-size-xl-5), 1.8vw, var(--font-size-3xl))",
+              fontSize: "clamp(var(--font-size-lg), 1.4vw, var(--font-size-2xl))",
               fontWeight: "var(--weight-bold)" as any,
               letterSpacing: 0,
               lineHeight: 1,

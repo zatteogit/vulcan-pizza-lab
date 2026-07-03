@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, RotateCcw, Sparkles, TriangleAlert } from "lucide-react";
+import { Bookmark, BookmarkCheck, ChevronDown, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, RotateCcw, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
@@ -151,6 +151,10 @@ export function RecipeMatchCard({
 }) {
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
+  /* Audit fruibilità luglio 2026: la card nasce COMPATTA (icona, punteggio,
+     tono e azioni). Barre punteggio, stato forno e rationale arrivano a
+     richiesta: erano una schermata intera prima degli ingredienti. */
+  const [expanded, setExpanded] = useState(false);
   const ovenGap = idealTemp - ovenTemp;
   const ovenStatus =
     ovenGap <= 0
@@ -349,24 +353,6 @@ export function RecipeMatchCard({
               </p>
             </motion.div>
           </AnimatePresence>
-          <div
-            className="mt-2 flex items-start gap-1.5"
-            style={{
-              color: ovenGap > 0 ? "var(--text-muted)" : "var(--text-accent)",
-            }}
-          >
-            {ovenGap > 0 && (
-              <TriangleAlert
-                size={14}
-                style={{ color: "var(--text-warning)", marginTop: 2, flexShrink: 0 }}
-                aria-hidden="true"
-              />
-            )}
-            <span className="type-numeric text-left" style={{ fontSize: "var(--font-size-md)" }}>
-              {ovenStatus}: {fmt.celsius(ovenTemp)}
-              {ovenGap > 0 ? ` · ${cms.ui.statIdeal} ${fmt.celsius(idealTemp)}` : ""}
-            </span>
-          </div>
           {unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
             <p
               className="mt-1.5 text-left"
@@ -381,7 +367,7 @@ export function RecipeMatchCard({
               {unviableText}
             </p>
           )}
-          {headroomLine && (
+          {headroomLine && (expanded || headroomLine.tone === "warn") && (
             <p
               className="mt-1.5 text-left"
               style={{
@@ -518,52 +504,111 @@ export function RecipeMatchCard({
         </div>
       </div>
 
-      {/* VPL-C4: barre con label ESTESA; quando non entrano sulla riga, vanno a
-       * capo (flex-wrap + min-width che contiene il nome pieno) invece di
-       * comprimersi in sigle criptiche. */}
-      <div
-        className="flex flex-wrap gap-x-4 gap-y-3 mt-3.5 pt-3 w-full"
-        style={{ borderTop: "1px solid var(--container-border-subtle)" }}
-      >
-        {axes.map((axis) => (
-          <ScoreBar
-            key={axis.key}
-            label={axis.label}
-            displayLabel={axis.label}
-            value={axis.value}
-            color={axis.color}
-            compact
-          />
-        ))}
-      </div>
+      {/* ── Dettagli a richiesta: stato forno, barre punteggio, rationale ── */}
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="match-details"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            className="overflow-hidden"
+          >
+            <div
+              className="mt-3 pt-3 flex items-start gap-1.5"
+              style={{
+                borderTop: "1px solid var(--container-border-subtle)",
+                color: ovenGap > 0 ? "var(--text-muted)" : "var(--text-accent)",
+              }}
+            >
+              {ovenGap > 0 && (
+                <TriangleAlert
+                  size={14}
+                  style={{ color: "var(--text-warning)", marginTop: 2, flexShrink: 0 }}
+                  aria-hidden="true"
+                />
+              )}
+              <span className="type-numeric text-left" style={{ fontSize: "var(--font-size-md)" }}>
+                {ovenStatus}: {fmt.celsius(ovenTemp)}
+                {ovenGap > 0 ? ` · ${cms.ui.statIdeal} ${fmt.celsius(idealTemp)}` : ""}
+              </span>
+            </div>
 
-      {optimizationRationale && optimizationRationale.length > 0 && (
-        <div
-          className="mt-3 pt-3 w-full"
-          style={{ borderTop: "1px solid var(--container-border-subtle)" }}
-        >
-          <div className="flex items-center gap-1.5 mb-1.5" style={{ color: "var(--cta)" }}>
-            <Sparkles size={14} />
-            <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
-              {cms.cooking.optimizedForSetup}
-            </span>
-          </div>
-          <ul className="flex flex-col gap-1">
-            {optimizationRationale.map((reason, i) => (
-              <li
-                key={i}
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
-                  lineHeight: "var(--leading-normal)",
-                }}
+            {/* VPL-C4: barre con label ESTESA; quando non entrano sulla riga, vanno a
+             * capo (flex-wrap + min-width che contiene il nome pieno) invece di
+             * comprimersi in sigle criptiche. */}
+            <div className="flex flex-wrap gap-x-4 gap-y-3 mt-3 w-full">
+              {axes.map((axis) => (
+                <ScoreBar
+                  key={axis.key}
+                  label={axis.label}
+                  displayLabel={axis.label}
+                  value={axis.value}
+                  color={axis.color}
+                  compact
+                />
+              ))}
+            </div>
+
+            {optimizationRationale && optimizationRationale.length > 0 && (
+              <div
+                className="mt-3 pt-3 w-full"
+                style={{ borderTop: "1px solid var(--container-border-subtle)" }}
               >
-                • {reason}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                <div className="flex items-center gap-1.5 mb-1.5" style={{ color: "var(--cta)" }}>
+                  <Sparkles size={14} />
+                  <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
+                    {cms.cooking.optimizedForSetup}
+                  </span>
+                </div>
+                <ul className="flex flex-col gap-1">
+                  {optimizationRationale.map((reason, i) => (
+                    <li
+                      key={i}
+                      style={{
+                        fontSize: "var(--font-size-sm)",
+                        color: "var(--text-muted)",
+                        lineHeight: "var(--leading-normal)",
+                      }}
+                    >
+                      • {reason}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded}
+        className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 active:scale-[0.98] transition-transform"
+        style={{
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          color: "var(--text-muted)",
+          fontSize: "var(--font-size-sm)",
+          fontWeight: "var(--weight-semibold)" as any,
+        }}
+      >
+        <span>
+          {expanded
+            ? cms.cooking.stepDetailsHide
+            : (cms.cooking.matchDetailsShow ?? "Dettagli punteggio")}
+        </span>
+        <motion.span
+          animate={{ rotate: expanded ? 180 : 0 }}
+          transition={{ type: "spring", stiffness: 420, damping: 30 }}
+          className="inline-flex"
+        >
+          <ChevronDown size={14} />
+        </motion.span>
+      </button>
     </Surface>
   );
 }

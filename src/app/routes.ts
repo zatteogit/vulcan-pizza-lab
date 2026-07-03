@@ -1,6 +1,7 @@
 /* === ROUTE CONFIG — VPL-056 / VPL-072 ===
-   Ristrutturazione: AppShell con tab bar 4 tab + command palette search.
-   Tab: Crea(/) · Stili(/explore) · Impara(/learn) · Profilo(/profile)
+   Ristrutturazione: AppShell con tab bar 3 tab + ProfileButton flottante
+   + command palette search.
+   Tab: Crea(/) · Scopri(/explore) · Impara(/learn) — Profilo(/profile) via avatar
    Search: ⌘K overlay (no tab dedicato)
    Dettaglio: /recipe/:styleId (non-tab)
    Tool: /dev, /design-system, /cms (nascosti dalla tab bar) */

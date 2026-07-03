@@ -1145,7 +1145,11 @@ function RecipeContent({
                 <div className="flex items-center gap-2 mb-1.5" style={{ color: "var(--cta)" }}>
                   <Sparkles size={15} />
                   <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
-                    Ho imparato dai tuoi {feedbackCorrection.sampleSize} tentativi
+                    {tpl(
+                      cms.cooking.learnedFromAttempts ??
+                        "Ho imparato dai tuoi {n} tentativi",
+                      { n: feedbackCorrection.sampleSize },
+                    )}
                   </span>
                 </div>
                 <ul className="flex flex-col gap-1 mb-2.5">
@@ -1177,7 +1181,8 @@ function RecipeContent({
                       cursor: "pointer",
                     }}
                   >
-                    <Sparkles size={14} /> Applica le correzioni
+                    <Sparkles size={14} />{" "}
+                    {cms.cooking.applyCorrections ?? "Applica le correzioni"}
                   </button>
                 )}
               </div>
@@ -1188,6 +1193,11 @@ function RecipeContent({
               isPersonalized={recipeMode !== "canonical"}
               nerdAvailable={nerdAvailable}
               onNerdModeChange={setNerdMode}
+              modeBadge={
+                recipeMode === "canonical"
+                  ? cms.cooking.recipeCanonical
+                  : cms.cooking.recipeAdapted
+              }
             />
             <RecipeSetupPanel
                 style={style}
