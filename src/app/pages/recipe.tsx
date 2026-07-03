@@ -1072,7 +1072,6 @@ function RecipeContent({
         eyebrow={recipeTabLabel}
         shareUrl={shareUrl}
         showStickyHeader={false}
-        hideFloatingActions={false}
         isPersonalized={recipeMode !== "canonical"}
         onRequestPersonalization={handleAdaptToKitchen}
         selectedToppingConcept={selectedToppingConcept}

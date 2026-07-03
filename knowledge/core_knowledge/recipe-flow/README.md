@@ -1,5 +1,5 @@
 # Flusso ricetta e UI
-> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 15
+> Aggiornamento: 2026-07-03 | Stato: ✅ | File documentati: 23
 
 ## Sommario
 
@@ -23,7 +23,15 @@ Componenti condivisi: `RecipeView`, `RecipeSectionTabs`, `RecipeConfigurator`, `
 | `src/app/features/recipe/recipe-match-card.tsx` | Card compatibilità/fattibilità: composite score, stato forno e barre dei 5 assi con label estese CMS |
 | `src/app/features/recipe/recipe-learning-panel.tsx` | Dialog "Approfondimento" su stile: descrizione, famiglia/origine e caratteristiche chiave |
 | `src/app/features/recipe/recipe-configurator.tsx` | Slider parametri, Smart Link, adaptive hints, `PremiumSelect`; export `VersionChips` e `applyVersionParams` |
-| `src/app/features/recipe/recipe-output.tsx` | Procedimento e ingredienti; timeline con orari e descrizione estesa; proximity UI #54 per teglie; stima persone; toggle sub-pannello regola 55; condimenti riscalati; comfort time alert con ricalcolo suggestedStart locale BCP-47 |
+| `src/app/features/recipe/recipe-output.tsx` | 958 | Coordinatore e contenitore principale per l'output della ricetta (procedimento, condimenti, ingredienti). |
+| `src/app/features/recipe/condiment-choice-strip.tsx` | 557 | Componente slider orizzontale per la selezione dei condimenti (varianti e autenticità dello stile). |
+| `src/app/features/recipe/topping-section.tsx` | 556 | Sezione condimenti: dosi ingredienti, descrizioni, note e lista passaggi della farcitura. |
+| `src/app/features/recipe/ingredients-section.tsx` | 499 | Tabella ingredienti principali, stepper panetti interattivo e split grafico biga/poolish. |
+| `src/app/features/recipe/procedure-hero.tsx` | 442 | Pannello riassuntivo superiore della scheda procedimento (comfort time, note lievito, delta forno, Regola 55). |
+| `src/app/features/recipe/procedure-timeline.tsx` | 336 | Timeline cronologica degli step di preparazione (ore, orari calcolati, icone e mascotte). |
+| `src/app/features/recipe/recipe-step-details.tsx` | 180 | Cassetto di approfondimento interattivo inline ("Come si fa") associato a ciascuno step della timeline. |
+| `src/app/features/recipe/recipe-output-format.ts` | 677 | Funzioni pure di formattazione e utility UI (arrotondamento magnitudini, unità di misura, tooltips lievito). |
+| `src/app/features/recipe/recipe-output-bits.tsx` | 144 | Piccoli elementi condivisi di layout (es. `GlossaryWLink`, `IngRow`, `ServingUnitSelect`). |
 | `src/app/features/recipe/recipe-stat-strip.tsx` | 4 KPI (idratazione, forno, cottura, lievitazione) + riga nerd opzionale |
 | `src/app/features/cooking/cook-session.tsx` | Context provider e gestore dello stato persistente della sessione di cottura attiva (`vulcan_cook_session` in `localStorage`), inclusi i countdown e le notifiche di sistema |
 | `src/app/features/cooking/active-cook-widget.tsx` | Widget mobile-friendly galleggiante (Live Activity su web) visibile globalmente in tutta l'applicazione per monitorare il progresso dello step corrente |

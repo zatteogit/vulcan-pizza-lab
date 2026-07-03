@@ -65,7 +65,6 @@ interface RecipeViewProps {
   /** Controlli sopra gli ingredienti (StatStrip + Personalizza / warning) */
   recipeControls?: ReactNode;
   shareUrl?: string;
-  hideFloatingActions?: boolean;
   showStickyHeader?: boolean;
   selectedToppingConcept?: string | null;
   onSelectTopping?: (conceptId: string) => void;
@@ -97,7 +96,6 @@ export function RecipeView({
   introExtraSlot,
   recipeControls,
   shareUrl,
-  hideFloatingActions = false,
   showStickyHeader = false,
   selectedToppingConcept,
   onSelectTopping,
@@ -581,7 +579,6 @@ export function RecipeView({
               onTabChange={onTabChange}
               hidePager
               hideContextSummary
-              hideFloatingActions={hideFloatingActions}
               selectedToppingConcept={selectedToppingConcept}
               onSelectTopping={onSelectTopping}
               shareUrl={shareUrl}
