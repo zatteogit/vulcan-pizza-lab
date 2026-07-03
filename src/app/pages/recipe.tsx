@@ -58,7 +58,7 @@ import { InterpretationNarrativeCard } from "../features/recipe/interpretation-n
 import {
 type RecipePrimaryTab,
 } from "../features/recipe/recipe-section-tabs";
-import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
+import { buildAdvancedSummary, RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
 import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
@@ -199,7 +199,7 @@ function replaceRecipeSearchParams(
 /* ═══ RECIPE PAGE ═══ */
 export function RecipePage() {
   const { styleId } = useParams<{ styleId: string }>();
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const { effectiveStyles } = useStylesOverride();
 
   const db = effectiveStyles ?? STYLES_DB;
@@ -220,6 +220,7 @@ function RecipeContent({
   style: PizzaStyle;
   cms: any;
 }) {
+  const { bcp47 } = useCms();
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const exploreBackTo = readExploreBackTo(location.state);
@@ -1085,6 +1086,67 @@ function RecipeContent({
         onNerdModeChange={setNerdMode}
         matchSlot={
           <>
+            {/* Mockup Proposta A: parametri sopra la match card, stretti. */}
+            <div className="flex flex-col gap-3">
+            {/* Niente modeBadge: l'origine (canonica/su misura) la dichiara
+                già l'eyebrow della pagina, visibile su tutti i tab. */}
+            <RecipeStatStrip
+              recipe={recipe}
+              nerdMode={effectiveNerdMode}
+              dense={!effectiveNerdMode}
+              isPersonalized={recipeMode !== "canonical"}
+              nerdAvailable={nerdAvailable}
+              onNerdModeChange={setNerdMode}
+            />
+            {/* La leva dei parametri vive COI parametri (nota Matteo 3 lug). */}
+            <RecipeSetupPanel
+                style={style}
+                versions={styleVersions}
+                activeVersion={activeVersion}
+                customHydration={customHydration}
+                customFlourW={customFlourW}
+                customFermentHours={customFermentHours}
+                customFermentTemp={customFermentTemp}
+                activeInterpretationId={activeInterpretationId}
+                onSelectVersion={handleVersionSelect}
+                onSelectInterpretation={handleInterpretationSelect}
+                notice={setupNotice}
+                onNotice={setSetupNotice}
+                open={setupPanelOpen}
+                onOpenChange={setSetupPanelOpen}
+                onRequestOpen={handleOpenPersonalization}
+                isCanonical={recipeMode === "canonical"}
+                openDefault={openPersonalizeByDefault}
+                scores={matchRecipe.scores}
+                compact={!effectiveNerdMode}
+                advancedSummary={buildAdvancedSummary(recipe, cms, bcp47)}
+              >
+                <RecipeConfigurator
+                  style={style}
+                  constraints={constraints}
+                  onConstraintsChange={(c) => {
+                    setConstraints(c);
+                    if (c.dough_balls !== doughBalls) setDoughBalls(c.dough_balls);
+                  }}
+                  customHydration={customHydration}
+                  onHydrationChange={setCustomHydration}
+                  customFlourW={customFlourW}
+                  onFlourWChange={setCustomFlourW}
+                  customFermentHours={customFermentHours}
+                  onFermentHoursChange={setCustomFermentHours}
+                  customFermentTemp={customFermentTemp}
+                  onFermentTempChange={setCustomFermentTemp}
+                  usePreFerment={usePreFerment}
+                  onPreFermentChange={setUsePreFerment}
+                  customSalt={customSalt}
+                  onSaltChange={(v) => {
+                    if (recipeMode === "canonical") setRecipeMode("adapted");
+                    setCustomSalt(v);
+                  }}
+                  panConfig={panConfig}
+                  onPanConfigChange={setPanConfig}
+                />
+              </RecipeSetupPanel>
             <RecipeMatchCard
               scores={matchRecipe.scores}
               ovenTemp={matchConstraints.oven_max_temp_c}
@@ -1104,7 +1166,9 @@ function RecipeContent({
               softNeeds={ceilingInfo.softNeeds}
               onSave={handleToggleSaveRecipe}
               saved={Boolean(savedEntry)}
+              nerdMode={effectiveNerdMode}
             />
+            </div>
             {activeInterpretationId && (() => {
               const it = getInterpretationById(activeInterpretationId);
               return it ? <InterpretationNarrativeCard interpretation={it} /> : null;
@@ -1131,7 +1195,7 @@ function RecipeContent({
           </button>
         }
         recipeControls={
-          <div className="flex flex-col gap-5 sm:gap-6">
+          <div className="flex flex-col gap-3">
             {/* F2 — "Vulcan ha imparato dai tuoi tentativi" (opt-in, trasparente) */}
             {showFeedbackPanel && feedbackCorrection && (
               <div
@@ -1186,64 +1250,6 @@ function RecipeContent({
                 )}
               </div>
             )}
-            <RecipeStatStrip
-              recipe={recipe}
-              nerdMode={effectiveNerdMode}
-              isPersonalized={recipeMode !== "canonical"}
-              nerdAvailable={nerdAvailable}
-              onNerdModeChange={setNerdMode}
-              modeBadge={
-                recipeMode === "canonical"
-                  ? cms.cooking.recipeCanonical
-                  : cms.cooking.recipeAdapted
-              }
-            />
-            <RecipeSetupPanel
-                style={style}
-                versions={styleVersions}
-                activeVersion={activeVersion}
-                customHydration={customHydration}
-                customFlourW={customFlourW}
-                customFermentHours={customFermentHours}
-                customFermentTemp={customFermentTemp}
-                activeInterpretationId={activeInterpretationId}
-                onSelectVersion={handleVersionSelect}
-                onSelectInterpretation={handleInterpretationSelect}
-                notice={setupNotice}
-                onNotice={setSetupNotice}
-                open={setupPanelOpen}
-                onOpenChange={setSetupPanelOpen}
-                onRequestOpen={handleOpenPersonalization}
-                isCanonical={recipeMode === "canonical"}
-                openDefault={openPersonalizeByDefault}
-                scores={matchRecipe.scores}
-              >
-                <RecipeConfigurator
-                  style={style}
-                  constraints={constraints}
-                  onConstraintsChange={(c) => {
-                    setConstraints(c);
-                    if (c.dough_balls !== doughBalls) setDoughBalls(c.dough_balls);
-                  }}
-                  customHydration={customHydration}
-                  onHydrationChange={setCustomHydration}
-                  customFlourW={customFlourW}
-                  onFlourWChange={setCustomFlourW}
-                  customFermentHours={customFermentHours}
-                  onFermentHoursChange={setCustomFermentHours}
-                  customFermentTemp={customFermentTemp}
-                  onFermentTempChange={setCustomFermentTemp}
-                  usePreFerment={usePreFerment}
-                  onPreFermentChange={setUsePreFerment}
-                  customSalt={customSalt}
-                  onSaltChange={(v) => {
-                    if (recipeMode === "canonical") setRecipeMode("adapted");
-                    setCustomSalt(v);
-                  }}
-                  panConfig={panConfig}
-                  onPanConfigChange={setPanConfig}
-                />
-              </RecipeSetupPanel>
           </div>
         }
       />

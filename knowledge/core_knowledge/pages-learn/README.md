@@ -104,6 +104,7 @@ flowchart TD
 - **Passaggio di Contesto tramite Query Param**: `learn.tsx` supporta il parametro di query `?style=` e lo propaga dinamicamente ai link delle sotto-sezioni (glossario, troubleshooting, pre-fermenti) per guidare l'utente verso contenuti adatti allo stile selezionato.
 - **Percorso skill-aware**: `learn.tsx` legge `vulcan_skill_level` e costruisce un percorso consigliato con label del livello (`SKILL_LEVELS`) e link localizzati verso glossario, troubleshooting o pre-fermenti.
 - **Pulizia dead code 2026-06-19:** `glossary-link.tsx` è stato rimosso; i deeplink e l'esperienza glossario passano dalla pagina `/learn/glossary` e dalla command palette.
+- **Deep-linking in Troubleshooting per Fase Critica**: `TroubleshootingGuide` (`troubleshooting-panel.tsx`) e `TroubleshootingPage` (`troubleshooting.tsx`) supportano il parametro di query `?issue=Pxx`. All'arrivo, l'issue selezionata viene automaticamente aperta (`expandedId`) e portata al centro dello schermo con uno scroll fluido (`scrollIntoView`) dopo lo stagger di entrata (delay 400ms).
 
 ## Bug noti e fix
 

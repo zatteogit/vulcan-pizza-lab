@@ -2,12 +2,16 @@
 /* Route /learn/troubleshooting — guida completa problemi pizza */
 
 import { motion } from "motion/react";
+import { useSearchParams } from "react-router";
 import { TroubleshootingGuide } from "../features/recipe/troubleshooting-panel";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import { useCms } from "../features/cms/cms-context";
 
 export default function TroubleshootingPage() {
   const { cms } = useCms();
+  // Deep-link dalle fasi della ricetta ("è andata lunga?"): ?issue=Pxx
+  const [searchParams] = useSearchParams();
+  const initialIssueId = searchParams.get("issue") ?? undefined;
   return (
     <div
       className="min-h-screen"
@@ -30,7 +34,7 @@ export default function TroubleshootingPage() {
         }}
         className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 pb-24"
       >
-        <TroubleshootingGuide />
+        <TroubleshootingGuide initialIssueId={initialIssueId} />
       </motion.main>
     </div>
   );

@@ -315,26 +315,36 @@ export const PT_LOCALE: CmsContent = {
       label: "Autenticidade",
       short: "Aut",
       weight: 0.3,
+      explain:
+        "O quanto a receita respeita o c\u00E2none do estilo: ingredientes (hidrata\u00E7\u00E3o, for\u00E7a e P/L da farinha), fermenta\u00E7\u00E3o e equipamento. Se o seu forno fica abaixo do m\u00EDnimo do estilo, este eixo desaba: algumas pizzas exigem um fogo que n\u00E3o d\u00E1 para simular.",
     },
     feasibility: {
       label: "Viabilidade",
       short: "Via",
       weight: 0.25,
+      explain:
+        "O quanto \u00E9 realista para voc\u00EA, hoje: pesa o forno (40%), a farinha (30%) e a experi\u00EAncia exigida (30%). Cai se o estilo pede mais calor do que voc\u00EA tem ou se a hidrata\u00E7\u00E3o supera o seu n\u00EDvel.",
     },
     digestibility: {
       label: "Digestibilidade",
       short: "Dig",
       weight: 0.2,
+      explain:
+        "Estimativa da matura\u00E7\u00E3o da massa: horas de fermenta\u00E7\u00E3o normalizadas a 18 \u00B0C (pr\u00E9-fermentos contam mais). Quanto mais a massa matura, mais amidos e gl\u00FAten se decomp\u00F5em \u2014 e melhor a pizza \u00E9 digerida.",
     },
     sustainability: {
       label: "Sustentabilidade",
       short: "Sus",
       weight: 0.15,
+      explain:
+        "Energia estimada: temperatura e dura\u00E7\u00E3o do forneamento, geladeira para a fermenta\u00E7\u00E3o, tipo de fermento. Fornadas curtas e fermenta\u00E7\u00E3o em temperatura ambiente ajudam.",
     },
     experimentation: {
       label: "Experimenta\u00E7\u00E3o",
       short: "Exp",
       weight: 0.1,
+      explain:
+        "O quanto voc\u00EA se afasta do c\u00E2none: desvios de hidrata\u00E7\u00E3o e fermenta\u00E7\u00E3o, pr\u00E9-fermentos fora da regra, compensa\u00E7\u00F5es for\u00E7adas pelo seu equipamento. N\u00E3o \u00E9 defeito: mede a coragem.",
     },
   },
   recommendationWeights: {

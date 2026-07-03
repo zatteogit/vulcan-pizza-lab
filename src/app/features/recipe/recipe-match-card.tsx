@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { Bookmark, BookmarkCheck, ChevronDown, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, RotateCcw, Sparkles, TriangleAlert } from "lucide-react";
-import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores } from "../../domain/pizza-engine";
+import { Bookmark, BookmarkCheck, ChevronDown, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, Info, RotateCcw, Sparkles, TriangleAlert } from "lucide-react";
+import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { Surface } from "../../components/ds/index";
@@ -122,6 +122,7 @@ export function RecipeMatchCard({
   hardLimited,
   softNeeds,
   saved = false,
+  nerdMode = false,
   className = "",
 }: {
   scores: RecipeScores;
@@ -147,6 +148,9 @@ export function RecipeMatchCard({
    *  soffitto ma sono precondizioni per raggiungerlo → "ti serve X". */
   softNeeds?: string[];
   saved?: boolean;
+  /** Nerd mode: mostra anche gli assi secondari pesati (sostenibilità,
+   *  sperimentazione) e la scomposizione numerica del composite. */
+  nerdMode?: boolean;
   className?: string;
 }) {
   const { cms, bcp47 } = useCms();
@@ -171,14 +175,54 @@ export function RecipeMatchCard({
     ? resolveEngineMsgs([unviableWarning], cms.engineMessages)[0]
     : null;
 
-  const axes = SCORE_DIMENSIONS.map((dimension) => ({
-    ...dimension,
-    label: cms.scoreDimensions[dimension.key]?.label ?? dimension.label,
-    shortLabel: cms.scoreDimensions[dimension.key]?.short ?? dimension.short,
-    value: scores[dimension.key],
-  }));
+  // Learn-inline (audit lug 2026): ogni asse è tappabile → spiegazione dal CMS.
+  // In nerd compaiono anche gli assi secondari pesati e la scomposizione numerica:
+  // il composite del motore è la media pesata dei 5 assi (pesi CMS, rinormalizzati),
+  // quindi la formula mostrata usa gli STESSI pesi passati a generateRecipe.
+  const [explainKey, setExplainKey] = useState<ScoreDimensionKey | null>(null);
+  const NERD_EXTRA_DIMENSIONS = [
+    { key: "sustainability" as const, label: "Sostenibilità", short: "Sos", color: "var(--secondary)", weight: 0 },
+    { key: "experimentation" as const, label: "Sperimentazione", short: "Spe", color: "var(--text-accent)", weight: 0 },
+  ];
+  const axes = [...SCORE_DIMENSIONS, ...(nerdMode ? NERD_EXTRA_DIMENSIONS : [])]
+    .map((dimension) => ({
+      ...dimension,
+      label: cms.scoreDimensions[dimension.key]?.label ?? dimension.label,
+      shortLabel: cms.scoreDimensions[dimension.key]?.short ?? dimension.short,
+      value: scores[dimension.key],
+      weight: cms.scoreDimensions[dimension.key]?.weight ?? dimension.weight,
+      explain: cms.scoreDimensions[dimension.key]?.explain,
+    }))
+    // Gli assi secondari compaiono solo se pesano davvero sul composite.
+    .filter((axis) => SCORE_DIMENSIONS.some((d) => d.key === axis.key) || axis.weight > 0);
+  const totalWeight = axes.reduce((sum, axis) => sum + axis.weight, 0);
+  const weightedAxes = totalWeight > 0
+    ? axes
+        .filter((axis) => axis.weight > 0)
+        .map((axis) => ({ ...axis, weightPct: Math.round((axis.weight / totalWeight) * 100) }))
+    : [];
+  const explainedAxis = explainKey ? axes.find((axis) => axis.key === explainKey) : undefined;
 
   const roundedScore = Math.round(scores.composite);
+
+  // Il guadagno NON vive più sulla label del bottone ("Ottimizza per me +6"):
+  // quando il punteggio SALE (ottimizzazione, ritocco riuscito) un "+Δ" verde
+  // spunta accanto al numero e svanisce — feedback nel momento, non promessa
+  // nel pulsante (Matteo, 3 lug 2026).
+  const prevScoreRef = useRef(roundedScore);
+  const [scoreBump, setScoreBump] = useState<{ delta: number; id: number } | null>(null);
+  useEffect(() => {
+    const prev = prevScoreRef.current;
+    prevScoreRef.current = roundedScore;
+    if (roundedScore <= prev) return;
+    const id = Date.now();
+    setScoreBump({ delta: roundedScore - prev, id });
+    const timer = window.setTimeout(
+      () => setScoreBump((bump) => (bump?.id === id ? null : bump)),
+      1800,
+    );
+    return () => window.clearTimeout(timer);
+  }, [roundedScore]);
 
   // ── Due livelli: match corrente vs SOFFITTO (M_o) ───────────────────────────
   // Audit role-play giugno 2026. Il soffitto è il massimo raggiungibile ottimizzando.
@@ -259,22 +303,26 @@ export function RecipeMatchCard({
       }}
       aria-label={cms.ui.recipeScore}
     >
-      <div className="relative w-full flex flex-col gap-4 text-left lg:flex-row lg:items-center lg:gap-5">
+      {/* Mockup Proposta A (approvato 3 lug): la card è due righe — contenuto
+          (cuore, numero, tono) e azioni in riga unica sotto. Mai colonna
+          laterale: a larghezze intermedie impilava i bottoni e svuotava la
+          destra della card. */}
+      <div className="relative w-full flex flex-col gap-2.5 text-left sm:flex-row sm:items-center sm:gap-4">
         <div className="flex items-center gap-3 min-w-[174px]">
           <motion.span
             className="relative flex items-center justify-center rounded-full"
             animate={{ scale: [1, tone.low ? 1.015 : 1.035, 1] }}
             transition={{ duration: tone.low ? 2.8 : 3.4, repeat: Infinity, ease: "easeInOut" }}
             style={{
-              width: 52,
-              height: 52,
+              width: 46,
+              height: 46,
               background: "color-mix(in srgb, var(--primary) 10%, var(--container-page))",
               color: tone.low ? "var(--text-warning)" : "var(--primary)",
               border: "1px solid color-mix(in srgb, var(--primary) 16%, var(--container-border-subtle))",
               boxShadow: "0 9px 22px color-mix(in srgb, var(--shadow-color) 8%, transparent)",
             }}
           >
-            <MatchIcon size={23} fill="currentColor" />
+            <MatchIcon size={21} fill="currentColor" />
           </motion.span>
           <div>
             <span
@@ -310,6 +358,26 @@ export function RecipeMatchCard({
               >
                 /100
               </span>
+              <AnimatePresence>
+                {scoreBump && (
+                  <motion.span
+                    key={scoreBump.id}
+                    initial={{ opacity: 0, y: 5, scale: 0.9 }}
+                    animate={{ opacity: 1, y: -3, scale: 1 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ type: "spring", stiffness: 380, damping: 26 }}
+                    className="type-numeric ml-1.5"
+                    style={{
+                      color: "var(--cta)",
+                      fontSize: "var(--font-size-md)",
+                      fontWeight: "var(--weight-bold)" as any,
+                    }}
+                    aria-hidden="true"
+                  >
+                    +{scoreBump.delta}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>
@@ -391,7 +459,32 @@ export function RecipeMatchCard({
           )}
         </div>
 
-        <div className="flex shrink-0 flex-col gap-2 lg:items-end min-h-[44px] justify-center">
+      </div>
+
+      <div className="mt-3.5 flex w-full flex-wrap items-center gap-2">
+        {onOptimize && (
+          <motion.button
+            type="button"
+            onClick={onOptimize}
+            whileHover={{ scale: 1.025, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 450, damping: 28 }}
+            className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5"
+            style={{
+              background: "var(--cta)",
+              color: "var(--cta-foreground)",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--weight-bold)" as any,
+              lineHeight: "var(--leading-tight)",
+              boxShadow: "0 10px 22px color-mix(in srgb, var(--cta) 22%, transparent)",
+            }}
+          >
+            <Sparkles size={15} />
+            {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}
+          </motion.button>
+        )}
           <AnimatePresence mode="wait" initial={false}>
             {showAdaptAction && (
               <motion.button
@@ -407,7 +500,6 @@ export function RecipeMatchCard({
                 transition={{ type: "spring", stiffness: 450, damping: 28 }}
                 className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5"
                 style={{
-                  alignSelf: "flex-start",
                   background:
                     "color-mix(in srgb, var(--primary) 8%, var(--container-page))",
                   border: "1px solid color-mix(in srgb, var(--primary) 20%, var(--container-border))",
@@ -437,7 +529,6 @@ export function RecipeMatchCard({
                 transition={{ type: "spring", stiffness: 450, damping: 28 }}
                 className="inline-flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2"
                 style={{
-                  alignSelf: "flex-start",
                   background: "color-mix(in srgb, var(--container-page) 76%, transparent)",
                   border: "1px solid var(--container-border-subtle)",
                   color: "var(--text-accent)",
@@ -452,30 +543,6 @@ export function RecipeMatchCard({
               </motion.button>
             )}
           </AnimatePresence>
-          {onOptimize && (
-            <motion.button
-              type="button"
-              onClick={onOptimize}
-              whileHover={{ scale: 1.025, y: -1 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 450, damping: 28 }}
-              className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5"
-              style={{
-                alignSelf: "flex-start",
-                background: "var(--cta)",
-                color: "var(--cta-foreground)",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "var(--font-size-sm)",
-                fontWeight: "var(--weight-bold)" as any,
-                lineHeight: "var(--leading-tight)",
-                boxShadow: "0 10px 22px color-mix(in srgb, var(--cta) 22%, transparent)",
-              }}
-            >
-              <Sparkles size={15} />
-              {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}{headroom >= 2 ? ` +${headroom}` : ""}
-            </motion.button>
-          )}
           {showSaveAction && (
             <button
               type="button"
@@ -483,7 +550,6 @@ export function RecipeMatchCard({
               aria-pressed={saved}
               className="inline-flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 active:scale-95 transition-transform"
               style={{
-                alignSelf: "flex-start",
                 background: saved
                   ? "color-mix(in srgb, var(--primary) 12%, var(--container-page))"
                   : "color-mix(in srgb, var(--container-page) 76%, transparent)",
@@ -501,7 +567,6 @@ export function RecipeMatchCard({
               {saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
             </button>
           )}
-        </div>
       </div>
 
       {/* ── Dettagli a richiesta: stato forno, barre punteggio, rationale ── */}
@@ -547,9 +612,97 @@ export function RecipeMatchCard({
                   value={axis.value}
                   color={axis.color}
                   compact
+                  explainable={Boolean(axis.explain)}
+                  explained={explainKey === axis.key}
+                  onToggleExplain={() =>
+                    setExplainKey((k) => (k === axis.key ? null : axis.key))
+                  }
                 />
               ))}
             </div>
+
+            {/* Learn-inline: spiegazione dell'asse selezionato, sotto la riga
+             * delle barre (mai dentro il flex-wrap: non sposta le colonne). */}
+            <AnimatePresence initial={false} mode="wait">
+              {explainedAxis?.explain && (
+                <motion.div
+                  key={explainedAxis.key}
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  className="overflow-hidden"
+                >
+                  <div
+                    className="mt-2.5 rounded-xl px-3 py-2.5"
+                    style={{
+                      background: "color-mix(in srgb, var(--container-bg-high) 70%, transparent)",
+                      border: "1px solid var(--container-border-subtle)",
+                    }}
+                  >
+                    <div
+                      className="flex items-baseline gap-2"
+                      style={{
+                        color: "var(--text-default)",
+                        fontSize: "var(--font-size-sm)",
+                        fontWeight: "var(--weight-bold)" as any,
+                      }}
+                    >
+                      <span style={{ color: explainedAxis.color }}>{explainedAxis.label}</span>
+                      {nerdMode && (() => {
+                        const weighted = weightedAxes.find((axis) => axis.key === explainedAxis.key);
+                        return weighted ? (
+                          <span
+                            className="type-numeric"
+                            style={{
+                              color: "var(--text-muted)",
+                              fontSize: "var(--font-size-xs)",
+                              fontWeight: "var(--weight-semibold)" as any,
+                            }}
+                          >
+                            {t(cms.cooking.matchAxisWeight ?? "peso {pct}% del Match", { pct: weighted.weightPct })}
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
+                    <p
+                      style={{
+                        margin: "4px 0 0",
+                        color: "var(--text-muted)",
+                        fontSize: "var(--font-size-sm)",
+                        lineHeight: "var(--leading-normal)",
+                      }}
+                    >
+                      {explainedAxis.explain}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Scomposizione numerica (nerd): stessi pesi passati al motore,
+             * rinormalizzati — la somma è il Match mostrato (±1 di rounding). */}
+            {nerdMode && weightedAxes.length > 0 && (
+              <p
+                className="type-numeric mt-2.5"
+                style={{
+                  margin: "10px 0 0",
+                  color: "var(--text-muted)",
+                  fontSize: "var(--font-size-xs)",
+                  lineHeight: "var(--leading-normal)",
+                  fontFeatureSettings: "'tnum'",
+                }}
+              >
+                {cms.cooking.matchBreakdownLabel ?? "Media pesata"}:{" "}
+                {weightedAxes
+                  .map((axis) => `${axis.shortLabel} ${Math.round(axis.value)}·${axis.weightPct}%`)
+                  .join(" + ")}
+                {" ≈ "}
+                <span style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>
+                  {roundedScore}
+                </span>
+              </p>
+            )}
 
             {optimizationRationale && optimizationRationale.length > 0 && (
               <div
@@ -584,7 +737,12 @@ export function RecipeMatchCard({
 
       <button
         type="button"
-        onClick={() => setExpanded((v) => !v)}
+        onClick={() =>
+          setExpanded((v) => {
+            if (v) setExplainKey(null);
+            return !v;
+          })
+        }
         aria-expanded={expanded}
         className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 active:scale-[0.98] transition-transform"
         style={{
@@ -619,27 +777,46 @@ function ScoreBar({
   value,
   color,
   compact = false,
+  explainable = false,
+  explained = false,
+  onToggleExplain,
 }: {
   label: string;
   displayLabel?: string;
   value: number;
   color: string;
   compact?: boolean;
+  /** Learn-inline: la barra è tappabile e apre la spiegazione dell'asse. */
+  explainable?: boolean;
+  explained?: boolean;
+  onToggleExplain?: () => void;
 }) {
   const rounded = Math.round(value);
+  const Wrapper = explainable ? "button" : "div";
   return (
-    <div className={compact ? "grow shrink-0 basis-[140px] min-w-[140px]" : "min-w-[148px] flex-1"}>
+    <Wrapper
+      {...(explainable
+        ? { type: "button" as const, onClick: onToggleExplain, "aria-expanded": explained }
+        : {})}
+      className={`${compact ? "grow shrink-0 basis-[140px] min-w-[140px]" : "min-w-[148px] flex-1"} ${
+        explainable ? "text-left active:scale-[0.985] transition-transform" : ""
+      }`}
+      style={explainable ? { background: "transparent", border: "none", padding: 0, cursor: "pointer" } : undefined}
+    >
       <div
         className="flex items-center justify-between gap-2"
         style={{
-          color: "var(--text-muted)",
+          color: explained ? "var(--text-default)" : "var(--text-muted)",
           fontSize: compact ? "var(--font-size-xs)" : "var(--font-size-sm)",
           fontWeight: "var(--weight-semibold)" as any,
           lineHeight: "var(--leading-tight)",
         }}
       >
-        <span title={label} aria-label={label}>
+        <span className="inline-flex items-center gap-1" title={label} aria-label={label}>
           {compact ? displayLabel ?? label : label}
+          {explainable && (
+            <Info size={11} aria-hidden="true" style={{ opacity: explained ? 0.9 : 0.55, flexShrink: 0 }} />
+          )}
         </span>
         <span className="type-numeric">{rounded}</span>
       </div>
@@ -655,6 +832,6 @@ function ScoreBar({
           style={{ background: color }}
         />
       </div>
-    </div>
+    </Wrapper>
   );
 }

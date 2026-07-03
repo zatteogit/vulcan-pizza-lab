@@ -36,6 +36,8 @@ export const EN_LOCALE: CmsContent = {
     generate: "Generate recipe",
     chooseStyle: "Choose style",
     customizeParams: "Customize parameters",
+    adjustByHand: "Adjust by hand",
+    adjustByHandQuestion: "Rather decide yourself?",
     changeStyle: "Change style",
     newPizza: "New pizza",
     // Recipe output
@@ -166,6 +168,11 @@ export const EN_LOCALE: CmsContent = {
     title_line2: "perfect pizza.",
     subtitle:
       "Tell us what you have and we\u2019ll guide you to the ideal style.",
+    onboardingEyebrow: "First time here?",
+    onboardingBody:
+      "Vulcan tailors the recipe to your oven and your schedule \u2014 and tells you, with an honest score, how close it gets to the real thing. Answer the questions below and off you go.",
+    onboardingCta: "Got it, let's go",
+    onboardingProfileCta: "Save oven & skill to your profile",
   },
   steps: {
     context: {
@@ -327,26 +334,36 @@ export const EN_LOCALE: CmsContent = {
       label: "Authenticity",
       short: "Auth",
       weight: 0.3,
+      explain:
+        "How closely the recipe follows the style's canon: ingredients (hydration, flour strength and P/L), fermentation process and equipment. If your oven stays below the style's minimum, this axis collapses: some pizzas demand a fire you can't simulate.",
     },
     feasibility: {
       label: "Feasibility",
       short: "Feas",
       weight: 0.25,
+      explain:
+        "How realistic it is for you, today: it weighs your oven (40%), flour (30%) and the skill required (30%). It drops when the style needs more heat than you have, or the hydration exceeds your level.",
     },
     digestibility: {
       label: "Digestibility",
       short: "Dig",
       weight: 0.2,
+      explain:
+        "An estimate of dough maturation: fermentation hours normalized to 18 °C (pre-ferments count extra). The more the dough matures, the more starches and gluten break down — and the easier the pizza is to digest.",
     },
     sustainability: {
       label: "Sustainability",
       short: "Sus",
       weight: 0.15,
+      explain:
+        "Estimated energy: baking temperature and duration, fridge time for fermentation, yeast type. Short bakes and room-temperature fermentation help.",
     },
     experimentation: {
       label: "Experimentation",
       short: "Exp",
       weight: 0.1,
+      explain:
+        "How far you stray from the canon: hydration and fermentation deviations, off-spec pre-ferments, compensations forced by your setup. Not a flaw: it measures courage.",
     },
   },
   recommendationWeights: {
@@ -420,7 +437,7 @@ export const EN_LOCALE: CmsContent = {
     adaptToKitchen: "Adapt to my kitchen",
     optimizeForMe: "Optimize for me",
     resetToOriginal: "Back to the original",
-    saveVersion: "Save my version",
+    saveVersion: "Save this version",
     savedVersion: "Saved to your recipe book",
     optimizedForSetup: "Optimized for your setup",
     doneBody: "You’ve completed every step of your {style}. Enjoy!",
@@ -518,6 +535,16 @@ export const EN_LOCALE: CmsContent = {
     stepDetailsShow: "How to do it",
     stepDetailsHide: "Hide details",
     matchDetailsShow: "Score details",
+    matchBreakdownLabel: "Weighted average",
+    matchAxisWeight: "{pct}% of the Match",
+    troubleStepLinks: {
+      preferment: "Smells too sour?",
+      mix: "Dough too sticky?",
+      bulk: "Did it overproof?",
+      proof: "Did it overproof?",
+      shape: "Tearing as you stretch?",
+      bake: "Bake gone wrong?",
+    },
     draftResumeEyebrow: "Recipe in progress",
     draftResumeCta: "Resume",
     draftReplaceTitle: "Replace the recipe in progress?",
@@ -667,6 +694,8 @@ export const EN_LOCALE: CmsContent = {
     ovenWood: "Wood-fired",
     ovenElectricHigh: "Electric >350°C",
     ovenPan: "Pan-baked",
+    stylesSearchPlaceholder: "Search a style…",
+    stylesSearchNoResults: 'No style matches "{query}"',
   },
   glossary: {
     pageTitle: "Technical Glossary",

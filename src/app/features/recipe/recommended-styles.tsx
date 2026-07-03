@@ -1,8 +1,8 @@
-import { Award,Check,ChefHat,Clock,Flame,SlidersHorizontal,Sparkles,Triangle,Wheat } from "lucide-react";
+import { Award,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useMemo,useState } from "react";
 import { useCms } from "../cms/cms-context";
-import { createFormatter,formatTemperatureCopy } from "../cms/i18n";
+import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import { FilterChip, Surface } from "../../components/ds/index";
 import { getStyleTags } from "../../domain/deviation-tags";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
@@ -22,6 +22,7 @@ import { useStylesOverride } from "../../context/styles-override-context";
 import { TiltCard } from "./tilt-card";
 
 import { STYLE_PHOTOS } from "../../data/style-photos";
+import { getVersions } from "../../data/style-versions";
 
 interface RecommendedStylesProps {
   constraints: UserConstraints;
@@ -59,6 +60,11 @@ export const MATCH_DIMENSION_ICON: Record<MatchDimension, typeof Clock> = {
   equipment: SlidersHorizontal,
   pantry: Wheat,
 };
+
+/* Ricerca stili accent-insensitive: minuscole + rimozione diacritici. */
+function normalizeQuery(s: string): string {
+  return s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
 
 const TIER_META: Record<
   string,
@@ -139,6 +145,7 @@ export function RecommendedStyles({
     [constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
   );
   const [familyFilter, setFamilyFilter] = useState<FamilyId | "all">("all");
+  const [styleQuery, setStyleQuery] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [hydrationFilter, setHydrationFilter] = useState<string | null>(null);
   const [textureFilter, setTextureFilter] = useState<string | null>(null);
@@ -178,9 +185,24 @@ export function RecommendedStyles({
           return true;
         });
       }
+
+      /* Ricerca testuale (audit lug 2026): nome, città d'origine, id e label
+       * delle versioni (così "bonci" trova la Teglia col Metodo Bonci) —
+       * accent-insensitive per trovare "napoletana" scrivendo "Napoletanà". */
+      const query = normalizeQuery(styleQuery);
+      if (query) {
+        result = result.filter((r) =>
+          [
+            r.style.name,
+            r.style.origin?.city ?? "",
+            r.style.id.replace(/_/g, " "),
+            ...getVersions(r.style.id).map((version) => version.label),
+          ].some((field) => normalizeQuery(field).includes(query)),
+        );
+      }
       return result;
     },
-    [recommendations, familyFilter, hydrationFilter, textureFilter, skillFilter, ovenFilter],
+    [recommendations, familyFilter, hydrationFilter, textureFilter, skillFilter, ovenFilter, styleQuery],
   );
 
   const tiers: { key: string; items: StyleRecommendation[] }[] =
@@ -222,6 +244,52 @@ export function RecommendedStyles({
 
   return (
     <div className="flex flex-col gap-6 sm:gap-8">
+      {/* ═══ Ricerca + family chips (audit lug 2026: trovare uno stile per
+          nome senza scansionare 28 card) ═══ */}
+      <div className="flex flex-col gap-3">
+      <div
+        className="flex items-center gap-2 rounded-xl px-3 py-2 w-full sm:max-w-[320px]"
+        style={{
+          background: "var(--surface-container-low)",
+          border: "1px solid var(--outline-variant)",
+        }}
+      >
+        <Search size={15} style={{ color: "var(--text-muted)", flexShrink: 0 }} aria-hidden="true" />
+        <input
+          type="text"
+          value={styleQuery}
+          onChange={(e) => setStyleQuery(e.target.value)}
+          placeholder={cms.filters.stylesSearchPlaceholder ?? "Cerca uno stile…"}
+          aria-label={cms.filters.stylesSearchPlaceholder ?? "Cerca uno stile…"}
+          className="flex-1 min-w-0"
+          style={{
+            border: "none",
+            background: "transparent",
+            outline: "none",
+            fontSize: "var(--font-size-lg)",
+            color: "var(--text-default)",
+            fontFamily: "inherit",
+          }}
+        />
+        {styleQuery && (
+          <button
+            type="button"
+            onClick={() => setStyleQuery("")}
+            className="inline-flex items-center justify-center rounded-full active:scale-90 transition-transform"
+            style={{
+              background: "transparent",
+              border: "none",
+              padding: 2,
+              color: "var(--text-muted)",
+              cursor: "pointer",
+            }}
+            aria-label={cms.filters.removeFilters}
+          >
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
       {/* ═══ Family filter chips + "Altro" inline ═══ */}
       <div className="flex flex-wrap gap-1.5">
           {FAMILY_FILTERS.map((f) => {
@@ -250,6 +318,7 @@ export function RecommendedStyles({
             <SlidersHorizontal size={13} style={{ flexShrink: 0 }} />
             {cms.filters.advancedLabel}
           </FilterChip>
+      </div>
       </div>
 
       {/* ═══ Advanced faceted filters panel (collapsible) ═══ */}
@@ -358,10 +427,17 @@ export function RecommendedStyles({
               fontSize: "var(--font-size-2xl)",
             }}
           >
-            {cms.misc.noStyleInFamily}
+            {styleQuery.trim()
+              ? t(cms.filters.stylesSearchNoResults ?? 'Nessuno stile per "{query}"', {
+                  query: styleQuery.trim(),
+                })
+              : cms.misc.noStyleInFamily}
           </p>
           <motion.button
-            onClick={() => setFamilyFilter("all")}
+            onClick={() => {
+              setFamilyFilter("all");
+              setStyleQuery("");
+            }}
             className="mt-4 px-5 py-2 rounded-xl active:scale-95 transition-transform"
             style={{
               background: "var(--chip-bg-active)",

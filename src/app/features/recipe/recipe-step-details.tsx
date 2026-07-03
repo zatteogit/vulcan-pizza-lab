@@ -1,8 +1,9 @@
 /* ═══ STEP DETAILS — "come si fa" collassabile + learn-inline (estratto lug 2026) ═══ */
 
-import { ChevronRight, FlaskConical, Lightbulb } from "lucide-react";
+import { ChevronRight, FlaskConical, LifeBuoy, Lightbulb } from "lucide-react";
 import { motion } from "motion/react";
 import { useMemo, useState } from "react";
+import { Link } from "react-router";
 import type { CmsContent } from "../cms/cms-context";
 import { t } from "../cms/i18n";
 
@@ -14,6 +15,20 @@ export const STEP_GLOSSARY: Record<string, { hash: string }> = {
   proof: { hash: "ball_fermentation" },
   bake: { hash: "maillard" },
   mix: { hash: "hydration" },
+};
+
+/* ═══ "È andata lunga?" (audit lug 2026): ogni fase critica porta all'issue di
+   troubleshooting più probabile quando qualcosa va storto in QUELLA fase.
+   La label è per-fase (cms.cooking.troubleStepLinks), l'id apre l'issue via
+   deep-link ?issue=Pxx su /learn/troubleshooting. ═══ */
+export const STEP_TROUBLE: Record<string, { issueId: string; labelKey: string }> = {
+  preferment: { issueId: "P06", labelKey: "preferment" }, // troppo acido
+  mix: { issueId: "P01", labelKey: "mix" },               // appiccicoso
+  bulk: { issueId: "P03", labelKey: "bulk" },             // over-fermentato
+  proof: { issueId: "P03", labelKey: "proof" },           // over-fermentato
+  shape: { issueId: "P02", labelKey: "shape" },           // si strappa
+  bake: { issueId: "P09", labelKey: "bake" },             // cruda/bruciata
+  bake2: { issueId: "P09", labelKey: "bake" },
 };
 
 /* ═══ Dettaglio step collassabile — "come si fa" + consigli al tocco ═══ */
@@ -172,6 +187,26 @@ export function StepDetails({
             )}
             </>
           )}
+          {stepId && STEP_TROUBLE[stepId] && (() => {
+            const trouble = STEP_TROUBLE[stepId];
+            const label = cms.cooking.troubleStepLinks?.[trouble.labelKey];
+            if (!label) return null;
+            return (
+              <Link
+                to={`/learn/troubleshooting?issue=${trouble.issueId}`}
+                className={`inline-flex items-center gap-1.5 mt-3 type-data${STEP_GLOSSARY[stepId] ? " ml-4" : ""}`}
+                style={{
+                  color: "var(--text-accent)",
+                  textDecoration: "underline",
+                  textUnderlineOffset: 3,
+                  minHeight: 36,
+                }}
+              >
+                <LifeBuoy size={13} aria-hidden="true" style={{ flexShrink: 0, opacity: 0.75 }} />
+                {label}
+              </Link>
+            );
+          })()}
         </motion.div>
       )}
     </div>

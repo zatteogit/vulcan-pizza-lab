@@ -245,3 +245,8 @@ La funzionalità **PizzaNerd** sostituisce il vecchio concetto di View Mode a tr
 - `RecipeOutput` trasforma le descrizioni inline scegliendo `tip.beginner` o `tip.nerd`, aggiunge blocchi `NerdAuraBlock`, parametriche tecniche, pre-ferment guide e compensazioni.
 - `RecipeStatStrip` mostra la riga tecnica solo in `nerdMode`.
 - `RecipeMatchCard` e il `MatchSummary` del pannello ricetta mostrano lo score sintetico; i dettagli tecnici restano nei blocchi nerd di `RecipeOutput`/`RecipeStatStrip`.
+
+### 3. Gerarchia e Design dei Parametri — "Mockup Proposta A" (luglio 2026)
+- **Modalità Easy (StatStrip Dense)**: In Easy, `RecipeStatStrip` nasconde i box tonali e le icone e mostra una singola riga di mini-chip testuali molto sobrie. I trend dei parametri (es. idratazione o fermentazione aumentate dall'ottimizzatore rispetto al canone dello stile) sono indicati da freccette minimali `TrendingUp` o `TrendingDown` inline.
+- **Minicard Setup Panel**: In modalità Easy, `RecipeSetupPanel` si contrae in una minicard orizzontale discreta con l'icona delle stelline, che racchiude il riepilogo testuale dei parametri "sommersi" (es. `"Sale 2.6% · W 200 · 22 °C"` calcolato tramite `buildAdvancedSummary`) e un pulsante secondario "Regola a mano". L'azione prominente principale rimane il solo pulsante "Ottimizza per me" (gerarchia pulita).
+- **Onboarding non invasivo**: Introdotta la `WelcomeOnboardingCard` all'inizio del passo 1, che illustra chiaramente il valore dell'app (ottimizzazione forno + score onesto) senza finestre modali o overlay bloccanti. Scompare non appena l'utente risponde alla prima domanda o preme il pulsante di chiusura.

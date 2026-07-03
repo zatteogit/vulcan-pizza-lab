@@ -12,7 +12,7 @@ Wrench,
 XCircle
 } from 'lucide-react';
 import { AnimatePresence,motion } from 'motion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useCms } from "../cms/cms-context";
 import { FilterChip } from "../../components/ds/index";
 import {
@@ -181,13 +181,27 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
 interface TroubleshootingGuideProps {
   /** Filtro opzionale per categoria */
   filterCategory?: string;
+  /** Deep-link (audit lug 2026): issue da aprire e portare in vista all'arrivo,
+   *  usato dai link "è andata lunga?" delle fasi della ricetta (?issue=Pxx). */
+  initialIssueId?: string;
 }
 
-export function TroubleshootingGuide({ filterCategory }: TroubleshootingGuideProps) {
+export function TroubleshootingGuide({ filterCategory, initialIssueId }: TroubleshootingGuideProps) {
   const { cms } = useCms();
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(initialIssueId ?? null);
   const [activeCategory, setActiveCategory] = useState<string | null>(filterCategory || null);
+
+  useEffect(() => {
+    if (!initialIssueId) return;
+    // Dopo lo stagger di entrata delle card, porta l'issue aperta in vista.
+    const timer = window.setTimeout(() => {
+      document
+        .getElementById(`trouble-${initialIssueId}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [initialIssueId]);
 
   const categories = Object.entries(CATEGORY_LABELS);
 
@@ -298,6 +312,7 @@ export function TroubleshootingGuide({ filterCategory }: TroubleshootingGuidePro
           {filtered.map((issue, i) => (
             <motion.div
               key={issue.id}
+              id={`trouble-${issue.id}`}
               layout
               initial={{ opacity: 0, y: 10, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}

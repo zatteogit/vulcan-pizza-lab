@@ -1,4 +1,4 @@
-import { ChevronDown,ChevronUp,Droplets,Flame,FlaskConical,Hourglass,Sparkles,Timer } from "lucide-react";
+import { Droplets,Flame,FlaskConical,Hourglass,Sparkles,Timer,TrendingDown,TrendingUp } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import React from "react";
 import { useCms } from "../cms/cms-context";
@@ -17,6 +17,10 @@ interface RecipeStatStripProps {
   /** Badge di stato accanto al titolo ("Ricetta canonica" / "Su misura per
    *  te"): sostituisce la vecchia card di contesto sopra la strip. */
   modeBadge?: string;
+  /** Mockup Proposta A (lug 2026): in Easy la strip è una riga di chip
+   *  minuscole — niente titolo di sezione, niente icone, niente range.
+   *  I numeri completi vivono in Nerd e nel dialog Personalizza. */
+  dense?: boolean;
 }
 
 /**
@@ -31,6 +35,7 @@ export function RecipeStatStrip({
   nerdAvailable = false,
   onNerdModeChange,
   modeBadge,
+  dense = false,
 }: RecipeStatStripProps) {
   const science = recipe.science;
   const { cms, bcp47 } = useCms();
@@ -67,9 +72,14 @@ export function RecipeStatStrip({
 
   return (
     <div className="flex flex-col gap-3">
-      {/* ═══ Intestazione della Sezione e Nerd Toggle incorporato ═══ */}
+      {/* ═══ Intestazione della Sezione e Nerd Toggle incorporato ═══
+          In dense (Easy) il titolo sparisce (l'origine la dice già l'eyebrow
+          della pagina): resta solo il toggle, su una riga sottile — che
+          scompare del tutto se il nerd non è disponibile. */}
+      {(!dense || modeBadge || (nerdAvailable && onNerdModeChange)) && (
       <div className="flex items-center justify-between px-0.5 min-h-[36px]">
         <span className="inline-flex items-center gap-2 min-w-0">
+          {!dense && (
           <span
             className="type-data"
             style={{
@@ -83,6 +93,7 @@ export function RecipeStatStrip({
           >
             {cms.ui.nerdTitle || "Parametri Impasto"}
           </span>
+          )}
           {modeBadge && (
             <Badge
               className="px-2 py-0.5 rounded-full flex-shrink-0"
@@ -147,10 +158,19 @@ export function RecipeStatStrip({
           </div>
         )}
       </div>
+      )}
       {/* ═══ Capsule espressive (M3 Expressive, giugno 2026) ═══
           Niente più griglia da tabella: quattro contenitori tonali con
           forme CONTRASTANTI (raggi asimmetrici alternati), numeri oversize
           e ingresso a molla scaglionato. Il tocco le fa "respirare". */}
+      {dense ? (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <MiniStatCell label={ui.statHydration} value={fmt.percent(recipe.hydration_pct)} index={0} changed={hChanged} />
+          <MiniStatCell label={ui.statOven} value={fmt.celsius(recipe.oven_temp_c)} index={1} />
+          <MiniStatCell label={ui.statCookTime} value={fmt.cookTime(recipe.cook_time_sec)} index={2} />
+          <MiniStatCell label={ui.statFermentation} value={fmt.fermentTime(recipe.fermentation_hours)} index={3} changed={fChanged} />
+        </div>
+      ) : (
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatCell
           label={ui.statHydration}
@@ -207,6 +227,7 @@ export function RecipeStatStrip({
           changed={fChanged}
         />
       </div>
+      )}
 
       {/* Nerd row — slides in below */}
       <AnimatePresence>
@@ -292,6 +313,76 @@ export function RecipeStatStrip({
   );
 }
 
+/* ═══ Voce minuscola (dense/Easy, mockup Proposta A) ═══
+   Solo label e valore, SENZA scatola: è un dato da leggere, non un bottone.
+   Il marker ↗/↘ (trend, non chevron-accordion) segue il VALORE e segnala il
+   parametro spostato dall'ottimizzatore rispetto alla canonica (#3b). */
+function MiniStatCell({
+  label,
+  value,
+  index = 0,
+  changed,
+}: {
+  label: string;
+  value: string;
+  index?: number;
+  changed?: { dir: "up" | "down"; canonical: string };
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.04 + index * 0.05, type: "spring", stiffness: 400, damping: 26 }}
+      className="text-left min-w-0"
+    >
+      <div
+        className="truncate"
+        style={{
+          color: "var(--text-muted)",
+          fontSize: "var(--font-size-xs)",
+          fontWeight: "var(--weight-semibold)" as any,
+          letterSpacing: "var(--tracking-caps)",
+          textTransform: "uppercase",
+          lineHeight: "var(--leading-tight)",
+        }}
+      >
+        {label}
+      </div>
+      <AnimatePresence initial={false} mode="popLayout">
+        <motion.div
+          key={value}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ type: "spring", stiffness: 420, damping: 30 }}
+          className="type-numeric flex items-center gap-1"
+          style={{
+            color: "var(--text-default)",
+            fontSize: "var(--font-size-xl)",
+            fontWeight: "var(--weight-bold)" as any,
+            fontFeatureSettings: "'tnum'",
+            lineHeight: "var(--leading-tight)",
+            whiteSpace: "nowrap",
+            marginTop: 2,
+          }}
+        >
+          {value}
+          {changed && (
+            <span
+              className="inline-flex flex-shrink-0"
+              style={{ color: "var(--cta)" }}
+              title={`Su misura per te · canonica ${changed.canonical}`}
+              aria-label={`Valore su misura. Canonica: ${changed.canonical}`}
+            >
+              {changed.dir === "up" ? <TrendingUp size={13} strokeWidth={2.5} /> : <TrendingDown size={13} strokeWidth={2.5} />}
+            </span>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
 function StatCell({
   label,
   value,
@@ -360,7 +451,7 @@ function StatCell({
             title={`Su misura per te · canonica ${changed.canonical}`}
             aria-label={`Valore su misura. Canonica: ${changed.canonical}`}
           >
-            {changed.dir === "up" ? <ChevronUp size={14} strokeWidth={3} /> : <ChevronDown size={14} strokeWidth={3} />}
+            {changed.dir === "up" ? <TrendingUp size={13} strokeWidth={2.5} /> : <TrendingDown size={13} strokeWidth={2.5} />}
           </span>
         )}
       </div>
@@ -477,7 +568,7 @@ function NerdCell({
             style={{ color: "var(--cta)" }}
             title={`Su misura per te · canonica ${changed.canonical}`}
           >
-            {changed.dir === "up" ? <ChevronUp size={12} strokeWidth={3} /> : <ChevronDown size={12} strokeWidth={3} />}
+            {changed.dir === "up" ? <TrendingUp size={12} strokeWidth={2.5} /> : <TrendingDown size={12} strokeWidth={2.5} />}
           </span>
         )}
       </span>

@@ -52,6 +52,10 @@ export interface CmsUiStrings {
   generate: string;
   chooseStyle: string;
   customizeParams: string;
+  /** Gerarchia azioni (Proposta A, lug 2026): invito testuale Easy che apre
+   *  il dialog Personalizza. Opzionali: fallback sul default. */
+  adjustByHand?: string;
+  adjustByHandQuestion?: string;
   changeStyle: string;
   newPizza: string;
   // Recipe output
@@ -184,6 +188,12 @@ interface CmsHero {
   title_line1: string;
   title_line2: string;
   subtitle: string;
+  /** Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le
+   *  domande del passo 1. Opzionali: i locale non tradotti cadono sul default. */
+  onboardingEyebrow?: string;
+  onboardingBody?: string;
+  onboardingCta?: string;
+  onboardingProfileCta?: string;
 }
 
 interface CmsStepHeader {
@@ -230,6 +240,9 @@ interface CmsScoreDimension {
   label: string;
   short: string;
   weight: number;
+  /** Learn-inline (audit lug 2026): spiegazione dell'asse mostrata a richiesta
+   *  nella match card. Opzionale: i locale non tradotti cadono sul default. */
+  explain?: string;
 }
 
 interface CmsRecommendationWeights {
@@ -842,6 +855,14 @@ export interface CmsContent {
     /** Toggle dettagli della match card (barre punteggio, stato forno).
      *  Opzionale: i locale non ancora tradotti cadono sul default. */
     matchDetailsShow?: string;
+    /** Learn-inline assi (audit lug 2026) — etichetta della formula pesata in
+     *  nerd mode e peso dell'asse nel pannello di spiegazione. Opzionali. */
+    matchBreakdownLabel?: string;
+    matchAxisWeight?: string;
+    /** "È andata lunga?" (audit lug 2026) — domanda per-fase che porta
+     *  all'issue di troubleshooting più probabile (STEP_TROUBLE). Chiavi:
+     *  preferment/mix/bulk/proof/shape/bake. Opzionale. */
+    troubleStepLinks?: Record<string, string>;
     /** Ondata 1 (audit lug 2026) — ricetta parcheggiata: card Riprendi negli
      *  step precedenti + conferma prima di sostituirla con un nuovo stile.
      *  Opzionali: i locale non ancora tradotti cadono sul default. */
@@ -973,6 +994,10 @@ export interface CmsContent {
     ovenWood: string;
     ovenElectricHigh: string;
     ovenPan: string;
+    /** Ricerca testuale nella lista stili del Crea (audit lug 2026).
+     *  Opzionali: i locale non ancora tradotti cadono sul default. */
+    stylesSearchPlaceholder?: string;
+    stylesSearchNoResults?: string;
   };
   /** Glossary page labels */
   glossary: {
@@ -1122,6 +1147,8 @@ export const CMS_DEFAULTS: CmsContent = {
     generate: "Genera ricetta",
     chooseStyle: "Scegli lo stile",
     customizeParams: "Personalizza parametri",
+    adjustByHand: "Regola a mano",
+    adjustByHandQuestion: "Preferisci decidere tu?",
     changeStyle: "Altro stile",
     newPizza: "Ricomincia",
     // Recipe output
@@ -1255,6 +1282,11 @@ export const CMS_DEFAULTS: CmsContent = {
     title_line1: "La tua",
     title_line2: "pizza perfetta.",
     subtitle: "Seleziona il momento per calcolare i tempi di preparazione.",
+    onboardingEyebrow: "Prima volta qui?",
+    onboardingBody:
+      "Vulcan disegna la ricetta su misura per il tuo forno e il tuo tempo — e ti dice con un punteggio onesto quanto si avvicina all'originale. Rispondi alle domande qui sotto e via.",
+    onboardingCta: "Capito, si parte",
+    onboardingProfileCta: "Salva forno e livello nel profilo",
   },
   steps: {
     context: { number: "01 — Contesto", title: "Quando e dove", subtitle: "Tempo, temperatura, ambiente" },
@@ -1303,11 +1335,31 @@ export const CMS_DEFAULTS: CmsContent = {
     not_feasible: { label: "Non fattibili",    subtitle: "mancano requisiti chiave (forno, esperienza)" },
   },
   scoreDimensions: {
-    authenticity:    { label: "Autenticità",     short: "Aut", weight: 0.30 },
-    feasibility:     { label: "Fattibilità",     short: "Fat", weight: 0.25 },
-    digestibility:   { label: "Digeribilità",    short: "Dig", weight: 0.20 },
-    sustainability:  { label: "Sostenibilità",   short: "Sos", weight: 0.15 },
-    experimentation: { label: "Sperimentazione", short: "Spe", weight: 0.10 },
+    authenticity: {
+      label: "Autenticità", short: "Aut", weight: 0.30,
+      explain:
+        "Quanto la ricetta rispetta il canone dello stile: ingredienti (idratazione, forza e P/L della farina), processo di fermentazione e attrezzatura. Se il forno resta sotto il minimo dello stile, questo asse crolla: certe pizze chiedono un fuoco che non si può simulare.",
+    },
+    feasibility: {
+      label: "Fattibilità", short: "Fat", weight: 0.25,
+      explain:
+        "Quanto è realistica per te, oggi: pesa il forno (40%), la farina (30%) e l'esperienza richiesta (30%). Cala se lo stile chiede più temperatura di quella che hai o se l'idratazione supera il tuo livello.",
+    },
+    digestibility: {
+      label: "Digeribilità", short: "Dig", weight: 0.20,
+      explain:
+        "Stima della maturazione dell'impasto: le ore di fermentazione riportate a 18 °C (i pre-fermenti contano di più). Più l'impasto matura, più amidi e glutine si scompongono — e la pizza si digerisce meglio.",
+    },
+    sustainability: {
+      label: "Sostenibilità", short: "Sos", weight: 0.15,
+      explain:
+        "Energia stimata: temperatura e durata della cottura, frigo per la fermentazione, tipo di lievito. Cotture brevi e fermentazioni a temperatura ambiente aiutano.",
+    },
+    experimentation: {
+      label: "Sperimentazione", short: "Spe", weight: 0.10,
+      explain:
+        "Quanto ti allontani dal canone: deviazioni di idratazione e fermentazione, pre-fermenti fuori disciplinare, compensazioni forzate dal tuo setup. Non è un difetto: misura il coraggio.",
+    },
   },
   recommendationWeights: {
     time: 0.25,
@@ -1386,7 +1438,7 @@ export const CMS_DEFAULTS: CmsContent = {
     adaptToKitchen: "Adatta alla mia cucina",
     optimizeForMe: "Ottimizza per me",
     resetToOriginal: "Torna all'originale",
-    saveVersion: "Salva la mia versione",
+    saveVersion: "Salva questa versione",
     savedVersion: "Salvata nel ricettario",
     optimizedForSetup: "Ottimizzata per il tuo setup",
     doneBody: "Hai completato tutti i passaggi della tua {style}. Buon appetito!",
@@ -1484,6 +1536,16 @@ export const CMS_DEFAULTS: CmsContent = {
     stepDetailsShow: "Come si fa",
     stepDetailsHide: "Nascondi dettagli",
     matchDetailsShow: "Dettagli punteggio",
+    matchBreakdownLabel: "Media pesata",
+    matchAxisWeight: "peso {pct}% del Match",
+    troubleStepLinks: {
+      preferment: "Odora troppo di acido?",
+      mix: "Impasto troppo appiccicoso?",
+      bulk: "È andata lunga?",
+      proof: "È andata lunga?",
+      shape: "Si strappa quando stendi?",
+      bake: "Cottura non riuscita?",
+    },
     draftResumeEyebrow: "Ricetta in corso",
     draftResumeCta: "Riprendi",
     draftReplaceTitle: "Sostituire la ricetta in corso?",
@@ -1633,6 +1695,8 @@ export const CMS_DEFAULTS: CmsContent = {
     ovenWood: "Legna",
     ovenElectricHigh: "Elettrico >350°C",
     ovenPan: "Padella",
+    stylesSearchPlaceholder: "Cerca uno stile…",
+    stylesSearchNoResults: "Nessuno stile per \"{query}\"",
   },
   glossary: {
     pageTitle: "Glossario Tecnico",
@@ -3035,14 +3099,19 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       // Composite weights
       { path: "scoreDimensions.authenticity.label", label: "Autenticita — Label", type: "text" },
       { path: "scoreDimensions.authenticity.weight", label: "Autenticita — Peso", type: "slider", min: 0, max: 1, step: 0.05 },
+      { path: "scoreDimensions.authenticity.explain", label: "Autenticita — Spiegazione", type: "textarea" },
       { path: "scoreDimensions.feasibility.label", label: "Fattibilita — Label", type: "text" },
       { path: "scoreDimensions.feasibility.weight", label: "Fattibilita — Peso", type: "slider", min: 0, max: 1, step: 0.05 },
+      { path: "scoreDimensions.feasibility.explain", label: "Fattibilita — Spiegazione", type: "textarea" },
       { path: "scoreDimensions.digestibility.label", label: "Digeribilita — Label", type: "text" },
       { path: "scoreDimensions.digestibility.weight", label: "Digeribilita — Peso", type: "slider", min: 0, max: 1, step: 0.05 },
+      { path: "scoreDimensions.digestibility.explain", label: "Digeribilita — Spiegazione", type: "textarea" },
       { path: "scoreDimensions.sustainability.label", label: "Sostenibilita — Label", type: "text" },
       { path: "scoreDimensions.sustainability.weight", label: "Sostenibilita — Peso", type: "slider", min: 0, max: 1, step: 0.05 },
+      { path: "scoreDimensions.sustainability.explain", label: "Sostenibilita — Spiegazione", type: "textarea" },
       { path: "scoreDimensions.experimentation.label", label: "Sperimentazione — Label", type: "text" },
       { path: "scoreDimensions.experimentation.weight", label: "Sperimentazione — Peso", type: "slider", min: 0, max: 1, step: 0.05 },
+      { path: "scoreDimensions.experimentation.explain", label: "Sperimentazione — Spiegazione", type: "textarea" },
       // Recommendation weights
       { path: "recommendationWeights.time", label: "Recommendation: Tempo", type: "slider", min: 0, max: 1, step: 0.05 },
       { path: "recommendationWeights.oven", label: "Recommendation: Forno", type: "slider", min: 0, max: 1, step: 0.05 },

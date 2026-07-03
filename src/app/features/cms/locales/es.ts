@@ -318,26 +318,36 @@ export const ES_LOCALE: CmsContent = {
       label: "Autenticidad",
       short: "Aut",
       weight: 0.3,
+      explain:
+        "Cu\u00E1nto respeta la receta el canon del estilo: ingredientes (hidrataci\u00F3n, fuerza y P/L de la harina), proceso de fermentaci\u00F3n y equipo. Si tu horno queda por debajo del m\u00EDnimo del estilo, este eje se derrumba: algunas pizzas exigen un fuego que no se puede simular.",
     },
     feasibility: {
       label: "Viabilidad",
       short: "Via",
       weight: 0.25,
+      explain:
+        "Qu\u00E9 tan realista es para ti, hoy: pondera el horno (40%), la harina (30%) y la experiencia requerida (30%). Baja si el estilo pide m\u00E1s calor del que tienes o la hidrataci\u00F3n supera tu nivel.",
     },
     digestibility: {
       label: "Digestibilidad",
       short: "Dig",
       weight: 0.2,
+      explain:
+        "Estimaci\u00F3n de la maduraci\u00F3n de la masa: horas de fermentaci\u00F3n normalizadas a 18 \u00B0C (los prefermentos cuentan m\u00E1s). Cuanto m\u00E1s madura la masa, m\u00E1s se descomponen almidones y gluten \u2014 y mejor se digiere la pizza.",
     },
     sustainability: {
       label: "Sostenibilidad",
       short: "Sos",
       weight: 0.15,
+      explain:
+        "Energ\u00EDa estimada: temperatura y duraci\u00F3n del horneado, nevera para la fermentaci\u00F3n, tipo de levadura. Horneados cortos y fermentaci\u00F3n a temperatura ambiente ayudan.",
     },
     experimentation: {
       label: "Experimentaci\u00F3n",
       short: "Exp",
       weight: 0.1,
+      explain:
+        "Cu\u00E1nto te alejas del canon: desviaciones de hidrataci\u00F3n y fermentaci\u00F3n, prefermentos fuera de norma, compensaciones forzadas por tu equipo. No es un defecto: mide el coraje.",
     },
   },
   recommendationWeights: {

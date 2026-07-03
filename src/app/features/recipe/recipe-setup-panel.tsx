@@ -23,6 +23,7 @@ import {
 } from "../../data/interpretation-library";
 import {
   SCORE_DIMENSIONS,
+  type GeneratedRecipe,
   type PizzaStyle,
   type RecipeScores,
 } from "../../domain/pizza-engine";
@@ -32,6 +33,28 @@ import type { StyleVersion } from "../../data/style-versions";
 
 function cmsMessage(cms: CmsContent, key: string, fallback: string): string {
   return cms.engineMessages?.[key] ?? fallback;
+}
+
+/** Miniriepilogo per la minicard Easy: i parametri che la StatStrip non mostra
+ *  (sale, forza farina, temperatura di fermentazione, pre-fermento). */
+export function buildAdvancedSummary(
+  recipe: GeneratedRecipe,
+  cms: CmsContent,
+  bcp47: string,
+): string {
+  const nf = new Intl.NumberFormat(bcp47, { maximumFractionDigits: 1 });
+  const saltPct =
+    recipe.flour_g > 0 ? (recipe.salt_g / recipe.flour_g) * 100 : 0;
+  const parts = [
+    `${cms.ui.salt} ${nf.format(saltPct)}%`,
+    `W ${recipe.flour_w}`,
+    `${nf.format(recipe.fermentation_temp_c)} °C`,
+  ];
+  if (recipe.has_pre_ferment && recipe.pre_ferment_type) {
+    const type = recipe.pre_ferment_type;
+    parts.push(type.charAt(0).toUpperCase() + type.slice(1));
+  }
+  return parts.join(" · ");
 }
 
 function localizedVersionLabel(cms: CmsContent, label: string): string {
@@ -101,6 +124,12 @@ interface RecipeSetupPanelProps {
   onRequestOpen?: () => void;
   isCanonical?: boolean;
   scores: RecipeScores;
+  /** Gerarchia azioni (Proposta A, lug 2026): in Easy il trigger diventa una
+   *  minicard discreta — "Ottimizza per me" resta l'unica azione piena. */
+  compact?: boolean;
+  /** Miniriepilogo dei parametri che la StatStrip Easy non mostra
+   *  (es. "Sale 2,6% · W 200 · 22 °C"), calcolato dal chiamante. */
+  advancedSummary?: string;
   children?: ReactNode;
 }
 
@@ -124,6 +153,8 @@ export function RecipeSetupPanel({
   onRequestOpen,
   isCanonical = false,
   scores,
+  compact = false,
+  advancedSummary,
   children,
 }: RecipeSetupPanelProps) {
   const { cms, bcp47 } = useCms();
@@ -209,8 +240,75 @@ export function RecipeSetupPanel({
      ripete il verbo breve, non il titolo (duplicava su desktop). */
   const triggerAction = cms.ui.modify;
 
+  /* Minicard Easy: notice in tempo reale se presente, altrimenti i parametri
+     "sommersi" (sale, W, temperatura) + preset/interpretazione attivi. */
+  const compactSummary =
+    notice ??
+    [
+      advancedSummary,
+      activeVersion ? activeVersionLabel : null,
+      activeInterpretation ? interpretationName(activeInterpretation) : null,
+    ]
+      .filter(Boolean)
+      .join(" · ");
+
   return (
     <section>
+      {compact ? (
+        /* Minicard Easy (rollback 3 lug): scatola discreta con icona, vive
+           accanto ai parametri. PRIMA il riepilogo dei valori sommersi (sale,
+           W, temperatura, preset), POI l'azione "Regola a mano" a destra. */
+        <button
+          onClick={() => (onRequestOpen ? onRequestOpen() : setOpen(true))}
+          className="w-full flex items-center gap-2.5 rounded-2xl px-4 py-3 text-left active:scale-[0.99] transition-all duration-200"
+          style={{
+            background: "color-mix(in srgb, var(--container-bg) 72%, transparent)",
+            border: "1px solid var(--container-border-subtle)",
+            cursor: "pointer",
+          }}
+          aria-expanded={open}
+          aria-haspopup="dialog"
+        >
+          <Sparkles
+            size={14}
+            style={{ color: "var(--text-accent)", flexShrink: 0 }}
+            aria-hidden="true"
+          />
+          {compactSummary ? (
+            <motion.span
+              key={compactSummary}
+              initial={{ opacity: 0, y: 3 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="type-numeric flex-1 min-w-0 truncate"
+              style={{
+                color: notice ? "var(--text-accent)" : "var(--text-muted)",
+                fontSize: "var(--font-size-sm)",
+                lineHeight: "var(--leading-tight)",
+              }}
+            >
+              {compactSummary}
+            </motion.span>
+          ) : (
+            <span className="flex-1" />
+          )}
+          <span
+            className="inline-flex items-center gap-0.5 flex-shrink-0"
+            style={{
+              color: "var(--text-accent)",
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--weight-semibold)" as any,
+              lineHeight: "var(--leading-tight)",
+            }}
+          >
+            {cms.ui.adjustByHand ?? "Regola a mano"}
+            <ChevronDown
+              size={14}
+              style={{ transform: "rotate(-90deg)" }}
+              aria-hidden="true"
+            />
+          </span>
+        </button>
+      ) : (
       <div
         className="overflow-hidden rounded-2xl border border-[var(--recipe-setup-border)] transition-all duration-200 hover:border-[var(--tertiary)] hover:shadow-sm"
         style={{
@@ -282,6 +380,7 @@ export function RecipeSetupPanel({
           </span>
         </button>
       </div>
+      )}
 
       <AnimatePresence>
         {open && (

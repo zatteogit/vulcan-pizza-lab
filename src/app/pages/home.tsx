@@ -39,7 +39,7 @@ UserConstraints,
 import { RecipeConfigurator } from "../features/recipe/recipe-configurator";
 import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
 import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
-import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
+import { buildAdvancedSummary, RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
 import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { RecommendedStyles,STYLE_PHOTOS } from "../features/recipe/recommended-styles";
@@ -409,12 +409,102 @@ function ResumeRecipeCard({
   );
 }
 
+/* ═══ Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le
+   domande del passo 1: una frase sul patto dell'app (su misura + punteggio
+   onesto), dismiss esplicito o automatico appena l'utente avanza. Niente
+   wizard, niente overlay: il flusso Crea È già l'onboarding. ═══ */
+const ONBOARDING_SEEN_KEY = "vulcan_onboarding_seen";
+
+function WelcomeOnboardingCard({
+  eyebrow,
+  body,
+  cta,
+  profileCta,
+  onDismiss,
+  className = "",
+}: {
+  eyebrow: string;
+  body: string;
+  cta: string;
+  profileCta: string;
+  onDismiss: () => void;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 380, damping: 28 }}
+      className={`rounded-2xl px-4 py-3.5 ${className}`}
+      style={{
+        background: "color-mix(in srgb, var(--container-bg) 72%, transparent)",
+        border: "1px solid var(--container-border-subtle)",
+      }}
+    >
+      <div
+        className="flex items-center gap-1.5"
+        style={{
+          color: "var(--text-accent)",
+          fontSize: "var(--font-size-sm)",
+          fontWeight: "var(--weight-bold)" as any,
+        }}
+      >
+        <Sparkles size={14} aria-hidden="true" />
+        {eyebrow}
+      </div>
+      <p
+        className="mt-1"
+        style={{
+          margin: "4px 0 0",
+          color: "var(--text-muted)",
+          fontSize: "var(--font-size-md)",
+          lineHeight: "var(--leading-normal)",
+        }}
+      >
+        {body}
+      </p>
+      <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="inline-flex items-center gap-1 active:scale-95 transition-transform"
+          style={{
+            background: "transparent",
+            border: "none",
+            padding: 0,
+            color: "var(--text-default)",
+            fontSize: "var(--font-size-sm)",
+            fontWeight: "var(--weight-semibold)" as any,
+            cursor: "pointer",
+          }}
+        >
+          {cta}
+          <ChevronRight size={13} />
+        </button>
+        <Link
+          to="/profile"
+          onClick={onDismiss}
+          style={{
+            color: "var(--text-accent)",
+            fontSize: "var(--font-size-sm)",
+            textDecoration: "underline",
+            textUnderlineOffset: 3,
+          }}
+        >
+          {profileCta}
+        </Link>
+      </div>
+    </motion.div>
+  );
+}
+
 export function HomePage() {
   const { setHideNavbar } = useDarkMode();
   const { isOverrideActive, clearOverride, effectiveStyles } =
     useStylesOverride();
   const {
     cms,
+    bcp47,
     modifiedCount,
     resetAll: cmsResetAll,
   } = useCms();
@@ -444,6 +534,26 @@ export function HomePage() {
   const [setupPanelOpen, setSetupPanelOpen] = useState(false);
   const [setupNotice, setSetupNotice] = useState<string | null>(null);
   const [nerdMode, setNerdMode] = useState(false);
+  /* Onboarding primo uso: visibile finché non viene congedato — esplicitamente
+     o avanzando nel flusso (chi ha già generato una ricetta non ne ha bisogno). */
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    try {
+      return localStorage.getItem(ONBOARDING_SEEN_KEY) !== "true";
+    } catch {
+      return false;
+    }
+  });
+  const dismissOnboarding = useCallback(() => {
+    setShowOnboarding(false);
+    try {
+      localStorage.setItem(ONBOARDING_SEEN_KEY, "true");
+    } catch {
+      /* */
+    }
+  }, []);
+  useEffect(() => {
+    if (showOnboarding && currentStep !== "settings") dismissOnboarding();
+  }, [showOnboarding, currentStep, dismissOnboarding]);
   /* Ondata 1: ricetta generata e poi lasciata — resta parcheggiata finché
      l'utente non la riprende o la sostituisce (previa conferma). */
   const [parkedStyleId, setParkedStyleId] = useState<string | null>(
@@ -1275,6 +1385,19 @@ export function HomePage() {
                     className="mt-4 mb-1"
                   />
                 )}
+                {showOnboarding && !parkedStyle && (
+                  <WelcomeOnboardingCard
+                    eyebrow={cms.hero.onboardingEyebrow ?? "Prima volta qui?"}
+                    body={
+                      cms.hero.onboardingBody ??
+                      "Vulcan disegna la ricetta su misura per il tuo forno e il tuo tempo — e ti dice con un punteggio onesto quanto si avvicina all'originale."
+                    }
+                    cta={cms.hero.onboardingCta ?? "Capito, si parte"}
+                    profileCta={cms.hero.onboardingProfileCta ?? "Salva forno e livello nel profilo"}
+                    onDismiss={dismissOnboarding}
+                    className="mt-4 mb-1"
+                  />
+                )}
                 <UserNeeds
                   constraints={constraints}
                   onConstraintsChange={setConstraints}
@@ -1619,6 +1742,94 @@ export function HomePage() {
               isPersonalized={createRecipeMode !== "canonical"}
               onRequestPersonalization={handleOpenCreatePersonalization}
               matchSlot={
+                /* Mockup Proposta A: parametri sopra la match card, stretti. */
+                <div className="flex flex-col gap-3">
+                {/* Niente modeBadge: l'origine (canonica/su misura) la dichiara
+                    già l'eyebrow della pagina, visibile su tutti i tab. */}
+                <RecipeStatStrip
+                  recipe={recipe}
+                  nerdMode={effectiveNerdMode}
+                  dense={!effectiveNerdMode}
+                  isPersonalized={createRecipeMode !== "canonical"}
+                  nerdAvailable={nerdAvailable}
+                  onNerdModeChange={setNerdMode}
+                />
+                {/* La leva dei parametri vive COI parametri (nota Matteo 3 lug). */}
+                <RecipeSetupPanel
+                  style={selectedStyle}
+                  versions={styleVersions}
+                  activeVersion={activeVersion}
+                  customHydration={customHydration}
+                  customFlourW={customFlourW}
+                  customFermentHours={customFermentHours}
+                  customFermentTemp={customFermentTemp}
+                  activeInterpretationId={activeInterpretationId}
+                  onSelectVersion={handleCreateVersionSelect}
+                  onSelectInterpretation={handleCreateInterpretationSelect}
+                  notice={setupNotice}
+                  onNotice={setSetupNotice}
+                  open={setupPanelOpen}
+                  onOpenChange={setSetupPanelOpen}
+                  onRequestOpen={handleOpenCreatePersonalization}
+                  isCanonical={createRecipeMode === "canonical"}
+                  scores={recipe.scores}
+                  compact={!effectiveNerdMode}
+                  advancedSummary={buildAdvancedSummary(recipe, cms, bcp47)}
+                >
+                  <RecipeConfigurator
+                    style={selectedStyle}
+                    constraints={constraints}
+                    onConstraintsChange={(next) => {
+                      setCreateRecipeMode("adapted");
+                      setConstraints(next);
+                    }}
+                    customHydration={customHydration}
+                    onHydrationChange={(value) => {
+                      setCreateRecipeMode("adapted");
+                      setCustomHydration(value);
+                    }}
+                    customFlourW={customFlourW}
+                    onFlourWChange={(value) => {
+                      setCreateRecipeMode("adapted");
+                      setCustomFlourW(value);
+                    }}
+                    customFermentHours={customFermentHours}
+                    onFermentHoursChange={(value) => {
+                      setCreateRecipeMode("adapted");
+                      setCustomFermentHours(value);
+                    }}
+                    customFermentTemp={customFermentTemp}
+                    onFermentTempChange={(value) => {
+                      setCreateRecipeMode("adapted");
+                      setCustomFermentTemp(value);
+                    }}
+                    usePreFerment={usePreFerment}
+                    onPreFermentChange={(value) => {
+                      setCreateRecipeMode("adapted");
+                      setUsePreFerment(value);
+                    }}
+                    customFlourPL={effectiveNerdMode ? customFlourPL : undefined}
+                    onFlourPLChange={
+                      effectiveNerdMode
+                        ? (value) => {
+                            setCreateRecipeMode("adapted");
+                            setCustomFlourPL(value);
+                          }
+                        : undefined
+                    }
+                    customSalt={customSalt}
+                    onSaltChange={(value) => {
+                      setCreateRecipeMode("adapted");
+                      setCustomSalt(value);
+                    }}
+                    science={recipe.science}
+                    panConfig={panConfig}
+                    onPanConfigChange={(next) => {
+                      setCreateRecipeMode("adapted");
+                      setPanConfig(next);
+                    }}
+                  />
+                </RecipeSetupPanel>
                 <RecipeMatchCard
                   scores={recipe.scores}
                   ovenTemp={constraints.oven_max_temp_c}
@@ -1645,10 +1856,12 @@ export function HomePage() {
                   softNeeds={ceilingInfo?.softNeeds}
                   onSave={handleToggleSaveRecipe}
                   saved={Boolean(savedEntry)}
+                  nerdMode={effectiveNerdMode}
                 />
+                </div>
               }
               recipeControls={
-                <div className="flex flex-col gap-5 sm:gap-6">
+                <div className="flex flex-col gap-3">
                   {/* F2 — "Vulcan ha imparato dai tuoi tentativi" (opt-in, trasparente) */}
                   {showFeedbackPanel && feedbackCorrection && (
                     <div
@@ -1703,97 +1916,6 @@ export function HomePage() {
                       )}
                     </div>
                   )}
-                  {/* Audit fruibilità luglio 2026: la card di contesto
-                      ("Ricetta canonica" / "Su misura per te") è diventata un
-                      badge nella testata della strip — stessa informazione,
-                      una schermata in meno. */}
-                  <RecipeStatStrip
-                    recipe={recipe}
-                    nerdMode={effectiveNerdMode}
-                    isPersonalized={createRecipeMode !== "canonical"}
-                    nerdAvailable={nerdAvailable}
-                    onNerdModeChange={setNerdMode}
-                    modeBadge={
-                      createRecipeMode === "canonical"
-                        ? cms.cooking.recipeCanonical
-                        : cms.cooking.recipeAdapted
-                    }
-                  />
-
-                  <RecipeSetupPanel
-                    style={selectedStyle}
-                    versions={styleVersions}
-                    activeVersion={activeVersion}
-                    customHydration={customHydration}
-                    customFlourW={customFlourW}
-                    customFermentHours={customFermentHours}
-                    customFermentTemp={customFermentTemp}
-                    activeInterpretationId={activeInterpretationId}
-                    onSelectVersion={handleCreateVersionSelect}
-                    onSelectInterpretation={handleCreateInterpretationSelect}
-                    notice={setupNotice}
-                    onNotice={setSetupNotice}
-                    open={setupPanelOpen}
-                    onOpenChange={setSetupPanelOpen}
-                    onRequestOpen={handleOpenCreatePersonalization}
-                    isCanonical={createRecipeMode === "canonical"}
-                    scores={recipe.scores}
-                  >
-                    <RecipeConfigurator
-                      style={selectedStyle}
-                      constraints={constraints}
-                      onConstraintsChange={(next) => {
-                        setCreateRecipeMode("adapted");
-                        setConstraints(next);
-                      }}
-                      customHydration={customHydration}
-                      onHydrationChange={(value) => {
-                        setCreateRecipeMode("adapted");
-                        setCustomHydration(value);
-                      }}
-                      customFlourW={customFlourW}
-                      onFlourWChange={(value) => {
-                        setCreateRecipeMode("adapted");
-                        setCustomFlourW(value);
-                      }}
-                      customFermentHours={customFermentHours}
-                      onFermentHoursChange={(value) => {
-                        setCreateRecipeMode("adapted");
-                        setCustomFermentHours(value);
-                      }}
-                      customFermentTemp={customFermentTemp}
-                      onFermentTempChange={(value) => {
-                        setCreateRecipeMode("adapted");
-                        setCustomFermentTemp(value);
-                      }}
-                      usePreFerment={usePreFerment}
-                      onPreFermentChange={(value) => {
-                        setCreateRecipeMode("adapted");
-                        setUsePreFerment(value);
-                      }}
-                      customFlourPL={effectiveNerdMode ? customFlourPL : undefined}
-                      onFlourPLChange={
-                        effectiveNerdMode
-                          ? (value) => {
-                              setCreateRecipeMode("adapted");
-                              setCustomFlourPL(value);
-                            }
-                          : undefined
-                      }
-                      customSalt={customSalt}
-                      onSaltChange={(value) => {
-                        setCreateRecipeMode("adapted");
-                        setCustomSalt(value);
-                      }}
-                      science={recipe.science}
-                      panConfig={panConfig}
-                      onPanConfigChange={(next) => {
-                        setCreateRecipeMode("adapted");
-                        setPanConfig(next);
-                      }}
-                    />
-                  </RecipeSetupPanel>
-
                   {/* Warning contestuali + dieta */}
                   <div>
                     <ContextualWarnings

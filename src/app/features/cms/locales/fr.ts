@@ -315,26 +315,36 @@ export const FR_LOCALE: CmsContent = {
       label: "Authenticit\u00E9",
       short: "Auth",
       weight: 0.3,
+      explain:
+        "\u00C0 quel point la recette respecte le canon du style : ingr\u00E9dients (hydratation, force et P/L de la farine), fermentation et \u00E9quipement. Si votre four reste sous le minimum du style, cet axe s'effondre : certaines pizzas exigent un feu qu'on ne peut pas simuler.",
     },
     feasibility: {
       label: "Faisabilit\u00E9",
       short: "Fais",
       weight: 0.25,
+      explain:
+        "\u00C0 quel point c'est r\u00E9aliste pour vous, aujourd'hui : le four p\u00E8se 40 %, la farine 30 % et l'exp\u00E9rience requise 30 %. Baisse si le style demande plus de chaleur que vous n'en avez, ou si l'hydratation d\u00E9passe votre niveau.",
     },
     digestibility: {
       label: "Digestibilit\u00E9",
       short: "Dig",
       weight: 0.2,
+      explain:
+        "Estimation de la maturation de la p\u00E2te : heures de fermentation normalis\u00E9es \u00E0 18 \u00B0C (les pr\u00E9ferments comptent davantage). Plus la p\u00E2te m\u00FBrit, plus amidons et gluten se d\u00E9composent \u2014 et mieux la pizza se dig\u00E8re.",
     },
     sustainability: {
       label: "Durabilit\u00E9",
       short: "Dur",
       weight: 0.15,
+      explain:
+        "\u00C9nergie estim\u00E9e : temp\u00E9rature et dur\u00E9e de cuisson, frigo pour la fermentation, type de levure. Cuissons courtes et fermentation \u00E0 temp\u00E9rature ambiante aident.",
     },
     experimentation: {
       label: "Exp\u00E9rimentation",
       short: "Exp",
       weight: 0.1,
+      explain:
+        "\u00C0 quel point vous vous \u00E9loignez du canon : \u00E9carts d'hydratation et de fermentation, pr\u00E9ferments hors cadre, compensations impos\u00E9es par votre mat\u00E9riel. Pas un d\u00E9faut : \u00E7a mesure l'audace.",
     },
   },
   recommendationWeights: {

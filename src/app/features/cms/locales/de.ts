@@ -25,6 +25,8 @@ export const DE_LOCALE: CmsContent = {
     generate: "Rezept erstellen",
     chooseStyle: "Stil w\u00E4hlen",
     customizeParams: "Parameter anpassen",
+    adjustByHand: "Von Hand einstellen",
+    adjustByHandQuestion: "Lieber selbst entscheiden?",
     changeStyle: "Stil \u00E4ndern",
     newPizza: "Neue Pizza",
     ingredients: "Zutaten",
@@ -147,6 +149,11 @@ export const DE_LOCALE: CmsContent = {
     title_line2: "perfekte Pizza.",
     subtitle:
       "Erz\u00E4hl uns, was du hast, und wir f\u00FChren dich zum idealen Stil.",
+    onboardingEyebrow: "Zum ersten Mal hier?",
+    onboardingBody:
+      "Vulcan schneidet das Rezept auf deinen Ofen und deine Zeit zu \u2014 und sagt dir mit einer ehrlichen Bewertung, wie nah es ans Original kommt. Beantworte die Fragen unten und los geht's.",
+    onboardingCta: "Alles klar, los",
+    onboardingProfileCta: "Ofen & Erfahrung im Profil speichern",
   },
   steps: {
     context: {
@@ -306,26 +313,36 @@ export const DE_LOCALE: CmsContent = {
       label: "Authentizit\u00E4t",
       short: "Auth",
       weight: 0.3,
+      explain:
+        "Wie genau das Rezept dem Kanon des Stils folgt: Zutaten (Hydration, Mehlst\u00E4rke und P/L), G\u00E4rprozess und Ausstattung. Bleibt dein Ofen unter dem Minimum des Stils, bricht diese Achse ein: Manche Pizzen verlangen ein Feuer, das sich nicht simulieren l\u00E4sst.",
     },
     feasibility: {
       label: "Machbarkeit",
       short: "Mach",
       weight: 0.25,
+      explain:
+        "Wie realistisch es heute f\u00FCr dich ist: gewichtet Ofen (40 %), Mehl (30 %) und geforderte Erfahrung (30 %). Sinkt, wenn der Stil mehr Hitze braucht, als du hast, oder die Hydration \u00FCber deinem Niveau liegt.",
     },
     digestibility: {
       label: "Bek\u00F6mmlichkeit",
       short: "Bek",
       weight: 0.2,
+      explain:
+        "Sch\u00E4tzung der Teigreife: G\u00E4rstunden normalisiert auf 18 \u00B0C (Vorteige z\u00E4hlen st\u00E4rker). Je reifer der Teig, desto weiter sind St\u00E4rke und Gluten abgebaut \u2014 und desto bek\u00F6mmlicher die Pizza.",
     },
     sustainability: {
       label: "Nachhaltigkeit",
       short: "Nach",
       weight: 0.15,
+      explain:
+        "Gesch\u00E4tzte Energie: Backtemperatur und -dauer, K\u00FChlschrankzeit f\u00FCr die G\u00E4rung, Hefetyp. Kurzes Backen und G\u00E4rung bei Raumtemperatur helfen.",
     },
     experimentation: {
       label: "Experimentierung",
       short: "Exp",
       weight: 0.1,
+      explain:
+        "Wie weit du vom Kanon abweichst: Abweichungen bei Hydration und G\u00E4rung, Vorteige au\u00DFerhalb der Vorgabe, vom Setup erzwungene Kompensationen. Kein Makel: Es misst Mut.",
     },
   },
   recommendationWeights: {
@@ -467,6 +484,8 @@ export const DE_LOCALE: CmsContent = {
     ovenWood: "Holzofen",
     ovenElectricHigh: "Elektro >350\u00B0C",
     ovenPan: "Pfanne",
+    stylesSearchPlaceholder: "Stil suchen…",
+    stylesSearchNoResults: 'Kein Stil für "{query}"',
   },
   glossary: {
     pageTitle: "Technisches Glossar",
@@ -1291,7 +1310,7 @@ export const DE_LOCALE: CmsContent = {
     adaptToKitchen: "An meine K\u00FCche anpassen",
     optimizeForMe: "F\u00FCr mich optimieren",
     resetToOriginal: "Zur\u00FCck zum Original",
-    saveVersion: "Meine Version speichern",
+    saveVersion: "Diese Version speichern",
     savedVersion: "Im Rezeptbuch gespeichert",
     optimizedForSetup: "F\u00FCr dein Setup optimiert",
     doneBody: "Du hast alle Schritte deiner {style} abgeschlossen. Guten Appetit!",
@@ -1328,6 +1347,16 @@ export const DE_LOCALE: CmsContent = {
     stepDetailsShow: "So geht es",
     stepDetailsHide: "Details ausblenden",
     matchDetailsShow: "Match-Details",
+    matchBreakdownLabel: "Gewichteter Durchschnitt",
+    matchAxisWeight: "{pct} % des Match",
+    troubleStepLinks: {
+      preferment: "Riecht zu sauer?",
+      mix: "Teig zu klebrig?",
+      bulk: "Übergare?",
+      proof: "Übergare?",
+      shape: "Reißt beim Ausziehen?",
+      bake: "Backen misslungen?",
+    },
     draftResumeEyebrow: "Rezept in Arbeit",
     draftResumeCta: "Fortsetzen",
     draftReplaceTitle: "Laufendes Rezept ersetzen?",

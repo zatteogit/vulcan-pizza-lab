@@ -783,7 +783,14 @@ export function RecipeOutput({
         className="flex flex-col gap-8 sm:gap-10"
       >
       <ScrollToTopOnMount />
-      {matchSlot}
+      {/* Parametri + match + Regola a mano sono UN blocco compatto (mockup
+          Proposta A) e vivono PRIMA degli ingredienti: i parametri sono
+          l'identità della ricetta, gli ingredienti la conseguenza. */}
+      <div className="flex flex-col gap-3">
+        {matchSlot}
+        {recipeControls}
+      </div>
+
       <IngredientsSection
         recipe={recipe}
         constraints={constraints}
@@ -798,10 +805,6 @@ export function RecipeOutput({
         setShowRule55Tip={setShowRule55Tip}
         rule55Description={rule55Description}
       />
-
-      {/* Parametri + Personalizza vivono DOPO gli ingredienti: prima il "cosa
-          serve", poi il "come è calcolato" (audit fruibilità luglio 2026). */}
-      {recipeControls}
 
       </motion.div>
       )}
