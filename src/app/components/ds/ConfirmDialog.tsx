@@ -14,7 +14,7 @@ import type { ReactNode } from "react";
 import { CtaButton } from "./CtaButton";
 import { Heading } from "./Heading";
 
-export type ConfirmDialogTone = "primary" | "destructive";
+type ConfirmDialogTone = "primary" | "destructive";
 
 export interface ConfirmDialogAction {
   label: ReactNode;

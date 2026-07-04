@@ -37,28 +37,6 @@ function cmsMessage(cms: CmsContent, key: string, fallback: string): string {
   return cms.engineMessages?.[key] ?? fallback;
 }
 
-/** Miniriepilogo per la minicard Easy: i parametri che la StatStrip non mostra
- *  (sale, forza farina, temperatura di fermentazione, pre-fermento). */
-export function buildAdvancedSummary(
-  recipe: GeneratedRecipe,
-  cms: CmsContent,
-  bcp47: string,
-): string {
-  const nf = new Intl.NumberFormat(bcp47, { maximumFractionDigits: 1 });
-  const saltPct =
-    recipe.flour_g > 0 ? (recipe.salt_g / recipe.flour_g) * 100 : 0;
-  const parts = [
-    `${cms.ui.salt} ${nf.format(saltPct)}%`,
-    `W ${recipe.flour_w}`,
-    `${nf.format(recipe.fermentation_temp_c)} °C`,
-  ];
-  if (recipe.has_pre_ferment && recipe.pre_ferment_type) {
-    const type = recipe.pre_ferment_type;
-    parts.push(type.charAt(0).toUpperCase() + type.slice(1));
-  }
-  return parts.join(" · ");
-}
-
 function localizedVersionLabel(cms: CmsContent, label: string): string {
   return cmsMessage(cms, `version.label.${label}`, label);
 }
