@@ -281,8 +281,8 @@ export function RecipeView({
           style={{
             background:
               "color-mix(in srgb, var(--container-page) 88%, transparent)",
-            backdropFilter: "blur(24px) saturate(1.6)",
-            WebkitBackdropFilter: "blur(24px) saturate(1.6)",
+            backdropFilter: "var(--backdrop-glass-strong)",
+            WebkitBackdropFilter: "var(--backdrop-glass-strong)",
             borderBottom:
               "1px solid var(--container-border-subtle)",
             /* Notch / status bar (Safari iOS, PWA, landscape) */

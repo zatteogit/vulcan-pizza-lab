@@ -472,7 +472,7 @@ function SpringArrow({ direction, onClick, disabled }: { direction: "left" | "ri
       disabled={disabled}
       whileHover={{ scale: 1.08 }}
       transition={SP.arrow}
-      className="w-9 h-9 rounded-full flex items-center justify-center active:scale-[0.82] transition-transform"
+      className="w-9 h-9 rounded-full flex items-center justify-center active:scale-82 transition-transform"
       style={{
         background: "color-mix(in srgb, var(--container-page) 88%, transparent)",
         backdropFilter: "blur(12px) saturate(1.4)",
@@ -698,7 +698,7 @@ function CarouselSpec() {
               <motion.button
                 key={item.id}
                 onClick={() => { setDir(i > focus ? 1 : -1); setFocus(i); }}
-                className="relative rounded-full overflow-hidden active:scale-[0.8] transition-transform"
+                className="relative rounded-full overflow-hidden active:scale-80 transition-transform"
                 style={{ border: "none", cursor: "pointer", outline: "none", padding: 0, background: "rgba(0,0,0,0)" }}
                 animate={{ width: isActive ? 24 : 8, height: 8 }}
                 transition={SP.dot}

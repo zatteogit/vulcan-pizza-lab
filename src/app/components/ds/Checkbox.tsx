@@ -78,7 +78,7 @@ export function Checkbox({
       disabled={disabled}
       onClick={() => onCheckedChange?.(!isChecked)}
       className={[
-        "flex items-start gap-3 py-3 px-2 rounded-xl text-left active:scale-[0.98] transition-transform",
+        "flex items-start gap-3 py-3 px-2 rounded-xl text-left active:scale-98 transition-transform",
         label || description ? "w-full" : "",
         className,
       ]

@@ -298,7 +298,7 @@ function Section({
       }}
     >
       <motion.button
-        className="w-full flex items-center justify-between px-4 py-3 active:scale-[0.98]"
+        className="w-full flex items-center justify-between px-4 py-3 active:scale-98"
         onClick={() => onToggle(isOpen ? null : id)}
         style={{ background: "none", border: "none", cursor: "pointer" }}
         aria-expanded={isOpen}
@@ -439,7 +439,7 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
       }}
     >
       <motion.button
-        className="w-full flex items-center gap-2 px-3 py-2 active:scale-[0.98]"
+        className="w-full flex items-center gap-2 px-3 py-2 active:scale-98"
         onClick={() => setExpanded(!expanded)}
         style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left" }}
       >
@@ -448,7 +448,7 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
           style={{
             fontSize: "var(--font-size-xs)",
             fontFamily: "var(--font-mono)",
-            fontWeight: 800,
+            fontWeight: "var(--weight-bold)" as any,
             letterSpacing: "0.08em",
             background: severityColors[finding.severity],
             color: "var(--overlay-text)",
@@ -520,11 +520,11 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
                 {finding.description}
               </div>
               <div style={{ color: "var(--muted-foreground)" }}>
-                <span style={{ fontWeight: 600 }}>Stili:</span>{" "}
+                <span style={{ fontWeight: "var(--weight-semibold)" as any }}>Stili:</span>{" "}
                 {finding.affectedStyles.join(", ")}
               </div>
               <div style={{ color: "var(--cta)" }}>
-                <span style={{ fontWeight: 600 }}>Fix:</span>{" "}
+                <span style={{ fontWeight: "var(--weight-semibold)" as any }}>Fix:</span>{" "}
                 {finding.suggestedFix}
               </div>
             </div>

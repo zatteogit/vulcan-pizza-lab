@@ -130,7 +130,7 @@ function LabSection({
     <Surface className="overflow-hidden" style={{ borderLeft: `3px solid ${color}` }}>
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-4 active:scale-[0.99] transition-transform"
+        className="w-full flex items-center justify-between p-4 active:scale-99 transition-transform"
         style={{ background: "transparent" }}
       >
         <div className="flex items-center gap-2.5">

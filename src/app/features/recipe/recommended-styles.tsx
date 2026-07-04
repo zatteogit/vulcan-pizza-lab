@@ -688,7 +688,7 @@ function StyleCard({
           y: isSelected ? 0 : -4,
           transition: { type: "spring", stiffness: 500, damping: 30 },
         }}
-        className="relative text-left group w-full active:scale-[0.97]"
+        className="relative text-left group w-full active:scale-97"
         style={{ transformOrigin: "center bottom" }}
       >
         {/* Tilt 3D: la card si inclina verso il puntatore col riflesso caldo */}
@@ -727,7 +727,7 @@ function StyleCard({
                 src={photo}
                 alt={style.name}
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
             </motion.div>
 

@@ -625,7 +625,7 @@ function TabsSpec() {
                   key={tab.id}
                   ref={(el) => { tabRefs.current[tab.id] = el; }}
                   onClick={() => setActiveTab(tab.id)}
-                  className="flex-1 flex flex-col items-center gap-1 py-3 px-2 relative active:scale-[0.97]"
+                  className="flex-1 flex flex-col items-center gap-1 py-3 px-2 relative active:scale-97"
                   style={{
                     background: "rgba(0,0,0,0)",
                     border: "none",
@@ -688,7 +688,7 @@ function TabsSpec() {
               <button
                 key={tab.id}
                 onClick={() => setActiveSecondary(tab.id)}
-                className="flex-1 py-2.5 px-3 relative active:scale-[0.97]"
+                className="flex-1 py-2.5 px-3 relative active:scale-97"
                 style={{
                   background: "rgba(0,0,0,0)",
                   border: "none",

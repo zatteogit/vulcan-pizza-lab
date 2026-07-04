@@ -282,7 +282,7 @@ function FavoriteStylesSection() {
           <div key={style.id} className="relative">
             <Link
               to={`/recipe/${style.id}?mode=canonical`}
-              className="block rounded-2xl overflow-hidden active:scale-[0.97] transition-transform group"
+              className="block rounded-2xl overflow-hidden active:scale-97 transition-transform group"
               style={{
                 background: "var(--container-card)",
                 border: "1px solid var(--container-border-ghost)",
@@ -400,7 +400,7 @@ function SavedRecipesSection() {
             >
               <Link
                 to={buildSavedRecipeUrl(r)}
-                className="flex items-center gap-3 flex-1 min-w-0 px-3.5 py-3 active:scale-[0.99] transition-transform"
+                className="flex items-center gap-3 flex-1 min-w-0 px-3.5 py-3 active:scale-99 transition-transform"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <span
@@ -487,7 +487,7 @@ function EquipmentCategory({
     >
       <motion.button
         onClick={onToggle}
-        className="w-full flex items-center gap-3 px-4 py-3.5 active:scale-[0.99] transition-transform"
+        className="w-full flex items-center gap-3 px-4 py-3.5 active:scale-99 transition-transform"
         style={{ textAlign: "left" as any, cursor: "pointer" }}
       >
         <span style={{ fontSize: "var(--font-size-2-5xl)", flexShrink: 0 }}>{emoji}</span>
@@ -682,7 +682,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                         setOvenType(preset.id);
                         setOvenTemp(preset.maxTemp);
                       }}
-                      className="flex items-center gap-4 p-4 rounded-2xl active:scale-[0.98]"
+                      className="flex items-center gap-4 p-4 rounded-2xl active:scale-98"
                       animate={{
                         backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
@@ -745,7 +745,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                     <motion.button
                       key={skill.level}
                       onClick={() => setSkillLevel(skill.level as SkillLevel)}
-                      className="flex items-center gap-4 p-4 rounded-2xl active:scale-[0.98]"
+                      className="flex items-center gap-4 p-4 rounded-2xl active:scale-98"
                       animate={{
                         backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
@@ -1523,7 +1523,7 @@ export function ProfilePage() {
                       return [preset.id, ...prev.filter((x) => x !== preset.id)];
                     });
                   }}
-                  className="flex items-center gap-3 p-3 sm:p-4 rounded-xl active:scale-[0.98]"
+                  className="flex items-center gap-3 p-3 sm:p-4 rounded-xl active:scale-98"
                   animate={{
                     backgroundColor: active
                       ? "var(--surface-container)"
@@ -1620,7 +1620,7 @@ export function ProfilePage() {
                 <motion.button
                   key={skill.level}
                   onClick={() => setSkillLevel(skill.level as SkillLevel)}
-                  className="flex flex-col items-start gap-1 p-3 sm:p-4 rounded-xl active:scale-[0.98]"
+                  className="flex flex-col items-start gap-1 p-3 sm:p-4 rounded-xl active:scale-98"
                   animate={{
                     backgroundColor: active
                       ? "var(--surface-container)"
@@ -1702,7 +1702,7 @@ export function ProfilePage() {
                     <motion.button
                       key={mixer.id}
                       onClick={() => toggleMixer(mixer.id)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg active:scale-[0.98]"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg active:scale-98"
                       animate={{
                         backgroundColor: active ? "var(--surface-container)" : "transparent",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
@@ -1776,7 +1776,7 @@ export function ProfilePage() {
                     <motion.button
                       key={surface.id}
                       onClick={() => toggleSurface(surface.id)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg active:scale-[0.98]"
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg active:scale-98"
                       animate={{
                         backgroundColor: active ? "var(--surface-container)" : "transparent",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
@@ -2044,7 +2044,7 @@ export function ProfilePage() {
                         <button
                           key={`${result.lat}-${result.lon}-${i}`}
                           onClick={() => selectLocation(result)}
-                          className="w-full flex items-center gap-3 px-3.5 py-2.5 text-left active:scale-[0.99] transition-transform"
+                          className="w-full flex items-center gap-3 px-3.5 py-2.5 text-left active:scale-99 transition-transform"
                           style={{
                             borderBottom: i < locationResults.length - 1 ? "1px solid var(--container-border-subtle)" : "none",
                           }}
@@ -2233,7 +2233,7 @@ export function ProfilePage() {
                     key={option.id}
                     type="button"
                     onClick={() => setUnitSystem(option.id)}
-                    className="flex items-start gap-3 p-3 sm:p-4 rounded-xl text-left active:scale-[0.98]"
+                    className="flex items-start gap-3 p-3 sm:p-4 rounded-xl text-left active:scale-98"
                     initial={false}
                     animate={{
                       backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
@@ -2281,7 +2281,7 @@ export function ProfilePage() {
           <button
             type="button"
             onClick={() => setPizzaNerd((value) => !value)}
-            className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left active:scale-[0.99] transition-transform"
+            className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left active:scale-99 transition-transform"
             style={{
               background: pizzaNerd
                 ? "color-mix(in srgb, var(--primary) 10%, var(--container-bg))"

@@ -81,7 +81,7 @@ export function ActiveCookWidget({
         whileTap={{ scale: 0.96 }}
         transition={liquidDockSpring}
         onClick={handleClick}
-        className={`fixed z-[70] inline-flex items-center rounded-full active-cook-widget ${
+        className={`fixed z-(--z-widget) inline-flex items-center rounded-full active-cook-widget ${
           active ? "is-active" : ""
         } ${compact ? "is-compact" : ""}`}
         style={{

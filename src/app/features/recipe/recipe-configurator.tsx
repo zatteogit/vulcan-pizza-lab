@@ -76,7 +76,7 @@ export function PremiumSelect({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`w-full flex items-center gap-2.5 px-4 py-3 rounded-xl text-left active:scale-[0.99] transition-all border
+        className={`w-full flex items-center gap-2.5 px-4 py-3 rounded-xl text-left active:scale-99 transition-all border
           ${open 
             ? "border-[var(--tertiary)] shadow-[0_0_0_1px_color-mix(in_srgb,var(--tertiary)_15%,transparent)]" 
             : "border-[var(--outline-variant)] hover:border-[var(--tertiary)]"
@@ -153,7 +153,7 @@ export function PremiumSelect({
                     />
                   )}
                   <div
-                    className="px-3 py-1 text-[10px] font-bold tracking-wider"
+                    className="px-3 py-1 text-2xs font-bold tracking-wider"
                     style={{
                       color: "var(--text-muted)",
                       textTransform: "uppercase",
@@ -235,7 +235,7 @@ function PremiumSelectRow({
       </div>
       {option.suggested && (
         <span
-          className="px-1.5 py-0.5 rounded text-[10px] font-semibold flex-shrink-0 mr-1"
+          className="px-1.5 py-0.5 rounded text-2xs font-semibold flex-shrink-0 mr-1"
           style={{
             background: active ? "color-mix(in srgb, var(--overlay-text) 20%, transparent)" : "color-mix(in srgb, var(--tertiary) 15%, transparent)",
             color: active ? "inherit" : "var(--tertiary)",
@@ -605,7 +605,7 @@ export function RecipeConfigurator({
       {/* Smart Link — barra compatta, singolo tap-target */}
       <button
         onClick={() => setSmartLink(!smartLink)}
-        className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left active:scale-[0.99] transition-all"
+        className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left active:scale-99 transition-all"
         style={{
           background: smartLink ? "color-mix(in srgb, var(--tertiary) 8%, transparent)" : "var(--surface-container)",
           border: smartLink ? "1.5px solid var(--tertiary)" : "1px solid var(--outline-variant)",
@@ -1254,7 +1254,7 @@ function BeginnerFlourPicker({
               key={f.label}
               type="button"
               onClick={() => onChange(f.w)}
-              className="flex-1 rounded-xl px-2 py-2.5 text-left transition-all active:scale-[0.98]"
+              className="flex-1 rounded-xl px-2 py-2.5 text-left transition-all active:scale-98"
               style={{
                 background: active ? "color-mix(in srgb, var(--tertiary) 12%, transparent)" : "var(--surface-container)",
                 border: active ? "1.5px solid var(--tertiary)" : "1px solid var(--outline-variant)",

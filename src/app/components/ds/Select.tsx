@@ -56,7 +56,7 @@ export function Select({
         type="button"
         disabled={disabled}
         onClick={() => setOpen((p) => !p)}
-        className="w-full flex items-center justify-between px-4 py-3 rounded-xl active:scale-[0.98] transition-transform"
+        className="w-full flex items-center justify-between px-4 py-3 rounded-xl active:scale-98 transition-transform"
         style={{
           background: "var(--surface-container)",
           border: open ? "2px solid var(--primary)" : "1px solid var(--outline-variant)",
@@ -141,7 +141,7 @@ export function Select({
                       onValueChange?.(opt.id);
                       setOpen(false);
                     }}
-                    className="w-full flex items-center justify-between px-4 py-2.5 text-left active:scale-[0.98] transition-transform"
+                    className="w-full flex items-center justify-between px-4 py-2.5 text-left active:scale-98 transition-transform"
                     style={{
                       background: isSelected
                         ? "color-mix(in srgb, var(--primary) 10%, rgba(0,0,0,0))"

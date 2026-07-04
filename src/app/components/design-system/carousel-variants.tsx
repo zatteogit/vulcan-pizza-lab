@@ -66,7 +66,7 @@ function Arrow({ dir, onClick }: { dir: "left" | "right"; onClick: () => void })
       onClick={onClick}
       whileHover={{ scale: 1.08 }}
       transition={SP.arrow}
-      className="w-9 h-9 rounded-full flex items-center justify-center active:scale-[0.82] transition-transform"
+      className="w-9 h-9 rounded-full flex items-center justify-center active:scale-82 transition-transform"
       style={{
         background: "color-mix(in srgb, var(--container-page) 88%, transparent)",
         backdropFilter: "blur(12px) saturate(1.4)",
@@ -90,7 +90,7 @@ function Dots({ count, active, onSelect, id }: { count: number; active: number; 
           <motion.button
             key={i}
             onClick={() => onSelect(i)}
-            className="relative rounded-full overflow-hidden active:scale-[0.8] transition-transform"
+            className="relative rounded-full overflow-hidden active:scale-80 transition-transform"
             style={{ border: "none", cursor: "pointer", outline: "none", padding: 0, background: "transparent" }}
             animate={{ width: isActive ? 24 : 8, height: 8 }}
             transition={SP.dot}

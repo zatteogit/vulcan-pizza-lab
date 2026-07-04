@@ -1647,7 +1647,7 @@ export function EngineTestSuite() {
               {/* Category header */}
               <button
                 onClick={() => hasResults && toggleCat(cat.id)}
-                className="w-full flex items-center justify-between p-4 active:scale-[0.99] transition-transform"
+                className="w-full flex items-center justify-between p-4 active:scale-99 transition-transform"
                 style={{ background: "transparent", cursor: hasResults ? "pointer" : "default" }}
                 disabled={!hasResults}
               >

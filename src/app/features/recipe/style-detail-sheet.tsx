@@ -563,7 +563,7 @@ export function StyleDetailSheet({
             onClick={onGenerate}
             whileHover={{ scale: 1.02 }}
             deepShadow
-            className="w-full h-13 mt-6 active:scale-[0.97]"
+            className="w-full h-13 mt-6 active:scale-97"
           >
             <Sparkles size={15} />
             {pt.sheetGenerateBtn}

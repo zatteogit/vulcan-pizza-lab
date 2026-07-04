@@ -1,8 +1,8 @@
-import { AnimatePresence, motion } from "motion/react";
 import { X, GraduationCap } from "lucide-react";
 import type { PizzaStyle } from "../../domain/pizza-engine";
 import { formatOrigin } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
+import { ModalSheet } from "../../components/ds/index";
 
 export function RecipeLearningPanel({
   open,
@@ -17,37 +17,16 @@ export function RecipeLearningPanel({
 }) {
   const { cms } = useCms();
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center px-4 py-5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          style={{
-            background: "var(--dialog-scrim)",
-            backdropFilter: "blur(10px)",
-            WebkitBackdropFilter: "blur(10px)",
-          }}
-          onClick={onClose}
-        >
-          <motion.section
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Approfondimenti su ${style.name}`}
-            initial={{ y: 28, opacity: 0, scale: 0.98 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 22, opacity: 0, scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 420, damping: 34 }}
-            className="w-full max-w-2xl rounded-3xl overflow-hidden"
-            style={{
-              background: "var(--container-bg)",
-              color: "var(--text-default)",
-              border: "1px solid var(--container-border)",
-              boxShadow: "var(--dialog-shadow)",
-            }}
-            onClick={(event) => event.stopPropagation()}
-          >
+    <ModalSheet
+      open={open}
+      onClose={onClose}
+      ariaLabel={`Approfondimenti su ${style.name}`}
+      size="lg"
+      scrim="soft"
+      surface="solid"
+      entry="pop"
+      panelClassName="overflow-hidden"
+    >
             <div
               className="flex items-start gap-4 px-5 py-5 sm:px-6"
               style={{ borderBottom: "1px solid var(--container-border-subtle)" }}
@@ -131,9 +110,6 @@ export function RecipeLearningPanel({
                 ))}
               </div>
             </div>
-          </motion.section>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    </ModalSheet>
   );
 }

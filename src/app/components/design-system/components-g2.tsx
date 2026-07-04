@@ -80,7 +80,7 @@ function TooltipSpec() {
                 onMouseLeave={() => setHoveredPlain(null)}
               >
                 <motion.button
-                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-[0.9] transition-transform"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-90 transition-transform"
                   style={{
                     background: "var(--surface-container)",
                     border: "none",
@@ -134,7 +134,7 @@ function TooltipSpec() {
               <div key={item.id} className="relative">
                 <button
                   onClick={() => setOpenRich(isOpen ? null : item.id)}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-[0.9] transition-transform"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-90 transition-transform"
                   style={{
                     background: isOpen ? "color-mix(in srgb, var(--primary) 12%, transparent)" : "var(--surface-container)",
                     border: "none",
@@ -341,7 +341,7 @@ function DialogSpec() {
               <div className="flex items-center gap-3">
                 <motion.button
                   onClick={() => setFullOpen(false)}
-                  className="w-10 h-10 rounded-full flex items-center justify-center active:scale-[0.9] transition-transform"
+                  className="w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform"
                   style={{ background: "rgba(0,0,0,0)", border: "none", cursor: "pointer", outline: "none", color: "var(--text-default)" }}
                   aria-label="Chiudi"
                 >
@@ -512,7 +512,7 @@ function IconButtonSpec() {
                   <motion.button
                     key={i}
                     whileHover={{ scale: 1.05 }}
-                    className="w-10 h-10 rounded-full flex items-center justify-center active:scale-[0.85] transition-transform"
+                    className="w-10 h-10 rounded-full flex items-center justify-center active:scale-85 transition-transform"
                     style={{
                       background: v.bg,
                       color: v.fg,
@@ -545,7 +545,7 @@ function IconButtonSpec() {
               <div key={item.id} className="flex flex-col items-center gap-2">
                 <button
                   onClick={() => toggleIcon(item.id)}
-                  className="w-12 h-12 rounded-full flex items-center justify-center active:scale-[0.8]"
+                  className="w-12 h-12 rounded-full flex items-center justify-center active:scale-80"
                   style={{
                     background: isOn ? "var(--primary)" : "rgba(0,0,0,0)",
                     color: isOn ? "var(--primary-foreground)" : "var(--on-surface-variant)",
@@ -587,7 +587,7 @@ function IconButtonSpec() {
           ].map((s) => (
             <div key={s.label} className="flex flex-col items-center gap-2">
               <motion.div
-                className="rounded-full flex items-center justify-center cursor-pointer active:scale-[0.85] transition-transform"
+                className="rounded-full flex items-center justify-center cursor-pointer active:scale-85 transition-transform"
                 style={{
                   width: s.size,
                   height: s.size,

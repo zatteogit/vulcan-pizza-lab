@@ -255,7 +255,7 @@ export function LearnPage() {
           </div>
           <Link
             to={`/recipe/${path.styleId}?mode=adapted`}
-            className="block relative overflow-hidden rounded-3xl active:scale-[0.99] transition-all duration-300 group"
+            className="block relative overflow-hidden rounded-3xl active:scale-99 transition-all duration-300 group"
             style={{
               textDecoration: "none",
               color: "var(--overlay-text)",
@@ -376,7 +376,7 @@ export function LearnPage() {
 
           <Link
             to="/learn/glossary"
-            className="block rounded-2xl active:scale-[0.99] transition-all duration-300 group"
+            className="block rounded-2xl active:scale-99 transition-all duration-300 group"
             style={{
               textDecoration: "none",
               color: "inherit",
@@ -517,7 +517,7 @@ export function LearnPage() {
                 >
                   <Link
                     to={section.to + linkSearch}
-                    className="relative flex items-center gap-5 rounded-2xl overflow-hidden active:scale-[0.98] transition-all duration-300 group"
+                    className="relative flex items-center gap-5 rounded-2xl overflow-hidden active:scale-98 transition-all duration-300 group"
                     style={{
                       textDecoration: "none",
                       color: "inherit",

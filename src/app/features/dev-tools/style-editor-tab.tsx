@@ -595,7 +595,7 @@ function ToggleField({
   return (
     <button
       onClick={() => onChange(!value)}
-      className="flex items-center gap-3 p-2.5 rounded-lg w-full active:scale-[0.98] transition-transform"
+      className="flex items-center gap-3 p-2.5 rounded-lg w-full active:scale-98 transition-transform"
       style={{
         background: value
           ? "color-mix(in srgb, var(--cta) 12%, transparent)"
@@ -662,7 +662,7 @@ function Section({
     >
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-3.5 active:scale-[0.99] transition-transform"
+        className="w-full flex items-center justify-between p-3.5 active:scale-99 transition-transform"
         style={{ background: "transparent" }}
       >
         <div className="flex items-center gap-2.5">
@@ -1712,7 +1712,7 @@ export function StyleEditorTab() {
           <button
             key={m.id}
             onClick={() => setEditorMode(m.id)}
-            className="flex items-center gap-2 flex-1 justify-center px-4 py-3 rounded-xl type-data-base active:scale-[0.98] transition-transform"
+            className="flex items-center gap-2 flex-1 justify-center px-4 py-3 rounded-xl type-data-base active:scale-98 transition-transform"
             style={{
               background: editorMode === m.id ? "var(--container-page)" : "transparent",
               color: editorMode === m.id ? "var(--text-default)" : "var(--text-muted)",
@@ -1798,7 +1798,7 @@ export function StyleEditorTab() {
         >
           <button
             onClick={() => setShowPipeline(!showPipeline)}
-            className="w-full flex items-center justify-between active:scale-[0.99] transition-transform"
+            className="w-full flex items-center justify-between active:scale-99 transition-transform"
             style={{ background: "transparent" }}
           >
             <div className="flex items-center gap-2.5">
@@ -1900,7 +1900,7 @@ export function StyleEditorTab() {
         >
           <button
             onClick={() => setShowSchema(!showSchema)}
-            className="w-full flex items-center justify-between active:scale-[0.99] transition-transform"
+            className="w-full flex items-center justify-between active:scale-99 transition-transform"
             style={{ background: "transparent" }}
           >
             <div className="flex items-center gap-2.5">
@@ -2272,7 +2272,7 @@ export function StyleEditorTab() {
         >
           <button
             onClick={() => setShowDiff(!showDiff)}
-            className="w-full flex items-center justify-between active:scale-[0.99] transition-transform"
+            className="w-full flex items-center justify-between active:scale-99 transition-transform"
             style={{ background: "transparent" }}
           >
             <div className="flex items-center gap-2.5">
