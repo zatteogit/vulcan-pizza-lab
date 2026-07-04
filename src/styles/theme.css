@@ -217,6 +217,7 @@
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;
+  --weight-extrabold: 800;
 
   /* ── Typography Primitives · Paragraph ── */
   --paragraph-spacing: 0.75em;
@@ -267,7 +268,6 @@
   --background: var(--color-parchment-50);
   --foreground: var(--color-night-1000);
   --card: var(--color-parchment-0);
-  --popover: var(--color-parchment-0);
   --primary: var(--color-terracotta-500);
   --ring: var(--color-terracotta-600);
   --primary-foreground: var(--color-white);
@@ -388,7 +388,6 @@
   --shadow-glow: 0 0 0 3px rgba(194, 74, 47, 0.14);
   --shadow-cta: 0 4px 14px rgba(45, 106, 79, 0.2);
 
-  --elevation-glow: var(--shadow-glow);
   --elevation-glow-lg: 0 0 0 4px rgba(194, 74, 47, 0.18);
   --elevation-cta: var(--shadow-cta);
 
@@ -830,7 +829,6 @@
   --background: var(--color-night-900);
   --foreground: var(--color-night-0);
   --card: var(--color-night-700);
-  --popover: var(--color-night-700);
   --primary: var(--color-terracotta-300);
   --ring: var(--color-terracotta-300);
   --primary-foreground: var(--color-terracotta-900);
@@ -939,7 +937,6 @@
   --shadow-glow: 0 0 0 3px rgba(244, 146, 106, 0.25);
   --shadow-cta: 0 4px 14px rgba(114, 200, 166, 0.18);
 
-  --elevation-glow: var(--shadow-glow);
   --elevation-glow-lg: 0 0 0 4px rgba(244, 146, 106, 0.3);
   --elevation-cta: var(--shadow-cta);
 

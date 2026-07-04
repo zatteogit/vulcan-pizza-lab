@@ -3,7 +3,6 @@
 
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useState, type ReactNode } from "react";
-import { createPortal } from "react-dom";
 import { Link } from "react-router";
 import { X } from "lucide-react";
 import { GLOSSARY_TERMS } from "../../data/glossary-data";
@@ -167,8 +166,7 @@ export function GlossaryWLink({ w }: { w: number }) {
       >
         W{w}
       </button>
-      {createPortal(
-        <ModalSheet
+      <ModalSheet
           open={open}
           onClose={() => setOpen(false)}
           ariaLabel={term.name}
@@ -281,9 +279,7 @@ export function GlossaryWLink({ w }: { w: number }) {
                 >
                   {cms.cooking.learnMore} →
                 </Link>
-        </ModalSheet>,
-        document.body,
-      )}
+        </ModalSheet>
     </>
   );
 }

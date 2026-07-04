@@ -5,6 +5,7 @@
  * card centrata da `sm` in su. Scrim, superficie, animazione e layering
  * consumano SOLO token (`--z-modal`, `--backdrop-glass-*`, `--sheet-glass-bg`,
  * `--dialog-*`, `--container-*`). Chiude su click-scrim e su Escape.
+ * Monta in portal su document.body: i call site non devono portalare.
  *
  * Varianti ortogonali:
  *  - `scrim`    glass (blur forte) · soft (blur leggero) · plain (solo tinta)
@@ -16,6 +17,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
 import type { ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 export interface ModalSheetProps {
   open: boolean;
@@ -120,7 +122,10 @@ export function ModalSheet({
     ? "rounded-t-4xl sm:rounded-4xl border-0 sm:border"
     : "rounded-4xl border";
 
-  return (
+  /* Portal su body: `fixed inset-0` si rompe sotto antenati con transform
+   * (es. pannelli motion draggabili), quindi il portal è responsabilità del
+   * guscio, non dei call site. */
+  const sheet = (
     <AnimatePresence>
       {open && (
         <motion.div
@@ -154,4 +159,7 @@ export function ModalSheet({
       )}
     </AnimatePresence>
   );
+
+  if (typeof document === "undefined") return sheet;
+  return createPortal(sheet, document.body);
 }
