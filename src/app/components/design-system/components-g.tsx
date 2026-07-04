@@ -1,6 +1,5 @@
 import { Check,ChevronDown,Minus } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
-import { useEffect,useRef,useState } from "react";
+import { useState } from "react";
 import type { SectionEntry } from "./shared";
 import {
 AccessibilitaInfo,
@@ -298,21 +297,7 @@ const FLOUR_OPTIONS = [
 ];
 
 function SelectSpec() {
-  const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>("00");
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  const selectedOption = FLOUR_OPTIONS.find((o) => o.id === selected);
 
   return (
     <div className="flex flex-col gap-8">

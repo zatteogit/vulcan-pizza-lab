@@ -44,7 +44,7 @@ import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
 import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { RecommendedStyles,STYLE_PHOTOS } from "../features/recipe/recommended-styles";
-import { useDarkMode } from "../components/shared/root-layout";
+import { useDarkMode } from "../hooks/use-dark-mode";
 import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 import { VulcanHero } from "../components/shared/vulcan-hero";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */

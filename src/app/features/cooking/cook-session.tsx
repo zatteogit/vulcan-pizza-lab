@@ -52,7 +52,7 @@ export interface CookSessionStep {
   done: boolean;
 }
 
-export interface CookSession {
+interface CookSession {
   styleName: string;
   styleId: string;
   createdAt: number;

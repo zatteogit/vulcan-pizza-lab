@@ -415,12 +415,3 @@ export function DoughBlob({
     </div>
   );
 }
-
-// ═══ HELPERS ═══
-function moodFromScore(score: number): DoughVariant {
-  if (score >= 80) return 'rise';
-  if (score >= 60) return 'stretch';
-  if (score >= 40) return 'fold';
-  return 'rest';
-}
-

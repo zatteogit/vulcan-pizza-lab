@@ -43,7 +43,7 @@ function calculateHistamine(
 }
 
 /* === CONTEXTUAL DIETARY WARNINGS (based on recipe params) === */
-export interface DietaryWarning {
+interface DietaryWarning {
   filterId: string;
   message: string;
   tip: string;

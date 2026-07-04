@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createContext, useContext, useId } from "react";
+import React, { useState, createContext, useContext, useId } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Check, X } from "lucide-react";
 
@@ -15,7 +15,7 @@ export interface SectionEntry {
 }
 
 /* ── Section Number Context (auto-injected by index.tsx) ── */
-export interface SectionNumValue {
+interface SectionNumValue {
   num: string;
   category: string;
 }
@@ -56,7 +56,7 @@ export function resolveVar(
 }
 
 /* ── Dark Mode Context (forwarded from page) ── */
-export interface DSContext {
+interface DSContext {
   darkMode: boolean;
   setDarkMode: (v: boolean) => void;
 }

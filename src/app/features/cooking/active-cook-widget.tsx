@@ -10,8 +10,7 @@ import {
 } from "./cook-session";
 import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
-import { CtaButton } from "../../components/ds/index";
-import { liquidDockButtonStyle, liquidDockQuickSpring, liquidDockSpring, liquidDockStartButtonStyle } from "../../domain/liquid-dock";
+import { liquidDockButtonStyle, liquidDockSpring, liquidDockStartButtonStyle } from "../../domain/liquid-dock";
 
 export function ActiveCookWidget({
   canStartRecipe = false,

@@ -19,7 +19,7 @@ supportsThickness,
 import { StyleVersion } from "../../data/style-versions";
 import { SegmentedControl, Switch } from "../../components/ds/index";
 
-export interface PremiumSelectOption {
+interface PremiumSelectOption {
   value: string;
   label: string;
   subLabel?: string;
@@ -27,7 +27,7 @@ export interface PremiumSelectOption {
   suggested?: boolean;
 }
 
-export interface PremiumSelectGroup {
+interface PremiumSelectGroup {
   label: string;
   options: PremiumSelectOption[];
 }

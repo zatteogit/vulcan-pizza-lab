@@ -36,7 +36,7 @@ const isToppingTimelineStep = (stepId: string) =>
 
 type Compensation = NonNullable<GeneratedRecipe["science"]>["compensations"][number];
 
-export interface ProcedureTimelineProps {
+interface ProcedureTimelineProps {
   recipe: GeneratedRecipe;
   isNerd: boolean;
   compensations: Compensation[];

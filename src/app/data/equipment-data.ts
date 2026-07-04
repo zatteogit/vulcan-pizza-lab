@@ -7,7 +7,7 @@
 export type MixerType = "hands" | "planetary" | "spiral" | "fork" | "stand_domestic";
 type MixerLevel = "domestic" | "semi_pro" | "professional";
 
-export interface MixerOption {
+interface MixerOption {
   id: MixerType;
   label: string;
   description: string;
@@ -76,7 +76,7 @@ export type SurfaceType =
   | "blue_steel_pan"
   | "oven_rack";
 
-export interface SurfaceOption {
+interface SurfaceOption {
   id: SurfaceType;
   label: string;
   description: string;
@@ -159,7 +159,7 @@ const SURFACE_OPTIONS: SurfaceOption[] = [
 
 export type ToolCategory = "essential" | "precision" | "handling" | "containment";
 
-export interface ToolOption {
+interface ToolOption {
   id: string;
   label: string;
   emoji: string;
@@ -318,12 +318,6 @@ const TOOL_CMS_MAP: Record<string, { label: keyof EquipCmsLabels; desc: keyof Eq
   pizza_screen: { label: "toolPizzaScreen", desc: "toolPizzaScreenDesc" },
   proofing_boxes: { label: "toolProofingBoxes", desc: "toolProofingBoxesDesc" },
   bannetons: { label: "toolBannetons", desc: "toolBannetonsDesc" },
-};
-
-const LEVEL_CMS_MAP: Record<MixerLevel, keyof EquipCmsLabels> = {
-  domestic: "mixerLevelHome",
-  semi_pro: "mixerLevelSemiPro",
-  professional: "mixerLevelPro",
 };
 
 const CAT_CMS_MAP: Record<ToolCategory, keyof EquipCmsLabels> = {

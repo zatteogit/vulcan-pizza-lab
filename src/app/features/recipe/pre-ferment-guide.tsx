@@ -10,7 +10,7 @@ import { useCms } from "../cms/cms-context";
 import { Flask } from "../cooking/step-illustrations";
 
 /* === PRE-FERMENT DATA (Italian fallback) === */
-export interface PreFermentInfo {
+interface PreFermentInfo {
   id: string;
   name: string;
   origin: string;

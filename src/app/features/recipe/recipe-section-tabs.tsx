@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ListChecks, ScrollText, Utensils, ChefHat } from "lucide-react";
+import { ListChecks, Utensils, ChefHat } from "lucide-react";
 import { type CSSProperties, type ComponentType } from "react";
 import { useCms } from "../cms/cms-context";
 import { SearchButton } from "../../components/shared/search-button";

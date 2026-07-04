@@ -23,7 +23,7 @@ import {
   shiftQuarter,
 } from "./recipe-output-format";
 
-export interface ProcedureHeroControlsProps {
+interface ProcedureHeroControlsProps {
   startTime: Date;
   setStartTime: Dispatch<SetStateAction<Date>>;
   endTime: Date;

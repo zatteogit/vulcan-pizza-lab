@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { useNavigate } from "react-router";
 import { DesignSystemTab } from "../components/design-system/index";
 import { Surface } from "../components/ds/index";
-import { useDarkMode } from "../components/shared/root-layout";
+import { useDarkMode } from "../hooks/use-dark-mode";
 
 /**
  * Standalone Design System page at /design-system

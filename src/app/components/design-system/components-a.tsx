@@ -1,5 +1,5 @@
-import { ArrowRight,Check,Flame,Lightbulb,Moon,Star,Sun,Timer } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
+import { ArrowRight,Flame,Lightbulb,Moon,Star,Sun,Timer } from "lucide-react";
+import { motion } from "motion/react";
 import { useState } from "react";
 import { ImageWithFallback } from "../media/ImageWithFallback";
 import type { SectionEntry } from "./shared";
@@ -7,12 +7,6 @@ import { AccessibilitaInfo,LineeGuida,Panoramica,SectionHeader,SubSectionLabel }
 import { CtaButton, Badge, StepHeader, Chip, Surface, Slider } from "../ds/index";
 
 /* ═══ C01: BUTTONS ═══ */
-const BTN_V = [
-  { v: "Primary", bg: "var(--cta)", c: "var(--cta-foreground)", b: "none", h: "color-mix(in srgb,var(--cta) 88%,black)" },
-  { v: "Secondary", bg: "var(--surface-container)", c: "var(--text-default)", b: "1px solid var(--outline-variant)", h: "var(--surface-container-high)" },
-  { v: "Ghost", bg: "rgba(0,0,0,0)", c: "var(--primary)", b: "none", h: "color-mix(in srgb,var(--primary) 8%,transparent)" },
-  { v: "Destructive", bg: "var(--destructive)", c: "var(--destructive-foreground)", b: "none", h: "color-mix(in srgb,var(--destructive) 88%,black)" },
-];
 function ButtonsSpec() {
   return (
     <div className="flex flex-col gap-8">

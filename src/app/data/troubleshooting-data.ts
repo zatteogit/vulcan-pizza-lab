@@ -232,7 +232,7 @@ export function getLocalizedCategoryLabel(category: string, cms?: CmsContent): s
 /* === CONTEXTUAL WARNINGS === */
 /* Genera avvisi contestuali basati sui parametri della ricetta */
 
-export interface ContextualWarning {
+interface ContextualWarning {
   issueId: string;
   message: string;
   tip: string;

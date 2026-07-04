@@ -16,7 +16,7 @@ import {
 } from "../../data/topping-library";
 import { authenticityLabel, engineMessage } from "./recipe-output-format";
 
-export const FLAVOR_PROFILE_LABELS: Record<FlavorProfile, string> = {
+const FLAVOR_PROFILE_LABELS: Record<FlavorProfile, string> = {
   fresh: "Freschi",
   earthy: "Bosco",
   spicy: "Piccanti",
@@ -27,7 +27,7 @@ export const FLAVOR_PROFILE_LABELS: Record<FlavorProfile, string> = {
   light: "Leggeri",
 };
 
-export const FLAVOR_PROFILE_ORDER: FlavorProfile[] = [
+const FLAVOR_PROFILE_ORDER: FlavorProfile[] = [
   "fresh",
   "light",
   "creamy",
@@ -38,7 +38,7 @@ export const FLAVOR_PROFILE_ORDER: FlavorProfile[] = [
   "sweet_savory",
 ];
 
-export function normalizeSearch(value: string): string {
+function normalizeSearch(value: string): string {
   return value
     .toLocaleLowerCase("it")
     .normalize("NFD")

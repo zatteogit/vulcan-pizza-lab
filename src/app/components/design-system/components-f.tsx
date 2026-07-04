@@ -42,10 +42,8 @@ const FAB_COLORS = [
 function FABSpec() {
   const [activeVariant, setActiveVariant] = useState("standard");
   const [activeColor, setActiveColor] = useState("primary");
-  const [fabPressed, setFabPressed] = useState(false);
 
   const variant = FAB_VARIANTS.find((v) => v.id === activeVariant)!;
-  const color = FAB_COLORS.find((c) => c.id === activeColor)!;
 
   return (
     <div className="flex flex-col gap-8">

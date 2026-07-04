@@ -16,7 +16,7 @@ import { Link,Outlet,useLocation,useNavigate } from "react-router";
 import { ActiveCookWidget } from "../../features/cooking/active-cook-widget";
 import { CmsProvider,useCms } from "../../features/cms/cms-context";
 import { CookSessionProvider,useCookSession } from "../../features/cooking/cook-session";
-import type { DarkModeContext,ThemeMode } from "./root-layout";
+import type { DarkModeContext,ThemeMode } from "../../hooks/use-dark-mode";
 import { SearchButton } from "./search-button";
 
 /* Audit bundle lug 2026: CookingMode e SearchOverlay trascinavano motore,

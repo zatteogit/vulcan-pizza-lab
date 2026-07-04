@@ -9,7 +9,7 @@
  *    sale e grassi appartengono all'impasto finale.
  */
 
-export interface PreFermentSplit {
+interface PreFermentSplit {
   name: "Biga" | "Poolish";
   isPoolish: boolean;
   /** Idratazione del pre-fermento (45 biga · 100 poolish). */

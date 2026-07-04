@@ -1,6 +1,6 @@
 import { useNavigate,useParams } from "react-router";
 import { DevTools } from "../features/dev-tools/dev-tools";
-import { useDarkMode } from "../components/shared/root-layout";
+import { useDarkMode } from "../hooks/use-dark-mode";
 
 export function DevToolsPage() {
   const navigate = useNavigate();
