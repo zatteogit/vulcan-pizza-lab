@@ -14,6 +14,7 @@ import {
   MapPin,
   Cloud,
   CloudOff,
+  RefreshCw,
   Square,
   Circle,
 } from "lucide-react";
@@ -24,7 +25,6 @@ import { compilePrompt } from "./compile-prompt";
 import { useConsoleCapture } from "./use-console-capture";
 import { usePinPositions } from "./use-pin-positions";
 import { useAnnotations } from "./use-annotations";
-import { createGist, loadGistConfig, saveGistConfig } from "./gist-sync";
 
 interface DebugWorkspaceProps {
   showToast: (msg: string) => void;
@@ -43,7 +43,7 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { annotations, upsert, remove, setResolved, clearAll, gistConfigured, configureGist } =
+  const { annotations, upsert, remove, setResolved, clearAll, remoteConfigured, syncing, lastSync, refresh } =
     useAnnotations();
   const consoleLogsRef = useConsoleCapture();
 
@@ -72,9 +72,6 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
   const [formPriority, setFormPriority] = useState<"low" | "medium" | "high">("medium");
   const [firstDrawPoint, setFirstDrawPoint] = useState<{ pageX: number; pageY: number } | null>(null);
   const [tempAnnotation, setTempAnnotation] = useState<Partial<Annotation> | null>(null);
-
-  // Gist settings panel
-  const [showGistSettings, setShowGistSettings] = useState(false);
 
   const pinPositions = usePinPositions(annotations, location.pathname, true);
 
@@ -716,28 +713,28 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
                 <span>AI Debug Assistant</span>
               </div>
               <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setShowGistSettings((s) => !s)}
-                  className="p-1 rounded-md transition-colors"
-                  style={{ color: gistConfigured ? "var(--text-success)" : "var(--text-muted)", background: "transparent" }}
-                  title={gistConfigured ? "Sync Gist attivo" : "Configura sync Gist"}
+                <span
+                  className="flex items-center gap-1 text-[9px] font-semibold"
+                  style={{ color: remoteConfigured ? "var(--text-success)" : "var(--text-muted)" }}
+                  title={remoteConfigured ? "Sync cloud attiva (D1)" : "Solo locale: imposta VITE_ANNOTATIONS_API per la sync cloud"}
                 >
-                  {gistConfigured ? <Cloud size={14} /> : <CloudOff size={14} />}
+                  {remoteConfigured ? <Cloud size={13} /> : <CloudOff size={13} />}
+                  {lastSync ? new Date(lastSync).toLocaleTimeString() : ""}
+                </span>
+                <button
+                  onClick={() => { void refresh(); }}
+                  disabled={syncing}
+                  className="p-1 rounded-md transition-colors disabled:opacity-50"
+                  style={{ color: "var(--text-muted)", background: "transparent" }}
+                  title="Sync ora"
+                >
+                  <RefreshCw size={13} className={syncing ? "animate-spin" : ""} />
                 </button>
                 <button onClick={() => setIsOpen(false)} className="p-1 rounded-md transition-colors" style={{ color: "var(--text-muted)", background: "transparent" }}>
                   <X size={14} />
                 </button>
               </div>
             </div>
-
-            {showGistSettings && (
-              <GistSettings
-                onClose={() => setShowGistSettings(false)}
-                onConfigured={configureGist}
-                annotations={annotations}
-                showToast={showToast}
-              />
-            )}
 
             <div className="grid grid-cols-2 gap-2 text-xs">
               <button onClick={startNewPin} className="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg font-bold text-white transition-all active:scale-95" style={{ background: "var(--primary)", color: "var(--primary-foreground)" }}>
@@ -819,96 +816,5 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
         )}
       </AnimatePresence>
     </>
-  );
-}
-
-/* ═══ GIST SYNC SETTINGS ═══ */
-function GistSettings({
-  onClose,
-  onConfigured,
-  annotations,
-  showToast,
-}: {
-  onClose: () => void;
-  onConfigured: (cfg: { token: string; gistId: string } | null) => void;
-  annotations: Annotation[];
-  showToast: (msg: string) => void;
-}) {
-  const initial = loadGistConfig();
-  const [token, setToken] = useState(initial?.token || "");
-  const [gistId, setGistId] = useState(initial?.gistId || "");
-  const [busy, setBusy] = useState(false);
-
-  const save = () => {
-    if (!token.trim() || !gistId.trim()) return;
-    const cfg = { token: token.trim(), gistId: gistId.trim() };
-    saveGistConfig(cfg);
-    onConfigured(cfg);
-    showToast("Sync Gist attivato");
-    onClose();
-  };
-
-  const create = async () => {
-    if (!token.trim()) {
-      showToast("Inserisci prima un token");
-      return;
-    }
-    setBusy(true);
-    const id = await createGist(token.trim(), annotations);
-    setBusy(false);
-    if (id) {
-      setGistId(id);
-      const cfg = { token: token.trim(), gistId: id };
-      saveGistConfig(cfg);
-      onConfigured(cfg);
-      showToast("Gist creato e sync attivo");
-      onClose();
-    } else {
-      showToast("Creazione gist fallita (token?)");
-    }
-  };
-
-  const disconnect = () => {
-    saveGistConfig(null);
-    onConfigured(null);
-    setToken("");
-    setGistId("");
-    showToast("Sync Gist disattivato");
-    onClose();
-  };
-
-  return (
-    <div className="flex flex-col gap-2 p-3 rounded-lg border" style={{ borderColor: "var(--container-border)", background: "var(--surface-container)" }}>
-      <div className="text-[10px] leading-snug" style={{ color: "var(--text-muted)" }}>
-        Sync opzionale via GitHub Gist per condividere i pin fra produzione e locale. Il token (scope <strong>gist</strong>) resta solo in questo browser.
-      </div>
-      <input
-        type="password"
-        value={token}
-        onChange={(e) => setToken(e.target.value)}
-        placeholder="GitHub token (scope: gist)"
-        className="w-full px-2.5 py-1.5 rounded-lg text-xs border outline-none"
-        style={{ background: "var(--container-bg)", borderColor: "var(--container-border)", color: "var(--text-default)" }}
-      />
-      <input
-        type="text"
-        value={gistId}
-        onChange={(e) => setGistId(e.target.value)}
-        placeholder="Gist ID (o creane uno nuovo)"
-        className="w-full px-2.5 py-1.5 rounded-lg text-xs border outline-none"
-        style={{ background: "var(--container-bg)", borderColor: "var(--container-border)", color: "var(--text-default)" }}
-      />
-      <div className="flex gap-2">
-        <button onClick={save} disabled={!token.trim() || !gistId.trim()} className="flex-1 py-1.5 rounded-lg text-xs font-bold border disabled:opacity-50 transition-all active:scale-95" style={{ background: "var(--primary)", color: "var(--primary-foreground)", borderColor: "transparent" }}>
-          Attiva
-        </button>
-        <button onClick={create} disabled={busy || !token.trim()} className="flex-1 py-1.5 rounded-lg text-xs font-bold border disabled:opacity-50 transition-all active:scale-95" style={{ background: "transparent", borderColor: "var(--container-border)", color: "var(--text-default)" }}>
-          {busy ? "..." : "Crea gist"}
-        </button>
-      </div>
-      <button onClick={disconnect} className="text-[10px] underline transition-colors" style={{ color: "var(--text-error)" }}>
-        Disconnetti sync
-      </button>
-    </div>
   );
 }

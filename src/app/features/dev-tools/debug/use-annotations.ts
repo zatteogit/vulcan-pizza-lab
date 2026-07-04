@@ -6,16 +6,12 @@ import {
   nextIndex,
   purgeExpiredTombstones,
 } from "./merge-registries";
-import {
-  fetchGistRegistry,
-  loadGistConfig,
-  pushGistRegistry,
-  type GistConfig,
-} from "./gist-sync";
+import { fetchRemote, isRemoteConfigured, pushRemote } from "./api-sync";
 
 const LS_KEY = "vulcan_debug_registry";
 const FILE_ENDPOINT = "/api/save-annotations";
 const PUSH_DEBOUNCE_MS = 800;
+const POLL_INTERVAL_MS = 20000;
 
 function readLocal(): Annotation[] {
   try {
@@ -46,133 +42,161 @@ async function fetchFileRegistry(): Promise<Annotation[] | null> {
 }
 
 function pushFileRegistry(list: Annotation[]) {
-  // Dev-only endpoint; silently a no-op in production/preview.
+  // Dev-only Vite endpoint that keeps vulcan-debug-registry.json live for the
+  // "risolvi i commenti" workflow; silently a no-op in production/preview.
   fetch(FILE_ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(list, null, 2),
+    keepalive: true,
   }).catch(() => {});
 }
 
 /**
  * Single source of truth for the overlay's annotations. Reconciles three
- * storage layers (localStorage, the dev file endpoint, an optional gist) with
- * last-write-wins-by-id, and fans every mutation back out to all three.
- * Callers see only live annotations; tombstones are handled internally.
+ * storage layers — localStorage (instant/offline cache), the dev file endpoint,
+ * and the shared Cloudflare/D1 remote — with last-write-wins-by-id, and fans
+ * every mutation back out. Polls the remote so pins made in another environment
+ * appear without a reload. Callers see only live annotations.
  */
 export function useAnnotations() {
   const [registry, setRegistry] = useState<Annotation[]>(() => readLocal());
-  const gistConfigRef = useRef<GistConfig | null>(loadGistConfig());
-  const [gistConfigured, setGistConfigured] = useState(() => gistConfigRef.current !== null);
+  const [remoteConfigured] = useState(() => isRemoteConfigured());
+  const [syncing, setSyncing] = useState(false);
+  const [lastSync, setLastSync] = useState<number | null>(null);
+
+  const registryRef = useRef(registry);
+  registryRef.current = registry;
   const pushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingPush = useRef(false);
 
   const annotations = useMemo(() => activeAnnotations(registry), [registry]);
 
-  /* ── Persist a new registry to every layer (localStorage now, remote debounced) ── */
-  const persist = useCallback((next: Annotation[]) => {
+  /* ── Adopt a reconciled registry into state + local cache ── */
+  const adopt = useCallback((next: Annotation[]) => {
     const pruned = purgeExpiredTombstones(next);
     setRegistry(pruned);
     writeLocal(pruned);
-
-    if (pushTimer.current) clearTimeout(pushTimer.current);
-    pushTimer.current = setTimeout(() => {
-      pushFileRegistry(pruned);
-      const cfg = gistConfigRef.current;
-      if (cfg) void pushGistRegistry(cfg, pruned);
-    }, PUSH_DEBOUNCE_MS);
+    return pruned;
   }, []);
 
-  /* ── Initial reconciliation across layers ── */
+  /* ── Flush the current registry to the writable layers ── */
+  const flushPush = useCallback(() => {
+    if (!pendingPush.current) return;
+    pendingPush.current = false;
+    const current = registryRef.current;
+    pushFileRegistry(current);
+    if (isRemoteConfigured()) {
+      void pushRemote(current).then((canonical) => {
+        if (canonical) {
+          const merged = mergeRegistries(canonical, registryRef.current);
+          adopt(merged);
+          setLastSync(Date.now());
+        }
+      });
+    }
+  }, [adopt]);
+
+  /* ── Persist a new registry (local now, remote debounced) ── */
+  const persist = useCallback(
+    (next: Annotation[]) => {
+      const pruned = adopt(next);
+      pendingPush.current = true;
+      if (pushTimer.current) clearTimeout(pushTimer.current);
+      pushTimer.current = setTimeout(flushPush, PUSH_DEBOUNCE_MS);
+      return pruned;
+    },
+    [adopt, flushPush],
+  );
+
+  /* ── Pull remote + file and reconcile ── */
+  const refresh = useCallback(async () => {
+    setSyncing(true);
+    const [file, remote] = await Promise.all([
+      fetchFileRegistry(),
+      isRemoteConfigured() ? fetchRemote() : Promise.resolve(null),
+    ]);
+    // Local last so a mutation made while fetching isn't lost.
+    const merged = mergeRegistries(remote, file, readLocal());
+    const adopted = adopt(merged);
+    // Backfill whatever layer was stale.
+    if (file) pushFileRegistry(adopted);
+    if (remote !== null) void pushRemote(adopted);
+    setLastSync(Date.now());
+    setSyncing(false);
+  }, [adopt]);
+
+  /* ── Initial reconciliation ── */
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const [file, gist] = await Promise.all([
-        fetchFileRegistry(),
-        gistConfigRef.current ? fetchGistRegistry(gistConfigRef.current) : Promise.resolve(null),
-      ]);
-      if (cancelled) return;
-      // Local last so a mutation made before the fetch resolved isn't lost.
-      const merged = purgeExpiredTombstones(mergeRegistries(gist, file, readLocal()));
-      setRegistry(merged);
-      writeLocal(merged);
-      // Backfill the merged view to any writable layer that was stale.
-      if (file) pushFileRegistry(merged);
-      if (gist && gistConfigRef.current) void pushGistRegistry(gistConfigRef.current, merged);
-    })();
-    return () => {
-      cancelled = true;
-    };
+    void refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => () => {
-    if (pushTimer.current) clearTimeout(pushTimer.current);
-  }, []);
+  /* ── Poll the remote for cross-environment changes ── */
+  useEffect(() => {
+    if (!remoteConfigured) return;
+    const interval = setInterval(() => {
+      void (async () => {
+        const remote = await fetchRemote();
+        if (remote) {
+          adopt(mergeRegistries(remote, registryRef.current));
+          setLastSync(Date.now());
+        }
+      })();
+    }, POLL_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [remoteConfigured, adopt]);
+
+  /* ── Flush pending writes before the tab goes away ── */
+  useEffect(() => {
+    const onHide = () => {
+      if (pushTimer.current) clearTimeout(pushTimer.current);
+      flushPush();
+    };
+    window.addEventListener("pagehide", onHide);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") onHide();
+    });
+    return () => {
+      window.removeEventListener("pagehide", onHide);
+      if (pushTimer.current) clearTimeout(pushTimer.current);
+    };
+  }, [flushPush]);
 
   /* ── Mutators ── */
 
-  /** Insert or update an annotation, stamping sync metadata. */
   const upsert = useCallback((anno: Annotation) => {
-    setRegistry((prev) => {
-      const existing = prev.find((a) => a.id === anno.id);
-      const merged: Annotation = {
-        ...anno,
-        index: existing?.index ?? anno.index ?? nextIndex(prev),
-        updatedAt: Date.now(),
-        deleted: false,
-      };
-      const next = existing
-        ? prev.map((a) => (a.id === anno.id ? merged : a))
-        : [...prev, merged];
-      persist(next);
-      return purgeExpiredTombstones(next);
-    });
+    const prev = registryRef.current;
+    const existing = prev.find((a) => a.id === anno.id);
+    const merged: Annotation = {
+      ...anno,
+      index: existing?.index ?? anno.index ?? nextIndex(prev),
+      updatedAt: Date.now(),
+      deleted: false,
+    };
+    persist(existing ? prev.map((a) => (a.id === anno.id ? merged : a)) : [...prev, merged]);
   }, [persist]);
 
-  /** Tombstone an annotation so the deletion propagates before being purged. */
   const remove = useCallback((id: string) => {
-    setRegistry((prev) => {
-      const next = prev.map((a) =>
+    persist(
+      registryRef.current.map((a) =>
         a.id === id ? { ...a, deleted: true, updatedAt: Date.now() } : a,
-      );
-      persist(next);
-      return purgeExpiredTombstones(next);
-    });
+      ),
+    );
   }, [persist]);
 
-  /** Toggle the "resolved" flag (used by the fix workflow instead of deleting). */
   const setResolved = useCallback((id: string, resolved: boolean) => {
-    setRegistry((prev) => {
-      const next = prev.map((a) =>
+    persist(
+      registryRef.current.map((a) =>
         a.id === id ? { ...a, resolved, updatedAt: Date.now() } : a,
-      );
-      persist(next);
-      return purgeExpiredTombstones(next);
-    });
+      ),
+    );
   }, [persist]);
 
-  /** Tombstone everything at once. */
   const clearAll = useCallback(() => {
-    setRegistry((prev) => {
-      const now = Date.now();
-      const next = prev.map((a) => ({ ...a, deleted: true, updatedAt: now }));
-      persist(next);
-      return purgeExpiredTombstones(next);
-    });
+    const now = Date.now();
+    persist(registryRef.current.map((a) => ({ ...a, deleted: true, updatedAt: now })));
   }, [persist]);
-
-  /** Wire up (or tear down) gist sync at runtime and reconcile immediately. */
-  const configureGist = useCallback((cfg: GistConfig | null) => {
-    gistConfigRef.current = cfg;
-    setGistConfigured(cfg !== null);
-    if (!cfg) return;
-    (async () => {
-      const gist = await fetchGistRegistry(cfg);
-      const merged = purgeExpiredTombstones(mergeRegistries(gist, readLocal()));
-      setRegistry(merged);
-      writeLocal(merged);
-      void pushGistRegistry(cfg, merged);
-    })();
-  }, []);
 
   return {
     annotations,
@@ -181,7 +205,9 @@ export function useAnnotations() {
     remove,
     setResolved,
     clearAll,
-    gistConfigured,
-    configureGist,
+    remoteConfigured,
+    syncing,
+    lastSync,
+    refresh,
   };
 }

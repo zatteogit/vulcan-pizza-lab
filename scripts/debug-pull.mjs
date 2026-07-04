@@ -1,14 +1,12 @@
 #!/usr/bin/env node
-/* Pull the debug annotation registry from the GitHub gist into the local
- * `vulcan-debug-registry.json`, merging by id (last-write-wins) so pins created
- * in production land in the file the "risolvi i commenti" workflow reads —
- * without having to open the dev app first.
+/* Pull the debug annotation registry from the shared Cloudflare/D1 endpoint into
+ * the local `vulcan-debug-registry.json`, merging by id (last-write-wins) so
+ * pins created in production land in the file the "risolvi i commenti" workflow
+ * reads — without opening the app.
  *
  * Usage:
- *   VULCAN_GIST_TOKEN=<pat> VULCAN_GIST_ID=<id> npm run debug:pull
- *
- * The token needs only the `gist` scope. Store it outside the repo (shell
- * profile / .env you don't commit).
+ *   VULCAN_ANNOTATIONS_API=https://your-project.pages.dev/api/annotations \
+ *   [VULCAN_ANNOTATIONS_KEY=<key>] npm run debug:pull
  */
 import fs from "fs";
 import path from "path";
@@ -16,13 +14,12 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REGISTRY_PATH = path.resolve(__dirname, "..", "vulcan-debug-registry.json");
-const GIST_FILENAME = "vulcan-debug-registry.json";
 
-const token = process.env.VULCAN_GIST_TOKEN;
-const gistId = process.env.VULCAN_GIST_ID;
+const api = process.env.VULCAN_ANNOTATIONS_API;
+const key = process.env.VULCAN_ANNOTATIONS_KEY;
 
-if (!token || !gistId) {
-  console.error("✖ Set VULCAN_GIST_TOKEN and VULCAN_GIST_ID env vars first.");
+if (!api) {
+  console.error("✖ Set VULCAN_ANNOTATIONS_API to the deployed /api/annotations URL first.");
   process.exit(1);
 }
 
@@ -53,35 +50,24 @@ function readLocal() {
   return [];
 }
 
-const res = await fetch(`https://api.github.com/gists/${gistId}`, {
-  headers: {
-    Authorization: `Bearer ${token}`,
-    Accept: "application/vnd.github+json",
-    "X-GitHub-Api-Version": "2022-11-28",
-  },
+const res = await fetch(api, {
+  headers: key ? { "x-annotations-key": key } : {},
 });
 
 if (!res.ok) {
-  console.error(`✖ Gist fetch failed: ${res.status} ${res.statusText}`);
+  console.error(`✖ API fetch failed: ${res.status} ${res.statusText}`);
   process.exit(1);
 }
-
-const data = await res.json();
-const file = data?.files?.[GIST_FILENAME];
-if (!file) {
-  console.error(`✖ Gist has no ${GIST_FILENAME} file.`);
-  process.exit(1);
-}
-
-const content = file.truncated && file.raw_url
-  ? await (await fetch(file.raw_url)).text()
-  : file.content;
 
 let remote;
 try {
-  remote = JSON.parse(content);
+  remote = await res.json();
 } catch {
-  console.error("✖ Gist file is not valid JSON.");
+  console.error("✖ Response is not valid JSON.");
+  process.exit(1);
+}
+if (!Array.isArray(remote)) {
+  console.error("✖ Response is not an annotations array.");
   process.exit(1);
 }
 
