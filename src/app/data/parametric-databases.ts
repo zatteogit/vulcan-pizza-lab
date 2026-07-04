@@ -3,7 +3,7 @@
 /* Allineato 16 marzo 2026 */
 
 /* ═══ 1. TEMPERATURE FORNO IDEALI ═══ */
-export interface OvenTempParams {
+interface OvenTempParams {
   styleId: string;
   idealTemp_c: number;
   minTemp_c: number;
@@ -31,7 +31,7 @@ const OVEN_TEMPS_DB: OvenTempParams[] = [
 ];
 
 /* ═══ 2. TEMPI COTTURA PER STILE ═══ */
-export interface BakingTimeParams {
+interface BakingTimeParams {
   styleId: string;
   minSeconds: number;
   maxSeconds: number;
@@ -58,7 +58,7 @@ const BAKING_TIMES_DB: BakingTimeParams[] = [
 ];
 
 /* ═══ 3. PARAMETRI IMPASTO BASE ═══ */
-export interface DoughBaseParams {
+interface DoughBaseParams {
   styleId: string;
   ballWeight_g: number;
   panSize_cm?: number;
@@ -86,7 +86,7 @@ const DOUGH_BASE_DB: DoughBaseParams[] = [
 ];
 
 /* ═══ 4. PARAMETRI SALE PER STILE ═══ */
-export interface SaltParams {
+interface SaltParams {
   styleId: string;
   saltPct: number;
   saltType: string;
@@ -112,7 +112,7 @@ const SALT_DB: SaltParams[] = [
 ];
 
 /* ═══ 5. PARAMETRI ACQUA ═══ */
-export interface WaterParams {
+interface WaterParams {
   styleId: string;
   idealTempC: number;
   minTempC: number;
@@ -139,7 +139,7 @@ const WATER_DB: WaterParams[] = [
 ];
 
 /* ═══ 6. PARAMETRI MATURAZIONE ═══ */
-export interface MaturationParams {
+interface MaturationParams {
   styleId: string;
   bulkHours: [number, number];
   bulkTempC: number;
@@ -169,7 +169,7 @@ const MATURATION_DB: MaturationParams[] = [
 ];
 
 /* ═══ 7. PARAMETRI CONDIMENTO PER STILE ═══ */
-export interface ToppingParams {
+interface ToppingParams {
   styleId: string;
   toppingOrder: string[];
   saucePosition: "sotto" | "sopra" | "integrata" | "nessuna";
@@ -196,7 +196,7 @@ const TOPPING_DB: ToppingParams[] = [
 ];
 
 /* ═══ 8. PIEGHE E MANIPOLAZIONE ═══ */
-export interface FoldingParams {
+interface FoldingParams {
   styleId: string;
   foldType: "stretch_fold" | "coil_fold" | "french_fold" | "slap_fold" | "none";
   foldCount: number;
@@ -222,7 +222,7 @@ const FOLDING_DB: FoldingParams[] = [
 ];
 
 /* ═══ 9. PARAMETRI SCORING (TAGLIO) ═══ */
-export interface ScoringParams {
+interface ScoringParams {
   styleId: string;
   scoringRequired: boolean;
   scoringType: string;
@@ -249,7 +249,7 @@ const SCORING_DB: ScoringParams[] = [
 ];
 
 /* ═══ 10. COMPATIBILITA ATTREZZATURA ═══ */
-export interface EquipmentCompat {
+interface EquipmentCompat {
   styleId: string;
   mixerRequired: boolean;
   mixerType: "planetaria" | "spirale" | "manuale" | "qualsiasi";

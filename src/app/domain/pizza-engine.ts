@@ -104,7 +104,7 @@ export type LayoutType =
   | "folded_layers"
   | "double_thin_sheet";
 
-export interface LayoutSpec {
+interface LayoutSpec {
   type: LayoutType;
   /** Quanti pezzi compongono UNA unità servita (default 1, Baciata = 2, ecc.) */
   pieces_per_unit?: number;
@@ -149,9 +149,9 @@ export function isFillingStyle(style: PizzaStyle): boolean {
 }
 
 /** Unità di servizio per l'UI: come si chiama un pezzo di questa pizza. */
-export type ServingUnit = "panetto" | "teglia" | "pala" | "padellino" | "focaccia";
+type ServingUnit = "panetto" | "teglia" | "pala" | "padellino" | "focaccia";
 
-export interface ServingUnitLabel {
+interface ServingUnitLabel {
   singular: string;
   plural: string;
 }
@@ -332,7 +332,7 @@ export interface RecipeScores {
 /* ═══ SCORE DIMENSIONS — single source of truth for labels/colors ═══ */
 export type ScoreDimensionKey = "authenticity" | "feasibility" | "digestibility" | "experimentation" | "sustainability";
 
-export interface ScoreDimension {
+interface ScoreDimension {
   key: ScoreDimensionKey;
   label: string;
   short: string;
@@ -553,7 +553,7 @@ export function thermalViability(style: PizzaStyle, ovenTemp: number): number {
 // Audit Maestro P0-4: 8 compensazioni parametriche per deficit forno
 // Audit Database: formula idratazione deve essere logaritmica (Modernist Pizza 2021)
 
-export interface OvenCompensations {
+interface OvenCompensations {
   hydration_delta_pct: number; // Aumento idratazione per non seccare
   oil_delta_pct: number; // Aumento grasso per tenerezza (shortening)
   sugar_delta_pct: number; // Aumento zucchero per Maillard a bassa T
@@ -684,7 +684,7 @@ export function estimatePL(flourW: number, stylePlRange: [number, number]): numb
  * del range dello stile, ma il valore preciso dell'interpretazione.
  * Tolleranza simmetrica più stretta: ±3% H / ±25W / ±0.07 P/L / ±4h.
  */
-export interface AuthenticityCenter {
+interface AuthenticityCenter {
   hydration_pct?: number;
   flour_w?: number;
   flour_pl?: number;
@@ -1308,7 +1308,7 @@ export interface ScoreWeightsOverride {
   experimentation?: number;
 }
 
-export interface RecWeightsOverride {
+interface RecWeightsOverride {
   time?: number;
   oven?: number;
   skill?: number;
@@ -1332,7 +1332,7 @@ export interface VersionRangeOverrides {
 /** Opzioni di generateRecipe. Audit role-play giugno 2026: rifattorizzate da 12
  *  parametri posizionali a un options object — l'ordine di 6 `custom*` scalari
  *  in fila era un footgun (il compilatore non becca uno swap). */
-export interface GenerateRecipeOptions {
+interface GenerateRecipeOptions {
   customHydration?: number;
   customFlourW?: number;
   customFermentationHours?: number;
@@ -1978,7 +1978,7 @@ const MIXER_FRICTION_K: Record<string, number> = {
 
 /** Pesi dell'obiettivo da massimizzare. Se omessi, si usano i pesi di scoring
  *  (default 0.45 / 0.30 / 0.25) così l'ottimo coincide col composite mostrato. */
-export interface OptimizeObjectiveWeights {
+interface OptimizeObjectiveWeights {
   authenticity?: number;
   feasibility?: number;
   digestibility?: number;
@@ -1986,7 +1986,7 @@ export interface OptimizeObjectiveWeights {
   experimentation?: number;
 }
 
-export interface OptimizedCandidate {
+interface OptimizedCandidate {
   hydration: number;
   flour_w: number;
   fermentation_hours: number;
@@ -2293,7 +2293,7 @@ export function optimizeRecipe(
 // generico, "Cuocere a X°C" senza setup). Questi helper rendono Impasto e Cottura
 // specifici per l'attrezzatura dichiarata.
 
-export interface EquipmentContext {
+interface EquipmentContext {
   mixerType?: string | null;
   hasMixer?: boolean;
   ovenType?: OvenType;
@@ -2949,45 +2949,6 @@ export interface TimeSlot {
   hours: number;
   emoji: string;
 }
-
-/** VPL-065: Kept as legacy fallback — consumers should prefer generateTimeSlots() */
-const TIME_SLOTS: TimeSlot[] = [
-  {
-    id: "tonight",
-    label: "Stasera",
-    sublabel: "4-6 ore",
-    hours: 5,
-    emoji: "🌙",
-  },
-  {
-    id: "tomorrow_lunch",
-    label: "Domani a pranzo",
-    sublabel: "16-20 ore",
-    hours: 18,
-    emoji: "☀️",
-  },
-  {
-    id: "tomorrow_dinner",
-    label: "Domani sera",
-    sublabel: "24-28 ore",
-    hours: 26,
-    emoji: "🌆",
-  },
-  {
-    id: "day_after",
-    label: "Dopodomani",
-    sublabel: "40-48 ore",
-    hours: 44,
-    emoji: "📅",
-  },
-  {
-    id: "long_ferment",
-    label: "Lunga maturazione",
-    sublabel: "72+ ore",
-    hours: 72,
-    emoji: "🕐",
-  },
-];
 
 /* ═══ VPL-065: Dynamic time slots based on current time ═══
  * Calculates real hours remaining until each eating moment.

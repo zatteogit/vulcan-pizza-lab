@@ -163,7 +163,7 @@ export type FlavorProfile =
   | "sweet_savory"  // hawaiiana, tatin
   | "light";        // bianca semplice
 
-export interface ToppingConcept {
+interface ToppingConcept {
   id: string;
   name: string;
   description: string;
@@ -3287,10 +3287,6 @@ function getAllToppings(): ToppingRecipe[] {
   return Object.values(TOPPING_LIBRARY);
 }
 
-function getAllConcepts(): ToppingConcept[] {
-  return Object.values(TOPPING_CONCEPTS);
-}
-
 export function getToppingThumbnail(recipe?: ToppingRecipe): string | undefined {
   return recipe?.thumbnail ?? (recipe ? TOPPING_CONCEPTS[recipe.concept_ref]?.thumbnail : undefined);
 }
@@ -3309,38 +3305,6 @@ export type AuthenticityScore =
   | "common"        // ⚪️ "Alternativa" — fallback generico non ancorato allo stile
   | "experimental"  // 🟠 "Da provare" — variante esistente ma per altri stili/famiglie
   | "taboo";        // 🔴 — esplicito taboo (style o family)
-
-/** Una ricetta è "generica" se è un fallback classico NON ancorato a stili. */
-function isGenericRecipe(r: ToppingRecipe): boolean {
-  return (
-    (r.variant_name === "classica" ||
-      r.variant_name === "generica" ||
-      r.id.endsWith("_generica") ||
-      r.id.endsWith("_classica")) &&
-    !(r.preferred_for_styles && r.preferred_for_styles.length > 0)
-  );
-}
-
-/** Tier di autenticità DISPLAY della coppia (conceptId, style).
- *
- *  IMPORTANTE — separazione dei due assi:
- *  - `preferred_for_styles` / `preferred_for_families` dicono SE il topping è
- *    pertinente allo stile (e quale variante usare): NON dicono quanto è
- *    "da disciplinare".
- *  - Il tier mostrato di default per un topping pertinente è "natural"
- *    (Tradizionale). Le singole ricette possono dichiarare `authenticity`
- *    esplicito per salire a "canonical" (disciplinare ufficiale: AVPN/IGP/…)
- *    o a "signature" (firma moderna/gourmet, es. Hot Honey, Scarpetta).
- */
-function computeAuthenticity(
-  conceptId: string,
-  style: PizzaStyle,
-): AuthenticityScore {
-  // Per-stile: il tier è quello della ricetta assegnata a questo stile.
-  const resolved = resolveTopping(conceptId, style);
-  if (!resolved) return "experimental"; // concept non offerto da questo stile
-  return resolved.authenticity ?? "natural";
-}
 
 /** Metadata visiva per ogni livello di autenticità (color/icona/label).
  *  Usata dai chip nella UI per coerenza di linguaggio visivo. */
@@ -3534,22 +3498,6 @@ function representativeOrder(
     recipe.concept_ref,
     REPRESENTATIVE_CONCEPT_ORDER_BY_FAMILY[style.family],
   );
-}
-
-/** Restituisce tutti i concept ordinati per autenticità rispetto a uno style.
- *  Utile per costruire la chip strip con i topping migliori in cima. */
-export function getConceptsByAuthenticity(style: PizzaStyle): Array<{
-  concept: ToppingConcept;
-  authenticity: AuthenticityScore;
-  resolved: ToppingRecipe | undefined;
-}> {
-  return getAllConcepts()
-    .map((concept) => ({
-      concept,
-      authenticity: computeAuthenticity(concept.id, style),
-      resolved: resolveTopping(concept.id, style),
-    }))
-    .sort((a, b) => AUTHENTICITY_ORDER[a.authenticity] - AUTHENTICITY_ORDER[b.authenticity]);
 }
 
 export function getRecipesByAuthenticity(style: PizzaStyle): Array<{

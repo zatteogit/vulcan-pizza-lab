@@ -24,7 +24,7 @@ import {
   TextCursorInput,
   Lightbulb,
 } from "lucide-react";
-import { useDarkMode } from "../components/shared/root-layout";
+import { useDarkMode } from "../hooks/use-dark-mode";
 import {
   useCms,
   CMS_SECTIONS,

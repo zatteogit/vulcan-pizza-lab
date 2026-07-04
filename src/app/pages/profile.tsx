@@ -83,7 +83,7 @@ import {
   toggleFavoriteStyle,
   type SavedRecipe,
 } from "../data/saved-recipes";
-import { useDarkMode } from "../components/shared/root-layout";
+import { useDarkMode } from "../hooks/use-dark-mode";
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";

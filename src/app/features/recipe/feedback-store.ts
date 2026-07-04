@@ -112,7 +112,7 @@ export interface CalibrationResult {
   verdict: "calibrated" | "overestimates" | "underestimates" | "uncorrelated" | "insufficient_data";
 }
 
-export interface IssueFrequency {
+interface IssueFrequency {
   issueId: RecipeIssueId;
   label: string;
   count: number;
@@ -361,7 +361,7 @@ export function analyzeIssueFrequency(feedback: RecipeFeedback[]): IssueFrequenc
 // fermentazione). Per il sale (non ancora una leva) restiamo onesti: nota, non
 // finto auto-fix. L'applicazione è opt-in e trasparente (vedi UI), non silenziosa.
 
-export interface FeedbackCorrection {
+interface FeedbackCorrection {
   /** Punti % da sommare all'idratazione (0 = nessuna correzione). */
   hydrationDelta: number;
   /** Moltiplicatore sulle ore di fermentazione (1 = nessuna). */

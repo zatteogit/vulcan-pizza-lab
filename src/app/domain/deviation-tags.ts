@@ -24,7 +24,7 @@ export type DeviationCategory =
   | "hybrid"
   | "experimental";
 
-export interface DeviationSignature {
+interface DeviationSignature {
   deviation_points: DeviationPoint[];
   deviation_score: number; // 0.0 (canonico) - 1.0 (sperimentale)
   category: DeviationCategory;
@@ -32,7 +32,7 @@ export interface DeviationSignature {
 }
 
 /* === TAG MULTI-DIMENSIONALI === */
-export interface RecipeTags {
+interface RecipeTags {
   geographic_origin: string[];
   philosophy: string[];
   dough_technique: string[];

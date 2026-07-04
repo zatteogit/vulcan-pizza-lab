@@ -146,7 +146,7 @@ export function daySuffix(
 }
 
 /** Clock time with optional day offset badge: "14:30" or "14:30 +1g" */
-export function clockWithDay(
+function clockWithDay(
   date: Date,
   reference: Date,
   bcp47: string,
@@ -177,7 +177,7 @@ export function displayStepTime(
   return `~${clockWithDay(rounded, reference, bcp47, copy)}`;
 }
 
-export function normalizeTemperatureUnitSuffixes(text: string): string {
+function normalizeTemperatureUnitSuffixes(text: string): string {
   return text.replace(/(°[CF])\s*(?:°C|℃)\b/g, "$1");
 }
 
@@ -192,16 +192,16 @@ export function normalizeMeasureUnitSuffixes(text: string): string {
  * tolleranze tecniche per portare le fasi ATTIVE in orari umani, tenendo
  * fisso l'orario del pasto (la fine non si tocca). */
 
-export const ACTIVE_STEP_IDS = new Set([
+const ACTIVE_STEP_IDS = new Set([
   "mix", "divide", "shape", "top", "bake", "preheat",
   "stack", "fill_internal", "split_fill", "top_post", "bake2",
 ]);
 
-export function isNightHour(h: number): boolean {
+function isNightHour(h: number): boolean {
   return h >= 23 || h < 7;
 }
 
-export function countNightActives(
+function countNightActives(
   timeline: TimelineStep[],
   startMs: number,
   stretch: Record<number, number>,
@@ -215,7 +215,7 @@ export function countNightActives(
   return count;
 }
 
-export interface ComfortPlan {
+interface ComfortPlan {
   stretch: Record<number, number>;
   newStart: Date;
   nightCount: number;
@@ -323,7 +323,7 @@ export function flourStrengthLabel(w: number, cms: CmsContent | undefined): stri
  * `approx` è true quando l'arrotondamento ha semplificato il numero, così la UI
  * può anteporre "~" (Q1+Q3, audit precisione lug 2026). Il lievito NON passa di
  * qui: mantiene 0.1g, dove il sotto-grammo conta. */
-export function roundGramsMagnitude(grams: number): { value: number; approx: boolean } {
+function roundGramsMagnitude(grams: number): { value: number; approx: boolean } {
   if (grams <= 0) return { value: 0, approx: false };
   const step = grams < 100 ? 1 : grams < 1000 ? 5 : 10;
   const value = Math.round(grams / step) * step;

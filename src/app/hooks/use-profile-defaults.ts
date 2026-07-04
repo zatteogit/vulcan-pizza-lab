@@ -28,7 +28,7 @@ function loadJson<T>(key: string): T | null {
   return null;
 }
 
-export interface ProfileDefaults {
+interface ProfileDefaults {
   constraints: UserConstraints;
   isProfileComplete: boolean;
   pizzaNerdEnabled: boolean;

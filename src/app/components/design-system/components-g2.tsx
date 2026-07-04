@@ -1,5 +1,4 @@
 import {
-AlertTriangle,
 Copy,
 Flame,
 Heart,

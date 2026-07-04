@@ -9,7 +9,7 @@ import { t } from "../cms/i18n";
 
 /* ═══ Learning contestuale: ogni fase porta al suo termine nel glossario ═══
    (feedback giugno 2026 — il "come si impara" richiamabile dalla ricetta) */
-export const STEP_GLOSSARY: Record<string, { hash: string }> = {
+const STEP_GLOSSARY: Record<string, { hash: string }> = {
   preferment: { hash: "biga" },
   bulk: { hash: "bulk_fermentation" },
   proof: { hash: "ball_fermentation" },
