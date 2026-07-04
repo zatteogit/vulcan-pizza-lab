@@ -167,12 +167,12 @@ production and — via `VITE_ANNOTATIONS_API` — the local dev app talk to. Eac
 entry carries `updatedAt`, plus `deleted` (tombstone) and `resolved` flags. If
 pins were created in production and dev isn't pointed at the same D1, run
 `VULCAN_ANNOTATIONS_API=… [VULCAN_ANNOTATIONS_KEY=…] npm run debug:pull` first to
-fold the remote registry into the local file. The Pages Function reaches D1 via
-its REST API (Pages secret `D1_API_TOKEN`, no dashboard binding); setup (schema
-load, token) is documented in `.env.example` alongside `schema.sql`. Note: do
-**not** commit a `wrangler.toml` — on a git-connected Pages project it disables
-the dashboard bindings UI and forces a Workers-style `wrangler deploy` that
-fails the build.
+fold the remote registry into the local file. Production is a **Cloudflare
+Worker** (…workers.dev), so the API lives in `worker/index.ts` (SPA via the
+`ASSETS` binding, `/api/annotations` via the native D1 binding `DB`), configured
+in `wrangler.toml` and deployed by `wrangler deploy`. Setup (schema load) is in
+`.env.example` alongside `schema.sql`. Note: this is a Worker, **not** Pages —
+the `functions/` Pages-Functions convention does not apply here.
 
 If the user requests to "risolvi i commenti", "risolvi le annotazioni", "fix comments", or similar:
 1. Locate `vulcan-debug-registry.json` at the project root (run `npm run debug:pull` first if dev isn't wired to the same D1, so production pins are included).
