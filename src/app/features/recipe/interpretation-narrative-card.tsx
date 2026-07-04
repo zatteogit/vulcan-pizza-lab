@@ -305,7 +305,7 @@ function InterpretationsModal({
   );
 }
 
-export function InterpretationNarrativeCard({
+function InterpretationNarrativeCard({
   interpretation,
   selected = false,
   onSelect,

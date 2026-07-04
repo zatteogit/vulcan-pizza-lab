@@ -27,7 +27,7 @@ import {
   yeastPracticalHint,
 } from "./recipe-output-format";
 
-export interface IngredientsSectionProps {
+interface IngredientsSectionProps {
   recipe: GeneratedRecipe;
   constraints: UserConstraints;
   simple?: boolean;

@@ -5,18 +5,18 @@ import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores, type ScoreDimen
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 
-export type RecipeMatchMode = "canonical" | "adapted" | "lab";
+type RecipeMatchMode = "canonical" | "adapted" | "lab";
 
 /** Icona cuore per stato di match — 5 stati distinti (audit role-play giugno 2026). */
-export type MatchIconKey = "handshake" | "heart" | "pulse" | "crack" | "off";
+type MatchIconKey = "handshake" | "heart" | "pulse" | "crack" | "off";
 
 /** Copy CMS per fascia di match (cms.cooking.matchTones). */
-export interface MatchToneCopy {
+interface MatchToneCopy {
   title: string;
   canonical: string;
   adapted: string;
 }
-export interface MatchTonesCopy {
+interface MatchTonesCopy {
   t90: MatchToneCopy;
   t75: MatchToneCopy;
   t60: MatchToneCopy;

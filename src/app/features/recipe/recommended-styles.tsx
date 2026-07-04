@@ -60,7 +60,7 @@ const FALLBACK =
 /* VPL-C3: dimensione del match da una reason key (rec.*). Serve a scegliere
  * l'icona sintetica sulla tile e a raggruppare/visualizzare i reasons nel
  * dettaglio. Esportata per riuso in style-detail-sheet. */
-export type MatchDimension = "time" | "oven" | "skill" | "equipment" | "pantry";
+type MatchDimension = "time" | "oven" | "skill" | "equipment" | "pantry";
 export function reasonDimension(key: string): MatchDimension {
   if (key.includes("time")) return "time";
   if (key.includes("oven") || key.includes("Wood") || key.includes("refractory"))

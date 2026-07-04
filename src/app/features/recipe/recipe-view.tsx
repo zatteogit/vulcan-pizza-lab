@@ -18,7 +18,7 @@ import { Heading, IconButton } from "../../components/ds/index";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { RecipeOutput } from "./recipe-output";
 import { RecipeSectionTabs, type RecipePrimaryTab } from "./recipe-section-tabs";
-import { TOPPING_LIBRARY, getToppingForStyle, getRecipesByAuthenticity, TOPPING_CONCEPTS } from "../../data/topping-library";
+import { getToppingForStyle, getRecipesByAuthenticity, TOPPING_CONCEPTS } from "../../data/topping-library";
 import { useIsMobile } from "../../hooks/use-mobile";
 import { FireGlow } from "../cooking/fire-glow";
 import { useCms, type CmsContent } from "../cms/cms-context";

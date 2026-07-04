@@ -440,7 +440,6 @@ export function HomePage() {
     useStylesOverride();
   const {
     cms,
-    bcp47,
     modifiedCount,
     resetAll: cmsResetAll,
   } = useCms();

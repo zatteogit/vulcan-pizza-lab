@@ -43,7 +43,6 @@ type GeneratedRecipe,
 type OvenType,
 type PanConfig,
 type PizzaStyle,
-type RecipeScores,
 type SkillLevel,
 type UserConstraints
 } from "../domain/pizza-engine";
@@ -70,7 +69,7 @@ getVersions,
 type StyleVersion,
 } from "../data/style-versions";
 import { useStylesOverride } from "../context/styles-override-context";
-import { TOPPING_CONCEPTS, resolveTopping, TOPPING_LIBRARY } from "../data/topping-library";
+import { resolveTopping, TOPPING_LIBRARY } from "../data/topping-library";
 import {
   findSavedRecipe,
   removeRecipe,
@@ -199,7 +198,7 @@ function replaceRecipeSearchParams(
 /* ═══ RECIPE PAGE ═══ */
 export function RecipePage() {
   const { styleId } = useParams<{ styleId: string }>();
-  const { cms, bcp47 } = useCms();
+  const { cms } = useCms();
   const { effectiveStyles } = useStylesOverride();
 
   const db = effectiveStyles ?? STYLES_DB;
@@ -220,7 +219,6 @@ function RecipeContent({
   style: PizzaStyle;
   cms: any;
 }) {
-  const { bcp47 } = useCms();
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
