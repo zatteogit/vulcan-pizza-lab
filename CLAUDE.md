@@ -154,3 +154,11 @@ Edit `src/app/routes.ts`:
 - **Sourcemaps**: Generated in build for debugging (`sourcemap: true` in config).
 - **Assets**: SVG and CSV imports supported; other types via standard imports.
 - **i18n**: CMS is the source of truth for user-facing strings (see `src/app/features/cms/`).
+
+## Visual Debug Annotations & AI Fixes
+
+If the user requests to "risolvi i commenti", "risolvi le annotazioni", "fix comments", or similar:
+1. Locate `vulcan-debug-registry.json` at the project root.
+2. Read the JSON array of annotations (containing target elements HTML, parents code, selectors, and comments).
+3. Find the target source files, implement the fixes conforming strictly to the Design Tokens system (`theme.css`), and verify (`npm run verify`).
+4. Once fixed, reset the registry by overwriting `vulcan-debug-registry.json` with an empty array `[]` so that the visual pins clear in the browser.

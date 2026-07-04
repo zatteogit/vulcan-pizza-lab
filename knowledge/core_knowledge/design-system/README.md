@@ -1,5 +1,5 @@
 # Design system e dev UI
-> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 64
+> Aggiornamento: 2026-07-04 | Stato: ✅ | File documentati: 65
 
 ## Sommario
 
@@ -15,6 +15,7 @@ Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modell
 | `src/app/pages/design-system.tsx` | Route `/design-system`: header sticky, toggle dark, render `DesignSystemTab` |
 | `src/app/pages/dev.tsx` | Route `/dev` e `/dev/:tab` → wrapper `DevTools` |
 | `src/app/features/dev-tools/dev-tools.tsx` | Tab dev incluso `design` → `DesignSystemTab` |
+| `src/app/features/dev-tools/debug-overlay.tsx` | Widget fluttuante di debug AI con modalità Pin Elemento o Pin Libero, disegno su canvas HTML5, cattura stili computati e log consolle, e modifica diretta dei pin con copia prompt AI real-time |
 | `src/app/components/design-system/index.tsx` | Registry `ALL_ENTRIES`, ordini `FOUNDATION_ORDER` / `COMPONENT_ORDER` / `PATTERN_ORDER`, navigazione sidebar |
 | `src/app/components/design-system/shared.tsx` | `SectionEntry`, `DSCtx`, `resolveVar`, `useResolvedVars`, componenti showcase comuni |
 | `src/app/components/design-system/foundations.tsx` | Token core: colori, tipografia, spacing, shape, elevation, states |
@@ -78,6 +79,7 @@ flowchart TD
 | `RecipeConfiguratorSpec` / `RecipeTimelineSpec` | `components-d.tsx` | Specimen app-specific |
 | `ModalScoreDashboardSpec` | `components-c.tsx` | Specimen legacy-named di modale score con dati demo; non implica un file runtime `score-dashboard.tsx` |
 | `CarouselSpec` | `components-h.tsx` | Carousel spring + swipe |
+| `DebugOverlay` | `debug-overlay.tsx` | Componente di overlay visuale per annotazioni bug-fix, disegno canvas, editing diretto dei pin e copia prompt real-time |
 
 ## Costanti e configurazione
 
@@ -97,6 +99,7 @@ flowchart TD
 - `DesignSystemPage` e `DevTools` passano `darkMode`/`setDarkMode` da `useDarkMode()` (`root-layout`) — specimen devono usare `DSCtx` o props, non tema hardcoded.
 - Specimen importano componenti produzione (`ScoreRing`, `RecipeStatStrip`, …) e componenti ds reali (`CtaButton`, `Badge`, ecc.): lo showcase è ora un reale consumatore del Design System, evitando duplicazioni visive.
 - `/design-system` ottimizzato per export visivo (minimo chrome); `/dev` include altre tab (CMS, engine test, feedback).
+- **Scorciatoie AI Debugger**: `Ctrl + Option + A` (o `Ctrl + Alt + A` su Windows) è la scorciatoia principale e libera da conflitti browser/estensioni; `Ctrl + Shift + X` (o `Cmd + Shift + X` su macOS) funge da fallback. Il triplo tocco mobile sul viewport fa lo stesso.
 - Non documentare i primitivi `components/ui/*` in this capitolo; dopo la pulizia 2026-06-19 resta solo lo stretto necessario (`switch`, hook mobile, helper classi).
 - **Gestione Placeholder Immagini**: `ImageWithFallback.tsx` intercetta esplicitamente la stringa `"placeholder"` (o sorgenti nulli/vuoti) per forzare il rendering immediato del layout di fallback SVG, prevenendo errori di caricamento del browser o visualizzazioni vuote.
 - `step-header.tsx` è stato rimosso ed integrato in `ds/StepHeader.tsx` (Tier 4).

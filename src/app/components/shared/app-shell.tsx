@@ -30,6 +30,7 @@ const CookingMode = lazy(() =>
 const SearchOverlay = lazy(() =>
   import("./search-overlay").then((m) => ({ default: m.SearchOverlay })),
 );
+import { DebugOverlay } from "../../features/dev-tools/debug-overlay";
 import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { VulcanMark } from "./vulcan-logo";
 import { liquidDockQuickSpring } from "../../domain/liquid-dock";
@@ -627,6 +628,28 @@ export function AppShell() {
   const [themeMode, setThemeModeState] = useState<ThemeMode>(loadThemeMode);
   const [darkMode, setDarkModeState] = useState(() => resolveThemeMode(loadThemeMode()));
   const [devMode, setDevModeState] = useState(loadDevMode);
+  const [isOverlayDeactivated, setIsOverlayDeactivated] = useState(() => {
+    try {
+      return localStorage.getItem("vulcan_debug_overlay_deactivated") === "true";
+    } catch {
+      return false;
+    }
+  });
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      try {
+        setIsOverlayDeactivated(localStorage.getItem("vulcan_debug_overlay_deactivated") === "true");
+      } catch {}
+    };
+    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("vulcan_debug_toggle", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("vulcan_debug_toggle", handleStorageChange);
+    };
+  }, []);
+
   const [searchOpen, setSearchOpen] = useState(false);
   /* Il chunk della palette si scarica alla prima apertura e resta montato
      (le animazioni open/close continuano a passare dalla prop `open`). */
@@ -807,6 +830,11 @@ export function AppShell() {
                pizzata ATTIVA resta comunque visibile (gestito nel widget). */
             hidden={navState.hidden || (navState.nearBottom && navState.scrolled)}
           />
+
+          {/* Strumento di debug AI per annotazioni e bug-fix (se non disattivato nelle impostazioni) */}
+          {!isOverlayDeactivated && (
+            <DebugOverlay />
+          )}
         </div>
         </CookSessionProvider>
       </StylesOverrideProvider>

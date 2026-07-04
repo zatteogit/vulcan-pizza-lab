@@ -211,6 +211,14 @@ interface BundleStats {
 function ProjectTab() {
   const REPO_URL = "https://github.com/zatteogit/vulcan-pizza-lab";
 
+  const [isOverlayActive, setIsOverlayActive] = useState(() => {
+    try {
+      return localStorage.getItem("vulcan_debug_overlay_deactivated") !== "true";
+    } catch {
+      return true;
+    }
+  });
+
   /* ── Health check state ── */
   const [healthResults, setHealthResults] = useState<HealthResult[] | null>(null);
   const [healthRunning, setHealthRunning] = useState(false);
@@ -719,6 +727,40 @@ function ProjectTab() {
           ))}
         </div>
 
+      </LabSection>
+
+      {/* ═══ IMPOSTAZIONI DEBUGGER ═══ */}
+      <LabSection title="Impostazioni Debugger AI" icon={<Shield size={13} />} color="var(--primary)" defaultOpen>
+        <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}>
+          <div>
+            <div className="type-data" style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+              Overlay di Annotazione Visuale
+            </div>
+            <div className="type-data-sm" style={{ color: "var(--text-muted)", marginTop: 2 }}>
+              Abilita il widget fluttuante, le combinazioni Ctrl+Option+A / Ctrl+Shift+X e il triplo tocco mobile.
+            </div>
+          </div>
+          
+          <button
+            onClick={() => {
+              const nextVal = !isOverlayActive;
+              setIsOverlayActive(nextVal);
+              try {
+                localStorage.setItem("vulcan_debug_overlay_deactivated", String(!nextVal));
+                window.dispatchEvent(new Event("vulcan_debug_toggle"));
+              } catch {}
+            }}
+            className="px-4 py-2 rounded-xl type-data active:scale-95 transition-transform border"
+            style={{
+              background: isOverlayActive ? "var(--primary)" : "transparent",
+              color: isOverlayActive ? "var(--primary-foreground)" : "var(--text-default)",
+              borderColor: isOverlayActive ? "var(--primary)" : "var(--container-border)",
+              fontWeight: "var(--weight-semibold)" as any,
+            }}
+          >
+            {isOverlayActive ? "Attivo" : "Disattivato"}
+          </button>
+        </div>
       </LabSection>
 
       {/* ═══ ISSUE TRACKER ═══ */}

@@ -1,5 +1,5 @@
 # Routing e shell app
-> Aggiornamento: 2026-07-02 | Stato: ✅ | File documentati: 10
+> Aggiornamento: 2026-07-04 | Stato: ✅ | File documentati: 10
 
 ## Sommario
 
@@ -15,7 +15,7 @@ Vulcan è una **SPA React Router 7** (`createBrowserRouter`): entry `main.tsx` �
 | `src/main.tsx` | 13 | `createRoot` + `StrictMode` → `App` |
 | `src/app/App.tsx` | 6 | `RouterProvider` con `router` da `routes.ts` |
 | `src/app/routes.ts` | 98 | Definizione route lazy, redirect legacy (incluso prefermenti), catch-all |
-| `src/app/components/shared/app-shell.tsx` | 756 | Layout principale, barre liquid-glass a 3 tab, trigger ricerca integrato, ProfileButton top-right, provider e sessione cucina globale |
+| `src/app/components/shared/app-shell.tsx` | 756 | Layout principale, barre liquid-glass a 3 tab, trigger ricerca integrato, ProfileButton top-right, provider, sessione cucina globale, e montaggio dell'overlay di debug AI (`DebugOverlay`) |
 | `src/app/components/shared/search-overlay.tsx` | 791 | Command palette: stili, glossario, problemi, guide, farine |
 | `src/app/pages/not-found.tsx` | 73 | Pagina 404 personalizzata con fallback CMS ed animazioni spring |
 | `src/app/components/shared/root-layout.tsx` | 82 | **@deprecated** — stesso pattern provider, dark mode booleano legacy |
@@ -85,6 +85,8 @@ flowchart TD
 | `vulcan_dark_mode` | `light` \| `dark` \| `auto` (legacy `true`/`false` migrati) | Tema; `auto` segue `prefers-color-scheme` |
 | `vulcan_dev_mode` | `"true"` / assente | Mostra link `/dev` nella sidebar |
 | `vulcan_cook_session` | JSON sessione cucina | Countdown e overlay persistenti cross-page |
+| `vulcan_debug_overlay_enabled` | `"true"` / `"false"` | Stato di attivazione visibile dell'AI Debugger fluttuante |
+| `vulcan_debug_overlay_deactivated` | `"true"` / `"false"` | Se impostato a "true", disattiva e smonta completamente l'overlay di debug dall'App Shell |
 
 **Tab definitions** (`TABS` in `app-shell.tsx`):
 
@@ -103,7 +105,7 @@ La navigazione e la ricerca utilizzano una disposizione affiancata a capsule flo
 - **Su Desktop**: La sidebar laterale è sdoppiata in una capsula di navigazione principale (altezza dinamica, larghezza 72px) e un cerchio di ricerca flottante indipendente `[ 🔍 ]` (72x72px) posizionato subito sotto di essa.
 Questo design lascia l'header superiore completamente libero per i loghi, titoli e pulsanti Indietro, eliminando la necessità di nascondere elementi a scorrimento zero o di applicare ampi margini compensatori.
 
-**Vite dev server**: `strictPort: true`, `open: true`, SPA fallback su `index.html`.
+**Vite dev server**: `strictPort: true`, `open: true`, SPA fallback su `index.html`. Integra `saveAnnotationsPlugin` per intercettare le chiamate `POST /api/save-annotations` e scrivere in locale sul file `vulcan-debug-registry.json`.
 
 ## Guard rail e vincoli
 
