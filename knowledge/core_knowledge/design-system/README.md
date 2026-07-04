@@ -15,7 +15,8 @@ Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modell
 | `src/app/pages/design-system.tsx` | Route `/design-system`: header sticky, toggle dark, render `DesignSystemTab` |
 | `src/app/pages/dev.tsx` | Route `/dev` e `/dev/:tab` → wrapper `DevTools` |
 | `src/app/features/dev-tools/dev-tools.tsx` | Tab dev incluso `design` → `DesignSystemTab` |
-| `src/app/features/dev-tools/debug-overlay.tsx` | Widget fluttuante di debug AI con modalità Pin Elemento o Pin Libero, disegno su canvas HTML5, cattura stili computati e log consolle, e modifica diretta dei pin con copia prompt AI real-time |
+| `src/app/features/dev-tools/debug-overlay.tsx` | Gate leggero sempre montato (toggle + toast) che fa lazy-load del workspace di debug AI; i moduli pesanti (pin, canvas, form, pannello, sync) stanno in `src/app/features/dev-tools/debug/` |
+| `src/app/features/dev-tools/debug/` | Workspace lazy + persistenza: `use-annotations` riconcilia localStorage / file dev / gist (last-write-wins per `id`, con tombstone `deleted` e flag `resolved`); `merge-registries`, `gist-sync`, `use-pin-positions` (observer, non più polling), `compile-prompt` |
 | `src/app/components/design-system/index.tsx` | Registry `ALL_ENTRIES`, ordini `FOUNDATION_ORDER` / `COMPONENT_ORDER` / `PATTERN_ORDER`, navigazione sidebar |
 | `src/app/components/design-system/shared.tsx` | `SectionEntry`, `DSCtx`, `resolveVar`, `useResolvedVars`, componenti showcase comuni |
 | `src/app/components/design-system/foundations.tsx` | Token core: colori, tipografia, spacing, shape, elevation, states |
@@ -79,7 +80,7 @@ flowchart TD
 | `RecipeConfiguratorSpec` / `RecipeTimelineSpec` | `components-d.tsx` | Specimen app-specific |
 | `ModalScoreDashboardSpec` | `components-c.tsx` | Specimen legacy-named di modale score con dati demo; non implica un file runtime `score-dashboard.tsx` |
 | `CarouselSpec` | `components-h.tsx` | Carousel spring + swipe |
-| `DebugOverlay` | `debug-overlay.tsx` | Componente di overlay visuale per annotazioni bug-fix, disegno canvas, editing diretto dei pin e copia prompt real-time |
+| `DebugOverlay` | `debug-overlay.tsx` | Gate sempre montato che lazy-carica il workspace di annotazioni bug-fix (canvas, editing pin, copia prompt) solo quando il debugger è attivo; sync opzionale via gist e stato `resolved`/tombstone |
 
 ## Costanti e configurazione
 

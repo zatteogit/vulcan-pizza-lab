@@ -157,8 +157,17 @@ Edit `src/app/routes.ts`:
 
 ## Visual Debug Annotations & AI Fixes
 
+The AI debug overlay lives in `src/app/features/dev-tools/debug/` (entry gate at
+`debug-overlay.tsx`, lazy workspace + sync hook inside `debug/`). Annotations
+sync across three layers, reconciled last-write-wins by `id`: `localStorage`, the
+dev-only `/api/save-annotations` endpoint (writes `vulcan-debug-registry.json`),
+and an optional GitHub gist. Each entry carries `updatedAt`, plus `deleted`
+(tombstone) and `resolved` flags. If pins were created in production, run
+`VULCAN_GIST_TOKEN=… VULCAN_GIST_ID=… npm run debug:pull` first to fold the gist
+into the local file.
+
 If the user requests to "risolvi i commenti", "risolvi le annotazioni", "fix comments", or similar:
-1. Locate `vulcan-debug-registry.json` at the project root.
-2. Read the JSON array of annotations (containing target elements HTML, parents code, selectors, and comments).
+1. Locate `vulcan-debug-registry.json` at the project root (run `npm run debug:pull` first if gist sync is configured, so production pins are included).
+2. Read the JSON array of annotations. Skip any entry with `"deleted": true` (tombstones) or `"resolved": true` (already handled).
 3. Find the target source files, implement the fixes conforming strictly to the Design Tokens system (`theme.css`), and verify (`npm run verify`).
-4. Once fixed, reset the registry by overwriting `vulcan-debug-registry.json` with an empty array `[]` so that the visual pins clear in the browser.
+4. Once fixed, mark each handled annotation as resolved **in place** — set `"resolved": true` and bump `"updatedAt"` to `Date.now()` (milliseconds). Do **not** empty the file to `[]`: with gist merge active, deleted-by-truncation entries would be resurrected from the gist on the next load, and last-write-wins needs the fresh `updatedAt` to propagate the resolution to the other layers.

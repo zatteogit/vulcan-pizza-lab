@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "start": "vite",
     "check:tokens": "node scripts/check-design-tokens.mjs",
+    "debug:pull": "node scripts/debug-pull.mjs",
     "test": "vitest run",
     "verify": "tsc --noEmit && npm run check:tokens && vitest run"
   },
