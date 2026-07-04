@@ -12,7 +12,7 @@
  *
  * Uso: `npm run check:tokens`  (o `npm run verify` per tsc + guard).
  */
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = "src/app";
@@ -104,7 +104,7 @@ const RULES = [
     desc: "Classe palette Tailwind di default (bg-red-500…) → token semantico. La palette è disattivata in @theme: la classe NON compila e fallisce in silenzio.",
     test: (l) =>
       l.match(
-        /\b(?:bg|text|border|ring|fill|stroke|from|to|via|shadow|outline|decoration|accent|caret|divide)-(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)-\d+(?:\/\d+)?\b/g,
+        /\b(?:bg|text|placeholder|border|divide|ring-offset|inset-ring|ring|fill|stroke|from|to|via|shadow|outline|decoration|accent|caret)(?:-(?:[trblxyse]|ss|se|es|ee))?-(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)-\d+(?:\/\d+)?\b/g,
       ),
   },
   {
@@ -217,6 +217,9 @@ const STAGED_TOKENS = new Set([
   /* es. "--nuovo-token", // in rollout fino a <data/PR> */
 ]);
 
+/* A differenza del guard in avanti, qui lo showcase È incluso: le sue pagine
+ * renderizzano davvero i token (swatch, demo glass/dynamics), quindi contano
+ * come consumo — escluderle romperebbe /design-system. */
 function walkAll(dir, acc = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const full = join(dir, entry.name);
@@ -226,14 +229,23 @@ function walkAll(dir, acc = []) {
   return acc;
 }
 
-try {
+/* Consumo "vivo" = occorrenza dell'identificatore con confini: `--primary`
+ * dentro `var(--primary-foreground)` NON tiene vivo `--primary`. */
+const boundaryRe = (id) => new RegExp(`(?<![a-z0-9-])${id}(?![a-z0-9-])`);
+
+/* Guard esplicito (niente try/catch: un errore qui deve fallire il check,
+ * non disattivarlo in silenzio). */
+if (existsSync(CSS_FILE)) {
   const css = readFileSync(CSS_FILE, "utf8");
   const cssLines = css.split("\n");
   const lineOf = (name, matcher) => {
     const idx = cssLines.findIndex((l) => matcher.test(l));
     return idx === -1 ? 1 : idx + 1;
   };
-  const themeBlock = css.match(/@theme inline \{[\s\S]*?\n\}/)?.[0] ?? "";
+  /* Le definizioni/consumi si cercano nel CSS senza commenti: un blocco
+   * commentato non definisce né tiene vivo nulla. */
+  const cssClean = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  const themeBlock = cssClean.match(/@theme inline \{[\s\S]*?\n\}/)?.[0] ?? "";
   const themeTokens = new Set(
     [...themeBlock.matchAll(/^\s*(--[a-z0-9-]+)\s*:/gm)].map((m) => m[1]),
   );
@@ -249,14 +261,14 @@ try {
     .join("\n");
 
   const tokenDefs = [
-    ...new Set([...css.matchAll(/^\s*(--[a-z0-9-]+)\s*:/gm)].map((m) => m[1])),
+    ...new Set([...cssClean.matchAll(/^\s*(--[a-z0-9-]+)\s*:/gm)].map((m) => m[1])),
   ];
   for (const t of tokenDefs) {
     if (STAGED_TOKENS.has(t)) continue;
     const name = t.slice(2);
     const varRe = new RegExp(`var\\(${t}[\\),]`);
-    if (varRe.test(allSources) || varRe.test(css)) continue;
-    if (allSources.includes(t)) continue; // riferimento letterale (stringa JS)
+    if (varRe.test(cssClean)) continue; // consumato dentro theme.css
+    if (boundaryRe(t).test(allSources)) continue; // var(--x) o stringa letterale
     if (themeTokens.has(t)) {
       /* Token @theme: vivo anche se consumato via utility Tailwind derivata.
        * `--text-2xs--line-height` è un modificatore del token base: segue
@@ -265,7 +277,7 @@ try {
       let utilRe = null;
       if (name.startsWith("color-")) {
         utilRe = new RegExp(
-          `\\b(?:bg|text|border|ring|fill|stroke|divide|outline|accent|caret|decoration|from|to|via|shadow|placeholder|inset-ring)-${name.slice(6)}(?![a-z-])`,
+          `\\b(?:bg|text|placeholder|border|divide|ring-offset|inset-ring|ring|fill|stroke|outline|accent|caret|decoration|from|to|via|shadow)(?:-(?:[trblxyse]|ss|se|es|ee))?-${name.slice(6)}(?![a-z-])`,
         );
       } else if (name.startsWith("radius-")) {
         utilRe = new RegExp(`\\brounded(?:-[trbleyxs]{1,2})?-${name.slice(7)}(?![a-z-])`);
@@ -285,14 +297,12 @@ try {
     });
   }
 
-  const compBlock = css
-    .slice(css.indexOf("@layer components"))
-    .replace(/\/\*[\s\S]*?\*\//g, "");
+  const compBlock = cssClean.slice(cssClean.indexOf("@layer components"));
   const compClasses = [
     ...new Set([...compBlock.matchAll(/^\s*\.([a-z][a-z0-9-]+)/gm)].map((m) => m[1])),
   ];
   for (const c of compClasses) {
-    if (!allSources.includes(c)) {
+    if (!boundaryRe(c).test(allSources)) {
       violations.push({
         file: CSS_FILE,
         line: lineOf(c, new RegExp(`^\\s*\\.${c}\\b`)),
@@ -302,8 +312,6 @@ try {
       });
     }
   }
-} catch {
-  /* theme.css assente: ignora */
 }
 
 const errors = violations.filter((v) => v.severity !== "warn");

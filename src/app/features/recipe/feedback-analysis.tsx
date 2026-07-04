@@ -448,7 +448,7 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
           style={{
             fontSize: "var(--font-size-xs)",
             fontFamily: "var(--font-mono)",
-            fontWeight: "var(--weight-bold)" as any,
+            fontWeight: "var(--weight-extrabold)" as any,
             letterSpacing: "0.08em",
             background: severityColors[finding.severity],
             color: "var(--overlay-text)",

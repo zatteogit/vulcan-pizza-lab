@@ -20,12 +20,12 @@ export function RecipeLearningPanel({
     <ModalSheet
       open={open}
       onClose={onClose}
-      ariaLabel={`Approfondimenti su ${style.name}`}
+      ariaLabelledby="learning-panel-title"
       size="lg"
       scrim="soft"
       surface="solid"
       entry="pop"
-      panelClassName="overflow-hidden"
+      panelClassName="overflow-y-auto overscroll-contain"
     >
             <div
               className="flex items-start gap-4 px-5 py-5 sm:px-6"
@@ -46,6 +46,7 @@ export function RecipeLearningPanel({
                   <span>Approfondimento</span>
                 </p>
                 <h2
+                  id="learning-panel-title"
                   className="font-serif mt-1"
                   style={{
                     fontSize: "clamp(var(--font-size-4xl), 6vw, var(--font-size-6xl))",

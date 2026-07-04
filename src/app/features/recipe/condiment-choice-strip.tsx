@@ -1,9 +1,7 @@
 /* ═══ CONDIMENT CHOICE STRIP — selettore condimenti (estratto lug 2026) ═══ */
 
 import { Search, Utensils, X } from "lucide-react";
-import { motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { useCms } from "../cms/cms-context";
 import { IconButton, ModalSheet } from "../../components/ds/index";
@@ -319,8 +317,7 @@ export function CondimentChoiceStrip({
           aria-hidden="true"
         />
       )}
-      {!isTimeline && typeof document !== "undefined"
-          ? createPortal(
+      {!isTimeline && (
               <ModalSheet
                 open={pickerOpen}
                 onClose={() => setPickerOpen(false)}
@@ -329,9 +326,9 @@ export function CondimentChoiceStrip({
                 scrim="plain"
                 surface="glass-dense"
                 entry="pop"
-                panelClassName="overflow-hidden"
+                panelClassName="flex flex-col overflow-hidden"
               >
-                  <div className="flex items-start gap-3 px-4 pb-3 pt-4 sm:px-5 sm:pt-5">
+                  <div className="flex flex-shrink-0 items-start gap-3 px-4 pb-3 pt-4 sm:px-5 sm:pt-5">
                     <div className="min-w-0 flex-1">
                       <div
                         className="type-data-sm"
@@ -381,9 +378,9 @@ export function CondimentChoiceStrip({
                     </IconButton>
                   </div>
 
-                  <div className="px-4 pb-4 sm:px-5 sm:pb-5">
+                  <div className="flex min-h-0 flex-col px-4 pb-4 sm:px-5 sm:pb-5">
                     <div
-                      className="flex items-center gap-2 rounded-2xl px-3"
+                      className="flex flex-shrink-0 items-center gap-2 rounded-2xl px-3"
                       style={{
                         minHeight: 46,
                         background: "var(--container-bg-low)",
@@ -417,7 +414,7 @@ export function CondimentChoiceStrip({
                       )}
                     </div>
 
-                    <div className="mt-3 flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
+                    <div className="mt-3 flex flex-shrink-0 gap-2 overflow-x-auto pb-1 hide-scrollbar">
                       <button
                         type="button"
                         onClick={() => setActiveFlavor("all")}
@@ -455,7 +452,7 @@ export function CondimentChoiceStrip({
                       ))}
                     </div>
 
-                    <div className="mt-3 max-h-[48vh] overflow-y-auto pr-1 sm:max-h-[440px]">
+                    <div className="mt-3 min-h-0 max-h-[48vh] overflow-y-auto pr-1 sm:max-h-[440px]">
                       <div className="grid gap-2 sm:grid-cols-2">
                         {filteredPickerChoices.length > 0 ? (
                           filteredPickerChoices.map(({ recipe }) => {
@@ -526,11 +523,8 @@ export function CondimentChoiceStrip({
                       </div>
                     </div>
                   </div>
-              </ModalSheet>,
-              document.body,
-              "topping-choice-sheet",
-            )
-          : null}
+              </ModalSheet>
+      )}
     </div>
   );
 }
