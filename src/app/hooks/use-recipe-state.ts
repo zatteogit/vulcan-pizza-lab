@@ -101,7 +101,10 @@ function defaultRecipePanConfig(style: PizzaStyle): PanConfig {
   };
 }
 
-function centerParamsForStyle(style: PizzaStyle, availableHours: number) {
+/* Esportata (redesign lug 2026): è la definizione del polo "originale" del
+   Crea — serve anche a home.tsx per calcolare isDirty in modo speculare al
+   reset ("Torna all'originale"). */
+export function centerParamsForStyle(style: PizzaStyle, availableHours: number) {
   const fMin = style.dough.fermentation_hours_range[0];
   const fMax = style.dough.fermentation_hours_range[1];
   const fermentHours = Math.min(Math.round((fMin + fMax) / 2), availableHours);
@@ -372,8 +375,25 @@ export function useRecipeState({
       setRecipeMode("adapted");
       setActiveInterpretationId(interpretation.id);
       if (clearVersion) setActiveVersionId(null);
+      /* Invariante "selezionare una firma NON è dirty" (fix 4 lug 2026): i
+         parametri NON overridati tornano ai centri dello stile — gli stessi
+         di createCanonicalTargets/reset — altrimenti si ereditano avanzi
+         della selezione precedente e la firma nasce già "modificata". */
       const overrides = interpretation.parameter_overrides;
-      if (overrides) {
+      if (style) {
+        const centered = centerParamsForStyle(style, defaultAvailableHours);
+        setCustomHydration(overrides?.hydration_pct ?? centered.hydration);
+        setCustomFlourW(overrides?.flour_w ?? centered.flourW);
+        setCustomFlourPL(overrides?.flour_pl ?? centered.flourPL);
+        setCustomFermentHours(
+          overrides?.fermentation_hours ?? centered.fermentHours,
+        );
+        setCustomFermentTemp(
+          overrides?.fermentation_temp_c ?? centered.fermentTemp,
+        );
+        setUsePreFerment(overrides?.use_pre_ferment ?? centered.usePreFerment);
+        setCustomSalt(style.dough.salt_pct);
+      } else if (overrides) {
         if (overrides.hydration_pct !== undefined)
           setCustomHydration(overrides.hydration_pct);
         if (overrides.flour_w !== undefined) setCustomFlourW(overrides.flour_w);
@@ -391,7 +411,7 @@ export function useRecipeState({
         setSelectedToppingConcept(resolved ? resolved.id : interpretation.base_topping_concept_id);
       }
     },
-    [style],
+    [style, defaultAvailableHours],
   );
 
   const resetToBaseRecipe = useCallback(
@@ -414,6 +434,9 @@ export function useRecipeState({
       setCustomFermentHours(centered.fermentHours);
       setCustomFermentTemp(centered.fermentTemp);
       setUsePreFerment(centered.usePreFerment);
+      // Redesign lug 2026: anche il sale torna al valore dello stile — così
+      // dopo il reset isDirty è false per costruzione (invariante Salva/Torna).
+      setCustomSalt(style.dough.salt_pct);
       setPanConfig(defaultRecipePanConfig(style));
       setLastOptimization(null);
       if (options.clearTopping !== false) {

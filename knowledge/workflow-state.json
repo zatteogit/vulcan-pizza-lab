@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-03T13:40:00.000Z",
+  "lastUpdated": "2026-07-04T02:51:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 150,
@@ -10,11 +10,11 @@
     "stylesInDb": 28
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-03 v2 registra la scomposizione completa del file monolitico recipe-output.tsx in 8 moduli dedicati (condimenti, ingredienti, timeline, hero procedimento, dettagli step, formattatori e micro-componenti condivisi) per massimizzare la manutenibilità e le performance di build.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-04 registra il redesign del tab Ricetta con la StatStrip focalizzata sui 4 parametri critici, l'unificazione delle azioni sulla MatchCard (Ottimizza, Personalizza, Salva, Torna all'originale), la riga d'Ispirazione inline (InterpretationSwitcher) con approfondimento in modale, e il modello di stato 'dirty' che governa coerentemente l'estetica (terracotta vs salvia) e le azioni.",
   "filesMappedCount": 150,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-03-v2",
+  "lastScannedChapter": "kipi-update-2026-07-04",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -63,7 +63,7 @@
         "src/app/features/cooking/cooking-mode.tsx",
         "src/app/features/cooking/step-illustrations.tsx"
       ],
-      "lastWorked": "2026-07-03"
+      "lastWorked": "2026-07-04"
     },
     {
       "id": "scoring-feedback",
@@ -76,7 +76,7 @@
         "src/app/features/recipe/feedback-analysis.tsx",
         "src/app/features/recipe/feedback-store.ts"
       ],
-      "lastWorked": "2026-07-03"
+      "lastWorked": "2026-07-04"
     },
     {
       "id": "styles-versions",
@@ -96,7 +96,7 @@
         "src/app/features/recipe/tilt-card.tsx",
         "src/app/features/recipe/interpretation-narrative-card.tsx"
       ],
-      "lastWorked": "2026-07-01"
+      "lastWorked": "2026-07-04"
     },
     {
       "id": "cms-i18n",
@@ -121,7 +121,7 @@
         "src/app/features/cms/locales/domain-pt.ts",
         "src/app/pages/cms.tsx"
       ],
-      "lastWorked": "2026-07-03"
+      "lastWorked": "2026-07-04"
     },
     {
       "id": "routing-shell",

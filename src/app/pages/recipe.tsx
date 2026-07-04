@@ -5,12 +5,11 @@
    "Copia link" genera URL condivisibile con parametri correnti. */
 
 import {
-ChevronDown,
+Bookmark,
 ChevronLeft,
 Sparkles,
-X
 } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
+import { motion } from "motion/react";
 import {
 useCallback,
 useEffect,
@@ -18,11 +17,12 @@ useMemo,
 useRef,
 useState,
 } from "react";
-import { Link,useLocation,useParams,useSearchParams } from "react-router";
+import { Link,useLocation,useNavigate,useParams,useSearchParams } from "react-router";
 import { useCms,type CmsContent } from "../features/cms/cms-context";
 import { t as tpl } from "../features/cms/i18n";
 import {
 getInterpretationById,
+getInterpretationsForStyle,
 type Interpretation
 } from "../data/interpretation-library";
 import {
@@ -54,15 +54,15 @@ applyVersionParams,
 import { RecipeLearningPanel } from "../features/recipe/recipe-learning-panel";
 import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
 import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
-import { InterpretationNarrativeCard } from "../features/recipe/interpretation-narrative-card";
+import { InterpretationSwitcher } from "../features/recipe/interpretation-narrative-card";
 import {
 type RecipePrimaryTab,
 } from "../features/recipe/recipe-section-tabs";
-import { buildAdvancedSummary, RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
+import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
 import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
-import { CtaButton, Heading } from "../components/ds/index";
+import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
 import {
 getDefaultVersion,
 getVersionById,
@@ -223,6 +223,7 @@ function RecipeContent({
   const { bcp47 } = useCms();
   const [searchParams] = useSearchParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const exploreBackTo = readExploreBackTo(location.state);
 
   /* ── Load profile from localStorage ── */
@@ -246,9 +247,15 @@ function RecipeContent({
    * Fallback al centro del range quando lo stile non ha versioni. */
   const skillLevel = savedSkill ?? 2;
   const urlInterpretationId = searchParams.get("interpretation");
+  /* Default variante (round 6, nota Matteo): se lo stile ha una variante
+     "legata a doppio filo" (verified_canonical: i disciplinari AVPN/IGP/
+     APITER), è LEI la selezione di partenza — mai una firma d'autore. */
+  const styleCanonicalVariant =
+    getInterpretationsForStyle(style.id).find((it) => it.verified_canonical) ??
+    null;
   const initialInterpretation: Interpretation | null = urlInterpretationId
     ? (getInterpretationById(urlInterpretationId) ?? null)
-    : null;
+    : styleCanonicalVariant;
   const interpOverrides = initialInterpretation?.parameter_overrides;
   const urlVersionId = useTailoredUrlParams ? searchParams.get("v") : null;
   const initialVersion: StyleVersion | null =
@@ -372,12 +379,9 @@ function RecipeContent({
   );
   const openPersonalizeByDefault = false;
   const [setupPanelOpen, setSetupPanelOpen] = useState(false);
-  const [toast, setToast] = useState<{
-    message: string;
-    subText?: string;
-    actionLabel?: string;
-    onAction?: () => void;
-  } | null>(null);
+  /* Redesign lug 2026: niente bozze/parcheggi — all'uscita con modifiche non
+     salvate si avvisa e basta. */
+  const [exitConfirm, setExitConfirm] = useState(false);
   const [activeRecipeTab, setActiveRecipeTab] = useState<RecipePrimaryTab>(() => {
     const tab = searchParams.get("tab");
     if (tab === "procedimento" || tab === "condimento" || tab === "ricetta") {
@@ -399,11 +403,6 @@ function RecipeContent({
   const [setupNotice, setSetupNotice] = useState<string | null>(null);
   const [learningOpen, setLearningOpen] = useState(false);
 
-  useEffect(() => {
-    if (!toast) return;
-    const timer = window.setTimeout(() => setToast(null), 8000);
-    return () => window.clearTimeout(timer);
-  }, [toast]);
   const searchSyncTimeoutRef = useRef<number | null>(null);
   const [activeVersionId, setActiveVersionId] = useState<string | null>(
     initialVersion?.id ?? null,
@@ -411,6 +410,7 @@ function RecipeContent({
   const activeVersion: StyleVersion | null = activeVersionId
     ? getVersionById(activeVersionId)
     : null;
+
 
   /* Sprint 12 Fase 3 — Topping selezionato esplicitamente dall'utente via chip strip.
    * Senza deep-link parte il primo item del carousel condimenti; il default_topping_ref
@@ -435,6 +435,71 @@ function RecipeContent({
   const [activeInterpretationId, setActiveInterpretationId] = useState<string | null>(
     initialInterpretation?.id ?? null,
   );
+
+  /* ═══ Modello "dirty" (redesign lug 2026) ═══
+     L'originale è UNO: la canonica dello stile (o la firma attiva, che
+     ridefinisce il canone). canonicalTargets = esattamente ciò che "Torna
+     all'originale" ripristina; isDirty = i parametri attuali se ne
+     discostano. Invariante: Salva/Torna compaiono ⇔ Torna cambierebbe
+     qualcosa. Anche firma d'origine (eyebrow) e trend seguono isDirty —
+     aprire il pannello senza toccare nulla NON personalizza. */
+  const canonicalTargets = useMemo(() => {
+    const overrides = activeInterpretationId
+      ? getInterpretationById(activeInterpretationId)?.parameter_overrides
+      : undefined;
+    const canonicalVersion = activeInterpretationId
+      ? null
+      : getCanonicalVersion(style.id);
+    const fMidBase = Math.min(
+      Math.round(
+        (style.dough.fermentation_hours_range[0] +
+          style.dough.fermentation_hours_range[1]) /
+          2,
+      ),
+      48,
+    );
+    const base = {
+      hydration:
+        canonicalVersion?.params.hydration_pct ??
+        Math.round(
+          (style.dough.hydration_pct_range[0] +
+            style.dough.hydration_pct_range[1]) /
+            2,
+        ),
+      flourW:
+        canonicalVersion?.params.flour_w ??
+        Math.round(
+          (style.dough.flour_w_range[0] + style.dough.flour_w_range[1]) / 2,
+        ),
+      flourPL: canonicalVersion?.params.flour_pl ?? defaultPL(style),
+      fermentHours: canonicalVersion?.params.fermentation_hours ?? fMidBase,
+      fermentTemp:
+        canonicalVersion?.params.fermentation_temp_c ??
+        defaultFermentTempC(style, fMidBase),
+      preFerment:
+        canonicalVersion?.params.use_pre_ferment ?? style.requires_pre_ferment,
+      salt: style.dough.salt_pct,
+      versionId: canonicalVersion?.id ?? null,
+    };
+    if (overrides) {
+      if (overrides.hydration_pct !== undefined) base.hydration = overrides.hydration_pct;
+      if (overrides.flour_w !== undefined) base.flourW = overrides.flour_w;
+      if (overrides.flour_pl !== undefined) base.flourPL = overrides.flour_pl;
+      if (overrides.fermentation_hours !== undefined) base.fermentHours = overrides.fermentation_hours;
+      if (overrides.fermentation_temp_c !== undefined) base.fermentTemp = overrides.fermentation_temp_c;
+      if (overrides.use_pre_ferment !== undefined) base.preFerment = overrides.use_pre_ferment;
+    }
+    return base;
+  }, [style, activeInterpretationId]);
+
+  const isDirty =
+    customHydration !== canonicalTargets.hydration ||
+    customFlourW !== canonicalTargets.flourW ||
+    Math.abs(customFlourPL - canonicalTargets.flourPL) > 0.001 ||
+    customFermentHours !== canonicalTargets.fermentHours ||
+    customFermentTemp !== canonicalTargets.fermentTemp ||
+    usePreFerment !== canonicalTargets.preFerment ||
+    Math.abs(customSalt - canonicalTargets.salt) > 0.01;
 
   const applyVersionToState = useCallback(
     (version: StyleVersion) => {
@@ -541,14 +606,40 @@ function RecipeContent({
         return;
       }
       setActiveInterpretationId(interpretation.id);
+      /* Invariante "selezionare una firma NON è dirty": i parametri NON
+         overridati tornano alla base della firma (stessi fallback di
+         canonicalTargets), altrimenti si ereditano avanzi della selezione
+         precedente e i trend si accendono da soli (fix 4 lug 2026). */
       const o = interpretation.parameter_overrides;
-      if (!o) return;
-      if (o.hydration_pct !== undefined) setCustomHydration(o.hydration_pct);
-      if (o.flour_w !== undefined) setCustomFlourW(o.flour_w);
-      if (o.flour_pl !== undefined) setCustomFlourPL(o.flour_pl);
-      if (o.fermentation_hours !== undefined) setCustomFermentHours(o.fermentation_hours);
-      if (o.fermentation_temp_c !== undefined) setCustomFermentTemp(o.fermentation_temp_c);
-      if (o.use_pre_ferment !== undefined) setUsePreFerment(o.use_pre_ferment);
+      const fMidBase = Math.min(
+        Math.round(
+          (style.dough.fermentation_hours_range[0] +
+            style.dough.fermentation_hours_range[1]) /
+            2,
+        ),
+        48,
+      );
+      setCustomHydration(
+        o?.hydration_pct ??
+          Math.round(
+            (style.dough.hydration_pct_range[0] +
+              style.dough.hydration_pct_range[1]) /
+              2,
+          ),
+      );
+      setCustomFlourW(
+        o?.flour_w ??
+          Math.round(
+            (style.dough.flour_w_range[0] + style.dough.flour_w_range[1]) / 2,
+          ),
+      );
+      setCustomFlourPL(o?.flour_pl ?? defaultPL(style));
+      setCustomFermentHours(o?.fermentation_hours ?? fMidBase);
+      setCustomFermentTemp(
+        o?.fermentation_temp_c ?? defaultFermentTempC(style, fMidBase),
+      );
+      setUsePreFerment(o?.use_pre_ferment ?? style.requires_pre_ferment);
+      setCustomSalt(style.dough.salt_pct);
       // L'override topping è opzionale: se l'interpretazione include un topping firmato,
       // pre-selezionalo (es. da Michele → Margherita).
       if (interpretation.base_topping_concept_id) {
@@ -749,7 +840,10 @@ function RecipeContent({
     experimentation: cms.scoreDimensions?.experimentation?.weight,
   };
   const ceilingInfo = useMemo(() => {
-    const opt = optimizeRecipe(style, matchConstraints, undefined, undefined, optScoreWeights).recipe;
+    // panConfig passato all'optimizer: senza, su stili in teglia il soffitto
+    // era calcolato su una teglia diversa da quella mostrata → "Ottimizza"
+    // poteva ABBASSARE il punteggio (bug reso visibile dal modello dirty).
+    const opt = optimizeRecipe(style, matchConstraints, undefined, panConfig, optScoreWeights).recipe;
     const hard = thermalViability(style, opt.oven_temp_c) < 1;
     const softNeeds: string[] = [];
     if (matchConstraints.pantry_flours.length > 0) {
@@ -769,7 +863,7 @@ function RecipeContent({
     }
     return { value: opt.scores.composite, hard, softNeeds };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [style, matchConstraints, cms.scoreDimensions, cms.cooking.needFlour, cms.yeastLabels]);
+  }, [style, matchConstraints, panConfig, cms.scoreDimensions, cms.cooking.needFlour, cms.yeastLabels]);
 
   const [lastOptimization, setLastOptimization] = useState<{
     params: { hydration: number; flour_w: number; fermentation_hours: number; fermentation_temp_c: number; use_pre_ferment: boolean };
@@ -777,7 +871,7 @@ function RecipeContent({
   } | null>(null);
 
   const handleOptimize = useCallback(() => {
-    const o = optimizeRecipe(style, matchConstraints, undefined, undefined, optScoreWeights);
+    const o = optimizeRecipe(style, matchConstraints, undefined, panConfig, optScoreWeights);
     // "Ottimizza per me" = il movimento completo verso su-misura: porta il forno
     // alla TUA cucina (come faceva il vecchio "adatta") E sceglie i parametri
     // migliori. Così il forno mostrato nei parametri = il tuo, non l'ideale.
@@ -807,7 +901,13 @@ function RecipeContent({
       next.set("temp", String(personalOvenTemp));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [style, matchConstraints, cms.scoreDimensions, savedOven?.ovenType, savedOven?.maxTemp]);
+  }, [style, matchConstraints, panConfig, cms.scoreDimensions, savedOven?.ovenType, savedOven?.maxTemp]);
+
+  /* "Ottimizza per me" ha senso solo se c'è margine: già all'ottimo (anche
+     via deep-link) o a soffitto raggiunto, il bottone sparisce — la riga
+     soffitto spiega perché (fix 4 lug 2026, nota Matteo). */
+  const optimizeGain =
+    Math.round(ceilingInfo.value) - Math.round(matchRecipe.scores.composite);
 
   const isOptimized =
     recipeMode !== "canonical" &&
@@ -902,12 +1002,15 @@ function RecipeContent({
   }, [savedEntry, style.id, style.name, activeVersionId, currentSaveParams, matchRecipe]);
 
   const styleVersions = useMemo(() => getVersions(style.id), [style.id]);
+  /* Firma d'origine (redesign lug 2026): l'eyebrow dice l'origine UNA volta,
+     con il copy dei poli ("Ricetta canonica" / "Su misura per te") e identità
+     cromatica fissa (terracotta / salvia) via eyebrowTone. */
   const recipeTabLabel =
-    recipeMode === "canonical"
-      ? cmsMessage(cms, "recipeMode.canonical", cms.cooking.recipeCanonical)
-      : recipeMode === "lab"
-        ? cmsMessage(cms, "recipeMode.lab", "Laboratorio")
-        : cms.cooking.tabRecipeTailored;
+    recipeMode === "lab"
+      ? cmsMessage(cms, "recipeMode.lab", "Laboratorio")
+      : isDirty
+        ? cms.cooking.recipeAdapted
+        : cmsMessage(cms, "recipeMode.canonical", cms.cooking.recipeCanonical);
 
   /* Photo */
   const photo =
@@ -920,85 +1023,22 @@ function RecipeContent({
     PIZZA_FAMILIES[style.family]?.name ||
     "";
 
-  /* Adattamento "silenzioso": calibra modalità e vincoli per la cucina dell'utente,
-     senza toast né cambi di tab. Usato sia dal flusso esplicito (con toast) sia
-     dall'apertura diretta della dashboard. */
-  const applyKitchenAdaptation = useCallback(() => {
-    const personalOvenType = savedOven?.ovenType ?? "home";
-    const personalOvenTemp = savedOven?.maxTemp ?? 250;
-
-    setRecipeMode("adapted");
-    setConstraints((current) => ({
-      ...current,
-      oven_type: personalOvenType,
-      oven_max_temp_c: personalOvenTemp,
-      dough_balls: doughBalls,
-    }));
-
-    replaceRecipeSearchParams((next) => {
-      next.set("mode", "adapted");
-      next.delete("tab");
-      if (activeVersionId) next.set("v", activeVersionId);
-      else next.delete("v");
-      if (activeInterpretationId) next.set("interpretation", activeInterpretationId);
-      else next.delete("interpretation");
-      if (selectedToppingConcept && selectedToppingConcept !== style.default_topping_ref)
-        next.set("topping", selectedToppingConcept);
-      else next.delete("topping");
-      next.set("h", String(customHydration));
-      next.set("w", String(customFlourW));
-      next.set("pl", String(customFlourPL));
-      next.set("f", String(customFermentHours));
-      next.set("t", String(customFermentTemp));
-      next.set("n", String(doughBalls));
-      if (usePreFerment) next.set("pf", "1");
-      else next.delete("pf");
-      next.set("oven", personalOvenType);
-      next.set("temp", String(personalOvenTemp));
-    });
-  }, [
-    savedOven?.ovenType,
-    savedOven?.maxTemp,
-    doughBalls,
-    activeVersionId,
-    activeInterpretationId,
-    selectedToppingConcept,
-    style.default_topping_ref,
-    customHydration,
-    customFlourW,
-    customFlourPL,
-    customFermentHours,
-    customFermentTemp,
-    usePreFerment,
-  ]);
-
-  /* Flusso esplicito dalla MatchCard: adatta + conferma con toast. */
-  const handleAdaptToKitchen = useCallback(() => {
-    applyKitchenAdaptation();
-    setActiveRecipeTab("ricetta");
-    setToast({
-      message: cmsMessage(cms, "recipeSetup.adaptedToast", "Calibrazione cucina completata!"),
-      subText: cmsMessage(cms, "recipeSetup.adaptedToastSub", "I parametri dell'impasto e le temperature sono stati ricalibrati per il tuo ambiente e forno."),
-      actionLabel: cms.ui.customizeParams,
-      onAction: () => setSetupPanelOpen(true),
-    });
-  }, [applyKitchenAdaptation, cms]);
-
-  /* Scorciatoia sempre disponibile: apre la dashboard, adattando in silenzio
-     se la ricetta è ancora canonica (nessun toast). */
+  /* "Personalizza": apre il dialog e basta. NIENTE adattamento silenzioso —
+     la ricetta diventa personalizzata solo quando l'utente cambia davvero un
+     parametro (isDirty), non quando apre il pannello (nota Matteo lug 2026). */
   const handleOpenPersonalization = useCallback(() => {
-    if (recipeMode === "canonical") applyKitchenAdaptation();
     setSetupPanelOpen(true);
-  }, [recipeMode, applyKitchenAdaptation]);
+  }, []);
 
+  /* Un parametro toccato a mano = si esce dal polo canonico (per URL/share);
+     l'evidenza visiva (eyebrow, trend, Salva/Torna) segue però isDirty. */
+  const markAdapted = useCallback(() => {
+    setRecipeMode((mode) => (mode === "canonical" ? "adapted" : mode));
+  }, []);
+
+  /* "Torna all'originale": ripristina ESATTAMENTE canonicalTargets — così
+     l'invariante regge (dopo il reset, isDirty è false per costruzione). */
   const handleResetToCanonical = useCallback(() => {
-    const canonicalVersion = activeInterpretationId
-      ? null
-      : getCanonicalVersion(style.id);
-    const overrides = activeInterpretationId
-      ? getInterpretationById(activeInterpretationId)?.parameter_overrides
-      : undefined;
-
     setRecipeMode("canonical");
     setConstraints((current) => ({
       ...current,
@@ -1009,19 +1049,15 @@ function RecipeContent({
     setDoughBalls(getDefaultDoughBalls(style));
     setSetupNotice(null);
 
-    if (overrides) {
-      if (overrides.hydration_pct !== undefined) setCustomHydration(overrides.hydration_pct);
-      if (overrides.flour_w !== undefined) setCustomFlourW(overrides.flour_w);
-      if (overrides.flour_pl !== undefined) setCustomFlourPL(overrides.flour_pl);
-      if (overrides.fermentation_hours !== undefined) setCustomFermentHours(overrides.fermentation_hours);
-      if (overrides.fermentation_temp_c !== undefined) setCustomFermentTemp(overrides.fermentation_temp_c);
-      if (overrides.use_pre_ferment !== undefined) setUsePreFerment(overrides.use_pre_ferment);
-      setActiveVersionId(null);
-    } else if (canonicalVersion) {
-      applyVersionToState(canonicalVersion);
-    } else {
-      resetToBaseRecipe();
-    }
+    setCustomHydration(canonicalTargets.hydration);
+    setCustomFlourW(canonicalTargets.flourW);
+    setCustomFlourPL(canonicalTargets.flourPL);
+    setCustomFermentHours(canonicalTargets.fermentHours);
+    setCustomFermentTemp(canonicalTargets.fermentTemp);
+    setUsePreFerment(canonicalTargets.preFerment);
+    setCustomSalt(canonicalTargets.salt);
+    setActiveVersionId(canonicalTargets.versionId);
+    setLastOptimization(null);
 
     replaceRecipeSearchParams((next) => {
       next.set("mode", "canonical");
@@ -1046,9 +1082,24 @@ function RecipeContent({
     activeInterpretationId,
     style,
     selectedToppingConcept,
-    applyVersionToState,
-    resetToBaseRecipe,
+    canonicalTargets,
   ]);
+
+  /* ═══ Uscita con modifiche non salvate (redesign lug 2026) ═══
+     Niente bozze: se la ricetta è modificata e non salvata, il back avvisa
+     e offre di salvarla; altrimenti si esce e basta. */
+  const handleBack = useCallback(() => {
+    if (isDirty && !savedEntry) {
+      setExitConfirm(true);
+      return;
+    }
+    navigate(exploreBackTo);
+  }, [isDirty, savedEntry, navigate, exploreBackTo]);
+
+  const styleInterpretations = useMemo(
+    () => getInterpretationsForStyle(style.id),
+    [style.id],
+  );
 
   if (!recipe) return null;
 
@@ -1068,13 +1119,15 @@ function RecipeContent({
         panConfig={panConfig}
         activeTab={activeRecipeTab}
         onTabChange={handleRecipeTabChange}
-        back={{ label: (cms.pages as any).navExplore || cms.pages.recipeBackToStyles, to: exploreBackTo }}
+        back={{ label: (cms.pages as any).navExplore || cms.pages.recipeBackToStyles, onClick: handleBack }}
         recipeTabLabel={cms.cooking.tabRecipe}
         eyebrow={recipeTabLabel}
+        eyebrowTone={isDirty ? "tailored" : "canonical"}
         shareUrl={shareUrl}
         showStickyHeader={false}
-        isPersonalized={recipeMode !== "canonical"}
-        onRequestPersonalization={handleAdaptToKitchen}
+        isPersonalized={isDirty}
+        onRequestPersonalization={handleOpenPersonalization}
+        onResetToOriginal={isDirty ? handleResetToCanonical : undefined}
         selectedToppingConcept={selectedToppingConcept}
         onSelectTopping={(recipeId) => {
           const toppingRecipe = TOPPING_LIBRARY[recipeId];
@@ -1086,19 +1139,23 @@ function RecipeContent({
         onNerdModeChange={setNerdMode}
         matchSlot={
           <>
-            {/* Mockup Proposta A: parametri sopra la match card, stretti. */}
-            <div className="flex flex-col gap-3">
-            {/* Niente modeBadge: l'origine (canonica/su misura) la dichiara
-                già l'eyebrow della pagina, visibile su tutti i tab. */}
+            {/* Round 4-5 (note Matteo): ordine Ispirazione → parametri →
+                match. Chip e tabella sono UN'unità (10px); il verdetto
+                respira (24px). */}
+            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2.5">
+            <InterpretationSwitcher
+              interpretations={styleInterpretations}
+              activeId={activeInterpretationId}
+              onSelect={handleInterpretationSelect}
+              defaultInterpretation={styleCanonicalVariant}
+            />
             <RecipeStatStrip
               recipe={recipe}
-              nerdMode={effectiveNerdMode}
-              dense={!effectiveNerdMode}
-              isPersonalized={recipeMode !== "canonical"}
-              nerdAvailable={nerdAvailable}
-              onNerdModeChange={setNerdMode}
+              isPersonalized={isDirty}
             />
-            {/* La leva dei parametri vive COI parametri (nota Matteo 3 lug). */}
+            {/* Il dialog Personalizza: si apre dal pulsante sulla match card
+                (niente trigger proprio — nota Matteo lug 2026). */}
             <RecipeSetupPanel
                 style={style}
                 versions={styleVersions}
@@ -1115,11 +1172,11 @@ function RecipeContent({
                 open={setupPanelOpen}
                 onOpenChange={setSetupPanelOpen}
                 onRequestOpen={handleOpenPersonalization}
-                isCanonical={recipeMode === "canonical"}
+                isCanonical={!isDirty}
                 openDefault={openPersonalizeByDefault}
                 scores={matchRecipe.scores}
-                compact={!effectiveNerdMode}
-                advancedSummary={buildAdvancedSummary(recipe, cms, bcp47)}
+                hideTrigger
+                recipe={recipe}
               >
                 <RecipeConfigurator
                   style={style}
@@ -1129,33 +1186,49 @@ function RecipeContent({
                     if (c.dough_balls !== doughBalls) setDoughBalls(c.dough_balls);
                   }}
                   customHydration={customHydration}
-                  onHydrationChange={setCustomHydration}
+                  onHydrationChange={(v) => {
+                    markAdapted();
+                    setCustomHydration(v);
+                  }}
                   customFlourW={customFlourW}
-                  onFlourWChange={setCustomFlourW}
+                  onFlourWChange={(v) => {
+                    markAdapted();
+                    setCustomFlourW(v);
+                  }}
                   customFermentHours={customFermentHours}
-                  onFermentHoursChange={setCustomFermentHours}
+                  onFermentHoursChange={(v) => {
+                    markAdapted();
+                    setCustomFermentHours(v);
+                  }}
                   customFermentTemp={customFermentTemp}
-                  onFermentTempChange={setCustomFermentTemp}
+                  onFermentTempChange={(v) => {
+                    markAdapted();
+                    setCustomFermentTemp(v);
+                  }}
                   usePreFerment={usePreFerment}
-                  onPreFermentChange={setUsePreFerment}
+                  onPreFermentChange={(v) => {
+                    markAdapted();
+                    setUsePreFerment(v);
+                  }}
                   customSalt={customSalt}
                   onSaltChange={(v) => {
-                    if (recipeMode === "canonical") setRecipeMode("adapted");
+                    markAdapted();
                     setCustomSalt(v);
                   }}
                   panConfig={panConfig}
                   onPanConfigChange={setPanConfig}
                 />
               </RecipeSetupPanel>
+            </div>
             <RecipeMatchCard
               scores={matchRecipe.scores}
               ovenTemp={matchConstraints.oven_max_temp_c}
               idealTemp={style.baking.temp_c_ideal}
               minTemp={style.baking.temp_c_range[0]}
-              mode={recipeMode}
-              onAdapt={handleAdaptToKitchen}
-              onReset={recipeMode !== "canonical" ? handleResetToCanonical : undefined}
-              onOptimize={isOptimized ? undefined : handleOptimize}
+              mode={recipeMode === "lab" ? "lab" : isDirty ? "adapted" : "canonical"}
+              dirty={isDirty}
+              onPersonalize={handleOpenPersonalization}
+              onOptimize={isOptimized || optimizeGain < 2 ? undefined : handleOptimize}
               optimizationRationale={
                 isOptimized && lastOptimization
                   ? resolveEngineMsgs(lastOptimization.rationale, cms.engineMessages)
@@ -1169,10 +1242,6 @@ function RecipeContent({
               nerdMode={effectiveNerdMode}
             />
             </div>
-            {activeInterpretationId && (() => {
-              const it = getInterpretationById(activeInterpretationId);
-              return it ? <InterpretationNarrativeCard interpretation={it} /> : null;
-            })()}
           </>
         }
         introExtraSlot={
@@ -1260,90 +1329,38 @@ function RecipeContent({
         onClose={() => setLearningOpen(false)}
       />
 
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 350, damping: 28 }}
-            className="fixed bottom-24 left-4 right-4 md:left-auto md:right-6 md:bottom-6 z-[100] max-w-sm"
-          >
-            <div
-              className="relative overflow-hidden rounded-2xl p-4 pr-9 flex items-start gap-3.5"
-              style={{
-                background: "color-mix(in srgb, var(--container-page) 88%, transparent)",
-                backdropFilter: "blur(24px) saturate(1.6)",
-                WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-                border: "1px solid var(--container-border)",
-                borderLeft: "4px solid var(--cta)",
-                boxShadow: "0 16px 44px color-mix(in srgb, var(--shadow-color) 22%, transparent)",
-                color: "var(--text-default)",
-              }}
-            >
-              <div
-                className="flex items-center justify-center rounded-xl flex-shrink-0"
-                style={{
-                  width: 40,
-                  height: 40,
-                  background: "var(--recipe-setup-icon-bg)",
-                  color: "var(--recipe-setup-icon)",
-                }}
-              >
-                <Sparkles size={18} />
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <h4 style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-bold)" as any, margin: 0, lineHeight: "var(--leading-tight)" }}>
-                  {toast.message}
-                </h4>
-                {toast.subText && (
-                  <p className="type-body-xs" style={{ color: "var(--text-muted)", margin: "3px 0 0 0", lineHeight: "var(--leading-normal)" }}>
-                    {toast.subText}
-                  </p>
-                )}
-
-                {toast.actionLabel && toast.onAction && (
-                  <button
-                    onClick={() => {
-                      toast.onAction?.();
-                      setToast(null);
-                    }}
-                    className="mt-3 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full active:scale-95 transition-all"
-                    style={{
-                      background: "var(--recipe-setup-action-bg)",
-                      color: "var(--recipe-setup-action-text)",
-                      fontSize: "var(--font-size-sm)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {toast.actionLabel}
-                    <ChevronDown size={13} style={{ transform: "rotate(-90deg)" }} />
-                  </button>
-                )}
-              </div>
-
-              <button
-                onClick={() => setToast(null)}
-                className="absolute top-3 right-3 flex items-center justify-center rounded-full active:scale-90 transition-transform"
-                style={{ width: 24, height: 24, background: "var(--container-bg-low)", border: "1px solid var(--container-border-subtle)", color: "var(--text-muted)", cursor: "pointer", padding: 0 }}
-                aria-label={cms.ui.close}
-              >
-                <X size={13} />
-              </button>
-
-              <motion.div
-                initial={{ width: "100%" }}
-                animate={{ width: "0%" }}
-                transition={{ duration: 8, ease: "linear" }}
-                className="absolute bottom-0 left-0 h-[3px] rounded-full"
-                style={{ background: "var(--cta)", opacity: 0.6 }}
-              />
-            </div>
-          </motion.div>
+      {/* ── Avviso uscita: modifiche non salvate ── */}
+      <ConfirmDialog
+        open={exitConfirm}
+        onDismiss={() => setExitConfirm(false)}
+        ariaLabel={cms.cooking.unsavedTitle ?? "Modifiche non salvate"}
+        icon={<Bookmark size={26} />}
+        title={cms.cooking.unsavedTitle ?? "Modifiche non salvate"}
+        body={tpl(
+          cms.cooking.unsavedBody ??
+            "Se esci ora, la tua versione di {style} andrà persa. Vuoi salvarla nel ricettario?",
+          { style: style.name },
         )}
-      </AnimatePresence>
+        actions={[
+          {
+            label: cms.cooking.saveVersion,
+            onClick: () => {
+              handleToggleSaveRecipe();
+              setExitConfirm(false);
+              navigate(exploreBackTo);
+            },
+            variant: "cta",
+          },
+          {
+            label: cms.cooking.unsavedDiscard ?? "Esci senza salvare",
+            onClick: () => {
+              setExitConfirm(false);
+              navigate(exploreBackTo);
+            },
+            variant: "secondary",
+          },
+        ]}
+      />
     </main>
   );
 }

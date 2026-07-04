@@ -15,7 +15,9 @@ import {
 } from "react";
 import { CtaButton } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
-import { createFormatter } from "../cms/i18n";
+import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
+import { SpecCell } from "./recipe-stat-strip";
+import { NerdAuraBlock } from "./recipe-output-bits";
 import {
   getInterpretationById,
   getInterpretationsForStyle,
@@ -127,9 +129,16 @@ interface RecipeSetupPanelProps {
   /** Gerarchia azioni (Proposta A, lug 2026): in Easy il trigger diventa una
    *  minicard discreta — "Ottimizza per me" resta l'unica azione piena. */
   compact?: boolean;
+  /** Redesign lug 2026: nessun trigger proprio — l'apertura passa dal
+   *  pulsante "Personalizza" della match card; qui resta solo il dialog. */
+  hideTrigger?: boolean;
   /** Miniriepilogo dei parametri che la StatStrip Easy non mostra
    *  (es. "Sale 2,6% · W 200 · 22 °C"), calcolato dal chiamante. */
   advancedSummary?: string;
+  /** Round 4 (lug 2026): i dati nerd non vivono più sulla scheda (accordion
+   *  della strip rimosso) — se passata, la ricetta alimenta il blocco science
+   *  read-only in coda al dialog (lievito, P/L, ore@18°, Q10, Aw). */
+  recipe?: GeneratedRecipe | null;
   children?: ReactNode;
 }
 
@@ -154,7 +163,9 @@ export function RecipeSetupPanel({
   isCanonical = false,
   scores,
   compact = false,
+  hideTrigger = false,
   advancedSummary,
+  recipe = null,
   children,
 }: RecipeSetupPanelProps) {
   const { cms, bcp47 } = useCms();
@@ -227,6 +238,17 @@ export function RecipeSetupPanel({
     .filter(Boolean)
     .join(" · ");
 
+  /* Riepilogo completo dei parametri "sommersi" (sale, W, temperatura,
+     pre-fermento) + preset/interpretazione attivi: è la seconda riga dello
+     spec-sheet Impasto, condivisa da Easy (adv-line) e Nerd (card piena). */
+  const fullSummary = [
+    advancedSummary,
+    activeVersion ? activeVersionLabel : null,
+    activeInterpretation ? interpretationName(activeInterpretation) : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
   const triggerSubtitle = notice
     ? notice
     : isCanonical
@@ -235,74 +257,64 @@ export function RecipeSetupPanel({
           "recipeSetup.triggerCanonical",
           "Adatta idratazione, lievitazione e cottura alla tua cucina",
         )
-      : summary;
+      : fullSummary || summary;
   /* Il titolo del trigger dice già "Personalizza parametri": la pill
      ripete il verbo breve, non il titolo (duplicava su desktop). */
   const triggerAction = cms.ui.modify;
 
-  /* Minicard Easy: notice in tempo reale se presente, altrimenti i parametri
-     "sommersi" (sale, W, temperatura) + preset/interpretazione attivi. */
-  const compactSummary =
-    notice ??
-    [
-      advancedSummary,
-      activeVersion ? activeVersionLabel : null,
-      activeInterpretation ? interpretationName(activeInterpretation) : null,
-    ]
-      .filter(Boolean)
-      .join(" · ");
+  /* Adv-line Easy: notice in tempo reale se presente, altrimenti il riepilogo
+     completo. */
+  const compactSummary = notice ?? fullSummary;
 
   return (
     <section>
-      {compact ? (
-        /* Minicard Easy (rollback 3 lug): scatola discreta con icona, vive
-           accanto ai parametri. PRIMA il riepilogo dei valori sommersi (sale,
-           W, temperatura, preset), POI l'azione "Regola a mano" a destra. */
+      {hideTrigger ? null : compact ? (
+        /* Adv-line (redesign lug 2026): seconda riga dello spec-sheet, niente
+           scatola — PRIMA i dati (riepilogo dei valori sommersi: sale, W,
+           temperatura, preset), POI la leva "Regola a mano ›" a chiuderla.
+           Solo la leva ha aspetto cliccabile. */
         <button
           onClick={() => (onRequestOpen ? onRequestOpen() : setOpen(true))}
-          className="w-full flex items-center gap-2.5 rounded-2xl px-4 py-3 text-left active:scale-[0.99] transition-all duration-200"
+          className="w-full flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 px-0.5 py-1 text-left active:scale-[0.995] transition-transform"
           style={{
-            background: "color-mix(in srgb, var(--container-bg) 72%, transparent)",
-            border: "1px solid var(--container-border-subtle)",
+            background: "transparent",
+            border: "none",
             cursor: "pointer",
           }}
           aria-expanded={open}
           aria-haspopup="dialog"
         >
-          <Sparkles
-            size={14}
-            style={{ color: "var(--text-accent)", flexShrink: 0 }}
-            aria-hidden="true"
-          />
-          {compactSummary ? (
+          {compactSummary && (
             <motion.span
               key={compactSummary}
               initial={{ opacity: 0, y: 3 }}
               animate={{ opacity: 1, y: 0 }}
-              className="type-numeric flex-1 min-w-0 truncate"
+              className="type-numeric min-w-0"
               style={{
                 color: notice ? "var(--text-accent)" : "var(--text-muted)",
                 fontSize: "var(--font-size-sm)",
-                lineHeight: "var(--leading-tight)",
+                lineHeight: "var(--leading-normal)",
+                fontFeatureSettings: "'tnum'",
               }}
             >
               {compactSummary}
             </motion.span>
-          ) : (
-            <span className="flex-1" />
           )}
           <span
-            className="inline-flex items-center gap-0.5 flex-shrink-0"
+            className="inline-flex items-baseline gap-0.5 flex-shrink-0 whitespace-nowrap"
             style={{
               color: "var(--text-accent)",
               fontSize: "var(--font-size-sm)",
               fontWeight: "var(--weight-semibold)" as any,
-              lineHeight: "var(--leading-tight)",
+              lineHeight: "var(--leading-normal)",
+              textDecoration: "underline",
+              textUnderlineOffset: 3,
             }}
           >
             {cms.ui.adjustByHand ?? "Regola a mano"}
             <ChevronDown
-              size={14}
+              size={13}
+              className="self-center"
               style={{ transform: "rotate(-90deg)" }}
               aria-hidden="true"
             />
@@ -581,6 +593,86 @@ export function RecipeSetupPanel({
                     }}
                   >
                     {children}
+                  </div>
+                )}
+
+                {/* ── Dati science (round 4): read-only, derivati dalla
+                    ricetta corrente — erano l'accordion della StatStrip. ── */}
+                {recipe?.science && (
+                  <div
+                    className="pt-4"
+                    style={{
+                      borderTop:
+                        "1px solid var(--recipe-setup-border-subtle)",
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: "block",
+                        color: "var(--score-accent)",
+                        fontSize: "var(--font-size-xs)",
+                        fontWeight: "var(--weight-bold)" as any,
+                        letterSpacing: "var(--tracking-spread)",
+                        textTransform: "uppercase",
+                        marginBottom: "var(--space-2)",
+                      }}
+                    >
+                      {cms.ui.nerdTitle}
+                    </span>
+                    <NerdAuraBlock compact>
+                      <div
+                        className="grid grid-cols-3 sm:grid-cols-5 gap-x-3 gap-y-2 px-3.5 py-3"
+                        style={{
+                          background: "var(--recipe-tip-nerd-bg)",
+                          border: "1px solid var(--recipe-tip-nerd-border)",
+                          borderRadius: "12px 28px 28px 28px",
+                        }}
+                      >
+                        <SpecCell
+                          small
+                          science
+                          label={cms.ui.nerdYeast}
+                          value={fmt.percent(recipe.science.yeast_baker_pct)}
+                          index={0}
+                        />
+                        <SpecCell
+                          small
+                          science
+                          label={cms.ui.nerdPL}
+                          value={`${recipe.flour_pl}`}
+                          index={1}
+                        />
+                        <SpecCell
+                          small
+                          science
+                          label={t(
+                            formatTemperatureCopy(cms.ui.nerdHoursAt18, fmt),
+                            { refTemp: fmt.celsius(18) },
+                          )}
+                          value={fmt.fermentTime(
+                            Number(recipe.science.effective_hours_18c),
+                          )}
+                          index={2}
+                        />
+                        <SpecCell
+                          small
+                          science
+                          label={t(
+                            formatTemperatureCopy(cms.ui.nerdQ10, fmt),
+                            { refTemp: fmt.celsius(18) },
+                          )}
+                          value={`${recipe.science.q10_factor}×`}
+                          index={3}
+                        />
+                        <SpecCell
+                          small
+                          science
+                          label={cms.ui.nerdAw}
+                          value={`${recipe.science.water_activity}`}
+                          index={4}
+                        />
+                      </div>
+                    </NerdAuraBlock>
                   </div>
                 )}
               </div>

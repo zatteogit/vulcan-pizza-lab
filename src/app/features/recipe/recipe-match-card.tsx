@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { Bookmark, BookmarkCheck, ChevronDown, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, Info, RotateCcw, Sparkles, TriangleAlert } from "lucide-react";
+import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
-import { Surface } from "../../components/ds/index";
 
 export type RecipeMatchMode = "canonical" | "adapted" | "lab";
 
@@ -113,10 +112,10 @@ export function RecipeMatchCard({
   idealTemp,
   minTemp,
   mode = "adapted",
-  onAdapt,
-  onReset,
+  onPersonalize,
   onSave,
   onOptimize,
+  dirty = false,
   optimizationRationale,
   ceiling,
   hardLimited,
@@ -130,11 +129,16 @@ export function RecipeMatchCard({
   idealTemp: number;
   minTemp: number;
   mode?: RecipeMatchMode;
-  onAdapt?: () => void;
-  onReset?: () => void;
+  /** "Personalizza": apre il dialog dei parametri (sostituisce la vecchia
+   *  leva "Regola a mano" — le azioni vivono tutte sulla match card). */
+  onPersonalize?: () => void;
   onSave?: () => void;
   /** "Ottimizza per me": cerca i parametri migliori per il setup dell'utente. */
   onOptimize?: () => void;
+  /** La ricetta È stata modificata rispetto all'originale (parametri diversi
+   *  da quelli che "Torna all'originale" ripristinerebbe). Solo allora hanno
+   *  senso — e compaiono — Salva e Torna all'originale. */
+  dirty?: boolean;
   /** Rationale dell'ultima ottimizzazione (stringhe già risolte) da mostrare. */
   optimizationRationale?: string[];
   /** Soffitto: composite della ricetta OTTIMIZZATA per i vincoli dell'utente —
@@ -255,9 +259,15 @@ export function RecipeMatchCard({
       };
     } else if (needs.length > 0) {
       // SOFT: lista della spesa — la ricetta mostrata assume qualcosa che non hai.
+      // A soffitto raggiunto "per arrivare a X" non ha senso (ci sei già):
+      // il punteggio mostrato ASSUME l'acquisto (fix 4 lug 2026, nota Matteo).
       headroomLine = {
         tone: "accent",
-        text: t(cms.cooking.ceilingNeeds, { ceiling: ceilingRounded, needs: needs.join(", ") }),
+        text: atCeiling
+          ? t(cms.cooking.ceilingNeedsAtCeiling ?? "Questa versione assume: {needs}.", {
+              needs: needs.join(", "),
+            })
+          : t(cms.cooking.ceilingNeeds, { ceiling: ceilingRounded, needs: needs.join(", ") }),
       };
     } else if (headroom >= 8 && onOptimize) {
       // Hai tutto: basta ottimizzare.
@@ -282,292 +292,190 @@ export function RecipeMatchCard({
   // Un solo "movimento in avanti" verso su-misura: quando l'ottimizzatore è
   // disponibile, è LUI l'azione (subentra al vecchio "adatta alla cucina", che era
   // il midpoint ricalibrato — dominato dall'ottimo). Evita il doppio pulsante.
-  const showAdaptAction = mode === "canonical" && Boolean(onAdapt) && !onOptimize;
-  const showResetAction = mode !== "canonical" && Boolean(onReset);
-  const showSaveAction = mode !== "canonical" && Boolean(onSave);
-  const actionLabel = tone.low ? cms.cooking.makePossible : cms.cooking.adaptToKitchen;
+  /* Redesign lug 2026 (nota Matteo): azioni SEMPRE presenti = Ottimizza +
+     Personalizza. Salva e Torna all'originale compaiono SOLO quando la
+     ricetta è davvero cambiata (dirty) — e Torna, azione distruttiva, ha
+     il peso visivo minore di tutte (testo muto, in coda). */
+  const showSaveAction = dirty && Boolean(onSave);
 
   return (
-    <Surface
-      as={motion.aside}
+    <motion.section
       layout
-      className={`relative w-full max-w-[900px] overflow-hidden rounded-3xl px-4 py-4 sm:px-5 sm:py-5 ${className}`}
-      style={{
-        background:
-          "color-mix(in srgb, var(--container-page) 88%, transparent)",
-        border: "1px solid var(--container-border)",
-        boxShadow:
-          "0 16px 42px color-mix(in srgb, var(--shadow-color) 9%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)",
-        backdropFilter: "blur(18px) saturate(1.35)",
-        WebkitBackdropFilter: "blur(18px) saturate(1.35)",
-      }}
+      className={`relative w-full ${className}`}
       aria-label={cms.ui.recipeScore}
     >
-      {/* Mockup Proposta A (approvato 3 lug): la card è due righe — contenuto
-          (cuore, numero, tono) e azioni in riga unica sotto. Mai colonna
-          laterale: a larghezze intermedie impilava i bottoni e svuotava la
-          destra della card. */}
-      <div className="relative w-full flex flex-col gap-2.5 text-left sm:flex-row sm:items-center sm:gap-4">
-        <div className="flex items-center gap-3 min-w-[174px]">
-          <motion.span
-            className="relative flex items-center justify-center rounded-full"
-            animate={{ scale: [1, tone.low ? 1.015 : 1.035, 1] }}
-            transition={{ duration: tone.low ? 2.8 : 3.4, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              width: 46,
-              height: 46,
-              background: "color-mix(in srgb, var(--primary) 10%, var(--container-page))",
-              color: tone.low ? "var(--text-warning)" : "var(--primary)",
-              border: "1px solid color-mix(in srgb, var(--primary) 16%, var(--container-border-subtle))",
-              boxShadow: "0 9px 22px color-mix(in srgb, var(--shadow-color) 8%, transparent)",
-            }}
-          >
-            <MatchIcon size={21} fill="currentColor" />
-          </motion.span>
-          <div>
-            <span
-              className="block"
-              style={{
-                color: "var(--text-muted)",
-                fontSize: "var(--font-size-xs)",
-                fontWeight: "var(--weight-semibold)" as any,
-                letterSpacing: "var(--tracking-spread)",
-                textTransform: "uppercase",
-                lineHeight: 1,
-              }}
-            >
-              Match
-            </span>
-            <div className="flex items-baseline">
-              <AnimatedScore
-                value={roundedScore}
-                style={{
-                  color: "var(--text-default)",
-                  fontSize: "var(--font-size-4xl)",
-                  fontWeight: "var(--weight-bold)" as any,
-                  lineHeight: 1.1,
-                }}
-              />
-              <span
-                className="type-numeric ml-0.5"
-                style={{
-                  color: "var(--text-muted)",
-                  fontSize: "var(--font-size-md)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                }}
-              >
-                /100
-              </span>
-              <AnimatePresence>
-                {scoreBump && (
-                  <motion.span
-                    key={scoreBump.id}
-                    initial={{ opacity: 0, y: 5, scale: 0.9 }}
-                    animate={{ opacity: 1, y: -3, scale: 1 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ type: "spring", stiffness: 380, damping: 26 }}
-                    className="type-numeric ml-1.5"
-                    style={{
-                      color: "var(--cta)",
-                      fontSize: "var(--font-size-md)",
-                      fontWeight: "var(--weight-bold)" as any,
-                    }}
-                    aria-hidden="true"
-                  >
-                    +{scoreBump.delta}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className="flex-1 min-w-0"
+      {/* ═══ Verdetto editoriale (redesign lug 2026, round 5) ═══
+          Il Match È un verdetto da guida gastronomica: punteggio in serifa,
+          tono in corsivo — "85/100 · Ottima intesa" come su una guida.
+          Niente scatola: kicker con filetto, stessa grammatica di
+          Ingredienti. Dettagli (copy, forno, barre) a richiesta. */}
+      <div className="flex items-center gap-2">
+        <MatchIcon
+          size={14}
+          fill="currentColor"
+          style={{ color: tone.low ? "var(--text-warning)" : "var(--primary)", flexShrink: 0 }}
+          aria-hidden="true"
+        />
+        <span
           style={{
             color: "var(--text-muted)",
-            fontSize: "var(--font-size-md)",
-            lineHeight: "var(--leading-normal)",
+            fontSize: "var(--font-size-xs)",
+            fontWeight: "var(--weight-semibold)" as any,
+            letterSpacing: "var(--tracking-caps)",
+            textTransform: "uppercase",
+            lineHeight: 1,
+          }}
+        >
+          Match
+        </span>
+        <span
+          className="flex-1 h-px"
+          style={{ background: "var(--container-border-subtle)" }}
+          aria-hidden="true"
+        />
+      </div>
+
+      {/* Verdetto: numero serifa + tono corsivo, stesso baseline. */}
+      <div className="mt-2.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+        <span className="flex items-baseline flex-shrink-0">
+          <AnimatedScore
+            value={roundedScore}
+            style={{
+              fontFamily: "var(--font-serif)",
+              color: "var(--text-default)",
+              fontSize: "clamp(var(--font-size-7xl), 6vw, var(--font-size-8xl))",
+              fontWeight: "var(--weight-bold)" as any,
+              lineHeight: 1,
+            }}
+          />
+          <span
+            className="type-numeric ml-1"
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--weight-semibold)" as any,
+            }}
+          >
+            /100
+          </span>
+          <AnimatePresence>
+            {scoreBump && (
+              <motion.span
+                key={scoreBump.id}
+                initial={{ opacity: 0, y: 5, scale: 0.9 }}
+                animate={{ opacity: 1, y: -3, scale: 1 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ type: "spring", stiffness: 380, damping: 26 }}
+                className="type-numeric ml-1.5"
+                style={{
+                  color: "var(--cta)",
+                  fontSize: "var(--font-size-md)",
+                  fontWeight: "var(--weight-bold)" as any,
+                }}
+                aria-hidden="true"
+              >
+                +{scoreBump.delta}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </span>
+        <span
+          className="min-w-0"
+          style={{
+            fontFamily: "var(--font-serif)",
+            fontStyle: "italic",
+            color: "var(--text-default)",
+            fontSize: "clamp(var(--font-size-2xl), 3vw, var(--font-size-5xl))",
+            fontWeight: "var(--weight-semibold)" as any,
+            lineHeight: "var(--leading-compact)",
           }}
         >
           <AnimatePresence mode="wait" initial={false}>
-            <motion.div
+            <motion.span
               key={tone.title}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="block"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
             >
-              <div
-                style={{
-                  color: "var(--text-default)",
-                  fontSize: "var(--font-size-lg)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  lineHeight: "var(--leading-tight)",
-                  marginBottom: 2,
-                }}
-              >
-                {tone.title}
-              </div>
-              <p
-                style={{
-                  margin: 0,
-                  color: "var(--text-muted)",
-                  fontSize: "var(--font-size-md)",
-                  lineHeight: "var(--leading-normal)",
-                }}
-              >
-                {tone.body}
-              </p>
-            </motion.div>
+              {tone.title}
+            </motion.span>
           </AnimatePresence>
-          {unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
-            <p
-              className="mt-1.5 text-left"
-              style={{
-                margin: "6px 0 0",
-                color: "var(--text-warning)",
-                fontSize: "var(--font-size-sm)",
-                lineHeight: "var(--leading-normal)",
-                fontWeight: "var(--weight-semibold)" as any,
-              }}
-            >
-              {unviableText}
-            </p>
-          )}
-          {headroomLine && (expanded || headroomLine.tone === "warn") && (
-            <p
-              className="mt-1.5 text-left"
-              style={{
-                margin: "6px 0 0",
-                color:
-                  headroomLine.tone === "warn"
-                    ? "var(--text-warning)"
-                    : headroomLine.tone === "accent" || headroomLine.tone === "ok"
-                      ? "var(--cta)"
-                      : "var(--text-muted)",
-                fontSize: "var(--font-size-sm)",
-                lineHeight: "var(--leading-normal)",
-                fontWeight:
-                  headroomLine.tone === "muted"
-                    ? ("var(--weight-medium)" as any)
-                    : ("var(--weight-semibold)" as any),
-              }}
-            >
-              {headroomLine.text}
-            </p>
-          )}
-        </div>
-
+        </span>
+        {/* I dettagli si aprono da un'iconcina ⓘ accanto al tono (nota
+            Matteo): prossimità massima con ciò che spiega. */}
+        <button
+          type="button"
+          onClick={() =>
+            setExpanded((v) => {
+              if (v) setExplainKey(null);
+              return !v;
+            })
+          }
+          aria-expanded={expanded}
+          aria-label={
+            expanded
+              ? (cms.cooking.matchDetailsHide ?? "Nascondi")
+              : (cms.cooking.matchDetails ?? "Dettagli")
+          }
+          title={
+            expanded
+              ? (cms.cooking.matchDetailsHide ?? "Nascondi")
+              : (cms.cooking.matchDetails ?? "Dettagli")
+          }
+          className="inline-flex flex-shrink-0 self-center p-1 active:scale-90 transition-all"
+          style={{
+            background: "transparent",
+            border: "none",
+            cursor: "pointer",
+            color: expanded ? "var(--text-accent)" : "var(--icon-muted)",
+            lineHeight: 1,
+          }}
+        >
+          <Info size={16} />
+        </button>
       </div>
 
-      <div className="mt-3.5 flex w-full flex-wrap items-center gap-2">
-        {onOptimize && (
-          <motion.button
-            type="button"
-            onClick={onOptimize}
-            whileHover={{ scale: 1.025, y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 450, damping: 28 }}
-            className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5"
-            style={{
-              background: "var(--cta)",
-              color: "var(--cta-foreground)",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--weight-bold)" as any,
-              lineHeight: "var(--leading-tight)",
-              boxShadow: "0 10px 22px color-mix(in srgb, var(--cta) 22%, transparent)",
-            }}
-          >
-            <Sparkles size={15} />
-            {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}
-          </motion.button>
-        )}
-          <AnimatePresence mode="wait" initial={false}>
-            {showAdaptAction && (
-              <motion.button
-                key="adapt"
-                layoutId="match-card-action"
-                type="button"
-                onClick={onAdapt}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ scale: 1.025, y: -1 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 450, damping: 28 }}
-                className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5"
-                style={{
-                  background:
-                    "color-mix(in srgb, var(--primary) 8%, var(--container-page))",
-                  border: "1px solid color-mix(in srgb, var(--primary) 20%, var(--container-border))",
-                  color: "var(--primary)",
-                  cursor: "pointer",
-                  fontSize: "var(--font-size-sm)",
-                  fontWeight: "var(--weight-bold)" as any,
-                  lineHeight: "var(--leading-tight)",
-                  boxShadow: "0 10px 22px color-mix(in srgb, var(--primary) 9%, transparent)",
-                }}
-              >
-                <Heart size={15} fill="currentColor" />
-                {actionLabel}
-              </motion.button>
-            )}
-            {showResetAction && (
-              <motion.button
-                key="reset"
-                layoutId="match-card-action"
-                type="button"
-                onClick={onReset}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ scale: 1.025, y: -1 }}
-                whileTap={{ scale: 0.97 }}
-                transition={{ type: "spring", stiffness: 450, damping: 28 }}
-                className="inline-flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2"
-                style={{
-                  background: "color-mix(in srgb, var(--container-page) 76%, transparent)",
-                  border: "1px solid var(--container-border-subtle)",
-                  color: "var(--text-accent)",
-                  cursor: "pointer",
-                  fontSize: "var(--font-size-sm)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  lineHeight: "var(--leading-tight)",
-                }}
-              >
-                <RotateCcw size={14} />
-                {cms.cooking.resetToOriginal}
-              </motion.button>
-            )}
-          </AnimatePresence>
-          {showSaveAction && (
-            <button
-              type="button"
-              onClick={onSave}
-              aria-pressed={saved}
-              className="inline-flex items-center justify-center gap-1.5 rounded-full px-3.5 py-2 active:scale-95 transition-transform"
-              style={{
-                background: saved
-                  ? "color-mix(in srgb, var(--primary) 12%, var(--container-page))"
-                  : "color-mix(in srgb, var(--container-page) 76%, transparent)",
-                border: saved
-                  ? "1px solid color-mix(in srgb, var(--primary) 30%, var(--container-border))"
-                  : "1px solid var(--container-border-subtle)",
-                color: saved ? "var(--primary)" : "var(--text-accent)",
-                cursor: "pointer",
-                fontSize: "var(--font-size-sm)",
-                fontWeight: "var(--weight-semibold)" as any,
-                lineHeight: "var(--leading-tight)",
-              }}
-            >
-              {saved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
-              {saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
-            </button>
-          )}
-      </div>
+      {/* Avvisi onesti: visibili anche a card chiusa */}
+      {unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
+        <p
+          className="text-left"
+          style={{
+            margin: "8px 0 0",
+            color: "var(--text-warning)",
+            fontSize: "var(--font-size-sm)",
+            lineHeight: "var(--leading-normal)",
+            fontWeight: "var(--weight-semibold)" as any,
+          }}
+        >
+          {unviableText}
+        </p>
+      )}
+      {/* Riga-soffitto SEMPRE visibile ("Puoi arrivare a {ceiling}…") —
+          round 4, nota Matteo: è la promessa che dà senso a "Ottimizza". */}
+      {headroomLine && (
+        <p
+          className="text-left"
+          style={{
+            margin: "8px 0 0",
+            color:
+              headroomLine.tone === "warn"
+                ? "var(--text-warning)"
+                : headroomLine.tone === "accent" || headroomLine.tone === "ok"
+                  ? "var(--cta)"
+                  : "var(--text-muted)",
+            fontSize: "var(--font-size-sm)",
+            lineHeight: "var(--leading-normal)",
+            fontWeight:
+              headroomLine.tone === "muted"
+                ? ("var(--weight-medium)" as any)
+                : ("var(--weight-semibold)" as any),
+          }}
+        >
+          {headroomLine.text}
+        </p>
+      )}
 
       {/* ── Dettagli a richiesta: stato forno, barre punteggio, rationale ── */}
       <AnimatePresence initial={false}>
@@ -580,10 +488,26 @@ export function RecipeMatchCard({
             transition={{ type: "spring", stiffness: 380, damping: 32 }}
             className="overflow-hidden"
           >
+            {/* Copy emotivo del tono: apre il pannello. */}
             <div
-              className="mt-3 pt-3 flex items-start gap-1.5"
+              className="mt-3 pt-3"
+              style={{ borderTop: "1px solid var(--container-border-subtle)" }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                  color: "var(--text-muted)",
+                  fontSize: "var(--font-size-md)",
+                  lineHeight: "var(--leading-normal)",
+                }}
+              >
+                {tone.body}
+              </p>
+            </div>
+
+            <div
+              className="mt-3 flex items-start gap-1.5"
               style={{
-                borderTop: "1px solid var(--container-border-subtle)",
                 color: ovenGap > 0 ? "var(--text-muted)" : "var(--text-accent)",
               }}
             >
@@ -735,39 +659,85 @@ export function RecipeMatchCard({
         )}
       </AnimatePresence>
 
-      <button
-        type="button"
-        onClick={() =>
-          setExpanded((v) => {
-            if (v) setExplainKey(null);
-            return !v;
-          })
-        }
-        aria-expanded={expanded}
-        className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full py-1.5 active:scale-[0.98] transition-transform"
-        style={{
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          color: "var(--text-muted)",
-          fontSize: "var(--font-size-sm)",
-          fontWeight: "var(--weight-semibold)" as any,
-        }}
-      >
-        <span>
-          {expanded
-            ? cms.cooking.stepDetailsHide
-            : (cms.cooking.matchDetailsShow ?? "Dettagli punteggio")}
-        </span>
-        <motion.span
-          animate={{ rotate: expanded ? 180 : 0 }}
-          transition={{ type: "spring", stiffness: 420, damping: 30 }}
-          className="inline-flex"
-        >
-          <ChevronDown size={14} />
-        </motion.span>
-      </button>
-    </Surface>
+      <div className="mt-4 flex w-full flex-wrap items-center gap-3">
+        {onOptimize && (
+          <motion.button
+            type="button"
+            onClick={onOptimize}
+            whileHover={{ scale: 1.025, y: -1 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 450, damping: 28 }}
+            className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5"
+            style={{
+              background: "var(--cta)",
+              color: "var(--cta-foreground)",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--weight-bold)" as any,
+              lineHeight: "var(--leading-tight)",
+              boxShadow: "0 10px 22px color-mix(in srgb, var(--cta) 22%, transparent)",
+            }}
+          >
+            <Sparkles size={15} />
+            {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}
+          </motion.button>
+        )}
+        {/* Gerarchia (redesign lug 2026, round 2): UN solo pulsante pieno
+            (Ottimizza). Personalizza e Salva sono azioni testuali in accento —
+            niente scatole in competizione; Torna resta il peso minimo in coda. */}
+        {onPersonalize && (
+          <motion.button
+            type="button"
+            onClick={onPersonalize}
+            whileTap={{ scale: 0.95 }}
+            className="inline-flex items-center justify-center gap-1.5 rounded-full px-1 py-2.5"
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "var(--primary)",
+              cursor: "pointer",
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--weight-semibold)" as any,
+              lineHeight: "var(--leading-tight)",
+            }}
+          >
+            <SlidersHorizontal size={14} />
+            {cms.ui.personalize ?? "Personalizza"}
+          </motion.button>
+        )}
+        <AnimatePresence initial={false}>
+          {showSaveAction && (
+            <motion.button
+              key="save"
+              type="button"
+              onClick={onSave}
+              aria-pressed={saved}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center justify-center gap-1.5 rounded-full px-1 py-2.5"
+              style={{
+                background: "transparent",
+                border: "none",
+                color: saved ? "var(--primary)" : "var(--text-accent)",
+                cursor: "pointer",
+                fontSize: "var(--font-size-sm)",
+                fontWeight: "var(--weight-semibold)" as any,
+                lineHeight: "var(--leading-tight)",
+              }}
+            >
+              {saved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
+              {saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
+
+
+    </motion.section>
   );
 }
 

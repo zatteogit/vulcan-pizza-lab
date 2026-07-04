@@ -247,9 +247,92 @@ export function IngredientsSection({
           )}
           <IngRow
             name={ui.water}
-            detail={`${fmt.percent(recipe.hydration_pct)}${recipe.water_temp_c != null ? ` · ${fmt.celsius(recipe.water_temp_c)}` : ""}`}
+            detail={
+              <>
+                {fmt.percent(recipe.hydration_pct)}
+                {recipe.water_temp_c != null
+                  ? ` · ${fmt.celsius(recipe.water_temp_c)}`
+                  : ""}
+                {recipe.water_temp_c != null && (
+                  /* Round 7 (nota Matteo): la Regola 55 vive SOLO come tip
+                     della riga Acqua — la temperatura è già nel dettaglio. */
+                  <button
+                    onClick={() => setShowRule55Tip((v) => !v)}
+                    className="ml-1.5 align-middle active:scale-90 transition-transform"
+                    style={{
+                      background: "none",
+                      border: "none",
+                      padding: 0,
+                      cursor: "pointer",
+                      color: "var(--text-muted)",
+                      opacity: showRule55Tip ? 0.85 : 0.5,
+                      lineHeight: 1,
+                    }}
+                    aria-label={
+                      showRule55Tip
+                        ? cms.cooking.rule55AriaClose
+                        : cms.cooking.rule55AriaOpen
+                    }
+                    aria-expanded={showRule55Tip}
+                  >
+                    <HelpCircle size={13} />
+                  </button>
+                )}
+              </>
+            }
             amount={gramsApprox(recipe.water_g, fmt)}
           />
+          {recipe.water_temp_c != null && showRule55Tip && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              className="overflow-hidden"
+              style={{
+                paddingLeft: "var(--space-3)",
+                marginTop: "var(--space-1)",
+                marginBottom: "var(--space-2)",
+              }}
+            >
+              <div
+                className="type-body"
+                style={{
+                  color: "var(--text-muted)",
+                  lineHeight: "var(--leading-normal)",
+                }}
+              >
+                {recipe.water_temp_c < 5
+                  ? t(cms.engineMessages["tip.waterTempCold"], {
+                      temp: fmt.celsius(recipe.water_temp_c),
+                    })
+                  : t(cms.engineMessages["tip.waterTempNormal"], {
+                      temp: fmt.celsius(recipe.water_temp_c),
+                      ddt: fmt.celsius(recipe.science.desired_dough_temp_c),
+                    })}
+              </div>
+              <div
+                className="type-body"
+                style={{
+                  color: "var(--text-muted)",
+                  marginTop: 4,
+                  lineHeight: "var(--leading-normal)",
+                }}
+              >
+                {rule55Description}
+              </div>
+              {recipe.science.friction_factor > 0 && (
+                <div
+                  className="type-data"
+                  style={{ color: "var(--text-muted)", marginTop: 4 }}
+                >
+                  {t(cms.engineMessages["tip.frictionNote"], {
+                    friction: fmt.celsiusDelta(recipe.science.friction_factor),
+                  })}
+                </div>
+              )}
+            </motion.div>
+          )}
           {/* Audit lug 2026 (nerd): baker's % accanto ai grammi — il linguaggio
               con cui si confrontano le ricette. Easy resta pulito. */}
           <IngRow
@@ -372,71 +455,7 @@ export function IngredientsSection({
           {fmt.grams(recipe.total_dough_g)} {ui.totalDough}
         </div>
 
-        {/* ── Regola 55 (temperatura acqua / DDT) — la riga pratica ("acqua a
-             28°C") è per tutti: il numero senza criterio si sbaglia col primo
-             caldo (audit lug 2026, persona pizzaiolo). Il dettaglio completo
-             resta dietro il toggle "?". ── */}
-        {recipe.water_temp_c != null && (
-          <div
-            className="mt-5 flex items-start gap-3 px-1 py-1"
-            title={rule55Description}
-          >
-            <span style={{ fontSize: "var(--font-size-xl)", flexShrink: 0, opacity: 0.8 }}>
-              H2O
-            </span>
-            <div className="flex-1 min-w-0">
-              <div
-                className="flex items-start gap-1.5 type-body"
-                style={{
-                  color: "var(--text-muted)",
-                  lineHeight: "var(--leading-normal)",
-                }}
-              >
-                <span>
-                  {recipe.water_temp_c < 5
-                  ? t(cms.engineMessages["tip.waterTempCold"], { temp: fmt.celsius(recipe.water_temp_c) })
-                  : t(cms.engineMessages["tip.waterTempNormal"], { temp: fmt.celsius(recipe.water_temp_c), ddt: fmt.celsius(recipe.science.desired_dough_temp_c) })}
-                </span>
-                <button
-                  onClick={() => setShowRule55Tip((v) => !v)}
-                  className="flex-shrink-0 mt-0.5 active:scale-90 transition-transform"
-                  style={{ color: "var(--text-muted)", opacity: showRule55Tip ? 0.85 : 0.5 }}
-                  aria-label={showRule55Tip ? cms.cooking.rule55AriaClose : cms.cooking.rule55AriaOpen}
-                  aria-expanded={showRule55Tip}
-                >
-                  <HelpCircle size={13} />
-                </button>
-              </div>
-              {showRule55Tip && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  className="overflow-hidden type-body"
-                  style={{
-                    color: "var(--text-muted)",
-                    marginTop: 4,
-                    lineHeight: "var(--leading-normal)",
-                  }}
-                >
-                  {rule55Description}
-                </motion.div>
-              )}
-              {recipe.science.friction_factor > 0 && (
-                <div
-                  className="type-data"
-                  style={{
-                    color: "var(--text-muted)",
-                    marginTop: 2,
-                  }}
-                >
-                  {t(cms.engineMessages["tip.frictionNote"], { friction: fmt.celsiusDelta(recipe.science.friction_factor) })}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        {/* Regola 55: da round 7 vive SOLO come tip della riga Acqua. */}
 
         {/* La FlourSuggestionCard è stata spostata dentro il pannello Parametri (RecipeConfigurator) — è una scelta, non un risultato. */}
 

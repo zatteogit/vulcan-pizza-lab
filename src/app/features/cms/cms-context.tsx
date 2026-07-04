@@ -56,6 +56,12 @@ export interface CmsUiStrings {
    *  il dialog Personalizza. Opzionali: fallback sul default. */
   adjustByHand?: string;
   adjustByHandQuestion?: string;
+  /** Redesign lug 2026: label temperatura di fermentazione nell'accordion
+   *  parametri dello spec-sheet Impasto. Opzionale. */
+  specFermentTemp?: string;
+  /** Redesign lug 2026: azione "Personalizza" sulla match card (apre il
+   *  dialog parametri; sostituisce la leva "Regola a mano"). Opzionale. */
+  personalize?: string;
   changeStyle: string;
   newPizza: string;
   // Recipe output
@@ -102,6 +108,10 @@ export interface CmsUiStrings {
   statOven: string;
   statCookTime: string;
   statFermentation: string;
+  /** Tabella parametri (round 7): "Forza farina" + contesto lievitazione. */
+  statFlourStrength: string;
+  fermentEnvAmbient: string;
+  fermentEnvFridge: string;
   statTempSuffix: string;        // "a {t}°C"
   statIdeal?: string;
   // Nerd row
@@ -739,6 +749,9 @@ export interface CmsContent {
     ceilingUnviable: string;
     ceilingOvenWall: string;
     ceilingNeeds: string;
+    /** Variante a soffitto raggiunto: il punteggio mostrato ASSUME acquisti
+     *  (es. farina W310 non in dispensa) — niente "per arrivare a", ci sei già. */
+    ceilingNeedsAtCeiling: string;
     ceilingOptimize: string;
     ceilingCanonicalOk: string;
     ceilingCompromise: string;
@@ -855,6 +868,15 @@ export interface CmsContent {
     /** Toggle dettagli della match card (barre punteggio, stato forno).
      *  Opzionale: i locale non ancora tradotti cadono sul default. */
     matchDetailsShow?: string;
+    /** Redesign lug 2026: toggle compatto sotto il numero del Match
+     *  ("Dettagli ⌄" / "Nascondi ⌃"). Opzionali. */
+    matchDetails?: string;
+    matchDetailsHide?: string;
+    /** Redesign lug 2026: avviso all'uscita con modifiche non salvate
+     *  (sostituisce la gestione bozze/parcheggio). {style} interpolato. */
+    unsavedTitle?: string;
+    unsavedBody?: string;
+    unsavedDiscard?: string;
     /** Learn-inline assi (audit lug 2026) — etichetta della formula pesata in
      *  nerd mode e peso dell'asse nel pannello di spiegazione. Opzionali. */
     matchBreakdownLabel?: string;
@@ -932,6 +954,18 @@ export interface CmsContent {
     noSignature: string;
     fineParams: string;
     cmsRestoreContent: string;
+    /** Riga "Ispirazione" sulla scheda ricetta (redesign lug 2026): chip solo
+     *  per le firme che cambiano i parametri; le storie vivono nella modale. */
+    inspirationLabel: string;
+    /** Chip base sempre selezionabile ("Tradizionale"): il canone dello stile
+     *  quando nessuna firma è attiva — il default non è mai una firma. */
+    inspirationBase: string;
+    inspirationSeeAll: string;
+    inspirationModalTitle: string;
+    inspirationLearnLink: string;
+    /** Selezione delle varianti dalla modale "Vedi tutte". */
+    inspirationSelect: string;
+    inspirationSelected: string;
   };
   /** Form feedback post-cottura (recipe-feedback) — VPL-082 */
   feedback: {
@@ -1148,6 +1182,8 @@ export const CMS_DEFAULTS: CmsContent = {
     chooseStyle: "Scegli lo stile",
     customizeParams: "Personalizza parametri",
     adjustByHand: "Regola a mano",
+    specFermentTemp: "Fermento",
+    personalize: "Personalizza",
     adjustByHandQuestion: "Preferisci decidere tu?",
     changeStyle: "Altro stile",
     newPizza: "Ricomincia",
@@ -1195,6 +1231,9 @@ export const CMS_DEFAULTS: CmsContent = {
     statOven: "Forno",
     statCookTime: "Cottura",
     statFermentation: "Lievitazione",
+    statFlourStrength: "Forza farina",
+    fermentEnvAmbient: "ambiente",
+    fermentEnvFridge: "frigo",
     statTempSuffix: "a {t}°C",
     statIdeal: "ideale",
     // Nerd row
@@ -1429,6 +1468,7 @@ export const CMS_DEFAULTS: CmsContent = {
     ceilingOvenWall:
       "Il forno ti ferma a {ceiling}/100: niente leopardatura, ma una buona pizza sì.",
     ceilingNeeds: "Per arrivare a {ceiling}/100 ti serve: {needs}.",
+    ceilingNeedsAtCeiling: "Questa versione assume: {needs}.",
     ceilingOptimize: "Puoi portarla a {ceiling}/100 ottimizzando — hai già tutto.",
     ceilingCanonicalOk: "Anche la ricetta canonica resta fattibile col tuo setup.",
     ceilingCompromise:
@@ -1516,7 +1556,7 @@ export const CMS_DEFAULTS: CmsContent = {
     prevStep: "Passo precedente",
     replaceTitle: "Hai già una pizzata in corso",
     confirmNewAria: "Conferma nuova pizzata",
-    recipeAdapted: "Su misura per te",
+    recipeAdapted: "Modificata per te",
     ovenSummary: "forno {temp}",
     ovenOptimal: "Temperatura forno ottimale",
     ovenLimited: "Fattibile (temperatura limite)",
@@ -1536,6 +1576,11 @@ export const CMS_DEFAULTS: CmsContent = {
     stepDetailsShow: "Come si fa",
     stepDetailsHide: "Nascondi dettagli",
     matchDetailsShow: "Dettagli punteggio",
+    matchDetails: "Dettagli",
+    matchDetailsHide: "Nascondi",
+    unsavedTitle: "Modifiche non salvate",
+    unsavedBody: "Se esci ora, la tua versione di {style} andrà persa. Vuoi salvarla nel ricettario?",
+    unsavedDiscard: "Esci senza salvare",
     matchBreakdownLabel: "Media pesata",
     matchAxisWeight: "peso {pct}% del Match",
     troubleStepLinks: {
@@ -1617,6 +1662,13 @@ export const CMS_DEFAULTS: CmsContent = {
     noSignature: "nessuna firma",
     fineParams: "Parametri fini",
     cmsRestoreContent: "Ripristina contenuti CMS",
+    inspirationLabel: "Ispirazione",
+    inspirationBase: "Tradizionale",
+    inspirationSeeAll: "Vedi tutte",
+    inspirationModalTitle: "Ispirazioni d'autore",
+    inspirationLearnLink: "Scopri di più nella sezione Impara",
+    inspirationSelect: "Seleziona",
+    inspirationSelected: "Selezionata",
   },
   feedback: {
     savedTitle: "Feedback salvato — grazie!",

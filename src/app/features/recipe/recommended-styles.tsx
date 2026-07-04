@@ -9,6 +9,7 @@ import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import {
 PIZZA_FAMILIES,
 PizzaStyle,
+generateRecipe,
 optimizeRecipe,
 recommendStyles,
 shortOrigin,
@@ -17,6 +18,10 @@ StyleRecommendation,
 UserConstraints,
 type FamilyId,
 } from "../../domain/pizza-engine";
+import {
+  getInterpretationsForStyle,
+  type Interpretation,
+} from "../../data/interpretation-library";
 import { ScoreRing } from "./score-ring";
 import { useStylesOverride } from "../../context/styles-override-context";
 import { TiltCard } from "./tilt-card";
@@ -27,7 +32,25 @@ import { getVersions } from "../../data/style-versions";
 interface RecommendedStylesProps {
   constraints: UserConstraints;
   selectedStyle: PizzaStyle | null;
-  onSelectStyle: (style: PizzaStyle) => void;
+  /** La scelta porta con sé la variante migliore (round 7, nota Matteo):
+   *  null = ricetta base dello stile. */
+  onSelectStyle: (
+    style: PizzaStyle,
+    interpretation?: Interpretation | null,
+  ) => void;
+}
+
+/** Raccomandazione + la variante (firma/disciplinare) che rende al meglio
+ *  coi vincoli dell'utente. */
+type RecommendationWithVariant = StyleRecommendation & {
+  bestInterpretation: Interpretation | null;
+};
+
+/** Nome breve della variante per la card ("AVPN", "Franco Pepe"). */
+function variantShortName(it: Interpretation): string {
+  const name =
+    it.author ?? it.pizzeria ?? it.organization ?? it.signature_name ?? "";
+  return name.split("—")[0].trim();
 }
 
 export { STYLE_PHOTOS };
@@ -132,16 +155,50 @@ export function RecommendedStyles({
           equipment: cms.recommendationWeights.equipment,
           pantry: cms.recommendationWeights.pantry,
         },
-      ).map((rec) => ({
-        ...rec,
-        optimizedComposite: optimizeRecipe(
+      ).map((rec): RecommendationWithVariant => {
+        const baseComposite = optimizeRecipe(
           rec.style,
           constraints,
           undefined,
           undefined,
           scoreWeights,
-        ).recipe.scores.composite,
-      })),
+        ).recipe.scores.composite;
+        /* Round 7 (nota Matteo): il match considera anche TUTTE le varianti
+           parametriche (firme/disciplinari) e propone la migliore. La
+           variante si valuta com'È — è un canone d'autore, non si ottimizza —
+           e il suo canone è il centro per l'autenticità (interpretationCenter,
+           come su recipe.tsx). Base preferita a parità (+0.5). */
+        let bestInterpretation: Interpretation | null = null;
+        let bestComposite = baseComposite;
+        for (const it of getInterpretationsForStyle(rec.style.id)) {
+          const o = it.parameter_overrides;
+          if (!o || Object.keys(o).length === 0) continue;
+          const composite = generateRecipe(rec.style, constraints, {
+            customHydration: o.hydration_pct,
+            customFlourW: o.flour_w,
+            customFlourPL: o.flour_pl,
+            customFermentationHours: o.fermentation_hours,
+            customFermentationTempC: o.fermentation_temp_c,
+            usePreFerment: o.use_pre_ferment,
+            scoreWeights,
+            interpretationCenter: {
+              hydration_pct: o.hydration_pct,
+              flour_w: o.flour_w,
+              flour_pl: o.flour_pl,
+              fermentation_hours: o.fermentation_hours,
+            },
+          }).scores.composite;
+          if (composite > bestComposite + 0.5) {
+            bestComposite = composite;
+            bestInterpretation = it;
+          }
+        }
+        return {
+          ...rec,
+          optimizedComposite: bestComposite,
+          bestInterpretation,
+        };
+      }),
     [constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
   );
   const [familyFilter, setFamilyFilter] = useState<FamilyId | "all">("all");
@@ -205,7 +262,7 @@ export function RecommendedStyles({
     [recommendations, familyFilter, hydrationFilter, textureFilter, skillFilter, ovenFilter, styleQuery],
   );
 
-  const tiers: { key: string; items: StyleRecommendation[] }[] =
+  const tiers: { key: string; items: RecommendationWithVariant[] }[] =
     [
       {
         key: "perfect",
@@ -230,8 +287,8 @@ export function RecommendedStyles({
 
   let idx = 0;
 
-  const handleSelect = (style: PizzaStyle) => {
-    onSelectStyle(style);
+  const handleSelect = (rec: RecommendationWithVariant) => {
+    onSelectStyle(rec.style, rec.bestInterpretation);
   };
 
   const FAMILY_FILTERS: { id: FamilyId | "all"; label: string }[] = [
@@ -543,7 +600,7 @@ export function RecommendedStyles({
                       selectedStyle?.id === rec.style.id
                     }
                     hasSelection={hasSelection}
-                    onSelect={() => handleSelect(rec.style)}
+                    onSelect={() => handleSelect(rec)}
                     index={i}
                   />
                 );
@@ -565,7 +622,7 @@ function StyleCard({
   onSelect,
   index,
 }: {
-  rec: StyleRecommendation;
+  rec: RecommendationWithVariant;
   tierColor: string;
   isSelected: boolean;
   hasSelection: boolean;
@@ -760,6 +817,9 @@ function StyleCard({
                 }}
               >
                 {shortOrigin(style.origin).toUpperCase()}
+                {rec.bestInterpretation
+                  ? ` · ${variantShortName(rec.bestInterpretation).toUpperCase()}`
+                  : ""}
               </div>
 
               {/* VPL-C3 (rev): badge "difficoltà · impegno" — differenzia le tile
