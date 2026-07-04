@@ -6,7 +6,7 @@ const imgPizzaNapoletana = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
 import { Flame,Image as ImageIcon,Sparkles,Wheat } from "lucide-react";
 import { motion } from "motion/react";
 import React,{ useState } from "react";
-import { imgDivShapeIlloBg,imgDivXshape,imgDivXshape1,imgDivXshape2,imgDivXshape3 } from "../../../imports/svg-21qef";
+import { imgDivShapeIlloBg,imgDivXshape,imgDivXshape1,imgDivXshape2,imgDivXshape3 } from "./foundations-shapes";
 import type { SectionEntry } from "./shared";
 import {
 Panoramica,

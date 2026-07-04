@@ -89,7 +89,6 @@
         "src/app/features/dev-tools/style-editor-tab.tsx",
         "src/app/context/styles-override-context.tsx",
         "src/app/features/recipe/style-detail-sheet.tsx",
-        "src/app/features/dev-tools/sync-tab.tsx",
         "src/app/data/interpretation-library.ts",
         "src/app/data/signature-recipes.ts",
         "src/app/pages/explore.tsx",

@@ -22,7 +22,7 @@ Vulcan è una **SPA React Router 7** (`createBrowserRouter`): entry `main.tsx` �
 | `src/app/components/shared/search-button.tsx` | 65 | Bottone circolare standardizzato "apri ricerca" (T5) con icona e dimensioni calcolate proporzionalmente |
 | `src/vite-env.d.ts` | 1 | File di dichiarazione dei tipi client di Vite (asset statici, import.meta.env) |
 
-**Config build**: `vite.config.ts` — porta dev **5174**, `historyApiFallback`, alias `@` → `src/`, chunk manuali (`vendor-react`, `vendor-motion`), plugin Tailwind e stub per import `figma:asset/...`.
+**Config build**: `vite.config.ts` — porta dev **5174**, `historyApiFallback`, alias `@` → `src/`, chunk manuali (`vendor-react`, `vendor-motion`) e plugin Tailwind.
 
 ## Flusso dati
 

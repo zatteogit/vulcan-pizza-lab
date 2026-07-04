@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Vulcan** is a React + Vite web application for designing, learning, and optimizing pizza recipes. It's built as a Vulcan Cloud file and syncs between Figma and a local React codebase.
+**Vulcan** is a React + Vite web application for designing, learning, and optimizing pizza recipes.
 
 Core features:
 - **Create**: Configure pizza recipes with parametric engine (hydration, fermentation, baking, equipment)
@@ -20,7 +20,7 @@ Core features:
 npm install
 npm run dev          # Start dev server (port 5174)
 npm run build        # Production build
-npm run verify       # TypeScript + design tokens check
+npm run verify       # TypeScript + design tokens + Vitest
 npm run check:tokens # Design token compliance only
 ```
 
@@ -35,7 +35,7 @@ npm run check:tokens # Design token compliance only
 - `profile.tsx` — User profile, saved recipes, dietary preferences
 - `cms.tsx` — Content admin interface for data management
 - `design-system.tsx` — Design token showcase
-- `dev.tsx` — Developer tools (engine test suite, sync dashboard, style editor)
+- `dev.tsx` — Developer tools (engine test suite, style editor)
 
 All pages are **lazy-loaded** via React Router's `lazy()` for code-splitting.
 
@@ -67,7 +67,7 @@ All pages are **lazy-loaded** via React Router's `lazy()` for code-splitting.
 - **`features/`** — Feature-specific component groups
   - `recipe/` — Recipe creation UI (`recipe-configurator.tsx`, `recipe-output.tsx`, `recipe-view.tsx`)
   - `cooking/` — Active cook dashboard (`cooking-mode.tsx`, `active-cook-widget.tsx`, `dough-mascot.tsx`)
-  - `dev-tools/` — Diagnostics (`dev-tools.tsx`, `engine-test-suite.tsx`, `sync-tab.tsx`)
+  - `dev-tools/` — Diagnostics (`dev-tools.tsx`, `engine-test-suite.tsx`)
   - `cms/` — Locales context, i18n and translation helpers (merged from components)
 
 ### Styling (`src/styles/`)
@@ -85,20 +85,9 @@ All pages are **lazy-loaded** via React Router's `lazy()` for code-splitting.
 See `scripts/check-design-tokens.mjs` for enforcement rules.
 
 ### Configuration
-- `vite.config.ts` — Build config, dev server (port 5174), custom Figma asset stub plugin, path alias `@/`
+- `vite.config.ts` — Build config, dev server (port 5174), path alias `@/`
 - `tsconfig.json` — TypeScript strict mode, ES2020 target, bundler resolution
 - `postcss.config.mjs` — PostCSS (for Tailwind)
-
-### Sync System
-- `sync.mjs` — Node.js CLI for bidirectional syncing with Vulcan Cloud
-  ```bash
-  node sync.mjs scan                # List all files with hashes
-  node sync.mjs export [file]       # Export to JSON (clipboard or file)
-  node sync.mjs import [file]       # Import from JSON (clipboard or file)
-  node sync.mjs diff [file]         # Compare local vs snapshot
-  ```
-- `.sync-snapshot.json` — Last known state (gitignored, created by import)
-- `sync.mjs` includes directories: `src/app`, `src/styles`, `src/imports`, root config files
 
 ## Development Patterns
 
@@ -113,12 +102,12 @@ When adding styles:
 
 Run `npm run check:tokens` to validate. The checker ignores:
 - `components/design-system/` (showcase)
-- `dev-tools`, `engine-test-suite`, `sync-tab`, `style-editor-tab` (tooling exemptions)
+- `dev-tools`, `engine-test-suite`, `style-editor-tab` (tooling exemptions)
 - `feedback-analysis`, `cms.tsx` (CMS defines strings)
 
 ### Component Structure
 - Keep components in `src/app/components/`
-- Group related components into subdirectories (e.g., `cms/`, `figma/`)
+- Group related components into subdirectories (e.g., `shared/`, `ds/`)
 - Data/utilities as `.ts` files; UI as `.tsx`
 - Large files (100+ lines) can be split: UI logic in `.tsx`, engine/calculations in `.ts`
 
@@ -134,10 +123,8 @@ Edit `src/app/routes.ts`:
 - For cross-page state: lift state to `AppShell` or use React Router loader/action patterns
 - Profile/user data: managed via `use-profile-defaults.ts` hook
 
-### Figma Asset Imports
-- Assets in Vulcan Cloud are stubbed locally with `figma:asset/<id>` imports
-- Vite's `figmaAssetStub()` plugin resolves them to empty SVG placeholders
-- Local assets go in `src/assets/` and imported normally: `import pizza from '@/assets/pizza.png'`
+### Assets
+- Local assets go in `src/assets/` and are imported normally: `import pizza from '@/assets/pizza.png'`
 
 ## Commands Reference
 
@@ -146,9 +133,9 @@ Edit `src/app/routes.ts`:
 | `npm run dev` | Start dev server (HMR at port 5174) |
 | `npm run build` | Production build (minified, chunked) |
 | `npm run preview` | Serve `dist/` locally (port 4173) |
-| `npm run verify` | TypeScript + design tokens check (pre-commit) |
+| `npm run verify` | TypeScript + design tokens + tests (pre-commit) |
 | `npm run check:tokens` | Design token linter only |
-| `node sync.mjs` | Figma ↔ local sync CLI |
+| `npm test` | Run Vitest suite |
 
 ## Key Files to Know
 
@@ -166,4 +153,4 @@ Edit `src/app/routes.ts`:
 - **Chunk splitting**: React, DOM, Router, and Motion split into separate chunks for faster loads.
 - **Sourcemaps**: Generated in build for debugging (`sourcemap: true` in config).
 - **Assets**: SVG and CSV imports supported; other types via standard imports.
-- **i18n**: CMS is the source of truth for user-facing strings (see `components/cms/`).
+- **i18n**: CMS is the source of truth for user-facing strings (see `src/app/features/cms/`).

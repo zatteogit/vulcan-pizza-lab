@@ -102,7 +102,7 @@ pages/home.tsx (orchestrator, tutto lo stato build/result)
     +-- (cms)              useCms(), createFormatter(), CmsTimelineStep
 ```
 
-### Context Providers (in RootLayout, avvolgono tutto)
+### Context Providers (in AppShell, avvolgono tutto)
 
 ```
 CmsProvider                gestisce stato CMS + locale + override
@@ -144,7 +144,6 @@ CmsProvider                gestisce stato CMS + locale + override
 | `design`  | Design System | Catalogo DS interattivo completo                                                                   |
 | `editor`  | Style Editor  | Editor 15 stili con smart import, diff, validazione                                                |
 | `engine`  | Engine Lab    | Compensazioni, Q10, punteggi, radar chart, **Test Suite** (12 categorie, ~100+ test auto-adattivi) |
-| `sync`    | Sync          | Scansione, export/import bundle, diff viewer, prompt AI                                            |
 
 **Legacy URL redirect:** `LEGACY_TAB_MAP` mappa i vecchi ID (overview, audit, styles, compensations, q10, scores) ai nuovi tab.
 
@@ -462,7 +461,7 @@ Mobile: ScoreDashboard sticky sotto header
 
 | Stato              | Tipo             | Default                 | Persistenza                                      |
 | ------------------ | ---------------- | ----------------------- | ------------------------------------------------ |
-| darkMode           | boolean          | false                   | localStorage (`vulcan_dark_mode`) via RootLayout |
+| darkMode           | boolean          | false                   | localStorage (`vulcan_dark_mode`) via AppShell   |
 | currentStep        | "build"/"result" | "build"                 | --                                               |
 | selectedStyle      | PizzaStyle/null  | null                    | --                                               |
 | selectedTimeSlot   | string/null      | null                    | --                                               |
@@ -481,7 +480,7 @@ Mobile: ScoreDashboard sticky sotto header
 
 | Chiave                   | Contenuto                                 | Usato in                           |
 | ------------------------ | ----------------------------------------- | ---------------------------------- |
-| `vulcan_dark_mode`       | `"true"/"false"`                          | RootLayout (load/save)             |
+| `vulcan_dark_mode`       | `"true"/"false"`                          | AppShell (load/save)               |
 | `vulcan_pantry`          | `{ flours: string[], yeasts: string[] }`  | UserNeeds (load/save)              |
 | `vulcan_oven_pref`       | `{ ovenType: OvenType, maxTemp: number }` | UserNeeds (load/save)              |
 | `vulcan_cms_overrides`   | JSON oggetto override CMS                 | CmsProvider (load/save)            |
@@ -494,10 +493,10 @@ Mobile: ScoreDashboard sticky sotto header
 
 ### Architettura
 
-Il CMS e basato su un **React Context** (`CmsProvider`) che avvolge l'intera app in RootLayout. Pattern: override su top di default hardcoded (stessa architettura di StylesOverrideContext).
+Il CMS e basato su un **React Context** (`CmsProvider`) che avvolge l'intera app in AppShell. Pattern: override su top di default hardcoded (stessa architettura di StylesOverrideContext).
 
 ```
-CmsProvider (root-layout.tsx)
+CmsProvider (app-shell.tsx)
   +-- CMS_DEFAULTS: CmsContent         hardcoded in cms-context.tsx (italiano)
   +-- LOCALE_BUNDLES: Record<LocaleId>  bundle lingue in cms/locales/
   +-- overrides: Partial<CmsContent>    persistiti in localStorage
@@ -648,7 +647,7 @@ Editor completo per tutti i 15 stili pizza con:
 
 ---
 
-## 9. Iframe Figma — vincoli tecnici
+## 9. Iframe — vincoli tecnici
 
 ### Clipboard
 
@@ -665,11 +664,11 @@ Editor completo per tutti i 15 stili pizza con:
 
 ### Dark mode
 
-- `.dark` applicato su `<html>` (document.documentElement) da RootLayout — i portali su `document.body` ereditano i token automaticamente
+- `.dark` applicato su `<html>` (document.documentElement) da AppShell — i portali su `document.body` ereditano i token automaticamente
 - `@custom-variant dark (&:is(.dark *))` in theme.css
 - Tutti i token si invertono automaticamente
 - Persistenza in localStorage (`vulcan_dark_mode`)
-- Hook: `useDarkMode()` da `root-layout.tsx` (usa `useOutletContext`)
+- Hook: `useDarkMode()` da `hooks/use-dark-mode.ts` (usa `useOutletContext`)
 
 ---
 
@@ -767,7 +766,7 @@ Editor completo per tutti i 15 stili pizza con:
 | Vite         | 6.3.5       | Build tool                   |
 | TypeScript   | 5.7.3       | Type checking                |
 
-**Routing:** `App.tsx` -> `RouterProvider`, layout condiviso in `root-layout.tsx`, pagine in `/pages/` (`home.tsx`, `dev.tsx`, `design-system.tsx`, `cms.tsx`, `not-found.tsx`), route config in `routes.ts`.
+**Routing:** `App.tsx` -> `RouterProvider`, layout condiviso in `app-shell.tsx`, pagine in `/pages/` (`home.tsx`, `dev.tsx`, `design-system.tsx`, `cms.tsx`, `not-found.tsx`), route config in `routes.ts`.
 
 **File attivi nel progetto:** ~68 file (`.tsx`, `.ts`, `.css`), escludendo i 46+2 file `ui/` dead code.
 
@@ -778,7 +777,6 @@ Editor completo per tutti i 15 stili pizza con:
 | `style-editor-tab.tsx`    | 3622  | Style Editor completo                        |
 | `pizza-engine.ts`         | 2644  | Motore scientifico                           |
 | `dev-tools.tsx`           | 1409  | DevTools 5 tab                               |
-| `sync-tab.tsx`            | 1280  | Tab Sync con diff/prompt                     |
 | `score-dashboard.tsx`     | 1278  | Dashboard punteggi + PizzaNerd               |
 | `cms-context.tsx`         | 1273  | CMS Provider + schema                        |
 | `user-needs.tsx`          | 1288  | Configuratore input utente                   |
@@ -907,20 +905,6 @@ pnpm build
 pnpm preview
 # -> http://localhost:4173
 ```
-
-### 13.5 Pulizia del nome pacchetto
-
-Il `package.json` ha `"name": "@figma/my-make-file"` — cambiarlo con il nome reale:
-
-```json
-{
-  "name": "vulcan-pizza-lab",
-  "private": true,
-  "version": "1.0.0"
-}
-```
-
----
 
 ## 14. Deployment su server/hosting
 
@@ -1230,105 +1214,16 @@ node server.mjs
 
 | Problema                                                | Causa                                              | Soluzione                                                                                                                  |
 | ------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `Cannot find module 'figma:asset/...'`                  | Import Figma-specific non risolti                  | Il plugin `figmaAssetStub` in `vite.config.ts` gestisce questo — restituisce un SVG placeholder. Nessuna azione richiesta. |
 | Pagina bianca su route `/dev`, `/cms`, `/design-system` | Server non configurato per SPA fallback            | Aggiungere `try_files $uri /index.html` (Nginx) o equivalente                                                              |
 | Font non caricati                                       | Nessun accesso a Google Fonts (offline/firewall)   | Scaricare i font e servirli localmente da `/public/fonts/`, aggiornando `fonts.css`                                        |
-| Dark mode non persiste                                  | localStorage non disponibile (iframe sandboxed)    | Fuori da Figma funziona nativamente. In iframe verificare `allow="storage-access"`                                         |
+| Dark mode non persiste                                  | localStorage non disponibile (iframe sandboxed)    | In pagina standalone funziona nativamente. In iframe verificare `allow="storage-access"`                                   |
 | CMS/lingua non persiste                                 | localStorage non disponibile (iframe sandboxed)    | Stesso motivo del dark mode — in iframe le restrizioni storage si applicano                                                |
 | Build fallisce con errori TypeScript                    | `noUnusedLocals` o import mancanti                 | `pnpm build` usa `tsc` — risolvere i warning o impostare `"noUnusedLocals": false` in `tsconfig.json` (gia impostato)      |
 | `ERR_PNPM_FROZEN_LOCKFILE` su CI                        | Lockfile non aggiornato dopo modifica package.json | Eseguire `pnpm install` localmente e committare `pnpm-lock.yaml` aggiornato                                                |
 
 ---
 
-## 17. Sistema Sync (Make <-> Locale)
-
-### Componenti
-
-| Componente              | Posizione                         | Funzione                                                                                                                               |
-| ----------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **SyncTab**             | `src/app/components/sync-tab.tsx` | Tab nei DevTools (`/dev/sync`): scansione progetto, export bundle, import bundle, diff viewer, generatore prompt con modalita compatta |
-| **sync.mjs**            | root del progetto                 | Script CLI Node.js: scan, export, import, diff                                                                                         |
-| **.sync-snapshot.json** | root (gitignored)                 | Ultimo snapshot per confronto diff                                                                                                     |
-
-### Formato bundle
-
-```json
-{
-  "vulcan_sync": "1.0",
-  "timestamp": "2026-03-15T...",
-  "source": "cloud" | "local",
-  "files": {
-    "/src/app/components/pizza-engine.ts": {
-      "hash": "a1b2c3d4",
-      "lines": 2644,
-      "content": "..."
-    }
-  },
-  "manifest": { "total_files": 65, "excluded": [...] }
-}
-```
-
-Hash: djb2 (identico browser/CLI per confronto coerente).
-
-### Workflow Make -> Locale
-
-1. DevTools -> Sync -> "Scansiona progetto"
-2. "Copia Bundle JSON" -> clipboard
-3. Sul terminale locale:
-   - **macOS:** `pbpaste | node sync.mjs import`
-   - **Linux:** `xclip -selection clipboard -o | node sync.mjs import`
-   - **Windows:** `powershell -c "Get-Clipboard" | node sync.mjs import`
-   - **Alternativa (tutti i SO):** salvare in file e `node sync.mjs import bundle.json`
-
-### Workflow Locale -> Make
-
-1. Lavori in Cursor/Windsurf/Claude Desktop
-2. Esporta:
-   - **macOS:** `node sync.mjs export | pbcopy`
-   - **Linux:** `node sync.mjs export | xclip -selection clipboard`
-   - **Windows:** `node sync.mjs export | clip`
-3. In Vulcan Cloud: DevTools -> Sync -> incolla il bundle -> "Analizza diff"
-4. Scegli modalita prompt (compatto o file interi) -> "Copia prompt" -> incolla nella chat -> Claude applica le modifiche
-
-### Generazione prompt — modalita "Diff compatto" vs "File interi"
-
-Il SyncTab genera il prompt per Claude in due modalita, selezionabili con un toggle:
-
-| Modalita                    | Strategia                                                                                                                                   | Quando usarla                                                |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| **Diff compatto** (default) | Algoritmo LCS riga-per-riga, output in formato `fast_apply_tool` (`// ... existing code ...` + solo righe cambiate con 3 righe di contesto) | Sempre, a meno che non ci siano problemi di applicazione     |
-| **File interi**             | Manda il contenuto completo di ogni file modificato con `write_tool`                                                                        | Fallback se Claude non riesce ad applicare un patch compatto |
-
-**Risparmio tipico:** per un file da 1000 righe con 10 righe modificate, il prompt compatto produce ~30 righe invece di 1000 (~97% di riduzione token). La UI mostra in tempo reale la stima di token e turni per entrambe le modalita.
-
-**Logica di fallback automatico** (nel codice, `computeHunks()`):
-
-- File < 25 righe -> sempre file intero (overhead del diff non conviene)
-- File con > 65% righe diverse -> sempre file intero (e una riscrittura, non un patch)
-- File con prodotto righe old x new > 4M -> sempre file intero (LCS troppo costoso in RAM)
-- Altrimenti -> diff compatto con hunks merged quando il contesto si sovrappone
-
-### Comandi CLI rapidi
-
-| Comando                              | Funzione                                    |
-| ------------------------------------ | ------------------------------------------- |
-| `node sync.mjs scan`                 | Mostra i file del progetto con righe e hash |
-| `node sync.mjs diff`                 | Cosa e cambiato dall'ultimo sync            |
-| `node sync.mjs export > bundle.json` | Salva bundle in un file                     |
-| `node sync.mjs import bundle.json`   | Importa bundle da file                      |
-
-### Limiti noti
-
-- L'import in Make richiede un turno di conversazione con Claude (non e automatico)
-- Non gestisce merge di conflitti (se lo stesso file e modificato in entrambi gli ambienti)
-- File binari non tracciati (ma Vulcan usa solo URL Unsplash, nessuna immagine locale)
-- Il bundle JSON puo essere grande (~200-400 KB) per progetti con molti file
-- L'algoritmo LCS e O(n\*m) in memoria — per file > ~2000 righe ciascuno, il diff viene bypassato e si usa il file intero
-- Il diff compatto richiede che Claude usi `fast_apply_tool` correttamente — in rari casi potrebbe fallire e richiedere un retry con "File interi"
-
----
-
-## 18. Mappa file completa del progetto
+## 17. Mappa file completa del progetto
 
 ### Root
 
@@ -1336,9 +1231,8 @@ Il SyncTab genera il prompt per Claude in due modalita, selezionabili con un tog
 | -------------------- | --------------------------------------------- |
 | `package.json`       | Dipendenze e script                           |
 | `tsconfig.json`      | Configurazione TypeScript                     |
-| `vite.config.ts`     | Build config + plugin figmaAssetStub          |
+| `vite.config.ts`     | Build config Vite                             |
 | `postcss.config.mjs` | PostCSS (vuoto — Tailwind v4 via Vite plugin) |
-| `sync.mjs`           | CLI sync Make <-> locale                      |
 | `index.html`         | Entry HTML                                    |
 
 ### `/src/styles/`
@@ -1381,7 +1275,6 @@ Il SyncTab genera il prompt per Claude in due modalita, selezionabili con un tog
 | `pizza-engine.ts`             | 2644  | Motore scientifico (15 stili, scoring, compensazioni)                                                                                                                                                              |
 | `style-editor-tab.tsx`        | 3622  | Style Editor con import/diff/validazione/liveSync                                                                                                                                                                  |
 | `dev-tools.tsx`               | 1409  | DevTools consolidati 5 tab                                                                                                                                                                                         |
-| `sync-tab.tsx`                | 1280  | Tab Sync (scansione, bundle, diff, prompt)                                                                                                                                                                         |
 | `user-needs.tsx`              | 1288  | Input utente (meteo, time slot, skill, oven, pantry)                                                                                                                                                               |
 | `score-dashboard.tsx`         | 1278  | Dashboard punteggi + PizzaNerd + RadarChart                                                                                                                                                                        |
 | `recipe-output.tsx`           | 1009  | Ingredienti + timeline procedurale                                                                                                                                                                                 |
@@ -1444,16 +1337,3 @@ Il SyncTab genera il prompt per Claude in due modalita, selezionabili con un tog
 | `carousel-variants.tsx`            | Demo carousel (importato da components-h) |
 | `patterns-templates.tsx`           | P01-P08: Pattern e template compositi     |
 
-### `/src/imports/` (1 file attivo)
-
-| File            | Funzione                                          |
-| --------------- | ------------------------------------------------- |
-| `svg-21qef.tsx` | SVG decorativi (importato da foundations-ext.tsx) |
-
-### Dead code (non eliminabile dal sandbox)
-
-| Directory/File                         | Conta   | Note                                  |
-| -------------------------------------- | ------- | ------------------------------------- |
-| `/src/app/components/ui/*.tsx`         | 46 file | shadcn/radix, non importati — VPL-032 |
-| `/src/app/components/ui/utils.ts`      | 1 file  | Utility (clsx/twMerge) non usata      |
-| `/src/app/components/ui/use-mobile.ts` | 1 file  | Hook non usato                        |
