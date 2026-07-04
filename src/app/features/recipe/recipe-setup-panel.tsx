@@ -5,7 +5,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import {
   useEffect,
   useMemo,
@@ -13,7 +13,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { CtaButton } from "../../components/ds/index";
+import { CtaButton, ModalSheet } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
 import { SpecCell } from "./recipe-stat-strip";
@@ -185,15 +185,6 @@ export function RecipeSetupPanel({
     return () => window.clearTimeout(timeout);
   }, [notice, onNotice]);
 
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, setOpen]);
-
   const interpretations = useMemo(
     () => getInterpretationsForStyle(style.id),
     [style.id],
@@ -253,7 +244,7 @@ export function RecipeSetupPanel({
            Solo la leva ha aspetto cliccabile. */
         <button
           onClick={() => (onRequestOpen ? onRequestOpen() : setOpen(true))}
-          className="w-full flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 px-0.5 py-1 text-left active:scale-[0.995] transition-transform"
+          className="w-full flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 px-0.5 py-1 text-left active:scale-99 transition-transform"
           style={{
             background: "transparent",
             border: "none",
@@ -307,7 +298,7 @@ export function RecipeSetupPanel({
       >
         <button
           onClick={() => (onRequestOpen ? onRequestOpen() : setOpen(true))}
-          className="w-full flex items-center gap-3 px-5 py-4 text-left active:scale-[0.99] transition-all duration-200 hover:bg-[color-mix(in srgb,var(--text-default)_2%,transparent)] group"
+          className="w-full flex items-center gap-3 px-5 py-4 text-left active:scale-99 transition-all duration-200 hover:bg-[color-mix(in srgb,var(--text-default)_2%,transparent)] group"
           style={{
             background: "transparent",
             border: "none",
@@ -372,40 +363,14 @@ export function RecipeSetupPanel({
       </div>
       )}
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="fixed inset-0 z-[80] flex items-end justify-center overscroll-contain sm:items-center sm:px-4 sm:py-5"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              background: "var(--dialog-scrim-strong)",
-              backdropFilter: "blur(20px) saturate(1.4)",
-              WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-            }}
-            onClick={() => setOpen(false)}
-          >
-            <motion.section
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="recipe-setup-title"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", stiffness: 350, damping: 34 }}
-              className="w-full h-[92dvh] max-h-[92dvh] sm:h-[min(760px,88vh)] sm:max-h-[88vh] sm:max-w-[1160px] rounded-t-4xl sm:rounded-4xl border-0 sm:border overflow-hidden flex flex-col"
-              style={{
-                background:
-                  "color-mix(in srgb, var(--container-page) 92%, transparent)",
-                color: "var(--text-default)",
-                borderColor: "var(--container-border)",
-                boxShadow: "var(--dialog-shadow)",
-                backdropFilter: "blur(24px) saturate(1.6)",
-                WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
+      <ModalSheet
+        open={open}
+        onClose={() => setOpen(false)}
+        ariaLabelledby="recipe-setup-title"
+        size="xl"
+        height="full"
+        panelClassName="overflow-hidden flex flex-col"
+      >
               <div
                 className="flex-shrink-0 px-5 py-3 sm:px-7 sm:py-3.5 border-b"
                 style={{ borderColor: "var(--container-border-subtle)" }}
@@ -662,16 +627,13 @@ export function RecipeSetupPanel({
                 <CtaButton
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="w-full sm:w-auto px-7 py-3 active:scale-[0.98]"
+                  className="w-full sm:w-auto px-7 py-3 active:scale-98"
                   style={{ fontSize: "var(--font-size-lg)" }}
                 >
                   {cmsMessage(cms, "recipeSetup.done", "Fatto")}
                 </CtaButton>
               </div>
-            </motion.section>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </ModalSheet>
     </section>
   );
 }

@@ -92,7 +92,7 @@ function FeaturedRecipeCard({
     <Link
       to={linkTo}
       state={{ exploreBackTo }}
-      className="flex flex-col md:flex-row overflow-hidden rounded-3xl active:scale-[0.99] transition-all duration-300 group"
+      className="flex flex-col md:flex-row overflow-hidden rounded-3xl active:scale-99 transition-all duration-300 group"
       style={{
         textDecoration: "none",
         color: "inherit",
@@ -114,7 +114,7 @@ function FeaturedRecipeCard({
         <ImageWithFallback
           src={photo}
           alt={recipe.name}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-104"
           loading="lazy"
         />
         {/* Badge autenticità posizionato sull'immagine */}
@@ -699,7 +699,7 @@ function SignatureRecipeCard({
         <Link
           to={linkTo}
           state={{ exploreBackTo }}
-          className="block rounded-2xl overflow-hidden active:scale-[0.97] transition-transform group"
+          className="block rounded-2xl overflow-hidden active:scale-97 transition-transform group"
           style={{
             background: "var(--container-card)",
             border: isNerd ? "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)" : "1px solid var(--container-border-ghost)",
@@ -714,7 +714,7 @@ function SignatureRecipeCard({
           <ImageWithFallback
             src={photo}
             alt={recipe.name}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             loading="lazy"
           />
           <div
@@ -846,7 +846,7 @@ function StyleCatalogCard({
         <Link
           to={`/recipe/${style.id}?mode=canonical`}
           state={{ exploreBackTo }}
-          className="block rounded-2xl overflow-hidden active:scale-[0.97] transition-transform group"
+          className="block rounded-2xl overflow-hidden active:scale-97 transition-transform group"
           style={{
             background: "var(--container-card)",
             border: isNerd ? "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)" : "1px solid var(--container-border-ghost)",
@@ -862,7 +862,7 @@ function StyleCatalogCard({
           <ImageWithFallback
             src={photo}
             alt={style.name}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             loading="lazy"
           />
 

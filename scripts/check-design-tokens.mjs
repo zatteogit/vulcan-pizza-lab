@@ -100,6 +100,32 @@ const RULES = [
     },
   },
   {
+    id: "tw-raw-palette",
+    desc: "Classe palette Tailwind di default (bg-red-500…) → token semantico. La palette è disattivata in @theme: la classe NON compila e fallisce in silenzio.",
+    test: (l) =>
+      l.match(
+        /\b(?:bg|text|border|ring|fill|stroke|from|to|via|shadow|outline|decoration|accent|caret|divide)-(?:red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)-\d+(?:\/\d+)?\b/g,
+      ),
+  },
+  {
+    id: "arbitrary-font-size",
+    desc: "Font-size arbitrario text-[Npx] → scala tipografica (text-2xs, text-xs, …) o composite type-*.",
+    excludeFiles: SIZING_TOOLING_EXEMPT,
+    test: (l) => l.match(/\btext-\[\d+(?:\.\d+)?px\]/g),
+  },
+  {
+    id: "arbitrary-z",
+    desc: "Z-index arbitrario z-[N] → scala nativa (z-10…z-50) o token AF: z-(--z-widget|--z-modal|--z-skiplink).",
+    excludeFiles: SIZING_TOOLING_EXEMPT,
+    test: (l) => l.match(/\bz-\[\d+\]/g),
+  },
+  {
+    id: "arbitrary-scale",
+    desc: "Scale arbitrario scale-[x] → valore bare Tailwind 4 (scale-98, active:scale-95, …).",
+    excludeFiles: SIZING_TOOLING_EXEMPT,
+    test: (l) => l.match(/\bscale-\[[\d.]+\]/g),
+  },
+  {
     id: "hardcoded-text",
     desc: "Testo user-facing hardcoded in aria-label/placeholder/title/alt → spostalo nel CMS (cms.*).",
     excludeDs: true,
@@ -181,10 +207,111 @@ try {
   /* theme.css assente: ignora */
 }
 
+/* ── Allineamento bidirezionale: token/composite DEFINITI ma mai CONSUMATI ──
+ * Il tier system vale nei due sensi: il codice consuma solo token, e il
+ * design system non accumula token morti. Un token è "vivo" se compare come
+ * var(--x) (in app o in theme.css stesso), come stringa letterale nel codice,
+ * o — per i token @theme — come utility Tailwind derivata (bg-primary…).
+ * Token in fase di rollout: aggiungerli a STAGED_TOKENS con una scadenza. */
+const STAGED_TOKENS = new Set([
+  /* es. "--nuovo-token", // in rollout fino a <data/PR> */
+]);
+
+function walkAll(dir, acc = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) walkAll(full, acc);
+    else if (/\.(ts|tsx|css|html)$/.test(entry.name)) acc.push(full);
+  }
+  return acc;
+}
+
+try {
+  const css = readFileSync(CSS_FILE, "utf8");
+  const cssLines = css.split("\n");
+  const lineOf = (name, matcher) => {
+    const idx = cssLines.findIndex((l) => matcher.test(l));
+    return idx === -1 ? 1 : idx + 1;
+  };
+  const themeBlock = css.match(/@theme inline \{[\s\S]*?\n\}/)?.[0] ?? "";
+  const themeTokens = new Set(
+    [...themeBlock.matchAll(/^\s*(--[a-z0-9-]+)\s*:/gm)].map((m) => m[1]),
+  );
+  const allSources = [...walkAll("src"), "index.html"]
+    .filter((f) => !f.replace(/\\/g, "/").endsWith("theme.css"))
+    .map((f) => {
+      try {
+        return readFileSync(f, "utf8");
+      } catch {
+        return "";
+      }
+    })
+    .join("\n");
+
+  const tokenDefs = [
+    ...new Set([...css.matchAll(/^\s*(--[a-z0-9-]+)\s*:/gm)].map((m) => m[1])),
+  ];
+  for (const t of tokenDefs) {
+    if (STAGED_TOKENS.has(t)) continue;
+    const name = t.slice(2);
+    const varRe = new RegExp(`var\\(${t}[\\),]`);
+    if (varRe.test(allSources) || varRe.test(css)) continue;
+    if (allSources.includes(t)) continue; // riferimento letterale (stringa JS)
+    if (themeTokens.has(t)) {
+      /* Token @theme: vivo anche se consumato via utility Tailwind derivata.
+       * `--text-2xs--line-height` è un modificatore del token base: segue
+       * la sorte di `--text-2xs`, non va contato da solo. */
+      if (name.includes("--")) continue;
+      let utilRe = null;
+      if (name.startsWith("color-")) {
+        utilRe = new RegExp(
+          `\\b(?:bg|text|border|ring|fill|stroke|divide|outline|accent|caret|decoration|from|to|via|shadow|placeholder|inset-ring)-${name.slice(6)}(?![a-z-])`,
+        );
+      } else if (name.startsWith("radius-")) {
+        utilRe = new RegExp(`\\brounded(?:-[trbleyxs]{1,2})?-${name.slice(7)}(?![a-z-])`);
+      } else if (name.startsWith("font-")) {
+        utilRe = new RegExp(`\\bfont-${name.slice(5)}(?![a-z-])`);
+      } else if (name.startsWith("text-")) {
+        utilRe = new RegExp(`\\btext-${name.slice(5)}(?![a-z-])`);
+      }
+      if (utilRe && utilRe.test(allSources)) continue;
+    }
+    violations.push({
+      file: CSS_FILE,
+      line: lineOf(t, new RegExp(`^\\s*${t}\\s*:`)),
+      rule: "dead-token",
+      severity: "error",
+      hits: [t],
+    });
+  }
+
+  const compBlock = css
+    .slice(css.indexOf("@layer components"))
+    .replace(/\/\*[\s\S]*?\*\//g, "");
+  const compClasses = [
+    ...new Set([...compBlock.matchAll(/^\s*\.([a-z][a-z0-9-]+)/gm)].map((m) => m[1])),
+  ];
+  for (const c of compClasses) {
+    if (!allSources.includes(c)) {
+      violations.push({
+        file: CSS_FILE,
+        line: lineOf(c, new RegExp(`^\\s*\\.${c}\\b`)),
+        rule: "dead-composite",
+        severity: "error",
+        hits: [`.${c}`],
+      });
+    }
+  }
+} catch {
+  /* theme.css assente: ignora */
+}
+
 const errors = violations.filter((v) => v.severity !== "warn");
 const warnings = violations.filter((v) => v.severity === "warn");
 const EXTRA_DESC = {
   "css-font-literal": "theme.css: famiglia font letterale → usare var(--font-sans|-serif|-mono)",
+  "dead-token": "theme.css: token definito ma mai consumato (né var(), né utility @theme) → rimuoverlo o metterlo in STAGED_TOKENS",
+  "dead-composite": "theme.css: classe composite @layer components mai usata → rimuoverla",
 };
 
 function report(list, stream) {

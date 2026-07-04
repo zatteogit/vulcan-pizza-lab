@@ -1094,7 +1094,7 @@ export function HomePage() {
         href="#main-content"
         radius="lg"
         elevated={false}
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-(--z-skiplink) focus:px-4 focus:py-2 focus:rounded-lg"
         style={{
           fontSize: "var(--font-size-lg)",
           fontWeight: "var(--weight-semibold)" as any,
@@ -1986,7 +1986,7 @@ export function HomePage() {
               onClick={handleGenerateRecipe}
               whileHover={{ scale: 1.03, y: -1 }}
               deepShadow
-              className="pointer-events-auto h-12 sm:h-13 px-8 sm:px-10 active:scale-[0.97]"
+              className="pointer-events-auto h-12 sm:h-13 px-8 sm:px-10 active:scale-97"
             >
               <Sparkles size={15} />
               {cms.ui.generate}

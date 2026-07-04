@@ -164,7 +164,7 @@ export function CmsPage() {
         style={{
           background:
             "color-mix(in srgb, var(--container-page) 88%, transparent)",
-          backdropFilter: "blur(24px) saturate(1.6)",
+          backdropFilter: "var(--backdrop-glass-strong)",
           borderBottom: "1px solid var(--border-muted)",
         }}
       >
@@ -462,7 +462,7 @@ export function CmsPage() {
             onClick={() =>
               setMobileSidebarOpen(!mobileSidebarOpen)
             }
-            className="w-full flex items-center justify-between px-4 py-3 active:scale-[0.99]"
+            className="w-full flex items-center justify-between px-4 py-3 active:scale-99"
             style={{
               background: "var(--surface-container-low)",
               borderBottom: "1px solid var(--border-muted)",
@@ -583,7 +583,7 @@ function SidebarContent({
           <button
             key={s.id}
             onClick={() => onSelect(s.id)}
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left active:scale-[0.98] transition-transform"
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left active:scale-98 transition-transform"
             style={{
               background: isActive
                 ? "var(--container-page)"
@@ -1233,7 +1233,7 @@ function LocaleSwitcher() {
                 if (meta.available) switchLocale(meta.id);
               }}
               disabled={!meta.available}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left active:scale-[0.97] transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
+              className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left active:scale-97 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
               style={{
                 background: isActive
                   ? "color-mix(in srgb, var(--primary) 12%, var(--container-page))"

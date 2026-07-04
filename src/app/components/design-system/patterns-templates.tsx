@@ -180,7 +180,7 @@ function SelectionPatternSpec() {
                       <motion.button
                         key={card.id}
                         onClick={() => setSelectedCard(card.id)}
-                        className="relative p-4 rounded-2xl text-left cursor-pointer active:scale-[0.97]"
+                        className="relative p-4 rounded-2xl text-left cursor-pointer active:scale-97"
                         style={{
                           background: isActive
                             ? tc.bg
@@ -275,7 +275,7 @@ function SelectionPatternSpec() {
                 principi={[
                   "Un solo elemento attivo per gruppo (single-select). Il check animato conferma la scelta.",
                   "Il colore di selezione riflette il contesto: primary per chip generici, tier-color per card stilistiche.",
-                  "Feedback tattile immediato: active:scale-95 (chip) o active:scale-[0.97] (card).",
+                  "Feedback tattile immediato: active:scale-95 (chip) o active:scale-97 (card).",
                   "L'icona si swap-anima (icon → check) con spring transition, mai cross-fade.",
                 ]}
                 quandoUsare="Ogni volta che l'utente deve scegliere tra opzioni discrete. Chip per 2-6 opzioni testuali, Card per opzioni con contenuto rich (immagine, score, metadata)."
@@ -710,7 +710,7 @@ function ProgressiveDisclosureSpec() {
                 >
                   <button
                     onClick={() => setAccordionOpen(!accordionOpen)}
-                    className="w-full flex items-center justify-between px-5 py-3.5 text-left active:scale-[0.99] transition-transform cursor-pointer"
+                    className="w-full flex items-center justify-between px-5 py-3.5 text-left active:scale-99 transition-transform cursor-pointer"
                     aria-expanded={accordionOpen}
                   >
                     <div className="flex items-center gap-2.5">
@@ -984,7 +984,7 @@ function FloatingCTASpec() {
                             stiffness: 400,
                             damping: 25,
                           }}
-                          className="flex items-center gap-2 h-11 px-7 rounded-full active:scale-[0.97]"
+                          className="flex items-center gap-2 h-11 px-7 rounded-full active:scale-97"
                           style={{
                             pointerEvents: "auto",
                             background: "var(--cta-btn-bg)",
@@ -1011,7 +1011,7 @@ function FloatingCTASpec() {
                             stiffness: 400,
                             damping: 25,
                           }}
-                          className="flex items-center gap-2 h-11 px-7 rounded-full active:scale-[0.97]"
+                          className="flex items-center gap-2 h-11 px-7 rounded-full active:scale-97"
                           style={{
                             pointerEvents: "auto",
                             background: "var(--cta-btn-bg)",
@@ -1037,7 +1037,7 @@ function FloatingCTASpec() {
                           style={{ pointerEvents: "auto" }}
                         >
                           <button
-                            className="flex items-center gap-2 h-11 px-5 rounded-full active:scale-[0.97]"
+                            className="flex items-center gap-2 h-11 px-5 rounded-full active:scale-97"
                             style={{
                               background: "var(--surface-container)",
                               color: "var(--text-default)",
@@ -1052,7 +1052,7 @@ function FloatingCTASpec() {
                             Cambia stile
                           </button>
                           <button
-                            className="flex items-center gap-2 h-11 px-5 rounded-full active:scale-[0.97]"
+                            className="flex items-center gap-2 h-11 px-5 rounded-full active:scale-97"
                             style={{
                               background: "rgba(0,0,0,0)",
                               color: "var(--muted-foreground)",

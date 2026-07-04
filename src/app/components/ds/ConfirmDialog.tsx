@@ -43,7 +43,7 @@ export interface ConfirmDialogProps {
 }
 
 const ACTION_BASE =
-  "w-full h-12 rounded-full active:scale-[0.98] transition-transform flex items-center justify-center gap-2";
+  "w-full h-12 rounded-full active:scale-98 transition-transform flex items-center justify-center gap-2";
 
 export function ConfirmDialog({
   open,
@@ -127,7 +127,7 @@ export function ConfirmDialog({
                     <CtaButton
                       key={i}
                       onClick={action.onClick}
-                      className="w-full h-12 active:scale-[0.98]"
+                      className="w-full h-12 active:scale-98"
                       style={{ fontSize: "var(--font-size-lg)" }}
                     >
                       {action.label}

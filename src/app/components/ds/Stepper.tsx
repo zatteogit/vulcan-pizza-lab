@@ -47,7 +47,7 @@ export function Stepper({
         size="md"
         radius="xl"
         variant="ghost"
-        className="disabled:opacity-20 active:scale-[0.88] transition-transform"
+        className="disabled:opacity-20 active:scale-88 transition-transform"
         style={buttonStyle}
         aria-label={decrementLabel}
       >
@@ -68,7 +68,7 @@ export function Stepper({
         size="md"
         radius="xl"
         variant="ghost"
-        className="disabled:opacity-20 active:scale-[0.88] transition-transform"
+        className="disabled:opacity-20 active:scale-88 transition-transform"
         style={buttonStyle}
         aria-label={incrementLabel}
       >

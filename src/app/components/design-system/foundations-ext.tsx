@@ -560,7 +560,7 @@ function ImageTreatmentSection() {
             {STYLE_PHOTOS.map((photo) => (
               <motion.div
                 key={photo.label}
-                className="flex flex-col gap-2 cursor-pointer active:scale-[0.97] transition-transform"
+                className="flex flex-col gap-2 cursor-pointer active:scale-97 transition-transform"
                 whileHover={{ y: -4, boxShadow: "var(--shadow-md)" }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >

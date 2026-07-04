@@ -334,7 +334,7 @@ function ContainerTransformSection() {
                     damping: 28,
                     mass: 1,
                   }}
-                  className="flex items-center justify-center overflow-hidden cursor-pointer active:scale-[0.97] transition-transform"
+                  className="flex items-center justify-center overflow-hidden cursor-pointer active:scale-97 transition-transform"
                   style={{
                     border: "none",
                     outline: "none",

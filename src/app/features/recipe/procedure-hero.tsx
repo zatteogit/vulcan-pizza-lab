@@ -112,7 +112,7 @@ export function ProcedureHeroControls({
           <div className="mt-2 flex items-center gap-1 sm:gap-1.5">
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, -1))}
-              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
+              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-90 transition-transform"
               style={{
                 background: "var(--recipe-bg)",
                 border: "1px solid var(--recipe-border)",
@@ -185,7 +185,7 @@ export function ProcedureHeroControls({
             )}
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, 1))}
-              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
+              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-90 transition-transform"
               style={{
                 background: "var(--recipe-bg)",
                 border: "1px solid var(--recipe-border)",
@@ -217,7 +217,7 @@ export function ProcedureHeroControls({
           <div className="mt-2 flex items-center gap-1 sm:gap-1.5">
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, -1))}
-              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
+              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-90 transition-transform"
               style={{
                 background: "var(--recipe-bg)",
                 border: "1px solid var(--recipe-border)",
@@ -291,7 +291,7 @@ export function ProcedureHeroControls({
             )}
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, 1))}
-              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-[0.9] transition-transform"
+              className="w-8 h-8 rounded-xl flex items-center justify-center active:scale-90 transition-transform"
               style={{
                 background: "var(--recipe-bg)",
                 border: "1px solid var(--recipe-border)",
@@ -324,7 +324,7 @@ export function ProcedureHeroControls({
                 newStart.setFullYear(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
                 setStartTime(roundToQuarter(newStart));
               }}
-              className="flex-1 py-1.5 px-2.5 rounded-xl text-center text-xs font-semibold active:scale-[0.97] transition-all"
+              className="flex-1 py-1.5 px-2.5 rounded-xl text-center text-xs font-semibold active:scale-97 transition-all"
               style={{
                 background: isSelected ? "var(--chip-bg-active)" : "var(--container-bg-low)",
                 border: isSelected ? "1px solid var(--tertiary)" : "1px solid var(--container-border-subtle)",
@@ -341,7 +341,7 @@ export function ProcedureHeroControls({
       {/* Smart Eating Planner Shortcuts */}
       <div className="mt-4 pt-3.5" style={{ borderTop: "1px solid var(--container-border-subtle)" }}>
         <div
-          className="text-[10px] font-bold tracking-wider uppercase mb-2"
+          className="text-2xs font-bold tracking-wider uppercase mb-2"
           style={{ color: "var(--text-muted)", letterSpacing: "var(--tracking-spread)" }}
         >
           Pronto per il pasto:

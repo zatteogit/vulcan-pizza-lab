@@ -239,11 +239,9 @@
   --space-12: 3rem; /* 48px */
   --space-16: 4rem; /* 64px */
   --space-20: 5rem; /* 80px */
-  --space-24: 6rem; /* 96px */
 
   /* ── Border Primitives ── */
   --border-width-thin: 1px;
-  --border-width-medium: 2px;
   --border-width-thick: 3px;
   --scrollbar-width-thin: thin;
 
@@ -269,25 +267,20 @@
   --background: var(--color-parchment-50);
   --foreground: var(--color-night-1000);
   --card: var(--color-parchment-0);
-  --card-foreground: var(--color-night-1000);
   --popover: var(--color-parchment-0);
-  --popover-foreground: var(--color-night-1000);
   --primary: var(--color-terracotta-500);
+  --ring: var(--color-terracotta-600);
   --primary-foreground: var(--color-white);
   --secondary: var(--color-mocha-500);
   --secondary-foreground: var(--color-white);
   --muted: var(--color-parchment-200);
   --muted-foreground: var(--color-mocha-700);
   --accent: var(--color-parchment-200);
-  --accent-foreground: var(--color-night-1000);
   --destructive: var(--color-red-500);
   --destructive-foreground: var(--color-white);
   --border: var(--color-parchment-600);
   --border-muted: var(--color-parchment-400);
-  --input: transparent;
-  --input-background: var(--color-parchment-200);
   --switch-background: var(--color-parchment-700);
-  --ring: var(--color-terracotta-600);
 
   /* ── Color · Accents (semantic, domain) ──
      Ruoli che prima erano rgba/primitive sparsi nei componenti:
@@ -301,17 +294,9 @@
   --severity-warning: var(--color-amber-500);
   --severity-info: var(--color-mocha-500);
 
-  /* ── Color · Chart ── */
-  --chart-1: var(--color-terracotta-500);
-  --chart-2: var(--color-amber-500);
-  --chart-3: var(--color-sage-600);
-  --chart-4: var(--color-mocha-500);
-  --chart-5: var(--color-sienna-400);
-
 
   /* ── Color · Surface Tones (M3 tonal system) ── */
   --surface: var(--color-parchment-50);
-  --surface-dim: var(--color-parchment-400);
   --surface-bright: var(--color-parchment-0);
   --surface-container-lowest: var(--color-parchment-0);
   --surface-container-low: var(--color-parchment-100);
@@ -365,7 +350,6 @@
   /* ── CTA (action) ── */
   --cta: var(--color-sage-600);
   --cta-foreground: var(--color-white);
-  --cta-hover: var(--color-sage-700);
 
   /* ── Gradients ── */
   --grad-ember: linear-gradient(
@@ -385,7 +369,6 @@
     var(--color-sage-600) 0%,
     var(--color-sage-500) 100%
   );
-  --grad-surface: none;
   --shadow-color: var(--color-black);
 
   /* ── Elevation / Shadows ── */
@@ -405,16 +388,11 @@
   --shadow-glow: 0 0 0 3px rgba(194, 74, 47, 0.14);
   --shadow-cta: 0 4px 14px rgba(45, 106, 79, 0.2);
 
-  --elevation-0: none;
-  --elevation-1: var(--shadow-sm);
-  --elevation-2: var(--shadow-md);
-  --elevation-3: var(--shadow-lg);
   --elevation-glow: var(--shadow-glow);
   --elevation-glow-lg: 0 0 0 4px rgba(194, 74, 47, 0.18);
   --elevation-cta: var(--shadow-cta);
 
   --border-w: var(--border-width-thin);
-  --border-w-thick: var(--border-width-thin);
 
   /* ═══════════════════════════════════════════════════════════════════
      TIER 2.5 — DATA VISUALIZATION & FORGE  (semantic, domain-specific)
@@ -461,26 +439,20 @@
   --text-warning: var(--tertiary);
   --text-error: var(--destructive);
   --text-on-accent: var(--primary-foreground);
-  --text-on-cta: var(--cta-foreground);
-  --text-on-bg: var(--background);
 
   /* ── B. Icon Color Roles ── */
   --icon-default: var(--foreground);
   --icon-muted: var(--muted-foreground);
-  --icon-subtle: var(--on-surface-variant);
   --icon-accent: var(--primary);
   --icon-success: var(--cta);
   --icon-warning: var(--tertiary);
   --icon-error: var(--destructive);
-  --icon-on-accent: var(--primary-foreground);
 
   /* ── C. Container / Surface ── */
   --container-bg: var(--surface-container);
   --container-bg-low: var(--surface-container-low);
   --container-bg-high: var(--surface-container-high);
-  --container-bg-lowest: var(--surface-container-lowest);
   --container-border: var(--outline-variant);
-  --container-border-strong: var(--outline);
   --container-border-subtle: var(--border-muted);
   --container-card: var(--card);
   --container-divider: var(--outline-variant);
@@ -521,7 +493,6 @@
   --segmented-text-active: var(--foreground);
   --segmented-text-active-brand: var(--primary-foreground);
   --segmented-border: var(--outline-variant);
-  --segmented-border-active: var(--primary);
   --segmented-shadow-active: var(--shadow-sm);
   --segmented-font-size: var(--font-size-base);
   --segmented-font-size-sm: var(--font-size-sm);
@@ -545,66 +516,16 @@
   --btn-secondary-text: var(--foreground);
   --btn-secondary-border: var(--outline-variant);
   --btn-secondary-weight: var(--weight-semibold);
-  --btn-ghost-bg: var(--foreground);
-  --btn-ghost-text: var(--background);
-  --btn-ghost-weight: var(--weight-semibold);
-
-  /* ── G. Step Header ── */
-  --step-num-color: var(--primary);
-  --step-title-color: var(--foreground);
-  --step-line-color: var(--primary);
-  --step-subtitle-opacity: 0.65;
-
-  /* ── H. Stepper / ProgressPill ── */
-  --stepper-dot-active: var(--primary);
-  --stepper-dot-past: var(--outline);
-  --stepper-dot-future: var(--outline-variant);
-  --stepper-pill-bg: color-mix(
-    in srgb,
-    var(--surface-container) 85%,
-    transparent
-  );
-  --stepper-pill-border: var(--outline-variant);
-  --stepper-label-color: var(--primary);
-  --stepper-label-bg: color-mix(
-    in srgb,
-    var(--primary) 10%,
-    transparent
-  );
-
-  /* ── I. Tip / Coachmark ── */
-  --tip-bg: color-mix(
-    in srgb,
-    var(--surface-container) 88%,
-    transparent
-  );
-  --tip-bg-emphasis: color-mix(
-    in srgb,
-    var(--surface-container) 94%,
-    transparent
-  );
-  --tip-border: var(--outline-variant);
-  --tip-border-emphasis: color-mix(
-    in srgb,
-    var(--primary) 18%,
-    var(--outline-variant)
-  );
-  --tip-text: var(--muted-foreground);
-  --tip-icon: var(--tertiary);
-  --tip-bg-warm: var(--tertiary-container);
 
   /* ── I2. User Needs specifics ── */
   --needs-oven-bg: var(--surface-container);
   --needs-oven-border: var(--outline-variant);
-  --needs-oven-bg-low: var(--surface-container-low);
   --needs-pantry-accent: var(--tertiary);
   --needs-pantry-border-active: color-mix(
     in srgb,
     var(--tertiary) 40%,
     var(--outline-variant)
   );
-  --needs-yeast-bg-active: var(--cta);
-  --needs-yeast-text-active: var(--cta-foreground);
 
   /* ── J. Popover (InfoTip) ── */
   --popover-surface: var(--surface-container-lowest);
@@ -619,36 +540,8 @@
   --popover-trigger-active: var(--primary);
   --popover-trigger-idle: var(--muted-foreground);
 
-  /* ── K. Inline Tip ── */
-  --inline-tip-bg: var(--tertiary-container);
-  --inline-tip-border: var(--outline-variant);
-  --inline-tip-icon: var(--tertiary);
-  --inline-tip-text: var(--on-surface-variant);
-
   /* ── L. Score Dashboard ── */
   --score-accent: var(--primary);
-  --score-secondary: var(--tertiary);
-  --score-tertiary: var(--cta);
-  --score-track: var(--outline-variant);
-  --score-grid: var(--outline-variant);
-  --score-value: var(--foreground);
-  --score-label: var(--muted-foreground);
-  --score-bg: var(--surface-container);
-  --score-page: var(--background);
-  --score-card: var(--card);
-  --score-border: var(--outline-variant);
-  --score-border-strong: var(--outline);
-  --score-divider: var(--border);
-  --score-nerd-bg: color-mix(
-    in srgb,
-    var(--primary) 12%,
-    var(--surface-container)
-  );
-  --score-nerd-border: color-mix(
-    in srgb,
-    var(--primary) 25%,
-    var(--outline-variant)
-  );
 
   /* ── L2. Score Axes (RadarChart + devtools) ── */
   --axis-authenticity: var(--warm-sienna);
@@ -657,12 +550,6 @@
   --axis-sustainability: var(--warm-sage);
   --axis-experimentation: var(--secondary);
 
-  /* ── M. Stat Strip ── */
-  --stat-hydration: var(--primary);
-  --stat-oven: var(--tertiary);
-  --stat-cook: var(--cta);
-  --stat-ferment: var(--tertiary);
-
   /* ── N. Recipe Output ── */
   --recipe-bg: var(--surface-container);
   --recipe-border: var(--outline-variant);
@@ -670,7 +557,6 @@
   --recipe-divider-subtle: var(--border-muted);
   --recipe-highlight: var(--primary);
   --recipe-success: var(--cta);
-  --recipe-accent: var(--tertiary);
   --recipe-node-first-bg: var(--primary);
   --recipe-node-last-bg: var(--cta);
   --recipe-node-mid-bg: var(--surface-container);
@@ -726,51 +612,6 @@
     var(--forge-abyss) 100%
   );
 
-  /* ── Q. Time-slot chips ── */
-  --timeslot-tonight-bg: var(--time-tonight);
-  --timeslot-tonight-text: color-mix(
-    in srgb,
-    var(--time-tonight-soft) 30%,
-    white
-  );
-  --timeslot-lunch-bg: var(--time-lunch);
-  --timeslot-lunch-text: color-mix(
-    in srgb,
-    var(--time-lunch-soft) 20%,
-    white
-  );
-  --timeslot-dinner-bg: var(--time-dinner);
-  --timeslot-dinner-text: color-mix(
-    in srgb,
-    var(--time-dinner-soft) 25%,
-    white
-  );
-  --timeslot-dayafter-bg: var(--time-dayafter);
-  --timeslot-dayafter-text: color-mix(
-    in srgb,
-    var(--time-dayafter-soft) 25%,
-    white
-  );
-  --timeslot-weekend-bg: var(--time-weekend);
-  --timeslot-weekend-text: color-mix(
-    in srgb,
-    var(--time-weekend-soft) 25%,
-    white
-  );
-
-  /* ── R. Header / Glassmorphism ── */
-  --header-bg: color-mix(
-    in srgb,
-    var(--background) 88%,
-    transparent
-  );
-  --header-bg-dense: color-mix(
-    in srgb,
-    var(--background) 92%,
-    transparent
-  );
-  --header-border: var(--border-muted);
-
   /* ── S. Brand / Glow (FireGlow, Logo) ── */
   --glow-primary: var(--primary);
   --glow-secondary: var(--tertiary);
@@ -788,7 +629,6 @@
   --recipe-hero-card-bg: color-mix(in srgb, var(--container-page) 88%, transparent);
   --recipe-hero-card-shadow: var(--shadow-lg);
   --recipe-hero-badge-bg: color-mix(in srgb, var(--text-accent) 8%, transparent);
-  --recipe-hero-badge-text: var(--text-accent);
 
   --hero-glow-warm: radial-gradient(
     ellipse at 48% 52%,
@@ -874,7 +714,6 @@
   --overlay-shadow-text:
     0 2px 8px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 0, 0, 0.25);
   --overlay-shadow-text-sm: 0 1px 4px rgba(0, 0, 0, 0.5);
-  --overlay-shadow-text-lg: 0 2px 20px rgba(0, 0, 0, 0.6);
   --overlay-scrim: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0) 0%,
@@ -890,10 +729,6 @@
   --score-ring-track-stroke: rgba(255, 255, 255, 0.08);
   --score-ring-text: var(--color-white);
 
-  /* ── L (ext). Score Dashboard modal ── */
-  --score-modal-backdrop: rgba(0, 0, 0, 0.45);
-  --score-modal-shadow: 0 -8px 40px rgba(0, 0, 0, 0.18);
-
   /* ── N2. Style Card (recommended-styles) ── */
   --style-card-shadow:
     0 2px 8px -2px rgba(0, 0, 0, 0.08),
@@ -905,19 +740,6 @@
   /* ── E (ext). Button shadows ── */
   --cta-btn-shadow-deep:
     var(--cta-btn-shadow), 0 8px 30px rgba(0, 0, 0, 0.1);
-  --btn-secondary-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  --btn-ghost-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-
-  /* ── S (ext). Logo badge ── */
-  --logo-badge-shadow: 0 2px 8px
-    color-mix(in srgb, var(--logo-glow) 25%, transparent);
-
-  /* ── T (ext). Hero result scrim — subtle vignette only (title moved outside photo) ── */
-  --hero-result-scrim: radial-gradient(
-    ellipse at 50% 40%,
-    rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 0.18) 100%
-  );
 
   /* ── X. Card Photo Scrims (bottom-up gradient for text legibility) ── */
   --card-scrim-light: linear-gradient(
@@ -933,11 +755,6 @@
   --card-scrim-heavy: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.65) 0%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  --card-scrim-hero: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.7) 0%,
     rgba(0, 0, 0, 0) 100%
   );
   --card-scrim-subtle: rgba(0, 0, 0, 0.08);
@@ -988,6 +805,24 @@
   --dialog-scrim-strong: var(--overlay-backdrop);
   --dialog-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
   --dialog-shadow-compact: 0 24px 48px rgba(0, 0, 0, 0.18);
+
+  /* ── AE2. Glass (backdrop-filter) — scala unica per scrim e superfici ── */
+  --backdrop-glass-soft: blur(10px); /* scrim leggero (panel solidi) */
+  --backdrop-glass: blur(20px) saturate(1.4); /* scrim dietro sheet glass */
+  --backdrop-glass-strong: blur(24px) saturate(1.6); /* superficie sheet glass */
+  --backdrop-glass-max: blur(28px) saturate(1.7); /* superficie glass densa (picker) */
+  --sheet-glass-bg: color-mix(
+    in srgb,
+    var(--container-page) 94%,
+    transparent
+  );
+
+  /* ── AF. Z-index scale (livelli sopra z-50 di Tailwind) ──
+     Consumo: className="z-(--z-widget)" (sintassi var Tailwind 4).
+     Sotto i 50 si usa la scala nativa z-10..z-50. */
+  --z-widget: 70; /* floating widget persistenti (active-cook) */
+  --z-modal: 80; /* sheet/modali sopra ogni chrome di pagina */
+  --z-skiplink: 9999; /* skip-link a11y: sempre sopra tutto */
 }
 
 .dark {
@@ -995,17 +830,15 @@
   --background: var(--color-night-900);
   --foreground: var(--color-night-0);
   --card: var(--color-night-700);
-  --card-foreground: var(--color-night-0);
   --popover: var(--color-night-700);
-  --popover-foreground: var(--color-night-0);
   --primary: var(--color-terracotta-300);
+  --ring: var(--color-terracotta-300);
   --primary-foreground: var(--color-terracotta-900);
   --secondary: var(--color-mocha-400);
   --secondary-foreground: var(--color-night-1000);
   --muted: var(--color-night-500);
   --muted-foreground: var(--color-parchment-900);
   --accent: var(--color-night-500);
-  --accent-foreground: var(--color-night-0);
   --destructive: var(--color-red-400);
   --destructive-foreground: var(--color-red-800);
   --border: var(--color-night-200);
@@ -1022,18 +855,9 @@
   --tab-indicator-bg: linear-gradient(145deg, color-mix(in srgb, var(--container-page) 86%, transparent), color-mix(in srgb, var(--primary) 18%, transparent));
   --tab-indicator-border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
   --tab-indicator-shadow: 0 8px 18px color-mix(in srgb, var(--primary) 12%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 22%, transparent);
-  --input: var(--color-night-500);
-  --input-background: var(--color-night-500);
   --switch-background: var(--color-mocha-800);
-  --ring: var(--color-terracotta-300);
-  --chart-1: var(--color-terracotta-300);
-  --chart-2: var(--color-amber-300);
-  --chart-3: var(--color-sage-300);
-  --chart-4: var(--color-parchment-900);
-  --chart-5: var(--color-terracotta-300);
 
   --surface: var(--color-night-900);
-  --surface-dim: var(--color-night-900);
   --surface-bright: var(--color-night-250);
   --surface-container-lowest: var(--color-night-950);
   --surface-container-low: var(--color-night-800);
@@ -1058,13 +882,6 @@
   --inverse-surface: var(--color-parchment-100);
   --inverse-on-surface: var(--color-night-800);
 
-  /* ── T (ext). Hero result scrim — dark mode: mild vignette + bottom tonal blend ── */
-  --hero-result-scrim: radial-gradient(
-    ellipse at 50% 40%,
-    rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 0.3) 100%
-  );
-
   --warm-terracotta: var(--color-terracotta-300);
   --warm-sienna: var(--color-terracotta-300);
   --warm-oak: var(--color-amber-300);
@@ -1078,7 +895,6 @@
 
   --cta: var(--color-sage-300);
   --cta-foreground: var(--color-night-1000);
-  --cta-hover: var(--color-sage-700);
   --cta-shadow: 0 4px 14px rgba(114, 200, 166, 0.18);
 
   /* Time-of-day palette (dark — vivid) */
@@ -1108,7 +924,6 @@
     var(--color-sage-300) 0%,
     var(--color-sage-350) 100%
   );
-  --grad-surface: none;
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.25);
   --shadow-sm:
@@ -1124,16 +939,11 @@
   --shadow-glow: 0 0 0 3px rgba(244, 146, 106, 0.25);
   --shadow-cta: 0 4px 14px rgba(114, 200, 166, 0.18);
 
-  --elevation-0: none;
-  --elevation-1: var(--shadow-sm);
-  --elevation-2: var(--shadow-md);
-  --elevation-3: var(--shadow-lg);
   --elevation-glow: var(--shadow-glow);
   --elevation-glow-lg: 0 0 0 4px rgba(244, 146, 106, 0.3);
   --elevation-cta: var(--shadow-cta);
 
   --border-w: var(--border-width-thin);
-  --border-w-thick: var(--border-width-thin);
 
   /* ── Tier 2.5 — Data-viz & Forge (dark adaptations) ── */
   --data-water: var(--color-water-300);
@@ -1152,8 +962,6 @@
 
   /* ── Tier 3 dark overrides for shadows/buttons ── */
   --overlay-backdrop: rgba(0, 0, 0, 0.6);
-  --score-modal-backdrop: rgba(0, 0, 0, 0.6);
-  --score-modal-shadow: 0 -8px 40px rgba(0, 0, 0, 0.35);
   --style-card-shadow:
     0 2px 8px -2px rgba(0, 0, 0, 0.25),
     0 1px 3px rgba(0, 0, 0, 0.18);
@@ -1162,10 +970,6 @@
   --style-card-badge-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   --cta-btn-shadow-deep:
     var(--elevation-cta), 0 8px 30px rgba(0, 0, 0, 0.25);
-  --btn-secondary-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  --btn-ghost-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-  --logo-badge-shadow: 0 2px 8px
-    color-mix(in srgb, var(--logo-glow) 30%, transparent);
 
   /* ── Tier 3 dark overrides (new groups X–AD) ── */
   --sheet-backdrop: rgba(0, 0, 0, 0.5);
@@ -1178,6 +982,14 @@
 }
 
 @theme inline {
+  /* Palette default Tailwind DISATTIVATA: le utility colore esistono solo per
+     i token semantici mappati qui sotto. `bg-red-500` & co. non compilano —
+     l'enforcement "solo token DS" avviene a build-time, non solo nel linter. */
+  --color-*: initial;
+  /* Bianco/nero riammessi: scrim e testo su fotografia (bg-black/40, text-white). */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
   --font-sans: "DM Sans", sans-serif;
   --font-serif: "Playfair Display", serif;
   --font-mono: "DM Mono", monospace;
@@ -1186,32 +998,13 @@
      Kept as alias of --font-sans so it can diverge later without touching call sites. */
   --font-body: var(--font-sans);
 
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-input-background: var(--input-background);
-  --color-switch-background: var(--switch-background);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
+  /* Micro-etichette (badge, pill di stato): sotto text-xs, sulla scala tipografica. */
+  --text-2xs: 0.625rem;
+  --text-2xs--line-height: 1.4;
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
@@ -1238,7 +1031,8 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
+    outline-color: color-mix(in srgb, var(--ring) 50%, transparent);
   }
 
   html {
@@ -1248,7 +1042,8 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
     overflow-x: hidden;
     max-width: 100%;
     font-family: var(--font-sans);
@@ -1473,15 +1268,6 @@
       "tnum" 1;
   }
 
-  /** Micro inline code/data annotation */
-  .type-code-xs {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xs); /* 9px */
-    letter-spacing: var(--tracking-spread);
-    font-feature-settings:
-      "kern" 1,
-      "tnum" 1;
-  }
 
   /** Raw data values: W320, 68%, temperatures — tabular nums, DM Sans */
   .type-data-base {
@@ -1651,17 +1437,6 @@
       "calt" 1;
   }
 
-  /** Editorial quote: Playfair italic for citations */
-  .type-editorial-quote {
-    font-family: var(--font-serif);
-    font-style: italic;
-    font-size: var(--font-size-2xl); /* 16px */
-    line-height: var(--leading-reading); /* 1.6 */
-    font-feature-settings:
-      "kern" 1,
-      "liga" 1,
-      "calt" 1;
-  }
 
   /* ── Typography · DM Sans family ──────────────────────────── */
 
@@ -1722,14 +1497,6 @@
     text-transform: uppercase;
   }
 
-  /** Label SM: compact uppercase UI labels */
-  .type-label-sm {
-    font-family: var(--font-sans);
-    font-size: var(--font-size-base); /* 11px */
-    font-weight: var(--weight-semibold);
-    letter-spacing: var(--tracking-widest);
-    text-transform: uppercase;
-  }
 
   /** Label XS: dense uppercase UI labels */
   .type-label-xs {

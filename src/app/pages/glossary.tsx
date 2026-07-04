@@ -452,7 +452,7 @@ function TermCard({
     >
       <motion.button
         onClick={onToggle}
-        className="w-full flex items-start gap-3 px-4 py-3.5 active:scale-[0.995] text-left"
+        className="w-full flex items-start gap-3 px-4 py-3.5 active:scale-99 text-left"
       >
         <div
           className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"

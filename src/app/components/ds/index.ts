@@ -52,6 +52,8 @@ export { Snackbar } from "./Snackbar";
 export type { SnackbarProps } from "./Snackbar";
 export { Dialog } from "./Dialog";
 export type { DialogProps } from "./Dialog";
+export { ModalSheet } from "./ModalSheet";
+export type { ModalSheetProps } from "./ModalSheet";
 export { BottomSheet } from "./BottomSheet";
 export type { BottomSheetProps } from "./BottomSheet";
 export { Carousel } from "./Carousel";

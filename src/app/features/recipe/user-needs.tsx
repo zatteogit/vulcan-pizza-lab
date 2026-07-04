@@ -432,7 +432,7 @@ function SettingsSummaryBar({
           <button
             key={tab.id}
             onClick={() => onTabSelect(isActive ? null : tab.id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all active:scale-[0.97]"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all active:scale-97"
             style={{
               background: isActive
                 ? "var(--chip-bg-active)"
@@ -479,7 +479,7 @@ function SettingsSummaryBar({
             }}
             onClick={onChangeTime}
             aria-pressed={timeActive}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full active:scale-[0.97]"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full active:scale-97"
             style={{
               background: timeColors.bg,
               color: timeColors.text,
@@ -704,7 +704,7 @@ export function UserNeeds({
                         <Thermometer size={16} style={{ color: "var(--needs-pantry-accent)" }} />
                         <button
                           onClick={() => { setKitchenTempManual(true); setKitchenTemp((prev) => Math.max(10, prev - 1)); }}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center active:scale-[0.88] transition-transform text-lg"
+                          className="w-8 h-8 rounded-lg flex items-center justify-center active:scale-88 transition-transform text-lg"
                           style={{ background: "var(--needs-oven-bg)", border: "1px solid var(--needs-oven-border)" }}
                           aria-label={cms.misc.kitchenTempDown}
                         >
@@ -715,7 +715,7 @@ export function UserNeeds({
                         </span>
                         <button
                           onClick={() => { setKitchenTempManual(true); setKitchenTemp((prev) => Math.min(40, prev + 1)); }}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center active:scale-[0.88] transition-transform text-lg"
+                          className="w-8 h-8 rounded-lg flex items-center justify-center active:scale-88 transition-transform text-lg"
                           style={{ background: "var(--needs-oven-bg)", border: "1px solid var(--needs-oven-border)" }}
                           aria-label={cms.misc.kitchenTempUp}
                         >
@@ -760,7 +760,7 @@ export function UserNeeds({
                             <motion.button
                               key={preset.id}
                               onClick={() => handleOvenSelect(preset.id, preset.maxTemp)}
-                              className={compact ? "flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left active:scale-[0.96]" : "flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all text-left active:scale-[0.96]"}
+                              className={compact ? "flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left active:scale-96" : "flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all text-left active:scale-96"}
                               style={{
                                 background: active ? "var(--chip-bg-active)" : "var(--chip-bg)",
                                 color: active ? "var(--chip-text-active)" : "var(--chip-text)",
@@ -968,8 +968,8 @@ function TimeSlotPicker({
               onClick={() => onTimeSlotChange(slot)}
               className={
                 compact
-                  ? "relative flex items-center justify-between px-3 py-2.5 rounded-xl transition-all active:scale-[0.98] text-left w-full"
-                  : "relative flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all active:scale-[0.98] text-left w-full"
+                  ? "relative flex items-center justify-between px-3 py-2.5 rounded-xl transition-all active:scale-98 text-left w-full"
+                  : "relative flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all active:scale-98 text-left w-full"
               }
               style={{
                 background: active
@@ -1043,7 +1043,7 @@ function TimeSlotPicker({
                 )}
                 {active && (
                   <span
-                    className="px-2 py-0.5 rounded-full text-[10px] flex-shrink-0"
+                    className="px-2 py-0.5 rounded-full text-2xs flex-shrink-0"
                     style={{
                       background: "color-mix(in srgb, var(--overlay-text) 25%, transparent)",
                       color: "var(--overlay-text)",
@@ -1124,7 +1124,7 @@ function TimeSlotPicker({
               {suggested && !compact && (
                 <div className="absolute top-2 inset-x-0 flex justify-center z-10">
                   <span
-                    className="px-2 py-0.5 rounded-full text-[10px]"
+                    className="px-2 py-0.5 rounded-full text-2xs"
                     style={{
                       background: colors.bg,
                       color: "var(--overlay-text)",
@@ -1189,7 +1189,7 @@ function TimeSlotPicker({
               {active && (
                 <div className={compact ? "absolute top-2 right-2" : "absolute top-2.5 right-2.5"}>
                   <span
-                    className="px-2 py-0.5 rounded-full text-[10px]"
+                    className="px-2 py-0.5 rounded-full text-2xs"
                     style={{
                       background: "color-mix(in srgb, var(--overlay-text) 25%, transparent)",
                       color: "var(--overlay-text)",

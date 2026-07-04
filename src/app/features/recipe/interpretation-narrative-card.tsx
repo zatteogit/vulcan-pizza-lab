@@ -5,12 +5,12 @@
  * Le storie dei maestri (badge, tecnica, narrativa) NON stanno più inline:
  * "Vedi tutte" apre una modale con tutte le interpretazioni dello stile e il
  * link alla sezione Impara. */
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 import { Check, MoreHorizontal, X } from "lucide-react";
 import { Link } from "react-router";
 import { useCms } from "../cms/cms-context";
 import type { Interpretation } from "../../data/interpretation-library";
+import { ModalSheet } from "../../components/ds/index";
 
 /** Nome primario dell'interpretazione (maestro › locale › ente › firma). */
 function primaryName(it: Interpretation): string {
@@ -184,50 +184,14 @@ function InterpretationsModal({
 }) {
   const { cms } = useCms();
 
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
-
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          className="fixed inset-0 z-[80] flex items-end justify-center overscroll-contain sm:items-center sm:px-4 sm:py-5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          style={{
-            background: "var(--dialog-scrim-strong)",
-            backdropFilter: "blur(20px) saturate(1.4)",
-            WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-          }}
-          onClick={onClose}
-        >
-          <motion.section
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="inspiration-modal-title"
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", stiffness: 350, damping: 34 }}
-            className="w-full max-h-[85dvh] sm:max-h-[80vh] sm:max-w-[640px] rounded-t-4xl sm:rounded-4xl border-0 sm:border overflow-hidden flex flex-col"
-            style={{
-              background:
-                "color-mix(in srgb, var(--container-page) 94%, transparent)",
-              color: "var(--text-default)",
-              borderColor: "var(--container-border)",
-              boxShadow: "var(--dialog-shadow)",
-              backdropFilter: "blur(24px) saturate(1.6)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
+    <ModalSheet
+      open={open}
+      onClose={onClose}
+      ariaLabelledby="inspiration-modal-title"
+      size="md"
+      panelClassName="overflow-hidden flex flex-col"
+    >
             <div
               className="flex-shrink-0 flex items-center gap-3 px-5 py-3.5 sm:px-6 border-b"
               style={{ borderColor: "var(--container-border-subtle)" }}
@@ -298,10 +262,7 @@ function InterpretationsModal({
                 {cms.misc.inspirationLearnLink ?? "Scopri di più nella sezione Impara"} →
               </Link>
             </div>
-          </motion.section>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    </ModalSheet>
   );
 }
 
@@ -337,7 +298,7 @@ function InterpretationNarrativeCard({
             },
           }
         : {})}
-      className={`relative rounded-2xl p-4 ${selectable ? "cursor-pointer transition-all active:scale-[0.99]" : ""}`}
+      className={`relative rounded-2xl p-4 ${selectable ? "cursor-pointer transition-all active:scale-99" : ""}`}
       style={{
         background: selected
           ? "color-mix(in srgb, var(--primary) 6%, var(--container-card))"

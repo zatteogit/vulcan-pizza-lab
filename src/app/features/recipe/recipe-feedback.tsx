@@ -241,7 +241,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
         }}
       >
         <div>
-          <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)", fontWeight: 600 }}>
+          <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any }}>
             {cms.feedback.triedQuestion}
           </div>
           <div className="type-body" style={{ color: "var(--muted-foreground)", marginTop: "var(--space-0-5)" }}>
@@ -260,7 +260,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
               border: "1px solid var(--outline-variant)",
               color: "var(--text-default)",
               fontSize: "0.8125rem",
-              fontWeight: 600,
+              fontWeight: "var(--weight-semibold)" as any,
               cursor: "pointer",
             }}
           >
@@ -278,7 +278,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
               border: "1px solid var(--outline-variant)",
               color: "var(--text-default)",
               fontSize: "0.8125rem",
-              fontWeight: 600,
+              fontWeight: "var(--weight-semibold)" as any,
               cursor: "pointer",
             }}
           >
@@ -301,7 +301,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
         }}
       >
         <div>
-          <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)", fontWeight: 600 }}>
+          <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any }}>
             {cms.feedback.detailedPrompt}
           </div>
           <div className="type-body" style={{ color: "var(--muted-foreground)", marginTop: "var(--space-0-5)" }}>
@@ -316,7 +316,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
               background: "var(--cta)",
               color: "var(--overlay-text)",
               fontSize: "var(--font-size-md)",
-              fontWeight: 600,
+              fontWeight: "var(--weight-semibold)" as any,
               cursor: "pointer",
               border: "none",
             }}
@@ -331,7 +331,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
               border: "1px solid var(--outline-variant)",
               color: "var(--text-muted)",
               fontSize: "var(--font-size-md)",
-              fontWeight: 600,
+              fontWeight: "var(--weight-semibold)" as any,
               cursor: "pointer",
             }}
           >
@@ -355,7 +355,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
         style={{ borderBottom: "1px solid var(--outline-variant)" }}
       >
         <div>
-          <span className="type-body-lg" style={{ color: "var(--text-default)", fontWeight: 600 }}>
+          <span className="type-body-lg" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>
             {cms.feedback.detailedTitle}
           </span>
           <span className="type-body-sm" style={{ display: "block", color: "var(--muted-foreground)", marginTop: "var(--space-0-5)" }}>
@@ -447,7 +447,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
             border: "none",
             cursor: overall !== null ? "pointer" : "not-allowed",
             fontSize: "var(--font-size-lg)",
-            fontWeight: 600,
+            fontWeight: "var(--weight-semibold)" as any,
             opacity: overall !== null ? 1 : 0.5,
             transition: "background 0.15s, opacity 0.15s",
           }}
@@ -466,7 +466,7 @@ function FieldLabel({ label, optional, hint }: { label: string; optional?: boole
   const { cms } = useCms();
   return (
     <div className="flex items-center gap-2">
-      <span className="type-body" style={{ color: "var(--text-default)", fontWeight: 600 }}>
+      <span className="type-body" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>
         {label}
       </span>
       {optional && (

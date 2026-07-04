@@ -605,7 +605,7 @@ export function CookingMode() {
                 variant={isCurrent && !waiting ? "primary" : "secondary"}
                 radius="xl"
                 elevated={isCurrent && !waiting}
-                className="flex-1 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+                className="flex-1 flex items-center justify-center gap-2 active:scale-98 transition-transform"
                 style={{
                   height: 56,
                   borderRadius: "var(--radius-xl)",

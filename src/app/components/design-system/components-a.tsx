@@ -300,7 +300,7 @@ function CardsSpec() {
           {CARD_V.map(c => (
             <div key={c.v} className="flex flex-col gap-2">
               <span className="type-label" style={{ color: c.c }}>{c.v}</span>
-              <Surface variant="card" className="p-4 rounded-2xl cursor-pointer active:scale-[0.98] transition-all hover:-translate-y-0.5 hover:shadow-md" style={{ background: c.bg, border: "1px solid var(--outline-variant)", boxShadow: c.s || "none" }}>
+              <Surface variant="card" className="p-4 rounded-2xl cursor-pointer active:scale-98 transition-all hover:-translate-y-0.5 hover:shadow-md" style={{ background: c.bg, border: "1px solid var(--outline-variant)", boxShadow: c.s || "none" }}>
                 <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: "var(--font-size-lg)", color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>{c.d}</p>
               </Surface>
             </div>
@@ -314,7 +314,7 @@ function CardsSpec() {
             { t: "Napoletana STG", s: "AVPN", b: "Forno legna 450\u00b0C, 60-90s.", img: "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZWFwb2xpdGFuJTIwcGl6emElMjBtYXJnaGVyaXRhJTIwd29vZCUyMGZpcmV8ZW58MXx8fHwxNzcxMjMwNTM5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral", badge: "W 250\u2013320", bc: "var(--primary)" },
             { t: "Lunga Maturazione", s: "72h frigo", b: "Fermentazione 4\u00b0C, alveolatura aperta.", img: "https://images.unsplash.com/photo-1738717201744-9faf699eea3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMGRvdWdoJTIwZmVybWVudGF0aW9uJTIwc291cmRvdWdofGVufDF8fHx8MTc3MTIzMDU0Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral", badge: "72h frigo", bc: "var(--cta)" },
           ].map(c => (
-            <motion.div key={c.t} className="rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98]" style={{ background: "var(--surface-container-low)", border: "1px solid var(--outline-variant)" }} whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
+            <motion.div key={c.t} className="rounded-2xl overflow-hidden cursor-pointer active:scale-98" style={{ background: "var(--surface-container-low)", border: "1px solid var(--outline-variant)" }} whileHover={{ y: -4, boxShadow: "var(--shadow-lg)" }} transition={{ type: "spring", stiffness: 400, damping: 25 }}>
               <div className="relative" style={{ aspectRatio: "16/9", overflow: "hidden" }}>
                 <ImageWithFallback src={c.img} alt={c.t} className="w-full h-full" style={{ objectFit: "cover", display: "block" }} />
                 <div className="absolute top-3 left-3">

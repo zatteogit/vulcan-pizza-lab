@@ -61,7 +61,7 @@ function ElevationSection() {
         {SHADOWS.map((s) => (
           <motion.div
             key={s.name}
-            className="p-5 rounded-2xl cursor-pointer active:scale-[0.98] transition-transform"
+            className="p-5 rounded-2xl cursor-pointer active:scale-98 transition-transform"
             style={{ background: "var(--surface-container-low)", boxShadow: s.value === "none" ? "none" : s.value, border: "1px solid var(--outline-variant)" }}
             whileHover={{ y: -2, scale: 1.01 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -307,7 +307,7 @@ function IconographySection() {
               {set.icons.map((Icon, i) => (
                 <motion.div
                   key={i}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-[0.9] transition-transform"
+                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-90 transition-transform"
                   style={{ background: "var(--surface-container)" }}
                   whileHover={{ scale: 1.15 }}
                   transition={{ type: "spring", stiffness: 500, damping: 25 }}

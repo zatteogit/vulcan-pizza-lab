@@ -1,13 +1,14 @@
 /* ═══ RECIPE OUTPUT — componenti di supporto (estratti lug 2026) ═══
  * NerdAuraBlock, ScrollToTopOnMount, IngRow, GlossaryWLink. */
 
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router";
 import { X } from "lucide-react";
 import { GLOSSARY_TERMS } from "../../data/glossary-data";
 import { useCms } from "../cms/cms-context";
+import { ModalSheet } from "../../components/ds/index";
 
 export function NerdAuraBlock({
   children,
@@ -48,7 +49,7 @@ export function NerdAuraBlock({
             "radial-gradient(ellipse at 18% 18%, color-mix(in srgb, var(--logo-grad-start) 42%, transparent) 0%, transparent 58%), radial-gradient(ellipse at 82% 30%, color-mix(in srgb, var(--logo-grad-mid) 36%, transparent) 0%, transparent 54%), radial-gradient(ellipse at 48% 92%, color-mix(in srgb, var(--logo-grad-end) 34%, transparent) 0%, transparent 62%)",
         }}
       />
-      <div className="relative z-[1]">{children}</div>
+      <div className="relative z-1">{children}</div>
     </div>
   );
 }
@@ -137,15 +138,6 @@ export function GlossaryWLink({ w }: { w: number }) {
   const { cms } = useCms();
   const term = GLOSSARY_TERMS.find((t) => t.id === "w_alveograph");
 
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open]);
-
   if (!term) return <>W{w}</>;
 
   const inRange = (value: string) => {
@@ -176,40 +168,13 @@ export function GlossaryWLink({ w }: { w: number }) {
         W{w}
       </button>
       {createPortal(
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              className="fixed inset-0 z-[80] flex items-end justify-center overscroll-contain sm:items-center sm:px-4 sm:py-5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              style={{
-                background: "var(--dialog-scrim-strong)",
-                backdropFilter: "blur(20px) saturate(1.4)",
-                WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-              }}
-              onClick={() => setOpen(false)}
-            >
-              <motion.section
-                role="dialog"
-                aria-modal="true"
-                aria-label={term.name}
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "100%" }}
-                transition={{ type: "spring", stiffness: 350, damping: 34 }}
-                className="w-full max-h-[80dvh] sm:max-w-[440px] rounded-t-4xl sm:rounded-4xl border-0 sm:border overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 sm:py-5"
-                style={{
-                  background:
-                    "color-mix(in srgb, var(--container-page) 94%, transparent)",
-                  color: "var(--text-default)",
-                  borderColor: "var(--container-border)",
-                  boxShadow: "var(--dialog-shadow)",
-                  backdropFilter: "blur(24px) saturate(1.6)",
-                  WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
+        <ModalSheet
+          open={open}
+          onClose={() => setOpen(false)}
+          ariaLabel={term.name}
+          size="sm"
+          panelClassName="overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 sm:py-5"
+        >
                 <div className="flex items-start gap-3">
                   <h3
                     className="flex-1 min-w-0"
@@ -316,10 +281,7 @@ export function GlossaryWLink({ w }: { w: number }) {
                 >
                   {cms.cooking.learnMore} →
                 </Link>
-              </motion.section>
-            </motion.div>
-          )}
-        </AnimatePresence>,
+        </ModalSheet>,
         document.body,
       )}
     </>

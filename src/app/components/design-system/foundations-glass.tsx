@@ -66,7 +66,7 @@ function GlassSpecimen({
     <motion.div
       whileHover={{ scale: 1.03 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className="relative flex flex-col items-center justify-center cursor-pointer overflow-hidden active:scale-[0.97] transition-transform"
+      className="relative flex flex-col items-center justify-center cursor-pointer overflow-hidden active:scale-97 transition-transform"
       style={{
         width: "120px",
         height: "120px",
@@ -423,7 +423,7 @@ function GlassmorphismLiquidGlassSection() {
             return (
               <motion.div
                 key={p.context}
-                className="surface-card p-4 active:scale-[0.98] transition-transform"
+                className="surface-card p-4 active:scale-98 transition-transform"
                 whileHover={{ y: -2, boxShadow: "var(--shadow-md)" }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
               >

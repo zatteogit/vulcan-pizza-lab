@@ -201,7 +201,7 @@ function StatStripSpec() {
             return (
               <motion.div
                 key={stat.label}
-                className="flex-1 flex flex-col items-center gap-1.5 py-3 rounded-xl cursor-pointer active:scale-[0.96]"
+                className="flex-1 flex flex-col items-center gap-1.5 py-3 rounded-xl cursor-pointer active:scale-96"
                 style={{ background: "var(--surface-container)" }}
                 whileHover={{ y: -3, boxShadow: "var(--shadow-md)" }}
                 transition={{ type: "spring", stiffness: 400, damping: 25 }}
@@ -321,7 +321,7 @@ function SingleToast({
       {toast.action && (
         <button className="active:scale-95 transition-transform" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, color: cfg.color, background: "none", border: "none", cursor: "pointer", outline: "none", whiteSpace: "nowrap", textTransform: "uppercase", letterSpacing: "var(--tracking-label)" }}>{toast.action}</button>
       )}
-      <button onClick={onDismiss} className="active:scale-[0.85] transition-transform" style={{ color: "var(--muted-foreground)", opacity: 0.5, cursor: "pointer", background: "none", border: "none", outline: "none", flexShrink: 0, padding: "2px" }} aria-label="Chiudi toast">
+      <button onClick={onDismiss} className="active:scale-85 transition-transform" style={{ color: "var(--muted-foreground)", opacity: 0.5, cursor: "pointer", background: "none", border: "none", outline: "none", flexShrink: 0, padding: "2px" }} aria-label="Chiudi toast">
         <X size={14} />
       </button>
     </motion.div>

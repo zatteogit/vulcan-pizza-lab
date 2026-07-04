@@ -437,8 +437,8 @@ export function SearchOverlay({
               inset: 0,
               background:
                 "color-mix(in srgb, var(--container-page) 65%, transparent)",
-              backdropFilter: "blur(20px) saturate(1.4)",
-              WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+              backdropFilter: "var(--backdrop-glass)",
+              WebkitBackdropFilter: "var(--backdrop-glass)",
             }}
           />
 
@@ -692,7 +692,7 @@ export function SearchOverlay({
                                 aria-selected={isActive}
                                 onClick={() => handleSelect(item.link)}
                                 onMouseEnter={() => setActiveIndex(idx)}
-                                className="flex items-center gap-3 mx-2 px-3 py-2.5 rounded-xl cursor-pointer active:scale-[0.98] transition-transform"
+                                className="flex items-center gap-3 mx-2 px-3 py-2.5 rounded-xl cursor-pointer active:scale-98 transition-transform"
                                 style={{
                                   background: isActive
                                     ? "color-mix(in srgb, var(--primary) 8%, transparent)"

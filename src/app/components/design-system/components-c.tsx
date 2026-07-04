@@ -121,7 +121,7 @@ function NavigationBarSpec() {
                 const isActive = activeNavMobile === item.id;
                 const Icon = item.icon;
                 return (
-                  <motion.button key={item.id} onClick={() => setActiveNavMobile(item.id)} className="flex flex-col items-center gap-0.5 relative active:scale-[0.9] transition-transform" style={{ background: "rgba(0,0,0,0)", border: "none", cursor: "pointer", outline: "none", padding: "4px 12px" }}>
+                  <motion.button key={item.id} onClick={() => setActiveNavMobile(item.id)} className="flex flex-col items-center gap-0.5 relative active:scale-90 transition-transform" style={{ background: "rgba(0,0,0,0)", border: "none", cursor: "pointer", outline: "none", padding: "4px 12px" }}>
                     <div className="relative">
                       {isActive && <motion.div layoutId="mobileNavPill" className="absolute rounded-full" style={{ inset: "-4px -12px", background: "color-mix(in srgb, var(--primary) 12%, transparent)" }} transition={{ type: "spring", stiffness: 500, damping: 30 }} />}
                       <Icon size={18} style={{ color: isActive ? "var(--primary)" : "var(--muted-foreground)", position: "relative", zIndex: 1 }} />
@@ -505,7 +505,7 @@ function ModalScoreDashboardSpec() {
                 <motion.button onClick={() => setNerdMode(!nerdMode)} className="flex items-center gap-2 px-3 py-1.5 rounded-lg active:scale-95 transition-transform" style={{ background: nerdMode ? "color-mix(in srgb, var(--primary) 15%, transparent)" : "var(--surface-container)", border: nerdMode ? "1px solid var(--primary)" : "1px solid var(--outline-variant)", fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: nerdMode ? "var(--primary)" : "var(--muted-foreground)", cursor: "pointer", outline: "none", letterSpacing: "var(--tracking-label)", textTransform: "uppercase" }}>
                   <FlaskConical size={12} />PizzaNerd
                 </motion.button>
-                <motion.button onClick={() => setModalOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center active:scale-[0.85] transition-transform" style={{ background: "var(--surface-container)", color: "var(--muted-foreground)", border: "1px solid var(--outline-variant)", cursor: "pointer", outline: "none" }} aria-label="Chiudi modale">
+                <motion.button onClick={() => setModalOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center active:scale-85 transition-transform" style={{ background: "var(--surface-container)", color: "var(--muted-foreground)", border: "1px solid var(--outline-variant)", cursor: "pointer", outline: "none" }} aria-label="Chiudi modale">
                   <X size={16} />
                 </motion.button>
               </div>

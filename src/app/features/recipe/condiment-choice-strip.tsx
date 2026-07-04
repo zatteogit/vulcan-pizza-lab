@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { useCms } from "../cms/cms-context";
-import { IconButton } from "../../components/ds/index";
+import { IconButton, ModalSheet } from "../../components/ds/index";
 import {
   TOPPING_CONCEPTS,
   getToppingThumbnail,
@@ -319,37 +319,18 @@ export function CondimentChoiceStrip({
           aria-hidden="true"
         />
       )}
-      {!isTimeline && pickerOpen && typeof document !== "undefined"
+      {!isTimeline && typeof document !== "undefined"
           ? createPortal(
-              <motion.div
-                key="topping-choice-sheet"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.18 }}
-                className="fixed inset-0 z-[80] flex items-end justify-center px-3 pb-3 sm:items-center sm:p-6"
-                style={{ background: "var(--dialog-scrim)" }}
-                onClick={() => setPickerOpen(false)}
+              <ModalSheet
+                open={pickerOpen}
+                onClose={() => setPickerOpen(false)}
+                ariaLabel={engineMessage(cms, "topping.chooseAllTitle", "Tutti i gusti")}
+                size="lg"
+                scrim="plain"
+                surface="glass-dense"
+                entry="pop"
+                panelClassName="overflow-hidden"
               >
-                <motion.div
-                  role="dialog"
-                  aria-modal="true"
-                  aria-label={engineMessage(cms, "topping.chooseAllTitle", "Tutti i gusti")}
-                  initial={{ y: 28, opacity: 0, scale: 0.98 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  exit={{ y: 20, opacity: 0, scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                  className="w-full max-w-2xl overflow-hidden rounded-4xl"
-                  style={{
-                    maxHeight: "min(760px, calc(100vh - 32px))",
-                    background: "color-mix(in srgb, var(--container-page) 94%, transparent)",
-                    border: "1px solid var(--container-border)",
-                    boxShadow: "var(--dialog-shadow), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)",
-                    backdropFilter: "blur(28px) saturate(1.7)",
-                    WebkitBackdropFilter: "blur(28px) saturate(1.7)",
-                  }}
-                  onClick={(event) => event.stopPropagation()}
-                >
                   <div className="flex items-start gap-3 px-4 pb-3 pt-4 sm:px-5 sm:pt-5">
                     <div className="min-w-0 flex-1">
                       <div
@@ -486,7 +467,7 @@ export function CondimentChoiceStrip({
                                 key={recipe.id}
                                 type="button"
                                 onClick={() => selectFromSheet(recipe.id)}
-                                className="flex items-center gap-3 rounded-2xl p-2.5 text-left active:scale-[0.99] transition-transform"
+                                className="flex items-center gap-3 rounded-2xl p-2.5 text-left active:scale-99 transition-transform"
                                 style={{
                                   background: active
                                     ? "var(--chip-bg-active)"
@@ -545,8 +526,7 @@ export function CondimentChoiceStrip({
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              </motion.div>,
+              </ModalSheet>,
               document.body,
               "topping-choice-sheet",
             )

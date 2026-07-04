@@ -455,7 +455,7 @@ export function DesignSystemTab({
                 <motion.button
                   key={s.id}
                   onClick={() => scrollToSection(s.id)}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-[0.97] transition-transform"
+                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform"
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: "var(--font-size-lg)",
@@ -523,7 +523,7 @@ export function DesignSystemTab({
                 <motion.button
                   key={s.id}
                   onClick={() => scrollToSection(s.id)}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-[0.97] transition-transform"
+                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform"
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: "var(--font-size-lg)",
@@ -591,7 +591,7 @@ export function DesignSystemTab({
                 <motion.button
                   key={s.id}
                   onClick={() => scrollToSection(s.id)}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-[0.97] transition-transform"
+                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform"
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: "var(--font-size-lg)",
@@ -829,7 +829,7 @@ export function DesignSystemTab({
                 >
                   <motion.button
                     onClick={() => toggleSection(section.id)}
-                    className="w-full flex items-center justify-between py-3 px-1 active:scale-[0.98] transition-transform"
+                    className="w-full flex items-center justify-between py-3 px-1 active:scale-98 transition-transform"
                     style={{
                       borderBottom: "1px solid var(--outline-variant)",
                     }}

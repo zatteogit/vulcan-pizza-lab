@@ -769,7 +769,7 @@ function ScoreBar({
         ? { type: "button" as const, onClick: onToggleExplain, "aria-expanded": explained }
         : {})}
       className={`${compact ? "grow shrink-0 basis-[140px] min-w-[140px]" : "min-w-[148px] flex-1"} ${
-        explainable ? "text-left active:scale-[0.985] transition-transform" : ""
+        explainable ? "text-left active:scale-98 transition-transform" : ""
       }`}
       style={explainable ? { background: "transparent", border: "none", padding: 0, cursor: "pointer" } : undefined}
     >

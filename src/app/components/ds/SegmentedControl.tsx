@@ -126,7 +126,7 @@ export function SegmentedControl<TValue extends string>({
               if (!option.disabled) onValueChange(option.value);
             }}
             className={[
-              "inline-flex min-w-0 items-center justify-center gap-1.5 active:scale-[0.98] transition-transform",
+              "inline-flex min-w-0 items-center justify-center gap-1.5 active:scale-98 transition-transform",
               fullWidth ? "flex-1" : "",
               SIZE_CLASS[size],
               ITEM_RADIUS_CLASS[radius],
