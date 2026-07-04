@@ -4,34 +4,31 @@
  * VITE_ANNOTATIONS_API) the local dev app talk to this single endpoint, so pins
  * sync across environments without a third-party service.
  *
+ * Talks to D1 over its **REST API** (not a runtime binding): the flaky
+ * dashboard "D1 bindings" UI is bypassed entirely. All it needs is a Cloudflare
+ * API token with D1 edit permission, stored server-side as the Pages secret
+ * `D1_API_TOKEN`. Account and database ids are non-secret and default to the
+ * project's values below (override with env vars if they ever change).
+ *
  * GET    → full registry (array of annotations, tombstones included)
  * POST   → upsert an array of annotations (last-write-wins by id), returns the
  *          canonical registry after the write
  * OPTIONS→ CORS preflight
  *
- * If the `ANNOTATIONS_KEY` env secret is set, every request must send a matching
- * `x-annotations-key` header. It ships in the client bundle so it is a soft gate
- * (stops casual/bot writes to a public URL), not real auth.
+ * If the `ANNOTATIONS_KEY` env is set, every request must send a matching
+ * `x-annotations-key` header (soft gate for a public URL, not real auth).
  *
- * This file lives under `functions/` and is intentionally outside the app
- * tsconfig `include`, so its Cloudflare-runtime types don't affect `tsc`.
+ * Lives under `functions/` — intentionally outside the app tsconfig `include`,
+ * so its Cloudflare-runtime types don't affect `tsc`.
  */
 
-interface D1Result {
-  results?: Record<string, unknown>[];
-}
-interface D1PreparedStatement {
-  bind(...values: unknown[]): D1PreparedStatement;
-  all(): Promise<D1Result>;
-  run(): Promise<unknown>;
-}
-interface D1Database {
-  prepare(query: string): D1PreparedStatement;
-  batch(statements: D1PreparedStatement[]): Promise<unknown>;
-}
+const DEFAULT_ACCOUNT_ID = "ea8b6efff9e61cb1427a489488354518";
+const DEFAULT_DATABASE_ID = "471d2a9d-1a54-418e-849c-479b85cbd979";
 
 interface Env {
-  DB: D1Database;
+  D1_API_TOKEN?: string;
+  CF_ACCOUNT_ID?: string;
+  CF_DATABASE_ID?: string;
   ANNOTATIONS_KEY?: string;
 }
 
@@ -55,13 +52,39 @@ function json(body: unknown, status = 200): Response {
 }
 
 function authorized(request: Request, env: Env): boolean {
-  if (!env.ANNOTATIONS_KEY) return true; // open when no key configured
+  if (!env.ANNOTATIONS_KEY) return true;
   return request.headers.get("x-annotations-key") === env.ANNOTATIONS_KEY;
 }
 
+/** Run one parameterized statement against D1's REST API; returns result rows. */
+async function d1Query(env: Env, sql: string, params: unknown[] = []): Promise<Record<string, unknown>[]> {
+  const accountId = env.CF_ACCOUNT_ID || DEFAULT_ACCOUNT_ID;
+  const databaseId = env.CF_DATABASE_ID || DEFAULT_DATABASE_ID;
+  const res = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${accountId}/d1/database/${databaseId}/query`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.D1_API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sql, params }),
+    },
+  );
+  const data = (await res.json()) as {
+    success?: boolean;
+    errors?: { message?: string }[];
+    result?: { results?: Record<string, unknown>[] }[];
+  };
+  if (!res.ok || !data.success) {
+    const msg = data.errors?.map((e) => e.message).join("; ") || `HTTP ${res.status}`;
+    throw new Error(`D1 query failed: ${msg}`);
+  }
+  return data.result?.[0]?.results ?? [];
+}
+
 async function readRegistry(env: Env): Promise<unknown[]> {
-  const { results } = await env.DB.prepare("SELECT data FROM annotations").all();
-  const rows = results ?? [];
+  const rows = await d1Query(env, "SELECT data FROM annotations");
   const out: unknown[] = [];
   for (const row of rows) {
     try {
@@ -80,6 +103,7 @@ export async function onRequestOptions(): Promise<Response> {
 export async function onRequestGet(context: EventContext): Promise<Response> {
   const { request, env } = context;
   if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
+  if (!env.D1_API_TOKEN) return json({ error: "D1_API_TOKEN secret not set" }, 500);
   try {
     return json(await readRegistry(env));
   } catch (e) {
@@ -90,6 +114,7 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
 export async function onRequestPost(context: EventContext): Promise<Response> {
   const { request, env } = context;
   if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
+  if (!env.D1_API_TOKEN) return json({ error: "D1_API_TOKEN secret not set" }, 500);
 
   let incoming: unknown;
   try {
@@ -101,32 +126,26 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
     return json({ error: "body must be an array of annotations" }, 400);
   }
 
-  const statements: D1PreparedStatement[] = [];
-  for (const anno of incoming) {
-    if (!anno || typeof (anno as { id?: unknown }).id !== "string") continue;
-    const record = anno as { id: string; updatedAt?: number; deleted?: boolean };
-    statements.push(
-      env.DB
-        .prepare(
-          `INSERT INTO annotations (id, data, updated_at, deleted)
-           VALUES (?1, ?2, ?3, ?4)
-           ON CONFLICT(id) DO UPDATE SET
-             data = excluded.data,
-             updated_at = excluded.updated_at,
-             deleted = excluded.deleted
-           WHERE excluded.updated_at >= annotations.updated_at`,
-        )
-        .bind(
-          record.id,
-          JSON.stringify(record),
-          typeof record.updatedAt === "number" ? record.updatedAt : 0,
-          record.deleted ? 1 : 0,
-        ),
-    );
-  }
+  const upsertSql = `INSERT INTO annotations (id, data, updated_at, deleted)
+     VALUES (?1, ?2, ?3, ?4)
+     ON CONFLICT(id) DO UPDATE SET
+       data = excluded.data,
+       updated_at = excluded.updated_at,
+       deleted = excluded.deleted
+     WHERE excluded.updated_at >= annotations.updated_at`;
 
   try {
-    if (statements.length > 0) await env.DB.batch(statements);
+    // Sequential to avoid write contention; the registry is small (a few pins).
+    for (const anno of incoming) {
+      if (!anno || typeof (anno as { id?: unknown }).id !== "string") continue;
+      const record = anno as { id: string; updatedAt?: number; deleted?: boolean };
+      await d1Query(env, upsertSql, [
+        record.id,
+        JSON.stringify(record),
+        typeof record.updatedAt === "number" ? record.updatedAt : 0,
+        record.deleted ? 1 : 0,
+      ]);
+    }
     return json(await readRegistry(env));
   } catch (e) {
     return json({ error: String((e as Error).message) }, 500);
