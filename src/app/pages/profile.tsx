@@ -207,19 +207,22 @@ function ProfileSection({
       style={{ borderBottom: "1px solid var(--container-border-subtle)" }}
     >
       <div className="mb-4">
-        {stepNum && (
-          <span
-            className="type-label-compact"
-            style={{
-              color: "var(--primary)",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase" as any,
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
-          >
-            {stepNum}
-          </span>
-        )}
+        {stepNum && (() => {
+          const cleanStepNum = stepNum.split(/[-—]/)[0].trim();
+          return (
+            <span
+              className="type-label-compact"
+              style={{
+                color: "var(--primary)",
+                letterSpacing: "0.18em",
+                textTransform: "uppercase" as any,
+                fontWeight: "var(--weight-semibold)" as any,
+              }}
+            >
+              {cleanStepNum}
+            </span>
+          );
+        })()}
         <Heading
           level="md"
           as="h2"
@@ -460,7 +463,6 @@ function SavedRecipesSection() {
 /* ═══ EQUIPMENT CATEGORY ACCORDION ═══ */
 function EquipmentCategory({
   title,
-  emoji,
   stepLabel,
   expanded,
   onToggle,
@@ -469,7 +471,6 @@ function EquipmentCategory({
   children,
 }: {
   title: string;
-  emoji: string;
   stepLabel: string;
   expanded: boolean;
   onToggle: () => void;
@@ -490,7 +491,6 @@ function EquipmentCategory({
         className="w-full flex items-center gap-3 px-4 py-3.5 active:scale-99 transition-transform"
         style={{ textAlign: "left" as any, cursor: "pointer" }}
       >
-        <span style={{ fontSize: "var(--font-size-2-5xl)", flexShrink: 0 }}>{emoji}</span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span
@@ -1463,8 +1463,23 @@ export function ProfilePage() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12"
+        className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative"
       >
+        {/* Close Button */}
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+          <IconButton
+            size="md"
+            onClick={() => navigate("/")}
+            style={{
+              background: "var(--surface-container)",
+              color: "var(--text-muted)",
+              border: "1px solid var(--outline-variant)",
+            }}
+            aria-label={cms.ui.close}
+          >
+            <X size={15} />
+          </IconButton>
+        </div>
         {/* Header */}
         <div className="text-center mb-4">
           <div
@@ -1686,7 +1701,6 @@ export function ProfilePage() {
             {/* ── Impastamento ── */}
             <EquipmentCategory
               title={p.equipMixerTitle}
-              emoji="🤲"
               stepLabel={p.equipMixerTitle.toUpperCase()}
               expanded={equipExpandedCat === "mixer"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "mixer" ? null : "mixer")}
@@ -1710,7 +1724,6 @@ export function ProfilePage() {
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
                       style={{ borderWidth: 1, borderStyle: "solid", cursor: "pointer", textAlign: "left" as any }}
                     >
-                      <span style={{ fontSize: "var(--font-size-xl-5)", flexShrink: 0 }}>{mixer.emoji}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
@@ -1760,7 +1773,6 @@ export function ProfilePage() {
             {/* ── Superficie di cottura ── */}
             <EquipmentCategory
               title={p.equipSurfaceTitle}
-              emoji="♨️"
               stepLabel={p.equipSurfaceTitle.toUpperCase()}
               expanded={equipExpandedCat === "surface"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "surface" ? null : "surface")}
@@ -1784,7 +1796,6 @@ export function ProfilePage() {
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
                       style={{ borderWidth: 1, borderStyle: "solid", cursor: "pointer", textAlign: "left" as any }}
                     >
-                      <span style={{ fontSize: "var(--font-size-xl-5)", flexShrink: 0 }}>{surface.emoji}</span>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
@@ -1828,7 +1839,6 @@ export function ProfilePage() {
             {/* ── Utensili ── */}
             <EquipmentCategory
               title={p.equipToolsTitle}
-              emoji="🔧"
               stepLabel={(p.equipToolsTitle).toUpperCase()}
               expanded={equipExpandedCat === "tools"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "tools" ? null : "tools")}
@@ -1853,7 +1863,7 @@ export function ProfilePage() {
                           color: "var(--text-muted)",
                         }}
                       >
-                        {cat.emoji} {cat.label}
+                        {cat.label}
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {catTools.map((tool) => (
@@ -1862,7 +1872,6 @@ export function ProfilePage() {
                             label={tool.label}
                             active={equipment.tools.includes(tool.id)}
                             onToggle={() => toggleTool(tool.id)}
-                            icon={<span style={{ fontSize: "var(--font-size-base)" }}>{tool.emoji}</span>}
                           />
                         ))}
                       </div>
@@ -1887,20 +1896,20 @@ export function ProfilePage() {
                 <div className="flex flex-wrap gap-1.5">
                   {equipment.mixer_type && (
                     <span className="type-data-xs px-2 py-0.5 rounded-md" style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-default)" }}>
-                      {localMixers.find((m) => m.id === equipment.mixer_type)?.emoji} {localMixers.find((m) => m.id === equipment.mixer_type)?.label}
+                      {localMixers.find((m) => m.id === equipment.mixer_type)?.label}
                     </span>
                   )}
                   {equipment.surfaces.map((s) => {
                     const opt = localSurfaces.find((o) => o.id === s);
                     return (
                       <span key={s} className="type-data-xs px-2 py-0.5 rounded-md" style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-default)" }}>
-                        {opt?.emoji} {opt?.label}
+                        {opt?.label}
                       </span>
                     );
                   })}
                   {equipment.tools.length > 0 && (
                     <span className="type-data-xs px-2 py-0.5 rounded-md" style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-muted)" }}>
-                      🔧 {equipment.tools.length} utensili
+                      {equipment.tools.length} utensili
                     </span>
                   )}
                 </div>

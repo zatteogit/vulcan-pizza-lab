@@ -5,7 +5,7 @@
 
 import { ArrowRight, ChevronUp } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
 import { Heading } from "../components/ds/index";
 import { useCms } from "../features/cms/cms-context";
@@ -32,6 +32,24 @@ type SignatureRecipe,
 } from "../data/signature-recipes";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
+
+function getAcronymTooltip(text: string | null | undefined): string | undefined {
+  if (!text) return undefined;
+  const acronyms: Record<string, string> = {
+    AVPN: "Associazione Verace Pizza Napoletana",
+    STG: "Specialità Tradizionale Garantita",
+    IGP: "Indicazione Geografica Protetta",
+  };
+  
+  const found = Object.keys(acronyms).filter(acronym => 
+    new RegExp(`\\b${acronym}\\b`, 'i').test(text)
+  );
+  
+  if (found.length > 0) {
+    return found.map(acronym => `${acronym}: ${acronyms[acronym]}`).join("\n");
+  }
+  return undefined;
+}
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
@@ -67,6 +85,7 @@ function FeaturedRecipeCard({
   exploreBackTo: string;
 }) {
   const { cms } = useCms();
+  const [hovered, setHovered] = useState(false);
   const photo =
     recipe.photo ||
     STYLE_PHOTOS[recipe.style_id] ||
@@ -92,16 +111,28 @@ function FeaturedRecipeCard({
     <Link
       to={linkTo}
       state={{ exploreBackTo }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       className="flex flex-col md:flex-row overflow-hidden rounded-3xl active:scale-99 transition-all duration-300 group"
       style={{
         textDecoration: "none",
         color: "inherit",
         background:
           "linear-gradient(135deg, color-mix(in srgb, var(--container-page) 76%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 34%, transparent))",
-        border: isNerd ? "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)" : "1px solid color-mix(in srgb, var(--container-border) 72%, transparent)",
+        border: isNerd
+          ? hovered
+            ? "1px solid var(--accent-nerd)"
+            : "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)"
+          : hovered
+            ? "1px solid var(--primary)"
+            : "1px solid color-mix(in srgb, var(--container-border) 72%, transparent)",
         boxShadow: isNerd
-          ? "0 0 25px color-mix(in srgb, var(--accent-nerd) 15%, transparent), 0 12px 40px -12px color-mix(in srgb, var(--shadow-color) 12%, transparent)"
-          : "0 18px 56px -18px color-mix(in srgb, var(--shadow-color) 22%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)",
+          ? hovered
+            ? "0 0 35px color-mix(in srgb, var(--accent-nerd) 35%, transparent), 0 16px 48px -8px color-mix(in srgb, var(--shadow-color) 20%, transparent)"
+            : "0 0 25px color-mix(in srgb, var(--accent-nerd) 15%, transparent), 0 12px 40px -12px color-mix(in srgb, var(--shadow-color) 12%, transparent)"
+          : hovered
+            ? "0 22px 64px -14px color-mix(in srgb, var(--shadow-color) 35%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 22%, transparent)"
+            : "0 18px 56px -18px color-mix(in srgb, var(--shadow-color) 22%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)",
         backdropFilter: "blur(22px) saturate(1.55)",
         WebkitBackdropFilter: "blur(22px) saturate(1.55)",
       }}
@@ -121,6 +152,7 @@ function FeaturedRecipeCard({
         {recipe.authenticity_badge && (
           <div
             className="absolute top-4 left-4 px-2.5 py-1 rounded-lg text-white"
+            title={getAcronymTooltip(recipe.authenticity_badge)}
             style={{
               background: "color-mix(in srgb, var(--primary) 90%, transparent)",
               backdropFilter: "blur(8px)",
@@ -143,6 +175,7 @@ function FeaturedRecipeCard({
       >
         <div className="flex flex-col gap-2">
           <span
+            title={getAcronymTooltip(styleName)}
             style={{
               fontSize: "var(--font-size-sm)",
               color: "var(--primary)",
@@ -151,7 +184,7 @@ function FeaturedRecipeCard({
               fontWeight: "var(--weight-semibold)" as any,
             }}
           >
-            {cms.pages.recipeLabel} · {styleName}
+            {styleName}
           </span>
           <h3
             className="font-serif"
@@ -726,6 +759,7 @@ function SignatureRecipeCard({
           {recipe.authenticity_badge && (
             <div
               className="absolute top-3 right-3 px-2 py-1 rounded-lg"
+              title={getAcronymTooltip(recipe.authenticity_badge)}
               style={{
                 background:
                   "color-mix(in srgb, var(--primary) 90%, transparent)",
@@ -742,6 +776,7 @@ function SignatureRecipeCard({
           {/* Title + sotto-titolo stile */}
           <div className="absolute bottom-0 left-0 right-0 px-4 pb-3.5 sm:pb-4 pt-16">
             <div
+              title={getAcronymTooltip(styleName)}
               style={{
                 fontSize: "var(--font-size-sm)",
                 fontWeight: "var(--weight-semibold)" as any,
@@ -752,7 +787,7 @@ function SignatureRecipeCard({
                 marginBottom: 4,
               }}
             >
-              {cms.pages.recipeLabel} · {styleName}
+              {styleName}
             </div>
             <span
               className="font-serif"
@@ -891,36 +926,30 @@ function StyleCatalogCard({
 
           {/* Match canonico + margine ottimizzabile — top right (Fase 4) */}
           {match && (
-            <div className="absolute top-3 right-3 flex flex-col items-end gap-1">
+            <div className="absolute top-3 right-3">
               <div
-                className="flex items-center justify-center rounded-full"
+                className="flex items-center gap-1 px-2 py-0.5 rounded-full text-white"
                 style={{
-                  width: 38,
-                  height: 38,
-                  background: "color-mix(in srgb, var(--container-page) 70%, transparent)",
-                  backdropFilter: "blur(8px)",
-                  WebkitBackdropFilter: "blur(8px)",
+                  background: "color-mix(in srgb, var(--container-page) 82%, transparent)",
+                  border: "1px solid color-mix(in srgb, var(--overlay-text) 12%, transparent)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
+                  fontSize: "var(--font-size-xs)",
+                  fontWeight: "var(--weight-bold)" as any,
+                  boxShadow: "0 4px 12px color-mix(in srgb, var(--shadow-color) 16%, transparent)",
                 }}
+                title={match.headroom > 0 ? `Ottimizzabile: ${match.mc}% → ${match.mc + match.headroom}% col tuo setup` : `Match: ${match.mc}%`}
               >
-                <ScoreRing score={match.mc} color="var(--cta)" size={32} />
+                <span style={{ color: "var(--cta)" }}>{match.mc}%</span>
+                {match.headroom > 0 && (
+                  <>
+                    <span style={{ color: "var(--text-muted)", opacity: 0.6 }}>→</span>
+                    <span style={{ color: "var(--time-dayafter)" }}>
+                      {match.mc + match.headroom}%
+                    </span>
+                  </>
+                )}
               </div>
-              {match.headroom > 0 && (
-                <div
-                  className="flex items-center gap-0.5 rounded-full px-1.5 py-0.5"
-                  style={{
-                    background: "var(--cta)",
-                    color: "var(--cta-foreground)",
-                    fontSize: "var(--font-size-xs)",
-                    fontWeight: "var(--weight-bold)" as any,
-                    backdropFilter: "blur(8px)",
-                    WebkitBackdropFilter: "blur(8px)",
-                  }}
-                  title={`Ottimizzabile: +${match.headroom} col tuo setup`}
-                >
-                  <ChevronUp size={11} strokeWidth={3} />
-                  {match.headroom}
-                </div>
-              )}
             </div>
           )}
 
@@ -928,6 +957,7 @@ function StyleCatalogCard({
           <div className="absolute bottom-0 left-0 right-0 px-4 pb-3.5 sm:pb-4 pt-16">
             <span
               className="font-serif"
+              title={getAcronymTooltip(style.name)}
               style={{
                 /* min(…, cqw): nelle colonne strette (griglie 4-col a ~768px)
                    il titolo scala con la card: "Contemporanea" non viene più

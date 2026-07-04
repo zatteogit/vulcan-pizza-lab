@@ -393,9 +393,12 @@ function BottomTabBar({
       >
         <motion.span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-5 top-0 h-px"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px"
           animate={{ opacity: 0.44 }}
-          style={{ background: "color-mix(in srgb, var(--overlay-text) 42%, transparent)" }}
+          style={{
+            background:
+              "linear-gradient(to right, transparent, color-mix(in srgb, var(--overlay-text) 36%, transparent) 15%, color-mix(in srgb, var(--overlay-text) 36%, transparent) 85%, transparent)",
+          }}
         />
         <div
           className="flex items-center justify-around px-2"
@@ -658,6 +661,7 @@ export function AppShell() {
   const navigate = useNavigate();
   const location = useLocation();
   const navState = useLiquidNavState();
+  const prefersReducedMotion = useReducedMotion();
 
   // Reset hideNavbar state during render when the pathname changes to avoid race conditions with children
   const [prevPathname, setPrevPathname] = useState(location.pathname);
@@ -801,11 +805,24 @@ export function AppShell() {
           {showNav && (
             <>
               {/* Bottom scrim — visually grounds the floating tab bar on mobile */}
-              <div
+              <motion.div
                 className="fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden"
+                initial={{ y: 0, opacity: 1 }}
+                animate={{
+                  y: navState.hidden && !prefersReducedMotion ? 40 : 0,
+                  opacity: navState.hidden ? 0 : 1,
+                }}
+                transition={
+                  prefersReducedMotion
+                    ? { duration: 0.16, ease: "easeOut" }
+                    : {
+                        y: navSpring,
+                        opacity: { duration: navState.hidden ? 0.14 : 0.24, ease: "easeOut" },
+                      }
+                }
                 style={{
-                  height: "calc(112px + env(safe-area-inset-bottom, 0px))",
-                  background: "linear-gradient(to top, var(--container-page) 0%, var(--container-page) 46%, color-mix(in srgb, var(--container-page) 88%, transparent) 72%, transparent 100%)",
+                  height: "calc(72px + env(safe-area-inset-bottom, 0px))",
+                  background: "linear-gradient(to top, var(--container-page) 0%, var(--container-page) 20%, color-mix(in srgb, var(--container-page) 65%, transparent) 60%, transparent 100%)",
                 }}
               />
               <BottomTabBar activeTab={activeTab} onSearchOpen={openSearch} navState={navState} />

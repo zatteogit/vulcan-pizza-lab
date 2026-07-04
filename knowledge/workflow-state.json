@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-07-04T11:45:00.000Z",
+  "lastUpdated": "2026-07-04T23:35:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
-    "srcFilesTsTsx": 150,
-    "appFilesExcludingUi": 150,
+    "srcFilesTsTsx": 151,
+    "appFilesExcludingUi": 151,
     "pizzaEngineExports": 59,
     "pizzaEngineLines": 3566,
-    "cmsContextLines": 3271,
-    "stylesInDb": 28
+    "cmsContextLines": 3281,
+    "stylesInDb": 29
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-04 registra l'integrazione del DebugOverlay con doppia scorciatoia anti-conflitto Ctrl+Option+A / Ctrl+Shift+X, posizionamento Pin Libero e Pin Elemento, disegno sketch canvas interattivo, sincronizzazione e caricamento da file system locale, editing diretto delle annotazioni con pulsante Elimina e copia prompt AI real-time.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-04 v2 registra l'introduzione dello stile 'Pizza Montanara' separato da 'Pizza Fritta' nel database, l'ottimizzazione grafica dei selettori in RecipeSetupPanel (PremiumSelect sostituito da bottoni/card), il redesign dell'indicatore match su explore.tsx (singola chip lineare 92% -> 98%), i tooltips per acronimi disciplinari (STG, IGP), il blocco dello scroll del body in StyleDetailSheet, e la semplificazione delle funzioni di disegno canvas nel DebugWorkspace.",
   "filesMappedCount": 151,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-04",
+  "lastScannedChapter": "kipi-update-2026-07-04-v2",
   "chapters": [
     {
       "id": "pizza-engine",

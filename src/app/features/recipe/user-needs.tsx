@@ -201,10 +201,20 @@ function savePantry(flours: string[], yeasts: string[]) {
   }
 }
 
-/* VPL-065: suggested slot = first dynamic slot (always the closest viable option) */
+/* suggested slot = the dynamic slot closest to the 24h fermentation sweet spot */
 function getSuggestedSlot(): string {
   const slots = generateTimeSlots();
-  return slots.length > 0 ? slots[0].id : "tomorrow_lunch";
+  if (slots.length === 0) return "tomorrow_lunch";
+  let bestSlot = slots[0];
+  let minDiff = Math.abs(slots[0].hours - 24);
+  for (let i = 1; i < slots.length; i++) {
+    const diff = Math.abs(slots[i].hours - 24);
+    if (diff < minDiff) {
+      minDiff = diff;
+      bestSlot = slots[i];
+    }
+  }
+  return bestSlot.id;
 }
 
 /* ═══ VPL-003: Geolocation + Open-Meteo weather API ═══

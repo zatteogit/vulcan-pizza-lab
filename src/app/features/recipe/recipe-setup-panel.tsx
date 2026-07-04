@@ -4,6 +4,8 @@ import {
   HeartCrack,
   Sparkles,
   X,
+  Check,
+  Beaker,
 } from "lucide-react";
 import { motion } from "motion/react";
 import {
@@ -475,56 +477,84 @@ export function RecipeSetupPanel({
                       )}
                     </span>
                   </div>
-                  <PremiumSelect
-                    value={
-                      activeInterpretationId
-                        ? `interpretation-${activeInterpretationId}`
-                        : activeVersion
-                          ? `version-${activeVersion.id}`
-                          : ""
-                    }
-                    onChange={(val) => {
-                      if (val.startsWith("version-")) {
-                        const versionId = val.replace("version-", "");
-                        const version = versions.find((v) => v.id === versionId);
-                        if (version) {
-                          onSelectVersion(version);
-                        }
-                      } else if (val.startsWith("interpretation-")) {
-                        const interpretationId = val.replace(
-                          "interpretation-",
-                          "",
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1.5">
+                      {versions.map((version) => {
+                        const active = !activeInterpretationId && activeVersion?.id === version.id;
+                        return (
+                          <button
+                            key={version.id}
+                            type="button"
+                            onClick={() => onSelectVersion(version)}
+                            className="flex items-center justify-between px-4 py-3 rounded-xl border text-left active:scale-98 transition-all"
+                            style={{
+                              background: active ? "var(--surface-container)" : "var(--surface-container-low)",
+                              borderColor: active ? "var(--tertiary)" : "var(--outline-variant)",
+                              borderWidth: active ? 2 : 1,
+                              color: "var(--text-default)",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <div className="flex-1 min-w-0">
+                              <span className="block font-semibold" style={{ fontSize: "var(--font-size-md)" }}>
+                                {localizedVersionLabel(cms, version.label)}
+                              </span>
+                              <span className="block text-xs" style={{ color: "var(--text-muted)", marginTop: 2 }}>
+                                {fmt.percent(version.params.hydration_pct)} idr. · W{version.params.flour_w}
+                              </span>
+                            </div>
+                            {active && <Check size={16} style={{ color: "var(--tertiary)", flexShrink: 0 }} />}
+                          </button>
                         );
-                        const interpretation = interpretations.find(
-                          (i) => i.id === interpretationId,
-                        );
-                        if (interpretation) {
-                          onSelectInterpretation(interpretation);
-                        }
-                      }
-                    }}
-                    groups={[
-                      {
-                        label: cmsMessage(cms, "recipeSetup.dough", "Impasto"),
-                        options: versions.map((version) => ({
-                          value: `version-${version.id}`,
-                          label: localizedVersionLabel(cms, version.label),
-                          subLabel: `${fmt.percent(version.params.hydration_pct)} idr. · W${version.params.flour_w}`,
-                        })),
-                      },
-                      ...(interpretations.length > 0
-                        ? [
-                            {
-                              label: cms.misc.signatureLabel || "Firma",
-                              options: interpretations.map((interpretation) => ({
-                                value: `interpretation-${interpretation.id}`,
-                                label: interpretationName(interpretation),
-                              })),
-                            },
-                          ]
-                        : []),
-                    ]}
-                  />
+                      })}
+                    </div>
+
+                    {interpretations.length > 0 && (
+                      <div className="flex flex-col gap-1.5 mt-2">
+                        <div
+                          style={{
+                            fontSize: "var(--font-size-2xs)",
+                            letterSpacing: "var(--tracking-spread)",
+                            textTransform: "uppercase",
+                            fontWeight: "var(--weight-bold)" as any,
+                            color: "var(--text-muted)",
+                            marginBottom: 2,
+                            marginLeft: 4,
+                          }}
+                        >
+                          {cms.misc.signatureLabel || "Firma"}
+                        </div>
+                        {interpretations.map((interpretation) => {
+                          const active = activeInterpretationId === interpretation.id;
+                          return (
+                            <button
+                              key={interpretation.id}
+                              type="button"
+                              onClick={() => onSelectInterpretation(interpretation)}
+                              className="flex items-center justify-between px-4 py-3 rounded-xl border text-left active:scale-98 transition-all"
+                              style={{
+                                background: active ? "var(--surface-container)" : "var(--surface-container-low)",
+                                borderColor: active ? "var(--tertiary)" : "var(--outline-variant)",
+                                borderWidth: active ? 2 : 1,
+                                color: "var(--text-default)",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <div className="flex-1 min-w-0">
+                                <span className="block font-semibold" style={{ fontSize: "var(--font-size-md)" }}>
+                                  {interpretationName(interpretation)}
+                                </span>
+                                <span className="block text-xs" style={{ color: "var(--text-muted)", marginTop: 2 }}>
+                                  {interpretation.author ?? interpretation.pizzeria ?? "D'autore"}
+                                </span>
+                              </div>
+                              {active && <Check size={16} style={{ color: "var(--tertiary)", flexShrink: 0 }} />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {children && (
@@ -551,7 +581,9 @@ export function RecipeSetupPanel({
                   >
                     <span
                       style={{
-                        display: "block",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
                         color: "var(--score-accent)",
                         fontSize: "var(--font-size-xs)",
                         fontWeight: "var(--weight-bold)" as any,
@@ -560,7 +592,8 @@ export function RecipeSetupPanel({
                         marginBottom: "var(--space-2)",
                       }}
                     >
-                      {cms.ui.nerdTitle}
+                      <Beaker size={13} style={{ color: "var(--score-accent)" }} />
+                      {bcp47.startsWith("it") ? "Parametri nerd" : "Nerd parameters"}
                     </span>
                     <NerdAuraBlock compact>
                       <div

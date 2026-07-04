@@ -1566,7 +1566,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   montanara_classica: {
     id: "montanara_classica",
     concept_ref: "montanara",
-    preferred_for_styles: ["pizza_fritta"],
+    preferred_for_styles: ["pizza_montanara"],
     ingredients: [
       { name: "Pomodoro (pelati schiacciati o passata, sale)", amount: { value: 40, unit: "g" }, section: "base" },
       { name: "Ricotta fresca (siero di latte, sale)", amount: { value: 30, unit: "g" }, notes: "A fiocchi, a crudo", section: "superficie" },
@@ -3456,7 +3456,8 @@ const REPRESENTATIVE_CONCEPT_ORDER_BY_STYLE: Record<string, readonly string[]> =
   detroit: ["detroit", "hot_honey", "vodka_pizza", "meat_lovers", "hawaiiana"],
   chicago_deep: ["chicago", "supreme", "italian_beef", "meat_lovers", "spinaci"],
   focaccia_barese: ["focaccia_barese"],
-  pizza_fritta: ["pizza_fritta", "montanara", "ricotta_cicoli"],
+  pizza_fritta: ["pizza_fritta", "ricotta_cicoli"],
+  pizza_montanara: ["montanara"],
   calzone_napoletano: ["calzone", "ricotta_cicoli", "scarola"],
   new_haven_apizza: ["white_clam", "tomato_pie"],
   fugazzeta: ["fugazzeta", "fugazza"],

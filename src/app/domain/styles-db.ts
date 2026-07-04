@@ -204,7 +204,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   },
   tonda_romana: {
     id: "tonda_romana",
-    name: "Tonda Romana",
+    name: 'Tonda Romana "Scrocchiarella"',
     family: "romana",
     origin: { city: "Roma", region: "Lazio", country: "Italia" },
     dough: {
@@ -494,7 +494,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   },
   sfincione: {
     id: "sfincione",
-    name: "Sfincione Palermitano",
+    name: "Sfincione",
     family: "contemporanea",
     origin: { city: "Palermo", region: "Sicilia", country: "Italia" },
     dough: {
@@ -1101,16 +1101,66 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 4,
     servings_per_unit: [1, 2],
     description:
-      "Disco di impasto fritto in olio bollente. Due scuole distinte: RIPIENA — farcita di ricotta, provola e cicoli e sigillata PRIMA di friggere; oppure MONTANARA — fritta vuota e poi condita A CRUDO sopra con pomodoro, ricotta e basilico.",
+      "Disco di impasto farcito internamente (tipicamente con ricotta, provola e cicoli), sigillato a mezzaluna prima di essere fritto in olio bollente.",
     key_characteristics: [
       "Cottura in frittura (no forno)",
-      "Ripiena (chiusa) oppure Montanara (aperta, condita sopra)",
-      "Ricotta + provola/cicoli o pomodoro + basilico",
+      "Ripiena (chiusa a mezzaluna)",
+      "Farcita prima di friggere",
       "Veloce, lievitazione breve",
     ],
     hydration_category: "medium",
     emoji: "🍳",
     default_topping_ref: "pizza_fritta_ripiena",
+  },
+
+  pizza_montanara: {
+    id: "pizza_montanara",
+    name: "Pizza Montanara",
+    family: "napoletana",
+    origin: { city: "Napoli", region: "Campania", country: "Italia" },
+    dough: {
+      flour_w_range: [220, 280],
+      flour_pl_range: [0.50, 0.60],
+      hydration_pct_range: [60, 65],
+      salt_pct: 2.5,
+      oil_pct: 0.0,
+      fat_type: "none",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [4, 8],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 100,
+      thickness_factor: 0.5,
+      diameter_cm: 14,
+    },
+    baking: {
+      oven_type_required: "home",
+      temp_c_range: [180, 190],
+      temp_c_ideal: 185,
+      cook_time_sec_range: [60, 120],
+      cook_time_sec_ideal: 90,
+    },
+    crust_type: "pan_crispy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: true,
+    serving_unit: "panetto",
+    default_dough_balls: 4,
+    servings_per_unit: [1, 2],
+    description:
+      "Dischetto di impasto fritto in olio bollente, scolato e poi condito a caldo/crudo sopra con pomodoro, ricotta, pecorino e basilico fresco. Aperta, non ripiena.",
+    key_characteristics: [
+      "Cottura in frittura (no forno)",
+      "Aperta (non ripiena)",
+      "Condita dopo la frittura",
+      "Veloce, lievitazione breve",
+    ],
+    hydration_category: "medium",
+    emoji: "🍳",
+    default_topping_ref: "montanara_classica",
   },
 
   calzone_napoletano: {

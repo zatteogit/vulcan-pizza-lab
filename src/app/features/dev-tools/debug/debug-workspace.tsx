@@ -8,15 +8,12 @@ import {
   ClipboardCopy,
   Eye,
   EyeOff,
-  Edit3,
   Check,
   CheckCircle2,
   MapPin,
   Cloud,
   CloudOff,
   RefreshCw,
-  Square,
-  Circle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { Annotation, ToolType } from "./annotation-types";
@@ -54,11 +51,6 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
   // Drawing & UI lock states
   const [isDrawingMode, setIsDrawingMode] = useState(false);
   const [currentTool, setCurrentTool] = useState<ToolType>("pointer");
-  const [isDrawing, setIsDrawing] = useState(false);
-
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const startPoint = useRef<{ x: number; y: number } | null>(null);
-  const canvasSnapshot = useRef<ImageData | null>(null);
 
   // Selection states
   const [hoveredRect, setHoveredRect] = useState<DOMRect | null>(null);
@@ -152,161 +144,36 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
   }, [isSelecting, currentTool, location.pathname, consoleLogsRef]);
 
   /* ═══ CANVAS SIZE INIT ═══ */
-  useEffect(() => {
-    if (isDrawingMode) {
-      const canvas = canvasRef.current;
-      if (canvas) {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        canvas.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
-      }
-    }
-  }, [isDrawingMode]);
+  /* ═══ PIN PLACEMENT ═══ */
+  const handlePinPlacement = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if (currentTool !== "simple-pin") return;
 
-  /* ═══ CANVAS DRAWING ═══ */
-  const getCanvasCoords = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return { x: 0, y: 0 };
-    const rect = canvas.getBoundingClientRect();
+    e.preventDefault();
+    e.stopPropagation();
     const clientX = "touches" in e && e.touches.length > 0 ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
     const clientY = "touches" in e && e.touches.length > 0 ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-    return { x: clientX - rect.left, y: clientY - rect.top };
-  };
+    const pageX = clientX + window.scrollX;
+    const pageY = clientY + window.scrollY;
 
-  const startCanvasDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (currentTool === "pointer") return;
-
-    if (currentTool === "simple-pin") {
-      e.preventDefault();
-      e.stopPropagation();
-      const clientX = "touches" in e && e.touches.length > 0 ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-      const clientY = "touches" in e && e.touches.length > 0 ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-      const pageX = clientX + window.scrollX;
-      const pageY = clientY + window.scrollY;
-
-      setTempAnnotation({
-        id: `anno-${Date.now()}`,
-        selector: "body",
-        route: location.pathname,
-        elementTag: "simple-pin",
-        outerHTML: "<!-- simple-pin -->",
-        parentHTML: "",
-        timestamp: new Date().toLocaleTimeString(),
-        viewport: { width: window.innerWidth, height: window.innerHeight },
-        elementRect: { top: clientY, left: clientX, width: 24, height: 24 },
-        computedStyles: {
-          display: "block", position: "absolute", width: "24px", height: "24px",
-          padding: "0", margin: "0", fontSize: "0", fontWeight: "normal",
-          color: "inherit", backgroundColor: "transparent", boxShadow: "none", zIndex: "auto", opacity: "1",
-        },
-        recipeStateAtClick: readRecipeDraft(),
-        consoleLogsAtClick: [...consoleLogsRef.current],
-        pageX,
-        pageY,
-      });
-
-      setIsDrawingMode(false);
-      setIsSelecting(false);
-      setIsFormOpen(true);
-      return;
-    }
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const { x, y } = getCanvasCoords(e);
-    const clientX = "touches" in e && e.touches.length > 0 ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-    const clientY = "touches" in e && e.touches.length > 0 ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-    if (!firstDrawPoint) {
-      setFirstDrawPoint({ pageX: clientX + window.scrollX, pageY: clientY + window.scrollY });
-    }
-
-    startPoint.current = { x, y };
-    canvasSnapshot.current = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-    if (currentTool === "freehand") {
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineWidth = 3;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.strokeStyle = window.getComputedStyle(document.body).getPropertyValue("--primary").trim() || "tomato";
-    }
-    setIsDrawing(true);
-  };
-
-  const drawOnCanvas = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing || !startPoint.current) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const { x, y } = getCanvasCoords(e);
-    const startX = startPoint.current.x;
-    const startY = startPoint.current.y;
-    const brandColor = window.getComputedStyle(document.body).getPropertyValue("--primary").trim() || "tomato";
-
-    if (currentTool === "freehand") {
-      ctx.lineTo(x, y);
-      ctx.stroke();
-    } else if (currentTool === "rect" || currentTool === "circle") {
-      if (canvasSnapshot.current) ctx.putImageData(canvasSnapshot.current, 0, 0);
-      ctx.beginPath();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = brandColor;
-      if (currentTool === "rect") {
-        ctx.strokeRect(startX, startY, x - startX, y - startY);
-      } else {
-        const radius = Math.sqrt(Math.pow(x - startX, 2) + Math.pow(y - startY, 2));
-        ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
-        ctx.stroke();
-      }
-    }
-  };
-
-  const stopCanvasDrawing = () => {
-    setIsDrawing(false);
-    startPoint.current = null;
-    canvasSnapshot.current = null;
-  };
-
-  const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    canvas?.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
-  };
-
-  const handleSaveDrawing = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const dataUrl = canvas.toDataURL("image/png");
-
-    const baseAnnotation = tempAnnotation || {
+    setTempAnnotation({
       id: `anno-${Date.now()}`,
       selector: "body",
       route: location.pathname,
-      elementTag: "sketch-layer",
-      outerHTML: "<!-- canvas-sketch -->",
+      elementTag: "simple-pin",
+      outerHTML: "<!-- simple-pin -->",
       parentHTML: "",
       timestamp: new Date().toLocaleTimeString(),
       viewport: { width: window.innerWidth, height: window.innerHeight },
-      elementRect: { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight },
+      elementRect: { top: clientY, left: clientX, width: 24, height: 24 },
       computedStyles: {
-        display: "block", position: "static", width: "100%", height: "100%",
-        padding: "0 0 0 0", margin: "0 0 0 0", fontSize: "16px", fontWeight: "normal",
+        display: "block", position: "absolute", width: "24px", height: "24px",
+        padding: "0", margin: "0", fontSize: "0", fontWeight: "normal",
         color: "inherit", backgroundColor: "transparent", boxShadow: "none", zIndex: "auto", opacity: "1",
       },
-      pageX: firstDrawPoint ? firstDrawPoint.pageX : window.innerWidth / 2 + window.scrollX,
-      pageY: firstDrawPoint ? firstDrawPoint.pageY : window.innerHeight / 2 + window.scrollY,
-    };
-
-    setTempAnnotation({
-      ...baseAnnotation,
-      scrollTop: window.scrollY,
-      scrollLeft: window.scrollX,
-      drawingDataURL: dataUrl,
+      recipeStateAtClick: readRecipeDraft(),
+      consoleLogsAtClick: [...consoleLogsRef.current],
+      pageX,
+      pageY,
     });
 
     setIsDrawingMode(false);
@@ -476,22 +343,19 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
       </AnimatePresence>
 
       {/* ── DRAWING CANVAS ── */}
-      {isDrawingMode && (
-        <canvas
-          ref={canvasRef}
-          onMouseDown={startCanvasDrawing}
-          onMouseMove={drawOnCanvas}
-          onMouseUp={stopCanvasDrawing}
-          onMouseLeave={stopCanvasDrawing}
-          onTouchStart={startCanvasDrawing}
-          onTouchMove={drawOnCanvas}
-          onTouchEnd={stopCanvasDrawing}
+      {/* ── PIN INTERCEPTOR BACKDROP ── */}
+      {isDrawingMode && currentTool === "simple-pin" && (
+        <div
+          onClick={handlePinPlacement}
+          onTouchStart={handlePinPlacement}
           className="vulcan-debug-exclude"
           style={{
-            position: "fixed", inset: 0, zIndex: 99993, background: "rgba(0, 0, 0, 0.08)",
-            cursor: currentTool === "pointer" ? "default" : currentTool === "simple-pin" ? "cell" : "crosshair",
-            touchAction: "none",
-            pointerEvents: currentTool === "pointer" ? "none" : "auto",
+            position: "fixed",
+            inset: 0,
+            zIndex: 99993,
+            background: "rgba(0, 0, 0, 0.08)",
+            cursor: "cell",
+            pointerEvents: "auto",
           }}
         />
       )}
@@ -510,9 +374,6 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
               {([
                 { tool: "pointer" as const, icon: MousePointerClick, title: "Seleziona Elemento (HTML Selector)", select: true },
                 { tool: "simple-pin" as const, icon: MapPin, title: "Piazza Pin Semplice", select: false },
-                { tool: "freehand" as const, icon: Edit3, title: "Disegno a Mano Libera", select: false },
-                { tool: "rect" as const, icon: Square, title: "Disegna Rettangolo", select: false },
-                { tool: "circle" as const, icon: Circle, title: "Disegna Cerchio", select: false },
               ]).map(({ tool, icon: Icon, title, select }) => (
                 <button
                   key={tool}
@@ -529,12 +390,6 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
             <div className="w-px h-6" style={{ background: "var(--container-border)" }} />
 
             <div className="flex items-center gap-1.5">
-              <button onClick={clearCanvas} className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors active:scale-95" style={{ color: "var(--text-muted)" }} title="Pulisci Disegni">
-                <Trash2 size={16} />
-              </button>
-              <button onClick={handleSaveDrawing} className="p-2 rounded-lg transition-colors active:scale-95 text-white" style={{ background: "var(--primary)" }} title="Salva Pin e Disegni">
-                <Check size={16} />
-              </button>
               <button
                 onClick={() => { setIsDrawingMode(false); setIsSelecting(false); setTempAnnotation(null); setIsOpen(true); }}
                 className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors active:scale-95"

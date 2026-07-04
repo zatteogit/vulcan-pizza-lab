@@ -3068,6 +3068,7 @@ const ICONIC_BOOST: Record<string, number> = {
   padellino_torino: 2,
   chicago_deep: 2,
   calzone_napoletano: 2,
+  pizza_montanara: 2,
 };
 
 export function recommendStyles(

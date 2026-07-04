@@ -63,10 +63,23 @@ export function StyleDetailSheet({
   const photo = STYLE_PHOTOS[style.id] || STYLE_PHOTOS.napoletana_stg;
   const video = STYLE_VIDEOS[style.id];
   const { cms, bcp47 } = useCms();
+
+  // Pin #15: lock body scroll when sheet is open
+  React.useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
+
+  const rec = React.useMemo(() => {
+    if (!constraints) return null;
+    return recommendStyles(constraints).find((r) => r.style.id === style.id);
+  }, [constraints, style.id]);
+
   /* VPL-C3: motivazioni di match articolate (lista completa, con dimensione). */
   const matchReasons = React.useMemo(() => {
-    if (!constraints) return [] as { text: string; dim: ReturnType<typeof reasonDimension> }[];
-    const rec = recommendStyles(constraints).find((r) => r.style.id === style.id);
     if (!rec || rec.tier === "not_feasible") return [];
     const fmt = createFormatter(cms.ui, bcp47);
     const texts = resolveEngineMsgs(
@@ -78,7 +91,7 @@ export function StyleDetailSheet({
           : value,
     );
     return texts.map((text, i) => ({ text, dim: reasonDimension(rec.reasons[i].key) }));
-  }, [constraints, style.id, cms.engineMessages, cms.ui, bcp47]);
+  }, [rec, cms.engineMessages, cms.ui, bcp47]);
   const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "").toUpperCase();
   const pt = cms.parametricTips;
   const prefersReducedMotion = useReducedMotion();
@@ -138,7 +151,6 @@ export function StyleDetailSheet({
         }}
       />
 
-      {/* Sheet — anchored to bottom */}
       <motion.div
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
@@ -152,6 +164,7 @@ export function StyleDetailSheet({
           pointerEvents: "auto",
           maxHeight: "85vh",
           overflowY: "auto",
+          overscrollBehavior: "contain",
           WebkitOverflowScrolling: "touch",
           borderTopLeftRadius: "1.25rem",
           borderTopRightRadius: "1.25rem",
@@ -160,19 +173,6 @@ export function StyleDetailSheet({
           boxShadow: "var(--sheet-shadow)",
         }}
       >
-        {/* Handle bar */}
-        <div className="flex justify-center pt-3 pb-1">
-          <div
-            className="rounded-full"
-            style={{
-              width: 36,
-              height: 4,
-              background: "var(--outline-variant)",
-              opacity: 0.6,
-            }}
-          />
-        </div>
-
         {/* Preferito (canonico) — il bookmark marca lo STILE che ami, non la tua
             versione su misura (quella si salva dalla scheda ricetta). */}
         <IconButton
@@ -180,8 +180,10 @@ export function StyleDetailSheet({
           size="md"
           onClick={() => setFav(toggleFavoriteStyle(style.id).includes(style.id))}
           whileTap={{ scale: 0.8 }}
-          className="absolute top-3 right-16"
           style={{
+            position: "absolute",
+            top: 12,
+            right: 54,
             zIndex: 3,
             background: fav
               ? "color-mix(in srgb, var(--primary) 14%, var(--surface-container))"
@@ -207,8 +209,15 @@ export function StyleDetailSheet({
         <IconButton
           size="md"
           onClick={onDismiss}
-          className="absolute top-3 right-3 active:scale-95 transition-transform"
-          style={{ zIndex: 3 }}
+          style={{
+            position: "absolute",
+            top: 12,
+            right: 12,
+            zIndex: 3,
+            background: "var(--surface-container)",
+            color: "var(--text-muted)",
+            border: "1px solid var(--outline-variant)",
+          }}
           aria-label={cms.ui.closeDetails}
         >
           <X size={15} />
@@ -266,6 +275,35 @@ export function StyleDetailSheet({
               >
                 {formatOrigin(style.origin)}
               </span>
+
+              {rec && rec.tier !== "not_feasible" && (
+                <>
+                  <span
+                    style={{
+                      fontSize: "var(--font-size-xs)",
+                      color: "var(--text-muted)",
+                      margin: "0 6px",
+                      opacity: 0.5,
+                    }}
+                  >
+                    ·
+                  </span>
+                  <span
+                    className="px-1.5 py-0.5 rounded-md"
+                    style={{
+                      fontSize: "var(--font-size-2xs)",
+                      fontWeight: "var(--weight-bold)" as any,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      background: "color-mix(in srgb, var(--primary) 12%, var(--surface-container))",
+                      color: "var(--primary)",
+                      border: "1px solid color-mix(in srgb, var(--primary) 20%, transparent)",
+                    }}
+                  >
+                    {rec.compatibilityScore}% Match
+                  </span>
+                </>
+              )}
 
               {/* Title */}
               <h3
@@ -528,7 +566,7 @@ export function StyleDetailSheet({
                 {matchReasons.map((r, i) => {
                   const DimIcon = MATCH_DIMENSION_ICON[r.dim];
                   return (
-                    <div key={i} className="flex items-start gap-2.5">
+                    <div key={i} className="flex items-center gap-2.5">
                       <span
                         className="flex items-center justify-center rounded-full shrink-0"
                         style={{
@@ -536,7 +574,6 @@ export function StyleDetailSheet({
                           height: 24,
                           background: "var(--surface-container)",
                           color: "var(--text-accent)",
-                          marginTop: 1,
                         }}
                       >
                         <DimIcon size={13} strokeWidth={2.5} aria-hidden="true" />
