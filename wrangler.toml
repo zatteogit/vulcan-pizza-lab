@@ -1,0 +1,23 @@
+# Cloudflare Worker config for the deployed app (…workers.dev).
+#
+# The Worker serves the built SPA via the ASSETS binding and handles
+# /api/annotations against the D1 binding DB. Deployed by `wrangler deploy`
+# (the Pages-only pitfalls from earlier do NOT apply here — this IS a Worker).
+#
+# One-time setup:
+#   npx wrangler d1 execute vulcan-annotations --remote --file=./schema.sql
+#   (D1 already created: id below. Binding travels in this file — no dashboard.)
+#   Deploy: `npx wrangler deploy` (or the project's connected Workers build).
+name = "vulcan-pizza-lab"
+main = "worker/index.ts"
+compatibility_date = "2024-11-01"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "vulcan-annotations"
+database_id = "471d2a9d-1a54-418e-849c-479b85cbd979"

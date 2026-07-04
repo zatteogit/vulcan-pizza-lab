@@ -12,6 +12,7 @@
     "start": "vite",
     "check:tokens": "node scripts/check-design-tokens.mjs",
     "debug:pull": "node scripts/debug-pull.mjs",
+    "deploy": "npm run build && wrangler deploy",
     "test": "vitest run",
     "verify": "tsc --noEmit && npm run check:tokens && vitest run"
   },
