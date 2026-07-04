@@ -159,15 +159,19 @@ Edit `src/app/routes.ts`:
 
 The AI debug overlay lives in `src/app/features/dev-tools/debug/` (entry gate at
 `debug-overlay.tsx`, lazy workspace + sync hook inside `debug/`). Annotations
-sync across three layers, reconciled last-write-wins by `id`: `localStorage`, the
-dev-only `/api/save-annotations` endpoint (writes `vulcan-debug-registry.json`),
-and an optional GitHub gist. Each entry carries `updatedAt`, plus `deleted`
-(tombstone) and `resolved` flags. If pins were created in production, run
-`VULCAN_GIST_TOKEN=… VULCAN_GIST_ID=… npm run debug:pull` first to fold the gist
-into the local file.
+sync across three layers, reconciled last-write-wins by `id`: `localStorage`
+(instant/offline cache), the dev-only `/api/save-annotations` endpoint (keeps
+`vulcan-debug-registry.json` live), and a shared **Cloudflare Pages Function
+backed by D1** at `/api/annotations` (`functions/api/annotations.ts`), which both
+production and — via `VITE_ANNOTATIONS_API` — the local dev app talk to. Each
+entry carries `updatedAt`, plus `deleted` (tombstone) and `resolved` flags. If
+pins were created in production and dev isn't pointed at the same D1, run
+`VULCAN_ANNOTATIONS_API=… [VULCAN_ANNOTATIONS_KEY=…] npm run debug:pull` first to
+fold the remote registry into the local file. Backend setup lives in
+`wrangler.toml` / `schema.sql` / `.env.example`.
 
 If the user requests to "risolvi i commenti", "risolvi le annotazioni", "fix comments", or similar:
-1. Locate `vulcan-debug-registry.json` at the project root (run `npm run debug:pull` first if gist sync is configured, so production pins are included).
+1. Locate `vulcan-debug-registry.json` at the project root (run `npm run debug:pull` first if dev isn't wired to the same D1, so production pins are included).
 2. Read the JSON array of annotations. Skip any entry with `"deleted": true` (tombstones) or `"resolved": true` (already handled).
 3. Find the target source files, implement the fixes conforming strictly to the Design Tokens system (`theme.css`), and verify (`npm run verify`).
-4. Once fixed, mark each handled annotation as resolved **in place** — set `"resolved": true` and bump `"updatedAt"` to `Date.now()` (milliseconds). Do **not** empty the file to `[]`: with gist merge active, deleted-by-truncation entries would be resurrected from the gist on the next load, and last-write-wins needs the fresh `updatedAt` to propagate the resolution to the other layers.
+4. Once fixed, mark each handled annotation as resolved **in place** — set `"resolved": true` and bump `"updatedAt"` to `Date.now()` (milliseconds). Do **not** empty the file to `[]`: with the D1 merge active, deleted-by-truncation entries would be resurrected from the remote on the next load/sync, and last-write-wins needs the fresh `"updatedAt"` to propagate the resolution to the other layers.
