@@ -5,14 +5,11 @@ ArrowLeft,
 BarChart3,
 Beaker,
 Bug,
-Check,
 CheckCircle2,
 ChevronDown,
 Circle,
 CircleX,
 ClipboardCheck,
-Clock,
-Copy,
 ExternalLink,
 FileCode2,
 Flame,
@@ -27,7 +24,6 @@ Moon,
 Package,
 PenTool,
 Play,
-RefreshCw,
 Shield,
 Sparkles,
 Sun,
@@ -52,10 +48,9 @@ type OvenType,
 type UserConstraints,
 } from "../../domain/pizza-engine";
 import { StyleEditorTab } from "./style-editor-tab";
-import { SyncTab } from "./sync-tab";
 
 /* ═══ TYPES ═══ */
-type TabId = "project" | "editor" | "engine" | "design" | "sync";
+type TabId = "project" | "editor" | "engine" | "design";
 
 interface TabDef {
   id: TabId;
@@ -68,7 +63,6 @@ const TABS: TabDef[] = [
   { id: "design", label: "Design System", icon: <Sparkles size={14} /> },
   { id: "editor", label: "Style Editor", icon: <PenTool size={14} /> },
   { id: "engine", label: "Engine Lab", icon: <TestTubes size={14} /> },
-  { id: "sync", label: "Sync", icon: <RefreshCw size={14} /> },
 ];
 
 /* ═══ LEGACY TAB REDIRECT MAP ═══ */
@@ -85,66 +79,6 @@ const LEGACY_TAB_MAP: Record<string, TabId> = {
 function formatSec(sec: number): string {
   if (sec < 120) return `${sec}s`;
   return `${Math.round(sec / 60)}min`;
-}
-
-/* ═══ CLIPBOARD (dual path per iframe) ═══ */
-async function copyText(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    try {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      document.body.appendChild(ta);
-      ta.select();
-      const ok = document.execCommand("copy");
-      document.body.removeChild(ta);
-      return ok;
-    } catch {
-      return false;
-    }
-  }
-}
-
-/* ═══ REUSABLE: CopyCmd ═══ */
-function CopyCmd({ cmd, label }: { cmd: string; label?: string }) {
-  const [copied, setCopied] = useState(false);
-  const handleCopy = () => {
-    copyText(cmd).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
-  return (
-    <div
-      className="flex items-center gap-2 p-2.5 rounded-lg overflow-x-auto"
-      style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}
-    >
-      <span className="type-data-sm" style={{ color: "var(--cta)", flexShrink: 0 }}>$</span>
-      <code
-        className="type-data flex-1 min-w-0"
-        style={{ fontSize: "var(--font-size-sm)", fontFamily: "var(--font-mono)", color: "var(--text-default)", whiteSpace: "nowrap" }}
-      >
-        {label || cmd}
-      </code>
-      <button
-        onClick={handleCopy}
-        className="flex items-center gap-1 px-2 py-1 rounded-md type-data active:scale-95 transition-transform flex-shrink-0"
-        style={{
-          fontSize: "var(--font-size-xs)",
-          background: copied ? "color-mix(in srgb, var(--cta) 15%, transparent)" : "transparent",
-          color: copied ? "var(--cta)" : "var(--icon-muted)",
-          border: "1px solid " + (copied ? "var(--cta)" : "var(--container-border)"),
-        }}
-        aria-label={`Copia comando ${cmd}`}
-      >
-        {copied ? <Check size={10} /> : <Copy size={10} />}
-      </button>
-    </div>
-  );
 }
 
 /* ═══ REUSABLE: DataCell ═══ */
@@ -243,7 +177,6 @@ const sourceGlobs = import.meta.glob(
     "/src/app/**/*.{ts,tsx}",
     "/src/styles/**/*.css",
     "/src/main.tsx",
-    "/src/imports/**/*.tsx",
   ],
   { query: "?raw", import: "default" }
 ) as Record<string, () => Promise<string>>;
@@ -455,22 +388,6 @@ function ProjectTab() {
     });
     setBundleLoading(false);
   }, []);
-
-  /* ── Sync timestamp ── */
-  const lastSyncRaw = useMemo(() => {
-    try { return localStorage.getItem("vulcan_last_sync_ts"); } catch { return null; }
-  }, []);
-  const lastSyncAgo = useMemo(() => {
-    if (!lastSyncRaw) return null;
-    const ts = new Date(lastSyncRaw).getTime();
-    const now = Date.now();
-    const diffMin = Math.round((now - ts) / 60000);
-    if (diffMin < 1) return "Adesso";
-    if (diffMin < 60) return `${diffMin} min fa`;
-    const diffH = Math.round(diffMin / 60);
-    if (diffH < 24) return `${diffH}h fa`;
-    return `${Math.round(diffH / 24)}g fa`;
-  }, [lastSyncRaw]);
 
   /* ── Issues ── */
   const issues: { id: string; severity: string; desc: string; status: "closed" | "blocked" | "open" }[] = [
@@ -765,12 +682,6 @@ function ProjectTab() {
               </div>
               <div className="flex items-center gap-2 type-data-sm" style={{ color: "var(--text-muted)" }}>
                 <span>main · React + Vite + Tailwind v4</span>
-                {lastSyncAgo && (
-                  <span className="flex items-center gap-1">
-                    <Clock size={10} />
-                    Sync: {lastSyncAgo}
-                  </span>
-                )}
               </div>
             </div>
           </div>
@@ -808,52 +719,6 @@ function ProjectTab() {
           ))}
         </div>
 
-        {/* Workflows */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          {/* Make → Git */}
-          <div className="p-3 rounded-xl" style={{ background: "color-mix(in srgb, var(--cta) 4%, transparent)", border: "1px solid color-mix(in srgb, var(--cta) 10%, transparent)" }}>
-            <div className="type-data-sm mb-2" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--cta)" }}>
-              Make → GitHub
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <CopyCmd cmd="node sync.mjs import" label="sync.mjs import (dopo pbpaste)" />
-              <CopyCmd cmd='git add -A && git commit -m "sync: da Make"' />
-              <CopyCmd cmd="git push origin main" />
-            </div>
-          </div>
-          {/* Git → Make */}
-          <div className="p-3 rounded-xl" style={{ background: "color-mix(in srgb, var(--tertiary) 4%, transparent)", border: "1px solid color-mix(in srgb, var(--tertiary) 10%, transparent)" }}>
-            <div className="type-data-sm mb-2" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--tertiary)" }}>
-              GitHub → Make
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <CopyCmd cmd="git pull origin main" />
-              <CopyCmd cmd="node sync.mjs export | pbcopy" label="sync.mjs export | pbcopy" />
-              <CopyCmd cmd="# Sync tab → Incolla → Copia prompt" />
-            </div>
-          </div>
-        </div>
-
-        {/* Cycle diagram */}
-        <div className="flex flex-wrap items-center gap-1.5 type-data-sm px-1" style={{ color: "var(--text-muted)" }}>
-          {[
-            { t: "Make Export", c: "var(--cta)" }, { t: "→" },
-            { t: "sync import", c: "var(--tertiary)" }, { t: "→" },
-            { t: "git push", c: "var(--text-default)" }, { t: "→" },
-            { t: "IDE", c: "var(--secondary)" }, { t: "→" },
-            { t: "git push", c: "var(--text-default)" }, { t: "→" },
-            { t: "sync export", c: "var(--tertiary)" }, { t: "→" },
-            { t: "Make Import", c: "var(--cta)" },
-          ].map((step, i) =>
-            step.c ? (
-              <Badge key={i} color={step.c} background={`color-mix(in srgb, ${step.c} 12%, transparent)`}>
-                {step.t}
-              </Badge>
-            ) : (
-              <span key={i} style={{ color: "var(--text-muted)", fontSize: "var(--font-size-xs)" }}>{step.t}</span>
-            )
-          )}
-        </div>
       </LabSection>
 
       {/* ═══ ISSUE TRACKER ═══ */}
@@ -1327,7 +1192,7 @@ export function DevTools({
   setDarkMode?: (v: boolean) => void;
   initialTab?: string;
 }) {
-  const validTabs: TabId[] = ["project", "editor", "engine", "design", "sync"];
+  const validTabs: TabId[] = ["project", "editor", "engine", "design"];
   const resolvedTab: TabId = (() => {
     if (!initialTab) return "project";
     if (validTabs.includes(initialTab as TabId)) return initialTab as TabId;
@@ -1343,7 +1208,6 @@ export function DevTools({
       case "design": return <DesignSystemTab darkMode={darkMode} setDarkMode={setDarkMode} />;
       case "editor": return <StyleEditorTab />;
       case "engine": return <EngineLabTab />;
-      case "sync": return <SyncTab />;
     }
   };
 

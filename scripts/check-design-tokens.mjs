@@ -26,7 +26,6 @@ const DS_SEGMENT = "components/ds"; // T4: può usare composite/token-componente
 const SIZING_TOOLING_EXEMPT = [
   "dev-tools",
   "engine-test-suite",
-  "sync-tab",
   "style-editor-tab",
 ];
 

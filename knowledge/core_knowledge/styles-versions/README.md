@@ -22,7 +22,6 @@ La versione attiva fluisce in `generateRecipe` come `versionOverrides` e nei ran
 | `src/app/features/recipe/style-detail-sheet.tsx` | Bottom sheet portal: foto poster, video blur-in se disponibile, range stile, deviazione, parametriche, CTA genera |
 | `src/app/pages/explore.tsx` | Route `/explore` (Tab Scopri): ricette iconiche, preferiti, filtri famiglia e catalogo completo 28 stili |
 | `src/app/features/dev-tools/style-editor-tab.tsx` | DevTools: editor CRUD stili dev con componente `ImageInput` per caricamento/gestione file grafici locali (Base64) o URL esterni |
-| `src/app/features/dev-tools/sync-tab.tsx` | Diff bundle sorgenti Vulcan Cloud ↔ locale (non modifica stili direttamente) |
 | `src/app/data/interpretation-library.ts` | Database delle Interpretazioni d'Autore: 14 voci tra Maestri, Pizzerie, Community e Disciplinari con parameter overrides e narrativa |
 | `src/app/data/signature-recipes.ts` | Database delle Ricette Iconiche: 12 combinazioni pre-impostate di Stile e Topping (rimossi gli helper `getSignatureRecipesByFamily`/`getSignatureRecipeById`) |
 | `src/app/features/recipe/tilt-card.tsx` | Componente UI per l'effetto di inclinazione 3D interattivo e riflesso speculare sensibile al puntatore del mouse delle card degli stili |
@@ -64,7 +63,6 @@ flowchart TD
 | `recommendStyles` | `pizza-engine` via `recommended-styles.tsx` | Ranking stili vs `UserConstraints` |
 | `StyleDetailSheet` | `style-detail-sheet.tsx` | Dettaglio + `onGenerate` (home wizard) |
 | `StyleEditorTab` | `style-editor-tab.tsx` | CRUD stili dev (~1476+ righe) |
-| `SyncTab` | `sync-tab.tsx` | `import.meta.glob` sorgenti, diff hash djb2, export bundle |
 
 ## Costanti e configurazione
 
