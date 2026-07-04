@@ -4,6 +4,8 @@ import fs from "fs";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 // Custom Vite plugin to auto-save visual debug annotations into the local workspace
 function saveAnnotationsPlugin() {
   return {
@@ -58,7 +60,7 @@ function saveAnnotationsPlugin() {
 }
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), saveAnnotationsPlugin()],
+  plugins: [react(), tailwindcss(), saveAnnotationsPlugin(), cloudflare()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
