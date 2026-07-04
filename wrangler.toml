@@ -16,7 +16,10 @@ name = "vulcan-pizza-lab"
 pages_build_output_dir = "dist"
 compatibility_date = "2024-11-01"
 
+# NB: il binding DEVE chiamarsi "DB" (il codice usa env.DB). Ignora il nome
+# "vulcan_annotations" suggerito da `wrangler d1 create`: quando aggiungi il
+# binding nel progetto Pages, la Variable name va impostata a "DB".
 [[d1_databases]]
 binding = "DB"
 database_name = "vulcan-annotations"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "471d2a9d-1a54-418e-849c-479b85cbd979"
