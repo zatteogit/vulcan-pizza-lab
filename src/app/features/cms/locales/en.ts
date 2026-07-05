@@ -397,6 +397,7 @@ export const EN_LOCALE: CmsContent = {
     tabRecipe: "Recipe",
     tabRecipeTailored: "Tailored recipe",
     recipeCanonical: "Canonical recipe",
+    recipeCanonicalEyebrow: "Canonical",
     preCookTitle: "Before you fire up the oven",
     preCookBody:
       "This is still the original recipe. You can start as is, or adapt it to your oven and your schedule before the bake.",

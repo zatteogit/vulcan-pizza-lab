@@ -148,7 +148,7 @@ export interface CmsUiStrings {
   weatherOutdoor: string;       // "{t}°C fuori" template
   weatherKitchen: string;       // "Cucina"
   // Badges
-  badgeIdeal: string;           // "Più rapido" — slot temporale più vicino (non un giudizio di qualità)
+  badgeIdeal: string;           // "Consigliato" — slot con fermentazione più vicina a ~24h (finestra ideale, non il più rapido)
   badgeRecent: string;          // "RECENTE"
   autoLabel: string;            // "Auto"
   // Oven compact bar
@@ -731,6 +731,9 @@ export interface CmsContent {
     tabRecipeTailored: string;
     /** Etichetta stato ricetta non personalizzata (pill contesto + occhiello). */
     recipeCanonical: string;
+    /** Occhiello hero: variante canonica senza ripetere "Ricetta" (già nel tab).
+     *  Opzionale: i locali che non la definiscono ricadono su recipeCanonical. */
+    recipeCanonicalEyebrow?: string;
     /** Dialog pre-cottura: la ricetta canonica non è ancora adattata. */
     preCookTitle: string;
     preCookBody: string;
@@ -1429,6 +1432,7 @@ export const CMS_DEFAULTS: CmsContent = {
     tabRecipe: "Ricetta",
     tabRecipeTailored: "Ricetta su misura",
     recipeCanonical: "Ricetta canonica",
+    recipeCanonicalEyebrow: "Canonica",
     preCookTitle: "Prima di accendere il forno",
     preCookBody:
       "Questa è ancora la ricetta originale. Puoi partire così, oppure adattarla al tuo forno e ai tuoi tempi prima di iniziare la pizzata.",
