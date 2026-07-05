@@ -24,7 +24,6 @@ type PizzaStyle,
 type UserConstraints,
 } from "../domain/pizza-engine";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
-import { ScoreRing } from "../features/recipe/score-ring";
 import { useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
 SIGNATURE_RECIPES,
@@ -231,7 +230,7 @@ export function ExplorePage() {
   const { cms } = useCms();
   const { effectiveStyles } = useStylesOverride();
   // Fase 4: Scopri è il polo CANONICO. Le card mostrano il match canonico sul tuo
-  // forno (M_c) con una scia fantasma fino al soffitto ottimizzabile (M_o).
+  // forno (M_c) e, quando il margine è reale, la pill "M_c% → M_o%" col soffitto ottimizzabile.
   const { constraints: profileConstraints } = useProfileDefaults();
   const [searchParams, setSearchParams] = useSearchParams();
   const urlFilter = searchParams.get("view");
