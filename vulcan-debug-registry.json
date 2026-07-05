@@ -45,8 +45,9 @@
     "comment": "Andrebbe sistemata posizione navbar e sfumatura sotto. Anche il comportamento on-scroll è da decidere (considera ad es Safari su iphone che sotto ha la barra indirizzi)",
     "priority": "high",
     "index": 1,
-    "updatedAt": 1783283968000,
-    "deleted": true
+    "updatedAt": 1783283969000,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783170718236",
@@ -88,8 +89,9 @@
     "comment": "Sigle come AVPN o STG: dove abbiamo spazio, o lescriviamo per intero o mettiamo un tip",
     "priority": "low",
     "index": 2,
-    "updatedAt": 1783283968000,
-    "deleted": true
+    "updatedAt": 1783283969001,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783170828747",
@@ -131,8 +133,9 @@
     "comment": "scrivere ogni volta \"ricetta\" è ridondante",
     "priority": "medium",
     "index": 3,
-    "updatedAt": 1783283968000,
-    "deleted": true
+    "updatedAt": 1783283969002,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783170865598",
@@ -174,8 +177,9 @@
     "comment": "questo arco fantasma non mi sembra abbia avuto molto successo... Troviamo un altro modo per mostrare in modo semplice e esplicito a quanto può arrivare il match",
     "priority": "medium",
     "index": 4,
-    "updatedAt": 1783283968000,
-    "deleted": true
+    "updatedAt": 1783283969003,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783192002768",
@@ -217,8 +221,9 @@
     "comment": "\"Più rapido\" sarà sempre la prima scelta, che valore aggiunto mi dà? O troviamo un suggerimento valido, o togliamo",
     "priority": "medium",
     "index": 5,
-    "updatedAt": 1783283968000,
-    "deleted": true
+    "updatedAt": 1783283969004,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783192065657",
@@ -260,8 +265,9 @@
     "comment": "controllare riflesso \"glass\" su border top, sembra strano",
     "priority": "low",
     "index": 6,
-    "updatedAt": 1783283968000,
-    "deleted": true
+    "updatedAt": 1783283969005,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783192140444",
@@ -303,7 +309,7 @@
     "comment": "è bello questo glow, su dark rende meglio che su light. Troviamo modo di farlo + evidente in entrambi i mode",
     "priority": "low",
     "index": 7,
-    "updatedAt": 1783283968000,
+    "updatedAt": 1783283969006,
     "deleted": false,
     "resolved": true
   }
