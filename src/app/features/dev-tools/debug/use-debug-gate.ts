@@ -50,24 +50,52 @@ export function useDebugGate() {
 
     let lastTap = 0;
     let tapCount = 0;
+    let replayTimer: number | null = null;
+    let replayTarget: HTMLElement | null = null;
+    const clearReplay = () => {
+      if (replayTimer !== null) window.clearTimeout(replayTimer);
+      replayTimer = null;
+      replayTarget = null;
+    };
     const handleTouchEnd = (e: TouchEvent) => {
       const touch = e.changedTouches[0];
       const inHotCorner = touch && touch.clientX < HOT_CORNER_PX && touch.clientY < HOT_CORNER_PX;
       if (!inHotCorner) {
         tapCount = 0;
+        clearReplay();
         return;
       }
+
+      /* Alcune pagine mostrano un pulsante flottante (es. "indietro" su
+       * /recipe) proprio in questo angolo: senza questa esclusione il primo
+       * tocco navigava via prima che i 3 tocchi potessero completarsi.
+       * Sospendiamo il default e lo "ripetiamo" se non è un triplo-tap, così
+       * il pulsante resta invariato per chi tocca una volta sola. */
+      const target = touch.target as HTMLElement | null;
+      const isDebugUi = !!target?.closest("#vulcan-debug-ui, .vulcan-debug-exclude");
+      const interactiveTarget = isDebugUi
+        ? null
+        : (target?.closest("a,button,[role='button']") as HTMLElement | null);
+      if (interactiveTarget) e.preventDefault();
+
       const now = Date.now();
-      if (now - lastTap < 350) {
-        tapCount++;
-        if (tapCount >= 3) {
-          toggle();
-          tapCount = 0;
-        }
-      } else {
-        tapCount = 1;
-      }
+      tapCount = now - lastTap < 350 ? tapCount + 1 : 1;
       lastTap = now;
+
+      clearReplay();
+      if (tapCount >= 3) {
+        tapCount = 0;
+        toggle();
+        return;
+      }
+      if (interactiveTarget) {
+        replayTarget = interactiveTarget;
+        replayTimer = window.setTimeout(() => {
+          replayTarget?.click();
+          replayTimer = null;
+          replayTarget = null;
+        }, 350);
+      }
     };
 
     window.addEventListener("keydown", handleGlobalKeys);
@@ -75,6 +103,7 @@ export function useDebugGate() {
     return () => {
       window.removeEventListener("keydown", handleGlobalKeys);
       window.removeEventListener("touchend", handleTouchEnd);
+      clearReplay();
     };
   }, [toggle]);
 
