@@ -1430,7 +1430,7 @@ export function HomePage() {
               eyebrow={
                 createDirty
                   ? cms.cooking.recipeAdapted
-                  : cms.cooking.recipeCanonical
+                  : cms.cooking.recipeCanonicalEyebrow ?? cms.cooking.recipeCanonical
               }
               eyebrowTone={createDirty ? "tailored" : "canonical"}
               shareUrl={shareUrl}

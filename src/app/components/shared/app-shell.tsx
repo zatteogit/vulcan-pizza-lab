@@ -289,9 +289,17 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
     let acc = 0;
     let frame = 0;
 
+    /* Massimo scroll reale della pagina. Su Safari iOS lo scrollY va oltre
+       questo valore (o sotto 0 in cima) durante il rubber-band: lo usiamo per
+       clampare ed evitare che l'elastico generi un dy fantasma. */
+    const maxScroll = () =>
+      Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+
     const readScroll = () => {
       frame = 0;
-      const y = window.scrollY;
+      /* Clamp anti rubber-band iOS: senza questo, l'overscroll in cima/fondo
+         produce delta spurii che fanno lampeggiare il dock. */
+      const y = Math.min(Math.max(window.scrollY, 0), maxScroll());
       const dy = y - lastY;
       lastY = y;
       const isScrolled = y > 24;
@@ -333,13 +341,27 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
       frame = window.requestAnimationFrame(readScroll);
     };
 
+    /* Comparsa/scomparsa della barra indirizzi Safari iOS: emette resize (e
+       visualViewport resize) senza uno scroll reale dell'utente. La trattiamo
+       come "mostra il dock" e ri-sincronizziamo lastY, così la barra che
+       ricompare non lascia il dock nascosto né provoca un flip spurio. */
+    const onViewportChange = () => {
+      lastY = Math.min(Math.max(window.scrollY, 0), maxScroll());
+      acc = 0;
+      setState((prev) => (prev.hidden ? { ...prev, hidden: false } : prev));
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("scroll", onScroll, { passive: true, capture: true });
+    window.addEventListener("resize", onViewportChange, { passive: true });
+    window.visualViewport?.addEventListener("resize", onViewportChange);
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("scroll", onScroll, { capture: true } as EventListenerOptions);
+      window.removeEventListener("resize", onViewportChange);
+      window.visualViewport?.removeEventListener("resize", onViewportChange);
     };
   }, [threshold]);
   return state;
@@ -396,10 +418,10 @@ function BottomTabBar({
         <motion.span
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-px"
-          animate={{ opacity: 0.44 }}
+          animate={{ opacity: 0.26 }}
           style={{
             background:
-              "linear-gradient(to right, transparent, color-mix(in srgb, var(--overlay-text) 36%, transparent) 15%, color-mix(in srgb, var(--overlay-text) 36%, transparent) 85%, transparent)",
+              "linear-gradient(to right, transparent, color-mix(in srgb, var(--overlay-text) 20%, transparent) 30%, color-mix(in srgb, var(--overlay-text) 20%, transparent) 70%, transparent)",
           }}
         />
         <div

@@ -24,7 +24,6 @@ type PizzaStyle,
 type UserConstraints,
 } from "../domain/pizza-engine";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
-import { ScoreRing } from "../features/recipe/score-ring";
 import { useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
 SIGNATURE_RECIPES,
@@ -167,7 +166,7 @@ export function ExplorePage() {
   const { cms } = useCms();
   const { effectiveStyles } = useStylesOverride();
   // Fase 4: Scopri è il polo CANONICO. Le card mostrano il match canonico sul tuo
-  // forno (M_c) con una scia fantasma fino al soffitto ottimizzabile (M_o).
+  // forno (M_c) e, quando il margine è reale, la pill "M_c% → M_o%" col soffitto ottimizzabile.
   const { constraints: profileConstraints } = useProfileDefaults();
   const [searchParams, setSearchParams] = useSearchParams();
   const urlFilter = searchParams.get("view");
@@ -250,7 +249,10 @@ export function ExplorePage() {
       id="main-content"
       className="explore-page"
     >
-      {isNerd && <FireGlow intensity={0.3} variant="warm" />}
+      {/* Glow sempre attivo (feedback: "rendiamolo evidente in entrambi i mode",
+          non solo nerd). Un filo più intenso fuori dalla modalità nerd così
+          emerge anche su light, dove il warm si legge meno che su dark. */}
+      <FireGlow intensity={isNerd ? 0.3 : 0.36} variant="warm" />
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -703,6 +705,7 @@ function StyleCatalogCard({
               <div
                 className="explore-card__match-pill"
                 title={match.headroom > 0 ? `Ottimizzabile: ${match.mc}% → ${match.mc + match.headroom}% col tuo setup` : `Match: ${match.mc}%`}
+                aria-label={match.headroom > 0 ? `Compatibilità ${match.mc}%, ottimizzabile fino a ${match.mc + match.headroom}% col tuo setup` : `Compatibilità ${match.mc}%`}
               >
                 <span className="explore-card__match-mc">{match.mc}%</span>
                 {match.headroom > 0 && (

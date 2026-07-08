@@ -1008,7 +1008,7 @@ function RecipeContent({
       ? cmsMessage(cms, "recipeMode.lab", "Laboratorio")
       : isDirty
         ? cms.cooking.recipeAdapted
-        : cmsMessage(cms, "recipeMode.canonical", cms.cooking.recipeCanonical);
+        : cmsMessage(cms, "recipeMode.canonical", cms.cooking.recipeCanonicalEyebrow ?? cms.cooking.recipeCanonical);
 
   /* Photo */
   const photo =
