@@ -105,7 +105,13 @@ flowchart TD
 - **Gestione Placeholder Immagini**: `ImageWithFallback.tsx` intercetta esplicitamente la stringa `"placeholder"` (o sorgenti nulli/vuoti) per forzare il rendering immediato del layout di fallback SVG, prevenendo errori di caricamento del browser o visualizzazioni vuote.
 - `step-header.tsx` è stato rimosso ed integrato in `ds/StepHeader.tsx` (Tier 4).
 - **Modello a 6 Tier**: Rispettare sempre la direzione di consumo `Schermata → T6 → T5 → T4 → T3/T3.5 → (T2 → T1)`. Non consumare mai token primitivi T1 (`--color-*`) o literal hex direttamente nel codice app; consumare solo token semantici T2 o componenti T4.
-- **Enforcement automatico**: L'enforcement dei token e l'integrità del design system sono monitorati tramite `npm run check:tokens` e `npm run verify` integrati nei pre-commit hooks e nella CI.
+- **Enforcement automatico**: L'enforcement dei token e l'integrità del design system sono monitorati tramite tre cricchetti principali in `npm run verify` (e pre-commit hooks):
+  - `check:tokens` — Vieta colori hex, primitivi crudi, font non-standard o rgba inline.
+  - `check:semantics` — Impedisce nuovi stili inline (`style={}`), utility class di Tailwind presentazionali e `<div>` nudi nel markup.
+  - `check:css-tokens` — Vieta dimensioni hardcoded nel CSS consumante (`@layer components` e `layout.css`).
+  - `check-class-parity.mjs` — Utility per verificare a mano la corrispondenza esatta delle classi usate tra i file TSX e i blocchi CSS.
+- **Markup Semantico e Classi Tokenizzate**: Tutta l'applicazione è stata convertita a un design semantico al 100%. Il codice JSX contiene solo classi semantiche ed attributi `data-*` (nessuna classe Tailwind come `flex`, `p-4`, `text-*`), mentre l'intero aspetto visuale è mappato in `theme.css` `@layer components` usando esclusivamente variabili e token standardizzati.
+- **De-duplicazione Superfici Card su Surface**: Il componente `<Surface>` gestisce le varianti di elevazione e superficie (`card`, `container`), azzerando le duplicazioni visive delle card del catalogo, guide e glossario, supportando al contempo lo spread dei props (motion.div, Link).
 - **Dimensionamento Font Fluido per Mobile**: In `theme.css` sono state introdotte media query per ottimizzare la dimensione base del font (`font-size` a `15px` sotto 768px, e a `14.25px` sotto 390px) per migliorare la leggibilità ed evitare sfondamenti di testo sui dispositivi mobili con schermi stretti.
 - **Prevenzione Scroll Orizzontale**: Aggiunto il blocco di sicurezza `overflow-x: hidden` e `max-width: 100%` sui tag `html`, `body` e sui container root di `app-shell.tsx` per impedire lo scroll o il bounce orizzontale della viewport.
 
