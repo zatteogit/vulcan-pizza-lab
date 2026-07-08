@@ -442,13 +442,29 @@ lasciali a baseline (cricchetto), non forzare un atomo finto.
 
 ---
 
-## 11. Prossimo passo architetturale (dopo la tokenizzazione)
+## 11. Passo architetturale — de-dup superfici card (FATTO, commit `4068197`)
 
-Le "card" sono state namespacate per-pagina (`explore-card`, `glossary-card`,
-…): è duplicazione. Il target T4/T5 è un **componente Card riusabile** (e
-simili: media-card, section-header, chip-row) che le pagine compongono. Da
-affrontare DOPO che tutto è semantico+token: estrarre i pattern ricorrenti in
-componenti DS (T4) / composti (T5), riducendo le classi per-feature a varianti.
+**Esito dell'analisi**: NON esiste un "Card unico". Le famiglie divergono in
+~2 ricette di superficie + speciali non unificabili:
+- **surface-low** (`--container-low` + `--outline-variant` + raggio): `surface-card`
+  (già in `Surface`), `troubleshooting-card`/`preferment-guide-card` (duplicati
+  ESATTI), `glossary-card` (stessa superficie, raggio 2xl).
+- **container** (`--container-card` + `--container-border-ghost` + r-2xl): nuova
+  composite `.surface-container` (+ `Surface variant="container"`) — `explore-card`,
+  `interpretation-card`.
+- **speciali (lasciati)**: `recipe-view-card` (glass hero), `needs-oven-card` (è un
+  chip), `match-card`/`recommended-card` (wrapper di posizionamento).
+
+**Fatto**: le 5 card che duplicavano la superficie ora **compongono il componente
+`<Surface>`** (`as={motion.div}`/`as={Link}`, `variant="card"|"container"`), non la
+classe (il guard `composite-class-bypass` F5-6 VIETA `surface-*` nel markup fuori
+da `ds/`). Le classi per-feature tengono solo le specifiche (overflow, raggio 2xl,
+padding, media/scrim/badge…). Render byte-identico. `Surface as={motion.div}` e
+`as={Link}` typecheck-ano (spread `{...props}` inoltra motion/Link props).
+
+**Ancora aperto** (se si vuole spingere oltre): estrarre pattern ricorrenti
+(media-card, section-header, chip-row) in composti T5; unificare le famiglie
+"container" e "surface-low" con un raggio parametrico su `Surface`.
 
 ---
 
