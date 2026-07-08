@@ -16,14 +16,14 @@ export function ScoreRing({ score, color, size = 36 }: ScoreRingProps) {
   const offset = circ * (1 - score / 100);
   return (
     <div
-      className="relative"
-      style={{ width: size, height: size }}
+      className="score-ring"
+      style={{ ["--score-ring-size" as any]: `${size}px` }}
     >
       <svg
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
-        style={{ display: "block" }}
+        className="score-ring__svg"
       >
         {/* Background circle */}
         <circle
@@ -46,10 +46,7 @@ export function ScoreRing({ score, color, size = 36 }: ScoreRingProps) {
           strokeDasharray={circ}
           strokeDashoffset={offset}
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
-          style={{
-            transition:
-              "stroke-dashoffset 0.8s cubic-bezier(0.16,1,0.3,1)",
-          }}
+          className="score-ring__progress"
         />
         {/* Number */}
         <text
@@ -61,7 +58,7 @@ export function ScoreRing({ score, color, size = 36 }: ScoreRingProps) {
           fontSize={size * 0.33}
           fontWeight="700"
           fontFamily="var(--font-sans)"
-          style={{ fontFeatureSettings: "'tnum'" }}
+          className="score-ring__text"
         >
           {score}
         </text>

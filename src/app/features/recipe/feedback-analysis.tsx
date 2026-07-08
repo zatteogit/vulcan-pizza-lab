@@ -105,22 +105,22 @@ export function FeedbackAnalysisPanel() {
   }, [reload]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="feedback-analysis">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div style={{ fontSize: "var(--font-size-2xl)", fontWeight: "var(--weight-bold)", color: "var(--text-default)" }}>
+      <div className="feedback-analysis__header">
+        <div className="feedback-analysis__header-info">
+          <div className="feedback-analysis__header-title">
             Feedback & Calibrazione
           </div>
-          <div className="type-body" style={{ color: "var(--muted-foreground)" }}>
+          <div className="type-body feedback-analysis__header-meta">
             {feedback.length} feedback · {attempted.length} tentati · {successCount} riusciti
           </div>
         </div>
-        <div className="flex gap-2">
-          <SmallButton icon={copyDone ? <Check style={{ width: "var(--space-3)", height: "var(--space-3)" }} /> : <Copy style={{ width: "var(--space-3)", height: "var(--space-3)" }} />} label="Export" onClick={handleExport} />
-          <SmallButton icon={<Download style={{ width: "var(--space-3)", height: "var(--space-3)" }} />} label="Export CSV" onClick={handleExportCSV} />
-          <SmallButton icon={<Upload style={{ width: "var(--space-3)", height: "var(--space-3)" }} />} label="Import" onClick={handleImport} />
-          <SmallButton icon={<Trash2 style={{ width: "var(--space-3)", height: "var(--space-3)" }} />} label="Reset" onClick={handleClear} danger />
+        <div className="feedback-analysis__header-actions">
+          <SmallButton icon={copyDone ? <Check className="feedback-analysis__btn-icon" /> : <Copy className="feedback-analysis__btn-icon" />} label="Export" onClick={handleExport} />
+          <SmallButton icon={<Download className="feedback-analysis__btn-icon" />} label="Export CSV" onClick={handleExportCSV} />
+          <SmallButton icon={<Upload className="feedback-analysis__btn-icon" />} label="Import" onClick={handleImport} />
+          <SmallButton icon={<Trash2 className="feedback-analysis__btn-icon" />} label="Reset" onClick={handleClear} danger />
         </div>
       </div>
 
@@ -128,14 +128,14 @@ export function FeedbackAnalysisPanel() {
       <Section
         id="overview"
         title="Panoramica Calibrazione"
-        icon={<Target style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />}
+        icon={<Target className="feedback-analysis__section-icon-svg" />}
         active={activeSection}
         onToggle={setActiveSection}
       >
         {calibration[0]?.verdict === "insufficient_data" ? (
           <EmptyState message={`Servono almeno 5 feedback con rating per l'analisi di calibrazione. Attualmente: ${calibration[0].sampleCount}.`} />
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="feedback-analysis__list feedback-analysis__list--wide-gap">
             {calibration.map((cal) => (
               <CalibrationRow key={cal.dimension} cal={cal} />
             ))}
@@ -146,7 +146,7 @@ export function FeedbackAnalysisPanel() {
       <Section
         id="issues"
         title="Problemi Frequenti"
-        icon={<AlertTriangle style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />}
+        icon={<AlertTriangle className="feedback-analysis__section-icon-svg" />}
         active={activeSection}
         onToggle={setActiveSection}
         badge={issueFreq.length > 0 ? issueFreq.length : undefined}
@@ -154,30 +154,19 @@ export function FeedbackAnalysisPanel() {
         {issueFreq.length === 0 ? (
           <EmptyState message="Nessun problema segnalato. I feedback con issues popoleranno questa sezione." />
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="feedback-analysis__list">
             {issueFreq.slice(0, 10).map((issue) => (
-              <div
-                key={issue.issueId}
-                className="flex items-center justify-between px-3 py-2 rounded-xl"
-                style={{ background: "var(--surface-container)" }}
-              >
-                <div>
-                  <span className="type-body-lg" style={{ color: "var(--text-default)" }}>
+              <div key={issue.issueId} className="feedback-analysis__row">
+                <div className="feedback-analysis__issue-info">
+                  <span className="type-body-lg feedback-analysis__issue-label">
                     {issue.label}
                   </span>
-                  <span className="type-body-sm" style={{ color: "var(--muted-foreground)", marginLeft: "var(--space-2)" }}>
+                  <span className="type-body-sm feedback-analysis__issue-meta">
                     H̄={issue.avgParams.hydration}% · T̄={issue.avgParams.ovenTemp}°C · t̄={issue.avgParams.fermentHours}h
                   </span>
                 </div>
                 <div
-                  className="rounded-lg px-2 py-0.5"
-                  style={{
-                    fontSize: "var(--font-size-md)",
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: "var(--weight-bold)",
-                    background: issue.count >= 3 ? "var(--primary)" : "var(--surface-container-high)",
-                    color: issue.count >= 3 ? "var(--overlay-text)" : "var(--text-default)",
-                  }}
+                  className={`feedback-analysis__issue-count${issue.count >= 3 ? " feedback-analysis__issue-count--hot" : ""}`}
                 >
                   {issue.count}×
                 </div>
@@ -190,41 +179,34 @@ export function FeedbackAnalysisPanel() {
       <Section
         id="styles"
         title="Success Rate per Stile"
-        icon={<BarChart3 style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />}
+        icon={<BarChart3 className="feedback-analysis__section-icon-svg" />}
         active={activeSection}
         onToggle={setActiveSection}
       >
         {styleSuccess.length === 0 ? (
           <EmptyState message="Nessun tentativo registrato. Prova una ricetta e lascia feedback!" />
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="feedback-analysis__list">
             {styleSuccess.map((s) => (
-              <div
-                key={s.styleId}
-                className="flex items-center justify-between px-3 py-2 rounded-xl"
-                style={{ background: "var(--surface-container)" }}
-              >
-                <div className="flex flex-col">
-                  <span className="type-body-lg" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" }}>
+              <div key={s.styleId} className="feedback-analysis__row">
+                <div className="feedback-analysis__style-info">
+                  <span className="type-body-lg feedback-analysis__style-name">
                     {s.styleName}
                   </span>
-                  <span className="type-body-sm" style={{ color: "var(--muted-foreground)" }}>
+                  <span className="type-body-sm feedback-analysis__style-meta">
                     {s.attempts} tentativi · predicted {s.avgPredictedComposite}
                     {s.calibrationGap !== 0 && (
-                      <span style={{ color: s.calibrationGap > 10 ? "var(--primary)" : "var(--cta)" }}>
+                      <span className={`feedback-analysis__style-gap${s.calibrationGap > 10 ? " feedback-analysis__style-gap--high" : ""}`}>
                         {" "}({s.calibrationGap > 0 ? "+" : ""}{s.calibrationGap} bias)
                       </span>
                     )}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="feedback-analysis__style-rate-wrap">
                   <SuccessBar rate={s.successRate} />
-                  <span style={{
-                    fontSize: "var(--font-size-md)",
-                    fontFamily: "var(--font-mono)",
-                    fontWeight: "var(--weight-bold)",
-                    color: s.successRate >= 70 ? "var(--cta)" : s.successRate >= 40 ? "var(--tertiary)" : "var(--primary)",
-                  }}>
+                  <span className={`feedback-analysis__style-rate${
+                    s.successRate >= 70 ? "" : s.successRate >= 40 ? " feedback-analysis__style-rate--mid" : " feedback-analysis__style-rate--low"
+                  }`}>
                     {s.successRate}%
                   </span>
                 </div>
@@ -237,15 +219,15 @@ export function FeedbackAnalysisPanel() {
       <Section
         id="adversarial"
         title="Audit Adversarial"
-        icon={<Bug style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />}
+        icon={<Bug className="feedback-analysis__section-icon-svg" />}
         active={activeSection}
         onToggle={setActiveSection}
         badge={adversarial.filter((f) => f.confirmedByFeedback).length || undefined}
       >
-        <div className="type-body" style={{ color: "var(--muted-foreground)", marginBottom: "var(--space-2)" }}>
+        <div className="type-body feedback-analysis__adversarial-intro">
           Problemi noti nel motore, incrociati con feedback utente per conferma/smentita.
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="feedback-analysis__list">
           {adversarial.map((finding) => (
             <AdversarialRow key={finding.id} finding={finding} />
           ))}
@@ -264,15 +246,8 @@ function SmallButton({
 }) {
   return (
     <motion.button
-      className="rounded-lg px-2.5 py-1.5 flex items-center gap-1.5 active:scale-95"
+      className={`feedback-analysis__btn${danger ? " feedback-analysis__btn--danger" : ""}`}
       onClick={onClick}
-      style={{
-        fontSize: "var(--font-size-base)",
-        border: `var(--border-width-thin) solid ${danger ? "var(--primary)" : "var(--outline-variant)"}`,
-        background: "var(--surface-container)",
-        color: danger ? "var(--primary)" : "var(--text-default)",
-        cursor: "pointer",
-      }}
       aria-label={label}
     >
       {icon}
@@ -290,35 +265,19 @@ function Section({
 }) {
   const isOpen = active === id;
   return (
-    <div
-      className="rounded-2xl overflow-hidden"
-      style={{
-        background: "var(--surface-container-low)",
-        border: "var(--border-width-thin) solid var(--outline-variant)",
-      }}
-    >
+    <div className="feedback-analysis__section">
       <motion.button
-        className="w-full flex items-center justify-between px-4 py-3 active:scale-98"
+        className="feedback-analysis__section-trigger"
         onClick={() => onToggle(isOpen ? null : id)}
-        style={{ background: "none", border: "none", cursor: "pointer" }}
         aria-expanded={isOpen}
       >
-        <div className="flex items-center gap-2">
-          <span style={{ color: "var(--primary)" }}>{icon}</span>
-          <span className="type-body-lg" style={{ fontWeight: "var(--weight-semibold)", color: "var(--text-default)" }}>
+        <div className="feedback-analysis__section-heading">
+          <span className="feedback-analysis__section-icon">{icon}</span>
+          <span className="type-body-lg feedback-analysis__section-title">
             {title}
           </span>
           {badge !== undefined && badge > 0 && (
-            <span
-              className="rounded-full px-1.5 py-0.5"
-              style={{
-                fontSize: "var(--font-size-sm)",
-                fontFamily: "var(--font-mono)",
-                fontWeight: "var(--weight-bold)",
-                background: "var(--primary)",
-                color: "var(--overlay-text)",
-              }}
-            >
+            <span className="feedback-analysis__section-badge">
               {badge}
             </span>
           )}
@@ -327,7 +286,7 @@ function Section({
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
         >
-          <ChevronDown style={{ color: "var(--muted-foreground)", width: "var(--font-size-xl)", height: "var(--font-size-xl)" }} />
+          <ChevronDown className="feedback-analysis__section-chevron" />
         </motion.div>
       </motion.button>
       <AnimatePresence>
@@ -337,10 +296,10 @@ function Section({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="overflow-hidden"
+            className="feedback-analysis__section-panel"
           >
-            <div className="px-4 pb-4" style={{ borderTop: "1px solid var(--outline-variant)" }}>
-              <div className="pt-3">{children}</div>
+            <div className="feedback-analysis__section-panel-inner">
+              <div className="feedback-analysis__section-panel-content">{children}</div>
             </div>
           </motion.div>
         )}
@@ -377,21 +336,21 @@ function CalibrationRow({ cal }: { cal: CalibrationResult }) {
     : HelpCircle;
 
   return (
-    <div
-      className="flex items-center justify-between px-3 py-2.5 rounded-xl"
-      style={{ background: "var(--surface-container)" }}
-    >
-      <div className="flex flex-col">
-        <span className="type-body-lg" style={{ fontWeight: "var(--weight-semibold)", color: "var(--text-default)" }}>
+    <div className="feedback-analysis__row feedback-analysis__row--tall">
+      <div className="feedback-analysis__calibration-info">
+        <span className="type-body-lg feedback-analysis__calibration-label">
           {dimLabels[cal.dimension] ?? cal.dimension}
         </span>
-        <span style={{ fontSize: "var(--font-size-base)", color: "var(--muted-foreground)", fontFamily: "var(--font-mono)" }}>
+        <span className="feedback-analysis__calibration-stats">
           bias={cal.meanBias > 0 ? "+" : ""}{cal.meanBias} · σ={cal.stdDev} · r={cal.correlation} · n={cal.sampleCount}
         </span>
       </div>
-      <div className="flex items-center gap-1.5">
-        <VerdictIcon style={{ width: "var(--font-size-xl)", height: "var(--font-size-xl)", color: verdictColors[cal.verdict] }} />
-        <span className="type-body" style={{ fontWeight: "var(--weight-semibold)", color: verdictColors[cal.verdict] }}>
+      <div
+        className="feedback-analysis__calibration-verdict"
+        style={{ ["--tone" as any]: verdictColors[cal.verdict] }}
+      >
+        <VerdictIcon className="feedback-analysis__calibration-verdict-icon" />
+        <span className="type-body feedback-analysis__calibration-verdict-label">
           {verdictLabels[cal.verdict]}
         </span>
       </div>
@@ -400,18 +359,12 @@ function CalibrationRow({ cal }: { cal: CalibrationResult }) {
 }
 
 function SuccessBar({ rate }: { rate: number }) {
+  const toneClass = rate >= 70 ? "" : rate >= 40 ? " feedback-analysis__success-bar-fill--mid" : " feedback-analysis__success-bar-fill--low";
   return (
-    <div
-      className="rounded-full overflow-hidden"
-      style={{ width: "var(--space-12)", height: "var(--space-1-5)", background: "var(--surface-container-high)" }}
-    >
+    <div className="feedback-analysis__success-bar">
       <div
-        className="h-full rounded-full"
-        style={{
-          width: `${rate}%`,
-          background: rate >= 70 ? "var(--cta)" : rate >= 40 ? "var(--tertiary)" : "var(--primary)",
-          transition: "width 0.3s",
-        }}
+        className={`feedback-analysis__success-bar-fill${toneClass}`}
+        style={{ ["--rate" as any]: `${rate}%` }}
       />
     </div>
   );
@@ -419,11 +372,6 @@ function SuccessBar({ rate }: { rate: number }) {
 
 function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
   const [expanded, setExpanded] = useState(false);
-  const severityColors: Record<string, string> = {
-    bug: "var(--primary)",
-    bias: "var(--tertiary)",
-    noise: "var(--muted-foreground)",
-  };
   const severityLabels: Record<string, string> = {
     bug: "BUG",
     bias: "BIAS",
@@ -431,74 +379,36 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
   };
 
   return (
-    <div
-      className="rounded-xl overflow-hidden"
-      style={{
-        background: "var(--surface-container)",
-        border: `1px solid ${finding.confirmedByFeedback ? "var(--primary)" : "var(--outline-variant)"}`,
-      }}
-    >
+    <div className={`feedback-analysis__adversarial${finding.confirmedByFeedback ? " feedback-analysis__adversarial--confirmed" : ""}`}>
       <motion.button
-        className="w-full flex items-center gap-2 px-3 py-2 active:scale-98"
+        className="feedback-analysis__adversarial-trigger"
         onClick={() => setExpanded(!expanded)}
-        style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left" }}
       >
-        <span
-          className="rounded px-1.5 py-0.5 shrink-0"
-          style={{
-            fontSize: "var(--font-size-xs)",
-            fontFamily: "var(--font-mono)",
-            fontWeight: "var(--weight-extrabold)" as any,
-            letterSpacing: "0.08em",
-            background: severityColors[finding.severity],
-            color: "var(--overlay-text)",
-          }}
-        >
+        <span className={`feedback-analysis__severity-badge${
+          finding.severity === "bug" ? " feedback-analysis__severity-badge--bug"
+          : finding.severity === "bias" ? " feedback-analysis__severity-badge--bias"
+          : " feedback-analysis__severity-badge--noise"
+        }`}>
           {severityLabels[finding.severity]}
         </span>
-        <span
-          className="rounded px-1 py-0.5 shrink-0"
-          style={{
-            fontSize: "var(--font-size-xs)",
-            fontFamily: "var(--font-mono)",
-            fontWeight: "var(--weight-bold)",
-            background: "var(--surface-container-high)",
-            color: "var(--muted-foreground)",
-          }}
-        >
+        <span className="feedback-analysis__adversarial-id">
           {finding.id}
         </span>
-        <span className="type-body" style={{ color: "var(--text-default)", flex: 1 }}>
+        <span className="type-body feedback-analysis__adversarial-title">
           {finding.title}
         </span>
         {finding.fixed && (
-          <span
-            className="rounded-full px-1.5 py-0.5 shrink-0"
-            style={{
-              fontSize: "var(--font-size-xs)",
-              fontWeight: "var(--weight-bold)",
-              background: "var(--cta)",
-              color: "var(--overlay-text)",
-            }}
-          >
+          <span className="feedback-analysis__adversarial-tag feedback-analysis__adversarial-tag--fixed">
             FIXED
           </span>
         )}
         {finding.confirmedByFeedback && (
-          <span
-            className="rounded-full px-1.5 py-0.5 shrink-0"
-            style={{
-              fontSize: "var(--font-size-xs)",
-              fontWeight: "var(--weight-bold)",
-              background: "var(--primary)",
-              color: "var(--overlay-text)",
-            }}
-          >
+          <span className="feedback-analysis__adversarial-tag feedback-analysis__adversarial-tag--confirmed">
             CONFERMATO
           </span>
         )}
         {finding.feedbackCount > 0 && !finding.confirmedByFeedback && (
-          <span style={{ fontSize: "var(--font-size-sm)", color: "var(--muted-foreground)", fontFamily: "var(--font-mono)" }}>
+          <span className="feedback-analysis__adversarial-fbcount">
             {finding.feedbackCount}fb
           </span>
         )}
@@ -510,21 +420,18 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="overflow-hidden"
+            className="feedback-analysis__adversarial-panel"
           >
-            <div
-              className="px-3 pb-3 flex flex-col gap-2"
-              style={{ borderTop: "var(--border-width-thin) solid var(--outline-variant)", fontSize: "var(--font-size-md)" }}
-            >
-              <div className="pt-2" style={{ color: "var(--text-default)" }}>
+            <div className="feedback-analysis__adversarial-detail">
+              <div className="feedback-analysis__adversarial-desc">
                 {finding.description}
               </div>
-              <div style={{ color: "var(--muted-foreground)" }}>
-                <span style={{ fontWeight: "var(--weight-semibold)" as any }}>Stili:</span>{" "}
+              <div className="feedback-analysis__adversarial-styles">
+                <span className="feedback-analysis__adversarial-detail-label">Stili:</span>{" "}
                 {finding.affectedStyles.join(", ")}
               </div>
-              <div style={{ color: "var(--cta)" }}>
-                <span style={{ fontWeight: "var(--weight-semibold)" as any }}>Fix:</span>{" "}
+              <div className="feedback-analysis__adversarial-fix">
+                <span className="feedback-analysis__adversarial-detail-label">Fix:</span>{" "}
                 {finding.suggestedFix}
               </div>
             </div>
@@ -537,8 +444,8 @@ function AdversarialRow({ finding }: { finding: AdversarialFinding }) {
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="py-4 text-center" style={{ color: "var(--muted-foreground)", fontSize: "var(--font-size-lg)" }}>
-      <Info style={{ width: "var(--space-5)", height: "var(--space-5)", margin: "var(--space-0) auto var(--space-2)", opacity: 0.5 }} />
+    <div className="feedback-analysis__empty">
+      <Info className="feedback-analysis__empty-icon" />
       {message}
     </div>
   );

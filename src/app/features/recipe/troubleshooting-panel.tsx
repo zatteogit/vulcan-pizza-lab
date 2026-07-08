@@ -26,24 +26,18 @@ ISSUES_DB
 
 /* === SEVERITY ICON MAP === */
 const SeverityIcon = ({ severity }: { severity: string }) => {
-  if (severity === 'critical') return <XCircle style={{ width: 'var(--space-4)', height: 'var(--space-4)', color: 'var(--destructive)' }} />;
-  if (severity === 'warning') return <AlertTriangle style={{ width: 'var(--space-4)', height: 'var(--space-4)', color: 'var(--tertiary)' }} />;
-  return <Info style={{ width: 'var(--space-4)', height: 'var(--space-4)', color: 'var(--secondary)' }} />;
+  if (severity === 'critical') return <XCircle className="troubleshooting-severity-icon troubleshooting-severity-icon--critical" />;
+  if (severity === 'warning') return <AlertTriangle className="troubleshooting-severity-icon troubleshooting-severity-icon--warning" />;
+  return <Info className="troubleshooting-severity-icon troubleshooting-severity-icon--info" />;
 };
 
-const severityBg = (s: string) =>
-  s === 'critical'
-    ? 'color-mix(in srgb, var(--destructive) 8%, transparent)'
-    : s === 'warning'
-      ? 'color-mix(in srgb, var(--tertiary) 8%, transparent)'
-      : 'color-mix(in srgb, var(--secondary) 6%, transparent)';
-
-const severityBorder = (s: string) =>
-  s === 'critical'
-    ? 'color-mix(in srgb, var(--destructive) 20%, transparent)'
-    : s === 'warning'
-      ? 'color-mix(in srgb, var(--tertiary) 20%, transparent)'
-      : 'color-mix(in srgb, var(--secondary) 12%, transparent)';
+/* Classe modifier per severità della card avviso (costruita in JS, non nel JSX:
+   evita literal className dinamici — vedi CSS per le 3 varianti). */
+function warningItemClass(severity: string) {
+  if (severity === 'critical') return 'troubleshooting-warnings__item troubleshooting-warnings__item--critical';
+  if (severity === 'warning') return 'troubleshooting-warnings__item troubleshooting-warnings__item--warning';
+  return 'troubleshooting-warnings__item troubleshooting-warnings__item--info';
+}
 
 /* === CONTEXTUAL WARNINGS (inline in recipe) === */
 interface ContextualWarningsProps {
@@ -71,40 +65,18 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
   return (
     <motion.div
       data-region="section"
+      className="troubleshooting-warnings"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      style={{
-        background: 'var(--surface-container-low)',
-        border: '1px solid var(--outline-variant)',
-        borderRadius: 'var(--radius-lg)',
-        padding: 'var(--space-4) var(--space-5)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--space-3)',
-      }}
     >
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-        <Lightbulb style={{ width: 'var(--space-4)', height: 'var(--space-4)', color: 'var(--tertiary)' }} />
-        <span
-          style={{
-            fontSize: '0.6875rem',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase' as const,
-            color: 'var(--tertiary)',
-            fontWeight: 'var(--weight-semibold)' as any,
-          }}
-        >
+      <div className="troubleshooting-warnings__header">
+        <Lightbulb className="troubleshooting-warnings__header-icon" />
+        <span className="troubleshooting-warnings__label">
           Suggerimenti
         </span>
-        <span
-          style={{
-            marginLeft: 'auto',
-            fontSize: '0.75rem',
-            color: 'var(--muted-foreground)',
-          }}
-        >
+        <span className="troubleshooting-warnings__count">
           {warnings.length} avvis{warnings.length === 1 ? 'o' : 'i'}
         </span>
       </div>
@@ -114,29 +86,21 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
         {shown.map((w, i) => (
           <motion.div
             key={w.issueId + i}
+            className={warningItemClass(w.severity)}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-            style={{
-              background: severityBg(w.severity),
-              border: `1px solid ${severityBorder(w.severity)}`,
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--space-1-5) var(--space-4)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--space-1-5)',
-            }}
           >
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-2)' }}>
-              <div style={{ marginTop: 'var(--space-0-5)', flexShrink: 0 }}>
+            <div className="troubleshooting-warnings__item-row">
+              <div className="troubleshooting-warnings__item-icon">
                 <SeverityIcon severity={w.severity} />
               </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 'var(--font-size-lg)', color: 'var(--text-default)', lineHeight: 1.4 }}>
+              <div className="troubleshooting-warnings__item-body">
+                <div className="troubleshooting-warnings__item-message">
                   {w.message}
                 </div>
-                <div style={{ fontSize: 'var(--font-size-md)', color: 'var(--muted-foreground)', lineHeight: 1.4, marginTop: 'var(--space-0-5)' }}>
+                <div className="troubleshooting-warnings__item-tip">
                   💡 {w.tip}
                 </div>
               </div>
@@ -148,28 +112,16 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
       {/* Show more */}
       {hasMore && (
         <motion.button
-          className="active:scale-95"
+          className="troubleshooting-warnings__toggle"
           onClick={() => setExpanded(!expanded)}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.375rem',
-            fontSize: '0.75rem',
-            color: 'var(--primary)',
-            padding: '0.375rem',
-          }}
         >
           {expanded ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
-              <ChevronUp style={{ width: 'var(--font-size-xl)', height: 'var(--font-size-xl)' }} /> Mostra meno
+            <div className="troubleshooting-warnings__toggle-content">
+              <ChevronUp className="troubleshooting-warnings__toggle-icon" /> Mostra meno
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1)' }}>
-              <ChevronDown style={{ width: 'var(--font-size-xl)', height: 'var(--font-size-xl)' }} /> +{warnings.length - 2} altr{warnings.length - 2 === 1 ? 'o' : 'i'}
+            <div className="troubleshooting-warnings__toggle-content">
+              <ChevronDown className="troubleshooting-warnings__toggle-icon" /> +{warnings.length - 2} altr{warnings.length - 2 === 1 ? 'o' : 'i'}
             </div>
           )}
         </motion.button>
@@ -220,41 +172,30 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
   });
 
   return (
-    <div data-region="section" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+    <div data-region="section" className="troubleshooting-guide">
       {/* Title */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-        <Wrench style={{ width: 'var(--font-size-3xl)', height: 'var(--font-size-3xl)', color: 'var(--primary)' }} />
-        <span style={{ fontFamily: 'var(--font-serif)', fontSize: 'var(--font-size-5xl)', color: 'var(--text-default)' }}>
+      <div className="troubleshooting-guide__title-row">
+        <Wrench className="troubleshooting-guide__title-icon" />
+        <span className="troubleshooting-guide__title">
           Guida Troubleshooting
         </span>
-        
       </div>
 
       {/* Search */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 'var(--space-2)',
-        background: 'var(--surface-container)',
-        border: 'var(--border-width-thin) solid var(--outline-variant)',
-        borderRadius: 'var(--radius-md)',
-        padding: 'var(--space-2) var(--space-3)',
-      }}>
-        <Search style={{ width: 'var(--font-size-xl)', height: 'var(--font-size-xl)', color: 'var(--muted-foreground)', flexShrink: 0 }} />
+      <div className="troubleshooting-guide__search">
+        <Search className="troubleshooting-guide__search-icon" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={cms.pages.troubleshootSearchPlaceholder}
-          style={{
-            flex: 1, border: 'none', background: 'transparent', outline: 'none',
-            fontSize: 'var(--font-size-lg)', color: 'var(--text-default)',
-            fontFamily: 'inherit',
-          }}
+          className="troubleshooting-guide__search-input"
         />
       </div>
 
       {/* Category chips */}
       <motion.div
-        style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-1-5)' }}
+        className="troubleshooting-guide__chips"
         initial="hidden"
         animate="visible"
         variants={{
@@ -294,18 +235,15 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
 
       {/* Issues list */}
       <AnimatePresence mode="popLayout">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+        <div className="troubleshooting-guide__list">
           {filtered.length === 0 && (
             <motion.div
               key="empty"
+              className="troubleshooting-guide__empty"
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-              style={{
-                textAlign: 'center', padding: 'var(--space-8)',
-                color: 'var(--muted-foreground)', fontSize: 'var(--font-size-lg)',
-              }}
             >
               {cms.misc.noTroubleshootingResults}
             </motion.div>
@@ -347,51 +285,27 @@ function IssueCard({
   const catLabel = getLocalizedCategoryLabel(issue.category, cms);
 
   return (
-    <motion.div
-      style={{
-        background: 'var(--surface-container-low)',
-        border: 'var(--border-width-thin) solid var(--outline-variant)',
-        borderRadius: 'var(--radius-lg)',
-        overflow: 'hidden',
-      }}
-    >
+    <motion.div className="troubleshooting-card">
       {/* Header — always visible */}
       <motion.button
-        className="active:scale-95"
+        className="troubleshooting-card__toggle"
         onClick={onToggle}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 'var(--space-2-5)',
-          padding: 'var(--font-size-xl) var(--space-4)',
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-          textAlign: 'left',
-          fontFamily: 'inherit',
-        }}
       >
         <SeverityIcon severity={issue.severity} />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-1-5)', flexWrap: 'wrap' }}>
-            
-            <span style={{
-              fontSize: 'var(--font-size-xs)', color: 'var(--muted-foreground)',
-              background: 'var(--surface-container)',
-              padding: 'var(--space-px) var(--space-1-5)', borderRadius: 'var(--radius-xs)',
-            }}>
+        <div className="troubleshooting-card__toggle-body">
+          <div className="troubleshooting-card__meta-row">
+            <span className="troubleshooting-card__badge">
               {catLabel}
             </span>
           </div>
-          <div style={{ fontSize: 'var(--font-size-lg)', color: 'var(--text-default)', lineHeight: 1.4, marginTop: 'var(--space-1)' }}>
+          <div className="troubleshooting-card__symptom">
             {issue.symptom}
           </div>
         </div>
-        <div style={{ flexShrink: 0, color: 'var(--muted-foreground)' }}>
+        <div className="troubleshooting-card__chevron">
           {expanded
-            ? <ChevronUp style={{ width: 'var(--space-4)', height: 'var(--space-4)' }} />
-            : <ChevronDown style={{ width: 'var(--space-4)', height: 'var(--space-4)' }} />
+            ? <ChevronUp className="troubleshooting-card__chevron-icon" />
+            : <ChevronDown className="troubleshooting-card__chevron-icon" />
           }
         </div>
       </motion.button>
@@ -400,20 +314,13 @@ function IssueCard({
       <AnimatePresence>
         {expanded && (
           <motion.div
+            className="troubleshooting-card__detail"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            style={{ overflow: 'hidden' }}
           >
-            <div style={{
-              padding: 'var(--space-0) var(--space-4) var(--space-4)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--space-3)',
-              borderTop: 'var(--border-width-thin) solid var(--outline-variant)',
-              paddingTop: 'var(--space-3)',
-            }}>
+            <div className="troubleshooting-card__detail-body">
               {/* Causa */}
               <DetailRow icon="🔍" label="Causa" value={issue.cause} />
               {/* Test rapido */}
@@ -440,32 +347,17 @@ function DetailRow({
 }: {
   icon: string; label: string; value: string; highlight?: boolean;
 }) {
+  const rowClass = highlight
+    ? 'troubleshooting-detail-row troubleshooting-detail-row--highlight'
+    : 'troubleshooting-detail-row';
   return (
-    <div style={{
-      display: 'flex', gap: 'var(--space-2)',
-      ...(highlight ? {
-        background: 'color-mix(in srgb, var(--destructive) 6%, transparent)',
-        borderRadius: 'var(--radius-sm)',
-        padding: 'var(--space-2) var(--space-2-5)',
-        margin: 'var(--space-0) calc(-1 * var(--space-2-5))',
-      } : {}),
-    }}>
-      <span style={{ flexShrink: 0, fontSize: 'var(--font-size-lg)' }}>{icon}</span>
-      <div>
-        <span
-          style={{
-            fontSize: 'var(--font-size-xs)',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase' as const,
-            color: 'var(--muted-foreground)',
-            display: 'block',
-            marginBottom: 'var(--space-0-5)',
-            fontWeight: 'var(--weight-semibold)' as any,
-          }}
-        >
+    <div className={rowClass}>
+      <span className="troubleshooting-detail-row__icon">{icon}</span>
+      <div className="troubleshooting-detail-row__body">
+        <span className="troubleshooting-detail-row__label">
           {label}
         </span>
-        <span style={{ fontSize: 'var(--font-size-lg)', color: 'var(--text-default)', lineHeight: 1.5 }}>
+        <span className="troubleshooting-detail-row__value">
           {value}
         </span>
       </div>

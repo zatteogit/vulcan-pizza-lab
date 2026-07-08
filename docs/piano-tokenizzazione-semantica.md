@@ -399,6 +399,23 @@ ondata ha il suo commit di checkpoint sul branch `refactor/tokenizzazione`.
   `style={{ y|scale|opacity: <MotionValue> }}` (parallax hero + card lift via
   `useTransform`) — inconvertibili (aggiornati per-frame da Framer Motion),
   ratchettati come il residuo di `home.tsx` (ondata 1).
+- **Ondata 4** — atomi one-off nuovi (definiti in `theme.css` T1, non literal):
+  `--elevation-dock`/`--elevation-dock-active` (capsula pillola tab e segmento
+  attivo, `recipe-section-tabs`), `--elevation-chip-active` (pill condimento
+  selezionato), `--rating-star-size` (22px, stelle recipe-feedback — come
+  `interpretation-card__badge`), `--tilt-perspective` (900px), `--video-blur-in`
+  (16px, fade-in video style-detail), `--detail-sheet-hero-height`
+  (`clamp(160px,38vw,220px)`), `--toggle-padding-block` (1.1rem), le geometrie
+  picker condimento (`--condiment-*`) e i bound clamp navbar (`--section-tabs-*`,
+  ramo navbar non instradato ma preservato). Scale estese: `--leading-cozy`
+  (1.55), `--blur-2xs` (6px), `--measure-1xs` (320px). NB: `roundDockButtonStyle`
+  in `recipe-section-tabs.tsx` resta un `CSSProperties` inline passato a
+  `SearchButton` via prop `surfaceStyle` (non un `style=` di markup) — invariato.
+- **Ondata 4** — residui semantics accettati (≤ baseline, non nuovi):
+  `tilt-card.tsx` 2 `style={{ rotateX|rotateY }}` + `{{ background|opacity }}`
+  (MotionValue runtime, come recipe-view); `score-ring.tsx` 1 markup-presentation
+  (attributi SVG `<circle>`/`<text>` geometrici, non presentazione CSS —
+  intenzionalmente non tokenizzati).
 
 Se durante il lavoro emergono altri one-off legittimi, documentali qui e
 lasciali a baseline (cricchetto), non forzare un atomo finto.

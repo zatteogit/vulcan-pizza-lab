@@ -161,66 +161,44 @@ export function CondimentChoiceStrip({
   };
 
   return (
-    <div className="relative">
+    <div className="condiment-strip">
       <div
         ref={scrollRef}
         onScroll={updateFades}
-        className={`flex gap-2 overflow-x-auto pb-1.5 hide-scrollbar ${
-          isTimeline ? "topping-strip-timeline" : ""
-        }`}
+        className="condiment-strip__rail hide-scrollbar"
         aria-label={cms.cooking.chooseTopping}
       >
         {railChoices.map(({ recipe }) => {
           const concept = TOPPING_CONCEPTS[recipe.concept_ref];
           const active = activeConceptId === recipe.id;
           const thumbnail = getToppingThumbnail(recipe) ?? toppingPlaceholder;
-          
+
           if (isTimeline) {
             return (
               <button
                 key={recipe.id}
                 type="button"
                 onClick={() => onSelect(recipe.id)}
-                className="flex-shrink-0 rounded-2xl px-3 py-2 active:scale-95 transition-transform"
-                style={{
-                  minHeight: 56,
-                  minWidth: thumbnail ? 164 : 124,
-                  background: active ? "var(--chip-bg-active)" : "var(--surface-container)",
-                  color: active ? "var(--chip-text-active)" : "var(--text-default)",
-                  border: active
-                    ? "1px solid transparent"
-                    : "1px solid var(--outline-variant)",
-                  cursor: "pointer",
-                }}
+                className={`condiment-strip__card${active ? " condiment-strip__card--active" : ""}`}
                 aria-pressed={active}
               >
-                <span className="flex items-center gap-3 text-left">
+                <span className="condiment-strip__card-row">
                   {thumbnail && (
                     <img
                       src={thumbnail}
                       alt=""
-                      className="h-12 w-12 rounded-xl object-cover"
+                      className="condiment-strip__card-thumb"
                       loading="lazy"
                     />
                   )}
-                  <span className="min-w-0">
-                    <span
-                      className="block truncate type-data"
-                      style={{
-                        fontWeight: "var(--weight-semibold)" as any,
-                        lineHeight: "var(--leading-tight)",
-                      }}
-                    >
+                  <span className="condiment-strip__card-text">
+                    <span className="condiment-strip__card-name type-data">
                       {recipe.name ?? concept?.name}
                     </span>
                     <span
-                      className="block mt-0.5 type-data-sm"
-                      style={{
-                        color: active ? "inherit" : "var(--text-muted)",
-                        fontWeight: "var(--weight-medium)" as any,
-                        lineHeight: "var(--leading-normal)",
-                        opacity: active ? 0.82 : 1,
-                      }}
+                      className={`condiment-strip__card-variant type-data-sm${
+                        active ? " condiment-strip__card-variant--active" : ""
+                      }`}
                     >
                       {recipe.variant_name ?? ""}
                     </span>
@@ -235,44 +213,25 @@ export function CondimentChoiceStrip({
               key={recipe.id}
               type="button"
               onClick={() => onSelect(recipe.id)}
-              className="flex-shrink-0 rounded-full pl-2 pr-5 py-2 active:scale-95 transition-transform flex items-center gap-3 text-left"
-              style={{
-                height: 56,
-                background: active ? "var(--primary)" : "color-mix(in srgb, var(--container-bg-low) 50%, transparent)",
-                color: active ? "var(--overlay-text)" : "var(--text-default)",
-                border: active
-                  ? "1px solid transparent"
-                  : "1px solid var(--container-border-subtle)",
-                cursor: "pointer",
-                boxShadow: active ? "0 4px 14px color-mix(in srgb, var(--primary) 30%, transparent)" : "none",
-              }}
+              className={`condiment-strip__pill${active ? " condiment-strip__pill--active" : ""}`}
               aria-pressed={active}
             >
               {thumbnail && (
                 <img
                   src={thumbnail}
                   alt=""
-                  className="h-10 w-10 rounded-full object-cover flex-shrink-0"
+                  className="condiment-strip__pill-thumb"
                   loading="lazy"
                 />
               )}
-              <div className="min-w-0 flex flex-col justify-center">
-                <span
-                  className="block truncate type-data"
-                  style={{
-                    fontWeight: "var(--weight-semibold)" as any,
-                    lineHeight: "var(--leading-none)",
-                  }}
-                >
+              <div className="condiment-strip__pill-text">
+                <span className="condiment-strip__pill-name type-data">
                   {recipe.name ?? concept?.name}
                 </span>
                 <span
-                  className="block mt-0.5 type-data-sm"
-                  style={{
-                    color: active ? "rgba(255, 255, 255, 0.8)" : "var(--text-muted)",
-                    fontWeight: "var(--weight-medium)" as any,
-                    lineHeight: "var(--leading-none)",
-                  }}
+                  className={`condiment-strip__pill-variant type-data-sm${
+                    active ? " condiment-strip__pill-variant--active" : ""
+                  }`}
                 >
                   {recipe.variant_name ?? ""}
                 </span>
@@ -286,36 +245,20 @@ export function CondimentChoiceStrip({
           <button
             type="button"
             onClick={() => setPickerOpen(true)}
-            className="flex-shrink-0 rounded-full px-5 py-2 active:scale-95 transition-transform type-data flex items-center gap-2"
-            style={{
-              height: 56,
-              background: "var(--surface-container)",
-              color: "var(--text-default)",
-              border: "1px solid var(--outline-variant)",
-              cursor: "pointer",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
+            className="condiment-strip__more type-data"
           >
             <Utensils size={14} />
-            <span>
+            <span data-region="label">
               {engineMessage(cms, "topping.viewAll", "Vedi tutti")}
             </span>
           </button>
         )}
       </div>
       {fade.start && (
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 w-8"
-          style={{ background: "linear-gradient(to right, var(--container-page), transparent)" }}
-          aria-hidden="true"
-        />
+        <div className="condiment-strip__fade condiment-strip__fade--start" aria-hidden="true" />
       )}
       {fade.end && (
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 w-10"
-          style={{ background: "linear-gradient(to left, var(--container-page), transparent)" }}
-          aria-hidden="true"
-        />
+        <div className="condiment-strip__fade condiment-strip__fade--end" aria-hidden="true" />
       )}
       {!isTimeline && (
               <ModalSheet
@@ -326,38 +269,17 @@ export function CondimentChoiceStrip({
                 scrim="plain"
                 surface="glass-dense"
                 entry="pop"
-                panelClassName="flex flex-col overflow-hidden"
+                panelClassName="condiment-strip-picker__panel"
               >
-                  <div className="flex flex-shrink-0 items-start gap-3 px-4 pb-3 pt-4 sm:px-5 sm:pt-5">
-                    <div className="min-w-0 flex-1">
-                      <div
-                        className="type-data-sm"
-                        style={{
-                          color: "var(--text-muted)",
-                          fontWeight: "var(--weight-semibold)" as any,
-                          letterSpacing: "0.1em",
-                          textTransform: "uppercase",
-                        }}
-                      >
+                  <div className="condiment-strip-picker__header">
+                    <div className="condiment-strip-picker__header-text">
+                      <div className="condiment-strip-picker__eyebrow type-data-sm">
                         {engineMessage(cms, "topping.viewAll", "Vedi tutti")}
                       </div>
-                      <h3
-                        className="mt-0.5 font-serif"
-                        style={{
-                          color: "var(--text-default)",
-                          fontSize: "clamp(1.45rem, 5vw, 2rem)",
-                          lineHeight: "var(--leading-heading)",
-                        }}
-                      >
+                      <h3 className="condiment-strip-picker__title">
                         {engineMessage(cms, "topping.chooseAllTitle", "Tutti i gusti")}
                       </h3>
-                      <p
-                        className="mt-1 type-body"
-                        style={{
-                          color: "var(--text-muted)",
-                          lineHeight: "var(--leading-normal)",
-                        }}
-                      >
+                      <p className="condiment-strip-picker__hint type-body">
                         {engineMessage(cms, "topping.chooseAllHint", "Scegli un condimento: torni subito al dettaglio.")}
                       </p>
                     </div>
@@ -366,37 +288,21 @@ export function CondimentChoiceStrip({
                       onClick={() => setPickerOpen(false)}
                       size="md"
                       variant="ghost"
-                      className="flex-shrink-0 active:scale-95 transition-transform"
-                      style={{
-                        background: "var(--container-bg-low)",
-                        border: "1px solid var(--container-border-subtle)",
-                        color: "var(--text-muted)",
-                      }}
+                      className="condiment-strip-picker__close"
                       aria-label={cms.ui.close}
                     >
                       <X size={16} />
                     </IconButton>
                   </div>
 
-                  <div className="flex min-h-0 flex-col px-4 pb-4 sm:px-5 sm:pb-5">
-                    <div
-                      className="flex flex-shrink-0 items-center gap-2 rounded-2xl px-3"
-                      style={{
-                        minHeight: 46,
-                        background: "var(--container-bg-low)",
-                        border: "1px solid var(--container-border-subtle)",
-                      }}
-                    >
-                      <Search size={16} style={{ color: "var(--icon-muted)", flexShrink: 0 }} />
+                  <div className="condiment-strip-picker__body">
+                    <div className="condiment-strip-picker__search">
+                      <Search size={16} className="condiment-strip-picker__search-icon" />
                       <input
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                         placeholder={engineMessage(cms, "topping.searchPlaceholder", "Cerca gusto, ingrediente o occasione")}
-                        className="min-w-0 flex-1 bg-transparent outline-none type-data"
-                        style={{
-                          border: "none",
-                          color: "var(--text-default)",
-                        }}
+                        className="condiment-strip-picker__search-input type-data"
                         autoFocus
                       />
                       {query && (
@@ -405,8 +311,7 @@ export function CondimentChoiceStrip({
                           onClick={() => setQuery("")}
                           size="sm"
                           variant="ghost"
-                          className="active:scale-95"
-                          style={{ color: "var(--text-muted)" }}
+                          className="condiment-strip-picker__search-clear"
                           aria-label={cms.pages.searchClearLabel}
                         >
                           <X size={14} />
@@ -414,20 +319,13 @@ export function CondimentChoiceStrip({
                       )}
                     </div>
 
-                    <div className="mt-3 flex flex-shrink-0 gap-2 overflow-x-auto pb-1 hide-scrollbar">
+                    <div className="condiment-strip-picker__filters hide-scrollbar">
                       <button
                         type="button"
                         onClick={() => setActiveFlavor("all")}
-                        className="flex-shrink-0 rounded-full px-3 py-1.5 type-data active:scale-95 transition-transform"
-                        style={{
-                          background: activeFlavor === "all" ? "var(--chip-bg-active)" : "var(--container-bg-low)",
-                          color: activeFlavor === "all" ? "var(--chip-text-active)" : "var(--text-muted)",
-                          border: activeFlavor === "all"
-                            ? "1px solid transparent"
-                            : "1px solid var(--container-border-subtle)",
-                          fontWeight: "var(--weight-semibold)" as any,
-                          cursor: "pointer",
-                        }}
+                        className={`condiment-strip-picker__filter type-data${
+                          activeFlavor === "all" ? " condiment-strip-picker__filter--active" : ""
+                        }`}
                       >
                         {engineMessage(cms, "topping.filterAll", "Tutti")}
                       </button>
@@ -436,24 +334,17 @@ export function CondimentChoiceStrip({
                           key={profile}
                           type="button"
                           onClick={() => setActiveFlavor(profile)}
-                          className="flex-shrink-0 rounded-full px-3 py-1.5 type-data active:scale-95 transition-transform"
-                          style={{
-                            background: activeFlavor === profile ? "var(--chip-bg-active)" : "var(--container-bg-low)",
-                            color: activeFlavor === profile ? "var(--chip-text-active)" : "var(--text-muted)",
-                            border: activeFlavor === profile
-                              ? "1px solid transparent"
-                              : "1px solid var(--container-border-subtle)",
-                            fontWeight: "var(--weight-semibold)" as any,
-                            cursor: "pointer",
-                          }}
+                          className={`condiment-strip-picker__filter type-data${
+                            activeFlavor === profile ? " condiment-strip-picker__filter--active" : ""
+                          }`}
                         >
                           {FLAVOR_PROFILE_LABELS[profile]}
                         </button>
                       ))}
                     </div>
 
-                    <div className="mt-3 min-h-0 max-h-[48vh] overflow-y-auto pr-1 sm:max-h-[440px]">
-                      <div className="grid gap-2 sm:grid-cols-2">
+                    <div className="condiment-strip-picker__results">
+                      <div className="condiment-strip-picker__grid">
                         {filteredPickerChoices.length > 0 ? (
                           filteredPickerChoices.map(({ recipe }) => {
                             const concept = TOPPING_CONCEPTS[recipe.concept_ref];
@@ -464,44 +355,25 @@ export function CondimentChoiceStrip({
                                 key={recipe.id}
                                 type="button"
                                 onClick={() => selectFromSheet(recipe.id)}
-                                className="flex items-center gap-3 rounded-2xl p-2.5 text-left active:scale-99 transition-transform"
-                                style={{
-                                  background: active
-                                    ? "var(--chip-bg-active)"
-                                    : "var(--container-bg-low)",
-                                  color: active
-                                    ? "var(--chip-text-active)"
-                                    : "var(--text-default)",
-                                  border: active
-                                    ? "1px solid transparent"
-                                    : "1px solid var(--container-border-subtle)",
-                                  cursor: "pointer",
-                                }}
+                                className={`condiment-strip-picker__choice${
+                                  active ? " condiment-strip-picker__choice--active" : ""
+                                }`}
                                 aria-pressed={active}
                               >
                                 <img
                                   src={thumbnail}
                                   alt=""
-                                  className="h-12 w-12 rounded-xl object-cover"
+                                  className="condiment-strip-picker__choice-thumb"
                                   loading="lazy"
                                 />
-                                <span className="min-w-0 flex-1">
-                                  <span
-                                    className="block truncate type-data"
-                                    style={{
-                                      fontWeight: "var(--weight-semibold)" as any,
-                                      lineHeight: "var(--leading-tight)",
-                                    }}
-                                  >
+                                <span className="condiment-strip-picker__choice-text">
+                                  <span className="condiment-strip-picker__choice-name type-data">
                                     {recipe.name ?? concept?.name}
                                   </span>
                                   <span
-                                    className="mt-0.5 block truncate type-data-sm"
-                                    style={{
-                                      color: active ? "inherit" : "var(--text-muted)",
-                                      lineHeight: "var(--leading-normal)",
-                                      opacity: active ? 0.82 : 1,
-                                    }}
+                                    className={`condiment-strip-picker__choice-variant type-data-sm${
+                                      active ? " condiment-strip-picker__choice-variant--active" : ""
+                                    }`}
                                   >
                                     {recipe.variant_name ?? ""}
                                   </span>
@@ -510,13 +382,7 @@ export function CondimentChoiceStrip({
                             );
                           })
                         ) : (
-                          <div
-                            className="rounded-2xl p-4 text-center sm:col-span-2 type-body"
-                            style={{
-                              background: "var(--container-bg-low)",
-                              color: "var(--text-muted)",
-                            }}
-                          >
+                          <div className="condiment-strip-picker__empty type-body">
                             {engineMessage(cms, "topping.noResults", "Nessun condimento trovato.")}
                           </div>
                         )}
@@ -528,4 +394,3 @@ export function CondimentChoiceStrip({
     </div>
   );
 }
-

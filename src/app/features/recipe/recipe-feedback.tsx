@@ -164,19 +164,15 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className="rounded-2xl p-6 text-center"
-        style={{
-          background: "var(--surface-container-low)",
-          border: "1px solid var(--outline-variant)",
-        }}
+        className="recipe-feedback recipe-feedback--saved"
       >
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Check style={{ color: "var(--cta)", width: "var(--space-5)", height: "var(--space-5)" }} />
-          <span style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)" }}>
+        <div className="recipe-feedback__saved-head">
+          <Check className="recipe-feedback__saved-icon" />
+          <span className="recipe-feedback__saved-title">
             {cms.feedback.savedTitle}
           </span>
         </div>
-        <span className="type-body" style={{ color: "var(--muted-foreground)" }}>
+        <span className="recipe-feedback__saved-body type-body">
           {cms.feedback.savedBody}
         </span>
 
@@ -193,33 +189,16 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
           );
           if (corrections.length === 0) return null;
           return (
-            <div
-              className="mt-5 text-left rounded-xl p-4"
-              style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)" }}
-            >
-              <div
-                className="flex items-center gap-1.5"
-                style={{
-                  color: "var(--text-accent)",
-                  fontSize: "var(--font-size-xs)",
-                  fontWeight: "var(--weight-bold)" as any,
-                  letterSpacing: "var(--tracking-caps)",
-                  textTransform: "uppercase",
-                  marginBottom: "var(--space-2)",
-                }}
-              >
+            <div className="recipe-feedback__corrections">
+              <div className="recipe-feedback__corrections-head">
                 <Sparkles size={13} aria-hidden="true" />
                 {cms.feedback.nextTimeTitle}
               </div>
-              <ul className="flex flex-col gap-1.5">
+              <ul className="recipe-feedback__corrections-list">
                 {corrections.map((c, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-2"
-                    style={{ color: "var(--text-default)", fontSize: "var(--font-size-md)", lineHeight: "var(--leading-normal)" }}
-                  >
-                    <span style={{ color: "var(--text-accent)", flexShrink: 0 }}>·</span>
-                    <span>{c}</span>
+                  <li key={i} className="recipe-feedback__corrections-item">
+                    <span className="recipe-feedback__corrections-bullet">·</span>
+                    <span className="recipe-feedback__corrections-text">{c}</span>
                   </li>
                 ))}
               </ul>
@@ -233,57 +212,41 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
   // State 1: Condensed initial question
   if (!hasDecision) {
     return (
-      <div
-        className="rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-left"
-        style={{
-          background: "var(--surface-container-low)",
-          border: "1px solid var(--outline-variant)",
-        }}
-      >
-        <div>
-          <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any }}>
+      <div className="recipe-feedback recipe-feedback--prompt">
+        <div className="recipe-feedback__intro">
+          <div className="recipe-feedback__intro-title">
             {cms.feedback.triedQuestion}
           </div>
-          <div className="type-body" style={{ color: "var(--muted-foreground)", marginTop: "var(--space-0-5)" }}>
+          <div className="recipe-feedback__intro-subtitle type-body">
             {cms.feedback.triedSubtitle}
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="recipe-feedback__actions">
           <button
             onClick={() => {
               setSuccess(true);
               setHasDecision(true);
             }}
-            className="flex items-center justify-center gap-2 h-9 px-4 rounded-xl transition-all active:scale-95"
-            style={{
-              background: "var(--surface-container)",
-              border: "1px solid var(--outline-variant)",
-              color: "var(--text-default)",
-              fontSize: "0.8125rem",
-              fontWeight: "var(--weight-semibold)" as any,
-              cursor: "pointer",
-            }}
+            className="recipe-feedback__decision-btn"
           >
-            <ThumbsUp size={14} className="text-success" style={{ color: "var(--icon-success)" }} />
-            <span>{cms.feedback.success}</span>
+            <ThumbsUp
+              size={14}
+              className="recipe-feedback__decision-icon recipe-feedback__decision-icon--success"
+            />
+            <span className="recipe-feedback__decision-label">{cms.feedback.success}</span>
           </button>
           <button
             onClick={() => {
               setSuccess(false);
               setHasDecision(true);
             }}
-            className="flex items-center justify-center gap-2 h-9 px-4 rounded-xl transition-all active:scale-95"
-            style={{
-              background: "var(--surface-container)",
-              border: "1px solid var(--outline-variant)",
-              color: "var(--text-default)",
-              fontSize: "0.8125rem",
-              fontWeight: "var(--weight-semibold)" as any,
-              cursor: "pointer",
-            }}
+            className="recipe-feedback__decision-btn"
           >
-            <ThumbsDown size={14} style={{ color: "var(--primary)" }} />
-            <span>{cms.feedback.fail}</span>
+            <ThumbsDown
+              size={14}
+              className="recipe-feedback__decision-icon recipe-feedback__decision-icon--fail"
+            />
+            <span className="recipe-feedback__decision-label">{cms.feedback.fail}</span>
           </button>
         </div>
       </div>
@@ -293,47 +256,25 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
   // State 2: Prompt for detailed review
   if (hasDecision && !showFullForm) {
     return (
-      <div
-        className="rounded-2xl p-5 flex flex-col gap-4 text-left"
-        style={{
-          background: "var(--surface-container-low)",
-          border: "1px solid var(--outline-variant)",
-        }}
-      >
-        <div>
-          <div style={{ color: "var(--text-default)", fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any }}>
+      <div className="recipe-feedback recipe-feedback--detail">
+        <div className="recipe-feedback__intro">
+          <div className="recipe-feedback__intro-title">
             {cms.feedback.detailedPrompt}
           </div>
-          <div className="type-body" style={{ color: "var(--muted-foreground)", marginTop: "var(--space-0-5)" }}>
+          <div className="recipe-feedback__intro-subtitle type-body">
             {cms.feedback.detailedSubtitle}
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="recipe-feedback__actions">
           <button
             onClick={() => setShowFullForm(true)}
-            className="h-9 px-4 rounded-xl"
-            style={{
-              background: "var(--cta)",
-              color: "var(--overlay-text)",
-              fontSize: "var(--font-size-md)",
-              fontWeight: "var(--weight-semibold)" as any,
-              cursor: "pointer",
-              border: "none",
-            }}
+            className="recipe-feedback__cta-btn"
           >
             {cms.misc.feedbackYes}
           </button>
           <button
             onClick={handleSubmitBasic}
-            className="h-9 px-4 rounded-xl"
-            style={{
-              background: "var(--surface-container)",
-              border: "1px solid var(--outline-variant)",
-              color: "var(--text-muted)",
-              fontSize: "var(--font-size-md)",
-              fontWeight: "var(--weight-semibold)" as any,
-              cursor: "pointer",
-            }}
+            className="recipe-feedback__ghost-btn"
           >
             {cms.misc.feedbackNo}
           </button>
@@ -344,33 +285,19 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
 
   // State 3: Show full review questionnaire
   return (
-    <div
-      className="rounded-2xl overflow-hidden text-left"
-      style={{
-        background: "var(--surface-container-low)",
-        border: "1px solid var(--outline-variant)",
-      }}
-    >
-      <div className="px-5 py-4 flex items-center justify-between"
-        style={{ borderBottom: "1px solid var(--outline-variant)" }}
-      >
-        <div>
-          <span className="type-body-lg" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>
+    <div className="recipe-feedback recipe-feedback--full">
+      <div className="recipe-feedback__header">
+        <div className="recipe-feedback__header-copy">
+          <span className="recipe-feedback__header-title type-body-lg">
             {cms.feedback.detailedTitle}
           </span>
-          <span className="type-body-sm" style={{ display: "block", color: "var(--muted-foreground)", marginTop: "var(--space-0-5)" }}>
+          <span className="recipe-feedback__header-subtitle type-body-sm">
             {success ? cms.feedback.recipeSuccess : cms.feedback.recipeFail}
           </span>
         </div>
         <button
           onClick={() => setShowFullForm(false)}
-          style={{
-            background: "none",
-            border: "none",
-            color: "var(--text-muted)",
-            cursor: "pointer",
-            padding: 4,
-          }}
+          className="recipe-feedback__close-btn"
           title={cms.ui.back}
           aria-label={cms.ui.back}
         >
@@ -378,7 +305,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
         </button>
       </div>
 
-      <div className="px-5 pb-5 pt-4 flex flex-col gap-5">
+      <div className="recipe-feedback__body">
         {/* Rating questions */}
         <StarRating label={cms.feedback.ratingOverall} value={overall} onChange={setOverall} required />
         <StarRating label={cms.feedback.ratingTaste} value={taste} onChange={setTaste} />
@@ -388,26 +315,14 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
         <StarRating label={cms.feedback.ratingDig} value={digFelt} onChange={setDigFelt} hint={cms.feedback.ratingDigHint} />
 
         {/* Issues checklist */}
-        <div>
+        <div className="recipe-feedback__field">
           <FieldLabel label={cms.feedback.issuesLabel} optional />
-          <div className="flex flex-wrap gap-2 mt-2">
+          <div className="recipe-feedback__issue-list">
             {RECIPE_ISSUES.map((issue) => (
               <motion.button
                 key={issue.id}
-                className="rounded-xl px-3 py-1.5 active:scale-95"
+                className={`recipe-feedback__issue-chip${issues.includes(issue.id) ? " recipe-feedback__issue-chip--active" : ""}`}
                 onClick={() => toggleIssue(issue.id)}
-                style={{
-                  fontSize: "0.75rem",
-                  border: `1px solid ${issues.includes(issue.id) ? "var(--primary)" : "var(--outline-variant)"}`,
-                  background: issues.includes(issue.id)
-                    ? "var(--primary)"
-                    : "var(--surface-container)",
-                  color: issues.includes(issue.id)
-                    ? "var(--overlay-text)"
-                    : "var(--text-default)",
-                  cursor: "pointer",
-                  transition: "background 0.15s, border-color 0.15s, color 0.15s",
-                }}
                 aria-pressed={issues.includes(issue.id)}
               >
                 {issue.icon} {issue.label}
@@ -417,42 +332,24 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
         </div>
 
         {/* Text area notes */}
-        <div>
+        <div className="recipe-feedback__field">
           <FieldLabel label={cms.feedback.notesLabel} optional />
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder={cms.misc.feedbackPlaceholder}
             rows={2}
-            className="w-full rounded-xl px-4 py-3 mt-2 resize-none"
-            style={{
-              fontSize: "0.8125rem",
-              background: "var(--surface-container)",
-              border: "1px solid var(--outline-variant)",
-              color: "var(--text-default)",
-              outline: "none",
-              fontFamily: "inherit",
-            }}
+            className="recipe-feedback__notes"
           />
         </div>
 
         {/* Submit */}
         <motion.button
-          className="w-full rounded-xl py-3 px-4 flex items-center justify-center gap-2 active:scale-95"
+          className={`recipe-feedback__submit-btn${overall !== null ? " recipe-feedback__submit-btn--active" : ""}`}
           onClick={handleSubmit}
           disabled={overall === null}
-          style={{
-            background: overall !== null ? "var(--cta)" : "var(--surface-container)",
-            color: overall !== null ? "var(--overlay-text)" : "var(--muted-foreground)",
-            border: "none",
-            cursor: overall !== null ? "pointer" : "not-allowed",
-            fontSize: "var(--font-size-lg)",
-            fontWeight: "var(--weight-semibold)" as any,
-            opacity: overall !== null ? 1 : 0.5,
-            transition: "background 0.15s, opacity 0.15s",
-          }}
         >
-          <Send style={{ width: "var(--font-size-lg)", height: "var(--font-size-lg)" }} />
+          <Send className="recipe-feedback__submit-icon" />
           {cms.feedback.submit}
         </motion.button>
       </div>
@@ -465,17 +362,17 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
 function FieldLabel({ label, optional, hint }: { label: string; optional?: boolean; hint?: string }) {
   const { cms } = useCms();
   return (
-    <div className="flex items-center gap-2">
-      <span className="type-body" style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>
+    <div className="recipe-feedback__field-label">
+      <span className="recipe-feedback__field-label-text type-body">
         {label}
       </span>
       {optional && (
-        <span className="type-body-xs" style={{ color: "var(--muted-foreground)", fontStyle: "italic" }}>
+        <span className="recipe-feedback__field-label-optional type-body-xs">
           {cms.ui.pantryOptional}
         </span>
       )}
       {hint && (
-        <span className="type-body-xs" style={{ color: "var(--muted-foreground)" }}>
+        <span className="recipe-feedback__field-label-hint type-body-xs">
           ({hint})
         </span>
       )}
@@ -497,42 +394,23 @@ function StarRating({
   required?: boolean;
 }) {
   return (
-    <div>
+    <div className="recipe-feedback__rating">
       <FieldLabel label={label} optional={!required} hint={hint} />
-      <div className="flex items-center gap-1 mt-1.5">
+      <div className="recipe-feedback__star-row">
         {[1, 2, 3, 4, 5].map((n) => (
           <motion.button
             key={n}
-            className="p-1 active:scale-90"
+            className="recipe-feedback__star-btn"
             onClick={() => onChange(value === n ? null : n)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              lineHeight: 1,
-            }}
             aria-label={`${n} ${n === 1 ? "stella" : "stelle"}`}
           >
             <Star
-              style={{
-                width: 22,
-                height: 22,
-                color: value !== null && n <= value ? "var(--tertiary)" : "var(--outline-variant)",
-                fill: value !== null && n <= value ? "var(--tertiary)" : "none",
-                transition: "color 0.15s, fill 0.15s",
-              }}
+              className={`recipe-feedback__star-icon${value !== null && n <= value ? " recipe-feedback__star-icon--filled" : ""}`}
             />
           </motion.button>
         ))}
         {value !== null && (
-          <span
-            style={{
-              color: "var(--muted-foreground)",
-              fontSize: "0.75rem",
-              marginLeft: 4,
-              fontFamily: "var(--font-mono)",
-            }}
-          >
+          <span className="recipe-feedback__star-value">
             {value}/5
           </span>
         )}

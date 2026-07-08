@@ -300,46 +300,25 @@ export function RecommendedStyles({
   ];
 
   return (
-    <div className="flex flex-col gap-6 sm:gap-8">
+    <div className="recommended-styles">
       {/* ═══ Ricerca + family chips (audit lug 2026: trovare uno stile per
           nome senza scansionare 28 card) ═══ */}
-      <div className="flex flex-col gap-3">
-      <div
-        className="flex items-center gap-2 rounded-xl px-3 py-2 w-full sm:max-w-[320px]"
-        style={{
-          background: "var(--surface-container-low)",
-          border: "1px solid var(--outline-variant)",
-        }}
-      >
-        <Search size={15} style={{ color: "var(--text-muted)", flexShrink: 0 }} aria-hidden="true" />
+      <div className="recommended-styles__search-group">
+      <div className="recommended-search">
+        <Search size={15} className="recommended-search__icon" aria-hidden="true" />
         <input
           type="text"
           value={styleQuery}
           onChange={(e) => setStyleQuery(e.target.value)}
           placeholder={cms.filters.stylesSearchPlaceholder ?? "Cerca uno stile…"}
           aria-label={cms.filters.stylesSearchPlaceholder ?? "Cerca uno stile…"}
-          className="flex-1 min-w-0"
-          style={{
-            border: "none",
-            background: "transparent",
-            outline: "none",
-            fontSize: "var(--font-size-lg)",
-            color: "var(--text-default)",
-            fontFamily: "inherit",
-          }}
+          className="recommended-search__input"
         />
         {styleQuery && (
           <button
             type="button"
             onClick={() => setStyleQuery("")}
-            className="inline-flex items-center justify-center rounded-full active:scale-90 transition-transform"
-            style={{
-              background: "transparent",
-              border: "none",
-              padding: 2,
-              color: "var(--text-muted)",
-              cursor: "pointer",
-            }}
+            className="recommended-search__clear"
             aria-label={cms.filters.removeFilters}
           >
             <X size={14} />
@@ -348,7 +327,7 @@ export function RecommendedStyles({
       </div>
 
       {/* ═══ Family filter chips + "Altro" inline ═══ */}
-      <div className="flex flex-wrap gap-1.5">
+      <div className="recommended-family-filters">
           {FAMILY_FILTERS.map((f) => {
             const isActive = familyFilter === f.id;
             const count = familyCounts[f.id] || 0;
@@ -372,7 +351,7 @@ export function RecommendedStyles({
             radius="lg"
             count={hasActiveAdvanced ? [hydrationFilter, textureFilter, skillFilter, ovenFilter].filter(Boolean).length : undefined}
           >
-            <SlidersHorizontal size={13} style={{ flexShrink: 0 }} />
+            <SlidersHorizontal size={13} className="recommended-family-filters__icon" />
             {cms.filters.advancedLabel}
           </FilterChip>
       </div>
@@ -386,15 +365,9 @@ export function RecommendedStyles({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="overflow-hidden -mt-3"
+            className="recommended-advanced-panel"
           >
-            <div
-              className="p-3 rounded-2xl flex flex-col gap-3"
-              style={{
-                background: "var(--surface-container-low)",
-                border: "1px solid var(--outline-variant)",
-              }}
-            >
+            <div className="recommended-advanced-panel__body">
               {/* Hydration */}
               <FacetRow
                 label={cms.filters.hydrationLabel}
@@ -452,13 +425,7 @@ export function RecommendedStyles({
                     setSkillFilter(null);
                     setOvenFilter(null);
                   }}
-                  className="self-start px-3 py-1.5 rounded-lg active:scale-95"
-                  style={{
-                    fontSize: "var(--font-size-sm)",
-                    color: "var(--primary)",
-                    background: "color-mix(in srgb, var(--primary) 8%, var(--surface-container))",
-                    border: "1px solid color-mix(in srgb, var(--primary) 20%, var(--outline-variant))",
-                  }}
+                  className="recommended-advanced-panel__clear"
                 >
                   {cms.filters.removeFilters}
                 </motion.button>
@@ -475,15 +442,9 @@ export function RecommendedStyles({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="p-8 text-center"
+          className="recommended-empty"
         >
-          <p
-            className="font-serif italic"
-            style={{
-              color: "var(--text-muted)",
-              fontSize: "var(--font-size-2xl)",
-            }}
-          >
+          <p className="recommended-empty__text">
             {styleQuery.trim()
               ? t(cms.filters.stylesSearchNoResults ?? 'Nessuno stile per "{query}"', {
                   query: styleQuery.trim(),
@@ -495,13 +456,7 @@ export function RecommendedStyles({
               setFamilyFilter("all");
               setStyleQuery("");
             }}
-            className="mt-4 px-5 py-2 rounded-xl active:scale-95 transition-transform"
-            style={{
-              background: "var(--chip-bg-active)",
-              color: "var(--chip-text-active)",
-              fontSize: "var(--font-size-lg)",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
+            className="recommended-empty__reset"
           >
             {cms.misc.showAllStyles}
           </motion.button>
@@ -531,42 +486,25 @@ export function RecommendedStyles({
             }}
           >
             {/* Tier header */}
-            <div className="flex items-center gap-3 mb-3">
+            <div className="recommended-tier-header">
               <div
-                className="w-8 h-8 rounded-full flex items-center justify-center"
-                style={{
-                  background: `color-mix(in srgb, ${meta.color} 12%, transparent)`,
-                  color: meta.color,
-                }}
+                className="recommended-tier-header__icon"
+                style={{ ["--tone" as any]: meta.color }}
               >
                 <TierIcon size={14} />
               </div>
-              <div className="flex items-baseline gap-2">
-                <span
-                  style={{
-                    color: "var(--text-default)",
-                    fontSize: "var(--font-size-2xl)",
-                    fontWeight: "var(--weight-bold)" as any,
-                  }}
-                >
+              <div className="recommended-tier-header__titles">
+                <span className="recommended-tier-header__label">
                   {tierLabel}
                 </span>
                 {/* Densità mobile: etichetta+icona+conteggio bastano; la
                     spiegazione del tier entra da sm in su. */}
-                <span
-                  className="font-serif italic hidden sm:inline"
-                  style={{ color: "var(--text-muted)", fontSize: "var(--font-size-lg)" }}
-                >
+                <span className="recommended-tier-header__subtitle">
                   {tierSubtitle}
                 </span>
               </div>
-              <div
-                className="flex-1 h-px ml-2"
-                style={{ background: "var(--container-divider)" }}
-              />
-              <span
-                style={{ color: "var(--text-muted)", fontSize: "var(--font-size-md)", fontFeatureSettings: "'tnum'" }}
-              >
+              <div className="recommended-tier-header__rule" />
+              <span className="recommended-tier-header__count">
                 {items.length}
               </span>
             </div>
@@ -574,21 +512,13 @@ export function RecommendedStyles({
             {/* Audit Sprint 12 — Not feasible: nota in cima alla griglia che chiarisce
                 perché questi stili non sono praticabili al momento. */}
             {key === "not_feasible" && items.length > 0 && (
-              <p
-                className="mb-4 italic"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
-                  lineHeight: 1.5,
-                }}
-              >
+              <p className="recommended-tier-note">
                 {cms.misc.notFeasibleExplainer}
               </p>
             )}
             <div
               data-region="collection"
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3 items-start"
-              style={key === "not_feasible" ? { opacity: 0.7 } : undefined}
+              className={`recommended-collection${key === "not_feasible" ? " recommended-collection--muted" : ""}`}
             >
               {items.map((rec) => {
                 const i = idx++;
@@ -665,8 +595,7 @@ function StyleCard({
   return (
     <div
       data-region="card"
-      className="relative"
-      style={{ zIndex: isSelected ? 10 : 1 }}
+      className={`recommended-card${isSelected ? " recommended-card--selected" : ""}`}
     >
       <motion.button
         onClick={onSelect}
@@ -690,11 +619,10 @@ function StyleCard({
           y: isSelected ? 0 : -4,
           transition: { type: "spring", stiffness: 500, damping: 30 },
         }}
-        className="relative text-left group w-full active:scale-97"
-        style={{ transformOrigin: "center bottom" }}
+        className="recommended-card__button"
       >
         {/* Tilt 3D: la card si inclina verso il puntatore col riflesso caldo */}
-        <TiltCard className="relative rounded-2xl">
+        <TiltCard className="recommended-card__tilt">
         {/* Card shell with warm border */}
         <motion.div
           animate={{
@@ -703,21 +631,13 @@ function StyleCard({
               : "var(--style-card-shadow)",
           }}
           transition={springT}
-          className="rounded-2xl overflow-hidden"
-          style={{
-            background: "var(--container-card)",
-            border:
-              "1px solid var(--container-border-ghost)",
-          }}
+          className="recommended-card__shell"
         >
           {/* ── Photo area ── */}
-          <div
-            className="relative overflow-hidden"
-            style={{ aspectRatio: "3/4", containerType: "inline-size" }}
-          >
+          <div className="recommended-card__photo">
             {/* Image with zoom on select */}
             <motion.div
-              className="absolute inset-0"
+              className="recommended-card__photo-zoom"
               animate={{ scale: isSelected ? 1.06 : 1 }}
               transition={{
                 type: "spring",
@@ -729,20 +649,15 @@ function StyleCard({
                 src={photo}
                 alt={style.name}
                 loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                className="recommended-card__img"
               />
             </motion.div>
 
             {/* Cinematic scrim — heavy bottom for text legibility */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `var(--overlay-scrim)`,
-              }}
-            />
+            <div className="recommended-card__scrim" />
 
             {/* ── Score ring badge — top right ── */}
-            <div className="absolute top-3 right-3">
+            <div className="recommended-card__score">
               <ScoreRing
                 score={displayScore}
                 color={ringColor}
@@ -762,11 +677,8 @@ function StyleCard({
                     stiffness: 500,
                     damping: 25,
                   }}
-                  className="absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{
-                    background: tierColor,
-                    boxShadow: "var(--style-card-badge-shadow)",
-                  }}
+                  className="recommended-card__check"
+                  style={{ ["--tone" as any]: tierColor }}
                 >
                   <Check
                     size={14}
@@ -778,46 +690,14 @@ function StyleCard({
             </AnimatePresence>
 
             {/* ── Title + subtitle — large serif editorial ── */}
-            <div className="absolute bottom-0 left-0 right-0 px-4 pb-3.5 sm:pb-4 pt-16">
+            <div className="recommended-card__info">
               {/* Title — Playfair Display, large and confident */}
-              <span
-                className="font-serif"
-                style={{
-                  /* min(…, cqw): nelle colonne strette il titolo scala con la
-                     card — "Contemporanea" non si spezza né viene clippato. */
-                  fontSize:
-                    "min(clamp(var(--font-size-3xl), 3.5vw, var(--font-size-6-5xl)), 10.5cqw)",
-                  hyphens: "auto",
-                  overflowWrap: "break-word",
-                  fontWeight: "var(--weight-bold)" as any,
-                  lineHeight: "var(--leading-snug)",
-                  color: "var(--overlay-text)",
-                  textShadow:
-                    "var(--overlay-shadow-text)",
-                  display: "block",
-                  letterSpacing: "var(--tracking-snug)",
-                }}
-              >
+              <span className="recommended-card__title">
                 {style.name}
               </span>
 
               {/* Subtitle — ALL CAPS, tracked, warm cream */}
-              <div
-                style={{
-                  marginTop: 6,
-                  fontSize: "var(--font-size-sm)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  fontFamily: "var(--font-sans)",
-                  letterSpacing: "var(--tracking-label)",
-                  textTransform: "uppercase" as const,
-                  color: "var(--overlay-text-warm)",
-                  textShadow: "var(--overlay-shadow-text-sm)",
-                  lineHeight: "var(--leading-normal)",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
+              <div className="recommended-card__subtitle">
                 {shortOrigin(style.origin).toUpperCase()}
                 {rec.bestInterpretation
                   ? ` · ${variantShortName(rec.bestInterpretation).toUpperCase()}`
@@ -827,22 +707,11 @@ function StyleCard({
               {/* VPL-C3 (rev): badge "difficoltà · impegno" — differenzia le tile
                   (la motivazione di match completa è nel pannello di dettaglio). */}
               <div
-                className="inline-flex items-center gap-1.5 mt-2 rounded-full"
-                style={{
-                  padding: "4px 10px 4px 8px",
-                  background: "var(--overlay-backdrop)",
-                  backdropFilter: "blur(6px)",
-                  WebkitBackdropFilter: "blur(6px)",
-                  border: `1px solid color-mix(in srgb, ${tierColor} 60%, transparent)`,
-                  fontSize: "var(--font-size-xs)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  fontFamily: "var(--font-sans)",
-                  color: "var(--overlay-text)",
-                  lineHeight: "var(--leading-none)",
-                }}
+                className="recommended-card__badge"
+                style={{ ["--tone" as any]: tierColor }}
               >
-                <ChefHat size={13} strokeWidth={2.5} style={{ color: tierColor, flexShrink: 0 }} aria-hidden="true" />
-                <span>
+                <ChefHat size={13} strokeWidth={2.5} className="recommended-card__badge-icon" aria-hidden="true" />
+                <span data-region="meta">
                   {difficultyLabel} · {timeLabel}
                 </span>
               </div>
@@ -868,14 +737,11 @@ function FacetRow({
   onToggle: (v: string) => void;
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <span
-        className="type-label"
-        style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}
-      >
+    <div className="recommended-facet">
+      <span className="type-label recommended-facet__label">
         {label}
       </span>
-      <div className="flex flex-wrap gap-2">
+      <div className="recommended-facet__options">
         {options.map((o) => {
           const isActive = active === o.id;
           return (

@@ -42,13 +42,7 @@ function BlurInVideo({ src }: { src: string }) {
       autoPlay
       preload="auto"
       onLoadedData={() => setReady(true)}
-      className="absolute inset-0 w-full h-full object-cover"
-      style={{
-        opacity: ready ? 1 : 0,
-        filter: ready ? "blur(0px)" : "blur(16px)",
-        transform: ready ? "scale(1)" : "scale(1.06)",
-        transition: "opacity 0.9s ease, filter 0.9s ease, transform 0.9s ease",
-      }}
+      className={`style-detail-media__video${ready ? " style-detail-media__video--ready" : ""}`}
       aria-hidden="true"
     />
   );
@@ -128,14 +122,7 @@ export function StyleDetailSheet({
   ];
 
   const sheet = (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        pointerEvents: "none",
-      }}
-    >
+    <div className="style-detail-sheet__portal">
       {/* Backdrop — subtle, dismissible */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -143,12 +130,7 @@ export function StyleDetailSheet({
         exit={{ opacity: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         onClick={onDismiss}
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "var(--sheet-backdrop)",
-          pointerEvents: "auto",
-        }}
+        className="style-detail-sheet__backdrop"
       />
 
       <motion.div
@@ -156,41 +138,17 @@ export function StyleDetailSheet({
         animate={{ y: 0 }}
         exit={{ y: "100%" }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          pointerEvents: "auto",
-          maxHeight: "85vh",
-          overflowY: "auto",
-          overscrollBehavior: "contain",
-          WebkitOverflowScrolling: "touch",
-          borderTopLeftRadius: "1.25rem",
-          borderTopRightRadius: "1.25rem",
-          background: "var(--surface-container-low)",
-          borderTop: "1px solid var(--outline-variant)",
-          boxShadow: "var(--sheet-shadow)",
-        }}
+        className="style-detail-sheet__panel"
       >
         {/* Preferito (canonico) — il bookmark marca lo STILE che ami, non la tua
             versione su misura (quella si salva dalla scheda ricetta). */}
         <IconButton
           as={motion.button}
           size="md"
+          variant="bare"
           onClick={() => setFav(toggleFavoriteStyle(style.id).includes(style.id))}
           whileTap={{ scale: 0.8 }}
-          style={{
-            position: "absolute",
-            top: 12,
-            right: 54,
-            zIndex: 3,
-            background: fav
-              ? "color-mix(in srgb, var(--primary) 14%, var(--surface-container))"
-              : "var(--surface-container)",
-            color: fav ? "var(--primary)" : "var(--text-muted)",
-            border: `1px solid ${fav ? "color-mix(in srgb, var(--primary) 35%, transparent)" : "var(--outline-variant)"}`,
-          }}
+          className={`style-detail-sheet__fav-btn${fav ? " style-detail-sheet__fav-btn--active" : ""}`}
           aria-label={fav ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
           aria-pressed={fav}
         >
@@ -199,7 +157,7 @@ export function StyleDetailSheet({
             initial={{ scale: 0.6 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 600, damping: 18 }}
-            style={{ display: "inline-flex" }}
+            className="style-detail-sheet__fav-icon"
           >
             <Bookmark size={15} fill={fav ? "currentColor" : "none"} />
           </motion.span>
@@ -209,163 +167,76 @@ export function StyleDetailSheet({
         <IconButton
           size="md"
           onClick={onDismiss}
-          style={{
-            position: "absolute",
-            top: 12,
-            right: 12,
-            zIndex: 3,
-            background: "var(--surface-container)",
-            color: "var(--text-muted)",
-            border: "1px solid var(--outline-variant)",
-          }}
+          className="style-detail-sheet__close-btn"
           aria-label={cms.ui.closeDetails}
         >
           <X size={15} />
         </IconButton>
 
-        <div className="px-5 sm:px-6 pb-6 pt-9">
+        <div className="style-detail-sheet__body">
           {/* ── Hero media (foto, o video di cottura con blur-in) ── */}
-          <div
-            className="relative w-full overflow-hidden rounded-2xl"
-            style={{ height: "clamp(160px, 38vw, 220px)" }}
-          >
+          <div className="style-detail-media">
             <ImageWithFallback
               src={photo}
               alt={style.name}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="style-detail-media__img"
             />
             {video && <BlurInVideo src={video} />}
             {/* scrim per leggibilità di eventuali badge */}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{ background: "linear-gradient(to top, color-mix(in srgb, var(--overlay-backdrop) 62%, transparent), transparent 55%)" }}
-            />
+            <div className="style-detail-media__scrim" />
           </div>
 
           {/* ── Title block ── */}
-          <div className="mt-3.5">
-            <div className="min-w-0">
+          <div className="style-detail-title">
+            <div className="style-detail-title__inner">
               {/* Family label */}
-              <span
-                style={{
-                  fontSize: "var(--font-size-xs)",
-                  color: "var(--text-accent)",
-                  letterSpacing: "var(--tracking-label)",
-                  textTransform: "uppercase" as const,
-                  fontWeight: "var(--weight-semibold)" as any,
-                }}
-              >
+              <span className="style-detail-title__family">
                 {familyName}
               </span>
-              <span
-                style={{
-                  fontSize: "var(--font-size-xs)",
-                  color: "var(--text-muted)",
-                  margin: "0 6px",
-                  opacity: 0.5,
-                }}
-              >
+              <span className="style-detail-title__dot">
                 ·
               </span>
-              <span
-                style={{
-                  fontSize: "var(--font-size-xs)",
-                  color: "var(--text-muted)",
-                }}
-              >
+              <span className="style-detail-title__origin">
                 {formatOrigin(style.origin)}
               </span>
 
               {rec && rec.tier !== "not_feasible" && (
                 <>
-                  <span
-                    style={{
-                      fontSize: "var(--font-size-xs)",
-                      color: "var(--text-muted)",
-                      margin: "0 6px",
-                      opacity: 0.5,
-                    }}
-                  >
+                  <span className="style-detail-title__dot">
                     ·
                   </span>
-                  <span
-                    className="px-1.5 py-0.5 rounded-md"
-                    style={{
-                      fontSize: "var(--font-size-2xs)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      background: "color-mix(in srgb, var(--primary) 12%, var(--surface-container))",
-                      color: "var(--primary)",
-                      border: "1px solid color-mix(in srgb, var(--primary) 20%, transparent)",
-                    }}
-                  >
+                  <span className="style-detail-title__match">
                     {rec.compatibilityScore}% Match
                   </span>
                 </>
               )}
 
               {/* Title */}
-              <h3
-                className="font-serif mt-0.5"
-                style={{
-                  fontSize: "clamp(1.25rem, 4vw, 1.75rem)",
-                  fontWeight: "var(--weight-bold)" as any,
-                  color: "var(--text-default)",
-                  lineHeight: 1.15,
-                }}
-              >
+              <h3 className="style-detail-title__heading">
                 {style.name}
               </h3>
             </div>
           </div>
 
           {/* ── Description ── */}
-          <p
-            className="mt-4"
-            style={{
-              fontSize: "var(--font-size-md)",
-              color: "var(--text-muted)",
-              lineHeight: 1.55,
-            }}
-          >
+          <p className="style-detail-sheet__description">
             {cmsDescription}
           </p>
 
           {/* ── Key characteristics ── */}
-          <div className="flex flex-wrap gap-1.5 mt-4">
+          <div className="style-detail-chars">
             {cmsChars.map((c) => (
-              <span
-                key={c}
-                className="px-2.5 py-1 rounded-lg"
-                style={{
-                  fontSize: "var(--font-size-xs)",
-                  fontWeight: "var(--weight-medium)" as any,
-                  background: "var(--surface-container)",
-                  color: "var(--text-default)",
-                  border: "1px solid var(--outline-variant)",
-                }}
-              >
+              <span key={c} className="style-detail-chars__chip">
                 {c}
               </span>
             ))}
           </div>
 
           {/* ── Nerd toggle — show/hide technical details ── */}
-          <div className="flex items-center justify-between mt-5">
+          <div className="style-detail-nerd">
             <motion.button
               onClick={() => setShowNerd(!showNerd)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg active:scale-95 transition-transform"
-              style={{
-                fontSize: "var(--font-size-sm)",
-                color: showNerd ? "var(--primary)" : "var(--text-muted)",
-                background: showNerd
-                  ? "color-mix(in srgb, var(--primary) 8%, transparent)"
-                  : "transparent",
-                border: `1px solid ${showNerd ? "color-mix(in srgb, var(--primary) 20%, var(--outline-variant))" : "var(--outline-variant)"}`,
-                cursor: "pointer",
-                fontWeight: "var(--weight-medium)" as any,
-              }}
+              className={`style-detail-nerd__toggle${showNerd ? " style-detail-nerd__toggle--active" : ""}`}
             >
               {showNerd ? <EyeOff size={13} /> : <Eye size={13} />}
               {showNerd ? "Nascondi dettagli tecnici" : "Mostra dettagli tecnici"}
@@ -380,38 +251,21 @@ export function StyleDetailSheet({
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ type: "spring", stiffness: 400, damping: 28 }}
-                className="overflow-hidden"
+                className="style-detail-nerd__panel"
               >
                 {/* ── Author variants — compatible methods ── */}
                 {compatVariants.length > 0 && (
-                  <div className="mt-4">
-                    <span
-                      style={{
-                        fontSize: "var(--font-size-2xs)",
-                        letterSpacing: "0.12em",
-                        textTransform: "uppercase" as const,
-                        color: "var(--text-muted)",
-                      }}
-                    >
+                  <div className="style-detail-techniques">
+                    <span className="style-detail-techniques__label">
                       {pt.sheetTechniquesLabel}
                     </span>
-                    <div className="flex flex-wrap gap-1.5 mt-2">
+                    <div className="style-detail-techniques__list">
                       {compatVariants.map((v) => {
                         /* Etichetta autore: maestro/pizzeria/ente, + firma tecnica. */
                         const who = v.author ?? v.pizzeria ?? v.organization ?? "";
                         const what = v.signature_name ?? "";
                         return (
-                          <span
-                            key={v.id}
-                            className="px-2.5 py-1 rounded-lg"
-                            style={{
-                              fontSize: "var(--font-size-xs)",
-                              fontWeight: "var(--weight-medium)" as any,
-                              background: "color-mix(in srgb, var(--primary) 8%, var(--surface-container))",
-                              color: "var(--text-default)",
-                              border: "1px solid color-mix(in srgb, var(--primary) 15%, var(--outline-variant))",
-                            }}
-                          >
+                          <span key={v.id} className="style-detail-techniques__chip">
                             {v.emoji ? `${v.emoji} ` : ""}{who}{what ? ` — ${what}` : ""}
                           </span>
                         );
@@ -421,7 +275,7 @@ export function StyleDetailSheet({
                 )}
 
                 {/* ── Data pills — quick-glance parameters ── */}
-                <div className="grid grid-cols-2 gap-2 mt-4">
+                <div className="style-detail-pills">
                   {DATA_PILLS.map((pill, idx) => {
                     const PillIcon = pill.icon;
                     return (
@@ -435,37 +289,14 @@ export function StyleDetailSheet({
                           stiffness: 500,
                           damping: 28,
                         }}
-                        className="flex items-center gap-2 px-3 py-2 rounded-xl"
-                        style={{
-                          background: "var(--surface-container)",
-                          border: "1px solid var(--outline-variant)",
-                        }}
+                        className="style-detail-pills__item"
                       >
-                        <PillIcon
-                          size={13}
-                          style={{ color: "var(--text-accent)", flexShrink: 0 }}
-                        />
-                        <div className="min-w-0">
-                          <div
-                            style={{
-                              fontSize: "var(--font-size-2xs)",
-                              color: "var(--text-muted)",
-                              letterSpacing: "var(--tracking-wide)",
-                              textTransform: "uppercase" as const,
-                              lineHeight: 1.2,
-                            }}
-                          >
+                        <PillIcon size={13} className="style-detail-pills__icon" />
+                        <div className="style-detail-pills__text">
+                          <div className="style-detail-pills__label">
                             {pill.label}
                           </div>
-                          <div
-                            style={{
-                              fontSize: "var(--font-size-sm)",
-                              color: "var(--text-default)",
-                              fontWeight: "var(--weight-semibold)" as any,
-                              fontFeatureSettings: "'tnum'",
-                              lineHeight: 1.3,
-                            }}
-                          >
+                          <div className="style-detail-pills__value">
                             {pill.value}
                           </div>
                         </div>
@@ -485,26 +316,12 @@ export function StyleDetailSheet({
                       stiffness: 450,
                       damping: 28,
                     }}
-                    className="mt-4 flex flex-col gap-2"
+                    className="style-detail-params"
                   >
-                    <span
-                      style={{
-                        fontSize: "var(--font-size-2xs)",
-                        letterSpacing: "0.12em",
-                        textTransform: "uppercase" as const,
-                        color: "var(--text-muted)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                      }}
-                    >
+                    <span className="style-detail-params__label">
                       {pt.sheetSectionTitle}
                     </span>
-                    <div
-                      className="rounded-xl px-3.5 py-3 flex flex-col gap-2.5"
-                      style={{
-                        background: "var(--surface-container)",
-                        border: "1px solid var(--outline-variant)",
-                      }}
-                    >
+                    <div className="style-detail-params__box">
                       {params.ovenTemp && (
                         <ParamRow
                           label={pt.sheetOvenLabel}
@@ -549,42 +366,19 @@ export function StyleDetailSheet({
 
           {/* ── VPL-C3: motivazioni di match articolate ── */}
           {matchReasons.length > 0 && (
-            <div className="mt-6">
-              <h3
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  fontWeight: "var(--weight-bold)" as any,
-                  letterSpacing: "var(--tracking-caps)",
-                  textTransform: "uppercase",
-                  color: "var(--text-muted)",
-                  marginBottom: "var(--space-3)",
-                }}
-              >
+            <div className="style-detail-match">
+              <h3 className="style-detail-match__heading">
                 {pt.sheetMatchTitle}
               </h3>
-              <div className="flex flex-col gap-2.5">
+              <div className="style-detail-match__list">
                 {matchReasons.map((r, i) => {
                   const DimIcon = MATCH_DIMENSION_ICON[r.dim];
                   return (
-                    <div key={i} className="flex items-center gap-2.5">
-                      <span
-                        className="flex items-center justify-center rounded-full shrink-0"
-                        style={{
-                          width: 24,
-                          height: 24,
-                          background: "var(--surface-container)",
-                          color: "var(--text-accent)",
-                        }}
-                      >
+                    <div key={i} className="style-detail-match__row">
+                      <span className="style-detail-match__icon">
                         <DimIcon size={13} strokeWidth={2.5} aria-hidden="true" />
                       </span>
-                      <span
-                        style={{
-                          fontSize: "var(--font-size-md)",
-                          lineHeight: "var(--leading-normal)",
-                          color: "var(--text-default)",
-                        }}
-                      >
+                      <span className="style-detail-match__text">
                         {r.text}
                       </span>
                     </div>
@@ -600,7 +394,7 @@ export function StyleDetailSheet({
             onClick={onGenerate}
             whileHover={{ scale: 1.02 }}
             deepShadow
-            className="w-full h-13 mt-6 active:scale-97"
+            className="style-detail-cta"
           >
             <Sparkles size={15} />
             {pt.sheetGenerateBtn}
@@ -615,38 +409,14 @@ export function StyleDetailSheet({
 
 function ParamRow({ label, value, sub }: { label: string; value: string; sub: string }) {
   return (
-    <div className="flex flex-col">
-      <div
-        style={{
-          fontSize: "var(--font-size-2xs)",
-          color: "var(--text-muted)",
-          letterSpacing: "var(--tracking-wide)",
-          textTransform: "uppercase" as const,
-          lineHeight: 1.2,
-        }}
-      >
+    <div className="style-detail-param-row">
+      <div className="style-detail-param-row__label">
         {label}
       </div>
-      <div
-        style={{
-          fontSize: "var(--font-size-sm)",
-          color: "var(--text-default)",
-          fontWeight: "var(--weight-semibold)" as any,
-          fontFeatureSettings: "'tnum'",
-          lineHeight: 1.3,
-        }}
-      >
+      <div className="style-detail-param-row__value">
         {value}
       </div>
-      <div
-        style={{
-          fontSize: "var(--font-size-2xs)",
-          color: "var(--text-muted)",
-          letterSpacing: "var(--tracking-wide)",
-          textTransform: "uppercase" as const,
-          lineHeight: 1.2,
-        }}
-      >
+      <div className="style-detail-param-row__sub">
         {sub}
       </div>
     </div>

@@ -7,7 +7,6 @@ import {
   liquidDockButtonStyle,
   liquidDockQuickSpring,
   liquidDockSpring,
-  liquidDockSurfaceStyle,
 } from "../../domain/liquid-dock";
 
 export type RecipePrimaryTab = "ricetta" | "procedimento" | "condimento";
@@ -28,23 +27,6 @@ const roundDockButtonStyle: CSSProperties = {
     "linear-gradient(180deg, color-mix(in srgb, var(--container-page) 97%, transparent), color-mix(in srgb, var(--container-page) 91%, transparent))",
   boxShadow:
     "0 14px 34px color-mix(in srgb, var(--shadow-color) 12%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 24%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--text-default) 4%, transparent)",
-};
-
-const tabsDockSurfaceStyle: CSSProperties = {
-  ...liquidDockSurfaceStyle,
-  background:
-    "linear-gradient(180deg, color-mix(in srgb, var(--container-page) 97%, transparent), color-mix(in srgb, var(--container-page) 92%, transparent))",
-  border: "1px solid color-mix(in srgb, var(--text-default) 8%, transparent)",
-  boxShadow:
-    "0 16px 36px color-mix(in srgb, var(--shadow-color) 12%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 24%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--text-default) 4%, transparent)",
-};
-
-const activeSegmentStyle: CSSProperties = {
-  background:
-    "linear-gradient(180deg, color-mix(in srgb, var(--primary) 13%, var(--container-page)), color-mix(in srgb, var(--primary) 7%, var(--container-page)))",
-  border: "1px solid color-mix(in srgb, var(--primary) 18%, transparent)",
-  boxShadow:
-    "0 8px 18px color-mix(in srgb, var(--primary) 10%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 22%, transparent)",
 };
 
 export function RecipeSectionTabs({
@@ -80,21 +62,21 @@ export function RecipeSectionTabs({
     ? cms.cooking.fillingTitle ?? cms.cooking.toppingTitle
     : cms.cooking.toppingTitle;
   const tabs: RecipeTabMeta[] = [
-    { 
-      id: "ricetta", 
-      label: navbar ? cms.cooking.tabRecipe : recipeLabel, 
+    {
+      id: "ricetta",
+      label: navbar ? cms.cooking.tabRecipe : recipeLabel,
       icon: ChefHat,
       subtitle: recipeSubtitle
     },
-    { 
-      id: "procedimento", 
-      label: cms.cooking.tabProcedure, 
+    {
+      id: "procedimento",
+      label: cms.cooking.tabProcedure,
       icon: ListChecks,
       subtitle: procedureSubtitle
     },
-    { 
-      id: "condimento", 
-      label: toppingLabel, 
+    {
+      id: "condimento",
+      label: toppingLabel,
       icon: Utensils,
       subtitle: toppingSubtitle
     },
@@ -112,26 +94,15 @@ export function RecipeSectionTabs({
   if (navbar && onSearchOpen) {
     return (
       <>
-        <div
-          className="fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden"
-          style={{
-            height: "calc(112px + env(safe-area-inset-bottom, 0px))",
-            background:
-              "linear-gradient(to top, var(--container-page) 0%, var(--container-page) 46%, color-mix(in srgb, var(--container-page) 88%, transparent) 72%, transparent 100%)",
-          }}
-        />
+        <div className="section-tabs-fade" />
         <motion.div
-          className="fixed left-0 right-0 z-50 px-2 pointer-events-none md:hidden"
+          className="section-tabs-dock"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={liquidDockSpring}
-          style={{ bottom: "calc(var(--space-6, 24px) + env(safe-area-inset-bottom, 0px))" }}
         >
-          <div
-            className="mx-auto grid w-full max-w-[440px] items-center gap-1.5"
-            style={{ gridTemplateColumns: "minmax(0, 1fr) 52px" }}
-          >
-            <div className="pointer-events-auto min-w-0">
+          <div className="section-tabs-dock__grid">
+            <div className="section-tabs-dock__tabs">
               <TabsCapsule
                 tabs={tabs}
                 activeTab={activeTab}
@@ -148,7 +119,7 @@ export function RecipeSectionTabs({
               diameter={52}
               onOpen={openSearch}
               surfaceStyle={roundDockButtonStyle}
-              className="pointer-events-auto"
+              className="section-tabs-dock__search"
             />
           </div>
         </motion.div>
@@ -160,19 +131,13 @@ export function RecipeSectionTabs({
     <div
       className={
         navbar
-          ? "fixed left-1/2 z-50"
-          : `max-w-4xl mx-auto pt-4 sm:pt-5 mb-6 md:mb-8 ${sticky ? "sticky z-30" : ""}`
+          ? "section-tabs-wrap section-tabs-wrap--navbar"
+          : `section-tabs-wrap section-tabs-wrap--inline${sticky ? " section-tabs-wrap--sticky" : ""}`
       }
       style={
-        navbar
-          ? {
-              transform: "translateX(-50%)",
-              width: "min(360px, calc(100vw - 32px))",
-              bottom: "calc(var(--space-6, 24px) + env(safe-area-inset-bottom, 0px))",
-            }
-          : sticky
-            ? { top: stickyTop ?? 44 }
-            : undefined
+        !navbar && sticky
+          ? { ["--section-tabs-sticky-top" as any]: `${stickyTop ?? 44}px` }
+          : undefined
       }
     >
       <TabsCapsule
@@ -213,20 +178,14 @@ function TabsCapsule({
   return (
     <nav
       data-region="filters"
-      className="relative flex w-full items-center overflow-hidden rounded-full"
-      style={{
-        ...tabsDockSurfaceStyle,
-        minHeight: navbar ? (hasSubtitles ? 58 : 52) : undefined,
-        padding: navbar ? 4 : "var(--space-1)",
-        borderRadius: "999px",
-      }}
+      className={`section-tabs-capsule${navbar ? " section-tabs-capsule--navbar" : ""}${hasSubtitles ? " section-tabs-capsule--subtitles" : ""}`}
       role="tablist"
       aria-label={ariaLabel}
     >
       {tabs.map((tab) => {
         const active = activeTab === tab.id;
         const TabIcon = tab.icon;
-        
+
         return (
           <motion.button
             key={tab.id}
@@ -237,71 +196,29 @@ function TabsCapsule({
             whileHover={{ scale: 1.015 }}
             whileTap={{ scale: 0.965 }}
             transition={liquidDockQuickSpring}
-            className="relative flex flex-1 items-center justify-center rounded-full"
-            style={{
-              minHeight: navbar ? (hasSubtitles ? 48 : 44) : (hasSubtitles ? "clamp(52px, 8vw, 60px)" : "clamp(42px, 6vw, 48px)"),
-              minWidth: 0,
-              overflow: "hidden",
-              padding: navbar ? "0 1px" : "var(--space-1) clamp(var(--space-1-5), 2vw, var(--space-3))",
-              border: "none",
-              background: "transparent",
-              color: active ? "var(--text-default)" : "var(--text-muted)",
-              cursor: "pointer",
-              fontSize: navbar
-                ? "clamp(0.63rem, 2.65vw, 0.8rem)"
-                : "clamp(var(--font-size-md), 2.8vw, var(--font-size-lg))",
-              fontWeight: (active ? "var(--weight-semibold)" : "var(--weight-medium)") as CSSProperties["fontWeight"],
-              lineHeight: 1,
-              textDecoration: "none",
-              WebkitTapHighlightColor: "transparent",
-            }}
+            className={`section-tabs-capsule__tab${navbar ? " section-tabs-capsule__tab--navbar" : ""}${hasSubtitles ? " section-tabs-capsule__tab--subtitles" : ""}${active ? " section-tabs-capsule__tab--active" : ""}`}
           >
             {active && (
               <motion.span
                 layoutId={navbar ? "recipe-bottom-tab-indicator" : "recipe-primary-tab-pill"}
-                className="absolute inset-0 rounded-full"
-                style={navbar ? activeSegmentStyle : { background: "color-mix(in srgb, var(--primary) 12%, transparent)" }}
+                className={`section-tabs-capsule__indicator${navbar ? " section-tabs-capsule__indicator--navbar" : ""}`}
                 transition={liquidDockSpring}
               />
             )}
-            <div 
-              className="relative z-10 flex items-center justify-center min-w-0" 
-              style={{
-                flexDirection: navbar ? "column" : "row",
-                gap: navbar ? "1px" : "var(--space-2, 8px)",
-                textAlign: navbar ? "center" : "left",
-              }}
-            >
+            <div className={`section-tabs-capsule__content${navbar ? " section-tabs-capsule__content--navbar" : ""}`}>
               {!navbar && (
-                <TabIcon 
-                  size={14} 
-                  style={{ 
-                    flexShrink: 0, 
-                    position: "relative",
-                    opacity: active ? 0.9 : 0.6 
-                  }} 
+                <TabIcon
+                  size={14}
+                  className={`section-tabs-capsule__icon${active ? " section-tabs-capsule__icon--active" : ""}`}
                 />
               )}
-              <div 
-                className="flex flex-col min-w-0"
-                style={{ 
-                  alignItems: navbar ? "center" : "flex-start",
-                  lineHeight: 1.15
-                }}
-              >
-                <span className="truncate max-w-full font-semibold">
+              <div className={`section-tabs-capsule__text${navbar ? " section-tabs-capsule__text--navbar" : ""}`}>
+                <span className="section-tabs-capsule__label">
                   {tab.label}
                 </span>
                 {hasSubtitles && tab.subtitle && (
-                  <span 
-                    className="truncate max-w-full font-normal"
-                    style={{
-                      /* Audit lug 2026: 0.58rem (~9px) era sotto ogni soglia di
-                         leggibilità — 0.68rem è il pavimento accettabile. */
-                      fontSize: navbar ? "0.68rem" : "clamp(var(--font-size-xs), 1.8vw, var(--font-size-sm))",
-                      opacity: active ? 0.85 : 0.6,
-                      marginTop: "1px"
-                    }}
+                  <span
+                    className={`section-tabs-capsule__subtitle${navbar ? " section-tabs-capsule__subtitle--navbar" : ""}${active ? " section-tabs-capsule__subtitle--active" : ""}`}
                   >
                     {tab.subtitle}
                   </span>

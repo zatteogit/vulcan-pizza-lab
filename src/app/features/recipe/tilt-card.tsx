@@ -72,30 +72,26 @@ export function TiltCard({ children, className, maxTilt = 6, style }: TiltCardPr
   }
 
   return (
-    <div style={{ perspective: 900 }}>
+    <div className="tilt-card__stage">
       <motion.div
         ref={ref}
-        className={className}
+        className={[className, "tilt-card__inner"].filter(Boolean).join(" ")}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
         style={{
           ...style,
           rotateX,
           rotateY,
-          transformStyle: "preserve-3d",
-          willChange: "transform",
         }}
       >
         {children}
         {/* Riflesso speculare caldo */}
         <motion.div
           aria-hidden="true"
-          className="absolute inset-0 pointer-events-none"
+          className="tilt-card__glare"
           style={{
             background: glare,
             opacity: glareOpacity,
-            borderRadius: "inherit",
-            zIndex: 3,
           }}
         />
       </motion.div>

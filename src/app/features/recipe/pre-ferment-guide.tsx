@@ -173,54 +173,29 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-      style={{
-        background: 'var(--surface-container-low)',
-        border: '1px solid var(--outline-variant)',
-        borderRadius: '1rem',
-        overflow: 'hidden',
-      }}
+      className="preferment-guide-card"
+      data-slot="pre-ferment-card"
     >
       {/* Header — always visible */}
       <motion.button
-        className="active:scale-95"
         onClick={() => setExpanded(!expanded)}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.875rem',
-          padding: '1.1rem 1.5rem',
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-          textAlign: 'left',
-          fontFamily: 'inherit',
-        }}
+        className="preferment-guide-card__header"
       >
-        <span style={{ width: "var(--space-8)", height: "var(--space-6)", flexShrink: 0, color: 'var(--primary)' }}>
+        <span className="preferment-guide-card__icon">
           <Flask size={32} />
         </span>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-            <span
-              style={{
-                fontSize: 'var(--font-size-xs)',
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase' as const,
-                color: 'var(--primary)',
-                fontWeight: 'var(--weight-semibold)' as any,
-                opacity: 0.7,
-              }}
-            >
+        <div className="preferment-guide-card__title-block">
+          <div className="preferment-guide-card__eyebrow-row">
+            <span className="preferment-guide-card__eyebrow">
               {pf.sectionLabel.toUpperCase()}
             </span>
           </div>
-          <div style={{ fontSize: 'var(--font-size-xl)', color: 'var(--text-default)', lineHeight: 'var(--leading-normal)', marginTop: "var(--space-1)" }}>
-            {info.emoji} <span style={{ fontFamily: 'var(--font-serif)' }}>{info.name}</span>
-            <span style={{ color: 'var(--muted-foreground)', fontSize: 'var(--font-size-base)' }}> — {info.origin}</span>
+          <div className="preferment-guide-card__name">
+            {info.emoji} <span className="preferment-guide-card__name-text">{info.name}</span>
+            <span className="preferment-guide-card__origin"> — {info.origin}</span>
           </div>
         </div>
-        <div style={{ color: 'var(--muted-foreground)', flexShrink: 0 }}>
+        <div className="preferment-guide-card__chevron">
           {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </div>
       </motion.button>
@@ -233,23 +208,16 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            style={{ overflow: 'hidden' }}
+            className="preferment-guide-card__body"
           >
-            <div style={{
-              padding: '0 1.5rem 1.5rem',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem',
-              borderTop: '1px solid var(--outline-variant)',
-              paddingTop: '1rem',
-            }}>
+            <div className="preferment-guide-card__content">
               {/* Description */}
-              <p style={{ fontSize: 'var(--font-size-xl)', color: 'var(--text-default)', lineHeight: 'var(--leading-reading)', margin: 0 }}>
+              <p className="preferment-guide-card__description">
                 {info.description}
               </p>
 
               {/* Key parameters grid */}
-              <div className="grid grid-cols-2 gap-2">
+              <div className="preferment-guide-card__params">
                 <ParamBadge icon={<Droplets size={12} />} label={pf.paramHydration} value={info.hydration} />
                 <ParamBadge icon={<Clock size={12} />} label={pf.paramDuration} value={info.duration} />
                 <ParamBadge icon={<Thermometer size={12} />} label={pf.paramTemperature} value={info.temperature} />
@@ -257,7 +225,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
               </div>
 
               {/* Result characteristics */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-1-5)' }}>
+              <div className="preferment-guide-card__details">
                 <DetailLine label={pf.detailFermentation} value={info.fermentationType} />
                 <DetailLine label={pf.detailFlavor} value={info.flavor} />
                 <DetailLine label={pf.detailCrust} value={info.crustResult} />
@@ -266,26 +234,13 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
               </div>
 
               {/* Tips */}
-              <div style={{
-                background: 'color-mix(in srgb, var(--accent-smart) 6%, transparent)',
-                borderRadius: '0.75rem',
-                padding: '0.75rem 1rem',
-              }}>
-                <div
-                  style={{
-                    fontSize: 'var(--font-size-sm)',
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase' as const,
-                    color: 'var(--tertiary)',
-                    marginBottom: '0.5rem',
-                    fontWeight: 'var(--weight-semibold)' as any,
-                  }}
-                >
+              <div className="preferment-guide-card__tips">
+                <div className="preferment-guide-card__tips-label">
                   {`💡 ${pf.tipsLabel.toUpperCase()}`}
                 </div>
-                <ul style={{ margin: 0, paddingLeft: 'var(--space-5)', display: 'flex', flexDirection: 'column', gap: 'var(--space-1)' }}>
+                <ul className="preferment-guide-card__tips-list">
                   {info.tips.map((tip, i) => (
-                    <li key={i} style={{ fontSize: 'var(--font-size-md)', color: 'var(--text-default)', lineHeight: 1.55 }}>
+                    <li key={i} className="preferment-guide-card__tips-item">
                       {tip}
                     </li>
                   ))}
@@ -294,22 +249,8 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
 
               {/* Comparison toggle */}
               <motion.button
-                className="active:scale-95"
                 onClick={() => setShowComparison(!showComparison)}
-                style={{
-                  background: 'var(--surface-container)',
-                  border: '1px solid var(--outline-variant)',
-                  borderRadius: '0.75rem',
-                  padding: '0.5rem 0.75rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.375rem',
-                  fontSize: 'var(--font-size-md)',
-                  color: 'var(--primary)',
-                  fontFamily: 'inherit',
-                }}
+                className="preferment-guide-card__compare-toggle"
               >
                 {showComparison ? pf.hideComparison : pf.showComparison}
               </motion.button>
@@ -321,47 +262,31 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    style={{ overflow: 'hidden' }}
+                    className="preferment-guide-card__compare-panel"
                   >
-                    <div style={{
-                      overflowX: 'auto',
-                      borderRadius: '0.75rem',
-                      border: '1px solid var(--outline-variant)',
-                    }}>
-                      <table style={{
-                        width: '100%',
-                        borderCollapse: 'collapse',
-                        fontSize: '0.75rem',
-                      }}>
+                    <div className="preferment-guide-card__table-wrap">
+                      <table className="preferment-guide-card__table">
                         <thead>
                           <tr>
-                            <th style={thStyle}> </th>
-                            <th style={{ ...thStyle, color: 'var(--primary)' }}>🍞 Biga</th>
-                            <th style={{ ...thStyle, color: 'var(--cta)' }}>💧 Poolish</th>
-                            <th style={{ ...thStyle, color: 'var(--tertiary)' }}>💦 Autolisi</th>
+                            <th className="preferment-guide-card__th"> </th>
+                            <th className="preferment-guide-card__th preferment-guide-card__th--biga">🍞 Biga</th>
+                            <th className="preferment-guide-card__th preferment-guide-card__th--poolish">💧 Poolish</th>
+                            <th className="preferment-guide-card__th preferment-guide-card__th--autolisi">💦 Autolisi</th>
                           </tr>
                         </thead>
                         <tbody>
                           {compRows.map((row, i) => (
                             <tr key={COMP_KEYS[i]}>
-                              <td style={{
-                                ...tdStyle,
-                                fontSize: '0.625rem',
-                                letterSpacing: '0.08em',
-                                textTransform: 'uppercase' as const,
-                                color: 'var(--muted-foreground)',
-                                fontWeight: 'var(--weight-semibold)' as any,
-                                background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent',
-                              }}>
+                              <td className="preferment-guide-card__td preferment-guide-card__td--label">
                                 {row.label}
                               </td>
-                              <td style={{ ...tdStyle, background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
+                              <td className="preferment-guide-card__td">
                                 {row.biga}
                               </td>
-                              <td style={{ ...tdStyle, background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
+                              <td className="preferment-guide-card__td">
                                 {row.poolish}
                               </td>
-                              <td style={{ ...tdStyle, background: i % 2 === 0 ? 'var(--surface-container-low)' : 'transparent' }}>
+                              <td className="preferment-guide-card__td">
                                 {row.autolisi}
                               </td>
                             </tr>
@@ -383,28 +308,13 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
 /* === PARAM BADGE === */
 function ParamBadge({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-        background: 'var(--surface-container)',
-        borderRadius: '0.75rem',
-        padding: '0.75rem 0.875rem',
-      }}
-    >
-      <span style={{ color: 'var(--secondary)', flexShrink: 0 }}>{icon}</span>
-      <div>
-        <div style={{
-          fontSize: 'var(--font-size-2xs)',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase' as const,
-          color: 'var(--muted-foreground)',
-          fontWeight: 'var(--weight-semibold)' as any,
-        }}>
+    <div className="preferment-guide-param">
+      <span className="preferment-guide-param__icon">{icon}</span>
+      <div data-region="stack">
+        <div className="preferment-guide-param__label">
           {label}
         </div>
-        <div style={{ fontSize: 'var(--font-size-md)', color: 'var(--text-default)', lineHeight: 1.35 }}>
+        <div className="preferment-guide-param__value">
           {value}
         </div>
       </div>
@@ -415,37 +325,11 @@ function ParamBadge({ icon, label, value }: { icon: React.ReactNode; label: stri
 /* === DETAIL LINE === */
 function DetailLine({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ display: 'flex', gap: 'var(--space-2)', fontSize: 'var(--font-size-md)', lineHeight: 1.5 }}>
-      <span style={{
-        fontSize: 'var(--font-size-2xs)',
-        letterSpacing: '0.1em',
-        textTransform: 'uppercase' as const,
-        color: 'var(--muted-foreground)',
-        minWidth: '5rem',
-        paddingTop: "var(--space-0-5)",
-        flexShrink: 0,
-        fontWeight: 'var(--weight-semibold)' as any,
-      }}>
+    <div className="preferment-guide-detail">
+      <span className="preferment-guide-detail__label">
         {label}
       </span>
-      <span style={{ color: 'var(--text-default)' }}>{value}</span>
+      <span className="preferment-guide-detail__value">{value}</span>
     </div>
   );
 }
-
-/* === TABLE STYLES === */
-const thStyle: React.CSSProperties = {
-  padding: '0.5rem 0.625rem',
-  textAlign: 'left',
-  fontSize: '0.625rem',
-  letterSpacing: '0.1em',
-  textTransform: 'uppercase',
-  fontWeight: 'var(--weight-semibold)' as any,
-  borderBottom: '1px solid var(--outline-variant)',
-};
-
-const tdStyle: React.CSSProperties = {
-  padding: '0.375rem 0.625rem',
-  color: 'var(--text-default)',
-  borderBottom: '1px solid var(--outline-variant)',
-};
