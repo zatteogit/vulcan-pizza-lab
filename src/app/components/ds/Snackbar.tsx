@@ -15,10 +15,10 @@ export interface SnackbarProps {
   style?: CSSProperties;
 }
 
-const ACCENT: Record<NonNullable<SnackbarProps["variant"]>, string> = {
-  default: "var(--primary)",
-  success: "var(--text-success)",
-  error: "var(--text-error)",
+const ACTION_CLASS: Record<NonNullable<SnackbarProps["variant"]>, string> = {
+  default: "ds-snackbar__action",
+  success: "ds-snackbar__action ds-snackbar__action--success",
+  error: "ds-snackbar__action ds-snackbar__action--error",
 };
 
 export function Snackbar({
@@ -31,39 +31,16 @@ export function Snackbar({
 }: SnackbarProps) {
   return (
     <div
-      className={className}
+      className={["ds-snackbar", className].filter(Boolean).join(" ")}
       role="status"
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 16,
-        padding: "12px 16px 12px 20px",
-        borderRadius: 14,
-        background: "var(--text-default)",
-        color: "var(--container-page)",
-        boxShadow: "var(--shadow-lg)",
-        maxWidth: 420,
-        ...style,
-      }}
+      style={style}
     >
-      <span style={{ fontFamily: "var(--font-sans)", fontSize: "var(--font-size-lg)", flex: 1 }}>
-        {message}
-      </span>
+      <span className="ds-snackbar__message">{message}</span>
       {action && (
         <button
           type="button"
           onClick={onAction}
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "var(--font-size-lg)",
-            fontWeight: "var(--weight-bold)" as CSSProperties["fontWeight"],
-            color: ACCENT[variant],
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            outline: "none",
-            whiteSpace: "nowrap",
-          }}
+          className={ACTION_CLASS[variant]}
         >
           {action}
         </button>

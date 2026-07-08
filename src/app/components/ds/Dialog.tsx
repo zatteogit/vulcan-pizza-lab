@@ -38,16 +38,7 @@ export function Dialog({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          style={{
-            position: inline ? "absolute" : "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.32)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 20,
-            zIndex: 50,
-          }}
+          className={["ds-dialog-scrim", inline && "ds-dialog-scrim--inline"].filter(Boolean).join(" ")}
         >
           <motion.div
             initial={{ scale: 0.85, opacity: 0 }}
@@ -55,47 +46,12 @@ export function Dialog({
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             onClick={(e) => e.stopPropagation()}
-            className={className}
-            style={{
-              background: "var(--container-card)",
-              borderRadius: "var(--radius-3xl)",
-              padding: 24,
-              maxWidth: 400,
-              width: "100%",
-              boxShadow: "var(--shadow-lg)",
-              ...style,
-            }}
+            className={["ds-dialog", className].filter(Boolean).join(" ")}
+            style={style}
           >
-            {title && (
-              <div
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "var(--font-size-2xl)",
-                  fontWeight: "var(--weight-bold)" as CSSProperties["fontWeight"],
-                  color: "var(--text-default)",
-                  marginBottom: 8,
-                }}
-              >
-                {title}
-              </div>
-            )}
-            {children && (
-              <div
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "var(--font-size-lg)",
-                  color: "var(--text-muted)",
-                  lineHeight: "var(--leading-body)",
-                }}
-              >
-                {children}
-              </div>
-            )}
-            {actions && (
-              <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 20 }}>
-                {actions}
-              </div>
-            )}
+            {title && <div className="ds-dialog__title">{title}</div>}
+            {children && <div className="ds-dialog__body">{children}</div>}
+            {actions && <div className="ds-dialog__actions">{actions}</div>}
           </motion.div>
         </motion.div>
       )}

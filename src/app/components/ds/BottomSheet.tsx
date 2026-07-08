@@ -35,15 +35,7 @@ export function BottomSheet({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          style={{
-            position: inline ? "absolute" : "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.32)",
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "center",
-            zIndex: 50,
-          }}
+          className={`ds-sheet-scrim${inline ? " ds-sheet-scrim--inline" : ""}`}
         >
           <motion.div
             initial={{ y: "100%" }}
@@ -51,52 +43,12 @@ export function BottomSheet({
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 400, damping: 32 }}
             onClick={(e) => e.stopPropagation()}
-            className={className}
-            style={{
-              background: "var(--container-card)",
-              borderTopLeftRadius: 28,
-              borderTopRightRadius: 28,
-              padding: "12px 24px 24px",
-              width: "100%",
-              maxWidth: inline ? "100%" : 480,
-              boxShadow: "var(--shadow-lg)",
-              ...style,
-            }}
+            className={`ds-sheet${inline ? " ds-sheet--inline" : ""}${className ? ` ${className}` : ""}`}
+            style={style}
           >
-            <div
-              style={{
-                width: 40,
-                height: 4,
-                borderRadius: 999,
-                background: "var(--outline-variant)",
-                margin: "0 auto 16px",
-              }}
-            />
-            {title && (
-              <div
-                style={{
-                  fontFamily: "var(--font-serif)",
-                  fontSize: "var(--font-size-2xl)",
-                  fontWeight: "var(--weight-bold)" as CSSProperties["fontWeight"],
-                  color: "var(--text-default)",
-                  marginBottom: 8,
-                }}
-              >
-                {title}
-              </div>
-            )}
-            {children && (
-              <div
-                style={{
-                  fontFamily: "var(--font-sans)",
-                  fontSize: "var(--font-size-lg)",
-                  color: "var(--text-muted)",
-                  lineHeight: "var(--leading-body)",
-                }}
-              >
-                {children}
-              </div>
-            )}
+            <div className="ds-sheet__handle" />
+            {title && <div className="ds-sheet__title">{title}</div>}
+            {children && <div className="ds-sheet__body">{children}</div>}
           </motion.div>
         </motion.div>
       )}

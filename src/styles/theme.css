@@ -186,6 +186,7 @@
   --font-size-6-5xl: 1.5rem; /* 24px — headline x-small, card titles */
   --font-size-7xl: 1.75rem; /* 28px — headline medium */
   --font-size-7-5xl: 1.85rem; /* 29.6px — bound clamp titolo ingredienti (min) */
+  --font-size-step-title: clamp(1.5rem, 4vw, 2.5rem); /* 24→40px — titolo StepHeader (ds) responsive */
   --font-size-8xl: 2rem; /* 32px — headline large */
   --font-size-8-5xl: 2.45rem; /* 39.2px — bound clamp titolo ingredienti (max) */
   --font-size-9xl: 2.5rem; /* 40px — display medium */
@@ -286,6 +287,8 @@
   --measure-3xs: 11.25rem; /* 180px */
   --measure-2xs: 17.5rem; /* 280px */
   --measure-1xs: 20rem; /* 320px — box ricerca stile (recommended-styles) */
+  --measure-dialog: 25rem; /* 400px — larghezza max container Dialog (ds) */
+  --measure-snackbar: 26.25rem; /* 420px — larghezza max Snackbar (ds) */
   --measure-xs: 28rem; /* 448px */
   --measure-sm: 30rem; /* 480px */
   --measure-md: 40rem; /* 640px */
@@ -881,6 +884,7 @@
   --overlay-shadow-text:
     0 2px 8px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 0, 0, 0.25);
   --overlay-shadow-text-sm: 0 1px 4px rgba(0, 0, 0, 0.5);
+  --scrim-modal: rgba(0, 0, 0, 0.32); /* velo modale Dialog/BottomSheet (ds) */
   --overlay-scrim: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0) 0%,
@@ -12019,6 +12023,187 @@
     font-size: var(--font-size-xs);
     opacity: 0.7;
     font-feature-settings: "tnum";
+  }
+
+
+
+  /* ═══ DS COMPONENT: Dialog ═══ */
+  .ds-dialog-scrim {
+    position: fixed;
+    inset: 0;
+    background: var(--scrim-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-5);
+    z-index: 50;
+  }
+
+  .ds-dialog-scrim--inline {
+    position: absolute;
+  }
+
+  .ds-dialog {
+    background: var(--container-card);
+    border-radius: var(--radius-3xl);
+    padding: var(--space-6);
+    max-width: var(--measure-dialog);
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .ds-dialog__title {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-default);
+    margin-bottom: var(--space-2);
+  }
+
+  .ds-dialog__body {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-lg);
+    color: var(--text-muted);
+    line-height: var(--leading-body);
+  }
+
+  .ds-dialog__actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+    margin-top: var(--space-5);
+  }
+
+  /* ═══ DS COMPONENT: BottomSheet ═══ */
+  .ds-sheet-scrim {
+    position: fixed;
+    inset: 0;
+    background: var(--scrim-modal);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 50;
+  }
+
+  .ds-sheet-scrim--inline {
+    position: absolute;
+  }
+
+  .ds-sheet {
+    background: var(--container-card);
+    border-top-left-radius: var(--radius-3xl);
+    border-top-right-radius: var(--radius-3xl);
+    padding: var(--space-3) var(--space-6) var(--space-6);
+    width: 100%;
+    max-width: var(--measure-sm);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .ds-sheet--inline {
+    max-width: 100%;
+  }
+
+  .ds-sheet__handle {
+    width: var(--space-10);
+    height: var(--space-1);
+    border-radius: var(--radius-full);
+    background: var(--outline-variant);
+    margin: 0 auto var(--space-4);
+  }
+
+  .ds-sheet__title {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-default);
+    margin-bottom: var(--space-2);
+  }
+
+  .ds-sheet__body {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-lg);
+    color: var(--text-muted);
+    line-height: var(--leading-body);
+  }
+
+  /* ═══ DS COMPONENT: Snackbar ═══ */
+  .ds-snackbar {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4) var(--space-3) var(--space-5);
+    border-radius: var(--radius-ml);
+    background: var(--text-default);
+    color: var(--container-page);
+    box-shadow: var(--shadow-lg);
+    max-width: var(--measure-snackbar);
+  }
+
+  .ds-snackbar__message {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-lg);
+    flex: 1;
+  }
+
+  .ds-snackbar__action {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-bold);
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    white-space: nowrap;
+    color: var(--primary);
+  }
+
+  .ds-snackbar__action--success {
+    color: var(--text-success);
+  }
+
+  .ds-snackbar__action--error {
+    color: var(--text-error);
+  }
+
+  /* ═══ DS COMPONENT: StepHeader ═══ */
+  .ds-stepheader {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .ds-stepheader__eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-extreme);
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+
+  .ds-stepheader__title {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-step-title);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-snug);
+    color: var(--text-default);
+    margin: 0;
+  }
+
+  .ds-stepheader__subtitle {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--font-size-2xl);
+    color: var(--text-muted);
+    opacity: 0.65;
+  }
+
+  .ds-stepheader__rule {
+    width: var(--space-8);
+    height: var(--border-width-strong);
+    background: var(--primary);
+    opacity: 0.35;
+    margin-top: var(--space-2);
   }
 
 
