@@ -919,14 +919,10 @@ function TimeSlotPicker({
   compact?: boolean;
 }) {
   return (
-    <div>
+    <div className="needs-slot-picker">
       <div
         data-region="slot-list"
-        className={
-          compact
-            ? "flex flex-col gap-2 w-full sm:hidden"
-            : "flex flex-col gap-3 w-full mt-4 sm:hidden"
-        }
+        className={compact ? "needs-slot-list needs-slot-list--compact" : "needs-slot-list"}
       >
         {slots.map((slot) => {
           const active = selectedTimeSlot === slot.id;
@@ -941,92 +937,47 @@ function TimeSlotPicker({
               key={slot.id}
               onClick={() => onTimeSlotChange(slot)}
               className={
-                compact
-                  ? "relative flex items-center justify-between px-3 py-2.5 rounded-xl transition-all active:scale-98 text-left w-full"
-                  : "relative flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all active:scale-98 text-left w-full"
+                (compact ? "needs-slot-list__item needs-slot-list__item--compact" : "needs-slot-list__item") +
+                (active ? " needs-slot-list__item--active" : "")
               }
               style={{
-                background: active
-                  ? `linear-gradient(155deg, ${colors.bg}, color-mix(in srgb, ${colors.bg} 75%, var(--overlay-backdrop)))`
-                  : "var(--surface-container-low, var(--chip-bg))",
-                color: active ? colors.text : "var(--text-default)",
-                border: active
-                  ? "1px solid transparent"
-                  : `1px solid color-mix(in srgb, ${colors.bg} 22%, var(--chip-border))`,
-                boxShadow: active
-                  ? `0 ${compact ? 8 : 12}px ${compact ? 18 : 28}px color-mix(in srgb, ${colors.bg} 40%, transparent)`
-                  : "none",
+                ["--needs-time-bg" as any]: colors.bg,
+                ["--needs-time-text" as any]: colors.text,
               }}
             >
-              <div className={compact ? "flex items-center gap-2.5" : "flex items-center gap-3.5"}>
+              <div className={compact ? "needs-slot-list__lead needs-slot-list__lead--compact" : "needs-slot-list__lead"}>
                 <div
                   className={
-                    compact
-                      ? "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                      : "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    (compact ? "needs-slot-list__icon-wrap needs-slot-list__icon-wrap--compact" : "needs-slot-list__icon-wrap") +
+                    (active ? " needs-slot-list__icon-wrap--active" : "")
                   }
-                  style={{
-                    background: active
-                      ? "color-mix(in srgb, var(--overlay-text) 18%, transparent)"
-                      : `color-mix(in srgb, ${colors.bg} 14%, transparent)`,
-                    color: active ? colors.text : colors.bg,
-                  }}
                 >
                   <Icon size={compact ? 15 : 18} />
                 </div>
-                <div className="flex flex-col">
-                  <span
-                    style={{
-                      fontSize: compact ? "var(--font-size-md)" : "var(--font-size-lg)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      lineHeight: 1.2,
-                    }}
-                  >
+                <div className="needs-slot-list__body">
+                  <span className={compact ? "needs-slot-list__label needs-slot-list__label--compact" : "needs-slot-list__label"}>
                     {displayLabel}
                   </span>
                   <span
-                    className="type-numeric"
-                    style={{
-                      fontSize: compact ? "var(--font-size-sm)" : "var(--font-size-base)",
-                      opacity: active ? 0.8 : 0.5,
-                      marginTop: 2,
-                    }}
+                    className={
+                      "type-numeric needs-slot-list__sublabel" +
+                      (compact ? " needs-slot-list__sublabel--compact" : "") +
+                      (active ? " needs-slot-list__sublabel--active" : "")
+                    }
                   >
                     {displaySublabel}
                   </span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="needs-slot-list__badges">
                 {suggested && (
-                  <span
-                    className="px-2 py-0.5 rounded-full"
-                    style={{
-                      background: active
-                        ? "color-mix(in srgb, var(--overlay-text) 20%, transparent)"
-                        : colors.bg,
-                      color: "var(--overlay-text)",
-                      fontSize: "10px",
-                      fontWeight: "var(--weight-bold)" as any,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
+                  <span className="needs-slot-list__badge needs-slot-list__badge--ideal">
                     {cms.ui.badgeIdeal}
                   </span>
                 )}
                 {active && (
-                  <span
-                    className="px-2 py-0.5 rounded-full text-2xs flex-shrink-0"
-                    style={{
-                      background: "color-mix(in srgb, var(--overlay-text) 25%, transparent)",
-                      color: "var(--overlay-text)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      border: "1px solid color-mix(in srgb, var(--overlay-text) 40%, transparent)",
-                    }}
-                  >
+                  <span className="needs-slot-list__badge needs-slot-list__badge--current">
                     {cms.misc.current}
                   </span>
                 )}
@@ -1036,13 +987,7 @@ function TimeSlotPicker({
         })}
       </div>
 
-      <div
-        className={
-          compact
-            ? "hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-2 w-full"
-            : "hidden sm:grid sm:grid-cols-5 gap-3 w-full mt-4"
-        }
-      >
+      <div className={compact ? "needs-slot-grid needs-slot-grid--compact" : "needs-slot-grid"}>
         {slots.map((slot) => {
           const active = selectedTimeSlot === slot.id;
           const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
@@ -1059,120 +1004,56 @@ function TimeSlotPicker({
               whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 400, damping: 26 }}
               className={
-                compact
-                  ? "relative flex items-center text-left px-3 py-2.5 rounded-xl w-full gap-2.5 overflow-hidden"
-                  : "relative flex flex-col items-center text-center px-3 py-6 rounded-2xl w-full gap-3 overflow-hidden"
+                (compact ? "needs-slot-grid__item needs-slot-grid__item--compact" : "needs-slot-grid__item") +
+                (active ? " needs-slot-grid__item--active" : "")
               }
               style={{
-                background: active
-                  ? `linear-gradient(155deg, ${colors.bg}, color-mix(in srgb, ${colors.bg} 75%, var(--overlay-backdrop)))`
-                  : "var(--surface-container-low, var(--chip-bg))",
-                color: active ? colors.text : "var(--text-default)",
-                border: active
-                  ? "1px solid transparent"
-                  : `1px solid color-mix(in srgb, ${colors.bg} 22%, var(--chip-border))`,
-                boxShadow: active
-                  ? `0 ${compact ? 8 : 14}px ${compact ? 18 : 32}px color-mix(in srgb, ${colors.bg} 42%, transparent)`
-                  : "none",
-                transition: "background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
+                ["--needs-time-bg" as any]: colors.bg,
+                ["--needs-time-text" as any]: colors.text,
               }}
             >
               {!active && (
                 <span
                   aria-hidden="true"
-                  style={{
-                    position: "absolute",
-                    top: compact ? -44 : -34,
-                    left: "50%",
-                    width: compact ? 100 : 130,
-                    height: compact ? 100 : 130,
-                    marginLeft: compact ? -50 : -65,
-                    borderRadius: "50%",
-                    background: colors.bg,
-                    opacity: compact ? 0.1 : 0.12,
-                    filter: "blur(26px)",
-                    pointerEvents: "none",
-                  }}
+                  className={compact ? "needs-slot-grid__glow needs-slot-grid__glow--compact" : "needs-slot-grid__glow"}
                 />
               )}
               {suggested && !compact && (
-                <div className="absolute top-2 inset-x-0 flex justify-center z-10">
-                  <span
-                    className="px-2 py-0.5 rounded-full text-2xs"
-                    style={{
-                      background: colors.bg,
-                      color: "var(--overlay-text)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      boxShadow: `0 2px 8px color-mix(in srgb, ${colors.bg} 45%, transparent)`,
-                    }}
-                  >
+                <div className="needs-slot-grid__ideal-row">
+                  <span className="needs-slot-grid__badge needs-slot-grid__badge--ideal">
                     {cms.ui.badgeIdeal}
                   </span>
                 </div>
               )}
               <div
                 className={
-                  compact
-                    ? "w-8 h-8 rounded-xl flex items-center justify-center relative flex-shrink-0"
-                    : "w-12 h-12 rounded-2xl flex items-center justify-center relative"
+                  (compact ? "needs-slot-grid__icon-wrap needs-slot-grid__icon-wrap--compact" : "needs-slot-grid__icon-wrap") +
+                  (active ? " needs-slot-grid__icon-wrap--active" : "")
                 }
-                style={{
-                  background: active
-                    ? "color-mix(in srgb, var(--overlay-text) 18%, transparent)"
-                    : `color-mix(in srgb, ${colors.bg} 14%, transparent)`,
-                  color: active ? colors.text : colors.bg,
-                }}
               >
                 <Icon size={compact ? 16 : 20} />
               </div>
-              <div className={compact ? "flex flex-col items-start relative min-w-0" : "flex flex-col items-center relative"}>
-                <span
-                  style={{
-                    fontSize: compact ? "var(--font-size-md)" : "var(--font-size-lg)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    lineHeight: 1.2,
-                    /* Griglia: le label variano tra 1 e 2 righe ("Tonight" vs
-                       "Tomorrow at lunch"); riservare sempre 2 righe allinea
-                       i sottotitoli orari sulla stessa baseline in tutte le card. */
-                    ...(compact
-                      ? {}
-                      : {
-                          minHeight: "2.4em",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }),
-                  }}
-                >
+              {/* Griglia: le label variano tra 1 e 2 righe ("Tonight" vs
+                  "Tomorrow at lunch"); riservare sempre 2 righe (non-compact)
+                  allinea i sottotitoli orari sulla stessa baseline in tutte le card. */}
+              <div className={compact ? "needs-slot-grid__body needs-slot-grid__body--compact" : "needs-slot-grid__body"}>
+                <span className={compact ? "needs-slot-grid__label needs-slot-grid__label--compact" : "needs-slot-grid__label"}>
                   {displayLabel}
                 </span>
                 <span
-                  className="type-numeric"
-                  style={{
-                    fontSize: compact ? "var(--font-size-sm)" : "var(--font-size-base)",
-                    opacity: active ? 0.85 : 0.5,
-                    marginTop: compact ? 1 : 4,
-                  }}
+                  className={
+                    "type-numeric needs-slot-grid__sublabel" +
+                    (compact ? " needs-slot-grid__sublabel--compact" : "") +
+                    (active ? " needs-slot-grid__sublabel--active" : "")
+                  }
                 >
                   {displaySublabel}
                 </span>
               </div>
 
               {active && (
-                <div className={compact ? "absolute top-2 right-2" : "absolute top-2.5 right-2.5"}>
-                  <span
-                    className="px-2 py-0.5 rounded-full text-2xs"
-                    style={{
-                      background: "color-mix(in srgb, var(--overlay-text) 25%, transparent)",
-                      color: "var(--overlay-text)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.05em",
-                      border: "1px solid color-mix(in srgb, var(--overlay-text) 40%, transparent)",
-                    }}
-                  >
+                <div className={compact ? "needs-slot-grid__current needs-slot-grid__current--compact" : "needs-slot-grid__current"}>
+                  <span className="needs-slot-grid__badge needs-slot-grid__badge--current">
                     {cms.misc.current}
                   </span>
                 </div>
@@ -1200,7 +1081,7 @@ function FlourChipGrid({
   cms: any;
 }) {
   return (
-    <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+    <div className="needs-flour-grid">
       {options.map((f) => (
         <FlourChip
           key={f.id}
@@ -1231,34 +1112,17 @@ function FlourChip({
   return (
     <motion.button
       onClick={() => onToggle(flour.id)}
-      className="relative flex flex-col items-start px-3.5 py-2.5 rounded-xl transition-all text-left active:scale-95"
-      style={{
-        background: active ? "var(--chip-bg-active)" : "var(--chip-bg)",
-        color: active ? "var(--chip-text-active)" : "var(--chip-text)",
-        border: active
-          ? "1px solid transparent"
-          : isRecent
-            ? "1px solid var(--needs-pantry-border-active)"
-            : "1px solid var(--chip-border)",
-        minWidth: 100,
-      }}
+      className={
+        "needs-flour-chip" +
+        (active ? " needs-flour-chip--active" : isRecent ? " needs-flour-chip--recent" : "")
+      }
     >
       {isRecent && (
-        <div
-          className="absolute -top-1.5 right-2 px-1.5 py-0.5 rounded-full"
-          style={{
-            background: "var(--needs-pantry-accent)",
-            fontSize: "var(--font-size-xs)",
-            fontWeight: "var(--weight-bold)" as any,
-            color: "var(--overlay-text)",
-            letterSpacing: "var(--tracking-spread)",
-            lineHeight: "var(--leading-none)",
-          }}
-        >
+        <div className="needs-flour-chip__badge">
           {cms.ui.badgeRecent}
         </div>
       )}
-      <div className="flex items-center gap-1.5">
+      <div className="needs-flour-chip__row">
         <AnimatePresence>
           {active && (
             <motion.span
@@ -1275,48 +1139,19 @@ function FlourChip({
             </motion.span>
           )}
         </AnimatePresence>
-        <span
-          style={{
-            fontSize: "var(--font-size-lg)",
-            fontWeight: "var(--weight-semibold)" as any,
-          }}
-        >
+        <span className="needs-flour-chip__name">
           {cms.flourLabels[flour.id] ?? flour.name}
         </span>
       </div>
-      <span
-        className="type-numeric"
-        style={{
-          fontSize: "var(--font-size-sm)",
-          opacity: 0.65,
-          marginTop: 2,
-        }}
-      >
+      <span className="type-numeric needs-flour-chip__detail">
         {cms.flourDetails[flour.id] ?? flour.detail}
       </span>
       {flour.branded && flour.producer && (
-        <span
-          style={{
-            fontSize: "var(--font-size-2xs)",
-            opacity: 0.4,
-            marginTop: 1,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase" as const,
-          }}
-        >
+        <span className="needs-flour-chip__producer">
           {flour.producer}
         </span>
       )}
-      <span
-        className="type-numeric"
-        style={{
-          fontSize: "var(--font-size-xs)",
-          opacity: 0.45,
-          marginTop: 1,
-          letterSpacing: "0.04em",
-          fontFeatureSettings: "'tnum'",
-        }}
-      >
+      <span className="type-numeric needs-flour-chip__w">
         {flour.w}
       </span>
     </motion.button>
@@ -1345,32 +1180,23 @@ function BrandedFloursSection({
   const activeBrandedCount = options.filter((f) => activeFlours.includes(f.id)).length;
 
   return (
-    <div className="mt-3">
+    <div className="needs-branded-flours">
       <motion.button
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-2 active:scale-95 transition-transform"
-        style={{ fontSize: "var(--font-size-md)", color: "var(--text-muted)" }}
+        className="needs-branded-flours__toggle"
       >
         <motion.span
           animate={{ rotate: expanded ? 90 : 0 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          style={{ display: "inline-flex" }}
+          className="needs-branded-flours__chevron"
         >
           <ChevronRight size={14} />
         </motion.span>
-        <span style={{ fontWeight: "var(--weight-semibold)" as any }}>
+        <span className="needs-branded-flours__label">
           {labelOverride ?? cms.ui?.brandedFlours ?? "Farine di marca"}
         </span>
         {activeBrandedCount > 0 && (
-          <span
-            className="px-1.5 py-0.5 rounded-full"
-            style={{
-              fontSize: "var(--font-size-xs)",
-              background: "var(--chip-bg-active)",
-              color: "var(--chip-text-active)",
-              fontFeatureSettings: "'tnum'",
-            }}
-          >
+          <span className="needs-branded-flours__count">
             {activeBrandedCount}
           </span>
         )}
@@ -1382,9 +1208,9 @@ function BrandedFloursSection({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="overflow-hidden"
+            className="needs-branded-flours__panel"
           >
-            <div className="mt-2">
+            <div className="needs-branded-flours__panel-inner">
               <FlourChipGrid
                 options={options}
                 activeFlours={activeFlours}

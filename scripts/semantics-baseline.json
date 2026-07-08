@@ -157,11 +157,6 @@
   "src/app/features/recipe/procedure-timeline.tsx": {
     "inline-style": 17
   },
-  "src/app/features/recipe/recipe-configurator.tsx": {
-    "inline-style": 59,
-    "bare-wrapper": 15,
-    "markup-presentation": 19
-  },
   "src/app/features/recipe/recipe-feedback.tsx": {
     "inline-style": 35,
     "bare-wrapper": 9,
@@ -171,10 +166,6 @@
     "inline-style": 7,
     "bare-wrapper": 1,
     "markup-presentation": 1
-  },
-  "src/app/features/recipe/recipe-match-card.tsx": {
-    "inline-style": 34,
-    "markup-presentation": 3
   },
   "src/app/features/recipe/recipe-output-bits.tsx": {
     "inline-style": 14,
@@ -187,10 +178,6 @@
   "src/app/features/recipe/recipe-section-tabs.tsx": {
     "inline-style": 9,
     "markup-presentation": 2
-  },
-  "src/app/features/recipe/recipe-setup-panel.tsx": {
-    "inline-style": 44,
-    "markup-presentation": 7
   },
   "src/app/features/recipe/recipe-stat-strip.tsx": {
     "inline-style": 8
@@ -227,11 +214,6 @@
     "inline-style": 44,
     "bare-wrapper": 1,
     "markup-presentation": 1
-  },
-  "src/app/features/recipe/user-needs.tsx": {
-    "inline-style": 55,
-    "bare-wrapper": 12,
-    "markup-presentation": 4
   },
   "src/app/pages/explore.tsx": {
     "bare-wrapper": 3

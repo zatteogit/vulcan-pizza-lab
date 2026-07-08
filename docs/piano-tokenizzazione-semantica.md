@@ -372,6 +372,13 @@ ondata ha il suo commit di checkpoint sul branch `refactor/tokenizzazione`.
   `--radius-xs` 4 e `--radius-sm` 8 — valutare `--radius-2xs`).
 - `.preferment-header__icon { width:76px; height:60px }` (contenitore
   illustrazione one-off).
+- `.needs-slot-grid__glow` (ondata 2): alone decorativo dietro l'icona dello
+  slot tempo — diametro 130px (variante lg; la sm usa `--measure-6xs`),
+  offset `top:-34px`/`-44px`, `blur(26px)` (fra `--blur-xl` 24 e `--blur-2xl`
+  40). Geometria one-off della decorazione, atomi finti non giustificati.
+- `.needs-slot-grid__label { min-height: 2.4em }` (ondata 2): riserva 2 righe
+  tipografiche per allineare le card degli slot — relativo al font, non alla
+  scala spazi.
 
 Se durante il lavoro emergono altri one-off legittimi, documentali qui e
 lasciali a baseline (cricchetto), non forzare un atomo finto.
