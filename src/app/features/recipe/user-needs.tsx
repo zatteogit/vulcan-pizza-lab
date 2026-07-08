@@ -365,19 +365,12 @@ function SectionHeader({
   compact?: boolean;
 }) {
   return (
-    <div className="flex flex-col items-center lg:items-start gap-0.5">
-      <div className="flex items-center gap-2.5">
+    <div className={compact ? "needs-section-header needs-section-header--compact" : "needs-section-header"}>
+      <div className="needs-section-header__row">
         {icon}
-        <h3 style={{ fontSize: compact ? "var(--font-size-xl)" : "var(--font-size-3xl)" }}>{title}</h3>
+        <h3 className="needs-section-header__title">{title}</h3>
       </div>
-      <span
-        className="font-serif italic"
-        style={{
-          color: "var(--text-muted)",
-          fontSize: compact ? "var(--font-size-md)" : "var(--font-size-lg)",
-          opacity: 0.7,
-        }}
-      >
+      <span className="needs-section-header__subtitle">
         {subtitle}
       </span>
     </div>
@@ -433,8 +426,8 @@ function SettingsSummaryBar({
   const timeColors = getTimeColors(selectedTimeSlotId);
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full">
-    <div className="flex flex-wrap gap-1.5 w-full justify-center">
+    <div className="needs-summary">
+    <div className="needs-summary__row">
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const Icon = tab.icon;
@@ -442,24 +435,10 @@ function SettingsSummaryBar({
           <button
             key={tab.id}
             onClick={() => onTabSelect(isActive ? null : tab.id)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all active:scale-97"
-            style={{
-              background: isActive
-                ? "var(--chip-bg-active)"
-                : "color-mix(in srgb, var(--chip-bg) 60%, transparent)",
-              color: isActive
-                ? "var(--chip-text-active)"
-                : "var(--text-muted)",
-              border: isActive
-                ? "1px solid transparent"
-                : "1px solid var(--chip-border)",
-              boxShadow: isActive ? "var(--shadow-glow), var(--shadow-sm)" : "none",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
+            className={isActive ? "needs-summary__tab needs-summary__tab--active" : "needs-summary__tab"}
           >
-            <Icon size={13} style={{ opacity: isActive ? 1 : 0.55 }} />
-            <span>{tab.text}</span>
+            <Icon size={13} className="needs-summary__tab-icon" />
+            <span data-slot="label">{tab.text}</span>
           </button>
         );
       })}
@@ -489,22 +468,15 @@ function SettingsSummaryBar({
             }}
             onClick={onChangeTime}
             aria-pressed={timeActive}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full active:scale-97"
+            className={timeActive ? "needs-summary__time-chip needs-summary__time-chip--active" : "needs-summary__time-chip"}
             style={{
-              background: timeColors.bg,
-              color: timeColors.text,
-              border: "1px solid transparent",
-              outline: timeActive
-                ? `2px solid color-mix(in srgb, ${timeColors.bg} 35%, transparent)`
-                : "none",
-              outlineOffset: 2,
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--weight-semibold)" as any,
+              ["--needs-time-bg" as any]: timeColors.bg,
+              ["--needs-time-text" as any]: timeColors.text,
             }}
             title={cms.misc.changeTiming}
           >
             <Clock size={13} />
-            <span>{selectedTimeLabel}</span>
+            <span data-slot="label">{selectedTimeLabel}</span>
           </motion.button>
         )}
       </AnimatePresence>
@@ -512,16 +484,7 @@ function SettingsSummaryBar({
 
       {/* VPL-C1: microcopy — spiega a cosa servono questi dati */}
       {showHelp && (
-        <p
-          className="text-center"
-          style={{
-            color: "var(--text-muted)",
-            fontSize: "var(--font-size-xs)",
-            lineHeight: "var(--leading-normal)",
-            opacity: 0.85,
-            margin: 0,
-          }}
-        >
+        <p className="needs-summary__help">
           {cms.misc.settingsHelp}
         </p>
       )}
@@ -640,13 +603,6 @@ export function UserNeeds({
     controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
   const setActiveTab = onActiveTabChange ?? setInternalActiveTab;
   const [showTempTip, setShowTempTip] = useState(false);
-  const drawerClassName = compact
-    ? "overflow-hidden mt-2 w-full rounded-xl p-3 sm:p-3.5"
-    : "overflow-hidden mt-3 rounded-2xl p-5";
-  const drawerStyle: React.CSSProperties = {
-    background: "var(--surface-container)",
-    border: "1px solid var(--outline-variant)",
-  };
   const drawerTransition = {
     type: "spring" as const,
     stiffness: 400,
@@ -654,29 +610,29 @@ export function UserNeeds({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="needs-root">
       {/* ═══ VPL-068: Single continuous flow ═══ */}
       <div
         data-section="context"
-        className={compact ? "pt-0 pb-0" : "pt-20 sm:pt-24 pb-6"}
+        className={compact ? "needs-context needs-context--compact" : "needs-context"}
       >
         <div
           data-region="create-flow"
-          className={compact ? "flex flex-col gap-4" : "flex flex-col gap-7 sm:gap-9"}
+          className={compact ? "needs-flow needs-flow--compact" : "needs-flow"}
         >
           {/* ═══ PRIMA COSA: parametri cucina/dispensa/tu ═══
               Minimal e in cima, come estensione del pulsante Profilo: chi sei e
               cosa hai. Il meteo (se disponibile) li precede, sottilissimo. */}
-          <div data-region="setup" className="flex flex-col w-full items-center gap-2">
+          <div data-region="setup" className="needs-setup">
             {showWeather && weather.data.city && (
-              <div className="flex items-center gap-2">
-                <MapPin size={11} className="flex-shrink-0" style={{ color: "var(--icon-muted)", opacity: 0.45 }} />
-                <span className="type-body-xs" style={{ color: "var(--text-muted)", opacity: 0.65 }}>
+              <div className="needs-weather">
+                <MapPin size={11} className="needs-weather__icon" />
+                <span className="type-body-xs needs-weather__text">
                   {weather.data.city}
                 </span>
-                <span style={{ opacity: 0.15, color: "var(--text-muted)" }}>·</span>
-                <CloudSun size={11} style={{ color: "var(--icon-muted)", opacity: 0.45 }} />
-                <span className="type-body-xs" style={{ color: "var(--text-muted)", opacity: 0.65 }}>
+                <span className="needs-weather__sep">·</span>
+                <CloudSun size={11} className="needs-weather__icon" />
+                <span className="type-body-xs needs-weather__text">
                   {formatTemperatureCopy(t(cms.ui.weatherOutdoor, { t: weather.data.temp }), fmt)}
                 </span>
               </div>
@@ -702,34 +658,31 @@ export function UserNeeds({
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={drawerTransition}
-                  className={drawerClassName}
-                  style={drawerStyle}
+                  className={compact ? "needs-drawer needs-drawer--compact" : "needs-drawer"}
                 >
-                  <div className={compact ? "flex flex-col gap-4" : "flex flex-col gap-6"}>
+                  <div className={compact ? "needs-drawer__stack needs-drawer__stack--compact" : "needs-drawer__stack"}>
                     {/* Kitchen Temperature */}
-                    <div>
+                    <div data-slot="kitchen-temp">
                       <SectionHeader
                         title={cms.misc.kitchenTempLabel}
                         subtitle={cms.misc.kitchenTempSubtitle}
                         compact={compact}
                       />
-                      <div className="flex items-center gap-3 mt-3">
-                        <Thermometer size={16} style={{ color: "var(--needs-pantry-accent)" }} />
+                      <div className="needs-kitchen-temp__row">
+                        <Thermometer size={16} className="needs-kitchen-temp__icon" />
                         <button
                           onClick={() => { setKitchenTempManual(true); setKitchenTemp((prev) => Math.max(10, prev - 1)); }}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center active:scale-88 transition-transform text-lg"
-                          style={{ background: "var(--needs-oven-bg)", border: "1px solid var(--needs-oven-border)" }}
+                          className="needs-kitchen-temp__btn"
                           aria-label={cms.misc.kitchenTempDown}
                         >
                           <Minus size={14} />
                         </button>
-                        <span className="type-numeric text-xl font-bold min-w-[50px] text-center" style={{ color: "var(--needs-pantry-accent)" }}>
+                        <span className="type-numeric needs-kitchen-temp__value">
                           {kitchenTemp}°C
                         </span>
                         <button
                           onClick={() => { setKitchenTempManual(true); setKitchenTemp((prev) => Math.min(40, prev + 1)); }}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center active:scale-88 transition-transform text-lg"
-                          style={{ background: "var(--needs-oven-bg)", border: "1px solid var(--needs-oven-border)" }}
+                          className="needs-kitchen-temp__btn"
                           aria-label={cms.misc.kitchenTempUp}
                         >
                           <Plus size={14} />
@@ -739,18 +692,18 @@ export function UserNeeds({
                             initial={{ opacity: 0, x: -4 }}
                             animate={{ opacity: 1, x: 0 }}
                             onClick={() => { setKitchenTempManual(false); setKitchenTemp(weather.data.kitchenTemp); }}
-                            className="ml-2 px-3 py-1 rounded bg-accent/10 text-accent text-sm font-semibold active:scale-95 transition-transform"
+                            className="needs-kitchen-temp__auto"
                           >
                             {cms.ui.autoLabel}
                           </motion.button>
                         )}
-                        <button onClick={() => setShowTempTip(!showTempTip)} className="ml-auto active:scale-90 transition-transform">
-                          <HelpCircle size={16} style={{ color: "var(--icon-muted)", opacity: showTempTip ? 0.8 : 0.3 }} />
+                        <button onClick={() => setShowTempTip(!showTempTip)} className="needs-kitchen-temp__help">
+                          <HelpCircle size={16} className={showTempTip ? "needs-kitchen-temp__help-icon needs-kitchen-temp__help-icon--active" : "needs-kitchen-temp__help-icon"} />
                         </button>
                       </div>
                       <AnimatePresence>
                         {showTempTip && (
-                          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden mt-2">
+                          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="needs-kitchen-temp__tip">
                             <InlineTip>{cms.tips.kitchenTemp}</InlineTip>
                           </motion.div>
                         )}
@@ -758,12 +711,12 @@ export function UserNeeds({
                     </div>
 
                     {/* ── Divider ── */}
-                    <div style={{ height: 1, background: "var(--outline-variant)", opacity: 0.5 }} />
+                    <div className="needs-divider" />
 
                     {/* Oven Preset */}
-                    <div>
+                    <div data-slot="oven-preset">
                       <SectionHeader title={cms.sections.oven.title} subtitle={ovenSet ? cms.ui.editOven : cms.sections.oven.description} compact={compact} />
-                      <div className={compact ? "grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2" : "grid grid-cols-2 sm:grid-cols-3 gap-2.5 mt-3"}>
+                      <div className={compact ? "needs-oven-grid needs-oven-grid--compact" : "needs-oven-grid"}>
                         {OVEN_PRESETS.map((preset) => {
                           const active = constraints.oven_type === preset.id;
                           const Icon = OVEN_ICONS[preset.id] || Thermometer;
@@ -773,18 +726,16 @@ export function UserNeeds({
                             <motion.button
                               key={preset.id}
                               onClick={() => handleOvenSelect(preset.id, preset.maxTemp)}
-                              className={compact ? "flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all text-left active:scale-96" : "flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all text-left active:scale-96"}
-                              style={{
-                                background: active ? "var(--chip-bg-active)" : "var(--chip-bg)",
-                                color: active ? "var(--chip-text-active)" : "var(--chip-text)",
-                                boxShadow: active ? "var(--shadow-glow), var(--shadow-md)" : "none",
-                                border: active ? "1px solid transparent" : "1px solid var(--chip-border)"
-                              }}
+                              className={
+                                active
+                                  ? (compact ? "needs-oven-card needs-oven-card--compact needs-oven-card--active" : "needs-oven-card needs-oven-card--active")
+                                  : (compact ? "needs-oven-card needs-oven-card--compact" : "needs-oven-card")
+                              }
                             >
-                              <Icon size={18} style={{ opacity: active ? 1 : 0.5 }} />
-                              <div>
-                                <div style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, lineHeight: "var(--leading-compact)" }}>{displayName}</div>
-                                <div className="type-numeric" style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-medium)" as any, opacity: 0.6 }}>{preset.maxTemp}°C</div>
+                              <Icon size={18} className={active ? "needs-oven-card__icon needs-oven-card__icon--active" : "needs-oven-card__icon"} />
+                              <div data-slot="body">
+                                <div className="needs-oven-card__name">{displayName}</div>
+                                <div className="type-numeric needs-oven-card__temp">{preset.maxTemp}°C</div>
                               </div>
                             </motion.button>
                           );
@@ -793,28 +744,28 @@ export function UserNeeds({
                     </div>
 
                     {/* ── Divider ── */}
-                    <div style={{ height: 1, background: "var(--outline-variant)", opacity: 0.5 }} />
+                    <div className="needs-divider" />
 
                     {/* Equipment */}
-                    <div>
+                    <div data-slot="equipment">
                       <SectionHeader title={cms.sections.equipment.title} subtitle={cms.sections.equipment.description} compact={compact} />
-                      <div className={compact ? "flex flex-col gap-3 mt-2" : "flex flex-col gap-4 mt-3"}>
+                      <div className={compact ? "needs-equipment needs-equipment--compact" : "needs-equipment"}>
                         {/* Impastamento */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="type-data-sm" style={{ color: "var(--text-muted)", letterSpacing: "0.06em", textTransform: "uppercase" as any }}>{cms.ui.equipKneading}</span>
+                        <div data-slot="equipment-group">
+                          <div className="needs-equipment__label-row">
+                            <span className="type-data-sm needs-equipment__label">{cms.ui.equipKneading}</span>
                           </div>
-                          <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+                          <div className="needs-equipment__chips">
                             <Chip label={cms.ui.equipByHand} active={!constraints.has_mixer} onToggle={() => update("has_mixer", false)} />
                             <Chip label={cms.ui.equipMixer} active={constraints.has_mixer} onToggle={() => update("has_mixer", true)} />
                           </div>
                         </div>
                         {/* Superficie cottura */}
-                        <div>
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="type-data-sm" style={{ color: "var(--text-muted)", letterSpacing: "0.06em", textTransform: "uppercase" as any }}>{cms.ui.equipSurface}</span>
+                        <div data-slot="equipment-group">
+                          <div className="needs-equipment__label-row">
+                            <span className="type-data-sm needs-equipment__label">{cms.ui.equipSurface}</span>
                           </div>
-                          <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+                          <div className="needs-equipment__chips">
                             <Chip label={cms.ui.equipStone} active={constraints.has_pizza_stone} onToggle={() => update("has_pizza_stone", !constraints.has_pizza_stone)} />
                             <Chip label={cms.ui.equipSteel} active={constraints.has_pizza_steel} onToggle={() => update("has_pizza_steel", !constraints.has_pizza_steel)} />
                             <Chip label={cms.ui.equipPan} active={constraints.has_baking_pan} onToggle={() => update("has_baking_pan", !constraints.has_baking_pan)} />
@@ -833,37 +784,46 @@ export function UserNeeds({
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={drawerTransition}
-                  className={drawerClassName}
-                  style={drawerStyle}
+                  className={compact ? "needs-drawer needs-drawer--compact" : "needs-drawer"}
                 >
-                  <div className={compact ? "flex flex-col gap-4" : "flex flex-col gap-6"}>
+                  <div className={compact ? "needs-drawer__stack needs-drawer__stack--compact" : "needs-drawer__stack"}>
                     {/* Flours */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Wheat size={14} style={{ color: "var(--needs-pantry-accent)" }} />
-                        <span style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any }}>{cms.ui.pantryFlours}</span>
+                    <div data-slot="flours">
+                      <div className="needs-pantry__group-header">
+                        <Wheat size={14} className="needs-pantry__group-icon" />
+                        <span className="needs-pantry__group-title">{cms.ui.pantryFlours}</span>
                       </div>
                       <FlourChipGrid options={FLOUR_OPTIONS_GENERIC} activeFlours={constraints.pantry_flours} recentFlours={recentFlours} onToggle={toggleFlour} cms={cms} />
                       <BrandedFloursSection options={FLOUR_OPTIONS_SPECIAL} activeFlours={constraints.pantry_flours} recentFlours={recentFlours} onToggle={toggleFlour} cms={cms} labelOverride={cms.ui.specialFlours} />
                     </div>
                     {/* Yeasts */}
-                    <div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <FlaskConical size={14} style={{ color: "var(--needs-pantry-accent)" }} />
-                        <span style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any }}>{cms.ui.pantryYeasts}</span>
+                    <div data-slot="yeasts">
+                      <div className="needs-pantry__group-header">
+                        <FlaskConical size={14} className="needs-pantry__group-icon" />
+                        <span className="needs-pantry__group-title">{cms.ui.pantryYeasts}</span>
                       </div>
-                      <div className="flex flex-wrap justify-center lg:justify-start gap-2">
+                      <div className="needs-yeast-grid">
                         {YEAST_OPTIONS.map((y) => {
                           const active = constraints.pantry_yeasts.includes(y.id);
                           const isRecent = !active && recentYeasts.includes(y.id);
                           return (
-                            <motion.button key={y.id} onClick={() => toggleYeast(y.id)} className="relative flex flex-col items-start gap-0.5 px-4 py-2.5 rounded-xl transition-all active:scale-95" style={{ background: active ? "var(--chip-bg-active)" : "var(--chip-bg)", color: active ? "var(--chip-text-active)" : "var(--chip-text)", border: active ? "1px solid transparent" : isRecent ? "1px solid var(--needs-pantry-border-active)" : "1px solid var(--chip-border)", fontSize: "var(--font-size-lg)" }}>
-                              {isRecent && (<div className="absolute -top-1.5 right-2 px-1.5 py-0.5 rounded-full" style={{ background: "var(--needs-pantry-accent)", fontSize: "var(--font-size-xs)", fontWeight: "var(--weight-bold)" as any, color: "var(--overlay-text)", letterSpacing: "var(--tracking-spread)", lineHeight: "var(--leading-none)" }}>{cms.ui.badgeRecent}</div>)}
-                              <div className="flex items-center gap-2">
+                            <motion.button
+                              key={y.id}
+                              onClick={() => toggleYeast(y.id)}
+                              className={
+                                active
+                                  ? "needs-yeast-chip needs-yeast-chip--active"
+                                  : isRecent
+                                    ? "needs-yeast-chip needs-yeast-chip--recent"
+                                    : "needs-yeast-chip"
+                              }
+                            >
+                              {isRecent && (<div className="needs-yeast-chip__badge">{cms.ui.badgeRecent}</div>)}
+                              <div className="needs-yeast-chip__row">
                                 <AnimatePresence>{active && (<motion.span initial={{ scale: 0, width: 0 }} animate={{ scale: 1, width: 14 }} exit={{ scale: 0, width: 0 }} transition={{ type: "spring", stiffness: 500, damping: 25 }}><Check size={14} /></motion.span>)}</AnimatePresence>
-                                <span style={{ fontWeight: "var(--weight-semibold)" as any }}>{cms.yeastLabels[y.id] ?? y.name}</span>
+                                <span className="needs-yeast-chip__name">{cms.yeastLabels[y.id] ?? y.name}</span>
                               </div>
-                              <span style={{ fontSize: "var(--font-size-sm)", opacity: 0.6 }}>{cms.yeastDetails[y.id] ?? y.detail}</span>
+                              <span className="needs-yeast-chip__detail">{cms.yeastDetails[y.id] ?? y.detail}</span>
                             </motion.button>
                           );
                         })}
@@ -880,12 +840,11 @@ export function UserNeeds({
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={drawerTransition}
-                  className={drawerClassName}
-                  style={drawerStyle}
+                  className={compact ? "needs-drawer needs-drawer--compact" : "needs-drawer"}
                 >
-                  <div>
+                  <div data-slot="skill">
                     <SectionHeader title={cms.sections.skill.title} subtitle={cms.sections.skill.description} compact={compact} />
-                    <div className={compact ? "flex flex-wrap justify-center lg:justify-start gap-2 mt-2" : "flex flex-wrap justify-center lg:justify-start gap-2 mt-3"}>
+                    <div className={compact ? "needs-skill-chips needs-skill-chips--compact" : "needs-skill-chips"}>
                       {SKILL_LEVELS.map((sl) => {
                         const cmsSkill = cms.skillLevels[String(sl.level)];
                         return (<Chip key={sl.level} label={cmsSkill?.name ?? sl.name} active={constraints.skill_level === sl.level} onToggle={() => update("skill_level", sl.level)} />);
@@ -902,8 +861,7 @@ export function UserNeeds({
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={drawerTransition}
-                  className={drawerClassName}
-                  style={drawerStyle}
+                  className={compact ? "needs-drawer needs-drawer--compact" : "needs-drawer"}
                 >
                   <TimeSlotPicker
                     slots={dynamicSlots}

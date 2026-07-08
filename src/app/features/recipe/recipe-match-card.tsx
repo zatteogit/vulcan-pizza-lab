@@ -82,10 +82,19 @@ export function matchTone(score: number, mode: RecipeMatchMode, tones?: MatchTon
   };
 }
 
+/* Fasce del messaggio-soffitto: mappa letterale tono→modifier (mai template
+   dinamico) — stesso pattern di MATCH_ICONS più sotto. */
+const HEADROOM_TONE_CLASS = {
+  warn: "match-notice--warn",
+  accent: "match-notice--accent",
+  muted: "match-notice--muted",
+  ok: "match-notice--ok",
+} as const;
+
 /* ═══ ANIMATED SCORE — il numero "rolla" verso il valore con una spring.
    Al mount parte da 0 (rivelazione), poi insegue ogni ricalcolo. Con
    prefers-reduced-motion salta direttamente al valore. tnum evita jitter. */
-function AnimatedScore({ value, style }: { value: number; style?: React.CSSProperties }) {
+function AnimatedScore({ value }: { value: number }) {
   const prefersReducedMotion = useReducedMotion();
   const spring = useSpring(prefersReducedMotion ? value : 0, {
     stiffness: 90,
@@ -97,10 +106,7 @@ function AnimatedScore({ value, style }: { value: number; style?: React.CSSPrope
   }, [value, spring, prefersReducedMotion]);
   const display = useTransform(spring, (v) => String(Math.round(v)));
   return (
-    <motion.span
-      className="type-numeric inline-block"
-      style={{ ...style, fontFeatureSettings: "'tnum'" }}
-    >
+    <motion.span className="type-numeric match-score-value">
       {display}
     </motion.span>
   );
@@ -302,7 +308,7 @@ export function RecipeMatchCard({
     <motion.section
       layout
       data-region="card"
-      className={`relative w-full ${className}`}
+      className={`match-card ${className}`}
       aria-label={cms.ui.recipeScore}
     >
       {/* ═══ Verdetto editoriale (redesign lug 2026, round 5) ═══
@@ -310,53 +316,22 @@ export function RecipeMatchCard({
           tono in corsivo — "85/100 · Ottima intesa" come su una guida.
           Niente scatola: kicker con filetto, stessa grammatica di
           Ingredienti. Dettagli (copy, forno, barre) a richiesta. */}
-      <div className="flex items-center gap-2">
+      <div className="match-kicker">
         <MatchIcon
           size={14}
           fill="currentColor"
-          style={{ color: tone.low ? "var(--text-warning)" : "var(--primary)", flexShrink: 0 }}
+          className={`match-kicker__icon ${tone.low ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
           aria-hidden="true"
         />
-        <span
-          style={{
-            color: "var(--text-muted)",
-            fontSize: "var(--font-size-xs)",
-            fontWeight: "var(--weight-semibold)" as any,
-            letterSpacing: "var(--tracking-caps)",
-            textTransform: "uppercase",
-            lineHeight: 1,
-          }}
-        >
-          Match
-        </span>
-        <span
-          className="flex-1 h-px"
-          style={{ background: "var(--container-border-subtle)" }}
-          aria-hidden="true"
-        />
+        <span className="match-kicker__label">Match</span>
+        <span className="match-kicker__rule" aria-hidden="true" />
       </div>
 
       {/* Verdetto: numero serifa + tono corsivo, stesso baseline. */}
-      <div className="mt-2.5 flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-        <span className="flex items-baseline flex-shrink-0">
-          <AnimatedScore
-            value={roundedScore}
-            style={{
-              fontFamily: "var(--font-serif)",
-              color: "var(--text-default)",
-              fontSize: "clamp(var(--font-size-7xl), 6vw, var(--font-size-8xl))",
-              fontWeight: "var(--weight-bold)" as any,
-              lineHeight: 1,
-            }}
-          />
-          <span
-            className="type-numeric ml-1"
-            style={{
-              color: "var(--text-muted)",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
-          >
+      <div className="match-verdict">
+        <span className="match-score-group">
+          <AnimatedScore value={roundedScore} />
+          <span className="type-numeric match-score-suffix">
             /100
           </span>
           <AnimatePresence>
@@ -367,12 +342,7 @@ export function RecipeMatchCard({
                 animate={{ opacity: 1, y: -3, scale: 1 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ type: "spring", stiffness: 380, damping: 26 }}
-                className="type-numeric ml-1.5"
-                style={{
-                  color: "var(--cta)",
-                  fontSize: "var(--font-size-md)",
-                  fontWeight: "var(--weight-bold)" as any,
-                }}
+                className="type-numeric match-score-bump"
                 aria-hidden="true"
               >
                 +{scoreBump.delta}
@@ -380,21 +350,11 @@ export function RecipeMatchCard({
             )}
           </AnimatePresence>
         </span>
-        <span
-          className="min-w-0"
-          style={{
-            fontFamily: "var(--font-serif)",
-            fontStyle: "italic",
-            color: "var(--text-default)",
-            fontSize: "clamp(var(--font-size-2xl), 3vw, var(--font-size-5xl))",
-            fontWeight: "var(--weight-semibold)" as any,
-            lineHeight: "var(--leading-compact)",
-          }}
-        >
+        <span className="match-tone">
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
               key={tone.title}
-              className="block"
+              className="match-tone__text"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -425,14 +385,7 @@ export function RecipeMatchCard({
               ? (cms.cooking.matchDetailsHide ?? "Nascondi")
               : (cms.cooking.matchDetails ?? "Dettagli")
           }
-          className="inline-flex flex-shrink-0 self-center p-1 active:scale-90 transition-all"
-          style={{
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            color: expanded ? "var(--text-accent)" : "var(--icon-muted)",
-            lineHeight: 1,
-          }}
+          className={`match-info-toggle${expanded ? " match-info-toggle--active" : ""}`}
         >
           <Info size={16} />
         </button>
@@ -440,40 +393,14 @@ export function RecipeMatchCard({
 
       {/* Avvisi onesti: visibili anche a card chiusa */}
       {unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
-        <p
-          className="text-left"
-          style={{
-            margin: "8px 0 0",
-            color: "var(--text-warning)",
-            fontSize: "var(--font-size-sm)",
-            lineHeight: "var(--leading-normal)",
-            fontWeight: "var(--weight-semibold)" as any,
-          }}
-        >
+        <p className="match-notice match-notice--warn">
           {unviableText}
         </p>
       )}
       {/* Riga-soffitto SEMPRE visibile ("Puoi arrivare a {ceiling}…") —
           round 4, nota Matteo: è la promessa che dà senso a "Ottimizza". */}
       {headroomLine && (
-        <p
-          className="text-left"
-          style={{
-            margin: "8px 0 0",
-            color:
-              headroomLine.tone === "warn"
-                ? "var(--text-warning)"
-                : headroomLine.tone === "accent" || headroomLine.tone === "ok"
-                  ? "var(--cta)"
-                  : "var(--text-muted)",
-            fontSize: "var(--font-size-sm)",
-            lineHeight: "var(--leading-normal)",
-            fontWeight:
-              headroomLine.tone === "muted"
-                ? ("var(--weight-medium)" as any)
-                : ("var(--weight-semibold)" as any),
-          }}
-        >
+        <p className={`match-notice ${HEADROOM_TONE_CLASS[headroomLine.tone]}`}>
           {headroomLine.text}
         </p>
       )}
@@ -487,39 +414,24 @@ export function RecipeMatchCard({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 380, damping: 32 }}
-            className="overflow-hidden"
+            className="match-details"
           >
             {/* Copy emotivo del tono: apre il pannello. */}
-            <div
-              className="mt-3 pt-3"
-              style={{ borderTop: "1px solid var(--container-border-subtle)" }}
-            >
-              <p
-                style={{
-                  margin: 0,
-                  color: "var(--text-muted)",
-                  fontSize: "var(--font-size-md)",
-                  lineHeight: "var(--leading-normal)",
-                }}
-              >
+            <div className="match-details__intro">
+              <p className="match-details__body">
                 {tone.body}
               </p>
             </div>
 
-            <div
-              className="mt-3 flex items-start gap-1.5"
-              style={{
-                color: ovenGap > 0 ? "var(--text-muted)" : "var(--text-accent)",
-              }}
-            >
+            <div className={`match-oven ${ovenGap > 0 ? "match-oven--gap" : "match-oven--ready"}`}>
               {ovenGap > 0 && (
                 <TriangleAlert
                   size={14}
-                  style={{ color: "var(--text-warning)", marginTop: 2, flexShrink: 0 }}
+                  className="match-oven__alert-icon"
                   aria-hidden="true"
                 />
               )}
-              <span className="type-numeric text-left" style={{ fontSize: "var(--font-size-md)" }}>
+              <span className="type-numeric match-oven__text">
                 {ovenStatus}: {fmt.celsius(ovenTemp)}
                 {ovenGap > 0 ? ` · ${cms.ui.statIdeal} ${fmt.celsius(idealTemp)}` : ""}
               </span>
@@ -528,7 +440,7 @@ export function RecipeMatchCard({
             {/* VPL-C4: barre con label ESTESA; quando non entrano sulla riga, vanno a
              * capo (flex-wrap + min-width che contiene il nome pieno) invece di
              * comprimersi in sigle criptiche. */}
-            <div className="flex flex-wrap gap-x-4 gap-y-3 mt-3 w-full">
+            <div className="match-bars">
               {axes.map((axis) => (
                 <ScoreBar
                   key={axis.key}
@@ -556,48 +468,26 @@ export function RecipeMatchCard({
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                  className="overflow-hidden"
+                  className="match-explain"
                 >
-                  <div
-                    className="mt-2.5 rounded-xl px-3 py-2.5"
-                    style={{
-                      background: "color-mix(in srgb, var(--container-bg-high) 70%, transparent)",
-                      border: "1px solid var(--container-border-subtle)",
-                    }}
-                  >
-                    <div
-                      className="flex items-baseline gap-2"
-                      style={{
-                        color: "var(--text-default)",
-                        fontSize: "var(--font-size-sm)",
-                        fontWeight: "var(--weight-bold)" as any,
-                      }}
-                    >
-                      <span style={{ color: explainedAxis.color }}>{explainedAxis.label}</span>
+                  <div className="match-explain__panel">
+                    <div className="match-explain__head">
+                      <span
+                        className="match-explain__axis"
+                        style={{ ["--axis-color" as any]: explainedAxis.color }}
+                      >
+                        {explainedAxis.label}
+                      </span>
                       {nerdMode && (() => {
                         const weighted = weightedAxes.find((axis) => axis.key === explainedAxis.key);
                         return weighted ? (
-                          <span
-                            className="type-numeric"
-                            style={{
-                              color: "var(--text-muted)",
-                              fontSize: "var(--font-size-xs)",
-                              fontWeight: "var(--weight-semibold)" as any,
-                            }}
-                          >
+                          <span className="type-numeric match-explain__weight">
                             {t(cms.cooking.matchAxisWeight ?? "peso {pct}% del Match", { pct: weighted.weightPct })}
                           </span>
                         ) : null;
                       })()}
                     </div>
-                    <p
-                      style={{
-                        margin: "4px 0 0",
-                        color: "var(--text-muted)",
-                        fontSize: "var(--font-size-sm)",
-                        lineHeight: "var(--leading-normal)",
-                      }}
-                    >
+                    <p className="match-explain__body">
                       {explainedAxis.explain}
                     </p>
                   </div>
@@ -608,48 +498,29 @@ export function RecipeMatchCard({
             {/* Scomposizione numerica (nerd): stessi pesi passati al motore,
              * rinormalizzati — la somma è il Match mostrato (±1 di rounding). */}
             {nerdMode && weightedAxes.length > 0 && (
-              <p
-                className="type-numeric mt-2.5"
-                style={{
-                  margin: "10px 0 0",
-                  color: "var(--text-muted)",
-                  fontSize: "var(--font-size-xs)",
-                  lineHeight: "var(--leading-normal)",
-                  fontFeatureSettings: "'tnum'",
-                }}
-              >
+              <p className="type-numeric match-breakdown">
                 {cms.cooking.matchBreakdownLabel ?? "Media pesata"}:{" "}
                 {weightedAxes
                   .map((axis) => `${axis.shortLabel} ${Math.round(axis.value)}·${axis.weightPct}%`)
                   .join(" + ")}
                 {" ≈ "}
-                <span style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>
+                <span className="match-breakdown__total">
                   {roundedScore}
                 </span>
               </p>
             )}
 
             {optimizationRationale && optimizationRationale.length > 0 && (
-              <div
-                className="mt-3 pt-3 w-full"
-                style={{ borderTop: "1px solid var(--container-border-subtle)" }}
-              >
-                <div className="flex items-center gap-1.5 mb-1.5" style={{ color: "var(--cta)" }}>
+              <div className="match-rationale">
+                <div className="match-rationale__head">
                   <Sparkles size={14} />
-                  <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
+                  <span className="match-rationale__head-label">
                     {cms.cooking.optimizedForSetup}
                   </span>
                 </div>
-                <ul className="flex flex-col gap-1">
+                <ul className="match-rationale__list">
                   {optimizationRationale.map((reason, i) => (
-                    <li
-                      key={i}
-                      style={{
-                        fontSize: "var(--font-size-sm)",
-                        color: "var(--text-muted)",
-                        lineHeight: "var(--leading-normal)",
-                      }}
-                    >
+                    <li key={i} className="match-rationale__item">
                       • {reason}
                     </li>
                   ))}
@@ -660,7 +531,7 @@ export function RecipeMatchCard({
         )}
       </AnimatePresence>
 
-      <div className="mt-4 flex w-full flex-wrap items-center gap-3">
+      <div className="match-actions">
         {onOptimize && (
           <motion.button
             type="button"
@@ -668,17 +539,7 @@ export function RecipeMatchCard({
             whileHover={{ scale: 1.025, y: -1 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 450, damping: 28 }}
-            className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5"
-            style={{
-              background: "var(--cta)",
-              color: "var(--cta-foreground)",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--weight-bold)" as any,
-              lineHeight: "var(--leading-tight)",
-              boxShadow: "0 10px 22px color-mix(in srgb, var(--cta) 22%, transparent)",
-            }}
+            className="match-action-cta"
           >
             <Sparkles size={15} />
             {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}
@@ -692,16 +553,7 @@ export function RecipeMatchCard({
             type="button"
             onClick={onPersonalize}
             whileTap={{ scale: 0.95 }}
-            className="inline-flex items-center justify-center gap-1.5 rounded-full px-1 py-2.5"
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "var(--primary)",
-              cursor: "pointer",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--weight-semibold)" as any,
-              lineHeight: "var(--leading-tight)",
-            }}
+            className="match-action-text match-action-text--personalize"
           >
             <SlidersHorizontal size={14} />
             {cms.ui.personalize ?? "Personalizza"}
@@ -718,16 +570,7 @@ export function RecipeMatchCard({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center justify-center gap-1.5 rounded-full px-1 py-2.5"
-              style={{
-                background: "transparent",
-                border: "none",
-                color: saved ? "var(--primary)" : "var(--text-accent)",
-                cursor: "pointer",
-                fontSize: "var(--font-size-sm)",
-                fontWeight: "var(--weight-semibold)" as any,
-                lineHeight: "var(--leading-tight)",
-              }}
+              className={`match-action-text match-action-text--save${saved ? " match-action-text--save-active" : ""}`}
             >
               {saved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
               {saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
@@ -769,38 +612,34 @@ function ScoreBar({
       {...(explainable
         ? { type: "button" as const, onClick: onToggleExplain, "aria-expanded": explained }
         : {})}
-      className={`${compact ? "grow shrink-0 basis-[140px] min-w-[140px]" : "min-w-[148px] flex-1"} ${
-        explainable ? "text-left active:scale-98 transition-transform" : ""
+      className={`match-bar ${compact ? "match-bar--compact" : "match-bar--wide"}${
+        explainable ? " match-bar--explainable" : ""
       }`}
-      style={explainable ? { background: "transparent", border: "none", padding: 0, cursor: "pointer" } : undefined}
     >
       <div
-        className="flex items-center justify-between gap-2"
-        style={{
-          color: explained ? "var(--text-default)" : "var(--text-muted)",
-          fontSize: compact ? "var(--font-size-xs)" : "var(--font-size-sm)",
-          fontWeight: "var(--weight-semibold)" as any,
-          lineHeight: "var(--leading-tight)",
-        }}
+        className={`match-bar__head${compact ? " match-bar__head--compact" : ""}${
+          explained ? " match-bar__head--explained" : ""
+        }`}
       >
-        <span className="inline-flex items-center gap-1" title={label} aria-label={label}>
+        <span className="match-bar__label" title={label} aria-label={label}>
           {compact ? displayLabel ?? label : label}
           {explainable && (
-            <Info size={11} aria-hidden="true" style={{ opacity: explained ? 0.9 : 0.55, flexShrink: 0 }} />
+            <Info
+              size={11}
+              aria-hidden="true"
+              className={`match-bar__label-icon${explained ? " match-bar__label-icon--explained" : ""}`}
+            />
           )}
         </span>
         <span className="type-numeric">{rounded}</span>
       </div>
-      <div
-        className={compact ? "mt-1 h-1.5 rounded-full overflow-hidden" : "mt-1.5 h-2 rounded-full overflow-hidden"}
-        style={{ background: "var(--container-bg-high)" }}
-      >
+      <div className={`match-bar-track ${compact ? "match-bar-track--compact" : "match-bar-track--wide"}`}>
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${rounded}%` }}
           transition={{ type: "spring", stiffness: 240, damping: 26 }}
-          className="h-full rounded-full"
-          style={{ background: color }}
+          className="match-bar-fill"
+          style={{ ["--bar-color" as any]: color }}
         />
       </div>
     </Wrapper>

@@ -603,8 +603,6 @@
   --btn-secondary-weight: var(--weight-semibold);
 
   /* ── I2. User Needs specifics ── */
-  --needs-oven-bg: var(--surface-container);
-  --needs-oven-border: var(--outline-variant);
   --needs-pantry-accent: var(--tertiary);
   --needs-pantry-border-active: color-mix(
     in srgb,
@@ -701,14 +699,11 @@
   --glow-primary: var(--primary);
   --glow-secondary: var(--tertiary);
   --glow-warm: var(--warm-sienna);
-  --logo-grad-start: var(--primary);
-  --logo-grad-mid: color-mix(
-    in srgb,
-    var(--primary) 60%,
-    var(--tertiary)
-  );
-  --logo-grad-end: var(--tertiary);
-  --logo-glow: var(--primary);
+  --logo-solid: #ea4e27;
+  --logo-grad-start: #f36b3d;
+  --logo-grad-mid: var(--logo-solid);
+  --logo-grad-end: #b93620;
+  --logo-glow: var(--logo-solid);
 
   /* ── T. Hero effects ── */
   --recipe-hero-card-bg: color-mix(in srgb, var(--container-page) 88%, transparent);

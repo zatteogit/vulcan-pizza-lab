@@ -246,12 +246,7 @@ export function RecipeSetupPanel({
            Solo la leva ha aspetto cliccabile. */
         <button
           onClick={() => (onRequestOpen ? onRequestOpen() : setOpen(true))}
-          className="w-full flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 px-0.5 py-1 text-left active:scale-99 transition-transform"
-          style={{
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="setup-trigger setup-trigger--compact"
           aria-expanded={open}
           aria-haspopup="dialog"
         >
@@ -260,109 +255,56 @@ export function RecipeSetupPanel({
               key={compactSummary}
               initial={{ opacity: 0, y: 3 }}
               animate={{ opacity: 1, y: 0 }}
-              className="type-numeric min-w-0"
-              style={{
-                color: notice ? "var(--text-accent)" : "var(--text-muted)",
-                fontSize: "var(--font-size-sm)",
-                lineHeight: "var(--leading-normal)",
-                fontFeatureSettings: "'tnum'",
-              }}
+              className={
+                notice
+                  ? "setup-trigger__summary setup-trigger__summary--notice"
+                  : "setup-trigger__summary"
+              }
             >
               {compactSummary}
             </motion.span>
           )}
-          <span
-            className="inline-flex items-baseline gap-0.5 flex-shrink-0 whitespace-nowrap"
-            style={{
-              color: "var(--text-accent)",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--weight-semibold)" as any,
-              lineHeight: "var(--leading-normal)",
-              textDecoration: "underline",
-              textUnderlineOffset: 3,
-            }}
-          >
+          <span className="setup-trigger__link">
             {cms.ui.adjustByHand ?? "Regola a mano"}
             <ChevronDown
               size={13}
-              className="self-center"
-              style={{ transform: "rotate(-90deg)" }}
+              className="setup-trigger__link-icon"
               aria-hidden="true"
             />
           </span>
         </button>
       ) : (
-      <div
-        className="overflow-hidden rounded-2xl border border-[var(--recipe-setup-border)] transition-all duration-200 hover:border-[var(--tertiary)] hover:shadow-sm"
-        style={{
-          background: "var(--recipe-setup-bg)",
-        }}
-      >
         <button
           onClick={() => (onRequestOpen ? onRequestOpen() : setOpen(true))}
-          className="w-full flex items-center gap-3 px-5 py-4 text-left active:scale-99 transition-all duration-200 hover:bg-[color-mix(in srgb,var(--text-default)_2%,transparent)] group"
-          style={{
-            background: "transparent",
-            border: "none",
-            color: "var(--text-default)",
-            cursor: "pointer",
-          }}
+          className="setup-trigger"
           aria-expanded={open}
           aria-haspopup="dialog"
         >
-          <span
-            className="flex items-center justify-center rounded-xl flex-shrink-0 group-hover:scale-110 transition-transform duration-200"
-            style={{
-              width: 38,
-              height: 38,
-              background: "var(--recipe-setup-icon-bg)",
-              color: "var(--recipe-setup-icon)",
-            }}
-          >
+          <span className="setup-trigger__icon">
             <Sparkles size={17} />
           </span>
-          <span className="flex-1 min-w-0">
-            <span
-              className="block"
-              style={{
-                fontSize: "var(--font-size-lg)",
-                fontWeight: "var(--weight-semibold)" as any,
-                lineHeight: "var(--leading-tight)",
-              }}
-            >
+          <span className="setup-trigger__text">
+            <span className="setup-trigger__title">
               {cms.ui.customizeParams}
             </span>
             <motion.span
               key={triggerSubtitle}
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="block truncate"
-              style={{
-                fontSize: "var(--font-size-md)",
-                color: notice ? "var(--text-accent)" : "var(--text-muted)",
-                lineHeight: "var(--leading-normal)",
-                marginTop: 2,
-              }}
+              className={
+                notice
+                  ? "setup-trigger__subtitle setup-trigger__subtitle--notice"
+                  : "setup-trigger__subtitle"
+              }
             >
               {triggerSubtitle}
             </motion.span>
           </span>
-          <span
-            className="hidden sm:inline-flex rounded-full px-3 py-1"
-            style={{
-              color: "var(--recipe-setup-action-text)",
-              background: "var(--recipe-setup-action-bg)",
-              fontSize: "var(--font-size-md)",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
-          >
-            {triggerAction}
-          </span>
-          <span className="inline-flex" style={{ color: "var(--text-muted)" }}>
-            <ChevronDown size={17} style={{ transform: "rotate(-90deg)" }} />
+          <span className="setup-trigger__action">{triggerAction}</span>
+          <span className="setup-trigger__chevron">
+            <ChevronDown size={17} className="setup-trigger__chevron-icon" />
           </span>
         </button>
-      </div>
       )}
 
       <ModalSheet
@@ -371,301 +313,177 @@ export function RecipeSetupPanel({
         ariaLabelledby="recipe-setup-title"
         size="xl"
         height="full"
-        panelClassName="overflow-hidden flex flex-col"
+        panelClassName="setup-panel"
       >
-              <div
-                className="flex-shrink-0 px-5 py-3 sm:px-7 sm:py-3.5 border-b"
-                style={{ borderColor: "var(--container-border-subtle)" }}
-              >
-                <div className="flex items-start gap-3">
-                  <div className="min-w-0 flex-1">
-                    <h2
-                      id="recipe-setup-title"
-                      className="truncate"
-                      style={{
-                        fontSize:
-                          "clamp(1.125rem, 4.6vw, var(--font-size-2xl))",
-                        fontWeight: "var(--weight-bold)" as any,
-                        margin: 0,
-                        lineHeight: "var(--leading-tight)",
-                      }}
-                    >
-                      {cms.ui.customizeParams}
-                    </h2>
-                    {scores && (
-                      <div className="mt-2 sm:hidden">
-                        <MatchSummary scores={scores} />
-                      </div>
-                    )}
-                  </div>
-
-                  {scores && (
-                    <MatchSummary
-                      scores={scores}
-                      className="hidden min-w-0 flex-1 justify-end sm:flex"
-                    />
-                  )}
-
-                  <button
-                    ref={closeButtonRef}
-                    type="button"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center justify-center rounded-full hover:bg-[color-mix(in srgb,var(--text-default)_10%,transparent)] hover:text-[var(--text-default)] active:scale-90 transition-all duration-150 flex-shrink-0"
-                    style={{
-                      width: 36,
-                      height: 36,
-                      background: "var(--container-bg-low)",
-                      border: "1px solid var(--container-border)",
-                      color: "var(--text-muted)",
-                      cursor: "pointer",
-                    }}
-                    aria-label={cms.ui.close}
-                  >
-                    <X size={16} />
-                  </button>
+        <div className="setup-header">
+          <div className="setup-header__row">
+            <div className="setup-header__titlewrap">
+              <h2 id="recipe-setup-title" className="setup-header__title">
+                {cms.ui.customizeParams}
+              </h2>
+              {scores && (
+                <div className="setup-header__match-mobile">
+                  <MatchSummary scores={scores} />
                 </div>
+              )}
+            </div>
+
+            {scores && <MatchSummary scores={scores} variant="desktop" />}
+
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={() => setOpen(false)}
+              className="setup-header__close"
+              aria-label={cms.ui.close}
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+
+        <div className="setup-body">
+          {notice && <div className="setup-notice">{notice}</div>}
+
+          <div className="setup-profile">
+            <div className="setup-profile__intro">
+              <span className="setup-profile__label">
+                {cmsMessage(cms, "recipeSetup.profileLabel", "Profilo impasto")}
+              </span>
+              <span className="type-body setup-profile__hint">
+                {cmsMessage(
+                  cms,
+                  "recipeSetup.profileHint",
+                  "Scegli un preset bilanciato dai nostri pizzaioli o un'interpretazione d'autore per configurare l'impasto.",
+                )}
+              </span>
+            </div>
+            <div className="setup-profile__body">
+              <div className="setup-versions">
+                {versions.map((version) => {
+                  const active = !activeInterpretationId && activeVersion?.id === version.id;
+                  return (
+                    <button
+                      key={version.id}
+                      type="button"
+                      onClick={() => onSelectVersion(version)}
+                      className={active ? "setup-option setup-option--active" : "setup-option"}
+                    >
+                      <div className="setup-option__text">
+                        <span className="setup-option__name">
+                          {localizedVersionLabel(cms, version.label)}
+                        </span>
+                        <span className="setup-option__detail">
+                          {fmt.percent(version.params.hydration_pct)} idr. · W{version.params.flour_w}
+                        </span>
+                      </div>
+                      {active && <Check size={16} className="setup-option__check" />}
+                    </button>
+                  );
+                })}
               </div>
 
-              <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 sm:px-8 sm:py-5 flex flex-col gap-4">
-                {notice && (
-                  <div
-                    className="rounded-xl px-3 py-2"
-                    style={{
-                      background: "var(--recipe-setup-feedback-bg)",
-                      color: "var(--recipe-setup-feedback-text)",
-                      fontSize: "var(--font-size-md)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                    }}
-                  >
-                    {notice}
+              {interpretations.length > 0 && (
+                <div className="setup-signatures">
+                  <div className="setup-signatures__label">
+                    {cms.misc.signatureLabel || "Firma"}
                   </div>
-                )}
-
-                <div
-                  className="rounded-2xl p-4 sm:p-5 flex flex-col gap-3.5"
-                  style={{
-                    background:
-                      "color-mix(in srgb, var(--tertiary) 4%, var(--surface-container-low))",
-                    border:
-                      "1px solid color-mix(in srgb, var(--tertiary) 10%, var(--container-border-subtle))",
-                  }}
-                >
-                  <div className="flex flex-col gap-1">
-                    <span
-                      style={{
-                        color: "var(--tertiary)",
-                        fontSize: "var(--font-size-xs)",
-                        fontWeight: "var(--weight-bold)" as any,
-                        letterSpacing: "var(--tracking-spread)",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      {cmsMessage(
-                        cms,
-                        "recipeSetup.profileLabel",
-                        "Profilo impasto",
-                      )}
-                    </span>
-                    <span
-                      className="type-body"
-                      style={{ color: "var(--text-muted)", lineHeight: "1.4" }}
-                    >
-                      {cmsMessage(
-                        cms,
-                        "recipeSetup.profileHint",
-                        "Scegli un preset bilanciato dai nostri pizzaioli o un'interpretazione d'autore per configurare l'impasto.",
-                      )}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex flex-col gap-1.5">
-                      {versions.map((version) => {
-                        const active = !activeInterpretationId && activeVersion?.id === version.id;
-                        return (
-                          <button
-                            key={version.id}
-                            type="button"
-                            onClick={() => onSelectVersion(version)}
-                            className="flex items-center justify-between px-4 py-3 rounded-xl border text-left active:scale-98 transition-all"
-                            style={{
-                              background: active ? "var(--surface-container)" : "var(--surface-container-low)",
-                              borderColor: active ? "var(--tertiary)" : "var(--outline-variant)",
-                              borderWidth: active ? 2 : 1,
-                              color: "var(--text-default)",
-                              cursor: "pointer",
-                            }}
-                          >
-                            <div className="flex-1 min-w-0">
-                              <span className="block font-semibold" style={{ fontSize: "var(--font-size-md)" }}>
-                                {localizedVersionLabel(cms, version.label)}
-                              </span>
-                              <span className="block text-xs" style={{ color: "var(--text-muted)", marginTop: 2 }}>
-                                {fmt.percent(version.params.hydration_pct)} idr. · W{version.params.flour_w}
-                              </span>
-                            </div>
-                            {active && <Check size={16} style={{ color: "var(--tertiary)", flexShrink: 0 }} />}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {interpretations.length > 0 && (
-                      <div className="flex flex-col gap-1.5 mt-2">
-                        <div
-                          style={{
-                            fontSize: "var(--font-size-2xs)",
-                            letterSpacing: "var(--tracking-spread)",
-                            textTransform: "uppercase",
-                            fontWeight: "var(--weight-bold)" as any,
-                            color: "var(--text-muted)",
-                            marginBottom: 2,
-                            marginLeft: 4,
-                          }}
-                        >
-                          {cms.misc.signatureLabel || "Firma"}
-                        </div>
-                        {interpretations.map((interpretation) => {
-                          const active = activeInterpretationId === interpretation.id;
-                          return (
-                            <button
-                              key={interpretation.id}
-                              type="button"
-                              onClick={() => onSelectInterpretation(interpretation)}
-                              className="flex items-center justify-between px-4 py-3 rounded-xl border text-left active:scale-98 transition-all"
-                              style={{
-                                background: active ? "var(--surface-container)" : "var(--surface-container-low)",
-                                borderColor: active ? "var(--tertiary)" : "var(--outline-variant)",
-                                borderWidth: active ? 2 : 1,
-                                color: "var(--text-default)",
-                                cursor: "pointer",
-                              }}
-                            >
-                              <div className="flex-1 min-w-0">
-                                <span className="block font-semibold" style={{ fontSize: "var(--font-size-md)" }}>
-                                  {interpretationName(interpretation)}
-                                </span>
-                                <span className="block text-xs" style={{ color: "var(--text-muted)", marginTop: 2 }}>
-                                  {interpretation.author ?? interpretation.pizzeria ?? "D'autore"}
-                                </span>
-                              </div>
-                              {active && <Check size={16} style={{ color: "var(--tertiary)", flexShrink: 0 }} />}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {children && (
-                  <div
-                    className="pt-4"
-                    style={{
-                      borderTop:
-                        "1px solid var(--recipe-setup-border-subtle)",
-                    }}
-                  >
-                    {children}
-                  </div>
-                )}
-
-                {/* ── Dati science (round 4): read-only, derivati dalla
-                    ricetta corrente — erano l'accordion della StatStrip. ── */}
-                {recipe?.science && (
-                  <div
-                    className="pt-4"
-                    style={{
-                      borderTop:
-                        "1px solid var(--recipe-setup-border-subtle)",
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6,
-                        color: "var(--score-accent)",
-                        fontSize: "var(--font-size-xs)",
-                        fontWeight: "var(--weight-bold)" as any,
-                        letterSpacing: "var(--tracking-spread)",
-                        textTransform: "uppercase",
-                        marginBottom: "var(--space-2)",
-                      }}
-                    >
-                      <Beaker size={13} style={{ color: "var(--score-accent)" }} />
-                      {bcp47.startsWith("it") ? "Parametri nerd" : "Nerd parameters"}
-                    </span>
-                    <NerdAuraBlock compact>
-                      <div
-                        className="grid grid-cols-3 sm:grid-cols-5 gap-x-3 gap-y-2 px-3.5 py-3"
-                        style={{
-                          background: "var(--recipe-tip-nerd-bg)",
-                          border: "1px solid var(--recipe-tip-nerd-border)",
-                          borderRadius: "12px 28px 28px 28px",
-                        }}
+                  {interpretations.map((interpretation) => {
+                    const active = activeInterpretationId === interpretation.id;
+                    return (
+                      <button
+                        key={interpretation.id}
+                        type="button"
+                        onClick={() => onSelectInterpretation(interpretation)}
+                        className={active ? "setup-option setup-option--active" : "setup-option"}
                       >
-                        <SpecCell
-                          small
-                          science
-                          label={cms.ui.nerdYeast}
-                          value={fmt.percent(recipe.science.yeast_baker_pct)}
-                          index={0}
-                        />
-                        <SpecCell
-                          small
-                          science
-                          label={cms.ui.nerdPL}
-                          value={`${recipe.flour_pl}`}
-                          index={1}
-                        />
-                        <SpecCell
-                          small
-                          science
-                          label={t(
-                            formatTemperatureCopy(cms.ui.nerdHoursAt18, fmt),
-                            { refTemp: fmt.celsius(18) },
-                          )}
-                          value={fmt.fermentTime(
-                            Number(recipe.science.effective_hours_18c),
-                          )}
-                          index={2}
-                        />
-                        <SpecCell
-                          small
-                          science
-                          label={t(
-                            formatTemperatureCopy(cms.ui.nerdQ10, fmt),
-                            { refTemp: fmt.celsius(18) },
-                          )}
-                          value={`${recipe.science.q10_factor}×`}
-                          index={3}
-                        />
-                        <SpecCell
-                          small
-                          science
-                          label={cms.ui.nerdAw}
-                          value={`${recipe.science.water_activity}`}
-                          index={4}
-                        />
-                      </div>
-                    </NerdAuraBlock>
-                  </div>
-                )}
-              </div>
+                        <div className="setup-option__text">
+                          <span className="setup-option__name">
+                            {interpretationName(interpretation)}
+                          </span>
+                          <span className="setup-option__detail">
+                            {interpretation.author ?? interpretation.pizzeria ?? "D'autore"}
+                          </span>
+                        </div>
+                        {active && <Check size={16} className="setup-option__check" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
 
-              <div
-                className="flex-shrink-0 flex items-center justify-end gap-3 px-5 pt-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:px-8 sm:pb-3.5 border-t"
-                style={{ borderColor: "var(--container-border-subtle)" }}
-              >
-                <CtaButton
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="w-full sm:w-auto px-7 py-3 active:scale-98"
-                  style={{ fontSize: "var(--font-size-lg)" }}
-                >
-                  {cmsMessage(cms, "recipeSetup.done", "Fatto")}
-                </CtaButton>
-              </div>
+          {children && <div className="setup-children">{children}</div>}
+
+          {/* ── Dati science (round 4): read-only, derivati dalla
+              ricetta corrente — erano l'accordion della StatStrip. ── */}
+          {recipe?.science && (
+            <div className="setup-science">
+              <span className="setup-science__label">
+                <Beaker size={13} className="setup-science__icon" />
+                {bcp47.startsWith("it") ? "Parametri nerd" : "Nerd parameters"}
+              </span>
+              <NerdAuraBlock compact>
+                <div className="setup-science__grid">
+                  <SpecCell
+                    small
+                    science
+                    label={cms.ui.nerdYeast}
+                    value={fmt.percent(recipe.science.yeast_baker_pct)}
+                    index={0}
+                  />
+                  <SpecCell
+                    small
+                    science
+                    label={cms.ui.nerdPL}
+                    value={`${recipe.flour_pl}`}
+                    index={1}
+                  />
+                  <SpecCell
+                    small
+                    science
+                    label={t(
+                      formatTemperatureCopy(cms.ui.nerdHoursAt18, fmt),
+                      { refTemp: fmt.celsius(18) },
+                    )}
+                    value={fmt.fermentTime(
+                      Number(recipe.science.effective_hours_18c),
+                    )}
+                    index={2}
+                  />
+                  <SpecCell
+                    small
+                    science
+                    label={t(
+                      formatTemperatureCopy(cms.ui.nerdQ10, fmt),
+                      { refTemp: fmt.celsius(18) },
+                    )}
+                    value={`${recipe.science.q10_factor}×`}
+                    index={3}
+                  />
+                  <SpecCell
+                    small
+                    science
+                    label={cms.ui.nerdAw}
+                    value={`${recipe.science.water_activity}`}
+                    index={4}
+                  />
+                </div>
+              </NerdAuraBlock>
+            </div>
+          )}
+        </div>
+
+        <div className="setup-footer">
+          <CtaButton
+            type="button"
+            onClick={() => setOpen(false)}
+            className="setup-footer__cta"
+          >
+            {cmsMessage(cms, "recipeSetup.done", "Fatto")}
+          </CtaButton>
+        </div>
       </ModalSheet>
     </section>
   );
@@ -673,10 +491,10 @@ export function RecipeSetupPanel({
 
 function MatchSummary({
   scores,
-  className,
+  variant,
 }: {
   scores: RecipeScores;
-  className?: string;
+  variant?: "mobile" | "desktop";
 }) {
   const { cms } = useCms();
   const roundedScore = Math.round(scores.composite);
@@ -691,69 +509,43 @@ function MatchSummary({
 
   const toneColor = tone.low ? "var(--text-warning)" : "var(--text-accent)";
   const MatchIcon = tone.low ? HeartCrack : Heart;
+  const rootClass =
+    variant === "desktop" ? "setup-match setup-match--desktop" : "setup-match";
+  const iconClass = tone.low
+    ? "setup-match__icon setup-match__icon--low"
+    : "setup-match__icon";
 
   return (
-    <div className={`flex items-center gap-2.5 sm:gap-3 ${className ?? ""}`}>
-      <div
-        className="flex items-center"
-        style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}
-      >
-        <span
-          style={{
-            fontWeight: "var(--weight-semibold)" as any,
-            textTransform: "uppercase",
-            fontSize: "var(--font-size-xs)",
-            letterSpacing: "var(--tracking-spread)",
-          }}
-        >
-          Match
-        </span>
+    <div className={rootClass}>
+      <div className="setup-match__label-wrap">
+        <span className="setup-match__label">Match</span>
       </div>
 
       <span
-        className="flex items-center gap-1.5 rounded-full px-2.5 py-1.5 flex-shrink-0 type-numeric"
-        style={{
-          background: `color-mix(in srgb, ${toneColor} 14%, transparent)`,
-          color: toneColor,
-          fontWeight: "var(--weight-bold)" as any,
-          lineHeight: 1,
-        }}
+        className="setup-match__score"
+        style={{ ["--tone" as any]: toneColor }}
         title={tone.title}
       >
-        <MatchIcon
-          size={14}
-          style={{ color: toneColor }}
-          fill={tone.low ? "none" : toneColor}
-        />
-        <span style={{ fontSize: "var(--font-size-xl)" }}>{roundedScore}</span>
+        <MatchIcon size={14} className={iconClass} />
+        <span className="setup-match__value">{roundedScore}</span>
       </span>
 
-      <div
-        className="hidden lg:flex items-center gap-3 pl-3"
-        style={{ borderLeft: "1px solid var(--container-border-subtle)" }}
-      >
+      <div className="setup-match__axes">
         {axes.map((axis) => {
           const val = Math.round(axis.value);
           return (
-            <div key={axis.key} className="flex flex-col gap-1 min-w-[64px]">
-              <div
-                className="flex items-center justify-between"
-                style={{
-                  fontSize: "var(--font-size-xs)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  color: "var(--text-muted)",
-                }}
-              >
+            <div key={axis.key} className="setup-match__axis">
+              <div className="setup-match__axis-row">
                 <span title={axis.label}>{axis.shortLabel}</span>
                 <span className="type-numeric">{val}</span>
               </div>
-              <div
-                className="h-1 rounded-full overflow-hidden"
-                style={{ background: "var(--container-bg-high)" }}
-              >
+              <div className="setup-match__track">
                 <div
-                  className="h-full rounded-full"
-                  style={{ background: axis.color, width: `${val}%` }}
+                  className="setup-match__fill"
+                  style={{
+                    ["--axis-color" as any]: axis.color,
+                    ["--axis-width" as any]: `${val}%`,
+                  }}
                 />
               </div>
             </div>

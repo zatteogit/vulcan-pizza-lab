@@ -10,7 +10,7 @@ import {
   AccessibilitaInfo,
 } from "./shared";
 import type { SectionEntry } from "./shared";
-import { VulcanMark } from "../shared/vulcan-logo";
+import { VulcanMark, VULCAN_MARK_PATHS } from "../shared/vulcan-logo";
 import type { VulcanVariant } from "../shared/vulcan-logo";
 import { LogoHeroSubSection, LogoFireGlowSubSection, LogoDoughBlobSubSection } from "./foundations-logo-brand";
 
@@ -46,92 +46,92 @@ const VARIANT_DATA: Record<
   intima: {
     label: "Intima",
     fill: "72% x 84%",
-    thinW: 2,
-    thickW: 6,
-    ratio: "1 : 3",
-    vGap: 2.5,
+    thinW: 6.2,
+    thickW: 8.4,
+    ratio: "taglio 7.5u",
+    vGap: 7.5,
     topY: 2,
-    botY: 26,
-    thinX1: 6,
-    thinX2: 8,
-    thickX1: 23,
-    thickX2: 29,
-    tearX: 16,
+    botY: 29,
+    thinX1: 5.2,
+    thinX2: 11.58,
+    thickX1: 19.16,
+    thickX2: 28.97,
+    tearX: 14.9,
     tearY: 29,
-    tearCtrl: 29,
-    desc: "Margini generosi, il mark galleggia. Elegante, distaccato — ideale per spazi ariosi.",
+    tearCtrl: 27.46,
+    desc: "Margini generosi: la fetta sottratta respira, il taglio resta leggibile.",
   },
   naturale: {
     label: "Naturale",
     fill: "78% x 89%",
-    thinW: 2.5,
-    thickW: 7,
-    ratio: "1 : 2.8",
-    vGap: 2.5,
+    thinW: 6.7,
+    thickW: 8.8,
+    ratio: "taglio 7.9u",
+    vGap: 7.9,
     topY: 1.5,
-    botY: 27,
-    thinX1: 5,
-    thinX2: 7.5,
-    thickX1: 23,
-    thickX2: 30,
-    tearX: 15.5,
-    tearY: 30,
-    tearCtrl: 30,
-    desc: "Default. Equilibrio tra respiro e presenza — va bene ovunque.",
+    botY: 29.9,
+    thinX1: 4.6,
+    thinX2: 11.31,
+    thickX1: 19.29,
+    thickX2: 29.6,
+    tearX: 14.8,
+    tearY: 30.2,
+    tearCtrl: 28.28,
+    desc: "Default: il miglior equilibrio tra fetta madre, V negativa e massa destra.",
   },
   aperta: {
     label: "Aperta",
     fill: "81% x 92%",
-    thinW: 3,
-    thickW: 8,
-    ratio: "1 : 2.67",
-    vGap: 2.5,
+    thinW: 6.9,
+    thickW: 9.2,
+    ratio: "taglio 8.1u",
+    vGap: 8.1,
     topY: 1,
-    botY: 27.5,
+    botY: 30.4,
     thinX1: 4,
-    thinX2: 7,
-    thickX1: 22,
-    thickX2: 30,
-    tearX: 15.5,
-    tearY: 30.5,
-    tearCtrl: 30.5,
-    desc: "Presenza decisa senza invadenza. Per titoli e hero di media dimensione.",
+    thinX2: 10.94,
+    thickX1: 19.2,
+    thickX2: 29.88,
+    tearX: 14.6,
+    tearY: 30.7,
+    tearCtrl: 28.72,
+    desc: "Presenza decisa: il taglio guadagna tensione e il vertice basso resta caldo.",
   },
   audace: {
     label: "Audace",
     fill: "86% x 95%",
-    thinW: 3.5,
-    thickW: 9,
-    ratio: "1 : 2.57",
-    vGap: 2.5,
+    thinW: 7,
+    thickW: 9.5,
+    ratio: "taglio 8.4u",
+    vGap: 8.4,
     topY: 0.5,
-    botY: 28,
-    thinX1: 3,
-    thinX2: 6.5,
-    thickX1: 21.5,
-    thickX2: 30.5,
-    tearX: 15,
-    tearY: 31,
-    tearCtrl: 31,
-    desc: "Impatto da sigillo. Bold ma ancora leggibile — per favicon e app icon.",
+    botY: 30.9,
+    thinX1: 3.4,
+    thinX2: 10.58,
+    thickX1: 19.12,
+    thickX2: 30.16,
+    tearX: 14.3,
+    tearY: 31.2,
+    tearCtrl: 29.16,
+    desc: "Impatto da sigillo: più massa, utile per favicon e app icon.",
   },
   monumentale: {
     label: "Monumentale",
     fill: "91% x 98%",
-    thinW: 3.5,
-    thickW: 10,
-    ratio: "1 : 2.86",
-    vGap: 3,
+    thinW: 7.2,
+    thickW: 9.7,
+    ratio: "taglio 8.7u",
+    vGap: 8.7,
     topY: 0,
-    botY: 28.5,
-    thinX1: 2,
-    thinX2: 5.5,
-    thickX1: 21,
-    thickX2: 31,
-    tearX: 15,
-    tearY: 31.5,
-    tearCtrl: 31.5,
-    desc: "Quasi full bleed. Il mark E il quadrato — massima presenza.",
+    botY: 31.2,
+    thinX1: 2.8,
+    thinX2: 10.17,
+    thickX1: 18.93,
+    thickX2: 30.27,
+    tearX: 14,
+    tearY: 31.6,
+    tearCtrl: 29.42,
+    desc: "Quasi full bleed: massima presenza, senza chiudere il vuoto centrale.",
   },
 };
 
@@ -159,9 +159,8 @@ function ConstructionBlueprint({
   const gradId = `bp-grad-${uid}`;
   const d = VARIANT_DATA[variant];
 
-  /* Vertex point (where the two legs converge) */
-  const vertexThinX = 13; /* approximate for naturale, close enough for all */
-  const vertexThickX = d.tearX;
+  const cutCenterX = (d.thinX2 + d.thickX1) / 2;
+  const heightLabelX = Math.min(d.thickX2 + 1.6, 31.1);
 
   return (
     <svg
@@ -170,13 +169,10 @@ function ConstructionBlueprint({
       style={{ maxHeight: "420px" }}
     >
       <defs>
-        <linearGradient id={gradId} x1="0.15" y1="0" x2="0.85" y2="1">
-          <stop offset="0%" stopColor="var(--primary)" />
-          <stop
-            offset="55%"
-            stopColor="color-mix(in srgb, var(--primary) 60%, var(--tertiary))"
-          />
-          <stop offset="100%" stopColor="var(--tertiary)" />
+        <linearGradient id={gradId} x1="0.12" y1="0" x2="0.9" y2="1">
+          <stop offset="0%" stopColor="var(--logo-grad-start)" />
+          <stop offset="48%" stopColor="var(--logo-grad-mid)" />
+          <stop offset="100%" stopColor="var(--logo-grad-end)" />
         </linearGradient>
       </defs>
 
@@ -243,7 +239,7 @@ function ConstructionBlueprint({
             strokeDasharray="0.8 0.4"
             opacity={0.7}
           />
-          {/* Thin leg left edge */}
+          {/* Left remnant outer edge */}
           <line
             x1={d.thinX1}
             y1={-3}
@@ -254,7 +250,7 @@ function ConstructionBlueprint({
             strokeDasharray="0.8 0.4"
             opacity={0.5}
           />
-          {/* Thick leg right edge */}
+          {/* Right remnant outer edge */}
           <line
             x1={d.thickX2}
             y1={-3}
@@ -285,7 +281,7 @@ function ConstructionBlueprint({
       {/* Measurement annotations */}
       {showMeasures && (
         <g>
-          {/* Thin leg width bracket (top) */}
+          {/* Left remnant width bracket (top) */}
           <line
             x1={d.thinX1}
             y1={d.topY - 2}
@@ -322,7 +318,7 @@ function ConstructionBlueprint({
             {d.thinW}u
           </text>
 
-          {/* Thick leg width bracket (top) */}
+          {/* Right remnant width bracket (top) */}
           <line
             x1={d.thickX1}
             y1={d.topY - 2}
@@ -385,7 +381,7 @@ function ConstructionBlueprint({
             strokeWidth={0.2}
           />
           <text
-            x={d.thickX2 + 3.2}
+            x={heightLabelX}
             y={(d.topY + d.botY) / 2 + 0.5}
             textAnchor="start"
             fill="var(--cta)"
@@ -396,28 +392,44 @@ function ConstructionBlueprint({
             {(d.botY - d.topY).toFixed(1)}u
           </text>
 
-          {/* Vertex gap label */}
-          <text
-            x={(vertexThinX + vertexThickX) / 2}
-            y={d.botY + 3}
-            textAnchor="middle"
-            fill="var(--muted-foreground)"
-            fontSize={1.5}
-            fontFamily="'DM Mono', monospace"
-          >
-            gap {d.vGap}u
-          </text>
+          {/* Negative cut label */}
           <line
-            x1={vertexThinX}
-            y1={d.botY + 1.5}
-            x2={vertexThickX}
-            y2={d.botY + 1.5}
+            x1={d.thinX2}
+            y1={d.topY + 1.1}
+            x2={d.thickX1}
+            y2={d.topY + 1.1}
             stroke="var(--muted-foreground)"
             strokeWidth={0.15}
             strokeDasharray="0.5 0.3"
           />
+          <line
+            x1={d.thinX2}
+            y1={d.topY + 0.3}
+            x2={d.thinX2}
+            y2={d.topY + 1.9}
+            stroke="var(--muted-foreground)"
+            strokeWidth={0.15}
+          />
+          <line
+            x1={d.thickX1}
+            y1={d.topY + 0.3}
+            x2={d.thickX1}
+            y2={d.topY + 1.9}
+            stroke="var(--muted-foreground)"
+            strokeWidth={0.15}
+          />
+          <text
+            x={cutCenterX}
+            y={d.topY + 3.2}
+            textAnchor="middle"
+            fill="var(--muted-foreground)"
+            fontSize={1.3}
+            fontFamily="'DM Mono', monospace"
+          >
+            taglio {d.vGap}u
+          </text>
 
-          {/* Teardrop annotation */}
+          {/* Warm vertex annotation */}
           <circle
             cx={d.tearX}
             cy={d.tearY}
@@ -427,22 +439,22 @@ function ConstructionBlueprint({
             strokeWidth={0.2}
           />
           <line
-            x1={d.tearX - 2.5}
+            x1={d.tearX + 0.6}
             y1={d.tearY + 1.5}
-            x2={d.tearX - 0.6}
+            x2={d.tearX + 2.6}
             y2={d.tearY + 0.3}
             stroke="var(--primary)"
             strokeWidth={0.15}
           />
           <text
-            x={d.tearX - 5}
-            y={d.tearY + 2.5}
-            textAnchor="middle"
+            x={d.tearX + 3}
+            y={d.tearY + 2.2}
+            textAnchor="start"
             fill="var(--primary)"
             fontSize={1.3}
             fontFamily="'DM Mono', monospace"
           >
-            teardrop cubic
+            vertice caldo
           </text>
         </g>
       )}
@@ -458,18 +470,9 @@ function VulcanMarkPath({
   variant: VulcanVariant;
   gradId: string;
 }) {
-  const PATHS: Record<VulcanVariant, string> = {
-    intima: "M6 2H8L13.5 26ZM23 2H29L20 26C20 29 16 29 16 26Z",
-    naturale: "M5 1.5H7.5L13 27ZM23 1.5H30L20 27C20 30 15.5 30 15.5 27Z",
-    aperta: "M4 1H7L13 27.5ZM22 1H30L20 27.5C20 30.5 15.5 30.5 15.5 27.5Z",
-    audace:
-      "M3 0.5H6.5L12.5 28ZM21.5 0.5H30.5L19.5 28C19.5 31 15 31 15 28Z",
-    monumentale:
-      "M2 0H5.5L12 28.5ZM21 0H31L19.5 28.5C19.5 31.5 15 31.5 15 28.5Z",
-  };
   return (
     <path
-      d={PATHS[variant]}
+      d={VULCAN_MARK_PATHS[variant]}
       fill={`url(#${gradId})`}
       fillRule="nonzero"
       opacity={0.88}
@@ -603,16 +606,16 @@ function LogoConstructionSection() {
     <div className="flex flex-col gap-8">
       <SectionHeader
         title="Logo & Brand Identity"
-        description="VulcanMark, VulcanHero, FireGlow, DoughBlob — l'intero sistema di identita visiva. Costruzione geometrica precisa su griglia 32x32u, 5 scale ottiche, composizione armonizzata mark+blob, sfondo animato e forma organica energy-reactive."
+        description="VulcanMark, VulcanHero, FireGlow, DoughBlob — l'intero sistema di identita visiva. Costruzione geometrica su griglia 32x32u: una fetta/vulcano implicita da cui nasce una V tramite taglio sottratto."
       />
       <SubSectionLabel label="Panoramica" />
       <Panoramica
-        descrizione="Il sistema di brand identity di Vulcan Pizza Lab si basa sul VulcanMark — una V serif asimmetrica con terminale teardrop ispirato al cornicione napoletano. Il mark è costruito su una griglia 32×32u con 5 scale ottiche (Intima → Monumentale)."
+        descrizione="Il sistema di brand identity di Vulcan Pizza Lab si basa sul VulcanMark — una V asimmetrica generata per sottrazione da una forma madre triangolare: fetta di pizza, profilo di vulcano e iniziale convivono nello stesso segno."
         principi={[
-          "Geometria precisa: ogni variante è definita matematicamente, mai approssimata",
+          "Forma madre: un triangolo/fetta implicito, mai illustrativo",
+          "Taglio sottratto: la V nasce dal vuoto centrale e dal completamento modale",
           "5 scale ottiche per adattarsi dal favicon al hero display senza ridisegnare",
-          "Il terminale teardrop è la firma organica — richiama la pizza, non è decorativo",
-          "Clear space minimo 1× la larghezza dell'asta sottile su ogni lato",
+          "Gradiente ember proprietario: luce calda in alto, profondita in basso",
         ]}
       />
       <SubSectionLabel label="Specifiche" />
@@ -783,15 +786,15 @@ function LogoConstructionSection() {
                 {[
                   { prop: "ViewBox", val: "0 0 32 32" },
                   { prop: "Occupazione", val: d.fill },
-                  { prop: "Asta sottile", val: `${d.thinW}u` },
-                  { prop: "Asta spessa", val: `${d.thickW}u` },
-                  { prop: "Rapporto", val: d.ratio },
-                  { prop: "Vertex gap", val: `${d.vGap}u` },
+                  { prop: "Residuo sx", val: `${d.thinW}u top` },
+                  { prop: "Massa dx", val: `${d.thickW}u top` },
+                  { prop: "Sistema", val: d.ratio },
+                  { prop: "Taglio", val: `${d.vGap}u top` },
                   {
                     prop: "Altezza",
                     val: `${(d.botY - d.topY).toFixed(1)}u (${d.topY} -> ${d.botY})`,
                   },
-                  { prop: "Terminale", val: "Cubic Bezier (teardrop)" },
+                  { prop: "Vertice", val: "Bezier caldo, non goccia" },
                   { prop: "Fill rule", val: "nonzero" },
                 ].map((row) => (
                   <div key={row.prop} className="flex items-baseline gap-2">
@@ -831,39 +834,39 @@ function LogoConstructionSection() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               {
-                title: "Asta sottile (punta secca)",
-                desc: "Gamba sinistra della V. Tratto calligrafico sottile, rastremata verso il vertice. Larghezza costante al top, converge a punto in basso.",
-                spec: `${d.thinW}u al top -> 0u al vertice`,
+                title: "Forma madre",
+                desc: "Il mark parte da una fetta triangolare implicita: pizza e vulcano restano percepibili senza diventare icone letterali.",
+                spec: `Occupazione ${d.fill}`,
                 color: "var(--primary)",
               },
               {
-                title: "Asta spessa (pennino pieno)",
-                desc: "Gamba destra della V. Tratto bold che porta il peso visivo. Larghezza costante al top, converge verso il teardrop.",
-                spec: `${d.thickW}u al top -> teardrop in basso`,
+                title: "Taglio sottratto",
+                desc: "La V non è disegnata: emerge dal vuoto centrale, largo sopra e orientato verso il vertice basso.",
+                spec: `${d.vGap}u top aperture`,
                 color: "var(--tertiary)",
               },
               {
-                title: "Terminale teardrop",
-                desc: "Goccia cubic Bezier al vertice dell'asta spessa. Richiama il cornicione della pizza napoletana — la firma organica del mark.",
-                spec: `Bezier C(${d.tearX}, ${d.tearCtrl}) simmetrico`,
+                title: "Residuo sinistro",
+                desc: "Faccia della fetta dopo il taglio: top pieno, lato interno verticale, punta bassa netta per guidare il completamento modale.",
+                spec: `${d.thinW}u al top`,
                 color: "var(--primary)",
               },
               {
-                title: "Vertex gap",
-                desc: "Spazio tra il punto dell'asta sottile e l'inizio del teardrop. Mantiene leggibilita anche a dimensioni piccole.",
-                spec: `${d.vGap}u — stabile tra varianti`,
+                title: "Massa destra",
+                desc: "Parte dominante del segno: fianco lungo da vulcano/fetta, spalla alta morbida e terminale basso caldo.",
+                spec: `${d.thickW}u al top`,
                 color: "var(--cta)",
               },
               {
                 title: "Asimmetria V",
-                desc: "Il rapporto sottile:spesso crea tensione visiva intenzionale. La V non e simmetrica — il peso e a destra, come un pennino calligrafico.",
-                spec: `Rapporto ${d.ratio}`,
+                desc: "Il peso rimane a destra: se il segno diventa simmetrico perde il carattere Vulcan e diventa un glifo generico.",
+                spec: d.ratio,
                 color: "var(--text-default)",
               },
               {
                 title: "Centro ottico",
-                desc: "Il mark e centrato otticamente, non geometricamente. Il peso dell'asta spessa sposta il baricentro verso destra di ~1.5u.",
-                spec: "Asse geometrico 16u, ottico ~17.5u",
+                desc: "Il baricentro è volutamente destro. Il contenitore resta 32x32, ma il segno vive leggermente fuori asse.",
+                spec: "Asse geometrico 16u, massa ottica ~17u",
                 color: "var(--muted-foreground)",
               },
             ].map((item) => (
@@ -931,9 +934,9 @@ function LogoConstructionSection() {
               marginBottom: "16px",
             }}
           >
-            Stessa geometria (V asimmetrica + teardrop), scalata dal centro
-            ottico per occupare piu o meno il viewBox 32x32. Ogni step ~+5%
-            di occupazione larghezza.
+            Stessa geometria (fetta madre + taglio sottratto), scalata dal
+            centro ottico per occupare piu o meno il viewBox 32x32. Ogni step
+            aumenta presenza senza chiudere il vuoto centrale.
           </p>
           <div className="flex flex-wrap gap-6 items-end justify-center">
             {VARIANTS_LIST.map((v) => {
@@ -1252,8 +1255,8 @@ function LogoConstructionSection() {
                 marginBottom: "16px",
               }}
             >
-              Sotto i 16px il teardrop cubic perde definizione. Sotto i 12px
-              usare solo la variante Monumentale.
+              Sotto i 16px il taglio centrale e il terminale basso perdono
+              definizione. Sotto i 12px usare solo la variante Monumentale.
             </p>
             <div className="flex flex-wrap items-end gap-5 justify-center">
               {[
@@ -1385,7 +1388,7 @@ function LogoConstructionSection() {
             >
               <svg width={48} height={48} viewBox="0 0 32 32">
                 <path
-                  d="M5 1.5H7.5L13 27ZM23 1.5H30L20 27C20 30 15.5 30 15.5 27Z"
+                  d={VULCAN_MARK_PATHS.naturale}
                   fill="none"
                   stroke="var(--primary)"
                   strokeWidth={0.8}
@@ -1423,8 +1426,8 @@ function LogoConstructionSection() {
             { prop: "Fill brand", val: "Gradiente ember (3 stop)" },
             { prop: "Glow", val: "Radial pulse 4s, opacity 0.12-0.22" },
             { prop: "Min size", val: "12px (solo Monumentale)" },
-            { prop: "Clear space", val: "1x thin-leg width per lato" },
-            { prop: "Terminale", val: "Cubic Bezier teardrop" },
+            { prop: "Clear space", val: "1x taglio top per lato" },
+            { prop: "Costruzione", val: "Fetta madre + sottrazione" },
           ].map((a) => (
             <AnatomyRow key={a.prop} {...a} />
           ))}
@@ -1444,7 +1447,7 @@ function LogoConstructionSection() {
         fai={[
           "Usare la variante Naturale come default per tutti i contesti standard",
           "Gradiente ember per brand hero, flat primary per UI funzionale",
-          "Rispettare il clear space minimo (1× thin-leg width)",
+          "Rispettare il clear space minimo (1× apertura del taglio)",
           "Variante Monumentale sotto i 16px per mantenere leggibilità",
         ]}
         nonFare={[

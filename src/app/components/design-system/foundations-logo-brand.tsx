@@ -66,8 +66,8 @@ export function LogoHeroSubSection({ activeVariant }: { activeVariant: VulcanVar
             {/* Composition anatomy cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                { title: "Blob forge", desc: "Variante dedicata con keyframes bottom-heavy che rimano con il teardrop del mark. Rotazione lenta continua per dinamismo organico.", color: "var(--tertiary)", spec: "keyframes teardrop · rotazione 45s" },
-                { title: "Mark gradient", desc: "Gradiente ember a 135° condiviso con i blob layers: primary -> primary x tertiary -> tertiary. Glow radial per profondita.", color: "var(--primary)", spec: "grad-ember 135° · glow radial" },
+                { title: "Blob forge", desc: "Variante dedicata con keyframes bottom-heavy che rimano con il vertice caldo del mark. Rotazione lenta continua per dinamismo organico.", color: "var(--tertiary)", spec: "keyframes slice-vertex · rotazione 45s" },
+                { title: "Mark gradient", desc: "Gradiente ember proprietario a 135°: #f36b3d -> #ea4e27 -> #b93620. Glow radial per profondita.", color: "var(--logo-solid)", spec: "logo-ember 135° · glow radial" },
                 { title: "Respiro sync", desc: "Il mark respira +-1.5% in scala, sincronizzato con la velocita del ciclo blob. L'ampiezza segue l'energy parametricamente.", color: "var(--cta)", spec: "scale +-1.5% · sync energy-driven" },
                 { title: "Composizione", desc: "Componente composable con 5 prop: size, energy, blobVariant, logoVariant, markRatio. Il rapporto mark/blob e calibrato per variante.", color: "var(--muted-foreground)", spec: "markRatio auto · 5 props" },
               ].map((layer) => (
@@ -92,8 +92,8 @@ export function LogoHeroSubSection({ activeVariant }: { activeVariant: VulcanVar
             {/* Specs riepilogative */}
             <div className="flex flex-col gap-1.5 mt-1">
               {[
-                { prop: "Forma", val: "Forge teardrop — keyframes bottom-heavy che rimano col mark" },
-                { prop: "Colore", val: "Gradiente ember 135° condiviso: primary -> primary x tertiary -> tertiary" },
+                { prop: "Forma", val: "Forge slice-vertex — keyframes bottom-heavy che rimano col mark" },
+                { prop: "Colore", val: "Gradiente ember 135°: #f36b3d -> #ea4e27 -> #b93620" },
                 { prop: "Layers", val: "Mark gradient+glow sovrapposto a blob forge con rotazione lenta" },
                 { prop: "Breath", val: "Mark +-1.5% scala, sync con velocita blob (energy-driven)" },
               ].map((a) => (
@@ -340,7 +340,7 @@ export function LogoDoughBlobSubSection() {
               {[
                 { prop: "Varianti", val: "5 mood: rest · stretch · fold · rise · spin — mappate da composite score via moodFromScore()" },
                 { prop: "Morph", val: "borderRadius keyframes organici, stile Material Expressive" },
-                { prop: "Forge", val: "Variante dedicata a VulcanHero: forme bottom-heavy che rimano col teardrop del mark, respiro sincronizzato" },
+                { prop: "Forge", val: "Variante dedicata a VulcanHero: forme bottom-heavy che rimano col vertice del mark, respiro sincronizzato" },
                 { prop: "Hero ↔", val: "In VulcanHero il blob è il substrato: il mark galleggia al centro, condivide gradiente ember e scala ±1.5% sync" },
                 { prop: "A11y", val: "prefers-reduced-motion → shape statica, nessuna animazione" },
               ].map((a) => (

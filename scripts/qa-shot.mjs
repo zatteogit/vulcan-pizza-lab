@@ -21,6 +21,13 @@
  * --seed: file JSON { chiave: valoreStringa } scritto in localStorage via
  * Page.addScriptToEvaluateOnNewDocument (gira prima dello script inline di
  * index.html, quindi anche il tema seedato vince sul default).
+ *
+ * --click "<selector CSS>": dopo il settle clicca l'elemento (querySelector)
+ * e attende --settle2 ms (default 900) prima della cattura — per stati
+ * interattivi (drawer, dialog). Se l'elemento manca, esce con errore.
+ * --eval "<espressione JS>": eseguita dopo il settle (e dopo l'eventuale
+ * --click), poi attende --settle2. Per click by-text o scroll interni:
+ * se l'espressione ritorna la stringa "MISS" lo script esce con errore.
  */
 import { spawn } from "node:child_process";
 import { mkdtempSync, rmSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -114,7 +121,11 @@ try {
     width, height, deviceScaleFactor: 2, mobile: width < 800,
   }, sessionId);
   await send("Emulation.setEmulatedMedia", {
-    features: [{ name: "prefers-color-scheme", value: "light" }],
+    features: [
+      { name: "prefers-color-scheme", value: "light" },
+      // --rm 1: congela le animazioni infinite (glow hero) per confronti deterministici
+      ...(args.rm ? [{ name: "prefers-reduced-motion", value: "reduce" }] : []),
+    ],
   }, sessionId);
 
   if (args.seed) {
@@ -133,6 +144,25 @@ try {
     console.error(`(load non arrivato entro ${timeout}ms — catturo comunque)`);
   }
   await new Promise((r) => setTimeout(r, settle));
+
+  const settle2 = Number(args.settle2 ?? 900);
+  if (args.click) {
+    const { result } = await send("Runtime.evaluate", {
+      expression: `(() => { const el = document.querySelector(${JSON.stringify(args.click)}); if (!el) return "MISS"; el.click(); return "OK"; })()`,
+      returnByValue: true,
+    }, sessionId);
+    if (result.value !== "OK") throw new Error(`--click: selettore non trovato: ${args.click}`);
+    await new Promise((r) => setTimeout(r, settle2));
+  }
+  if (args.eval) {
+    const { result } = await send("Runtime.evaluate", {
+      expression: args.eval,
+      returnByValue: true,
+      awaitPromise: true,
+    }, sessionId);
+    if (result.value === "MISS") throw new Error("--eval ha ritornato MISS (bersaglio non trovato)");
+    await new Promise((r) => setTimeout(r, settle2));
+  }
   mkdirSync(dirname(out), { recursive: true });
 
   if (args.full) {
