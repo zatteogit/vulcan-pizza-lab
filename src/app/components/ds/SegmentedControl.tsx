@@ -42,22 +42,32 @@ export type SegmentedControlProps<TValue extends string> = {
 };
 
 const SIZE_CLASS: Record<SegmentedControlSize, string> = {
-  sm: "px-3 py-1.5",
-  md: "px-4 py-3",
+  sm: "ds-segmented__item--sm",
+  md: "ds-segmented__item--md",
 };
 
 const GROUP_RADIUS_CLASS: Record<SegmentedControlRadius, string> = {
-  lg: "rounded-lg",
-  xl: "rounded-xl",
-  "2xl": "rounded-2xl",
-  pill: "rounded-full",
+  lg: "ds-segmented--r-lg",
+  xl: "ds-segmented--r-xl",
+  "2xl": "ds-segmented--r-2xl",
+  pill: "ds-segmented--r-pill",
 };
 
 const ITEM_RADIUS_CLASS: Record<SegmentedControlRadius, string> = {
-  lg: "rounded-md",
-  xl: "rounded-lg",
-  "2xl": "rounded-xl",
-  pill: "rounded-full",
+  lg: "ds-segmented__item--r-lg",
+  xl: "ds-segmented__item--r-xl",
+  "2xl": "ds-segmented__item--r-2xl",
+  pill: "ds-segmented__item--r-pill",
+};
+
+const CHROME_CLASS: Record<SegmentedControlChrome, string> = {
+  surface: "ds-segmented--surface",
+  ghost: "ds-segmented--ghost",
+};
+
+const TONE_CLASS: Record<SegmentedControlTone, string> = {
+  neutral: "",
+  brand: "ds-segmented--brand",
 };
 
 export function SegmentedControl<TValue extends string>({
@@ -77,41 +87,25 @@ export function SegmentedControl<TValue extends string>({
   itemStyle,
 }: SegmentedControlProps<TValue>) {
   const isTabList = role === "tablist";
-  const activeBg =
-    tone === "brand"
-      ? "var(--segmented-bg-active-brand)"
-      : "var(--segmented-bg-active)";
-  const activeText =
-    tone === "brand"
-      ? "var(--segmented-text-active-brand)"
-      : "var(--segmented-text-active)";
 
   return (
     <div
       role={role}
       aria-label={ariaLabel}
       className={[
-        "inline-flex items-center gap-1 p-1",
-        fullWidth ? "w-full" : "",
+        "ds-segmented",
+        CHROME_CLASS[chrome],
+        TONE_CLASS[tone],
+        fullWidth ? "ds-segmented--full" : "",
         GROUP_RADIUS_CLASS[radius],
         className,
       ]
         .filter(Boolean)
         .join(" ")}
-      style={{
-        background: chrome === "surface" ? "var(--segmented-bg)" : "transparent",
-        border:
-          chrome === "surface"
-            ? "1px solid var(--segmented-border)"
-            : "1px solid transparent",
-        ...style,
-      }}
+      style={style}
     >
       {options.map((option) => {
         const active = option.value === value;
-        const iconColor = active
-          ? option.accentColor ?? "currentColor"
-          : "currentColor";
 
         return (
           <motion.button
@@ -126,65 +120,34 @@ export function SegmentedControl<TValue extends string>({
               if (!option.disabled) onValueChange(option.value);
             }}
             className={[
-              "inline-flex min-w-0 items-center justify-center gap-1.5 active:scale-98 transition-transform",
-              fullWidth ? "flex-1" : "",
+              "ds-segmented__item",
               SIZE_CLASS[size],
               ITEM_RADIUS_CLASS[radius],
+              active ? "ds-segmented__item--active" : "",
               itemClassName,
             ]
               .filter(Boolean)
               .join(" ")}
             style={{
-              background: active ? activeBg : "transparent",
-              color: active ? activeText : "var(--segmented-text)",
-              border: "1px solid transparent",
-              borderBottom: `2px solid ${
-                active ? option.accentColor ?? "transparent" : "transparent"
-              }`,
-              boxShadow:
-                active && tone === "neutral"
-                  ? "var(--segmented-shadow-active)"
-                  : "none",
-              cursor: option.disabled ? "not-allowed" : "pointer",
-              fontSize:
-                size === "sm"
-                  ? "var(--segmented-font-size-sm)"
-                  : "var(--segmented-font-size)",
-              fontWeight: active
-                ? ("var(--segmented-weight-active)" as CSSProperties["fontWeight"])
-                : ("var(--segmented-weight)" as CSSProperties["fontWeight"]),
-              lineHeight: 1.15,
-              opacity: option.disabled ? 0.48 : 1,
+              ["--ds-seg-accent" as any]: option.accentColor,
               ...itemStyle,
             }}
             whileHover={option.disabled ? undefined : { y: -1 }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           >
             {option.icon && (
-              <span
-                className="flex-shrink-0"
-                style={{ color: iconColor, lineHeight: 0 }}
-              >
-                {option.icon}
-              </span>
+              <span className="ds-segmented__icon">{option.icon}</span>
             )}
             <span
               className={
                 option.subLabel
-                  ? "flex min-w-0 flex-col items-center gap-0.5"
-                  : "min-w-0 truncate"
+                  ? "ds-segmented__label-stack"
+                  : "ds-segmented__label"
               }
             >
-              <span className="min-w-0 truncate">{option.label}</span>
+              <span className="ds-segmented__label-text">{option.label}</span>
               {option.subLabel != null && (
-                <span
-                  className="type-data min-w-0 truncate"
-                  style={{
-                    fontSize: "var(--font-size-xs)",
-                    opacity: 0.7,
-                    fontFeatureSettings: "'tnum'",
-                  }}
-                >
+                <span className="type-data ds-segmented__sublabel">
                   {option.subLabel}
                 </span>
               )}

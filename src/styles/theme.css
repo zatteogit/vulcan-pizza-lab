@@ -671,6 +671,7 @@
   --switch-off: var(--switch-background);
   --switch-thumb: var(--surface-bright);
   --switch-thumb-shadow: 0 1px 3px color-mix(in srgb, var(--shadow-color) 18%, transparent);
+  --switch-track-h: 1.15rem; /* 18.4px — altezza track Switch (Radix Root) */
 
   /* ── E. CTA Button ── */
   --cta-btn-bg: var(--grad-sage);
@@ -11705,6 +11706,319 @@
     font-size: var(--font-size-sm);
     color: var(--text-muted);
     white-space: nowrap;
+  }
+
+
+
+  /* ═══ DS COMPONENT: Checkbox ═══ */
+  .ds-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+    padding-block: var(--space-3);
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-xl);
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    opacity: 1;
+    transition: transform 0.15s;
+  }
+
+  .ds-checkbox:active {
+    transform: scale(0.98);
+  }
+
+  .ds-checkbox--block {
+    width: 100%;
+  }
+
+  .ds-checkbox--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .ds-checkbox__box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--space-5);
+    height: var(--space-5);
+    margin-top: var(--space-0-5);
+    border-radius: var(--radius-sm);
+    border: var(--border-width-strong) solid var(--outline);
+    background-color: transparent;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+
+  .ds-checkbox--active .ds-checkbox__box {
+    border-color: var(--primary);
+    background-color: var(--primary);
+  }
+
+  .ds-checkbox__icon {
+    color: var(--primary-foreground);
+  }
+
+  .ds-checkbox__label {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-compact);
+    color: var(--text-default);
+  }
+
+  .ds-checkbox--active .ds-checkbox__label {
+    font-weight: var(--weight-semibold);
+  }
+
+  .ds-checkbox__description {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--leading-body);
+    margin-top: var(--space-0-5);
+    color: var(--text-muted);
+  }
+
+  /* ═══ DS COMPONENT: RadioButton ═══ */
+  .ds-radio {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+    padding-block: var(--space-3);
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-xl);
+    text-align: left;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .ds-radio:active { transform: scale(0.98); }
+  .ds-radio--block { width: 100%; }
+  .ds-radio--disabled { cursor: not-allowed; opacity: 0.5; }
+
+  .ds-radio__circle {
+    flex-shrink: 0;
+    width: var(--space-5);
+    height: var(--space-5);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--space-0-5);
+    border: var(--border-width-strong) solid var(--outline);
+  }
+  .ds-radio--checked .ds-radio__circle { border-color: var(--primary); }
+
+  .ds-radio__dot {
+    width: var(--space-2-5);
+    height: var(--space-2-5);
+    border-radius: var(--radius-full);
+    background: var(--primary);
+  }
+
+  .ds-radio__text {
+    display: block;
+  }
+
+  .ds-radio__label {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-regular);
+    color: var(--text-default);
+    line-height: var(--leading-compact);
+  }
+  .ds-radio--checked .ds-radio__label { font-weight: var(--weight-semibold); }
+
+  .ds-radio__description {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    line-height: var(--leading-body);
+    margin-top: var(--space-0-5);
+  }
+
+  /* ═══ DS COMPONENT: Switch ═══ */
+  /* ═══ COMPONENT: ds/Switch ═══ */
+  .ds-switch {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    width: var(--space-8);
+    height: var(--switch-track-h);
+    border-radius: var(--radius-full);
+    border: var(--border-width-thin) solid transparent;
+    background: var(--switch-off);
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .ds-switch[data-state="checked"] {
+    background: var(--switch-on);
+  }
+
+  .ds-switch:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .ds-switch:focus-visible {
+    outline: var(--border-width-thick) solid var(--primary);
+    outline-offset: var(--space-0-5);
+  }
+
+  .ds-switch__thumb {
+    pointer-events: none;
+    display: block;
+    width: var(--space-4);
+    height: var(--space-4);
+    border-radius: var(--radius-full);
+    background: var(--switch-thumb);
+    box-shadow: var(--switch-thumb-shadow);
+    transition: transform 0.2s ease;
+    transform: translateX(0);
+  }
+
+  .ds-switch__thumb[data-state="checked"] {
+    transform: translateX(calc(100% - var(--border-width-strong)));
+  }
+
+  /* ═══ DS COMPONENT: SegmentedControl ═══ */
+  /* ds/SegmentedControl — T4 selector (group + item matrix) */
+
+  .ds-segmented {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-1);
+  }
+  .ds-segmented--surface {
+    background: var(--segmented-bg);
+    border: var(--border-width-thin) solid var(--segmented-border);
+  }
+  .ds-segmented--ghost {
+    background: transparent;
+    border: var(--border-width-thin) solid transparent;
+  }
+  .ds-segmented--full {
+    width: 100%;
+  }
+  .ds-segmented--full .ds-segmented__item {
+    flex: 1;
+  }
+  .ds-segmented--r-lg {
+    border-radius: var(--radius-lg);
+  }
+  .ds-segmented--r-xl {
+    border-radius: var(--radius-xl);
+  }
+  .ds-segmented--r-2xl {
+    border-radius: var(--radius-2xl);
+  }
+  .ds-segmented--r-pill {
+    border-radius: var(--radius-full);
+  }
+
+  .ds-segmented__item {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1-5);
+    border: var(--border-width-thin) solid transparent;
+    border-bottom: var(--border-width-strong) solid transparent;
+    background: transparent;
+    color: var(--segmented-text);
+    font-weight: var(--segmented-weight);
+    line-height: var(--leading-heading);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .ds-segmented__item:active {
+    transform: scale(0.98);
+  }
+  .ds-segmented__item:disabled {
+    cursor: not-allowed;
+    opacity: 0.48;
+  }
+
+  .ds-segmented__item--sm {
+    padding-inline: var(--space-3);
+    padding-block: var(--space-1-5);
+    font-size: var(--segmented-font-size-sm);
+  }
+  .ds-segmented__item--md {
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3);
+    font-size: var(--segmented-font-size);
+  }
+
+  .ds-segmented__item--r-lg {
+    border-radius: var(--radius-md);
+  }
+  .ds-segmented__item--r-xl {
+    border-radius: var(--radius-lg);
+  }
+  .ds-segmented__item--r-2xl {
+    border-radius: var(--radius-xl);
+  }
+  .ds-segmented__item--r-pill {
+    border-radius: var(--radius-full);
+  }
+
+  .ds-segmented__item--active {
+    background: var(--segmented-bg-active);
+    color: var(--segmented-text-active);
+    font-weight: var(--segmented-weight-active);
+    box-shadow: var(--segmented-shadow-active);
+    border-bottom: var(--border-width-strong) solid var(--ds-seg-accent, transparent);
+  }
+  .ds-segmented--brand .ds-segmented__item--active {
+    background: var(--segmented-bg-active-brand);
+    color: var(--segmented-text-active-brand);
+    box-shadow: none;
+  }
+
+  .ds-segmented__icon {
+    flex-shrink: 0;
+    line-height: 0;
+  }
+  .ds-segmented__item--active .ds-segmented__icon {
+    color: var(--ds-seg-accent, currentColor);
+  }
+
+  .ds-segmented__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ds-segmented__label-stack {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-0-5);
+  }
+  .ds-segmented__label-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ds-segmented__sublabel {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--font-size-xs);
+    opacity: 0.7;
+    font-feature-settings: "tnum";
   }
 
 
