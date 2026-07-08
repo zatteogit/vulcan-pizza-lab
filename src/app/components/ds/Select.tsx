@@ -95,7 +95,7 @@ export function Select({
                     }}
                     className={`ds-select__option${isSelected ? " ds-select__option--selected" : ""}`}
                   >
-                    <div>
+                    <div data-slot="option-text">
                       <div className="ds-select__option-title">{opt.label}</div>
                       {opt.desc && <div className="ds-select__option-desc">{opt.desc}</div>}
                     </div>

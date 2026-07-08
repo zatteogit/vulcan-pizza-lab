@@ -51,7 +51,7 @@ export function Fab({
       style={style}
     >
       {icon}
-      {extended && label && <span>{label}</span>}
+      {extended && label && <span data-slot="label">{label}</span>}
     </button>
   );
 }
