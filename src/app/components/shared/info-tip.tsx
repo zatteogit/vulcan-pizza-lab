@@ -76,26 +76,13 @@ export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
   }, [open]);
 
   return (
-    <span className="relative inline-flex items-center">
+    <span className="info-tip">
       <button
         ref={triggerRef}
         type="button"
         onClick={toggle}
-        className="inline-flex items-center justify-center rounded-full transition-all flex-shrink-0"
-        style={{
-          width: size + 6,
-          height: size + 6,
-          background: open
-            ? "var(--popover-trigger-bg)"
-            : "transparent",
-          color: open
-            ? "var(--popover-trigger-active)"
-            : "var(--popover-trigger-idle)",
-          cursor: "pointer",
-          opacity: open ? 1 : 0.55,
-          border: "none",
-          padding: 0,
-        }}
+        className={`info-tip__trigger${open ? " info-tip__trigger--active" : ""}`}
+        style={{ ["--tip-size" as any]: `${size + 6}px` }}
         aria-label={cms.misc.moreInfo}
         aria-expanded={open}
       >
@@ -122,72 +109,25 @@ export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
               stiffness: 500,
               damping: 30,
             }}
-            className="absolute z-50"
-            style={{
-              [placement === "below" ? "top" : "bottom"]:
-                "calc(100% + 8px)",
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: "clamp(240px, 65vw, 300px)",
-              pointerEvents: "auto",
-            }}
+            className={`info-tip__popover ${
+              placement === "below"
+                ? "info-tip__popover--below"
+                : "info-tip__popover--above"
+            }`}
           >
-            <div
-              className="rounded-2xl px-4 py-3.5"
-              style={{
-                background: "var(--popover-surface)",
-                border: "1px solid var(--popover-border-color)",
-                boxShadow: "var(--popover-shadow)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "var(--font-size-md)",
-                  lineHeight: "1.4",
-                  color: "var(--popover-text)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.5rem",
-                }}
-              >
-                <div>{children}</div>
+            <div className="info-tip__panel">
+              <div className="info-tip__content">
+                <div data-slot="body">{children}</div>
 
                 {term && (
-                  <div
-                    style={{
-                      marginTop: "0.5rem",
-                      paddingTop: "0.5rem",
-                      borderTop: "1px solid var(--popover-border-color)",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.25rem",
-                    }}
-                  >
-                    <div
-                      className="flex items-center gap-1.5"
-                      style={{
-                        color: "var(--primary)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                        fontSize: "var(--font-size-xs)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                      }}
-                    >
+                  <div className="info-tip__term">
+                    <div className="info-tip__term-head">
                       <BookOpen size={11} />
-                      <span>
+                      <span data-slot="term-name">
                         {term.name} {term.symbol ? `(${term.symbol})` : ""}
                       </span>
                     </div>
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize: "var(--font-size-sm)",
-                        color: "var(--text-muted)",
-                        lineHeight: "1.4",
-                      }}
-                    >
+                    <p className="info-tip__definition">
                       {term.definition}
                     </p>
                   </div>

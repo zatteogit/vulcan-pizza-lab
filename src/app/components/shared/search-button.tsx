@@ -40,20 +40,15 @@ export function SearchButton({
     <motion.button
       type="button"
       onClick={() => onOpen?.()}
-      className={`flex items-center justify-center shrink-0${className ? ` ${className}` : ""}`}
+      className={`search-button${className ? ` ${className}` : ""}`}
       whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
       whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
       transition={SPRING}
       style={{
-        cursor: "pointer",
-        WebkitTapHighlightColor: "transparent",
         /* La superficie (tinta glass) arriva dal call-site; geometria e colore
            icona li possiede il componente → coerenti ovunque (è un oggetto). */
         ...surfaceStyle,
-        width: diameter,
-        height: diameter,
-        borderRadius: "var(--radius-full)",
-        color: "var(--icon-muted)",
+        ["--search-button-size" as any]: `${diameter}px`,
       }}
       aria-label={`${cms.pages.navSearch} (⌘K)`}
       title="⌘K"

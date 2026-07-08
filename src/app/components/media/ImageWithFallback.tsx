@@ -18,7 +18,7 @@ function FallbackGlyph() {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      style={{ color: "var(--icon-muted)", opacity: 0.45 }}
+      className="image-fallback-glyph"
     >
       <path d="M12 3c4.97 0 9 3.2 9 5L12 21 3 8c0-1.8 4.03-5 9-5Z" />
       <path d="M3 8c3 1.2 15 1.2 18 0" />
@@ -42,14 +42,8 @@ export function ImageWithFallback(props: React.ImgHTMLAttributes<HTMLImageElemen
   if (didError || isPlaceholder) {
     return (
       <div
-        className={className}
-        style={{
-          ...style,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "var(--surface-container)",
-        }}
+        className={[className, "image-fallback-error"].filter(Boolean).join(" ")}
+        style={style}
         role="img"
         aria-label={alt || undefined}
       >
@@ -60,23 +54,11 @@ export function ImageWithFallback(props: React.ImgHTMLAttributes<HTMLImageElemen
 
   return (
     <div
-      className={className}
-      style={{
-        ...style,
-        position: "relative",
-        overflow: "hidden",
-        background: "var(--surface-container)",
-      }}
+      className={[className, "image-fallback-media"].filter(Boolean).join(" ")}
+      style={style}
     >
       {!loaded && (
-        <div
-          className="absolute inset-0 animate-pulse"
-          style={{
-            background:
-              "var(--surface-container-high, var(--surface-container))",
-          }}
-          aria-hidden="true"
-        />
+        <div className="image-fallback-skeleton" aria-hidden="true" />
       )}
       <img
         src={src}
@@ -87,14 +69,10 @@ export function ImageWithFallback(props: React.ImgHTMLAttributes<HTMLImageElemen
           setLoaded(true);
           onLoad?.(e);
         }}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit,
-          display: "block",
-          opacity: loaded ? 1 : 0,
-          transition: "opacity 0.3s ease",
-        }}
+        className={
+          loaded ? "image-fallback-img image-fallback-img--loaded" : "image-fallback-img"
+        }
+        style={{ ["--object-fit" as any]: objectFit }}
       />
     </div>
   );

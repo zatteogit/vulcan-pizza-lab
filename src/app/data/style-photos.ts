@@ -22,6 +22,7 @@ import photoTrancioMilanese from "../../assets/pizzas/tranciomilanese.png";
 import photoChicagoTavern from "../../assets/pizzas/chicagotavern.png";
 import photoFocacciaBarese from "../../assets/pizzas/focacciabarese.png";
 import photoPizzaFritta from "../../assets/pizzas/fritta.png";
+import photoMontanara from "../../assets/pizzas/montanara.png";
 import photoCalzoneNapoletano from "../../assets/pizzas/calzonenapoletano.png";
 import photoPizzaAlMetro from "../../assets/pizzas/almetro.png";
 import photoNewHavenApizza from "../../assets/pizzas/newhavenapizza.png";
@@ -51,7 +52,7 @@ export const STYLE_PHOTOS: Record<string, string> = {
   chicago_tavern: photoChicagoTavern,
   focaccia_barese: photoFocacciaBarese,
   pizza_fritta: photoPizzaFritta,
-  pizza_montanara: photoPizzaFritta,
+  pizza_montanara: photoMontanara,
   calzone_napoletano: photoCalzoneNapoletano,
   pizza_al_metro: photoPizzaAlMetro,
   new_haven_apizza: photoNewHavenApizza,

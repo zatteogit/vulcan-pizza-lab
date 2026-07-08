@@ -30,46 +30,31 @@ export function SubPageHeader({
       as="header"
       variant="glass"
       data-region="toolbar"
-      className="sticky top-0 z-40"
-      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+      className="sub-page-header"
     >
       {/* pr-16: riserva la corsia del ProfileButton fisso della shell,
           che a viewport stretti tocca il bordo del contenitore. */}
-      <div className="max-w-4xl mx-auto pl-4 pr-16 sm:pl-6 sm:pr-16 h-14 sm:h-16 flex items-center gap-3">
+      <div className="sub-page-header__inner">
         <Link
           to={backTo}
           data-back-button="true"
-          className="flex items-center gap-1 -ml-1 active:scale-95 transition-transform flex-shrink-0"
-          style={{
-            color: "var(--text-accent)",
-            fontSize: "var(--font-size-xl)",
-            fontWeight: "var(--weight-semibold)" as any,
-            textDecoration: "none",
-          }}
+          className="sub-page-header__back"
         >
           <ChevronLeft size={18} />
-          <span>{backLabel}</span>
+          <span data-slot="label">{backLabel}</span>
         </Link>
 
         {title && (
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="sub-page-header__title-group">
             {icon && (
               <span
-                className="flex-shrink-0 inline-flex"
-                style={{ color: "var(--primary)" }}
+                className="sub-page-header__icon"
                 aria-hidden="true"
               >
                 {icon}
               </span>
             )}
-            <span
-              className="font-serif truncate"
-              style={{
-                fontSize: "var(--font-size-2xl)",
-                fontWeight: "var(--weight-bold)" as any,
-                color: "var(--text-default)",
-              }}
-            >
+            <span className="sub-page-header__title">
               {title}
             </span>
           </div>
@@ -77,8 +62,8 @@ export function SubPageHeader({
 
         {meta && (
           <>
-            <div className="flex-1" />
-            <div className="flex items-center flex-shrink-0">{meta}</div>
+            <div className="sub-page-header__spacer" />
+            <div className="sub-page-header__meta">{meta}</div>
           </>
         )}
       </div>

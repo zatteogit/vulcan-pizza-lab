@@ -190,79 +190,34 @@ function TabItem({
   const { cms } = useCms();
   const prefersReducedMotion = useReducedMotion();
   const label = (cms.pages as any)?.[tab.labelKey] || tab.labelFallback;
+  const isRailLayout = layout === "rail";
 
   return (
     <Link
       to={tab.path}
-      className="flex items-center justify-center relative group"
-      style={{
-        flexDirection: "column",
-        gap: layout === "bottom" ? 4 : 4,
-        padding: layout === "bottom" ? "4px 0" : "12px 0",
-        minWidth: layout === "bottom" ? 0 : 56,
-        minHeight: layout === "bottom" ? 0 : 56,
-        textDecoration: "none",
-        WebkitTapHighlightColor: "transparent",
-      }}
+      className={isRailLayout ? "app-shell-tab app-shell-tab--rail" : "app-shell-tab app-shell-tab--bottom"}
       aria-label={label}
       aria-current={active ? "page" : undefined}
     >
       {/* Active indicator pill (M3 style) */}
       <motion.div
-        className="relative flex items-center justify-center"
+        className="app-shell-tab__pill"
         whileHover={prefersReducedMotion ? undefined : { scale: 1.045 }}
         whileTap={prefersReducedMotion ? undefined : { scale: 0.94 }}
         transition={navQuickSpring}
-        style={{
-          width: "var(--space-16)",
-          height: "var(--space-8)",
-          borderRadius: "var(--radius-lg)",
-        }}
       >
         {active && (
           <motion.div
             layoutId={`tab-indicator-${layout}`}
-            className="absolute inset-0"
-            style={{
-              borderRadius: "var(--radius-lg)",
-              background: "var(--tab-indicator-bg)",
-              border: "var(--tab-indicator-border)",
-              boxShadow: "var(--tab-indicator-shadow)",
-              willChange: "transform",
-              WebkitBackfaceVisibility: "hidden",
-              backfaceVisibility: "hidden",
-            }}
+            className="app-shell-tab__indicator"
             transition={navSpring}
           />
         )}
-        <Icon
-          size={24}
-          style={{
-            color: active ? "var(--icon-accent)" : "var(--icon-muted)",
-            position: "relative",
-            zIndex: 1,
-            transition: "color 0.15s ease",
-          }}
-        />
+        <Icon size={24} className="app-shell-tab__icon" />
       </motion.div>
 
       {/* Label */}
-      <span
-        className="type-data"
-        style={{
-          fontSize: "0.6875rem",
-          fontWeight: active
-            ? ("var(--weight-semibold)" as any)
-            : ("var(--weight-regular)" as any),
-          color: active ? "var(--primary)" : "var(--text-muted)",
-          letterSpacing: "0.02em",
-          lineHeight: 1,
-          opacity: active ? 1 : 0.88,
-          transition: "color 0.15s ease",
-        }}
-      >
-        {label}
-      </span>
+      <span className="type-data app-shell-tab__label">{label}</span>
     </Link>
   );
 }
@@ -382,7 +337,7 @@ function BottomTabBar({
   const { hidden } = navState;
   return (
     <motion.div
-      className="fixed left-1/2 -translate-x-1/2 z-50 md:hidden flex items-center gap-3"
+      className="app-shell-dock"
       initial={{ y: 0, scale: 1, opacity: 1 }}
       animate={{
         y: hidden && !prefersReducedMotion ? 92 : 0,
@@ -398,36 +353,19 @@ function BottomTabBar({
               opacity: { duration: hidden ? 0.14 : 0.24, ease: "easeOut" },
             }
       }
-      style={{
-        bottom: "calc(var(--space-6, 24px) + env(safe-area-inset-bottom, 0px))",
-        width: "min(352px, 92vw)",
-        transformOrigin: "bottom center",
-        willChange: "transform, opacity",
-      }}
     >
       {/* Tabs Capsule */}
       <nav
         data-region="nav"
-        className="relative flex-1 overflow-hidden"
-        style={{
-          ...mobileDockGlassStyle,
-          borderRadius: "var(--radius-2xl)",
-        }}
+        className="app-shell-dock__nav"
         aria-label={cms.pages.navMainLabel}
       >
         <motion.span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-px"
+          className="app-shell-dock__gloss"
           animate={{ opacity: 0.26 }}
-          style={{
-            background:
-              "linear-gradient(to right, transparent, color-mix(in srgb, var(--overlay-text) 20%, transparent) 30%, color-mix(in srgb, var(--overlay-text) 20%, transparent) 70%, transparent)",
-          }}
         />
-        <div
-          className="flex items-center justify-around px-2"
-          style={{ height: "var(--space-14, 56px)" }}
-        >
+        <div className="app-shell-dock__row">
           {TABS.map((tab) => (
             <TabItem
               key={tab.id}
@@ -464,48 +402,32 @@ function SidebarRail({
 }) {
   const { cms } = useCms();
   return (
-    <div
-      className="fixed left-4 top-4 bottom-4 hidden md:flex flex-col gap-3 z-50"
-      style={{ width: "var(--space-18, 72px)" }}
-    >
+    <div className="app-shell-rail">
       {/* Navigation Capsule (Logo + Tabs) */}
       <motion.nav
         data-region="nav"
-        className="relative flex flex-col items-center overflow-hidden py-5 flex-1"
+        className="app-shell-rail__nav"
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 280, damping: 28, mass: 0.8 }}
-        style={{
-          ...premiumGlassStyle,
-          borderRadius: "var(--radius-2xl)",
-          transformOrigin: "center left",
-        }}
         aria-label={cms.pages.navMainLabel}
       >
         <motion.span
           aria-hidden="true"
-          className="pointer-events-none absolute left-3 right-3 top-0 h-px"
+          className="app-shell-rail__gloss"
           animate={{ opacity: 0.42 }}
-          style={{ background: "color-mix(in srgb, var(--overlay-text) 42%, transparent)" }}
         />
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center justify-center mb-5 active:scale-95 transition-transform"
-          style={{
-            width: "var(--space-10)",
-            height: "var(--space-10)",
-            borderRadius: "var(--radius-md)",
-            background: "var(--hero-brand-gradient)",
-            color: "var(--overlay-text)",
-          }}
+          className="app-shell-rail__logo"
           aria-label={cms.pages.homeAria}
         >
           <VulcanMark size={20} decorative />
         </Link>
 
         {/* Tabs — centrate verticalmente nella capsula (M3 rail) */}
-        <div className="flex flex-col items-center justify-center gap-1.5 flex-1">
+        <div className="app-shell-rail__tabs">
           {TABS.map((tab) => (
             <TabItem
               key={tab.id}
@@ -518,26 +440,14 @@ function SidebarRail({
 
         {/* Dev shortcut (subtle) */}
         {devMode && (
-          <div
-            className="flex flex-col items-center gap-1 mt-auto pt-2"
-            style={{ borderTop: "1px solid var(--container-border-subtle)", width: "var(--space-8)" }}
-          >
+          <div className="app-shell-rail__dev">
             <Link
               to="/dev"
-              className="flex items-center justify-center active:scale-95 transition-transform"
-              style={{
-                width: "var(--space-8)",
-                height: "var(--space-8)",
-                borderRadius: "var(--radius-sm)",
-                color: "var(--text-muted)",
-                opacity: 0.5,
-                fontSize: "var(--font-size-xs)",
-                fontFamily: "var(--font-mono)",
-              }}
+              className="app-shell-rail__dev-link"
               aria-label={cms.pages.devToolsAria}
               title="Ctrl+Shift+D"
             >
-              <span style={{ fontFeatureSettings: "'tnum'" }}>{"</>"}</span>
+              <span className="app-shell-rail__dev-icon">{"</>"}</span>
             </Link>
           </div>
         )}
@@ -568,7 +478,7 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
   return (
     <MotionLink
       to="/profile"
-      className="fixed right-4 flex items-center justify-center"
+      className={`app-shell-profile${scrolled ? " app-shell-profile--scrolled" : ""}${hidden ? " app-shell-profile--hidden" : ""}`}
       animate={{
         width: size,
         height: size,
@@ -579,32 +489,6 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
       transition={liquidDockQuickSpring}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.92 }}
-      style={{
-        top: "calc(var(--space-4, 16px) + env(safe-area-inset-top, 0px))",
-        /* z-index 60 per stare SOPRA gli header sticky z-50 delle pagine. */
-        zIndex: 60,
-        background: active
-          ? "color-mix(in srgb, var(--primary) 16%, var(--container-page))"
-          : scrolled
-            ? "color-mix(in srgb, var(--container-page) 72%, transparent)"
-            : "color-mix(in srgb, var(--container-page) 86%, transparent)",
-        backdropFilter: "blur(22px) saturate(1.55)",
-        WebkitBackdropFilter: "blur(22px) saturate(1.55)",
-        border: `1px solid ${
-          active
-            ? "color-mix(in srgb, var(--primary) 24%, transparent)"
-            : "color-mix(in srgb, var(--text-default) 10%, transparent)"
-        }`,
-        color: active ? "var(--primary)" : "var(--text-default)",
-        pointerEvents: hidden ? "none" : "auto",
-        boxShadow: active
-          ? "0 10px 24px color-mix(in srgb, var(--primary) 16%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)"
-          : "0 10px 24px color-mix(in srgb, var(--shadow-color) 8%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 12%, transparent)",
-        textDecoration: "none",
-        transition:
-          "background 180ms ease, border-color 180ms ease, box-shadow 180ms ease",
-        willChange: "transform, width, height",
-      }}
       aria-label={label}
       aria-current={active ? "page" : undefined}
       title={label}
@@ -789,15 +673,7 @@ export function AppShell() {
     <CmsProvider>
       <StylesOverrideProvider>
         <CookSessionProvider>
-        <div
-          style={{
-            minHeight: "100dvh",
-            background: "var(--container-page)",
-            overflowX: "hidden",
-            width: "100%",
-            position: "relative",
-          }}
-        >
+        <div className="app-shell-root">
           {/* Sidebar rail — desktop */}
           {showNav && (
             <SidebarRail
@@ -815,11 +691,7 @@ export function AppShell() {
 
           {/* Main content area */}
           <div
-            style={{
-              marginLeft: showNav ? undefined : 0,
-              paddingBottom: showNav ? "calc(80px + env(safe-area-inset-bottom, 0px))" : 0,
-            }}
-            className={showNav ? "md:ml-28 md:pb-0 overflow-x-hidden" : "overflow-x-hidden"}
+            className={`app-shell-main${showNav ? " app-shell-main--nav" : ""}`}
           >
             <Outlet
               context={{ darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode, hideNavbar, setHideNavbar } satisfies DarkModeContext}
@@ -831,7 +703,7 @@ export function AppShell() {
             <>
               {/* Bottom scrim — visually grounds the floating tab bar on mobile */}
               <motion.div
-                className="fixed bottom-0 inset-x-0 z-40 pointer-events-none md:hidden"
+                className="app-shell-scrim"
                 initial={{ y: 0, opacity: 1 }}
                 animate={{
                   y: navState.hidden && !prefersReducedMotion ? 40 : 0,
@@ -845,10 +717,6 @@ export function AppShell() {
                         opacity: { duration: navState.hidden ? 0.14 : 0.24, ease: "easeOut" },
                       }
                 }
-                style={{
-                  height: "calc(72px + env(safe-area-inset-bottom, 0px))",
-                  background: "linear-gradient(to top, var(--container-page) 0%, var(--container-page) 20%, color-mix(in srgb, var(--container-page) 65%, transparent) 60%, transparent 100%)",
-                }}
               />
               <BottomTabBar activeTab={activeTab} onSearchOpen={openSearch} navState={navState} />
             </>

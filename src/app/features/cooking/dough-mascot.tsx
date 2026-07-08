@@ -190,11 +190,9 @@ export function DoughBlob({
   const isForge = variant === 'forge';
   const isNeural = variant === 'neural';
 
-  /* Layer sizes */
-  const mainSize = size * 0.82;
-  const accentSize = isForge || isNeural ? size * 0.62 : size * 0.58;
-  const highlightSize = isForge || isNeural ? size * 0.28 : size * 0.3;
-  const satelliteSize = size * 0.1;
+  /* Layer sizes are expressed as CSS calc() ratios of --mascot-size in
+   * dough-mascot.css (main 0.82, accent 0.58/0.62, highlight 0.3/0.28,
+   * satellite 0.1) — kept here only as a comment for future readers. */
 
   /* Static border-radius for reduced-motion */
   const staticRadius = mainRadii[0];
@@ -242,24 +240,38 @@ export function DoughBlob({
     satelliteOpacity: isForge ? 0.5 : isNeural ? 0.75 : 0.35,
   };
 
+  const rootClassName = [
+    'dough-mascot',
+    isForge && 'dough-mascot--forge',
+    isNeural && 'dough-mascot--neural',
+    className,
+  ].filter(Boolean).join(' ');
+
   return (
     <div
-      className={className}
-      style={{ width: size, height: size, position: 'relative' }}
+      className={rootClassName}
+      style={{
+        ['--mascot-size' as any]: `${size}px`,
+        ['--blob-glow' as any]: layer.glow,
+        ['--blob-body' as any]: layer.main,
+        ['--blob-body-opacity' as any]: layer.mainOpacity,
+        ['--blob-accent' as any]: layer.accent,
+        ['--blob-accent-opacity' as any]: layer.accentOpacity,
+        ['--blob-core' as any]: layer.core,
+        ['--blob-core-opacity' as any]: layer.coreOpacity,
+        ['--blob-edge' as any]: layer.edge,
+        ['--blob-satellite' as any]: layer.satellite,
+        ['--blob-satellite-opacity' as any]: params.satelliteOpacity * layer.satelliteOpacity,
+        ['--static-radius-main' as any]: staticRadius,
+        ['--static-radius-accent' as any]: accentRadii[0],
+        ['--static-radius-highlight' as any]: HIGHLIGHT_RADII[0],
+      }}
       aria-hidden="true"
     >
       {/* Layer 0: Ambient glow — energy-reactive, blurred */}
       {isAnimated && (
         <motion.div
-          style={{
-            position: 'absolute',
-            inset: isForge ? '-25%' : '-20%',
-            background: layer.glow,
-            borderRadius: '50%',
-            filter: isForge ? 'blur(25px)' : 'blur(30px)',
-            pointerEvents: 'none',
-            willChange: 'transform, opacity',
-          }}
+          className="dough-mascot__glow"
           animate={{
             scale: isForge
               ? [params.glowScaleRange[0], params.glowScaleRange[1] * 1.1]
@@ -277,19 +289,7 @@ export function DoughBlob({
 
       {/* Layer 1: Main blob */}
       <motion.div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          width: mainSize,
-          height: mainSize,
-          marginTop: -mainSize / 2,
-          marginLeft: -mainSize / 2,
-          background: layer.main,
-          opacity: layer.mainOpacity,
-          borderRadius: isAnimated ? undefined : staticRadius,
-          willChange: 'border-radius, transform',
-        }}
+        className="dough-mascot__main"
         {...(isAnimated ? {
           animate: {
             borderRadius: mainRadii,
@@ -306,19 +306,7 @@ export function DoughBlob({
 
       {/* Layer 2: Accent blob — molten core (forge) or counter-rotate layer */}
       <motion.div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          width: accentSize,
-          height: accentSize,
-          marginTop: -accentSize / 2,
-          marginLeft: -accentSize / 2,
-          background: layer.accent,
-          opacity: layer.accentOpacity,
-          borderRadius: isAnimated ? undefined : accentRadii[0],
-          willChange: 'border-radius, transform',
-        }}
+        className="dough-mascot__accent"
         {...(isAnimated ? {
           animate: {
             borderRadius: accentRadii,
@@ -333,19 +321,7 @@ export function DoughBlob({
 
       {/* Layer 3: Highlight core — bright molten center */}
       <motion.div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          width: highlightSize,
-          height: highlightSize,
-          marginTop: -highlightSize / 2,
-          marginLeft: -highlightSize / 2,
-          background: layer.core,
-          opacity: layer.coreOpacity,
-          borderRadius: isAnimated ? undefined : HIGHLIGHT_RADII[0],
-          willChange: 'border-radius, transform',
-        }}
+        className="dough-mascot__highlight"
         {...(isAnimated ? {
           animate: {
             borderRadius: HIGHLIGHT_RADII,
@@ -360,18 +336,7 @@ export function DoughBlob({
 
       {/* Layer 4: Edge — solid crust (forge) or dashed ring */}
       <motion.div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          width: mainSize + 4,
-          height: mainSize + 4,
-          marginTop: -(mainSize + 4) / 2,
-          marginLeft: -(mainSize + 4) / 2,
-          border: layer.edge,
-          borderRadius: isAnimated ? undefined : staticRadius,
-          willChange: 'border-radius, transform',
-        }}
+        className="dough-mascot__edge"
         {...(isAnimated ? {
           animate: {
             borderRadius: mainRadii,
@@ -387,13 +352,7 @@ export function DoughBlob({
       {/* Layer 5: Satellite — ember spark (forge) or soft blob */}
       {isAnimated && params.satelliteOpacity > 0 && (
         <motion.div
-          style={{
-            position: 'absolute',
-            width: satelliteSize,
-            height: satelliteSize,
-            background: layer.satellite,
-            opacity: params.satelliteOpacity * layer.satelliteOpacity,
-          }}
+          className="dough-mascot__satellite"
           animate={{
             borderRadius: HIGHLIGHT_RADII,
             x: [

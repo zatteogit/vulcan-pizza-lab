@@ -81,52 +81,6 @@
     "inline-style": 2,
     "markup-presentation": 1
   },
-  "src/app/components/media/ImageWithFallback.tsx": {
-    "inline-style": 5
-  },
-  "src/app/components/shared/app-shell.tsx": {
-    "inline-style": 20,
-    "markup-presentation": 1
-  },
-  "src/app/components/shared/info-tip.tsx": {
-    "inline-style": 7,
-    "bare-wrapper": 2
-  },
-  "src/app/components/shared/search-button.tsx": {
-    "inline-style": 1
-  },
-  "src/app/components/shared/search-overlay.tsx": {
-    "inline-style": 27,
-    "bare-wrapper": 4,
-    "markup-presentation": 6
-  },
-  "src/app/components/shared/sub-page-header.tsx": {
-    "inline-style": 4,
-    "bare-wrapper": 1,
-    "markup-presentation": 1
-  },
-  "src/app/components/shared/vulcan-hero.tsx": {
-    "inline-style": 3
-  },
-  "src/app/components/shared/vulcan-logo.tsx": {
-    "inline-style": 3
-  },
-  "src/app/features/cooking/active-cook-widget.tsx": {
-    "inline-style": 5
-  },
-  "src/app/features/cooking/cooking-mode.tsx": {
-    "inline-style": 36,
-    "markup-presentation": 2
-  },
-  "src/app/features/cooking/dough-mascot.tsx": {
-    "inline-style": 7
-  },
-  "src/app/features/cooking/fire-glow.tsx": {
-    "inline-style": 6
-  },
-  "src/app/features/cooking/step-illustrations.tsx": {
-    "inline-style": 1
-  },
   "src/app/features/recipe/recipe-view.tsx": {
     "inline-style": 3
   },

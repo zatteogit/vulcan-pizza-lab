@@ -10,7 +10,7 @@ import {
 } from "./cook-session";
 import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
-import { liquidDockButtonStyle, liquidDockSpring, liquidDockStartButtonStyle } from "../../domain/liquid-dock";
+import { liquidDockSpring } from "../../domain/liquid-dock";
 
 export function ActiveCookWidget({
   canStartRecipe = false,
@@ -82,49 +82,23 @@ export function ActiveCookWidget({
         whileTap={{ scale: 0.96 }}
         transition={liquidDockSpring}
         onClick={handleClick}
-        className={`fixed z-(--z-widget) inline-flex items-center rounded-full active-cook-widget ${
-          active ? "is-active" : ""
-        } ${compact ? "is-compact" : ""}`}
-        style={{
-          top: "calc(var(--space-4, 16px) + env(safe-area-inset-top, 0px))",
-          ...(active ? liquidDockButtonStyle : liquidDockStartButtonStyle),
-          ...(active ? { background: "var(--primary)", color: "var(--text-on-accent)" } : {}),
-          border: active
-            ? due
-              ? "1.5px solid color-mix(in srgb, var(--primary) 74%, white)"
-              : "1px solid var(--primary)"
-            : "1px solid color-mix(in srgb, var(--cta) 44%, transparent)",
-          boxShadow: active
-            ? "0 8px 22px color-mix(in srgb, var(--primary) 28%, transparent)"
-            : "0 12px 30px color-mix(in srgb, var(--cta) 28%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 28%, transparent)",
-          fontSize: "var(--font-size-md)",
-          fontWeight: "var(--weight-bold)",
-          lineHeight: 1,
-          cursor: "pointer",
-          overflow: "hidden",
-          gap: compact ? 8 : 10,
-          paddingLeft: compact ? 12 : 14,
-          paddingRight: compact ? 12 : 14,
-          maxWidth: hasProfileButton ? "calc(100vw - 84px)" : "calc(100vw - 32px)",
-          pointerEvents: retracted ? "none" : "auto",
-          willChange: "transform, opacity, height, right",
-          WebkitTapHighlightColor: "transparent",
-        }}
+        className={[
+          "cook-widget",
+          active && "cook-widget--active",
+          compact && "cook-widget--compact",
+          due && "cook-widget--due",
+          retracted && "cook-widget--retracted",
+          hasProfileButton && "cook-widget--with-profile",
+        ]
+          .filter(Boolean)
+          .join(" ")}
         aria-label={active ? `${activeAccessibleLabel}. ${cms.cooking.reopen}` : cms.cooking.start}
         title={active ? activeAccessibleLabel : cms.cooking.start}
       >
         {active && (
           <motion.span
             aria-hidden="true"
-            className="pointer-events-none absolute rounded-full"
-            style={{
-              width: 84,
-              height: 58,
-              right: -28,
-              bottom: -24,
-              background:
-                "radial-gradient(circle, color-mix(in srgb, var(--overlay-text) 34%, transparent), color-mix(in srgb, var(--overlay-text) 12%, transparent) 44%, transparent 70%)",
-            }}
+            className="cook-widget__glow"
             animate={
               prefersReducedMotion || !due
                 ? undefined
@@ -134,39 +108,24 @@ export function ActiveCookWidget({
           />
         )}
 
-        <span
-          className="relative flex shrink-0 items-center justify-center"
-          style={{ width: iconBox, height: iconBox }}
-        >
+        <span className="cook-widget__icon-box">
           {active && metrics ? (
             <ProgressRing progress={metrics.progress} due={due} size={iconBox} />
           ) : (
             <Flame size={compact ? 16 : 17} />
           )}
-          {active && <Flame size={compact ? 13 : 14} className="absolute" fill={due ? "currentColor" : "none"} />}
+          {active && (
+            <Flame
+              size={compact ? 13 : 14}
+              className="cook-widget__flame-overlay"
+              fill={due ? "currentColor" : "none"}
+            />
+          )}
         </span>
 
-        <span
-          className="active-cook-label relative whitespace-nowrap"
-          style={{
-            fontSize: compact ? "var(--font-size-sm)" : "var(--font-size-md)",
-            maxWidth: compact ? "min(44vw, 132px)" : "min(52vw, 168px)",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {active ? actionLabel : cms.cooking.startShort}
-        </span>
+        <span className="cook-widget__label">{active ? actionLabel : cms.cooking.startShort}</span>
         {active && (
-          <span
-            className="active-cook-countdown relative type-data whitespace-nowrap"
-            style={{
-              color: "color-mix(in srgb, var(--overlay-text) 78%, transparent)",
-              fontWeight: "var(--weight-semibold)",
-              fontFeatureSettings: "'tnum'",
-              fontSize: compact ? "var(--font-size-sm)" : "var(--font-size-md)",
-            }}
-          >
+          <span className="cook-widget__countdown type-data">
             {metrics?.finished ? cms.cooking.completed : countdown}
           </span>
         )}
@@ -180,7 +139,13 @@ function ProgressRing({ progress, due, size }: { progress: number; due: boolean;
   const circumference = 2 * Math.PI * radius;
   const dash = Math.max(0, Math.min(1, progress)) * circumference;
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden="true" className="absolute inset-0">
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      aria-hidden="true"
+      className="cook-widget__progress-ring"
+    >
       <circle
         cx={size / 2}
         cy={size / 2}

@@ -49,26 +49,11 @@ export function VulcanHero({
 
   return (
     <div
-      className={className}
-      style={{
-        position: "relative",
-        width: size,
-        height: size,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        ...style,
-      }}
+      className={["vulcan-hero", className].filter(Boolean).join(" ")}
+      style={{ ["--hero-size" as any]: `${size}px`, ...style }}
     >
       {/* Blob: organic energy field */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          pointerEvents: "none",
-          zIndex: 0,
-        }}
-      >
+      <div className="vulcan-hero__field">
         <DoughBlob
           variant={blobVariant}
           size={size}
@@ -78,15 +63,7 @@ export function VulcanHero({
 
       {/* Mark: crystallized form floating in the blob */}
       <motion.div
-        style={{
-          position: "relative",
-          zIndex: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          willChange: "transform",
-          /* Subtle breathing sync'd with blob energy */
-        }}
+        className="vulcan-hero__mark"
         animate={{
           scale: [1, 1.015, 0.99, 1.01, 1],
         }}

@@ -127,27 +127,11 @@ export function VulcanMark({
 
   return (
     <div
-      className={className}
-      style={{
-        position: "relative",
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: size,
-        height: size,
-        ...style,
-      }}
+      className={["vulcan-logo__glow-box", className].filter(Boolean).join(" ")}
+      style={{ ["--vulcan-logo-size" as any]: `${size}px`, ...style }}
     >
       <motion.div
-        style={{
-          position: "absolute",
-          inset: "-30%",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(ellipse at 50% 35%, var(--logo-glow) 0%, transparent 70%)",
-          opacity: 0.14,
-          filter: "blur(8px)",
-        }}
+        className="vulcan-logo__glow-ring"
         initial={{ scale: 1, opacity: 0.12 }}
         animate={{
           scale: 1.12,
@@ -160,7 +144,7 @@ export function VulcanMark({
           ease: "easeInOut",
         }}
       />
-      <div style={{ position: "relative" }}>{svg}</div>
+      <div className="vulcan-logo__stage">{svg}</div>
     </div>
   );
 }

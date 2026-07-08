@@ -101,25 +101,23 @@ function Highlight({
   query: string;
   color?: string;
 }) {
-  if (!query || query.length < 2) return <span>{text}</span>;
+  if (!query || query.length < 2) return <span data-slot="term">{text}</span>;
 
   const lowerText = text.toLowerCase();
   const lowerQuery = query.toLowerCase().trim();
   const idx = lowerText.indexOf(lowerQuery);
-  if (idx === -1) return <span>{text}</span>;
+  if (idx === -1) return <span data-slot="term">{text}</span>;
 
   const before = text.slice(0, idx);
   const match = text.slice(idx, idx + lowerQuery.length);
   const after = text.slice(idx + lowerQuery.length);
 
   return (
-    <span>
+    <span data-slot="term">
       {before}
       <span
-        style={{
-          color: color || "var(--primary)",
-          fontWeight: "var(--weight-semibold)" as any,
-        }}
+        className="search-overlay-x__highlight"
+        style={{ ["--tone" as any]: color || "var(--primary)" }}
       >
         {match}
       </span>
@@ -414,16 +412,7 @@ export function SearchOverlay({
       {open && (
         <div
           data-region="overlay"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 9999,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: isMobile ? "center" : "flex-start",
-            paddingLeft: isMobile ? undefined : 112,
-            paddingBottom: isMobile ? 80 : 100,
-          }}
+          className={`search-overlay-x${isMobile ? " search-overlay-x--mobile" : ""}`}
           onKeyDown={handleKeyDown}
         >
           {/* Backdrop */}
@@ -433,14 +422,7 @@ export function SearchOverlay({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
             onClick={onClose}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background:
-                "color-mix(in srgb, var(--container-page) 65%, transparent)",
-              backdropFilter: "var(--backdrop-glass)",
-              WebkitBackdropFilter: "var(--backdrop-glass)",
-            }}
+            className="search-overlay-x__backdrop"
           />
 
           {/* Panel */}
@@ -449,56 +431,19 @@ export function SearchOverlay({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 450, damping: 28 }}
-            className="relative w-full mx-4 sm:mx-0 overflow-hidden"
-            style={{
-              maxWidth: 640,
-              maxHeight: "min(70vh, 560px)",
-              display: "flex",
-              flexDirection: "column",
-              background: "var(--container-bg-low)",
-              border: "1px solid var(--container-border)",
-              borderRadius: "var(--radius-3xl)",
-              boxShadow:
-                "0 24px 80px -12px color-mix(in srgb, var(--shadow-color) 25%, transparent), 0 0 0 1px color-mix(in srgb, var(--shadow-color) 4%, transparent)",
-              transformOrigin: isMobile ? "bottom center" : "bottom left",
-            }}
+            className={`search-overlay-x__panel${isMobile ? " search-overlay-x__panel--mobile" : ""}`}
           >
             {/* Drag Handle per Mobile */}
             {isMobile && (
-              <div 
-                className="flex justify-center items-center pt-3 pb-1" 
-                style={{ flexShrink: 0 }}
-              >
-                <div 
-                  className="rounded-full"
-                  style={{
-                    width: 36,
-                    height: 5,
-                    background: "var(--container-border)",
-                    opacity: 0.4
-                  }}
-                />
+              <div className="search-overlay-x__drag-wrap">
+                <div className="search-overlay-x__drag-handle" />
               </div>
             )}
 
             {/* Search input row */}
-            <div
-              className="flex items-center gap-3 px-5"
-              style={{
-                height: 60,
-                borderBottom: "1px solid var(--container-border-subtle)",
-                flexShrink: 0,
-              }}
-            >
+            <div className="search-overlay-x__input-row">
               {/* Icona lente statica a sinistra */}
-              <Search
-                size={20}
-                className="flex-shrink-0"
-                style={{
-                  color: "var(--text-muted)",
-                  opacity: 0.7,
-                }}
-              />
+              <Search size={20} className="search-overlay-x__search-icon" />
               <input
                 ref={inputRef}
                 type="text"
@@ -508,21 +453,13 @@ export function SearchOverlay({
                   setActiveIndex(0);
                 }}
                 placeholder={cms.pages.searchPlaceholder}
-                className="flex-1"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  outline: "none",
-                  color: "var(--text-default)",
-                  fontSize: "var(--font-size-xl)",
-                  fontFamily: "var(--font-body)",
-                }}
+                className="search-overlay-x__input"
                 aria-label={cms.pages.searchFieldLabel}
                 autoComplete="off"
                 autoCorrect="off"
                 spellCheck={false}
               />
-              <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="search-overlay-x__input-actions">
                 {query && (
                   <motion.button
                     initial={{ opacity: 0, scale: 0.7 }}
@@ -532,13 +469,7 @@ export function SearchOverlay({
                       setQuery("");
                       inputRef.current?.focus();
                     }}
-                    className="p-1.5 rounded-lg active:scale-95"
-                    style={{
-                      color: "var(--text-muted)",
-                      background: "var(--container-bg)",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
+                    className="search-overlay-x__clear-btn"
                     aria-label={cms.pages.searchClearLabel}
                   >
                     <X size={14} />
@@ -546,13 +477,7 @@ export function SearchOverlay({
                 )}
                 <button
                   onClick={onClose}
-                  className="px-2.5 py-1.5 rounded-lg text-sm font-semibold transition-colors active:scale-95"
-                  style={{
-                    color: "var(--primary)",
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                  }}
+                  className="search-overlay-x__cancel-btn"
                   aria-label={cms.pages.searchCloseLabel}
                 >
                   {cms.ui.cancel}
@@ -561,15 +486,7 @@ export function SearchOverlay({
             </div>
 
             {/* Filter pills bar (directly below input) */}
-            <div
-              className="flex items-center gap-2 px-5 py-2.5 overflow-x-auto hide-scrollbar"
-              style={{
-                borderBottom: "1px solid var(--container-border-subtle)",
-                background: "color-mix(in srgb, var(--container-bg-low) 50%, transparent)",
-                flexShrink: 0,
-                WebkitOverflowScrolling: "touch",
-              }}
-            >
+            <div className="search-overlay-x__filter-bar hide-scrollbar">
               {filterOptions.map((opt) => {
                 const Icon = opt.icon;
                 const isActive = activeFilter === opt.id;
@@ -577,34 +494,18 @@ export function SearchOverlay({
                   <button
                     key={opt.id}
                     onClick={() => handleFilterClick(opt.id)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full active:scale-95 transition-all text-xs font-medium shrink-0"
-                    style={{
-                      cursor: "pointer",
-                      border: "1px solid",
-                      borderColor: isActive
-                        ? "var(--primary)"
-                        : "var(--container-border-subtle)",
-                      background: isActive
-                        ? "color-mix(in srgb, var(--primary) 12%, transparent)"
-                        : "transparent",
-                      color: isActive ? "var(--primary)" : "var(--text-muted)",
-                      outline: "none",
-                    }}
+                    className={`search-overlay-x__filter-btn${isActive ? " search-overlay-x__filter-btn--active" : ""}`}
                     aria-label={opt.id === "all" ? "Mostra tutto" : `Filtra per ${opt.label}`}
                   >
                     <Icon size={12} />
-                    <span>{opt.label}</span>
+                    <span data-slot="label">{opt.label}</span>
                   </button>
                 );
               })}
             </div>
 
             {/* Results area */}
-            <div
-              ref={listRef}
-              className="flex-1 overflow-y-auto"
-              style={{ overscrollBehavior: "contain" }}
-            >
+            <div ref={listRef} className="search-overlay-x__results">
               <AnimatePresence mode="wait">
                 {hasQuery && results.length === 0 ? (
                   /* No results */
@@ -614,21 +515,10 @@ export function SearchOverlay({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    className="flex flex-col items-center justify-center py-12 px-6"
+                    className="search-overlay-x__empty"
                   >
-                    <Search
-                      size={32}
-                      style={{ color: "var(--text-muted)", opacity: 0.3 }}
-                    />
-                    <p
-                      className="font-serif italic mt-3"
-                      style={{
-                        fontSize: "var(--font-size-xl)",
-                        color: "var(--text-muted)",
-                        opacity: 0.65,
-                        textAlign: "center",
-                      }}
-                    >
+                    <Search size={32} className="search-overlay-x__empty-icon" />
+                    <p className="search-overlay-x__empty-text">
                       {cms.pages.searchNoResults.replace("{query}", query)}
                     </p>
                   </motion.div>
@@ -640,7 +530,7 @@ export function SearchOverlay({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    className="py-2"
+                    className="search-overlay-x__results-list"
                   >
                     {groupedResults.map(([type, items]) => {
                       const iconMeta = TYPE_ICONS[type as ResultType];
@@ -649,33 +539,17 @@ export function SearchOverlay({
                       const Icon = iconMeta.icon;
                       const catLabel = catLabels[type as ResultType] || type;
                       return (
-                        <div key={type} className="mb-1">
+                        <div key={type} className="search-overlay-x__group">
                           {/* Group header */}
                           <div
-                            className="flex items-center gap-2 px-5 py-2"
-                            style={{ opacity: 0.7 }}
+                            className="search-overlay-x__group-header"
+                            style={{ ["--tone" as any]: iconMeta.color }}
                           >
-                            <Icon size={12} style={{ color: iconMeta.color }} />
-                            <span
-                              style={{
-                                fontSize: "0.6875rem",
-                                fontFamily: "var(--font-mono)",
-                                color: iconMeta.color,
-                                textTransform: "uppercase",
-                                letterSpacing: "0.12em",
-                              }}
-                            >
+                            <Icon size={12} className="search-overlay-x__group-icon" />
+                            <span className="search-overlay-x__group-label">
                               {catLabel}
                             </span>
-                            <span
-                              style={{
-                                fontSize: "0.625rem",
-                                fontFamily: "var(--font-mono)",
-                                color: "var(--text-muted)",
-                                opacity: 0.5,
-                                fontFeatureSettings: "'tnum'",
-                              }}
-                            >
+                            <span className="search-overlay-x__group-count">
                               {items.length}
                             </span>
                           </div>
@@ -693,39 +567,18 @@ export function SearchOverlay({
                                 aria-selected={isActive}
                                 onClick={() => handleSelect(item.link)}
                                 onMouseEnter={() => setActiveIndex(idx)}
-                                className="flex items-center gap-3 mx-2 px-3 py-2.5 rounded-xl cursor-pointer active:scale-98 transition-transform"
-                                style={{
-                                  background: isActive
-                                    ? "color-mix(in srgb, var(--primary) 8%, transparent)"
-                                    : "transparent",
-                                  transition: "background 0.1s ease",
-                                }}
+                                className={`search-overlay-x__item${isActive ? " search-overlay-x__item--active" : ""}`}
                               >
                                 {item.photo && (
                                   <ImageWithFallback
                                     src={item.photo}
                                     alt=""
-                                    className="flex-shrink-0 rounded-lg"
-                                    style={{
-                                      width: 40,
-                                      height: 40,
-                                      objectFit: "cover",
-                                    }}
+                                    className="search-overlay-x__item-photo"
                                     loading="lazy"
                                   />
                                 )}
-                                <div className="flex-1 min-w-0">
-                                  <div
-                                    style={{
-                                      fontSize: "var(--font-size-base)",
-                                      fontWeight:
-                                        "var(--weight-medium)" as any,
-                                      color: isActive
-                                        ? "var(--primary)"
-                                        : "var(--text-default)",
-                                      transition: "color 0.1s ease",
-                                    }}
-                                  >
+                                <div className="search-overlay-x__item-body">
+                                  <div className="search-overlay-x__item-title">
                                     <Highlight
                                       text={item.title}
                                       query={trimmedQuery}
@@ -736,16 +589,7 @@ export function SearchOverlay({
                                       }
                                     />
                                   </div>
-                                  <div
-                                    className="type-data"
-                                    style={{
-                                      fontSize: "var(--font-size-sm)",
-                                      color: "var(--text-muted)",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
+                                  <div className="type-data search-overlay-x__item-subtitle">
                                     <Highlight
                                       text={item.subtitle}
                                       query={trimmedQuery}
@@ -756,11 +600,7 @@ export function SearchOverlay({
                                 {isActive && (
                                   <CornerDownLeft
                                     size={14}
-                                    style={{
-                                      color: "var(--primary)",
-                                      flexShrink: 0,
-                                      opacity: 0.6,
-                                    }}
+                                    className="search-overlay-x__item-enter-icon"
                                   />
                                 )}
                               </div>
@@ -783,22 +623,12 @@ export function SearchOverlay({
                       damping: 30,
                       delay: 0.05,
                     }}
-                    className="px-5 py-5"
+                    className="search-overlay-x__suggestions"
                   >
-                    <p
-                      style={{
-                        fontSize: "0.6875rem",
-                        fontFamily: "var(--font-body)",
-                        color: "var(--text-muted)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.12em",
-                        marginBottom: 10,
-                        opacity: 0.6,
-                      }}
-                    >
+                    <p className="search-overlay-x__suggestions-label">
                       {cms.pages.searchSuggestions}
                     </p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="search-overlay-x__suggestions-list">
                       {QUICK_TAGS.map((tag) => (
                         <motion.button
                           key={tag}
@@ -806,16 +636,7 @@ export function SearchOverlay({
                             setQuery(tag);
                             setActiveIndex(0);
                           }}
-                          className="px-3 py-1.5 rounded-lg active:scale-95"
-                          style={{
-                            background: "var(--container-bg)",
-                            border:
-                              "1px solid var(--container-border-subtle)",
-                            color: "var(--text-muted)",
-                            fontSize: "var(--font-size-sm)",
-                            fontFamily: "var(--font-body)",
-                            cursor: "pointer",
-                          }}
+                          className="search-overlay-x__quick-tag"
                           whileHover={{
                             borderColor: "var(--primary)",
                             color: "var(--primary)",

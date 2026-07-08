@@ -83,31 +83,11 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
   const phaseEnd = formatStepClock(step.endMs, step.flexible, bcp47);
 
   return (
-    <div
-      className="rounded-2xl px-5 py-4"
-      style={{
-        background: phaseDone
-          ? "color-mix(in srgb, var(--recipe-success) 12%, var(--surface-container-low))"
-          : "var(--surface-container-low)",
-        border: `1px solid ${phaseDone ? "color-mix(in srgb, var(--recipe-success) 35%, transparent)" : "var(--outline-variant)"}`,
-      }}
-    >
-      <div className="flex items-center gap-3">
-        <Clock
-          size={18}
-          style={{ color: phaseDone ? "var(--recipe-success)" : "var(--text-accent)", flexShrink: 0 }}
-        />
-        <div className="min-w-0 flex-1">
-          <div
-            className="type-numeric"
-            style={{
-              fontSize: "var(--font-size-3xl)",
-              fontWeight: "var(--weight-bold)" as any,
-              color: phaseDone ? "var(--recipe-success)" : "var(--text-default)",
-              fontFeatureSettings: "'tnum'",
-              lineHeight: 1.15,
-            }}
-          >
+    <div className={`cooking-mode-phase${phaseDone ? " cooking-mode-phase--done" : ""}`}>
+      <div className="cooking-mode-phase__head">
+        <Clock size={18} className="cooking-mode-phase__icon" />
+        <div className="cooking-mode-phase__body">
+          <div className="type-numeric cooking-mode-phase__value">
             {notStarted
               ? t(cms.cooking.stepStartsIn, {
                   eta: formatEta(step.startMs, Date.now(), cms.cooking),
@@ -116,7 +96,7 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
                 ? cms.cooking.phaseDone
                 : t(cms.cooking.phaseRemaining, { time: remainingLabel })}
           </div>
-          <div style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}>
+          <div className="cooking-mode-phase__meta">
             {step.flexible
               ? t(cms.cooking.passivePhaseMeta, {
                   duration: phaseDuration,
@@ -129,35 +109,22 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
           </div>
         </div>
         {phaseDone && isCurrent && (
-          <span
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full flex-shrink-0"
-            style={{
-              background: "color-mix(in srgb, var(--primary) 12%, transparent)",
-              color: "var(--primary)",
-              fontSize: "var(--font-size-xs)",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
-          >
+          <span className="cooking-mode-phase__badge">
             <BellRing size={12} />
             {cms.cooking.yourTurn}
           </span>
         )}
       </div>
       {!notStarted && !phaseDone && (
-        <div className="mt-3 rounded-full overflow-hidden" style={{ height: "var(--space-1)", background: "var(--container-bg)" }}>
+        <div className="cooking-mode-phase__track">
           <div
-            style={{
-              height: "100%",
-              width: `${Math.round(progress * 100)}%`,
-              background: "var(--text-accent)",
-              borderRadius: 999,
-              transition: "width 1s linear",
-            }}
+            className="cooking-mode-phase__track-fill"
+            style={{ ["--phase-progress" as any]: `${Math.round(progress * 100)}%` }}
           />
         </div>
       )}
       {step.flexible && !phaseDone && (
-        <p className="mt-2.5" style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", lineHeight: 1.45 }}>
+        <p className="cooking-mode-phase__hint">
           {cms.cooking.passiveCloseHint}
         </p>
       )}
@@ -291,57 +258,29 @@ export function CookingMode() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 flex flex-col"
-      style={{ zIndex: 200, background: "var(--container-page)", color: "var(--text-default)" }}
+      className="cooking-mode-overlay"
       role="dialog"
       aria-modal="true"
       aria-label={`${cms.cooking.inProgress} — ${session.styleName}`}
     >
       {/* ── Header ── */}
-      <div
-        className="flex items-center justify-between px-4 sm:px-6 flex-shrink-0"
-        style={{
-          paddingTop: "env(safe-area-inset-top, 0px)",
-          height: "calc(var(--space-15, 60px) + env(safe-area-inset-top, 0px))",
-          borderBottom: "1px solid var(--container-border-subtle)",
-        }}
-      >
-        <div className="min-w-0">
-          <div
-            style={{
-              fontSize: "var(--font-size-xs)",
-              letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              color: "var(--text-accent)",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
-          >
+      <div className="cooking-mode-header">
+        <div className="cooking-mode-header__identity">
+          <div className="cooking-mode-header__eyebrow">
 
           </div>
-          <div className="truncate" style={{ fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any }}>
+          <div className="cooking-mode-header__title">
             {session.styleName}
           </div>
         </div>
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <span
-            className="type-numeric"
-            style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}
-          >
+        <div className="cooking-mode-header__meta">
+          <span className="type-numeric cooking-mode-header__counter">
             {Math.min(viewIndex + 1, total)} / {total}
           </span>
           {/* Interrompi: azione distruttiva, perciò chiede conferma. */}
           <button
             onClick={() => setConfirmAbort(true)}
-            className="flex items-center justify-center active:scale-95 transition-transform"
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 14,
-              background: "var(--container-bg)",
-              border: "1px solid var(--container-border)",
-              cursor: "pointer",
-              color: "var(--icon-muted)",
-            }}
+            className="cooking-mode-header__action"
             aria-label={cms.cooking.interrupt}
             title={cms.cooking.interrupt}
           >
@@ -349,16 +288,7 @@ export function CookingMode() {
           </button>
           <button
             onClick={closeOverlay}
-            className="flex items-center justify-center active:scale-95 transition-transform"
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 14,
-              background: "var(--container-bg)",
-              border: "1px solid var(--container-border)",
-              cursor: "pointer",
-              color: "var(--text-default)",
-            }}
+            className="cooking-mode-header__action cooking-mode-header__action--close"
             aria-label={cms.cooking.minimize}
             title={cms.cooking.minimizeHint}
           >
@@ -401,17 +331,17 @@ export function CookingMode() {
       />
 
       {/* ── Progress ── */}
-      <div style={{ height: "var(--border-width-thick, 3px)", background: "var(--container-bg)" }} className="flex-shrink-0">
+      <div className="cooking-mode-progress">
         <motion.div
           animate={{ width: `${finished ? 100 : progressPct}%` }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          style={{ height: "100%", background: "var(--text-accent)" }}
+          className="cooking-mode-progress__fill"
         />
       </div>
 
       {/* ── Contenuto ── */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-xl mx-auto px-5 sm:px-6 py-7 pb-36">
+      <div className="cooking-mode-body">
+        <div className="cooking-mode-body__inner">
           <AnimatePresence mode="wait">
             {finished ? (
               <motion.div
@@ -419,11 +349,11 @@ export function CookingMode() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -12 }}
-                className="flex flex-col items-center text-center gap-5 pt-12"
+                className="cooking-mode-finished"
               >
                 {/* La mascotte festeggia con te: blob ad alta energia + burst
                     di coriandoli una tantum (niente con reduced-motion). */}
-                <div className="relative flex items-center justify-center" style={{ width: 168, height: 168 }}>
+                <div className="cooking-mode-finished__burst-wrap">
                   <CelebrationBurst />
                   <motion.div
                     initial={{ scale: 0.6, opacity: 0 }}
@@ -433,16 +363,15 @@ export function CookingMode() {
                     <DoughBlob variant="rise" size={124} energy={92} />
                   </motion.div>
                 </div>
-                <h2 className="font-serif" style={{ fontSize: "clamp(2rem, 6vw, 2.75rem)", lineHeight: 1.1 }}>
+                <h2 className="cooking-mode-finished__title">
                   {cms.cooking.completed}
                 </h2>
-                <p style={{ fontSize: "var(--font-size-xl)", color: "var(--text-muted)", maxWidth: "var(--cooking-done-max-width, 380px)", lineHeight: 1.5 }}>
+                <p className="cooking-mode-finished__body">
                   {t(cms.cooking.doneBody, { style: session.styleName })}
                 </p>
                 <CtaButton
                   onClick={endSession}
-                  className="mt-2 px-8 h-12"
-                  style={{ fontSize: "var(--font-size-xl)" }}
+                  className="cooking-mode-finished__cta"
                 >
                   {cms.cooking.finish}
                 </CtaButton>
@@ -454,25 +383,11 @@ export function CookingMode() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -24 }}
                 transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                className="flex flex-col gap-5"
+                className="cooking-mode-step"
               >
                 {/* Illustrazione di fase — respira piano, con alone caldo */}
-                <div className="relative flex justify-center">
-                  <div
-                    aria-hidden="true"
-                    className="absolute pointer-events-none"
-                    style={{
-                      width: 220,
-                      height: 220,
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      borderRadius: "50%",
-                      background:
-                        "radial-gradient(circle, color-mix(in srgb, var(--primary) 14%, transparent) 0%, transparent 70%)",
-                      filter: "blur(18px)",
-                    }}
-                  />
+                <div className="cooking-mode-step__illustration-wrap">
+                  <div aria-hidden="true" className="cooking-mode-step__glow" />
                   <motion.div
                     animate={{ y: [0, -5, 0] }}
                     transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
@@ -482,46 +397,29 @@ export function CookingMode() {
                 </div>
 
                 {/* Orario onesto + stato */}
-                <div className="flex items-center gap-2 flex-wrap justify-center">
-                  <span
-                    className="type-numeric px-3 py-1 rounded-full"
-                    style={{
-                      background: "color-mix(in srgb, var(--primary) 10%, transparent)",
-                      color: "var(--text-accent)",
-                      fontSize: "var(--font-size-base)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      fontFeatureSettings: "'tnum'",
-                    }}
-                  >
+                <div className="cooking-mode-step__status-row">
+                  <span className="type-numeric cooking-mode-step__clock">
                     {formatStepClock(step.startMs, step.flexible, bcp47)}
                   </span>
                   {viewingDone && (
-                    <span
-                      className="flex items-center gap-1 px-2.5 py-1 rounded-full"
-                      style={{
-                        background: "color-mix(in srgb, var(--recipe-success) 12%, transparent)",
-                        color: "var(--recipe-success)",
-                        fontSize: "var(--font-size-sm)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                      }}
-                    >
+                    <span className="cooking-mode-step__done-badge">
                       <Check size={13} /> {cms.cooking.stepDoneBadge}
                     </span>
                   )}
                 </div>
 
                 {/* Titolo */}
-                <h2 className="font-serif text-center" style={{ fontSize: "clamp(1.9rem, 6.5vw, 2.8rem)", lineHeight: 1.08 }}>
+                <h2 className="cooking-mode-step__title">
                   {step.title}
                 </h2>
 
                 {/* Descrizione */}
-                <p style={{ fontSize: "var(--font-size-2xl)", lineHeight: 1.55, color: "var(--text-default)" }}>
+                <p className="cooking-mode-step__description">
                   {step.description}
                 </p>
 
                 {step.longDesc && (
-                  <p className="type-body-lg" style={{ lineHeight: 1.6, color: "var(--text-muted)" }}>
+                  <p className="type-body-lg cooking-mode-step__long-desc">
                     {step.longDesc}
                   </p>
                 )}
@@ -533,15 +431,9 @@ export function CookingMode() {
 
                 {/* Tip */}
                 {step.tip && (
-                  <div
-                    className="flex items-start gap-3 rounded-2xl px-4 py-3.5"
-                    style={{
-                      background: "color-mix(in srgb, var(--tertiary) 8%, var(--surface-container-low))",
-                      border: "1px solid color-mix(in srgb, var(--tertiary) 18%, transparent)",
-                    }}
-                  >
-                    <Lightbulb size={18} style={{ color: "var(--tertiary)", flexShrink: 0, marginTop: "var(--space-0-5)" }} />
-                    <p className="type-body-lg" style={{ lineHeight: 1.5, color: "var(--text-default)" }}>
+                  <div className="cooking-mode-step__tip">
+                    <Lightbulb size={18} className="cooking-mode-step__tip-icon" />
+                    <p className="type-body-lg cooking-mode-step__tip-text">
                       {step.tip}
                     </p>
                   </div>
@@ -554,47 +446,22 @@ export function CookingMode() {
 
       {/* ── Navigazione ── */}
       {!finished && (
-        <div
-          className="absolute bottom-0 left-0 right-0 px-5 sm:px-6 pb-6 pt-10 pointer-events-none"
-          style={{ background: "linear-gradient(to top, var(--container-page) 55%, transparent 100%)" }}
-        >
-          <div
-            className="max-w-xl mx-auto flex flex-col gap-2 pointer-events-auto"
-            style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
-          >
+        <div className="cooking-mode-nav">
+          <div className="cooking-mode-nav__inner">
             {/* "Ho finito prima": uscita discreta dall'attesa */}
             {waiting && (
               <button
                 onClick={skipWait}
-                className="self-center px-3 py-1 rounded-full active:scale-95 transition-transform"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "var(--text-muted)",
-                  fontSize: "var(--font-size-sm)",
-                  textDecoration: "underline",
-                  textUnderlineOffset: 3,
-                  cursor: "pointer",
-                }}
+                className="cooking-mode-nav__skip"
               >
                 {cms.cooking.finishedEarly}
               </button>
             )}
-            <div className="flex items-center gap-3">
+            <div className="cooking-mode-nav__row">
               <button
                 onClick={goPrev}
                 disabled={viewIndex === 0}
-                className="flex items-center justify-center active:scale-95 transition-transform flex-shrink-0"
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: "var(--radius-xl)",
-                  background: "var(--container-bg)",
-                  border: "1px solid var(--container-border)",
-                  color: viewIndex === 0 ? "var(--icon-muted)" : "var(--icon-default)",
-                  opacity: viewIndex === 0 ? 0.4 : 1,
-                  cursor: viewIndex === 0 ? "default" : "pointer",
-                }}
+                className="cooking-mode-nav__prev"
                 aria-label={cms.cooking.prevStep}
               >
                 <ChevronLeft size={24} />
@@ -606,23 +473,7 @@ export function CookingMode() {
                 variant={isCurrent && !waiting ? "primary" : "secondary"}
                 radius="xl"
                 elevated={isCurrent && !waiting}
-                className="flex-1 flex items-center justify-center gap-2 active:scale-98 transition-transform"
-                style={{
-                  height: 56,
-                  borderRadius: "var(--radius-xl)",
-                  fontSize: "var(--font-size-xl-5)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  cursor: waiting ? "default" : "pointer",
-                  fontFeatureSettings: "'tnum'",
-                  ...(waiting
-                    ? {
-                        background: "var(--container-bg)",
-                        border: "1px solid var(--container-border)",
-                        boxShadow: "none",
-                        color: "var(--text-muted)",
-                      }
-                    : {}),
-                }}
+                className="cooking-mode-nav__cta"
               >
                 {waiting ? (
                   <>
@@ -685,11 +536,11 @@ function CelebrationBurst() {
     };
   });
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center justify-center">
+    <div aria-hidden="true" className="cooking-mode-burst">
       {particles.map((p, i) => (
         <motion.span
           key={i}
-          className="absolute"
+          className={`cooking-mode-burst__particle${p.round ? " cooking-mode-burst__particle--round" : ""}`}
           initial={{ x: 0, y: 0, scale: 0, opacity: 0, rotate: 0 }}
           animate={{
             x: p.x,
@@ -700,10 +551,8 @@ function CelebrationBurst() {
           }}
           transition={{ duration: 1.15, delay: p.delay, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            width: p.size,
-            height: p.size,
-            borderRadius: p.round ? "50%" : "var(--radius-xs)",
-            background: p.color,
+            ["--particle-size" as any]: `${p.size}px`,
+            ["--particle-color" as any]: p.color,
           }}
         />
       ))}
