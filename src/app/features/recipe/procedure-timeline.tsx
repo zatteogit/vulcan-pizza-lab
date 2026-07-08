@@ -71,7 +71,7 @@ export function ProcedureTimeline({
   return (
     <>
       {/* ── Procedure / Timeline with inline tips ── */}
-      <div>
+      <div data-region="section">
         {/* ── Compensations banner (PizzaNerd inline) ── */}
         {isNerd && compensations.length > 0 && (
           <NerdAuraBlock className="mb-6">

@@ -212,6 +212,7 @@ function TabsCapsule({
 
   return (
     <nav
+      data-region="filters"
       className="relative flex w-full items-center overflow-hidden rounded-full"
       style={{
         ...tabsDockSurfaceStyle,

@@ -68,7 +68,7 @@ export function IngredientsSection({
   return (
     <>
       {/* ── Ingredients + panetti stepper ── */}
-      <div>
+      <div data-region="section">
         <div className="flex items-center gap-3 sm:gap-4 mb-5">
           <h3
             className="font-serif flex-shrink-0"

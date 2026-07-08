@@ -157,6 +157,7 @@ export function LearnPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         className="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-20 pb-32 relative z-10"
+        data-region="page"
       >
         {/* Banner stile contestuale — visibile solo con ?style=<id> valido. */}
         {activeStyle && (
@@ -203,31 +204,14 @@ export function LearnPage() {
             HERO EDITORIALE — titolo serif bold + motto corsivo
             Stile allineato a Crea e Scopri.
            ══════════════════════════════════════════════════════════ */}
-        <div style={{ marginBottom: "var(--space-12)" }}>
-          <Heading level="page" style={{ margin: 0 }}>
+        <div data-region="page-header">
+          <Heading level="page">
             {cms.misc.learnHeroTitle1}
-            <span
-              style={{
-                display: "block",
-                color: "var(--text-accent)",
-                fontWeight: "var(--weight-bold)" as any,
-              }}
-            >
+            <span className="page-title-accent">
               {cms.misc.learnHeroTitle2}
             </span>
           </Heading>
-          <p
-            className="font-serif italic"
-            style={{
-              fontSize: "var(--font-size-2xl)",
-              color: "var(--text-muted)",
-              opacity: 0.75,
-              lineHeight: "var(--leading-reading)",
-              maxWidth: 620,
-              marginTop: "var(--space-4)",
-              marginBottom: 0,
-            }}
-          >
+          <p className="page-lead">
             {cms.misc.learnHeroSubtitle}
           </p>
         </div>
@@ -236,6 +220,7 @@ export function LearnPage() {
             PERCORSO CONSIGLIATO — card ember con hero typography
            ══════════════════════════════════════════════════════════ */}
         <motion.div
+          data-region="feature"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.05 }}
@@ -501,11 +486,12 @@ export function LearnPage() {
             />
           </div>
 
-          <div className="flex flex-col" style={{ gap: "var(--space-4)" }}>
+          <div data-region="collection" className="flex flex-col" style={{ gap: "var(--space-4)" }}>
             {SECTIONS.map((section, i) => {
               return (
                 <motion.div
                   key={section.id}
+                  data-region="card"
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{

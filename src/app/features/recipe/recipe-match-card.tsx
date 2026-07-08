@@ -301,6 +301,7 @@ export function RecipeMatchCard({
   return (
     <motion.section
       layout
+      data-region="card"
       className={`relative w-full ${className}`}
       aria-label={cms.ui.recipeScore}
     >

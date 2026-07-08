@@ -73,6 +73,7 @@ export function RecipeStatStrip({
      subito sotto è parte della stessa scheda (nota Matteo, 4 lug). */
   return (
     <div
+      data-region="section"
       className="grid grid-cols-4 pt-3.5 pb-1"
       style={{
         borderTop: "1px solid var(--container-border-subtle)",

@@ -70,6 +70,7 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
 
   return (
     <motion.div
+      data-region="section"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
@@ -219,7 +220,7 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
   });
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+    <div data-region="section" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
       {/* Title */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
         <Wrench style={{ width: 'var(--font-size-3xl)', height: 'var(--font-size-3xl)', color: 'var(--primary)' }} />

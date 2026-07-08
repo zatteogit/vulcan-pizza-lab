@@ -215,6 +215,12 @@ try {
  * Token in fase di rollout: aggiungerli a STAGED_TOKENS con una scadenza. */
 const STAGED_TOKENS = new Set([
   /* es. "--nuovo-token", // in rollout fino a <data/PR> */
+  /* Migrazione semantica (lug 2026): consumo rimosso dal markup, in migrazione
+     nel CSS per-feature. Rimuovere quando il consumo torna vivo. */
+  "--color-secondary",
+  /* Scala densità (T2) in rollout: --gap-lg non ha ancora un consumo, arriva
+     man mano che i componenti migrano da --space-* a --gap-*. */
+  "--gap-lg",
 ]);
 
 /* A differenza del guard in avanti, qui lo showcase È incluso: le sue pagine

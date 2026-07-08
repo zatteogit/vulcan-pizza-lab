@@ -11,10 +11,14 @@
     "preview": "vite preview",
     "start": "vite",
     "check:tokens": "node scripts/check-design-tokens.mjs",
+    "check:semantics": "node scripts/check-semantics.mjs",
+    "check:semantics:update": "node scripts/check-semantics.mjs --update",
+    "check:css-tokens": "node scripts/check-css-tokens.mjs",
+    "check:css-tokens:update": "node scripts/check-css-tokens.mjs --update",
     "debug:pull": "node scripts/debug-pull.mjs",
     "deploy": "npm run build && wrangler deploy",
     "test": "vitest run",
-    "verify": "tsc --noEmit && npm run check:tokens && vitest run"
+    "verify": "tsc --noEmit && npm run check:tokens && npm run check:semantics && npm run check:css-tokens && vitest run"
   },
   "dependencies": {
     "@radix-ui/react-switch": "1.1.3",

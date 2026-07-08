@@ -413,6 +413,7 @@ export function SearchOverlay({
     <AnimatePresence>
       {open && (
         <div
+          data-region="overlay"
           style={{
             position: "fixed",
             inset: 0,

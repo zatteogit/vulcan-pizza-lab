@@ -1102,7 +1102,7 @@ function RecipeContent({
   if (!recipe) return null;
 
   return (
-    <main id="main-content">
+    <main id="main-content" data-region="page">
       <RecipeView
         recipe={recipe}
         style={style}

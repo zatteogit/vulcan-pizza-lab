@@ -105,6 +105,21 @@ Run `npm run check:tokens` to validate. The checker ignores:
 - `dev-tools`, `engine-test-suite`, `style-editor-tab` (tooling exemptions)
 - `feedback-analysis`, `cms.tsx` (CMS defines strings)
 
+### Semantic-strictness ratchet (`check:semantics`)
+Presentation belongs OUT of the markup so any theme can recompose it (see the
+`data-region` presentation layer in `layout.css`). A ratcheting guard freezes
+the current debt and fails the build if it grows:
+- ❌ No new `style={…}` inline props → use tokens (`theme.css`) or the
+  presentation layer (`layout.css`, keyed on `data-region`).
+- ❌ No new bare `<div>` / `<span>` (zero attributes) → use a semantic element
+  or add a `data-region`.
+- **New files must be clean** (baseline 0); existing files may only decrease.
+
+Baseline lives in `scripts/semantics-baseline.json`. Run `npm run check:semantics`
+to verify; after legitimately reducing (or relocating) debt, regenerate with
+`npm run check:semantics:update`. Tooling/showcase (`design-system`, `dev-tools`,
+`cms`) is exempt. Part of `npm run verify`.
+
 ### Component Structure
 - Keep components in `src/app/components/`
 - Group related components into subdirectories (e.g., `shared/`, `ds/`)
@@ -133,8 +148,10 @@ Edit `src/app/routes.ts`:
 | `npm run dev` | Start dev server (HMR at port 5174) |
 | `npm run build` | Production build (minified, chunked) |
 | `npm run preview` | Serve `dist/` locally (port 4173) |
-| `npm run verify` | TypeScript + design tokens + tests (pre-commit) |
+| `npm run verify` | TypeScript + design tokens + semantics + tests (pre-commit) |
 | `npm run check:tokens` | Design token linter only |
+| `npm run check:semantics` | Semantic-strictness ratchet (no new inline styles / bare divs) |
+| `npm run check:semantics:update` | Regenerate the semantics baseline after reducing debt |
 | `npm test` | Run Vitest suite |
 
 ## Key Files to Know

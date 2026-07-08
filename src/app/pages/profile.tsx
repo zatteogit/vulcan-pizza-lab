@@ -84,6 +84,7 @@ import {
   type SavedRecipe,
 } from "../data/saved-recipes";
 import { useDarkMode } from "../hooks/use-dark-mode";
+import { ThemeControls } from "../features/dev-tools/theme-switcher";
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
@@ -200,13 +201,14 @@ function ProfileSection({
 }) {
   return (
     <motion.section
+      data-region="section"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 400, damping: 30, delay }}
       className="py-6"
       style={{ borderBottom: "1px solid var(--container-border-subtle)" }}
     >
-      <div className="mb-4">
+      <div data-region="section-header" className="mb-4">
         {stepNum && (() => {
           const cleanStepNum = stepNum.split(/[-—]/)[0].trim();
           return (
@@ -280,7 +282,7 @@ function FavoriteStylesSection() {
       subtitle={p.favoritesSubtitle}
       delay={0.02}
     >
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div data-region="collection" className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {styles.map((style) => (
           <div key={style.id} className="relative">
             <Link
@@ -1464,6 +1466,7 @@ export function ProfilePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative"
+        data-region="page"
       >
         {/* Close Button */}
         <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
@@ -1481,7 +1484,7 @@ export function ProfilePage() {
           </IconButton>
         </div>
         {/* Header */}
-        <div className="text-center mb-4">
+        <div data-region="page-header" className="text-center mb-4">
           <div
             className="inline-flex items-center justify-center mb-3"
             style={{
@@ -2199,6 +2202,9 @@ export function ProfilePage() {
                 ]}
               />
             </div>
+
+            {/* Tema rivista di cucina (fase esplorativa) */}
+            <ThemeControls />
 
           </div>
         </ProfileSection>

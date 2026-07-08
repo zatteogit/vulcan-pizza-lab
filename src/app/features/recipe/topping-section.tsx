@@ -178,7 +178,7 @@ export function ToppingSection({
     };
 
     return (
-      <section className="flex flex-col gap-6">
+      <section data-region="section" className="flex flex-col gap-6">
         {/* Carousel image with title & badges overlayed */}
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-[var(--surface-container)] shadow-md">
           <AnimatePresence initial={false} mode="popLayout">

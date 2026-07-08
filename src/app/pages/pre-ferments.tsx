@@ -3,8 +3,8 @@ import { Heading } from "../components/ds/index";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import { useCms } from "../features/cms/cms-context";
 import {
-COMPARISON_ROWS,
-PreFermentCard
+  COMPARISON_ROWS,
+  PreFermentCard
 } from "../features/recipe/pre-ferment-guide";
 import { Flask } from "../features/cooking/step-illustrations";
 
@@ -18,13 +18,7 @@ export function PreFermentsPage() {
   const { cms } = useCms();
   const pg = cms.pages;
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
-    >
+    <div className="preferment-page">
       {/* Header — pattern condiviso (il titolo vive nell'hero sotto) */}
       <SubPageHeader backTo="/learn" backLabel={pg.navLearn} />
 
@@ -36,59 +30,31 @@ export function PreFermentsPage() {
           stiffness: 400,
           damping: 30,
         }}
-        className="max-w-3xl mx-auto px-5 sm:px-8 py-10 sm:py-14"
+        className="preferment-shell"
+        data-region="page"
       >
         {/* Header */}
-        <div className="text-center mb-14">
-          <div
-            className="inline-flex items-center justify-center mb-4"
-            style={{
-              width: 76,
-              height: 60,
-              borderRadius: 16,
-              background:
-                "color-mix(in srgb, var(--cta) 12%, transparent)",
-            }}
-          >
+        <div data-region="page-header" className="preferment-header">
+          <div className="preferment-header__icon">
             <Flask size={58} />
           </div>
           <Heading level="page">
             {pg.learnPreFerments}
           </Heading>
-          <p
-            className="font-serif italic mt-2"
-            style={{
-              fontSize: "var(--font-size-2xl)",
-              color: "var(--text-muted)",
-              opacity: 0.65,
-            }}
-          >
+          <p className="preferment-header__subtitle">
             {pg.preFermentsSubtitle}
           </p>
         </div>
 
         {/* Intro paragraph */}
-        <div
-            className="rounded-2xl px-6 sm:px-8 py-6 sm:py-7 mb-10"
-          style={{
-            background: "var(--container-bg-low)",
-            border: "1px solid var(--container-border)",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "var(--font-size-2xl)",
-              lineHeight: "var(--leading-relaxed)",
-              color: "var(--text-default)",
-              margin: 0,
-            }}
-          >
+        <div className="preferment-intro">
+          <p className="preferment-intro__text">
             <span dangerouslySetInnerHTML={{ __html: pg.preFermentsDescription }} />
           </p>
         </div>
 
         {/* Pre-ferment cards */}
-        <div className="flex flex-col gap-5 mb-14">
+        <div className="preferment-cards">
           {PRE_FERMENT_ORDER.map((id, i) => (
             <motion.div
               key={id}
@@ -117,109 +83,39 @@ export function PreFermentsPage() {
             delay: 0.3,
           }}
         >
-          <Heading level="lg" className="mb-4">
+          <Heading level="lg" className="preferment-section-title">
             {cms.misc.preFermentCompare}
           </Heading>
-          <div
-            className="rounded-2xl overflow-hidden"
-            style={{
-              border: "1px solid var(--outline-variant)",
-            }}
-          >
-            <div
-              style={{
-                overflowX: "auto",
-                "--pre-ferment-cell-x": "clamp(var(--space-2), 2vw, var(--space-3))",
-              } as React.CSSProperties}
-            >
-              <table
-                style={{
-                  width: "100%",
-                  tableLayout: "fixed",
-                  borderCollapse: "collapse",
-                  fontSize: "var(--font-size-md)",
-                }}
-              >
+          <div className="preferment-table">
+            <div className="preferment-table__scroll">
+              <table className="preferment-table__grid">
                 <thead>
                   <tr>
-                    <th style={thStyle}> </th>
-                    <th
-                      style={{
-                        ...thStyle,
-                        color: "var(--primary)",
-                      }}
-                    >
+                    <th className="preferment-table__th"> </th>
+                    <th className="preferment-table__th preferment-table__th--biga">
                       Biga
                     </th>
-                    <th
-                      style={{
-                        ...thStyle,
-                        color: "var(--cta)",
-                      }}
-                    >
+                    <th className="preferment-table__th preferment-table__th--poolish">
                       Poolish
                     </th>
-                    <th
-                      style={{
-                        ...thStyle,
-                        color: "var(--tertiary)",
-                      }}
-                    >
+                    <th className="preferment-table__th preferment-table__th--autolisi">
                       Autolisi
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {COMPARISON_ROWS.map((row, i) => (
+                  {COMPARISON_ROWS.map((row) => (
                     <tr key={row.label}>
-                      <td
-                        style={{
-                          ...tdStyle,
-                          fontSize: "var(--font-size-sm)",
-                          letterSpacing: "0.08em",
-                          textTransform: "uppercase" as const,
-                          color: "var(--muted-foreground)",
-                          fontWeight:
-                            "var(--weight-semibold)" as any,
-                          background:
-                            i % 2 === 0
-                              ? "var(--surface-container-low)"
-                              : "transparent",
-                        }}
-                      >
+                      <td className="preferment-table__td preferment-table__rowlabel">
                         {row.label}
                       </td>
-                      <td
-                        style={{
-                          ...tdStyle,
-                          background:
-                            i % 2 === 0
-                              ? "var(--surface-container-low)"
-                              : "transparent",
-                        }}
-                      >
+                      <td className="preferment-table__td">
                         {row.biga}
                       </td>
-                      <td
-                        style={{
-                          ...tdStyle,
-                          background:
-                            i % 2 === 0
-                              ? "var(--surface-container-low)"
-                              : "transparent",
-                        }}
-                      >
+                      <td className="preferment-table__td">
                         {row.poolish}
                       </td>
-                      <td
-                        style={{
-                          ...tdStyle,
-                          background:
-                            i % 2 === 0
-                              ? "var(--surface-container-low)"
-                              : "transparent",
-                        }}
-                      >
+                      <td className="preferment-table__td">
                         {row.autolisi}
                       </td>
                     </tr>
@@ -240,12 +136,12 @@ export function PreFermentsPage() {
             damping: 30,
             delay: 0.4,
           }}
-          className="mt-8"
+          className="preferment-decisions"
         >
-          <Heading level="lg" className="mb-4">
+          <Heading level="lg" className="preferment-section-title">
             {pg.preFermentsChoiceTitle}
           </Heading>
-          <div className="flex flex-col gap-3">
+          <div className="preferment-decisions__list">
             <DecisionCard
               emoji="🍞"
               title={pg.preFermentsBigaTitle}
@@ -290,64 +186,23 @@ function DecisionCard({
 }) {
   return (
     <div
-      className="rounded-xl px-4 py-3.5"
-      style={{
-        background: "var(--container-bg-low)",
-        border: "1px solid var(--container-border)",
-      }}
+      className="preferment-decision"
+      style={{ ["--tone" as any]: color }}
     >
-      <div className="flex items-center gap-2 mb-1.5">
-        <span style={{ fontSize: "var(--font-size-xl)" }}>
+      <div className="preferment-decision__head">
+        <span className="preferment-decision__emoji">
           {emoji}
         </span>
-        <span
-          style={{
-            fontSize: "var(--font-size-xl)",
-            fontWeight: "var(--weight-semibold)" as any,
-            color,
-          }}
-        >
+        <span className="preferment-decision__title">
           {title}
         </span>
       </div>
-      <div
-        style={{
-          fontSize: "var(--font-size-lg)",
-          lineHeight: "var(--leading-relaxed)",
-          color: "var(--text-default)",
-        }}
-      >
+      <div className="preferment-decision__when">
         {when}
       </div>
-      <div
-        className="mt-1"
-        style={{
-          fontSize: "var(--font-size-md)",
-          color: "var(--text-muted)",
-          lineHeight: "var(--leading-relaxed)",
-        }}
-      >
+      <div className="preferment-decision__best">
         Ideale per: {best}
       </div>
     </div>
   );
 }
-
-/* === TABLE STYLES === */
-const thStyle: React.CSSProperties = {
-  padding: "var(--space-2) var(--pre-ferment-cell-x, var(--space-3))",
-  textAlign: "left",
-  fontSize: "var(--font-size-sm)",
-  letterSpacing: "0.1em",
-  textTransform: "uppercase",
-  fontWeight: "var(--weight-semibold)" as any,
-  borderBottom: "1px solid var(--outline-variant)",
-  overflowWrap: "break-word",
-};
-
-const tdStyle: React.CSSProperties = {
-  padding: "var(--space-2) var(--pre-ferment-cell-x, var(--space-3))",
-  color: "var(--text-default)",
-  borderBottom: "1px solid var(--outline-variant)",
-  overflowWrap: "break-word",
-};

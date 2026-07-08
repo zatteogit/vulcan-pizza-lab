@@ -66,6 +66,7 @@ export function ActiveCookWidget({
     <AnimatePresence>
       <motion.button
         layout
+        data-region="widget"
         key={active ? "cook-active-action" : "cook-start-action"}
         type="button"
         initial={{ opacity: 0, y: -8, scale: 0.98, height: actionHeight, right: rightVal }}

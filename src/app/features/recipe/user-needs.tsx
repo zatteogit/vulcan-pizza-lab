@@ -660,11 +660,14 @@ export function UserNeeds({
         data-section="context"
         className={compact ? "pt-0 pb-0" : "pt-20 sm:pt-24 pb-6"}
       >
-        <div className={compact ? "flex flex-col gap-4" : "flex flex-col gap-7 sm:gap-9"}>
+        <div
+          data-region="create-flow"
+          className={compact ? "flex flex-col gap-4" : "flex flex-col gap-7 sm:gap-9"}
+        >
           {/* ═══ PRIMA COSA: parametri cucina/dispensa/tu ═══
               Minimal e in cima, come estensione del pulsante Profilo: chi sei e
               cosa hai. Il meteo (se disponibile) li precede, sottilissimo. */}
-          <div className="flex flex-col w-full items-center gap-2">
+          <div data-region="setup" className="flex flex-col w-full items-center gap-2">
             {showWeather && weather.data.city && (
               <div className="flex items-center gap-2">
                 <MapPin size={11} className="flex-shrink-0" style={{ color: "var(--icon-muted)", opacity: 0.45 }} />
@@ -916,19 +919,21 @@ export function UserNeeds({
           </div>
 
           {/* ═══ LOGO ANIMATO + TITOLO ═══ (hero passato dal genitore) */}
-          {hero && <div>{hero}</div>}
+          {hero && <div data-region="masthead">{hero}</div>}
 
           {!compact && !hideTimeSlots && (
             <>
               {/* When — niente titolone: il sottotitolo dell'hero ("Seleziona il
                   momento...") è già l'istruzione. Le card SONO l'azione. */}
-              <TimeSlotPicker
-                slots={dynamicSlots}
-                suggestedSlot={suggestedSlot}
-                selectedTimeSlot={selectedTimeSlot}
-                onTimeSlotChange={onTimeSlotChange}
-                cms={cms}
-              />
+              <div data-region="slots">
+                <TimeSlotPicker
+                  slots={dynamicSlots}
+                  suggestedSlot={suggestedSlot}
+                  selectedTimeSlot={selectedTimeSlot}
+                  onTimeSlotChange={onTimeSlotChange}
+                  cms={cms}
+                />
+              </div>
               <InlineTip>
                 {cms.tips.timeSlot}
               </InlineTip>
@@ -958,6 +963,7 @@ function TimeSlotPicker({
   return (
     <div>
       <div
+        data-region="slot-list"
         className={
           compact
             ? "flex flex-col gap-2 w-full sm:hidden"

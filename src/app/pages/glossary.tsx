@@ -1,7 +1,7 @@
 import {
-BookOpen,
-ChevronDown,
-Search,
+  BookOpen,
+  ChevronDown,
+  Search,
 } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useEffect,useMemo,useState } from "react";
@@ -11,14 +11,14 @@ import { t } from "../features/cms/i18n";
 import { FilterChip } from "../components/ds/index";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import type {
-GlossaryCategory,
-GlossaryTerm,
+  GlossaryCategory,
+  GlossaryTerm,
 } from "../data/glossary-data";
 import {
-GLOSSARY_CATEGORIES,
-GLOSSARY_TERMS,
-getTermById,
-getTermsByCategory,
+  GLOSSARY_CATEGORIES,
+  GLOSSARY_TERMS,
+  getTermById,
+  getTermsByCategory,
 } from "../data/glossary-data";
 
 export function GlossaryPage() {
@@ -108,13 +108,7 @@ export function GlossaryPage() {
   };
 
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
-    >
+    <div className="glossary-page">
       {/* ── Header — pattern condiviso delle sotto-pagine ── */}
       <SubPageHeader
         backTo="/learn"
@@ -122,14 +116,7 @@ export function GlossaryPage() {
         icon={<BookOpen size={16} />}
         title={gl.pageTitle}
         meta={
-          <span
-            style={{
-              fontSize: "var(--font-size-sm)",
-              color: "var(--text-muted)",
-              fontFeatureSettings: "'tnum'",
-              letterSpacing: "0.04em",
-            }}
-          >
+          <span className="glossary-meta">
             {t(gl.termCount, {
               count: String(filteredTerms.length),
             })}
@@ -137,44 +124,22 @@ export function GlossaryPage() {
         }
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-8">
+      <div data-region="page" className="glossary-body">
         {/* ── Search ── */}
-        <div className="flex flex-col gap-4">
-          <div
-            className="flex items-center gap-3 px-4 py-3 rounded-2xl"
-            style={{
-              background: "var(--surface-container)",
-              border: "1px solid var(--outline-variant)",
-            }}
-          >
-            <Search
-              size={16}
-              style={{
-                color: "var(--text-muted)",
-                flexShrink: 0,
-              }}
-            />
+        <div className="glossary-search">
+          <div className="glossary-searchbox">
+            <Search size={16} className="glossary-searchbox__icon" />
             <input
               type="text"
               placeholder={gl.searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 bg-transparent outline-none"
-              style={{
-                color: "var(--text-default)",
-                fontSize: "var(--font-size-lg)",
-                fontFamily: "var(--font-sans)",
-              }}
+              className="glossary-searchbox__input"
             />
             {search && (
               <motion.button
                 onClick={() => setSearch("")}
-                className="px-2 py-0.5 rounded-md active:scale-95"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
-                  background: "var(--surface-container-low)",
-                }}
+                className="glossary-searchbox__clear"
               >
                 {gl.cancelSearch}
               </motion.button>
@@ -183,7 +148,7 @@ export function GlossaryPage() {
 
           {/* Category chips */}
           <motion.div
-            className="flex flex-wrap gap-2"
+            className="glossary-chips"
             initial="hidden"
             animate="visible"
             variants={{
@@ -250,15 +215,9 @@ export function GlossaryPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center py-12"
+            className="glossary-empty"
           >
-            <p
-              className="font-serif italic"
-              style={{
-                color: "var(--text-muted)",
-                fontSize: "var(--font-size-2xl)",
-              }}
-            >
+            <p className="glossary-empty__text">
               {t(gl.noResults, { query: search })}
             </p>
           </motion.div>
@@ -275,46 +234,20 @@ export function GlossaryPage() {
             const catTerms = termsByCategory[catId];
             if (!catTerms || catTerms.length === 0) return null;
             return (
-              <div key={catId} className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 mb-1">
-                  <span
-                    style={{ fontSize: "var(--font-size-2xl)" }}
-                  >
+              <div key={catId} className="glossary-group">
+                <div className="glossary-group__header">
+                  <span className="glossary-group__emoji">
                     {catMeta.emoji}
                   </span>
-                  <span
-                    className="font-serif"
-                    style={{
-                      fontSize: "var(--font-size-2-5xl)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      color: "var(--text-default)",
-                    }}
-                  >
+                  <span className="glossary-group__title">
                     {catLabel(catId as GlossaryCategory, gl)}
                   </span>
-                  <span
-                    style={{
-                      fontSize: "var(--font-size-sm)",
-                      color: "var(--text-muted)",
-                      fontFeatureSettings: "'tnum'",
-                    }}
-                  >
+                  <span className="glossary-group__count">
                     {catTerms.length}
                   </span>
-                  <div
-                    className="flex-1 h-px ml-2"
-                    style={{
-                      background: "var(--container-divider)",
-                    }}
-                  />
+                  <div className="glossary-group__divider" />
                 </div>
-                <span
-                  style={{
-                    fontSize: "var(--font-size-md)",
-                    color: "var(--text-muted)",
-                    marginBottom: 4,
-                  }}
-                >
+                <span className="glossary-group__desc">
                   {catDesc(catId as GlossaryCategory, gl)}
                 </span>
                 {catTerms.map((term) => (
@@ -337,7 +270,7 @@ export function GlossaryPage() {
           })
         ) : (
           /* Flat list when filtered */
-          <div className="flex flex-col gap-3">
+          <div data-region="collection" className="glossary-list">
             {filteredTerms.map((term) => (
               <TermCard
                 key={term.id}
@@ -439,11 +372,7 @@ function TermCard({
     <motion.div
       id={`glossary-${term.id}`}
       layout
-      className="rounded-2xl overflow-hidden"
-      style={{
-        background: "var(--surface-container-low)",
-        border: `1px solid ${isExpanded ? "var(--primary)" : "var(--outline-variant)"}`,
-      }}
+      className={`glossary-card${isExpanded ? " glossary-card--expanded" : ""}`}
       transition={{
         type: "spring",
         stiffness: 400,
@@ -452,66 +381,31 @@ function TermCard({
     >
       <motion.button
         onClick={onToggle}
-        className="w-full flex items-start gap-3 px-4 py-3.5 active:scale-99 text-left"
+        className="glossary-card__toggle"
       >
-        <div
-          className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
-          style={{
-            background: isExpanded
-              ? "color-mix(in srgb, var(--primary) 15%, var(--surface-container))"
-              : "var(--surface-container)",
-          }}
-        >
-          <span style={{ fontSize: "var(--font-size-md)" }}>
+        <div className="glossary-card__icon">
+          <span className="glossary-card__emoji">
             {catMeta.emoji}
           </span>
         </div>
 
-        <div className="flex-1 min-w-0">
-          <div className="flex items-baseline gap-2 flex-wrap">
-            <span
-              style={{
-                fontSize: "var(--font-size-xl)",
-                fontWeight: "var(--weight-semibold)" as any,
-                color: "var(--text-default)",
-              }}
-            >
+        <div className="glossary-card__content">
+          <div className="glossary-card__titlerow">
+            <span className="glossary-card__name">
               {term.name}
             </span>
             {term.symbol && (
-              <span
-                className="font-mono"
-                style={{
-                  fontSize: "var(--font-size-md)",
-                  color: "var(--primary)",
-                  letterSpacing: "0.04em",
-                }}
-              >
+              <span className="glossary-card__symbol">
                 {term.symbol}
               </span>
             )}
             {term.unit && (
-              <span
-                className="font-mono"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
-                }}
-              >
+              <span className="glossary-card__unit">
                 [{term.unit}]
               </span>
             )}
           </div>
-          <span
-            className={isExpanded ? "" : "line-clamp-2"}
-            style={{
-              fontSize: "var(--font-size-md)",
-              color: "var(--text-secondary)",
-              lineHeight: "var(--leading-reading)",
-              marginTop: 2,
-              display: "block",
-            }}
-          >
+          <span className="glossary-card__definition">
             {term.definition}
           </span>
         </div>
@@ -523,12 +417,9 @@ function TermCard({
             stiffness: 500,
             damping: 30,
           }}
-          className="flex-shrink-0 mt-1"
+          className="glossary-card__chevron"
         >
-          <ChevronDown
-            size={16}
-            style={{ color: "var(--text-muted)" }}
-          />
+          <ChevronDown size={16} />
         </motion.div>
       </motion.button>
 
@@ -543,96 +434,40 @@ function TermCard({
               stiffness: 400,
               damping: 30,
             }}
-            className="overflow-hidden"
+            className="glossary-card__reveal"
           >
-            <div
-              className="px-4 pb-4 flex flex-col gap-4"
-              style={{
-                borderTop: "1px solid var(--outline-variant)",
-              }}
-            >
+            <div className="glossary-card__body">
               {term.formula && (
-                <div className="mt-3">
-                  <span
-                    className="type-label"
-                    style={{
-                      fontSize: "var(--font-size-xs)",
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase" as const,
-                    }}
-                  >
+                <div className="glossary-formula">
+                  <span className="type-label glossary-section__label">
                     {gl.formulaLabel}
                   </span>
-                  <div
-                    className="mt-1.5 px-3 py-2 rounded-xl type-nerd"
-                    style={{
-                      background: "var(--surface-container)",
-                      border:
-                        "1px solid var(--outline-variant)",
-                      fontSize: "var(--font-size-md)",
-                      color: "var(--primary)",
-                      letterSpacing: "0.02em",
-                    }}
-                  >
+                  <div className="type-nerd glossary-formula__value">
                     {term.formula}
                   </div>
                 </div>
               )}
 
               {term.ranges && term.ranges.length > 0 && (
-                <div>
-                  <span
-                    className="type-label"
-                    style={{
-                      fontSize: "var(--font-size-xs)",
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase" as const,
-                    }}
-                  >
+                <div className="glossary-ranges">
+                  <span className="type-label glossary-section__label">
                     {gl.rangesLabel}
                   </span>
-                  <div className="mt-1.5 flex flex-col gap-1">
+                  <div className="glossary-ranges__list">
                     {term.ranges.map((r, i) => (
                       <div
                         key={i}
-                        className="flex items-baseline gap-3 px-3 py-1.5 rounded-lg"
-                        style={{
-                          background:
-                            i % 2 === 0
-                              ? "var(--surface-container)"
-                              : "transparent",
-                        }}
+                        className="glossary-ranges__row"
                       >
-                        <span
-                          className="flex-shrink-0"
-                          style={{
-                            fontSize: "var(--font-size-md)",
-                            color: "var(--text-default)",
-                            fontFeatureSettings: "'tnum'",
-                            minWidth: 80,
-                          }}
-                        >
+                        <span className="glossary-ranges__value">
                           {r.value}
                         </span>
-                        <span
-                          style={{
-                            fontSize: "var(--font-size-md)",
-                            color: "var(--text-secondary)",
-                          }}
-                        >
+                        <span className="glossary-ranges__label">
                           {r.label}
                         </span>
                         {r.note && (
-                          <span
-                            className="font-serif italic"
-                            style={{
-                              fontSize: "var(--font-size-sm)",
-                              color: "var(--text-muted)",
-                            }}
-                          >
-                            {"\u2014 "}
+                          <span className="glossary-ranges__note">
+                            {"— "}
                             {r.note}
                           </span>
                         )}
@@ -643,26 +478,11 @@ function TermCard({
               )}
 
               {term.whyImportant && (
-                <div>
-                  <span
-                    className="type-label"
-                    style={{
-                      fontSize: "var(--font-size-xs)",
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase" as const,
-                    }}
-                  >
+                <div className="glossary-why">
+                  <span className="type-label glossary-section__label">
                     {gl.whyImportantLabel}
                   </span>
-                  <p
-                    className="mt-1.5"
-                    style={{
-                      fontSize: "var(--font-size-md)",
-                      color: "var(--text-secondary)",
-                      lineHeight: "var(--leading-reading)",
-                    }}
-                  >
+                  <p className="glossary-why__text">
                     {term.whyImportant}
                   </p>
                 </div>
@@ -670,19 +490,11 @@ function TermCard({
 
               {term.relatedTerms &&
                 term.relatedTerms.length > 0 && (
-                  <div>
-                    <span
-                      className="type-label"
-                      style={{
-                        fontSize: "var(--font-size-xs)",
-                        color: "var(--text-muted)",
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase" as const,
-                      }}
-                    >
+                  <div className="glossary-related">
+                    <span className="type-label glossary-section__label">
                       {gl.relatedLabel}
                     </span>
-                    <div className="mt-1.5 flex flex-wrap gap-1.5">
+                    <div className="glossary-related__list">
                       {term.relatedTerms.map((relId) => {
                         const rel = getTermById(relId, cms);
                         if (!rel) return null;
@@ -692,16 +504,7 @@ function TermCard({
                             onClick={() =>
                               onNavigateToTerm?.(relId)
                             }
-                            className="px-2.5 py-1 rounded-lg active:scale-95"
-                            style={{
-                              fontSize: "var(--font-size-sm)",
-                              color: "var(--primary)",
-                              background:
-                                "color-mix(in srgb, var(--primary) 8%, var(--surface-container))",
-                              border:
-                                "1px solid color-mix(in srgb, var(--primary) 15%, var(--outline-variant))",
-                              cursor: "pointer",
-                            }}
+                            className="glossary-related__tag"
                           >
                             {rel.symbol || rel.name}
                           </button>

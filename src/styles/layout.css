@@ -1,0 +1,169 @@
+/* ═══════════════════════════════════════════════════════════════════
+   PRESENTATION / LAYOUT LAYER — the CSS-Zen-Garden separation.
+
+   Structure (JSX) declares WHICH regions exist via semantic `data-region`
+   hooks; presentation (this file) declares HOW they compose. Each
+   [data-theme] may recompose any region into a different layout without
+   touching a line of JSX.
+
+   ─── CANONICAL REGION VOCABULARY (app-wide, target these to theme) ───
+     page          top-level content wrapper of a screen
+     page-header   title / eyebrow / subtitle block
+     toolbar       sticky top bars (sub-page header, recipe sticky header)
+     nav           primary navigation (sidebar rail, bottom dock)
+     filters       chip / tab rows (explore filters, recipe section tabs)
+     section       a content section (has its own heading)
+     section-header  heading block of a section
+     collection    a grid/list of repeated items
+     card          one repeated item in a collection
+     feature       a featured / hero card
+     hero          full-bleed media hero (recipe photo)
+     body          main reading column (recipe content)
+     overlay       full-screen surface (cooking mode, command palette)
+     widget        persistent floating control (active-cook)
+   ─── Create step-1 specific ───
+     create-flow / setup / masthead / slots / slot-list
+
+   Loaded after theme.css, so `[data-theme] [data-region]` (specificity
+   0,2,0) overrides component utility classes without !important. The
+   default (Vulcan / no data-theme) is the authored layout, untouched.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Base authored layout is the default (Vulcan): centered vertical stack.
+   Only the alternative themes below re-compose it. */
+
+/* ── EDITORIALE — magazine masthead ──
+   Hero rises to the top as a left-aligned masthead; the controls and the
+   slot index read underneath it like a printed page. */
+[data-theme="editoriale"] [data-region="masthead"] {
+  order: -1;
+  width: 100%;
+}
+[data-theme="editoriale"] [data-region="masthead"] > div {
+  align-items: flex-start;
+  text-align: left;
+  padding-top: 0;
+}
+[data-theme="editoriale"] [data-region="masthead"] > div > * {
+  margin-left: 0;
+  margin-right: 0;
+}
+[data-theme="editoriale"] [data-region="setup"] {
+  align-items: flex-start;
+}
+
+/* ── CLASSICA — menu grid ──
+   Elegant centered masthead kept, but the time slots reflow into a
+   two-column card grid, like dishes on a tasting menu. */
+[data-theme="classica"] [data-region="slots"] [data-region="slot-list"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-sm);
+  margin-top: var(--space-3);
+}
+
+/* ── MINIMAL — gallery grid ──
+   Hero to the top, tightened; slots become a quiet square gallery grid.
+   Whitespace and alignment do the composing. */
+[data-theme="minimal"] [data-region="masthead"] {
+  order: -1;
+}
+[data-theme="minimal"] [data-region="masthead"] > div {
+  padding-bottom: var(--space-2);
+}
+[data-theme="minimal"] [data-region="slots"] [data-region="slot-list"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-xs);
+  margin-top: var(--space-3);
+}
+
+/* Grid cells recompose the wide list-row card into a compact vertical cell,
+   so the slot cards fit a narrow column instead of overflowing it. */
+[data-theme="classica"] [data-region="slot-list"] > button,
+[data-theme="minimal"] [data-region="slot-list"] > button {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+[data-theme="classica"] [data-region="slot-list"] > button > div,
+[data-theme="minimal"] [data-region="slot-list"] > button > div {
+  min-width: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GENERIC cross-screen rules — keyed on the shared region vocabulary
+   (page / page-header / filters), so every hooked page recomposes per
+   theme with a consistent signature:
+     · Editoriale → left-aligned editorial masthead everywhere
+     · Classica   → centered, symmetric fine-dining
+     · Minimal    → centered, quiet gallery
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* EDITORIALE — flush-left headers (turns centered pages into mastheads). */
+[data-theme="editoriale"] [data-region="page-header"] {
+  text-align: left;
+  align-items: flex-start;
+}
+[data-theme="editoriale"] [data-region="page-header"] > p {
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 44ch;
+}
+
+/* CLASSICA — centered symmetric headers + centered filter rows. */
+[data-theme="classica"] [data-region="page-header"] {
+  text-align: center;
+  align-items: center;
+}
+[data-theme="classica"] [data-region="page-header"] > p {
+  margin-left: auto;
+  margin-right: auto;
+}
+[data-theme="classica"] [data-region="filters"] {
+  justify-content: center;
+}
+
+/* MINIMAL — centered quiet headers + centered filter rows. */
+[data-theme="minimal"] [data-region="page-header"] {
+  text-align: center;
+  align-items: center;
+}
+[data-theme="minimal"] [data-region="page-header"] > p {
+  margin-left: auto;
+  margin-right: auto;
+}
+[data-theme="minimal"] [data-region="filters"] {
+  justify-content: center;
+}
+
+/* ── Collection compositions (mobile) ──
+   Same card grid, recomposed per theme. Scoped to the narrow viewport so the
+   desktop responsive grid is preserved. */
+@media (max-width: 639px) {
+  /* EDITORIALE — magazine lead: the first item spans the full measure,
+     the rest flow beneath it, like a printed feature spread. */
+  [data-theme="editoriale"] [data-region="collection"] > *:first-child {
+    grid-column: 1 / -1;
+  }
+  /* MINIMAL — tighter gallery gutters (the card designs don't shrink
+     cleanly to 3-up, so density comes from the gap + flat square styling). */
+  [data-theme="minimal"] [data-region="collection"] {
+    gap: var(--gap-xs);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   SEMANTIC ROLES — markup declares WHAT (a lead, a title accent); this
+   layer decides HOW (serif/sans, size, colour). No presentation vocab
+   ("serif", "italic", sizes, colours) lives in the JSX. A theme can
+   restyle any role without touching a component.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Semantic role classes (.page-lead, .page-title-accent) live in theme.css
+   @layer components, alongside the .type-* composites. */
+
+/* Page-scoped presentation (keyed on data-page, set on the page root). */
+[data-page="learn"] [data-region="page-header"] { margin-bottom: var(--space-12); }
+[data-page="learn"] [data-region="page-header"] :where(h1) { margin: 0; }

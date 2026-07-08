@@ -29,6 +29,7 @@ export function SubPageHeader({
     <Surface
       as="header"
       variant="glass"
+      data-region="toolbar"
       className="sticky top-0 z-40"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >

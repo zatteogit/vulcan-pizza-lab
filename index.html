@@ -21,6 +21,15 @@
               window.matchMedia("(prefers-color-scheme: dark)").matches);
           var el = document.documentElement;
           if (dark) el.classList.add("dark");
+          /* Tema rivista di cucina scelto (fase esplorativa): applicato prima
+             del primo paint per evitare il flash del tema di default.
+             ?theme=… nell'URL vince e viene persistito (deep-link condivisibile). */
+          var qTheme = new URLSearchParams(window.location.search).get("theme");
+          if (qTheme !== null) {
+            localStorage.setItem("vulcan_theme", qTheme);
+          }
+          var theme = qTheme !== null ? qTheme : localStorage.getItem("vulcan_theme");
+          if (theme) el.setAttribute("data-theme", theme);
           /* Colore diretto: copre il gap prima che theme.css sia caricato. */
           el.style.backgroundColor = dark ? "#131211" : "#fdfbf7";
         } catch (e) {

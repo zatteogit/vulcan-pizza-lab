@@ -8,12 +8,15 @@ import {
   ClipboardCopy,
   Eye,
   EyeOff,
+  Edit3,
   Check,
   CheckCircle2,
   MapPin,
   Cloud,
   CloudOff,
   RefreshCw,
+  Square,
+  Circle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { Annotation, ToolType } from "./annotation-types";

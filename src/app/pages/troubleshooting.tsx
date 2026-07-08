@@ -33,6 +33,7 @@ export default function TroubleshootingPage() {
           damping: 30,
         }}
         className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 pb-24"
+        data-region="page"
       >
         <TroubleshootingGuide initialIssueId={initialIssueId} />
       </motion.main>

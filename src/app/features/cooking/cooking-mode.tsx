@@ -287,6 +287,7 @@ export function CookingMode() {
 
   const overlay = (
     <motion.div
+      data-region="overlay"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

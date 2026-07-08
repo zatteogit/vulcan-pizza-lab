@@ -40,11 +40,11 @@ function getAcronymTooltip(text: string | null | undefined): string | undefined 
     STG: "Specialità Tradizionale Garantita",
     IGP: "Indicazione Geografica Protetta",
   };
-  
-  const found = Object.keys(acronyms).filter(acronym => 
+
+  const found = Object.keys(acronyms).filter(acronym =>
     new RegExp(`\\b${acronym}\\b`, 'i').test(text)
   );
-  
+
   if (found.length > 0) {
     return found.map(acronym => `${acronym}: ${acronyms[acronym]}`).join("\n");
   }
@@ -111,54 +111,24 @@ function FeaturedRecipeCard({
     <Link
       to={linkTo}
       state={{ exploreBackTo }}
+      data-region="feature"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="flex flex-col md:flex-row overflow-hidden rounded-3xl active:scale-99 transition-all duration-300 group"
-      style={{
-        textDecoration: "none",
-        color: "inherit",
-        background:
-          "linear-gradient(135deg, color-mix(in srgb, var(--container-page) 76%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 34%, transparent))",
-        border: isNerd
-          ? hovered
-            ? "1px solid var(--accent-nerd)"
-            : "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)"
-          : hovered
-            ? "1px solid var(--primary)"
-            : "1px solid color-mix(in srgb, var(--container-border) 72%, transparent)",
-        boxShadow: isNerd
-          ? hovered
-            ? "0 0 35px color-mix(in srgb, var(--accent-nerd) 35%, transparent), 0 16px 48px -8px color-mix(in srgb, var(--shadow-color) 20%, transparent)"
-            : "0 0 25px color-mix(in srgb, var(--accent-nerd) 15%, transparent), 0 12px 40px -12px color-mix(in srgb, var(--shadow-color) 12%, transparent)"
-          : hovered
-            ? "0 22px 64px -14px color-mix(in srgb, var(--shadow-color) 35%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 22%, transparent)"
-            : "0 18px 56px -18px color-mix(in srgb, var(--shadow-color) 22%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)",
-        backdropFilter: "blur(22px) saturate(1.55)",
-        WebkitBackdropFilter: "blur(22px) saturate(1.55)",
-      }}
+      className={`explore-feature${isNerd ? " explore-feature--nerd" : ""}${hovered ? " explore-feature--hovered" : ""}`}
     >
       {/* Colonna Immagine */}
-      <div
-        className="w-full md:w-[45%] relative overflow-hidden"
-        style={{ height: "min(280px, 40vh)" }}
-      >
+      <div className="explore-feature__media">
         <ImageWithFallback
           src={photo}
           alt={recipe.name}
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-104"
+          className="explore-feature__image"
           loading="lazy"
         />
         {/* Badge autenticità posizionato sull'immagine */}
         {recipe.authenticity_badge && (
           <div
-            className="absolute top-4 left-4 px-2.5 py-1 rounded-lg text-white"
+            className="explore-feature__badge"
             title={getAcronymTooltip(recipe.authenticity_badge)}
-            style={{
-              background: "color-mix(in srgb, var(--primary) 90%, transparent)",
-              backdropFilter: "blur(8px)",
-              fontSize: "var(--font-size-base)",
-              fontWeight: "var(--weight-semibold)",
-            }}
           >
             {recipe.authenticity_badge}
           </div>
@@ -166,58 +136,25 @@ function FeaturedRecipeCard({
       </div>
 
       {/* Colonna Testo Solido */}
-      <div
-        className="w-full md:w-[55%] flex flex-col justify-between p-6 sm:p-8"
-        style={{
-          background:
-            "linear-gradient(135deg, color-mix(in srgb, var(--container-page) 58%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 22%, transparent))",
-        }}
-      >
-        <div className="flex flex-col gap-2">
+      <div className="explore-feature__body">
+        <div className="explore-feature__head">
           <span
+            className="explore-feature__eyebrow"
             title={getAcronymTooltip(styleName)}
-            style={{
-              fontSize: "var(--font-size-sm)",
-              color: "var(--primary)",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
           >
             {styleName}
           </span>
-          <h3
-            className="font-serif"
-            style={{
-              color: "var(--text-default)",
-              lineHeight: "var(--leading-snug)",
-              fontWeight: "var(--weight-bold)" as any,
-              margin: 0,
-            }}
-          >
+          <h3 className="explore-feature__title">
             {recipe.name}
           </h3>
-          <p
-            className="mt-2"
-            style={{
-              color: "var(--text-muted)",
-              fontSize: "var(--font-size-lg)",
-              lineHeight: 1.55,
-            }}
-          >
+          <p className="explore-feature__desc">
             Una delle combinazioni più celebri per lo stile{" "}
-            <strong style={{ color: "var(--text-default)", fontWeight: "var(--weight-semibold)" as any }}>{styleName}</strong>
+            <strong className="explore-feature__desc-strong">{styleName}</strong>
             {authorLabel ? ` via ${authorLabel}` : ""}. Scopri i parametri dell'impasto consigliati, i tempi e il condimento autentico.
           </p>
         </div>
 
-        <div
-          className="mt-6 flex items-center gap-1 text-[var(--primary)] group-hover:translate-x-1 transition-transform"
-          style={{
-            fontSize: "var(--font-size-lg)",
-            fontWeight: "var(--weight-semibold)",
-          }}
-        >
+        <div className="explore-feature__cta">
           <span>{cms.pages.exploreRecipe}</span>
           <ArrowRight size={14} />
         </div>
@@ -311,11 +248,7 @@ export function ExplorePage() {
   return (
     <main
       id="main-content"
-      className="min-h-screen relative overflow-hidden"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
+      className="explore-page"
     >
       {isNerd && <FireGlow intensity={0.3} variant="warm" />}
       <motion.div
@@ -326,44 +259,26 @@ export function ExplorePage() {
           stiffness: 400,
           damping: 30,
         }}
-        className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 pb-28 relative z-10"
+        className="explore-page__container"
+        data-region="page"
       >
         {/* Header a grande respiro */}
-        <div style={{ marginBottom: "var(--space-10)" }}>
+        <div data-region="page-header" className="explore-page__header">
           <Heading level="page">
             {cms.misc.exploreHeroTitle1}
             <span
-              style={{
-                display: "block",
-                background: isNerd
-                  ? "var(--gradient-nerd)"
-                  : "none",
-                color: isNerd ? "transparent" : "var(--text-accent)",
-                WebkitBackgroundClip: isNerd ? "text" : "unset",
-                WebkitTextFillColor: isNerd ? "transparent" : "unset",
-                fontWeight: "var(--weight-bold)" as any,
-                transition: "all 0.3s ease"
-              }}
+              className={`page-title-accent explore-page__accent${isNerd ? " explore-page__accent--nerd" : ""}`}
             >
               {cms.misc.exploreHeroTitle2}
             </span>
           </Heading>
-          <p
-            className="font-serif italic mt-3"
-            style={{
-              fontSize: "var(--font-size-2xl)",
-              color: "var(--text-muted)",
-              opacity: 0.75,
-              lineHeight: 1.45,
-              maxWidth: 480,
-            }}
-          >
+          <p className="page-lead explore-page__lead">
             {cms.pages.exploreHeroDesc}
           </p>
         </div>
 
         {/* Filtri Principali a Chips Flessibili (Spotify/Pinterest style) */}
-        <div className="flex gap-2 mb-8 overflow-x-auto pb-1 hide-scrollbar">
+        <div data-region="filters" className="explore-filters hide-scrollbar">
           {[
             { id: "all", label: cms.pages.exploreFilterFeatured },
             { id: "styles", label: cms.pages.exploreFilterStyles },
@@ -374,20 +289,7 @@ export function ExplorePage() {
               <button
                 key={item.id}
                 onClick={() => setExploreFilters(item.id as ExploreFilter)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl active:scale-95 transition-transform shrink-0"
-                style={{
-                  background: active
-                    ? (isNerd ? "var(--gradient-nerd)" : "var(--primary)")
-                    : "var(--container-bg)",
-                  color: active ? "white" : "var(--text-default)",
-                  border: `1px solid ${active ? (isNerd ? "transparent" : "var(--primary)") : "var(--container-border)"}`,
-                  boxShadow: active && isNerd ? "0 0 12px color-mix(in srgb, var(--accent-nerd) 40%, transparent)" : "none",
-                  fontSize: "var(--font-size-lg)",
-                  fontWeight: "var(--weight-semibold)",
-                  cursor: "pointer",
-                  outline: "none",
-                  transition: "all 0.3s ease",
-                }}
+                className={`explore-filters__chip${active ? " explore-filters__chip--active" : ""}${active && isNerd ? " explore-filters__chip--nerd" : ""}`}
               >
                 {item.label}
               </button>
@@ -404,7 +306,7 @@ export function ExplorePage() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
-              className="flex flex-col gap-10"
+              className="explore-section-stack"
             >
               {/* 1. Hero Card "In primo piano" */}
               {SIGNATURE_RECIPES.length > 0 && (
@@ -417,23 +319,18 @@ export function ExplorePage() {
 
               {/* 2. Anteprima Ricette Iconiche */}
               <div>
-                <div className="flex items-baseline justify-between mb-4">
+                <div className="explore-section__head">
                   <Heading level="md" as="h2">
                     {cms.pages.exploreFilterRecipes}
                   </Heading>
                   <button
                     onClick={() => setExploreFilters("recipes")}
-                    className="flex items-center gap-1 hover:underline cursor-pointer bg-none border-none outline-none"
-                    style={{
-                      color: "var(--primary)",
-                      fontSize: "var(--font-size-base)",
-                      fontWeight: "var(--weight-semibold)",
-                    }}
+                    className="explore-section__link"
                   >
                     Vedi tutte ({SIGNATURE_RECIPES.length}) <ArrowRight size={12} />
                   </button>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+                <div data-region="collection" className="explore-grid--preview">
                   {SIGNATURE_RECIPES.slice(1, 5).map((recipe, i) => (
                     <SignatureRecipeCard
                       key={recipe.id}
@@ -449,23 +346,18 @@ export function ExplorePage() {
 
               {/* 3. Anteprima Stili Tradizionali */}
               <div>
-                <div className="flex items-baseline justify-between mb-4">
+                <div className="explore-section__head">
                   <Heading level="md" as="h2">
                     {cms.misc.exploreSectionTraditional}
                   </Heading>
                   <button
                     onClick={() => setExploreFilters("styles")}
-                    className="flex items-center gap-1 hover:underline cursor-pointer bg-none border-none outline-none"
-                    style={{
-                      color: "var(--primary)",
-                      fontSize: "var(--font-size-base)",
-                      fontWeight: "var(--weight-semibold)",
-                    }}
+                    className="explore-section__link"
                   >
                     Esplora tutti ({styles.length}) <ArrowRight size={12} />
                   </button>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+                <div data-region="collection" className="explore-grid--preview">
                   {styles.slice(0, 4).map((style, i) => (
                     <StyleCatalogCard
                       key={style.id}
@@ -490,7 +382,7 @@ export function ExplorePage() {
               exit={{ opacity: 0, y: -12 }}
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             >
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+              <div data-region="collection" className="explore-grid">
                 {SIGNATURE_RECIPES.map((recipe, i) => (
                   <SignatureRecipeCard
                     key={recipe.id}
@@ -514,7 +406,7 @@ export function ExplorePage() {
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             >
               {/* Family filter chips in linea allineati a sinistra */}
-              <div className="flex flex-wrap gap-1.5 mb-6">
+              <div className="explore-families">
                 {FAMILY_IDS.map((fam) => {
                   const active = activeFamily === fam;
                   const label =
@@ -531,31 +423,10 @@ export function ExplorePage() {
                     <button
                       key={fam}
                       onClick={() => setExploreFilters("styles", fam)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg active:scale-95 transition-transform"
-                      style={{
-                        background: active
-                          ? (isNerd ? "var(--gradient-nerd)" : "var(--primary)")
-                          : "var(--container-bg)",
-                        color: active
-                          ? "white"
-                          : "var(--text-default)",
-                        border: `1px solid ${active ? (isNerd ? "transparent" : "var(--primary)") : "var(--container-border)"}`,
-                        boxShadow: active && isNerd ? "0 0 12px color-mix(in srgb, var(--accent-nerd) 40%, transparent)" : "none",
-                        fontSize: "var(--font-size-base)",
-                        fontWeight: "var(--weight-semibold)",
-                        cursor: "pointer",
-                        outline: "none",
-                        transition: "all 0.3s ease",
-                      }}
+                      className={`explore-families__chip${active ? " explore-families__chip--active" : ""}${active && isNerd ? " explore-families__chip--nerd" : ""}`}
                     >
                       {label}
-                      <span
-                        style={{
-                          fontSize: "var(--font-size-xs)",
-                          opacity: 0.7,
-                          fontFeatureSettings: "'tnum'",
-                        }}
-                      >
+                      <span className="explore-families__count">
                         {count}
                       </span>
                     </button>
@@ -583,31 +454,16 @@ export function ExplorePage() {
                       const fam = PIZZA_FAMILIES[familyId as FamilyId];
                       const cmsFam = cms.families[familyId as FamilyId];
                       return (
-                        <div key={familyId} style={{ marginBottom: "var(--space-10)" }}>
-                          <div className="flex items-center gap-2 mb-4">
-                            <h3
-                              className="font-serif"
-                              style={{
-                                color: "var(--text-default)",
-                                fontSize: "var(--font-size-2-5xl)",
-                                fontWeight: "var(--weight-bold)" as any,
-                                margin: 0,
-                              }}
-                            >
+                        <div key={familyId} className="explore-family-group">
+                          <div className="explore-family-group__head">
+                            <h3 className="explore-family-group__title">
                               {cmsFam?.name || fam?.name}
                             </h3>
-                            <span
-                              className="type-data"
-                              style={{
-                                fontSize: "var(--font-size-xs)",
-                                color: "var(--text-muted)",
-                                fontFeatureSettings: "'tnum'",
-                              }}
-                            >
+                            <span className="type-data explore-family-group__count">
                               ({familyStyles.length})
                             </span>
                           </div>
-                          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                          <div data-region="collection" className="explore-grid">
                             {familyStyles.map((style, i) => (
                               <StyleCatalogCard
                                 key={style.id}
@@ -625,20 +481,12 @@ export function ExplorePage() {
                     })
                   ) : filteredStyles.length === 0 ? (
                     /* VPL-A6: empty-state esplicito invece della griglia vuota */
-                    <div
-                      className="flex items-center justify-center text-center"
-                      style={{
-                        minHeight: "var(--space-40, 200px)",
-                        padding: "var(--space-8)",
-                        color: "var(--text-muted)",
-                        fontSize: "var(--font-size-base)",
-                      }}
-                    >
+                    <div className="explore-empty">
                       {cms.misc.noStyleInFamily}
                     </div>
                   ) : (
                     /* Griglia piatta filtrata */
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                    <div data-region="collection" className="explore-grid">
                       {filteredStyles.map((style, i) => (
                         <StyleCatalogCard
                           key={style.id}
@@ -719,6 +567,7 @@ function SignatureRecipeCard({
 
   return (
     <motion.div
+      data-region="card"
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
@@ -728,100 +577,45 @@ function SignatureRecipeCard({
         delay: index * 0.04,
       }}
     >
-      <TiltCard className="relative rounded-2xl">
+      <TiltCard className="explore-tilt">
         <Link
           to={linkTo}
           state={{ exploreBackTo }}
-          className="block rounded-2xl overflow-hidden active:scale-97 transition-transform group"
-          style={{
-            background: "var(--container-card)",
-            border: isNerd ? "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)" : "1px solid var(--container-border-ghost)",
-            textDecoration: "none",
-            color: "inherit",
-          }}
+          className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
-          <div
-            className="relative overflow-hidden"
-          style={{ aspectRatio: "3/4", containerType: "inline-size" }}
-        >
+          <div className="explore-card__media">
           <ImageWithFallback
             src={photo}
             alt={recipe.name}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="explore-card__image"
             loading="lazy"
           />
-          <div
-            className="absolute inset-0"
-            style={{ background: "var(--overlay-scrim)" }}
-          />
+          <div className="explore-card__scrim" />
 
           {/* Badge autenticità — top right */}
           {recipe.authenticity_badge && (
             <div
-              className="absolute top-3 right-3 px-2 py-1 rounded-lg"
+              className="explore-card__badge explore-card__badge--auth"
               title={getAcronymTooltip(recipe.authenticity_badge)}
-              style={{
-                background:
-                  "color-mix(in srgb, var(--primary) 90%, transparent)",
-                fontSize: "var(--font-size-xs)",
-                fontWeight: "var(--weight-semibold)" as any,
-                color: "white",
-                backdropFilter: "blur(8px)",
-              }}
             >
               {recipe.authenticity_badge}
             </div>
           )}
 
           {/* Title + sotto-titolo stile */}
-          <div className="absolute bottom-0 left-0 right-0 px-4 pb-3.5 sm:pb-4 pt-16">
+          <div className="explore-card__caption">
             <div
+              className="explore-card__eyebrow"
               title={getAcronymTooltip(styleName)}
-              style={{
-                fontSize: "var(--font-size-sm)",
-                fontWeight: "var(--weight-semibold)" as any,
-                letterSpacing: "var(--tracking-label)",
-                textTransform: "uppercase" as const,
-                color: "var(--overlay-text-warm)",
-                textShadow: "var(--overlay-shadow-text-sm)",
-                marginBottom: 4,
-              }}
             >
               {styleName}
             </div>
-            <span
-              className="font-serif"
-              style={{
-                /* min(…, cqw): nelle colonne strette (griglie 4-col a ~768px)
-                   il titolo scala con la larghezza reale della card, così
-                   "Friarielli"/"Porchetta" non si spezzano né vengono clippati. */
-                fontSize:
-                  "min(clamp(var(--font-size-2xl), 3vw, var(--font-size-5xl)), 12cqw)",
-                hyphens: "auto",
-                overflowWrap: "break-word",
-                fontWeight: "var(--weight-bold)" as any,
-                lineHeight: "var(--leading-snug)",
-                color: "var(--overlay-text)",
-                textShadow: "var(--overlay-shadow-text)",
-                display: "block",
-                letterSpacing: "var(--tracking-snug)",
-              }}
-            >
+            <span className="explore-card__title explore-card__title--recipe">
               {recipe.name}
             </span>
             {/* Sprint 12 — autore/locale dell'interpretazione (se mappata). */}
             {authorLabel && (
-              <div
-                style={{
-                  marginTop: 4,
-                  fontSize: "var(--font-size-xs)",
-                  fontWeight: "var(--weight-medium)" as any,
-                  letterSpacing: "var(--tracking-snug)",
-                  color: "var(--overlay-text-warm)",
-                  textShadow: "var(--overlay-shadow-text-sm)",
-                  opacity: 0.92,
-                }}
-              >
+              <div className="explore-card__author">
                 via {authorLabel}
               </div>
             )}
@@ -868,6 +662,7 @@ function StyleCatalogCard({
 
   return (
     <motion.div
+      data-region="card"
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
@@ -877,74 +672,43 @@ function StyleCatalogCard({
         delay: index * 0.04,
       }}
     >
-      <TiltCard className="relative rounded-2xl">
+      <TiltCard className="explore-tilt">
         <Link
           to={`/recipe/${style.id}?mode=canonical`}
           state={{ exploreBackTo }}
-          className="block rounded-2xl overflow-hidden active:scale-97 transition-transform group"
-          style={{
-            background: "var(--container-card)",
-            border: isNerd ? "1px solid color-mix(in srgb, var(--accent-nerd) 25%, transparent)" : "1px solid var(--container-border-ghost)",
-            textDecoration: "none",
-            color: "inherit",
-          }}
+          className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
           {/* Photo area — 3/4 aspect like Create cards */}
-        <div
-          className="relative overflow-hidden"
-          style={{ aspectRatio: "3/4", containerType: "inline-size" }}
-        >
+        <div className="explore-card__media">
           <ImageWithFallback
             src={photo}
             alt={style.name}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            className="explore-card__image"
             loading="lazy"
           />
 
           {/* Cinematic scrim */}
-          <div
-            className="absolute inset-0"
-            style={{ background: "var(--overlay-scrim)" }}
-          />
+          <div className="explore-card__scrim" />
 
           {/* Beginner badge — top left */}
           {style.suitable_for_beginner && (
-            <div
-              className="absolute top-3 left-3 px-2 py-1 rounded-lg"
-              style={{
-                background:
-                  "color-mix(in srgb, var(--cta) 90%, transparent)",
-                fontSize: "var(--font-size-xs)",
-                fontWeight: "var(--weight-semibold)" as any,
-                color: "white",
-                backdropFilter: "blur(8px)",
-              }}
-            >
+            <div className="explore-card__badge explore-card__badge--beginner">
               {cms.misc.badgeBeginnerFriendly}
             </div>
           )}
 
           {/* Match canonico + margine ottimizzabile — top right (Fase 4) */}
           {match && (
-            <div className="absolute top-3 right-3">
+            <div className="explore-card__match">
               <div
-                className="flex items-center gap-1 px-2 py-0.5 rounded-full text-white"
-                style={{
-                  background: "color-mix(in srgb, var(--container-page) 82%, transparent)",
-                  border: "1px solid color-mix(in srgb, var(--overlay-text) 12%, transparent)",
-                  backdropFilter: "blur(12px)",
-                  WebkitBackdropFilter: "blur(12px)",
-                  fontSize: "var(--font-size-xs)",
-                  fontWeight: "var(--weight-bold)" as any,
-                  boxShadow: "0 4px 12px color-mix(in srgb, var(--shadow-color) 16%, transparent)",
-                }}
+                className="explore-card__match-pill"
                 title={match.headroom > 0 ? `Ottimizzabile: ${match.mc}% → ${match.mc + match.headroom}% col tuo setup` : `Match: ${match.mc}%`}
               >
-                <span style={{ color: "var(--cta)" }}>{match.mc}%</span>
+                <span className="explore-card__match-mc">{match.mc}%</span>
                 {match.headroom > 0 && (
                   <>
-                    <span style={{ color: "var(--text-muted)", opacity: 0.6 }}>→</span>
-                    <span style={{ color: "var(--time-dayafter)" }}>
+                    <span className="explore-card__match-arrow">→</span>
+                    <span className="explore-card__match-headroom">
                       {match.mc + match.headroom}%
                     </span>
                   </>
@@ -954,44 +718,14 @@ function StyleCatalogCard({
           )}
 
           {/* Title + subtitle — overlaid on image (editorial style) */}
-          <div className="absolute bottom-0 left-0 right-0 px-4 pb-3.5 sm:pb-4 pt-16">
+          <div className="explore-card__caption">
             <span
-              className="font-serif"
+              className="explore-card__title explore-card__title--style"
               title={getAcronymTooltip(style.name)}
-              style={{
-                /* min(…, cqw): nelle colonne strette (griglie 4-col a ~768px)
-                   il titolo scala con la card: "Contemporanea" non viene più
-                   spezzato ("Contemporane/a") né clippato in locale it. */
-                fontSize:
-                  "min(clamp(var(--font-size-3xl), 3.5vw, var(--font-size-6-5xl)), 10.5cqw)",
-                hyphens: "auto",
-                overflowWrap: "break-word",
-                fontWeight: "var(--weight-bold)" as any,
-                lineHeight: "var(--leading-snug)",
-                color: "var(--overlay-text)",
-                textShadow: "var(--overlay-shadow-text)",
-                display: "block",
-                letterSpacing: "var(--tracking-snug)",
-              }}
             >
               {style.name}
             </span>
-            <div
-              style={{
-                marginTop: 6,
-                fontSize: "var(--font-size-sm)",
-                fontWeight: "var(--weight-semibold)" as any,
-                fontFamily: "var(--font-sans)",
-                letterSpacing: "var(--tracking-label)",
-                textTransform: "uppercase" as const,
-                color: "var(--overlay-text-warm)",
-                textShadow: "var(--overlay-shadow-text-sm)",
-                lineHeight: "var(--leading-normal)",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
+            <div className="explore-card__origin">
               {shortOrigin(style.origin).toUpperCase()}
             </div>
           </div>

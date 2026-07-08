@@ -31,6 +31,7 @@ const SearchOverlay = lazy(() =>
   import("./search-overlay").then((m) => ({ default: m.SearchOverlay })),
 );
 import { DebugOverlay } from "../../features/dev-tools/debug-overlay";
+import { ThemeSwitcher } from "../../features/dev-tools/theme-switcher";
 import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { VulcanMark } from "./vulcan-logo";
 import { liquidDockQuickSpring } from "../../domain/liquid-dock";
@@ -384,6 +385,7 @@ function BottomTabBar({
     >
       {/* Tabs Capsule */}
       <nav
+        data-region="nav"
         className="relative flex-1 overflow-hidden"
         style={{
           ...mobileDockGlassStyle,
@@ -446,6 +448,7 @@ function SidebarRail({
     >
       {/* Navigation Capsule (Logo + Tabs) */}
       <motion.nav
+        data-region="nav"
         className="relative flex flex-col items-center overflow-hidden py-5 flex-1"
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -852,6 +855,9 @@ export function AppShell() {
           {!isOverlayDeactivated && (
             <DebugOverlay />
           )}
+
+          {/* Theme explorer — confronto temi rivista di cucina (fase esplorativa) */}
+          <ThemeSwitcher />
         </div>
         </CookSessionProvider>
       </StylesOverrideProvider>

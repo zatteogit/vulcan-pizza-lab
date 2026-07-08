@@ -90,7 +90,7 @@ export function InterpretationSwitcher({
   });
 
   return (
-    <div>
+    <div data-region="filters">
       {/* "Vedi tutte" resta SEMPRE in vista (fuori dallo scroller delle chip). */}
       <div className="flex items-center gap-2">
         <div

@@ -66,6 +66,6 @@ export interface Annotation {
   pageY?: number;
 }
 
-export type ToolType = "pointer" | "simple-pin";
+export type ToolType = "pointer" | "simple-pin" | "freehand" | "rect" | "circle";
 
 export type PinPosition = { top: number; left: number; visible: boolean };

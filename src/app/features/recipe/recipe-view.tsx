@@ -277,6 +277,7 @@ export function RecipeView({
       {/* Sticky header or Floating back button */}
       {showStickyHeader ? (
         <header
+          data-region="toolbar"
           className="sticky top-0 z-40"
           style={{
             background:
@@ -373,6 +374,7 @@ export function RecipeView({
 
       {/* ── Hero photo ── */}
       <motion.div
+        data-region="hero"
         className="relative overflow-hidden"
         animate={{ height: isHeroReduced ? 0 : "clamp(220px, 32vh, 400px)" }}
         transition={{ type: "spring", stiffness: 280, damping: 28 }}
@@ -408,6 +410,7 @@ export function RecipeView({
       {/* ── Glassmorphic title card / Header ── */}
       <motion.div
         layout
+        data-region="page-header"
         className="max-w-6xl mx-auto px-5 sm:px-8 relative z-10"
         animate={{ marginTop: resolvedMarginTop }}
         transition={{ type: "spring", stiffness: 280, damping: 28 }}
@@ -613,7 +616,7 @@ export function RecipeView({
       </motion.div>
 
       {/* ── Contenuto ── */}
-      <div id="recipe-content-tabs-anchor" className="max-w-6xl mx-auto px-5 sm:px-8">
+      <div data-region="body" id="recipe-content-tabs-anchor" className="max-w-6xl mx-auto px-5 sm:px-8">
         <div className="max-w-4xl mx-auto pt-6 pb-28 sm:pb-32">
           <motion.div
             initial={{ opacity: 0, y: 12 }}

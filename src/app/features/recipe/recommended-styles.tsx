@@ -586,6 +586,7 @@ export function RecommendedStyles({
               </p>
             )}
             <div
+              data-region="collection"
               className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3 items-start"
               style={key === "not_feasible" ? { opacity: 0.7 } : undefined}
             >
@@ -663,6 +664,7 @@ function StyleCard({
 
   return (
     <div
+      data-region="card"
       className="relative"
       style={{ zIndex: isSelected ? 10 : 1 }}
     >
