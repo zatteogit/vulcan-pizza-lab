@@ -371,62 +371,23 @@ function WelcomeOnboardingCard({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 380, damping: 28 }}
-      className={`rounded-2xl px-4 py-3.5 ${className}`}
-      style={{
-        background: "color-mix(in srgb, var(--container-bg) 72%, transparent)",
-        border: "1px solid var(--container-border-subtle)",
-      }}
+      className={`home-onboarding ${className}`}
     >
-      <div
-        className="flex items-center gap-1.5"
-        style={{
-          color: "var(--text-accent)",
-          fontSize: "var(--font-size-sm)",
-          fontWeight: "var(--weight-bold)" as any,
-        }}
-      >
+      <div className="home-onboarding__eyebrow">
         <Sparkles size={14} aria-hidden="true" />
         {eyebrow}
       </div>
-      <p
-        className="mt-1"
-        style={{
-          margin: "4px 0 0",
-          color: "var(--text-muted)",
-          fontSize: "var(--font-size-md)",
-          lineHeight: "var(--leading-normal)",
-        }}
-      >
-        {body}
-      </p>
-      <div className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1.5">
+      <p className="home-onboarding__body">{body}</p>
+      <div className="home-onboarding__actions">
         <button
           type="button"
           onClick={onDismiss}
-          className="inline-flex items-center gap-1 active:scale-95 transition-transform"
-          style={{
-            background: "transparent",
-            border: "none",
-            padding: 0,
-            color: "var(--text-default)",
-            fontSize: "var(--font-size-sm)",
-            fontWeight: "var(--weight-semibold)" as any,
-            cursor: "pointer",
-          }}
+          className="home-onboarding__cta"
         >
           {cta}
           <ChevronRight size={13} />
         </button>
-        <Link
-          to="/profile"
-          onClick={onDismiss}
-          style={{
-            color: "var(--text-accent)",
-            fontSize: "var(--font-size-sm)",
-            textDecoration: "underline",
-            textUnderlineOffset: 3,
-          }}
-        >
+        <Link to="/profile" onClick={onDismiss} className="home-onboarding__link">
           {profileCta}
         </Link>
       </div>
@@ -493,7 +454,9 @@ export function HomePage() {
      widget flottante occupa la fascia alta — pill Riprendi e onboarding
      si abbassano per non finirgli sotto. */
   const { session: activeCookSession } = useCookSession();
-  const topPillOffsetClass = activeCookSession ? "mt-20" : "mt-4";
+  const topPillOffsetClass = activeCookSession
+    ? "home-onboarding--session-active"
+    : "";
   /* Redesign lug 2026: niente bozze/parcheggi — all'uscita dal result con
      modifiche non salvate si avvisa e basta. */
   const [exitConfirm, setExitConfirm] = useState(false);
@@ -1081,24 +1044,14 @@ export function HomePage() {
   ]);
 
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
-    >
+    <div className="home-page">
       {/* ═══ VPL-009: Skip-to-content link for screen readers ═══ */}
       <CtaButton
         as="a"
         href="#main-content"
         radius="lg"
         elevated={false}
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-(--z-skiplink) focus:px-4 focus:py-2 focus:rounded-lg"
-        style={{
-          fontSize: "var(--font-size-lg)",
-          fontWeight: "var(--weight-semibold)" as any,
-        }}
+        className="home-skiplink"
       >
         {cms.pages.skipToContent}
       </CtaButton>
@@ -1122,38 +1075,13 @@ export function HomePage() {
               stiffness: 500,
               damping: 28,
             }}
-            className="overflow-hidden sticky top-0 z-40"
+            className="home-banner"
           >
-            <div
-              className="flex items-center justify-center gap-3 px-4 py-2"
-              style={{
-                background:
-                  "color-mix(in srgb, var(--tertiary) 12%, var(--container-page))",
-                borderBottom:
-                  "1px solid color-mix(in srgb, var(--tertiary) 25%, transparent)",
-              }}
-            >
-              <div
-                className="w-2 h-2 rounded-full flex-shrink-0"
-                style={{
-                  background: "var(--tertiary)",
-                  boxShadow: "0 0 6px var(--tertiary)",
-                }}
-              />
-              <span
-                className="type-data"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-default)",
-                }}
-              >
+            <div className="home-banner__bar home-banner__bar--override">
+              <div className="home-banner__dot home-banner__dot--override" />
+              <span className="type-data home-banner__text">
                 {cms.ui.styleEditorActive} —{" "}
-                <span
-                  style={{
-                    fontFeatureSettings: "'tnum'",
-                    color: "var(--tertiary)",
-                  }}
-                >
+                <span className="home-banner__count home-banner__count--override">
                   {(() => {
                     let mod = 0,
                       cust = 0;
@@ -1179,24 +1107,13 @@ export function HomePage() {
               </span>
               <Link
                 to="/dev/editor"
-                className="type-data active:scale-95 transition-transform"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  color: "var(--tertiary)",
-                  textDecoration: "underline",
-                  textUnderlineOffset: 2,
-                }}
+                className="type-data home-banner__action home-banner__action--override"
               >
                 {cms.ui.modify}
               </Link>
               <button
                 onClick={clearOverride}
-                className="type-data active:scale-95 transition-transform ml-1"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
-                }}
+                className="type-data home-banner__dismiss"
                 aria-label={cms.pages.deactivateCustomStyles}
               >
                 {cms.pages.deactivate}
@@ -1216,44 +1133,18 @@ export function HomePage() {
               stiffness: 500,
               damping: 28,
             }}
-            className="overflow-hidden sticky top-0 z-40"
-            style={{
-              marginTop: isOverrideActive ? 0 : undefined,
-            }}
+            className="home-banner"
           >
             <div
               /* pr-16 mobile: corsia del ProfileButton fisso della shell (come
                  SubPageHeader); flex-wrap: sotto i 360px i link scendono su una
                  seconda riga invece di finire sotto il bottone. */
-              className="flex flex-wrap items-center justify-center gap-x-3 gap-y-0.5 pl-4 pr-16 sm:pr-4 py-2"
-              style={{
-                background:
-                  "color-mix(in srgb, var(--cta) 10%, var(--container-page))",
-                borderBottom:
-                  "1px solid color-mix(in srgb, var(--cta) 20%, transparent)",
-              }}
+              className="home-banner__bar home-banner__bar--cms"
             >
-              <div
-                className="w-2 h-2 rounded-full flex-shrink-0"
-                style={{
-                  background: "var(--cta)",
-                  boxShadow: "0 0 6px var(--cta)",
-                }}
-              />
-              <span
-                className="type-data"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-default)",
-                }}
-              >
+              <div className="home-banner__dot home-banner__dot--cms" />
+              <span className="type-data home-banner__text">
                 {cms.ui.cmsActive} —{" "}
-                <span
-                  style={{
-                    fontFeatureSettings: "'tnum'",
-                    color: "var(--cta)",
-                  }}
-                >
+                <span className="home-banner__count home-banner__count--cms">
                   {modifiedCount}{" "}
                   {modifiedCount === 1
                     ? cms.ui.fieldModified
@@ -1262,24 +1153,13 @@ export function HomePage() {
               </span>
               <Link
                 to="/cms"
-                className="type-data active:scale-95 transition-transform"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  color: "var(--cta)",
-                  textDecoration: "underline",
-                  textUnderlineOffset: 2,
-                }}
+                className="type-data home-banner__action home-banner__action--cms"
               >
                 {cms.ui.modify}
               </Link>
               <button
                 onClick={cmsResetAll}
-                className="type-data active:scale-95 transition-transform ml-1"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
-                }}
+                className="type-data home-banner__dismiss"
                 aria-label={cms.misc.cmsRestoreContent}
               >
                 {cms.ui.restore}
@@ -1302,11 +1182,10 @@ export function HomePage() {
               stiffness: 320,
               damping: 30,
             }}
-            className="relative pb-40"
-            style={{ zIndex: 2 }}
+            className="home-step home-step--settings"
           >
-            <div className="relative">
-              <div className="relative max-w-2xl mx-auto px-4 sm:px-6 w-full">
+            <div className="home-step__frame">
+              <div className="home-step__container">
                 {showOnboarding && (
                   <WelcomeOnboardingCard
                     eyebrow={cms.hero.onboardingEyebrow ?? "Prima volta qui?"}
@@ -1317,7 +1196,7 @@ export function HomePage() {
                     cta={cms.hero.onboardingCta ?? "Capito, si parte"}
                     profileCta={cms.hero.onboardingProfileCta ?? "Salva forno e livello nel profilo"}
                     onDismiss={dismissOnboarding}
-                    className={`${topPillOffsetClass} mb-1`}
+                    className={topPillOffsetClass}
                   />
                 )}
                 <UserNeeds
@@ -1327,41 +1206,25 @@ export function HomePage() {
                   onTimeSlotChange={handleTimeSlotChange}
                   hero={
                     <motion.div
-                      className="flex flex-col items-center text-center pb-4 sm:pb-5"
+                      className="home-hero"
                       style={{
                         opacity: titleOpacity,
                         y: titleY,
                       }}
                     >
                       {/* VulcanHero — harmonized blob + mark composition */}
-                      <div
-                        className="relative flex items-center justify-center mb-3"
-                        style={{
-                          width: "var(--hero-mark-size, 160px)",
-                          height: "var(--hero-mark-size, 160px)",
-                        }}
-                      >
+                      <div className="home-hero__mark">
                         {/* Radiant warmth — large soft glow irradiated outward */}
                         <motion.div
                           aria-hidden="true"
+                          className="home-hero__glow home-hero__glow--primary"
                           style={{
-                            position: "absolute",
-                            width: "var(--hero-glow-size, 420px)",
-                            height: "var(--hero-glow-size, 420px)",
-                            top: "50%",
-                            left: "50%",
-                            marginTop: "calc(var(--hero-glow-size, 420px) / -2)",
-                            marginLeft: "calc(var(--hero-glow-size, 420px) / -2)",
-                            borderRadius: "var(--radius-full)",
-                            background: "var(--hero-glow-warm)",
-                            filter: "blur(40px)",
-                            pointerEvents: "none",
-                            willChange: prefersReducedMotion
-                              ? "auto"
-                              : "transform, opacity",
-                            opacity: prefersReducedMotion
+                            ["--home-glow-opacity" as any]: prefersReducedMotion
                               ? 0.15
                               : undefined,
+                            ["--home-glow-will-change" as any]: prefersReducedMotion
+                              ? "auto"
+                              : "transform, opacity",
                           }}
                           animate={
                             prefersReducedMotion
@@ -1393,25 +1256,14 @@ export function HomePage() {
                         {/* Secondary warmth ring — wider, subtler */}
                         <motion.div
                           aria-hidden="true"
+                          className="home-hero__glow home-hero__glow--secondary"
                           style={{
-                            position: "absolute",
-                            width: 600,
-                            height: 600,
-                            top: "50%",
-                            left: "50%",
-                            marginTop: -300,
-                            marginLeft: -300,
-                            borderRadius: "50%",
-                            background:
-                              "var(--hero-glow-accent)",
-                            filter: "blur(60px)",
-                            pointerEvents: "none",
-                            willChange: prefersReducedMotion
-                              ? "auto"
-                              : "transform, opacity",
-                            opacity: prefersReducedMotion
+                            ["--home-glow-opacity" as any]: prefersReducedMotion
                               ? 0.08
                               : undefined,
+                            ["--home-glow-will-change" as any]: prefersReducedMotion
+                              ? "auto"
+                              : "transform, opacity",
                           }}
                           animate={
                             prefersReducedMotion
@@ -1450,37 +1302,14 @@ export function HomePage() {
                         />
                       </div>
                       {/* R8: wordmark — il nome del brand accanto al logo */}
-                      <span
-                        style={{
-                          fontSize: "var(--font-size-sm)",
-                          letterSpacing: "0.34em",
-                          textTransform: "uppercase",
-                          fontWeight: "var(--weight-bold)",
-                          color: "var(--primary)",
-                          marginBottom: "var(--space-3)",
-                        }}
-                      >
-                        Vulcan
-                      </span>
+                      <span className="home-hero__wordmark">Vulcan</span>
                       <Heading level="page">
                         {cms.hero.title_line1}{" "}
-                        <span
-                          style={{
-                            display: "block",
-                            color: "var(--text-accent)",
-                          }}
-                        >
+                        <span className="page-title-accent">
                           {cms.hero.title_line2}
                         </span>
                       </Heading>
-                      <p
-                        className="font-serif italic mt-3 max-w-md"
-                        style={{
-                          color: "var(--text-muted)",
-                          fontSize: "var(--font-size-2xl)",
-                          lineHeight: "var(--leading-relaxed)",
-                        }}
-                      >
+                      <p className="home-hero__subtitle">
                         {cms.hero.subtitle}
                       </p>
                     </motion.div>
@@ -1504,12 +1333,11 @@ export function HomePage() {
               stiffness: 320,
               damping: 30,
             }}
-            className="relative pb-40"
-            style={{ zIndex: 2 }}
+            className="home-step home-step--styles"
           >
-            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-5 sm:py-7">
-              <div className="max-w-2xl lg:max-w-none mx-auto">
-                <div className="mb-5 sm:mb-6">
+            <div className="home-step__container home-step__container--wide">
+              <div className="home-step__inner">
+                <div className="home-step__head">
                   <IconButton
                     as={motion.button}
                     onClick={handleBackToSettings}
@@ -1522,21 +1350,13 @@ export function HomePage() {
                       stiffness: 400,
                       damping: 25,
                     }}
-                    className="active:scale-95 transition-transform"
-                    style={{
-                      color: "var(--text-default)",
-                      background: "color-mix(in srgb, var(--container-bg) 85%, transparent)",
-                      border: "1px solid var(--container-border)",
-                      boxShadow: "0 8px 24px color-mix(in srgb, var(--shadow-color) 12%, transparent)",
-                      backdropFilter: "blur(12px)",
-                      WebkitBackdropFilter: "blur(12px)",
-                    }}
+                    className="home-step__back"
                     aria-label={cms.configurator.backLabel}
                     title={cms.configurator.backLabel}
                   >
                     <ChevronLeft size={20} />
                   </IconButton>
-                  <div className="mt-4 max-w-2xl">
+                  <div className="home-step__needs">
                     <UserNeeds
                       constraints={constraints}
                       onConstraintsChange={setConstraints}
@@ -1556,18 +1376,10 @@ export function HomePage() {
                       }
                     />
                   </div>
-                  <Heading level="page" className="mt-5">
+                  <Heading level="page" className="home-step__title">
                     {cms.steps.styles.title}
                   </Heading>
-                  <p
-                    className="font-serif italic mt-1 max-w-2xl"
-                    style={{
-                      fontSize: "var(--font-size-xl)",
-                      color: "var(--text-muted)",
-                      opacity: 0.72,
-                      lineHeight: "var(--leading-normal)",
-                    }}
-                  >
+                  <p className="home-step__subtitle">
                     {cms.steps.styles.subtitle}
                   </p>
                 </div>
@@ -1591,8 +1403,7 @@ export function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="relative outline-none"
-            style={{ zIndex: 2 }}
+            className="home-step home-step--result"
           >
             <RecipeView
               recipe={recipe}
@@ -1661,8 +1472,8 @@ export function HomePage() {
               matchSlot={
                 /* Round 4-5 (note Matteo): ordine Ispirazione → parametri →
                    match. Chip e tabella sono UN'unità; il verdetto respira. */
-                <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2.5">
+                <div className="home-result__match">
+                <div className="home-result__match-primary">
                 <InterpretationSwitcher
                   interpretations={createInterpretations}
                   activeId={activeInterpretationId}
@@ -1782,19 +1593,13 @@ export function HomePage() {
                 </div>
               }
               recipeControls={
-                <div className="flex flex-col gap-3">
+                <div className="home-result__controls">
                   {/* F2 — "Vulcan ha imparato dai tuoi tentativi" (opt-in, trasparente) */}
                   {showFeedbackPanel && feedbackCorrection && (
-                    <div
-                      className="rounded-2xl px-4 py-3.5"
-                      style={{
-                        background: "color-mix(in srgb, var(--cta) 8%, var(--container-bg-low))",
-                        border: "1px solid color-mix(in srgb, var(--cta) 30%, transparent)",
-                      }}
-                    >
-                      <div className="flex items-center gap-2 mb-1.5" style={{ color: "var(--cta)" }}>
+                    <div className="home-feedback-panel">
+                      <div className="home-feedback-panel__header">
                         <Sparkles size={15} />
-                        <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
+                        <span className="home-feedback-panel__header-text">
                           {tpl(
                             cms.cooking.learnedFromAttempts ??
                               "Ho imparato dai tuoi {n} tentativi",
@@ -1802,16 +1607,9 @@ export function HomePage() {
                           )}
                         </span>
                       </div>
-                      <ul className="flex flex-col gap-1 mb-2.5">
+                      <ul className="home-feedback-panel__notes">
                         {feedbackCorrection.notes.map((n, i) => (
-                          <li
-                            key={i}
-                            style={{
-                              fontSize: "var(--font-size-sm)",
-                              color: "var(--text-muted)",
-                              lineHeight: "var(--leading-normal)",
-                            }}
-                          >
+                          <li key={i} className="home-feedback-panel__note">
                             • {n}
                           </li>
                         ))}
@@ -1821,15 +1619,7 @@ export function HomePage() {
                         <button
                           type="button"
                           onClick={applyFeedbackCorrection}
-                          className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 active:scale-95 transition-transform"
-                          style={{
-                            background: "var(--cta)",
-                            color: "var(--cta-foreground)",
-                            fontSize: "var(--font-size-sm)",
-                            fontWeight: "var(--weight-bold)" as any,
-                            border: "none",
-                            cursor: "pointer",
-                          }}
+                          className="home-feedback-panel__cta"
                         >
                           <Sparkles size={14} />{" "}
                           {cms.cooking.applyCorrections ?? "Applica le correzioni"}
@@ -1838,7 +1628,7 @@ export function HomePage() {
                     </div>
                   )}
                   {/* Warning contestuali + dieta */}
-                  <div>
+                  <div data-region="warnings">
                     <ContextualWarnings
                       hydration={customHydration}
                       flourW={customFlourW}
@@ -1869,67 +1659,38 @@ export function HomePage() {
                         );
                         if (dw.length === 0) return null;
                         return (
-                          <div
-                            className="mt-3"
-                            style={{
-                              background: "var(--surface-container-low)",
-                              border: "var(--border-width-thin) solid var(--outline-variant)",
-                              borderRadius: "var(--radius-lg)",
-                              padding: "var(--space-4) var(--space-5)",
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: "var(--space-2-5)",
-                            }}
-                          >
-                            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-                              <span style={{ fontSize: "var(--font-size-base)" }}>🩺</span>
-                              <span
-                                style={{
-                                  fontSize: "var(--font-size-sm)",
-                                  letterSpacing: "0.18em",
-                                  textTransform: "uppercase",
-                                  color: "var(--primary)",
-                                  fontWeight: "var(--weight-semibold)",
-                                }}
-                              >
+                          <div className="home-dietary-warnings">
+                            <div className="home-dietary-warnings__header">
+                              <span className="home-dietary-warnings__icon">🩺</span>
+                              <span className="home-dietary-warnings__title">
                                 {cms.pages.dietaryWarningsTitle}
                               </span>
                             </div>
-                            {dw.map((w, i) => (
+                            {dw.map((w, i) => {
+                              const severityClass = {
+                                critical: "home-dietary-warning--critical",
+                                warning: "home-dietary-warning--warning",
+                                info: "home-dietary-warning--info",
+                              }[w.severity];
+                              return (
                               <div
                                 key={w.filterId + i}
-                                className="flex items-start gap-2"
-                                style={{
-                                  background:
-                                    w.severity === "critical"
-                                      ? "color-mix(in srgb, var(--severity-critical) 8%, transparent)"
-                                      : w.severity === "warning"
-                                        ? "color-mix(in srgb, var(--severity-warning) 8%, transparent)"
-                                        : "color-mix(in srgb, var(--severity-info) 6%, transparent)",
-                                  border: `1px solid ${
-                                    w.severity === "critical"
-                                      ? "color-mix(in srgb, var(--severity-critical) 20%, transparent)"
-                                      : w.severity === "warning"
-                                        ? "color-mix(in srgb, var(--severity-warning) 20%, transparent)"
-                                        : "color-mix(in srgb, var(--severity-info) 12%, transparent)"
-                                  }`,
-                                  borderRadius: "var(--radius-md)",
-                                  padding: "var(--space-2-5) var(--font-size-lg)",
-                                }}
+                                className={`home-dietary-warning ${severityClass}`}
                               >
-                                <span style={{ flexShrink: 0, fontSize: "var(--font-size-base)", marginTop: "var(--space-px)" }}>
+                                <span className="home-dietary-warning__icon">
                                   {w.severity === "critical" ? "🛑" : w.severity === "warning" ? "⚠️" : "ℹ️"}
                                 </span>
-                                <div>
-                                  <div className="type-body" style={{ color: "var(--text-default)", lineHeight: 1.4 }}>
+                                <div className="home-dietary-warning__body">
+                                  <div className="type-body home-dietary-warning__message">
                                     {w.message}
                                   </div>
-                                  <div className="type-body-sm" style={{ color: "var(--muted-foreground)", lineHeight: 1.4, marginTop: "var(--space-0-5)" }}>
+                                  <div className="type-body-sm home-dietary-warning__tip">
                                     💡 {w.tip}
                                   </div>
                                 </div>
                               </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         );
                       })()}
@@ -1944,21 +1705,11 @@ export function HomePage() {
 
       {currentStep !== "result" && (
         <footer
-          className="relative mx-auto flex max-w-7xl justify-center px-4 pb-36 pt-8 sm:px-6 md:pb-12 lg:px-8"
-          style={{ zIndex: 2 }}
+          className="home-footer"
           aria-label={cms.pages.mottoAria}
         >
-          <span
-            className="inline-flex items-center gap-1.5"
-            style={{
-              color: "var(--text-muted)",
-              fontSize: "var(--font-size-xs)",
-              fontWeight: "var(--weight-medium)" as any,
-              opacity: 0.35,
-              letterSpacing: "0.04em",
-            }}
-          >
-            <Heart size={10} fill="currentColor" style={{ color: "var(--primary)", opacity: 0.6 }} />
+          <span className="home-footer__motto">
+            <Heart size={10} fill="currentColor" className="home-footer__heart" />
             Make pizza, not war
           </span>
         </footer>
@@ -1966,12 +1717,9 @@ export function HomePage() {
 
       {/* ═══ FLOATING CTA ═══ (non sul result: lì c'è solo back + navbar sezioni) */}
       {currentStep === "styles" && canGenerateRecipe && (
-      <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+      <div className="home-float-cta">
         {/* pb-20 on mobile to clear the 64px bottom tab bar; md:pb-6 on desktop */}
-        <div
-          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-6 flex justify-center"
-          style={{ zIndex: 1 }}
-        >
+        <div className="home-float-cta__inner">
             <CtaButton
               as={motion.button}
               key="cta-generate"
@@ -1986,7 +1734,7 @@ export function HomePage() {
               onClick={handleGenerateRecipe}
               whileHover={{ scale: 1.03, y: -1 }}
               deepShadow
-              className="pointer-events-auto h-12 sm:h-13 px-8 sm:px-10 active:scale-97"
+              className="home-float-cta__button"
             >
               <Sparkles size={15} />
               {cms.ui.generate}

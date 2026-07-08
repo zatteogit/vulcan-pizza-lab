@@ -143,55 +143,29 @@ export function LearnPage() {
   ];
 
   return (
-    <main
-      id="main-content"
-      className="min-h-screen relative overflow-hidden"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
-    >
+    <main id="main-content" className="learn-page">
       <FireGlow intensity={0.25} variant="warm" />
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className="max-w-3xl mx-auto px-5 sm:px-8 py-14 sm:py-20 pb-32 relative z-10"
+        className="learn-page__container"
         data-region="page"
       >
         {/* Banner stile contestuale — visibile solo con ?style=<id> valido. */}
         {activeStyle && (
-          <div
-            className="flex items-start gap-3 mb-6 px-4 py-3 rounded-2xl"
-            style={{
-              background: "color-mix(in srgb, var(--primary) 8%, transparent)",
-              border: "var(--border-w) solid var(--container-border-subtle)",
-            }}
-          >
-            <div className="flex-1 min-w-0">
-              <div
-                style={{
-                  fontSize: "var(--font-size-md)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  color: "var(--text-default)",
-                }}
-              >
+          <div className="learn-banner">
+            <div className="learn-banner__body">
+              <div className="learn-banner__title">
                 Stai studiando: {activeStyle.name}
               </div>
-              <div
-                style={{
-                  fontSize: "var(--font-size-md)",
-                  color: "var(--text-muted)",
-                  marginTop: 2,
-                }}
-              >
+              <div className="learn-banner__subtitle">
                 {pg.learnFilterSubtitle}
               </div>
             </div>
             <button
               onClick={() => setSearchParams({})}
-              className="flex-shrink-0 active:scale-90 transition-transform"
-              style={{ color: "var(--text-muted)", opacity: 0.7 }}
+              className="learn-banner__close"
               aria-label={pg.learnRemoveFilter}
               title={pg.learnRemoveFilter}
             >
@@ -224,104 +198,29 @@ export function LearnPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.05 }}
-          style={{ marginBottom: "var(--space-12)" }}
+          className="learn-path"
         >
-          <div
-            style={{
-              fontSize: "var(--font-size-md)",
-              letterSpacing: "var(--tracking-caps)",
-              textTransform: "uppercase",
-              color: "var(--text-muted)",
-              fontWeight: "var(--weight-semibold)" as any,
-              marginBottom: "var(--space-3)",
-            }}
-          >
-            {pathContextLabel}
-          </div>
+          <div className="learn-path__label">{pathContextLabel}</div>
           <Link
             to={`/recipe/${path.styleId}?mode=adapted`}
-            className="block relative overflow-hidden rounded-3xl active:scale-99 transition-all duration-300 group"
-            style={{
-              textDecoration: "none",
-              color: "var(--overlay-text)",
-              background: "var(--grad-ember)",
-              border: "1px solid color-mix(in srgb, var(--overlay-text) 15%, transparent)",
-              boxShadow: "0 12px 40px -12px color-mix(in srgb, var(--primary) 25%, transparent)",
-              padding: "var(--space-12) var(--space-10)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = "0 20px 45px -12px color-mix(in srgb, var(--primary) 40%, transparent)";
-              e.currentTarget.style.transform = "scale(1.005)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = "0 12px 40px -12px color-mix(in srgb, var(--primary) 25%, transparent)";
-              e.currentTarget.style.transform = "scale(1)";
-            }}
+            className="learn-path__card"
           >
             {/* Hand-drawn illustration — rising dough for the learning path */}
-            <div
-              className="absolute top-4 right-4 opacity-15 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
-            >
+            <div className="learn-path__illustration">
               <RisingDough size={90} />
             </div>
 
-            <div className="relative z-10 flex flex-col justify-between h-full min-h-[180px]">
-              <div>
-                <span
-                  style={{
-                    fontSize: "var(--font-size-2xs)",
-                    fontWeight: "var(--weight-bold)" as any,
-                    letterSpacing: "var(--tracking-extreme)",
-                    textTransform: "uppercase",
-                    color: "color-mix(in srgb, var(--overlay-text) 70%, transparent)",
-                    borderBottom: "1px solid color-mix(in srgb, var(--overlay-text) 25%, transparent)",
-                    paddingBottom: "3px",
-                    display: "inline-block",
-                    marginBottom: "var(--space-2)",
-                  }}
-                >
-                  {pg.learnPathLabel}
-                </span>
-                <h3
-                  className="font-serif mt-3"
-                  style={{
-                    fontSize: "clamp(var(--font-size-7xl), 6vw, var(--font-size-9xl))",
-                    color: "var(--overlay-text)",
-                    lineHeight: "var(--leading-snug)",
-                    fontWeight: "var(--weight-bold)" as any,
-                    margin: 0,
-                  }}
-                >
-                  {path.title}
-                </h3>
-                <p
-                  className="mt-4"
-                  style={{
-                    fontSize: "var(--font-size-2xl)",
-                    color: "color-mix(in srgb, var(--overlay-text) 85%, transparent)",
-                    lineHeight: "var(--leading-reading)",
-                    maxWidth: "90%",
-                  }}
-                >
-                  {path.copy}
-                </p>
+            <div className="learn-path__content">
+              <div className="learn-path__body">
+                <span className="learn-path__kicker">{pg.learnPathLabel}</span>
+                <h3 className="learn-path__title">{path.title}</h3>
+                <p className="learn-path__copy">{path.copy}</p>
               </div>
 
-              <div className="mt-8">
-                <span
-                  className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full transition-all duration-300"
-                  style={{
-                    background: "var(--overlay-surface)",
-                    color: "var(--text-accent)",
-                    fontSize: "var(--font-size-md)",
-                    fontWeight: "var(--weight-bold)" as any,
-                    letterSpacing: "var(--tracking-spread)",
-                    textTransform: "uppercase",
-                    boxShadow: "var(--shadow-md)",
-                  }}
-                >
+              <div className="learn-path__cta-row">
+                <span className="learn-path__cta">
                   {pg.learnStartPath}
-                  <ArrowRight size={12} className="transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight size={12} className="learn-path__cta-icon" />
                 </span>
               </div>
             </div>
@@ -336,129 +235,46 @@ export function LearnPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.1 }}
-          style={{ marginBottom: "var(--space-12)" }}
+          className="learn-term"
         >
           {/* Decorative thin rule — magazine section break */}
-          <div
-            style={{
-              height: "var(--space-px)",
-              background: "var(--container-border-subtle)",
-              marginBottom: "var(--space-6)",
-            }}
-          />
-          <div
-            style={{
-              fontSize: "var(--font-size-md)",
-              letterSpacing: "var(--tracking-ultra)",
-              textTransform: "uppercase",
-              color: "var(--tertiary)",
-              fontWeight: "var(--weight-bold)" as any,
-              marginBottom: "var(--space-4)",
-            }}
-          >
+          <div className="learn-term__rule" />
+          <div className="learn-term__kicker">
             {t(pg.learnTermOfTheDay, { category: termCat.label })}
           </div>
 
-          <Link
-            to="/learn/glossary"
-            className="block rounded-2xl active:scale-99 transition-all duration-300 group"
-            style={{
-              textDecoration: "none",
-              color: "inherit",
-              background:
-                "linear-gradient(145deg, color-mix(in srgb, var(--tertiary) 6%, var(--container-bg-low)) 0%, var(--container-bg-low) 100%)",
-              border: "var(--border-w) solid color-mix(in srgb, var(--tertiary) 18%, var(--container-border))",
-              boxShadow: "var(--shadow-sm)",
-              padding: "var(--space-10)",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = "var(--shadow-md)";
-              e.currentTarget.style.borderColor = "color-mix(in srgb, var(--tertiary) 40%, var(--container-border))";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = "var(--shadow-sm)";
-              e.currentTarget.style.borderColor = "color-mix(in srgb, var(--tertiary) 18%, var(--container-border))";
-            }}
-          >
-            <div className="flex items-start gap-5">
-              <div
-                className="flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
-                style={{
-                  width: 56,
-                  height: 44,
-                }}
-              >
+          <Link to="/learn/glossary" className="learn-term__card">
+            <div className="learn-term__body">
+              <div className="learn-term__icon">
                 <Bowl size={52} />
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="learn-term__content">
                 <h3
-                  className="font-serif transition-colors duration-200 group-hover:text-[var(--primary)]"
-                  style={{
+                  className={
                     /* Audit lug 2026: i termini lunghi ("P/L (Rapporto
                        Tenacità/Estensibilità)") a 8xl traboccano dalla card su
                        mobile — sopra ~18 caratteri si scende di scala. */
-                    fontSize:
-                      term.name.length > 18
-                        ? "clamp(var(--font-size-3xl), 4vw, var(--font-size-6xl))"
-                        : "clamp(var(--font-size-6xl), 5vw, var(--font-size-8xl))",
-                    fontWeight: "var(--weight-bold)" as any,
-                    color: "var(--text-default)",
-                    lineHeight: "var(--leading-snug)",
-                    margin: 0,
-                    /* Nomi lunghi ("Estensibilità") a 320px: meglio sillabare
-                       che traboccare — override del hyphens:manual di locale it. */
-                    hyphens: "auto",
-                    overflowWrap: "break-word",
-                  }}
+                    term.name.length > 18
+                      ? "learn-term__name learn-term__name--long"
+                      : "learn-term__name"
+                  }
                 >
                   {term.name}
                   {term.symbol && (
                     /*  : il simbolo resta agganciato all'ultima parola del
                        termine — mai da solo su una riga (vedova). */
-                    <span
-                      style={{
-                        fontSize: "var(--font-size-xl)",
-                        color: "var(--text-muted)",
-                        fontFamily: "var(--font-mono)",
-                        fontWeight: "var(--weight-regular)" as any,
-                        whiteSpace: "nowrap",
-                      }}
-                    >
+                    <span className="learn-term__symbol">
                       {"\u00A0"}
                       {term.symbol}
                     </span>
                   )}
                 </h3>
-                <p
-                  className="mt-3"
-                  style={{
-                    fontSize: "var(--font-size-xl-5)",
-                    color: "var(--text-muted)",
-                    lineHeight: "var(--leading-reading)",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  {term.definition}
-                </p>
+                <p className="learn-term__definition">{term.definition}</p>
               </div>
             </div>
-            <div
-              className="flex items-center gap-1 mt-5"
-              style={{
-                fontSize: "var(--font-size-md)",
-                fontWeight: "var(--weight-semibold)" as any,
-                color: "var(--tertiary)",
-                letterSpacing: "var(--tracking-wide)",
-              }}
-            >
-              <span>{pg.learnOpenGlossary}</span>
-              <ChevronRight
-                size={14}
-                className="transition-transform group-hover:translate-x-1"
-              />
+            <div className="learn-term__footer">
+              <span className="learn-term__footer-label">{pg.learnOpenGlossary}</span>
+              <ChevronRight size={14} className="learn-term__footer-icon" />
             </div>
           </Link>
         </motion.div>
@@ -466,27 +282,16 @@ export function LearnPage() {
         {/* ══════════════════════════════════════════════════════════
             RISORSE — sezioni in calce con intestazione editoriale
            ══════════════════════════════════════════════════════════ */}
-        <div>
+        <div data-region="resources">
           {/* Section heading with decorative trailing rule */}
-          <div className="flex items-center gap-3" style={{ marginBottom: "var(--space-6)" }}>
-            <Heading
-              level="md"
-              as="h2"
-              className="flex-shrink-0"
-              style={{ margin: 0, lineHeight: "var(--leading-snug)" }}
-            >
+          <div className="learn-resources__heading">
+            <Heading level="md" as="h2" className="learn-resources__heading-text">
               {cms.misc.learnResources}
             </Heading>
-            <div
-              className="flex-1"
-              style={{
-                height: "var(--space-px)",
-                background: "var(--container-border-subtle)",
-              }}
-            />
+            <div className="learn-resources__rule" />
           </div>
 
-          <div data-region="collection" className="flex flex-col" style={{ gap: "var(--space-4)" }}>
+          <div data-region="collection" className="learn-resources__list">
             {SECTIONS.map((section, i) => {
               return (
                 <motion.div
@@ -503,61 +308,21 @@ export function LearnPage() {
                 >
                   <Link
                     to={section.to + linkSearch}
-                    className="relative flex items-center gap-5 rounded-2xl overflow-hidden active:scale-98 transition-all duration-300 group"
-                    style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                      padding: "var(--space-8)",
-                      background: `linear-gradient(145deg, color-mix(in srgb, ${section.color} 7%, var(--container-bg-low)) 0%, var(--container-bg-low) 100%)`,
-                      border: `var(--border-w) solid color-mix(in srgb, ${section.color} 18%, var(--container-border))`,
-                      boxShadow: "var(--shadow-sm)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow = `0 12px 35px -10px color-mix(in srgb, ${section.color} 25%, transparent)`;
-                      e.currentTarget.style.borderColor = `color-mix(in srgb, ${section.color} 45%, var(--container-border))`;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = "var(--shadow-sm)";
-                      e.currentTarget.style.borderColor = `color-mix(in srgb, ${section.color} 18%, var(--container-border))`;
-                    }}
+                    className="learn-resources__card"
+                    style={{ ["--tone" as any]: section.color }}
                   >
-                    <div
-                      className="relative flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
-                      style={{
-                        width: 56,
-                        height: 44,
-                      }}
-                    >
+                    <div className="learn-resources__icon">
                       <section.illustration size={52} />
                     </div>
-                    <div className="relative flex-1 min-w-0">
-                      <div
-                        className="font-serif transition-colors duration-200 group-hover:text-[var(--primary)]"
-                        style={{
-                          fontSize: "var(--font-size-6xl)",
-                          fontWeight: "var(--weight-bold)" as any,
-                          color: "var(--text-default)",
-                          lineHeight: "var(--leading-snug)",
-                        }}
-                      >
+                    <div className="learn-resources__content">
+                      <div className="learn-resources__label">
                         {section.label}
                       </div>
-                      <div
-                        style={{
-                          fontSize: "var(--font-size-xl)",
-                          color: "var(--text-muted)",
-                          marginTop: "var(--space-1)",
-                          lineHeight: "var(--leading-relaxed)",
-                        }}
-                      >
+                      <div className="learn-resources__desc">
                         {section.desc}
                       </div>
                     </div>
-                    <ChevronRight
-                      size={16}
-                      className="relative flex-shrink-0 transition-transform group-hover:translate-x-1"
-                      style={{ color: "var(--text-muted)" }}
-                    />
+                    <ChevronRight size={16} className="learn-resources__chevron" />
                   </Link>
                 </motion.div>
               );

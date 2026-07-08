@@ -7,7 +7,7 @@
     "markup-presentation": 2
   },
   "src/app/components/ds/Carousel.tsx": {
-    "inline-style": 5
+    "inline-style": 4
   },
   "src/app/components/ds/Checkbox.tsx": {
     "inline-style": 6,
@@ -18,7 +18,7 @@
     "inline-style": 1
   },
   "src/app/components/ds/ConfirmDialog.tsx": {
-    "inline-style": 7
+    "inline-style": 6
   },
   "src/app/components/ds/CtaButton.tsx": {
     "inline-style": 1
@@ -45,11 +45,8 @@
   "src/app/components/ds/IconButton.tsx": {
     "inline-style": 1
   },
-  "src/app/components/ds/ModalSheet.tsx": {
-    "inline-style": 2
-  },
   "src/app/components/ds/Progress.tsx": {
-    "inline-style": 6,
+    "inline-style": 5,
     "markup-presentation": 1
   },
   "src/app/components/ds/RadioButton.tsx": {
@@ -61,29 +58,23 @@
     "inline-style": 4
   },
   "src/app/components/ds/Select.tsx": {
-    "inline-style": 13,
+    "inline-style": 12,
     "bare-wrapper": 1,
     "markup-presentation": 5
   },
   "src/app/components/ds/Slider.tsx": {
-    "inline-style": 8,
+    "inline-style": 7,
     "markup-presentation": 1
   },
   "src/app/components/ds/Snackbar.tsx": {
     "inline-style": 3,
     "markup-presentation": 2
   },
-  "src/app/components/ds/Spinner.tsx": {
-    "inline-style": 1
-  },
   "src/app/components/ds/StepHeader.tsx": {
-    "inline-style": 5,
+    "inline-style": 4,
     "markup-presentation": 4
   },
   "src/app/components/ds/Stepper.tsx": {
-    "inline-style": 3
-  },
-  "src/app/components/ds/Surface.tsx": {
     "inline-style": 1
   },
   "src/app/components/ds/Switch.tsx": {
@@ -118,7 +109,7 @@
     "inline-style": 3
   },
   "src/app/components/shared/vulcan-logo.tsx": {
-    "inline-style": 4
+    "inline-style": 3
   },
   "src/app/features/cooking/active-cook-widget.tsx": {
     "inline-style": 5
@@ -151,11 +142,11 @@
     "markup-presentation": 3
   },
   "src/app/features/recipe/interpretation-narrative-card.tsx": {
-    "inline-style": 18,
+    "inline-style": 15,
     "markup-presentation": 1
   },
   "src/app/features/recipe/pre-ferment-guide.tsx": {
-    "inline-style": 37,
+    "inline-style": 36,
     "bare-wrapper": 1,
     "markup-presentation": 1
   },
@@ -182,7 +173,7 @@
     "markup-presentation": 1
   },
   "src/app/features/recipe/recipe-match-card.tsx": {
-    "inline-style": 35,
+    "inline-style": 34,
     "markup-presentation": 3
   },
   "src/app/features/recipe/recipe-output-bits.tsx": {
@@ -194,7 +185,7 @@
     "bare-wrapper": 1
   },
   "src/app/features/recipe/recipe-section-tabs.tsx": {
-    "inline-style": 11,
+    "inline-style": 9,
     "markup-presentation": 2
   },
   "src/app/features/recipe/recipe-setup-panel.tsx": {
@@ -208,12 +199,12 @@
     "inline-style": 12
   },
   "src/app/features/recipe/recipe-view.tsx": {
-    "inline-style": 19,
+    "inline-style": 17,
     "bare-wrapper": 3,
     "markup-presentation": 1
   },
   "src/app/features/recipe/recommended-styles.tsx": {
-    "inline-style": 27,
+    "inline-style": 26,
     "bare-wrapper": 1,
     "markup-presentation": 8
   },
@@ -226,7 +217,7 @@
     "markup-presentation": 1
   },
   "src/app/features/recipe/tilt-card.tsx": {
-    "inline-style": 4
+    "inline-style": 3
   },
   "src/app/features/recipe/topping-section.tsx": {
     "inline-style": 28,
@@ -238,41 +229,25 @@
     "markup-presentation": 1
   },
   "src/app/features/recipe/user-needs.tsx": {
-    "inline-style": 59,
+    "inline-style": 55,
     "bare-wrapper": 12,
     "markup-presentation": 4
   },
   "src/app/pages/explore.tsx": {
-    "inline-style": 3,
     "bare-wrapper": 3
   },
   "src/app/pages/glossary.tsx": {
     "bare-wrapper": 1
   },
   "src/app/pages/home.tsx": {
-    "inline-style": 53,
-    "bare-wrapper": 2,
-    "markup-presentation": 4
-  },
-  "src/app/pages/learn.tsx": {
-    "inline-style": 30,
-    "bare-wrapper": 3,
-    "markup-presentation": 6
+    "inline-style": 1
   },
   "src/app/pages/not-found.tsx": {
     "inline-style": 3,
     "markup-presentation": 2
   },
-  "src/app/pages/pre-ferments.tsx": {
-    "inline-style": 1
-  },
-  "src/app/pages/profile.tsx": {
-    "inline-style": 147,
-    "bare-wrapper": 10,
-    "markup-presentation": 9
-  },
   "src/app/pages/recipe.tsx": {
-    "inline-style": 14,
+    "inline-style": 9,
     "markup-presentation": 2
   },
   "src/app/pages/troubleshooting.tsx": {

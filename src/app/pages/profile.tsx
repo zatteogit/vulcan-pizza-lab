@@ -205,22 +205,13 @@ function ProfileSection({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 400, damping: 30, delay }}
-      className="py-6"
-      style={{ borderBottom: "1px solid var(--container-border-subtle)" }}
+      className="profile-section"
     >
-      <div data-region="section-header" className="mb-4">
+      <div data-region="section-header" className="profile-section__header">
         {stepNum && (() => {
           const cleanStepNum = stepNum.split(/[-—]/)[0].trim();
           return (
-            <span
-              className="type-label-compact"
-              style={{
-                color: "var(--primary)",
-                letterSpacing: "0.18em",
-                textTransform: "uppercase" as any,
-                fontWeight: "var(--weight-semibold)" as any,
-              }}
-            >
+            <span className="type-label-compact profile-section__step">
               {cleanStepNum}
             </span>
           );
@@ -228,19 +219,12 @@ function ProfileSection({
         <Heading
           level="md"
           as="h2"
-          style={{ marginTop: stepNum ? 4 : 0 }}
+          className={stepNum ? "profile-section__title" : "profile-section__title--flush"}
         >
           {title}
         </Heading>
         {subtitle && (
-          <p
-            className="font-serif italic mt-1"
-            style={{
-              fontSize: "var(--font-size-xl)",
-              color: "var(--text-muted)",
-              opacity: 0.65,
-            }}
-          >
+          <p className="profile-section__subtitle">
             {subtitle}
           </p>
         )}
@@ -282,56 +266,33 @@ function FavoriteStylesSection() {
       subtitle={p.favoritesSubtitle}
       delay={0.02}
     >
-      <div data-region="collection" className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div data-region="collection" className="profile-favorites">
         {styles.map((style) => (
-          <div key={style.id} className="relative">
+          <div key={style.id} className="profile-favorites__item">
             <Link
               to={`/recipe/${style.id}?mode=canonical`}
-              className="block rounded-2xl overflow-hidden active:scale-97 transition-transform group"
-              style={{
-                background: "var(--container-card)",
-                border: "1px solid var(--container-border-ghost)",
-                textDecoration: "none",
-                color: "inherit",
-              }}
+              className="profile-favorites__link"
             >
-              <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
+              <div className="profile-favorites__media">
                 <ImageWithFallback
                   src={STYLE_PHOTOS[style.id]}
                   alt={style.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="profile-favorites__img"
                   loading="lazy"
                 />
-                <div className="absolute inset-0" style={{ background: "var(--overlay-scrim)" }} />
-                <span
-                  className="font-serif absolute bottom-0 left-0 right-0 px-3 pb-2.5 pt-10"
-                  style={{
-                    fontSize: "var(--font-size-lg)",
-                    fontWeight: "var(--weight-bold)" as any,
-                    color: "var(--overlay-text)",
-                    textShadow: "var(--overlay-shadow-text)",
-                    lineHeight: "var(--leading-snug)",
-                  }}
-                >
+                <div className="profile-favorites__scrim" />
+                <span className="profile-favorites__label">
                   {style.name}
                 </span>
               </div>
             </Link>
             <button
               onClick={() => setFavs(toggleFavoriteStyle(style.id))}
-              className="absolute top-2 right-2 flex items-center justify-center rounded-full active:scale-90 transition-transform"
-              style={{
-                width: 30,
-                height: 30,
-                background: "color-mix(in srgb, var(--container-page) 70%, transparent)",
-                backdropFilter: "blur(8px)",
-                border: "1px solid var(--container-border-subtle)",
-                cursor: "pointer",
-              }}
+              className="profile-favorites__remove"
               aria-label={t(p.favoriteRemoveAria, { name: style.name })}
               title={p.favoriteRemove}
             >
-              <Heart size={15} fill="var(--primary)" style={{ color: "var(--primary)" }} />
+              <Heart size={15} fill="var(--primary)" className="profile-favorites__remove-icon" />
             </button>
           </div>
         ))}
@@ -385,7 +346,7 @@ function SavedRecipesSection() {
       subtitle={p.savedRecipesSubtitle}
       delay={0.03}
     >
-      <div className="flex flex-col gap-2">
+      <div className="profile-saved-recipes">
         {recipes.map((r) => {
           const styleName = STYLES_DB[r.styleId]?.name ?? r.styleName;
           const meta = [
@@ -395,60 +356,26 @@ function SavedRecipesSection() {
             .filter(Boolean)
             .join(" · ");
           return (
-            <div
-              key={r.id}
-              className="relative flex items-center rounded-2xl"
-              style={{
-                background: "var(--surface-container-low)",
-                border: "1px solid var(--outline-variant)",
-              }}
-            >
+            <div key={r.id} className="profile-saved-recipes__item">
               <Link
                 to={buildSavedRecipeUrl(r)}
-                className="flex items-center gap-3 flex-1 min-w-0 px-3.5 py-3 active:scale-99 transition-transform"
-                style={{ textDecoration: "none", color: "inherit" }}
+                className="profile-saved-recipes__link"
               >
-                <span
-                  className="flex items-center justify-center rounded-xl flex-shrink-0"
-                  style={{
-                    width: 38,
-                    height: 38,
-                    background: "color-mix(in srgb, var(--primary) 10%, transparent)",
-                    color: "var(--primary)",
-                  }}
-                >
+                <span className="profile-saved-recipes__icon">
                   <Bookmark size={17} fill="currentColor" />
                 </span>
-                <div className="flex flex-col min-w-0">
-                  <span
-                    className="truncate"
-                    style={{
-                      fontSize: "var(--font-size-lg)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      color: "var(--text-default)",
-                    }}
-                  >
+                <div className="profile-saved-recipes__info">
+                  <span className="profile-saved-recipes__name">
                     {styleName}
                   </span>
-                  <span
-                    className="type-data"
-                    style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}
-                  >
+                  <span className="type-data profile-saved-recipes__meta">
                     {meta}
                   </span>
                 </div>
               </Link>
               <button
                 onClick={() => setRecipes(removeRecipe(r.id))}
-                className="flex items-center justify-center flex-shrink-0 mr-2 rounded-full active:scale-90 transition-transform"
-                style={{
-                  width: 30,
-                  height: 30,
-                  background: "transparent",
-                  border: "none",
-                  color: "var(--text-muted)",
-                  cursor: "pointer",
-                }}
+                className="profile-saved-recipes__remove"
                 aria-label={t(p.savedRecipeRemoveAria, { name: styleName })}
                 title={p.savedRecipeRemove}
               >
@@ -482,47 +409,25 @@ function EquipmentCategory({
 }) {
   return (
     <div
-      className="rounded-2xl overflow-hidden"
-      style={{
-        background: "var(--surface-container-low)",
-        border: hasSelection ? "1px solid var(--primary)" : "1px solid var(--outline-variant)",
-      }}
+      className={`profile-equip-cat${hasSelection ? " profile-equip-cat--selected" : ""}`}
     >
       <motion.button
         onClick={onToggle}
-        className="w-full flex items-center gap-3 px-4 py-3.5 active:scale-99 transition-transform"
-        style={{ textAlign: "left" as any, cursor: "pointer" }}
+        className="profile-equip-cat__trigger"
       >
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
+        <div className="profile-equip-cat__body">
+          <div className="profile-equip-cat__step-row">
             <span
-              style={{
-                fontSize: "var(--font-size-2xs)",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase" as any,
-                fontWeight: "var(--weight-semibold)" as any,
-                color: hasSelection ? "var(--primary)" : "var(--text-muted)",
-              }}
+              className={`profile-equip-cat__step${hasSelection ? " profile-equip-cat__step--selected" : ""}`}
             >
               {stepLabel}
             </span>
           </div>
-          <span
-            className="type-data-base"
-            style={{
-              fontWeight: "var(--weight-medium)" as any,
-              color: "var(--text-default)",
-            }}
-          >
+          <span className="type-data-base profile-equip-cat__title">
             {title}
           </span>
           <div
-            className="type-data-xs"
-            style={{
-              color: hasSelection ? "var(--text-default)" : "var(--text-muted)",
-              marginTop: 1,
-              opacity: hasSelection ? 1 : 0.6,
-            }}
+            className={`type-data-xs profile-equip-cat__summary${hasSelection ? " profile-equip-cat__summary--selected" : ""}`}
           >
             {summary}
           </div>
@@ -530,9 +435,9 @@ function EquipmentCategory({
         <motion.div
           animate={{ rotate: expanded ? 180 : 0 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          style={{ flexShrink: 0 }}
+          className="profile-equip-cat__chevron"
         >
-          <ChevronDown size={16} style={{ color: "var(--icon-muted)" }} />
+          <ChevronDown size={16} className="profile-equip-cat__chevron-icon" />
         </motion.div>
       </motion.button>
 
@@ -543,13 +448,10 @@ function EquipmentCategory({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            className="overflow-hidden"
+            className="profile-equip-cat__panel"
           >
-            <div
-              className="px-3 pb-3"
-              style={{ borderTop: "1px solid var(--outline-variant)" }}
-            >
-              <div className="pt-3">
+            <div className="profile-equip-cat__panel-inner">
+              <div className="profile-equip-cat__panel-content">
                 {children}
               </div>
             </div>
@@ -609,56 +511,33 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
   return (
     <main
       id="main-content"
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-12"
-      style={{ background: "var(--container-page)", color: "var(--text-default)" }}
+      className="profile-ftu"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className="w-full"
-        style={{ maxWidth: "var(--profile-card-max-width, 30rem)" }}
+        className="profile-ftu__card"
       >
         {/* Progress dots */}
-        <div className="flex items-center justify-center gap-2 mb-8">
+        <div className="profile-ftu__dots">
           {steps.map((_, i) => (
             <div
               key={i}
-              style={{
-                width: i === step ? "var(--space-6)" : "var(--space-2)",
-                height: "var(--space-2)",
-                borderRadius: "var(--radius-xs)",
-                background: i <= step ? "var(--primary)" : "var(--container-bg-high)",
-                transition: "all 0.3s ease",
-              }}
+              className={`profile-ftu__dot${i === step ? " profile-ftu__dot--current" : ""}${i <= step ? " profile-ftu__dot--filled" : ""}`}
             />
           ))}
         </div>
 
         {/* Step header */}
-        <div className="text-center mb-8">
-          <span
-            className="type-label-compact"
-            style={{
-              color: "var(--primary)",
-              letterSpacing: "0.18em",
-              textTransform: "uppercase" as any,
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
-          >
+        <div className="profile-ftu__step-header">
+          <span className="type-label-compact profile-ftu__step-label">
             {steps[step].num} — {p.ftuWelcome}
           </span>
-          <Heading level="page" className="mt-2">
+          <Heading level="page" className="profile-ftu__step-title">
             {steps[step].title}
           </Heading>
-          <p
-            className="font-serif italic mt-1"
-            style={{
-              fontSize: "var(--font-size-xl)",
-              color: "var(--text-muted)",
-              opacity: 0.65,
-            }}
-          >
+          <p className="profile-ftu__step-subtitle">
             {steps[step].subtitle}
           </p>
         </div>
@@ -673,7 +552,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
           >
             {step === 0 && (
-              <div className="flex flex-col gap-3">
+              <div className="profile-ftu__option-list">
                 {OVEN_PRESETS.map((preset) => {
                   const Icon = OVEN_ICONS[preset.id] || Flame;
                   const active = ovenType === preset.id;
@@ -684,30 +563,19 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                         setOvenType(preset.id);
                         setOvenTemp(preset.maxTemp);
                       }}
-                      className="flex items-center gap-4 p-4 rounded-2xl active:scale-98"
+                      className="profile-ftu__option"
                       animate={{
                         backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                      style={{
-                        borderWidth: 1.5,
-                        borderStyle: "solid",
-                        cursor: "pointer",
-                        textAlign: "left" as any,
-                      }}
                     >
                       <motion.div
-                        className="flex items-center justify-center flex-shrink-0"
+                        className="profile-ftu__option-icon"
                         animate={{
                           backgroundColor: active ? "var(--surface-container)" : "var(--container-bg)",
                         }}
                         transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 12,
-                        }}
                       >
                         <motion.div
                           animate={{ color: active ? "var(--primary)" : "var(--text-muted)" }}
@@ -716,11 +584,11 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                           <Icon size={20} />
                         </motion.div>
                       </motion.div>
-                      <div className="flex-1">
-                        <div style={{ fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                      <div className="profile-ftu__option-body">
+                        <div className="profile-ftu__option-name">
                           {preset.name}
                         </div>
-                        <div className="type-data-sm" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
+                        <div className="type-data-sm profile-ftu__option-meta">
                           Max {preset.maxTemp}°C
                         </div>
                       </div>
@@ -730,7 +598,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                           animate={{ scale: 1 }}
                           transition={{ type: "spring", stiffness: 500, damping: 25 }}
                         >
-                          <Check size={18} style={{ color: "var(--primary)" }} />
+                          <Check size={18} className="profile-ftu__option-check" />
                         </motion.div>
                       )}
                     </motion.button>
@@ -740,49 +608,35 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
             )}
 
             {step === 1 && (
-              <div className="flex flex-col gap-3">
+              <div className="profile-ftu__option-list">
                 {SKILL_LEVELS.map((skill) => {
                   const active = skillLevel === skill.level;
                   return (
                     <motion.button
                       key={skill.level}
                       onClick={() => setSkillLevel(skill.level as SkillLevel)}
-                      className="flex items-center gap-4 p-4 rounded-2xl active:scale-98"
+                      className="profile-ftu__option"
                       animate={{
                         backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                      style={{
-                        borderWidth: 1.5,
-                        borderStyle: "solid",
-                        cursor: "pointer",
-                        textAlign: "left" as any,
-                      }}
                     >
                       <motion.div
-                        className="flex items-center justify-center flex-shrink-0"
+                        className="profile-ftu__option-icon profile-ftu__option-icon--level"
                         animate={{
                           backgroundColor: active ? "var(--surface-container)" : "var(--container-bg)",
                           color: active ? "var(--primary)" : "var(--text-muted)",
                         }}
                         transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 12,
-                          fontSize: "var(--font-size-lg)",
-                          fontWeight: "var(--weight-bold)" as any,
-                          fontFeatureSettings: "'tnum'",
-                        }}
                       >
                         {skill.level}
                       </motion.div>
-                      <div className="flex-1">
-                        <div style={{ fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                      <div className="profile-ftu__option-body">
+                        <div className="profile-ftu__option-name">
                           {skill.name}
                         </div>
-                        <div className="type-data-sm" style={{ color: "var(--text-muted)" }}>
+                        <div className="type-data-sm profile-ftu__option-meta">
                           {skill.description}
                         </div>
                       </div>
@@ -792,7 +646,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                           animate={{ scale: 1 }}
                           transition={{ type: "spring", stiffness: 500, damping: 25 }}
                         >
-                          <Check size={18} style={{ color: "var(--primary)" }} />
+                          <Check size={18} className="profile-ftu__option-check" />
                         </motion.div>
                       )}
                     </motion.button>
@@ -802,13 +656,13 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
             )}
 
             {step === 2 && (
-              <div className="flex flex-col gap-4">
+              <div className="profile-ftu__pantry">
                 {/* Pantry: farine */}
-                <div>
-                  <div className="type-label-compact" style={{ color: "var(--text-muted)", marginBottom: "var(--space-2)", letterSpacing: "0.05em", textTransform: "uppercase" as any }}>
+                <div className="profile-ftu__pantry-group">
+                  <div className="type-label-compact profile-ftu__pantry-label">
                     {cms.ui.pantryFlours}
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="profile-ftu__pantry-chips">
                     {FTU_FLOURS.map((f) => (
                       <Chip
                         key={f.id}
@@ -821,27 +675,17 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                   {/* Accordion farine speciali */}
                   <button
                     onClick={() => setShowSpecialFlours((v) => !v)}
-                    className="flex items-center gap-1 mt-3 type-data-sm active:scale-95 transition-transform"
-                    style={{
-                      color: "var(--text-accent)",
-                      fontWeight: "var(--weight-medium)" as any,
-                      background: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                    }}
+                    className="type-data-sm profile-ftu__pantry-toggle"
                     aria-expanded={showSpecialFlours}
                   >
                     <ChevronDown
                       size={14}
-                      style={{
-                        transform: showSpecialFlours ? "rotate(180deg)" : "rotate(0deg)",
-                        transition: "transform 0.2s",
-                      }}
+                      className={`profile-ftu__pantry-chevron${showSpecialFlours ? " profile-ftu__pantry-chevron--open" : ""}`}
                     />
                     {p.specialFloursOnboarding}
                   </button>
                   {showSpecialFlours && (
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="profile-ftu__pantry-chips profile-ftu__pantry-chips--nested">
                       {FTU_FLOURS_SPECIAL.map((f) => (
                         <Chip
                           key={f.id}
@@ -854,11 +698,11 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                   )}
                 </div>
                 {/* Pantry: lieviti */}
-                <div>
-                  <div className="type-label-compact" style={{ color: "var(--text-muted)", marginBottom: "var(--space-2)", letterSpacing: "0.05em", textTransform: "uppercase" as any }}>
+                <div className="profile-ftu__pantry-group">
+                  <div className="type-label-compact profile-ftu__pantry-label">
                     {cms.ui.pantryYeasts}
                   </div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="profile-ftu__pantry-chips">
                     {FTU_YEASTS.map((y) => (
                       <Chip
                         key={y.id}
@@ -870,7 +714,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                   </div>
                 </div>
                 {ftuFlours.length === 0 && ftuYeasts.length === 0 && (
-                  <p className="type-data-sm text-center" style={{ color: "var(--text-muted)", opacity: 0.6 }}>
+                  <p className="type-data-sm profile-ftu__pantry-skip">
                     {p.ftuSkipMessage}
                   </p>
                 )}
@@ -878,55 +722,51 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
             )}
 
             {step === 3 && (
-              <div className="flex flex-col gap-5">
-                <div className="text-center" style={{ fontSize: "var(--font-size-8xl)" }}>🎉</div>
-                <p style={{ fontSize: "var(--font-size-xl)", color: "var(--text-default)", textAlign: "center", lineHeight: 1.5 }}>
+              <div className="profile-ftu__done">
+                <div className="profile-ftu__done-emoji">🎉</div>
+                <p className="profile-ftu__done-title">
                   {p.ftuDoneTitle}
                 </p>
-                <ul style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)", paddingLeft: 0 }}>
-                  <li className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "var(--container-bg-low)", border: "1px solid var(--container-border)", listStyle: "none" }}>
-                    <span style={{ fontSize: "var(--font-size-3xl)", flexShrink: 0 }}>🍕</span>
-                    <div>
-                      <div style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                <ul className="profile-ftu__done-list">
+                  <li className="profile-ftu__done-item">
+                    <span className="profile-ftu__done-item-emoji">🍕</span>
+                    <div className="profile-ftu__done-item-body">
+                      <div className="profile-ftu__done-item-title">
                         {p.ftuDoneCreateTitle}
                       </div>
                       <div
-                        className="type-body-xs"
-                        style={{ color: "var(--text-muted)" }}
+                        className="type-body-xs profile-ftu__done-item-desc"
                         dangerouslySetInnerHTML={{ __html: p.ftuDoneCreateDesc }}
                       />
                     </div>
                   </li>
-                  <li className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "var(--container-bg-low)", border: "1px solid var(--container-border)", listStyle: "none" }}>
-                    <span style={{ fontSize: "var(--font-size-3xl)", flexShrink: 0 }}>📚</span>
-                    <div>
-                      <div style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                  <li className="profile-ftu__done-item">
+                    <span className="profile-ftu__done-item-emoji">📚</span>
+                    <div className="profile-ftu__done-item-body">
+                      <div className="profile-ftu__done-item-title">
                         {p.ftuDoneExploreTitle}
                       </div>
                       <div
-                        className="type-body-xs"
-                        style={{ color: "var(--text-muted)" }}
+                        className="type-body-xs profile-ftu__done-item-desc"
                         dangerouslySetInnerHTML={{ __html: p.ftuDoneExploreDesc }}
                       />
                     </div>
                   </li>
-                  <li className="flex items-start gap-3 p-3 rounded-xl" style={{ background: "var(--container-bg-low)", border: "1px solid var(--container-border)", listStyle: "none" }}>
-                    <span style={{ fontSize: "var(--font-size-3xl)", flexShrink: 0 }}>🎓</span>
-                    <div>
-                      <div style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                  <li className="profile-ftu__done-item">
+                    <span className="profile-ftu__done-item-emoji">🎓</span>
+                    <div className="profile-ftu__done-item-body">
+                      <div className="profile-ftu__done-item-title">
                         {p.ftuDoneLearnTitle}
                       </div>
                       <div
-                        className="type-body-xs"
-                        style={{ color: "var(--text-muted)" }}
+                        className="type-body-xs profile-ftu__done-item-desc"
                         dangerouslySetInnerHTML={{ __html: p.ftuDoneLearnDesc }}
                       />
                     </div>
                   </li>
                 </ul>
                 <p
-                  className="type-body-xs"
-                  style={{ color: "var(--text-muted)", textAlign: "center", opacity: 0.7 }}
+                  className="type-body-xs profile-ftu__done-footnote"
                   dangerouslySetInnerHTML={{ __html: p.ftuDoneProfileNote }}
                 />
               </div>
@@ -935,19 +775,11 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
         </AnimatePresence>
 
         {/* Navigation */}
-        <div className="flex items-center justify-between mt-10">
+        <div className="profile-ftu__nav">
           {step > 0 ? (
             <button
               onClick={() => setStep((s) => s - 1)}
-              className="px-5 py-2.5 rounded-full active:scale-95 transition-transform"
-              style={{
-                background: "var(--container-bg)",
-                border: "1px solid var(--container-border)",
-                color: "var(--text-default)",
-                fontSize: "var(--font-size-xl)",
-                fontWeight: "var(--weight-medium)" as any,
-                cursor: "pointer",
-              }}
+              className="profile-ftu__nav-back"
             >
               {p.ftuBack}
             </button>
@@ -957,8 +789,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
           <CtaButton
             as={motion.button}
             onClick={handleNext}
-            className="px-6 py-2.5"
-            style={{ fontSize: "var(--font-size-xl)" }}
+            className="profile-ftu__nav-next"
           >
             {step < lastStep ? p.ftuNext : p.ftuStart}
             {step < lastStep ? <ChevronRight size={16} /> : <Sparkles size={16} />}
@@ -1014,29 +845,14 @@ function LocaleConfirmModal({
   }, [onCancel]);
 
   return createPortal(
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
-      }}
-    >
+    <div className="profile-locale-modal">
       {/* Backdrop */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onCancel}
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "var(--dialog-scrim)",
-          backdropFilter: "blur(8px)",
-        }}
+        className="profile-locale-modal__backdrop"
       />
       {/* Card */}
       <motion.div
@@ -1044,52 +860,22 @@ function LocaleConfirmModal({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.92, y: 12 }}
         transition={{ type: "spring", stiffness: 500, damping: 32 }}
-        className="relative rounded-2xl overflow-hidden"
-        style={{
-          background: "var(--container-bg)",
-          border: "1px solid var(--container-border)",
-          width: "100%",
-          maxWidth: 380,
-          boxShadow: "var(--dialog-shadow-compact)",
-        }}
+        className="profile-locale-modal__card"
       >
-        <div className="px-6 pt-6 pb-2 text-center">
-          <div
-            className="inline-flex items-center justify-center mb-3"
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 14,
-              background: "var(--surface-container)",
-            }}
-          >
-            <Globe size={22} style={{ color: "var(--primary)" }} />
+        <div className="profile-locale-modal__body">
+          <div className="profile-locale-modal__icon">
+            <Globe size={22} className="profile-locale-modal__icon-glyph" />
           </div>
           <Heading level="sm">
             {srcProfile.localeModalTitle}
           </Heading>
           {/* Target language echo */}
           {tgtProfile.localeModalTitle !== srcProfile.localeModalTitle && (
-            <p
-              className="font-serif italic"
-              style={{
-                fontSize: "var(--font-size-base)",
-                color: "var(--text-muted)",
-                opacity: 0.55,
-                marginTop: 2,
-              }}
-            >
+            <p className="profile-locale-modal__echo">
               {tgtProfile.localeModalTitle}
             </p>
           )}
-          <p
-            className="type-body-sm"
-            style={{
-              color: "var(--text-muted)",
-              marginTop: 8,
-              lineHeight: 1.5,
-            }}
-          >
+          <p className="type-body-sm profile-locale-modal__desc">
             {(() => {
               /* Render description with bold from/to names inline */
               const desc = srcProfile.localeModalDesc;
@@ -1099,36 +885,28 @@ function LocaleConfirmModal({
               const middle = afterFrom[0];
               const after = afterFrom[1] || "";
               return (
-                <span>
+                <span data-slot="locale-desc">
                   {before}
-                  <span style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>{fromLabel}</span>
+                  <span className="profile-locale-modal__name">{fromLabel}</span>
                   {middle}
-                  <span style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>{toLabel}</span>
+                  <span className="profile-locale-modal__name">{toLabel}</span>
                   {after}
                 </span>
               );
             })()}
           </p>
         </div>
-        <div className="flex gap-3 px-6 pb-6 pt-4">
+        <div className="profile-locale-modal__actions">
           <button
             onClick={onCancel}
-            className="flex-1 px-4 py-2.5 rounded-xl type-data-base active:scale-95 transition-transform"
-            style={{
-              background: "var(--surface-container)",
-              border: "1px solid var(--container-border)",
-              color: "var(--text-default)",
-              fontWeight: "var(--weight-medium)" as any,
-              cursor: "pointer",
-            }}
+            className="type-data-base profile-locale-modal__cancel"
           >
             {srcProfile.localeModalCancel}
           </button>
           <CtaButton
             onClick={onConfirm}
             radius="xl"
-            className="flex-1 px-4 py-2.5"
-            style={{ fontSize: "var(--font-size-base)" }}
+            className="profile-locale-modal__confirm"
           >
             {tgtProfile.localeModalConfirm}
           </CtaButton>
@@ -1458,55 +1236,34 @@ export function ProfilePage() {
   return (
     <main
       id="main-content"
-      className="min-h-screen"
-      style={{ background: "var(--container-page)", color: "var(--text-default)" }}
+      className="profile-shell"
     >
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative"
+        className="profile-page"
         data-region="page"
       >
         {/* Close Button */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+        <div className="profile-page__close">
           <IconButton
             size="md"
             onClick={() => navigate("/")}
-            style={{
-              background: "var(--surface-container)",
-              color: "var(--text-muted)",
-              border: "1px solid var(--outline-variant)",
-            }}
             aria-label={cms.ui.close}
           >
             <X size={15} />
           </IconButton>
         </div>
         {/* Header */}
-        <div data-region="page-header" className="text-center mb-4">
-          <div
-            className="inline-flex items-center justify-center mb-3"
-            style={{
-              width: 52,
-              height: 52,
-              borderRadius: 16,
-              background: "var(--surface-container)",
-            }}
-          >
-            <User size={26} style={{ color: "var(--primary)" }} />
+        <div data-region="page-header" className="profile-page__header">
+          <div className="profile-page__header-icon">
+            <User size={26} className="profile-page__header-icon-glyph" />
           </div>
           <Heading level="page">
             {p.pageTitle}
           </Heading>
-          <p
-            className="font-serif italic mt-1"
-            style={{
-              fontSize: "var(--font-size-xl)",
-              color: "var(--text-muted)",
-              opacity: 0.65,
-            }}
-          >
+          <p className="profile-page__subtitle">
             {p.pageSubtitle}
           </p>
         </div>
@@ -1522,7 +1279,7 @@ export function ProfilePage() {
           stepNum={p.ovenStep}
           delay={0.05}
         >
-          <div className="flex flex-col gap-2">
+          <div className="profile-oven-list">
             {OVEN_PRESETS.map((preset) => {
               const Icon = OVEN_ICONS[preset.id] || Flame;
               const active = ovens.includes(preset.id);
@@ -1541,7 +1298,7 @@ export function ProfilePage() {
                       return [preset.id, ...prev.filter((x) => x !== preset.id)];
                     });
                   }}
-                  className="flex items-center gap-3 p-3 sm:p-4 rounded-xl active:scale-98"
+                  className="profile-oven-list__item"
                   animate={{
                     backgroundColor: active
                       ? "var(--surface-container)"
@@ -1549,29 +1306,20 @@ export function ProfilePage() {
                     borderColor: active ? "var(--primary)" : "var(--container-border)",
                   }}
                   transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                  style={{
-                    borderWidth: 1.5,
-                    borderStyle: "solid",
-                    cursor: "pointer",
-                    textAlign: "left" as any,
-                  }}
                 >
                   <motion.div
                     animate={{ color: active ? "var(--primary)" : "var(--text-muted)" }}
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                    style={{ flexShrink: 0 }}
+                    className="profile-oven-list__icon"
                   >
                     <Icon size={18} />
                   </motion.div>
-                  <div className="flex-1 min-w-0">
-                    <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                  <div className="profile-oven-list__body">
+                    <span className="type-body-sm profile-oven-list__name">
                       {preset.name}
                     </span>
                   </div>
-                  <span
-                    className="type-data flex-shrink-0"
-                    style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}
-                  >
+                  <span className="type-data profile-oven-list__temp">
                     {fmt.celsius(preset.maxTemp)}
                   </span>
                   <AnimatePresence>
@@ -1581,9 +1329,9 @@ export function ProfilePage() {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0, opacity: 0 }}
                         transition={{ type: "spring", stiffness: 500, damping: 28 }}
-                        style={{ flexShrink: 0 }}
+                        className="profile-oven-list__check"
                       >
-                        <Check size={16} style={{ color: "var(--primary)" }} />
+                        <Check size={16} className="profile-oven-list__check-icon" />
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -1593,20 +1341,12 @@ export function ProfilePage() {
           </div>
 
           {/* Temperature override */}
-          <div className="mt-4 px-1">
-            <div className="flex items-center justify-between mb-2">
-              <span className="type-data-sm" style={{ color: "var(--text-muted)" }}>
+          <div className="profile-oven-temp">
+            <div className="profile-oven-temp__row">
+              <span className="type-data-sm profile-oven-temp__label">
                 {p.tempLabel}
               </span>
-              <span
-                className="type-data"
-                style={{
-                  fontSize: "var(--font-size-base)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  color: "var(--text-default)",
-                  fontFeatureSettings: "'tnum'",
-                }}
-              >
+              <span className="type-data profile-oven-temp__value">
                 {fmt.celsius(ovenTemp)}
               </span>
             </div>
@@ -1617,8 +1357,7 @@ export function ProfilePage() {
               step={10}
               value={ovenTemp}
               onChange={(e) => setOvenTemp(Number(e.target.value))}
-              className="w-full"
-              style={{ accentColor: "var(--primary)" }}
+              className="profile-oven-temp__slider"
               aria-label={p.tempAria}
             />
           </div>
@@ -1631,14 +1370,14 @@ export function ProfilePage() {
           stepNum={p.skillStep}
           delay={0.1}
         >
-          <div className="grid grid-cols-2 gap-2">
+          <div className="profile-skill-grid">
             {SKILL_LEVELS.map((skill) => {
               const active = skillLevel === skill.level;
               return (
                 <motion.button
                   key={skill.level}
                   onClick={() => setSkillLevel(skill.level as SkillLevel)}
-                  className="flex flex-col items-start gap-1 p-3 sm:p-4 rounded-xl active:scale-98"
+                  className="profile-skill-grid__item"
                   animate={{
                     backgroundColor: active
                       ? "var(--surface-container)"
@@ -1646,26 +1385,16 @@ export function ProfilePage() {
                     borderColor: active ? "var(--primary)" : "var(--container-border)",
                   }}
                   transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                  style={{
-                    borderWidth: 1.5,
-                    borderStyle: "solid",
-                    cursor: "pointer",
-                    textAlign: "left" as any,
-                  }}
                 >
-                  <div className="flex items-center gap-2 w-full">
+                  <div className="profile-skill-grid__row">
                     <motion.span
                       animate={{ color: active ? "var(--primary)" : "var(--text-muted)" }}
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                      style={{
-                        fontSize: "var(--font-size-base)",
-                        fontWeight: "var(--weight-bold)" as any,
-                        fontFeatureSettings: "'tnum'",
-                      }}
+                      className="profile-skill-grid__level"
                     >
                       LV{skill.level}
                     </motion.span>
-                    <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                    <span className="type-body-sm profile-skill-grid__name">
                       {skill.name}
                     </span>
                     <AnimatePresence>
@@ -1675,14 +1404,14 @@ export function ProfilePage() {
                           animate={{ scale: 1, opacity: 1 }}
                           exit={{ scale: 0, opacity: 0 }}
                           transition={{ type: "spring", stiffness: 500, damping: 28 }}
-                          style={{ marginLeft: "auto" }}
+                          className="profile-skill-grid__check"
                         >
-                          <Check size={14} style={{ color: "var(--primary)" }} />
+                          <Check size={14} className="profile-skill-grid__check-icon" />
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </div>
-                  <span className="type-data-xs" style={{ color: "var(--text-muted)" }}>
+                  <span className="type-data-xs profile-skill-grid__desc">
                     {skill.description}
                   </span>
                 </motion.button>
@@ -1700,7 +1429,7 @@ export function ProfilePage() {
           stepNum={p.equipStep}
           delay={0.15}
         >
-          <div className="flex flex-col gap-3">
+          <div className="profile-equip-list">
             {/* ── Impastamento ── */}
             <EquipmentCategory
               title={p.equipMixerTitle}
@@ -1712,45 +1441,36 @@ export function ProfilePage() {
                 : p.equipSummaryNone}
               hasSelection={mixers.length > 0}
             >
-              <div className="flex flex-col gap-1.5">
+              <div className="profile-equip-option-list">
                 {localMixers.map((mixer) => {
                   const active = mixers.includes(mixer.id);
+                  const levelModifier =
+                    mixer.level === "professional"
+                      ? " profile-equip-option__badge--pro"
+                      : mixer.level === "semi_pro"
+                        ? " profile-equip-option__badge--semi-pro"
+                        : "";
                   return (
                     <motion.button
                       key={mixer.id}
                       onClick={() => toggleMixer(mixer.id)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg active:scale-98"
+                      className="profile-equip-option"
                       animate={{
                         backgroundColor: active ? "var(--surface-container)" : "transparent",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                      style={{ borderWidth: 1, borderStyle: "solid", cursor: "pointer", textAlign: "left" as any }}
                     >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                      <div className="profile-equip-option__body">
+                        <div className="profile-equip-option__row">
+                          <span className="type-body-sm profile-equip-option__label">
                             {mixer.label}
                           </span>
-                          <span
-                            className="px-1.5 py-0.5 rounded"
-                            style={{
-                              fontSize: "var(--font-size-2xs)",
-                              letterSpacing: "0.08em",
-                              textTransform: "uppercase" as any,
-                              fontWeight: "var(--weight-semibold)" as any,
-                              color: mixer.level === "professional" ? "var(--primary)" : mixer.level === "semi_pro" ? "var(--tertiary)" : "var(--text-muted)",
-                              background: mixer.level === "professional"
-                                ? "color-mix(in srgb, var(--primary) 10%, var(--surface-container))"
-                                : mixer.level === "semi_pro"
-                                  ? "color-mix(in srgb, var(--tertiary) 10%, var(--surface-container))"
-                                  : "var(--surface-container)",
-                            }}
-                          >
+                          <span className={`profile-equip-option__badge${levelModifier}`}>
                             {mixer.level === "professional" ? "Pro" : mixer.level === "semi_pro" ? "Semi-Pro" : "Casa"}
                           </span>
                         </div>
-                        <div className="type-data-xs" style={{ color: "var(--text-muted)", marginTop: 1 }}>
+                        <div className="type-data-xs profile-equip-option__desc">
                           {mixer.description}
                         </div>
                       </div>
@@ -1761,9 +1481,9 @@ export function ProfilePage() {
                             animate={{ scale: 1 }}
                             exit={{ scale: 0 }}
                             transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                            style={{ flexShrink: 0 }}
+                            className="profile-equip-option__check"
                           >
-                            <Check size={16} style={{ color: "var(--primary)" }} />
+                            <Check size={16} className="profile-equip-option__check-icon" />
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -1784,39 +1504,36 @@ export function ProfilePage() {
                 : p.equipSummaryNone}
               hasSelection={equipment.surfaces.length > 0}
             >
-              <div className="flex flex-col gap-1.5">
+              <div className="profile-equip-option-list">
                 {localSurfaces.map((surface) => {
                   const active = equipment.surfaces.includes(surface.id);
+                  const heatModifier =
+                    surface.heatClass === "very_fast"
+                      ? " profile-equip-option__k-badge--fast"
+                      : surface.heatClass === "medium"
+                        ? " profile-equip-option__k-badge--medium"
+                        : "";
                   return (
                     <motion.button
                       key={surface.id}
                       onClick={() => toggleSurface(surface.id)}
-                      className="flex items-center gap-3 px-3 py-2.5 rounded-lg active:scale-98"
+                      className="profile-equip-option"
                       animate={{
                         backgroundColor: active ? "var(--surface-container)" : "transparent",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
                       transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                      style={{ borderWidth: 1, borderStyle: "solid", cursor: "pointer", textAlign: "left" as any }}
                     >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                      <div className="profile-equip-option__body">
+                        <div className="profile-equip-option__row">
+                          <span className="type-body-sm profile-equip-option__label">
                             {surface.label}
                           </span>
-                          <span
-                            className="type-data px-1.5 py-0.5 rounded"
-                            style={{
-                              fontSize: "var(--font-size-2xs)",
-                              color: surface.heatClass === "very_fast" ? "var(--primary)" : surface.heatClass === "medium" ? "var(--tertiary)" : "var(--text-muted)",
-                              background: "var(--surface-container)",
-                              fontFeatureSettings: "'tnum'",
-                            }}
-                          >
+                          <span className={`type-data profile-equip-option__k-badge${heatModifier}`}>
                             k={surface.conductivity}
                           </span>
                         </div>
-                        <div className="type-data-xs" style={{ color: "var(--text-muted)", marginTop: 1 }}>
+                        <div className="type-data-xs profile-equip-option__desc">
                           {surface.description}
                         </div>
                       </div>
@@ -1827,9 +1544,9 @@ export function ProfilePage() {
                             animate={{ scale: 1 }}
                             exit={{ scale: 0 }}
                             transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                            style={{ flexShrink: 0 }}
+                            className="profile-equip-option__check"
                           >
-                            <Check size={16} style={{ color: "var(--primary)" }} />
+                            <Check size={16} className="profile-equip-option__check-icon" />
                           </motion.div>
                         )}
                       </AnimatePresence>
@@ -1850,25 +1567,16 @@ export function ProfilePage() {
                 : p.equipSummaryNone}
               hasSelection={equipment.tools.length > 0}
             >
-              <div className="flex flex-col gap-4">
+              <div className="profile-equip-tools">
                 {(Object.keys(localToolCats) as ToolCategory[]).map((catId) => {
                   const cat = localToolCats[catId];
                   const catTools = localTools.filter((t) => t.category === catId);
                   return (
                     <div key={catId}>
-                      <div
-                        className="mb-2"
-                        style={{
-                          fontSize: "var(--font-size-2xs)",
-                          letterSpacing: "0.12em",
-                          textTransform: "uppercase" as any,
-                          fontWeight: "var(--weight-semibold)" as any,
-                          color: "var(--text-muted)",
-                        }}
-                      >
+                      <div className="profile-equip-tools__cat-label">
                         {cat.label}
                       </div>
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="profile-equip-tools__chips">
                         {catTools.map((tool) => (
                           <Chip
                             key={tool.id}
@@ -1890,28 +1598,24 @@ export function ProfilePage() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="mt-2 px-3 py-2.5 rounded-xl"
-                style={{
-                  background: "color-mix(in srgb, var(--cta) 6%, var(--surface-container-low))",
-                  border: "1px solid color-mix(in srgb, var(--cta) 15%, var(--outline-variant))",
-                }}
+                className="profile-equip-summary"
               >
-                <div className="flex flex-wrap gap-1.5">
+                <div className="profile-equip-summary__chips">
                   {equipment.mixer_type && (
-                    <span className="type-data-xs px-2 py-0.5 rounded-md" style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-default)" }}>
+                    <span className="type-data-xs profile-equip-summary__chip">
                       {localMixers.find((m) => m.id === equipment.mixer_type)?.label}
                     </span>
                   )}
                   {equipment.surfaces.map((s) => {
                     const opt = localSurfaces.find((o) => o.id === s);
                     return (
-                      <span key={s} className="type-data-xs px-2 py-0.5 rounded-md" style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-default)" }}>
+                      <span key={s} className="type-data-xs profile-equip-summary__chip">
                         {opt?.label}
                       </span>
                     );
                   })}
                   {equipment.tools.length > 0 && (
-                    <span className="type-data-xs px-2 py-0.5 rounded-md" style={{ background: "var(--surface-container)", border: "1px solid var(--outline-variant)", color: "var(--text-muted)" }}>
+                    <span className="type-data-xs profile-equip-summary__chip profile-equip-summary__chip--muted">
                       {equipment.tools.length} utensili
                     </span>
                   )}
@@ -1928,7 +1632,7 @@ export function ProfilePage() {
           stepNum={p.dietStep}
           delay={0.2}
         >
-          <div className="flex flex-wrap gap-2">
+          <div className="profile-diet-chips">
             {DIETARY_OPTIONS.map((d) => {
               const Icon = d.icon;
               return (
@@ -1943,7 +1647,7 @@ export function ProfilePage() {
             })}
           </div>
           {dietary.length === 0 && (
-            <p className="type-data-sm mt-3" style={{ color: "var(--text-muted)", opacity: 0.6 }}>
+            <p className="type-data-sm profile-diet-empty">
               {p.noDietNote}
             </p>
           )}
@@ -1956,27 +1660,22 @@ export function ProfilePage() {
           stepNum={p.locationStep}
           delay={0.22}
         >
-          <div className="flex flex-col gap-3">
+          <div className="profile-location">
             {/* Current saved location */}
             {savedLocation && (
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="flex items-center gap-3 p-3 rounded-xl"
-                style={{
-                  background: "var(--surface-container)",
-                  border: "1px solid var(--primary)",
-                  borderStyle: "solid",
-                }}
+                className="profile-location__current"
               >
-                <MapPin size={16} style={{ color: "var(--primary)", flexShrink: 0 }} />
-                <div className="flex-1 min-w-0">
-                  <div className="type-body-sm" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                <MapPin size={16} className="profile-location__current-icon" />
+                <div className="profile-location__current-body">
+                  <div className="type-body-sm profile-location__current-name">
                     {savedLocation.city || `${savedLocation.lat.toFixed(2)}, ${savedLocation.lon.toFixed(2)}`}
                   </div>
                   {/* Il titolo mostra già città o coordinate: qui solo lo stato. */}
-                  <div className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'" }}>
+                  <div className="type-data-xs profile-location__current-status">
                     {p.locationSaved}
                   </div>
                 </div>
@@ -1985,48 +1684,36 @@ export function ProfilePage() {
                   size="sm"
                   radius="lg"
                   variant="ghost"
-                  className="flex-shrink-0 active:scale-95 transition-transform"
-                  style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}
+                  className="profile-location__current-remove"
                   aria-label={p.locationRemove}
                 >
-                  <X size={12} style={{ color: "var(--icon-muted)" }} />
+                  <X size={12} className="profile-location__current-remove-icon" />
                 </IconButton>
               </motion.div>
             )}
 
             {/* Search input */}
-            <div className="relative">
-              <div
-                className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl"
-                style={{
-                  background: "var(--container-bg-low)",
-                  border: "1px solid var(--container-border)",
-                }}
-              >
+            <div className="profile-location__search">
+              <div className="profile-location__search-bar">
                 {locationSearching ? (
-                  <Loader2 size={14} className="animate-spin" style={{ color: "var(--icon-muted)", flexShrink: 0 }} />
+                  <Loader2 size={14} className="profile-spin profile-location__search-icon" />
                 ) : (
-                  <Search size={14} style={{ color: "var(--icon-muted)", flexShrink: 0 }} />
+                  <Search size={14} className="profile-location__search-icon" />
                 )}
                 <input
                   type="text"
                   value={locationQuery}
                   onChange={(e) => setLocationQuery(e.target.value)}
                   placeholder={p.locationPlaceholder}
-                  className="flex-1 bg-transparent outline-none"
-                  style={{
-                    fontSize: "var(--font-size-base)",
-                    color: "var(--text-default)",
-                    border: "none",
-                  }}
+                  className="profile-location__search-input"
                 />
                 {locationQuery && (
                   <button
                     onClick={() => { setLocationQuery(""); setLocationResults([]); }}
-                    className="flex-shrink-0 active:scale-95"
+                    className="profile-location__search-clear"
                     aria-label={cms.pages.searchClearLabel}
                   >
-                    <X size={14} style={{ color: "var(--icon-muted)" }} />
+                    <X size={14} className="profile-location__search-clear-icon" />
                   </button>
                 )}
               </div>
@@ -2039,13 +1726,7 @@ export function ProfilePage() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    className="absolute left-0 right-0 mt-1 rounded-xl overflow-hidden"
-                    style={{
-                      background: "var(--container-bg)",
-                      border: "1px solid var(--container-border)",
-                      boxShadow: "0 8px 24px color-mix(in srgb, var(--shadow-color) 12%, transparent)",
-                      zIndex: 10,
-                    }}
+                    className="profile-location__dropdown"
                   >
                     {locationResults.map((result, i) => {
                       const addr = result.address;
@@ -2056,18 +1737,15 @@ export function ProfilePage() {
                         <button
                           key={`${result.lat}-${result.lon}-${i}`}
                           onClick={() => selectLocation(result)}
-                          className="w-full flex items-center gap-3 px-3.5 py-2.5 text-left active:scale-99 transition-transform"
-                          style={{
-                            borderBottom: i < locationResults.length - 1 ? "1px solid var(--container-border-subtle)" : "none",
-                          }}
+                          className="profile-location__result"
                         >
-                          <MapPin size={13} style={{ color: "var(--icon-muted)", flexShrink: 0 }} />
-                          <div className="flex-1 min-w-0">
-                            <div className="type-body-sm" style={{ fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>
+                          <MapPin size={13} className="profile-location__result-icon" />
+                          <div className="profile-location__result-body">
+                            <div className="type-body-sm profile-location__result-name">
                               {city || result.display_name.split(",")[0]}
                             </div>
                             {(region || country) && (
-                              <div style={{ fontSize: "var(--font-size-xs)", color: "var(--text-muted)" }}>
+                              <div className="profile-location__result-meta">
                                 {[region, country].filter(Boolean).join(", ")}
                               </div>
                             )}
@@ -2081,10 +1759,7 @@ export function ProfilePage() {
 
               {/* No results */}
               {locationQuery.length >= 2 && !locationSearching && locationResults.length === 0 && (
-                <div
-                  className="mt-1 px-3.5 py-2 rounded-xl"
-                  style={{ background: "var(--container-bg-low)", fontSize: "var(--font-size-sm)", color: "var(--text-muted)" }}
-                >
+                <div className="profile-location__empty">
                   {p.locationNoResults}
                 </div>
               )}
@@ -2094,19 +1769,10 @@ export function ProfilePage() {
             <motion.button
               onClick={detectCurrentLocation}
               disabled={locationDetecting}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl active:scale-95 transition-transform"
-              style={{
-                background: "var(--container-bg-low)",
-                border: "1px solid var(--container-border)",
-                color: "var(--text-default)",
-                fontSize: "var(--font-size-base)",
-                fontWeight: "var(--weight-medium)" as any,
-                cursor: locationDetecting ? "wait" : "pointer",
-                opacity: locationDetecting ? 0.6 : 1,
-              }}
+              className={`profile-location__detect${locationDetecting ? " profile-location__detect--busy" : ""}`}
             >
               {locationDetecting ? (
-                <Loader2 size={14} className="animate-spin" />
+                <Loader2 size={14} className="profile-spin" />
               ) : (
                 <Navigation size={14} />
               )}
@@ -2115,7 +1781,7 @@ export function ProfilePage() {
 
             {/* Hint when no location */}
             {!savedLocation && (
-              <p className="type-data-sm" style={{ color: "var(--text-muted)", opacity: 0.6 }}>
+              <p className="type-data-sm profile-location__hint">
                 {p.locationNone}
               </p>
             )}
@@ -2129,22 +1795,13 @@ export function ProfilePage() {
           stepNum={p.prefsStep}
           delay={0.25}
         >
-          <div className="flex flex-col gap-4">
+          <div className="profile-prefs">
             {/* Language */}
-            <div>
-              <div
-                className="type-data mb-2"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  textTransform: "uppercase" as any,
-                  letterSpacing: "0.08em",
-                }}
-              >
+            <div data-slot="language">
+              <div className="type-data profile-prefs__label">
                 {p.langLabel}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="profile-prefs__lang-list">
                 {LOCALE_META.filter((l) => l.available).map((locale) => (
                   <motion.button
                     key={locale.id}
@@ -2153,7 +1810,7 @@ export function ProfilePage() {
                         setPendingLocale(locale);
                       }
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 rounded-xl active:scale-95"
+                    className="profile-prefs__lang-btn"
                     initial={false}
                     animate={{
                       backgroundColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-bg)",
@@ -2161,15 +1818,8 @@ export function ProfilePage() {
                       borderColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-border)",
                     }}
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                    style={{
-                      borderWidth: 1,
-                      borderStyle: "solid",
-                      fontSize: "var(--font-size-md)",
-                      fontWeight: "var(--weight-medium)" as any,
-                      cursor: "pointer",
-                    }}
                   >
-                    <span>{locale.flag}</span>
+                    <span data-slot="flag">{locale.flag}</span>
                     {locale.name}
                   </motion.button>
                 ))}
@@ -2177,17 +1827,8 @@ export function ProfilePage() {
             </div>
 
             {/* Dark mode */}
-            <div>
-              <div
-                className="type-data mb-2"
-                style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-muted)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  textTransform: "uppercase" as any,
-                  letterSpacing: "0.08em",
-                }}
-              >
+            <div data-slot="theme">
+              <div className="type-data profile-prefs__label">
                 {p.themeLabel}
               </div>
               <SegmentedControl
@@ -2216,20 +1857,11 @@ export function ProfilePage() {
           stepNum={p.unitStep}
           delay={0.3}
         >
-          <div>
-            <div
-              className="type-data mb-2"
-              style={{
-                fontSize: "var(--font-size-sm)",
-                color: "var(--text-muted)",
-                fontWeight: "var(--weight-semibold)" as any,
-                textTransform: "uppercase" as any,
-                letterSpacing: "0.08em",
-              }}
-            >
+          <div data-slot="unit-system">
+            <div className="type-data profile-prefs__label">
               {p.unitSystemLabel}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="profile-unit-grid">
               {([
                 {
                   id: "metric" as UnitSystem,
@@ -2248,37 +1880,28 @@ export function ProfilePage() {
                     key={option.id}
                     type="button"
                     onClick={() => setUnitSystem(option.id)}
-                    className="flex items-start gap-3 p-3 sm:p-4 rounded-xl text-left active:scale-98"
+                    className="profile-unit-option"
                     initial={false}
                     animate={{
                       backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
                       borderColor: active ? "var(--primary)" : "var(--container-border)",
                     }}
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                    style={{
-                      borderWidth: 1.5,
-                      borderStyle: "solid",
-                      cursor: "pointer",
-                    }}
                     aria-pressed={active}
                   >
                     <Thermometer
                       size={17}
-                      style={{
-                        color: active ? "var(--primary)" : "var(--text-muted)",
-                        flexShrink: 0,
-                        marginTop: 1,
-                      }}
+                      className={`profile-unit-option__icon${active ? " profile-unit-option__icon--active" : ""}`}
                     />
-                    <span className="flex-1 min-w-0">
-                      <span className="type-body-sm" style={{ display: "block", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                    <span className="profile-unit-option__body">
+                      <span className="type-body-sm profile-unit-option__label">
                         {option.label}
                       </span>
-                      <span className="type-data-xs" style={{ display: "block", marginTop: 3, color: "var(--text-muted)", lineHeight: "var(--leading-normal)" }}>
+                      <span className="type-data-xs profile-unit-option__desc">
                         {option.desc}
                       </span>
                     </span>
-                    {active && <Check size={15} style={{ color: "var(--primary)", flexShrink: 0 }} />}
+                    {active && <Check size={15} className="profile-unit-option__check" />}
                   </motion.button>
                 );
               })}
@@ -2296,80 +1919,36 @@ export function ProfilePage() {
           <button
             type="button"
             onClick={() => setPizzaNerd((value) => !value)}
-            className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left active:scale-99 transition-transform"
-            style={{
-              background: pizzaNerd
-                ? "color-mix(in srgb, var(--primary) 10%, var(--container-bg))"
-                : "var(--container-bg-low)",
-              border: pizzaNerd
-                ? "1px solid color-mix(in srgb, var(--primary) 32%, var(--container-border))"
-                : "1px solid var(--container-border)",
-              color: "var(--text-default)",
-              cursor: "pointer",
-            }}
+            className={`profile-nerd-toggle${pizzaNerd ? " profile-nerd-toggle--active" : ""}`}
             aria-pressed={pizzaNerd}
           >
             <span
-              className="flex items-center justify-center rounded-xl flex-shrink-0"
-              style={{
-                width: 38,
-                height: 38,
-                background: pizzaNerd
-                  ? "color-mix(in srgb, var(--primary) 14%, var(--container-bg))"
-                  : "var(--surface-container)",
-                color: pizzaNerd ? "var(--primary)" : "var(--text-muted)",
-              }}
+              className={`profile-nerd-toggle__icon${pizzaNerd ? " profile-nerd-toggle__icon--active" : ""}`}
             >
               <Beaker size={17} />
             </span>
-            <span className="flex-1 min-w-0">
-              <span
-                className="block"
-                style={{
-                  fontSize: "var(--font-size-lg)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  lineHeight: "var(--leading-tight)",
-                }}
-              >
+            <span className="profile-nerd-toggle__body">
+              <span className="profile-nerd-toggle__title">
                 {p.pizzaNerdCardTitle}
               </span>
-              <span
-                className="block"
-                style={{
-                  color: "var(--text-muted)",
-                  fontSize: "var(--font-size-md)",
-                  lineHeight: "var(--leading-normal)",
-                  marginTop: 2,
-                }}
-              >
+              <span className="profile-nerd-toggle__desc">
                 {p.pizzaNerdCardDesc}
               </span>
             </span>
             <span
-              className="relative rounded-full flex-shrink-0"
-              style={{
-                width: 44,
-                height: 26,
-                background: pizzaNerd ? "var(--primary)" : "var(--container-border)",
-              }}
+              className={`profile-nerd-toggle__track${pizzaNerd ? " profile-nerd-toggle__track--active" : ""}`}
             >
               <motion.span
-                className="absolute top-1 rounded-full"
+                className="profile-nerd-toggle__thumb"
                 animate={{ left: pizzaNerd ? 22 : 4 }}
                 transition={{ type: "spring", stiffness: 500, damping: 32 }}
-                style={{
-                  width: 18,
-                  height: 18,
-                  background: "var(--container-bg)",
-                  boxShadow: "0 1px 3px color-mix(in srgb, var(--shadow-color) 18%, transparent)",
-                }}
               />
             </span>
           </button>
         </ProfileSection>
 
         {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}
-        <div className="mt-8 flex flex-col items-center gap-3">
+        <div className="profile-page__footer">
           <button
             onClick={() => {
               const ok = window.confirm(p.resetConfirmMessage);
@@ -2379,14 +1958,7 @@ export function ProfilePage() {
               } catch { /* */ }
               setShowFtu(true);
             }}
-            className="type-data px-4 py-2 rounded-lg active:scale-95 transition-transform"
-            style={{
-              fontSize: "var(--font-size-sm)",
-              color: "var(--text-muted)",
-              background: "transparent",
-              border: "1px solid var(--container-border)",
-              cursor: "pointer",
-            }}
+            className="type-data profile-page__reset"
           >
             {p.resetProfile}
           </button>
@@ -2394,7 +1966,7 @@ export function ProfilePage() {
           {/* Dev mode toggle */}
           <motion.button
             onClick={() => setDevMode(!devMode)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg active:scale-95"
+            className="profile-page__dev-toggle"
             animate={{
               backgroundColor: devMode ? "var(--surface-container)" : "transparent",
               color: devMode ? "var(--primary)" : "var(--text-muted)",
@@ -2402,12 +1974,6 @@ export function ProfilePage() {
               opacity: devMode ? 1 : 0.5,
             }}
             transition={{ type: "spring", stiffness: 500, damping: 35 }}
-            style={{
-              fontSize: "var(--font-size-sm)",
-              borderWidth: 1,
-              borderStyle: "solid",
-              cursor: "pointer",
-            }}
           >
             <Bug size={13} />
             {devMode ? p.devModeOn : p.devModeOff}

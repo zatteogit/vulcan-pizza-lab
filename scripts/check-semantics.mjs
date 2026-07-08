@@ -32,8 +32,22 @@ const EXEMPT_SEGMENTS = ["design-system", "dev-tools", "cms.tsx", "cms-context"]
 
 const METRICS = {
   "inline-style": {
-    desc: "style={…} inline → classe semantica (theme.css @layer components)",
-    re: /\bstyle=\{/g,
+    desc:
+      "style={{…}} inline → classe semantica (theme.css @layer components). " +
+      "Esenti: oggetti di SOLE custom property (style={{ [\"--x\" as any]: v }}, " +
+      "il pattern legale per i valori runtime) e style={espressione} non-literal " +
+      "(prop di dominio o MotionValue: non è CSS scritto nel markup).",
+    count(src) {
+      let n = 0;
+      for (const m of src.matchAll(/style=\{\{([\s\S]*?)\}\}/g)) {
+        const body = m[1];
+        const hasPlainKey = /(^|,)\s*[A-Za-z_$][\w$]*\s*:/.test(body);
+        const hasCustomProp = /\[?\s*["']--/.test(body);
+        if (hasCustomProp && !hasPlainKey) continue; // solo custom property → legale
+        n++;
+      }
+      return n;
+    },
   },
   "bare-wrapper": {
     desc: "<div>/<span> senza attributi → elemento semantico o data-region",
@@ -77,8 +91,8 @@ function scan() {
     if (isExempt(norm)) continue;
     const src = sanitize(readFileSync(file, "utf8"));
     const rel = relative(".", file).replace(/\\/g, "/");
-    for (const [id, { re }] of Object.entries(METRICS)) {
-      const n = (src.match(re) || []).length;
+    for (const [id, { re, count }] of Object.entries(METRICS)) {
+      const n = count ? count(src) : (src.match(re) || []).length;
       if (n > 0) {
         counts[rel] ??= {};
         counts[rel][id] = n;
