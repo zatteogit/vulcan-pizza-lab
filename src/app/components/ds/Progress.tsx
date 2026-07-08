@@ -41,8 +41,8 @@ export function Progress({
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
-        className={className}
-        style={{ display: "inline-block", ...style }}
+        className={`ds-progress--circular${className ? ` ${className}` : ""}`}
+        style={style}
         animate={indeterminate ? { rotate: 360 } : undefined}
         transition={indeterminate ? { repeat: Infinity, duration: 1, ease: "linear" } : undefined}
         role="progressbar"
@@ -66,27 +66,16 @@ export function Progress({
 
   return (
     <div className={className} style={style}>
-      {label && (
-        <div
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "var(--font-size-base)",
-            color: "var(--text-muted)",
-            marginBottom: 6,
-          }}
-        >
-          {label}
-        </div>
-      )}
-      <div style={{ position: "relative", height: 6, borderRadius: 999, background: TRACK, overflow: "hidden" }}>
+      {label && <div className="ds-progress__label">{label}</div>}
+      <div className="ds-progress__track">
         {indeterminate ? (
           <motion.div
-            style={{ position: "absolute", top: 0, bottom: 0, width: "40%", borderRadius: 999, background: FILL }}
+            className="ds-progress__fill ds-progress__fill--indeterminate"
             animate={{ left: ["-40%", "100%"] }}
             transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
           />
         ) : (
-          <div style={{ height: "100%", width: `${pct}%`, borderRadius: 999, background: FILL }} />
+          <div className="ds-progress__fill" style={{ ["--ds-progress-pct" as any]: `${pct}%` }} />
         )}
       </div>
     </div>

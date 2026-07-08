@@ -35,41 +35,22 @@ export function Slider({
   const pct = max > min ? ((value - min) / (max - min)) * 100 : 0;
 
   return (
-    <div className={className} style={style}>
+    <div className={className ? `ds-slider ${className}` : "ds-slider"} style={style}>
       {label && (
-        <div className="flex items-center justify-between mb-2">
-          <span
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "var(--font-size-lg)",
-              fontWeight: "var(--weight-semibold)" as CSSProperties["fontWeight"],
-              color: "var(--text-default)",
-            }}
-          >
-            {label}
-          </span>
-          <span
-            className="type-data-lg"
-            style={{
-              fontWeight: "var(--weight-bold)" as CSSProperties["fontWeight"],
-              color: "var(--primary)",
-              fontFeatureSettings: "'tnum'",
-            }}
-          >
+        <div className="ds-slider__label-row">
+          <span className="ds-slider__label">{label}</span>
+          <span className="ds-slider__value type-data-lg">
             {value}
             {unit}
           </span>
         </div>
       )}
-      <div className="relative h-8 flex items-center" style={{ opacity: disabled ? 0.5 : 1 }}>
-        <div
-          className="absolute left-0 right-0 h-1.5 rounded-full"
-          style={{ background: "var(--surface-container-high)" }}
-        />
-        <div
-          className="absolute left-0 h-1.5 rounded-full"
-          style={{ width: `${pct}%`, background: "var(--primary)" }}
-        />
+      <div
+        className={`ds-slider__control${disabled ? " ds-slider__control--disabled" : ""}`}
+        style={{ ["--ds-slider-pct" as any]: `${pct}%` }}
+      >
+        <div className="ds-slider__track" />
+        <div className="ds-slider__fill" />
         <input
           type="range"
           min={min}
@@ -79,18 +60,9 @@ export function Slider({
           disabled={disabled}
           aria-label={label}
           onChange={(e) => onValueChange?.(+e.target.value)}
-          className="absolute left-0 right-0 w-full h-full opacity-0 cursor-pointer"
-          style={{ margin: 0 }}
+          className="ds-slider__input"
         />
-        <div
-          className="absolute w-4 h-4 rounded-full"
-          style={{
-            left: `calc(${pct}% - 8px)`,
-            background: "var(--primary)",
-            boxShadow: "var(--shadow-sm)",
-            pointerEvents: "none",
-          }}
-        />
+        <div className="ds-slider__thumb" />
       </div>
     </div>
   );

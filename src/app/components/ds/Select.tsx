@@ -7,7 +7,7 @@
  */
 import { AnimatePresence, motion } from "motion/react";
 import { Check, ChevronDown } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 
 interface SelectOption {
@@ -51,49 +51,23 @@ export function Select({
   }, []);
 
   return (
-    <div className={`relative ${className ?? ""}`} ref={ref} style={style}>
+    <div className={`ds-select ${className ?? ""}`} ref={ref} style={style}>
       <motion.button
         type="button"
         disabled={disabled}
         onClick={() => setOpen((p) => !p)}
-        className="w-full flex items-center justify-between px-4 py-3 rounded-xl active:scale-98 transition-transform"
-        style={{
-          background: "var(--surface-container)",
-          border: open ? "2px solid var(--primary)" : "1px solid var(--outline-variant)",
-          cursor: disabled ? "not-allowed" : "pointer",
-          outline: "none",
-          opacity: disabled ? 0.5 : 1,
-          boxShadow: open ? "var(--shadow-glow)" : "none",
-        }}
+        className={`ds-select__trigger${open ? " ds-select__trigger--open" : ""}${
+          disabled ? " ds-select__trigger--disabled" : ""
+        }`}
       >
-        <div style={{ textAlign: "left" }}>
-          {label && (
-            <div
-              style={{
-                fontFamily: "var(--font-sans)",
-                fontSize: "var(--font-size-lg)",
-                fontWeight: "var(--weight-medium)" as CSSProperties["fontWeight"],
-                color: "var(--primary)",
-                letterSpacing: "var(--tracking-spread)",
-                marginBottom: 2,
-              }}
-            >
-              {label}
-            </div>
-          )}
-          <div
-            style={{
-              fontFamily: "var(--font-sans)",
-              fontSize: "var(--font-size-xl)",
-              fontWeight: "var(--weight-medium)" as CSSProperties["fontWeight"],
-              color: selected ? "var(--text-default)" : "var(--muted-foreground)",
-            }}
-          >
+        <div className="ds-select__trigger-text">
+          {label && <div className="ds-select__label">{label}</div>}
+          <div className={`ds-select__value${selected ? "" : " ds-select__value--placeholder"}`}>
             {selected ? selected.label : placeholder}
           </div>
         </div>
         <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ type: "spring", stiffness: 500, damping: 25 }}>
-          <ChevronDown size={18} style={{ color: "var(--muted-foreground)" }} />
+          <ChevronDown size={18} className="ds-select__chevron" />
         </motion.div>
       </motion.button>
 
@@ -104,93 +78,34 @@ export function Select({
             animate={{ opacity: 1, y: 4, scaleY: 1 }}
             exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
             transition={{ type: "spring", stiffness: 500, damping: 28 }}
-            className="absolute z-50 w-full rounded-xl overflow-hidden"
-            style={{
-              background: "var(--surface-container)",
-              border: "1px solid var(--outline-variant)",
-              boxShadow: "var(--shadow-lg)",
-              transformOrigin: "top",
-              maxHeight: 280,
-              overflowY: "auto",
-            }}
+            className="ds-select__menu"
           >
             {options.map((opt, i) => {
               const isSelected = value === opt.id;
               const prevGroup = i > 0 ? options[i - 1].group : null;
               const showGroupHeader = opt.group && opt.group !== prevGroup;
               return (
-                <div style={{ display: "contents" }} key={opt.id}>
-                  {showGroupHeader && (
-                    <div
-                      className="px-4 pt-3 pb-1"
-                      style={{
-                        fontFamily: "var(--font-mono)",
-                        fontSize: "var(--font-size-md)",
-                        fontWeight: "var(--weight-semibold)" as CSSProperties["fontWeight"],
-                        letterSpacing: "var(--tracking-caps)",
-                        textTransform: "uppercase",
-                        color: "var(--primary)",
-                      }}
-                    >
-                      {opt.group}
-                    </div>
-                  )}
+                <Fragment key={opt.id}>
+                  {showGroupHeader && <div className="ds-select__group-header">{opt.group}</div>}
                   <motion.button
                     type="button"
                     onClick={() => {
                       onValueChange?.(opt.id);
                       setOpen(false);
                     }}
-                    className="w-full flex items-center justify-between px-4 py-2.5 text-left active:scale-98 transition-transform"
-                    style={{
-                      background: isSelected
-                        ? "color-mix(in srgb, var(--primary) 10%, rgba(0,0,0,0))"
-                        : "rgba(0,0,0,0)",
-                      border: "none",
-                      cursor: "pointer",
-                      outline: "none",
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isSelected)
-                        e.currentTarget.style.background = "color-mix(in srgb, var(--primary) 5%, rgba(0,0,0,0))";
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isSelected) e.currentTarget.style.background = "rgba(0,0,0,0)";
-                    }}
+                    className={`ds-select__option${isSelected ? " ds-select__option--selected" : ""}`}
                   >
                     <div>
-                      <div
-                        style={{
-                          fontFamily: "var(--font-sans)",
-                          fontSize: "var(--font-size-lg)",
-                          fontWeight: (isSelected
-                            ? "var(--weight-semibold)"
-                            : "var(--weight-regular)") as CSSProperties["fontWeight"],
-                          color: "var(--text-default)",
-                        }}
-                      >
-                        {opt.label}
-                      </div>
-                      {opt.desc && (
-                        <div
-                          style={{
-                            fontFamily: "var(--font-mono)",
-                            fontSize: "var(--font-size-lg)",
-                            color: "var(--muted-foreground)",
-                            fontFeatureSettings: "'tnum'",
-                          }}
-                        >
-                          {opt.desc}
-                        </div>
-                      )}
+                      <div className="ds-select__option-title">{opt.label}</div>
+                      {opt.desc && <div className="ds-select__option-desc">{opt.desc}</div>}
                     </div>
                     {isSelected && (
                       <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 20 }}>
-                        <Check size={16} style={{ color: "var(--primary)" }} />
+                        <Check size={16} className="ds-select__check-icon" />
                       </motion.div>
                     )}
                   </motion.button>
-                </div>
+                </Fragment>
               );
             })}
           </motion.div>

@@ -16,7 +16,9 @@ export interface DividerProps {
   style?: CSSProperties;
 }
 
-const LINE = "var(--outline-variant)";
+function cx(...parts: Array<string | false | undefined>) {
+  return parts.filter(Boolean).join(" ");
+}
 
 export function Divider({
   orientation = "horizontal",
@@ -30,8 +32,8 @@ export function Divider({
       <div
         role="separator"
         aria-orientation="vertical"
-        className={className}
-        style={{ width: 1, alignSelf: "stretch", background: LINE, ...style }}
+        className={cx("ds-divider", "ds-divider--vertical", className)}
+        style={style}
       />
     );
   }
@@ -40,21 +42,12 @@ export function Divider({
     return (
       <div
         role="separator"
-        className={className}
-        style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", ...style }}
+        className={cx("ds-divider", "ds-divider--label", className)}
+        style={style}
       >
-        <div style={{ height: 1, flex: 1, background: LINE }} />
-        <span
-          style={{
-            fontFamily: "var(--font-sans)",
-            fontSize: "var(--font-size-sm)",
-            color: "var(--text-muted)",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {label}
-        </span>
-        <div style={{ height: 1, flex: 1, background: LINE }} />
+        <div className="ds-divider__line" />
+        <span className="ds-divider__label">{label}</span>
+        <div className="ds-divider__line" />
       </div>
     );
   }
@@ -63,14 +56,8 @@ export function Divider({
     <div
       role="separator"
       aria-orientation="horizontal"
-      className={className}
-      style={{
-        height: 1,
-        width: inset ? "auto" : "100%",
-        marginInline: inset ? "var(--space-4)" : 0,
-        background: LINE,
-        ...style,
-      }}
+      className={cx("ds-divider", inset && "ds-divider--inset", className)}
+      style={style}
     />
   );
 }
