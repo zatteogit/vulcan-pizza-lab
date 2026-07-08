@@ -13,13 +13,7 @@ export default function TroubleshootingPage() {
   const [searchParams] = useSearchParams();
   const initialIssueId = searchParams.get("issue") ?? undefined;
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
-    >
+    <div className="min-h-screen troubleshooting-shell">
       {/* Header — pattern condiviso (il titolo vive nell'hero della guida) */}
       <SubPageHeader backTo="/learn" backLabel={cms.pages.navLearn} />
 

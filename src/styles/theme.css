@@ -7822,6 +7822,12 @@
   /* ═══ COMPONENT: troubleshooting-panel (ondata 4) ═══ */
 /* === TROUBLESHOOTING PANEL — troubleshooting-* === */
 
+/* --- Page shell (sub-page background + colore testo) --- */
+.troubleshooting-shell {
+  background: var(--container-page);
+  color: var(--text-default);
+}
+
 /* --- Severity icon (shared: warning cards + issue card header) --- */
 .troubleshooting-severity-icon {
   width: var(--space-4);
@@ -12663,6 +12669,151 @@
     font-size: var(--font-size-sm);
     opacity: 0.65;
     font-feature-settings: "tnum";
+  }
+
+
+
+  /* ═══ DS COMPONENT: recipe.tsx (residui pagina) ═══ */
+  /* recipe.tsx — residui presentazionali (introExtraSlot, recipeControls feedback panel, RecipeNotFound) */
+
+  .recipe-page__learn-more-btn {
+    color: var(--text-accent);
+    text-decoration: underline;
+    font-style: normal;
+    font-weight: var(--weight-semibold);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+  }
+
+  .recipe-page__recipe-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+  }
+
+  .recipe-page__feedback {
+    border-radius: var(--radius-2xl);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3-5);
+    background: color-mix(in srgb, var(--cta) 8%, var(--container-bg-low));
+    border: var(--border-width-thin) solid color-mix(in srgb, var(--cta) 30%, transparent);
+  }
+
+  .recipe-page__feedback-head {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin-bottom: var(--space-1-5);
+    color: var(--cta);
+  }
+
+  .recipe-page__feedback-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-bold);
+  }
+
+  .recipe-page__feedback-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-2xs);
+    margin-bottom: var(--space-2-5);
+  }
+
+  .recipe-page__feedback-item {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .recipe-page__feedback-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    border-radius: var(--radius-full);
+    padding-inline: var(--space-3-5);
+    padding-block: var(--space-2);
+    transition: transform 0.15s ease;
+    background: var(--cta);
+    color: var(--cta-foreground);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-bold);
+    border: none;
+    cursor: pointer;
+  }
+  .recipe-page__feedback-cta:active {
+    transform: scale(0.95);
+  }
+
+  .recipe-page__notfound {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--space-6);
+    background: var(--container-page);
+    color: var(--text-default);
+  }
+
+  .recipe-page__notfound-inner {
+    text-align: center;
+  }
+
+  .recipe-page__notfound-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    margin-top: var(--space-2);
+    font-size: var(--font-size-xl-5);
+    color: var(--text-muted);
+    opacity: 0.65;
+  }
+
+  .recipe-page__notfound-cta {
+    margin-top: var(--space-6);
+    padding-inline: var(--space-5);
+    padding-block: var(--space-2-5);
+    font-size: var(--font-size-xl);
+  }
+
+  /* ═══ DS COMPONENT: not-found.tsx ═══ */
+  .notfound-shell {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--container-page);
+    color: var(--text-default);
+  }
+
+  .notfound-card {
+    text-align: center;
+    padding-inline: var(--space-6);
+  }
+
+  .notfound-num {
+    font-weight: var(--weight-bold);
+    color: var(--text-accent);
+  }
+
+  .notfound-title {
+    margin-top: var(--space-2);
+  }
+
+  .notfound-sub {
+    font-family: var(--font-serif);
+    font-style: italic;
+    margin-top: var(--space-2);
+    font-size: var(--font-size-xl-5);
+    color: var(--text-muted);
+    opacity: 0.65;
+  }
+
+  .notfound-cta {
+    margin-top: var(--space-6);
+    padding-inline: var(--space-6);
+    padding-block: var(--space-3);
   }
 
 

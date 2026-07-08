@@ -1246,35 +1246,19 @@ function RecipeContent({
           <button
             type="button"
             onClick={() => setLearningOpen(true)}
-            style={{
-              color: "var(--text-accent)",
-              textDecoration: "underline",
-              fontStyle: "normal",
-              fontWeight: "var(--weight-semibold)" as any,
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-              fontSize: "inherit",
-            }}
+            className="recipe-page__learn-more-btn"
           >
             {cms.cooking.learnMore}
           </button>
         }
         recipeControls={
-          <div className="flex flex-col gap-3">
+          <div className="recipe-page__recipe-controls">
             {/* F2 — "Vulcan ha imparato dai tuoi tentativi" (opt-in, trasparente) */}
             {showFeedbackPanel && feedbackCorrection && (
-              <div
-                className="rounded-2xl px-4 py-3.5"
-                style={{
-                  background: "color-mix(in srgb, var(--cta) 8%, var(--container-bg-low))",
-                  border: "1px solid color-mix(in srgb, var(--cta) 30%, transparent)",
-                }}
-              >
-                <div className="flex items-center gap-2 mb-1.5" style={{ color: "var(--cta)" }}>
+              <div className="recipe-page__feedback">
+                <div className="recipe-page__feedback-head">
                   <Sparkles size={15} />
-                  <span style={{ fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-bold)" as any }}>
+                  <span className="recipe-page__feedback-title">
                     {tpl(
                       cms.cooking.learnedFromAttempts ??
                         "Ho imparato dai tuoi {n} tentativi",
@@ -1282,16 +1266,9 @@ function RecipeContent({
                     )}
                   </span>
                 </div>
-                <ul className="flex flex-col gap-1 mb-2.5">
+                <ul className="recipe-page__feedback-list">
                   {feedbackCorrection.notes.map((n, i) => (
-                    <li
-                      key={i}
-                      style={{
-                        fontSize: "var(--font-size-sm)",
-                        color: "var(--text-muted)",
-                        lineHeight: "var(--leading-normal)",
-                      }}
-                    >
+                    <li key={i} className="recipe-page__feedback-item">
                       • {n}
                     </li>
                   ))}
@@ -1301,15 +1278,7 @@ function RecipeContent({
                   <button
                     type="button"
                     onClick={applyFeedbackCorrection}
-                    className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 active:scale-95 transition-transform"
-                    style={{
-                      background: "var(--cta)",
-                      color: "var(--cta-foreground)",
-                      fontSize: "var(--font-size-sm)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      border: "none",
-                      cursor: "pointer",
-                    }}
+                    className="recipe-page__feedback-cta"
                   >
                     <Sparkles size={14} />{" "}
                     {cms.cooking.applyCorrections ?? "Applica le correzioni"}
@@ -1369,14 +1338,7 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
   const location = useLocation();
   const exploreBackTo = readExploreBackTo(location.state);
   return (
-    <main
-      id="main-content"
-      className="min-h-screen flex items-center justify-center px-6"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
-    >
+    <main id="main-content" className="recipe-page__notfound">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -1385,19 +1347,12 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
           stiffness: 400,
           damping: 30,
         }}
-        className="text-center"
+        className="recipe-page__notfound-inner"
       >
         <Heading level="page">
           {cms.pages.recipeStyleNotFound}
         </Heading>
-        <p
-          className="font-serif italic mt-2"
-          style={{
-            fontSize: "var(--font-size-xl-5)",
-            color: "var(--text-muted)",
-            opacity: 0.65,
-          }}
-        >
+        <p className="recipe-page__notfound-sub">
           {cms.pages.recipeStyleNotFoundDesc.replace(
             "{id}",
             styleId || "?",
@@ -1406,8 +1361,7 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
         <CtaButton
           as={Link}
           to={exploreBackTo}
-          className="mt-6 px-5 py-2.5"
-          style={{ fontSize: "var(--font-size-xl)" }}
+          className="recipe-page__notfound-cta"
         >
           <ChevronLeft size={16} />
           {cms.pages.recipeExploreStyles}

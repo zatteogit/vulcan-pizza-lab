@@ -202,7 +202,7 @@ export function GlossaryPage() {
                   radius="xl"
                   count={categoryCounts[id] || 0}
                 >
-                  {meta.emoji && <span>{meta.emoji} </span>}
+                  {meta.emoji && <span data-slot="emoji">{meta.emoji} </span>}
                   {catLabel(id, gl)}
                 </FilterChip>
               </motion.div>

@@ -7,13 +7,7 @@ import { CtaButton, Heading } from "../components/ds/index";
 export function NotFoundPage() {
   const { cms } = useCms();
   return (
-    <div
-      className="min-h-screen flex items-center justify-center"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
-    >
+    <div className="notfound-shell">
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -22,34 +16,19 @@ export function NotFoundPage() {
           stiffness: 350,
           damping: 25,
         }}
-        className="text-center px-6"
+        className="notfound-card"
       >
-        <span
-          className="type-step-num"
-          style={{
-            fontWeight: "var(--weight-bold)" as any,
-            color: "var(--text-accent)",
-          }}
-        >
-          404
-        </span>
-        <Heading level="page" className="mt-2">
+        <span className="type-step-num notfound-num">404</span>
+        <Heading level="page" className="notfound-title">
           {cms.pages.notFoundTitle}
         </Heading>
-        <p
-          className="font-serif italic mt-2"
-          style={{
-            fontSize: "var(--font-size-xl-5)",
-            color: "var(--text-muted)",
-            opacity: 0.65,
-          }}
-        >
+        <p className="notfound-sub">
           {cms.pages.notFoundSubtitle}
         </p>
         <CtaButton
           as={Link}
           to="/"
-          className="mt-6 px-6 py-3"
+          className="notfound-cta"
         >
           <ArrowLeft size={14} />
           {cms.pages.notFoundBack}

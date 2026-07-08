@@ -154,7 +154,7 @@ function FeaturedRecipeCard({
         </div>
 
         <div className="explore-feature__cta">
-          <span>{cms.pages.exploreRecipe}</span>
+          <span data-slot="cta-label">{cms.pages.exploreRecipe}</span>
           <ArrowRight size={14} />
         </div>
       </div>
@@ -320,7 +320,7 @@ export function ExplorePage() {
               )}
 
               {/* 2. Anteprima Ricette Iconiche */}
-              <div>
+              <section>
                 <div className="explore-section__head">
                   <Heading level="md" as="h2">
                     {cms.pages.exploreFilterRecipes}
@@ -344,10 +344,10 @@ export function ExplorePage() {
                     />
                   ))}
                 </div>
-              </div>
+              </section>
 
               {/* 3. Anteprima Stili Tradizionali */}
-              <div>
+              <section>
                 <div className="explore-section__head">
                   <Heading level="md" as="h2">
                     {cms.misc.exploreSectionTraditional}
@@ -372,7 +372,7 @@ export function ExplorePage() {
                     />
                   ))}
                 </div>
-              </div>
+              </section>
             </motion.div>
           )}
 
