@@ -42,9 +42,6 @@ export interface ConfirmDialogProps {
   size?: "sm" | "md";
 }
 
-const ACTION_BASE =
-  "w-full h-12 rounded-full active:scale-98 transition-transform flex items-center justify-center gap-2";
-
 export function ConfirmDialog({
   open,
   onDismiss,
@@ -68,12 +65,8 @@ export function ConfirmDialog({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className={`${position === "fixed" ? "fixed" : "absolute"} inset-0 flex items-end sm:items-center justify-center p-4`}
-          style={{
-            zIndex,
-            background: `color-mix(in srgb, var(--container-page) ${brand ? 72 : 70}%, transparent)`,
-            backdropFilter: brand ? "blur(6px)" : "blur(4px)",
-          }}
+          className={`ds-confirm-scrim${position === "absolute" ? " ds-confirm-scrim--absolute" : ""}${brand ? " ds-confirm-scrim--brand" : ""}`}
+          style={{ ["--ds-confirm-z" as any]: zIndex }}
           onClick={onDismiss}
         >
           <motion.div
@@ -82,44 +75,30 @@ export function ConfirmDialog({
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             onClick={(e) => e.stopPropagation()}
-            className={`w-full ${size === "md" ? "max-w-md" : "max-w-sm"} flex flex-col items-center text-center gap-4 p-6`}
-            style={{
-              borderRadius: "var(--radius-3xl)",
-              background: brand
-                ? "linear-gradient(145deg, color-mix(in srgb, var(--container-page) 92%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 38%, var(--container-page)))"
-                : "var(--container-page)",
-              border: brand
-                ? "1px solid color-mix(in srgb, var(--primary) 24%, var(--container-border))"
-                : "1px solid var(--container-border)",
-              boxShadow: brand
-                ? "0 24px 70px color-mix(in srgb, var(--shadow-color) 26%, transparent), 0 0 48px color-mix(in srgb, var(--primary) 16%, transparent)"
-                : "0 24px 60px color-mix(in srgb, var(--shadow-color) 28%, transparent)",
-            }}
+            className={`ds-confirm__card${brand ? " ds-confirm__card--brand" : ""}${size === "md" ? " ds-confirm__card--md" : ""}`}
             role="alertdialog"
             aria-modal="true"
             aria-label={ariaLabel}
           >
             <div
-              className="flex items-center justify-center"
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: "var(--radius-xl)",
-                background: `color-mix(in srgb, ${toneVar} 12%, transparent)`,
-                color: toneVar,
-              }}
+              className="ds-confirm__icon"
+              style={{ ["--ds-confirm-tone" as any]: toneVar }}
             >
               {icon}
             </div>
-            <div className="flex flex-col gap-1.5">
-              <Heading level={brand ? "sm" : "xs"} color="var(--text-default)" style={brand ? { lineHeight: 1.15 } : undefined}>
+            <div className="ds-confirm__head">
+              <Heading
+                level={brand ? "sm" : "xs"}
+                color="var(--text-default)"
+                className={brand ? "ds-confirm__title--brand" : undefined}
+              >
                 {title}
               </Heading>
-              <p className={brand ? "type-body-lg" : "type-body"} style={{ color: "var(--text-muted)", lineHeight: 1.5, margin: 0 }}>
+              <p className={`${brand ? "type-body-lg" : "type-body"} ds-confirm__body`}>
                 {body}
               </p>
             </div>
-            <div className="flex flex-col w-full gap-2.5 mt-1">
+            <div className="ds-confirm__actions">
               {actions.map((action, i) => {
                 const variant = action.variant ?? (i === 0 ? "cta" : "secondary");
                 if (variant === "cta") {
@@ -127,41 +106,22 @@ export function ConfirmDialog({
                     <CtaButton
                       key={i}
                       onClick={action.onClick}
-                      className="w-full h-12 active:scale-98"
-                      style={{ fontSize: "var(--font-size-lg)" }}
+                      className="ds-confirm__action-cta"
                     >
                       {action.label}
                     </CtaButton>
                   );
                 }
+                const actionModifierClass = {
+                  primary: "ds-confirm__action--primary",
+                  destructive: "ds-confirm__action--destructive",
+                  secondary: "ds-confirm__action--secondary",
+                }[variant as "primary" | "destructive" | "secondary"];
                 return (
                   <button
                     key={i}
                     onClick={action.onClick}
-                    className={ACTION_BASE}
-                    style={{
-                      fontSize: "var(--font-size-lg)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      cursor: "pointer",
-                      ...(variant === "primary"
-                        ? {
-                            background: "var(--primary)",
-                            color: "var(--text-on-accent)",
-                            border: "1px solid var(--primary)",
-                            boxShadow: "0 12px 28px color-mix(in srgb, var(--primary) 24%, transparent)",
-                          }
-                        : variant === "destructive"
-                          ? {
-                              background: "var(--destructive)",
-                              color: "var(--overlay-text)",
-                              border: "none",
-                            }
-                          : {
-                              background: "var(--container-bg)",
-                              color: "var(--text-default)",
-                              border: "1px solid var(--container-border)",
-                            }),
-                    }}
+                    className={`ds-confirm__action ${actionModifierClass}`}
                   >
                     {action.label}
                   </button>

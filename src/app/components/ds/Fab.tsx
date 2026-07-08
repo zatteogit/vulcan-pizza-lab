@@ -18,10 +18,16 @@ export interface FabProps {
   style?: CSSProperties;
 }
 
-const COLORS: Record<NonNullable<FabProps["color"]>, { bg: string; fg: string }> = {
-  primary: { bg: "var(--primary)", fg: "var(--primary-foreground)" },
-  surface: { bg: "var(--surface-container)", fg: "var(--primary)" },
-  tertiary: { bg: "var(--tertiary)", fg: "var(--text-default)" },
+const VARIANT_CLASS: Record<NonNullable<FabProps["variant"]>, string> = {
+  standard: "ds-fab--standard",
+  small: "ds-fab--small",
+  extended: "ds-fab--extended",
+};
+
+const COLOR_CLASS: Record<NonNullable<FabProps["color"]>, string> = {
+  primary: "ds-fab--c-primary",
+  surface: "ds-fab--c-surface",
+  tertiary: "ds-fab--c-tertiary",
 };
 
 export function Fab({
@@ -34,34 +40,15 @@ export function Fab({
   className,
   style,
 }: FabProps) {
-  const c = COLORS[color];
   const extended = variant === "extended";
-  const size = variant === "small" ? 40 : 56;
 
   return (
     <button
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex items-center justify-center active:scale-95 transition-transform ${className ?? ""}`}
-      style={{
-        gap: extended ? 8 : 0,
-        height: size,
-        width: extended ? "auto" : size,
-        padding: extended ? "0 20px" : 0,
-        borderRadius: extended ? 16 : 18,
-        background: c.bg,
-        color: c.fg,
-        border: "none",
-        boxShadow: "var(--shadow-lg)",
-        cursor: disabled ? "not-allowed" : "pointer",
-        outline: "none",
-        opacity: disabled ? 0.5 : 1,
-        fontFamily: "var(--font-sans)",
-        fontSize: "var(--font-size-lg)",
-        fontWeight: "var(--weight-semibold)" as CSSProperties["fontWeight"],
-        ...style,
-      }}
+      className={`ds-fab ${VARIANT_CLASS[variant]} ${COLOR_CLASS[color]} ${className ?? ""}`}
+      style={style}
     >
       {icon}
       {extended && label && <span>{label}</span>}

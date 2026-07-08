@@ -289,6 +289,7 @@
   --measure-1xs: 20rem; /* 320px — box ricerca stile (recommended-styles) */
   --measure-dialog: 25rem; /* 400px — larghezza max container Dialog (ds) */
   --measure-snackbar: 26.25rem; /* 420px — larghezza max Snackbar (ds) */
+  --measure-confirm-sm: 24rem; /* 384px — card ConfirmDialog size sm (ds) */
   --measure-xs: 28rem; /* 448px */
   --measure-sm: 30rem; /* 480px */
   --measure-md: 40rem; /* 640px */
@@ -302,6 +303,7 @@
   --measure-3xl: 80rem; /* 1280px */
 
   /* ── Blur Primitives (backdrop / glass) · $type dimension ── */
+  --blur-3xs: 4px; /* scrim non-brand ConfirmDialog (ds) */
   --blur-2xs: 6px; /* backdrop pill difficoltà card stile */
   --blur-sm: 8px;
   --blur-md: 12px;
@@ -336,6 +338,7 @@
   --radius-ml: 0.875rem; /* 14px */
   --radius-lg: 1rem; /* 16px */
   --radius-xl: 1.25rem; /* 20px */
+  --radius-fab: 18px; /* raggio FAB circolare standard/small (ds) — fra lg 16 e xl 20 */
   --radius-2xl: 1.5rem; /* 24px */
   --radius-3xl: 1.75rem; /* 28px — dialog, overlay card */
   --radius-4xl: 2rem; /* 32px — sheet, hero card */
@@ -556,6 +559,9 @@
   --elevation-profile-button: 0 10px 24px color-mix(in srgb, var(--shadow-color) 8%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 12%, transparent); /* bottone profilo flottante */
   --elevation-profile-button-active: 0 10px 24px color-mix(in srgb, var(--primary) 16%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent); /* bottone profilo su /profile */
   --elevation-search-overlay: 0 24px 80px -12px color-mix(in srgb, var(--shadow-color) 25%, transparent), 0 0 0 1px color-mix(in srgb, var(--shadow-color) 4%, transparent); /* pannello bottom-sheet ricerca */
+  --elevation-confirm: 0 24px 60px color-mix(in srgb, var(--shadow-color) 28%, transparent); /* card ConfirmDialog plain (ds) */
+  --elevation-confirm-brand: 0 24px 70px color-mix(in srgb, var(--shadow-color) 26%, transparent), 0 0 48px color-mix(in srgb, var(--primary) 16%, transparent); /* card ConfirmDialog brand (ds) */
+  --elevation-confirm-action: 0 12px 28px color-mix(in srgb, var(--primary) 24%, transparent); /* bottone azione primary ConfirmDialog (ds) */
   --nav-dock-max-width: 352px; /* larghezza max capsula nav mobile (min con 92vw) */
   --search-overlay-panel-max-height: min(70vh, 560px); /* cap altezza pannello ricerca */
   --search-overlay-drag-handle-height: 5px; /* maniglia drag mobile bottom-sheet */
@@ -12204,6 +12210,253 @@
     background: var(--primary);
     opacity: 0.35;
     margin-top: var(--space-2);
+  }
+
+
+
+  /* ═══ DS COMPONENT: ConfirmDialog ═══ */
+  /* ═══ COMPONENT: ds/ConfirmDialog (ondata 6) ═══ */
+
+  .ds-confirm-scrim {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: var(--space-4);
+    z-index: var(--ds-confirm-z);
+    background: color-mix(in srgb, var(--container-page) 70%, transparent);
+    backdrop-filter: blur(var(--blur-3xs));
+    -webkit-backdrop-filter: blur(var(--blur-3xs));
+  }
+  @media (min-width: 640px) {
+    .ds-confirm-scrim { align-items: center; }
+  }
+  .ds-confirm-scrim--absolute { position: absolute; }
+  .ds-confirm-scrim--brand {
+    background: color-mix(in srgb, var(--container-page) 72%, transparent);
+    backdrop-filter: blur(var(--blur-2xs));
+    -webkit-backdrop-filter: blur(var(--blur-2xs));
+  }
+
+  .ds-confirm__card {
+    width: 100%;
+    max-width: var(--measure-confirm-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--gap-md);
+    padding: var(--space-6);
+    border-radius: var(--radius-3xl);
+    background: var(--container-page);
+    border: var(--border-width-thin) solid var(--container-border);
+    box-shadow: var(--elevation-confirm);
+  }
+  .ds-confirm__card--md { max-width: var(--measure-xs); }
+  .ds-confirm__card--brand {
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--container-page) 92%, transparent),
+      color-mix(in srgb, var(--recipe-hero-badge-bg) 38%, var(--container-page))
+    );
+    border: var(--border-width-thin) solid color-mix(in srgb, var(--primary) 24%, var(--container-border));
+    box-shadow: var(--elevation-confirm-brand);
+  }
+
+  .ds-confirm__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-14);
+    height: var(--space-14);
+    border-radius: var(--radius-xl);
+    background: color-mix(in srgb, var(--ds-confirm-tone) 12%, transparent);
+    color: var(--ds-confirm-tone);
+  }
+
+  .ds-confirm__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1-5);
+  }
+  .ds-confirm__title--brand { line-height: var(--leading-heading); }
+
+  .ds-confirm__body {
+    color: var(--text-muted);
+    line-height: var(--leading-relaxed);
+    margin: 0;
+  }
+
+  .ds-confirm__actions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: var(--space-2-5);
+    margin-top: var(--space-1);
+  }
+
+  /* CtaButton applica il suo stile via inline style (props merge, § CtaButton.tsx):
+     senza !important queste regole non vincono la style prop del componente. */
+  .ds-confirm__action-cta {
+    width: 100%;
+    height: var(--space-12);
+    font-size: var(--font-size-lg) !important;
+  }
+  .ds-confirm__action-cta:active { transform: scale(0.98) !important; }
+
+  .ds-confirm__action {
+    width: 100%;
+    height: var(--space-12);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-xs);
+    transition: transform 0.2s ease;
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+  }
+  .ds-confirm__action:active { transform: scale(0.98); }
+
+  .ds-confirm__action--primary {
+    background: var(--primary);
+    color: var(--text-on-accent);
+    border: var(--border-width-thin) solid var(--primary);
+    box-shadow: var(--elevation-confirm-action);
+  }
+  .ds-confirm__action--destructive {
+    background: var(--destructive);
+    color: var(--overlay-text);
+    border: none;
+  }
+  .ds-confirm__action--secondary {
+    background: var(--container-bg);
+    color: var(--text-default);
+    border: var(--border-width-thin) solid var(--container-border);
+  }
+
+  /* ═══ DS COMPONENT: Carousel ═══ */
+  .ds-carousel__track {
+    display: flex;
+    gap: var(--space-3);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-bottom: var(--space-1);
+  }
+
+  .ds-carousel__item {
+    flex: 0 0 var(--ds-carousel-item-w);
+    scroll-snap-align: start;
+  }
+
+  .ds-carousel__dots {
+    display: flex;
+    gap: var(--space-1-5);
+    justify-content: center;
+    margin-top: var(--space-3);
+  }
+
+  .ds-carousel__dot {
+    width: var(--space-1-5);
+    height: var(--space-1-5);
+    border-radius: var(--radius-full);
+    background: var(--outline-variant);
+    transition: width 0.2s, background 0.2s;
+  }
+
+  .ds-carousel__dot--active {
+    width: var(--space-5);
+    background: var(--primary);
+  }
+
+  /* ═══ DS COMPONENT: Fab ═══ */
+  .ds-fab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+    box-shadow: var(--shadow-lg);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .ds-fab:active {
+    transform: scale(0.95);
+  }
+
+  .ds-fab:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .ds-fab--standard {
+    height: var(--space-14);
+    width: var(--space-14);
+    gap: 0;
+    padding: 0;
+    border-radius: var(--radius-fab);
+  }
+
+  .ds-fab--small {
+    height: var(--space-10);
+    width: var(--space-10);
+    gap: 0;
+    padding: 0;
+    border-radius: var(--radius-fab);
+  }
+
+  .ds-fab--extended {
+    height: var(--space-14);
+    width: auto;
+    gap: var(--space-2);
+    padding: 0 var(--space-5);
+    border-radius: var(--radius-lg);
+  }
+
+  .ds-fab--c-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .ds-fab--c-surface {
+    background: var(--surface-container);
+    color: var(--primary);
+  }
+
+  .ds-fab--c-tertiary {
+    background: var(--tertiary);
+    color: var(--text-default);
+  }
+
+  /* ═══ DS COMPONENT: Stepper ═══ */
+  .ds-stepper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .ds-stepper__btn {
+    transition: transform 0.15s;
+  }
+
+  .ds-stepper__btn:disabled {
+    opacity: 0.2;
+  }
+
+  .ds-stepper__btn:active {
+    transform: scale(0.88);
+  }
+
+  .ds-stepper__value {
+    min-width: var(--space-7);
+    text-align: center;
   }
 
 

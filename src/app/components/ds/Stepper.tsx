@@ -40,14 +40,14 @@ export function Stepper({
   className,
 }: StepperProps) {
   return (
-    <div className={`flex items-center gap-2${className ? ` ${className}` : ""}`}>
+    <div className={`ds-stepper${className ? ` ${className}` : ""}`}>
       <IconButton
         onClick={() => onChange(value - step)}
         disabled={value <= min}
         size="md"
         radius="xl"
         variant="ghost"
-        className="disabled:opacity-20 active:scale-88 transition-transform"
+        className="ds-stepper__btn"
         style={buttonStyle}
         aria-label={decrementLabel}
       >
@@ -57,8 +57,8 @@ export function Stepper({
         key={value}
         initial={{ scale: 0.85 }}
         animate={{ scale: 1 }}
-        className="type-numeric"
-        style={{ minWidth: 28, textAlign: "center", ...valueStyle }}
+        className="type-numeric ds-stepper__value"
+        style={valueStyle}
       >
         {value}
       </motion.span>
@@ -68,7 +68,7 @@ export function Stepper({
         size="md"
         radius="xl"
         variant="ghost"
-        className="disabled:opacity-20 active:scale-88 transition-transform"
+        className="ds-stepper__btn"
         style={buttonStyle}
         aria-label={incrementLabel}
       >

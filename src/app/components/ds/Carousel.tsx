@@ -34,25 +34,15 @@ export function Carousel({
   };
 
   return (
-    <div className={className} style={style}>
-      <div
-        ref={ref}
-        onScroll={onScroll}
-        style={{
-          display: "flex",
-          gap: "var(--space-3)",
-          overflowX: "auto",
-          scrollSnapType: "x mandatory",
-          scrollbarWidth: "none",
-          paddingBottom: 4,
-        }}
-      >
+    <div className={["ds-carousel", className].filter(Boolean).join(" ")} style={style}>
+      <div ref={ref} onScroll={onScroll} className="ds-carousel__track">
         {items.map((it, i) => (
           <div
             key={i}
+            className="ds-carousel__item"
             style={{
-              flex: `0 0 ${typeof itemWidth === "number" ? `${itemWidth}px` : itemWidth}`,
-              scrollSnapAlign: "start",
+              ["--ds-carousel-item-w" as any]:
+                typeof itemWidth === "number" ? `${itemWidth}px` : itemWidth,
             }}
           >
             {it}
@@ -60,17 +50,11 @@ export function Carousel({
         ))}
       </div>
       {showDots && items.length > 1 && (
-        <div style={{ display: "flex", gap: 6, justifyContent: "center", marginTop: 12 }}>
+        <div className="ds-carousel__dots">
           {items.map((_, i) => (
             <div
               key={i}
-              style={{
-                width: i === active ? 20 : 6,
-                height: 6,
-                borderRadius: 999,
-                background: i === active ? "var(--primary)" : "var(--outline-variant)",
-                transition: "width 0.2s, background 0.2s",
-              }}
+              className={`ds-carousel__dot${i === active ? " ds-carousel__dot--active" : ""}`}
             />
           ))}
         </div>
