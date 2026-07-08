@@ -7,7 +7,7 @@ import { ArrowRight, ChevronUp } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
-import { Heading } from "../components/ds/index";
+import { Heading, Surface } from "../components/ds/index";
 import { useCms } from "../features/cms/cms-context";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { FireGlow } from "../features/cooking/fire-glow";
@@ -580,7 +580,9 @@ function SignatureRecipeCard({
       }}
     >
       <TiltCard className="explore-tilt">
-        <Link
+        <Surface
+          as={Link}
+          variant="container"
           to={linkTo}
           state={{ exploreBackTo }}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
@@ -623,7 +625,7 @@ function SignatureRecipeCard({
             )}
           </div>
         </div>
-      </Link>
+      </Surface>
       </TiltCard>
     </motion.div>
   );
@@ -675,7 +677,9 @@ function StyleCatalogCard({
       }}
     >
       <TiltCard className="explore-tilt">
-        <Link
+        <Surface
+          as={Link}
+          variant="container"
           to={`/recipe/${style.id}?mode=canonical`}
           state={{ exploreBackTo }}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
@@ -733,7 +737,7 @@ function StyleCatalogCard({
             </div>
           </div>
         </div>
-      </Link>
+      </Surface>
       </TiltCard>
     </motion.div>
   );

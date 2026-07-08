@@ -10,7 +10,7 @@ import { Check, MoreHorizontal, X } from "lucide-react";
 import { Link } from "react-router";
 import { useCms } from "../cms/cms-context";
 import type { Interpretation } from "../../data/interpretation-library";
-import { ModalSheet } from "../../components/ds/index";
+import { ModalSheet, Surface } from "../../components/ds/index";
 
 /** Nome primario dell'interpretazione (maestro › locale › ente › firma). */
 function primaryName(it: Interpretation): string {
@@ -230,7 +230,8 @@ function InterpretationNarrativeCard({
   const meta = metaLine(it);
   const selectable = Boolean(onSelect);
   return (
-    <div
+    <Surface
+      variant="container"
       {...(selectable
         ? {
             role: "radio" as const,
@@ -299,6 +300,6 @@ function InterpretationNarrativeCard({
           </a>
         )}
       </div>
-    </div>
+    </Surface>
   );
 }

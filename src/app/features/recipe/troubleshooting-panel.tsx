@@ -14,7 +14,7 @@ XCircle
 import { AnimatePresence,motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useCms } from "../cms/cms-context";
-import { FilterChip } from "../../components/ds/index";
+import { FilterChip, Surface } from "../../components/ds/index";
 import {
 type TroubleshootingIssue,
 CATEGORY_LABELS,
@@ -285,7 +285,7 @@ function IssueCard({
   const catLabel = getLocalizedCategoryLabel(issue.category, cms);
 
   return (
-    <motion.div className="troubleshooting-card">
+    <Surface as={motion.div} variant="card" className="troubleshooting-card">
       {/* Header — always visible */}
       <motion.button
         className="troubleshooting-card__toggle"
@@ -338,7 +338,7 @@ function IssueCard({
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </Surface>
   );
 }
 

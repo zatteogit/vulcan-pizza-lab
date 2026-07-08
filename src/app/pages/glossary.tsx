@@ -8,7 +8,7 @@ import { useEffect,useMemo,useState } from "react";
 import { useLocation } from "react-router";
 import { useCms } from "../features/cms/cms-context";
 import { t } from "../features/cms/i18n";
-import { FilterChip } from "../components/ds/index";
+import { FilterChip, Surface } from "../components/ds/index";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import type {
   GlossaryCategory,
@@ -369,7 +369,9 @@ function TermCard({
   const gl = cms.glossary;
 
   return (
-    <motion.div
+    <Surface
+      as={motion.div}
+      variant="card"
       id={`glossary-${term.id}`}
       layout
       className={`glossary-card${isExpanded ? " glossary-card--expanded" : ""}`}
@@ -517,6 +519,6 @@ function TermCard({
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </Surface>
   );
 }

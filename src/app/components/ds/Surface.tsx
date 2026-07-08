@@ -11,7 +11,7 @@ import type {
   ReactNode,
 } from "react";
 
-type SurfaceVariant = "card" | "glass";
+type SurfaceVariant = "card" | "container" | "glass";
 
 export type SurfaceProps<T extends ElementType = "div"> = {
   as?: T;
@@ -26,6 +26,7 @@ export type SurfaceProps<T extends ElementType = "div"> = {
 
 const VARIANT_CLASS: Record<SurfaceVariant, string> = {
   card: "surface-card",
+  container: "surface-container",
   glass: "surface-glass",
 };
 

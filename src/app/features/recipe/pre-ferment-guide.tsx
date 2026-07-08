@@ -5,6 +5,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Surface } from "../../components/ds/index";
 import { ChevronDown, ChevronUp, Clock, Droplets, Thermometer } from 'lucide-react';
 import { useCms } from "../cms/cms-context";
 import { Flask } from "../cooking/step-illustrations";
@@ -169,7 +170,9 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
   }, [pf.compLabels, pf.compValues]);
 
   return (
-    <motion.div
+    <Surface
+      as={motion.div}
+      variant="card"
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
@@ -301,7 +304,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </Surface>
   );
 }
 

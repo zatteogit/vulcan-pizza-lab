@@ -1709,6 +1709,14 @@
     border-radius: var(--radius-lg); /* 16px */
   }
 
+  /** Container: superficie "card" con bordo ghost, raggio 2xl. Ricetta
+   *  condivisa (T3.5) composta da explore-card / interpretation-card. */
+  .surface-container {
+    background: var(--container-card);
+    border: var(--border-width-thin) solid var(--container-border-ghost);
+    border-radius: var(--radius-2xl); /* 24px */
+  }
+
   /** Glass: sticky header / overlay glassmorphism */
   .surface-glass {
     background: color-mix(
@@ -1813,7 +1821,8 @@
   .glossary-group__divider { flex: 1; height: var(--border-width-thin); margin-left: var(--space-2); background: var(--container-divider); }
   .glossary-group__desc { font-size: var(--font-size-md); color: var(--text-muted); margin-bottom: var(--space-1); }
   .glossary-list { display: flex; flex-direction: column; gap: var(--gap-sm); }
-  .glossary-card { border-radius: var(--radius-2xl); overflow: hidden; background: var(--surface-container-low); border: 1px solid var(--outline-variant); }
+  /* superficie bg/bordo via .surface-card (composto nel markup); raggio 2xl proprio */
+  .glossary-card { border-radius: var(--radius-2xl); overflow: hidden; }
   .glossary-card--expanded { border-color: var(--primary); }
   .glossary-card__toggle { width: 100%; display: flex; align-items: flex-start; gap: var(--gap-sm); padding-inline: var(--space-4); padding-block: var(--space-3-5); text-align: left; }
   .glossary-card__toggle:active { transform: scale(0.99); }
@@ -1901,7 +1910,8 @@
   .explore-feature__cta { margin-top: var(--space-6); display: flex; align-items: center; gap: var(--gap-2xs); color: var(--primary); transition: transform 0.15s; font-size: var(--font-size-lg); font-weight: var(--weight-semibold); }
   .explore-feature--hovered .explore-feature__cta { transform: translateX(var(--space-1)); }
   .explore-tilt { position: relative; border-radius: var(--radius-2xl); }
-  .explore-card { display: block; border-radius: var(--radius-2xl); overflow: hidden; transition: transform 0.15s; background: var(--container-card); border: 1px solid var(--container-border-ghost); text-decoration: none; color: inherit; }
+  /* superficie (bg/bordo/raggio 2xl) via .surface-container, composto nel markup */
+  .explore-card { display: block; overflow: hidden; transition: transform 0.15s; text-decoration: none; color: inherit; }
   .explore-card:active { transform: scale(0.97); }
   .explore-card--nerd { border-color: color-mix(in srgb, var(--accent-nerd) 25%, transparent); }
   .explore-card__media { position: relative; overflow: hidden; aspect-ratio: 3 / 4; container-type: inline-size; }
@@ -7012,11 +7022,9 @@
 
   /* ── Card narrativa (dentro la modale) ── */
   .interpretation-card {
+    /* superficie (bg/bordo/raggio 2xl) via .surface-container, composto nel markup */
     position: relative;
-    border-radius: var(--radius-2xl);
     padding: var(--space-4);
-    background: var(--container-card);
-    border: var(--border-width-thin) solid var(--container-border-ghost);
   }
   .interpretation-card--selectable {
     cursor: pointer;
@@ -8024,9 +8032,7 @@
 
 /* --- Issue card --- */
 .troubleshooting-card {
-  background: var(--surface-container-low);
-  border: var(--border-width-thin) solid var(--outline-variant);
-  border-radius: var(--radius-lg);
+  /* superficie (bg/bordo/raggio) via .surface-card, composto nel markup */
   overflow: hidden;
 }
 
@@ -8137,9 +8143,7 @@
 /* ═══ pre-ferment-guide.tsx — PreFermentCard, ParamBadge, DetailLine ═══ */
 
 .preferment-guide-card {
-  background: var(--surface-container-low);
-  border: var(--border-width-thin) solid var(--outline-variant);
-  border-radius: var(--radius-lg);
+  /* superficie (bg/bordo/raggio) via .surface-card, composto nel markup */
   overflow: hidden;
 }
 
