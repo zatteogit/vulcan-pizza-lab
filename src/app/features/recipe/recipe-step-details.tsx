@@ -62,35 +62,22 @@ export function StepDetails({
 
   if (!longDesc && tips.length === 0) return null;
   return (
-    <div className="mt-4">
+    <div className="step-details">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 type-data active:scale-95 transition-transform"
-        style={{
-          background: "transparent",
-          border: "none",
-          padding: 0,
-          color: "var(--text-accent)",
-          fontWeight: "var(--weight-semibold)" as any,
-          cursor: "pointer",
-        }}
+        className="step-details__toggle type-data"
         aria-expanded={open}
       >
         <motion.span
           animate={{ rotate: open ? 90 : 0 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          style={{ display: "inline-flex" }}
+          className="step-details__chevron"
         >
           <ChevronRight size={16} />
         </motion.span>
         {open ? cms.cooking.stepDetailsHide : cms.cooking.stepDetailsShow}
         {!open && tips.length > 0 && (
-          <span
-            style={{
-              color: "var(--text-muted)",
-              fontWeight: "var(--weight-regular)" as any,
-            }}
-          >
+          <span className="step-details__tips-count">
             · {t(tips.length === 1 ? cms.cooking.tipsCountOne : cms.cooking.tipsCountMany, { n: tips.length })}
           </span>
         )}
@@ -100,51 +87,25 @@ export function StepDetails({
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
           transition={{ type: "spring", stiffness: 420, damping: 32 }}
-          className="overflow-hidden"
+          className="step-details__content"
         >
-          {longDesc && (
-            <p
-              className="mt-3 type-body-lg"
-              style={{
-                color: "var(--text-default)",
-                lineHeight: "var(--leading-relaxed)",
-                opacity: 0.88,
-              }}
-            >
-              {longDesc}
-            </p>
-          )}
+          {longDesc && <p className="step-details__desc type-body-lg">{longDesc}</p>}
           {tips.map((tip, k) => (
             <div
               key={k}
-              className="flex items-start gap-3 mt-3 px-4 py-3 rounded-2xl"
-              style={{
-                background: isNerd
-                  ? "var(--recipe-tip-nerd-bg)"
-                  : "var(--recipe-tip-beginner-bg)",
-                border: `1px solid ${isNerd ? "var(--recipe-tip-nerd-border)" : "var(--recipe-tip-border)"}`,
-              }}
+              className={isNerd ? "step-details__tip step-details__tip--nerd" : "step-details__tip step-details__tip--beginner"}
             >
               {isNerd ? (
-                <FlaskConical
-                  size={14}
-                  className="flex-shrink-0 mt-0.5"
-                  style={{ color: "var(--recipe-tip-nerd-icon)", opacity: 0.7 }}
-                />
+                <FlaskConical size={14} className="step-details__tip-icon step-details__tip-icon--nerd" />
               ) : (
-                <Lightbulb
-                  size={14}
-                  className="flex-shrink-0 mt-0.5"
-                  style={{ color: "var(--recipe-tip-icon)", opacity: 0.7 }}
-                />
+                <Lightbulb size={14} className="step-details__tip-icon step-details__tip-icon--beginner" />
               )}
               <span
-                className={isNerd ? "type-data" : ""}
-                style={{
-                  fontSize: isNerd ? "var(--font-size-lg)" : "var(--font-size-xl)",
-                  lineHeight: "var(--leading-relaxed)",
-                  color: "var(--text-subtle)",
-                }}
+                className={
+                  isNerd
+                    ? "step-details__tip-text step-details__tip-text--nerd type-data"
+                    : "step-details__tip-text step-details__tip-text--beginner"
+                }
               >
                 {tip}
               </span>
@@ -155,17 +116,7 @@ export function StepDetails({
             <button
               type="button"
               onClick={() => setGlossaryOpen((value) => !value)}
-              className="inline-flex items-center gap-1.5 mt-3 type-data"
-              style={{
-                background: "transparent",
-                border: "none",
-                padding: 0,
-                color: "var(--text-accent)",
-                textDecoration: "underline",
-                textUnderlineOffset: 3,
-                minHeight: 36,
-                cursor: "pointer",
-              }}
+              className="step-details__glossary-toggle type-data"
               aria-expanded={glossaryOpen}
             >
               {t(cms.cooking.learnInlineTitle, { label: glossaryLabel })}
@@ -174,13 +125,7 @@ export function StepDetails({
               <motion.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-2 rounded-2xl px-4 py-3 type-body"
-                style={{
-                  background: "var(--container-bg-low)",
-                  border: "1px solid var(--container-border-subtle)",
-                  color: "var(--text-muted)",
-                  lineHeight: "var(--leading-normal)",
-                }}
+                className="step-details__glossary-content type-body"
               >
                 {t(cms.cooking.learnInlineBody, { label: glossaryLabel })}
               </motion.div>
@@ -194,15 +139,13 @@ export function StepDetails({
             return (
               <Link
                 to={`/learn/troubleshooting?issue=${trouble.issueId}`}
-                className={`inline-flex items-center gap-1.5 mt-3 type-data${STEP_GLOSSARY[stepId] ? " ml-4" : ""}`}
-                style={{
-                  color: "var(--text-accent)",
-                  textDecoration: "underline",
-                  textUnderlineOffset: 3,
-                  minHeight: 36,
-                }}
+                className={
+                  STEP_GLOSSARY[stepId]
+                    ? "step-details__trouble-link step-details__trouble-link--indented type-data"
+                    : "step-details__trouble-link type-data"
+                }
               >
-                <LifeBuoy size={13} aria-hidden="true" style={{ flexShrink: 0, opacity: 0.75 }} />
+                <LifeBuoy size={13} aria-hidden="true" className="step-details__trouble-link-icon" />
                 {label}
               </Link>
             );

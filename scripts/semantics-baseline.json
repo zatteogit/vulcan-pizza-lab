@@ -137,58 +137,22 @@
     "bare-wrapper": 2,
     "markup-presentation": 7
   },
-  "src/app/features/recipe/ingredients-section.tsx": {
-    "inline-style": 33,
-    "markup-presentation": 3
-  },
-  "src/app/features/recipe/interpretation-narrative-card.tsx": {
-    "inline-style": 15,
-    "markup-presentation": 1
-  },
   "src/app/features/recipe/pre-ferment-guide.tsx": {
     "inline-style": 36,
     "bare-wrapper": 1,
     "markup-presentation": 1
-  },
-  "src/app/features/recipe/procedure-hero.tsx": {
-    "inline-style": 26,
-    "markup-presentation": 5
-  },
-  "src/app/features/recipe/procedure-timeline.tsx": {
-    "inline-style": 17
   },
   "src/app/features/recipe/recipe-feedback.tsx": {
     "inline-style": 35,
     "bare-wrapper": 9,
     "markup-presentation": 2
   },
-  "src/app/features/recipe/recipe-learning-panel.tsx": {
-    "inline-style": 7,
-    "bare-wrapper": 1,
-    "markup-presentation": 1
-  },
-  "src/app/features/recipe/recipe-output-bits.tsx": {
-    "inline-style": 14,
-    "markup-presentation": 1
-  },
-  "src/app/features/recipe/recipe-output.tsx": {
-    "inline-style": 12,
-    "bare-wrapper": 1
-  },
   "src/app/features/recipe/recipe-section-tabs.tsx": {
     "inline-style": 9,
     "markup-presentation": 2
   },
-  "src/app/features/recipe/recipe-stat-strip.tsx": {
-    "inline-style": 8
-  },
-  "src/app/features/recipe/recipe-step-details.tsx": {
-    "inline-style": 12
-  },
   "src/app/features/recipe/recipe-view.tsx": {
-    "inline-style": 17,
-    "bare-wrapper": 3,
-    "markup-presentation": 1
+    "inline-style": 3
   },
   "src/app/features/recipe/recommended-styles.tsx": {
     "inline-style": 26,
@@ -205,10 +169,6 @@
   },
   "src/app/features/recipe/tilt-card.tsx": {
     "inline-style": 3
-  },
-  "src/app/features/recipe/topping-section.tsx": {
-    "inline-style": 28,
-    "markup-presentation": 5
   },
   "src/app/features/recipe/troubleshooting-panel.tsx": {
     "inline-style": 44,

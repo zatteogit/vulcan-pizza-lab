@@ -185,7 +185,9 @@
   --font-size-6xl: 1.375rem; /* 22px — headline small */
   --font-size-6-5xl: 1.5rem; /* 24px — headline x-small, card titles */
   --font-size-7xl: 1.75rem; /* 28px — headline medium */
+  --font-size-7-5xl: 1.85rem; /* 29.6px — bound clamp titolo ingredienti (min) */
   --font-size-8xl: 2rem; /* 32px — headline large */
+  --font-size-8-5xl: 2.45rem; /* 39.2px — bound clamp titolo ingredienti (max) */
   --font-size-9xl: 2.5rem; /* 40px — display medium */
   --font-size-10xl: 3.5rem; /* 56px — display large */
   --font-size-11xl: 4rem; /* 64px — display hero */
@@ -202,7 +204,9 @@
   --leading-body: 1.4; /* description body text, annotations */
   --leading-relaxed: 1.5;
   --leading-reading: 1.6; /* long-form reading, section descriptions */
+  --leading-comfortable: 1.45; /* fra body 1.4 e relaxed 1.5 */
   --leading-loose: 1.65;
+  --leading-loosest: 1.75; /* blocchi cifre scorporo pre-fermento */
 
   /* ── Typography Primitives · Letter Spacing (tracking) ── */
   --tracking-tighter: -0.03em;
@@ -280,14 +284,17 @@
   --measure-sm: 30rem; /* 480px */
   --measure-md: 40rem; /* 640px */
   --measure-ml: 42rem; /* 672px */
+  --measure-prose: 45rem; /* 720px — larghezza di lettura paragrafi condimento */
   --measure-lg: 48rem; /* 768px */
   --measure-xl: 56rem; /* 896px */
   --measure-2xl: 64rem; /* 1024px */
+  --measure-6xl: 72rem; /* 1152px — colonna contenuto scheda ricetta (Tailwind max-w-6xl) */
   --measure-3xl: 80rem; /* 1280px */
 
   /* ── Blur Primitives (backdrop / glass) · $type dimension ── */
   --blur-sm: 8px;
   --blur-md: 12px;
+  --blur-ml: 14px; /* glow NerdAura compact */
   --blur-lg: 22px;
   --blur-xl: 24px;
   --blur-2xl: 40px;
@@ -486,6 +493,7 @@
   /* Parametrica: var(--tone) si risolve sull'elemento che la consuma. */
   --elevation-tone-hover: 0 12px 35px -10px color-mix(in srgb, var(--tone) 25%, transparent);
   --shadow-pill: 0 4px 12px color-mix(in srgb, var(--shadow-color) 16%, transparent);
+  --elevation-hero-soft: 0 12px 34px color-mix(in srgb, var(--shadow-color) 8%, transparent); /* Surface tabella di marcia (procedure-hero) */
 
   --border-w: var(--border-width-thin);
 
@@ -1091,13 +1099,9 @@
      Kept as alias of --font-sans so it can diverge later without touching call sites. */
   --font-body: var(--font-sans);
 
-  --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
-  /* Micro-etichette (badge, pill di stato): sotto text-xs, sulla scala tipografica. */
-  --text-2xs: 0.625rem;
-  --text-2xs--line-height: 1.4;
   --radius-xs: var(--radius-xs);
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
@@ -4809,6 +4813,2336 @@
   }
   .match-action-text--save-active {
     color: var(--primary);
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: ingredients-section (PREFIX: ingredients) ═══ */
+  /* ═══ COMPONENT: ingredients-section ═══ */
+
+  /* ── Header: titolo + divisore + copia ── */
+  .ingredients-header {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    margin-bottom: var(--space-5);
+  }
+  @media (min-width: 640px) {
+    .ingredients-header { gap: var(--gap-md); }
+  }
+  .ingredients-header__title {
+    font-family: var(--font-serif);
+    flex-shrink: 0;
+    font-size: clamp(var(--font-size-7-5xl), 4.5vw, var(--font-size-8-5xl));
+    line-height: var(--leading-heading);
+  }
+  .ingredients-header__divider {
+    flex: 1;
+    height: var(--border-width-thin);
+    background: var(--container-divider);
+  }
+  .ingredients-header__copy {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    transition: color 0.15s;
+    padding-inline: var(--space-3);
+    padding-block: var(--space-1-5);
+    border-radius: var(--radius-full);
+    color: var(--text-muted);
+    font-weight: var(--weight-medium);
+    background: var(--recipe-bg);
+    border: var(--border-width-thin) solid var(--recipe-border);
+  }
+  .ingredients-header__copy:active {
+    transform: scale(0.95);
+  }
+  .ingredients-header__copy-icon {
+    color: var(--recipe-success);
+  }
+
+  /* ── Riga panetti/servings ── */
+  .ingredients-servings {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: var(--border-width-thin) solid var(--recipe-divider-subtle);
+  }
+  .ingredients-servings__label {
+    color: var(--text-muted);
+    font-weight: var(--weight-medium);
+  }
+  .ingredients-servings__note {
+    color: var(--text-muted);
+  }
+  .ingredients-servings__estimate {
+    margin-left: auto;
+    padding-inline: var(--space-2);
+    padding-block: var(--space-0-5);
+    border-radius: var(--radius-md);
+    font-weight: var(--weight-medium);
+    color: var(--text-muted);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border);
+  }
+
+  /* ── Lista ingredienti ── */
+  .ingredients-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Scorporo mix farine (VPL-B2) ── */
+  .ingredients-blend {
+    padding-left: var(--space-3);
+    margin-top: calc(-1 * var(--space-1));
+    margin-bottom: var(--space-2);
+  }
+  .ingredients-blend__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-block: var(--space-1);
+  }
+  .ingredients-blend__row--gluten {
+    margin-top: var(--space-1);
+  }
+  .ingredients-blend__name {
+    color: var(--text-muted);
+  }
+  .ingredients-blend__grams {
+    color: var(--text-muted);
+    font-size: var(--font-size-md);
+  }
+
+  /* ── Toggle Regola 55 (riga Acqua) ── */
+  .ingredients-rule55-toggle {
+    margin-left: var(--space-1-5);
+    vertical-align: middle;
+    transition: transform 0.15s;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--text-muted);
+    opacity: 0.5;
+    line-height: var(--leading-none);
+  }
+  .ingredients-rule55-toggle--active {
+    opacity: 0.85;
+  }
+  .ingredients-rule55-toggle:active {
+    transform: scale(0.9);
+  }
+
+  /* ── Tip Regola 55 (espanso) ── */
+  .ingredients-rule55-tip {
+    overflow: hidden;
+    padding-left: var(--space-3);
+    margin-top: var(--space-1);
+    margin-bottom: var(--space-2);
+  }
+  .ingredients-rule55-tip__text {
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+  .ingredients-rule55-tip__desc {
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+    line-height: var(--leading-normal);
+  }
+  .ingredients-rule55-tip__friction {
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+  }
+
+  /* ── Totale impasto ── */
+  .ingredients-total {
+    margin-top: var(--space-5);
+    color: var(--text-muted);
+    font-size: var(--font-size-xl);
+  }
+
+  /* ── Scorporo pre-fermento (biga/poolish) ── */
+  .ingredients-preferment {
+    margin-top: var(--space-5);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+  .ingredients-preferment__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ingredients-preferment__cell {
+    padding-inline: var(--space-5);
+    padding-block: var(--space-4);
+  }
+  .ingredients-preferment__cell--filled {
+    background: var(--container-bg-low);
+  }
+  .ingredients-preferment__cell--divided {
+    border-left: var(--border-width-thin) solid var(--outline-variant);
+  }
+  .ingredients-preferment__label {
+    letter-spacing: var(--tracking-ultra);
+    text-transform: uppercase;
+    color: var(--text-accent);
+    font-weight: var(--weight-semibold);
+    margin-bottom: var(--space-1-5);
+  }
+  .ingredients-preferment__label--muted {
+    color: var(--text-muted);
+  }
+  .ingredients-preferment__content {
+    color: var(--text-default);
+    line-height: var(--leading-loosest);
+    font-feature-settings: "tnum";
+  }
+  .ingredients-preferment__note {
+    color: var(--text-muted);
+    border-top: var(--border-width-thin) solid var(--outline-variant);
+    line-height: var(--leading-comfortable);
+  }
+
+  /* ── Blocco scienza (PizzaNerd) ── */
+  .ingredients-science {
+    padding-top: var(--space-6);
+    border-top: var(--border-width-thin) solid var(--recipe-divider-subtle);
+    text-align: left;
+  }
+  .ingredients-science__title {
+    font-family: var(--font-serif);
+    margin-bottom: var(--space-4);
+    color: var(--text-default);
+    font-size: clamp(var(--font-size-3xl), 3vw, var(--font-size-5xl));
+  }
+  .ingredients-science__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    border: var(--border-width-thin) solid var(--recipe-tip-nerd-border);
+    background: var(--recipe-tip-nerd-bg);
+  }
+  @media (min-width: 640px) {
+    .ingredients-science__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  .ingredients-science__cell {
+    padding-inline: var(--space-5);
+    padding-block: var(--space-4);
+    border: 0.5px solid var(--recipe-tip-nerd-border);
+  }
+  .ingredients-science__value {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--weight-bold);
+    color: var(--score-accent);
+    font-feature-settings: "tnum";
+  }
+  .ingredients-science__label {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-1);
+    line-height: var(--leading-normal);
+  }
+
+  /* ── Spaziatura blocchi NerdAura (era mt-8 / mt-6 mb-2 passati come className) ── */
+  .ingredients-aura-top {
+    margin-top: var(--space-8);
+  }
+  .ingredients-aura-compact {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-2);
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: topping-section (PREFIX: topping) ═══ */
+  /* ═══ TOPPING SECTION (topping-section.tsx) — prefix "topping" ═══ */
+
+  /* ── Modalità inline (dentro lo step Condimento del procedimento) ── */
+
+  .topping-inline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    margin-top: var(--space-4);
+  }
+
+  .topping-inline__preps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1-5);
+    margin-top: var(--space-1);
+  }
+
+  .topping-inline__prep {
+    border-radius: var(--radius-xl);
+    padding-inline: var(--space-3-5);
+    padding-block: var(--space-2-5);
+    background: var(--surface-container);
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .topping-inline__prep-title {
+    display: block;
+    font-weight: var(--weight-semibold);
+    color: var(--text-default);
+  }
+
+  .topping-inline__prep-duration {
+    color: var(--text-muted);
+    font-weight: var(--weight-regular);
+  }
+
+  .topping-inline__prep-desc {
+    display: block;
+    margin-top: var(--space-0-5);
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  /* ── Modalità pannello (tab Condimento) ── */
+
+  .topping-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg);
+  }
+
+  /* Carousel */
+
+  .topping-panel__carousel {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-3xl);
+    background: var(--surface-container);
+    box-shadow: var(--shadow-md);
+  }
+
+  .topping-panel__carousel-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .topping-panel__carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .topping-panel__carousel-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--shadow-color) 75%, transparent) 0%,
+      color-mix(in srgb, var(--shadow-color) 25%, transparent) 45%,
+      transparent 75%
+    );
+  }
+
+  .topping-panel__carousel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-5);
+    text-align: left;
+  }
+
+  .topping-panel__carousel-eyebrow {
+    color: color-mix(in srgb, var(--overlay-text) 70%, transparent);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-ultra); /* 0.12em */
+    text-transform: uppercase;
+  }
+
+  .topping-panel__carousel-title {
+    margin-top: var(--space-0-5);
+  }
+
+  .topping-panel__carousel-badges {
+    margin-top: var(--space-2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-xs);
+  }
+
+  .topping-panel__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 20;
+    transform: translateY(-50%);
+    background: color-mix(in srgb, var(--shadow-color) 40%, transparent);
+    color: var(--overlay-text);
+    border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 10%, transparent);
+    backdrop-filter: blur(var(--blur-sm));
+    -webkit-backdrop-filter: blur(var(--blur-sm));
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+  .topping-panel__nav:hover {
+    background: color-mix(in srgb, var(--shadow-color) 60%, transparent);
+  }
+  .topping-panel__nav:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+  .topping-panel__nav--prev { left: var(--space-3); }
+  .topping-panel__nav--next { right: var(--space-3); }
+
+  /* Strip selettore thumbnail */
+
+  .topping-panel__strip {
+    width: 100%;
+  }
+
+  /* Dettagli (descrizione + nota quantità) */
+
+  .topping-panel__details {
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--space-1);
+  }
+
+  .topping-panel__details-description {
+    text-align: left;
+    color: var(--text-default);
+    line-height: var(--leading-reading);
+    max-width: var(--measure-prose);
+  }
+
+  .topping-panel__details-note {
+    margin-top: var(--space-2);
+    text-align: left;
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+    max-width: var(--measure-prose);
+  }
+
+  .topping-panel__divider {
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+
+  /* Sezioni ingredienti (raggruppate o piatte) */
+
+  .topping-panel__sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xl);
+  }
+
+  .topping-panel__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+  }
+
+  .topping-panel__group-header {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+  }
+
+  .topping-panel__group-marker {
+    display: block;
+    width: var(--space-1);
+    height: var(--space-5);
+    border-radius: var(--radius-full);
+    background: var(--text-accent);
+  }
+
+  .topping-panel__group-title {
+    margin: 0;
+    text-align: left;
+    font-size: var(--font-size-xl);
+    font-weight: var(--weight-semibold);
+    color: var(--text-default);
+  }
+
+  .topping-panel__grid {
+    display: grid;
+    gap: var(--gap-sm);
+  }
+  @media (min-width: 640px) {
+    .topping-panel__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  .topping-panel__card {
+    border-radius: var(--radius-2xl);
+    padding: var(--space-4);
+    text-align: left;
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+  @media (min-width: 640px) {
+    .topping-panel__card { padding: var(--space-5); }
+  }
+
+  .topping-panel__card-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--gap-md);
+  }
+
+  .topping-panel__card-left {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: var(--gap-sm);
+  }
+
+  .topping-panel__index {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-8);
+    height: var(--space-8);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--text-accent) 10%, transparent);
+    border: var(--border-width-thin) solid color-mix(in srgb, var(--text-accent) 22%, transparent);
+    color: var(--text-accent);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-none);
+  }
+
+  .topping-panel__name {
+    color: var(--text-default);
+    font-size: var(--font-size-xl);
+    font-style: normal;
+    line-height: var(--leading-normal);
+  }
+  .topping-panel__name--optional {
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .topping-panel__amount {
+    flex-shrink: 0;
+    color: var(--text-default);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-tight);
+  }
+
+  .topping-panel__detail {
+    margin-top: var(--space-3);
+    text-align: left;
+    color: var(--text-muted);
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
+  }
+
+  /* Note tecniche (prep/assembly/bake adjustments) */
+
+  .topping-panel__notes {
+    overflow: hidden;
+    border-radius: var(--radius-3xl);
+    border: var(--border-width-thin) solid var(--recipe-tip-border);
+    background: var(--recipe-tip-beginner-bg);
+  }
+
+  .topping-panel__notes-header {
+    padding-inline: var(--space-5);
+    padding-block: var(--space-4);
+    border-bottom: var(--border-width-thin) solid var(--recipe-divider-subtle);
+    color: var(--text-default);
+    font-weight: var(--weight-semibold);
+  }
+  @media (min-width: 640px) {
+    .topping-panel__notes-header { padding-inline: var(--space-6); }
+  }
+
+  .topping-panel__notes-grid {
+    display: grid;
+    gap: 0;
+  }
+  @media (min-width: 768px) {
+    .topping-panel__notes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  .topping-panel__note-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+    padding: var(--space-5);
+  }
+  @media (min-width: 640px) {
+    .topping-panel__note-item { padding: var(--space-6); }
+  }
+  .topping-panel__note-item--top {
+    border-top: var(--border-width-thin) solid var(--recipe-divider-subtle);
+  }
+  .topping-panel__note-item--left {
+    border-left: var(--border-width-thin) solid var(--recipe-divider-subtle);
+  }
+
+  .topping-panel__note-icon {
+    flex-shrink: 0;
+    margin-top: var(--space-0-5);
+    color: var(--recipe-tip-icon);
+  }
+
+  .topping-panel__note-body {
+    min-width: 0;
+  }
+
+  .topping-panel__note-title {
+    color: var(--text-default);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-normal);
+  }
+
+  .topping-panel__note-desc {
+    margin-top: var(--space-1);
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: procedure-hero (PREFIX: procedure-hero) ═══ */
+  /* ═══ PROCEDURE HERO — Tabella di marcia (ondata 3) ═══ */
+
+  .procedure-hero {
+    padding: var(--space-4);
+    background: color-mix(in srgb, var(--container-bg) 88%, transparent);
+    box-shadow: var(--elevation-hero-soft);
+  }
+  @media (min-width: 640px) {
+    .procedure-hero { padding: var(--space-5); }
+  }
+
+  .procedure-hero__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-sm);
+    width: 100%;
+  }
+
+  .procedure-hero__title-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    min-width: 0;
+  }
+
+  .procedure-hero__title-icon {
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+
+  .procedure-hero__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .procedure-hero__total {
+    padding-inline: var(--space-2-5);
+    padding-block: var(--space-1);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
+    font-weight: var(--weight-semibold);
+    flex-shrink: 0;
+    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    color: var(--primary);
+  }
+
+  .procedure-hero__times {
+    margin-top: var(--space-4);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-xs);
+  }
+  @media (min-width: 640px) {
+    .procedure-hero__times { gap: var(--gap-sm); }
+  }
+
+  .procedure-hero__time {
+    border-radius: var(--radius-2xl);
+    padding-inline: var(--space-2-5);
+    padding-block: var(--space-3);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+  @media (min-width: 640px) {
+    .procedure-hero__time { padding-inline: var(--space-3); }
+  }
+
+  .procedure-hero__time-label {
+    color: var(--text-muted);
+    font-weight: var(--weight-semibold);
+    line-height: 1;
+  }
+
+  .procedure-hero__time-controls {
+    margin-top: var(--space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+  @media (min-width: 640px) {
+    .procedure-hero__time-controls { gap: var(--space-1-5); }
+  }
+
+  .procedure-hero__shift-btn {
+    width: var(--space-8);
+    height: var(--space-8);
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--recipe-bg);
+    border: var(--border-width-thin) solid var(--recipe-border);
+    transition: transform 150ms ease;
+  }
+  .procedure-hero__shift-btn:active {
+    transform: scale(0.9);
+  }
+
+  .procedure-hero__time-input {
+    background: transparent;
+    text-align: center;
+    outline: none;
+    color: var(--text-default);
+    font-size: clamp(var(--font-size-md), 3.7vw, var(--font-size-2xl));
+    font-weight: var(--weight-bold);
+    width: 58px;
+    border: none;
+    border-bottom: var(--border-width-strong) solid var(--recipe-highlight);
+  }
+
+  .procedure-hero__time-display {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-bottom: var(--border-width-thin) dashed var(--recipe-border);
+    padding-bottom: var(--border-width-thin);
+  }
+
+  .procedure-hero__time-value {
+    font-size: clamp(var(--font-size-md), 3.7vw, var(--font-size-2xl));
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    color: var(--text-accent);
+  }
+
+  .procedure-hero__time-suffix {
+    display: block;
+    font-weight: var(--weight-medium);
+    color: var(--text-muted);
+    line-height: var(--leading-tight);
+    margin-top: var(--space-0-5);
+    min-height: 2.2em;
+    max-width: 100%;
+    white-space: normal;
+    visibility: visible;
+  }
+  .procedure-hero__time-suffix--hidden {
+    visibility: hidden;
+  }
+
+  .procedure-hero__days {
+    margin-top: var(--space-3-5);
+    display: flex;
+    gap: var(--gap-xs);
+  }
+
+  .procedure-hero__day {
+    flex: 1;
+    padding-block: var(--space-1-5);
+    padding-inline: var(--space-2-5);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
+    font-weight: var(--weight-semibold);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+    color: var(--text-default);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .procedure-hero__day:active {
+    transform: scale(0.97);
+  }
+  .procedure-hero__day--active {
+    background: var(--chip-bg-active);
+    border-color: var(--tertiary);
+    color: var(--chip-text-active);
+  }
+
+  .procedure-hero__meals {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3-5);
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+
+  .procedure-hero__meals-label {
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-body);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-spread);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+    color: var(--text-muted);
+  }
+
+  .procedure-hero__meals-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-xs);
+  }
+
+  .procedure-hero__meal-chip {
+    padding-inline: var(--space-3);
+    padding-block: var(--space-1-5);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
+    font-weight: var(--weight-semibold);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+    color: var(--text-default);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .procedure-hero__meal-chip:active {
+    transform: scale(0.95);
+  }
+
+  .procedure-hero__comfort {
+    margin-top: var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-sm);
+    border-radius: var(--radius-2xl);
+    padding-inline: var(--space-3);
+    padding-block: var(--space-3);
+    transition: all 0.2s ease;
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+  .procedure-hero__comfort--active {
+    background: color-mix(in srgb, var(--cta) 5%, transparent);
+    border-color: var(--recipe-success);
+  }
+
+  .procedure-hero__comfort-text {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .procedure-hero__comfort-title {
+    color: var(--text-default);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-tight);
+  }
+
+  .procedure-hero__comfort-desc {
+    margin-top: var(--space-0-5);
+    line-height: var(--leading-normal);
+  }
+  .procedure-hero__comfort-desc--success {
+    color: var(--recipe-success);
+  }
+  .procedure-hero__comfort-desc--warning {
+    color: var(--primary);
+  }
+  .procedure-hero__comfort-desc--idle {
+    color: var(--text-muted);
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: procedure-timeline (PREFIX: procedure-timeline) ═══ */
+  /* ═══ PROCEDURE TIMELINE — spina, nodi, durate (ondata 3) ═══
+   * Consumato da src/app/features/recipe/procedure-timeline.tsx.
+   * Renderizza figli invariati: recipe-step-details.tsx, topping-section.tsx,
+   * recipe-output-bits.tsx (NerdAuraBlock) — le loro classi non sono qui. */
+
+  /* ── Banner compensazioni (nerd) ── */
+  .procedure-timeline-comp {
+    margin-bottom: var(--gap-lg);
+  }
+
+  .procedure-timeline-comp__panel {
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    text-align: left;
+    background: var(--recipe-tip-nerd-bg);
+    border: var(--border-width-thin) solid var(--recipe-tip-nerd-border);
+    border-left: var(--border-width-thick) solid var(--score-accent);
+    animation: procedure-timeline-fade-in 200ms ease-out;
+  }
+
+  @keyframes procedure-timeline-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .procedure-timeline-comp__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2-5);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3);
+    border-bottom: var(--border-width-thin) solid var(--recipe-tip-nerd-border);
+  }
+
+  .procedure-timeline-comp__icon {
+    color: var(--score-accent);
+    flex-shrink: 0;
+  }
+
+  .procedure-timeline-comp__label {
+    font-weight: var(--weight-semibold);
+    color: var(--score-accent);
+  }
+
+  .procedure-timeline-comp__badge {
+    padding-inline: var(--space-2);
+    padding-block: var(--space-0-5);
+    border-radius: var(--radius-md);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    color: var(--score-accent);
+    background: transparent; /* originale: custom property nerd-pill-bg mai definita → reso trasparente (bug latente preservato) */
+  }
+
+  .procedure-timeline-comp__count {
+    font-size: var(--font-size-md);
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  .procedure-timeline-comp__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-2-5);
+  }
+
+  .procedure-timeline-comp__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--gap-sm);
+  }
+
+  .procedure-timeline-comp__row-label {
+    color: var(--text-default);
+  }
+
+  .procedure-timeline-comp__row-value {
+    flex-shrink: 0;
+    color: var(--score-accent);
+    font-weight: var(--weight-semibold);
+  }
+
+  /* ── Spina della timeline ── */
+  .procedure-timeline-spine {
+    position: relative;
+  }
+
+  .procedure-timeline-spine__rail {
+    position: absolute;
+    left: var(--space-5);
+    top: var(--space-5);
+    bottom: var(--space-5);
+    width: var(--border-width-thin);
+    background: var(--recipe-divider);
+  }
+
+  .procedure-timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* ── Step ── */
+  .procedure-timeline-step {
+    display: flex;
+    gap: var(--gap-ml);
+    padding-bottom: var(--space-9);
+  }
+
+  .procedure-timeline-step:last-child {
+    padding-bottom: 0;
+  }
+
+  .procedure-timeline-step__node {
+    position: relative;
+    z-index: 10;
+    width: var(--space-10);
+    height: var(--space-10);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--recipe-node-mid-bg);
+    color: var(--recipe-node-accent);
+    border: var(--border-width-strong) solid var(--recipe-border);
+  }
+
+  .procedure-timeline-step__node--first {
+    background: var(--recipe-node-first-bg);
+    color: var(--text-on-accent);
+    border: none;
+  }
+
+  .procedure-timeline-step__node--last {
+    background: var(--recipe-node-last-bg);
+    color: var(--text-on-accent);
+    border: none;
+  }
+
+  /* Forza l'opacità piena dell'illustrazione (default 0.9 nel componente
+     figlio StepIllustration): !important necessario per vincere lo style
+     inline che il componente applica da sé, fuori dal nostro perimetro. */
+  .procedure-timeline-step__icon {
+    opacity: 1 !important;
+  }
+
+  .procedure-timeline-step__content {
+    flex: 1;
+    min-width: 0;
+    padding-top: var(--space-0-5);
+  }
+
+  .procedure-timeline-step__time-row {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin-bottom: var(--space-1);
+  }
+
+  .procedure-timeline-step__time {
+    padding-inline: var(--space-2);
+    padding-block: var(--space-0-5);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-fine);
+    background: var(--recipe-bg);
+    color: var(--text-default);
+  }
+
+  .procedure-timeline-step__time--accent {
+    background: var(--recipe-badge-accent-bg);
+    color: var(--recipe-badge-accent-text);
+  }
+
+  .procedure-timeline-step__title {
+    color: var(--text-default);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-semibold);
+  }
+
+  .procedure-timeline-step__desc {
+    margin-top: var(--space-1);
+    color: var(--text-muted);
+    font-size: var(--font-size-2xl);
+    line-height: var(--leading-reading);
+  }
+
+  .procedure-timeline-step__desc--topping {
+    margin-top: var(--space-3);
+  }
+
+  .procedure-timeline-step__duration {
+    display: inline-block;
+    margin-top: var(--space-1-5);
+    color: var(--text-muted);
+    font-size: var(--font-size-lg);
+  }
+
+  .procedure-timeline-step__stretch {
+    margin-left: var(--space-1-5);
+    padding-inline: var(--space-1-5);
+    padding-block: var(--space-0-5);
+    border-radius: var(--radius-xs);
+    font-weight: var(--weight-semibold);
+    background: transparent; /* originale: custom property comfort-chip-bg mai definita → reso trasparente (bug latente preservato) */
+    color: var(--recipe-success);
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: recipe-output (PREFIX: recipe-output) ═══ */
+  /* ═══ COMPONENT: recipe-output (contenitore scheda ricetta) ═══ */
+
+  .recipe-output {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+  @media (min-width: 640px) {
+    .recipe-output {
+      gap: var(--space-12);
+    }
+  }
+
+  /* ── Share button flottante nel portal header ── */
+  .recipe-output-share-btn {
+    display: flex;
+    height: var(--space-11);
+    align-items: center;
+    gap: var(--space-2);
+    border-radius: var(--radius-full);
+    padding-inline: var(--space-4);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-none);
+    cursor: pointer;
+    background: var(--container-bg);
+    border: var(--border-width-thin) solid var(--container-border);
+    color: var(--text-muted);
+    transition: transform 0.15s;
+  }
+  .recipe-output-share-btn:active {
+    transform: scale(0.95);
+  }
+  .recipe-output-share-btn--copied {
+    background: color-mix(in srgb, var(--cta) 15%, transparent);
+    border-color: var(--cta);
+    color: var(--cta);
+  }
+
+  /* ── Riepilogo contesto: ricetta adattata vs canonica ── */
+  .recipe-output-context {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--space-2-5);
+    row-gap: var(--space-1);
+    margin-bottom: calc(var(--space-2) * -1);
+    color: var(--text-muted);
+  }
+
+  .recipe-output-context__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    padding-inline: var(--space-2-5);
+    padding-block: var(--space-1);
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    /* --recipe-context-pill-bg non è mai stata definita in theme.css:
+       l'originale risolveva a "transparent" (bug latente preservato). */
+    background: transparent;
+    color: var(--text-accent);
+    font-weight: var(--weight-semibold);
+  }
+
+  .recipe-output-context__summary {
+    min-width: 0;
+    line-height: var(--leading-normal);
+  }
+
+  /* ── Pager orizzontale (Ricetta | Procedimento | Condimento) ── */
+  .recipe-output-pager {
+    position: sticky;
+    z-index: 30;
+    margin-inline: calc(var(--space-1) * -1);
+    padding-inline: var(--space-1);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2-5);
+    width: 100%;
+    top: calc(var(--space-16) + var(--space-3));
+  }
+
+  .recipe-output-pager__tabs {
+    display: flex;
+    align-items: stretch;
+    flex: 1;
+    padding: var(--space-1);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--container-bg) 82%, transparent);
+    backdrop-filter: blur(var(--blur-xl)) saturate(1.8);
+    -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(1.8);
+    border: var(--border-width-thin) solid var(--container-border);
+    /* --recipe-pager-shadow non è mai stata definita: bug latente preservato. */
+    box-shadow: none;
+  }
+
+  .recipe-output-pager__tab {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1-5);
+    border-radius: var(--radius-full);
+    border: none;
+    background: transparent;
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    z-index: 1;
+    white-space: nowrap;
+    min-height: var(--space-13);
+    padding-inline: var(--space-3);
+    padding-block: 0;
+    color: var(--text-muted);
+  }
+  .recipe-output-pager__tab--active {
+    color: var(--text-on-accent);
+  }
+
+  .recipe-output-pager__tab-pill {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-full);
+    z-index: -1;
+    /* --recipe-pager-active-bg non è mai stata definita: bug latente preservato. */
+    background: transparent;
+  }
+
+  .recipe-output-pager__share {
+    background: color-mix(in srgb, var(--container-bg) 82%, transparent);
+    border: var(--border-width-thin) solid var(--container-border);
+    backdrop-filter: blur(var(--blur-xl)) saturate(1.8);
+    -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(1.8);
+    color: var(--text-muted);
+    box-shadow: none;
+    transition: transform 0.15s;
+  }
+  .recipe-output-pager__share:active {
+    transform: scale(0.95);
+  }
+  .recipe-output-pager__share--copied {
+    /* --recipe-header-action-bg-active non è mai stata definita: bug preservato. */
+    background: transparent;
+    /* --recipe-header-action-border-active non è mai stata definita: il
+       var() invalido invalida l'intero shorthand `border`, che ricade sui
+       valori iniziali (nessun bordo visibile). */
+    border: none;
+    /* --recipe-header-action-text-active non è mai stata definita: `color`
+       è una proprietà ereditata, quindi il var() invalido ricade sul valore
+       ereditato dal genitore, non su nero/iniziale. */
+    color: inherit;
+  }
+
+  /* ── Pannelli dello swipe (Ricetta / Procedimento / Condimento) ── */
+  .recipe-output-panel {
+    display: flex;
+    flex-direction: column;
+    touch-action: pan-y;
+  }
+  .recipe-output-panel--ricetta {
+    gap: var(--space-8);
+  }
+  @media (min-width: 640px) {
+    .recipe-output-panel--ricetta {
+      gap: var(--space-10);
+    }
+  }
+  .recipe-output-panel--procedura {
+    gap: var(--space-2);
+  }
+  .recipe-output-panel--condimento {
+    gap: var(--space-8);
+  }
+
+  .recipe-output-params {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+  }
+
+  .recipe-output-hero-wrap {
+    margin-bottom: var(--space-4);
+  }
+  @media (min-width: 640px) {
+    .recipe-output-hero-wrap {
+      margin-bottom: var(--space-6);
+    }
+  }
+
+  .recipe-output-feedback-wrap {
+    margin-top: var(--space-6);
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: recipe-output-bits (PREFIX: bits) ═══ */
+  /* ═══ COMPONENT: recipe-output-bits (NerdAuraBlock, IngRow, GlossaryWLink) ═══ */
+
+  /* ── NerdAuraBlock ── */
+  .bits-nerd-aura {
+    position: relative;
+    isolation: isolate;
+  }
+  .bits-nerd-aura__glow {
+    pointer-events: none;
+    position: absolute;
+    inset: calc(-1 * var(--space-4-5));
+    z-index: -1;
+    border-radius: var(--radius-4xl);
+    filter: blur(var(--blur-lg));
+    background:
+      radial-gradient(ellipse at 18% 18%, color-mix(in srgb, var(--logo-grad-start) 42%, transparent) 0%, transparent 58%),
+      radial-gradient(ellipse at 82% 30%, color-mix(in srgb, var(--logo-grad-mid) 36%, transparent) 0%, transparent 54%),
+      radial-gradient(ellipse at 48% 92%, color-mix(in srgb, var(--logo-grad-end) 34%, transparent) 0%, transparent 62%);
+  }
+  .bits-nerd-aura__glow--compact {
+    inset: calc(-1 * var(--space-2-5));
+    filter: blur(var(--blur-ml));
+  }
+  .bits-nerd-aura__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── IngRow ── */
+  .bits-ing-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--gap-md);
+    padding-block: var(--space-3-5);
+    border-bottom: var(--border-width-thin) solid var(--recipe-divider-subtle);
+  }
+  .bits-ing-row__label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-2-5);
+    row-gap: var(--gap-2xs);
+    min-width: 0;
+  }
+  .bits-ing-row__name {
+    color: var(--text-default);
+    font-size: var(--font-size-xl-5);
+    line-height: var(--leading-normal);
+  }
+  .bits-ing-row__detail {
+    color: var(--text-muted);
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
+  }
+  .bits-ing-row__amount {
+    color: var(--text-default);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-tight);
+    flex-shrink: 0;
+  }
+
+  /* ── GlossaryWLink ── */
+  .bits-glossary-w__trigger {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: var(--space-0-75);
+  }
+
+  .bits-glossary-w-modal__panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-inline: var(--space-5);
+    padding-block: var(--space-4);
+  }
+  @media (min-width: 640px) {
+    .bits-glossary-w-modal__panel {
+      padding-inline: var(--space-6);
+      padding-block: var(--space-5);
+    }
+  }
+  .bits-glossary-w-modal__header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+  }
+  .bits-glossary-w-modal__title {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    margin: 0;
+    line-height: var(--leading-compact);
+  }
+  .bits-glossary-w-modal__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--space-8);
+    height: var(--space-8);
+    border-radius: var(--radius-full);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .bits-glossary-w-modal__close:active {
+    transform: scale(0.9);
+  }
+  .bits-glossary-w-modal__definition {
+    margin: var(--space-2) 0 0;
+    color: var(--text-muted);
+    font-size: var(--font-size-md);
+    line-height: var(--leading-normal);
+  }
+  .bits-glossary-w-modal__ranges {
+    margin-top: var(--space-3);
+    display: flex;
+    flex-direction: column;
+  }
+  .bits-glossary-w-modal__range {
+    display: flex;
+    align-items: baseline;
+    gap: var(--gap-sm);
+    padding-block: var(--space-1-5);
+    border-bottom: var(--border-width-thin) solid var(--container-border-subtle);
+    color: var(--text-muted);
+    font-weight: var(--weight-regular);
+    font-size: var(--font-size-sm);
+  }
+  .bits-glossary-w-modal__range--active {
+    color: var(--primary);
+    font-weight: var(--weight-semibold);
+  }
+  .bits-glossary-w-modal__range-value {
+    flex-shrink: 0;
+    min-width: 72px;
+  }
+  .bits-glossary-w-modal__range-label {
+    flex: 1;
+    min-width: 0;
+  }
+  .bits-glossary-w-modal__range-current {
+    flex-shrink: 0;
+  }
+  .bits-glossary-w-modal__why {
+    margin: var(--space-3) 0 0;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+  }
+  .bits-glossary-w-modal__learn-more {
+    margin-top: var(--space-3);
+    display: inline-block;
+    color: var(--text-accent);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-75);
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: recipe-step-details (PREFIX: step-details) ═══ */
+  /* ═══ STEP DETAILS — "come si fa" collassabile + learn-inline ═══ */
+
+  .step-details {
+    margin-top: var(--gap-md);
+  }
+
+  .step-details__toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--text-accent);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    transition: transform 150ms ease;
+  }
+  .step-details__toggle:active {
+    transform: scale(0.95);
+  }
+
+  .step-details__chevron {
+    display: inline-flex;
+  }
+
+  .step-details__tips-count {
+    color: var(--text-muted);
+    font-weight: var(--weight-regular);
+  }
+
+  .step-details__content {
+    overflow: hidden;
+  }
+
+  .step-details__desc {
+    margin-top: var(--gap-sm);
+    color: var(--text-default);
+    line-height: var(--leading-relaxed);
+    opacity: 0.88;
+  }
+
+  .step-details__tip {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+    margin-top: var(--gap-sm);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3);
+    border-radius: var(--radius-2xl);
+  }
+  .step-details__tip--nerd {
+    background: var(--recipe-tip-nerd-bg);
+    border: var(--border-width-thin) solid var(--recipe-tip-nerd-border);
+  }
+  .step-details__tip--beginner {
+    background: var(--recipe-tip-beginner-bg);
+    border: var(--border-width-thin) solid var(--recipe-tip-border);
+  }
+
+  .step-details__tip-icon {
+    flex-shrink: 0;
+    margin-top: var(--space-0-5);
+    opacity: 0.7;
+  }
+  .step-details__tip-icon--nerd {
+    color: var(--recipe-tip-nerd-icon);
+  }
+  .step-details__tip-icon--beginner {
+    color: var(--recipe-tip-icon);
+  }
+
+  .step-details__tip-text {
+    line-height: var(--leading-relaxed);
+    color: var(--text-subtle);
+  }
+  .step-details__tip-text--nerd {
+    font-size: var(--font-size-lg);
+  }
+  .step-details__tip-text--beginner {
+    font-size: var(--font-size-xl);
+  }
+
+  .step-details__glossary-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    margin-top: var(--gap-sm);
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--text-accent);
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-75);
+    min-height: var(--space-9);
+    cursor: pointer;
+  }
+
+  .step-details__glossary-content {
+    margin-top: var(--gap-xs);
+    border-radius: var(--radius-2xl);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .step-details__trouble-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    margin-top: var(--gap-sm);
+    color: var(--text-accent);
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-75);
+    min-height: var(--space-9);
+  }
+  .step-details__trouble-link--indented {
+    margin-left: var(--space-4);
+  }
+
+  .step-details__trouble-link-icon {
+    flex-shrink: 0;
+    opacity: 0.75;
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: recipe-view (PREFIX: recipe-view) ═══ */
+  /* ═══ RECIPE VIEW (recipe-view.tsx) — impianto condiviso scheda ricetta ═══ */
+
+  .recipe-view {
+    position: relative;
+    min-height: 100vh;
+    background: var(--container-page);
+    color: var(--text-default);
+  }
+
+  /* ── Toolbar (sticky header, showStickyHeader=true) ── */
+  .recipe-view-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--container-page) 88%, transparent);
+    backdrop-filter: var(--backdrop-glass-strong);
+    -webkit-backdrop-filter: var(--backdrop-glass-strong);
+    border-bottom: var(--border-width-thin) solid var(--container-border-subtle);
+    /* Notch / status bar (Safari iOS, PWA, landscape) */
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .recipe-view-toolbar__inner {
+    max-width: var(--measure-6xl);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+    height: var(--space-14);
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+  }
+
+  @media (min-width: 640px) {
+    .recipe-view-toolbar__inner {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  .recipe-view-toolbar__back {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-2xs);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--text-accent);
+    font-size: var(--font-size-xl);
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+    transition: transform 0.15s;
+  }
+  .recipe-view-toolbar__back:active { transform: scale(0.95); }
+
+  .recipe-view-toolbar__spacer { flex: 1; }
+
+  .recipe-view-toolbar__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+  }
+
+  /* ── Floating back button (showStickyHeader=false) ── */
+  .recipe-view-back {
+    position: fixed;
+    top: calc(var(--space-4) + env(safe-area-inset-top, 0px));
+    left: var(--space-4);
+    z-index: 50;
+    pointer-events: auto;
+  }
+  .recipe-view-back--hidden { pointer-events: none; }
+
+  .recipe-view-back__button {
+    background: color-mix(in srgb, var(--container-page) 85%, transparent);
+    backdrop-filter: blur(var(--blur-md));
+    -webkit-backdrop-filter: blur(var(--blur-md));
+    color: var(--text-default);
+    border: var(--border-width-thin) solid var(--container-border);
+    transition: transform 0.15s;
+  }
+  .recipe-view-back__button:active { transform: scale(0.9); }
+
+  /* ── Hero photo ── */
+  .recipe-view-hero {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .recipe-view-hero__frame {
+    height: 100%;
+    max-width: var(--measure-3xl);
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+  @media (min-width: 640px) {
+    .recipe-view-hero__frame { padding-inline: var(--space-6); }
+  }
+  @media (min-width: 1024px) {
+    .recipe-view-hero__frame { padding-inline: var(--space-8); }
+  }
+
+  .recipe-view-hero__clip {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+  }
+  @media (min-width: 640px) {
+    .recipe-view-hero__clip {
+      border-bottom-left-radius: var(--radius-3xl);
+      border-bottom-right-radius: var(--radius-3xl);
+    }
+  }
+
+  .recipe-view-hero__parallax { width: 100%; height: 100%; }
+  .recipe-view-hero__image { width: 100%; height: 100%; }
+
+  .recipe-view-hero__scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--container-page);
+  }
+
+  .recipe-view-hero__gradient {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(to top, var(--overlay-backdrop) 0%, transparent 50%, color-mix(in srgb, var(--overlay-backdrop) 67%, transparent) 100%);
+  }
+
+  /* ── Glassmorphic title card / Header ── */
+  .recipe-view-header {
+    position: relative;
+    z-index: 10;
+    max-width: var(--measure-6xl);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+  }
+  @media (min-width: 640px) {
+    .recipe-view-header { padding-inline: var(--space-8); }
+  }
+
+  .recipe-view-card {
+    border-radius: var(--radius-2xl);
+    text-align: left;
+    background: var(--recipe-hero-card-bg);
+    backdrop-filter: blur(var(--blur-xl)) saturate(1.7);
+    -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(1.7);
+    border: var(--border-width-thin) solid var(--container-border);
+    box-shadow: var(--recipe-hero-card-shadow);
+    padding-top: var(--space-5);
+    padding-bottom: var(--space-5);
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+    margin-left: calc(var(--space-2) - var(--space-5));
+    margin-right: calc(var(--space-2) - var(--space-5));
+    transition:
+      background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      -webkit-backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      margin 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @media (min-width: 768px) {
+    .recipe-view-card {
+      padding-top: var(--space-8);
+      padding-bottom: var(--space-8);
+      padding-left: var(--space-5);
+      padding-right: var(--space-5);
+      margin-left: calc(var(--space-3) - var(--space-8));
+      margin-right: calc(var(--space-3) - var(--space-8));
+    }
+  }
+  .recipe-view-card--reduced {
+    background: transparent;
+    backdrop-filter: blur(0) saturate(1);
+    -webkit-backdrop-filter: blur(0) saturate(1);
+    border-color: transparent;
+    box-shadow: none;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-left: var(--space-1);
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .recipe-view-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+    transition: gap 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .recipe-view-card__body--reduced { gap: var(--gap-2xs); }
+
+  .recipe-view-eyebrow-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--gap-sm);
+    row-gap: var(--gap-2xs);
+  }
+
+  .recipe-view-eyebrow {
+    display: inline-block;
+    font-size: var(--font-size-md);
+    color: var(--text-accent);
+    letter-spacing: var(--tracking-extreme);
+    text-transform: uppercase;
+    font-weight: var(--weight-bold);
+    transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .recipe-view-eyebrow--tailored { color: var(--cta); }
+
+  .recipe-view-reset {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--gap-2xs);
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-75);
+    text-decoration-color: color-mix(in srgb, var(--text-muted) 45%, transparent);
+  }
+  .recipe-view-reset__icon { align-self: center; }
+
+  .recipe-view-title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    flex-wrap: wrap;
+  }
+
+  .recipe-view-title { margin: 0; }
+
+  .recipe-view-expanded {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+    overflow: hidden;
+  }
+
+  .recipe-view-tags {
+    /* Ritmo uniforme della colonna (gap-md): nessun margine proprio — un
+       margine negativo uscirebbe dal box overflow-hidden dell'animazione e
+       verrebbe tagliato. */
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-spread);
+    line-height: var(--leading-normal);
+  }
+
+  .recipe-view-utility-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--gap-lg);
+    row-gap: var(--gap-xs);
+    /* Utilità, non contenuto: corpo minore. */
+    font-size: clamp(var(--font-size-md), 3vw, var(--font-size-lg));
+    margin: 0;
+  }
+
+  .recipe-view-share {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: inherit;
+    font-weight: var(--weight-semibold);
+    font-style: normal;
+    color: var(--text-accent);
+    text-decoration: underline;
+    transition: transform 0.15s;
+  }
+  .recipe-view-share:active { transform: scale(0.95); }
+  .recipe-view-share--copied { color: var(--recipe-success); }
+
+  /* ── Contenuto ── */
+  .recipe-view-body {
+    max-width: var(--measure-6xl);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+  }
+  @media (min-width: 640px) {
+    .recipe-view-body { padding-inline: var(--space-8); }
+  }
+
+  .recipe-view-content {
+    max-width: var(--measure-xl);
+    margin-inline: auto;
+    padding-top: var(--space-6);
+    padding-bottom: var(--space-28);
+  }
+  @media (min-width: 640px) {
+    .recipe-view-content { padding-bottom: var(--space-32); }
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: recipe-stat-strip (PREFIX: stat-strip) ═══ */
+  /* ═══ COMPONENT: recipe-stat-strip ═══ */
+
+  /* Blocco IMPASTO — spec-sheet a 4 colonne con filetti verticali fra le celle. */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding-top: var(--space-3-5); /* 14px */
+    padding-bottom: var(--space-1); /* 4px */
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+
+  .stat-strip__cell {
+    min-width: 0;
+    padding-right: var(--space-2); /* 8px */
+  }
+
+  .stat-strip__cell--divider {
+    border-left: var(--border-width-thin) solid var(--container-border-subtle);
+    padding-left: var(--space-3); /* 12px */
+  }
+
+  /* Voce dello spec-sheet: etichetta sopra, valore sotto. */
+  .stat-strip__spec {
+    text-align: left;
+    min-width: 0;
+  }
+
+  .stat-strip__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--font-size-xs); /* 9px — spec labels */
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-caps);
+    text-transform: uppercase;
+    line-height: var(--leading-tight);
+    color: var(--text-muted);
+    opacity: 1;
+  }
+
+  .stat-strip__label--science {
+    color: var(--score-accent);
+    opacity: 0.85;
+  }
+
+  .stat-strip__value {
+    display: flex;
+    align-items: baseline;
+    gap: var(--gap-2xs);
+    color: var(--text-default);
+    line-height: var(--leading-tight);
+    white-space: nowrap;
+    margin-top: var(--space-0-5); /* 2px */
+  }
+
+  .stat-strip__value-main {
+    font-size: clamp(var(--font-size-xl), 4.4vw, var(--font-size-2xl));
+    font-weight: var(--weight-bold);
+  }
+
+  .stat-strip__value-main--small {
+    font-size: var(--font-size-lg);
+  }
+
+  .stat-strip__value-sub {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+  }
+
+  .stat-strip__value-sub--small {
+    font-size: var(--font-size-xs);
+  }
+
+  .stat-strip__value-trend {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-self: center;
+    color: var(--cta);
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: interpretation-narrative-card (PREFIX: interpretation) ═══ */
+  /* ═══ interpretation-narrative-card.tsx — InterpretationSwitcher (chip riga
+     "Ispirazione") + modale d'approfondimento + InterpretationNarrativeCard.
+     PREFIX: interpretation ═══ */
+
+  /* ── Switcher (riga chip) ── */
+  .interpretation-switcher {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+  }
+
+  .interpretation-switcher__scroll {
+    flex: 1 1 0%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    overflow-x: auto;
+    padding-inline: var(--space-0-5);
+    margin-inline: calc(var(--space-0-5) * -1);
+    scrollbar-width: none;
+  }
+
+  .interpretation-switcher__chip {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    border-radius: var(--radius-full);
+    padding-inline: var(--space-2-5);
+    padding-block: var(--space-1);
+    white-space: nowrap;
+    background: transparent;
+    border: var(--border-width-thin) solid transparent;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-tight);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .interpretation-switcher__chip:active {
+    transform: scale(0.95);
+  }
+  .interpretation-switcher__chip--active {
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    border-color: color-mix(in srgb, var(--primary) 28%, transparent);
+    color: var(--primary);
+    font-weight: var(--weight-semibold);
+  }
+
+  .interpretation-switcher__more {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-2xs);
+    border-radius: var(--radius-full);
+    padding-inline: var(--space-2-5);
+    padding-block: var(--space-1);
+    white-space: nowrap;
+    background: transparent;
+    border: var(--border-width-thin) solid var(--container-border);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-tight);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .interpretation-switcher__more:active {
+    transform: scale(0.95);
+  }
+
+  /* ── Modale d'approfondimento ── */
+  .interpretation-modal {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .interpretation-modal__header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    padding-inline: var(--space-5);
+    padding-block: var(--space-3-5);
+    border-bottom: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+  @media (min-width: 640px) {
+    .interpretation-modal__header { padding-inline: var(--space-6); }
+  }
+
+  .interpretation-modal__title {
+    flex: 1 1 0%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+    font-size: clamp(var(--font-size-3xl), 4.6vw, var(--font-size-2xl));
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+  }
+
+  .interpretation-modal__close {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--space-9);
+    height: var(--space-9);
+    border-radius: var(--radius-full);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .interpretation-modal__close:active {
+    transform: scale(0.9);
+  }
+
+  .interpretation-modal__body {
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-inline: var(--space-5);
+    padding-block: var(--space-4);
+  }
+  @media (min-width: 640px) {
+    .interpretation-modal__body { padding-inline: var(--space-6); }
+  }
+
+  .interpretation-modal__footer {
+    flex-shrink: 0;
+    padding-inline: var(--space-5);
+    padding-top: var(--space-3);
+    padding-bottom: max(var(--space-3-5), env(safe-area-inset-bottom));
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+  @media (min-width: 640px) {
+    .interpretation-modal__footer {
+      padding-inline: var(--space-6);
+      padding-bottom: var(--space-3-5);
+    }
+  }
+
+  .interpretation-modal__link {
+    color: var(--text-accent);
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-75);
+  }
+
+  /* ── Card narrativa (dentro la modale) ── */
+  .interpretation-card {
+    position: relative;
+    border-radius: var(--radius-2xl);
+    padding: var(--space-4);
+    background: var(--container-card);
+    border: var(--border-width-thin) solid var(--container-border-ghost);
+  }
+  .interpretation-card--selectable {
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .interpretation-card--selectable:active {
+    transform: scale(0.99);
+  }
+  .interpretation-card--selected {
+    background: color-mix(in srgb, var(--primary) 6%, var(--container-card));
+    border-color: color-mix(in srgb, var(--primary) 32%, transparent);
+  }
+
+  .interpretation-card__check {
+    position: absolute;
+    top: var(--space-3-5);
+    right: var(--space-3-5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--radius-full);
+    background: transparent;
+    border: var(--border-width-thin) solid var(--container-border);
+    color: transparent;
+    transition: all 0.15s ease;
+  }
+  .interpretation-card__check--selected {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--text-on-accent);
+  }
+
+  .interpretation-card__body {
+    min-width: 0;
+  }
+  .interpretation-card__body--selectable {
+    padding-right: var(--space-7-5);
+  }
+
+  .interpretation-card__title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-2);
+    row-gap: var(--space-1);
+  }
+
+  .interpretation-card__name {
+    color: var(--text-default);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-semibold);
+  }
+
+  .interpretation-card__badge {
+    border-radius: var(--radius-full);
+    padding-inline: var(--space-2);
+    padding-block: var(--space-0-5);
+    font-size: var(--font-size-xs);
+    font-weight: var(--weight-semibold);
+    color: var(--text-accent);
+    background: color-mix(in srgb, var(--text-accent) 10%, transparent);
+  }
+
+  .interpretation-card__meta {
+    margin-top: var(--space-0-5);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .interpretation-card__technique {
+    margin-top: var(--space-2);
+    color: var(--text-default);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+  }
+
+  .interpretation-card__story {
+    margin-top: var(--space-2);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+  }
+
+  .interpretation-card__url {
+    display: inline-block;
+    margin-top: var(--space-2);
+    color: var(--text-accent);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+  }
+
+  /* ═══ ONDATA 3 — COMPONENT: recipe-learning-panel (PREFIX: learning) ═══ */
+  /* ═══ COMPONENT: recipe-learning-panel ═══ */
+
+  .learning-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .learning-panel__header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-md);
+    padding-inline: var(--space-5);
+    padding-block: var(--space-5);
+    border-bottom: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+  @media (min-width: 640px) {
+    .learning-panel__header {
+      padding-inline: var(--space-6);
+    }
+  }
+
+  .learning-panel__intro {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  .learning-panel__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    color: var(--text-accent);
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-spread);
+    text-transform: uppercase;
+  }
+
+  .learning-panel__title {
+    font-family: var(--font-serif);
+    margin-top: var(--space-1);
+    font-size: clamp(var(--font-size-4xl), 6vw, var(--font-size-6xl));
+    line-height: var(--leading-heading);
+  }
+
+  .learning-panel__subtitle {
+    margin-top: var(--space-2);
+    color: var(--text-muted);
+    font-size: var(--font-size-lg);
+    line-height: var(--leading-normal);
+  }
+
+  .learning-panel__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    width: var(--space-9-5);
+    height: var(--space-9-5);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .learning-panel__close:active {
+    transform: scale(0.95);
+  }
+
+  .learning-panel__body {
+    padding-inline: var(--space-5);
+    padding-block: var(--space-5);
+  }
+  @media (min-width: 640px) {
+    .learning-panel__body {
+      padding-inline: var(--space-6);
+      padding-block: var(--space-6);
+    }
+  }
+
+  .learning-panel__description {
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-reading);
+    color: var(--text-default);
+  }
+
+  .learning-panel__characteristics {
+    margin-top: var(--space-5);
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: var(--gap-xs);
+  }
+  @media (min-width: 640px) {
+    .learning-panel__characteristics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .learning-panel__characteristic {
+    border-radius: var(--radius-2xl);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+    color: var(--text-default);
+    font-size: var(--font-size-lg);
+    line-height: var(--leading-normal);
   }
 }
 

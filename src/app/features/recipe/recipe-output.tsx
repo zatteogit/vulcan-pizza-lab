@@ -541,7 +541,7 @@ export function RecipeOutput({
 
 
   return (
-    <div className="flex flex-col gap-10 sm:gap-12">
+    <div className="recipe-output">
       {/* Sticky header portal actions */}
       {portalTarget && createPortal(
         <>
@@ -552,24 +552,12 @@ export function RecipeOutput({
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleCopyLink}
-              className="flex h-11 items-center gap-2 rounded-full px-4 type-data active:scale-95 transition-transform"
-              style={{
-                background: linkCopied
-                  ? "color-mix(in srgb, var(--cta) 15%, transparent)"
-                  : "var(--container-bg)",
-                border: `1px solid ${
-                  linkCopied ? "var(--cta)" : "var(--container-border)"
-                }`,
-                color: linkCopied ? "var(--cta)" : "var(--text-muted)",
-                fontWeight: "var(--weight-semibold)" as any,
-                lineHeight: 1,
-                cursor: "pointer",
-              }}
+              className={`recipe-output-share-btn type-data${linkCopied ? " recipe-output-share-btn--copied" : ""}`}
               title={linkCopied ? cms.ui.copied : cms.ui.share}
               aria-label={cms.pages.recipeCopyLinkAria}
             >
               {linkCopied ? <Check size={14} /> : <LinkIcon size={14} />}
-              <span>{linkCopied ? cms.ui.copied : cms.ui.share}</span>
+              <span data-slot="label">{linkCopied ? cms.ui.copied : cms.ui.share}</span>
             </motion.button>
           )}
         </>,
@@ -643,24 +631,11 @@ export function RecipeOutput({
           (feedback giugno 2026: "non è chiaro che parametri e punteggio si
           riferiscono alla ricetta adattata alle tue possibilità") */}
       {!hideContextSummary && (
-        <div
-          className="flex flex-wrap items-center gap-x-2.5 gap-y-1 -mb-2 type-body"
-          style={{ color: "var(--text-muted)" }}
-        >
-          <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full flex-shrink-0"
-            style={{
-              background: "var(--recipe-context-pill-bg)",
-              color: "var(--text-accent)",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
-          >
+        <div className="recipe-output-context type-body">
+          <span className="recipe-output-context__pill">
             {isPersonalized ? cms.cooking.recipeAdapted : cms.cooking.recipeCanonical}
           </span>
-          <span
-            className="min-w-0"
-            style={{ lineHeight: "var(--leading-normal)" }}
-          >
+          <span className="recipe-output-context__summary">
             {t(cms.cooking.ovenSummary, { temp: fmt.celsius(constraints.oven_max_temp_c) })} · {recipe.dough_balls}{" "}
             {getServingUnitLabel(cms, servingUnit, recipe.dough_balls, true)}
             {" · "}
@@ -675,21 +650,11 @@ export function RecipeOutput({
           Meno info per schermata, navigazione da app: Ricetta | Procedimento.
           Il layer PizzaNerd trasforma i contenuti inline, senza tab separata. */}
       {!hidePager && (
-      <div
-        className="sticky z-30 -mx-1 px-1 flex items-center gap-2.5 w-full"
-        style={{ top: "calc(64px + 12px)" }}
-      >
+      <div className="recipe-output-pager">
         {/* Button group espressivo: a tutta larghezza, segmento attivo con
             forma piena che "scivola" a molla tra le posizioni. */}
         <div
-          className="flex items-stretch flex-1 p-1 rounded-full"
-          style={{
-            background: "color-mix(in srgb, var(--container-bg) 82%, transparent)",
-            backdropFilter: "blur(24px) saturate(1.8)",
-            WebkitBackdropFilter: "blur(24px) saturate(1.8)",
-            border: "1px solid var(--container-border)",
-            boxShadow: "var(--recipe-pager-shadow)",
-          }}
+          className="recipe-output-pager__tabs"
           role="tablist"
           aria-label={cms.cooking.sectionsAria}
         >
@@ -703,24 +668,12 @@ export function RecipeOutput({
                 role="tab"
                 aria-selected={active}
                 whileTap={{ scale: 0.95 }}
-                className="relative flex-1 flex items-center justify-center gap-1.5 rounded-full type-data-field"
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  color: active ? "var(--text-on-accent)" : "var(--text-muted)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  cursor: "pointer",
-                  zIndex: 1,
-                  whiteSpace: "nowrap",
-                  minHeight: 52,
-                  padding: "0 12px",
-                }}
+                className={`recipe-output-pager__tab type-data-field${active ? " recipe-output-pager__tab--active" : ""}`}
               >
                 {active && (
                   <motion.span
                     layoutId="recipe-pager-pill"
-                    className="absolute inset-0 rounded-full"
-                    style={{ background: "var(--recipe-pager-active-bg)", zIndex: -1 }}
+                    className="recipe-output-pager__tab-pill"
                     transition={{ type: "spring", stiffness: 420, damping: 30 }}
                   />
                 )}
@@ -739,23 +692,7 @@ export function RecipeOutput({
             onClick={handleCopyLink}
             size="lg"
             variant="ghost"
-            className="active:scale-95 transition-transform"
-            style={{
-              background: linkCopied
-                ? "var(--recipe-header-action-bg-active)"
-                : "color-mix(in srgb, var(--container-bg) 82%, transparent)",
-              border: `1px solid ${
-                linkCopied
-                  ? "var(--recipe-header-action-border-active)"
-                  : "var(--container-border)"
-              }`,
-              backdropFilter: "blur(24px) saturate(1.8)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.8)",
-              color: linkCopied
-                ? "var(--recipe-header-action-text-active)"
-                : "var(--text-muted)",
-              boxShadow: "var(--recipe-pager-shadow)",
-            }}
+            className={`recipe-output-pager__share${linkCopied ? " recipe-output-pager__share--copied" : ""}`}
             title={linkCopied ? cms.ui.copied : cms.ui.share}
             aria-label={cms.pages.recipeCopyLinkAria}
           >
@@ -779,14 +716,13 @@ export function RecipeOutput({
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}
         onDragEnd={onPanelDragEnd}
-        style={{ touchAction: "pan-y" }}
-        className="flex flex-col gap-8 sm:gap-10"
+        className="recipe-output-panel recipe-output-panel--ricetta"
       >
       <ScrollToTopOnMount />
       {/* Parametri + match + Regola a mano sono UN blocco compatto (mockup
           Proposta A) e vivono PRIMA degli ingredienti: i parametri sono
           l'identità della ricetta, gli ingredienti la conseguenza. */}
-      <div className="flex flex-col gap-3">
+      <div className="recipe-output-params">
         {matchSlot}
         {recipeControls}
       </div>
@@ -822,11 +758,10 @@ export function RecipeOutput({
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}
         onDragEnd={onPanelDragEnd}
-        style={{ touchAction: "pan-y" }}
-        className="flex flex-col gap-2"
+        className="recipe-output-panel recipe-output-panel--procedura"
       >
       <ScrollToTopOnMount />
-      <div className="mb-4 sm:mb-6">
+      <div className="recipe-output-hero-wrap">
         <ProcedureHeroControls
           startTime={startTime}
           setStartTime={setStartTime}
@@ -879,8 +814,7 @@ export function RecipeOutput({
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}
         onDragEnd={onPanelDragEnd}
-        style={{ touchAction: "pan-y" }}
-        className="flex flex-col gap-8"
+        className="recipe-output-panel recipe-output-panel--condimento"
       >
       <ScrollToTopOnMount />
       <ToppingSection mode="ingredients" recipe={recipe} activeTopping={activeTopping} toppingChoices={toppingChoices} allToppingChoices={allToppingChoices} servingUnit={servingUnit} onSelectTopping={onSelectTopping} />
@@ -892,7 +826,7 @@ export function RecipeOutput({
       {/* ── Feedback form — solo nel tab Ricetta: ripetuto in tutti e tre i
           tab era rumore (audit fruibilità luglio 2026). ── */}
       {showFeedback && activeTabView === "ricetta" && (
-        <div className="mt-6">
+        <div className="recipe-output-feedback-wrap">
           <RecipeFeedbackForm recipe={recipe} skillLevel={constraints.skill_level} />
         </div>
       )}

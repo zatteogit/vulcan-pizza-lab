@@ -302,6 +302,12 @@ Il frontmatter fissa `model: sonnet`, `effort: high` — non serve passare
 - Ombre/elevazioni: `--shadow-xs..xl`, `--elevation-cta/-feature/-feature-hover/-nerd/-nerd-hover`, `--glow-chip-nerd`, `--shadow-pill`.
 - Colori: ruoli T2/T3 (`--primary`, `--text-default/-muted/-subtle/-accent`, `--surface*`, `--container-*`, `--outline*`, `--cta`, `--tertiary`, `--severity-*`, `--overlay-*`…).
 
+**⚠️ Mappa font-size Tailwind → token (la scala è SFASATA dai nomi Tailwind — NON mappare per nome!):**
+La scala `--font-size-*` dell'app è: `2xs=8px · xs=9px · sm=10px · md=12px · lg=13px · xl=14px · 2xl=~18px`.
+Le utility Tailwind hanno gli STESSI nomi ma valori diversi, quindi:
+`text-2xs`(10px)→`--font-size-sm` · `text-xs`(12px)→`--font-size-md` · `text-sm`(14px)→`--font-size-xl` · `text-base`(16px)→`--font-size-2xl`.
+**Porta anche la line-height che Tailwind include**: `text-xs` è 12/16 → aggiungi `line-height: var(--leading-normal)`; `text-2xs` (custom 10/14) → `line-height: var(--leading-body)`. Senza line-height esplicita il testo eredita un valore diverso e la card cambia altezza (regressione trovata in ondata 3 su procedure-hero: chip mappate a `--font-size-xs`=9px invece di `md`=12px). Se l'originale usa `fontSize: var(--font-size-X)` inline, copialo verbatim (è già il token giusto).
+
 **Mappa utility → CSS token:**
 `flex`→`display:flex` · `flex-col`→`flex-direction:column` · `items-center`→`align-items:center` · `justify-between`→`justify-content:space-between` · `grid`→`display:grid` · `grid-cols-2`→`grid-template-columns:repeat(2,minmax(0,1fr))` · `gap-N`→`gap: var(--gap-…)` (respiro) o `var(--space-N)` · `p-N`→`padding: var(--space-N)` · `px/py-N`→`padding-inline/block` · `m*-N`→`margin*` · `w-full`→`width:100%` · `max-w-Nxl`→`max-width: var(--measure-…)` · `rounded-2xl`→`border-radius: var(--radius-2xl)` · `text-center`→`text-align:center` · `font-serif`→`font-family: var(--font-serif)` · `font-bold`→`font-weight: var(--weight-bold)` · `italic`→`font-style:italic` · `overflow-hidden`→`overflow:hidden` · `truncate`→`overflow:hidden;text-overflow:ellipsis;white-space:nowrap` · `active:scale-95`→`:active{transform:scale(0.95)}` · `group-hover:x`→`.parent:hover .child` · `blur(Npx)`→`blur(var(--blur-…))` · `z-N`→`z-index:N` · breakpoints → `@media (min-width: 640/768/1024px)`.
 
@@ -379,6 +385,20 @@ ondata ha il suo commit di checkpoint sul branch `refactor/tokenizzazione`.
 - `.needs-slot-grid__label { min-height: 2.4em }` (ondata 2): riserva 2 righe
   tipografiche per allineare le card degli slot — relativo al font, non alla
   scala spazi.
+- **Ondata 3** — geometrie one-off di controlli specifici (nessun token della
+  scala combacia):
+  - `.procedure-hero__time-input { width: 58px }` — larghezza fissa dell'input
+    orario editabile.
+  - `.procedure-hero__time-suffix { min-height: 2.2em }` — riserva riga del
+    suffisso giorno sotto l'orario (relativo al font, come `needs-slot-grid__label`).
+  - `.bits-glossary-w__range-value { min-width: 72px }` — colonna valore della
+    tabella W-alveografo, per allineare le righe.
+  - `.interpretation-card__badge { width/height: 22px }` — diametro del badge
+    di selezione (fra `--space-5` 20 e `--space-6` 24).
+- **Ondata 3** — residuo motion accettato: `recipe-view.tsx` mantiene 3
+  `style={{ y|scale|opacity: <MotionValue> }}` (parallax hero + card lift via
+  `useTransform`) — inconvertibili (aggiornati per-frame da Framer Motion),
+  ratchettati come il residuo di `home.tsx` (ondata 1).
 
 Se durante il lavoro emergono altri one-off legittimi, documentali qui e
 lasciali a baseline (cricchetto), non forzare un atomo finto.

@@ -72,22 +72,11 @@ export function RecipeStatStrip({
      VERTICALI fra le colonne. NIENTE filetto di chiusura: la sezione Match
      subito sotto è parte della stessa scheda (nota Matteo, 4 lug). */
   return (
-    <div
-      data-region="section"
-      className="grid grid-cols-4 pt-3.5 pb-1"
-      style={{
-        borderTop: "1px solid var(--container-border-subtle)",
-      }}
-    >
+    <div data-region="section" className="stat-strip">
       {cells.map((cell, i) => (
         <div
           key={cell.label}
-          className="min-w-0"
-          style={{
-            borderLeft: i > 0 ? "1px solid var(--container-border-subtle)" : "none",
-            paddingLeft: i > 0 ? "var(--space-3)" : 0,
-            paddingRight: "var(--space-2)",
-          }}
+          className={i > 0 ? "stat-strip__cell stat-strip__cell--divider" : "stat-strip__cell"}
         >
           <SpecCell label={cell.label} value={cell.value} index={i} changed={cell.changed} />
         </div>
@@ -122,22 +111,11 @@ export function SpecCell({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.04 + index * 0.05, type: "spring", stiffness: 400, damping: 26 }}
-      className="text-left min-w-0"
+      className="stat-strip__spec"
     >
       <div
-        className="truncate"
+        className={science ? "stat-strip__label stat-strip__label--science" : "stat-strip__label"}
         title={label}
-        style={{
-          color: science
-            ? "var(--score-accent)"
-            : "var(--text-muted)",
-          fontSize: "var(--font-size-xs)",
-          fontWeight: "var(--weight-semibold)" as any,
-          letterSpacing: "var(--tracking-caps)",
-          textTransform: "uppercase",
-          lineHeight: "var(--leading-tight)",
-          opacity: science ? 0.85 : 1,
-        }}
       >
         {label}
       </div>
@@ -148,51 +126,42 @@ export function SpecCell({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ type: "spring", stiffness: 420, damping: 30 }}
-          className="type-numeric flex items-baseline gap-1"
-          style={{
-            color: "var(--text-default)",
-            fontFeatureSettings: "'tnum'",
-            lineHeight: "var(--leading-tight)",
-            whiteSpace: "nowrap",
-            marginTop: 2,
-          }}
+          className="type-numeric stat-strip__value"
         >
           <span
-            style={{
-              fontSize: small
-                ? "var(--font-size-lg)"
-                : "clamp(var(--font-size-xl), 4.4vw, var(--font-size-2xl))",
-              fontWeight: "var(--weight-bold)" as any,
-            }}
+            className={
+              small
+                ? "stat-strip__value-main stat-strip__value-main--small"
+                : "stat-strip__value-main"
+            }
           >
             {parts.main}
           </span>
           {parts.unit && (
             <span
-              style={{
-                color: "var(--text-muted)",
-                fontSize: small ? "var(--font-size-xs)" : "var(--font-size-sm)",
-                fontWeight: "var(--weight-semibold)" as any,
-              }}
+              className={
+                small
+                  ? "stat-strip__value-sub stat-strip__value-sub--small"
+                  : "stat-strip__value-sub"
+              }
             >
               {parts.unit}
             </span>
           )}
           {parts.extra && (
             <span
-              style={{
-                color: "var(--text-muted)",
-                fontSize: small ? "var(--font-size-xs)" : "var(--font-size-sm)",
-                fontWeight: "var(--weight-semibold)" as any,
-              }}
+              className={
+                small
+                  ? "stat-strip__value-sub stat-strip__value-sub--small"
+                  : "stat-strip__value-sub"
+              }
             >
               {parts.extra}
             </span>
           )}
           {changed && (
             <span
-              className="inline-flex flex-shrink-0 self-center"
-              style={{ color: "var(--cta)" }}
+              className="stat-strip__value-trend"
               title={`Su misura per te · canonica ${changed.canonical}`}
               aria-label={`Valore su misura. Canonica: ${changed.canonical}`}
             >

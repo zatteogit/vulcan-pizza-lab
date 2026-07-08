@@ -69,36 +69,18 @@ export function IngredientsSection({
     <>
       {/* ── Ingredients + panetti stepper ── */}
       <div data-region="section">
-        <div className="flex items-center gap-3 sm:gap-4 mb-5">
-          <h3
-            className="font-serif flex-shrink-0"
-            style={{
-              fontSize: "clamp(1.85rem, 4.5vw, 2.45rem)",
-              lineHeight: "var(--leading-heading)",
-            }}
-          >
+        <div className="ingredients-header">
+          <h3 className="ingredients-header__title">
             {ui.ingredients}
           </h3>
           {/* Visore di sezione — come "Perfetti per te" */}
-          <div
-            className="flex-1 h-px"
-            style={{ background: "var(--container-divider)" }}
-          />
+          <div className="ingredients-header__divider" />
           <button
             onClick={handleCopyIngredients}
-            className="flex items-center gap-1.5 transition-colors px-3 py-1.5 rounded-full type-data-field active:scale-95"
-            style={{
-              color: "var(--text-muted)",
-              fontWeight: "var(--weight-medium)" as any,
-              background: "var(--recipe-bg)",
-              border: "1px solid var(--recipe-border)",
-            }}
+            className="type-data-field ingredients-header__copy"
           >
             {copiedIng ? (
-              <Check
-                size={14}
-                style={{ color: "var(--recipe-success)" }}
-              />
+              <Check size={14} className="ingredients-header__copy-icon" />
             ) : (
               <Copy size={14} />
             )}
@@ -106,16 +88,8 @@ export function IngredientsSection({
           </button>
         </div>
 
-        <div
-          className="flex flex-wrap items-center gap-x-4 gap-y-3 mb-5 pb-4"
-          style={{
-            borderBottom: "1px solid var(--recipe-divider-subtle)",
-          }}
-        >
-          <span
-            className="type-data"
-            style={{ color: "var(--text-muted)", fontWeight: "var(--weight-medium)" as any }}
-          >
+        <div className="ingredients-servings">
+          <span className="type-data ingredients-servings__label">
             {servingLabel}
           </span>
           <Stepper
@@ -135,10 +109,7 @@ export function IngredientsSection({
               color: "var(--recipe-highlight)",
             }}
           />
-          <span
-            className="type-body"
-            style={{ color: "var(--text-muted)" }}
-          >
+          <span className="type-body ingredients-servings__note">
             {normalizeMeasureUnitSuffixes(t(ui.doughBallsFrom, { w: fmt.grams(recipe.ball_weight_g) }))}
             {panSizeLabel ? ` · ${panSizeLabel}` : ""}
           </span>
@@ -159,13 +130,7 @@ export function IngredientsSection({
                 });
             return (
               <span
-                className="ml-auto px-2 py-0.5 rounded-md type-data"
-                style={{
-                  fontWeight: "var(--weight-medium)" as any,
-                  color: "var(--text-muted)",
-                  background: "var(--container-bg-low)",
-                  border: "1px solid var(--container-border)",
-                }}
+                className="type-data ingredients-servings__estimate"
                 title={cms.cooking.ballEstimateTooltip}
               >
                 {peopleLabel}
@@ -174,7 +139,7 @@ export function IngredientsSection({
           })()}
         </div>
 
-        <div className="flex flex-col">
+        <div className="ingredients-list">
           <IngRow
             name={ui.flour}
             detail={
@@ -198,28 +163,16 @@ export function IngredientsSection({
           {recipe.flour_blend && recipe.flour_blend.length > 0 && (
             /* VPL-B2: breakdown del mix risolto. Ogni farina di frumento mostra la
              * propria W (supporta più frumenti, es. Bonci); le senza glutine no. */
-            <div
-              style={{
-                paddingLeft: "var(--space-3)",
-                marginTop: "calc(-1 * var(--space-1))",
-                marginBottom: "var(--space-2)",
-              }}
-            >
+            <div className="ingredients-blend">
               {recipe.flour_blend.map((c) => (
-                <div
-                  key={c.name}
-                  className="flex items-baseline justify-between gap-4 py-1"
-                >
-                  <span className="type-body" style={{ color: "var(--text-muted)" }}>
+                <div key={c.name} className="ingredients-blend__row">
+                  <span className="type-body ingredients-blend__name">
                     ↳ {c.name}{" "}
                     <span className="type-numeric">
                       {c.pct}%{c.w ? ` · W${c.w}` : ""}
                     </span>
                   </span>
-                  <span
-                    className="type-numeric"
-                    style={{ color: "var(--text-muted)", fontSize: "var(--font-size-md)" }}
-                  >
+                  <span className="type-numeric ingredients-blend__grams">
                     {fmt.grams(c.grams)}
                   </span>
                 </div>
@@ -228,17 +181,11 @@ export function IngredientsSection({
                 /* VPL-B2: forza glutinica efficace = W frumento diluita dalla
                  * quota senza glutine. Informativa, spiega perché il mix è più
                  * delicato di una farina di pari W. */
-                <div
-                  className="flex items-baseline justify-between gap-4 py-1"
-                  style={{ marginTop: "var(--space-1)" }}
-                >
-                  <span className="type-body" style={{ color: "var(--text-muted)" }}>
+                <div className="ingredients-blend__row ingredients-blend__row--gluten">
+                  <span className="type-body ingredients-blend__name">
                     {ui.flourEffectiveGluten}
                   </span>
-                  <span
-                    className="type-numeric"
-                    style={{ color: "var(--text-muted)", fontSize: "var(--font-size-md)" }}
-                  >
+                  <span className="type-numeric ingredients-blend__grams">
                     ≈ W{recipe.effective_gluten_w}
                   </span>
                 </div>
@@ -258,16 +205,7 @@ export function IngredientsSection({
                      della riga Acqua — la temperatura è già nel dettaglio. */
                   <button
                     onClick={() => setShowRule55Tip((v) => !v)}
-                    className="ml-1.5 align-middle active:scale-90 transition-transform"
-                    style={{
-                      background: "none",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
-                      color: "var(--text-muted)",
-                      opacity: showRule55Tip ? 0.85 : 0.5,
-                      lineHeight: 1,
-                    }}
+                    className={`ingredients-rule55-toggle${showRule55Tip ? " ingredients-rule55-toggle--active" : ""}`}
                     aria-label={
                       showRule55Tip
                         ? cms.cooking.rule55AriaClose
@@ -288,20 +226,9 @@ export function IngredientsSection({
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="overflow-hidden"
-              style={{
-                paddingLeft: "var(--space-3)",
-                marginTop: "var(--space-1)",
-                marginBottom: "var(--space-2)",
-              }}
+              className="ingredients-rule55-tip"
             >
-              <div
-                className="type-body"
-                style={{
-                  color: "var(--text-muted)",
-                  lineHeight: "var(--leading-normal)",
-                }}
-              >
+              <div className="type-body ingredients-rule55-tip__text">
                 {recipe.water_temp_c < 5
                   ? t(cms.engineMessages["tip.waterTempCold"], {
                       temp: fmt.celsius(recipe.water_temp_c),
@@ -311,21 +238,11 @@ export function IngredientsSection({
                       ddt: fmt.celsius(recipe.science.desired_dough_temp_c),
                     })}
               </div>
-              <div
-                className="type-body"
-                style={{
-                  color: "var(--text-muted)",
-                  marginTop: 4,
-                  lineHeight: "var(--leading-normal)",
-                }}
-              >
+              <div className="type-body ingredients-rule55-tip__desc">
                 {rule55Description}
               </div>
               {recipe.science.friction_factor > 0 && (
-                <div
-                  className="type-data"
-                  style={{ color: "var(--text-muted)", marginTop: 4 }}
-                >
+                <div className="type-data ingredients-rule55-tip__friction">
                   {t(cms.engineMessages["tip.frictionNote"], {
                     friction: fmt.celsiusDelta(recipe.science.friction_factor),
                   })}
@@ -381,25 +298,13 @@ export function IngredientsSection({
           const prefFlour = split.prefermentFlourG;
           const prefWater = split.prefermentWaterG;
           return (
-            <div
-              className="mt-5 rounded-2xl overflow-hidden"
-              style={{ border: "1px solid var(--outline-variant)" }}
-            >
-              <div className="grid grid-cols-2">
-                <div className="px-5 py-4" style={{ background: "var(--container-bg-low)" }}>
-                  <div
-                    className="type-data"
-                    style={{
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
-                      color: "var(--text-accent)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      marginBottom: 6,
-                    }}
-                  >
+            <div className="ingredients-preferment">
+              <div className="ingredients-preferment__grid">
+                <div className="ingredients-preferment__cell ingredients-preferment__cell--filled">
+                  <div className="type-data ingredients-preferment__label">
                     1 · {name} ({isPoolish ? `${(cms.ui.statHydration).toLowerCase()} ${fmt.percent(100)}` : `${(cms.ui.statHydration).toLowerCase()} ${fmt.percent(45)}`})
                   </div>
-                  <div className="type-data" style={{ color: "var(--text-default)", lineHeight: 1.75, fontFeatureSettings: "'tnum'" }}>
+                  <div className="type-data ingredients-preferment__content">
                     {ui.flour}: <b>{fmt.grams(prefFlour)}</b>
                     <br />
                     {ui.water}: <b>{fmt.grams(prefWater)}</b>
@@ -407,20 +312,11 @@ export function IngredientsSection({
                     {cms.yeastLabels[recipe.yeast_type] || YEAST_LABELS[recipe.yeast_type]}: <b>{fmt.grams(recipe.yeast_g)}</b> (tutto)
                   </div>
                 </div>
-                <div className="px-5 py-4" style={{ borderLeft: "1px solid var(--outline-variant)" }}>
-                  <div
-                    className="type-data"
-                    style={{
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
-                      color: "var(--text-muted)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      marginBottom: 6,
-                    }}
-                  >
+                <div className="ingredients-preferment__cell ingredients-preferment__cell--divided">
+                  <div className="type-data ingredients-preferment__label ingredients-preferment__label--muted">
                     2 · {cms.cooking.finalDoughStageTitle}
                   </div>
-                  <div className="type-data" style={{ color: "var(--text-default)", lineHeight: 1.75, fontFeatureSettings: "'tnum'" }}>
+                  <div className="type-data ingredients-preferment__content">
                     {ui.flour}: <b>{fmt.grams(split.mainFlourG)}</b>
                     <br />
                     {ui.water}: <b>{fmt.grams(split.mainWaterG)}</b>
@@ -430,27 +326,14 @@ export function IngredientsSection({
                   </div>
                 </div>
               </div>
-              <div
-                className="px-5 py-3 type-body"
-                style={{
-                  color: "var(--text-muted)",
-                  borderTop: "1px solid var(--outline-variant)",
-                  lineHeight: 1.45,
-                }}
-              >
+              <div className="type-body ingredients-preferment__note">
                 {cms.cooking.prefermentSaltNote ??
                   "Il sale va sempre e solo nell'impasto finale: nel pre-fermento frenerebbe i lieviti."}
               </div>
             </div>
           );
         })()}
-        <div
-          className="mt-5 type-numeric"
-          style={{
-            color: "var(--text-muted)",
-            fontSize: "var(--font-size-xl)",
-          }}
-        >
+        <div className="type-numeric ingredients-total">
           {recipe.dough_balls} × {fmt.grams(recipe.ball_weight_g)} ={" "}
           {fmt.grams(recipe.total_dough_g)} {ui.totalDough}
         </div>
@@ -461,15 +344,12 @@ export function IngredientsSection({
 
         {/* ── PizzaNerd parameters grid & Pre-ferment guide (redistributed inline in nerdMode) ── */}
         {isNerd && (
-          <NerdAuraBlock className="mt-8">
-            <div className="pt-6 border-t border-[var(--recipe-divider-subtle)] text-left">
-              <h4 className="font-serif mb-4" style={{ color: "var(--text-default)", fontSize: "clamp(var(--font-size-3xl), 3vw, var(--font-size-5xl))" }}>
+          <NerdAuraBlock className="ingredients-aura-top">
+            <div className="ingredients-science">
+              <h4 className="ingredients-science__title">
                 {cms.ui.scienceTitle}
               </h4>
-              <div
-                className="grid grid-cols-2 sm:grid-cols-3 rounded-2xl overflow-hidden"
-                style={{ border: "1px solid var(--recipe-tip-nerd-border)", background: "var(--recipe-tip-nerd-bg)" }}
-              >
+              <div className="ingredients-science__grid">
                 {[
                   { l: `${cms.scienceLabels.yeastBaker} (baker's %)`, v: fmt.percent(recipe.science.yeast_baker_pct) },
                   { l: `${cms.scienceLabels.effectiveHours} @${fmt.celsius(18)}`, v: `${recipe.science.effective_hours_18c}h` },
@@ -481,23 +361,11 @@ export function IngredientsSection({
                   { l: cms.scienceLabels.frictionFactor, v: `+${fmt.celsiusDelta(recipe.science.friction_factor)}` },
                   { l: cms.scienceLabels.bakingEnergy, v: `${recipe.science.baking_energy_kj} kJ` },
                 ].map((cell) => (
-                  <div
-                    key={cell.l}
-                    className="px-5 py-4"
-                    style={{ border: "0.5px solid var(--recipe-tip-nerd-border)" }}
-                  >
-                    <div
-                      className="type-numeric"
-                      style={{
-                        fontSize: "var(--font-size-2xl)",
-                        fontWeight: "var(--weight-bold)" as any,
-                        color: "var(--score-accent)",
-                        fontFeatureSettings: "'tnum'",
-                      }}
-                    >
+                  <div key={cell.l} className="ingredients-science__cell">
+                    <div className="type-numeric ingredients-science__value">
                       {cell.v}
                     </div>
-                    <div style={{ fontSize: "var(--font-size-sm)", color: "var(--text-muted)", marginTop: "var(--space-1)", lineHeight: "var(--leading-normal)" }}>
+                    <div className="ingredients-science__label">
                       {cell.l}
                     </div>
                   </div>
@@ -508,7 +376,7 @@ export function IngredientsSection({
         )}
 
         {isNerd && recipe.has_pre_ferment && (
-          <NerdAuraBlock className="mt-6 mb-2" compact>
+          <NerdAuraBlock className="ingredients-aura-compact" compact>
             <PreFermentCard preFermentType={recipe.pre_ferment_type} />
           </NerdAuraBlock>
         )}

@@ -217,14 +217,6 @@ export function RecipeView({
   const resolvedMarginTop = isHeroReduced
     ? (showStickyHeader ? "var(--space-4, 16px)" : "var(--space-20, 80px)")
     : "calc(-1 * var(--space-19, 4.75rem))";
-  
-  const floatingBackStyle = {
-    background: "color-mix(in srgb, var(--container-page) 85%, transparent)",
-    backdropFilter: "blur(12px)",
-    WebkitBackdropFilter: "blur(12px)",
-    color: "var(--text-default)",
-    border: "1px solid var(--container-border)",
-  };
 
   const handleShare = () => {
     if (!shareUrl) return;
@@ -266,81 +258,44 @@ export function RecipeView({
   const heroTags =
     localizedStyleTags.length > 0 ? localizedStyleTags : fallbackStyleTags;
 
+  const eyebrowIsTailored = eyebrowTone === "tailored";
+
   return (
-    <div
-      className="min-h-screen relative"
-      style={{ background: "var(--container-page)", color: "var(--text-default)" }}
-    >
+    <div className="recipe-view">
       {/* Sfondo caldo base. Il glow PizzaNerd vive solo nei blocchi tecnici. */}
       <FireGlow variant="warm" intensity={0.22} />
 
       {/* Sticky header or Floating back button */}
       {showStickyHeader ? (
-        <header
-          data-region="toolbar"
-          className="sticky top-0 z-40"
-          style={{
-            background:
-              "color-mix(in srgb, var(--container-page) 88%, transparent)",
-            backdropFilter: "var(--backdrop-glass-strong)",
-            WebkitBackdropFilter: "var(--backdrop-glass-strong)",
-            borderBottom:
-              "1px solid var(--container-border-subtle)",
-            /* Notch / status bar (Safari iOS, PWA, landscape) */
-            paddingTop: "env(safe-area-inset-top, 0px)",
-          }}
-        >
-          <div className="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center gap-3">
+        <header data-region="toolbar" className="recipe-view-toolbar">
+          <div className="recipe-view-toolbar__inner">
             {back.to ? (
-              <Link
-                to={back.to}
-                className="flex items-center gap-1 active:scale-95 transition-transform"
-                style={{
-                  color: "var(--text-accent)",
-                  fontSize: "var(--font-size-xl)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  textDecoration: "none",
-                }}
-              >
+              <Link to={back.to} className="recipe-view-toolbar__back">
                 <ChevronLeft size={18} />
-                <span>{back.label}</span>
+                <span data-slot="label">{back.label}</span>
               </Link>
             ) : (
               <button
                 type="button"
                 onClick={back.onClick}
-                className="flex items-center gap-1 active:scale-95 transition-transform"
-                style={{
-                  color: "var(--text-accent)",
-                  fontSize: "var(--font-size-xl)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                }}
+                className="recipe-view-toolbar__back"
               >
                 <ChevronLeft size={18} />
-                <span>{back.label}</span>
+                <span data-slot="label">{back.label}</span>
               </button>
             )}
-            <div className="flex-1" />
-            <div id="recipe-header-actions" className="flex items-center gap-2" />
+            <div className="recipe-view-toolbar__spacer" />
+            <div id="recipe-header-actions" className="recipe-view-toolbar__actions" />
           </div>
         </header>
       ) : (
         <motion.div
-          className={`fixed ${back.positionClassName ?? "top-4 left-4"} z-50`}
+          className={backHidden ? "recipe-view-back recipe-view-back--hidden" : "recipe-view-back"}
           animate={{
             y: backHidden && !prefersReducedMotion ? -72 : 0,
             opacity: backHidden ? 0 : 1,
           }}
           transition={{ type: "spring", stiffness: 360, damping: 31, mass: 0.72 }}
-          style={{
-            pointerEvents: backHidden ? "none" : "auto",
-            /* Notch / status bar: allineato al ProfileButton della shell. */
-            top: "calc(var(--space-4, 16px) + env(safe-area-inset-top, 0px))",
-          }}
         >
           {back.to ? (
             <IconButton
@@ -348,8 +303,7 @@ export function RecipeView({
               to={back.to}
               size="lg"
               variant="ghost"
-              className="active:scale-90 transition-transform"
-              style={floatingBackStyle}
+              className="recipe-view-back__button"
               aria-label={back.label}
               title={back.label}
             >
@@ -361,8 +315,7 @@ export function RecipeView({
               onClick={back.onClick}
               size="lg"
               variant="ghost"
-              className="active:scale-90 transition-transform"
-              style={floatingBackStyle}
+              className="recipe-view-back__button"
               aria-label={back.label}
               title={back.label}
             >
@@ -375,34 +328,27 @@ export function RecipeView({
       {/* ── Hero photo ── */}
       <motion.div
         data-region="hero"
-        className="relative overflow-hidden"
+        className="recipe-view-hero"
         animate={{ height: isHeroReduced ? 0 : "clamp(220px, 32vh, 400px)" }}
         transition={{ type: "spring", stiffness: 280, damping: 28 }}
       >
-        <div className="h-full max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
-          <div className="relative h-full overflow-hidden sm:rounded-b-3xl">
+        <div className="recipe-view-hero__frame">
+          <div className="recipe-view-hero__clip">
             <motion.div
-              className="w-full h-full"
+              className="recipe-view-hero__parallax"
               style={{ y: heroImageY, scale: heroImageScale }}
             >
               <ImageWithFallback
                 src={photo}
                 alt={style.name}
-                className="w-full h-full"
-                style={{ objectFit: "cover" }}
+                className="recipe-view-hero__image"
               />
             </motion.div>
             <motion.div
-              className="absolute inset-0 pointer-events-none"
-              style={{ background: "var(--container-page)", opacity: heroOverlayOpacity }}
+              className="recipe-view-hero__scrim"
+              style={{ opacity: heroOverlayOpacity }}
             />
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background:
-                  "linear-gradient(to top, var(--overlay-backdrop) 0%, transparent 50%, color-mix(in srgb, var(--overlay-backdrop) 67%, transparent) 100%)",
-              }}
-            />
+            <div className="recipe-view-hero__gradient" />
           </div>
         </div>
       </motion.div>
@@ -411,49 +357,29 @@ export function RecipeView({
       <motion.div
         layout
         data-region="page-header"
-        className="max-w-6xl mx-auto px-5 sm:px-8 relative z-10"
+        className="recipe-view-header"
         animate={{ marginTop: resolvedMarginTop }}
         transition={{ type: "spring", stiffness: 280, damping: 28 }}
       >
         <motion.div
           layout
-          className="rounded-2xl text-left"
-          style={{
-            background: isHeroReduced ? "rgba(0, 0, 0, 0)" : "var(--recipe-hero-card-bg)",
-            backdropFilter: isHeroReduced ? "blur(0px) saturate(1)" : "blur(24px) saturate(1.7)",
-            WebkitBackdropFilter: isHeroReduced ? "blur(0px) saturate(1)" : "blur(24px) saturate(1.7)",
-            border: isHeroReduced ? "1px solid rgba(0, 0, 0, 0)" : "1px solid var(--container-border)",
-            boxShadow: isHeroReduced ? "none" : "var(--recipe-hero-card-shadow)",
-            y: isHeroReduced ? 0 : cardY,
-            // Transition responsive padding in-place
-            paddingTop: isHeroReduced ? 0 : (isMobile ? "var(--space-5)" : "var(--space-8)"),
-            paddingBottom: isHeroReduced ? 0 : (isMobile ? "var(--space-5)" : "var(--space-8)"),
-            paddingLeft: isHeroReduced ? "4px" : (isMobile ? "var(--space-3)" : "var(--space-5)"),
-            paddingRight: isHeroReduced ? 0 : (isMobile ? "var(--space-3)" : "var(--space-5)"),
-            /* UN solo binario sinistro per tutta la pagina (round 6-7, note
-               Matteo): il margine negativo compensa il padding interno così il
-               testo in card è sul rail — ma la card è ELEVATA, quindi non va
-               a battuta col viewport: resta un respiro di 8px (mobile) /
-               12px (desktop) per l'ombra. margine = respiro − gutter. */
-            marginLeft: isHeroReduced ? 0 : (isMobile ? "calc(var(--space-2) - var(--space-5))" : "calc(var(--space-3) - var(--space-8))"),
-            marginRight: isHeroReduced ? 0 : (isMobile ? "calc(var(--space-2) - var(--space-5))" : "calc(var(--space-3) - var(--space-8))"),
-            transition: "background 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), -webkit-backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s cubic-bezier(0.16, 1, 0.3, 1), margin 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
+          className={isHeroReduced ? "recipe-view-card recipe-view-card--reduced" : "recipe-view-card"}
+          style={{ y: isHeroReduced ? 0 : cardY }}
           transition={{ type: "spring", stiffness: 280, damping: 28 }}
         >
-          <div 
-            className="flex flex-col"
-            style={{
-              gap: isHeroReduced ? "var(--space-1, 4px)" : "var(--space-4, 16px)",
-              transition: "gap 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-            }}
+          <div
+            className={
+              isHeroReduced
+                ? "recipe-view-card__body recipe-view-card__body--reduced"
+                : "recipe-view-card__body"
+            }
           >
             {/* Eyebrow — firma d'origine colorata (unica dichiarazione).
                 Accanto, quando la ricetta è dirty, il ritorno alla base:
                 chi dichiara la divergenza offre anche la via del ritorno. */}
             <motion.div
               layout
-              className="flex flex-wrap items-baseline gap-x-3 gap-y-1"
+              className="recipe-view-eyebrow-row"
               transition={{ type: "spring", stiffness: 280, damping: 28 }}
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -463,18 +389,11 @@ export function RecipeView({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
                   transition={{ duration: 0.18, ease: "easeOut" }}
-                  style={{
-                    display: "inline-block",
-                    fontSize: "var(--font-size-md)",
-                    color:
-                      eyebrowTone === "tailored"
-                        ? "var(--cta)"
-                        : "var(--text-accent)",
-                    letterSpacing: "0.18em",
-                    textTransform: "uppercase" as any,
-                    fontWeight: "var(--weight-bold)" as any,
-                    transition: "color 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-                  }}
+                  className={
+                    eyebrowIsTailored
+                      ? "recipe-view-eyebrow recipe-view-eyebrow--tailored"
+                      : "recipe-view-eyebrow"
+                  }
                 >
                   {heroEyebrow}
                 </motion.span>
@@ -489,23 +408,9 @@ export function RecipeView({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     whileTap={{ scale: 0.95 }}
-                    className="inline-flex items-baseline gap-1"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      padding: 0,
-                      cursor: "pointer",
-                      color: "var(--text-muted)",
-                      fontSize: "var(--font-size-sm)",
-                      fontWeight: "var(--weight-medium)" as any,
-                      lineHeight: "var(--leading-tight)",
-                      textDecoration: "underline",
-                      textUnderlineOffset: 3,
-                      textDecorationColor:
-                        "color-mix(in srgb, var(--text-muted) 45%, transparent)",
-                    }}
+                    className="recipe-view-reset"
                   >
-                    <RotateCcw size={12} className="self-center" aria-hidden="true" />
+                    <RotateCcw size={12} className="recipe-view-reset__icon" aria-hidden="true" />
                     {cms.cooking.resetToOriginal}
                   </motion.button>
                 )}
@@ -518,10 +423,10 @@ export function RecipeView({
                 descrizione, accanto ad Approfondisci. */}
             <motion.div
               layout
-              className="flex items-center gap-3 flex-wrap"
+              className="recipe-view-title-row"
               transition={{ type: "spring", stiffness: 280, damping: 28 }}
             >
-              <Heading level="page" style={{ margin: 0 }}>
+              <Heading level="page" className="recipe-view-title">
                 {heroTitle}
               </Heading>
             </motion.div>
@@ -539,25 +444,13 @@ export function RecipeView({
                     y: { type: "spring", stiffness: 280, damping: 28 },
                     opacity: { duration: 0.18, ease: "easeInOut" }
                   }}
-                  className="flex flex-col gap-4 overflow-hidden"
+                  className="recipe-view-expanded"
                 >
                   {/* Round 3 "pulizia": le caratteristiche non sono più 3 chip
                       (scatole che ricalcavano la descrizione) ma UNA riga meta
                       muta — è metadata, non azione. */}
                   {heroTags.length > 0 && (
-                    <p
-                      style={{
-                        /* Ritmo uniforme della colonna (gap-4): nessun margine
-                           proprio — un margine negativo uscirebbe dal box
-                           overflow-hidden dell'animazione e verrebbe tagliato. */
-                        margin: 0,
-                        color: "var(--text-muted)",
-                        fontSize: "var(--font-size-md)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                        letterSpacing: "var(--tracking-spread)",
-                        lineHeight: "var(--leading-normal)",
-                      }}
-                    >
+                    <p className="recipe-view-tags">
                       {heroTags
                         .map((tag) =>
                           tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : tag,
@@ -570,40 +463,26 @@ export function RecipeView({
                   )}
 
                   {(introExtraSlot || shareUrl) && (
-                    <div
-                      className="flex flex-wrap items-center gap-x-6 gap-y-2"
-                      style={{
-                        /* Utilità, non contenuto: corpo minore. */
-                        fontSize: "clamp(var(--font-size-md), 3vw, var(--font-size-lg))",
-                        margin: 0,
-                      }}
-                    >
+                    <div className="recipe-view-utility-row">
                       {introExtraSlot}
                       {shareUrl && (
                         <button
                           type="button"
                           onClick={handleShare}
-                          className="inline-flex items-center gap-1.5 active:scale-95 transition-transform"
-                          style={{
-                            background: "none",
-                            border: "none",
-                            padding: 0,
-                            cursor: "pointer",
-                            fontSize: "inherit",
-                            fontWeight: "var(--weight-semibold)" as any,
-                            fontStyle: "normal",
-                            color: linkCopied ? "var(--recipe-success)" : "var(--text-accent)",
-                            textDecoration: "underline",
-                          }}
+                          className={
+                            linkCopied
+                              ? "recipe-view-share recipe-view-share--copied"
+                              : "recipe-view-share"
+                          }
                           title={linkCopied ? cms.ui.copied : cms.ui.share}
                           aria-label={cms.pages.recipeCopyLinkAria}
                         >
                           {linkCopied ? (
-                            <Check size={15} className="stroke-[2.5]" />
+                            <Check size={15} strokeWidth={2.5} />
                           ) : (
                             <Share2 size={15} />
                           )}
-                          <span>{linkCopied ? cms.ui.copied : cms.ui.share}</span>
+                          <span data-slot="label">{linkCopied ? cms.ui.copied : cms.ui.share}</span>
                         </button>
                       )}
                     </div>
@@ -616,8 +495,8 @@ export function RecipeView({
       </motion.div>
 
       {/* ── Contenuto ── */}
-      <div data-region="body" id="recipe-content-tabs-anchor" className="max-w-6xl mx-auto px-5 sm:px-8">
-        <div className="max-w-4xl mx-auto pt-6 pb-28 sm:pb-32">
+      <div data-region="body" id="recipe-content-tabs-anchor" className="recipe-view-body">
+        <div className="recipe-view-content">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}

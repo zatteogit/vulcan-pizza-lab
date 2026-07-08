@@ -72,30 +72,14 @@ export function InterpretationSwitcher({
   const hiddenCount = interpretations.filter((it) => !shownIds.has(it.id)).length;
 
   /* Niente etichetta (nota Matteo): la riga si spiega da sola perché UNA voce
-     è SEMPRE selezionata. */
-  const chipStyle = (isActive: boolean) => ({
-    background: isActive
-      ? "color-mix(in srgb, var(--primary) 10%, transparent)"
-      : "transparent",
-    border: isActive
-      ? "1px solid color-mix(in srgb, var(--primary) 28%, transparent)"
-      : "1px solid transparent",
-    color: isActive ? "var(--primary)" : "var(--text-muted)",
-    fontSize: "var(--font-size-sm)",
-    fontWeight: isActive
-      ? ("var(--weight-semibold)" as any)
-      : ("var(--weight-medium)" as any),
-    cursor: "pointer",
-    lineHeight: "var(--leading-tight)",
-  });
+     è SEMPRE selezionata. Stato attivo = modifier CSS, non style inline. */
 
   return (
     <div data-region="filters">
       {/* "Vedi tutte" resta SEMPRE in vista (fuori dallo scroller delle chip). */}
-      <div className="flex items-center gap-2">
+      <div className="interpretation-switcher">
         <div
-          className="flex-1 min-w-0 flex items-center gap-1.5 overflow-x-auto px-0.5 -mx-0.5"
-          style={{ scrollbarWidth: "none" }}
+          className="interpretation-switcher__scroll"
           role="group"
           aria-label={cms.misc.inspirationLabel ?? "Ispirazione"}
         >
@@ -105,8 +89,7 @@ export function InterpretationSwitcher({
               if (!defaultActive) onSelect(defaultInterpretation);
             }}
             aria-pressed={defaultActive}
-            className="flex-shrink-0 inline-flex items-center rounded-full px-2.5 py-1 active:scale-95 transition-all whitespace-nowrap"
-            style={chipStyle(defaultActive)}
+            className={`interpretation-switcher__chip${defaultActive ? " interpretation-switcher__chip--active" : ""}`}
           >
             {defaultInterpretation
               ? chipName(defaultInterpretation)
@@ -120,8 +103,7 @@ export function InterpretationSwitcher({
                 type="button"
                 onClick={() => onSelect(isActive ? defaultInterpretation : it)}
                 aria-pressed={isActive}
-                className="flex-shrink-0 inline-flex items-center rounded-full px-2.5 py-1 active:scale-95 transition-all whitespace-nowrap"
-                style={chipStyle(isActive)}
+                className={`interpretation-switcher__chip${isActive ? " interpretation-switcher__chip--active" : ""}`}
               >
                 {chipName(it)}
               </button>
@@ -136,16 +118,7 @@ export function InterpretationSwitcher({
           aria-haspopup="dialog"
           aria-label={cms.misc.inspirationSeeAll ?? "Vedi tutte"}
           title={cms.misc.inspirationSeeAll ?? "Vedi tutte"}
-          className="flex-shrink-0 inline-flex items-center gap-1 rounded-full px-2.5 py-1 active:scale-95 transition-all whitespace-nowrap"
-          style={{
-            background: "transparent",
-            border: "1px solid var(--container-border)",
-            color: "var(--text-muted)",
-            fontSize: "var(--font-size-sm)",
-            fontWeight: "var(--weight-semibold)" as any,
-            cursor: "pointer",
-            lineHeight: "var(--leading-tight)",
-          }}
+          className="interpretation-switcher__more"
         >
           {hiddenCount > 0 ? (
             <span className="type-numeric">+{hiddenCount}</span>
@@ -190,36 +163,19 @@ function InterpretationsModal({
       onClose={onClose}
       ariaLabelledby="inspiration-modal-title"
       size="md"
-      panelClassName="overflow-hidden flex flex-col"
+      panelClassName="interpretation-modal"
     >
-            <div
-              className="flex-shrink-0 flex items-center gap-3 px-5 py-3.5 sm:px-6 border-b"
-              style={{ borderColor: "var(--container-border-subtle)" }}
-            >
+            <div className="interpretation-modal__header">
               <h2
                 id="inspiration-modal-title"
-                className="flex-1 min-w-0 truncate"
-                style={{
-                  fontSize: "clamp(1.125rem, 4.6vw, var(--font-size-2xl))",
-                  fontWeight: "var(--weight-bold)" as any,
-                  margin: 0,
-                  lineHeight: "var(--leading-tight)",
-                }}
+                className="interpretation-modal__title"
               >
                 {cms.misc.inspirationModalTitle ?? "Ispirazioni d'autore"}
               </h2>
               <button
                 type="button"
                 onClick={onClose}
-                className="flex items-center justify-center rounded-full active:scale-90 transition-all flex-shrink-0"
-                style={{
-                  width: 36,
-                  height: 36,
-                  background: "var(--container-bg-low)",
-                  border: "1px solid var(--container-border)",
-                  color: "var(--text-muted)",
-                  cursor: "pointer",
-                }}
+                className="interpretation-modal__close"
                 aria-label={cms.ui.close}
               >
                 <X size={16} />
@@ -227,7 +183,7 @@ function InterpretationsModal({
             </div>
 
             <div
-              className="flex-1 overflow-y-auto overscroll-contain px-5 py-4 sm:px-6 flex flex-col gap-3"
+              className="interpretation-modal__body"
               role="radiogroup"
               aria-label={cms.misc.inspirationModalTitle ?? "Ispirazioni d'autore"}
             >
@@ -244,20 +200,11 @@ function InterpretationsModal({
               ))}
             </div>
 
-            <div
-              className="flex-shrink-0 px-5 pt-3 pb-[max(0.875rem,env(safe-area-inset-bottom))] sm:px-6 sm:pb-3.5 border-t"
-              style={{ borderColor: "var(--container-border-subtle)" }}
-            >
+            <div className="interpretation-modal__footer">
               <Link
                 to="/learn"
                 onClick={onClose}
-                style={{
-                  color: "var(--text-accent)",
-                  fontSize: "var(--font-size-md)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  textDecoration: "underline",
-                  textUnderlineOffset: 3,
-                }}
+                className="interpretation-modal__link"
               >
                 {cms.misc.inspirationLearnLink ?? "Scopri di più nella sezione Impara"} →
               </Link>
@@ -298,15 +245,7 @@ function InterpretationNarrativeCard({
             },
           }
         : {})}
-      className={`relative rounded-2xl p-4 ${selectable ? "cursor-pointer transition-all active:scale-99" : ""}`}
-      style={{
-        background: selected
-          ? "color-mix(in srgb, var(--primary) 6%, var(--container-card))"
-          : "var(--container-card)",
-        border: selected
-          ? "1px solid color-mix(in srgb, var(--primary) 32%, transparent)"
-          : "1px solid var(--container-border-ghost)",
-      }}
+      className={`interpretation-card${selectable ? " interpretation-card--selectable" : ""}${selected ? " interpretation-card--selected" : ""}`}
       title={
         selectable
           ? selected
@@ -319,69 +258,33 @@ function InterpretationNarrativeCard({
       {selectable && (
         <span
           aria-hidden="true"
-          className="absolute flex items-center justify-center rounded-full transition-all"
-          style={{
-            top: 14,
-            right: 14,
-            width: 22,
-            height: 22,
-            background: selected
-              ? "var(--primary)"
-              : "transparent",
-            border: selected
-              ? "1px solid var(--primary)"
-              : "1px solid var(--container-border)",
-            color: selected ? "var(--text-on-accent)" : "transparent",
-          }}
+          className={`interpretation-card__check${selected ? " interpretation-card__check--selected" : ""}`}
         >
           <Check size={13} strokeWidth={3} />
         </span>
       )}
-      <div className="min-w-0" style={selectable ? { paddingRight: 30 } : undefined}>
-        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-          <span
-            style={{
-              color: "var(--text-default)",
-              fontSize: "var(--font-size-lg)",
-              fontWeight: "var(--weight-semibold)" as any,
-            }}
-          >
+      <div className={`interpretation-card__body${selectable ? " interpretation-card__body--selectable" : ""}`}>
+        <div className="interpretation-card__title-row">
+          <span className="interpretation-card__name">
             {primaryName(it)}
           </span>
           {it.badge && (
-            <span
-              className="rounded-full px-2 py-0.5"
-              style={{
-                fontSize: "var(--font-size-xs)",
-                fontWeight: "var(--weight-semibold)" as any,
-                color: "var(--text-accent)",
-                background: "color-mix(in srgb, var(--text-accent) 10%, transparent)",
-              }}
-            >
+            <span className="interpretation-card__badge">
               {it.badge}
             </span>
           )}
         </div>
         {meta && (
-          <div
-            className="mt-0.5"
-            style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)" }}
-          >
+          <div className="interpretation-card__meta">
             {meta}
           </div>
         )}
         {it.technique_signature && (
-          <div
-            className="mt-2"
-            style={{ color: "var(--text-default)", fontSize: "var(--font-size-sm)", fontStyle: "italic" }}
-          >
+          <div className="interpretation-card__technique">
             {it.technique_signature}
           </div>
         )}
-        <p
-          className="mt-2"
-          style={{ color: "var(--text-muted)", fontSize: "var(--font-size-sm)", lineHeight: "var(--leading-normal)" }}
-        >
+        <p className="interpretation-card__story">
           {it.story}
         </p>
         {it.url && (
@@ -389,14 +292,8 @@ function InterpretationNarrativeCard({
             href={it.url}
             target="_blank"
             rel="noreferrer noopener"
-            className="mt-2 inline-block"
+            className="interpretation-card__url"
             onClick={(e) => e.stopPropagation()}
-            style={{
-              color: "var(--text-accent)",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--weight-semibold)" as any,
-              textDecoration: "underline",
-            }}
           >
             {it.author ?? it.pizzeria ?? "Approfondisci"} ↗
           </a>

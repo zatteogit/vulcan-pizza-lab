@@ -101,7 +101,7 @@ export function ToppingSection({
         (p) => p.timing === "just_before_assembly",
       );
       return (
-        <div className="mt-4 flex flex-col gap-2">
+        <div className="topping-inline">
           <CondimentChoiceStrip
             choices={toppingChoices}
             allChoices={allToppingChoices}
@@ -110,37 +110,18 @@ export function ToppingSection({
             mode="timeline"
           />
           {inlinePrep.length > 0 && (
-            <div className="mt-1 flex flex-col gap-1.5">
+            <div className="topping-inline__preps">
               {inlinePrep.map((p) => (
-                <div
-                  key={p.id}
-                  className="rounded-xl px-3.5 py-2.5"
-                  style={{
-                    background: "var(--surface-container)",
-                    border: "1px solid var(--outline-variant)",
-                  }}
-                >
-                  <span
-                    className="block type-data"
-                    style={{
-                      fontWeight: "var(--weight-semibold)" as any,
-                      color: "var(--text-default)",
-                    }}
-                  >
+                <div key={p.id} className="topping-inline__prep">
+                  <span className="topping-inline__prep-title type-data">
                     {p.title}
                     {p.duration_minutes > 0 && (
-                      <span style={{ color: "var(--text-muted)", fontWeight: "var(--weight-regular)" as any }}>
+                      <span className="topping-inline__prep-duration">
                         {" · "}{fmtDuration(p.duration_minutes, fmt)}
                       </span>
                     )}
                   </span>
-                  <span
-                    className="block mt-0.5 type-body"
-                    style={{
-                      color: "var(--text-muted)",
-                      lineHeight: "var(--leading-normal)",
-                    }}
-                  >
+                  <span className="topping-inline__prep-desc type-body">
                     {p.description}
                   </span>
                 </div>
@@ -178,9 +159,9 @@ export function ToppingSection({
     };
 
     return (
-      <section data-region="section" className="flex flex-col gap-6">
+      <section data-region="section" className="topping-panel">
         {/* Carousel image with title & badges overlayed */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-[var(--surface-container)] shadow-md">
+        <div className="topping-panel__carousel">
           <AnimatePresence initial={false} mode="popLayout">
             <motion.div
               key={activeToppingId}
@@ -188,45 +169,39 @@ export function ToppingSection({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -80 }}
               transition={{ type: "spring", stiffness: 350, damping: 30 }}
-              className="absolute inset-0 w-full h-full"
+              className="topping-panel__carousel-frame"
             >
               <img
                 src={toppingThumbnail}
                 alt={toppingName}
-                className="w-full h-full object-cover"
+                className="topping-panel__carousel-image"
                 loading="lazy"
               />
-              
+
               {/* Scrim overlay */}
               <div
-                className="absolute inset-0 z-0"
-                style={{
-                  background: "linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.25) 45%, transparent 75%)",
-                }}
+                className="topping-panel__carousel-scrim"
                 aria-hidden="true"
               />
 
               {/* Text overlay on image */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-1 text-left z-10">
-                <div
-                  className="type-data-sm"
-                  style={{
-                    color: "rgba(255, 255, 255, 0.7)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}
-                >
+              <div className="topping-panel__carousel-caption">
+                <div className="topping-panel__carousel-eyebrow type-data-sm">
                   {toppingSectionLabel(recipe.style, cms)}
                 </div>
-                
-                <Heading level="page" color="var(--overlay-text)" className="font-serif !text-white mt-0.5">
+
+                <Heading level="page" color="var(--overlay-text)" className="topping-panel__carousel-title">
                   {toppingName}
                 </Heading>
 
                 {activeRecipe.variant_name && (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    <Badge tone="muted" size="sm" style={{ background: "rgba(255, 255, 255, 0.18)", color: "rgba(255, 255, 255, 0.9)" }}>
+                  <div className="topping-panel__carousel-badges">
+                    <Badge
+                      tone="muted"
+                      size="sm"
+                      color="color-mix(in srgb, var(--overlay-text) 90%, transparent)"
+                      background="color-mix(in srgb, var(--overlay-text) 18%, transparent)"
+                    >
                       {activeRecipe.variant_name}
                     </Badge>
                   </div>
@@ -243,7 +218,7 @@ export function ToppingSection({
                 onClick={(e) => { e.stopPropagation(); prevTopping(); }}
                 size="md"
                 variant="bare"
-                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white backdrop-blur-sm border border-white/10 hover:bg-black/60 active:scale-95 transition-all"
+                className="topping-panel__nav topping-panel__nav--prev"
                 aria-label={cms.cooking.toppingPrevAria}
               >
                 <ChevronLeft size={20} />
@@ -253,7 +228,7 @@ export function ToppingSection({
                 onClick={(e) => { e.stopPropagation(); nextTopping(); }}
                 size="md"
                 variant="bare"
-                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 bg-black/40 text-white backdrop-blur-sm border border-white/10 hover:bg-black/60 active:scale-95 transition-all"
+                className="topping-panel__nav topping-panel__nav--next"
                 aria-label={cms.cooking.toppingNextAria}
               >
                 <ChevronRight size={20} />
@@ -263,7 +238,7 @@ export function ToppingSection({
         </div>
 
         {/* Thumbnails selector strip */}
-        <div className="w-full">
+        <div className="topping-panel__strip">
           <CondimentChoiceStrip
             choices={toppingChoices}
             allChoices={allToppingChoices}
@@ -274,28 +249,14 @@ export function ToppingSection({
         </div>
 
         {/* Details section */}
-        <div className="flex flex-col px-1">
+        <div className="topping-panel__details">
           {toppingDescription && (
-            <p
-              className="type-body-lg text-left"
-              style={{
-                color: "var(--text-default)",
-                lineHeight: "var(--leading-reading)",
-                maxWidth: 720,
-              }}
-            >
+            <p className="topping-panel__details-description type-body-lg">
               {toppingDescription}
             </p>
           )}
 
-          <p
-            className="mt-2 type-body text-left"
-            style={{
-              color: "var(--text-muted)",
-              lineHeight: "var(--leading-normal)",
-              maxWidth: 720,
-            }}
-          >
+          <p className="topping-panel__details-note type-body">
             {t(cms.cooking.toppingAmountsNote, {
               n: multiplier,
               unit: totalUnitName,
@@ -305,9 +266,7 @@ export function ToppingSection({
         </div>
 
         {/* Separator line */}
-        <div
-          style={{ borderTop: "1px solid var(--container-border-subtle)" }}
-        />
+        <div className="topping-panel__divider" />
 
         {(() => {
           const hasSections = topping.ingredients.some((ing) => ing.section !== undefined);
@@ -325,83 +284,51 @@ export function ToppingSection({
             });
 
             return (
-              <div className="flex flex-col gap-8">
+              <div className="topping-panel__sections">
                 {sectionOrder.map((sec) => {
                   const list = grouped[sec];
                   if (list.length === 0) return null;
                   const headerText = getSectionHeader(sec, cms.locale.id);
                   return (
-                    <div key={sec} className="flex flex-col gap-4">
-                      <div className="flex items-center gap-3">
-                        <span className="w-1 h-5 rounded-full" style={{ background: "var(--text-accent)" }} />
-                        <Heading level="xl" className="!my-0 font-serif text-left" style={{ fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)", color: "var(--text-default)" }}>
+                    <div key={sec} className="topping-panel__group">
+                      <div className="topping-panel__group-header">
+                        <span className="topping-panel__group-marker" />
+                        <Heading level="xl" className="topping-panel__group-title">
                           {headerText}
                         </Heading>
                       </div>
-                      <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="topping-panel__grid">
                         {list.map(({ ing, index }) => {
                           const displayAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
                           const detailParts: string[] = [];
                           if (ing.notes) detailParts.push(ing.notes);
                           if (ing.optional) detailParts.push(ui.pantryOptional);
                           return (
-                            <div
-                              key={`${ing.name}-${index}`}
-                              className="rounded-2xl p-4 sm:p-5 text-left"
-                              style={{
-                                background: "var(--container-bg-low)",
-                                border: "1px solid var(--container-border-subtle)",
-                              }}
-                            >
-                              <div className="flex items-start justify-between gap-4">
-                                <div className="flex min-w-0 items-center gap-3">
+                            <div key={`${ing.name}-${index}`} className="topping-panel__card">
+                              <div className="topping-panel__card-row">
+                                <div className="topping-panel__card-left">
                                   <span
                                     aria-hidden="true"
-                                    className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full type-numeric"
-                                    style={{
-                                      background: "color-mix(in srgb, var(--text-accent) 10%, transparent)",
-                                      border: "1px solid color-mix(in srgb, var(--text-accent) 22%, transparent)",
-                                      color: "var(--text-accent)",
-                                      fontSize: "var(--font-size-sm)",
-                                      fontWeight: "var(--weight-semibold)" as any,
-                                      lineHeight: 1,
-                                    }}
+                                    className="topping-panel__index type-numeric"
                                   >
                                     {index + 1}
                                   </span>
                                   <span
-                                    style={{
-                                      color: ing.optional ? "var(--text-muted)" : "var(--text-default)",
-                                      fontSize: "var(--font-size-xl)",
-                                      fontStyle: ing.optional ? "italic" : "normal",
-                                      lineHeight: "var(--leading-normal)",
-                                    }}
+                                    className={
+                                      ing.optional
+                                        ? "topping-panel__name topping-panel__name--optional"
+                                        : "topping-panel__name"
+                                    }
                                   >
                                     {ing.name}
                                   </span>
                                 </div>
-                                <span
-                                  className="type-numeric"
-                                  style={{
-                                    color: "var(--text-default)",
-                                    fontSize: "var(--font-size-2xl)",
-                                    fontWeight: "var(--weight-semibold)" as any,
-                                    lineHeight: "var(--leading-tight)",
-                                    flexShrink: 0,
-                                  }}
-                                >
+                                <span className="topping-panel__amount type-numeric">
                                   {displayAmount}
                                 </span>
                               </div>
                               {detailParts.length > 0 && (
-                                <div
-                                  className="mt-3 type-numeric text-left"
-                                  style={{
-                                    color: "var(--text-muted)",
-                                    fontSize: "var(--font-size-md)",
-                                    lineHeight: "var(--leading-normal)",
-                                  }}
-                                >
+                                <div className="topping-panel__detail type-numeric">
                                   {detailParts.join(" · ")}
                                 </div>
                               )}
@@ -416,70 +343,38 @@ export function ToppingSection({
             );
           } else {
             return (
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="topping-panel__grid">
                 {topping.ingredients.map((ing, i) => {
                   const displayAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
                   const detailParts: string[] = [];
                   if (ing.notes) detailParts.push(ing.notes);
                   if (ing.optional) detailParts.push(ui.pantryOptional);
                   return (
-                    <div
-                      key={`${ing.name}-${i}`}
-                      className="rounded-2xl p-4 sm:p-5 text-left"
-                      style={{
-                        background: "var(--container-bg-low)",
-                        border: "1px solid var(--container-border-subtle)",
-                      }}
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex min-w-0 items-center gap-3">
+                    <div key={`${ing.name}-${i}`} className="topping-panel__card">
+                      <div className="topping-panel__card-row">
+                        <div className="topping-panel__card-left">
                           <span
                             aria-hidden="true"
-                            className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full type-numeric"
-                            style={{
-                              background: "color-mix(in srgb, var(--text-accent) 10%, transparent)",
-                              border: "1px solid color-mix(in srgb, var(--text-accent) 22%, transparent)",
-                              color: "var(--text-accent)",
-                              fontSize: "var(--font-size-sm)",
-                              fontWeight: "var(--weight-semibold)" as any,
-                              lineHeight: 1,
-                            }}
+                            className="topping-panel__index type-numeric"
                           >
                             {i + 1}
                           </span>
                           <span
-                            style={{
-                              color: ing.optional ? "var(--text-muted)" : "var(--text-default)",
-                              fontSize: "var(--font-size-xl)",
-                              fontStyle: ing.optional ? "italic" : "normal",
-                              lineHeight: "var(--leading-normal)",
-                            }}
+                            className={
+                              ing.optional
+                                ? "topping-panel__name topping-panel__name--optional"
+                                : "topping-panel__name"
+                            }
                           >
                             {ing.name}
                           </span>
                         </div>
-                        <span
-                          className="type-numeric"
-                          style={{
-                            color: "var(--text-default)",
-                            fontSize: "var(--font-size-2xl)",
-                            fontWeight: "var(--weight-semibold)" as any,
-                            lineHeight: "var(--leading-tight)",
-                            flexShrink: 0,
-                          }}
-                        >
+                        <span className="topping-panel__amount type-numeric">
                           {displayAmount}
                         </span>
                       </div>
                       {detailParts.length > 0 && (
-                        <div
-                          className="mt-3 type-numeric text-left"
-                          style={{
-                            color: "var(--text-muted)",
-                            fontSize: "var(--font-size-md)",
-                            lineHeight: "var(--leading-normal)",
-                          }}
-                        >
+                        <div className="topping-panel__detail type-numeric">
                           {detailParts.join(" · ")}
                         </div>
                       )}
@@ -492,57 +387,28 @@ export function ToppingSection({
         })()}
 
         {technicalNotes.length > 0 && (
-          <div
-            className="rounded-3xl overflow-hidden"
-            style={{
-              border: "1px solid var(--recipe-tip-border)",
-              background: "var(--recipe-tip-beginner-bg)",
-            }}
-          >
-            <div
-              className="px-5 py-4 sm:px-6 type-data-field"
-              style={{
-                borderBottom: "1px solid var(--recipe-divider-subtle)",
-                color: "var(--text-default)",
-                fontWeight: "var(--weight-semibold)" as any,
-              }}
-            >
+          <div className="topping-panel__notes">
+            <div className="topping-panel__notes-header type-data-field">
               {cms.cooking.toppingNotesTitle}
             </div>
-            <div className="grid gap-0 md:grid-cols-2">
+            <div className="topping-panel__notes-grid">
               {technicalNotes.map((note, i) => (
                 <div
                   key={`${note.title}-${note.body}`}
-                  className="flex items-start gap-3 p-5 sm:p-6"
-                  style={{
-                    borderTop: i > 0 ? "1px solid var(--recipe-divider-subtle)" : undefined,
-                    borderLeft: i % 2 === 1 ? "1px solid var(--recipe-divider-subtle)" : undefined,
-                  }}
+                  className={[
+                    "topping-panel__note-item",
+                    i > 0 ? "topping-panel__note-item--top" : "",
+                    i % 2 === 1 ? "topping-panel__note-item--left" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                 >
-                  <Lightbulb
-                    size={17}
-                    className="mt-0.5 flex-shrink-0"
-                    style={{ color: "var(--recipe-tip-icon)" }}
-                  />
-                  <div className="min-w-0">
-                    <div
-                      className="type-data-field"
-                      style={{
-                        color: "var(--text-default)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                        lineHeight: "var(--leading-normal)",
-                      }}
-                    >
+                  <Lightbulb size={17} className="topping-panel__note-icon" />
+                  <div className="topping-panel__note-body">
+                    <div className="topping-panel__note-title type-data-field">
                       {note.title}
                     </div>
-                    <div
-                      className="type-body"
-                      style={{
-                        color: "var(--text-muted)",
-                        lineHeight: "var(--leading-normal)",
-                        marginTop: 4,
-                      }}
-                    >
+                    <div className="topping-panel__note-desc type-body">
                       {note.body}
                     </div>
                   </div>

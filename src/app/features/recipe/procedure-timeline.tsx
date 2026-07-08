@@ -74,70 +74,30 @@ export function ProcedureTimeline({
       <div data-region="section">
         {/* ── Compensations banner (PizzaNerd inline) ── */}
         {isNerd && compensations.length > 0 && (
-          <NerdAuraBlock className="mb-6">
-            <div
-              className="rounded-2xl overflow-hidden text-left animate-in fade-in duration-200"
-              style={{
-                background: "var(--recipe-tip-nerd-bg)",
-                border: "1px solid var(--recipe-tip-nerd-border)",
-                borderLeft: "3px solid var(--score-accent)",
-              }}
-            >
-          <div className="px-4 py-3 flex items-center gap-2.5"
-                style={{ borderBottom: "1px solid var(--recipe-tip-nerd-border)" }}
-              >
-                <FlaskConical
-                  size={14}
-                  style={{ color: "var(--score-accent)", flexShrink: 0 }}
-                />
-                <span
-                  className="type-data-field"
-                  style={{
-                    fontWeight: "var(--weight-semibold)" as any,
-                    color: "var(--score-accent)",
-                  }}
-                >
+          <NerdAuraBlock className="procedure-timeline-comp">
+            <div className="procedure-timeline-comp__panel">
+              <div className="procedure-timeline-comp__header">
+                <FlaskConical size={14} className="procedure-timeline-comp__icon" />
+                <span className="type-data-field procedure-timeline-comp__label">
                   {cms.misc.techAdjustmentsApplied}
                 </span>
-                <span
-                  className="px-2 py-0.5 rounded-md type-code"
-                  style={{
-                    fontWeight: "var(--weight-bold)" as any,
-                    letterSpacing: "var(--tracking-caps)",
-                    textTransform: "uppercase",
-                    color: "var(--score-accent)",
-                    background: "var(--stat-nerd-pill-bg)",
-                  }}
-                >
+                <span className="type-code procedure-timeline-comp__badge">
                   Nerd
                 </span>
-                <span
-                  className="type-numeric"
-                  style={{
-                    fontSize: "var(--font-size-md)",
-                    color: "var(--text-muted)",
-                    marginLeft: "auto",
-                  }}
-                >
+                <span className="type-numeric procedure-timeline-comp__count">
                   {compensations.length}
                 </span>
               </div>
-              <div className="px-4 py-2.5 flex flex-col gap-2">
+              <div className="procedure-timeline-comp__list">
                 {compensations.map((c, i) => (
                   <div
                     key={`${c.type}-${i}`}
-                    className="flex items-baseline justify-between gap-3 type-body"
+                    className="type-body procedure-timeline-comp__row"
                   >
-                    <span style={{ color: "var(--text-default)" }}>
+                    <span className="procedure-timeline-comp__row-label">
                       {c.reason}{compGramsSuffix(c, recipe.flour_g)}
                     </span>
-                    <span
-                      className="type-numeric flex-shrink-0"
-                      style={{
-                        color: "var(--score-accent)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                      }}
-                    >
+                    <span className="type-numeric procedure-timeline-comp__row-value">
                       {c.original !== c.compensated
                         ? `${formatCompVal(c.type, c.original)} → ${formatCompVal(c.type, c.compensated)}`
                         : formatCompVal(c.type, c.compensated)}
@@ -150,12 +110,9 @@ export function ProcedureTimeline({
         )}
 
         {/* Steps with inline tips */}
-        <div className="relative">
-          <div
-            className="absolute left-[20px] top-5 bottom-5 w-px"
-            style={{ background: "var(--recipe-divider)" }}
-          />
-          <div className="flex flex-col gap-0">
+        <div className="procedure-timeline-spine">
+          <div className="procedure-timeline-spine__rail" />
+          <div className="procedure-timeline-list">
             {recipe.timeline.map((step, i) => {
               const isFirst = i === 0;
               const isLast = i === recipe.timeline.length - 1;
@@ -200,112 +157,59 @@ export function ProcedureTimeline({
                     stiffness: 400,
                     damping: 25,
                   }}
-                  className="flex gap-5 pb-9 last:pb-0"
+                  className="procedure-timeline-step"
                 >
                   {/* Node */}
                   <div
-                    className="relative z-10 w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{
-                      background: isFirst
-                        ? "var(--recipe-node-first-bg)"
+                    className={`procedure-timeline-step__node${
+                      isFirst
+                        ? " procedure-timeline-step__node--first"
                         : isLast
-                          ? "var(--recipe-node-last-bg)"
-                          : "var(--recipe-node-mid-bg)",
-                      color:
-                        isFirst || isLast
-                          ? "var(--text-on-accent)"
-                          : "var(--recipe-node-accent)",
-                      border:
-                        isFirst || isLast
-                          ? "none"
-                          : "2px solid var(--recipe-border)",
-                    }}
+                          ? " procedure-timeline-step__node--last"
+                          : ""
+                    }`}
                   >
                     <StepIllustration
                       stepId={step.id}
                       size={34}
                       tone={isFirst || isLast ? "onAccent" : "accent"}
-                      style={{ opacity: 1 }}
+                      className="procedure-timeline-step__icon"
                     />
                   </div>
                   {/* Content */}
-                  <div className="flex-1 min-w-0 pt-0.5">
+                  <div className="procedure-timeline-step__content">
                     {/* Orario inizio (prima del nome step, ben evidente) */}
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="procedure-timeline-step__time-row">
                       <span
-                        className="px-2 py-0.5 rounded-md type-numeric"
-                        style={{
-                          fontSize: "var(--font-size-md)",
-                          fontWeight: "var(--weight-bold)" as any,
-                          background:
-                            isFirst || isLast
-                              ? "var(--recipe-badge-accent-bg)"
-                              : "var(--recipe-bg)",
-                          color:
-                            isFirst || isLast
-                              ? "var(--recipe-badge-accent-text)"
-                              : "var(--text-default)",
-                          letterSpacing: "0.02em",
-                        }}
+                        className={`type-numeric procedure-timeline-step__time${
+                          isFirst || isLast ? " procedure-timeline-step__time--accent" : ""
+                        }`}
                       >
                         {times
                           ? displayStepTime(step.id, times.start, startTime, bcp47, cms.cooking)
                           : step.timing_label}
                       </span>
                     </div>
-                    <span
-                      style={{
-                        color: "var(--text-default)",
-                        fontSize: "var(--font-size-3xl)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                      }}
-                    >
+                    <span className="procedure-timeline-step__title">
                       {isToppingTimelineStep(step.id) ? cms.cooking.toppingTitle : localizedStep.title}
                     </span>
                     {isToppingTimelineStep(step.id) ? (
                       <>
                         <ToppingSection mode="timeline" recipe={recipe} activeTopping={activeTopping} toppingChoices={toppingChoices} allToppingChoices={allToppingChoices} servingUnit={servingUnit} onSelectTopping={onSelectTopping} />
-                        <p
-                          className="mt-3"
-                          style={{
-                            color: "var(--text-muted)",
-                            fontSize: "var(--font-size-2xl)",
-                            lineHeight: "var(--leading-reading)",
-                          }}
-                        >
+                        <p className="procedure-timeline-step__desc procedure-timeline-step__desc--topping">
                           {localizedStep.description}
                         </p>
                       </>
                     ) : (
-                      <p
-                        className="mt-1"
-                        style={{
-                          color: "var(--text-muted)",
-                          fontSize: "var(--font-size-2xl)",
-                          lineHeight: "var(--leading-reading)",
-                        }}
-                      >
+                      <p className="procedure-timeline-step__desc">
                         {localizedStep.description}
                       </p>
                     )}
                     {step.duration_minutes > 0 && (
-                      <span
-                        className="inline-block mt-1.5 type-numeric"
-                        style={{
-                          color: "var(--text-muted)",
-                          fontSize: "var(--font-size-lg)",
-                        }}
-                      >
+                      <span className="type-numeric procedure-timeline-step__duration">
                         {t(cms.cooking.durationLabel, { duration: fmtDuration(effDuration(i), fmt) })}
                         {(stretch[i] ?? 0) !== 0 && (
-                          <span
-                            className="ml-1.5 px-1.5 py-0.5 rounded type-data-sm"
-                            style={{
-                              fontWeight: "var(--weight-semibold)" as any,
-                              background: "var(--recipe-comfort-chip-bg)",
-                              color: "var(--recipe-success)",
-                            }}
-                          >
+                          <span className="type-data-sm procedure-timeline-step__stretch">
                             {stretch[i]! > 0 ? "+" : "−"}
                             {t(cms.cooking.comfortLabel, {
                               duration: fmtDuration(Math.abs(stretch[i]!), fmt),
