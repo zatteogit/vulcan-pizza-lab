@@ -417,6 +417,26 @@ ondata ha il suo commit di checkpoint sul branch `refactor/tokenizzazione`.
   (attributi SVG `<circle>`/`<text>` geometrici, non presentazione CSS —
   intenzionalmente non tokenizzati).
 
+- **Ondata 6** — atomi nuovi (theme.css T1) per i componenti `ds/*`:
+  `--switch-track-h` (1.15rem, altezza track Switch); `--measure-dialog` (400px),
+  `--measure-snackbar` (420px), `--measure-confirm-sm` (24rem, card ConfirmDialog
+  sm; md usa `--measure-xs`); `--font-size-step-title` (`clamp(1.5rem,4vw,2.5rem)`,
+  titolo StepHeader); `--scrim-modal` (`rgba(0,0,0,0.32)` — velo Dialog/BottomSheet;
+  NON riusare `--overlay-backdrop` che è 0.45); `--radius-fab` (18px, fra lg 16 e
+  xl 20); `--blur-3xs` (4px, scrim non-brand ConfirmDialog); `--elevation-confirm`
+  /`-brand`/`-action` (ombre card+azione ConfirmDialog); classe `.troubleshooting-shell`.
+  Switch RIUSA `--switch-thumb-shadow` esistente al posto del suo shadow inline raw
+  (drift accettato: inline era `0 1px 2px rgba(0,0,0,.18)`, token è `0 1px 3px
+  color-mix(...18%)` — convergenza drift→token, 1px di blur sub-percettibile) e
+  mappa il focus-ring Radix a `outline` primary 3px/offset 2px.
+- **Ondata 6** — residui semantics a baseline (§9): SOLO gli accettati già noti —
+  `recipe-view` 3 inline (parallax MotionValue), `tilt-card` 2 inline (MotionValue),
+  `home` 1 inline (scroll-fade), `score-ring` 1 markup-presentation (SVG). ds/* e
+  coda pagine a 0. Le utility Tailwind di puro layout rimaste in file NON
+  interamente convertiti (es. `flex flex-col gap-4` nel `matchSlot` di recipe.tsx,
+  fuori dal perimetro dei residui delegati) non sono tracciate dal cricchetto e
+  restano — non sono debito semantics.
+
 Se durante il lavoro emergono altri one-off legittimi, documentali qui e
 lasciali a baseline (cricchetto), non forzare un atomo finto.
 
