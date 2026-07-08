@@ -54,19 +54,20 @@ export function Badge<T extends ElementType = "span">({
 }: BadgeProps<T>) {
   const Component = (as ?? "span") as ElementType;
   const badgeColor = color ?? TONE_COLOR[tone];
+  const isXs = size === "xs";
+  const sizeClass = isXs ? "badge-size-xs" : "";
 
   return (
     <Component
       className={[
         "badge-base",
-        size === "xs" ? "badge-size-xs" : "",
+        "ds-badge",
+        sizeClass,
         className,
       ].filter(Boolean).join(" ")}
       style={{
-        color: badgeColor,
-        background:
-          background ??
-          `color-mix(in srgb, ${badgeColor} 15%, transparent)`,
+        ["--ds-badge-color" as any]: badgeColor,
+        ...(background ? { ["--ds-badge-bg" as any]: background } : {}),
         ...style,
       }}
       {...props}

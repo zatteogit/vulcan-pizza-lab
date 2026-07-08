@@ -12460,6 +12460,212 @@
   }
 
 
+
+  /* ═══ DS COMPONENT: Badge ═══ */
+  .ds-badge {
+    color: var(--ds-badge-color);
+    background: var(--ds-badge-bg, color-mix(in srgb, var(--ds-badge-color) 15%, transparent));
+  }
+
+  /* ═══ DS COMPONENT: Chip ═══ */
+  .ds-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    border-radius: var(--radius-xl);
+    padding-block: var(--space-2-5);
+    padding-inline: var(--space-4);
+    transition: all 0.2s;
+    background: var(--chip-bg);
+    color: var(--chip-text);
+    border: var(--border-width-thin) solid var(--chip-border);
+    font-size: var(--chip-font-size);
+    font-weight: var(--chip-weight);
+  }
+
+  .ds-chip:active {
+    transform: scale(0.95);
+  }
+
+  .ds-chip--active {
+    background: var(--chip-bg-active);
+    color: var(--chip-text-active);
+    border-color: transparent;
+    font-weight: var(--chip-weight-active);
+  }
+
+  .ds-chip__icon {
+    flex-shrink: 0;
+  }
+
+  /* ═══ DS COMPONENT: CtaButton ═══ */
+  /* ═══ COMPONENT: ds/CtaButton ═══ */
+
+  .ds-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: var(--cta-btn-font-size);
+    box-shadow: none;
+    transition: transform 150ms ease;
+  }
+
+  .ds-cta:active {
+    transform: scale(0.95);
+  }
+
+  .ds-cta--primary {
+    background: var(--cta-btn-bg);
+    color: var(--cta-btn-text);
+    border: none;
+    font-weight: var(--cta-btn-weight);
+  }
+
+  .ds-cta--secondary {
+    background: var(--btn-secondary-bg);
+    color: var(--btn-secondary-text);
+    border: var(--border-width-thin) solid var(--btn-secondary-border);
+    font-weight: var(--btn-secondary-weight);
+  }
+
+  .ds-cta--r-pill {
+    border-radius: var(--radius-full);
+  }
+
+  .ds-cta--r-xl {
+    border-radius: var(--radius-xl);
+  }
+
+  .ds-cta--r-lg {
+    border-radius: var(--radius-lg);
+  }
+
+  .ds-cta--elevated.ds-cta--primary {
+    box-shadow: var(--cta-btn-shadow);
+  }
+
+  .ds-cta--deep.ds-cta--primary {
+    box-shadow: var(--cta-btn-shadow-deep);
+  }
+
+  /* ═══ DS COMPONENT: Heading ═══ */
+  .ds-heading {
+    color: var(--ds-heading-color);
+  }
+
+  /* ═══ DS COMPONENT: IconButton ═══ */
+  .ds-iconbtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* Size */
+  .ds-iconbtn--sm {
+    width: var(--space-8);
+    height: var(--space-8);
+  }
+  .ds-iconbtn--md {
+    width: var(--space-10);
+    height: var(--space-10);
+  }
+  .ds-iconbtn--lg {
+    width: var(--space-12);
+    height: var(--space-12);
+  }
+
+  /* Variant */
+  .ds-iconbtn--surface {
+    background: var(--surface-container);
+    color: var(--icon-muted);
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+  .ds-iconbtn--ghost {
+    background: transparent;
+    border: none;
+  }
+  .ds-iconbtn--bare {
+    /* nessuna apparenza: bg/bordo/colore restano al call-site */
+  }
+
+  /* Radius */
+  .ds-iconbtn--r-full {
+    border-radius: var(--radius-full);
+  }
+  .ds-iconbtn--r-lg {
+    border-radius: var(--radius-lg);
+  }
+  .ds-iconbtn--r-xl {
+    border-radius: var(--radius-xl);
+  }
+  .ds-iconbtn--r-2xl {
+    border-radius: var(--radius-2xl);
+  }
+
+  /* ═══ DS COMPONENT: FilterChip ═══ */
+  /* ds/FilterChip — T4 chip filtro */
+
+  .ds-filterchip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    padding-inline: var(--space-3);
+    padding-block: var(--space-1-5);
+    background: var(--chip-bg);
+    color: var(--chip-text);
+    border: var(--border-width-thin) solid var(--chip-border);
+    cursor: pointer;
+    font-size: var(--chip-font-size);
+    font-weight: var(--chip-weight-active);
+    transition: transform 0.2s ease;
+  }
+
+  .ds-filterchip:active {
+    transform: scale(0.95);
+  }
+
+  .ds-filterchip--active {
+    background: var(--chip-bg-active);
+    color: var(--chip-text-active);
+    border-color: transparent;
+  }
+
+  .ds-filterchip--sm {
+    font-size: var(--font-size-sm);
+  }
+
+  .ds-filterchip--md {
+    font-size: var(--chip-font-size);
+  }
+
+  .ds-filterchip--r-md {
+    border-radius: var(--radius-md);
+  }
+
+  .ds-filterchip--r-lg {
+    border-radius: var(--radius-lg);
+  }
+
+  .ds-filterchip--r-xl {
+    border-radius: var(--radius-xl);
+  }
+
+  .ds-filterchip--r-pill {
+    border-radius: var(--radius-full);
+  }
+
+  .ds-filterchip__count {
+    font-size: var(--font-size-sm);
+    opacity: 0.65;
+    font-feature-settings: "tnum";
+  }
+
+
 }
 
 /* ═══════════════════════════════════════════════════════════════════

@@ -29,13 +29,10 @@ export type CtaButtonProps<T extends ElementType = "button"> = {
   "as" | "children" | "className" | "style"
 >;
 
-const BASE =
-  "inline-flex items-center justify-center gap-2 active:scale-95 transition-transform";
-
 const RADIUS_CLASS: Record<CtaRadius, string> = {
-  pill: "rounded-full",
-  xl: "rounded-xl",
-  lg: "rounded-lg",
+  pill: "ds-cta--r-pill",
+  xl: "ds-cta--r-xl",
+  lg: "ds-cta--r-lg",
 };
 
 export function CtaButton<T extends ElementType = "button">({
@@ -54,35 +51,17 @@ export function CtaButton<T extends ElementType = "button">({
 
   return (
     <Component
-      className={
-        className
-          ? `${BASE} ${RADIUS_CLASS[radius]} ${className}`
-          : `${BASE} ${RADIUS_CLASS[radius]}`
-      }
-      style={{
-        background: primary
-          ? "var(--cta-btn-bg)"
-          : "var(--btn-secondary-bg)",
-        color: primary
-          ? "var(--cta-btn-text)"
-          : "var(--btn-secondary-text)",
-        border: primary
-          ? "none"
-          : "1px solid var(--btn-secondary-border)",
-        fontSize: "var(--cta-btn-font-size)",
-        fontWeight: primary
-          ? ("var(--cta-btn-weight)" as CSSProperties["fontWeight"])
-          : ("var(--btn-secondary-weight)" as CSSProperties["fontWeight"]),
-        boxShadow:
-          primary && elevated
-            ? deepShadow
-              ? "var(--cta-btn-shadow-deep)"
-              : "var(--cta-btn-shadow)"
-            : "none",
-        cursor: "pointer",
-        textDecoration: "none",
-        ...style,
-      }}
+      className={[
+        "ds-cta",
+        primary ? "ds-cta--primary" : "ds-cta--secondary",
+        RADIUS_CLASS[radius],
+        elevated ? "ds-cta--elevated" : "",
+        deepShadow ? "ds-cta--deep" : "",
+        className ?? "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      style={style}
       {...props}
     >
       {children}

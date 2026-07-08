@@ -23,15 +23,15 @@ export type FilterChipProps = {
 } & Omit<MotionButtonProps, "children" | "className" | "style">;
 
 const SIZE_CLASS: Record<FilterChipSize, string> = {
-  sm: "px-3 py-1.5",
-  md: "px-3 py-1.5",
+  sm: "ds-filterchip--sm",
+  md: "ds-filterchip--md",
 };
 
 const RADIUS_CLASS: Record<FilterChipRadius, string> = {
-  md: "rounded-md",
-  lg: "rounded-lg",
-  xl: "rounded-xl",
-  pill: "rounded-full",
+  md: "ds-filterchip--r-md",
+  lg: "ds-filterchip--r-lg",
+  xl: "ds-filterchip--r-xl",
+  pill: "ds-filterchip--r-pill",
 };
 
 export function FilterChip({
@@ -49,38 +49,22 @@ export function FilterChip({
       type="button"
       aria-pressed={active}
       className={[
-        "inline-flex items-center gap-1.5 active:scale-95 transition-transform",
+        "ds-filterchip",
+        active ? "ds-filterchip--active" : "",
         SIZE_CLASS[size],
         RADIUS_CLASS[radius],
         className,
       ]
         .filter(Boolean)
         .join(" ")}
-      style={{
-        background: active ? "var(--chip-bg-active)" : "var(--chip-bg)",
-        color: active ? "var(--chip-text-active)" : "var(--chip-text)",
-        border: active ? "1px solid transparent" : "1px solid var(--chip-border)",
-        cursor: "pointer",
-        fontSize: size === "sm" ? "var(--font-size-sm)" : "var(--chip-font-size)",
-        fontWeight: "var(--chip-weight-active)" as CSSProperties["fontWeight"],
-        ...style,
-      }}
+      style={style}
       whileHover={{ y: -1 }}
       transition={{ type: "spring", stiffness: 500, damping: 30 }}
       {...props}
     >
       {children}
       {count != null && (
-        <span
-          className="type-numeric"
-          style={{
-            fontSize: "var(--font-size-sm)",
-            opacity: 0.65,
-            fontFeatureSettings: "'tnum'",
-          }}
-        >
-          {count}
-        </span>
+        <span className="type-numeric ds-filterchip__count">{count}</span>
       )}
     </motion.button>
   );

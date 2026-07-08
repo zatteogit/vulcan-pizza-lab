@@ -12,8 +12,6 @@ import { Check } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ReactNode } from "react";
 
-const BASE = "flex items-center gap-2 rounded-xl px-4 py-2.5 transition-all active:scale-95";
-
 export interface ChipProps {
   label: ReactNode;
   active: boolean;
@@ -25,19 +23,8 @@ export function Chip({ label, active, onToggle, icon }: ChipProps) {
   return (
     <button
       onClick={onToggle}
-      className={BASE}
+      className={`ds-chip${active ? " ds-chip--active" : ""}`}
       aria-pressed={active}
-      style={{
-        background: active ? "var(--chip-bg-active)" : "var(--chip-bg)",
-        color: active ? "var(--chip-text-active)" : "var(--chip-text)",
-        border: active
-          ? "1px solid transparent"
-          : "1px solid var(--chip-border)",
-        fontSize: "var(--chip-font-size)",
-        fontWeight: active
-          ? ("var(--chip-weight-active)" as unknown as number)
-          : ("var(--chip-weight)" as unknown as number),
-      }}
     >
       <AnimatePresence>
         {active && (
@@ -51,7 +38,7 @@ export function Chip({ label, active, onToggle, icon }: ChipProps) {
           </motion.span>
         )}
       </AnimatePresence>
-      {icon && !active && <span className="flex-shrink-0">{icon}</span>}
+      {icon && !active && <span className="ds-chip__icon">{icon}</span>}
       {label}
     </button>
   );

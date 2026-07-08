@@ -52,8 +52,12 @@ export function Heading({
   const composite = LEVEL_CLASS[level];
   return (
     <Tag
-      className={className ? `${composite} ${className}` : composite}
-      style={{ color, ...style }}
+      className={
+        className
+          ? `${composite} ds-heading ${className}`
+          : `${composite} ds-heading`
+      }
+      style={{ ["--ds-heading-color" as any]: color, ...style }}
     >
       {children}
     </Tag>
