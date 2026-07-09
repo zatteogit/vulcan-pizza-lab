@@ -1,7 +1,4 @@
 /* Type systems for the switchable themes (see [data-theme] blocks in theme.css).
    · Vulcan (default) → Playfair Display · DM Sans · DM Mono
-   · Editoriale       → Fraunces · Hanken Grotesk · DM Mono
-   · Classica         → Cormorant Garamond · Mulish · DM Mono
-   · Minimal          → Marcellus · Jost · DM Mono
-   Exploration phase: all families load together; trim to the winner later. */
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Mulish:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Marcellus&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap");
+   Exploration phase: theme families load together; trim to the winner later. */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Mono:wght@400;500&display=swap");

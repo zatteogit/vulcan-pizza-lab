@@ -22,6 +22,19 @@
         "--strictPort"
       ],
       "port": 5180
+    },
+    {
+      "name": "vulcan-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5183",
+        "--strictPort"
+      ],
+      "port": 5183
     }
   ]
 }

@@ -21,9 +21,6 @@ export interface ThemeMeta {
 
 export const THEMES: ThemeMeta[] = [
   { id: "", preview: "vulcan", label: "Vulcan", note: "L'originale · Playfair" },
-  { id: "editoriale", preview: "editoriale", label: "Editoriale", note: "Gourmet mag · Fraunces" },
-  { id: "classica", preview: "classica", label: "Classica", note: "Fine dining · Cormorant" },
-  { id: "minimal", preview: "minimal", label: "Minimal", note: "Kinfolk · Marcellus" },
 ];
 
 function applyTheme(id: string) {
@@ -138,7 +135,10 @@ export function ThemeControls() {
                     fontFamily: "var(--font-serif-family)",
                     fontSize: "var(--font-size-2-5xl)",
                     fontWeight: 600,
-                    color: "var(--text-default)",
+                    /* --on-surface è ridefinito dal [data-theme] della tessera
+                       stessa (i temi scuri come Insegna restano leggibili);
+                       --text-default risolverebbe sul tema di pagina. */
+                    color: "var(--on-surface)",
                     lineHeight: 1.1,
                   }}
                 >
@@ -149,8 +149,10 @@ export function ThemeControls() {
                 style={{
                   fontFamily: "var(--font-sans-family)",
                   fontSize: "var(--font-size-xs)",
-                  color: active ? "var(--text-default)" : "var(--text-muted)",
-                  opacity: active ? 0.8 : 0.6,
+                  color: active
+                    ? "var(--on-surface)"
+                    : "var(--on-surface-variant)",
+                  opacity: active ? 0.8 : 0.75,
                 }}
               >
                 {t.note}

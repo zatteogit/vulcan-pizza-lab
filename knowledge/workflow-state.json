@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-04T23:35:00.000Z",
+  "lastUpdated": "2026-07-09T08:15:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 151,
@@ -10,11 +10,11 @@
     "stylesInDb": 29
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-04 v2 registra l'introduzione dello stile 'Pizza Montanara' separato da 'Pizza Fritta' nel database, l'ottimizzazione grafica dei selettori in RecipeSetupPanel (PremiumSelect sostituito da bottoni/card), il redesign dell'indicatore match su explore.tsx (singola chip lineare 92% -> 98%), i tooltips per acronimi disciplinari (STG, IGP), il blocco dello scroll del body in StyleDetailSheet, e la semplificazione delle funzioni di disegno canvas nel DebugWorkspace.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-09 registra la rimozione dei vecchi temi switchabili sperimentali (Editoriale, Classica, Minimal), dei relativi fogli stile e font non utilizzati per ottimizzare il bundle, e il salvataggio del token --density-spacious in staging in check-design-tokens.mjs.",
   "filesMappedCount": 151,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-04-v2",
+  "lastScannedChapter": "kipi-update-2026-07-09",
   "chapters": [
     {
       "id": "pizza-engine",
