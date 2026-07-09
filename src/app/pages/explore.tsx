@@ -3,7 +3,7 @@
    Layout editoriale e filtri flessibili (Spotify/Pinterest style).
    Tab: Stili — /explore */
 
-import { ArrowRight, ChevronUp } from "lucide-react";
+import { ArrowRight, ChevronUp, Heart, HeartCrack, HeartHandshake, HeartOff, HeartPulse } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
@@ -71,6 +71,20 @@ function isExploreFilter(value: string | null): value is ExploreFilter {
 
 function isFamilyFilter(value: string | null): value is FamilyId | "all" {
   return FAMILY_IDS.includes(value as FamilyId | "all");
+}
+
+function MatchHeartIcon({ score }: { score: number }) {
+  const Icon =
+    score >= 90
+      ? HeartHandshake
+      : score >= 75
+        ? Heart
+        : score >= 60
+          ? HeartPulse
+          : score >= 40
+            ? HeartCrack
+            : HeartOff;
+  return <Icon size={11} fill={score >= 60 ? "currentColor" : "none"} aria-hidden="true" className="explore-card__match-icon" />;
 }
 
 /* ── Componente Editoriale per la Ricetta in Primo Piano ── */
@@ -711,6 +725,7 @@ function StyleCatalogCard({
                 title={match.headroom > 0 ? `Ottimizzabile: ${match.mc}% → ${match.mc + match.headroom}% col tuo setup` : `Match: ${match.mc}%`}
                 aria-label={match.headroom > 0 ? `Compatibilità ${match.mc}%, ottimizzabile fino a ${match.mc + match.headroom}% col tuo setup` : `Compatibilità ${match.mc}%`}
               >
+                <MatchHeartIcon score={match.mc} />
                 <span className="explore-card__match-mc">{match.mc}%</span>
                 {match.headroom > 0 && (
                   <>

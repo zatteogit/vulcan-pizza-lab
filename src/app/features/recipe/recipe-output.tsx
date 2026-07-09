@@ -7,15 +7,14 @@ import { ToppingSection } from "./topping-section";
 import { ProcedureHeroControls } from "./procedure-hero";
 import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
-import { addMinutes, copyToClipboard, gramsApprox, localizeStep, normalizeMeasureUnitSuffixes, optimizeComfort, roundToQuarter, formatToppingAmountForLocale, getSectionHeader, getServingUnitLabel, getToppingIngredientSectionOrder, toppingSectionLabel } from "./recipe-output-format";
-import type { CmsContent } from "../cms/cms-context";
+import { addMinutes, localizeStep, optimizeComfort, roundToQuarter, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
 import type { FlourEntry } from "../../data/flour-database";
-import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, UserConstraints, YEAST_LABELS, type PanConfig } from "../../domain/pizza-engine";
+import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
 import { RecipeFeedbackForm } from "./recipe-feedback";
-import { getRecipesByAuthenticity, getToppingForStyle, TOPPING_CONCEPTS, type IngredientSection, type ToppingIngredient } from "../../data/topping-library";
+import { getRecipesByAuthenticity, getToppingForStyle } from "../../data/topping-library";
 import { ConfirmDialog, IconButton } from "../../components/ds/index";
 
 
@@ -87,7 +86,7 @@ export function RecipeOutput({
   hideContextSummary = false,
   recipeControls,
   matchSlot,
-  showFeedback = true,
+  showFeedback = false,
   selectedToppingConcept,
   onSelectTopping,
   onTabChange,
@@ -98,7 +97,6 @@ export function RecipeOutput({
   onRequestPersonalization,
 }: RecipeOutputProps) {
   const reduceMotion = useReducedMotion();
-  const [copiedIng, setCopiedIng] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
@@ -258,13 +256,6 @@ export function RecipeOutput({
   const showNerdToggle = nerdAvailable && !!onNerdModeChange;
   const isNerd = showNerdToggle && !!nerdMode;
 
-  const handleCopyIngredients = () => {
-    const text = formatIngredientsText(recipe, cms, bcp47);
-    copyToClipboard(text, () => {
-      setCopiedIng(true);
-      setTimeout(() => setCopiedIng(false), 2000);
-    });
-  };
   /* ── Timeline comoda (feedback giugno 2026): minuti extra per fase ──
    * Le fasi flessibili possono stirarsi/accorciarsi entro tolleranze: un'ora
    * in più di frigo non cambia la pizza, ma evita la sveglia alle 5. */
@@ -493,24 +484,32 @@ export function RecipeOutput({
 
 
   function handleTimeInput(
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>,
   ) {
-    const [h, m] = e.target.value.split(":").map(Number);
-    if (!isNaN(h) && !isNaN(m)) {
-      const d = new Date(startTime);
-      d.setHours(h, m, 0, 0);
-      setStartTime(d);
-    }
-    setEditingTime(false);
+    const value = e.target.value;
+    if (!value) return;
+    const d = value.includes("T") ? new Date(value) : (() => {
+      const [h, m] = value.split(":").map(Number);
+      const next = new Date(startTime);
+      if (!isNaN(h) && !isNaN(m)) next.setHours(h, m, 0, 0);
+      return next;
+    })();
+    if (!isNaN(d.getTime())) setStartTime(roundToQuarter(d));
+    if (e.type === "blur") setEditingTime(false);
   }
 
   function handleEndTimeInput(
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>,
   ) {
-    const [h, m] = e.target.value.split(":").map(Number);
-    if (!isNaN(h) && !isNaN(m)) {
-      const desired = new Date(startTime);
-      desired.setHours(h, m, 0, 0);
+    const value = e.target.value;
+    if (!value) return;
+    const desired = value.includes("T") ? new Date(value) : (() => {
+      const [h, m] = value.split(":").map(Number);
+      const next = new Date(startTime);
+      if (!isNaN(h) && !isNaN(m)) next.setHours(h, m, 0, 0);
+      return next;
+    })();
+    if (!isNaN(desired.getTime())) {
       // If desired end is before or equal to start, assume next day
       if (desired.getTime() <= startTime.getTime()) {
         desired.setDate(desired.getDate() + 1);
@@ -526,7 +525,7 @@ export function RecipeOutput({
       // Inizio sempre su un quarto d'ora: "parti alle 07:37" è precisione finta.
       setStartTime(roundToQuarter(newStart));
     }
-    setEditingEndTime(false);
+    if (e.type === "blur") setEditingEndTime(false);
   }
 
   const updateBalls = (n: number) => {
@@ -735,8 +734,6 @@ export function RecipeOutput({
         servingUnit={servingUnit}
         panSizeLabel={panSizeLabel}
         updateBalls={updateBalls}
-        copiedIng={copiedIng}
-        handleCopyIngredients={handleCopyIngredients}
         showRule55Tip={showRule55Tip}
         setShowRule55Tip={setShowRule55Tip}
         rule55Description={rule55Description}
@@ -833,63 +830,4 @@ export function RecipeOutput({
 
     </div>
   );
-}
-
-
-function formatIngredientsText(r: GeneratedRecipe, cms: CmsContent, bcp47: string) {
-  const ui = cms.ui;
-  const fmt = createFormatter(ui, bcp47);
-  const yeastName = cms.yeastLabels[r.yeast_type] || YEAST_LABELS[r.yeast_type] || r.yeast_type;
-  const title = t(ui.clipboardTitle, { style: r.style.name });
-  const balls = normalizeMeasureUnitSuffixes(t(ui.clipboardBalls, { n: r.dough_balls, w: fmt.grams(r.ball_weight_g) }));
-  const total = normalizeMeasureUnitSuffixes(t(ui.clipboardTotal, { g: fmt.grams(r.total_dough_g) }));
-  const doughText = `${title}\n${balls}\n\n${ui.flour} W${r.flour_w} · P/L ${r.flour_pl}: ${gramsApprox(r.flour_g, fmt)}\n${ui.water}: ${gramsApprox(r.water_g, fmt)} (${fmt.percent(r.hydration_pct)})\n${ui.salt}: ${fmt.grams(r.salt_g)}${r.yeast_g > 0 ? `\n${yeastName}: ${fmt.grams(r.yeast_g)}` : ""}${r.fat_g > 0 ? `\n${r.fat_label || ui.oilEvo}: ${fmt.grams(r.fat_g)}` : ""}\n\n${total}`;
-
-  const toppingRefId = r.style.default_topping_ref;
-  if (!toppingRefId) return doughText;
-  const topping = getToppingForStyle(toppingRefId, r.style);
-  if (!topping?.ingredients?.length) return doughText;
-
-  const concept = TOPPING_CONCEPTS[topping.concept_ref];
-  const toppingTitle = topping.name ?? concept?.name ?? cms.cooking.toppingTitle;
-
-  const hasSections = topping.ingredients.some((ing) => ing.section !== undefined);
-  let toppingDetailsText = "";
-
-  if (hasSections) {
-    const sectionOrder = getToppingIngredientSectionOrder(topping.ingredients);
-    const grouped: Record<IngredientSection, ToppingIngredient[]> = {
-      ripieno: [],
-      base: [],
-      crosta: [],
-      superficie: [],
-    };
-    topping.ingredients.forEach((ing) => {
-      const sec = ing.section ?? "superficie";
-      grouped[sec].push(ing);
-    });
-
-    const sectionsText: string[] = [];
-    sectionOrder.forEach((sec) => {
-      const list = grouped[sec];
-      if (list.length === 0) return;
-      const header = getSectionHeader(sec, bcp47);
-      const lines = list.map((ing) => {
-        const singleAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
-        const notes = [ing.notes, ing.optional ? ui.pantryOptional : null].filter(Boolean).join(" · ");
-        return `- ${ing.name}: ${singleAmount}${notes ? ` — ${notes}` : ""}`;
-      });
-      sectionsText.push(`[${header}]\n${lines.join("\n")}`);
-    });
-    toppingDetailsText = sectionsText.join("\n\n");
-  } else {
-    const lines = topping.ingredients.map((ing) => {
-      const singleAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
-      const notes = [ing.notes, ing.optional ? ui.pantryOptional : null].filter(Boolean).join(" · ");
-      return `${ing.name}: ${singleAmount}${notes ? ` — ${notes}` : ""}`;
-    });
-    toppingDetailsText = lines.join("\n");
-  }
-
-  return `${doughText}\n\n${cms.cooking.toppingTitle} — ${toppingTitle}\n${toppingDetailsText}\n\n${cms.cooking.toppingAmountsNote}`;
 }

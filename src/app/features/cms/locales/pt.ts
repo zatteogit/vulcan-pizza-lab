@@ -934,6 +934,9 @@ export const PT_LOCALE: CmsContent = {
     favoriteRemoveAria: "Remover {name} dos favoritos",
     savedRecipesTitle: "Suas receitas salvas",
     savedRecipesSubtitle: "As versões sob medida que você guardou",
+    savedRecipesEmptyTitle: "Nenhuma receita salva ainda",
+    savedRecipesEmptyBody: "As versões sob medida que você salvar aparecerão aqui.",
+    savedRecipesEmptyCta: "Explorar estilos",
     savedRecipeRemove: "Remover do livro de receitas",
     savedRecipeRemoveAria: "Remover {name} do livro de receitas",
     ovenTitle: "Seu forno",
@@ -1273,6 +1276,7 @@ export const PT_LOCALE: CmsContent = {
     hintLimitMaxLabel: "limite máx",
   },
   cooking: {
+    recipeCanonicalEyebrow: "Original",
     glossaryPreferment: "Biga e prefermentos",
     glossaryBulk: "Fermentação em bloco",
     glossaryProof: "Fermentação final (appretto)",

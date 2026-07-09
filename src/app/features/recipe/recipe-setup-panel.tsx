@@ -540,7 +540,7 @@ function MatchSummary({
           return (
             <div key={axis.key} className="setup-match__axis">
               <div className="setup-match__axis-row">
-                <span title={axis.label}>{axis.shortLabel}</span>
+                <span title={axis.label}>{axis.label}</span>
                 <span className="type-numeric">{val}</span>
               </div>
               <div className="setup-match__track">

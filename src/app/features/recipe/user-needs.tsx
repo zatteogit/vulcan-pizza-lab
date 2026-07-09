@@ -128,6 +128,12 @@ const FLOUR_OPTIONS_GENERIC: FlourOption[] = [
     detail: "Media forza",
   },
   {
+    id: "tipo_1",
+    name: "Farina tipo 1",
+    w: "W220–280",
+    detail: "Rustica, profumo di cereale",
+  },
+  {
     id: "manitoba",
     name: "Manitoba",
     w: "W340–380",

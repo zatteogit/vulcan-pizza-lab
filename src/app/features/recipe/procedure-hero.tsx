@@ -3,10 +3,11 @@
  * "pronto per il pasto" e Timeline comoda. Stato e handler restano in
  * RecipeOutput (gli orari guidano anche la timeline): qui arrivano via props. */
 
-import { CalendarRange, Minus, Plus } from "lucide-react";
+import { CalendarRange, Clock3, Minus, Plus } from "lucide-react";
 import type {
   ChangeEvent,
   Dispatch,
+  FocusEvent,
   MutableRefObject,
   SetStateAction,
 } from "react";
@@ -22,6 +23,11 @@ import {
   shiftQuarter,
 } from "./recipe-output-format";
 
+function localDateTimeValue(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 interface ProcedureHeroControlsProps {
   startTime: Date;
   setStartTime: Dispatch<SetStateAction<Date>>;
@@ -32,8 +38,8 @@ interface ProcedureHeroControlsProps {
   setEditingTime: Dispatch<SetStateAction<boolean>>;
   editingEndTime: boolean;
   setEditingEndTime: Dispatch<SetStateAction<boolean>>;
-  handleTimeInput: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleEndTimeInput: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleTimeInput: (e: ChangeEvent<HTMLInputElement> | FocusEvent<HTMLInputElement>) => void;
+  handleEndTimeInput: (e: ChangeEvent<HTMLInputElement> | FocusEvent<HTMLInputElement>) => void;
   mealSlots: (TimeSlot & { idealStart: Date; isFeasible: boolean })[];
   comfortToggled: boolean;
   setComfortToggled: Dispatch<SetStateAction<boolean>>;
@@ -102,14 +108,17 @@ export function ProcedureHeroControls({
             </button>
             {editingTime ? (
               <input
-                type="time"
+                type="datetime-local"
                 autoFocus
-                defaultValue={fmt.clockTime(startTime)}
+                defaultValue={localDateTimeValue(startTime)}
+                step={900}
                 onBlur={handleTimeInput}
+                onChange={handleTimeInput}
                 onKeyDown={(e) => {
                   if (e.key === "Enter")
                     (e.target as HTMLInputElement).blur();
                 }}
+                aria-label={ui.startTime}
                 className="procedure-hero__time-input type-numeric"
               />
             ) : (
@@ -133,6 +142,14 @@ export function ProcedureHeroControls({
               <Plus size={13} />
             </button>
           </div>
+          <button
+            type="button"
+            onClick={() => setEditingTime(true)}
+            className="procedure-hero__native-picker"
+          >
+            <Clock3 size={13} aria-hidden="true" />
+            Modifica data e ora
+          </button>
         </div>
 
         <div className="procedure-hero__time">
@@ -149,14 +166,17 @@ export function ProcedureHeroControls({
             </button>
             {editingEndTime ? (
               <input
-                type="time"
+                type="datetime-local"
                 autoFocus
-                defaultValue={fmt.clockTime(endTime)}
+                defaultValue={localDateTimeValue(endTime)}
+                step={900}
                 onBlur={handleEndTimeInput}
+                onChange={handleEndTimeInput}
                 onKeyDown={(e) => {
                   if (e.key === "Enter")
                     (e.target as HTMLInputElement).blur();
                 }}
+                aria-label={ui.endTime}
                 className="procedure-hero__time-input type-numeric"
               />
             ) : (
@@ -165,7 +185,7 @@ export function ProcedureHeroControls({
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
-                  {hasFlexiblePhases ? "~" : ""}
+                  {hasFlexiblePhases ? "ca. " : ""}
                   {fmt.clockTime(endTime)}
                 </span>
                 <span className="procedure-hero__time-suffix type-data-sm">
@@ -181,6 +201,14 @@ export function ProcedureHeroControls({
               <Plus size={13} />
             </button>
           </div>
+          <button
+            type="button"
+            onClick={() => setEditingEndTime(true)}
+            className="procedure-hero__native-picker"
+          >
+            <Clock3 size={13} aria-hidden="true" />
+            Modifica data e ora
+          </button>
         </div>
       </div>
 

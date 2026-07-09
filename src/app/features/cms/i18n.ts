@@ -15,9 +15,11 @@ import type { CmsUiStrings } from "./cms-context";
 /** Simple template interpolation: replaces {key} placeholders */
 export function t(template: string | undefined, vars: Record<string, string | number>): string {
   if (!template) return "";
-  return template.replace(/\{(\w+)\}/g, (_, key) =>
+  const interpolated = template.replace(/\{(\w+)\}/g, (_, key) =>
     vars[key] !== undefined ? String(vars[key]) : `{${key}}`,
   );
+  // Template e valore interpolato possono entrambi dichiarare una stima.
+  return interpolated.replace(/~\s*~+/g, "~");
 }
 
 export type UnitSystem = "metric" | "imperial";

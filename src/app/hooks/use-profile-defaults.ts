@@ -116,6 +116,7 @@ function loadProfileDefaults(): ProfileDefaults {
         constraints.has_pizza_stone = constraints.surfaces.includes("refractory_brick") || constraints.surfaces.includes("cordierite_stone");
         constraints.has_pizza_steel = constraints.surfaces.includes("steel_plate");
         constraints.has_baking_pan = constraints.surfaces.includes("aluminum_pan") || constraints.surfaces.includes("blue_steel_pan") || constraints.surfaces.includes("cast_iron");
+        constraints.oven_heat_profile = equip.oven_heat_profile ?? constraints.oven_heat_profile;
       }
     }
   } catch { /* */ }

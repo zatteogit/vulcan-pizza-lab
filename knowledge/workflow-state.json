@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-09T08:15:00.000Z",
+  "lastUpdated": "2026-07-10T01:10:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 151,
@@ -10,11 +10,11 @@
     "stylesInDb": 29
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-09 registra la rimozione dei vecchi temi switchabili sperimentali (Editoriale, Classica, Minimal), dei relativi fogli stile e font non utilizzati per ottimizzare il bundle, e il salvataggio del token --density-spacious in staging in check-design-tokens.mjs.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-10 registra la nascita delle tre nuove direzioni tipografiche (Riserva, Lettera, Copertina), il controllo datetime-local completo sulle ore di fermentazione in ProcedureHero, la revisione del selettore profili di calore forno (Statico, Ventilato, Gas sotto/dietro, Legna) ed il layout delle ricette salvate vuote sul Profilo.",
   "filesMappedCount": 151,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-09",
+  "lastScannedChapter": "kipi-update-2026-07-10",
   "chapters": [
     {
       "id": "pizza-engine",

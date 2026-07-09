@@ -1013,6 +1013,9 @@ export const JA_LOCALE: CmsContent = {
     favoriteRemoveAria: "{name}をお気に入りから削除",
     savedRecipesTitle: "保存したレシピ",
     savedRecipesSubtitle: "あなた好みに調整したバージョン",
+    savedRecipesEmptyTitle: "保存したレシピはまだありません",
+    savedRecipesEmptyBody: "保存したレシピはここに表示されます。",
+    savedRecipesEmptyCta: "スタイルを見る",
     savedRecipeRemove: "レシピ帳から削除",
     savedRecipeRemoveAria: "{name}をレシピ帳から削除",
     ovenTitle:
@@ -1411,6 +1414,7 @@ export const JA_LOCALE: CmsContent = {
     tabRecipe: "\u30EC\u30B7\u30D4",
     tabRecipeTailored: "\u3042\u306A\u305F\u7528\u306E\u30EC\u30B7\u30D4",
     recipeCanonical: "\u57FA\u672C\u30EC\u30B7\u30D4",
+    recipeCanonicalEyebrow: "\u30AA\u30EA\u30B8\u30CA\u30EB",
     preCookTitle: "\u30AA\u30FC\u30D6\u30F3\u3092\u6E29\u3081\u308B\u524D\u306B",
     preCookBody:
       "\u3053\u308C\u306F\u307E\u3060\u30AA\u30EA\u30B8\u30CA\u30EB\u306E\u30EC\u30B7\u30D4\u3067\u3059\u3002\u3053\u306E\u307E\u307E\u59CB\u3081\u308B\u3053\u3068\u3082\u3001\u5148\u306B\u30AA\u30FC\u30D6\u30F3\u3084\u6642\u9593\u306B\u5408\u308F\u305B\u3066\u8ABF\u6574\u3059\u308B\u3053\u3068\u3082\u3067\u304D\u307E\u3059\u3002",

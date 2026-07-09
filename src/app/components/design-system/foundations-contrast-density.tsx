@@ -82,7 +82,7 @@ const ALL_PAIRS: ContrastPair[] = [
   { id: "cta-cbg", fgVar: "--cta-foreground", bgVar: "--cta", label: "CTA FG / CTA", category: "semantic", required: "AA" },
   { id: "destr-dbg", fgVar: "--destructive-foreground", bgVar: "--destructive", label: "Destructive FG / Destructive", category: "semantic", required: "AA" },
   { id: "muted-bg", fgVar: "--muted-foreground", bgVar: "--background", label: "Muted FG / Background", category: "semantic", required: "AA" },
-  { id: "primary-bg", fgVar: "--primary", bgVar: "--background", label: "Primary / Background", category: "semantic", required: "AA18" },
+  { id: "primary-bg", fgVar: "--primary", bgVar: "--background", label: "Primary / Background", category: "semantic", required: "AA" },
 
   /* ── M3 Container (tonal) ── */
   { id: "pc-opc", fgVar: "--on-primary-container", bgVar: "--primary-container", label: "on-primary-container / primary-container", category: "container", required: "AA" },
@@ -98,9 +98,18 @@ const ALL_PAIRS: ContrastPair[] = [
   /* ── Cross-component (common patterns) ── */
   { id: "fg-surfcl", fgVar: "--foreground", bgVar: "--surface-container-low", label: "foreground / surface-container-low", category: "cross", required: "AAA" },
   { id: "muted-surfcl", fgVar: "--muted-foreground", bgVar: "--surface-container-low", label: "muted-foreground / surface-container-low", category: "cross", required: "AA" },
-  { id: "muted-surfcont", fgVar: "--muted-foreground", bgVar: "--surface-container", label: "muted-foreground / surface-container", category: "cross", required: "AA18" },
-  { id: "primary-surfch", fgVar: "--primary", bgVar: "--surface-container-high", label: "primary / surface-container-high (FAB surface)", category: "cross", required: "AA18" },
+  { id: "muted-surfcont", fgVar: "--muted-foreground", bgVar: "--surface-container", label: "muted-foreground / surface-container", category: "cross", required: "AA" },
+  { id: "primary-surfch", fgVar: "--primary", bgVar: "--surface-container-high", label: "primary / surface-container-high (non-text icon)", category: "cross", required: "AA18" },
   { id: "fg-surfch", fgVar: "--foreground", bgVar: "--surface-container-high", label: "foreground / surface-container-high", category: "cross", required: "AA" },
+  { id: "text-default-page", fgVar: "--text-default", bgVar: "--container-page", label: "text-default / container-page", category: "cross", required: "AAA" },
+  { id: "text-muted-page", fgVar: "--text-muted", bgVar: "--container-page", label: "text-muted / container-page", category: "cross", required: "AA" },
+  { id: "text-muted-container", fgVar: "--text-muted", bgVar: "--container-bg", label: "text-muted / container-bg", category: "cross", required: "AA" },
+  { id: "text-subtle-container", fgVar: "--text-subtle", bgVar: "--container-bg", label: "text-subtle / container-bg", category: "cross", required: "AA" },
+  { id: "text-accent-page", fgVar: "--text-accent", bgVar: "--container-page", label: "text-accent / container-page", category: "cross", required: "AA" },
+  { id: "text-accent-container", fgVar: "--text-accent", bgVar: "--container-bg", label: "text-accent / container-bg", category: "cross", required: "AA" },
+  { id: "text-success-page", fgVar: "--text-success", bgVar: "--container-page", label: "text-success / container-page", category: "cross", required: "AA" },
+  { id: "text-warning-page", fgVar: "--text-warning", bgVar: "--container-page", label: "text-warning / container-page", category: "cross", required: "AA" },
+  { id: "text-error-page", fgVar: "--text-error", bgVar: "--container-page", label: "text-error / container-page", category: "cross", required: "AA" },
 ];
 
 /* ═══════════════════════════════════════════════════════════

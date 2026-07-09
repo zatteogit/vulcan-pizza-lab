@@ -351,6 +351,9 @@ interface CmsProfile {
   favoriteRemoveAria: string;
   savedRecipesTitle: string;
   savedRecipesSubtitle: string;
+  savedRecipesEmptyTitle: string;
+  savedRecipesEmptyBody: string;
+  savedRecipesEmptyCta: string;
   savedRecipeRemove: string;
   savedRecipeRemoveAria: string;
   // Sections
@@ -1432,7 +1435,7 @@ export const CMS_DEFAULTS: CmsContent = {
     tabRecipe: "Ricetta",
     tabRecipeTailored: "Ricetta su misura",
     recipeCanonical: "Ricetta canonica",
-    recipeCanonicalEyebrow: "Canonica",
+    recipeCanonicalEyebrow: "Originale",
     preCookTitle: "Prima di accendere il forno",
     preCookBody:
       "Questa è ancora la ricetta originale. Puoi partire così, oppure adattarla al tuo forno e ai tuoi tempi prima di iniziare la pizzata.",
@@ -1472,7 +1475,7 @@ export const CMS_DEFAULTS: CmsContent = {
     ceilingOvenWall:
       "Il forno ti ferma a {ceiling}/100: niente leopardatura, ma una buona pizza sì.",
     ceilingNeeds: "Per arrivare a {ceiling}/100 ti serve: {needs}.",
-    ceilingNeedsAtCeiling: "Questa versione assume: {needs}.",
+    ceilingNeedsAtCeiling: "Per questa versione serve: {needs}.",
     ceilingOptimize: "Puoi portarla a {ceiling}/100 ottimizzando — hai già tutto.",
     ceilingCanonicalOk: "Anche la ricetta canonica resta fattibile col tuo setup.",
     ceilingCompromise:
@@ -2114,6 +2117,9 @@ export const CMS_DEFAULTS: CmsContent = {
     favoriteRemoveAria: "Rimuovi {name} dai preferiti",
     savedRecipesTitle: "Le tue ricette salvate",
     savedRecipesSubtitle: "Le versioni su misura che hai messo da parte",
+    savedRecipesEmptyTitle: "Nessuna ricetta salvata",
+    savedRecipesEmptyBody: "Le versioni su misura che salverai compariranno qui.",
+    savedRecipesEmptyCta: "Esplora gli stili",
     savedRecipeRemove: "Rimuovi dal ricettario",
     savedRecipeRemoveAria: "Rimuovi {name} dal ricettario",
     ovenTitle: "Il tuo forno",

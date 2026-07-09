@@ -933,6 +933,9 @@ export const DE_LOCALE: CmsContent = {
     favoriteRemoveAria: "{name} aus Favoriten entfernen",
     savedRecipesTitle: "Deine gespeicherten Rezepte",
     savedRecipesSubtitle: "Die maßgeschneiderten Versionen, die du gespeichert hast",
+    savedRecipesEmptyTitle: "Noch keine gespeicherten Rezepte",
+    savedRecipesEmptyBody: "Die Versionen, die du speicherst, erscheinen hier.",
+    savedRecipesEmptyCta: "Stile entdecken",
     savedRecipeRemove: "Aus dem Rezeptbuch entfernen",
     savedRecipeRemoveAria: "{name} aus dem Rezeptbuch entfernen",
     ovenTitle: "Dein Ofen",
@@ -1277,6 +1280,7 @@ export const DE_LOCALE: CmsContent = {
     tabRecipe: "Rezept",
     tabRecipeTailored: "Rezept nach Ma\u00DF",
     recipeCanonical: "Kanonisches Rezept",
+    recipeCanonicalEyebrow: "Original",
     preCookTitle: "Bevor du den Ofen anheizt",
     preCookBody:
       "Dies ist noch das Originalrezept. Du kannst so starten oder es vorher an deinen Ofen und deine Zeiten anpassen.",

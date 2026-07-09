@@ -78,7 +78,6 @@ export function VulcanHero({
         <VulcanMark
           size={markSize}
           variant={logoVariant}
-          gradient
           glow
           decorative
         />

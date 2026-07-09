@@ -2,7 +2,7 @@
  * Stepper panetti, lista ingredienti (baker's % in nerd), scorporo
  * pre-fermento, Regola 55 e blocchi scienza PizzaNerd. */
 
-import { Check, Copy, HelpCircle } from "lucide-react";
+import { HelpCircle } from "lucide-react";
 import { motion } from "motion/react";
 import type { Dispatch, SetStateAction } from "react";
 import { useCms } from "../cms/cms-context";
@@ -35,8 +35,6 @@ interface IngredientsSectionProps {
   servingUnit: ReturnType<typeof getServingUnit>;
   panSizeLabel: string | null;
   updateBalls: (n: number) => void;
-  copiedIng: boolean;
-  handleCopyIngredients: () => void;
   showRule55Tip: boolean;
   setShowRule55Tip: Dispatch<SetStateAction<boolean>>;
   rule55Description: string;
@@ -50,8 +48,6 @@ export function IngredientsSection({
   servingUnit,
   panSizeLabel,
   updateBalls,
-  copiedIng,
-  handleCopyIngredients,
   showRule55Tip,
   setShowRule55Tip,
   rule55Description,
@@ -65,13 +61,12 @@ export function IngredientsSection({
     `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: maxDecimals }).format(
       (grams / recipe.flour_g) * 100,
     )}%`;
-  const stagedAmount = (amount: string, stage: string) =>
-    recipe.has_pre_ferment ? (
-      <>
-        <span className="bits-ing-row__amount-value">{amount}</span>
-        <span className="bits-ing-row__amount-note">{stage}</span>
-      </>
-    ) : amount;
+  const flourUseLabel = (() => {
+    if (recipe.flour_w >= 330) return "Manitoba o tipo 0 molto forte";
+    if (recipe.flour_w >= 280) return "Tipo 0/00 forte per pizza";
+    if (recipe.flour_w >= 220) return "Tipo 0 media forza";
+    return "Tipo 00 debole/media";
+  })();
   return (
     <>
       {/* ── Ingredients + panetti stepper ── */}
@@ -82,17 +77,6 @@ export function IngredientsSection({
           </h3>
           {/* Visore di sezione — come "Perfetti per te" */}
           <div className="ingredients-header__divider" />
-          <button
-            onClick={handleCopyIngredients}
-            className="type-data-field ingredients-header__copy"
-          >
-            {copiedIng ? (
-              <Check size={14} className="ingredients-header__copy-icon" />
-            ) : (
-              <Copy size={14} />
-            )}
-            {copiedIng ? ui.copied : ui.copy}
-          </button>
         </div>
 
         <div className="ingredients-servings">
@@ -155,17 +139,17 @@ export function IngredientsSection({
                 : simple
                   ? (
                       <>
-                        {flourStrengthLabel(recipe.flour_w, cms)} ·{" "}
+                        {flourUseLabel} · {flourStrengthLabel(recipe.flour_w, cms)} ·{" "}
                         <GlossaryWLink w={recipe.flour_w} />
                       </>
                     )
                   : (
                       <>
-                        <GlossaryWLink w={recipe.flour_w} /> · P/L {recipe.flour_pl}
+                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} /> · P/L {recipe.flour_pl}
                       </>
                     )
             }
-            amount={stagedAmount(gramsApprox(recipe.flour_g, fmt), "totale")}
+            amount={gramsApprox(recipe.flour_g, fmt)}
           />
           {recipe.flour_blend && recipe.flour_blend.length > 0 && (
             /* VPL-B2: breakdown del mix risolto. Ogni farina di frumento mostra la
@@ -225,7 +209,7 @@ export function IngredientsSection({
                 )}
               </>
             }
-            amount={stagedAmount(gramsApprox(recipe.water_g, fmt), "totale")}
+            amount={gramsApprox(recipe.water_g, fmt)}
           />
           {recipe.water_temp_c != null && showRule55Tip && (
             <motion.div
@@ -262,7 +246,7 @@ export function IngredientsSection({
           <IngRow
             name={ui.salt}
             detail={isNerd ? bakerPct(recipe.salt_g) : undefined}
-            amount={stagedAmount(fmt.grams(recipe.salt_g), "impasto finale")}
+            amount={fmt.grams(recipe.salt_g)}
           />
           {recipe.yeast_g > 0 && (
             <IngRow
@@ -273,21 +257,21 @@ export function IngredientsSection({
               ]
                 .filter(Boolean)
                 .join(" · ")}
-              amount={stagedAmount(fmt.grams(recipe.yeast_g), "pre-fermento")}
+              amount={fmt.grams(recipe.yeast_g)}
             />
           )}
           {recipe.fat_g > 0 && (
             <IngRow
               name={recipe.fat_label || ui.oilEvo}
               detail={isNerd ? bakerPct(recipe.fat_g) : undefined}
-              amount={stagedAmount(fmt.grams(recipe.fat_g), "impasto finale")}
+              amount={fmt.grams(recipe.fat_g)}
             />
           )}
           {recipe.sugar_g > 0 && (
             <IngRow
               name={ui.sugar}
               detail={isNerd ? bakerPct(recipe.sugar_g) : undefined}
-              amount={stagedAmount(fmt.grams(recipe.sugar_g), "impasto finale")}
+              amount={fmt.grams(recipe.sugar_g)}
             />
           )}
         </div>
@@ -341,8 +325,8 @@ export function IngredientsSection({
           );
         })()}
         <div className="type-numeric ingredients-total">
-          {recipe.dough_balls} × {fmt.grams(recipe.ball_weight_g)} ={" "}
-          {fmt.grams(recipe.total_dough_g)} {ui.totalDough}
+          <span className="ingredients-total__amount">{fmt.grams(recipe.total_dough_g)}</span>
+          <span className="ingredients-total__label">{ui.totalDough}</span>
         </div>
 
         {/* Regola 55: da round 7 vive SOLO come tip della riga Acqua. */}

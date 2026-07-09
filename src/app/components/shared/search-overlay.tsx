@@ -433,13 +433,6 @@ export function SearchOverlay({
             transition={{ type: "spring", stiffness: 450, damping: 28 }}
             className={`search-overlay-x__panel${isMobile ? " search-overlay-x__panel--mobile" : ""}`}
           >
-            {/* Drag Handle per Mobile */}
-            {isMobile && (
-              <div className="search-overlay-x__drag-wrap">
-                <div className="search-overlay-x__drag-handle" />
-              </div>
-            )}
-
             {/* Search input row */}
             <div className="search-overlay-x__input-row">
               {/* Icona lente statica a sinistra */}

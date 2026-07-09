@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
-import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark } from "lucide-react";
+import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, Heart } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { STYLE_PHOTOS, reasonDimension, MATCH_DIMENSION_ICON } from "./recommended-styles";
@@ -206,6 +206,7 @@ export function StyleDetailSheet({
                     ·
                   </span>
                   <span className="style-detail-title__match">
+                    <Heart size={10} fill="currentColor" aria-hidden="true" />
                     {rec.compatibilityScore}% Match
                   </span>
                 </>

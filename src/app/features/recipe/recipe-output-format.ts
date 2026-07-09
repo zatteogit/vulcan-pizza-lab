@@ -174,11 +174,11 @@ export function displayStepTime(
 ): string {
   if (!FLEXIBLE_STEP_IDS.has(stepId)) {
     const rounded = new Date(Math.round(date.getTime() / 300_000) * 300_000);
-    const prefix = Math.abs(rounded.getTime() - date.getTime()) >= 60_000 ? "≈" : "";
+    const prefix = Math.abs(rounded.getTime() - date.getTime()) >= 60_000 ? "ca. " : "";
     return `${prefix}${clockWithDay(rounded, reference, bcp47, copy)}`;
   }
   const rounded = new Date(Math.round(date.getTime() / 900_000) * 900_000);
-  return `~${clockWithDay(rounded, reference, bcp47, copy)}`;
+  return `ca. ${clockWithDay(rounded, reference, bcp47, copy)}`;
 }
 
 function normalizeTemperatureUnitSuffixes(text: string): string {

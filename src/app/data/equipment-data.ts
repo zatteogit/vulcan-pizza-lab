@@ -76,6 +76,15 @@ export type SurfaceType =
   | "blue_steel_pan"
   | "oven_rack";
 
+export type OvenHeatProfile =
+  | "static_top_bottom"
+  | "top_grill"
+  | "bottom_boost"
+  | "fan_assisted"
+  | "gas_bottom"
+  | "gas_rear"
+  | "wood_side_flame";
+
 interface SurfaceOption {
   id: SurfaceType;
   label: string;
@@ -206,6 +215,7 @@ export interface EquipmentState {
   mixer_level: MixerLevel | null;
   surfaces: SurfaceType[];
   tools: string[];
+  oven_heat_profile?: OvenHeatProfile;
 }
 
 export const DEFAULT_EQUIPMENT: EquipmentState = {
@@ -217,6 +227,7 @@ export const DEFAULT_EQUIPMENT: EquipmentState = {
   mixer_level: null,
   surfaces: [],
   tools: [],
+  oven_heat_profile: "static_top_bottom",
 };
 
 /** Derive legacy booleans from advanced state */

@@ -938,6 +938,9 @@ export const FR_LOCALE: CmsContent = {
     favoriteRemoveAria: "Retirer {name} des favoris",
     savedRecipesTitle: "Vos recettes enregistrées",
     savedRecipesSubtitle: "Les versions sur mesure que vous avez gardées",
+    savedRecipesEmptyTitle: "Aucune recette enregistrée",
+    savedRecipesEmptyBody: "Les versions sur mesure que vous garderez apparaîtront ici.",
+    savedRecipesEmptyCta: "Explorer les styles",
     savedRecipeRemove: "Retirer du carnet",
     savedRecipeRemoveAria: "Retirer {name} du carnet",
     ovenTitle: "Votre four",
@@ -1282,6 +1285,7 @@ export const FR_LOCALE: CmsContent = {
     hintLimitMaxLabel: "limite max",
   },
   cooking: {
+    recipeCanonicalEyebrow: "Originale",
     glossaryPreferment: "Biga et pré-ferments",
     glossaryBulk: "Fermentation en masse",
     glossaryProof: "Apprêt",

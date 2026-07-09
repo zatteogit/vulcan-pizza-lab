@@ -520,13 +520,6 @@ export function RecommendedStyles({
               </span>
             </div>
 
-            {/* Audit Sprint 12 — Not feasible: nota in cima alla griglia che chiarisce
-                perché questi stili non sono praticabili al momento. */}
-            {key === "not_feasible" && items.length > 0 && (
-              <p className="recommended-tier-note">
-                {cms.misc.notFeasibleExplainer}
-              </p>
-            )}
             <div
               data-region="collection"
               className={`recommended-collection${key === "not_feasible" ? " recommended-collection--muted" : ""}`}

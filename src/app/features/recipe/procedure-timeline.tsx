@@ -3,7 +3,7 @@
  * flessibili, StepDetails e ToppingSection inline allo step Condimento. */
 
 import { FlaskConical } from "lucide-react";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { StepIllustration } from "../cooking/step-illustrations";
@@ -194,12 +194,21 @@ export function ProcedureTimeline({
                       {isToppingTimelineStep(step.id) ? cms.cooking.toppingTitle : localizedStep.title}
                     </span>
                     {isToppingTimelineStep(step.id) ? (
-                      <>
+                      <AnimatePresence mode="wait" initial={false}>
+                        <motion.div
+                          key={activeTopping?.id ?? "no-topping"}
+                          className="procedure-timeline-step__topping"
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                        >
                         <ToppingSection mode="timeline" recipe={recipe} activeTopping={activeTopping} toppingChoices={toppingChoices} allToppingChoices={allToppingChoices} servingUnit={servingUnit} onSelectTopping={onSelectTopping} />
                         <p className="procedure-timeline-step__desc procedure-timeline-step__desc--topping">
                           {localizedStep.description}
                         </p>
-                      </>
+                        </motion.div>
+                      </AnimatePresence>
                     ) : (
                       <p className="procedure-timeline-step__desc">
                         {localizedStep.description}

@@ -71,13 +71,13 @@ export function InterpretationSwitcher({
   );
   const hiddenCount = interpretations.filter((it) => !shownIds.has(it.id)).length;
 
-  /* Niente etichetta (nota Matteo): la riga si spiega da sola perché UNA voce
-     è SEMPRE selezionata. Stato attivo = modifier CSS, non style inline. */
-
   return (
     <div data-region="filters">
       {/* "Vedi tutte" resta SEMPRE in vista (fuori dallo scroller delle chip). */}
       <div className="interpretation-switcher">
+        <span className="interpretation-switcher__label">
+          Versione
+        </span>
         <div
           className="interpretation-switcher__scroll"
           role="group"

@@ -1,4 +1,5 @@
 import {
+ArrowDown,
 Bookmark,
 ChevronLeft,
 ChevronRight,
@@ -390,6 +391,10 @@ function WelcomeOnboardingCard({
         <Link to="/profile" onClick={onDismiss} className="home-onboarding__link">
           {profileCta}
         </Link>
+      </div>
+      <div className="home-onboarding__guide" aria-hidden="true">
+        <span className="home-onboarding__guide-line" />
+        <ArrowDown size={14} strokeWidth={1.5} />
       </div>
     </motion.div>
   );
@@ -905,8 +910,7 @@ export function HomePage() {
     () => (selectedStyle ? deriveFeedbackCorrections(selectedStyle.id, loadFeedback()) : null),
     [selectedStyle],
   );
-  const showFeedbackPanel =
-    Boolean(feedbackCorrection) && selectedStyle != null && feedbackAppliedStyle !== selectedStyle.id;
+  const showFeedbackPanel = false;
   const applyFeedbackCorrection = useCallback(() => {
     if (!feedbackCorrection || !selectedStyle) return;
     if (feedbackCorrection.hydrationDelta !== 0) {
@@ -1309,9 +1313,6 @@ export function HomePage() {
                           {cms.hero.title_line2}
                         </span>
                       </Heading>
-                      <p className="home-hero__subtitle">
-                        {cms.hero.subtitle}
-                      </p>
                     </motion.div>
                   }
                 />

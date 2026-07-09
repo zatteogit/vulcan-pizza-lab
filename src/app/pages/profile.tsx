@@ -55,6 +55,7 @@ import {
 import type {
 EquipmentState,
 MixerType,
+OvenHeatProfile,
 SurfaceType,
 ToolCategory,
 } from "../data/equipment-data";
@@ -172,6 +173,56 @@ const OVEN_ICONS: Record<string, typeof Flame> = {
   gas: Flame,
   wood: Trees, // Differenziato da gas (Flame) — gruppo di alberi più riconoscibile
 };
+
+const OVEN_HEAT_PROFILES: {
+  id: OvenHeatProfile;
+  label: string;
+  description: string;
+  bestFor: OvenType[];
+}[] = [
+  {
+    id: "static_top_bottom",
+    label: "Sopra + sotto",
+    description: "Statico classico: equilibrio fra base e cielo.",
+    bestFor: ["home", "electric_standard", "electric_high"],
+  },
+  {
+    id: "top_grill",
+    label: "Grill superiore",
+    description: "Cielo forte per cornicione e doratura finale.",
+    bestFor: ["home", "electric_standard"],
+  },
+  {
+    id: "bottom_boost",
+    label: "Spinta dal basso",
+    description: "Base intensa: utile per teglie, acciaio e croccantezza.",
+    bestFor: ["electric_standard", "electric_high"],
+  },
+  {
+    id: "fan_assisted",
+    label: "Ventilato",
+    description: "Aria in movimento: asciuga e uniforma, va gestita.",
+    bestFor: ["home", "electric_standard"],
+  },
+  {
+    id: "gas_bottom",
+    label: "Gas sotto",
+    description: "Fiamma sotto la platea, rotazione a meta cottura.",
+    bestFor: ["gas"],
+  },
+  {
+    id: "gas_rear",
+    label: "Bruciatore dietro",
+    description: "Calore direzionale: rotazioni frequenti e piccole.",
+    bestFor: ["gas"],
+  },
+  {
+    id: "wood_side_flame",
+    label: "Fiamma laterale",
+    description: "Fiamma viva di lato, gestione come forno a legna.",
+    bestFor: ["wood"],
+  },
+];
 
 /* Pantry data removed — managed in user-needs.tsx */
 
@@ -338,53 +389,69 @@ function SavedRecipesSection() {
     };
   }, []);
 
-  if (recipes.length === 0) return null;
-
   return (
     <ProfileSection
       title={p.savedRecipesTitle}
       subtitle={p.savedRecipesSubtitle}
       delay={0.03}
     >
-      <div className="profile-saved-recipes">
-        {recipes.map((r) => {
-          const styleName = STYLES_DB[r.styleId]?.name ?? r.styleName;
-          const meta = [
-            formatSavedDate(r.createdAt),
-            r.score != null ? `${r.score}/100` : null,
-          ]
-            .filter(Boolean)
-            .join(" · ");
-          return (
-            <div key={r.id} className="profile-saved-recipes__item">
-              <Link
-                to={buildSavedRecipeUrl(r)}
-                className="profile-saved-recipes__link"
-              >
-                <span className="profile-saved-recipes__icon">
-                  <Bookmark size={17} fill="currentColor" />
-                </span>
-                <div className="profile-saved-recipes__info">
-                  <span className="profile-saved-recipes__name">
-                    {styleName}
+      {recipes.length === 0 ? (
+        <div className="profile-saved-recipes__empty">
+          <span className="profile-saved-recipes__empty-icon" aria-hidden="true">
+            <Bookmark size={22} />
+          </span>
+          <div className="profile-saved-recipes__empty-copy">
+            <Heading level="sm" as="h3">
+              {p.savedRecipesEmptyTitle}
+            </Heading>
+            <p>{p.savedRecipesEmptyBody}</p>
+          </div>
+          <CtaButton as={Link} to="/explore" variant="secondary" radius="lg">
+            {p.savedRecipesEmptyCta}
+            <ChevronRight size={17} aria-hidden="true" />
+          </CtaButton>
+        </div>
+      ) : (
+        <div className="profile-saved-recipes">
+          {recipes.map((r) => {
+            const styleName = STYLES_DB[r.styleId]?.name ?? r.styleName;
+            const meta = [
+              formatSavedDate(r.createdAt),
+              r.score != null ? `${r.score}/100` : null,
+            ]
+              .filter(Boolean)
+              .join(" · ");
+            return (
+              <div key={r.id} className="profile-saved-recipes__item">
+                <Link
+                  to={buildSavedRecipeUrl(r)}
+                  className="profile-saved-recipes__link"
+                >
+                  <span className="profile-saved-recipes__icon">
+                    <Bookmark size={17} fill="currentColor" />
                   </span>
-                  <span className="type-data profile-saved-recipes__meta">
-                    {meta}
-                  </span>
-                </div>
-              </Link>
-              <button
-                onClick={() => setRecipes(removeRecipe(r.id))}
-                className="profile-saved-recipes__remove"
-                aria-label={t(p.savedRecipeRemoveAria, { name: styleName })}
-                title={p.savedRecipeRemove}
-              >
-                <X size={16} />
-              </button>
-            </div>
-          );
-        })}
-      </div>
+                  <div className="profile-saved-recipes__info">
+                    <span className="profile-saved-recipes__name">
+                      {styleName}
+                    </span>
+                    <span className="type-data profile-saved-recipes__meta">
+                      {meta}
+                    </span>
+                  </div>
+                </Link>
+                <button
+                  onClick={() => setRecipes(removeRecipe(r.id))}
+                  className="profile-saved-recipes__remove"
+                  aria-label={t(p.savedRecipeRemoveAria, { name: styleName })}
+                  title={p.savedRecipeRemove}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </ProfileSection>
   );
 }
@@ -1069,6 +1136,10 @@ export function ProfilePage() {
     });
   }, [updateEquipment]);
 
+  const setOvenHeatProfile = useCallback((id: OvenHeatProfile) => {
+    updateEquipment((prev) => ({ ...prev, oven_heat_profile: id }));
+  }, [updateEquipment]);
+
   const toggleTool = useCallback((id: string) => {
     updateEquipment((prev) => {
       const tools = prev.tools.includes(id)
@@ -1271,9 +1342,9 @@ export function ProfilePage() {
 
         <div className="profile-tabs" role="tablist" aria-label={p.pageTitle}>
           {[
-            { id: "setup" as const, label: "Il tuo setup" },
+            { id: "recipes" as const, label: "Ricette salvate" },
+            { id: "setup" as const, label: "La tua cucina" },
             { id: "app" as const, label: "App" },
-            { id: "recipes" as const, label: "Ricette" },
           ].map((tab) => {
             const active = profileTab === tab.id;
             return (
@@ -1389,6 +1460,54 @@ export function ProfilePage() {
               className="profile-oven-temp__slider"
               aria-label={p.tempAria}
             />
+          </div>
+
+          <div className="profile-oven-heat">
+            <div className="profile-oven-heat__head">
+              <span className="type-data-sm profile-oven-heat__label">
+                Distribuzione del calore
+              </span>
+              <span className="type-data-xs profile-oven-heat__hint">
+                Cambia preriscaldo, ripiano e rotazioni.
+              </span>
+            </div>
+            <div className="profile-oven-heat__grid">
+              {OVEN_HEAT_PROFILES.map((profile) => {
+                const active = (equipment.oven_heat_profile ?? "static_top_bottom") === profile.id;
+                const suggested = profile.bestFor.includes(ovenType);
+                return (
+                  <motion.button
+                    key={profile.id}
+                    type="button"
+                    onClick={() => setOvenHeatProfile(profile.id)}
+                    className={
+                      active
+                        ? "profile-oven-heat__option profile-oven-heat__option--active"
+                        : "profile-oven-heat__option"
+                    }
+                    animate={{
+                      borderColor: active ? "var(--primary)" : "var(--container-border)",
+                      backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
+                    }}
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  >
+                    <span className="profile-oven-heat__option-row">
+                      <span className="type-body-sm profile-oven-heat__option-label">
+                        {profile.label}
+                      </span>
+                      {suggested && (
+                        <span className="profile-oven-heat__option-badge">
+                          adatto
+                        </span>
+                      )}
+                    </span>
+                    <span className="type-data-xs profile-oven-heat__option-desc">
+                      {profile.description}
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
           </div>
         </ProfileSection>
 

@@ -397,7 +397,7 @@ export const EN_LOCALE: CmsContent = {
     tabRecipe: "Recipe",
     tabRecipeTailored: "Tailored recipe",
     recipeCanonical: "Canonical recipe",
-    recipeCanonicalEyebrow: "Canonical",
+    recipeCanonicalEyebrow: "Original",
     preCookTitle: "Before you fire up the oven",
     preCookBody:
       "This is still the original recipe. You can start as is, or adapt it to your oven and your schedule before the bake.",
@@ -1138,6 +1138,9 @@ export const EN_LOCALE: CmsContent = {
     favoriteRemoveAria: "Remove {name} from favourites",
     savedRecipesTitle: "Your saved recipes",
     savedRecipesSubtitle: "The tailored versions you set aside",
+    savedRecipesEmptyTitle: "No saved recipes yet",
+    savedRecipesEmptyBody: "The tailored versions you save will appear here.",
+    savedRecipesEmptyCta: "Explore styles",
     savedRecipeRemove: "Remove from recipe book",
     savedRecipeRemoveAria: "Remove {name} from recipe book",
     ovenTitle: "Your oven",

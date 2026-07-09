@@ -282,6 +282,15 @@ export interface UserConstraints {
   mixer_type?: string | null;
   /** Advanced equipment — baking surfaces from profile */
   surfaces?: string[];
+  /** Advanced oven heat profile — resistances/burner layout from profile */
+  oven_heat_profile?:
+    | "static_top_bottom"
+    | "top_grill"
+    | "bottom_boost"
+    | "fan_assisted"
+    | "gas_bottom"
+    | "gas_rear"
+    | "wood_side_flame";
 }
 
 /** Engine message: key-based for i18n, fallback for backward compat */
@@ -1738,6 +1747,7 @@ export function generateRecipe(
       hasMixer: constraints.has_mixer,
       ovenType: constraints.oven_type,
       surfaces: constraints.surfaces,
+      ovenHeatProfile: constraints.oven_heat_profile,
     },
   );
 
@@ -2298,6 +2308,7 @@ interface EquipmentContext {
   hasMixer?: boolean;
   ovenType?: OvenType;
   surfaces?: string[];
+  ovenHeatProfile?: UserConstraints["oven_heat_profile"];
 }
 
 interface KneadGuidance {
@@ -2374,6 +2385,21 @@ function ovenBakeSetup(eq: EquipmentContext | undefined, _ovenTemp: number): str
   const hasStone = (eq?.surfaces ?? []).some((s) =>
     ["refractory_brick", "cordierite_stone", "steel_plate"].includes(s),
   );
+  if (eq?.ovenHeatProfile === "top_grill") {
+    return ` Grill/resistenza superiore forte: preriscalda con ${hasStone ? "pietra o acciaio" : "ripiano"} medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.`;
+  }
+  if (eq?.ovenHeatProfile === "bottom_boost") {
+    return " Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.";
+  }
+  if (eq?.ovenHeatProfile === "fan_assisted") {
+    return " Ventilato: usa una temperatura leggermente piu bassa se il bordo asciuga, ruota a meta cottura e proteggi i topping delicati.";
+  }
+  if (eq?.ovenHeatProfile === "gas_rear") {
+    return " Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.";
+  }
+  if (eq?.ovenHeatProfile === "wood_side_flame") {
+    return " Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.";
+  }
   switch (eq?.ovenType) {
     case "wood":
       return " Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.";
@@ -2814,6 +2840,12 @@ function generateTips(
   if (style.crust_type === "leopard_soft") {
     tips.push(
       "Per la leopardatura: il forno deve essere ben caldo e la pizza deve toccare direttamente la superficie calda.",
+    );
+  }
+
+  if (constraints.oven_heat_profile === "gas_rear" || constraints.oven_heat_profile === "wood_side_flame") {
+    tips.push(
+      "La sorgente di calore e laterale/posteriore: prepara la pala per ruotare spesso la pizza, non aspettare che un lato sia gia scuro.",
     );
   }
 

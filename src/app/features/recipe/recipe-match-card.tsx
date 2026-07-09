@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { Bookmark, BookmarkCheck, Heart, HeartHandshake, HeartPulse, HeartOff, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
+import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
@@ -270,7 +270,7 @@ export function RecipeMatchCard({
       headroomLine = {
         tone: "accent",
         text: atCeiling
-          ? t(cms.cooking.ceilingNeedsAtCeiling ?? "Questa versione assume: {needs}.", {
+          ? t(cms.cooking.ceilingNeedsAtCeiling ?? "Per questa versione serve: {needs}.", {
               needs: needs.join(", "),
             })
           : t(cms.cooking.ceilingNeeds, { ceiling: ceilingRounded, needs: needs.join(", ") }),
@@ -291,7 +291,7 @@ export function RecipeMatchCard({
     handshake: HeartHandshake,
     heart: Heart,
     pulse: HeartPulse,
-    crack: TriangleAlert,
+    crack: HeartCrack,
     off: HeartOff,
   } as const;
   const MatchIcon = MATCH_ICONS[tone.icon];
@@ -307,7 +307,7 @@ export function RecipeMatchCard({
   return (
     <motion.section
       layout
-      data-region="card"
+      data-region="section"
       className={`match-card ${className}`}
       aria-label={cms.ui.recipeScore}
     >
@@ -325,6 +325,29 @@ export function RecipeMatchCard({
         />
         <span className="match-kicker__label">Match</span>
         <span className="match-kicker__rule" aria-hidden="true" />
+        <button
+          type="button"
+          onClick={() =>
+            setExpanded((v) => {
+              if (v) setExplainKey(null);
+              return !v;
+            })
+          }
+          aria-expanded={expanded}
+          aria-label={
+            expanded
+              ? (cms.cooking.matchDetailsHide ?? "Nascondi")
+              : (cms.cooking.matchDetails ?? "Dettagli")
+          }
+          title={
+            expanded
+              ? (cms.cooking.matchDetailsHide ?? "Nascondi")
+              : (cms.cooking.matchDetails ?? "Dettagli")
+          }
+          className={`match-info-toggle${expanded ? " match-info-toggle--active" : ""}`}
+        >
+          <Info size={16} />
+        </button>
       </div>
 
       {/* Verdetto: numero serifa + tono corsivo, stesso baseline. */}
@@ -364,31 +387,6 @@ export function RecipeMatchCard({
             </motion.span>
           </AnimatePresence>
         </span>
-        {/* I dettagli si aprono da un'iconcina ⓘ accanto al tono (nota
-            Matteo): prossimità massima con ciò che spiega. */}
-        <button
-          type="button"
-          onClick={() =>
-            setExpanded((v) => {
-              if (v) setExplainKey(null);
-              return !v;
-            })
-          }
-          aria-expanded={expanded}
-          aria-label={
-            expanded
-              ? (cms.cooking.matchDetailsHide ?? "Nascondi")
-              : (cms.cooking.matchDetails ?? "Dettagli")
-          }
-          title={
-            expanded
-              ? (cms.cooking.matchDetailsHide ?? "Nascondi")
-              : (cms.cooking.matchDetails ?? "Dettagli")
-          }
-          className={`match-info-toggle${expanded ? " match-info-toggle--active" : ""}`}
-        >
-          <Info size={16} />
-        </button>
       </div>
 
       {/* Avvisi onesti: visibili anche a card chiusa */}

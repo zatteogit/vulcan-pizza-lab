@@ -10,9 +10,9 @@
  * Il selettore tab (RecipeSectionTabs) qui è finalmente montato: il layer
  * PizzaNerd vive dentro Ricetta/Procedimento quando abilitato dal Profilo. */
 
-import { useState, useEffect, useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, type ReactNode } from "react";
 import { Link } from "react-router";
-import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import { ChevronLeft, RotateCcw } from "lucide-react";
 import { Heading, IconButton } from "../../components/ds/index";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
@@ -128,21 +128,6 @@ export function RecipeView({
   const heroImageScale = useTransform(scrollY, [0, 400], [1.02, 1.15]);
   const heroOverlayOpacity = useTransform(scrollY, [0, 300], [0, 0.65]);
   const cardY = useTransform(scrollY, [0, 400], [0, -20]);
-  const prefersReducedMotion = useReducedMotion();
-
-  /* Il back flottante segue la chrome liquida: si ritira mentre leggi
-     (altrimenti resta sovrapposto ai contenuti), riemerge appena risali. */
-  const [backHidden, setBackHidden] = useState(false);
-  useMotionValueEvent(scrollY, "change", (y) => {
-    const prev = scrollY.getPrevious() ?? y;
-    const dy = y - prev;
-    if (y < 96) {
-      setBackHidden(false);
-      return;
-    }
-    if (dy > 6) setBackHidden(true);
-    else if (dy < -6) setBackHidden(false);
-  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -267,11 +252,8 @@ export function RecipeView({
         </header>
       ) : (
         <motion.div
-          className={backHidden ? "recipe-view-back recipe-view-back--hidden" : "recipe-view-back"}
-          animate={{
-            y: backHidden && !prefersReducedMotion ? -72 : 0,
-            opacity: backHidden ? 0 : 1,
-          }}
+          className="recipe-view-back"
+          animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 360, damping: 31, mass: 0.72 }}
         >
           {back.to ? (
@@ -279,7 +261,7 @@ export function RecipeView({
               as={Link}
               to={back.to}
               size="lg"
-              variant="ghost"
+              variant="bare"
               className="recipe-view-back__button"
               aria-label={back.label}
               title={back.label}
@@ -291,7 +273,7 @@ export function RecipeView({
               type="button"
               onClick={back.onClick}
               size="lg"
-              variant="ghost"
+              variant="bare"
               className="recipe-view-back__button"
               aria-label={back.label}
               title={back.label}
@@ -426,21 +408,20 @@ export function RecipeView({
                   {/* Round 3 "pulizia": le caratteristiche non sono più 3 chip
                       (scatole che ricalcavano la descrizione) ma UNA riga meta
                       muta — è metadata, non azione. */}
-                  {heroTags.length > 0 && (
-                    <p className="recipe-view-tags">
-                      {heroTags
-                        .map((tag) =>
-                          tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : tag,
-                        )
-                        /* Ogni caratteristica è un'unità: va a capo solo sui
-                           separatori, mai a metà valore ("Maturazione 24-72h"). */
-                        .map((tag) => tag.replace(/ /g, " "))
-                        .join(" · ")}
-                    </p>
-                  )}
-
-                  {introExtraSlot && (
-                    <div className="recipe-view-utility-row">
+                  {(heroTags.length > 0 || introExtraSlot) && (
+                    <div className="recipe-view-meta-row">
+                      {heroTags.length > 0 && (
+                        <p className="recipe-view-tags">
+                          {heroTags
+                            .map((tag) =>
+                              tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : tag,
+                            )
+                            /* Ogni caratteristica è un'unità: va a capo solo sui
+                               separatori, mai a metà valore ("Maturazione 24-72h"). */
+                            .map((tag) => tag.replace(/ /g, " "))
+                            .join(" · ")}
+                        </p>
+                      )}
                       {introExtraSlot}
                     </div>
                   )}

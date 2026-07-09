@@ -922,8 +922,7 @@ function RecipeContent({
     () => deriveFeedbackCorrections(style.id, loadFeedback()),
     [style.id],
   );
-  const showFeedbackPanel =
-    Boolean(feedbackCorrection) && feedbackAppliedStyle !== style.id;
+  const showFeedbackPanel = false;
   const applyFeedbackCorrection = useCallback(() => {
     if (!feedbackCorrection) return;
     // Applicare una correzione = personalizzare: esci dal canonico e tieni il TUO

@@ -158,11 +158,6 @@ const premiumGlassStyle: React.CSSProperties = {
   boxShadow: "var(--premium-glass-shadow)",
 };
 
-const mobileDockGlassStyle: React.CSSProperties = {
-  ...premiumGlassStyle,
-  background: "color-mix(in srgb, var(--container-page) 94%, transparent)",
-};
-
 function getActiveTab(pathname: string): string | null {
   /* Exact match for "/" to avoid matching everything */
   if (pathname === "/") return "create";
@@ -337,12 +332,12 @@ function BottomTabBar({
   const { hidden, scrolled } = navState;
   return (
     <motion.div
-      className={`app-shell-dock${scrolled ? " app-shell-dock--scrolled" : ""}`}
+      className={`app-shell-dock${scrolled ? " app-shell-dock--scrolled" : ""}${hidden ? " app-shell-dock--hidden" : ""}`}
       initial={{ y: 0, scale: 1, opacity: 1 }}
       animate={{
-        y: hidden && !prefersReducedMotion ? 16 : 0,
-        scale: hidden && !prefersReducedMotion ? 0.985 : scrolled ? 0.99 : 1,
-        opacity: hidden ? 0.88 : 1,
+        y: hidden && !prefersReducedMotion ? 96 : 0,
+        scale: hidden && !prefersReducedMotion ? 0.98 : scrolled ? 0.99 : 1,
+        opacity: hidden ? 0 : 1,
       }}
       transition={
         prefersReducedMotion
@@ -382,7 +377,7 @@ function BottomTabBar({
         diameter={56}
         iconSize={24}
         onOpen={onSearchOpen}
-        surfaceStyle={mobileDockGlassStyle}
+        surfaceStyle={premiumGlassStyle}
       />
     </motion.div>
   );
@@ -423,10 +418,10 @@ function SidebarRail({
           className="app-shell-rail__logo"
           aria-label={cms.pages.homeAria}
         >
-          <VulcanMark size={20} decorative />
+          <VulcanMark size={22} decorative />
         </Link>
 
-        {/* Tabs — centrate verticalmente nella capsula (M3 rail) */}
+        {/* Tabs */}
         <div className="app-shell-rail__tabs">
           {TABS.map((tab) => (
             <TabItem
@@ -436,6 +431,15 @@ function SidebarRail({
               layout="rail"
             />
           ))}
+        </div>
+
+        <div className="app-shell-rail__search">
+          <SearchButton
+            diameter={44}
+            iconSize={20}
+            onOpen={onSearchOpen}
+            surfaceStyle={premiumGlassStyle}
+          />
         </div>
 
         {/* Dev shortcut (subtle) */}
@@ -453,13 +457,6 @@ function SidebarRail({
         )}
       </motion.nav>
 
-      {/* Floating Search Circle below the capsule */}
-      <SearchButton
-        diameter={72}
-        iconSize={24}
-        onOpen={onSearchOpen}
-        surfaceStyle={premiumGlassStyle}
-      />
     </div>
   );
 }
@@ -706,8 +703,8 @@ export function AppShell() {
                 className="app-shell-scrim"
                 initial={{ y: 0, opacity: 1 }}
                 animate={{
-                  y: navState.hidden && !prefersReducedMotion ? 18 : 0,
-                  opacity: navState.hidden ? 0.42 : 1,
+                  y: navState.hidden && !prefersReducedMotion ? 48 : 0,
+                  opacity: navState.hidden ? 0 : 1,
                 }}
                 transition={
                   prefersReducedMotion
