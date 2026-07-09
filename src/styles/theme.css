@@ -12844,3 +12844,412 @@
 [data-theme="vulcan"]:not(.dark) {
   --primary: var(--color-terracotta-500);
 }
+
+/* ── RISERVA — Newsreader × DM Sans ──
+   L'identità Vulcan, affinata: stessa anima (avorio caldo, terracotta,
+   serif editoriale) eseguita con disciplina da design system maturo.
+   · Newsreader al posto di Playfair: optical sizing vero, corsivi veri,
+     titoli a peso 600 — mai muscolo tipografico gratuito.
+   · Ombre a 3 strati con anello hairline (lift caldo, mai grigio).
+   · Ramp superfici con più aria fra i livelli; bordi disciplinati.
+   · Dark "lume di candela": espresso caldo, terracotta luminosa. */
+[data-theme="riserva"] {
+  --font-serif-family: "Newsreader", "Playfair Display", serif;
+  --font-sans-family: "DM Sans", sans-serif;
+  --shadow-xs: 0 0 0 1px rgba(36, 30, 24, 0.03), 0 1px 2px rgba(36, 30, 24, 0.04);
+  --shadow-sm: 0 0 0 1px rgba(36, 30, 24, 0.03), 0 2px 6px rgba(36, 30, 24, 0.05);
+  --shadow-md:
+    0 0 0 1px rgba(36, 30, 24, 0.04),
+    0 2px 6px rgba(36, 30, 24, 0.04),
+    0 8px 16px -4px rgba(36, 30, 24, 0.08);
+  --shadow-lg:
+    0 0 0 1px rgba(36, 30, 24, 0.04),
+    0 4px 10px rgba(36, 30, 24, 0.05),
+    0 16px 32px -8px rgba(36, 30, 24, 0.11);
+  --shadow-xl:
+    0 0 0 1px rgba(36, 30, 24, 0.05),
+    0 8px 16px rgba(36, 30, 24, 0.06),
+    0 28px 48px -12px rgba(36, 30, 24, 0.14);
+}
+[data-theme="riserva"] :is(
+  h1, h2,
+  .type-display, .type-heading-xl, .type-heading-lg,
+  .type-heading-md, .type-heading-sm, .type-heading-xs,
+  .type-title-page
+) {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+[data-theme="riserva"]:not(.dark) {
+  --background: #faf6ee;
+  --foreground: #241e18;
+  --card: #fffdf9;
+  --muted: #f0e9db;
+  --muted-foreground: #6f6155;
+  --accent: #f0e9db;
+  --primary: #c2401f;
+  --ring: #a83618;
+  --primary-foreground: #ffffff;
+  --secondary: #857263;
+  --secondary-foreground: #ffffff;
+  --border: #e0d6c4;
+  --border-muted: #ece4d6;
+  --switch-background: #d5c8b0;
+  --surface: #faf6ee;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #fffdf9;
+  --surface-container-low: #f5efe4;
+  --surface-container: #ede5d6;
+  --surface-container-high: #e2d7c3;
+  --surface-container-highest: #d5c8b0;
+  --on-surface: #241e18;
+  --on-surface-variant: #6f6155;
+  --outline: #cdbfa8;
+  --outline-variant: #e0d6c4;
+  --primary-container: #f9e0d2;
+  --on-primary-container: #7c2812;
+  --secondary-container: #efe7d9;
+  --on-secondary-container: #241e18;
+  --tertiary: #b8813d;
+  --tertiary-container: #f4e6cc;
+  --on-tertiary-container: #6b4a1d;
+  --grad-ember: linear-gradient(135deg, #c2401f 0%, #d4652f 55%, #cb8a3e 100%);
+  --grad-warm: linear-gradient(160deg, #faf6ee 0%, #f9ede2 55%, #f4e6cc 100%);
+}
+[data-theme="riserva"].dark {
+  --background: #16110d;
+  --foreground: #f5efe6;
+  --card: #211a14;
+  --muted: #2a231b;
+  --muted-foreground: #b9ab98;
+  --accent: #2a231b;
+  --primary: #ef8a58;
+  --ring: #ef8a58;
+  --primary-foreground: #3a1305;
+  --secondary: #a8988a;
+  --secondary-foreground: #16110d;
+  --border: #3a3128;
+  --border-muted: #2b241c;
+  --switch-background: #4a3f32;
+  --surface: #16110d;
+  --surface-bright: #453b2f;
+  --surface-container-lowest: #0d0a07;
+  --surface-container-low: #1c1611;
+  --surface-container: #262019;
+  --surface-container-high: #322a21;
+  --surface-container-highest: #3e352a;
+  --on-surface: #f5efe6;
+  --on-surface-variant: #b3a695;
+  --outline: #4a3f32;
+  --outline-variant: #3a3128;
+  --primary-container: #4a1c0c;
+  --on-primary-container: #ffcdb4;
+  --secondary-container: #322a21;
+  --on-secondary-container: #f5efe6;
+  --tertiary: #d9a45e;
+  --tertiary-container: #4a3717;
+  --on-tertiary-container: #f2ddb8;
+  --grad-ember: linear-gradient(135deg, #ef8a58 0%, #d9a45e 100%);
+  --grad-warm: linear-gradient(160deg, #1c1611 0%, #262019 100%);
+}
+
+/* ── LETTERA — Archivo VF × Bodoni Moda ──
+   Milano razionale-lirica: Noorda (fascia rossa Metro), Pintori (numeri
+   come ornamento), Vignelli (carta/inchiostro/rosso), Huber (foto su
+   blocchi). Titoli in Archivo espanso (asse width alla Pirelli); la voce
+   lirica è Bodoni Moda corsivo — il didone di Parma. Angoli tecnici ma
+   tattili (mai broadsheet), ombre quasi piatte con anello d'inchiostro. */
+[data-theme="lettera"] {
+  /* Lo slot serif è la voce lirica (Bodoni): .page-lead e la riga accento
+     la ereditano da soli. I titoli vengono ri-puntati ad Archivo (sans)
+     nella regola scoped qui sotto. */
+  --font-serif-family: "Bodoni Moda", "Playfair Display", serif;
+  --font-sans-family: "Archivo", sans-serif;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-2xl: 12px;
+  --radius-3xl: 14px;
+  --radius-4xl: 16px;
+  --shadow-xs: 0 0 0 1px rgba(25, 24, 23, 0.05);
+  --shadow-sm: 0 0 0 1px rgba(25, 24, 23, 0.05), 0 1px 2px rgba(25, 24, 23, 0.05);
+  --shadow-md: 0 0 0 1px rgba(25, 24, 23, 0.05), 0 2px 8px rgba(25, 24, 23, 0.06);
+  --shadow-lg:
+    0 0 0 1px rgba(25, 24, 23, 0.06),
+    0 6px 16px -4px rgba(25, 24, 23, 0.09);
+  --shadow-xl:
+    0 0 0 1px rgba(25, 24, 23, 0.06),
+    0 12px 28px -8px rgba(25, 24, 23, 0.12);
+}
+[data-theme="lettera"] :is(
+  h1, h2,
+  .type-display, .type-heading-xl, .type-heading-lg,
+  .type-heading-md, .type-heading-sm, .type-heading-xs,
+  .type-title-page
+) {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-stretch: 115%;
+  letter-spacing: -0.01em;
+}
+/* LA FIRMA — la fascia: titolo di pagina come lettering della Metro
+   Milanese, bianco su rosso segnale, maiuscolo espanso. */
+[data-theme="lettera"] [data-region="page-header"] :is(h1) {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  width: fit-content;
+  text-transform: uppercase;
+  font-stretch: 125%;
+  letter-spacing: 0.02em;
+  padding: var(--space-1-5) var(--space-3) var(--space-2);
+  border-radius: var(--radius-xs);
+}
+/* La riga accento del titolo è ovunque la voce lirica: Bodoni corsivo
+   rosso su carta (es. masthead di Crea)… */
+[data-theme="lettera"] .page-title-accent {
+  color: var(--primary);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-stretch: 100%;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+/* …ma dentro la fascia rossa diventa bianca (lettering della Metro). */
+[data-theme="lettera"] [data-region="page-header"] .page-title-accent {
+  color: var(--primary-foreground);
+}
+/* Fotografia da stampa: satura appena meno, contrasto appena più. */
+[data-theme="lettera"] :is([data-region="card"], [data-region="feature"]) img {
+  filter: saturate(0.92) contrast(1.05);
+}
+/* Le micro-etichette dello spec-sheet corrono strette (Archivo è più largo
+   di DM Sans): l'asse width evita l'ellissi sulle celle da 9px. */
+[data-theme="lettera"] .stat-strip__label {
+  font-stretch: 85%;
+  letter-spacing: 0.06em;
+}
+[data-theme="lettera"]:not(.dark) {
+  --background: #f6f4ef;
+  --foreground: #191817;
+  --card: #fdfcfa;
+  --muted: #ebe8e1;
+  --muted-foreground: #5d5a53;
+  --accent: #ebe8e1;
+  --primary: #c9251b;
+  --ring: #a91d14;
+  --primary-foreground: #ffffff;
+  --secondary: #6d6a64;
+  --secondary-foreground: #ffffff;
+  --border: #dfdbd2;
+  --border-muted: #eae7e0;
+  --switch-background: #cfc9bc;
+  --surface: #f6f4ef;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #fdfcfa;
+  --surface-container-low: #f1eee7;
+  --surface-container: #eae6dd;
+  --surface-container-high: #dfdacf;
+  --surface-container-highest: #d1cbbe;
+  --on-surface: #191817;
+  --on-surface-variant: #5d5a53;
+  --outline: #c9c4b8;
+  --outline-variant: #dfdbd2;
+  --primary-container: #f6d7d2;
+  --on-primary-container: #7c130c;
+  --secondary-container: #eae6dd;
+  --on-secondary-container: #191817;
+  --tertiary: #b97d0c;
+  --tertiary-container: #f2e3bd;
+  --on-tertiary-container: #5d3f06;
+  --inverse-surface: #211f1d;
+  --inverse-on-surface: #f4f2ec;
+  --cta: #2c7a4b;
+  --cta-foreground: #ffffff;
+  --grad-ember: linear-gradient(135deg, #d6291e 0%, #b01f15 100%);
+  --grad-warm: linear-gradient(160deg, #f6f4ef 0%, #eae6dd 100%);
+}
+[data-theme="lettera"].dark {
+  --background: #131211;
+  --foreground: #f2f0ea;
+  --card: #1d1c1a;
+  --muted: #26241f;
+  --muted-foreground: #b5b0a5;
+  --accent: #26241f;
+  --primary: #ef5241;
+  --ring: #ef5241;
+  --primary-foreground: #2b0503;
+  --secondary: #a09b91;
+  --secondary-foreground: #131211;
+  --border: #34322d;
+  --border-muted: #262521;
+  --switch-background: #3a3833;
+  --surface: #131211;
+  --surface-bright: #403d38;
+  --surface-container-lowest: #0c0b0a;
+  --surface-container-low: #181715;
+  --surface-container: #22211e;
+  --surface-container-high: #2d2b28;
+  --surface-container-highest: #383632;
+  --on-surface: #f2f0ea;
+  --on-surface-variant: #a8a49b;
+  --outline: #45423c;
+  --outline-variant: #34322d;
+  --primary-container: #4a100a;
+  --on-primary-container: #ffb4aa;
+  --secondary-container: #2d2b28;
+  --on-secondary-container: #f2f0ea;
+  --tertiary: #e0a83c;
+  --tertiary-container: #453208;
+  --on-tertiary-container: #f5dfae;
+  --inverse-surface: #f2f0ea;
+  --inverse-on-surface: #1d1c1a;
+  --cta: #4fae77;
+  --cta-foreground: #06281a;
+  --grad-ember: linear-gradient(135deg, #ef5241 0%, #c93325 100%);
+  --grad-warm: linear-gradient(160deg, #181715 0%, #22211e 100%);
+}
+
+/* ── COPERTINA — Bodoni Moda × Jost ──
+   Un po' Instagram, un po' Vogue: la pizza trattata come alta moda.
+   Il chrome sparisce (bianco galleria / nero vero, ombre quasi nulle,
+   CTA neri pieni) e la fotografia comanda; i titoli sono il masthead di
+   una rivista — Bodoni maiuscolo fra filetti editoriali, riga accento
+   in corsivo rossetto. Didascalie geometriche alla Futura (Jost).
+   Oro per i badge. Respira: densità spacious. */
+[data-theme="copertina"] {
+  --font-serif-family: "Bodoni Moda", "Playfair Display", serif;
+  --font-sans-family: "Jost", sans-serif;
+  --density: var(--density-spacious);
+  --radius-xs: 0px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 10px;
+  --radius-3xl: 12px;
+  --radius-4xl: 14px;
+  --shadow-xs: none;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px -6px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 16px 40px -8px rgba(0, 0, 0, 0.14);
+}
+/* Titoli: il didone respira con un filo d'aria fra le lettere. */
+[data-theme="copertina"] :is(
+  h1, h2,
+  .type-display, .type-heading-xl, .type-heading-lg,
+  .type-heading-md, .type-heading-sm, .type-heading-xs,
+  .type-title-page
+) {
+  letter-spacing: 0.015em;
+}
+/* LA FIRMA — il masthead: titolo di pagina maiuscolo fra due filetti
+   editoriali, come la testata di una rivista di moda. */
+[data-theme="copertina"] [data-region="page-header"] :is(h1) {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-top: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
+  padding-block: var(--space-3);
+}
+/* La riga accento torna minuscola, corsiva, rossetto — la voce sotto
+   la testata. Vale anche fuori dal masthead (Crea). */
+[data-theme="copertina"] .page-title-accent {
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  color: var(--primary);
+}
+/* Fotografia da editoriale moda: più punch, il cibo è la modella. */
+[data-theme="copertina"] :is([data-region="card"], [data-region="feature"]) img {
+  filter: contrast(1.05) saturate(1.06);
+}
+/* Micro-etichette dello spec-sheet: Jost col tracking-caps di default
+   tronca a 9px — didascalia serrata, da colophon. */
+[data-theme="copertina"] .stat-strip__label {
+  letter-spacing: normal;
+}
+[data-theme="copertina"]:not(.dark) {
+  --background: #ffffff;
+  --foreground: #121110;
+  --card: #ffffff;
+  --muted: #f0efec;
+  --muted-foreground: #5f5b55;
+  --accent: #f0efec;
+  --primary: #b5001f;
+  --ring: #8f0019;
+  --primary-foreground: #ffffff;
+  --secondary: #6e6a64;
+  --secondary-foreground: #ffffff;
+  --border: #e8e6e2;
+  --border-muted: #f1f0ed;
+  --switch-background: #d8d6d1;
+  --surface: #ffffff;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f7f6f4;
+  --surface-container: #f0efec;
+  --surface-container-high: #e6e4e0;
+  --surface-container-highest: #d8d6d1;
+  --on-surface: #121110;
+  --on-surface-variant: #5f5b55;
+  --outline: #cfccc6;
+  --outline-variant: #e8e6e2;
+  --primary-container: #ffe1e4;
+  --on-primary-container: #740014;
+  --secondary-container: #f0efec;
+  --on-secondary-container: #121110;
+  --tertiary: #a97f2f;
+  --tertiary-container: #f4e8cd;
+  --on-tertiary-container: #5c421a;
+  --inverse-surface: #1c1b1a;
+  --inverse-on-surface: #f7f6f4;
+  --cta: #121110;
+  --cta-foreground: #ffffff;
+  --grad-ember: linear-gradient(135deg, #b5001f 0%, #e0263c 100%);
+  --grad-warm: linear-gradient(160deg, #ffffff 0%, #f4f2ef 100%);
+}
+[data-theme="copertina"].dark {
+  --background: #000000;
+  --foreground: #f5f4f2;
+  --card: #121212;
+  --muted: #1e1e1e;
+  --muted-foreground: #a8a5a0;
+  --accent: #1e1e1e;
+  --primary: #ff4059;
+  --ring: #ff4059;
+  --primary-foreground: #33000a;
+  --secondary: #98948e;
+  --secondary-foreground: #000000;
+  --border: #262626;
+  --border-muted: #1a1a1a;
+  --switch-background: #2e2e2e;
+  --surface: #000000;
+  --surface-bright: #2e2e2e;
+  --surface-container-lowest: #000000;
+  --surface-container-low: #0f0f0f;
+  --surface-container: #181818;
+  --surface-container-high: #222222;
+  --surface-container-highest: #2e2e2e;
+  --on-surface: #f5f4f2;
+  --on-surface-variant: #a5a29c;
+  --outline: #3a3a3a;
+  --outline-variant: #262626;
+  --primary-container: #520011;
+  --on-primary-container: #ffb3bd;
+  --secondary-container: #222222;
+  --on-secondary-container: #f5f4f2;
+  --tertiary: #d9b45e;
+  --tertiary-container: #43310e;
+  --on-tertiary-container: #f1dfae;
+  --inverse-surface: #f5f4f2;
+  --inverse-on-surface: #121212;
+  --cta: #f5f4f2;
+  --cta-foreground: #121110;
+  --grad-ember: linear-gradient(135deg, #ff4059 0%, #d42043 100%);
+  --grad-warm: linear-gradient(160deg, #0f0f0f 0%, #181818 100%);
+}
