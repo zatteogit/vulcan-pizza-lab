@@ -149,7 +149,7 @@ function FeaturedRecipeCard({
           <p className="explore-feature__desc">
             Una delle combinazioni più celebri per lo stile{" "}
             <strong className="explore-feature__desc-strong">{styleName}</strong>
-            {authorLabel ? ` via ${authorLabel}` : ""}. Scopri i parametri dell'impasto consigliati, i tempi e il condimento autentico.
+            {authorLabel ? ` secondo ${authorLabel}` : ""}. Scopri i parametri dell'impasto consigliati, i tempi e il condimento autentico.
           </p>
         </div>
 
@@ -537,12 +537,12 @@ function SignatureRecipeCard({
   const styleName =
     STYLES_DB[recipe.style_id]?.name ?? recipe.style_id;
 
-  /* Autore/locale dall'interpretazione (se mappata): mostrato come "via X"
+  /* Autore/locale dall'interpretazione (se mappata): mostrato come "Secondo X"
    * sopra al titolo, e propagato come deep-link ?interpretation=<id>.
    * Audit motore 2026-05: dedup vs authenticity_badge — se il badge in alto
    * già contiene il nome dell'organizzazione (es. badge "Disciplinare AVPN"
    * + organization "AVPN — Associazione Verace Pizza Napoletana"),
-   * sopprime "via X" perché ridondante. */
+   * sopprime "Secondo X" perché ridondante. */
   const interpretation = recipe.interpretation_id
     ? getInterpretationById(recipe.interpretation_id)
     : undefined;
@@ -620,7 +620,7 @@ function SignatureRecipeCard({
             {/* Sprint 12 — autore/locale dell'interpretazione (se mappata). */}
             {authorLabel && (
               <div className="explore-card__author">
-                via {authorLabel}
+                Secondo {authorLabel}
               </div>
             )}
           </div>

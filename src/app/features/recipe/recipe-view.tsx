@@ -13,7 +13,7 @@
 import { useState, useEffect, useMemo, type ReactNode } from "react";
 import { Link } from "react-router";
 import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { Check, ChevronLeft, RotateCcw, Share2 } from "lucide-react";
+import { ChevronLeft, RotateCcw } from "lucide-react";
 import { Heading, IconButton } from "../../components/ds/index";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { RecipeOutput } from "./recipe-output";
@@ -106,7 +106,6 @@ export function RecipeView({
   matchSlot,
   introExtraSlot,
   recipeControls,
-  shareUrl,
   showStickyHeader = false,
   selectedToppingConcept,
   onSelectTopping,
@@ -144,8 +143,6 @@ export function RecipeView({
     if (dy > 6) setBackHidden(true);
     else if (dy < -6) setBackHidden(false);
   });
-
-  const [linkCopied, setLinkCopied] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -217,26 +214,6 @@ export function RecipeView({
   const resolvedMarginTop = isHeroReduced
     ? (showStickyHeader ? "var(--space-4, 16px)" : "var(--space-20, 80px)")
     : "calc(-1 * var(--space-19, 4.75rem))";
-
-  const handleShare = () => {
-    if (!shareUrl) return;
-    if (navigator.share) {
-      navigator.share({
-        title: `${recipe.style.name} — Vulcan`,
-        url: shareUrl,
-      }).catch(() => {
-        navigator.clipboard.writeText(shareUrl).then(() => {
-          setLinkCopied(true);
-          setTimeout(() => setLinkCopied(false), 2000);
-        });
-      });
-    } else {
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        setLinkCopied(true);
-        setTimeout(() => setLinkCopied(false), 2000);
-      });
-    }
-  };
 
   const heroEyebrow = eyebrow;
   const heroTitle = style.name;
@@ -462,29 +439,9 @@ export function RecipeView({
                     </p>
                   )}
 
-                  {(introExtraSlot || shareUrl) && (
+                  {introExtraSlot && (
                     <div className="recipe-view-utility-row">
                       {introExtraSlot}
-                      {shareUrl && (
-                        <button
-                          type="button"
-                          onClick={handleShare}
-                          className={
-                            linkCopied
-                              ? "recipe-view-share recipe-view-share--copied"
-                              : "recipe-view-share"
-                          }
-                          title={linkCopied ? cms.ui.copied : cms.ui.share}
-                          aria-label={cms.pages.recipeCopyLinkAria}
-                        >
-                          {linkCopied ? (
-                            <Check size={15} strokeWidth={2.5} />
-                          ) : (
-                            <Share2 size={15} />
-                          )}
-                          <span data-slot="label">{linkCopied ? cms.ui.copied : cms.ui.share}</span>
-                        </button>
-                      )}
                     </div>
                   )}
                 </motion.div>
@@ -532,7 +489,6 @@ export function RecipeView({
               hideContextSummary
               selectedToppingConcept={selectedToppingConcept}
               onSelectTopping={onSelectTopping}
-              shareUrl={shareUrl}
               recipeControls={recipeControls}
               selectedFlourId={selectedFlourId}
               onSelectFlour={onSelectFlour}
@@ -563,4 +519,3 @@ export function RecipeView({
     </div>
   );
 }
-

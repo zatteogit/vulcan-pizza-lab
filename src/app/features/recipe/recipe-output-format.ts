@@ -162,7 +162,9 @@ function clockWithDay(
 
 /** Orario "onesto" (feedback giugno 2026): le fasi flessibili (puntata,
  * appretto, pre-fermento) durano ore — "inizia alle 18:17" è precisione
- * finta. Arrotondiamo ai 15' con prefisso ~; le fasi attive restano esatte. */
+ * finta. Arrotondiamo ai 15' con prefisso ~. Anche le fasi operative derivate
+ * dalla timeline vengono arrotondate ai 5': i minuti esatti restano solo nei
+ * controlli inizio/fine, dove l'utente sta scegliendo l'orario. */
 export function displayStepTime(
   stepId: string,
   date: Date,
@@ -171,7 +173,9 @@ export function displayStepTime(
   copy?: CmsContent["cooking"],
 ): string {
   if (!FLEXIBLE_STEP_IDS.has(stepId)) {
-    return clockWithDay(date, reference, bcp47, copy);
+    const rounded = new Date(Math.round(date.getTime() / 300_000) * 300_000);
+    const prefix = Math.abs(rounded.getTime() - date.getTime()) >= 60_000 ? "≈" : "";
+    return `${prefix}${clockWithDay(rounded, reference, bcp47, copy)}`;
   }
   const rounded = new Date(Math.round(date.getTime() / 900_000) * 900_000);
   return `~${clockWithDay(rounded, reference, bcp47, copy)}`;
@@ -376,13 +380,23 @@ export function yeastPracticalHint(grams: number, type: string, cms: CmsContent 
   return undefined; // madre: pesabile, nessuna nota
 }
 
-/** Unified duration formatter: "15 min" / "1h 30min" / "16h" / "1g 4h" / "2g 3h" */
+function honestDurationMinutes(minutes: number): number {
+  if (minutes <= 0) return 0;
+  if (minutes < 10) return Math.max(1, Math.round(minutes));
+  if (minutes < 180) return Math.max(5, Math.round(minutes / 5) * 5);
+  return Math.max(15, Math.round(minutes / 15) * 15);
+}
+
+/** Unified duration formatter: "15 min" / "1h 30min" / "16h" / "1g 4h" / "2g 3h".
+ * Display only: long timeline blocks are rounded to human increments so the UI
+ * does not imply false minute-level precision for fermentation windows. */
 export function fmtDuration(minutes: number, fmt?: ReturnType<typeof createFormatter>): string {
-  if (minutes <= 0) return "";
-  if (fmt) return fmt.durationMinutes(minutes);
-  if (minutes < 60) return `${minutes} min`;
-  const totalH = Math.floor(minutes / 60);
-  const m = minutes % 60;
+  const roundedMinutes = honestDurationMinutes(minutes);
+  if (roundedMinutes <= 0) return "";
+  if (fmt) return fmt.durationMinutes(roundedMinutes);
+  if (roundedMinutes < 60) return `${roundedMinutes} min`;
+  const totalH = Math.floor(roundedMinutes / 60);
+  const m = roundedMinutes % 60;
   if (totalH < 24) {
     if (m === 0) return `${totalH}h`;
     return `${totalH}h ${m}min`;

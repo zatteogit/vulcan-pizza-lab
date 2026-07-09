@@ -75,7 +75,7 @@ export function IngRow({
 }: {
   name: string;
   detail?: ReactNode;
-  amount: string;
+  amount: ReactNode;
 }) {
   return (
     <div className="bits-ing-row">
@@ -177,4 +177,3 @@ export function GlossaryWLink({ w }: { w: number }) {
     </>
   );
 }
-

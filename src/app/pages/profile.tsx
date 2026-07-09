@@ -1208,6 +1208,7 @@ export function ProfilePage() {
   const currentLocale = useMemo(() => {
     return LOCALE_META.find((l) => l.id === cms.locale?.id) ?? LOCALE_META[0];
   }, [cms.locale?.id]);
+  const [profileTab, setProfileTab] = useState<"setup" | "app" | "recipes">("setup");
 
   /* FTU */
   if (showFtu) {
@@ -1268,11 +1269,39 @@ export function ProfilePage() {
           </p>
         </div>
 
+        <div className="profile-tabs" role="tablist" aria-label={p.pageTitle}>
+          {[
+            { id: "setup" as const, label: "Il tuo setup" },
+            { id: "app" as const, label: "App" },
+            { id: "recipes" as const, label: "Ricette" },
+          ].map((tab) => {
+            const active = profileTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => setProfileTab(tab.id)}
+                className={active ? "profile-tabs__button profile-tabs__button--active" : "profile-tabs__button"}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+
         {/* ── STILI PREFERITI + RICETTARIO (R31) — visibili solo se ne hai ── */}
-        <FavoriteStylesSection />
-        <SavedRecipesSection />
+        {profileTab === "recipes" && (
+          <>
+            <FavoriteStylesSection />
+            <SavedRecipesSection />
+          </>
+        )}
 
         {/* ── FORNO ── */}
+        {profileTab === "setup" && (
+          <>
         <ProfileSection
           title={p.ovenTitle}
           subtitle={p.ovenSubtitle}
@@ -1787,8 +1816,12 @@ export function ProfilePage() {
             )}
           </div>
         </ProfileSection>
+          </>
+        )}
 
         {/* ── LINGUA & TEMA ── */}
+        {profileTab === "app" && (
+          <>
         <ProfileSection
           title={p.prefsTitle}
           subtitle={p.prefsSubtitle}
@@ -1979,6 +2012,8 @@ export function ProfilePage() {
             {devMode ? p.devModeOn : p.devModeOff}
           </motion.button>
         </div>
+          </>
+        )}
 
         {/* Locale confirmation modal */}
         <AnimatePresence>

@@ -65,6 +65,13 @@ export function IngredientsSection({
     `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: maxDecimals }).format(
       (grams / recipe.flour_g) * 100,
     )}%`;
+  const stagedAmount = (amount: string, stage: string) =>
+    recipe.has_pre_ferment ? (
+      <>
+        <span className="bits-ing-row__amount-value">{amount}</span>
+        <span className="bits-ing-row__amount-note">{stage}</span>
+      </>
+    ) : amount;
   return (
     <>
       {/* ── Ingredients + panetti stepper ── */}
@@ -158,7 +165,7 @@ export function IngredientsSection({
                       </>
                     )
             }
-            amount={gramsApprox(recipe.flour_g, fmt)}
+            amount={stagedAmount(gramsApprox(recipe.flour_g, fmt), "totale")}
           />
           {recipe.flour_blend && recipe.flour_blend.length > 0 && (
             /* VPL-B2: breakdown del mix risolto. Ogni farina di frumento mostra la
@@ -218,7 +225,7 @@ export function IngredientsSection({
                 )}
               </>
             }
-            amount={gramsApprox(recipe.water_g, fmt)}
+            amount={stagedAmount(gramsApprox(recipe.water_g, fmt), "totale")}
           />
           {recipe.water_temp_c != null && showRule55Tip && (
             <motion.div
@@ -255,7 +262,7 @@ export function IngredientsSection({
           <IngRow
             name={ui.salt}
             detail={isNerd ? bakerPct(recipe.salt_g) : undefined}
-            amount={fmt.grams(recipe.salt_g)}
+            amount={stagedAmount(fmt.grams(recipe.salt_g), "impasto finale")}
           />
           {recipe.yeast_g > 0 && (
             <IngRow
@@ -266,21 +273,21 @@ export function IngredientsSection({
               ]
                 .filter(Boolean)
                 .join(" · ")}
-              amount={fmt.grams(recipe.yeast_g)}
+              amount={stagedAmount(fmt.grams(recipe.yeast_g), "pre-fermento")}
             />
           )}
           {recipe.fat_g > 0 && (
             <IngRow
               name={recipe.fat_label || ui.oilEvo}
               detail={isNerd ? bakerPct(recipe.fat_g) : undefined}
-              amount={fmt.grams(recipe.fat_g)}
+              amount={stagedAmount(fmt.grams(recipe.fat_g), "impasto finale")}
             />
           )}
           {recipe.sugar_g > 0 && (
             <IngRow
               name={ui.sugar}
               detail={isNerd ? bakerPct(recipe.sugar_g) : undefined}
-              amount={fmt.grams(recipe.sugar_g)}
+              amount={stagedAmount(fmt.grams(recipe.sugar_g), "impasto finale")}
             />
           )}
         </div>

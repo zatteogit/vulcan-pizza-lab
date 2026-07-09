@@ -46,6 +46,14 @@ type RecommendationWithVariant = StyleRecommendation & {
   bestInterpretation: Interpretation | null;
 };
 
+function sortByVisibleMatch(items: RecommendationWithVariant[]): RecommendationWithVariant[] {
+  return [...items].sort((a, b) => {
+    const aScore = a.optimizedComposite ?? a.compatibilityScore;
+    const bScore = b.optimizedComposite ?? b.compatibilityScore;
+    return bScore - aScore;
+  });
+}
+
 /** Nome breve della variante per la card ("AVPN", "Franco Pepe"). */
 function variantShortName(it: Interpretation): string {
   const name =
@@ -266,22 +274,22 @@ export function RecommendedStyles({
     [
       {
         key: "perfect",
-        items: filtered.filter((r) => r.tier === "perfect"),
+        items: sortByVisibleMatch(filtered.filter((r) => r.tier === "perfect")),
       },
       {
         key: "good",
-        items: filtered.filter((r) => r.tier === "good"),
+        items: sortByVisibleMatch(filtered.filter((r) => r.tier === "good")),
       },
       {
         key: "challenging",
-        items: filtered.filter((r) => r.tier === "challenging"),
+        items: sortByVisibleMatch(filtered.filter((r) => r.tier === "challenging")),
       },
       {
         // Audit Sprint 12 — Sezione "Non fattibili": stili con incompatibilità
         // hard (forno legna assente, ecc.) o score molto basso. Mostrati per
         // trasparenza ("cosa non puoi fare e perché"), in stile muted.
         key: "not_feasible",
-        items: filtered.filter((r) => r.tier === "not_feasible"),
+        items: sortByVisibleMatch(filtered.filter((r) => r.tier === "not_feasible")),
       },
     ].filter((t) => t.items.length > 0);
 
@@ -368,6 +376,22 @@ export function RecommendedStyles({
             className="recommended-advanced-panel"
           >
             <div className="recommended-advanced-panel__body">
+              {hasActiveAdvanced && (
+                <div className="recommended-advanced-panel__actions">
+                  <motion.button
+                    type="button"
+                    onClick={() => {
+                      setHydrationFilter(null);
+                      setTextureFilter(null);
+                      setSkillFilter(null);
+                      setOvenFilter(null);
+                    }}
+                    className="recommended-advanced-panel__clear"
+                  >
+                    {cms.filters.removeFilters}
+                  </motion.button>
+                </div>
+              )}
               {/* Hydration */}
               <FacetRow
                 label={cms.filters.hydrationLabel}
@@ -417,19 +441,6 @@ export function RecommendedStyles({
                 onToggle={(v) => setOvenFilter(ovenFilter === v ? null : v)}
               />
 
-              {hasActiveAdvanced && (
-                <motion.button
-                  onClick={() => {
-                    setHydrationFilter(null);
-                    setTextureFilter(null);
-                    setSkillFilter(null);
-                    setOvenFilter(null);
-                  }}
-                  className="recommended-advanced-panel__clear"
-                >
-                  {cms.filters.removeFilters}
-                </motion.button>
-              )}
             </div>
           </motion.div>
         )}

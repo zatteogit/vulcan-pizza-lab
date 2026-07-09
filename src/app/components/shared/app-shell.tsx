@@ -334,15 +334,15 @@ function BottomTabBar({
 }) {
   const { cms } = useCms();
   const prefersReducedMotion = useReducedMotion();
-  const { hidden } = navState;
+  const { hidden, scrolled } = navState;
   return (
     <motion.div
-      className="app-shell-dock"
+      className={`app-shell-dock${scrolled ? " app-shell-dock--scrolled" : ""}`}
       initial={{ y: 0, scale: 1, opacity: 1 }}
       animate={{
-        y: hidden && !prefersReducedMotion ? 92 : 0,
-        scale: hidden && !prefersReducedMotion ? 0.96 : 1,
-        opacity: hidden ? 0 : 1,
+        y: hidden && !prefersReducedMotion ? 16 : 0,
+        scale: hidden && !prefersReducedMotion ? 0.985 : scrolled ? 0.99 : 1,
+        opacity: hidden ? 0.88 : 1,
       }}
       transition={
         prefersReducedMotion
@@ -706,8 +706,8 @@ export function AppShell() {
                 className="app-shell-scrim"
                 initial={{ y: 0, opacity: 1 }}
                 animate={{
-                  y: navState.hidden && !prefersReducedMotion ? 40 : 0,
-                  opacity: navState.hidden ? 0 : 1,
+                  y: navState.hidden && !prefersReducedMotion ? 18 : 0,
+                  opacity: navState.hidden ? 0.42 : 1,
                 }}
                 transition={
                   prefersReducedMotion

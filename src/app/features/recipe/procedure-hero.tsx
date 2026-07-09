@@ -15,7 +15,6 @@ import { createFormatter } from "../cms/i18n";
 import { Surface, Switch } from "../../components/ds/index";
 import type { TimeSlot } from "../../domain/pizza-engine";
 import {
-  dayOffset,
   daySuffix,
   engineMessage,
   optimizeComfort,
@@ -66,12 +65,8 @@ export function ProcedureHeroControls({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
 
-  const startSuffixClass = dayOffset(new Date(), startTime) > 0
-    ? "procedure-hero__time-suffix type-data-sm"
-    : "procedure-hero__time-suffix procedure-hero__time-suffix--hidden type-data-sm";
-  const endSuffixClass = dayOffset(new Date(), endTime) > 0
-    ? "procedure-hero__time-suffix type-data-sm"
-    : "procedure-hero__time-suffix procedure-hero__time-suffix--hidden type-data-sm";
+  const startDayLabel = daySuffix(new Date(), startTime, cms.cooking).trim() || "oggi";
+  const endDayLabel = daySuffix(new Date(), endTime, cms.cooking).trim() || "oggi";
 
   const comfortDescClass = comfortToggled
     ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--success type-data-sm"
@@ -125,8 +120,8 @@ export function ProcedureHeroControls({
                 <span className="procedure-hero__time-value">
                   {fmt.clockTime(startTime)}
                 </span>
-                <span className={startSuffixClass}>
-                  {daySuffix(new Date(), startTime, cms.cooking).trim() || " "}
+                <span className="procedure-hero__time-suffix type-data-sm">
+                  {startDayLabel}
                 </span>
               </button>
             )}
@@ -173,8 +168,8 @@ export function ProcedureHeroControls({
                   {hasFlexiblePhases ? "~" : ""}
                   {fmt.clockTime(endTime)}
                 </span>
-                <span className={endSuffixClass}>
-                  {daySuffix(new Date(), endTime, cms.cooking).trim() || " "}
+                <span className="procedure-hero__time-suffix type-data-sm">
+                  {endDayLabel}
                 </span>
               </button>
             )}
@@ -187,34 +182,6 @@ export function ProcedureHeroControls({
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Start Day Shifter */}
-      <div className="procedure-hero__days">
-        {[
-          { offset: 0, label: "Oggi" },
-          { offset: 1, label: "Domani" },
-          { offset: 2, label: "Dopodomani" },
-        ].map((dayOpt) => {
-          const now = new Date();
-          const currentStartDay = dayOffset(now, startTime);
-          const isSelected = currentStartDay === dayOpt.offset;
-          return (
-            <button
-              key={dayOpt.offset}
-              type="button"
-              onClick={() => {
-                const newStart = new Date(startTime);
-                const targetDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + dayOpt.offset);
-                newStart.setFullYear(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
-                setStartTime(roundToQuarter(newStart));
-              }}
-              className={isSelected ? "procedure-hero__day procedure-hero__day--active" : "procedure-hero__day"}
-            >
-              {dayOpt.label}
-            </button>
-          );
-        })}
       </div>
 
       {/* Smart Eating Planner Shortcuts */}

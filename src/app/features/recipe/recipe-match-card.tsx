@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
+import { Bookmark, BookmarkCheck, Heart, HeartHandshake, HeartPulse, HeartOff, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
@@ -291,7 +291,7 @@ export function RecipeMatchCard({
     handshake: HeartHandshake,
     heart: Heart,
     pulse: HeartPulse,
-    crack: HeartCrack,
+    crack: TriangleAlert,
     off: HeartOff,
   } as const;
   const MatchIcon = MATCH_ICONS[tone.icon];

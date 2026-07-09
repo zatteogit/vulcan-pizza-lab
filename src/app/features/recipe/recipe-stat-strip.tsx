@@ -1,4 +1,4 @@
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
@@ -32,21 +32,21 @@ export function RecipeStatStrip({
   );
   const hChanged =
     isPersonalized && Math.abs(recipe.hydration_pct - hMid) >= 2
-      ? { dir: recipe.hydration_pct > hMid ? "up" : ("down" as "up" | "down"), canonical: fmt.percent(hMid) }
+      ? { canonical: fmt.percent(hMid) }
       : undefined;
   const fMid = Math.round(
     (recipe.style.dough.fermentation_hours_range[0] + recipe.style.dough.fermentation_hours_range[1]) / 2,
   );
   const fChanged =
     isPersonalized && Math.abs(recipe.fermentation_hours - fMid) >= 2
-      ? { dir: recipe.fermentation_hours > fMid ? "up" : ("down" as "up" | "down"), canonical: fmt.fermentTime(fMid) }
+      ? { canonical: fmt.fermentTime(fMid) }
       : undefined;
   const wMid = Math.round(
     (recipe.style.dough.flour_w_range[0] + recipe.style.dough.flour_w_range[1]) / 2,
   );
   const wChanged =
     isPersonalized && Math.abs(recipe.flour_w - wMid) >= 15
-      ? { dir: recipe.flour_w > wMid ? "up" : ("down" as "up" | "down"), canonical: `W${wMid}` }
+      ? { canonical: `W${wMid}` }
       : undefined;
 
   /* Round 6-7 (note Matteo): in tabella SOLO i valori che cambiano e
@@ -60,7 +60,7 @@ export function RecipeStatStrip({
   const cells: {
     label: string;
     value: string;
-    changed?: { dir: "up" | "down"; canonical: string };
+    changed?: { canonical: string };
   }[] = [
     { label: ui.statHydration, value: fmt.percent(recipe.hydration_pct), changed: hChanged },
     { label: ui.statFlourStrength ?? "Forza farina", value: `${recipe.flour_w} W`, changed: wChanged },
@@ -101,7 +101,7 @@ export function SpecCell({
   label: string;
   value: string;
   index?: number;
-  changed?: { dir: "up" | "down"; canonical: string };
+  changed?: { canonical: string };
   small?: boolean;
   science?: boolean;
 }) {
@@ -126,8 +126,29 @@ export function SpecCell({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ type: "spring", stiffness: 420, damping: 30 }}
-          className="type-numeric stat-strip__value"
+          className={changed ? "type-numeric stat-strip__value stat-strip__value--changed" : "type-numeric stat-strip__value"}
+          title={changed ? `Prima ${changed.canonical} → ottimizzato ${value}` : undefined}
+          aria-label={changed ? `Valore ottimizzato. Prima: ${changed.canonical}. Ora: ${value}` : undefined}
         >
+          {changed && (
+            <>
+              <span className="stat-strip__value-prev">
+                {changed.canonical}
+              </span>
+              <ArrowRight
+                size={small ? 11 : 12}
+                strokeWidth={2.4}
+                className="stat-strip__value-arrow"
+                aria-hidden="true"
+              />
+              <Sparkles
+                size={small ? 11 : 12}
+                strokeWidth={2.4}
+                className="stat-strip__value-star"
+                aria-hidden="true"
+              />
+            </>
+          )}
           <span
             className={
               small
@@ -157,19 +178,6 @@ export function SpecCell({
               }
             >
               {parts.extra}
-            </span>
-          )}
-          {changed && (
-            <span
-              className="stat-strip__value-trend"
-              title={`Su misura per te · canonica ${changed.canonical}`}
-              aria-label={`Valore su misura. Canonica: ${changed.canonical}`}
-            >
-              {changed.dir === "up" ? (
-                <TrendingUp size={small ? 12 : 13} strokeWidth={2.5} />
-              ) : (
-                <TrendingDown size={small ? 12 : 13} strokeWidth={2.5} />
-              )}
             </span>
           )}
         </motion.div>

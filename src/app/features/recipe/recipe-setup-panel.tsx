@@ -359,7 +359,11 @@ export function RecipeSetupPanel({
               </span>
             </div>
             <div className="setup-profile__body">
-              <div className="setup-versions">
+              <div
+                className="setup-versions setup-versions--binary"
+                role="group"
+                aria-label={cmsMessage(cms, "recipeSetup.profileLabel", "Profilo impasto")}
+              >
                 {versions.map((version) => {
                   const active = !activeInterpretationId && activeVersion?.id === version.id;
                   return (
@@ -367,7 +371,7 @@ export function RecipeSetupPanel({
                       key={version.id}
                       type="button"
                       onClick={() => onSelectVersion(version)}
-                      className={active ? "setup-option setup-option--active" : "setup-option"}
+                      className={active ? "setup-option setup-option--binary setup-option--active" : "setup-option setup-option--binary"}
                     >
                       <div className="setup-option__text">
                         <span className="setup-option__name">
