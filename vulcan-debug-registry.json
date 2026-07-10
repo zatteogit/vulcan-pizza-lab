@@ -312,5 +312,3740 @@
     "updatedAt": 1783283969006,
     "deleted": false,
     "resolved": true
+  },
+  {
+    "id": "anno-1783628885815",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div:nth-of-type(2) > div.ingredients-preferment:nth-of-type(4) > div.type-body.ingredients-preferment__note:nth-of-type(2)",
+    "route": "/recipe/pizza_al_metro",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"type-body ingredients-preferment__note\">Il sale va sempre e solo nell'impasto finale: nel pre-fermento frenerebbe i lieviti.</div>",
+    "parentHTML": "<div class=\"ingredients-preferment\">\n  ...\n  <div class=\"type-body ingredients-preferment__note\">Il sale va sempre e solo nell'impasto finale: nel pre-fermento frenerebbe i lieviti.</div>\n  ...\n</div>",
+    "timestamp": "22:28:05",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 650.78125,
+      "left": 127,
+      "width": 894,
+      "height": 18.390625
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "894px",
+      "height": "18.390625px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "12px",
+      "fontWeight": "400",
+      "color": "rgb(181, 170, 160)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 127,
+    "pageY": 1397.78125,
+    "comment": "sistemare questa nota, viene tagliata a sinistra per via del border radius",
+    "priority": "low",
+    "index": 8,
+    "updatedAt": 1783628907215,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783628940985",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div:nth-of-type(2) > div.ingredients-list:nth-of-type(3) > div.bits-ing-row:nth-of-type(2) > span.bits-ing-row__amount.type-numeric > span.bits-ing-row__amount-note:nth-of-type(2)",
+    "route": "/recipe/pizza_al_metro",
+    "elementTag": "span",
+    "outerHTML": "<span class=\"bits-ing-row__amount-note\">totale</span>",
+    "parentHTML": "<span class=\"bits-ing-row__amount type-numeric\">\n  ...\n  <span class=\"bits-ing-row__amount-note\">totale</span>\n  ...\n</span>",
+    "timestamp": "22:29:00",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 316.21875,
+      "left": 988.96875,
+      "width": 33.03125,
+      "height": 8
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "33.03125px",
+      "height": "8px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "8px",
+      "fontWeight": "600",
+      "color": "rgb(181, 170, 160)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 988.96875,
+    "pageY": 1063.21875,
+    "comment": "non mi piace come abbiamo approfondito le quantità del prefermento... io avrei diviso la lista degli ingredienti",
+    "priority": "high",
+    "index": 9,
+    "updatedAt": 1783628975752,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629025952",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--procedura > div.recipe-output-hero-wrap > div.surface-card.procedure-hero > div.procedure-hero__times:nth-of-type(2) > div.procedure-hero__time:nth-of-type(2)",
+    "route": "/recipe/pizza_al_metro",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"procedure-hero__time\"><div class=\"procedure-hero__time-label type-data\">Fine</div><div class=\"procedure-hero__time-controls\"><button class=\"procedure-hero__shift-btn\" aria-label=\"Inizia prima\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-minus\"><path d=\"M5 12h14\"></path></svg></button><button class=\"procedure-hero__time-display type-numeric\"><span class=\"procedure-hero__time-value\">~12:37</span><span class=\"procedure-hero__time-suffix type-data-sm\">dopodomani</span></button><button class=\"procedure-hero__shift-btn\" aria-label=\"Inizia più tardi\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus\"><path d=\"M5 12h14\"></path><path d=\"M12 5v14\"></path></svg></button></div></div>",
+    "parentHTML": "<div class=\"procedure-hero__times\">\n  ...\n  <div class=\"procedure-hero__time\"><div class=\"procedure-hero__time-label type-data\">Fine</div><div class=\"procedure-hero__time-controls\"><button class=\"procedure-hero__shift-btn\" aria-label=\"Inizia prima\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-minus\"><path d=\"M5 12h14\"></path></svg></button><button class=\"procedure-hero__time-display type-numeric\"><span class=\"procedure-hero__time-value\">~12:37</span><span class=\"procedure-hero__time-suffix type-data-sm\">dopodomani</span></button><button class=\"procedure-hero__shift-btn\" aria-label=\"Inizia più tardi\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"13\" height=\"13\" viewBox=\"0 0 24 2...\n  ...\n</div>",
+    "timestamp": "22:30:25",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 212.796875,
+      "left": 580,
+      "width": 421,
+      "height": 78
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "421px",
+      "height": "78px",
+      "padding": "12px 12px 12px 12px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgb(26, 24, 22)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 580,
+    "pageY": 350.796875,
+    "comment": "su questi picker ci dobbiamo decisamente lavorare... vedi quali sono le best practice e facciamo qualcosa di intuitivo e completo",
+    "priority": "high",
+    "index": 10,
+    "updatedAt": 1783629050051,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629073001",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--procedura > div:nth-of-type(2) > div.procedure-timeline-spine > div.procedure-timeline-list:nth-of-type(2) > div.procedure-timeline-step:nth-of-type(4) > div.procedure-timeline-step__content:nth-of-type(2) > div.procedure-timeline-step__time-row > span.type-numeric.procedure-timeline-step__time",
+    "route": "/recipe/pizza_al_metro",
+    "elementTag": "span",
+    "outerHTML": "<span class=\"type-numeric procedure-timeline-step__time\">≈07:15 domani</span>",
+    "parentHTML": "<div class=\"procedure-timeline-step__time-row\">\n  ...\n  <span class=\"type-numeric procedure-timeline-step__time\">≈07:15 domani</span>\n  ...\n</div>",
+    "timestamp": "22:31:13",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 611.96875,
+      "left": 186,
+      "width": 102.703125,
+      "height": 22
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "102.703125px",
+      "height": "22px",
+      "padding": "2px 8px 2px 8px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "12px",
+      "fontWeight": "700",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgb(37, 34, 32)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 186,
+    "pageY": 1212.96875,
+    "comment": "perché a volte il \"circa\" è indicato con la doppia tilde?",
+    "priority": "high",
+    "index": 11,
+    "updatedAt": 1783680226813,
+    "deleted": false,
+    "resolved": true
+  },
+  {
+    "id": "anno-1783629115321",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--procedura > div:nth-of-type(2) > div.procedure-timeline-spine > div.procedure-timeline-list:nth-of-type(2) > div.procedure-timeline-step:nth-of-type(8) > div.procedure-timeline-step__content:nth-of-type(2)",
+    "route": "/recipe/pizza_al_metro",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"procedure-timeline-step__content\"><div class=\"procedure-timeline-step__time-row\"><span class=\"type-numeric procedure-timeline-step__time\">12:25 domani</span></div><span class=\"procedure-timeline-step__title\">Condimento</span><div class=\"topping-inline\"><div class=\"condiment-strip\"><div class=\"condiment-strip__rail hide-scrollbar\" aria-label=\"Scegli condimento\"><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/variants/margherita_napoletana_avpn.jpg\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Margherita</span><span class=\"condiment-strip__card-variant type-data-sm\">Verace AVPN</span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_marinara.png\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Marinara</span><span class=\"condiment-strip__card-variant type-data-sm\">AVPN</span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_friarellisalsiccia.png\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Salsiccia e Friarielli</span><span class=\"condiment-strip__card-variant type-data-sm\"></span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_diavola.png\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Diavola</span><span class=\"condiment-strip__card-variant type-data-sm\">salame napoletano</span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_boscaiola.png\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Boscaiola</span><span class=\"condiment-strip__card-variant type-data-sm\">porcini e salsiccia</span></span></span></button><button type=\"button\" class=\"condiment-strip__card condiment-strip__card--active\" aria-pressed=\"true\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_cacioepepe.png\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Cacio e Pepe</span><span class=\"condiment-strip__card-variant type-data-sm condiment-strip__card-variant--active\">post-bake</span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_capricciosa.png\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Capricciosa</span><span class=\"condiment-strip__card-variant type-data-sm\"></span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_4stagioni.jpg\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Quattro Stagioni</span><span class=\"condiment-strip__card-variant type-data-sm\"></span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_4formaggi.png\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Quattro Formaggi</span><span class=\"condiment-strip__card-variant type-data-sm\"></span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_ortolana.png\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Ortolana</span><span class=\"condiment-strip__card-variant type-data-sm\"></span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_cosacca.jpg\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Cosacca</span><span class=\"condiment-strip__card-variant type-data-sm\"></span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_provolapepe.jpg\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Provola e Pepe</span><span class=\"condiment-strip__card-variant type-data-sm\"></span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_nduja.jpg\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">'Nduja di Spilinga</span><span class=\"condiment-strip__card-variant type-data-sm\"></span></span></span></button><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/topping_nerano.jpg\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Nerano</span><span class=\"condiment-strip__card-variant type-data-sm\"></span></span></span></button></div><div class=\"condiment-strip__fade condiment-strip__fade--start\" aria-hidden=\"true\"></div><div class=\"condiment-strip__fade condiment-strip__fade--end\" aria-hidden=\"true\"></div></div><div class=\"topping-inline__preps\"><div class=\"topping-inline__prep\"><span class=\"topping-inline__prep-title type-data\">Montare la crema di pecorino<span class=\"topping-inline__prep-duration\"> · 5 minuti</span></span><span class=\"topping-inline__prep-desc type-body\">Mescolare il pecorino con acqua tiepida (o poca panna) e pepe fino a ottenere una crema liscia senza grumi. Tenere da parte a temperatura ambiente.</span></div></div></div><p class=\"procedure-timeline-step__desc procedure-timeline-step__desc--topping\">Cuocere la base bianca. Appena sfornata, stendere la crema di pecorino e pepe sul disco caldo: il calore residuo la rende setosa senza stracciarla. Macinare altro pepe sopra.</p><span class=\"type-numeric procedure-timeline-step__duration\">Durata: 3 minuti</span></div>",
+    "parentHTML": "<div class=\"procedure-timeline-step\">\n  ...\n  <div class=\"procedure-timeline-step__content\"><div class=\"procedure-timeline-step__time-row\"><span class=\"type-numeric procedure-timeline-step__time\">12:25 domani</span></div><span class=\"procedure-timeline-step__title\">Condimento</span><div class=\"topping-inline\"><div class=\"condiment-strip\"><div class=\"condiment-strip__rail hide-scrollbar\" aria-label=\"Scegli condimento\"><button type=\"button\" class=\"condiment-strip__card\" aria-pressed=\"false\"><span class=\"condiment-strip__card-row\"><img src=\"/src/assets/toppings/variants/margherita_napoletana_avpn.jpg\" alt=\"\" class=\"condiment-strip__card-thumb\" loading=\"lazy\"><span class=\"condiment-strip__card-text\"><span class=\"condiment-strip__card-name type-data\">Margherita</span><span class=\"condiment-strip__card-variant type-data-sm\">Verace AVPN</spa...\n  ...\n</div>",
+    "timestamp": "22:31:55",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 428.15625,
+      "left": 186,
+      "width": 836,
+      "height": 331.265625
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "836px",
+      "height": "331.265625px",
+      "padding": "2px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 186,
+    "pageY": 1950.15625,
+    "comment": "quello che c'è sotto allo slider potrebbe animarsi",
+    "priority": "medium",
+    "index": 12,
+    "updatedAt": 1783629129038,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629149713",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.section-tabs-wrap.section-tabs-wrap--inline.section-tabs-wrap--sticky > nav.section-tabs-capsule.section-tabs-capsule--subtitles",
+    "route": "/recipe/pizza_al_metro",
+    "elementTag": "nav",
+    "outerHTML": "<nav data-region=\"filters\" class=\"section-tabs-capsule section-tabs-capsule--subtitles\" role=\"tablist\" aria-label=\"Sezioni della ricetta\"><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"section-tabs-capsule__tab section-tabs-capsule__tab--subtitles\" tabindex=\"0\"><div class=\"section-tabs-capsule__content\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chef-hat section-tabs-capsule__icon\"><path d=\"M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z\"></path><path d=\"M6 17h12\"></path></svg><div class=\"section-tabs-capsule__text\"><span class=\"section-tabs-capsule__label\">Ricetta</span></div></div></button><button type=\"button\" role=\"tab\" aria-selected=\"true\" class=\"section-tabs-capsule__tab section-tabs-capsule__tab--subtitles section-tabs-capsule__tab--active\" tabindex=\"0\" style=\"transform: none;\"><span class=\"section-tabs-capsule__indicator\" style=\"transform: none; transform-origin: 50% 50%; opacity: 1;\"></span><div class=\"section-tabs-capsule__content\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-list-checks section-tabs-capsule__icon section-tabs-capsule__icon--active\"><path d=\"m3 17 2 2 4-4\"></path><path d=\"m3 7 2 2 4-4\"></path><path d=\"M13 6h8\"></path><path d=\"M13 12h8\"></path><path d=\"M13 18h8\"></path></svg><div class=\"section-tabs-capsule__text\"><span class=\"section-tabs-capsule__label\">Procedimento</span><span class=\"section-tabs-capsule__subtitle section-tabs-capsule__subtitle--active\">Biga • 24h</span></div></div></button><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"section-tabs-capsule__tab section-tabs-capsule__tab--subtitles\" tabindex=\"0\" style=\"transform: none;\"><div class=\"section-tabs-capsule__content\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-utensils section-tabs-capsule__icon\"><path d=\"M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2\"></path><path d=\"M7 2v20\"></path><path d=\"M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7\"></path></svg><div class=\"section-tabs-capsule__text\"><span class=\"section-tabs-capsule__label\">Condimento</span><span class=\"section-tabs-capsule__subtitle\">Cacio e Pepe</span></div></div></button></nav>",
+    "parentHTML": "<div class=\"section-tabs-wrap section-tabs-wrap--inline section-tabs-wrap--sticky\">\n  ...\n  <nav data-region=\"filters\" class=\"section-tabs-capsule section-tabs-capsule--subtitles\" role=\"tablist\" aria-label=\"Sezioni della ricetta\"><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"section-tabs-capsule__tab section-tabs-capsule__tab--subtitles\" tabindex=\"0\"><div class=\"section-tabs-capsule__content\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chef-hat section-tabs-capsule__icon\"><path d=\"M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z\"></path><path d=\"M6 17h12\"></path></svg><div class=\"section-tabs-capsule...\n  ...\n</div>",
+    "timestamp": "22:32:29",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 184.796875,
+      "left": 126,
+      "width": 896,
+      "height": 70
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "relative",
+      "width": "896px",
+      "height": "70px",
+      "padding": "4px 4px 4px 4px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "color(srgb 0 0 0 / 0.12) 0px 16px 36px 0px, color(srgb 1 1 1 / 0.24) 0px 1px 0px 0px inset, color(srgb 0.980392 0.972549 0.960784 / 0.04) 0px -1px 0px 0px inset",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 126,
+    "pageY": 184.796875,
+    "comment": "perché non si aggancia?",
+    "priority": "high",
+    "index": 13,
+    "updatedAt": 1783629159208,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629199743",
+    "selector": "main#main-content > div.profile-page > div.profile-tabs:nth-of-type(3) > button.profile-tabs__button:nth-of-type(3)",
+    "route": "/profile",
+    "elementTag": "button",
+    "outerHTML": "<button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"profile-tabs__button\">Ricette</button>",
+    "parentHTML": "<div class=\"profile-tabs\">\n  ...\n  <button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"profile-tabs__button\">Ricette</button>\n  ...\n</div>",
+    "timestamp": "22:33:19",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 195.028076171875,
+      "left": 736.7623901367188,
+      "width": 198.4752197265625,
+      "height": 26.03759765625
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "202px",
+      "height": "26.5px",
+      "padding": "8px 8px 8px 8px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "10px",
+      "fontWeight": "600",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgb(26, 24, 22)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 736.7623901367188,
+    "pageY": 195.028076171875,
+    "comment": "questo tab va per primo",
+    "priority": "high",
+    "index": 14,
+    "updatedAt": 1783680226813,
+    "deleted": false,
+    "resolved": true
+  },
+  {
+    "id": "anno-1783629244102",
+    "selector": "main#main-content > div.profile-page > div.profile-tabs:nth-of-type(3) > button.profile-tabs__button.profile-tabs__button--active",
+    "route": "/profile",
+    "elementTag": "button",
+    "outerHTML": "<button type=\"button\" role=\"tab\" aria-selected=\"true\" class=\"profile-tabs__button profile-tabs__button--active\">Il tuo setup</button>",
+    "parentHTML": "<div class=\"profile-tabs\">\n  ...\n  <button type=\"button\" role=\"tab\" aria-selected=\"true\" class=\"profile-tabs__button profile-tabs__button--active\">Il tuo setup</button>\n  ...\n</div>",
+    "timestamp": "22:34:04",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 195.09909057617188,
+      "left": 325.3037414550781,
+      "width": 197.39254760742188,
+      "height": 25.89556884765625
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "202px",
+      "height": "26.5px",
+      "padding": "8px 8px 8px 8px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "10px",
+      "fontWeight": "600",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgb(26, 24, 22)",
+      "boxShadow": "rgba(0, 0, 0, 0.35) 0px 1px 3px 0px, rgba(0, 0, 0, 0.25) 0px 1px 2px 0px",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 325.3037414550781,
+    "pageY": 195.09909057617188,
+    "comment": "La tua Cucina",
+    "priority": "high",
+    "index": 15,
+    "updatedAt": 1783680226813,
+    "deleted": false,
+    "resolved": true
+  },
+  {
+    "id": "anno-1783629272623",
+    "selector": "main#main-content > div.profile-page > div.profile-tabs:nth-of-type(3) > button.profile-tabs__button:nth-of-type(3)",
+    "route": "/profile",
+    "elementTag": "button",
+    "outerHTML": "<button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"profile-tabs__button\">Ricette</button>",
+    "parentHTML": "<div class=\"profile-tabs\">\n  ...\n  <button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"profile-tabs__button\">Ricette</button>\n  ...\n</div>",
+    "timestamp": "22:34:32",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 124.05889892578125,
+      "left": 736.9973754882812,
+      "width": 198.0052490234375,
+      "height": 25.9759521484375
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "202px",
+      "height": "26.5px",
+      "padding": "8px 8px 8px 8px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "10px",
+      "fontWeight": "600",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgb(26, 24, 22)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 736.9973754882812,
+    "pageY": 195.05889892578125,
+    "comment": "Ricette salvate",
+    "priority": "medium",
+    "index": 16,
+    "updatedAt": 1783680226813,
+    "deleted": false,
+    "resolved": true
+  },
+  {
+    "id": "anno-1783629300861",
+    "selector": "main#main-content > div.profile-page > section.profile-section",
+    "route": "/profile",
+    "elementTag": "section",
+    "outerHTML": "<section data-region=\"section\" class=\"profile-section\" style=\"opacity: 1; transform: none;\"><div data-region=\"section-header\" class=\"profile-section__header\"><span class=\"type-label-compact profile-section__step\">01</span><h2 class=\"type-heading-md ds-heading profile-section__title\" style=\"--ds-heading-color: var(--text-default);\">Il tuo forno</h2><p class=\"profile-section__subtitle\">Determina temperature e stili disponibili</p></div><div class=\"profile-oven-list\"><button class=\"profile-oven-list__item\" style=\"background-color: var(--surface-container); border-color: var(--primary);\"><div class=\"profile-oven-list__icon\" style=\"color: var(--primary);\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-house\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"></path><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"></path></svg></div><div class=\"profile-oven-list__body\"><span class=\"type-body-sm profile-oven-list__name\">Forno Domestico</span></div><span class=\"type-data profile-oven-list__temp\">250°C</span><div class=\"profile-oven-list__check\" style=\"opacity: 1; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check profile-oven-list__check-icon\"><path d=\"M20 6 9 17l-5-5\"></path></svg></div></button><button class=\"profile-oven-list__item\" style=\"background-color: var(--surface-container); border-color: var(--primary);\"><div class=\"profile-oven-list__icon\" style=\"color: var(--primary);\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-zap\"><path d=\"M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z\"></path></svg></div><div class=\"profile-oven-list__body\"><span class=\"type-body-sm profile-oven-list__name\">Elettrico Standard</span></div><span class=\"type-data profile-oven-list__temp\">300°C</span><div class=\"profile-oven-list__check\" style=\"opacity: 1; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check profile-oven-list__check-icon\"><path d=\"M20 6 9 17l-5-5\"></path></svg></div></button><button class=\"profile-oven-list__item\" style=\"background-color: var(--surface-container); border-color: var(--primary);\"><div class=\"profile-oven-list__icon\" style=\"color: var(--primary);\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-flame\"><path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\"></path></svg></div><div class=\"profile-oven-list__body\"><span class=\"type-body-sm profile-oven-list__name\">Gas Professionale</span></div><span class=\"type-data profile-oven-list__temp\">350°C</span><div class=\"profile-oven-list__check\" style=\"opacity: 1; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check profile-oven-list__check-icon\"><path d=\"M20 6 9 17l-5-5\"></path></svg></div></button><button class=\"profile-oven-list__item\" style=\"background-color: var(--container-bg-low); border-color: var(--container-border);\"><div class=\"profile-oven-list__icon\" style=\"color: var(--text-muted);\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-thermometer\"><path d=\"M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z\"></path></svg></div><div class=\"profile-oven-list__body\"><span class=\"type-body-sm profile-oven-list__name\">Elettrico alta temperatura</span></div><span class=\"type-data profile-oven-list__temp\">450°C</span></button><button class=\"profile-oven-list__item\" style=\"background-color: var(--container-bg-low); border-color: var(--container-border);\"><div class=\"profile-oven-list__icon\" style=\"color: var(--text-muted);\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-trees\"><path d=\"M10 10v.2A3 3 0 0 1 8.9 16H5a3 3 0 0 1-1-5.8V10a3 3 0 0 1 6 0Z\"></path><path d=\"M7 16v6\"></path><path d=\"M13 19v3\"></path><path d=\"M12 19h8.3a1 1 0 0 0 .7-1.7L18 14h.3a1 1 0 0 0 .7-1.7L16 9h.2a1 1 0 0 0 .8-1.7L13 3l-1.4 1.5\"></path></svg></div><div class=\"profile-oven-list__body\"><span class=\"type-body-sm profile-oven-list__name\">Forno a Legna</span></div><span class=\"type-data profile-oven-list__temp\">500°C</span></button></div><div class=\"profile-oven-temp\"><div class=\"profile-oven-temp__row\"><span class=\"type-data-sm profile-oven-temp__label\">Temperatura massima</span><span class=\"type-data profile-oven-temp__value\">350°C</span></div><input type=\"range\" min=\"180\" max=\"500\" step=\"10\" class=\"profile-oven-temp__slider\" aria-label=\"Temperatura massima forno\" value=\"350\"></div></section>",
+    "parentHTML": "<div class=\"profile-page\">\n  ...\n  <section data-region=\"section\" class=\"profile-section\" style=\"opacity: 1; transform: none;\"><div data-region=\"section-header\" class=\"profile-section__header\"><span class=\"type-label-compact profile-section__step\">01</span><h2 class=\"type-heading-md ds-heading profile-section__title\" style=\"--ds-heading-color: var(--text-default);\">Il tuo forno</h2><p class=\"profile-section__subtitle\">Determina temperature e stili disponibili</p></div><div class=\"profile-oven-list\"><button class=\"profile-oven-list__item\" style=\"background-color: var(--surface-container); border-color: var(--primary);\"><div class=\"profile-oven-list__icon\" style=\"color: var(--primary);\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-...\n  ...\n</div>",
+    "timestamp": "22:35:00",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": -70.703125,
+      "left": 318,
+      "width": 624,
+      "height": 535.5
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "624px",
+      "height": "535.5px",
+      "padding": "24px 0px 24px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 318,
+    "pageY": 246.296875,
+    "comment": "manca tutto il discorso su resistenze (sopra sotto ecc), bruciatori, forma dei bruciatori ecc... Cerchiamo di farlo in maniera figa e che influenzi correttamente il motore",
+    "priority": "high",
+    "index": 17,
+    "updatedAt": 1783629344377,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629364973",
+    "selector": "main#main-content > div.profile-page > div.profile-tabs:nth-of-type(3)",
+    "route": "/profile",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"profile-tabs\" role=\"tablist\" aria-label=\"Il tuo Profilo\"><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"profile-tabs__button\">Il tuo setup</button><button type=\"button\" role=\"tab\" aria-selected=\"true\" class=\"profile-tabs__button profile-tabs__button--active\">App</button><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"profile-tabs__button\">Ricette</button></div>",
+    "parentHTML": "<div class=\"profile-page\">\n  ...\n  <div class=\"profile-tabs\" role=\"tablist\" aria-label=\"Il tuo Profilo\"><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"profile-tabs__button\">Il tuo setup</button><button type=\"button\" role=\"tab\" aria-selected=\"true\" class=\"profile-tabs__button profile-tabs__button--active\">App</button><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"profile-tabs__button\">Ricette</button></div>\n  ...\n</div>",
+    "timestamp": "22:36:04",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 189.796875,
+      "left": 318,
+      "width": 624,
+      "height": 36.5
+    },
+    "computedStyles": {
+      "display": "grid",
+      "position": "sticky",
+      "width": "624px",
+      "height": "36.5px",
+      "padding": "4px 4px 4px 4px",
+      "margin": "0px 0px 20px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "color(srgb 0.07451 0.070588 0.066667 / 0.86)",
+      "boxShadow": "rgba(0, 0, 0, 0.35) 0px 1px 3px 0px, rgba(0, 0, 0, 0.25) 0px 1px 2px 0px",
+      "zIndex": "4",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783628815027,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783628803537,
+      "selectedTimeHours": 22,
+      "selectedTimeTargetAt": 1783708003537,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "home",
+        "oven_max_temp_c": 250,
+        "skill_level": 2,
+        "available_hours": 22,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 318,
+    "pageY": 189.796875,
+    "comment": "è corretta l'animazione e gli stati di questo elemento?",
+    "priority": "high",
+    "index": 18,
+    "updatedAt": 1783629377314,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629387247",
+    "selector": "",
+    "route": "/",
+    "elementTag": "svg",
+    "outerHTML": "<svg width=\"51\" height=\"51\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"><defs><linearGradient id=\"vm-rdh\" x1=\"0.12\" y1=\"0\" x2=\"0.9\" y2=\"1\"><stop offset=\"0%\" stop-color=\"var(--logo-grad-start)\"></stop><stop offset=\"48%\" stop-color=\"var(--logo-grad-mid)\"></stop><stop offset=\"100%\" stop-color=\"var(--logo-grad-end)\"></stop></linearGradient></defs><path d=\"M4.8 1.5H11.31Q11.41 1.5 11.41 1.6L11.25 19.71L4.61 1.77Q4.56 1.64 4.66 1.54Q4.72 1.5 4.8 1.5ZM19.18 1.58C19.19 1.53 19.23 1.5 19.29 1.5H28.12C29.3 1.5 29.92 2.54 29.44 3.62L17.42 28.28C16.46 30.11 14.8 30.23 13.67 29.43C12.72 28.77 12.73 27.85 13.06 26.43L19.18 1.58Z\" fill=\"url(#vm-rdh)\" fill-rule=\"nonzero\"></path></svg>",
+    "parentHTML": "<div class=\"vulcan-logo__stage\">\n  ...\n  <svg width=\"51\" height=\"51\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"><defs><linearGradient id=\"vm-rdh\" x1=\"0.12\" y1=\"0\" x2=\"0.9\" y2=\"1\"><stop offset=\"0%\" stop-color=\"var(--logo-grad-start)\"></stop><stop offset=\"48%\" stop-color=\"var(--logo-grad-mid)\"></stop><stop offset=\"100%\" stop-color=\"var(--logo-grad-end)\"></stop></linearGradient></defs><path d=\"M4.8 1.5H11.31Q11.41 1.5 11.41 1.6L11.25 19.71L4.61 1.77Q4.56 1.64 4.66 1.54Q4.72 1.5 4.8 1.5ZM19.18 1.58C19.19 1.53 19.23 1.5 19.29 1.5H28.12C29.3 1.5 29.92 2.54 29.44 3.62L17.42 28.28C16.46 30.11 14.8 30.23 13.67 29.43C12.72 28.77 12.73 27.85 13.06 26.43L19.18 1.58Z\" fill=\"url(#vm-rdh)\" fill-rule=\"nonzero\"></path></svg>\n  ...\n</div>",
+    "timestamp": "22:36:27",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 267.81982421875,
+      "left": 604.67919921875,
+      "width": 50.6416015625,
+      "height": 50.6416015625
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "51px",
+      "height": "51px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": null,
+    "consoleLogsAtClick": [],
+    "pageX": 604.67919921875,
+    "pageY": 267.81982421875,
+    "comment": "perché qui non è bianco? (e anche nel DS!)",
+    "priority": "high",
+    "index": 19,
+    "updatedAt": 1783629402189,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629428822",
+    "selector": "main#main-content > div.explore-page__container:nth-of-type(2) > div.explore-section-stack:nth-of-type(3) > section:nth-of-type(2) > div.explore-grid--preview:nth-of-type(2) > div > div.tilt-card__stage > div.explore-tilt.tilt-card__inner > a.surface-container.explore-card.explore-card--nerd > div.explore-card__media > div.explore-card__match:nth-of-type(3) > div.explore-card__match-pill",
+    "route": "/explore",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"explore-card__match-pill\" title=\"Match: 62%\" aria-label=\"Compatibilità 62%\"><span class=\"explore-card__match-mc\">62%</span></div>",
+    "parentHTML": "<div class=\"explore-card__match\">\n  ...\n  <div class=\"explore-card__match-pill\" title=\"Match: 62%\" aria-label=\"Compatibilità 62%\"><span class=\"explore-card__match-mc\">62%</span></div>\n  ...\n</div>",
+    "timestamp": "22:37:08",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 504.419921875,
+      "left": 321.1419372558594,
+      "width": 36.04779052734375,
+      "height": 19.05224609375
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "37.484375px",
+      "height": "19.5px",
+      "padding": "2px 8px 2px 8px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "9px",
+      "fontWeight": "700",
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "color(srgb 0.07451 0.070588 0.066667 / 0.82)",
+      "boxShadow": "color(srgb 0 0 0 / 0.16) 0px 4px 12px 0px",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": null,
+    "consoleLogsAtClick": [],
+    "pageX": 321.1419372558594,
+    "pageY": 1002.419921875,
+    "comment": "Mettiamo iconcine (cuore, cuore spezzato ecc)",
+    "priority": "high",
+    "index": 20,
+    "updatedAt": 1783629445839,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629473814",
+    "selector": "main#main-content > div.explore-page__container:nth-of-type(2) > div.explore-filters.hide-scrollbar:nth-of-type(2)",
+    "route": "/explore",
+    "elementTag": "div",
+    "outerHTML": "<div data-region=\"filters\" class=\"explore-filters hide-scrollbar\"><button class=\"explore-filters__chip\">In primo piano</button><button class=\"explore-filters__chip\">Stili di pizza</button><button class=\"explore-filters__chip explore-filters__chip--active explore-filters__chip--nerd\">Ricette iconiche</button></div>",
+    "parentHTML": "<div class=\"explore-page__container\">\n  ...\n  <div data-region=\"filters\" class=\"explore-filters hide-scrollbar\"><button class=\"explore-filters__chip\">In primo piano</button><button class=\"explore-filters__chip\">Stili di pizza</button><button class=\"explore-filters__chip explore-filters__chip--active explore-filters__chip--nerd\">Ricette iconiche</button></div>\n  ...\n</div>",
+    "timestamp": "22:37:53",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 237.59375,
+      "left": 142,
+      "width": 976,
+      "height": 47.5
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "976px",
+      "height": "47.5px",
+      "padding": "4px 4px 4px 4px",
+      "margin": "0px 0px 32px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "color(srgb 0.101961 0.094118 0.086275 / 0.72)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": null,
+    "consoleLogsAtClick": [],
+    "pageX": 142,
+    "pageY": 237.59375,
+    "comment": "questo bordo è necessario da DS?",
+    "priority": "high",
+    "index": 21,
+    "updatedAt": 1783629484673,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629544157",
+    "selector": "html.dark > body > div.style-detail-sheet__portal:nth-of-type(2) > div.style-detail-sheet__panel:nth-of-type(2) > button.ds-iconbtn.ds-iconbtn--md.ds-iconbtn--bare",
+    "route": "/",
+    "elementTag": "button",
+    "outerHTML": "<button class=\"ds-iconbtn ds-iconbtn--md ds-iconbtn--bare ds-iconbtn--r-full style-detail-sheet__fav-btn\" aria-label=\"Aggiungi ai preferiti\" aria-pressed=\"false\" tabindex=\"0\" style=\"transform: scale(0.868771);\"><span class=\"style-detail-sheet__fav-icon\" style=\"transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-bookmark\"><path d=\"m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z\"></path></svg></span></button>",
+    "parentHTML": "<div class=\"style-detail-sheet__panel\">\n  ...\n  <button class=\"ds-iconbtn ds-iconbtn--md ds-iconbtn--bare ds-iconbtn--r-full style-detail-sheet__fav-btn\" aria-label=\"Aggiungi ai preferiti\" aria-pressed=\"false\" tabindex=\"0\" style=\"transform: scale(0.868771);\"><span class=\"style-detail-sheet__fav-icon\" style=\"transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-bookmark\"><path d=\"m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z\"></path></svg></span></button>\n  ...\n</div>",
+    "timestamp": "22:39:04",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 309.5628662109375,
+      "left": 1054.3441162109375,
+      "width": 39.311767578125,
+      "height": 39.311767578125
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "absolute",
+      "width": "40px",
+      "height": "40px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "color": "rgb(181, 170, 160)",
+      "backgroundColor": "rgb(37, 34, 32)",
+      "boxShadow": "none",
+      "zIndex": "3",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629525462,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": "pala_romana",
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 77,
+        "customFlourW": 300,
+        "customFlourPL": 0.57,
+        "customFermentHours": 18,
+        "customFermentTemp": 22,
+        "usePreFerment": true,
+        "panConfig": {
+          "panShape": "round",
+          "panLength": 40,
+          "panWidth": 20,
+          "thickness": 0.35
+        },
+        "selectedToppingConcept": "bianca_mortazza_romana"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 1054.3441162109375,
+    "pageY": 309.5628662109375,
+    "comment": "è corretto che questo button e quello Close abbiano status diversi?",
+    "priority": "high",
+    "index": 22,
+    "updatedAt": 1783629562372,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629589080",
+    "selector": "div#root > div.app-shell-root > div.app-shell-rail > nav.app-shell-rail__nav > div.app-shell-rail__tabs",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"app-shell-rail__tabs\"><a class=\"app-shell-tab app-shell-tab--rail\" aria-label=\"Crea\" href=\"/\" data-discover=\"true\" aria-current=\"page\"><div class=\"app-shell-tab__pill\" tabindex=\"0\" style=\"transform: none;\"><div class=\"app-shell-tab__indicator\" style=\"transform: none; transform-origin: 50% 50%; opacity: 1;\"></div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-flame app-shell-tab__icon\"><path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\"></path></svg></div><span class=\"type-data app-shell-tab__label\">Crea</span></a><a class=\"app-shell-tab app-shell-tab--rail\" aria-label=\"Scopri\" href=\"/explore\" data-discover=\"true\"><div class=\"app-shell-tab__pill\" tabindex=\"0\" style=\"transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-compass app-shell-tab__icon\"><path d=\"m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z\"></path><circle cx=\"12\" cy=\"12\" r=\"10\"></circle></svg></div><span class=\"type-data app-shell-tab__label\">Scopri</span></a><a class=\"app-shell-tab app-shell-tab--rail\" aria-label=\"Impara\" href=\"/learn\" data-discover=\"true\"><div class=\"app-shell-tab__pill\" tabindex=\"0\" style=\"transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-graduation-cap app-shell-tab__icon\"><path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\"></path><path d=\"M22 10v6\"></path><path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\"></path></svg></div><span class=\"type-data app-shell-tab__label\">Impara</span></a></div>",
+    "parentHTML": "<nav class=\"app-shell-rail__nav\">\n  ...\n  <div class=\"app-shell-rail__tabs\"><a class=\"app-shell-tab app-shell-tab--rail\" aria-label=\"Crea\" href=\"/\" data-discover=\"true\" aria-current=\"page\"><div class=\"app-shell-tab__pill\" tabindex=\"0\" style=\"transform: none;\"><div class=\"app-shell-tab__indicator\" style=\"transform: none; transform-origin: 50% 50%; opacity: 1;\"></div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-flame app-shell-tab__icon\"><path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\"></path></svg></div><span class=\"type-data app-shell-tab__label\">C...\n  ...\n</nav>",
+    "timestamp": "22:39:49",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 97,
+      "left": 20,
+      "width": 64,
+      "height": 776
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "64px",
+      "height": "776px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629564581,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 20,
+    "pageY": 1450,
+    "comment": "preferisco gli elementi navbar in alto e non centrati",
+    "priority": "high",
+    "index": 23,
+    "updatedAt": 1783629606871,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629636021",
+    "selector": "div#root > div.app-shell-root > div.app-shell-rail > button.search-button",
+    "route": "/",
+    "elementTag": "button",
+    "outerHTML": "<button type=\"button\" class=\"search-button\" aria-label=\"Cerca (⌘K)\" title=\"⌘K\" tabindex=\"0\" style=\"background: var(--premium-glass-bg); backdrop-filter: blur(32px) saturate(1.8); -webkit-backdrop-filter: blur(32px) saturate(1.8); border: 1px solid var(--premium-glass-border); box-shadow: var(--premium-glass-shadow); --search-button-size: 72px; transform: scale(0.988427);\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-search\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><path d=\"m21 21-4.3-4.3\"></path></svg></button>",
+    "parentHTML": "<div class=\"app-shell-rail\">\n  ...\n  <button type=\"button\" class=\"search-button\" aria-label=\"Cerca (⌘K)\" title=\"⌘K\" tabindex=\"0\" style=\"background: var(--premium-glass-bg); backdrop-filter: blur(32px) saturate(1.8); -webkit-backdrop-filter: blur(32px) saturate(1.8); border: 1px solid var(--premium-glass-border); box-shadow: var(--premium-glass-shadow); --search-button-size: 72px; transform: scale(0.988427);\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-search\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><path d=\"m21 21-4.3-4.3\"></path></svg></button>\n  ...\n</div>",
+    "timestamp": "22:40:36",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 906.4166259765625,
+      "left": 16.416643142700195,
+      "width": 71.16671752929688,
+      "height": 71.166748046875
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "72px",
+      "height": "72px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "color": "rgb(181, 170, 160)",
+      "backgroundColor": "color(srgb 0.07451 0.070588 0.066667 / 0.86)",
+      "boxShadow": "color(srgb 0 0 0 / 0.06) 0px 10px 30px 0px, color(srgb 0 0 0 / 0.02) 0px 1px 3px 0px, color(srgb 1 1 1 / 0.15) 0px 1px 0px 0px inset",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629564581,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0"
+        ],
+        "pantry_yeasts": [],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 16.416643142700195,
+    "pageY": 906.4166259765625,
+    "comment": "il cerca in material va qui?",
+    "priority": "high",
+    "index": 24,
+    "updatedAt": 1783629647048,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629662855",
+    "selector": "main#main-content > div.home-step__container.home-step__container--wide > div.home-step__inner > div.home-step__head > div.home-step__needs > div.needs-root > div.needs-context.needs-context--compact > div.needs-flow.needs-flow--compact > div.needs-setup > div.needs-drawer.needs-drawer--compact:nth-of-type(2)",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"needs-drawer needs-drawer--compact\" style=\"height: auto; opacity: 1;\"><div class=\"needs-drawer__stack needs-drawer__stack--compact\"><div data-slot=\"flours\"><div class=\"needs-pantry__group-header\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-wheat needs-pantry__group-icon\"><path d=\"M2 22 16 8\"></path><path d=\"M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z\"></path><path d=\"M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z\"></path><path d=\"M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z\"></path><path d=\"M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z\"></path><path d=\"M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z\"></path><path d=\"M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z\"></path><path d=\"M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z\"></path></svg><span class=\"needs-pantry__group-title\">Farine</span></div><div class=\"needs-flour-grid\"><button class=\"needs-flour-chip\"><div class=\"needs-flour-chip__row\"><span class=\"needs-flour-chip__name\">Farina 00</span></div><span class=\"type-numeric needs-flour-chip__detail\">Classica, versatile</span><span class=\"type-numeric needs-flour-chip__w\">W170–220</span></button><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Farina 0</span></div><span class=\"type-numeric needs-flour-chip__detail\">Media forza</span><span class=\"type-numeric needs-flour-chip__w\">W220–260</span></button><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Manitoba</span></div><span class=\"type-numeric needs-flour-chip__detail\">Alta forza, lunga maturazione</span><span class=\"type-numeric needs-flour-chip__w\">W340–380</span></button><button class=\"needs-flour-chip\"><div class=\"needs-flour-chip__row\"><span class=\"needs-flour-chip__name\">Integrale</span></div><span class=\"type-numeric needs-flour-chip__detail\">Più fibra e sapore</span><span class=\"type-numeric needs-flour-chip__w\">W200–260</span></button><button class=\"needs-flour-chip\"><div class=\"needs-flour-chip__row\"><span class=\"needs-flour-chip__name\">Semola rimacinata</span></div><span class=\"type-numeric needs-flour-chip__detail\">Croccantezza, colore dorato</span><span class=\"type-numeric needs-flour-chip__w\">W220–280</span></button></div><div class=\"needs-branded-flours\"><button class=\"needs-branded-flours__toggle\"><span class=\"needs-branded-flours__chevron\" style=\"transform: rotate(90deg);\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-right\"><path d=\"m9 18 6-6-6-6\"></path></svg></span><span class=\"needs-branded-flours__label\">Farine speciali</span><span class=\"needs-branded-flours__count\">4</span></button><div class=\"needs-branded-flours__panel\" style=\"height: auto; opacity: 1;\"><div class=\"needs-branded-flours__panel-inner\"><div class=\"needs-flour-grid\"><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Farina di farro</span></div><span class=\"type-numeric needs-flour-chip__detail\">Sapore nocciolato, digeribile</span><span class=\"type-numeric needs-flour-chip__w\">W130–180</span></button><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Farina di spelta</span></div><span class=\"type-numeric needs-flour-chip__detail\">Grano antico, aromatica</span><span class=\"type-numeric needs-flour-chip__w\">W150–200</span></button><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Farina di kamut</span></div><span class=\"type-numeric needs-flour-chip__detail\">Khorasan, dolce e burrosa</span><span class=\"type-numeric needs-flour-chip__w\">W200–260</span></button><button class=\"needs-flour-chip\"><div class=\"needs-flour-chip__row\"><span class=\"needs-flour-chip__name\">Farina di segale</span></div><span class=\"type-numeric needs-flour-chip__detail\">Sapore intenso, bassa glutine</span><span class=\"type-numeric needs-flour-chip__w\">W80–150</span></button><button class=\"needs-flour-chip\"><div class=\"needs-flour-chip__row\"><span class=\"needs-flour-chip__name\">Farina di riso</span></div><span class=\"type-numeric needs-flour-chip__detail\">Senza glutine, croccantezza</span><span class=\"type-numeric needs-flour-chip__w\">—</span></button><button class=\"needs-flour-chip\"><div class=\"needs-flour-chip__row\"><span class=\"needs-flour-chip__name\">Farina di mais</span></div><span class=\"type-numeric needs-flour-chip__detail\">Senza glutine, colore dorato</span><span class=\"type-numeric needs-flour-chip__w\">—</span></button><button class=\"needs-flour-chip\"><div class=\"needs-flour-chip__row\"><span class=\"needs-flour-chip__name\">Grano saraceno</span></div><span class=\"type-numeric needs-flour-chip__detail\">Senza glutine, terroso</span><span class=\"type-numeric needs-flour-chip__w\">—</span></button><button class=\"needs-flour-chip\"><div class=\"needs-flour-chip__row\"><span class=\"needs-flour-chip__name\">Farina di avena</span></div><span class=\"type-numeric needs-flour-chip__detail\">Fibra alta, morbidezza</span><span class=\"type-numeric needs-flour-chip__w\">W100–140</span></button><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Farina di ceci</span></div><span class=\"type-numeric needs-flour-chip__detail\">Proteica, sapore deciso</span><span class=\"type-numeric needs-flour-chip__w\">—</span></button></div></div></div></div></div><div data-slot=\"yeasts\"><div class=\"needs-pantry__group-header\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-flask-conical needs-pantry__group-icon\"><path d=\"M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2\"></path><path d=\"M6.453 15h11.094\"></path><path d=\"M8.5 2h7\"></path></svg><span class=\"needs-pantry__group-title\">Lieviti</span></div><div class=\"needs-yeast-grid\"><button class=\"needs-yeast-chip\"><div class=\"needs-yeast-chip__row\"><span class=\"needs-yeast-chip__name\">Lievito fresco</span></div><span class=\"needs-yeast-chip__detail\">Cubetto classico</span></button><button class=\"needs-yeast-chip needs-yeast-chip--active\"><div class=\"needs-yeast-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-yeast-chip__name\">Lievito secco</span></div><span class=\"needs-yeast-chip__detail\">Pratico, lunga conservazione</span></button><button class=\"needs-yeast-chip needs-yeast-chip--active\"><div class=\"needs-yeast-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-yeast-chip__name\">Lievito madre</span></div><span class=\"needs-yeast-chip__detail\">Sapore complesso, lunga maturazione</span></button></div></div></div></div>",
+    "parentHTML": "<div class=\"needs-setup\">\n  ...\n  <div class=\"needs-drawer needs-drawer--compact\" style=\"height: auto; opacity: 1;\"><div class=\"needs-drawer__stack needs-drawer__stack--compact\"><div data-slot=\"flours\"><div class=\"needs-pantry__group-header\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-wheat needs-pantry__group-icon\"><path d=\"M2 22 16 8\"></path><path d=\"M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z\"></path><path d=\"M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z\"></path><path d=\"M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z\"></path><path d=\"M20 2h2v2a4 4...\n  ...\n</div>",
+    "timestamp": "22:41:02",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": -132,
+      "left": 144,
+      "width": 672,
+      "height": 594.5
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "672px",
+      "height": "594.5px",
+      "padding": "14px 14px 14px 14px",
+      "margin": "8px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgb(37, 34, 32)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629658468,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci"
+        ],
+        "pantry_yeasts": [
+          "sourdough",
+          "dry"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 144,
+    "pageY": 129,
+    "comment": "sotto i risultati ora cambiano correttamente, ma senza animazioni di feedback",
+    "priority": "high",
+    "index": 25,
+    "updatedAt": 1783629696334,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629760265",
+    "selector": "main#main-content > div.home-step__container.home-step__container--wide > div.home-step__inner > div.home-step__head > div.home-step__needs > div.needs-root > div.needs-context.needs-context--compact > div.needs-flow.needs-flow--compact > div.needs-setup > div.needs-drawer.needs-drawer--compact:nth-of-type(2) > div.needs-drawer__stack.needs-drawer__stack--compact > div > div.needs-flour-grid:nth-of-type(2)",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"needs-flour-grid\"><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Farina 00</span></div><span class=\"type-numeric needs-flour-chip__detail\">Classica, versatile</span><span class=\"type-numeric needs-flour-chip__w\">W170–220</span></button><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Farina 0</span></div><span class=\"type-numeric needs-flour-chip__detail\">Media forza</span><span class=\"type-numeric needs-flour-chip__w\">W220–260</span></button><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Manitoba</span></div><span class=\"type-numeric needs-flour-chip__detail\">Alta forza, lunga maturazione</span><span class=\"type-numeric needs-flour-chip__w\">W340–380</span></button><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Integrale</span></div><span class=\"type-numeric needs-flour-chip__detail\">Più fibra e sapore</span><span class=\"type-numeric needs-flour-chip__w\">W200–260</span></button><button class=\"needs-flour-chip\"><div class=\"needs-flour-chip__row\"><span class=\"needs-flour-chip__name\">Semola rimacinata</span></div><span class=\"type-numeric needs-flour-chip__detail\">Croccantezza, colore dorato</span><span class=\"type-numeric needs-flour-chip__w\">W220–280</span></button></div>",
+    "parentHTML": "<div>\n  ...\n  <div class=\"needs-flour-grid\"><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></span><span class=\"needs-flour-chip__name\">Farina 00</span></div><span class=\"type-numeric needs-flour-chip__detail\">Classica, versatile</span><span class=\"type-numeric needs-flour-chip__w\">W170–220</span></button><button class=\"needs-flour-chip needs-flour-chip--active\"><div class=\"needs-flour-chip__row\"><span style=\"width: 14px; transform: none;\"><svg xmlns=\"http://www.w3.org/200...\n  ...\n</div>",
+    "timestamp": "22:42:40",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 175.5,
+      "left": 159,
+      "width": 642,
+      "height": 154
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "642px",
+      "height": "154px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629744653,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 25,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 159,
+    "pageY": 175.5,
+    "comment": "e la 1?",
+    "priority": "high",
+    "index": 26,
+    "updatedAt": 1783629767504,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629786081",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div:nth-of-type(2) > div.ingredients-list:nth-of-type(3) > div.bits-ing-row > div.bits-ing-row__label > span.bits-ing-row__detail.type-numeric:nth-of-type(2)",
+    "route": "/",
+    "elementTag": "span",
+    "outerHTML": "<span class=\"bits-ing-row__detail type-numeric\">farina forte (per pizza) · <button type=\"button\" aria-haspopup=\"dialog\" title=\"W (Alveografo di Chopin)\" class=\"bits-glossary-w__trigger\">W310</button></span>",
+    "parentHTML": "<div class=\"bits-ing-row__label\">\n  ...\n  <span class=\"bits-ing-row__detail type-numeric\">farina forte (per pizza) · <button type=\"button\" aria-haspopup=\"dialog\" title=\"W (Alveografo di Chopin)\" class=\"bits-glossary-w__trigger\">W310</button></span>\n  ...\n</div>",
+    "timestamp": "22:43:06",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 656.90625,
+      "left": 177.578125,
+      "width": 163.296875,
+      "height": 16.1875
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "163.296875px",
+      "height": "16.1875px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "12px",
+      "fontWeight": "400",
+      "color": "rgb(181, 170, 160)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629777722,
+      "step": "result",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": "new_york",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 25,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 58,
+        "customFlourW": 310,
+        "customFlourPL": 0.63,
+        "customFermentHours": 18,
+        "customFermentTemp": 22,
+        "usePreFerment": true,
+        "panConfig": {
+          "panShape": "round",
+          "panDiameter": 35,
+          "thickness": 0.28
+        },
+        "selectedToppingConcept": "margherita_new_york"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 177.578125,
+    "pageY": 1022.90625,
+    "comment": "perché qui non indichiamo il tipo di farina ma solo la forza e nei filtri il contrario? Ragioniamoci su!",
+    "priority": "high",
+    "index": 27,
+    "updatedAt": 1783629806954,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629821071",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div.recipe-output-params > div.home-result__match > div.home-result__match-primary > div > div.interpretation-switcher > div.interpretation-switcher__scroll > button.interpretation-switcher__chip.interpretation-switcher__chip--active:nth-of-type(2)",
+    "route": "/",
+    "elementTag": "button",
+    "outerHTML": "<button type=\"button\" aria-pressed=\"true\" class=\"interpretation-switcher__chip interpretation-switcher__chip--active\">Ken Forkish</button>",
+    "parentHTML": "<div class=\"interpretation-switcher__scroll\">\n  ...\n  <button type=\"button\" aria-pressed=\"true\" class=\"interpretation-switcher__chip interpretation-switcher__chip--active\">Ken Forkish</button>\n  ...\n</div>",
+    "timestamp": "22:43:41",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 220.12255859375,
+      "left": 219.47503662109375,
+      "width": 74.36788940429688,
+      "height": 19.6121826171875
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "77.734375px",
+      "height": "20.5px",
+      "padding": "4px 10px 4px 10px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "10px",
+      "fontWeight": "600",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "color(srgb 0.258745 0.194824 0.166118)",
+      "boxShadow": "rgba(0, 0, 0, 0.35) 0px 1px 3px 0px, rgba(0, 0, 0, 0.25) 0px 1px 2px 0px, color(srgb 0.956863 0.572549 0.415686 / 0.12) 0px 0px 0px 1px",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629815012,
+      "step": "result",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": "new_york",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 25,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": "forkish_portland",
+        "customHydration": 68,
+        "customFlourW": 280,
+        "customFlourPL": 0.63,
+        "customFermentHours": 24,
+        "customFermentTemp": 4,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "round",
+          "panDiameter": 35,
+          "thickness": 0.28
+        },
+        "selectedToppingConcept": "margherita_new_york"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 219.47503662109375,
+    "pageY": 566.12255859375,
+    "comment": "occhio che sull'hover la pillola viene tagliata in alto",
+    "priority": "medium",
+    "index": 28,
+    "updatedAt": 1783629835771,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629855048",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div.recipe-output-params > div.home-result__match > div.home-result__match-primary > div > div.interpretation-switcher",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"interpretation-switcher\"><div class=\"interpretation-switcher__scroll\" role=\"group\" aria-label=\"Ispirazione\"><button type=\"button\" aria-pressed=\"false\" class=\"interpretation-switcher__chip\">Tradizionale</button><button type=\"button\" aria-pressed=\"true\" class=\"interpretation-switcher__chip interpretation-switcher__chip--active\">Ken Forkish</button></div><button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Vedi tutte\" title=\"Vedi tutte\" class=\"interpretation-switcher__more\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-ellipsis\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"1\"></circle><circle cx=\"19\" cy=\"12\" r=\"1\"></circle><circle cx=\"5\" cy=\"12\" r=\"1\"></circle></svg></button></div>",
+    "parentHTML": "<div>\n  ...\n  <div class=\"interpretation-switcher\"><div class=\"interpretation-switcher__scroll\" role=\"group\" aria-label=\"Ispirazione\"><button type=\"button\" aria-pressed=\"false\" class=\"interpretation-switcher__chip\">Tradizionale</button><button type=\"button\" aria-pressed=\"true\" class=\"interpretation-switcher__chip interpretation-switcher__chip--active\">Ken Forkish</button></div><button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Vedi tutte\" title=\"Vedi tutte\" class=\"interpretation-switcher__more\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-ellipsis\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"1\"></circle><circle cx=\"19\" cy=\"12\" r=\"1\"></circle...\n  ...\n</div>",
+    "timestamp": "22:44:15",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 328.0625,
+      "left": 126,
+      "width": 896,
+      "height": 38
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "896px",
+      "height": "38px",
+      "padding": "6px 6px 6px 6px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "color(srgb 0.101961 0.094118 0.086275 / 0.74)",
+      "boxShadow": "color(srgb 1 1 1 / 0.04) 0px 0px 0px 1px inset",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629815012,
+      "step": "result",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": "new_york",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 25,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": "forkish_portland",
+        "customHydration": 68,
+        "customFlourW": 280,
+        "customFlourPL": 0.63,
+        "customFermentHours": 24,
+        "customFermentTemp": 4,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "round",
+          "panDiameter": 35,
+          "thickness": 0.28
+        },
+        "selectedToppingConcept": "margherita_new_york"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 126,
+    "pageY": 557.0625,
+    "comment": "è possibile aggiungere \"Versione\"?",
+    "priority": "high",
+    "index": 29,
+    "updatedAt": 1783629869887,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629895403",
+    "selector": "html.dark > body > div.fixed.inset-0.z-(--z-modal):nth-of-type(2) > section.w-full.h-[92dvh].max-h-[92dvh] > div.setup-body:nth-of-type(2) > div.setup-profile",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"setup-profile\"><div class=\"setup-profile__intro\"><span class=\"setup-profile__label\">Profilo impasto</span><span class=\"type-body setup-profile__hint\">Scegli un preset bilanciato dai nostri pizzaioli o un'interpretazione d'autore per configurare l'impasto.</span></div><div class=\"setup-profile__body\"><div class=\"setup-versions setup-versions--binary\" role=\"group\" aria-label=\"Profilo impasto\"><button type=\"button\" class=\"setup-option setup-option--binary setup-option--active\"><div class=\"setup-option__text\"><span class=\"setup-option__name\">Casalinga</span><span class=\"setup-option__detail\">62% idr. · W280</span></div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check setup-option__check\"><path d=\"M20 6 9 17l-5-5\"></path></svg></button><button type=\"button\" class=\"setup-option setup-option--binary\"><div class=\"setup-option__text\"><span class=\"setup-option__name\">Classica NY</span><span class=\"setup-option__detail\">64% idr. · W290</span></div></button></div><div class=\"setup-signatures\"><div class=\"setup-signatures__label\">Firma</div><button type=\"button\" class=\"setup-option\"><div class=\"setup-option__text\"><span class=\"setup-option__name\">Ken Forkish</span><span class=\"setup-option__detail\">Ken Forkish</span></div></button></div></div></div>",
+    "parentHTML": "<div class=\"setup-body\">\n  ...\n  <div class=\"setup-profile\"><div class=\"setup-profile__intro\"><span class=\"setup-profile__label\">Profilo impasto</span><span class=\"type-body setup-profile__hint\">Scegli un preset bilanciato dai nostri pizzaioli o un'interpretazione d'autore per configurare l'impasto.</span></div><div class=\"setup-profile__body\"><div class=\"setup-versions setup-versions--binary\" role=\"group\" aria-label=\"Profilo impasto\"><button type=\"button\" class=\"setup-option setup-option--binary setup-option--active\"><div class=\"setup-option__text\"><span class=\"setup-option__name\">Casalinga</span><span class=\"setup-option__detail\">62% idr. · W280</span></div><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-l...\n  ...\n</div>",
+    "timestamp": "22:44:55",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 190,
+      "left": 49,
+      "width": 1050,
+      "height": 258.671875
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "1050px",
+      "height": "258.671875px",
+      "padding": "20px 20px 20px 20px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "color(srgb 0.13302 0.116706 0.098824)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629890463,
+      "step": "result",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": "new_york",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 25,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": "ny_casalinga",
+        "activeInterpretationId": null,
+        "customHydration": 62,
+        "customFlourW": 280,
+        "customFlourPL": 0.6,
+        "customFermentHours": 24,
+        "customFermentTemp": 4,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "round",
+          "panDiameter": 35,
+          "thickness": 0.28
+        },
+        "selectedToppingConcept": "margherita_new_york"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 49,
+    "pageY": 190,
+    "comment": "uhm non ci siamo come layout...",
+    "priority": "high",
+    "index": 30,
+    "updatedAt": 1783629902964,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629946995",
+    "selector": "html.dark > body > div.fixed.inset-0.z-(--z-modal):nth-of-type(2) > section.w-full.h-[92dvh].max-h-[92dvh] > div.setup-header > div.setup-header__row > div.setup-match.setup-match--desktop:nth-of-type(2) > div.setup-match__axes:nth-of-type(2)",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"setup-match__axes\"><div class=\"setup-match__axis\"><div class=\"setup-match__axis-row\"><span title=\"Autenticità\">Aut</span><span class=\"type-numeric\">97</span></div><div class=\"setup-match__track\"><div class=\"setup-match__fill\" style=\"--axis-color: var(--primary); --axis-width: 97%;\"></div></div></div><div class=\"setup-match__axis\"><div class=\"setup-match__axis-row\"><span title=\"Fattibilità\">Fat</span><span class=\"type-numeric\">94</span></div><div class=\"setup-match__track\"><div class=\"setup-match__fill\" style=\"--axis-color: var(--tertiary); --axis-width: 94%;\"></div></div></div><div class=\"setup-match__axis\"><div class=\"setup-match__axis-row\"><span title=\"Digeribilità\">Dig</span><span class=\"type-numeric\">80</span></div><div class=\"setup-match__track\"><div class=\"setup-match__fill\" style=\"--axis-color: var(--cta); --axis-width: 80%;\"></div></div></div></div>",
+    "parentHTML": "<div class=\"setup-match setup-match--desktop\">\n  ...\n  <div class=\"setup-match__axes\"><div class=\"setup-match__axis\"><div class=\"setup-match__axis-row\"><span title=\"Autenticità\">Aut</span><span class=\"type-numeric\">97</span></div><div class=\"setup-match__track\"><div class=\"setup-match__fill\" style=\"--axis-color: var(--primary); --axis-width: 97%;\"></div></div></div><div class=\"setup-match__axis\"><div class=\"setup-match__axis-row\"><span title=\"Fattibilità\">Fat</span><span class=\"type-numeric\">94</span></div><div class=\"setup-match__track\"><div class=\"setup-match__fill\" style=\"--axis-color: var(--tertiary); --axis-width: 94%;\"></div></div></div><div class=\"setup-match__axis\"><div class=\"setup-match__axis-row\"><span title=\"Digeribilità\">Dig</span><span class=\"type-numeric\">80</span></div><div class=\"setup-match__track\"><div class=\"setup-match__fi...\n  ...\n</div>",
+    "timestamp": "22:45:46",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 134.25,
+      "left": 826,
+      "width": 229,
+      "height": 21.5
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "229px",
+      "height": "21.5px",
+      "padding": "0px 0px 0px 12px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629928921,
+      "step": "result",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": "new_york",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "electric_standard",
+        "oven_max_temp_c": 300,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 25,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": "ny_casalinga",
+        "activeInterpretationId": null,
+        "customHydration": 64,
+        "customFlourW": 330,
+        "customFlourPL": 0.6,
+        "customFermentHours": 42,
+        "customFermentTemp": 4,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "round",
+          "panDiameter": 35,
+          "thickness": 0.28
+        },
+        "selectedToppingConcept": "margherita_new_york"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 826,
+    "pageY": 134.25,
+    "comment": "o li mettiamo per esteso, o mettiamo un tip",
+    "priority": "high",
+    "index": 31,
+    "updatedAt": 1783629966863,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783629985427",
+    "selector": "html.dark > body > div.fixed.inset-0.z-(--z-modal):nth-of-type(2) > section.w-full.h-[92dvh].max-h-[92dvh] > div.setup-footer:nth-of-type(3)",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"setup-footer\"><button class=\"ds-cta ds-cta--primary ds-cta--r-pill ds-cta--elevated setup-footer__cta\" type=\"button\">Fatto</button></div>",
+    "parentHTML": "<section class=\"w-full sm:max-w-[1160px] h-[92dvh] max-h-[92dvh] sm:h-[min(760px,88vh)] sm:max-h-[88vh] rounded-t-4xl sm:rounded-4xl border-0 sm:border setup-panel\">\n  ...\n  <div class=\"setup-footer\"><button class=\"ds-cta ds-cta--primary ds-cta--r-pill ds-cta--elevated setup-footer__cta\" type=\"button\">Fatto</button></div>\n  ...\n</section>",
+    "timestamp": "22:46:25",
+    "viewport": {
+      "width": 1148,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 800.5,
+      "left": 17,
+      "width": 1114,
+      "height": 75.5
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "1114px",
+      "height": "75.5px",
+      "padding": "14px 32px 14px 32px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783629928921,
+      "step": "result",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": "new_york",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "electric_standard",
+        "oven_max_temp_c": 300,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 25,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": "ny_casalinga",
+        "activeInterpretationId": null,
+        "customHydration": 64,
+        "customFlourW": 330,
+        "customFlourPL": 0.6,
+        "customFermentHours": 42,
+        "customFermentTemp": 4,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "round",
+          "panDiameter": 35,
+          "thickness": 0.28
+        },
+        "selectedToppingConcept": "margherita_new_york"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 17,
+    "pageY": 800.5,
+    "comment": "non ha senso che la modale venga limitata in basso... dovrebbe essere TIPO pannello",
+    "priority": "high",
+    "index": 32,
+    "updatedAt": 1783630007067,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630059548",
+    "selector": "",
+    "route": "/",
+    "elementTag": "svg",
+    "outerHTML": "<svg width=\"38\" height=\"38\" viewBox=\"0 0 38 38\" class=\"score-ring__svg\"><circle cx=\"19\" cy=\"19\" r=\"17\" fill=\"var(--score-ring-track)\" stroke=\"var(--score-ring-track-stroke)\" stroke-width=\"2\"></circle><circle cx=\"19\" cy=\"19\" r=\"17\" fill=\"none\" stroke=\"var(--text-success)\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-dasharray=\"106.81415022205297\" stroke-dashoffset=\"17.090264035528477\" transform=\"rotate(-90 19 19)\" class=\"score-ring__progress\"></circle><text x=\"19\" y=\"19.5\" text-anchor=\"middle\" dominant-baseline=\"central\" fill=\"var(--score-ring-text)\" font-size=\"12.540000000000001\" font-weight=\"700\" font-family=\"var(--font-sans)\" class=\"score-ring__text\">84</text></svg>",
+    "parentHTML": "<div class=\"score-ring\">\n  ...\n  <svg width=\"38\" height=\"38\" viewBox=\"0 0 38 38\" class=\"score-ring__svg\"><circle cx=\"19\" cy=\"19\" r=\"17\" fill=\"var(--score-ring-track)\" stroke=\"var(--score-ring-track-stroke)\" stroke-width=\"2\"></circle><circle cx=\"19\" cy=\"19\" r=\"17\" fill=\"none\" stroke=\"var(--text-success)\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-dasharray=\"106.81415022205297\" stroke-dashoffset=\"17.090264035528477\" transform=\"rotate(-90 19 19)\" class=\"score-ring__progress\"></circle><text x=\"19\" y=\"19.5\" text-anchor=\"middle\" dominant-baseline=\"central\" fill=\"var(--score-ring-text)\" font-size=\"12.540000000000001\" font-weight=\"700\" font-family=\"var(--font-sans)\" class=\"score-ring__text\">84</text></svg>\n  ...\n</div>",
+    "timestamp": "22:47:39",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 400.6611633300781,
+      "left": 385.50152587890625,
+      "width": 37.289306640625,
+      "height": 37.6070556640625
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "38px",
+      "height": "38px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630048955,
+      "step": "styles",
+      "selectedTimeSlot": "tomorrow_dinner",
+      "selectedTimeAt": 1783629524132,
+      "selectedTimeHours": 21,
+      "selectedTimeTargetAt": 1783705124132,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 21,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 25,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 385.50152587890625,
+    "pageY": 400.6611633300781,
+    "comment": "dobbiamo trovare un compromesso fra questo storing e quello di Crea",
+    "priority": "high",
+    "index": 33,
+    "updatedAt": 1783630075115,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630099948",
+    "selector": "main#main-content > div.home-step__frame > div.home-step__container > div.needs-root > div.needs-context > div.needs-flow > div:nth-of-type(2) > div.home-hero > p.home-hero__subtitle",
+    "route": "/",
+    "elementTag": "p",
+    "outerHTML": "<p class=\"home-hero__subtitle\">Seleziona il momento per calcolare i tempi di preparazione.</p>",
+    "parentHTML": "<div class=\"home-hero\">\n  ...\n  <p class=\"home-hero__subtitle\">Seleziona il momento per calcolare i tempi di preparazione.</p>\n  ...\n</div>",
+    "timestamp": "22:48:19",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 497.734375,
+      "left": 355.96875,
+      "width": 403.0625,
+      "height": 24
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "403.0625px",
+      "height": "24px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "12px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(181, 170, 160)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": null,
+    "consoleLogsAtClick": [],
+    "pageX": 355.96875,
+    "pageY": 497.734375,
+    "comment": "questo sottotitolo dovrebbe essere legato alla selezione sottostante più che qui",
+    "priority": "high",
+    "index": 34,
+    "updatedAt": 1783630117348,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630161225",
+    "selector": "main#main-content > div.home-step__container.home-step__container--wide > div.home-step__inner > div.recommended-styles:nth-of-type(2) > div:nth-of-type(4) > p.recommended-tier-note",
+    "route": "/",
+    "elementTag": "p",
+    "outerHTML": "<p class=\"recommended-tier-note\">Questi stili richiedono requisiti che oggi non hai (es. forno a legna, lunga esperienza, attrezzatura pro). Sono qui per trasparenza — clicca per leggere cosa servirebbe.</p>",
+    "parentHTML": "<div>\n  ...\n  <p class=\"recommended-tier-note\">Questi stili richiedono requisiti che oggi non hai (es. forno a legna, lunga esperienza, attrezzatura pro). Sono qui per trasparenza — clicca per leggere cosa servirebbe.</p>\n  ...\n</div>",
+    "timestamp": "22:49:21",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 418.140625,
+      "left": 221.5,
+      "width": 672,
+      "height": 30
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "672px",
+      "height": "30px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 16px 0px",
+      "fontSize": "10px",
+      "fontWeight": "400",
+      "color": "rgb(181, 170, 160)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630150758,
+      "step": "styles",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 221.5,
+    "pageY": 3238.140625,
+    "comment": "togliere nota",
+    "priority": "medium",
+    "index": 35,
+    "updatedAt": 1783630165242,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630170488",
+    "selector": "main#main-content > div.home-step__container.home-step__container--wide > div.home-step__inner > div.recommended-styles:nth-of-type(2) > div:nth-of-type(4) > div.recommended-collection.recommended-collection--muted:nth-of-type(2) > div.recommended-card > button.recommended-card__button > div.tilt-card__stage > div.recommended-card__tilt.tilt-card__inner > div.recommended-card__shell > div.recommended-card__photo > div.recommended-card__info:nth-of-type(4) > span.recommended-card__title",
+    "route": "/",
+    "elementTag": "span",
+    "outerHTML": "<span class=\"recommended-card__title\">New Haven Apizza</span>",
+    "parentHTML": "<div class=\"recommended-card__info\">\n  ...\n  <span class=\"recommended-card__title\">New Haven Apizza</span>\n  ...\n</div>",
+    "timestamp": "22:49:30",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 628.857177734375,
+      "left": 238.4727783203125,
+      "width": 181.74014282226562,
+      "height": 49.418212890625
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "182px",
+      "height": "49.40625px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "22.469999px",
+      "fontWeight": "700",
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630150758,
+      "step": "styles",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 238.4727783203125,
+    "pageY": 3448.857177734375,
+    "comment": "togliere sillabazione (dovrebbe essere usata solo come estrema ratio... qui andando a capo entrava)",
+    "priority": "high",
+    "index": 36,
+    "updatedAt": 1783630196952,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630219116",
+    "selector": "div#root > div.app-shell-root > div.app-shell-rail > nav.app-shell-rail__nav > a.app-shell-rail__logo",
+    "route": "/",
+    "elementTag": "a",
+    "outerHTML": "<a class=\"app-shell-rail__logo\" aria-label=\"Vulcan Pizza Lab — Home\" href=\"/\" data-discover=\"true\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4.8 1.5H11.31Q11.41 1.5 11.41 1.6L11.25 19.71L4.61 1.77Q4.56 1.64 4.66 1.54Q4.72 1.5 4.8 1.5ZM19.18 1.58C19.19 1.53 19.23 1.5 19.29 1.5H28.12C29.3 1.5 29.92 2.54 29.44 3.62L17.42 28.28C16.46 30.11 14.8 30.23 13.67 29.43C12.72 28.77 12.73 27.85 13.06 26.43L19.18 1.58Z\" fill=\"currentColor\" fill-rule=\"nonzero\"></path></svg></a>",
+    "parentHTML": "<nav class=\"app-shell-rail__nav\">\n  ...\n  <a class=\"app-shell-rail__logo\" aria-label=\"Vulcan Pizza Lab — Home\" href=\"/\" data-discover=\"true\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 32 32\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4.8 1.5H11.31Q11.41 1.5 11.41 1.6L11.25 19.71L4.61 1.77Q4.56 1.64 4.66 1.54Q4.72 1.5 4.8 1.5ZM19.18 1.58C19.19 1.53 19.23 1.5 19.29 1.5H28.12C29.3 1.5 29.92 2.54 29.44 3.62L17.42 28.28C16.46 30.11 14.8 30.23 13.67 29.43C12.72 28.77 12.73 27.85 13.06 26.43L19.18 1.58Z\" fill=\"currentColor\" fill-rule=\"nonzero\"></path></svg></a>\n  ...\n</nav>",
+    "timestamp": "22:50:19",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 37.587623596191406,
+      "left": 32.587623596191406,
+      "width": 38.82475280761719,
+      "height": 38.82475280761719
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "40px",
+      "height": "40px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 20px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(255, 255, 255)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630150758,
+      "step": "styles",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 32.587623596191406,
+    "pageY": 37.587623596191406,
+    "comment": "che n e dici se qui mettiamo la versione animata del logo, che magari \"illumina\" col fuoco il glass della barra?",
+    "priority": "high",
+    "index": 37,
+    "updatedAt": 1783630246327,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630281602",
+    "selector": "main#main-content > div.home-step__container.home-step__container--wide > div.home-step__inner > div.recommended-styles:nth-of-type(2) > div.recommended-advanced-panel:nth-of-type(2) > div.recommended-advanced-panel__body > div.recommended-facet:nth-of-type(3) > div.recommended-facet__options",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"recommended-facet__options\"><button type=\"button\" aria-pressed=\"false\" class=\"ds-filterchip ds-filterchip--md ds-filterchip--r-xl\">Sottile croccante</button><button type=\"button\" aria-pressed=\"false\" class=\"ds-filterchip ds-filterchip--md ds-filterchip--r-xl\">Alta soffice</button><button type=\"button\" aria-pressed=\"false\" class=\"ds-filterchip ds-filterchip--md ds-filterchip--r-xl\" style=\"transform: none;\">Alveolata</button><button type=\"button\" aria-pressed=\"true\" class=\"ds-filterchip ds-filterchip--active ds-filterchip--md ds-filterchip--r-xl\" style=\"transform: translateY(-0.00004px);\">Deep dish</button></div>",
+    "parentHTML": "<div class=\"recommended-facet\">\n  ...\n  <div class=\"recommended-facet__options\"><button type=\"button\" aria-pressed=\"false\" class=\"ds-filterchip ds-filterchip--md ds-filterchip--r-xl\">Sottile croccante</button><button type=\"button\" aria-pressed=\"false\" class=\"ds-filterchip ds-filterchip--md ds-filterchip--r-xl\">Alta soffice</button><button type=\"button\" aria-pressed=\"false\" class=\"ds-filterchip ds-filterchip--md ds-filterchip--r-xl\" style=\"transform: none;\">Alveolata</button><button type=\"button\" aria-pressed=\"true\" class=\"ds-filterchip ds-filterchip--active ds-filterchip--md ds-filterchip--r-xl\" style=\"transform: translateY(-0.00004px);\">Deep dish</button></div>\n  ...\n</div>",
+    "timestamp": "22:51:21",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 447.1875,
+      "left": 234.5,
+      "width": 646,
+      "height": 33.5
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "646px",
+      "height": "33.5px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630150758,
+      "step": "styles",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 234.5,
+    "pageY": 447.1875,
+    "comment": "manca animazione chips. dovrebbe essere definita a livello di DS, di componente",
+    "priority": "high",
+    "index": 38,
+    "updatedAt": 1783630302069,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630314527",
+    "selector": "main#main-content > div.home-step__container.home-step__container--wide > div.home-step__inner > div.home-step__head > button.ds-iconbtn.ds-iconbtn--md.ds-iconbtn--ghost",
+    "route": "/",
+    "elementTag": "button",
+    "outerHTML": "<button class=\"ds-iconbtn ds-iconbtn--md ds-iconbtn--ghost ds-iconbtn--r-full home-step__back\" aria-label=\"Indietro\" title=\"Indietro\" style=\"opacity: 1; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-left\"><path d=\"m15 18-6-6 6-6\"></path></svg></button>",
+    "parentHTML": "<div class=\"home-step__head\">\n  ...\n  <button class=\"ds-iconbtn ds-iconbtn--md ds-iconbtn--ghost ds-iconbtn--r-full home-step__back\" aria-label=\"Indietro\" title=\"Indietro\" style=\"opacity: 1; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-left\"><path d=\"m15 18-6-6 6-6\"></path></svg></button>\n  ...\n</div>",
+    "timestamp": "22:51:54",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 28,
+      "left": 221.5,
+      "width": 40,
+      "height": 40
+    },
+    "computedStyles": {
+      "display": "inline-flex",
+      "position": "static",
+      "width": "40px",
+      "height": "40px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "color(srgb 0 0 0 / 0.12) 0px 8px 24px 0px",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630150758,
+      "step": "styles",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": null,
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": null
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 221.5,
+    "pageY": 28,
+    "comment": "back poco visibile. Dovrebbe rimanere persistente",
+    "priority": "high",
+    "index": 39,
+    "updatedAt": 1783630328385,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630341620",
+    "selector": "html.dark > body > div.style-detail-sheet__portal:nth-of-type(2) > div.style-detail-sheet__panel:nth-of-type(2) > div.style-detail-sheet__body > div.style-detail-title:nth-of-type(2) > div.style-detail-title__inner > span.style-detail-title__match:nth-of-type(5)",
+    "route": "/",
+    "elementTag": "span",
+    "outerHTML": "<span class=\"style-detail-title__match\">94% Match</span>",
+    "parentHTML": "<div class=\"style-detail-title__inner\">\n  ...\n  <span class=\"style-detail-title__match\">94% Match</span>\n  ...\n</div>",
+    "timestamp": "22:52:21",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 555.14501953125,
+      "left": 167.46206665039062,
+      "width": 65.84291076660156,
+      "height": 16.416015625
+    },
+    "computedStyles": {
+      "display": "inline",
+      "position": "static",
+      "width": "auto",
+      "height": "auto",
+      "padding": "2px 6px 2px 6px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "8px",
+      "fontWeight": "700",
+      "color": "rgb(244, 146, 106)",
+      "backgroundColor": "color(srgb 0.24251 0.186039 0.160314)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630335010,
+      "step": "styles",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": "pizza_spaccata",
+      "recipeGenerated": false,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 75,
+        "customFlourW": 330,
+        "customFlourPL": 0.55,
+        "customFermentHours": 36,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "rectangular",
+          "panLength": 40,
+          "panWidth": 30,
+          "thickness": 0.6
+        },
+        "selectedToppingConcept": "bianca_mortazza_romana"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 167.46206665039062,
+    "pageY": 804.14501953125,
+    "comment": "icona cuore anche qui. più visibilità del match.",
+    "priority": "high",
+    "index": 40,
+    "updatedAt": 1783630361627,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630419292",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div.recipe-output-params > div.home-result__match > section.match-card > div.match-actions:nth-of-type(3)",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"match-actions\"><button type=\"button\" class=\"match-action-text match-action-text--personalize\" tabindex=\"0\" style=\"transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sliders-horizontal\"><line x1=\"21\" x2=\"14\" y1=\"4\" y2=\"4\"></line><line x1=\"10\" x2=\"3\" y1=\"4\" y2=\"4\"></line><line x1=\"21\" x2=\"12\" y1=\"12\" y2=\"12\"></line><line x1=\"8\" x2=\"3\" y1=\"12\" y2=\"12\"></line><line x1=\"21\" x2=\"16\" y1=\"20\" y2=\"20\"></line><line x1=\"12\" x2=\"3\" y1=\"20\" y2=\"20\"></line><line x1=\"14\" x2=\"14\" y1=\"2\" y2=\"6\"></line><line x1=\"8\" x2=\"8\" y1=\"10\" y2=\"14\"></line><line x1=\"16\" x2=\"16\" y1=\"18\" y2=\"22\"></line></svg>Personalizza</button><button type=\"button\" aria-pressed=\"false\" class=\"match-action-text match-action-text--save\" tabindex=\"0\" style=\"opacity: 1; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-bookmark\"><path d=\"m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z\"></path></svg>Salva questa versione</button></div>",
+    "parentHTML": "<section class=\"match-card\">\n  ...\n  <div class=\"match-actions\"><button type=\"button\" class=\"match-action-text match-action-text--personalize\" tabindex=\"0\" style=\"transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sliders-horizontal\"><line x1=\"21\" x2=\"14\" y1=\"4\" y2=\"4\"></line><line x1=\"10\" x2=\"3\" y1=\"4\" y2=\"4\"></line><line x1=\"21\" x2=\"12\" y1=\"12\" y2=\"12\"></line><line x1=\"8\" x2=\"3\" y1=\"12\" y2=\"12\"></line><line x1=\"21\" x2=\"16\" y1=\"20\" y2=\"20\"></line><line x1=\"12\" x2=\"3\" y1=\"20\" y2=\"20\"></line><line x1=\"14\" x2=\"14\" y1=\"2\" y2=\"6\"></line><line x1=\"8\" x2=\"8\" y1=\"10\" y2=\"14\"></line><line x1=\"16\" x2=\"16\" y1=\"18\" y2=\"22\"></line></svg>Personalizza</button><button type=\"...\n  ...\n</section>",
+    "timestamp": "22:53:39",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 437.78125,
+      "left": 53.5,
+      "width": 896,
+      "height": 34
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "896px",
+      "height": "34px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "16px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630399794,
+      "step": "result",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": "teglia_romana",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 75,
+        "customFlourW": 300,
+        "customFlourPL": 0.55,
+        "customFermentHours": 36,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "rectangular",
+          "panLength": 40,
+          "panWidth": 30,
+          "thickness": 0.6
+        },
+        "selectedToppingConcept": "margherita_romana"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 53.5,
+    "pageY": 773.78125,
+    "comment": "forse poco visibili?",
+    "priority": "high",
+    "index": 41,
+    "updatedAt": 1783630429881,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630452410",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div.recipe-output-params > div.home-result__match > section.match-card",
+    "route": "/",
+    "elementTag": "section",
+    "outerHTML": "<section data-region=\"card\" class=\"match-card \" aria-label=\"Match\" style=\"transform: none; transform-origin: 50% 50%;\"><div class=\"match-kicker\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-heart match-kicker__icon match-kicker__icon--primary\" aria-hidden=\"true\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"></path></svg><span class=\"match-kicker__label\">Match</span><span class=\"match-kicker__rule\" aria-hidden=\"true\"></span></div><div class=\"match-verdict\"><span class=\"match-score-group\"><span class=\"type-numeric match-score-value\">84</span><span class=\"type-numeric match-score-suffix\">/100</span></span><span class=\"match-tone\"><span class=\"match-tone__text\" style=\"opacity: 1;\">Ottima intesa</span></span><button type=\"button\" aria-expanded=\"false\" aria-label=\"Dettagli\" title=\"Dettagli\" class=\"match-info-toggle\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg></button></div><p class=\"match-notice match-notice--accent\">Questa versione assume: una farina ~W300.</p><div class=\"match-actions\"><button type=\"button\" class=\"match-action-text match-action-text--personalize\" tabindex=\"0\" style=\"transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sliders-horizontal\"><line x1=\"21\" x2=\"14\" y1=\"4\" y2=\"4\"></line><line x1=\"10\" x2=\"3\" y1=\"4\" y2=\"4\"></line><line x1=\"21\" x2=\"12\" y1=\"12\" y2=\"12\"></line><line x1=\"8\" x2=\"3\" y1=\"12\" y2=\"12\"></line><line x1=\"21\" x2=\"16\" y1=\"20\" y2=\"20\"></line><line x1=\"12\" x2=\"3\" y1=\"20\" y2=\"20\"></line><line x1=\"14\" x2=\"14\" y1=\"2\" y2=\"6\"></line><line x1=\"8\" x2=\"8\" y1=\"10\" y2=\"14\"></line><line x1=\"16\" x2=\"16\" y1=\"18\" y2=\"22\"></line></svg>Personalizza</button><button type=\"button\" aria-pressed=\"false\" class=\"match-action-text match-action-text--save\" tabindex=\"0\" style=\"opacity: 1; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-bookmark\"><path d=\"m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z\"></path></svg>Salva questa versione</button></div></section>",
+    "parentHTML": "<div class=\"home-result__match\">\n  ...\n  <section data-region=\"card\" class=\"match-card \" aria-label=\"Match\" style=\"transform: none; transform-origin: 50% 50%;\"><div class=\"match-kicker\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-heart match-kicker__icon match-kicker__icon--primary\" aria-hidden=\"true\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"></path></svg><span class=\"match-kicker__label\">Match</span><span class=\"match-kicker__rule\" aria-hidden=\"true\"></span></div><div class=\"match-verdict\"><span class=\"match-score-group\"><span class=\"type-numeric match-score-valu...\n  ...\n</div>",
+    "timestamp": "22:54:12",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 342.296875,
+      "left": 53.5,
+      "width": 896,
+      "height": 129.484375
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "relative",
+      "width": "896px",
+      "height": "129.484375px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630399794,
+      "step": "result",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": "teglia_romana",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 75,
+        "customFlourW": 300,
+        "customFlourPL": 0.55,
+        "customFermentHours": 36,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "rectangular",
+          "panLength": 40,
+          "panWidth": 30,
+          "thickness": 0.6
+        },
+        "selectedToppingConcept": "margherita_romana"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 53.5,
+    "pageY": 678.296875,
+    "comment": "non credi sia vuoto qui a destra?",
+    "priority": "high",
+    "index": 42,
+    "updatedAt": 1783630462281,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630479706",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div.recipe-output-params > div.home-result__match > section.match-card",
+    "route": "/",
+    "elementTag": "section",
+    "outerHTML": "<section data-region=\"card\" class=\"match-card \" aria-label=\"Match\" style=\"transform: none; transform-origin: 50% 50%;\"><div class=\"match-kicker\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-heart match-kicker__icon match-kicker__icon--primary\" aria-hidden=\"true\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"></path></svg><span class=\"match-kicker__label\">Match</span><span class=\"match-kicker__rule\" aria-hidden=\"true\"></span></div><div class=\"match-verdict\"><span class=\"match-score-group\"><span class=\"type-numeric match-score-value\">84</span><span class=\"type-numeric match-score-suffix\">/100</span></span><span class=\"match-tone\"><span class=\"match-tone__text\" style=\"opacity: 1;\">Ottima intesa</span></span><button type=\"button\" aria-expanded=\"false\" aria-label=\"Dettagli\" title=\"Dettagli\" class=\"match-info-toggle\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg></button></div><p class=\"match-notice match-notice--accent\">Questa versione assume: una farina ~W300.</p><div class=\"match-actions\"><button type=\"button\" class=\"match-action-text match-action-text--personalize\" tabindex=\"0\" style=\"transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sliders-horizontal\"><line x1=\"21\" x2=\"14\" y1=\"4\" y2=\"4\"></line><line x1=\"10\" x2=\"3\" y1=\"4\" y2=\"4\"></line><line x1=\"21\" x2=\"12\" y1=\"12\" y2=\"12\"></line><line x1=\"8\" x2=\"3\" y1=\"12\" y2=\"12\"></line><line x1=\"21\" x2=\"16\" y1=\"20\" y2=\"20\"></line><line x1=\"12\" x2=\"3\" y1=\"20\" y2=\"20\"></line><line x1=\"14\" x2=\"14\" y1=\"2\" y2=\"6\"></line><line x1=\"8\" x2=\"8\" y1=\"10\" y2=\"14\"></line><line x1=\"16\" x2=\"16\" y1=\"18\" y2=\"22\"></line></svg>Personalizza</button><button type=\"button\" aria-pressed=\"false\" class=\"match-action-text match-action-text--save\" tabindex=\"0\" style=\"opacity: 1; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-bookmark\"><path d=\"m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z\"></path></svg>Salva questa versione</button></div></section>",
+    "parentHTML": "<div class=\"home-result__match\">\n  ...\n  <section data-region=\"card\" class=\"match-card \" aria-label=\"Match\" style=\"transform: none; transform-origin: 50% 50%;\"><div class=\"match-kicker\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-heart match-kicker__icon match-kicker__icon--primary\" aria-hidden=\"true\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"></path></svg><span class=\"match-kicker__label\">Match</span><span class=\"match-kicker__rule\" aria-hidden=\"true\"></span></div><div class=\"match-verdict\"><span class=\"match-score-group\"><span class=\"type-numeric match-score-valu...\n  ...\n</div>",
+    "timestamp": "22:54:39",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 342.296875,
+      "left": 53.5,
+      "width": 896,
+      "height": 129.484375
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "relative",
+      "width": "896px",
+      "height": "129.484375px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630399794,
+      "step": "result",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": "teglia_romana",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 75,
+        "customFlourW": 300,
+        "customFlourPL": 0.55,
+        "customFermentHours": 36,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "rectangular",
+          "panLength": 40,
+          "panWidth": 30,
+          "thickness": 0.6
+        },
+        "selectedToppingConcept": "margherita_romana"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 53.5,
+    "pageY": 678.296875,
+    "comment": "e se mettessimo un glow? (diverso a seconda della situazione...)",
+    "priority": "high",
+    "index": 43,
+    "updatedAt": 1783630496498,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630503210",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div.recipe-output-params > div.home-result__match > div.home-result__match-primary > div > div.interpretation-switcher > button.interpretation-switcher__more",
+    "route": "/",
+    "elementTag": "button",
+    "outerHTML": "<button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Vedi tutte\" title=\"Vedi tutte\" class=\"interpretation-switcher__more\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-ellipsis\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"1\"></circle><circle cx=\"19\" cy=\"12\" r=\"1\"></circle><circle cx=\"5\" cy=\"12\" r=\"1\"></circle></svg></button>",
+    "parentHTML": "<div class=\"interpretation-switcher\">\n  ...\n  <button type=\"button\" aria-haspopup=\"dialog\" aria-label=\"Vedi tutte\" title=\"Vedi tutte\" class=\"interpretation-switcher__more\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-ellipsis\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"1\"></circle><circle cx=\"19\" cy=\"12\" r=\"1\"></circle><circle cx=\"5\" cy=\"12\" r=\"1\"></circle></svg></button>\n  ...\n</div>",
+    "timestamp": "22:55:03",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 228.5087890625,
+      "left": 907.1694946289062,
+      "width": 34.6610107421875,
+      "height": 23.107421875
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "36px",
+      "height": "24px",
+      "padding": "4px 10px 4px 10px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "10px",
+      "fontWeight": "600",
+      "color": "rgb(181, 170, 160)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630399794,
+      "step": "result",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": "teglia_romana",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 75,
+        "customFlourW": 300,
+        "customFlourPL": 0.55,
+        "customFermentHours": 36,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "rectangular",
+          "panLength": 40,
+          "panWidth": 30,
+          "thickness": 0.6
+        },
+        "selectedToppingConcept": "margherita_romana"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 907.1694946289062,
+    "pageY": 564.5087890625,
+    "comment": "button non ha stati/animazione",
+    "priority": "high",
+    "index": 44,
+    "updatedAt": 1783630520077,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630532189",
+    "selector": "div#root > div.app-shell-root > div.app-shell-main > div.home-page > main.home-step.home-step--result > div.recipe-view > div.recipe-view-back:nth-of-type(2) > button.ds-iconbtn.ds-iconbtn--lg.ds-iconbtn--ghost",
+    "route": "/",
+    "elementTag": "button",
+    "outerHTML": "<button class=\"ds-iconbtn ds-iconbtn--lg ds-iconbtn--ghost ds-iconbtn--r-full recipe-view-back__button\" type=\"button\" aria-label=\"Altro stile\" title=\"Altro stile\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-left\"><path d=\"m15 18-6-6 6-6\"></path></svg></button>",
+    "parentHTML": "<div class=\"recipe-view-back\">\n  ...\n  <button class=\"ds-iconbtn ds-iconbtn--lg ds-iconbtn--ghost ds-iconbtn--r-full recipe-view-back__button\" type=\"button\" aria-label=\"Altro stile\" title=\"Altro stile\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-left\"><path d=\"m15 18-6-6 6-6\"></path></svg></button>\n  ...\n</div>",
+    "timestamp": "22:55:32",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 16.311492919921875,
+      "left": 16.77400016784668,
+      "width": 46.452003479003906,
+      "height": 46.45201110839844
+    },
+    "computedStyles": {
+      "display": "inline-flex",
+      "position": "static",
+      "width": "48px",
+      "height": "48px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "500",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgb(37, 34, 32)",
+      "boxShadow": "color(srgb 0 0 0 / 0.12) 0px 8px 24px 0px, rgba(244, 146, 106, 0.25) 0px 0px 0px 3px",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630399794,
+      "step": "result",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": "teglia_romana",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 75,
+        "customFlourW": 300,
+        "customFlourPL": 0.55,
+        "customFermentHours": 36,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "rectangular",
+          "panLength": 40,
+          "panWidth": 30,
+          "thickness": 0.6
+        },
+        "selectedToppingConcept": "margherita_romana"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 16.77400016784668,
+    "pageY": 200.31149291992188,
+    "comment": "button SEMBRA avere elevation minore di elementi su cui passa sopra",
+    "priority": "high",
+    "index": 45,
+    "updatedAt": 1783630555539,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630564114",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-feedback-wrap:nth-of-type(2) > div.recipe-feedback.recipe-feedback--prompt",
+    "route": "/",
+    "elementTag": "div",
+    "outerHTML": "<div class=\"recipe-feedback recipe-feedback--prompt\"><div class=\"recipe-feedback__intro\"><div class=\"recipe-feedback__intro-title\">Hai provato questa ricetta?</div><div class=\"recipe-feedback__intro-subtitle type-body\">Il tuo feedback aiuta a calibrare il motore di Vulcan.</div></div><div class=\"recipe-feedback__actions\"><button class=\"recipe-feedback__decision-btn\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-thumbs-up recipe-feedback__decision-icon recipe-feedback__decision-icon--success\"><path d=\"M7 10v12\"></path><path d=\"M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z\"></path></svg><span class=\"recipe-feedback__decision-label\">Riuscita</span></button><button class=\"recipe-feedback__decision-btn\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-thumbs-down recipe-feedback__decision-icon recipe-feedback__decision-icon--fail\"><path d=\"M17 14V2\"></path><path d=\"M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z\"></path></svg><span class=\"recipe-feedback__decision-label\">Non riuscita</span></button></div></div>",
+    "parentHTML": "<div class=\"recipe-output-feedback-wrap\">\n  ...\n  <div class=\"recipe-feedback recipe-feedback--prompt\"><div class=\"recipe-feedback__intro\"><div class=\"recipe-feedback__intro-title\">Hai provato questa ricetta?</div><div class=\"recipe-feedback__intro-subtitle type-body\">Il tuo feedback aiuta a calibrare il motore di Vulcan.</div></div><div class=\"recipe-feedback__actions\"><button class=\"recipe-feedback__decision-btn\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-thumbs-up recipe-feedback__decision-icon recipe-feedback__decision-icon--success\"><path d=\"M7 10v12\"></path><path d=\"M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 ...\n  ...\n</div>",
+    "timestamp": "22:56:04",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 783.09375,
+      "left": 53.5,
+      "width": 896,
+      "height": 83
+    },
+    "computedStyles": {
+      "display": "flex",
+      "position": "static",
+      "width": "896px",
+      "height": "83px",
+      "padding": "20px 20px 20px 20px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgb(26, 24, 22)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630399794,
+      "step": "result",
+      "selectedTimeSlot": "day_after_lunch",
+      "selectedTimeAt": 1783630124973,
+      "selectedTimeHours": 38,
+      "selectedTimeTargetAt": 1783766924973,
+      "selectedStyleId": "teglia_romana",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 38,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 75,
+        "customFlourW": 300,
+        "customFlourPL": 0.55,
+        "customFermentHours": 36,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "rectangular",
+          "panLength": 40,
+          "panWidth": 30,
+          "thickness": 0.6
+        },
+        "selectedToppingConcept": "margherita_romana"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 53.5,
+    "pageY": 1365.09375,
+    "comment": "per ora spegniamo questa feature, ovunque",
+    "priority": "high",
+    "index": 46,
+    "updatedAt": 1783630578147,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630635705",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div.recipe-output-params > div.home-result__match > section.match-card > p.match-notice.match-notice--accent",
+    "route": "/",
+    "elementTag": "p",
+    "outerHTML": "<p class=\"match-notice match-notice--accent\">Questa versione assume: una farina ~W300.</p>",
+    "parentHTML": "<section class=\"match-card\">\n  ...\n  <p class=\"match-notice match-notice--accent\">Questa versione assume: una farina ~W300.</p>\n  ...\n</section>",
+    "timestamp": "22:57:15",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 258.28125,
+      "left": 53.5,
+      "width": 896,
+      "height": 13.5
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "896px",
+      "height": "13.5px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "8px 0px 0px 0px",
+      "fontSize": "10px",
+      "fontWeight": "600",
+      "color": "rgb(114, 200, 166)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783630624084,
+      "step": "result",
+      "selectedTimeSlot": null,
+      "selectedTimeAt": null,
+      "selectedTimeHours": null,
+      "selectedTimeTargetAt": null,
+      "selectedStyleId": "teglia_romana",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 36,
+        "dough_balls": 1,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": true,
+        "has_baking_pan": true,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ]
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 75,
+        "customFlourW": 300,
+        "customFlourPL": 0.55,
+        "customFermentHours": 36,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "rectangular",
+          "panLength": 40,
+          "panWidth": 30,
+          "thickness": 0.6
+        },
+        "selectedToppingConcept": "margherita"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 53.5,
+    "pageY": 744.28125,
+    "comment": "che vuol dire \"questa versione assume\"? miglioriamo l'italiano",
+    "priority": "high",
+    "index": 47,
+    "updatedAt": 1783630652531,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783630688822",
+    "selector": "main#main-content > div.home-step__container.home-step__container--wide > div.home-step__inner > div.home-step__head > h1.type-title-page.ds-heading.home-step__title",
+    "route": "/",
+    "elementTag": "h1",
+    "outerHTML": "<h1 class=\"type-title-page ds-heading home-step__title\" style=\"--ds-heading-color: var(--text-default);\">Scegli il tuo stile</h1>",
+    "parentHTML": "<div class=\"home-step__head\">\n  ...\n  <h1 class=\"type-title-page ds-heading home-step__title\" style=\"--ds-heading-color: var(--text-default);\">Scegli il tuo stile</h1>\n  ...\n</div>",
+    "timestamp": "22:58:08",
+    "viewport": {
+      "width": 1003,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 133,
+      "left": 221.5,
+      "width": 672,
+      "height": 36.796875
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "672px",
+      "height": "36.796875px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "20px 0px 0px 0px",
+      "fontSize": "32px",
+      "fontWeight": "700",
+      "color": "rgb(250, 248, 245)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": null,
+    "consoleLogsAtClick": [],
+    "pageX": 221.5,
+    "pageY": 133,
+    "comment": "più spazio sopra?",
+    "priority": "medium",
+    "index": 48,
+    "updatedAt": 1783630697055,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783663905765",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div:nth-of-type(2) > div.ingredients-header > h3.ingredients-header__title",
+    "route": "/",
+    "elementTag": "h3",
+    "outerHTML": "<h3 class=\"ingredients-header__title\">Ingredienti</h3>",
+    "parentHTML": "<div class=\"ingredients-header\">\n  ...\n  <h3 class=\"ingredients-header__title\">Ingredienti</h3>\n  ...\n</div>",
+    "timestamp": "08:11:45",
+    "viewport": {
+      "width": 982,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 844.828125,
+      "left": 43,
+      "width": 198.9375,
+      "height": 45.0625
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "static",
+      "width": "198.9375px",
+      "height": "45.0625px",
+      "padding": "0px 0px 0px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "39.200001px",
+      "fontWeight": "600",
+      "color": "rgb(247, 239, 226)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783663889431,
+      "step": "result",
+      "selectedTimeSlot": "tomorrow_lunch",
+      "selectedTimeAt": 1783663881301,
+      "selectedTimeHours": 28,
+      "selectedTimeTargetAt": 1783764551871,
+      "selectedStyleId": "chicago_deep",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 28,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ],
+        "oven_heat_profile": "static_top_bottom"
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 48,
+        "customFlourW": 220,
+        "customFlourPL": 0.53,
+        "customFermentHours": 24,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "round",
+          "panDiameter": 23,
+          "thickness": 1.05
+        },
+        "selectedToppingConcept": "chicago_deep_classic"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 43,
+    "pageY": 844.828125,
+    "comment": "Ingredienti è addirittura più grande dell'h1!",
+    "priority": "high",
+    "index": 49,
+    "updatedAt": 1783663919123,
+    "deleted": false
+  },
+  {
+    "id": "anno-1783663941664",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--procedura > div.recipe-output-hero-wrap > div.surface-card.procedure-hero > div.procedure-hero__times:nth-of-type(2) > div.procedure-hero__time > button.procedure-hero__native-picker",
+    "route": "/",
+    "elementTag": "button",
+    "outerHTML": "<button type=\"button\" class=\"procedure-hero__native-picker\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock3 lucide-clock-3\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16.5 12\"></polyline></svg>Modifica data e ora</button>",
+    "parentHTML": "<div class=\"procedure-hero__time\">\n  ...\n  <button type=\"button\" class=\"procedure-hero__native-picker\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-clock3 lucide-clock-3\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><polyline points=\"12 6 12 12 16.5 12\"></polyline></svg>Modifica data e ora</button>\n  ...\n</div>",
+    "timestamp": "08:12:21",
+    "viewport": {
+      "width": 982,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 320.14349365234375,
+      "left": 82.07084655761719,
+      "width": 384.85833740234375,
+      "height": 26.3067626953125
+    },
+    "computedStyles": {
+      "display": "inline-flex",
+      "position": "static",
+      "width": "395px",
+      "height": "27px",
+      "padding": "6px 8px 6px 8px",
+      "margin": "8px 0px 0px 0px",
+      "fontSize": "9px",
+      "fontWeight": "600",
+      "color": "rgb(247, 239, 226)",
+      "backgroundColor": "rgb(39, 30, 18)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783663889431,
+      "step": "result",
+      "selectedTimeSlot": "tomorrow_lunch",
+      "selectedTimeAt": 1783663881301,
+      "selectedTimeHours": 28,
+      "selectedTimeTargetAt": 1783764551871,
+      "selectedStyleId": "chicago_deep",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 28,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ],
+        "oven_heat_profile": "static_top_bottom"
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 48,
+        "customFlourW": 220,
+        "customFlourPL": 0.53,
+        "customFermentHours": 24,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "round",
+          "panDiameter": 23,
+          "thickness": 1.05
+        },
+        "selectedToppingConcept": "chicago_deep_classic"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 82.07084655761719,
+    "pageY": 424.14349365234375,
+    "comment": "bastava na matitina...",
+    "priority": "high",
+    "index": 50,
+    "updatedAt": 1783680226813,
+    "deleted": false,
+    "resolved": true
+  },
+  {
+    "id": "anno-1783666010976",
+    "selector": "div#recipe-content-tabs-anchor > div.recipe-view-content > div > div.recipe-output:nth-of-type(2) > div.recipe-output-panel.recipe-output-panel--ricetta > div.recipe-output-params > div.home-result__match > section.match-card",
+    "route": "/",
+    "elementTag": "section",
+    "outerHTML": "<section data-region=\"section\" class=\"match-card \" aria-label=\"Match\" style=\"transform: none; transform-origin: 50% 50%;\"><div class=\"match-kicker\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-heart match-kicker__icon match-kicker__icon--primary\" aria-hidden=\"true\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"></path></svg><span class=\"match-kicker__label\">Match</span><span class=\"match-kicker__rule\" aria-hidden=\"true\"></span><button type=\"button\" aria-expanded=\"false\" aria-label=\"Dettagli\" title=\"Dettagli\" class=\"match-info-toggle\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-info\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><path d=\"M12 16v-4\"></path><path d=\"M12 8h.01\"></path></svg></button></div><div class=\"match-verdict\"><span class=\"match-score-group\"><span class=\"type-numeric match-score-value\">83</span><span class=\"type-numeric match-score-suffix\">/100</span></span><span class=\"match-tone\"><span class=\"match-tone__text\" style=\"opacity: 1;\">Ottima intesa</span></span></div><div class=\"match-actions\"><button type=\"button\" class=\"match-action-text match-action-text--personalize\" tabindex=\"0\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sliders-horizontal\"><line x1=\"21\" x2=\"14\" y1=\"4\" y2=\"4\"></line><line x1=\"10\" x2=\"3\" y1=\"4\" y2=\"4\"></line><line x1=\"21\" x2=\"12\" y1=\"12\" y2=\"12\"></line><line x1=\"8\" x2=\"3\" y1=\"12\" y2=\"12\"></line><line x1=\"21\" x2=\"16\" y1=\"20\" y2=\"20\"></line><line x1=\"12\" x2=\"3\" y1=\"20\" y2=\"20\"></line><line x1=\"14\" x2=\"14\" y1=\"2\" y2=\"6\"></line><line x1=\"8\" x2=\"8\" y1=\"10\" y2=\"14\"></line><line x1=\"16\" x2=\"16\" y1=\"18\" y2=\"22\"></line></svg>Personalizza</button><button type=\"button\" aria-pressed=\"false\" class=\"match-action-text match-action-text--save\" tabindex=\"0\" style=\"opacity: 1; transform: none;\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-bookmark\"><path d=\"m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z\"></path></svg>Salva questa versione</button></div></section>",
+    "parentHTML": "<div class=\"home-result__match\">\n  ...\n  <section data-region=\"section\" class=\"match-card \" aria-label=\"Match\" style=\"transform: none; transform-origin: 50% 50%;\"><div class=\"match-kicker\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"currentColor\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-heart match-kicker__icon match-kicker__icon--primary\" aria-hidden=\"true\"><path d=\"M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z\"></path></svg><span class=\"match-kicker__label\">Match</span><span class=\"match-kicker__rule\" aria-hidden=\"true\"></span><button type=\"button\" aria-expanded=\"false\" aria-label=\"Dettagli\" title=\"Dettagli\" class=\"match-info-tog...\n  ...\n</div>",
+    "timestamp": "08:46:50",
+    "viewport": {
+      "width": 982,
+      "height": 994
+    },
+    "elementRect": {
+      "top": 640.84375,
+      "left": 43,
+      "width": 896,
+      "height": 151.984375
+    },
+    "computedStyles": {
+      "display": "block",
+      "position": "relative",
+      "width": "896px",
+      "height": "151.984375px",
+      "padding": "16px 0px 16px 0px",
+      "margin": "0px 0px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "color": "rgb(247, 239, 226)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "boxShadow": "none",
+      "zIndex": "auto",
+      "opacity": "1"
+    },
+    "recipeStateAtClick": {
+      "version": 1,
+      "updatedAt": 1783666005515,
+      "step": "result",
+      "selectedTimeSlot": "tomorrow_lunch",
+      "selectedTimeAt": 1783666005460,
+      "selectedTimeHours": 28,
+      "selectedTimeTargetAt": 1783764551871,
+      "selectedStyleId": "chicago_deep",
+      "recipeGenerated": true,
+      "constraints": {
+        "oven_type": "gas",
+        "oven_max_temp_c": 350,
+        "skill_level": 2,
+        "available_hours": 28,
+        "dough_balls": 4,
+        "has_mixer": true,
+        "has_pizza_stone": true,
+        "has_pizza_steel": false,
+        "has_baking_pan": false,
+        "dietary_filters": [],
+        "kitchen_temp_c": 22,
+        "pantry_flours": [
+          "farro",
+          "spelta",
+          "kamut",
+          "0",
+          "manitoba",
+          "ceci",
+          "00",
+          "integrale"
+        ],
+        "pantry_yeasts": [
+          "dry",
+          "fresh"
+        ],
+        "mixer_type": "planetary",
+        "surfaces": [
+          "cordierite_stone"
+        ],
+        "oven_heat_profile": "static_top_bottom"
+      },
+      "recipe": {
+        "mode": "adapted",
+        "activeVersionId": null,
+        "activeInterpretationId": null,
+        "customHydration": 48,
+        "customFlourW": 220,
+        "customFlourPL": 0.53,
+        "customFermentHours": 24,
+        "customFermentTemp": 22,
+        "usePreFerment": false,
+        "panConfig": {
+          "panShape": "round",
+          "panDiameter": 23,
+          "thickness": 1.05
+        },
+        "selectedToppingConcept": "chicago_deep_classic"
+      }
+    },
+    "consoleLogsAtClick": [],
+    "pageX": 43,
+    "pageY": 640.84375,
+    "comment": "invertirei il glow: la parte colorata a sinistra",
+    "priority": "high",
+    "index": 51,
+    "updatedAt": 1783666024925,
+    "deleted": false
   }
 ]
