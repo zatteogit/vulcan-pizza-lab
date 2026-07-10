@@ -1,0 +1,16 @@
+# Cloudflare Workers Static Assets — header di cache.
+# Copiato da Vite in dist/_headers al build; letto dal sistema asset di
+# Cloudflare (gli header impostati nel Worker NON si applicano agli asset
+# serviti direttamente, solo alle risposte generate dal Worker).
+#
+# Gli asset di build hanno il content-hash nel nome (es. index-BNAyXsMB.js):
+# nome = contenuto, quindi cache eterna + immutable → il browser non li
+# rivalida né rifetcha mai. Questo elimina la finestra in cui Safari mischiava
+# un chunk vecchio con un index nuovo dopo un deploy
+# ("Importing binding name 'x' is not found").
+#
+# index.html e gli altri file non-hash mantengono il default Cloudflare
+# (public, max-age=0, must-revalidate = rivalida sempre → riferimenti ai
+# chunk sempre aggiornati).
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
