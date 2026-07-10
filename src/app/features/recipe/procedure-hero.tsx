@@ -3,7 +3,7 @@
  * "pronto per il pasto" e Timeline comoda. Stato e handler restano in
  * RecipeOutput (gli orari guidano anche la timeline): qui arrivano via props. */
 
-import { CalendarRange, Clock3, Minus, Plus } from "lucide-react";
+import { CalendarRange, Minus, Pencil, Plus } from "lucide-react";
 import type {
   ChangeEvent,
   Dispatch,
@@ -13,7 +13,7 @@ import type {
 } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
-import { Surface, Switch } from "../../components/ds/index";
+import { IconButton, Surface, Switch } from "../../components/ds/index";
 import type { TimeSlot } from "../../domain/pizza-engine";
 import {
   daySuffix,
@@ -142,14 +142,17 @@ export function ProcedureHeroControls({
               <Plus size={13} />
             </button>
           </div>
-          <button
+          <IconButton
             type="button"
+            size="sm"
+            variant="ghost"
             onClick={() => setEditingTime(true)}
-            className="procedure-hero__native-picker"
+            className="procedure-hero__edit-time"
+            aria-label={`Modifica ${ui.startTime}`}
+            title={`Modifica ${ui.startTime}`}
           >
-            <Clock3 size={13} aria-hidden="true" />
-            Modifica data e ora
-          </button>
+            <Pencil size={14} aria-hidden="true" />
+          </IconButton>
         </div>
 
         <div className="procedure-hero__time">
@@ -201,14 +204,17 @@ export function ProcedureHeroControls({
               <Plus size={13} />
             </button>
           </div>
-          <button
+          <IconButton
             type="button"
+            size="sm"
+            variant="ghost"
             onClick={() => setEditingEndTime(true)}
-            className="procedure-hero__native-picker"
+            className="procedure-hero__edit-time"
+            aria-label={`Modifica ${ui.endTime}`}
+            title={`Modifica ${ui.endTime}`}
           >
-            <Clock3 size={13} aria-hidden="true" />
-            Modifica data e ora
-          </button>
+            <Pencil size={14} aria-hidden="true" />
+          </IconButton>
         </div>
       </div>
 

@@ -21,9 +21,7 @@ export interface ThemeMeta {
 
 export const THEMES: ThemeMeta[] = [
   { id: "", preview: "vulcan", label: "Vulcan", note: "L'originale · Playfair" },
-  { id: "riserva", preview: "riserva", label: "Riserva", note: "Vulcan affinato · Newsreader" },
-  { id: "lettera", preview: "lettera", label: "Lettera", note: "Milano razionale · Archivo × Bodoni" },
-  { id: "copertina", preview: "copertina", label: "Copertina", note: "Instagram × Vogue · Bodoni × Jost" },
+  { id: "sfornata", preview: "sfornata", label: "Sfornata", note: "L'ora del forno · Playfair" },
 ];
 
 function applyTheme(id: string) {

@@ -27,94 +27,40 @@
    Loaded after theme.css, so `[data-theme] [data-region]` (specificity
    0,2,0) overrides component utility classes without !important. The
    default (Vulcan / no data-theme) is the authored layout, untouched.
-   Le ricomposizioni delle ondate bocciate sono state rimosse; le nuove
-   vivono qui sotto, per tema.
    ═══════════════════════════════════════════════════════════════════ */
 
 /* Base authored layout is the default (Vulcan): centered vertical stack.
-   Only the alternative themes below re-compose it.
-   RISERVA è il base affinato: eredita il layout autorato di proposito —
-   il suo salto di qualità è tutto token-level (theme.css). */
+   Only the alternative themes below re-compose it. */
 
-/* ── LETTERA — impaginato razionale milanese ──
-   Tutto flush-left su misura stretta, come un poster Olivetti: la fascia
-   rossa del titolo (theme.css) apre la pagina, il lead lirico le sta
-   sotto, i contenuti compongono in griglia. */
-[data-theme="lettera"] [data-region="page-header"] {
-  text-align: left;
-  align-items: flex-start;
-}
-[data-theme="lettera"] [data-region="page-header"] > p {
-  margin-left: 0;
-  margin-right: 0;
-  max-width: 40ch;
-}
-[data-theme="lettera"] [data-region="filters"] {
-  justify-content: flex-start;
-}
-
-/* Crea: il masthead sale in testa, allineato a sinistra (masthead da
-   rivista tecnica), e gli slot orari compongono una scheda a 2 colonne. */
-[data-theme="lettera"] [data-region="masthead"] {
-  order: -1;
-  width: 100%;
-}
-[data-theme="lettera"] [data-region="masthead"] > div {
-  align-items: flex-start;
-  text-align: left;
-  padding-top: 0;
-}
-[data-theme="lettera"] [data-region="masthead"] > div > * {
-  margin-left: 0;
-  margin-right: 0;
-}
-[data-theme="lettera"] [data-region="setup"] {
-  align-items: flex-start;
-}
-[data-theme="lettera"] [data-region="slots"] [data-region="slot-list"] {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--gap-xs);
-  margin-top: var(--space-3);
-}
-[data-theme="lettera"] [data-region="slot-list"] > button {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--gap-xs);
-  min-width: 0;
-}
-[data-theme="lettera"] [data-region="slot-list"] > button > div {
-  min-width: 0;
-}
-
-/* Collezioni (mobile): lead alla Max Huber — il primo item occupa tutta
-   la misura come il soggetto del poster, gli altri compongono sotto. */
-@media (max-width: 639px) {
-  [data-theme="lettera"] [data-region="collection"] > *:first-child {
-    grid-column: 1 / -1;
+/* ── SFORNATA — l'ora del forno: la fotografia comanda ──
+   Solo composizione: la featured di Explore diventa una copertina (foto
+   full-bleed, testo sovrapposto in basso), le collezioni mobile scorrono
+   come un feed a colonna singola. Crea (masthead, glow, pillole slot) e i
+   codici funzionali restano nell'impaginato autorato. Le regole cover sono
+   ancorate a .explore-feature (la feature di Learn ha altro markup) e SOLO
+   sotto i 768px: sopra, la feature torna alla riga autorata del default. */
+@media (max-width: 767px) {
+  [data-theme="sfornata"] [data-region="feature"].explore-feature {
+    position: relative;
+    flex-direction: column;
   }
-  [data-theme="lettera"] [data-region="collection"] {
-    gap: var(--gap-sm);
+  [data-theme="sfornata"] [data-region="feature"] .explore-feature__media {
+    width: 100%;
+    height: min(64vh, var(--measure-sm));
+  }
+  [data-theme="sfornata"] [data-region="feature"] .explore-feature__body {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: var(--space-16);
   }
 }
 
-/* ── COPERTINA — la rivista sfogliabile ──
-   Masthead centrato come una testata; il resto è un feed fotografico:
-   una card per volta, a tutta misura, con aria fra gli "scatti". */
-[data-theme="copertina"] [data-region="page-header"] {
-  text-align: center;
-  align-items: center;
-}
-[data-theme="copertina"] [data-region="page-header"] > p {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 44ch;
-}
-[data-theme="copertina"] [data-region="filters"] {
-  justify-content: center;
-}
+/* Instagram vero, su crema: feed a colonna singola con aria fra gli scatti. */
 @media (max-width: 639px) {
-  [data-theme="copertina"] [data-region="collection"] {
+  [data-theme="sfornata"] [data-region="collection"] {
     grid-template-columns: 1fr;
     gap: var(--gap-xl);
   }

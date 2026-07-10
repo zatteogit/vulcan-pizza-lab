@@ -221,6 +221,9 @@ const STAGED_TOKENS = new Set([
   /* Scala densità (T2) in rollout: --gap-lg non ha ancora un consumo, arriva
      man mano che i componenti migrano da --space-* a --gap-*. */
   "--gap-lg",
+  /* Terzo step della scala densità: lo consumavano i temi rimossi
+     (Minimal, Copertina). Resta in staging come parte della scala T2. */
+  "--density-spacious",
 ]);
 
 /* A differenza del guard in avanti, qui lo showcase È incluso: le sue pagine
