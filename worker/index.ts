@@ -66,6 +66,39 @@ async function readRegistry(env: Env): Promise<unknown[]> {
   return out;
 }
 
+/**
+ * Cache policy for the served SPA. Vite emits content-hashed asset names
+ * (e.g. /assets/index-BNAyXsMB.js): the name changes whenever the bytes change,
+ * so the old name can be cached forever. HTML must NEVER be cached hard — a
+ * browser holding a stale index.html keeps requesting old chunk names after a
+ * deploy and ends up mixing an old chunk with a new index, which is exactly what
+ * makes Safari throw "Importing binding name 'x' is not found" (Chrome tolerates
+ * the same stale mix). So: hash-named /assets/* → immutable; everything else,
+ * including the single-page-application fallback (which returns HTML), → no-cache.
+ *
+ * The content-type check matters: a request for a missing /assets/old.js returns
+ * the SPA fallback (text/html), and we must NOT stamp that as an immutable asset.
+ */
+function withCacheHeaders(request: Request, response: Response): Response {
+  const url = new URL(request.url);
+  const contentType = response.headers.get("content-type") || "";
+  const isHashedAsset =
+    response.status === 200 &&
+    url.pathname.startsWith("/assets/") &&
+    !contentType.includes("text/html");
+
+  const headers = new Headers(response.headers);
+  headers.set(
+    "Cache-Control",
+    isHashedAsset ? "public, max-age=31536000, immutable" : "no-cache, must-revalidate",
+  );
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 async function handleGet(request: Request, env: Env): Promise<Response> {
   if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
   try {
@@ -131,7 +164,9 @@ export default {
       return json({ error: "method not allowed" }, 405);
     }
 
-    // Everything else: serve the built SPA (assets + client-route fallback).
-    return env.ASSETS.fetch(request);
+    // Everything else: serve the built SPA (assets + client-route fallback),
+    // stamping cache headers so hashed assets are immutable and HTML is never
+    // cached stale (see withCacheHeaders).
+    return withCacheHeaders(request, await env.ASSETS.fetch(request));
   },
 };
