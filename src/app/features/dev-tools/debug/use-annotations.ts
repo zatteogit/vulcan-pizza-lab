@@ -147,6 +147,21 @@ export function useAnnotations() {
     return () => clearInterval(interval);
   }, [remoteConfigured, adopt]);
 
+  /* ── Poll the local file registry in dev mode ── */
+  useEffect(() => {
+    if (!import.meta.env.DEV) return;
+    const interval = setInterval(() => {
+      void (async () => {
+        const file = await fetchFileRegistry();
+        if (file) {
+          adopt(mergeRegistries(file, registryRef.current));
+          setLastSync(Date.now());
+        }
+      })();
+    }, 4000); // Poll local file registry every 4 seconds in dev mode for responsive sync!
+    return () => clearInterval(interval);
+  }, [adopt]);
+
   /* ── Flush pending writes before the tab goes away ── */
   useEffect(() => {
     const onHide = () => {

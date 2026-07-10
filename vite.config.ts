@@ -17,9 +17,33 @@ function saveAnnotationsPlugin() {
           });
           req.on("end", () => {
             try {
+              const incoming = JSON.parse(body);
+              const filePath = path.resolve(__dirname, "vulcan-debug-registry.json");
+              let merged = incoming;
+              if (fs.existsSync(filePath)) {
+                try {
+                  const existing = JSON.parse(fs.readFileSync(filePath, "utf8"));
+                  if (Array.isArray(existing) && Array.isArray(incoming)) {
+                    const byId = new Map();
+                    for (const item of [...existing, ...incoming]) {
+                      if (item && typeof item.id === "string") {
+                        const existingItem = byId.get(item.id);
+                        const itemTime = typeof item.updatedAt === "number" ? item.updatedAt : 0;
+                        const existingTime = existingItem && typeof existingItem.updatedAt === "number" ? existingItem.updatedAt : 0;
+                        if (!existingItem || itemTime > existingTime) {
+                          byId.set(item.id, item);
+                        }
+                      }
+                    }
+                    merged = Array.from(byId.values());
+                  }
+                } catch (e) {
+                  // fallback to incoming if corrupt
+                }
+              }
               fs.writeFileSync(
-                path.resolve(__dirname, "vulcan-debug-registry.json"),
-                body,
+                filePath,
+                JSON.stringify(merged, null, 2),
                 "utf8"
               );
               res.statusCode = 200;
