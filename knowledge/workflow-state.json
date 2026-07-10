@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-10T01:10:00.000Z",
+  "lastUpdated": "2026-07-10T11:51:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 151,
@@ -10,11 +10,11 @@
     "stylesInDb": 29
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-10 registra la nascita delle tre nuove direzioni tipografiche (Riserva, Lettera, Copertina), il controllo datetime-local completo sulle ore di fermentazione in ProcedureHero, la revisione del selettore profili di calore forno (Statico, Ventilato, Gas sotto/dietro, Legna) ed il layout delle ricette salvate vuote sul Profilo.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-10 v2 registra l'ottimizzazione delle performance di scorrimento (rimossi transition:all, introdotto decoding:async su ImageWithFallback, will-change:transform sul parallax della ricetta) e la sistemazione mobile del componente SpecCell in RecipeStatStrip.",
   "filesMappedCount": 151,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-10",
+  "lastScannedChapter": "kipi-update-2026-07-10-v2",
   "chapters": [
     {
       "id": "pizza-engine",

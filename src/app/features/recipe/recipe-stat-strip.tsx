@@ -151,35 +151,43 @@ export function SpecCell({
           )}
           <span
             className={
-              small
-                ? "stat-strip__value-main stat-strip__value-main--small"
-                : "stat-strip__value-main"
+              parts.extra
+                ? "stat-strip__value-current stat-strip__value-current--stacked"
+                : "stat-strip__value-current"
             }
           >
-            {parts.main}
+            <span
+              className={
+                small
+                  ? "stat-strip__value-main stat-strip__value-main--small"
+                  : "stat-strip__value-main"
+              }
+            >
+              {parts.main}
+            </span>
+            {parts.unit && (
+              <span
+                className={
+                  small
+                    ? "stat-strip__value-sub stat-strip__value-sub--small"
+                    : "stat-strip__value-sub"
+                }
+              >
+                {parts.unit}
+              </span>
+            )}
+            {parts.extra && (
+              <span
+                className={
+                  small
+                    ? "stat-strip__value-sub stat-strip__value-sub--small"
+                    : "stat-strip__value-sub"
+                }
+              >
+                {parts.extra}
+              </span>
+            )}
           </span>
-          {parts.unit && (
-            <span
-              className={
-                small
-                  ? "stat-strip__value-sub stat-strip__value-sub--small"
-                  : "stat-strip__value-sub"
-              }
-            >
-              {parts.unit}
-            </span>
-          )}
-          {parts.extra && (
-            <span
-              className={
-                small
-                  ? "stat-strip__value-sub stat-strip__value-sub--small"
-                  : "stat-strip__value-sub"
-              }
-            >
-              {parts.extra}
-            </span>
-          )}
         </motion.div>
       </AnimatePresence>
     </motion.div>

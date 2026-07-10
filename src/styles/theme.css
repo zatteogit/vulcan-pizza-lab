@@ -6971,6 +6971,19 @@
     gap: var(--space-1);
   }
 
+  .stat-strip__value-current {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--gap-2xs);
+    min-width: 0;
+  }
+
+  .stat-strip__value-current--stacked {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-0-5);
+  }
+
   .stat-strip__value-main {
     font-size: clamp(var(--font-size-xl), 4.4vw, var(--font-size-2xl));
     font-weight: var(--weight-bold);
@@ -7017,12 +7030,6 @@
     .stat-strip__value-prev,
     .stat-strip__value-arrow {
       display: none;
-    }
-    .stat-strip__value {
-      flex-wrap: wrap;
-    }
-    .stat-strip__cell:nth-child(3) .stat-strip__value-sub {
-      flex-basis: 100%;
     }
   }
 
