@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-10T11:51:00.000Z",
+  "lastUpdated": "2026-07-10T12:15:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 151,
@@ -10,11 +10,11 @@
     "stylesInDb": 29
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-10 v2 registra l'ottimizzazione delle performance di scorrimento (rimossi transition:all, introdotto decoding:async su ImageWithFallback, will-change:transform sul parallax della ricetta) e la sistemazione mobile del componente SpecCell in RecipeStatStrip.",
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-10 v3 registra il pulsante di filtro 'Mostra Risolti' / 'Nascondi Risolti' per nascondere i pin risolti dal canvas, dalla mappa e dalla lista di debug, e l'esclusione automatica delle annotazioni risolte dal prompt copiato per l'AI.",
   "filesMappedCount": 151,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-10-v2",
+  "lastScannedChapter": "kipi-update-2026-07-10-v3",
   "chapters": [
     {
       "id": "pizza-engine",

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router";
 import {
   Bug,
@@ -50,6 +50,7 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [isSelecting, setIsSelecting] = useState(false);
   const [showPins, setShowPins] = useState(true);
+  const [showResolved, setShowResolved] = useState(false);
 
   // Drawing & UI lock states
   const [isDrawingMode, setIsDrawingMode] = useState(false);
@@ -68,7 +69,11 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
   const [firstDrawPoint, setFirstDrawPoint] = useState<{ pageX: number; pageY: number } | null>(null);
   const [tempAnnotation, setTempAnnotation] = useState<Partial<Annotation> | null>(null);
 
-  const pinPositions = usePinPositions(annotations, location.pathname, true);
+  const visibleAnnotations = useMemo(() => {
+    return annotations.filter((a) => showResolved || !a.resolved);
+  }, [annotations, showResolved]);
+
+  const pinPositions = usePinPositions(visibleAnnotations, location.pathname, true);
 
   /* ═══ MOUSE INSPECTION CAPTURE ═══ */
   useEffect(() => {
@@ -224,12 +229,13 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
   };
 
   const handleCopyPrompt = () => {
-    if (annotations.length === 0) {
-      showToast("Aggiungi dei Pin prima!");
+    const unresolved = annotations.filter((a) => !a.resolved);
+    if (unresolved.length === 0) {
+      showToast("Nessun pin attivo da risolvere!");
       return;
     }
     navigator.clipboard
-      .writeText(compilePrompt(annotations, consoleLogsRef.current))
+      .writeText(compilePrompt(unresolved, consoleLogsRef.current))
       .then(() => showToast("Prompt Copiato in Appunti!"))
       .catch(() => showToast("Errore di scrittura negli appunti"));
   };
@@ -250,7 +256,7 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
           className="vulcan-debug-exclude pointer-events-none"
           style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 99990 }}
         >
-          {annotations.map((anno) => {
+          {visibleAnnotations.map((anno) => {
             if (anno.route !== location.pathname || !anno.drawingDataURL) return null;
             const capturedW = anno.viewport?.width || window.innerWidth;
             const capturedH = anno.viewport?.height || window.innerHeight;
@@ -281,7 +287,7 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
           className="vulcan-debug-exclude pointer-events-none"
           style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 99991 }}
         >
-          {annotations.map((anno, idx) => {
+          {visibleAnnotations.map((anno, idx) => {
             const pos = pinPositions[anno.id];
             if (!pos || !pos.visible) return null;
             const dotColor = anno.resolved
@@ -624,18 +630,31 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto mt-1 flex flex-col gap-2 pr-1" style={{ maxHeight: "180px" }}>
-              <div className="text-[10px] font-semibold uppercase tracking-wider flex justify-between" style={{ color: "var(--text-muted)" }}>
-                <span>Pin nel Registro ({annotations.length})</span>
-                {annotations.length > 0 && <span style={{ fontSize: "8px", opacity: 0.7 }}>Clicca su un pin per modificarlo</span>}
+             <div className="flex-1 overflow-y-auto mt-1 flex flex-col gap-2 pr-1" style={{ maxHeight: "180px" }}>
+              <div className="text-[10px] font-semibold uppercase tracking-wider flex justify-between items-center" style={{ color: "var(--text-muted)" }}>
+                <span>Pin nel Registro ({annotations.filter((a) => !a.resolved).length})</span>
+                {annotations.some((a) => a.resolved) && (
+                  <button
+                    type="button"
+                    onClick={() => setShowResolved(!showResolved)}
+                    className="px-1.5 py-0.5 rounded border text-[9px] font-bold transition-all active:scale-95 cursor-pointer"
+                    style={{
+                      background: showResolved ? "color-mix(in srgb, var(--primary) 12%, transparent)" : "transparent",
+                      borderColor: showResolved ? "var(--primary)" : "var(--container-border)",
+                      color: showResolved ? "var(--primary)" : "var(--text-muted)"
+                    }}
+                  >
+                    {showResolved ? "Nascondi Risolti" : "Mostra Risolti"}
+                  </button>
+                )}
               </div>
 
-              {annotations.length === 0 ? (
+              {visibleAnnotations.length === 0 ? (
                 <div className="h-24 flex flex-col items-center justify-center border border-dashed rounded-xl p-3 text-center" style={{ borderColor: "var(--container-border)" }}>
-                  <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>Nessun pin inserito. Clicca su "Nuovo Pin" per iniziare.</span>
+                  <span className="text-[11px]" style={{ color: "var(--text-muted)" }}>Nessun pin visualizzato.</span>
                 </div>
               ) : (
-                annotations.map((anno, idx) => (
+                visibleAnnotations.map((anno, idx) => (
                   <div
                     key={anno.id}
                     className="p-2.5 rounded-lg border flex items-start justify-between gap-2 text-xs cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
