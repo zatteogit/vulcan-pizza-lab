@@ -63,6 +63,10 @@ export function ImageWithFallback(props: React.ImgHTMLAttributes<HTMLImageElemen
       <img
         src={src}
         alt={alt}
+        /* Decodifica fuori dal main thread: evita che il decode di una foto
+           grande rubi un frame (spike da centinaia di ms) durante lo scroll.
+           Sovrascrivibile dal chiamante via props (spread dopo). */
+        decoding="async"
         {...rest}
         onError={() => setDidError(true)}
         onLoad={(e) => {
