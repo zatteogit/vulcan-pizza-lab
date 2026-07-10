@@ -43,14 +43,24 @@ export async function fetchRemote(): Promise<Annotation[] | null> {
 /**
  * Upsert annotations. The endpoint applies last-write-wins by id and returns the
  * canonical registry after the write, which callers fold back in.
+ *
+ * `keepalive` lets a request outlive a page unload, but the browser caps the
+ * *total* body of all in-flight keepalive requests at 64 KiB — a full registry
+ * (rich `outerHTML` / `drawingDataURL` context) silently blows past that and the
+ * POST is rejected with a swallowed TypeError, so the write vanishes. Opt in
+ * ONLY for the unload flush; the debounced hot path uses a normal fetch, which
+ * has no such size limit.
  */
-export async function pushRemote(list: Annotation[]): Promise<Annotation[] | null> {
+export async function pushRemote(
+  list: Annotation[],
+  opts: { keepalive?: boolean } = {},
+): Promise<Annotation[] | null> {
   try {
     const res = await fetch(API_BASE, {
       method: "POST",
       headers: headers(true),
       body: JSON.stringify(list),
-      keepalive: true, // let the request survive a page unload (flush-on-close)
+      keepalive: opts.keepalive ?? false,
     });
     if (!res.ok) return null;
     const data = await res.json();

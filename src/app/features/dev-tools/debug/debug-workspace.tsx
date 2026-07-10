@@ -122,8 +122,12 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
         selector,
         route: location.pathname,
         elementTag: target.tagName.toLowerCase(),
-        outerHTML: target.outerHTML,
-        parentHTML: parentSnippet,
+        // Cap the rich-context HTML at capture: the AI prompt only ever reads the
+        // first ~1000 chars (see compile-prompt.ts), so an unbounded outerHTML
+        // (seen up to 27 KB) is pure bloat that pushes the synced registry past
+        // the 64 KiB keepalive ceiling. Store lean, consistent across all layers.
+        outerHTML: target.outerHTML.slice(0, 2000),
+        parentHTML: parentSnippet.slice(0, 4000),
         timestamp: new Date().toLocaleTimeString(),
         viewport: { width: window.innerWidth, height: window.innerHeight },
         elementRect: { top: rect.top, left: rect.left, width: rect.width, height: rect.height },

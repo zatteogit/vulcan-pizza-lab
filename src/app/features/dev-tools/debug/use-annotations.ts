@@ -30,6 +30,19 @@ function writeLocal(list: Annotation[]) {
   } catch {}
 }
 
+/**
+ * A cheap fingerprint of the sync-relevant state (existence + last write +
+ * deleted/resolved flags) so a poll can tell whether a merge actually changed
+ * anything before re-broadcasting to the other layers. Ignores position/comment
+ * churn that a mutation already flushes on its own.
+ */
+function registrySignature(list: Annotation[]): string {
+  return list
+    .map((a) => `${a.id}:${a.updatedAt ?? 0}:${a.deleted ? 1 : 0}:${a.resolved ? 1 : 0}`)
+    .sort()
+    .join("|");
+}
+
 async function fetchFileRegistry(): Promise<Annotation[] | null> {
   try {
     const res = await fetch(FILE_ENDPOINT);
@@ -81,13 +94,13 @@ export function useAnnotations() {
   }, []);
 
   /* ── Flush the current registry to the writable layers ── */
-  const flushPush = useCallback(() => {
+  const flushPush = useCallback((keepalive = false) => {
     if (!pendingPush.current) return;
     pendingPush.current = false;
     const current = registryRef.current;
     pushFileRegistry(current);
     if (isRemoteConfigured()) {
-      void pushRemote(current).then((canonical) => {
+      void pushRemote(current, { keepalive }).then((canonical) => {
         if (canonical) {
           const merged = mergeRegistries(canonical, registryRef.current);
           adopt(merged);
@@ -103,7 +116,7 @@ export function useAnnotations() {
       const pruned = adopt(next);
       pendingPush.current = true;
       if (pushTimer.current) clearTimeout(pushTimer.current);
-      pushTimer.current = setTimeout(flushPush, PUSH_DEBOUNCE_MS);
+      pushTimer.current = setTimeout(() => flushPush(false), PUSH_DEBOUNCE_MS);
       return pruned;
     },
     [adopt, flushPush],
@@ -138,10 +151,17 @@ export function useAnnotations() {
     const interval = setInterval(() => {
       void (async () => {
         const remote = await fetchRemote();
-        if (remote) {
-          adopt(mergeRegistries(remote, registryRef.current));
-          setLastSync(Date.now());
-        }
+        if (!remote) return;
+        const before = registryRef.current;
+        const merged = mergeRegistries(remote, before);
+        if (registrySignature(merged) === registrySignature(before)) return;
+        adopt(merged);
+        setLastSync(Date.now());
+        // Re-broadcast into the OTHER writable layer (the dev file registry) so a
+        // change that landed in D1 also reaches the "risolvi i commenti" file
+        // without waiting for a reload. Reading remote here, we only push to file
+        // — pushing back to remote would just echo what we just read.
+        pushFileRegistry(merged);
       })();
     }, POLL_INTERVAL_MS);
     return () => clearInterval(interval);
@@ -153,10 +173,16 @@ export function useAnnotations() {
     const interval = setInterval(() => {
       void (async () => {
         const file = await fetchFileRegistry();
-        if (file) {
-          adopt(mergeRegistries(file, registryRef.current));
-          setLastSync(Date.now());
-        }
+        if (!file) return;
+        const before = registryRef.current;
+        const merged = mergeRegistries(file, before);
+        if (registrySignature(merged) === registrySignature(before)) return;
+        adopt(merged);
+        setLastSync(Date.now());
+        // Re-broadcast file-side changes (e.g. an agent resolving comments in
+        // vulcan-debug-registry.json) up to the shared remote, so production and
+        // other clients converge without a reload.
+        if (isRemoteConfigured()) void pushRemote(merged);
       })();
     }, 4000); // Poll local file registry every 4 seconds in dev mode for responsive sync!
     return () => clearInterval(interval);
@@ -166,7 +192,7 @@ export function useAnnotations() {
   useEffect(() => {
     const onHide = () => {
       if (pushTimer.current) clearTimeout(pushTimer.current);
-      flushPush();
+      flushPush(true); // last-gasp flush must survive unload → keepalive
     };
     window.addEventListener("pagehide", onHide);
     document.addEventListener("visibilitychange", () => {
