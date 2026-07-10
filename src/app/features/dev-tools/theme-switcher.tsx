@@ -20,15 +20,14 @@ export interface ThemeMeta {
 }
 
 export const THEMES: ThemeMeta[] = [
-  { id: "", preview: "sfornata", label: "Sfornata", note: "Il default · L'ora del forno" },
-  { id: "vulcan", preview: "vulcan", label: "Vulcan", note: "L'originale · Playfair" },
+  { id: "", preview: "vulcan", label: "Vulcan", note: "L'originale · Playfair" },
+  { id: "sfornata", preview: "sfornata", label: "Sfornata", note: "L'ora del forno · Playfair" },
 ];
 
-/* Sfornata è il tema promosso: la non-scelta (id "") lo applica. "vulcan"
-   resta l'originale (alias che eredita i token di :root). Un id legacy di
-   un tema rimosso non matcha nessun blocco CSS → rende come l'originale. */
 function applyTheme(id: string) {
-  document.documentElement.dataset.theme = id || "sfornata";
+  const el = document.documentElement;
+  if (id) el.dataset.theme = id;
+  else delete el.dataset.theme;
 }
 
 function readStr(key: string, fallback: string): string {
