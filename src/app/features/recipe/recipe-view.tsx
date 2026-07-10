@@ -12,7 +12,13 @@
 
 import { useEffect, useMemo, type ReactNode } from "react";
 import { Link } from "react-router";
-import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "motion/react";
 import { ChevronLeft, RotateCcw } from "lucide-react";
 import { Heading, IconButton } from "../../components/ds/index";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
@@ -119,15 +125,30 @@ export function RecipeView({
   onSelectFlour,
   selectedTimeSlotId,
 }: RecipeViewProps) {
-  /* Parallax hero (identico alla scheda Scopri originale) */
+  /* Parallax hero (identico alla scheda Scopri originale). Con
+     prefers-reduced-motion il movimento scroll-driven si spegne (resta il
+     solo scrim, che è una dissolvenza, non un moto). */
   const { scrollY } = useScroll();
+  const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
-  const heroImageY = useTransform(scrollY, [0, 400], [0, 80]);
-  const heroImageScale = useTransform(scrollY, [0, 400], [1.02, 1.15]);
+  const heroImageY = useTransform(
+    scrollY,
+    [0, 400],
+    prefersReducedMotion ? [0, 0] : [0, 80]
+  );
+  const heroImageScale = useTransform(
+    scrollY,
+    [0, 400],
+    prefersReducedMotion ? [1, 1] : [1.02, 1.15]
+  );
   const heroOverlayOpacity = useTransform(scrollY, [0, 300], [0, 0.65]);
-  const cardY = useTransform(scrollY, [0, 400], [0, -20]);
+  const cardY = useTransform(
+    scrollY,
+    [0, 400],
+    prefersReducedMotion ? [0, 0] : [0, -20]
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
