@@ -103,6 +103,7 @@ export function ProcedureHeroControls({
               onClick={() => setStartTime((s) => shiftQuarter(s, -1))}
               className="procedure-hero__shift-btn"
               aria-label={ui.ariaEarlier}
+              title={ui.ariaEarlier}
             >
               <Minus size={13} />
             </button>
@@ -124,6 +125,15 @@ export function ProcedureHeroControls({
             ) : (
               <button
                 onClick={() => setEditingTime(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setStartTime((s) => shiftQuarter(s, 1));
+                  } else if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setStartTime((s) => shiftQuarter(s, -1));
+                  }
+                }}
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
@@ -138,6 +148,7 @@ export function ProcedureHeroControls({
               onClick={() => setStartTime((s) => shiftQuarter(s, 1))}
               className="procedure-hero__shift-btn"
               aria-label={ui.ariaLater}
+              title={ui.ariaLater}
             >
               <Plus size={13} />
             </button>
@@ -164,6 +175,7 @@ export function ProcedureHeroControls({
               onClick={() => setStartTime((s) => shiftQuarter(s, -1))}
               className="procedure-hero__shift-btn"
               aria-label={ui.ariaEarlier}
+              title={ui.ariaEarlier}
             >
               <Minus size={13} />
             </button>
@@ -185,6 +197,15 @@ export function ProcedureHeroControls({
             ) : (
               <button
                 onClick={() => setEditingEndTime(true)}
+                onKeyDown={(e) => {
+                  if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    setStartTime((s) => shiftQuarter(s, 1));
+                  } else if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    setStartTime((s) => shiftQuarter(s, -1));
+                  }
+                }}
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
@@ -200,6 +221,7 @@ export function ProcedureHeroControls({
               onClick={() => setStartTime((s) => shiftQuarter(s, 1))}
               className="procedure-hero__shift-btn"
               aria-label={ui.ariaLater}
+              title={ui.ariaLater}
             >
               <Plus size={13} />
             </button>

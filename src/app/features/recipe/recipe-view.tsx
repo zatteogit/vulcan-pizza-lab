@@ -456,28 +456,31 @@ export function RecipeView({
       {/* ── Contenuto ── */}
       <div data-region="body" id="recipe-content-tabs-anchor" className="recipe-view-body">
         <div className="recipe-view-content">
+          {/* Le section-tabs stanno FUORI dal wrapper animato: un antenato con
+              `transform` (l'entry motion.div) diventa il containing block e
+              rompe `position: sticky` — le tabs non si agganciavano più
+              (pin VPL-149713). Qui restano figlie dirette di recipe-view-content. */}
+          {!isMobile && (
+            <RecipeSectionTabs
+              variant="inline"
+              activeTab={activeTab}
+              recipeLabel={recipeTabLabel}
+              onChange={onTabChange}
+              fillingMode={isFillingStyle(recipe.style)}
+              /* VPL-A3: senza sticky header restano i controlli flottanti
+               * (back + Inizia) a top-4 / h-10 → bottom ~56px. Il pill sticky
+               * (z-30, sotto i controlli z-50) deve fissarsi sotto di essi per
+               * non finirgli sotto sui bordi a larghezza tablet. */
+              stickyTop={showStickyHeader ? 56 : 64}
+              procedureSubtitle={procedureSubtitle}
+              toppingSubtitle={toppingSubtitle}
+            />
+          )}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.08 }}
           >
-            {!isMobile && (
-              <RecipeSectionTabs
-                variant="inline"
-                activeTab={activeTab}
-                recipeLabel={recipeTabLabel}
-                onChange={onTabChange}
-                fillingMode={isFillingStyle(recipe.style)}
-                /* VPL-A3: senza sticky header restano i controlli flottanti
-                 * (back + Inizia) a top-4 / h-10 → bottom ~56px. Il pill sticky
-                 * (z-30, sotto i controlli z-50) deve fissarsi sotto di essi per
-                 * non finirgli sotto sui bordi a larghezza tablet. */
-                stickyTop={showStickyHeader ? 56 : 64}
-                procedureSubtitle={procedureSubtitle}
-                toppingSubtitle={toppingSubtitle}
-              />
-            )}
-
             <RecipeOutput
               recipe={recipe}
               constraints={constraints}

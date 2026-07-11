@@ -33,7 +33,7 @@ WheatOff,
 X,
 Zap,
 } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
+import { AnimatePresence,motion, useReducedMotion } from "motion/react";
 import { useCallback,useEffect,useMemo,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router";
@@ -1280,6 +1280,7 @@ export function ProfilePage() {
     return LOCALE_META.find((l) => l.id === cms.locale?.id) ?? LOCALE_META[0];
   }, [cms.locale?.id]);
   const [profileTab, setProfileTab] = useState<"setup" | "app" | "recipes">("setup");
+  const reduceMotion = useReducedMotion();
 
   /* FTU */
   if (showFtu) {
@@ -1356,7 +1357,14 @@ export function ProfilePage() {
                 onClick={() => setProfileTab(tab.id)}
                 className={active ? "profile-tabs__button profile-tabs__button--active" : "profile-tabs__button"}
               >
-                {tab.label}
+                {active && (
+                  <motion.span
+                    layoutId="profile-tab-indicator"
+                    className="profile-tabs__indicator"
+                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <span className="profile-tabs__label">{tab.label}</span>
               </button>
             );
           })}

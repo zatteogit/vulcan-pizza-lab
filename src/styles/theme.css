@@ -1208,14 +1208,17 @@
 
   html {
     font-size: var(--font-size);
-    overflow-x: hidden;
+    /* `clip` non forza `overflow-y: auto` (a differenza di `hidden`), così html
+       e body non diventano scroll-container e `position: sticky` funziona
+       (pin VPL-149713). */
+    overflow-x: clip;
     max-width: 100%;
   }
 
   body {
     background-color: var(--background);
     color: var(--foreground);
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100%;
     font-family: var(--font-sans);
     font-kerning: normal;
@@ -2982,11 +2985,13 @@
   .profile-page__header-icon-glyph { color: var(--primary); }
   .profile-page__subtitle { font-family: var(--font-serif); font-style: italic; margin-top: var(--space-1); font-size: var(--font-size-xl); color: var(--text-muted); opacity: 0.65; }
   .profile-tabs { position: sticky; top: var(--space-3); z-index: 4; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-1); margin-bottom: var(--space-5); padding: var(--space-1); border-radius: var(--radius-2xl); background: color-mix(in srgb, var(--container-page) 86%, transparent); border: var(--border-width-thin) solid var(--container-border-subtle); box-shadow: var(--shadow-sm); backdrop-filter: blur(var(--blur-md)); -webkit-backdrop-filter: blur(var(--blur-md)); }
-  .profile-tabs__button { min-width: 0; padding-inline: var(--space-2); padding-block: var(--space-2); border-radius: var(--radius-xl); color: var(--text-muted); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); line-height: var(--leading-tight); cursor: pointer; transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease; }
-  .profile-tabs__button:hover { color: var(--text-default); background: var(--surface-container-low); }
+  .profile-tabs__button { position: relative; min-width: 0; padding-inline: var(--space-2); padding-block: var(--space-2); border-radius: var(--radius-xl); color: var(--text-muted); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); line-height: var(--leading-tight); cursor: pointer; transition: transform 0.18s ease, color 0.18s ease; }
+  .profile-tabs__button:hover:not(.profile-tabs__button--active) { color: var(--text-default); background: var(--surface-container-low); }
   .profile-tabs__button:focus-visible { outline: var(--space-0-5) solid color-mix(in srgb, var(--primary) 30%, transparent); outline-offset: var(--space-0-5); }
   .profile-tabs__button:active { transform: scale(0.97); }
-  .profile-tabs__button--active { color: var(--chip-text-active); background: var(--chip-bg-active); box-shadow: var(--shadow-sm); }
+  .profile-tabs__button--active { color: var(--chip-text-active); }
+  .profile-tabs__indicator { position: absolute; inset: 0; z-index: 0; border-radius: var(--radius-xl); background: var(--chip-bg-active); box-shadow: var(--shadow-sm); }
+  .profile-tabs__label { position: relative; z-index: 1; }
 
   /* ── Oven section (profile main) ── */
   .profile-oven-list { display: flex; flex-direction: column; gap: var(--gap-xs); }
@@ -5020,6 +5025,39 @@
   }
   .match-action-text--save-active {
     color: var(--primary);
+  }
+  .match-action-text:hover {
+    background: var(--container-bg);
+    border-color: color-mix(in srgb, var(--primary) 30%, var(--container-border-subtle));
+  }
+  /* Desktop (nota Matteo, pin VPL-452410 + VPL-419292): la card verdetto era
+     alta e vuota a destra, con le azioni poco visibili in coda. Su schermo largo
+     diventa a due colonne — verdetto a sinistra, cluster azioni impilato a
+     destra: riempie il vuoto e dà peso alle azioni. Sotto i 768px resta la
+     riga di azioni a piena larghezza. */
+  @media (min-width: 768px) {
+    .match-card {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--gap-lg);
+    }
+    .match-card__main {
+      flex: 1 1 0%;
+      min-width: 0;
+    }
+    .match-actions {
+      margin-top: var(--space-1);
+      flex: 0 0 auto;
+      width: auto;
+      min-width: max-content;
+      flex-direction: column;
+      align-items: stretch;
+      flex-wrap: nowrap;
+    }
+    .match-action-cta,
+    .match-action-text {
+      width: 100%;
+    }
   }
 
   /* ═══ ONDATA 3 — COMPONENT: ingredients-section (PREFIX: ingredients) ═══ */
@@ -9095,8 +9133,20 @@
 .style-detail-sheet__fav-btn {
   background: var(--surface-container);
   color: var(--text-default);
-  border: 1px solid var(--outline-variant);
+  border: var(--border-width-thin) solid var(--outline-variant);
   box-shadow: var(--shadow-sm);
+  transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+.style-detail-sheet__close-btn:hover,
+.style-detail-sheet__fav-btn:hover {
+  background: var(--container-bg);
+  border-color: color-mix(in srgb, var(--primary) 26%, var(--outline-variant));
+  box-shadow: var(--shadow-md);
+}
+.style-detail-sheet__close-btn:focus-visible,
+.style-detail-sheet__fav-btn:focus-visible {
+  outline: var(--border-width-thin) solid color-mix(in srgb, var(--primary) 40%, transparent);
+  outline-offset: var(--space-0-5);
 }
 .style-detail-sheet__fav-btn--active {
   background: color-mix(in srgb, var(--primary) 14%, var(--surface-container));
@@ -9428,6 +9478,19 @@
 }
 @media (min-width: 640px) {
   .recommended-styles {
+    gap: var(--gap-xl);
+  }
+}
+
+/* Wrapper dei gruppi-tier: eredita la colonna spaziata così i tier restano
+   distanziati come quando erano figli diretti; porta il pulse di ricalcolo. */
+.recommended-styles__results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+@media (min-width: 640px) {
+  .recommended-styles__results {
     gap: var(--gap-xl);
   }
 }
@@ -10767,13 +10830,17 @@
   .app-shell-root {
     min-height: 100dvh;
     background: var(--container-page);
-    overflow-x: hidden;
+    /* `clip` invece di `hidden`: taglia il bleed orizzontale SENZA diventare
+       scroll-container (pin VPL-149713). `overflow-x: hidden` forzava
+       `overflow-y: auto`, così le section-tabs `position: sticky` si
+       ancoravano a questo antenato e non si agganciavano mai al viewport. */
+    overflow-x: clip;
     width: 100%;
     position: relative;
   }
 
   .app-shell-main {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   .app-shell-main--nav {
