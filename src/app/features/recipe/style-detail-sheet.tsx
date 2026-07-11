@@ -163,9 +163,11 @@ export function StyleDetailSheet({
           </motion.span>
         </IconButton>
 
-        {/* Close button */}
+        {/* Close button — stessa apparenza `bare` del fav: entrambi i controlli
+            in overlay condividono chrome e stati via `.style-detail-sheet__*`. */}
         <IconButton
           size="md"
+          variant="bare"
           onClick={onDismiss}
           className="style-detail-sheet__close-btn"
           aria-label={cms.ui.closeDetails}

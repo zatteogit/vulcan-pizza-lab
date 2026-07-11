@@ -1,6 +1,6 @@
 import { Award,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
-import { useMemo,useState } from "react";
+import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
+import { useEffect,useMemo,useRef,useState } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import { FilterChip, Surface } from "../../components/ds/index";
@@ -295,6 +295,25 @@ export function RecommendedStyles({
 
   let idx = 0;
 
+  /* Feedback di ricalcolo (nota Matteo): quando cambi un vincolo, i risultati
+   * qui sotto si aggiornano in place (card riconciliate per id) senza segnale
+   * visivo. Un pulse gentile sul blocco risultati comunica "ho ricalcolato". */
+  const reduceMotion = useReducedMotion();
+  const resultsControls = useAnimationControls();
+  const firstResultsRun = useRef(true);
+  useEffect(() => {
+    if (firstResultsRun.current) {
+      firstResultsRun.current = false;
+      return;
+    }
+    if (reduceMotion) return;
+    resultsControls.start({
+      opacity: [0.72, 1],
+      y: [4, 0],
+      transition: { duration: 0.34, ease: "easeOut" },
+    });
+  }, [recommendations, resultsControls, reduceMotion]);
+
   const handleSelect = (rec: RecommendationWithVariant) => {
     onSelectStyle(rec.style, rec.bestInterpretation);
   };
@@ -447,6 +466,7 @@ export function RecommendedStyles({
       </AnimatePresence>
 
       {/* ═══ Tier groups ═══ */}
+      <motion.div className="recommended-styles__results" animate={resultsControls}>
       {tiers.length === 0 && (
         <Surface
           as={motion.div}
@@ -544,6 +564,7 @@ export function RecommendedStyles({
           </motion.div>
         );
       })}
+      </motion.div>
     </div>
   );
 }
@@ -664,6 +685,7 @@ function StyleCard({
             <div className="recommended-card__score">
               <ScoreRing
                 score={displayScore}
+                baseScore={compatibilityScore}
                 color={ringColor}
                 size={38}
               />

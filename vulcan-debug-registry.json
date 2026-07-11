@@ -388,8 +388,9 @@
     "comment": "sistemare questa nota, viene tagliata a sinistra per via del border radius",
     "priority": "low",
     "index": 8,
-    "updatedAt": 1783628907215,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783628940985",
@@ -466,8 +467,9 @@
     "comment": "non mi piace come abbiamo approfondito le quantità del prefermento... io avrei diviso la lista degli ingredienti",
     "priority": "high",
     "index": 9,
-    "updatedAt": 1783628975752,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629025952",
@@ -544,8 +546,9 @@
     "comment": "su questi picker ci dobbiamo decisamente lavorare... vedi quali sono le best practice e facciamo qualcosa di intuitivo e completo",
     "priority": "high",
     "index": 10,
-    "updatedAt": 1783629050051,
-    "deleted": false
+    "updatedAt": 1783757061747,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629073001",
@@ -701,8 +704,9 @@
     "comment": "quello che c'è sotto allo slider potrebbe animarsi",
     "priority": "medium",
     "index": 12,
-    "updatedAt": 1783629129038,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629149713",
@@ -779,8 +783,9 @@
     "comment": "perché non si aggancia?",
     "priority": "high",
     "index": 13,
-    "updatedAt": 1783629159208,
-    "deleted": false
+    "updatedAt": 1783757061747,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629199743",
@@ -1094,8 +1099,9 @@
     "comment": "manca tutto il discorso su resistenze (sopra sotto ecc), bruciatori, forma dei bruciatori ecc... Cerchiamo di farlo in maniera figa e che influenzi correttamente il motore",
     "priority": "high",
     "index": 17,
-    "updatedAt": 1783629344377,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629364973",
@@ -1172,8 +1178,9 @@
     "comment": "è corretta l'animazione e gli stati di questo elemento?",
     "priority": "high",
     "index": 18,
-    "updatedAt": 1783629377314,
-    "deleted": false
+    "updatedAt": 1783712430956,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629387247",
@@ -1215,8 +1222,9 @@
     "comment": "perché qui non è bianco? (e anche nel DS!)",
     "priority": "high",
     "index": 19,
-    "updatedAt": 1783629402189,
-    "deleted": false
+    "updatedAt": 1783717922054,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629428822",
@@ -1258,8 +1266,9 @@
     "comment": "Mettiamo iconcine (cuore, cuore spezzato ecc)",
     "priority": "high",
     "index": 20,
-    "updatedAt": 1783629445839,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629473814",
@@ -1301,8 +1310,9 @@
     "comment": "questo bordo è necessario da DS?",
     "priority": "high",
     "index": 21,
-    "updatedAt": 1783629484673,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629544157",
@@ -1396,8 +1406,9 @@
     "comment": "è corretto che questo button e quello Close abbiano status diversi?",
     "priority": "high",
     "index": 22,
-    "updatedAt": 1783629562372,
-    "deleted": false
+    "updatedAt": 1783712430956,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629589080",
@@ -1474,8 +1485,9 @@
     "comment": "preferisco gli elementi navbar in alto e non centrati",
     "priority": "high",
     "index": 23,
-    "updatedAt": 1783629606871,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629636021",
@@ -1552,8 +1564,9 @@
     "comment": "il cerca in material va qui?",
     "priority": "high",
     "index": 24,
-    "updatedAt": 1783629647048,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629662855",
@@ -1635,8 +1648,9 @@
     "comment": "sotto i risultati ora cambiano correttamente, ma senza animazioni di feedback",
     "priority": "high",
     "index": 25,
-    "updatedAt": 1783629696334,
-    "deleted": false
+    "updatedAt": 1783712430956,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629760265",
@@ -1720,8 +1734,9 @@
     "comment": "e la 1?",
     "priority": "high",
     "index": 26,
-    "updatedAt": 1783629767504,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629786081",
@@ -1821,8 +1836,9 @@
     "comment": "perché qui non indichiamo il tipo di farina ma solo la forza e nei filtri il contrario? Ragioniamoci su!",
     "priority": "high",
     "index": 27,
-    "updatedAt": 1783629806954,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629821071",
@@ -1922,8 +1938,9 @@
     "comment": "occhio che sull'hover la pillola viene tagliata in alto",
     "priority": "medium",
     "index": 28,
-    "updatedAt": 1783629835771,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629855048",
@@ -2023,8 +2040,9 @@
     "comment": "è possibile aggiungere \"Versione\"?",
     "priority": "high",
     "index": 29,
-    "updatedAt": 1783629869887,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629895403",
@@ -2124,8 +2142,9 @@
     "comment": "uhm non ci siamo come layout...",
     "priority": "high",
     "index": 30,
-    "updatedAt": 1783629902964,
-    "deleted": false
+    "updatedAt": 1783712430956,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629946995",
@@ -2225,8 +2244,9 @@
     "comment": "o li mettiamo per esteso, o mettiamo un tip",
     "priority": "high",
     "index": 31,
-    "updatedAt": 1783629966863,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783629985427",
@@ -2326,8 +2346,9 @@
     "comment": "non ha senso che la modale venga limitata in basso... dovrebbe essere TIPO pannello",
     "priority": "high",
     "index": 32,
-    "updatedAt": 1783630007067,
-    "deleted": false
+    "updatedAt": 1783712430956,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630059548",
@@ -2411,8 +2432,9 @@
     "comment": "dobbiamo trovare un compromesso fra questo storing e quello di Crea",
     "priority": "high",
     "index": 33,
-    "updatedAt": 1783630075115,
-    "deleted": false
+    "updatedAt": 1783717922054,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630099948",
@@ -2454,8 +2476,9 @@
     "comment": "questo sottotitolo dovrebbe essere legato alla selezione sottostante più che qui",
     "priority": "high",
     "index": 34,
-    "updatedAt": 1783630117348,
-    "deleted": false
+    "updatedAt": 1783757061747,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630161225",
@@ -2539,8 +2562,9 @@
     "comment": "togliere nota",
     "priority": "medium",
     "index": 35,
-    "updatedAt": 1783630165242,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630170488",
@@ -2624,8 +2648,9 @@
     "comment": "togliere sillabazione (dovrebbe essere usata solo come estrema ratio... qui andando a capo entrava)",
     "priority": "high",
     "index": 36,
-    "updatedAt": 1783630196952,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630219116",
@@ -2709,8 +2734,9 @@
     "comment": "che n e dici se qui mettiamo la versione animata del logo, che magari \"illumina\" col fuoco il glass della barra?",
     "priority": "high",
     "index": 37,
-    "updatedAt": 1783630246327,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630281602",
@@ -2794,8 +2820,9 @@
     "comment": "manca animazione chips. dovrebbe essere definita a livello di DS, di componente",
     "priority": "high",
     "index": 38,
-    "updatedAt": 1783630302069,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630314527",
@@ -2879,8 +2906,9 @@
     "comment": "back poco visibile. Dovrebbe rimanere persistente",
     "priority": "high",
     "index": 39,
-    "updatedAt": 1783630328385,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630341620",
@@ -2981,8 +3009,9 @@
     "comment": "icona cuore anche qui. più visibilità del match.",
     "priority": "high",
     "index": 40,
-    "updatedAt": 1783630361627,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630419292",
@@ -3083,8 +3112,9 @@
     "comment": "forse poco visibili?",
     "priority": "high",
     "index": 41,
-    "updatedAt": 1783630429881,
-    "deleted": false
+    "updatedAt": 1783757061747,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630452410",
@@ -3185,8 +3215,9 @@
     "comment": "non credi sia vuoto qui a destra?",
     "priority": "high",
     "index": 42,
-    "updatedAt": 1783630462281,
-    "deleted": false
+    "updatedAt": 1783757061747,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630479706",
@@ -3287,8 +3318,9 @@
     "comment": "e se mettessimo un glow? (diverso a seconda della situazione...)",
     "priority": "high",
     "index": 43,
-    "updatedAt": 1783630496498,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630503210",
@@ -3389,8 +3421,9 @@
     "comment": "button non ha stati/animazione",
     "priority": "high",
     "index": 44,
-    "updatedAt": 1783630520077,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630532189",
@@ -3491,8 +3524,9 @@
     "comment": "button SEMBRA avere elevation minore di elementi su cui passa sopra",
     "priority": "high",
     "index": 45,
-    "updatedAt": 1783630555539,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630564114",
@@ -3593,8 +3627,9 @@
     "comment": "per ora spegniamo questa feature, ovunque",
     "priority": "high",
     "index": 46,
-    "updatedAt": 1783630578147,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630635705",
@@ -3695,8 +3730,9 @@
     "comment": "che vuol dire \"questa versione assume\"? miglioriamo l'italiano",
     "priority": "high",
     "index": 47,
-    "updatedAt": 1783630652531,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783630688822",
@@ -3738,8 +3774,9 @@
     "comment": "più spazio sopra?",
     "priority": "medium",
     "index": 48,
-    "updatedAt": 1783630697055,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783663905765",
@@ -3840,8 +3877,9 @@
     "comment": "Ingredienti è addirittura più grande dell'h1!",
     "priority": "high",
     "index": 49,
-    "updatedAt": 1783663919123,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   },
   {
     "id": "anno-1783663941664",
@@ -4045,7 +4083,8 @@
     "comment": "invertirei il glow: la parte colorata a sinistra",
     "priority": "high",
     "index": 51,
-    "updatedAt": 1783666024925,
-    "deleted": false
+    "updatedAt": 1783711742697,
+    "deleted": false,
+    "resolved": true
   }
 ]

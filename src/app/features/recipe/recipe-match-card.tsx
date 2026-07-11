@@ -311,6 +311,7 @@ export function RecipeMatchCard({
       className={`match-card ${className}`}
       aria-label={cms.ui.recipeScore}
     >
+      <div className="match-card__main">
       {/* ═══ Verdetto editoriale (redesign lug 2026, round 5) ═══
           Il Match È un verdetto da guida gastronomica: punteggio in serifa,
           tono in corsivo — "85/100 · Ottima intesa" come su una guida.
@@ -528,6 +529,7 @@ export function RecipeMatchCard({
           </motion.div>
         )}
       </AnimatePresence>
+      </div>
 
       <div className="match-actions">
         {onOptimize && (
