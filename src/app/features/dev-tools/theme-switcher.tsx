@@ -22,6 +22,7 @@ export interface ThemeMeta {
 export const THEMES: ThemeMeta[] = [
   { id: "", preview: "vulcan", label: "Vulcan", note: "L'originale · Playfair" },
   { id: "sfornata", preview: "sfornata", label: "Sfornata", note: "L'ora del forno · Playfair" },
+  { id: "editorial-fire", preview: "editorial-fire", label: "Vulcan Editorial", note: "Materia, luce e fuoco · Playfair" },
 ];
 
 function applyTheme(id: string) {

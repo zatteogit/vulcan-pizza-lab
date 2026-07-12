@@ -143,7 +143,7 @@ export function LearnPage() {
   ];
 
   return (
-    <main id="main-content" className="learn-page">
+    <main id="main-content" className="learn-page" data-page="learn">
       <FireGlow intensity={0.25} variant="warm" />
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -204,6 +204,7 @@ export function LearnPage() {
           <Link
             to={`/recipe/${path.styleId}?mode=adapted`}
             className="learn-path__card"
+            data-attention="recommended"
           >
             {/* Hand-drawn illustration — rising dough for the learning path */}
             <div className="learn-path__illustration">

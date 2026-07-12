@@ -79,3 +79,27 @@
 /* Page-scoped presentation (keyed on data-page, set on the page root). */
 [data-page="learn"] [data-region="page-header"] { margin-bottom: var(--space-12); }
 [data-page="learn"] [data-region="page-header"] :where(h1) { margin: 0; }
+
+/* ── VULCAN EDITORIAL ──
+   Desktop apre il contenuto e usa filetti/ritmo editoriale; mobile conserva
+   una colonna ariosa e una hero fotografica contenuta, mai scontornata. */
+@media (min-width: 1024px) {
+  [data-theme="editorial-fire"] [data-page="recipe"] [data-region="body"] {
+    max-width: var(--measure-6xl);
+  }
+  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-content {
+    max-width: var(--measure-3xl);
+  }
+  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"] {
+    min-height: var(--feature-media-height);
+  }
+}
+
+@media (max-width: 767px) {
+  [data-theme="editorial-fire"] [data-page] [data-region="page-header"] {
+    margin-bottom: var(--space-8);
+  }
+  [data-theme="editorial-fire"] [data-page] [data-region="collection"] {
+    gap: var(--gap-lg);
+  }
+}

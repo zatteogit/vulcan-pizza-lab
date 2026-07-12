@@ -1122,6 +1122,8 @@ function RecipeContent({
         eyebrowTone={isDirty ? "tailored" : "canonical"}
         shareUrl={shareUrl}
         showStickyHeader={false}
+        favorite={Boolean(savedEntry)}
+        onToggleFavorite={handleToggleSaveRecipe}
         isPersonalized={isDirty}
         onRequestPersonalization={handleOpenPersonalization}
         onResetToOriginal={isDirty ? handleResetToCanonical : undefined}

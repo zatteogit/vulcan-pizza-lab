@@ -1048,7 +1048,7 @@ export function HomePage() {
   ]);
 
   return (
-    <div className="home-page">
+    <div className="home-page" data-page="home">
       {/* ═══ VPL-009: Skip-to-content link for screen readers ═══ */}
       <CtaButton
         as="a"
@@ -1422,6 +1422,8 @@ export function HomePage() {
               panConfig={panConfig}
               activeTab={createRecipeTab}
               onTabChange={setCreateRecipeTab}
+              favorite={Boolean(savedEntry)}
+              onToggleFavorite={handleToggleSaveRecipe}
               back={{ label: cms.ui.changeStyle, onClick: handleBackToStyles, positionClassName: "top-4 left-4" }}
               recipeTabLabel={
                 createRecipeMode === "canonical"
