@@ -19,7 +19,7 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { ChevronLeft, RotateCcw } from "lucide-react";
+import { ChevronLeft, Heart, RotateCcw } from "lucide-react";
 import { Heading, IconButton } from "../../components/ds/index";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { RecipeOutput } from "./recipe-output";
@@ -93,6 +93,8 @@ interface RecipeViewProps {
   selectedFlourId?: string | null;
   onSelectFlour?: (flour: import("../../data/flour-database").FlourEntry | null) => void;
   selectedTimeSlotId?: string | null;
+  favorite?: boolean;
+  onToggleFavorite?: () => void;
 }
 
 export function RecipeView({
@@ -124,6 +126,8 @@ export function RecipeView({
   selectedFlourId,
   onSelectFlour,
   selectedTimeSlotId,
+  favorite = false,
+  onToggleFavorite,
 }: RecipeViewProps) {
   /* Parallax hero (identico alla scheda Scopri originale). Con
      prefers-reduced-motion il movimento scroll-driven si spegne (resta il
@@ -244,7 +248,7 @@ export function RecipeView({
   const eyebrowIsTailored = eyebrowTone === "tailored";
 
   return (
-    <div className="recipe-view">
+    <div className="recipe-view" data-page="recipe">
       {/* Sfondo caldo base. Il glow PizzaNerd vive solo nei blocchi tecnici. */}
       <FireGlow variant="warm" intensity={0.22} />
 
@@ -330,6 +334,17 @@ export function RecipeView({
             />
             <div className="recipe-view-hero__gradient" />
           </div>
+          {onToggleFavorite && (
+            <button
+              type="button"
+              className="recipe-view-favorite"
+              aria-label={favorite ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+              aria-pressed={favorite}
+              onClick={onToggleFavorite}
+            >
+              <Heart size={20} fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
+            </button>
+          )}
         </div>
       </motion.div>
 

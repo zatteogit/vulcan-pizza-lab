@@ -262,6 +262,7 @@ export function ExplorePage() {
     <main
       id="main-content"
       className="explore-page"
+      data-page="explore"
     >
       {/* Glow sempre attivo (feedback: "rendiamolo evidente in entrambi i mode",
           non solo nerd). Un filo più intenso fuori dalla modalità nerd così

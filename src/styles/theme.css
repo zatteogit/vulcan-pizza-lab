@@ -13488,3 +13488,180 @@
     0 8px 12px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(247, 236, 217, 0.07);
 }
+
+/* ═══ VULCAN EDITORIAL — ricettario contemporaneo, luce funzionale ═══
+   Il fuoco non è un fondale decorativo: compare soltanto vicino a una
+   scelta attiva, a una raccomandazione o a un limite che richiede attenzione. */
+[data-theme="editorial-fire"] {
+  --font-serif-family: "Playfair Display", Georgia, serif;
+  --font-serif: var(--font-serif-family);
+  --primary: #c84122;
+  --ring: #c84122;
+  --primary-container: #f8ded3;
+  --on-primary-container: #70200f;
+  --cta: #23744d;
+  --cta-foreground: #ffffff;
+  --forge-glow: #ff6a2a;
+  --glow-primary: color-mix(in srgb, #ff6a2a 74%, transparent);
+  --glow-secondary: color-mix(in srgb, #e9a33c 54%, transparent);
+  --glow-warm: color-mix(in srgb, #ffcf8a 44%, transparent);
+  --shadow-glow: 0 0 0 var(--space-1) color-mix(in srgb, var(--forge-glow) 18%, transparent);
+}
+
+[data-theme="editorial-fire"]:not(.dark) {
+  --background: #fbf9f5;
+  --foreground: #211d19;
+  --card: #ffffff;
+  --muted: #f2eee8;
+  --muted-foreground: #736b63;
+  --accent: #f4eee7;
+  --primary-foreground: #ffffff;
+  --secondary: #796d62;
+  --secondary-foreground: #ffffff;
+  --border: #e5ded6;
+  --border-muted: #eee9e3;
+  --surface: #fbf9f5;
+  --surface-bright: #ffffff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f8f5f0;
+  --surface-container: #f2eee8;
+  --surface-container-high: #ebe5de;
+  --surface-container-highest: #ded6ce;
+  --on-surface: #211d19;
+  --on-surface-variant: #736b63;
+  --outline: #cfc5bc;
+  --outline-variant: #e5ded6;
+  --container-page: #fbf9f5;
+}
+
+[data-theme="editorial-fire"].dark {
+  --background: #11100f;
+  --foreground: #f5f0e9;
+  --card: #1a1816;
+  --muted: #24211e;
+  --muted-foreground: #b9afa5;
+  --accent: #29231f;
+  --primary: #f06b43;
+  --ring: #f06b43;
+  --primary-foreground: #2d0c04;
+  --primary-container: #542012;
+  --on-primary-container: #ffd4c4;
+  --secondary: #b7a99c;
+  --secondary-foreground: #171411;
+  --border: #38322d;
+  --border-muted: #2b2723;
+  --surface: #11100f;
+  --surface-bright: #37312c;
+  --surface-container-lowest: #0b0a09;
+  --surface-container-low: #171513;
+  --surface-container: #1e1b18;
+  --surface-container-high: #292521;
+  --surface-container-highest: #342e29;
+  --on-surface: #f5f0e9;
+  --on-surface-variant: #b9afa5;
+  --outline: #514941;
+  --outline-variant: #38322d;
+  --container-page: #11100f;
+  --cta: #3d9668;
+  --cta-foreground: #061f13;
+}
+
+/* Il vecchio FireGlow vaga su tutta la pagina. In questa direzione viene
+   spento; i segnali sottostanti sono localizzati e semanticamente stabili. */
+[data-theme="editorial-fire"] [data-page] > .fire-glow,
+[data-theme="editorial-fire"] .recipe-view > .fire-glow {
+  display: none;
+}
+
+/* Scelte attive e raccomandazioni: una brace sul bordo, mai sulla CTA verde. */
+[data-theme="editorial-fire"] .needs-slot-list__item--active,
+[data-theme="editorial-fire"] .explore-filters__chip--active,
+[data-theme="editorial-fire"] .learn-path__card[data-attention="recommended"] {
+  box-shadow:
+    0 0 0 var(--border-width-thin) color-mix(in srgb, var(--forge-glow) 56%, transparent),
+    0 var(--space-2) var(--space-6) color-mix(in srgb, var(--forge-glow) 18%, transparent);
+}
+
+[data-theme="editorial-fire"] .match-card::before {
+  inset: calc(-1 * var(--space-2));
+  background: radial-gradient(
+    ellipse at 12% 24%,
+    color-mix(in srgb, var(--forge-glow) 22%, transparent),
+    transparent 64%
+  );
+  opacity: 1;
+}
+
+/* Le azioni restano capsule nette e tattili. Il verde non riceve riflessi
+   arancio: comunica avanzamento, mentre la brace comunica attenzione. */
+[data-theme="editorial-fire"] :where(.match-action-cta, .recipe-view-favorite) {
+  border-radius: var(--radius-full);
+}
+[data-theme="editorial-fire"] .match-action-cta {
+  background: var(--cta);
+  color: var(--cta-foreground);
+  box-shadow: var(--shadow-sm);
+}
+
+[data-theme="editorial-fire"] .recipe-view-favorite {
+  position: absolute;
+  z-index: 4;
+  top: var(--space-5);
+  right: var(--space-5);
+  display: grid;
+  place-items: center;
+  width: var(--space-12);
+  height: var(--space-12);
+  color: var(--overlay-text);
+  border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 34%, transparent);
+  background: color-mix(in srgb, var(--overlay-backdrop) 62%, transparent);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  box-shadow: var(--shadow-md);
+}
+
+[data-theme="editorial-fire"] .recipe-view-hero__clip {
+  border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+}
+[data-theme="editorial-fire"] .recipe-view-hero__gradient {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--overlay-backdrop) 48%, transparent),
+    transparent 38%
+  );
+}
+
+@media (min-width: 768px) {
+  [data-theme="editorial-fire"] .recipe-view-card {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding-inline: 0;
+  }
+  [data-theme="editorial-fire"] .recipe-view-meta-row {
+    padding-bottom: var(--space-5);
+    border-bottom: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+}
+
+@media (max-width: 767px) {
+  [data-theme="editorial-fire"] .recipe-view-hero__frame {
+    padding-inline: var(--space-3);
+  }
+  [data-theme="editorial-fire"] .recipe-view-hero__clip {
+    border-radius: var(--radius-2xl);
+  }
+  [data-theme="editorial-fire"] .recipe-view-card {
+    margin-inline: 0;
+  }
+  [data-theme="editorial-fire"] .recipe-view-meta-row,
+  [data-theme="editorial-fire"] .recipe-view-tags {
+    display: inline;
+  }
+  [data-theme="editorial-fire"] .recipe-view-meta-row > :last-child {
+    margin-inline-start: var(--space-2);
+    white-space: nowrap;
+  }
+}
