@@ -1141,8 +1141,8 @@ function RecipeContent({
             {/* Round 4-5 (note Matteo): ordine Ispirazione → parametri →
                 match. Chip e tabella sono UN'unità (10px); il verdetto
                 respira (24px). */}
-            <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2.5">
+            <div className="recipe-view-match-layout" data-region="recipe-summary">
+            <div className="recipe-view-match-primary" data-slot="recipe-parameters">
             <InterpretationSwitcher
               interpretations={styleInterpretations}
               activeId={activeInterpretationId}
@@ -1219,6 +1219,7 @@ function RecipeContent({
                 />
               </RecipeSetupPanel>
             </div>
+            <div className="recipe-view-match-shoulder" data-slot="recipe-shoulder">
             <RecipeMatchCard
               scores={matchRecipe.scores}
               ovenTemp={matchConstraints.oven_max_temp_c}
@@ -1240,6 +1241,7 @@ function RecipeContent({
               saved={Boolean(savedEntry)}
               nerdMode={effectiveNerdMode}
             />
+            </div>
             </div>
           </>
         }

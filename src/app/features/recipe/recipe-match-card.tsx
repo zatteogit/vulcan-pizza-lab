@@ -308,6 +308,7 @@ export function RecipeMatchCard({
     <motion.section
       layout
       data-region="section"
+      data-attention={tone.low ? "warning" : undefined}
       className={`match-card ${className}`}
       aria-label={cms.ui.recipeScore}
     >

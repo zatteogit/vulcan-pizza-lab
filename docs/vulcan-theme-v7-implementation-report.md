@@ -806,3 +806,47 @@ Screenshot di verifica reali:
 - `output/playwright/vulcan-redesign/editorial-fire-mobile-dark.png`;
 - `output/playwright/vulcan-redesign/editorial-fire-desktop-light.png`;
 - `output/playwright/vulcan-redesign/editorial-fire-explore-desktop-dark.png`.
+
+## 19. Revisione strutturale
+
+La prima applicazione del tema interveniva soprattutto su token e superfici.
+La revisione successiva porta la ricomposizione nei layout mantenendo una sola
+sorgente di contenuto. Gli hook aggiunti descrivono significato e priorità,
+non coordinate o stile:
+
+```tsx
+<div data-region="recipe-summary">
+  <div data-slot="recipe-parameters">…</div>
+  <div data-slot="recipe-shoulder">…</div>
+</div>
+
+<section
+  data-stage="1"
+  data-stage-state="recommended"
+>
+  …
+</section>
+```
+
+Il tema usa questi hook per ottenere:
+
+- Crea desktop come copertina editoriale con scelte temporali a piè pagina;
+- Scopri come spread fotografico e mosaico a gerarchia variabile;
+- Impara come percorso numerato dinamico, con rail e layout a due colonne;
+- Ricetta come colonna di lettura con vera spalla destra desktop;
+- ritorno automatico alla singola colonna sui breakpoint mobili;
+- glow del match solo in presenza di `data-attention="warning"`.
+
+La terminazione del percorso Impara non assume un numero fisso di risorse:
+l’ultimo contenuto riceve `data-stage-terminal="true"` a partire dalla
+lunghezza reale della collezione.
+
+Screenshot della QA strutturale:
+
+- `editorial-structural-home-desktop.png`;
+- `editorial-structural-explore-desktop.png`;
+- `editorial-structural-learn-desktop.png`;
+- `editorial-structural-recipe-desktop.png`;
+- `editorial-structural-recipe-mobile-dark-v2.png`;
+- `editorial-structural-learn-mobile-dark.png`;
+- `editorial-structural-explore-mobile-dark.png`.

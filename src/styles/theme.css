@@ -13349,6 +13349,160 @@
   }
 }
 
+/* ═══ EDITORIAL FIRE — IMPARA ═════════════════════════════════════
+   Una sequenza didattica, non una dashboard di card. La composizione vive
+   in layout.css; qui cambiano soltanto materia, gerarchia e stati. */
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__label {
+  color: var(--text-accent);
+  letter-spacing: var(--tracking-ultra);
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__card {
+  overflow: visible;
+  border: 0;
+  border-block: var(--border-width-thin) solid var(--container-border-subtle);
+  border-radius: 0;
+  padding: var(--space-10) 0;
+  color: var(--text-default);
+  background:
+    radial-gradient(
+      ellipse at 0 50%,
+      color-mix(in srgb, var(--forge-glow) 13%, transparent),
+      transparent 48%
+    );
+  box-shadow: none;
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__card:hover {
+  border-color: color-mix(in srgb, var(--forge-glow) 38%, var(--container-border));
+  box-shadow: none;
+  transform: none;
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__illustration {
+  inset-block-start: 50%;
+  inset-inline-end: 0;
+  color: var(--primary);
+  opacity: 0.22;
+  transform: translateY(-50%);
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__card:hover .learn-path__illustration {
+  transform: translateY(-50%) scale(1.04);
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__content {
+  min-height: 0;
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__kicker {
+  color: var(--text-accent);
+  border-color: var(--container-border-subtle);
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__title {
+  max-width: 78%;
+  color: var(--text-default);
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__copy {
+  max-width: 72%;
+  color: var(--text-muted);
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-path__cta {
+  border: var(--border-width-thin) solid var(--container-border);
+  color: var(--text-accent);
+  background: var(--container-bg-low);
+  box-shadow: none;
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-term__rule {
+  display: none;
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-term__card {
+  border: 0;
+  border-block-end: var(--border-width-thin) solid var(--container-border-subtle);
+  border-radius: 0;
+  padding: var(--space-6) 0 var(--space-10);
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-term__card:hover {
+  border-color: color-mix(in srgb, var(--tertiary) 42%, var(--container-border));
+  box-shadow: none;
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-resources__card {
+  border: 0;
+  border-block-end: var(--border-width-thin) solid var(--container-border-subtle);
+  border-radius: 0;
+  padding: var(--space-5) 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-resources__card:hover {
+  border-color: color-mix(in srgb, var(--tone) 42%, var(--container-border));
+  box-shadow: none;
+  transform: none;
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-resources__icon {
+  width: var(--space-12);
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] .learn-resources__label {
+  font-size: var(--font-size-4xl);
+}
+
+@media (max-width: 639px) {
+  [data-theme="editorial-fire"] [data-page="learn"] .learn-page__container {
+    padding-block-start: var(--space-10);
+  }
+
+  [data-theme="editorial-fire"] [data-page="learn"] .learn-path {
+    margin-bottom: var(--space-16);
+  }
+
+  [data-theme="editorial-fire"] [data-page="learn"] .learn-path__card {
+    padding-block: var(--space-8);
+  }
+
+  [data-theme="editorial-fire"] [data-page="learn"] .learn-path__illustration {
+    opacity: 0.12;
+  }
+
+  [data-theme="editorial-fire"] [data-page="learn"] :where(
+    .learn-path__title,
+    .learn-path__copy
+  ) {
+    max-width: 100%;
+  }
+
+  [data-theme="editorial-fire"] [data-page="learn"] .learn-path__copy {
+    font-size: var(--font-size-xl);
+  }
+
+  [data-theme="editorial-fire"] [data-page="learn"] .learn-term {
+    margin-bottom: var(--space-16);
+  }
+
+  [data-theme="editorial-fire"] [data-page="learn"] .learn-term__card {
+    padding-block-start: var(--space-4);
+  }
+
+  [data-theme="editorial-fire"] [data-page="learn"] .learn-term__body {
+    gap: var(--gap-sm);
+  }
+
+  [data-theme="editorial-fire"] [data-page="learn"] .learn-resources__heading {
+    margin-bottom: var(--space-3);
+  }
+}
+
 /* Ricetta: foto full-bleed che si scioglie NELLA carta (la pizza a casa sua):
    in alto un velo per il back button, in basso la pagina che la accoglie.
    Stesso meccanismo in light (crema) e dark (espresso): una persona, due luci. */
@@ -13583,6 +13737,10 @@
 }
 
 [data-theme="editorial-fire"] .match-card::before {
+  opacity: 0;
+}
+
+[data-theme="editorial-fire"] .match-card[data-attention="warning"]::before {
   inset: calc(-1 * var(--space-2));
   background: radial-gradient(
     ellipse at 12% 24%,
@@ -13607,7 +13765,7 @@
   position: absolute;
   z-index: 4;
   top: var(--space-5);
-  right: var(--space-5);
+  right: calc(var(--space-5) + var(--space-24));
   display: grid;
   place-items: center;
   width: var(--space-12);

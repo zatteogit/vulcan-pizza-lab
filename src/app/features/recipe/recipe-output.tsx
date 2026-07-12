@@ -726,18 +726,20 @@ export function RecipeOutput({
         {recipeControls}
       </div>
 
-      <IngredientsSection
-        recipe={recipe}
-        constraints={constraints}
-        simple={simple}
-        isNerd={isNerd}
-        servingUnit={servingUnit}
-        panSizeLabel={panSizeLabel}
-        updateBalls={updateBalls}
-        showRule55Tip={showRule55Tip}
-        setShowRule55Tip={setShowRule55Tip}
-        rule55Description={rule55Description}
-      />
+      <div className="recipe-output-ingredients" data-slot="recipe-main">
+        <IngredientsSection
+          recipe={recipe}
+          constraints={constraints}
+          simple={simple}
+          isNerd={isNerd}
+          servingUnit={servingUnit}
+          panSizeLabel={panSizeLabel}
+          updateBalls={updateBalls}
+          showRule55Tip={showRule55Tip}
+          setShowRule55Tip={setShowRule55Tip}
+          rule55Description={rule55Description}
+        />
+      </div>
 
       </motion.div>
       )}

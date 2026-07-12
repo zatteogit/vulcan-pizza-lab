@@ -1475,8 +1475,8 @@ export function HomePage() {
               matchSlot={
                 /* Round 4-5 (note Matteo): ordine Ispirazione → parametri →
                    match. Chip e tabella sono UN'unità; il verdetto respira. */
-                <div className="home-result__match">
-                <div className="home-result__match-primary">
+                <div className="home-result__match" data-region="recipe-summary">
+                <div className="home-result__match-primary" data-slot="recipe-parameters">
                 <InterpretationSwitcher
                   interpretations={createInterpretations}
                   activeId={activeInterpretationId}
@@ -1564,6 +1564,7 @@ export function HomePage() {
                   />
                 </RecipeSetupPanel>
                 </div>
+                <div data-slot="recipe-shoulder">
                 <RecipeMatchCard
                   scores={recipe.scores}
                   ovenTemp={constraints.oven_max_temp_c}
@@ -1593,6 +1594,7 @@ export function HomePage() {
                   saved={Boolean(savedEntry)}
                   nerdMode={effectiveNerdMode}
                 />
+                </div>
                 </div>
               }
               recipeControls={

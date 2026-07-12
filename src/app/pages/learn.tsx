@@ -151,6 +151,7 @@ export function LearnPage() {
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
         className="learn-page__container"
         data-region="page"
+        data-progress="learning-path"
       >
         {/* Banner stile contestuale — visibile solo con ?style=<id> valido. */}
         {activeStyle && (
@@ -195,6 +196,8 @@ export function LearnPage() {
            ══════════════════════════════════════════════════════════ */}
         <motion.div
           data-region="feature"
+          data-stage="1"
+          data-stage-state="recommended"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.05 }}
@@ -233,6 +236,8 @@ export function LearnPage() {
             Divisore decorativo + kicker ambra + card generosa
            ══════════════════════════════════════════════════════════ */}
         <motion.div
+          data-region="section"
+          data-stage="2"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.1 }}
@@ -298,6 +303,8 @@ export function LearnPage() {
                 <motion.div
                   key={section.id}
                   data-region="card"
+                  data-stage={String(i + 3)}
+                  data-stage-terminal={i === SECTIONS.length - 1 ? "true" : undefined}
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
