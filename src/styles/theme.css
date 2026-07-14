@@ -13135,9 +13135,11 @@
 
   .ds-carousel__nav {
     position: absolute;
-    top: 50%;
+    top: 0;
+    bottom: 0;
+    margin-block: auto;
+    height: fit-content;
     z-index: 20;
-    transform: translateY(-50%);
     background: color-mix(in srgb, var(--shadow-color) 40%, transparent);
     color: var(--overlay-text);
     border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 10%, transparent);
@@ -13148,11 +13150,11 @@
 
   .ds-iconbtn.ds-carousel__nav:hover {
     background: color-mix(in srgb, var(--shadow-color) 60%, transparent);
-    transform: translateY(-50%) scale(1.08);
+    transform: scale(1.08);
   }
 
   .ds-iconbtn.ds-carousel__nav:active {
-    transform: translateY(-50%) scale(0.92);
+    transform: scale(0.92);
   }
 
   .ds-carousel__nav--prev {
