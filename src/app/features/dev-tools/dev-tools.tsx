@@ -48,6 +48,7 @@ type OvenType,
 type UserConstraints,
 } from "../../domain/pizza-engine";
 import { StyleEditorTab } from "./style-editor-tab";
+import { ThemeControls } from "./theme-switcher";
 
 /* ═══ TYPES ═══ */
 type TabId = "project" | "editor" | "engine" | "design";
@@ -175,6 +176,7 @@ function LabSection({
 const sourceGlobs = import.meta.glob(
   [
     "/src/app/**/*.{ts,tsx}",
+    "!/src/app/**/*.test.{ts,tsx}",
     "/src/styles/**/*.css",
     "/src/main.tsx",
   ],
@@ -213,9 +215,9 @@ function ProjectTab() {
 
   const [isOverlayActive, setIsOverlayActive] = useState(() => {
     try {
-      return localStorage.getItem("vulcan_debug_overlay_deactivated") !== "true";
+      return localStorage.getItem("vulcan_debug_overlay_deactivated") === "false";
     } catch {
-      return true;
+      return false;
     }
   });
 
@@ -729,6 +731,11 @@ function ProjectTab() {
 
       </LabSection>
 
+      {/* ═══ TEMI EDITORIALI ═══ */}
+      <LabSection title="Temi Editoriali" icon={<Sparkles size={13} />} color="var(--primary)" defaultOpen>
+        <ThemeControls />
+      </LabSection>
+
       {/* ═══ IMPOSTAZIONI DEBUGGER ═══ */}
       <LabSection title="Impostazioni Debugger AI" icon={<Shield size={13} />} color="var(--primary)" defaultOpen>
         <div className="flex items-center justify-between p-4 rounded-xl" style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}>
@@ -821,9 +828,7 @@ function ProjectTab() {
                 {issues.map((issue) => (
                   <div key={issue.id} className="flex items-center gap-2 py-1.5 px-2.5 rounded-lg" style={{ opacity: issue.status === "closed" ? 0.5 : issue.status === "open" ? 1 : 0.7 }}>
                     <span className="type-data-xs" style={{ color: "var(--text-muted)", fontFeatureSettings: "'tnum'", minWidth: 32, flexShrink: 0 }}>#{issue.id}</span>
-                    <Badge className="flex-shrink-0" color={issue.severity === "alta" ? "var(--axis-authenticity)" : issue.severity === "media" ? "var(--axis-feasibility)" : issue.severity === "bassa" ? "var(--axis-digestibility)" : "var(--text-muted)"} background={`color-mix(in srgb, ${issue.severity === "alta" ? "var(--axis-authenticity)" : issue.severity === "media" ? "var(--axis-feasibility)" : issue.severity === "bassa" ? "var(--axis-digestibility)" : "var(--text-muted)"} 15%, transparent)`} style={{
-                      fontSize: "var(--font-size-xs)",
-                    }}>
+                    <Badge size="xs" className="flex-shrink-0" color={issue.severity === "alta" ? "var(--axis-authenticity)" : issue.severity === "media" ? "var(--axis-feasibility)" : issue.severity === "bassa" ? "var(--axis-digestibility)" : "var(--text-muted)"} background={`color-mix(in srgb, ${issue.severity === "alta" ? "var(--axis-authenticity)" : issue.severity === "media" ? "var(--axis-feasibility)" : issue.severity === "bassa" ? "var(--axis-digestibility)" : "var(--text-muted)"} 15%, transparent)`}>
                       {issue.severity}
                     </Badge>
                     <span className="type-data-sm flex-1" style={{ color: issue.status === "open" ? "var(--text-default)" : "var(--text-muted)", textDecoration: issue.status === "closed" ? "line-through" : "none" }}>{issue.desc}</span>
@@ -886,7 +891,7 @@ function EngineLabTab() {
         fullWidth
         radius="2xl"
         itemClassName="type-data"
-        style={{ padding: "var(--space-1-5)" }}
+        className="p-1.5"
       />
 
       {/* ═══ CONTROLS (adaptive) ═══ */}
@@ -1322,7 +1327,6 @@ export function DevTools({
             radius="lg"
             className="max-w-full overflow-x-auto p-0 pb-2 -mb-px"
             itemClassName="type-data whitespace-nowrap"
-            style={{ padding: "0 0 var(--space-2) 0" }}
           />
         </div>
       </header>

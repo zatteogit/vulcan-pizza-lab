@@ -34,7 +34,8 @@ import { DebugOverlay } from "../../features/dev-tools/debug-overlay";
 import { ThemeSwitcher } from "../../features/dev-tools/theme-switcher";
 import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { VulcanMark } from "./vulcan-logo";
-import { liquidDockQuickSpring } from "../../domain/liquid-dock";
+import { motionDuration,motionEase,motionSpring } from "../ds/motion";
+import { uiMessage } from "../../i18n/ui-messages";
 
 const MotionLink = motion(Link);
 
@@ -105,13 +106,13 @@ interface TabDef {
 /* Audit Sprint 12 — Profilo NON è una tab pari ad altre: è impostazione utente.
    Spostato dalla tab bar all'header top-right (vedi ProfileButton in AppShell). */
 const TABS: TabDef[] = [
-  { id: "create", labelKey: "navCreate", labelFallback: "Crea", icon: Flame, path: "/", match: ["/"] },
+  { id: "create", labelKey: "navCreate", labelFallback: uiMessage("components.shared.app-shell.crea-e7c107d0"), icon: Flame, path: "/", match: ["/"] },
   {
     id: "explore",
     labelKey: "navExplore",
     /* "Scopri", non "Stili": la sezione contiene ricette iconiche E stili
        (feedback giugno 2026). */
-    labelFallback: "Scopri",
+    labelFallback: uiMessage("components.shared.app-shell.scopri-b4aad9f0"),
     icon: Compass,
     path: "/explore",
     match: ["/explore"],
@@ -119,7 +120,7 @@ const TABS: TabDef[] = [
   {
     id: "learn",
     labelKey: "navLearn",
-    labelFallback: "Impara",
+    labelFallback: uiMessage("components.shared.app-shell.impara-bc1df07a"),
     icon: GraduationCap,
     path: "/learn",
     match: ["/learn"],
@@ -130,33 +131,14 @@ const TABS: TabDef[] = [
 const PROFILE_TAB: TabDef = {
   id: "profile",
   labelKey: "navProfile",
-  labelFallback: "Profilo",
+  labelFallback: uiMessage("components.shared.app-shell.profilo-afedc6c9"),
   icon: User,
   path: "/profile",
   match: ["/profile"],
 };
 
-const navSpring = {
-  type: "spring",
-  stiffness: 360,
-  damping: 31,
-  mass: 0.72,
-} as const;
-
-const navQuickSpring = {
-  type: "spring",
-  stiffness: 520,
-  damping: 36,
-  mass: 0.62,
-} as const;
-
-const premiumGlassStyle: React.CSSProperties = {
-  background: "var(--premium-glass-bg)",
-  backdropFilter: "blur(32px) saturate(1.8)",
-  WebkitBackdropFilter: "blur(32px) saturate(1.8)",
-  border: "1px solid var(--premium-glass-border)",
-  boxShadow: "var(--premium-glass-shadow)",
-};
+const navSpring = motionSpring.navigation;
+const navQuickSpring = motionSpring.navigationQuick;
 
 function getActiveTab(pathname: string): string | null {
   /* Exact match for "/" to avoid matching everything */
@@ -341,11 +323,11 @@ function BottomTabBar({
       }}
       transition={
         prefersReducedMotion
-          ? { duration: 0.16, ease: "easeOut" }
+          ? { duration: motionDuration.fast,ease: motionEase.exit }
           : {
               y: navSpring,
               scale: navSpring,
-              opacity: { duration: hidden ? 0.14 : 0.24, ease: "easeOut" },
+              opacity: { duration: hidden ? motionDuration.subtle : motionDuration.normal,ease: motionEase.exit },
             }
       }
     >
@@ -374,10 +356,8 @@ function BottomTabBar({
 
       {/* Floating Search Circle next to it */}
       <SearchButton
-        diameter={56}
-        iconSize={24}
+        size="lg"
         onOpen={onSearchOpen}
-        surfaceStyle={premiumGlassStyle}
       />
     </motion.div>
   );
@@ -388,12 +368,10 @@ function SidebarRail({
   activeTab,
   devMode,
   onSearchOpen,
-  navState,
 }: {
   activeTab: string | null;
   devMode: boolean;
   onSearchOpen: () => void;
-  navState: LiquidNavState;
 }) {
   const { cms } = useCms();
   return (
@@ -404,7 +382,7 @@ function SidebarRail({
         className="app-shell-rail__nav"
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 280, damping: 28, mass: 0.8 }}
+        transition={motionSpring.gentle}
         aria-label={cms.pages.navMainLabel}
       >
         <motion.span
@@ -435,10 +413,8 @@ function SidebarRail({
 
         <div className="app-shell-rail__search">
           <SearchButton
-            diameter={44}
-            iconSize={20}
+            size="sm"
             onOpen={onSearchOpen}
-            surfaceStyle={premiumGlassStyle}
           />
         </div>
 
@@ -483,7 +459,7 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
         y: hidden && !prefersReducedMotion ? -(size + 24) : 0,
         opacity: hidden ? 0 : 1,
       }}
-      transition={liquidDockQuickSpring}
+      transition={motionSpring.quick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.92 }}
       aria-label={label}
@@ -539,9 +515,9 @@ export function AppShell() {
   const [devMode, setDevModeState] = useState(loadDevMode);
   const [isOverlayDeactivated, setIsOverlayDeactivated] = useState(() => {
     try {
-      return localStorage.getItem("vulcan_debug_overlay_deactivated") === "true";
+      return localStorage.getItem("vulcan_debug_overlay_deactivated") !== "false";
     } catch {
-      return false;
+      return true;
     }
   });
 
@@ -677,7 +653,6 @@ export function AppShell() {
               activeTab={activeTab}
               devMode={devMode}
               onSearchOpen={openSearch}
-              navState={navState}
             />
           )}
 
@@ -708,10 +683,10 @@ export function AppShell() {
                 }}
                 transition={
                   prefersReducedMotion
-                    ? { duration: 0.16, ease: "easeOut" }
+                    ? { duration: motionDuration.fast,ease: motionEase.exit }
                     : {
                         y: navSpring,
-                        opacity: { duration: navState.hidden ? 0.14 : 0.24, ease: "easeOut" },
+                        opacity: { duration: navState.hidden ? motionDuration.subtle : motionDuration.normal,ease: motionEase.exit },
                       }
                 }
               />

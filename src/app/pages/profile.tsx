@@ -83,9 +83,10 @@ import {
   removeRecipe,
   toggleFavoriteStyle,
   type SavedRecipe,
-} from "../data/saved-recipes";
+} from "../adapters/browser/saved-recipes-storage";
 import { useDarkMode } from "../hooks/use-dark-mode";
-import { ThemeControls } from "../features/dev-tools/theme-switcher";
+import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
+import { uiMessage } from "../i18n/ui-messages";
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
@@ -182,44 +183,44 @@ const OVEN_HEAT_PROFILES: {
 }[] = [
   {
     id: "static_top_bottom",
-    label: "Sopra + sotto",
-    description: "Statico classico: equilibrio fra base e cielo.",
+    label: uiMessage("pages.profile.sopra-sotto-3f886947"),
+    description: uiMessage("pages.profile.statico-classico-equilibrio-fra-base-e-cie-6cb08433"),
     bestFor: ["home", "electric_standard", "electric_high"],
   },
   {
     id: "top_grill",
-    label: "Grill superiore",
-    description: "Cielo forte per cornicione e doratura finale.",
+    label: uiMessage("pages.profile.grill-superiore-4368292b"),
+    description: uiMessage("pages.profile.cielo-forte-per-cornicione-e-doratura-fina-8d35d50c"),
     bestFor: ["home", "electric_standard"],
   },
   {
     id: "bottom_boost",
-    label: "Spinta dal basso",
-    description: "Base intensa: utile per teglie, acciaio e croccantezza.",
+    label: uiMessage("pages.profile.spinta-dal-basso-e8551eab"),
+    description: uiMessage("pages.profile.base-intensa-utile-per-teglie-acciaio-e-cr-cee70bcc"),
     bestFor: ["electric_standard", "electric_high"],
   },
   {
     id: "fan_assisted",
-    label: "Ventilato",
-    description: "Aria in movimento: asciuga e uniforma, va gestita.",
+    label: uiMessage("pages.profile.ventilato-c306cb96"),
+    description: uiMessage("pages.profile.aria-in-movimento-asciuga-e-uniforma-va-ge-df314474"),
     bestFor: ["home", "electric_standard"],
   },
   {
     id: "gas_bottom",
-    label: "Gas sotto",
-    description: "Fiamma sotto la platea, rotazione a meta cottura.",
+    label: uiMessage("pages.profile.gas-sotto-011dc103"),
+    description: uiMessage("pages.profile.fiamma-sotto-la-platea-rotazione-a-meta-co-a0eff472"),
     bestFor: ["gas"],
   },
   {
     id: "gas_rear",
-    label: "Bruciatore dietro",
-    description: "Calore direzionale: rotazioni frequenti e piccole.",
+    label: uiMessage("pages.profile.bruciatore-dietro-443293a0"),
+    description: uiMessage("pages.profile.calore-direzionale-rotazioni-frequenti-e-p-b0292f9e"),
     bestFor: ["gas"],
   },
   {
     id: "wood_side_flame",
-    label: "Fiamma laterale",
-    description: "Fiamma viva di lato, gestione come forno a legna.",
+    label: uiMessage("pages.profile.fiamma-laterale-ebdd6232"),
+    description: uiMessage("pages.profile.fiamma-viva-di-lato-gestione-come-forno-a--d630082c"),
     bestFor: ["wood"],
   },
 ];
@@ -242,7 +243,7 @@ function ProfileSection({
   subtitle,
   stepNum,
   children,
-  delay = 0,
+  delay = motionDelay.none,
 }: {
   title: string;
   subtitle?: string;
@@ -255,7 +256,7 @@ function ProfileSection({
       data-region="section"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 400, damping: 30, delay }}
+      transition={{ ...motionSpring.standard,delay }}
       className="profile-section"
     >
       <div data-region="section-header" className="profile-section__header">
@@ -315,7 +316,7 @@ function FavoriteStylesSection() {
     <ProfileSection
       title={p.favoritesTitle}
       subtitle={p.favoritesSubtitle}
-      delay={0.02}
+      delay={motionDelay.profileIntro}
     >
       <div data-region="collection" className="profile-favorites">
         {styles.map((style) => (
@@ -393,7 +394,7 @@ function SavedRecipesSection() {
     <ProfileSection
       title={p.savedRecipesTitle}
       subtitle={p.savedRecipesSubtitle}
-      delay={0.03}
+      delay={motionDelay.profileIntroStep}
     >
       {recipes.length === 0 ? (
         <div className="profile-saved-recipes__empty">
@@ -501,7 +502,7 @@ function EquipmentCategory({
         </div>
         <motion.div
           animate={{ rotate: expanded ? 180 : 0 }}
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          transition={motionSpring.crispControl}
           className="profile-equip-cat__chevron"
         >
           <ChevronDown size={16} className="profile-equip-cat__chevron-icon" />
@@ -514,7 +515,7 @@ function EquipmentCategory({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            transition={motionSpring.standard}
             className="profile-equip-cat__panel"
           >
             <div className="profile-equip-cat__panel-inner">
@@ -550,7 +551,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
     { num: "01", title: p.ftuOvenTitle, subtitle: p.ftuOvenSubtitle, optional: false },
     { num: "02", title: p.ftuSkillTitle, subtitle: p.ftuSkillSubtitle, optional: false },
     { num: "03", title: p.ftuPantryTitle, subtitle: p.ftuPantrySubtitle, optional: true },
-    { num: "04", title: "Tutto pronto!", subtitle: "Creiamo la tua prima pizza", optional: false },
+    { num: "04", title: uiMessage("pages.profile.tutto-pronto-0d7ff4fd"), subtitle: uiMessage("pages.profile.creiamo-la-tua-prima-pizza-96bbe504"), optional: false },
   ];
   const lastStep = steps.length - 1;
 
@@ -583,7 +584,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        transition={motionSpring.standard}
         className="profile-ftu__card"
       >
         {/* Progress dots */}
@@ -616,7 +617,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            transition={motionSpring.standard}
           >
             {step === 0 && (
               <div className="profile-ftu__option-list">
@@ -635,18 +636,18 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                         backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                      transition={motionSpring.crispPanel}
                     >
                       <motion.div
                         className="profile-ftu__option-icon"
                         animate={{
                           backgroundColor: active ? "var(--surface-container)" : "var(--container-bg)",
                         }}
-                        transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                        transition={motionSpring.crispPanel}
                       >
                         <motion.div
                           animate={{ color: active ? "var(--primary)" : "var(--text-muted)" }}
-                          transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                          transition={motionSpring.crispPanel}
                         >
                           <Icon size={20} />
                         </motion.div>
@@ -656,14 +657,14 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                           {preset.name}
                         </div>
                         <div className="type-data-sm profile-ftu__option-meta">
-                          Max {preset.maxTemp}°C
+                          {uiMessage("pages.profile.max-3c624fea")}{preset.maxTemp}°C
                         </div>
                       </div>
                       {active && (
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                          transition={motionSpring.crisp}
                         >
                           <Check size={18} className="profile-ftu__option-check" />
                         </motion.div>
@@ -687,7 +688,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                         backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                      transition={motionSpring.crispPanel}
                     >
                       <motion.div
                         className="profile-ftu__option-icon profile-ftu__option-icon--level"
@@ -695,7 +696,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                           backgroundColor: active ? "var(--surface-container)" : "var(--container-bg)",
                           color: active ? "var(--primary)" : "var(--text-muted)",
                         }}
-                        transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                        transition={motionSpring.crispPanel}
                       >
                         {skill.level}
                       </motion.div>
@@ -711,7 +712,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                          transition={motionSpring.crisp}
                         >
                           <Check size={18} className="profile-ftu__option-check" />
                         </motion.div>
@@ -914,19 +915,24 @@ function LocaleConfirmModal({
   return createPortal(
     <div className="profile-locale-modal">
       {/* Backdrop */}
-      <motion.div
+      <motion.button
+        type="button"
+        aria-label={srcProfile.localeModalCancel}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onCancel}
-        className="profile-locale-modal__backdrop"
+        className="profile-locale-modal__backdrop border-0 p-0"
       />
       {/* Card */}
       <motion.div
+        role="alertdialog"
+        aria-modal="true"
+        aria-label={srcProfile.localeModalTitle}
         initial={{ opacity: 0, scale: 0.92, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.92, y: 12 }}
-        transition={{ type: "spring", stiffness: 500, damping: 32 }}
+        transition={motionSpring.crispSettled}
         className="profile-locale-modal__card"
       >
         <div className="profile-locale-modal__body">
@@ -1314,7 +1320,7 @@ export function ProfilePage() {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        transition={motionSpring.standard}
         className="profile-page"
         data-region="page"
       >
@@ -1343,9 +1349,9 @@ export function ProfilePage() {
 
         <div className="profile-tabs" role="tablist" aria-label={p.pageTitle}>
           {[
-            { id: "recipes" as const, label: "Ricette salvate" },
-            { id: "setup" as const, label: "La tua cucina" },
-            { id: "app" as const, label: "App" },
+            { id: "recipes" as const, label: uiMessage("pages.profile.ricette-salvate-b5c99ac7") },
+            { id: "setup" as const, label: uiMessage("pages.profile.la-tua-cucina-c2d87895") },
+            { id: "app" as const, label: uiMessage("pages.profile.app-fc4a695f") },
           ].map((tab) => {
             const active = profileTab === tab.id;
             return (
@@ -1361,7 +1367,7 @@ export function ProfilePage() {
                   <motion.span
                     layoutId="profile-tab-indicator"
                     className="profile-tabs__indicator"
-                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 32 }}
+                    transition={reduceMotion ? { duration: motionDuration.reduced } : motionSpring.matchPanel}
                   />
                 )}
                 <span className="profile-tabs__label">{tab.label}</span>
@@ -1385,7 +1391,7 @@ export function ProfilePage() {
           title={p.ovenTitle}
           subtitle={p.ovenSubtitle}
           stepNum={p.ovenStep}
-          delay={0.05}
+          delay={motionDelay.short}
         >
           <div className="profile-oven-list">
             {OVEN_PRESETS.map((preset) => {
@@ -1413,11 +1419,11 @@ export function ProfilePage() {
                       : "var(--container-bg-low)",
                     borderColor: active ? "var(--primary)" : "var(--container-border)",
                   }}
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  transition={motionSpring.crispPanel}
                 >
                   <motion.div
                     animate={{ color: active ? "var(--primary)" : "var(--text-muted)" }}
-                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    transition={motionSpring.crispPanel}
                     className="profile-oven-list__icon"
                   >
                     <Icon size={18} />
@@ -1436,7 +1442,7 @@ export function ProfilePage() {
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0, opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 500, damping: 28 }}
+                        transition={motionSpring.crispDisclosure}
                         className="profile-oven-list__check"
                       >
                         <Check size={16} className="profile-oven-list__check-icon" />
@@ -1473,11 +1479,9 @@ export function ProfilePage() {
           <div className="profile-oven-heat">
             <div className="profile-oven-heat__head">
               <span className="type-data-sm profile-oven-heat__label">
-                Distribuzione del calore
-              </span>
+                {uiMessage("pages.profile.distribuzione-del-calore-bfa0da90")}</span>
               <span className="type-data-xs profile-oven-heat__hint">
-                Cambia preriscaldo, ripiano e rotazioni.
-              </span>
+                {uiMessage("pages.profile.cambia-preriscaldo-ripiano-e-rotazioni-8f2fcd03")}</span>
             </div>
             <div className="profile-oven-heat__grid">
               {OVEN_HEAT_PROFILES.map((profile) => {
@@ -1497,7 +1501,7 @@ export function ProfilePage() {
                       borderColor: active ? "var(--primary)" : "var(--container-border)",
                       backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
                     }}
-                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    transition={motionSpring.crispPanel}
                   >
                     <span className="profile-oven-heat__option-row">
                       <span className="type-body-sm profile-oven-heat__option-label">
@@ -1505,8 +1509,7 @@ export function ProfilePage() {
                       </span>
                       {suggested && (
                         <span className="profile-oven-heat__option-badge">
-                          adatto
-                        </span>
+                          {uiMessage("pages.profile.adatto-0fd37e76")}</span>
                       )}
                     </span>
                     <span className="type-data-xs profile-oven-heat__option-desc">
@@ -1524,7 +1527,7 @@ export function ProfilePage() {
           title={p.skillTitle}
           subtitle={p.skillSubtitle}
           stepNum={p.skillStep}
-          delay={0.1}
+          delay={motionDelay.medium}
         >
           <div className="profile-skill-grid">
             {SKILL_LEVELS.map((skill) => {
@@ -1540,12 +1543,12 @@ export function ProfilePage() {
                       : "var(--container-bg-low)",
                     borderColor: active ? "var(--primary)" : "var(--container-border)",
                   }}
-                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  transition={motionSpring.crispPanel}
                 >
                   <div className="profile-skill-grid__row">
                     <motion.span
                       animate={{ color: active ? "var(--primary)" : "var(--text-muted)" }}
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                      transition={motionSpring.crispPanel}
                       className="profile-skill-grid__level"
                     >
                       LV{skill.level}
@@ -1559,7 +1562,7 @@ export function ProfilePage() {
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           exit={{ scale: 0, opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 28 }}
+                          transition={motionSpring.crispDisclosure}
                           className="profile-skill-grid__check"
                         >
                           <Check size={14} className="profile-skill-grid__check-icon" />
@@ -1583,7 +1586,7 @@ export function ProfilePage() {
           title={p.equipTitle}
           subtitle={p.equipSubtitle}
           stepNum={p.equipStep}
-          delay={0.15}
+          delay={motionDelay.feedback}
         >
           <div className="profile-equip-list">
             {/* ── Impastamento ── */}
@@ -1615,7 +1618,7 @@ export function ProfilePage() {
                         backgroundColor: active ? "var(--surface-container)" : "transparent",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                      transition={motionSpring.crispPanel}
                     >
                       <div className="profile-equip-option__body">
                         <div className="profile-equip-option__row">
@@ -1623,7 +1626,7 @@ export function ProfilePage() {
                             {mixer.label}
                           </span>
                           <span className={`profile-equip-option__badge${levelModifier}`}>
-                            {mixer.level === "professional" ? "Pro" : mixer.level === "semi_pro" ? "Semi-Pro" : "Casa"}
+                            {mixer.level === "professional" ? uiMessage("pages.profile.pro-66d0c5e6") : mixer.level === "semi_pro" ? uiMessage("pages.profile.semi-pro-e857b480") : uiMessage("pages.profile.casa-9ea949c3")}
                           </span>
                         </div>
                         <div className="type-data-xs profile-equip-option__desc">
@@ -1636,7 +1639,7 @@ export function ProfilePage() {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             exit={{ scale: 0 }}
-                            transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                            transition={motionSpring.crisp}
                             className="profile-equip-option__check"
                           >
                             <Check size={16} className="profile-equip-option__check-icon" />
@@ -1678,7 +1681,7 @@ export function ProfilePage() {
                         backgroundColor: active ? "var(--surface-container)" : "transparent",
                         borderColor: active ? "var(--primary)" : "var(--container-border)",
                       }}
-                      transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                      transition={motionSpring.crispPanel}
                     >
                       <div className="profile-equip-option__body">
                         <div className="profile-equip-option__row">
@@ -1686,7 +1689,7 @@ export function ProfilePage() {
                             {surface.label}
                           </span>
                           <span className={`type-data profile-equip-option__k-badge${heatModifier}`}>
-                            k={surface.conductivity}
+                            {uiMessage("pages.profile.k-a2a64040")}{surface.conductivity}
                           </span>
                         </div>
                         <div className="type-data-xs profile-equip-option__desc">
@@ -1699,7 +1702,7 @@ export function ProfilePage() {
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
                             exit={{ scale: 0 }}
-                            transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                            transition={motionSpring.crisp}
                             className="profile-equip-option__check"
                           >
                             <Check size={16} className="profile-equip-option__check-icon" />
@@ -1753,7 +1756,7 @@ export function ProfilePage() {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                transition={motionSpring.standard}
                 className="profile-equip-summary"
               >
                 <div className="profile-equip-summary__chips">
@@ -1772,8 +1775,7 @@ export function ProfilePage() {
                   })}
                   {equipment.tools.length > 0 && (
                     <span className="type-data-xs profile-equip-summary__chip profile-equip-summary__chip--muted">
-                      {equipment.tools.length} utensili
-                    </span>
+                      {equipment.tools.length} {uiMessage("pages.profile.utensili-7d6ac61b")}</span>
                   )}
                 </div>
               </motion.div>
@@ -1786,7 +1788,7 @@ export function ProfilePage() {
           title={p.dietTitle}
           subtitle={p.dietSubtitle}
           stepNum={p.dietStep}
-          delay={0.2}
+          delay={motionDelay.profileSection}
         >
           <div className="profile-diet-chips">
             {DIETARY_OPTIONS.map((d) => {
@@ -1814,7 +1816,7 @@ export function ProfilePage() {
           title={p.locationTitle}
           subtitle={p.locationSubtitle}
           stepNum={p.locationStep}
-          delay={0.22}
+          delay={motionDelay.profileSectionStep}
         >
           <div className="profile-location">
             {/* Current saved location */}
@@ -1822,7 +1824,7 @@ export function ProfilePage() {
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                transition={motionSpring.standard}
                 className="profile-location__current"
               >
                 <MapPin size={16} className="profile-location__current-icon" />
@@ -1881,7 +1883,7 @@ export function ProfilePage() {
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    transition={motionSpring.crispControl}
                     className="profile-location__dropdown"
                   >
                     {locationResults.map((result, i) => {
@@ -1953,7 +1955,7 @@ export function ProfilePage() {
           title={p.prefsTitle}
           subtitle={p.prefsSubtitle}
           stepNum={p.prefsStep}
-          delay={0.25}
+          delay={motionDelay.profileSectionLate}
         >
           <div className="profile-prefs">
             {/* Language */}
@@ -1977,7 +1979,7 @@ export function ProfilePage() {
                       color: currentLocale.id === locale.id ? "var(--chip-text-active)" : "var(--chip-text)",
                       borderColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-border)",
                     }}
-                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    transition={motionSpring.crispPanel}
                   >
                     <span data-slot="flag">{locale.flag}</span>
                     {locale.name}
@@ -2004,9 +2006,6 @@ export function ProfilePage() {
               />
             </div>
 
-            {/* Tema rivista di cucina (fase esplorativa) */}
-            <ThemeControls />
-
           </div>
         </ProfileSection>
 
@@ -2015,7 +2014,7 @@ export function ProfilePage() {
           title={p.unitTitle}
           subtitle={p.unitSubtitle}
           stepNum={p.unitStep}
-          delay={0.3}
+          delay={motionDelay.deliberate}
         >
           <div data-slot="unit-system">
             <div className="type-data profile-prefs__label">
@@ -2046,7 +2045,7 @@ export function ProfilePage() {
                       backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
                       borderColor: active ? "var(--primary)" : "var(--container-border)",
                     }}
-                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                    transition={motionSpring.crispPanel}
                     aria-pressed={active}
                   >
                     <Thermometer
@@ -2074,7 +2073,7 @@ export function ProfilePage() {
           title={p.pizzaNerdTitle}
           subtitle={p.pizzaNerdSubtitle}
           stepNum={p.pizzaNerdStep}
-          delay={0.35}
+          delay={motionDelay.profileSectionFinal}
         >
           <button
             type="button"
@@ -2101,7 +2100,7 @@ export function ProfilePage() {
               <motion.span
                 className="profile-nerd-toggle__thumb"
                 animate={{ left: pizzaNerd ? 22 : 4 }}
-                transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                transition={motionSpring.crispSettled}
               />
             </span>
           </button>
@@ -2133,7 +2132,7 @@ export function ProfilePage() {
               borderColor: devMode ? "var(--primary)" : "var(--container-border)",
               opacity: devMode ? 1 : 0.5,
             }}
-            transition={{ type: "spring", stiffness: 500, damping: 35 }}
+            transition={motionSpring.crispPanel}
           >
             <Bug size={13} />
             {devMode ? p.devModeOn : p.devModeOff}
