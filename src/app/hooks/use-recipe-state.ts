@@ -25,7 +25,7 @@ import {
   type UserConstraints,
   type VersionRangeOverrides,
 } from "../domain/pizza-engine";
-import { applyVersionParams } from "../features/recipe/recipe-configurator";
+import { applyStyleVersion } from "../use-cases/apply-style-version";
 import {
   getVersions,
   type StyleVersion,
@@ -347,7 +347,7 @@ export function useRecipeState({
 
   const applyVersionToState = useCallback(
     (version: StyleVersion) => {
-      applyVersionParams(version, {
+      applyStyleVersion(version, {
         onHydrationChange: setCustomHydration,
         onFlourWChange: setCustomFlourW,
         onFlourPLChange: (value) =>

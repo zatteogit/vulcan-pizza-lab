@@ -1,4 +1,5 @@
 import type { CmsUiStrings } from "./cms-context";
+import { interpolate } from "../../i18n/interpolate";
 
 /* ═══ VULCAN I18N HELPERS ═══
  * Lightweight template + formatting utilities driven by CMS ui strings.
@@ -14,12 +15,7 @@ import type { CmsUiStrings } from "./cms-context";
 
 /** Simple template interpolation: replaces {key} placeholders */
 export function t(template: string | undefined, vars: Record<string, string | number>): string {
-  if (!template) return "";
-  const interpolated = template.replace(/\{(\w+)\}/g, (_, key) =>
-    vars[key] !== undefined ? String(vars[key]) : `{${key}}`,
-  );
-  // Template e valore interpolato possono entrambi dichiarare una stima.
-  return interpolated.replace(/~\s*~+/g, "~");
+  return interpolate(template, vars);
 }
 
 export type UnitSystem = "metric" | "imperial";

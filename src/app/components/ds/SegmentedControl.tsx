@@ -6,7 +6,9 @@
  * Consumes the T3 `--segmented-*` token group.
  */
 import { motion } from "motion/react";
-import type { CSSProperties, ReactNode } from "react";
+import { useRef } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
+import { motionOffset, motionSpring } from "./motion";
 
 export type SegmentedControlOption<TValue extends string> = {
   value: TValue;
@@ -37,8 +39,6 @@ export type SegmentedControlProps<TValue extends string> = {
   fullWidth?: boolean;
   className?: string;
   itemClassName?: string;
-  style?: CSSProperties;
-  itemStyle?: CSSProperties;
 };
 
 const SIZE_CLASS: Record<SegmentedControlSize, string> = {
@@ -83,10 +83,39 @@ export function SegmentedControl<TValue extends string>({
   fullWidth = false,
   className,
   itemClassName,
-  style,
-  itemStyle,
 }: SegmentedControlProps<TValue>) {
   const isTabList = role === "tablist";
+  const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const moveSelection = (fromIndex: number, direction: 1 | -1) => {
+    for (let offset = 1; offset <= options.length; offset += 1) {
+      const index = (fromIndex + direction * offset + options.length) % options.length;
+      const option = options[index];
+      if (option.disabled) continue;
+      onValueChange(option.value);
+      itemRefs.current[index]?.focus();
+      return;
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    if (["ArrowRight", "ArrowDown"].includes(event.key)) {
+      event.preventDefault();
+      moveSelection(index, 1);
+    } else if (["ArrowLeft", "ArrowUp"].includes(event.key)) {
+      event.preventDefault();
+      moveSelection(index, -1);
+    } else if (event.key === "Home" || event.key === "End") {
+      event.preventDefault();
+      const ordered = event.key === "Home"
+        ? options.map((_, optionIndex) => optionIndex)
+        : options.map((_, optionIndex) => options.length - 1 - optionIndex);
+      const targetIndex = ordered.find((optionIndex) => !options[optionIndex].disabled);
+      if (targetIndex === undefined) return;
+      onValueChange(options[targetIndex].value);
+      itemRefs.current[targetIndex]?.focus();
+    }
+  };
 
   return (
     <div
@@ -102,20 +131,24 @@ export function SegmentedControl<TValue extends string>({
       ]
         .filter(Boolean)
         .join(" ")}
-      style={style}
     >
-      {options.map((option) => {
+      {options.map((option, index) => {
         const active = option.value === value;
 
         return (
           <motion.button
+            ref={(element) => {
+              itemRefs.current[index] = element;
+            }}
             key={option.value}
             type="button"
             role={isTabList ? "tab" : "radio"}
             aria-selected={isTabList ? active : undefined}
             aria-checked={isTabList ? undefined : active}
-            aria-label={option.ariaLabel}
+            aria-label={option.ariaLabel ?? (typeof option.label === "string" ? option.label : undefined)}
+            tabIndex={active ? 0 : -1}
             disabled={option.disabled}
+            onKeyDown={(event) => handleKeyDown(event, index)}
             onClick={() => {
               if (!option.disabled) onValueChange(option.value);
             }}
@@ -130,10 +163,9 @@ export function SegmentedControl<TValue extends string>({
               .join(" ")}
             style={{
               ["--ds-seg-accent" as any]: option.accentColor,
-              ...itemStyle,
             }}
-            whileHover={option.disabled ? undefined : { y: -1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            whileHover={option.disabled ? undefined : { y: motionOffset.controlHoverLift }}
+            transition={motionSpring.crispControl}
           >
             {option.icon && (
               <span className="ds-segmented__icon">{option.icon}</span>

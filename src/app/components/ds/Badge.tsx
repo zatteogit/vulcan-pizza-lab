@@ -34,7 +34,6 @@ export type BadgeProps<T extends ElementType = "span"> = {
   color?: string;
   background?: string;
   className?: string;
-  style?: CSSProperties;
   children: ReactNode;
 } & Omit<
   ComponentPropsWithoutRef<T>,
@@ -48,7 +47,6 @@ export function Badge<T extends ElementType = "span">({
   color,
   background,
   className,
-  style,
   children,
   ...props
 }: BadgeProps<T>) {
@@ -56,6 +54,10 @@ export function Badge<T extends ElementType = "span">({
   const badgeColor = color ?? TONE_COLOR[tone];
   const isXs = size === "xs";
   const sizeClass = isXs ? "badge-size-xs" : "";
+  const dynamicTokens = {
+    ["--ds-badge-color" as string]: badgeColor,
+    ...(background ? { ["--ds-badge-bg" as string]: background } : {}),
+  } as CSSProperties;
 
   return (
     <Component
@@ -65,11 +67,7 @@ export function Badge<T extends ElementType = "span">({
         sizeClass,
         className,
       ].filter(Boolean).join(" ")}
-      style={{
-        ["--ds-badge-color" as any]: badgeColor,
-        ...(background ? { ["--ds-badge-bg" as any]: background } : {}),
-        ...style,
-      }}
+      style={dynamicTokens}
       {...props}
     >
       {children}

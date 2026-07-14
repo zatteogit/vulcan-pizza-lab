@@ -287,7 +287,7 @@ export function ThemeSwitcher() {
     <div
       className="fixed right-3 flex items-center gap-1 p-1"
       style={{
-        top: "calc(var(--space-4) + env(safe-area-inset-top, 0px))",
+        top: "calc(64px + var(--space-4) + env(safe-area-inset-top, 0px))",
         zIndex: 99,
         borderRadius: "var(--radius-full)",
         background: "color-mix(in srgb, var(--container-page) 82%, transparent)",

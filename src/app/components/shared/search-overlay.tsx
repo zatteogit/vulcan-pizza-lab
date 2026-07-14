@@ -31,6 +31,9 @@ import { SIGNATURE_RECIPES } from "../../data/signature-recipes";
 import { TOPPING_CONCEPTS, getVariantsForConcept } from "../../data/topping-library";
 import { ISSUES_DB,getLocalizedIssue } from "../../data/troubleshooting-data";
 import { useIsMobile } from "../../hooks/use-mobile";
+import { motionDelay,motionSpring,motionTiming } from "../ds/motion";
+import { useDialogFocus } from "../ds/use-dialog-focus";
+import { uiMessage } from "../../i18n/ui-messages";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
@@ -59,13 +62,13 @@ const TYPE_ICONS: Record<ResultType, { icon: typeof Search; color: string }> = {
 
 function getCategoryLabels(pages: any): Record<ResultType, string> {
   return {
-    style: pages?.searchCatStyles || "Stili",
-    recipe: pages?.searchCatRecipes || "Ricette",
-    topping: pages?.searchCatToppings || "Condimenti",
-    flour: pages?.searchCatFlours || "Farine",
-    glossary: pages?.searchCatGlossary || "Glossario",
-    problem: pages?.searchCatProblems || "Problemi",
-    guide: pages?.searchCatGuides || "Guide",
+    style: pages?.searchCatStyles || uiMessage("components.shared.search-overlay.stili-ad1a9b2f"),
+    recipe: pages?.searchCatRecipes || uiMessage("components.shared.search-overlay.ricette-c46b30c8"),
+    topping: pages?.searchCatToppings || uiMessage("components.shared.search-overlay.condimenti-fc3218d7"),
+    flour: pages?.searchCatFlours || uiMessage("components.shared.search-overlay.category.flours"),
+    glossary: pages?.searchCatGlossary || uiMessage("components.shared.search-overlay.category.glossary"),
+    problem: pages?.searchCatProblems || uiMessage("components.shared.search-overlay.category.problems"),
+    guide: pages?.searchCatGuides || uiMessage("components.shared.search-overlay.category.guides"),
   };
 }
 
@@ -80,15 +83,15 @@ const GROUP_ORDER: ResultType[] = [
   "problem",
 ];
 
-const QUICK_TAGS = [
-  "Napoletana",
-  "Teglia",
-  "Caputo",
-  "Idratazione",
-  "Lievito madre",
-  "Detroit",
-  "Focaccia",
-  "Bonci",
+const QUICK_TAG_KEYS = [
+  "components.shared.search-overlay.suggestion.napoletana",
+  "components.shared.search-overlay.suggestion.teglia",
+  "components.shared.search-overlay.suggestion.caputo",
+  "components.shared.search-overlay.suggestion.hydration",
+  "components.shared.search-overlay.suggestion.sourdough",
+  "components.shared.search-overlay.suggestion.detroit",
+  "components.shared.search-overlay.suggestion.focaccia",
+  "components.shared.search-overlay.suggestion.bonci",
 ];
 
 /* ═══ HIGHLIGHT COMPONENT ═══ */
@@ -129,12 +132,12 @@ function Highlight({
 /* ═══ FLOUR CATEGORY LABELS (CMS-driven) ═══ */
 function getFlourCatLabels(pages: any): Record<string, string> {
   return {
-    grano_tenero: pages?.searchFlourWheat || "Grano tenero",
-    manitoba: pages?.searchFlourManitoba || "Manitoba",
-    semola: pages?.searchFlourSemola || "Semola",
-    integrale: pages?.searchFlourWholegrain || "Integrale",
-    gluten_free: pages?.searchFlourGlutenFree || "Senza glutine",
-    speciale: pages?.searchFlourSpecial || "Speciale",
+    grano_tenero: pages?.searchFlourWheat || uiMessage("components.shared.search-overlay.flour.wheat"),
+    manitoba: pages?.searchFlourManitoba || uiMessage("components.shared.search-overlay.flour.manitoba"),
+    semola: pages?.searchFlourSemola || uiMessage("components.shared.search-overlay.flour.semola"),
+    integrale: pages?.searchFlourWholegrain || uiMessage("components.shared.search-overlay.flour.wholegrain"),
+    gluten_free: pages?.searchFlourGlutenFree || uiMessage("components.shared.search-overlay.flour.glutenFree"),
+    speciale: pages?.searchFlourSpecial || uiMessage("components.shared.search-overlay.flour.special"),
   };
 }
 
@@ -215,7 +218,7 @@ function buildResults(query: string, cms: any): SearchResult[] {
         id: `flour-${flour.id}`,
         type: "flour",
         title: flour.name,
-        subtitle: `${flour.producer} · W${flour.w} · ${flour.proteine_pct}% prot · ${catLabel}`,
+        subtitle: uiMessage("components.shared.search-overlay.value-w-value-value-prot-value-98984423", [flour.producer, flour.w, flour.proteine_pct, catLabel]),
         link: `/profile`,
       });
     }
@@ -299,11 +302,25 @@ export function SearchOverlay({
       setQuery("");
       setActiveIndex(0);
       setActiveFilter("all");
-      requestAnimationFrame(() => {
-        inputRef.current?.focus();
-      });
     }
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const appRoot = document.getElementById("root");
+    if (!appRoot) return;
+    const wasInert = appRoot.inert;
+    const previousAriaHidden = appRoot.getAttribute("aria-hidden");
+    appRoot.inert = true;
+    appRoot.setAttribute("aria-hidden", "true");
+    return () => {
+      appRoot.inert = wasInert;
+      if (previousAriaHidden === null) appRoot.removeAttribute("aria-hidden");
+      else appRoot.setAttribute("aria-hidden", previousAriaHidden);
+    };
+  }, [open]);
+
+  const panelRef = useDialogFocus<HTMLDivElement>({ open, onClose });
 
   /* Results */
   const rawResults = useMemo(() => buildResults(query, cms), [query, cms]);
@@ -326,11 +343,11 @@ export function SearchOverlay({
   };
 
   const filterOptions = [
-    { id: "all", label: "Tutto", icon: Search },
-    { id: "styles", label: "Stili", icon: ChefHat },
-    { id: "recipes", label: "Ricette", icon: UtensilsCrossed },
-    { id: "toppings", label: "Condimenti", icon: Pizza },
-    { id: "articles", label: "Teoria", icon: BookOpen },
+    { id: "all", label: uiMessage("components.shared.search-overlay.tutto-371aa077"), icon: Search },
+    { id: "styles", label: uiMessage("components.shared.search-overlay.stili-ad1a9b2f"), icon: ChefHat },
+    { id: "recipes", label: uiMessage("components.shared.search-overlay.ricette-c46b30c8"), icon: UtensilsCrossed },
+    { id: "toppings", label: uiMessage("components.shared.search-overlay.condimenti-fc3218d7"), icon: Pizza },
+    { id: "articles", label: uiMessage("components.shared.search-overlay.teoria-b97a6296"), icon: BookOpen },
   ] as const;
 
   /* Grouped + ordered for display */
@@ -392,10 +409,6 @@ export function SearchOverlay({
             handleSelect(results[activeIndex].link);
           }
           break;
-        case "Escape":
-          e.preventDefault();
-          onClose();
-          break;
       }
     },
     [results, activeIndex, handleSelect, onClose],
@@ -416,21 +429,28 @@ export function SearchOverlay({
           onKeyDown={handleKeyDown}
         >
           {/* Backdrop */}
-          <motion.div
+          <motion.button
+            type="button"
+            aria-label={cms.pages.searchCloseLabel}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={motionTiming.feedback}
             onClick={onClose}
-            className="search-overlay-x__backdrop"
+            className="search-overlay-x__backdrop border-0 p-0"
           />
 
           {/* Panel */}
           <motion.div
+            ref={panelRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label={cms.pages.searchFieldLabel}
             initial={{ opacity: 0, y: 60, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 450, damping: 28 }}
+            transition={motionSpring.highlightedMatch}
             className={`search-overlay-x__panel${isMobile ? " search-overlay-x__panel--mobile" : ""}`}
           >
             {/* Search input row */}
@@ -451,13 +471,22 @@ export function SearchOverlay({
                 autoComplete="off"
                 autoCorrect="off"
                 spellCheck={false}
+                role="combobox"
+                aria-autocomplete="list"
+                aria-controls="search-results-listbox"
+                aria-expanded={hasQuery && results.length > 0}
+                aria-activedescendant={
+                  hasQuery && results[activeIndex]
+                    ? `search-result-${results[activeIndex].id}`
+                    : undefined
+                }
               />
               <div className="search-overlay-x__input-actions">
                 {query && (
                   <motion.button
                     initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 28 }}
+                    transition={motionSpring.crispDisclosure}
                     onClick={() => {
                       setQuery("");
                       inputRef.current?.focus();
@@ -488,7 +517,7 @@ export function SearchOverlay({
                     key={opt.id}
                     onClick={() => handleFilterClick(opt.id)}
                     className={`search-overlay-x__filter-btn${isActive ? " search-overlay-x__filter-btn--active" : ""}`}
-                    aria-label={opt.id === "all" ? "Mostra tutto" : `Filtra per ${opt.label}`}
+                    aria-label={opt.id === "all" ? uiMessage("components.shared.search-overlay.mostra-tutto-d72ef3ee") : uiMessage("components.shared.search-overlay.filtra-per-value-7dca99ea", [opt.label])}
                   >
                     <Icon size={12} />
                     <span data-slot="label">{opt.label}</span>
@@ -498,7 +527,15 @@ export function SearchOverlay({
             </div>
 
             {/* Results area */}
-            <div ref={listRef} className="search-overlay-x__results">
+            <div
+              ref={listRef}
+              id="search-results-listbox"
+              role={hasQuery && results.length > 0 ? "listbox" : undefined}
+              aria-label={hasQuery && results.length > 0
+                ? uiMessage("components.shared.search-overlay.results")
+                : undefined}
+              className="search-overlay-x__results"
+            >
               <AnimatePresence mode="wait">
                 {hasQuery && results.length === 0 ? (
                   /* No results */
@@ -507,7 +544,7 @@ export function SearchOverlay({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    transition={motionSpring.standard}
                     className="search-overlay-x__empty"
                   >
                     <Search size={32} className="search-overlay-x__empty-icon" />
@@ -522,7 +559,7 @@ export function SearchOverlay({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    transition={motionSpring.standard}
                     className="search-overlay-x__results-list"
                   >
                     {groupedResults.map(([type, items]) => {
@@ -553,14 +590,17 @@ export function SearchOverlay({
                             const idx = flatIdx;
                             const isActive = idx === activeIndex;
                             return (
-                              <div
+                              <button
                                 key={item.id}
-                                data-index={idx}
+                                id={`search-result-${item.id}`}
+                                type="button"
                                 role="option"
                                 aria-selected={isActive}
+                                tabIndex={-1}
+                                data-index={idx}
                                 onClick={() => handleSelect(item.link)}
                                 onMouseEnter={() => setActiveIndex(idx)}
-                                className={`search-overlay-x__item${isActive ? " search-overlay-x__item--active" : ""}`}
+                                className={`search-overlay-x__item border-0 text-left${isActive ? " search-overlay-x__item--active" : ""}`}
                               >
                                 {item.photo && (
                                   <ImageWithFallback
@@ -570,8 +610,8 @@ export function SearchOverlay({
                                     loading="lazy"
                                   />
                                 )}
-                                <div className="search-overlay-x__item-body">
-                                  <div className="search-overlay-x__item-title">
+                                <span className="search-overlay-x__item-body">
+                                  <span className="search-overlay-x__item-title">
                                     <Highlight
                                       text={item.title}
                                       query={trimmedQuery}
@@ -581,22 +621,22 @@ export function SearchOverlay({
                                           : "var(--primary)"
                                       }
                                     />
-                                  </div>
-                                  <div className="type-data search-overlay-x__item-subtitle">
+                                  </span>
+                                  <span className="type-data search-overlay-x__item-subtitle">
                                     <Highlight
                                       text={item.subtitle}
                                       query={trimmedQuery}
                                       color="var(--primary)"
                                     />
-                                  </div>
-                                </div>
+                                  </span>
+                                </span>
                                 {isActive && (
                                   <CornerDownLeft
                                     size={14}
                                     className="search-overlay-x__item-enter-icon"
                                   />
                                 )}
-                              </div>
+                              </button>
                             );
                           })}
                         </div>
@@ -610,21 +650,18 @@ export function SearchOverlay({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 30,
-                      delay: 0.05,
-                    }}
+                    transition={{ ...motionSpring.standard,delay: motionDelay.short }}
                     className="search-overlay-x__suggestions"
                   >
                     <p className="search-overlay-x__suggestions-label">
                       {cms.pages.searchSuggestions}
                     </p>
                     <div className="search-overlay-x__suggestions-list">
-                      {QUICK_TAGS.map((tag) => (
+                      {QUICK_TAG_KEYS.map((key) => {
+                        const tag = uiMessage(key);
+                        return (
                         <motion.button
-                          key={tag}
+                          key={key}
                           onClick={() => {
                             setQuery(tag);
                             setActiveIndex(0);
@@ -637,7 +674,8 @@ export function SearchOverlay({
                         >
                           {tag}
                         </motion.button>
-                      ))}
+                        );
+                      })}
                     </div>
                   </motion.div>
                 )}

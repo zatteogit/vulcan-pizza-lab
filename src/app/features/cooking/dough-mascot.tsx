@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { doughMotionDuration,motionEase } from "../../components/ds/motion";
 
 /**
  * M3 EXPRESSIVE DYNAMIC SHAPE — Energy-reactive blob mascot.
@@ -143,24 +144,24 @@ function energyToParams(energy: number) {
   const e = Math.max(0, Math.min(100, energy)) / 100;
   return {
     /* Morph cycle: slower when calm, faster when intense */
-    mainDuration:  8 - e * 4.5,       // 8s → 3.5s
-    accentDuration: 6 - e * 3,        // 6s → 3s
-    highlightDuration: 5 - e * 2.5,   // 5s → 2.5s
+    mainDuration: doughMotionDuration.mainBase - e * doughMotionDuration.mainEnergyRange,
+    accentDuration: doughMotionDuration.accentBase - e * doughMotionDuration.accentEnergyRange,
+    highlightDuration: doughMotionDuration.highlightBase - e * doughMotionDuration.highlightEnergyRange,
     /* Rotation: very slow base, increases with energy */
-    rotateDuration: 40 - e * 25,      // 40s → 15s
+    rotateDuration: doughMotionDuration.rotationBase - e * doughMotionDuration.rotationEnergyRange,
     rotateRange: [0, 360] as [number, number],
     /* Accent rotation: counter-rotate */
-    accentRotateDuration: 50 - e * 30, // 50s → 20s
+    accentRotateDuration: doughMotionDuration.accentRotationBase - e * doughMotionDuration.accentRotationEnergyRange,
     /* Scale breathing */
     scaleRange: [1, 1.02 + e * 0.06, 0.98 - e * 0.03, 1] as number[],
-    scaleDuration: 6 - e * 3,          // 6s → 3s
+    scaleDuration: doughMotionDuration.scaleBase - e * doughMotionDuration.scaleEnergyRange,
     /* Glow */
     glowOpacityRange: [0.06 + e * 0.06, 0.12 + e * 0.14] as [number, number],
     glowScaleRange: [1, 1.08 + e * 0.15] as [number, number],
-    glowDuration: 5 - e * 2.5,
+    glowDuration: doughMotionDuration.glowBase - e * doughMotionDuration.glowEnergyRange,
     /* Satellite (only visible at high energy) */
     satelliteOpacity: Math.max(0, (e - 0.5) * 2),   // 0 until 50, then linear to 1
-    satelliteDuration: 4 - e * 2,
+    satelliteDuration: doughMotionDuration.satelliteBase - e * doughMotionDuration.satelliteEnergyRange,
   };
 }
 
@@ -281,8 +282,8 @@ export function DoughBlob({
               : params.glowOpacityRange,
           }}
           transition={{
-            scale: { duration: params.glowDuration, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' },
-            opacity: { duration: params.glowDuration * 1.2, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' },
+            scale: { duration: params.glowDuration, repeat: Infinity, repeatType: 'mirror', ease: motionEase.standard },
+            opacity: { duration: params.glowDuration * 1.2, repeat: Infinity, repeatType: 'mirror', ease: motionEase.standard },
           }}
         />
       )}
@@ -297,9 +298,9 @@ export function DoughBlob({
             scale: params.scaleRange,
           },
           transition: {
-            borderRadius: { duration: params.mainDuration, repeat: Infinity, ease: 'easeInOut' },
-            rotate: { duration: params.rotateDuration, repeat: Infinity, ease: 'linear' },
-            scale: { duration: params.scaleDuration, repeat: Infinity, ease: 'easeInOut' },
+            borderRadius: { duration: params.mainDuration, repeat: Infinity, ease: motionEase.standard },
+            rotate: { duration: params.rotateDuration, repeat: Infinity, ease: motionEase.linear },
+            scale: { duration: params.scaleDuration, repeat: Infinity, ease: motionEase.standard },
           },
         } : {})}
       />
@@ -313,8 +314,8 @@ export function DoughBlob({
             rotate: [360, 0],
           },
           transition: {
-            borderRadius: { duration: params.accentDuration, repeat: Infinity, ease: 'easeInOut' },
-            rotate: { duration: params.accentRotateDuration, repeat: Infinity, ease: 'linear' },
+            borderRadius: { duration: params.accentDuration, repeat: Infinity, ease: motionEase.standard },
+            rotate: { duration: params.accentRotateDuration, repeat: Infinity, ease: motionEase.linear },
           },
         } : {})}
       />
@@ -328,8 +329,8 @@ export function DoughBlob({
             scale: isForge ? [1, 1.15, 0.92, 1.08, 1] : [1, 1.1, 0.95, 1.05, 1],
           },
           transition: {
-            borderRadius: { duration: params.highlightDuration, repeat: Infinity, ease: 'easeInOut' },
-            scale: { duration: params.highlightDuration * 1.3, repeat: Infinity, ease: 'easeInOut' },
+            borderRadius: { duration: params.highlightDuration, repeat: Infinity, ease: motionEase.standard },
+            scale: { duration: params.highlightDuration * 1.3, repeat: Infinity, ease: motionEase.standard },
           },
         } : {})}
       />
@@ -343,8 +344,8 @@ export function DoughBlob({
             rotate: params.rotateRange,
           },
           transition: {
-            borderRadius: { duration: params.mainDuration * 1.1, repeat: Infinity, ease: 'easeInOut' },
-            rotate: { duration: params.rotateDuration * 1.05, repeat: Infinity, ease: 'linear' },
+            borderRadius: { duration: params.mainDuration * 1.1, repeat: Infinity, ease: motionEase.standard },
+            rotate: { duration: params.rotateDuration * 1.05, repeat: Infinity, ease: motionEase.linear },
           },
         } : {})}
       />
@@ -365,9 +366,9 @@ export function DoughBlob({
             ],
           }}
           transition={{
-            borderRadius: { duration: params.satelliteDuration, repeat: Infinity, ease: 'easeInOut' },
-            x: { duration: params.satelliteDuration * 3, repeat: Infinity, ease: 'easeInOut' },
-            y: { duration: params.satelliteDuration * 3, repeat: Infinity, ease: 'easeInOut' },
+            borderRadius: { duration: params.satelliteDuration, repeat: Infinity, ease: motionEase.standard },
+            x: { duration: params.satelliteDuration * 3, repeat: Infinity, ease: motionEase.standard },
+            y: { duration: params.satelliteDuration * 3, repeat: Infinity, ease: motionEase.standard },
           }}
         />
       )}

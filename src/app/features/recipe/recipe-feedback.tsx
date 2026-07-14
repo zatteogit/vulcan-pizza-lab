@@ -13,6 +13,7 @@ ThumbsUp,
 X
 } from "lucide-react";
 import { motion } from "motion/react";
+import { motionSpring } from "../../components/ds/motion";
 import { useCallback,useState } from "react";
 import { useCms } from "../cms/cms-context";
 import {
@@ -163,7 +164,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        transition={motionSpring.standard}
         className="recipe-feedback recipe-feedback--saved"
       >
         <div className="recipe-feedback__saved-head">

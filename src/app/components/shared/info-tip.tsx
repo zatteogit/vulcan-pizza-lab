@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { HelpCircle, BookOpen } from "lucide-react";
 import { useCms } from "../../features/cms/cms-context";
 import { getTermById } from "../../data/glossary-data";
+import { motionSpring } from "../ds/motion";
 
 interface InfoTipProps {
   children: React.ReactNode;
@@ -104,11 +105,7 @@ export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
               scale: 0.92,
               y: placement === "below" ? -4 : 4,
             }}
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 30,
-            }}
+            transition={motionSpring.crispControl}
             className={`info-tip__popover ${
               placement === "below"
                 ? "info-tip__popover--below"

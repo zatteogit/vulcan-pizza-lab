@@ -15,9 +15,10 @@
  *  - `height`   auto (cap max-h) · full (workspace ~92dvh)
  */
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { useDialogFocus } from "./use-dialog-focus";
+import { motionSpring } from "./motion";
 
 export interface ModalSheetProps {
   open: boolean;
@@ -105,14 +106,7 @@ export function ModalSheet({
   panelClassName,
   children,
 }: ModalSheetProps) {
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  const dialogRef = useDialogFocus<HTMLElement>({ open, onClose });
 
   const slide = entry === "slide";
   const containerClass = slide
@@ -134,9 +128,11 @@ export function ModalSheet({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           style={SCRIM_STYLE[scrim]}
-          onClick={onClose}
+          onPointerDown={onClose}
         >
           <motion.section
+            ref={dialogRef}
+            tabIndex={-1}
             role="dialog"
             aria-modal="true"
             aria-label={ariaLabel}
@@ -145,13 +141,11 @@ export function ModalSheet({
             animate={slide ? { y: 0 } : { y: 0, opacity: 1, scale: 1 }}
             exit={slide ? { y: "100%" } : { y: 20, opacity: 0, scale: 0.98 }}
             transition={
-              slide
-                ? { type: "spring", stiffness: 350, damping: 34 }
-                : { type: "spring", stiffness: 420, damping: 34 }
+              slide ? motionSpring.sheetSlide : motionSpring.panel
             }
             className={`w-full ${SIZE_CLASS[size]} ${HEIGHT_CLASS[height]} ${panelShape} ${panelClassName ?? ""}`}
             style={SURFACE_STYLE[surface]}
-            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(event) => event.stopPropagation()}
           >
             {children}
           </motion.section>

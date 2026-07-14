@@ -1,9 +1,9 @@
-import React from "react";
 import { motion } from "motion/react";
 import { VulcanMark } from "./vulcan-logo";
 import { DoughBlob } from "../../features/cooking/dough-mascot";
 import type { DoughVariant } from "../../features/cooking/dough-mascot";
 import type { VulcanVariant } from "./vulcan-logo";
+import { motionDuration,motionEase } from "../ds/motion";
 
 /**
  * VulcanHero — composizione armonizzata logo + blob.
@@ -33,7 +33,6 @@ interface VulcanHeroProps {
   /** Ratio of mark size to container size */
   markRatio?: number;
   className?: string;
-  style?: React.CSSProperties;
 }
 
 export function VulcanHero({
@@ -43,14 +42,13 @@ export function VulcanHero({
   logoVariant = "naturale",
   markRatio = 0.32,
   className,
-  style,
 }: VulcanHeroProps) {
   const markSize = Math.round(size * markRatio);
 
   return (
     <div
       className={["vulcan-hero", className].filter(Boolean).join(" ")}
-      style={{ ["--hero-size" as any]: `${size}px`, ...style }}
+      style={{ ["--hero-size" as any]: `${size}px` }}
     >
       {/* Blob: organic energy field */}
       <div className="vulcan-hero__field">
@@ -69,9 +67,9 @@ export function VulcanHero({
         }}
         transition={{
           scale: {
-            duration: 8 - (energy / 100) * 4,
+            duration: motionDuration.ambientLong - (energy / 100) * motionDuration.ambientRange,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: motionEase.standard,
           },
         }}
       >

@@ -11,6 +11,7 @@
 import { Check } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ReactNode } from "react";
+import { motionSpring } from "./motion";
 
 export interface ChipProps {
   label: ReactNode;
@@ -32,7 +33,7 @@ export function Chip({ label, active, onToggle, icon }: ChipProps) {
             initial={{ scale: 0, width: 0 }}
             animate={{ scale: 1, width: 14 }}
             exit={{ scale: 0, width: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 25 }}
+            transition={motionSpring.crisp}
           >
             <Check size={14} />
           </motion.span>

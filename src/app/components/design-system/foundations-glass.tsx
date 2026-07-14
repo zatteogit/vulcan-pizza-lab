@@ -10,6 +10,9 @@ Panoramica,
 SectionHeader,
 SubSectionLabel,
 } from "./shared";
+import { toShowcaseCssValue } from "./showcase-style";
+import { showcaseTransition } from "./showcase-motion";
+import { showcaseMessage } from "../../i18n/showcase-messages";
 
 /* ═══════════════════════════════════════════════════════════
    FONDAMENTA — GLASSMORPHISM & LIQUID GLASS
@@ -19,23 +22,23 @@ SubSectionLabel,
 /* ── Glass Material Layers (iOS 26 reference) ── */
 const GLASS_LAYERS = [
   {
-    name: "Shadow Layer",
-    desc: "Ombra diffusa sotto il container per profondita",
+    name: showcaseMessage("components.design-system.foundations-glass.shadow-layer-d70148a5"),
+    desc: showcaseMessage("components.design-system.foundations-glass.ombra-diffusa-sotto-il-container-per-profo-e8b13fb7"),
     css: "backdrop-blur(40px)\nbackground: rgba(0,0,0,0.08)\nmix-blend-mode: hard-light",
   },
   {
-    name: "Glass Effect",
-    desc: "Overlay bianco semitrasparente con screen blend",
+    name: showcaseMessage("components.design-system.foundations-glass.glass-effect-a3b6a93d"),
+    desc: showcaseMessage("components.design-system.foundations-glass.overlay-bianco-semitrasparente-con-screen--16012a18"),
     css: "background: rgba(255,255,255,0.07)\nmix-blend-mode: screen",
   },
   {
-    name: "Fill Layer",
-    desc: "Tinta colorata con plus-lighter blend",
+    name: showcaseMessage("components.design-system.foundations-glass.fill-layer-5d4135b8"),
+    desc: showcaseMessage("components.design-system.foundations-glass.tinta-colorata-con-plus-lighter-blend-3b6ec2ae"),
     css: "background: #242424 (dark)\nmix-blend-mode: plus-lighter",
   },
   {
-    name: "Content Layer",
-    desc: "Icone e testo con plus-lighter e opacita 90%",
+    name: showcaseMessage("components.design-system.foundations-glass.content-layer-a4b3a13c"),
+    desc: showcaseMessage("components.design-system.foundations-glass.icone-e-testo-con-plus-lighter-e-opacita-9-1fbd5e3f"),
     css: "mix-blend-mode: plus-lighter\nopacity: 0.9\ncolor: #d9d9d9",
   },
 ];
@@ -65,41 +68,21 @@ function GlassSpecimen({
   return (
     <motion.div
       whileHover={{ scale: 1.03 }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className="relative flex flex-col items-center justify-center cursor-pointer overflow-hidden active:scale-97 transition-transform"
-      style={{
-        width: "120px",
-        height: "120px",
-        borderRadius: radius,
-        border: `1px solid rgba(255,255,255,${glassOpacity * 2})`,
-      }}
+      transition={showcaseTransition.preset_0e2957ab5e}
+      className="relative flex flex-col items-center justify-center cursor-pointer overflow-hidden active:scale-97 transition-transform dsx-s-99af6086ac"
+      style={{ "--dsx-border-radius": toShowcaseCssValue(radius, false), "--dsx-border": toShowcaseCssValue(`1px solid rgba(255,255,255,${glassOpacity * 2})`, false) } as any}
     >
       <div
-        className="absolute inset-0"
-        style={{
-          backdropFilter: `blur(${blur}px)`,
-          WebkitBackdropFilter: `blur(${blur}px)`,
-          background: `rgba(0,0,0,${bgOpacity})`,
-          borderRadius: "inherit",
-        }}
+        className="absolute inset-0 dsx-s-3ee2e21bef"
+        style={{ "--dsx-backdrop-filter": toShowcaseCssValue(`blur(${blur}px)`, false), "--dsx-webkit-backdrop-filter": toShowcaseCssValue(`blur(${blur}px)`, false), "--dsx-background": toShowcaseCssValue(`rgba(0,0,0,${bgOpacity})`, false) } as any}
       />
       <div
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(ellipse at 30% 20%, rgba(255,255,255,${glassOpacity * 0.6}) 0%, rgba(0,0,0,0) 70%)`,
-          borderRadius: "inherit",
-          pointerEvents: "none",
-        }}
+        className="absolute inset-0 dsx-s-e184316eaf"
+        style={{ "--dsx-background": toShowcaseCssValue(`radial-gradient(ellipse at 30% 20%, rgba(255,255,255,${glassOpacity * 0.6}) 0%, rgba(0,0,0,0) 70%)`, false) } as any}
       />
-      <div className="relative flex flex-col items-center gap-1.5" style={{ zIndex: 1 }}>
-        <Flame size={24} style={{ color: "var(--glass-icon)" }} />
-        <span style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: "var(--font-size-base)",
-          fontWeight: "var(--weight-semibold)" as any,
-          color: "var(--glass-text)",
-          letterSpacing: "var(--tracking-spread)",
-        }}>
+      <div className="relative flex flex-col items-center gap-1.5 dsx-s-1f9ab3be63">
+        <Flame size={24} className="dsx-s-da205c28bb" />
+        <span className="dsx-s-93ad6a1caf">
           {label}
         </span>
       </div>
@@ -116,77 +99,47 @@ function BlurPlayground() {
   return (
     <div className="flex flex-col gap-4">
       <div
-        className="relative h-56 rounded-2xl overflow-hidden"
-        style={{ border: "1px solid var(--outline-variant)" }}
+        className="relative h-56 rounded-2xl overflow-hidden dsx-s-dd7e961eb3"
       >
         <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("https://images.unsplash.com/photo-1689010039458-c605ea68c0b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b29kJTIwZmlyZWQlMjBwaXp6YSUyMG92ZW4lMjBmbGFtZXMlMjBkYXJrfGVufDF8fHx8MTc3MTIyNjI2Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
+          className="absolute inset-0 dsx-s-7201528232"
         />
         <div
-          className="absolute inset-0"
-          style={{
-            background: "var(--glass-panel-warm)",
-          }}
+          className="absolute inset-0 dsx-s-69c0e0adf3"
         />
         <div
-          className="absolute rounded-full"
-          style={{
-            width: "160px", height: "160px", top: "-20px", right: "-30px",
-            background: "var(--glass-orb-primary)",
-          }}
+          className="absolute rounded-full dsx-s-8afc5cf768"
         />
         <div
-          className="absolute rounded-full"
-          style={{
-            width: "120px", height: "120px", bottom: "10px", left: "20px",
-            background: "var(--glass-orb-secondary)",
-          }}
+          className="absolute rounded-full dsx-s-7f1ee34768"
         />
 
         <div className="absolute inset-0 flex items-center justify-center gap-4 p-6">
-          <GlassSpecimen label="Vulcan" blur={blur} bgOpacity={opacity / 100} glassOpacity={glass / 100} radius="var(--radius, 1rem)" />
-          <GlassSpecimen label="Pill" blur={blur} bgOpacity={opacity / 100} glassOpacity={glass / 100} radius="9999px" />
+          <GlassSpecimen label={showcaseMessage("components.design-system.foundations-glass.vulcan-91cbb945")} blur={blur} bgOpacity={opacity / 100} glassOpacity={glass / 100} radius="var(--radius-lg)" />
+          <GlassSpecimen label={showcaseMessage("components.design-system.foundations-glass.pill-38ea5ba8")} blur={blur} bgOpacity={opacity / 100} glassOpacity={glass / 100} radius="9999px" />
           <div
-            className="relative flex flex-col gap-2 p-4 overflow-hidden"
-            style={{
-              width: "160px",
-              borderRadius: "var(--radius, 1rem)",
-              border: `1px solid rgba(255,255,255,${(glass / 100) * 2})`,
-            }}
+            className="relative flex flex-col gap-2 p-4 overflow-hidden dsx-s-4c773b777c"
+            style={{ "--dsx-border": toShowcaseCssValue(`1px solid rgba(255,255,255,${(glass / 100) * 2})`, false) } as any}
           >
             <div
-              className="absolute inset-0"
-              style={{
-                backdropFilter: `blur(${blur}px)`,
-                WebkitBackdropFilter: `blur(${blur}px)`,
-                background: `rgba(0,0,0,${opacity / 100})`,
-                borderRadius: "inherit",
-              }}
+              className="absolute inset-0 dsx-s-3ee2e21bef"
+              style={{ "--dsx-backdrop-filter": toShowcaseCssValue(`blur(${blur}px)`, false), "--dsx-webkit-backdrop-filter": toShowcaseCssValue(`blur(${blur}px)`, false), "--dsx-background": toShowcaseCssValue(`rgba(0,0,0,${opacity / 100})`, false) } as any}
             />
             <div
-              className="absolute inset-0"
-              style={{
-                background: `radial-gradient(ellipse at 30% 20%, rgba(255,255,255,${(glass / 100) * 0.6}) 0%, rgba(0,0,0,0) 70%)`,
-                borderRadius: "inherit",
-                pointerEvents: "none",
-              }}
+              className="absolute inset-0 dsx-s-e184316eaf"
+              style={{ "--dsx-background": toShowcaseCssValue(`radial-gradient(ellipse at 30% 20%, rgba(255,255,255,${(glass / 100) * 0.6}) 0%, rgba(0,0,0,0) 70%)`, false) } as any}
             />
             {[
-              { icon: Flame, label: "Idratazione", val: "68%" },
-              { icon: Wheat, label: "Farina W", val: "300" },
-              { icon: Timer, label: "Fermento", val: "24h" },
+              { icon: Flame, label: showcaseMessage("components.design-system.foundations-glass.idratazione-ca30c32c"), val: "68%" },
+              { icon: Wheat, label: showcaseMessage("components.design-system.foundations-glass.farina-w-9be32fb5"), val: "300" },
+              { icon: Timer, label: showcaseMessage("components.design-system.foundations-glass.fermento-96079945"), val: showcaseMessage("components.design-system.foundations-glass.24h-02779596") },
             ].map((item) => (
-              <div key={item.label} className="relative flex items-center gap-2" style={{ zIndex: 1 }}>
-                <item.icon size={14} style={{ color: "var(--glass-text-dim)" }} />
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--glass-text)" }}>
+              <div key={item.label} className="relative flex items-center gap-2 dsx-s-1f9ab3be63">
+                <item.icon size={14} className="dsx-s-8a9e6a537f" />
+                <span className="dsx-s-b3b944b438">
                   {item.label}
                 </span>
-                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-semibold)" as any, color: "var(--glass-text-bright)", marginLeft: "auto", fontFeatureSettings: "'tnum'" }}>
+                <span className="dsx-s-84e9dbda7f">
                   {item.val}
                 </span>
               </div>
@@ -197,36 +150,31 @@ function BlurPlayground() {
 
       <div className="grid grid-cols-3 gap-4">
         {[
-          { label: "Blur", value: blur, set: setBlur, min: 0, max: 60, unit: "px" },
-          { label: "BG Opacity", value: opacity, set: setOpacity, min: 0, max: 30, unit: "%" },
-          { label: "Glass Overlay", value: glass, set: setGlass, min: 0, max: 20, unit: "%" },
+          { label: showcaseMessage("components.design-system.foundations-glass.blur-900aa998"), value: blur, set: setBlur, min: 0, max: 60, unit: "px" },
+          { label: showcaseMessage("components.design-system.foundations-glass.bg-opacity-54bfc748"), value: opacity, set: setOpacity, min: 0, max: 30, unit: "%" },
+          { label: showcaseMessage("components.design-system.foundations-glass.glass-overlay-d6c80859"), value: glass, set: setGlass, min: 0, max: 20, unit: "%" },
         ].map((s) => {
           const pct = ((s.value - s.min) / (s.max - s.min)) * 100;
           return (
             <div key={s.label}>
               <div className="flex items-center justify-between mb-1.5">
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-medium)" as any, color: "var(--text-default)" }}>{s.label}</span>
-                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any, color: "var(--primary)", fontFeatureSettings: "'tnum'" }}>
+                <span className="dsx-s-2fd7b782ba">{s.label}</span>
+                <span className="dsx-s-8947b681d6">
                   {s.value}{s.unit}
                 </span>
               </div>
               <div className="relative w-full h-6 flex items-center">
-                <div className="absolute w-full h-2 rounded-full" style={{ background: "var(--surface-container-high)" }} />
-                <div className="absolute h-2 rounded-full" style={{ width: `${pct}%`, background: "var(--primary)" }} />
+                <div className="absolute w-full h-2 rounded-full dsx-s-cbebeffe46" />
+                <div className="absolute h-2 rounded-full dsx-s-c2bf27541a" style={{ "--dsx-width": toShowcaseCssValue(`${pct}%`, false) } as any} />
                 <input
+                  aria-label={s.label}
                   type="range" min={s.min} max={s.max} value={s.value}
                   onChange={(e) => s.set(Number(e.target.value))}
-                  className="absolute w-full h-6 cursor-pointer"
-                  style={{ opacity: 0, margin: 0, left: 0, top: 0, zIndex: 2, WebkitAppearance: "none", padding: 0 }}
+                  className="absolute w-full h-6 cursor-pointer dsx-s-0e37fcc660"
                 />
                 <div
-                  className="absolute w-5 h-5 rounded-full pointer-events-none"
-                  style={{
-                    left: `calc(${pct}% - 10px)`,
-                    background: "var(--primary)",
-                    border: "2.5px solid var(--primary-foreground)",
-                    boxShadow: "var(--shadow-sm)",
-                  }}
+                  className="absolute w-5 h-5 rounded-full pointer-events-none dsx-s-cfa8ab722b"
+                  style={{ "--dsx-left": toShowcaseCssValue(`calc(${pct}% - 10px)`, false) } as any}
                 />
               </div>
             </div>
@@ -242,126 +190,81 @@ function GlassmorphismLiquidGlassSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader
-        title="Glassmorphism & Liquid Glass"
-        description="Pattern per header sticky e overlay Vulcan, con riferimento alla composizione materiale iOS 26 Liquid Glass. Background con color-mix + backdrop-filter blur(24px) saturate(1.6). Playground interattivo per esplorare blur, opacita e glass overlay."
+        title={showcaseMessage("components.design-system.foundations-glass.glassmorphism-liquid-glass-57569f1a")}
+        description={showcaseMessage("components.design-system.foundations-glass.pattern-per-header-sticky-e-overlay-vulcan-29b425c9")}
       />
-      <SubSectionLabel label="Panoramica" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.foundations-glass.panoramica-f38c9a27")} />
       <Panoramica
-        descrizione="Il glassmorphism in Vulcan crea profondità senza oscurare il contenuto sottostante. Usato per header sticky, modali e overlay. L'implementazione preferisce color-mix + saturate rispetto ai blend mode iOS."
+        descrizione={showcaseMessage("components.design-system.foundations-glass.il-glassmorphism-in-vulcan-crea-profondita-61afa2c5")}
         principi={[
-          "blur(24px) saturate(1.6) come standard Vulcan — meno aggressivo dell'iOS 40px",
-          "color-mix(in srgb, var(--container-page) 88%, transparent) per il background",
-          "Border sottile con var(--border-muted) per definire i contorni",
-          "Evitare mix-blend-mode: plus-lighter — troppo specifico per iOS",
+          showcaseMessage("components.design-system.foundations-glass.blur-24px-saturate-1-6-come-standard-vulca-23f3f4f8"),
+          showcaseMessage("components.design-system.foundations-glass.color-mix-in-srgb-var-container-page-88-tr-147cc6ce"),
+          showcaseMessage("components.design-system.foundations-glass.border-sottile-con-var-border-muted-per-de-f4cb4687"),
+          showcaseMessage("components.design-system.foundations-glass.evitare-mix-blend-mode-plus-lighter-troppo-695558a1"),
         ]}
       />
-      <SubSectionLabel label="Specifiche" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.foundations-glass.specifiche-057caf2f")} />
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Pattern Vulcan — header sticky</h3>
-        <div className="relative h-48 rounded-2xl overflow-hidden" style={{ border: "1px solid var(--outline-variant)" }}>
-          <div className="absolute inset-0" style={{ background: "var(--grad-ember)" }} />
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-glass.pattern-vulcan-header-sticky-7761b94a")}</h3>
+        <div className="relative h-48 rounded-2xl overflow-hidden dsx-s-dd7e961eb3">
+          <div className="absolute inset-0 dsx-s-ee7b477eef" />
           <div className="absolute inset-0 grid grid-cols-8 grid-rows-4 gap-px opacity-30">
             {Array.from({ length: 32 }).map((_, i) => (
               <div
                 key={i}
-                className="rounded"
-                style={{
-                  background: i % 3 === 0 ? "var(--warm-terracotta)" : i % 3 === 1 ? "var(--warm-oak)" : "var(--warm-sage)",
-                  opacity: 0.3 + (i % 5) * 0.12,
-                }}
+                className="rounded dsx-s-61cd6cc75a"
+                style={{ "--dsx-background": toShowcaseCssValue(i % 3 === 0 ? "var(--warm-terracotta)" : i % 3 === 1 ? "var(--warm-oak)" : "var(--warm-sage)", false), "--dsx-opacity": toShowcaseCssValue(0.3 + (i % 5) * 0.12, true) } as any}
               />
             ))}
           </div>
           <div
-            className="absolute top-0 left-0 right-0 h-14 flex items-center px-5"
-            style={{
-              background: "color-mix(in srgb, var(--container-page) 88%, transparent)",
-              backdropFilter: "blur(24px) saturate(1.6)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-              borderBottom: "1px solid var(--border-muted)",
-            }}
+            className="absolute top-0 left-0 right-0 h-14 flex items-center px-5 dsx-s-0bb936ee2c"
           >
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
-              Header con Glassmorphism
-            </span>
+            <span className="dsx-s-9688f15e19">
+              {showcaseMessage("components.design-system.foundations-glass.header-con-glassmorphism-d9acd0f3")}</span>
           </div>
           <div
-            className="absolute bottom-3 left-3 right-3 p-3 rounded-xl"
-            style={{
-              background: "color-mix(in srgb, var(--container-page) 92%, transparent)",
-              backdropFilter: "blur(16px)",
-              WebkitBackdropFilter: "blur(16px)",
-              border: "1px solid var(--outline-variant)",
-            }}
+            className="absolute bottom-3 left-3 right-3 p-3 rounded-xl dsx-s-02494e0305"
           >
-            <code
-              style={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: "var(--font-size-lg)",
-                color: "var(--muted-foreground)",
-                lineHeight: "var(--leading-reading)",
-                display: "block",
-                whiteSpace: "pre-wrap",
-              }}
+            <code className="dsx-s-bdf7e04d9e"
             >
-              {`background: color-mix(in srgb, var(--container-page) 88%, transparent);\nbackdrop-filter: blur(24px) saturate(1.6);\nborder-bottom: 1px solid var(--border-muted);`}
+              {showcaseMessage("components.design-system.foundations-glass.background-color-mix-in-srgb-var-container-da6f6ed7")}
             </code>
           </div>
         </div>
       </div>
 
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Recipe Hero Card Glassmorphism</h3>
-        <div className="relative h-56 rounded-2xl overflow-hidden" style={{ border: "1px solid var(--outline-variant)" }}>
-          <div className="absolute inset-0" style={{ background: "var(--grad-ember)" }} />
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-glass.recipe-hero-card-glassmorphism-57aa6443")}</h3>
+        <div className="relative h-56 rounded-2xl overflow-hidden dsx-s-dd7e961eb3">
+          <div className="absolute inset-0 dsx-s-ee7b477eef" />
           <div
-            className="absolute inset-x-4 top-4 bottom-4 p-5 rounded-2xl flex flex-col justify-between"
-            style={{
-              background: "var(--recipe-hero-card-bg)",
-              backdropFilter: "blur(24px) saturate(1.7)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.7)",
-              border: "1px solid var(--container-border)",
-              boxShadow: "var(--recipe-hero-card-shadow)",
-            }}
+            className="absolute inset-x-4 top-4 bottom-4 p-5 rounded-2xl flex flex-col justify-between dsx-s-13f81a83cb"
           >
             <div>
-              <span style={{ fontSize: "var(--font-size-md)", color: "var(--text-accent)", textTransform: "uppercase", fontWeight: "var(--weight-semibold)" }}>Procedimento</span>
-              <h1 className="font-serif mt-1" style={{ fontSize: "var(--font-size-6xl)", color: "var(--text-default)", fontWeight: "var(--weight-bold)", margin: 0 }}>Napoletana STG</h1>
+              <span className="dsx-s-9cfb42e4af">{showcaseMessage("components.design-system.foundations-glass.procedimento-34df82fa")}</span>
+              <h4 className="font-serif mt-1 dsx-s-1bfe13f151">{showcaseMessage("components.design-system.foundations-glass.napoletana-stg-fc9d3868")}</h4>
             </div>
-            <code
-              style={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: "var(--font-size-md)",
-                color: "var(--muted-foreground)",
-                whiteSpace: "pre-wrap",
-              }}
+            <code className="dsx-s-9c9e7eb6d0"
             >
-              {`background: var(--recipe-hero-card-bg);\nbackdrop-filter: blur(24px) saturate(1.7);\nborder: 1px solid var(--container-border);\nbox-shadow: var(--recipe-hero-card-shadow);`}
+              {showcaseMessage("components.design-system.foundations-glass.background-var-recipe-hero-card-bg-backdro-f9718c50")}
             </code>
           </div>
         </div>
       </div>
 
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Riferimento iOS 26 — composizione materiale</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-glass.riferimento-ios-26-composizione-materiale-e8ae9a2a")}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {GLASS_LAYERS.map((layer) => (
             <div key={layer.name} className="surface-card p-4">
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+              <span className="dsx-s-9688f15e19">
                 {layer.name}
               </span>
-              <p className="type-body" style={{ color: "var(--muted-foreground)", marginTop: "4px" }}>
+              <p className="type-body dsx-s-423a2af08b">
                 {layer.desc}
               </p>
-              <code style={{
-                fontFamily: "'DM Mono', monospace",
-                fontSize: "var(--font-size-lg)",
-                color: "var(--primary)",
-                display: "block",
-                marginTop: "8px",
-                whiteSpace: "pre-wrap",
-                lineHeight: "var(--leading-reading)",
-              }}>
+              <code className="dsx-s-93397dac94">
                 {layer.css}
               </code>
             </div>
@@ -370,39 +273,35 @@ function GlassmorphismLiquidGlassSection() {
       </div>
 
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Playground interattivo</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-glass.playground-interattivo-7ed61c72")}</h3>
         <div className="surface-card p-5">
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-base)", color: "var(--text-default)", marginBottom: "12px", display: "block" }}>
-            Trascina i cursori per esplorare il materiale glass. Il pannello "Vulcan" usa <code style={{ fontFamily: "'DM Mono', monospace", color: "var(--primary)" }}>var(--radius-lg)</code> (1rem), il "Pill" e riferimento iOS.
-          </span>
+          <span className="dsx-s-22944e37e2">
+            {showcaseMessage("components.design-system.foundations-glass.trascina-i-cursori-per-esplorare-il-materi-300a43f9")}<code className="dsx-s-84aeb79e35">var(--radius-lg)</code> {showcaseMessage("components.design-system.foundations-glass.1rem-il-pill-e-riferimento-ios-e55315e4")}</span>
           <BlurPlayground />
         </div>
       </div>
 
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Adattamento iOS 26 → Vulcan Pizza Lab</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-glass.adattamento-ios-26-vulcan-pizza-lab-3f348876")}</h3>
         <div className="surface-card overflow-hidden">
-          <div className="px-4 py-3" style={{ borderBottom: "1px solid var(--outline-variant)" }}>
-            <span className="type-label" style={{ color: "var(--text-default)" }}>
-              Mappatura proprietà
-            </span>
+          <div className="px-4 py-3 dsx-s-ff83771d47">
+            <span className="type-label dsx-s-a57c4bed75">
+              {showcaseMessage("components.design-system.foundations-glass.mappatura-proprieta-4aace8ec")}</span>
           </div>
           <div className="flex flex-col">
             {VULCAN_ADAPTATION.map((row, i) => (
               <div
                 key={i}
-                className="grid grid-cols-3 gap-4 px-4 py-3 items-start"
-                style={{
-                  borderBottom: i < VULCAN_ADAPTATION.length - 1 ? "1px solid var(--outline-variant)" : "none",
-                }}
+                className="grid grid-cols-3 gap-4 px-4 py-3 items-start dsx-s-57dac8b284"
+                style={{ "--dsx-border-bottom": toShowcaseCssValue(i < VULCAN_ADAPTATION.length - 1 ? "1px solid var(--outline-variant)" : "none", false) } as any}
               >
-                <code style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-lg)", color: "var(--muted-foreground)" }}>
+                <code className="dsx-s-e7daa36649">
                   {row.from}
                 </code>
-                <code style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-lg)", color: "var(--primary)", fontWeight: "var(--weight-semibold)" as any }}>
+                <code className="dsx-s-91ec361c08">
                   {row.to}
                 </code>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", color: "var(--muted-foreground)", lineHeight: "var(--leading-body)" }}>
+                <span className="dsx-s-53660225ba">
                   {row.note}
                 </span>
               </div>
@@ -412,7 +311,7 @@ function GlassmorphismLiquidGlassSection() {
       </div>
 
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Pattern Vulcan: dove applicarlo</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-glass.pattern-vulcan-dove-applicarlo-bc1d0926")}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[
             { context: "Header sticky", recipe: "blur(24px) saturate(1.6)\ncolor-mix(bg 88%)\nborder-bottom: border-muted", icon: Sun },
@@ -425,22 +324,15 @@ function GlassmorphismLiquidGlassSection() {
                 key={p.context}
                 className="surface-card p-4 active:scale-98 transition-transform"
                 whileHover={{ y: -2, boxShadow: "var(--shadow-md)" }}
-                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                transition={showcaseTransition.preset_0e2957ab5e}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <Icon size={16} style={{ color: "var(--primary)" }} />
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-xl)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+                  <Icon size={16} className="dsx-s-b0e08465c2" />
+                  <span className="dsx-s-9688f15e19">
                     {p.context}
                   </span>
                 </div>
-                <code style={{
-                  fontFamily: "'DM Mono', monospace",
-                  fontSize: "var(--font-size-lg)",
-                  color: "var(--muted-foreground)",
-                  whiteSpace: "pre-wrap",
-                  lineHeight: "var(--leading-reading)",
-                  display: "block",
-                }}>
+                <code className="dsx-s-8c0f4a8278">
                   {p.recipe}
                 </code>
               </motion.div>
@@ -450,38 +342,38 @@ function GlassmorphismLiquidGlassSection() {
       </div>
 
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)" }}>Specifiche Glassmorphism</span>
+        <span className="type-label dsx-s-a57c4bed75">{showcaseMessage("components.design-system.foundations-glass.specifiche-glassmorphism-2796768c")}</span>
         <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { prop: "Backdrop", val: "blur(24px) saturate(1.6)" },
-            { prop: "Background", val: "color-mix(bg 88%)" },
-            { prop: "Border", val: "1px solid var(--border-muted)" },
-            { prop: "Radius", val: "var(--radius-lg) -> 1rem / 16px" },
-            { prop: "iOS ref blur", val: "40px (non usato in Vulcan)" },
-            { prop: "iOS blend", val: "plus-lighter (non usato)" },
-            { prop: "Vulcan blend", val: "color-mix + saturate" },
-            { prop: "Pill shape", val: "9999px (solo iOS ref)" },
+            { prop: showcaseMessage("components.design-system.foundations-glass.backdrop-d4f5e938"), val: showcaseMessage("components.design-system.foundations-glass.blur-24px-saturate-1-6-786f0891") },
+            { prop: showcaseMessage("components.design-system.foundations-glass.background-64dd60fe"), val: showcaseMessage("components.design-system.foundations-glass.color-mix-bg-88-954586c8") },
+            { prop: showcaseMessage("components.design-system.foundations-glass.border-5d10d3f4"), val: showcaseMessage("components.design-system.foundations-glass.1px-solid-var-border-muted-8edc4248") },
+            { prop: showcaseMessage("components.design-system.foundations-glass.radius-e5aaeaac"), val: showcaseMessage("components.design-system.foundations-glass.var-radius-lg-1rem-16px-222bb1c0") },
+            { prop: showcaseMessage("components.design-system.foundations-glass.ios-ref-blur-b2205e1e"), val: showcaseMessage("components.design-system.foundations-glass.40px-non-usato-in-vulcan-0630b77b") },
+            { prop: showcaseMessage("components.design-system.foundations-glass.ios-blend-edeca742"), val: showcaseMessage("components.design-system.foundations-glass.plus-lighter-non-usato-22d2f51a") },
+            { prop: showcaseMessage("components.design-system.foundations-glass.vulcan-blend-064b3168"), val: showcaseMessage("components.design-system.foundations-glass.color-mix-saturate-de763394") },
+            { prop: showcaseMessage("components.design-system.foundations-glass.pill-shape-ee630094"), val: showcaseMessage("components.design-system.foundations-glass.9999px-solo-ios-ref-a8882483") },
           ].map((a) => <AnatomyRow key={a.prop} {...a} />)}
         </div>
       </div>
-      <SubSectionLabel label="Linee guida" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.foundations-glass.linee-guida-b43417d1")} />
       <LineeGuida
         fai={[
-          "Usare color-mix per trasparenze — più prevedibile di opacity",
-          "Limitare il glass a 2-3 elementi per schermata",
-          "Testare sempre su sfondi complessi (gradienti, immagini)",
+          showcaseMessage("components.design-system.foundations-glass.usare-color-mix-per-trasparenze-piu-preved-45ebf3c7"),
+          showcaseMessage("components.design-system.foundations-glass.limitare-il-glass-a-2-3-elementi-per-scher-5bc03f74"),
+          showcaseMessage("components.design-system.foundations-glass.testare-sempre-su-sfondi-complessi-gradien-15f8b28e"),
         ]}
         nonFare={[
-          "Mai backdrop-filter senza fallback opaco per browser non supportati",
-          "Mai glass su elementi con molto testo — riduce la leggibilità",
-          "Mai impilare più layer glass — performance costosa",
+          showcaseMessage("components.design-system.foundations-glass.mai-backdrop-filter-senza-fallback-opaco-p-4c850391"),
+          showcaseMessage("components.design-system.foundations-glass.mai-glass-su-elementi-con-molto-testo-ridu-3a10bbf8"),
+          showcaseMessage("components.design-system.foundations-glass.mai-impilare-piu-layer-glass-performance-c-4a039ff6"),
         ]}
       />
-      <SubSectionLabel label="Accessibilità" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.foundations-glass.accessibilita-e59811a6")} />
       <AccessibilitaInfo items={[
-        { label: "Contrasto", desc: "Il testo su glass deve mantenere WCAG AA. Usare color-mix con almeno 85% di background." },
-        { label: "Reduced motion", desc: "Nessun impatto — il glass è statico, non animato." },
-        { label: "Performance", desc: "backdrop-filter è costoso su mobile. Limitare a header e modali." },
+        { label: showcaseMessage("components.design-system.foundations-glass.contrasto-19fb9f0a"), desc: showcaseMessage("components.design-system.foundations-glass.il-testo-su-glass-deve-mantenere-wcag-aa-u-01481ed1") },
+        { label: showcaseMessage("components.design-system.foundations-glass.reduced-motion-78980499"), desc: showcaseMessage("components.design-system.foundations-glass.nessun-impatto-il-glass-e-statico-non-anim-419e0b63") },
+        { label: showcaseMessage("components.design-system.foundations-glass.performance-63c90455"), desc: showcaseMessage("components.design-system.foundations-glass.backdrop-filter-e-costoso-su-mobile-limita-c46bb6f4") },
       ]} />
     </div>
   );
@@ -491,5 +383,5 @@ function GlassmorphismLiquidGlassSection() {
    ENTRIES REGISTRY
    ═══════════════════════════════════════════════════════════ */
 export const ENTRIES: SectionEntry[] = [
-  { id: "glass", label: "Glassmorphism & Liquid Glass", group: "f", Component: GlassmorphismLiquidGlassSection },
+  { id: "glass", label: showcaseMessage("components.design-system.foundations-glass.glassmorphism-liquid-glass-57569f1a"), group: "f", Component: GlassmorphismLiquidGlassSection },
 ];

@@ -10,50 +10,41 @@
  */
 import { Search } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
-import type { CSSProperties } from "react";
 import { useCms } from "../../features/cms/cms-context";
+import { motionSpring } from "../ds/motion";
+import { uiMessage } from "../../i18n/ui-messages";
 
-const SPRING = { type: "spring", stiffness: 400, damping: 30 } as const;
+const SEARCH_BUTTON_SIZE = {
+  sm: { className: "search-button--sm", icon: 20 },
+  md: { className: "search-button--md", icon: 20 },
+  lg: { className: "search-button--lg", icon: 24 },
+} as const;
 
 export function SearchButton({
-  diameter,
-  surfaceStyle,
+  size = "md",
   className,
   onOpen,
-  iconSize,
 }: {
-  /** Diametro del bottone in px (la superficie del dock decide la dimensione). */
-  diameter: number;
-  /** Stile della superficie (glass/dock) — include sfondo, bordo, ombra, radius. */
-  surfaceStyle?: CSSProperties;
+  size?: keyof typeof SEARCH_BUTTON_SIZE;
   className?: string;
   onOpen?: () => void;
-  /** Custom icon size override. If not specified, calculates proportional size. */
-  iconSize?: number;
 }) {
   const { cms } = useCms();
   const prefersReducedMotion = useReducedMotion();
-  /* Icona proporzionale → coerente a ogni diametro (prima 20/22/24 era invertita). */
-  const finalIconSize = iconSize ?? Math.round(diameter * 0.38);
+  const sizing = SEARCH_BUTTON_SIZE[size];
 
   return (
     <motion.button
       type="button"
       onClick={() => onOpen?.()}
-      className={`search-button${className ? ` ${className}` : ""}`}
+      className={`search-button ${sizing.className}${className ? ` ${className}` : ""}`}
       whileHover={prefersReducedMotion ? undefined : { scale: 1.04 }}
       whileTap={prefersReducedMotion ? undefined : { scale: 0.92 }}
-      transition={SPRING}
-      style={{
-        /* La superficie (tinta glass) arriva dal call-site; geometria e colore
-           icona li possiede il componente → coerenti ovunque (è un oggetto). */
-        ...surfaceStyle,
-        ["--search-button-size" as any]: `${diameter}px`,
-      }}
-      aria-label={`${cms.pages.navSearch} (⌘K)`}
-      title="⌘K"
+      transition={motionSpring.standard}
+      aria-label={uiMessage("components.shared.search-button.value-k-b834ead1", [cms.pages.navSearch])}
+      title={uiMessage("components.shared.search-button.k-64d86f33")}
     >
-      <Search size={finalIconSize} strokeWidth={2} />
+      <Search size={sizing.icon} strokeWidth={2} />
     </motion.button>
   );
 }

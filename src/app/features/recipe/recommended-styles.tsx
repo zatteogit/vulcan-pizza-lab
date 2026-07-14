@@ -1,5 +1,6 @@
 import { Award,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
 import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
+import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
 import { useEffect,useMemo,useRef,useState } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
@@ -28,6 +29,7 @@ import { TiltCard } from "./tilt-card";
 
 import { STYLE_PHOTOS } from "../../data/style-photos";
 import { getVersions } from "../../data/style-versions";
+import { uiMessage } from "../../i18n/ui-messages";
 
 interface RecommendedStylesProps {
   constraints: UserConstraints;
@@ -107,26 +109,26 @@ const TIER_META: Record<
   }
 > = {
   perfect: {
-    label: "Perfetti per te",
-    subtitle: "ideali con il tuo forno e livello",
+    label: uiMessage("features.recipe.recommended-styles.perfetti-per-te-3530eb1d"),
+    subtitle: uiMessage("features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d"),
     color: "var(--text-success)",
     Icon: Award,
   },
   good: {
-    label: "Fattibili",
-    subtitle: "richiedono qualche compromesso",
+    label: uiMessage("features.recipe.recommended-styles.fattibili-f3ba54d3"),
+    subtitle: uiMessage("features.recipe.recommended-styles.richiedono-qualche-compromesso-170fe3d8"),
     color: "var(--text-warning)",
     Icon: Sparkles,
   },
   challenging: {
-    label: "Sfidanti",
-    subtitle: "richiedono pi\u00f9 attrezzatura o esperienza",
+    label: uiMessage("features.recipe.recommended-styles.sfidanti-354cbc9b"),
+    subtitle: uiMessage("features.recipe.recommended-styles.richiedono-piu-attrezzatura-o-esperienza-1685224c"),
     color: "var(--text-accent)",
     Icon: Triangle,
   },
   not_feasible: {
-    label: "Non fattibili",
-    subtitle: "mancano requisiti chiave",
+    label: uiMessage("features.recipe.recommended-styles.non-fattibili-327346d5"),
+    subtitle: uiMessage("features.recipe.recommended-styles.mancano-requisiti-chiave-763f98f6"),
     color: "var(--text-muted)",
     Icon: Triangle,
   },
@@ -310,7 +312,7 @@ export function RecommendedStyles({
     resultsControls.start({
       opacity: [0.72, 1],
       y: [4, 0],
-      transition: { duration: 0.34, ease: "easeOut" },
+      transition: motionTiming.recommendation,
     });
   }, [recommendations, resultsControls, reduceMotion]);
 
@@ -319,7 +321,7 @@ export function RecommendedStyles({
   };
 
   const FAMILY_FILTERS: { id: FamilyId | "all"; label: string }[] = [
-    { id: "all", label: "Tutti" },
+    { id: "all", label: uiMessage("features.recipe.recommended-styles.tutti-148ba18e") },
     { id: "napoletana", label: cms.families.napoletana?.name ?? PIZZA_FAMILIES.napoletana.name },
     { id: "romana", label: cms.families.romana?.name ?? PIZZA_FAMILIES.romana.name },
     { id: "americana", label: cms.families.americana?.name ?? PIZZA_FAMILIES.americana.name },
@@ -337,8 +339,8 @@ export function RecommendedStyles({
           type="text"
           value={styleQuery}
           onChange={(e) => setStyleQuery(e.target.value)}
-          placeholder={cms.filters.stylesSearchPlaceholder ?? "Cerca uno stile…"}
-          aria-label={cms.filters.stylesSearchPlaceholder ?? "Cerca uno stile…"}
+          placeholder={cms.filters.stylesSearchPlaceholder ?? uiMessage("features.recipe.recommended-styles.cerca-uno-stile-57efa702")}
+          aria-label={cms.filters.stylesSearchPlaceholder ?? uiMessage("features.recipe.recommended-styles.cerca-uno-stile-57efa702")}
           className="recommended-search__input"
         />
         {styleQuery && (
@@ -391,7 +393,7 @@ export function RecommendedStyles({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            transition={motionSpring.standard}
             className="recommended-advanced-panel"
           >
             <div className="recommended-advanced-panel__body">
@@ -472,7 +474,7 @@ export function RecommendedStyles({
           as={motion.div}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          transition={motionSpring.balanced}
           className="recommended-empty"
         >
           <p className="recommended-empty__text">
@@ -507,13 +509,11 @@ export function RecommendedStyles({
             transition={{
               delay:
                 key === "perfect"
-                  ? 0
+                  ? motionDelay.none
                   : key === "good"
-                    ? 0.1
-                    : 0.2,
-              type: "spring",
-              stiffness: 400,
-              damping: 30,
+                    ? motionDelay.medium
+                    : motionDelay.profileSection,
+              ...motionSpring.standard,
             }}
           >
             {/* Tier header */}
@@ -608,11 +608,7 @@ function StyleCard({
     fMax <= 8 ? cms.filters.timeFast : `${Math.round(fMin)}–${Math.round(fMax)}h`;
   const cmsPhoto = cms.media.stylePhotos[style.id];
   const photo = cmsPhoto || STYLE_PHOTOS[style.id] || cms.media.fallbackPhoto || FALLBACK;
-  const springT = {
-    type: "spring" as const,
-    stiffness: 400,
-    damping: 28,
-  };
+  const springT = motionSpring.responsiveSoft;
 
   /* Resolve tier color to a CSS variable for the ring SVG — auto dark mode */
   const ringColor = tierColor;
@@ -633,16 +629,14 @@ function StyleCard({
         transition={{
           ...springT,
           opacity: {
-            delay: index * 0.04 + 0.05,
-            type: "spring",
-            stiffness: 400,
-            damping: 28,
+            ...motionSpring.responsiveSoft,
+            delay: index * motionDelay.micro + motionDelay.short,
           },
-          y: { delay: index * 0.04 + 0.05, type: "spring", stiffness: 400, damping: 28 },
+          y: { ...motionSpring.responsiveSoft,delay: index * motionDelay.micro + motionDelay.short },
         }}
         whileHover={{
           y: isSelected ? 0 : -4,
-          transition: { type: "spring", stiffness: 500, damping: 30 },
+          transition: motionSpring.crispControl,
         }}
         className="recommended-card__button"
       >
@@ -664,11 +658,7 @@ function StyleCard({
             <motion.div
               className="recommended-card__photo-zoom"
               animate={{ scale: isSelected ? 1.06 : 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 200,
-                damping: 22,
-              }}
+              transition={motionSpring.photoZoom}
             >
               <ImageWithFallback
                 src={photo}
@@ -698,11 +688,7 @@ function StyleCard({
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0, opacity: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 500,
-                    damping: 25,
-                  }}
+                  transition={motionSpring.crisp}
                   className="recommended-card__check"
                   style={{ ["--tone" as any]: tierColor }}
                 >

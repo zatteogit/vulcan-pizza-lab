@@ -1,5 +1,6 @@
 import { Check,ChevronDown,Circle,Layers,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
+import { motionSpring,motionTiming } from "../../components/ds/motion";
 import React,{ useEffect,useMemo,useRef,useState } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter,t } from "../cms/i18n";
@@ -16,8 +17,8 @@ needsPan,
 optimizeRecipe,
 supportsThickness,
 } from "../../domain/pizza-engine";
-import { StyleVersion } from "../../data/style-versions";
 import { SegmentedControl, Switch } from "../../components/ds/index";
+import { uiMessage } from "../../i18n/ui-messages";
 
 interface PremiumSelectOption {
   value: string;
@@ -102,7 +103,7 @@ export function PremiumSelect({
             initial={{ opacity: 0, y: 6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 450, damping: 30 }}
+            transition={motionSpring.configuratorControl}
             className="config-select__menu"
             role="listbox"
           >
@@ -167,7 +168,7 @@ function PremiumSelectRow({
           : "color-mix(in srgb, var(--text-default) 6%, transparent)",
       }}
       whileTap={{ scale: 0.985 }}
-      transition={{ duration: 0.1 }}
+      transition={motionTiming.instant}
       role="option"
       aria-selected={active}
     >
@@ -186,8 +187,7 @@ function PremiumSelectRow({
       </div>
       {option.suggested && (
         <span className="config-select__row-badge">
-          Consigliato
-        </span>
+          {uiMessage("features.recipe.recipe-configurator.consigliato-f488c665")}</span>
       )}
       {active && <Check size={14} className="config-select__row-check" />}
     </motion.button>
@@ -372,27 +372,6 @@ const SLIDER_GRADIENTS = {
   temperature: "var(--grad-slider-temp)",
 };
 
-export function applyVersionParams(
-  version: StyleVersion,
-  callbacks: {
-    onHydrationChange: (v: number) => void;
-    onFlourWChange: (v: number) => void;
-    onFlourPLChange: (v: number | undefined) => void;
-    onFermentHoursChange: (v: number) => void;
-    onFermentTempChange: (v: number) => void;
-    onPreFermentChange: (v: boolean) => void;
-    onVersionChange: (v: string) => void;
-  }
-) {
-  callbacks.onHydrationChange(version.params.hydration_pct);
-  callbacks.onFlourWChange(version.params.flour_w);
-  callbacks.onFlourPLChange(version.params.flour_pl);
-  callbacks.onFermentHoursChange(version.params.fermentation_hours);
-  callbacks.onFermentTempChange(version.params.fermentation_temp_c);
-  callbacks.onPreFermentChange(version.params.use_pre_ferment);
-  callbacks.onVersionChange(version.id);
-}
-
 export function RecipeConfigurator({
   style,
   constraints,
@@ -411,7 +390,6 @@ export function RecipeConfigurator({
   onFlourPLChange,
   customSalt,
   onSaltChange,
-  science,
   panConfig,
   onPanConfigChange,
 }: RecipeConfiguratorProps) {
@@ -545,22 +523,21 @@ export function RecipeConfigurator({
         onClick={() => setSmartLink(!smartLink)}
         className={smartLink ? "config-smart-link config-smart-link--active" : "config-smart-link"}
         aria-pressed={smartLink}
-        aria-label={smartLink ? "Disattiva Smart Link" : "Attiva Smart Link"}
+        aria-label={smartLink ? uiMessage("features.recipe.recipe-configurator.disattiva-smart-link-82c8c9bb") : uiMessage("features.recipe.recipe-configurator.attiva-smart-link-e1f2961f")}
       >
         <span className="config-smart-link__icon">
           {smartLink ? <Link size={16} /> : <Unlink size={16} />}
         </span>
         <span className="config-smart-link__title">
-          Smart Link
-        </span>
+          {uiMessage("features.recipe.recipe-configurator.smart-link-95995174")}</span>
         <span className="config-smart-link__desc">
-          {smartLink ? "i parametri si adattano fra loro" : "regolazione indipendente"}
+          {smartLink ? uiMessage("features.recipe.recipe-configurator.i-parametri-si-adattano-fra-loro-c31575f0") : uiMessage("features.recipe.recipe-configurator.regolazione-indipendente-f7040ded")}
         </span>
         <span className={smartLink ? "config-smart-link__switch config-smart-link__switch--active" : "config-smart-link__switch"}>
           <motion.span
             className="config-smart-link__thumb"
             animate={{ x: smartLink ? 22 : 2 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            transition={motionSpring.crispControl}
           />
         </span>
       </button>
@@ -595,9 +572,9 @@ export function RecipeConfigurator({
                 unit="%"
                 label={
                   adaptiveHints.hydration.adaptiveMax != null && adaptiveHints.hydration.adaptiveMin == null
-                    ? (cfg.hintLimitMaxLabel || "limite max")
+                    ? (cfg.hintLimitMaxLabel || uiMessage("features.recipe.recipe-configurator.limite-max-6dd61da8"))
                     : adaptiveHints.hydration.adaptiveMin != null && adaptiveHints.hydration.adaptiveMax == null
-                      ? (cfg.hintLimitMinLabel || "limite min")
+                      ? (cfg.hintLimitMinLabel || uiMessage("features.recipe.recipe-configurator.limite-min-ace7b14a"))
                       : cfg.hintAdaptiveLabel
                 }
               />
@@ -640,9 +617,9 @@ export function RecipeConfigurator({
                 unit=""
                 label={
                   adaptiveHints.flourW.adaptiveMax != null && adaptiveHints.flourW.adaptiveMin == null
-                    ? (cfg.hintLimitMaxLabel || "limite max")
+                    ? (cfg.hintLimitMaxLabel || uiMessage("features.recipe.recipe-configurator.limite-max-6dd61da8"))
                     : adaptiveHints.flourW.adaptiveMin != null && adaptiveHints.flourW.adaptiveMax == null
-                      ? (cfg.hintLimitMinLabel || "limite min")
+                      ? (cfg.hintLimitMinLabel || uiMessage("features.recipe.recipe-configurator.limite-min-ace7b14a"))
                       : cfg.hintAdaptiveLabel
                 }
               />
@@ -675,9 +652,9 @@ export function RecipeConfigurator({
                   unit=""
                   label={
                     adaptiveHints.flourPL.adaptiveMax != null && adaptiveHints.flourPL.adaptiveMin == null
-                      ? (cfg.hintLimitMaxLabel || "limite max")
+                      ? (cfg.hintLimitMaxLabel || uiMessage("features.recipe.recipe-configurator.limite-max-6dd61da8"))
                       : adaptiveHints.flourPL.adaptiveMin != null && adaptiveHints.flourPL.adaptiveMax == null
-                        ? (cfg.hintLimitMinLabel || "limite min")
+                        ? (cfg.hintLimitMinLabel || uiMessage("features.recipe.recipe-configurator.limite-min-ace7b14a"))
                         : cfg.hintAdaptiveLabel
                   }
                 />
@@ -691,7 +668,7 @@ export function RecipeConfigurator({
           {customSalt !== undefined && onSaltChange && (
             <div className="config-field">
               <GradientSlider
-                label={<Label>Sale</Label>}
+                label={<Label>{uiMessage("features.recipe.recipe-configurator.sale-0028d743")}</Label>}
                 value={Math.round(customSalt * 10) / 10}
                 onChange={onSaltChange}
                 min={1.5}
@@ -723,7 +700,7 @@ export function RecipeConfigurator({
                   min={1}
                   max={96}
                   step={1}
-                  unit="h"
+                  unit={uiMessage("features.recipe.recipe-configurator.h-27d5482e")}
                   rangeMin={style.dough.fermentation_hours_range[0]}
                   rangeMax={style.dough.fermentation_hours_range[1]}
                   gradient={SLIDER_GRADIENTS.fermentation}
@@ -736,12 +713,12 @@ export function RecipeConfigurator({
                     hint={adaptiveHints.fermentation.hint}
                     adaptiveMin={adaptiveHints.fermentation.adaptiveMin}
                     adaptiveMax={adaptiveHints.fermentation.adaptiveMax}
-                    unit="h"
+                    unit={uiMessage("features.recipe.recipe-configurator.h-27d5482e")}
                     label={
                       adaptiveHints.fermentation.adaptiveMax != null && adaptiveHints.fermentation.adaptiveMin == null
-                        ? (cfg.hintLimitMaxLabel || "limite max")
+                        ? (cfg.hintLimitMaxLabel || uiMessage("features.recipe.recipe-configurator.limite-max-6dd61da8"))
                         : adaptiveHints.fermentation.adaptiveMin != null && adaptiveHints.fermentation.adaptiveMax == null
-                          ? (cfg.hintLimitMinLabel || "limite min")
+                          ? (cfg.hintLimitMinLabel || uiMessage("features.recipe.recipe-configurator.limite-min-ace7b14a"))
                           : cfg.hintAdaptiveLabel
                     }
                   />
@@ -766,17 +743,17 @@ export function RecipeConfigurator({
               <div className="config-field">
                 <div className="config-temp-header">
                   <div className="config-temp-header__label-group">
-                    <Label>Temperatura</Label>
-                    <InfoTip>Temperatura di fermentazione dell'impasto</InfoTip>
+                    <Label>{uiMessage("features.recipe.recipe-configurator.temperatura-df12789a")}</Label>
+                    <InfoTip>{uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-dell-impasto-737f1c50")}</InfoTip>
                   </div>
                   {suggestedTemp && (
                     <span className="config-temp-header__badge">
-                      Consigliato: {
+                      {uiMessage("features.recipe.recipe-configurator.consigliato-bf1907c1")}{
                         suggestedTemp === "fridge"
-                          ? "Frigo"
+                          ? uiMessage("features.recipe.recipe-configurator.frigo-51f4c92e")
                           : suggestedTemp === "cool"
-                            ? "Fresco"
-                            : "Ambiente"
+                            ? uiMessage("features.recipe.recipe-configurator.fresco-bffc946d")
+                            : uiMessage("features.recipe.recipe-configurator.ambiente-e6fefb74")
                       }
                     </span>
                   )}
@@ -792,7 +769,7 @@ export function RecipeConfigurator({
                     <SegmentedControl
                       value={activeVal}
                       onValueChange={(val) => handleFT(tempMap[val])}
-                      ariaLabel="Temperatura di fermentazione"
+                      ariaLabel={uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-e4ff14ef")}
                       size="sm"
                       fullWidth
                       options={[
@@ -804,7 +781,7 @@ export function RecipeConfigurator({
                               {suggestedTemp === "fridge" && (
                                 <span
                                   className={isFridgeActive ? "config-temp-option__dot config-temp-option__dot--active" : "config-temp-option__dot"}
-                                  title="Consigliato"
+                                  title={uiMessage("features.recipe.recipe-configurator.consigliato-de822f3c")}
                                 />
                               )}
                             </span>
@@ -818,7 +795,7 @@ export function RecipeConfigurator({
                               {suggestedTemp === "cool" && (
                                 <span
                                   className={isCoolActive ? "config-temp-option__dot config-temp-option__dot--active" : "config-temp-option__dot"}
-                                  title="Consigliato"
+                                  title={uiMessage("features.recipe.recipe-configurator.consigliato-de822f3c")}
                                 />
                               )}
                             </span>
@@ -832,7 +809,7 @@ export function RecipeConfigurator({
                               {suggestedTemp === "ambient" && (
                                 <span
                                   className={isAmbientActive ? "config-temp-option__dot config-temp-option__dot--active" : "config-temp-option__dot"}
-                                  title="Consigliato"
+                                  title={uiMessage("features.recipe.recipe-configurator.consigliato-de822f3c")}
                                 />
                               )}
                             </span>
@@ -855,7 +832,7 @@ export function RecipeConfigurator({
           {/* Temperatura di cottura */}
           <div className="config-field">
             <GradientSlider
-              label={<Label>Temperatura di cottura</Label>}
+              label={<Label>{uiMessage("features.recipe.recipe-configurator.temperatura-di-cottura-85a0cbf5")}</Label>}
               value={constraints.oven_max_temp_c}
               onChange={(v) =>
                 onConstraintsChange({
@@ -1013,8 +990,7 @@ export function RecipeConfigurator({
                     {cfg.panArea}
                   </span>
                   <span className="type-numeric config-summary-row__value">
-                    {area} cm²
-                  </span>
+                    {area} {uiMessage("features.recipe.recipe-configurator.cm2-7776ab6e")}</span>
                 </div>
               </div>
             );
@@ -1071,9 +1047,9 @@ function Label({ children }: { children: React.ReactNode }) {
    forza della sua farina. Qui sceglie in linguaggio naturale (debole/media/forte
    con esempi reali) e il motore deriva la W. Mostrato solo a skill_level === 1. */
 const BEGINNER_FLOURS: { label: string; sub: string; w: number }[] = [
-  { label: "Debole", sub: "00 supermercato", w: 185 },
-  { label: "Media", sub: "0 / per pizza", w: 250 },
-  { label: "Forte", sub: "Manitoba", w: 350 },
+  { label: uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"), sub: "00 supermercato", w: 185 },
+  { label: uiMessage("features.recipe.recipe-configurator.media-0c77aeec"), sub: "0 / per pizza", w: 250 },
+  { label: uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"), sub: "Manitoba", w: 350 },
 ];
 
 function BeginnerFlourPicker({
@@ -1119,10 +1095,10 @@ function BeginnerFlourPicker({
       </div>
       <p className={isIdealFit ? "config-flour-picker__fit config-flour-picker__fit--ideal" : "config-flour-picker__fit"}>
         {fit === "ideal"
-          ? "Perfetta per questo stile."
+          ? uiMessage("features.recipe.recipe-configurator.perfetta-per-questo-stile-4307e09e")
           : fit === "weak"
-            ? "Un po' debole per questo stile: l'impasto reggerà meno."
-            : "Più forte del necessario: nessun problema."}
+            ? uiMessage("features.recipe.recipe-configurator.un-po-debole-per-questo-stile-l-impasto-re-dc7843a7")
+            : uiMessage("features.recipe.recipe-configurator.piu-forte-del-necessario-nessun-problema-3a78c2c2")}
       </p>
     </div>
   );

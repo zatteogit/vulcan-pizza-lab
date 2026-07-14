@@ -7,6 +7,7 @@
  */
 import { motion } from "motion/react";
 import type { ComponentProps, CSSProperties, ReactNode } from "react";
+import { motionSpring } from "./motion";
 
 type MotionButtonProps = ComponentProps<typeof motion.button>;
 type FilterChipSize = "sm" | "md";
@@ -61,7 +62,7 @@ export function FilterChip({
       layout
       whileHover={{ y: -1 }}
       whileTap={{ scale: 0.96 }}
-      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+      transition={motionSpring.crispControl}
       {...props}
     >
       {children}

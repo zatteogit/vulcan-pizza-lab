@@ -32,7 +32,10 @@ export function ScoreRing({ score, color, size = 36, baseScore }: ScoreRingProps
   return (
     <div
       className="score-ring"
-      style={{ ["--score-ring-size" as any]: `${size}px` }}
+      style={{
+        ["--score-ring-size" as any]: `${size}px`,
+        ["--score-ring-label-size" as any]: `${size * 0.33}px`,
+      }}
     >
       <svg
         width={size}
@@ -89,9 +92,6 @@ export function ScoreRing({ score, color, size = 36, baseScore }: ScoreRingProps
           textAnchor="middle"
           dominantBaseline="central"
           fill="var(--score-ring-text)"
-          fontSize={size * 0.33}
-          fontWeight="700"
-          fontFamily="var(--font-sans)"
           className="score-ring__text"
         >
           {rounded}

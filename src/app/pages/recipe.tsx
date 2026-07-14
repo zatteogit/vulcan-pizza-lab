@@ -48,8 +48,8 @@ type UserConstraints
 } from "../domain/pizza-engine";
 import {
 RecipeConfigurator,
-applyVersionParams,
 } from "../features/recipe/recipe-configurator";
+import { applyStyleVersion } from "../use-cases/apply-style-version";
 import { RecipeLearningPanel } from "../features/recipe/recipe-learning-panel";
 import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
 import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
@@ -62,6 +62,7 @@ import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
+import { motionSpring } from "../components/ds/motion";
 import {
 getDefaultVersion,
 getVersionById,
@@ -75,7 +76,8 @@ import {
   removeRecipe,
   saveRecipe,
   type SavedRecipeParams,
-} from "../data/saved-recipes";
+} from "../adapters/browser/saved-recipes-storage";
+import { uiMessage } from "../i18n/ui-messages";
 
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
@@ -501,7 +503,7 @@ function RecipeContent({
 
   const applyVersionToState = useCallback(
     (version: StyleVersion) => {
-      applyVersionParams(version, {
+      applyStyleVersion(version, {
         onHydrationChange: setCustomHydration,
         onFlourWChange: setCustomFlourW,
         onFlourPLChange: (value) => setCustomFlourPL(value ?? plDefault),
@@ -917,7 +919,6 @@ function RecipeContent({
     usePreFerment === lastOptimization.params.use_pre_ferment;
 
   // F2 (parità con Crea): "Vulcan ha imparato dai tuoi tentativi" anche su Scopri.
-  const [feedbackAppliedStyle, setFeedbackAppliedStyle] = useState<string | null>(null);
   const feedbackCorrection = useMemo(
     () => deriveFeedbackCorrections(style.id, loadFeedback()),
     [style.id],
@@ -943,7 +944,6 @@ function RecipeContent({
     if (feedbackCorrection.saltDelta !== 0) {
       setCustomSalt((s) => Math.max(1.5, Math.min(3.5, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
     }
-    setFeedbackAppliedStyle(style.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [feedbackCorrection, style.id, savedOven?.ovenType, savedOven?.maxTemp]);
 
@@ -1130,7 +1130,9 @@ function RecipeContent({
         selectedToppingConcept={selectedToppingConcept}
         onSelectTopping={(recipeId) => {
           const toppingRecipe = TOPPING_LIBRARY[recipeId];
-          setSetupNotice(`${toppingRecipe?.name ?? "Condimento"}: ingredienti aggiornati`);
+          setSetupNotice(uiMessage("pages.recipe.ingredientsUpdated", [
+            toppingRecipe?.name ?? uiMessage("pages.recipe.defaultTopping"),
+          ]));
           setSelectedToppingConcept(recipeId);
         }}
         nerdMode={effectiveNerdMode}
@@ -1219,7 +1221,11 @@ function RecipeContent({
                 />
               </RecipeSetupPanel>
             </div>
-            <div className="recipe-view-match-shoulder" data-slot="recipe-shoulder">
+            <aside
+              className="recipe-view-match-shoulder"
+              data-slot="recipe-shoulder"
+              aria-label={cms.ui.recipeScore}
+            >
             <RecipeMatchCard
               scores={matchRecipe.scores}
               ovenTemp={matchConstraints.oven_max_temp_c}
@@ -1241,7 +1247,7 @@ function RecipeContent({
               saved={Boolean(savedEntry)}
               nerdMode={effectiveNerdMode}
             />
-            </div>
+            </aside>
             </div>
           </>
         }
@@ -1284,7 +1290,7 @@ function RecipeContent({
                     className="recipe-page__feedback-cta"
                   >
                     <Sparkles size={14} />{" "}
-                    {cms.cooking.applyCorrections ?? "Applica le correzioni"}
+                    {cms.cooking.applyCorrections ?? uiMessage("pages.recipe.applyCorrections")}
                   </button>
                 )}
               </div>
@@ -1303,9 +1309,9 @@ function RecipeContent({
       <ConfirmDialog
         open={exitConfirm}
         onDismiss={() => setExitConfirm(false)}
-        ariaLabel={cms.cooking.unsavedTitle ?? "Modifiche non salvate"}
+        ariaLabel={cms.cooking.unsavedTitle ?? uiMessage("shared.unsavedChanges")}
         icon={<Bookmark size={26} />}
-        title={cms.cooking.unsavedTitle ?? "Modifiche non salvate"}
+        title={cms.cooking.unsavedTitle ?? uiMessage("shared.unsavedChanges")}
         body={tpl(
           cms.cooking.unsavedBody ??
             "Se esci ora, la tua versione di {style} andrà persa. Vuoi salvarla nel ricettario?",
@@ -1345,11 +1351,7 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 30,
-        }}
+        transition={motionSpring.standard}
         className="recipe-page__notfound-inner"
       >
         <Heading level="page">

@@ -12,6 +12,7 @@ Wrench,
 XCircle
 } from 'lucide-react';
 import { AnimatePresence,motion } from 'motion/react';
+import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useEffect, useState } from 'react';
 import { useCms } from "../cms/cms-context";
 import { FilterChip, Surface } from "../../components/ds/index";
@@ -23,6 +24,7 @@ getLocalizedCategoryLabel,
 getLocalizedIssue,
 ISSUES_DB
 } from "../../data/troubleshooting-data";
+import { uiMessage } from "../../i18n/ui-messages";
 
 /* === SEVERITY ICON MAP === */
 const SeverityIcon = ({ severity }: { severity: string }) => {
@@ -68,16 +70,17 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
       className="troubleshooting-warnings"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+      transition={motionSpring.standard}
     >
       {/* Header */}
       <div className="troubleshooting-warnings__header">
         <Lightbulb className="troubleshooting-warnings__header-icon" />
         <span className="troubleshooting-warnings__label">
-          Suggerimenti
-        </span>
+          {uiMessage("features.recipe.troubleshooting-panel.suggerimenti-968745bd")}</span>
         <span className="troubleshooting-warnings__count">
-          {warnings.length} avvis{warnings.length === 1 ? 'o' : 'i'}
+          {warnings.length === 1
+            ? uiMessage("features.recipe.troubleshooting-panel.warning-count-one", [warnings.length])
+            : uiMessage("features.recipe.troubleshooting-panel.warning-count-many", [warnings.length])}
         </span>
       </div>
 
@@ -90,7 +93,7 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            transition={motionSpring.crispControl}
           >
             <div className="troubleshooting-warnings__item-row">
               <div className="troubleshooting-warnings__item-icon">
@@ -117,11 +120,13 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
         >
           {expanded ? (
             <div className="troubleshooting-warnings__toggle-content">
-              <ChevronUp className="troubleshooting-warnings__toggle-icon" /> Mostra meno
-            </div>
+              <ChevronUp className="troubleshooting-warnings__toggle-icon" /> {uiMessage("features.recipe.troubleshooting-panel.mostra-meno-2d38f713")}</div>
           ) : (
             <div className="troubleshooting-warnings__toggle-content">
-              <ChevronDown className="troubleshooting-warnings__toggle-icon" /> +{warnings.length - 2} altr{warnings.length - 2 === 1 ? 'o' : 'i'}
+              <ChevronDown className="troubleshooting-warnings__toggle-icon" />
+              {warnings.length - 2 === 1
+                ? uiMessage("features.recipe.troubleshooting-panel.more-count-one", [warnings.length - 2])
+                : uiMessage("features.recipe.troubleshooting-panel.more-count-many", [warnings.length - 2])}
             </div>
           )}
         </motion.button>
@@ -176,9 +181,8 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
       {/* Title */}
       <div className="troubleshooting-guide__title-row">
         <Wrench className="troubleshooting-guide__title-icon" />
-        <span className="troubleshooting-guide__title">
-          Guida Troubleshooting
-        </span>
+        <h1 className="troubleshooting-guide__title">
+          {uiMessage("features.recipe.troubleshooting-panel.guida-troubleshooting-ada8fe75")}</h1>
       </div>
 
       {/* Search */}
@@ -211,10 +215,9 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
             hidden: { opacity: 0, y: 8, scale: 0.95 },
             visible: { opacity: 1, y: 0, scale: 1 },
           }}
-          transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+          transition={motionSpring.crispDisclosure}
         >
-          Tutti
-        </FilterChip>
+          {uiMessage("features.recipe.troubleshooting-panel.tutti-d4ef129b")}</FilterChip>
         {categories.map(([key, { emoji }]) => (
           <FilterChip
             key={key}
@@ -226,7 +229,7 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
               hidden: { opacity: 0, y: 8, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
             }}
-            transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+            transition={motionSpring.crispDisclosure}
           >
             {emoji} {getLocalizedCategoryLabel(key, cms)}
           </FilterChip>
@@ -243,7 +246,7 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+              transition={motionSpring.crispControl}
             >
               {cms.misc.noTroubleshootingResults}
             </motion.div>
@@ -256,7 +259,7 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
               initial={{ opacity: 0, y: 10, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.97 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 30, delay: i * 0.03 }}
+              transition={{ ...motionSpring.crispControl,delay: i * motionDelay.profileIntroStep }}
             >
               <IssueCard
                 issue={issue}
@@ -318,22 +321,22 @@ function IssueCard({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            transition={motionSpring.standard}
           >
             <div className="troubleshooting-card__detail-body">
               {/* Causa */}
-              <DetailRow icon="🔍" label="Causa" value={issue.cause} />
+              <DetailRow icon="🔍" label={uiMessage("features.recipe.troubleshooting-panel.causa-2cff0350")} value={issue.cause} />
               {/* Test rapido */}
-              <DetailRow icon="🧪" label="Test rapido" value={issue.testRapido} />
+              <DetailRow icon="🧪" label={uiMessage("features.recipe.troubleshooting-panel.test-rapido-5e89b688")} value={issue.testRapido} />
               {/* Fix immediato */}
               <DetailRow
                 icon="🔧"
-                label="Fix immediato"
+                label={uiMessage("features.recipe.troubleshooting-panel.fix-immediato-4a6dd0bf")}
                 value={issue.fixImmediate}
                 highlight={issue.severity === 'critical'}
               />
               {/* Prevenzione */}
-              <DetailRow icon="🛡️" label="Prevenzione" value={issue.prevention} />
+              <DetailRow icon="🛡️" label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
             </div>
           </motion.div>
         )}

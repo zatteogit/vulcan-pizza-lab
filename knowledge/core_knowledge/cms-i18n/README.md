@@ -1,5 +1,5 @@
 # CMS e localizzazione
-> Aggiornamento: 2026-07-13 | Stato: ✅ | File documentati: 24
+> Aggiornamento: 2026-07-14 | Stato: ✅ | File documentati: 24
 
 ## Sommario
 
@@ -19,7 +19,7 @@ Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazi
 | `src/app/i18n/domain-contracts.ts` | 40 | Contratti e schemi tipizzati per i testi localizzati del dominio di Vulcan |
 | `src/app/i18n/interpolate.ts` | 15 | Funzione pura per l'interpolazione delle variabili all'interno dei testi tradotti |
 | `src/app/i18n/ui-messages.ts` | 50 | Interfacce e schemi per le stringhe di interfaccia utente |
-| `src/app/i18n/ui-messages.it.ts` | 500 | Dizionario canonico italiano per i testi ed i messaggi dell'applicazione |
+| `src/app/i18n/ui-messages.it.ts` | 500 | Dizionario canonico italiano per i testi ed i messaggi dell'applicazione. Include le chiavi localizzate per il feedback di salvataggio/rimozione preferiti del ricettario (`recipeSaveFavoriteSuccess`, `recipeRemoveFavoriteSuccess`, `recipeSaveFavoriteAria`) |
 | `src/app/i18n/showcase-messages.it.ts` | 6000 | Dizionario esteso contenente tutte le stringhe necessarie allo showcase del design system |
 | `src/app/features/cms/cms-context.tsx` | 3266 | Schema `CmsContent`, `CMS_DEFAULTS` con `cooking`, `misc`, `feedback`, `longDesc`/`tipNerd`, `CmsProvider`, merge, persistenza, rimozione pulita degli override ritornati a default (esportazioni secondarie inutilizzate rimosse) |
 | `src/app/features/cms/i18n.ts` | 286 | `t()`, `createFormatter()`, `formatTemperatureCopy`, `formatLengthCopy`, conversioni metric/imperial, `vulcan_unit_system` |

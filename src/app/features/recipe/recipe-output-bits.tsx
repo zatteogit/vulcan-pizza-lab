@@ -2,12 +2,14 @@
  * NerdAuraBlock, ScrollToTopOnMount, IngRow, GlossaryWLink. */
 
 import { motion, useReducedMotion } from "motion/react";
+import { motionDuration,motionEase } from "../../components/ds/motion";
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "react-router";
 import { X } from "lucide-react";
 import { GLOSSARY_TERMS } from "../../data/glossary-data";
 import { useCms } from "../cms/cms-context";
 import { ModalSheet } from "../../components/ds/index";
+import { uiMessage } from "../../i18n/ui-messages";
 
 export function NerdAuraBlock({
   children,
@@ -36,9 +38,9 @@ export function NerdAuraBlock({
               }
         }
         transition={{
-          duration: compact ? 5.8 : 7.2,
+          duration: compact ? motionDuration.auraCompact : motionDuration.auraRegular,
           repeat: reduceMotion ? 0 : Infinity,
-          ease: "easeInOut",
+          ease: motionEase.standard,
         }}
       />
       <div className="bits-nerd-aura__content">{children}</div>
@@ -155,7 +157,7 @@ export function GlossaryWLink({ w }: { w: number }) {
                   </span>
                   {active && (
                     <span className="bits-glossary-w-modal__range-current type-numeric">
-                      ← W{w}
+                      {uiMessage("features.recipe.recipe-output-bits.w-262d147c")}{w}
                     </span>
                   )}
                 </div>

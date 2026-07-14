@@ -1,8 +1,10 @@
 import { ArrowRight, Sparkles } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { GeneratedRecipe } from "../../domain/pizza-engine";
+import { uiMessage } from "../../i18n/ui-messages";
 
 interface RecipeStatStripProps {
   recipe: GeneratedRecipe;
@@ -46,7 +48,7 @@ export function RecipeStatStrip({
   );
   const wChanged =
     isPersonalized && Math.abs(recipe.flour_w - wMid) >= 15
-      ? { canonical: `W${wMid}` }
+      ? { canonical: uiMessage("features.recipe.recipe-stat-strip.w-value-f64b6332", [wMid]) }
       : undefined;
 
   /* Round 6-7 (note Matteo): in tabella SOLO i valori che cambiano e
@@ -110,7 +112,7 @@ export function SpecCell({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.04 + index * 0.05, type: "spring", stiffness: 400, damping: 26 }}
+      transition={{ ...motionSpring.statValue,delay: motionDelay.micro + index * motionDelay.short }}
       className="stat-strip__spec"
     >
       <div
@@ -125,10 +127,10 @@ export function SpecCell({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
-          transition={{ type: "spring", stiffness: 420, damping: 30 }}
+          transition={motionSpring.selection}
           className={changed ? "type-numeric stat-strip__value stat-strip__value--changed" : "type-numeric stat-strip__value"}
-          title={changed ? `Prima ${changed.canonical} → ottimizzato ${value}` : undefined}
-          aria-label={changed ? `Valore ottimizzato. Prima: ${changed.canonical}. Ora: ${value}` : undefined}
+          title={changed ? uiMessage("features.recipe.recipe-stat-strip.prima-value-ottimizzato-value-e6e2e71f", [changed.canonical, value]) : undefined}
+          aria-label={changed ? uiMessage("features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8", [changed.canonical, value]) : undefined}
         >
           {changed && (
             <>

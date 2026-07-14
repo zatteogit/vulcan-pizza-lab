@@ -6,6 +6,7 @@
  */
 import { motion } from "motion/react";
 import type { CSSProperties } from "react";
+import { motionTiming } from "./motion";
 
 export interface ProgressProps {
   value?: number;
@@ -44,7 +45,7 @@ export function Progress({
         className={`ds-progress--circular${className ? ` ${className}` : ""}`}
         style={style}
         animate={indeterminate ? { rotate: 360 } : undefined}
-        transition={indeterminate ? { repeat: Infinity, duration: 1, ease: "linear" } : undefined}
+        transition={indeterminate ? motionTiming.progressIndeterminate : undefined}
         role="progressbar"
       >
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={TRACK} strokeWidth={stroke} />
@@ -72,7 +73,7 @@ export function Progress({
           <motion.div
             className="ds-progress__fill ds-progress__fill--indeterminate"
             animate={{ left: ["-40%", "100%"] }}
-            transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
+            transition={motionTiming.progressPulse}
           />
         ) : (
           <div className="ds-progress__fill" style={{ ["--ds-progress-pct" as any]: `${pct}%` }} />

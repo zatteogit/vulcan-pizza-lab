@@ -1,5 +1,5 @@
 # Flusso ricetta e UI
-> Aggiornamento: 2026-07-13 | Stato: ✅ | File documentati: 23
+> Aggiornamento: 2026-07-14 | Stato: ✅ | File documentati: 23
 
 ## Sommario
 
@@ -18,14 +18,14 @@ Componenti condivisi: `RecipeView`, `RecipeSectionTabs`, `RecipeConfigurator`, `
 | `src/app/pages/home.tsx` | Wizard `AppStep`: `settings` \| `styles` \| `result`; instanzia `useRecipeState` per la configurazione live dei parametri; redirect a `/profile` se onboarding incompleto |
 | `src/app/hooks/use-recipe-state.ts` | Custom Hook che incapsula lo stato reattivo della ricetta (parametri custom, versione attiva, interpretazione e pan) per Home e RecipePage |
 | `src/app/features/recipe/recipe-setup-panel.tsx` | Pannello di setup/customizzazione ricetta estratto da `recipe.tsx`; gestisce la selezione delle versioni d'autore (via `PremiumSelect`) e dei parametri con scroll lock del body |
-| `src/app/features/recipe/recipe-view.tsx` | Shell condivisa della scheda ricetta per Home e Detail: hero, back/share, tab Ricetta/Procedimento, slot match/intro/controlli e render di `RecipeOutput` |
+| `src/app/features/recipe/recipe-view.tsx` | Shell condivisa della scheda ricetta per Home e Detail: hero, back/share, tab Ricetta/Procedimento, slot match/intro/controlli e render di `RecipeOutput`. Espone il pulsante preferiti (icon-button MD bare con icona `Bookmark`) con feedback visivo transiente via `Snackbar` |
 | `src/app/features/recipe/recipe-section-tabs.tsx` | Tab primary `ricetta` / `procedimento`, inline o navbar mobile, con label CMS e ARIA tablist |
 | `src/app/features/recipe/recipe-match-card.tsx` | Card compatibilità/fattibilità: composite score, stato forno e barre dei 5 assi con label estese CMS |
 | `src/app/features/recipe/recipe-learning-panel.tsx` | Dialog "Approfondimento" su stile: descrizione, famiglia/origine e caratteristiche chiave |
 | `src/app/features/recipe/recipe-configurator.tsx` | Slider parametri, Smart Link, adaptive hints, `PremiumSelect`; export `VersionChips` e `applyVersionParams` |
 | `src/app/features/recipe/recipe-output.tsx` | 958 | Coordinatore e contenitore principale per l'output della ricetta (procedimento, condimenti, ingredienti). |
 | `src/app/features/recipe/condiment-choice-strip.tsx` | 557 | Componente slider orizzontale per la selezione dei condimenti (varianti e autenticità dello stile). |
-| `src/app/features/recipe/topping-section.tsx` | 556 | Sezione condimenti: dosi ingredienti, descrizioni, note e lista passaggi della farcitura. |
+| `src/app/features/recipe/topping-section.tsx` | 556 | Sezione condimenti: dosi ingredienti, descrizioni, note e lista passaggi della farcitura. Le frecce di navigazione del carousel usano la classe centralizzata `.ds-carousel__nav` del Design System per l'allineamento verticale |
 | `src/app/features/recipe/ingredients-section.tsx` | 499 | Tabella ingredienti principali, stepper panetti interattivo e split grafico biga/poolish. |
 | `src/app/features/recipe/procedure-hero.tsx` | 442 | Pannello riassuntivo superiore della scheda procedimento (comfort time, note lievito, delta forno, Regola 55). |
 | `src/app/features/recipe/procedure-timeline.tsx` | 336 | Timeline cronologica degli step di preparazione (ore, orari calcolati, icone e mascotte). |

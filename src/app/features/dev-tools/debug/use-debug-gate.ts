@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const ENABLED_KEY = "vulcan_debug_overlay_enabled";
 // Triple-tap arms the debugger only inside this top-left hot corner, so a normal

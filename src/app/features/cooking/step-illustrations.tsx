@@ -4,8 +4,6 @@
  * SVG precedenti per Recipe Timeline, Cooking Mode e Learn.
  */
 
-import type { CSSProperties } from "react";
-
 import bakeSrc from "../../../assets/timeline/timeline-bake.png";
 import bulkSrc from "../../../assets/timeline/timeline-bulk.png";
 import divideSrc from "../../../assets/timeline/timeline-divide.png";
@@ -28,7 +26,6 @@ interface Props {
   size?: number;
   tone?: StepIllustrationTone;
   className?: string;
-  style?: CSSProperties;
 }
 
 interface IllustrationProps {
@@ -91,18 +88,16 @@ function TimelineImage({
   size,
   tone = "default",
   className,
-  style,
 }: {
   src: string;
   size: number;
   tone?: StepIllustrationTone;
   className?: string;
-  style?: CSSProperties;
 }) {
   return (
     <span
       className={`step-illustration ${TONE_CLASSES[tone]} ${className ?? ""}`}
-      style={{ ["--illustration-size" as any]: `${size}px`, ...style }}
+      style={{ ["--illustration-size" as any]: `${size}px` }}
       aria-hidden="true"
     >
       <img
@@ -142,7 +137,6 @@ export function StepIllustration({
   size = 110,
   tone = "default",
   className,
-  style,
 }: Props) {
   return (
     <TimelineImage
@@ -150,7 +144,6 @@ export function StepIllustration({
       size={size}
       tone={tone}
       className={className}
-      style={style}
     />
   );
 }

@@ -1,8 +1,8 @@
 /* === GLOSSARIO TECNICO — Appendice C === */
 /* Basato su Notion Appendice C · Glossario Tecnico (302ed0f7e12081379cf4ce959ef2b1b3) */
-/* i18n: getLocalizedTerm/Categories accept CmsContent */
+/* i18n: localized getters depend on a neutral message-source contract. */
 
-import type { CmsContent } from "../features/cms/cms-context";
+import type { GlossaryMessageSource } from "../i18n/domain-contracts";
 
 export type GlossaryCategory =
   | "rheology"
@@ -451,7 +451,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
 ];
 
 /** Termini raggruppati per categoria */
-export function getTermsByCategory(cms?: CmsContent): Record<GlossaryCategory, GlossaryTerm[]> {
+export function getTermsByCategory(cms?: GlossaryMessageSource): Record<GlossaryCategory, GlossaryTerm[]> {
   const map = {} as Record<GlossaryCategory, GlossaryTerm[]>;
   for (const cat of Object.keys(GLOSSARY_CATEGORIES) as GlossaryCategory[]) {
     map[cat] = GLOSSARY_TERMS.map(term => term.category === cat ? getLocalizedTerm(term, cms) : term)
@@ -461,7 +461,7 @@ export function getTermsByCategory(cms?: CmsContent): Record<GlossaryCategory, G
 }
 
 /** Trova un termine per ID (localized) */
-export function getTermById(id: string, cms?: CmsContent): GlossaryTerm | undefined {
+export function getTermById(id: string, cms?: GlossaryMessageSource): GlossaryTerm | undefined {
   const term = GLOSSARY_TERMS.find((t) => t.id === id);
   return term ? getLocalizedTerm(term, cms) : undefined;
 }
@@ -469,7 +469,7 @@ export function getTermById(id: string, cms?: CmsContent): GlossaryTerm | undefi
 /* === i18n: LOCALIZED GETTERS === */
 
 /** Return localized term content (falls back to Italian hardcoded) */
-export function getLocalizedTerm(term: GlossaryTerm, cms?: CmsContent): GlossaryTerm {
+export function getLocalizedTerm(term: GlossaryTerm, cms?: GlossaryMessageSource): GlossaryTerm {
   const loc = cms?.glossaryTerms?.terms?.[term.id];
   if (!loc) return term;
   return {

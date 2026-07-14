@@ -7,10 +7,13 @@
  */
 import { AnimatePresence, motion } from "motion/react";
 import type { CSSProperties, ReactNode } from "react";
+import { motionSpring } from "./motion";
+import { useDialogFocus } from "./use-dialog-focus";
 
 export interface BottomSheetProps {
   open: boolean;
   onClose?: () => void;
+  ariaLabel?: string;
   title?: ReactNode;
   children?: ReactNode;
   inline?: boolean;
@@ -21,12 +24,19 @@ export interface BottomSheetProps {
 export function BottomSheet({
   open,
   onClose,
+  ariaLabel,
   title,
   children,
   inline = false,
   className,
   style,
 }: BottomSheetProps) {
+  const dialogRef = useDialogFocus<HTMLDivElement>({
+    open,
+    onClose,
+    lockScroll: !inline,
+  });
+
   return (
     <AnimatePresence>
       {open && (
@@ -34,17 +44,22 @@ export function BottomSheet({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onClose}
+          onPointerDown={onClose}
           className={`ds-sheet-scrim${inline ? " ds-sheet-scrim--inline" : ""}`}
         >
           <motion.div
+            ref={dialogRef}
+            tabIndex={-1}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
-            transition={{ type: "spring", stiffness: 400, damping: 32 }}
-            onClick={(e) => e.stopPropagation()}
+            transition={motionSpring.sheetContent}
+            onPointerDown={(event) => event.stopPropagation()}
             className={`ds-sheet${inline ? " ds-sheet--inline" : ""}${className ? ` ${className}` : ""}`}
             style={style}
+            role="dialog"
+            aria-modal="true"
+            aria-label={ariaLabel ?? (typeof title === "string" ? title : undefined)}
           >
             <div className="ds-sheet__handle" />
             {title && <div className="ds-sheet__title">{title}</div>}

@@ -10,7 +10,7 @@ import {
 } from "./cook-session";
 import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
-import { liquidDockSpring } from "../../domain/liquid-dock";
+import { motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
 
 export function ActiveCookWidget({
   canStartRecipe = false,
@@ -80,7 +80,7 @@ export function ActiveCookWidget({
         exit={{ opacity: 0, y: -6, scale: 0.98 }}
         whileHover={prefersReducedMotion ? undefined : { scale: 1.018, y: -1 }}
         whileTap={{ scale: 0.96 }}
-        transition={liquidDockSpring}
+        transition={motionSpring.liquid}
         onClick={handleClick}
         className={[
           "cook-widget",
@@ -104,13 +104,13 @@ export function ActiveCookWidget({
                 ? undefined
                 : { opacity: [0.36, 0.68, 0.36], scale: [1, 1.14, 1] }
             }
-            transition={{ duration: due ? 2 : 5, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: due ? motionDuration.duePulse : motionDuration.ambientShort,repeat: Infinity,ease: motionEase.standard }}
           />
         )}
 
         <span className="cook-widget__icon-box">
           {active && metrics ? (
-            <ProgressRing progress={metrics.progress} due={due} size={iconBox} />
+            <ProgressRing progress={metrics.progress} size={iconBox} />
           ) : (
             <Flame size={compact ? 16 : 17} />
           )}
@@ -134,7 +134,7 @@ export function ActiveCookWidget({
   );
 }
 
-function ProgressRing({ progress, due, size }: { progress: number; due: boolean; size: number }) {
+function ProgressRing({ progress, size }: { progress: number; size: number }) {
   const radius = size / 2 - 3;
   const circumference = 2 * Math.PI * radius;
   const dash = Math.max(0, Math.min(1, progress)) * circumference;
@@ -164,7 +164,7 @@ function ProgressRing({ progress, due, size }: { progress: number; due: boolean;
         strokeLinecap="round"
         strokeDasharray={`${dash} ${circumference}`}
         transform={`rotate(-90 ${size / 2} ${size / 2})`}
-        transition={liquidDockSpring}
+        transition={motionSpring.liquid}
       />
     </svg>
   );

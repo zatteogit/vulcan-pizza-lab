@@ -29,7 +29,11 @@ import { ENTRIES as COMP_F } from "./components-f";
 import { ENTRIES as COMP_G } from "./components-g";
 import { ENTRIES as COMP_G2 } from "./components-g2";
 import { ENTRIES as COMP_H } from "./components-h";
+import { ENTRIES as COMP_RUNTIME } from "./components-runtime";
 import { ENTRIES as PAT_TMPL } from "./patterns-templates";
+import { toShowcaseCssValue } from "./showcase-style";
+import { showcaseTransition } from "./showcase-motion";
+import { showcaseMessage } from "../../i18n/showcase-messages";
 
 /* ═══════════════════════════════════════════════════════════
    ORDER DEFINITION — SINGLE SOURCE OF TRUTH
@@ -44,7 +48,7 @@ import { ENTRIES as PAT_TMPL } from "./patterns-templates";
 const ALL_ENTRIES = new Map<string, SectionEntry>();
 [
   FOUND_CORE, FOUND_DYN, FOUND_GLASS, FOUND_LOGO, FOUND_EXT, FOUND_M3E, FOUND_CD,
-  COMP_A, COMP_B, COMP_C, COMP_D, COMP_F, COMP_G, COMP_G2, COMP_H, PAT_TMPL,
+  COMP_A, COMP_B, COMP_C, COMP_D, COMP_F, COMP_G, COMP_G2, COMP_H, COMP_RUNTIME, PAT_TMPL,
 ].forEach((arr) => arr.forEach((e) => ALL_ENTRIES.set(e.id, e)));
 
 /** Foundation order (reorder here → auto-renumbered) */
@@ -109,18 +113,21 @@ const COMPONENT_ORDER: string[] = [
   // ── App-Specific ──
   "configurator",     // RecipeConfigurator
   "timeline",         // Recipe Timeline
+  "runtime-contract", // Production T4 contract gallery
 ];
 
-/** Pattern & Template order (reorder here → auto-renumbered as P01..PN) */
+/** T5 Pattern order (reorder here → auto-renumbered as P01..PN) */
 const PATTERN_ORDER: string[] = [
-  // ── Pattern (combinazioni riutilizzabili) ──
   "pat-selection",      // Selection Pattern
   "pat-editorial",      // Editorial Section
   "pat-disclosure",     // Progressive Disclosure
   "pat-floating-cta",   // Floating CTA
   "pat-coachmark",      // Coachmark → Tooltip
   "pat-sticky",         // Sticky Context
-  // ── Template (composizioni pagina) ──
+];
+
+/** T6 Template order (reorder here → auto-renumbered as T01..TN) */
+const TEMPLATE_ORDER: string[] = [
   "tmpl-build",         // Build Page Template
   "tmpl-result",        // Result Page Template
 ];
@@ -134,8 +141,8 @@ interface BuiltSection {
   num: string;        // "01" or "C07" or "P03"
   label: string;      // "01 · Sistema Cromatico"
   short: string;      // "01" or "C07" or "P03"
-  group: "f" | "c" | "p";
-  category: string;   // "Fondamenta" or "Componenti" or "Pattern & Template"
+  group: "f" | "c" | "p" | "t";
+  category: string;   // "Fondamenta", "Componenti", "Pattern" or "Template"
   Component: React.ComponentType;
 }
 
@@ -152,7 +159,7 @@ function buildSections(): BuiltSection[] {
       label: `${num} · ${entry.label}`,
       short: num,
       group: "f",
-      category: "Fondamenta",
+      category: showcaseMessage("components.design-system.index.fondamenta-f3c3e8ce"),
       Component: entry.Component,
     });
   });
@@ -167,7 +174,7 @@ function buildSections(): BuiltSection[] {
       label: `${num} · ${entry.label}`,
       short: num,
       group: "c",
-      category: "Componenti",
+      category: showcaseMessage("components.design-system.index.componenti-f9c24842"),
       Component: entry.Component,
     });
   });
@@ -182,7 +189,22 @@ function buildSections(): BuiltSection[] {
       label: `${num} · ${entry.label}`,
       short: num,
       group: "p",
-      category: "Pattern & Template",
+      category: showcaseMessage("components.design-system.index.pattern-1fff6a31"),
+      Component: entry.Component,
+    });
+  });
+
+  TEMPLATE_ORDER.forEach((id, i) => {
+    const entry = ALL_ENTRIES.get(id);
+    if (!entry) { console.warn(`[DS] Template "${id}" not found in registry`); return; }
+    const num = `T${String(i + 1).padStart(2, "0")}`;
+    result.push({
+      id: entry.id,
+      num,
+      label: `${num} · ${entry.label}`,
+      short: num,
+      group: "t",
+      category: showcaseMessage("components.design-system.index.template-3ec1ae06"),
       Component: entry.Component,
     });
   });
@@ -193,6 +215,7 @@ function buildSections(): BuiltSection[] {
 const SECTIONS = buildSections();
 const COMPONENT_IDS = new Set(SECTIONS.filter((s) => s.group === "c").map((s) => s.id));
 const PATTERN_IDS = new Set(SECTIONS.filter((s) => s.group === "p").map((s) => s.id));
+const TEMPLATE_IDS = new Set(SECTIONS.filter((s) => s.group === "t").map((s) => s.id));
 
 /* ═══════════════════════════════════════════════════════════
    MAIN EXPORT
@@ -268,6 +291,7 @@ export function DesignSystemTab({
   const foundations = SECTIONS.filter((s) => s.group === "f");
   const components = SECTIONS.filter((s) => s.group === "c");
   const patterns = SECTIONS.filter((s) => s.group === "p");
+  const templates = SECTIONS.filter((s) => s.group === "t");
 
   return (
     <DSCtx.Provider value={{ darkMode, setDarkMode: setDarkMode || noop }}>
@@ -275,99 +299,50 @@ export function DesignSystemTab({
         {/* ══ Page Header ══ */}
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
-            <BookOpen size={18} style={{ color: "var(--primary)" }} />
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-base)",
-                fontWeight: "var(--weight-semibold)" as any,
-                letterSpacing: "var(--tracking-display)",
-                textTransform: "uppercase",
-                color: "var(--primary)",
-              }}
+            <BookOpen size={18} className="dsx-s-b0e08465c2" />
+            <span className="dsx-s-97bd1732e7"
             >
-              Design Spec Sheet
-            </span>
+              {showcaseMessage("components.design-system.index.design-spec-sheet-21f99f90")}</span>
           </div>
           <div className="flex items-center gap-3 flex-wrap">
-            <h1
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "var(--font-size-9xl)",
-                fontWeight: "var(--weight-bold)" as any,
-                lineHeight: "var(--leading-tight)",
-                letterSpacing: "-0.03em",
-                color: "var(--text-default)",
-              }}
+            <h1 className="dsx-s-5e63651105"
             >
-              Vulcan Design System
-            </h1>
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-base)",
-                fontWeight: "var(--weight-bold)" as any,
-                letterSpacing: "var(--tracking-label)",
-                textTransform: "uppercase",
-                background: "color-mix(in srgb, var(--cta) 15%, transparent)",
-                color: "var(--cta)",
-                padding: "4px 12px",
-                borderRadius: "9999px",
-              }}
+              {showcaseMessage("components.design-system.index.vulcan-design-system-79aa984a")}</h1>
+            <span className="dsx-s-3fe0ac1704"
             >
-              v2.1 Modular
-            </span>
+              {showcaseMessage("components.design-system.index.v2-1-modular-de82fec4")}</span>
           </div>
-          <p
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "var(--font-size-2xl)",
-              fontWeight: "var(--weight-regular)" as any,
-              lineHeight: "var(--leading-reading)",
-              color: "var(--muted-foreground)",
-              maxWidth: "640px",
-            }}
+          <p className="dsx-s-02cf081320"
           >
-            Spec sheet interattiva. Ogni componente è{" "}
-            <span style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>
-              vivo e cliccabile
-            </span>{" "}
-            — hover, click, toggle, drag per provare tutti gli stati dal vivo.
-            Palette{" "}
-            <span style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>
-              Atelier Stone
-            </span>
-            , {foundations.length} fondamenta + {components.length} componenti + {patterns.length} pattern.
-          </p>
+            {showcaseMessage("components.design-system.index.spec-sheet-interattiva-ogni-componente-e-08cd5bb9")}{" "}
+            <span className="dsx-s-a172e52ce6">
+              {showcaseMessage("components.design-system.index.vivo-e-cliccabile-c0b2b2f8")}</span>{" "}
+            {showcaseMessage("components.design-system.index.hover-click-toggle-drag-per-provare-tutti--686c04f6")}{" "}
+            <span className="dsx-s-a172e52ce6">
+              {showcaseMessage("components.design-system.index.atelier-stone-3c66930c")}</span>
+            , {foundations.length} {showcaseMessage("components.design-system.index.fondamenta-a8503a52")}{components.length} {showcaseMessage("components.design-system.index.componenti-272723fc")}{patterns.length} {showcaseMessage("components.design-system.index.pattern-4e1c5277")}{templates.length} {showcaseMessage("components.design-system.index.template-cab6016f")}</p>
 
           {/* Legend */}
           <div
-            className="flex items-center gap-4 py-2.5 px-4 rounded-lg mt-1"
-            style={{
-              background: "var(--surface-container)",
-              border: "1px solid var(--outline-variant)",
-            }}
+            className="flex items-center gap-4 py-2.5 px-4 rounded-lg mt-1 dsx-s-d1283e5581"
           >
             <Layers
-              size={14}
-              style={{ color: "var(--muted-foreground)", flexShrink: 0 }}
+              size={14} className="dsx-s-3f51ae8a96"
             />
             <div className="flex flex-wrap gap-3">
               {[
-                { label: "Fondamenta", prefix: `01–${foundations.length.toString().padStart(2, "0")}`, color: "var(--primary)" },
-                { label: "Componenti", prefix: `C01–C${components.length.toString().padStart(2, "0")}`, color: "var(--cta)" },
-                { label: "Pattern & Template", prefix: `P01–P${patterns.length.toString().padStart(2, "0")}`, color: "var(--secondary)" },
+                { label: showcaseMessage("components.design-system.index.fondamenta-f3c3e8ce"), prefix: `01–${foundations.length.toString().padStart(2, "0")}`, color: "var(--primary)" },
+                { label: showcaseMessage("components.design-system.index.componenti-f9c24842"), prefix: `C01–C${components.length.toString().padStart(2, "0")}`, color: "var(--cta)" },
+                { label: showcaseMessage("components.design-system.index.pattern-t5-a32c89d3"), prefix: `P01–P${patterns.length.toString().padStart(2, "0")}`, color: "var(--secondary)" },
+                { label: showcaseMessage("components.design-system.index.template-t6-6cd92f12"), prefix: `T01–T${templates.length.toString().padStart(2, "0")}`, color: "var(--tertiary)" },
               ].map((cat) => (
                 <span key={cat.label} className="flex items-center gap-1.5">
                   <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ background: cat.color }}
+                    className="w-2 h-2 rounded-full dsx-s-fbecfa7efd"
+                    style={{ "--dsx-background": toShowcaseCssValue(cat.color, false) } as any}
                   />
                   <span
-                    className="type-data"
-                    style={{
-                      color: "var(--text-default)",
-                    }}
+                    className="type-data dsx-s-a57c4bed75"
                   >
                     {cat.prefix} — {cat.label}
                   </span>
@@ -380,112 +355,48 @@ export function DesignSystemTab({
         {/* ══ Layout: Sidebar (lg+) + Content ══ */}
         <div className="flex gap-6">
           {/* ── Sidebar (lg+ only) ── */}
-          <aside
-            className="hidden lg:flex flex-col flex-shrink-0 sticky self-start overflow-y-auto"
-            style={{
-              width: "220px",
-              top: "60px",
-              maxHeight: "calc(100vh - 72px)",
-              scrollbarWidth: "thin",
-              paddingBottom: "32px",
-            }}
+          <nav
+            aria-label={showcaseMessage("components.design-system.index.indice-del-design-system-eada352f")}
+            className="hidden lg:flex flex-col flex-shrink-0 sticky self-start overflow-y-auto dsx-s-b4645d1b2c"
           >
             {/* Dark mode toggle */}
             {setDarkMode && (
               <motion.button
                 onClick={() => setDarkMode(!darkMode)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg mb-4 active:scale-95 transition-transform"
-                style={{
-                  background: "color-mix(in srgb, var(--primary) 8%, transparent)",
-                  border: "1px solid var(--outline-variant)",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: "var(--font-size-lg)",
-                  fontWeight: "var(--weight-semibold)" as any,
-                  color: "var(--primary)",
-                  cursor: "pointer",
-                  outline: "none",
-                  letterSpacing: "var(--tracking-label)",
-                  textTransform: "uppercase",
-                }}
-                aria-label={darkMode ? "Passa a Light mode" : "Passa a Dark mode"}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg mb-4 active:scale-95 transition-transform dsx-s-da1388fd62"
+                aria-label={darkMode ? showcaseMessage("components.design-system.index.passa-a-light-mode-2ee1a984") : showcaseMessage("components.design-system.index.passa-a-dark-mode-b6cac547")}
               >
                 {darkMode ? <Sun size={14} /> : <Moon size={14} />}
-                {darkMode ? "Light mode" : "Dark mode"}
+                {darkMode ? showcaseMessage("components.design-system.index.light-mode-3d3791aa") : showcaseMessage("components.design-system.index.dark-mode-9cf83d1f")}
               </motion.button>
             )}
 
             {/* Expand/Collapse */}
             <motion.button
               onClick={allExpanded ? collapseAll : expandAll}
-              className="px-3 py-1.5 rounded-md mb-4 active:scale-95 transition-transform"
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-md)",
-                fontWeight: "var(--weight-semibold)" as any,
-                letterSpacing: "var(--tracking-spread)",
-                background: "var(--surface-container)",
-                color: "var(--muted-foreground)",
-                border: "1px solid var(--outline-variant)",
-                cursor: "pointer",
-                outline: "none",
-                textAlign: "left",
-              }}
+              className="px-3 py-1.5 rounded-md mb-4 active:scale-95 transition-transform dsx-s-813813629f"
             >
-              {allExpanded ? "Comprimi tutto" : "Espandi tutto"}
+              {allExpanded ? showcaseMessage("components.design-system.index.comprimi-tutto-33bce275") : showcaseMessage("components.design-system.index.espandi-tutto-976ac0c3")}
             </motion.button>
 
             {/* Fondamenta group */}
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-base)",
-                fontWeight: "var(--weight-bold)" as any,
-                letterSpacing: "var(--tracking-ultra)",
-                textTransform: "uppercase",
-                color: "var(--primary)",
-                marginBottom: "4px",
-                paddingLeft: "8px",
-              }}
+            <span className="dsx-s-f4ac66dbb3"
             >
-              Fondamenta
-            </span>
+              {showcaseMessage("components.design-system.index.fondamenta-12b68e92")}</span>
             {foundations.map((s) => {
               const isActive = activeSection === s.id;
               return (
                 <motion.button
                   key={s.id}
                   onClick={() => scrollToSection(s.id)}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform"
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-lg)",
-                    fontWeight: isActive ? "var(--weight-bold)" as any : "var(--weight-medium)" as any,
-                    letterSpacing: "var(--tracking-fine)",
-                    color: isActive ? "var(--primary-foreground)" : "var(--muted-foreground)",
-                    background: isActive ? "var(--primary)" : "rgba(0,0,0,0)",
-                    border: "none",
-                    cursor: "pointer",
-                    outline: "none",
-                    textAlign: "left",
-                    transition: "background 0.15s, color 0.15s",
-                  }}
+                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform dsx-s-196ac45619"
+                  style={{ "--dsx-font-weight": toShowcaseCssValue(isActive ? "var(--weight-bold)" as any : "var(--weight-medium)" as any, true), "--dsx-color": toShowcaseCssValue(isActive ? "var(--primary-foreground)" : "var(--muted-foreground)", false), "--dsx-background": toShowcaseCssValue(isActive ? "var(--primary)" : "rgba(0,0,0,0)", false) } as any}
                 >
-                  <span
-                    style={{
-                      width: "24px",
-                      flexShrink: 0,
-                      fontFeatureSettings: "'tnum'",
-                      fontFamily: "'DM Mono', monospace",
-                    }}
+                  <span className="dsx-s-93831e2f43"
                   >
                     {s.short}
                   </span>
-                  <span
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
+                  <span className="dsx-s-0119c27775"
                   >
                     {s.label.split(" · ")[1] || s.label}
                   </span>
@@ -495,65 +406,27 @@ export function DesignSystemTab({
 
             {/* Divider */}
             <div
-              className="my-3 mx-2"
-              style={{
-                height: "1px",
-                background: "var(--outline-variant)",
-              }}
+              className="my-3 mx-2 dsx-s-2c046cdae7"
             />
 
             {/* Componenti group */}
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-base)",
-                fontWeight: "var(--weight-bold)" as any,
-                letterSpacing: "var(--tracking-ultra)",
-                textTransform: "uppercase",
-                color: "var(--cta)",
-                marginBottom: "4px",
-                paddingLeft: "8px",
-              }}
+            <span className="dsx-s-b00ae2ac38"
             >
-              Componenti
-            </span>
+              {showcaseMessage("components.design-system.index.componenti-141c9303")}</span>
             {components.map((s) => {
               const isActive = activeSection === s.id;
               return (
                 <motion.button
                   key={s.id}
                   onClick={() => scrollToSection(s.id)}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform"
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-lg)",
-                    fontWeight: isActive ? "var(--weight-bold)" as any : "var(--weight-medium)" as any,
-                    letterSpacing: "var(--tracking-fine)",
-                    color: isActive ? "var(--cta-foreground)" : "var(--muted-foreground)",
-                    background: isActive ? "var(--cta)" : "rgba(0,0,0,0)",
-                    border: "none",
-                    cursor: "pointer",
-                    outline: "none",
-                    textAlign: "left",
-                    transition: "background 0.15s, color 0.15s",
-                  }}
+                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform dsx-s-196ac45619"
+                  style={{ "--dsx-font-weight": toShowcaseCssValue(isActive ? "var(--weight-bold)" as any : "var(--weight-medium)" as any, true), "--dsx-color": toShowcaseCssValue(isActive ? "var(--cta-foreground)" : "var(--muted-foreground)", false), "--dsx-background": toShowcaseCssValue(isActive ? "var(--cta)" : "rgba(0,0,0,0)", false) } as any}
                 >
-                  <span
-                    style={{
-                      width: "28px",
-                      flexShrink: 0,
-                      fontFeatureSettings: "'tnum'",
-                      fontFamily: "'DM Mono', monospace",
-                    }}
+                  <span className="dsx-s-15dbd194b0"
                   >
                     {s.short}
                   </span>
-                  <span
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
+                  <span className="dsx-s-0119c27775"
                   >
                     {s.label.split(" · ")[1] || s.label}
                   </span>
@@ -563,122 +436,83 @@ export function DesignSystemTab({
 
             {/* Divider */}
             <div
-              className="my-3 mx-2"
-              style={{
-                height: "1px",
-                background: "var(--outline-variant)",
-              }}
+              className="my-3 mx-2 dsx-s-2c046cdae7"
             />
 
-            {/* Pattern & Template group */}
-            <span
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: "var(--font-size-base)",
-                fontWeight: "var(--weight-bold)" as any,
-                letterSpacing: "var(--tracking-ultra)",
-                textTransform: "uppercase",
-                color: "var(--secondary)",
-                marginBottom: "4px",
-                paddingLeft: "8px",
-              }}
+            {/* T5 Pattern group */}
+            <span className="dsx-s-0ae2cc7999"
             >
-              Pattern & Template
-            </span>
+              {showcaseMessage("components.design-system.index.pattern-t5-3824a152")}</span>
             {patterns.map((s) => {
               const isActive = activeSection === s.id;
               return (
                 <motion.button
                   key={s.id}
                   onClick={() => scrollToSection(s.id)}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform"
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-lg)",
-                    fontWeight: isActive ? "var(--weight-bold)" as any : "var(--weight-medium)" as any,
-                    letterSpacing: "var(--tracking-fine)",
-                    color: isActive ? "var(--secondary-foreground)" : "var(--muted-foreground)",
-                    background: isActive ? "var(--secondary)" : "rgba(0,0,0,0)",
-                    border: "none",
-                    cursor: "pointer",
-                    outline: "none",
-                    textAlign: "left",
-                    transition: "background 0.15s, color 0.15s",
-                  }}
+                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform dsx-s-196ac45619"
+                  style={{ "--dsx-font-weight": toShowcaseCssValue(isActive ? "var(--weight-bold)" as any : "var(--weight-medium)" as any, true), "--dsx-color": toShowcaseCssValue(isActive ? "var(--secondary-foreground)" : "var(--muted-foreground)", false), "--dsx-background": toShowcaseCssValue(isActive ? "var(--secondary)" : "rgba(0,0,0,0)", false) } as any}
                 >
-                  <span
-                    style={{
-                      width: "28px",
-                      flexShrink: 0,
-                      fontFeatureSettings: "'tnum'",
-                      fontFamily: "'DM Mono', monospace",
-                    }}
+                  <span className="dsx-s-15dbd194b0"
                   >
                     {s.short}
                   </span>
-                  <span
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
+                  <span className="dsx-s-0119c27775"
                   >
                     {s.label.split(" · ")[1] || s.label}
                   </span>
                 </motion.button>
               );
             })}
-          </aside>
+
+            <div
+              className="my-3 mx-2 dsx-s-2c046cdae7"
+            />
+            <span className="dsx-s-163939eae5"
+            >
+              {showcaseMessage("components.design-system.index.template-t6-6adb678b")}</span>
+            {templates.map((s) => {
+              const isActive = activeSection === s.id;
+              return (
+                <motion.button
+                  key={s.id}
+                  onClick={() => scrollToSection(s.id)}
+                  className="flex items-center gap-2 px-2 py-1.5 rounded-md active:scale-97 transition-transform dsx-s-196ac45619"
+                  style={{ "--dsx-font-weight": toShowcaseCssValue(isActive ? "var(--weight-bold)" as any : "var(--weight-medium)" as any, true), "--dsx-color": toShowcaseCssValue(isActive ? "var(--primary-foreground)" : "var(--muted-foreground)", false), "--dsx-background": toShowcaseCssValue(isActive ? "var(--tertiary)" : "rgba(0,0,0,0)", false) } as any}
+                >
+                  <span className="dsx-s-15dbd194b0"
+                  >
+                    {s.short}
+                  </span>
+                  <span className="dsx-s-0119c27775">
+                    {s.label.split(" · ")[1] || s.label}
+                  </span>
+                </motion.button>
+              );
+            })}
+          </nav>
 
           {/* ── Main content ── */}
           <div className="flex-1 min-w-0 flex flex-col gap-6">
             {/* ── Mobile Navigation (lg:hidden) ── */}
-            <div
-              className="lg:hidden sticky z-40 -mx-4 sm:-mx-6 px-4 sm:px-6 rounded-b-xl"
-              style={{
-                top: "48px",
-                paddingTop: "10px",
-                paddingBottom: "10px",
-                background:
-                  "color-mix(in srgb, var(--container-page) 90%, transparent)",
-                backdropFilter: "blur(24px) saturate(1.6)",
-                WebkitBackdropFilter: "blur(24px) saturate(1.6)",
-                borderBottom: "1px solid var(--border-muted)",
-              }}
+            <nav
+              aria-label={showcaseMessage("components.design-system.index.indice-del-design-system-eada352f")}
+              className="lg:hidden sticky z-40 -mx-4 sm:-mx-6 px-4 sm:px-6 rounded-b-xl dsx-s-bc043068fd"
             >
               <div
-                className="flex items-center gap-0.5 overflow-x-auto"
-                style={{ scrollbarWidth: "none" }}
+                className="flex items-center gap-0.5 overflow-x-auto dsx-s-d23c07fd1e"
               >
                 {/* Dark mode toggle (mobile) */}
                 {setDarkMode && (
                   <motion.button
                     onClick={() => setDarkMode(!darkMode)}
-                    className="flex-shrink-0 w-7 h-7 rounded-md flex items-center justify-center mr-1 active:scale-95 transition-transform"
-                    style={{
-                      background: "color-mix(in srgb, var(--primary) 10%, transparent)",
-                      color: "var(--primary)",
-                      border: "none",
-                      cursor: "pointer",
-                      outline: "none",
-                    }}
-                    aria-label={darkMode ? "Light mode" : "Dark mode"}
+                    className="flex-shrink-0 w-7 h-7 rounded-md flex items-center justify-center mr-1 active:scale-95 transition-transform dsx-s-f5074fcb0f"
+                    aria-label={darkMode ? showcaseMessage("components.design-system.index.light-mode-3d3791aa") : showcaseMessage("components.design-system.index.dark-mode-9cf83d1f")}
                   >
                     {darkMode ? <Sun size={13} /> : <Moon size={13} />}
                   </motion.button>
                 )}
 
-                <span
-                  style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: "var(--font-size-base)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    letterSpacing: "var(--tracking-ultra)",
-                    textTransform: "uppercase",
-                    color: "var(--primary)",
-                    flexShrink: 0,
-                    paddingRight: "4px",
-                  }}
+                <span className="dsx-s-ac008c9c7f"
                 >
                   FOND
                 </span>
@@ -686,41 +520,15 @@ export function DesignSystemTab({
                   <motion.button
                     key={s.id}
                     onClick={() => scrollToSection(s.id)}
-                    style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: "var(--font-size-md)",
-                      fontWeight: activeSection === s.id ? "var(--weight-bold)" as any : "var(--weight-medium)" as any,
-                      letterSpacing: "var(--tracking-spread)",
-                      color: activeSection === s.id ? "var(--primary-foreground)" : "var(--muted-foreground)",
-                      background: activeSection === s.id ? "var(--primary)" : "rgba(0,0,0,0)",
-                      padding: "3px 7px",
-                      borderRadius: "6px",
-                      border: "none",
-                      cursor: "pointer",
-                      flexShrink: 0,
-                      whiteSpace: "nowrap",
-                      fontFeatureSettings: "'tnum'",
-                      transition: "background 0.15s, color 0.15s",
-                    }}
+                    style={{ "--dsx-font-weight": toShowcaseCssValue(activeSection === s.id ? "var(--weight-bold)" as any : "var(--weight-medium)" as any, true), "--dsx-color": toShowcaseCssValue(activeSection === s.id ? "var(--primary-foreground)" : "var(--muted-foreground)", false), "--dsx-background": toShowcaseCssValue(activeSection === s.id ? "var(--primary)" : "rgba(0,0,0,0)", false) } as any} className="dsx-s-b9a345748c"
                   >
                     {s.short}
                   </motion.button>
                 ))}
                 <div
-                  className="mx-1.5 flex-shrink-0"
-                  style={{ width: "1px", height: "14px", background: "var(--outline-variant)" }}
+                  className="mx-1.5 flex-shrink-0 dsx-s-7f1b3a6457"
                 />
-                <span
-                  style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: "var(--font-size-base)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    letterSpacing: "var(--tracking-ultra)",
-                    textTransform: "uppercase",
-                    color: "var(--cta)",
-                    flexShrink: 0,
-                    paddingRight: "4px",
-                  }}
+                <span className="dsx-s-0500c5ed65"
                 >
                   COMP
                 </span>
@@ -728,41 +536,15 @@ export function DesignSystemTab({
                   <motion.button
                     key={s.id}
                     onClick={() => scrollToSection(s.id)}
-                    style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: "var(--font-size-md)",
-                      fontWeight: activeSection === s.id ? "var(--weight-bold)" as any : "var(--weight-medium)" as any,
-                      letterSpacing: "var(--tracking-spread)",
-                      color: activeSection === s.id ? "var(--cta-foreground)" : "var(--muted-foreground)",
-                      background: activeSection === s.id ? "var(--cta)" : "rgba(0,0,0,0)",
-                      padding: "3px 7px",
-                      borderRadius: "6px",
-                      border: "none",
-                      cursor: "pointer",
-                      flexShrink: 0,
-                      whiteSpace: "nowrap",
-                      fontFeatureSettings: "'tnum'",
-                      transition: "background 0.15s, color 0.15s",
-                    }}
+                    style={{ "--dsx-font-weight": toShowcaseCssValue(activeSection === s.id ? "var(--weight-bold)" as any : "var(--weight-medium)" as any, true), "--dsx-color": toShowcaseCssValue(activeSection === s.id ? "var(--cta-foreground)" : "var(--muted-foreground)", false), "--dsx-background": toShowcaseCssValue(activeSection === s.id ? "var(--cta)" : "rgba(0,0,0,0)", false) } as any} className="dsx-s-b9a345748c"
                   >
                     {s.short}
                   </motion.button>
                 ))}
                 <div
-                  className="mx-1.5 flex-shrink-0"
-                  style={{ width: "1px", height: "14px", background: "var(--outline-variant)" }}
+                  className="mx-1.5 flex-shrink-0 dsx-s-7f1b3a6457"
                 />
-                <span
-                  style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: "var(--font-size-base)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    letterSpacing: "var(--tracking-ultra)",
-                    textTransform: "uppercase",
-                    color: "var(--secondary)",
-                    flexShrink: 0,
-                    paddingRight: "4px",
-                  }}
+                <span className="dsx-s-346d8df875"
                 >
                   PAT
                 </span>
@@ -770,22 +552,23 @@ export function DesignSystemTab({
                   <motion.button
                     key={s.id}
                     onClick={() => scrollToSection(s.id)}
-                    style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: "var(--font-size-md)",
-                      fontWeight: activeSection === s.id ? "var(--weight-bold)" as any : "var(--weight-medium)" as any,
-                      letterSpacing: "var(--tracking-spread)",
-                      color: activeSection === s.id ? "var(--secondary-foreground)" : "var(--muted-foreground)",
-                      background: activeSection === s.id ? "var(--secondary)" : "rgba(0,0,0,0)",
-                      padding: "3px 7px",
-                      borderRadius: "6px",
-                      border: "none",
-                      cursor: "pointer",
-                      flexShrink: 0,
-                      whiteSpace: "nowrap",
-                      fontFeatureSettings: "'tnum'",
-                      transition: "background 0.15s, color 0.15s",
-                    }}
+                    style={{ "--dsx-font-weight": toShowcaseCssValue(activeSection === s.id ? "var(--weight-bold)" as any : "var(--weight-medium)" as any, true), "--dsx-color": toShowcaseCssValue(activeSection === s.id ? "var(--secondary-foreground)" : "var(--muted-foreground)", false), "--dsx-background": toShowcaseCssValue(activeSection === s.id ? "var(--secondary)" : "rgba(0,0,0,0)", false) } as any} className="dsx-s-b9a345748c"
+                  >
+                    {s.short}
+                  </motion.button>
+                ))}
+                <div
+                  className="mx-1.5 flex-shrink-0 dsx-s-7f1b3a6457"
+                />
+                <span className="dsx-s-03945cfd8f"
+                >
+                  TMP
+                </span>
+                {templates.map((s) => (
+                  <motion.button
+                    key={s.id}
+                    onClick={() => scrollToSection(s.id)}
+                    style={{ "--dsx-font-weight": toShowcaseCssValue(activeSection === s.id ? "var(--weight-bold)" as any : "var(--weight-medium)" as any, true), "--dsx-color": toShowcaseCssValue(activeSection === s.id ? "var(--primary-foreground)" : "var(--muted-foreground)", false), "--dsx-background": toShowcaseCssValue(activeSection === s.id ? "var(--tertiary)" : "rgba(0,0,0,0)", false) } as any} className="dsx-s-b9a345748c"
                   >
                     {s.short}
                   </motion.button>
@@ -796,91 +579,61 @@ export function DesignSystemTab({
               <div className="flex gap-2 mt-2">
                 <motion.button
                   onClick={allExpanded ? collapseAll : expandAll}
-                  className="px-2.5 py-1 rounded-md active:scale-95 transition-transform"
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-md)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    letterSpacing: "var(--tracking-spread)",
-                    background: "var(--surface-container)",
-                    color: "var(--muted-foreground)",
-                    border: "1px solid var(--outline-variant)",
-                    cursor: "pointer",
-                    outline: "none",
-                  }}
+                  className="px-2.5 py-1 rounded-md active:scale-95 transition-transform dsx-s-e92c22ec8b"
                 >
-                  {allExpanded ? "Comprimi tutto" : "Espandi tutto"}
+                  {allExpanded ? showcaseMessage("components.design-system.index.comprimi-tutto-33bce275") : showcaseMessage("components.design-system.index.espandi-tutto-976ac0c3")}
                 </motion.button>
               </div>
-            </div>
+            </nav>
 
             {/* ── Sections (accordion) ── */}
             {SECTIONS.map((section) => {
               const isOpen = expandedSections.has(section.id);
               const isComponent = COMPONENT_IDS.has(section.id);
               const isPattern = PATTERN_IDS.has(section.id);
+              const isTemplate = TEMPLATE_IDS.has(section.id);
               const Comp = section.Component;
               return (
                 <div
                   key={section.id}
                   id={`ds-${section.id}`}
-                  data-nav-id={section.id}
-                  style={{ scrollMarginTop: "160px" }}
+                  data-nav-id={section.id} className="dsx-s-5c95386af9"
                 >
                   <motion.button
                     onClick={() => toggleSection(section.id)}
-                    className="w-full flex items-center justify-between py-3 px-1 active:scale-98 transition-transform"
-                    style={{
-                      borderBottom: "1px solid var(--outline-variant)",
-                    }}
+                    className="w-full flex items-center justify-between py-3 px-1 active:scale-98 transition-transform dsx-s-ff83771d47"
                   >
                     <div className="flex items-center gap-2.5">
                       <div
-                        className="w-2 h-2 rounded-full flex-shrink-0"
-                        style={{
-                          background: isComponent
-                            ? "var(--cta)"
-                            : isPattern
-                            ? "var(--secondary)"
-                            : "var(--primary)",
-                        }}
+                        className="w-2 h-2 rounded-full flex-shrink-0 dsx-s-fbecfa7efd"
+                        style={{ "--dsx-background": toShowcaseCssValue(isComponent
+                                                                                            ? "var(--cta)"
+                                                                                            : isPattern
+                                                                                            ? "var(--secondary)"
+                                                                                            : isTemplate
+                                                                                            ? "var(--tertiary)"
+                                                                                            : "var(--primary)", false) } as any}
                       />
-                      <span
-                        style={{
-                          fontFamily: "'DM Sans', sans-serif",
-                          fontSize: "var(--font-size-2xl)",
-                          fontWeight: "var(--weight-semibold)" as any,
-                          color: "var(--text-default)",
-                        }}
+                      <span className="dsx-s-0b15ddefe0"
                       >
                         {section.label}
                       </span>
                     </div>
                     <motion.div
                       animate={{ rotate: isOpen ? 180 : 0 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 30,
-                      }}
+                      transition={showcaseTransition.preset_a84e383e92}
                     >
                       <ChevronDown
-                        size={16}
-                        style={{ color: "var(--muted-foreground)" }}
+                        size={16} className="dsx-s-63782726c0"
                       />
                     </motion.div>
                   </motion.button>
 
                   {/* Accordion body — CSS grid-rows */}
                   <div
-                    style={{
-                      display: "grid",
-                      gridTemplateRows: isOpen ? "1fr" : "0fr",
-                      transition:
-                        "grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
-                    }}
+                    style={{ "--dsx-grid-template-rows": toShowcaseCssValue(isOpen ? "1fr" : "0fr", false) } as any} className="dsx-s-2a61280093"
                   >
-                    <div style={{ overflow: "hidden" }}>
+                    <div className="dsx-s-a5317b8da5">
                       <div className="py-6">
                         <SectionNumCtx.Provider
                           value={{ num: section.num, category: section.category }}

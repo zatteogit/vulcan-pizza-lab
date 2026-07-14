@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { motionDelay,motionDuration,motionEase } from "../../components/ds/motion";
 
 /**
  * FireGlow — subtle animated gradient background simulating warm firelight.
@@ -51,9 +52,9 @@ export function FireGlow({ intensity = 0.5, variant = 'warm' }: { intensity?: nu
           scale: [1, 1.08, 0.95, 1.05, 1],
         }}
         transition={{
-          duration: 18,
+          duration: motionDuration.mascotBreath,
           repeat: Infinity,
-          ease: 'easeInOut',
+          ease: motionEase.standard,
         }}
       />
 
@@ -66,10 +67,10 @@ export function FireGlow({ intensity = 0.5, variant = 'warm' }: { intensity?: nu
           scale: [1, 1.12, 0.92, 1.06, 1],
         }}
         transition={{
-          duration: 22,
+          duration: motionDuration.mascotBlink,
           repeat: Infinity,
-          ease: 'easeInOut',
-          delay: 2,
+          ease: motionEase.standard,
+          delay: motionDelay.ambient,
         }}
       />
 
@@ -82,10 +83,10 @@ export function FireGlow({ intensity = 0.5, variant = 'warm' }: { intensity?: nu
           scale: [1, 0.95, 1.1, 0.98, 1],
         }}
         transition={{
-          duration: 25,
+          duration: motionDuration.mascotFloat,
           repeat: Infinity,
-          ease: 'easeInOut',
-          delay: 4,
+          ease: motionEase.standard,
+          delay: motionDelay.ambientLong,
         }}
       />
     </div>

@@ -345,14 +345,13 @@ interface ScoreDimension {
   key: ScoreDimensionKey;
   label: string;
   short: string;
-  color: string;
   weight: number;
 }
 
 export const SCORE_DIMENSIONS: ScoreDimension[] = [
-  { key: "authenticity",    label: "Autenticità",     short: "Aut", color: "var(--primary)",    weight: 0.45 },
-  { key: "feasibility",     label: "Fattibilità",     short: "Fat", color: "var(--tertiary)",   weight: 0.30 },
-  { key: "digestibility",   label: "Digeribilità",    short: "Dig", color: "var(--cta)",        weight: 0.25 },
+  { key: "authenticity", label: "Autenticità", short: "Aut", weight: 0.45 },
+  { key: "feasibility", label: "Fattibilità", short: "Fat", weight: 0.30 },
+  { key: "digestibility", label: "Digeribilità", short: "Dig", weight: 0.25 },
 ];
 
 /* ═══ YEAST LABELS — single source of truth ═══ */
@@ -1669,7 +1668,6 @@ export function generateRecipe(
     ovenTemp,
     cookTime,
     fermentationTempC,
-    doughBalls,
     yeastType,
   );
 
@@ -3460,7 +3458,6 @@ function calculateSustainabilityScore(
   ovenTemp: number,
   cookTimeSec: number,
   fermentationTempC: number,
-  doughBalls: number,
   yeastType: "fresh" | "dry" | "sourdough",
 ): { score: number; category: string; claims: EngineMsg[] } {
   const claims: EngineMsg[] = [];

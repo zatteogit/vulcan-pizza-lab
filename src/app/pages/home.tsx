@@ -52,7 +52,7 @@ import { VulcanHero } from "../components/shared/vulcan-hero";
 import { useCms } from "../features/cms/cms-context";
 import { t as tpl } from "../features/cms/i18n";
 import { getDietaryWarnings } from "../data/dietary-data";
-import { findSavedRecipe, removeRecipe, saveRecipe } from "../data/saved-recipes";
+import { findSavedRecipe, removeRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
 import {
   getInterpretationById,
   getInterpretationsForStyle,
@@ -75,6 +75,11 @@ import {
   useRecipeState,
 } from "../hooks/use-recipe-state";
 import { ConfirmDialog, CtaButton, Heading, IconButton } from "../components/ds/index";
+import {
+  decorativeMotion,
+  motionSpring,
+} from "../components/ds/motion";
+import { uiMessage } from "../i18n/ui-messages";
 
 type AppStep = "settings" | "styles" | "result";
 type StyleSettingsPanel = SettingsTab | "time";
@@ -371,7 +376,7 @@ function WelcomeOnboardingCard({
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring", stiffness: 380, damping: 28 }}
+      transition={motionSpring.emphasisEnter}
       className={`home-onboarding ${className}`}
     >
       <div className="home-onboarding__eyebrow">
@@ -905,7 +910,6 @@ export function HomePage() {
   // F2 — loop di apprendimento: se hai riportato problemi RICORRENTI su questo stile,
   // Vulcan propone una correzione (opt-in, trasparente). Applicazione manuale, non
   // silenziosa: modificare la ricetta in automatico su feedback rumoroso è pericoloso.
-  const [feedbackAppliedStyle, setFeedbackAppliedStyle] = useState<string | null>(null);
   const feedbackCorrection = useMemo(
     () => (selectedStyle ? deriveFeedbackCorrections(selectedStyle.id, loadFeedback()) : null),
     [selectedStyle],
@@ -922,13 +926,13 @@ export function HomePage() {
     if (feedbackCorrection.saltDelta !== 0) {
       setCustomSalt((s) => Math.max(1.5, Math.min(3.5, Math.round((s + feedbackCorrection.saltDelta) * 10) / 10)));
     }
-    setFeedbackAppliedStyle(selectedStyle.id);
   }, [feedbackCorrection, selectedStyle, setCustomHydration, setCustomFermentHours, setCustomSalt]);
 
   /* Scroll-driven title fade */
   const { scrollY } = useScroll();
   const titleOpacity = useTransform(scrollY, [0, 160], [1, 0]);
   const titleY = useTransform(scrollY, [0, 160], [0, -14]);
+  const heroMotionStyle = { opacity: titleOpacity, y: titleY };
 
   /* Scroll-to-top on step change */
   useEffect(() => {
@@ -1074,11 +1078,7 @@ export function HomePage() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 28,
-            }}
+            transition={motionSpring.disclosure}
             className="home-banner"
           >
             <div className="home-banner__bar home-banner__bar--override">
@@ -1132,11 +1132,7 @@ export function HomePage() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 28,
-            }}
+            transition={motionSpring.disclosure}
             className="home-banner"
           >
             <div
@@ -1181,11 +1177,7 @@ export function HomePage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -18 }}
-            transition={{
-              type: "spring",
-              stiffness: 320,
-              damping: 30,
-            }}
+            transition={motionSpring.stepEnter}
             className="home-step home-step--settings"
           >
             <div className="home-step__frame">
@@ -1195,7 +1187,7 @@ export function HomePage() {
                     eyebrow={cms.hero.onboardingEyebrow ?? "Prima volta qui?"}
                     body={
                       cms.hero.onboardingBody ??
-                      "Vulcan disegna la ricetta su misura per il tuo forno e il tuo tempo — e ti dice con un punteggio onesto quanto si avvicina all'originale."
+                      uiMessage("pages.home.onboardingBody")
                     }
                     cta={cms.hero.onboardingCta ?? "Capito, si parte"}
                     profileCta={cms.hero.onboardingProfileCta ?? "Salva forno e livello nel profilo"}
@@ -1211,10 +1203,7 @@ export function HomePage() {
                   hero={
                     <motion.div
                       className="home-hero"
-                      style={{
-                        opacity: titleOpacity,
-                        y: titleY,
-                      }}
+                      style={heroMotionStyle}
                     >
                       {/* VulcanHero — harmonized blob + mark composition */}
                       <div className="home-hero__mark">
@@ -1241,20 +1230,7 @@ export function HomePage() {
                           transition={
                             prefersReducedMotion
                               ? {}
-                              : {
-                                  scale: {
-                                    duration: 6,
-                                    repeat: Infinity,
-                                    repeatType: "mirror",
-                                    ease: "easeInOut",
-                                  },
-                                  opacity: {
-                                    duration: 8,
-                                    repeat: Infinity,
-                                    repeatType: "mirror",
-                                    ease: "easeInOut",
-                                  },
-                                }
+                              : decorativeMotion.heroGlowPrimary
                           }
                         />
                         {/* Secondary warmth ring — wider, subtler */}
@@ -1280,21 +1256,7 @@ export function HomePage() {
                           transition={
                             prefersReducedMotion
                               ? {}
-                              : {
-                                  scale: {
-                                    duration: 10,
-                                    repeat: Infinity,
-                                    repeatType: "mirror",
-                                    ease: "easeInOut",
-                                  },
-                                  opacity: {
-                                    duration: 12,
-                                    repeat: Infinity,
-                                    repeatType: "mirror",
-                                    ease: "easeInOut",
-                                    delay: 2,
-                                  },
-                                }
+                              : decorativeMotion.heroGlowSecondary
                           }
                         />
                         <VulcanHero
@@ -1306,7 +1268,7 @@ export function HomePage() {
                         />
                       </div>
                       {/* R8: wordmark — il nome del brand accanto al logo */}
-                      <span className="home-hero__wordmark">Vulcan</span>
+                      <span className="home-hero__wordmark">{uiMessage("pages.home.brandName")}</span>
                       <Heading level="page">
                         {cms.hero.title_line1}{" "}
                         <span className="page-title-accent">
@@ -1329,11 +1291,7 @@ export function HomePage() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -16 }}
-            transition={{
-              type: "spring",
-              stiffness: 320,
-              damping: 30,
-            }}
+            transition={motionSpring.stepEnter}
             className="home-step home-step--styles"
           >
             <div className="home-step__container home-step__container--wide">
@@ -1346,11 +1304,7 @@ export function HomePage() {
                     variant="ghost"
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 25,
-                    }}
+                    transition={motionSpring.responsiveEnter}
                     className="home-step__back"
                     aria-label={cms.configurator.backLabel}
                     title={cms.configurator.backLabel}
@@ -1403,7 +1357,7 @@ export function HomePage() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            transition={motionSpring.responsiveEnter}
             className="home-step home-step--result"
           >
             <RecipeView
@@ -1564,7 +1518,7 @@ export function HomePage() {
                   />
                 </RecipeSetupPanel>
                 </div>
-                <div data-slot="recipe-shoulder">
+                <aside data-slot="recipe-shoulder" aria-label={cms.ui.recipeScore}>
                 <RecipeMatchCard
                   scores={recipe.scores}
                   ovenTemp={constraints.oven_max_temp_c}
@@ -1594,7 +1548,7 @@ export function HomePage() {
                   saved={Boolean(savedEntry)}
                   nerdMode={effectiveNerdMode}
                 />
-                </div>
+                </aside>
                 </div>
               }
               recipeControls={
@@ -1627,7 +1581,7 @@ export function HomePage() {
                           className="home-feedback-panel__cta"
                         >
                           <Sparkles size={14} />{" "}
-                          {cms.cooking.applyCorrections ?? "Applica le correzioni"}
+                          {cms.cooking.applyCorrections ?? uiMessage("pages.home.applyCorrections")}
                         </button>
                       )}
                     </div>
@@ -1715,7 +1669,7 @@ export function HomePage() {
         >
           <span className="home-footer__motto">
             <Heart size={10} fill="currentColor" className="home-footer__heart" />
-            Make pizza, not war
+            {uiMessage("pages.home.motto")}
           </span>
         </footer>
       )}
@@ -1731,11 +1685,7 @@ export function HomePage() {
               initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 25,
-              }}
+              transition={motionSpring.responsiveEnter}
               onClick={handleGenerateRecipe}
               whileHover={{ scale: 1.03, y: -1 }}
               deepShadow
@@ -1763,9 +1713,9 @@ export function HomePage() {
       <ConfirmDialog
         open={exitConfirm}
         onDismiss={() => setExitConfirm(false)}
-        ariaLabel={cms.cooking.unsavedTitle ?? "Modifiche non salvate"}
+        ariaLabel={cms.cooking.unsavedTitle ?? uiMessage("shared.unsavedChanges")}
         icon={<Bookmark size={26} />}
-        title={cms.cooking.unsavedTitle ?? "Modifiche non salvate"}
+        title={cms.cooking.unsavedTitle ?? uiMessage("shared.unsavedChanges")}
         body={tpl(
           cms.cooking.unsavedBody ??
             "Se esci ora, la tua versione di {style} andrà persa. Vuoi salvarla nel ricettario?",

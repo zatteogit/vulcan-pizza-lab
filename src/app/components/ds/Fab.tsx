@@ -10,6 +10,8 @@ export interface FabProps {
   icon?: ReactNode;
   /** Solo `extended`. */
   label?: string;
+  /** Nome accessibile per le varianti icon-only. Se omesso, usa `label`. */
+  ariaLabel?: string;
   variant?: "standard" | "small" | "extended";
   color?: "primary" | "surface" | "tertiary";
   onClick?: () => void;
@@ -33,6 +35,7 @@ const COLOR_CLASS: Record<NonNullable<FabProps["color"]>, string> = {
 export function Fab({
   icon,
   label,
+  ariaLabel,
   variant = "standard",
   color = "primary",
   onClick,
@@ -47,6 +50,7 @@ export function Fab({
       type="button"
       disabled={disabled}
       onClick={onClick}
+      aria-label={!extended ? ariaLabel ?? label : ariaLabel}
       className={`ds-fab ${VARIANT_CLASS[variant]} ${COLOR_CLASS[color]} ${className ?? ""}`}
       style={style}
     >

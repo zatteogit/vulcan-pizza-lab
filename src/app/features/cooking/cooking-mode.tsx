@@ -18,6 +18,7 @@ Trash2,
 X,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
+import { motionDelay,motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
 import { useCallback,useEffect,useMemo,useState } from "react";
 import { createPortal } from "react-dom";
 import { useCms,type CmsContent } from "../cms/cms-context";
@@ -334,7 +335,7 @@ export function CookingMode() {
       <div className="cooking-mode-progress">
         <motion.div
           animate={{ width: `${finished ? 100 : progressPct}%` }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          transition={motionSpring.cookingPanel}
           className="cooking-mode-progress__fill"
         />
       </div>
@@ -358,7 +359,7 @@ export function CookingMode() {
                   <motion.div
                     initial={{ scale: 0.6, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.05 }}
+                    transition={{ ...motionSpring.cookingStep,delay: motionDelay.short }}
                   >
                     <DoughBlob variant="rise" size={124} energy={92} />
                   </motion.div>
@@ -382,7 +383,7 @@ export function CookingMode() {
                 initial={{ opacity: 0, x: 24 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -24 }}
-                transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                transition={motionSpring.steady}
                 className="cooking-mode-step"
               >
                 {/* Illustrazione di fase — respira piano, con alone caldo */}
@@ -390,7 +391,7 @@ export function CookingMode() {
                   <div aria-hidden="true" className="cooking-mode-step__glow" />
                   <motion.div
                     animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{ duration: motionDuration.ambientPulse,repeat: Infinity,ease: motionEase.standard }}
                   >
                     <StepIllustration stepId={step.id} size={120} />
                   </motion.div>
@@ -529,7 +530,7 @@ function CelebrationBurst() {
       x: Math.cos(angle) * distance,
       y: Math.sin(angle) * distance - 12,
       color: BURST_COLORS[i % BURST_COLORS.length],
-      delay: 0.18 + (i % 5) * 0.045,
+      delay: motionDelay.burstStart + (i % 5) * motionDelay.burstStep,
       rotate: (i % 2 ? 1 : -1) * (140 + i * 16),
       size: i % 3 === 0 ? 10 : 7,
       round: i % 2 === 0,
@@ -549,7 +550,7 @@ function CelebrationBurst() {
             opacity: [0, 1, 0],
             rotate: p.rotate,
           }}
-          transition={{ duration: 1.15, delay: p.delay, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: motionDuration.particle,delay: p.delay,ease: motionEase.expressiveEnter }}
           style={{
             ["--particle-size" as any]: `${p.size}px`,
             ["--particle-color" as any]: p.color,

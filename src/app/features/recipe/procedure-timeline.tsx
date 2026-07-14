@@ -4,6 +4,7 @@
 
 import { FlaskConical } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { StepIllustration } from "../cooking/step-illustrations";
@@ -23,6 +24,7 @@ import {
 } from "./recipe-output-format";
 import { StepDetails } from "./recipe-step-details";
 import { ToppingSection, type ToppingSectionProps } from "./topping-section";
+import { uiMessage } from "../../i18n/ui-messages";
 
 const TOPPING_TIMELINE_STEP_IDS = new Set([
   "top",
@@ -82,8 +84,7 @@ export function ProcedureTimeline({
                   {cms.misc.techAdjustmentsApplied}
                 </span>
                 <span className="type-code procedure-timeline-comp__badge">
-                  Nerd
-                </span>
+                  {uiMessage("features.recipe.procedure-timeline.nerd-2de974af")}</span>
                 <span className="type-numeric procedure-timeline-comp__count">
                   {compensations.length}
                 </span>
@@ -151,12 +152,7 @@ export function ProcedureTimeline({
                   key={step.id}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{
-                    delay: i * 0.06,
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 25,
-                  }}
+                  transition={{ ...motionSpring.balanced,delay: i * motionDelay.collectionStep }}
                   className="procedure-timeline-step"
                 >
                   {/* Node */}
@@ -201,7 +197,7 @@ export function ProcedureTimeline({
                           initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -6 }}
-                          transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                          transition={motionSpring.denseDisclosure}
                         >
                         <ToppingSection mode="timeline" recipe={recipe} activeTopping={activeTopping} toppingChoices={toppingChoices} allToppingChoices={allToppingChoices} servingUnit={servingUnit} onSelectTopping={onSelectTopping} />
                         <p className="procedure-timeline-step__desc procedure-timeline-step__desc--topping">

@@ -9,6 +9,7 @@ import type { CSSProperties, ReactNode } from "react";
 
 export interface CarouselProps {
   children: ReactNode[];
+  ariaLabel: string;
   itemWidth?: number | string;
   showDots?: boolean;
   className?: string;
@@ -17,6 +18,7 @@ export interface CarouselProps {
 
 export function Carousel({
   children,
+  ariaLabel,
   itemWidth = 260,
   showDots = true,
   className,
@@ -35,7 +37,14 @@ export function Carousel({
 
   return (
     <div className={["ds-carousel", className].filter(Boolean).join(" ")} style={style}>
-      <div ref={ref} onScroll={onScroll} className="ds-carousel__track">
+      <div
+        ref={ref}
+        onScroll={onScroll}
+        className="ds-carousel__track"
+        role="region"
+        aria-label={ariaLabel}
+        tabIndex={0}
+      >
         {items.map((it, i) => (
           <div
             key={i}

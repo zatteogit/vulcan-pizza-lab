@@ -328,12 +328,12 @@ const STYLE_TAGS: Record<string, RecipeTags> = {
    usa getInterpretationsForStyle(styleId) al suo posto. */
 
 /* === DEVIATION CATEGORY LABELS === */
-export const DEVIATION_CATEGORY_LABELS: Record<DeviationCategory, { label: string; emoji: string; color: string }> = {
-  canonical: { label: "Canonico", emoji: "📜", color: "var(--cta)" },
-  parameter_variant: { label: "Variazione parametrica", emoji: "🔧", color: "var(--tertiary)" },
-  technique_variant: { label: "Variante tecnica", emoji: "⚙️", color: "var(--primary)" },
-  hybrid: { label: "Ibridazione", emoji: "🔀", color: "var(--secondary)" },
-  experimental: { label: "Sperimentale", emoji: "🧪", color: "var(--primary)" },
+export const DEVIATION_CATEGORY_LABELS: Record<DeviationCategory, { label: string; emoji: string }> = {
+  canonical: { label: "Canonico", emoji: "📜" },
+  parameter_variant: { label: "Variazione parametrica", emoji: "🔧" },
+  technique_variant: { label: "Variante tecnica", emoji: "⚙️" },
+  hybrid: { label: "Ibridazione", emoji: "🔀" },
+  experimental: { label: "Sperimentale", emoji: "🧪" },
 };
 
 /* === HELPER: get deviation info for a style === */

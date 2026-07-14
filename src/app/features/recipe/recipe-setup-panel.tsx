@@ -31,9 +31,10 @@ import {
   type PizzaStyle,
   type RecipeScores,
 } from "../../domain/pizza-engine";
-import { PremiumSelect } from "./recipe-configurator";
+import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
 import { matchTone } from "./recipe-match-card";
 import type { StyleVersion } from "../../data/style-versions";
+import { uiMessage } from "../../i18n/ui-messages";
 
 function cmsMessage(cms: CmsContent, key: string, fallback: string): string {
   return cms.engineMessages?.[key] ?? fallback;
@@ -127,10 +128,6 @@ export function RecipeSetupPanel({
   style,
   versions,
   activeVersion,
-  customHydration,
-  customFlourW,
-  customFermentHours,
-  customFermentTemp,
   activeInterpretationId,
   onSelectVersion,
   onSelectInterpretation,
@@ -265,7 +262,7 @@ export function RecipeSetupPanel({
             </motion.span>
           )}
           <span className="setup-trigger__link">
-            {cms.ui.adjustByHand ?? "Regola a mano"}
+            {cms.ui.adjustByHand ?? uiMessage("features.recipe.recipe-setup-panel.regola-a-mano-93b9fcba")}
             <ChevronDown
               size={13}
               className="setup-trigger__link-icon"
@@ -378,7 +375,7 @@ export function RecipeSetupPanel({
                           {localizedVersionLabel(cms, version.label)}
                         </span>
                         <span className="setup-option__detail">
-                          {fmt.percent(version.params.hydration_pct)} idr. · W{version.params.flour_w}
+                          {fmt.percent(version.params.hydration_pct)} {uiMessage("features.recipe.recipe-setup-panel.idr-w-6f351627")}{version.params.flour_w}
                         </span>
                       </div>
                       {active && <Check size={16} className="setup-option__check" />}
@@ -390,7 +387,7 @@ export function RecipeSetupPanel({
               {interpretations.length > 0 && (
                 <div className="setup-signatures">
                   <div className="setup-signatures__label">
-                    {cms.misc.signatureLabel || "Firma"}
+                    {cms.misc.signatureLabel || uiMessage("features.recipe.recipe-setup-panel.firma-439145df")}
                   </div>
                   {interpretations.map((interpretation) => {
                     const active = activeInterpretationId === interpretation.id;
@@ -406,7 +403,7 @@ export function RecipeSetupPanel({
                             {interpretationName(interpretation)}
                           </span>
                           <span className="setup-option__detail">
-                            {interpretation.author ?? interpretation.pizzeria ?? "D'autore"}
+                            {interpretation.author ?? interpretation.pizzeria ?? uiMessage("features.recipe.recipe-setup-panel.d-autore-23e32e2a")}
                           </span>
                         </div>
                         {active && <Check size={16} className="setup-option__check" />}
@@ -426,7 +423,7 @@ export function RecipeSetupPanel({
             <div className="setup-science">
               <span className="setup-science__label">
                 <Beaker size={13} className="setup-science__icon" />
-                {bcp47.startsWith("it") ? "Parametri nerd" : "Nerd parameters"}
+                {bcp47.startsWith("it") ? uiMessage("features.recipe.recipe-setup-panel.parametri-nerd-104a1e9b") : uiMessage("features.recipe.recipe-setup-panel.nerd-parameters-b375fda3")}
               </span>
               <NerdAuraBlock compact>
                 <div className="setup-science__grid">
@@ -505,7 +502,7 @@ function MatchSummary({
   const tone = matchTone(roundedScore, "adapted", cms.cooking.matchTones);
   const axes = SCORE_DIMENSIONS.map((dimension) => ({
     key: dimension.key,
-    color: dimension.color,
+    color: SCORE_DIMENSION_COLORS[dimension.key],
     label: cms.scoreDimensions[dimension.key]?.label ?? dimension.label,
     shortLabel: cms.scoreDimensions[dimension.key]?.short ?? dimension.short,
     value: scores[dimension.key],
@@ -522,7 +519,7 @@ function MatchSummary({
   return (
     <div className={rootClass}>
       <div className="setup-match__label-wrap">
-        <span className="setup-match__label">Match</span>
+        <span className="setup-match__label">{uiMessage("features.recipe.recipe-setup-panel.match-0335207f")}</span>
       </div>
 
       <span
@@ -566,6 +563,6 @@ function interpretationName(interpretation: Interpretation): string {
     interpretation.pizzeria ??
     interpretation.organization ??
     interpretation.signature_name ??
-    "Interpretazione"
+    uiMessage("features.recipe.recipe-setup-panel.interpretazione-b24004b7")
   );
 }

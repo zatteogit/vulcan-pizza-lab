@@ -1,13 +1,9 @@
 import { motion } from "motion/react";
 import { ListChecks, Utensils, ChefHat } from "lucide-react";
-import { type CSSProperties, type ComponentType } from "react";
+import { type ComponentType } from "react";
 import { useCms } from "../cms/cms-context";
 import { SearchButton } from "../../components/shared/search-button";
-import {
-  liquidDockButtonStyle,
-  liquidDockQuickSpring,
-  liquidDockSpring,
-} from "../../domain/liquid-dock";
+import { motionSpring } from "../../components/ds/motion";
 
 export type RecipePrimaryTab = "ricetta" | "procedimento" | "condimento";
 
@@ -16,17 +12,6 @@ type RecipeTabMeta = {
   label: string;
   subtitle?: string;
   icon: ComponentType<any>;
-};
-
-const roundDockButtonStyle: CSSProperties = {
-  ...liquidDockButtonStyle,
-  width: 52,
-  height: 52,
-  borderRadius: "999px",
-  background:
-    "linear-gradient(180deg, color-mix(in srgb, var(--container-page) 97%, transparent), color-mix(in srgb, var(--container-page) 91%, transparent))",
-  boxShadow:
-    "0 14px 34px color-mix(in srgb, var(--shadow-color) 12%, transparent), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 24%, transparent), inset 0 -1px 0 color-mix(in srgb, var(--text-default) 4%, transparent)",
 };
 
 export function RecipeSectionTabs({
@@ -47,7 +32,7 @@ export function RecipeSectionTabs({
   onChange: (tab: RecipePrimaryTab) => void;
   sticky?: boolean;
   variant?: "inline" | "navbar";
-  stickyTop?: number;
+  stickyTop?: 44 | 56 | 64;
   onSearchOpen?: () => void;
   /** Stili farciti → la tab "Condimento" diventa "Farcitura". */
   fillingMode?: boolean;
@@ -99,7 +84,7 @@ export function RecipeSectionTabs({
           className="section-tabs-dock"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={liquidDockSpring}
+          transition={motionSpring.liquid}
         >
           <div className="section-tabs-dock__grid">
             <div className="section-tabs-dock__tabs">
@@ -116,9 +101,8 @@ export function RecipeSectionTabs({
             </div>
 
             <SearchButton
-              diameter={52}
+              size="md"
               onOpen={openSearch}
-              surfaceStyle={roundDockButtonStyle}
               className="section-tabs-dock__search"
             />
           </div>
@@ -129,16 +113,9 @@ export function RecipeSectionTabs({
 
   return (
     <div
-      className={
-        navbar
-          ? "section-tabs-wrap section-tabs-wrap--navbar"
-          : `section-tabs-wrap section-tabs-wrap--inline${sticky ? " section-tabs-wrap--sticky" : ""}`
-      }
-      style={
-        !navbar && sticky
-          ? { ["--section-tabs-sticky-top" as any]: `${stickyTop ?? 44}px` }
-          : undefined
-      }
+      className={navbar
+        ? "section-tabs-wrap section-tabs-wrap--navbar"
+        : `section-tabs-wrap section-tabs-wrap--inline${sticky ? " section-tabs-wrap--sticky" : ""}${stickyTop === 56 ? " section-tabs-wrap--below-subheader" : stickyTop === 64 ? " section-tabs-wrap--below-header" : ""}`}
     >
       <TabsCapsule
         tabs={tabs}
@@ -195,14 +172,14 @@ function TabsCapsule({
             aria-selected={active}
             whileHover={{ scale: 1.015 }}
             whileTap={{ scale: 0.965 }}
-            transition={liquidDockQuickSpring}
+            transition={motionSpring.quick}
             className={`section-tabs-capsule__tab${navbar ? " section-tabs-capsule__tab--navbar" : ""}${hasSubtitles ? " section-tabs-capsule__tab--subtitles" : ""}${active ? " section-tabs-capsule__tab--active" : ""}`}
           >
             {active && (
               <motion.span
                 layoutId={navbar ? "recipe-bottom-tab-indicator" : "recipe-primary-tab-pill"}
                 className={`section-tabs-capsule__indicator${navbar ? " section-tabs-capsule__indicator--navbar" : ""}`}
-                transition={liquidDockSpring}
+                transition={motionSpring.liquid}
               />
             )}
             <div className={`section-tabs-capsule__content${navbar ? " section-tabs-capsule__content--navbar" : ""}`}>

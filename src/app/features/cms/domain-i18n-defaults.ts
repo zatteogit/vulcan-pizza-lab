@@ -2,7 +2,12 @@
 /* Pre-ferment guide, dietary data, troubleshooting, glossary terms */
 /* Separated from cms-context.tsx for maintainability */
 
-import type { CmsPreFerment, CmsDietaryI18n, CmsTroubleshootingI18n, CmsGlossaryTerms } from "./cms-context";
+import type { CmsPreFerment } from "./cms-context";
+import type {
+  DietaryMessages,
+  GlossaryMessages,
+  TroubleshootingMessages,
+} from "../../i18n/domain-contracts";
 
 export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
   sectionLabel: "Pre-fermento",
@@ -89,7 +94,7 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
   },
 };
 
-export const DIETARY_I18N_DEFAULTS: CmsDietaryI18n = {
+export const DIETARY_I18N_DEFAULTS: DietaryMessages = {
   info: {
     low_fodmap: {
       name: "Low FODMAP",
@@ -162,7 +167,7 @@ export const DIETARY_I18N_DEFAULTS: CmsDietaryI18n = {
   },
 };
 
-export const TROUBLESHOOTING_I18N_DEFAULTS: CmsTroubleshootingI18n = {
+export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
   categories: {
     dough: "Impasto",
     fermentation: "Fermentazione",
@@ -335,7 +340,7 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: CmsTroubleshootingI18n = {
   },
 };
 
-export const GLOSSARY_TERMS_DEFAULTS: CmsGlossaryTerms = {
+export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
   terms: {
     w_alveograph: {
       name: "W (Alveografo di Chopin)",

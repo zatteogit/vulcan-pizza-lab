@@ -13,6 +13,8 @@ import { AnimatePresence, motion } from "motion/react";
 import type { ReactNode } from "react";
 import { CtaButton } from "./CtaButton";
 import { Heading } from "./Heading";
+import { motionSpring } from "./motion";
+import { useDialogFocus } from "./use-dialog-focus";
 
 type ConfirmDialogTone = "primary" | "destructive";
 
@@ -58,6 +60,11 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   const toneVar = tone === "destructive" ? "var(--destructive)" : "var(--primary)";
   const brand = emphasis === "brand";
+  const dialogRef = useDialogFocus<HTMLDivElement>({
+    open,
+    onClose: onDismiss,
+    lockScroll: position === "fixed",
+  });
   return (
     <AnimatePresence>
       {open && (
@@ -67,14 +74,16 @@ export function ConfirmDialog({
           exit={{ opacity: 0 }}
           className={`ds-confirm-scrim${position === "absolute" ? " ds-confirm-scrim--absolute" : ""}${brand ? " ds-confirm-scrim--brand" : ""}`}
           style={{ ["--ds-confirm-z" as any]: zIndex }}
-          onClick={onDismiss}
+          onPointerDown={onDismiss}
         >
           <motion.div
+            ref={dialogRef}
+            tabIndex={-1}
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            onClick={(e) => e.stopPropagation()}
+            transition={motionSpring.standard}
+            onPointerDown={(event) => event.stopPropagation()}
             className={`ds-confirm__card${brand ? " ds-confirm__card--brand" : ""}${size === "md" ? " ds-confirm__card--md" : ""}`}
             role="alertdialog"
             aria-modal="true"

@@ -29,32 +29,15 @@ import {
   Slice,
 } from "../features/cooking/step-illustrations";
 import { loadSkill } from "../hooks/use-profile-defaults";
+import { motionDelay, motionSpring } from "../components/ds/motion";
+import { uiMessage } from "../i18n/ui-messages";
 
 /* ── Percorsi consigliati per livello ── */
-const PATHS: Record<
-  SkillLevel,
-  { title: string; copy: string; styleId: string }
-> = {
-  1: {
-    title: "La tua prima teglia",
-    copy: "Niente impastatrice, niente stress: la Teglia Romana perdona tutto e premia subito. Il punto di partenza perfetto.",
-    styleId: "teglia_romana",
-  },
-  2: {
-    title: "Alza l'asticella: il padellino",
-    copy: "Bordo morbido, base croccante, una padella che hai già in casa. Il salto di qualità più accessibile che ci sia.",
-    styleId: "padellino_torino",
-  },
-  3: {
-    title: "La sfida del canotto",
-    copy: "Cornicione esplosivo, alta idratazione, pre-fermento. Tutto quello che hai imparato finora, messo alla prova.",
-    styleId: "napoletana_canotto",
-  },
-  4: {
-    title: "Maestro del metodo Bonci",
-    copy: "Idratazione estrema, pieghe, pazienza. La teglia da maestro che trasforma acqua e farina in una nuvola.",
-    styleId: "teglia_romana",
-  },
+const PATH_STYLE_IDS: Record<SkillLevel, string> = {
+  1: "teglia_romana",
+  2: "padellino_torino",
+  3: "napoletana_canotto",
+  4: "teglia_romana",
 };
 
 /* ── Termine del giorno: scelta deterministica per data ── */
@@ -79,24 +62,24 @@ export function LearnPage() {
   const localizedPaths = useMemo(() => {
     return {
       1: {
-        title: pg.learnPath1Title || PATHS[1].title,
-        copy: pg.learnPath1Copy || PATHS[1].copy,
-        styleId: PATHS[1].styleId,
+        title: pg.learnPath1Title || uiMessage("pages.learn.path1.title"),
+        copy: pg.learnPath1Copy || uiMessage("pages.learn.path1.copy"),
+        styleId: PATH_STYLE_IDS[1],
       },
       2: {
-        title: pg.learnPath2Title || PATHS[2].title,
-        copy: pg.learnPath2Copy || PATHS[2].copy,
-        styleId: PATHS[2].styleId,
+        title: pg.learnPath2Title || uiMessage("pages.learn.path2.title"),
+        copy: pg.learnPath2Copy || uiMessage("pages.learn.path2.copy"),
+        styleId: PATH_STYLE_IDS[2],
       },
       3: {
-        title: pg.learnPath3Title || PATHS[3].title,
-        copy: pg.learnPath3Copy || PATHS[3].copy,
-        styleId: PATHS[3].styleId,
+        title: pg.learnPath3Title || uiMessage("pages.learn.path3.title"),
+        copy: pg.learnPath3Copy || uiMessage("pages.learn.path3.copy"),
+        styleId: PATH_STYLE_IDS[3],
       },
       4: {
-        title: pg.learnPath4Title || PATHS[4].title,
-        copy: pg.learnPath4Copy || PATHS[4].copy,
-        styleId: PATHS[4].styleId,
+        title: pg.learnPath4Title || uiMessage("pages.learn.path4.title"),
+        copy: pg.learnPath4Copy || uiMessage("pages.learn.path4.copy"),
+        styleId: PATH_STYLE_IDS[4],
       },
     };
   }, [pg]);
@@ -110,8 +93,8 @@ export function LearnPage() {
     : localizedPaths[skill];
   const skillName = SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
   const pathContextLabel = activeStyle
-    ? `${pg.learnPathLabel} · ${activeStyle.name}`
-    : `Il percorso su misura per te · Livello ${skillName}`;
+    ? uiMessage("pages.learn.contextByStyle", [pg.learnPathLabel, activeStyle.name])
+    : uiMessage("pages.learn.contextByLevel", [skillName]);
   const term = getLocalizedTerm(termOfTheDay(), cms);
   const termCat = GLOSSARY_CATEGORIES[term.category];
 
@@ -148,7 +131,7 @@ export function LearnPage() {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        transition={motionSpring.standard}
         className="learn-page__container"
         data-region="page"
         data-progress="learning-path"
@@ -158,7 +141,7 @@ export function LearnPage() {
           <div className="learn-banner">
             <div className="learn-banner__body">
               <div className="learn-banner__title">
-                Stai studiando: {activeStyle.name}
+                {uiMessage("pages.learn.studying", [activeStyle.name])}
               </div>
               <div className="learn-banner__subtitle">
                 {pg.learnFilterSubtitle}
@@ -179,7 +162,7 @@ export function LearnPage() {
             HERO EDITORIALE — titolo serif bold + motto corsivo
             Stile allineato a Crea e Scopri.
            ══════════════════════════════════════════════════════════ */}
-        <div data-region="page-header">
+        <header data-region="page-header">
           <Heading level="page">
             {cms.misc.learnHeroTitle1}
             <span className="page-title-accent">
@@ -189,18 +172,18 @@ export function LearnPage() {
           <p className="page-lead">
             {cms.misc.learnHeroSubtitle}
           </p>
-        </div>
+        </header>
 
         {/* ══════════════════════════════════════════════════════════
             PERCORSO CONSIGLIATO — card ember con hero typography
            ══════════════════════════════════════════════════════════ */}
-        <motion.div
+        <motion.section
           data-region="feature"
           data-stage="1"
           data-stage-state="recommended"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.05 }}
+          transition={{ ...motionSpring.standard, delay: motionDelay.short }}
           className="learn-path"
         >
           <div className="learn-path__label">{pathContextLabel}</div>
@@ -229,18 +212,18 @@ export function LearnPage() {
               </div>
             </div>
           </Link>
-        </motion.div>
+        </motion.section>
 
         {/* ══════════════════════════════════════════════════════════
             TERMINE DEL GIORNO — feature editoriale autonoma
             Divisore decorativo + kicker ambra + card generosa
            ══════════════════════════════════════════════════════════ */}
-        <motion.div
+        <motion.section
           data-region="section"
           data-stage="2"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.1 }}
+          transition={{ ...motionSpring.standard, delay: motionDelay.medium }}
           className="learn-term"
         >
           {/* Decorative thin rule — magazine section break */}
@@ -278,17 +261,17 @@ export function LearnPage() {
                 <p className="learn-term__definition">{term.definition}</p>
               </div>
             </div>
-            <div className="learn-term__footer">
+            <footer className="learn-term__footer">
               <span className="learn-term__footer-label">{pg.learnOpenGlossary}</span>
               <ChevronRight size={14} className="learn-term__footer-icon" />
-            </div>
+            </footer>
           </Link>
-        </motion.div>
+        </motion.section>
 
         {/* ══════════════════════════════════════════════════════════
             RISORSE — sezioni in calce con intestazione editoriale
            ══════════════════════════════════════════════════════════ */}
-        <div data-region="resources">
+        <section data-region="resources">
           {/* Section heading with decorative trailing rule */}
           <div className="learn-resources__heading">
             <Heading level="md" as="h2" className="learn-resources__heading-text">
@@ -300,7 +283,7 @@ export function LearnPage() {
           <div data-region="collection" className="learn-resources__list">
             {SECTIONS.map((section, i) => {
               return (
-                <motion.div
+                <motion.article
                   key={section.id}
                   data-region="card"
                   data-stage={String(i + 3)}
@@ -308,10 +291,10 @@ export function LearnPage() {
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 30,
-                    delay: 0.14 + i * 0.06,
+                    ...motionSpring.standard,
+                    delay:
+                      motionDelay.collectionStart +
+                      i * motionDelay.collectionStep,
                   }}
                 >
                   <Link
@@ -323,20 +306,20 @@ export function LearnPage() {
                       <section.illustration size={52} />
                     </div>
                     <div className="learn-resources__content">
-                      <div className="learn-resources__label">
+                      <h3 className="learn-resources__label">
                         {section.label}
-                      </div>
-                      <div className="learn-resources__desc">
+                      </h3>
+                      <p className="learn-resources__desc">
                         {section.desc}
-                      </div>
+                      </p>
                     </div>
                     <ChevronRight size={16} className="learn-resources__chevron" />
                   </Link>
-                </motion.div>
+                </motion.article>
               );
             })}
           </div>
-        </div>
+        </section>
       </motion.div>
     </main>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
+import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
 import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, Heart } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
@@ -20,7 +21,8 @@ import { getStyleParametrics } from "../../data/parametric-databases";
 import { useCms } from "../cms/cms-context";
 import { t, createFormatter } from "../cms/i18n";
 import { CtaButton, IconButton } from "../../components/ds/index";
-import { isFavoriteStyle, toggleFavoriteStyle } from "../../data/saved-recipes";
+import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
+import { uiMessage } from "../../i18n/ui-messages";
 
 interface StyleDetailSheetProps {
   style: PizzaStyle;
@@ -124,20 +126,25 @@ export function StyleDetailSheet({
   const sheet = (
     <div className="style-detail-sheet__portal">
       {/* Backdrop — subtle, dismissible */}
-      <motion.div
+      <motion.button
+        type="button"
+        aria-label={cms.ui.closeDetails}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        transition={motionSpring.standard}
         onClick={onDismiss}
-        className="style-detail-sheet__backdrop"
+        className="style-detail-sheet__backdrop border-0 p-0"
       />
 
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={`style-detail-title-${style.id}`}
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
         exit={{ y: "100%" }}
-        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+        transition={motionSpring.standard}
         className="style-detail-sheet__panel"
       >
         {/* Preferito (canonico) — il bookmark marca lo STILE che ami, non la tua
@@ -149,14 +156,14 @@ export function StyleDetailSheet({
           onClick={() => setFav(toggleFavoriteStyle(style.id).includes(style.id))}
           whileTap={{ scale: 0.8 }}
           className={`style-detail-sheet__fav-btn${fav ? " style-detail-sheet__fav-btn--active" : ""}`}
-          aria-label={fav ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+          aria-label={fav ? uiMessage("features.recipe.style-detail-sheet.rimuovi-dai-preferiti-7f61dbbb") : uiMessage("features.recipe.style-detail-sheet.aggiungi-ai-preferiti-b5037a86")}
           aria-pressed={fav}
         >
           <motion.span
             key={String(fav)}
             initial={{ scale: 0.6 }}
             animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 600, damping: 18 }}
+            transition={motionSpring.radioMark}
             className="style-detail-sheet__fav-icon"
           >
             <Bookmark size={15} fill={fav ? "currentColor" : "none"} />
@@ -209,13 +216,12 @@ export function StyleDetailSheet({
                   </span>
                   <span className="style-detail-title__match">
                     <Heart size={10} fill="currentColor" aria-hidden="true" />
-                    {rec.compatibilityScore}% Match
-                  </span>
+                    {rec.compatibilityScore}{uiMessage("features.recipe.style-detail-sheet.match-a3424e8a")}</span>
                 </>
               )}
 
               {/* Title */}
-              <h3 className="style-detail-title__heading">
+              <h3 id={`style-detail-title-${style.id}`} className="style-detail-title__heading">
                 {style.name}
               </h3>
             </div>
@@ -242,7 +248,7 @@ export function StyleDetailSheet({
               className={`style-detail-nerd__toggle${showNerd ? " style-detail-nerd__toggle--active" : ""}`}
             >
               {showNerd ? <EyeOff size={13} /> : <Eye size={13} />}
-              {showNerd ? "Nascondi dettagli tecnici" : "Mostra dettagli tecnici"}
+              {showNerd ? uiMessage("features.recipe.style-detail-sheet.nascondi-dettagli-tecnici-5ce27cbc") : uiMessage("features.recipe.style-detail-sheet.mostra-dettagli-tecnici-73357a85")}
             </motion.button>
           </div>
 
@@ -253,7 +259,7 @@ export function StyleDetailSheet({
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ type: "spring", stiffness: 400, damping: 28 }}
+                transition={motionSpring.responsiveSoft}
                 className="style-detail-nerd__panel"
               >
                 {/* ── Author variants — compatible methods ── */}
@@ -286,11 +292,9 @@ export function StyleDetailSheet({
                         key={pill.label}
                         initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={prefersReducedMotion ? { duration: 0 } : {
-                          delay: 0.15 + idx * 0.04,
-                          type: "spring",
-                          stiffness: 500,
-                          damping: 28,
+                        transition={prefersReducedMotion ? { duration: motionDuration.reduced } : {
+                          ...motionSpring.crispDisclosure,
+                          delay: motionDelay.feedback + idx * motionDelay.micro,
                         }}
                         className="style-detail-pills__item"
                       >
@@ -313,11 +317,9 @@ export function StyleDetailSheet({
                   <motion.div
                     initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={prefersReducedMotion ? { duration: 0 } : {
-                      delay: 0.4,
-                      type: "spring",
-                      stiffness: 450,
-                      damping: 28,
+                    transition={prefersReducedMotion ? { duration: motionDuration.reduced } : {
+                      ...motionSpring.highlightedMatch,
+                      delay: motionDelay.pageDecision,
                     }}
                     className="style-detail-params"
                   >

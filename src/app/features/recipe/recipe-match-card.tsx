@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { motionSpring,motionTiming } from "../../components/ds/motion";
 import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
+import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
+import { uiMessage } from "../../i18n/ui-messages";
 
 type RecipeMatchMode = "canonical" | "adapted" | "lab";
 
@@ -30,37 +33,37 @@ const TONE_FALLBACKS: Record<
   MatchToneCopy & { low: boolean; icon: MatchIconKey }
 > = {
   t90: {
-    title: "Amore a prima vista",
-    canonical: "La canonica e la tua cucina parlano già la stessa lingua.",
-    adapted: "Questa versione è nata per il tuo setup.",
+    title: uiMessage("features.recipe.recipe-match-card.amore-a-prima-vista-d3108980"),
+    canonical: uiMessage("features.recipe.recipe-match-card.la-canonica-e-la-tua-cucina-parlano-gia-la-37bbb4fd"),
+    adapted: uiMessage("features.recipe.recipe-match-card.questa-versione-e-nata-per-il-tuo-setup-4ff2056a"),
     low: false,
     icon: "handshake",
   },
   t75: {
-    title: "Ottima intesa",
-    canonical: "Qualche micro-compromesso, ma la scintilla c'è.",
-    adapted: "Pochi aggiustamenti, tanta sostanza.",
+    title: uiMessage("features.recipe.recipe-match-card.ottima-intesa-55470040"),
+    canonical: uiMessage("features.recipe.recipe-match-card.qualche-micro-compromesso-ma-la-scintilla--62f59a12"),
+    adapted: uiMessage("features.recipe.recipe-match-card.pochi-aggiustamenti-tanta-sostanza-528675f6"),
     low: false,
     icon: "heart",
   },
   t60: {
-    title: "Ci vuole un po' di corteggiamento",
-    canonical: "Si può fare bene: sblocchiamola e Vulcan sistema tempi e cottura.",
-    adapted: "La ricetta funziona, ma chiede un minimo di attenzione.",
+    title: uiMessage("features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af"),
+    canonical: uiMessage("features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69"),
+    adapted: uiMessage("features.recipe.recipe-match-card.la-ricetta-funziona-ma-chiede-un-minimo-di-7c183f59"),
     low: false,
     icon: "pulse",
   },
   t40: {
-    title: "Per le cose buone ci vuole tempo",
-    canonical: "La ricetta è seria: meglio adattarla al tuo forno prima di provarci.",
-    adapted: "Buona direzione, ma serve ancora qualche compromesso.",
+    title: uiMessage("features.recipe.recipe-match-card.per-le-cose-buone-ci-vuole-tempo-e6addc9c"),
+    canonical: uiMessage("features.recipe.recipe-match-card.la-ricetta-e-seria-meglio-adattarla-al-tuo-551e300f"),
+    adapted: uiMessage("features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050"),
     low: true,
     icon: "crack",
   },
   t0: {
-    title: "Cuore spezzato",
-    canonical: "Bellissima, ma oggi chiede più fuoco di quello che hai. La rendiamo possibile?",
-    adapted: "Troppo per questo setup: alleggeriamo tempi, forno o ambizione.",
+    title: uiMessage("features.recipe.recipe-match-card.cuore-spezzato-42157bb9"),
+    canonical: uiMessage("features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75"),
+    adapted: uiMessage("features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf"),
     low: true,
     icon: "off",
   },
@@ -96,10 +99,7 @@ const HEADROOM_TONE_CLASS = {
    prefers-reduced-motion salta direttamente al valore. tnum evita jitter. */
 function AnimatedScore({ value }: { value: number }) {
   const prefersReducedMotion = useReducedMotion();
-  const spring = useSpring(prefersReducedMotion ? value : 0, {
-    stiffness: 90,
-    damping: 22,
-  });
+  const spring = useSpring(prefersReducedMotion ? value : 0, motionSpring.animatedScore);
   useEffect(() => {
     if (prefersReducedMotion) spring.jump(value);
     else spring.set(value);
@@ -191,10 +191,16 @@ export function RecipeMatchCard({
   // quindi la formula mostrata usa gli STESSI pesi passati a generateRecipe.
   const [explainKey, setExplainKey] = useState<ScoreDimensionKey | null>(null);
   const NERD_EXTRA_DIMENSIONS = [
-    { key: "sustainability" as const, label: "Sostenibilità", short: "Sos", color: "var(--secondary)", weight: 0 },
-    { key: "experimentation" as const, label: "Sperimentazione", short: "Spe", color: "var(--text-accent)", weight: 0 },
+    { key: "sustainability" as const, label: uiMessage("features.recipe.recipe-match-card.sostenibilita-7cea5449"), short: "Sos", color: "var(--secondary)", weight: 0 },
+    { key: "experimentation" as const, label: uiMessage("features.recipe.recipe-match-card.sperimentazione-d09679c9"), short: "Spe", color: "var(--text-accent)", weight: 0 },
   ];
-  const axes = [...SCORE_DIMENSIONS, ...(nerdMode ? NERD_EXTRA_DIMENSIONS : [])]
+  const axes = [
+    ...SCORE_DIMENSIONS.map((dimension) => ({
+      ...dimension,
+      color: SCORE_DIMENSION_COLORS[dimension.key],
+    })),
+    ...(nerdMode ? NERD_EXTRA_DIMENSIONS : []),
+  ]
     .map((dimension) => ({
       ...dimension,
       label: cms.scoreDimensions[dimension.key]?.label ?? dimension.label,
@@ -325,7 +331,7 @@ export function RecipeMatchCard({
           className={`match-kicker__icon ${tone.low ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
           aria-hidden="true"
         />
-        <span className="match-kicker__label">Match</span>
+        <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.match-0335207f")}</span>
         <span className="match-kicker__rule" aria-hidden="true" />
         <button
           type="button"
@@ -338,13 +344,13 @@ export function RecipeMatchCard({
           aria-expanded={expanded}
           aria-label={
             expanded
-              ? (cms.cooking.matchDetailsHide ?? "Nascondi")
-              : (cms.cooking.matchDetails ?? "Dettagli")
+              ? (cms.cooking.matchDetailsHide ?? uiMessage("features.recipe.recipe-match-card.nascondi-f6ef7782"))
+              : (cms.cooking.matchDetails ?? uiMessage("features.recipe.recipe-match-card.dettagli-8f4ce7d9"))
           }
           title={
             expanded
-              ? (cms.cooking.matchDetailsHide ?? "Nascondi")
-              : (cms.cooking.matchDetails ?? "Dettagli")
+              ? (cms.cooking.matchDetailsHide ?? uiMessage("features.recipe.recipe-match-card.nascondi-f6ef7782"))
+              : (cms.cooking.matchDetails ?? uiMessage("features.recipe.recipe-match-card.dettagli-8f4ce7d9"))
           }
           className={`match-info-toggle${expanded ? " match-info-toggle--active" : ""}`}
         >
@@ -366,7 +372,7 @@ export function RecipeMatchCard({
                 initial={{ opacity: 0, y: 5, scale: 0.9 }}
                 animate={{ opacity: 1, y: -3, scale: 1 }}
                 exit={{ opacity: 0, y: -10 }}
-                transition={{ type: "spring", stiffness: 380, damping: 26 }}
+                transition={motionSpring.matchGauge}
                 className="type-numeric match-score-bump"
                 aria-hidden="true"
               >
@@ -383,7 +389,7 @@ export function RecipeMatchCard({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.18, ease: "easeOut" }}
+              transition={motionTiming.exit}
             >
               {tone.title}
             </motion.span>
@@ -413,7 +419,7 @@ export function RecipeMatchCard({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            transition={motionSpring.matchPanel}
             className="match-details"
           >
             {/* Copy emotivo del tono: apre il pannello. */}
@@ -467,7 +473,7 @@ export function RecipeMatchCard({
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  transition={motionSpring.matchPanel}
                   className="match-explain"
                 >
                   <div className="match-explain__panel">
@@ -499,7 +505,7 @@ export function RecipeMatchCard({
              * rinormalizzati — la somma è il Match mostrato (±1 di rounding). */}
             {nerdMode && weightedAxes.length > 0 && (
               <p className="type-numeric match-breakdown">
-                {cms.cooking.matchBreakdownLabel ?? "Media pesata"}:{" "}
+                {cms.cooking.matchBreakdownLabel ?? uiMessage("features.recipe.recipe-match-card.media-pesata-e31351dd")}:{" "}
                 {weightedAxes
                   .map((axis) => `${axis.shortLabel} ${Math.round(axis.value)}·${axis.weightPct}%`)
                   .join(" + ")}
@@ -539,7 +545,7 @@ export function RecipeMatchCard({
             onClick={onOptimize}
             whileHover={{ scale: 1.025, y: -1 }}
             whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 450, damping: 28 }}
+            transition={motionSpring.highlightedMatch}
             className="match-action-cta"
           >
             <Sparkles size={15} />
@@ -557,7 +563,7 @@ export function RecipeMatchCard({
             className="match-action-text match-action-text--personalize"
           >
             <SlidersHorizontal size={14} />
-            {cms.ui.personalize ?? "Personalizza"}
+            {cms.ui.personalize ?? uiMessage("features.recipe.recipe-match-card.personalizza-0beadff3")}
           </motion.button>
         )}
         <AnimatePresence initial={false}>
@@ -638,7 +644,7 @@ function ScoreBar({
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${rounded}%` }}
-          transition={{ type: "spring", stiffness: 240, damping: 26 }}
+          transition={motionSpring.calmMatch}
           className="match-bar-fill"
           style={{ ["--bar-color" as any]: color }}
         />

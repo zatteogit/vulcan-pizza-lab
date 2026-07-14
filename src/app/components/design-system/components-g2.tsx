@@ -22,6 +22,9 @@ SectionHeader,
 SubSectionLabel,
 } from "./shared";
 import { Dialog, CtaButton } from "../ds/index";
+import { toShowcaseCssValue } from "./showcase-style";
+import { showcaseTransition } from "./showcase-motion";
+import { showcaseMessage } from "../../i18n/showcase-messages";
 
 /* ═══════════════════════════════════════════════════════════
    C26 — TOOLTIP  (M3 Expressive)
@@ -33,42 +36,41 @@ function TooltipSpec() {
   const [openRich, setOpenRich] = useState<string | null>(null);
 
   const PLAIN_ITEMS = [
-    { id: "heart", Icon: Heart, tip: "Aggiungi ai preferiti" },
-    { id: "copy", Icon: Copy, tip: "Copia negli appunti" },
-    { id: "search", Icon: Search, tip: "Cerca ricetta" },
-    { id: "settings", Icon: Settings, tip: "Impostazioni" },
-    { id: "trash", Icon: Trash2, tip: "Elimina" },
+    { id: "heart", Icon: Heart, tip: showcaseMessage("components.design-system.components-g2.aggiungi-ai-preferiti-b5037a86") },
+    { id: "copy", Icon: Copy, tip: showcaseMessage("components.design-system.components-g2.copia-negli-appunti-e82b73ba") },
+    { id: "search", Icon: Search, tip: showcaseMessage("components.design-system.components-g2.cerca-ricetta-7400ff8d") },
+    { id: "settings", Icon: Settings, tip: showcaseMessage("components.design-system.components-g2.impostazioni-8f710ac6") },
+    { id: "trash", Icon: Trash2, tip: showcaseMessage("components.design-system.components-g2.elimina-6b177bdf") },
   ];
 
   const RICH_ITEMS = [
-    { id: "hydration", title: "Idratazione", body: "Rapporto acqua/farina in percentuale. Valori alti (70%+) producono alveolatura più aperta ma richiedono maggiore esperienza.", Icon: Info },
-    { id: "w-value", title: "Indice W", body: "Misura la forza alveografica della farina. W alto (300+) regge idratazioni elevate e fermentazioni lunghe.", Icon: Wheat },
+    { id: "hydration", title: showcaseMessage("components.design-system.components-g2.idratazione-ca30c32c"), body: showcaseMessage("components.design-system.components-g2.rapporto-acqua-farina-in-percentuale-valor-0f6b13c0"), Icon: Info },
+    { id: "w-value", title: showcaseMessage("components.design-system.components-g2.indice-w-35d73f41"), body: showcaseMessage("components.design-system.components-g2.misura-la-forza-alveografica-della-farina--a6218822"), Icon: Wheat },
   ];
 
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader
-        title="Tooltip"
-        description="M3 definisce 2 tipi: Plain tooltip (breve, solo testo, hover) e Rich tooltip (titolo + body, click/hover). Entrambi con entrata spring e puntatore verso il trigger."
+        title={showcaseMessage("components.design-system.components-g2.tooltip-b8407e25")}
+        description={showcaseMessage("components.design-system.components-g2.m3-definisce-2-tipi-plain-tooltip-breve-so-d164770a")}
       />
 
-      <SubSectionLabel label="Panoramica" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.panoramica-f38c9a27")} />
       <Panoramica
-        descrizione="Due tipi di tooltip M3: Plain (breve, solo testo, appare su hover) e Rich (titolo + body, appare su click o hover prolungato). Entrambi con entrata spring e posizionamento sotto il trigger."
+        descrizione={showcaseMessage("components.design-system.components-g2.due-tipi-di-tooltip-m3-plain-breve-solo-te-96f817f2")}
         principi={[
-          "Plain: inverse-surface bg, testo breve (max 1 riga), hover only",
-          "Rich: surface-container-high bg con bordo, titolo + body, click/hover",
-          "Spring stiffness:500 damping:25, translateY 6→0px + scale 0.95→1",
+          showcaseMessage("components.design-system.components-g2.plain-inverse-surface-bg-testo-breve-max-1-cdbbf24b"),
+          showcaseMessage("components.design-system.components-g2.rich-surface-container-high-bg-con-bordo-t-0fe6ba48"),
+          showcaseMessage("components.design-system.components-g2.spring-stiffness-500-damping-25-translatey-4b0dd2cd"),
         ]}
       />
 
-      <SubSectionLabel label="Specifiche" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.specifiche-057caf2f")} />
 
       {/* Plain tooltips */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
-          Plain Tooltip — hover sulle icone
-        </span>
+        <span className="type-label dsx-s-e2184fadc0">
+          {showcaseMessage("components.design-system.components-g2.plain-tooltip-hover-sulle-icone-c9dd2521")}</span>
         <div className="mt-4 flex items-center gap-4 justify-center">
           {PLAIN_ITEMS.map((item) => {
             const Icon = item.Icon;
@@ -80,13 +82,7 @@ function TooltipSpec() {
                 onMouseLeave={() => setHoveredPlain(null)}
               >
                 <motion.button
-                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-90 transition-transform"
-                  style={{
-                    background: "var(--surface-container)",
-                    border: "none",
-                    outline: "none",
-                    color: "var(--on-surface-variant)",
-                  }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-90 transition-transform dsx-s-631b935c12"
                   aria-label={item.tip}
                 >
                   <Icon size={18} />
@@ -98,18 +94,8 @@ function TooltipSpec() {
                       initial={{ opacity: 0, y: 6, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 4, scale: 0.95 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                      className="absolute left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg whitespace-nowrap z-50"
-                      style={{
-                        top: "calc(100% + 8px)",
-                        background: "var(--inverse-surface)",
-                        color: "var(--inverse-on-surface)",
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: "var(--font-size-base)",
-                        fontWeight: "var(--weight-medium)" as any,
-                        boxShadow: "var(--shadow-md)",
-                        pointerEvents: "none",
-                      }}
+                      transition={showcaseTransition.preset_e8d752eab0}
+                      className="absolute left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-lg whitespace-nowrap z-50 dsx-s-ef25f29e7a"
                     >
                       {item.tip}
                     </motion.div>
@@ -123,9 +109,8 @@ function TooltipSpec() {
 
       {/* Rich tooltips */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
-          Rich Tooltip — clicca sulle icone
-        </span>
+        <span className="type-label dsx-s-e2184fadc0">
+          {showcaseMessage("components.design-system.components-g2.rich-tooltip-clicca-sulle-icone-6d8243c4")}</span>
         <div className="mt-4 flex flex-wrap gap-4 justify-center">
           {RICH_ITEMS.map((item) => {
             const Icon = item.Icon;
@@ -134,14 +119,9 @@ function TooltipSpec() {
               <div key={item.id} className="relative">
                 <button
                   onClick={() => setOpenRich(isOpen ? null : item.id)}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-90 transition-transform"
-                  style={{
-                    background: isOpen ? "color-mix(in srgb, var(--primary) 12%, transparent)" : "var(--surface-container)",
-                    border: "none",
-                    outline: "none",
-                    color: isOpen ? "var(--primary)" : "var(--on-surface-variant)",
-                    transition: "background 0.15s, color 0.15s",
-                  }}
+                  aria-label={item.title}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center cursor-pointer active:scale-90 transition-transform dsx-s-cb62cd3734"
+                  style={{ "--dsx-background": toShowcaseCssValue(isOpen ? "color-mix(in srgb, var(--primary) 12%, transparent)" : "var(--surface-container)", false), "--dsx-color": toShowcaseCssValue(isOpen ? "var(--primary)" : "var(--on-surface-variant)", false) } as any}
                   aria-expanded={isOpen}
                 >
                   <Icon size={18} />
@@ -153,31 +133,13 @@ function TooltipSpec() {
                       initial={{ opacity: 0, y: 6, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 4, scale: 0.95 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                      className="absolute left-1/2 -translate-x-1/2 p-4 rounded-xl z-50"
-                      style={{
-                        top: "calc(100% + 10px)",
-                        width: "240px",
-                        background: "var(--surface-container-high)",
-                        border: "1px solid var(--outline-variant)",
-                        boxShadow: "var(--shadow-lg)",
-                      }}
+                      transition={showcaseTransition.preset_e8d752eab0}
+                      className="absolute left-1/2 -translate-x-1/2 p-4 rounded-xl z-50 dsx-s-fc41b64083"
                     >
-                      <div style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: "var(--font-size-lg)",
-                        fontWeight: "var(--weight-bold)" as any,
-                        color: "var(--text-default)",
-                        marginBottom: "4px",
-                      }}>
+                      <div className="dsx-s-ed2f1d2101">
                         {item.title}
                       </div>
-                      <div style={{
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: "var(--font-size-md)",
-                        color: "var(--muted-foreground)",
-                        lineHeight: "var(--leading-relaxed)",
-                      }}>
+                      <div className="dsx-s-b4252559c3">
                         {item.body}
                       </div>
                     </motion.div>
@@ -189,34 +151,34 @@ function TooltipSpec() {
         </div>
       </div>
 
-      <SubSectionLabel label="Linee guida" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.linee-guida-b43417d1")} />
       <LineeGuida
         fai={[
-          "Plain per spiegare icone senza label — hover mostra il significato",
-          "Rich per informazioni contestuali che richiedono titolo + corpo",
-          "Posizione sotto il trigger, centrato — evitare di coprire il contenuto",
+          showcaseMessage("components.design-system.components-g2.plain-per-spiegare-icone-senza-label-hover-01410701"),
+          showcaseMessage("components.design-system.components-g2.rich-per-informazioni-contestuali-che-rich-30523dce"),
+          showcaseMessage("components.design-system.components-g2.posizione-sotto-il-trigger-centrato-evitar-9eb190c1"),
         ]}
         nonFare={[
-          "Mai tooltip per informazioni critiche — non sono accessibili su mobile",
-          "Mai testo lungo in plain tooltip — max 1-2 parole",
-          "Mai tooltip su elementi già chiari (es. bottone con label)",
+          showcaseMessage("components.design-system.components-g2.mai-tooltip-per-informazioni-critiche-non--e25198a1"),
+          showcaseMessage("components.design-system.components-g2.mai-testo-lungo-in-plain-tooltip-max-1-2-p-7cc51410"),
+          showcaseMessage("components.design-system.components-g2.mai-tooltip-su-elementi-gia-chiari-es-bott-6ae0c51f"),
         ]}
       />
 
-      <SubSectionLabel label="Accessibilità" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.accessibilita-e59811a6")} />
       <AccessibilitaInfo items={[
-        { label: "ARIA", desc: "aria-describedby per collegare il tooltip al trigger. role='tooltip' sul contenitore." },
-        { label: "Tastiera", desc: "Focus sul trigger mostra il tooltip. Escape per chiudere." },
+        { label: "ARIA", desc: showcaseMessage("components.design-system.components-g2.aria-describedby-per-collegare-il-tooltip--b1be209c") },
+        { label: showcaseMessage("components.design-system.components-g2.tastiera-d99ab9ca"), desc: showcaseMessage("components.design-system.components-g2.focus-sul-trigger-mostra-il-tooltip-escape-8310cb27") },
       ]} />
 
       {/* Anatomy */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Anatomia</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-g2.anatomia-80a1ebf8")}</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <AnatomyRow prop="Plain" val="inverse-surface bg, inverse-on-surface text. Radius 8px. Max 1 riga." />
-          <AnatomyRow prop="Rich" val="surface-container-high bg, outline-variant border. Radius 12px. Titolo + body." />
-          <AnatomyRow prop="Posizione" val="8–10px sotto il trigger, centrato. Caret opzionale (non M3 standard)." />
-          <AnatomyRow prop="Motion" val="Spring stiffness:500 damping:25. Translate Y 6→0px + scale 0.95→1." />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.plain-34118050")} val={showcaseMessage("components.design-system.components-g2.inverse-surface-bg-inverse-on-surface-text-98aeec27")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.rich-50ccaf35")} val={showcaseMessage("components.design-system.components-g2.surface-container-high-bg-outline-variant--0510b820")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.posizione-69f569a6")} val={showcaseMessage("components.design-system.components-g2.8-10px-sotto-il-trigger-centrato-caret-opz-d5a13879")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.motion-e040db2b")} val={showcaseMessage("components.design-system.components-g2.spring-stiffness-500-damping-25-translate--11e6b34c")} />
         </div>
       </div>
     </div>
@@ -236,59 +198,41 @@ function DialogSpec() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader
-        title="Dialog"
-        description="M3 dialog: scrim 32% nero, container con radius 28px, headline + supporting text + actions. Supporta Alert (1 azione), Confirmation (2 azioni) e Full-screen. Entrata spring dal centro."
+        title={showcaseMessage("components.design-system.components-g2.dialog-a31bda55")}
+        description={showcaseMessage("components.design-system.components-g2.m3-dialog-scrim-32-nero-container-con-radi-3dc2a5b7")}
       />
 
-      <SubSectionLabel label="Panoramica" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.panoramica-f38c9a27")} />
       <Panoramica
-        descrizione="Dialog M3 con 3 varianti: Alert (1 azione, info/warning), Confirmation (2 azioni, scelta binaria), Full-screen (slide-up, azioni complesse). Scrim 32% nero, radius 28px, spring entrance dal centro."
+        descrizione={showcaseMessage("components.design-system.components-g2.dialog-m3-con-3-varianti-alert-1-azione-in-dc4662bf")}
         principi={[
-          "Scrim backdrop rgba(0,0,0,0.32) con click-to-dismiss (solo Confirm)",
-          "Scale 0.85→1 per Alert/Confirm, slide Y 40→0 per Full-screen",
-          "Spring stiffness:400 damping:25 per entrata fluida",
+          showcaseMessage("components.design-system.components-g2.scrim-backdrop-rgba-0-0-0-0-32-con-click-t-5593a2a1"),
+          showcaseMessage("components.design-system.components-g2.scale-0-85-1-per-alert-confirm-slide-y-40--0b770e0f"),
+          showcaseMessage("components.design-system.components-g2.spring-stiffness-400-damping-25-per-entrat-49eef062"),
         ]}
       />
 
-      <SubSectionLabel label="Specifiche" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.specifiche-057caf2f")} />
 
       {/* Trigger buttons */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Prova i dialog</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-g2.prova-i-dialog-2c02ffa8")}</span>
         <div className="mt-4 flex flex-wrap gap-3">
           <motion.button
             onClick={() => setAlertOpen(true)}
-            className="px-5 py-2.5 rounded-xl active:scale-95 transition-transform"
-            style={{
-              background: "var(--primary)", color: "var(--primary-foreground)",
-              border: "none", cursor: "pointer", outline: "none",
-              fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any,
-            }}
+            className="px-5 py-2.5 rounded-xl active:scale-95 transition-transform dsx-s-12b3a76574"
           >
-            Alert Dialog
-          </motion.button>
+            {showcaseMessage("components.design-system.components-g2.alert-dialog-711a1129")}</motion.button>
           <motion.button
             onClick={() => setConfirmOpen(true)}
-            className="px-5 py-2.5 rounded-xl active:scale-95 transition-transform"
-            style={{
-              background: "var(--surface-container)", color: "var(--text-default)",
-              border: "1px solid var(--outline-variant)", cursor: "pointer", outline: "none",
-              fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any,
-            }}
+            className="px-5 py-2.5 rounded-xl active:scale-95 transition-transform dsx-s-a286884f1c"
           >
-            Confirmation Dialog
-          </motion.button>
+            {showcaseMessage("components.design-system.components-g2.confirmation-dialog-69d235d4")}</motion.button>
           <motion.button
             onClick={() => setFullOpen(true)}
-            className="px-5 py-2.5 rounded-xl active:scale-95 transition-transform"
-            style={{
-              background: "var(--surface-container)", color: "var(--text-default)",
-              border: "1px solid var(--outline-variant)", cursor: "pointer", outline: "none",
-              fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any,
-            }}
+            className="px-5 py-2.5 rounded-xl active:scale-95 transition-transform dsx-s-a286884f1c"
           >
-            Full-screen Dialog
-          </motion.button>
+            {showcaseMessage("components.design-system.components-g2.full-screen-dialog-9a898a9d")}</motion.button>
         </div>
       </div>
 
@@ -296,34 +240,29 @@ function DialogSpec() {
       <Dialog
         open={alertOpen}
         onClose={() => setAlertOpen(false)}
-        title="Temperatura insufficiente"
+        title={showcaseMessage("components.design-system.components-g2.temperatura-insufficiente-ff3fae9b")}
         actions={
           <CtaButton variant="primary" onClick={() => setAlertOpen(false)}>
-            Ho capito
-          </CtaButton>
+            {showcaseMessage("components.design-system.components-g2.ho-capito-eee8047d")}</CtaButton>
         }
       >
-        Il forno casalingo a 250°C non raggiunge la temperatura ideale per la Napoletana STG (450°C). Verranno applicate compensazioni automatiche.
-      </Dialog>
+        {showcaseMessage("components.design-system.components-g2.il-forno-casalingo-a-250-c-non-raggiunge-l-f1c6b8f6")}</Dialog>
 
       {/* Confirmation Dialog */}
       <Dialog
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        title="Cambiare stile?"
+        title={showcaseMessage("components.design-system.components-g2.cambiare-stile-ad856b3e")}
         actions={
           <>
             <CtaButton variant="secondary" onClick={() => setConfirmOpen(false)}>
-              Annulla
-            </CtaButton>
+              {showcaseMessage("components.design-system.components-g2.annulla-5c034dd0")}</CtaButton>
             <CtaButton variant="primary" onClick={() => setConfirmOpen(false)}>
-              Cambia stile
-            </CtaButton>
+              {showcaseMessage("components.design-system.components-g2.cambia-stile-d0e513fb")}</CtaButton>
           </>
         }
       >
-        Passando da Napoletana a Teglia Romana, i parametri del fine-tuning verranno resettati ai valori raccomandati per il nuovo stile.
-      </Dialog>
+        {showcaseMessage("components.design-system.components-g2.passando-da-napoletana-a-teglia-romana-i-p-ab71754f")}</Dialog>
 
       {/* Full-screen Dialog */}
       <AnimatePresence>
@@ -332,99 +271,72 @@ function DialogSpec() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
-            transition={{ type: "spring", stiffness: 300, damping: 28 }}
-            className="fixed inset-0 z-50 flex flex-col"
-            style={{ background: "var(--surface-container-low)" }}
+            transition={showcaseTransition.preset_98bf3c3416}
+            className="fixed inset-0 z-50 flex flex-col dsx-s-ff6be3e5a5"
           >
             {/* Top bar */}
-            <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid var(--outline-variant)" }}>
+            <div className="flex items-center justify-between px-4 py-3 dsx-s-ff83771d47">
               <div className="flex items-center gap-3">
                 <motion.button
                   onClick={() => setFullOpen(false)}
-                  className="w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform"
-                  style={{ background: "rgba(0,0,0,0)", border: "none", cursor: "pointer", outline: "none", color: "var(--text-default)" }}
-                  aria-label="Chiudi"
+                  className="w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform dsx-s-224b44991e"
+                  aria-label={showcaseMessage("components.design-system.components-g2.chiudi-a3be8a9a")}
                 >
                   <X size={20} />
                 </motion.button>
-                <span style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: "var(--font-size-3xl)",
-                  fontWeight: "var(--weight-bold)" as any,
-                  color: "var(--text-default)",
-                }}>
-                  Dettaglio ricetta
-                </span>
+                <span className="dsx-s-b4f5b7135b">
+                  {showcaseMessage("components.design-system.components-g2.dettaglio-ricetta-4287deb3")}</span>
               </div>
               <motion.button
                 onClick={() => setFullOpen(false)}
-                className="px-5 py-2 rounded-xl active:scale-95 transition-transform"
-                style={{
-                  background: "var(--primary)", color: "var(--primary-foreground)",
-                  border: "none", cursor: "pointer", outline: "none",
-                  fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any,
-                }}
+                className="px-5 py-2 rounded-xl active:scale-95 transition-transform dsx-s-12b3a76574"
               >
-                Salva
-              </motion.button>
+                {showcaseMessage("components.design-system.components-g2.salva-0fe6a465")}</motion.button>
             </div>
             {/* Content placeholder */}
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center p-6">
-                <Flame size={48} style={{ color: "var(--primary)", margin: "0 auto 16px" }} />
-                <div style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: "var(--font-size-6-5xl)",
-                  fontWeight: "var(--weight-bold)" as any,
-                  color: "var(--text-default)",
-                }}>
-                  Full-screen Dialog
-                </div>
-                <p style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: "var(--font-size-xl)",
-                  color: "var(--muted-foreground)",
-                  marginTop: "8px",
-                  maxWidth: "320px",
-                }}>
-                  Usato per task complessi che richiedono l'intera viewport. Transizione slide-up con spring.
-                </p>
+                <Flame size={48} className="dsx-s-9cc075bcc6" />
+                <div className="dsx-s-87b2f6e68f">
+                  {showcaseMessage("components.design-system.components-g2.full-screen-dialog-9a898a9d")}</div>
+                <p className="dsx-s-f381b03625">
+                  {showcaseMessage("components.design-system.components-g2.usato-per-task-complessi-che-richiedono-l--c38011b7")}</p>
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <SubSectionLabel label="Linee guida" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.linee-guida-b43417d1")} />
       <LineeGuida
         fai={[
-          "Alert per informazioni importanti che richiedono conferma (es. eliminazione)",
-          "Confirmation per scelte binarie (es. Annulla/Conferma)",
-          "Full-screen per form complessi o contenuti che richiedono spazio",
+          showcaseMessage("components.design-system.components-g2.alert-per-informazioni-importanti-che-rich-fe4d0b7e"),
+          showcaseMessage("components.design-system.components-g2.confirmation-per-scelte-binarie-es-annulla-1e1b1858"),
+          showcaseMessage("components.design-system.components-g2.full-screen-per-form-complessi-o-contenuti-d971d3dc"),
         ]}
         nonFare={[
-          "Mai dialog per messaggi non critici — usare snackbar o toast",
-          "Mai più di 2 azioni in Alert/Confirm — usare full-screen",
-          "Mai dialog senza via d'uscita (Escape, X, o scrim click)",
+          showcaseMessage("components.design-system.components-g2.mai-dialog-per-messaggi-non-critici-usare--3ff6390f"),
+          showcaseMessage("components.design-system.components-g2.mai-piu-di-2-azioni-in-alert-confirm-usare-a3085132"),
+          showcaseMessage("components.design-system.components-g2.mai-dialog-senza-via-d-uscita-escape-x-o-s-a78ce857"),
         ]}
       />
 
-      <SubSectionLabel label="Accessibilità" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.accessibilita-e59811a6")} />
       <AccessibilitaInfo items={[
-        { label: "Focus trap", desc: "Focus resta nel dialog. Escape chiude. Focus restituito al trigger." },
-        { label: "ARIA", desc: "role='alertdialog' (Alert) o role='dialog'. aria-modal='true'. aria-labelledby su headline." },
+        { label: showcaseMessage("components.design-system.components-g2.focus-trap-f835888b"), desc: showcaseMessage("components.design-system.components-g2.focus-resta-nel-dialog-escape-chiude-focus-c6b2f21d") },
+        { label: "ARIA", desc: showcaseMessage("components.design-system.components-g2.role-alertdialog-alert-o-role-dialog-aria--a80f74e5") },
       ]} />
 
       {/* Anatomy */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Anatomia</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-g2.anatomia-80a1ebf8")}</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <AnatomyRow prop="Scrim" val="rgba(0,0,0,0.32). Click per dismissare (Alert/Confirm)." />
-          <AnatomyRow prop="Container" val="surface-container-high, radius 28px (rounded-3xl), shadow-lg. Max 560px." />
-          <AnatomyRow prop="Headline" val="Playfair Display, 1.25rem, weight 700. Centrato (Alert) o allineato sx (Confirm)." />
-          <AnatomyRow prop="Actions" val="Centrato (Alert), flex-end (Confirm). Primary button + text button opzionale." />
-          <AnatomyRow prop="Full-screen" val="Nessuno scrim. Slide-up spring. Top bar con X e azione primaria." />
-          <AnatomyRow prop="Motion" val="Scale 0.85→1 (Alert/Confirm). Slide Y 40→0 (Full-screen). Spring stiffness:400 damping:25." />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.scrim-cbd1ca36")} val={showcaseMessage("components.design-system.components-g2.rgba-0-0-0-0-32-click-per-dismissare-alert-cac0b3f3")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.container-e6443af9")} val={showcaseMessage("components.design-system.components-g2.surface-container-high-radius-28px-rounded-701a4e3a")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.headline-442250df")} val={showcaseMessage("components.design-system.components-g2.playfair-display-1-25rem-weight-700-centra-b4c6b7c7")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.actions-c3cd636a")} val={showcaseMessage("components.design-system.components-g2.centrato-alert-flex-end-confirm-primary-bu-68235194")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.full-screen-225c026a")} val={showcaseMessage("components.design-system.components-g2.nessuno-scrim-slide-up-spring-top-bar-con--e4dccf1a")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.motion-e040db2b")} val={showcaseMessage("components.design-system.components-g2.scale-0-85-1-alert-confirm-slide-y-40-0-fu-b1465a48")} />
         </div>
       </div>
     </div>
@@ -450,7 +362,7 @@ function IconButtonSpec() {
   const VARIANTS = [
     {
       id: "standard",
-      label: "Standard",
+      label: showcaseMessage("components.design-system.components-g2.standard-2dfa6607"),
       bg: "rgba(0,0,0,0)",
       bgHover: "color-mix(in srgb, var(--on-surface-variant) 8%, rgba(0,0,0,0))",
       fg: "var(--on-surface-variant)",
@@ -458,7 +370,7 @@ function IconButtonSpec() {
     },
     {
       id: "filled",
-      label: "Filled",
+      label: showcaseMessage("components.design-system.components-g2.filled-a7419509"),
       bg: "var(--primary)",
       bgHover: "var(--primary)",
       fg: "var(--primary-foreground)",
@@ -466,7 +378,7 @@ function IconButtonSpec() {
     },
     {
       id: "tonal",
-      label: "Filled Tonal",
+      label: showcaseMessage("components.design-system.components-g2.filled-tonal-83c8246a"),
       bg: "var(--primary-container)",
       bgHover: "var(--primary-container)",
       fg: "var(--on-primary-container)",
@@ -474,7 +386,7 @@ function IconButtonSpec() {
     },
     {
       id: "outlined",
-      label: "Outlined",
+      label: showcaseMessage("components.design-system.components-g2.outlined-19c35027"),
       bg: "rgba(0,0,0,0)",
       bgHover: "color-mix(in srgb, var(--on-surface-variant) 8%, rgba(0,0,0,0))",
       fg: "var(--on-surface-variant)",
@@ -485,25 +397,25 @@ function IconButtonSpec() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader
-        title="Icon Button"
-        description="M3 definisce 4 varianti di bottone icona: Standard (nessun container), Filled, Filled Tonal e Outlined. Supportano toggle state (cuore/stella) con animazione spring. 3 taglie: 40/48/56px."
+        title={showcaseMessage("components.design-system.components-g2.icon-button-f3e3cbce")}
+        description={showcaseMessage("components.design-system.components-g2.m3-definisce-4-varianti-di-bottone-icona-s-7bdb39ec")}
       />
 
-      <SubSectionLabel label="Panoramica" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.panoramica-f38c9a27")} />
       <Panoramica
-        descrizione="4 varianti di Icon Button M3: Standard (no bg), Filled (primary), Filled Tonal (primary-container), Outlined (transparent + border). Toggle state con pulse animation (scale 1→1.3→1). 3 taglie: 32/40/48px."
+        descrizione={showcaseMessage("components.design-system.components-g2.4-varianti-di-icon-button-m3-standard-no-b-278bd605")}
         principi={[
-          "Standard: nessun container, solo icona. Per azioni secondarie",
-          "Filled/Tonal: container colorato per azioni prominenti",
-          "Toggle: pulse scale 1→1.3→1 + cambio variant off→on",
+          showcaseMessage("components.design-system.components-g2.standard-nessun-container-solo-icona-per-a-e2930010"),
+          showcaseMessage("components.design-system.components-g2.filled-tonal-container-colorato-per-azioni-c509501c"),
+          showcaseMessage("components.design-system.components-g2.toggle-pulse-scale-1-1-3-1-cambio-variant--397c0b6c"),
         ]}
       />
 
-      <SubSectionLabel label="Specifiche" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.specifiche-057caf2f")} />
 
       {/* Variant grid */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Varianti — 4 stili</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-g2.varianti-4-stili-fd6e60f5")}</span>
         <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
           {VARIANTS.map((v) => (
             <div key={v.id} className="flex flex-col items-center gap-3">
@@ -512,21 +424,15 @@ function IconButtonSpec() {
                   <motion.button
                     key={i}
                     whileHover={{ scale: 1.05 }}
-                    className="w-10 h-10 rounded-full flex items-center justify-center active:scale-85 transition-transform"
-                    style={{
-                      background: v.bg,
-                      color: v.fg,
-                      border: v.border,
-                      cursor: "pointer",
-                      outline: "none",
-                    }}
-                    aria-label={`${v.label} icon button`}
+                    className="w-10 h-10 rounded-full flex items-center justify-center active:scale-85 transition-transform dsx-s-581a0621c3"
+                    style={{ "--dsx-background": toShowcaseCssValue(v.bg, false), "--dsx-color": toShowcaseCssValue(v.fg, false), "--dsx-border": toShowcaseCssValue(v.border, false) } as any}
+                    aria-label={showcaseMessage("components.design-system.components-g2.value-icon-button-843cf412", [v.label])}
                   >
                     <Icon size={20} />
                   </motion.button>
                 ))}
               </div>
-              <span className="type-label text-center" style={{ color: "var(--muted-foreground)", fontSize: "var(--font-size-md)", letterSpacing: "var(--tracking-caps)" }}>{v.label}</span>
+              <span className="type-label text-center dsx-s-4d3571287d">{v.label}</span>
             </div>
           ))}
         </div>
@@ -534,40 +440,30 @@ function IconButtonSpec() {
 
       {/* Toggle icon buttons */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Toggle — Clicca per attivare</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-g2.toggle-clicca-per-attivare-1035daac")}</span>
         <div className="mt-4 flex items-center gap-6 justify-center">
           {[
-            { id: "heart", Icon: Heart, label: "Preferito" },
-            { id: "star", Icon: Star, label: "Valuta" },
+            { id: "heart", Icon: Heart, label: showcaseMessage("components.design-system.components-g2.preferito-745ab699") },
+            { id: "star", Icon: Star, label: showcaseMessage("components.design-system.components-g2.valuta-04fe77cf") },
           ].map((item) => {
             const isOn = toggled[item.id];
             return (
               <div key={item.id} className="flex flex-col items-center gap-2">
                 <button
                   onClick={() => toggleIcon(item.id)}
-                  className="w-12 h-12 rounded-full flex items-center justify-center active:scale-80"
-                  style={{
-                    background: isOn ? "var(--primary)" : "rgba(0,0,0,0)",
-                    color: isOn ? "var(--primary-foreground)" : "var(--on-surface-variant)",
-                    border: isOn ? "none" : "1px solid var(--outline)",
-                    cursor: "pointer",
-                    outline: "none",
-                    transition: "background 0.15s, color 0.15s, border-color 0.15s",
-                  }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center active:scale-80 dsx-s-571c4cd9f6"
+                  style={{ "--dsx-background": toShowcaseCssValue(isOn ? "var(--primary)" : "rgba(0,0,0,0)", false), "--dsx-color": toShowcaseCssValue(isOn ? "var(--primary-foreground)" : "var(--on-surface-variant)", false), "--dsx-border": toShowcaseCssValue(isOn ? "none" : "1px solid var(--outline)", false) } as any}
                   aria-label={item.label}
                   aria-pressed={isOn}
                 >
                   <motion.div
                     animate={{ scale: isOn ? [1, 1.3, 1] : 1 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    transition={showcaseTransition.preset_0e2957ab5e}
                   >
                     <item.Icon size={22} fill={isOn ? "currentColor" : "none"} />
                   </motion.div>
                 </button>
-                <span className="type-code" style={{
-                  fontWeight: "var(--weight-semibold)" as any,
-                  color: isOn ? "var(--primary)" : "var(--muted-foreground)",
-                }}>
+                <span className="type-code dsx-s-fdd5477c7e" style={{ "--dsx-color": toShowcaseCssValue(isOn ? "var(--primary)" : "var(--muted-foreground)", false) } as any}>
                   {isOn ? "ON" : "OFF"}
                 </span>
               </div>
@@ -578,26 +474,21 @@ function IconButtonSpec() {
 
       {/* Sizes */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Taglie</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-g2.taglie-76403aaa")}</span>
         <div className="mt-4 flex items-end gap-6 justify-center">
           {[
-            { size: 32, icon: 16, label: "Small" },
-            { size: 40, icon: 20, label: "Medium" },
-            { size: 48, icon: 24, label: "Large" },
+            { size: 32, icon: 16, label: showcaseMessage("components.design-system.components-g2.small-c74fd971") },
+            { size: 40, icon: 20, label: showcaseMessage("components.design-system.components-g2.medium-d404968e") },
+            { size: 48, icon: 24, label: showcaseMessage("components.design-system.components-g2.large-738fd1d2") },
           ].map((s) => (
             <div key={s.label} className="flex flex-col items-center gap-2">
               <motion.div
-                className="rounded-full flex items-center justify-center cursor-pointer active:scale-85 transition-transform"
-                style={{
-                  width: s.size,
-                  height: s.size,
-                  background: "var(--primary-container)",
-                  color: "var(--on-primary-container)",
-                }}
+                className="rounded-full flex items-center justify-center cursor-pointer active:scale-85 transition-transform dsx-s-e9d39f5aea"
+                style={{ "--dsx-width": toShowcaseCssValue(s.size, false), "--dsx-height": toShowcaseCssValue(s.size, false) } as any}
               >
                 <Flame size={s.icon} />
               </motion.div>
-              <span className="type-code" style={{ color: "var(--muted-foreground)" }}>
+              <span className="type-code dsx-s-63782726c0">
                 {s.label} · {s.size}px
               </span>
             </div>
@@ -605,34 +496,34 @@ function IconButtonSpec() {
         </div>
       </div>
 
-      <SubSectionLabel label="Linee guida" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.linee-guida-b43417d1")} />
       <LineeGuida
         fai={[
-          "Standard per azioni secondarie in toolbar (es. share, more)",
-          "Filled per azioni primarie isolate (es. play, add)",
-          "Toggle con pulse per feedback visivo su like/bookmark/star",
+          showcaseMessage("components.design-system.components-g2.standard-per-azioni-secondarie-in-toolbar--2019d9d8"),
+          showcaseMessage("components.design-system.components-g2.filled-per-azioni-primarie-isolate-es-play-7a3571a9"),
+          showcaseMessage("components.design-system.components-g2.toggle-con-pulse-per-feedback-visivo-su-li-5c9a52e8"),
         ]}
         nonFare={[
-          "Mai icon button senza aria-label — l'icona da sola non basta",
-          "Mai standard icon button su sfondo complesso — perde visibilità",
-          "Mai toggle senza feedback visivo (colore + animazione)",
+          showcaseMessage("components.design-system.components-g2.mai-icon-button-senza-aria-label-l-icona-d-dd5572d2"),
+          showcaseMessage("components.design-system.components-g2.mai-standard-icon-button-su-sfondo-comples-c1d6848b"),
+          showcaseMessage("components.design-system.components-g2.mai-toggle-senza-feedback-visivo-colore-an-7c6fb82c"),
         ]}
       />
 
-      <SubSectionLabel label="Accessibilità" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-g2.accessibilita-e59811a6")} />
       <AccessibilitaInfo items={[
-        { label: "ARIA", desc: "aria-label descrittivo. Toggle: aria-pressed='true'/'false'." },
-        { label: "Focus", desc: "Focus ring 3px primary su :focus-visible. Area minima 44×44px (WCAG)." },
+        { label: "ARIA", desc: showcaseMessage("components.design-system.components-g2.aria-label-descrittivo-toggle-aria-pressed-d859227a") },
+        { label: showcaseMessage("components.design-system.components-g2.focus-fe7f55b8"), desc: showcaseMessage("components.design-system.components-g2.focus-ring-3px-primary-su-focus-visible-ar-fcc33f3e") },
       ]} />
 
       {/* Anatomy */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Anatomia</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-g2.anatomia-80a1ebf8")}</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <AnatomyRow prop="Container" val="radius-full (cerchio). Standard: nessun bg. Filled: primary. Tonal: primary-container." />
-          <AnatomyRow prop="Outlined" val="transparent bg, outline border 1px. Hover: 8% on-surface-variant overlay." />
-          <AnatomyRow prop="Toggle" val="Off: outlined. On: filled (primary bg, icon fill). Pulse scale animation 1→1.3→1." />
-          <AnatomyRow prop="Taglie" val="32px (small, icon 16), 40px (medium, icon 20), 48px (large, icon 24)." />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.container-e6443af9")} val={showcaseMessage("components.design-system.components-g2.radius-full-cerchio-standard-nessun-bg-fil-b3179aae")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.outlined-19c35027")} val={showcaseMessage("components.design-system.components-g2.transparent-bg-outline-border-1px-hover-8--cc24591d")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.toggle-d5e14b06")} val={showcaseMessage("components.design-system.components-g2.off-outlined-on-filled-primary-bg-icon-fil-c88fd243")} />
+          <AnatomyRow prop={showcaseMessage("components.design-system.components-g2.taglie-76403aaa")} val={showcaseMessage("components.design-system.components-g2.32px-small-icon-16-40px-medium-icon-20-48p-8f2bc7e0")} />
         </div>
       </div>
     </div>
@@ -643,7 +534,7 @@ function IconButtonSpec() {
    ENTRIES REGISTRY
    ═══════════════════════════════════════════════════════════ */
 export const ENTRIES: SectionEntry[] = [
-  { id: "tooltip", label: "Tooltip", group: "c", Component: TooltipSpec },
-  { id: "dialog", label: "Dialog", group: "c", Component: DialogSpec },
-  { id: "iconbutton", label: "Icon Button", group: "c", Component: IconButtonSpec },
+  { id: "tooltip", label: showcaseMessage("components.design-system.components-g2.tooltip-b8407e25"), group: "c", Component: TooltipSpec },
+  { id: "dialog", label: showcaseMessage("components.design-system.components-g2.dialog-a31bda55"), group: "c", Component: DialogSpec },
+  { id: "iconbutton", label: showcaseMessage("components.design-system.components-g2.icon-button-f3e3cbce"), group: "c", Component: IconButtonSpec },
 ];

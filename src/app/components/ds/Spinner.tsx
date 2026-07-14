@@ -5,6 +5,8 @@
  */
 import { motion } from "motion/react";
 import type { CSSProperties } from "react";
+import { motionTiming } from "./motion";
+import { uiMessage } from "../../i18n/ui-messages";
 
 export interface SpinnerProps {
   size?: number;
@@ -26,9 +28,9 @@ export function Spinner({ size = 24, color = "var(--primary)", className, style 
       className={className}
       style={style}
       animate={{ rotate: 360 }}
-      transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+      transition={motionTiming.spinner}
       role="status"
-      aria-label="Caricamento"
+      aria-label={uiMessage("components.ds.spinner.caricamento-9f21540f")}
     >
       <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--surface-container-high)" strokeWidth={stroke} />
       <circle

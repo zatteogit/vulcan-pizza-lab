@@ -23,45 +23,48 @@ import {
   AccessibilitaInfo,
 } from "./shared";
 import type { SectionEntry } from "./shared";
+import { toShowcaseCssValue } from "./showcase-style";
+import { showcaseTransition } from "./showcase-motion";
+import { showcaseMessage } from "../../i18n/showcase-messages";
 
 /* ═══ C15: RECIPE CONFIGURATOR ═══ */
 
 const DEMO_SLIDERS = [
   {
     id: "hydration",
-    label: "Idratazione",
+    label: showcaseMessage("components.design-system.components-d.idratazione-ca30c32c"),
     icon: Droplets,
     unit: "%",
     min: 45, max: 100, step: 1, defaultValue: 65,
     gradient: "var(--grad-slider-hydration)",
-    tip: "Percentuale di acqua rispetto alla farina. Più alta = impasto più morbido e alveolato.",
+    tip: showcaseMessage("components.design-system.components-d.percentuale-di-acqua-rispetto-alla-farina--e28fd058"),
   },
   {
     id: "flourW",
-    label: "Forza Farina (W)",
+    label: showcaseMessage("components.design-system.components-d.forza-farina-w-96325fc3"),
     icon: Wheat,
     unit: "",
     min: 150, max: 420, step: 10, defaultValue: 280,
     gradient: "var(--grad-slider-flour)",
-    tip: "Indice di forza alveografico. W alto = più glutine, regge idratazioni alte.",
+    tip: showcaseMessage("components.design-system.components-d.indice-di-forza-alveografico-w-alto-piu-gl-b7b57373"),
   },
   {
     id: "fermentation",
-    label: "Fermentazione",
+    label: showcaseMessage("components.design-system.components-d.fermentazione-e42ae57b"),
     icon: Clock,
-    unit: "h",
+    unit: showcaseMessage("components.design-system.components-d.h-27d5482e"),
     min: 2, max: 72, step: 1, defaultValue: 24,
     gradient: "var(--grad-slider-ferment)",
-    tip: "Durata totale della lievitazione. Più lunga = più sapore e digeribilità.",
+    tip: showcaseMessage("components.design-system.components-d.durata-totale-della-lievitazione-piu-lunga-92603ab5"),
   },
   {
     id: "temperature",
-    label: "Temperatura",
+    label: showcaseMessage("components.design-system.components-d.temperatura-df12789a"),
     icon: Thermometer,
     unit: "°C",
     min: 2, max: 30, step: 1, defaultValue: 4,
     gradient: "var(--grad-slider-temp)",
-    tip: "Temperatura di fermentazione. Frigo (2-6°C) per maturazioni lunghe, ambiente (18-24°C) per brevi.",
+    tip: showcaseMessage("components.design-system.components-d.temperatura-di-fermentazione-frigo-2-6-c-p-6328ed79"),
   },
 ];
 
@@ -75,19 +78,19 @@ function RecipeConfiguratorSpec() {
 
   return (
     <div className="flex flex-col gap-8">
-      <SectionHeader title="RecipeConfigurator" description="Pannello fine-tuning con slider a gradiente semantico, InfoTip contestuali e feedback visivo. Ogni parametro ha un range specifico per stile. Interagisci con gli slider!" />
-      <SubSectionLabel label="Panoramica" />
+      <SectionHeader title={showcaseMessage("components.design-system.components-d.recipeconfigurator-abcbcfdd")} description={showcaseMessage("components.design-system.components-d.pannello-fine-tuning-con-slider-a-gradient-9e3060a6")} />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-d.panoramica-f38c9a27")} />
       <Panoramica
-        descrizione="Il RecipeConfigurator permette il fine-tuning dei parametri dell'impasto con slider visivi a gradiente semantico. Ogni parametro ha un range coerente con lo stile selezionato e tooltip contestuali con spiegazioni scientifiche."
+        descrizione={showcaseMessage("components.design-system.components-d.il-recipeconfigurator-permette-il-fine-tun-17e758ed")}
         principi={[
-          "Gradiente semantico: colori che comunicano il significato del valore (caldo→freddo per temperatura)",
-          "InfoTip contestuali: spiegazione di ogni parametro accessibile con un click",
-          "Range dinamico: limiti che si adattano allo stile di pizza selezionato",
+          showcaseMessage("components.design-system.components-d.gradiente-semantico-colori-che-comunicano--9881b711"),
+          showcaseMessage("components.design-system.components-d.infotip-contestuali-spiegazione-di-ogni-pa-3a9c09e3"),
+          showcaseMessage("components.design-system.components-d.range-dinamico-limiti-che-si-adattano-allo-96ca8a22"),
         ]}
       />
-      <SubSectionLabel label="Specifiche" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-d.specifiche-057caf2f")} />
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Slider Fine-Tuning — Demo interattiva</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-d.slider-fine-tuning-demo-interattiva-1dae4e56")}</span>
 
         <div className="mt-5 flex flex-col gap-5">
           {DEMO_SLIDERS.map((slider) => {
@@ -101,26 +104,18 @@ function RecipeConfiguratorSpec() {
                 {/* Label row */}
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <Icon size={14} style={{ color: "var(--primary)" }} />
-                    <span className="type-code" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>{slider.label}</span>
+                    <Icon size={14} className="dsx-s-b0e08465c2" />
+                    <span className="type-code dsx-s-24d7245ee0">{slider.label}</span>
                     <motion.button
                       onClick={() => setExpandedTip(isTipOpen ? null : slider.id)}
-                      className="flex items-center justify-center w-5 h-5 rounded-full active:scale-95 transition-transform"
-                      style={{
-                        background: isTipOpen ? "var(--primary)" : "color-mix(in srgb, var(--primary) 10%, transparent)",
-                        color: isTipOpen ? "var(--primary-foreground)" : "var(--primary)",
-                        border: "none",
-                        cursor: "pointer",
-                        outline: "none",
-                      }}
-                      aria-label="Info"
+                      className="flex items-center justify-center w-5 h-5 rounded-full active:scale-95 transition-transform dsx-s-e62f59d27e ds-showcase__compact-target"
+                      style={{ "--dsx-background": toShowcaseCssValue(isTipOpen ? "var(--primary)" : "color-mix(in srgb, var(--primary) 10%, transparent)", false), "--dsx-color": toShowcaseCssValue(isTipOpen ? "var(--primary-foreground)" : "var(--primary)", false) } as any}
+                      aria-label={showcaseMessage("components.design-system.components-d.info-4b631f69")}
                     >
                       <Lightbulb size={10} />
                     </motion.button>
                   </div>
-                  <span className="type-data-lg" style={{ fontWeight: "var(--weight-bold)" as any,
-                    color: "var(--primary)", fontFeatureSettings: "'tnum'",
-                  }}>
+                  <span className="type-data-lg dsx-s-9f15ac2970">
                     {val}{slider.unit}
                   </span>
                 </div>
@@ -131,62 +126,41 @@ function RecipeConfiguratorSpec() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="mb-2 p-2.5 rounded-lg"
-                    style={{
-                      background: "color-mix(in srgb, var(--primary) 6%, transparent)",
-                      border: "1px solid color-mix(in srgb, var(--primary) 15%, transparent)",
-                    }}
+                    className="mb-2 p-2.5 rounded-lg dsx-s-db81fe0192"
                   >
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)", lineHeight: "var(--leading-relaxed)" }}>{slider.tip}</span>
+                    <span className="dsx-s-37161a8aea">{slider.tip}</span>
                   </motion.div>
                 )}
 
                 {/* Slider track */}
-                <div className="relative" style={{ height: "28px" }}>
+                <div className="relative dsx-s-1ef1d2ac3e">
                   <div
-                    className="absolute top-1/2 left-0 right-0 h-2 rounded-full"
-                    style={{
-                      transform: "translateY(-50%)",
-                      background: slider.gradient,
-                      opacity: 0.3,
-                    }}
+                    className="absolute top-1/2 left-0 right-0 h-2 rounded-full dsx-s-e286542006"
+                    style={{ "--dsx-background": toShowcaseCssValue(slider.gradient, false) } as any}
                   />
                   <div
-                    className="absolute top-1/2 left-0 h-2 rounded-full"
-                    style={{
-                      transform: "translateY(-50%)",
-                      width: `${pct}%`,
-                      background: slider.gradient,
-                    }}
+                    className="absolute top-1/2 left-0 h-2 rounded-full dsx-s-b8e8759055"
+                    style={{ "--dsx-width": toShowcaseCssValue(`${pct}%`, false), "--dsx-background": toShowcaseCssValue(slider.gradient, false) } as any}
                   />
                   <input
                     type="range"
+                    aria-label={slider.label}
                     min={slider.min}
                     max={slider.max}
                     step={slider.step}
                     value={val}
                     onChange={(e) => setValues((prev) => ({ ...prev, [slider.id]: Number(e.target.value) }))}
-                    className="absolute inset-0 w-full opacity-0 cursor-pointer"
-                    style={{ height: "28px" }}
+                    className="absolute inset-0 w-full opacity-0 cursor-pointer dsx-s-1ef1d2ac3e"
                   />
                   {/* Thumb indicator */}
                   <div
-                    className="absolute top-1/2 rounded-full"
-                    style={{
-                      width: "16px",
-                      height: "16px",
-                      background: "var(--primary)",
-                      border: "3px solid var(--container-page)",
-                      boxShadow: "var(--slider-thumb-shadow)",
-                      transform: "translate(-50%, -50%)",
-                      left: `${pct}%`,
-                      pointerEvents: "none",
-                    }}
+                    className="absolute top-1/2 rounded-full dsx-s-111f7c59a0"
+                    style={{ "--dsx-left": toShowcaseCssValue(`${pct}%`, false) } as any}
                   />
                 </div>
 
                 {/* Range labels */}
-                <div className="flex justify-between mt-1 type-code" style={{ color: "var(--muted-foreground)" }}>
+                <div className="flex justify-between mt-1 type-code dsx-s-63782726c0">
                   <span>{slider.min}{slider.unit}</span>
                   <span>{slider.max}{slider.unit}</span>
                 </div>
@@ -198,41 +172,41 @@ function RecipeConfiguratorSpec() {
 
       {/* Pattern specs */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Pattern Slider — Specifiche</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-d.pattern-slider-specifiche-569bc3ca")}</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
-            { label: "Gradiente", desc: "Semantico per parametro (colori caldi→freddi per temperatura, secco→umido per idratazione)" },
-            { label: "InfoTip", desc: "Toggle con Lightbulb icon, background primary 6%, bordo 15%" },
-            { label: "Valore", desc: "DM Mono, tnum, fontWeight 700, colore primary" },
+            { label: showcaseMessage("components.design-system.components-d.gradiente-e7afa1b4"), desc: showcaseMessage("components.design-system.components-d.semantico-per-parametro-colori-caldi-fredd-f931ad4c") },
+            { label: showcaseMessage("components.design-system.components-d.infotip-ec4c79f7"), desc: showcaseMessage("components.design-system.components-d.toggle-con-lightbulb-icon-background-prima-a211c6ce") },
+            { label: showcaseMessage("components.design-system.components-d.valore-36a6d826"), desc: showcaseMessage("components.design-system.components-d.dm-mono-tnum-fontweight-700-colore-primary-06857edb") },
           ].map((spec) => (
-            <div key={spec.label} className="p-3 rounded-lg" style={{ background: "var(--surface-container)" }}>
-              <span className="type-data" style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--primary)" }}>{spec.label}</span>
-              <p className="type-code" style={{ color: "var(--muted-foreground)", marginTop: "4px", lineHeight: "var(--leading-relaxed)" }}>{spec.desc}</p>
+            <div key={spec.label} className="p-3 rounded-lg dsx-s-e4f209c55b">
+              <span className="type-data dsx-s-133edc77c0">{spec.label}</span>
+              <p className="type-code dsx-s-a40253a895">{spec.desc}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <SubSectionLabel label="Linee guida" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-d.linee-guida-b43417d1")} />
       <LineeGuida
         fai={[
-          "Gradiente semantico per ogni parametro — colori che comunicano il significato",
-          "InfoTip contestuali con spiegazione breve (max 2 righe)",
-          "Range dinamici coerenti con lo stile selezionato",
+          showcaseMessage("components.design-system.components-d.gradiente-semantico-per-ogni-parametro-col-81240691"),
+          showcaseMessage("components.design-system.components-d.infotip-contestuali-con-spiegazione-breve--70076f56"),
+          showcaseMessage("components.design-system.components-d.range-dinamici-coerenti-con-lo-stile-selez-1cd05035"),
         ]}
         nonFare={[
-          "Mai slider senza gradiente — il colore piatto non comunica il range",
-          "Mai omettere il valore numerico corrente — è il feedback principale",
-          "Mai step non coerenti con l'unità (es. step 10 per ore)",
+          showcaseMessage("components.design-system.components-d.mai-slider-senza-gradiente-il-colore-piatt-3d35f29f"),
+          showcaseMessage("components.design-system.components-d.mai-omettere-il-valore-numerico-corrente-e-21eb4fbd"),
+          showcaseMessage("components.design-system.components-d.mai-step-non-coerenti-con-l-unita-es-step--6837cd65"),
         ]}
-        comportamento="I slider aggiornano in real-time. Il rilascio trigger ricalcolo ricetta. Touch: area di hit 28px."
+        comportamento={showcaseMessage("components.design-system.components-d.i-slider-aggiornano-in-real-time-il-rilasc-0b5f1671")}
       />
 
-      <SubSectionLabel label="Accessibilità" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-d.accessibilita-e59811a6")} />
       <AccessibilitaInfo items={[
-        { label: "Input nativo", desc: "<input type='range'> sotto il visual custom — tastiera e screen reader out of the box." },
-        { label: "InfoTip", desc: "Toggle con aria-expanded. Contenuto collegato via aria-describedby." },
-        { label: "Touch target", desc: "Thumb 16px + area cliccabile 28px per WCAG Target Size." },
+        { label: showcaseMessage("components.design-system.components-d.input-nativo-bebffdc9"), desc: showcaseMessage("components.design-system.components-d.input-type-range-sotto-il-visual-custom-ta-83650b31") },
+        { label: showcaseMessage("components.design-system.components-d.infotip-ec4c79f7"), desc: showcaseMessage("components.design-system.components-d.toggle-con-aria-expanded-contenuto-collega-50e7000a") },
+        { label: showcaseMessage("components.design-system.components-d.touch-target-dc7bb62b"), desc: showcaseMessage("components.design-system.components-d.thumb-16px-area-cliccabile-28px-per-wcag-t-c547e55f") },
       ]} />
     </div>
   );
@@ -241,21 +215,21 @@ function RecipeConfiguratorSpec() {
 /* ═══ C16: RECIPE TIMELINE ═══ */
 
 const DEMO_INGREDIENTS = [
-  { name: "Farina W280", amount: 500, unit: "g", pct: 100, color: "var(--tertiary)" },
-  { name: "Acqua", amount: 325, unit: "ml", pct: 65, color: "var(--time-tonight)" },
-  { name: "Sale", amount: 15, unit: "g", pct: 3, color: "var(--secondary)" },
-  { name: "Lievito fresco", amount: 1.5, unit: "g", pct: 0.3, color: "var(--cta)" },
-  { name: "Olio EVO", amount: 15, unit: "ml", pct: 3, color: "var(--warm-sienna)" },
+  { name: showcaseMessage("components.design-system.components-d.farina-w280-f5965c8d"), amount: 500, unit: "g", pct: 100, color: "var(--tertiary)" },
+  { name: showcaseMessage("components.design-system.components-d.acqua-f3128966"), amount: 325, unit: "ml", pct: 65, color: "var(--time-tonight)" },
+  { name: showcaseMessage("components.design-system.components-d.sale-0028d743"), amount: 15, unit: "g", pct: 3, color: "var(--secondary)" },
+  { name: showcaseMessage("components.design-system.components-d.lievito-fresco-f3a7cabd"), amount: 1.5, unit: "g", pct: 0.3, color: "var(--cta)" },
+  { name: showcaseMessage("components.design-system.components-d.olio-evo-fc08a6fd"), amount: 15, unit: "ml", pct: 3, color: "var(--warm-sienna)" },
 ];
 
 const DEMO_TIMELINE = [
-  { icon: Hand, label: "Autolisi", duration: "30 min", desc: "Farina + 80% acqua, riposo coperto", time: "18:00", zone: "ambient" as const, temp: "22°C", detail: "Unire farina e acqua (80% del totale) in una ciotola ampia. Mescolare grossolanamente fino a idratazione uniforme. Coprire con pellicola e lasciar riposare — il glutine inizia a formarsi da solo." },
-  { icon: ChefHat, label: "Impasto", duration: "15 min", desc: "Aggiungere sale, lievito, olio. Incordare.", time: "18:30", zone: "ambient" as const, temp: "22°C", detail: "Sciogliere il lievito nell'acqua restante (20%). Incorporare nell'impasto con sale e olio EVO. Impastare a mano con tecnica slap & fold oppure con planetaria (velocità 2) fino a incordatura — l'impasto deve staccarsi dalle pareti." },
-  { icon: Scissors, label: "Pieghe", duration: "3×15 min", desc: "Stretch & fold ogni 15 minuti", time: "18:45", zone: "ambient" as const, temp: "22°C", detail: "Eseguire 3 serie di stretch & fold a intervalli di 15 minuti. Ogni serie: afferrare un lato dell'impasto, stenderlo verso l'alto e ripiegarlo al centro. Ruotare la ciotola di 90° e ripetere su tutti e 4 i lati. Rafforza la maglia glutinica senza re-impastare." },
-  { icon: Clock, label: "Puntata", duration: "2h", desc: "Riposo a temperatura ambiente, coperto", time: "19:30", zone: "ambient" as const, temp: "22°C", detail: "Fase di fermentazione bulk. L'impasto deve raddoppiare di volume. A 22°C richiede circa 2 ore. Controllare con il finger test: premere con un dito infarinato — l'impronta deve rientrare lentamente." },
-  { icon: Thermometer, label: "Frigo", duration: "20h", desc: "Maturazione in frigo a 4°C", time: "21:30", zone: "cold" as const, temp: "4°C", detail: "Trasferire l'impasto in contenitore oleato e sigillare. In frigo la fermentazione rallenta (Q10 ≈ 1.6) ma la maturazione enzimatica continua: gli enzimi proteasi e amilasi scompongono glutine e amidi, sviluppando complessità aromatica e migliorando la digeribilità (FODMAP -65%)." },
-  { icon: Expand, label: "Staglio", duration: "30 min", desc: "Dividere in panetti da 250g, arrotondare", time: "17:30+1", zone: "ambient" as const, temp: "22°C", detail: "Estrarre l'impasto dal frigo, ribaltare sulla spianatoia infarinata. Dividere in porzioni da 250g con tarocco. Arrotondare ogni panetto con movimento rotatorio a mani coppa, creando tensione superficiale. Coprire e lasciare a temperatura ambiente 30 minuti." },
-  { icon: Flame, label: "Cottura", duration: "8-10 min", desc: "Forno 250°C, pietra refrattaria", time: "19:00+1", zone: "hot" as const, temp: "250°C", detail: "Preriscaldare forno al massimo con pietra refrattaria per almeno 45 minuti. Stendere il panetto a mano (no mattarello) lasciando il cornicione. Condire velocemente, infornare direttamente sulla pietra. Rotare la pizza a metà cottura per uniformità." },
+  { icon: Hand, label: showcaseMessage("components.design-system.components-d.autolisi-d768d82f"), duration: "30 min", desc: showcaseMessage("components.design-system.components-d.farina-80-acqua-riposo-coperto-88d7c050"), time: "18:00", zone: "ambient" as const, temp: "22°C", detail: showcaseMessage("components.design-system.components-d.unire-farina-e-acqua-80-del-totale-in-una--6f66a62e") },
+  { icon: ChefHat, label: showcaseMessage("components.design-system.components-d.impasto-4c653db5"), duration: "15 min", desc: showcaseMessage("components.design-system.components-d.aggiungere-sale-lievito-olio-incordare-9425febb"), time: "18:30", zone: "ambient" as const, temp: "22°C", detail: showcaseMessage("components.design-system.components-d.sciogliere-il-lievito-nell-acqua-restante--5c8d440a") },
+  { icon: Scissors, label: showcaseMessage("components.design-system.components-d.pieghe-ef8aa969"), duration: "3×15 min", desc: showcaseMessage("components.design-system.components-d.stretch-fold-ogni-15-minuti-4758730c"), time: "18:45", zone: "ambient" as const, temp: "22°C", detail: showcaseMessage("components.design-system.components-d.eseguire-3-serie-di-stretch-fold-a-interva-7c2895a6") },
+  { icon: Clock, label: showcaseMessage("components.design-system.components-d.puntata-d0f2ff75"), duration: "2h", desc: showcaseMessage("components.design-system.components-d.riposo-a-temperatura-ambiente-coperto-3304fccc"), time: "19:30", zone: "ambient" as const, temp: "22°C", detail: showcaseMessage("components.design-system.components-d.fase-di-fermentazione-bulk-l-impasto-deve--f91f84ac") },
+  { icon: Thermometer, label: showcaseMessage("components.design-system.components-d.frigo-51f4c92e"), duration: "20h", desc: showcaseMessage("components.design-system.components-d.maturazione-in-frigo-a-4-c-38833536"), time: "21:30", zone: "cold" as const, temp: "4°C", detail: showcaseMessage("components.design-system.components-d.trasferire-l-impasto-in-contenitore-oleato-f338d152") },
+  { icon: Expand, label: showcaseMessage("components.design-system.components-d.staglio-30fb5fbe"), duration: "30 min", desc: showcaseMessage("components.design-system.components-d.dividere-in-panetti-da-250g-arrotondare-63ad8a3d"), time: "17:30+1", zone: "ambient" as const, temp: "22°C", detail: showcaseMessage("components.design-system.components-d.estrarre-l-impasto-dal-frigo-ribaltare-sul-7f913bed") },
+  { icon: Flame, label: showcaseMessage("components.design-system.components-d.cottura-95c1a57a"), duration: "8-10 min", desc: showcaseMessage("components.design-system.components-d.forno-250-c-pietra-refrattaria-c014d309"), time: "19:00+1", zone: "hot" as const, temp: "250°C", detail: showcaseMessage("components.design-system.components-d.preriscaldare-forno-al-massimo-con-pietra--39e8bfd2") },
 ];
 
 function RecipeTimelineSpec() {
@@ -281,37 +255,31 @@ function RecipeTimelineSpec() {
 
   return (
     <div className="flex flex-col gap-8">
-      <SectionHeader title="Recipe Output / Timeline" description="Visualizzazione finale della ricetta: ingredienti con barre proporzionali e timeline procedurale interattiva con zone termiche (ambiente/frigo/cottura), step espandibili e dettagli scientifici. Clicca su uno step per espanderlo!" />
+      <SectionHeader title={showcaseMessage("components.design-system.components-d.recipe-output-timeline-45360f6f")} description={showcaseMessage("components.design-system.components-d.visualizzazione-finale-della-ricetta-ingre-f2f626f0")} />
 
-      <SubSectionLabel label="Panoramica" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-d.panoramica-f38c9a27")} />
       <Panoramica
-        descrizione="Il Recipe Output è la visualizzazione finale della ricetta con due sezioni: ingredienti (barre proporzionali con baker's %) e timeline procedurale (step interattivi con zone termiche, dettagli scientifici e clipboard)."
+        descrizione={showcaseMessage("components.design-system.components-d.il-recipe-output-e-la-visualizzazione-fina-00a67b77")}
         principi={[
-          "Ingredienti: barre proporzionali al baker's %, con colore semantico per tipo",
-          "Timeline: step verticali con nodi 40×40px, zone termiche colorate, step espandibili",
-          "Clipboard: doppio path (API + textarea fallback) per iframe",
+          showcaseMessage("components.design-system.components-d.ingredienti-barre-proporzionali-al-baker-s-dd27f18b"),
+          showcaseMessage("components.design-system.components-d.timeline-step-verticali-con-nodi-40-40px-z-0a454632"),
+          showcaseMessage("components.design-system.components-d.clipboard-doppio-path-api-textarea-fallbac-72d9ed8c"),
         ]}
       />
 
-      <SubSectionLabel label="Specifiche" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-d.specifiche-057caf2f")} />
 
       {/* Ingredients */}
       <div className="surface-card p-5">
         <div className="flex items-center justify-between mb-4">
-          <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Ingredienti — Barre proporzionali</span>
+          <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-d.ingredienti-barre-proporzionali-93c7d2b4")}</span>
           <motion.button
             onClick={() => handleCopy(-1)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg type-data active:scale-95 transition-transform"
-            style={{
-              fontWeight: "var(--weight-semibold)" as any,
-              background: "var(--surface-container)",
-              border: "1px solid var(--outline-variant)",
-              color: copiedIdx === -1 ? "var(--cta)" : "var(--muted-foreground)",
-              cursor: "pointer", outline: "none",
-            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg type-data active:scale-95 transition-transform dsx-s-4fe29d0b0f"
+            style={{ "--dsx-color": toShowcaseCssValue(copiedIdx === -1 ? "var(--cta)" : "var(--muted-foreground)", false) } as any}
           >
             {copiedIdx === -1 ? <Check size={12} /> : <Copy size={12} />}
-            {copiedIdx === -1 ? "Copiato!" : "Copia lista"}
+            {copiedIdx === -1 ? showcaseMessage("components.design-system.components-d.copiato-d7638aaa") : showcaseMessage("components.design-system.components-d.copia-lista-7584ffd6")}
           </motion.button>
         </div>
 
@@ -320,64 +288,58 @@ function RecipeTimelineSpec() {
             const barWidth = Math.max(4, ing.pct);
             return (
               <div key={ing.name} className="flex items-center gap-3">
-                <span className="type-data" style={{ fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)", width: "120px", flexShrink: 0 }}>{ing.name}</span>
-                <div className="flex-1 min-w-0 h-6 rounded-lg overflow-hidden relative" style={{ background: "var(--surface-container)" }}>
+                <span className="type-data dsx-s-9a12d800a3">{ing.name}</span>
+                <div className="flex-1 min-w-0 h-6 rounded-lg overflow-hidden relative dsx-s-e4f209c55b">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${barWidth}%` }}
-                    transition={{ type: "spring", stiffness: 280, damping: 25 }}
-                    className="h-full rounded-lg"
-                    style={{ background: ing.color, opacity: 0.7 }}
+                    transition={showcaseTransition.preset_e9fa60716e}
+                    className="h-full rounded-lg dsx-s-d6af7b2e2d"
+                    style={{ "--dsx-background": toShowcaseCssValue(ing.color, false) } as any}
                   />
                   <span
-                    className="absolute right-2 top-1/2"
-                    style={{
-                      transform: "translateY(-50%)",
-                      fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-semibold)" as any,
-                      color: "var(--text-default)", fontFeatureSettings: "'tnum'",
-                    }}
+                    className="absolute right-2 top-1/2 dsx-s-5e98391378 ds-showcase__bar-value"
                   >
                     {ing.amount}{ing.unit}
                   </span>
                 </div>
-                <span className="type-code" style={{ color: "var(--muted-foreground)", width: "40px", textAlign: "right", fontFeatureSettings: "'tnum'" }}>{ing.pct}%</span>
+                <span className="type-code dsx-s-ad965616fd">{ing.pct}%</span>
               </div>
             );
           })}
         </div>
 
         {/* Total */}
-        <div className="mt-3 pt-3 flex items-center justify-between" style={{ borderTop: "1px solid var(--outline-variant)" }}>
-          <span className="type-code" style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>Totale impasto</span>
-          <span className="type-data-lg" style={{ fontWeight: "var(--weight-bold)" as any, color: "var(--primary)", fontFeatureSettings: "'tnum'" }}>856.5g</span>
+        <div className="mt-3 pt-3 flex items-center justify-between dsx-s-e0f5da197d">
+          <span className="type-code dsx-s-a172e52ce6">{showcaseMessage("components.design-system.components-d.totale-impasto-6b5008fd")}</span>
+          <span className="type-data-lg dsx-s-9f15ac2970">856.5g</span>
         </div>
       </div>
 
       {/* Timeline — interactive, with temperature zones */}
       <div className="surface-card p-5">
         <div className="flex items-center justify-between mb-2">
-          <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Timeline Procedurale — Interattiva</span>
+          <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-d.timeline-procedurale-interattiva-31e83a86")}</span>
           {/* Zone legend */}
           <div className="flex items-center gap-3">
             {[
-              { label: "Ambiente", color: "var(--cta)" },
-              { label: "Frigo", color: "var(--time-tonight)" },
-              { label: "Forno", color: "var(--primary)" },
+              { label: showcaseMessage("components.design-system.components-d.ambiente-e6fefb74"), color: "var(--cta)" },
+              { label: showcaseMessage("components.design-system.components-d.frigo-51f4c92e"), color: "var(--time-tonight)" },
+              { label: showcaseMessage("components.design-system.components-d.forno-0f50f5fe"), color: "var(--primary)" },
             ].map((z) => (
               <div key={z.label} className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full" style={{ background: z.color }} />
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-base)", color: "var(--muted-foreground)" }}>{z.label}</span>
+                <div className="w-2 h-2 rounded-full dsx-s-fbecfa7efd" style={{ "--dsx-background": toShowcaseCssValue(z.color, false) } as any} />
+                <span className="dsx-s-6849179898">{z.label}</span>
               </div>
             ))}
           </div>
         </div>
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--muted-foreground)", lineHeight: "var(--leading-relaxed)", marginBottom: "16px" }}>
-          Clicca su uno step per espandere i dettagli con istruzioni complete e note scientifiche. La barra laterale cambia colore per zona termica.
-        </p>
+        <p className="dsx-s-c62c524b46">
+          {showcaseMessage("components.design-system.components-d.clicca-su-uno-step-per-espandere-i-dettagl-dac68827")}</p>
 
         <div className="relative">
           {/* Vertical line — segmented by zone */}
-          <div className="absolute left-5 top-3 bottom-3" style={{ width: "2px", background: "var(--outline-variant)" }} />
+          <div className="absolute left-5 top-3 bottom-3 dsx-s-4b816239d7" />
 
           <div className="flex flex-col gap-0.5">
             {DEMO_TIMELINE.map((step, i) => {
@@ -389,28 +351,27 @@ function RecipeTimelineSpec() {
               return (
                 <motion.div
                   key={step.label}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isExpanded}
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25, delay: i * 0.08 }}
-                  className="flex gap-4 pl-0 cursor-pointer"
+                  transition={showcaseTransition.dynamic_bcd2ab8e60(i * 0.08)}
+                  className="flex gap-4 pl-0 cursor-pointer dsx-s-8a0318eb5f"
                   onClick={() => setExpandedStep(isExpanded ? null : i)}
-                  style={{
-                    background: isExpanded ? zoneBg(step.zone) : "transparent",
-                    borderRadius: 12,
-                    padding: isExpanded ? "8px 8px 8px 0" : "0",
-                    transition: "background 0.2s, padding 0.2s",
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setExpandedStep(isExpanded ? null : i);
+                    }
                   }}
+                  style={{ "--dsx-background": toShowcaseCssValue(isExpanded ? zoneBg(step.zone) : "transparent", false), "--dsx-padding": toShowcaseCssValue(isExpanded ? "8px 8px 8px 0" : "0", false) } as any}
                 >
                   {/* Node */}
-                  <div className="flex flex-col items-center" style={{ width: "40px", flexShrink: 0 }}>
+                  <div className="flex flex-col items-center dsx-s-23ce1bfc81">
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center relative z-10"
-                      style={{
-                        background: isLast || isExpanded ? color : "var(--surface-container)",
-                        border: isLast || isExpanded ? "none" : "2px solid var(--outline-variant)",
-                        color: isLast || isExpanded ? "var(--container-page)" : color,
-                        transition: "background 0.2s, color 0.2s, border 0.2s",
-                      }}
+                      className="w-10 h-10 rounded-xl flex items-center justify-center relative z-10 dsx-s-900493cc9c"
+                      style={{ "--dsx-background": toShowcaseCssValue(isLast || isExpanded ? color : "var(--surface-container)", false), "--dsx-border": toShowcaseCssValue(isLast || isExpanded ? "none" : "2px solid var(--outline-variant)", false), "--dsx-color": toShowcaseCssValue(isLast || isExpanded ? "var(--container-page)" : color, false) } as any}
                     >
                       <Icon size={16} />
                     </div>
@@ -419,43 +380,28 @@ function RecipeTimelineSpec() {
                   {/* Content */}
                   <div className="flex-1 min-w-0 pb-5">
                     <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                      <span className="type-code" style={{ color, fontFeatureSettings: "'tnum'" }}>{step.time}</span>
-                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-bold)" as any, color: "var(--text-default)" }}>{step.label}</span>
-                      <span style={{
-                        fontWeight: "var(--weight-semibold)" as any,
-                        padding: "2px 6px", borderRadius: "4px",
-                        background: `color-mix(in srgb, ${color} 12%, transparent)`,
-                        color,
-                      }}>
+                      <span className="type-code dsx-s-bc619688ba ds-showcase__data-ink" style={{ "--dsx-color": toShowcaseCssValue(color, false) } as any}>{step.time}</span>
+                      <span className="dsx-s-1ccbfa8010">{step.label}</span>
+                      <span style={{ "--dsx-background": toShowcaseCssValue(`color-mix(in srgb, ${color} 12%, transparent)`, false), "--dsx-color": toShowcaseCssValue(color, false) } as any} className="dsx-s-9f0ce81a80 ds-showcase__data-ink">
                         {step.duration}
                       </span>
                       {/* Temperature badge */}
-                      <span style={{
-                        fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any,
-                        padding: "1px 5px", borderRadius: "4px",
-                        background: `color-mix(in srgb, ${color} 8%, transparent)`,
-                        color,
-                        fontFeatureSettings: "'tnum'",
-                        border: `1px solid color-mix(in srgb, ${color} 20%, transparent)`,
-                      }}>
+                      <span style={{ "--dsx-background": toShowcaseCssValue(`color-mix(in srgb, ${color} 8%, transparent)`, false), "--dsx-color": toShowcaseCssValue(color, false), "--dsx-border": toShowcaseCssValue(`1px solid color-mix(in srgb, ${color} 20%, transparent)`, false) } as any} className="dsx-s-7d609755d3 ds-showcase__data-ink">
                         {step.temp}
                       </span>
                     </div>
-                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--muted-foreground)", lineHeight: "var(--leading-relaxed)" }}>{step.desc}</p>
+                    <p className="dsx-s-b4252559c3">{step.desc}</p>
 
                     {/* Expanded detail */}
                     {isExpanded && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
-                        transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                        className="mt-2 p-3 rounded-lg"
-                        style={{
-                          background: "var(--surface-container-low)",
-                          border: `1px solid color-mix(in srgb, ${color} 20%, transparent)`,
-                        }}
+                        transition={showcaseTransition.preset_e933d0e313}
+                        className="mt-2 p-3 rounded-lg dsx-s-b640817721"
+                        style={{ "--dsx-border": toShowcaseCssValue(`1px solid color-mix(in srgb, ${color} 20%, transparent)`, false) } as any}
                       >
-                        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)", lineHeight: "var(--leading-loose)" }}>
+                        <p className="dsx-s-047468da18">
                           {step.detail}
                         </p>
                       </motion.div>
@@ -470,17 +416,17 @@ function RecipeTimelineSpec() {
 
       {/* Clipboard pattern */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Pattern Clipboard / Share</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-d.pattern-clipboard-share-a7f1c6e6")}</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
-            { label: "Clipboard API", desc: "navigator.clipboard.writeText() — primario, richiede secure context" },
-            { label: "Fallback Textarea", desc: "createElement('textarea') + execCommand('copy') — per iframe senza permission" },
-            { label: "Share API", desc: "navigator.share() con fallback a clipboard se non supportato" },
-            { label: "Feedback", desc: "Icona Copy -> Check per 1.5s, colore muted -> cta" },
+            { label: showcaseMessage("components.design-system.components-d.clipboard-api-e048451c"), desc: showcaseMessage("components.design-system.components-d.navigator-clipboard-writetext-primario-ric-ca78e455") },
+            { label: showcaseMessage("components.design-system.components-d.fallback-textarea-811f85d9"), desc: showcaseMessage("components.design-system.components-d.createelement-textarea-execcommand-copy-pe-e58c8b71") },
+            { label: showcaseMessage("components.design-system.components-d.share-api-d62eea62"), desc: showcaseMessage("components.design-system.components-d.navigator-share-con-fallback-a-clipboard-s-932f922f") },
+            { label: showcaseMessage("components.design-system.components-d.feedback-c8d7677e"), desc: showcaseMessage("components.design-system.components-d.icona-copy-check-per-1-5s-colore-muted-cta-a38bf68b") },
           ].map((spec) => (
-            <div key={spec.label} className="p-3 rounded-lg" style={{ background: "var(--surface-container)" }}>
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-semibold)" as any, color: "var(--primary)" }}>{spec.label}</span>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-base)", color: "var(--muted-foreground)", marginTop: "4px", lineHeight: "var(--leading-relaxed)" }}>{spec.desc}</p>
+            <div key={spec.label} className="p-3 rounded-lg dsx-s-e4f209c55b">
+              <span className="dsx-s-97e646b80b">{spec.label}</span>
+              <p className="dsx-s-d0b294e222">{spec.desc}</p>
             </div>
           ))}
         </div>
@@ -488,40 +434,40 @@ function RecipeTimelineSpec() {
 
       {/* Timeline anatomy */}
       <div className="surface-card p-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>Anatomia Timeline</span>
+        <span className="type-label dsx-s-e2184fadc0">{showcaseMessage("components.design-system.components-d.anatomia-timeline-b7b6fea3")}</span>
         <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
-            { prop: "Node", val: "40×40px rounded-xl. Colore cambia per zona termica: cta (ambiente), time-tonight (frigo), primary (forno)." },
-            { prop: "Zone termiche", val: "3 zone con colore semantico. Background espanso usa il colore zona al 8% per contesto visivo." },
-            { prop: "Step espandibile", val: "Click → spring s:300 d:24. Dettaglio con istruzioni complete e note scientifiche (FODMAP, Q10)." },
-            { prop: "Badge temp", val: "DM Mono 0.625rem, border zona 20%, mostra la temperatura target per ogni fase." },
-            { prop: "Stagger", val: "Entrance staggerata: delay 80ms × indice, x: -12→0, opacity: 0→1." },
-            { prop: "Linea verticale", val: "2px outline-variant, absolute left-5, connette tutti i nodi visivamente." },
+            { prop: showcaseMessage("components.design-system.components-d.node-260f7a8c"), val: showcaseMessage("components.design-system.components-d.40-40px-rounded-xl-colore-cambia-per-zona--c37d13f3") },
+            { prop: showcaseMessage("components.design-system.components-d.zone-termiche-caab5cd7"), val: showcaseMessage("components.design-system.components-d.3-zone-con-colore-semantico-background-esp-7b015370") },
+            { prop: showcaseMessage("components.design-system.components-d.step-espandibile-d5d7f164"), val: showcaseMessage("components.design-system.components-d.click-spring-s-300-d-24-dettaglio-con-istr-5e3ce103") },
+            { prop: showcaseMessage("components.design-system.components-d.badge-temp-92429895"), val: showcaseMessage("components.design-system.components-d.dm-mono-0-625rem-border-zona-20-mostra-la--f3692d1d") },
+            { prop: showcaseMessage("components.design-system.components-d.stagger-dc29b6ac"), val: showcaseMessage("components.design-system.components-d.entrance-staggerata-delay-80ms-indice-x-12-29799c9e") },
+            { prop: showcaseMessage("components.design-system.components-d.linea-verticale-94b19aea"), val: showcaseMessage("components.design-system.components-d.2px-outline-variant-absolute-left-5-connet-953362ce") },
           ].map((a) => (
             <AnatomyRow key={a.prop} prop={a.prop} val={a.val} />
           ))}
         </div>
       </div>
 
-      <SubSectionLabel label="Linee guida" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-d.linee-guida-b43417d1")} />
       <LineeGuida
         fai={[
-          "Ingredienti con barre proporzionali al baker's % — comunicano le proporzioni visivamente",
-          "Zone termiche colorate nella timeline — l'utente capisce immediatamente il contesto",
-          "Step espandibili con dettagli scientifici — informazione progressiva",
+          showcaseMessage("components.design-system.components-d.ingredienti-con-barre-proporzionali-al-bak-051884c8"),
+          showcaseMessage("components.design-system.components-d.zone-termiche-colorate-nella-timeline-l-ut-a423eb4e"),
+          showcaseMessage("components.design-system.components-d.step-espandibili-con-dettagli-scientifici--84d68cd2"),
         ]}
         nonFare={[
-          "Mai timeline senza linea verticale — perde la connessione visiva tra step",
-          "Mai nodi tutti dello stesso colore — le zone termiche sono informative",
-          "Mai step espansi di default — il dettaglio è opt-in",
+          showcaseMessage("components.design-system.components-d.mai-timeline-senza-linea-verticale-perde-l-aae4c430"),
+          showcaseMessage("components.design-system.components-d.mai-nodi-tutti-dello-stesso-colore-le-zone-d04541d7"),
+          showcaseMessage("components.design-system.components-d.mai-step-espansi-di-default-il-dettaglio-e-e439777b"),
         ]}
       />
 
-      <SubSectionLabel label="Accessibilità" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.components-d.accessibilita-e59811a6")} />
       <AccessibilitaInfo items={[
-        { label: "Clipboard", desc: "Doppio path (API + textarea fallback) per compatibilità iframe." },
-        { label: "Timeline", desc: "role='list' con role='listitem' per ogni step. aria-expanded per i dettagli." },
-        { label: "Contrasto", desc: "I colori zona hanno contrasto ≥3:1 contro il background (non-text)." },
+        { label: showcaseMessage("components.design-system.components-d.clipboard-5efe0c93"), desc: showcaseMessage("components.design-system.components-d.doppio-path-api-textarea-fallback-per-comp-75dafef0") },
+        { label: showcaseMessage("components.design-system.components-d.timeline-018514a3"), desc: showcaseMessage("components.design-system.components-d.role-list-con-role-listitem-per-ogni-step--681f3074") },
+        { label: showcaseMessage("components.design-system.components-d.contrasto-19fb9f0a"), desc: showcaseMessage("components.design-system.components-d.i-colori-zona-hanno-contrasto-3-1-contro-i-9c1caf32") },
       ]} />
     </div>
   );
@@ -531,6 +477,6 @@ function RecipeTimelineSpec() {
    ENTRIES REGISTRY
    ═══════════════════════════════════════════════════════════ */
 export const ENTRIES: SectionEntry[] = [
-  { id: "configurator", label: "RecipeConfigurator", group: "c", Component: RecipeConfiguratorSpec },
-  { id: "timeline", label: "Recipe Timeline", group: "c", Component: RecipeTimelineSpec },
+  { id: "configurator", label: showcaseMessage("components.design-system.components-d.recipeconfigurator-abcbcfdd"), group: "c", Component: RecipeConfiguratorSpec },
+  { id: "timeline", label: showcaseMessage("components.design-system.components-d.recipe-timeline-794d239e"), group: "c", Component: RecipeTimelineSpec },
 ];

@@ -1,10 +1,10 @@
 /* === TROUBLESHOOTING DATABASE === */
 /* Basato su Notion Pagina 11 · Troubleshooting & Testing */
 /* 21 problemi comuni, 6 categorie, diagnostica contestuale */
-/* i18n: getLocalizedIssue/CategoryLabel/ContextualWarnings accept CmsContent */
+/* i18n: presenters accept a neutral message-source contract. */
 
-import type { CmsContent } from "../features/cms/cms-context";
-import { t } from "../features/cms/i18n";
+import type { TroubleshootingMessageSource } from "../i18n/domain-contracts";
+import { interpolate } from "../i18n/interpolate";
 
 export interface TroubleshootingIssue {
   id: string;
@@ -209,7 +209,7 @@ export const CATEGORY_LABELS: Record<string, { label: string; emoji: string }> =
 /* === i18n: LOCALIZED GETTERS === */
 
 /** Return localized issue content (falls back to Italian hardcoded) */
-export function getLocalizedIssue(issue: TroubleshootingIssue, cms?: CmsContent): TroubleshootingIssue {
+export function getLocalizedIssue(issue: TroubleshootingIssue, cms?: TroubleshootingMessageSource): TroubleshootingIssue {
   const loc = cms?.troubleshootingI18n?.issues?.[issue.id];
   if (!loc) return issue;
   return {
@@ -222,7 +222,7 @@ export function getLocalizedIssue(issue: TroubleshootingIssue, cms?: CmsContent)
   };
 }
 
-export function getLocalizedCategoryLabel(category: string, cms?: CmsContent): string {
+export function getLocalizedCategoryLabel(category: string, cms?: TroubleshootingMessageSource): string {
   const loc = cms?.troubleshootingI18n?.categories?.[category];
   if (loc) return loc;
   return CATEGORY_LABELS[category]?.label ?? category;
@@ -251,7 +251,7 @@ export function getContextualWarnings(params: {
   /** Grammi di farina della ricetta corrente: se presenti, i tip in % diventano
    * dinamici (es. "0.5-1% zucchero → ≈ 8-15g"). */
   flourG?: number;
-}, cms?: CmsContent): ContextualWarning[] {
+}, cms?: TroubleshootingMessageSource): ContextualWarning[] {
   const warnings: ContextualWarning[] = [];
   const cmsCtx = cms?.troubleshootingI18n?.contextual;
 
@@ -260,7 +260,7 @@ export function getContextualWarnings(params: {
     const loc = cmsCtx?.sticky_dough;
     warnings.push({
       issueId: 'P01',
-      message: loc ? t(loc.message, { h: String(params.hydration), w: String(params.flourW) })
+      message: loc ? interpolate(loc.message, { h: String(params.hydration), w: String(params.flourW) })
         : `Idratazione ${params.hydration}% con W ${params.flourW}: rischio impasto appiccicoso`,
       tip: loc?.tip ?? 'Usa farina con W ≥ 280 oppure riduci idratazione a 68-70%',
       severity: 'warning',
@@ -272,7 +272,7 @@ export function getContextualWarnings(params: {
     const loc = cmsCtx?.high_pl;
     warnings.push({
       issueId: 'P02',
-      message: loc ? t(loc.message, { pl: params.flourPL.toFixed(2) })
+      message: loc ? interpolate(loc.message, { pl: params.flourPL.toFixed(2) })
         : `P/L ${params.flourPL.toFixed(2)} alto: possibile impasto troppo tenace`,
       tip: loc?.tip ?? 'Prevedi autolisi 45min prima di aggiungere sale e lievito',
       severity: 'info',
@@ -284,7 +284,7 @@ export function getContextualWarnings(params: {
     const loc = cmsCtx?.sour_risk;
     warnings.push({
       issueId: 'P06',
-      message: loc ? t(loc.message, { h: String(params.fermentHours), t: String(params.fermentTemp) })
+      message: loc ? interpolate(loc.message, { h: String(params.fermentHours), t: String(params.fermentTemp) })
         : `${params.fermentHours}h a ${params.fermentTemp}°C: rischio sapore acido`,
       tip: loc?.tip ?? 'Per fermentazioni >24h, usa temperatura 4-8°C',
       severity: 'warning',
@@ -301,7 +301,7 @@ export function getContextualWarnings(params: {
       : '';
     warnings.push({
       issueId: 'P10',
-      message: loc ? t(loc.message, { h: String(params.fermentHours) })
+      message: loc ? interpolate(loc.message, { h: String(params.fermentHours) })
         : `Fermentazione breve (${params.fermentHours}h): crosta pallida e digeribilita limitata`,
       tip: (loc?.tip ?? 'Aggiungi 0.5-1% zucchero per favorire la doratura Maillard') + sugarNote,
       severity: 'info',
@@ -313,7 +313,7 @@ export function getContextualWarnings(params: {
     const loc = cmsCtx?.cold_oven;
     warnings.push({
       issueId: 'P09',
-      message: loc ? t(loc.message, { t: String(params.ovenTemp) })
+      message: loc ? interpolate(loc.message, { t: String(params.ovenTemp) })
         : `Forno a ${params.ovenTemp}°C: rischio base cruda con bordo bruciato`,
       tip: loc?.tip ?? 'Pre-cuoci la base 3min senza topping, poi aggiungi ingredienti',
       severity: 'warning',
@@ -327,7 +327,7 @@ export function getContextualWarnings(params: {
     const loc = cmsCtx?.beginner_hydration;
     warnings.push({
       issueId: 'P01',
-      message: loc ? t(loc.message, { h: String(params.hydration) })
+      message: loc ? interpolate(loc.message, { h: String(params.hydration) })
         : params.skillLevel === 1
           ? `Idratazione ${params.hydration}% è impegnativa per principianti`
           : `Idratazione ${params.hydration}% è estrema, richiede pratica`,
@@ -345,7 +345,7 @@ export function getContextualWarnings(params: {
       : '';
     warnings.push({
       issueId: 'P19',
-      message: loc ? t(loc.message, { w: String(params.flourW) })
+      message: loc ? interpolate(loc.message, { w: String(params.flourW) })
         : `W ${params.flourW} molto alto: impasto difficile da stendere`,
       tip: (loc?.tip ?? 'Mixa 50:50 con farina W 200 oppure prevedi autolisi lunga') + halfNote,
       severity: 'warning',
@@ -357,7 +357,7 @@ export function getContextualWarnings(params: {
     const loc = cmsCtx?.flat_long_ferment;
     warnings.push({
       issueId: 'P06',
-      message: loc ? t(loc.message, { h: String(params.fermentHours) })
+      message: loc ? interpolate(loc.message, { h: String(params.fermentHours) })
         : `${params.fermentHours}h in frigo senza pre-fermento: possibile sapore piatto`,
       tip: loc?.tip ?? 'Aggiungi un pre-fermento (poolish o biga) per complessita aromatica',
       severity: 'info',

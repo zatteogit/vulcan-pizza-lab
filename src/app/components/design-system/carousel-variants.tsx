@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnatomyRow } from "./shared";
 import { ImageWithFallback } from "../media/ImageWithFallback";
+import { toShowcaseCssValue } from "./showcase-style";
+import { showcaseMotion } from "./showcase-motion";
+import { showcaseMessage } from "../../i18n/showcase-messages";
 
 /* ═══════════════════════════════════════════════════════════
    M3 EXPRESSIVE — CAROUSEL VARIANTS
@@ -13,12 +16,7 @@ import { ImageWithFallback } from "../media/ImageWithFallback";
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Shared springs (tutte spring, zero duration/ease) ── */
-const SP = {
-  slide: { type: "spring" as const, stiffness: 280, damping: 28, mass: 0.8 },
-  fade:  { type: "spring" as const, stiffness: 300, damping: 26 },
-  dot:   { type: "spring" as const, stiffness: 420, damping: 28 },
-  arrow: { type: "spring" as const, stiffness: 500, damping: 22 },
-};
+const SP = showcaseMotion.carousel;
 
 /* ── M3 Expressive item radii ── */
 const R_LARGE  = 20;
@@ -27,24 +25,24 @@ const R_SMALL  = 12;
 
 /* ── Data ── */
 const ITEMS = [
-  { id: "napoletana", title: "Napoletana STG", sub: "Forno legna · 450°C", img: "https://images.unsplash.com/photo-1765652584214-ab9167622c8d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZWFwb2xpdGFuJTIwcGl6emElMjB3b29kJTIwb3ZlbnxlbnwxfHx8fDE3NzEyMjg4NDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
-  { id: "teglia", title: "Teglia Romana", sub: "Elettrico · 280°C", img: "https://images.unsplash.com/photo-1695324318807-a234819bad21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbiUyMHBpenphJTIwYWwlMjB0YWdsaW98ZW58MXx8fHwxNzcxMjI4ODQyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
-  { id: "chicago", title: "Chicago Deep Dish", sub: "Elettrico · 220°C", img: "https://images.unsplash.com/photo-1765933613028-63223082b4ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWVwJTIwZGlzaCUyMHBpenphJTIwY2hlZXNlfGVufDF8fHx8MTc3MTIyODg0Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
-  { id: "margherita", title: "Margherita", sub: "Universale · 250-500°C", img: "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1hcmdoZXJpdGElMjBiYXNpbCUyMG1venphcmVsbGF8ZW58MXx8fHwxNzcxMjI4ODQ5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
-  { id: "fermentazione", title: "Lunga Maturazione", sub: "48-72h frigo", img: "https://images.unsplash.com/photo-1738717201678-412395e65b36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMGRvdWdoJTIwcHJvb2ZpbmclMjBmZXJtZW50YXRpb258ZW58MXx8fHwxNzcxMjI4ODQzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
-  { id: "sourdough", title: "Sourdough Crumb", sub: "Lievito madre · 72h", img: "https://images.unsplash.com/photo-1763297014734-e2ac58a6f3c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBjbG9zZXVwfGVufDF8fHx8MTc3MTIzMzY2Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
-  { id: "focaccia", title: "Focaccia Ligure", sub: "Olio EVO · 220°C", img: "https://images.unsplash.com/photo-1706145787429-4d6b00a5dc0c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpdGFsaWFuJTIwZm9jYWNjaWElMjByb3NlbWFyeSUyMG9saXZlJTIwb2lsfGVufDF8fHx8MTc3MTIzMzY2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
-  { id: "forno", title: "Forno a Legna", sub: "450-500°C", img: "https://images.unsplash.com/photo-1706011465964-7a226eea129a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b29kJTIwZmlyZWQlMjBwaXp6YSUyMG92ZW4lMjBmbGFtZXN8ZW58MXx8fHwxNzcxMTk1OTgwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
+  { id: "napoletana", title: showcaseMessage("components.design-system.carousel-variants.napoletana-stg-fc9d3868"), sub: "Forno legna · 450°C", img: "https://images.unsplash.com/photo-1765652584214-ab9167622c8d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZWFwb2xpdGFuJTIwcGl6emElMjB3b29kJTIwb3ZlbnxlbnwxfHx8fDE3NzEyMjg4NDF8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
+  { id: "teglia", title: showcaseMessage("components.design-system.carousel-variants.teglia-romana-3dfce708"), sub: "Elettrico · 280°C", img: "https://images.unsplash.com/photo-1695324318807-a234819bad21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbiUyMHBpenphJTIwYWwlMjB0YWdsaW98ZW58MXx8fHwxNzcxMjI4ODQyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
+  { id: "chicago", title: showcaseMessage("components.design-system.carousel-variants.chicago-deep-dish-1124774f"), sub: "Elettrico · 220°C", img: "https://images.unsplash.com/photo-1765933613028-63223082b4ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZWVwJTIwZGlzaCUyMHBpenphJTIwY2hlZXNlfGVufDF8fHx8MTc3MTIyODg0Nnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
+  { id: "margherita", title: showcaseMessage("components.design-system.carousel-variants.margherita-0117d9ad"), sub: "Universale · 250-500°C", img: "https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMG1hcmdoZXJpdGElMjBiYXNpbCUyMG1venphcmVsbGF8ZW58MXx8fHwxNzcxMjI4ODQ5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
+  { id: "fermentazione", title: showcaseMessage("components.design-system.carousel-variants.lunga-maturazione-9c6f42d7"), sub: "48-72h frigo", img: "https://images.unsplash.com/photo-1738717201678-412395e65b36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMGRvdWdoJTIwcHJvb2ZpbmclMjBmZXJtZW50YXRpb258ZW58MXx8fHwxNzcxMjI4ODQzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
+  { id: "sourdough", title: showcaseMessage("components.design-system.carousel-variants.sourdough-crumb-e28bd6ba"), sub: "Lievito madre · 72h", img: "https://images.unsplash.com/photo-1763297014734-e2ac58a6f3c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpc2FuJTIwc291cmRvdWdoJTIwYnJlYWQlMjBjbG9zZXVwfGVufDF8fHx8MTc3MTIzMzY2Mnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
+  { id: "focaccia", title: showcaseMessage("components.design-system.carousel-variants.focaccia-ligure-71be3d63"), sub: "Olio EVO · 220°C", img: "https://images.unsplash.com/photo-1706145787429-4d6b00a5dc0c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxpdGFsaWFuJTIwZm9jYWNjaWElMjByb3NlbWFyeSUyMG9saXZlJTIwb2lsfGVufDF8fHx8MTc3MTIzMzY2M3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
+  { id: "forno", title: showcaseMessage("components.design-system.carousel-variants.forno-a-legna-fd23b413"), sub: "450-500°C", img: "https://images.unsplash.com/photo-1706011465964-7a226eea129a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3b29kJTIwZmlyZWQlMjBwaXp6YSUyMG92ZW4lMjBmbGFtZXN8ZW58MXx8fHwxNzcxMTk1OTgwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
 ];
 
 /** Uncontained multi-aspect items */
 const MULTI_ASPECT_ITEMS = [
-  { id: "ma-1", title: "Impasto",    aspect: 0.7,  img: "https://images.unsplash.com/photo-1738717201744-9faf699eea3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMGRvdWdoJTIwc3RyZXRjaGluZyUyMGhhbmRzfGVufDF8fHx8MTc3MTIzMzY2NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
-  { id: "ma-2", title: "Napoletana", aspect: 1.4,  img: ITEMS[0].img },
-  { id: "ma-3", title: "Forno",      aspect: 1.0,  img: ITEMS[7].img },
-  { id: "ma-4", title: "Focaccia",   aspect: 1.6,  img: ITEMS[6].img },
-  { id: "ma-5", title: "Crumb",      aspect: 0.85, img: ITEMS[5].img },
-  { id: "ma-6", title: "Deep Dish",  aspect: 1.2,  img: ITEMS[2].img },
+  { id: "ma-1", title: showcaseMessage("components.design-system.carousel-variants.impasto-4c653db5"),    aspect: 0.7,  img: "https://images.unsplash.com/photo-1738717201744-9faf699eea3d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwaXp6YSUyMGRvdWdoJTIwc3RyZXRjaGluZyUyMGhhbmRzfGVufDF8fHx8MTc3MTIzMzY2NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=vulcan&utm_medium=referral" },
+  { id: "ma-2", title: showcaseMessage("components.design-system.carousel-variants.napoletana-97c08737"), aspect: 1.4,  img: ITEMS[0].img },
+  { id: "ma-3", title: showcaseMessage("components.design-system.carousel-variants.forno-0f50f5fe"),      aspect: 1.0,  img: ITEMS[7].img },
+  { id: "ma-4", title: showcaseMessage("components.design-system.carousel-variants.focaccia-22c16a0a"),   aspect: 1.6,  img: ITEMS[6].img },
+  { id: "ma-5", title: showcaseMessage("components.design-system.carousel-variants.crumb-3aee4974"),      aspect: 0.85, img: ITEMS[5].img },
+  { id: "ma-6", title: showcaseMessage("components.design-system.carousel-variants.deep-dish-ecd4aa9d"),  aspect: 1.2,  img: ITEMS[2].img },
 ];
 
 /* ── Shared helpers ── */
@@ -66,17 +64,10 @@ function Arrow({ dir, onClick }: { dir: "left" | "right"; onClick: () => void })
       onClick={onClick}
       whileHover={{ scale: 1.08 }}
       transition={SP.arrow}
-      className="w-9 h-9 rounded-full flex items-center justify-center active:scale-82 transition-transform"
-      style={{
-        background: "color-mix(in srgb, var(--container-page) 88%, transparent)",
-        backdropFilter: "blur(12px) saturate(1.4)",
-        border: "var(--border-width-thin) solid var(--outline-variant)",
-        cursor: "pointer",
-        outline: "none",
-      }}
-      aria-label={dir === "left" ? "Precedente" : "Successiva"}
+      className="w-9 h-9 rounded-full flex items-center justify-center active:scale-82 transition-transform dsx-s-cbf876569c"
+      aria-label={dir === "left" ? showcaseMessage("components.design-system.carousel-variants.precedente-4dfefd8d") : showcaseMessage("components.design-system.carousel-variants.successiva-5c6e5fb1")}
     >
-      <I size={18} style={{ color: "var(--text-default)" }} />
+      <I size={18} className="dsx-s-a57c4bed75" />
     </motion.button>
   );
 }
@@ -90,21 +81,22 @@ function Dots({ count, active, onSelect, id }: { count: number; active: number; 
           <motion.button
             key={i}
             onClick={() => onSelect(i)}
-            className="relative rounded-full overflow-hidden active:scale-80 transition-transform"
-            style={{ border: "none", cursor: "pointer", outline: "none", padding: 0, background: "transparent" }}
-            animate={{ width: isActive ? 24 : 8, height: 8 }}
-            transition={SP.dot}
-            aria-label={`Slide ${i + 1}`}
+            className="relative w-6 h-6 rounded-full flex items-center justify-center active:scale-80 transition-transform dsx-s-2596e0553d ds-showcase__compact-target"
+            aria-label={showcaseMessage("components.design-system.carousel-variants.slide-value-0a48c24b", [i + 1])}
           >
-            <div className="absolute inset-0 rounded-full" style={{ background: "var(--outline-variant)" }} />
-            {isActive && (
-              <motion.div
-                layoutId={`dot-${id}`}
-                className="absolute inset-0 rounded-full"
-                style={{ background: "var(--primary)" }}
-                transition={SP.dot}
-              />
-            )}
+            <motion.span
+              className="relative block h-2 rounded-full overflow-hidden dsx-s-279d49df94"
+              animate={{ width: isActive ? 24 : 8 }}
+              transition={SP.dot}
+            >
+              {isActive && (
+                <motion.span
+                  layoutId={`dot-${id}`}
+                  className="absolute inset-0 rounded-full dsx-s-0a278ece1c"
+                  transition={SP.dot}
+                />
+              )}
+            </motion.span>
           </motion.button>
         );
       })}
@@ -136,26 +128,23 @@ export function HeroDemo() {
 
   return (
     <div className="surface-card p-5">
-      <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
-        Hero — 1 Large + 1 Small
-      </span>
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--muted-foreground)", lineHeight: "var(--leading-relaxed)", marginTop: "var(--space-2)" }}>
-        M3 Hero layout: l'item in focus e un <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>Large carousel item</span> ({HERO_LARGE_PCT}), l'item successivo e un <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>Small carousel item</span> ({HERO_SMALL_PCT}) clippato al bordo destro del container. Gap <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>8px</span>.  Click sul peek per avanzare.
-      </p>
+      <span className="type-label dsx-s-e2184fadc0">
+        {showcaseMessage("components.design-system.carousel-variants.hero-1-large-1-small-2b9d396a")}</span>
+      <p className="dsx-s-da3caa8807">
+        {showcaseMessage("components.design-system.carousel-variants.m3-hero-layout-l-item-in-focus-e-un-ac7844c2")}<span className="dsx-s-154dc56bcf">{showcaseMessage("components.design-system.carousel-variants.large-carousel-item-df331c96")}</span> ({HERO_LARGE_PCT}{showcaseMessage("components.design-system.carousel-variants.l-item-successivo-e-un-309b7e7b")}<span className="dsx-s-154dc56bcf">{showcaseMessage("components.design-system.carousel-variants.small-carousel-item-58009ac4")}</span> ({HERO_SMALL_PCT}{showcaseMessage("components.design-system.carousel-variants.clippato-al-bordo-destro-del-container-gap-414af569")}<span className="dsx-s-154dc56bcf">8px</span>{showcaseMessage("components.design-system.carousel-variants.click-sul-peek-per-avanzare-4ae56b03")}</p>
 
       <div className="mt-5 relative">
         <div
-          className="flex overflow-hidden"
-          style={{ height: 280, gap: 8 }}
+          className="flex overflow-hidden dsx-s-08c21e2f7c"
           {...swipe}
           role="region"
           aria-roledescription="carousel"
-          aria-label="Hero carousel"
+          aria-label={showcaseMessage("components.design-system.carousel-variants.hero-carousel-9da93ffc")}
         >
           {/* ── Large item (hero) ── */}
           <div
-            className="relative overflow-hidden"
-            style={{ flex: `0 0 ${HERO_LARGE_PCT}`, height: "100%", borderRadius: R_LARGE }}
+            className="relative overflow-hidden dsx-s-c460f87e81"
+            style={{ "--dsx-flex": toShowcaseCssValue(`0 0 ${HERO_LARGE_PCT}`, true), "--dsx-border-radius": toShowcaseCssValue(R_LARGE, false) } as any}
           >
             <AnimatePresence>
               <motion.div
@@ -169,43 +158,19 @@ export function HeroDemo() {
                 <ImageWithFallback
                   src={heroItem.img}
                   alt={heroItem.title}
-                  className="absolute inset-0 w-full h-full"
-                  style={{ objectFit: "cover", display: "block" }}
+                  className="absolute inset-0 w-full h-full dsx-s-bcc9535a4c"
                 />
                 {/* Scrim gradient */}
                 <div
-                  className="absolute bottom-0 left-0 right-0"
-                  style={{
-                    height: "50%",
-                    background: "var(--card-scrim-heavy)",
-                    pointerEvents: "none",
-                  }}
+                  className="absolute bottom-0 left-0 right-0 dsx-s-2bdb173748"
                 />
                 {/* Label */}
                 <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <span
-                    style={{
-                      fontFamily: "'Playfair Display', serif",
-                      fontSize: "var(--font-size-4xl)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      color: "var(--overlay-text)",
-                      display: "block",
-                      lineHeight: "var(--leading-display)",
-                    }}
+                  <span className="dsx-s-9eebe548f2"
                   >
                     {heroItem.title}
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: "var(--font-size-base)",
-                      color: "var(--overlay-text)",
-                      opacity: 0.75,
-                      letterSpacing: "var(--tracking-spread)",
-                      fontFeatureSettings: "'tnum'",
-                      display: "block",
-                      marginTop: "var(--space-0-5)",
-                    }}
+                  <span className="dsx-s-81a7ce9ccb"
                   >
                     {heroItem.sub}
                   </span>
@@ -216,14 +181,18 @@ export function HeroDemo() {
 
           {/* ── Small item (peek) — clipped at right edge ── */}
           <div
-            className="relative overflow-hidden cursor-pointer"
-            style={{
-              flex: `0 0 ${HERO_SMALL_PCT}`,
-              height: "100%",
-              borderRadius: `${R_SMALL}px 0 0 ${R_SMALL}px`,
-              marginRight: -HERO_CLIP,
-            }}
+            className="relative overflow-hidden cursor-pointer dsx-s-145328d76f"
+            role="button"
+            tabIndex={0}
+            aria-label={showcaseMessage("components.design-system.carousel-variants.mostra-value-9a8864ea", [peekItem.title])}
+            style={{ "--dsx-flex": toShowcaseCssValue(`0 0 ${HERO_SMALL_PCT}`, true), "--dsx-border-radius": toShowcaseCssValue(`${R_SMALL}px 0 0 ${R_SMALL}px`, false), "--dsx-margin-right": toShowcaseCssValue(-HERO_CLIP, false) } as any}
             onClick={next}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                next();
+              }
+            }}
           >
             <AnimatePresence>
               <motion.div
@@ -237,24 +206,15 @@ export function HeroDemo() {
                 <ImageWithFallback
                   src={peekItem.img}
                   alt={peekItem.title}
-                  className="absolute inset-0 w-full h-full"
-                  style={{ objectFit: "cover", display: "block" }}
+                  className="absolute inset-0 w-full h-full dsx-s-bcc9535a4c"
                 />
                 {/* Sottile scrim per suggerire interattivita */}
-                <div className="absolute inset-0" style={{ background: "var(--card-scrim-subtle)" }} />
+                <div className="absolute inset-0 dsx-s-145ffa4a64" />
                 {/* Small label M3 */}
                 <div
-                  className="absolute bottom-0 left-0 right-0 p-3"
-                  style={{ background: "var(--card-scrim)" }}
+                  className="absolute bottom-0 left-0 right-0 p-3 dsx-s-ff84a6103d"
                 >
-                  <span
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: "var(--font-size-md)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      color: "var(--overlay-text)",
-                      display: "block",
-                    }}
+                  <span className="dsx-s-29d09c3054"
                   >
                     {peekItem.title}
                   </span>
@@ -296,52 +256,44 @@ export function MultiBrowseDemo() {
 
   return (
     <div className="surface-card p-5">
-      <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
-        Multi-browse — Medium items, edge clip
-      </span>
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--muted-foreground)", lineHeight: "var(--leading-relaxed)", marginTop: "var(--space-2)" }}>
-        Tutti gli item sono <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>Medium carousel item</span> con larghezza uguale (~{Math.round(100 / MB_VISIBLE)}%). L'ultimo a destra e clippato, suggerendo scroll. Radius <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>{R_MEDIUM}px</span>. Gap <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>{MB_GAP}px</span>.
+      <span className="type-label dsx-s-e2184fadc0">
+        {showcaseMessage("components.design-system.carousel-variants.multi-browse-medium-items-edge-clip-7af06bc1")}</span>
+      <p className="dsx-s-da3caa8807">
+        {showcaseMessage("components.design-system.carousel-variants.tutti-gli-item-sono-b278e8a6")}<span className="dsx-s-154dc56bcf">{showcaseMessage("components.design-system.carousel-variants.medium-carousel-item-13d65247")}</span> {showcaseMessage("components.design-system.carousel-variants.con-larghezza-uguale-82d4473a")}{Math.round(100 / MB_VISIBLE)}{showcaseMessage("components.design-system.carousel-variants.l-ultimo-a-destra-e-clippato-suggerendo-sc-2a32c136")}<span className="dsx-s-154dc56bcf">{R_MEDIUM}px</span>{showcaseMessage("components.design-system.carousel-variants.gap-e9160ca0")}<span className="dsx-s-154dc56bcf">{MB_GAP}px</span>.
       </p>
 
       <div className="mt-5 relative">
         <div
-          className="overflow-hidden"
-          style={{ borderRadius: 0 }}
+          className="overflow-hidden dsx-s-ef4b6ace17"
           {...swipe}
           role="region"
           aria-roledescription="carousel"
-          aria-label="Multi-browse"
+          aria-label={showcaseMessage("components.design-system.carousel-variants.multi-browse-a381c24b")}
         >
           <motion.div
-            className="flex"
-            style={{ gap: MB_GAP }}
+            className="flex dsx-s-9ba7ea1b18"
+            style={{ "--dsx-gap": toShowcaseCssValue(MB_GAP, false) } as any}
             animate={{ x: -(offset * (100 / MB_VISIBLE + MB_GAP / MB_VISIBLE)) + "%" }}
             transition={SP.slide}
           >
             {ITEMS.map((item) => (
               <div
                 key={item.id}
-                className="relative overflow-hidden flex-shrink-0"
-                style={{
-                  width: `calc(${100 / MB_VISIBLE}% - ${MB_GAP * (MB_VISIBLE - 1) / MB_VISIBLE}px)`,
-                  height: 200,
-                  borderRadius: R_MEDIUM,
-                }}
+                className="relative overflow-hidden flex-shrink-0 dsx-s-928aa45342"
+                style={{ "--dsx-width": toShowcaseCssValue(`calc(${100 / MB_VISIBLE}% - ${MB_GAP * (MB_VISIBLE - 1) / MB_VISIBLE}px)`, false), "--dsx-border-radius": toShowcaseCssValue(R_MEDIUM, false) } as any}
               >
                 <ImageWithFallback
                   src={item.img}
                   alt={item.title}
-                  className="absolute inset-0 w-full h-full"
-                  style={{ objectFit: "cover", display: "block" }}
+                  className="absolute inset-0 w-full h-full dsx-s-bcc9535a4c"
                 />
                 <div
-                  className="absolute bottom-0 left-0 right-0 p-3"
-                  style={{ background: "var(--card-scrim-heavy)" }}
+                  className="absolute bottom-0 left-0 right-0 p-3 dsx-s-2de2509a7d"
                 >
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-lg)", fontWeight: "var(--weight-semibold)" as any, color: "var(--overlay-text)", display: "block" }}>
+                  <span className="dsx-s-f9417186e8">
                     {item.title}
                   </span>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--overlay-text)", opacity: 0.75, fontFeatureSettings: "'tnum'", letterSpacing: "var(--tracking-spread)" }}>
+                  <span className="dsx-s-0ee47c3b1b">
                     {item.sub}
                   </span>
                 </div>
@@ -361,18 +313,24 @@ export function MultiBrowseDemo() {
       {/* Scroll position dots */}
       <div className="flex items-center justify-center gap-1.5 mt-3">
         {Array.from({ length: maxOffset + 1 }, (_, i) => (
-          <motion.div
+          <motion.button
             key={i}
-            className="rounded-full"
-            animate={{
-              width: i === offset ? 16 : 6,
-              height: 6,
-              background: i === offset ? "var(--primary)" : "var(--outline-variant)",
-            }}
-            transition={SP.dot}
-            style={{ cursor: "pointer" }}
+            type="button"
+            aria-label={showcaseMessage("components.design-system.carousel-variants.vai-alla-pagina-value-33a45164", [i + 1])}
+            aria-pressed={i === offset}
+            className="w-6 h-6 rounded-full flex items-center justify-center dsx-s-80e3bcb9cf ds-showcase__compact-target"
             onClick={() => setOffset(i)}
-          />
+          >
+            <motion.span
+              className="block rounded-full"
+              animate={{
+                width: i === offset ? 16 : 6,
+                height: 6,
+                background: i === offset ? "var(--primary)" : "var(--outline-variant)",
+              }}
+              transition={SP.dot}
+            />
+          </motion.button>
         ))}
       </div>
     </div>
@@ -399,72 +357,46 @@ export function UncontainedDemo() {
 
   return (
     <div className="surface-card p-5">
-      <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
-        Uncontained — Large items, stessa dimensione
-      </span>
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--muted-foreground)", lineHeight: "var(--leading-relaxed)", marginTop: "var(--space-2)" }}>
-        Ogni item e un <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>Large carousel item</span> con larghezza uniforme ({UC_ITEM_WIDTH_PCT}%). Il container non ha radius — gli item ai bordi vengono tagliati dal clip, creando il pattern M3 "uncontained". Radius item <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>{R_LARGE}px</span>. Gap <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>{UC_GAP}px</span>.
+      <span className="type-label dsx-s-e2184fadc0">
+        {showcaseMessage("components.design-system.carousel-variants.uncontained-large-items-stessa-dimensione-c7782a28")}</span>
+      <p className="dsx-s-da3caa8807">
+        {showcaseMessage("components.design-system.carousel-variants.ogni-item-e-un-f57ca88f")}<span className="dsx-s-154dc56bcf">{showcaseMessage("components.design-system.carousel-variants.large-carousel-item-df331c96")}</span> {showcaseMessage("components.design-system.carousel-variants.con-larghezza-uniforme-5123f0db")}{UC_ITEM_WIDTH_PCT}{showcaseMessage("components.design-system.carousel-variants.il-container-non-ha-radius-gli-item-ai-bor-b9303f6e")}<span className="dsx-s-154dc56bcf">{R_LARGE}px</span>{showcaseMessage("components.design-system.carousel-variants.gap-e9160ca0")}<span className="dsx-s-154dc56bcf">{UC_GAP}px</span>.
       </p>
 
       <div className="mt-5 relative">
         <div
-          className="overflow-hidden"
-          style={{ borderRadius: 0, height: 260 }}
+          className="overflow-hidden dsx-s-61111b8fc9"
           {...swipe}
           role="region"
           aria-roledescription="carousel"
-          aria-label="Uncontained carousel"
+          aria-label={showcaseMessage("components.design-system.carousel-variants.uncontained-carousel-4738db1a")}
         >
           <motion.div
-            className="flex h-full"
-            style={{ gap: UC_GAP }}
+            className="flex h-full dsx-s-9ba7ea1b18"
+            style={{ "--dsx-gap": toShowcaseCssValue(UC_GAP, false) } as any}
             animate={{ x: `${-offset * (UC_ITEM_WIDTH_PCT + (UC_GAP * 100 / 600))}%` }}
             transition={SP.slide}
           >
             {ITEMS.map((item) => (
               <div
                 key={item.id}
-                className="relative overflow-hidden flex-shrink-0"
-                style={{
-                  width: `${UC_ITEM_WIDTH_PCT}%`,
-                  height: "100%",
-                  borderRadius: R_LARGE,
-                }}
+                className="relative overflow-hidden flex-shrink-0 dsx-s-fee5fccfa5"
+                style={{ "--dsx-width": toShowcaseCssValue(`${UC_ITEM_WIDTH_PCT}%`, false), "--dsx-border-radius": toShowcaseCssValue(R_LARGE, false) } as any}
               >
                 <ImageWithFallback
                   src={item.img}
                   alt={item.title}
-                  className="absolute inset-0 w-full h-full"
-                  style={{ objectFit: "cover", display: "block" }}
+                  className="absolute inset-0 w-full h-full dsx-s-bcc9535a4c"
                 />
                 {/* Scrim + label M3 */}
                 <div
-                  className="absolute bottom-0 left-0 right-0 p-4"
-                  style={{ background: "var(--card-scrim-heavy)" }}
+                  className="absolute bottom-0 left-0 right-0 p-4 dsx-s-2de2509a7d"
                 >
-                  <span
-                    style={{
-                      fontFamily: "'Playfair Display', serif",
-                      fontSize: "var(--font-size-2xl)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      color: "var(--overlay-text)",
-                      display: "block",
-                      lineHeight: "var(--leading-display)",
-                    }}
+                  <span className="dsx-s-3df36ec9e0"
                   >
                     {item.title}
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: "var(--font-size-base)",
-                      color: "var(--overlay-text)",
-                      opacity: 0.7,
-                      fontFeatureSettings: "'tnum'",
-                      letterSpacing: "var(--tracking-spread)",
-                      display: "block",
-                      marginTop: "var(--space-0-5)",
-                    }}
+                  <span className="dsx-s-4df4ae2ea9"
                   >
                     {item.sub}
                   </span>
@@ -485,18 +417,24 @@ export function UncontainedDemo() {
       {/* Scroll position */}
       <div className="flex items-center justify-center gap-1.5 mt-3">
         {Array.from({ length: maxOffset + 1 }, (_, i) => (
-          <motion.div
+          <motion.button
             key={i}
-            className="rounded-full"
-            animate={{
-              width: i === offset ? 16 : 6,
-              height: 6,
-              background: i === offset ? "var(--primary)" : "var(--outline-variant)",
-            }}
-            transition={SP.dot}
-            style={{ cursor: "pointer" }}
+            type="button"
+            aria-label={showcaseMessage("components.design-system.carousel-variants.vai-alla-pagina-value-33a45164", [i + 1])}
+            aria-pressed={i === offset}
+            className="w-6 h-6 rounded-full flex items-center justify-center dsx-s-80e3bcb9cf ds-showcase__compact-target"
             onClick={() => setOffset(i)}
-          />
+          >
+            <motion.span
+              className="block rounded-full"
+              animate={{
+                width: i === offset ? 16 : 6,
+                height: 6,
+                background: i === offset ? "var(--primary)" : "var(--outline-variant)",
+              }}
+              transition={SP.dot}
+            />
+          </motion.button>
         ))}
       </div>
     </div>
@@ -523,25 +461,23 @@ export function UncontainedMultiAspectDemo() {
 
   return (
     <div className="surface-card p-5">
-      <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
-        Uncontained Multi-aspect Ratio — 9:16 → 16:9
-      </span>
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--muted-foreground)", lineHeight: "var(--leading-relaxed)", marginTop: "var(--space-2)" }}>
-        Ogni item ha un aspect ratio diverso (da <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>0.7</span> portrait a <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>1.6</span> landscape). La larghezza e proporzionale: <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>w = aspect / Σaspect × 100%</span>. Container senza radius, item radius <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>{R_MEDIUM}px</span>.
+      <span className="type-label dsx-s-e2184fadc0">
+        {showcaseMessage("components.design-system.carousel-variants.uncontained-multi-aspect-ratio-9-16-16-9-bfd51a7c")}</span>
+      <p className="dsx-s-da3caa8807">
+        {showcaseMessage("components.design-system.carousel-variants.ogni-item-ha-un-aspect-ratio-diverso-da-5817889b")}<span className="dsx-s-154dc56bcf">0.7</span> {showcaseMessage("components.design-system.carousel-variants.portrait-a-0f29b0f5")}<span className="dsx-s-154dc56bcf">1.6</span> {showcaseMessage("components.design-system.carousel-variants.landscape-la-larghezza-e-proporzionale-8df8b405")}<span className="dsx-s-154dc56bcf">{showcaseMessage("components.design-system.carousel-variants.w-aspect-aspect-100-db6be339")}</span>{showcaseMessage("components.design-system.carousel-variants.container-senza-radius-item-radius-fb02a6a9")}<span className="dsx-s-154dc56bcf">{R_MEDIUM}px</span>.
       </p>
 
       <div className="mt-5 relative">
         <div
-          className="overflow-hidden"
-          style={{ borderRadius: 0, height: MA_HEIGHT }}
+          className="overflow-hidden dsx-s-f641ccf940"
+          style={{ "--dsx-height": toShowcaseCssValue(MA_HEIGHT, false) } as any}
           {...swipe}
           role="region"
           aria-roledescription="carousel"
-          aria-label="Multi-aspect carousel"
+          aria-label={showcaseMessage("components.design-system.carousel-variants.multi-aspect-carousel-6b46cc2b")}
         >
           <motion.div
-            className="flex h-full"
-            style={{ gap: 8 }}
+            className="flex h-full dsx-s-491198ddb7"
             animate={{ x: `${-offset * 28}%` }}
             transition={SP.slide}
           >
@@ -550,24 +486,18 @@ export function UncontainedMultiAspectDemo() {
               return (
                 <div
                   key={item.id}
-                  className="relative overflow-hidden flex-shrink-0"
-                  style={{
-                    width: `${Math.max(w * 2.2, 18)}%`,
-                    height: "100%",
-                    borderRadius: R_MEDIUM,
-                  }}
+                  className="relative overflow-hidden flex-shrink-0 dsx-s-fee5fccfa5"
+                  style={{ "--dsx-width": toShowcaseCssValue(`${Math.max(w * 2.2, 18)}%`, false), "--dsx-border-radius": toShowcaseCssValue(R_MEDIUM, false) } as any}
                 >
                   <ImageWithFallback
                     src={item.img}
                     alt={item.title}
-                    className="absolute inset-0 w-full h-full"
-                    style={{ objectFit: "cover", display: "block" }}
+                    className="absolute inset-0 w-full h-full dsx-s-bcc9535a4c"
                   />
                   <div
-                    className="absolute bottom-0 left-0 right-0 p-2.5"
-                    style={{ background: "var(--card-scrim)" }}
+                    className="absolute bottom-0 left-0 right-0 p-2.5 dsx-s-ff84a6103d"
                   >
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", fontWeight: "var(--weight-semibold)" as any, color: "var(--overlay-text)" }}>
+                    <span className="dsx-s-1a5f7c207b">
                       {item.title}
                     </span>
                   </div>
@@ -590,14 +520,7 @@ export function UncontainedMultiAspectDemo() {
         {MULTI_ASPECT_ITEMS.map((item) => (
           <span
             key={item.id}
-            className="px-2 py-1 rounded-lg"
-            style={{
-              background: "var(--surface-container)",
-              fontFamily: "'DM Mono', monospace",
-              fontSize: "var(--font-size-sm)",
-              color: "var(--muted-foreground)",
-              fontFeatureSettings: "'tnum'",
-            }}
+            className="px-2 py-1 rounded-lg dsx-s-ecd2a0e5f2"
           >
             {item.title}: {item.aspect.toFixed(1)}
           </span>
@@ -623,21 +546,19 @@ export function FullScreenDemo() {
 
   return (
     <div className="surface-card p-5">
-      <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
-        Full-screen — un item alla volta
-      </span>
-      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--muted-foreground)", lineHeight: "var(--leading-relaxed)", marginTop: "var(--space-2)" }}>
-        L'item in focus occupa il <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>100%</span> del container. Nessun peek, nessun radius sul container. Transizione <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>crossfade + scale</span> spring per profondita cinematica. Counter overlay <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--primary)" }}>01 / 08</span>.
+      <span className="type-label dsx-s-e2184fadc0">
+        {showcaseMessage("components.design-system.carousel-variants.full-screen-un-item-alla-volta-253900bc")}</span>
+      <p className="dsx-s-da3caa8807">
+        {showcaseMessage("components.design-system.carousel-variants.l-item-in-focus-occupa-il-f14a2ee6")}<span className="dsx-s-154dc56bcf">100%</span> {showcaseMessage("components.design-system.carousel-variants.del-container-nessun-peek-nessun-radius-su-633856c9")}<span className="dsx-s-154dc56bcf">{showcaseMessage("components.design-system.carousel-variants.crossfade-scale-b90c467c")}</span> {showcaseMessage("components.design-system.carousel-variants.spring-per-profondita-cinematica-counter-o-11c50c22")}<span className="dsx-s-154dc56bcf">01 / 08</span>.
       </p>
 
       <div className="mt-5 relative">
         <div
-          className="relative overflow-hidden"
-          style={{ height: 320, borderRadius: 0 }}
+          className="relative overflow-hidden dsx-s-348d0d8579"
           {...swipe}
           role="region"
           aria-roledescription="carousel"
-          aria-label="Full-screen carousel"
+          aria-label={showcaseMessage("components.design-system.carousel-variants.full-screen-carousel-2918f02a")}
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -651,20 +572,18 @@ export function FullScreenDemo() {
               <ImageWithFallback
                 src={ITEMS[focus].img}
                 alt={ITEMS[focus].title}
-                className="absolute inset-0 w-full h-full"
-                style={{ objectFit: "cover", display: "block" }}
+                className="absolute inset-0 w-full h-full dsx-s-bcc9535a4c"
               />
               {/* Scrim */}
               <div
-                className="absolute bottom-0 left-0 right-0"
-                style={{ height: "45%", background: "var(--card-scrim-heavy)", pointerEvents: "none" }}
+                className="absolute bottom-0 left-0 right-0 dsx-s-49686b3396"
               />
               {/* Label */}
               <div className="absolute bottom-0 left-0 right-0 p-5">
-                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "var(--font-size-6xl)", fontWeight: "var(--weight-bold)" as any, color: "var(--overlay-text)", display: "block", lineHeight: "var(--leading-heading)" }}>
+                <span className="dsx-s-2e13245d4c">
                   {ITEMS[focus].title}
                 </span>
-                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-md)", color: "var(--overlay-text)", opacity: 0.7, letterSpacing: "var(--tracking-spread)", fontFeatureSettings: "'tnum'", display: "block", marginTop: "var(--space-1)" }}>
+                <span className="dsx-s-c9d81585e2">
                   {ITEMS[focus].sub}
                 </span>
               </div>
@@ -672,8 +591,8 @@ export function FullScreenDemo() {
           </AnimatePresence>
 
           {/* Counter overlay */}
-          <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-lg" style={{ background: "var(--overlay-backdrop)", backdropFilter: "blur(8px)" }}>
-            <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", color: "var(--overlay-text)", fontFeatureSettings: "'tnum'", letterSpacing: "var(--tracking-label)" }}>
+          <div className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-lg dsx-s-8d1dee08aa">
+            <span className="dsx-s-545599cf5f">
               {String(focus + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}
             </span>
           </div>
@@ -698,28 +617,32 @@ export function FullScreenDemo() {
 
 export function VariantComparisonCard() {
   const rows = [
-    { name: "Center-aligned Hero", vis: "1 + 2 peek", hero: "~56%", peek: "~20%", itemSize: "L + S + S", ir: "16px", nav: "flex crossfade" },
-    { name: "Hero",                vis: "1 + 1 peek", hero: "70%",  peek: "28%",  itemSize: "L + S",     ir: "20 / 12", nav: "AnimatePresence" },
-    { name: "Multi-browse",        vis: "3.3",        hero: "—",    peek: "clip",  itemSize: "M × N",     ir: "16px", nav: "translateX" },
-    { name: "Uncontained",         vis: "~2.3",       hero: "—",    peek: "clip",  itemSize: "L × N",     ir: "20px", nav: "translateX" },
-    { name: "Uncontained Multi-AR",vis: "2-3",        hero: "—",    peek: "clip",  itemSize: "Mixed",     ir: "16px", nav: "translateX" },
-    { name: "Full-screen",         vis: "1",          hero: "100%", peek: "0",     itemSize: "L × 1",     ir: "0",    nav: "crossfade + scale" },
+    { name: showcaseMessage("components.design-system.carousel-variants.center-aligned-hero-eebb5d70"), vis: "1 + 2 peek", hero: "~56%", peek: "~20%", itemSize: "L + S + S", ir: "16px", nav: "flex crossfade" },
+    { name: showcaseMessage("components.design-system.carousel-variants.hero-17f5d4f0"),                vis: "1 + 1 peek", hero: "70%",  peek: "28%",  itemSize: "L + S",     ir: "20 / 12", nav: "AnimatePresence" },
+    { name: showcaseMessage("components.design-system.carousel-variants.multi-browse-a381c24b"),        vis: "3.3",        hero: "—",    peek: "clip",  itemSize: "M × N",     ir: "16px", nav: "translateX" },
+    { name: showcaseMessage("components.design-system.carousel-variants.uncontained-ef6d4bff"),         vis: "~2.3",       hero: "—",    peek: "clip",  itemSize: "L × N",     ir: "20px", nav: "translateX" },
+    { name: showcaseMessage("components.design-system.carousel-variants.uncontained-multi-ar-53f31e47"),vis: "2-3",        hero: "—",    peek: "clip",  itemSize: "Mixed",     ir: "16px", nav: "translateX" },
+    { name: showcaseMessage("components.design-system.carousel-variants.full-screen-225c026a"),         vis: "1",          hero: "100%", peek: "0",     itemSize: "L × 1",     ir: "0",    nav: "crossfade + scale" },
   ];
 
   const headers = ["Variante", "Items vis.", "Hero %", "Peek", "Item size", "Item radius", "Navigazione"];
 
   return (
     <div className="surface-card p-5">
-      <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
-        Confronto varianti — M3 Expressive Carousel
-      </span>
+      <span className="type-label dsx-s-e2184fadc0">
+        {showcaseMessage("components.design-system.carousel-variants.confronto-varianti-m3-expressive-carousel-9325fca8")}</span>
 
-      <div className="mt-4 overflow-x-auto">
-        <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: "'DM Sans', sans-serif", fontSize: "var(--font-size-md)", color: "var(--text-default)" }}>
+      <div
+        className="mt-4 overflow-x-auto"
+        role="region"
+        tabIndex={0}
+        aria-label={showcaseMessage("components.design-system.carousel-variants.confronto-varianti-m3-expressive-carousel-9325fca8")}
+      >
+        <table className="dsx-s-327b8a7ad6">
           <thead>
-            <tr style={{ borderBottom: "var(--border-width-thin) solid var(--outline-variant)" }}>
+            <tr className="dsx-s-e7826affa9">
               {headers.map((h) => (
-                <th key={h} style={{ padding: "var(--space-2) var(--space-1-5)", textAlign: "left", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-sm)", fontWeight: "var(--weight-semibold)" as any, color: "var(--muted-foreground)", letterSpacing: "var(--tracking-label)", textTransform: "uppercase" }}>
+                <th key={h} className="dsx-s-e89d79e022">
                   {h}
                 </th>
               ))}
@@ -727,14 +650,14 @@ export function VariantComparisonCard() {
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.name} style={{ borderBottom: "var(--border-width-thin) solid var(--outline-variant)" }}>
-                <td style={{ padding: "var(--space-2) var(--space-1-5)", fontWeight: "var(--weight-semibold)" as any, color: "var(--primary)" }}>{row.name}</td>
-                <td style={{ padding: "var(--space-2) var(--space-1-5)", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", fontFeatureSettings: "'tnum'" }}>{row.vis}</td>
-                <td style={{ padding: "var(--space-2) var(--space-1-5)", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", fontFeatureSettings: "'tnum'" }}>{row.hero}</td>
-                <td style={{ padding: "var(--space-2) var(--space-1-5)", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", fontFeatureSettings: "'tnum'" }}>{row.peek}</td>
-                <td style={{ padding: "var(--space-2) var(--space-1-5)", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)" }}>{row.itemSize}</td>
-                <td style={{ padding: "var(--space-2) var(--space-1-5)", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", fontFeatureSettings: "'tnum'" }}>{row.ir}</td>
-                <td style={{ padding: "var(--space-2) var(--space-1-5)", fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)" }}>{row.nav}</td>
+              <tr key={row.name} className="dsx-s-e7826affa9">
+                <td className="dsx-s-75e7824b76">{row.name}</td>
+                <td className="dsx-s-f0104e1cbd">{row.vis}</td>
+                <td className="dsx-s-f0104e1cbd">{row.hero}</td>
+                <td className="dsx-s-f0104e1cbd">{row.peek}</td>
+                <td className="dsx-s-b6979344ef">{row.itemSize}</td>
+                <td className="dsx-s-f0104e1cbd">{row.ir}</td>
+                <td className="dsx-s-b6979344ef">{row.nav}</td>
               </tr>
             ))}
           </tbody>
@@ -743,31 +666,25 @@ export function VariantComparisonCard() {
 
       {/* M3 item size anatomy */}
       <div className="mt-5">
-        <span className="type-label" style={{ color: "var(--text-default)", fontSize: "var(--font-size-base)" }}>
-          M3 Item Size Anatomy
-        </span>
-        <div className="mt-3 flex items-end gap-3" style={{ height: 100 }}>
+        <span className="type-label dsx-s-e2184fadc0 ds-showcase__on-primary">
+          {showcaseMessage("components.design-system.carousel-variants.m3-item-size-anatomy-41d0d5dd")}</span>
+        <div className="mt-3 flex items-end gap-3 dsx-s-584921563c">
           {[
-            { label: "Large", radius: R_LARGE, h: 100, color: "var(--primary)" },
-            { label: "Medium", radius: R_MEDIUM, h: 72, color: "color-mix(in srgb, var(--primary) 65%, var(--surface-container))" },
-            { label: "Small", radius: R_SMALL, h: 48, color: "color-mix(in srgb, var(--primary) 35%, var(--surface-container))" },
+            { label: showcaseMessage("components.design-system.carousel-variants.large-738fd1d2"), radius: R_LARGE, h: 100, color: "var(--primary)" },
+            { label: showcaseMessage("components.design-system.carousel-variants.medium-d404968e"), radius: R_MEDIUM, h: 72, color: "color-mix(in srgb, var(--primary) 65%, var(--surface-container))" },
+            { label: showcaseMessage("components.design-system.carousel-variants.small-c74fd971"), radius: R_SMALL, h: 48, color: "color-mix(in srgb, var(--primary) 35%, var(--surface-container))" },
           ].map((size) => (
             <div key={size.label} className="flex flex-col items-center gap-2 flex-1">
               <div
-                className="w-full overflow-hidden"
-                style={{
-                  height: size.h,
-                  borderRadius: size.radius,
-                  background: size.color,
-                  border: "var(--border-width-thin) solid var(--outline-variant)",
-                }}
+                className="w-full overflow-hidden dsx-s-614b176bae"
+                style={{ "--dsx-height": toShowcaseCssValue(size.h, false), "--dsx-border-radius": toShowcaseCssValue(size.radius, false), "--dsx-background": toShowcaseCssValue(size.color, false) } as any}
               />
               <div className="flex flex-col items-center">
-                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)", fontFeatureSettings: "'tnum'" }}>
+                <span className="dsx-s-d480dd1c6d">
                   {size.label}
                 </span>
-                <span style={{ fontFamily: "'DM Mono', monospace", fontSize: "var(--font-size-sm)", color: "var(--muted-foreground)", fontFeatureSettings: "'tnum'" }}>
-                  r: {size.radius}px
+                <span className="dsx-s-b45529f002">
+                  {showcaseMessage("components.design-system.carousel-variants.r-b53ea639")}{size.radius}px
                 </span>
               </div>
             </div>
@@ -777,12 +694,12 @@ export function VariantComparisonCard() {
 
       {/* Anatomy details */}
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <AnatomyRow prop="Container" val="Sempre overflow:hidden, mai borderRadius. Il clip avviene naturalmente: gli item interni mantengono il proprio radius, il container taglia solo cio che esce." />
-        <AnatomyRow prop="Uncontained" val="M3 principle: item che escono dal container vengono tagliati dal clip, creando un bordo piatto che suggerisce contenuto nascosto." />
-        <AnatomyRow prop="Item hierarchy" val="Large (r:20px, h:260px+): hero, uncontained. Medium (r:16px, h:200px): multi-browse, multi-aspect. Small (r:12px): peek in Hero." />
-        <AnatomyRow prop="Navigazione" val="translateX: scroll progressivo (multi-browse, uncontained). AnimatePresence: crossfade per cambio item (hero, center-hero). crossfade+scale: cinematico (full-screen)." />
-        <AnatomyRow prop="Spring" val="Slide s:280 d:28 m:0.8 — Fade s:300 d:26 — Dots s:420 d:28 — Arrow s:500 d:22. Zero duration/ease." />
-        <AnatomyRow prop="A11y" val="role='region' aria-roledescription='carousel' su container. Dots con aria-label. Arrow buttons accessibili. Touch swipe threshold 40px." />
+        <AnatomyRow prop={showcaseMessage("components.design-system.carousel-variants.container-e6443af9")} val={showcaseMessage("components.design-system.carousel-variants.sempre-overflow-hidden-mai-borderradius-il-938705db")} />
+        <AnatomyRow prop={showcaseMessage("components.design-system.carousel-variants.uncontained-ef6d4bff")} val={showcaseMessage("components.design-system.carousel-variants.m3-principle-item-che-escono-dal-container-1f030990")} />
+        <AnatomyRow prop={showcaseMessage("components.design-system.carousel-variants.item-hierarchy-7c1d9a40")} val={showcaseMessage("components.design-system.carousel-variants.large-r-20px-h-260px-hero-uncontained-medi-932cb34f")} />
+        <AnatomyRow prop={showcaseMessage("components.design-system.carousel-variants.navigazione-14e9d9e8")} val={showcaseMessage("components.design-system.carousel-variants.translatex-scroll-progressivo-multi-browse-014db2bc")} />
+        <AnatomyRow prop={showcaseMessage("components.design-system.carousel-variants.spring-89677615")} val={showcaseMessage("components.design-system.carousel-variants.slide-s-280-d-28-m-0-8-fade-s-300-d-26-dot-5ac47ce8")} />
+        <AnatomyRow prop={showcaseMessage("components.design-system.carousel-variants.a11y-9126f700")} val={showcaseMessage("components.design-system.carousel-variants.role-region-aria-roledescription-carousel--c6b08978")} />
       </div>
     </div>
   );

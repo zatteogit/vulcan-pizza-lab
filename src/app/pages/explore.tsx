@@ -3,7 +3,7 @@
    Layout editoriale e filtri flessibili (Spotify/Pinterest style).
    Tab: Stili — /explore */
 
-import { ArrowRight, ChevronUp, Heart, HeartCrack, HeartHandshake, HeartOff, HeartPulse } from "lucide-react";
+import { ArrowRight, Heart, HeartCrack, HeartHandshake, HeartOff, HeartPulse } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
@@ -31,13 +31,15 @@ type SignatureRecipe,
 } from "../data/signature-recipes";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
+import { motionDelay, motionSpring } from "../components/ds/motion";
+import { uiMessage } from "../i18n/ui-messages";
 
 function getAcronymTooltip(text: string | null | undefined): string | undefined {
   if (!text) return undefined;
   const acronyms: Record<string, string> = {
-    AVPN: "Associazione Verace Pizza Napoletana",
-    STG: "Specialità Tradizionale Garantita",
-    IGP: "Indicazione Geografica Protetta",
+    AVPN: uiMessage("pages.explore.acronym.avpn"),
+    STG: uiMessage("pages.explore.acronym.stg"),
+    IGP: uiMessage("pages.explore.acronym.igp"),
   };
 
   const found = Object.keys(acronyms).filter(acronym =>
@@ -121,6 +123,7 @@ function FeaturedRecipeCard({
   const linkTo = `/recipe/${recipe.style_id}?${linkParams.toString()}`;
 
   return (
+    <article className="explore-feature-shell">
     <Link
       to={linkTo}
       state={{ exploreBackTo }}
@@ -161,9 +164,10 @@ function FeaturedRecipeCard({
             {recipe.name}
           </h3>
           <p className="explore-feature__desc">
-            Una delle combinazioni più celebri per lo stile{" "}
+            {uiMessage("pages.explore.featuredLead")}
             <strong className="explore-feature__desc-strong">{styleName}</strong>
-            {authorLabel ? ` secondo ${authorLabel}` : ""}. Scopri i parametri dell'impasto consigliati, i tempi e il condimento autentico.
+            {authorLabel ? uiMessage("pages.explore.featuredBy", [authorLabel]) : ""}
+            {uiMessage("pages.explore.featuredTail")}
           </p>
         </div>
 
@@ -173,6 +177,7 @@ function FeaturedRecipeCard({
         </div>
       </div>
     </Link>
+    </article>
   );
 }
 
@@ -271,11 +276,7 @@ export function ExplorePage() {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 30,
-        }}
+        transition={motionSpring.standard}
         className="explore-page__container"
         data-region="page"
       >
@@ -322,7 +323,7 @@ export function ExplorePage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
-              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              transition={motionSpring.sectionEnter}
               className="explore-section-stack"
             >
               {/* 1. Hero Card "In primo piano" */}
@@ -344,7 +345,7 @@ export function ExplorePage() {
                     onClick={() => setExploreFilters("recipes")}
                     className="explore-section__link"
                   >
-                    Vedi tutte ({SIGNATURE_RECIPES.length}) <ArrowRight size={12} />
+                    {uiMessage("pages.explore.allRecipes", [SIGNATURE_RECIPES.length])} <ArrowRight size={12} />
                   </button>
                 </div>
                 <div data-region="collection" className="explore-grid--preview">
@@ -371,7 +372,7 @@ export function ExplorePage() {
                     onClick={() => setExploreFilters("styles")}
                     className="explore-section__link"
                   >
-                    Esplora tutti ({styles.length}) <ArrowRight size={12} />
+                    {uiMessage("pages.explore.allStyles", [styles.length])} <ArrowRight size={12} />
                   </button>
                 </div>
                 <div data-region="collection" className="explore-grid--preview">
@@ -397,7 +398,7 @@ export function ExplorePage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
-              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              transition={motionSpring.sectionEnter}
             >
               <div data-region="collection" className="explore-grid">
                 {SIGNATURE_RECIPES.map((recipe, i) => (
@@ -420,7 +421,7 @@ export function ExplorePage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
-              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              transition={motionSpring.sectionEnter}
             >
               {/* Family filter chips in linea allineati a sinistra */}
               <div className="explore-families">
@@ -458,11 +459,7 @@ export function ExplorePage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 30,
-                  }}
+                  transition={motionSpring.standard}
                 >
                   {activeFamily === "all" && groupedStyles ? (
                     /* Raggruppati per famiglia */
@@ -583,15 +580,13 @@ function SignatureRecipeCard({
   const linkTo = `/recipe/${recipe.style_id}?${linkParams.toString()}`;
 
   return (
-    <motion.div
+    <motion.article
       data-region="card"
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 28,
-        delay: index * 0.04,
+        ...motionSpring.collectionEnter,
+        delay: index * motionDelay.micro,
       }}
     >
       <TiltCard className="explore-tilt">
@@ -602,7 +597,7 @@ function SignatureRecipeCard({
           state={{ exploreBackTo }}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
-          <div className="explore-card__media">
+          <figure className="explore-card__media">
           <ImageWithFallback
             src={photo}
             alt={recipe.name}
@@ -622,27 +617,27 @@ function SignatureRecipeCard({
           )}
 
           {/* Title + sotto-titolo stile */}
-          <div className="explore-card__caption">
+          <figcaption className="explore-card__caption">
             <div
               className="explore-card__eyebrow"
               title={getAcronymTooltip(styleName)}
             >
               {styleName}
             </div>
-            <span className="explore-card__title explore-card__title--recipe">
+            <h3 className="explore-card__title explore-card__title--recipe">
               {recipe.name}
-            </span>
+            </h3>
             {/* Sprint 12 — autore/locale dell'interpretazione (se mappata). */}
             {authorLabel && (
               <div className="explore-card__author">
-                Secondo {authorLabel}
+                {uiMessage("pages.explore.recipeBy", [authorLabel])}
               </div>
             )}
-          </div>
-        </div>
+          </figcaption>
+        </figure>
       </Surface>
       </TiltCard>
-    </motion.div>
+    </motion.article>
   );
 }
 
@@ -680,15 +675,13 @@ function StyleCatalogCard({
   }, [style, constraints]);
 
   return (
-    <motion.div
+    <motion.article
       data-region="card"
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 28,
-        delay: index * 0.04,
+        ...motionSpring.collectionEnter,
+        delay: index * motionDelay.micro,
       }}
     >
       <TiltCard className="explore-tilt">
@@ -700,7 +693,7 @@ function StyleCatalogCard({
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
           {/* Photo area — 3/4 aspect like Create cards */}
-        <div className="explore-card__media">
+        <figure className="explore-card__media">
           <ImageWithFallback
             src={photo}
             alt={style.name}
@@ -723,8 +716,12 @@ function StyleCatalogCard({
             <div className="explore-card__match">
               <div
                 className="explore-card__match-pill"
-                title={match.headroom > 0 ? `Ottimizzabile: ${match.mc}% → ${match.mc + match.headroom}% col tuo setup` : `Match: ${match.mc}%`}
-                aria-label={match.headroom > 0 ? `Compatibilità ${match.mc}%, ottimizzabile fino a ${match.mc + match.headroom}% col tuo setup` : `Compatibilità ${match.mc}%`}
+                title={match.headroom > 0
+                  ? uiMessage("pages.explore.optimizable", [match.mc, match.mc + match.headroom])
+                  : uiMessage("pages.explore.match", [match.mc])}
+                aria-label={match.headroom > 0
+                  ? uiMessage("pages.explore.compatibilityOptimizable", [match.mc, match.mc + match.headroom])
+                  : uiMessage("pages.explore.compatibility", [match.mc])}
               >
                 <MatchHeartIcon score={match.mc} />
                 <span className="explore-card__match-mc">{match.mc}%</span>
@@ -741,20 +738,20 @@ function StyleCatalogCard({
           )}
 
           {/* Title + subtitle — overlaid on image (editorial style) */}
-          <div className="explore-card__caption">
-            <span
+          <figcaption className="explore-card__caption">
+            <h3
               className="explore-card__title explore-card__title--style"
               title={getAcronymTooltip(style.name)}
             >
               {style.name}
-            </span>
+            </h3>
             <div className="explore-card__origin">
               {shortOrigin(style.origin).toUpperCase()}
             </div>
-          </div>
-        </div>
+          </figcaption>
+        </figure>
       </Surface>
       </TiltCard>
-    </motion.div>
+    </motion.article>
   );
 }

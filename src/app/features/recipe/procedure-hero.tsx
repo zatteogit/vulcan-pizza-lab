@@ -22,6 +22,7 @@ import {
   roundToQuarter,
   shiftQuarter,
 } from "./recipe-output-format";
+import { uiMessage } from "../../i18n/ui-messages";
 
 function localDateTimeValue(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
@@ -89,7 +90,7 @@ export function ProcedureHeroControls({
           <h3 className="procedure-hero__title">{ui.timeline}</h3>
         </div>
         <span className="procedure-hero__total">
-          Tempo totale: {fmt.durationMinutes(totalDurationMin)}
+          {uiMessage("features.recipe.procedure-hero.tempo-totale-3c1f6a6f")}{fmt.durationMinutes(totalDurationMin)}
         </span>
       </div>
 
@@ -159,8 +160,8 @@ export function ProcedureHeroControls({
             variant="ghost"
             onClick={() => setEditingTime(true)}
             className="procedure-hero__edit-time"
-            aria-label={`Modifica ${ui.startTime}`}
-            title={`Modifica ${ui.startTime}`}
+            aria-label={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.startTime])}
+            title={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.startTime])}
           >
             <Pencil size={14} aria-hidden="true" />
           </IconButton>
@@ -209,7 +210,7 @@ export function ProcedureHeroControls({
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
-                  {hasFlexiblePhases ? "ca. " : ""}
+                  {hasFlexiblePhases ? uiMessage("features.recipe.procedure-hero.ca-dfd4ac18") : ""}
                   {fmt.clockTime(endTime)}
                 </span>
                 <span className="procedure-hero__time-suffix type-data-sm">
@@ -232,8 +233,8 @@ export function ProcedureHeroControls({
             variant="ghost"
             onClick={() => setEditingEndTime(true)}
             className="procedure-hero__edit-time"
-            aria-label={`Modifica ${ui.endTime}`}
-            title={`Modifica ${ui.endTime}`}
+            aria-label={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.endTime])}
+            title={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.endTime])}
           >
             <Pencil size={14} aria-hidden="true" />
           </IconButton>
@@ -243,16 +244,14 @@ export function ProcedureHeroControls({
       {/* Smart Eating Planner Shortcuts */}
       <div className="procedure-hero__meals">
         <div className="procedure-hero__meals-label">
-          Pronto per il pasto:
-        </div>
+          {uiMessage("features.recipe.procedure-hero.pronto-per-il-pasto-503f1512")}</div>
         <div className="procedure-hero__meals-row">
           <button
             type="button"
             onClick={() => setStartTime(roundToQuarter(new Date()))}
             className="procedure-hero__meal-chip"
           >
-            ⚡ Inizia ora
-          </button>
+            {uiMessage("features.recipe.procedure-hero.inizia-ora-895d8504")}</button>
 
           {mealSlots.map((slot) => {
             if (!slot.isFeasible) return null;

@@ -7,6 +7,7 @@
  */
 import { motion } from "motion/react";
 import type { CSSProperties, ReactNode } from "react";
+import { motionSpring } from "./motion";
 
 export interface RadioButtonProps {
   checked?: boolean;
@@ -48,7 +49,7 @@ export function RadioButton({
       <div className="ds-radio__circle">
         <motion.div
           animate={{ scale: checked ? 1 : 0, opacity: checked ? 1 : 0 }}
-          transition={{ type: "spring", stiffness: 600, damping: 18 }}
+          transition={motionSpring.radioMark}
           className="ds-radio__dot"
         />
       </div>

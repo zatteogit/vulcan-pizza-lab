@@ -1,5 +1,5 @@
 # Routing e shell app
-> Aggiornamento: 2026-07-04 | Stato: ✅ | File documentati: 10
+> Aggiornamento: 2026-07-14 | Stato: ✅ | File documentati: 12
 
 ## Sommario
 
@@ -15,14 +15,19 @@ Vulcan è una **SPA React Router 7** (`createBrowserRouter`): entry `main.tsx` �
 | `src/main.tsx` | 13 | `createRoot` + `StrictMode` → `App` |
 | `src/app/App.tsx` | 6 | `RouterProvider` con `router` da `routes.ts` |
 | `src/app/routes.ts` | 98 | Definizione route lazy, redirect legacy (incluso prefermenti), catch-all |
-| `src/app/components/shared/app-shell.tsx` | 756 | Layout principale, barre liquid-glass a 3 tab, trigger ricerca integrato, ProfileButton top-right, provider, sessione cucina globale, e montaggio dell'overlay di debug AI (`DebugOverlay`) |
+| `src/app/components/shared/app-shell.tsx` | 756 | Layout principale, barre liquid-glass a 3 tab, trigger ricerca integrato, ProfileButton top-right, provider, sessione cucina globale, e montaggio dell'overlay di debug AI (`DebugOverlay`) — spento di default (`isOverlayDeactivated = true`) |
 | `src/app/components/shared/search-overlay.tsx` | 791 | Command palette: stili, glossario, problemi, guide, farine |
 | `src/app/pages/not-found.tsx` | 73 | Pagina 404 personalizzata con fallback CMS ed animazioni spring |
 | `src/app/components/shared/root-layout.tsx` | 82 | **@deprecated** — stesso pattern provider, dark mode booleano legacy |
 | `src/app/components/shared/search-button.tsx` | 65 | Bottone circolare standardizzato "apri ricerca" (T5) con icona e dimensioni calcolate proporzionalmente |
 | `src/vite-env.d.ts` | 1 | File di dichiarazione dei tipi client di Vite (asset statici, import.meta.env) |
 
-**Config build**: `vite.config.ts` — porta dev **5174**, `historyApiFallback`, alias `@` → `src/`, chunk manuali (`vendor-react`, `vendor-motion`) e plugin Tailwind.
+**Config build**: `vite.config.ts` — porta dev **5174**, `historyApiFallback`, alias `@` → `src/`, chunk manuali (`vendor-react`, `vendor-motion`) e plugin Tailwind. Include il plugin mock locale `saveConfigPlugin` che intercetta GET e POST su `/api/config` e persiste la selezione del tema in `vulcan-debug-config.json` durante lo sviluppo locale.
+
+| File | Righe (circa) | Ruolo |
+|------|----------------|--------|
+| `vite.config.ts` | 132 | Configurazione di build; plugin mock `/api/config` per dev locale con persistenza JSON |
+| `worker/index.ts` | 173 | Cloudflare Worker; serve la SPA via `ASSETS` e gestisce `/api/annotations` e `/api/config` su D1 |
 
 ## Flusso dati
 
@@ -86,7 +91,7 @@ flowchart TD
 | `vulcan_dev_mode` | `"true"` / assente | Mostra link `/dev` nella sidebar |
 | `vulcan_cook_session` | JSON sessione cucina | Countdown e overlay persistenti cross-page |
 | `vulcan_debug_overlay_enabled` | `"true"` / `"false"` | Stato di attivazione visibile dell'AI Debugger fluttuante |
-| `vulcan_debug_overlay_deactivated` | `"true"` / `"false"` | Se impostato a "true", disattiva e smonta completamente l'overlay di debug dall'App Shell |
+| `vulcan_debug_overlay_deactivated` | `"true"` / `"false"` | Disattiva e smonta completamente l'overlay di debug dall'App Shell. **Default di fabbrica: `true`** — l'overlay è spento per tutti i visitatori; va attivato esplicitamente in Dev Tools |
 
 **Tab definitions** (`TABS` in `app-shell.tsx`):
 

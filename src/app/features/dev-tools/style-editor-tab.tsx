@@ -1971,9 +1971,7 @@ export function StyleEditorTab() {
                             <Badge
                               tone={sev === "error" ? "error" : sev === "warn" ? "warning" : "cta"}
                               size="xs"
-                              style={{
-                                alignSelf: "flex-start",
-                              }}
+                              className="self-start"
                             >
                               {sev === "error" ? "ERRORI" : sev === "warn" ? "WARNING" : "INFO"}
                             </Badge>
@@ -3459,10 +3457,7 @@ export function StyleEditorTab() {
                           <Badge
                             size="xs"
                             tone="warning"
-                            className="flex-shrink-0"
-                            style={{
-                              textTransform: "uppercase",
-                            }}
+                            className="flex-shrink-0 uppercase"
                           >
                             {c.type}
                           </Badge>

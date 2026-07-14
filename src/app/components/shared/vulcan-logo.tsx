@@ -1,5 +1,7 @@
-import React, { useId } from "react";
+import { useId } from "react";
 import { motion } from "motion/react";
+import { motionDuration,motionEase } from "../ds/motion";
+import { uiMessage } from "../../i18n/ui-messages";
 
 /**
  * VulcanMark — fetta sottratta, 5 scale ottiche.
@@ -70,7 +72,6 @@ const VARIANTS: Record<Variant, { d: string; fillRule: "nonzero" | "evenodd" }> 
 interface VulcanMarkProps {
   size?: number;
   className?: string;
-  style?: React.CSSProperties;
   decorative?: boolean;
   gradient?: boolean;
   glow?: boolean;
@@ -82,7 +83,6 @@ export type { Variant as VulcanVariant };
 export function VulcanMark({
   size = 24,
   className,
-  style,
   decorative = false,
   gradient = false,
   glow = false,
@@ -101,13 +101,12 @@ export function VulcanMark({
       viewBox="0 0 32 32"
       xmlns="http://www.w3.org/2000/svg"
       className={!glow ? className : undefined}
-      style={!glow ? style : undefined}
       role={decorative ? undefined : "img"}
-      aria-label={decorative ? undefined : "Vulcan Pizza Lab"}
+      aria-label={decorative ? undefined : uiMessage("components.shared.vulcan-logo.vulcan-pizza-lab-49eb8fd0")}
       aria-hidden={decorative || undefined}
       focusable="false"
     >
-      {!decorative && <title>Vulcan Pizza Lab</title>}
+      {!decorative && <title>{uiMessage("components.shared.vulcan-logo.vulcan-pizza-lab-49eb8fd0")}</title>}
 
       {gradient && (
         <defs>
@@ -128,7 +127,7 @@ export function VulcanMark({
   return (
     <div
       className={["vulcan-logo__glow-box", className].filter(Boolean).join(" ")}
-      style={{ ["--vulcan-logo-size" as any]: `${size}px`, ...style }}
+      style={{ ["--vulcan-logo-size" as any]: `${size}px` }}
     >
       <motion.div
         className="vulcan-logo__glow-ring"
@@ -138,10 +137,10 @@ export function VulcanMark({
           opacity: 0.22,
         }}
         transition={{
-          duration: 2,
+          duration: motionDuration.logoPulse,
           repeat: Infinity,
           repeatType: "mirror",
-          ease: "easeInOut",
+          ease: motionEase.standard,
         }}
       />
       <div className="vulcan-logo__stage">{svg}</div>

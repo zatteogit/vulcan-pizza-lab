@@ -7,6 +7,8 @@ import {
   PreFermentCard
 } from "../features/recipe/pre-ferment-guide";
 import { Flask } from "../features/cooking/step-illustrations";
+import { motionDelay,motionSpring } from "../components/ds/motion";
+import { uiMessage } from "../i18n/ui-messages";
 
 const PRE_FERMENT_ORDER = [
   "biga",
@@ -22,14 +24,10 @@ export function PreFermentsPage() {
       {/* Header — pattern condiviso (il titolo vive nell'hero sotto) */}
       <SubPageHeader backTo="/learn" backLabel={pg.navLearn} />
 
-      <motion.div
+      <motion.main
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{
-          type: "spring",
-          stiffness: 400,
-          damping: 30,
-        }}
+        transition={motionSpring.standard}
         className="preferment-shell"
         data-region="page"
       >
@@ -60,12 +58,7 @@ export function PreFermentsPage() {
               key={id}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 400,
-                damping: 30,
-                delay: i * 0.08,
-              }}
+              transition={{ ...motionSpring.standard,delay: i * motionDelay.recipeReveal }}
             >
               <PreFermentCard preFermentType={id} />
             </motion.div>
@@ -76,12 +69,7 @@ export function PreFermentsPage() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 30,
-            delay: 0.3,
-          }}
+          transition={{ ...motionSpring.standard,delay: motionDelay.deliberate }}
         >
           <Heading level="lg" className="preferment-section-title">
             {cms.misc.preFermentCompare}
@@ -93,14 +81,11 @@ export function PreFermentsPage() {
                   <tr>
                     <th className="preferment-table__th"> </th>
                     <th className="preferment-table__th preferment-table__th--biga">
-                      Biga
-                    </th>
+                      {uiMessage("pages.pre-ferments.biga-a0b1ee2e")}</th>
                     <th className="preferment-table__th preferment-table__th--poolish">
-                      Poolish
-                    </th>
+                      {uiMessage("pages.pre-ferments.poolish-4520b254")}</th>
                     <th className="preferment-table__th preferment-table__th--autolisi">
-                      Autolisi
-                    </th>
+                      {uiMessage("pages.pre-ferments.autolisi-044fc990")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -130,12 +115,7 @@ export function PreFermentsPage() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 400,
-            damping: 30,
-            delay: 0.4,
-          }}
+          transition={{ ...motionSpring.standard,delay: motionDelay.pageDecision }}
           className="preferment-decisions"
         >
           <Heading level="lg" className="preferment-section-title">
@@ -165,7 +145,7 @@ export function PreFermentsPage() {
             />
           </div>
         </motion.div>
-      </motion.div>
+      </motion.main>
     </div>
   );
 }
@@ -201,7 +181,7 @@ function DecisionCard({
         {when}
       </div>
       <div className="preferment-decision__best">
-        Ideale per: {best}
+        {uiMessage("pages.pre-ferments.ideale-per-0aebda24")}{best}
       </div>
     </div>
   );

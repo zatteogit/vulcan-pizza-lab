@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState, useMemo } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router";
 import {
   Bug,
@@ -8,15 +8,12 @@ import {
   ClipboardCopy,
   Eye,
   EyeOff,
-  Edit3,
   Check,
   CheckCircle2,
   MapPin,
   Cloud,
   CloudOff,
   RefreshCw,
-  Square,
-  Circle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import type { Annotation, ToolType } from "./annotation-types";
@@ -66,7 +63,6 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formComment, setFormComment] = useState("");
   const [formPriority, setFormPriority] = useState<"low" | "medium" | "high">("medium");
-  const [firstDrawPoint, setFirstDrawPoint] = useState<{ pageX: number; pageY: number } | null>(null);
   const [tempAnnotation, setTempAnnotation] = useState<Partial<Annotation> | null>(null);
 
   const visibleAnnotations = useMemo(() => {
@@ -197,7 +193,6 @@ export function DebugWorkspace({ showToast }: DebugWorkspaceProps) {
   const resetForm = () => {
     setFormComment("");
     setFormPriority("medium");
-    setFirstDrawPoint(null);
     setTempAnnotation(null);
     setIsFormOpen(false);
   };

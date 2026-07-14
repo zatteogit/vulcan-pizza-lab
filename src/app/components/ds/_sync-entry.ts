@@ -42,8 +42,3 @@ export { RecommendedStyles } from "../../features/recipe/recommended-styles";
 export { ContextualWarnings } from "../../features/recipe/troubleshooting-panel";
 
 /* ── Foundation — card di riferimento dei token ── */
-export { ColorPalette } from "../design-system/foundations-ui/ColorPalette";
-export { TypeScale } from "../design-system/foundations-ui/TypeScale";
-export { SpacingScale } from "../design-system/foundations-ui/SpacingScale";
-export { RadiusScale } from "../design-system/foundations-ui/RadiusScale";
-export { Elevation } from "../design-system/foundations-ui/Elevation";

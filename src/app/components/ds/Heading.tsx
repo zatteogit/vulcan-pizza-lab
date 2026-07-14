@@ -7,7 +7,7 @@
  *
  * Vedi docs/design-system-tiers.md (T4, F2-3).
  */
-import type { CSSProperties, ElementType, ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 
 const LEVEL_CLASS = {
   display: "type-display",
@@ -35,8 +35,8 @@ export interface HeadingProps {
   as?: ElementType;
   /** Colore del testo: token T3. Default `--text-default`. */
   color?: string;
+  id?: string;
   className?: string;
-  style?: CSSProperties;
   children: ReactNode;
 }
 
@@ -44,20 +44,21 @@ export function Heading({
   level = "page",
   as,
   color = "var(--text-default)",
+  id,
   className,
-  style,
   children,
 }: HeadingProps) {
   const Tag = (as ?? LEVEL_TAG[level]) as ElementType;
   const composite = LEVEL_CLASS[level];
   return (
     <Tag
+      id={id}
       className={
         className
           ? `${composite} ds-heading ${className}`
           : `${composite} ds-heading`
       }
-      style={{ ["--ds-heading-color" as any]: color, ...style }}
+      style={{ ["--ds-heading-color" as any]: color }}
     >
       {children}
     </Tag>

@@ -4,6 +4,7 @@
 
 import { HelpCircle } from "lucide-react";
 import { motion } from "motion/react";
+import { motionSpring } from "../../components/ds/motion";
 import type { Dispatch, SetStateAction } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
@@ -26,6 +27,7 @@ import {
   normalizeMeasureUnitSuffixes,
   yeastPracticalHint,
 } from "./recipe-output-format";
+import { uiMessage } from "../../i18n/ui-messages";
 
 interface IngredientsSectionProps {
   recipe: GeneratedRecipe;
@@ -90,15 +92,6 @@ export function IngredientsSection({
             onChange={updateBalls}
             decrementLabel={ui.ariaReduceBalls}
             incrementLabel={ui.ariaAddBalls}
-            buttonStyle={{
-              background: "var(--recipe-bg)",
-              border: "1px solid var(--recipe-border)",
-            }}
-            valueStyle={{
-              fontSize: "var(--font-size-2-5xl)",
-              fontWeight: "var(--weight-bold)" as any,
-              color: "var(--recipe-highlight)",
-            }}
           />
           <span className="type-body ingredients-servings__note">
             {normalizeMeasureUnitSuffixes(t(ui.doughBallsFrom, { w: fmt.grams(recipe.ball_weight_g) }))}
@@ -145,7 +138,7 @@ export function IngredientsSection({
                     )
                   : (
                       <>
-                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} /> · P/L {recipe.flour_pl}
+                        {flourUseLabel} · <GlossaryWLink w={recipe.flour_w} /> {uiMessage("features.recipe.ingredients-section.p-l-c4730ae9")}{recipe.flour_pl}
                       </>
                     )
             }
@@ -160,7 +153,7 @@ export function IngredientsSection({
                   <span className="type-body ingredients-blend__name">
                     ↳ {c.name}{" "}
                     <span className="type-numeric">
-                      {c.pct}%{c.w ? ` · W${c.w}` : ""}
+                      {c.pct}%{c.w ? uiMessage("features.recipe.ingredients-section.w-value-f84aef04", [c.w]) : ""}
                     </span>
                   </span>
                   <span className="type-numeric ingredients-blend__grams">
@@ -177,7 +170,7 @@ export function IngredientsSection({
                     {ui.flourEffectiveGluten}
                   </span>
                   <span className="type-numeric ingredients-blend__grams">
-                    ≈ W{recipe.effective_gluten_w}
+                    {uiMessage("features.recipe.ingredients-section.w-e07879a9")}{recipe.effective_gluten_w}
                   </span>
                 </div>
               )}
@@ -216,7 +209,7 @@ export function IngredientsSection({
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              transition={motionSpring.balanced}
               className="ingredients-rule55-tip"
             >
               <div className="type-body ingredients-rule55-tip__text">
@@ -300,8 +293,7 @@ export function IngredientsSection({
                     <br />
                     {ui.water}: <b>{fmt.grams(prefWater)}</b>
                     <br />
-                    {cms.yeastLabels[recipe.yeast_type] || YEAST_LABELS[recipe.yeast_type]}: <b>{fmt.grams(recipe.yeast_g)}</b> (tutto)
-                  </div>
+                    {cms.yeastLabels[recipe.yeast_type] || YEAST_LABELS[recipe.yeast_type]}: <b>{fmt.grams(recipe.yeast_g)}</b> {uiMessage("features.recipe.ingredients-section.tutto-e2f163ad")}</div>
                 </div>
                 <div className="ingredients-preferment__cell ingredients-preferment__cell--divided">
                   <div className="type-data ingredients-preferment__label ingredients-preferment__label--muted">
@@ -319,7 +311,7 @@ export function IngredientsSection({
               </div>
               <div className="type-body ingredients-preferment__note">
                 {cms.cooking.prefermentSaltNote ??
-                  "Il sale va sempre e solo nell'impasto finale: nel pre-fermento frenerebbe i lieviti."}
+                  uiMessage("features.recipe.ingredients-section.il-sale-va-sempre-e-solo-nell-impasto-fina-0ceb4736")}
               </div>
             </div>
           );

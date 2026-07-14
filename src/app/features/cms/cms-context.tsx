@@ -12,6 +12,16 @@ import {
   GLOSSARY_TERMS_DEFAULTS,
 } from "./domain-i18n-defaults";
 import { STYLE_PHOTOS } from "../../data/style-photos";
+import type {
+  DietaryMessages,
+  GlossaryMessages,
+  TroubleshootingMessages,
+} from "../../i18n/domain-contracts";
+import { UI_MESSAGES_IT } from "../../i18n/ui-messages.it";
+import {
+  registerUiMessages,
+  setActiveUiLocale,
+} from "../../i18n/ui-messages";
 
 /* ═══ VULCAN CMS CONTEXT ═══
  * Centralized content management for all user-facing text, config, weights, and media.
@@ -311,34 +321,13 @@ export interface CmsPreFerment {
 }
 
 /** Dietary data — info, conflict & warning messages */
-export interface CmsDietaryI18n {
-  info: Record<string, { name: string; description: string; scienceNote: string }>;
-  conflicts: Record<string, { message: string; compromiseTip?: string }>;
-  warnings: Record<string, { message: string; tip: string }>;
-}
+export type CmsDietaryI18n = DietaryMessages;
 
 /** Troubleshooting — category labels + issue content + contextual warnings */
-export interface CmsTroubleshootingI18n {
-  categories: Record<string, string>;
-  issues: Record<string, {
-    symptom: string;
-    cause: string;
-    testRapido: string;
-    fixImmediate: string;
-    prevention: string;
-  }>;
-  contextual: Record<string, { message: string; tip: string }>;
-}
+export type CmsTroubleshootingI18n = TroubleshootingMessages;
 
 /** Glossary term content — per-term i18n strings */
-export interface CmsGlossaryTerms {
-  terms: Record<string, {
-    name: string;
-    definition: string;
-    whyImportant?: string;
-    ranges?: { label: string; value: string; note?: string }[];
-  }>;
-}
+export type CmsGlossaryTerms = GlossaryMessages;
 
 /** Profile page strings — sections, FTU, locale modal */
 interface CmsProfile {
@@ -686,6 +675,8 @@ interface CmsConfigurator {
 export interface CmsContent {
   /** i18n locale metadata */
   locale: CmsLocale;
+  /** Catalogo estensibile per copy montato non coperto dalle sezioni legacy. */
+  messages?: Record<string, string>;
   /** Generic UI strings (buttons, labels, actions) */
   ui: CmsUiStrings;
   /** InlineTip contextual texts */
@@ -1172,6 +1163,7 @@ export const CMS_DEFAULTS: CmsContent = {
     id: "it",
     name: "Italiano",
   },
+  messages: UI_MESSAGES_IT,
   ui: {
     copy: "Copia",
     copied: "Copiato!",
@@ -2656,6 +2648,13 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
     () => deepMerge(fallbackBase, overrides) as CmsContent,
     [fallbackBase, overrides],
   );
+
+  /* Il catalogo strict condivide la stessa locale del CMS. I bundle lingua
+     possono fornire `messages` in modo incrementale; le chiavi mancanti
+     ricadono sul catalogo italiano. L'assegnazione precede il render dei
+     figli, quindi anche i consumer context-free vedono subito la locale. */
+  registerUiMessages(cms.locale.id, cms.messages);
+  setActiveUiLocale(cms.locale.id);
 
   const modifiedPaths = useMemo(
     () => (overrides ? deepDiffPaths(CMS_DEFAULTS, cms) : []),

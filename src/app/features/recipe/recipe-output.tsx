@@ -16,6 +16,7 @@ import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, UserConst
 import { RecipeFeedbackForm } from "./recipe-feedback";
 import { getRecipesByAuthenticity, getToppingForStyle } from "../../data/topping-library";
 import { ConfirmDialog, IconButton } from "../../components/ds/index";
+import { motionSpring } from "../../components/ds/motion";
 
 
 interface RecipeOutputProps {
@@ -638,9 +639,11 @@ export function RecipeOutput({
             {t(cms.cooking.ovenSummary, { temp: fmt.celsius(constraints.oven_max_temp_c) })} · {recipe.dough_balls}{" "}
             {getServingUnitLabel(cms, servingUnit, recipe.dough_balls, true)}
             {" · "}
-            {t(cms.cooking.readyAt, {
-              eta: `${hasFlexiblePhases ? "~" : ""}${endTime.toLocaleTimeString(bcp47, { hour: "2-digit", minute: "2-digit" })}`,
-            })}
+            <time dateTime={endTime.toISOString()}>
+              {t(cms.cooking.readyAt, {
+                eta: `${hasFlexiblePhases ? "~" : ""}${endTime.toLocaleTimeString(bcp47, { hour: "2-digit", minute: "2-digit" })}`,
+              })}
+            </time>
           </span>
         </div>
       )}
@@ -673,7 +676,7 @@ export function RecipeOutput({
                   <motion.span
                     layoutId="recipe-pager-pill"
                     className="recipe-output-pager__tab-pill"
-                    transition={{ type: "spring", stiffness: 420, damping: 30 }}
+                    transition={motionSpring.selection}
                   />
                 )}
                 <TabIcon size={15} />
@@ -710,7 +713,7 @@ export function RecipeOutput({
         initial="enter"
         animate="center"
         exit="exit"
-        transition={{ type: "spring", stiffness: 420, damping: 34 }}
+        transition={motionSpring.panel}
         drag={forcedTab ? false : "x"}
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}
@@ -752,7 +755,7 @@ export function RecipeOutput({
         initial="enter"
         animate="center"
         exit="exit"
-        transition={{ type: "spring", stiffness: 420, damping: 34 }}
+        transition={motionSpring.panel}
         drag={forcedTab ? false : "x"}
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}
@@ -808,7 +811,7 @@ export function RecipeOutput({
         initial="enter"
         animate="center"
         exit="exit"
-        transition={{ type: "spring", stiffness: 420, damping: 34 }}
+        transition={motionSpring.panel}
         drag={forcedTab ? false : "x"}
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.12}

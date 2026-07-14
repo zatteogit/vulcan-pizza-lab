@@ -5,10 +5,12 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { motionSpring } from "../../components/ds/motion";
 import { Surface } from "../../components/ds/index";
 import { ChevronDown, ChevronUp, Clock, Droplets, Thermometer } from 'lucide-react';
 import { useCms } from "../cms/cms-context";
 import { Flask } from "../cooking/step-illustrations";
+import { uiMessage } from "../../i18n/ui-messages";
 
 /* === PRE-FERMENT DATA (Italian fallback) === */
 interface PreFermentInfo {
@@ -34,75 +36,75 @@ interface PreFermentInfo {
 export const PRE_FERMENT_DB: Record<string, PreFermentInfo> = {
   poolish: {
     id: 'poolish',
-    name: 'Poolish',
-    origin: 'Francese',
+    name: uiMessage("features.recipe.pre-ferment-guide.poolish-e474d66e"),
+    origin: uiMessage("features.recipe.pre-ferment-guide.francese-82f7efde"),
     emoji: '💧',
-    description: 'Pre-fermento liquido (1:1 farina:acqua) con fermentazione prevalentemente alcolica. Sviluppa zuccheri per Maillard intensa.',
+    description: uiMessage("features.recipe.pre-ferment-guide.pre-fermento-liquido-1-1-farina-acqua-con--3f33fa78"),
     hydration: '100% (rapporto 1:1)',
     yeastPct: '0.1-0.5%',
     duration: '8-16h',
     temperature: '20-22°C',
-    consistency: 'Liquida, schiumosa',
+    consistency: uiMessage("features.recipe.pre-ferment-guide.liquida-schiumosa-4761d70d"),
     phFinal: '4.5-4.8',
-    fermentationType: 'Prevalente alcolica (CO₂ + etanolo)',
-    flavor: 'Dolce, maltato, note complesse',
-    crustResult: 'Leggera, dorata intensa, leopard spotting marcato',
-    extensibility: 'Alta — stesura facile',
-    idealStyles: 'Teglia Romana, NY Style, Napoletana contemporanea, Focacce',
+    fermentationType: uiMessage("features.recipe.pre-ferment-guide.prevalente-alcolica-co2-etanolo-e4e14567"),
+    flavor: uiMessage("features.recipe.pre-ferment-guide.dolce-maltato-note-complesse-af6a5e90"),
+    crustResult: uiMessage("features.recipe.pre-ferment-guide.leggera-dorata-intensa-leopard-spotting-ma-60374676"),
+    extensibility: uiMessage("features.recipe.pre-ferment-guide.alta-stesura-facile-9a7a4a2e"),
+    idealStyles: uiMessage("features.recipe.pre-ferment-guide.teglia-romana-ny-style-napoletana-contempo-c1592262"),
     tips: [
-      'Punto ottimale: superficie a cupola con bolle, poi inizia a ritirarsi',
-      'Oltre 16h il sapore diventa troppo acido/alcolico',
-      'Se collassa e ancora usabile ma riduci la percentuale sul totale',
-      'Percentuale poolish su impasto finale: 20-40% della farina totale',
+      uiMessage("features.recipe.pre-ferment-guide.punto-ottimale-superficie-a-cupola-con-bol-6f1f3a1b"),
+      uiMessage("features.recipe.pre-ferment-guide.oltre-16h-il-sapore-diventa-troppo-acido-a-0c29de16"),
+      uiMessage("features.recipe.pre-ferment-guide.se-collassa-e-ancora-usabile-ma-riduci-la--9a59e0fa"),
+      uiMessage("features.recipe.pre-ferment-guide.percentuale-poolish-su-impasto-finale-20-4-89117fcd"),
     ],
   },
   biga: {
     id: 'biga',
-    name: 'Biga',
-    origin: 'Italiano',
+    name: uiMessage("features.recipe.pre-ferment-guide.biga-08518857"),
+    origin: uiMessage("features.recipe.pre-ferment-guide.italiano-21df7394"),
     emoji: '🍞',
-    description: 'Pre-fermento asciutto (44-48% idratazione) con fermentazione lattica + alcolica. Massima conservazione e complessita aromatica.',
+    description: uiMessage("features.recipe.pre-ferment-guide.pre-fermento-asciutto-44-48-idratazione-co-bd813da5"),
     hydration: '44-48%',
     yeastPct: '0.5-1%',
     duration: '16-48h',
     temperature: '16-18°C (o 4°C per 48h)',
-    consistency: 'Asciutta, compatta',
+    consistency: uiMessage("features.recipe.pre-ferment-guide.asciutta-compatta-6bcc69ed"),
     phFinal: '5.0-5.3',
-    fermentationType: 'Lattica + alcolica (LAB attivi)',
-    flavor: 'Acidulo, complesso, note fermentate',
-    crustResult: 'Croccante, friabile, alveolatura fine',
-    extensibility: 'Bassa — richiede riposo dopo staglio',
-    idealStyles: 'Napoletana classica, Pinsa, Pizza al taglio, Pane',
+    fermentationType: uiMessage("features.recipe.pre-ferment-guide.lattica-alcolica-lab-attivi-15c8cdb5"),
+    flavor: uiMessage("features.recipe.pre-ferment-guide.acidulo-complesso-note-fermentate-3d50a454"),
+    crustResult: uiMessage("features.recipe.pre-ferment-guide.croccante-friabile-alveolatura-fine-0a655c50"),
+    extensibility: uiMessage("features.recipe.pre-ferment-guide.bassa-richiede-riposo-dopo-staglio-e0c000b7"),
+    idealStyles: uiMessage("features.recipe.pre-ferment-guide.napoletana-classica-pinsa-pizza-al-taglio--29eefb3f"),
     tips: [
-      'Se troppo asciutta: aggiungi 5-10% acqua per facilitare incorporazione',
-      'Matura quando la superficie e screpolata "a cupola" e il volume e triplicato',
-      'Conservabile fino a 48h in frigo (rinfresca con 10% acqua prima dell\'uso)',
-      'Percentuale biga su impasto finale: 20-50% della farina totale',
+      uiMessage("features.recipe.pre-ferment-guide.se-troppo-asciutta-aggiungi-5-10-acqua-per-a05b6761"),
+      uiMessage("features.recipe.pre-ferment-guide.matura-quando-la-superficie-e-screpolata-a-f8fc36f7"),
+      uiMessage("features.recipe.pre-ferment-guide.conservabile-fino-a-48h-in-frigo-rinfresca-bd3f8c73"),
+      uiMessage("features.recipe.pre-ferment-guide.percentuale-biga-su-impasto-finale-20-50-d-c26c8331"),
     ],
   },
   autolisi: {
     id: 'autolisi',
-    name: 'Autolisi',
-    origin: 'Universale',
+    name: uiMessage("features.recipe.pre-ferment-guide.autolisi-d768d82f"),
+    origin: uiMessage("features.recipe.pre-ferment-guide.universale-4d9a8d57"),
     emoji: '💦',
-    description: 'Riposo enzimatico di sola farina+acqua (senza lievito ne sale). Sviluppa glutine spontaneamente e attiva proteasi/amilasi.',
+    description: uiMessage("features.recipe.pre-ferment-guide.riposo-enzimatico-di-sola-farina-acqua-sen-bf42f0b6"),
     hydration: '55-75% (tutta l\'acqua della ricetta)',
     yeastPct: '0% (nessuno)',
     duration: '20min - 2h',
     temperature: 'Ambiente',
-    consistency: 'Pastosa',
+    consistency: uiMessage("features.recipe.pre-ferment-guide.pastosa-37b423b6"),
     phFinal: '~6.5 (neutro)',
-    fermentationType: 'Nessuna (solo attività enzimatica)',
-    flavor: 'Neutro — non altera il sapore',
-    crustResult: 'Variabile — dipende dal processo successivo',
-    extensibility: 'Alta — impasto setoso e meno appiccicoso',
-    idealStyles: 'Tutti gli stili (tecnica universale)',
+    fermentationType: uiMessage("features.recipe.pre-ferment-guide.nessuna-solo-attivita-enzimatica-27843676"),
+    flavor: uiMessage("features.recipe.pre-ferment-guide.neutro-non-altera-il-sapore-46a7c141"),
+    crustResult: uiMessage("features.recipe.pre-ferment-guide.variabile-dipende-dal-processo-successivo-d4ac118c"),
+    extensibility: uiMessage("features.recipe.pre-ferment-guide.alta-impasto-setoso-e-meno-appiccicoso-61f86f7d"),
+    idealStyles: uiMessage("features.recipe.pre-ferment-guide.tutti-gli-stili-tecnica-universale-6673807c"),
     tips: [
-      'Farine integrali: autolisi più lunga (60-90min) per ammorbidire la crusca',
-      'Acqua tiepida (30-35°C) accelera gli enzimi',
-      'SEMPRE prima di aggiungere sale (il sale inibisce gli enzimi)',
-      'Riduce il tempo di impasto del 30% perché il glutine si sviluppa da solo',
-      'Combinabile con Biga o Poolish per risultati superiori',
+      uiMessage("features.recipe.pre-ferment-guide.farine-integrali-autolisi-piu-lunga-60-90m-1690bbff"),
+      uiMessage("features.recipe.pre-ferment-guide.acqua-tiepida-30-35-c-accelera-gli-enzimi-14c88588"),
+      uiMessage("features.recipe.pre-ferment-guide.sempre-prima-di-aggiungere-sale-il-sale-in-23c0578a"),
+      uiMessage("features.recipe.pre-ferment-guide.riduce-il-tempo-di-impasto-del-30-perche-i-a4c95c1d"),
+      uiMessage("features.recipe.pre-ferment-guide.combinabile-con-biga-o-poolish-per-risulta-5e807f3d"),
     ],
   },
 };
@@ -111,15 +113,15 @@ export const PRE_FERMENT_DB: Record<string, PreFermentInfo> = {
 const COMP_KEYS = ['hydration','yeast','duration','temperature','ph','flavor','extensibility','alveolatura','complexity'] as const;
 
 export const COMPARISON_ROWS = [
-  { label: 'Idratazione', biga: '44-48%', poolish: '100%', autolisi: '55-75%' },
-  { label: 'Lievito', biga: '0.5-1%', poolish: '0.1-0.5%', autolisi: '0%' },
-  { label: 'Durata', biga: '16-48h', poolish: '8-16h', autolisi: '0.5-2h' },
-  { label: 'Temperatura', biga: '16-18°C', poolish: '20-22°C', autolisi: 'Ambiente' },
-  { label: 'pH finale', biga: '5.0-5.3', poolish: '4.5-4.8', autolisi: '~6.5' },
-  { label: 'Sapore', biga: 'Acidulo', poolish: 'Dolce/maltato', autolisi: 'Neutro' },
-  { label: 'Estensibilita', biga: 'Bassa', poolish: 'Alta', autolisi: 'Alta' },
-  { label: 'Alveolatura', biga: 'Fine', poolish: 'Grande', autolisi: 'Grande' },
-  { label: 'Complessita', biga: 'Media', poolish: 'Bassa', autolisi: 'Molto bassa' },
+  { label: uiMessage("features.recipe.pre-ferment-guide.idratazione-ca30c32c"), biga: '44-48%', poolish: '100%', autolisi: '55-75%' },
+  { label: uiMessage("features.recipe.pre-ferment-guide.lievito-e6b263a4"), biga: '0.5-1%', poolish: '0.1-0.5%', autolisi: '0%' },
+  { label: uiMessage("features.recipe.pre-ferment-guide.durata-32c1dabb"), biga: '16-48h', poolish: '8-16h', autolisi: '0.5-2h' },
+  { label: uiMessage("features.recipe.pre-ferment-guide.temperatura-df12789a"), biga: '16-18°C', poolish: '20-22°C', autolisi: 'Ambiente' },
+  { label: uiMessage("features.recipe.pre-ferment-guide.ph-finale-99bbe246"), biga: '5.0-5.3', poolish: '4.5-4.8', autolisi: '~6.5' },
+  { label: uiMessage("features.recipe.pre-ferment-guide.sapore-ac3d50d8"), biga: 'Acidulo', poolish: 'Dolce/maltato', autolisi: 'Neutro' },
+  { label: uiMessage("features.recipe.pre-ferment-guide.estensibilita-cbedf025"), biga: 'Bassa', poolish: 'Alta', autolisi: 'Alta' },
+  { label: uiMessage("features.recipe.pre-ferment-guide.alveolatura-9d08dfa3"), biga: 'Fine', poolish: 'Grande', autolisi: 'Grande' },
+  { label: uiMessage("features.recipe.pre-ferment-guide.complessita-39ee6854"), biga: 'Media', poolish: 'Bassa', autolisi: 'Molto bassa' },
 ];
 
 /* === COMPONENT === */
@@ -175,7 +177,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
       variant="card"
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+      transition={motionSpring.standard}
       className="preferment-guide-card"
       data-slot="pre-ferment-card"
     >
@@ -210,7 +212,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            transition={motionSpring.standard}
             className="preferment-guide-card__body"
           >
             <div className="preferment-guide-card__content">
@@ -264,7 +266,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    transition={motionSpring.standard}
                     className="preferment-guide-card__compare-panel"
                   >
                     <div className="preferment-guide-card__table-wrap">
@@ -272,9 +274,9 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
                         <thead>
                           <tr>
                             <th className="preferment-guide-card__th"> </th>
-                            <th className="preferment-guide-card__th preferment-guide-card__th--biga">🍞 Biga</th>
-                            <th className="preferment-guide-card__th preferment-guide-card__th--poolish">💧 Poolish</th>
-                            <th className="preferment-guide-card__th preferment-guide-card__th--autolisi">💦 Autolisi</th>
+                            <th className="preferment-guide-card__th preferment-guide-card__th--biga">{uiMessage("features.recipe.pre-ferment-guide.biga-4e43b430")}</th>
+                            <th className="preferment-guide-card__th preferment-guide-card__th--poolish">{uiMessage("features.recipe.pre-ferment-guide.poolish-40fc939a")}</th>
+                            <th className="preferment-guide-card__th preferment-guide-card__th--autolisi">{uiMessage("features.recipe.pre-ferment-guide.autolisi-c4e938cc")}</th>
                           </tr>
                         </thead>
                         <tbody>

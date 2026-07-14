@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-07-14T10:24:00.000Z",
+  "lastUpdated": "2026-07-14T11:15:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
     "srcFilesTsTsx": 186,
@@ -14,7 +14,7 @@
   "filesMappedCount": 186,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-14-v1",
+  "lastScannedChapter": "kipi-update-2026-07-14-v2",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -63,7 +63,7 @@
         "src/app/features/cooking/cooking-mode.tsx",
         "src/app/features/cooking/step-illustrations.tsx"
       ],
-      "lastWorked": "2026-07-13"
+      "lastWorked": "2026-07-14"
     },
     {
       "id": "scoring-feedback",
@@ -136,7 +136,7 @@
         "src/app/features/cms/locales/domain-pt.ts",
         "src/app/pages/cms.tsx"
       ],
-      "lastWorked": "2026-07-13"
+      "lastWorked": "2026-07-14"
     },
     {
       "id": "routing-shell",
@@ -155,9 +155,10 @@
         "src/app/pages/not-found.tsx",
         "src/app/components/shared/search-button.tsx",
         "src/app/components/shared/sub-page-header.tsx",
-        "src/vite-env.d.ts"
+        "vite.config.ts",
+        "worker/index.ts"
       ],
-      "lastWorked": "2026-07-13"
+      "lastWorked": "2026-07-14"
     },
     {
       "id": "pages-learn",
@@ -200,7 +201,7 @@
         "src/app/features/recipe/user-needs.tsx",
         "src/app/data/saved-recipes.ts"
       ],
-      "lastWorked": "2026-07-13"
+      "lastWorked": "2026-07-14"
     },
     {
       "id": "design-system",
@@ -274,9 +275,10 @@
         "src/app/components/media/ImageWithFallback.tsx",
         "src/app/components/shared/info-tip.tsx",
         "src/app/components/shared/vulcan-hero.tsx",
+        "src/app/features/dev-tools/theme-switcher.tsx",
         "src/app/components/shared/vulcan-logo.tsx"
       ],
-      "lastWorked": "2026-07-13"
+      "lastWorked": "2026-07-14"
     }
   ]
 }

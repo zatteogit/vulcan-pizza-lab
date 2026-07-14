@@ -2,6 +2,7 @@
 
 import { ChevronRight, FlaskConical, LifeBuoy, Lightbulb } from "lucide-react";
 import { motion } from "motion/react";
+import { motionSpring } from "../../components/ds/motion";
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import type { CmsContent } from "../cms/cms-context";
@@ -70,7 +71,7 @@ export function StepDetails({
       >
         <motion.span
           animate={{ rotate: open ? 90 : 0 }}
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          transition={motionSpring.crispControl}
           className="step-details__chevron"
         >
           <ChevronRight size={16} />
@@ -86,7 +87,7 @@ export function StepDetails({
         <motion.div
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
-          transition={{ type: "spring", stiffness: 420, damping: 32 }}
+          transition={motionSpring.denseDisclosure}
           className="step-details__content"
         >
           {longDesc && <p className="step-details__desc type-body-lg">{longDesc}</p>}
@@ -155,4 +156,3 @@ export function StepDetails({
     </div>
   );
 }
-

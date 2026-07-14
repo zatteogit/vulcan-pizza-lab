@@ -17,6 +17,12 @@ import { join } from "node:path";
 
 const ROOT = "src/app";
 const EXCLUDE_SEGMENTS = ["design-system"]; // showcase
+/* Catalogo copy dello showcase: documenta intenzionalmente valori primitivi
+ * (hex/rgba/font) mostrati nelle spec-sheet. L'esenzione è file-exact: il
+ * catalogo prodotto `ui-messages.it.ts` resta interamente sotto guard. */
+const FORWARD_EXEMPT_FILES = new Set([
+  "src/app/i18n/showcase-messages.it.ts",
+]);
 const DS_SEGMENT = "components/ds"; // T4: può usare composite/token-componente
 
 /** @typedef {{ id: string, desc: string, severity?: "error"|"warn", excludeDs?: boolean, excludeFiles?: string[], test: (line: string) => string[] | null }} Rule */
@@ -154,7 +160,12 @@ function walk(dir, acc = []) {
     if (EXCLUDE_SEGMENTS.includes(entry.name)) continue;
     const full = join(dir, entry.name);
     if (entry.isDirectory()) walk(full, acc);
-    else if (/\.(ts|tsx)$/.test(entry.name)) acc.push(full);
+    else if (
+      /\.(ts|tsx)$/.test(entry.name) &&
+      !FORWARD_EXEMPT_FILES.has(full.replace(/\\/g, "/"))
+    ) {
+      acc.push(full);
+    }
   }
   return acc;
 }

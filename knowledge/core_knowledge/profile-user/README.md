@@ -1,5 +1,5 @@
 # Profilo e vincoli utente
-> Aggiornamento: 2026-07-13 | Stato: ✅ | File documentati: 5
+> Aggiornamento: 2026-07-14 | Stato: ✅ | File documentati: 5
 
 ## Sommario
 
@@ -9,7 +9,7 @@ Persistenza preferenze utente in **localStorage** e bridge verso `UserConstraint
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
-| `src/app/pages/profile.tsx` | 2400 | UI profilo, FTU 3 domande + congedo, preferenze unità, PizzaNerd, salvataggio preferenze, reset confermato |
+| `src/app/pages/profile.tsx` | 2400 | UI profilo, FTU 3 domande + congedo, preferenze unità, PizzaNerd, salvataggio preferenze, reset confermato. I controlli tema editoriale (`ThemeControls`) sono stati rimossi da questa schermata e spostati in `/dev` (Dev Tools) |
 | `src/app/hooks/use-profile-defaults.ts` | 145 | `loadProfileDefaults()` / `useProfileDefaults()` → `UserConstraints` + `pizzaNerdEnabled` |
 | `src/app/features/recipe/user-needs.tsx` | 1366 | Wizard home: constraints live, weather, time slots con sublabel dinamico e nuova sezione "Tu" |
 | `src/app/adapters/browser/saved-recipes-storage.ts` | 110 | Adattatore browser per la persistenza locale e il recupero del ricettario personalizzato |

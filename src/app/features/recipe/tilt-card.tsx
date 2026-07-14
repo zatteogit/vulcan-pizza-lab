@@ -13,24 +13,24 @@ import {
   useTransform,
   useReducedMotion,
 } from "motion/react";
+import { motionSpring } from "../../components/ds/motion";
 
 interface TiltCardProps {
   children: React.ReactNode;
   className?: string;
   /** Gradi massimi di inclinazione (default 6) */
   maxTilt?: number;
-  style?: React.CSSProperties;
 }
 
-export function TiltCard({ children, className, maxTilt = 6, style }: TiltCardProps) {
+export function TiltCard({ children, className, maxTilt = 6 }: TiltCardProps) {
   const prefersReducedMotion = useReducedMotion();
   const ref = useRef<HTMLDivElement | null>(null);
 
   /* -0.5..0.5 rispetto al centro della card */
   const px = useMotionValue(0);
   const py = useMotionValue(0);
-  const sx = useSpring(px, { stiffness: 260, damping: 22, mass: 0.6 });
-  const sy = useSpring(py, { stiffness: 260, damping: 22, mass: 0.6 });
+  const sx = useSpring(px, motionSpring.tilt);
+  const sy = useSpring(py, motionSpring.tilt);
 
   const rotateX = useTransform(sy, [-0.5, 0.5], [maxTilt, -maxTilt]);
   const rotateY = useTransform(sx, [-0.5, 0.5], [-maxTilt, maxTilt]);
@@ -42,7 +42,8 @@ export function TiltCard({ children, className, maxTilt = 6, style }: TiltCardPr
     ([gx, gy]) =>
       `radial-gradient(420px circle at ${gx}% ${gy}%, color-mix(in srgb, var(--tertiary) 16%, transparent), color-mix(in srgb, var(--overlay-text) 5%, transparent) 38%, transparent 65%)`,
   );
-  const glareOpacity = useSpring(0, { stiffness: 300, damping: 28 });
+  const glareOpacity = useSpring(0, motionSpring.tiltGlare);
+  const tiltMotionStyle = { rotateX, rotateY };
 
   const onPointerMove = useCallback(
     (e: React.PointerEvent) => {
@@ -65,7 +66,7 @@ export function TiltCard({ children, className, maxTilt = 6, style }: TiltCardPr
 
   if (prefersReducedMotion) {
     return (
-      <div className={className} style={style}>
+      <div className={className}>
         {children}
       </div>
     );
@@ -78,11 +79,7 @@ export function TiltCard({ children, className, maxTilt = 6, style }: TiltCardPr
         className={[className, "tilt-card__inner"].filter(Boolean).join(" ")}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
-        style={{
-          ...style,
-          rotateX,
-          rotateY,
-        }}
+        style={tiltMotionStyle}
       >
         {children}
         {/* Riflesso speculare caldo */}
@@ -90,8 +87,8 @@ export function TiltCard({ children, className, maxTilt = 6, style }: TiltCardPr
           aria-hidden="true"
           className="tilt-card__glare"
           style={{
-            background: glare,
-            opacity: glareOpacity,
+            ["--tilt-glare" as any]: glare,
+            ["--tilt-glare-opacity" as any]: glareOpacity,
           }}
         />
       </motion.div>

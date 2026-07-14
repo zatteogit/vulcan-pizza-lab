@@ -11,10 +11,11 @@ import { Link } from "react-router";
 import { useCms } from "../cms/cms-context";
 import type { Interpretation } from "../../data/interpretation-library";
 import { ModalSheet, Surface } from "../../components/ds/index";
+import { uiMessage } from "../../i18n/ui-messages";
 
 /** Nome primario dell'interpretazione (maestro › locale › ente › firma). */
 function primaryName(it: Interpretation): string {
-  return it.author ?? it.pizzeria ?? it.organization ?? it.signature_name ?? "Interpretazione";
+  return it.author ?? it.pizzeria ?? it.organization ?? it.signature_name ?? uiMessage("features.recipe.interpretation-narrative-card.interpretazione-b24004b7");
 }
 
 /** Riga meta: locale · città · anno (solo i pezzi presenti). */
@@ -76,12 +77,11 @@ export function InterpretationSwitcher({
       {/* "Vedi tutte" resta SEMPRE in vista (fuori dallo scroller delle chip). */}
       <div className="interpretation-switcher">
         <span className="interpretation-switcher__label">
-          Versione
-        </span>
+          {uiMessage("features.recipe.interpretation-narrative-card.versione-96d474e8")}</span>
         <div
           className="interpretation-switcher__scroll"
           role="group"
-          aria-label={cms.misc.inspirationLabel ?? "Ispirazione"}
+          aria-label={cms.misc.inspirationLabel ?? uiMessage("features.recipe.interpretation-narrative-card.ispirazione-fea568b8")}
         >
           <button
             type="button"
@@ -93,7 +93,7 @@ export function InterpretationSwitcher({
           >
             {defaultInterpretation
               ? chipName(defaultInterpretation)
-              : (cms.misc.inspirationBase ?? "Tradizionale")}
+              : (cms.misc.inspirationBase ?? uiMessage("features.recipe.interpretation-narrative-card.tradizionale-57d82228"))}
           </button>
           {parametric.map((it) => {
             const isActive = it.id === activeId;
@@ -116,8 +116,8 @@ export function InterpretationSwitcher({
           type="button"
           onClick={() => setModalOpen(true)}
           aria-haspopup="dialog"
-          aria-label={cms.misc.inspirationSeeAll ?? "Vedi tutte"}
-          title={cms.misc.inspirationSeeAll ?? "Vedi tutte"}
+          aria-label={cms.misc.inspirationSeeAll ?? uiMessage("features.recipe.interpretation-narrative-card.vedi-tutte-82e02261")}
+          title={cms.misc.inspirationSeeAll ?? uiMessage("features.recipe.interpretation-narrative-card.vedi-tutte-82e02261")}
           className="interpretation-switcher__more"
         >
           {hiddenCount > 0 ? (
@@ -170,7 +170,7 @@ function InterpretationsModal({
                 id="inspiration-modal-title"
                 className="interpretation-modal__title"
               >
-                {cms.misc.inspirationModalTitle ?? "Ispirazioni d'autore"}
+                {cms.misc.inspirationModalTitle ?? uiMessage("features.recipe.interpretation-narrative-card.ispirazioni-d-autore-7d5d1844")}
               </h2>
               <button
                 type="button"
@@ -185,7 +185,7 @@ function InterpretationsModal({
             <div
               className="interpretation-modal__body"
               role="radiogroup"
-              aria-label={cms.misc.inspirationModalTitle ?? "Ispirazioni d'autore"}
+              aria-label={cms.misc.inspirationModalTitle ?? uiMessage("features.recipe.interpretation-narrative-card.ispirazioni-d-autore-7d5d1844")}
             >
               {interpretations.map((it) => (
                 <InterpretationNarrativeCard
@@ -206,7 +206,7 @@ function InterpretationsModal({
                 onClick={onClose}
                 className="interpretation-modal__link"
               >
-                {cms.misc.inspirationLearnLink ?? "Scopri di più nella sezione Impara"} →
+                {cms.misc.inspirationLearnLink ?? uiMessage("features.recipe.interpretation-narrative-card.scopri-di-piu-nella-sezione-impara-a541395d")} →
               </Link>
             </div>
     </ModalSheet>
@@ -250,8 +250,8 @@ function InterpretationNarrativeCard({
       title={
         selectable
           ? selected
-            ? (cms.misc.inspirationSelected ?? "Selezionata")
-            : (cms.misc.inspirationSelect ?? "Seleziona")
+            ? (cms.misc.inspirationSelected ?? uiMessage("features.recipe.interpretation-narrative-card.selezionata-8af6d724"))
+            : (cms.misc.inspirationSelect ?? uiMessage("features.recipe.interpretation-narrative-card.seleziona-e886c9e7"))
           : undefined
       }
     >
@@ -296,7 +296,7 @@ function InterpretationNarrativeCard({
             className="interpretation-card__url"
             onClick={(e) => e.stopPropagation()}
           >
-            {it.author ?? it.pizzeria ?? "Approfondisci"} ↗
+            {it.author ?? it.pizzeria ?? uiMessage("features.recipe.interpretation-narrative-card.approfondisci-44efee7c")} ↗
           </a>
         )}
       </div>

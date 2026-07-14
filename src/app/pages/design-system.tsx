@@ -4,6 +4,8 @@ import { useNavigate } from "react-router";
 import { DesignSystemTab } from "../components/design-system/index";
 import { Surface } from "../components/ds/index";
 import { useDarkMode } from "../hooks/use-dark-mode";
+import "../components/design-system/showcase.css";
+import { showcaseMessage } from "../i18n/showcase-messages";
 
 /**
  * Standalone Design System page at /design-system
@@ -15,66 +17,38 @@ export function DesignSystemPage() {
   const navigate = useNavigate();
 
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "var(--container-page)",
-        color: "var(--text-default)",
-      }}
-    >
+    <main className="ds-showcase">
       {/* Minimal sticky header */}
       <Surface as="header" variant="glass" className="sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <motion.button
               onClick={() => navigate("/")}
-              className="flex items-center gap-1 active:scale-95 transition-transform"
-              style={{
-                fontSize: "var(--font-size-xl)",
-                fontWeight: "var(--weight-semibold)" as any,
-                color: "var(--text-accent)",
-              }}
-              aria-label="Torna all'app"
+              className="flex items-center gap-1 active:scale-95 transition-transform dsx-s-cf4f387037"
+              aria-label={showcaseMessage("pages.design-system.torna-all-app-86641218")}
             >
               <ArrowLeft size={16} />
-              <span>App</span>
+              <span>{showcaseMessage("pages.design-system.app-fc4a695f")}</span>
             </motion.button>
             <div
-              className="w-px h-5"
-              style={{ background: "var(--container-border)" }}
+              className="w-px h-5 dsx-s-b72787883f"
             />
             <span
-              className="type-body-sm"
-              style={{
-                fontWeight: "var(--weight-semibold)" as any,
-                letterSpacing: "var(--tracking-spread)",
-                color: "var(--text-default)",
-              }}
+              className="type-body-sm dsx-s-f033b89e21"
             >
-              Design System
-            </span>
+              {showcaseMessage("pages.design-system.design-system-e635ad53")}</span>
             <span
-              className="type-label"
-              style={{
-                fontSize: "var(--font-size-xs)",
-                color: "var(--text-muted)",
-              }}
+              className="type-label dsx-s-b0aecf2e21"
             >
-              Interactive
-            </span>
+              {showcaseMessage("pages.design-system.interactive-ffc4bf2e")}</span>
           </div>
           <motion.button
             onClick={() => setDarkMode(!darkMode)}
-            className="flex items-center justify-center w-8 h-8 rounded-lg active:scale-95 transition-transform"
-            style={{
-              background:
-                "color-mix(in srgb, var(--text-accent) 10%, transparent)",
-              color: "var(--text-accent)",
-            }}
+            className="flex items-center justify-center w-8 h-8 rounded-lg active:scale-95 transition-transform dsx-s-e5d78b9523"
             aria-label={
               darkMode
-                ? "Passa a Light mode"
-                : "Passa a Dark mode"
+                ? showcaseMessage("pages.design-system.passa-a-light-mode-2ee1a984")
+                : showcaseMessage("pages.design-system.passa-a-dark-mode-b6cac547")
             }
           >
             {darkMode ? <Sun size={16} /> : <Moon size={16} />}
@@ -83,12 +57,12 @@ export function DesignSystemPage() {
       </Surface>
 
       {/* Full-width spec sheet */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-24">
+      <article className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-24">
         <DesignSystemTab
           darkMode={darkMode}
           setDarkMode={setDarkMode}
         />
-      </div>
-    </div>
+      </article>
+    </main>
   );
 }

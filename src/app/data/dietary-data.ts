@@ -2,11 +2,19 @@
 /* Basato su Notion Pagina 10 · Gestione Intolleranze */
 /* 6 intolleranze: FODMAP, Istamina, Celiachia, Lattosio, Nickel, Vegan */
 /* Conflitti, validazione, avvisi contestuali */
-/* i18n: getLocalizedDietaryInfo/Conflicts/Warnings accept CmsContent */
+/* i18n: accepts a neutral message-source contract, never the CMS feature. */
 
-import type { CmsContent } from "../features/cms/cms-context";
-import { DIETARY_I18N_DEFAULTS } from "../features/cms/domain-i18n-defaults";
-import { t } from "../features/cms/i18n";
+import type { DietaryMessageSource } from "../i18n/domain-contracts";
+import { interpolate } from "../i18n/interpolate";
+
+const DEFAULT_WARNINGS = {
+  fodmap_low: { message: "FODMAP ridotti solo {pct}% — fermentazione troppo breve", tip: "Aumenta a ≥24h per raggiungere 70%+ di riduzione" },
+  fodmap_good: { message: "FODMAP ridotti {pct}% — buon livello per IBS", tip: "La fermentazione è sufficientemente lunga per degradare i fruttani" },
+  histamine_high: { message: "Istamina stimata ~{val} mg/kg — livello alto", tip: "Riduci fermentazione a ≤12h o usa lievito fresco a ≤20°C" },
+  histamine_moderate: { message: "Istamina stimata ~{val} mg/kg — livello moderato", tip: "Monitora i sintomi. Per sicurezza, riduci tempo o temperatura" },
+  gluten_free: { message: "Ricetta usa farina di grano — incompatibile con celiachia", tip: "Sostituisci con mix GF (riso 40% + mais 30% + quinoa 10% + sorgo 10% + amido 10%) + xantana 1.5%" },
+  nickel_highW: { message: "Farine forti (W alto) tendono ad essere meno raffinate, con più nichel", tip: "Preferisci farina 00 raffinata (W 200-260) per minimizzare nichel" },
+} as const;
 
 /* === FODMAP REDUCTION === */
 function calculateFodmapReduction(
@@ -59,10 +67,10 @@ export function getDietaryWarnings(
     hydration: number;
     flourW: number;
   },
-  cms?: CmsContent
+  cms?: DietaryMessageSource
 ): DietaryWarning[] {
   const warnings: DietaryWarning[] = [];
-  const cmsW = cms?.dietaryI18n?.warnings ?? DIETARY_I18N_DEFAULTS.warnings;
+  const cmsW = cms?.dietaryI18n?.warnings;
 
   if (activeFilters.includes('low_fodmap')) {
     const reduction = calculateFodmapReduction(
@@ -71,18 +79,18 @@ export function getDietaryWarnings(
       params.yeastType === 'sourdough'
     );
     if (reduction < 50) {
-      const loc = cmsW?.fodmap_low ?? DIETARY_I18N_DEFAULTS.warnings.fodmap_low;
+      const loc = cmsW?.fodmap_low ?? DEFAULT_WARNINGS.fodmap_low;
       warnings.push({
         filterId: 'low_fodmap',
-        message: t(loc.message, { pct: reduction.toFixed(0) }),
+        message: interpolate(loc.message, { pct: reduction.toFixed(0) }),
         tip: loc.tip,
         severity: 'warning',
       });
     } else if (reduction >= 70) {
-      const loc = cmsW?.fodmap_good ?? DIETARY_I18N_DEFAULTS.warnings.fodmap_good;
+      const loc = cmsW?.fodmap_good ?? DEFAULT_WARNINGS.fodmap_good;
       warnings.push({
         filterId: 'low_fodmap',
-        message: t(loc.message, { pct: reduction.toFixed(0) }),
+        message: interpolate(loc.message, { pct: reduction.toFixed(0) }),
         tip: loc.tip,
         severity: 'info',
       });
@@ -96,18 +104,18 @@ export function getDietaryWarnings(
       params.yeastType
     );
     if (histamine > 10) {
-      const loc = cmsW?.histamine_high ?? DIETARY_I18N_DEFAULTS.warnings.histamine_high;
+      const loc = cmsW?.histamine_high ?? DEFAULT_WARNINGS.histamine_high;
       warnings.push({
         filterId: 'histamine',
-        message: t(loc.message, { val: histamine.toFixed(0) }),
+        message: interpolate(loc.message, { val: histamine.toFixed(0) }),
         tip: loc.tip,
         severity: 'critical',
       });
     } else if (histamine > 5) {
-      const loc = cmsW?.histamine_moderate ?? DIETARY_I18N_DEFAULTS.warnings.histamine_moderate;
+      const loc = cmsW?.histamine_moderate ?? DEFAULT_WARNINGS.histamine_moderate;
       warnings.push({
         filterId: 'histamine',
-        message: t(loc.message, { val: histamine.toFixed(0) }),
+        message: interpolate(loc.message, { val: histamine.toFixed(0) }),
         tip: loc.tip,
         severity: 'warning',
       });
@@ -115,7 +123,7 @@ export function getDietaryWarnings(
   }
 
   if (activeFilters.includes('gluten_free')) {
-    const loc = cmsW?.gluten_free ?? DIETARY_I18N_DEFAULTS.warnings.gluten_free;
+    const loc = cmsW?.gluten_free ?? DEFAULT_WARNINGS.gluten_free;
     warnings.push({
       filterId: 'gluten_free',
       message: loc.message,
@@ -125,7 +133,7 @@ export function getDietaryWarnings(
   }
 
   if (activeFilters.includes('nickel') && params.flourW > 300) {
-    const loc = cmsW?.nickel_highW ?? DIETARY_I18N_DEFAULTS.warnings.nickel_highW;
+    const loc = cmsW?.nickel_highW ?? DEFAULT_WARNINGS.nickel_highW;
     warnings.push({
       filterId: 'nickel',
       message: loc.message,

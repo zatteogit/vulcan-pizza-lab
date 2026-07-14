@@ -46,7 +46,7 @@
   }
   [data-theme="sfornata"] [data-region="feature"] .explore-feature__media {
     width: 100%;
-    height: min(64vh, var(--measure-sm));
+    height: var(--feature-media-height-cover);
   }
   [data-theme="sfornata"] [data-region="feature"] .explore-feature__body {
     position: absolute;
@@ -58,12 +58,92 @@
   }
 }
 
-/* ── EDITORIAL FIRE / IMPARA ───────────────────────────────────────
-   Il JSX espone soltanto la progressione logica (`data-stage`); questa
-   sezione decide come comporla. I contenuti e i link restano quelli della
-   pagina canonica, quindi il tema non crea un secondo albero da mantenere. */
+/* WCAG 2.2: gli affordance icon-only compatti mantengono l'icona ottica ma
+   espongono un hit box semantico minimo. Il token è T2 e resta adattabile dai
+   temi senza introdurre dimensioni raw nel layer di prodotto. */
+:where(.match-info-toggle, .ingredients-rule55-toggle, .info-tip__trigger) {
+  display: inline-flex;
+  min-inline-size: var(--interactive-target-min);
+  min-block-size: var(--interactive-target-min);
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── EDITORIAL FIRE / composizione stabile ────────────────────────
+   Questi override usano gli hook semantici senza cambiare l'ordine del DOM.
+   Nessun blocco viene assolutizzato e nessuna pagina diventa una dashboard. */
+@media (min-width: 1024px) {
+  [data-theme="editorial-fire"] [data-page="explore"] [data-region="page"],
+  [data-theme="editorial-fire"] [data-page="learn"] [data-region="page"] {
+    max-width: var(--measure-3xl);
+  }
+
+  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"].explore-feature {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+
+  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"] :where(
+    .explore-feature__media,
+    .explore-feature__body
+  ) {
+    width: 100%;
+  }
+
+  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-content {
+    max-width: var(--measure-6xl);
+  }
+
+  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-output-panel--ricetta {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(var(--measure-xs), 0.75fr);
+    column-gap: var(--space-12);
+    row-gap: var(--space-8);
+    align-items: start;
+  }
+
+  [data-theme="editorial-fire"] [data-page="recipe"] :where(
+    .recipe-output-params,
+    [data-region="recipe-summary"]
+  ) {
+    display: contents;
+  }
+
+  [data-theme="editorial-fire"] [data-page="recipe"] :where(
+    [data-slot="recipe-parameters"],
+    .recipe-page__recipe-controls,
+    [data-slot="recipe-main"]
+  ) {
+    grid-column: 1;
+  }
+
+  [data-theme="editorial-fire"] [data-page="recipe"] [data-slot="recipe-parameters"] {
+    grid-row: 1;
+  }
+
+  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-page__recipe-controls {
+    grid-row: 2;
+  }
+
+  [data-theme="editorial-fire"] [data-page="recipe"] [data-slot="recipe-main"] {
+    grid-row: 3;
+  }
+
+  [data-theme="editorial-fire"] [data-page="recipe"] [data-slot="recipe-shoulder"] {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    min-width: 0;
+    padding-inline-start: var(--space-8);
+    border-inline-start: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+}
+
 [data-theme="editorial-fire"] [data-page="learn"] [data-progress="learning-path"] {
-  --learn-stage-gutter: var(--space-12);
+  --learn-rail-gutter: var(--space-10);
+}
+
+[data-theme="editorial-fire"] [data-page="learn"] [data-region="page"] {
+  padding-inline-start: calc(var(--space-6) + var(--learn-rail-gutter));
 }
 
 [data-theme="editorial-fire"] [data-page="learn"] [data-stage] {
@@ -73,27 +153,24 @@
 [data-theme="editorial-fire"] [data-page="learn"] [data-stage]::after {
   content: attr(data-stage);
   position: absolute;
-  z-index: 2;
   inset-block-start: 0;
-  inset-inline-start: calc(-1 * var(--learn-stage-gutter));
+  inset-inline-start: calc(-1 * var(--learn-rail-gutter));
   display: grid;
   place-items: center;
-  width: var(--space-8);
-  height: var(--space-8);
+  width: var(--space-7);
+  height: var(--space-7);
   border: var(--border-width-thin) solid var(--container-border);
   border-radius: var(--radius-full);
   color: var(--text-muted);
   background: var(--container-page);
   font-family: var(--font-serif);
-  font-size: var(--font-size-lg);
-  line-height: 1;
 }
 
 [data-theme="editorial-fire"] [data-page="learn"] [data-stage]::before {
   content: "";
   position: absolute;
-  inset-block: var(--space-8) calc(-1 * var(--space-8));
-  inset-inline-start: calc(-1 * var(--learn-stage-gutter) + var(--space-4));
+  inset-block: var(--space-7) calc(-1 * var(--space-8));
+  inset-inline-start: calc(-1 * var(--learn-rail-gutter) + var(--space-3-5));
   width: var(--border-width-thin);
   background: var(--container-border-subtle);
 }
@@ -102,163 +179,14 @@
   display: none;
 }
 
-[data-theme="editorial-fire"] [data-page="learn"] [data-stage-state="recommended"]::after {
-  border-color: color-mix(in srgb, var(--forge-glow) 62%, var(--container-border));
-  color: var(--text-accent);
-}
-
-@media (min-width: 1024px) {
-  [data-theme="editorial-fire"] [data-page="learn"] [data-region="page"] {
-    max-width: var(--measure-6xl);
-    padding-inline-start: calc(var(--space-8) + var(--learn-stage-gutter));
-    display: grid;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-    column-gap: var(--space-16);
-    align-items: start;
-  }
-
-  [data-theme="editorial-fire"] [data-page="learn"] :where(
-    [data-region="page-header"],
-    .learn-banner,
-    [data-region="feature"]
-  ) {
-    grid-column: 1 / -1;
-  }
-
-  [data-theme="editorial-fire"] [data-page="learn"] [data-region="feature"] {
-    margin-bottom: var(--space-20);
-  }
-
-  [data-theme="editorial-fire"] [data-page="learn"] [data-region="section"] {
-    grid-column: 1;
-    margin-bottom: 0;
-  }
-
-  [data-theme="editorial-fire"] [data-page="learn"] [data-region="resources"] {
-    grid-column: 2;
-  }
-}
-
-/* ── EDITORIAL FIRE / RICETTA ─────────────────────────────────────
-   La sorgente dati resta RecipeOutput. Gli hook semantici ricompongono lo
-   stesso albero in una pagina editoriale a colonna di lettura + spalla,
-   senza duplicare parametri, match o ingredienti. */
-[data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-match-layout,
-[data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-match-primary {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
-
-[data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-match-shoulder {
-  min-width: 0;
-}
-
-@media (min-width: 1024px) {
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-content {
-    max-width: var(--measure-6xl);
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-output-panel--ricetta {
-    display: grid;
-    grid-template-columns: minmax(0, 1.7fr) minmax(var(--measure-xs), 0.75fr);
-    column-gap: var(--space-12);
-    row-gap: var(--space-8);
-    align-items: start;
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-output-params,
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-match-layout {
-    display: contents;
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] :where(
-    .recipe-view-match-primary,
-    .recipe-page__recipe-controls,
-    .recipe-output-ingredients
-  ) {
-    grid-column: 1;
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-match-primary {
-    grid-row: 1;
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-page__recipe-controls {
-    grid-row: 2;
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-output-ingredients {
-    grid-row: 3;
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-match-shoulder {
-    grid-column: 2;
-    grid-row: 1 / span 3;
-    padding-inline-start: var(--space-8);
-    border-inline-start: var(--border-width-thin) solid var(--container-border-subtle);
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-match-shoulder .match-card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-    padding-block: 0;
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-match-shoulder .match-actions {
-    width: 100%;
-    min-width: 0;
-  }
-}
-
-@media (max-width: 767px) {
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-content {
-    padding-top: var(--space-8);
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-match-layout {
-    gap: var(--space-6);
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] .section-tabs-dock__grid {
-    padding: var(--space-1);
-    border-radius: var(--radius-full);
-  }
-
-  [data-theme="editorial-fire"] [data-page="recipe"] :where(
-    .section-tabs-capsule,
-    .section-tabs-capsule__indicator
-  ) {
-    border-radius: var(--radius-full);
-  }
-}
-
-@media (max-width: 1023px) {
-  [data-theme="editorial-fire"] [data-page="learn"] [data-region="page"] {
-    padding-inline-start: calc(var(--space-5) + var(--learn-stage-gutter));
-  }
-}
-
 @media (max-width: 639px) {
   [data-theme="editorial-fire"] [data-page="learn"] [data-progress="learning-path"] {
-    --learn-stage-gutter: var(--space-10);
+    --learn-rail-gutter: var(--space-8);
   }
 
   [data-theme="editorial-fire"] [data-page="learn"] [data-region="page"] {
-    padding-inline-start: calc(var(--space-4) + var(--learn-stage-gutter));
+    padding-inline-start: calc(var(--space-4) + var(--learn-rail-gutter));
     padding-inline-end: var(--space-4);
-  }
-
-  [data-theme="editorial-fire"] [data-page="learn"] [data-stage]::after {
-    width: var(--space-7);
-    height: var(--space-7);
-    font-size: var(--font-size-md);
-  }
-
-  [data-theme="editorial-fire"] [data-page="learn"] [data-stage]::before {
-    inset-block-start: var(--space-7);
-    inset-inline-start: calc(-1 * var(--learn-stage-gutter) + var(--space-3-5));
   }
 }
 
@@ -292,7 +220,7 @@
     max-width: var(--measure-6xl);
   }
   [data-theme="editorial-fire"] [data-page="recipe"] .recipe-view-content {
-    max-width: var(--measure-6xl);
+    max-width: var(--measure-3xl);
   }
   [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"] {
     min-height: var(--feature-media-height);
@@ -305,203 +233,5 @@
   }
   [data-theme="editorial-fire"] [data-page] [data-region="collection"] {
     gap: var(--gap-lg);
-  }
-}
-
-/* ── EDITORIAL FIRE / CREA ───────────────────────────────────────────────
-   The Create screen is one content flow in the DOM.  On a wide viewport it
-   becomes an editorial cover: setup is the quiet folio, the existing Vulcan
-   masthead remains the focal point, and time choices form a ruled footer.
-   No alternate content tree (and, importantly, no alternate logo) is needed. */
-@media (min-width: 1024px) {
-  [data-theme="editorial-fire"] [data-page="home"] .home-step__container {
-    max-width: var(--measure-6xl);
-    padding-inline: var(--space-10);
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] [data-region="create-flow"] {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(var(--measure-sm), 1fr) auto auto;
-    align-items: center;
-    min-height: calc(100dvh - var(--space-16));
-    gap: var(--space-6);
-    padding-block: var(--space-6) var(--space-8);
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] [data-region="setup"] {
-    justify-self: center;
-    max-width: var(--measure-lg);
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] [data-region="masthead"] {
-    align-self: center;
-    justify-self: center;
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] [data-region="slots"] {
-    width: 100%;
-    padding-top: var(--space-5);
-    border-top: var(--border-width-thin) solid var(--outline-variant);
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] [data-region="slot-list"] {
-    gap: 0;
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] .needs-slot-grid__item {
-    min-height: var(--space-24);
-    border: 0;
-    border-inline-start: var(--border-width-thin) solid var(--outline-variant);
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] .needs-slot-grid__item:first-child {
-    border-inline-start: 0;
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] .needs-slot-grid__item--active {
-    color: var(--text-default);
-    background: color-mix(in srgb, var(--primary-container) 42%, transparent);
-    box-shadow: inset 0 var(--space-0-5) 0 var(--primary);
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] .needs-slot-grid__icon-wrap--active {
-    color: var(--primary);
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] .needs-slot-grid__sublabel--active {
-    opacity: 0.68;
-  }
-}
-
-/* Mobile Create keeps the same sequence, with more breathing room around the
-   mark and between the decision groups.  The five choices remain touch-first. */
-@media (max-width: 767px) {
-  [data-theme="editorial-fire"] [data-page="home"] .needs-context {
-    padding-top: var(--space-16);
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] [data-region="create-flow"] {
-    gap: var(--space-10);
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] [data-region="masthead"] {
-    padding-block: var(--space-4);
-  }
-
-  [data-theme="editorial-fire"] [data-page="home"] [data-region="slots"] {
-    padding-top: var(--space-4);
-    border-top: var(--border-width-thin) solid var(--outline-variant);
-  }
-}
-
-/* ── EDITORIAL FIRE / SCOPRI ─────────────────────────────────────────────
-   A magazine spread rather than a catalogue of equal cards.  The feature is
-   the cover story; the first collection below it becomes a small image-led
-   mosaic. Other filter views keep the reusable grid and its original data. */
-@media (min-width: 1024px) {
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="page"] {
-    max-width: var(--measure-6xl);
-    padding-inline: var(--space-10);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="page-header"] {
-    max-width: var(--measure-md);
-    margin-bottom: var(--space-5);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="filters"] {
-    width: fit-content;
-    margin-bottom: var(--space-5);
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"].explore-feature {
-    display: grid;
-    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
-    min-height: var(--measure-xs);
-    border-radius: var(--radius-2xl);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"] .explore-feature__media,
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"] .explore-feature__body {
-    width: 100%;
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"] .explore-feature__media {
-    height: 100%;
-    min-height: var(--measure-xs);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"] .explore-feature__body {
-    padding: var(--space-10);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] .explore-section-stack {
-    gap: var(--space-8);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] .explore-section-stack > section:first-of-type [data-region="collection"] {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr) minmax(0, 1.12fr);
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-    min-height: var(--measure-xs);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] .explore-section-stack > section:first-of-type [data-region="card"]:nth-child(1),
-  [data-theme="editorial-fire"] [data-page="explore"] .explore-section-stack > section:first-of-type [data-region="card"]:nth-child(2) {
-    grid-row: span 2;
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] .explore-section-stack > section:first-of-type [data-region="card"] :is(.explore-tilt, .explore-card, .explore-card__media) {
-    height: 100%;
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] .explore-section-stack > section:first-of-type [data-region="card"] .explore-card__media {
-    aspect-ratio: auto;
-  }
-}
-
-@media (max-width: 767px) {
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="page"] {
-    padding-top: var(--space-16);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="filters"] {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(max-content, 1fr));
-    width: 100%;
-    margin-bottom: var(--space-8);
-    padding: 0;
-    border: 0;
-    background: transparent;
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] .explore-filters__chip {
-    justify-content: center;
-    border-radius: var(--radius-full);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"].explore-feature {
-    border-radius: var(--radius-2xl);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"] .explore-feature__media {
-    height: min(52vh, var(--measure-sm));
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] [data-region="feature"] .explore-feature__body {
-    padding: var(--space-8) var(--space-6);
-  }
-
-  [data-theme="editorial-fire"] [data-page="explore"] .explore-section-stack > section:first-of-type [data-region="collection"] {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--gap-sm);
   }
 }

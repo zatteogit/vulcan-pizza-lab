@@ -54,9 +54,9 @@ export function SubPageHeader({
                 {icon}
               </span>
             )}
-            <span className="sub-page-header__title">
+            <h1 className="sub-page-header__title">
               {title}
-            </span>
+            </h1>
           </div>
         )}
 

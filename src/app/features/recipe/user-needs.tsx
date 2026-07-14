@@ -22,6 +22,7 @@ Wheat,
 Zap
 } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
+import { motionDelay,motionDuration,motionEase,motionSpring,motionTiming } from "../../components/ds/motion";
 import React,{ useEffect,useMemo,useState } from "react";
 import { Chip } from "../../components/ds/index";
 import { useCms } from "../cms/cms-context";
@@ -37,6 +38,7 @@ SKILL_LEVELS,
 type TimeSlot,
 type UserConstraints,
 } from "../../domain/pizza-engine";
+import { uiMessage } from "../../i18n/ui-messages";
 
 interface UserNeedsProps {
   constraints: UserConstraints;
@@ -117,69 +119,69 @@ interface FlourOption {
 const FLOUR_OPTIONS_GENERIC: FlourOption[] = [
   {
     id: "00",
-    name: "Farina 00",
+    name: uiMessage("features.recipe.user-needs.farina-00-06dc5ab2"),
     w: "W170–220",
-    detail: "Classica, versatile",
+    detail: uiMessage("features.recipe.user-needs.classica-versatile-21c9cc66"),
   },
   {
     id: "0",
-    name: "Farina 0",
+    name: uiMessage("features.recipe.user-needs.farina-0-625e81ec"),
     w: "W220–260",
-    detail: "Media forza",
+    detail: uiMessage("features.recipe.user-needs.media-forza-1dea8ed0"),
   },
   {
     id: "tipo_1",
-    name: "Farina tipo 1",
+    name: uiMessage("features.recipe.user-needs.farina-tipo-1-189a22b7"),
     w: "W220–280",
-    detail: "Rustica, profumo di cereale",
+    detail: uiMessage("features.recipe.user-needs.rustica-profumo-di-cereale-766e58ac"),
   },
   {
     id: "manitoba",
-    name: "Manitoba",
+    name: uiMessage("features.recipe.user-needs.manitoba-c1a38647"),
     w: "W340–380",
-    detail: "Alta forza, lunga maturazione",
+    detail: uiMessage("features.recipe.user-needs.alta-forza-lunga-maturazione-58db76ea"),
   },
   {
     id: "integrale",
-    name: "Integrale",
+    name: uiMessage("features.recipe.user-needs.integrale-596f723e"),
     w: "W200–260",
-    detail: "Più fibra e sapore",
+    detail: uiMessage("features.recipe.user-needs.piu-fibra-e-sapore-e0f02324"),
   },
   {
     id: "semola",
-    name: "Semola rimacinata",
+    name: uiMessage("features.recipe.user-needs.semola-rimacinata-8c3476b8"),
     w: "W220–280",
-    detail: "Croccantezza, colore dorato",
+    detail: uiMessage("features.recipe.user-needs.croccantezza-colore-dorato-0119e353"),
   },
 ];
 
 const FLOUR_OPTIONS_SPECIAL: FlourOption[] = [
-  { id: "farro", name: "Farina di farro", w: "W130–180", detail: "Sapore nocciolato, digeribile" },
-  { id: "spelta", name: "Farina di spelta", w: "W150–200", detail: "Grano antico, aromatica" },
-  { id: "kamut", name: "Farina di kamut", w: "W200–260", detail: "Khorasan, dolce e burrosa" },
-  { id: "segale", name: "Farina di segale", w: "W80–150", detail: "Sapore intenso, bassa glutine" },
-  { id: "riso", name: "Farina di riso", w: "—", detail: "Senza glutine, croccantezza" },
-  { id: "mais", name: "Farina di mais", w: "—", detail: "Senza glutine, colore dorato" },
-  { id: "saraceno", name: "Grano saraceno", w: "—", detail: "Senza glutine, terroso" },
-  { id: "avena", name: "Farina di avena", w: "W100–140", detail: "Fibra alta, morbidezza" },
-  { id: "ceci", name: "Farina di ceci", w: "—", detail: "Proteica, sapore deciso" },
+  { id: "farro", name: uiMessage("features.recipe.user-needs.farina-di-farro-cba26b1c"), w: "W130–180", detail: uiMessage("features.recipe.user-needs.sapore-nocciolato-digeribile-7f620358") },
+  { id: "spelta", name: uiMessage("features.recipe.user-needs.farina-di-spelta-145c7e5d"), w: "W150–200", detail: uiMessage("features.recipe.user-needs.grano-antico-aromatica-6b49eff1") },
+  { id: "kamut", name: uiMessage("features.recipe.user-needs.farina-di-kamut-23160bf9"), w: "W200–260", detail: uiMessage("features.recipe.user-needs.khorasan-dolce-e-burrosa-1c0a0d60") },
+  { id: "segale", name: uiMessage("features.recipe.user-needs.farina-di-segale-4d6ef95b"), w: "W80–150", detail: uiMessage("features.recipe.user-needs.sapore-intenso-bassa-glutine-b955d1cb") },
+  { id: "riso", name: uiMessage("features.recipe.user-needs.farina-di-riso-1d5fb293"), w: "—", detail: uiMessage("features.recipe.user-needs.senza-glutine-croccantezza-c0379498") },
+  { id: "mais", name: uiMessage("features.recipe.user-needs.farina-di-mais-41910105"), w: "—", detail: uiMessage("features.recipe.user-needs.senza-glutine-colore-dorato-83a2168b") },
+  { id: "saraceno", name: uiMessage("features.recipe.user-needs.grano-saraceno-d1593536"), w: "—", detail: uiMessage("features.recipe.user-needs.senza-glutine-terroso-85af8327") },
+  { id: "avena", name: uiMessage("features.recipe.user-needs.farina-di-avena-d11c4a10"), w: "W100–140", detail: uiMessage("features.recipe.user-needs.fibra-alta-morbidezza-348c80f9") },
+  { id: "ceci", name: uiMessage("features.recipe.user-needs.farina-di-ceci-f7a159a1"), w: "—", detail: uiMessage("features.recipe.user-needs.proteica-sapore-deciso-6623765b") },
 ];
 
 const YEAST_OPTIONS = [
   {
     id: "fresh",
-    name: "Lievito fresco",
-    detail: "Cubetto classico",
+    name: uiMessage("features.recipe.user-needs.lievito-fresco-f3a7cabd"),
+    detail: uiMessage("features.recipe.user-needs.cubetto-classico-76ef5715"),
   },
   {
     id: "dry",
-    name: "Lievito secco",
-    detail: "Pratico, lunga conservazione",
+    name: uiMessage("features.recipe.user-needs.lievito-secco-0043f8c5"),
+    detail: uiMessage("features.recipe.user-needs.pratico-lunga-conservazione-8c39549a"),
   },
   {
     id: "sourdough",
-    name: "Lievito madre",
-    detail: "Sapore complesso, lunga maturazione",
+    name: uiMessage("features.recipe.user-needs.lievito-madre-180392fb"),
+    detail: uiMessage("features.recipe.user-needs.sapore-complesso-lunga-maturazione-9d8ec002"),
   },
 ];
 
@@ -353,7 +355,10 @@ function saveOven(ovenType: OvenType, maxTemp: number) {
 /* ═══ INLINE TIP ═══ */
 function InlineTip({ children }: { children: string }) {
   return (
-    null
+    <aside className="needs-inline-tip" role="note">
+      <HelpCircle className="needs-inline-tip__icon" aria-hidden="true" />
+      <span className="needs-inline-tip__copy">{children}</span>
+    </aside>
   );
 }
 
@@ -405,7 +410,6 @@ function SettingsSummaryBar({
   activeTab,
   onTabSelect,
   constraints,
-  kitchenTemp,
   cms,
   selectedTimeLabel,
   selectedTimeSlotId,
@@ -467,10 +471,10 @@ function SettingsSummaryBar({
                 `0 0 0 10px color-mix(in srgb, ${timeColors.bg} 0%, transparent)`,
               ],
             }}
-            exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.15 } }}
+            exit={{ opacity: 0, scale: 0.6, transition: motionTiming.feedback }}
             transition={{
-              default: { type: "spring", stiffness: 460, damping: 20 },
-              boxShadow: { duration: 0.7, ease: "easeOut", delay: 0.1 },
+              default: motionSpring.emphaticMark,
+              boxShadow: { duration: motionDuration.slow,ease: motionEase.exit,delay: motionDelay.medium },
             }}
             onClick={onChangeTime}
             aria-pressed={timeActive}
@@ -609,11 +613,7 @@ export function UserNeeds({
     controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
   const setActiveTab = onActiveTabChange ?? setInternalActiveTab;
   const [showTempTip, setShowTempTip] = useState(false);
-  const drawerTransition = {
-    type: "spring" as const,
-    stiffness: 400,
-    damping: compact ? 30 : 25,
-  };
+  const drawerTransition = compact ? motionSpring.drawerCompact : motionSpring.drawerRegular;
 
   return (
     <div className="needs-root">
@@ -826,7 +826,7 @@ export function UserNeeds({
                             >
                               {isRecent && (<div className="needs-yeast-chip__badge">{cms.ui.badgeRecent}</div>)}
                               <div className="needs-yeast-chip__row">
-                                <AnimatePresence>{active && (<motion.span initial={{ scale: 0, width: 0 }} animate={{ scale: 1, width: 14 }} exit={{ scale: 0, width: 0 }} transition={{ type: "spring", stiffness: 500, damping: 25 }}><Check size={14} /></motion.span>)}</AnimatePresence>
+                                <AnimatePresence>{active && (<motion.span initial={{ scale: 0, width: 0 }} animate={{ scale: 1, width: 14 }} exit={{ scale: 0, width: 0 }} transition={motionSpring.crisp}><Check size={14} /></motion.span>)}</AnimatePresence>
                                 <span className="needs-yeast-chip__name">{cms.yeastLabels[y.id] ?? y.name}</span>
                               </div>
                               <span className="needs-yeast-chip__detail">{cms.yeastDetails[y.id] ?? y.detail}</span>
@@ -1008,7 +1008,7 @@ function TimeSlotPicker({
               onClick={() => onTimeSlotChange(slot)}
               whileHover={{ y: compact ? -2 : -4 }}
               whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 400, damping: 26 }}
+              transition={motionSpring.statValue}
               className={
                 (compact ? "needs-slot-grid__item needs-slot-grid__item--compact" : "needs-slot-grid__item") +
                 (active ? " needs-slot-grid__item--active" : "")
@@ -1135,11 +1135,7 @@ function FlourChip({
               initial={{ scale: 0, width: 0 }}
               animate={{ scale: 1, width: 14 }}
               exit={{ scale: 0, width: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 25,
-              }}
+              transition={motionSpring.crisp}
             >
               <Check size={14} />
             </motion.span>
@@ -1193,13 +1189,13 @@ function BrandedFloursSection({
       >
         <motion.span
           animate={{ rotate: expanded ? 90 : 0 }}
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          transition={motionSpring.crispControl}
           className="needs-branded-flours__chevron"
         >
           <ChevronRight size={14} />
         </motion.span>
         <span className="needs-branded-flours__label">
-          {labelOverride ?? cms.ui?.brandedFlours ?? "Farine di marca"}
+          {labelOverride ?? cms.ui?.brandedFlours ?? uiMessage("features.recipe.user-needs.farine-di-marca-d5a34a3b")}
         </span>
         {activeBrandedCount > 0 && (
           <span className="needs-branded-flours__count">
@@ -1213,7 +1209,7 @@ function BrandedFloursSection({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            transition={motionSpring.standard}
             className="needs-branded-flours__panel"
           >
             <div className="needs-branded-flours__panel-inner">

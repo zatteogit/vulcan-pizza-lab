@@ -9,6 +9,7 @@ import { useLocation } from "react-router";
 import { useCms } from "../features/cms/cms-context";
 import { t } from "../features/cms/i18n";
 import { FilterChip, Surface } from "../components/ds/index";
+import { motionDelay,motionSpring } from "../components/ds/motion";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import type {
   GlossaryCategory,
@@ -124,7 +125,7 @@ export function GlossaryPage() {
         }
       />
 
-      <div data-region="page" className="glossary-body">
+      <main data-region="page" className="glossary-body">
         {/* ── Search ── */}
         <div className="glossary-search">
           <div className="glossary-searchbox">
@@ -154,7 +155,7 @@ export function GlossaryPage() {
             variants={{
               hidden: {},
               visible: {
-                transition: { staggerChildren: 0.04 },
+                transition: { staggerChildren: motionDelay.micro },
               },
             }}
           >
@@ -163,11 +164,7 @@ export function GlossaryPage() {
                 hidden: { opacity: 0, y: 8, scale: 0.95 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 28,
-              }}
+              transition={motionSpring.crispDisclosure}
             >
               <FilterChip
                 active={activeCategory === "all"}
@@ -190,11 +187,7 @@ export function GlossaryPage() {
                   hidden: { opacity: 0, y: 8, scale: 0.95 },
                   visible: { opacity: 1, y: 0, scale: 1 },
                 }}
-                transition={{
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 28,
-                }}
+                transition={motionSpring.crispDisclosure}
               >
                 <FilterChip
                   active={activeCategory === id}
@@ -286,7 +279,7 @@ export function GlossaryPage() {
             ))}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }
@@ -375,11 +368,7 @@ function TermCard({
       id={`glossary-${term.id}`}
       layout
       className={`glossary-card${isExpanded ? " glossary-card--expanded" : ""}`}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 30,
-      }}
+      transition={motionSpring.standard}
     >
       <motion.button
         onClick={onToggle}
@@ -414,11 +403,7 @@ function TermCard({
 
         <motion.div
           animate={{ rotate: isExpanded ? 180 : 0 }}
-          transition={{
-            type: "spring",
-            stiffness: 500,
-            damping: 30,
-          }}
+          transition={motionSpring.crispControl}
           className="glossary-card__chevron"
         >
           <ChevronDown size={16} />
@@ -431,11 +416,7 @@ function TermCard({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 30,
-            }}
+            transition={motionSpring.standard}
             className="glossary-card__reveal"
           >
             <div className="glossary-card__body">

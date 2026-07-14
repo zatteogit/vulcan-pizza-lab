@@ -13,6 +13,8 @@ import type { SectionEntry } from "./shared";
 import { VulcanMark, VULCAN_MARK_PATHS } from "../shared/vulcan-logo";
 import type { VulcanVariant } from "../shared/vulcan-logo";
 import { LogoHeroSubSection, LogoFireGlowSubSection, LogoDoughBlobSubSection } from "./foundations-logo-brand";
+import { toShowcaseCssValue } from "./showcase-style";
+import { showcaseMessage } from "../../i18n/showcase-messages";
 
 /* ═══════════════════════════════════════════════════════════
    FONDAMENTA — LOGO & BRAND IDENTITY
@@ -44,7 +46,7 @@ const VARIANT_DATA: Record<
   }
 > = {
   intima: {
-    label: "Intima",
+    label: showcaseMessage("components.design-system.foundations-logo.intima-77921154"),
     fill: "72% x 84%",
     thinW: 6.2,
     thickW: 8.4,
@@ -59,10 +61,10 @@ const VARIANT_DATA: Record<
     tearX: 14.9,
     tearY: 29,
     tearCtrl: 27.46,
-    desc: "Margini generosi: la fetta sottratta respira, il taglio resta leggibile.",
+    desc: showcaseMessage("components.design-system.foundations-logo.margini-generosi-la-fetta-sottratta-respir-334a0b86"),
   },
   naturale: {
-    label: "Naturale",
+    label: showcaseMessage("components.design-system.foundations-logo.naturale-9eb1c81a"),
     fill: "78% x 89%",
     thinW: 6.7,
     thickW: 8.8,
@@ -77,10 +79,10 @@ const VARIANT_DATA: Record<
     tearX: 14.8,
     tearY: 30.2,
     tearCtrl: 28.28,
-    desc: "Default: il miglior equilibrio tra fetta madre, V negativa e massa destra.",
+    desc: showcaseMessage("components.design-system.foundations-logo.default-il-miglior-equilibrio-tra-fetta-ma-528795a1"),
   },
   aperta: {
-    label: "Aperta",
+    label: showcaseMessage("components.design-system.foundations-logo.aperta-4ab10637"),
     fill: "81% x 92%",
     thinW: 6.9,
     thickW: 9.2,
@@ -95,10 +97,10 @@ const VARIANT_DATA: Record<
     tearX: 14.6,
     tearY: 30.7,
     tearCtrl: 28.72,
-    desc: "Presenza decisa: il taglio guadagna tensione e il vertice basso resta caldo.",
+    desc: showcaseMessage("components.design-system.foundations-logo.presenza-decisa-il-taglio-guadagna-tension-d7d911ae"),
   },
   audace: {
-    label: "Audace",
+    label: showcaseMessage("components.design-system.foundations-logo.audace-0aabc68a"),
     fill: "86% x 95%",
     thinW: 7,
     thickW: 9.5,
@@ -113,10 +115,10 @@ const VARIANT_DATA: Record<
     tearX: 14.3,
     tearY: 31.2,
     tearCtrl: 29.16,
-    desc: "Impatto da sigillo: più massa, utile per favicon e app icon.",
+    desc: showcaseMessage("components.design-system.foundations-logo.impatto-da-sigillo-piu-massa-utile-per-fav-2b04ff20"),
   },
   monumentale: {
-    label: "Monumentale",
+    label: showcaseMessage("components.design-system.foundations-logo.monumentale-b43ca9d7"),
     fill: "91% x 98%",
     thinW: 7.2,
     thickW: 9.7,
@@ -131,7 +133,7 @@ const VARIANT_DATA: Record<
     tearX: 14,
     tearY: 31.6,
     tearCtrl: 29.42,
-    desc: "Quasi full bleed: massima presenza, senza chiudere il vuoto centrale.",
+    desc: showcaseMessage("components.design-system.foundations-logo.quasi-full-bleed-massima-presenza-senza-ch-964776d9"),
   },
 };
 
@@ -165,8 +167,7 @@ function ConstructionBlueprint({
   return (
     <svg
       viewBox="-4 -4 40 40"
-      className="w-full h-full"
-      style={{ maxHeight: "420px" }}
+      className="w-full h-full dsx-s-de81b0b9a5"
     >
       <defs>
         <linearGradient id={gradId} x1="0.12" y1="0" x2="0.9" y2="1">
@@ -315,8 +316,7 @@ function ConstructionBlueprint({
             fontFamily="'DM Mono', monospace"
             fontWeight={600}
           >
-            {d.thinW}u
-          </text>
+            {d.thinW}{showcaseMessage("components.design-system.foundations-logo.u-b26c4425")}</text>
 
           {/* Right remnant width bracket (top) */}
           <line
@@ -352,8 +352,7 @@ function ConstructionBlueprint({
             fontFamily="'DM Mono', monospace"
             fontWeight={600}
           >
-            {d.thickW}u
-          </text>
+            {d.thickW}{showcaseMessage("components.design-system.foundations-logo.u-b26c4425")}</text>
 
           {/* Height bracket (right side) */}
           <line
@@ -389,8 +388,7 @@ function ConstructionBlueprint({
             fontFamily="'DM Mono', monospace"
             fontWeight={600}
           >
-            {(d.botY - d.topY).toFixed(1)}u
-          </text>
+            {(d.botY - d.topY).toFixed(1)}{showcaseMessage("components.design-system.foundations-logo.u-b26c4425")}</text>
 
           {/* Negative cut label */}
           <line
@@ -426,8 +424,7 @@ function ConstructionBlueprint({
             fontSize={1.3}
             fontFamily="'DM Mono', monospace"
           >
-            taglio {d.vGap}u
-          </text>
+            {showcaseMessage("components.design-system.foundations-logo.taglio-dd1edaf8")}{d.vGap}{showcaseMessage("components.design-system.foundations-logo.u-b26c4425")}</text>
 
           {/* Warm vertex annotation */}
           <circle
@@ -454,8 +451,7 @@ function ConstructionBlueprint({
             fontSize={1.3}
             fontFamily="'DM Mono', monospace"
           >
-            vertice caldo
-          </text>
+            {showcaseMessage("components.design-system.foundations-logo.vertice-caldo-fecc3a49")}</text>
         </g>
       )}
     </svg>
@@ -484,53 +480,21 @@ function VulcanMarkPath({
 function ClearSpaceDiagram({ variant }: { variant: VulcanVariant }) {
   return (
     <div
-      className="relative flex items-center justify-center"
-      style={{
-        width: "200px",
-        height: "200px",
-        background: "var(--surface-container-low)",
-        border: "1px solid var(--outline-variant)",
-        borderRadius: "1rem",
-      }}
+      className="relative flex items-center justify-center dsx-s-3fc5771f3a"
     >
       {/* Safe zone dashed border */}
       <div
-        className="absolute flex items-center justify-center"
-        style={{
-          inset: "24px",
-          border: "1px dashed var(--primary)",
-          borderRadius: "4px",
-          opacity: 0.4,
-        }}
+        className="absolute flex items-center justify-center dsx-s-3cf1e9899e"
       />
       {/* Measure arrows (4 sides) */}
       {["top", "bottom", "left", "right"].map((side) => (
         <div
           key={side}
-          className="absolute flex items-center justify-center"
-          style={{
-            ...(side === "top"
-              ? { top: "4px", left: "50%", transform: "translateX(-50%)" }
-              : side === "bottom"
-              ? { bottom: "4px", left: "50%", transform: "translateX(-50%)" }
-              : side === "left"
-              ? { left: "4px", top: "50%", transform: "translateY(-50%)" }
-              : { right: "4px", top: "50%", transform: "translateY(-50%)" }),
-          }}
+          className={`absolute flex items-center justify-center ds-showcase__clear-space-measure--${side}`}
         >
-          <span
-            style={{
-              fontFamily: "'DM Mono', monospace",
-              fontSize: "var(--font-size-xs)",
-              fontWeight: "var(--weight-semibold)" as any,
-              color: "var(--primary)",
-              background: "var(--surface-container-low)",
-              padding: "0 3px",
-              letterSpacing: "var(--tracking-spread)",
-            }}
+          <span className="dsx-s-064731b49c"
           >
-            1x
-          </span>
+            {showcaseMessage("components.design-system.foundations-logo.1x-8d7a4fd5")}</span>
         </div>
       ))}
       <VulcanMark size={80} variant={variant} gradient decorative />
@@ -551,40 +515,25 @@ function UsageSpecimen({
   return (
     <div className="flex flex-col gap-2">
       <div
-        className="relative flex items-center justify-center rounded-xl overflow-hidden"
-        style={{
-          width: "120px",
-          height: "120px",
-          background: "var(--surface-container)",
-          border: `2px solid ${ok ? "var(--cta)" : "var(--destructive)"}`,
-        }}
+        className="relative flex items-center justify-center rounded-xl overflow-hidden dsx-s-170f6337c4"
+        style={{ "--dsx-border": toShowcaseCssValue(`2px solid ${ok ? "var(--cta)" : "var(--destructive)"}`, false) } as any}
       >
         {children}
         <div
-          className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center"
-          style={{
-            background: ok
-              ? "var(--cta)"
-              : "var(--destructive)",
-          }}
+          className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center dsx-s-fbecfa7efd"
+          style={{ "--dsx-background": toShowcaseCssValue(ok
+                                              ? "var(--cta)"
+                                              : "var(--destructive)", false) } as any}
         >
           {ok ? (
-            <Check size={11} style={{ color: "white" }} />
+            <Check size={11} className="dsx-s-9e8bd0a4c5" />
           ) : (
-            <Ban size={11} style={{ color: "white" }} />
+            <Ban size={11} className="dsx-s-9ecd821ceb" />
           )}
         </div>
       </div>
       <span
-        style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: "var(--font-size-base)",
-          fontWeight: "var(--weight-medium)" as any,
-          color: ok ? "var(--cta)" : "var(--destructive)",
-          textAlign: "center",
-          maxWidth: "120px",
-          lineHeight: "var(--leading-compact)",
-        }}
+        style={{ "--dsx-color": toShowcaseCssValue(ok ? "var(--cta)" : "var(--destructive)", false) } as any} className="dsx-s-242281ce47"
       >
         {label}
       </span>
@@ -605,23 +554,23 @@ function LogoConstructionSection() {
   return (
     <div className="flex flex-col gap-8">
       <SectionHeader
-        title="Logo & Brand Identity"
-        description="VulcanMark, VulcanHero, FireGlow, DoughBlob — l'intero sistema di identita visiva. Costruzione geometrica su griglia 32x32u: una fetta/vulcano implicita da cui nasce una V tramite taglio sottratto."
+        title={showcaseMessage("components.design-system.foundations-logo.logo-brand-identity-b4c1a77b")}
+        description={showcaseMessage("components.design-system.foundations-logo.vulcanmark-vulcanhero-fireglow-doughblob-l-92a366ae")}
       />
-      <SubSectionLabel label="Panoramica" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.foundations-logo.panoramica-f38c9a27")} />
       <Panoramica
-        descrizione="Il sistema di brand identity di Vulcan Pizza Lab si basa sul VulcanMark — una V asimmetrica generata per sottrazione da una forma madre triangolare: fetta di pizza, profilo di vulcano e iniziale convivono nello stesso segno."
+        descrizione={showcaseMessage("components.design-system.foundations-logo.il-sistema-di-brand-identity-di-vulcan-piz-77947dcf")}
         principi={[
-          "Forma madre: un triangolo/fetta implicito, mai illustrativo",
-          "Taglio sottratto: la V nasce dal vuoto centrale e dal completamento modale",
-          "5 scale ottiche per adattarsi dal favicon al hero display senza ridisegnare",
-          "Gradiente ember proprietario: luce calda in alto, profondita in basso",
+          showcaseMessage("components.design-system.foundations-logo.forma-madre-un-triangolo-fetta-implicito-m-9734ebd1"),
+          showcaseMessage("components.design-system.foundations-logo.taglio-sottratto-la-v-nasce-dal-vuoto-cent-ef15acc2"),
+          showcaseMessage("components.design-system.foundations-logo.5-scale-ottiche-per-adattarsi-dal-favicon--fcc82d37"),
+          showcaseMessage("components.design-system.foundations-logo.gradiente-ember-proprietario-luce-calda-in-77df37c8"),
         ]}
       />
-      <SubSectionLabel label="Specifiche" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.foundations-logo.specifiche-057caf2f")} />
       {/* ── 1. CONSTRUCTION BLUEPRINT ── */}
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Costruzione geometrica</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-logo.costruzione-geometrica-ab1277f6")}</h3>
         <div className="surface-card p-5">
           {/* Variant selector */}
           <div className="flex flex-wrap gap-2 mb-4">
@@ -629,43 +578,22 @@ function LogoConstructionSection() {
               <motion.button
                 key={v}
                 onClick={() => setActiveVariant(v)}
-                className="px-4 py-2 rounded-xl active:scale-95 transition-transform"
-                style={{
-                  background:
-                    activeVariant === v
-                      ? "var(--primary)"
-                      : "var(--surface-container)",
-                  color:
-                    activeVariant === v
-                      ? "var(--primary-foreground)"
-                      : "var(--text-default)",
-                  border:
-                    activeVariant === v
-                      ? "none"
-                      : "1px solid var(--outline-variant)",
-                  cursor: "pointer",
-                  outline: "none",
-                }}
+                className="px-4 py-2 rounded-xl active:scale-95 transition-transform dsx-s-581a0621c3"
+                style={{ "--dsx-background": toShowcaseCssValue(activeVariant === v
+                                                          ? "var(--primary)"
+                                                          : "var(--surface-container)", false), "--dsx-color": toShowcaseCssValue(activeVariant === v
+                                                          ? "var(--primary-foreground)"
+                                                          : "var(--text-default)", false), "--dsx-border": toShowcaseCssValue(activeVariant === v
+                                                          ? "none"
+                                                          : "1px solid var(--outline-variant)", false) } as any}
               >
-                <span
-                  style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: "var(--font-size-base)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    letterSpacing: "var(--tracking-label)",
-                    textTransform: "uppercase",
-                  }}
+                <span className="dsx-s-0c6ba8b333"
                 >
                   {VARIANT_DATA[v].label}
                 </span>
                 <span
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-base)",
-                    opacity: activeVariant === v ? 0.85 : 0.6,
-                    display: "block",
-                    marginTop: "1px",
-                  }}
+                  style={{ "--dsx-opacity": toShowcaseCssValue(activeVariant === v ? 0.85 : 0.6, true) } as any}
+                  className={`dsx-s-e3967aa608 ${activeVariant === v ? "ds-showcase__on-primary" : "ds-showcase__secondary-ink"}`}
                 >
                   {VARIANT_DATA[v].fill}
                 </span>
@@ -678,21 +606,21 @@ function LogoConstructionSection() {
             {[
               {
                 id: "grid",
-                label: "Griglia",
+                label: showcaseMessage("components.design-system.foundations-logo.griglia-4eb7e601"),
                 icon: Grid3X3,
                 active: showGrid,
                 set: setShowGrid,
               },
               {
                 id: "measures",
-                label: "Misure",
+                label: showcaseMessage("components.design-system.foundations-logo.misure-25e9d227"),
                 icon: Ruler,
                 active: showMeasures,
                 set: setShowMeasures,
               },
               {
                 id: "guides",
-                label: "Guide",
+                label: showcaseMessage("components.design-system.foundations-logo.guide-bf073fae"),
                 icon: Eye,
                 active: showGuides,
                 set: setShowGuides,
@@ -703,23 +631,14 @@ function LogoConstructionSection() {
                 <motion.button
                   key={toggle.id}
                   onClick={() => toggle.set(!toggle.active)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg active:scale-95 transition-transform"
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-md)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    background: toggle.active
-                      ? "color-mix(in srgb, var(--primary) 12%, transparent)"
-                      : "var(--surface-container)",
-                    color: toggle.active
-                      ? "var(--primary)"
-                      : "var(--muted-foreground)",
-                    border: toggle.active
-                      ? "1px solid color-mix(in srgb, var(--primary) 25%, transparent)"
-                      : "1px solid var(--outline-variant)",
-                    cursor: "pointer",
-                    outline: "none",
-                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg active:scale-95 transition-transform dsx-s-d29fb15dce"
+                  style={{ "--dsx-background": toShowcaseCssValue(toggle.active
+                                                              ? "color-mix(in srgb, var(--primary) 12%, transparent)"
+                                                              : "var(--surface-container)", false), "--dsx-color": toShowcaseCssValue(toggle.active
+                                                              ? "var(--primary)"
+                                                              : "var(--muted-foreground)", false), "--dsx-border": toShowcaseCssValue(toggle.active
+                                                              ? "1px solid color-mix(in srgb, var(--primary) 25%, transparent)"
+                                                              : "1px solid var(--outline-variant)", false) } as any}
                 >
                   <Icon size={12} />
                   {toggle.label}
@@ -731,12 +650,7 @@ function LogoConstructionSection() {
           {/* Blueprint canvas */}
           <div className="flex flex-col lg:flex-row gap-6">
             <div
-              className="flex-1 min-w-0 rounded-2xl overflow-hidden flex items-center justify-center p-6"
-              style={{
-                background: "var(--surface-container)",
-                border: "1px solid var(--outline-variant)",
-                minHeight: "320px",
-              }}
+              className="flex-1 min-w-0 rounded-2xl overflow-hidden flex items-center justify-center p-6 dsx-s-d9867f2550"
             >
               <ConstructionBlueprint
                 variant={activeVariant}
@@ -751,32 +665,13 @@ function LogoConstructionSection() {
               className="flex flex-col gap-3 lg:w-64 flex-shrink-0"
             >
               <div
-                className="p-4 rounded-xl"
-                style={{
-                  background: "var(--surface-container)",
-                  border: "1px solid var(--outline-variant)",
-                }}
+                className="p-4 rounded-xl dsx-s-d1283e5581"
               >
-                <span
-                  style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: "var(--font-size-base)",
-                    fontWeight: "var(--weight-bold)" as any,
-                    letterSpacing: "var(--tracking-display)",
-                    textTransform: "uppercase",
-                    color: "var(--primary)",
-                  }}
+                <span className="dsx-s-6b708d0219"
                 >
                   {d.label}
                 </span>
-                <p
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-md)",
-                    color: "var(--muted-foreground)",
-                    lineHeight: "var(--leading-relaxed)",
-                    marginTop: "6px",
-                  }}
+                <p className="dsx-s-5f1397de26"
                 >
                   {d.desc}
                 </p>
@@ -784,38 +679,26 @@ function LogoConstructionSection() {
 
               <div className="flex flex-col gap-2">
                 {[
-                  { prop: "ViewBox", val: "0 0 32 32" },
-                  { prop: "Occupazione", val: d.fill },
-                  { prop: "Residuo sx", val: `${d.thinW}u top` },
-                  { prop: "Massa dx", val: `${d.thickW}u top` },
-                  { prop: "Sistema", val: d.ratio },
-                  { prop: "Taglio", val: `${d.vGap}u top` },
+                  { prop: showcaseMessage("components.design-system.foundations-logo.viewbox-b3894302"), val: "0 0 32 32" },
+                  { prop: showcaseMessage("components.design-system.foundations-logo.occupazione-956c2372"), val: d.fill },
+                  { prop: showcaseMessage("components.design-system.foundations-logo.residuo-sx-6cf7bff5"), val: showcaseMessage("components.design-system.foundations-logo.value-u-top-e97fa163", [d.thinW]) },
+                  { prop: showcaseMessage("components.design-system.foundations-logo.massa-dx-f6667556"), val: showcaseMessage("components.design-system.foundations-logo.value-u-top-e97fa163", [d.thickW]) },
+                  { prop: showcaseMessage("components.design-system.foundations-logo.sistema-c0041603"), val: d.ratio },
+                  { prop: showcaseMessage("components.design-system.foundations-logo.taglio-4b3f0122"), val: showcaseMessage("components.design-system.foundations-logo.value-u-top-e97fa163", [d.vGap]) },
                   {
-                    prop: "Altezza",
-                    val: `${(d.botY - d.topY).toFixed(1)}u (${d.topY} -> ${d.botY})`,
+                    prop: showcaseMessage("components.design-system.foundations-logo.altezza-7d07237e"),
+                    val: showcaseMessage("components.design-system.foundations-logo.value-u-value-value-1a95a140", [(d.botY - d.topY).toFixed(1), d.topY, d.botY]),
                   },
-                  { prop: "Vertice", val: "Bezier caldo, non goccia" },
-                  { prop: "Fill rule", val: "nonzero" },
+                  { prop: showcaseMessage("components.design-system.foundations-logo.vertice-f1611804"), val: showcaseMessage("components.design-system.foundations-logo.bezier-caldo-non-goccia-554d4d50") },
+                  { prop: showcaseMessage("components.design-system.foundations-logo.fill-rule-a6712368"), val: showcaseMessage("components.design-system.foundations-logo.nonzero-350529c7") },
                 ].map((row) => (
                   <div key={row.prop} className="flex items-baseline gap-2">
                     <span
-                      className="type-code"
-                      style={{
-                        color: "var(--primary)",
-                        fontWeight: "var(--weight-semibold)" as any,
-                        width: "80px",
-                        flexShrink: 0,
-                      }}
+                      className="type-code dsx-s-6ee313dd9b"
                     >
                       {row.prop}
                     </span>
-                    <span
-                      style={{
-                        fontFamily: "'DM Mono', monospace",
-                        fontSize: "var(--font-size-base)",
-                        color: "var(--muted-foreground)",
-                        fontFeatureSettings: "'tnum'",
-                      }}
+                    <span className="dsx-s-f1bb4e214b"
                     >
                       {row.val}
                     </span>
@@ -829,90 +712,66 @@ function LogoConstructionSection() {
 
       {/* ── 2. ANATOMY ── */}
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Anatomia del mark</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-logo.anatomia-del-mark-3293980b")}</h3>
         <div className="surface-card p-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               {
-                title: "Forma madre",
-                desc: "Il mark parte da una fetta triangolare implicita: pizza e vulcano restano percepibili senza diventare icone letterali.",
+                title: showcaseMessage("components.design-system.foundations-logo.forma-madre-20df682f"),
+                desc: showcaseMessage("components.design-system.foundations-logo.il-mark-parte-da-una-fetta-triangolare-imp-73738ad1"),
                 spec: `Occupazione ${d.fill}`,
                 color: "var(--primary)",
               },
               {
-                title: "Taglio sottratto",
-                desc: "La V non è disegnata: emerge dal vuoto centrale, largo sopra e orientato verso il vertice basso.",
+                title: showcaseMessage("components.design-system.foundations-logo.taglio-sottratto-cc36e768"),
+                desc: showcaseMessage("components.design-system.foundations-logo.la-v-non-e-disegnata-emerge-dal-vuoto-cent-fb05840f"),
                 spec: `${d.vGap}u top aperture`,
                 color: "var(--tertiary)",
               },
               {
-                title: "Residuo sinistro",
-                desc: "Faccia della fetta dopo il taglio: top pieno, lato interno verticale, punta bassa netta per guidare il completamento modale.",
+                title: showcaseMessage("components.design-system.foundations-logo.residuo-sinistro-dabf3e50"),
+                desc: showcaseMessage("components.design-system.foundations-logo.faccia-della-fetta-dopo-il-taglio-top-pien-34ad273d"),
                 spec: `${d.thinW}u al top`,
                 color: "var(--primary)",
               },
               {
-                title: "Massa destra",
-                desc: "Parte dominante del segno: fianco lungo da vulcano/fetta, spalla alta morbida e terminale basso caldo.",
+                title: showcaseMessage("components.design-system.foundations-logo.massa-destra-8950cca5"),
+                desc: showcaseMessage("components.design-system.foundations-logo.parte-dominante-del-segno-fianco-lungo-da--3e009b0d"),
                 spec: `${d.thickW}u al top`,
                 color: "var(--cta)",
               },
               {
-                title: "Asimmetria V",
-                desc: "Il peso rimane a destra: se il segno diventa simmetrico perde il carattere Vulcan e diventa un glifo generico.",
+                title: showcaseMessage("components.design-system.foundations-logo.asimmetria-v-fb1d07ca"),
+                desc: showcaseMessage("components.design-system.foundations-logo.il-peso-rimane-a-destra-se-il-segno-divent-d7b9cd97"),
                 spec: d.ratio,
                 color: "var(--text-default)",
               },
               {
-                title: "Centro ottico",
-                desc: "Il baricentro è volutamente destro. Il contenitore resta 32x32, ma il segno vive leggermente fuori asse.",
+                title: showcaseMessage("components.design-system.foundations-logo.centro-ottico-f2c5c5b4"),
+                desc: showcaseMessage("components.design-system.foundations-logo.il-baricentro-e-volutamente-destro-il-cont-0896dbca"),
                 spec: "Asse geometrico 16u, massa ottica ~17u",
                 color: "var(--muted-foreground)",
               },
             ].map((item) => (
               <div
                 key={item.title}
-                className="p-4 rounded-xl"
-                style={{
-                  background: "var(--surface-container)",
-                  border: "1px solid var(--outline-variant)",
-                }}
+                className="p-4 rounded-xl dsx-s-d1283e5581"
               >
                 <div className="flex items-center gap-2 mb-2">
                   <div
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ background: item.color }}
+                    className="w-2 h-2 rounded-full flex-shrink-0 dsx-s-fbecfa7efd"
+                    style={{ "--dsx-background": toShowcaseCssValue(item.color, false) } as any}
                   />
-                  <span
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: "var(--font-size-lg)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      color: "var(--text-default)",
-                    }}
+                  <span className="dsx-s-ce5ec66ff8"
                   >
                     {item.title}
                   </span>
                 </div>
-                <p
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-md)",
-                    color: "var(--muted-foreground)",
-                    lineHeight: "var(--leading-relaxed)",
-                  }}
+                <p className="dsx-s-b4252559c3"
                 >
                   {item.desc}
                 </p>
-                <code
-                  style={{
-                    fontFamily: "'DM Mono', monospace",
-                    fontSize: "var(--font-size-base)",
-                    color: "var(--primary)",
-                    display: "block",
-                    marginTop: "8px",
-                    fontFeatureSettings: "'tnum'",
-                  }}
+                <code className="dsx-s-8495e8cafe"
                 >
                   {item.spec}
                 </code>
@@ -924,44 +783,31 @@ function LogoConstructionSection() {
 
       {/* ── 3. SCALE OTTICHE — Comparazione ── */}
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>5 Scale ottiche — comparazione</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-logo.5-scale-ottiche-comparazione-f5e6ac9b")}</h3>
         <div className="surface-card p-5">
           <p
-            className="type-body"
-            style={{
-              fontSize: "var(--font-size-lg)",
-              color: "var(--muted-foreground)",
-              marginBottom: "16px",
-            }}
+            className="type-body dsx-s-bc17c18d98"
           >
-            Stessa geometria (fetta madre + taglio sottratto), scalata dal
-            centro ottico per occupare piu o meno il viewBox 32x32. Ogni step
-            aumenta presenza senza chiudere il vuoto centrale.
-          </p>
+            {showcaseMessage("components.design-system.foundations-logo.stessa-geometria-fetta-madre-taglio-sottra-344a7b6e")}</p>
           <div className="flex flex-wrap gap-6 items-end justify-center">
             {VARIANTS_LIST.map((v) => {
               const vd = VARIANT_DATA[v];
               const isActive = v === activeVariant;
               return (
-                <motion.div
+                <motion.button
                   key={v}
-                  className="flex flex-col items-center gap-2 active:scale-95 transition-transform"
+                  type="button"
+                  aria-pressed={isActive}
+                  className="flex flex-col items-center gap-2 active:scale-95 transition-transform dsx-s-0177181e49"
                   onClick={() => setActiveVariant(v)}
-                  style={{ cursor: "pointer" }}
                 >
-                  <div
-                    className="flex items-center justify-center rounded-2xl"
-                    style={{
-                      width: 100,
-                      height: 100,
-                      background: isActive
-                        ? "color-mix(in srgb, var(--primary) 8%, transparent)"
-                        : "var(--surface-container)",
-                      border: isActive
-                        ? "2px solid var(--primary)"
-                        : "1px solid var(--outline-variant)",
-                      transition: "border 0.2s, background 0.2s",
-                    }}
+                  <span
+                    className="flex items-center justify-center rounded-2xl dsx-s-3aa7c7a1a3"
+                    style={{ "--dsx-background": toShowcaseCssValue(isActive
+                                                                        ? "color-mix(in srgb, var(--primary) 8%, transparent)"
+                                                                        : "var(--surface-container)", false), "--dsx-border": toShowcaseCssValue(isActive
+                                                                        ? "2px solid var(--primary)"
+                                                                        : "1px solid var(--outline-variant)", false) } as any}
                   >
                     <VulcanMark
                       size={56}
@@ -969,73 +815,43 @@ function LogoConstructionSection() {
                       gradient
                       decorative
                     />
-                  </div>
+                  </span>
                   <span
-                    style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: "var(--font-size-base)",
-                      fontWeight: isActive ? "var(--weight-bold)" : "var(--weight-medium)" as any,
-                      color: isActive
-                        ? "var(--primary)"
-                        : "var(--muted-foreground)",
-                      textTransform: "uppercase",
-                      letterSpacing: "var(--tracking-caps)",
-                    }}
+                    style={{ "--dsx-font-weight": toShowcaseCssValue(isActive ? "var(--weight-bold)" : "var(--weight-medium)" as any, true), "--dsx-color": toShowcaseCssValue(isActive
+                                                                        ? "var(--primary)"
+                                                                        : "var(--muted-foreground)", false) } as any} className="dsx-s-2728156fbf"
                   >
                     {vd.label}
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: "var(--font-size-sm)",
-                      color: "var(--muted-foreground)",
-                      fontFeatureSettings: "'tnum'",
-                      opacity: 0.7,
-                    }}
+                  <span className="dsx-s-a5ae1bebc9 ds-showcase__secondary-ink"
                   >
                     {vd.fill}
                   </span>
-                </motion.div>
+                </motion.button>
               );
             })}
           </div>
 
           {/* Ratio comparison table */}
           <div
-            className="mt-6 overflow-hidden rounded-xl"
-            style={{ border: "1px solid var(--outline-variant)" }}
+            className="mt-6 overflow-hidden rounded-xl dsx-s-dd7e961eb3"
           >
             <div
-              className="grid gap-px"
-              style={{
-                gridTemplateColumns: "1fr repeat(5, 1fr)",
-                background: "var(--outline-variant)",
-              }}
+              className="grid gap-px dsx-s-420b0d6873"
             >
               {/* Header row */}
               {["", ...VARIANTS_LIST.map((v) => VARIANT_DATA[v].label)].map(
                 (h, i) => (
                   <div
                     key={`h-${i}`}
-                    className="px-3 py-2"
-                    style={{
-                      background:
-                        i === 0
-                          ? "var(--surface-container)"
-                          : VARIANTS_LIST[i - 1] === activeVariant
-                          ? "color-mix(in srgb, var(--primary) 10%, var(--surface-container))"
-                          : "var(--surface-container)",
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: "var(--font-size-base)",
-                      fontWeight: "var(--weight-bold)" as any,
-                      color:
-                        i > 0 && VARIANTS_LIST[i - 1] === activeVariant
-                          ? "var(--primary)"
-                          : "var(--text-default)",
-                      letterSpacing: "var(--tracking-label)",
-                      textTransform: "uppercase",
-                      textAlign: i === 0 ? "left" : "center",
-                    }}
+                    className="px-3 py-2 dsx-s-4fddbf12cc"
+                    style={{ "--dsx-background": toShowcaseCssValue(i === 0
+                                                                          ? "var(--surface-container)"
+                                                                          : VARIANTS_LIST[i - 1] === activeVariant
+                                                                          ? "color-mix(in srgb, var(--primary) 10%, var(--surface-container))"
+                                                                          : "var(--surface-container)", false), "--dsx-color": toShowcaseCssValue(i > 0 && VARIANTS_LIST[i - 1] === activeVariant
+                                                                          ? "var(--primary)"
+                                                                          : "var(--text-default)", false), "--dsx-text-align": toShowcaseCssValue(i === 0 ? "left" : "center", false) } as any}
                   >
                     {h}
                   </div>
@@ -1044,41 +860,34 @@ function LogoConstructionSection() {
               {/* Data rows */}
               {[
                 {
-                  label: "Thin",
+                  label: showcaseMessage("components.design-system.foundations-logo.thin-027f0b07"),
                   key: "thinW" as const,
-                  unit: "u",
+                  unit: showcaseMessage("components.design-system.foundations-logo.u-51e69892"),
                 },
                 {
-                  label: "Thick",
+                  label: showcaseMessage("components.design-system.foundations-logo.thick-4318f26f"),
                   key: "thickW" as const,
-                  unit: "u",
+                  unit: showcaseMessage("components.design-system.foundations-logo.u-51e69892"),
                 },
                 {
-                  label: "Ratio",
+                  label: showcaseMessage("components.design-system.foundations-logo.ratio-794f65e9"),
                   key: "ratio" as const,
                   unit: "",
                 },
                 {
-                  label: "Gap",
+                  label: showcaseMessage("components.design-system.foundations-logo.gap-b2464742"),
                   key: "vGap" as const,
-                  unit: "u",
+                  unit: showcaseMessage("components.design-system.foundations-logo.u-51e69892"),
                 },
                 {
-                  label: "Fill",
+                  label: showcaseMessage("components.design-system.foundations-logo.fill-7adb6736"),
                   key: "fill" as const,
                   unit: "",
                 },
               ].map((row) => (
-                <div key={row.label} style={{ display: "contents" }}>
+                <div key={row.label} className="dsx-s-043808a943">
                   <div
-                    className="px-3 py-2"
-                    style={{
-                      background: "var(--surface-container-low)",
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: "var(--font-size-md)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      color: "var(--text-default)",
-                    }}
+                    className="px-3 py-2 dsx-s-72f52ed86c"
                   >
                     {row.label}
                   </div>
@@ -1088,22 +897,12 @@ function LogoConstructionSection() {
                     return (
                       <div
                         key={`${row.label}-${v}`}
-                        className="px-3 py-2"
-                        style={{
-                          background:
-                            v === activeVariant
-                              ? "color-mix(in srgb, var(--primary) 6%, var(--surface-container-low))"
-                              : "var(--surface-container-low)",
-                          fontFamily: "'DM Mono', monospace",
-                          fontSize: "var(--font-size-base)",
-                          color:
-                            v === activeVariant
-                              ? "var(--primary)"
-                              : "var(--muted-foreground)",
-                          fontWeight: v === activeVariant ? "var(--weight-bold)" : "var(--weight-regular)" as any,
-                          fontFeatureSettings: "'tnum'",
-                          textAlign: "center",
-                        }}
+                        className="px-3 py-2 dsx-s-75cfded046"
+                        style={{ "--dsx-background": toShowcaseCssValue(v === activeVariant
+                                                                                  ? "color-mix(in srgb, var(--primary) 6%, var(--surface-container-low))"
+                                                                                  : "var(--surface-container-low)", false), "--dsx-color": toShowcaseCssValue(v === activeVariant
+                                                                                  ? "var(--primary)"
+                                                                                  : "var(--muted-foreground)", false), "--dsx-font-weight": toShowcaseCssValue(v === activeVariant ? "var(--weight-bold)" : "var(--weight-regular)" as any, true) } as any}
                       >
                         {typeof val === "number"
                           ? `${val}${row.unit}`
@@ -1120,47 +919,47 @@ function LogoConstructionSection() {
 
       {/* ── 4. VARIANTI CROMATICHE ── */}
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Varianti cromatiche</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-logo.varianti-cromatiche-afc5b54c")}</h3>
         <div className="surface-card p-5">
           <div className="flex flex-wrap gap-4 justify-center">
             {[
               {
-                label: "Flat primary",
+                label: showcaseMessage("components.design-system.foundations-logo.flat-primary-166ca0fb"),
                 bg: "var(--surface-container-low)",
                 cls: "text-[var(--primary)]",
                 gradient: false,
                 glow: false,
               },
               {
-                label: "Gradiente ember",
+                label: showcaseMessage("components.design-system.foundations-logo.gradiente-ember-a1eda8a7"),
                 bg: "var(--surface-container-low)",
                 cls: "",
                 gradient: true,
                 glow: false,
               },
               {
-                label: "Glow",
+                label: showcaseMessage("components.design-system.foundations-logo.glow-d5545dea"),
                 bg: "var(--surface-container-low)",
                 cls: "text-[var(--primary)]",
                 gradient: false,
                 glow: true,
               },
               {
-                label: "Su ember",
+                label: showcaseMessage("components.design-system.foundations-logo.su-ember-d75e74f8"),
                 bg: "var(--grad-ember)",
                 cls: "text-white",
                 gradient: false,
                 glow: false,
               },
               {
-                label: "Reversed",
+                label: showcaseMessage("components.design-system.foundations-logo.reversed-307404eb"),
                 bg: "var(--primary)",
                 cls: "text-[var(--primary-foreground)]",
                 gradient: false,
                 glow: false,
               },
               {
-                label: "Su scuro",
+                label: showcaseMessage("components.design-system.foundations-logo.su-scuro-7640ff84"),
                 bg: "var(--inverse-surface)",
                 cls: "text-[var(--primary)]",
                 gradient: false,
@@ -1169,13 +968,8 @@ function LogoConstructionSection() {
             ].map((ctx) => (
               <div key={ctx.label} className="flex flex-col items-center gap-2">
                 <div
-                  className="flex items-center justify-center rounded-xl"
-                  style={{
-                    width: 88,
-                    height: 88,
-                    background: ctx.bg,
-                    border: "1px solid var(--outline-variant)",
-                  }}
+                  className="flex items-center justify-center rounded-xl dsx-s-0ebef58db3"
+                  style={{ "--dsx-background": toShowcaseCssValue(ctx.bg, false) } as any}
                 >
                   <VulcanMark
                     size={40}
@@ -1186,14 +980,7 @@ function LogoConstructionSection() {
                     decorative
                   />
                 </div>
-                <span
-                  style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: "var(--font-size-base)",
-                    fontWeight: "var(--weight-semibold)" as any,
-                    color: "var(--muted-foreground)",
-                    textAlign: "center",
-                  }}
+                <span className="dsx-s-c053d93dcb"
                 >
                   {ctx.label}
                 </span>
@@ -1205,31 +992,18 @@ function LogoConstructionSection() {
 
       {/* ── 5. CLEAR SPACE & DIMENSIONI MINIME ── */}
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Clear space & dimensioni minime</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-logo.clear-space-dimensioni-minime-c3eee7cf")}</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {/* Clear space */}
           <div className="surface-card p-5">
             <span
-              className="type-label"
-              style={{
-                color: "var(--text-default)",
-                fontSize: "var(--font-size-base)",
-              }}
+              className="type-label dsx-s-e2184fadc0"
             >
-              Area di rispetto
-            </span>
+              {showcaseMessage("components.design-system.foundations-logo.area-di-rispetto-9e250d9b")}</span>
             <p
-              className="type-body"
-              style={{
-                fontSize: "var(--font-size-md)",
-                color: "var(--muted-foreground)",
-                marginTop: "4px",
-                marginBottom: "16px",
-              }}
+              className="type-body dsx-s-6f569bce97"
             >
-              Minimo 1x la larghezza dell'asta sottile su ogni lato. Garantisce
-              leggibilita e respiro anche in contesti affollati.
-            </p>
+              {showcaseMessage("components.design-system.foundations-logo.minimo-1x-la-larghezza-dell-asta-sottile-s-15157f91")}</p>
             <div className="flex justify-center">
               <ClearSpaceDiagram variant={activeVariant} />
             </div>
@@ -1238,26 +1012,13 @@ function LogoConstructionSection() {
           {/* Minimum sizes */}
           <div className="surface-card p-5">
             <span
-              className="type-label"
-              style={{
-                color: "var(--text-default)",
-                fontSize: "var(--font-size-base)",
-              }}
+              className="type-label dsx-s-e2184fadc0"
             >
-              Dimensioni minime
-            </span>
+              {showcaseMessage("components.design-system.foundations-logo.dimensioni-minime-596f56da")}</span>
             <p
-              className="type-body"
-              style={{
-                fontSize: "var(--font-size-md)",
-                color: "var(--muted-foreground)",
-                marginTop: "4px",
-                marginBottom: "16px",
-              }}
+              className="type-body dsx-s-6f569bce97"
             >
-              Sotto i 16px il taglio centrale e il terminale basso perdono
-              definizione. Sotto i 12px usare solo la variante Monumentale.
-            </p>
+              {showcaseMessage("components.design-system.foundations-logo.sotto-i-16px-il-taglio-centrale-e-il-termi-97aa215f")}</p>
             <div className="flex flex-wrap items-end gap-5 justify-center">
               {[
                 { size: 12, note: "min assoluto", variant: "monumentale" as VulcanVariant },
@@ -1272,13 +1033,8 @@ function LogoConstructionSection() {
                   className="flex flex-col items-center gap-1.5"
                 >
                   <div
-                    className="flex items-center justify-center rounded-lg"
-                    style={{
-                      width: Math.max(item.size + 16, 36),
-                      height: Math.max(item.size + 16, 36),
-                      background: "var(--surface-container)",
-                      border: "1px solid var(--outline-variant)",
-                    }}
+                    className="flex items-center justify-center rounded-lg dsx-s-6418ac0c9d"
+                    style={{ "--dsx-width": toShowcaseCssValue(Math.max(item.size + 16, 36), false), "--dsx-height": toShowcaseCssValue(Math.max(item.size + 16, 36), false) } as any}
                   >
                     <VulcanMark
                       size={item.size}
@@ -1287,23 +1043,11 @@ function LogoConstructionSection() {
                       decorative
                     />
                   </div>
-                  <span
-                    style={{
-                      fontFamily: "'DM Mono', monospace",
-                      fontSize: "var(--font-size-base)",
-                      fontWeight: "var(--weight-semibold)" as any,
-                      color: "var(--primary)",
-                      fontFeatureSettings: "'tnum'",
-                    }}
+                  <span className="dsx-s-531c99222a"
                   >
                     {item.size}px
                   </span>
-                  <span
-                    style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: "var(--font-size-sm)",
-                      color: "var(--muted-foreground)",
-                    }}
+                  <span className="dsx-s-ed4f77319d"
                   >
                     {item.note}
                   </span>
@@ -1316,10 +1060,10 @@ function LogoConstructionSection() {
 
       {/* ── 6. DO / DON'T ── */}
       <div>
-        <h3 className="type-subheading" style={{ color: "var(--text-default)", marginBottom: "var(--space-3)" }}>Regole d'uso</h3>
+        <h3 className="type-subheading dsx-s-1c0bccd446">{showcaseMessage("components.design-system.foundations-logo.regole-d-uso-ae9fe1fa")}</h3>
         <div className="surface-card p-5">
           <div className="flex flex-wrap gap-4 justify-center">
-            <UsageSpecimen ok label="Gradiente ember su chiaro">
+            <UsageSpecimen ok label={showcaseMessage("components.design-system.foundations-logo.gradiente-ember-su-chiaro-894f3e24")}>
               <VulcanMark
                 size={48}
                 variant="naturale"
@@ -1327,7 +1071,7 @@ function LogoConstructionSection() {
                 decorative
               />
             </UsageSpecimen>
-            <UsageSpecimen ok label="Flat primary, area rispetto">
+            <UsageSpecimen ok label={showcaseMessage("components.design-system.foundations-logo.flat-primary-area-rispetto-9e4c1703")}>
               <VulcanMark
                 size={40}
                 variant="naturale"
@@ -1335,56 +1079,47 @@ function LogoConstructionSection() {
                 decorative
               />
             </UsageSpecimen>
-            <UsageSpecimen ok label="Bianco su ember pieno">
+            <UsageSpecimen ok label={showcaseMessage("components.design-system.foundations-logo.bianco-su-ember-pieno-66490c57")}>
               <div
-                className="absolute inset-0"
-                style={{ background: "var(--grad-ember)" }}
+                className="absolute inset-0 dsx-s-ee7b477eef"
               />
               <VulcanMark
                 size={48}
                 variant="naturale"
-                className="text-white"
-                style={{ position: "relative" }}
+                className="text-white dsx-s-2a9495ecbb"
                 decorative
               />
             </UsageSpecimen>
-            <UsageSpecimen ok={false} label="Mai ruotare il mark">
+            <UsageSpecimen ok={false} label={showcaseMessage("components.design-system.foundations-logo.mai-ruotare-il-mark-16c34058")}>
               <VulcanMark
                 size={48}
                 variant="naturale"
-                className="text-[var(--primary)]"
-                style={{ transform: "rotate(15deg)" }}
+                className="text-[var(--primary)] dsx-s-1a2798daf9"
                 decorative
               />
             </UsageSpecimen>
-            <UsageSpecimen ok={false} label="Mai deformare (stretch)">
+            <UsageSpecimen ok={false} label={showcaseMessage("components.design-system.foundations-logo.mai-deformare-stretch-4ced33e4")}>
               <VulcanMark
                 size={48}
                 variant="naturale"
-                className="text-[var(--primary)]"
-                style={{ transform: "scaleX(1.5)" }}
+                className="text-[var(--primary)] dsx-s-777ccc0401"
                 decorative
               />
             </UsageSpecimen>
-            <UsageSpecimen ok={false} label="Mai su sfondo caotico">
+            <UsageSpecimen ok={false} label={showcaseMessage("components.design-system.foundations-logo.mai-su-sfondo-caotico-fffe6c80")}>
               <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(45deg, var(--text-error), var(--data-water), var(--cta), var(--data-warmth-light))",
-                }}
+                className="absolute inset-0 dsx-s-30f971f650"
               />
               <VulcanMark
                 size={48}
                 variant="naturale"
-                className="text-white"
-                style={{ position: "relative" }}
+                className="text-white dsx-s-2a9495ecbb"
                 decorative
               />
             </UsageSpecimen>
             <UsageSpecimen
               ok={false}
-              label="Mai outline / stroke"
+              label={showcaseMessage("components.design-system.foundations-logo.mai-outline-stroke-1dd9ebec")}
             >
               <svg width={48} height={48} viewBox="0 0 32 32">
                 <path
@@ -1395,7 +1130,7 @@ function LogoConstructionSection() {
                 />
               </svg>
             </UsageSpecimen>
-            <UsageSpecimen ok={false} label="Mai sotto 12px non-Monumentale">
+            <UsageSpecimen ok={false} label={showcaseMessage("components.design-system.foundations-logo.mai-sotto-12px-non-monumentale-d1e654af")}>
               <VulcanMark
                 size={10}
                 variant="intima"
@@ -1410,24 +1145,19 @@ function LogoConstructionSection() {
       {/* ── 7. SPECIFICHE RIEPILOGATIVE MARK ── */}
       <div className="surface-card p-5">
         <span
-          className="type-label"
-          style={{
-            color: "var(--text-default)",
-            fontSize: "var(--font-size-base)",
-          }}
+          className="type-label dsx-s-e2184fadc0"
         >
-          Specifiche riepilogative — VulcanMark
-        </span>
+          {showcaseMessage("components.design-system.foundations-logo.specifiche-riepilogative-vulcanmark-76e8fa68")}</span>
         <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { prop: "Formato", val: "SVG path, viewBox 32x32" },
-            { prop: "Scale", val: "5 varianti ottiche" },
-            { prop: "Fill default", val: "currentColor (tematico)" },
-            { prop: "Fill brand", val: "Gradiente ember (3 stop)" },
-            { prop: "Glow", val: "Radial pulse 4s, opacity 0.12-0.22" },
-            { prop: "Min size", val: "12px (solo Monumentale)" },
-            { prop: "Clear space", val: "1x taglio top per lato" },
-            { prop: "Costruzione", val: "Fetta madre + sottrazione" },
+            { prop: showcaseMessage("components.design-system.foundations-logo.formato-c25b742e"), val: showcaseMessage("components.design-system.foundations-logo.svg-path-viewbox-32x32-0f548f30") },
+            { prop: showcaseMessage("components.design-system.foundations-logo.scale-a29f0256"), val: showcaseMessage("components.design-system.foundations-logo.5-varianti-ottiche-cedbde1b") },
+            { prop: showcaseMessage("components.design-system.foundations-logo.fill-default-ec2f976e"), val: showcaseMessage("components.design-system.foundations-logo.currentcolor-tematico-cbc7d443") },
+            { prop: showcaseMessage("components.design-system.foundations-logo.fill-brand-f0ef9ceb"), val: showcaseMessage("components.design-system.foundations-logo.gradiente-ember-3-stop-aee03774") },
+            { prop: showcaseMessage("components.design-system.foundations-logo.glow-d5545dea"), val: showcaseMessage("components.design-system.foundations-logo.radial-pulse-4s-opacity-0-12-0-22-8a4ec11a") },
+            { prop: showcaseMessage("components.design-system.foundations-logo.min-size-51b2eb0f"), val: showcaseMessage("components.design-system.foundations-logo.12px-solo-monumentale-29798367") },
+            { prop: showcaseMessage("components.design-system.foundations-logo.clear-space-c5260b51"), val: showcaseMessage("components.design-system.foundations-logo.1x-taglio-top-per-lato-8cf92435") },
+            { prop: showcaseMessage("components.design-system.foundations-logo.costruzione-42cddb34"), val: showcaseMessage("components.design-system.foundations-logo.fetta-madre-sottrazione-d12ceea7") },
           ].map((a) => (
             <AnatomyRow key={a.prop} {...a} />
           ))}
@@ -1442,26 +1172,26 @@ function LogoConstructionSection() {
 
       {/* ── 10. DOUGHBLOB — Forma organica energy-reactive ── */}
       <LogoDoughBlobSubSection />
-      <SubSectionLabel label="Linee guida" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.foundations-logo.linee-guida-b43417d1")} />
       <LineeGuida
         fai={[
-          "Usare la variante Naturale come default per tutti i contesti standard",
-          "Gradiente ember per brand hero, flat primary per UI funzionale",
-          "Rispettare il clear space minimo (1× apertura del taglio)",
-          "Variante Monumentale sotto i 16px per mantenere leggibilità",
+          showcaseMessage("components.design-system.foundations-logo.usare-la-variante-naturale-come-default-pe-9065e11b"),
+          showcaseMessage("components.design-system.foundations-logo.gradiente-ember-per-brand-hero-flat-primar-9da4335c"),
+          showcaseMessage("components.design-system.foundations-logo.rispettare-il-clear-space-minimo-1-apertur-25a40199"),
+          showcaseMessage("components.design-system.foundations-logo.variante-monumentale-sotto-i-16px-per-mant-1a2c217d"),
         ]}
         nonFare={[
-          "Mai ruotare, deformare o applicare stroke al mark",
-          "Mai su sfondi caotici o multicolore senza overlay",
-          "Mai sotto 12px in nessuna variante",
-          "Mai usare il mark come pattern ripetuto o watermark",
+          showcaseMessage("components.design-system.foundations-logo.mai-ruotare-deformare-o-applicare-stroke-a-888d4796"),
+          showcaseMessage("components.design-system.foundations-logo.mai-su-sfondi-caotici-o-multicolore-senza--1e354202"),
+          showcaseMessage("components.design-system.foundations-logo.mai-sotto-12px-in-nessuna-variante-463b009b"),
+          showcaseMessage("components.design-system.foundations-logo.mai-usare-il-mark-come-pattern-ripetuto-o--eac1890a"),
         ]}
       />
-      <SubSectionLabel label="Accessibilità" />
+      <SubSectionLabel label={showcaseMessage("components.design-system.foundations-logo.accessibilita-e59811a6")} />
       <AccessibilitaInfo items={[
-        { label: "aria-hidden", desc: "Il mark è decorativo: usare aria-hidden='true' e decorative prop." },
-        { label: "Contrasto", desc: "Il mark deve avere contrasto minimo 3:1 con lo sfondo (WCAG AA non-testo)." },
-        { label: "Alt text", desc: "Se il mark è l'unico indicatore del brand, aggiungere aria-label='Vulcan Pizza Lab'." },
+        { label: showcaseMessage("components.design-system.foundations-logo.aria-hidden-90a75933"), desc: showcaseMessage("components.design-system.foundations-logo.il-mark-e-decorativo-usare-aria-hidden-tru-129bc479") },
+        { label: showcaseMessage("components.design-system.foundations-logo.contrasto-19fb9f0a"), desc: showcaseMessage("components.design-system.foundations-logo.il-mark-deve-avere-contrasto-minimo-3-1-co-302a66ba") },
+        { label: showcaseMessage("components.design-system.foundations-logo.alt-text-f978200b"), desc: showcaseMessage("components.design-system.foundations-logo.se-il-mark-e-l-unico-indicatore-del-brand--6c9bfd79") },
       ]} />
     </div>
   );
@@ -1473,7 +1203,7 @@ function LogoConstructionSection() {
 export const ENTRIES: SectionEntry[] = [
   {
     id: "logo",
-    label: "Logo & Brand Identity",
+    label: showcaseMessage("components.design-system.foundations-logo.logo-brand-identity-b4c1a77b"),
     group: "f",
     Component: LogoConstructionSection,
   },

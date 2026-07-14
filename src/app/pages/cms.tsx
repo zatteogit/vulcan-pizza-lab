@@ -614,10 +614,7 @@ function SidebarContent({
             {modCount > 0 && (
               <Badge
                 tone="tertiary"
-                style={{
-                  fontSize: "var(--font-size-xs)",
-                  padding: "1px 6px",
-                }}
+                size="xs"
               >
                 {modCount}
               </Badge>

@@ -8,6 +8,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Check, Minus } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
+import { motionSpring } from "./motion";
 
 export interface CheckboxProps {
   /** `true`, `false`, oppure `"indeterminate"`. */
@@ -42,7 +43,7 @@ export function Checkbox({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 600, damping: 20 }}
+            transition={motionSpring.checkmark}
           >
             <Check size={14} className="ds-checkbox__icon" />
           </motion.div>
@@ -53,7 +54,7 @@ export function Checkbox({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 600, damping: 20 }}
+            transition={motionSpring.checkmark}
           >
             <Minus size={14} className="ds-checkbox__icon" />
           </motion.div>

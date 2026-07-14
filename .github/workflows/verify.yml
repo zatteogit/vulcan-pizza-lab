@@ -15,6 +15,6 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      # tsc --noEmit + guard design-token (F5-6)
+      # Typecheck, test e guard architettura/DS/i18n/semantica/dead-code.
       - run: npm run verify
       - run: npm run build
