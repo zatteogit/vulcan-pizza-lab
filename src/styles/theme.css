@@ -5781,27 +5781,6 @@
     gap: var(--gap-xs);
   }
 
-  .topping-panel__nav {
-    position: absolute;
-    top: 50%;
-    z-index: 20;
-    transform: translateY(-50%);
-    background: color-mix(in srgb, var(--shadow-color) 40%, transparent);
-    color: var(--overlay-text);
-    border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 10%, transparent);
-    backdrop-filter: blur(var(--blur-sm));
-    -webkit-backdrop-filter: blur(var(--blur-sm));
-    transition: background-color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
-  }
-  .ds-iconbtn.topping-panel__nav:hover {
-    background: color-mix(in srgb, var(--shadow-color) 60%, transparent);
-    transform: translateY(-50%) scale(1.08);
-  }
-  .ds-iconbtn.topping-panel__nav:active {
-    transform: translateY(-50%) scale(0.92);
-  }
-  .topping-panel__nav--prev { left: var(--space-3); }
-  .topping-panel__nav--next { right: var(--space-3); }
 
   /* Strip selettore thumbnail */
 
@@ -13152,6 +13131,36 @@
   .ds-carousel__dot--active {
     width: var(--space-5);
     background: var(--primary);
+  }
+
+  .ds-carousel__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 20;
+    transform: translateY(-50%);
+    background: color-mix(in srgb, var(--shadow-color) 40%, transparent);
+    color: var(--overlay-text);
+    border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 10%, transparent);
+    backdrop-filter: blur(var(--blur-sm));
+    -webkit-backdrop-filter: blur(var(--blur-sm));
+    transition: background-color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
+  }
+
+  .ds-iconbtn.ds-carousel__nav:hover {
+    background: color-mix(in srgb, var(--shadow-color) 60%, transparent);
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  .ds-iconbtn.ds-carousel__nav:active {
+    transform: translateY(-50%) scale(0.92);
+  }
+
+  .ds-carousel__nav--prev {
+    left: var(--space-3);
+  }
+
+  .ds-carousel__nav--next {
+    right: var(--space-3);
   }
 
   /* ═══ DS COMPONENT: Fab ═══ */

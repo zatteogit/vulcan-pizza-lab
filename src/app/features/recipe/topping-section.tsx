@@ -5,6 +5,7 @@
 
 import { ChevronLeft, ChevronRight, Lightbulb } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { motionSpring } from "../../components/ds/motion";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
@@ -168,7 +169,7 @@ export function ToppingSection({
               initial={{ opacity: 0, x: 80 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -80 }}
-              transition={{ type: "spring", stiffness: 350, damping: 30 }}
+              transition={motionSpring.topping}
               className="topping-panel__carousel-frame"
             >
               <img
@@ -218,7 +219,7 @@ export function ToppingSection({
                 onClick={(e) => { e.stopPropagation(); prevTopping(); }}
                 size="md"
                 variant="bare"
-                className="topping-panel__nav topping-panel__nav--prev"
+                className="ds-carousel__nav ds-carousel__nav--prev"
                 aria-label={cms.cooking.toppingPrevAria}
               >
                 <ChevronLeft size={20} />
@@ -228,7 +229,7 @@ export function ToppingSection({
                 onClick={(e) => { e.stopPropagation(); nextTopping(); }}
                 size="md"
                 variant="bare"
-                className="topping-panel__nav topping-panel__nav--next"
+                className="ds-carousel__nav ds-carousel__nav--next"
                 aria-label={cms.cooking.toppingNextAria}
               >
                 <ChevronRight size={20} />
