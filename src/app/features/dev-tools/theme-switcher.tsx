@@ -65,6 +65,7 @@ export function useThemeControl() {
   const [switcherOn, setSwitcherState] = useState(
     () => readStr(SWITCHER_KEY, "false") === "true",
   );
+  const [globalTheme, setGlobalTheme] = useState<string | null>(null);
 
   useEffect(() => {
     const sync = () => {
@@ -80,6 +81,7 @@ export function useThemeControl() {
         .then((data) => {
           if (data && typeof data.theme === "string") {
             const remoteTheme = data.theme;
+            setGlobalTheme(remoteTheme);
             const localTheme = readStr(THEME_KEY, "");
             if (remoteTheme !== localTheme) {
               applyTheme(remoteTheme);
@@ -107,6 +109,7 @@ export function useThemeControl() {
     applyTheme(id);
     writeStr(THEME_KEY, id);
     if (isGlobal) {
+      setGlobalTheme(id);
       fetch(CONFIG_ENDPOINT, {
         method: "POST",
         headers: configHeaders(true),
@@ -119,12 +122,12 @@ export function useThemeControl() {
     writeStr(SWITCHER_KEY, String(on));
   }, []);
 
-  return { theme, setTheme, switcherOn, setSwitcherOn };
+  return { theme, globalTheme, setTheme, switcherOn, setSwitcherOn };
 }
 
 /* ═══ Profile-embedded controls ═══ */
 export function ThemeControls() {
-  const { theme, setTheme, switcherOn, setSwitcherOn } = useThemeControl();
+  const { theme, globalTheme, setTheme, switcherOn, setSwitcherOn } = useThemeControl();
 
   return (
     <div>
@@ -188,6 +191,17 @@ export function ThemeControls() {
                 >
                   {t.label}
                 </span>
+                {t.id === globalTheme && (
+                  <span
+                    className="ml-auto px-1.5 py-0.5 rounded text-[10px] uppercase tracking-wider font-semibold"
+                    style={{
+                      background: "color-mix(in srgb, var(--primary) 15%, transparent)",
+                      color: "var(--primary)",
+                    }}
+                  >
+                    Globale
+                  </span>
+                )}
               </span>
               <span
                 style={{
@@ -266,7 +280,7 @@ export function ThemeControls() {
 
 /* ═══ Floating quick-switcher (opt-in from Profilo) ═══ */
 export function ThemeSwitcher() {
-  const { theme, setTheme, switcherOn } = useThemeControl();
+  const { theme, globalTheme, setTheme, switcherOn } = useThemeControl();
   if (!switcherOn) return null;
 
   return (
@@ -293,7 +307,7 @@ export function ThemeSwitcher() {
             type="button"
             onClick={() => setTheme(t.id, false)}
             aria-pressed={active}
-            className="px-2.5 py-1 transition-colors active:scale-95"
+            className="px-2.5 py-1 transition-colors active:scale-95 flex items-center gap-1"
             style={{
               borderRadius: "var(--radius-full)",
               fontFamily: "var(--font-sans)",
@@ -308,7 +322,19 @@ export function ThemeSwitcher() {
               whiteSpace: "nowrap",
             }}
           >
-            {t.label}
+            <span>{t.label}</span>
+            {t.id === globalTheme && (
+              <span
+                style={{
+                  width: 5,
+                  height: 5,
+                  borderRadius: "var(--radius-full)",
+                  background: active ? "var(--primary-foreground)" : "var(--primary)",
+                  opacity: 0.8,
+                }}
+                title="Tema Globale"
+              />
+            )}
           </button>
         );
       })}
