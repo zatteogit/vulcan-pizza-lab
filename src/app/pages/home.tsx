@@ -460,6 +460,24 @@ export function HomePage() {
   useEffect(() => {
     if (showOnboarding && currentStep !== "settings") dismissOnboarding();
   }, [showOnboarding, currentStep, dismissOnboarding]);
+
+  /* Badge beta — controllabile da Dev Tools senza reload */
+  const [showBeta, setShowBeta] = useState(() => {
+    try {
+      return localStorage.getItem("vulcan_show_beta") !== "false";
+    } catch {
+      return true;
+    }
+  });
+  useEffect(() => {
+    const handler = () => {
+      try {
+        setShowBeta(localStorage.getItem("vulcan_show_beta") !== "false");
+      } catch { /* */ }
+    };
+    window.addEventListener("vulcan_beta_toggle", handler);
+    return () => window.removeEventListener("vulcan_beta_toggle", handler);
+  }, []);
   /* Fix collisione (redesign lug 2026): quando c'è una pizzata attiva il
      widget flottante occupa la fascia alta — pill Riprendi e onboarding
      si abbassano per non finirgli sotto. */
@@ -1268,7 +1286,12 @@ export function HomePage() {
                         />
                       </div>
                       {/* R8: wordmark — il nome del brand accanto al logo */}
-                      <span className="home-hero__wordmark">{uiMessage("pages.home.brandName")}</span>
+                      <span className="home-hero__wordmark">
+                        {uiMessage("pages.home.brandName")}
+                        {showBeta && (
+                          <span className="home-hero__beta-badge">{uiMessage("pages.home.betaBadge")}</span>
+                        )}
+                      </span>
                       <Heading level="page">
                         {cms.hero.title_line1}{" "}
                         <span className="page-title-accent">

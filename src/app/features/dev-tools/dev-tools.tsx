@@ -221,6 +221,14 @@ function ProjectTab() {
     }
   });
 
+  const [showBeta, setShowBeta] = useState(() => {
+    try {
+      return localStorage.getItem("vulcan_show_beta") !== "false";
+    } catch {
+      return true;
+    }
+  });
+
   /* ── Health check state ── */
   const [healthResults, setHealthResults] = useState<HealthResult[] | null>(null);
   const [healthRunning, setHealthRunning] = useState(false);
@@ -734,6 +742,37 @@ function ProjectTab() {
       {/* ═══ TEMI EDITORIALI ═══ */}
       <LabSection title="Temi Editoriali" icon={<Sparkles size={13} />} color="var(--primary)" defaultOpen>
         <ThemeControls />
+
+        {/* Badge Beta */}
+        <div className="flex items-center justify-between p-4 rounded-xl mt-2" style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}>
+          <div>
+            <div className="type-data" style={{ fontSize: "var(--font-size-base)", fontWeight: "var(--weight-semibold)" as any, color: "var(--text-default)" }}>
+              Badge Beta
+            </div>
+            <div className="type-data-sm" style={{ color: "var(--text-muted)", marginTop: 2 }}>
+              Mostra il badge "beta" accanto al logo in home.
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              const next = !showBeta;
+              setShowBeta(next);
+              try {
+                localStorage.setItem("vulcan_show_beta", String(next));
+                window.dispatchEvent(new Event("vulcan_beta_toggle"));
+              } catch {}
+            }}
+            className="px-4 py-2 rounded-xl type-data active:scale-95 transition-transform border"
+            style={{
+              background: showBeta ? "var(--primary)" : "transparent",
+              color: showBeta ? "var(--primary-foreground)" : "var(--text-default)",
+              borderColor: showBeta ? "var(--primary)" : "var(--container-border)",
+              fontWeight: "var(--weight-semibold)" as any,
+            }}
+          >
+            {showBeta ? "Visibile" : "Nascosto"}
+          </button>
+        </div>
       </LabSection>
 
       {/* ═══ IMPOSTAZIONI DEBUGGER ═══ */}

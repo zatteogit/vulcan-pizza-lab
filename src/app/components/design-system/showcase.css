@@ -1,0 +1,87 @@
+@import "./showcase.generated.css";
+
+@layer components {
+  .ds-showcase {
+    min-height: 100vh;
+    background: var(--container-page);
+    color: var(--text-default);
+  }
+
+  .ds-showcase__focus-preview {
+    outline: var(--border-width-thick) solid var(--primary);
+    outline-offset: var(--space-0-5);
+  }
+
+  .ds-showcase__clear-space-measure--top {
+    top: var(--space-1);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .ds-showcase__clear-space-measure--bottom {
+    bottom: var(--space-1);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .ds-showcase__clear-space-measure--left {
+    top: 50%;
+    left: var(--space-1);
+    transform: translateY(-50%);
+  }
+
+  .ds-showcase__clear-space-measure--right {
+    top: 50%;
+    right: var(--space-1);
+    transform: translateY(-50%);
+  }
+
+  .ds-showcase__mobile-active-icon {
+    color: var(--primary);
+    opacity: 0.4;
+  }
+
+  /* I fill di brand/data-viz restano cromatici; il copy usa sempre un ink
+     semantico AA. Le opacità non vengono applicate all'intero contenuto. */
+  .ds-showcase__secondary-ink {
+    color: var(--text-muted);
+    opacity: 1;
+  }
+
+  .ds-showcase__data-ink {
+    color: var(--data-label-ink);
+  }
+
+  .ds-showcase__bar-value {
+    color: var(--data-label-ink);
+    background: var(--surface-bright);
+    padding-inline: var(--space-1);
+    border-radius: var(--radius-xs);
+  }
+
+  .ds-showcase__on-primary {
+    color: var(--primary-foreground);
+    opacity: 1;
+  }
+
+  .ds-showcase__opaque-specimen {
+    opacity: 1;
+  }
+
+  .ds-showcase__compact-target {
+    inline-size: var(--interactive-target-min);
+    block-size: var(--interactive-target-min);
+    min-inline-size: var(--interactive-target-min);
+    min-block-size: var(--interactive-target-min);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-showcase,
+    .ds-showcase * {
+      scroll-behavior: auto !important;
+      animation-duration: var(--duration-reduced) !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: var(--duration-reduced) !important;
+    }
+  }
+}

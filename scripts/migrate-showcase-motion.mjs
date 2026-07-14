@@ -1,0 +1,137 @@
+#!/usr/bin/env node
+/** Move JSX transition objects into the authorised showcase motion owner. */
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { Project, SyntaxKind } from "ts-morph";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const ROOT = resolve(HERE, "..");
+const GENERATED = resolve(ROOT, "src/app/components/design-system/showcase-motion.generated.ts");
+const OWNER = resolve(ROOT, "src/app/components/design-system/showcase-motion");
+const TARGETS = [
+  "src/app/components/design-system/**/*.tsx",
+  "src/app/pages/design-system.tsx",
+];
+
+function importPath(sourceFile) {
+  const specifier = relative(dirname(sourceFile.getFilePath()), OWNER).replaceAll("\\", "/");
+  return specifier.startsWith(".") ? specifier : `./${specifier}`;
+}
+
+function referencedIdentifiers(node) {
+  const identifiers = node.getKind() === SyntaxKind.Identifier
+    ? [node, ...node.getDescendantsOfKind(SyntaxKind.Identifier)]
+    : node.getDescendantsOfKind(SyntaxKind.Identifier);
+  return identifiers.filter((identifier) => {
+    if (identifier.getText() === "Infinity") return false;
+    const parent = identifier.getParent();
+    if (parent?.getKind() === SyntaxKind.PropertyAssignment && parent.getNameNode() === identifier) return false;
+    if (parent?.getKind() === SyntaxKind.PropertyAccessExpression && parent.getNameNode() === identifier) return false;
+    return true;
+  });
+}
+
+function propertyName(property) {
+  if (property.getKind() === SyntaxKind.ShorthandPropertyAssignment) return property.getName();
+  const node = property.getNameNode();
+  return node.getLiteralValue?.() ?? node.getText();
+}
+
+function propertyValue(property) {
+  return property.getKind() === SyntaxKind.ShorthandPropertyAssignment
+    ? property.getNameNode()
+    : property.getInitializer();
+}
+
+const project = new Project({
+  tsConfigFilePath: resolve(ROOT, "tsconfig.json"),
+  skipAddingFilesFromTsConfig: true,
+});
+project.addSourceFilesAtPaths(TARGETS.map((glob) => resolve(ROOT, glob)));
+
+const definitions = new Map();
+const skipped = [];
+let migrated = 0;
+
+for (const sourceFile of project.getSourceFiles()) {
+  const attributes = sourceFile
+    .getDescendantsOfKind(SyntaxKind.JsxAttribute)
+    .filter((attribute) => attribute.getNameNode().getText() === "transition")
+    .sort((a, b) => b.getStart() - a.getStart());
+  let needsImport = false;
+
+  for (const attribute of attributes) {
+    const expression = attribute.getInitializer()?.asKind(SyntaxKind.JsxExpression)?.getExpression();
+    if (expression?.getKind() !== SyntaxKind.ObjectLiteralExpression) continue;
+    const properties = expression.getProperties();
+    if (properties.some((property) => property.getKind() === SyntaxKind.SpreadAssignment)) {
+      skipped.push(`${relative(ROOT, sourceFile.getFilePath())}:${attribute.getStartLineNumber()} spread transition`);
+      continue;
+    }
+    if (properties.some((property) => ![
+      SyntaxKind.PropertyAssignment,
+      SyntaxKind.ShorthandPropertyAssignment,
+    ].includes(property.getKind()))) {
+      skipped.push(`${relative(ROOT, sourceFile.getFilePath())}:${attribute.getStartLineNumber()} unsupported transition`);
+      continue;
+    }
+
+    const signature = expression.getText().replace(/\s+/g, " ");
+    const hash = createHash("sha256").update(signature).digest("hex").slice(0, 10);
+    const dynamic = [];
+    const fields = properties.map((property) => {
+      const name = propertyName(property);
+      const value = propertyValue(property);
+      if (referencedIdentifiers(value).length === 0) return `${name}: ${value.getText()}`;
+      const parameter = `value${dynamic.length}`;
+      dynamic.push(value.getText());
+      return `${name}: ${parameter}`;
+    });
+    const name = `${dynamic.length > 0 ? "dynamic" : "preset"}_${hash}`;
+    const definition = dynamic.length > 0
+      ? `${name}: (${dynamic.map((_, index) => `value${index}: number`).join(", ")}) => ({ ${fields.join(", ")} } as const)`
+      : `${name}: { ${fields.join(", ")} } as const`;
+    definitions.set(name, definition);
+    attribute.setInitializer(`{showcaseTransition.${name}${dynamic.length > 0 ? `(${dynamic.join(", ")})` : ""}}`);
+    needsImport = true;
+    migrated += 1;
+  }
+
+  const moduleSpecifier = importPath(sourceFile);
+  if (needsImport) {
+    const declaration = sourceFile.getImportDeclaration(moduleSpecifier);
+    if (!declaration) {
+      sourceFile.addImportDeclaration({ moduleSpecifier, namedImports: ["showcaseTransition"] });
+    } else if (!declaration.getNamedImports().some((item) => item.getName() === "showcaseTransition")) {
+      declaration.addNamedImport("showcaseTransition");
+    }
+  }
+}
+
+await project.save();
+
+if (!existsSync(GENERATED)) {
+  const source = [
+    "/* AUTO-GENERATED by scripts/migrate-showcase-motion.mjs. Do not edit. */",
+    "/* Literal motion physics are owned here, never in showcase render code. */",
+    "export const showcaseTransition = {",
+    ...[...definitions].sort(([a], [b]) => a.localeCompare(b)).map(([, definition]) => `  ${definition},`),
+    "} as const;",
+    "",
+  ].join("\n");
+  writeFileSync(GENERATED, source);
+} else if (definitions.size > 0) {
+  const existing = readFileSync(GENERATED, "utf8");
+  const novel = [...definitions]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .filter(([name]) => !existing.includes(`  ${name}:`))
+    .map(([, definition]) => `  ${definition},`);
+  if (novel.length > 0) {
+    writeFileSync(GENERATED, existing.replace(/\n} as const;\s*$/, `\n${novel.join("\n")}\n} as const;\n`));
+  }
+}
+
+console.log(JSON.stringify({ migrated, presets: definitions.size, skipped }, null, 2));
+if (skipped.length > 0) process.exitCode = 2;

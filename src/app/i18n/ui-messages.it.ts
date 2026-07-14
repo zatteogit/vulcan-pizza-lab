@@ -315,6 +315,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "pages.explore.recipeBy": "Secondo {0}",
   "pages.home.applyCorrections": "Applica le correzioni",
   "pages.home.brandName": "Vulcan",
+  "pages.home.betaBadge": "beta",
   "pages.home.motto": "Make pizza, not war",
   "pages.learn.contextByLevel": "Il percorso su misura per te · Livello {0}",
   "pages.learn.contextByStyle": "{0} · {1}",
