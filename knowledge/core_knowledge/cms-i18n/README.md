@@ -1,12 +1,13 @@
 # CMS e localizzazione
-> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 17
+> Aggiornamento: 2026-07-13 | Stato: ✅ | File documentati: 24
 
 ## Sommario
 
-Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazione, media, stringhe di dominio (glossario, troubleshooting, pre-fermenti, dietary), copy cucina/feedback e preferenze di formattazione in un unico schema tipizzato `CmsContent`. Il pattern è **override su default** (come `StylesOverrideContext`): `cms = deepMerge(CMS_DEFAULTS, overrides)` esposto da `useCms()`.
+Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazione, media, stringhe di dominio (glossario, troubleshooting, pre-fermenti, dietary), copy cucina/feedback e preferenze di formattazione in un unico schema tipizzato `CmsContent`. Il pattern è **override su default** (come `StylesOverrideContext`): `cms = deepMerge(CMS_DEFAULTS, overrides)` esposto da `useCms()`. La localizzazione è supportata da dizionari tipizzati all'interno di `src/app/i18n/`.
 
 - **Default italiano**: `CMS_DEFAULTS` in `cms-context.tsx` (3266 righe, schema + default + registry campi CMS).
 - **Altre lingue**: bundle completi in `locales/{en,es,de,fr,pt,ja}.ts` + dati dominio in `locales/domain-{lang}.ts`.
+- **Nuovo modulo i18n tipizzato**: i dizionari in `src/app/i18n/` forniscono le stringhe di interfaccia (`ui-messages.it.ts`) e dello showcase (`showcase-messages.it.ts`) con logiche di interpolazione sicure (`interpolate.ts`).
 - **Persistenza**: `localStorage` chiave `vulcan_cms` (oggetto JSON parziale, solo override).
 - **UI admin**: `/cms` (`cms.tsx`, ~1320 righe) guidata da `CMS_SECTIONS` (~18 sezioni, centinaia di campi dot-path).
 - **Formattazione**: `i18n.ts` con `t()`, `createFormatter()`, conversioni metric/imperial, copy temperatura/lunghezza e storage `vulcan_unit_system`.
@@ -15,6 +16,11 @@ Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazi
 
 | File | Righe (circa) | Ruolo |
 |------|----------------|--------|
+| `src/app/i18n/domain-contracts.ts` | 40 | Contratti e schemi tipizzati per i testi localizzati del dominio di Vulcan |
+| `src/app/i18n/interpolate.ts` | 15 | Funzione pura per l'interpolazione delle variabili all'interno dei testi tradotti |
+| `src/app/i18n/ui-messages.ts` | 50 | Interfacce e schemi per le stringhe di interfaccia utente |
+| `src/app/i18n/ui-messages.it.ts` | 500 | Dizionario canonico italiano per i testi ed i messaggi dell'applicazione |
+| `src/app/i18n/showcase-messages.it.ts` | 6000 | Dizionario esteso contenente tutte le stringhe necessarie allo showcase del design system |
 | `src/app/features/cms/cms-context.tsx` | 3266 | Schema `CmsContent`, `CMS_DEFAULTS` con `cooking`, `misc`, `feedback`, `longDesc`/`tipNerd`, `CmsProvider`, merge, persistenza, rimozione pulita degli override ritornati a default (esportazioni secondarie inutilizzate rimosse) |
 | `src/app/features/cms/i18n.ts` | 286 | `t()`, `createFormatter()`, `formatTemperatureCopy`, `formatLengthCopy`, conversioni metric/imperial, `vulcan_unit_system` |
 | `src/app/features/cms/domain-i18n-defaults.ts` | 598 | Default IT: `PRE_FERMENT_DEFAULTS`, `DIETARY_I18N_DEFAULTS`, `TROUBLESHOOTING_I18N_DEFAULTS`, `GLOSSARY_TERMS_DEFAULTS` |
@@ -33,7 +39,7 @@ Il CMS di Vulcan centralizza **tutti i testi user-facing**, pesi di raccomandazi
 | `src/app/features/cms/locales/domain-pt.ts` | 480 | Override dominio PT (Vorteig, Dietary, Troubleshooting, Glossary) |
 | `src/app/pages/cms.tsx` | 1320 | Editor: sezioni, import/export JSON, switch lingua, dark mode |
 
-**Bundle lingua** (oltre EN): `es.ts`, `de.ts`, `fr.ts`, `pt.ts`, `ja.ts` + rispettivi `domain-*.ts`.
+**Bundle lingua** (oltre EN): `es.ts`, `de.ts`, `fr.ts`, `pt.ts`, `ja.ts` + rispettivi `domain-*.ts` e moduli `src/app/i18n/`.
 
 **Consumatori principali** (~20 moduli): `home.tsx`, `recipe-output.tsx`, `recipe-match-card.tsx`, `recipe.tsx` (`RecipeSetupPanel`/`MatchSummary`), `glossary.tsx`, `troubleshooting-panel.tsx`, `user-needs.tsx`, `search-overlay.tsx`, `app-shell.tsx`, `dietary-data.ts`, `troubleshooting-data.ts`, `glossary-data.ts`, `pre-ferment-guide.tsx`, ecc.
 

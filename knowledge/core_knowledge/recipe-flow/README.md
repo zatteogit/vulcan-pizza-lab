@@ -1,5 +1,5 @@
 # Flusso ricetta e UI
-> Aggiornamento: 2026-07-03 | Stato: ✅ | File documentati: 23
+> Aggiornamento: 2026-07-13 | Stato: ✅ | File documentati: 23
 
 ## Sommario
 
@@ -250,3 +250,12 @@ La funzionalità **PizzaNerd** sostituisce il vecchio concetto di View Mode a tr
 - **Modalità Easy (StatStrip Dense)**: In Easy, `RecipeStatStrip` nasconde i box tonali e le icone e mostra una singola riga di mini-chip testuali molto sobrie. I trend dei parametri (es. idratazione o fermentazione aumentate dall'ottimizzatore rispetto al canone dello stile) sono indicati da freccette minimali `TrendingUp` o `TrendingDown` inline.
 - **Minicard Setup Panel**: In modalità Easy, `RecipeSetupPanel` si contrae in una minicard orizzontale discreta con l'icona delle stelline, che racchiude il riepilogo testuale dei parametri "sommersi" (es. `"Sale 2.6% · W 200 · 22 °C"` calcolato tramite `buildAdvancedSummary`) e un pulsante secondario "Regola a mano". L'azione prominente principale rimane il solo pulsante "Ottimizza per me" (gerarchia pulita).
 - **Onboarding non invasivo**: Introdotta la `WelcomeOnboardingCard` all'inizio del passo 1, che illustra chiaramente il valore dell'app (ottimizzazione forno + score onesto) senza finestre modali o overlay bloccanti. Scompare non appena l'utente risponde alla prima domanda o preme il pulsante di chiusura.
+
+## Componenti Visuali e Layout Vulcan V7 (Editorial FireGlow)
+
+L'interfaccia nel tema `editorial-fire` adotta una composizione editoriale raffinata e rimuove il layout a box multipli:
+1. **EditorialHeroMedia**: Custodisce l'immagine di copertina hero prevenendo bleeding irregolari o forzature di forma. Montato su `RecipeView`.
+2. **FavoriteButton (Heart Action)**: Azione per aggiungere/rimuovere lo stile dai preferiti integrata all'interno dell'hero chrome di `RecipeView`, sincronizzato con lo stato di salvataggio.
+3. **RecipeShoulder (Desktop)**: Layout a due colonne (main 68% / shoulder 32%). La sidebar destra diventa sticky e ospita i parametri, separati dal corpo principale tramite un singolo bordo logico verticale.
+4. **StageDock (Mobile)**: Dock di navigazione inferiore a tre stadi floating, con effetto glassmorphic blur ed isolamento dalla safe-area di sistema.
+5. **Approfondisci inline**: Link contestuale didattico montato subito dopo la descrizione sommaria del piatto invece di un pulsante isolato.

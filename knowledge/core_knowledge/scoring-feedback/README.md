@@ -1,9 +1,9 @@
 # Score e feedback utente
-> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 5
+> Aggiornamento: 2026-07-13 | Stato: ✅ | File documentati: 10
 
 ## Sommario
 
-Il motore (`pizza-engine.ts`) calcola `RecipeScores` (5 dimensioni + composite) e `ScientificLayer` dentro `GeneratedRecipe`. Questo capitolo copre **solo la UI** e la **persistenza feedback** post-cottura: card match, anello compatto, form utente e Engine Lab per calibrazione.
+Il motore (`pizza-engine.ts`) calcola `RecipeScores` (5 dimensioni + composite) e `ScientificLayer` dentro `GeneratedRecipe`. Questo capitolo copre la UI, la **persistenza feedback** post-cottura, la modellazione a Use Cases slegati dal browser e gli adapters di memorizzazione: card match, anello compatto, form utente, calibrazione e Engine Lab.
 
 Integrazione: `recipe.tsx` e `home.tsx` montano `RecipeMatchCard`; `recipe.tsx` usa anche `MatchSummary` interno nell'header del pannello parametri; `recipe-output.tsx` monta `RecipeFeedbackForm` in fondo; `recommended-styles.tsx` usa `ScoreRing` sulle card stile.
 
@@ -11,11 +11,16 @@ Integrazione: `recipe.tsx` e `home.tsx` montano `RecipeMatchCard`; `recipe.tsx` 
 
 | File | Ruolo |
 |------|--------|
-| `src/app/features/recipe/recipe-match-card.tsx` | 600 righe; card compatibilità/fattibilità con composite score, diagnosi del soffitto, pulsante ottimizza, e indicatori di tono estesi |
-| `src/app/features/recipe/score-ring.tsx` | 71 righe; anello SVG compatto (score 0–100) per liste stili |
-| `src/app/features/recipe/recipe-feedback.tsx` | 542 righe; form progressivo post-ricetta: tentativo, riuscita, dettagli opzionali, issues, note → `saveFeedback` |
-| `src/app/features/recipe/feedback-store.ts` | 619 righe; tipi, `localStorage` (`vulcan_recipe_feedback`), analisi calibrazione, export/import CSV/JSON, `ADVERSARIAL_FINDINGS` |
-| `src/app/features/recipe/feedback-analysis.tsx` | 544 righe; pannello DevTools (Engine Lab → Feedback): panoramica, issues, success per stile, audit adversarial |
+| `src/app/domain/recipe-feedback.ts` | Interfacce dati del feedback, `RecipeSnapshot`, `PredictedScores` e i 14 ticket definiti di issue (`RecipeIssueId`) |
+| `src/app/use-cases/analyze-recipe-feedback.ts` | Logica di business per calibrazione dei coefficienti, bias medi, frequenza degli issue e correzioni di lievitazione/sale/idratazione |
+| `src/app/adapters/browser/recipe-feedback-storage.ts` | Adattatore browser locale (`vulcan_recipe_feedback`) per il caricamento/salvataggio dei feedback |
+| `src/app/features/recipe/recipe-match-card.tsx` | Card compatibilità/fattibilità con composite score, diagnosi del soffitto, pulsante ottimizza, e indicatori di tono estesi |
+| `src/app/features/recipe/score-ring.tsx` | Anello SVG compatto (score 0–100) per liste stili |
+| `src/app/features/recipe/recipe-feedback.tsx` | Form progressivo post-ricetta: tentativo, riuscita, dettagli opzionali, issues, note |
+| `src/app/features/recipe/feedback-copy.tsx` | Helper di presentazione ed iniezione delle stringhe del CMS per le risultanze e le correzioni consigliate |
+| `src/app/features/recipe/score-dimension-presentation.ts` | Logica di presentazione visuale e mappatura colori/icone per le 5 dimensioni dello score |
+| `src/app/features/recipe/feedback-store.ts` | Legacy store e ponti per le persistenza in localStorage, compatibile con gli adapters e l'analisi DevTools |
+| `src/app/features/recipe/feedback-analysis.tsx` | Pannello DevTools (Engine Lab → Feedback): panoramica, calibrazione, success rate e cross-ref adversarial |
 
 **Motore (riferimento):** `SCORE_DIMENSIONS`, `calculate*Score`, `resolveEngineMsgs` in `pizza-engine.ts`.
 

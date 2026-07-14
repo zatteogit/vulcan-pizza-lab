@@ -1,16 +1,24 @@
 # Design system e dev UI
-> Aggiornamento: 2026-07-04 | Stato: ✅ | File documentati: 65
+> Aggiornamento: 2026-07-13 | Stato: ✅ | File documentati: 72
 
 ## Sommario
 
-Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modello a 6 tier (T1–T6)**: registry a sezioni in `design-system/index.tsx`, moduli `foundations-*` / `components-*` / `patterns-templates`, utilità in `shared.tsx`. Include i componenti atomo/molecola context-free in `src/app/components/ds/` (Tier 4) e le card visive delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) in `src/app/components/design-system/foundations-ui/` (Tier 4). Accesso tramite route standalone `/design-system` e tab **Design** dentro `/dev` (`DevTools` → `DesignSystemTab`). I file di stile core vivono in `theme.css` (Tier 1-3.5) con tool di enforcement (`npm run check:tokens`). Le pagine showcase dei componenti sono state allineate per importare ed utilizzare i veri componenti ds (Tier 4) riducendo la duplicazione di markup inline.
+Showcase interattivo del design M3/M3 Expressive di Vulcan basato su un **modello a 6 tier (T1–T6)** (disciplinato dalla policy in `docs/design-system-guard-policy.md` e verificato dallo script di controllo `scripts/ds-tier-guard.mjs`): registry a sezioni in `design-system/index.tsx`, moduli `foundations-*` / `components-*` / `patterns-templates`, utilità in `shared.tsx`. Include i componenti atomo/molecola context-free in `src/app/components/ds/` (Tier 4) e le card visive delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) in `src/app/components/design-system/foundations-ui/` (Tier 4). Accesso tramite route standalone `/design-system` e tab **Design** dentro `/dev` (`DevTools` → `DesignSystemTab`). I file di stile core vivono in `theme.css` (Tier 1-3.5) con tool di enforcement (`npm run check:tokens`). Le pagine showcase dei componenti sono state allineate per importare ed utilizzare i veri componenti ds (Tier 4) riducendo la duplicazione di markup inline.
 
 ## File chiave
 
 | File / Cartella | Ruolo |
 |------|--------|
 | `src/styles/theme.css` | File CSS centrale dei token e delle classi composite (Tier 1-3.5); supporta l'enforcement automatico |
-| `src/app/components/ds/` | Barrel directory contenente 24 componenti atomo/molecola context-free (Tier 4) come `CtaButton`, `Checkbox`, `Dialog`, etc. |
+| `src/styles/layout.css` | File CSS centrale delle griglie responsive e della composizione a breakpoint |
+| `src/app/components/ds/` | Barrel directory contenente componenti atomo/molecola context-free (Tier 4) come `CtaButton`, `Checkbox`, `Dialog`, ecc. |
+| `src/app/components/ds/motion.ts` | Definizioni centralizzate degli spring e dei preset di animazione Framer Motion |
+| `src/app/components/ds/use-dialog-focus.ts` | Hook custom per la gestione accessibile del focus per i dialoghi modali |
+| `src/app/components/design-system/components-runtime.tsx` | Runtime di render per il caricamento dinamico dei componenti dello showcase |
+| `src/app/components/design-system/showcase-motion.ts` | Modulo contenente le costanti fisiche di animazione Framer Motion dello showcase |
+| `src/app/components/design-system/showcase-style.ts` | Gestore dei metadati e delle configurazioni di stile dello showcase |
+| `docs/design-system-guard-policy.md` | Specifica formale della policy di dipendenze a tier, regole di tokenizzazione e contratti visuali |
+| `scripts/ds-tier-guard.mjs` | Script di enforcement che verifica import ascendenti, bypass di token e conformità delle classi TSX/CSS |
 | `src/app/components/design-system/foundations-ui/` | Cartella contenente le showcase cards per visualizzare i token reali delle foundations (ColorPalette, TypeScale, SpacingScale, RadiusScale, Elevation) (Tier 4) |
 | `src/app/pages/design-system.tsx` | Route `/design-system`: header sticky, toggle dark, render `DesignSystemTab` |
 | `src/app/pages/dev.tsx` | Route `/dev` e `/dev/:tab` → wrapper `DevTools` |
@@ -115,12 +123,12 @@ flowchart TD
 - **Dimensionamento Font Fluido per Mobile**: In `theme.css` sono state introdotte media query per ottimizzare la dimensione base del font (`font-size` a `15px` sotto 768px, e a `14.25px` sotto 390px) per migliorare la leggibilità ed evitare sfondamenti di testo sui dispositivi mobili con schermi stretti.
 - **Prevenzione Scroll Orizzontale**: Aggiunto il blocco di sicurezza `overflow-x: hidden` e `max-width: 100%` sui tag `html`, `body` e sui container root di `app-shell.tsx` per impedire lo scroll o il bounce orizzontale della viewport.
 
-## Neural Expressive Design & Sfondi Ambientali
+## Neural Expressive Design & FireGlow Semantico (V7)
 
-Vulcan introduce una variante estetica **Neural Expressive** che simula la fluidità e la dinamicità dell'intelligenza artificiale tramite tre pilastri:
+Vulcan introduce una variante estetica **Neural Expressive** ed un sistema di gestione dell'attenzione dell'utente denominato **FireGlow Semantico**:
 1. **Neo-Gradienti**: Palette neon composte da indaco, viola e rosa brillante, in contrapposizione ai colori caldi e terrosi della cottura classica.
 2. **Liquid Morphing**: Transizioni continue e biologiche della mascotte `DoughBlob` controllate da interpolazioni di `borderRadius` nei fotogrammi chiave CSS.
-3. **Ambient Glow**: Il componente `FireGlow` passa dinamicamente da un'atmosfera a brace arancio (`warm`) a un'aurora indaco-fucsia pulsante (`neural`).
+3. **FireGlow Semantico (V7)**: In conformità alle specifiche di Vulcan V7, l'effetto di glow decorativo a livello pagina (legacy `FireGlow`) è deprecato nel tema `editorial-fire`. La luce viene ancorata semanticamente a specifici elementi tracciati tramite il componente `AttentionGlow` (`src/app/features/attention/attention-glow.tsx`) in base a livelli (`none`, `info`, `recommended`, `warning`, `critical`) e motivazioni (`AttentionReason` in `src/app/features/attention/attention-types.ts`).
 
 ### Token CSS correlati (`theme.css`)
 - `--blob-body-neural`: Gradiente lineare 135° indaco/viola/rosa controllato dai token tema.
@@ -128,11 +136,19 @@ Vulcan introduce una variante estetica **Neural Expressive** che simula la fluid
 - `--blob-accent-neural`: Riflesso angolare 225° a contrasto.
 - `--blob-satellite-neural`: Il satellite (lievito/bolla) orbitante si illumina di un rosa vivido fucsia.
 - `--glow-*-neural`: Colori di supporto per l'effetto aurora di sfondo.
+- `--attention-color-*`: Token semantici per il bagliore dell'AttentionGlow (`--attention-color-recommended`, `--attention-color-warning`, ecc.).
 
 ### Regole di Attivazione e Visualizzazione
 La transizione visiva è accoppiata allo stato dell'applicazione:
-- **Trigger**: Quando l'utente attiva **PizzaNerd** (`nerdMode === true`) per studiare grafici alveografici e termodinamica, i blocchi tecnici possono usare `FireGlow`/`DoughBlob` in variante `neural`. Il gate globale è nel profilo (`vulcan_nerd_on`), mentre il toggle locale vive in Home/Recipe.
+- **Trigger**: Quando l'utente attiva **PizzaNerd** (`nerdMode === true`), i blocchi tecnici e di diagnostica possono usare `FireGlow`/`DoughBlob` in variante `neural`.
 - **Showcase DS**: La sezione Brand Hero in `foundations-logo-brand.tsx` include comandi interattivi per forzare e testare le varianti `forge` (default) e `neural` in isolamento.
+
+## Sincronizzazione e Riconciliazione Annotazioni
+
+Il debugger visivo e il relativo workspace (`src/app/features/dev-tools/debug/`) offrono un flusso di tracciamento e correzione automatica:
+- **Merge Last-Write-Wins**: Il server dev (`vite.config.ts`) e il client riconciliano le annotazioni salvate unendo le modifiche basandosi sulla data `updatedAt` di ciascun ID per evitare sovrascritture.
+- **Polling locale**: In modalità sviluppo, il client interroga l'endpoint `/api/save-annotations` ogni 4 secondi per riflettere in tempo reale le annotazioni introdotte da altri browser o agenti.
+- **Filtro Risolti e Clipboard**: I pin contrassegnati come risolti (`resolved: true`) sono nascosti per impostazione predefinita per non affollare la schermata. Un toggle "Mostra Risolti" consente di ispezionarli. Il prompt AI generato per la risoluzione dei bug (`handleCopyPrompt`) esclude automaticamente i pin risolti dal corpo del testo copiato.
 
 ## Bug noti e fix
 

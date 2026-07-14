@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "2026-07-10T12:15:00.000Z",
+  "lastUpdated": "2026-07-14T10:24:00.000Z",
   "project": "Vulcan",
   "sourceStats": {
-    "srcFilesTsTsx": 151,
-    "appFilesExcludingUi": 151,
+    "srcFilesTsTsx": 186,
+    "appFilesExcludingUi": 186,
     "pizzaEngineExports": 59,
     "pizzaEngineLines": 3566,
     "cmsContextLines": 3281,
     "stylesInDb": 29
   },
   "coveragePercent": 100,
-  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-10 v3 registra il pulsante di filtro 'Mostra Risolti' / 'Nascondi Risolti' per nascondere i pin risolti dal canvas, dalla mappa e dalla lista di debug, e l'esclusione automatica delle annotazioni risolte dal prompt copiato per l'AI.",
-  "filesMappedCount": 151,
+  "coverageNote": "10/10 capitoli con scan profondo completato; l'update 2026-07-14 v1 allinea la documentazione con l'implementazione del tema V7 (Editorial FireGlow), i nuovi Use Cases (ricette salvate, feedback) ed il nuovo modulo i18n.",
+  "filesMappedCount": 186,
   "nextRecommendedScan": null,
   "nextRecommendedScanMessage": "KB sincronizzata — usare kipi update dopo modifiche codice",
-  "lastScannedChapter": "kipi-update-2026-07-10-v3",
+  "lastScannedChapter": "kipi-update-2026-07-14-v1",
   "chapters": [
     {
       "id": "pizza-engine",
@@ -63,26 +63,35 @@
         "src/app/features/cooking/cooking-mode.tsx",
         "src/app/features/cooking/step-illustrations.tsx"
       ],
-      "lastWorked": "2026-07-04"
+      "lastWorked": "2026-07-13"
     },
     {
       "id": "scoring-feedback",
       "title": "Score e feedback utente",
       "status": "completed",
       "filesDocumented": [
+        "src/app/domain/recipe-feedback.ts",
+        "src/app/use-cases/analyze-recipe-feedback.ts",
+        "src/app/use-cases/analyze-recipe-feedback.test.ts",
+        "src/app/adapters/browser/recipe-feedback-storage.ts",
+        "src/app/features/recipe/feedback-copy.tsx",
+        "src/app/features/recipe/score-dimension-presentation.ts",
+        "src/app/data/adversarial-feedback-findings.ts",
         "src/app/features/recipe/recipe-match-card.tsx",
         "src/app/features/recipe/score-ring.tsx",
         "src/app/features/recipe/recipe-feedback.tsx",
         "src/app/features/recipe/feedback-analysis.tsx",
         "src/app/features/recipe/feedback-store.ts"
       ],
-      "lastWorked": "2026-07-04"
+      "lastWorked": "2026-07-13"
     },
     {
       "id": "styles-versions",
       "title": "Stili, versioni e override",
       "status": "completed",
       "filesDocumented": [
+        "src/app/use-cases/apply-style-version.ts",
+        "src/app/use-cases/apply-style-version.test.ts",
         "src/app/data/style-versions.ts",
         "src/app/data/style-photos.ts",
         "src/app/features/recipe/recommended-styles.tsx",
@@ -95,13 +104,20 @@
         "src/app/features/recipe/tilt-card.tsx",
         "src/app/features/recipe/interpretation-narrative-card.tsx"
       ],
-      "lastWorked": "2026-07-04"
+      "lastWorked": "2026-07-13"
     },
     {
       "id": "cms-i18n",
       "title": "CMS e localizzazione",
       "status": "completed",
       "filesDocumented": [
+        "src/app/i18n/domain-contracts.ts",
+        "src/app/i18n/interpolate.ts",
+        "src/app/i18n/showcase-messages.ts",
+        "src/app/i18n/showcase-messages.it.ts",
+        "src/app/i18n/ui-messages.ts",
+        "src/app/i18n/ui-messages.it.ts",
+        "src/app/i18n/ui-messages.test.ts",
         "src/app/features/cms/cms-context.tsx",
         "src/app/features/cms/i18n.ts",
         "src/app/features/cms/domain-i18n-defaults.ts",
@@ -120,13 +136,15 @@
         "src/app/features/cms/locales/domain-pt.ts",
         "src/app/pages/cms.tsx"
       ],
-      "lastWorked": "2026-07-04"
+      "lastWorked": "2026-07-13"
     },
     {
       "id": "routing-shell",
       "title": "Routing e shell app",
       "status": "completed",
       "filesDocumented": [
+        "public/_headers",
+        "vitest.config.ts",
         "index.html",
         "src/app/routes.ts",
         "src/app/App.tsx",
@@ -139,7 +157,7 @@
         "src/app/components/shared/sub-page-header.tsx",
         "src/vite-env.d.ts"
       ],
-      "lastWorked": "2026-07-04"
+      "lastWorked": "2026-07-13"
     },
     {
       "id": "pages-learn",
@@ -175,12 +193,14 @@
       "title": "Profilo e vincoli utente",
       "status": "completed",
       "filesDocumented": [
+        "src/app/adapters/browser/saved-recipes-storage.ts",
+        "src/app/data/saved-recipes.test.ts",
         "src/app/pages/profile.tsx",
         "src/app/hooks/use-profile-defaults.ts",
         "src/app/features/recipe/user-needs.tsx",
         "src/app/data/saved-recipes.ts"
       ],
-      "lastWorked": "2026-07-01"
+      "lastWorked": "2026-07-13"
     },
     {
       "id": "design-system",
@@ -188,6 +208,13 @@
       "status": "completed",
       "filesDocumented": [
         "src/styles/theme.css",
+        "src/styles/layout.css",
+        "src/app/components/design-system/components-runtime.tsx",
+        "src/app/components/design-system/showcase-motion.ts",
+        "src/app/components/design-system/showcase-motion.generated.ts",
+        "src/app/components/design-system/showcase-style.ts",
+        "src/app/components/ds/motion.ts",
+        "src/app/components/ds/use-dialog-focus.ts",
         "src/app/components/design-system/foundations-ui/ColorPalette.tsx",
         "src/app/components/design-system/foundations-ui/Elevation.tsx",
         "src/app/components/design-system/foundations-ui/RadiusScale.tsx",
@@ -249,7 +276,7 @@
         "src/app/components/shared/vulcan-hero.tsx",
         "src/app/components/shared/vulcan-logo.tsx"
       ],
-      "lastWorked": "2026-07-04"
+      "lastWorked": "2026-07-13"
     }
   ]
 }

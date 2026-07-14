@@ -1,5 +1,5 @@
 # Stili, versioni e override
-> Aggiornamento: 2026-07-01 | Stato: ✅ | File documentati: 12
+> Aggiornamento: 2026-07-13 | Stato: ✅ | File documentati: 13
 
 ## Sommario
 
@@ -8,6 +8,7 @@ Gli **stili canonici** vivono in `STYLES_DB` (`pizza-engine.ts`, **28 stili**). 
 - **Versioni interpretative** (`StyleVersion`) — preset parametri + range per slider/score, skill-aware. Ora supportano anche un blocco `ranges` specifico a livello di versione impasto (es. W farina e idratazione localizzati) che sovrascrive i range dello stile genitore.
 - **Override runtime** — intero DB sostituibile via `localStorage` (editor dev).
 - **UI scoperta stile** — raccomandazioni, sheet dettaglio, foto editoriali.
+- **Applicazione Versione** — use case puro per iniettare i parametri delle versioni e delle interpretazioni nel flusso ricetta.
 
 La versione attiva fluisce in `generateRecipe` come `versionOverrides` e nei range del configurator (Smart Link, adaptive hints, autenticità).
 
@@ -15,6 +16,7 @@ La versione attiva fluisce in `generateRecipe` come `versionOverrides` e nei ran
 
 | File | Ruolo |
 |------|--------|
+| `src/app/use-cases/apply-style-version.ts` | Use Case puro per l'applicazione fisica dei parametri fisici di una versione interpretativa d'autore |
 | `src/app/data/style-versions.ts` | `STYLE_VERSIONS`, API `getVersions`, `getDefaultVersion`, `getVersionById` |
 | `src/app/data/style-photos.ts` | Fonte canonica delle foto locali per 28 stili e dei 6 video hero serviti da `public/videos/` |
 | `src/app/context/styles-override-context.tsx` | Provider React: `effectiveStyles = override ?? STYLES_DB`, persistenza `vulcan_styles_override` |
