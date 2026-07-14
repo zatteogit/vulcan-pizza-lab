@@ -103,14 +103,16 @@ export function useThemeControl() {
     };
   }, []);
 
-  const setTheme = useCallback((id: string) => {
+  const setTheme = useCallback((id: string, isGlobal = true) => {
     applyTheme(id);
     writeStr(THEME_KEY, id);
-    fetch(CONFIG_ENDPOINT, {
-      method: "POST",
-      headers: configHeaders(true),
-      body: JSON.stringify({ theme: id }),
-    }).catch(() => {});
+    if (isGlobal) {
+      fetch(CONFIG_ENDPOINT, {
+        method: "POST",
+        headers: configHeaders(true),
+        body: JSON.stringify({ theme: id }),
+      }).catch(() => {});
+    }
   }, []);
 
   const setSwitcherOn = useCallback((on: boolean) => {
@@ -289,7 +291,7 @@ export function ThemeSwitcher() {
           <button
             key={t.id || "default"}
             type="button"
-            onClick={() => setTheme(t.id)}
+            onClick={() => setTheme(t.id, false)}
             aria-pressed={active}
             className="px-2.5 py-1 transition-colors active:scale-95"
             style={{
