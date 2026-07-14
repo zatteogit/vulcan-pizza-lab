@@ -157,6 +157,38 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
+    if (url.pathname === "/api/config") {
+      if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS_HEADERS });
+      if (request.method === "GET") {
+        try {
+          await env.DB.prepare("CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT NOT NULL)").run();
+          const { results } = await env.DB.prepare("SELECT value FROM config WHERE key = 'theme'").all();
+          const themeValue = results?.[0]?.value ?? "";
+          return json({ theme: themeValue });
+        } catch (e) {
+          return json({ error: String((e as Error).message) }, 500);
+        }
+      }
+      if (request.method === "POST") {
+        if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
+        try {
+          let body: any;
+          try {
+            body = await request.json();
+          } catch {
+            return json({ error: "invalid JSON body" }, 400);
+          }
+          const themeValue = body?.theme ?? "";
+          await env.DB.prepare("CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT NOT NULL)").run();
+          await env.DB.prepare("INSERT INTO config (key, value) VALUES ('theme', ?1) ON CONFLICT(key) DO UPDATE SET value = excluded.value").bind(themeValue).run();
+          return json({ success: true, theme: themeValue });
+        } catch (e) {
+          return json({ error: String((e as Error).message) }, 500);
+        }
+      }
+      return json({ error: "method not allowed" }, 405);
+    }
+
     if (url.pathname === "/api/annotations") {
       if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS_HEADERS });
       if (request.method === "GET") return handleGet(request, env);

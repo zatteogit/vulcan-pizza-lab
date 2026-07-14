@@ -11,6 +11,17 @@ const THEME_KEY = "vulcan_theme";
 const SWITCHER_KEY = "vulcan_theme_switcher";
 const SYNC_EVENT = "vulcan:theme-change";
 
+const API_BASE = (import.meta.env.VITE_ANNOTATIONS_API as string | undefined) || "/api/annotations";
+const CONFIG_ENDPOINT = API_BASE.replace(/\/annotations\/?$/, "/config");
+const API_KEY = (import.meta.env.VITE_ANNOTATIONS_KEY as string | undefined) || "";
+
+function configHeaders(withBody: boolean): Record<string, string> {
+  const h: Record<string, string> = {};
+  if (withBody) h["Content-Type"] = "application/json";
+  if (API_KEY) h["x-annotations-key"] = API_KEY;
+  return h;
+}
+
 export interface ThemeMeta {
   id: string;
   /** data-theme used to preview this theme's own type/accent in the picker. */
@@ -60,17 +71,46 @@ export function useThemeControl() {
       setThemeState(readStr(THEME_KEY, ""));
       setSwitcherState(readStr(SWITCHER_KEY, "false") === "true");
     };
+
+    const fetchConfig = () => {
+      fetch(CONFIG_ENDPOINT)
+        .then((res) => {
+          if (res.ok) return res.json();
+        })
+        .then((data) => {
+          if (data && typeof data.theme === "string") {
+            const remoteTheme = data.theme;
+            const localTheme = readStr(THEME_KEY, "");
+            if (remoteTheme !== localTheme) {
+              applyTheme(remoteTheme);
+              writeStr(THEME_KEY, remoteTheme);
+              setThemeState(remoteTheme);
+            }
+          }
+        })
+        .catch(() => {});
+    };
+
+    fetchConfig();
+
     window.addEventListener(SYNC_EVENT, sync);
     window.addEventListener("storage", sync);
+    window.addEventListener("focus", fetchConfig);
     return () => {
       window.removeEventListener(SYNC_EVENT, sync);
       window.removeEventListener("storage", sync);
+      window.removeEventListener("focus", fetchConfig);
     };
   }, []);
 
   const setTheme = useCallback((id: string) => {
     applyTheme(id);
     writeStr(THEME_KEY, id);
+    fetch(CONFIG_ENDPOINT, {
+      method: "POST",
+      headers: configHeaders(true),
+      body: JSON.stringify({ theme: id }),
+    }).catch(() => {});
   }, []);
 
   const setSwitcherOn = useCallback((on: boolean) => {
