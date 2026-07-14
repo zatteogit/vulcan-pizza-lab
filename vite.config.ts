@@ -73,6 +73,43 @@ function saveAnnotationsPlugin() {
             res.setHeader("Content-Type", "application/json");
             res.end(JSON.stringify({ error: e.message }));
           }
+        } else if (req.url === "/api/config" && req.method === "GET") {
+          try {
+            const filePath = path.resolve(__dirname, "vulcan-debug-config.json");
+            if (fs.existsSync(filePath)) {
+              const data = fs.readFileSync(filePath, "utf8");
+              res.statusCode = 200;
+              res.setHeader("Content-Type", "application/json");
+              res.end(data);
+            } else {
+              res.statusCode = 200;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ theme: "" }));
+            }
+          } catch (e: any) {
+            res.statusCode = 500;
+            res.setHeader("Content-Type", "application/json");
+            res.end(JSON.stringify({ error: e.message }));
+          }
+        } else if (req.url === "/api/config" && req.method === "POST") {
+          let body = "";
+          req.on("data", (chunk: any) => {
+            body += chunk;
+          });
+          req.on("end", () => {
+            try {
+              const incoming = JSON.parse(body);
+              const filePath = path.resolve(__dirname, "vulcan-debug-config.json");
+              fs.writeFileSync(filePath, JSON.stringify({ theme: incoming.theme ?? "" }, null, 2), "utf8");
+              res.statusCode = 200;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ success: true, theme: incoming.theme ?? "" }));
+            } catch (e: any) {
+              res.statusCode = 500;
+              res.setHeader("Content-Type", "application/json");
+              res.end(JSON.stringify({ error: e.message }));
+            }
+          });
         } else {
           next();
         }
