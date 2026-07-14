@@ -285,10 +285,10 @@ export function ThemeSwitcher() {
 
   return (
     <div
-      className="fixed left-3 flex items-center gap-1 p-1"
+      className="fixed right-3 flex items-center gap-1 p-1"
       style={{
         top: "calc(var(--space-4) + env(safe-area-inset-top, 0px))",
-        zIndex: 79,
+        zIndex: 99,
         borderRadius: "var(--radius-full)",
         background: "color-mix(in srgb, var(--container-page) 82%, transparent)",
         border: "1px solid var(--container-border-ghost)",
