@@ -10,7 +10,7 @@
  * Il selettore tab (RecipeSectionTabs) qui è finalmente montato: il layer
  * PizzaNerd vive dentro Ricetta/Procedimento quando abilitato dal Profilo. */
 
-import { useEffect, useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router";
 import {
   AnimatePresence,
@@ -19,8 +19,8 @@ import {
   useScroll,
   useTransform,
 } from "motion/react";
-import { ChevronLeft, Heart, RotateCcw } from "lucide-react";
-import { Heading, IconButton } from "../../components/ds/index";
+import { ChevronLeft, Bookmark, RotateCcw } from "lucide-react";
+import { Heading, IconButton, Snackbar } from "../../components/ds/index";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { RecipeOutput } from "./recipe-output";
 import { RecipeSectionTabs, type RecipePrimaryTab } from "./recipe-section-tabs";
@@ -29,6 +29,7 @@ import { useIsMobile } from "../../hooks/use-mobile";
 import { FireGlow } from "../cooking/fire-glow";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { createFormatter, formatLengthCopy } from "../cms/i18n";
+import { motionDelay,motionEase,motionSpring,motionTiming } from "../../components/ds/motion";
 import {
   localizeHydrationCategory,
   localizeCrustType,
@@ -38,6 +39,7 @@ import {
   type GeneratedRecipe,
   type PanConfig,
 } from "../../domain/pizza-engine";
+import { uiMessage } from "../../i18n/ui-messages";
 
 interface RecipeViewBack {
   label: string;
@@ -129,6 +131,25 @@ export function RecipeView({
   favorite = false,
   onToggleFavorite,
 }: RecipeViewProps) {
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timer = setTimeout(() => setToastMessage(null), 3000);
+    return () => clearTimeout(timer);
+  }, [toastMessage]);
+
+  const handleFavoriteClick = () => {
+    if (!onToggleFavorite) return;
+    onToggleFavorite();
+    const nextFavorite = !favorite;
+    setToastMessage(
+      nextFavorite
+        ? uiMessage("features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success")
+        : uiMessage("features.recipe.recipe-view.rimosso-dai-preferiti-toast-info")
+    );
+  };
+
   /* Parallax hero (identico alla scheda Scopri originale). Con
      prefers-reduced-motion il movimento scroll-driven si spegne (resta il
      solo scrim, che è una dissolvenza, non un moto). */
@@ -159,6 +180,9 @@ export function RecipeView({
   }, [activeTab]);
 
   const isHeroReduced = activeTab !== "ricetta";
+  const heroParallaxStyle = { y: heroImageY, scale: heroImageScale };
+  const heroScrimStyle = { opacity: heroOverlayOpacity };
+  const cardMotionStyle = { y: isHeroReduced ? 0 : cardY };
 
   // Resolve topping using the exact same fallback hierarchy as recipe-output.tsx
   const allToppingChoices = useMemo(() => {
@@ -222,8 +246,8 @@ export function RecipeView({
   /* Niente sottotitolo sul tab Ricetta: ripeteva il nome dello stile che
      campeggia già nell'hero (sempre visibile, anche a hero ridotto). */
   const resolvedMarginTop = isHeroReduced
-    ? (showStickyHeader ? "var(--space-4, 16px)" : "var(--space-20, 80px)")
-    : "calc(-1 * var(--space-19, 4.75rem))";
+    ? (showStickyHeader ? "var(--recipe-section-offset-compact)" : "var(--recipe-section-offset-expanded)")
+    : "calc(-1 * var(--recipe-section-overlap))";
 
   const heroEyebrow = eyebrow;
   const heroTitle = style.name;
@@ -279,7 +303,7 @@ export function RecipeView({
         <motion.div
           className="recipe-view-back"
           animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 360, damping: 31, mass: 0.72 }}
+          transition={motionSpring.recipeStage}
         >
           {back.to ? (
             <IconButton
@@ -314,13 +338,13 @@ export function RecipeView({
         data-region="hero"
         className="recipe-view-hero"
         animate={{ height: isHeroReduced ? 0 : "clamp(220px, 32vh, 400px)" }}
-        transition={{ type: "spring", stiffness: 280, damping: 28 }}
+        transition={motionSpring.recipeSection}
       >
         <div className="recipe-view-hero__frame">
           <div className="recipe-view-hero__clip">
             <motion.div
               className="recipe-view-hero__parallax"
-              style={{ y: heroImageY, scale: heroImageScale }}
+              style={heroParallaxStyle}
             >
               <ImageWithFallback
                 src={photo}
@@ -330,20 +354,22 @@ export function RecipeView({
             </motion.div>
             <motion.div
               className="recipe-view-hero__scrim"
-              style={{ opacity: heroOverlayOpacity }}
+              style={heroScrimStyle}
             />
             <div className="recipe-view-hero__gradient" />
           </div>
           {onToggleFavorite && (
-            <button
+            <IconButton
               type="button"
               className="recipe-view-favorite"
-              aria-label={favorite ? "Rimuovi dai preferiti" : "Aggiungi ai preferiti"}
+              aria-label={favorite ? uiMessage("features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb") : uiMessage("features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86")}
               aria-pressed={favorite}
-              onClick={onToggleFavorite}
+              onClick={handleFavoriteClick}
+              size="md"
+              variant="bare"
             >
-              <Heart size={20} fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
-            </button>
+              <Bookmark size={20} fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
+            </IconButton>
           )}
         </div>
       </motion.div>
@@ -354,13 +380,13 @@ export function RecipeView({
         data-region="page-header"
         className="recipe-view-header"
         animate={{ marginTop: resolvedMarginTop }}
-        transition={{ type: "spring", stiffness: 280, damping: 28 }}
+        transition={motionSpring.recipeSection}
       >
         <motion.div
           layout
           className={isHeroReduced ? "recipe-view-card recipe-view-card--reduced" : "recipe-view-card"}
-          style={{ y: isHeroReduced ? 0 : cardY }}
-          transition={{ type: "spring", stiffness: 280, damping: 28 }}
+          style={cardMotionStyle}
+          transition={motionSpring.gentle}
         >
           <div
             className={
@@ -375,7 +401,7 @@ export function RecipeView({
             <motion.div
               layout
               className="recipe-view-eyebrow-row"
-              transition={{ type: "spring", stiffness: 280, damping: 28 }}
+              transition={motionSpring.recipeSection}
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
@@ -383,7 +409,7 @@ export function RecipeView({
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  transition={motionTiming.exit}
                   className={
                     eyebrowIsTailored
                       ? "recipe-view-eyebrow recipe-view-eyebrow--tailored"
@@ -419,7 +445,7 @@ export function RecipeView({
             <motion.div
               layout
               className="recipe-view-title-row"
-              transition={{ type: "spring", stiffness: 280, damping: 28 }}
+              transition={motionSpring.recipeSection}
             >
               <Heading level="page" className="recipe-view-title">
                 {heroTitle}
@@ -435,9 +461,9 @@ export function RecipeView({
                   animate={{ opacity: 1, y: 0, height: "auto" }}
                   exit={{ opacity: 0, y: -8, height: 0 }}
                   transition={{
-                    height: { type: "spring", stiffness: 280, damping: 28 },
-                    y: { type: "spring", stiffness: 280, damping: 28 },
-                    opacity: { duration: 0.18, ease: "easeInOut" }
+                    height: motionSpring.recipeSection,
+                    y: motionSpring.recipeSection,
+                    opacity: { duration: motionTiming.exit.duration,ease: motionEase.standard }
                   }}
                   className="recipe-view-expanded"
                 >
@@ -494,7 +520,7 @@ export function RecipeView({
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.08 }}
+            transition={{ ...motionSpring.standard,delay: motionDelay.recipeReveal }}
           >
             <RecipeOutput
               recipe={recipe}
@@ -536,6 +562,22 @@ export function RecipeView({
           toppingSubtitle={toppingSubtitle}
         />
       )}
+
+      <AnimatePresence>
+        {toastMessage && (
+          <div className="recipe-view-favorite-toast">
+            <motion.div
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={motionSpring.recipeStage}
+              className="recipe-view-favorite-toast__motion"
+            >
+              <Snackbar message={toastMessage} />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
