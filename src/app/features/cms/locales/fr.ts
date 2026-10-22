@@ -636,6 +636,13 @@ export const FR_LOCALE: CmsContent = {
       "Règle du 55 : utiliser l'eau à {temp} pour atteindre {ddt} de température de pâte.",
     "tip.frictionNote":
       "Compensation de friction du pétrin : {friction}",
+    "gen.windowTooShort": "Avec {available} h, il n'y a pas le temps pour tout : cette recette demande environ {needed} h. Elle sera prête plus tard que l'heure choisie : choisissez une heure plus tardive ou une fermentation plus courte.",
+    "opt.hydrationOvenCompensated": "Hydratation {h}% : {base}% plus {delta}% pour compenser un four moins chaud que l'idéal.",
+    "opt.hydrationOutOfStyleRange": "Avec cette compensation, l'hydratation sort de la plage du style ({min}–{max}%).",
+    "tip.waterTempLimitMax": "Cuisine froide : même avec une eau à {temp}, la pâte reste sous {ddt}. Ne chauffez pas davantage l'eau : gardez la farine dans un endroit tiède ou allongez un peu le pointage.",
+    "tip.waterTempLimitMin": "Cuisine chaude : même avec une eau à {temp}, la pâte dépasse {ddt}. Utilisez de l'eau glacée, gardez la farine au frigo ou raccourcissez un peu le pointage.",
+    "timeline.preheat.descWholeProof": "Allumez le four maintenant à {temp}{equipmentNote}. Pendant ce temps, les pâtons font leur apprêt.",
+    "timeline.preheat.descDuringRest": "Allumez le four maintenant à {temp}{equipmentNote}. Pendant ce temps, les pâtons reposent.",
     "tip.waterTemp": "",
     "hint.flourWeak": "farine faible (00 classique)",
     "hint.flourMedium": "farine de force moyenne",
@@ -746,7 +753,13 @@ export const FR_LOCALE: CmsContent = {
       tipBeginner:
         "Au frigo la p\u00E2te monte lentement mais gagne en saveur. Bien couvrir avec un film au contact.",
       tipNerd:
-        "\u00C0 {temp} le Q\u2081\u2080\u22482,0 ralentit la fermentation. L'activit\u00E9 prot\u00E9olytique domine, d\u00E9gradant les FODMAP.",
+        "À {temp} la fermentation ralentit à {factor}× par rapport à la référence {refTemp}. L'activité protéolytique domine, dégradant les FODMAP.",
+    },
+    rest: {
+      title: "Repos",
+      desc: "Laisser reposer la pâte couverte à {temp}",
+      tipBeginner: "Sans levure, la pâte ne lève pas : le repos détend le gluten, la feuille s'étire finement sans se rétracter.",
+      tipNerd: "Le repos complète l'hydratation de la farine et détend le réseau de gluten : moins de rétraction élastique, une feuille presque translucide.",
     },
     divide: {
       title: "Division",

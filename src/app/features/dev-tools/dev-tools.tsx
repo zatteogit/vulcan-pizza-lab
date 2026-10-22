@@ -41,6 +41,7 @@ import {
 STYLES_DB,
 calculateOvenCompensations,
 estimatePL,
+fermentationSpeedRatio,
 generateRecipe,
 getQ10,
 recommendStyles,
@@ -1174,7 +1175,9 @@ function Q10Content({
     for (const yeast of yeastTypes) {
       for (const temp of temps) {
         const { q10, model } = getQ10(yeast, temp);
-        const speedVs18 = Math.round(Math.pow(q10, (temp - 18) / 10) * 100) / 100;
+        // Stesso fattore del motore (Q10 a tratti continuo, ENG-2), non il Q10
+        // locale elevato da 18°C: sotto i raccordi darebbe un valore diverso.
+        const speedVs18 = Math.round(fermentationSpeedRatio(yeast, temp) * 100) / 100;
         points.push({ yeast, temp, q10, model, speedVs18 });
       }
     }

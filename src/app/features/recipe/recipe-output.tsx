@@ -12,7 +12,7 @@ import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
 import type { FlourEntry } from "../../data/flour-database";
-import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
+import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, resolveEngineMsgs, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
 import { RecipeFeedbackForm } from "./recipe-feedback";
 import { getRecipesByAuthenticity, getToppingForStyle } from "../../data/topping-library";
 import { ConfirmDialog, IconButton } from "../../components/ds/index";
@@ -539,6 +539,19 @@ export function RecipeOutput({
   /* VPL-013: Compensations applied */
   const compensations = recipe.science?.compensations ?? [];
 
+  /* ENG-4: con un orario del pasto scelto, se la ricetta non sta nella finestra
+     (il motore ha già tolto l'overhead fisso dalla fermentazione) lo diciamo:
+     prima l'inizio cadeva nel passato e si partiva «adesso» senza avviso. */
+  const hasMealTarget = !!selectedTimeSlotId && selectedTimeSlotId !== "no_preference";
+  const windowWarning = hasMealTarget
+    ? recipe.scores.warnings.find((w) => w.key === "gen.windowTooShort")
+    : undefined;
+  const windowWarningText = windowWarning
+    ? resolveEngineMsgs([windowWarning], cms.engineMessages, (_msg, _key, value) =>
+        typeof value === "number" ? fmt.number(value, { maximumFractionDigits: 1 }) : value,
+      )[0]
+    : null;
+
 
   return (
     <div className="recipe-output">
@@ -763,6 +776,9 @@ export function RecipeOutput({
         className="recipe-output-panel recipe-output-panel--procedura"
       >
       <ScrollToTopOnMount />
+      {windowWarningText && (
+        <p className="type-body recipe-output-timing-notice">{windowWarningText}</p>
+      )}
       <div className="recipe-output-hero-wrap">
         <ProcedureHeroControls
           startTime={startTime}

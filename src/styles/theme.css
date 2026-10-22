@@ -9221,6 +9221,14 @@
     transform: scale(0.9);
   }
 
+  /* ── ENG-7: acqua al limite pratico (cucina molto fredda o molto calda) ── */
+  .ingredients-water-limit {
+    margin: var(--space-1) 0 var(--space-2);
+    padding-left: var(--space-3);
+    color: var(--text-warning);
+    line-height: var(--leading-normal);
+  }
+
   /* ── Tip Regola 55 (espanso) ── */
   .ingredients-rule55-tip {
     overflow: hidden;
@@ -10448,6 +10456,14 @@
     .recipe-output-hero-wrap {
       margin-bottom: var(--space-6);
     }
+  }
+
+  /* ENG-4: la ricetta non sta nella finestra fino al pasto */
+  .recipe-output-timing-notice {
+    margin: 0 0 var(--space-3);
+    color: var(--text-warning);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-normal);
   }
 
   .recipe-output-feedback-wrap {

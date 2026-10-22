@@ -231,6 +231,7 @@ export function ProcedureTimeline({
                       tips={[tipText, parametricTip].filter(Boolean) as string[]}
                       isNerd={isNerd}
                       stepId={step.id}
+                      unleavened={!!recipe.style.dough.unleavened}
                       cms={cms}
                     />
                   </div>
