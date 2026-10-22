@@ -1345,6 +1345,24 @@ function runOptimizer(): TestResult[] {
   return results;
 }
 
+/** I 13 gruppi di controlli, eseguibili anche fuori dal browser: vitest li
+ *  lancia in CI (engine-test-suite.test.ts, ENG-1) e fallisce sugli esiti "fail". */
+export const ENGINE_CHECK_GROUPS: { id: string; label: string; run: () => TestResult[] }[] = [
+  { id: "db", label: "DB Integrity", run: runDbIntegrity },
+  { id: "gen", label: "Generation Matrix", run: runGenerationMatrix },
+  { id: "score", label: "Score Bounds", run: runScoreBounds },
+  { id: "comp", label: "Compensazioni", run: runCompensations },
+  { id: "q10", label: "Q10 Models", run: runQ10 },
+  { id: "pl", label: "P/L Estimation", run: runPLEstimation },
+  { id: "r55", label: "Rule 55", run: runRule55 },
+  { id: "rec", label: "Recommendation", run: runRecommendation },
+  { id: "edge", label: "Edge Cases", run: runEdgeCases },
+  { id: "xval", label: "Cross-Validation", run: runCrossValidation },
+  { id: "pdb", label: "Parametric DB", run: runParametricDb },
+  { id: "dev", label: "Deviation & Flour", run: runDeviationFlour },
+  { id: "opt", label: "Optimizer", run: runOptimizer },
+];
+
 function buildCategories(): TestCategory[] {
   return [
     { id: "db", label: "DB Integrity", icon: <Database size={14} />, color: "var(--primary)", run: runDbIntegrity },
