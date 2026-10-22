@@ -4,20 +4,20 @@
  * SVG precedenti per Recipe Timeline, Cooking Mode e Learn.
  */
 
-import bakeSrc from "../../../assets/timeline/timeline-bake.png";
-import bulkSrc from "../../../assets/timeline/timeline-bulk.png";
-import divideSrc from "../../../assets/timeline/timeline-divide.png";
-import fillInternalSrc from "../../../assets/timeline/timeline-fill_internal.png";
-import mixSrc from "../../../assets/timeline/timeline-mix.png";
-import preheatSrc from "../../../assets/timeline/timeline-preheat.png";
-import prefermentSrc from "../../../assets/timeline/timeline-preferment.png";
-import proofSrc from "../../../assets/timeline/timeline-proof.png";
-import shapeSrc from "../../../assets/timeline/timeline-shape.png";
-import sliceSrc from "../../../assets/timeline/timeline-slice.png";
-import splitFillSrc from "../../../assets/timeline/timeline-split_fill.png";
-import stackSrc from "../../../assets/timeline/timeline-stack.png";
-import topSrc from "../../../assets/timeline/timeline-top.png";
-import topPostSrc from "../../../assets/timeline/timeline-top_post.png";
+import bakeSrc from "../../../assets/timeline/timeline-bake.webp";
+import bulkSrc from "../../../assets/timeline/timeline-bulk.webp";
+import divideSrc from "../../../assets/timeline/timeline-divide.webp";
+import fillInternalSrc from "../../../assets/timeline/timeline-fill_internal.webp";
+import mixSrc from "../../../assets/timeline/timeline-mix.webp";
+import preheatSrc from "../../../assets/timeline/timeline-preheat.webp";
+import prefermentSrc from "../../../assets/timeline/timeline-preferment.webp";
+import proofSrc from "../../../assets/timeline/timeline-proof.webp";
+import shapeSrc from "../../../assets/timeline/timeline-shape.webp";
+import sliceSrc from "../../../assets/timeline/timeline-slice.webp";
+import splitFillSrc from "../../../assets/timeline/timeline-split_fill.webp";
+import stackSrc from "../../../assets/timeline/timeline-stack.webp";
+import topSrc from "../../../assets/timeline/timeline-top.webp";
+import topPostSrc from "../../../assets/timeline/timeline-top_post.webp";
 
 type StepIllustrationTone = "default" | "accent" | "onAccent" | "muted";
 

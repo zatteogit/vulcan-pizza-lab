@@ -7,6 +7,7 @@ import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import { FilterChip, Surface } from "../../components/ds/index";
 import { getStyleTags } from "../../domain/deviation-tags";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
+import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import {
 PIZZA_FAMILIES,
 PizzaStyle,
@@ -664,6 +665,7 @@ function StyleCard({
                 src={photo}
                 alt={style.name}
                 loading="lazy"
+                sizes={IMAGE_SIZES.card}
                 className="recommended-card__img"
               />
             </motion.div>

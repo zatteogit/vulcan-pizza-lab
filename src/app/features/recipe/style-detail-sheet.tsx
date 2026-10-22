@@ -4,6 +4,7 @@ import { motionDelay,motionDuration,motionSpring } from "../../components/ds/mot
 import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, Heart } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
+import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import { STYLE_PHOTOS, reasonDimension, MATCH_DIMENSION_ICON } from "./recommended-styles";
 import { STYLE_VIDEOS } from "../../data/style-photos";
 import {
@@ -188,6 +189,7 @@ export function StyleDetailSheet({
             <ImageWithFallback
               src={photo}
               alt={style.name}
+              sizes={IMAGE_SIZES.full}
               className="style-detail-media__img"
             />
             {video && <BlurInVideo src={video} />}
