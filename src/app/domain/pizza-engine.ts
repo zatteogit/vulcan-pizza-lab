@@ -480,6 +480,10 @@ export interface TimelineStep {
     beginner: string;
     nerd: string;
   };
+  /** Solo step "preheat" (ENG-5): minuti di forno acceso prima della stesura.
+   *  Maggiore di duration_minutes quando il forno si accende prima dello
+   *  staglio e scalda anche durante staglio e appretto. */
+  preheat_lead_minutes?: number;
 }
 
 // ═══ STYLES DATABASE ═══
@@ -499,9 +503,17 @@ export {
 
 
 // ═══ Q10 MODEL — VARIABLE BY YEAST TYPE & TEMPERATURE ═══
-// Audit Database: Q10=2.0 fisso sovrastima attività a bassa T del ~20%
 // Letteratura: Saccharomyces cerevisiae Q10=2.1±0.3 (15-30°C), scende a 1.6 sotto 10°C
 // Lievito madre: LAB (batteri lattici) hanno Q10 1.9-2.4, media diversa da S. cerevisiae
+//
+// ENG-2 (audit motore 22/10/2026, decisione di Matteo): getQ10 dà il Q10 della
+// FASCIA di temperatura; il fattore di velocità rispetto a 18 °C si ottiene
+// invece integrando a tratti con fermentationSpeedFactor (sotto), così il
+// modello è continuo. Prima l'esponente partiva sempre da 18 °C col Q10 della
+// fascia finale: a 9,9 °C → 10 °C il lievito saliva da 0,15% a 0,17% (salto non
+// fisico). Nota onesta: con Q10 1,6 sotto i 10 °C l'attività stimata cala PIÙ
+// LENTAMENTE che con Q10 2,0 (a 4 °C: fattore 0,433 contro 0,379); il vecchio
+// commento «Q10=2.0 sovrastima l'attività a bassa T» descriveva l'effetto opposto.
 
 export function getQ10(
   yeastType: "fresh" | "dry" | "sourdough",
@@ -515,11 +527,36 @@ export function getQ10(
     };
   }
   if (tempC < 10) {
-    // Cold fermentation: metabolismo rallentato più di quanto Q10=2.0 predica
-    // PMC7146123: S. cerevisiae Q10 ≈ 1.6 sotto 10°C
+    // Cold fermentation — PMC7146123: S. cerevisiae Q10 ≈ 1.6 sotto 10°C
     return { q10: 1.6, model: "cold_adapted" };
   }
   return { q10: 2.0, model: "standard" };
+}
+
+/** Temperatura di riferimento del modello cinetico (°C). */
+const Q10_REFERENCE_TEMP_C = 18;
+
+/**
+ * ENG-2 — fattore di velocità della fermentazione rispetto a 18 °C, continuo a
+ * tratti. Lievito di birra (fresco/secco): Q10 2,0 da 18 a 10 °C, poi 1,6 sotto
+ * i 10 °C. Lievito madre: Q10 2,2 fino a 15 °C, poi 1,9 sotto. Sopra i 18 °C
+ * vale il Q10 della fascia alta. Usato da dose di lievito, digeribilità e
+ * livello scientifico: una sola formula per tutto il motore.
+ */
+export function fermentationSpeedFactor(
+  yeastType: "fresh" | "dry" | "sourdough",
+  tempC: number,
+): number {
+  const breakC = yeastType === "sourdough" ? 15 : 10;
+  const highQ10 = getQ10(yeastType, breakC + 1).q10;
+  const lowQ10 = getQ10(yeastType, breakC - 1).q10;
+  if (tempC >= breakC) {
+    return Math.pow(highQ10, (tempC - Q10_REFERENCE_TEMP_C) / 10);
+  }
+  return (
+    Math.pow(highQ10, (breakC - Q10_REFERENCE_TEMP_C) / 10) *
+    Math.pow(lowQ10, (tempC - breakC) / 10)
+  );
 }
 
 // ═══ FERMENTATION TEMPERATURE DEFAULT ═══
@@ -966,10 +1003,10 @@ function calculateDigestibilityScore(
 } {
   const claims: EngineMsg[] = [];
 
-  // Effective hours at 18°C — Audit Database: Q10 variabile per tipo lievito e temperatura
+  // Effective hours at 18°C — Q10 variabile per tipo lievito e temperatura,
+  // integrato a tratti (ENG-2): nessun salto ai confini di fascia.
   const { q10, model: q10Model } = getQ10(yeastType, fermentationTempC);
-  const tempDiff = fermentationTempC - 18;
-  const speedRatio = Math.pow(q10, tempDiff / 10);
+  const speedRatio = fermentationSpeedFactor(yeastType, fermentationTempC);
   let effectiveHours = fermentationHours * speedRatio;
 
   if (hasPreFerment) {
@@ -1211,12 +1248,14 @@ function calculateYeastPercentage(
   fermentationTempC: number,
   yeastType: "fresh" | "dry",
 ): number {
-  // Guard: zero/negative fermentation → no yeast needed (sfoglia diretta, es. Focaccia di Recco)
+  // Guard: zero/negative fermentation → no yeast needed
   if (fermentationHours <= 0) return 0;
-  // ADV-02 fix: very short fermentation (≤2h) = unleavened or minimal leavening
-  // Focaccia di Recco [0.5, 2]h — Arrhenius model produces 3% (absurd for sfoglia diretta)
-  // Cap at 0.5% max with gentle linear ramp instead of exponential blowup
-  if (fermentationHours <= 2) return Math.max(0.01, Math.min(0.5, fermentationHours * 0.2));
+  // ENG-3 (audit motore 22/10/2026, decisione di Matteo): tolta la rampa
+  // lineare sotto le 2 h (ADV-02, 0,2% all'ora). Era nata per la Focaccia di
+  // Recco, che oggi è `unleavened` e ha lievito 0 a monte; sugli impasti
+  // lievitati dava il lievito CRESCENTE con le ore (1 h → 0,2%, 2 h → 0,4%) e
+  // impasti sotto-lievitati. Anche sotto le 2 h vale il modello cinetico,
+  // limitato al 3% (tetto sotto).
   // Arrhenius-based model con Q10 variabile — Audit Database V2
   // Audit motore 2026-05: ricalibrato dopo verifica empirica vs disciplinari.
   //   - referenceRate 0.25→0.10: il vecchio 0.25 sovrastimava di 2-3x rispetto
@@ -1226,11 +1265,8 @@ function calculateYeastPercentage(
   //     RIPRODUCE durante la fermentazione, non si consuma. Curva log-like.
   //     Verificato su Napoletana 8h, 12h, 24h, Bonci 48h, Detroit 24h.
   const referenceRate = 0.10; // % fresh yeast a 18°C per 24h (Caputo standard)
-  const { q10 } = getQ10(yeastType, fermentationTempC);
-  const tempFactor = Math.pow(
-    q10,
-    (fermentationTempC - 18) / 10,
-  );
+  // ENG-2: fattore di velocità continuo a tratti (Q10 2,0 → 1,6 sotto i 10 °C).
+  const tempFactor = fermentationSpeedFactor(yeastType, fermentationTempC);
   const timeFactor = Math.pow(24 / fermentationHours, 0.7);
 
   let pct = (referenceRate * timeFactor) / tempFactor;
@@ -1342,6 +1378,12 @@ export interface VersionRangeOverrides {
  *  in fila era un footgun (il compilatore non becca uno swap). */
 interface GenerateRecipeOptions {
   customHydration?: number;
+  /** ENG-6 — `customHydration` è l'idratazione BASE, prima della compensazione
+   *  forno: il motore aggiunge la compensazione e la dichiara in
+   *  science.compensations. Usato dall'ottimizzatore. Senza flag un
+   *  `customHydration` è il valore finale scelto dall'utente (nessuna
+   *  compensazione applicata né dichiarata). */
+  customHydrationIsBase?: boolean;
   customFlourW?: number;
   customFermentationHours?: number;
   customFermentationTempC?: number;
@@ -1370,6 +1412,7 @@ export function generateRecipe(
 ): GeneratedRecipe {
   const {
     customHydration,
+    customHydrationIsBase,
     customFlourW,
     customFermentationHours,
     customFermentationTempC,
@@ -1467,14 +1510,49 @@ export function generateRecipe(
   let fermentationHours =
     customFermentationHours ?? (fermRange[0] + fermRange[1]) / 2;
 
+  const hasPreFerment =
+    usePreFerment ?? style.requires_pre_ferment;
+
+  // Oven temperature
+  const ovenTemp = resolveOvenTemp(style, constraints);
+
+  // ── Full Compensation Engine — Audit Maestro P0-4 ──
+  const ovenCompensations = calculateOvenCompensations(style, ovenTemp);
+  const cookTime = ovenCompensations.cook_time_sec;
+
+  // Topping e attrezzatura servono già qui: determinano la durata dei passaggi
+  // non di fermentazione della timeline (ENG-4). Il resolver Sprint 12 Fase 2:
+  // se default_topping_ref è un concept_id (es. "margherita"), sceglie la
+  // variante più adatta allo Style (es. margherita_napoletana_avpn per STG,
+  // margherita_romana per Tonda Romana, margherita_americana per NY); se è una
+  // recipe_id specifica (es. "patate_porchetta"), usa quella direttamente.
+  const defaultTopping = style.default_topping_ref
+    ? getToppingForStyle(style.default_topping_ref, style)
+    : undefined;
+  const timelineFrame: TimelineFrame = {
+    style,
+    hasPreFerment,
+    cookTimeSec: cookTime,
+    ovenTemp,
+    topping: defaultTopping,
+    equipment: equipmentContextFor(constraints),
+  };
+
   // Clamp fermentation a available_hours SOLO se l'utente non ha esplicitato un valore custom.
   // Rispettiamo la scelta dell'utente (es. scelta versione "Tradizionale 48h" non va clampata a 24h).
+  // ENG-4: la finestra deve contenere l'intera timeline, quindi si sottraggono i
+  // passaggi non di fermentazione (impasto, staglio, stesura, cottura…).
   // Audit role-play giugno 2026 (finding F8): se il clamp porta SOTTO la finestra
   // minima dello stile, non è una scelta dell'utente ma un vincolo di tempo →
   // lo segnaliamo onestamente invece di limitarci a penalizzare l'autenticità.
   let timeClampedBelowMin = false;
   if (customFermentationHours === undefined && constraints.available_hours > 0) {
-    const clamped = Math.min(fermentationHours, constraints.available_hours);
+    const clamped = fermentationHoursForWindow(
+      timelineFrame,
+      constraints.available_hours,
+      fermentationHours,
+      windowFloorHours(style),
+    );
     if (clamped < fermRange[0]) timeClampedBelowMin = true;
     fermentationHours = clamped;
   }
@@ -1483,9 +1561,6 @@ export function generateRecipe(
     customFermentationTempC ??
     defaultFermentTempC(style, fermentationHours);
 
-  const hasPreFerment =
-    usePreFerment ?? style.requires_pre_ferment;
-
   // F3 — sale effettivo: leva utente (customSalt) con fallback allo stile. Clampato
   // a un range sensato (1.5–3.5%) per non uscire dal ragionevole.
   const effectiveSaltPct =
@@ -1493,23 +1568,24 @@ export function generateRecipe(
       ? Math.max(1.5, Math.min(3.5, customSalt))
       : style.dough.salt_pct;
 
-  // Oven temperature
-  let ovenTemp = Math.min(
-    constraints.oven_max_temp_c,
-    style.baking.temp_c_ideal,
+  // ENG-6 (audit motore 22/10/2026, decisione di Matteo): la compensazione
+  // d'idratazione si applica sul punto medio dello stile o sulla base passata
+  // dall'ottimizzatore (customHydrationIsBase), anche uscendo dal range dello
+  // stile; con un customHydration finale scelto dall'utente non si applica.
+  // science.compensations elenca solo ciò che è stato davvero applicato.
+  const applyHydrationCompensation =
+    customHydration == null || customHydrationIsBase === true;
+  const hydration = applyHydrationCompensation
+    ? Math.round((baseHydration + ovenCompensations.hydration_delta_pct) * 10) / 10
+    : baseHydration;
+  const appliedCompensations: CompensationApplied[] = ovenCompensations.compensations.flatMap(
+    (c) => {
+      if (c.type !== "hydration") return [c];
+      if (!applyHydrationCompensation) return [];
+      // Base → finale, così la UI mostra «58,5% → 67,2%» e non «0% → 8,7%».
+      return [{ ...c, original: baseHydration, compensated: hydration }];
+    },
   );
-  if (ovenTemp < style.baking.temp_c_range[0]) {
-    ovenTemp = constraints.oven_max_temp_c;
-  }
-
-  // ── Full Compensation Engine — Audit Maestro P0-4 ──
-  const ovenCompensations = calculateOvenCompensations(style, ovenTemp);
-  const cookTime = ovenCompensations.cook_time_sec;
-
-  // Apply hydration compensation (only if user didn't set custom)
-  const hydration = customHydration
-    ? baseHydration
-    : Math.round((baseHydration + ovenCompensations.hydration_delta_pct) * 10) / 10;
 
   // Effective oil/sugar with compensations
   // VPL-B2: il grasso/zucchero BASE dello stile è un ingrediente sempre presente
@@ -1659,7 +1735,7 @@ export function generateRecipe(
     fermentationHours,
     hasPreFerment,
     constraints.oven_type,
-    ovenCompensations.compensations.length, // Notion Pag.04: compensation count feeds E-Score
+    appliedCompensations.length, // Notion Pag.04: compensation count feeds E-Score (solo quelle applicate, ENG-6)
   );
 
   // ── Sustainability score ──
@@ -1724,14 +1800,7 @@ export function generateRecipe(
     claims: [...digestResult.claims, ...sustResult.claims],
   };
 
-  // Generate timeline — risolve il topping con il resolver Sprint 12 Fase 2.
-  // Se default_topping_ref è un concept_id (es. "margherita"), il resolver sceglie
-  // la variante più adatta allo Style (es. margherita_napoletana_avpn per STG,
-  // margherita_romana per Tonda Romana, margherita_americana per NY).
-  // Se è una recipe_id specifica (es. "patate_porchetta"), usa quella direttamente.
-  const defaultTopping = style.default_topping_ref
-    ? getToppingForStyle(style.default_topping_ref, style)
-    : undefined;
+  // Generate timeline (topping e attrezzatura risolti sopra, timelineFrame).
   const timeline = generateTimeline(
     style,
     fermentationHours,
@@ -1740,14 +1809,27 @@ export function generateRecipe(
     cookTime,
     ovenTemp,
     defaultTopping,
-    {
-      mixerType: constraints.mixer_type,
-      hasMixer: constraints.has_mixer,
-      ovenType: constraints.oven_type,
-      surfaces: constraints.surfaces,
-      ovenHeatProfile: constraints.oven_heat_profile,
-    },
+    timelineFrame.equipment,
+    yeastType,
   );
+
+  // ENG-4: se la timeline non sta comunque nella finestra (fermentazione scelta
+  // dall'utente o finestra più corta dei soli passaggi attivi), lo diciamo. La
+  // UI lo mostra quando c'è un orario del pasto (non con "nessuna preferenza").
+  if (constraints.available_hours > 0) {
+    const totalMinutes = timeline.reduce((sum, step) => sum + step.duration_minutes, 0);
+    const availableMinutes = Math.round(constraints.available_hours * 60);
+    const overflowMinutes = totalMinutes - availableMinutes;
+    if (overflowMinutes > 0) {
+      scores.warnings.push(
+        em(
+          "gen.windowTooShort",
+          "La procedura dura {total} ma al pasto mancano {available}: sarà pronta circa {late} dopo l'orario scelto. Scegli un pasto più tardi o accorcia la lievitazione.",
+          { total: totalMinutes, available: availableMinutes, late: overflowMinutes },
+        ),
+      );
+    }
+  }
 
   // Generate tips
   const tips = generateTips(
@@ -1758,11 +1840,10 @@ export function generateRecipe(
     constraints,
   );
 
-  // ── Scientific layer — con Q10 variabile (Audit Database) ──
-  const { q10: sciQ10, model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
-  const effectiveHours18c =
-    fermentationHours *
-    Math.pow(sciQ10, (fermentationTempC - 18) / 10);
+  // ── Scientific layer — Q10 variabile, integrato a tratti (ENG-2) ──
+  const { model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
+  const sciSpeedFactor = fermentationSpeedFactor(yeastType, fermentationTempC);
+  const effectiveHours18c = fermentationHours * sciSpeedFactor;
 
   // Gluten network score: flour W strength + hydration sweet spot + kneading method
   const wNorm = Math.min(1, Math.max(0, (flourW - 150) / 250)); // 0 at W150, 1 at W400
@@ -1841,13 +1922,10 @@ export function generateRecipe(
     proteolysis_index: proteolysis,
     water_activity: waterActivity,
     starch_degradation_pct: starchDeg,
-    q10_factor:
-      Math.round(
-        Math.pow(sciQ10, (fermentationTempC - 18) / 10) * 100,
-      ) / 100,
+    q10_factor: Math.round(sciSpeedFactor * 100) / 100,
     q10_model: sciQ10Model,
     authenticity_breakdown: authResult.breakdown,
-    compensations: ovenCompensations.compensations,
+    compensations: appliedCompensations,
     flour_pl_estimated: flourPL,
     baking_energy_kj: bakingEnergyKJ,
     desired_dough_temp_c: 0, // set below
@@ -2421,8 +2499,12 @@ function generateTimeline(
   actualOvenTemp?: number,
   topping?: ToppingRecipe,
   equipment?: EquipmentContext,
+  yeastType: "fresh" | "dry" | "sourdough" = "fresh",
 ): TimelineStep[] {
   const steps: TimelineStep[] = [];
+  // VPL-B2/ENG-5: impasto non lievitato (Focaccia di Recco) → le fasi di
+  // fermentazione sono solo riposo, niente «lievitazione».
+  const isUnleavened = !!style.dough.unleavened;
 
   // Helper per iniettare assembly_steps del topping in un certo punto.
   // Restituisce true se uno step "replaces_generic" è già stato iniettato
@@ -2505,30 +2587,94 @@ function generateTimeline(
       : (knead as KneadGuidance).tip,
   });
 
+  /* ─── PUNTATA + APPRETTO + PRERISCALDO (ENG-5, audit motore 22/10/2026) ───
+   * Il preriscaldo è un'attesa passiva in parallelo: lo step "preheat" ruba i
+   * suoi minuti alla fase di fermentazione che lo precede, così il totale della
+   * timeline resta fermentazione + passaggi attivi. Prima esisteva solo se
+   * l'appretto superava i 30 min (Recco ne era senza) e veniva troncato con
+   * appretti brevi. Ora c'è sempre:
+   *  - appretto lungo (≥ preriscaldo + 15 min): si accende il forno negli
+   *    ultimi minuti dell'appretto, come prima;
+   *  - appretto corto (o impasto non lievitato): si accende il forno a fine
+   *    puntata, prima di staglio e formatura, e scalda mentre si preparano i
+   *    panetti. Lo step dura solo la parte non coperta da staglio e appretto. */
+  const bulkMinutes = Math.round(
+    fermentHours * 60 * (hasPreFerment ? 0.4 : 0.6),
+  );
+  const proofMinutes = Math.round(
+    fermentHours * 60 * (hasPreFerment ? 0.2 : 0.4),
+  );
+  const ovenTempForPreheat = Math.round(actualOvenTemp ?? style.baking.temp_c_ideal);
+  const idealPreheat =
+    ovenTempForPreheat >= 400 ? 60 : ovenTempForPreheat >= 300 ? 45 : 30;
+  const DIVIDE_MINUTES = 15;
+  const MIN_PROOF_STEP_MINUTES = 15;
+  const MIN_EARLY_PREHEAT_STEP_MINUTES = 5;
+  const preheatDuringProof =
+    !isUnleavened && proofMinutes >= idealPreheat + MIN_PROOF_STEP_MINUTES;
+  const preheatMinutes = preheatDuringProof
+    ? idealPreheat
+    : Math.max(
+        MIN_EARLY_PREHEAT_STEP_MINUTES,
+        idealPreheat - DIVIDE_MINUTES - proofMinutes,
+      );
+  // Minuti di forno acceso prima della stesura (per il consiglio "soak").
+  const preheatLeadMinutes = preheatDuringProof
+    ? preheatMinutes
+    : preheatMinutes + DIVIDE_MINUTES + proofMinutes;
+  // Preriscaldo anticipato: sovrapposto alla fine della puntata (fin dove c'è).
+  const bulkOverlap = preheatDuringProof ? 0 : Math.min(preheatMinutes, bulkMinutes);
+  const bulkStepMinutes = bulkMinutes - bulkOverlap;
+
+  // ENG-7: il consiglio nerd usa lo stesso modello Q10 del calcolo (continuo a tratti).
+  const localQ10 = getQ10(yeastType, fermentTemp).q10;
+  const speedFactor = fermentationSpeedFactor(yeastType, fermentTemp);
   steps.push({
     id: "bulk",
-    title: "Puntata",
-    description: `Lievitazione in massa a ${fermentTemp}°C`,
-    duration_minutes: Math.round(
-      fermentHours * 60 * (hasPreFerment ? 0.4 : 0.6),
-    ),
+    title: isUnleavened ? "Riposo dell'impasto" : "Puntata",
+    description: isUnleavened
+      ? `Impasto coperto, a riposo a ${fermentTemp}°C`
+      : `Lievitazione in massa a ${fermentTemp}°C`,
+    duration_minutes: bulkStepMinutes,
     icon: "clock",
-    timing_label: formatDuration(
-      Math.round(fermentHours * (hasPreFerment ? 0.4 : 0.6)),
-    ),
-    tip:
-      fermentTemp <= 6
+    timing_label: formatDuration(Math.round(bulkStepMinutes / 60)),
+    tip: isUnleavened
+      ? {
+          beginner:
+            "Avvolgi l'impasto nella pellicola e lascialo riposare: senza lievito non deve crescere.",
+          nerd: "Senza lievito non si forma gas: il riposo completa l'idratazione della farina e rilassa la maglia glutinica, così la sfoglia si tira sottile senza ritirarsi.",
+        }
+      : fermentTemp <= 6
         ? {
             beginner:
               "In frigo l'impasto cresce lento ma guadagna sapore. Copri bene con pellicola a contatto.",
-            nerd: `A ${fermentTemp}°C il Q₁₀≈2.0 rallenta la fermentazione. L'attività proteolitica prevale, degradando i FODMAP.`,
+            nerd: `A ${fermentTemp}°C il Q₁₀≈${localQ10.toFixed(1)} rallenta la fermentazione. L'attività proteolitica prevale, degradando i FODMAP.`,
           }
         : {
             beginner:
               "L'impasto deve raddoppiare di volume. Se fa caldo, controlla più spesso!",
-            nerd: `A ${fermentTemp}°C la velocità di fermentazione è ${Math.pow(2, (fermentTemp - 18) / 10).toFixed(1)}× rispetto al riferimento 18°C.`,
+            nerd: `A ${fermentTemp}°C la velocità di fermentazione è ${speedFactor.toFixed(1)}× rispetto al riferimento 18°C.`,
           },
   });
+
+  const preheatStep = (): TimelineStep => ({
+    id: "preheat",
+    title: "Forno al massimo",
+    description: preheatDuringProof
+      ? `Accendi ora il forno a ${ovenTempForPreheat}°C${preheatLeadMinutes >= 45 ? " (pietra o acciaio già dentro)" : ""}. Intanto i panetti finiscono l'appretto.`
+      : `Accendi ora il forno a ${ovenTempForPreheat}°C${preheatLeadMinutes >= 45 ? " (pietra o acciaio già dentro)" : ""}: arriverà in temperatura mentre prepari i panetti.`,
+    duration_minutes: preheatMinutes,
+    icon: "flame",
+    timing_label: `${preheatMinutes} min`,
+    preheat_lead_minutes: preheatLeadMinutes,
+    tip: {
+      beginner:
+        "Forno ben caldo = base che si stacca e cornicione che spinge. Non avere fretta: aspetta che arrivi a temperatura.",
+      nerd: `La massa termica della superficie domina il primo minuto di cottura: ${preheatLeadMinutes} min di soak assicurano che pietra/acciaio siano saturi, non solo l'aria del forno.`,
+    },
+  });
+
+  if (!preheatDuringProof) steps.push(preheatStep());
 
   // ─── STAGLIO (layout-aware: descrizione cambia con pieces_per_unit) ───
   const layout = getLayoutSpec(style);
@@ -2549,9 +2695,9 @@ function generateTimeline(
       : isGentleDivide
         ? "Dividere con delicatezza, senza sgonfiare l'impasto."
         : "Dividere in panetti del peso corretto. Formare pallina.",
-    duration_minutes: 15,
+    duration_minutes: DIVIDE_MINUTES,
     icon: "scissors",
-    timing_label: "15 min",
+    timing_label: `${DIVIDE_MINUTES} min`,
     tip: isGentleDivide
       ? {
           beginner:
@@ -2565,50 +2711,35 @@ function generateTimeline(
         },
   });
 
-  /* ─── APPRETTO + PRERISCALDO (audit roleplay giugno 2026) ───
-   * Nessuna timeline diceva di ACCENDERE IL FORNO: si infornava a freddo.
-   * Il preriscaldo ruba i minuti finali dell'appretto (avviene in parallelo:
-   * i panetti finiscono di lievitare mentre il forno va in temperatura),
-   * così il totale resta identico e l'orario del promemoria è esatto. */
-  const proofMinutes = Math.round(
-    fermentHours * 60 * (hasPreFerment ? 0.2 : 0.4),
-  );
-  const ovenTempForPreheat = Math.round(actualOvenTemp ?? style.baking.temp_c_ideal);
-  const idealPreheat =
-    ovenTempForPreheat >= 400 ? 60 : ovenTempForPreheat >= 300 ? 45 : 30;
-  const preheatMinutes = Math.min(idealPreheat, Math.max(0, proofMinutes - 30));
-
+  /* ─── APPRETTO (audit roleplay giugno 2026 + ENG-5) ───
+   * Con preriscaldo durante l'appretto, lo step "preheat" ne occupa i minuti
+   * finali (in parallelo): il totale resta identico e l'orario del promemoria
+   * è esatto. */
+  const proofStepMinutes = preheatDuringProof ? proofMinutes - preheatMinutes : proofMinutes;
+  const proofTempC = Math.max(fermentTemp, 18);
   steps.push({
     id: "proof",
-    title: "Appretto",
-    description: `Lievitazione finale a ${Math.max(fermentTemp, 18)}°C`,
-    duration_minutes: proofMinutes - preheatMinutes,
+    title: isUnleavened ? "Riposo dei panetti" : "Appretto",
+    description: isUnleavened
+      ? `Panetti coperti, a riposo a ${proofTempC}°C`
+      : `Lievitazione finale a ${proofTempC}°C`,
+    duration_minutes: proofStepMinutes,
     icon: "timer",
-    timing_label: formatDuration(
-      Math.round((proofMinutes - preheatMinutes) / 60),
-    ),
-    tip: {
-      beginner:
-        "I panetti devono essere morbidi. Se li premi con un dito, tornano su lentamente.",
-      nerd: "Poke test: ritorno lento = fermentazione ottimale. Troppo rapido = sotto-lievitato. Nessun ritorno = over-proofed.",
-    },
+    timing_label: formatDuration(Math.round(proofStepMinutes / 60)),
+    tip: isUnleavened
+      ? {
+          beginner:
+            "Tieni i panetti coperti perché non si secchi la superficie: si stenderanno più facilmente.",
+          nerd: "Il riposo dopo lo staglio rilassa la tensione data dalla formatura: la sfoglia velata si tira senza strapparsi né ritirarsi.",
+        }
+      : {
+          beginner:
+            "I panetti devono essere morbidi. Se li premi con un dito, tornano su lentamente.",
+          nerd: "Poke test: ritorno lento = fermentazione ottimale. Troppo rapido = sotto-lievitato. Nessun ritorno = over-proofed.",
+        },
   });
 
-  if (preheatMinutes > 0) {
-    steps.push({
-      id: "preheat",
-      title: "Forno al massimo",
-      description: `Accendi ora il forno a ${ovenTempForPreheat}°C${preheatMinutes >= 45 ? " (pietra o acciaio già dentro)" : ""}. Intanto i panetti finiscono l'appretto.`,
-      duration_minutes: preheatMinutes,
-      icon: "flame",
-      timing_label: `${preheatMinutes} min`,
-      tip: {
-        beginner:
-          "Forno ben caldo = base che si stacca e cornicione che spinge. Non avere fretta: aspetta che arrivi a temperatura.",
-        nerd: `La massa termica della superficie domina il primo minuto di cottura: ${preheatMinutes} min di soak assicurano che pietra/acciaio siano saturi, non solo l'aria del forno.`,
-      },
-    });
-  }
+  if (preheatDuringProof) steps.push(preheatStep());
 
   // ─── STESURA (layout-aware) ───
   let shapeDesc: string;
@@ -2801,6 +2932,90 @@ function generateTimeline(
   }
 
   return steps;
+}
+
+/* ═══ ENG-4 — FINESTRA TEMPORALE (audit motore 22/10/2026) ═══
+ * available_hours sono le ore fino al pasto: devono contenere l'INTERA timeline
+ * (impasto, staglio, stesura, farcitura, cottura), non solo la fermentazione.
+ * Prima la fermentazione veniva tagliata all'intera finestra e la timeline la
+ * sforava (Napoletana, finestra di 4 h → 4 h 44 min). */
+
+/** Ripiego quando la finestra non basta: 2 h per gli impasti lievitati, mai
+ *  oltre il minimo dello stile (la sfoglia di Recco riposa da 30 min). */
+const WINDOW_FERMENT_FLOOR_HOURS = 2;
+
+/** Tutto ciò che, oltre alle ore di fermentazione, determina la durata della timeline. */
+interface TimelineFrame {
+  style: PizzaStyle;
+  hasPreFerment: boolean;
+  cookTimeSec: number;
+  ovenTemp: number;
+  topping?: ToppingRecipe;
+  equipment?: EquipmentContext;
+}
+
+function timelineMinutes(frame: TimelineFrame, fermentHours: number): number {
+  return generateTimeline(
+    frame.style,
+    fermentHours,
+    20,
+    frame.hasPreFerment,
+    frame.cookTimeSec,
+    frame.ovenTemp,
+    frame.topping,
+    frame.equipment,
+  ).reduce((sum, step) => sum + step.duration_minutes, 0);
+}
+
+/** Temperatura di cottura usata dal motore: l'ideale dello stile se il forno ci
+ *  arriva, altrimenti il massimo del forno. */
+function resolveOvenTemp(style: PizzaStyle, constraints: UserConstraints): number {
+  const ovenTemp = Math.min(constraints.oven_max_temp_c, style.baking.temp_c_ideal);
+  return ovenTemp < style.baking.temp_c_range[0] ? constraints.oven_max_temp_c : ovenTemp;
+}
+
+function equipmentContextFor(constraints: UserConstraints): EquipmentContext {
+  return {
+    mixerType: constraints.mixer_type,
+    hasMixer: constraints.has_mixer,
+    ovenType: constraints.oven_type,
+    surfaces: constraints.surfaces,
+    ovenHeatProfile: constraints.oven_heat_profile,
+  };
+}
+
+function windowFloorHours(style: PizzaStyle): number {
+  const [fMin, fMax] = style.dough.fermentation_hours_range;
+  return Math.min(WINDOW_FERMENT_FLOOR_HOURS, fMin, fMax);
+}
+
+/**
+ * Ore di fermentazione più lunghe (≤ desiredHours) con cui l'intera timeline
+ * sta in availableHours. La durata della timeline non decresce con le ore, quindi
+ * basta una bisezione; il risultato è arrotondato per difetto al quarto d'ora.
+ * Se nemmeno il ripiego ci sta, restituisce il ripiego: il risultato porterà
+ * l'avviso gen.windowTooShort.
+ */
+function fermentationHoursForWindow(
+  frame: TimelineFrame,
+  availableHours: number,
+  desiredHours: number,
+  floorHours: number,
+): number {
+  const windowMinutes = availableHours * 60;
+  if (timelineMinutes(frame, desiredHours) <= windowMinutes) return desiredHours;
+  const floor = Math.min(floorHours, desiredHours);
+  if (timelineMinutes(frame, floor) > windowMinutes) return floor;
+  let lo = floor;
+  let hi = desiredHours;
+  for (let i = 0; i < 40 && hi - lo > 1 / 240; i++) {
+    const mid = (lo + hi) / 2;
+    if (timelineMinutes(frame, mid) <= windowMinutes) lo = mid;
+    else hi = mid;
+  }
+  const quarter = Math.floor(lo * 4) / 4;
+  if (quarter >= floor && timelineMinutes(frame, quarter) <= windowMinutes) return quarter;
+  return Math.floor(lo * 100) / 100;
 }
 
 function formatDuration(hours: number): string {
