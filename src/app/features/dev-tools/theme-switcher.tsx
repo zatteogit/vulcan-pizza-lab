@@ -6,6 +6,7 @@
    State is plain localStorage + a window event so both surfaces + the shell
    stay in sync. data-theme on <html> drives the CSS in theme.css. */
 import { useCallback, useEffect, useState } from "react";
+import { BRAND } from "../../config/brand";
 
 const THEME_KEY = "vulcan_theme";
 const SWITCHER_KEY = "vulcan_theme_switcher";
@@ -31,9 +32,9 @@ export interface ThemeMeta {
 }
 
 export const THEMES: ThemeMeta[] = [
-  { id: "", preview: "vulcan", label: "Vulcan", note: "L'originale · Playfair" },
+  { id: "", preview: "vulcan", label: BRAND.name, note: "L'originale · Playfair" },
   { id: "sfornata", preview: "sfornata", label: "Sfornata", note: "L'ora del forno · Playfair" },
-  { id: "editorial-fire", preview: "editorial-fire", label: "Vulcan Editorial", note: "Materia, luce e fuoco · Playfair" },
+  { id: "editorial-fire", preview: "editorial-fire", label: `${BRAND.name} Editorial`, note: "Materia, luce e fuoco · Playfair" },
 ];
 
 function applyTheme(id: string) {

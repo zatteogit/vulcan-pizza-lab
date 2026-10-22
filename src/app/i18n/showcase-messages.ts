@@ -1,3 +1,4 @@
+import { withBrand } from "../config/brand";
 import { getActiveUiLocale, type UiMessageValues } from "./ui-messages";
 import { SHOWCASE_MESSAGES_IT } from "./showcase-messages.it";
 
@@ -18,6 +19,7 @@ export function registerShowcaseMessages(
   catalogs[languageOf(locale)] = messages;
 }
 
+/** Like uiMessage: positional `{0}` placeholders, then `{brand}` / `{brandFull}`. */
 export function showcaseMessage(
   key: string,
   values: UiMessageValues = [],
@@ -26,8 +28,10 @@ export function showcaseMessage(
   const language = languageOf(locale);
   const template = catalogs[language]?.[key] ?? SHOWCASE_MESSAGES_IT[key];
   if (template === undefined) return `⟦${key}⟧`;
-  return template.replace(/\{(\d+)\}/g, (placeholder, index: string) => {
-    const value = values[Number(index)];
-    return value === undefined ? placeholder : String(value);
-  });
+  return withBrand(
+    template.replace(/\{(\d+)\}/g, (placeholder, index: string) => {
+      const value = values[Number(index)];
+      return value === undefined ? placeholder : String(value);
+    }),
+  );
 }

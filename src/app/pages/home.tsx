@@ -80,6 +80,7 @@ import {
   motionSpring,
 } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { BRAND } from "../config/brand";
 
 type AppStep = "settings" | "styles" | "result";
 type StyleSettingsPanel = SettingsTab | "time";
@@ -1287,7 +1288,7 @@ export function HomePage() {
                       </div>
                       {/* R8: wordmark — il nome del brand accanto al logo */}
                       <span className="home-hero__wordmark">
-                        {uiMessage("pages.home.brandName")}
+                        {BRAND.name}
                         {showBeta && (
                           <span className="home-hero__beta-badge">{uiMessage("pages.home.betaBadge")}</span>
                         )}

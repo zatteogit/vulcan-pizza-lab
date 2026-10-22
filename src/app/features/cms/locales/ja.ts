@@ -54,7 +54,6 @@ export const JA_LOCALE: CmsContent = {
     startTime: "\u958B\u59CB",
     endTime: "\u7D42\u4E86",
     // Recipe output — clipboard/share text
-    clipboardTitle: "{style} \u2014 Vulcan Pizza Lab",
     clipboardBalls:
       "{n}\u500B\u306E\u751F\u5730\u7389\uFF08\u5404{w}\uFF09",
     clipboardTotal: "\u5408\u8A08: {g}",
@@ -118,7 +117,7 @@ export const JA_LOCALE: CmsContent = {
     recipeScore: "Match",
     nerdToggle: "PizzaNerd",
     nerdActive: "PizzaNerd\u3092\u6709\u52B9\u5316",
-    scienceTitle: "Vulcan Science",
+    scienceTitle: "{brand} Science",
     ariaCloseScores:
       "\u30B9\u30B3\u30A2\u30D1\u30CD\u30EB\u3092\u9589\u3058\u308B",
     ariaViewScores:
@@ -196,7 +195,7 @@ export const JA_LOCALE: CmsContent = {
       "\u6750\u6599\u3092\u6559\u3048\u3066\u304F\u3060\u3055\u3044\u3002\u6700\u9069\u306A\u30B9\u30BF\u30A4\u30EB\u3078\u3054\u6848\u5185\u3057\u307E\u3059\u3002",
     onboardingEyebrow: "\u521D\u3081\u3066\u3067\u3059\u304B\uFF1F",
     onboardingBody:
-      "Vulcan\u306F\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3\u3068\u4E88\u5B9A\u306B\u5408\u308F\u305B\u3066\u30EC\u30B7\u30D4\u3092\u8ABF\u6574\u3057\u3001\u672C\u7269\u306B\u3069\u308C\u3060\u3051\u8FD1\u3065\u3051\u308B\u304B\u3092\u6B63\u76F4\u306A\u30B9\u30B3\u30A2\u3067\u4F1D\u3048\u307E\u3059\u3002\u4E0B\u306E\u8CEA\u554F\u306B\u7B54\u3048\u3066\u3001\u3055\u3042\u59CB\u3081\u307E\u3057\u3087\u3046\u3002",
+      "{brand}\u306F\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3\u3068\u4E88\u5B9A\u306B\u5408\u308F\u305B\u3066\u30EC\u30B7\u30D4\u3092\u8ABF\u6574\u3057\u3001\u672C\u7269\u306B\u3069\u308C\u3060\u3051\u8FD1\u3065\u3051\u308B\u304B\u3092\u6B63\u76F4\u306A\u30B9\u30B3\u30A2\u3067\u4F1D\u3048\u307E\u3059\u3002\u4E0B\u306E\u8CEA\u554F\u306B\u7B54\u3048\u3066\u3001\u3055\u3042\u59CB\u3081\u307E\u3057\u3087\u3046\u3002",
     onboardingCta: "\u308F\u304B\u3063\u305F\u3001\u59CB\u3081\u308B",
     onboardingProfileCta: "\u30AA\u30FC\u30D6\u30F3\u3068\u7D4C\u9A13\u3092\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u306B\u4FDD\u5B58",
   },
@@ -452,7 +451,7 @@ export const JA_LOCALE: CmsContent = {
     smartLinkOn: "パラメータ連動 — スライダーを動かすと他も自動調整されます",
     smartLinkOff: "すべてのパラメータを連動させて自動調整",
     smartLinkApplied: "{param}：他のパラメータとタイムラインを再調整しました。",
-    settingsHelp: "これらの情報をもとにVulcanが時間とレシピを調整します。",
+    settingsHelp: "これらの情報をもとに{brand}が時間とレシピを調整します。",
     versionsLabel: "バージョン",
     versionsHint: "このスタイルの解釈で、それぞれ独自のパラメータ範囲を持ちます。アクティブなバージョンがスライダーの「範囲内」を決めます。",
     learnHeroTitle1: "おうちの",
@@ -488,7 +487,7 @@ export const JA_LOCALE: CmsContent = {
     savedBody: "あなたのデータはエンジンの調整に役立ちます。DevTools → Engine Lab で確認できます。",
     nextTimeTitle: "次回は",
     triedQuestion: "このレシピを試しましたか？",
-    triedSubtitle: "あなたのフィードバックは Vulcan のエンジンの調整に役立ちます。",
+    triedSubtitle: "あなたのフィードバックは {brand} のエンジンの調整に役立ちます。",
     success: "成功",
     fail: "失敗",
     detailedPrompt: "ありがとう！詳しいフィードバックを残しませんか？",
@@ -601,7 +600,7 @@ export const JA_LOCALE: CmsContent = {
     catMechanicsDesc:
       "\u52A0\u5DE5\u3001\u8A2D\u5099\u3001\u8A08\u6E2C",
     catScoring: "\u30B9\u30B3\u30A2",
-    catScoringDesc: "Vulcan\u54C1\u8CEA\u6307\u6A19",
+    catScoringDesc: "{brand}\u54C1\u8CEA\u6307\u6A19",
   },
   engineMessages: {
     "auth.hydrationOff":
@@ -1305,9 +1304,9 @@ export const JA_LOCALE: CmsContent = {
     searchFieldLabel:
       "\u30B0\u30ED\u30FC\u30D0\u30EB\u691C\u7D22\u30D5\u30A3\u30FC\u30EB\u30C9",
     searchClearLabel: "\u691C\u7D22\u3092\u30AF\u30EA\u30A2",
-    homeAria: "Vulcan Pizza Lab — \u30DB\u30FC\u30E0",
+    homeAria: "{brandFull} — \u30DB\u30FC\u30E0",
     devToolsAria: "\u958B\u767A\u8005\u30C4\u30FC\u30EB",
-    mottoAria: "Vulcan \u30E2\u30C3\u30C8\u30FC",
+    mottoAria: "{brand} \u30E2\u30C3\u30C8\u30FC",
     troubleshootSearchPlaceholder: "\u75C7\u72B6\u3084\u539F\u56E0\u3092\u691C\u7D22...",
     dietaryWarningsTitle:
       "\u98DF\u4E8B\u306B\u95A2\u3059\u308B\u6CE8\u610F",
@@ -1433,7 +1432,7 @@ export const JA_LOCALE: CmsContent = {
       },
       t60: {
         title: "\u5C11\u3057\u6B69\u307F\u5BC4\u308A\u304C\u5FC5\u8981",
-        canonical: "\u3046\u307E\u304F\u3044\u304D\u307E\u3059:\u30ED\u30C3\u30AF\u3092\u5916\u305B\u3070Vulcan\u304C\u6642\u9593\u3068\u713C\u304D\u3092\u6574\u3048\u307E\u3059\u3002",
+        canonical: "\u3046\u307E\u304F\u3044\u304D\u307E\u3059:\u30ED\u30C3\u30AF\u3092\u5916\u305B\u3070{brand}\u304C\u6642\u9593\u3068\u713C\u304D\u3092\u6574\u3048\u307E\u3059\u3002",
         adapted: "\u4F5C\u308C\u307E\u3059\u304C\u3001\u5C11\u3057\u6CE8\u610F\u304C\u5FC5\u8981\u3067\u3059\u3002",
       },
       t40: {

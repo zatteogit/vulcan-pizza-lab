@@ -3,6 +3,7 @@
 /* i18n: localized getters depend on a neutral message-source contract. */
 
 import type { GlossaryMessageSource } from "../i18n/domain-contracts";
+import { BRAND } from "../config/brand";
 
 export type GlossaryCategory =
   | "rheology"
@@ -55,7 +56,7 @@ export const GLOSSARY_CATEGORIES: Record<GlossaryCategory, { label: string; emoj
   scoring: {
     label: "Punteggi",
     emoji: "📊",
-    description: "Metriche di qualità Vulcan",
+    description: `Metriche di qualità ${BRAND.name}`,
   },
 };
 
@@ -236,7 +237,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     category: "fermentation",
     definition: "Descrive la dipendenza della velocità di reazione dalla temperatura assoluta.",
     formula: "k(T) = k_ref × e^(β × (T - T_ref))",
-    whyImportant: "Con β=0.075 e T_ref=18°C → Q₁₀ ≈ 2.12. Usato nel motore Vulcan per calcolare dosaggio lievito e tempi.",
+    whyImportant: `Con β=0.075 e T_ref=18°C → Q₁₀ ≈ 2.12. Usato nel motore ${BRAND.name} per calcolare dosaggio lievito e tempi.`,
     relatedTerms: ["q10"],
   },
   {
@@ -380,7 +381,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
       { label: "New York", value: "0.40–0.50", note: "8-10 mm" },
       { label: "Chicago deep dish", value: "1.00–1.30", note: "20-26 mm" },
     ],
-    whyImportant: "Determina tempo cottura, croccantezza e densità calorica. Metrica originale Progetto Vulcan.",
+    whyImportant: `Determina tempo cottura, croccantezza e densità calorica. Metrica originale Progetto ${BRAND.name}.`,
   },
   {
     id: "friction_factor",

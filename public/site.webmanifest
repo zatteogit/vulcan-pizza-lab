@@ -1,6 +1,6 @@
 {
-  "name": "Vulcan Pizza Lab",
-  "short_name": "Vulcan",
+  "name": "%BRAND_FULL_NAME%",
+  "short_name": "%BRAND_NAME%",
   "icons": [
     {
       "src": "/icon-192.png",
