@@ -1,0 +1,800 @@
+{
+  "pizzas/almetro.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/almetro-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/baciata.webp": {
+    "width": 1280,
+    "height": 1024,
+    "small": "pizzas/baciata-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 512
+  },
+  "pizzas/california.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/california-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/calzonenapoletano.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/calzonenapoletano-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/canotto.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/canotto-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/chicagodeepdish.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/chicagodeepdish-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/chicagotavern.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/chicagotavern-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/ciaccino.webp": {
+    "width": 1280,
+    "height": 1024,
+    "small": "pizzas/ciaccino-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 512
+  },
+  "pizzas/detroit.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/detroit-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/focacciabarese.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/focacciabarese-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/focacciarecco.webp": {
+    "width": 1280,
+    "height": 1024,
+    "small": "pizzas/focacciarecco-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 512
+  },
+  "pizzas/focgenovese.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/focgenovese-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/fritta.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/fritta-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/fugazzeta.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/fugazzeta-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/grandma.webp": {
+    "width": 1280,
+    "height": 1024,
+    "small": "pizzas/grandma-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 512
+  },
+  "pizzas/greekpan.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/greekpan-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/montanara.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/montanara-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/new_york.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/new_york-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/newhavenapizza.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/newhavenapizza-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/padellino.webp": {
+    "width": 1280,
+    "height": 1024,
+    "small": "pizzas/padellino-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 512
+  },
+  "pizzas/palaromana.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/palaromana-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/patateporchetta.webp": {
+    "width": 1280,
+    "height": 1024,
+    "small": "pizzas/patateporchetta-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 512
+  },
+  "pizzas/pinsa.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/pinsa-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/romanatonda.webp": {
+    "width": 1280,
+    "height": 960,
+    "small": "pizzas/romanatonda-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 480
+  },
+  "pizzas/sfincione.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/sfincione-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/tegliaromana.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/tegliaromana-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "pizzas/tranciomilanese.webp": {
+    "width": 1280,
+    "height": 1024,
+    "small": "pizzas/tranciomilanese-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 512
+  },
+  "pizzas/verace.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "pizzas/verace-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "signatures/signature_bonci_margherita.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "signatures/signature_bonci_margherita-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "signatures/signature_cacio_e_pepe.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "signatures/signature_cacio_e_pepe-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "signatures/signature_detroit_pepperoni.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "signatures/signature_detroit_pepperoni-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "signatures/signature_marinara_avpn.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "signatures/signature_marinara_avpn-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "signatures/signature_ny_pepperoni.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "signatures/signature_ny_pepperoni-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "signatures/signature_salsiccia_friarielli.webp": {
+    "width": 1280,
+    "height": 960,
+    "small": "signatures/signature_salsiccia_friarielli-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 480
+  },
+  "signatures/signature_sfincione_bianco.webp": {
+    "width": 1280,
+    "height": 853,
+    "small": "signatures/signature_sfincione_bianco-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 427
+  },
+  "toppings/topping_4formaggi.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_4formaggi-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_4stagioni.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_4stagioni-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_bbqchicken.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_bbqchicken-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_bianca.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_bianca-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_boscaiola.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_boscaiola-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_bresaolarucola.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_bresaolarucola-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_burratasalmone.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_burratasalmone-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_cacioepepe.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_cacioepepe-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_calzone.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_calzone-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_capricciosa.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_capricciosa-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_cheesepizza.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_cheesepizza-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_chicago.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_chicago-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_ciaccino.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_ciaccino-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_cosacca.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_cosacca-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_crescenzarecco.webp": {
+    "width": 1200,
+    "height": 1200,
+    "small": "toppings/topping_crescenzarecco-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_crudo.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_crudo-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_detroitpepperoni.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_detroitpepperoni-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_diavola.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_diavola-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_focacciabarese.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_focacciabarese-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_focacciacipolle.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_focacciacipolle-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_friarellisalsiccia.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_friarellisalsiccia-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_fugazza.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_fugazza-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_fugazzeta.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_fugazzeta-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_gorgonzolapere.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_gorgonzolapere-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_greekfeta.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_greekfeta-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_hawaiiana.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_hawaiiana-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_hothoney.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_hothoney-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_italianbeef.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_italianbeef-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_margherita.webp": {
+    "width": 1024,
+    "height": 1024,
+    "small": "toppings/topping_margherita-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_margheritasbagliata.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_margheritasbagliata-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_marinara.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_marinara-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_meatlovers.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_meatlovers-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_montanara.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_montanara-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_mortadellapistacchio.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_mortadellapistacchio-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_nduja.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_nduja-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_nerano.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_nerano-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_ortolana.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_ortolana-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_patateporchetta.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_patateporchetta-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_pataterosmarino.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_pataterosmarino-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_pizzafritta.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_pizzafritta-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_prosciuttofunghi.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_prosciuttofunghi-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_provolapepe.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_provolapepe-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_reccocotto.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_reccocotto-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_reccoculatello.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_reccoculatello-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_reccopizzata.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_reccopizzata-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_ricottacicoli.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_ricottacicoli-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_sardenaira.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_sardenaira-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_scarola.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_scarola-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_scarpetta.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_scarpetta-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_sfincione.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_sfincione-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_sfincionebianco.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_sfincionebianco-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_smokedsalmon.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_smokedsalmon-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_spinaci.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_spinaci-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_stracciatabottarga.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_stracciatabottarga-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_supreme.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_supreme-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_tomatopie.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_tomatopie-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_tonnocipolla.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_tonnocipolla-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_vodkapizza.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_vodkapizza-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_whiteclam.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_whiteclam-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_whitepizza.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_whitepizza-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/topping_zuccaspeck.webp": {
+    "width": 1254,
+    "height": 1254,
+    "small": "toppings/topping_zuccaspeck-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/bianca_mortazza_romana.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/bianca_mortazza_romana-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/calzone_ricotta_cicoli.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/calzone_ricotta_cicoli-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/calzone_scarola.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/calzone_scarola-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/crudo_spaccata.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/crudo_spaccata-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/fugazzeta_rellena.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/fugazzeta_rellena-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/margherita_americana.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/margherita_americana-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/margherita_grandma.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/margherita_grandma-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/margherita_napoletana_avpn.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/margherita_napoletana_avpn-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/margherita_new_york.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/margherita_new_york-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/margherita_padellino.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/margherita_padellino-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/margherita_romana.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/margherita_romana-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/margherita_trancio.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/margherita_trancio-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/patate_porchetta_baciata.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/patate_porchetta_baciata-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/patate_porchetta_sancho.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/patate_porchetta_sancho-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/recco_cotto.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/recco_cotto-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/recco_culatello.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/recco_culatello-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/recco_nduja.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/recco_nduja-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  },
+  "toppings/variants/recco_pizzata.webp": {
+    "width": 1100,
+    "height": 1100,
+    "small": "toppings/variants/recco_pizzata-640.webp",
+    "smallWidth": 640,
+    "smallHeight": 640
+  }
+}
