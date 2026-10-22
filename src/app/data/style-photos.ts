@@ -63,12 +63,19 @@ export const STYLE_PHOTOS: Record<string, string> = {
 
 /* VPL-D/C: video di cottura per-stile (serviti da public/videos, lazy dal tag
  * <video>). Usati nel detail sheet con transizione foto→video sfocata. Solo gli
- * stili con un video curato; gli altri restano sulla foto. */
-export const STYLE_VIDEOS: Record<string, string> = {
-  napoletana_stg: "/videos/napoletana_stg.mp4",
-  chicago_deep: "/videos/chicago_deep.mp4",
-  detroit: "/videos/detroit.mp4",
-  new_york: "/videos/new_york.mp4",
-  focaccia_genovese: "/videos/focaccia_genovese.mp4",
-  focaccia_barese: "/videos/focaccia_barese.mp4",
+ * stili con un video curato; gli altri restano sulla foto.
+ * BUN-1: il poster è il primo fotogramma in WebP (scripts/build-responsive-images.py
+ * --posters), così il tag non deve scaricare il video per mostrare un'immagine. */
+export interface StyleVideo {
+  src: string;
+  poster: string;
+}
+
+export const STYLE_VIDEOS: Record<string, StyleVideo> = {
+  napoletana_stg: { src: "/videos/napoletana_stg.mp4", poster: "/videos/napoletana_stg-poster.webp" },
+  chicago_deep: { src: "/videos/chicago_deep.mp4", poster: "/videos/chicago_deep-poster.webp" },
+  detroit: { src: "/videos/detroit.mp4", poster: "/videos/detroit-poster.webp" },
+  new_york: { src: "/videos/new_york.mp4", poster: "/videos/new_york-poster.webp" },
+  focaccia_genovese: { src: "/videos/focaccia_genovese.mp4", poster: "/videos/focaccia_genovese-poster.webp" },
+  focaccia_barese: { src: "/videos/focaccia_barese.mp4", poster: "/videos/focaccia_barese-poster.webp" },
 };
