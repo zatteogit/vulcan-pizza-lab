@@ -1,34 +1,34 @@
 /* Foto curate locali — canoniche per stile, niente sorprese da stock remoto */
-import photoVerace from "../../assets/pizzas/verace.png";
-import photoCanotto from "../../assets/pizzas/canotto.png";
-import photoTegliaRomana from "../../assets/pizzas/tegliaromana.png";
-import photoRomanaTonda from "../../assets/pizzas/romanatonda.png";
-import photoPinsa from "../../assets/pizzas/pinsa.png";
+import photoVerace from "../../assets/pizzas/verace.webp";
+import photoCanotto from "../../assets/pizzas/canotto.webp";
+import photoTegliaRomana from "../../assets/pizzas/tegliaromana.webp";
+import photoRomanaTonda from "../../assets/pizzas/romanatonda.webp";
+import photoPinsa from "../../assets/pizzas/pinsa.webp";
 
 // Nuove foto locali importate da temp/
-import photoNewYork from "../../assets/pizzas/new_york.png";
-import photoDetroit from "../../assets/pizzas/detroit.png";
-import photoChicagoDeep from "../../assets/pizzas/chicagodeepdish.png";
-import photoFocacciaGenovese from "../../assets/pizzas/focgenovese.png";
-import photoSfincione from "../../assets/pizzas/sfincione.png";
-import photoPalaRomana from "../../assets/pizzas/palaromana.png";
-import photoGrandmaStyle from "../../assets/pizzas/grandma.png";
-import photoFocacciaRecco from "../../assets/pizzas/focacciarecco.png";
-import photoPadellinoTorino from "../../assets/pizzas/padellino.png";
-import photoPizzaBaciata from "../../assets/pizzas/baciata.png";
-import photoCiaccinoSenese from "../../assets/pizzas/ciaccino.png";
-import photoPizzaPatatePorchetta from "../../assets/pizzas/patateporchetta.png";
-import photoTrancioMilanese from "../../assets/pizzas/tranciomilanese.png";
-import photoChicagoTavern from "../../assets/pizzas/chicagotavern.png";
-import photoFocacciaBarese from "../../assets/pizzas/focacciabarese.png";
-import photoPizzaFritta from "../../assets/pizzas/fritta.png";
-import photoMontanara from "../../assets/pizzas/montanara.png";
-import photoCalzoneNapoletano from "../../assets/pizzas/calzonenapoletano.png";
-import photoPizzaAlMetro from "../../assets/pizzas/almetro.png";
-import photoNewHavenApizza from "../../assets/pizzas/newhavenapizza.png";
-import photoFugazzeta from "../../assets/pizzas/fugazzeta.png";
-import photoCaliforniaStyle from "../../assets/pizzas/california.png";
-import photoGreekPan from "../../assets/pizzas/greekpan.png";
+import photoNewYork from "../../assets/pizzas/new_york.webp";
+import photoDetroit from "../../assets/pizzas/detroit.webp";
+import photoChicagoDeep from "../../assets/pizzas/chicagodeepdish.webp";
+import photoFocacciaGenovese from "../../assets/pizzas/focgenovese.webp";
+import photoSfincione from "../../assets/pizzas/sfincione.webp";
+import photoPalaRomana from "../../assets/pizzas/palaromana.webp";
+import photoGrandmaStyle from "../../assets/pizzas/grandma.webp";
+import photoFocacciaRecco from "../../assets/pizzas/focacciarecco.webp";
+import photoPadellinoTorino from "../../assets/pizzas/padellino.webp";
+import photoPizzaBaciata from "../../assets/pizzas/baciata.webp";
+import photoCiaccinoSenese from "../../assets/pizzas/ciaccino.webp";
+import photoPizzaPatatePorchetta from "../../assets/pizzas/patateporchetta.webp";
+import photoTrancioMilanese from "../../assets/pizzas/tranciomilanese.webp";
+import photoChicagoTavern from "../../assets/pizzas/chicagotavern.webp";
+import photoFocacciaBarese from "../../assets/pizzas/focacciabarese.webp";
+import photoPizzaFritta from "../../assets/pizzas/fritta.webp";
+import photoMontanara from "../../assets/pizzas/montanara.webp";
+import photoCalzoneNapoletano from "../../assets/pizzas/calzonenapoletano.webp";
+import photoPizzaAlMetro from "../../assets/pizzas/almetro.webp";
+import photoNewHavenApizza from "../../assets/pizzas/newhavenapizza.webp";
+import photoFugazzeta from "../../assets/pizzas/fugazzeta.webp";
+import photoCaliforniaStyle from "../../assets/pizzas/california.webp";
+import photoGreekPan from "../../assets/pizzas/greekpan.webp";
 
 export const STYLE_PHOTOS: Record<string, string> = {
   napoletana_stg: photoVerace,
