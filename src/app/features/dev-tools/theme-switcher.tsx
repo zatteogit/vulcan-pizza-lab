@@ -6,14 +6,21 @@
    State is plain localStorage + a window event so both surfaces + the shell
    stay in sync. data-theme on <html> drives the CSS in theme.css. */
 import { useCallback, useEffect, useState } from "react";
+import { BRAND } from "../../config/brand";
 
 const THEME_KEY = "vulcan_theme";
 const SWITCHER_KEY = "vulcan_theme_switcher";
 const SYNC_EVENT = "vulcan:theme-change";
 
+/* Tema globale (uguale per tutti i visitatori, via /api/config): solo in
+   sviluppo. In produzione l'API risponde 404 (audit SEC-1) e il build non la
+   chiama: il tema resta una preferenza locale di questo browser. */
+const GLOBAL_THEME_ENABLED = !import.meta.env.PROD;
 const API_BASE = (import.meta.env.VITE_ANNOTATIONS_API as string | undefined) || "/api/annotations";
 const CONFIG_ENDPOINT = API_BASE.replace(/\/annotations\/?$/, "/config");
-const API_KEY = (import.meta.env.VITE_ANNOTATIONS_KEY as string | undefined) || "";
+const API_KEY = import.meta.env.PROD
+  ? ""
+  : (import.meta.env.VITE_ANNOTATIONS_KEY as string | undefined) || "";
 
 function configHeaders(withBody: boolean): Record<string, string> {
   const h: Record<string, string> = {};
@@ -31,9 +38,9 @@ export interface ThemeMeta {
 }
 
 export const THEMES: ThemeMeta[] = [
-  { id: "", preview: "vulcan", label: "Vulcan", note: "L'originale · Playfair" },
+  { id: "", preview: "vulcan", label: BRAND.name, note: "L'originale · Playfair" },
   { id: "sfornata", preview: "sfornata", label: "Sfornata", note: "L'ora del forno · Playfair" },
-  { id: "editorial-fire", preview: "editorial-fire", label: "Vulcan Editorial", note: "Materia, luce e fuoco · Playfair" },
+  { id: "editorial-fire", preview: "editorial-fire", label: `${BRAND.name} Editorial`, note: "Materia, luce e fuoco · Playfair" },
 ];
 
 function applyTheme(id: string) {
@@ -74,6 +81,7 @@ export function useThemeControl() {
     };
 
     const fetchConfig = () => {
+      if (!GLOBAL_THEME_ENABLED) return;
       fetch(CONFIG_ENDPOINT)
         .then((res) => {
           if (res.ok) return res.json();
@@ -108,7 +116,7 @@ export function useThemeControl() {
   const setTheme = useCallback((id: string, isGlobal = true) => {
     applyTheme(id);
     writeStr(THEME_KEY, id);
-    if (isGlobal) {
+    if (isGlobal && GLOBAL_THEME_ENABLED) {
       setGlobalTheme(id);
       fetch(CONFIG_ENDPOINT, {
         method: "POST",

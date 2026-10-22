@@ -660,7 +660,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Describes the dependence of reaction rate on absolute temperature.",
       whyImportant:
-        "With \u03B2=0.075 and T_ref=18\u00B0C \u2192 Q\u2081\u2080 \u2248 2.12. Used in the Vulcan engine to calculate yeast dosage and timing.",
+        "With \u03B2=0.075 and T_ref=18\u00B0C \u2192 Q\u2081\u2080 \u2248 2.12. Used in the {brand} engine to calculate yeast dosage and timing.",
     },
     biga: {
       name: "Biga",
@@ -764,7 +764,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Dough surface density \u2014 mass per unit area. Indicates how much dough there is per cm\u00B2.",
       whyImportant:
-        "Determines baking time, crispness and caloric density. Original Vulcan Project metric.",
+        "Determines baking time, crispness and caloric density. Original {brand} Project metric.",
     },
     friction_factor: {
       name: "Friction Factor",

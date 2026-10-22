@@ -14,3 +14,13 @@
 # chunk sempre aggiornati).
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Intestazioni di sicurezza (audit SEC-2) per tutto ciò che il layer asset
+# serve direttamente (compreso "/"). Le risposte generate dal Worker ricevono
+# lo stesso insieme da worker/index.ts (SECURITY_HEADERS): tenerli allineati.
+# frame-ancestors 'self': l'app non è incorporabile in iframe da altri siti.
+# Nessun'altra direttiva CSP finché non c'è una revisione dedicata.
+/*
+  Content-Security-Policy: frame-ancestors 'self'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

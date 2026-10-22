@@ -1,10 +1,16 @@
-/* ═══ CLOUDFLARE WORKER — SPA + /api/annotations ═══
+/* ═══ CLOUDFLARE WORKER — SPA + API degli strumenti (solo sviluppo) ═══
  *
  * The production deploy is a Worker with Static Assets (…workers.dev), not
  * Pages, so the API can't live in a `functions/` Pages Function — it must be
- * this Worker script. Requests to `/api/annotations` are handled here against
- * the D1 binding `DB`; everything else is served from the built SPA via the
+ * this Worker script. Everything is served from the built SPA via the
  * `ASSETS` binding (with single-page-application fallback for client routes).
+ *
+ * Tool APIs (`/api/annotations` for the debug overlay, `/api/config` for the
+ * global theme) are OFF unless `TOOLS_API_ENABLED="1"`: in production they
+ * answer 404 (audit SEC-1 — they exposed annotations and let anyone change the
+ * theme for every visitor). The variable is set ONLY in local development, in
+ * `.dev.vars` read by `wrangler dev` (see .env.example); never in
+ * wrangler.toml or in the dashboard. The schema lives in schema.sql.
  *
  * D1 is a native binding declared in `wrangler.toml` and deployed atomically by
  * `wrangler deploy` — no dashboard binding UI, no API token.
@@ -31,21 +37,67 @@ interface AssetsBinding {
 interface Env {
   DB: D1Database;
   ASSETS: AssetsBinding;
+  /** Optional soft write-gate (x-annotations-key), development only. */
   ANNOTATIONS_KEY?: string;
+  /** "1" turns the tool APIs on. Local development only (.dev.vars). */
+  TOOLS_API_ENABLED?: string;
+  /** Comma-separated CORS allowlist for the tool APIs (default: Vite dev server). */
+  TOOLS_API_ORIGINS?: string;
 }
 
-const CORS_HEADERS: Record<string, string> = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, x-annotations-key",
-  "Access-Control-Max-Age": "86400",
+const TOOL_API_PATHS = new Set(["/api/annotations", "/api/config"]);
+const DEFAULT_TOOLS_API_ORIGINS = "http://localhost:5174,http://127.0.0.1:5174";
+
+/**
+ * Security headers (audit SEC-2) for every response the Worker generates.
+ * Assets served directly by the asset layer get the same set from
+ * public/_headers. Only frame-ancestors on purpose: a fuller CSP would need
+ * its own review (inline anti-FOUC script, fonts, images).
+ */
+const SECURITY_HEADERS: Record<string, string> = {
+  "Content-Security-Policy": "frame-ancestors 'self'",
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
 };
 
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { "Content-Type": "application/json", ...CORS_HEADERS },
-  });
+function withSecurityHeaders(headers: Headers): Headers {
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) headers.set(name, value);
+  return headers;
+}
+
+function toolsApiEnabled(env: Env): boolean {
+  return env.TOOLS_API_ENABLED === "1";
+}
+
+/** CORS only for an allowlisted Origin (no more `*`). Same-origin needs none. */
+function corsHeaders(request: Request, env: Env): Record<string, string> {
+  const origin = request.headers.get("Origin");
+  const allowed = (env.TOOLS_API_ORIGINS ?? DEFAULT_TOOLS_API_ORIGINS)
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+  if (!origin || !allowed.includes(origin)) return { Vary: "Origin" };
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, x-annotations-key",
+    "Access-Control-Max-Age": "86400",
+    Vary: "Origin",
+  };
+}
+
+function json(body: unknown, status: number, cors: Record<string, string>): Response {
+  const headers = withSecurityHeaders(
+    new Headers({ "Content-Type": "application/json", "Cache-Control": "no-store", ...cors }),
+  );
+  return new Response(JSON.stringify(body), { status, headers });
+}
+
+function notFound(): Response {
+  const headers = withSecurityHeaders(
+    new Headers({ "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" }),
+  );
+  return new Response("Not found", { status: 404, headers });
 }
 
 function authorized(request: Request, env: Env): boolean {
@@ -78,6 +130,8 @@ async function readRegistry(env: Env): Promise<unknown[]> {
  *
  * The content-type check matters: a request for a missing /assets/old.js returns
  * the SPA fallback (text/html), and we must NOT stamp that as an immutable asset.
+ * The same responses also get SECURITY_HEADERS (frame-ancestors, nosniff,
+ * referrer policy).
  */
 function withCacheHeaders(request: Request, response: Response): Response {
   const url = new URL(request.url);
@@ -87,7 +141,7 @@ function withCacheHeaders(request: Request, response: Response): Response {
     url.pathname.startsWith("/assets/") &&
     !contentType.includes("text/html");
 
-  const headers = new Headers(response.headers);
+  const headers = withSecurityHeaders(new Headers(response.headers));
   headers.set(
     "Cache-Control",
     isHashedAsset ? "public, max-age=31536000, immutable" : "no-cache, must-revalidate",
@@ -99,26 +153,34 @@ function withCacheHeaders(request: Request, response: Response): Response {
   });
 }
 
-async function handleGet(request: Request, env: Env): Promise<Response> {
-  if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
+async function handleGet(
+  request: Request,
+  env: Env,
+  cors: Record<string, string>,
+): Promise<Response> {
+  if (!authorized(request, env)) return json({ error: "unauthorized" }, 401, cors);
   try {
-    return json(await readRegistry(env));
+    return json(await readRegistry(env), 200, cors);
   } catch (e) {
-    return json({ error: String((e as Error).message) }, 500);
+    return json({ error: String((e as Error).message) }, 500, cors);
   }
 }
 
-async function handlePost(request: Request, env: Env): Promise<Response> {
-  if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
+async function handlePost(
+  request: Request,
+  env: Env,
+  cors: Record<string, string>,
+): Promise<Response> {
+  if (!authorized(request, env)) return json({ error: "unauthorized" }, 401, cors);
 
   let incoming: unknown;
   try {
     incoming = await request.json();
   } catch {
-    return json({ error: "invalid JSON body" }, 400);
+    return json({ error: "invalid JSON body" }, 400, cors);
   }
   if (!Array.isArray(incoming)) {
-    return json({ error: "body must be an array of annotations" }, 400);
+    return json({ error: "body must be an array of annotations" }, 400, cors);
   }
 
   const statements: D1PreparedStatement[] = [];
@@ -147,53 +209,61 @@ async function handlePost(request: Request, env: Env): Promise<Response> {
 
   try {
     if (statements.length > 0) await env.DB.batch(statements);
-    return json(await readRegistry(env));
+    return json(await readRegistry(env), 200, cors);
   } catch (e) {
-    return json({ error: String((e as Error).message) }, 500);
+    return json({ error: String((e as Error).message) }, 500, cors);
   }
+}
+
+/** Global theme for every visitor (`config` table, see schema.sql). */
+async function handleConfig(
+  request: Request,
+  env: Env,
+  cors: Record<string, string>,
+): Promise<Response> {
+  if (request.method === "GET") {
+    try {
+      const { results } = await env.DB.prepare("SELECT value FROM config WHERE key = 'theme'").all();
+      const themeValue = results?.[0]?.value ?? "";
+      return json({ theme: themeValue }, 200, cors);
+    } catch (e) {
+      return json({ error: String((e as Error).message) }, 500, cors);
+    }
+  }
+  if (request.method === "POST") {
+    if (!authorized(request, env)) return json({ error: "unauthorized" }, 401, cors);
+    try {
+      let body: any;
+      try {
+        body = await request.json();
+      } catch {
+        return json({ error: "invalid JSON body" }, 400, cors);
+      }
+      const themeValue = body?.theme ?? "";
+      await env.DB.prepare("INSERT INTO config (key, value) VALUES ('theme', ?1) ON CONFLICT(key) DO UPDATE SET value = excluded.value").bind(themeValue).run();
+      return json({ success: true, theme: themeValue }, 200, cors);
+    } catch (e) {
+      return json({ error: String((e as Error).message) }, 500, cors);
+    }
+  }
+  return json({ error: "method not allowed" }, 405, cors);
 }
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    if (url.pathname === "/api/config") {
-      if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS_HEADERS });
-      if (request.method === "GET") {
-        try {
-          await env.DB.prepare("CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT NOT NULL)").run();
-          const { results } = await env.DB.prepare("SELECT value FROM config WHERE key = 'theme'").all();
-          const themeValue = results?.[0]?.value ?? "";
-          return json({ theme: themeValue });
-        } catch (e) {
-          return json({ error: String((e as Error).message) }, 500);
-        }
+    if (TOOL_API_PATHS.has(url.pathname)) {
+      // Off in production: same answer as a route that does not exist.
+      if (!toolsApiEnabled(env)) return notFound();
+      const cors = corsHeaders(request, env);
+      if (request.method === "OPTIONS") {
+        return new Response(null, { status: 204, headers: withSecurityHeaders(new Headers(cors)) });
       }
-      if (request.method === "POST") {
-        if (!authorized(request, env)) return json({ error: "unauthorized" }, 401);
-        try {
-          let body: any;
-          try {
-            body = await request.json();
-          } catch {
-            return json({ error: "invalid JSON body" }, 400);
-          }
-          const themeValue = body?.theme ?? "";
-          await env.DB.prepare("CREATE TABLE IF NOT EXISTS config (key TEXT PRIMARY KEY, value TEXT NOT NULL)").run();
-          await env.DB.prepare("INSERT INTO config (key, value) VALUES ('theme', ?1) ON CONFLICT(key) DO UPDATE SET value = excluded.value").bind(themeValue).run();
-          return json({ success: true, theme: themeValue });
-        } catch (e) {
-          return json({ error: String((e as Error).message) }, 500);
-        }
-      }
-      return json({ error: "method not allowed" }, 405);
-    }
-
-    if (url.pathname === "/api/annotations") {
-      if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS_HEADERS });
-      if (request.method === "GET") return handleGet(request, env);
-      if (request.method === "POST") return handlePost(request, env);
-      return json({ error: "method not allowed" }, 405);
+      if (url.pathname === "/api/config") return handleConfig(request, env, cors);
+      if (request.method === "GET") return handleGet(request, env, cors);
+      if (request.method === "POST") return handlePost(request, env, cors);
+      return json({ error: "method not allowed" }, 405, cors);
     }
 
     // Everything else: serve the built SPA (assets + client-route fallback),

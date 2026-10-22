@@ -1,3 +1,4 @@
+import { withBrand } from "../config/brand";
 import { UI_MESSAGES_IT } from "./ui-messages.it";
 
 export type UiMessageValues = readonly (string | number)[];
@@ -31,7 +32,8 @@ export function getActiveUiLocale(): string {
 }
 
 /**
- * Resolve a catalog key and interpolate positional `{0}` placeholders.
+ * Resolve a catalog key and interpolate positional `{0}` placeholders, then
+ * the brand tokens `{brand}` / `{brandFull}` (see config/brand.ts).
  * Missing translations fall back to Italian; a missing source key remains
  * visibly diagnosable and is also rejected statically by the i18n guard.
  */
@@ -43,8 +45,10 @@ export function uiMessage(
   const language = languageOf(locale);
   const template = catalogs[language]?.[key] ?? UI_MESSAGES_IT[key];
   if (template === undefined) return `⟦${key}⟧`;
-  return template.replace(/\{(\d+)\}/g, (placeholder, index: string) => {
-    const value = values[Number(index)];
-    return value === undefined ? placeholder : String(value);
-  });
+  return withBrand(
+    template.replace(/\{(\d+)\}/g, (placeholder, index: string) => {
+      const value = values[Number(index)];
+      return value === undefined ? placeholder : String(value);
+    }),
+  );
 }

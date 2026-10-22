@@ -50,6 +50,7 @@ type UserConstraints,
 } from "../../domain/pizza-engine";
 import { Badge, Surface } from "../../components/ds/index";
 import { useStylesOverride } from "../../context/styles-override-context";
+import { BRAND } from "../../config/brand";
 
 /* ═══ CONSTANTS ═══ */
 
@@ -945,7 +946,7 @@ function buildAiPrompt(existingStyles: Record<string, PizzaStyle>): string {
   const styleList = Object.values(existingStyles)
     .map((s) => `  - ${s.id} (${s.name}, ${s.family})`)
     .join("\n");
-  return `Crea un nuovo stile pizza per Vulcan Pizza Lab. Lo stile deve seguire esattamente lo schema JSON PizzaStyle.
+  return `Crea un nuovo stile pizza per ${BRAND.fullName}. Lo stile deve seguire esattamente lo schema JSON PizzaStyle.
 
 STILI GIÀ PRESENTI NEL DATABASE (non duplicare):
 ${styleList}

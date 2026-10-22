@@ -10,6 +10,7 @@ useDSContext
 import { toShowcaseCssValue } from "./showcase-style";
 import { showcaseTransition } from "./showcase-motion";
 import { showcaseMessage } from "../../i18n/showcase-messages";
+import { BRAND } from "../../config/brand";
 
 /* ═══════════════════════════════════════════════════════════
    UTILITY — WCAG Contrast ratio at runtime
@@ -403,7 +404,7 @@ const DENSITY_SPECS: Record<DensityLevel, DensitySpec> = {
   comfortable: {
     targetHeight: 40, iconSize: 20, paddingY: 8, paddingX: 16,
     gap: 12, chipHeight: 36, inputHeight: 40, fontSize: "var(--font-size-lg)",
-    label: showcaseMessage("components.design-system.foundations-contrast-density.comfortable-2313707a"), m3Scale: "-1 (Vulcan default)",
+    label: showcaseMessage("components.design-system.foundations-contrast-density.comfortable-2313707a"), m3Scale: `-1 (${BRAND.name} default)`,
   },
   compact: {
     targetHeight: 32, iconSize: 18, paddingY: 4, paddingX: 12,

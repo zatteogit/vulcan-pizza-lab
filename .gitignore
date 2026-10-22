@@ -4,6 +4,9 @@ dist/
 *.local
 .env
 .env.*
+# Variabili locali di `wrangler dev` (TOOLS_API_ENABLED, ANNOTATIONS_KEY) e stato locale
+.dev.vars
+.wrangler/
 vulcan.command
 
 # Asset di lavoro / dati locali — non versionare (binari pesanti)

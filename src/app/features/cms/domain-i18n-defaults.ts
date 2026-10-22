@@ -460,7 +460,7 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     arrhenius: {
       name: "Equazione di Arrhenius",
       definition: "Descrive la dipendenza della velocità di reazione dalla temperatura assoluta.",
-      whyImportant: "Con β=0.075 e T_ref=18°C → Q₁₀ ≈ 2.12. Usato nel motore Vulcan per calcolare dosaggio lievito e tempi.",
+      whyImportant: "Con β=0.075 e T_ref=18°C → Q₁₀ ≈ 2.12. Usato nel motore {brand} per calcolare dosaggio lievito e tempi.",
     },
     biga: {
       name: "Biga",
@@ -544,7 +544,7 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     thickness_factor: {
       name: "Thickness Factor (TF)",
       definition: "Densità superficiale impasto — massa per unità area. Indica quanto impasto c'è per cm².",
-      whyImportant: "Determina tempo cottura, croccantezza e densità calorica. Metrica originale Progetto Vulcan.",
+      whyImportant: "Determina tempo cottura, croccantezza e densità calorica. Metrica originale Progetto {brand}.",
       ranges: [
         { label: "Napoletana", value: "0.30–0.36", note: "6-7 mm" },
         { label: "Romana tonda", value: "0.20–0.25", note: "4-5 mm" },

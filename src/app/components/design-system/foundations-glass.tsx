@@ -13,6 +13,7 @@ SubSectionLabel,
 import { toShowcaseCssValue } from "./showcase-style";
 import { showcaseTransition } from "./showcase-motion";
 import { showcaseMessage } from "../../i18n/showcase-messages";
+import { BRAND } from "../../config/brand";
 
 /* ═══════════════════════════════════════════════════════════
    FONDAMENTA — GLASSMORPHISM & LIQUID GLASS
@@ -48,7 +49,7 @@ const VULCAN_ADAPTATION = [
   { from: "blur(40px)", to: "blur(24px) saturate(1.6)", note: "Meno aggressivo, più caldo" },
   { from: "rgba(255,255,255,0.07)", to: "var(--outline-variant) / opacity 0.12", note: "Bordi morbidi" },
   { from: "mix-blend-mode: plus-lighter", to: "Non usato (troppo iOS-specifico)", note: "Preferiamo color-mix" },
-  { from: "rounded-[100px]", to: "rounded-2xl (1rem)", note: "Coerenza con DS Vulcan" },
+  { from: "rounded-[100px]", to: "rounded-2xl (1rem)", note: `Coerenza con DS ${BRAND.name}` },
 ];
 
 /* ── Interactive Glass Specimen ── */

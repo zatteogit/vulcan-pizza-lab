@@ -783,11 +783,14 @@ function ProjectTab() {
               Overlay di Annotazione Visuale
             </div>
             <div className="type-data-sm" style={{ color: "var(--text-muted)", marginTop: 2 }}>
-              Abilita il widget fluttuante, le combinazioni Ctrl+Option+A / Ctrl+Shift+X e il triplo tocco mobile.
+              {import.meta.env.PROD
+                ? "Solo in sviluppo (npm run dev): nelle build di produzione l'overlay e la sincronizzazione delle annotazioni sono spenti."
+                : "Abilita il widget fluttuante, le combinazioni Ctrl+Option+A / Ctrl+Shift+X e il triplo tocco mobile."}
             </div>
           </div>
           
           <button
+            disabled={import.meta.env.PROD}
             onClick={() => {
               const nextVal = !isOverlayActive;
               setIsOverlayActive(nextVal);
@@ -804,7 +807,7 @@ function ProjectTab() {
               fontWeight: "var(--weight-semibold)" as any,
             }}
           >
-            {isOverlayActive ? "Attivo" : "Disattivato"}
+            {import.meta.env.PROD ? "Solo sviluppo" : isOverlayActive ? "Attivo" : "Disattivato"}
           </button>
         </div>
       </LabSection>

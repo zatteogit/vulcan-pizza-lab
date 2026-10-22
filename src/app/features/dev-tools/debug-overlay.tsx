@@ -33,11 +33,21 @@ function DebugToast({ message }: { message: string | null }) {
 }
 
 /**
- * Always-mounted gate for the AI debug overlay. Keeps the footprint to a single
- * toggle hook + toast until the user activates it, then lazy-loads the full
- * workspace.
+ * Entry point for the AI debug overlay. Off in production builds (audit SEC-1):
+ * no shortcuts, no hot-corner listener, no calls to the annotations API. Pins
+ * are created in development.
  */
 export function DebugOverlay() {
+  if (import.meta.env.PROD) return null;
+  return <DebugOverlayGate />;
+}
+
+/**
+ * Always-mounted gate (development). Keeps the footprint to a single toggle
+ * hook + toast until the user activates it, then lazy-loads the full
+ * workspace.
+ */
+function DebugOverlayGate() {
   const { isEnabled, showToast, toast } = useDebugGate();
 
   return (

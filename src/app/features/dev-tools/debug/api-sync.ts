@@ -1,24 +1,29 @@
 import type { Annotation } from "./annotation-types";
 
-/* ═══ REMOTE SYNC — CLOUDFLARE PAGES FUNCTION + D1 ═══
+/* ═══ REMOTE SYNC — CLOUDFLARE WORKER + D1 (development only) ═══
  *
  * The overlay talks to a single `/api/annotations` endpoint backed by D1 (see
- * `functions/api/annotations.ts`). Production hits it same-origin; local dev
- * points at the deployed URL via `VITE_ANNOTATIONS_API`, so both environments
- * share one store. localStorage stays as an instant/offline cache on top.
+ * `worker/index.ts`). That API is OFF in production (it answers 404, audit
+ * SEC-1) and production builds never call it. In local dev, point
+ * `VITE_ANNOTATIONS_API` at a `wrangler dev` Worker started with
+ * `TOOLS_API_ENABLED="1"` (see .env.example). localStorage stays as an
+ * instant/offline cache on top.
  */
 
 const API_BASE = (import.meta.env.VITE_ANNOTATIONS_API as string | undefined) || "/api/annotations";
-const API_KEY = (import.meta.env.VITE_ANNOTATIONS_KEY as string | undefined) || "";
+/* Never inlined in a production bundle. */
+const API_KEY = import.meta.env.PROD
+  ? ""
+  : (import.meta.env.VITE_ANNOTATIONS_KEY as string | undefined) || "";
 
 /**
- * Whether a remote is reachable. Always true in production (same-origin
- * function); in dev only when an absolute URL is configured, since the Vite dev
- * server does not serve the function itself.
+ * Whether a remote is reachable: never in production builds; in dev only when
+ * an absolute URL is configured, since the Vite dev server does not serve the
+ * Worker API itself.
  */
 export function isRemoteConfigured(): boolean {
-  if (import.meta.env.VITE_ANNOTATIONS_API) return true;
-  return !import.meta.env.DEV;
+  if (import.meta.env.PROD) return false;
+  return Boolean(import.meta.env.VITE_ANNOTATIONS_API);
 }
 
 function headers(withBody: boolean): Record<string, string> {
@@ -30,6 +35,7 @@ function headers(withBody: boolean): Record<string, string> {
 
 /** Fetch the full registry (tombstones included). Null on any failure. */
 export async function fetchRemote(): Promise<Annotation[] | null> {
+  if (!isRemoteConfigured()) return null;
   try {
     const res = await fetch(API_BASE, { headers: headers(false) });
     if (!res.ok) return null;
@@ -55,6 +61,7 @@ export async function pushRemote(
   list: Annotation[],
   opts: { keepalive?: boolean } = {},
 ): Promise<Annotation[] | null> {
+  if (!isRemoteConfigured()) return null;
   try {
     const res = await fetch(API_BASE, {
       method: "POST",

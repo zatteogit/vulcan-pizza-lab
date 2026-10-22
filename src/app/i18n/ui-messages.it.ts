@@ -38,7 +38,6 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "components.shared.search-overlay.teoria-b97a6296": "Teoria",
   "components.shared.search-overlay.tutto-371aa077": "Tutto",
   "components.shared.search-overlay.value-w-value-value-prot-value-98984423": "{0} · W{1} · {2}% prot · {3}",
-  "components.shared.vulcan-logo.vulcan-pizza-lab-49eb8fd0": "Vulcan Pizza Lab",
   "features.recipe.feedback.correction.bland": "Insipida: +0,2% di sale (e allunga un po' la maturazione).",
   "features.recipe.feedback.correction.overproofed": "Sovra-lievitata/sgonfiata: fermentazione ~20% più corta.",
   "features.recipe.feedback.correction.too-dense": "Troppo densa: +2% idratazione per una mollica più aperta.",
@@ -216,7 +215,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "features.recipe.recipe-match-card.pochi-aggiustamenti-tanta-sostanza-528675f6": "Pochi aggiustamenti, tanta sostanza.",
   "features.recipe.recipe-match-card.qualche-micro-compromesso-ma-la-scintilla--62f59a12": "Qualche micro-compromesso, ma la scintilla c'è.",
   "features.recipe.recipe-match-card.questa-versione-e-nata-per-il-tuo-setup-4ff2056a": "Questa versione è nata per il tuo setup.",
-  "features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69": "Si può fare bene: sblocchiamola e Vulcan sistema tempi e cottura.",
+  "features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69": "Si può fare bene: sblocchiamola e {brand} sistema tempi e cottura.",
   "features.recipe.recipe-match-card.sostenibilita-7cea5449": "Sostenibilità",
   "features.recipe.recipe-match-card.sperimentazione-d09679c9": "Sperimentazione",
   "features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf": "Troppo per questo setup: alleggeriamo tempi, forno o ambizione.",
@@ -314,7 +313,6 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "pages.explore.optimizable": "Ottimizzabile: {0}% → {1}% col tuo setup",
   "pages.explore.recipeBy": "Secondo {0}",
   "pages.home.applyCorrections": "Applica le correzioni",
-  "pages.home.brandName": "Vulcan",
   "pages.home.betaBadge": "beta",
   "pages.home.motto": "Make pizza, not war",
   "pages.learn.contextByLevel": "Il percorso su misura per te · Livello {0}",
@@ -363,6 +361,6 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "pages.recipe.applyCorrections": "Applica le correzioni",
   "pages.recipe.defaultTopping": "Condimento",
   "pages.recipe.ingredientsUpdated": "{0}: ingredienti aggiornati",
-  "pages.home.onboardingBody": "Vulcan disegna la ricetta su misura per il tuo forno e il tuo tempo — e ti dice con un punteggio onesto quanto si avvicina all'originale.",
+  "pages.home.onboardingBody": "{brand} disegna la ricetta su misura per il tuo forno e il tuo tempo — e ti dice con un punteggio onesto quanto si avvicina all'originale.",
   "shared.unsavedChanges": "Modifiche non salvate"
 };

@@ -17,6 +17,7 @@ getToppingForStyle,
 type TimelineInsertPoint,
 type ToppingRecipe
 } from "../data/topping-library";
+import { BRAND } from "../config/brand";
 
 // ═══ TYPES ═══
 
@@ -3017,7 +3018,7 @@ function getDayLabel(dayOffset: number, meal: string, now: Date): string {
 export const NO_PREFERENCE_SLOT: TimeSlot = {
   id: "no_preference",
   label: "Nessuna preferenza",
-  sublabel: "ci pensa Vulcan",
+  sublabel: `ci pensa ${BRAND.name}`,
   hours: 24,
   emoji: "⏳",
 };

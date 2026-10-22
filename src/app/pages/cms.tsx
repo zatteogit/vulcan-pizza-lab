@@ -59,6 +59,7 @@ export function CmsPage() {
   const navigate = useNavigate();
   const {
     cms,
+    rawCms,
     update,
     resetField,
     resetAll,
@@ -538,7 +539,7 @@ export function CmsPage() {
             >
               <SectionEditor
                 section={currentSection}
-                cms={cms}
+                cms={rawCms}
                 onUpdate={update}
                 onReset={resetField}
                 isModified={isModified}
