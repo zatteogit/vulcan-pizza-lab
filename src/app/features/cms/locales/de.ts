@@ -636,6 +636,13 @@ export const DE_LOCALE: CmsContent = {
       "55er-Regel: Wasser mit {temp} verwenden, um {ddt} Teigtemperatur zu erreichen.",
     "tip.frictionNote":
       "Reibungskompensation der Knetmaschine: {friction}",
+    "gen.windowTooShort": "Mit {available} h reicht die Zeit nicht für alles: Dieses Rezept braucht etwa {needed} h. Es wird später fertig als zur gewählten Uhrzeit: Wähle eine spätere Uhrzeit oder eine kürzere Gare.",
+    "opt.hydrationOvenCompensated": "Hydratation {h}%: {base}% plus {delta}% als Ausgleich für einen Ofen, der kühler als ideal ist.",
+    "opt.hydrationOutOfStyleRange": "Mit dieser Kompensation liegt die Hydratation außerhalb des Stilbereichs ({min}–{max}%).",
+    "tip.waterTempLimitMax": "Kalte Küche: Selbst mit Wasser von {temp} bleibt der Teig unter {ddt}. Das Wasser nicht weiter erwärmen: Mehl an einem warmen Ort lagern oder die Stockgare etwas verlängern.",
+    "tip.waterTempLimitMin": "Warme Küche: Selbst mit Wasser von {temp} wird der Teig wärmer als {ddt}. Eiswasser verwenden, Mehl im Kühlschrank lagern oder die Stockgare etwas verkürzen.",
+    "timeline.preheat.descWholeProof": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. Währenddessen machen die Teiglinge ihre Stückgare.",
+    "timeline.preheat.descDuringRest": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. Währenddessen ruhen die Teiglinge.",
     "hint.flourWeak": "schwaches Mehl (klassisches 00)",
     "hint.flourMedium": "mittelstarkes Mehl",
     "hint.flourStrong": "starkes Pizzamehl",
@@ -747,7 +754,13 @@ export const DE_LOCALE: CmsContent = {
       tipBeginner:
         "Im K\u00FChlschrank w\u00E4chst der Teig langsam, gewinnt aber an Geschmack. Gut mit Kontaktfolie abdecken.",
       tipNerd:
-        "Bei {temp} verlangsamt Q\u2081\u2080\u22482,0 die G\u00E4rung. Proteolytische Aktivit\u00E4t dominiert und baut FODMAP ab.",
+        "Bei {temp} verlangsamt sich die Gärung auf {factor}× gegenüber dem Referenzwert {refTemp}. Proteolytische Aktivität dominiert und baut FODMAP ab.",
+    },
+    rest: {
+      title: "Ruhezeit",
+      desc: "Den Teig abgedeckt bei {temp} ruhen lassen",
+      tipBeginner: "Ohne Hefe geht der Teig nicht auf: Die Ruhe entspannt das Gluten, so lässt sich die Teigplatte dünn ausrollen, ohne sich zusammenzuziehen.",
+      tipNerd: "Die Ruhe vollendet die Hydratation des Mehls und entspannt das Glutennetz: weniger elastische Rückstellung, eine fast durchscheinende Teigplatte.",
     },
     divide: {
       title: "Teilen",

@@ -638,6 +638,13 @@ export const ES_LOCALE: CmsContent = {
       "Regla del 55: usa agua a {temp} para alcanzar {ddt} de masa.",
     "tip.frictionNote":
       "Compensación por fricción de la amasadora: {friction}",
+    "gen.windowTooShort": "Con {available} h no hay tiempo para todo: esta receta necesita unas {needed} h. Estará lista más tarde de la hora elegida: elige una hora posterior o un levado más corto.",
+    "opt.hydrationOvenCompensated": "Hidratación {h}%: {base}% más {delta}% para compensar un horno más frío de lo ideal.",
+    "opt.hydrationOutOfStyleRange": "Con esta compensación la hidratación sale del rango del estilo ({min}–{max}%).",
+    "tip.waterTempLimitMax": "Cocina fría: incluso con agua a {temp} la masa queda por debajo de {ddt}. No calientes más el agua: guarda la harina en un lugar templado o alarga un poco la fermentación en bloque.",
+    "tip.waterTempLimitMin": "Cocina cálida: incluso con agua a {temp} la masa supera {ddt}. Usa agua helada, guarda la harina en la nevera o acorta un poco la fermentación en bloque.",
+    "timeline.preheat.descWholeProof": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, los bollos hacen el leudado final.",
+    "timeline.preheat.descDuringRest": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, los bollos reposan.",
     "tip.waterTemp": "",
     "hint.flourWeak": "harina floja (00 clásica)",
     "hint.flourMedium": "harina de fuerza media",
@@ -748,7 +755,13 @@ export const ES_LOCALE: CmsContent = {
       tipBeginner:
         "En la nevera la masa crece lento pero gana sabor. Cubre bien con film en contacto.",
       tipNerd:
-        "A {temp} el Q\u2081\u2080\u22482.0 ralentiza la fermentaci\u00F3n. La actividad proteol\u00EDtica domina, degradando los FODMAP.",
+        "A {temp} la fermentación se ralentiza a {factor}× respecto a la referencia de {refTemp}. La actividad proteolítica domina, degradando los FODMAP.",
+    },
+    rest: {
+      title: "Reposo",
+      desc: "Dejar reposar la masa tapada a {temp}",
+      tipBeginner: "Sin levadura la masa no crece: el reposo relaja el gluten y la lámina se estira fina sin encogerse.",
+      tipNerd: "El reposo completa la hidratación de la harina y relaja la red de gluten: menos retracción elástica, lámina casi transparente.",
     },
     divide: {
       title: "Boleado",

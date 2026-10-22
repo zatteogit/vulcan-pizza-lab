@@ -1,0 +1,208 @@
+# Correzioni al motore — 22 ottobre 2026
+
+Rilievi ENG-1…ENG-7 dell'audit di prodotto. Le decisioni sono di Matteo (22/10/2026).
+Codice in `src/app/domain/pizza-engine.ts`; il motore resta puro (niente React/DOM).
+
+I numeri «prima/dopo» sono misurati sul codice, con questi vincoli salvo diversa
+indicazione: 4 panetti, forno di casa 250 °C, livello 2, cucina 22 °C, impasto a mano.
+
+## Riepilogo
+
+| Rilievo | Cosa cambia |
+|---|---|
+| ENG-2 | Q10 a tratti e continuo. Niente salto a 10 °C (e a 15 °C per la madre). A freddo circa +20% di lievito. |
+| ENG-3 | Tolta la rampa sotto le 2 h. Vale il modello cinetico, con il tetto al 3%. |
+| ENG-4 | La fermentazione lascia spazio a impasto, staglio, stesura, farcitura e cottura. Se la finestra non basta, avviso in Procedimento. |
+| ENG-5 | Il preriscaldo c'è sempre, anche nella Focaccia di Recco. Per gli impasti non lievitati si parla di «Riposo». |
+| ENG-6 | L'ottimizzatore applica la compensazione d'idratazione sopra i candidati. `science.compensations` elenca solo ciò che è applicato. |
+| ENG-7 | Cucina molto fredda o molto calda: acqua al limite pratico (40 °C o 2 °C) con un'indicazione, non più silenzio. |
+| ENG-1 | 37 test nuovi: proprietà su tutti i 28 stili e la suite dev-tools (98 controlli) in vitest. |
+
+## ENG-2 — Q10 a tratti continuo
+
+**Prima.** L'esponente partiva sempre da 18 °C con il Q10 del tratto finale. Sotto i 10 °C
+il Q10 passava da 2,0 a 1,6 di colpo: scaldando da 9,9 a 10 °C il lievito saliva.
+Il vecchio commento diceva che Q10 = 2 «sovrastima l'attività a bassa T». Ma il Q10
+più basso dà più attività a freddo: commento ed effetto si contraddicevano.
+
+**Dopo.** Nuova funzione `fermentationSpeedRatio(lievito, T)`:
+- lievito commerciale: Q10 2,0 da 18 a 10 °C, poi 1,6 sotto i 10 °C partendo dal valore a 10 °C;
+- lievito madre: Q10 2,2 sopra i 15 °C, poi 1,9 sotto, con lo stesso raccordo.
+
+È l'unica fonte del fattore di velocità: dose di lievito, ore equivalenti a 18 °C
+(digeribilità e livello scientifico, `q10_factor`), testi «nerd» della puntata.
+`getQ10` resta e restituisce il Q10 locale del tratto.
+
+New York, 24 h, lievito fresco:
+
+| Temperatura | Lievito prima | Lievito dopo | Ore eq. 18 °C | Digeribilità |
+|---|---|---|---|---|
+| 4 °C | 0,19% (1,3 g) | 0,23% (1,5 g) | 12,4 → 10,4 | 64 → 60 |
+| 9,9 °C | 0,15% (1,0 g) | 0,17% (1,1 g) | 16,4 → 13,7 | 67 → 61 |
+| 10 °C | 0,17% (1,1 g) | invariato | 13,8 | 62 |
+| 15 °C e oltre | invariato | invariato | — | — |
+
+Il fattore a 4 °C passa da 0,52 a 0,43 (2^-0,8 · 1,6^-0,6): circa +20% di lievito,
+come accettato nella decisione. Lievito madre, Teglia 24 h: a 14,9 °C ore eq.
+19,7 → 18,8; a 15 °C 19,8 → 18,9; a 15,1 °C 19,1 invariato. Il salto non c'è più.
+
+Interpretazione: a freddo la digeribilità stimata scende di qualche punto, perché
+le ore equivalenti diminuiscono. È la conseguenza diretta del modello scelto.
+
+## ENG-3 — Fermentazioni sotto le 2 ore
+
+**Prima.** Fino a 2 h il lievito cresceva con le ore (0,2% all'ora). Era nata per la
+Focaccia di Recco, che oggi è `unleavened` e ha lievito 0. Sugli impasti lievitati la
+curva andava al contrario del resto del modello.
+
+**Dopo.** Vale il modello cinetico anche sotto le 2 h, con il tetto al 3%.
+
+Napoletana STG a 22 °C (farina circa 507 g):
+
+| Ore | Prima | Dopo |
+|---|---|---|
+| 1 h | 0,2% (1,0 g) | 0,7% (3,5 g) |
+| 1,5 h | 0,3% (1,5 g) | 0,53% (2,7 g) |
+| 2 h | 0,4% (2,0 g) | 0,43% (2,2 g) |
+| 2,5 h e oltre | invariato | invariato |
+
+## ENG-4 — Finestra stretta fino al pasto
+
+**Prima.** La fermentazione prendeva tutte le ore fino al pasto. Impasto, staglio,
+stesura e cottura restavano fuori. Su 28 stili × 4/8/12/24 h × genera/ottimizza,
+177 casi su 224 sforavano la finestra. In UI l'inizio cadeva nel passato e si partiva
+«adesso» senza avviso: la pizza era pronta dopo l'orario scelto.
+
+**Dopo.**
+- Il motore calcola l'overhead fisso: i minuti della timeline che non sono
+  fermentazione (`timelineOverheadMinutes`). Il preriscaldo corre in parallelo al
+  riposo e conta come fermentazione.
+- `generateRecipe` (senza ore scelte) e `optimizeRecipe` tolgono l'overhead dalla
+  finestra e arrotondano per difetto al quarto d'ora.
+- L'ottimizzatore aggiunge come candidato la fermentazione più lunga che sta nella
+  finestra, se cade nel range dello stile. I candidati sono filtrati dopo l'arrotondamento.
+- Minimo tecnico: 1 h per gli impasti lievitati (0,5 h di riposo per la Recco).
+- Se la timeline non sta comunque nella finestra, il risultato porta l'avviso
+  `gen.windowTooShort` (ore disponibili e ore necessarie). Vale anche quando le ore
+  le sceglie l'utente (es. versione 48 h con il pasto fra 24 h): si rispettano, ma
+  con avviso. La UI lo mostra nel Procedimento, sopra gli orari, solo se è scelto
+  un orario del pasto (non con «Nessuna preferenza»).
+
+| Caso | Fermentazione | Timeline totale |
+|---|---|---|
+| Napoletana, forno a legna, finestra 4 h | 4 h → 3,25 h | 284 min → 239 min |
+| New York, 250 °C, finestra 4 h | 4 h → 3 h | 296 min → 236 min |
+| Napoletana, finestra 8 h | 8 h → 7,25 h | 524 min → 479 min |
+| Napoletana, finestra 2 h | 2 h → 1,25 h | 164 min → 119 min |
+| Sonda 28 stili × 4/8/12/24 h × genera/ottimizza | — | 177/224 → 0/224 oltre la finestra |
+
+Effetti collaterali misurati:
+- con 8 h la Napoletana scende sotto il suo minimo (8 h): ora compare anche
+  l'avviso già esistente `gen.timeBelowStyleWindow` e l'autenticità ne tiene conto;
+- con 24 h (anche «Nessuna preferenza», che vale 24 h) gli stili con minimo 24 h
+  passano da 24 h a circa 23 h nell'ottimizzatore; il punteggio complessivo cambia
+  di 1–2 punti (es. Teglia romana a legna 95 → 94).
+
+## ENG-5 — Preriscaldo sempre presente
+
+**Prima.** Il passaggio «Forno al massimo» esisteva solo se l'appretto superava i 30 min.
+La Focaccia di Recco (riposo 1,25 h, appretto 30 min) non diceva mai di accendere il
+forno. Per un impasto non lievitato i passaggi si chiamavano «Puntata» e «Lievitazione finale».
+
+**Dopo.** Il preriscaldo è ricavato dentro la fermentazione, quindi il totale non cambia:
+- appretto lungo (almeno preriscaldo + 15 min): il forno si accende negli ultimi minuti
+  dell'appretto, con il preriscaldo pieno (30/45/60 min secondo la temperatura);
+- appretto corto: il forno si accende subito dopo lo staglio e l'appretto avviene
+  durante il preriscaldo; i minuti mancanti si tolgono dalla fine della puntata;
+- impasto non lievitato: «Riposo» al posto di «Puntata» e «Appretto», con testi propri
+  (`timelineLabels.rest`), e preriscaldo con «Intanto i panetti riposano».
+
+| Caso | Prima | Dopo |
+|---|---|---|
+| Recco, 250 °C | Puntata 45 · Staglio 15 · Appretto 30 · (nessun preriscaldo) | Riposo 45 · Staglio 15 · Forno al massimo 30 |
+| Recco, forno a legna (320 °C) | Puntata 45 · Staglio 15 · Appretto 30 · (nessun preriscaldo) | Riposo 30 · Staglio 15 · Forno al massimo 45 |
+| Napoletana 2 h, 485 °C | Puntata 72 · Staglio 15 · Appretto 30 · Forno 18 | Puntata 60 · Staglio 15 · Forno al massimo 60 |
+| Appretti lunghi (≥ preriscaldo + 30 min) | invariato | invariato |
+
+Limite noto, non corretto: per pizza fritta e montanara (frittura a 185 °C) il passaggio
+dice ancora «Forno al massimo». Andrebbe un testo per l'olio.
+
+## ENG-6 — Compensazione d'idratazione e ottimizzatore
+
+**Prima.** La compensazione si applicava solo senza idratazione custom. L'ottimizzatore
+passa sempre un valore custom, quindi non la applicava. Però `science.compensations`
+continuava a elencare «+X% idratazione». La compensazione era scritta «0 → 8,7».
+
+**Dopo.**
+- Nuova opzione `compensateCustomHydration` di `generateRecipe`: l'ottimizzatore la usa
+  sui suoi candidati, che sono idratazioni base.
+- Si può uscire dal range dello stile, in modo dichiarato: la compensazione è in
+  `science.compensations` come «base → finale» e la motivazione dell'ottimizzatore dice
+  «Idratazione X%: base + delta…» e, se serve, «esce dal range dello stile».
+- Il tetto per livello (principiante 68%, intermedio 78%, avanzato 88%) vale
+  sull'idratazione finale.
+- `science.compensations`, l'E-score e la deviazione contano solo le compensazioni
+  applicate. Con un valore scelto dall'utente l'idratazione non è compensata e non è elencata.
+
+Napoletana STG a 250 °C (range 55–62%):
+
+| | Prima | Dopo |
+|---|---|---|
+| Genera (punto medio) | 67,2%, elencata «0 → 8,7» | 67,2%, elencata «58,5 → 67,2» |
+| Ottimizza | 55%, «+8,7%» elencata ma non applicata | 63,7% (55 + 8,7), elencata e motivata, fuori range dichiarato |
+| Valore utente 60% | 60%, «+8,7%» elencata; E-score 21 | 60%, non elencata; E-score 17 |
+
+Limite noto: dopo «Ottimizza» la UI ricostruisce la ricetta con l'idratazione finale
+come valore custom. Quella ricetta non elenca la compensazione nel riquadro tecnico:
+la dichiarazione resta nella motivazione dell'ottimizzazione.
+
+## ENG-7 — Regola 55 ai limiti
+
+**Prima.** Con la cucina a 15 °C o meno l'acqua richiesta superava i 40 °C: il motore
+restituiva `null` e l'interfaccia taceva. Lo stesso sotto i 2 °C (cucina calda con impastatrice).
+
+**Dopo.** L'acqua si ferma al limite pratico e `science.water_temp_limit` vale `"max"` o `"min"`.
+Sotto la riga Acqua compare un'indicazione: per la cucina fredda non scaldare oltre e
+intiepidire la farina o allungare la puntata; per la cucina calda acqua ghiacciata,
+farina in frigo o puntata più corta.
+
+| Caso (Napoletana) | Prima | Dopo |
+|---|---|---|
+| Cucina 12 °C, a mano | acqua `null`, nessuna indicazione | 40 °C + «Cucina fredda…» |
+| Cucina 15 °C, a mano | `null` | 40 °C + «Cucina fredda…» |
+| Cucina 34 °C, planetaria | `null` | 2 °C + «Cucina calda…» |
+| Cucina 22 °C, a mano | 28 °C | invariato |
+
+I testi «nerd» della puntata usano il fattore del modello: a 4 °C «Q₁₀≈2.0 rallenta»
+diventa «la fermentazione rallenta a 0,4× rispetto a 18 °C».
+
+## ENG-1 — Test
+
+- `src/app/domain/pizza-engine.properties.test.ts` (23 test, tutti i 28 stili):
+  monotonia del lievito nelle ore (1–96 h) e nella temperatura (2–30 °C a passi di 0,5),
+  ore equivalenti non decrescenti, timeline ≤ ore disponibili × 60 (genera e ottimizza),
+  avviso solo quando si sfora, preriscaldo presente negli stili cotti in forno, fasi di
+  fermentazione = ore, compensazioni dichiarate = applicate, tetto di livello,
+  bilancio di massa (somma, percentuali, mix di farine), Regola 55 ai limiti.
+- `src/app/features/dev-tools/engine-test-suite.test.ts`: i 13 gruppi della pagina /dev
+  (98 controlli) girano in vitest e falliscono sugli esiti «fail».
+- Test totali: 44 → 81.
+
+## Testi nuovi (7 lingue)
+
+In `cms-context.tsx` (italiano) e `locales/{en,de,es,fr,pt,ja}.ts`:
+- `engineMessages`: `gen.windowTooShort`, `opt.hydrationOvenCompensated`,
+  `opt.hydrationOutOfStyleRange`, `tip.waterTempLimitMax`, `tip.waterTempLimitMin`,
+  `timeline.preheat.descWholeProof`, `timeline.preheat.descDuringRest`;
+- `timelineLabels.rest` (titolo, descrizione, consigli);
+- `timelineLabels.bulk_cold.tipNerd` riscritto con `{factor}` e `{refTemp}`.
+
+## Da decidere o da fare
+
+- «Nessuna preferenza» vale 24 h: con ENG-4 gli stili con minimo 24 h scendono a circa 23 h.
+  Opzioni: (a, consigliata) trattarla come finestra libera nel motore; (b) portarla a 24 h + overhead; (c) lasciare così.
+- `centerParamsForStyle` (`use-recipe-state.ts`) limita ancora le ore senza togliere
+  l'overhead. Nel flusso Crea l'ottimizzazione automatica la sostituisce.
+- `recommendStyles` confronta ancora il minimo dello stile con le ore intere.
+- Ottimizzatore della Recco: i candidati arrotondati all'ora portano a 3 h (range 0,5–2 h).
+- Le motivazioni dell'ottimizzatore mostrano i decimali con il punto (63.7%).

@@ -638,6 +638,13 @@ export const PT_LOCALE: CmsContent = {
       "Regra dos 55: use água a {temp} para atingir {ddt} de temperatura da massa.",
     "tip.frictionNote":
       "Compensação de atrito da amassadeira: {friction}",
+    "gen.windowTooShort": "Com {available} h não há tempo para tudo: esta receita precisa de cerca de {needed} h. Vai ficar pronta mais tarde do que o horário escolhido: escolha um horário mais tarde ou uma fermentação mais curta.",
+    "opt.hydrationOvenCompensated": "Hidratação {h}%: {base}% mais {delta}% para compensar um forno mais frio do que o ideal.",
+    "opt.hydrationOutOfStyleRange": "Com esta compensação a hidratação sai da faixa do estilo ({min}–{max}%).",
+    "tip.waterTempLimitMax": "Cozinha fria: mesmo com água a {temp} a massa fica abaixo de {ddt}. Não aqueça mais a água: guarde a farinha num lugar morno ou prolongue um pouco a fermentação em massa.",
+    "tip.waterTempLimitMin": "Cozinha quente: mesmo com água a {temp} a massa passa de {ddt}. Use água gelada, guarde a farinha na geladeira ou encurte um pouco a fermentação em massa.",
+    "timeline.preheat.descWholeProof": "Ligue o forno agora a {temp}{equipmentNote}. Entretanto, as bolas de massa fazem a fermentação final.",
+    "timeline.preheat.descDuringRest": "Ligue o forno agora a {temp}{equipmentNote}. Entretanto, as bolas de massa descansam.",
     "tip.waterTemp": "",
     "hint.flourWeak": "farinha fraca (00 clássica)",
     "hint.flourMedium": "farinha de força média",
@@ -748,7 +755,13 @@ export const PT_LOCALE: CmsContent = {
       tipBeginner:
         "Na geladeira a massa cresce devagar mas ganha sabor. Cubra bem com filme em contacto.",
       tipNerd:
-        "A {temp} o Q\u2081\u2080\u22482,0 desacelera a fermenta\u00E7\u00E3o. A atividade proteol\u00EDtica domina, degradando os FODMAP.",
+        "A {temp} a fermentação desacelera para {factor}× em relação à referência de {refTemp}. A atividade proteolítica domina, degradando os FODMAP.",
+    },
+    rest: {
+      title: "Descanso",
+      desc: "Deixar a massa descansar coberta a {temp}",
+      tipBeginner: "Sem fermento a massa não cresce: o descanso relaxa o glúten e a folha estica fina sem encolher.",
+      tipNerd: "O descanso completa a hidratação da farinha e relaxa a rede de glúten: menos retração elástica, folha quase transparente.",
     },
     divide: {
       title: "Divis\u00E3o",

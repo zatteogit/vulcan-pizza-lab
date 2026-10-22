@@ -58,6 +58,7 @@ export function IngredientsSection({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
   const servingLabel = getServingUnitLabel(cms, servingUnit, 2);
+  const waterTempLimit = recipe.science.water_temp_limit ?? null;
   /* Baker's % sul totale farina — layer nerd accanto ai grammi. */
   const bakerPct = (grams: number, maxDecimals = 1) =>
     `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: maxDecimals }).format(
@@ -204,6 +205,21 @@ export function IngredientsSection({
             }
             amount={gramsApprox(recipe.water_g, fmt)}
           />
+          {/* ENG-7: fuori dal range pratico dell'acqua (2–40 °C) la Regola 55 non
+              basta da sola: diciamo cosa fare invece di tacere. */}
+          {recipe.water_temp_c != null && waterTempLimit && (
+            <p className="type-body ingredients-water-limit">
+              {t(
+                cms.engineMessages[
+                  waterTempLimit === "max" ? "tip.waterTempLimitMax" : "tip.waterTempLimitMin"
+                ],
+                {
+                  temp: fmt.celsius(recipe.water_temp_c),
+                  ddt: fmt.celsius(recipe.science.desired_dough_temp_c),
+                },
+              )}
+            </p>
+          )}
           {recipe.water_temp_c != null && showRule55Tip && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
@@ -212,6 +228,7 @@ export function IngredientsSection({
               transition={motionSpring.balanced}
               className="ingredients-rule55-tip"
             >
+              {!waterTempLimit && (
               <div className="type-body ingredients-rule55-tip__text">
                 {recipe.water_temp_c < 5
                   ? t(cms.engineMessages["tip.waterTempCold"], {
@@ -222,6 +239,7 @@ export function IngredientsSection({
                       ddt: fmt.celsius(recipe.science.desired_dough_temp_c),
                     })}
               </div>
+              )}
               <div className="type-body ingredients-rule55-tip__desc">
                 {rule55Description}
               </div>

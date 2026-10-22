@@ -16,6 +16,7 @@ import {
   type GeneratedRecipe,
   type PizzaStyle,
   type TimelineStep,
+  fermentationSpeedRatio,
   getLayoutSpec,
   getServingUnit,
   isFillingStyle,
@@ -480,7 +481,10 @@ export function localizeStep(
   // forno domestico 250°C.
   const bakeTemp = Math.round(recipe.oven_temp_c);
   const fermTemp = recipe.fermentation_temp_c;
-  const fermFactor = Math.pow(2, (fermTemp - 18) / 10).toFixed(1);
+  // ENG-2: stesso fattore di velocità del motore (Q10 a tratti continuo), non
+  // più Math.pow(2, …) fisso.
+  const fermFactor = fermentationSpeedRatio(recipe.yeast_type, fermTemp).toFixed(1);
+  const isUnleavened = !!recipe.style.dough.unleavened;
   const prefType = recipe.style.dough.process_type.includes("poolish") ? "poolish" : "biga";
   const formatTemp = (value: number) =>
     fmt ? fmt.celsius(value) : `${Math.round(value)}°C`;
@@ -506,7 +510,10 @@ export function localizeStep(
       entry = labels.mix_noknead || labels.mix;
       break;
     case "bulk":
-      entry = isCold ? (labels.bulk_cold || labels.bulk) : labels.bulk;
+      // Impasto non lievitato (Recco): è un riposo, non una lievitazione (ENG-5).
+      entry = isUnleavened
+        ? (labels.rest || labels.bulk)
+        : isCold ? (labels.bulk_cold || labels.bulk) : labels.bulk;
       break;
     case "divide": {
       // Con layout multi-piece, motore già genera desc specifica
@@ -518,7 +525,7 @@ export function localizeStep(
       break;
     }
     case "proof":
-      entry = labels.proof;
+      entry = isUnleavened ? (labels.rest || labels.proof) : labels.proof;
       break;
     case "shape":
       // Con layout speciale, motore già genera desc specifica per il tipo di stesura
@@ -532,16 +539,29 @@ export function localizeStep(
       const equipmentNote = step.description.includes("pietra o acciaio")
         ? engineMessage(cms, "timeline.preheat.equipmentNote", " (pietra o acciaio già dentro)")
         : "";
+      // ENG-5: cosa fanno i panetti mentre il forno scalda dipende dal piano
+      // del motore (appretto lungo, appretto corto, impasto non lievitato).
+      const preheatDesc =
+        step.variant === "whole_proof"
+          ? engineMessage(
+              cms,
+              "timeline.preheat.descWholeProof",
+              "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti fanno l'appretto.",
+            )
+          : step.variant === "during_rest"
+            ? engineMessage(
+                cms,
+                "timeline.preheat.descDuringRest",
+                "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti riposano.",
+              )
+            : engineMessage(
+                cms,
+                "timeline.preheat.desc",
+                "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti finiscono l'appretto.",
+              );
       return {
         title: engineMessage(cms, "timeline.preheat.title", "Forno al massimo"),
-        description: t(
-          engineMessage(
-            cms,
-            "timeline.preheat.desc",
-            "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti finiscono l'appretto.",
-          ),
-          { temp: formatTemp(bakeTemp), equipmentNote },
-        ),
+        description: t(preheatDesc, { temp: formatTemp(bakeTemp), equipmentNote }),
         tip: step.tip
           ? {
               beginner: engineMessage(

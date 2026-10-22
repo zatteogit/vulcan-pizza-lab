@@ -841,6 +841,13 @@ export const EN_LOCALE: CmsContent = {
       "Rule of 55: use water at {temp} to reach {ddt} dough temperature.",
     "tip.frictionNote":
       "Mixer friction compensation: {friction}",
+    "gen.windowTooShort": "With {available} h there isn't time for everything: this recipe needs about {needed} h. It will be ready later than the time you chose: pick a later time or a shorter rise.",
+    "opt.hydrationOvenCompensated": "Hydration {h}%: {base}% plus {delta}% to make up for an oven cooler than ideal.",
+    "opt.hydrationOutOfStyleRange": "With this compensation, hydration goes outside the style's range ({min}–{max}%).",
+    "tip.waterTempLimitMax": "Cold kitchen: even with water at {temp} the dough stays below {ddt}. Don't heat the water further: keep the flour somewhere warm or let the bulk rise a little longer.",
+    "tip.waterTempLimitMin": "Warm kitchen: even with water at {temp} the dough goes above {ddt}. Use ice water, keep the flour in the fridge or shorten the bulk rise a little.",
+    "timeline.preheat.descWholeProof": "Turn the oven on now to {temp}{equipmentNote}. The dough balls do their final proof while it heats.",
+    "timeline.preheat.descDuringRest": "Turn the oven on now to {temp}{equipmentNote}. The dough pieces rest while it heats.",
     "hint.flourWeak": "weak flour (classic 00)",
     "hint.flourMedium": "medium-strength flour",
     "hint.flourStrong": "strong pizza flour",
@@ -952,7 +959,13 @@ export const EN_LOCALE: CmsContent = {
       tipBeginner:
         "In the fridge the dough rises slowly but gains flavor. Cover well with contact wrap.",
       tipNerd:
-        "At {temp} Q\u2081\u2080\u22482.0 slows fermentation. Proteolytic activity dominates, degrading FODMAPs.",
+        "At {temp} fermentation slows to {factor}× vs the {refTemp} reference. Proteolytic activity dominates, degrading FODMAPs.",
+    },
+    rest: {
+      title: "Rest",
+      desc: "Let the dough rest, covered, at {temp}",
+      tipBeginner: "Without yeast the dough doesn't rise: resting relaxes the gluten, so the sheet stretches thin without shrinking back.",
+      tipNerd: "Resting completes flour hydration and relaxes the gluten network: less elastic recoil, an almost translucent sheet.",
     },
     divide: {
       title: "Dividing",

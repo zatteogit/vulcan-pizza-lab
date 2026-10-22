@@ -687,6 +687,13 @@ export const JA_LOCALE: CmsContent = {
     "tip.waterTempNormal":
       "55の法則: {temp}の水を使って{ddt}の生地温度を目指してください。",
     "tip.frictionNote": "ミキサー摩擦補正: {friction}",
+    "gen.windowTooShort": "{available}時間ではすべてに足りません。このレシピには約{needed}時間かかります。選んだ時刻より遅く仕上がります。もっと遅い時刻を選ぶか、発酵を短くしてください。",
+    "opt.hydrationOvenCompensated": "加水率{h}%：理想より温度の低いオーブンを補うため、{base}%に{delta}%を加えています。",
+    "opt.hydrationOutOfStyleRange": "この補正により、加水率がスタイルの範囲（{min}–{max}%）を外れます。",
+    "tip.waterTempLimitMax": "キッチンが寒い：{temp}の水でも生地は{ddt}に届きません。これ以上水を温めず、粉を暖かい場所に置くか、一次発酵を少し長くしてください。",
+    "tip.waterTempLimitMin": "キッチンが暑い：{temp}の水でも生地は{ddt}を超えます。氷水を使い、粉を冷蔵庫に入れるか、一次発酵を少し短くしてください。",
+    "timeline.preheat.descWholeProof": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に生地玉の最終発酵を行います。",
+    "timeline.preheat.descDuringRest": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に生地を休ませます。",
     "hint.flourWeak": "\u5F31\u529B\u306A\u5C0F\u9EA6\u7C89\uFF08\u30AF\u30E9\u30B7\u30C3\u30AF\u306A00\uFF09",
     "hint.flourMedium": "\u4E2D\u7A0B\u5EA6\u306E\u5F37\u3055\u306E\u5C0F\u9EA6\u7C89",
     "hint.flourStrong": "\u5F37\u529B\u306A\u30D4\u30B6\u7528\u5C0F\u9EA6\u7C89",
@@ -799,7 +806,13 @@ export const JA_LOCALE: CmsContent = {
       tipBeginner:
         "\u51B7\u8535\u5EAB\u3067\u306F\u751F\u5730\u304C\u3086\u3063\u304F\u308A\u818A\u3089\u307F\u307E\u3059\u304C\u3001\u98A8\u5473\u304C\u5897\u3057\u307E\u3059\u3002\u5BC6\u7740\u30E9\u30C3\u30D7\u3067\u3057\u3063\u304B\u308A\u8986\u3063\u3066\u304F\u3060\u3055\u3044\u3002",
       tipNerd:
-        "{temp}\u3067\u306FQ\u2081\u2080\u22482.0\u304C\u767A\u9175\u3092\u6E1B\u901F\u3002\u30BF\u30F3\u30D1\u30AF\u5206\u89E3\u6D3B\u6027\u304C\u512A\u52E2\u3068\u306A\u308A\u3001FODMAP\u3092\u5206\u89E3\u3057\u307E\u3059\u3002",
+        "{temp}では発酵速度が{refTemp}基準の{factor}倍に落ちます。タンパク分解活性が優勢となり、FODMAPを分解します。",
+    },
+    rest: {
+      title: "休ませる",
+      desc: "生地を覆い、{temp}で休ませます",
+      tipBeginner: "イーストなしの生地は膨らみません。休ませるとグルテンがゆるみ、縮まずに薄く伸ばせます。",
+      tipNerd: "休ませると粉の水和が進み、グルテンの網目がゆるみます。弾性による戻りが減り、ほぼ透ける薄さの生地になります。",
     },
     divide: {
       title: "\u5206\u5272",
