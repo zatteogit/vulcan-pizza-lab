@@ -569,9 +569,13 @@ export function FullScreenDemo() {
               exit={{ opacity: 0, scale: 0.97 }}
               transition={SP.fade}
             >
+              {/* eager: la slide fa da sfondo al contatore. Con il lazy di
+                  default, finché non carica, axe misura il contrasto del
+                  contatore sul fondo pieno dello skeleton (visual:check). */}
               <ImageWithFallback
                 src={ITEMS[focus].img}
                 alt={ITEMS[focus].title}
+                loading="eager"
                 className="absolute inset-0 w-full h-full dsx-s-bcc9535a4c"
               />
               {/* Scrim */}
