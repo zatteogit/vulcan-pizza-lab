@@ -46,6 +46,7 @@ type PizzaStyle,
 type SkillLevel,
 type UserConstraints
 } from "../domain/pizza-engine";
+import { styleWithSelectedTopping } from "../hooks/use-recipe-state";
 import {
 RecipeConfigurator,
 } from "../features/recipe/recipe-configurator";
@@ -436,6 +437,15 @@ function RecipeContent({
     initialInterpretation?.id ?? null,
   );
 
+  /* ENG-6: idratazione scelta da «Ottimizza per me» con la compensazione del
+   * forno (base del candidato e valore finale). Finché lo slider resta sul
+   * valore finale la ricetta si ricostruisce come l'ha valutata l'ottimizzatore,
+   * con la compensazione dichiarata nel riquadro tecnico. */
+  const [optimizedHydration, setOptimizedHydration] = useState<{
+    base: number;
+    final: number;
+  } | null>(null);
+
   /* ═══ Modello "dirty" (redesign lug 2026) ═══
      L'originale è UNO: la canonica dello stile (o la firma attiva, che
      ridefinisce il canone). canonicalTargets = esattamente ciò che "Torna
@@ -729,14 +739,8 @@ function RecipeContent({
         }
       : undefined;
     // Sprint 12 Fase 3: clona lo style con il topping selezionato dall'utente
-    const isToppingValid =
-      selectedToppingConcept && style
-        ? resolveTopping(selectedToppingConcept, style) !== undefined
-        : false;
-    const styleWithTopping =
-      isToppingValid && selectedToppingConcept !== style.default_topping_ref
-        ? { ...style, default_topping_ref: selectedToppingConcept ?? undefined }
-        : style;
+    // (stesso helper dell'ottimizzatore e del soffitto).
+    const styleWithTopping = styleWithSelectedTopping(style, selectedToppingConcept);
     // Audit motore 2026-05 — quando un'interpretazione è attiva, i suoi
     // parameter_overrides diventano il "canone" per il punteggio auth.
     const activeInterpretation = activeInterpretationId
@@ -751,7 +755,7 @@ function RecipeContent({
             activeInterpretation.parameter_overrides.fermentation_hours,
       }
       : undefined;
-    return generateRecipe(styleWithTopping, recipeConstraints, {
+    const options = {
       customHydration,
       customFlourW,
       customFermentationHours: customFermentHours,
@@ -765,7 +769,16 @@ function RecipeContent({
       activeImpastoRef: activeVersion?.impasto_ref,
       interpretationCenter,
       customFlourBlend,
-    });
+    };
+    if (optimizedHydration && customHydration === optimizedHydration.final) {
+      const compensated = generateRecipe(styleWithTopping, recipeConstraints, {
+        ...options,
+        customHydration: optimizedHydration.base,
+        compensateCustomHydration: true,
+      });
+      if (compensated.hydration_pct === optimizedHydration.final) return compensated;
+    }
+    return generateRecipe(styleWithTopping, recipeConstraints, options);
     },
     [
       style,
@@ -782,6 +795,7 @@ function RecipeContent({
       activeInterpretationId,
       selectedToppingConcept,
       customFlourBlend,
+      optimizedHydration,
     ],
   );
 
@@ -843,7 +857,13 @@ function RecipeContent({
     // panConfig passato all'optimizer: senza, su stili in teglia il soffitto
     // era calcolato su una teglia diversa da quella mostrata → "Ottimizza"
     // poteva ABBASSARE il punteggio (bug reso visibile dal modello dirty).
-    const opt = optimizeRecipe(style, matchConstraints, undefined, panConfig, optScoreWeights).recipe;
+    const opt = optimizeRecipe(
+      styleWithSelectedTopping(style, selectedToppingConcept),
+      matchConstraints,
+      undefined,
+      panConfig,
+      optScoreWeights,
+    ).recipe;
     const hard = thermalViability(style, opt.oven_temp_c) < 1;
     const softNeeds: string[] = [];
     if (matchConstraints.pantry_flours.length > 0) {
@@ -863,7 +883,7 @@ function RecipeContent({
     }
     return { value: opt.scores.composite, hard, softNeeds };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [style, matchConstraints, panConfig, cms.scoreDimensions, cms.cooking.needFlour, cms.yeastLabels]);
+  }, [style, selectedToppingConcept, matchConstraints, panConfig, cms.scoreDimensions, cms.cooking.needFlour, cms.yeastLabels]);
 
   const [lastOptimization, setLastOptimization] = useState<{
     params: { hydration: number; flour_w: number; fermentation_hours: number; fermentation_temp_c: number; use_pre_ferment: boolean };
@@ -871,7 +891,13 @@ function RecipeContent({
   } | null>(null);
 
   const handleOptimize = useCallback(() => {
-    const o = optimizeRecipe(style, matchConstraints, undefined, panConfig, optScoreWeights);
+    const o = optimizeRecipe(
+      styleWithSelectedTopping(style, selectedToppingConcept),
+      matchConstraints,
+      undefined,
+      panConfig,
+      optScoreWeights,
+    );
     // "Ottimizza per me" = il movimento completo verso su-misura: porta il forno
     // alla TUA cucina (come faceva il vecchio "adatta") E sceglie i parametri
     // migliori. Così il forno mostrato nei parametri = il tuo, non l'ideale.
@@ -888,6 +914,11 @@ function RecipeContent({
     setCustomFermentHours(o.params.fermentation_hours);
     setCustomFermentTemp(o.params.fermentation_temp_c);
     setUsePreFerment(o.params.use_pre_ferment);
+    setOptimizedHydration(
+      o.params.hydration_compensated
+        ? { base: o.params.hydration_base, final: o.params.hydration }
+        : null,
+    );
     setLastOptimization({ params: o.params, rationale: o.rationale });
     replaceRecipeSearchParams((next) => {
       next.set("mode", "adapted");
@@ -901,7 +932,7 @@ function RecipeContent({
       next.set("temp", String(personalOvenTemp));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [style, matchConstraints, panConfig, cms.scoreDimensions, savedOven?.ovenType, savedOven?.maxTemp]);
+  }, [style, selectedToppingConcept, matchConstraints, panConfig, cms.scoreDimensions, savedOven?.ovenType, savedOven?.maxTemp]);
 
   /* "Ottimizza per me" ha senso solo se c'è margine: già all'ottimo (anche
      via deep-link) o a soffitto raggiunto, il bottone sparisce — la riga
@@ -1055,6 +1086,7 @@ function RecipeContent({
     setCustomSalt(canonicalTargets.salt);
     setActiveVersionId(canonicalTargets.versionId);
     setLastOptimization(null);
+    setOptimizedHydration(null);
 
     replaceRecipeSearchParams((next) => {
       next.set("mode", "canonical");

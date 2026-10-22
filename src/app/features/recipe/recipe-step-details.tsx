@@ -32,26 +32,37 @@ export const STEP_TROUBLE: Record<string, { issueId: string; labelKey: string }>
   bake2: { issueId: "P09", labelKey: "bake" },
 };
 
+/* Impasto non lievitato (Focaccia di Recco): puntata e appretto sono un
+   riposo (ENG-5). Glossario e troubleshooting di quelle fasi parlano di
+   lievitazione («La puntata», «È andata lunga?» → impasto troppo lievitato),
+   quindi lì non si mostrano. */
+const REST_STEP_IDS = new Set(["bulk", "proof"]);
+
 /* ═══ Dettaglio step collassabile — "come si fa" + consigli al tocco ═══ */
 export function StepDetails({
   longDesc,
   tips,
   isNerd,
   stepId,
+  unleavened = false,
   cms,
 }: {
   longDesc?: string;
   tips: string[];
   isNerd: boolean;
   stepId?: string;
+  /** Impasto non lievitato: niente rimandi alla lievitazione nei riposi. */
+  unleavened?: boolean;
   cms: CmsContent;
 }) {
   const [open, setOpen] = useState(false);
   const [glossaryOpen, setGlossaryOpen] = useState(false);
+  const learnStepId =
+    stepId && !(unleavened && REST_STEP_IDS.has(stepId)) ? stepId : undefined;
 
   const glossaryLabel = useMemo(() => {
-    if (!stepId) return "";
-    switch (stepId) {
+    if (!learnStepId) return "";
+    switch (learnStepId) {
       case "preferment": return cms.cooking.glossaryPreferment;
       case "bulk": return cms.cooking.glossaryBulk;
       case "proof": return cms.cooking.glossaryProof;
@@ -59,7 +70,7 @@ export function StepDetails({
       case "mix": return cms.cooking.glossaryMix;
       default: return "";
     }
-  }, [stepId, cms.cooking]);
+  }, [learnStepId, cms.cooking]);
 
   if (!longDesc && tips.length === 0) return null;
   return (
@@ -112,7 +123,7 @@ export function StepDetails({
               </span>
             </div>
           ))}
-          {stepId && STEP_GLOSSARY[stepId] && (
+          {learnStepId && STEP_GLOSSARY[learnStepId] && (
             <>
             <button
               type="button"
@@ -133,15 +144,15 @@ export function StepDetails({
             )}
             </>
           )}
-          {stepId && STEP_TROUBLE[stepId] && (() => {
-            const trouble = STEP_TROUBLE[stepId];
+          {learnStepId && STEP_TROUBLE[learnStepId] && (() => {
+            const trouble = STEP_TROUBLE[learnStepId];
             const label = cms.cooking.troubleStepLinks?.[trouble.labelKey];
             if (!label) return null;
             return (
               <Link
                 to={`/learn/troubleshooting?issue=${trouble.issueId}`}
                 className={
-                  STEP_GLOSSARY[stepId]
+                  STEP_GLOSSARY[learnStepId]
                     ? "step-details__trouble-link step-details__trouble-link--indented type-data"
                     : "step-details__trouble-link type-data"
                 }

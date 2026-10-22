@@ -1363,22 +1363,29 @@ export const ENGINE_CHECK_GROUPS: { id: string; label: string; run: () => TestRe
   { id: "opt", label: "Optimizer", run: runOptimizer },
 ];
 
+/** Aspetto dei gruppi nella pagina /dev. I gruppi stessi vengono da
+ *  ENGINE_CHECK_GROUPS: un gruppo nuovo gira in pagina e in CI insieme. */
+const CATEGORY_LOOK: Record<string, { icon: React.ReactNode; color: string }> = {
+  db: { icon: <Database size={14} />, color: "var(--primary)" },
+  gen: { icon: <Zap size={14} />, color: "var(--cta)" },
+  score: { icon: <BarChart3 size={14} />, color: "var(--tertiary)" },
+  comp: { icon: <Thermometer size={14} />, color: "var(--axis-feasibility)" },
+  q10: { icon: <FlaskConical size={14} />, color: "var(--axis-digestibility)" },
+  pl: { icon: <Wheat size={14} />, color: "var(--warm-olive)" },
+  r55: { icon: <Droplets size={14} />, color: "var(--time-tonight)" },
+  rec: { icon: <TrendingUp size={14} />, color: "var(--axis-experimentation)" },
+  edge: { icon: <Shield size={14} />, color: "var(--axis-authenticity)" },
+  xval: { icon: <Shuffle size={14} />, color: "var(--warm-sienna)" },
+  pdb: { icon: <Layers size={14} />, color: "var(--secondary)" },
+  dev: { icon: <GitBranch size={14} />, color: "var(--time-dinner)" },
+  opt: { icon: <Sparkles size={14} />, color: "var(--cta)" },
+};
+
 function buildCategories(): TestCategory[] {
-  return [
-    { id: "db", label: "DB Integrity", icon: <Database size={14} />, color: "var(--primary)", run: runDbIntegrity },
-    { id: "gen", label: "Generation Matrix", icon: <Zap size={14} />, color: "var(--cta)", run: runGenerationMatrix },
-    { id: "score", label: "Score Bounds", icon: <BarChart3 size={14} />, color: "var(--tertiary)", run: runScoreBounds },
-    { id: "comp", label: "Compensazioni", icon: <Thermometer size={14} />, color: "var(--axis-feasibility)", run: runCompensations },
-    { id: "q10", label: "Q10 Models", icon: <FlaskConical size={14} />, color: "var(--axis-digestibility)", run: runQ10 },
-    { id: "pl", label: "P/L Estimation", icon: <Wheat size={14} />, color: "var(--warm-olive)", run: runPLEstimation },
-    { id: "r55", label: "Rule 55", icon: <Droplets size={14} />, color: "var(--time-tonight)", run: runRule55 },
-    { id: "rec", label: "Recommendation", icon: <TrendingUp size={14} />, color: "var(--axis-experimentation)", run: runRecommendation },
-    { id: "edge", label: "Edge Cases", icon: <Shield size={14} />, color: "var(--axis-authenticity)", run: runEdgeCases },
-    { id: "xval", label: "Cross-Validation", icon: <Shuffle size={14} />, color: "var(--warm-sienna)", run: runCrossValidation },
-    { id: "pdb", label: "Parametric DB", icon: <Layers size={14} />, color: "var(--secondary)", run: runParametricDb },
-    { id: "dev", label: "Deviation & Flour", icon: <GitBranch size={14} />, color: "var(--time-dinner)", run: runDeviationFlour },
-    { id: "opt", label: "Optimizer", icon: <Sparkles size={14} />, color: "var(--cta)", run: runOptimizer },
-  ];
+  return ENGINE_CHECK_GROUPS.map((group) => ({
+    ...group,
+    ...(CATEGORY_LOOK[group.id] ?? { icon: <Zap size={14} />, color: "var(--primary)" }),
+  }));
 }
 
 /* ═══ MAIN COMPONENT ═══ */

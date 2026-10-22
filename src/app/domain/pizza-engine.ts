@@ -269,6 +269,11 @@ export interface UserConstraints {
   oven_max_temp_c: number;
   skill_level: SkillLevel;
   available_hours: number;
+  /** true: available_hours sono le ore fino a un pasto scelto, quindi la
+   *  timeline intera (impasto, staglio, cottura…) deve starci (ENG-4).
+   *  Assente o false («Nessuna preferenza», profilo, Scopri): le ore limitano
+   *  solo la fermentazione, senza scadenza né avviso di finestra. */
+  meal_deadline?: boolean;
   dough_balls: number;
   has_mixer: boolean;
   has_pizza_stone: boolean;
@@ -1415,7 +1420,7 @@ export interface VersionRangeOverrides {
 /** Opzioni di generateRecipe. Audit role-play giugno 2026: rifattorizzate da 12
  *  parametri posizionali a un options object — l'ordine di 6 `custom*` scalari
  *  in fila era un footgun (il compilatore non becca uno swap). */
-interface GenerateRecipeOptions {
+export interface GenerateRecipeOptions {
   customHydration?: number;
   customFlourW?: number;
   customFermentationHours?: number;
@@ -1600,15 +1605,21 @@ export function generateRecipe(
   // Audit role-play giugno 2026 (finding F8): se il clamp porta SOTTO la finestra
   // minima dello stile, non è una scelta dell'utente ma un vincolo di tempo →
   // lo segnaliamo onestamente invece di limitarci a penalizzare l'autenticità.
-  // ENG-4 (decisione di Matteo, 22/10/2026): la finestra è fino al pasto, quindi
-  // si toglie l'overhead fisso (impasto, staglio, stesura, farcitura, cottura):
-  // prima la fermentazione prendeva TUTTE le ore e la timeline sforava.
+  // ENG-4 (decisione di Matteo, 22/10/2026): con un orario del pasto la finestra
+  // è fino al pasto, quindi si toglie l'overhead fisso (impasto, staglio,
+  // stesura, farcitura, cottura): prima la fermentazione prendeva TUTTE le ore
+  // e la timeline sforava. Senza orario (meal_deadline assente) le ore limitano
+  // solo la fermentazione, come prima: «Nessuna preferenza» resta 24 h.
   let timeClampedBelowMin = false;
   if (customFermentationHours === undefined && constraints.available_hours > 0) {
-    const overheadMinutes = timelineOverheadMinutes(
-      buildTimeline(fermentationHours, defaultFermentTempC(style, fermentationHours), "fresh"),
-    );
-    const windowHours = fermentationWindowHours(constraints.available_hours, overheadMinutes);
+    const windowHours = constraints.meal_deadline
+      ? fermentationWindowHours(
+          constraints.available_hours,
+          timelineOverheadMinutes(
+            buildTimeline(fermentationHours, defaultFermentTempC(style, fermentationHours), "fresh"),
+          ),
+        )
+      : constraints.available_hours;
     const clamped = Math.max(
       minimumFermentationHours(fermRange),
       Math.min(fermentationHours, windowHours),
@@ -1842,7 +1853,9 @@ export function generateRecipe(
   // non sta nella finestra fino al pasto, lo diciamo: la UI mostra l'avviso.
   const timelineMinutes = timeline.reduce((sum, step) => sum + step.duration_minutes, 0);
   const windowTooShort =
-    constraints.available_hours > 0 && timelineMinutes > constraints.available_hours * 60;
+    constraints.meal_deadline === true &&
+    constraints.available_hours > 0 &&
+    timelineMinutes > constraints.available_hours * 60;
   const neededHours = Math.ceil(timelineMinutes / 6) / 10;
 
   const scores: RecipeScores = {
@@ -2158,7 +2171,14 @@ export interface OptimizedRecipe {
   recipe: GeneratedRecipe;
   /** I parametri scelti dall'ottimizzatore. */
   params: {
+    /** Idratazione finale della ricetta (base + compensazione del forno). */
     hydration: number;
+    /** ENG-6: idratazione base del candidato, prima della compensazione. */
+    hydration_base: number;
+    /** ENG-6: true se la compensazione d'idratazione è applicata. Per
+     *  ricostruire la stessa ricetta: customHydration = hydration_base con
+     *  compensateCustomHydration = true. */
+    hydration_compensated: boolean;
     flour_w: number;
     fermentation_hours: number;
     fermentation_temp_c: number;
@@ -2188,6 +2208,31 @@ function _hydrationCeilingForSkill(skill: SkillLevel): number {
     case 3: return 88;
     default: return 200; // esperto: nessun tetto pratico
   }
+}
+
+/** ENG-4 — ore di fermentazione massime che stanno nella finestra fino al
+ *  pasto, tolto l'overhead fisso della timeline (stesso calcolo del clamp di
+ *  generateRecipe), arrotondate per difetto al quarto d'ora e mai sotto il
+ *  minimo tecnico. Senza orario del pasto (meal_deadline assente) restituisce
+ *  Infinity: nessun limite oltre alle ore disponibili. Serve alla UI per i
+ *  parametri «centro dello stile» (reset, interpretazione base), che passano
+ *  sempre ore custom e quindi saltano il clamp del motore. */
+export function maxFermentationHoursForWindow(
+  style: PizzaStyle,
+  constraints: UserConstraints,
+  options: GenerateRecipeOptions = {},
+): number {
+  if (!constraints.meal_deadline || !(constraints.available_hours > 0)) return Infinity;
+  const probe = generateRecipe(style, constraints, {
+    ...options,
+    customFermentationHours: undefined,
+  });
+  const range = probe.style.dough.fermentation_hours_range;
+  const fermRange: [number, number] = range[0] <= range[1] ? range : [range[1], range[0]];
+  return Math.max(
+    minimumFermentationHours(fermRange),
+    fermentationWindowHours(constraints.available_hours, timelineOverheadMinutes(probe.timeline)),
+  );
 }
 
 export function optimizeRecipe(
@@ -2243,10 +2288,14 @@ export function optimizeRecipe(
   // MENO l'overhead fisso (ENG-4: la finestra arriva fino al pasto). Il filtro
   // ora viene DOPO l'arrotondamento all'ora, così nessun candidato sfora; si
   // aggiunge la fermentazione più lunga che sta nella finestra (al quarto
-  // d'ora), se cade nel range dello stile. ──
+  // d'ora), se cade nel range dello stile. Senza orario del pasto
+  // (meal_deadline assente) l'overhead non si toglie: le ore limitano solo
+  // la fermentazione, come in generateRecipe. ──
   const avail = constraints.available_hours > 0 ? constraints.available_hours : Infinity;
   const fermentWindow =
-    avail === Infinity ? Infinity : fermentationWindowHours(avail, overheadMinutes);
+    avail === Infinity || !constraints.meal_deadline
+      ? avail
+      : fermentationWindowHours(avail, overheadMinutes);
   let hourCands = _uniqRounded([
     ..._uniqRounded([fMin, (fMin + fMax) / 2, fMax, fMax * 1.25], 0),
     ...(fermentWindow >= fMin && fermentWindow <= fMax ? [fermentWindow] : []),
@@ -2265,7 +2314,9 @@ export function optimizeRecipe(
   // ENG-6: i candidati sono idratazioni BASE; la compensazione del forno si
   // applica sopra (compensateCustomHydration). Il tetto di livello vale
   // sull'idratazione FINALE, quindi la base si ferma a tetto − compensazione.
-  const hCeil = Math.min(hMax, _hydrationCeilingForSkill(constraints.skill_level) - hydrationDelta);
+  const skillCeilBase = _hydrationCeilingForSkill(constraints.skill_level) - hydrationDelta;
+  const skillCeilingBinding = skillCeilBase < hMax;
+  const hCeil = Math.min(hMax, skillCeilBase);
   const hLo = Math.min(hMin, hCeil);
   const hydrCands = _uniqRounded(
     _uniqRounded([hLo, (hLo + hCeil) / 2, hCeil], 0).map((h) => Math.min(h, hCeil)),
@@ -2388,13 +2439,17 @@ export function optimizeRecipe(
   const hMidStyle = Math.round((hMin + hMax) / 2);
   // ENG-6: le scelte sull'idratazione si leggono sulla BASE del candidato; la
   // compensazione del forno, se applicata, è dichiarata a parte.
+  // «Abbassata per il tuo livello» solo se il tetto di livello ha davvero
+  // limitato la ricerca e l'idratazione FINALE resta sotto la canonica: con la
+  // compensazione la finale può superare la canonica e il messaggio si
+  // contraddirebbe (Napoletana a 250°C: base 55%, finale 63,7%).
   const baseHydrationChosen = chosen.cand.hydration;
-  if (baseHydrationChosen < hMidStyle - 1 && constraints.skill_level <= 2) {
+  if (skillCeilingBinding && r.hydration_pct < hMidStyle - 1) {
     rationale.push(
       em(
         "opt.hydrationLowered",
-        `Idratazione abbassata a ${baseHydrationChosen}% (canonica ${hMidStyle}%) per restare gestibile al tuo livello.`,
-        { h: baseHydrationChosen, canonical: hMidStyle },
+        `Idratazione abbassata a ${r.hydration_pct}% (canonica ${hMidStyle}%) per restare gestibile al tuo livello.`,
+        { h: r.hydration_pct, canonical: hMidStyle },
       ),
     );
   } else if (baseHydrationChosen >= hMidStyle) {
@@ -2482,6 +2537,8 @@ export function optimizeRecipe(
     recipe: r,
     params: {
       hydration: r.hydration_pct,
+      hydration_base: chosen.cand.hydration,
+      hydration_compensated: hydrationCompApplied !== undefined,
       flour_w: r.flour_w,
       fermentation_hours: r.fermentation_hours,
       fermentation_temp_c: r.fermentation_temp_c,

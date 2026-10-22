@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { getRecipesByAuthenticity } from "../data/topping-library";
 import {
   STYLES_DB,
   calculateOvenCompensations,
@@ -44,6 +45,8 @@ function makeConstraints(overrides: Partial<UserConstraints> = {}): UserConstrai
 
 const HOME_OVEN = { oven_type: "home", oven_max_temp_c: 250 } as const;
 const WOOD_OVEN = { oven_type: "wood", oven_max_temp_c: 485 } as const;
+/** Orario del pasto scelto: available_hours è una scadenza (ENG-4). */
+const MEAL = { meal_deadline: true } as const;
 
 const totalMinutes = (recipe: GeneratedRecipe) =>
   recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0);
@@ -166,7 +169,7 @@ describe("timeline dentro la finestra fino al pasto (ENG-4)", () => {
     for (const style of STYLES) {
       for (const oven of [HOME_OVEN, WOOD_OVEN]) {
         for (const available of [4, 6, 8, 12, 24, 48]) {
-          const recipe = generateRecipe(style, makeConstraints({ ...oven, available_hours: available }));
+          const recipe = generateRecipe(style, makeConstraints({ ...oven, ...MEAL, available_hours: available }));
           const total = totalMinutes(recipe);
           if (total > available * 60) {
             violations.push(`${style.id} @${oven.oven_max_temp_c} ${available}h: ${total} min`);
@@ -185,7 +188,7 @@ describe("timeline dentro la finestra fino al pasto (ENG-4)", () => {
     for (const style of STYLES) {
       for (const oven of [HOME_OVEN, WOOD_OVEN]) {
         for (const available of [4, 8, 24]) {
-          const { recipe } = optimizeRecipe(style, makeConstraints({ ...oven, available_hours: available }));
+          const { recipe } = optimizeRecipe(style, makeConstraints({ ...oven, ...MEAL, available_hours: available }));
           const total = totalMinutes(recipe);
           if (total > available * 60) {
             violations.push(`${style.id} @${oven.oven_max_temp_c} ${available}h: ${total} min`);
@@ -199,7 +202,7 @@ describe("timeline dentro la finestra fino al pasto (ENG-4)", () => {
   it("finestra impossibile: fermentazione minima e avviso, che compare solo quando si sfora", () => {
     for (const style of STYLES) {
       for (const available of [1, 2, 3]) {
-        const recipe = generateRecipe(style, makeConstraints({ available_hours: available }));
+        const recipe = generateRecipe(style, makeConstraints({ ...MEAL, available_hours: available }));
         const over = totalMinutes(recipe) > available * 60;
         expect(hasWarning(recipe, "gen.windowTooShort")).toBe(over);
         const minimum = Math.min(style.dough.fermentation_hours_range[0], 1);
@@ -209,7 +212,7 @@ describe("timeline dentro la finestra fino al pasto (ENG-4)", () => {
   });
 
   it("ore scelte dall'utente oltre la finestra: si rispettano, ma con avviso", () => {
-    const recipe = generateRecipe(STYLES_DB["teglia_romana"], makeConstraints({ available_hours: 24 }), {
+    const recipe = generateRecipe(STYLES_DB["teglia_romana"], makeConstraints({ ...MEAL, available_hours: 24 }), {
       customFermentationHours: 48,
     });
     expect(recipe.fermentation_hours).toBe(48);
@@ -219,10 +222,100 @@ describe("timeline dentro la finestra fino al pasto (ENG-4)", () => {
   it("esempio documentato: Napoletana con 4 h e forno a legna → 3,25 h di fermentazione", () => {
     const recipe = generateRecipe(
       STYLES_DB["napoletana_stg"],
-      makeConstraints({ ...WOOD_OVEN, available_hours: 4 }),
+      makeConstraints({ ...WOOD_OVEN, ...MEAL, available_hours: 4 }),
     );
     expect(recipe.fermentation_hours).toBe(3.25);
     expect(totalMinutes(recipe)).toBeLessThanOrEqual(240);
+  });
+
+  it("ogni condimento dello stile: la ricetta ottimizzata e quella ricostruita stanno nella finestra", () => {
+    // La UI ottimizza e ricostruisce con lo stile + condimento scelto: i passaggi
+    // di farcitura e i minuti di cottura cambiano l'overhead (revisione 22/10).
+    const violations: string[] = [];
+    for (const style of STYLES) {
+      const toppings = getRecipesByAuthenticity(style).filter((t) => t.authenticity !== "taboo");
+      for (const { recipe: topping } of toppings) {
+        const styleWithTopping = { ...style, default_topping_ref: topping.id };
+        for (const oven of [HOME_OVEN, WOOD_OVEN]) {
+          for (const available of [3, 4, 8]) {
+            const constraints = makeConstraints({ ...oven, ...MEAL, available_hours: available });
+            const optimized = optimizeRecipe(styleWithTopping, constraints);
+            const rebuilt = generateRecipe(styleWithTopping, constraints, {
+              customHydration: optimized.params.hydration_base,
+              compensateCustomHydration: optimized.params.hydration_compensated,
+              customFlourW: optimized.params.flour_w,
+              customFermentationHours: optimized.params.fermentation_hours,
+              customFermentationTempC: optimized.params.fermentation_temp_c,
+              usePreFerment: optimized.params.use_pre_ferment,
+            });
+            const label = `${style.id}+${topping.id} @${oven.oven_max_temp_c} ${available}h`;
+            const minimum = Math.min(style.dough.fermentation_hours_range[0], 1);
+            for (const [which, recipe] of [["ottimizzata", optimized.recipe], ["ricostruita", rebuilt]] as const) {
+              const total = totalMinutes(recipe);
+              // Si può sforare solo se nemmeno la fermentazione minima ci sta,
+              // e allora c'è l'avviso.
+              if (total > available * 60 && recipe.fermentation_hours > minimum) {
+                violations.push(`${label} ${which}: ${total} min`);
+              }
+              if (hasWarning(recipe, "gen.windowTooShort") !== total > available * 60) {
+                violations.push(`${label} ${which}: avviso finestra incoerente`);
+              }
+            }
+          }
+        }
+      }
+    }
+    expect(violations).toEqual([]);
+  });
+});
+
+describe("senza orario del pasto (Nessuna preferenza, profilo: 24 h)", () => {
+  // Revisione 22/10: le 24 h di «Nessuna preferenza» non sono una scadenza.
+  // L'overhead non si toglie e gli stili con minimo 24 h restano a 24 h.
+  it("generateRecipe: fermentazione = min(centro dello stile, 24 h), nessun avviso di finestra", () => {
+    const violations: string[] = [];
+    for (const style of STYLES) {
+      for (const oven of [HOME_OVEN, WOOD_OVEN]) {
+        const recipe = generateRecipe(style, makeConstraints({ ...oven, available_hours: 24 }));
+        const [fMin, fMax] = style.dough.fermentation_hours_range;
+        const expected = Math.min((fMin + fMax) / 2, 24);
+        if (recipe.fermentation_hours !== expected) {
+          violations.push(`${style.id} @${oven.oven_max_temp_c}: ${recipe.fermentation_hours} h, attese ${expected} h`);
+        }
+        if (hasWarning(recipe, "gen.windowTooShort")) violations.push(`${style.id}: avviso finestra`);
+        if (fMin <= 24 && hasWarning(recipe, "gen.timeBelowStyleWindow")) {
+          violations.push(`${style.id}: «sotto la finestra dello stile» con 24 h`);
+        }
+      }
+    }
+    expect(violations).toEqual([]);
+  });
+
+  it("optimizeRecipe: dentro il range dello stile se il minimo è ≤ 24 h, mai oltre 24 h", () => {
+    const violations: string[] = [];
+    for (const style of STYLES) {
+      for (const oven of [HOME_OVEN, WOOD_OVEN]) {
+        const { recipe } = optimizeRecipe(style, makeConstraints({ ...oven, available_hours: 24 }));
+        const [fMin] = style.dough.fermentation_hours_range;
+        const label = `${style.id} @${oven.oven_max_temp_c}`;
+        if (fMin <= 24 && recipe.fermentation_hours < fMin) {
+          violations.push(`${label}: ${recipe.fermentation_hours} h sotto il minimo ${fMin} h`);
+        }
+        if (recipe.fermentation_hours > 24) violations.push(`${label}: ${recipe.fermentation_hours} h oltre 24 h`);
+        if (hasWarning(recipe, "gen.windowTooShort")) violations.push(`${label}: avviso finestra`);
+      }
+    }
+    expect(violations).toEqual([]);
+  });
+
+  it("gli stili con minimo 24 h restano a 24 h (prima della revisione: 23 h)", () => {
+    const styles24 = STYLES.filter((s) => s.dough.fermentation_hours_range[0] === 24);
+    expect(styles24.length).toBeGreaterThan(0);
+    for (const style of styles24) {
+      const constraints = makeConstraints({ available_hours: 24 });
+      expect(generateRecipe(style, constraints).fermentation_hours).toBe(24);
+      expect(optimizeRecipe(style, constraints).recipe.fermentation_hours).toBe(24);
+    }
   });
 });
 
@@ -400,6 +493,30 @@ describe("compensazioni dichiarate = applicate (ENG-6)", () => {
           if (result.params.hydration !== recipe.hydration_pct) {
             errors.push(`${label}: params.hydration ${result.params.hydration} ≠ ricetta ${recipe.hydration_pct}`);
           }
+          if (result.params.hydration_compensated !== declared) {
+            errors.push(`${label}: hydration_compensated ${result.params.hydration_compensated} ≠ dichiarata ${declared}`);
+          }
+          // La UI ricostruisce con base + compensazione: stessa ricetta valutata.
+          const rebuilt = generateRecipe(recipe.style, makeConstraints({ oven_max_temp_c: oven, skill_level: skill }), {
+            customHydration: result.params.hydration_base,
+            compensateCustomHydration: result.params.hydration_compensated,
+            customFlourW: result.params.flour_w,
+            customFermentationHours: result.params.fermentation_hours,
+            customFermentationTempC: result.params.fermentation_temp_c,
+            usePreFerment: result.params.use_pre_ferment,
+          });
+          if (rebuilt.hydration_pct !== recipe.hydration_pct) {
+            errors.push(`${label}: ricostruita ${rebuilt.hydration_pct}% ≠ ${recipe.hydration_pct}%`);
+          }
+          // «Abbassata per il tuo livello» solo se la finale è davvero sotto la canonica.
+          const lowered = result.rationale.find((m) => m.key === "opt.hydrationLowered");
+          if (lowered) {
+            const [hMin] = recipe.style.dough.hydration_pct_range;
+            const canonical = Math.round((hMin + hMax) / 2);
+            if (lowered.params?.h !== recipe.hydration_pct || recipe.hydration_pct >= canonical - 1) {
+              errors.push(`${label}: «abbassata a ${lowered.params?.h}%» con finale ${recipe.hydration_pct}% (canonica ${canonical}%)`);
+            }
+          }
         }
       }
     }
@@ -416,11 +533,24 @@ describe("compensazioni dichiarate = applicate (ENG-6)", () => {
     expect(comp).toBeDefined();
     expect(optimized.recipe.hydration_pct).toBeCloseTo((comp?.original ?? 0) + 8.7, 5);
     expect(optimized.rationale.some((m) => m.key === "opt.hydrationOvenCompensated")).toBe(true);
-    // La UI ricostruisce la ricetta con l'idratazione finale come valore custom:
-    // stessa idratazione, nessuna seconda compensazione.
-    const rebuilt = generateRecipe(napoletana, constraints, { customHydration: optimized.params.hydration });
+    // Base 55% sotto la canonica (59%), ma finale 63,7%: niente «abbassata per il
+    // tuo livello» (il tetto di livello 78 − 8,7 non era vincolante).
+    expect(optimized.rationale.some((m) => m.key === "opt.hydrationLowered")).toBe(false);
+    expect(optimized.params.hydration_compensated).toBe(true);
+    expect(optimized.params.hydration_base).toBe(comp?.original);
+    // La UI ricostruisce la ricetta con base + compensazione (revisione 22/10):
+    // stessa idratazione, compensazione dichiarata ed E-score dell'ottimizzatore.
+    const rebuilt = generateRecipe(napoletana, constraints, {
+      customHydration: optimized.params.hydration_base,
+      compensateCustomHydration: true,
+      customFlourW: optimized.params.flour_w,
+      customFermentationHours: optimized.params.fermentation_hours,
+      customFermentationTempC: optimized.params.fermentation_temp_c,
+      usePreFerment: optimized.params.use_pre_ferment,
+    });
     expect(rebuilt.hydration_pct).toBe(optimized.recipe.hydration_pct);
-    expect(rebuilt.science.compensations.some((c) => c.type === "hydration")).toBe(false);
+    expect(rebuilt.science.compensations.some((c) => c.type === "hydration")).toBe(true);
+    expect(rebuilt.scores.experimentation).toBe(optimized.recipe.scores.experimentation);
   });
 });
 

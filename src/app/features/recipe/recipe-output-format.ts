@@ -482,8 +482,11 @@ export function localizeStep(
   const bakeTemp = Math.round(recipe.oven_temp_c);
   const fermTemp = recipe.fermentation_temp_c;
   // ENG-2: stesso fattore di velocità del motore (Q10 a tratti continuo), non
-  // più Math.pow(2, …) fisso.
-  const fermFactor = fermentationSpeedRatio(recipe.yeast_type, fermTemp).toFixed(1);
+  // più Math.pow(2, …) fisso. Decimale della lingua (0,4 in italiano), una cifra.
+  const fermRatio = fermentationSpeedRatio(recipe.yeast_type, fermTemp);
+  const fermFactor = fmt
+    ? fmt.number(fermRatio, { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+    : fermRatio.toFixed(1);
   const isUnleavened = !!recipe.style.dough.unleavened;
   const prefType = recipe.style.dough.process_type.includes("poolish") ? "poolish" : "biga";
   const formatTemp = (value: number) =>

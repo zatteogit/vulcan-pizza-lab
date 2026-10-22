@@ -2,13 +2,17 @@ import { describe, expect, it } from "vitest";
 import { ENGINE_CHECK_GROUPS } from "./engine-test-suite";
 
 /* ═══ Suite dev-tools in CI (audit motore 22/10/2026, ENG-1) ═══
-   I 13 gruppi della pagina /dev (98 controlli) giravano solo a mano nel
-   browser. Qui falliscono sugli esiti "fail"; i "warn" restano informativi,
+   I gruppi della pagina /dev (13, 98 controlli al 22/10) giravano solo a
+   mano nel browser. Qui falliscono sugli esiti "fail"; i "warn" restano informativi,
    come nella pagina. */
 
 describe("suite motore di dev-tools", () => {
-  it("contiene i 13 gruppi della pagina /dev", () => {
-    expect(ENGINE_CHECK_GROUPS).toHaveLength(13);
+  // La pagina /dev deriva i suoi gruppi da ENGINE_CHECK_GROUPS: un gruppo
+  // nuovo gira qui senza aggiornare un conteggio a mano.
+  it("gruppi con id univoci (almeno i 13 storici)", () => {
+    const ids = ENGINE_CHECK_GROUPS.map((group) => group.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids.length).toBeGreaterThanOrEqual(13);
   });
 
   for (const group of ENGINE_CHECK_GROUPS) {

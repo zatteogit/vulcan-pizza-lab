@@ -74,6 +74,9 @@ stesura e cottura restavano fuori. Su 28 stili × 4/8/12/24 h × genera/ottimizz
 «adesso» senza avviso: la pizza era pronta dopo l'orario scelto.
 
 **Dopo.**
+- Vale solo con un orario del pasto: `UserConstraints.meal_deadline` (revisione
+  del 22/10, vedi sotto). Con «Nessuna preferenza», senza scelta o in Scopri le ore
+  limitano solo la fermentazione, come prima.
 - Il motore calcola l'overhead fisso: i minuti della timeline che non sono
   fermentazione (`timelineOverheadMinutes`). Il preriscaldo corre in parallelo al
   riposo e conta come fermentazione.
@@ -99,9 +102,9 @@ stesura e cottura restavano fuori. Su 28 stili × 4/8/12/24 h × genera/ottimizz
 Effetti collaterali misurati:
 - con 8 h la Napoletana scende sotto il suo minimo (8 h): ora compare anche
   l'avviso già esistente `gen.timeBelowStyleWindow` e l'autenticità ne tiene conto;
-- con 24 h (anche «Nessuna preferenza», che vale 24 h) gli stili con minimo 24 h
-  passano da 24 h a circa 23 h nell'ottimizzatore; il punteggio complessivo cambia
-  di 1–2 punti (es. Teglia romana a legna 95 → 94).
+- con un pasto fra 24 h gli stili con minimo 24 h passano a circa 23 h; il punteggio
+  complessivo cambia di 1–2 punti (es. Teglia romana a legna 95 → 94). Con
+  «Nessuna preferenza» non succede più (revisione del 22/10): restano a 24 h.
 
 ## ENG-5 — Preriscaldo sempre presente
 
@@ -152,9 +155,12 @@ Napoletana STG a 250 °C (range 55–62%):
 | Ottimizza | 55%, «+8,7%» elencata ma non applicata | 63,7% (55 + 8,7), elencata e motivata, fuori range dichiarato |
 | Valore utente 60% | 60%, «+8,7%» elencata; E-score 21 | 60%, non elencata; E-score 17 |
 
-Limite noto: dopo «Ottimizza» la UI ricostruisce la ricetta con l'idratazione finale
-come valore custom. Quella ricetta non elenca la compensazione nel riquadro tecnico:
-la dichiarazione resta nella motivazione dell'ottimizzazione.
+Dopo «Ottimizza» la UI ricostruisce la ricetta come l'ha valutata l'ottimizzatore
+(revisione del 22/10): `params.hydration_base` più compensazione, finché lo slider
+dell'idratazione resta sul valore scelto. La compensazione compare nel riquadro
+tecnico e l'E-score coincide. Se l'utente sposta lo slider, il valore è suo e non
+è compensato. Dopo un ricaricamento della pagina Scopri (valori nell'URL) la
+compensazione non si ricostruisce: il valore resta, senza dichiarazione.
 
 ## ENG-7 — Regola 55 ai limiti
 
@@ -197,12 +203,44 @@ In `cms-context.tsx` (italiano) e `locales/{en,de,es,fr,pt,ja}.ts`:
 - `timelineLabels.rest` (titolo, descrizione, consigli);
 - `timelineLabels.bulk_cold.tipNerd` riscritto con `{factor}` e `{refTemp}`.
 
+## Revisione del 22/10
+
+Correzioni dopo la revisione del ramo:
+
+- **Nessuna preferenza non è una scadenza.** Nuovo campo `meal_deadline` in
+  `UserConstraints`: il Crea lo mette a `true` solo con uno slot diverso da
+  «Nessuna preferenza» (derivato dallo slot, non salvato nella bozza). Senza, il motore
+  limita la fermentazione alle ore disponibili senza togliere l'overhead e senza
+  `gen.windowTooShort`. I 7 stili con minimo 24 h tornano a 24 h in genera e
+  ottimizza (es. California 87 → 88); sparisce l'avviso contraddittorio
+  «Con 24h non rientri nella finestra (min 24h)». È l'opzione (a) proposta sopra:
+  **da confermare da Matteo prima del merge.**
+- **Condimento scelto.** Ottimizzatore, soffitto e firma dell'ottimizzazione
+  automatica usano lo stesso stile con condimento della ricetta mostrata
+  (`styleWithSelectedTopping`). Sonda 28 stili × condimenti × 3/4/8 h × 2 forni:
+  63/936 ricette ricostruite oltre la finestra → 0/936.
+- **Centri dello stile.** `centerParamsForStyle` accetta i vincoli con l'orario del
+  pasto e usa `maxFermentationHoursForWindow` del motore: «Torna all'originale»,
+  interpretazione base e stato iniziale stanno nella finestra. Napoletana a legna,
+  pasto fra 4 h: 4 h → 3,25 h, 284 → 239 min (prima 27 stili su 28 sforavano).
+- **Compensazione d'idratazione in UI** (sopra, ENG-6).
+- **Motivazione.** `opt.hydrationLowered` solo se il tetto di livello ha limitato la
+  ricerca e l'idratazione finale resta sotto la canonica. Napoletana a 250 °C: non dice
+  più «abbassata a 55%» accanto a «63,7%, esce dal range».
+- **Testi.** Il fattore `{factor}` usa il decimale della lingua («0,4×» in italiano).
+  Nei riposi della Focaccia di Recco niente glossario «La puntata» e niente link
+  «È andata lunga?» (impasto troppo lievitato).
+- **Dev Tools.** Il pannello Q10 usa `fermentationSpeedRatio` (a 4 °C 0,43, non 0,52);
+  la pagina deriva i gruppi da `ENGINE_CHECK_GROUPS`.
+- Test: 81 → 90 (`use-recipe-state.test.ts` nuovo; proprietà su condimenti e caso
+  senza orario).
+
 ## Da decidere o da fare
 
-- «Nessuna preferenza» vale 24 h: con ENG-4 gli stili con minimo 24 h scendono a circa 23 h.
-  Opzioni: (a, consigliata) trattarla come finestra libera nel motore; (b) portarla a 24 h + overhead; (c) lasciare così.
-- `centerParamsForStyle` (`use-recipe-state.ts`) limita ancora le ore senza togliere
-  l'overhead. Nel flusso Crea l'ottimizzazione automatica la sostituisce.
+- Gli slot del pasto arrotondano le ore (`Math.round`): la finestra può superare
+  di fino a 30 min il tempo reale fino al pasto, senza avviso. Opzioni: (a, consigliata)
+  ore al quarto d'ora per difetto, con i testi che mostrano le ore formattati per
+  lingua; (b) ore intere per difetto (fino a 59 min in meno); (c) lasciare così.
 - `recommendStyles` confronta ancora il minimo dello stile con le ore intere.
 - Ottimizzatore della Recco: i candidati arrotondati all'ora portano a 3 h (range 0,5–2 h).
 - Le motivazioni dell'ottimizzatore mostrano i decimali con il punto (63.7%).
