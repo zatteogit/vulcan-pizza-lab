@@ -75,6 +75,7 @@ SKILL_LEVELS,
 STYLES_DB,
 } from "../domain/pizza-engine";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
+import { IMAGE_SIZES } from "../components/media/responsive-images";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import {
   formatSavedDate,
@@ -331,6 +332,7 @@ function FavoriteStylesSection() {
                   alt={style.name}
                   className="profile-favorites__img"
                   loading="lazy"
+                  sizes={IMAGE_SIZES.card}
                 />
                 <div className="profile-favorites__scrim" />
                 <span className="profile-favorites__label">

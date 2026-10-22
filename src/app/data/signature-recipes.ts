@@ -17,13 +17,13 @@
  * finita più che la tecnica.
  */
 import type { FamilyId } from "../domain/pizza-engine";
-import signatureBonciMargherita from "../../assets/signatures/signature_bonci_margherita.jpg";
-import signatureCacioEPepe from "../../assets/signatures/signature_cacio_e_pepe.jpg";
-import signatureDetroitPepperoni from "../../assets/signatures/signature_detroit_pepperoni.jpg";
-import signatureMarinaraAvpn from "../../assets/signatures/signature_marinara_avpn.jpg";
-import signatureNyPepperoni from "../../assets/signatures/signature_ny_pepperoni.jpg";
-import signatureSalsicciaFriarielli from "../../assets/signatures/signature_salsiccia_friarielli.jpg";
-import signatureSfincioneBianco from "../../assets/signatures/signature_sfincione_bianco.jpg";
+import signatureBonciMargherita from "../../assets/signatures/signature_bonci_margherita.webp";
+import signatureCacioEPepe from "../../assets/signatures/signature_cacio_e_pepe.webp";
+import signatureDetroitPepperoni from "../../assets/signatures/signature_detroit_pepperoni.webp";
+import signatureMarinaraAvpn from "../../assets/signatures/signature_marinara_avpn.webp";
+import signatureNyPepperoni from "../../assets/signatures/signature_ny_pepperoni.webp";
+import signatureSalsicciaFriarielli from "../../assets/signatures/signature_salsiccia_friarielli.webp";
+import signatureSfincioneBianco from "../../assets/signatures/signature_sfincione_bianco.webp";
 
 export interface SignatureRecipe {
   id: string;

@@ -22,6 +22,7 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router";
 import { useCms } from "../../features/cms/cms-context";
 import { ImageWithFallback } from "../media/ImageWithFallback";
+import { IMAGE_SIZES } from "../media/responsive-images";
 import { FLOURS_DB } from "../../data/flour-database";
 import { GLOSSARY_TERMS,getLocalizedTerm } from "../../data/glossary-data";
 import { formatOrigin,PIZZA_FAMILIES,STYLES_DB } from "../../domain/pizza-engine";
@@ -608,6 +609,7 @@ export function SearchOverlay({
                                     alt=""
                                     className="search-overlay-x__item-photo"
                                     loading="lazy"
+                                    sizes={IMAGE_SIZES.thumb}
                                   />
                                 )}
                                 <span className="search-overlay-x__item-body">

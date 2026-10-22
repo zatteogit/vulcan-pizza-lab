@@ -4,8 +4,9 @@ import { motionDelay,motionDuration,motionSpring } from "../../components/ds/mot
 import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, Heart } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
+import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import { STYLE_PHOTOS, reasonDimension, MATCH_DIMENSION_ICON } from "./recommended-styles";
-import { STYLE_VIDEOS } from "../../data/style-photos";
+import { STYLE_VIDEOS, type StyleVideo } from "../../data/style-photos";
 import {
   PizzaStyle,
   PIZZA_FAMILIES,
@@ -32,17 +33,20 @@ interface StyleDetailSheetProps {
   onDismiss: () => void;
 }
 
-/* VPL: video di cottura che sfuma in ingresso sopra la foto-poster (effetto wow). */
-function BlurInVideo({ src }: { src: string }) {
+/* VPL: video di cottura che sfuma in ingresso sopra la foto-poster (effetto wow).
+ * BUN-1: preload="metadata" e poster WebP (primo fotogramma). Con autoPlay il
+ * browser scarica comunque il video, ma solo quando la scheda è aperta. */
+function BlurInVideo({ src, poster }: StyleVideo) {
   const [ready, setReady] = useState(false);
   return (
     <video
       src={src}
+      poster={poster}
       muted
       loop
       playsInline
       autoPlay
-      preload="auto"
+      preload="metadata"
       onLoadedData={() => setReady(true)}
       className={`style-detail-media__video${ready ? " style-detail-media__video--ready" : ""}`}
       aria-hidden="true"
@@ -188,9 +192,10 @@ export function StyleDetailSheet({
             <ImageWithFallback
               src={photo}
               alt={style.name}
+              sizes={IMAGE_SIZES.full}
               className="style-detail-media__img"
             />
-            {video && <BlurInVideo src={video} />}
+            {video && <BlurInVideo src={video.src} poster={video.poster} />}
             {/* scrim per leggibilità di eventuali badge */}
             <div className="style-detail-media__scrim" />
           </div>
