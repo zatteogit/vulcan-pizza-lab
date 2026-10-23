@@ -36,6 +36,7 @@ import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { VulcanMark } from "./vulcan-logo";
 import { motionDuration,motionEase,motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
+import { TOOLS_ENABLED } from "../../config/tools";
 
 const MotionLink = motion(Link);
 
@@ -75,6 +76,7 @@ function resolveThemeMode(mode: ThemeMode): boolean {
 }
 
 function loadDevMode(): boolean {
+  if (!TOOLS_ENABLED) return false;
   try {
     const raw = localStorage.getItem(DEV_MODE_KEY);
     if (raw !== null) return raw === "true";
@@ -615,7 +617,7 @@ export function AppShell() {
         return;
       }
       /* Ctrl+Shift+D — dev mode toggle */
-      if (e.ctrlKey && e.shiftKey && e.key === "D") {
+      if (TOOLS_ENABLED && e.ctrlKey && e.shiftKey && e.key === "D") {
         e.preventDefault();
         const isDev = window.location.pathname.startsWith("/dev");
         if (isDev) {

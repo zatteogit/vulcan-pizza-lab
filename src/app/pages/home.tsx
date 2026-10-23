@@ -82,6 +82,7 @@ import {
 } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 import { BRAND } from "../config/brand";
+import { TOOLS_ENABLED } from "../config/tools";
 
 type AppStep = "settings" | "styles" | "result";
 type StyleSettingsPanel = SettingsTab | "time";
@@ -1216,12 +1217,14 @@ export function HomePage() {
                     : cms.ui.fieldsModified}
                 </span>
               </span>
-              <Link
-                to="/cms"
-                className="type-data home-banner__action home-banner__action--cms"
-              >
-                {cms.ui.modify}
-              </Link>
+              {TOOLS_ENABLED && (
+                <Link
+                  to="/cms"
+                  className="type-data home-banner__action home-banner__action--cms"
+                >
+                  {cms.ui.modify}
+                </Link>
+              )}
               <button
                 onClick={cmsResetAll}
                 className="type-data home-banner__dismiss"

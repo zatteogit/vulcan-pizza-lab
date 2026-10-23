@@ -4,10 +4,12 @@
    Tab: Crea(/) · Scopri(/explore) · Impara(/learn) — Profilo(/profile) via avatar
    Search: ⌘K overlay (no tab dedicato)
    Dettaglio: /recipe/:styleId (non-tab)
-   Tool: /dev, /design-system, /cms (nascosti dalla tab bar) */
+   Tool: /dev, /design-system, /cms (nascosti dalla tab bar; solo con
+   TOOLS_ENABLED, cioè in sviluppo e nell'ambiente di test: P-1) */
 
 import { createBrowserRouter, redirect } from "react-router";
 import { AppShell } from "./components/shared/app-shell";
+import { TOOLS_ENABLED } from "./config/tools";
 
 function RouteHydrateFallback() {
   return null;
@@ -55,23 +57,29 @@ export const router = createBrowserRouter([
         lazy: async () => ({ Component: (await import("./pages/recipe")).RecipePage }),
       },
 
-      /* ═══ TOOL ROUTES (hidden from tab bar) ═══ */
-      {
-        path: "dev",
-        lazy: async () => ({ Component: (await import("./pages/dev")).DevToolsPage }),
-      },
-      {
-        path: "dev/:tab",
-        lazy: async () => ({ Component: (await import("./pages/dev")).DevToolsPage }),
-      },
-      {
-        path: "design-system",
-        lazy: async () => ({ Component: (await import("./pages/design-system")).DesignSystemPage }),
-      },
-      {
-        path: "cms",
-        lazy: async () => ({ Component: (await import("./pages/cms")).CmsPage }),
-      },
+      /* ═══ TOOL ROUTES (hidden from tab bar) ═══
+         In produzione l'array è vuoto già in compilazione: /dev, /cms e
+         /design-system finiscono sul 404 e i loro chunk non vengono emessi. */
+      ...(TOOLS_ENABLED
+        ? [
+            {
+              path: "dev",
+              lazy: async () => ({ Component: (await import("./pages/dev")).DevToolsPage }),
+            },
+            {
+              path: "dev/:tab",
+              lazy: async () => ({ Component: (await import("./pages/dev")).DevToolsPage }),
+            },
+            {
+              path: "design-system",
+              lazy: async () => ({ Component: (await import("./pages/design-system")).DesignSystemPage }),
+            },
+            {
+              path: "cms",
+              lazy: async () => ({ Component: (await import("./pages/cms")).CmsPage }),
+            },
+          ]
+        : []),
 
       /* ═══ LEGACY REDIRECTS ═══ */
       { path: "search", loader: () => redirect("/") },
