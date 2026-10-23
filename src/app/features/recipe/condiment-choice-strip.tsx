@@ -3,6 +3,7 @@
 import { Search, Utensils, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
+import { IMAGE_SIZES, responsiveImgAttributes } from "../../components/media/responsive-images";
 import { useCms } from "../cms/cms-context";
 import { IconButton, ModalSheet } from "../../components/ds/index";
 import {
@@ -185,10 +186,12 @@ export function CondimentChoiceStrip({
                 <span className="condiment-strip__card-row">
                   {thumbnail && (
                     <img
+                      loading="lazy"
+                      decoding="async"
+                      {...responsiveImgAttributes(thumbnail, IMAGE_SIZES.thumb)}
                       src={thumbnail}
                       alt=""
                       className="condiment-strip__card-thumb"
-                      loading="lazy"
                     />
                   )}
                   <span className="condiment-strip__card-text">
@@ -218,10 +221,12 @@ export function CondimentChoiceStrip({
             >
               {thumbnail && (
                 <img
+                  loading="lazy"
+                  decoding="async"
+                  {...responsiveImgAttributes(thumbnail, IMAGE_SIZES.thumb)}
                   src={thumbnail}
                   alt=""
                   className="condiment-strip__pill-thumb"
-                  loading="lazy"
                 />
               )}
               <div className="condiment-strip__pill-text">
@@ -361,10 +366,12 @@ export function CondimentChoiceStrip({
                                 aria-pressed={active}
                               >
                                 <img
+                                  loading="lazy"
+                                  decoding="async"
+                                  {...responsiveImgAttributes(thumbnail, IMAGE_SIZES.thumb)}
                                   src={thumbnail}
                                   alt=""
                                   className="condiment-strip-picker__choice-thumb"
-                                  loading="lazy"
                                 />
                                 <span className="condiment-strip-picker__choice-text">
                                   <span className="condiment-strip-picker__choice-name type-data">

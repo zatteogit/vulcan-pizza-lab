@@ -10,3 +10,11 @@ CREATE TABLE IF NOT EXISTS annotations (
 );
 
 CREATE INDEX IF NOT EXISTS idx_annotations_updated ON annotations(updated_at);
+
+-- Global theme shared by every visitor (`/api/config`, development only:
+-- the Worker answers 404 in production). Created here rather than on each
+-- request; the Worker no longer runs DDL.
+CREATE TABLE IF NOT EXISTS config (
+  key   TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);

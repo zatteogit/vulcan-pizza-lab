@@ -114,7 +114,9 @@ async function probeServer() {
     return {
       reachable: response.ok,
       isVulcan:
-        /<title>Vulcan Pizza Lab<\/title>/.test(html) && /id=["']root["']/.test(html),
+        /* Marcatore tecnico stabile, non il titolo: il nome del prodotto
+           arriva da src/app/config/brand.ts e può cambiare. */
+        /id=["']vulcan-splash["']/.test(html) && /id=["']root["']/.test(html),
       isCurrentBuild: Boolean(expectedHtml) && digest(html) === digest(expectedHtml),
     };
   } catch {

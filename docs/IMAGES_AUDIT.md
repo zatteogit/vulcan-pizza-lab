@@ -399,3 +399,5 @@ Specifiche come §4: **1:1, 400×400 px, PNG/WebP**, food photography dark/moody
 ### 7.4 Integrazione
 
 Salvare in `src/assets/toppings/` con naming `topping_<concept_id>.jpg` per gli asset compressi nuovi, importare in `topping-library.ts` e assegnare a `ToppingConcept.thumbnail`. La lista di produzione §7.1–§7.4c resta come storico/prompt bank; lo stato corrente è completo.
+
+**Aggiornamento ottobre 2026 (BUN-1):** gli originali PNG/JPG ora stanno in `design-assets/originali/` (fuori dal bundle) e l'app importa i WebP generati in `src/assets/` (`<nome>.webp` fino a 1280 px, `<nome>-640.webp` per le card). Un nuovo `topping_<concept_id>.jpg` va salvato in `design-assets/originali/toppings/`; poi si esegue `python3 scripts/build-responsive-images.py` e si importa `topping_<concept_id>.webp`. Procedura completa in `design-assets/originali/README.md`.

@@ -22,6 +22,7 @@ import {
 import { ChevronLeft, Bookmark, RotateCcw } from "lucide-react";
 import { Heading, IconButton, Snackbar } from "../../components/ds/index";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
+import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import { RecipeOutput } from "./recipe-output";
 import { RecipeSectionTabs, type RecipePrimaryTab } from "./recipe-section-tabs";
 import { getToppingForStyle, getRecipesByAuthenticity, TOPPING_CONCEPTS } from "../../data/topping-library";
@@ -349,6 +350,8 @@ export function RecipeView({
               <ImageWithFallback
                 src={photo}
                 alt={style.name}
+                priority
+                sizes={IMAGE_SIZES.full}
                 className="recipe-view-hero__image"
               />
             </motion.div>

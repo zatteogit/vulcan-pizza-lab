@@ -190,6 +190,10 @@ Worker** (…workers.dev), so the API lives in `worker/index.ts` (SPA via the
 in `wrangler.toml` and deployed by `wrangler deploy`. Setup (schema load) is in
 `.env.example` alongside `schema.sql`. Note: this is a Worker, **not** Pages —
 the `functions/` Pages-Functions convention does not apply here.
+**In production these APIs are off** (`/api/annotations` and `/api/config`
+answer 404, the overlay and the global theme are not in production builds):
+pins are created in development, against a local `wrangler dev` Worker started
+with `TOOLS_API_ENABLED="1"` in `.dev.vars` (see `.env.example`).
 
 If the user requests to "risolvi i commenti", "risolvi le annotazioni", "fix comments", or similar:
 1. Locate `vulcan-debug-registry.json` at the project root (run `npm run debug:pull` first if dev isn't wired to the same D1, so production pins are included).

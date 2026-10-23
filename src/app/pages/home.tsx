@@ -70,6 +70,7 @@ import { useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
   centerParamsForStyle,
   defaultRecipePL,
+  styleWithSelectedTopping,
   type RecipeInitialState,
   type RecipeMode,
   useRecipeState,
@@ -80,6 +81,7 @@ import {
   motionSpring,
 } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { BRAND } from "../config/brand";
 
 type AppStep = "settings" | "styles" | "result";
 type StyleSettingsPanel = SettingsTab | "time";
@@ -347,8 +349,12 @@ function resolveCreateDraft(
 /* Firma dei vincoli per l'auto-ottimizzazione una-tantum per stile: condivisa
    tra l'effect e la ripresa di una ricetta parcheggiata (che NON deve
    ri-ottimizzare, o sovrascriverebbe i ritocchi manuali dell'utente). */
-function computeAutoOptSig(style: PizzaStyle, c: UserConstraints): string {
-  return `${style.id}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}`;
+function computeAutoOptSig(
+  style: PizzaStyle,
+  c: UserConstraints,
+  toppingConcept: string | null,
+): string {
+  return `${style.id}|${toppingConcept ?? ""}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.meal_deadline ? "deadline" : ""}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}`;
 }
 
 /* ═══ Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le
@@ -536,6 +542,16 @@ export function HomePage() {
   const effectiveNerdMode = nerdAvailable && nerdMode;
   const [constraints, setConstraints] =
     useState<UserConstraints>(initialCreateDraft.constraints);
+  /* ENG-4: i vincoli che vanno al motore. Solo un orario del pasto vero è una
+     scadenza: con «Nessuna preferenza» (o senza scelta) le ore limitano la
+     fermentazione ma la timeline non deve starci dentro. Derivato dallo slot,
+     non salvato nello stato né nella bozza. */
+  const hasMealDeadline =
+    selectedTimeSlot !== null && selectedTimeSlot !== NO_PREFERENCE_SLOT.id;
+  const engineConstraints = useMemo<UserConstraints>(
+    () => ({ ...constraints, meal_deadline: hasMealDeadline }),
+    [constraints, hasMealDeadline],
+  );
 
   const [selectedFlourId, setSelectedFlourId] = useState<
     string | null
@@ -547,6 +563,7 @@ export function HomePage() {
     cms,
     initial: initialCreateDraft.recipeInitial,
     defaultAvailableHours: constraints.available_hours,
+    windowConstraints: engineConstraints,
   });
   const {
     recipeMode: createRecipeMode,
@@ -663,7 +680,12 @@ export function HomePage() {
     useState<Interpretation | null>(null);
   const applySelectStyle = useCallback(
     (style: PizzaStyle, interpretation: Interpretation | null = null) => {
-      resetForStyle(style, { mode: "adapted" }, constraints.available_hours);
+      resetForStyle(
+        style,
+        { mode: "adapted" },
+        constraints.available_hours,
+        engineConstraints,
+      );
       setSelectedStyle(style);
       setSetupPanelOpen(false);
       setSetupNotice(null);
@@ -671,7 +693,7 @@ export function HomePage() {
       setStyleSettingsPanel(null);
       setPendingInterpretation(interpretation);
     },
-    [constraints.available_hours, resetForStyle],
+    [constraints.available_hours, engineConstraints, resetForStyle],
   );
 
   useEffect(() => {
@@ -708,8 +730,11 @@ export function HomePage() {
   }, [resetToBaseRecipe, selectedStyle]);
 
   const resetCreateBaseRecipe = useCallback(() => {
-    resetToBaseRecipe({ availableHours: constraints.available_hours });
-  }, [constraints.available_hours, resetToBaseRecipe]);
+    resetToBaseRecipe({
+      availableHours: constraints.available_hours,
+      windowConstraints: engineConstraints,
+    });
+  }, [constraints.available_hours, engineConstraints, resetToBaseRecipe]);
 
   // Audit role-play giugno 2026: la ricetta del "Crea" deve essere GIÀ su misura,
   // non il midpoint. Quando entri in uno stile in modalità adattata (senza versione
@@ -722,16 +747,23 @@ export function HomePage() {
     }
     if (createRecipeMode !== "adapted") return; // canonico: lascia il riferimento da manuale
     if (activeVersionId || activeInterpretationId) return; // rispetta la scelta dell'utente
-    const sig = computeAutoOptSig(selectedStyle, constraints);
+    // Il condimento che arriva al motore entra nella firma: cambia i minuti
+    // della timeline, quindi la fermentazione che sta nella finestra fino al
+    // pasto. Si usa quello effettivo, così una scelta che non cambia la
+    // ricetta del motore non riottimizza (e non cancella i ritocchi).
+    const engineTopping =
+      styleWithSelectedTopping(selectedStyle, selectedToppingConcept).default_topping_ref ?? null;
+    const sig = computeAutoOptSig(selectedStyle, engineConstraints, engineTopping);
     if (autoOptSigRef.current === sig) return;
     autoOptSigRef.current = sig;
-    optimizeForConstraints(constraints);
+    optimizeForConstraints(engineConstraints);
   }, [
     selectedStyle,
     createRecipeMode,
     activeVersionId,
     activeInterpretationId,
-    constraints,
+    engineConstraints,
+    selectedToppingConcept,
     optimizeForConstraints,
   ]);
 
@@ -762,8 +794,8 @@ export function HomePage() {
   }, []);
 
   const recipe = useMemo(
-    () => buildRecipe(constraints),
-    [buildRecipe, constraints],
+    () => buildRecipe(engineConstraints),
+    [buildRecipe, engineConstraints],
   );
 
   /* ═══ Ondata 1: salva la ricetta su misura anche dal flusso Crea (stesso
@@ -866,13 +898,19 @@ export function HomePage() {
   // tu li prenda — ma sono precondizioni per raggiungerlo → lista della spesa).
   const ceilingInfo = useMemo(() => {
     if (!selectedStyle) return undefined;
-    const opt = optimizeRecipe(selectedStyle, constraints, undefined, undefined, {
-      authenticity: cms.scoreDimensions?.authenticity?.weight,
-      feasibility: cms.scoreDimensions?.feasibility?.weight,
-      digestibility: cms.scoreDimensions?.digestibility?.weight,
-      sustainability: cms.scoreDimensions?.sustainability?.weight,
-      experimentation: cms.scoreDimensions?.experimentation?.weight,
-    }).recipe;
+    const opt = optimizeRecipe(
+      styleWithSelectedTopping(selectedStyle, selectedToppingConcept),
+      engineConstraints,
+      undefined,
+      undefined,
+      {
+        authenticity: cms.scoreDimensions?.authenticity?.weight,
+        feasibility: cms.scoreDimensions?.feasibility?.weight,
+        digestibility: cms.scoreDimensions?.digestibility?.weight,
+        sustainability: cms.scoreDimensions?.sustainability?.weight,
+        experimentation: cms.scoreDimensions?.experimentation?.weight,
+      },
+    ).recipe;
     const hard = thermalViability(selectedStyle, opt.oven_temp_c) < 1;
     const softNeeds: string[] = [];
     if (constraints.pantry_flours.length > 0) {
@@ -891,7 +929,15 @@ export function HomePage() {
       );
     }
     return { value: opt.scores.composite, hard, softNeeds };
-  }, [selectedStyle, constraints, cms.scoreDimensions, cms.cooking.needFlour, cms.yeastLabels]);
+  }, [
+    selectedStyle,
+    selectedToppingConcept,
+    constraints,
+    engineConstraints,
+    cms.scoreDimensions,
+    cms.cooking.needFlour,
+    cms.yeastLabels,
+  ]);
 
   // La ricetta è "già ottimizzata" se siamo in modalità adattata, senza versione/
   // interpretazione, e i parametri correnti coincidono con l'ultimo ottimo. In quel
@@ -1287,7 +1333,7 @@ export function HomePage() {
                       </div>
                       {/* R8: wordmark — il nome del brand accanto al logo */}
                       <span className="home-hero__wordmark">
-                        {uiMessage("pages.home.brandName")}
+                        {BRAND.name}
                         {showBeta && (
                           <span className="home-hero__beta-badge">{uiMessage("pages.home.betaBadge")}</span>
                         )}
@@ -1557,7 +1603,7 @@ export function HomePage() {
                         Math.round(recipe.scores.composite) <
                         2)
                       ? undefined
-                      : () => optimizeForConstraints(constraints)
+                      : () => optimizeForConstraints(engineConstraints)
                   }
                   optimizationRationale={
                     createRecipeOptimized && lastOptimization

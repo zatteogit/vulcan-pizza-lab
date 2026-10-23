@@ -41,6 +41,7 @@ import {
 STYLES_DB,
 calculateOvenCompensations,
 estimatePL,
+fermentationSpeedRatio,
 generateRecipe,
 getQ10,
 recommendStyles,
@@ -783,11 +784,14 @@ function ProjectTab() {
               Overlay di Annotazione Visuale
             </div>
             <div className="type-data-sm" style={{ color: "var(--text-muted)", marginTop: 2 }}>
-              Abilita il widget fluttuante, le combinazioni Ctrl+Option+A / Ctrl+Shift+X e il triplo tocco mobile.
+              {import.meta.env.PROD
+                ? "Solo in sviluppo (npm run dev): nelle build di produzione l'overlay e la sincronizzazione delle annotazioni sono spenti."
+                : "Abilita il widget fluttuante, le combinazioni Ctrl+Option+A / Ctrl+Shift+X e il triplo tocco mobile."}
             </div>
           </div>
           
           <button
+            disabled={import.meta.env.PROD}
             onClick={() => {
               const nextVal = !isOverlayActive;
               setIsOverlayActive(nextVal);
@@ -804,7 +808,7 @@ function ProjectTab() {
               fontWeight: "var(--weight-semibold)" as any,
             }}
           >
-            {isOverlayActive ? "Attivo" : "Disattivato"}
+            {import.meta.env.PROD ? "Solo sviluppo" : isOverlayActive ? "Attivo" : "Disattivato"}
           </button>
         </div>
       </LabSection>
@@ -1171,7 +1175,9 @@ function Q10Content({
     for (const yeast of yeastTypes) {
       for (const temp of temps) {
         const { q10, model } = getQ10(yeast, temp);
-        const speedVs18 = Math.round(Math.pow(q10, (temp - 18) / 10) * 100) / 100;
+        // Stesso fattore del motore (Q10 a tratti continuo, ENG-2), non il Q10
+        // locale elevato da 18°C: sotto i raccordi darebbe un valore diverso.
+        const speedVs18 = Math.round(fermentationSpeedRatio(yeast, temp) * 100) / 100;
         points.push({ yeast, temp, q10, model, speedVs18 });
       }
     }

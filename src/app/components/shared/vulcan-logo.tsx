@@ -1,7 +1,7 @@
 import { useId } from "react";
 import { motion } from "motion/react";
 import { motionDuration,motionEase } from "../ds/motion";
-import { uiMessage } from "../../i18n/ui-messages";
+import { BRAND } from "../../config/brand";
 
 /**
  * VulcanMark — fetta sottratta, 5 scale ottiche.
@@ -102,11 +102,11 @@ export function VulcanMark({
       xmlns="http://www.w3.org/2000/svg"
       className={!glow ? className : undefined}
       role={decorative ? undefined : "img"}
-      aria-label={decorative ? undefined : uiMessage("components.shared.vulcan-logo.vulcan-pizza-lab-49eb8fd0")}
+      aria-label={decorative ? undefined : BRAND.fullName}
       aria-hidden={decorative || undefined}
       focusable="false"
     >
-      {!decorative && <title>{uiMessage("components.shared.vulcan-logo.vulcan-pizza-lab-49eb8fd0")}</title>}
+      {!decorative && <title>{BRAND.fullName}</title>}
 
       {gradient && (
         <defs>

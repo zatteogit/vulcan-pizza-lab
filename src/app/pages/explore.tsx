@@ -10,6 +10,7 @@ import { Link,useSearchParams } from "react-router";
 import { Heading, Surface } from "../components/ds/index";
 import { useCms } from "../features/cms/cms-context";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
+import { IMAGE_SIZES } from "../components/media/responsive-images";
 import { FireGlow } from "../features/cooking/fire-glow";
 import { getInterpretationById } from "../data/interpretation-library";
 import {
@@ -138,7 +139,8 @@ function FeaturedRecipeCard({
           src={photo}
           alt={recipe.name}
           className="explore-feature__image"
-          loading="lazy"
+          priority
+          sizes={IMAGE_SIZES.feature}
         />
         {/* Badge autenticità posizionato sull'immagine */}
         {recipe.authenticity_badge && (
@@ -603,6 +605,7 @@ function SignatureRecipeCard({
             alt={recipe.name}
             className="explore-card__image"
             loading="lazy"
+            sizes={IMAGE_SIZES.card}
           />
           <div className="explore-card__scrim" />
 
@@ -699,6 +702,7 @@ function StyleCatalogCard({
             alt={style.name}
             className="explore-card__image"
             loading="lazy"
+            sizes={IMAGE_SIZES.card}
           />
 
           {/* Cinematic scrim */}

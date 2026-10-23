@@ -19,6 +19,29 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
   ja: () => import("./ja").then((m) => m.JA_LOCALE),
 };
 
+/* ═══ REVISIONE DEI BUNDLE ═══
+ * Chi usa una lingua non italiana tiene in localStorage uno snapshot dell'intero
+ * bundle (evita il lampo dell'italiano al boot) e lo snapshot prevale sui
+ * default. Quando i testi dei bundle cambiano in modo che gli snapshot già
+ * salvati vadano sostituiti, si incrementa LOCALE_BUNDLE_REV: al primo avvio
+ * il CmsProvider ricarica il bundle corrente (si perdono le modifiche CMS locali
+ * in quella lingua, come già succede cambiando lingua).
+ *   1 → token {brand}/{brandFull} al posto del nome scritto per esteso.
+ * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
+ * questa revisione in poi contengono i token, non il nome. */
+export const LOCALE_BUNDLE_REV = 1;
+
+/** True se lo snapshot salvato è di una lingua non italiana e di una revisione
+ *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */
+export function isStaleLocaleSnapshot(
+  overrides: Partial<CmsContent> | null,
+  savedRev: number | null,
+): boolean {
+  const localeId = overrides?.locale?.id;
+  if (!localeId || localeId === "it") return false;
+  return savedRev !== LOCALE_BUNDLE_REV;
+}
+
 /** Bundle già caricati in sessione — lettura sincrona per il merge base. */
 const loadedBundles: Partial<Record<LocaleId, CmsContent>> = {};
 

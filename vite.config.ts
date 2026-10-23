@@ -1,8 +1,40 @@
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import path from "path";
 import fs from "fs";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import { fillBrandPlaceholders } from "./src/app/config/brand";
+
+/* Nome del prodotto in index.html e public/site.webmanifest: i file sorgente
+   contengono %BRAND_NAME% / %BRAND_FULL_NAME% e il plugin li riempie da
+   src/app/config/brand.ts. public/ viene copiato così com'è, quindi il
+   manifest si riempie dopo la copia (build) e al volo (dev). Il file resta in
+   public/ ed è JSON valido anche con i segnaposto (lo legge ds-tier-guard). */
+function brandPlugin(): Plugin {
+  const MANIFEST = "site.webmanifest";
+  let outDir = path.resolve(__dirname, "dist");
+  return {
+    name: "vulcan-brand",
+    configResolved(config) {
+      outDir = path.resolve(config.root, config.build.outDir);
+    },
+    transformIndexHtml: (html) => fillBrandPlaceholders(html),
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (req.url?.split("?")[0] !== `/${MANIFEST}`) return next();
+        const source = path.resolve(server.config.root, "public", MANIFEST);
+        res.setHeader("Content-Type", "application/manifest+json");
+        res.end(fillBrandPlaceholders(fs.readFileSync(source, "utf8")));
+      });
+    },
+    writeBundle() {
+      const target = path.join(outDir, MANIFEST);
+      if (fs.existsSync(target)) {
+        fs.writeFileSync(target, fillBrandPlaceholders(fs.readFileSync(target, "utf8")));
+      }
+    },
+  };
+}
 
 // Custom Vite plugin to auto-save visual debug annotations into the local workspace
 function saveAnnotationsPlugin() {
@@ -119,7 +151,7 @@ function saveAnnotationsPlugin() {
 }
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), saveAnnotationsPlugin()],
+  plugins: [react(), tailwindcss(), saveAnnotationsPlugin(), brandPlugin()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

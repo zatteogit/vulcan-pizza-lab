@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from "react";
 import {
   LOCALE_BCP47,
+  LOCALE_BUNDLE_REV,
   getCachedLocaleBundle,
   isKnownLocale,
+  isStaleLocaleSnapshot,
   loadLocaleBundle,
 } from "./locales/index";
 import {
@@ -22,6 +24,7 @@ import {
   registerUiMessages,
   setActiveUiLocale,
 } from "../../i18n/ui-messages";
+import { resolveBrandTokens } from "../../config/brand";
 
 /* ═══ VULCAN CMS CONTEXT ═══
  * Centralized content management for all user-facing text, config, weights, and media.
@@ -85,7 +88,6 @@ export interface CmsUiStrings {
   startTime: string;
   endTime: string;
   // Recipe output — clipboard/share text
-  clipboardTitle: string;        // "{style} — Vulcan Pizza Lab"
   clipboardBalls: string;        // "{n} panetti da {w}", with {w} already formatted
   clipboardTotal: string;        // "Totale: {g}", with {g} already formatted
   clipboardProcedure: string;    // "{style} — Procedimento"
@@ -1196,7 +1198,6 @@ export const CMS_DEFAULTS: CmsContent = {
     startTime: "Inizio",
     endTime: "Fine",
     // Recipe output — clipboard/share text
-    clipboardTitle: "{style} — Vulcan Pizza Lab",
     clipboardBalls: "{n} panetti da {w}",
     clipboardTotal: "Totale: {g}",
     clipboardProcedure: "{style} — Procedimento",
@@ -1255,7 +1256,7 @@ export const CMS_DEFAULTS: CmsContent = {
     recipeScore: "Match",
     nerdToggle: "PizzaNerd",
     nerdActive: "Attiva PizzaNerd",
-    scienceTitle: "Vulcan Science",
+    scienceTitle: "{brand} Science",
     ariaCloseScores: "Chiudi il pannello Match",
     ariaViewScores: "Visualizza dettagli Match",
     tapForDetails: "Quanto la tua versione si avvicina al massimo · Tocca per dettagli ›",
@@ -1321,7 +1322,7 @@ export const CMS_DEFAULTS: CmsContent = {
     subtitle: "Seleziona il momento per calcolare i tempi di preparazione.",
     onboardingEyebrow: "Prima volta qui?",
     onboardingBody:
-      "Vulcan disegna la ricetta su misura per il tuo forno e il tuo tempo — e ti dice con un punteggio onesto quanto si avvicina all'originale. Rispondi alle domande qui sotto e via.",
+      "{brand} disegna la ricetta su misura per il tuo forno e il tuo tempo — e ti dice con un punteggio onesto quanto si avvicina all'originale. Rispondi alle domande qui sotto e via.",
     onboardingCta: "Capito, si parte",
     onboardingProfileCta: "Salva forno e livello nel profilo",
   },
@@ -1446,7 +1447,7 @@ export const CMS_DEFAULTS: CmsContent = {
       },
       t60: {
         title: "Ci vuole un po' di corteggiamento",
-        canonical: "Si può fare bene: sblocchiamola e Vulcan sistema tempi e cottura.",
+        canonical: "Si può fare bene: sblocchiamola e {brand} sistema tempi e cottura.",
         adapted: "La ricetta funziona, ma chiede un minimo di attenzione.",
       },
       t40: {
@@ -1550,8 +1551,8 @@ export const CMS_DEFAULTS: CmsContent = {
     notificationWaitDoneTitle: "Attesa finita: {title}!",
     notificationDueTitle: "È ora: {title}",
     notificationBody: "{style} — {description}",
-    documentTitleDue: "{title} — Vulcan",
-    documentTitleCountdown: "{eta} · {title} — Vulcan",
+    documentTitleDue: "{title} — {brand}",
+    documentTitleCountdown: "{eta} · {title} — {brand}",
     prevStep: "Passo precedente",
     replaceTitle: "Hai già una pizzata in corso",
     confirmNewAria: "Conferma nuova pizzata",
@@ -1638,7 +1639,7 @@ export const CMS_DEFAULTS: CmsContent = {
     smartLinkOn: "Parametri collegati — muovi uno slider, gli altri si adattano",
     smartLinkOff: "Collega tutti i parametri per regolazione automatica",
     smartLinkApplied: "{param}: ho riallineato gli altri parametri e la timeline.",
-    settingsHelp: "Questi dati aiutano Vulcan ad adattare tempi e ricetta.",
+    settingsHelp: "Questi dati aiutano {brand} ad adattare tempi e ricetta.",
     versionsLabel: "Versioni",
     versionsHint: "Interpretazioni di questo stile, ognuna con i suoi range di parametri. La versione attiva determina cosa è \"in range\" sugli slider.",
     learnHeroTitle1: "Diventa il pizzaiolo",
@@ -1674,7 +1675,7 @@ export const CMS_DEFAULTS: CmsContent = {
     savedBody: "I tuoi dati aiutano a calibrare il motore. Puoi analizzarli in DevTools → Engine Lab.",
     nextTimeTitle: "La prossima volta",
     triedQuestion: "Hai provato questa ricetta?",
-    triedSubtitle: "Il tuo feedback aiuta a calibrare il motore di Vulcan.",
+    triedSubtitle: "Il tuo feedback aiuta a calibrare il motore di {brand}.",
     success: "Riuscita",
     fail: "Non riuscita",
     detailedPrompt: "Grazie! Ti andrebbe di lasciare un feedback dettagliato?",
@@ -1772,7 +1773,7 @@ export const CMS_DEFAULTS: CmsContent = {
     catMechanics: "Meccanica",
     catMechanicsDesc: "Lavorazione, attrezzature e misure",
     catScoring: "Punteggi",
-    catScoringDesc: "Metriche di qualit\u00E0 Vulcan",
+    catScoringDesc: "Metriche di qualit\u00E0 {brand}",
   },
   engineMessages: {
     // Authenticity penalties
@@ -1844,6 +1845,13 @@ export const CMS_DEFAULTS: CmsContent = {
     "tip.waterTempCold": "Regola 55: usa acqua dal frigo ({temp}). L'impasto a macchina scalda la massa.",
     "tip.waterTempNormal": "Regola 55: usa acqua a {temp} per raggiungere {ddt} di impasto.",
     "tip.frictionNote": "Compensazione attrito impastatrice: {friction}",
+    "gen.windowTooShort": "Con {available} h non c'è tempo per tutto: questa ricetta richiede circa {needed} h. Sarà pronta più tardi dell'orario scelto: scegli un orario più avanti o una lievitazione più breve.",
+    "opt.hydrationOvenCompensated": "Idratazione {h}%: {base}% più {delta}% per compensare il forno più freddo dell'ideale.",
+    "opt.hydrationOutOfStyleRange": "Con la compensazione l'idratazione esce dal range dello stile ({min}–{max}%).",
+    "tip.waterTempLimitMax": "Cucina fredda: anche con acqua a {temp} l'impasto resta sotto {ddt}. Non scaldare di più l'acqua: tieni la farina in un posto tiepido o allunga un po' la puntata.",
+    "tip.waterTempLimitMin": "Cucina calda: anche con acqua a {temp} l'impasto supera {ddt}. Usa acqua ghiacciata, tieni la farina in frigo o accorcia un po' la puntata.",
+    "timeline.preheat.descWholeProof": "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti fanno l'appretto.",
+    "timeline.preheat.descDuringRest": "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti riposano.",
     "hint.flourWeak": "farina debole (00 classica)",
     "hint.flourMedium": "farina di media forza",
     "hint.flourStrong": "farina forte (per pizza)",
@@ -1948,7 +1956,14 @@ export const CMS_DEFAULTS: CmsContent = {
       desc: "Lievitazione in massa a {temp}",
       longDesc: "Trasferisci il contenitore con l'impasto in frigorifero ({fridgeTemp}). In frigo il lievito lavora molto pi\u00F9 lentamente: serve molto pi\u00F9 tempo, ma in cambio guadagni complessit\u00E0 di aroma, digeribilit\u00E0 e maglia glutinica pi\u00F9 sviluppata. Copri sempre con pellicola a contatto per evitare che la crosta si secchi. Quando lo tiri fuori, lascialo acclimatare 1-2 ore a temperatura ambiente prima dello staglio.",
       tipBeginner: "In frigo l'impasto cresce lento ma guadagna sapore. Copri bene con pellicola a contatto.",
-      tipNerd: "A {temp} il Q\u2081\u2080\u22482.0 rallenta la fermentazione. L'attivit\u00E0 proteolitica prevale, degradando i FODMAP.",
+      tipNerd: "A {temp} la fermentazione rallenta a {factor}× rispetto a {refTemp}. L'attività proteolitica prevale, degradando i FODMAP.",
+    },
+    // ENG-5: impasto non lievitato (Focaccia di Recco) — riposo, non lievitazione
+    rest: {
+      title: "Riposo",
+      desc: "Lasciare riposare l'impasto coperto a {temp}",
+      tipBeginner: "Senza lievito l'impasto non cresce: il riposo rilassa il glutine, così la sfoglia si stende sottile senza ritirarsi.",
+      tipNerd: "Il riposo completa l'idratazione della farina e rilassa la maglia glutinica: meno ritorno elastico, sfoglia quasi trasparente.",
     },
     divide: {
       title: "Staglio",
@@ -2320,9 +2335,9 @@ export const CMS_DEFAULTS: CmsContent = {
     searchCloseLabel: "Chiudi ricerca",
     searchFieldLabel: "Campo di ricerca globale",
     searchClearLabel: "Cancella ricerca",
-    homeAria: "Vulcan Pizza Lab — Home",
+    homeAria: "{brandFull} — Home",
     devToolsAria: "Developer Tools",
-    mottoAria: "Vulcan motto",
+    mottoAria: "{brand} motto",
     troubleshootSearchPlaceholder: "Cerca sintomo o causa...",
     dietaryWarningsTitle: "Avvisi dietetici",
     troubleshootingTitle: "Problemi con la ricetta?",
@@ -2464,6 +2479,9 @@ function deepDiffPaths(a: any, b: any, prefix = ""): string[] {
 // ═══ PERSISTENCE ═══
 
 const STORAGE_KEY = "vulcan_cms";
+/* Revisione dei bundle lingua da cui è stato preso lo snapshot salvato
+   (LOCALE_BUNDLE_REV). Chiave tecnica: il prefisso vulcan_ resta. */
+const STORAGE_REV_KEY = "vulcan_cms_rev";
 
 /** Detect best locale from browser language, with fallback to English (not Italian).
  * Returns null if Italian is detected (since Italian is the default). */
@@ -2496,12 +2514,25 @@ function loadCms(): Partial<CmsContent> | null {
   return null;
 }
 
-function saveCms(overrides: Partial<CmsContent> | null) {
+function loadCmsRev(): number | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_REV_KEY);
+    return raw === null ? null : Number(raw);
+  } catch {
+    return null;
+  }
+}
+
+/** `rev`: passarla quando si salva uno snapshot di bundle (o un import);
+ *  le modifiche puntuali dei campi lasciano invariata quella esistente. */
+function saveCms(overrides: Partial<CmsContent> | null, rev?: number) {
   try {
     if (overrides && Object.keys(overrides).length > 0) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+      if (rev !== undefined) localStorage.setItem(STORAGE_REV_KEY, String(rev));
     } else {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_REV_KEY);
     }
   } catch { /* storage restricted */ }
 }
@@ -2547,8 +2578,10 @@ function fallbackBaseFor(overrides: Partial<CmsContent> | null): CmsContent {
 // ═══ CONTEXT ═══
 
 interface CmsContextValue {
-  /** Effective content (defaults + overrides merged) */
+  /** Effective content (defaults + overrides merged, brand tokens resolved) */
   cms: CmsContent;
+  /** Same content with the raw `{brand}` / `{brandFull}` tokens: CMS editor only */
+  rawCms: CmsContent;
   /** Raw overrides (only user-changed values) */
   overrides: Partial<CmsContent> | null;
   /** Update a single field by dot-path */
@@ -2574,7 +2607,8 @@ interface CmsContextValue {
 }
 
 const Ctx = createContext<CmsContextValue>({
-  cms: CMS_DEFAULTS,
+  cms: resolveBrandTokens(CMS_DEFAULTS),
+  rawCms: CMS_DEFAULTS,
   overrides: null,
   update: () => {},
   resetField: () => {},
@@ -2611,13 +2645,38 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
       setOverrides((prev) => {
         if (prev !== null) return prev; /* l'utente ha già fatto scelte */
         const initial = { ...bundle } as Partial<CmsContent>;
-        saveCms(initial);
+        saveCms(initial, LOCALE_BUNDLE_REV);
         return initial;
       });
     });
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  /* Snapshot di una lingua non italiana salvato da una revisione precedente
+     dei bundle (per esempio con il nome del prodotto scritto per esteso):
+     si ricarica il bundle corrente, come fa switchLocale. Il primo paint
+     usa ancora lo snapshot vecchio, quindi niente lampo dell'italiano. */
+  useEffect(() => {
+    const snapshotLocale = overrides?.locale?.id;
+    if (!snapshotLocale || !isStaleLocaleSnapshot(overrides, loadCmsRev())) return;
+    let cancelled = false;
+    void loadLocaleBundle(snapshotLocale).then((bundle) => {
+      if (cancelled || !bundle) return;
+      setOverrides((prev) => {
+        /* L'utente ha cambiato lingua nel frattempo: vince la sua scelta. */
+        if (prev?.locale?.id !== snapshotLocale) return prev;
+        const refreshed = { ...bundle } as Partial<CmsContent>;
+        saveCms(refreshed, LOCALE_BUNDLE_REV);
+        return refreshed;
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+    // Solo al boot: gli snapshot salvati dopo hanno già la revisione corrente.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* Lingua attiva non-IT: assicura in cache EN (fallback intermedio) e il
@@ -2644,10 +2703,14 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
     [overrides, localeTick],
   );
 
-  const cms = useMemo(
+  const rawCms = useMemo(
     () => deepMerge(fallbackBase, overrides) as CmsContent,
     [fallbackBase, overrides],
   );
+
+  /* Nome del prodotto risolto in un solo punto: ogni consumer legge il nome
+     effettivo; l'editor /cms usa rawCms e mostra i token. */
+  const cms = useMemo(() => resolveBrandTokens(rawCms), [rawCms]);
 
   /* Il catalogo strict condivide la stessa locale del CMS. I bundle lingua
      possono fornire `messages` in modo incrementale; le chiavi mancanti
@@ -2657,8 +2720,8 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
   setActiveUiLocale(cms.locale.id);
 
   const modifiedPaths = useMemo(
-    () => (overrides ? deepDiffPaths(CMS_DEFAULTS, cms) : []),
-    [overrides, cms],
+    () => (overrides ? deepDiffPaths(CMS_DEFAULTS, rawCms) : []),
+    [overrides, rawCms],
   );
 
   const update = useCallback((path: string, value: any) => {
@@ -2718,7 +2781,8 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
 
   const importOverrides = useCallback((data: Partial<CmsContent>) => {
     setOverrides(data);
-    saveCms(data);
+    /* Import esplicito: non va sostituito al prossimo avvio. */
+    saveCms(data, LOCALE_BUNDLE_REV);
   }, []);
 
   const switchLocale = useCallback((localeId: LocaleId) => {
@@ -2737,7 +2801,7 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
       if (!bundle) return;
       const newOverrides = { ...bundle } as Partial<CmsContent>;
       setOverrides(newOverrides);
-      saveCms(newOverrides);
+      saveCms(newOverrides, LOCALE_BUNDLE_REV);
     });
   }, []);
 
@@ -2768,6 +2832,7 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
     <Ctx.Provider
       value={{
         cms,
+        rawCms,
         overrides,
         update,
         resetField,
@@ -2867,7 +2932,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "ui.startTime", label: "Inizio (orario)", type: "text" },
       { path: "ui.endTime", label: "Fine (orario)", type: "text" },
       // Recipe output — clipboard/share text
-      { path: "ui.clipboardTitle", label: "Titolo clipboard", type: "text", description: "Template: {style} — Vulcan Pizza Lab" },
       { path: "ui.clipboardBalls", label: "Panetti clipboard", type: "text", description: "Template: {n} panetti da {w}" },
       { path: "ui.clipboardTotal", label: "Totale clipboard", type: "text", description: "Template: Totale: {g}" },
       { path: "ui.clipboardProcedure", label: "Procedimento clipboard", type: "text", description: "Template: {style} — Procedimento" },
@@ -3236,7 +3300,7 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "timelineLabels.bulk_cold.title", label: "Puntata fredda — Titolo", type: "text" },
       { path: "timelineLabels.bulk_cold.desc", label: "Puntata fredda — Desc", type: "textarea" },
       { path: "timelineLabels.bulk_cold.tipBeginner", label: "Puntata fredda — Tip beginner", type: "textarea" },
-      { path: "timelineLabels.bulk_cold.tipNerd", label: "Puntata fredda — Tip nerd", type: "textarea" },
+      { path: "timelineLabels.bulk_cold.tipNerd", label: "Puntata fredda — Tip nerd", type: "textarea", description: "Template: {temp}, {factor}, {refTemp}" },
       { path: "timelineLabels.divide.title", label: "Divisione — Titolo", type: "text" },
       { path: "timelineLabels.divide.desc", label: "Divisione — Desc", type: "textarea" },
       { path: "timelineLabels.divide.tipBeginner", label: "Divisione — Tip beginner", type: "textarea" },
@@ -3245,6 +3309,10 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "timelineLabels.proof.desc", label: "Appretto — Desc", type: "textarea", description: "Template: {temp}" },
       { path: "timelineLabels.proof.tipBeginner", label: "Appretto — Tip beginner", type: "textarea" },
       { path: "timelineLabels.proof.tipNerd", label: "Appretto — Tip nerd", type: "textarea" },
+      { path: "timelineLabels.rest.title", label: "Riposo (non lievitato) — Titolo", type: "text" },
+      { path: "timelineLabels.rest.desc", label: "Riposo (non lievitato) — Desc", type: "textarea", description: "Template: {temp}" },
+      { path: "timelineLabels.rest.tipBeginner", label: "Riposo (non lievitato) — Tip beginner", type: "textarea" },
+      { path: "timelineLabels.rest.tipNerd", label: "Riposo (non lievitato) — Tip nerd", type: "textarea" },
       { path: "timelineLabels.shape.title", label: "Stesura — Titolo", type: "text" },
       { path: "timelineLabels.shape.desc", label: "Stesura — Desc (tonda)", type: "textarea" },
       { path: "timelineLabels.shape.descAlt", label: "Stesura — Desc (teglia)", type: "textarea" },

@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Lightbulb } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
+import { IMAGE_SIZES, responsiveImgAttributes } from "../../components/media/responsive-images";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { Badge, Heading, IconButton } from "../../components/ds/index";
@@ -173,10 +174,12 @@ export function ToppingSection({
               className="topping-panel__carousel-frame"
             >
               <img
+                loading="lazy"
+                decoding="async"
+                {...responsiveImgAttributes(toppingThumbnail, IMAGE_SIZES.fluid)}
                 src={toppingThumbnail}
                 alt={toppingName}
                 className="topping-panel__carousel-image"
-                loading="lazy"
               />
 
               {/* Scrim overlay */}

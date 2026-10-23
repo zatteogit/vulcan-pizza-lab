@@ -1,34 +1,34 @@
 /* Foto curate locali — canoniche per stile, niente sorprese da stock remoto */
-import photoVerace from "../../assets/pizzas/verace.png";
-import photoCanotto from "../../assets/pizzas/canotto.png";
-import photoTegliaRomana from "../../assets/pizzas/tegliaromana.png";
-import photoRomanaTonda from "../../assets/pizzas/romanatonda.png";
-import photoPinsa from "../../assets/pizzas/pinsa.png";
+import photoVerace from "../../assets/pizzas/verace.webp";
+import photoCanotto from "../../assets/pizzas/canotto.webp";
+import photoTegliaRomana from "../../assets/pizzas/tegliaromana.webp";
+import photoRomanaTonda from "../../assets/pizzas/romanatonda.webp";
+import photoPinsa from "../../assets/pizzas/pinsa.webp";
 
 // Nuove foto locali importate da temp/
-import photoNewYork from "../../assets/pizzas/new_york.png";
-import photoDetroit from "../../assets/pizzas/detroit.png";
-import photoChicagoDeep from "../../assets/pizzas/chicagodeepdish.png";
-import photoFocacciaGenovese from "../../assets/pizzas/focgenovese.png";
-import photoSfincione from "../../assets/pizzas/sfincione.png";
-import photoPalaRomana from "../../assets/pizzas/palaromana.png";
-import photoGrandmaStyle from "../../assets/pizzas/grandma.png";
-import photoFocacciaRecco from "../../assets/pizzas/focacciarecco.png";
-import photoPadellinoTorino from "../../assets/pizzas/padellino.png";
-import photoPizzaBaciata from "../../assets/pizzas/baciata.png";
-import photoCiaccinoSenese from "../../assets/pizzas/ciaccino.png";
-import photoPizzaPatatePorchetta from "../../assets/pizzas/patateporchetta.png";
-import photoTrancioMilanese from "../../assets/pizzas/tranciomilanese.png";
-import photoChicagoTavern from "../../assets/pizzas/chicagotavern.png";
-import photoFocacciaBarese from "../../assets/pizzas/focacciabarese.png";
-import photoPizzaFritta from "../../assets/pizzas/fritta.png";
-import photoMontanara from "../../assets/pizzas/montanara.png";
-import photoCalzoneNapoletano from "../../assets/pizzas/calzonenapoletano.png";
-import photoPizzaAlMetro from "../../assets/pizzas/almetro.png";
-import photoNewHavenApizza from "../../assets/pizzas/newhavenapizza.png";
-import photoFugazzeta from "../../assets/pizzas/fugazzeta.png";
-import photoCaliforniaStyle from "../../assets/pizzas/california.png";
-import photoGreekPan from "../../assets/pizzas/greekpan.png";
+import photoNewYork from "../../assets/pizzas/new_york.webp";
+import photoDetroit from "../../assets/pizzas/detroit.webp";
+import photoChicagoDeep from "../../assets/pizzas/chicagodeepdish.webp";
+import photoFocacciaGenovese from "../../assets/pizzas/focgenovese.webp";
+import photoSfincione from "../../assets/pizzas/sfincione.webp";
+import photoPalaRomana from "../../assets/pizzas/palaromana.webp";
+import photoGrandmaStyle from "../../assets/pizzas/grandma.webp";
+import photoFocacciaRecco from "../../assets/pizzas/focacciarecco.webp";
+import photoPadellinoTorino from "../../assets/pizzas/padellino.webp";
+import photoPizzaBaciata from "../../assets/pizzas/baciata.webp";
+import photoCiaccinoSenese from "../../assets/pizzas/ciaccino.webp";
+import photoPizzaPatatePorchetta from "../../assets/pizzas/patateporchetta.webp";
+import photoTrancioMilanese from "../../assets/pizzas/tranciomilanese.webp";
+import photoChicagoTavern from "../../assets/pizzas/chicagotavern.webp";
+import photoFocacciaBarese from "../../assets/pizzas/focacciabarese.webp";
+import photoPizzaFritta from "../../assets/pizzas/fritta.webp";
+import photoMontanara from "../../assets/pizzas/montanara.webp";
+import photoCalzoneNapoletano from "../../assets/pizzas/calzonenapoletano.webp";
+import photoPizzaAlMetro from "../../assets/pizzas/almetro.webp";
+import photoNewHavenApizza from "../../assets/pizzas/newhavenapizza.webp";
+import photoFugazzeta from "../../assets/pizzas/fugazzeta.webp";
+import photoCaliforniaStyle from "../../assets/pizzas/california.webp";
+import photoGreekPan from "../../assets/pizzas/greekpan.webp";
 
 export const STYLE_PHOTOS: Record<string, string> = {
   napoletana_stg: photoVerace,
@@ -63,12 +63,19 @@ export const STYLE_PHOTOS: Record<string, string> = {
 
 /* VPL-D/C: video di cottura per-stile (serviti da public/videos, lazy dal tag
  * <video>). Usati nel detail sheet con transizione foto→video sfocata. Solo gli
- * stili con un video curato; gli altri restano sulla foto. */
-export const STYLE_VIDEOS: Record<string, string> = {
-  napoletana_stg: "/videos/napoletana_stg.mp4",
-  chicago_deep: "/videos/chicago_deep.mp4",
-  detroit: "/videos/detroit.mp4",
-  new_york: "/videos/new_york.mp4",
-  focaccia_genovese: "/videos/focaccia_genovese.mp4",
-  focaccia_barese: "/videos/focaccia_barese.mp4",
+ * stili con un video curato; gli altri restano sulla foto.
+ * BUN-1: il poster è il primo fotogramma in WebP (scripts/build-responsive-images.py
+ * --posters), così il tag non deve scaricare il video per mostrare un'immagine. */
+export interface StyleVideo {
+  src: string;
+  poster: string;
+}
+
+export const STYLE_VIDEOS: Record<string, StyleVideo> = {
+  napoletana_stg: { src: "/videos/napoletana_stg.mp4", poster: "/videos/napoletana_stg-poster.webp" },
+  chicago_deep: { src: "/videos/chicago_deep.mp4", poster: "/videos/chicago_deep-poster.webp" },
+  detroit: { src: "/videos/detroit.mp4", poster: "/videos/detroit-poster.webp" },
+  new_york: { src: "/videos/new_york.mp4", poster: "/videos/new_york-poster.webp" },
+  focaccia_genovese: { src: "/videos/focaccia_genovese.mp4", poster: "/videos/focaccia_genovese-poster.webp" },
+  focaccia_barese: { src: "/videos/focaccia_barese.mp4", poster: "/videos/focaccia_barese-poster.webp" },
 };
