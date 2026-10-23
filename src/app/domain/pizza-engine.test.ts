@@ -151,6 +151,29 @@ describe("generateTimeSlots", () => {
     }
   });
 
+  it("M-2: ore al quarto d'ora per difetto, mai oltre il tempo reale al pasto", () => {
+    for (let minute = 0; minute < 24 * 60; minute += 7) {
+      const now = new Date(2026, 9, 23, 0, minute);
+      for (const slot of generateTimeSlots(now)) {
+        expect(slot.hours * 4).toBe(Math.floor(slot.hours * 4));
+        const meal = new Date(now);
+        meal.setDate(meal.getDate() + (slot.dayOffset ?? 0));
+        if (slot.meal === "lunch") meal.setHours(12, 30, 0, 0);
+        else meal.setHours(20, 0, 0, 0);
+        const realHours = (meal.getTime() - now.getTime()) / 3_600_000;
+        expect(slot.hours).toBeLessThanOrEqual(realHours + 1e-9);
+        expect(realHours - slot.hours).toBeLessThan(0.25);
+      }
+    }
+  });
+
+  it("M-2: alle 16:20 «Stasera» vale 3 h 30 min, non 4 h", () => {
+    const tonight = generateTimeSlots(new Date(2026, 9, 23, 16, 20)).find((s) => s.id === "tonight");
+    expect(tonight?.hours).toBe(3.5);
+    expect(tonight?.meal).toBe("dinner");
+    expect(tonight?.dayOffset).toBe(0);
+  });
+
   it("a tarda sera i pasti di oggi sono già esclusi", () => {
     const slots = generateTimeSlots(new Date("2026-07-03T23:30:00"));
     // nessuno slot deve essere irrealisticamente vicino

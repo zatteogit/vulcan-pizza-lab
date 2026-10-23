@@ -19,6 +19,7 @@ useState,
 } from "react";
 import { Link,useLocation,useNavigate,useParams,useSearchParams } from "react-router";
 import { useCms,type CmsContent } from "../features/cms/cms-context";
+import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { t as tpl } from "../features/cms/i18n";
 import {
 getInterpretationById,
@@ -36,7 +37,6 @@ defaultPanShape,
 generateRecipe,
 getDefaultDoughBalls,
 optimizeRecipe,
-resolveEngineMsgs,
 thermalViability,
 type EngineMsg,
 type GeneratedRecipe,
@@ -222,6 +222,7 @@ function RecipeContent({
   style: PizzaStyle;
   cms: any;
 }) {
+  const { bcp47 } = useCms();
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -1269,7 +1270,7 @@ function RecipeContent({
               onOptimize={isOptimized || optimizeGain < 2 ? undefined : handleOptimize}
               optimizationRationale={
                 isOptimized && lastOptimization
-                  ? resolveEngineMsgs(lastOptimization.rationale, cms.engineMessages)
+                  ? engineMsgTexts(lastOptimization.rationale, cms, bcp47)
                   : undefined
               }
               ceiling={ceilingInfo.value}

@@ -25,7 +25,8 @@ import { AnimatePresence,motion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring,motionTiming } from "../../components/ds/motion";
 import React,{ useEffect,useMemo,useState } from "react";
 import { Chip } from "../../components/ds/index";
-import { useCms } from "../cms/cms-context";
+import { useCms, type CmsContent } from "../cms/cms-context";
+import { timeSlotText } from "./time-slot-text";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import {
 DEFAULT_KITCHEN_TEMP,
@@ -532,8 +533,8 @@ export function UserNeeds({
   const selectedTimeLabel = useMemo(() => {
     if (!selectedTimeSlot) return null;
     const slot = dynamicSlots.find((s) => s.id === selectedTimeSlot);
-    return cms.timeSlots[selectedTimeSlot]?.label ?? slot?.label ?? null;
-  }, [selectedTimeSlot, dynamicSlots, cms.timeSlots]);
+    return slot ? timeSlotText(slot, cms, bcp47).label : null;
+  }, [selectedTimeSlot, dynamicSlots, cms, bcp47]);
   const weather = useLocationWeather();
 
   const [kitchenTempManual, setKitchenTempManual] =
@@ -921,9 +922,10 @@ function TimeSlotPicker({
   suggestedSlot: string;
   selectedTimeSlot: string | null;
   onTimeSlotChange: (slot: TimeSlot) => void;
-  cms: any;
+  cms: CmsContent;
   compact?: boolean;
 }) {
+  const { bcp47 } = useCms();
   return (
     <div className="needs-slot-picker">
       <div
@@ -935,9 +937,7 @@ function TimeSlotPicker({
           const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
-          const cmsSlot = cms.timeSlots[slot.id];
-          const displayLabel = cmsSlot?.label ?? slot.label;
-          const displaySublabel = cmsSlot?.sublabel ?? slot.sublabel;
+          const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);
           return (
             <button
               key={slot.id}
@@ -999,9 +999,7 @@ function TimeSlotPicker({
           const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
-          const cmsSlot = cms.timeSlots[slot.id];
-          const displayLabel = cmsSlot?.label ?? slot.label;
-          const displaySublabel = cmsSlot?.sublabel ?? slot.sublabel;
+          const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);
           return (
             <motion.button
               key={slot.id}

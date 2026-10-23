@@ -30,7 +30,6 @@ optimizeRecipe,
 thermalViability,
 FLOUR_W_RANGES,
 YEAST_LABELS,
-resolveEngineMsgs,
 type PanConfig,
 PizzaStyle,
 STYLES_DB,
@@ -50,6 +49,7 @@ import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 import { VulcanHero } from "../components/shared/vulcan-hero";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
 import { useCms } from "../features/cms/cms-context";
+import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { t as tpl } from "../features/cms/i18n";
 import { getDietaryWarnings } from "../data/dietary-data";
 import { findSavedRecipe, removeRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
@@ -417,6 +417,7 @@ export function HomePage() {
     useStylesOverride();
   const {
     cms,
+    bcp47,
     modifiedCount,
     resetAll: cmsResetAll,
   } = useCms();
@@ -1607,7 +1608,7 @@ export function HomePage() {
                   }
                   optimizationRationale={
                     createRecipeOptimized && lastOptimization
-                      ? resolveEngineMsgs(lastOptimization.rationale, cms.engineMessages)
+                      ? engineMsgTexts(lastOptimization.rationale, cms, bcp47)
                       : undefined
                   }
                   ceiling={ceilingInfo?.value}

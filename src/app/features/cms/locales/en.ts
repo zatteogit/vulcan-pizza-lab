@@ -105,6 +105,10 @@ export const EN_LOCALE: CmsContent = {
     minute: "minute",
     hours: "hours",
     hour: "hour",
+    slotWeekdayLunch: "{day} lunch",
+    slotWeekdayDinner: "{day} dinner",
+    slotNoPreference: "No preference",
+    slotNoPreferenceSub: "{brand} decides",
     // Score dashboard
     recipeScore: "Match",
     nerdToggle: "PizzaNerd",
@@ -792,10 +796,10 @@ export const EN_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "Sourdough: home-made, zero impact",
     "rec.timeCompatible":
-      "Fermentation {fMin}-{fMax}h: fits your schedule",
-    "rec.timeAdaptable": "Fermentation adaptable to ~{hours}h",
+      "Fermentation {fMin}-{fMax}: fits your schedule",
+    "rec.timeAdaptable": "Fermentation adaptable to ~{hours}",
     "rec.timeInsufficient":
-      "Requires at least {fMin}h, you have {available}h",
+      "Requires at least {fMin}, you have {available}",
     "rec.needsWoodOven": "Requires wood-fired oven",
     "rec.ovenIdeal":
       "Your oven reaches ideal temperature ({ideal})",
@@ -840,9 +844,22 @@ export const EN_LOCALE: CmsContent = {
       "Rule of 55: use water at {temp} to reach {ddt} dough temperature.",
     "tip.frictionNote":
       "Mixer friction compensation: {friction}",
-    "gen.windowTooShort": "With {available} h there isn't time for everything: this recipe needs about {needed} h. It will be ready later than the time you chose: pick a later time or a shorter rise.",
+    "gen.windowTooShort": "With {available} there isn't time for everything: this recipe needs about {needed}. It will be ready later than the time you chose: pick a later time or a shorter rise.",
     "opt.hydrationOvenCompensated": "Hydration {h}%: {base}% plus {delta}% to make up for an oven cooler than ideal.",
     "opt.hydrationOutOfStyleRange": "With this compensation, hydration goes outside the style's range ({min}–{max}%).",
+    "auth.fermentOffCenter": "Fermentation far from the canon (-{penalty}%)",
+    "auth.thermalUnviable": "Oven too cold for this style ({oven} < {min}): canonical leopard spotting, rim and structure are out of reach (×{factor})",
+    "feas.thermalUnviable": "At {oven} you won't get a true {style}: no leopard spotting and no puffy rim. This style needs an oven that reaches at least {min}.",
+    "gen.timeBelowStyleWindow": "With {available} you're below this style's window (minimum {fMin}): fermentation shortened. Full authenticity needs at least {fMin}.",
+    "opt.coldLongFerment": "{hours} maturation in the fridge ({temp}): maximum digestibility within your {available}.",
+    "opt.roomFerment": "{hours} fermentation at room temperature ({temp}): true to the style, no fridge needed.",
+    "opt.hydrationLowered": "Hydration lowered to {h}% (canonical {canonical}%) to stay manageable at your level.",
+    "opt.hydrationForStyle": "Hydration {h}%, right at the heart of the style.",
+    "opt.prefermentAdded": "Pre-ferment ({type}) added: more structure, crumb and aroma.",
+    "opt.preferment": "Pre-ferment ({type}): more structure, crumb and aroma.",
+    "opt.flourChanged": "Flour changed to W{w} (canonical W{canonical}).",
+    "opt.ovenAdapted": "Bake adapted to your oven ({temp}) with automatic compensations.",
+    "opt.pantryFlour": "Flour strength W{w} matches your pantry.",
     "tip.waterTempLimitMax": "Cold kitchen: even with water at {temp} the dough stays below {ddt}. Don't heat the water further: keep the flour somewhere warm or let the bulk rise a little longer.",
     "tip.waterTempLimitMin": "Warm kitchen: even with water at {temp} the dough goes above {ddt}. Use ice water, keep the flour in the fridge or shorten the bulk rise a little.",
     "timeline.preheat.descWholeProof": "Turn the oven on now to {temp}{equipmentNote}. The dough balls do their final proof while it heats.",

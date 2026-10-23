@@ -9,10 +9,11 @@ import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
 import { addMinutes, localizeStep, optimizeComfort, roundToQuarter, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
+import { engineMsgTexts } from "./engine-msg-text";
 import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
 import type { FlourEntry } from "../../data/flour-database";
-import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, resolveEngineMsgs, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
+import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
 import { RecipeFeedbackForm } from "./recipe-feedback";
 import { getRecipesByAuthenticity, getToppingForStyle } from "../../data/topping-library";
 import { ConfirmDialog, IconButton } from "../../components/ds/index";
@@ -547,9 +548,7 @@ export function RecipeOutput({
     ? recipe.scores.warnings.find((w) => w.key === "gen.windowTooShort")
     : undefined;
   const windowWarningText = windowWarning
-    ? resolveEngineMsgs([windowWarning], cms.engineMessages, (_msg, _key, value) =>
-        typeof value === "number" ? fmt.number(value, { maximumFractionDigits: 1 }) : value,
-      )[0]
+    ? engineMsgTexts([windowWarning], cms, bcp47)[0]
     : null;
 
 

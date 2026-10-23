@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring,motionTiming } from "../../components/ds/motion";
 import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
-import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
+import { SCORE_DIMENSIONS, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
 import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
 import { useCms } from "../cms/cms-context";
+import { engineMsgTexts } from "./engine-msg-text";
 import { createFormatter, t } from "../cms/i18n";
 import { uiMessage } from "../../i18n/ui-messages";
 
@@ -182,7 +183,7 @@ export function RecipeMatchCard({
   // Lo rendiamo qui — prima era calcolato ma mai mostrato.
   const unviableWarning = scores.warnings?.find((w) => w.key === "feas.thermalUnviable");
   const unviableText = unviableWarning
-    ? resolveEngineMsgs([unviableWarning], cms.engineMessages)[0]
+    ? engineMsgTexts([unviableWarning], cms, bcp47)[0]
     : null;
 
   // Learn-inline (audit lug 2026): ogni asse è tappabile → spiegazione dal CMS.

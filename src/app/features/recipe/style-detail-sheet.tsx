@@ -11,16 +11,15 @@ import {
   PizzaStyle,
   PIZZA_FAMILIES,
   recommendStyles,
-  resolveEngineMsgs,
   formatOrigin,
-  type EngineMsg,
   type UserConstraints,
 } from "../../domain/pizza-engine";
 import { getStyleDeviation, DEVIATION_CATEGORY_LABELS } from "../../domain/deviation-tags";
 import { getInterpretationsForStyle } from "../../data/interpretation-library";
 import { getStyleParametrics } from "../../data/parametric-databases";
 import { useCms } from "../cms/cms-context";
-import { t, createFormatter } from "../cms/i18n";
+import { engineMsgTexts } from "./engine-msg-text";
+import { t } from "../cms/i18n";
 import { CtaButton, IconButton } from "../../components/ds/index";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -81,17 +80,9 @@ export function StyleDetailSheet({
   /* VPL-C3: motivazioni di match articolate (lista completa, con dimensione). */
   const matchReasons = React.useMemo(() => {
     if (!rec || rec.tier === "not_feasible") return [];
-    const fmt = createFormatter(cms.ui, bcp47);
-    const texts = resolveEngineMsgs(
-      rec.reasons,
-      cms.engineMessages,
-      (_m: EngineMsg, key: string, value: string | number) =>
-        typeof value === "number" && ["temp", "ideal", "min"].includes(key)
-          ? fmt.celsius(value)
-          : value,
-    );
+    const texts = engineMsgTexts(rec.reasons, cms, bcp47);
     return texts.map((text, i) => ({ text, dim: reasonDimension(rec.reasons[i].key) }));
-  }, [rec, cms.engineMessages, cms.ui, bcp47]);
+  }, [rec, cms, bcp47]);
   const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "").toUpperCase();
   const pt = cms.parametricTips;
   const prefersReducedMotion = useReducedMotion();

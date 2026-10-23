@@ -321,7 +321,7 @@ export function resolveEngineMsgs(
     const tpl = templates?.[m.key] ?? m.fallback;
     if (!m.params) return tpl;
     return Object.entries(m.params).reduce(
-      (s, [k, v]) => s.replace(`{${k}}`, String(formatParam ? formatParam(m, k, v) : v)),
+      (s, [k, v]) => s.split(`{${k}}`).join(String(formatParam ? formatParam(m, k, v) : v)),
       tpl,
     );
   });
@@ -520,8 +520,7 @@ function minimumFermentationHours(fermRange: [number, number]): number {
 /** Ore di fermentazione che stanno nella finestra togliendo l'overhead fisso,
  *  arrotondate per difetto al quarto d'ora (orari umani, somme esatte). */
 function fermentationWindowHours(availableHours: number, overheadMinutes: number): number {
-  const hours = (availableHours * 60 - overheadMinutes) / 60;
-  return Math.floor(hours * 4 + 1e-9) / 4;
+  return floorToQuarterHour((availableHours * 60 - overheadMinutes) / 60);
 }
 
 // ═══ STYLES DATABASE ═══
@@ -2287,18 +2286,22 @@ export function optimizeRecipe(
 
   // ── Spazio ore: dentro la finestra dello stile, capato alle ore disponibili
   // MENO l'overhead fisso (ENG-4: la finestra arriva fino al pasto). Il filtro
-  // ora viene DOPO l'arrotondamento all'ora, così nessun candidato sfora; si
+  // ora viene DOPO l'arrotondamento, così nessun candidato sfora; si
   // aggiunge la fermentazione più lunga che sta nella finestra (al quarto
   // d'ora), se cade nel range dello stile. Senza orario del pasto
   // (meal_deadline assente) l'overhead non si toglie: le ore limitano solo
-  // la fermentazione, come in generateRecipe. ──
+  // la fermentazione, come in generateRecipe.
+  // M-4: candidati al quarto d'ora (all'ora intera la Recco, 0,5–2 h, finiva
+  // a 3 h). Il sondaggio oltre il massimo (×1,25) vale solo per gli impasti
+  // lievitati: per una sfoglia non lievitata un riposo più lungo non dà nulla. ──
   const avail = constraints.available_hours > 0 ? constraints.available_hours : Infinity;
   const fermentWindow =
     avail === Infinity || !constraints.meal_deadline
       ? avail
       : fermentationWindowHours(avail, overheadMinutes);
+  const beyondMax = effStyle.dough.unleavened ? [] : [fMax * 1.25];
   let hourCands = _uniqRounded([
-    ..._uniqRounded([fMin, (fMin + fMax) / 2, fMax, fMax * 1.25], 0),
+    ...[fMin, (fMin + fMax) / 2, fMax, ...beyondMax].map((h) => Math.max(fMin, floorToQuarterHour(h))),
     ...(fermentWindow >= fMin && fermentWindow <= fMax ? [fermentWindow] : []),
   ]).filter((h) => h <= fermentWindow);
   if (hourCands.length === 0) {
@@ -3269,12 +3272,21 @@ export interface StyleRecommendation {
   optimizedComposite?: number;
 }
 
+export type MealKind = "lunch" | "dinner";
+
 export interface TimeSlot {
   id: string;
+  /** Etichetta di riserva in italiano: la UI la ricompone per lingua da `meal`
+   *  e `dayOffset` (vedi features/recipe/time-slot-text.ts). */
   label: string;
   sublabel: string;
+  /** Ore fino al pasto, al quarto d'ora per difetto (M-2): la finestra non
+   *  supera mai il tempo reale. */
   hours: number;
   emoji: string;
+  /** Pasto e giorno (0 = oggi). Assenti per lo slot «Nessuna preferenza». */
+  meal?: MealKind;
+  dayOffset?: number;
 }
 
 /* ═══ VPL-065: Dynamic time slots based on current time ═══
@@ -3290,15 +3302,22 @@ const MEAL_TARGETS = [
   { id: "long_ferment", meal: "lunch", emoji: "🕐", dayOffset: 3 },
 ] as const;
 
-const MEAL_HOURS: Record<string, number> = { lunch: 12.5, dinner: 20 };
+const MEAL_HOURS: Record<MealKind, number> = { lunch: 12.5, dinner: 20 };
 const MIN_PREP_HOURS = 3;
+
+/** M-2 — ore al quarto d'ora per difetto. Il margine assorbe l'errore in
+ *  virgola mobile (3,7499999 → 3,75, non 3,5). */
+export function floorToQuarterHour(hours: number): number {
+  return Math.floor(hours * 4 + 1e-9) / 4;
+}
 
 function formatHoursLabel(h: number): string {
   // Difensivo: se il calcolo dà un valore negativo (slot nel passato), skip.
   if (h <= 0) return "passato";
-  if (h < 1) return "<1 ora";
-  if (h < 2) return "~1 ora";
-  return `~${Math.round(h)} ore`;
+  const whole = Math.floor(h);
+  const minutes = Math.round((h - whole) * 60);
+  if (whole === 0) return `${minutes} min`;
+  return minutes === 0 ? `${whole} h` : `${whole} h ${minutes} min`;
 }
 
 function getDayLabel(dayOffset: number, meal: string, now: Date): string {
@@ -3325,7 +3344,7 @@ export function generateTimeSlots(now: Date = new Date()): TimeSlot[] {
 
   for (const target of MEAL_TARGETS) {
     const mealHour = MEAL_HOURS[target.meal];
-    const hoursUntil = target.dayOffset * 24 + (mealHour - nowHour);
+    const hoursUntil = floorToQuarterHour(target.dayOffset * 24 + (mealHour - nowHour));
 
     if (hoursUntil < MIN_PREP_HOURS) continue;
     if (slots.length >= 4) break;
@@ -3334,18 +3353,23 @@ export function generateTimeSlots(now: Date = new Date()): TimeSlot[] {
       id: target.id,
       label: getDayLabel(target.dayOffset, target.meal, now),
       sublabel: formatHoursLabel(hoursUntil),
-      hours: Math.round(hoursUntil),
+      hours: hoursUntil,
       emoji: target.emoji,
+      meal: target.meal,
+      dayOffset: target.dayOffset,
     });
   }
 
   if (slots.length === 0) {
+    const hoursUntil = floorToQuarterHour(24 - nowHour + MEAL_HOURS.lunch);
     slots.push({
       id: "tomorrow_lunch",
       label: "Domani a pranzo",
-      sublabel: formatHoursLabel(24 - nowHour + 12.5),
-      hours: Math.round(24 - nowHour + 12.5),
+      sublabel: formatHoursLabel(hoursUntil),
+      hours: hoursUntil,
       emoji: "☀️",
+      meal: "lunch",
+      dayOffset: 1,
     });
   }
 
@@ -3420,26 +3444,28 @@ export function recommendStyles(
 
     // ── Time compatibility (25%) ──
     const [fMin, fMax] = style.dough.fermentation_hours_range;
+    // M-3: stesse ore degli slot del pasto, al quarto d'ora per difetto.
+    const availableHours = floorToQuarterHour(constraints.available_hours);
     let timeScore: number;
     if (
-      constraints.available_hours >= fMin &&
-      constraints.available_hours <= fMax * 1.5
+      availableHours >= fMin &&
+      availableHours <= fMax * 1.5
     ) {
       timeScore = 95;
       reasons.push(em("rec.timeCompatible", `Fermentazione ${fMin}-${fMax}h: compatibile con il tuo tempo`, { fMin, fMax }));
-    } else if (constraints.available_hours >= fMin * 0.85) {
+    } else if (availableHours >= fMin * 0.85) {
       /* Audit roleplay giugno 2026: il gradino 95→65 era brutale — 21h vs
        * 24h minime (-12%) non deve far sparire i classici dai consigli. */
       timeScore = 85;
-      const optimalHours = Math.min(constraints.available_hours, fMax);
+      const optimalHours = Math.min(availableHours, fMax);
       reasons.push(em("rec.timeAdaptable", `Fermentazione adattabile a ~${optimalHours}h`, { hours: optimalHours }));
-    } else if (constraints.available_hours >= fMin * 0.7) {
+    } else if (availableHours >= fMin * 0.7) {
       timeScore = 65;
-      const optimalHours = Math.min(constraints.available_hours, fMax);
+      const optimalHours = Math.min(availableHours, fMax);
       reasons.push(em("rec.timeAdaptable", `Fermentazione adattabile a ~${optimalHours}h`, { hours: optimalHours }));
     } else {
       timeScore = 25;
-      warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${constraints.available_hours}h`, { fMin, available: constraints.available_hours }));
+      warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${availableHours}h`, { fMin, available: availableHours }));
     }
 
     // ── Oven compatibility (25%) ──

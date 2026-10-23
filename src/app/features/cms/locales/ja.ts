@@ -113,6 +113,10 @@ export const JA_LOCALE: CmsContent = {
     minute: "\u5206",
     hours: "\u6642\u9593",
     hour: "\u6642\u9593",
+    slotWeekdayLunch: "{day}の昼",
+    slotWeekdayDinner: "{day}の夜",
+    slotNoPreference: "指定なし",
+    slotNoPreferenceSub: "{brand}におまかせ",
     // Score dashboard
     recipeScore: "Match",
     nerdToggle: "PizzaNerd",
@@ -643,10 +647,10 @@ export const JA_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "天然酵母: 自家製、ゼロインパクト",
     "rec.timeCompatible":
-      "発酵{fMin}-{fMax}h: あなたの時間に適合",
-    "rec.timeAdaptable": "発酵は~{hours}hに調整可能",
+      "発酵{fMin}-{fMax}: あなたの時間に適合",
+    "rec.timeAdaptable": "発酵は~{hours}に調整可能",
     "rec.timeInsufficient":
-      "最低{fMin}h必要、{available}hしかありません",
+      "最低{fMin}必要、{available}しかありません",
     "rec.needsWoodOven": "薪窯が必要です",
     "rec.ovenIdeal":
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3\u306F\u7406\u60F3\u6E29\u5EA6\u306B\u5230\u9054 ({ideal})",
@@ -686,9 +690,22 @@ export const JA_LOCALE: CmsContent = {
     "tip.waterTempNormal":
       "55の法則: {temp}の水を使って{ddt}の生地温度を目指してください。",
     "tip.frictionNote": "ミキサー摩擦補正: {friction}",
-    "gen.windowTooShort": "{available}時間ではすべてに足りません。このレシピには約{needed}時間かかります。選んだ時刻より遅く仕上がります。もっと遅い時刻を選ぶか、発酵を短くしてください。",
+    "gen.windowTooShort": "{available}ではすべてに足りません。このレシピには約{needed}かかります。選んだ時刻より遅く仕上がります。もっと遅い時刻を選ぶか、発酵を短くしてください。",
     "opt.hydrationOvenCompensated": "加水率{h}%：理想より温度の低いオーブンを補うため、{base}%に{delta}%を加えています。",
     "opt.hydrationOutOfStyleRange": "この補正により、加水率がスタイルの範囲（{min}–{max}%）を外れます。",
+    "auth.fermentOffCenter": "発酵が基準から離れています（-{penalty}%）",
+    "auth.thermalUnviable": "このスタイルにはオーブンの温度が低すぎます（{oven} < {min}）：本来のレオパード模様、コルニチョーネ、生地構造は再現できません（×{factor}）",
+    "feas.thermalUnviable": "{oven}では本物の{style}にはなりません。レオパード模様も膨らんだ縁もできません。このスタイルには{min}以上になるオーブンが必要です。",
+    "gen.timeBelowStyleWindow": "{available}ではこのスタイルの発酵時間（最低{fMin}）に届きません。発酵を短縮しています。本来の仕上がりには{fMin}以上が必要です。",
+    "opt.coldLongFerment": "冷蔵庫（{temp}）で{hours}熟成：使える{available}の中で消化しやすさを最大にします。",
+    "opt.roomFerment": "室温（{temp}）で{hours}発酵：スタイルに忠実で、冷蔵庫は不要です。",
+    "opt.hydrationLowered": "あなたのレベルで扱いやすいよう、加水率を{h}%に下げています（基準は{canonical}%）。",
+    "opt.hydrationForStyle": "加水率{h}%：スタイルのど真ん中です。",
+    "opt.prefermentAdded": "中種（{type}）を追加：構造、気泡、香りが増します。",
+    "opt.preferment": "中種（{type}）：構造、気泡、香りが増します。",
+    "opt.flourChanged": "粉をW{w}に変更（基準はW{canonical}）。",
+    "opt.ovenAdapted": "あなたのオーブン（{temp}）に合わせて焼成を自動補正しています。",
+    "opt.pantryFlour": "粉の強さW{w}は手持ちの粉に合っています。",
     "tip.waterTempLimitMax": "キッチンが寒い：{temp}の水でも生地は{ddt}に届きません。これ以上水を温めず、粉を暖かい場所に置くか、一次発酵を少し長くしてください。",
     "tip.waterTempLimitMin": "キッチンが暑い：{temp}の水でも生地は{ddt}を超えます。氷水を使い、粉を冷蔵庫に入れるか、一次発酵を少し短くしてください。",
     "timeline.preheat.descWholeProof": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に生地玉の最終発酵を行います。",

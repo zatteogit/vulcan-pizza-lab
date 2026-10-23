@@ -140,6 +140,11 @@ export interface CmsUiStrings {
   minute: string;
   hours: string;
   hour: string;
+  /** Slot del pasto oltre domani: {day} = giorno della settimana per lingua. */
+  slotWeekdayLunch: string;
+  slotWeekdayDinner: string;
+  slotNoPreference: string;
+  slotNoPreferenceSub: string;
   // Score dashboard
   recipeScore: string;
   nerdToggle: string;
@@ -1252,6 +1257,10 @@ export const CMS_DEFAULTS: CmsContent = {
     minute: "minuto",
     hours: "ore",
     hour: "ora",
+    slotWeekdayLunch: "{day} a pranzo",
+    slotWeekdayDinner: "{day} sera",
+    slotNoPreference: "Nessuna preferenza",
+    slotNoPreferenceSub: "ci pensa {brand}",
     // Score dashboard
     recipeScore: "Match",
     nerdToggle: "PizzaNerd",
@@ -1810,9 +1819,9 @@ export const CMS_DEFAULTS: CmsContent = {
     "sust.pureDough": "Impasto puro: solo farina, acqua, sale, lievito",
     "sust.sourdoughZeroImpact": "Lievito madre: autoprodotto, a impatto zero",
     // Recommendation reasons/warnings
-    "rec.timeCompatible": "Fermentazione {fMin}-{fMax}h: compatibile con il tuo tempo",
-    "rec.timeAdaptable": "Fermentazione adattabile a ~{hours}h",
-    "rec.timeInsufficient": "Richiede minimo {fMin}h, hai {available}h",
+    "rec.timeCompatible": "Fermentazione {fMin}-{fMax}: compatibile con il tuo tempo",
+    "rec.timeAdaptable": "Fermentazione adattabile a ~{hours}",
+    "rec.timeInsufficient": "Richiede minimo {fMin}, hai {available}",
     "rec.needsWoodOven": "Richiede forno a legna",
     "rec.ovenIdeal": "Il tuo forno raggiunge la temperatura ideale ({ideal})",
     "rec.ovenAdequate": "Forno adeguato (compensazione automatica tempo/temperatura)",
@@ -1845,9 +1854,22 @@ export const CMS_DEFAULTS: CmsContent = {
     "tip.waterTempCold": "Regola 55: usa acqua dal frigo ({temp}). L'impasto a macchina scalda la massa.",
     "tip.waterTempNormal": "Regola 55: usa acqua a {temp} per raggiungere {ddt} di impasto.",
     "tip.frictionNote": "Compensazione attrito impastatrice: {friction}",
-    "gen.windowTooShort": "Con {available} h non c'è tempo per tutto: questa ricetta richiede circa {needed} h. Sarà pronta più tardi dell'orario scelto: scegli un orario più avanti o una lievitazione più breve.",
+    "gen.windowTooShort": "Con {available} non c'è tempo per tutto: questa ricetta richiede circa {needed}. Sarà pronta più tardi dell'orario scelto: scegli un orario più avanti o una lievitazione più breve.",
     "opt.hydrationOvenCompensated": "Idratazione {h}%: {base}% più {delta}% per compensare il forno più freddo dell'ideale.",
     "opt.hydrationOutOfStyleRange": "Con la compensazione l'idratazione esce dal range dello stile ({min}–{max}%).",
+    "auth.fermentOffCenter": "Fermentazione lontana dal canone (-{penalty}%)",
+    "auth.thermalUnviable": "Forno troppo freddo per lo stile ({oven} < {min}): leopardatura, cornicione e struttura canonici non raggiungibili (×{factor})",
+    "feas.thermalUnviable": "Con {oven} non otterrai una vera {style}: niente leopardatura né cornicione spinto. Per questo stile serve un forno da almeno {min}.",
+    "gen.timeBelowStyleWindow": "Con {available} non rientri nella finestra di questo stile (minimo {fMin}): fermentazione accorciata. Per l'autenticità piena servono almeno {fMin}.",
+    "opt.coldLongFerment": "Maturazione di {hours} in frigo ({temp}): massima digeribilità entro le tue {available}.",
+    "opt.roomFerment": "Fermentazione di {hours} a temperatura ambiente ({temp}): coerente con lo stile e senza frigo.",
+    "opt.hydrationLowered": "Idratazione abbassata a {h}% (canonica {canonical}%) per restare gestibile al tuo livello.",
+    "opt.hydrationForStyle": "Idratazione {h}% nel cuore dello stile.",
+    "opt.prefermentAdded": "Pre-fermento ({type}) aggiunto: più struttura, alveolatura e aroma.",
+    "opt.preferment": "Pre-fermento ({type}): più struttura, alveolatura e aroma.",
+    "opt.flourChanged": "Farina cambiata a W{w} (canonica W{canonical}).",
+    "opt.ovenAdapted": "Cottura adattata al tuo forno ({temp}) con compensazioni automatiche.",
+    "opt.pantryFlour": "Forza farina W{w} compatibile con la tua dispensa.",
     "tip.waterTempLimitMax": "Cucina fredda: anche con acqua a {temp} l'impasto resta sotto {ddt}. Non scaldare di più l'acqua: tieni la farina in un posto tiepido o allunga un po' la puntata.",
     "tip.waterTempLimitMin": "Cucina calda: anche con acqua a {temp} l'impasto supera {ddt}. Usa acqua ghiacciata, tieni la farina in frigo o accorcia un po' la puntata.",
     "timeline.preheat.descWholeProof": "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti fanno l'appretto.",

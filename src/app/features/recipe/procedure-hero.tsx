@@ -13,6 +13,7 @@ import type {
 } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
+import { timeSlotText } from "./time-slot-text";
 import { IconButton, Surface, Switch } from "../../components/ds/index";
 import type { TimeSlot } from "../../domain/pizza-engine";
 import {
@@ -255,6 +256,7 @@ export function ProcedureHeroControls({
 
           {mealSlots.map((slot) => {
             if (!slot.isFeasible) return null;
+            const text = timeSlotText(slot, cms, bcp47);
             return (
               <button
                 key={slot.id}
@@ -262,7 +264,7 @@ export function ProcedureHeroControls({
                 onClick={() => setStartTime(roundToQuarter(slot.idealStart))}
                 className="procedure-hero__meal-chip"
               >
-                {slot.label} ({slot.sublabel})
+                {text.label} ({text.sublabel})
               </button>
             );
           })}
