@@ -1221,6 +1221,28 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
         },
       },
     },
+    marinara_scarole_metro: {
+      variant_name: "with escarole",
+      ingredients: {
+        "0": {
+          name: "Peeled tomatoes (tomatoes, tomato juice)",
+        },
+        "1": {
+          name: "Escarole",
+          notes: "to braise",
+        },
+        "2": {
+          name: "Garlic",
+          notes: "clove",
+        },
+        "3": {
+          name: "Dried oregano",
+        },
+        "4": {
+          name: "Extra-virgin olive oil",
+        },
+      },
+    },
   },
 
   steps: {
@@ -1919,6 +1941,14 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     spread_sausage_tavern: {
       title: "Raw sausage to the edge",
       description: "Thin sauce almost to the edge, then the mozzarella. Spread the raw sausage in small pieces over the whole surface: it cooks in the oven with the pizza. Oregano. After baking, cut into squares.",
+    },
+    stufare_scarola_metro: {
+      title: "Braise the escarole",
+      description: "Wash the escarole and cut it into strips. Braise it in a pan with oil and garlic until it wilts and loses its water, then salt it. Let it cool before putting it on the pizza.",
+    },
+    spread_marinara_scarole: {
+      title: "Marinara with escarole",
+      description: "Crushed, salted peeled tomatoes, the braised escarole well drained, oregano and a drizzle of oil. No cheese.",
     },
   },
 };

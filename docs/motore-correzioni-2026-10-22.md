@@ -383,3 +383,20 @@ Masse, forno e lievitazione invariati.
   sale grosso), al posto di olio e rosmarino. Durata invariata.
 - Chicago tavern: predefinita `italian_sausage_tavern` (salsiccia al finocchio
   cruda), al posto del pepperoni. Timeline +1 min.
+
+## C-2 · Parametri di al metro, teglia, tonda, Detroit con fonti (24/10/2026)
+
+Decisioni D-028…D-031; fonti in `docs/ricerca/stili-fonti-2026-10-24.md`.
+Golden: gli esiti non cambiano; cambiano i numeri.
+
+| Scenario | Prima | Dopo |
+|---|---|---|
+| teglia ideale | 800 g, forno 280 °C, 1020 s | 600 g, 310 °C, 720 s |
+| teglia casa | 800 g, 1240 s | 600 g, 1063 s |
+| tonda ideale | idratazione 52,5%, 320 °C, 360 s | 57,5%, 380 °C, 120 s |
+| tonda casa | 567 s | 279 s (il motore compensa il forno freddo con idratazione e zucchero, come prima) |
+| Detroit | lievitazione 33/24 h, zucchero 7 g | 16 h, zucchero 0 |
+| pizza al metro | 700 g, 24 h a 4 °C | 1000 g, 9 h a 22 °C |
+
+Dosi dei condimenti della pizza al metro: `topping_scale` 3,7 (3000 cm² contro
+804 cm² del disco napoletano da 32 cm), applicato solo in visualizzazione.

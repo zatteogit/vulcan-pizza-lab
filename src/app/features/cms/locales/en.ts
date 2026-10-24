@@ -1236,7 +1236,7 @@ export const EN_LOCALE: CmsContent = {
     teglia_romana:
       "High hydration, no-knead with folds. Crispy base, cloud-like crumb.",
     tonda_romana:
-      'Ultra-thin, rolling pin required, extremely crispy. "Scrocchiarella".',
+      'Ultra-thin, rolled with a pin or by hand, extremely crispy. "Scrocchiarella".',
     pinsa_romana:
       "70% wheat / 15% soy / 15% rice blend. Oval shape, glassy crust.",
     pala_romana:
@@ -1281,13 +1281,13 @@ export const EN_LOCALE: CmsContent = {
     teglia_romana:
       "Height 2-3cm|Hydration 80-100%|No-knead + folds|Cloud crumb",
     tonda_romana:
-      "Thickness 1-2mm|Rolling pin required|Extremely crispy|Weak flour W<210",
+      "Thickness 1-2mm|Rolling pin or by hand|Extremely crispy|Weak flour W<210",
     pinsa_romana:
       "Multi-grain mix|Oval shape|Glassy crust|24-72h maturation",
     pala_romana:
       "Elongated oval shape|High hydration|Served on peel|Crispy-cloud crust",
     new_york:
-      "Foldable slice|Sugar + oil|Bake 12-15min|Signature oiliness",
+      "Foldable slice|Sugar + oil|Bake 9–12 min|Signature oiliness",
     detroit:
       "Cheese crown|Deep pan|Cheese to edges|Caramelised crust",
     chicago_deep:

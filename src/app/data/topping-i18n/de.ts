@@ -2208,6 +2208,28 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
         },
       },
     },
+    marinara_scarole_metro: {
+      variant_name: "mit Endivie",
+      ingredients: {
+        "0": {
+          name: "Gesch\u00E4lte Tomaten (Tomaten, Tomatensaft)",
+        },
+        "1": {
+          name: "Glatte Endivie (Scarola)",
+          notes: "zum Schmoren",
+        },
+        "2": {
+          name: "Knoblauch",
+          notes: "Zehe",
+        },
+        "3": {
+          name: "Getrockneter Oregano",
+        },
+        "4": {
+          name: "Natives Oliven\u00F6l extra",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2761,6 +2783,14 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     spread_sausage_tavern: {
       title: "Rohe Wurst bis zum Rand",
       description: "So\u00DFe d\u00FCnn fast bis zum Rand, dann der Mozzarella. Die rohe Wurst in kleinen St\u00FCcken auf der ganzen Fl\u00E4che verteilen: sie gart im Ofen mit der Pizza. Oregano. Nach dem Backen in Quadrate schneiden.",
+    },
+    stufare_scarola_metro: {
+      title: "Endivie schmoren",
+      description: "Die Endivie waschen und in Streifen schneiden. In der Pfanne mit \u00D6l und Knoblauch schmoren, bis sie zusammenf\u00E4llt und ihr Wasser verliert, dann salzen. Abk\u00FChlen lassen, bevor sie auf die Pizza kommt.",
+    },
+    spread_marinara_scarole: {
+      title: "Marinara mit Endivie",
+      description: "Zerdr\u00FCckte, gesalzene gesch\u00E4lte Tomaten, die gut abgetropfte geschmorte Endivie, Oregano und etwas \u00D6l. Kein K\u00E4se.",
     },
   },
 };

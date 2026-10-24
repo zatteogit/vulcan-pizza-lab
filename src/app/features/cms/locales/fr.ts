@@ -1046,7 +1046,7 @@ export const FR_LOCALE: CmsContent = {
     teglia_romana:
       "Haute hydratation, sans p\u00E9trissage avec pliages. Base croustillante, mie nuage.",
     tonda_romana:
-      "Ultra-fine, rouleau obligatoire, croustillance extr\u00EAme. \u00AB Scrocchiarella \u00BB.",
+      "Ultra-fine, étalée au rouleau ou à la main, croustillance extr\u00EAme. \u00AB Scrocchiarella \u00BB.",
     pinsa_romana:
       "M\u00E9lange 70% bl\u00E9 / 15% soja / 15% riz. Forme ovale, cro\u00FBte vitr\u00E9e.",
     pala_romana:
@@ -1091,13 +1091,13 @@ export const FR_LOCALE: CmsContent = {
     teglia_romana:
       "Hauteur 2-3cm|Hydratation 80-100%|Sans p\u00E9trissage + pliages|Mie nuage",
     tonda_romana:
-      "\u00C9paisseur 1-2mm|Rouleau obligatoire|Croustillance extr\u00EAme|Farine faible W<210",
+      "\u00C9paisseur 1-2mm|Rouleau ou à la main|Croustillance extr\u00EAme|Farine faible W<210",
     pinsa_romana:
       "Mix multi-c\u00E9r\u00E9ales|Forme ovale|Cro\u00FBte vitr\u00E9e|Maturation 24-72h",
     pala_romana:
       "Forme ovale allong\u00E9e|Haute hydratation|Servie sur pelle|Cro\u00FBte croustillante-nuage",
     new_york:
-      "Part pliable|Sucre + huile|Cuisson 12-15min|Onctuosit\u00E9 caract\u00E9ristique",
+      "Part pliable|Sucre + huile|Cuisson 9–12 min|Onctuosit\u00E9 caract\u00E9ristique",
     detroit:
       "Couronne de fromage|Moule profond|Fromage aux bords|Cro\u00FBte caram\u00E9lis\u00E9e",
     chicago_deep:

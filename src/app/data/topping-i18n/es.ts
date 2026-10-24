@@ -2208,6 +2208,28 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
         },
       },
     },
+    marinara_scarole_metro: {
+      variant_name: "con escarola",
+      ingredients: {
+        "0": {
+          name: "Tomates pelados (tomate, jugo de tomate)",
+        },
+        "1": {
+          name: "Escarola",
+          notes: "para rehogar",
+        },
+        "2": {
+          name: "Ajo",
+          notes: "diente",
+        },
+        "3": {
+          name: "Or\u00E9gano seco",
+        },
+        "4": {
+          name: "Aceite de oliva virgen extra",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2761,6 +2783,14 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     spread_sausage_tavern: {
       title: "Salchicha cruda hasta el borde",
       description: "Salsa fina casi hasta el borde, luego la mozzarella. Reparte la salchicha cruda en trocitos por toda la superficie: se cocina en el horno con la pizza. Or\u00E9gano. Despu\u00E9s de hornear, corta en cuadrados.",
+    },
+    stufare_scarola_metro: {
+      title: "Rehogar la escarola",
+      description: "Lava la escarola y c\u00F3rtala en tiras. Reh\u00F3gala en una sart\u00E9n con aceite y ajo hasta que se ablande y pierda el agua, luego s\u00E1lala. Deja que se enfr\u00EDe antes de ponerla sobre la pizza.",
+    },
+    spread_marinara_scarole: {
+      title: "Marinara con escarola",
+      description: "Tomates pelados aplastados y salados, la escarola rehogada bien escurrida, or\u00E9gano y un hilo de aceite. Sin queso.",
     },
   },
 };

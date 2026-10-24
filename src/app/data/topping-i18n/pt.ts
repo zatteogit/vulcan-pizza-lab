@@ -2208,6 +2208,28 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
         },
       },
     },
+    marinara_scarole_metro: {
+      variant_name: "com escarola",
+      ingredients: {
+        "0": {
+          name: "Tomates pelados (tomate, suco de tomate)",
+        },
+        "1": {
+          name: "Escarola",
+          notes: "para refogar",
+        },
+        "2": {
+          name: "Alho",
+          notes: "dente",
+        },
+        "3": {
+          name: "Or\u00E9gano seco",
+        },
+        "4": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2761,6 +2783,14 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     spread_sausage_tavern: {
       title: "Lingui\u00E7a crua at\u00E9 a borda",
       description: "Molho fino quase at\u00E9 a borda, depois a mussarela. Espalhe a lingui\u00E7a crua em pedacinhos por toda a superf\u00EDcie: ela assa no forno junto com a pizza. Or\u00E9gano. Depois de assar, corte em quadrados.",
+    },
+    stufare_scarola_metro: {
+      title: "Refogar a escarola",
+      description: "Lave a escarola e corte em tiras. Refogue numa frigideira com azeite e alho at\u00E9 murchar e soltar a \u00E1gua, depois salgue. Deixe esfriar antes de colocar na pizza.",
+    },
+    spread_marinara_scarole: {
+      title: "Marinara com escarola",
+      description: "Tomates pelados amassados e salgados, a escarola refogada bem escorrida, or\u00E9gano e um fio de azeite. Sem queijo.",
     },
   },
 };

@@ -201,6 +201,9 @@ export interface PizzaStyle {
   default_dough_balls?: number;
   /** Quante persone serve UNA porzione (un panetto, una teglia, ecc.). Range [min, max]. */
   servings_per_unit?: [number, number];
+  /** C-2: moltiplicatore delle dosi dei condimenti quando lo stile usa ricette
+   *  scritte per un altro formato (pizza al metro con il catalogo napoletano). */
+  topping_scale?: number;
   /** Sprint 11 Fase 1 — struttura geometrica (stacked/closed/folded/double_sheet).
    * Opzionale: omesso = single (pizza/teglia/panetto monostrato classico). */
   layout?: LayoutSpec;

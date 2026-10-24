@@ -67,8 +67,8 @@ solo dal codice. Il numero di condimenti è quello mostrato nella scheda.
 |---|---|---|---|---|
 | `napoletana_stg` | con fonte (STG, AVPN) | `margherita_napoletana_avpn` | 14 | — |
 | `napoletana_canotto` | senza fonte | `margherita_napoletana_avpn` | 16 | Etichetta «Da disciplinare» tolta per questo stile (24/10) |
-| `teglia_romana` | senza fonte | `margherita_romana` | 12 | Il classico al taglio è rossa/bianca: valutare |
-| `tonda_romana` | senza fonte | `margherita_romana` | 11 | — |
+| `teglia_romana` | con fonte (APITER, D-029) | `margherita_romana` | 12 | Il classico al taglio è rossa/bianca: valutare |
+| `tonda_romana` | con fonte (D-030) | `margherita_romana` | 11 | — |
 | `pinsa_romana` | con fonte (OPR 2020) | `margherita_romana` | 9 | — |
 | `pala_romana` | senza fonte | `bianca_mortazza_romana` | 12 | — |
 | `pizza_baciata` | senza fonte | `bianca_mortazza_romana` | 2 | Predefinito corretto il 24/10 (prima non portava a nessuna ricetta) |
@@ -89,7 +89,7 @@ solo dal codice. Il numero di condimenti è quello mostrato nella scheda.
 | `padellino_torino` | senza fonte | `margherita_padellino` | 5 | — |
 | `trancio_milanese` | senza fonte | `margherita_trancio` | 5 | — |
 | `ciaccino_senese` | senza fonte | `ciaccino_senese_farcito` | 1 | — |
-| `pizza_al_metro` | senza fonte | `margherita_napoletana_avpn` | 14 | Etichetta AVPN tolta (24/10); servono ancora condimenti propri |
+| `pizza_al_metro` | con fonte (D-028) | `margherita_napoletana_avpn` | 9 | Condimenti dal menù di Gigino, marinara con scarole; dosi ×3,7 |
 | `pizza_fritta` | con fonte (AVPN) | `pizza_fritta_ripiena` | 1 | — |
 | `pizza_fritta_tonda` | con fonte (AVPN) | `pizza_fritta_tonda_ripiena` | 1 | Manca una foto vera |
 | `pizza_montanara` | con fonte (AVPN, parziale) | `montanara_classica` | 1 | — |
@@ -101,6 +101,6 @@ solo dal codice. Il numero di condimenti è quello mostrato nella scheda.
    «Da disciplinare solo negli stili con un disciplinare».
 2. ~~**Predefiniti non tipici**~~ fatto il 24/10: Chicago tavern (salsiccia),
    focaccia genovese (salamoia, senza rosmarino).
-3. **Pizza al metro**: condimenti propri invece del catalogo napoletano.
-4. **Fonti dei parametri** per gli stili «senza fonte», a partire da quelli più
-   visti (teglia, tonda, New York, Detroit).
+3. ~~**Pizza al metro**~~ fatto il 24/10 (D-028).
+4. **Fonti dei parametri**: teglia, tonda (D-029, D-030) fatte; New York e
+   Detroit solo gli errori evidenti (D-031), servono fonti di pizzeria.

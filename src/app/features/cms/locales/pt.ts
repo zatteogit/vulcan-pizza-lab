@@ -1040,7 +1040,7 @@ export const PT_LOCALE: CmsContent = {
     teglia_romana:
       "Alta hidrata\u00E7\u00E3o, sem sovar com dobras. Base crocante, miolo nuvem.",
     tonda_romana:
-      'Ultrafina, rolo obrigat\u00F3rio, crocante extrema. "Scrocchiarella".',
+      'Ultrafina, aberta com rolo ou à mão, crocante extrema. "Scrocchiarella".',
     pinsa_romana:
       "Mistura 70% trigo / 15% soja / 15% arroz. Forma oval, crosta v\u00EDtrea.",
     pala_romana:
@@ -1085,13 +1085,13 @@ export const PT_LOCALE: CmsContent = {
     teglia_romana:
       "Altura 2-3cm|Hidrata\u00E7\u00E3o 80-100%|Sem sovar + dobras|Miolo nuvem",
     tonda_romana:
-      "Espessura 1-2mm|Rolo obrigat\u00F3rio|Crocante extrema|Farinha fraca W<210",
+      "Espessura 1-2mm|Rolo ou à mão|Crocante extrema|Farinha fraca W<210",
     pinsa_romana:
       "Mix multi-cereais|Forma oval|Crosta v\u00EDtrea|Matura\u00E7\u00E3o 24-72h",
     pala_romana:
       "Forma oval alongada|Alta hidrata\u00E7\u00E3o|Servida na p\u00E1|Crosta crocante-nuvem",
     new_york:
-      "Fatia dobr\u00E1vel|A\u00E7\u00FAcar + \u00F3leo|Cozimento 12-15min|Oleosidade caracter\u00EDstica",
+      "Fatia dobr\u00E1vel|A\u00E7\u00FAcar + \u00F3leo|Cozimento 9–12 min|Oleosidade caracter\u00EDstica",
     detroit:
       "Coroa de queijo|Assadeira profunda|Queijo nas bordas|Crosta caramelizada",
     chicago_deep:

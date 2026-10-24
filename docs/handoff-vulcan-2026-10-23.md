@@ -226,8 +226,10 @@ Emerse nel lavoro, da pianificare in fase 1:
   fedeltà all'originale): va bene o vanno trattate a parte?
 - **C-2 (P1)** avanzato il 24/10: etichette «Da disciplinare» solo dove c'è un
   disciplinare (test), focaccia genovese con salamoia e Chicago tavern con
-  salsiccia come predefiniti. Restano la pizza al metro con condimenti propri e
-  le fonti dei parametri degli stili «senza fonte» (`docs/linee-guida-stili.md` §4).
+  salsiccia come predefiniti. Poi (D-028…D-031) pizza al metro, teglia, tonda
+  e Detroit sulle fonti, con le dosi della pizza al metro scalate. Restano le
+  fonti di pizzeria per New York e Detroit e i parametri degli altri stili
+  «senza fonte» (`docs/linee-guida-stili.md` §3–4).
 - ~~**C-1 (P1)**~~ chiuso il 24/10: `docs/linee-guida-stili.md` (regole, modello
   di scheda, stato dei 29 stili, priorità per C-2) e test
   `style-editorial.test.ts`. Il test ha trovato tre stili (baciata, California,

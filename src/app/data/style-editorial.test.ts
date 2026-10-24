@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { STYLES_DB } from "../domain/styles-db";
 import { STYLE_PHOTOS } from "./style-photos";
-import { getRecipesByAuthenticity, getToppingForStyle } from "./topping-library";
+import { getRecipesByAuthenticity, getToppingForStyle, scaleToppingAmounts } from "./topping-library";
 
 /* ═══ C-1 — regole editoriali per stile controllabili dal codice ═══
  * Le linee guida complete sono in docs/linee-guida-stili.md; qui solo quello
@@ -32,6 +32,18 @@ describe("linee guida degli stili", () => {
         .map((r) => `${style.id}: ${r.recipe.id}`),
     );
     expect(wrong).toEqual([]);
+  });
+
+  it("pizza al metro: dosi dei condimenti scalate sul formato (D-028)", () => {
+    const style = STYLES_DB.pizza_al_metro;
+    const recipe = getToppingForStyle(style.default_topping_ref!, style)!;
+    const scaled = scaleToppingAmounts(recipe, style.topping_scale);
+    const grams = recipe.ingredients.findIndex((i) => i.amount.unit === "g");
+    expect(scaled.ingredients[grams].amount.value).toBe(Math.round(recipe.ingredients[grams].amount.value * 3.7));
+    // gli altri stili non cambiano
+    const stg = STYLES_DB.napoletana_stg;
+    const r = getToppingForStyle(stg.default_topping_ref!, stg)!;
+    expect(scaleToppingAmounts(r, stg.topping_scale)).toBe(r);
   });
 
   it("ogni stile ha almeno una foto", () => {

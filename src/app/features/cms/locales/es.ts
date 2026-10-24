@@ -1044,7 +1044,7 @@ export const ES_LOCALE: CmsContent = {
     teglia_romana:
       "Alta hidrataci\u00F3n, sin amasado con pliegues. Base crujiente, miga nube.",
     tonda_romana:
-      'Ultrafina, rodillo obligatorio, crujiente extrema. "Scrocchiarella".',
+      'Ultrafina, estirada con rodillo o a mano, crujiente extrema. "Scrocchiarella".',
     pinsa_romana:
       "Mezcla 70% trigo / 15% soja / 15% arroz. Forma ovalada, corteza v\u00EDtrea.",
     pala_romana:
@@ -1089,13 +1089,13 @@ export const ES_LOCALE: CmsContent = {
     teglia_romana:
       "Altura 2-3cm|Hidrataci\u00F3n 80-100%|Sin amasado + pliegues|Miga nube",
     tonda_romana:
-      "Grosor 1-2mm|Rodillo obligatorio|Crujiente extrema|Harina d\u00E9bil W<210",
+      "Grosor 1-2mm|Rodillo o a mano|Crujiente extrema|Harina d\u00E9bil W<210",
     pinsa_romana:
       "Mezcla multi-cereal|Forma ovalada|Corteza v\u00EDtrea|Maduraci\u00F3n 24-72h",
     pala_romana:
       "Forma ovalada alargada|Alta hidrataci\u00F3n|Servida en pala|Corteza crujiente-nube",
     new_york:
-      "Porci\u00F3n plegable|Az\u00FAcar + aceite|Cocci\u00F3n 12-15min|Oleosidad caracter\u00EDstica",
+      "Porci\u00F3n plegable|Az\u00FAcar + aceite|Cocci\u00F3n 9–12 min|Oleosidad caracter\u00EDstica",
     detroit:
       "Corona de queso|Bandeja profunda|Queso en bordes|Corteza caramelizada",
     chicago_deep:

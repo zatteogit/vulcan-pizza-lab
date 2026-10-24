@@ -2208,6 +2208,28 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
         },
       },
     },
+    marinara_scarole_metro: {
+      variant_name: "\u00E0 la scarole",
+      ingredients: {
+        "0": {
+          name: "Tomates pel\u00E9es (tomates, jus de tomate)",
+        },
+        "1": {
+          name: "Scarole",
+          notes: "\u00E0 \u00E9tuver",
+        },
+        "2": {
+          name: "Ail",
+          notes: "gousse",
+        },
+        "3": {
+          name: "Origan s\u00E9ch\u00E9",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2761,6 +2783,14 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     spread_sausage_tavern: {
       title: "Saucisse crue jusqu'au bord",
       description: "Sauce fine presque jusqu'au bord, puis la mozzarella. R\u00E9partir la saucisse crue en petits morceaux sur toute la surface\u00A0: elle cuit au four avec la pizza. Origan. Apr\u00E8s cuisson, couper en carr\u00E9s.",
+    },
+    stufare_scarola_metro: {
+      title: "\u00C9tuver la scarole",
+      description: "Laver la scarole et la couper en lani\u00E8res. L'\u00E9tuver \u00E0 la po\u00EAle avec l'huile et l'ail jusqu'\u00E0 ce qu'elle fonde et perde son eau, puis saler. La laisser refroidir avant de la mettre sur la pizza.",
+    },
+    spread_marinara_scarole: {
+      title: "Marinara \u00E0 la scarole",
+      description: "Tomates pel\u00E9es \u00E9cras\u00E9es et sal\u00E9es, la scarole \u00E9tuv\u00E9e bien \u00E9goutt\u00E9e, origan et un filet d'huile. Pas de fromage.",
     },
   },
 };
