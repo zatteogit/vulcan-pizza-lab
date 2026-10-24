@@ -2063,6 +2063,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "version.label.Bilanciata": "Bilanciata",
     "timelineComfort.title": "Timeline comoda",
     "timelineComfort.active": "Attiva: evita le fasi notturne.",
+    "timelineComfort.activePartial": "Attiva, ma alcune fasi restano di notte: scegli un altro pasto qui sopra.",
     "timelineComfort.nightDetected": "Fasi attive di notte rilevate.",
     "timelineComfort.idle": "Ottimizza gli orari se serve.",
     "timeline.preheat.title": "Forno al massimo",

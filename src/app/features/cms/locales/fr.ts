@@ -781,6 +781,7 @@ export const FR_LOCALE: CmsContent = {
     "version.label.Bilanciata": "Équilibrée",
     "timelineComfort.title": "Timeline confortable",
     "timelineComfort.active": "Activé : évite les étapes nocturnes.",
+    "timelineComfort.activePartial": "Activ\u00E9e, mais certaines \u00E9tapes restent la nuit : choisissez un autre repas ci-dessus.",
     "timelineComfort.nightDetected": "Étapes nocturnes actives détectées.",
     "timelineComfort.idle": "Optimisez le planning si nécessaire.",
     "timeline.preheat.title": "Four au maximum",

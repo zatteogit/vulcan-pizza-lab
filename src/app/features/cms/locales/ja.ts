@@ -815,6 +815,7 @@ export const JA_LOCALE: CmsContent = {
     "version.label.Bilanciata": "\u30D0\u30E9\u30F3\u30B9\u578B",
     "timelineComfort.title": "\u898B\u3084\u3059\u3044\u30BF\u30A4\u30E0\u30E9\u30A4\u30F3",
     "timelineComfort.active": "\u6709\u52B9\uFF1A\u591C\u9593\u306E\u4F5C\u696D\u3092\u907F\u3051\u307E\u3059\u3002",
+    "timelineComfort.activePartial": "有効ですが、一部の工程がまだ夜にかかります。上で別の食事を選んでください。",
     "timelineComfort.nightDetected": "\u591C\u9593\u306B\u4F5C\u696D\u304C\u3042\u308A\u307E\u3059\u3002",
     "timelineComfort.idle": "\u5FC5\u8981\u306A\u3089\u6642\u9593\u3092\u8ABF\u6574\u3057\u307E\u3059\u3002",
     "timeline.preheat.title": "\u30AA\u30FC\u30D6\u30F3\u3092\u6700\u5927\u306B\u4E88\u71B1",

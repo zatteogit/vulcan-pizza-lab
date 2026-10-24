@@ -971,6 +971,7 @@ export const EN_LOCALE: CmsContent = {
     "version.label.Bilanciata": "Balanced",
     "timelineComfort.title": "Comfort timeline",
     "timelineComfort.active": "On: avoids active night steps.",
+    "timelineComfort.activePartial": "On, but some steps still fall at night: pick another meal above.",
     "timelineComfort.nightDetected": "Active night steps detected.",
     "timelineComfort.idle": "Optimize the schedule if needed.",
     "timeline.preheat.title": "Max out the oven",

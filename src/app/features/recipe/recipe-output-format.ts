@@ -108,6 +108,29 @@ export function getParametricTip(
 
 
 /* ═══ CLOCK HELPERS ═══ */
+
+/** Audit totale n. 2: senza un pasto scelto il piano partiva «adesso» e la
+ *  pizza usciva alle 3 di notte. Ora si ancora al primo pranzo (12:30) o
+ *  cena (20:00) raggiungibile, come gli slot di Crea, e si parte
+ *  all'indietro. */
+export function defaultMealStart(totalMinutes: number, now: Date = new Date()): Date {
+  let firstReachable: Date | null = null;
+  for (let day = 0; day < 8; day++) {
+    for (const [h, m] of [[12, 30], [20, 0]] as const) {
+      const meal = new Date(now);
+      meal.setDate(meal.getDate() + day);
+      meal.setHours(h, m, 0, 0);
+      const start = new Date(meal.getTime() - totalMinutes * 60_000);
+      if (start.getTime() < now.getTime()) continue;
+      firstReachable ??= start;
+      // Anche l'impasto va fatto di giorno: si scarta un inizio fra le 22 e le 7.
+      const sh = start.getHours();
+      if (sh >= 7 && sh < 22) return roundToQuarter(start);
+    }
+  }
+  return roundToQuarter(firstReachable ?? now);
+}
+
 export function roundToQuarter(date: Date): Date {
   const d = new Date(date);
   const mins = d.getMinutes();
@@ -210,7 +233,7 @@ function isNightHour(h: number): boolean {
   return h >= 23 || h < 7;
 }
 
-function countNightActives(
+export function countNightActives(
   timeline: TimelineStep[],
   startMs: number,
   stretch: Record<number, number>,

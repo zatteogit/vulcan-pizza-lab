@@ -782,6 +782,7 @@ export const ES_LOCALE: CmsContent = {
     "version.label.Bilanciata": "Equilibrada",
     "timelineComfort.title": "Línea de tiempo cómoda",
     "timelineComfort.active": "Activo: evita fases nocturnas.",
+    "timelineComfort.activePartial": "Activa, pero algunas fases siguen cayendo de noche: elige otra comida arriba.",
     "timelineComfort.nightDetected": "Fases nocturnas activas detectadas.",
     "timelineComfort.idle": "Optimiza el horario si es necesario.",
     "timeline.preheat.title": "Horno al máximo",

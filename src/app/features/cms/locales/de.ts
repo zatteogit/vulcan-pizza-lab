@@ -764,6 +764,7 @@ export const DE_LOCALE: CmsContent = {
     "version.label.Bilanciata": "Ausgewogen",
     "timelineComfort.title": "Komfort-Timeline",
     "timelineComfort.active": "Aktiv: vermeidet aktive Nachtschritte.",
+    "timelineComfort.activePartial": "Aktiv, aber einige Schritte fallen noch in die Nacht: W\u00E4hle oben eine andere Mahlzeit.",
     "timelineComfort.nightDetected": "Aktive Schritte in der Nacht erkannt.",
     "timelineComfort.idle": "Optimiere die Zeiten bei Bedarf.",
     "timeline.preheat.title": "Ofen voll vorheizen",

@@ -8,7 +8,8 @@ import { ToppingSection } from "./topping-section";
 import { ProcedureHeroControls } from "./procedure-hero";
 import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
-import { addMinutes, localizeStep, optimizeComfort, roundToQuarter, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
+import { addMinutes, countNightActives, localizeStep, optimizeComfort, roundToQuarter,
+  defaultMealStart, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { saveYeastSpeedFactor } from "../../adapters/browser/yeast-speed-storage";
@@ -252,7 +253,7 @@ export function RecipeOutput({
       }
       return roundToQuarter(idealStart);
     }
-    return roundToQuarter(new Date());
+    return defaultMealStart(totalDurationMinStatic);
   });
 
   const [editingTime, setEditingTime] = useState(false);
@@ -796,6 +797,7 @@ export function RecipeOutput({
           handleEndTimeInput={handleEndTimeInput}
           mealSlots={mealSlots}
           comfortToggled={comfortToggled}
+          nightActivesLeft={countNightActives(recipe.timeline, startTime.getTime(), stretch)}
           setComfortToggled={setComfortToggled}
           currentComfortPlan={currentComfortPlan}
           preComfortStart={preComfortStart}
