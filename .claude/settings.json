@@ -5,7 +5,29 @@
   "permissions": {
     "allow": [
       "Bash(npx tsc:*)",
-      "Bash(node scripts/check-class-parity.mjs:*)"
+      "Bash(node scripts/check-class-parity.mjs:*)",
+      "Bash(npm run verify)",
+      "Bash(npm run quality:check)",
+      "Bash(npm run typecheck)",
+      "Bash(npm test)",
+      "Bash(npm test:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run check:tokens)",
+      "Bash(npm run check:semantics)",
+      "Bash(npm run build)",
+      "Bash(git diff --check:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/session-start.sh"
+          }
+        ]
+      }
     ]
   }
 }
