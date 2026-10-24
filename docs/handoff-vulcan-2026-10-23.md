@@ -204,8 +204,8 @@ Emerse nel lavoro, da pianificare in fase 1:
   ricostruzioni da fonti pubbliche, non ricette fornite da loro.
 - ~~**P-3**~~ chiuso il 24/10: annotazioni di debug archiviate in `docs/archivio/`.
 - **P-5** misurato il 24/10: `docs/budget-prestazioni.md`, controllo
-  `npm run check:budget` in CI. P-5a ridimensionata il 24/10 (Scopri usa
-  davvero il motore per i punteggi, vedi il budget); restano P-5b e P-5d.
+  `npm run check:budget` in CI. P-5a e P-5d ridimensionate il 24/10 (vedi il budget), P-5b fatta
+  (font in locale).
 - ~~**M-7 (P1)**~~ chiuso il 24/10: nessuna fonte per una fritta aperta diversa
   dalla montanara; aggiunta la «Pizza fritta tonda» dell'AVPN (D-022) e impasto
   delle fritte allineato all'AVPN con lievitazione 8–24 h (D-023). Manca una

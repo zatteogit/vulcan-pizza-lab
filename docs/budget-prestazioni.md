@@ -51,9 +51,9 @@ della lingua attiva.
 | # | Intervento | Effetto atteso | Costo |
 |---|---|---|---|
 | ~~P-5a~~ | Ridimensionata il 24/10: con D-036/D-037 l'ingresso è Scopri e lo step «quando» non c'è più. Misura in locale (build di produzione): Scopri scarica `pizza-engine` (118 kB) e `topping-library` (124 kB) non compressi perché ogni card calcola il punteggio sul forno dell'utente; LCP 0,9 s (la foto), Crea 0,92 s. Rimandarli farebbe comparire i punteggi dopo le card per circa 60 kB compressi: non conviene. Da riaprire solo se `styles-db` si stacca da `topping-library` per altri motivi | — | — |
-| P-5b | Fatto in parte: `<link>` con `preconnect` in `index.html`. Resta: font in locale con `preload` del peso del titolo, sottoinsieme latino | −1 round trip bloccante | Basso |
+| ~~P-5b~~ | Fatto il 24/10: font in locale (`public/fonts`, sottoinsiemi latin e latin-ext, file variabili, licenze OFL accanto), `preload` dei due file sopra la piega, nessuna richiesta a domini esterni al primo caricamento | −1 connessione a terzi (DNS+TLS) e niente IP del visitatore a Google | — |
 | ~~P-5c~~ | Fatto il 24/10 (D-034): 480p, 24 fps, 8 s in loop, H.264 CRF 28, senza audio, faststart; niente video con «riduci movimento» o risparmio dati | da 48,6 MB a 2,6 MB (−95%) | — |
-| P-5d | Stili per pagina: spostare nel chunk della pagina gli stili di profilo, CMS e design system | −60/80 kB di CSS non compresso sul primo caricamento | Medio |
+| ~~P-5d~~ | Ridimensionata il 24/10: il CSS è 456 kB non compressi, 62 kB gzip; le regole spostabili per pagina (profilo, analisi feedback, CMS, vetrina DS) valgono circa 8 kB gzip. Per spostarle andrebbero riscritti i controlli che trattano `theme.css` come fonte unica (check:tokens, css-tokens, type-floor, ds:check): non conviene ora | — | — |
 
 ## Decisioni da prendere (Matteo)
 
