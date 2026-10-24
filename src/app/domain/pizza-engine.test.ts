@@ -358,10 +358,28 @@ describe("pre-fermento sulle ore delle fonti (verifica di GPT, 24/10/2026)", () 
 describe("cotture una alla volta (D-050)", () => {
   it("la cottura dura il tempo di una pizza per il numero di pizze", () => {
     const one = generateRecipe(napoletana, makeConstraints({ dough_balls: 1 })).timeline.find((s) => s.id === "bake")!;
-    const six = generateRecipe(napoletana, makeConstraints({ dough_balls: 6 })).timeline.find((s) => s.id === "bake")!;
+    const recipe = generateRecipe(napoletana, makeConstraints({ dough_balls: 6 }));
+    const six = recipe.timeline.find((s) => s.id === "bake")!;
     expect(one.rounds).toBeUndefined();
     expect(six.rounds).toBe(6);
-    expect(six.duration_minutes).toBe(one.duration_minutes * 6);
+    // Sui secondi veri, non sul minuto arrondato di una pizza (90 s × 6 = 9 min, non 2 × 6).
+    expect(six.duration_minutes).toBe(Math.round((recipe.cook_time_sec * 6) / 60));
+    expect(six.msg?.description?.find((m) => m.key === "timeline.bake.rounds")?.params?.sec).toBe(recipe.cook_time_sec);
     expect(six.msg?.description?.some((m) => m.key === "timeline.bake.rounds")).toBe(true);
+  });
+});
+
+describe("avviso sul tempo fino al pasto (verifica di GPT, 24/10/2026)", () => {
+  it("dice quante ore restano alla lievitazione dopo lavorazioni e cottura", () => {
+    const style = Object.values(STYLES_DB).find((s) => s.dough.fermentation_hours_range[0] === 4)!;
+    const recipe = generateRecipe(style, makeConstraints({ oven_type: "home", oven_max_temp_c: 250, available_hours: 4, meal_deadline: true }));
+    const msg = recipe.scores.warnings.find((w) => w.key === "gen.timeBelowStyleWindowMeal");
+    expect(msg).toBeDefined();
+    const { available, work, ferment, fMin, needed } = msg!.params as Record<string, number>;
+    expect(available).toBe(4);
+    expect(ferment).toBe(recipe.fermentation_hours);
+    expect(ferment).toBeLessThan(fMin);
+    expect(work).toBeGreaterThan(0);
+    expect(needed).toBe(fMin + work);
   });
 });

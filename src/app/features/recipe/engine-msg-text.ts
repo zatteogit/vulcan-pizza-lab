@@ -27,8 +27,13 @@ const HOUR_PARAMS: Record<string, readonly string[]> = {
   "rec.timeInsufficient": ["fMin", "available"],
   "gen.windowTooShort": ["available", "needed"],
   "gen.timeBelowStyleWindow": ["available", "fMin"],
+  "gen.timeBelowStyleWindowMeal": ["available", "work", "ferment", "fMin", "needed"],
   "opt.coldLongFerment": ["hours", "available"],
   "opt.roomFerment": ["hours"],
+};
+/** Parametri in secondi di cottura, per messaggio (D-050). */
+const COOK_SECONDS_PARAMS: Record<string, readonly string[]> = {
+  "timeline.bake.rounds": ["sec"],
 };
 /** Parametri che sono id di farine della dispensa (C-3). */
 const FLOUR_PARAMS: Record<string, readonly string[]> = {
@@ -51,6 +56,7 @@ export function engineMsgTexts(
       TEMPERATURE_PARAMS.has(key) || (key === "min" && TEMPERATURE_MIN_KEYS.has(msg.key));
     if (isTemperature) return fmt.celsius(number);
     if (HOUR_PARAMS[msg.key]?.includes(key)) return fmt.durationShort(number);
+    if (COOK_SECONDS_PARAMS[msg.key]?.includes(key)) return fmt.cookTime(number);
     return fmt.number(number, { maximumFractionDigits: 2 });
   });
 }

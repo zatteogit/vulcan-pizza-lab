@@ -571,7 +571,7 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       whyImportant: "Somma delle tre temperature = 3 \u00D7 impasto voluto \u2212 attrito. In pizzeria si dice anche \u00ABregola del 55\u00BB: con la somma fissa a 55 l'impasto viene intorno ai 18 \u00B0C (55 \u00F7 3); qui si usa la temperatura voluta dallo stile, 22\u201324 \u00B0C.",
     },
     a_score: {
-      name: "A-Score (Authenticity)",
+      name: "A-Score (Autenticità)",
       definition: "Punteggio 0-100 che misura aderenza di una ricetta al disciplinare dello stile target.",
       ranges: [
         { label: "90-100", value: "Rigorosamente autentica" },
@@ -581,7 +581,7 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     f_score: {
-      name: "F-Score (Feasibility)",
+      name: "F-Score (Fattibilità)",
       definition: "Punteggio 0-100 che misura realizzabilità pratica data equipaggiamento e abilità utente.",
       ranges: [
         { label: "90-100", value: "Altamente fattibile" },
@@ -591,7 +591,7 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     d_score: {
-      name: "D-Score (Digestibility)",
+      name: "D-Score (Digeribilità)",
       definition: "Punteggio 0-100 che stima digeribilità basato su ore fermentazione normalizzate e riduzione FODMAP.",
       ranges: [
         { label: "85-100", value: "Alta (>48h equivalenti)" },
