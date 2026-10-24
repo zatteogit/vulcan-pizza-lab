@@ -2073,6 +2073,7 @@ export function ProfilePage() {
                   value={locationQuery}
                   onChange={(e) => setLocationQuery(e.target.value)}
                   placeholder={p.locationPlaceholder}
+                  aria-label={p.locationTitle}
                   className="profile-location__search-input"
                 />
                 {locationQuery && (

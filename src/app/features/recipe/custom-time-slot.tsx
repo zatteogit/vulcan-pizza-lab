@@ -46,6 +46,7 @@ export function CustomTimeSlot({
 }) {
   const inputId = useId();
   const errorId = useId();
+  const hintId = useId();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);
@@ -102,15 +103,20 @@ export function CustomTimeSlot({
             max={max}
             step={900}
             aria-invalid={error}
-            aria-describedby={error ? errorId : undefined}
+            aria-describedby={error ? errorId : hintId}
             onChange={(event) => {
               setValue(event.target.value);
               setError(false);
             }}
             className="needs-custom-slot__input"
           />
-          {error && (
+          {/* U-10 (F27): il vincolo si legge prima di sbagliare, non solo dopo. */}
+          {error ? (
             <p id={errorId} role="alert" className="type-body needs-custom-slot__error">
+              {cms.ui.slotCustomOutOfRange}
+            </p>
+          ) : (
+            <p id={hintId} className="type-body needs-custom-slot__hint">
               {cms.ui.slotCustomOutOfRange}
             </p>
           )}

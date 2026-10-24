@@ -8124,6 +8124,12 @@
     border-color: var(--text-warning);
   }
 
+  .needs-custom-slot__hint {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
   .needs-custom-slot__error {
     margin: 0;
     color: var(--text-warning);
@@ -16053,6 +16059,13 @@
     will-change: transform, opacity;
   }
 
+  /* Contenitore «search» del pulsante di ricerca (U-10, F29): non cambia il
+     layout del dock. */
+  .app-shell-dock__search {
+    display: flex;
+    flex-shrink: 0;
+  }
+
   .app-shell-dock--scrolled {
     bottom: calc(var(--space-4) + env(safe-area-inset-bottom, var(--space-0)));
   }
@@ -16178,7 +16191,7 @@
     pointer-events: none;
     transform: translate(-51%, -49%);
     will-change: transform;
-    animation: app-shell-logo-drift var(--duration-drift) var(--ease-emphasis) infinite;
+    animation: app-shell-logo-drift var(--duration-drift) var(--ease-emphasis) 3; /* U-10 (F25): non infinito */
   }
 
   @keyframes app-shell-logo-drift {
@@ -18550,6 +18563,39 @@
     margin-top: var(--space-6);
     padding-inline: var(--space-6);
     padding-block: var(--space-3);
+  }
+
+  /* ═══ U-10 (F21) — bersagli di almeno 24 px ═══
+     Misurati sotto i 24 px a 390 px (da 14 a 23 px di altezza). */
+  :is(
+    .home-onboarding__cta,
+    .home-onboarding__link,
+    .explore-section__link,
+    .recipe-page__learn-more-btn,
+    .interpretation-switcher__chip,
+    .interpretation-switcher__more,
+    .step-details__toggle,
+    .profile-location__search-input,
+    .profile-oven-temp__slider
+  ) {
+    min-block-size: var(--space-7); /* ≈ 25 px con la radice a 14,25 px */
+  }
+
+  :is(.home-onboarding__link, .recipe-page__learn-more-btn) {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Lo switch resta 29×16 a vista; l'area di tocco sale a 24 px. */
+  .ds-switch {
+    position: relative;
+  }
+
+  .ds-switch::before {
+    content: "";
+    position: absolute;
+    inset-block: calc(var(--space-1-5) * -1);
+    inset-inline: 0;
   }
 
 

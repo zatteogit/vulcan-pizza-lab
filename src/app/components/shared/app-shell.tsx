@@ -371,11 +371,13 @@ function BottomTabBar({
         </div>
       </nav>
 
-      {/* Floating Search Circle next to it */}
-      <SearchButton
-        size="lg"
-        onOpen={onSearchOpen}
-      />
+      {/* Floating Search Circle next to it — landmark «search» (U-10, F29) */}
+      <div role="search" className="app-shell-dock__search">
+        <SearchButton
+          size="lg"
+          onOpen={onSearchOpen}
+        />
+      </div>
     </motion.div>
   );
 }
@@ -428,7 +430,7 @@ function SidebarRail({
           ))}
         </div>
 
-        <div className="app-shell-rail__search">
+        <div role="search" className="app-shell-rail__search">
           <SearchButton
             size="sm"
             onOpen={onSearchOpen}
@@ -676,7 +678,10 @@ export function AppShell() {
 
           {/* Audit Sprint 12 — Profilo top-right (sostituisce la tab Profilo). */}
           {showNav && activeTab !== "profile" && (
-            <ProfileButton active={activeTab === "profile"} navState={navState} />
+            /* U-10 (F29): l'avatar sta in un landmark (banner) come il resto della shell */
+            <header className="app-shell-header">
+              <ProfileButton active={activeTab === "profile"} navState={navState} />
+            </header>
           )}
 
           {/* Main content area */}

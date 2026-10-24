@@ -5,6 +5,10 @@ import type { DoughVariant } from "../../features/cooking/dough-mascot";
 import type { VulcanVariant } from "./vulcan-logo";
 import { motionDuration,motionEase } from "../ds/motion";
 
+/** U-10 (F25): il respiro della home si ferma dopo pochi cicli (oltre 5 s
+ *  un movimento automatico distrae e va fermato). */
+const HERO_LOOPS = 3;
+
 /**
  * VulcanHero — composizione armonizzata logo + blob.
  *
@@ -56,6 +60,7 @@ export function VulcanHero({
           variant={blobVariant}
           size={size}
           energy={energy}
+          loops={HERO_LOOPS}
         />
       </div>
 
@@ -68,7 +73,7 @@ export function VulcanHero({
         transition={{
           scale: {
             duration: motionDuration.ambientLong - (energy / 100) * motionDuration.ambientRange,
-            repeat: Infinity,
+            repeat: HERO_LOOPS,
             ease: motionEase.standard,
           },
         }}

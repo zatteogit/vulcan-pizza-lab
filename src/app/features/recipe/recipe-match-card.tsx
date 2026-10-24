@@ -318,7 +318,7 @@ export function RecipeMatchCard({
       data-region="section"
       data-attention={tone.low ? "warning" : undefined}
       className={`match-card ${className}`}
-      aria-label={cms.ui.recipeScore}
+      /* U-10 (F29): il nome lo porta già l'aside che la contiene */
     >
       <div className="match-card__main">
       {/* ═══ Verdetto editoriale (redesign lug 2026, round 5) ═══

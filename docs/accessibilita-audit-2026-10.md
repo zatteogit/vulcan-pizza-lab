@@ -7,6 +7,27 @@
 
 ---
 
+## 0. Stato delle correzioni (aggiornato al 24/10/2026)
+
+| Voci | Stato | Dove |
+|---|---|---|
+| F01–F07 (P1) | corrette | commit «le 7 correzioni P1» sul ramo `claude/bold-brahmagupta-s484he` |
+| F08–F20 (P2) | corrette | commit «correzioni P2» |
+| F21 | corretta per i bersagli sotto 24 px misurati a 390 px; restano sotto 44 px alcune azioni primarie (livello AAA) | `theme.css`, blocco «U-10 (F21)» |
+| F22–F27, F29 | corrette | commit P3 |
+| F28 (pavimento tipografico a 12 px) | **da decidere**: cambia la resa di molte schermate | vedi handoff, §6 |
+| F30 | corretta | commit P2 |
+
+Verifica dopo le correzioni, con gli stessi script: axe-core sui 32 scenari
+(390 e 1280 px, chiaro e scuro) passa da 32 violazioni (28 di contrasto, 4 di
+nome mancante) a **0**. Controlli da tastiera ripetuti: lo sheet dello stile
+tiene il focus (25 Tab su 25 dentro, Escape chiude, il focus torna alla card),
+le tab di ricetta e Profilo rispondono a frecce, Home e Fine con una sola
+fermata del Tab, la chiusura dell'onboarding porta il focus sul titolo.
+Resta valido il limite del § 6: nessun test con screen reader su dispositivo.
+
+---
+
 ## 1. Sintesi
 
 | Severità | Priorità | N. | Cosa significa |
