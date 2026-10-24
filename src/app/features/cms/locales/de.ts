@@ -845,6 +845,7 @@ export const DE_LOCALE: CmsContent = {
     "timeline.bake2.desc": "Schieb sie bei {temp} noch einmal in den Ofen, nur damit alles trocknet und sich verbindet. Wenige Minuten.",
     "timeline.bake.title": "Backen",
     "timeline.bake.desc": "Backe bei {temp}.",
+    "timeline.bake.rounds": "{n} Backvorgänge zu je {min} Min., einer nach dem anderen.",
     "timeline.bake.tipBeginner": "Der Ofen muss sehr heiß sein. Heize mindestens 30 Minuten vorher vor.",
     "timeline.bake.tipNerd": "Die Maillard-Reaktion beginnt bei ~140°C und beschleunigt sich exponentiell. Bei {temp} entstehen durch die Karamellisierung ~600 Aromastoffe.",
     "timeline.topPost.title": "Belag nach dem Backen",

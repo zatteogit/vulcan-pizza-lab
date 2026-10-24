@@ -862,6 +862,7 @@ export const FR_LOCALE: CmsContent = {
     "timeline.bake2.desc": "Remettez au four à {temp} juste pour sécher et lier le tout. Quelques minutes.",
     "timeline.bake.title": "Cuisson",
     "timeline.bake.desc": "Faites cuire à {temp}.",
+    "timeline.bake.rounds": "{n} cuissons de {min} min, une à la fois.",
     "timeline.bake.tipBeginner": "Le four doit être très chaud. Préchauffez-le au moins 30 minutes avant.",
     "timeline.bake.tipNerd": "La réaction de Maillard commence à ~140°C et s'accélère de façon exponentielle. À {temp}, la caramélisation crée ~600 composés aromatiques.",
     "timeline.topPost.title": "Garniture après cuisson",
