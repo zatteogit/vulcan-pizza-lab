@@ -37,6 +37,7 @@ defaultFermentTempC,
 defaultPanShape,
 generateRecipe,
 getDefaultDoughBalls,
+MAX_DOUGH_BALLS,
 optimizeRecipe,
 thermalViability,
 type EngineMsg,
@@ -357,7 +358,7 @@ function RecipeContent({
   });
   const [doughBalls, setDoughBalls] = useState(
     useTailoredUrlParams
-      ? numParam(searchParams, "n", getDefaultDoughBalls(style), 1, 20)
+      ? numParam(searchParams, "n", getDefaultDoughBalls(style), 1, MAX_DOUGH_BALLS)
       : getDefaultDoughBalls(style),
   );
   const openPersonalizeByDefault = false;

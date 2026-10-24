@@ -3696,7 +3696,8 @@ function getDayLabel(dayOffset: number, meal: string, now: Date): string {
  * Le masse sono lineari nei panetti: la farina per panetto della ricetta
  * corrente dà quanti panetti ci stanno. Il numero esatto si rilegge dalla
  * ricetta rigenerata dopo aver scelto i panetti. */
-export const MAX_DOUGH_BALLS = 20;
+/** D-043: fino a 200 unità (un impasto da laboratorio); prima 20. */
+export const MAX_DOUGH_BALLS = 200;
 
 export interface FlourBudgetFit {
   balls: number;

@@ -18182,6 +18182,23 @@
     transform: scale(0.88);
   }
 
+  /* Valore digitabile (D-043): senza frecce native, stessa resa del numero. */
+  .ds-stepper__input {
+    width: var(--space-14);
+    border: var(--border-width-thin) solid var(--border);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    text-align: center;
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  .ds-stepper__input::-webkit-outer-spin-button,
+  .ds-stepper__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
   .ds-stepper__value {
     min-width: var(--space-7);
     text-align: center;

@@ -18,6 +18,7 @@ import {
   type UserConstraints,
   type getServingUnit,
   getServingsRange,
+  MAX_DOUGH_BALLS,
   YEAST_LABELS,
 } from "../../domain/pizza-engine";
 import { PreFermentCard } from "./pre-ferment-guide";
@@ -100,7 +101,8 @@ export function IngredientsSection({
           <Stepper
             value={constraints.dough_balls}
             min={1}
-            max={20}
+            max={MAX_DOUGH_BALLS}
+            inputLabel={servingLabel}
             onChange={(n) => {
               updateBalls(n);
               /* U-10 (F11): le quantità cambiano tutte insieme; lo si dice. */
