@@ -40,6 +40,7 @@ UserConstraints,
 } from "../domain/pizza-engine";
 import { RecipeConfigurator } from "../features/recipe/recipe-configurator";
 import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
+import { SaveFailedNotice } from "../features/recipe/save-failed-notice";
 import { InterpretationSwitcher } from "../features/recipe/interpretation-narrative-card";
 import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
 import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
@@ -859,8 +860,13 @@ export function HomePage() {
     // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
     [selectedStyle, currentSaveParams, savedTick],
   );
-  const handleToggleSaveRecipe = useCallback(() => {
-    if (!selectedStyle || !recipe) return;
+  const [saveFailed, setSaveFailed] = useState(false);
+  const closeSaveFailed = useCallback(() => setSaveFailed(false), []);
+  /** true se il ricettario ora riflette la scelta; false se la scrittura è
+   *  fallita (storage pieno o bloccato): lo si dice con SaveFailedNotice. */
+  const handleToggleSaveRecipe = useCallback((): boolean => {
+    if (!selectedStyle || !recipe) return false;
+    let ok = true;
     if (savedEntry) {
       removeRecipe(savedEntry.id);
     } else {
@@ -871,8 +877,11 @@ export function HomePage() {
         params: currentSaveParams,
         score: Math.round(recipe.scores.composite),
       });
+      ok = findSavedRecipe(selectedStyle.id, currentSaveParams) !== undefined;
+      setSaveFailed(!ok);
     }
     setSavedTick((v) => v + 1);
+    return ok;
   }, [selectedStyle, recipe, savedEntry, activeVersionId, currentSaveParams]);
 
   /* ═══ Modello "dirty" (redesign lug 2026) ═══
@@ -1457,6 +1466,7 @@ export function HomePage() {
             transition={motionSpring.responsiveEnter}
             className="home-step home-step--result"
           >
+            <SaveFailedNotice open={saveFailed} onClose={closeSaveFailed} cms={cms} />
             <RecipeView
               recipe={recipe}
               style={selectedStyle}
@@ -1822,9 +1832,10 @@ export function HomePage() {
           {
             label: cms.cooking.saveVersion,
             onClick: () => {
-              handleToggleSaveRecipe();
+              const saved = handleToggleSaveRecipe();
               setExitConfirm(false);
-              proceedBackToStyles();
+              // Se il salvataggio non riesce si resta: uscendo la versione andrebbe persa.
+              if (saved) proceedBackToStyles();
             },
             variant: "cta",
           },

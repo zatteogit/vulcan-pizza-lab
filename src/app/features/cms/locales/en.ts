@@ -137,6 +137,8 @@ export const EN_LOCALE: CmsContent = {
     slotCustom: "Pick a day and time",
     slotCustomInput: "When are you eating?",
     slotCustomConfirm: "Use this time",
+    saveFailedStorage: "Your browser is out of storage space, so the recipe wasn't saved. From your Profile you can export the recipe book and remove recipes you no longer use.",
+    saveFailedDismiss: "Got it",
     slotCustomOutOfRange: "Pick a time between 1 hour and 7 days from now.",
     badgeAvpnRules: "AVPN rules",
     badgeIgpRules: "IGP rules",

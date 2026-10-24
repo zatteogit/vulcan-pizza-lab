@@ -117,6 +117,8 @@ export const PT_LOCALE: CmsContent = {
     slotCustom: "Escolha dia e hora",
     slotCustomInput: "Quando vocês vão comer?",
     slotCustomConfirm: "Usar este horário",
+    saveFailedStorage: "N\u00E3o h\u00E1 mais espa\u00E7o no navegador: a receita n\u00E3o foi salva. No Perfil voc\u00EA pode exportar o livro de receitas e apagar as receitas que n\u00E3o usa.",
+    saveFailedDismiss: "Entendi",
     slotCustomOutOfRange: "Escolha um horário entre 1 hora e 7 dias a partir de agora.",
     badgeAvpnRules: "Regulamento AVPN",
     badgeIgpRules: "Regulamento IGP",

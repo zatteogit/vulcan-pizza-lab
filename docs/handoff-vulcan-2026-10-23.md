@@ -179,8 +179,9 @@ Emerse nel lavoro, da pianificare in fase 1:
   voci illeggibili); oltre il limite (ora 200) non si perde più nulla in silenzio;
   esportazione e importazione da file versionato, con unione senza doppioni; copia
   link per ricetta; «Annulla» dopo l'eliminazione; avviso che le ricette stanno
-  solo nel browser. Resta da fare: avviso quando lo storage è pieno al salvataggio
-  dalla ricetta (oggi il pulsante semplicemente non si attiva).
+  solo nel browser. Dal 24/10 anche l'avviso quando lo storage è pieno al
+  salvataggio dalla ricetta (prima il toast diceva «aggiunto» e l'uscita con
+  «Salva» perdeva la versione).
 - ~~**U-2 (P0)**~~ chiuso il 24/10: si parte da ciò che si ha. «Si cena sabato
   alle 20»: voce «Scegli giorno e ora» accanto agli slot (da 1 h a 7 giorni, ore al
   quarto d'ora per difetto, ripristinata dalla bozza). «Ho 750 g di farina»:

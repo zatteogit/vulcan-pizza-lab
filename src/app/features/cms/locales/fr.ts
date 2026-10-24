@@ -117,6 +117,8 @@ export const FR_LOCALE: CmsContent = {
     slotCustom: "Choisir le jour et l'heure",
     slotCustomInput: "On mange quand ?",
     slotCustomConfirm: "Utiliser cet horaire",
+    saveFailedStorage: "Le navigateur n'a plus d'espace : la recette n'a pas \u00E9t\u00E9 enregistr\u00E9e. Depuis le Profil, vous pouvez exporter le carnet et supprimer les recettes que vous n'utilisez plus.",
+    saveFailedDismiss: "Compris",
     slotCustomOutOfRange: "Choisissez un horaire entre 1 heure et 7 jours à partir de maintenant.",
     badgeAvpnRules: "Cahier des charges AVPN",
     badgeIgpRules: "Cahier des charges IGP",

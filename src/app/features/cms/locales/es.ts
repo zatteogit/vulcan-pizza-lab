@@ -120,6 +120,8 @@ export const ES_LOCALE: CmsContent = {
     slotCustom: "Elige día y hora",
     slotCustomInput: "¿Cuándo se come?",
     slotCustomConfirm: "Usar esta hora",
+    saveFailedStorage: "No queda espacio en el navegador: la receta no se ha guardado. Desde el Perfil puedes exportar el recetario y borrar las recetas que no uses.",
+    saveFailedDismiss: "Entendido",
     slotCustomOutOfRange: "Elige una hora entre 1 hora y 7 días a partir de ahora.",
     badgeAvpnRules: "Reglamento AVPN",
     badgeIgpRules: "Reglamento IGP",

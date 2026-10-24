@@ -174,6 +174,9 @@ export interface CmsUiStrings {
   slotCustom: string;
   slotCustomInput: string;
   slotCustomConfirm: string;
+  /** U-1 — salvataggio non riuscito: storage del browser pieno. */
+  saveFailedStorage: string;
+  saveFailedDismiss: string;
   slotCustomOutOfRange: string;
   /** Badge delle ricette iconiche in Scopri. */
   badgeAvpnRules: string;
@@ -1365,6 +1368,8 @@ export const CMS_DEFAULTS: CmsContent = {
     slotCustom: "Scegli giorno e ora",
     slotCustomInput: "Quando si mangia?",
     slotCustomConfirm: "Usa questo orario",
+    saveFailedStorage: "Non c'è più spazio nel browser: la ricetta non è stata salvata. Dal Profilo puoi esportare il ricettario e togliere le ricette che non usi.",
+    saveFailedDismiss: "Ho capito",
     slotCustomOutOfRange: "Scegli un orario tra 1 ora e 7 giorni da adesso.",
     badgeAvpnRules: "Disciplinare AVPN",
     badgeIgpRules: "Disciplinare IGP",

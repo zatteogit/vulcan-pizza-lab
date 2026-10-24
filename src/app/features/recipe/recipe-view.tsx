@@ -98,7 +98,8 @@ interface RecipeViewProps {
   onSelectFlour?: (flour: import("../../data/flour-database").FlourEntry | null) => void;
   selectedTimeSlotId?: string | null;
   favorite?: boolean;
-  onToggleFavorite?: () => void;
+  /** Restituisce false se il salvataggio non è riuscito: la pagina lo dice. */
+  onToggleFavorite?: () => boolean | void;
 }
 
 export function RecipeView({
@@ -143,7 +144,7 @@ export function RecipeView({
 
   const handleFavoriteClick = () => {
     if (!onToggleFavorite) return;
-    onToggleFavorite();
+    if (onToggleFavorite() === false) return;
     const nextFavorite = !favorite;
     setToastMessage(
       nextFavorite
