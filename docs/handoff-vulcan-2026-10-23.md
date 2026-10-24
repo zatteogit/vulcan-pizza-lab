@@ -214,6 +214,12 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- **U-3 (P1)** proposta applicata il 24/10 (D-035, da confermare): in
+  Personalizza «Parametri avanzati» raccoglie W e P/L precisi, sale,
+  prefermento, spessore e Smart Link; chiuso la farina si sceglie a parole
+  (debole/media/forte). Si ricorda l'apertura, parte aperto per il livello
+  esperto e conta i valori nascosti diversi dallo stile. Base: progressive
+  disclosure (Nielsen 2006, https://www.nngroup.com/articles/progressive-disclosure/).
 - **D-032** (24/10): le fritte in una sezione a parte dei consigli, «Fritte in
   pentola», dopo gli stili al forno.
 - ~~**C-3 (P2)**~~ chiuso il 24/10: i consigli e l'avviso «ti serve una farina

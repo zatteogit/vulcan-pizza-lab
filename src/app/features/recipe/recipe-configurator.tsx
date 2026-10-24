@@ -372,6 +372,34 @@ const SLIDER_GRADIENTS = {
   temperature: "var(--grad-slider-temp)",
 };
 
+/* ═══ U-3 — parametri avanzati (D-035) ═══
+ * Progressive disclosure (Nielsen 2006): in vista le scelte che servono a
+ * tutti (idratazione, farina a parole, lievitazione, forno, teglia); W e P/L
+ * precisi, sale, prefermento, spessore e Smart Link dietro «Parametri
+ * avanzati». Niente si toglie: il pannello ricorda se l'hai aperto, parte
+ * aperto per il livello esperto e conta i valori nascosti diversi da quelli
+ * dello stile, così niente resta cambiato di nascosto. */
+const ADVANCED_STORAGE_KEY = "vulcan_config_advanced";
+
+function loadAdvancedOpen(skillLevel: number): boolean {
+  try {
+    const saved = localStorage.getItem(ADVANCED_STORAGE_KEY);
+    if (saved === "1") return true;
+    if (saved === "0") return false;
+  } catch {
+    /* storage non disponibile: vale il livello */
+  }
+  return skillLevel >= 3;
+}
+
+function saveAdvancedOpen(open: boolean) {
+  try {
+    localStorage.setItem(ADVANCED_STORAGE_KEY, open ? "1" : "0");
+  } catch {
+    /* niente: resta per la sessione */
+  }
+}
+
 export function RecipeConfigurator({
   style,
   constraints,
@@ -413,6 +441,13 @@ export function RecipeConfigurator({
 
   const [smartLink, setSmartLink] = useState(true);
   const propagatingRef = useRef(false);
+  const [showAdvanced, setShowAdvanced] = useState(() => loadAdvancedOpen(constraints.skill_level));
+  const toggleAdvanced = () => {
+    setShowAdvanced((open) => {
+      saveAdvancedOpen(!open);
+      return !open;
+    });
+  };
 
   const sH = style.dough.hydration_pct_range;
   const sW = style.dough.flour_w_range;
@@ -516,9 +551,36 @@ export function RecipeConfigurator({
 
   const suggestedTemp = adaptiveHints.fermentTemp?.suggestedTemp;
 
+  const changedAdvanced = [
+    !smartLink,
+    customSalt !== undefined && Math.abs(customSalt - style.dough.salt_pct) >= 0.05,
+    usePreFerment !== Boolean(style.requires_pre_ferment),
+    customFlourPL !== undefined &&
+      (customFlourPL < style.dough.flour_pl_range[0] - 0.005 || customFlourPL > style.dough.flour_pl_range[1] + 0.005),
+    panConfig?.thickness !== undefined && Math.abs(panConfig.thickness - style.shape.thickness_factor) >= 0.01,
+  ].filter(Boolean).length;
+
   return (
     <div className="config-root">
+      <button
+        type="button"
+        onClick={toggleAdvanced}
+        aria-expanded={showAdvanced}
+        className="config-advanced-toggle"
+      >
+        <span className="config-advanced-toggle__label">{uiMessage("features.recipe.recipe-configurator.advanced.label")}</span>
+        {changedAdvanced > 0 && (
+          <span className="config-advanced-toggle__count">
+            {changedAdvanced === 1
+              ? uiMessage("features.recipe.recipe-configurator.advanced.changedOne")
+              : uiMessage("features.recipe.recipe-configurator.advanced.changedMany", [changedAdvanced])}
+          </span>
+        )}
+        <ChevronDown size={16} aria-hidden="true" className="config-advanced-toggle__chevron" />
+      </button>
+
       {/* Smart Link — barra compatta, singolo tap-target */}
+      {showAdvanced && (
       <button
         onClick={() => setSmartLink(!smartLink)}
         className={smartLink ? "config-smart-link config-smart-link--active" : "config-smart-link"}
@@ -541,6 +603,7 @@ export function RecipeConfigurator({
           />
         </span>
       </button>
+      )}
 
       {/* 3-Column Grid Layout */}
       <div className="config-grid">
@@ -584,7 +647,7 @@ export function RecipeConfigurator({
 
           {/* F11 beginner mode: il principiante sceglie la farina in linguaggio
               naturale (W derivata), niente slider alveografici W/P/L. */}
-          {constraints.skill_level === 1 ? (
+          {!showAdvanced ? (
             <BeginnerFlourPicker
               value={customFlourW}
               onChange={handleW}
@@ -667,8 +730,8 @@ export function RecipeConfigurator({
           </>
           )}
 
-          {/* F3 — Sale come leva (visibile a tutti: non è gergo alveografico) */}
-          {customSalt !== undefined && onSaltChange && (
+          {/* F3 — Sale come leva; U-3: tra i parametri avanzati */}
+          {showAdvanced && customSalt !== undefined && onSaltChange && (
             <div className="config-field">
               <GradientSlider
               name={uiMessage("features.recipe.recipe-configurator.sale-0028d743")}
@@ -734,7 +797,8 @@ export function RecipeConfigurator({
                 )}
               </div>
 
-              {/* Pre-fermento */}
+              {/* Pre-fermento — U-3: tra i parametri avanzati */}
+              {showAdvanced && (
               <div className="config-toggle-row">
                 <div className="config-toggle-row__label-group">
                   <span className="config-toggle-row__label">
@@ -747,6 +811,7 @@ export function RecipeConfigurator({
                   onCheckedChange={onPreFermentChange}
                 />
               </div>
+              )}
 
               {/* Temperatura di fermentazione */}
               <div className="config-field">
@@ -1008,7 +1073,7 @@ export function RecipeConfigurator({
           })()}
 
           {/* Thickness — visible only when style supports it */}
-          {supportsThickness(style) && panConfig && onPanConfigChange && (
+          {showAdvanced && supportsThickness(style) && panConfig && onPanConfigChange && (
             <div className="config-field">
               <div className="config-thickness-header">
                 <Label>{cfg.thicknessLabel}</Label>
@@ -1057,7 +1122,8 @@ function Label({ children }: { children: React.ReactNode }) {
 /* ═══ BEGINNER FLOUR PICKER (Audit role-play giugno 2026, F11) ═══
    Per il principiante, W e P/L alveografici sono una barriera: non conosce la
    forza della sua farina. Qui sceglie in linguaggio naturale (debole/media/forte
-   con esempi reali) e il motore deriva la W. Mostrato solo a skill_level === 1. */
+   con esempi reali) e il motore deriva la W. U-3: è la vista semplice della
+   farina; con i parametri avanzati aperti lo sostituiscono W e P/L precisi. */
 const BEGINNER_FLOURS: { label: string; sub: string; w: number }[] = [
   { get label() { return uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubWeak"); }, w: 185 },
   { get label() { return uiMessage("features.recipe.recipe-configurator.media-0c77aeec"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubMedium"); }, w: 250 },

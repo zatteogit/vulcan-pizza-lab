@@ -6482,6 +6482,46 @@
   }
 
   /* ── Smart Link toggle ── */
+  /* U-3: interruttore dei parametri avanzati */
+  .config-advanced-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--space-11);
+    padding-inline: var(--space-3-5);
+    border: var(--border-width-thin) solid var(--outline-variant);
+    border-radius: var(--radius-xl);
+    background: transparent;
+    color: var(--text-default);
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-semibold);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .config-advanced-toggle__label {
+    flex: 1 1 0%;
+  }
+
+  .config-advanced-toggle__count {
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--tertiary) 14%, transparent);
+    color: var(--tertiary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-medium);
+  }
+
+  .config-advanced-toggle__chevron {
+    flex-shrink: 0;
+    color: var(--icon-muted);
+    transition: transform var(--duration-normal) var(--ease-standard);
+  }
+
+  .config-advanced-toggle[aria-expanded="true"] .config-advanced-toggle__chevron {
+    transform: rotate(180deg);
+  }
+
   .config-smart-link {
     display: flex;
     align-items: center;
