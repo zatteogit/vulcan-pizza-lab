@@ -14,6 +14,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "features.recipe.recommended-styles.fried.label": "Fritte in pentola",
   "features.recipe.recommended-styles.fried.subtitle": "Senza forno: impasto fritto in olio",
   "features.recipe.recipe-configurator.legend": "valore consigliato · fra le tacche, il range dello stile",
+  "features.recipe.recipe-configurator.typeValue": "Tocca per scrivere il valore",
   "features.recipe.recipe-configurator.thicknessTickThin": "Più sottile",
   "features.recipe.recipe-configurator.thicknessTickThick": "Più alta",
   "features.recipe.recipe-configurator.advanced.label": "Parametri avanzati",

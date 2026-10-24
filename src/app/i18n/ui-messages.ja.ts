@@ -11,6 +11,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "features.recipe.recommended-styles.fried.label": "鍋で揚げるピッツァ",
   "features.recipe.recommended-styles.fried.subtitle": "オーブン不要：生地を油で揚げる",
   "features.recipe.recipe-configurator.legend": "おすすめ値・目盛りの間がスタイルの範囲",
+  "features.recipe.recipe-configurator.typeValue": "タップして値を入力",
   "features.recipe.recipe-configurator.thicknessTickThin": "薄め",
   "features.recipe.recipe-configurator.thicknessTickThick": "厚め",
   "features.recipe.recipe-configurator.advanced.label": "詳細設定",

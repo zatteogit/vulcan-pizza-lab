@@ -1225,6 +1225,18 @@ function GradientSlider({
   /** Nome accessibile dell'input (U-10, F05): il testo dell'etichetta visibile. */
   name?: string;
 }) {
+  /* Fix di Matteo: al tocco del valore si digita il numero, per chi non ama
+     gli slider. Invio o tocco fuori conferma, Esc annulla. */
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(String(value));
+  const commitDraft = () => {
+    const n = Number(draft.replace(",", "."));
+    setEditing(false);
+    if (!Number.isFinite(n)) return;
+    const snapped = Math.round(n / step) * step;
+    const clamped = Math.max(min, Math.min(max, Math.round(snapped * 100) / 100));
+    if (clamped !== value) onChange(clamped);
+  };
   const pct = ((value - min) / (max - min)) * 100;
   const inRange =
     rangeMin !== undefined && rangeMax !== undefined
@@ -1256,14 +1268,43 @@ function GradientSlider({
         {label && (
           <div className="config-slider__label-group">{label}</div>
         )}
-        <span className={inRange ? "type-numeric config-slider__value" : "type-numeric config-slider__value config-slider__value--oor"}>
-          {valueText ?? (
-            <>
-              {value}
-              {unit}
-            </>
-          )}
-        </span>
+        {valueText ? (
+          <span className={inRange ? "type-numeric config-slider__value" : "type-numeric config-slider__value config-slider__value--oor"}>
+            {valueText}
+          </span>
+        ) : editing ? (
+          <span className="type-numeric config-slider__value config-slider__value--editing">
+            <input
+              type="text"
+              inputMode="decimal"
+              autoFocus
+              value={draft}
+              aria-label={name}
+              onChange={(e) => setDraft(e.target.value)}
+              onBlur={commitDraft}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") commitDraft();
+                if (e.key === "Escape") setEditing(false);
+              }}
+              className="config-slider__value-input"
+            />
+            {unit.trim()}
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              setDraft(String(value));
+              setEditing(true);
+            }}
+            className={inRange ? "type-numeric config-slider__value config-slider__value--button" : "type-numeric config-slider__value config-slider__value--button config-slider__value--oor"}
+            title={uiMessage("features.recipe.recipe-configurator.typeValue")}
+            aria-label={`${name ?? ""}: ${value}${unit} · ${uiMessage("features.recipe.recipe-configurator.typeValue")}`}
+          >
+            {value}
+            {unit}
+          </button>
+        )}
       </div>
 
       <div className="config-slider__track-wrap">

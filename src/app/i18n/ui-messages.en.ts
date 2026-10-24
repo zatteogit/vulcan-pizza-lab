@@ -11,6 +11,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "features.recipe.recommended-styles.fried.label": "Fried in a pot",
   "features.recipe.recommended-styles.fried.subtitle": "No oven: dough fried in oil",
   "features.recipe.recipe-configurator.legend": "recommended value · between the ticks, the style's range",
+  "features.recipe.recipe-configurator.typeValue": "Tap to type the value",
   "features.recipe.recipe-configurator.thicknessTickThin": "Thinner",
   "features.recipe.recipe-configurator.thicknessTickThick": "Thicker",
   "features.recipe.recipe-configurator.advanced.label": "Advanced settings",

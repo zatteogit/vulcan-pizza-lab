@@ -11,6 +11,7 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "features.recipe.recommended-styles.fried.label": "Frites à la casserole",
   "features.recipe.recommended-styles.fried.subtitle": "Sans four : pâte frite dans l'huile",
   "features.recipe.recipe-configurator.legend": "valeur conseillée · entre les repères, la plage du style",
+  "features.recipe.recipe-configurator.typeValue": "Touchez pour saisir la valeur",
   "features.recipe.recipe-configurator.thicknessTickThin": "Plus fine",
   "features.recipe.recipe-configurator.thicknessTickThick": "Plus épaisse",
   "features.recipe.recipe-configurator.advanced.label": "Paramètres avancés",

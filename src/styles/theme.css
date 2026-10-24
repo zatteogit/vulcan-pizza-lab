@@ -6722,6 +6722,35 @@
     color: var(--config-value-oor);
   }
 
+  /* Valore toccabile: si legge come il numero, con una sottolineatura
+     tratteggiata che dice «si può scrivere». */
+  .config-slider__value--button {
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: text;
+    text-decoration: underline dotted;
+    text-decoration-thickness: var(--border-width-thin);
+    text-underline-offset: var(--space-1);
+  }
+
+  .config-slider__value--editing {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-0-5);
+  }
+
+  .config-slider__value-input {
+    width: var(--space-16);
+    padding: 0 var(--space-1);
+    border: var(--border-width-thin) solid var(--primary);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    font: inherit;
+    color: inherit;
+    text-align: right;
+  }
+
   .config-slider__track-wrap {
     position: relative;
     height: calc(var(--space-8) + var(--space-1));

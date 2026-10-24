@@ -11,6 +11,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "features.recipe.recommended-styles.fried.label": "Im Topf frittiert",
   "features.recipe.recommended-styles.fried.subtitle": "Ohne Ofen: Teig in Öl frittiert",
   "features.recipe.recipe-configurator.legend": "empfohlener Wert · zwischen den Strichen der Bereich des Stils",
+  "features.recipe.recipe-configurator.typeValue": "Tippen, um den Wert einzugeben",
   "features.recipe.recipe-configurator.thicknessTickThin": "Dünner",
   "features.recipe.recipe-configurator.thicknessTickThick": "Höher",
   "features.recipe.recipe-configurator.advanced.label": "Erweiterte Einstellungen",

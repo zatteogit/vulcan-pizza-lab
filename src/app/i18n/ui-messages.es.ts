@@ -11,6 +11,7 @@ export const UI_MESSAGES_ES: Record<string, string> = {
   "features.recipe.recommended-styles.fried.label": "Fritas en olla",
   "features.recipe.recommended-styles.fried.subtitle": "Sin horno: masa frita en aceite",
   "features.recipe.recipe-configurator.legend": "valor recomendado · entre las marcas, el rango del estilo",
+  "features.recipe.recipe-configurator.typeValue": "Toca para escribir el valor",
   "features.recipe.recipe-configurator.thicknessTickThin": "Más fina",
   "features.recipe.recipe-configurator.thicknessTickThick": "Más alta",
   "features.recipe.recipe-configurator.advanced.label": "Parámetros avanzados",
