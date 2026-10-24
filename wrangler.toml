@@ -30,7 +30,7 @@ run_worker_first = ["/mcp", "/api/auth/*"]
 # pubblico: niente email in chiaro). GOOGLE_CLIENT_ID è pubblico per natura;
 # vuoto = accesso con Google spento. Elenchi separati da virgole.
 [vars]
-GOOGLE_CLIENT_ID = ""
+GOOGLE_CLIENT_ID = "216267907893-r6f22fhk3bg9u6v7jttukmocbobfg5m1.apps.googleusercontent.com"
 ADMIN_EMAIL_SHA256 = "48d1cbb1b746c94b78a7c7c149d5500d0bc1117c948bd6730554c8c16954763f"
 EDITOR_EMAIL_SHA256 = ""
 TESTER_EMAIL_SHA256 = ""
@@ -58,7 +58,7 @@ run_worker_first = true
 [env.test.vars]
 DEPLOY_ENV = "test"
 # Le [vars] non si ereditano negli ambienti: stesse di produzione.
-GOOGLE_CLIENT_ID = ""
+GOOGLE_CLIENT_ID = "216267907893-r6f22fhk3bg9u6v7jttukmocbobfg5m1.apps.googleusercontent.com"
 ADMIN_EMAIL_SHA256 = "48d1cbb1b746c94b78a7c7c149d5500d0bc1117c948bd6730554c8c16954763f"
 EDITOR_EMAIL_SHA256 = ""
 TESTER_EMAIL_SHA256 = ""
