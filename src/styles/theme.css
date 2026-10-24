@@ -366,7 +366,6 @@
   --tracking-extreme: 0.18em;
   --tracking-cooking-eyebrow: 0.16em;
   /* eyebrow header cooking-mode (fra ultra 0.12 e extreme 0.18) */
-  --tracking-wordmark: 0.24em;
   /* brand name sotto il mark hero */
 
   /* ── Typography Primitives · Weight ── */
@@ -541,10 +540,6 @@
   --dimension-relative-275: 2.75rem;
   --dimension-relative-280: 2.8rem;
   --dimension-relative-2375: 23.75rem;
-  --dimension-relative-2625: 26.25rem;
-  --dimension-relative-3200: 32rem;
-  --dimension-relative-3750: 37.5rem;
-  --dimension-relative-4600: 46rem;
   --dimension-viewport-48: 48vh;
   --dimension-viewport-height-40: 40vh;
   --dimension-viewport-height-50: 50vh;
@@ -584,8 +579,6 @@
   /* glow NerdAura compact */
   --blur-lg: 22px;
   --blur-xl: 24px;
-  --blur-2xl: 40px;
-  --blur-3xl: 60px;
   --blur-dock-glass: 32px;
   /* frosted glass liquid-dock / active-cook widget (fra --blur-xl 24 e --blur-2xl 40) */
   --blur-blob-glow: 30px;
@@ -835,7 +828,6 @@
   --brand-mark-solid-color: var(--color-brand-mark-solid);
   --brand-mark-gradient-start: var(--color-brand-mark-start);
   --brand-mark-gradient-end: var(--color-brand-mark-end);
-  --brand-mark-size: var(--space-40);
   --type-chip-size: var(--font-size-lg);
   --type-chip-weight: var(--weight-medium);
   --type-chip-weight-active: var(--weight-semibold);
@@ -852,10 +844,6 @@
   --layout-recipe-offset-expanded: var(--space-20);
   --layout-recipe-overlap: var(--space-19);
   --control-track-height: var(--dimension-relative-115);
-  --ambient-glow-size: var(--dimension-relative-2625);
-  --ambient-glow-size-lg: var(--dimension-relative-3750);
-  --ambient-glow-size-theatrical: var(--dimension-relative-3200);
-  --ambient-glow-size-theatrical-lg: var(--dimension-relative-4600);
   --dialog-compact-measure: var(--dimension-relative-2375);
 
   /* ── Elevation / Shadows ── */
@@ -1218,19 +1206,7 @@
   --recipe-hero-card-shadow: var(--shadow-lg);
   --recipe-hero-badge-bg: color-mix(in srgb, var(--text-accent) 8%, transparent);
 
-  --hero-glow-warm: radial-gradient(ellipse at 48% 52%,
-      var(--forge-mid) 0%,
-      color-mix(in srgb, var(--forge-glow) 40%, transparent) 35%,
-      transparent 70%);
-  --hero-glow-accent: radial-gradient(ellipse at 50% 55%,
-      color-mix(in srgb, var(--primary) 50%, transparent) 0%,
-      transparent 65%);
-  --hero-mark-size: var(--brand-mark-size);
   /* logo mark container */
-  --hero-glow-size: var(--ambient-glow-size);
-  /* 420px — diametro glow primario */
-  --hero-glow-size-lg: var(--ambient-glow-size-lg);
-  /* 600px — diametro glow secondario */
 
   /* ── U. DoughBlob — default (dough) ── */
   --blob-body: linear-gradient(135deg,
@@ -3913,28 +3889,14 @@
     text-underline-offset: var(--space-0-75);
   }
 
-  .home-onboarding__guide {
-    position: absolute;
-    top: calc(100% - var(--space-1));
-    left: var(--space-7);
-    width: var(--space-16);
-    height: var(--space-9);
-    color: var(--primary);
-    pointer-events: none;
-  }
-
-  .home-onboarding__guide-line {
-    position: absolute;
-    inset: var(--space-0) var(--space-4) var(--space-1) var(--space-0);
-    border-inline-start: var(--blob-edge);
-    border-block-end: var(--blob-edge);
-    border-end-start-radius: var(--radius-3xl);
-  }
-
-  .home-onboarding__guide svg {
-    position: absolute;
-    right: var(--space-0);
-    bottom: var(--space-0);
+  .home-onboarding__dismiss {
+    min-height: var(--space-11);
+    padding: var(--space-0);
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
   }
 
   /* ── Override / CMS banners ── */
@@ -4044,17 +4006,15 @@
     transform: scale(0.95);
   }
 
-  /* ── Step shells (settings / styles / result) ── */
+  /* ── Step shells (styles / result) ── */
   .home-step {
     position: relative;
   }
 
-  .home-step--settings,
   .home-step--styles {
     padding-bottom: var(--space-40);
   }
 
-  .home-step--settings,
   .home-step--styles,
   .home-step--result {
     z-index: 2;
@@ -4156,82 +4116,6 @@
     color: var(--text-muted);
     opacity: 1;
     line-height: var(--leading-normal);
-  }
-
-  /* ── Hero (settings step) ── */
-  .home-hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding-bottom: var(--space-4);
-  }
-
-  @media (min-width: 640px) {
-    .home-hero {
-      padding-bottom: var(--space-5);
-    }
-  }
-
-  .home-hero__mark {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--space-3);
-    width: var(--hero-mark-size);
-    height: var(--hero-mark-size);
-  }
-
-  .home-hero__glow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border-radius: var(--radius-full);
-    pointer-events: none;
-    will-change: var(--home-glow-will-change, auto);
-  }
-
-  .home-hero__glow--primary {
-    width: var(--hero-glow-size);
-    height: var(--hero-glow-size);
-    margin-top: calc(var(--hero-glow-size) / -2);
-    margin-left: calc(var(--hero-glow-size) / -2);
-    background: var(--hero-glow-warm);
-    filter: blur(var(--blur-2xl));
-    opacity: var(--home-glow-opacity, 0.12);
-  }
-
-  .home-hero__glow--secondary {
-    width: var(--hero-glow-size-lg);
-    height: var(--hero-glow-size-lg);
-    margin-top: calc(var(--hero-glow-size-lg) / -2);
-    margin-left: calc(var(--hero-glow-size-lg) / -2);
-    background: var(--hero-glow-accent);
-    filter: blur(var(--blur-3xl));
-    opacity: var(--home-glow-opacity, 0.06);
-  }
-
-  .home-hero__wordmark {
-    position: relative;
-    display: inline-block;
-    font-size: var(--font-size-xl);
-    line-height: var(--leading-none);
-    letter-spacing: var(--tracking-wordmark);
-    text-transform: uppercase;
-    font-weight: var(--weight-bold);
-    color: var(--primary);
-    margin-bottom: var(--space-3);
-  }
-
-  .home-hero__subtitle {
-    font-family: var(--font-serif);
-    font-style: italic;
-    margin-top: var(--space-3);
-    max-width: var(--measure-xs);
-    color: var(--text-muted);
-    font-size: var(--font-size-2xl);
-    line-height: var(--leading-relaxed);
   }
 
   /* ── Result step: match slot & controls ── */
@@ -6482,6 +6366,46 @@
   }
 
   /* ── Smart Link toggle ── */
+  /* U-3: interruttore dei parametri avanzati */
+  .config-advanced-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--space-11);
+    padding-inline: var(--space-3-5);
+    border: var(--border-width-thin) solid var(--outline-variant);
+    border-radius: var(--radius-xl);
+    background: transparent;
+    color: var(--text-default);
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-semibold);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .config-advanced-toggle__label {
+    flex: 1 1 0%;
+  }
+
+  .config-advanced-toggle__count {
+    padding-inline: var(--space-2);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--tertiary) 14%, transparent);
+    color: var(--tertiary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-medium);
+  }
+
+  .config-advanced-toggle__chevron {
+    flex-shrink: 0;
+    color: var(--icon-muted);
+    transition: transform var(--duration-normal) var(--ease-standard);
+  }
+
+  .config-advanced-toggle[aria-expanded="true"] .config-advanced-toggle__chevron {
+    transform: rotate(180deg);
+  }
+
   .config-smart-link {
     display: flex;
     align-items: center;
@@ -16871,23 +16795,6 @@
     color: var(--overlay-text);
   }
 
-  .home-hero__beta-badge {
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(95%, -40%);
-    font-family: var(--font-sans);
-    font-size: var(--font-size-2xs);
-    font-weight: 500;
-    letter-spacing: var(--tracking-caps);
-    text-transform: uppercase;
-    line-height: 1;
-    color: var(--primary); /* U-10 (F09): --logo-solid era 3,1:1 */
-    background: color-mix(in srgb, var(--logo-solid) 12%, var(--container-page));
-    border-radius: var(--radius-full);
-    padding: calc(2 * var(--space-px)) var(--space-0-75) var(--space-0-75) var(--space-1);
-    white-space: nowrap;
-  }
 
   /* ── vulcan-logo ── */
   .vulcan-logo__glow-box {
@@ -18705,13 +18612,6 @@ html {
   --font-mono-family: "DM Mono", monospace;
   /* Il forno alzato: glow masthead più grande e più profondo (il respiro
      è già animato via Motion; qui si scalda solo la sorgente). */
-  --hero-glow-size: var(--ambient-glow-size-theatrical);
-  --hero-glow-size-lg: var(--ambient-glow-size-theatrical-lg);
-  --hero-glow-warm: radial-gradient(ellipse at 48% 55%,
-      var(--forge-core) 0%,
-      color-mix(in srgb, var(--forge-mid) 60%, transparent) 32%,
-      color-mix(in srgb, var(--forge-glow) 34%, transparent) 58%,
-      transparent 80%);
   /* Spec-card della ricetta: vetro caldo con anello ember appena acceso. */
   --recipe-hero-card-bg: color-mix(in srgb, var(--container-page) 84%, transparent);
   --recipe-hero-card-shadow:
@@ -18734,12 +18634,6 @@ html {
 /* La fotografia è la copertina: warm-up leggero, MAI saturate < 1. */
 [data-theme="sfornata"] :is([data-region="card"], [data-region="feature"], [data-region="hero"]) img {
   filter: contrast(1.05) saturate(1.08);
-}
-
-/* Crea: masthead a scala da cookbook — l'unico momento forte della pagina. */
-[data-theme="sfornata"] .home-hero :is(h1) {
-  font-size: clamp(var(--font-size-7xl), 9vw, var(--font-size-10xl));
-  line-height: var(--leading-tight);
 }
 
 /* Ricetta: il momento tipografico forte sono i numeri di cibo — 280W, 60%,

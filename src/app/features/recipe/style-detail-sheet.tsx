@@ -36,9 +36,19 @@ interface StyleDetailSheetProps {
 
 /* VPL: video di cottura che sfuma in ingresso sopra la foto-poster (effetto wow).
  * BUN-1: preload="metadata" e poster WebP (primo fotogramma). Con autoPlay il
- * browser scarica comunque il video, ma solo quando la scheda è aperta. */
+ * browser scarica comunque il video, ma solo quando la scheda è aperta.
+ * D-034 (P-5c): i video sono un esperimento, il più leggeri possibile: clip
+ * da 8 s a 480p senza audio (2,6 MB in tutto), e niente video con «riduci
+ * movimento» o col risparmio dati: resta la foto sotto. */
+function prefersSaveData(): boolean {
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  return Boolean(connection?.saveData);
+}
+
 function BlurInVideo({ src, poster }: StyleVideo) {
   const [ready, setReady] = useState(false);
+  const reduceMotion = useReducedMotion();
+  if (reduceMotion || prefersSaveData()) return null;
   return (
     <video
       src={src}

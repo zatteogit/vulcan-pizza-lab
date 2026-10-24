@@ -8,6 +8,11 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "Stile",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "Im Topf frittiert",
+  "features.recipe.recommended-styles.fried.subtitle": "Ohne Ofen: Teig in Öl frittiert",
+  "features.recipe.recipe-configurator.advanced.label": "Erweiterte Einstellungen",
+  "features.recipe.recipe-configurator.advanced.changedOne": "1 geändert",
+  "features.recipe.recipe-configurator.advanced.changedMany": "{0} geändert",
   "features.search.filters": "Ergebnisse filtern",
   "features.search.showAll": "Alle anzeigen ({0})",
   "components.shared.search-overlay.condimenti-fc3218d7": "Beläge",
@@ -301,7 +306,6 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "pages.explore.optimizable": "Optimierbar: {0}% → {1}% mit deinem Setup",
   "pages.explore.recipeBy": "Nach {0}",
   "pages.home.applyCorrections": "Korrekturen anwenden",
-  "pages.home.betaBadge": "beta",
   "pages.home.motto": "Make pizza, not war",
   "pages.learn.contextByLevel": "Dein Lernpfad nach Maß · Niveau {0}",
   "pages.learn.contextByStyle": "{0} · {1}",
@@ -349,6 +353,5 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "pages.recipe.applyCorrections": "Korrekturen anwenden",
   "pages.recipe.defaultTopping": "Belag",
   "pages.recipe.ingredientsUpdated": "{0}: Zutaten aktualisiert",
-  "pages.home.onboardingBody": "{brand} schneidet das Rezept auf deinen Ofen und deine Zeit zu — und sagt dir mit einer ehrlichen Bewertung, wie nah es ans Original kommt.",
   "shared.unsavedChanges": "Ungespeicherte Änderungen"
 };

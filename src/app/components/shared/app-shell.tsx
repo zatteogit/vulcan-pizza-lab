@@ -111,7 +111,6 @@ interface TabDef {
 /* Audit Sprint 12 — Profilo NON è una tab pari ad altre: è impostazione utente.
    Spostato dalla tab bar all'header top-right (vedi ProfileButton in AppShell). */
 const TABS: TabDef[] = [
-  { id: "create", labelKey: "navCreate", get labelFallback() { return uiMessage("components.shared.app-shell.crea-e7c107d0"); }, icon: Flame, path: "/", match: ["/"] },
   {
     id: "explore",
     labelKey: "navExplore",
@@ -122,6 +121,8 @@ const TABS: TabDef[] = [
     path: "/explore",
     match: ["/explore"],
   },
+  /* D-037: Crea è la seconda tab, su /crea. */
+  { id: "create", labelKey: "navCreate", get labelFallback() { return uiMessage("components.shared.app-shell.crea-e7c107d0"); }, icon: Flame, path: "/crea", match: ["/crea"] },
   {
     id: "learn",
     labelKey: "navLearn",
@@ -146,11 +147,8 @@ const navSpring = motionSpring.navigation;
 const navQuickSpring = motionSpring.navigationQuick;
 
 function getActiveTab(pathname: string): string | null {
-  /* Exact match for "/" to avoid matching everything */
-  if (pathname === "/") return "create";
   /* PROFILE_TAB checked too — usato per highlight pulsante top-right. */
   for (const tab of [...TABS, PROFILE_TAB]) {
-    if (tab.id === "create") continue;
     if (tab.match.some((m) => pathname === m || pathname.startsWith(m + "/")))
       return tab.id;
   }

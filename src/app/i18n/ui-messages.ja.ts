@@ -8,6 +8,11 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "スタイル",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "鍋で揚げるピッツァ",
+  "features.recipe.recommended-styles.fried.subtitle": "オーブン不要：生地を油で揚げる",
+  "features.recipe.recipe-configurator.advanced.label": "詳細設定",
+  "features.recipe.recipe-configurator.advanced.changedOne": "1件変更",
+  "features.recipe.recipe-configurator.advanced.changedMany": "{0}件変更",
   "features.search.filters": "結果を絞り込む",
   "features.search.showAll": "すべて表示（{0}）",
   "components.shared.search-overlay.condimenti-fc3218d7": "トッピング",
@@ -301,7 +306,6 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "pages.explore.optimizable": "最適化可能：あなたの環境なら{0}% → {1}%",
   "pages.explore.recipeBy": "{0}による",
   "pages.home.applyCorrections": "補正を適用",
-  "pages.home.betaBadge": "beta",
   "pages.home.motto": "Make pizza, not war",
   "pages.learn.contextByLevel": "あなたに合わせたロードマップ · レベル{0}",
   "pages.learn.contextByStyle": "{0} · {1}",
@@ -349,6 +353,5 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "pages.recipe.applyCorrections": "補正を適用",
   "pages.recipe.defaultTopping": "トッピング",
   "pages.recipe.ingredientsUpdated": "{0}：材料を更新しました",
-  "pages.home.onboardingBody": "{brand}はあなたのオーブンと時間に合わせてレシピを設計し、本物にどれだけ近いかを正直なスコアで伝えます。",
   "shared.unsavedChanges": "未保存の変更"
 };

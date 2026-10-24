@@ -8,6 +8,11 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "Explore",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "Fried in a pot",
+  "features.recipe.recommended-styles.fried.subtitle": "No oven: dough fried in oil",
+  "features.recipe.recipe-configurator.advanced.label": "Advanced settings",
+  "features.recipe.recipe-configurator.advanced.changedOne": "1 changed",
+  "features.recipe.recipe-configurator.advanced.changedMany": "{0} changed",
   "features.search.filters": "Filter results",
   "features.search.showAll": "Show all ({0})",
   "components.shared.search-overlay.condimenti-fc3218d7": "Toppings",
@@ -301,7 +306,6 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "pages.explore.optimizable": "Optimisable: {0}% → {1}% with your setup",
   "pages.explore.recipeBy": "By {0}",
   "pages.home.applyCorrections": "Apply the corrections",
-  "pages.home.betaBadge": "beta",
   "pages.home.motto": "Make pizza, not war",
   "pages.learn.contextByLevel": "Your tailored path · Level {0}",
   "pages.learn.contextByStyle": "{0} · {1}",
@@ -349,6 +353,5 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "pages.recipe.applyCorrections": "Apply the corrections",
   "pages.recipe.defaultTopping": "Topping",
   "pages.recipe.ingredientsUpdated": "{0}: ingredients updated",
-  "pages.home.onboardingBody": "{brand} tailors the recipe to your oven and your schedule — and tells you, with an honest score, how close it gets to the real thing.",
   "shared.unsavedChanges": "Unsaved changes"
 };

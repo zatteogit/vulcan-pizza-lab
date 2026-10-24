@@ -1498,8 +1498,8 @@ export function ProfilePage() {
           const loc = loadJson<SavedLocation>(LOCATION_STORAGE_KEY);
           if (loc) setSavedLocation(loc);
           /* Audit UX giugno 2026 — "Inizia" mantiene la promessa: si atterra
-           * su Crea, non sulla pagina impostazioni. */
-          navigate("/");
+           * su Crea, non sulla pagina impostazioni (D-037: Crea è su /crea). */
+          navigate("/crea");
         }}
       />
     );
@@ -1521,7 +1521,8 @@ export function ProfilePage() {
         <div className="profile-page__close">
           <IconButton
             size="md"
-            onClick={() => navigate("/")}
+            /* D-037: chiudendo si torna da dove si è arrivati (es. Crea). */
+            onClick={() => (window.history.state?.idx > 0 ? navigate(-1) : navigate("/"))}
             aria-label={cms.ui.close}
           >
             <X size={15} />

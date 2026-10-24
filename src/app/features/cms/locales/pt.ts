@@ -216,9 +216,10 @@ export const PT_LOCALE: CmsContent = {
     subtitle:
       "Conte o que voc\u00EA tem e vamos guiar voc\u00EA at\u00E9 o estilo ideal.",
     onboardingEyebrow: "Primeira vez aqui?",
-    onboardingBody: "O {brand} monta a receita sob medida para o seu forno e o seu tempo \u2014 e diz, com uma pontua\u00E7\u00E3o honesta, o quanto ela chega perto da original. Responda \u00E0s perguntas abaixo e pronto.",
-    onboardingCta: "Entendi, vamos l\u00E1",
-    onboardingProfileCta: "Salvar forno e n\u00EDvel no perfil",
+    onboardingBody: "As sugestões partem deste forno: {oven}, {temp}. Se o seu for diferente, escolha-o: é o que mais muda a receita.",
+    onboardingCta: "Escolha seu forno",
+    onboardingProfileCta: "Configure toda a cozinha",
+    onboardingDismiss: "Est\u00E1 bom assim",
   },
   steps: {
     context: {

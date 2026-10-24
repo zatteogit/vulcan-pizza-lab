@@ -19,10 +19,11 @@ const BUDGET = {
   totalJsGz: 900 * KB,
   /** Foglio di stile unico, gzip. Oggi 60 kB. */
   cssGz: 75 * KB,
-  /** Singolo video. Oggi il più grande è 15,3 MB (napoletana_stg.mp4). */
-  maxVideo: 16 * MB,
-  /** Tutti i video. Oggi 51 MB. */
-  totalVideo: 52 * MB,
+  /** Singolo video. P-5c (D-034): clip da 8 s a 480p; oggi il più grande è
+   *  0,65 MB (napoletana_stg.mp4). */
+  maxVideo: 1 * MB,
+  /** Tutti i video. Oggi 2,6 MB (erano 48,6). */
+  totalVideo: 3 * MB,
   /** Tutte le immagini (WebP + originali fuori bundle esclusi). Oggi 40,4 MB. */
   totalImages: 42 * MB,
 };

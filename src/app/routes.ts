@@ -1,7 +1,9 @@
 /* === ROUTE CONFIG — VPL-056 / VPL-072 ===
    Ristrutturazione: AppShell con tab bar 3 tab + ProfileButton flottante
    + command palette search.
-   Tab: Crea(/) · Scopri(/explore) · Impara(/learn) — Profilo(/profile) via avatar
+   Tab: Scopri(/explore) · Crea(/crea) · Impara(/learn) — Profilo(/profile) via avatar
+   D-037 (Matteo, 24/10/2026): Scopri è la prima tab e la pagina d'ingresso,
+   «/» porta lì; Crea è su /crea.
    Search: ⌘K overlay (no tab dedicato)
    Dettaglio: /recipe/:styleId (non-tab)
    Tool: /dev, /design-system, /cms (nascosti dalla tab bar; solo con
@@ -24,6 +26,10 @@ export const router = createBrowserRouter([
       /* ═══ TAB ROUTES ═══ */
       {
         index: true,
+        loader: () => redirect("/explore"),
+      },
+      {
+        path: "crea",
         lazy: async () => ({ Component: (await import("./pages/home")).HomePage }),
       },
       {
@@ -82,7 +88,7 @@ export const router = createBrowserRouter([
         : []),
 
       /* ═══ LEGACY REDIRECTS ═══ */
-      { path: "search", loader: () => redirect("/") },
+      { path: "search", loader: () => redirect("/explore") },
       { path: "styles", loader: () => redirect("/explore") },
       /* "Pizza Patate e Porchetta" non è più uno stile: è la Spaccata con la
          farcitura patate&porchetta. Vecchi link → spaccata con topping pre-scelto. */

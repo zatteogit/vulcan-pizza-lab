@@ -234,9 +234,10 @@ export const EN_LOCALE: CmsContent = {
       "Tell us what you have and we\u2019ll guide you to the ideal style.",
     onboardingEyebrow: "First time here?",
     onboardingBody:
-      "{brand} tailors the recipe to your oven and your schedule \u2014 and tells you, with an honest score, how close it gets to the real thing. Answer the questions below and off you go.",
-    onboardingCta: "Got it, let's go",
-    onboardingProfileCta: "Save oven & skill to your profile",
+      "Recommendations assume this oven: {oven}, {temp}. If yours is different, pick it: it's what changes the recipe most.",
+    onboardingCta: "Choose your oven",
+    onboardingProfileCta: "Set up your whole kitchen",
+    onboardingDismiss: "That's fine",
   },
   steps: {
     context: {

@@ -219,9 +219,10 @@ export const ES_LOCALE: CmsContent = {
     subtitle:
       "Cu\u00E9ntanos qu\u00E9 tienes y te guiaremos hacia el estilo ideal.",
     onboardingEyebrow: "\u00BFPrimera vez aqu\u00ED?",
-    onboardingBody: "{brand} dise\u00F1a la receta a medida de tu horno y de tu tiempo, y te dice con una puntuaci\u00F3n honesta cu\u00E1nto se acerca a la original. Responde a las preguntas de abajo y listo.",
-    onboardingCta: "Entendido, \u00A1vamos!",
-    onboardingProfileCta: "Guardar horno y nivel en el perfil",
+    onboardingBody: "Las sugerencias parten de este horno: {oven}, {temp}. Si el tuyo es distinto, elígelo: es lo que más cambia la receta.",
+    onboardingCta: "Elige tu horno",
+    onboardingProfileCta: "Configura toda la cocina",
+    onboardingDismiss: "As\u00ED est\u00E1 bien",
   },
   steps: {
     context: {

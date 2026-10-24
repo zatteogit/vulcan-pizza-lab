@@ -214,6 +214,23 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- ~~**P-5c**~~ chiuso il 24/10 (D-034): video da 48,6 a 2,6 MB (480p, 8 s,
+  senza audio); non partono con «riduci movimento» o col risparmio dati.
+- **D-037** (24/10): Scopri è la prima tab e la pagina d'ingresso (`/` porta a
+  `/explore`); Crea è su `/crea`. Il profilo chiudendosi torna da dove si era.
+- **D-036, D-038** (24/10): Crea parte dagli stili col momento consigliato in
+  un chip; tolto il passo iniziale con il grande logo. La scheda «Prima volta
+  qui?» ora chiede solo il forno (finché non è scelto), con «Scegli il tuo
+  forno» che apre «La tua cucina», «Va bene così» e «Configura tutta la cucina»
+  (profilo).
+- **U-3 (P1)** proposta applicata il 24/10 (D-035, da confermare): in
+  Personalizza «Parametri avanzati» raccoglie W e P/L precisi, sale,
+  prefermento, spessore e Smart Link; chiuso la farina si sceglie a parole
+  (debole/media/forte). Si ricorda l'apertura, parte aperto per il livello
+  esperto e conta i valori nascosti diversi dallo stile. Base: progressive
+  disclosure (Nielsen 2006, https://www.nngroup.com/articles/progressive-disclosure/).
+- **D-032** (24/10): le fritte in una sezione a parte dei consigli, «Fritte in
+  pentola», dopo gli stili al forno.
 - ~~**C-3 (P2)**~~ chiuso il 24/10: i consigli e l'avviso «ti serve una farina
   W…» tengono conto del mix di due farine della dispensa (`pantryFlourMix`,
   quote al 5%, W stimata come media pesata e detta «circa»). Bug collaterale:

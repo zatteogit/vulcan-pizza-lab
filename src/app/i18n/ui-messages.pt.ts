@@ -8,6 +8,11 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "Explorar",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "Fritas na panela",
+  "features.recipe.recommended-styles.fried.subtitle": "Sem forno: massa frita no óleo",
+  "features.recipe.recipe-configurator.advanced.label": "Parâmetros avançados",
+  "features.recipe.recipe-configurator.advanced.changedOne": "1 alterado",
+  "features.recipe.recipe-configurator.advanced.changedMany": "{0} alterados",
   "features.search.filters": "Filtrar resultados",
   "features.search.showAll": "Ver todos ({0})",
   "components.shared.search-overlay.condimenti-fc3218d7": "Coberturas",
@@ -301,7 +306,6 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "pages.explore.optimizable": "Otimizável: {0}% → {1}% com o seu setup",
   "pages.explore.recipeBy": "Segundo {0}",
   "pages.home.applyCorrections": "Aplicar as correções",
-  "pages.home.betaBadge": "beta",
   "pages.home.motto": "Make pizza, not war",
   "pages.learn.contextByLevel": "A trilha sob medida para você · Nível {0}",
   "pages.learn.contextByStyle": "{0} · {1}",
@@ -349,6 +353,5 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "pages.recipe.applyCorrections": "Aplicar as correções",
   "pages.recipe.defaultTopping": "Cobertura",
   "pages.recipe.ingredientsUpdated": "{0}: ingredientes atualizados",
-  "pages.home.onboardingBody": "O {brand} monta a receita sob medida para o seu forno e o seu tempo — e diz, com uma pontuação honesta, o quanto ela se aproxima da original.",
   "shared.unsavedChanges": "Alterações não salvas"
 };

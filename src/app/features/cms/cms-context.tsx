@@ -283,6 +283,8 @@ interface CmsHero {
   onboardingBody?: string;
   onboardingCta?: string;
   onboardingProfileCta?: string;
+  /** D-038: chiude l'avviso del forno senza cambiarlo. */
+  onboardingDismiss?: string;
 }
 
 interface CmsStepHeader {
@@ -1471,9 +1473,10 @@ export const CMS_DEFAULTS: CmsContent = {
     subtitle: "Seleziona il momento per calcolare i tempi di preparazione.",
     onboardingEyebrow: "Prima volta qui?",
     onboardingBody:
-      "{brand} disegna la ricetta su misura per il tuo forno e il tuo tempo — e ti dice con un punteggio onesto quanto si avvicina all'originale. Rispondi alle domande qui sotto e via.",
-    onboardingCta: "Capito, si parte",
-    onboardingProfileCta: "Salva forno e livello nel profilo",
+      "I consigli partono da questo forno: {oven}, {temp}. Se il tuo è diverso, sceglilo: è il dato che cambia di più la ricetta.",
+    onboardingCta: "Scegli il tuo forno",
+    onboardingProfileCta: "Configura tutta la cucina",
+    onboardingDismiss: "Va bene così",
   },
   steps: {
     context: { number: "01 — Contesto", title: "Quando e dove", subtitle: "Tempo, temperatura, ambiente" },
