@@ -215,9 +215,10 @@ export const DE_LOCALE: CmsContent = {
       "Erz\u00E4hl uns, was du hast, und wir f\u00FChren dich zum idealen Stil.",
     onboardingEyebrow: "Zum ersten Mal hier?",
     onboardingBody:
-      "{brand} schneidet das Rezept auf deinen Ofen und deine Zeit zu \u2014 und sagt dir mit einer ehrlichen Bewertung, wie nah es ans Original kommt. Beantworte die Fragen unten und los geht's.",
-    onboardingCta: "Alles klar, los",
-    onboardingProfileCta: "Ofen & Erfahrung im Profil speichern",
+      "Die Vorschläge gehen von diesem Ofen aus: {oven}, {temp}. Ist deiner anders, wähle ihn: Er verändert das Rezept am meisten.",
+    onboardingCta: "Wähle deinen Ofen",
+    onboardingProfileCta: "Ganze Küche einrichten",
+    onboardingDismiss: "Passt so",
   },
   steps: {
     context: {

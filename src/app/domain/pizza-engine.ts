@@ -3691,6 +3691,17 @@ export const NO_PREFERENCE_SLOT: TimeSlot = {
   emoji: "⏳",
 };
 
+/** Il momento consigliato: quello più vicino alle 24 h di lievitazione.
+ *  D-036: è il momento con cui partono i consigli, senza chiederlo prima. */
+export function suggestedTimeSlot(now: Date = new Date()): TimeSlot | null {
+  const slots = generateTimeSlots(now);
+  let best: TimeSlot | null = null;
+  for (const slot of slots) {
+    if (!best || Math.abs(slot.hours - 24) < Math.abs(best.hours - 24)) best = slot;
+  }
+  return best;
+}
+
 export function generateTimeSlots(now: Date = new Date()): TimeSlot[] {
   const nowHour = now.getHours() + now.getMinutes() / 60;
   const slots: TimeSlot[] = [];

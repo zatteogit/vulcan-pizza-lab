@@ -1,7 +1,5 @@
 import {
-ArrowDown,
 Bookmark,
-ChevronLeft,
 ChevronRight,
 Heart,
 Sparkles,
@@ -9,8 +7,6 @@ Sparkles,
 import {
 motion,
 useReducedMotion,
-useScroll,
-useTransform,
 } from "motion/react";
 import {
 useCallback,
@@ -25,6 +21,7 @@ import { useCookSession } from "../features/cooking/cook-session";
 import {
 getDefaultDoughBalls,
 generateTimeSlots,
+suggestedTimeSlot,
 customMealSlot,
 CUSTOM_SLOT_ID,
 NO_PREFERENCE_SLOT,
@@ -50,11 +47,10 @@ import { RecipeView } from "../features/recipe/recipe-view";
 import { RecommendedStyles,STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
-import { VulcanHero } from "../components/shared/vulcan-hero";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
 import { useCms } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
-import { t as tpl } from "../features/cms/i18n";
+import { createFormatter, t as tpl } from "../features/cms/i18n";
 import { getDietaryWarnings } from "../data/dietary-data";
 import { findSavedRecipe, removeRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
 import {
@@ -79,16 +75,16 @@ import {
   type RecipeMode,
   useRecipeState,
 } from "../hooks/use-recipe-state";
-import { ConfirmDialog, CtaButton, Heading, IconButton } from "../components/ds/index";
+import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
 import {
-  decorativeMotion,
   motionSpring,
 } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
-import { BRAND } from "../config/brand";
 import { TOOLS_ENABLED } from "../config/tools";
 
-type AppStep = "settings" | "styles" | "result";
+/* D-036 (Matteo, 24/10/2026): niente passo iniziale «Quando la vuoi».
+   Si entra sugli stili col momento consigliato, che resta un chip modificabile. */
+type AppStep = "styles" | "result";
 type StyleSettingsPanel = SettingsTab | "time";
 
 const CREATE_DRAFT_KEY = "vulcan_create_draft";
@@ -304,13 +300,18 @@ function resolveCreateDraft(
   profileConstraints: UserConstraints,
   styles: Record<string, PizzaStyle>,
 ): ResolvedCreateDraft {
+  const nowMs = Date.now();
+  const suggested = suggestedTimeSlot(new Date(nowMs));
+  const suggestedMeta = suggested
+    ? { selectedAt: nowMs, hours: suggested.hours, targetAt: suggested.targetAt ?? nowMs + suggested.hours * HOUR_MS }
+    : null;
   const fallback: ResolvedCreateDraft = {
-    step: "settings",
+    step: "styles",
     selectedStyle: null,
-    selectedTimeSlot: null,
-    selectedTimeMeta: null,
+    selectedTimeSlot: suggested?.id ?? null,
+    selectedTimeMeta: suggestedMeta,
     styleSettingsPanel: null,
-    constraints: profileConstraints,
+    constraints: suggested ? { ...profileConstraints, available_hours: suggested.hours } : profileConstraints,
     recipeInitial: null,
   };
   const draft = readCreateDraft();
@@ -326,8 +327,8 @@ function resolveCreateDraft(
   }
 
   const selectedStyle = draftStyle;
-  const selectedTimeSlot = timeChoice.selectedTimeSlot;
-  const selectedTimeMeta = timeChoice.selectedTimeMeta;
+  const selectedTimeSlot = timeChoice.selectedTimeSlot ?? fallback.selectedTimeSlot;
+  const selectedTimeMeta = timeChoice.selectedTimeMeta ?? fallback.selectedTimeMeta;
   const restoredConstraints = {
     ...profileConstraints,
     ...(draft.constraints ?? {}),
@@ -341,12 +342,7 @@ function resolveCreateDraft(
     draft.recipeGenerated && draftStyle !== null && !timeChoice.stale;
   /* Redesign lug 2026: niente parcheggio — il result si ripristina solo se
      l'utente era LÌ (continuità di reload); chi è uscito è stato avvisato. */
-  const step: AppStep =
-    recipeGenerated && draft.step === "result"
-      ? "result"
-      : selectedStyle || selectedTimeSlot
-        ? "styles"
-        : "settings";
+  const step: AppStep = recipeGenerated && draft.step === "result" ? "result" : "styles";
 
   return {
     step,
@@ -382,11 +378,17 @@ function computeAutoOptSig(
    wizard, niente overlay: il flusso Crea È già l'onboarding. ═══ */
 const ONBOARDING_SEEN_KEY = "vulcan_onboarding_seen";
 
+/* D-038 (Matteo, 24/10/2026): niente wizard all'avvio (NN/g, «Mobile
+   Tutorials»: i tutorial iniziali non migliorano i risultati). Si chiede solo
+   il forno, il dato che cambia di più la ricetta, e solo finché non è scelto;
+   il resto della cucina si configura a richiesta dal profilo. */
 function WelcomeOnboardingCard({
   eyebrow,
   body,
   cta,
   profileCta,
+  dismissLabel,
+  onChooseOven,
   onDismiss,
   className = "",
 }: {
@@ -394,6 +396,8 @@ function WelcomeOnboardingCard({
   body: string;
   cta: string;
   profileCta: string;
+  dismissLabel: string;
+  onChooseOven: () => void;
   onDismiss: () => void;
   className?: string;
 }) {
@@ -412,19 +416,18 @@ function WelcomeOnboardingCard({
       <div className="home-onboarding__actions">
         <button
           type="button"
-          onClick={onDismiss}
+          onClick={onChooseOven}
           className="home-onboarding__cta"
         >
           {cta}
           <ChevronRight size={13} />
         </button>
+        <button type="button" onClick={onDismiss} className="home-onboarding__dismiss">
+          {dismissLabel}
+        </button>
         <Link to="/profile" onClick={onDismiss} className="home-onboarding__link">
           {profileCta}
         </Link>
-      </div>
-      <div className="home-onboarding__guide" aria-hidden="true">
-        <span className="home-onboarding__guide-line" />
-        <ArrowDown size={14} strokeWidth={1.5} />
       </div>
     </motion.div>
   );
@@ -488,6 +491,8 @@ export function HomePage() {
      o avanzando nel flusso (chi ha già generato una ricetta non ne ha bisogno). */
   const [showOnboarding, setShowOnboarding] = useState(() => {
     try {
+      // D-038: chi ha già scelto il forno non ha niente da rispondere.
+      if (localStorage.getItem("vulcan_oven_pref")) return false;
       return localStorage.getItem(ONBOARDING_SEEN_KEY) !== "true";
     } catch {
       return false;
@@ -496,7 +501,7 @@ export function HomePage() {
   const dismissOnboarding = useCallback(() => {
     setShowOnboarding(false);
     // U-10 (F12): la card sparisce col focus dentro: lo si porta al passo.
-    requestAnimationFrame(() => focusStep("settings"));
+    requestAnimationFrame(() => focusStep("styles"));
     try {
       localStorage.setItem(ONBOARDING_SEEN_KEY, "true");
     } catch {
@@ -504,26 +509,9 @@ export function HomePage() {
     }
   }, []);
   useEffect(() => {
-    if (showOnboarding && currentStep !== "settings") dismissOnboarding();
+    if (showOnboarding && currentStep === "result") dismissOnboarding();
   }, [showOnboarding, currentStep, dismissOnboarding]);
 
-  /* Badge beta — controllabile da Dev Tools senza reload */
-  const [showBeta, setShowBeta] = useState(() => {
-    try {
-      return localStorage.getItem("vulcan_show_beta") !== "false";
-    } catch {
-      return true;
-    }
-  });
-  useEffect(() => {
-    const handler = () => {
-      try {
-        setShowBeta(localStorage.getItem("vulcan_show_beta") !== "false");
-      } catch { /* */ }
-    };
-    window.addEventListener("vulcan_beta_toggle", handler);
-    return () => window.removeEventListener("vulcan_beta_toggle", handler);
-  }, []);
   /* Fix collisione (redesign lug 2026): quando c'è una pizzata attiva il
      widget flottante occupa la fascia alta — pill Riprendi e onboarding
      si abbassano per non finirgli sotto. */
@@ -552,18 +540,6 @@ export function HomePage() {
   /* ═══ Back navigation (redesign lug 2026): niente parcheggio — se la
      ricetta è modificata e non salvata, handleBackToStyles (più sotto,
      dopo il calcolo di isDirty) avvisa prima di buttarla. ═══ */
-  const handleBackToSettings = useCallback(() => {
-    removeCreateDraft();
-    setSelectedStyle(null);
-    setSelectedTimeSlot(null);
-    setSelectedTimeMeta(null);
-    setStyleSettingsPanel(null);
-    window.scrollTo({
-      top: 0,
-      behavior: "instant" as ScrollBehavior,
-    });
-    setCurrentStep("settings");
-  }, []);
 
   const proceedBackToStyles = useCallback(() => {
     setSelectedStyle(null);
@@ -1049,11 +1025,6 @@ export function HomePage() {
     }
   }, [feedbackCorrection, selectedStyle, setCustomHydration, setCustomFermentHours, setCustomSalt]);
 
-  /* Scroll-driven title fade */
-  const { scrollY } = useScroll();
-  const titleOpacity = useTransform(scrollY, [0, 160], [1, 0]);
-  const titleY = useTransform(scrollY, [0, 160], [0, -14]);
-  const heroMotionStyle = { opacity: titleOpacity, y: titleY };
 
   /* Scroll-to-top on step change */
   useEffect(() => {
@@ -1081,13 +1052,6 @@ export function HomePage() {
         ? 0.5
         : 0.3;
 
-  /* ═══ DoughBlob energy — maps step state to mascot reactivity ═══ */
-  const doughEnergy =
-    currentStep === "result"
-      ? (recipe?.scores.composite ?? 60)
-      : currentStep === "styles"
-        ? 55
-        : 25;
 
   /* ═══ VPL-008: Focus management on step transitions ═══ */
   const resultHeadingRef = useRef<HTMLElement | null>(
@@ -1283,125 +1247,6 @@ export function HomePage() {
 
       {/* ═══ CONTENT ═══ */}
       {/* ─── STEP 1 — SETTINGS: Hero + UserNeeds ─── */}
-        {currentStep === "settings" && (
-          <motion.main
-            key="settings"
-            id="main-content"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -18 }}
-            transition={motionSpring.stepEnter}
-            className="home-step home-step--settings"
-          >
-            <div className="home-step__frame">
-              <div className="home-step__container">
-                {showOnboarding && (
-                  <WelcomeOnboardingCard
-                    eyebrow={cms.hero.onboardingEyebrow ?? "Prima volta qui?"}
-                    body={
-                      cms.hero.onboardingBody ??
-                      uiMessage("pages.home.onboardingBody")
-                    }
-                    cta={cms.hero.onboardingCta ?? "Capito, si parte"}
-                    profileCta={cms.hero.onboardingProfileCta ?? "Salva forno e livello nel profilo"}
-                    onDismiss={dismissOnboarding}
-                    className={topPillOffsetClass}
-                  />
-                )}
-                <UserNeeds
-                  constraints={constraints}
-                  onConstraintsChange={setConstraints}
-                  selectedTimeSlot={selectedTimeSlot}
-                  onTimeSlotChange={handleTimeSlotChange}
-                  customTimeSlot={customTimeSlot}
-                  hero={
-                    <motion.div
-                      className="home-hero"
-                      style={heroMotionStyle}
-                    >
-                      {/* VulcanHero — harmonized blob + mark composition */}
-                      <div className="home-hero__mark">
-                        {/* Radiant warmth — large soft glow irradiated outward */}
-                        <motion.div
-                          aria-hidden="true"
-                          className="home-hero__glow home-hero__glow--primary"
-                          style={{
-                            ["--home-glow-opacity" as any]: prefersReducedMotion
-                              ? 0.15
-                              : undefined,
-                            ["--home-glow-will-change" as any]: prefersReducedMotion
-                              ? "auto"
-                              : "transform, opacity",
-                          }}
-                          animate={
-                            prefersReducedMotion
-                              ? {}
-                              : {
-                                  scale: [1, 1.06],
-                                  opacity: [0.12, 0.18],
-                                }
-                          }
-                          transition={
-                            prefersReducedMotion
-                              ? {}
-                              : decorativeMotion.heroGlowPrimary
-                          }
-                        />
-                        {/* Secondary warmth ring — wider, subtler */}
-                        <motion.div
-                          aria-hidden="true"
-                          className="home-hero__glow home-hero__glow--secondary"
-                          style={{
-                            ["--home-glow-opacity" as any]: prefersReducedMotion
-                              ? 0.08
-                              : undefined,
-                            ["--home-glow-will-change" as any]: prefersReducedMotion
-                              ? "auto"
-                              : "transform, opacity",
-                          }}
-                          animate={
-                            prefersReducedMotion
-                              ? {}
-                              : {
-                                  scale: [1, 1.04],
-                                  opacity: [0.06, 0.1],
-                                }
-                          }
-                          transition={
-                            prefersReducedMotion
-                              ? {}
-                              : decorativeMotion.heroGlowSecondary
-                          }
-                        />
-                        <VulcanHero
-                          size={160}
-                          energy={doughEnergy}
-                          blobVariant="forge"
-                          logoVariant="naturale"
-                          markRatio={0.32}
-                        />
-                      </div>
-                      {/* R8: wordmark — il nome del brand accanto al logo */}
-                      <span className="home-hero__wordmark">
-                        {BRAND.name}
-                        {showBeta && (
-                          <span className="home-hero__beta-badge">{uiMessage("pages.home.betaBadge")}</span>
-                        )}
-                      </span>
-                      <Heading level="page">
-                        {cms.hero.title_line1}{" "}
-                        <span className="page-title-accent">
-                          {cms.hero.title_line2}
-                        </span>
-                      </Heading>
-                    </motion.div>
-                  }
-                />
-              </div>
-            </div>
-          </motion.main>
-        )}
-
         {/* ─── STEP 2 — STYLES: Choose your style ─── */}
         {currentStep === "styles" && (
           <motion.main
@@ -1415,21 +1260,25 @@ export function HomePage() {
           >
             <div className="home-step__container home-step__container--wide">
               <div className="home-step__inner">
+                {showOnboarding && (
+                  <WelcomeOnboardingCard
+                    eyebrow={cms.hero.onboardingEyebrow ?? ""}
+                    body={tpl(cms.hero.onboardingBody ?? "", {
+                      oven: cms.ovenPresets[constraints.oven_type]?.name ?? constraints.oven_type,
+                      temp: createFormatter(cms.ui, bcp47).celsius(constraints.oven_max_temp_c),
+                    })}
+                    cta={cms.hero.onboardingCta ?? ""}
+                    profileCta={cms.hero.onboardingProfileCta ?? ""}
+                    dismissLabel={cms.hero.onboardingDismiss ?? ""}
+                    onChooseOven={() => {
+                      dismissOnboarding();
+                      setStyleSettingsPanel("cucina");
+                    }}
+                    onDismiss={dismissOnboarding}
+                    className={topPillOffsetClass}
+                  />
+                )}
                 <div className="home-step__head">
-                  <IconButton
-                    as={motion.button}
-                    onClick={handleBackToSettings}
-                    size="md"
-                    variant="ghost"
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={motionSpring.responsiveEnter}
-                    className="home-step__back"
-                    aria-label={cms.configurator.backLabel}
-                    title={cms.configurator.backLabel}
-                  >
-                    <ChevronLeft size={20} />
-                  </IconButton>
                   <div className="home-step__needs">
                     <UserNeeds
                       constraints={constraints}

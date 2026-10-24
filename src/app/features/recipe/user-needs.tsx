@@ -33,6 +33,7 @@ import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import {
 DEFAULT_KITCHEN_TEMP,
 generateTimeSlots,
+suggestedTimeSlot,
 NO_PREFERENCE_SLOT,
 outdoorToKitchenTemp,
 OVEN_PRESETS,
@@ -214,18 +215,7 @@ function savePantry(flours: string[], yeasts: string[]) {
 
 /* suggested slot = the dynamic slot closest to the 24h fermentation sweet spot */
 function getSuggestedSlot(): string {
-  const slots = generateTimeSlots();
-  if (slots.length === 0) return "tomorrow_lunch";
-  let bestSlot = slots[0];
-  let minDiff = Math.abs(slots[0].hours - 24);
-  for (let i = 1; i < slots.length; i++) {
-    const diff = Math.abs(slots[i].hours - 24);
-    if (diff < minDiff) {
-      minDiff = diff;
-      bestSlot = slots[i];
-    }
-  }
-  return bestSlot.id;
+  return suggestedTimeSlot()?.id ?? "tomorrow_lunch";
 }
 
 /* ═══ VPL-003: Geolocation + Open-Meteo weather API ═══

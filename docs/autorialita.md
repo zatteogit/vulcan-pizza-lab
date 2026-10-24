@@ -72,6 +72,9 @@ firmato da un agente, «nessun segno» se non c'è traccia (non prova l'assenza)
 | D-033 | 2026-10-24 | Contenuti | Confermati i predefiniti: mortadella per la baciata, salmone di Spago per la California, cheese pizza per il greek pan | patate e porchetta; BBQ chicken | risposta di Matteo nella sessione dell'agente del 24/10/2026 | Matteo | come D-032 |
 | D-034 | 2026-10-24 | Prestazioni | I video di cottura sono un esperimento: restano, il più leggeri possibile (P-5c) | toglierli; tenerli com'erano | risposta di Matteo nella sessione dell'agente del 24/10/2026 | Matteo | come D-032 |
 | D-035 | 2026-10-24 | UX | U-3: Matteo chiede una proposta basata su uno studio UX per i campi «avanzati» di Personalizza | — | risposta di Matteo nella sessione dell'agente del 24/10/2026 | Matteo (delega la proposta) | proposta AI da confermare |
+| D-036 | 2026-10-24 | UX | Niente passo iniziale «Quando la vuoi»: si entra sugli stili col momento consigliato (più vicino alle 24 h) in un chip modificabile | nessuna preferenza di tempo | proposta di Matteo, dettaglio a scelta multipla; risposta di Matteo nella sessione dell'agente del 24/10/2026 | Matteo | proposta umana, dettaglio AI |
+| D-037 | 2026-10-24 | UX | Scopri diventa la prima tab e la pagina d'ingresso; Crea la seconda, con reindirizzamento dei link | Scopri solo la prima volta; solo l'ordine dei tab | come D-036 | Matteo | come D-036 |
+| D-038 | 2026-10-24 | UX | First time experience contestuale: niente wizard all'avvio; in Crea un avviso chiede solo il forno finché non è scelto; la cucina completa si configura a richiesta dal profilo (NN/g, «Mobile Tutorials») | wizard breve saltabile all'avvio; solo scheda di benvenuto | risposta di Matteo nella sessione dell'agente del 24/10/2026 | Matteo | proposta AI, decisione umana |
 
 D-008 e D-009 arrivano dal brief del lavoro come decisioni del proprietario;
 nel repository non c'è ancora un riscontro scritto, quindi restano da

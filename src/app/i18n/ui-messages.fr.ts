@@ -306,7 +306,6 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "pages.explore.optimizable": "Optimisable : {0}% → {1}% avec votre configuration",
   "pages.explore.recipeBy": "Selon {0}",
   "pages.home.applyCorrections": "Appliquer les corrections",
-  "pages.home.betaBadge": "bêta",
   "pages.home.motto": "Make pizza, not war",
   "pages.learn.contextByLevel": "Le parcours sur mesure pour vous · Niveau {0}",
   "pages.learn.contextByStyle": "{0} · {1}",
@@ -354,6 +353,5 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "pages.recipe.applyCorrections": "Appliquer les corrections",
   "pages.recipe.defaultTopping": "Garniture",
   "pages.recipe.ingredientsUpdated": "{0} : ingrédients mis à jour",
-  "pages.home.onboardingBody": "{brand} conçoit la recette sur mesure pour votre four et votre temps — et vous dit, avec un score honnête, à quel point elle se rapproche de l'originale.",
   "shared.unsavedChanges": "Modifications non enregistrées"
 };

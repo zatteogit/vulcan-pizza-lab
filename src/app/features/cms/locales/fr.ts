@@ -216,9 +216,10 @@ export const FR_LOCALE: CmsContent = {
     subtitle:
       "Dites-nous ce que vous avez et nous vous guiderons vers le style id\u00E9al.",
     onboardingEyebrow: "Premi\u00E8re fois ici ?",
-    onboardingBody: "{brand} con\u00E7oit la recette sur mesure pour votre four et votre emploi du temps \u2014 et vous dit, avec un score honn\u00EAte, \u00E0 quel point elle s'approche de l'original. R\u00E9pondez aux questions ci-dessous, et en route.",
-    onboardingCta: "Compris, c'est parti",
-    onboardingProfileCta: "Enregistrer four et niveau dans le profil",
+    onboardingBody: "Les suggestions partent de ce four : {oven}, {temp}. Si le vôtre est différent, choisissez-le : c'est ce qui change le plus la recette.",
+    onboardingCta: "Choisir votre four",
+    onboardingProfileCta: "Configurer toute la cuisine",
+    onboardingDismiss: "\u00C7a me va",
   },
   steps: {
     context: {
