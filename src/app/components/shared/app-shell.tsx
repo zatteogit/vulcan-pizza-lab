@@ -12,7 +12,7 @@ User,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
 import { Suspense,lazy,useCallback,useEffect,useRef,useState,type KeyboardEvent as ReactKeyboardEvent,type MutableRefObject,type RefObject } from "react";
-import { Link,Outlet,useLocation,useNavigate } from "react-router";
+import { Link,Outlet,useLocation,useNavigate,useNavigationType } from "react-router";
 import { ActiveCookWidget } from "../../features/cooking/active-cook-widget";
 import { CmsProvider,useCms } from "../../features/cms/cms-context";
 import { CookSessionProvider,useCookSession } from "../../features/cooking/cook-session";
@@ -762,6 +762,14 @@ export function AppShell() {
     window.addEventListener("vulcan:open-search", openSearch);
     return () => window.removeEventListener("vulcan:open-search", openSearch);
   }, [openSearch]);
+
+  /* Audit n. 35: una pagina nuova parte dall'alto. Indietro/avanti (POP)
+     lasciano lo scroll al browser; un'ancora (#…) la gestisce la pagina. */
+  const navigationType = useNavigationType();
+  useEffect(() => {
+    if (navigationType === "POP" || location.hash) return;
+    window.scrollTo(0, 0);
+  }, [location.pathname, location.hash, navigationType]);
 
   /* All'apertura: risultati dall'alto e focus nel campo (dock o testata). */
   useEffect(() => {

@@ -28,7 +28,7 @@ import {
   Oven as OvenIllustration,
   Slice,
 } from "../features/cooking/step-illustrations";
-import { loadSkill } from "../hooks/use-profile-defaults";
+import { hasChosenSkill, loadSkill } from "../hooks/use-profile-defaults";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 
@@ -94,7 +94,9 @@ export function LearnPage() {
   const skillName = SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
   const pathContextLabel = activeStyle
     ? uiMessage("pages.learn.contextByStyle", [pg.learnPathLabel, activeStyle.name])
-    : uiMessage("pages.learn.contextByLevel", [skillName]);
+    : hasChosenSkill()
+      ? uiMessage("pages.learn.contextByLevel", [skillName])
+      : uiMessage("pages.learn.contextNoLevel");
   const term = getLocalizedTerm(termOfTheDay(), cms);
 
   const SECTIONS = [

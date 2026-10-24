@@ -27,6 +27,7 @@ import { TiltCard } from "./tilt-card";
 
 import { STYLE_PHOTOS } from "../../data/style-photos";
 import { getVersions } from "../../data/style-versions";
+import { TOPPING_CONCEPTS, TOPPING_LIBRARY } from "../../data/topping-library";
 import { uiMessage } from "../../i18n/ui-messages";
 
 interface RecommendedStylesProps {
@@ -96,6 +97,14 @@ export const MATCH_DIMENSION_ICON: Record<MatchDimension, typeof Clock> = {
 };
 
 /* Ricerca stili accent-insensitive: minuscole + rimozione diacritici. */
+/** Nome del condimento di partenza (concetto, es. «Margherita»), anche
+ *  quando lo stile punta a una variante («margherita_napoletana_avpn»). */
+function defaultToppingName(ref: string | undefined): string {
+  if (!ref) return "";
+  const conceptId = TOPPING_CONCEPTS[ref] ? ref : TOPPING_LIBRARY[ref]?.concept_ref;
+  return (conceptId && TOPPING_CONCEPTS[conceptId]?.name) || "";
+}
+
 function normalizeQuery(s: string): string {
   return s.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
@@ -241,6 +250,9 @@ export function RecommendedStyles({
             r.style.origin?.city ?? "",
             r.style.id.replace(/_/g, " "),
             ...getVersions(r.style.id).map((version) => version.label),
+            // Audit n. 35: «margherita» è un condimento; trova gli stili che
+            // la propongono come condimento di partenza.
+            defaultToppingName(r.style.default_topping_ref),
           ].some((field) => normalizeQuery(field).includes(query)),
         );
       }
