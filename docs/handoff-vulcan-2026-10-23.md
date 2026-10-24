@@ -208,8 +208,8 @@ Emerse nel lavoro, da pianificare in fase 1:
   (video, serve decisione) e P-5d.
 - ~~**U-10 (P1)**~~ chiuso il 24/10: audit WCAG 2.1 AA del percorso principale
   (`docs/accessibilita-audit-2026-10.md`, 30 voci) e correzioni di tutte le P1,
-  P2 e P3 tranne F28 (pavimento tipografico a 12 px), che cambia la resa di
-  molte schermate ed è da decidere. axe sui 32 scenari: da 32 violazioni a 0.
+  P2 e P3; F28 con D-019 (testo minimo 12 px, 11 px solo maiuscolo, controllo
+  `check:type-floor` in verify). axe sui 32 scenari: da 32 violazioni a 0.
   Non è stato fatto un test con screen reader su un dispositivo reale.
 - ~~**I18N-3 (P1)**~~ chiuso il 24/10: i bundle CMS di es/fr/pt non avevano 310
   testi e quelli di de/ja 193 (modalità cottura, durate, «domani», glossario

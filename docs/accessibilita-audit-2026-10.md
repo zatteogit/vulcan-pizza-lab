@@ -15,7 +15,7 @@
 | F08–F20 (P2) | corrette | commit «correzioni P2» |
 | F21 | corretta per i bersagli sotto 24 px misurati a 390 px; restano sotto 44 px alcune azioni primarie (livello AAA) | `theme.css`, blocco «U-10 (F21)» |
 | F22–F27, F29 | corrette | commit P3 |
-| F28 (pavimento tipografico a 12 px) | **da decidere**: cambia la resa di molte schermate | vedi handoff, §6 |
+| F28 (pavimento tipografico a 12 px) | corretta con la decisione D-019: 12 px minimo, 11 px solo maiuscolo; controllo `npm run check:type-floor` | `theme.css`, token `--font-size-*` |
 | F30 | corretta | commit P2 |
 
 Verifica dopo le correzioni, con gli stessi script: axe-core sui 32 scenari
