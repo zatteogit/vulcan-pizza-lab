@@ -24,8 +24,8 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 | Chunk JS più grande (gzip) | 75 kB (React) | 100 kB |
 | JS totale emesso (gzip) | 769 kB in 65 chunk (642 prima dei condimenti tradotti) | 900 kB |
 | CSS (gzip) | 61 kB (443 kB non compresso) | 75 kB |
-| Video più grande | 14,6 MB (`napoletana_stg.mp4`) | 16 MB |
-| Video totali | 48,6 MB (6 file) | 52 MB |
+| Video più grande | 0,65 MB (`napoletana_stg.mp4`; era 14,6) | 1 MB |
+| Video totali | 2,6 MB (6 file; erano 48,6) | 3 MB |
 | Immagini totali | 38,5 MB (254 file WebP) | 42 MB |
 
 Il controllo gira in CI dopo la build (`.github/workflows/verify.yml`). I limiti
@@ -52,7 +52,7 @@ della lingua attiva.
 |---|---|---|---|
 | P-5a | Caricare motore e libreria condimenti nella home solo dopo la scelta dell'orario (o in idle) | −420 kB di JS sul primo caricamento; LCP della home vicino a quello di Scopri | Medio: `HomePage` usa `useRecipeState` al primo render, va separato lo step «quando» |
 | P-5b | Fatto in parte: `<link>` con `preconnect` in `index.html`. Resta: font in locale con `preload` del peso del titolo, sottoinsieme latino | −1 round trip bloccante | Basso |
-| P-5c | Video: ricodifica 720p H.264 (CRF ~28, senza audio) | da 48,6 MB a circa 10–15 MB; meno dati su mobile | Basso, ma serve ffmpeg con H.264 (non disponibile in questo ambiente) |
+| ~~P-5c~~ | Fatto il 24/10 (D-034): 480p, 24 fps, 8 s in loop, H.264 CRF 28, senza audio, faststart; niente video con «riduci movimento» o risparmio dati | da 48,6 MB a 2,6 MB (−95%) | — |
 | P-5d | Stili per pagina: spostare nel chunk della pagina gli stili di profilo, CMS e design system | −60/80 kB di CSS non compresso sul primo caricamento | Medio |
 
 ## Decisioni da prendere (Matteo)

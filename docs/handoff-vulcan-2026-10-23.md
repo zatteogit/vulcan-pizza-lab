@@ -214,6 +214,8 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- ~~**P-5c**~~ chiuso il 24/10 (D-034): video da 48,6 a 2,6 MB (480p, 8 s,
+  senza audio); non partono con «riduci movimento» o col risparmio dati.
 - **D-037** (24/10): Scopri è la prima tab e la pagina d'ingresso (`/` porta a
   `/explore`); Crea è su `/crea`. Il profilo chiudendosi torna da dove si era.
 - **D-036, D-038** (24/10): Crea parte dagli stili col momento consigliato in
