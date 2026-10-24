@@ -1500,6 +1500,15 @@ function getDefaultShapeArea(shape: ShapeParameters): number {
   return Math.PI * (d / 2) * (d / 2);
 }
 
+/** Audit n. 11 (B-15): lo spessore reale, peso del panetto sull'area della
+ *  forma (g/cm²). `shape.thickness_factor` è solo un indice relativo che il
+ *  motore usa come rapporto: mostrarlo come g/cm² dava 0,35 dove il peso
+ *  diviso l'area fa 0,51. */
+export function doughThicknessGPerCm2(style: PizzaStyle, weightG = style.shape.dough_weight_g): number {
+  const area = getDefaultShapeArea(style.shape);
+  return area > 0 ? Math.round((weightG / area) * 100) / 100 : 0;
+}
+
 /** Recalculate dough weight from custom pan dimensions + thickness */
 function calcDoughWeight(
   style: PizzaStyle,
@@ -1515,6 +1524,11 @@ function calcDoughWeight(
     const l = panConfig.panLength ?? style.shape.length_cm ?? 30;
     const w = panConfig.panWidth ?? style.shape.width_cm ?? 20;
     customArea = l * w;
+  } else if (style.shape.shape_type === "oval" && panConfig.panDiameter == null) {
+    /* Audit n. 11 (B-15): le forme ovali (pala, pinsa) non hanno un diametro;
+     * senza una teglia tonda scelta valeva il tondo da 30 cm di ripiego e la
+     * Pala passava da 320 a 360 g. Resta la forma dello stile. */
+    customArea = defaultArea;
   } else {
     const d = panConfig.panDiameter ?? style.shape.diameter_cm ?? 30;
     customArea = Math.PI * (d / 2) * (d / 2);

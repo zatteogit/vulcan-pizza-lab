@@ -266,3 +266,25 @@ describe("stili in teglia: stesura prima dell'appretto (audit totale n. 7)", () 
     expect(ids.indexOf("proof")).toBeLessThan(ids.indexOf("shape"));
   });
 });
+
+describe("teglia di default delle forme ovali (audit totale n. 11, B-15)", () => {
+  for (const id of ["pala_romana", "pinsa_romana"]) {
+    it(`${id}: la teglia dello stile non cambia il peso`, () => {
+      const style = STYLES_DB[id];
+      const constraints = makeConstraints({
+        oven_type: style.baking.oven_type_required,
+        oven_max_temp_c: style.baking.temp_c_ideal,
+      });
+      const without = generateRecipe(style, constraints);
+      const withDefaultPan = generateRecipe(style, constraints, {
+        panConfig: {
+          panShape: "round",
+          panLength: style.shape.length_cm,
+          panWidth: style.shape.width_cm,
+          thickness: style.shape.thickness_factor,
+        },
+      });
+      expect(withDefaultPan.ball_weight_g).toBe(without.ball_weight_g);
+    });
+  }
+});

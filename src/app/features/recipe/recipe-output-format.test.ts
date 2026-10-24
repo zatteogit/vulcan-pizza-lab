@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defaultMealStart } from "./recipe-output-format";
+import { defaultMealStart, flourStrength } from "./recipe-output-format";
 describe("defaultMealStart (audit totale n. 2)", () => {
   it("ancora la fine a pranzo o cena, mai di notte", () => {
     const now = new Date(2026, 9, 24, 14, 30);
@@ -10,5 +10,14 @@ describe("defaultMealStart (audit totale n. 2)", () => {
       expect(sh >= 7 && sh < 22).toBe(true);
       expect(h === 12.5 || (h > 12.5 && h <= 12.75) || h === 20 || (h > 20 && h <= 20.25)).toBe(true);
     }
+  });
+});
+
+describe("flourStrength (audit totale n. 11, B-24)", () => {
+  it("una sola scala: W 300 è forte ovunque", () => {
+    expect(flourStrength(180)).toBe("weak");
+    expect(flourStrength(250)).toBe("medium");
+    expect(flourStrength(300)).toBe("strong");
+    expect(flourStrength(360)).toBe("veryStrong");
   });
 });

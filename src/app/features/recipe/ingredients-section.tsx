@@ -24,6 +24,7 @@ import {
 import { PreFermentCard } from "./pre-ferment-guide";
 import { GlossaryWLink, IngRow, NerdAuraBlock } from "./recipe-output-bits";
 import {
+  flourStrength,
   flourStrengthLabel,
   getServingUnitLabel,
   gramsApprox,
@@ -77,12 +78,12 @@ export function IngredientsSection({
   /* Nome del grasso nella lingua attiva (il motore dà un'etichetta italiana). */
   const fatType = recipe.style.dough.fat_type;
   const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
-  const flourUseLabel = (() => {
-    if (recipe.flour_w >= 330) return cms.ui.flourUseVeryStrong;
-    if (recipe.flour_w >= 280) return cms.ui.flourUseStrong;
-    if (recipe.flour_w >= 220) return cms.ui.flourUseMedium;
-    return cms.ui.flourUseWeak;
-  })();
+  const flourUseLabel = {
+    weak: cms.ui.flourUseWeak,
+    medium: cms.ui.flourUseMedium,
+    strong: cms.ui.flourUseStrong,
+    veryStrong: cms.ui.flourUseVeryStrong,
+  }[flourStrength(recipe.flour_w)];
   return (
     <>
       {/* ── Ingredients + panetti stepper ── */}

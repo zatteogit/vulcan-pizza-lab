@@ -53,7 +53,7 @@ const OVEN_LABELS: Record<string, string> = {
   wood: "Forno a legna",
 };
 
-function loadProfileDefaults(): ProfileDefaults {
+export function loadProfileDefaults(): ProfileDefaults {
   let ovenType: OvenType = "home";
   let ovenTemp = 250;
   let skillLevel: SkillLevel = 2;
@@ -130,6 +130,62 @@ function loadProfileDefaults(): ProfileDefaults {
   const summaryLabel = `${ovenLabel} ${ovenTemp}°C · ${skillLabel}`;
 
   return { constraints, isProfileComplete, pizzaNerdEnabled, summaryLabel };
+}
+
+/* ═══ Audit n. 11 (C-03): il profilo vince sulla bozza per ciò che non si
+ * sceglie in Crea ═══
+ * La bozza di Crea salva tutti i vincoli. Riaprendola dopo aver cambiato il
+ * profilo (es. impastatrice a spirale), i vecchi valori coprivano i nuovi e il
+ * procedimento diceva ancora «impastare a mano». Attrezzatura, livello,
+ * dispensa, dieta e correzione del lievito si impostano solo nel profilo,
+ * quindi si rileggono sempre da lì; forno, ore e panetti restano della bozza. */
+export const PROFILE_OWNED_CONSTRAINTS = [
+  "skill_level",
+  "has_mixer",
+  "has_pizza_stone",
+  "has_pizza_steel",
+  "has_baking_pan",
+  "mixer_type",
+  "surfaces",
+  "oven_heat_profile",
+  "dietary_filters",
+  "pantry_flours",
+  "pantry_yeasts",
+  "yeast_speed_factor",
+] as const satisfies readonly (keyof UserConstraints)[];
+
+const EQUIPMENT_KEYS = [
+  "has_mixer",
+  "has_pizza_stone",
+  "has_pizza_steel",
+  "has_baking_pan",
+  "mixer_type",
+  "surfaces",
+  "oven_heat_profile",
+] as const satisfies readonly (keyof UserConstraints)[];
+
+/** Solo l'attrezzatura del profilo (impastatrice, superfici, resistenze). */
+export function profileEquipment(profile: UserConstraints): Partial<UserConstraints> {
+  const equipment: Partial<UserConstraints> = {};
+  for (const key of EQUIPMENT_KEYS) {
+    if (key in profile) (equipment as Record<string, unknown>)[key] = profile[key];
+  }
+  return equipment;
+}
+
+export function mergeDraftConstraints(
+  profile: UserConstraints,
+  draft: Partial<UserConstraints> | undefined,
+): UserConstraints {
+  const merged: UserConstraints = { ...profile, ...(draft ?? {}) };
+  for (const key of PROFILE_OWNED_CONSTRAINTS) {
+    if (key in profile) {
+      (merged as unknown as Record<string, unknown>)[key] = profile[key];
+    } else {
+      delete (merged as unknown as Record<string, unknown>)[key];
+    }
+  }
+  return merged;
 }
 
 export function useProfileDefaults(): ProfileDefaults {

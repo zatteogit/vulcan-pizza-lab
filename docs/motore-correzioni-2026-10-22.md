@@ -435,3 +435,26 @@ in teglia e l'appretto si fa lì («Appretto in teglia»); prima la stesura veni
 dopo 9–14 h di appretto, subito prima di infornare. Teglia e pala romana, al
 metro e tonde restano com'erano (appretto a panetti, stesura prima della
 cottura). Cambia solo l'ordine: durate e totali invariati (golden identico).
+
+## Audit totale n. 11 · Peso delle forme ovali con la teglia di default (24/10/2026)
+
+La pagina ricetta e Crea passano sempre una teglia al motore. Per le forme
+ovali (pala e pinsa) la forma di default è «tonda» ma senza diametro, quindi
+`calcDoughWeight` usava il tondo di ripiego da 30 cm (707 cm²) invece
+dell'ovale dello stile: il peso cresceva senza che l'utente toccasse nulla.
+Ora, senza un diametro scelto, l'ovale resta l'area dello stile.
+
+| Stile | Area ovale | Panetto prima → dopo |
+|---|---|---|
+| pala romana | 40 × 20 cm, 628 cm² | 360 → 320 g |
+| pinsa romana | 34 × 21 cm, 561 cm² | 302 → 240 g |
+
+Golden invariato (i casi golden non passano una teglia). Test in
+`pizza-engine.test.ts`.
+
+Nello stesso intervento: la scheda tecnica di uno stile leggeva peso, sale,
+forno e tempi di cottura da `parametric-databases.ts`, diversi dal motore in
+molti stili (Pala 350 g, Pinsa forno 380 °C contro 300 °C, Recco 8–10 min
+contro 4–8). I numeri sono stati allineati al motore, con un test che li
+tiene uguali; lo spessore in g/cm² mostrato è ora peso diviso area (Pala
+0,51), non l'indice relativo `thickness_factor` (0,35).

@@ -2,7 +2,7 @@ import { Award,Check,ChefHat,Clock,CookingPot,Flame,Search,SlidersHorizontal,Spa
 import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
 import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
 import { useEffect,useMemo,useRef,useState } from "react";
-import { useCms } from "../cms/cms-context";
+import { useCms, type CmsContent } from "../cms/cms-context";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import { FilterChip, Surface } from "../../components/ds/index";
 import { getStyleTags } from "../../domain/deviation-tags";
@@ -585,16 +585,7 @@ function StyleCard({
   /* VPL-C3 (rev): badge "difficoltà · impegno" — info che DIFFERENZIA le tile
    * (a parità di momento il match è uguale per tutte). La motivazione di match
    * completa vive nel pannello di dettaglio. */
-  const skillKey = getStyleTags(style.id)?.skill_required ??
-    (style.suitable_for_beginner ? "beginner" : "intermediate");
-  const difficultyLabel =
-    skillKey === "beginner"
-      ? cms.filters.skillBeginner
-      : skillKey === "intermediate"
-        ? cms.filters.skillIntermediate
-        : skillKey === "advanced"
-          ? cms.filters.skillAdvanced
-          : cms.filters.skillExpert;
+  const difficultyLabel = styleDifficultyLabel(style, cms);
   const [fMin, fMax] = style.dough.fermentation_hours_range;
   const timeLabel =
     fMax <= 8 ? cms.filters.timeFast : `${Math.round(fMin)}–${Math.round(fMax)}h`;
@@ -766,4 +757,17 @@ function FacetRow({
       </div>
     </div>
   );
+}
+
+/** Audit n. 11 (B-16): una sola difficoltà per stile, uguale su card e scheda. */
+export function styleDifficultyLabel(style: PizzaStyle, cms: CmsContent): string {
+  const skillKey = getStyleTags(style.id)?.skill_required ??
+    (style.suitable_for_beginner ? "beginner" : "intermediate");
+  return skillKey === "beginner"
+    ? cms.filters.skillBeginner
+    : skillKey === "intermediate"
+      ? cms.filters.skillIntermediate
+      : skillKey === "advanced"
+        ? cms.filters.skillAdvanced
+        : cms.filters.skillExpert;
 }
