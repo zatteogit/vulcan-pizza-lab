@@ -10727,6 +10727,13 @@
     border-inline-start: var(--space-1) solid var(--text-warning);
   }
 
+  /* Dentro il blocco compatibilità: niente riquadro, il tono lo dà il blocco. */
+  .recipe-verdict--embedded {
+    margin: var(--space-2) 0 var(--space-1);
+    padding: 0;
+    border-inline-start: none;
+  }
+
   .recipe-verdict__header {
     display: flex;
     align-items: center;

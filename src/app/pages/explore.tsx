@@ -3,7 +3,7 @@
    Layout editoriale e filtri flessibili (Spotify/Pinterest style).
    Tab: Stili — /explore */
 
-import { ArrowRight, Heart, HeartCrack, HeartHandshake, HeartOff, HeartPulse } from "lucide-react";
+import { ArrowRight, Gauge } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
@@ -14,8 +14,6 @@ import { IMAGE_SIZES } from "../components/media/responsive-images";
 import { FireGlow } from "../features/cooking/fire-glow";
 import { getInterpretationById } from "../data/interpretation-library";
 import {
-generateRecipe,
-optimizeRecipe,
 PIZZA_FAMILIES,
 shortOrigin,
 STYLES_DB,
@@ -33,6 +31,7 @@ type SignatureRecipe,
 import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
+import { kitchenCompatibility, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 
@@ -92,19 +91,6 @@ function isFamilyFilter(value: string | null): value is FamilyId | "all" {
   return FAMILY_IDS.includes(value as FamilyId | "all");
 }
 
-function MatchHeartIcon({ score }: { score: number }) {
-  const Icon =
-    score >= 90
-      ? HeartHandshake
-      : score >= 75
-        ? Heart
-        : score >= 60
-          ? HeartPulse
-          : score >= 40
-            ? HeartCrack
-            : HeartOff;
-  return <Icon size={11} fill={score >= 60 ? "currentColor" : "none"} aria-hidden="true" className="explore-card__match-icon" />;
-}
 
 /* ── Componente Editoriale per la Ricetta in Primo Piano ── */
 function FeaturedRecipeCard({
@@ -691,13 +677,13 @@ function StyleCatalogCard({
   // così il 70-80% delle card resta pulito. (La scia fantasma a 32px era illeggibile.)
   const match = useMemo(() => {
     try {
-      const mc = generateRecipe(style, constraints).scores.composite;
-      const mo = optimizeRecipe(style, constraints).recipe.scores.composite;
-      return { mc, headroom: mo - mc >= 8 ? mo - mc : 0 };
+      // D-041: stesso numero di Crea, della scheda e della ricetta aperta.
+      const { now, best } = kitchenCompatibility(style, constraints, scoreWeightsFromCms(cms));
+      return { mc: now, headroom: best - now >= 8 ? best - now : 0 };
     } catch {
       return null;
     }
-  }, [style, constraints]);
+  }, [style, constraints, cms]);
 
   return (
     <motion.article
@@ -743,19 +729,19 @@ function StyleCatalogCard({
               <div
                 className="explore-card__match-pill"
                 title={match.headroom > 0
-                  ? uiMessage("pages.explore.optimizable", [match.mc, match.mc + match.headroom])
-                  : uiMessage("pages.explore.match", [match.mc])}
+                  ? uiMessage("pages.explore.compatibilityOptimizable", [match.mc, match.mc + match.headroom])
+                  : uiMessage("pages.explore.compatibility", [match.mc])}
                 aria-label={match.headroom > 0
                   ? uiMessage("pages.explore.compatibilityOptimizable", [match.mc, match.mc + match.headroom])
                   : uiMessage("pages.explore.compatibility", [match.mc])}
               >
-                <MatchHeartIcon score={match.mc} />
-                <span className="explore-card__match-mc">{match.mc}%</span>
+                <Gauge size={11} aria-hidden="true" className="explore-card__match-icon" />
+                <span className="explore-card__match-mc">{match.mc}</span>
                 {match.headroom > 0 && (
                   <>
                     <span className="explore-card__match-arrow">→</span>
                     <span className="explore-card__match-headroom">
-                      {match.mc + match.headroom}%
+                      {match.mc + match.headroom}
                     </span>
                   </>
                 )}

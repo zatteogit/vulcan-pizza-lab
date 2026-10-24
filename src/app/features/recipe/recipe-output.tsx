@@ -656,12 +656,13 @@ export function RecipeOutput({
         </div>
       )}
 
-      {/* M-10: esito «non fattibile così», sopra il pager: vale per entrambe le schede. */}
-      <RecipeVerdictNotice
+      {/* M-10: esito «non fattibile così», sopra il pager: vale per entrambe le
+          schede. Con il blocco compatibilità (matchSlot) l'esito vive lì dentro. */}
+      {!matchSlot && <RecipeVerdictNotice
         recipe={recipe}
         constraints={constraints}
         mealDeadline={!!selectedTimeSlotId && selectedTimeSlotId !== "no_preference"}
-      />
+      />}
 
       {/* ═══ PAGER ORIZZONTALE (feedback giugno 2026) ═══
           Meno info per schermata, navigazione da app: Ricetta | Procedimento.

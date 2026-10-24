@@ -64,6 +64,7 @@ type RecipePrimaryTab,
 import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
 import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
+import { defaultPL, getCanonicalVersion } from "../features/recipe/kitchen-compatibility";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
 import { motionSpring } from "../components/ds/motion";
@@ -128,20 +129,6 @@ function readExploreBackTo(state: unknown): string {
   return "/explore";
 }
 
-function getCanonicalVersion(styleId: string): StyleVersion | null {
-  const versions = getVersions(styleId);
-  if (versions.length === 0) return null;
-
-  return versions.reduce((best, version) => {
-    if (version.skill_hint !== best.skill_hint) {
-      return version.skill_hint > best.skill_hint ? version : best;
-    }
-    return version.params.fermentation_hours > best.params.fermentation_hours
-      ? version
-      : best;
-  }, versions[0]);
-}
-
 function cmsMessage(cms: CmsContent, key: string, fallback: string): string {
   return cms.engineMessages?.[key] ?? fallback;
 }
@@ -155,17 +142,6 @@ function loadJson<T>(key: string): T | null {
     /* */
   }
   return null;
-}
-
-function defaultPL(style: PizzaStyle): number {
-  return (
-    Math.round(
-      ((style.dough.flour_pl_range[0] +
-        style.dough.flour_pl_range[1]) /
-        2) *
-        100,
-    ) / 100
-  );
 }
 
 /* Parse a numeric URL param with bounds check */
@@ -1298,6 +1274,8 @@ function RecipeContent({
               onSave={handleToggleSaveRecipe}
               saved={Boolean(savedEntry)}
               nerdMode={effectiveNerdMode}
+              verdictRecipe={recipe ?? undefined}
+              verdictConstraints={effectiveConstraints}
             />
             </aside>
             </div>

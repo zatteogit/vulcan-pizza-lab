@@ -11,8 +11,6 @@ import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import {
 PIZZA_FAMILIES,
 PizzaStyle,
-generateRecipe,
-optimizeRecipe,
 isFriedStyle,
 recommendStyles,
 shortOrigin,
@@ -21,11 +19,9 @@ StyleRecommendation,
 UserConstraints,
 type FamilyId,
 } from "../../domain/pizza-engine";
-import {
-  getInterpretationsForStyle,
-  type Interpretation,
-} from "../../data/interpretation-library";
+import { type Interpretation } from "../../data/interpretation-library";
 import { ScoreRing } from "./score-ring";
+import { kitchenCompatibility } from "./kitchen-compatibility";
 import { useStylesOverride } from "../../context/styles-override-context";
 import { TiltCard } from "./tilt-card";
 
@@ -48,12 +44,14 @@ interface RecommendedStylesProps {
  *  coi vincoli dell'utente. */
 type RecommendationWithVariant = StyleRecommendation & {
   bestInterpretation: Interpretation | null;
+  /** D-041: compatibilità con la tua cucina (originale, 0–100). */
+  kitchenNow: number;
 };
 
 function sortByVisibleMatch(items: RecommendationWithVariant[]): RecommendationWithVariant[] {
   return [...items].sort((a, b) => {
-    const aScore = a.optimizedComposite ?? a.compatibilityScore;
-    const bScore = b.optimizedComposite ?? b.compatibilityScore;
+    const aScore = a.kitchenNow;
+    const bScore = b.kitchenNow;
     return bScore - aScore;
   });
 }
@@ -177,47 +175,15 @@ export function RecommendedStyles({
           pantry: cms.recommendationWeights.pantry,
         },
       ).map((rec): RecommendationWithVariant => {
-        const baseComposite = optimizeRecipe(
-          rec.style,
-          constraints,
-          undefined,
-          undefined,
-          scoreWeights,
-        ).recipe.scores.composite;
-        /* Round 7 (nota Matteo): il match considera anche TUTTE le varianti
-           parametriche (firme/disciplinari) e propone la migliore. La
-           variante si valuta com'È — è un canone d'autore, non si ottimizza —
-           e il suo canone è il centro per l'autenticità (interpretationCenter,
-           come su recipe.tsx). Base preferita a parità (+0.5). */
-        let bestInterpretation: Interpretation | null = null;
-        let bestComposite = baseComposite;
-        for (const it of getInterpretationsForStyle(rec.style.id)) {
-          const o = it.parameter_overrides;
-          if (!o || Object.keys(o).length === 0) continue;
-          const composite = generateRecipe(rec.style, constraints, {
-            customHydration: o.hydration_pct,
-            customFlourW: o.flour_w,
-            customFlourPL: o.flour_pl,
-            customFermentationHours: o.fermentation_hours,
-            customFermentationTempC: o.fermentation_temp_c,
-            usePreFerment: o.use_pre_ferment,
-            scoreWeights,
-            interpretationCenter: {
-              hydration_pct: o.hydration_pct,
-              flour_w: o.flour_w,
-              flour_pl: o.flour_pl,
-              fermentation_hours: o.fermentation_hours,
-            },
-          }).scores.composite;
-          if (composite > bestComposite + 0.5) {
-            bestComposite = composite;
-            bestInterpretation = it;
-          }
-        }
+        /* D-041: lo stesso numero di Scopri, della scheda e della ricetta
+           aperta (originale sulla tua cucina); il meglio raggiungibile
+           (ottimizzata o versione d'autore) è il secondo valore. */
+        const compat = kitchenCompatibility(rec.style, constraints, scoreWeights);
         return {
           ...rec,
-          optimizedComposite: bestComposite,
-          bestInterpretation,
+          kitchenNow: compat.now,
+          optimizedComposite: compat.best,
+          bestInterpretation: compat.bestInterpretation,
         };
       }),
     [constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
@@ -611,10 +577,11 @@ function StyleCard({
   index: number;
 }) {
   const { cms } = useCms();
-  const { style, compatibilityScore, optimizedComposite } = rec;
+  const { style, kitchenNow, optimizedComposite } = rec;
   // Badge = punteggio della ricetta ottimizzata per i tuoi vincoli (ciò che
   // otterrai aprendo lo stile). Fallback alla compatibilità se non calcolato.
-  const displayScore = optimizedComposite ?? compatibilityScore;
+  const displayScore = kitchenNow;
+  const bestScore = Math.max(kitchenNow, Math.round(optimizedComposite ?? kitchenNow));
   /* VPL-C3 (rev): badge "difficoltà · impegno" — info che DIFFERENZIA le tile
    * (a parità di momento il match è uguale per tutte). La motivazione di match
    * completa vive nel pannello di dettaglio. */
@@ -701,13 +668,12 @@ function StyleCard({
             <div className="recommended-card__score">
               <ScoreRing
                 score={displayScore}
-                baseScore={compatibilityScore}
                 color={ringColor}
                 size={38}
                 label={
-                  compatibilityScore < displayScore
-                    ? uiMessage("pages.explore.compatibilityOptimizable", [Math.round(compatibilityScore), Math.round(displayScore)])
-                    : uiMessage("pages.explore.compatibility", [Math.round(displayScore)])
+                  displayScore < bestScore
+                    ? uiMessage("pages.explore.compatibilityOptimizable", [displayScore, bestScore])
+                    : uiMessage("pages.explore.compatibility", [displayScore])
                 }
               />
             </div>

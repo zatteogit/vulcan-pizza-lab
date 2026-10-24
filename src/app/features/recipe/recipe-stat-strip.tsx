@@ -62,7 +62,10 @@ export function RecipeStatStrip({
   /* Audit totale n. 6: la ricetta (anche l'originale) si calcola sul TUO
      forno; se resta sotto il minimo dello stile lo diciamo accanto al valore. */
   const ovenBelowStyle =
-    !isFriedStyle(recipe.style) && recipe.oven_temp_c < recipe.style.baking.temp_c_range[0];
+    !isFriedStyle(recipe.style) &&
+    recipe.oven_temp_c < recipe.style.baking.temp_c_range[0] &&
+    // Se non è fattibile lo spiega già il blocco compatibilità.
+    recipe.verdict.outcome !== "not_feasible";
   const cells: {
     label: string;
     value: string;

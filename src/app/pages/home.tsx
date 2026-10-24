@@ -1512,6 +1512,9 @@ export function HomePage() {
                   onSave={handleToggleSaveRecipe}
                   saved={Boolean(savedEntry)}
                   nerdMode={effectiveNerdMode}
+                  verdictRecipe={recipe}
+                  verdictConstraints={constraints}
+                  mealDeadline={!!selectedTimeSlot && selectedTimeSlot !== "no_preference"}
                 />
                 </aside>
                 </div>
