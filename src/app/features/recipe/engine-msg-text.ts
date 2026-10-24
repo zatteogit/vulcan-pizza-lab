@@ -1,6 +1,7 @@
 import { resolveEngineMsgs, type EngineMsg } from "../../domain/pizza-engine";
 import type { CmsContent } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
+import { pantryFlourName } from "./pantry-flour-names";
 
 /* ═══ Messaggi del motore nella lingua attiva (M-5) ═══
  * Il motore passa i numeri come parametri (a volte già come stringa, es.
@@ -29,6 +30,10 @@ const HOUR_PARAMS: Record<string, readonly string[]> = {
   "opt.coldLongFerment": ["hours", "available"],
   "opt.roomFerment": ["hours"],
 };
+/** Parametri che sono id di farine della dispensa (C-3). */
+const FLOUR_PARAMS: Record<string, readonly string[]> = {
+  "rec.flourMix": ["weak", "strong"],
+};
 const NUMERIC = /^-?\d+(?:\.\d+)?$/;
 
 export function engineMsgTexts(
@@ -38,6 +43,7 @@ export function engineMsgTexts(
 ): string[] {
   const fmt = createFormatter(cms.ui, bcp47);
   return resolveEngineMsgs(msgs, cms.engineMessages, (msg, key, value) => {
+    if (FLOUR_PARAMS[msg.key]?.includes(key)) return pantryFlourName(String(value));
     const number =
       typeof value === "number" ? value : NUMERIC.test(value) ? Number(value) : null;
     if (number === null || !Number.isFinite(number)) return value;

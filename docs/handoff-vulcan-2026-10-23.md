@@ -214,6 +214,10 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- ~~**C-3 (P2)**~~ chiuso il 24/10: i consigli e l'avviso «ti serve una farina
+  W…» tengono conto del mix di due farine della dispensa (`pantryFlourMix`,
+  quote al 5%, W stimata come media pesata e detta «circa»). Bug collaterale:
+  la Tipo 1 della dispensa non aveva una W nel motore e veniva ignorata.
 - **U-6 (P2)** avanzato il 24/10: nel pannello dello stile le fritte dicevano
   «il tuo forno raggiunge la temperatura ideale (175 °C)», che è l'olio: ora
   «Si frigge in pentola: il forno non serve» (7 lingue, test). «Fermentazione

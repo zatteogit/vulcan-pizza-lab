@@ -31,6 +31,7 @@ NO_PREFERENCE_SLOT,
 optimizeRecipe,
 thermalViability,
 FLOUR_W_RANGES,
+pantryFlourMix,
 YEAST_LABELS,
 type PanConfig,
 PizzaStyle,
@@ -967,10 +968,13 @@ export function HomePage() {
     const hard = thermalViability(selectedStyle, opt.oven_temp_c) < 1;
     const softNeeds: string[] = [];
     if (constraints.pantry_flours.length > 0) {
-      const covered = constraints.pantry_flours.some((id) => {
-        const rng = FLOUR_W_RANGES[id];
-        return rng && opt.flour_w >= rng[0] - 1 && opt.flour_w <= rng[1] + 1;
-      });
+      const covered =
+        constraints.pantry_flours.some((id) => {
+          const rng = FLOUR_W_RANGES[id];
+          return rng && opt.flour_w >= rng[0] - 1 && opt.flour_w <= rng[1] + 1;
+        }) ||
+        // C-3: due farine della dispensa mescolate arrivano alla W richiesta.
+        pantryFlourMix(constraints.pantry_flours, [opt.flour_w - 15, opt.flour_w + 15]) !== null;
       if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: opt.flour_w }));
     }
     if (

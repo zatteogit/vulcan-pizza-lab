@@ -862,6 +862,7 @@ export const FR_LOCALE: CmsContent = {
     "timeline.topPost.desc": "Ajoutez les garnitures froides directement sur la surface cuite.",
     "version.label.Disciplinare AVPN": "Cahier des charges AVPN",
     "rec.fried": "Frite \u00E0 la casserole\u00A0: pas besoin de four",
+    "rec.flourMix": "En m\u00E9langeant vos farines\u00A0: {weakPct}\u00A0% {weak} et {strongPct}\u00A0% {strong}, W {w} environ",
   },
   scienceLabels: {
     yeastBaker: "Levure de boulanger",

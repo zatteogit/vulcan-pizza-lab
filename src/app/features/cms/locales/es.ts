@@ -863,6 +863,7 @@ export const ES_LOCALE: CmsContent = {
     "timeline.topPost.desc": "Añade los ingredientes en frío directamente sobre la superficie horneada.",
     "version.label.Disciplinare AVPN": "Reglamento AVPN",
     "rec.fried": "Se fr\u00EDe en una olla: no hace falta el horno",
+    "rec.flourMix": "Mezclando tus harinas: {weakPct}% {weak} y {strongPct}% {strong}, W {w} aprox.",
   },
   scienceLabels: {
     yeastBaker: "Levadura de panadero",

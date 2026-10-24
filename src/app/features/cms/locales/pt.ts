@@ -863,6 +863,7 @@ export const PT_LOCALE: CmsContent = {
     "timeline.topPost.desc": "Coloque as coberturas frias direto sobre a superfície assada.",
     "version.label.Disciplinare AVPN": "Regulamento AVPN",
     "rec.fried": "Frita na panela: n\u00E3o precisa de forno",
+    "rec.flourMix": "Misturando suas farinhas: {weakPct}% {weak} e {strongPct}% {strong}, cerca de W {w}",
   },
   scienceLabels: {
     yeastBaker: "Fermento de padeiro",

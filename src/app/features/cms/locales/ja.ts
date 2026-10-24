@@ -901,6 +901,7 @@ export const JA_LOCALE: CmsContent = {
     "recipeSetup.signatureApplied": "{label}：インスピレーションを適用しました",
     "recipeSetup.signatureRemoved": "インスピレーションを解除：パラメータを元に戻しました",
     "rec.fried": "\u934B\u3067\u63DA\u3052\u308B\u306E\u3067\u30AA\u30FC\u30D6\u30F3\u306F\u4E0D\u8981",
+    "rec.flourMix": "\u624B\u6301\u3061\u306E\u7C89\u3092\u6DF7\u305C\u308B\u3068\uFF1A{weak} {weakPct}%\u3001{strong} {strongPct}%\u3001W {w}\u524D\u5F8C",
   },
   scienceLabels: {
     yeastBaker: "\u30D1\u30F3\u7528\u30A4\u30FC\u30B9\u30C8",

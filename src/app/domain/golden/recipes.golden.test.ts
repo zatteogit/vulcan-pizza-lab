@@ -4,6 +4,7 @@ import {
   feasibleAlternativeStyles,
   generateRecipe,
   recommendStyles,
+  pantryFlourMix,
   type GeneratedRecipe,
   type PizzaStyle,
   type RecipeBlocker,
@@ -191,6 +192,22 @@ describe("impossibilità dichiarata (M-10)", () => {
     const rec = recommendStyles(c).find((r) => r.style.id === "napoletana_stg")!;
     expect(rec.tier).not.toBe("not_feasible");
     expect(rec.warnings.map((w) => w.key)).toContain("rec.needsWoodOven");
+  });
+
+  it("mix di due farine della dispensa (C-3)", () => {
+    // 00 (W170–220) e manitoba (W340–380): nessuna da sola sta in W260–300.
+    expect(pantryFlourMix(["00", "manitoba"], [260, 300])).toEqual({
+      weak: "00", strong: "manitoba", weakPct: 50, strongPct: 50, w: 278,
+    });
+    // una sola farina, o due dalla stessa parte: niente mix
+    expect(pantryFlourMix(["00"], [260, 300])).toBeNull();
+    expect(pantryFlourMix(["00", "0"], [260, 300])).toBeNull();
+    // la Tipo 1 della dispensa ora ha una W
+    expect(pantryFlourMix(["tipo_1", "manitoba"], [280, 320])).not.toBeNull();
+    const c = constraints({ pantry_flours: ["00", "manitoba"] });
+    const napoletana = recommendStyles(c).find((r) => r.style.id === "napoletana_stg")!;
+    expect(napoletana.reasons.map((m) => m.key)).toContain("rec.flourMix");
+    expect(napoletana.warnings.map((m) => m.key)).not.toContain("rec.flourNoMatch");
   });
 
   it("le fritte non parlano del forno (U-6)", () => {

@@ -1057,6 +1057,7 @@ export const EN_LOCALE: CmsContent = {
     "recipeSetup.signatureApplied": "{label}: inspiration applied",
     "recipeSetup.signatureRemoved": "Inspiration removed: parameters reset",
     "rec.fried": "Fried in a pot: no oven needed",
+    "rec.flourMix": "Mixing your flours: {weakPct}% {weak} and {strongPct}% {strong}, about W {w}",
   },
   scienceLabels: {
     yeastBaker: "Baker's yeast",

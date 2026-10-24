@@ -850,6 +850,7 @@ export const DE_LOCALE: CmsContent = {
     "recipeSetup.signatureApplied": "{label}: Inspiration übernommen",
     "recipeSetup.signatureRemoved": "Inspiration entfernt: Parameter zurückgesetzt",
     "rec.fried": "Wird im Topf frittiert: kein Ofen n\u00F6tig",
+    "rec.flourMix": "Wenn du deine Mehle mischst: {weakPct}% {weak} und {strongPct}% {strong}, etwa W {w}",
   },
   scienceLabels: {
     yeastBaker: "B\u00E4ckerhefe",
