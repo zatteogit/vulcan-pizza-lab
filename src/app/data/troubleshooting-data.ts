@@ -62,7 +62,7 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     cause: 'Troppo lievito (>1.5%) o temperatura ambiente >28°C',
     testRapido: "L'impasto ha raddoppiato in meno di 3 ore?",
     fixImmediate: 'Trasferisci immediatamente a 4°C per bloccare la fermentazione',
-    prevention: 'Usa 0.2% lievito fresco per 24h, controlla temperatura',
+    prevention: 'Usa la dose di lievito calcolata per le tue ore e la tua temperatura (a 18 °C per 24 h circa 0,1% di lievito fresco)',
     severity: 'warning',
   },
   {

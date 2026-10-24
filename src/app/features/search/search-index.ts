@@ -8,7 +8,7 @@ import { ISSUES_DB, getLocalizedIssue } from "../../data/troubleshooting-data";
 import { formatOrigin, PIZZA_FAMILIES, STYLES_DB } from "../../domain/pizza-engine";
 import { uiMessage } from "../../i18n/ui-messages";
 import type { CmsContent } from "../cms/cms-context";
-import { PRE_FERMENT_DB } from "../recipe/pre-ferment-guide";
+import { PRE_FERMENT_IDS, preFermentName } from "../recipe/pre-ferment-guide";
 import { STYLE_PHOTOS } from "../recipe/recommended-styles";
 
 /* ═══ U-5 — indice della ricerca a tutta pagina ═══
@@ -192,19 +192,19 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
     );
   }
 
-  for (const [id, raw] of Object.entries(PRE_FERMENT_DB)) {
-    const item = cms.preFerment?.items?.[id];
-    const description = item?.description ?? raw.description;
+  for (const id of PRE_FERMENT_IDS) {
+    const item = cms.preFerment.items[id];
+    const description = item?.description ?? "";
     out.push(
       entry(
         {
           id: `guide-${id}`,
           type: "guide",
-          title: raw.name,
+          title: preFermentName(id),
           subtitle: clip(description, 100),
           link: `/learn/pre-ferments#pf-${id}`,
         },
-        `${description} ${item?.idealStyles ?? raw.idealStyles} ${cms.pages.learnPreFerments}`,
+        `${description} ${item?.idealStyles ?? ""} ${cms.pages.learnPreFerments}`,
       ),
     );
   }

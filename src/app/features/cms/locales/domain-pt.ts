@@ -14,18 +14,17 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
   paramHydration: "Hidrata\u00E7\u00E3o",
   paramDuration: "Dura\u00E7\u00E3o",
   paramTemperature: "Temperatura",
-  paramPh: "pH final",
+  paramYeast: "Fermento",
   detailFermentation: "Fermenta\u00E7\u00E3o",
   detailFlavor: "Sabor",
   detailCrust: "Crosta",
   detailExtensibility: "Extensibilidade",
   detailIdealStyles: "Estilos ideais",
   compLabels: [
-    "Hidrata\u00E7\u00E3o",
+    "Hidratação",
     "Fermento",
-    "Dura\u00E7\u00E3o",
+    "Duração",
     "Temperatura",
-    "pH final",
     "Sabor",
     "Extensibilidade",
     "Alveolado",
@@ -35,49 +34,48 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
     poolish: {
       origin: "Franc\u00EAs",
       description:
-        "Pr\u00E9-fermento l\u00EDquido (1:1 farinha:\u00E1gua) com fermenta\u00E7\u00E3o predominantemente alco\u00F3lica. Desenvolve a\u00E7\u00FAcares para Maillard intensa.",
-      hydration: "100% (propor\u00E7\u00E3o 1:1)",
+        "Pré-fermento líquido: farinha e água em partes iguais com pouco fermento, 12–16 h a 20–22 °C.",
+      hydration: "100% (farinha e água em partes iguais)",
       consistency: "L\u00EDquida, espumosa",
       fermentationType:
-        "Predominante alco\u00F3lica (CO\u2082 + etanol)",
-      flavor: "Doce, maltado, notas complexas",
+        "Rápida: com tanta água, amadurece em poucas horas",
+      flavor: "Levemente ácido, notas de avelã",
       crustResult:
         "Leve, dourado intenso, leopard spotting marcado",
       extensibility: "Alta \u2014 f\u00E1cil de abrir",
       idealStyles:
         "Teglia Romana, NY Style, Napolitana contempor\u00E2nea, Focaccia",
       tips: [
-        "Ponto ideal: superf\u00EDcie abobadada com bolhas, come\u00E7ando a recuar",
-        "Ap\u00F3s 16h o sabor fica \u00E1cido/alco\u00F3lico demais",
-        "Se desabar ainda \u00E9 utiliz\u00E1vel mas reduza a porcentagem",
-        "Porcentagem de poolish: 20-40% da farinha total",
+        "Pronto quando a superfície está cheia de bolhas e o centro começa a ceder",
+        "Mais fermento, menos horas: a 20–22 °C, 0,1% para 15–16 h, 0,3% para 10–12 h",
+        "Farinha no poolish: 30–50% da farinha total",
       ],
     },
     biga: {
       origin: "Italiano",
       description:
-        "Pr\u00E9-fermento seco (44-48% hidrata\u00E7\u00E3o) com fermenta\u00E7\u00E3o l\u00E1ctica + alco\u00F3lica. M\u00E1xima conserva\u00E7\u00E3o e complexidade arom\u00E1tica.",
-      hydration: "44-48%",
+        "Pré-fermento firme: farinha, 44% de água e 1% de fermento, cerca de 16 h a 18–20 °C.",
+      hydration: "44% (até 50% com farinhas integrais)",
       consistency: "Seca, compacta",
       fermentationType:
-        "L\u00E1ctica + alco\u00F3lica (LAB ativos)",
-      flavor: "Acidulado, complexo, notas fermentadas",
+        "Lenta: com pouca água, amadurece em 16–48 h",
+      flavor: "Aromático, floral",
       crustResult: "Crocante, quebradi\u00E7a, alveolado fino",
       extensibility:
         "Baixa \u2014 necessita repouso ap\u00F3s boleamento",
       idealStyles:
-        "Napolitana cl\u00E1ssica, Pinsa, Pizza al taglio, P\u00E3o",
+        "Pinsa, Pizza al taglio, Pala romana, Pão",
       tips: [
-        "Se muito seca: adicione 5-10% de \u00E1gua",
-        "Madura quando a superf\u00EDcie est\u00E1 rachada e o volume triplicou",
-        "Conserv\u00E1vel at\u00E9 48h na geladeira (refrescar com 10% de \u00E1gua antes)",
-        "Porcentagem de biga: 20-50% da farinha total",
+        "Pronta quando está estufada em alguns pontos, cheira a iogurte e borbulha de leve; se tiver gosto azedo, passou do ponto",
+        "Biga longa: 24 h a 4–5 °C, depois 24 h a 18–20 °C",
+        "Farinha na biga: 20–50% da farinha total, geralmente um terço",
+        "Não se usa na Napolitana ETG: o regulamento admite só o método direto",
       ],
     },
     autolisi: {
-      origin: "Universal",
+      origin: "França (R. Calvel, 1974)",
       description:
-        "Repouso enzim\u00E1tico de farinha+\u00E1gua (sem fermento ou sal). Desenvolve gl\u00FAten espontaneamente e ativa proteases/amilases.",
+        "Não é um pré-fermento: farinha e água descansam sem fermento nem sal antes de sovar.",
       hydration: "55-75% (toda a \u00E1gua da receita)",
       consistency: "Pastosa",
       fermentationType:
@@ -89,43 +87,35 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
         "Alta \u2014 massa sedosa e menos pegajosa",
       idealStyles: "Todos os estilos (t\u00E9cnica universal)",
       tips: [
-        "Farinhas integrais: aut\u00F3lise mais longa (60-90min)",
-        "Água morna (30-35\u00B0C) acelera as enzimas",
-        "SEMPRE antes de adicionar sal (sal inibe enzimas)",
-        "Reduz tempo de sova em 30%",
-        "Combin\u00E1vel com Biga ou Poolish",
+        "Descanso de 20–60 minutos; fermento e sal entram depois",
+        "Combina com biga ou poolish",
       ],
     },
   },
   compValues: {
     hydration: {
-      biga: "44-48%",
+      biga: "44%",
       poolish: "100%",
       autolisi: "55-75%",
     },
     yeast: {
-      biga: "0.5-1%",
-      poolish: "0.1-0.5%",
+      biga: "1%",
+      poolish: "0,1–0,3%",
       autolisi: "0%",
     },
     duration: {
-      biga: "16-48h",
-      poolish: "8-16h",
-      autolisi: "0.5-2h",
+      biga: "16–48 h",
+      poolish: "12–16 h",
+      autolisi: "20–60 min",
     },
     temperature: {
-      biga: "16-18\u00B0C",
-      poolish: "20-22\u00B0C",
+      biga: "18–20 °C",
+      poolish: "20–22 °C",
       autolisi: "Ambiente",
     },
-    ph: {
-      biga: "5.0-5.3",
-      poolish: "4.5-4.8",
-      autolisi: "~6.5",
-    },
     flavor: {
-      biga: "Acidulado",
-      poolish: "Doce/maltado",
+      biga: "Aromático",
+      poolish: "Levemente ácido",
       autolisi: "Neutro",
     },
     extensibility: {
@@ -300,7 +290,7 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Transfira imediatamente para 4\u00B0C para bloquear a fermenta\u00E7\u00E3o",
         prevention:
-          "Use 0.2% fermento fresco para 24h, controle temperatura",
+          "Use a dose de fermento calculada para as suas horas e temperatura (a 18 °C por 24 h, cerca de 0,1% de fermento fresco)",
       },
       P06: {
         symptom: "Sabor muito \u00E1cido/ac\u00E9tico",
@@ -611,28 +601,28 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     },
     biga: {
       name: "Biga",
-      definition: "Pr\u00E9-massa seca (44-50% de hidrata\u00E7\u00E3o) com farinha + \u00E1gua + fermento, fermentada 16-24h a 16-18\u00B0C.",
-      whyImportant: "Aumenta for\u00E7a, extensibilidade, complexidade de sabor, alveolado irregular e r\u00FAstico e durabilidade. Dosagem: 20-40% da farinha total.",
+      definition: "Pré-fermento firme de farinha, 44% de água (até 50% com farinhas integrais) e 1% de fermento, maturado cerca de 16 h a 18–20 °C; a biga longa leva 24 h a 4–5 °C mais 24 h a 18–20 °C.",
+      whyImportant: "Traz aroma e estrutura à massa final. Geralmente um terço da farinha total (20–50%). Não é admitida na Napolitana ETG, que é de método direto.",
     },
     poolish: {
       name: "Poolish",
-      definition: "Pr\u00E9-massa l\u00EDquida (100% de hidrata\u00E7\u00E3o) com farinha + \u00E1gua 1:1 + fermento, fermentada 12-16h a 16-18\u00B0C.",
-      whyImportant: "Extensibilidade alta, alveolado fino e uniforme, sabor adocicado e levemente \u00E1cido, crosta fina e crocante. Poolish = extensibilidade; Biga = for\u00E7a.",
+      definition: "Pré-fermento líquido: farinha e água em partes iguais com pouco fermento, maturado 12–16 h a 20–22 °C (0,1% de fermento para 15–16 h, 0,3% para 10–12 h).",
+      whyImportant: "Amadurece rápido e deixa a massa extensível. Geralmente 30–50% da farinha total. Está pronto quando a superfície fica cheia de bolhas e o centro começa a ceder.",
     },
     autolysis: {
       name: "Aut\u00F3lise",
-      definition: "Descanso de farinha + \u00E1gua (sem fermento/sal) por 20-60 min. As enzimas proteases desenvolvem o gl\u00FAten espontaneamente.",
-      whyImportant: "Reduz o tempo de sova em 30-50%, aumenta a extensibilidade, melhora a hidrata\u00E7\u00E3o. 20-30 min para W<200, 45-60 min para W>280.",
+      definition: "Descanso de farinha e água, sem fermento nem sal, por 20–60 minutos antes de sovar (R. Calvel, 1974). Não é um pré-fermento.",
+      whyImportant: "A massa fica mais extensível e mais fácil de trabalhar.",
     },
     bulk_fermentation: {
       name: "Fermenta\u00E7\u00E3o em massa (puntata)",
-      definition: "Primeira fase de fermenta\u00E7\u00E3o ap\u00F3s a sova, antes da divis\u00E3o em bolas. A massa descansa em um \u00FAnico bloco por 30 min \u2013 4h.",
-      whyImportant: "Relaxamento do gl\u00FAten, in\u00EDcio da fermenta\u00E7\u00E3o, desenvolvimento de aromas, aumento de volume de 20-50%.",
+      definition: "Primeira fermentação, em bloco, depois de sovar e antes de bolear. Conforme o estilo, dura de menos de uma hora a mais de um dia na geladeira: a duração certa é a do modo de preparo.",
+      whyImportant: "O glúten relaxa, a fermentação começa e a massa ganha aroma.",
     },
     ball_fermentation: {
       name: "Fermenta\u00E7\u00E3o final (appretto)",
-      definition: "Segunda fase de fermenta\u00E7\u00E3o, ap\u00F3s a divis\u00E3o em bolas. Cada bola descansa individualmente 4-48h a 4-22\u00B0C.",
-      whyImportant: "Fermenta\u00E7\u00E3o principal, matura\u00E7\u00E3o por prote\u00F3lise, desenvolvimento do volume final, estabiliza\u00E7\u00E3o do pH.",
+      definition: "Segunda fermentação, depois de bolear: em bolinhas ou, nos estilos de assadeira, direto na assadeira. Dura conforme estilo, temperatura e fermento: a duração certa é a do modo de preparo.",
+      whyImportant: "Leva as bolinhas ao volume certo para abrir e assar.",
     },
     maillard: {
       name: "Rea\u00E7\u00E3o de Maillard",

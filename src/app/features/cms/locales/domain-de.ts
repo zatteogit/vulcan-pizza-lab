@@ -14,7 +14,7 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
   paramHydration: "Hydratation",
   paramDuration: "Dauer",
   paramTemperature: "Temperatur",
-  paramPh: "End-pH",
+  paramYeast: "Hefe",
   detailFermentation: "G\u00E4rung",
   detailFlavor: "Geschmack",
   detailCrust: "Kruste",
@@ -25,59 +25,57 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
     "Hefe",
     "Dauer",
     "Temperatur",
-    "End-pH",
     "Geschmack",
     "Dehnbarkeit",
     "Porung",
-    "Komplexit\u00E4t",
+    "Komplexität",
   ],
   items: {
     poolish: {
       origin: "Franz\u00F6sisch",
       description:
-        "Fl\u00FCssiger Vorteig (1:1 Mehl:Wasser) mit vorwiegend alkoholischer G\u00E4rung. Entwickelt Zucker f\u00FCr intensive Maillard-Reaktion.",
-      hydration: "100% (1:1-Verh\u00E4ltnis)",
+        "Flüssiger Vorteig: Mehl und Wasser zu gleichen Teilen mit wenig Hefe, 12–16 h bei 20–22 °C.",
+      hydration: "100 % (Mehl und Wasser zu gleichen Teilen)",
       consistency: "Fl\u00FCssig, schaumig",
       fermentationType:
-        "Vorwiegend alkoholisch (CO\u2082 + Ethanol)",
-      flavor: "S\u00FC\u00DF, malzig, komplexe Noten",
+        "Schnell: mit viel Wasser reift er in wenigen Stunden",
+      flavor: "Leicht säuerlich, nussige Noten",
       crustResult:
         "Leicht, intensiv golden, ausgepr\u00E4gtes Leopardenmuster",
       extensibility: "Hoch \u2014 einfach zu dehnen",
       idealStyles:
         "Teglia Romana, NY Style, Zeitgen\u00F6ssische Neapolitanische, Focaccia",
       tips: [
-        "Optimaler Punkt: gew\u00F6lbte Oberfl\u00E4che mit Blasen, beginnt sich zur\u00FCckzuziehen",
-        "Nach 16h wird der Geschmack zu sauer/alkoholisch",
-        "Wenn er zusammenf\u00E4llt, noch verwendbar \u2014 Anteil reduzieren",
-        "Poolish-Anteil am Endteig: 20-40% des Gesamtmehls",
+        "Fertig, wenn die Oberfläche voller Bläschen ist und die Mitte einzusinken beginnt",
+        "Mehr Hefe, weniger Stunden: bei 20–22 °C 0,1 % für 15–16 h, 0,3 % für 10–12 h",
+        "Mehl im Poolish: 30–50 % des Gesamtmehls",
       ],
     },
     biga: {
       origin: "Italienisch",
       description:
-        "Fester Vorteig (44-48% Hydratation) mit Milchs\u00E4ure- + alkoholischer G\u00E4rung. Maximale Haltbarkeit und Aromakomplexität.",
-      hydration: "44-48%",
+        "Fester Vorteig: Mehl, 44 % Wasser und 1 % Hefe, etwa 16 h bei 18–20 °C.",
+      hydration: "44 % (bis 50 % mit Vollkornmehl)",
       consistency: "Trocken, kompakt",
       fermentationType:
-        "Milchs\u00E4ure + alkoholisch (aktive LAB)",
-      flavor: "S\u00E4uerlich, komplex, fermentierte Noten",
+        "Langsam: mit wenig Wasser reift sie in 16–48 h",
+      flavor: "Aromatisch, blumig",
       crustResult: "Knusprig, br\u00FCchig, feine Porung",
       extensibility:
         "Niedrig \u2014 Ruhezeit nach Portionierung n\u00F6tig",
       idealStyles:
-        "Klassische Neapolitanische, Pinsa, Pizza al taglio, Brot",
+        "Pinsa, Pizza al taglio, Pala romana, Brot",
       tips: [
-        "Wenn zu trocken: 5-10% Wasser hinzuf\u00FCgen",
-        'Reif wenn Oberfl\u00E4che rissig "gew\u00F6lbt" und Volumen verdreifacht',
-        "Bis zu 48h im K\u00FChlschrank haltbar (vor Gebrauch mit 10% Wasser auffrischen)",
-        "Biga-Anteil am Endteig: 20-50% des Gesamtmehls",
+        "Fertig, wenn sie stellenweise aufgegangen ist, nach Joghurt riecht und leicht prickelt; schmeckt sie sauer, ist sie zu weit",
+        "Lange Biga: 24 h bei 4–5 °C, dann 24 h bei 18–20 °C",
+        "Mehl in der Biga: 20–50 % des Gesamtmehls, meist ein Drittel",
+        "Nicht für die Pizza Napoletana g.t.S.: die Spezifikation erlaubt nur die direkte Führung",
       ],
     },
     autolisi: {
-      origin: "Universal",
+      origin: "Frankreich (R. Calvel, 1974)",
       description:
-        "Enzymatische Ruhezeit von Mehl+Wasser (ohne Hefe/Salz). Entwickelt Gluten spontan und aktiviert Protease/Amylase.",
+        "Kein Vorteig: Mehl und Wasser ruhen ohne Hefe und Salz vor dem Kneten.",
       hydration: "55-75% (gesamtes Rezeptwasser)",
       consistency: "Teigig",
       fermentationType: "Keine (nur Enzymaktivit\u00E4t)",
@@ -89,43 +87,35 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
         "Hoch \u2014 seidiger, weniger klebriger Teig",
       idealStyles: "Alle Stile (universelle Technik)",
       tips: [
-        "Vollkornmehl: l\u00E4ngere Autolyse (60-90min)",
-        "Warmes Wasser (30-35\u00B0C) beschleunigt Enzyme",
-        "IMMER vor Salzzugabe (Salz hemmt Enzyme)",
-        "Reduziert Knetzeit um 30%",
-        "Kombinierbar mit Biga oder Poolish",
+        "20–60 Minuten ruhen lassen; Hefe und Salz kommen danach dazu",
+        "Lässt sich mit Biga oder Poolish kombinieren",
       ],
     },
   },
   compValues: {
     hydration: {
-      biga: "44-48%",
+      biga: "44 %",
       poolish: "100%",
       autolisi: "55-75%",
     },
     yeast: {
-      biga: "0.5-1%",
-      poolish: "0.1-0.5%",
+      biga: "1 %",
+      poolish: "0,1–0,3 %",
       autolisi: "0%",
     },
     duration: {
-      biga: "16-48h",
-      poolish: "8-16h",
-      autolisi: "0.5-2h",
+      biga: "16–48 h",
+      poolish: "12–16 h",
+      autolisi: "20–60 min",
     },
     temperature: {
-      biga: "16-18\u00B0C",
-      poolish: "20-22\u00B0C",
+      biga: "18–20 °C",
+      poolish: "20–22 °C",
       autolisi: "Raumtemp.",
     },
-    ph: {
-      biga: "5.0-5.3",
-      poolish: "4.5-4.8",
-      autolisi: "~6.5",
-    },
     flavor: {
-      biga: "S\u00E4uerlich",
-      poolish: "S\u00FC\u00DF/malzig",
+      biga: "Aromatisch",
+      poolish: "Leicht säuerlich",
       autolisi: "Neutral",
     },
     extensibility: {
@@ -299,7 +289,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Sofort auf 4\u00B0C umstellen um G\u00E4rung zu stoppen",
         prevention:
-          "0.2% Frischhefe f\u00FCr 24h, Temperatur kontrollieren",
+          "Die für Ihre Stunden und Temperatur berechnete Hefemenge verwenden (bei 18 °C für 24 h etwa 0,1 % Frischhefe)",
       },
       P06: {
         symptom: "Zu saurer/essigartiger Geschmack",
@@ -607,28 +597,28 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     },
     biga: {
       name: "Biga",
-      definition: "Fester Vorteig (44-50% Hydratation) aus Mehl + Wasser + Hefe, 16-24h bei 16-18\u00B0C geg\u00E4rt.",
-      whyImportant: "Bringt mehr Teigkraft, Dehnbarkeit und komplexen Geschmack, eine rustikal unregelm\u00E4\u00DFige Porung und l\u00E4ngere Haltbarkeit. Anteil: 20-40% des Gesamtmehls.",
+      definition: "Fester Vorteig aus Mehl, 44 % Wasser (bis 50 % mit Vollkornmehl) und 1 % Hefe, etwa 16 h bei 18–20 °C gereift; die lange Biga braucht 24 h bei 4–5 °C plus 24 h bei 18–20 °C.",
+      whyImportant: "Gibt dem Hauptteig Aroma und Struktur. Meist ein Drittel des Gesamtmehls (20–50 %). In der Pizza Napoletana g.t.S. nicht erlaubt, sie wird direkt geführt.",
     },
     poolish: {
       name: "Poolish",
-      definition: "Fl\u00FCssiger Vorteig (100% Hydratation) aus Mehl + Wasser 1:1 + Hefe, 12-16h bei 16-18\u00B0C geg\u00E4rt.",
-      whyImportant: "Hohe Dehnbarkeit, feine gleichm\u00E4\u00DFige Porung, s\u00FC\u00DFlich-s\u00E4uerlicher Geschmack, d\u00FCnne knusprige Kruste. Poolish = Dehnbarkeit; Biga = Teigkraft.",
+      definition: "Flüssiger Vorteig: Mehl und Wasser zu gleichen Teilen mit wenig Hefe, 12–16 h bei 20–22 °C gereift (0,1 % Hefe für 15–16 h, 0,3 % für 10–12 h).",
+      whyImportant: "Reift schnell und macht den Teig dehnbar. Meist 30–50 % des Gesamtmehls. Fertig, wenn die Oberfläche voller Bläschen ist und die Mitte einzusinken beginnt.",
     },
     autolysis: {
       name: "Autolyse",
-      definition: "Ruhezeit von Mehl + Wasser (ohne Hefe/Salz) f\u00FCr 20-60 min. Protease-Enzyme entwickeln das Gluten von selbst.",
-      whyImportant: "Knetzeit -30-50%, mehr Dehnbarkeit, bessere Hydratation. 20-30 min bei W<200, 45-60 min bei W>280.",
+      definition: "Ruhe von Mehl und Wasser ohne Hefe und Salz, 20–60 Minuten vor dem Kneten (R. Calvel, 1974). Kein Vorteig.",
+      whyImportant: "Der Teig wird dehnbarer und leichter zu verarbeiten.",
     },
     bulk_fermentation: {
       name: "Stockgare (Bulk Fermentation)",
-      definition: "Erste G\u00E4rphase nach dem Kneten, vor dem Teilen in Teiglinge. Der Teig ruht 30 min \u2013 4h als ein St\u00FCck.",
-      whyImportant: "Entspannung des Glutens, Beginn der G\u00E4rung, Aromaentwicklung, Volumenzunahme um 20-50%.",
+      definition: "Erste Gare im Ganzen, nach dem Kneten und vor dem Abwiegen. Je nach Stil von unter einer Stunde bis über einen Tag im Kühlschrank: die richtige Dauer steht im Ablauf.",
+      whyImportant: "Das Gluten entspannt sich, die Gärung beginnt und der Teig entwickelt Aroma.",
     },
     ball_fermentation: {
       name: "St\u00FCckgare (Ball Fermentation)",
-      definition: "Zweite G\u00E4rphase nach dem Teilen in Teiglinge. Jeder Teigling ruht einzeln 4-48h bei 4-22\u00B0C.",
-      whyImportant: "Hauptg\u00E4rung, Reifung durch Proteolyse, Entwicklung des Endvolumens, Stabilisierung des pH.",
+      definition: "Zweite Gare nach dem Abwiegen: als Teiglinge oder, bei Blechstilen, direkt im Blech. Die Dauer hängt von Stil, Temperatur und Hefe ab: die richtige Dauer steht im Ablauf.",
+      whyImportant: "Bringt die Teiglinge auf das richtige Volumen zum Ausziehen und Backen.",
     },
     maillard: {
       name: "Maillard-Reaktion",

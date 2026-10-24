@@ -14,7 +14,7 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
   paramHydration: "Hydratation",
   paramDuration: "Dur\u00E9e",
   paramTemperature: "Temp\u00E9rature",
-  paramPh: "pH final",
+  paramYeast: "Levure",
   detailFermentation: "Fermentation",
   detailFlavor: "Saveur",
   detailCrust: "Cro\u00FBte",
@@ -23,24 +23,23 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
   compLabels: [
     "Hydratation",
     "Levure",
-    "Dur\u00E9e",
-    "Temp\u00E9rature",
-    "pH final",
+    "Durée",
+    "Température",
     "Saveur",
-    "Extensibilit\u00E9",
-    "Alv\u00E9olage",
-    "Complexit\u00E9",
+    "Extensibilité",
+    "Alvéolage",
+    "Complexité",
   ],
   items: {
     poolish: {
       origin: "Fran\u00E7ais",
       description:
-        "Pr\u00E9-ferment liquide (1:1 farine:eau) avec fermentation principalement alcoolique. D\u00E9veloppe les sucres pour une Maillard intense.",
-      hydration: "100% (ratio 1:1)",
+        "Préferment liquide : farine et eau à parts égales avec peu de levure, 12–16 h à 20–22 °C.",
+      hydration: "100 % (farine et eau à parts égales)",
       consistency: "Liquide, mousseux",
       fermentationType:
-        "Principalement alcoolique (CO\u2082 + \u00E9thanol)",
-      flavor: "Doux, malt\u00E9, notes complexes",
+        "Rapide : avec autant d'eau, il mûrit en quelques heures",
+      flavor: "Légèrement acidulé, notes de noisette",
       crustResult:
         "L\u00E9g\u00E8re, dor\u00E9e intense, leopard spotting marqu\u00E9",
       extensibility:
@@ -48,36 +47,35 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
       idealStyles:
         "Teglia Romana, NY Style, Napolitaine contemporaine, Focaccia",
       tips: [
-        "Point optimal : surface en d\u00F4me avec bulles, commence \u00E0 se r\u00E9tracter",
-        "Au-del\u00E0 de 16h la saveur devient trop acide/alcoolique",
-        "S'il s'effondre, encore utilisable mais r\u00E9duire le pourcentage du total",
-        "Pourcentage de poolish : 20-40% de la farine totale",
+        "Prêt quand la surface est couverte de bulles et que le centre commence à s'affaisser",
+        "Plus de levure, moins d'heures : à 20–22 °C, 0,1 % pour 15–16 h, 0,3 % pour 10–12 h",
+        "Farine dans le poolish : 30–50 % de la farine totale",
       ],
     },
     biga: {
       origin: "Italien",
       description:
-        "Pr\u00E9-ferment sec (44-48% hydratation) avec fermentation lactique + alcoolique. Conservation maximale et complexit\u00E9 aromatique.",
-      hydration: "44-48%",
+        "Préferment ferme : farine, 44 % d'eau et 1 % de levure, environ 16 h à 18–20 °C.",
+      hydration: "44 % (jusqu'à 50 % avec des farines complètes)",
       consistency: "S\u00E8che, compacte",
-      fermentationType: "Lactique + alcoolique (LAB actifs)",
-      flavor: "Acidul\u00E9, complexe, notes ferment\u00E9es",
+      fermentationType: "Lente : avec peu d'eau, elle mûrit en 16–48 h",
+      flavor: "Aromatique, florale",
       crustResult: "Croustillante, friable, alv\u00E9olage fin",
       extensibility:
         "Faible \u2014 n\u00E9cessite repos apr\u00E8s boulage",
       idealStyles:
-        "Napolitaine classique, Pinsa, Pizza al taglio, Pain",
+        "Pinsa, Pizza al taglio, Pala romana, Pain",
       tips: [
-        "Si trop s\u00E8che : ajouter 5-10% d'eau",
-        "M\u00FBre quand la surface est craquel\u00E9e et le volume a tripl\u00E9",
-        "Conservable 48h au frigo (rafra\u00EEchir avec 10% d'eau avant usage)",
-        "Pourcentage de biga : 20-50% de la farine totale",
+        "Prête quand elle a gonflé par endroits, sent le yaourt et pétille un peu ; si elle a un goût acide, elle est allée trop loin",
+        "Biga longue : 24 h à 4–5 °C, puis 24 h à 18–20 °C",
+        "Farine dans la biga : 20–50 % de la farine totale, souvent un tiers",
+        "Pas utilisée pour la Napolitaine STG : le cahier des charges n'admet que la méthode directe",
       ],
     },
     autolisi: {
-      origin: "Universel",
+      origin: "France (R. Calvel, 1974)",
       description:
-        "Repos enzymatique de farine+eau seules (sans levure ni sel). D\u00E9veloppe le gluten spontan\u00E9ment et active prot\u00E9ases/amylases.",
+        "Ce n'est pas un préferment : farine et eau reposent sans levure ni sel avant le pétrissage.",
       hydration: "55-75% (toute l'eau de la recette)",
       consistency: "P\u00E2teuse",
       fermentationType:
@@ -89,43 +87,35 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
         "\u00C9lev\u00E9e \u2014 p\u00E2te soyeuse et moins collante",
       idealStyles: "Tous les styles (technique universelle)",
       tips: [
-        "Farines compl\u00E8tes : autolyse plus longue (60-90min)",
-        "Eau ti\u00E8de (30-35\u00B0C) acc\u00E9l\u00E8re les enzymes",
-        "TOUJOURS avant d'ajouter le sel (le sel inhibe les enzymes)",
-        "R\u00E9duit le temps de p\u00E9trissage de 30%",
-        "Combinable avec Biga ou Poolish",
+        "Repos de 20–60 minutes ; levure et sel s'ajoutent ensuite",
+        "Se combine avec la biga ou le poolish",
       ],
     },
   },
   compValues: {
     hydration: {
-      biga: "44-48%",
+      biga: "44 %",
       poolish: "100%",
       autolisi: "55-75%",
     },
     yeast: {
-      biga: "0.5-1%",
-      poolish: "0.1-0.5%",
+      biga: "1 %",
+      poolish: "0,1–0,3 %",
       autolisi: "0%",
     },
     duration: {
-      biga: "16-48h",
-      poolish: "8-16h",
-      autolisi: "0.5-2h",
+      biga: "16–48 h",
+      poolish: "12–16 h",
+      autolisi: "20–60 min",
     },
     temperature: {
-      biga: "16-18\u00B0C",
-      poolish: "20-22\u00B0C",
+      biga: "18–20 °C",
+      poolish: "20–22 °C",
       autolisi: "Ambiante",
     },
-    ph: {
-      biga: "5.0-5.3",
-      poolish: "4.5-4.8",
-      autolisi: "~6.5",
-    },
     flavor: {
-      biga: "Acidul\u00E9",
-      poolish: "Doux/malt\u00E9",
+      biga: "Aromatique",
+      poolish: "Légèrement acidulé",
       autolisi: "Neutre",
     },
     extensibility: {
@@ -302,7 +292,7 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Transf\u00E9rer imm\u00E9diatement \u00E0 4\u00B0C pour bloquer la fermentation",
         prevention:
-          "Utiliser 0.2% levure fra\u00EEche pour 24h, contr\u00F4ler temp\u00E9rature",
+          "Utiliser la dose de levure calculée pour vos heures et votre température (à 18 °C pendant 24 h, environ 0,1 % de levure fraîche)",
       },
       P06: {
         symptom: "Saveur trop acide/ac\u00E9tique",
@@ -617,28 +607,28 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     },
     biga: {
       name: "Biga",
-      definition: "Pr\u00E9-p\u00E2te ferme (44-50% d'hydratation) avec farine + eau + levure, ferment\u00E9e 16-24h \u00E0 16-18\u00B0C.",
-      whyImportant: "Apporte force, extensibilit\u00E9, go\u00FBt complexe, alv\u00E9olage irr\u00E9gulier et rustique, conservation plus longue. Dosage : 20-40% de la farine totale.",
+      definition: "Préferment ferme de farine, 44 % d'eau (jusqu'à 50 % avec des farines complètes) et 1 % de levure, mûri environ 16 h à 18–20 °C ; la biga longue demande 24 h à 4–5 °C puis 24 h à 18–20 °C.",
+      whyImportant: "Apporte arôme et structure à la pâte finale. Souvent un tiers de la farine totale (20–50 %). Non admise pour la Napolitaine STG, qui est en direct.",
     },
     poolish: {
       name: "Poolish",
-      definition: "Pr\u00E9-p\u00E2te liquide (100% d'hydratation) avec farine + eau 1:1 + levure, ferment\u00E9e 12-16h \u00E0 16-18\u00B0C.",
-      whyImportant: "Extensibilit\u00E9 \u00E9lev\u00E9e, alv\u00E9olage fin et r\u00E9gulier, go\u00FBt doux-acidul\u00E9, cro\u00FBte fine et croustillante. Poolish = extensibilit\u00E9 ; Biga = force.",
+      definition: "Préferment liquide : farine et eau à parts égales avec peu de levure, mûri 12–16 h à 20–22 °C (0,1 % de levure pour 15–16 h, 0,3 % pour 10–12 h).",
+      whyImportant: "Mûrit vite et rend la pâte extensible. Souvent 30–50 % de la farine totale. Prêt quand la surface est couverte de bulles et que le centre commence à s'affaisser.",
     },
     autolysis: {
       name: "Autolyse",
-      definition: "Repos de farine + eau (sans levure ni sel) pendant 20-60 min. Les enzymes prot\u00E9ases d\u00E9veloppent le gluten spontan\u00E9ment.",
-      whyImportant: "R\u00E9duit le temps de p\u00E9trissage de 30-50%, augmente l'extensibilit\u00E9, am\u00E9liore l'hydratation. 20-30 min pour W<200, 45-60 min pour W>280.",
+      definition: "Repos de la farine et de l'eau, sans levure ni sel, pendant 20–60 minutes avant le pétrissage (R. Calvel, 1974). Ce n'est pas un préferment.",
+      whyImportant: "La pâte devient plus extensible et plus facile à travailler.",
     },
     bulk_fermentation: {
       name: "Pointage (fermentation en masse)",
-      definition: "Premi\u00E8re phase de fermentation apr\u00E8s le p\u00E9trissage, avant la division en p\u00E2tons. La p\u00E2te repose en une seule masse 30 min \u2013 4h.",
-      whyImportant: "D\u00E9tente du gluten, d\u00E9but de la fermentation, d\u00E9veloppement des ar\u00F4mes, augmentation de volume de 20-50%.",
+      definition: "Premier pointage, en masse, après le pétrissage et avant le boulage. Selon le style, de moins d'une heure à plus d'un jour au réfrigérateur : la bonne durée est celle du déroulé.",
+      whyImportant: "Le gluten se détend, la fermentation démarre et la pâte prend de l'arôme.",
     },
     ball_fermentation: {
       name: "Appr\u00EAt (fermentation en p\u00E2tons)",
-      definition: "Deuxi\u00E8me phase de fermentation apr\u00E8s la division en p\u00E2tons. Chaque p\u00E2ton repose individuellement 4-48h \u00E0 4-22\u00B0C.",
-      whyImportant: "Fermentation principale, maturation par prot\u00E9olyse, d\u00E9veloppement du volume final, stabilisation du pH.",
+      definition: "Second apprêt, après le boulage : en pâtons ou, pour les styles en plaque, directement dans la plaque. La durée dépend du style, de la température et de la levure : la bonne durée est celle du déroulé.",
+      whyImportant: "Amène les pâtons au bon volume pour étaler et enfourner.",
     },
     maillard: {
       name: "R\u00E9action de Maillard",

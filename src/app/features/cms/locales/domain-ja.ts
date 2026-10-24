@@ -15,7 +15,7 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
   paramHydration: "\u52A0\u6C34\u7387",
   paramDuration: "\u6642\u9593",
   paramTemperature: "\u6E29\u5EA6",
-  paramPh: "\u6700\u7D42pH",
+  paramYeast: "イースト",
   detailFermentation: "\u767A\u9175",
   detailFlavor: "\u98A8\u5473",
   detailCrust: "\u30AF\u30E9\u30B9\u30C8",
@@ -23,27 +23,26 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
   detailIdealStyles:
     "\u7406\u60F3\u7684\u306A\u30B9\u30BF\u30A4\u30EB",
   compLabels: [
-    "\u52A0\u6C34\u7387",
-    "\u30A4\u30FC\u30B9\u30C8",
-    "\u6642\u9593",
-    "\u6E29\u5EA6",
-    "\u6700\u7D42pH",
-    "\u98A8\u5473",
-    "\u4F38\u5C55\u6027",
-    "\u6C17\u6CE1",
-    "\u8907\u96D1\u3055",
+    "加水率",
+    "イースト",
+    "時間",
+    "温度",
+    "風味",
+    "伸展性",
+    "気泡",
+    "複雑さ",
   ],
   items: {
     poolish: {
       origin: "\u30D5\u30E9\u30F3\u30B9",
       description:
-        "\u6DB2\u4F53\u524D\u767A\u9175\u7A2E\uFF081:1 \u5C0F\u9EA6\u7C89:\u6C34\uFF09\u3002\u4E3B\u306B\u30A2\u30EB\u30B3\u30FC\u30EB\u767A\u9175\u3002\u30E1\u30A4\u30E9\u30FC\u30C9\u53CD\u5FDC\u306E\u305F\u3081\u306E\u7CD6\u3092\u767A\u9054\u3055\u305B\u308B\u3002",
-      hydration: "100%\uFF081:1\u6BD4\u7387\uFF09",
+        "液種：粉と水を同量、少量のイースト、20〜22 °Cで12〜16時間。",
+      hydration: "100%（粉と水が同量）",
       consistency: "\u6DB2\u4F53\u3001\u6CE1\u7ACB\u3061",
       fermentationType:
-        "\u4E3B\u306B\u30A2\u30EB\u30B3\u30FC\u30EB\u767A\u9175\uFF08CO\u2082 + \u30A8\u30BF\u30CE\u30FC\u30EB\uFF09",
+        "速い：水分が多く数時間で熟成",
       flavor:
-        "\u7518\u3044\u3001\u30E2\u30EB\u30C8\u3001\u8907\u96D1\u306A\u30CE\u30FC\u30C8",
+        "ほのかな酸味、ナッツの風味",
       crustResult:
         "\u8EFD\u3044\u3001\u6FC3\u3044\u91D1\u8272\u3001\u30EC\u30AA\u30D1\u30FC\u30C9\u30B9\u30DD\u30C3\u30C6\u30A3\u30F3\u30B0\u304C\u7279\u5FB4\u7684",
       extensibility:
@@ -51,40 +50,39 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
       idealStyles:
         "\u30C6\u30EA\u30A2\u30ED\u30DE\u30FC\u30CA\u3001NY\u30B9\u30BF\u30A4\u30EB\u3001\u73FE\u4EE3\u30CA\u30DD\u30EA\u3001\u30D5\u30A9\u30AB\u30C3\u30C1\u30E3",
       tips: [
-        "\u6700\u9069\u70B9\uFF1A\u6CE1\u306E\u3042\u308B\u30C9\u30FC\u30E0\u578B\u8868\u9762\u3001\u5F8C\u9000\u304C\u59CB\u307E\u308B\u3068\u304D",
-        "16h\u3092\u8D85\u3048\u308B\u3068\u98A8\u5473\u304C\u9178\u3063\u3071\u304F\u306A\u308B",
-        "\u5D29\u308C\u3066\u3082\u307E\u3060\u4F7F\u3048\u308B\u304C\u5272\u5408\u3092\u6E1B\u3089\u3059",
-        "\u30DD\u30FC\u30EA\u30C3\u30B7\u30E5\u306E\u5272\u5408\uFF1A\u7DCF\u5C0F\u9EA6\u7C89\u306E20-40%",
+        "表面が泡でいっぱいになり、中心がへこみ始めたら完成",
+        "イーストが多いほど短時間：20〜22 °Cで0.1%なら15〜16時間、0.3%なら10〜12時間",
+        "ポーリッシュの粉：全粉量の30〜50%",
       ],
     },
     biga: {
       origin: "\u30A4\u30BF\u30EA\u30A2",
       description:
-        "\u56FA\u3044\u524D\u767A\u9175\u7A2E\uFF0844-48%\u52A0\u6C34\u7387\uFF09\u3002\u4E73\u9178\u767A\u9175 + \u30A2\u30EB\u30B3\u30FC\u30EB\u767A\u9175\u3002\u6700\u5927\u306E\u4FDD\u5B58\u6027\u3068\u9999\u308A\u306E\u8907\u96D1\u3055\u3002",
-      hydration: "44-48%",
+        "硬い元種：粉、水44%、イースト1%、18〜20 °Cで約16時間。",
+      hydration: "44%（全粒粉なら50%まで）",
       consistency:
         "\u4E7E\u71E5\u3001\u30B3\u30F3\u30D1\u30AF\u30C8",
       fermentationType:
-        "\u4E73\u9178 + \u30A2\u30EB\u30B3\u30FC\u30EB\uFF08\u6D3B\u6027LAB\uFF09",
+        "ゆっくり：水分が少なく16〜48時間で熟成",
       flavor:
-        "\u9178\u5473\u3001\u8907\u96D1\u3001\u767A\u9175\u306E\u30CE\u30FC\u30C8",
+        "芳醇、花のような香り",
       crustResult:
         "\u30AB\u30EA\u30AB\u30EA\u3001\u3082\u308D\u3044\u3001\u7D30\u304B\u3044\u6C17\u6CE1",
       extensibility:
         "\u4F4E\u3044 \u2014 \u5206\u5272\u5F8C\u306E\u4F11\u606F\u304C\u5FC5\u8981",
       idealStyles:
-        "\u30AF\u30E9\u30B7\u30C3\u30AF\u30CA\u30DD\u30EA\u3001\u30D4\u30F3\u30B5\u3001\u30D4\u30C3\u30C4\u30A1\u30A2\u30EB\u30BF\u30EA\u30AA\u3001\u30D1\u30F3",
+        "ピンサ、ピッツァ・アル・タリオ、パーラ・ロマーナ、パン",
       tips: [
-        "\u4E7E\u71E5\u3057\u3059\u304E\u305F\u5834\u5408\uFF1A5-10%\u306E\u6C34\u3092\u52A0\u3048\u308B",
-        "\u8868\u9762\u304C\u3072\u3073\u5272\u308C\u3066\u4F53\u7A4D\u304C3\u500D\u306B\u306A\u3063\u305F\u3089\u719F\u6210",
-        "\u51B7\u8535\u5EAB\u306748h\u307E\u3067\u4FDD\u5B58\u53EF\u80FD\uFF08\u4F7F\u7528\u524D\u306B10%\u306E\u6C34\u3067\u30EA\u30D5\u30EC\u30C3\u30B7\u30E5\uFF09",
-        "\u30D3\u30AC\u306E\u5272\u5408\uFF1A\u7DCF\u5C0F\u9EA6\u7C89\u306E20-50%",
+        "ところどころ膨らみ、ヨーグルトの香りがして軽く泡立てば完成。酸っぱければ発酵しすぎ",
+        "ロングビガ：4〜5 °Cで24時間、その後18〜20 °Cで24時間",
+        "ビガの粉：全粉量の20〜50%、通常は3分の1",
+        "STGナポリピッツァには使わない：規定はストレート法のみ",
       ],
     },
     autolisi: {
-      origin: "\u4E16\u754C\u5171\u901A",
+      origin: "フランス（R. カルヴェル、1974年）",
       description:
-        "\u5C0F\u9EA6\u7C89+\u6C34\u306E\u307F\u306E\u9175\u7D20\u4F11\u606F\uFF08\u30A4\u30FC\u30B9\u30C8\u3084\u5869\u306A\u3057\uFF09\u3002\u30B0\u30EB\u30C6\u30F3\u3092\u81EA\u7136\u306B\u767A\u9054\u3055\u305B\u3001\u30D7\u30ED\u30C6\u30A2\u30FC\u30BC/\u30A2\u30DF\u30E9\u30FC\u30BC\u3092\u6D3B\u6027\u5316\u3002",
+        "元種ではない：イーストも塩も入れずに粉と水を休ませる工程。",
       hydration:
         "55-75%\uFF08\u30EC\u30B7\u30D4\u306E\u5168\u6C34\u5206\uFF09",
       consistency: "\u30DA\u30FC\u30B9\u30C8\u72B6",
@@ -99,43 +97,35 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
       idealStyles:
         "\u5168\u30B9\u30BF\u30A4\u30EB\uFF08\u4E07\u80FD\u6280\u6CD5\uFF09",
       tips: [
-        "\u5168\u7C92\u7C89\uFF1A\u3088\u308A\u9577\u3044\u30AA\u30FC\u30C8\u30EA\u30FC\u30BA\uFF0860-90\u5206\uFF09",
-        "\u306C\u308B\u307E\u6E6F\uFF0830-35\u00B0C\uFF09\u304C\u9175\u7D20\u3092\u4FC3\u9032",
-        "\u5869\u3092\u52A0\u3048\u308B\u524D\u306B\u5FC5\u305A\u884C\u3046",
-        "\u3053\u306D\u6642\u9593\u309230%\u524A\u6E1B",
-        "\u30D3\u30AC\u3084\u30DD\u30FC\u30EA\u30C3\u30B7\u30E5\u3068\u7D44\u307F\u5408\u308F\u305B\u53EF\u80FD",
+        "20〜60分休ませ、イーストと塩はその後に加える",
+        "ビガやポーリッシュと組み合わせられる",
       ],
     },
   },
   compValues: {
     hydration: {
-      biga: "44-48%",
+      biga: "44%",
       poolish: "100%",
       autolisi: "55-75%",
     },
     yeast: {
-      biga: "0.5-1%",
-      poolish: "0.1-0.5%",
+      biga: "1%",
+      poolish: "0.1〜0.3%",
       autolisi: "0%",
     },
     duration: {
-      biga: "16-48h",
-      poolish: "8-16h",
-      autolisi: "0.5-2h",
+      biga: "16〜48時間",
+      poolish: "12〜16時間",
+      autolisi: "20〜60分",
     },
     temperature: {
-      biga: "16-18\u00B0C",
-      poolish: "20-22\u00B0C",
+      biga: "18〜20 °C",
+      poolish: "20〜22 °C",
       autolisi: "\u5BA4\u6E29",
     },
-    ph: {
-      biga: "5.0-5.3",
-      poolish: "4.5-4.8",
-      autolisi: "~6.5",
-    },
     flavor: {
-      biga: "\u9178\u5473",
-      poolish: "\u7518\u3044/\u30E2\u30EB\u30C8",
+      biga: "芳醇",
+      poolish: "ほのかな酸味",
       autolisi: "\u4E2D\u6027",
     },
     extensibility: {
@@ -319,7 +309,7 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "\u3059\u3050\u306B4\u00B0C\u306B\u79FB\u3057\u3066\u767A\u9175\u3092\u505C\u6B62",
         prevention:
-          "24h\u306B0.2%\u751F\u30A4\u30FC\u30B9\u30C8\u3001\u6E29\u5EA6\u3092\u7BA1\u7406",
+          "時間と温度に合わせて計算したイースト量を使う（18 °Cで24時間なら生イースト約0.1%）",
       },
       P06: {
         symptom:
@@ -650,28 +640,28 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     },
     biga: {
       name: "\u30D3\u30AC",
-      definition: "\u5C0F\u9EA6\u7C89 + \u6C34 + \u30A4\u30FC\u30B9\u30C8\u3067\u4F5C\u308B\u56FA\u3081\u306E\u524D\u7A2E\uFF08\u52A0\u6C34\u738744-50%\uFF09\u300216-18\u00B0C\u306716-24h\u767A\u9175\u3055\u305B\u307E\u3059\u3002",
-      whyImportant: "\u5F37\u3055\u3001\u4F38\u5C55\u6027\u3001\u8907\u96D1\u306A\u98A8\u5473\u3001\u4E0D\u898F\u5247\u3067\u7D20\u6734\u306A\u6C17\u6CE1\u3001\u9577\u3044\u65E5\u6301\u3061\u3092\u3082\u305F\u3089\u3057\u307E\u3059\u3002\u914D\u5408\uFF1A\u7DCF\u5C0F\u9EA6\u7C89\u306E20-40%\u3002",
+      definition: "粉、水44%（全粒粉なら50%まで）、イースト1%で作る硬い元種。18〜20 °Cで約16時間熟成。ロングビガは4〜5 °Cで24時間、さらに18〜20 °Cで24時間。",
+      whyImportant: "本生地に香りと骨格を与える。通常は全粉量の3分の1（20〜50%）。STGナポリピッツァはストレート法のため使えない。",
     },
     poolish: {
       name: "\u30DD\u30FC\u30EA\u30C3\u30B7\u30E5",
-      definition: "\u5C0F\u9EA6\u7C89\u3068\u6C34\u30921:1\u306B\u3057\u3001\u30A4\u30FC\u30B9\u30C8\u3092\u52A0\u3048\u305F\u6DB2\u72B6\u306E\u524D\u7A2E\uFF08\u52A0\u6C34\u7387100%\uFF09\u300216-18\u00B0C\u306712-16h\u767A\u9175\u3055\u305B\u307E\u3059\u3002",
-      whyImportant: "\u9AD8\u3044\u4F38\u5C55\u6027\u3001\u7D30\u304B\u304F\u5747\u4E00\u306A\u6C17\u6CE1\u3001\u307B\u306E\u304B\u306A\u7518\u9178\u3063\u3071\u3055\u3001\u8584\u304F\u30AB\u30EA\u30C3\u3068\u3057\u305F\u30AF\u30E9\u30B9\u30C8\u3002\u30DD\u30FC\u30EA\u30C3\u30B7\u30E5 = \u4F38\u5C55\u6027\u3001\u30D3\u30AC = \u5F37\u3055\u3002",
+      definition: "粉と水を同量、少量のイーストで作る液種。20〜22 °Cで12〜16時間熟成（イースト0.1%で15〜16時間、0.3%で10〜12時間）。",
+      whyImportant: "早く熟成し、生地を伸ばしやすくする。通常は全粉量の30〜50%。表面が泡でいっぱいになり中心がへこみ始めたら完成。",
     },
     autolysis: {
       name: "\u30AA\u30FC\u30C8\u30EA\u30FC\u30BA",
-      definition: "\u5C0F\u9EA6\u7C89 + \u6C34\uFF08\u30A4\u30FC\u30B9\u30C8\u30FB\u5869\u306A\u3057\uFF09\u309220-60 min\u4F11\u307E\u305B\u308B\u5DE5\u7A0B\u3002\u30D7\u30ED\u30C6\u30A2\u30FC\u30BC\u9175\u7D20\u306E\u50CD\u304D\u3067\u30B0\u30EB\u30C6\u30F3\u304C\u81EA\u7136\u306B\u767A\u9054\u3057\u307E\u3059\u3002",
-      whyImportant: "\u30DF\u30AD\u30B7\u30F3\u30B0\u6642\u9593\u3092-30-50%\u77ED\u7E2E\u3057\u3001\u4F38\u5C55\u6027\u3092\u9AD8\u3081\u3001\u6C34\u548C\u3092\u826F\u304F\u3057\u307E\u3059\u3002W<200\u306A\u308920-30 min\u3001W>280\u306A\u308945-60 min\u3002",
+      definition: "イーストも塩も入れずに粉と水を20〜60分休ませる工程（R. カルヴェル、1974年）。元種ではない。",
+      whyImportant: "生地が伸びやすく、扱いやすくなる。",
     },
     bulk_fermentation: {
       name: "\u4E00\u6B21\u767A\u9175\uFF08\u30D7\u30F3\u30BF\u30FC\u30BF\uFF09",
-      definition: "\u30DF\u30AD\u30B7\u30F3\u30B0\u5F8C\u3001\u751F\u5730\u7389\u306B\u5206\u5272\u3059\u308B\u524D\u306E\u6700\u521D\u306E\u767A\u9175\u6BB5\u968E\u3002\u751F\u5730\u306F\u3072\u3068\u307E\u3068\u3081\u306E\u307E\u307E30 min\u301C4h\u4F11\u307E\u305B\u307E\u3059\u3002",
-      whyImportant: "\u30B0\u30EB\u30C6\u30F3\u306E\u7DE9\u548C\u3001\u767A\u9175\u306E\u958B\u59CB\u3001\u9999\u308A\u306E\u767A\u9054\u3001\u4F53\u7A4D\u306E20-50%\u5897\u52A0\u3002",
+      definition: "こね上げ後、分割前に生地をひとまとめで発酵させる一次発酵。スタイルにより1時間未満から冷蔵で1日以上まで。適切な時間は手順に従う。",
+      whyImportant: "グルテンが緩み、発酵が始まり、生地に香りがつく。",
     },
     ball_fermentation: {
       name: "\u4E8C\u6B21\u767A\u9175\uFF08\u30A2\u30D7\u30EC\u30C3\u30C8\uFF09",
-      definition: "\u751F\u5730\u7389\u306B\u5206\u5272\u3057\u305F\u5F8C\u306E\u7B2C2\u306E\u767A\u9175\u6BB5\u968E\u3002\u5404\u751F\u5730\u7389\u30924-22\u00B0C\u30674-48h\u3001\u500B\u5225\u306B\u4F11\u307E\u305B\u307E\u3059\u3002",
-      whyImportant: "\u4E3B\u8981\u306A\u767A\u9175\u3001\u30BF\u30F3\u30D1\u30AF\u8CEA\u5206\u89E3\u306B\u3088\u308B\u719F\u6210\u3001\u6700\u7D42\u7684\u306A\u4F53\u7A4D\u306E\u5F62\u6210\u3001pH\u306E\u5B89\u5B9A\u5316\u3002",
+      definition: "分割後の二次発酵。生地玉で、天板スタイルなら天板の中で行う。時間はスタイル・温度・イーストによる。適切な時間は手順に従う。",
+      whyImportant: "伸ばして焼くのにちょうどよい大きさまで生地を膨らませる。",
     },
     maillard: {
       name: "\u30E1\u30A4\u30E9\u30FC\u30C9\u53CD\u5FDC",

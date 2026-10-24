@@ -9,146 +9,35 @@ import { motion, AnimatePresence } from 'motion/react';
 import { motionSpring } from "../../components/ds/motion";
 import { Surface } from "../../components/ds/index";
 import { ChevronDown, ChevronUp, Clock, Droplets, Thermometer } from 'lucide-react';
-import { useCms } from "../cms/cms-context";
+import { useCms, type CmsPreFerment } from "../cms/cms-context";
 import { Flask } from "../cooking/step-illustrations";
 import { uiMessage } from "../../i18n/ui-messages";
 
-/* === PRE-FERMENT DATA (Italian fallback) === */
-interface PreFermentInfo {
-  id: string;
-  name: string;
-  origin: string;
-  emoji: string;
-  description: string;
-  hydration: string;
-  yeastPct: string;
-  duration: string;
-  temperature: string;
-  consistency: string;
-  phFinal: string;
-  fermentationType: string;
-  flavor: string;
-  crustResult: string;
-  extensibility: string;
-  idealStyles: string;
-  tips: string[];
+/* === PRE-FERMENT IDS ===
+ * Audit totale n. 10: i testi e i valori vivono solo nel CMS (7 lingue,
+ * allineati a docs/ricerca/prefermenti-fonti-2026-10-24.md). Prima qui c'era
+ * una seconda copia italiana con pH senza fonte e durate diverse. */
+export const PRE_FERMENT_IDS = ["biga", "poolish", "autolisi"] as const;
+export type PreFermentId = (typeof PRE_FERMENT_IDS)[number];
+
+export function preFermentName(id: PreFermentId): string {
+  return id === "biga"
+    ? uiMessage("features.recipe.pre-ferment-guide.biga-4e43b430")
+    : id === "poolish"
+      ? uiMessage("features.recipe.pre-ferment-guide.poolish-40fc939a")
+      : uiMessage("features.recipe.pre-ferment-guide.autolisi-c4e938cc");
 }
 
-export const PRE_FERMENT_DB: Record<string, PreFermentInfo> = {
-  poolish: {
-    id: 'poolish',
-    get name() { return uiMessage("features.recipe.pre-ferment-guide.poolish-e474d66e"); },
-    get origin() { return uiMessage("features.recipe.pre-ferment-guide.francese-82f7efde"); },
-    emoji: '💧',
-    get description() { return uiMessage("features.recipe.pre-ferment-guide.pre-fermento-liquido-1-1-farina-acqua-con--3f33fa78"); },
-    hydration: '100% (rapporto 1:1)',
-    yeastPct: '0.1-0.5%',
-    duration: '8-16h',
-    temperature: '20-22°C',
-    get consistency() { return uiMessage("features.recipe.pre-ferment-guide.liquida-schiumosa-4761d70d"); },
-    phFinal: '4.5-4.8',
-    get fermentationType() { return uiMessage("features.recipe.pre-ferment-guide.prevalente-alcolica-co2-etanolo-e4e14567"); },
-    get flavor() { return uiMessage("features.recipe.pre-ferment-guide.dolce-maltato-note-complesse-af6a5e90"); },
-    get crustResult() { return uiMessage("features.recipe.pre-ferment-guide.leggera-dorata-intensa-leopard-spotting-ma-60374676"); },
-    get extensibility() { return uiMessage("features.recipe.pre-ferment-guide.alta-stesura-facile-9a7a4a2e"); },
-    get idealStyles() { return uiMessage("features.recipe.pre-ferment-guide.teglia-romana-ny-style-napoletana-contempo-c1592262"); },
-    get tips() {
-      return [
-        uiMessage("features.recipe.pre-ferment-guide.punto-ottimale-superficie-a-cupola-con-bol-6f1f3a1b"),
-        uiMessage("features.recipe.pre-ferment-guide.oltre-16h-il-sapore-diventa-troppo-acido-a-0c29de16"),
-        uiMessage("features.recipe.pre-ferment-guide.se-collassa-e-ancora-usabile-ma-riduci-la--9a59e0fa"),
-        uiMessage("features.recipe.pre-ferment-guide.percentuale-poolish-su-impasto-finale-20-4-89117fcd"),
-      ];
-    },
-  },
-  biga: {
-    id: 'biga',
-    get name() { return uiMessage("features.recipe.pre-ferment-guide.biga-08518857"); },
-    get origin() { return uiMessage("features.recipe.pre-ferment-guide.italiano-21df7394"); },
-    emoji: '🍞',
-    get description() { return uiMessage("features.recipe.pre-ferment-guide.pre-fermento-asciutto-44-48-idratazione-co-bd813da5"); },
-    hydration: '44-48%',
-    yeastPct: '0.5-1%',
-    duration: '16-48h',
-    temperature: '16-18°C (o 4°C per 48h)',
-    get consistency() { return uiMessage("features.recipe.pre-ferment-guide.asciutta-compatta-6bcc69ed"); },
-    phFinal: '5.0-5.3',
-    get fermentationType() { return uiMessage("features.recipe.pre-ferment-guide.lattica-alcolica-lab-attivi-15c8cdb5"); },
-    get flavor() { return uiMessage("features.recipe.pre-ferment-guide.acidulo-complesso-note-fermentate-3d50a454"); },
-    get crustResult() { return uiMessage("features.recipe.pre-ferment-guide.croccante-friabile-alveolatura-fine-0a655c50"); },
-    get extensibility() { return uiMessage("features.recipe.pre-ferment-guide.bassa-richiede-riposo-dopo-staglio-e0c000b7"); },
-    get idealStyles() { return uiMessage("features.recipe.pre-ferment-guide.napoletana-classica-pinsa-pizza-al-taglio--29eefb3f"); },
-    get tips() {
-      return [
-        uiMessage("features.recipe.pre-ferment-guide.se-troppo-asciutta-aggiungi-5-10-acqua-per-a05b6761"),
-        uiMessage("features.recipe.pre-ferment-guide.matura-quando-la-superficie-e-screpolata-a-f8fc36f7"),
-        uiMessage("features.recipe.pre-ferment-guide.conservabile-fino-a-48h-in-frigo-rinfresca-bd3f8c73"),
-        uiMessage("features.recipe.pre-ferment-guide.percentuale-biga-su-impasto-finale-20-50-d-c26c8331"),
-      ];
-    },
-  },
-  autolisi: {
-    id: 'autolisi',
-    get name() { return uiMessage("features.recipe.pre-ferment-guide.autolisi-d768d82f"); },
-    get origin() { return uiMessage("features.recipe.pre-ferment-guide.universale-4d9a8d57"); },
-    emoji: '💦',
-    get description() { return uiMessage("features.recipe.pre-ferment-guide.riposo-enzimatico-di-sola-farina-acqua-sen-bf42f0b6"); },
-    hydration: '55-75% (tutta l\'acqua della ricetta)',
-    yeastPct: '0% (nessuno)',
-    duration: '20min - 2h',
-    temperature: 'Ambiente',
-    get consistency() { return uiMessage("features.recipe.pre-ferment-guide.pastosa-37b423b6"); },
-    phFinal: '~6.5 (neutro)',
-    get fermentationType() { return uiMessage("features.recipe.pre-ferment-guide.nessuna-solo-attivita-enzimatica-27843676"); },
-    get flavor() { return uiMessage("features.recipe.pre-ferment-guide.neutro-non-altera-il-sapore-46a7c141"); },
-    get crustResult() { return uiMessage("features.recipe.pre-ferment-guide.variabile-dipende-dal-processo-successivo-d4ac118c"); },
-    get extensibility() { return uiMessage("features.recipe.pre-ferment-guide.alta-impasto-setoso-e-meno-appiccicoso-61f86f7d"); },
-    get idealStyles() { return uiMessage("features.recipe.pre-ferment-guide.tutti-gli-stili-tecnica-universale-6673807c"); },
-    get tips() {
-      return [
-        uiMessage("features.recipe.pre-ferment-guide.farine-integrali-autolisi-piu-lunga-60-90m-1690bbff"),
-        uiMessage("features.recipe.pre-ferment-guide.acqua-tiepida-30-35-c-accelera-gli-enzimi-14c88588"),
-        uiMessage("features.recipe.pre-ferment-guide.sempre-prima-di-aggiungere-sale-il-sale-in-23c0578a"),
-        uiMessage("features.recipe.pre-ferment-guide.riduce-il-tempo-di-impasto-del-30-perche-i-a4c95c1d"),
-        uiMessage("features.recipe.pre-ferment-guide.combinabile-con-biga-o-poolish-per-risulta-5e807f3d"),
-      ];
-    },
-  },
-};
+const COMP_KEYS = ['hydration','yeast','duration','temperature','flavor','extensibility','alveolatura','complexity'] as const;
 
-/* === COMPARISON TABLE DATA (Italian fallback) === */
-const COMP_KEYS = ['hydration','yeast','duration','temperature','ph','flavor','extensibility','alveolatura','complexity'] as const;
-
-export const COMPARISON_ROWS = [
-  { get label() { return uiMessage("features.recipe.pre-ferment-guide.idratazione-ca30c32c"); }, biga: '44-48%', poolish: '100%', autolisi: '55-75%' },
-  { get label() { return uiMessage("features.recipe.pre-ferment-guide.lievito-e6b263a4"); }, biga: '0.5-1%', poolish: '0.1-0.5%', autolisi: '0%' },
-  { get label() { return uiMessage("features.recipe.pre-ferment-guide.durata-32c1dabb"); }, biga: '16-48h', poolish: '8-16h', autolisi: '0.5-2h' },
-  { get label() { return uiMessage("features.recipe.pre-ferment-guide.temperatura-df12789a"); }, biga: '16-18°C', poolish: '20-22°C', autolisi: 'Ambiente' },
-  { get label() { return uiMessage("features.recipe.pre-ferment-guide.ph-finale-99bbe246"); }, biga: '5.0-5.3', poolish: '4.5-4.8', autolisi: '~6.5' },
-  { get label() { return uiMessage("features.recipe.pre-ferment-guide.sapore-ac3d50d8"); }, biga: 'Acidulo', poolish: 'Dolce/maltato', autolisi: 'Neutro' },
-  { get label() { return uiMessage("features.recipe.pre-ferment-guide.estensibilita-cbedf025"); }, biga: 'Bassa', poolish: 'Alta', autolisi: 'Alta' },
-  { get label() { return uiMessage("features.recipe.pre-ferment-guide.alveolatura-9d08dfa3"); }, biga: 'Fine', poolish: 'Grande', autolisi: 'Grande' },
-  { get label() { return uiMessage("features.recipe.pre-ferment-guide.complessita-39ee6854"); }, biga: 'Media', poolish: 'Bassa', autolisi: 'Molto bassa' },
-];
-
-/** Righe del confronto nella lingua attiva: CMS sopra il fallback italiano.
- *  Usata dalla card e dalla pagina Pre-fermenti (prima la pagina mostrava le
- *  righe italiane in tutte le lingue). */
-export function localizedComparisonRows(pf: {
-  compLabels?: string[];
-  compValues?: Partial<Record<(typeof COMP_KEYS)[number], { biga?: string; poolish?: string; autolisi?: string }>>;
-}) {
-  const labels = pf.compLabels ?? COMPARISON_ROWS.map((r) => r.label);
-  return COMP_KEYS.map((key, i) => {
-    const fallback = COMPARISON_ROWS[i];
-    const v = pf.compValues?.[key];
-    return {
-      label: labels[i] ?? fallback.label,
-      biga: v?.biga ?? fallback.biga,
-      poolish: v?.poolish ?? fallback.poolish,
-      autolisi: v?.autolisi ?? fallback.autolisi,
-    };
-  });
+/** Righe del confronto nella lingua attiva. */
+export function localizedComparisonRows(pf: CmsPreFerment) {
+  return COMP_KEYS.map((key, i) => ({
+    label: pf.compLabels[i] ?? key,
+    biga: pf.compValues[key]?.biga ?? "",
+    poolish: pf.compValues[key]?.poolish ?? "",
+    autolisi: pf.compValues[key]?.autolisi ?? "",
+  }));
 }
 
 /* === COMPONENT === */
@@ -161,26 +50,16 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
   const [showComparison, setShowComparison] = useState(false);
   const { cms } = useCms();
   const pf = cms.preFerment;
-  const rawInfo = PRE_FERMENT_DB[preFermentType] ?? PRE_FERMENT_DB.poolish;
-  const cmsItem = pf.items?.[preFermentType] ?? pf.items?.poolish;
-
-  /* Merge CMS i18n over hardcoded Italian fallback */
-  const info = useMemo(() => {
-    if (!cmsItem) return rawInfo;
-    return {
-      ...rawInfo,
-      origin: cmsItem.origin ?? rawInfo.origin,
-      description: cmsItem.description ?? rawInfo.description,
-      hydration: cmsItem.hydration ?? rawInfo.hydration,
-      consistency: cmsItem.consistency ?? rawInfo.consistency,
-      fermentationType: cmsItem.fermentationType ?? rawInfo.fermentationType,
-      flavor: cmsItem.flavor ?? rawInfo.flavor,
-      crustResult: cmsItem.crustResult ?? rawInfo.crustResult,
-      extensibility: cmsItem.extensibility ?? rawInfo.extensibility,
-      idealStyles: cmsItem.idealStyles ?? rawInfo.idealStyles,
-      tips: cmsItem.tips?.length ? cmsItem.tips : rawInfo.tips,
-    };
-  }, [rawInfo, cmsItem]);
+  const id: PreFermentId = (PRE_FERMENT_IDS as readonly string[]).includes(preFermentType)
+    ? (preFermentType as PreFermentId)
+    : "poolish";
+  const info = {
+    ...pf.items[id],
+    name: preFermentName(id),
+    yeast: pf.compValues.yeast?.[id] ?? "",
+    duration: pf.compValues.duration?.[id] ?? "",
+    temperature: pf.compValues.temperature?.[id] ?? "",
+  };
 
   /* Build localized comparison rows */
   const compRows = useMemo(() => localizedComparisonRows(pf), [pf]);
@@ -240,7 +119,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
                 <ParamBadge icon={<Droplets size={12} />} label={pf.paramHydration} value={info.hydration} />
                 <ParamBadge icon={<Clock size={12} />} label={pf.paramDuration} value={info.duration} />
                 <ParamBadge icon={<Thermometer size={12} />} label={pf.paramTemperature} value={info.temperature} />
-                <ParamBadge icon={<Flask size={18} />} label={pf.paramPh} value={info.phFinal} />
+                <ParamBadge icon={<Flask size={18} />} label={pf.paramYeast} value={info.yeast} />
               </div>
 
               {/* Result characteristics */}

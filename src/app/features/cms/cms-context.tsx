@@ -371,7 +371,7 @@ export interface CmsPreFerment {
   paramHydration: string;
   paramDuration: string;
   paramTemperature: string;
-  paramPh: string;
+  paramYeast: string;
   detailFermentation: string;
   detailFlavor: string;
   detailCrust: string;
@@ -2668,18 +2668,18 @@ export const CMS_DEFAULTS: CmsContent = {
     learnPath3Copy: "Cornicione esplosivo, alta idratazione, pre-fermento. Tutto quello che hai imparato finora, messo alla prova.",
     learnPath4Title: "Maestro del metodo Bonci",
     learnPath4Copy: "Idratazione estrema, pieghe, pazienza. La teglia da maestro che trasforma acqua e farina in una nuvola.",
-    preFermentsSubtitle: "Biga, Poolish e Autolisi: quando e perché usarli.",
-    preFermentsDescription: "I pre-fermenti sono impasti preliminari che maturano prima dell'impasto finale. Migliorano sapore, struttura e digeribilità della pizza. Ogni tecnica ha caratteristiche uniche: la <strong>Biga</strong> (asciutta) dona complessità aromatica, il <strong>Poolish</strong> (liquido) regala leggerezza e crosta dorata, l'<strong>Autolisi</strong> (solo farina+acqua) sviluppa il glutine senza sforzo.",
+    preFermentsSubtitle: "Biga e poolish, più l'autolisi: quando e perché usarli.",
+    preFermentsDescription: "I pre-fermenti sono impasti di farina, acqua e poco lievito che maturano prima dell'impasto finale. La <strong>Biga</strong> è asciutta (44% d'acqua) e matura lenta, il <strong>Poolish</strong> è liquido (farina e acqua in parti uguali) e matura in fretta. L'<strong>Autolisi</strong> non è un pre-fermento: è un riposo di sola farina e acqua, senza lievito né sale.",
     preFermentsChoiceTitle: "Quale scegliere?",
     preFermentsBigaTitle: "Biga",
-    preFermentsBigaWhen: "Quando vuoi sapore complesso e crosta friabile",
-    preFermentsBigaBest: "Napoletana classica, Pinsa, Pizza al taglio",
+    preFermentsBigaWhen: "Quando vuoi un impasto aromatico e hai circa 16 h a 18–20 °C",
+    preFermentsBigaBest: "Pinsa, Pizza al taglio, Pala romana",
     preFermentsPoolishTitle: "Poolish",
-    preFermentsPoolishWhen: "Quando vuoi leggerezza e crosta dorata intensa",
+    preFermentsPoolishWhen: "Quando vuoi un impasto estensibile e hai 12–16 h a 20–22 °C",
     preFermentsPoolishBest: "Teglia Romana, NY Style, Focacce",
     preFermentsAutolisiTitle: "Autolisi",
-    preFermentsAutolisiWhen: "Quando vuoi ridurre il tempo di impasto e migliorare l'estensibilità",
-    preFermentsAutolisiBest: "Tutti gli stili — tecnica universale, combinabile con Biga/Poolish",
+    preFermentsAutolisiWhen: "Quando vuoi un impasto più facile da stendere",
+    preFermentsAutolisiBest: "Tutti gli stili; si combina con biga e poolish",
     stylesModified: "modificati",
     stylesCustom: "custom",
     noChanges: "nessuna modifica",
