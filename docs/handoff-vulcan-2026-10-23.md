@@ -206,6 +206,14 @@ Emerse nel lavoro, da pianificare in fase 1:
 - **P-5** misurato il 24/10: `docs/budget-prestazioni.md`, controllo
   `npm run check:budget` in CI. Restano P-5a (motore in idle sulla home), P-5c
   (video, serve decisione) e P-5d.
+- ~~**M-7 (P1)**~~ chiuso il 24/10: nessuna fonte per una fritta aperta diversa
+  dalla montanara; aggiunta la «Pizza fritta tonda» dell'AVPN (D-022) e impasto
+  delle fritte allineato all'AVPN con lievitazione 8–24 h (D-023). Manca una
+  foto vera della tonda.
+- ~~**I18N-4**~~ chiuso il 24/10: 14 stili su 28 non avevano descrizione e
+  caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
+  lo vieta per ogni stile.
+- ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
 - ~~**U-10 (P1)**~~ chiuso il 24/10: audit WCAG 2.1 AA del percorso principale
   (`docs/accessibilita-audit-2026-10.md`, 30 voci) e correzioni di tutte le P1,
   P2 e P3; F28 con D-019 (testo minimo 12 px, 11 px solo maiuscolo, controllo

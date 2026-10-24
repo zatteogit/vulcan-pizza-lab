@@ -2155,6 +2155,23 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
         },
       },
     },
+    pizza_fritta_tonda_ripiena: {
+      variant_name: "redonda, ricotta, provola y cicoli",
+      ingredients: {
+        "0": {
+          name: "Ricotta de oveja (suero de leche, sal)",
+        },
+        "1": {
+          name: "Provola ahumada en dados",
+        },
+        "2": {
+          name: "Cicoli napolitanos (o salame napoletano)",
+        },
+        "3": {
+          name: "Pimienta negra reci\u00E9n molida",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2694,6 +2711,12 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     "4formaggi_trancio_assembly": {
       title: "Cuatro quesos al trancio",
       description: "Base blanca con mozzarella, gorgonzola y fontina en trocitos. Parmesano por encima. Sobre la masa alta y esponjosa milanesa.",
+    },
+    pizza_fritta_tonda_fill: {
+      title: "Rellenar y cerrar los dos discos",
+      description: "Estira a mano, sin harina, un disco de unos 120 g y otro de unos 80 g, de 2\u20133 mm de grosor. Sobre el disco m\u00E1s grande reparte la ricotta, la provola, los cicoli y la pimienta dejando libre el borde; cubre con el disco peque\u00F1o y sella presionando bien. Fr\u00EDela en aceite de semillas a unos 175 \u00B0C y dale la vuelta cuando est\u00E9 dorada.",
+      tip_beginner: "El disco de abajo es m\u00E1s grande: as\u00ED su borde se dobla por encima y la tonda se mantiene cerrada al fre\u00EDrla.",
+      tip_nerd: "Sin harina al estirar, el aceite se mantiene limpio m\u00E1s tiempo; un borde mal sellado deja entrar el aceite y salir el relleno.",
     },
   },
 };

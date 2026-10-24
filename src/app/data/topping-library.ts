@@ -1592,9 +1592,11 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "ricotta, provola e cicoli",
     preferred_for_styles: ["pizza_fritta"],
     ingredients: [
-      { name: "Ricotta di pecora (siero di latte, sale)", amount: { value: 80, unit: "g" }, section: "ripieno" },
-      { name: "Provola affumicata a cubetti", amount: { value: 70, unit: "g" }, section: "ripieno" },
-      { name: "Cicoli napoletani (o ciccioli di maiale)", amount: { value: 40, unit: "g" }, notes: "in alternativa: solo pepe nero", section: "ripieno" },
+      // M-7: dosi del disciplinare AVPN 2024 (§4.2) per un panetto di circa 200 g:
+      // ricotta 80–90 g, provola o fiordilatte 30–50 g, cicoli o salame 50–60 g.
+      { name: "Ricotta di pecora (siero di latte, sale)", amount: { value: 85, unit: "g" }, section: "ripieno" },
+      { name: "Provola affumicata a cubetti", amount: { value: 40, unit: "g" }, section: "ripieno" },
+      { name: "Cicoli napoletani (o ciccioli di maiale)", amount: { value: 55, unit: "g" }, notes: "in alternativa: solo pepe nero", section: "ripieno" },
       { name: "Pepe nero macinato fresco", amount: { value: 2, unit: "g" }, section: "ripieno" },
       { name: "Pomodoro San Marzano (poco, dentro)", amount: { value: 30, unit: "g" }, optional: true, section: "ripieno" },
     ],
@@ -1608,6 +1610,33 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       tip: {
         beginner: "È diversa dalla montanara: la montanara è aperta e condita sopra dopo la frittura; la pizza fritta è chiusa e ripiena prima di friggere.",
         nerd: "Sigillare bene i bordi è critico: una tasca aperta fa entrare olio e fa fuoriuscire il ripieno. Il vapore interno cuoce a vapore ricotta e provola mentre l'esterno frigge.",
+      },
+    }],
+  },
+
+  /* M-7 (D-022): ripieno della tonda fritta, dosi AVPN 2024 per 200 g. */
+  pizza_fritta_tonda_ripiena: {
+    id: "pizza_fritta_tonda_ripiena",
+    concept_ref: "pizza_fritta",
+    variant_name: "tonda, ricotta, provola e cicoli",
+    preferred_for_styles: ["pizza_fritta_tonda"],
+    compatible_layouts: ["closed_stuffed"],
+    ingredients: [
+      { name: "Ricotta di pecora (siero di latte, sale)", amount: { value: 85, unit: "g" }, section: "ripieno" },
+      { name: "Provola affumicata a cubetti", amount: { value: 40, unit: "g" }, section: "ripieno" },
+      { name: "Cicoli napoletani (o salame napoletano)", amount: { value: 55, unit: "g" }, section: "ripieno" },
+      { name: "Pepe nero macinato fresco", amount: { value: 1, unit: "g" }, section: "ripieno" },
+    ],
+    assembly_steps: [{
+      id: "pizza_fritta_tonda_fill",
+      title: "Farcire e chiudere i due dischi",
+      description: "Stendere a mano, senza farina, un disco da circa 120 g e uno da circa 80 g, sottili 2–3 mm. Sul disco più grande distribuire ricotta, provola, cicoli e pepe lasciando libero il bordo; coprire con il disco piccolo e sigillare premendo bene. Friggere in olio di semi a circa 175 °C, girandola quando è dorata.",
+      insert_at: "after_fill_internal",
+      duration_minutes: 6,
+      replaces_generic: true,
+      tip: {
+        beginner: "Il disco sotto è più grande: così il bordo si ripiega sopra e la tonda resta chiusa in frittura.",
+        nerd: "Senza farina in stesura l'olio resta pulito più a lungo; un bordo sigillato male fa entrare olio e uscire il ripieno.",
       },
     }],
   },
@@ -3457,6 +3486,7 @@ const REPRESENTATIVE_CONCEPT_ORDER_BY_STYLE: Record<string, readonly string[]> =
   chicago_deep: ["chicago", "supreme", "italian_beef", "meat_lovers", "spinaci"],
   focaccia_barese: ["focaccia_barese"],
   pizza_fritta: ["pizza_fritta", "ricotta_cicoli"],
+  pizza_fritta_tonda: ["pizza_fritta", "ricotta_cicoli"],
   pizza_montanara: ["montanara"],
   calzone_napoletano: ["calzone", "ricotta_cicoli", "scarola"],
   new_haven_apizza: ["white_clam", "tomato_pie"],

@@ -333,6 +333,21 @@ codice non dice più «Letteratura»; 2 tra 18 e 25 °C è coerente con Salvadó
   Indicazione di cottura propria (`timeline.oven.gasPizza`), nomi in 7 lingue.
   Chi aveva salvato `gas` resta sul forno a platea.
 
+## M-7 · Le pizze fritte con fonti (24/10)
+
+Decisioni D-022 e D-023; fonti in `docs/fonti-dati.md` §1.4.
+
+| Stile / dato | Prima | Dopo | Fonte |
+|---|---|---|---|
+| Pizza fritta (calzone fritto) | panetto 100 g, W 220–280, 4–8 h | 200 g, W 250–320, 8–24 h | AVPN 2024; Sorbillo per le 8 h |
+| Ripieno della fritta | ricotta 80, provola 70, cicoli 40 g | 85, 40, 55 g | AVPN 2024, §4.2 |
+| Montanara | W 220–280, 4–8 h | W 250–320, 8–24 h (stesso impasto); panetto 100 g invariato | AVPN 2024; Sorbillo |
+| Pizza fritta tonda | — | nuovo stile: due dischi 120 + 80 g, `closed_stuffed`, olio 175–190 °C | AVPN 2024 |
+
+Golden: la fritta passa da 242 g a 484 g di farina per 4 panetti e da 6 h a
+16 h (in frigo); la montanara da 6 a 16 h. Esiti invariati (ok / ok / pasto
+fra 2 h non fattibile). La foto della tonda è per ora quella della fritta chiusa.
+
 ## Da decidere o da fare
 
 - **Q10 del lievito (C-4):** 2 sopra i 10 °C è coerente con Salvadó et al. 2011;

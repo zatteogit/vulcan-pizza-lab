@@ -61,6 +61,8 @@ const EXPECTED: Record<string, Expected> = {
   focaccia_barese: { ideal: OK, home: OK, rush: LATE_SHORT },
   pizza_fritta: { ideal: OK, home: OK, rush: SHORT },
   pizza_montanara: { ideal: OK, home: OK, rush: SHORT },
+  // M-7 (D-022): tonda fritta AVPN, stesso impasto della pizza fritta.
+  pizza_fritta_tonda: { ideal: OK, home: OK, rush: SHORT },
   calzone_napoletano: { ideal: OK, home: OVEN, rush: OVEN_SHORT },
   pizza_al_metro: { ideal: OK, home: WARN, rush: SHORT },
   new_haven_apizza: { ideal: OK, home: OVEN, rush: OVEN_SHORT },

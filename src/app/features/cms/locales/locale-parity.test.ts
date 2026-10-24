@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CMS_DEFAULTS, type CmsContent } from "../cms-context";
+import { STYLES_DB } from "../../../domain/styles-db";
 import { EN_LOCALE } from "./en";
 import { DE_LOCALE } from "./de";
 import { ES_LOCALE } from "./es";
@@ -53,5 +54,17 @@ const BUNDLES: Record<string, CmsContent> = {
 describe.each(Object.entries(BUNDLES))("bundle %s", (_locale, bundle) => {
   it("ha tutti i testi del CMS", () => {
     expect(REQUIRED.filter((path) => !has(bundle, path))).toEqual([]);
+  });
+});
+
+/* Ogni stile del catalogo ha descrizione e caratteristiche nel CMS: senza, la UI
+ * ricade sul testo italiano di styles-db in tutte le lingue (14 stili su 28
+ * erano così). Con le chiavi in CMS_DEFAULTS, il test sopra le esige ovunque. */
+describe("stili nel CMS", () => {
+  it("ogni stile ha descrizione e caratteristiche", () => {
+    const missing = Object.keys(STYLES_DB).filter(
+      (id) => !CMS_DEFAULTS.styleDescriptions[id] || !CMS_DEFAULTS.styleChars[id],
+    );
+    expect(missing).toEqual([]);
   });
 });

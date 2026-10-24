@@ -1059,9 +1059,9 @@ function Label({ children }: { children: React.ReactNode }) {
    forza della sua farina. Qui sceglie in linguaggio naturale (debole/media/forte
    con esempi reali) e il motore deriva la W. Mostrato solo a skill_level === 1. */
 const BEGINNER_FLOURS: { label: string; sub: string; w: number }[] = [
-  { get label() { return uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"); }, sub: "00 supermercato", w: 185 },
-  { get label() { return uiMessage("features.recipe.recipe-configurator.media-0c77aeec"); }, sub: "0 / per pizza", w: 250 },
-  { get label() { return uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"); }, sub: "Manitoba", w: 350 },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubWeak"); }, w: 185 },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.media-0c77aeec"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubMedium"); }, w: 250 },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubStrong"); }, w: 350 },
 ];
 
 function BeginnerFlourPicker({

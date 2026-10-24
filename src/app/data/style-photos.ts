@@ -52,6 +52,7 @@ export const STYLE_PHOTOS: Record<string, string> = {
   chicago_tavern: photoChicagoTavern,
   focaccia_barese: photoFocacciaBarese,
   pizza_fritta: photoPizzaFritta,
+  pizza_fritta_tonda: photoPizzaFritta, // M-7: foto della fritta chiusa finché non c'è una foto della tonda
   pizza_montanara: photoMontanara,
   calzone_napoletano: photoCalzoneNapoletano,
   pizza_al_metro: photoPizzaAlMetro,

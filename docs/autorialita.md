@@ -58,7 +58,8 @@ firmato da un agente, «nessun segno» se non c'è traccia (non prova l'assenza)
 | D-019 | 2026-10-24 | Accessibilità | Testo minimo 12 px per il testo informativo, 11 px solo per gli eyebrow maiuscoli (audit F28) | solo testo informativo; lasciare com'è | risposta a scelta nella sessione dell'agente del 24/10; `docs/accessibilita-audit-2026-10.md` | Matteo | proposta e modifiche: agente AI |
 | D-020 | 2026-10-24 | Motore | Forno a legna dello stile (STG, New Haven): avviso, non blocco, in consigli e ricetta | blocco ovunque; lasciare l'incoerenza | come D-019; `docs/motore-correzioni-2026-10-22.md` | Matteo | come D-019 |
 | D-021 | 2026-10-24 | Dati | Due forni a gas: «da pizza» fino a 500 °C (portatili) e «a platea» fino a 350 °C | un solo tipo a 450–500 °C; lasciare 350 °C | come D-019; `docs/fonti-dati.md` §3.1 | Matteo | come D-019 |
-| D-022 | 2026-10-24 | Contenuti | M-7: un terzo stile fritto (fritta aperta) accanto a fritta ripiena e montanara, solo con fonti | chiudere M-7 con le due voci attuali | come D-019 | Matteo | ricerca fonti e proposta: agente AI |
+| D-022 | 2026-10-24 | Contenuti | M-7: terzo stile fritto. Le fonti non conoscono una fritta aperta diversa dalla montanara (il battilocchio è chiuso): si aggiunge la «Pizza fritta tonda» del disciplinare AVPN 2024 (due dischi, 120 + 80 g) | piscitiello/battilocchio (senza fonti su peso e misure, nome registrato); nessun terzo stile | due risposte a scelta nella sessione dell'agente del 24/10; `docs/fonti-dati.md` §1.4 | Matteo | ricerca fonti, proposta e modifiche: agente AI |
+| D-023 | 2026-10-24 | Contenuti | Impasto delle fritte su AVPN 2024 (panetto 200 g, W 250–320) con lievitazione 8–24 h (8 h dalle friggitorie, 24 h AVPN) | AVPN 12–24 h; correggere solo il panetto | come D-022 | Matteo | come D-022 |
 
 D-008 e D-009 arrivano dal brief del lavoro come decisioni del proprietario;
 nel repository non c'è ancora un riscontro scritto, quindi restano da
