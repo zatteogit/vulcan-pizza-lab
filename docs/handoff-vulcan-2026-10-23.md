@@ -214,6 +214,16 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- ~~**U-5 (P1)**~~ chiuso il 24/10: ricerca a tutta pagina secondo la spec
+  INT-NAV. Su mobile la capsula dei tab diventa il campo e la lente «Annulla»;
+  su desktop e nella pagina ricetta il campo sta in testa ai risultati. I
+  risultati prendono il posto della pagina, che resta montata (Annulla/Esc
+  riportano scroll e focus dove erano). Indice puro in
+  `features/search/search-index.ts` con test: testi della lingua attiva
+  (condimenti, prefermenti, glossario, problemi), accenti e maiuscole
+  ignorati, più parole in AND, ordinamento per pertinenza; problemi e
+  prefermenti aprono la voce giusta (`?issue=`, `#pf-`). `SearchOverlay`
+  rimosso. Le ricette iconiche restano in italiano finché non chiude I18N-5.
 - ~~**U-10 (P1)**~~ chiuso il 24/10: audit WCAG 2.1 AA del percorso principale
   (`docs/accessibilita-audit-2026-10.md`, 30 voci) e correzioni di tutte le P1,
   P2 e P3; F28 con D-019 (testo minimo 12 px, 11 px solo maiuscolo, controllo

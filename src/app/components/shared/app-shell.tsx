@@ -2,7 +2,7 @@
    Layout principale con Tab Bar Material 3.
    Mobile: bottom bar 4 tab + search FAB.
    Desktop: sidebar rail + search icon.
-   ⌘K / Ctrl+K apre la command palette (SearchOverlay). */
+   ⌘K / Ctrl+K apre la ricerca a tutta pagina (U-5). */
 
 import {
 Compass,
@@ -11,16 +11,18 @@ GraduationCap,
 User,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
-import { Suspense,lazy,useCallback,useEffect,useState } from "react";
+import { Suspense,lazy,useCallback,useEffect,useRef,useState,type KeyboardEvent as ReactKeyboardEvent,type MutableRefObject,type RefObject } from "react";
 import { Link,Outlet,useLocation,useNavigate } from "react-router";
 import { ActiveCookWidget } from "../../features/cooking/active-cook-widget";
 import { CmsProvider,useCms } from "../../features/cms/cms-context";
 import { CookSessionProvider,useCookSession } from "../../features/cooking/cook-session";
 import type { DarkModeContext,ThemeMode } from "../../hooks/use-dark-mode";
 import { SearchButton } from "./search-button";
+import { PageSearchBar, SearchField } from "./search-field";
+import { useIsMobile } from "../../hooks/use-mobile";
 import { RouteTitle, SkipLink } from "./route-title";
 
-/* Audit bundle lug 2026: CookingMode e SearchOverlay trascinavano motore,
+/* Audit bundle lug 2026: CookingMode e la ricerca trascinavano motore,
    topping, glossario e troubleshooting nel chunk d'ingresso (~400 kB di
    sorgente) pur montandosi solo su richiesta → lazy. */
 const CookingMode = lazy(() =>
@@ -28,8 +30,8 @@ const CookingMode = lazy(() =>
     default: m.CookingMode,
   })),
 );
-const SearchOverlay = lazy(() =>
-  import("./search-overlay").then((m) => ({ default: m.SearchOverlay })),
+const SearchResultsView = lazy(() =>
+  import("../../features/search/search-results-view").then((m) => ({ default: m.SearchResultsView })),
 );
 import { DebugOverlay } from "../../features/dev-tools/debug-overlay";
 import { ThemeSwitcher } from "../../features/dev-tools/theme-switcher";
@@ -210,6 +212,8 @@ type LiquidNavState = {
   scrolled: boolean;
 };
 
+const NAV_RESYNC_EVENT = "vulcan:nav-resync";
+
 /* ═══ Barre dinamiche (feedback giugno 2026, stile liquid glass) ═══
    La chrome fluttua sopra al contenuto: si ritira quando leggi, riemerge
    appena risali e cambia densità quando c'è contenuto che scorre sotto. */
@@ -280,6 +284,14 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
        visualViewport resize) senza uno scroll reale dell'utente. La trattiamo
        come "mostra il dock" e ri-sincronizziamo lastY, così la barra che
        ricompare non lascia il dock nascosto né provoca un flip spurio. */
+    /* U-5: un salto di scroll fatto dall'app (ritorno da «Annulla» della
+       ricerca) non è lettura: si riallinea senza ritirare il dock. */
+    const onResync = () => {
+      lastY = Math.min(Math.max(window.scrollY, 0), maxScroll());
+      acc = 0;
+      setState((prev) => (prev.hidden ? { ...prev, hidden: false } : prev));
+    };
+
     const onViewportChange = () => {
       lastY = Math.min(Math.max(window.scrollY, 0), maxScroll());
       acc = 0;
@@ -299,6 +311,7 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
     };
 
     onScroll();
+    window.addEventListener(NAV_RESYNC_EVENT, onResync);
     document.addEventListener("focusin", onFocusIn);
     window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("scroll", onScroll, { passive: true, capture: true });
@@ -306,6 +319,7 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
     window.visualViewport?.addEventListener("resize", onViewportChange);
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener(NAV_RESYNC_EVENT, onResync);
       document.removeEventListener("focusin", onFocusIn);
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("scroll", onScroll, { capture: true } as EventListenerOptions);
@@ -316,22 +330,62 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
   return state;
 }
 
-/* ═══ MOBILE BOTTOM BAR ═══ */
+type DockSearch = {
+  open: boolean;
+  query: string;
+  onQueryChange: (value: string) => void;
+  onCancel: () => void;
+  inputRef: RefObject<HTMLInputElement>;
+  onKeyDown: (event: ReactKeyboardEvent<HTMLInputElement>) => void;
+};
+
+/* U-5: con la tastiera virtuale aperta il dock deve stare sopra di essa, non
+   dietro. La distanza arriva da visualViewport come variabile CSS. */
+function useKeyboardInset(ref: RefObject<HTMLElement | null>, active: boolean) {
+  useEffect(() => {
+    const el = ref.current;
+    const vv = window.visualViewport;
+    if (!el || !vv || !active) return;
+    const update = () => {
+      const inset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      el.style.setProperty("--dock-keyboard-inset", `${Math.round(inset)}px`);
+    };
+    update();
+    vv.addEventListener("resize", update);
+    vv.addEventListener("scroll", update);
+    return () => {
+      vv.removeEventListener("resize", update);
+      vv.removeEventListener("scroll", update);
+      el.style.removeProperty("--dock-keyboard-inset");
+    };
+  }, [ref, active]);
+}
+
+/* ═══ MOBILE BOTTOM BAR ═══
+   U-5: alla ricerca i tab lasciano posto al campo (la capsula si trasforma) e
+   il cerchio della lente diventa «Annulla». */
 function BottomTabBar({
   activeTab,
   onSearchOpen,
   navState,
+  search,
 }: {
   activeTab: string | null;
   onSearchOpen: () => void;
   navState: LiquidNavState;
+  search: DockSearch;
 }) {
   const { cms } = useCms();
   const prefersReducedMotion = useReducedMotion();
-  const { hidden, scrolled } = navState;
+  const dockRef = useRef<HTMLDivElement>(null);
+  useKeyboardInset(dockRef, search.open);
+  const hidden = navState.hidden && !search.open;
+  const { scrolled } = navState;
+  const morph = prefersReducedMotion ? { duration: 0 } : navSpring;
   return (
     <motion.div
-      className={`app-shell-dock${scrolled ? " app-shell-dock--scrolled" : ""}${hidden ? " app-shell-dock--hidden" : ""}`}
+      ref={dockRef}
+      className={`app-shell-dock${scrolled ? " app-shell-dock--scrolled" : ""}${hidden ? " app-shell-dock--hidden" : ""}${search.open ? " app-shell-dock--search" : ""}`}
       initial={{ y: 0, scale: 1, opacity: 1 }}
       animate={{
         y: hidden && !prefersReducedMotion ? 96 : 0,
@@ -348,8 +402,25 @@ function BottomTabBar({
             }
       }
     >
-      {/* Tabs Capsule */}
-      <nav
+      {search.open ? (
+        <motion.div
+          layoutId="dock-capsule"
+          transition={morph}
+          role="search"
+          className="app-shell-dock__nav app-shell-dock__nav--search"
+        >
+          <SearchField
+            variant="dock"
+            value={search.query}
+            onChange={search.onQueryChange}
+            inputRef={search.inputRef}
+            onKeyDown={search.onKeyDown}
+          />
+        </motion.div>
+      ) : (
+      <motion.nav
+        layoutId="dock-capsule"
+        transition={morph}
         data-region="nav"
         className="app-shell-dock__nav"
         aria-label={cms.pages.navMainLabel}
@@ -369,15 +440,28 @@ function BottomTabBar({
             />
           ))}
         </div>
-      </nav>
+      </motion.nav>
+      )}
 
       {/* Floating Search Circle next to it — landmark «search» (U-10, F29) */}
-      <div role="search" className="app-shell-dock__search">
-        <SearchButton
-          size="lg"
-          onOpen={onSearchOpen}
-        />
-      </div>
+      {search.open ? (
+        <motion.button
+          layoutId="dock-action"
+          transition={morph}
+          type="button"
+          onClick={search.onCancel}
+          className="app-shell-dock__cancel"
+        >
+          {cms.ui.cancel}
+        </motion.button>
+      ) : (
+        <motion.div layoutId="dock-action" transition={morph} role="search" className="app-shell-dock__search">
+          <SearchButton
+            size="lg"
+            onOpen={onSearchOpen}
+          />
+        </motion.div>
+      )}
     </motion.div>
   );
 }
@@ -554,10 +638,17 @@ export function AppShell() {
     };
   }, []);
 
+  /* U-5 — ricerca a tutta pagina. La query vive qui perché il campo sta nel
+     dock (mobile) e i risultati al posto della pagina; il chunk dei risultati
+     si scarica alla prima apertura. */
   const [searchOpen, setSearchOpen] = useState(false);
-  /* Il chunk della palette si scarica alla prima apertura e resta montato
-     (le animazioni open/close continuano a passare dalla prop `open`). */
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchMounted, setSearchMounted] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchKeyRef: MutableRefObject<((event: ReactKeyboardEvent<HTMLInputElement>) => void) | null> = useRef(null);
+  /* Da dove si è partiti: scroll e focus tornano lì con «Annulla». */
+  const searchReturnRef = useRef<{ scrollY: number; focus: HTMLElement | null } | null>(null);
+  const isMobile = useIsMobile();
   const [hideNavbar, setHideNavbar] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -569,6 +660,13 @@ export function AppShell() {
   if (location.pathname !== prevPathname) {
     setPrevPathname(location.pathname);
     setHideNavbar(false);
+    /* Indietro del browser con la ricerca aperta: si va alla pagina, la
+       ricerca si chiude. */
+    if (searchOpen) {
+      setSearchOpen(false);
+      setSearchQuery("");
+      searchReturnRef.current = null;
+    }
   }
 
   const setThemeMode = useCallback((v: ThemeMode) => {
@@ -600,18 +698,71 @@ export function AppShell() {
 
   const openSearch = useCallback(() => {
     setSearchMounted(true);
-    setSearchOpen(true);
+    setSearchOpen((wasOpen) => {
+      if (!wasOpen) {
+        searchReturnRef.current = {
+          scrollY: window.scrollY,
+          focus: document.activeElement instanceof HTMLElement ? document.activeElement : null,
+        };
+      }
+      return true;
+    });
   }, []);
-  const closeSearch = useCallback(() => setSearchOpen(false), []);
+
+  /* «Annulla» ed Esc: si torna dove si era, con lo stesso scroll e focus. */
+  const cancelSearch = useCallback(() => {
+    const back = searchReturnRef.current;
+    searchReturnRef.current = null;
+    setSearchOpen(false);
+    setSearchQuery("");
+    requestAnimationFrame(() => {
+      if (back) window.scrollTo(0, back.scrollY);
+      window.dispatchEvent(new Event(NAV_RESYNC_EVENT));
+      /* La lente del dock si rimonta con la trasformazione: se il pulsante
+         salvato non c'è più, il focus va a quella nuova. */
+      const target = back?.focus?.isConnected
+        ? back.focus
+        : document.querySelector<HTMLElement>(".app-shell-dock__search .search-button");
+      target?.focus({ preventScroll: true });
+    });
+  }, []);
+
+  /* Scelta di un risultato: il link (o Invio) porta alla pagina, che parte
+     dall'alto. */
+  const selectSearchResult = useCallback(
+    (link?: string) => {
+      searchReturnRef.current = null;
+      setSearchOpen(false);
+      setSearchQuery("");
+      if (link) navigate(link);
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+    },
+    [navigate],
+  );
+
+  const onSearchKeyDown = useCallback((event: ReactKeyboardEvent<HTMLInputElement>) => {
+    searchKeyRef.current?.(event);
+  }, []);
 
   useEffect(() => {
-    const handler = () => {
-      setSearchMounted(true);
-      setSearchOpen(true);
+    window.addEventListener("vulcan:open-search", openSearch);
+    return () => window.removeEventListener("vulcan:open-search", openSearch);
+  }, [openSearch]);
+
+  /* All'apertura: risultati dall'alto e focus nel campo (dock o testata). */
+  useEffect(() => {
+    if (!searchOpen) return;
+    window.scrollTo(0, 0);
+    const frame = requestAnimationFrame(() => searchInputRef.current?.focus({ preventScroll: true }));
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") cancelSearch();
     };
-    window.addEventListener("vulcan:open-search", handler);
-    return () => window.removeEventListener("vulcan:open-search", handler);
-  }, []);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [searchOpen, cancelSearch]);
 
   /* Apply .dark on <html> so portals inherit tokens */
   useEffect(() => {
@@ -629,8 +780,8 @@ export function AppShell() {
       /* ⌘K / Ctrl+K — open search */
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setSearchMounted(true);
-        setSearchOpen((prev) => !prev);
+        if (searchOpen) cancelSearch();
+        else openSearch();
         return;
       }
       /* Ctrl+Shift+D — dev mode toggle */
@@ -646,7 +797,7 @@ export function AppShell() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [navigate, devMode, setDevMode]);
+  }, [navigate, devMode, setDevMode, searchOpen, cancelSearch, openSearch]);
 
   const activeTab = getActiveTab(location.pathname);
 
@@ -659,7 +810,10 @@ export function AppShell() {
   const isRecipePage = location.pathname.startsWith("/recipe/");
   const showNav = !isToolPage && !isRecipePage && !hideNavbar;
   const showCookAction = !isToolPage && !hideNavbar;
-  const hasProfileButton = showNav && activeTab !== "profile";
+  const hasProfileButton = showNav && activeTab !== "profile" && !searchOpen;
+  /* Il campo sta nel dock solo dove il dock c'è (mobile, pagine con i tab);
+     altrove la pagina dei risultati ha il suo. */
+  const searchInDock = showNav && isMobile === true;
 
   return (
     <CmsProvider>
@@ -677,7 +831,7 @@ export function AppShell() {
           )}
 
           {/* Audit Sprint 12 — Profilo top-right (sostituisce la tab Profilo). */}
-          {showNav && activeTab !== "profile" && (
+          {showNav && activeTab !== "profile" && !searchOpen && (
             /* U-10 (F29): l'avatar sta in un landmark (banner) come il resto della shell */
             <header className="app-shell-header">
               <ProfileButton active={activeTab === "profile"} navState={navState} />
@@ -691,9 +845,34 @@ export function AppShell() {
             className={`app-shell-main${showNav ? " app-shell-main--nav" : ""}`}
           >
             <RouteTitle />
-            <Outlet
-              context={{ darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode, hideNavbar, setHideNavbar } satisfies DarkModeContext}
-            />
+            {/* U-5: la pagina resta montata (stato e scroll salvi) e si nasconde
+                mentre i risultati ne prendono il posto. */}
+            <div className="app-shell-page" hidden={searchOpen}>
+              <Outlet
+                context={{ darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode, hideNavbar, setHideNavbar } satisfies DarkModeContext}
+              />
+            </div>
+            {searchMounted && searchOpen && (
+              <Suspense fallback={null}>
+                <SearchResultsView
+                  query={searchQuery}
+                  onQueryChange={setSearchQuery}
+                  onSelect={selectSearchResult}
+                  keyHandlerRef={searchKeyRef}
+                  field={
+                    searchInDock ? undefined : (
+                      <PageSearchBar
+                        value={searchQuery}
+                        onChange={setSearchQuery}
+                        inputRef={searchInputRef}
+                        onKeyDown={onSearchKeyDown}
+                        onCancel={cancelSearch}
+                      />
+                    )
+                  }
+                />
+              </Suspense>
+            )}
           </div>
 
           {/* Bottom tab bar — mobile */}
@@ -716,22 +895,27 @@ export function AppShell() {
                       }
                 }
               />
-              <BottomTabBar activeTab={activeTab} onSearchOpen={openSearch} navState={navState} />
+              <BottomTabBar
+                activeTab={activeTab}
+                onSearchOpen={openSearch}
+                navState={navState}
+                search={{
+                  open: searchOpen && searchInDock,
+                  query: searchQuery,
+                  onQueryChange: setSearchQuery,
+                  onCancel: cancelSearch,
+                  inputRef: searchInputRef,
+                  onKeyDown: onSearchKeyDown,
+                }}
+              />
             </>
-          )}
-
-          {/* Command palette search overlay — chunk caricato alla prima apertura */}
-          {searchMounted && (
-            <Suspense fallback={null}>
-              <SearchOverlay open={searchOpen} onClose={closeSearch} />
-            </Suspense>
           )}
 
           {/* Pizzata attiva: sticky action + overlay (cross-page) */}
           <CookSessionUI
             canStartRecipe={isRecipePage}
             hasProfileButton={hasProfileButton}
-            showAction={showCookAction}
+            showAction={showCookAction && !searchOpen}
             compact={navState.scrolled}
             /* Come il ProfileButton: a fondo pagina il force-show serve al
                dock in basso, non ai flottanti in alto (audit lug 2026). Una

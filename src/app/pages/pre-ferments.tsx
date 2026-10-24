@@ -1,4 +1,6 @@
 import { motion } from "motion/react";
+import { useEffect } from "react";
+import { useLocation } from "react-router";
 import { Heading } from "../components/ds/index";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import { useCms } from "../features/cms/cms-context";
@@ -19,6 +21,16 @@ const PRE_FERMENT_ORDER = [
 export function PreFermentsPage() {
   const { cms } = useCms();
   const pg = cms.pages;
+  const { hash } = useLocation();
+
+  /* U-5: dalla ricerca si arriva alla scheda (#pf-biga, #pf-poolish…). */
+  useEffect(() => {
+    if (!hash.startsWith("#pf-")) return;
+    const frame = requestAnimationFrame(() =>
+      document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" }),
+    );
+    return () => cancelAnimationFrame(frame);
+  }, [hash]);
   return (
     <div className="preferment-page">
       {/* Header — pattern condiviso (il titolo vive nell'hero sotto) */}
@@ -56,6 +68,7 @@ export function PreFermentsPage() {
           {PRE_FERMENT_ORDER.map((id, i) => (
             <motion.div
               key={id}
+              id={`pf-${id}`}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ ...motionSpring.standard,delay: i * motionDelay.recipeReveal }}
