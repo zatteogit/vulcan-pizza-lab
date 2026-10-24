@@ -192,6 +192,16 @@ export function useProfileDefaults(): ProfileDefaults {
   return useMemo(() => loadProfileDefaults(), []);
 }
 
+/** Audit n. 33: il livello è stato scelto (percorso o profilo)? Senza
+ *  scelta l'app usa 2 per i calcoli ma non lo presenta come «il tuo livello». */
+export function hasChosenSkill(): boolean {
+  try {
+    return localStorage.getItem(SKILL_STORAGE_KEY) !== null;
+  } catch {
+    return false;
+  }
+}
+
 export function loadSkill(): SkillLevel {
   try {
     const raw = localStorage.getItem(SKILL_STORAGE_KEY);

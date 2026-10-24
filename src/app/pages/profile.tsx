@@ -3,6 +3,7 @@
    Tab: Profilo — /profile
    Include FTU (First Time Use) onboarding al primo accesso. */
 
+import { TOOLS_ENABLED } from "../config/tools";
 import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
 import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Egg, Flame, Globe, GraduationCap, Heart, Home, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Thermometer, Timer, Trees, Upload, User, WheatOff, X, Zap } from "lucide-react";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
@@ -132,6 +133,20 @@ function loadJson<T>(key: string): T | null {
     if (raw) return JSON.parse(raw);
   } catch { /* */ }
   return null;
+}
+
+/** Audit n. 33: salva solo dopo una modifica vera. Prima bastava aprire il
+ *  profilo per scrivere livello, forno e attrezzatura di default come se
+ *  fossero scelti (Impara diceva «Livello intermedio» a chi non l'aveva mai
+ *  detto). Confronta col valore iniziale: regge il doppio effetto di StrictMode. */
+function useSaveOnChange(value: unknown, save: () => void) {
+  const initial = useRef(JSON.stringify(value));
+  const changed = useRef(false);
+  useEffect(() => {
+    if (!changed.current && JSON.stringify(value) === initial.current) return;
+    changed.current = true;
+    save();
+  }, [JSON.stringify(value)]);
 }
 
 function saveJson(key: string, value: unknown) {
@@ -736,6 +751,16 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
     onComplete();
   }, [ovenType, ovenTemp, skillLevel, ftuFlours, ftuYeasts, onComplete]);
 
+  /* Audit n. 33 / D-038: il percorso si può saltare. Forno e livello restano
+     «non scelti» (niente valori di default salvati come se li avessi scelti
+     tu): li chiedono Crea e il profilo quando servono. */
+  const handleSkip = useCallback(() => {
+    try {
+      localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
+    } catch { /* */ }
+    onComplete();
+  }, [onComplete]);
+
   const handleNext = useCallback(() => {
     if (step < lastStep) setStep((s) => s + 1);
     else handleFinish();
@@ -1019,6 +1044,10 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
               className="profile-ftu__nav-back"
             >
               {p.ftuBack}
+            </button>
+          ) : step < lastStep ? (
+            <button type="button" onClick={handleSkip} className="profile-ftu__nav-skip">
+              {uiMessage("pages.profile.ftu-skip")}
             </button>
           ) : (
             <div />
@@ -1405,17 +1434,17 @@ export function ProfilePage() {
     try { localStorage.removeItem(LOCATION_STORAGE_KEY); } catch { /* */ }
   }, []);
 
-  /* Auto-save on change */
-  useEffect(() => {
+  /* Salvataggio a ogni modifica (non all'apertura: audit n. 33) */
+  useSaveOnChange([ovens, ovenType, ovenTemp, ovenModelId], () => {
     saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp, ...(ovenModelId ? { modelId: ovenModelId } : {}) });
     try {
       localStorage.setItem("vulcan_ovens", JSON.stringify(ovens));
     } catch (e) {
       // ignore
     }
-  }, [ovens, ovenType, ovenTemp, ovenModelId]);
+  });
 
-  useEffect(() => {
+  useSaveOnChange(mixers, () => {
     try {
       localStorage.setItem("vulcan_mixers", JSON.stringify(mixers));
     } catch (e) {
@@ -1431,25 +1460,20 @@ export function ProfilePage() {
       saveJson(EQUIPMENT_STORAGE_KEY, next);
       return next;
     });
-  }, [mixers]);
+  });
 
-  useEffect(() => {
-    saveJson(SKILL_STORAGE_KEY, skillLevel);
-  }, [skillLevel]);
+  useSaveOnChange(skillLevel, () => saveJson(SKILL_STORAGE_KEY, skillLevel));
 
-  useEffect(() => {
-    saveJson(DIETARY_STORAGE_KEY, dietary);
-  }, [dietary]);
-  useEffect(() => {
+  useSaveOnChange(dietary, () => saveJson(DIETARY_STORAGE_KEY, dietary));
+
+  useSaveOnChange(pizzaNerd, () => {
     try {
       localStorage.setItem(NERD_STORAGE_KEY, String(pizzaNerd));
       localStorage.removeItem("vulcan_view_mode");
     } catch { /* */ }
-  }, [pizzaNerd]);
+  });
 
-  useEffect(() => {
-    savePreferredUnitSystem(unitSystem);
-  }, [unitSystem]);
+  useSaveOnChange(unitSystem, () => savePreferredUnitSystem(unitSystem));
   const toggleDietary = (id: string) =>
     setDietary((prev) =>
       prev.includes(id) ? prev.filter((d) => d !== id) : [...prev, id],
@@ -2329,7 +2353,9 @@ export function ProfilePage() {
             {p.resetProfile}
           </button>
 
-          {/* Dev mode toggle */}
+          {/* Dev mode toggle: solo nelle build con gli strumenti (audit n. 36:
+              in produzione era visibile ma non serviva a nulla). */}
+          {TOOLS_ENABLED && (
           <motion.button
             onClick={() => setDevMode(!devMode)}
             className="profile-page__dev-toggle"
@@ -2344,6 +2370,7 @@ export function ProfilePage() {
             <Bug size={13} />
             {devMode ? p.devModeOn : p.devModeOff}
           </motion.button>
+          )}
         </div>
           </div>
         )}

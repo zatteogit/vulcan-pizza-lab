@@ -404,7 +404,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   /* ═══ PUNTEGGI ═══ */
   {
     id: "a_score",
-    name: "A-Score (Authenticity)",
+    name: "A-Score (Autenticità)",
     category: "scoring",
     definition: "Punteggio 0-100 che misura aderenza di una ricetta al disciplinare dello stile target.",
     formula: "A = Ingredienti(30%) + Processo(25%) + Attrezzatura(35%) + Forma(10%)",
@@ -417,7 +417,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   },
   {
     id: "f_score",
-    name: "F-Score (Feasibility)",
+    name: "F-Score (Fattibilità)",
     category: "scoring",
     definition: "Punteggio 0-100 che misura realizzabilità pratica data equipaggiamento e abilità utente.",
     formula: "F = Forno(40%) + Ingredienti(30%) + Abilità(20%) + Tempo(10%)",
@@ -430,7 +430,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
   },
   {
     id: "d_score",
-    name: "D-Score (Digestibility)",
+    name: "D-Score (Digeribilità)",
     category: "scoring",
     definition: "Punteggio 0-100 che stima digeribilità basato su ore fermentazione normalizzate e riduzione FODMAP.",
     formula: "D = min(100, 20 + 1.5 × t_eff,18°C)",

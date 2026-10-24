@@ -530,3 +530,17 @@ Dalla verifica di GPT sul server MCP, approvato da Matteo.
   del canotto qui sopra; masse e forno invariati. Negli scenari «rush» (2 h)
   gli stili restano non fattibili e dichiarano anche `time_window`.
 - Test: `pizza-engine.test.ts` (fasi, passo del pre-fermento, cotture).
+
+## Seconda verifica di GPT · cotture sui secondi e avviso sul tempo (24/10/2026)
+
+- **Cotture.** *Prima:* le cotture ripetute moltiplicavano il minuto già
+  arrotondato di una pizza (Koda: 75 s → «4 cotture da 1 min», 4 min).
+  *Dopo:* totale sui secondi veri (4 × 75 s = 5 min) e frase «4 cotture da
+  75 secondi» (parametro `sec`, formattato dalla lingua). Golden: `timeline_min`
+  di ±1–2 minuti su 19 voci, nient'altro.
+- **Avviso.** *Prima:* con l'orario del pasto e la lievitazione accorciata
+  sotto il minimo dello stile, «Con 4 h non rientri nella finestra (min 4 h)»:
+  non diceva che parte delle ore va a impasto, staglio e cottura. *Dopo:* con
+  `meal_deadline` il messaggio `gen.timeBelowStyleWindowMeal` dice le ore di
+  lavorazione, quelle che restano alla lievitazione, il minimo e il totale
+  che serve (7 lingue). Senza orario resta il messaggio di prima. Test.

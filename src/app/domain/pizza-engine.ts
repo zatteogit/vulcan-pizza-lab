@@ -2158,11 +2158,26 @@ export function generateRecipe(
         : []),
       ...(timeClampedBelowMin
         ? [
-            em(
-              "gen.timeBelowStyleWindow",
-              `Con {available}h non rientri nella finestra di questo stile (min {fMin}h): fermentazione accorciata. Per l'autenticità piena servono almeno {fMin}h.`,
-              { available: constraints.available_hours, fMin: fermRange[0] },
-            ),
+            constraints.meal_deadline
+              ? // Con l'orario del pasto le ore servono anche a impasto, staglio
+                // e cottura: il messaggio dice quante ne restano alla
+                // lievitazione (verifica di GPT: «con 4 h… min 4 h» era oscuro).
+                em(
+                  "gen.timeBelowStyleWindowMeal",
+                  "Con {available} h fino al pasto, tolte le lavorazioni e la cottura ({work} h), restano {ferment} h di lievitazione: meno del minimo dello stile ({fMin} h). Per lo stile pieno servono circa {needed} h in tutto.",
+                  {
+                    available: constraints.available_hours,
+                    work: Math.ceil(timelineOverheadMinutes(timeline) / 15) / 4,
+                    ferment: fermentationHours,
+                    fMin: fermRange[0],
+                    needed: fermRange[0] + Math.ceil(timelineOverheadMinutes(timeline) / 15) / 4,
+                  },
+                )
+              : em(
+                  "gen.timeBelowStyleWindow",
+                  `Con {available}h non rientri nella finestra di questo stile (min {fMin}h): fermentazione accorciata. Per l'autenticità piena servono almeno {fMin}h.`,
+                  { available: constraints.available_hours, fMin: fermRange[0] },
+                ),
           ]
         : []),
       ...feasResult.warnings,
@@ -3548,16 +3563,19 @@ function generateTimeline(
   // ripete. Prima il passo valeva per una sola pizza e il piano finiva prima
   // del vero (verifica di GPT, 24/10/2026).
   if (bakeRounds > 1) {
+    // Secondi di una cottura: quelli veri per la cottura singola (75 s, non
+    // «1 min» arrotondato: verifica di GPT), i minuti del passo per la baciata.
+    const hasSecondBake = steps.some((step) => step.id === "bake2");
     for (const step of steps) {
       if (step.id !== "bake" && step.id !== "bake2") continue;
-      const perRound = step.duration_minutes;
-      step.duration_minutes = perRound * bakeRounds;
+      const perRoundSec = step.id === "bake" && !hasSecondBake ? effectiveCookSec : step.duration_minutes * 60;
+      step.duration_minutes = Math.max(1, Math.round((perRoundSec * bakeRounds) / 60));
       step.rounds = bakeRounds;
-      step.timing_label = `${bakeRounds} × ${step.timing_label}`;
+      step.timing_label = `${bakeRounds} × ${formatCookTime(perRoundSec)}`;
       if (step.msg?.description) {
         step.msg.description = [
           ...step.msg.description,
-          em("timeline.bake.rounds", "{n} cotture da {min} min, una alla volta.", { n: bakeRounds, min: perRound }),
+          em("timeline.bake.rounds", "{n} cotture da {sec} s, una alla volta.", { n: bakeRounds, sec: perRoundSec }),
         ];
         step.description = renderStepIt(step.msg.description);
       }

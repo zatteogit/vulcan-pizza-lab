@@ -5013,6 +5013,19 @@
     margin-top: var(--space-10);
   }
 
+  /* «Salta» (audit n. 33): azione secondaria, testo sottolineato. */
+  .profile-ftu__nav-skip {
+    min-height: var(--space-11);
+    padding-inline: var(--space-2);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: var(--font-size-lg);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+    cursor: pointer;
+  }
+
   .profile-ftu__nav-back {
     padding-inline: var(--space-5);
     padding-block: var(--space-2-5);
