@@ -529,7 +529,9 @@ export function localizeStep(
     ? fmt.number(fermRatio, { minimumFractionDigits: 1, maximumFractionDigits: 1 })
     : fermRatio.toFixed(1);
   const isUnleavened = !!recipe.style.dough.unleavened;
-  const prefType = recipe.style.dough.process_type.includes("poolish") ? "poolish" : "biga";
+  /* Audit totale n. 3: il tipo viene dalla ricetta, come lo scorporo degli
+   * ingredienti (prima «direct|biga|poolish» diventava poolish qui e biga là). */
+  const prefType = recipe.pre_ferment_type === "biga" ? "biga" : "poolish";
   const formatTemp = (value: number) =>
     fmt ? fmt.celsius(value) : `${Math.round(value)}°C`;
 
@@ -690,6 +692,14 @@ export function localizeStep(
     fridgeTemp: formatTemp(4),
     type: prefType,
     factor: fermFactor,
+    /* Durata del passo dalla timeline; temperatura e idratazione del tipo di
+     * pre-fermento (fonti in docs/ricerca/prefermenti-fonti-2026-10-24.md). */
+    /* al quarto d'ora, come la durata mostrata sopra il passo */
+    hours: fmt
+      ? fmt.durationMinutes(Math.round(step.duration_minutes / 15) * 15)
+      : `${Math.round(step.duration_minutes / 60)} h`,
+    prefTemp: prefType === "biga" ? `${formatTemp(18)}–${formatTemp(20)}` : `${formatTemp(20)}–${formatTemp(22)}`,
+    prefHydration: fmt ? fmt.percent(45) : "45%",
   };
   const title = entry.title || step.title;
   let desc = entry.desc || step.description;
@@ -710,8 +720,11 @@ export function localizeStep(
     : step.tip;
 
   // Spiegazione estesa opzionale (interpolata con le stesse vars)
-  const longDesc = entry.longDesc
-    ? normalizeTemperatureUnitSuffixes(t(entry.longDesc, vars))
+  const longText = step.id === "preferment" && prefType === "biga" && entry.longDescAlt
+    ? entry.longDescAlt
+    : entry.longDesc;
+  const longDesc = longText
+    ? normalizeTemperatureUnitSuffixes(t(longText, vars))
     : undefined;
 
   return { title, description: desc, longDesc, tip };

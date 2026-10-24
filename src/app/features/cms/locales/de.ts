@@ -700,9 +700,9 @@ export const DE_LOCALE: CmsContent = {
     "rec.sourdoughOnlyShort":
       "Nur Sauerteig: kurze Gärung schwierig",
     "tip.waterTempCold":
-      "55er-Regel: Wasser aus dem Kühlschrank verwenden ({temp}). Maschinelles Kneten erhitzt den Teig.",
+      "Nimm kaltes Wasser aus dem K\u00FChlschrank ({temp}): Die Maschine erw\u00E4rmt den Teig.",
     "tip.waterTempNormal":
-      "55er-Regel: Wasser mit {temp} verwenden, um {ddt} Teigtemperatur zu erreichen.",
+      "Wasser mit {temp} f\u00FCr einen Teig mit {ddt}.",
     "tip.frictionNote":
       "Reibungskompensation der Knetmaschine: {friction}",
     "gen.notWoodOven": "Dieser Stil geh\u00F6rt in den Holzofen: Mit deinem Ofen kommt das Ergebnis nah heran, ist aber nicht das kanonische.",
@@ -881,7 +881,8 @@ export const DE_LOCALE: CmsContent = {
         'Die Vorstufe ist wie ein "Appetizer" f\u00FCr die Hefe. Mischen und abgedeckt ruhen lassen.',
       tipNerd:
         "Die Vorstufe produziert organische S\u00E4uren (Milch-/Essigs\u00E4ure), die den pH auf ~4,5 senken und das Glutennetzwerk verbessern.",
-      longDesc: "Der Vorteig ist eine kleine Portion Mehl und Wasser (mit wenig Hefe), die du VOR dem eigentlichen Teig reifen l\u00E4sst. Gib das zimmerwarme Wasser in den Beh\u00E4lter, l\u00F6se die Frischhefe darin auf, f\u00FCge das Mehl hinzu und r\u00FChre mit einem L\u00F6ffel, bis ein dicker Brei entsteht. Mit Frischhaltefolie abdecken und 16-18 Stunden bei 18\u00B0C reifen lassen (Keller/k\u00FChle Raumtemperatur). Er ist fertig, wenn du viele Blasen an der Oberfl\u00E4che siehst und er nach Zitrus/Joghurt duftet.",
+      longDesc: "Poolish ist Mehl und Wasser zu gleichen Teilen mit der Hefe, das vor dem Teig reift. L\u00F6se die Hefe im Wasser, gib das Mehl dazu und r\u00FChre mit einem L\u00F6ffel einen weichen Brei. Abdecken und {hours} bei {prefTemp} reifen lassen. Er ist fertig, wenn die Oberfl\u00E4che voller Blasen ist und die Mitte gerade einzusinken beginnt; er riecht leicht s\u00E4uerlich.",
+      longDescAlt: "Biga ist ein fester Vorteig: Mehl und Wasser mit etwa {prefHydration}, dazu die Hefe. L\u00F6se die Hefe im Wasser, gie\u00DFe es \u00FCber das Mehl und mische nur wenige Sekunden, bis das Wasser aufgenommen ist: Es sollen unregelm\u00E4\u00DFige Kl\u00FCmpchen bleiben, kein glatter Teig. Abdecken und {hours} bei {prefTemp} reifen lassen. Sie ist fertig, wenn sie aufgegangen ist, fruchtig riecht und innen voller F\u00E4den ist.",
     },
     mix: {
       title: "Kneten",
@@ -1593,11 +1594,11 @@ export const DE_LOCALE: CmsContent = {
     comfortLabel: "{duration} komfortabel",
     totalDuration: "{duration} gesamt",
     finalDoughStageTitle: "Hauptteig",
-    rule55Title: "55er-Regel",
-    rule55AriaOpen: "Was ist die 55er-Regel?",
-    rule55AriaClose: "Erkl\u00E4rung zur 55er-Regel ausblenden",
+    rule55Title: "Wassertemperatur",
+    rule55AriaOpen: "Wie die Wassertemperatur berechnet wird",
+    rule55AriaClose: "Erkl\u00E4rung ausblenden",
     rule55Description:
-      "Faustregel: Raumtemperatur + Mehltemperatur + Wassertemperatur \u2248 55\u00B0C, um etwa 25\u00B0C Endteigtemperatur zu erreichen. Beim Kneten mit Maschine kommen durch Reibung weitere 1-3\u00B0C hinzu.",
+      "Raum, Mehl und Wasser sollten zusammen etwa {sum} ergeben: dreimal die gew\u00FCnschte Teigtemperatur ({ddt}) minus die W\u00E4rme der Knetmaschine ({friction}). Deshalb \u00E4ndert sich das Wasser mit der Temperatur deiner K\u00FCche.",
     stepDetailsShow: "So geht es",
     stepDetailsHide: "Details ausblenden",
     matchDetailsShow: "Match-Details",

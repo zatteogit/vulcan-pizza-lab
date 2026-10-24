@@ -229,3 +229,16 @@ describe("doughBallsForFlour (U-2)", () => {
     expect(doughBallsForFlour(recipe, 50)).toMatchObject({ balls: 0, flour_g: 0 });
   });
 });
+
+describe("pre-fermento: un solo tipo per ricetta e procedimento (audit totale n. 3)", () => {
+  it.each(
+    Object.values(STYLES_DB)
+      .filter((s) => /biga|poolish/.test(s.dough.process_type))
+      .map((s) => [s.id, s] as const),
+  )("%s: il passo nomina lo stesso pre-fermento della ricetta", (_id, style) => {
+    const recipe = generateRecipe(style, makeConstraints(), { usePreFerment: true });
+    expect(recipe.has_pre_ferment).toBe(true);
+    const step = recipe.timeline.find((s) => s.id === "preferment");
+    expect(step?.description).toContain(recipe.pre_ferment_type);
+  });
+});

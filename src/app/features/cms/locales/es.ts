@@ -713,9 +713,9 @@ export const ES_LOCALE: CmsContent = {
     "rec.sourdoughOnlyShort":
       "Solo masa madre: fermentación corta difícil",
     "tip.waterTempCold":
-      "Regla del 55: usa agua de la nevera ({temp}). El amasado a máquina calienta la masa.",
+      "Usa agua fr\u00EDa de la nevera ({temp}): la amasadora calienta la masa.",
     "tip.waterTempNormal":
-      "Regla del 55: usa agua a {temp} para alcanzar {ddt} de masa.",
+      "Agua a {temp} para tener la masa a {ddt}.",
     "tip.frictionNote":
       "Compensación por fricción de la amasadora: {friction}",
     "gen.notWoodOven": "Este estilo se hace en horno de le\u00F1a: con tu horno el resultado se acerca, pero no es el can\u00F3nico.",
@@ -894,7 +894,8 @@ export const ES_LOCALE: CmsContent = {
         'El pre-fermento es como un "aperitivo" para la levadura. Mezcla y deja reposar tapado.',
       tipNerd:
         "El pre-fermento produce \u00E1cidos org\u00E1nicos (l\u00E1ctico/ac\u00E9tico) que bajan el pH a ~4.5, mejorando la red de gluten y la vida \u00FAtil.",
-      longDesc: "El prefermento es una peque\u00F1a porci\u00F3n de harina y agua (con poca levadura) que dejas madurar ANTES de la masa propiamente dicha. Vierte en el recipiente el agua a temperatura ambiente, disuelve la levadura fresca, a\u00F1ade la harina y mezcla con una cuchara hasta obtener una papilla densa. Cubre con film y deja madurar 16-18 horas a 18\u00B0C (bodega o ambiente fresco). Estar\u00E1 listo cuando veas muchas burbujas en la superficie y un aroma c\u00EDtrico, a yogur.",
+      longDesc: "El poolish es harina y agua a partes iguales con la levadura, que madura antes de la masa. Disuelve la levadura en el agua, a\u00F1ade la harina y mezcla con una cuchara hasta obtener una papilla blanda. Tapa y deja madurar {hours} a {prefTemp}. Est\u00E1 listo cuando la superficie est\u00E1 llena de burbujas y el centro empieza a bajar; huele ligeramente \u00E1cido.",
+      longDescAlt: "La biga es una masa madre seca: harina y agua a un {prefHydration} aproximadamente, con la levadura. Disuelve la levadura en el agua, v\u00E9rtela sobre la harina y mezcla unos segundos, solo hasta que el agua se absorba: deben quedar grumos irregulares, no una masa lisa. Tapa y deja madurar {hours} a {prefTemp}. Est\u00E1 lista cuando ha crecido, huele a fruta y por dentro est\u00E1 llena de filamentos.",
     },
     mix: {
       title: "Amasado",
@@ -1679,10 +1680,10 @@ export const ES_LOCALE: CmsContent = {
     comfortLabel: "{duration} con margen",
     totalDuration: "{duration} en total",
     finalDoughStageTitle: "Masa final",
-    rule55Title: "Regla 55",
-    rule55AriaOpen: "Qu\u00E9 es la Regla 55",
-    rule55AriaClose: "Ocultar la explicaci\u00F3n de la Regla 55",
-    rule55Description: "Regla emp\u00EDrica: T_ambiente + T_harina + T_agua \u2248 {target}, para obtener ~{final} de masa final. Si amasas a m\u00E1quina, la fricci\u00F3n a\u00F1ade {frictionMin}-{frictionMax} m\u00E1s.",
+    rule55Title: "Temperatura del agua",
+    rule55AriaOpen: "C\u00F3mo se calcula la temperatura del agua",
+    rule55AriaClose: "Ocultar la explicaci\u00F3n",
+    rule55Description: "Ambiente, harina y agua deben sumar unos {sum}: tres veces la temperatura de masa que quieres ({ddt}) menos el calor de la amasadora ({friction}). Por eso el agua cambia con la temperatura de tu cocina.",
     stepDetailsShow: "C\u00F3mo se hace",
     stepDetailsHide: "Ocultar detalles",
     matchDetailsShow: "Detalles de la puntuaci\u00F3n",

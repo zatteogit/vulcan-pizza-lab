@@ -33,9 +33,10 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *       iconiche corrette e tradotte (inspirationI18n, I18N-5).
  *   4 → primo avvio sul forno (D-038), niente emoji nei testi (U-8),
  *       titoli con la sola iniziale maiuscola (INT-D5).
+ *   5 → pre-fermento e temperatura dell'acqua riscritti (audit totale n. 3-4).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 4;
+export const LOCALE_BUNDLE_REV = 5;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

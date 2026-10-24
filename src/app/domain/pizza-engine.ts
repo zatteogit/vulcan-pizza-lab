@@ -1580,6 +1580,15 @@ export interface GenerateRecipeOptions {
   compensateCustomHydration?: boolean;
 }
 
+/** Tipo di pre-fermento della ricetta: il primo dichiarato dallo stile
+ *  («direct|biga|poolish» → biga); poolish per gli stili diretti. Una sola
+ *  regola per ricetta, ingredienti e procedimento (audit totale n. 3: prima il
+ *  passo diceva «poolish» quando gli ingredienti scorporavano una biga). */
+export function preFermentKind(style: PizzaStyle): "biga" | "poolish" {
+  const kind = style.dough.process_type.split("|").find((m) => m === "biga" || m === "poolish");
+  return kind === "biga" ? "biga" : "poolish";
+}
+
 export function generateRecipe(
   style: PizzaStyle,
   constraints: UserConstraints,
@@ -2272,10 +2281,7 @@ export function generateRecipe(
     fermentation_hours: fermentationHours,
     fermentation_temp_c: fermentationTempC,
     has_pre_ferment: hasPreFerment,
-    // ADV-04 fix: pick first method from process_type (biga|poolish → biga)
-    pre_ferment_type: hasPreFerment
-      ? (style.dough.process_type.split("|").find(m => m === "biga" || m === "poolish") ?? "poolish")
-      : undefined,
+    pre_ferment_type: hasPreFerment ? preFermentKind(style) : undefined,
     oven_temp_c: ovenTemp,
     cook_time_sec: cookTime,
     total_dough_g: totalDough,
@@ -2958,7 +2964,7 @@ function generateTimeline(
     steps.push({
       id: "preferment",
       title: "Pre-Fermento",
-      description: `Mescolare ${style.dough.process_type.includes("poolish") ? "poolish" : "biga"} e far maturare`,
+      description: `Mescolare ${preFermentKind(style)} e far maturare`,
       duration_minutes: Math.round(fermentHours * 60 * 0.4),
       icon: "beaker",
       timing_label: `${Math.round(fermentHours * 0.4)}h prima`,

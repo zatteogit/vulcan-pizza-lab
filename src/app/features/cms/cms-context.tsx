@@ -356,6 +356,8 @@ export interface CmsTimelineStep {
   tipNerd?: string;
   /** Spiegazione estesa per il principiante: come si fa concretamente, cosa cercare, errori comuni */
   longDesc?: string;
+  /** Variante della spiegazione estesa (pre-fermento: longDesc = poolish, longDescAlt = biga) */
+  longDescAlt?: string;
 }
 
 /* ═══ DOMAIN DATA i18n INTERFACES ═══ */
@@ -1724,10 +1726,10 @@ export const CMS_DEFAULTS: CmsContent = {
     comfortLabel: "{duration} comfort",
     totalDuration: "{duration} totali",
     finalDoughStageTitle: "Impasto finale",
-    rule55Title: "Regola 55",
-    rule55AriaOpen: "Cos'è la Regola 55",
-    rule55AriaClose: "Nascondi spiegazione Regola 55",
-    rule55Description: "Regola empirica: T_ambiente + T_farina + T_acqua ≈ {target}, per ottenere ~{final} di impasto finale. Se impasti a macchina, l'attrito aggiunge {frictionMin}-{frictionMax} in più.",
+    rule55Title: "Temperatura dell'acqua",
+    rule55AriaOpen: "Come si calcola la temperatura dell'acqua",
+    rule55AriaClose: "Nascondi la spiegazione",
+    rule55Description: "Ambiente, farina e acqua devono sommare circa {sum}: tre volte la temperatura d'impasto che vuoi ({ddt}) meno il calore dell'impastatrice ({friction}). Per questo l'acqua cambia con la temperatura della tua cucina.",
     stepDetailsShow: "Come si fa",
     stepDetailsHide: "Nascondi dettagli",
     matchDetailsShow: "Dettagli punteggio",
@@ -1999,8 +2001,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "rec.sourdoughLongFerment": "Lievito madre ideale per maturazione lunga",
     "rec.sourdoughOnlyShort": "Solo lievito madre: fermentazione breve difficile",
     "tip.waterTemp": "",
-    "tip.waterTempCold": "Regola 55: usa acqua dal frigo ({temp}). L'impasto a macchina scalda la massa.",
-    "tip.waterTempNormal": "Regola 55: usa acqua a {temp} per raggiungere {ddt} di impasto.",
+    "tip.waterTempCold": "Usa acqua fredda di frigo ({temp}): l'impastatrice scalda la massa.",
+    "tip.waterTempNormal": "Acqua a {temp} per avere l'impasto a {ddt}.",
     "tip.frictionNote": "Compensazione attrito impastatrice: {friction}",
     "gen.notWoodOven": "Lo stile prevede il forno a legna: con il tuo forno il risultato si avvicina, ma non è quello canonico.",
     "gen.windowTooShort": "Con {available} non c'è tempo per tutto: questa ricetta richiede circa {needed}. Sarà pronta più tardi dell'orario scelto: scegli un orario più avanti o una lievitazione più breve.",
@@ -2171,7 +2173,8 @@ export const CMS_DEFAULTS: CmsContent = {
     preferment: {
       title: "Pre-Fermento",
       desc: "Mescolare {type} e far maturare",
-      longDesc: "Il pre-fermento \u00E8 una piccola porzione di farina e acqua (con poco lievito) che fai maturare PRIMA dell'impasto vero. Versa nel contenitore l'acqua a temperatura ambiente, sciogli il lievito di birra, aggiungi la farina e mescola con un cucchiaio fino a ottenere una pappetta densa. Copri con pellicola e lascia maturare 16-18 ore a 18\u00B0C (cantina/temperatura ambiente bassa). Sar\u00E0 pronto quando vedi tante bolle in superficie e un profumo agrumato/yogurt.",
+      longDesc: "Il poolish \u00E8 farina e acqua in parti uguali con il lievito, fatto maturare prima dell'impasto. Sciogli il lievito nell'acqua, aggiungi la farina e mescola con un cucchiaio: viene una pastella morbida. Copri e lascia maturare {hours} a {prefTemp}. \u00C8 pronto quando la superficie \u00E8 piena di bolle e al centro comincia appena ad abbassarsi; profuma leggermente acidulo.",
+      longDescAlt: "La biga \u00E8 un preimpasto asciutto: farina e acqua al {prefHydration} circa, con il lievito. Sciogli il lievito nell'acqua, versala sulla farina e mescola pochi secondi, solo finch\u00E9 l'acqua \u00E8 assorbita: devono restare grumi irregolari, non un impasto liscio. Copri e lascia maturare {hours} a {prefTemp}. \u00C8 pronta quando \u00E8 cresciuta, profuma di frutta e dentro \u00E8 piena di filamenti.",
       tipBeginner: "Il pre-fermento \u00E8 come un \"antipasto\" per il lievito. Mescola e lascia riposare coperto.",
       tipNerd: "Il pre-fermento produce acidi organici (lattico/acetico) che abbassano il pH a ~4.5, migliorando la rete glutinica e la shelf life.",
     },

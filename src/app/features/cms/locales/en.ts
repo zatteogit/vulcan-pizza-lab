@@ -604,10 +604,10 @@ export const EN_LOCALE: CmsContent = {
     comfortLabel: "{duration} comfort",
     totalDuration: "{duration} total",
     finalDoughStageTitle: "Final dough",
-    rule55Title: "Rule 55",
-    rule55AriaOpen: "What is Rule 55?",
-    rule55AriaClose: "Hide Rule 55 explanation",
-    rule55Description: "Rule of thumb: room temperature + flour temperature + water temperature \u2248 {target}, to land around {final} final dough temperature. If you use a mixer, friction adds another {frictionMin}-{frictionMax}.",
+    rule55Title: "Water temperature",
+    rule55AriaOpen: "How the water temperature is worked out",
+    rule55AriaClose: "Hide the explanation",
+    rule55Description: "Room, flour and water should add up to about {sum}: three times the dough temperature you want ({ddt}) minus the heat from the mixer ({friction}). That is why the water changes with the temperature of your kitchen.",
     stepDetailsShow: "How to do it",
     stepDetailsHide: "Hide details",
     matchDetailsShow: "Score details",
@@ -907,9 +907,9 @@ export const EN_LOCALE: CmsContent = {
     "rec.sourdoughOnlyShort":
       "Sourdough only: short fermentation difficult",
     "tip.waterTempCold":
-      "Rule of 55: use fridge water ({temp}). Machine mixing heats the dough.",
+      "Use cold water from the fridge ({temp}): the mixer warms the dough.",
     "tip.waterTempNormal":
-      "Rule of 55: use water at {temp} to reach {ddt} dough temperature.",
+      "Water at {temp} for a dough at {ddt}.",
     "tip.frictionNote":
       "Mixer friction compensation: {friction}",
     "gen.notWoodOven": "This style is made in a wood-fired oven: with your oven the result gets close, but it isn't the canonical one.",
@@ -1088,7 +1088,8 @@ export const EN_LOCALE: CmsContent = {
         'The pre-ferment is like an "appetizer" for the yeast. Mix and let it rest covered.',
       tipNerd:
         "The pre-ferment produces organic acids (lactic/acetic) that lower pH to ~4.5, improving the gluten network and shelf life.",
-      longDesc: "The pre-ferment is a small portion of flour and water (with a little yeast) that you leave to mature BEFORE the main dough. Pour room-temperature water into the container, dissolve the fresh yeast, add the flour and stir with a spoon until you get a thick paste. Cover with cling film and leave to mature for 16-18 hours at 18\u00B0C (cellar/cool room). It's ready when you see lots of bubbles on the surface and it smells citrusy, like yoghurt.",
+      longDesc: "Poolish is equal parts flour and water with the yeast, left to mature before the dough. Dissolve the yeast in the water, add the flour and stir with a spoon into a soft batter. Cover and let it mature {hours} at {prefTemp}. It is ready when the surface is full of bubbles and the centre is just starting to sink; it smells slightly tangy.",
+      longDescAlt: "Biga is a stiff pre-dough: flour and water at about {prefHydration}, with the yeast. Dissolve the yeast in the water, pour it over the flour and mix for a few seconds, only until the water is absorbed: it should stay lumpy and shaggy, not smooth. Cover and let it mature {hours} at {prefTemp}. It is ready when it has grown, smells fruity and is full of strands inside.",
     },
     mix: {
       title: "Mixing",

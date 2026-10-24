@@ -712,9 +712,9 @@ export const FR_LOCALE: CmsContent = {
     "rec.sourdoughOnlyShort":
       "Levain seul : fermentation courte difficile",
     "tip.waterTempCold":
-      "Règle du 55 : utiliser l'eau du réfrigérateur ({temp}). Le pétrissage mécanique chauffe la pâte.",
+      "Utilisez de l'eau froide du r\u00E9frig\u00E9rateur ({temp}) : le p\u00E9trin r\u00E9chauffe la p\u00E2te.",
     "tip.waterTempNormal":
-      "Règle du 55 : utiliser l'eau à {temp} pour atteindre {ddt} de température de pâte.",
+      "Eau \u00E0 {temp} pour une p\u00E2te \u00E0 {ddt}.",
     "tip.frictionNote":
       "Compensation de friction du pétrin : {friction}",
     "gen.notWoodOven": "Ce style se fait au four \u00E0 bois : avec votre four, le r\u00E9sultat s'en approche, mais ce n'est pas le r\u00E9sultat canonique.",
@@ -893,7 +893,8 @@ export const FR_LOCALE: CmsContent = {
         'Le pr\u00E9-ferment est comme un "ap\u00E9ritif" pour la levure. M\u00E9langer et laisser reposer couvert.',
       tipNerd:
         "Le pr\u00E9-ferment produit des acides organiques (lactique/ac\u00E9tique) qui abaissent le pH \u00E0 ~4,5, am\u00E9liorant le r\u00E9seau de gluten.",
-      longDesc: "Le pr\u00E9-ferment est une petite portion de farine et d'eau (avec peu de levure) que vous faites m\u00FBrir AVANT la vraie p\u00E2te. Versez dans le r\u00E9cipient l'eau \u00E0 temp\u00E9rature ambiante, dissolvez la levure de boulanger, ajoutez la farine et m\u00E9langez \u00E0 la cuill\u00E8re jusqu'\u00E0 obtenir une bouillie \u00E9paisse. Couvrez de film et laissez m\u00FBrir 16-18 heures \u00E0 18\u00B0C (cave/temp\u00E9rature ambiante basse). Il est pr\u00EAt quand vous voyez beaucoup de bulles en surface et sentez une odeur d'agrumes/de yaourt.",
+      longDesc: "Le poolish, c'est de la farine et de l'eau \u00E0 parts \u00E9gales avec la levure, qu'on laisse m\u00FBrir avant la p\u00E2te. Dissolvez la levure dans l'eau, ajoutez la farine et m\u00E9langez \u00E0 la cuill\u00E8re jusqu'\u00E0 obtenir une p\u00E2te molle. Couvrez et laissez m\u00FBrir {hours} \u00E0 {prefTemp}. Il est pr\u00EAt quand la surface est couverte de bulles et que le centre commence \u00E0 peine \u00E0 retomber ; il sent l\u00E9g\u00E8rement acidul\u00E9.",
+      longDescAlt: "La biga est une pr\u00E9-p\u00E2te ferme : farine et eau \u00E0 environ {prefHydration}, avec la levure. Dissolvez la levure dans l'eau, versez-la sur la farine et m\u00E9langez quelques secondes, juste le temps que l'eau soit absorb\u00E9e : il doit rester des grumeaux irr\u00E9guliers, pas une p\u00E2te lisse. Couvrez et laissez m\u00FBrir {hours} \u00E0 {prefTemp}. Elle est pr\u00EAte quand elle a gonfl\u00E9, sent le fruit et est pleine de filaments \u00E0 l'int\u00E9rieur.",
     },
     mix: {
       title: "P\u00E9trissage",
@@ -1685,10 +1686,10 @@ export const FR_LOCALE: CmsContent = {
     comfortLabel: "{duration} confort",
     totalDuration: "{duration} au total",
     finalDoughStageTitle: "P\u00E2te finale",
-    rule55Title: "R\u00E8gle du 55",
-    rule55AriaOpen: "Qu'est-ce que la R\u00E8gle du 55 ?",
-    rule55AriaClose: "Masquer l'explication de la R\u00E8gle du 55",
-    rule55Description: "R\u00E8gle empirique : T_ambiante + T_farine + T_eau \u2248 {target}, pour obtenir ~{final} de p\u00E2te finale. Si vous p\u00E9trissez \u00E0 la machine, la friction ajoute {frictionMin}-{frictionMax} de plus.",
+    rule55Title: "Temp\u00E9rature de l'eau",
+    rule55AriaOpen: "Comment se calcule la temp\u00E9rature de l'eau",
+    rule55AriaClose: "Masquer l'explication",
+    rule55Description: "Ambiante, farine et eau doivent faire environ {sum} au total : trois fois la temp\u00E9rature de p\u00E2te voulue ({ddt}) moins la chaleur du p\u00E9trin ({friction}). C'est pour cela que l'eau change avec la temp\u00E9rature de votre cuisine.",
     stepDetailsShow: "Comment faire",
     stepDetailsHide: "Masquer les d\u00E9tails",
     matchDetailsShow: "D\u00E9tails du score",

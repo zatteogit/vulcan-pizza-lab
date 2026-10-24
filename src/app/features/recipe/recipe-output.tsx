@@ -151,13 +151,14 @@ export function RecipeOutput({
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
+  /* Audit totale n. 4: la spiegazione usa i numeri del motore (metodo delle
+   * tre temperature: 3 × impasto obiettivo − attrito), non una somma fissa a 55. */
+  const ddt = recipe.science.desired_dough_temp_c;
+  const friction = recipe.science.friction_factor;
   const rule55Description = t(cms.cooking.rule55Description, {
-    target: fmt.unitSystem === "imperial"
-      ? (bcp47.toLowerCase().startsWith("it") ? "55 in scala Celsius" : "55 on the Celsius scale")
-      : fmt.celsius(55),
-    final: fmt.celsius(25),
-    frictionMin: fmt.celsiusDelta(1),
-    frictionMax: fmt.celsiusDelta(3),
+    sum: fmt.celsius(ddt * 3 - friction),
+    ddt: fmt.celsius(ddt),
+    friction: fmt.celsiusDelta(friction),
   });
 
   /* Label contestuale per il selettore di porzioni ("Panetti" / "Teglie" / ...). */
