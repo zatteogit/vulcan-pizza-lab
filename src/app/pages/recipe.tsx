@@ -20,6 +20,7 @@ useState,
 import { Link,useLocation,useNavigate,useParams,useSearchParams } from "react-router";
 import { useCms,type CmsContent } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
+import { loadProfileDefaults, profileEquipment } from "../hooks/use-profile-defaults";
 import { loadYeastSpeedFactor } from "../adapters/browser/yeast-speed-storage";
 import { t as tpl } from "../features/cms/i18n";
 import {
@@ -220,6 +221,10 @@ function RecipeContent({
     yeasts: string[];
   }>("vulcan_pantry");
   const savedDietary = loadJson<string[]>("vulcan_dietary");
+  /* Audit n. 11 (C-03): adattata alla propria cucina vuol dire anche con la
+     propria impastatrice e le proprie superfici. La canonica no: è la scheda
+     dello stile, uguale per tutti. */
+  const [personalEquipment] = useState(() => profileEquipment(loadProfileDefaults().constraints));
   // Storage bloccato (navigazione privata, cookie disattivati): getItem lancia.
   const nerdAvailable = loadJson<boolean>("vulcan_nerd_on") === true;
   const initialRecipeMode = readRecipeMode(searchParams);
@@ -323,6 +328,7 @@ function RecipeContent({
     pantry_flours: savedPantry?.flours ?? [],
     pantry_yeasts: savedPantry?.yeasts ?? [],
     yeast_speed_factor: loadYeastSpeedFactor(),
+    ...(initialRecipeMode === "canonical" ? {} : personalEquipment),
   }));
 
   /* ── State: recipe params (from style preset/center + URL override) ── */
@@ -911,6 +917,7 @@ function RecipeContent({
     setRecipeMode("adapted");
     setConstraints((current) => ({
       ...current,
+      ...personalEquipment,
       oven_type: personalOvenType,
       oven_max_temp_c: personalOvenTemp,
     }));
@@ -968,6 +975,7 @@ function RecipeContent({
     setRecipeMode("adapted");
     setConstraints((c) => ({
       ...c,
+      ...personalEquipment,
       oven_type: savedOven?.ovenType ?? "home",
       oven_max_temp_c: savedOven?.maxTemp ?? 250,
     }));

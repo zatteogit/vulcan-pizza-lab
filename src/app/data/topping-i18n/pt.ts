@@ -2234,7 +2234,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
   steps: {
     spread_margherita_avpn: {
       title: "Cobertura Margherita Verace",
-      description: "Espalhe os pelados esmagados à mão de forma uniforme. Distribua o fior di latte em tiras ou cubinhos. Manjericão fresco e um fio de azeite extravirgem ANTES do forno (com 90s de forno, ele aguenta).",
+      description: "Espalhe os pelados esmagados à mão de forma uniforme. Distribua o fior di latte em tiras ou cubinhos. Um fio de azeite extravirgem antes do forno. Manjericão fresco antes do forno se o assamento dura poucos minutos; no forno doméstico, coloque logo ao tirar do forno.",
       tip_beginner: "Regulamento AVPN: tomates pelados DOP, mozzarella da Campânia, manjericão fresco. Azeite extravirgem sim, mas pouco.",
       tip_nerd: "O forno relâmpago de 90s a 450°C preserva o manjericão fresco (a pizza fica pouco tempo lá dentro para degradá-lo). Diferente dos fornos domésticos lentos, onde ele deve entrar depois.",
     },
@@ -2263,7 +2263,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     spread_boscaiola_nap: {
       title: "Cobertura Boscaiola napolitana",
       description: "Espalhe os pelados esmagados e salgados. Distribua o fior di latte. Adicione os porcini escorridos e a linguiça crua em pedaços. Polvilhe Grana Padano. Um fio de azeite.",
-      tip_beginner: "Porcini em óleo = já prontos, sem cozimento prévio. A linguiça cozinha no forno relâmpago de 90s.",
+      tip_beginner: "Porcini em óleo = já prontos, sem cozimento prévio. A linguiça, em pedaços pequenos, cozinha direto no forno.",
       tip_nerd: "O óleo dos porcini em conserva já vem aromatizado (porcini, louro, alho): traz complexidade aromática. O grana resiste ao forno a lenha de 450° melhor que o parmesão (mais rico em gordura).",
     },
     saltare_champignon: {

@@ -6,12 +6,13 @@ import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConic
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
-import { STYLE_PHOTOS, reasonDimension, MATCH_DIMENSION_ICON } from "./recommended-styles";
+import { STYLE_PHOTOS, reasonDimension, MATCH_DIMENSION_ICON, styleDifficultyLabel } from "./recommended-styles";
 import { kitchenCompatibility, scoreWeightsFromCms } from "./kitchen-compatibility";
 import { STYLE_VIDEOS, type StyleVideo } from "../../data/style-photos";
 import {
   PizzaStyle,
   PIZZA_FAMILIES,
+  doughThicknessGPerCm2,
   recommendStyles,
   formatOrigin,
   type UserConstraints,
@@ -116,7 +117,7 @@ export function StyleDetailSheet({
   const wRange = `W ${style.dough.flour_w_range[0]}–${style.dough.flour_w_range[1]}`;
   const fRange = `${style.dough.fermentation_hours_range[0]}–${style.dough.fermentation_hours_range[1]}h`;
   const plRange = `${style.dough.flour_pl_range[0]}–${style.dough.flour_pl_range[1]}`;
-  const thickness = `${style.shape.thickness_factor.toFixed(2)} g/cm²`;
+  const thickness = `${doughThicknessGPerCm2(style).toFixed(2)} g/cm²`;
   const dev = getStyleDeviation(style.id);
   const devCmsLabel = cms.deviationLabels[dev.category] ?? DEVIATION_CATEGORY_LABELS[dev.category].label;
   const devEmoji = DEVIATION_CATEGORY_LABELS[dev.category].emoji;
@@ -137,7 +138,7 @@ export function StyleDetailSheet({
     { icon: Ratio, label: pt.pillPL, value: plRange },
     { icon: Clock, label: pt.pillFermentation, value: fRange },
     { icon: Layers, label: pt.pillThickness, value: thickness },
-    { icon: ChefHat, label: pt.pillLevel, value: style.suitable_for_beginner ? pt.pillLevelBeginner : pt.pillLevelExpert },
+    { icon: ChefHat, label: pt.pillLevel, value: styleDifficultyLabel(style, cms) },
     { icon: FlaskConical, label: pt.pillExperimentation, value: `${devEmoji} ${devCmsLabel}` },
   ];
 

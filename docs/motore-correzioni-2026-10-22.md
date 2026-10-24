@@ -435,3 +435,54 @@ in teglia e l'appretto si fa lì («Appretto in teglia»); prima la stesura veni
 dopo 9–14 h di appretto, subito prima di infornare. Teglia e pala romana, al
 metro e tonde restano com'erano (appretto a panetti, stesura prima della
 cottura). Cambia solo l'ordine: durate e totali invariati (golden identico).
+
+## Audit totale n. 11 · Peso delle forme ovali con la teglia di default (24/10/2026)
+
+La pagina ricetta e Crea passano sempre una teglia al motore. Per le forme
+ovali (pala e pinsa) la forma di default è «tonda» ma senza diametro, quindi
+`calcDoughWeight` usava il tondo di ripiego da 30 cm (707 cm²) invece
+dell'ovale dello stile: il peso cresceva senza che l'utente toccasse nulla.
+Ora, senza un diametro scelto, l'ovale resta l'area dello stile.
+
+| Stile | Area ovale | Panetto prima → dopo |
+|---|---|---|
+| pala romana | 40 × 20 cm, 628 cm² | 360 → 320 g |
+| pinsa romana | 34 × 21 cm, 561 cm² | 302 → 240 g |
+
+Golden invariato (i casi golden non passano una teglia). Test in
+`pizza-engine.test.ts`.
+
+Nello stesso intervento: la scheda tecnica di uno stile leggeva peso, sale,
+forno e tempi di cottura da `parametric-databases.ts`, diversi dal motore in
+molti stili (Pala 350 g, Pinsa forno 380 °C contro 300 °C, Recco 8–10 min
+contro 4–8). I numeri sono stati allineati al motore, con un test che li
+tiene uguali; lo spessore in g/cm² mostrato è ora peso diviso area (Pala
+0,51), non l'indice relativo `thickness_factor` (0,35).
+
+## Audit totale n. 8 · Consigli coerenti con forno e impasto (24/10/2026)
+
+- **Recco, passo doppio:** il passo generico «Farcitura tra sfoglie» ospita
+  già il condimento scelto; il motore aggiungeva anche il passo del
+  condimento con la stessa farcitura. Ora il passo del condimento entra solo
+  quando sostituisce quello generico. Golden: Recco ideale 130 → 126 min,
+  casa 132 → 128 min; nient'altro cambia.
+- **Preriscaldo:** «pietra o acciaio già dentro» solo per forno di casa ed
+  elettrico statico (legna, gas ed elettrico da pizza hanno la platea). Il
+  titolo passa da «Forno al massimo» a «Preriscalda il forno»: la
+  temperatura indicata spesso non è il massimo.
+- **Cottura in forno di casa:** «per il cornicione» diventa «per dorare i
+  bordi», giusto anche per le pizze chiuse e la Recco.
+
+## Audit totale n. 9 · Fattibilità nei consigli e nelle alternative (24/10/2026)
+
+- **Tempo:** in `recommendStyles` uno stile è «non fattibile» se le ore
+  disponibili sono meno della sua lievitazione minima. Con «Stasera» (5 h 30)
+  restano fattibili solo ciaccino senese, fugazzeta, greek pan e Recco;
+  prima comparivano tra i «Fattibili» stili da 6–48 h che la ricetta poi
+  dichiarava non fattibili. Nessuno stile chiede più di 24 h minime, quindi
+  «Nessuna preferenza» non cambia.
+- **Alternative:** con un forno da 250 °C le alternative alla Napoletana
+  erano stili da 300–380 °C. Ora un'alternativa deve avere il minimo entro
+  il 10 % della tua temperatura (Napoletana → ciaccino senese, New York,
+  Chicago tavern).
+Golden invariato (riguarda solo la ricetta).

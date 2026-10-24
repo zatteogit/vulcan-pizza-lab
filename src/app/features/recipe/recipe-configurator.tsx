@@ -19,6 +19,7 @@ supportsThickness,
 } from "../../domain/pizza-engine";
 import { SegmentedControl, Switch } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
+import { flourStrength, type FlourStrength } from "./recipe-output-format";
 
 interface PremiumSelectOption {
   value: string;
@@ -1128,10 +1129,12 @@ function Label({ children }: { children: React.ReactNode }) {
    forza della sua farina. Qui sceglie in linguaggio naturale (debole/media/forte
    con esempi reali) e il motore deriva la W. U-3: è la vista semplice della
    farina; con i parametri avanzati aperti lo sostituiscono W e P/L precisi. */
-const BEGINNER_FLOURS: { label: string; sub: string; w: number }[] = [
-  { get label() { return uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubWeak"); }, w: 185 },
-  { get label() { return uiMessage("features.recipe.recipe-configurator.media-0c77aeec"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubMedium"); }, w: 250 },
-  { get label() { return uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubStrong"); }, w: 350 },
+/* Tre scelte sulla scala unica (flourStrength): la «Forte» copre farina per
+   pizza e Manitoba; il valore è quello tipico della classe. */
+const BEGINNER_FLOURS: { label: string; sub: string; w: number; classes: FlourStrength[] }[] = [
+  { get label() { return uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubWeak"); }, w: 185, classes: ["weak"] },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.media-0c77aeec"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubMedium"); }, w: 250, classes: ["medium"] },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"); }, get sub() { return uiMessage("features.recipe.recipe-configurator.flourSubStrong"); }, w: 300, classes: ["strong", "veryStrong"] },
 ];
 
 function BeginnerFlourPicker({
@@ -1145,9 +1148,8 @@ function BeginnerFlourPicker({
   styleRange: [number, number];
   label: React.ReactNode;
 }) {
-  const selected = BEGINNER_FLOURS.reduce((best, f) =>
-    Math.abs(f.w - value) < Math.abs(best.w - value) ? f : best,
-  );
+  const strength = flourStrength(value);
+  const selected = BEGINNER_FLOURS.find((f) => f.classes.includes(strength)) ?? BEGINNER_FLOURS[0];
   const [wMin, wMax] = styleRange;
   const fit = value >= wMin - 25 && value <= wMax + 25 ? "ideal" : value < wMin ? "weak" : "strong";
   const isIdealFit = fit === "ideal";

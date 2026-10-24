@@ -2234,7 +2234,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
   steps: {
     spread_margherita_avpn: {
       title: "Aliño Margherita Verace",
-      description: "Extiende los pelados aplastados a mano de forma uniforme. Reparte el fior di latte en tiras o dados. Albahaca fresca y un hilo de AOVE ANTES del horno (cocción de 90s, aguanta).",
+      description: "Extiende los pelados aplastados a mano de forma uniforme. Reparte el fior di latte en tiras o dados. Un hilo de AOVE antes del horno. Albahaca fresca antes del horno si la cocción dura un par de minutos; con horno doméstico, añádela nada más sacarla.",
       tip_beginner: "Reglamento AVPN: tomates pelados DOP, mozzarella campana, albahaca fresca. AOVE sí, pero poco.",
       tip_nerd: "La cocción relámpago de 90s a 450°C conserva la albahaca fresca (la pizza está demasiado poco tiempo en el horno para degradarla). Distinto de los hornos domésticos lentos, donde hay que añadirla después.",
     },
@@ -2263,7 +2263,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     spread_boscaiola_nap: {
       title: "Aliño Boscaiola napolitana",
       description: "Extiende los pelados aplastados y salados. Reparte el fior di latte. Añade los boletus escurridos y la salchicha cruda desmenuzada. Espolvorea grana padano. Un hilo de aceite.",
-      tip_beginner: "Boletus en aceite = ya listos, sin cocción previa. La salchicha se hace en el horno relámpago de 90s.",
+      tip_beginner: "Boletus en aceite = ya listos, sin cocción previa. La salchicha, en trocitos, se hace directamente en el horno.",
       tip_nerd: "El aceite de los boletus en conserva ya viene aromatizado (boletus, laurel, ajo): aporta complejidad aromática. El grana aguanta la cocción en horno de leña a 450° mejor que el parmesano (tiene más grasa).",
     },
     saltare_champignon: {

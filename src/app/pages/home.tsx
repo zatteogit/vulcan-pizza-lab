@@ -61,7 +61,7 @@ import {
 } from "../data/style-versions";
 import { useStylesOverride } from "../context/styles-override-context";
 import { ContextualWarnings } from "../features/recipe/troubleshooting-panel";
-import { useProfileDefaults } from "../hooks/use-profile-defaults";
+import { mergeDraftConstraints, useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
   centerParamsForStyle,
   defaultRecipePL,
@@ -324,10 +324,7 @@ function resolveCreateDraft(
   const selectedStyle = draftStyle;
   const selectedTimeSlot = timeChoice.selectedTimeSlot ?? fallback.selectedTimeSlot;
   const selectedTimeMeta = timeChoice.selectedTimeMeta ?? fallback.selectedTimeMeta;
-  const restoredConstraints = {
-    ...profileConstraints,
-    ...(draft.constraints ?? {}),
-  };
+  const restoredConstraints = mergeDraftConstraints(profileConstraints, draft.constraints);
   if (selectedTimeMeta) {
     restoredConstraints.available_hours = selectedTimeMeta.hours;
   } else if (timeChoice.stale) {

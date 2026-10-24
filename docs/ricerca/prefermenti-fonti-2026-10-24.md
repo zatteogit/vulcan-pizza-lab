@@ -22,9 +22,14 @@ Ricerca per l'audit totale (n. 3 e n. 10). Stati come in `docs/fonti-dati.md`:
 
 - Il passo del pre-fermento usa 18–20 °C per la biga e 20–22 °C per il poolish
   e la durata della timeline (fatto il 24/10).
-- La guida ai pre-fermenti va allineata a questa tabella: valori di pH tolti
-  (nessuna fonte), profilo aromatico qualitativo, autolisi non più «pre-fermento»,
-  biga non «ideale per la napoletana classica» (la STG è diretta).
+- La guida ai pre-fermenti è allineata a questa tabella (fatto il 24/10, audit
+  n. 10): valori di pH tolti (nessuna fonte), profilo aromatico qualitativo,
+  autolisi dichiarata «non un pre-fermento», biga non più consigliata per la
+  napoletana (la STG è diretta). Stessi valori nel glossario (biga, poolish,
+  autolisi) e nei consigli; puntata e appretto rimandano alla durata del
+  procedimento invece di dare intervalli fissi in conflitto con le timeline.
+  Non verificati e rimasti com'erano: crosta, estensibilità, alveolatura e
+  complessità nella tabella di confronto (stato D).
 - Lo scorporo usa biga al 45 %: le fonti dicono 44 %. Differenza di 1 punto
   sull'acqua della biga, da correggere col selettore del prefermento (D-043).
 - Nessuna fonte per la regola «1 ora per ogni 1 % di lievito»: le tabelle dicono

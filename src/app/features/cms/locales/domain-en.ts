@@ -14,7 +14,7 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
   paramHydration: "Hydration",
   paramDuration: "Duration",
   paramTemperature: "Temperature",
-  paramPh: "Final pH",
+  paramYeast: "Yeast",
   detailFermentation: "Fermentation",
   detailFlavor: "Flavour",
   detailCrust: "Crust",
@@ -25,7 +25,6 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
     "Yeast",
     "Duration",
     "Temperature",
-    "Final pH",
     "Flavour",
     "Extensibility",
     "Crumb structure",
@@ -35,47 +34,46 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
     poolish: {
       origin: "French",
       description:
-        "Liquid pre-ferment (1:1 flour:water) with predominantly alcoholic fermentation. Develops sugars for intense Maillard reaction.",
-      hydration: "100% (1:1 ratio)",
+        "Liquid pre-ferment: equal parts flour and water with a little yeast, 12–16 h at 20–22 °C.",
+      hydration: "100% (equal parts flour and water)",
       consistency: "Liquid, foamy",
       fermentationType:
-        "Predominantly alcoholic (CO\u2082 + ethanol)",
-      flavor: "Sweet, malty, complex notes",
+        "Fast: with so much water it matures in a few hours",
+      flavor: "Slightly tangy, nutty notes",
       crustResult:
         "Light, deeply golden, pronounced leopard spotting",
       extensibility: "High \u2014 easy to stretch",
       idealStyles:
         "Roman teglia, NY Style, Contemporary Neapolitan, Focaccia",
       tips: [
-        "Optimal point: domed surface with bubbles, just starting to recede",
-        "Beyond 16h the flavour becomes too sour/alcoholic",
-        "If collapsed it is still usable but reduce the percentage of total flour",
-        "Poolish proportion in final dough: 20-40% of total flour",
+        "Ready when the surface is full of bubbles and the centre starts to sink",
+        "More yeast, fewer hours: at 20–22 °C, 0.1% for 15–16 h, 0.3% for 10–12 h",
+        "Flour in the poolish: 30–50% of the total flour",
       ],
     },
     biga: {
       origin: "Italian",
       description:
-        "Stiff pre-ferment (44-48% hydration) with lactic + alcoholic fermentation. Maximum shelf life and aromatic complexity.",
-      hydration: "44-48%",
+        "Stiff pre-ferment: flour, 44% water and 1% yeast, about 16 h at 18–20 °C.",
+      hydration: "44% (up to 50% with wholegrain flours)",
       consistency: "Dry, compact",
-      fermentationType: "Lactic + alcoholic (active LAB)",
-      flavor: "Tangy, complex, fermented notes",
+      fermentationType: "Slow: with little water it matures in 16–48 h",
+      flavor: "Aromatic, floral",
       crustResult: "Crispy, crumbly, fine crumb",
       extensibility: "Low \u2014 needs rest after portioning",
       idealStyles:
-        "Classic Neapolitan, Pinsa, Pizza al taglio, Bread",
+        "Pinsa, Pizza al taglio, Pala romana, Bread",
       tips: [
-        "If too dry: add 5-10% water to help incorporation",
-        "Ready when surface is cracked \u201Cdomed\u201D and volume has tripled",
-        "Can be stored up to 48h in fridge (refresh with 10% water before use)",
-        "Biga proportion in final dough: 20-50% of total flour",
+        "Ready when it is puffy in places, smells of yoghurt and fizzes slightly; if it tastes sour it has gone too far",
+        "Long biga: 24 h at 4–5 °C, then 24 h at 18–20 °C",
+        "Flour in the biga: 20–50% of the total flour, usually a third",
+        "Not used in STG Neapolitan pizza: the specification allows only the direct method",
       ],
     },
     autolisi: {
-      origin: "Universal",
+      origin: "France (R. Calvel, 1974)",
       description:
-        "Enzymatic rest of flour+water only (no yeast or salt). Develops gluten spontaneously and activates protease/amylase.",
+        "Not a pre-ferment: flour and water rest without yeast or salt before mixing.",
       hydration: "55-75% (all recipe water)",
       consistency: "Pasty",
       fermentationType: "None (enzymatic activity only)",
@@ -85,43 +83,35 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
       extensibility: "High \u2014 silky, less sticky dough",
       idealStyles: "All styles (universal technique)",
       tips: [
-        "Wholegrain flours: longer autolysis (60-90min) to soften the bran",
-        "Warm water (30-35\u00B0C) speeds up enzymes",
-        "ALWAYS before adding salt (salt inhibits enzymes)",
-        "Reduces mixing time by 30% as gluten develops on its own",
-        "Combinable with Biga or Poolish for superior results",
+        "Rest 20–60 minutes; add yeast and salt afterwards",
+        "Combines with biga or poolish",
       ],
     },
   },
   compValues: {
     hydration: {
-      biga: "44-48%",
+      biga: "44%",
       poolish: "100%",
       autolisi: "55-75%",
     },
     yeast: {
-      biga: "0.5-1%",
-      poolish: "0.1-0.5%",
+      biga: "1%",
+      poolish: "0.1–0.3%",
       autolisi: "0%",
     },
     duration: {
-      biga: "16-48h",
-      poolish: "8-16h",
-      autolisi: "0.5-2h",
+      biga: "16–48 h",
+      poolish: "12–16 h",
+      autolisi: "20–60 min",
     },
     temperature: {
-      biga: "16-18\u00B0C",
-      poolish: "20-22\u00B0C",
+      biga: "18–20 °C",
+      poolish: "20–22 °C",
       autolisi: "Room temp",
     },
-    ph: {
-      biga: "5.0-5.3",
-      poolish: "4.5-4.8",
-      autolisi: "~6.5",
-    },
     flavor: {
-      biga: "Tangy",
-      poolish: "Sweet/malty",
+      biga: "Aromatic",
+      poolish: "Slightly tangy",
       autolisi: "Neutral",
     },
     extensibility: {
@@ -292,7 +282,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Move immediately to 4\u00B0C to halt fermentation",
         prevention:
-          "Use 0.2% fresh yeast for 24h, check temperature",
+          "Use the yeast dose calculated for your hours and temperature (at 18 °C for 24 h, about 0.1% fresh yeast)",
       },
       P06: {
         symptom: "Too sour/acetic flavour",
@@ -341,7 +331,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Brush with oil+honey before baking or use grill for final 2min",
         prevention:
-          "Add 0.5-1% sugar, oven at least 280\u00B0C",
+          "Add 0.5–1% sugar or malt and run the oven at its maximum, with a well-preheated stone or steel",
       },
       P11: {
         symptom: "Chewy, not crispy pizza",
@@ -696,37 +686,37 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     biga: {
       name: "Biga",
       definition:
-        "Stiff pre-dough (44-50% hydration) with flour + water + yeast, fermented 16-24h at 16-18\u00B0C.",
+        "Stiff pre-dough of flour, 44% water (up to 50% with wholegrain flours) and 1% yeast, matured about 16 h at 18–20 °C; a long biga takes 24 h at 4–5 °C plus 24 h at 18–20 °C.",
       whyImportant:
-        "Increases strength, extensibility, complex flavour, rustic irregular crumb, longer shelf life. Dosage: 20-40% of total flour.",
+        "Brings aroma and structure to the final dough. Usually a third of the total flour (20–50%). Not allowed in STG Neapolitan pizza, which uses the direct method.",
     },
     poolish: {
       name: "Poolish",
       definition:
-        "Liquid pre-dough (100% hydration) with flour + water 1:1 + yeast, fermented 12-16h at 16-18\u00B0C.",
+        "Liquid pre-dough: equal parts flour and water with a little yeast, matured 12–16 h at 20–22 °C (0.1% yeast for 15–16 h, 0.3% for 10–12 h).",
       whyImportant:
-        "High extensibility, fine uniform crumb, sweet-tangy flavour, thin crispy crust. Poolish = extensibility; Biga = strength.",
+        "Matures quickly and makes the dough extensible. Usually 30–50% of the total flour. Ready when the surface is full of bubbles and the centre starts to sink.",
     },
     autolysis: {
       name: "Autolysis",
       definition:
-        "Rest of flour + water (without yeast/salt) for 20-60 min. Protease enzymes develop gluten spontaneously.",
+        "A rest of flour and water, without yeast or salt, for 20–60 minutes before mixing (R. Calvel, 1974). It is not a pre-ferment.",
       whyImportant:
-        "Reduces mixing time -30-50%, increases extensibility, better hydration. 20-30 min for W<200, 45-60 min for W>280.",
+        "The dough becomes more extensible and easier to work.",
     },
     bulk_fermentation: {
       name: "Bulk Fermentation",
       definition:
-        "First fermentation phase after mixing, before dividing into dough balls. Dough rests as a single mass 30 min \u2013 4h.",
+        "First rise, in a single mass, after mixing and before dividing. Depending on the style it lasts from under an hour to more than a day in the fridge: the right length is the one in the method.",
       whyImportant:
-        "Gluten relaxation, fermentation start, flavour development, 20-50% volume increase.",
+        "The gluten relaxes, fermentation starts and the dough gains aroma.",
     },
     ball_fermentation: {
       name: "Ball Fermentation (Proofing)",
       definition:
-        "Second fermentation phase after dividing into dough balls. Each ball rests individually 4-48h at 4-22\u00B0C.",
+        "Second rise, after dividing: as dough balls or, for pan styles, directly in the pan. Its length depends on style, temperature and yeast: the right length is the one in the method.",
       whyImportant:
-        "Main fermentation, proteolysis maturation, final volume development, pH stabilisation.",
+        "Brings the dough to the right volume for stretching and baking.",
     },
     maillard: {
       name: "Maillard Reaction",

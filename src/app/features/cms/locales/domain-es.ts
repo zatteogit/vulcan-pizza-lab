@@ -14,7 +14,7 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
   paramHydration: "Hidratación",
   paramDuration: "Duración",
   paramTemperature: "Temperatura",
-  paramPh: "pH final",
+  paramYeast: "Levadura",
   detailFermentation: "Fermentación",
   detailFlavor: "Sabor",
   detailCrust: "Corteza",
@@ -25,7 +25,6 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
     "Levadura",
     "Duración",
     "Temperatura",
-    "pH final",
     "Sabor",
     "Extensibilidad",
     "Alveolado",
@@ -35,47 +34,46 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
     poolish: {
       origin: "Francés",
       description:
-        "Pre-fermento líquido (1:1 harina:agua) con fermentación predominantemente alcohólica. Desarrolla azúcares para una Maillard intensa.",
-      hydration: "100% (proporción 1:1)",
+        "Prefermento líquido: harina y agua a partes iguales con poca levadura, 12–16 h a 20–22 °C.",
+      hydration: "100 % (harina y agua a partes iguales)",
       consistency: "Líquida, espumosa",
       fermentationType:
-        "Predominante alcohólica (CO₂ + etanol)",
-      flavor: "Dulce, maltoso, notas complejas",
+        "Rápida: con tanta agua madura en pocas horas",
+      flavor: "Ligeramente ácido, notas de avellana",
       crustResult:
         "Ligera, dorado intenso, leopard spotting marcado",
       extensibility: "Alta — fácil de estirar",
       idealStyles:
         "Teglia Romana, NY Style, Napolitana contemporánea, Focaccia",
       tips: [
-        "Punto óptimo: superficie abovedada con burbujas, comenzando a retraerse",
-        "Más de 16h el sabor se vuelve demasiado ácido/alcohólico",
-        "Si colapsa todavía es utilizable pero reduce el porcentaje del total",
-        "Porcentaje de poolish en masa final: 20-40% de la harina total",
+        "Listo cuando la superficie está llena de burbujas y el centro empieza a hundirse",
+        "Más levadura, menos horas: a 20–22 °C, 0,1 % para 15–16 h, 0,3 % para 10–12 h",
+        "Harina en el poolish: 30–50 % de la harina total",
       ],
     },
     biga: {
       origin: "Italiano",
       description:
-        "Pre-fermento seco (44-48% hidratación) con fermentación láctica + alcohólica. Máxima conservación y complejidad aromática.",
-      hydration: "44-48%",
+        "Prefermento seco: harina, 44 % de agua y 1 % de levadura, unas 16 h a 18–20 °C.",
+      hydration: "44 % (hasta 50 % con harinas integrales)",
       consistency: "Seca, compacta",
-      fermentationType: "Láctica + alcohólica (LAB activos)",
-      flavor: "Acidulado, complejo, notas fermentadas",
+      fermentationType: "Lenta: con poca agua madura en 16–48 h",
+      flavor: "Aromático, floral",
       crustResult: "Crujiente, quebradiza, alveolado fino",
       extensibility: "Baja — requiere reposo tras el boleado",
       idealStyles:
-        "Napolitana clásica, Pinsa, Pizza al taglio, Pan",
+        "Pinsa, Pizza al taglio, Pala romana, Pan",
       tips: [
-        "Si está muy seca: añade 5-10% de agua para facilitar la incorporación",
-        'Madura cuando la superficie está agrietada "en cúpula" y el volumen se ha triplicado',
-        "Conservable hasta 48h en nevera (refresca con 10% de agua antes de usar)",
-        "Porcentaje de biga en masa final: 20-50% de la harina total",
+        "Lista cuando está hinchada a trozos, huele a yogur y burbujea un poco; si sabe ácida, se ha pasado",
+        "Biga larga: 24 h a 4–5 °C y luego 24 h a 18–20 °C",
+        "Harina en la biga: 20–50 % de la harina total, normalmente un tercio",
+        "No se usa en la Napolitana ETG: el pliego solo admite el método directo",
       ],
     },
     autolisi: {
-      origin: "Universal",
+      origin: "Francia (R. Calvel, 1974)",
       description:
-        "Reposo enzimático de solo harina+agua (sin levadura ni sal). Desarrolla gluten espontáneamente y activa proteasas/amilasas.",
+        "No es un prefermento: harina y agua reposan sin levadura ni sal antes de amasar.",
       hydration: "55-75% (toda el agua de la receta)",
       consistency: "Pastosa",
       fermentationType: "Ninguna (solo actividad enzimática)",
@@ -84,43 +82,35 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
       extensibility: "Alta — masa sedosa y menos pegajosa",
       idealStyles: "Todos los estilos (técnica universal)",
       tips: [
-        "Harinas integrales: autólisis más larga (60-90min) para ablandar el salvado",
-        "Agua tibia (30-35°C) acelera las enzimas",
-        "SIEMPRE antes de añadir sal (la sal inhibe las enzimas)",
-        "Reduce el tiempo de amasado un 30% porque el gluten se desarrolla solo",
-        "Combinable con Biga o Poolish para resultados superiores",
+        "Reposo de 20–60 minutos; la levadura y la sal se añaden después",
+        "Se combina con biga o poolish",
       ],
     },
   },
   compValues: {
     hydration: {
-      biga: "44-48%",
+      biga: "44 %",
       poolish: "100%",
       autolisi: "55-75%",
     },
     yeast: {
-      biga: "0.5-1%",
-      poolish: "0.1-0.5%",
+      biga: "1 %",
+      poolish: "0,1–0,3 %",
       autolisi: "0%",
     },
     duration: {
-      biga: "16-48h",
-      poolish: "8-16h",
-      autolisi: "0.5-2h",
+      biga: "16–48 h",
+      poolish: "12–16 h",
+      autolisi: "20–60 min",
     },
     temperature: {
-      biga: "16-18°C",
-      poolish: "20-22°C",
+      biga: "18–20 °C",
+      poolish: "20–22 °C",
       autolisi: "Ambiente",
     },
-    ph: {
-      biga: "5.0-5.3",
-      poolish: "4.5-4.8",
-      autolisi: "~6.5",
-    },
     flavor: {
-      biga: "Acidulado",
-      poolish: "Dulce/maltoso",
+      biga: "Aromático",
+      poolish: "Ligeramente ácido",
       autolisi: "Neutro",
     },
     extensibility: {
@@ -289,7 +279,7 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Transfiere inmediatamente a 4°C para bloquear la fermentación",
         prevention:
-          "Usa 0.2% levadura fresca para 24h, controla temperatura",
+          "Usa la dosis de levadura calculada para tus horas y tu temperatura (a 18 °C durante 24 h, cerca del 0,1 % de levadura fresca)",
       },
       P06: {
         symptom: "Sabor demasiado ácido/acético",
@@ -339,7 +329,7 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
           "¿El horno alcanza al menos 250°C? ¿Fermentación >48h?",
         fixImmediate:
           "Pincelar aceite+miel antes de hornear o usar grill final 2min",
-        prevention: "Añade 0.5-1% azúcar, horno al menos 280°C",
+        prevention: "Añade 0,5–1 % de azúcar o malta y pon el horno al máximo, con piedra o acero bien precalentados",
       },
       P11: {
         symptom: "Pizza gomosa, no crujiente",
@@ -593,28 +583,28 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     },
     biga: {
       name: "Biga",
-      definition: "Prefermento seco (44-50% de hidrataci\u00F3n) con harina + agua + levadura, fermentado 16-24h a 16-18\u00B0C.",
-      whyImportant: "Aporta fuerza, extensibilidad, sabor complejo, alveolado irregular y r\u00FAstico, y mayor vida \u00FAtil. Dosis: 20-40% sobre la harina total.",
+      definition: "Prefermento seco de harina, 44 % de agua (hasta 50 % con harinas integrales) y 1 % de levadura, madurado unas 16 h a 18–20 °C; la biga larga lleva 24 h a 4–5 °C más 24 h a 18–20 °C.",
+      whyImportant: "Aporta aroma y estructura a la masa final. Normalmente un tercio de la harina total (20–50 %). No se admite en la Napolitana ETG, que es de método directo.",
     },
     poolish: {
       name: "Poolish",
-      definition: "Prefermento l\u00EDquido (100% de hidrataci\u00F3n) con harina + agua 1:1 + levadura, fermentado 12-16h a 16-18\u00B0C.",
-      whyImportant: "Extensibilidad alta, alveolado fino y uniforme, sabor agridulce, corteza fina y crujiente. Poolish = extensibilidad; Biga = fuerza.",
+      definition: "Prefermento líquido: harina y agua a partes iguales con poca levadura, madurado 12–16 h a 20–22 °C (0,1 % de levadura para 15–16 h, 0,3 % para 10–12 h).",
+      whyImportant: "Madura rápido y hace la masa extensible. Normalmente el 30–50 % de la harina total. Está listo cuando la superficie está llena de burbujas y el centro empieza a hundirse.",
     },
     autolysis: {
       name: "Aut\u00F3lisis",
-      definition: "Reposo de harina + agua (sin levadura ni sal) durante 20-60 min. Las enzimas proteasas desarrollan el gluten de forma espont\u00E1nea.",
-      whyImportant: "Reduce el tiempo de amasado -30-50%, aumenta la extensibilidad, mejora la hidrataci\u00F3n. 20-30 min para W<200, 45-60 min para W>280.",
+      definition: "Reposo de harina y agua, sin levadura ni sal, durante 20–60 minutos antes de amasar (R. Calvel, 1974). No es un prefermento.",
+      whyImportant: "La masa se vuelve más extensible y más fácil de trabajar.",
     },
     bulk_fermentation: {
       name: "Fermentaci\u00F3n en bloque (puntata)",
-      definition: "Primera fase de fermentaci\u00F3n tras el amasado, antes de dividir en bollos. La masa reposa en una sola pieza 30 min \u2013 4h.",
-      whyImportant: "Relajaci\u00F3n del gluten, inicio de la fermentaci\u00F3n, desarrollo de aromas, aumento de volumen del 20-50%.",
+      definition: "Primera fermentación, en bloque, después del amasado y antes de bolear. Según el estilo dura desde menos de una hora hasta más de un día en la nevera: la duración correcta es la del procedimiento.",
+      whyImportant: "El gluten se relaja, empieza la fermentación y la masa gana aroma.",
     },
     ball_fermentation: {
       name: "Fermentaci\u00F3n final (appretto)",
-      definition: "Segunda fase de fermentaci\u00F3n tras dividir en bollos. Cada bollo reposa por separado 4-48h a 4-22\u00B0C.",
-      whyImportant: "Fermentaci\u00F3n principal, maduraci\u00F3n por prote\u00F3lisis, desarrollo del volumen final, estabilizaci\u00F3n del pH.",
+      definition: "Segunda fermentación, después de bolear: en bolas o, en los estilos de bandeja, directamente en la bandeja. Dura según estilo, temperatura y levadura: la duración correcta es la del procedimiento.",
+      whyImportant: "Lleva las bolas al volumen adecuado para estirar y hornear.",
     },
     maillard: {
       name: "Reacci\u00F3n de Maillard",

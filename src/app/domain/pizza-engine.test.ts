@@ -8,6 +8,8 @@ import {
   equivalentFermentationHours,
   optimizeRecipe,
   thermalViability,
+  recommendStyles,
+  feasibleAlternativeStyles,
   type UserConstraints,
 } from "./pizza-engine";
 
@@ -264,5 +266,49 @@ describe("stili in teglia: stesura prima dell'appretto (audit totale n. 7)", () 
   it("la teglia romana fa l'appretto a panetti e si stende prima di infornare", () => {
     const ids = order("teglia_romana");
     expect(ids.indexOf("proof")).toBeLessThan(ids.indexOf("shape"));
+  });
+});
+
+describe("teglia di default delle forme ovali (audit totale n. 11, B-15)", () => {
+  for (const id of ["pala_romana", "pinsa_romana"]) {
+    it(`${id}: la teglia dello stile non cambia il peso`, () => {
+      const style = STYLES_DB[id];
+      const constraints = makeConstraints({
+        oven_type: style.baking.oven_type_required,
+        oven_max_temp_c: style.baking.temp_c_ideal,
+      });
+      const without = generateRecipe(style, constraints);
+      const withDefaultPan = generateRecipe(style, constraints, {
+        panConfig: {
+          panShape: "round",
+          panLength: style.shape.length_cm,
+          panWidth: style.shape.width_cm,
+          thickness: style.shape.thickness_factor,
+        },
+      });
+      expect(withDefaultPan.ball_weight_g).toBe(without.ball_weight_g);
+    });
+  }
+});
+
+describe("fattibilità nei consigli (audit totale n. 9)", () => {
+  it("con 5 ore gli stili che lievitano di più non sono fattibili", () => {
+    const recs = recommendStyles(makeConstraints({ oven_type: "home", oven_max_temp_c: 250, available_hours: 5 }));
+    for (const rec of recs) {
+      if (rec.style.dough.fermentation_hours_range[0] > 5) expect(rec.tier).toBe("not_feasible");
+    }
+  });
+
+  it("nessuno stile chiede più di 24 h minime: «Nessuna preferenza» non esclude nulla per il tempo", () => {
+    for (const style of Object.values(STYLES_DB)) {
+      expect(style.dough.fermentation_hours_range[0]).toBeLessThanOrEqual(24);
+    }
+  });
+
+  it("le alternative stanno nel forno che hai", () => {
+    const constraints = makeConstraints({ oven_type: "home", oven_max_temp_c: 250, mixer_type: "hands" });
+    for (const alt of feasibleAlternativeStyles(napoletana, constraints)) {
+      expect(alt.baking.temp_c_range[0]).toBeLessThanOrEqual(275);
+    }
   });
 });

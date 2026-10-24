@@ -824,7 +824,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_margherita_avpn",
       title: "Condimento Margherita Verace",
-      description: "Stendere i pelati schiacciati a mano in modo uniforme. Disporre il fior di latte a strisce o cubetti. Basilico fresco e olio EVO a filo PRIMA del forno (cottura 90s, regge).",
+      description: "Stendere i pelati schiacciati a mano in modo uniforme. Disporre il fior di latte a strisce o cubetti. Olio EVO a filo prima del forno. Basilico fresco prima del forno se la cottura dura un paio di minuti; con il forno di casa aggiungilo appena sfornata.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -1008,7 +1008,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       duration_minutes: 5,
       replaces_generic: true,
       tip: {
-        beginner: "Porcini sottolio = già pronti, niente cottura preliminare. La salsiccia cuoce nel forno flash 90s.",
+        beginner: "Porcini sottolio = già pronti, niente cottura preliminare. La salsiccia, a tocchetti piccoli, cuoce direttamente in forno.",
         nerd: "L'olio dei porcini sottolio è già aromatizzato (porcini, alloro, aglio): apporta complessità aromatica. La grana resiste alla cottura wood-oven 450° meglio del parmigiano (più ricca di grasso).",
       },
     }],

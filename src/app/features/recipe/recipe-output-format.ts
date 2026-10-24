@@ -343,11 +343,25 @@ export function toppingSectionLabel(style: PizzaStyle, cms: CmsContent): string 
     : cms.cooking.toppingTitle;
 }
 
+/** Audit n. 11 (B-24): una sola scala della forza (W) per tutta l'app; prima
+ *  il selettore semplice chiamava «Media» la W 300 che gli ingredienti
+ *  chiamavano «forte». */
+export type FlourStrength = "weak" | "medium" | "strong" | "veryStrong";
+
+export function flourStrength(w: number): FlourStrength {
+  if (w < 220) return "weak";
+  if (w < 280) return "medium";
+  if (w < 330) return "strong";
+  return "veryStrong";
+}
+
 export function flourStrengthLabel(w: number, cms: CmsContent | undefined): string {
-  if (w < 220) return engineMessage(cms, "hint.flourWeak", "farina debole (00 classica)");
-  if (w < 280) return engineMessage(cms, "hint.flourMedium", "farina di media forza");
-  if (w < 330) return engineMessage(cms, "hint.flourStrong", "farina forte (per pizza)");
-  return engineMessage(cms, "hint.flourVeryStrong", "farina molto forte (manitoba)");
+  switch (flourStrength(w)) {
+    case "weak": return engineMessage(cms, "hint.flourWeak", "farina debole (00 classica)");
+    case "medium": return engineMessage(cms, "hint.flourMedium", "farina di media forza");
+    case "strong": return engineMessage(cms, "hint.flourStrong", "farina forte (per pizza)");
+    default: return engineMessage(cms, "hint.flourVeryStrong", "farina molto forte (manitoba)");
+  }
 }
 
 /** Arrotondamento "caso per caso" dei numeri grandi (farina/acqua/totale).
@@ -668,7 +682,7 @@ export function localizeStep(
                 "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti finiscono l'appretto.",
               );
       return {
-        title: engineMessage(cms, "timeline.preheat.title", "Forno al massimo"),
+        title: engineMessage(cms, "timeline.preheat.title", "Preriscalda il forno"),
         description: t(preheatDesc, { temp: formatTemp(bakeTemp), equipmentNote }),
         tip: step.tip
           ? {

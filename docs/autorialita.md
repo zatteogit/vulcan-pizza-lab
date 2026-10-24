@@ -81,6 +81,7 @@ firmato da un agente, «nessun segno» se non c'è traccia (non prova l'assenza)
 | D-042 | 2026-10-24 | UX | Quantità: si chiede «Per quante persone?» e l'app decide unità e peso per lo stile; i panetti restano modificabili (audit n. 14) | panetti con stima visibile | idem | Matteo | proposta AI, decisione umana |
 | D-043 | 2026-10-24 | Prodotto | Uso professionale: via i blocchi (fino a 200 unità con campo numerico, peso panetto modificabile, misure nel link, temperatura libera), biga/poolish sceglibili per esperto e nerd, scheda di produzione stampabile, pizza al metro in metri (audit n. 15–19, 22) | solo una parte | idem | Matteo | proposta AI, decisione umana |
 | D-044 | 2026-10-24 | Contenuti | Gergo: termini tecnici toccabili che aprono il glossario (voci mancanti aggiunte) e registro per livello, al principiante prima la cosa semplice e poi il termine (audit n. 32) | solo termini toccabili | idem | Matteo | proposta AI, decisione umana |
+| D-045 | 2026-10-24 | Motore | Alternative a uno stile non fattibile: il minimo dello stile entro il 10 % sopra la temperatura del forno dell'utente (quanto recupera una pietra ben scaldata), audit n. 9 | minimo pari al forno (escludeva New York a 270 °C con 250 °C); nessun controllo | PR #53 | Matteo, delegata all'agente («sei tu l'esperto, decidi tu») | proposta e scelta AI su delega |
 
 D-008 e D-009 arrivano dal brief del lavoro come decisioni del proprietario;
 nel repository non c'è ancora un riscontro scritto, quindi restano da
