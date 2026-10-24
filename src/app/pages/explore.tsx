@@ -716,6 +716,9 @@ function StyleCatalogCard({
           {/* Cinematic scrim */}
           <div className="explore-card__scrim" />
 
+          {/* Etichette in alto: una riga che va a capo invece di sovrapporsi
+              sulle card strette (nota di Matteo, 24/10/2026). */}
+          <div className="explore-card__top">
           {/* Beginner badge — top left */}
           {style.suitable_for_beginner && (
             <div className="explore-card__badge explore-card__badge--beginner">
@@ -748,6 +751,7 @@ function StyleCatalogCard({
               </div>
             </div>
           )}
+          </div>
 
           {/* Title + subtitle — overlaid on image (editorial style) */}
           <figcaption className="explore-card__caption">

@@ -3255,9 +3255,29 @@
     background: color-mix(in srgb, var(--primary) 90%, transparent);
   }
 
-  .explore-card__badge--beginner {
+  .explore-card__top {
+    position: absolute;
     top: var(--space-3);
     left: var(--space-3);
+    right: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .explore-card__top .explore-card__badge,
+  .explore-card__top .explore-card__match {
+    position: static;
+  }
+
+  /* La compatibilità resta a destra anche quando va a capo. */
+  .explore-card__top .explore-card__match {
+    margin-inline-start: auto;
+  }
+
+  .explore-card__badge--beginner {
     color: var(--cta-foreground);
     background: color-mix(in srgb, var(--cta) 90%, transparent);
   }
