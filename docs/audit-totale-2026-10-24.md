@@ -96,7 +96,7 @@ difetto visto da più personas compare una volta sola, con tutti gli ID.
    20, 23, 25, 26, 27, 28, 30, 36 e la parte meccanica di 2, 9, 10, 33, 34, 35.
    Le correzioni del motore portano il prima/dopo in
    `docs/motore-correzioni-2026-10-22.md` e i test.
-2. **Con decisione di Matteo:** 1 (quale numero di compatibilità), 14 (domanda
-   «per quante persone»), 15/17/18/19/22 (quanto spingere l'uso
-   professionale), 32 (registro per livello), 24/31 (layout a testo grande e
-   desktop a due colonne).
+2. **Decisi da Matteo il 24/10:** 1 → D-041 (un numero solo, sulla tua
+   cucina); 14 → D-042 («per quante persone»); 15/17/18/19/22 → D-043 (tutto
+   l'uso professionale); 32 → D-044 (termini toccabili + registro per
+   livello). Restano da proporre: 24/31 (testo grande, desktop a due colonne).
