@@ -66,6 +66,7 @@ import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
 import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { defaultPL, getCanonicalVersion } from "../features/recipe/kitchen-compatibility";
+import { decodePan, encodePan } from "../features/recipe/pan-url";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
 import { motionSpring } from "../components/ds/motion";
@@ -338,7 +339,9 @@ function RecipeContent({
   const [customFlourPL, setCustomFlourPL] = useState(
     useTailoredUrlParams ? numParam(searchParams, "pl", plDefault, 0.2, 1.5) : plDefault,
   );
-  const [customSalt, setCustomSalt] = useState(style.dough.salt_pct);
+  const [customSalt, setCustomSalt] = useState(
+    useTailoredUrlParams ? numParam(searchParams, "s", style.dough.salt_pct, 1, 4) : style.dough.salt_pct,
+  );
   const [customFermentHours, setCustomFermentHours] = useState(
     useTailoredUrlParams ? numParam(searchParams, "f", fOptimal, 1, 120) : fOptimal,
   );
@@ -349,12 +352,24 @@ function RecipeContent({
     const pf = searchParams.get("pf");
     return useTailoredUrlParams && pf !== null ? pf === "1" : preFermentDefault;
   });
-  const [panConfig, setPanConfig] = useState<PanConfig>({
-    panShape: defaultPanShape(style),
-    panLength: style.shape.length_cm,
-    panWidth: style.shape.width_cm,
-    panDiameter: style.shape.diameter_cm,
-    thickness: style.shape.thickness_factor,
+  const [panConfig, setPanConfig] = useState<PanConfig>(() => {
+    const base: PanConfig = {
+      panShape: defaultPanShape(style),
+      panLength: style.shape.length_cm,
+      panWidth: style.shape.width_cm,
+      panDiameter: style.shape.diameter_cm,
+      thickness: style.shape.thickness_factor,
+    };
+    // Audit n. 16: la teglia del link (ricetta salvata o condivisa).
+    const fromUrl = useTailoredUrlParams ? decodePan(searchParams.get("pan")) : null;
+    if (!fromUrl) return base;
+    return {
+      panShape: fromUrl.panShape ?? base.panShape,
+      panLength: fromUrl.panLength ?? base.panLength,
+      panWidth: fromUrl.panWidth ?? base.panWidth,
+      panDiameter: fromUrl.panDiameter ?? base.panDiameter,
+      thickness: fromUrl.thickness ?? base.thickness,
+    };
   });
   const [doughBalls, setDoughBalls] = useState(
     useTailoredUrlParams
@@ -662,8 +677,15 @@ function RecipeContent({
       else params.delete("pf");
       params.set("oven", constraints.oven_type);
       params.set("temp", String(constraints.oven_max_temp_c));
+      const pan = encodePan(panConfig);
+      if (pan) params.set("pan", pan);
+      if (Math.abs(customSalt - style.dough.salt_pct) > 0.01) params.set("s", String(customSalt));
+      else params.delete("s");
     },
     [
+      panConfig,
+      customSalt,
+      style.dough.salt_pct,
       recipeMode,
       customHydration,
       customFlourW,
