@@ -580,38 +580,29 @@ export function RecipeConfigurator({
       </button>
 
       {/* Smart Link — barra compatta, singolo tap-target */}
-      {showAdvanced && (
-      <button
-        onClick={() => setSmartLink(!smartLink)}
-        className={smartLink ? "config-smart-link config-smart-link--active" : "config-smart-link"}
-        aria-pressed={smartLink}
-        aria-label={smartLink ? uiMessage("features.recipe.recipe-configurator.disattiva-smart-link-82c8c9bb") : uiMessage("features.recipe.recipe-configurator.attiva-smart-link-e1f2961f")}
-      >
-        <span className="config-smart-link__icon">
-          {smartLink ? <Link size={16} /> : <Unlink size={16} />}
-        </span>
-        <span className="config-smart-link__title">
-          {uiMessage("features.recipe.recipe-configurator.smart-link-95995174")}</span>
-        <span className="config-smart-link__desc">
-          {smartLink ? uiMessage("features.recipe.recipe-configurator.i-parametri-si-adattano-fra-loro-c31575f0") : uiMessage("features.recipe.recipe-configurator.regolazione-indipendente-f7040ded")}
-        </span>
-        <span className={smartLink ? "config-smart-link__switch config-smart-link__switch--active" : "config-smart-link__switch"}>
-          <motion.span
-            className="config-smart-link__thumb"
-            animate={{ x: smartLink ? 22 : 2 }}
-            transition={motionSpring.crispControl}
-          />
-        </span>
-      </button>
-      )}
 
-      {/* Fix di Matteo (24/10): il triangolo ha un solo significato, detto qui. */}
-      <p className="config-legend">
-        <svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true" className="config-legend__marker">
-          <path d="M5 6L0 0h10z" />
-        </svg>
-        {uiMessage("features.recipe.recipe-configurator.legend")}
-      </p>
+      {/* Fix di Matteo (24/10): legenda del triangolo e, accanto, la catenella
+          che collega i parametri (prima «Smart Link», un riquadro intero). */}
+      <div data-region="toolbar" className="config-toolbar">
+        <p className="config-legend">
+          <svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true" className="config-legend__marker">
+            <path d="M5 6L0 0h10z" />
+          </svg>
+          {uiMessage("features.recipe.recipe-configurator.legend")}
+        </p>
+        {showAdvanced && (
+          <button
+            type="button"
+            onClick={() => setSmartLink(!smartLink)}
+            className={smartLink ? "config-link-toggle config-link-toggle--on" : "config-link-toggle"}
+            aria-pressed={smartLink}
+            title={uiMessage("features.recipe.recipe-configurator.i-parametri-si-adattano-fra-loro-c31575f0")}
+          >
+            {smartLink ? <Link size={14} aria-hidden="true" /> : <Unlink size={14} aria-hidden="true" />}
+            {uiMessage("features.recipe.recipe-configurator.smart-link-95995174")}
+          </button>
+        )}
+      </div>
 
       {/* 3-Column Grid Layout */}
       <div className="config-grid">
