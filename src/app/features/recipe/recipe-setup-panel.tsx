@@ -7,6 +7,7 @@ import {
   Check,
   Beaker,
 } from "lucide-react";
+import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import { motion } from "motion/react";
 import {
   useEffect,
@@ -404,8 +405,10 @@ export function RecipeSetupPanel({
                           <span className="setup-option__name">
                             {interpretationName(interpretation)}
                           </span>
+                          {/* D-027: sotto il nome, «Ispirata a…» nella lingua attiva (prima
+                              ripeteva l'autore, o «D'autore» anche per APITER). */}
                           <span className="setup-option__detail">
-                            {interpretation.author ?? interpretation.pizzeria ?? uiMessage("features.recipe.recipe-setup-panel.d-autore-23e32e2a")}
+                            {localizeInterpretation(interpretation, cms.inspirationI18n).signature_name ?? interpretation.pizzeria ?? ""}
                           </span>
                         </div>
                         {active && <Check size={16} className="setup-option__check" />}

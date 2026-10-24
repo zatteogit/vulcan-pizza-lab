@@ -213,7 +213,6 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "features.recipe.recipe-match-card.sperimentazione-d09679c9": "実験性",
   "features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf": "この環境には過剰です：時間・オーブン・目標を軽くしましょう。",
   "features.recipe.recipe-output-bits.w-262d147c": "← W",
-  "features.recipe.recipe-setup-panel.d-autore-23e32e2a": "シェフの解釈",
   "features.recipe.recipe-setup-panel.firma-439145df": "シグネチャー",
   "features.recipe.recipe-setup-panel.idr-w-6f351627": "加水 · W",
   "features.recipe.recipe-setup-panel.interpretazione-b24004b7": "解釈",

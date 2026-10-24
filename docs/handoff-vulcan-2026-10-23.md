@@ -223,7 +223,7 @@ Emerse nel lavoro, da pianificare in fase 1:
   qui?» ora chiede solo il forno (finché non è scelto), con «Scegli il tuo
   forno» che apre «La tua cucina», «Va bene così» e «Configura tutta la cucina»
   (profilo).
-- **U-3 (P1)** proposta applicata il 24/10 (D-035, da confermare): in
+- ~~**U-3 (P1)**~~ chiuso il 24/10 (D-035, confermato da Matteo): in
   Personalizza «Parametri avanzati» raccoglie W e P/L precisi, sale,
   prefermento, spessore e Smart Link; chiuso la farina si sceglie a parole
   (debole/media/forte). Si ricorda l'apertura, parte aperto per il livello
