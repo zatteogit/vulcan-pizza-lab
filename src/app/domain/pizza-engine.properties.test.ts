@@ -711,3 +711,22 @@ describe("Lievito trasparente e correzione personale (M-11)", () => {
     expect(generateRecipe(STYLES_DB.focaccia_recco, base).science.yeast_model).toBeUndefined();
   });
 });
+
+describe("Stili fritti: olio, non forno (M-6)", () => {
+  it("pizza fritta e montanara: olio a temperatura e frittura, niente «forno»", () => {
+    for (const style of STYLES.filter(isFried)) {
+      const recipe = generateRecipe(style, makeConstraints({ ...HOME_OVEN }));
+      const preheat = recipe.timeline.find((step) => step.id === "preheat")!;
+      const bake = recipe.timeline.find((step) => step.id === "bake")!;
+      expect(preheat.variant, style.id).toBe("oil");
+      expect(bake.variant, style.id).toBe("fry");
+      expect(`${preheat.title} ${preheat.description} ${bake.title} ${bake.description}`.toLowerCase()).not.toContain("forno");
+    }
+  });
+
+  it("gli stili al forno non cambiano", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, makeConstraints({ ...HOME_OVEN }));
+    expect(recipe.timeline.find((step) => step.id === "preheat")?.variant).not.toBe("oil");
+    expect(recipe.timeline.find((step) => step.id === "bake")?.variant).toBeUndefined();
+  });
+});

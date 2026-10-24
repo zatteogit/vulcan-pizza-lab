@@ -118,6 +118,9 @@ export interface CmsUiStrings {
   // Stat strip
   statHydration: string;
   statOven: string;
+  /** M-6/M-8: stili fritti e non lievitati. */
+  statRest: string;
+  statOil: string;
   statCookTime: string;
   statFermentation: string;
   /** Tabella parametri (round 7): "Forza farina" + contesto lievitazione. */
@@ -707,6 +710,9 @@ interface CmsConfigurator {
   plLabel: string;
   plTip: string;
   fermentLabel: string;
+  /** M-8: impasti non lievitati (Recco). */
+  restLabel: string;
+  restTip: string;
   fermentTip: string;
   tempFridge: string;
   tempCool: string;
@@ -1299,6 +1305,8 @@ export const CMS_DEFAULTS: CmsContent = {
     // Stat strip
     statHydration: "Idratazione",
     statOven: "Forno",
+    statRest: "Riposo",
+    statOil: "Olio",
     statCookTime: "Cottura",
     statFermentation: "Lievitazione",
     statFlourStrength: "Forza farina",
@@ -2024,6 +2032,14 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.preheat.equipmentNote": " (pietra o acciaio già dentro)",
     "timeline.preheat.tipBeginner": "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
     "timeline.preheat.tipNerd": "La massa termica della superficie domina il primo minuto di cottura: {minutes} min di soak assicurano che pietra/acciaio siano saturi, non solo l'aria del forno.",
+    "timeline.heatOil.title": "Olio a temperatura",
+    "timeline.heatOil.desc": "Scalda l'olio (almeno 5 cm, in una pentola dai bordi alti) a {temp} e controllalo con un termometro. Intanto i panetti finiscono l'appretto.",
+    "timeline.heatOil.tipBeginner": "Sotto i 170 °C la pizza assorbe olio e diventa unta; sopra i 190 °C si colora fuori e resta cruda dentro.",
+    "timeline.heatOil.tipNerd": "Tra 180 e 190 °C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
+    "timeline.fry.title": "Frittura",
+    "timeline.fry.desc": "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
+    "timeline.fry.tipBeginner": "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
+    "timeline.fry.tipNerd": "Il vapore interno gonfia il disco nei primi secondi; girarla a metà uniforma la crosta e la cottura del ripieno.",
     "recipeSetup.noSignature": "Nessuna firma",
     "recipeSetup.currentParams": "parametri correnti",
     "recipeSetup.noSignatureAlreadyActive": "Nessuna firma già attiva",
@@ -2536,6 +2552,8 @@ export const CMS_DEFAULTS: CmsContent = {
     plLabel: "Rapporto P/L",
     plTip: "Rapporto alveografico tenacità/estensibilità della farina. P/L basso = impasto estensibile (pizza tonda). P/L alto = impasto tenace (lunga lievitazione). Stimato dalla W se non modificato manualmente.",
     fermentLabel: "Lievitazione e maturazione",
+    restLabel: "Riposo dell'impasto",
+    restTip: "Questo impasto non lievita: il riposo serve a rilassare il glutine, così la sfoglia si tira sottile senza strapparsi.",
     fermentTip: "Tempo totale di lievitazione e maturazione. La lievitazione produce i gas che gonfiano l'impasto; la maturazione scompone amidi e glutine, migliorando digeribilità e aroma. Più ore a basse temperature spostano l'equilibrio verso la maturazione.",
     tempFridge: "{fridgeTemp} frigo",
     tempCool: "{coolTemp}",

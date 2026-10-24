@@ -561,7 +561,8 @@ export interface TimelineStep {
   };
   /** Variante di testo per la localizzazione (es. preriscaldo: cosa fanno i
    *  panetti mentre il forno scalda). Assente = testo standard. */
-  variant?: "whole_proof" | "during_rest";
+  /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. */
+  variant?: "whole_proof" | "during_rest" | "oil" | "fry";
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
@@ -2783,6 +2784,11 @@ function ovenBakeSetup(eq: EquipmentContext | undefined, _ovenTemp: number): str
   }
 }
 
+/** M-6: stili che si friggono in olio (pizza fritta, montanara), non in forno. */
+export function isFriedStyle(style: PizzaStyle): boolean {
+  return style.baking.temp_c_range[1] < 200;
+}
+
 function generateTimeline(
   style: PizzaStyle,
   fermentHours: number,
@@ -2891,8 +2897,10 @@ function generateTimeline(
   const bulkMinutesFull = Math.round(fermentHours * 60 * (hasPreFerment ? 0.4 : 0.6));
   const proofMinutes = Math.round(fermentHours * 60 * (hasPreFerment ? 0.2 : 0.4));
   const ovenTempForPreheat = Math.round(actualOvenTemp ?? style.baking.temp_c_ideal);
-  const idealPreheat =
-    ovenTempForPreheat >= 400 ? 60 : ovenTempForPreheat >= 300 ? 45 : 30;
+  // M-6: per le fritte si scalda l'olio, non il forno: bastano 15 minuti.
+  const idealPreheat = isFriedStyle(style)
+    ? 15
+    : ovenTempForPreheat >= 400 ? 60 : ovenTempForPreheat >= 300 ? 45 : 30;
   const preheatDuringProof = proofMinutes - idealPreheat >= 15;
   const borrowedFromBulk = preheatDuringProof
     ? 0
@@ -3007,7 +3015,23 @@ function generateTimeline(
       : preheatVariant === "whole_proof"
         ? "Intanto i panetti fanno l'appretto."
         : "Intanto i panetti finiscono l'appretto.";
-  steps.push({
+  // M-6: le fritte non vanno in forno: prima si porta l'olio a temperatura.
+  if (isFriedStyle(style)) {
+    const oilTemp = Math.round(style.baking.temp_c_ideal);
+    steps.push({
+      id: "preheat",
+      variant: "oil",
+      title: "Olio a temperatura",
+      description: `Scalda l'olio (almeno 5 cm, in una pentola dai bordi alti) a ${oilTemp}°C e controllalo con un termometro. ${preheatWhile}`,
+      duration_minutes: preheatMinutes,
+      icon: "flame",
+      timing_label: `${preheatMinutes} min`,
+      tip: {
+        beginner: "Sotto i 170°C la pizza assorbe olio e diventa unta; sopra i 190°C si colora fuori e resta cruda dentro.",
+        nerd: "Tra 180 e 190°C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
+      },
+    });
+  } else steps.push({
     id: "preheat",
     title: "Forno al massimo",
     description: `Accendi ora il forno a ${ovenTempForPreheat}°C${preheatMinutes >= 45 ? " (pietra o acciaio già dentro)" : ""}. ${preheatWhile}`,
@@ -3183,8 +3207,23 @@ function generateTimeline(
     });
     injectToppingAt("after_bake2");
   } else {
-    // Cottura singola classica
-    steps.push({
+    // Cottura singola classica (M-6: frittura per gli stili fritti)
+    if (isFriedStyle(style)) {
+      const oilTemp = Math.round(style.baking.temp_c_ideal);
+      steps.push({
+        id: "bake",
+        variant: "fry",
+        title: "Frittura",
+        description: `Friggi una pizza alla volta a ${oilTemp}°C per ${formatCookTime(effectiveCookSec)}, girandola a metà con una schiumarola. Scolala su carta assorbente.`,
+        duration_minutes: Math.max(1, Math.round(effectiveCookSec / 60)),
+        icon: "flame",
+        timing_label: formatCookTime(effectiveCookSec),
+        tip: {
+          beginner: "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
+          nerd: "Il vapore interno gonfia il disco nei primi secondi; girarla a metà uniforma la crosta e la cottura del ripieno.",
+        },
+      });
+    } else steps.push({
       id: "bake",
       title: "Cottura",
       description: `Cuocere a ${ovenTempLabel}°C${topping?.bake_adjustments?.note ? `. ${topping.bake_adjustments.note}` : ""}.${ovenBakeSetup(equipment, ovenTempLabel)}`,

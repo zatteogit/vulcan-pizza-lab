@@ -70,6 +70,8 @@ export const FR_LOCALE: CmsContent = {
     ariaLater: "Commencer plus tard",
     statHydration: "Hydratation",
     statOven: "Four",
+    statRest: "Repos",
+    statOil: "Huile",
     statCookTime: "Cuisson",
     statFermentation: "Fermentation",
     statFlourStrength: "Force de farine",
@@ -752,6 +754,14 @@ export const FR_LOCALE: CmsContent = {
     "timeline.preheat.equipmentNote": " (pierre ou acier déjà dedans)",
     "timeline.preheat.tipBeginner": "Le four doit être très chaud. Préchauffez au moins 30 minutes avant.",
     "timeline.preheat.tipNerd": "La masse thermique de la surface domine la première minute de cuisson : {minutes} min de soak garantissent que la pierre/acier est saturée, pas seulement l'air du four.",
+    "timeline.heatOil.title": "Huile à température",
+    "timeline.heatOil.desc": "Chauffez l'huile (au moins 5 cm, dans une casserole à bords hauts) à {temp} et contrôlez-la avec un thermomètre. Pendant ce temps, les pâtons finissent leur apprêt.",
+    "timeline.heatOil.tipBeginner": "Sous 170 °C la pizza absorbe l'huile et devient grasse ; au-dessus de 190 °C elle colore dehors et reste crue dedans.",
+    "timeline.heatOil.tipNerd": "Entre 180 et 190 °C, l'eau de surface s'évapore aussitôt et forme une croûte qui limite l'absorption d'huile ; une à la fois, la température ne chute pas.",
+    "timeline.fry.title": "Friture",
+    "timeline.fry.desc": "Faites frire une pizza à la fois à {temp} pendant {time}, en la retournant à mi-cuisson avec une écumoire. Égouttez sur du papier absorbant.",
+    "timeline.fry.tipBeginner": "Faites glisser la pizza dans l'huile en l'éloignant de vous et arrosez le dessus d'une cuillerée d'huile chaude : elle gonfle de façon régulière.",
+    "timeline.fry.tipNerd": "La vapeur interne gonfle le disque dans les premières secondes ; la retourner à mi-cuisson uniformise la croûte et la cuisson de la garniture.",
   },
   scienceLabels: {
     yeastBaker: "Levure de boulanger",
@@ -1332,6 +1342,8 @@ export const FR_LOCALE: CmsContent = {
     plTip:
       "Rapport alv\u00E9ographique t\u00E9nacit\u00E9/extensibilit\u00E9. P/L bas = p\u00E2te extensible (pizza ronde). P/L \u00E9lev\u00E9 = p\u00E2te tenace (longue fermentation). Estim\u00E9 \u00E0 partir du W si non modifi\u00E9.",
     fermentLabel: "Lev\u00E9e et maturation",
+    restLabel: "Repos de la pâte",
+    restTip: "Cette pâte ne lève pas : le repos détend le gluten pour que la feuille s'étire finement sans se déchirer.",
     fermentTip:
       "Dur\u00E9e totale de lev\u00E9e et de maturation. La lev\u00E9e produit les gaz qui font gonfler la p\u00E2te ; la maturation d\u00E9compose l'amidon et le gluten, am\u00E9liorant la digestibilit\u00E9 et l'ar\u00F4me. Plus d'heures \u00E0 basse temp\u00E9rature d\u00E9placent l'\u00E9quilibre vers la maturation.",
     tempFridge: "{fridgeTemp} frigo",

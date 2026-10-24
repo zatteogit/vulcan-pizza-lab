@@ -70,6 +70,8 @@ export const PT_LOCALE: CmsContent = {
     ariaLater: "Come\u00E7ar mais tarde",
     statHydration: "Hidrata\u00E7\u00E3o",
     statOven: "Forno",
+    statRest: "Descanso",
+    statOil: "Óleo",
     statCookTime: "Coc\u00E7\u00E3o",
     statFermentation: "Fermenta\u00E7\u00E3o",
     statFlourStrength: "Força da farinha",
@@ -753,6 +755,14 @@ export const PT_LOCALE: CmsContent = {
     "timeline.preheat.equipmentNote": " (pedra ou aço já dentro)",
     "timeline.preheat.tipBeginner": "O forno deve estar muito quente. Pré-aqueça pelo menos 30 minutos antes.",
     "timeline.preheat.tipNerd": "A massa térmica da superfície domina o primeiro minuto de cozedura: {minutes} min de soak garantem que a pedra/aço estão saturados, não apenas o ar do forno.",
+    "timeline.heatOil.title": "Óleo na temperatura",
+    "timeline.heatOil.desc": "Aqueça o óleo (pelo menos 5 cm, numa panela de bordas altas) a {temp} e confira com um termômetro. Enquanto isso, as bolinhas terminam a segunda fermentação.",
+    "timeline.heatOil.tipBeginner": "Abaixo de 170 °C a pizza absorve óleo e fica oleosa; acima de 190 °C doura por fora e fica crua por dentro.",
+    "timeline.heatOil.tipNerd": "Entre 180 e 190 °C a água da superfície evapora na hora e forma uma crosta que limita a absorção de óleo; uma de cada vez, a temperatura não despenca.",
+    "timeline.fry.title": "Fritura",
+    "timeline.fry.desc": "Frite uma pizza de cada vez a {temp} por {time}, virando na metade com uma escumadeira. Escorra em papel-toalha.",
+    "timeline.fry.tipBeginner": "Deslize a pizza no óleo afastando-a de você e regue a parte de cima com uma colher de óleo quente: ela cresce por igual.",
+    "timeline.fry.tipNerd": "O vapor interno infla o disco nos primeiros segundos; virar na metade uniformiza a crosta e o cozimento do recheio.",
   },
   scienceLabels: {
     yeastBaker: "Fermento de padeiro",
@@ -1323,6 +1333,8 @@ export const PT_LOCALE: CmsContent = {
     plTip:
       "Rela\u00E7\u00E3o alveogr\u00E1fica tenacidade/extensibilidade. P/L baixo = massa extens\u00EDvel (pizza redonda). P/L alto = massa tenaz (fermenta\u00E7\u00E3o longa). Estimado a partir de W se n\u00E3o modificado.",
     fermentLabel: "Fermenta\u00E7\u00E3o e matura\u00E7\u00E3o",
+    restLabel: "Descanso da massa",
+    restTip: "Esta massa não fermenta: o descanso relaxa o glúten para a folha esticar fina sem rasgar.",
     fermentTip:
       "Tempo total de fermenta\u00E7\u00E3o e matura\u00E7\u00E3o. A fermenta\u00E7\u00E3o produz os gases que fazem a massa crescer; a matura\u00E7\u00E3o decomp\u00F5e amidos e gl\u00FAten, melhorando a digestibilidade e o aroma. Mais horas em temperaturas baixas inclinam o equil\u00EDbrio para a matura\u00E7\u00E3o.",
     tempFridge: "{fridgeTemp} geladeira",

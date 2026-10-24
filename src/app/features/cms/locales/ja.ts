@@ -95,6 +95,8 @@ export const JA_LOCALE: CmsContent = {
     // Stat strip
     statHydration: "\u52A0\u6C34\u7387",
     statOven: "\u30AA\u30FC\u30D6\u30F3",
+    statRest: "休ませ",
+    statOil: "油",
     statCookTime: "\u713C\u304D\u6642\u9593",
     statFermentation: "\u767A\u9175",
     statFlourStrength: "小麦粉の強さ",
@@ -797,6 +799,14 @@ export const JA_LOCALE: CmsContent = {
     "timeline.preheat.equipmentNote": "\uFF08\u77F3\u307E\u305F\u306F\u30B9\u30C1\u30FC\u30EB\u3082\u5165\u308C\u3066\u304A\u304F\uFF09",
     "timeline.preheat.tipBeginner": "\u30AA\u30FC\u30D6\u30F3\u306F\u3057\u3063\u304B\u308A\u71B1\u304F\u3002\u713C\u304F30\u5206\u4EE5\u4E0A\u524D\u304B\u3089\u4E88\u71B1\u3057\u307E\u3057\u3087\u3046\u3002",
     "timeline.preheat.tipNerd": "\u6700\u521D\u306E1\u5206\u306F\u8868\u9762\u306E\u84C4\u71B1\u304C\u652F\u914D\u7684\u3067\u3059\u3002{minutes}\u5206\u4E88\u71B1\u3059\u308B\u3068\u3001\u5EAB\u5185\u306E\u7A7A\u6C17\u3060\u3051\u3067\u306A\u304F\u77F3/\u30B9\u30C1\u30FC\u30EB\u307E\u3067\u71B1\u304C\u5165\u308A\u307E\u3059\u3002",
+    "timeline.heatOil.title": "油を適温に",
+    "timeline.heatOil.desc": "深さのある鍋に油を5 cm以上入れて{temp}に熱し、温度計で確認します。その間に生地玉の二次発酵を終えます。",
+    "timeline.heatOil.tipBeginner": "170 °C未満だと油を吸ってべたつき、190 °Cを超えると外だけ色づいて中が生のままになります。",
+    "timeline.heatOil.tipNerd": "180〜190 °Cでは表面の水分がすぐ蒸発して膜ができ、油の吸収を抑えます。1枚ずつ揚げると温度が下がりません。",
+    "timeline.fry.title": "揚げる",
+    "timeline.fry.desc": "1枚ずつ{temp}で{time}揚げ、途中で網じゃくしで裏返します。キッチンペーパーで油を切ります。",
+    "timeline.fry.tipBeginner": "奥へ滑らせるように油に入れ、表面に熱い油をスプーンでかけると均一にふくらみます。",
+    "timeline.fry.tipNerd": "内部の蒸気で最初の数秒に生地がふくらみます。途中で裏返すと皮と具の火の通りが均一になります。",
     "tip.waterTemp": "",
     "recipeSetup.noSignature": "シグネチャーなし",
     "recipeSetup.currentParams": "現在のパラメータ",
@@ -1456,6 +1466,8 @@ export const JA_LOCALE: CmsContent = {
     plTip:
       "\u30A2\u30EB\u30D9\u30AA\u30B0\u30E9\u30D5\u306E\u7C98\u308A/\u4F38\u3073\u6BD4\u3002P/L\u304C\u4F4E\u3044=\u4F38\u3073\u308B\u751F\u5730\uFF08\u4E38\u3044\u30D4\u30B6\uFF09\u3002P/L\u304C\u9AD8\u3044=\u7C98\u308A\u306E\u3042\u308B\u751F\u5730\uFF08\u9577\u6642\u9593\u767A\u9175\uFF09\u3002W\u304B\u3089\u63A8\u5B9A\u53EF\u80FD\u3002",
     fermentLabel: "\u767A\u9175\u3068\u719F\u6210",
+    restLabel: "生地を休ませる",
+    restTip: "この生地は発酵させません。休ませるとグルテンがゆるみ、破れずに薄くのばせます。",
     fermentTip:
       "\u767A\u9175\u3068\u719F\u6210\u306E\u5408\u8A08\u6642\u9593\u3002\u767A\u9175\u306F\u751F\u5730\u3092\u81A8\u3089\u307E\u305B\u308B\u30AC\u30B9\u3092\u751F\u307F\u51FA\u3057\u3001\u719F\u6210\u306F\u30C7\u30F3\u30D7\u30F3\u3068\u30B0\u30EB\u30C6\u30F3\u3092\u5206\u89E3\u3057\u3066\u6D88\u5316\u6027\u3068\u9999\u308A\u3092\u9AD8\u3081\u307E\u3059\u3002\u4F4E\u6E29\u3067\u9577\u6642\u9593\u307B\u3069\u3001\u719F\u6210\u3078\u3068\u50BE\u304D\u307E\u3059\u3002",
     tempFridge: "{fridgeTemp} \u51B7\u8535\u5EAB",

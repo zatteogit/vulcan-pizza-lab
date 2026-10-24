@@ -694,7 +694,11 @@ export function RecipeConfigurator({
               {/* Lievitazione */}
               <div className="config-field">
                 <GradientSlider
-                  label={<><Label>{cfg.fermentLabel}</Label><InfoTip>{cfg.fermentTip}</InfoTip></>}
+                  label={
+                    style.dough.unleavened
+                      ? <><Label>{cfg.restLabel}</Label><InfoTip>{cfg.restTip}</InfoTip></>
+                      : <><Label>{cfg.fermentLabel}</Label><InfoTip>{cfg.fermentTip}</InfoTip></>
+                  }
                   value={customFermentHours}
                   onChange={handleFH}
                   min={1}

@@ -73,6 +73,8 @@ export const ES_LOCALE: CmsContent = {
     ariaLater: "Empezar m\u00E1s tarde",
     statHydration: "Hidrataci\u00F3n",
     statOven: "Horno",
+    statRest: "Reposo",
+    statOil: "Aceite",
     statCookTime: "Cocci\u00F3n",
     statFermentation: "Fermentaci\u00F3n",
     statFlourStrength: "Fuerza de harina",
@@ -753,6 +755,14 @@ export const ES_LOCALE: CmsContent = {
     "timeline.preheat.equipmentNote": " (piedra o acero ya dentro)",
     "timeline.preheat.tipBeginner": "El horno debe estar muy caliente. Precalienta al menos 30 minutos antes.",
     "timeline.preheat.tipNerd": "La masa térmica de la superficie domina el primer minuto de cocción: {minutes} min de soak aseguran que la piedra/acero estén saturados, no solo el aire del horno.",
+    "timeline.heatOil.title": "Aceite a temperatura",
+    "timeline.heatOil.desc": "Calienta el aceite (al menos 5 cm, en una olla de bordes altos) a {temp} y contrólalo con un termómetro. Mientras, los bollos terminan de levar.",
+    "timeline.heatOil.tipBeginner": "Por debajo de 170 °C la pizza absorbe aceite y queda grasienta; por encima de 190 °C se dora fuera y queda cruda dentro.",
+    "timeline.heatOil.tipNerd": "Entre 180 y 190 °C el agua de la superficie se evapora enseguida y forma una costra que limita la absorción de aceite; de una en una, la temperatura no cae.",
+    "timeline.fry.title": "Fritura",
+    "timeline.fry.desc": "Fríe una pizza cada vez a {temp} durante {time}, dándole la vuelta a mitad con una espumadera. Escúrrela sobre papel absorbente.",
+    "timeline.fry.tipBeginner": "Desliza la pizza en el aceite alejándola de ti y báñala por encima con una cucharada de aceite caliente: se hincha de forma uniforme.",
+    "timeline.fry.tipNerd": "El vapor interno hincha el disco en los primeros segundos; darle la vuelta iguala la costra y la cocción del relleno.",
   },
   scienceLabels: {
     yeastBaker: "Levadura de panadero",
@@ -1326,6 +1336,8 @@ export const ES_LOCALE: CmsContent = {
     plTip:
       "Relaci\u00F3n alveogr\u00E1fica tenacidad/extensibilidad. P/L bajo = masa extensible (pizza redonda). P/L alto = masa tenaz (larga fermentaci\u00F3n). Estimado a partir de W si no se modifica.",
     fermentLabel: "Leudado y maduraci\u00F3n",
+    restLabel: "Reposo de la masa",
+    restTip: "Esta masa no leva: el reposo relaja el gluten para que la lámina se estire fina sin romperse.",
     fermentTip:
       "Tiempo total de leudado y maduraci\u00F3n. El leudado produce los gases que hacen crecer la masa; la maduraci\u00F3n descompone almidones y gluten, mejorando la digestibilidad y el aroma. M\u00E1s horas a temperaturas bajas inclinan el equilibrio hacia la maduraci\u00F3n.",
     tempFridge: "{fridgeTemp} nevera",

@@ -539,6 +539,26 @@ export function localizeStep(
       entry = labels.top;
       break;
     case "preheat": {
+      // M-6: per gli stili fritti il passo è l'olio, non il forno.
+      if (step.variant === "oil") {
+        return {
+          title: engineMessage(cms, "timeline.heatOil.title", "Olio a temperatura"),
+          description: t(
+            engineMessage(
+              cms,
+              "timeline.heatOil.desc",
+              "Scalda l'olio (almeno 5 cm, in una pentola dai bordi alti) a {temp} e controllalo con un termometro. Intanto i panetti finiscono l'appretto.",
+            ),
+            { temp: formatTemp(recipe.style.baking.temp_c_ideal) },
+          ),
+          tip: step.tip
+            ? {
+                beginner: engineMessage(cms, "timeline.heatOil.tipBeginner", step.tip.beginner),
+                nerd: engineMessage(cms, "timeline.heatOil.tipNerd", step.tip.nerd),
+              }
+            : undefined,
+        };
+      }
       const equipmentNote = step.description.includes("pietra o acciaio")
         ? engineMessage(cms, "timeline.preheat.equipmentNote", " (pietra o acciaio già dentro)")
         : "";
@@ -585,6 +605,28 @@ export function localizeStep(
       };
     }
     case "bake":
+      if (step.variant === "fry") {
+        return {
+          title: engineMessage(cms, "timeline.fry.title", "Frittura"),
+          description: t(
+            engineMessage(
+              cms,
+              "timeline.fry.desc",
+              "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
+            ),
+            {
+              temp: formatTemp(recipe.style.baking.temp_c_ideal),
+              time: fmt ? fmt.cookTime(recipe.cook_time_sec) : step.timing_label,
+            },
+          ),
+          tip: step.tip
+            ? {
+                beginner: engineMessage(cms, "timeline.fry.tipBeginner", step.tip.beginner),
+                nerd: engineMessage(cms, "timeline.fry.tipNerd", step.tip.nerd),
+              }
+            : undefined,
+        };
+      }
       // Con cook_mode "white_then_top", il motore genera "Prima cottura (in bianco)" custom
       if (layout.cook_mode === "white_then_top") return formatRawStep(step);
       // Audit role-play giugno 2026 (punto 2): il motore aggiunge il setup forno

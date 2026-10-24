@@ -87,6 +87,8 @@ export const EN_LOCALE: CmsContent = {
     // Stat strip
     statHydration: "Hydration",
     statOven: "Oven",
+    statRest: "Rest",
+    statOil: "Oil",
     statCookTime: "Bake time",
     statFermentation: "Fermentation",
     statFlourStrength: "Flour strength",
@@ -951,6 +953,14 @@ export const EN_LOCALE: CmsContent = {
     "timeline.preheat.equipmentNote": " (stone or steel already inside)",
     "timeline.preheat.tipBeginner": "The oven needs to be very hot. Preheat at least 30 minutes before baking.",
     "timeline.preheat.tipNerd": "Surface thermal mass dominates the first baking minute: a {minutes} min soak makes the stone/steel saturated, not just the oven air.",
+    "timeline.heatOil.title": "Oil up to temperature",
+    "timeline.heatOil.desc": "Heat the oil (at least 5 cm deep, in a high-sided pan) to {temp} and check it with a thermometer. Meanwhile the dough balls finish proofing.",
+    "timeline.heatOil.tipBeginner": "Below 170 °C the pizza soaks up oil and turns greasy; above 190 °C it browns outside and stays raw inside.",
+    "timeline.heatOil.tipNerd": "Between 180 and 190 °C surface water flashes off and forms a crust that limits oil uptake; one ball at a time keeps the temperature from crashing.",
+    "timeline.fry.title": "Frying",
+    "timeline.fry.desc": "Fry one pizza at a time at {temp} for {time}, turning it halfway with a slotted spoon. Drain on paper towels.",
+    "timeline.fry.tipBeginner": "Slide the pizza into the oil away from you and baste the top with a spoonful of hot oil: it puffs up evenly.",
+    "timeline.fry.tipNerd": "Internal steam puffs the disc in the first seconds; turning it halfway evens out the crust and cooks the filling through.",
     "tip.waterTemp": "",
     "recipeSetup.noSignature": "No signature",
     "recipeSetup.currentParams": "current parameters",
@@ -1523,6 +1533,8 @@ export const EN_LOCALE: CmsContent = {
     plTip:
       "Alveograph tenacity/extensibility ratio. Low P/L = extensible dough (round pizza). High P/L = tenacious dough (long fermentation). Estimated from W if not manually set.",
     fermentLabel: "Leavening & maturation",
+    restLabel: "Dough rest",
+    restTip: "This dough doesn't rise: the rest relaxes the gluten so the sheet stretches thin without tearing.",
     fermentTip:
       "Total leavening and maturation time. Leavening produces the gases that make the dough rise; maturation breaks down starches and gluten, improving digestibility and aroma. More hours at lower temperatures shift the balance toward maturation.",
     tempFridge: "{fridgeTemp} fridge",
