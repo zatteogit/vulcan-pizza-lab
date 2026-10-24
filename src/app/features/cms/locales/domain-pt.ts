@@ -149,7 +149,7 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
 export const DIETARY_PT: Partial<CmsDietaryI18n> = {
   info: {
     low_fodmap: {
-      name: "Low FODMAP",
+      name: "Baixo FODMAP",
       description:
         "Reduz frutanos e oligossacar\u00EDdeos ferment\u00E1veis",
       scienceNote:
@@ -488,5 +488,262 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
   };
 
 export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
-  terms: {},
+  terms: {
+    w_alveograph: {
+      name: "W (Alve\u00F3grafo de Chopin)",
+      definition: "Energia total necess\u00E1ria para expandir uma bolha de massa at\u00E9 ela se romper. Mede a for\u00E7a geral da farinha.",
+      whyImportant: "W baixo (<180): massa extens\u00EDvel, fermenta\u00E7\u00E3o curta. W m\u00E9dio (220-280): ideal para a napolitana, tolera 18-30h. W alto (>300): massa tenaz, indicada para massas enriquecidas.",
+      ranges: [
+        { label: "Fraca", value: "90\u2013160", note: "Biscoitos, wafers" },
+        { label: "M\u00E9dia", value: "160\u2013200", note: "P\u00E3o de forma, focaccia" },
+        { label: "M\u00E9dia-forte", value: "200\u2013280", note: "Pizza napolitana" },
+        { label: "Forte", value: "280\u2013350", note: "P\u00E3o de longa fermenta\u00E7\u00E3o" },
+        { label: "Muito forte", value: "350\u2013450", note: "Panettone, croissant" },
+      ],
+    },
+    p_tenacity: {
+      name: "P (Tenacidade)",
+      definition: "Resist\u00EAncia m\u00E1xima \u00E0 deforma\u00E7\u00E3o. Pico da curva alveogr\u00E1fica \u2014 o quanto a massa resiste ao estiramento.",
+      whyImportant: "P alto: massa 'dura', mant\u00E9m a forma no forno. P baixo: massa 'mole', f\u00E1cil de abrir, pode desabar.",
+      ranges: [
+        { label: "Pizza", value: "40\u201380 mm" },
+        { label: "P\u00E3o", value: "80\u2013120 mm" },
+        { label: "Croissant", value: "100\u2013140 mm" },
+      ],
+    },
+    l_extensibility: {
+      name: "L (Extensibilidade)",
+      definition: "Comprimento m\u00E1ximo que a bolha atinge antes de se romper. Mede o quanto a massa pode se alongar.",
+      whyImportant: "L alto: massa extens\u00EDvel, f\u00E1cil de abrir sem rasgar. L baixo: massa curta, que rasga.",
+      ranges: [
+        { label: "Pizza", value: "80\u2013120 mm" },
+        { label: "P\u00E3o", value: "60\u2013100 mm" },
+      ],
+    },
+    pl_ratio: {
+      name: "P/L (Rela\u00E7\u00E3o Tenacidade/Extensibilidade)",
+      definition: "\u00CDndice de equil\u00EDbrio mec\u00E2nico. Rela\u00E7\u00E3o entre a resist\u00EAncia e a extensibilidade da massa.",
+      whyImportant: "P/L ideal (0.5-0.6): borda alta + base fina. <0.4: pizza achatada. >0.8: massa 'borrachuda'.",
+      ranges: [
+        { label: "<0.4 Muito extens\u00EDvel", value: "Desaba facilmente", note: "Pinsa" },
+        { label: "0.4\u20130.5 Extens\u00EDvel", value: "F\u00E1cil de trabalhar", note: "Napolitana cl\u00E1ssica" },
+        { label: "0.5\u20130.7 Equilibrada", value: "Bom equil\u00EDbrio", note: "Napolitana moderna, p\u00E3o" },
+        { label: "0.7\u20131.0 Tenaz", value: "Resistente", note: "P\u00E3o de longa fermenta\u00E7\u00E3o" },
+        { label: ">1.0 Muito tenaz", value: "El\u00E1stica, encolhe", note: "Croissant" },
+      ],
+    },
+    falling_number: {
+      name: "Falling Number (Hagberg-Perten)",
+      definition: "Tempo que uma haste leva para cair atrav\u00E9s de uma suspens\u00E3o de farinha aquecida. Mede a atividade amil\u00E1sica.",
+      whyImportant: "FN baixo (<250): fermenta\u00E7\u00E3o r\u00E1pida, mas massa inst\u00E1vel. FN alto (>300): est\u00E1vel para matura\u00E7\u00F5es longas.",
+      ranges: [
+        { label: "<200 Amilase alt\u00EDssima", value: "Massa grudenta", note: "N\u00E3o recomendada para pizza" },
+        { label: "200\u2013250 Alta", value: "Miolo \u00FAmido", note: "P\u00E3o r\u00E1pido" },
+        { label: "250\u2013300 M\u00E9dia", value: "Bom equil\u00EDbrio", note: "Pizza 8-12h" },
+        { label: "300\u2013400 Baixa", value: "Seca, lenta", note: "Pizza 24-48h" },
+        { label: ">400 Muito baixa", value: "Seca", note: "Macarr\u00E3o seco" },
+      ],
+    },
+    hydration: {
+      name: "Hidrata\u00E7\u00E3o (H%)",
+      definition: "Porcentagem em peso de \u00E1gua em rela\u00E7\u00E3o \u00E0 farinha na massa.",
+      whyImportant: "H baixa (<55%): crocante, f\u00E1cil. H m\u00E9dia (60-65%): equil\u00EDbrio. H alta (>70%): exige farinha forte (W>280) e habilidade.",
+      ranges: [
+        { label: "Napolitana cl\u00E1ssica", value: "55\u201360%", note: "Macia, trabalh\u00E1vel" },
+        { label: "Napolitana contempor\u00E2nea", value: "60\u201365%", note: "Borda leve" },
+        { label: "Canotto", value: "65\u201370%", note: "Alv\u00E9olos grandes" },
+        { label: "Pinsa romana", value: "75\u201385%", note: "Aberta na assadeira" },
+        { label: "Focaccia/Bonci", value: "85\u2013100%+", note: "Massa quase l\u00EDquida" },
+      ],
+    },
+    absorption: {
+      name: "Absor\u00E7\u00E3o de \u00C1gua",
+      definition: "Quantidade m\u00E1xima de \u00E1gua que uma farinha consegue absorver mantendo uma consist\u00EAncia trabalh\u00E1vel. Depende das prote\u00EDnas, do amido danificado e das fibras.",
+      ranges: [
+        { label: "00 fraca (W150)", value: "50\u201352%" },
+        { label: "00 m\u00E9dia (W220)", value: "53\u201355%" },
+        { label: "00 forte (W280)", value: "56\u201358%" },
+        { label: "Integral", value: "65\u201375%" },
+        { label: "Manitoba (W380)", value: "60\u201365%" },
+      ],
+    },
+    stability: {
+      name: "Estabilidade da Massa",
+      definition: "Tempo durante o qual a massa mant\u00E9m a consist\u00EAncia ideal durante a sova. Medida com o farin\u00F3grafo.",
+      whyImportant: "Estabilidade baixa (<5 min): degrada se for sovada demais. Alta (>10 min): tolera erros operacionais.",
+      ranges: [
+        { label: "Fraca", value: "2\u20134 min" },
+        { label: "M\u00E9dia", value: "5\u20138 min" },
+        { label: "Forte", value: "10\u201315 min" },
+        { label: "Manitoba", value: "15\u201320 min" },
+      ],
+    },
+    yeast: {
+      name: "Fermento (Saccharomyces cerevisiae)",
+      definition: "Fungo unicelular que converte a\u00E7\u00FAcares em CO\u2082 + etanol + compostos arom\u00E1ticos.",
+      whyImportant: "Temp. ideal: 28-32\u00B0C. M\u00EDn. 4\u00B0C (dormente). M\u00E1x. 40\u00B0C (inibido). Morre acima de 55\u00B0C.",
+      ranges: [
+        { label: "Fresco", value: "0.5\u20132.0%", note: "Umidade 70%, geladeira a 4\u00B0C" },
+        { label: "Seco ativo", value: "0.3\u20131.0%", note: "Hidratar antes" },
+        { label: "Seco instant\u00E2neo", value: "0.2\u20130.8%", note: "Direto na farinha" },
+      ],
+    },
+    lab: {
+      name: "LAB (Bact\u00E9rias L\u00E1ticas)",
+      definition: "Bact\u00E9rias que fermentam a\u00E7\u00FAcares produzindo \u00E1cido l\u00E1tico (e ac\u00E9tico). Presentes no fermento natural.",
+      whyImportant: "Baixam o pH (4.0-4.5), aumentam a acidez, degradam FODMAP (frutanos), inibem mofos. Temp. ideal: 28-32\u00B0C.",
+    },
+    q10: {
+      name: "Q\u2081\u2080 (Coeficiente de Temperatura)",
+      definition: "Fator multiplicativo da velocidade de uma rea\u00E7\u00E3o bioqu\u00EDmica a cada aumento de 10\u00B0C.",
+      whyImportant: "Com Q\u2081\u2080 = 2, a fermenta\u00E7\u00E3o dobra a cada +10\u00B0C: 24h a 18\u00B0C \u2248 12h a 28\u00B0C. Os valores abaixo s\u00E3o estimativas do modelo do {brand}.",
+      ranges: [
+        { label: "Fermento comercial \u226510\u00B0C", value: "2.0", note: "Estimativa do modelo, coerente com os dados de crescimento entre 18 e 25 \u00B0C" },
+        { label: "Fermento comercial <10\u00B0C", value: "1.6", note: "Estimativa do modelo, sem fonte" },
+        { label: "Fermento natural >15\u00B0C", value: "2.2", note: "Estimativa do modelo" },
+        { label: "Fermento natural \u226415\u00B0C", value: "1.9", note: "Estimativa do modelo" },
+      ],
+    },
+    arrhenius: {
+      name: "Equa\u00E7\u00E3o de Arrhenius",
+      definition: "Descreve a depend\u00EAncia da velocidade de rea\u00E7\u00E3o em rela\u00E7\u00E3o \u00E0 temperatura absoluta.",
+      whyImportant: "Com \u03B2=0.075 e T_ref=18\u00B0C \u2192 Q\u2081\u2080 \u2248 2.12. Usada no motor do {brand} para calcular a dosagem de fermento e os tempos.",
+    },
+    biga: {
+      name: "Biga",
+      definition: "Pr\u00E9-massa seca (44-50% de hidrata\u00E7\u00E3o) com farinha + \u00E1gua + fermento, fermentada 16-24h a 16-18\u00B0C.",
+      whyImportant: "Aumenta for\u00E7a, extensibilidade, complexidade de sabor, alveolado irregular e r\u00FAstico e durabilidade. Dosagem: 20-40% da farinha total.",
+    },
+    poolish: {
+      name: "Poolish",
+      definition: "Pr\u00E9-massa l\u00EDquida (100% de hidrata\u00E7\u00E3o) com farinha + \u00E1gua 1:1 + fermento, fermentada 12-16h a 16-18\u00B0C.",
+      whyImportant: "Extensibilidade alta, alveolado fino e uniforme, sabor adocicado e levemente \u00E1cido, crosta fina e crocante. Poolish = extensibilidade; Biga = for\u00E7a.",
+    },
+    autolysis: {
+      name: "Aut\u00F3lise",
+      definition: "Descanso de farinha + \u00E1gua (sem fermento/sal) por 20-60 min. As enzimas proteases desenvolvem o gl\u00FAten espontaneamente.",
+      whyImportant: "Reduz o tempo de sova em 30-50%, aumenta a extensibilidade, melhora a hidrata\u00E7\u00E3o. 20-30 min para W<200, 45-60 min para W>280.",
+    },
+    bulk_fermentation: {
+      name: "Fermenta\u00E7\u00E3o em massa (puntata)",
+      definition: "Primeira fase de fermenta\u00E7\u00E3o ap\u00F3s a sova, antes da divis\u00E3o em bolas. A massa descansa em um \u00FAnico bloco por 30 min \u2013 4h.",
+      whyImportant: "Relaxamento do gl\u00FAten, in\u00EDcio da fermenta\u00E7\u00E3o, desenvolvimento de aromas, aumento de volume de 20-50%.",
+    },
+    ball_fermentation: {
+      name: "Fermenta\u00E7\u00E3o final (appretto)",
+      definition: "Segunda fase de fermenta\u00E7\u00E3o, ap\u00F3s a divis\u00E3o em bolas. Cada bola descansa individualmente 4-48h a 4-22\u00B0C.",
+      whyImportant: "Fermenta\u00E7\u00E3o principal, matura\u00E7\u00E3o por prote\u00F3lise, desenvolvimento do volume final, estabiliza\u00E7\u00E3o do pH.",
+    },
+    maillard: {
+      name: "Rea\u00E7\u00E3o de Maillard",
+      definition: "Rea\u00E7\u00E3o n\u00E3o enzim\u00E1tica entre amino\u00E1cidos e a\u00E7\u00FAcares redutores em alta temperatura (>140\u00B0C).",
+      whyImportant: "Crosta dourada (melanoidinas), aroma tostado (pirazinas), leopardado a 300\u00B0C+. Ideal: 160-180\u00B0C.",
+    },
+    caramelization: {
+      name: "Carameliza\u00E7\u00E3o",
+      definition: "Degrada\u00E7\u00E3o t\u00E9rmica dos a\u00E7\u00FAcares (sem prote\u00EDnas) em alta temperatura (>150\u00B0C sacarose, >120\u00B0C frutose).",
+      whyImportant: "Contribui para as manchas escuras na borda. Menos relevante que a rea\u00E7\u00E3o de Maillard na pizza (poucas prote\u00EDnas na superf\u00EDcie).",
+    },
+    starch_gelatinization: {
+      name: "Gelatiniza\u00E7\u00E3o do Amido",
+      definition: "Transi\u00E7\u00E3o do amido do estado cristalino para o gelatinoso, absorvendo \u00E1gua. In\u00EDcio 55-60\u00B0C, pico 65-70\u00B0C, conclus\u00E3o 80-85\u00B0C.",
+      whyImportant: "Miolo: torna o amido diger\u00EDvel (<55\u00B0C no centro = amido cru). Crosta: >100\u00B0C \u2192 crocante.",
+    },
+    retrogradation: {
+      name: "Retrograda\u00E7\u00E3o",
+      definition: "Recristaliza\u00E7\u00E3o do amido gelatinizado durante o armazenamento. M\u00E1xima a 4\u00B0C (geladeira).",
+      whyImportant: "O miolo fica duro e 'amanhecido'. Retarde com: gorduras 2-3%, a\u00E7\u00FAcares 1-2%, fermenta\u00E7\u00E3o longa, hidrata\u00E7\u00E3o alta.",
+    },
+    thermal_conductivity: {
+      name: "Condutividade T\u00E9rmica",
+      definition: "Capacidade de um material de conduzir calor.",
+      whyImportant: "A\u00E7o (k=50): ideal para fornos dom\u00E9sticos a 280\u00B0C, cozimento de 6-8 min. Pedra (k=2): ideal para fornos a lenha a 450\u00B0C+, cozimento de 60-90s.",
+      ranges: [
+        { label: "Cobre", value: "400" },
+        { label: "Alum\u00EDnio", value: "205" },
+        { label: "A\u00E7o carbono", value: "50" },
+        { label: "A\u00E7o inox", value: "16" },
+        { label: "Cordierita (pedra)", value: "2.5\u20133.5" },
+        { label: "Pedra refrat\u00E1ria", value: "1.0\u20131.5" },
+        { label: "Massa de pizza", value: "0.5" },
+      ],
+    },
+    fodmap: {
+      name: "FODMAP",
+      definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. Carboidratos ferment\u00E1veis de cadeia curta (frutanos: 1-3% no trigo).",
+      whyImportant: "O intestino n\u00E3o digere os frutanos \u2192 as bact\u00E9rias os fermentam \u2192 gases/incha\u00E7o. A fermenta\u00E7\u00E3o longa reduz: 24h\u219260-70%, 48h\u219280-85%.",
+    },
+    histamine: {
+      name: "Histamina",
+      definition: "Amina biog\u00EAnica resultante da descarboxila\u00E7\u00E3o da histidina. Produzida pelas LAB durante a fermenta\u00E7\u00E3o, presente em queijos maturados e embutidos.",
+      whyImportant: "Ac\u00FAmulo linear com o tempo. Fermento natural 24h/28\u00B0C \u2192 30-50 mg/kg. Pessoas com defici\u00EAncia de DAO: rea\u00E7\u00E3o pseudoal\u00E9rgica. Solu\u00E7\u00E3o: fermenta\u00E7\u00E3o curta (<12h) + fermento comercial.",
+    },
+    gluten: {
+      name: "Gl\u00FAten",
+      definition: "Complexo proteico viscoel\u00E1stico formado por gliadina (extens\u00EDvel) + glutenina (tenaz) na presen\u00E7a de \u00E1gua e sova.",
+      whyImportant: "Elasticidade vinda das gluteninas (liga\u00E7\u00F5es S-S), viscosidade das gliadinas (liga\u00E7\u00F5es H). Prote\u00F3lise longa quebra as liga\u00E7\u00F5es \u2192 massa mais extens\u00EDvel.",
+    },
+    proteolysis: {
+      name: "Prote\u00F3lise",
+      definition: "Degrada\u00E7\u00E3o das prote\u00EDnas em pept\u00EDdeos e amino\u00E1cidos por enzimas proteases. Alvo: gl\u00FAten.",
+      whyImportant: "Massa mais f\u00E1cil de abrir, maior digestibilidade, amino\u00E1cidos livres \u2192 sabor umami. Excessiva (>72h): massa mole demais. Ideal: 24-48h.",
+    },
+    thickness_factor: {
+      name: "Thickness Factor (TF)",
+      definition: "Densidade superficial da massa \u2014 massa por unidade de \u00E1rea. Indica quanta massa h\u00E1 por cm\u00B2.",
+      whyImportant: "Determina o tempo de cozimento, a croc\u00E2ncia e a densidade cal\u00F3rica. M\u00E9trica original do Projeto {brand}.",
+      ranges: [
+        { label: "Napolitana", value: "0.30\u20130.36", note: "6-7 mm" },
+        { label: "Romana redonda", value: "0.20\u20130.25", note: "4-5 mm" },
+        { label: "New York", value: "0.40\u20130.50", note: "8-10 mm" },
+        { label: "Chicago deep dish", value: "1.00\u20131.30", note: "20-26 mm" },
+      ],
+    },
+    friction_factor: {
+      name: "Friction Factor (Fator de Atrito)",
+      definition: "Aumento da temperatura da massa (\u00B0C) por minuto de sova, devido ao atrito mec\u00E2nico.",
+      whyImportant: "A sova gera calor \u2192 eleva a temperatura \u2192 fermenta\u00E7\u00E3o r\u00E1pida demais. Usado na Regra dos 55.",
+      ranges: [
+        { label: "Manual", value: "0.0" },
+        { label: "Batedeira planet\u00E1ria dom\u00E9stica", value: "0.8\u20131.0" },
+        { label: "Espiral profissional", value: "0.4\u20130.6" },
+        { label: "Amassadeira de garfo", value: "0.2\u20130.3" },
+      ],
+    },
+    rule_of_55: {
+      name: "Regra dos 55",
+      definition: "F\u00F3rmula emp\u00EDrica para calcular a temperatura da \u00E1gua necess\u00E1ria para atingir a temperatura-alvo da massa.",
+      whyImportant: "55 = constante emp\u00EDrica (varia entre 50-60 conforme a m\u00E1quina). \u0394T_atrito = Friction Factor \u00D7 tempo de sova.",
+    },
+    a_score: {
+      name: "A-Score (Autenticidade)",
+      definition: "Pontua\u00E7\u00E3o de 0-100 que mede a ader\u00EAncia de uma receita ao regulamento do estilo-alvo.",
+      ranges: [
+        { label: "90-100", value: "Rigorosamente aut\u00EAntica" },
+        { label: "75-89", value: "Substancialmente aut\u00EAntica" },
+        { label: "60-74", value: "Inspirada no estilo" },
+        { label: "<60", value: "Desvio significativo" },
+      ],
+    },
+    f_score: {
+      name: "F-Score (Viabilidade)",
+      definition: "Pontua\u00E7\u00E3o de 0-100 que mede a viabilidade pr\u00E1tica, considerando o equipamento e a habilidade do usu\u00E1rio.",
+      ranges: [
+        { label: "90-100", value: "Muito vi\u00E1vel" },
+        { label: "75-89", value: "Vi\u00E1vel com aten\u00E7\u00E3o" },
+        { label: "60-74", value: "Dif\u00EDcil" },
+        { label: "<60", value: "N\u00E3o recomendado" },
+      ],
+    },
+    d_score: {
+      name: "D-Score (Digestibilidade)",
+      definition: "Pontua\u00E7\u00E3o de 0-100 que estima a digestibilidade com base nas horas de fermenta\u00E7\u00E3o normalizadas e na redu\u00E7\u00E3o de FODMAP.",
+      ranges: [
+        { label: "85-100", value: "Alta (>48h equivalentes)" },
+        { label: "70-84", value: "M\u00E9dia-alta (24-48h)" },
+        { label: "50-69", value: "M\u00E9dia (12-24h)" },
+        { label: "<50", value: "Baixa (<12h)" },
+      ],
+    },
+  },
 };

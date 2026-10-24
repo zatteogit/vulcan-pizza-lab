@@ -385,6 +385,10 @@ export const EN_LOCALE: CmsContent = {
       label: "Challenging",
       subtitle: "for those who dare",
     },
+    not_feasible: {
+      label: "Not feasible",
+      subtitle: "key requirements missing (oven, experience)",
+    },
   },
   scoreDimensions: {
     authenticity: {
@@ -635,6 +639,8 @@ export const EN_LOCALE: CmsContent = {
       padellino: { singular: "Pan pizza", plural: "Pan pizzas" },
       focaccia: { singular: "Focaccia", plural: "Focacce" },
     },
+    dayToday: "today",
+    approxPrefix: "approx. ",
   },
   misc: {
     showAllStyles: "Show all",
@@ -1065,6 +1071,7 @@ export const EN_LOCALE: CmsContent = {
         'The pre-ferment is like an "appetizer" for the yeast. Mix and let it rest covered.',
       tipNerd:
         "The pre-ferment produces organic acids (lactic/acetic) that lower pH to ~4.5, improving the gluten network and shelf life.",
+      longDesc: "The pre-ferment is a small portion of flour and water (with a little yeast) that you leave to mature BEFORE the main dough. Pour room-temperature water into the container, dissolve the fresh yeast, add the flour and stir with a spoon until you get a thick paste. Cover with cling film and leave to mature for 16-18 hours at 18\u00B0C (cellar/cool room). It's ready when you see lots of bubbles on the surface and it smells citrusy, like yoghurt.",
     },
     mix: {
       title: "Mixing",
@@ -1075,6 +1082,7 @@ export const EN_LOCALE: CmsContent = {
         "The dough is ready when it's smooth and pulls away from your hands. If too sticky, wait 5 min and try again.",
       tipNerd:
         "Window pane test confirms sufficient gluten development: glutenin and gliadin form stable disulfide bonds.",
+      longDesc: "Dissolve the yeast in the water, then gradually add the flour while mixing. Once the flour is incorporated, add the salt and finally the oil. Knead the dough (by hand or in a stand mixer) until it's smooth, elastic and comes away from the sides of the bowl: it takes 10-15 minutes by hand, 6-8 in a stand mixer. Windowpane test: stretch a small piece of dough between your fingers \u2014 if it turns translucent without tearing, it's ready.",
     },
     mix_noknead: {
       title: "Mixing",
@@ -1083,6 +1091,7 @@ export const EN_LOCALE: CmsContent = {
         "No kneading needed! Mix with a spatula until there are no more dry flour lumps.",
       tipNerd:
         "Autolyse leverages endogenous flour proteinases to develop gluten without mechanical work.",
+      longDesc: "No mixer needed: just a spatula or one hand. Pour the water into the container, add the dissolved yeast, then the flour and finally the salt. Mix roughly until no dry flour lumps remain (2-3 minutes is enough). The dough will be sticky and uneven \u2014 that's normal. Cover and let it rest: the gluten will develop on its own with time + the folds that follow.",
     },
     bulk: {
       title: "Bulk Fermentation",
@@ -1091,6 +1100,7 @@ export const EN_LOCALE: CmsContent = {
         "The dough should double in volume. If it's warm, check more often!",
       tipNerd:
         "At {temp} fermentation speed is {factor}\u00D7 vs the 18\u00B0C reference.",
+      longDesc: "The dough rests as a single mass in an oiled container, with cling film pressed onto the surface. This is when the yeast gets to work, developing flavour, structure and digestibility. If the hydration is high, do 2-3 \"strengthening folds\" (stretch & fold) in the first 2 hours: lift a flap, pull it up and fold it towards the centre, rotate and repeat on all 4 sides. Fermentation is complete when the volume has doubled and the surface is domed and smooth.",
     },
     bulk_cold: {
       title: "Bulk Fermentation",
@@ -1099,6 +1109,7 @@ export const EN_LOCALE: CmsContent = {
         "In the fridge the dough rises slowly but gains flavor. Cover well with contact wrap.",
       tipNerd:
         "At {temp} fermentation slows to {factor}× vs the {refTemp} reference. Proteolytic activity dominates, degrading FODMAPs.",
+      longDesc: "Move the container with the dough into the fridge ({fridgeTemp}). In the fridge the yeast works much more slowly: it takes far longer, but in return you gain more complex flavour, better digestibility and a more developed gluten network. Always cover with cling film pressed onto the surface so the dough doesn't form a dry skin. When you take it out, let it come up to room temperature for 1-2 hours before dividing.",
     },
     rest: {
       title: "Rest",
@@ -1113,6 +1124,7 @@ export const EN_LOCALE: CmsContent = {
         "Use a scale! Cut with a bench scraper and round each piece into a smooth ball.",
       tipNerd:
         "Dividing creates surface tension that traps CO\u2082 during proofing and defines the final alveolar structure.",
+      longDesc: "Turn the dough out onto a lightly floured surface. Using a bench scraper, cut portions of the weight shown below under Ingredients, weighing them on a scale (it matters for even baking). Ball each piece: fold the edges down and under into the centre, rotate and round it into a smooth, taut ball. Place the dough balls on a floured tray, well spaced, and cover with cling film.",
     },
     proof: {
       title: "Final Proof",
@@ -1121,6 +1133,7 @@ export const EN_LOCALE: CmsContent = {
         "The balls should be soft. If you press with a finger, they spring back slowly.",
       tipNerd:
         "Poke test: slow return = optimal fermentation. Too fast = under-proofed. No return = over-proofed.",
+      longDesc: "After dividing, the dough balls need to relax and rise one last time. Keep them covered at room temperature. They're ready to stretch when: (1) they've doubled in volume, (2) the surface is domed and smooth, (3) the poke test springs back slowly (press with a finger: it should spring back in ~5 seconds). If the dough doesn't spring back = over-proofed; if it springs back straight away = under-proofed.",
     },
     shape: {
       title: "Shaping",
@@ -1142,6 +1155,14 @@ export const EN_LOCALE: CmsContent = {
         "The oven must be very hot. Preheat at least 30 minutes before.",
       tipNerd:
         "The Maillard reaction starts at ~140\u00B0C and accelerates exponentially. At {temp} caramelization creates ~600 aromatic compounds.",
+      longDesc: "Preheat the oven to its maximum temperature for 30-45 minutes (a cold oven won't work!). If you have a pizza stone or baking steel, heat it thoroughly. Bake the pizza on the top/middle shelf. DON'T open the oven in the first 5 minutes \u2014 you'll lose the burst of heat. The pizza is ready when the rim is golden/leopard-spotted and the base is crisp.",
+    },
+    divide_teglia: {
+      title: "Dividing",
+      desc: "Divide gently, without deflating the dough.",
+      longDesc: "Turn the dough out onto a well-floured surface (with high hydrations, use semolina to help). Using a bench scraper, cut portions of the weight shown below under Ingredients, weighing them on a scale. Handle it as little as possible: teglia does NOT need the tight balling of a round pizza \u2014 tuck the edges under to form a soft log, without squeezing out the air. The bubbles built up during bulk fermentation will become the open crumb. Put each piece in an oiled container and cover.",
+      tipBeginner: "Gentle hands! The bubbles in the dough are precious: tuck the edges under without pressing down.",
+      tipNerd: "With hydration >75%, aggressive dividing collapses the alveoli formed during bulk fermentation: minimal tension, almost no degassing.",
     },
   },
   timelineUi: {

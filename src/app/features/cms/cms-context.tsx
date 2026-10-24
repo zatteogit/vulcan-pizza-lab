@@ -883,7 +883,11 @@ export interface CmsContent {
     finish: string;
     finishedEarly: string;
     phaseDone: string;
+    /** Giorno di oggi accanto a un orario («oggi»). */
+    dayToday: string;
     dayTomorrow: string;
+    /** Prefisso degli orari arrotondati («ca. 18:15»); spazio incluso se serve. */
+    approxPrefix: string;
     dayAfterTomorrow: string;
     dayOffset: string;
     etaNow: string;
@@ -1642,7 +1646,9 @@ export const CMS_DEFAULTS: CmsContent = {
     finish: "Concludi la pizzata",
     finishedEarly: "Ho finito prima — salta l'attesa",
     phaseDone: "Tempo completato",
+    dayToday: "oggi",
     dayTomorrow: "domani",
+    approxPrefix: "ca. ",
     dayAfterTomorrow: "dopodomani",
     dayOffset: "+{n} giorni",
     etaNow: "ora",
@@ -2157,14 +2163,14 @@ export const CMS_DEFAULTS: CmsContent = {
     mix_noknead: {
       title: "Impasto",
       desc: "Mescolare senza impastare fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min.",
-      longDesc: "Niente impastatrice: usa solo una spatola o una mano. Versa l'acqua nel contenitore, aggiungi il lievito sciolto, poi la farina e infine il sale. Mescola in modo grossolano fino a quando non ci sono pi\u00F9 grumi di farina asciutta (sono sufficienti 2-3 minuti). L'impasto sar\u00E0 appiccicoso e irregolare \u2014 \u00E8 normale. Copri e lasciamo riposare: lo sviluppo del glutine avverr\u00E0 da solo con il tempo + le pieghe successive.",
+      longDesc: "Niente impastatrice: usa solo una spatola o una mano. Versa l'acqua nel contenitore, aggiungi il lievito sciolto, poi la farina e infine il sale. Mescola in modo grossolano fino a quando non ci sono pi\u00F9 grumi di farina asciutta (sono sufficienti 2-3 minuti). L'impasto sar\u00E0 appiccicoso e irregolare \u2014 \u00E8 normale. Copri e lascia riposare: lo sviluppo del glutine avverr\u00E0 da solo con il tempo + le pieghe successive.",
       tipBeginner: "Non serve impastare! Mescola con una spatola finch\u00E9 non ci sono pi\u00F9 grumi di farina asciutta.",
       tipNerd: "L'autolisi sfrutta le proteinasi endogene della farina per sviluppare il glutine senza lavoro meccanico.",
     },
     bulk: {
       title: "Puntata",
       desc: "Lievitazione in massa a {temp}",
-      longDesc: "L'impasto riposa in un'unica massa, dentro un contenitore unto d'olio e coperto a contatto con pellicola. \u00C8 in questa fase che il lievito lavora e sviluppa aroma, structure e digeribilit\u00E0. Se idratazione alta, esegui 2-3 \"pieghe di rinforzo\" (stretch & fold) nelle prime 2 ore: solleva un lembo, tiralo in alto e ripiegalo verso il centro, ruota e ripeti per i 4 lati. La fermentazione \u00E8 completa quando il volume \u00E8 raddoppiato e la superficie \u00E8 bombata e liscia.",
+      longDesc: "L'impasto riposa in un'unica massa, dentro un contenitore unto d'olio e coperto a contatto con pellicola. \u00C8 in questa fase che il lievito lavora e sviluppa aroma, struttura e digeribilit\u00E0. Se idratazione alta, esegui 2-3 \"pieghe di rinforzo\" (stretch & fold) nelle prime 2 ore: solleva un lembo, tiralo in alto e ripiegalo verso il centro, ruota e ripeti per i 4 lati. La fermentazione \u00E8 completa quando il volume \u00E8 raddoppiato e la superficie \u00E8 bombata e liscia.",
       tipBeginner: "L'impasto deve raddoppiare di volume. Se fa caldo, controlla più spesso!",
       tipNerd: "A {temp} la velocit\u00E0 di fermentazione \u00E8 {factor}\u00D7 rispetto al riferimento {refTemp}.",
     },

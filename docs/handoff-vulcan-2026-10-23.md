@@ -205,9 +205,13 @@ Emerse nel lavoro, da pianificare in fase 1:
 - **P-5** misurato il 24/10: `docs/budget-prestazioni.md`, controllo
   `npm run check:budget` in CI. Restano P-5a (motore in idle sulla home), P-5c
   (video, serve decisione) e P-5d.
-- **I18N-3 (P1, nuova):** i bundle CMS di es/fr/pt non hanno circa 300 chiavi e
-  quelli di de/ja circa 190 (modalità cottura, durate, «domani»…): ricadono
-  sull'inglese. Anche en manca di 22 chiavi (ricadono sull'italiano).
+- ~~**I18N-3 (P1)**~~ chiuso il 24/10: i bundle CMS di es/fr/pt non avevano 310
+  testi e quelli di de/ja 193 (modalità cottura, durate, «domani», glossario
+  vuoto): ricadevano sull'inglese; a en ne mancavano 24 (ricadevano
+  sull'italiano). Tradotti e inseriti; un test (`locale-parity.test.ts`) vieta
+  nuovi buchi. Corretti anche «OGGI» e «ca.» fissi nella timeline, refusi in ja
+  (焦き→焼き, 麻棒→麺棒, 昇食→昼食 e altri), forme del portoghese europeo in pt
+  (pt = pt-BR), note del Q₁₀ in inglese nel glossario italiano.
 - Le chiavi `timeSlots.day_after` e `timeSlots.weekend` del CMS non corrispondono
   a nessuno slot del motore, e i sottotitoli fissi degli slot non si usano più.
 

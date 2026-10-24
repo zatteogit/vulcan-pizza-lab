@@ -240,7 +240,8 @@ function RecipeContent({
     yeasts: string[];
   }>("vulcan_pantry");
   const savedDietary = loadJson<string[]>("vulcan_dietary");
-  const nerdAvailable = localStorage.getItem("vulcan_nerd_on") === "true";
+  // Storage bloccato (navigazione privata, cookie disattivati): getItem lancia.
+  const nerdAvailable = loadJson<boolean>("vulcan_nerd_on") === true;
   const initialRecipeMode = readRecipeMode(searchParams);
   const [recipeMode, setRecipeMode] = useState<RecipeMode>(initialRecipeMode);
   const useTailoredUrlParams = initialRecipeMode !== "canonical";

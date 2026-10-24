@@ -73,8 +73,8 @@ export function ProcedureHeroControls({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
 
-  const startDayLabel = daySuffix(new Date(), startTime, cms.cooking).trim() || "oggi";
-  const endDayLabel = daySuffix(new Date(), endTime, cms.cooking).trim() || "oggi";
+  const startDayLabel = daySuffix(new Date(), startTime, cms.cooking).trim() || cms.cooking.dayToday;
+  const endDayLabel = daySuffix(new Date(), endTime, cms.cooking).trim() || cms.cooking.dayToday;
 
   const comfortDescClass = comfortToggled
     ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--success type-data-sm"

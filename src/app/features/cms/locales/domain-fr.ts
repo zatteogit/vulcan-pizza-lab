@@ -494,5 +494,262 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
   };
 
 export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
-  terms: {},
+  terms: {
+    w_alveograph: {
+      name: "W (Alv\u00E9ographe de Chopin)",
+      definition: "\u00C9nergie totale n\u00E9cessaire pour gonfler une bulle de p\u00E2te jusqu'\u00E0 la rupture. Mesure la force globale de la farine.",
+      whyImportant: "W bas (<180) : p\u00E2te extensible, fermentation courte. W moyen (220-280) : id\u00E9al pour la napolitaine, tol\u00E8re 18-30h. W \u00E9lev\u00E9 (>300) : p\u00E2te tenace, n\u00E9cessaire pour les p\u00E2tes enrichies.",
+      ranges: [
+        { label: "Faible", value: "90\u2013160", note: "Biscuits, gaufrettes" },
+        { label: "Moyenne", value: "160\u2013200", note: "Pain de mie, focaccia" },
+        { label: "Moyenne-forte", value: "200\u2013280", note: "Pizza napolitaine" },
+        { label: "Forte", value: "280\u2013350", note: "Pains \u00E0 longue fermentation" },
+        { label: "Tr\u00E8s forte", value: "350\u2013450", note: "Panettone, croissant" },
+      ],
+    },
+    p_tenacity: {
+      name: "P (T\u00E9nacit\u00E9)",
+      definition: "R\u00E9sistance maximale \u00E0 la d\u00E9formation. Pic de la courbe alv\u00E9ographique \u2014 \u00E0 quel point la p\u00E2te r\u00E9siste \u00E0 l'\u00E9tirement.",
+      whyImportant: "P \u00E9lev\u00E9 : p\u00E2te \u00AB dure \u00BB, garde sa forme \u00E0 la cuisson. P bas : p\u00E2te \u00AB molle \u00BB, facile \u00E0 \u00E9taler, peut s'affaisser.",
+      ranges: [
+        { label: "Pizza", value: "40\u201380 mm" },
+        { label: "Pain", value: "80\u2013120 mm" },
+        { label: "Croissant", value: "100\u2013140 mm" },
+      ],
+    },
+    l_extensibility: {
+      name: "L (Extensibilit\u00E9)",
+      definition: "Longueur maximale atteinte par la bulle avant la rupture. Mesure jusqu'o\u00F9 la p\u00E2te peut s'allonger.",
+      whyImportant: "L \u00E9lev\u00E9 : p\u00E2te extensible, facile \u00E0 \u00E9taler sans d\u00E9chirures. L bas : p\u00E2te courte, se d\u00E9chire.",
+      ranges: [
+        { label: "Pizza", value: "80\u2013120 mm" },
+        { label: "Pain", value: "60\u2013100 mm" },
+      ],
+    },
+    pl_ratio: {
+      name: "P/L (Rapport T\u00E9nacit\u00E9/Extensibilit\u00E9)",
+      definition: "Indice d'\u00E9quilibre m\u00E9canique. Rapport entre la r\u00E9sistance et l'extensibilit\u00E9 de la p\u00E2te.",
+      whyImportant: "P/L optimal (0.5-0.6) : corniche haute + base fine. <0.4 : pizza plate. >0.8 : p\u00E2te \u00AB caoutchouteuse \u00BB.",
+      ranges: [
+        { label: "<0.4 Tr\u00E8s extensible", value: "S'affaisse facilement", note: "Pinsa" },
+        { label: "0.4\u20130.5 Extensible", value: "Facile \u00E0 travailler", note: "Napolitaine classique" },
+        { label: "0.5\u20130.7 \u00C9quilibr\u00E9", value: "Bon \u00E9quilibre", note: "Napolitaine moderne, pain" },
+        { label: "0.7\u20131.0 Tenace", value: "R\u00E9sistante", note: "Pains \u00E0 longue fermentation" },
+        { label: ">1.0 Tr\u00E8s tenace", value: "\u00C9lastique, se r\u00E9tracte", note: "Croissant" },
+      ],
+    },
+    falling_number: {
+      name: "Falling Number (Hagberg-Perten)",
+      definition: "Temps mis par une tige pour descendre \u00E0 travers une suspension de farine chauff\u00E9e. Mesure l'activit\u00E9 amylasique.",
+      whyImportant: "FN bas (<250) : fermentation rapide mais p\u00E2te instable. FN \u00E9lev\u00E9 (>300) : stable pour les longues maturations.",
+      ranges: [
+        { label: "<200 Amylase tr\u00E8s \u00E9lev\u00E9e", value: "P\u00E2te collante", note: "D\u00E9conseill\u00E9 pour la pizza" },
+        { label: "200\u2013250 \u00C9lev\u00E9e", value: "Mie humide", note: "Pain rapide" },
+        { label: "250\u2013300 Moyenne", value: "Bon \u00E9quilibre", note: "Pizza 8-12h" },
+        { label: "300\u2013400 Faible", value: "S\u00E8che, lente", note: "Pizza 24-48h" },
+        { label: ">400 Tr\u00E8s faible", value: "S\u00E8che", note: "P\u00E2tes s\u00E8ches" },
+      ],
+    },
+    hydration: {
+      name: "Hydratation (H%)",
+      definition: "Pourcentage en poids d'eau par rapport \u00E0 la farine dans la p\u00E2te.",
+      whyImportant: "H basse (<55%) : croustillante, facile. H moyenne (60-65%) : \u00E9quilibre. H \u00E9lev\u00E9e (>70%) : demande une farine forte (W>280) et du savoir-faire.",
+      ranges: [
+        { label: "Napolitaine classique", value: "55\u201360%", note: "Moelleuse, maniable" },
+        { label: "Napolitaine contemporaine", value: "60\u201365%", note: "Corniche l\u00E9g\u00E8re" },
+        { label: "Canotto", value: "65\u201370%", note: "Grandes alv\u00E9oles" },
+        { label: "Pinsa romaine", value: "75\u201385%", note: "\u00C9tal\u00E9e en plaque" },
+        { label: "Focaccia/Bonci", value: "85\u2013100%+", note: "P\u00E2te quasi liquide" },
+      ],
+    },
+    absorption: {
+      name: "Absorption d'eau",
+      definition: "Quantit\u00E9 maximale d'eau qu'une farine peut absorber tout en gardant une consistance maniable. D\u00E9pend des prot\u00E9ines, de l'amidon endommag\u00E9 et des fibres.",
+      ranges: [
+        { label: "00 faible (W150)", value: "50\u201352%" },
+        { label: "00 moyenne (W220)", value: "53\u201355%" },
+        { label: "00 forte (W280)", value: "56\u201358%" },
+        { label: "Compl\u00E8te", value: "65\u201375%" },
+        { label: "Manitoba (W380)", value: "60\u201365%" },
+      ],
+    },
+    stability: {
+      name: "Stabilit\u00E9 de la p\u00E2te",
+      definition: "Dur\u00E9e pendant laquelle la p\u00E2te garde une consistance optimale au p\u00E9trissage. Mesur\u00E9e au farinographe.",
+      whyImportant: "Stabilit\u00E9 faible (<5 min) : se d\u00E9grade si elle est trop p\u00E9trie. \u00C9lev\u00E9e (>10 min) : tol\u00E8re les erreurs de manipulation.",
+      ranges: [
+        { label: "Faible", value: "2\u20134 min" },
+        { label: "Moyenne", value: "5\u20138 min" },
+        { label: "Forte", value: "10\u201315 min" },
+        { label: "Manitoba", value: "15\u201320 min" },
+      ],
+    },
+    yeast: {
+      name: "Levure (Saccharomyces cerevisiae)",
+      definition: "Champignon unicellulaire qui convertit les sucres en CO\u2082 + \u00E9thanol + compos\u00E9s aromatiques.",
+      whyImportant: "Temp. optimale : 28-32\u00B0C. Min 4\u00B0C (dormante). Max 40\u00B0C (inhib\u00E9e). Mort >55\u00B0C.",
+      ranges: [
+        { label: "Fra\u00EEche", value: "0.5\u20132.0%", note: "Humidit\u00E9 70%, frigo 4\u00B0C" },
+        { label: "S\u00E8che active", value: "0.3\u20131.0%", note: "R\u00E9hydrater avant" },
+        { label: "S\u00E8che instantan\u00E9e", value: "0.2\u20130.8%", note: "Directement" },
+      ],
+    },
+    lab: {
+      name: "LAB (Bact\u00E9ries lactiques)",
+      definition: "Bact\u00E9ries qui fermentent les sucres en produisant de l'acide lactique (et ac\u00E9tique). Pr\u00E9sentes dans le levain.",
+      whyImportant: "Abaissent le pH (4.0-4.5), augmentent l'acidit\u00E9, d\u00E9gradent les FODMAP (fructanes), inhibent les moisissures. Temp. optimale : 28-32\u00B0C.",
+    },
+    q10: {
+      name: "Q\u2081\u2080 (Coefficient de temp\u00E9rature)",
+      definition: "Facteur multiplicatif de la vitesse de r\u00E9action biochimique pour chaque hausse de 10\u00B0C.",
+      whyImportant: "Avec Q\u2081\u2080 = 2, la fermentation double tous les +10\u00B0C : 24h \u00E0 18\u00B0C \u2248 12h \u00E0 28\u00B0C. Les valeurs ci-dessous sont des estimations du mod\u00E8le {brand}.",
+      ranges: [
+        { label: "Levure commerciale \u226510\u00B0C", value: "2.0", note: "Estimation du mod\u00E8le, coh\u00E9rente avec les donn\u00E9es de croissance entre 18 et 25 \u00B0C" },
+        { label: "Levure commerciale <10\u00B0C", value: "1.6", note: "Estimation du mod\u00E8le, sans source" },
+        { label: "Levain >15\u00B0C", value: "2.2", note: "Estimation du mod\u00E8le" },
+        { label: "Levain \u226415\u00B0C", value: "1.9", note: "Estimation du mod\u00E8le" },
+      ],
+    },
+    arrhenius: {
+      name: "\u00C9quation d'Arrhenius",
+      definition: "D\u00E9crit la d\u00E9pendance de la vitesse de r\u00E9action \u00E0 la temp\u00E9rature absolue.",
+      whyImportant: "Avec \u03B2=0.075 et T_ref=18\u00B0C \u2192 Q\u2081\u2080 \u2248 2.12. Utilis\u00E9e dans le moteur {brand} pour calculer le dosage de levure et les temps.",
+    },
+    biga: {
+      name: "Biga",
+      definition: "Pr\u00E9-p\u00E2te ferme (44-50% d'hydratation) avec farine + eau + levure, ferment\u00E9e 16-24h \u00E0 16-18\u00B0C.",
+      whyImportant: "Apporte force, extensibilit\u00E9, go\u00FBt complexe, alv\u00E9olage irr\u00E9gulier et rustique, conservation plus longue. Dosage : 20-40% de la farine totale.",
+    },
+    poolish: {
+      name: "Poolish",
+      definition: "Pr\u00E9-p\u00E2te liquide (100% d'hydratation) avec farine + eau 1:1 + levure, ferment\u00E9e 12-16h \u00E0 16-18\u00B0C.",
+      whyImportant: "Extensibilit\u00E9 \u00E9lev\u00E9e, alv\u00E9olage fin et r\u00E9gulier, go\u00FBt doux-acidul\u00E9, cro\u00FBte fine et croustillante. Poolish = extensibilit\u00E9 ; Biga = force.",
+    },
+    autolysis: {
+      name: "Autolyse",
+      definition: "Repos de farine + eau (sans levure ni sel) pendant 20-60 min. Les enzymes prot\u00E9ases d\u00E9veloppent le gluten spontan\u00E9ment.",
+      whyImportant: "R\u00E9duit le temps de p\u00E9trissage de 30-50%, augmente l'extensibilit\u00E9, am\u00E9liore l'hydratation. 20-30 min pour W<200, 45-60 min pour W>280.",
+    },
+    bulk_fermentation: {
+      name: "Pointage (fermentation en masse)",
+      definition: "Premi\u00E8re phase de fermentation apr\u00E8s le p\u00E9trissage, avant la division en p\u00E2tons. La p\u00E2te repose en une seule masse 30 min \u2013 4h.",
+      whyImportant: "D\u00E9tente du gluten, d\u00E9but de la fermentation, d\u00E9veloppement des ar\u00F4mes, augmentation de volume de 20-50%.",
+    },
+    ball_fermentation: {
+      name: "Appr\u00EAt (fermentation en p\u00E2tons)",
+      definition: "Deuxi\u00E8me phase de fermentation apr\u00E8s la division en p\u00E2tons. Chaque p\u00E2ton repose individuellement 4-48h \u00E0 4-22\u00B0C.",
+      whyImportant: "Fermentation principale, maturation par prot\u00E9olyse, d\u00E9veloppement du volume final, stabilisation du pH.",
+    },
+    maillard: {
+      name: "R\u00E9action de Maillard",
+      definition: "R\u00E9action non enzymatique entre acides amin\u00E9s et sucres r\u00E9ducteurs \u00E0 haute temp\u00E9rature (>140\u00B0C).",
+      whyImportant: "Cro\u00FBte dor\u00E9e (m\u00E9lano\u00EFdines), ar\u00F4me grill\u00E9 (pyrazines), l\u00E9opardage \u00E0 300\u00B0C+. Optimale \u00E0 160-180\u00B0C.",
+    },
+    caramelization: {
+      name: "Caram\u00E9lisation",
+      definition: "D\u00E9gradation thermique des sucres (sans prot\u00E9ines) \u00E0 haute temp\u00E9rature (>150\u00B0C saccharose, >120\u00B0C fructose).",
+      whyImportant: "Contribue aux taches sombres sur la corniche. Moins d\u00E9terminante que la r\u00E9action de Maillard dans la pizza (peu de prot\u00E9ines en surface).",
+    },
+    starch_gelatinization: {
+      name: "G\u00E9latinisation de l'amidon",
+      definition: "Passage de l'amidon d'un \u00E9tat cristallin \u00E0 un \u00E9tat g\u00E9lifi\u00E9 par absorption d'eau. D\u00E9but 55-60\u00B0C, pic 65-70\u00B0C, fin 80-85\u00B0C.",
+      whyImportant: "Mie : rend l'amidon digestible (<55\u00B0C \u00E0 c\u0153ur = amidon cru). Cro\u00FBte : >100\u00B0C \u2192 croustillante.",
+    },
+    retrogradation: {
+      name: "R\u00E9trogradation",
+      definition: "Recristallisation de l'amidon g\u00E9latinis\u00E9 pendant la conservation. Maximale \u00E0 4\u00B0C (frigo).",
+      whyImportant: "La mie devient dure et \u00AB rassise \u00BB. \u00C0 retarder avec : mati\u00E8res grasses 2-3%, sucres 1-2%, fermentation longue, hydratation \u00E9lev\u00E9e.",
+    },
+    thermal_conductivity: {
+      name: "Conductivit\u00E9 thermique",
+      definition: "Capacit\u00E9 d'un mat\u00E9riau \u00E0 conduire la chaleur.",
+      whyImportant: "Acier (k=50) : id\u00E9al pour les fours domestiques \u00E0 280\u00B0C, cuisson 6-8 min. Pierre (k=2) : id\u00E9ale pour les fours \u00E0 bois \u00E0 450\u00B0C+, cuisson 60-90s.",
+      ranges: [
+        { label: "Cuivre", value: "400" },
+        { label: "Aluminium", value: "205" },
+        { label: "Acier au carbone", value: "50" },
+        { label: "Acier inox", value: "16" },
+        { label: "Cordi\u00E9rite (pierre)", value: "2.5\u20133.5" },
+        { label: "Pierre r\u00E9fractaire", value: "1.0\u20131.5" },
+        { label: "P\u00E2te \u00E0 pizza", value: "0.5" },
+      ],
+    },
+    fodmap: {
+      name: "FODMAP",
+      definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. Glucides fermentescibles \u00E0 cha\u00EEne courte (fructanes 1-3% dans le bl\u00E9).",
+      whyImportant: "L'intestin ne dig\u00E8re pas les fructanes \u2192 les bact\u00E9ries les fermentent \u2192 gaz/ballonnements. Une fermentation longue les r\u00E9duit : 24h\u219260-70%, 48h\u219280-85%.",
+    },
+    histamine: {
+      name: "Histamine",
+      definition: "Amine biog\u00E8ne issue de la d\u00E9carboxylation de l'histidine. Produite par les LAB pendant la fermentation, pr\u00E9sente dans les fromages affin\u00E9s et la charcuterie.",
+      whyImportant: "Accumulation lin\u00E9aire avec le temps. Levain 24h/28\u00B0C \u2192 30-50 mg/kg. Personnes avec un d\u00E9ficit en DAO : r\u00E9action pseudo-allergique. Solution : fermentation courte (<12h) + levure commerciale.",
+    },
+    gluten: {
+      name: "Gluten",
+      definition: "Complexe prot\u00E9ique visco\u00E9lastique form\u00E9 par la gliadine (extensible) + la glut\u00E9nine (tenace) en pr\u00E9sence d'eau et de p\u00E9trissage.",
+      whyImportant: "\u00C9lasticit\u00E9 due aux glut\u00E9nines (liaisons S-S), viscosit\u00E9 due aux gliadines (liaisons H). Une prot\u00E9olyse longue coupe les liaisons \u2192 p\u00E2te plus extensible.",
+    },
+    proteolysis: {
+      name: "Prot\u00E9olyse",
+      definition: "D\u00E9gradation des prot\u00E9ines en peptides et acides amin\u00E9s par les enzymes prot\u00E9ases. Cible : le gluten.",
+      whyImportant: "\u00C9talage plus facile, meilleure digestibilit\u00E9, acides amin\u00E9s libres \u2192 go\u00FBt umami. Excessive (>72h) : p\u00E2te trop molle. Optimale : 24-48h.",
+    },
+    thickness_factor: {
+      name: "Thickness Factor (TF)",
+      definition: "Densit\u00E9 surfacique de la p\u00E2te \u2014 masse par unit\u00E9 de surface. Indique la quantit\u00E9 de p\u00E2te par cm\u00B2.",
+      whyImportant: "D\u00E9termine le temps de cuisson, le croustillant et la densit\u00E9 calorique. M\u00E9trique originale du Projet {brand}.",
+      ranges: [
+        { label: "Napolitaine", value: "0.30\u20130.36", note: "6-7 mm" },
+        { label: "Romaine ronde", value: "0.20\u20130.25", note: "4-5 mm" },
+        { label: "New York", value: "0.40\u20130.50", note: "8-10 mm" },
+        { label: "Chicago deep dish", value: "1.00\u20131.30", note: "20-26 mm" },
+      ],
+    },
+    friction_factor: {
+      name: "Friction Factor (facteur de friction)",
+      definition: "Hausse de la temp\u00E9rature de la p\u00E2te (\u00B0C) par minute de p\u00E9trissage, due \u00E0 la friction m\u00E9canique.",
+      whyImportant: "Le p\u00E9trissage g\u00E9n\u00E8re de la chaleur \u2192 la temp\u00E9rature monte \u2192 fermentation trop rapide. Utilis\u00E9 dans la R\u00E8gle du 55.",
+      ranges: [
+        { label: "\u00C0 la main", value: "0.0" },
+        { label: "Robot p\u00E2tissier domestique", value: "0.8\u20131.0" },
+        { label: "P\u00E9trin \u00E0 spirale professionnel", value: "0.4\u20130.6" },
+        { label: "P\u00E9trin \u00E0 fourche", value: "0.2\u20130.3" },
+      ],
+    },
+    rule_of_55: {
+      name: "R\u00E8gle du 55",
+      definition: "Formule empirique pour calculer la temp\u00E9rature de l'eau n\u00E9cessaire pour atteindre la temp\u00E9rature de p\u00E2te vis\u00E9e.",
+      whyImportant: "55 = constante empirique (varie de 50 \u00E0 60 selon les machines). \u0394T_friction = Friction Factor \u00D7 temps de p\u00E9trissage.",
+    },
+    a_score: {
+      name: "A-Score (Authenticit\u00E9)",
+      definition: "Score 0-100 qui mesure la fid\u00E9lit\u00E9 d'une recette au cahier des charges du style vis\u00E9.",
+      ranges: [
+        { label: "90-100", value: "Rigoureusement authentique" },
+        { label: "75-89", value: "Globalement authentique" },
+        { label: "60-74", value: "Inspir\u00E9e du style" },
+        { label: "<60", value: "\u00C9cart important" },
+      ],
+    },
+    f_score: {
+      name: "F-Score (Faisabilit\u00E9)",
+      definition: "Score 0-100 qui mesure la faisabilit\u00E9 pratique compte tenu de l'\u00E9quipement et du niveau de l'utilisateur.",
+      ranges: [
+        { label: "90-100", value: "Tr\u00E8s faisable" },
+        { label: "75-89", value: "Faisable avec attention" },
+        { label: "60-74", value: "Difficile" },
+        { label: "<60", value: "D\u00E9conseill\u00E9" },
+      ],
+    },
+    d_score: {
+      name: "D-Score (Digestibilit\u00E9)",
+      definition: "Score 0-100 qui estime la digestibilit\u00E9 \u00E0 partir des heures de fermentation normalis\u00E9es et de la r\u00E9duction des FODMAP.",
+      ranges: [
+        { label: "85-100", value: "\u00C9lev\u00E9e (>48h \u00E9quivalentes)" },
+        { label: "70-84", value: "Moyenne \u00E0 \u00E9lev\u00E9e (24-48h)" },
+        { label: "50-69", value: "Moyenne (12-24h)" },
+        { label: "<50", value: "Faible (<12h)" },
+      ],
+    },
+  },
 };

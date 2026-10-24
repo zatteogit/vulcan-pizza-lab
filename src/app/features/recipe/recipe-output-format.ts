@@ -176,13 +176,14 @@ export function displayStepTime(
   bcp47: string,
   copy?: CmsContent["cooking"],
 ): string {
+  const approx = copy?.approxPrefix ?? "ca. ";
   if (!FLEXIBLE_STEP_IDS.has(stepId)) {
     const rounded = new Date(Math.round(date.getTime() / 300_000) * 300_000);
-    const prefix = Math.abs(rounded.getTime() - date.getTime()) >= 60_000 ? "ca. " : "";
+    const prefix = Math.abs(rounded.getTime() - date.getTime()) >= 60_000 ? approx : "";
     return `${prefix}${clockWithDay(rounded, reference, bcp47, copy)}`;
   }
   const rounded = new Date(Math.round(date.getTime() / 900_000) * 900_000);
-  return `ca. ${clockWithDay(rounded, reference, bcp47, copy)}`;
+  return `${approx}${clockWithDay(rounded, reference, bcp47, copy)}`;
 }
 
 function normalizeTemperatureUnitSuffixes(text: string): string {
