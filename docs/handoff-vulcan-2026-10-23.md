@@ -82,7 +82,7 @@ Priorità: **P0** blocca fiducia o demo; **P1** contenuto sbagliato o incompleto
 | U-6 | P2 | Completare INT-C6 (transizione del momento) e INT-C10 (pannello dello stile) | idem |
 | U-7 | P2 | Notifiche: dire con onestà cosa funziona a app chiusa. Niente promesse senza service worker e push verificati | report ricerca §22 |
 | ~~U-8~~ | P3 | Fatto il 24/10: icone al posto delle emoji (D1), icone del glossario per categoria (D2), audit delle maiuscole (D5); D7 superata (nessun badge nella navigazione) | piano-interventi |
-| U-9 | P3 | Coerenza fotografica: niente foto visibilmente generate, ogni foto mostra il prodotto giusto (D3) | idem |
+| ~~U-9~~ | P3 | Fatto il 24/10 (D-039): foto rifatte con GPT per tonda romana, focaccia genovese e barese, sfincione; nuova la fritta tonda | idem |
 | U-10 | P1 | Audit di accessibilità WCAG 2.1 AA sul percorso principale; documentarlo, servirà al partner | analisi a rovescio |
 
 ### 3.4 Piattaforma e rilascio

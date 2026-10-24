@@ -22,6 +22,7 @@ import photoTrancioMilanese from "../../assets/pizzas/tranciomilanese.webp";
 import photoChicagoTavern from "../../assets/pizzas/chicagotavern.webp";
 import photoFocacciaBarese from "../../assets/pizzas/focacciabarese.webp";
 import photoPizzaFritta from "../../assets/pizzas/fritta.webp";
+import photoPizzaFrittaTonda from "../../assets/pizzas/frittatonda.webp";
 import photoMontanara from "../../assets/pizzas/montanara.webp";
 import photoCalzoneNapoletano from "../../assets/pizzas/calzonenapoletano.webp";
 import photoPizzaAlMetro from "../../assets/pizzas/almetro.webp";
@@ -52,7 +53,7 @@ export const STYLE_PHOTOS: Record<string, string> = {
   chicago_tavern: photoChicagoTavern,
   focaccia_barese: photoFocacciaBarese,
   pizza_fritta: photoPizzaFritta,
-  pizza_fritta_tonda: photoPizzaFritta, // M-7: foto della fritta chiusa finché non c'è una foto della tonda
+  pizza_fritta_tonda: photoPizzaFrittaTonda,
   pizza_montanara: photoMontanara,
   calzone_napoletano: photoCalzoneNapoletano,
   pizza_al_metro: photoPizzaAlMetro,

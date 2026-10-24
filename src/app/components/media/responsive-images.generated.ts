@@ -28,6 +28,8 @@ import img_pizzas_focgenovese from "../../../assets/pizzas/focgenovese.webp";
 import img_pizzas_focgenovese_640 from "../../../assets/pizzas/focgenovese-640.webp";
 import img_pizzas_fritta from "../../../assets/pizzas/fritta.webp";
 import img_pizzas_fritta_640 from "../../../assets/pizzas/fritta-640.webp";
+import img_pizzas_frittatonda from "../../../assets/pizzas/frittatonda.webp";
+import img_pizzas_frittatonda_640 from "../../../assets/pizzas/frittatonda-640.webp";
 import img_pizzas_fugazzeta from "../../../assets/pizzas/fugazzeta.webp";
 import img_pizzas_fugazzeta_640 from "../../../assets/pizzas/fugazzeta-640.webp";
 import img_pizzas_grandma from "../../../assets/pizzas/grandma.webp";
@@ -247,6 +249,7 @@ export const RESPONSIVE_IMAGE_ENTRIES: readonly ResponsiveImageEntry[] = [
   [img_pizzas_focacciarecco, img_pizzas_focacciarecco_640, 1280, 1024, 640, 512],
   [img_pizzas_focgenovese, img_pizzas_focgenovese_640, 1280, 853, 640, 427],
   [img_pizzas_fritta, img_pizzas_fritta_640, 1280, 853, 640, 427],
+  [img_pizzas_frittatonda, img_pizzas_frittatonda_640, 1280, 853, 640, 427],
   [img_pizzas_fugazzeta, img_pizzas_fugazzeta_640, 1280, 853, 640, 427],
   [img_pizzas_grandma, img_pizzas_grandma_640, 1280, 1024, 640, 512],
   [img_pizzas_greekpan, img_pizzas_greekpan_640, 1280, 853, 640, 427],
@@ -257,7 +260,7 @@ export const RESPONSIVE_IMAGE_ENTRIES: readonly ResponsiveImageEntry[] = [
   [img_pizzas_palaromana, img_pizzas_palaromana_640, 1280, 853, 640, 427],
   [img_pizzas_patateporchetta, img_pizzas_patateporchetta_640, 1280, 1024, 640, 512],
   [img_pizzas_pinsa, img_pizzas_pinsa_640, 1280, 853, 640, 427],
-  [img_pizzas_romanatonda, img_pizzas_romanatonda_640, 1280, 960, 640, 480],
+  [img_pizzas_romanatonda, img_pizzas_romanatonda_640, 1280, 853, 640, 427],
   [img_pizzas_sfincione, img_pizzas_sfincione_640, 1280, 853, 640, 427],
   [img_pizzas_tegliaromana, img_pizzas_tegliaromana_640, 1280, 853, 640, 427],
   [img_pizzas_tranciomilanese, img_pizzas_tranciomilanese_640, 1280, 1024, 640, 512],

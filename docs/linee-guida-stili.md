@@ -30,8 +30,10 @@ controllare stanno in `src/app/data/style-editorial.test.ts` (in `npm run verify
    bianco), perché è lì che nascono gli errori.
 8. **Testi nel CMS in 7 lingue**, con `{brand}` al posto del nome del prodotto.
    Descrizione e caratteristiche dello stile sono obbligatorie (test di parità).
-9. **Foto vera dello stile giusto** (U-9): niente foto visibilmente generate,
-   niente foto di un altro stile.
+9. **Foto dello stile giusto** (U-9, D-039): la foto può essere generata, ma
+   deve mostrare il prodotto come lo descrivono le fonti (forma, teglia,
+   spessore, condimento); mai la foto di un altro stile. Originali in
+   `design-assets/originali/`, WebP con `scripts/build-responsive-images.py`.
 10. **Tono**: fatti e numeri con la loro fonte; niente superlativi, classifiche
     o «il migliore» senza una fonte con data.
 
@@ -91,7 +93,7 @@ solo dal codice. Il numero di condimenti è quello mostrato nella scheda.
 | `ciaccino_senese` | senza fonte | `ciaccino_senese_farcito` | 1 | — |
 | `pizza_al_metro` | con fonte (D-028) | `margherita_napoletana_avpn` | 9 | Condimenti dal menù di Gigino, marinara con scarole; dosi ×3,7 |
 | `pizza_fritta` | con fonte (AVPN) | `pizza_fritta_ripiena` | 1 | — |
-| `pizza_fritta_tonda` | con fonte (AVPN) | `pizza_fritta_tonda_ripiena` | 1 | Manca una foto vera |
+| `pizza_fritta_tonda` | con fonte (AVPN) | `pizza_fritta_tonda_ripiena` | 1 | Foto propria dal 24/10 (D-039): due dischi farciti e fritti |
 | `pizza_montanara` | con fonte (AVPN, parziale) | `montanara_classica` | 1 | — |
 | `calzone_napoletano` | senza fonte | `calzone_napoletano_classico` | 3 | — |
 
