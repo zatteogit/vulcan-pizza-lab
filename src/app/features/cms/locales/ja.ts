@@ -1,4 +1,5 @@
 import type { CmsContent } from "../cms-context";
+import { UI_MESSAGES_JA } from "../../../i18n/ui-messages.ja";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_JA,
@@ -20,6 +21,8 @@ export const JA_LOCALE: CmsContent = {
     id: "ja",
     name: "\u65E5\u672C\u8A9E",
   },
+  /** I18N-1: catalogo delle stringhe di interfaccia (uiMessage). */
+  messages: UI_MESSAGES_JA,
   ui: {
     // Actions
     copy: "\u30B3\u30D4\u30FC",
@@ -117,6 +120,19 @@ export const JA_LOCALE: CmsContent = {
     slotWeekdayDinner: "{day}の夜",
     slotNoPreference: "指定なし",
     slotNoPreferenceSub: "{brand}におまかせ",
+    badgeAvpnRules: "AVPN規定",
+    badgeIgpRules: "IGP規定",
+    badgeBonciMethod: "ボンチ流",
+    badgeRomanSnack: "ローマの軽食",
+    badgeRomanBakery: "ローマのパン屋スタイル",
+    fatButter: "バター",
+    fatLard: "ラード",
+    procedureDirect: "ストレート法",
+    procedurePreferment: "中種",
+    flourUseVeryStrong: "マニトバ、またはかなり強いタイプ0",
+    flourUseStrong: "ピザ用の強いタイプ0/00",
+    flourUseMedium: "中程度の強さのタイプ0",
+    flourUseWeak: "弱め〜中程度のタイプ00",
     verdictTitle: "このままでは作れません",
     verdictOvenTooCold: "お使いのオーブンは{oven}まで、このスタイルには{min}以上が必要です。別のピザになります。",
     verdictTimeWindow: "約{needed}かかりますが、使えるのは{available}です。選んだ時刻より後に仕上がります。",
@@ -1054,6 +1070,23 @@ export const JA_LOCALE: CmsContent = {
     savedRecipesEmptyCta: "スタイルを見る",
     savedRecipeRemove: "レシピ帳から削除",
     savedRecipeRemoveAria: "{name}をレシピ帳から削除",
+    savedRecipesLocalNote: "レシピはこのブラウザにだけ保存されています。なくさないように、また別の端末に移すために、ファイルに書き出してください。",
+    savedRecipesExport: "ファイルに書き出す",
+    savedRecipesImport: "ファイルから読み込む",
+    savedRecipeCopyLink: "リンクをコピー",
+    savedRecipeCopyLinkAria: "{name}のリンクをコピー",
+    savedRecipeLinkCopied: "リンクをコピーしました",
+    savedRecipeRemoved: "レシピを削除しました",
+    savedRecipeUndo: "元に戻す",
+    savedRecipesImported: "{n}件のレシピを読み込みました",
+    savedRecipesImportDuplicates: "{n}件は登録済み",
+    savedRecipesImportSkipped: "{n}件は追加できません：レシピ帳がいっぱいです",
+    savedRecipesImportRejected: "読み取れない{n}件をスキップしました",
+    savedRecipesImportNothing: "ファイルに新しいレシピはありません",
+    savedRecipesImportErrorFormat: "このファイルは{brand}のレシピ帳ではありません。",
+    savedRecipesImportErrorNewer: "このファイルは新しいバージョンの{brand}のものです。ページを再読み込みしてもう一度お試しください。",
+    savedRecipesImportErrorStorage: "ブラウザの保存容量がいっぱいのため、レシピを読み込めませんでした。",
+    savedRecipesExportFileName: "recipes",
     ovenTitle:
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3",
     ovenSubtitle:

@@ -44,7 +44,7 @@ const ALLOWLIST: Record<string, string> = {};
 /** File le cui stringhe passano dalla risoluzione dei token (CMS e cataloghi). */
 const TOKEN_FILES = [
   /^\/src\/app\/features\/cms\/(cms-context\.tsx|domain-i18n-defaults\.ts|locales\/[\w-]+\.ts)$/,
-  /^\/src\/app\/i18n\/(ui|showcase)-messages\.it\.ts$/,
+  /^\/src\/app\/i18n\/(ui|showcase)-messages\.[a-z]{2}\.ts$/,
 ];
 
 const SOURCES = import.meta.glob(

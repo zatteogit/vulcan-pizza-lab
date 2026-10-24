@@ -110,26 +110,26 @@ const TIER_META: Record<
   }
 > = {
   perfect: {
-    label: uiMessage("features.recipe.recommended-styles.perfetti-per-te-3530eb1d"),
-    subtitle: uiMessage("features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d"),
+    get label() { return uiMessage("features.recipe.recommended-styles.perfetti-per-te-3530eb1d"); },
+    get subtitle() { return uiMessage("features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d"); },
     color: "var(--text-success)",
     Icon: Award,
   },
   good: {
-    label: uiMessage("features.recipe.recommended-styles.fattibili-f3ba54d3"),
-    subtitle: uiMessage("features.recipe.recommended-styles.richiedono-qualche-compromesso-170fe3d8"),
+    get label() { return uiMessage("features.recipe.recommended-styles.fattibili-f3ba54d3"); },
+    get subtitle() { return uiMessage("features.recipe.recommended-styles.richiedono-qualche-compromesso-170fe3d8"); },
     color: "var(--text-warning)",
     Icon: Sparkles,
   },
   challenging: {
-    label: uiMessage("features.recipe.recommended-styles.sfidanti-354cbc9b"),
-    subtitle: uiMessage("features.recipe.recommended-styles.richiedono-piu-attrezzatura-o-esperienza-1685224c"),
+    get label() { return uiMessage("features.recipe.recommended-styles.sfidanti-354cbc9b"); },
+    get subtitle() { return uiMessage("features.recipe.recommended-styles.richiedono-piu-attrezzatura-o-esperienza-1685224c"); },
     color: "var(--text-accent)",
     Icon: Triangle,
   },
   not_feasible: {
-    label: uiMessage("features.recipe.recommended-styles.non-fattibili-327346d5"),
-    subtitle: uiMessage("features.recipe.recommended-styles.mancano-requisiti-chiave-763f98f6"),
+    get label() { return uiMessage("features.recipe.recommended-styles.non-fattibili-327346d5"); },
+    get subtitle() { return uiMessage("features.recipe.recommended-styles.mancano-requisiti-chiave-763f98f6"); },
     color: "var(--text-muted)",
     Icon: Triangle,
   },

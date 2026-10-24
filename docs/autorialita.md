@@ -50,6 +50,7 @@ firmato da un agente, «nessun segno» se non c'è traccia (non prova l'assenza)
 | D-011 | 2026-10-23 | Motore | Slot del pasto al quarto d'ora per difetto | ore intere per difetto; `Math.round` | come D-010 | Matteo | domanda e modifiche: agente AI |
 | D-012 | 2026-10-23 | Motore | Consigli allineati all'esito della ricetta sul forno (soglia termica unica) | forno freddo come solo avviso; lasciare l'incoerenza | come D-010 | Matteo | domanda e modifiche: agente AI |
 | D-013 | 2026-10-23 | Contenuti | Il range di temperatura della Pinsa va verificato su fonti (C-4) prima di cambiarlo | range attuale corretto | come D-010 | Matteo | domanda: agente AI |
+| D-014 | 2026-10-24 | Prodotto | Ordine di lavoro: I18N-1 prima di U-1 e U-2 | U-1/U-2 prima | messaggio di Matteo nella sessione dell'agente del 24/10 | Matteo | proposta e modifiche: agente AI |
 
 D-008 e D-009 arrivano dal brief del lavoro come decisioni del proprietario;
 nel repository non c'è ancora un riscontro scritto, quindi restano da

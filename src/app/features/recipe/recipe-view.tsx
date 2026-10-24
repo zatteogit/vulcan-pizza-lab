@@ -240,9 +240,9 @@ export function RecipeView({
   const preFermentText = recipe.has_pre_ferment
     ? (recipe.pre_ferment_type 
         ? recipe.pre_ferment_type.charAt(0).toUpperCase() + recipe.pre_ferment_type.slice(1) 
-        : "Prefermento")
-    : "Diretto";
-  const procedureSubtitle = `${preFermentText} • ${recipe.fermentation_hours}h`;
+        : cms.ui.procedurePreferment)
+    : cms.ui.procedureDirect;
+  const procedureSubtitle = `${preFermentText} • ${fmt.durationShort(recipe.fermentation_hours)}`;
 
   /* Niente sottotitolo sul tab Ricetta: ripeteva il nome dello stile che
      campeggia già nell'hero (sempre visibile, anche a hero ridotto). */

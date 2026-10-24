@@ -145,6 +145,22 @@ export interface CmsUiStrings {
   slotWeekdayDinner: string;
   slotNoPreference: string;
   slotNoPreferenceSub: string;
+  /** Badge delle ricette iconiche in Scopri. */
+  badgeAvpnRules: string;
+  badgeIgpRules: string;
+  badgeBonciMethod: string;
+  badgeRomanSnack: string;
+  badgeRomanBakery: string;
+  /** Grasso dell'impasto e metodo (sottotitolo del procedimento). */
+  fatButter: string;
+  fatLard: string;
+  procedureDirect: string;
+  procedurePreferment: string;
+  /** Uso suggerito della farina per forza W (ingredienti). */
+  flourUseVeryStrong: string;
+  flourUseStrong: string;
+  flourUseMedium: string;
+  flourUseWeak: string;
   /** M-10: esito «non fattibile così» della ricetta. */
   verdictTitle: string;
   verdictOvenTooCold: string;
@@ -360,6 +376,24 @@ interface CmsProfile {
   savedRecipesEmptyCta: string;
   savedRecipeRemove: string;
   savedRecipeRemoveAria: string;
+  /** U-1: esportazione, importazione, link e annulla nel ricettario. */
+  savedRecipesLocalNote: string;
+  savedRecipesExport: string;
+  savedRecipesImport: string;
+  savedRecipeCopyLink: string;
+  savedRecipeCopyLinkAria: string;
+  savedRecipeLinkCopied: string;
+  savedRecipeRemoved: string;
+  savedRecipeUndo: string;
+  savedRecipesImported: string;
+  savedRecipesImportDuplicates: string;
+  savedRecipesImportSkipped: string;
+  savedRecipesImportRejected: string;
+  savedRecipesImportNothing: string;
+  savedRecipesImportErrorFormat: string;
+  savedRecipesImportErrorNewer: string;
+  savedRecipesImportErrorStorage: string;
+  savedRecipesExportFileName: string;
   // Sections
   ovenTitle: string;
   ovenSubtitle: string;
@@ -1269,6 +1303,19 @@ export const CMS_DEFAULTS: CmsContent = {
     slotWeekdayDinner: "{day} sera",
     slotNoPreference: "Nessuna preferenza",
     slotNoPreferenceSub: "ci pensa {brand}",
+    badgeAvpnRules: "Disciplinare AVPN",
+    badgeIgpRules: "Disciplinare IGP",
+    badgeBonciMethod: "Metodo Bonci",
+    badgeRomanSnack: "Spuntino romano",
+    badgeRomanBakery: "Stile panaria romana",
+    fatButter: "Burro",
+    fatLard: "Strutto",
+    procedureDirect: "Diretto",
+    procedurePreferment: "Prefermento",
+    flourUseVeryStrong: "Manitoba o tipo 0 molto forte",
+    flourUseStrong: "Tipo 0/00 forte per pizza",
+    flourUseMedium: "Tipo 0 media forza",
+    flourUseWeak: "Tipo 00 debole/media",
     verdictTitle: "Così non è fattibile",
     verdictOvenTooCold: "Il tuo forno arriva a {oven}, questo stile ne chiede almeno {min}: verrebbe un'altra pizza.",
     verdictTimeWindow: "Servono circa {needed}, ne hai {available}: sarebbe pronta dopo l'orario scelto.",
@@ -2166,6 +2213,23 @@ export const CMS_DEFAULTS: CmsContent = {
     savedRecipesEmptyCta: "Esplora gli stili",
     savedRecipeRemove: "Rimuovi dal ricettario",
     savedRecipeRemoveAria: "Rimuovi {name} dal ricettario",
+    savedRecipesLocalNote: "Le ricette stanno solo in questo browser. Esportale in un file per non perderle o per portarle su un altro dispositivo.",
+    savedRecipesExport: "Esporta in un file",
+    savedRecipesImport: "Importa da file",
+    savedRecipeCopyLink: "Copia link",
+    savedRecipeCopyLinkAria: "Copia il link di {name}",
+    savedRecipeLinkCopied: "Link copiato",
+    savedRecipeRemoved: "Ricetta rimossa",
+    savedRecipeUndo: "Annulla",
+    savedRecipesImported: "Ricette importate: {n}",
+    savedRecipesImportDuplicates: "Già presenti: {n}",
+    savedRecipesImportSkipped: "Non entrate, il ricettario è pieno: {n}",
+    savedRecipesImportRejected: "Voci illeggibili ignorate: {n}",
+    savedRecipesImportNothing: "Nessuna ricetta nuova nel file",
+    savedRecipesImportErrorFormat: "Questo file non è un ricettario di {brand}.",
+    savedRecipesImportErrorNewer: "Il file viene da una versione più nuova di {brand}: ricarica la pagina e riprova.",
+    savedRecipesImportErrorStorage: "Lo spazio del browser è pieno: le ricette non sono state importate.",
+    savedRecipesExportFileName: "ricette",
     ovenTitle: "Il tuo forno",
     ovenSubtitle: "Determina temperature e stili disponibili",
     ovenStep: "01 — Forno",
@@ -2756,10 +2820,16 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
   registerUiMessages(cms.locale.id, cms.messages);
   setActiveUiLocale(cms.locale.id);
 
-  const modifiedPaths = useMemo(
-    () => (overrides ? deepDiffPaths(CMS_DEFAULTS, rawCms) : []),
-    [overrides, rawCms],
-  );
+  /* Modifiche = differenze dalla lingua attiva, non dall'italiano: prima ogni
+     utente non italiano vedeva «CMS attivo — 1769 campi modificati» e
+     «Ripristina» lo riportava all'italiano. Finché il bundle non è in cache
+     la base non è affidabile e non si conta nulla. */
+  const modifiedPaths = useMemo(() => {
+    if (!overrides) return [];
+    const localeId = overrides.locale?.id;
+    if (localeId && localeId !== "it" && !getCachedLocaleBundle(localeId)) return [];
+    return deepDiffPaths(fallbackBase, rawCms);
+  }, [overrides, fallbackBase, rawCms]);
 
   const update = useCallback((path: string, value: any) => {
     setOverrides((prev) => {

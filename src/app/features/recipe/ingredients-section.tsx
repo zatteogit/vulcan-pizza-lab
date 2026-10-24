@@ -64,11 +64,14 @@ export function IngredientsSection({
     `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: maxDecimals }).format(
       (grams / recipe.flour_g) * 100,
     )}%`;
+  /* Nome del grasso nella lingua attiva (il motore dà un'etichetta italiana). */
+  const fatType = recipe.style.dough.fat_type;
+  const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
   const flourUseLabel = (() => {
-    if (recipe.flour_w >= 330) return "Manitoba o tipo 0 molto forte";
-    if (recipe.flour_w >= 280) return "Tipo 0/00 forte per pizza";
-    if (recipe.flour_w >= 220) return "Tipo 0 media forza";
-    return "Tipo 00 debole/media";
+    if (recipe.flour_w >= 330) return cms.ui.flourUseVeryStrong;
+    if (recipe.flour_w >= 280) return cms.ui.flourUseStrong;
+    if (recipe.flour_w >= 220) return cms.ui.flourUseMedium;
+    return cms.ui.flourUseWeak;
   })();
   return (
     <>
@@ -273,7 +276,7 @@ export function IngredientsSection({
           )}
           {recipe.fat_g > 0 && (
             <IngRow
-              name={recipe.fat_label || ui.oilEvo}
+              name={fatLabel}
               detail={isNerd ? bakerPct(recipe.fat_g) : undefined}
               amount={fmt.grams(recipe.fat_g)}
             />
@@ -323,7 +326,7 @@ export function IngredientsSection({
                     {ui.water}: <b>{fmt.grams(split.mainWaterG)}</b>
                     <br />
                     {ui.salt}: <b>{fmt.grams(recipe.salt_g)}</b>
-                    {recipe.fat_g > 0 ? <> · {recipe.fat_label || ui.oilEvo}: <b>{fmt.grams(recipe.fat_g)}</b></> : null}
+                    {recipe.fat_g > 0 ? <> · {fatLabel}: <b>{fmt.grams(recipe.fat_g)}</b></> : null}
                   </div>
                 </div>
               </div>

@@ -4596,6 +4596,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   .profile-saved-recipes__empty {
@@ -4689,15 +4692,15 @@
     color: var(--text-muted);
   }
 
-  .profile-saved-recipes__remove {
+  /* U-1: copia link e rimuovi, area tattile 44 px (U-10) */
+  .profile-saved-recipes__action {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    margin-right: var(--space-2);
     border-radius: var(--radius-full);
-    width: var(--space-7-5);
-    height: var(--space-7-5);
+    width: var(--space-11);
+    height: var(--space-11);
     background: transparent;
     border: none;
     color: var(--text-muted);
@@ -4705,8 +4708,53 @@
     transition: transform var(--duration-normal) var(--ease-standard);
   }
 
-  .profile-saved-recipes__remove:active {
+  .profile-saved-recipes__action:last-child {
+    margin-right: var(--space-1);
+  }
+
+  .profile-saved-recipes__action:hover {
+    color: var(--text-default);
+  }
+
+  .profile-saved-recipes__action:active {
     transform: scale(0.9);
+  }
+
+  /* U-1: esporta / importa */
+  .profile-saved-recipes__portability {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  .profile-saved-recipes__note {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: var(--leading-relaxed);
+  }
+
+  .profile-saved-recipes__portability-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .profile-saved-recipes__port-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--space-11);
+    padding-inline: var(--space-4);
+    font-size: var(--font-size-md);
+  }
+
+  .profile-saved-recipes__toast {
+    position: fixed;
+    bottom: calc(var(--space-20) + env(safe-area-inset-bottom, 0));
+    left: 50%;
+    z-index: 100;
+    translate: -50% 0;
+    max-width: calc(100% - var(--space-8));
   }
 
   /* ── EquipmentCategory accordion ── */

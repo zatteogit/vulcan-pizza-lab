@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   findSavedRecipeIn,
+  formatSavedDate,
   removeSavedRecipeFrom,
   toggleFavoriteStyleIn,
   upsertSavedRecipe,
@@ -36,5 +37,14 @@ describe("saved recipe rules", () => {
     expect(removeSavedRecipeFrom([base], "old")).toEqual([]);
     expect(toggleFavoriteStyleIn(["a"], "b")).toEqual(["a", "b"]);
     expect(toggleFavoriteStyleIn(["a", "b"], "a")).toEqual(["b"]);
+  });
+});
+
+describe("formatSavedDate", () => {
+  const now = new Date(2026, 9, 24, 12);
+  it("dice oggi, ieri e i giorni nella lingua attiva", () => {
+    expect(formatSavedDate(now.getTime(), now, "it-IT")).toBe("oggi");
+    expect(formatSavedDate(now.getTime() - 86_400_000, now, "en-GB")).toBe("yesterday");
+    expect(formatSavedDate(now.getTime() - 3 * 86_400_000, now, "de-DE")).toBe("vor 3 Tagen");
   });
 });

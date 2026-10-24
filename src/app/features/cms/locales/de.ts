@@ -1,4 +1,5 @@
 import type { CmsContent } from "../cms-context";
+import { UI_MESSAGES_DE } from "../../../i18n/ui-messages.de";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_DE,
@@ -10,6 +11,8 @@ import {
 /** German locale bundle */
 export const DE_LOCALE: CmsContent = {
   locale: { id: "de", name: "Deutsch" },
+  /** I18N-1: catalogo delle stringhe di interfaccia (uiMessage). */
+  messages: UI_MESSAGES_DE,
   ui: {
     copy: "Kopieren",
     copied: "Kopiert!",
@@ -92,6 +95,19 @@ export const DE_LOCALE: CmsContent = {
     slotWeekdayDinner: "{day} abends",
     slotNoPreference: "Keine Vorgabe",
     slotNoPreferenceSub: "{brand} entscheidet",
+    badgeAvpnRules: "AVPN-Regelwerk",
+    badgeIgpRules: "IGP-Regelwerk",
+    badgeBonciMethod: "Bonci-Methode",
+    badgeRomanSnack: "Römischer Snack",
+    badgeRomanBakery: "Römischer Bäckerstil",
+    fatButter: "Butter",
+    fatLard: "Schmalz",
+    procedureDirect: "Direkt",
+    procedurePreferment: "Vorteig",
+    flourUseVeryStrong: "Manitoba oder sehr starkes Tipo 0",
+    flourUseStrong: "Starkes Tipo 0/00 für Pizza",
+    flourUseMedium: "Tipo 0, mittlere Stärke",
+    flourUseWeak: "Tipo 00, schwach bis mittel",
     verdictTitle: "So klappt es nicht",
     verdictOvenTooCold: "Dein Ofen schafft {oven}, dieser Stil braucht mindestens {min}: Es würde eine andere Pizza.",
     verdictTimeWindow: "Es dauert etwa {needed}, du hast {available}: Sie wäre erst nach der gewählten Uhrzeit fertig.",
@@ -974,6 +990,23 @@ export const DE_LOCALE: CmsContent = {
     savedRecipesEmptyCta: "Stile entdecken",
     savedRecipeRemove: "Aus dem Rezeptbuch entfernen",
     savedRecipeRemoveAria: "{name} aus dem Rezeptbuch entfernen",
+    savedRecipesLocalNote: "Deine Rezepte liegen nur in diesem Browser. Exportiere sie in eine Datei, damit sie nicht verloren gehen oder um sie auf ein anderes Gerät zu bringen.",
+    savedRecipesExport: "In Datei exportieren",
+    savedRecipesImport: "Aus Datei importieren",
+    savedRecipeCopyLink: "Link kopieren",
+    savedRecipeCopyLinkAria: "Link zu {name} kopieren",
+    savedRecipeLinkCopied: "Link kopiert",
+    savedRecipeRemoved: "Rezept entfernt",
+    savedRecipeUndo: "Rückgängig",
+    savedRecipesImported: "Importierte Rezepte: {n}",
+    savedRecipesImportDuplicates: "Schon vorhanden: {n}",
+    savedRecipesImportSkipped: "Nicht übernommen, Rezeptbuch voll: {n}",
+    savedRecipesImportRejected: "Unlesbare Einträge übersprungen: {n}",
+    savedRecipesImportNothing: "Keine neuen Rezepte in der Datei",
+    savedRecipesImportErrorFormat: "Diese Datei ist kein {brand}-Rezeptbuch.",
+    savedRecipesImportErrorNewer: "Die Datei stammt aus einer neueren {brand}-Version: Lade die Seite neu und versuche es noch einmal.",
+    savedRecipesImportErrorStorage: "Der Browserspeicher ist voll: Die Rezepte wurden nicht importiert.",
+    savedRecipesExportFileName: "rezepte",
     ovenTitle: "Dein Ofen",
     ovenSubtitle: "Bestimmt Temperaturen und verfügbare Stile",
     ovenStep: "01 — Ausstattung",

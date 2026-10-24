@@ -8,7 +8,7 @@ import { AnimatePresence,motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
 import { Heading, Surface } from "../components/ds/index";
-import { useCms } from "../features/cms/cms-context";
+import { useCms, type CmsContent } from "../features/cms/cms-context";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../components/media/responsive-images";
 import { FireGlow } from "../features/cooking/fire-glow";
@@ -34,6 +34,21 @@ import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+
+/** Badge delle ricette iconiche nella lingua attiva: i dati restano in
+ *  italiano (servono anche al dedup con l'autore), il testo mostrato no. */
+const SIGNATURE_BADGE_KEYS: Record<string, keyof CmsContent["ui"]> = {
+  "Disciplinare AVPN": "badgeAvpnRules",
+  "Disciplinare IGP": "badgeIgpRules",
+  "Metodo Bonci": "badgeBonciMethod",
+  "Spuntino romano": "badgeRomanSnack",
+  "Stile panaria romana": "badgeRomanBakery",
+};
+
+function signatureBadgeText(badge: string, cms: CmsContent): string {
+  const key = SIGNATURE_BADGE_KEYS[badge];
+  return key ? String(cms.ui[key]) : badge;
+}
 
 function getAcronymTooltip(text: string | null | undefined): string | undefined {
   if (!text) return undefined;
@@ -148,7 +163,7 @@ function FeaturedRecipeCard({
             className="explore-feature__badge"
             title={getAcronymTooltip(recipe.authenticity_badge)}
           >
-            {recipe.authenticity_badge}
+            {signatureBadgeText(recipe.authenticity_badge, cms)}
           </div>
         )}
       </div>
@@ -615,7 +630,7 @@ function SignatureRecipeCard({
               className="explore-card__badge explore-card__badge--auth"
               title={getAcronymTooltip(recipe.authenticity_badge)}
             >
-              {recipe.authenticity_badge}
+              {signatureBadgeText(recipe.authenticity_badge, cms)}
             </div>
           )}
 

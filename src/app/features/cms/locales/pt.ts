@@ -1,4 +1,5 @@
 import type { CmsContent } from "../cms-context";
+import { UI_MESSAGES_PT } from "../../../i18n/ui-messages.pt";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_PT,
@@ -10,6 +11,8 @@ import {
 /** Portuguese locale bundle */
 export const PT_LOCALE: CmsContent = {
   locale: { id: "pt", name: "Portugu\u00EAs" },
+  /** I18N-1: catalogo delle stringhe di interfaccia (uiMessage). */
+  messages: UI_MESSAGES_PT,
   ui: {
     copy: "Copiar",
     copied: "Copiado!",
@@ -89,6 +92,19 @@ export const PT_LOCALE: CmsContent = {
     slotWeekdayDinner: "{day} ao jantar",
     slotNoPreference: "Sem preferência",
     slotNoPreferenceSub: "{brand} trata disso",
+    badgeAvpnRules: "Regulamento AVPN",
+    badgeIgpRules: "Regulamento IGP",
+    badgeBonciMethod: "Método Bonci",
+    badgeRomanSnack: "Lanche romano",
+    badgeRomanBakery: "Estilo padaria romana",
+    fatButter: "Manteiga",
+    fatLard: "Banha",
+    procedureDirect: "Direto",
+    procedurePreferment: "Pré-fermento",
+    flourUseVeryStrong: "Manitoba ou tipo 0 muito forte",
+    flourUseStrong: "Tipo 0/00 forte para pizza",
+    flourUseMedium: "Tipo 0 de força média",
+    flourUseWeak: "Tipo 00 fraca/média",
     verdictTitle: "Assim não dá certo",
     verdictOvenTooCold: "Seu forno chega a {oven} e este estilo pede pelo menos {min}: sairia outra pizza.",
     verdictTimeWindow: "São necessárias cerca de {needed} e você tem {available}: ficaria pronta depois do horário escolhido.",
@@ -975,6 +991,23 @@ export const PT_LOCALE: CmsContent = {
     savedRecipesEmptyCta: "Explorar estilos",
     savedRecipeRemove: "Remover do livro de receitas",
     savedRecipeRemoveAria: "Remover {name} do livro de receitas",
+    savedRecipesLocalNote: "Suas receitas ficam só neste navegador. Exporte-as para um arquivo para não perdê-las ou para levá-las a outro dispositivo.",
+    savedRecipesExport: "Exportar para arquivo",
+    savedRecipesImport: "Importar de arquivo",
+    savedRecipeCopyLink: "Copiar link",
+    savedRecipeCopyLinkAria: "Copiar o link de {name}",
+    savedRecipeLinkCopied: "Link copiado",
+    savedRecipeRemoved: "Receita removida",
+    savedRecipeUndo: "Desfazer",
+    savedRecipesImported: "Receitas importadas: {n}",
+    savedRecipesImportDuplicates: "Já existiam: {n}",
+    savedRecipesImportSkipped: "Não adicionadas, livro cheio: {n}",
+    savedRecipesImportRejected: "Itens ilegíveis ignorados: {n}",
+    savedRecipesImportNothing: "Nenhuma receita nova no arquivo",
+    savedRecipesImportErrorFormat: "Este arquivo não é um livro de receitas do {brand}.",
+    savedRecipesImportErrorNewer: "O arquivo vem de uma versão mais nova do {brand}: recarregue a página e tente de novo.",
+    savedRecipesImportErrorStorage: "O armazenamento do navegador está cheio: as receitas não foram importadas.",
+    savedRecipesExportFileName: "receitas",
     ovenTitle: "Seu forno",
     ovenSubtitle:
       "Determina temperaturas e estilos disponíveis",

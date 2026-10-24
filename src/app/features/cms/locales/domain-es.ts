@@ -420,6 +420,13 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
         prevention:
           "Filtra el agua o déjala reposar 12h abierta (el cloro se evapora)",
       },
+      P21: {
+        symptom: "La fermentación cambia de una masa a otra (nevera de casa)",
+        cause: "La nevera doméstica no mantiene una temperatura estable: descongelaciones, aperturas y baldas distintas hacen oscilar la maduración en frío, a diferencia de una cámara profesional",
+        testRapido: "Mismo estilo, misma dosis de levadura: ¿el levado cambia mucho de una vez a otra?",
+        fixImmediate: "Pon la masa en la balda más baja/central (la más estable) y valora el bollo a ojo, no solo por el reloj",
+        prevention: "Truco de Bonci para casa: un 0,5–1 % de azúcar da a la levadura alimento inmediato y hace la fermentación más previsible cuando la nevera es inestable. Solo en estilos que admiten aditivos — nunca en Napoletana STG/AVPN según el reglamento",
+      },
     },
     contextual: {
       sticky_dough: {

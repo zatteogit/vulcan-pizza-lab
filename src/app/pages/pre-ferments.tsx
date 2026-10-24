@@ -3,7 +3,7 @@ import { Heading } from "../components/ds/index";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import { useCms } from "../features/cms/cms-context";
 import {
-  COMPARISON_ROWS,
+  localizedComparisonRows,
   PreFermentCard
 } from "../features/recipe/pre-ferment-guide";
 import { Flask } from "../features/cooking/step-illustrations";
@@ -89,7 +89,7 @@ export function PreFermentsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {COMPARISON_ROWS.map((row) => (
+                  {localizedComparisonRows(cms.preFerment).map((row) => (
                     <tr key={row.label}>
                       <td className="preferment-table__td preferment-table__rowlabel">
                         {row.label}

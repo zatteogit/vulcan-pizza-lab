@@ -1193,7 +1193,7 @@ export function HomePage() {
       )}
 
       {/* ═══ CMS OVERRIDE BANNER ═══ */}
-      {modifiedCount > 0 && (
+      {TOOLS_ENABLED && modifiedCount > 0 && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}

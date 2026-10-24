@@ -2,7 +2,9 @@
 
 import type { OvenType, PanConfig } from "../domain/pizza-engine";
 
-export const MAX_SAVED_RECIPES = 30;
+/** U-1: prima 30, e oltre si perdevano in silenzio le più vecchie. Una voce
+ *  pesa circa 400 byte: 200 voci stanno larghe in localStorage. */
+export const MAX_SAVED_RECIPES = 200;
 
 export interface SavedRecipeParams {
   hydration: number;
@@ -64,11 +66,11 @@ export function upsertSavedRecipe(
   identity: { id: string; createdAt: number },
 ): SavedRecipe[] {
   const key = savedRecipeKey(recipe.styleId, recipe.params);
-  const entry: SavedRecipe = { ...recipe, ...identity };
-  return [
-    entry,
-    ...recipes.filter((item) => savedRecipeKey(item.styleId, item.params) !== key),
-  ].slice(0, MAX_SAVED_RECIPES);
+  const others = recipes.filter((item) => savedRecipeKey(item.styleId, item.params) !== key);
+  // U-1: a ricettario pieno una ricetta nuova non entra, ma nessuna voce
+  // esistente viene tolta per farle posto.
+  if (others.length >= MAX_SAVED_RECIPES) return [...recipes];
+  return [{ ...recipe, ...identity }, ...others];
 }
 
 export function removeSavedRecipeFrom(
@@ -87,19 +89,19 @@ export function toggleFavoriteStyleIn(
     : [...favoriteIds, styleId];
 }
 
-/** Locale-aware relative date; copy can be replaced by the UI catalog. */
+/** Data relativa nella lingua attiva («oggi», «yesterday», «vor 3 Tagen»)
+ *  tramite Intl: prima «oggi/ieri» restavano in italiano in tutte le lingue. */
 export function formatSavedDate(
   epochMs: number,
   now: Date = new Date(),
   locale = "it-IT",
-  copy = { today: "oggi", yesterday: "ieri", daysAgo: "{days} giorni fa" },
 ): string {
   const date = new Date(epochMs);
   const startOfDay = (value: Date) =>
     new Date(value.getFullYear(), value.getMonth(), value.getDate()).getTime();
-  const days = Math.round((startOfDay(now) - startOfDay(date)) / 86_400_000);
-  if (days <= 0) return copy.today;
-  if (days === 1) return copy.yesterday;
-  if (days < 7) return copy.daysAgo.replace("{days}", String(days));
+  const days = Math.max(0, Math.round((startOfDay(now) - startOfDay(date)) / 86_400_000));
+  if (days < 7) {
+    return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(-days, "day");
+  }
   return date.toLocaleDateString(locale, { day: "numeric", month: "short" });
 }

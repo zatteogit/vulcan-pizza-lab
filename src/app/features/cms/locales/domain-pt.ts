@@ -436,6 +436,13 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
         prevention:
           "Filtre a \u00E1gua ou deixe descansar 12h aberta (o cloro evapora)",
       },
+      P21: {
+        symptom: "A fermentação muda de uma massa para outra (geladeira de casa)",
+        cause: "A geladeira doméstica não mantém a temperatura estável: degelo, aberturas da porta e prateleiras diferentes fazem a maturação a frio oscilar, ao contrário de uma câmara profissional",
+        testRapido: "Mesmo estilo, mesma dose de fermento: a fermentação muda muito de uma vez para outra?",
+        fixImmediate: "Coloque a massa na prateleira mais baixa/central (a mais estável) e avalie a bolinha a olho, não só pelo relógio",
+        prevention: "Dica do Bonci para casa: 0,5–1% de açúcar dá ao fermento alimento imediato e torna a fermentação mais previsível quando a geladeira é instável. Só em estilos que admitem aditivos — nunca na Napoletana STG/AVPN pelo regulamento",
+      },
     },
     contextual: {
       sticky_dough: {

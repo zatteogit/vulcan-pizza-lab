@@ -160,12 +160,26 @@ Fase 2:
 | Data | Voci chiuse | Dove |
 |---|---|---|
 | 23–24/10/2026 | M-1 (confermato), M-2, M-3, M-4, M-5, M-9, M-10, P-1, P-2 | ramo `claude/bold-brahmagupta-s484he`; dettaglio in `docs/motore-correzioni-2026-10-22.md` |
+| 24/10/2026 | I18N-1, U-1 | stesso ramo; vedi sotto |
 
 Emerse nel lavoro, da pianificare in fase 1:
 
-- **I18N-1 (P1):** il catalogo `uiMessage` (`src/app/i18n/ui-messages.it.ts`, circa
-  360 stringhe) esiste solo in italiano: in tutte le altre lingue quelle parti
-  dell'interfaccia restano in italiano. Va tradotto nelle 6 lingue.
+- ~~**I18N-1 (P1)**~~ chiuso il 24/10: catalogo `uiMessage` (360 stringhe) nelle
+  6 lingue, caricato con il bundle della lingua. Corretti anche: 129 chiamate
+  `uiMessage` eseguite al caricamento del modulo (restavano in italiano, ora getter;
+  un test lo impedisce), banner «CMS attivo — 1769 campi modificati» mostrato in
+  produzione a chi non usa l'italiano, nomi dei forni, dispensa, grasso, uso della
+  farina, sottotitolo del procedimento, tabella dei pre-fermenti, badge di Scopri,
+  P21 del troubleshooting, date relative del ricettario. Scansione IT↔EN/DE delle
+  pagine principali: restano solo nomi propri. Da rivedere da un madrelingua: i
+  cataloghi sono traduzioni automatiche controllate su chiavi e segnaposto.
+- ~~**U-1 (P0)**~~ chiuso il 24/10: ricettario che non si perde. Un JSON
+  corrotto non azzera più tutto (copia di sicurezza a specchio e quarantena delle
+  voci illeggibili); oltre il limite (ora 200) non si perde più nulla in silenzio;
+  esportazione e importazione da file versionato, con unione senza doppioni; copia
+  link per ricetta; «Annulla» dopo l'eliminazione; avviso che le ricette stanno
+  solo nel browser. Resta da fare: avviso quando lo storage è pieno al salvataggio
+  dalla ricetta (oggi il pulsante semplicemente non si attiva).
 - **C-4, Pinsa:** range 350–420 °C da verificare su fonti (decisione D-013).
 - Le chiavi `timeSlots.day_after` e `timeSlots.weekend` del CMS non corrispondono
   a nessuno slot del motore, e i sottotitoli fissi degli slot non si usano più.

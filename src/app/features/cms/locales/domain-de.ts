@@ -433,6 +433,13 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         prevention:
           "Wasser filtern oder 12h offen stehen lassen (Chlor verdampft)",
       },
+      P21: {
+        symptom: "Die Gärung schwankt von Teig zu Teig (Kühlschrank zu Hause)",
+        cause: "Ein Haushaltskühlschrank hält die Temperatur nicht stabil: Abtauzyklen, Türöffnungen und unterschiedliche Fächer lassen die kalte Reifung schwanken, anders als eine Profi-Kühlzelle",
+        testRapido: "Gleicher Stil, gleiche Hefemenge: Geht der Teig jedes Mal deutlich anders auf?",
+        fixImmediate: "Stell den Teig ins unterste/mittlere Fach (am stabilsten) und beurteile den Teigling mit dem Auge, nicht nur nach der Uhr",
+        prevention: "Boncis Tipp für zu Hause: 0,5–1 % Zucker gibt der Hefe sofort Nahrung und macht die Gärung berechenbarer, wenn der Kühlschrank schwankt. Nur bei Stilen, die Zusätze erlauben — nie bei Napoletana STG/AVPN nach Regelwerk",
+      },
     },
     contextual: {
       sticky_dough: {

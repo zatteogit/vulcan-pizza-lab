@@ -108,13 +108,13 @@ interface TabDef {
 /* Audit Sprint 12 — Profilo NON è una tab pari ad altre: è impostazione utente.
    Spostato dalla tab bar all'header top-right (vedi ProfileButton in AppShell). */
 const TABS: TabDef[] = [
-  { id: "create", labelKey: "navCreate", labelFallback: uiMessage("components.shared.app-shell.crea-e7c107d0"), icon: Flame, path: "/", match: ["/"] },
+  { id: "create", labelKey: "navCreate", get labelFallback() { return uiMessage("components.shared.app-shell.crea-e7c107d0"); }, icon: Flame, path: "/", match: ["/"] },
   {
     id: "explore",
     labelKey: "navExplore",
     /* "Scopri", non "Stili": la sezione contiene ricette iconiche E stili
        (feedback giugno 2026). */
-    labelFallback: uiMessage("components.shared.app-shell.scopri-b4aad9f0"),
+    get labelFallback() { return uiMessage("components.shared.app-shell.scopri-b4aad9f0"); },
     icon: Compass,
     path: "/explore",
     match: ["/explore"],
@@ -122,7 +122,7 @@ const TABS: TabDef[] = [
   {
     id: "learn",
     labelKey: "navLearn",
-    labelFallback: uiMessage("components.shared.app-shell.impara-bc1df07a"),
+    get labelFallback() { return uiMessage("components.shared.app-shell.impara-bc1df07a"); },
     icon: GraduationCap,
     path: "/learn",
     match: ["/learn"],
@@ -133,7 +133,7 @@ const TABS: TabDef[] = [
 const PROFILE_TAB: TabDef = {
   id: "profile",
   labelKey: "navProfile",
-  labelFallback: uiMessage("components.shared.app-shell.profilo-afedc6c9"),
+  get labelFallback() { return uiMessage("components.shared.app-shell.profilo-afedc6c9"); },
   icon: User,
   path: "/profile",
   match: ["/profile"],

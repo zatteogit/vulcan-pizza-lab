@@ -7,6 +7,9 @@ import {
 Beaker,
 Bug,
 Check,
+Download,
+Link as LinkIcon,
+Upload,
 ChevronDown,
 ChevronRight,
 CircleDot,
@@ -34,11 +37,11 @@ X,
 Zap,
 } from "lucide-react";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
-import { useCallback,useEffect,useMemo,useState } from "react";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
-import { Chip, CtaButton, Heading, IconButton, SegmentedControl } from "../components/ds/index";
+import { Chip, CtaButton, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
 import {
 createFormatter,
 getPreferredUnitSystem,
@@ -80,14 +83,18 @@ import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import {
   formatSavedDate,
   loadFavoriteStyles,
+  exportRecipeBook,
+  importRecipeBook,
   loadSavedRecipes,
   removeRecipe,
+  restoreRecipe,
   toggleFavoriteStyle,
   type SavedRecipe,
 } from "../adapters/browser/saved-recipes-storage";
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { BRAND } from "../config/brand";
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
@@ -184,44 +191,44 @@ const OVEN_HEAT_PROFILES: {
 }[] = [
   {
     id: "static_top_bottom",
-    label: uiMessage("pages.profile.sopra-sotto-3f886947"),
-    description: uiMessage("pages.profile.statico-classico-equilibrio-fra-base-e-cie-6cb08433"),
+    get label() { return uiMessage("pages.profile.sopra-sotto-3f886947"); },
+    get description() { return uiMessage("pages.profile.statico-classico-equilibrio-fra-base-e-cie-6cb08433"); },
     bestFor: ["home", "electric_standard", "electric_high"],
   },
   {
     id: "top_grill",
-    label: uiMessage("pages.profile.grill-superiore-4368292b"),
-    description: uiMessage("pages.profile.cielo-forte-per-cornicione-e-doratura-fina-8d35d50c"),
+    get label() { return uiMessage("pages.profile.grill-superiore-4368292b"); },
+    get description() { return uiMessage("pages.profile.cielo-forte-per-cornicione-e-doratura-fina-8d35d50c"); },
     bestFor: ["home", "electric_standard"],
   },
   {
     id: "bottom_boost",
-    label: uiMessage("pages.profile.spinta-dal-basso-e8551eab"),
-    description: uiMessage("pages.profile.base-intensa-utile-per-teglie-acciaio-e-cr-cee70bcc"),
+    get label() { return uiMessage("pages.profile.spinta-dal-basso-e8551eab"); },
+    get description() { return uiMessage("pages.profile.base-intensa-utile-per-teglie-acciaio-e-cr-cee70bcc"); },
     bestFor: ["electric_standard", "electric_high"],
   },
   {
     id: "fan_assisted",
-    label: uiMessage("pages.profile.ventilato-c306cb96"),
-    description: uiMessage("pages.profile.aria-in-movimento-asciuga-e-uniforma-va-ge-df314474"),
+    get label() { return uiMessage("pages.profile.ventilato-c306cb96"); },
+    get description() { return uiMessage("pages.profile.aria-in-movimento-asciuga-e-uniforma-va-ge-df314474"); },
     bestFor: ["home", "electric_standard"],
   },
   {
     id: "gas_bottom",
-    label: uiMessage("pages.profile.gas-sotto-011dc103"),
-    description: uiMessage("pages.profile.fiamma-sotto-la-platea-rotazione-a-meta-co-a0eff472"),
+    get label() { return uiMessage("pages.profile.gas-sotto-011dc103"); },
+    get description() { return uiMessage("pages.profile.fiamma-sotto-la-platea-rotazione-a-meta-co-a0eff472"); },
     bestFor: ["gas"],
   },
   {
     id: "gas_rear",
-    label: uiMessage("pages.profile.bruciatore-dietro-443293a0"),
-    description: uiMessage("pages.profile.calore-direzionale-rotazioni-frequenti-e-p-b0292f9e"),
+    get label() { return uiMessage("pages.profile.bruciatore-dietro-443293a0"); },
+    get description() { return uiMessage("pages.profile.calore-direzionale-rotazioni-frequenti-e-p-b0292f9e"); },
     bestFor: ["gas"],
   },
   {
     id: "wood_side_flame",
-    label: uiMessage("pages.profile.fiamma-laterale-ebdd6232"),
-    description: uiMessage("pages.profile.fiamma-viva-di-lato-gestione-come-forno-a--d630082c"),
+    get label() { return uiMessage("pages.profile.fiamma-laterale-ebdd6232"); },
+    get description() { return uiMessage("pages.profile.fiamma-viva-di-lato-gestione-come-forno-a--d630082c"); },
     bestFor: ["wood"],
   },
 ];
@@ -377,10 +384,26 @@ function buildSavedRecipeUrl(r: SavedRecipe): string {
   return `/recipe/${r.styleId}?${q.toString()}`;
 }
 
+/** U-1: file del ricettario scaricato dal browser. */
+function downloadTextFile(name: string, text: string) {
+  const url = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+type SavedRecipesNotice =
+  | { kind: "removed"; recipe: SavedRecipe }
+  | { kind: "message"; text: string; tone: "default" | "error" };
+
 function SavedRecipesSection() {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const p = cms.profile;
   const [recipes, setRecipes] = useState<SavedRecipe[]>(() => loadSavedRecipes());
+  const [notice, setNotice] = useState<SavedRecipesNotice | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const sync = () => setRecipes(loadSavedRecipes());
@@ -391,6 +414,62 @@ function SavedRecipesSection() {
       document.removeEventListener("visibilitychange", sync);
     };
   }, []);
+
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(() => setNotice(null), notice.kind === "removed" ? 6000 : 4000);
+    return () => clearTimeout(timer);
+  }, [notice]);
+
+  const handleRemove = (recipe: SavedRecipe) => {
+    setRecipes(removeRecipe(recipe.id));
+    setNotice({ kind: "removed", recipe });
+  };
+
+  const handleUndo = () => {
+    if (notice?.kind !== "removed") return;
+    setRecipes(restoreRecipe(notice.recipe));
+    setNotice(null);
+  };
+
+  const handleCopyLink = (recipe: SavedRecipe) => {
+    const url = new URL(buildSavedRecipeUrl(recipe), window.location.origin).toString();
+    navigator.clipboard?.writeText(url).then(
+      () => setNotice({ kind: "message", text: p.savedRecipeLinkCopied, tone: "default" }),
+      () => undefined,
+    );
+  };
+
+  const handleExport = () => {
+    const day = new Date().toISOString().slice(0, 10);
+    downloadTextFile(
+      `${BRAND.name.toLowerCase()}-${p.savedRecipesExportFileName}-${day}.json`,
+      exportRecipeBook(),
+    );
+  };
+
+  const handleImport = async (file: File | undefined) => {
+    if (!file) return;
+    const result = importRecipeBook(await file.text());
+    if (!result.ok) {
+      const text =
+        result.error === "newer_version"
+          ? p.savedRecipesImportErrorNewer
+          : result.error === "storage"
+            ? p.savedRecipesImportErrorStorage
+            : p.savedRecipesImportErrorFormat;
+      setNotice({ kind: "message", text, tone: "error" });
+      return;
+    }
+    setRecipes(loadSavedRecipes());
+    const parts = [
+      result.added > 0 ? t(p.savedRecipesImported, { n: result.added }) : p.savedRecipesImportNothing,
+      result.duplicates > 0 ? t(p.savedRecipesImportDuplicates, { n: result.duplicates }) : null,
+      result.skipped > 0 ? t(p.savedRecipesImportSkipped, { n: result.skipped }) : null,
+      result.rejected > 0 ? t(p.savedRecipesImportRejected, { n: result.rejected }) : null,
+    ].filter(Boolean);
+    setNotice({ kind: "message", text: parts.join(" · "), tone: result.skipped > 0 ? "error" : "default" });
+  };
 
   return (
     <ProfileSection
@@ -415,17 +494,17 @@ function SavedRecipesSection() {
           </CtaButton>
         </div>
       ) : (
-        <div className="profile-saved-recipes">
+        <ul className="profile-saved-recipes">
           {recipes.map((r) => {
             const styleName = STYLES_DB[r.styleId]?.name ?? r.styleName;
             const meta = [
-              formatSavedDate(r.createdAt),
+              formatSavedDate(r.createdAt, new Date(), bcp47),
               r.score != null ? `${r.score}/100` : null,
             ]
               .filter(Boolean)
               .join(" · ");
             return (
-              <div key={r.id} className="profile-saved-recipes__item">
+              <li key={r.id} className="profile-saved-recipes__item">
                 <Link
                   to={buildSavedRecipeUrl(r)}
                   className="profile-saved-recipes__link"
@@ -433,28 +512,104 @@ function SavedRecipesSection() {
                   <span className="profile-saved-recipes__icon">
                     <Bookmark size={17} fill="currentColor" />
                   </span>
-                  <div className="profile-saved-recipes__info">
+                  <span className="profile-saved-recipes__info">
                     <span className="profile-saved-recipes__name">
                       {styleName}
                     </span>
                     <span className="type-data profile-saved-recipes__meta">
                       {meta}
                     </span>
-                  </div>
+                  </span>
                 </Link>
                 <button
-                  onClick={() => setRecipes(removeRecipe(r.id))}
-                  className="profile-saved-recipes__remove"
+                  type="button"
+                  onClick={() => handleCopyLink(r)}
+                  className="profile-saved-recipes__action"
+                  aria-label={t(p.savedRecipeCopyLinkAria, { name: styleName })}
+                  title={p.savedRecipeCopyLink}
+                >
+                  <LinkIcon size={16} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleRemove(r)}
+                  className="profile-saved-recipes__action"
                   aria-label={t(p.savedRecipeRemoveAria, { name: styleName })}
                   title={p.savedRecipeRemove}
                 >
-                  <X size={16} />
+                  <X size={16} aria-hidden="true" />
                 </button>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       )}
+
+      {/* U-1: le ricette vivono solo qui; il file è la copia che non si perde. */}
+      <footer className="profile-saved-recipes__portability">
+        <p className="type-body profile-saved-recipes__note">{p.savedRecipesLocalNote}</p>
+        <div className="profile-saved-recipes__portability-actions">
+          {recipes.length > 0 && (
+            <CtaButton
+              type="button"
+              variant="secondary"
+              radius="lg"
+              onClick={handleExport}
+              className="profile-saved-recipes__port-btn"
+            >
+              <Download size={16} aria-hidden="true" />
+              {p.savedRecipesExport}
+            </CtaButton>
+          )}
+          <CtaButton
+            type="button"
+            variant="secondary"
+            radius="lg"
+            onClick={() => fileInputRef.current?.click()}
+            className="profile-saved-recipes__port-btn"
+          >
+            <Upload size={16} aria-hidden="true" />
+            {p.savedRecipesImport}
+          </CtaButton>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            hidden
+            onChange={(event) => {
+              void handleImport(event.target.files?.[0]);
+              event.target.value = "";
+            }}
+          />
+        </div>
+      </footer>
+
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {notice && (
+              <motion.div
+                key={notice.kind === "removed" ? notice.recipe.id : notice.text}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 12 }}
+                transition={motionSpring.standard}
+                className="profile-saved-recipes__toast"
+              >
+                {notice.kind === "removed" ? (
+                  <Snackbar
+                    message={p.savedRecipeRemoved}
+                    action={p.savedRecipeUndo}
+                    onAction={handleUndo}
+                  />
+                ) : (
+                  <Snackbar message={notice.text} variant={notice.tone === "error" ? "error" : "default"} />
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
     </ProfileSection>
   );
 }
@@ -656,7 +811,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                       </motion.div>
                       <div className="profile-ftu__option-body">
                         <div className="profile-ftu__option-name">
-                          {preset.name}
+                          {cms.ovenPresets[preset.id]?.name ?? preset.name}
                         </div>
                         <div className="type-data-sm profile-ftu__option-meta">
                           {uiMessage("pages.profile.max-3c624fea")}{preset.maxTemp}°C
@@ -1432,7 +1587,7 @@ export function ProfilePage() {
                   </motion.div>
                   <div className="profile-oven-list__body">
                     <span className="type-body-sm profile-oven-list__name">
-                      {preset.name}
+                      {cms.ovenPresets[preset.id]?.name ?? preset.name}
                     </span>
                   </div>
                   <span className="type-data profile-oven-list__temp">

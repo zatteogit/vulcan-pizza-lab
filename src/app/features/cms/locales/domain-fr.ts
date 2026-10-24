@@ -441,6 +441,13 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         prevention:
           "Filtrer l'eau ou la laisser reposer 12h ouverte (le chlore s'\u00E9vapore)",
       },
+      P21: {
+        symptom: "La fermentation varie d'une pâte à l'autre (réfrigérateur domestique)",
+        cause: "Un réfrigérateur domestique ne garde pas une température stable : dégivrages, ouvertures et étagères différentes font varier la maturation à froid, contrairement à une chambre froide professionnelle",
+        testRapido: "Même style, même dose de levure : la pousse change-t-elle beaucoup d'une fois à l'autre ?",
+        fixImmediate: "Placez la pâte sur l'étagère du bas ou du milieu (la plus stable) et jugez le pâton à l'œil, pas seulement à la montre",
+        prevention: "Astuce de Bonci pour la maison : 0,5–1 % de sucre donne à la levure une nourriture immédiate et rend la fermentation plus prévisible quand le réfrigérateur est instable. Seulement pour les styles qui admettent des additifs — jamais pour la Napoletana STG/AVPN selon le cahier des charges",
+      },
     },
     contextual: {
       sticky_dough: {

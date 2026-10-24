@@ -474,6 +474,13 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
         prevention:
           "\u6C34\u3092\u6FF1\u904E\u3059\u308B\u304B12\u6642\u9593\u958B\u3051\u305F\u307E\u307E\u7F6E\u304F\uFF08\u5869\u7D20\u304C\u84B8\u767A\uFF09",
       },
+      P21: {
+        symptom: "生地ごとに発酵がばらつく（家庭用冷蔵庫）",
+        cause: "家庭用冷蔵庫は温度が安定しません。霜取り、扉の開閉、棚の位置の違いで低温熟成が揺らぎます。業務用の冷蔵室とは違います",
+        testRapido: "同じスタイル、同じイースト量なのに、毎回の発酵の進み方が大きく違いますか？",
+        fixImmediate: "生地をいちばん下か中段の棚（最も安定）に移し、時計だけでなく見た目で生地玉を判断してください",
+        prevention: "家庭向けのボンチのコツ：砂糖を0.5〜1%加えるとイーストにすぐ使える栄養が入り、冷蔵庫が不安定でも発酵が読みやすくなります。添加物を認めるスタイルのみ。規定上、ナポレターナSTG/AVPNには使いません",
+      },
     },
     contextual: {
       sticky_dough: {

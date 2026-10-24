@@ -1,4 +1,5 @@
 import type { CmsContent } from "../cms-context";
+import { UI_MESSAGES_EN } from "../../../i18n/ui-messages.en";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_EN,
@@ -20,6 +21,8 @@ export const EN_LOCALE: CmsContent = {
     id: "en",
     name: "English",
   },
+  /** I18N-1: catalogo delle stringhe di interfaccia (uiMessage). */
+  messages: UI_MESSAGES_EN,
   ui: {
     // Actions
     copy: "Copy",
@@ -109,6 +112,19 @@ export const EN_LOCALE: CmsContent = {
     slotWeekdayDinner: "{day} dinner",
     slotNoPreference: "No preference",
     slotNoPreferenceSub: "{brand} decides",
+    badgeAvpnRules: "AVPN rules",
+    badgeIgpRules: "IGP rules",
+    badgeBonciMethod: "Bonci method",
+    badgeRomanSnack: "Roman snack",
+    badgeRomanBakery: "Roman bakery style",
+    fatButter: "Butter",
+    fatLard: "Lard",
+    procedureDirect: "Direct",
+    procedurePreferment: "Pre-ferment",
+    flourUseVeryStrong: "Manitoba or very strong type 0",
+    flourUseStrong: "Strong type 0/00 pizza flour",
+    flourUseMedium: "Medium-strength type 0",
+    flourUseWeak: "Weak/medium type 00",
     verdictTitle: "This won't work as set up",
     verdictOvenTooCold: "Your oven reaches {oven}; this style needs at least {min}: you'd get a different pizza.",
     verdictTimeWindow: "It takes about {needed} and you have {available}: it would be ready after the time you chose.",
@@ -1179,6 +1195,23 @@ export const EN_LOCALE: CmsContent = {
     savedRecipesEmptyCta: "Explore styles",
     savedRecipeRemove: "Remove from recipe book",
     savedRecipeRemoveAria: "Remove {name} from recipe book",
+    savedRecipesLocalNote: "Your recipes live only in this browser. Export them to a file so you don't lose them or to move them to another device.",
+    savedRecipesExport: "Export to a file",
+    savedRecipesImport: "Import from file",
+    savedRecipeCopyLink: "Copy link",
+    savedRecipeCopyLinkAria: "Copy the link to {name}",
+    savedRecipeLinkCopied: "Link copied",
+    savedRecipeRemoved: "Recipe removed",
+    savedRecipeUndo: "Undo",
+    savedRecipesImported: "Recipes imported: {n}",
+    savedRecipesImportDuplicates: "Already there: {n}",
+    savedRecipesImportSkipped: "Not added, recipe book full: {n}",
+    savedRecipesImportRejected: "Unreadable entries skipped: {n}",
+    savedRecipesImportNothing: "No new recipes in the file",
+    savedRecipesImportErrorFormat: "This file isn't a {brand} recipe book.",
+    savedRecipesImportErrorNewer: "This file comes from a newer version of {brand}: reload the page and try again.",
+    savedRecipesImportErrorStorage: "Browser storage is full: the recipes weren't imported.",
+    savedRecipesExportFileName: "recipes",
     ovenTitle: "Your oven",
     ovenSubtitle:
       "Determines temperatures and available styles",

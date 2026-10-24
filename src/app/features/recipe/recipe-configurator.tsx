@@ -862,9 +862,7 @@ export function RecipeConfigurator({
                 }
               }}
               options={OVEN_PRESETS.map((preset) => {
-                const name = preset.name.toLowerCase().startsWith("forno")
-                  ? preset.name
-                  : `Forno ${preset.name.toLowerCase()}`;
+                const name = cms.ovenPresets[preset.id]?.name ?? preset.name;
                 return {
                   value: preset.id,
                   label: name,
@@ -1047,9 +1045,9 @@ function Label({ children }: { children: React.ReactNode }) {
    forza della sua farina. Qui sceglie in linguaggio naturale (debole/media/forte
    con esempi reali) e il motore deriva la W. Mostrato solo a skill_level === 1. */
 const BEGINNER_FLOURS: { label: string; sub: string; w: number }[] = [
-  { label: uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"), sub: "00 supermercato", w: 185 },
-  { label: uiMessage("features.recipe.recipe-configurator.media-0c77aeec"), sub: "0 / per pizza", w: 250 },
-  { label: uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"), sub: "Manitoba", w: 350 },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.debole-62b6eb4c"); }, sub: "00 supermercato", w: 185 },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.media-0c77aeec"); }, sub: "0 / per pizza", w: 250 },
+  { get label() { return uiMessage("features.recipe.recipe-configurator.forte-a88f9d1e"); }, sub: "Manitoba", w: 350 },
 ];
 
 function BeginnerFlourPicker({

@@ -419,6 +419,13 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         prevention:
           "Filter water or let it sit 12h uncovered (chlorine evaporates)",
       },
+      P21: {
+        symptom: "Fermentation varies from one batch to the next (home fridge)",
+        cause: "A home fridge doesn't hold a steady temperature: defrost cycles, door openings and different shelves make cold maturation swing, unlike a professional cold room",
+        testRapido: "Same style, same yeast amount: does the rise change a lot from one time to the next?",
+        fixImmediate: "Move the dough to the lowest/middle shelf (the most stable) and judge the dough ball by eye, not just by the clock",
+        prevention: "Bonci's tip for home bakers: 0.5–1% sugar gives the yeast ready food and makes fermentation more predictable when the fridge is unstable. Only for styles that allow additives — never for Napoletana STG/AVPN by the rules",
+      },
     },
     contextual: {
       sticky_dough: {
