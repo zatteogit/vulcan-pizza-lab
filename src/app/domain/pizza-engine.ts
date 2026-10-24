@@ -3872,6 +3872,8 @@ const ICONIC_BOOST: Record<string, number> = {
  *  i più simili per primi (forma, crosta, famiglia, spessore), poi nell'ordine dei
  *  consigli. Le pizze fritte si propongono solo al posto di una fritta: è un
  *  altro metodo di cottura. Serve all'esito «non fattibile così». */
+const ALTERNATIVE_OVEN_HEADROOM = 1.1;
+
 export function feasibleAlternativeStyles(
   current: PizzaStyle,
   constraints: UserConstraints,
@@ -3889,7 +3891,11 @@ export function feasibleAlternativeStyles(
       (rec) =>
         rec.style.id !== current.id &&
         rec.tier !== "not_feasible" &&
-        isFriedStyle(rec.style) === isFriedStyle(current),
+        isFriedStyle(rec.style) === isFriedStyle(current) &&
+        /* Audit n. 9 (B-17): un'alternativa deve stare nel tuo forno: il suo
+           minimo al massimo il 10 % sopra la tua temperatura (quanto recupera
+           una pietra ben scaldata), non 300–380 °C con un forno da 250. */
+        (isFriedStyle(rec.style) || rec.style.baking.temp_c_range[0] <= constraints.oven_max_temp_c * ALTERNATIVE_OVEN_HEADROOM),
     )
     .map((rec, rank) => ({ style: rec.style, rank, similarity: similarity(rec.style) }))
     .sort((x, y) => y.similarity - x.similarity || x.rank - y.rank);
@@ -4233,9 +4239,13 @@ export function recommendStyles(
     // M-10 (decisione di Matteo, 23/10/2026): stessa soglia termica dell'esito
     // della ricetta. Prima Canotto, Calzone e Pinsa risultavano «buoni» con il
     // forno di casa a 250 °C e la ricetta poi diceva «non fattibile così».
+    /* Audit n. 9 (A-09): con «Stasera» (5 h) uno stile che lievita almeno 6 h
+       non è fattibile, come dice poi la ricetta (lievitazione sotto il minimo). */
+    const tooLittleTime = constraints.available_hours < style.dough.fermentation_hours_range[0];
     const hasHardBlocker =
       (style.requires_pre_ferment === true &&
         constraints.skill_level === 1) ||
+      tooLittleTime ||
       thermalViability(style, constraints.oven_max_temp_c) <= THERMAL_UNVIABLE_THRESHOLD;
     if (score < 30 || hasHardBlocker) tier = "not_feasible";
     else if (score >= 78) tier = "perfect";

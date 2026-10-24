@@ -472,3 +472,17 @@ tiene uguali; lo spessore in g/cm² mostrato è ora peso diviso area (Pala
   temperatura indicata spesso non è il massimo.
 - **Cottura in forno di casa:** «per il cornicione» diventa «per dorare i
   bordi», giusto anche per le pizze chiuse e la Recco.
+
+## Audit totale n. 9 · Fattibilità nei consigli e nelle alternative (24/10/2026)
+
+- **Tempo:** in `recommendStyles` uno stile è «non fattibile» se le ore
+  disponibili sono meno della sua lievitazione minima. Con «Stasera» (5 h 30)
+  restano fattibili solo ciaccino senese, fugazzeta, greek pan e Recco;
+  prima comparivano tra i «Fattibili» stili da 6–48 h che la ricetta poi
+  dichiarava non fattibili. Nessuno stile chiede più di 24 h minime, quindi
+  «Nessuna preferenza» non cambia.
+- **Alternative:** con un forno da 250 °C le alternative alla Napoletana
+  erano stili da 300–380 °C. Ora un'alternativa deve avere il minimo entro
+  il 10 % della tua temperatura (Napoletana → ciaccino senese, New York,
+  Chicago tavern).
+Golden invariato (riguarda solo la ricetta).
