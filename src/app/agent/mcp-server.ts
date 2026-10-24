@@ -7,6 +7,7 @@
  * Specifica: https://modelcontextprotocol.io/specification/2025-06-18
  */
 
+import { MCP_INSTRUCTIONS } from "./mcp-guide";
 import { MCP_SERVER_INFO, MCP_TOOLS, ToolInputError } from "./mcp-tools";
 
 export const MCP_PROTOCOL_VERSION = "2025-06-18";
@@ -74,8 +75,7 @@ export function handleMcpMessage(message: unknown): JsonRpcResponse | null {
           protocolVersion: SUPPORTED_VERSIONS.has(requested) ? requested : MCP_PROTOCOL_VERSION,
           capabilities: { tools: { listChanged: false } },
           serverInfo: MCP_SERVER_INFO,
-          instructions:
-            "Pizza engine: list_styles and get_style describe styles; recommend_styles ranks them for a kitchen; generate_recipe returns grams, baker's percentages, timed steps and whether the recipe is feasible; glossary explains terms. Numbers are the same the app shows.",
+          instructions: MCP_INSTRUCTIONS,
         },
       };
     }
