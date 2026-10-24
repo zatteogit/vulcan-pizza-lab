@@ -32,8 +32,8 @@ export function SubPageHeader({
       data-region="toolbar"
       className="sub-page-header"
     >
-      {/* pr-16: riserva la corsia del ProfileButton fisso della shell,
-          che a viewport stretti tocca il bordo del contenitore. */}
+      {/* Il padding destro riserva la corsia del ProfileButton fisso
+          della shell (audit n. 25). */}
       <div className="sub-page-header__inner">
         <Link
           to={backTo}

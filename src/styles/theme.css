@@ -11670,11 +11670,13 @@
     background: linear-gradient(to top, var(--overlay-backdrop) 0%, transparent 50%, color-mix(in srgb, var(--overlay-backdrop) 67%, transparent) 100%);
   }
 
+  /* Accanto all'indietro, non sotto «Inizia» (larghezza variabile per
+     lingua e stato della pizzata): audit n. 25. */
   .recipe-view-favorite {
     position: absolute;
     z-index: 4;
-    top: var(--space-5);
-    right: calc(var(--space-5) + var(--space-24));
+    top: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0)));
+    left: calc(var(--space-4) + var(--space-11) + var(--space-2));
     color: var(--overlay-text);
     border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 34%, transparent);
     background: color-mix(in srgb, var(--overlay-backdrop) 62%, transparent);
@@ -11924,6 +11926,20 @@
     border-left: var(--border-width-thin) solid var(--container-border-subtle);
     padding-left: var(--space-3);
     /* 12px */
+  }
+
+  /* Telefoni: 2×2, così «LIEVITAZIONE» e «12 h ambiente» stanno interi
+     invece di spezzarsi in colonne da 80 px (audit n. 28). */
+  @media (max-width: 479px) {
+    .stat-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: var(--space-3);
+    }
+
+    .stat-strip__cell--divider:nth-child(odd) {
+      border-left: 0;
+      padding-left: 0;
+    }
   }
 
   /* Voce dello spec-sheet: etichetta sopra, valore sotto. */
@@ -17173,13 +17189,13 @@
     padding-top: env(safe-area-inset-top, var(--space-0));
   }
 
-  /* pr-16: riserva la corsia del ProfileButton fisso della shell, che a
-     viewport stretti tocca il bordo del contenitore. */
+  /* Riserva la corsia del ProfileButton fisso della shell (bordo + bottone
+     + respiro), che a viewport stretti tocca il contenitore: audit n. 25. */
   .sub-page-header__inner {
     max-width: var(--measure-xl);
     margin-inline: auto;
     padding-inline-start: var(--space-4);
-    padding-inline-end: var(--space-16);
+    padding-inline-end: calc(var(--space-4) + var(--space-11) + var(--space-3));
     height: var(--space-14);
     display: flex;
     align-items: center;

@@ -372,7 +372,7 @@ export function RecipeView({
               aria-label={favorite ? uiMessage("features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb") : uiMessage("features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86")}
               aria-pressed={favorite}
               onClick={handleFavoriteClick}
-              size="md"
+              size="lg"
               variant="bare"
             >
               <Bookmark size={20} fill={favorite ? "currentColor" : "none"} aria-hidden="true" />

@@ -22,7 +22,7 @@ import { getInterpretationsForStyle } from "../../data/interpretation-library";
 import { getStyleParametrics } from "../../data/parametric-databases";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
-import { t } from "../cms/i18n";
+import { createFormatter, t } from "../cms/i18n";
 import { CtaButton, IconButton } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
@@ -76,6 +76,7 @@ export function StyleDetailSheet({
   const photo = STYLE_PHOTOS[style.id] || STYLE_PHOTOS.napoletana_stg;
   const video = STYLE_VIDEOS[style.id];
   const { cms, bcp47 } = useCms();
+  const fmt = createFormatter(cms.ui, bcp47);
 
   /* Nota di Matteo (24/10/2026): con la scheda aperta la pagina sotto non
      deve scorrere. Prima si bloccava il body, ma la pagina scorre su <html>:
@@ -352,7 +353,7 @@ export function StyleDetailSheet({
                       {params.ovenTemp && (
                         <ParamRow
                           label={pt.sheetOvenLabel}
-                          value={`${params.ovenTemp.idealTemp_c}°C (${params.ovenTemp.minTemp_c}–${params.ovenTemp.maxTemp_c}°C)`}
+                          value={`${fmt.celsius(params.ovenTemp.idealTemp_c)} (${fmt.celsius(params.ovenTemp.minTemp_c)}–${fmt.celsius(params.ovenTemp.maxTemp_c)})`}
                           sub={t(pt.sheetOvenPreheat, { min: params.ovenTemp.preheatingMin })}
                         />
                       )}
@@ -366,14 +367,14 @@ export function StyleDetailSheet({
                       {params.doughBase && (
                         <ParamRow
                           label={pt.sheetDoughLabel}
-                          value={`${params.doughBase.ballWeight_g}g`}
+                          value={fmt.grams(params.doughBase.ballWeight_g)}
                           sub={params.doughBase.stretchMethod}
                         />
                       )}
                       {params.salt && (
                         <ParamRow
                           label={pt.sheetSaltLabel}
-                          value={`${params.salt.saltPct}% ${params.salt.saltType}`}
+                          value={`${fmt.percent(params.salt.saltPct)} ${params.salt.saltType}`}
                           sub={params.salt.additionTiming}
                         />
                       )}
