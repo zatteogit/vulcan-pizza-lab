@@ -340,7 +340,7 @@ export function IngredientsSection({
             preFermentType: recipe.pre_ferment_type,
             flourPct: recipe.pre_ferment_flour_pct,
           });
-          const { isPoolish, name } = split;
+          const { name } = split;
           const prefFlour = split.prefermentFlourG;
           const prefWater = split.prefermentWaterG;
           return (
@@ -348,7 +348,7 @@ export function IngredientsSection({
               <div className="ingredients-preferment__grid">
                 <div className="ingredients-preferment__cell ingredients-preferment__cell--filled">
                   <div className="type-data ingredients-preferment__label">
-                    1 · {name} ({isPoolish ? `${(cms.ui.statHydration).toLowerCase()} ${fmt.percent(100)}` : `${(cms.ui.statHydration).toLowerCase()} ${fmt.percent(45)}`})
+                    1 · {name} ({`${(cms.ui.statHydration).toLowerCase()} ${fmt.percent(split.hydrationPct)}`})
                   </div>
                   <div className="type-data ingredients-preferment__content">
                     {ui.flour}: <b>{fmt.grams(prefFlour)}</b>

@@ -66,4 +66,61 @@ describe("server MCP", () => {
     const scores = data.styles.map((s) => s.compatibility);
     expect(scores).toEqual([...scores].sort((a, b) => b - a));
   });
+
+  it("il limite tiene i più compatibili, non i primi del motore", () => {
+    const top = (limit: number) =>
+      (call("recommend_styles", { oven_model: "Koda 16", limit }).structuredContent as { styles: { id: string }[] }).styles.map((s) => s.id);
+    expect(top(3)).toEqual(top(30).slice(0, 3));
+  });
+
+  it("con la teglia in casa gli stili in teglia non chiedono la teglia", () => {
+    const warnings = (has_baking_pan: boolean) =>
+      (call("recommend_styles", { oven_type: "home", oven_max_temp_c: 250, limit: 30, has_baking_pan }).structuredContent as {
+        styles: { id: string; warnings: string[] }[];
+      }).styles.find((s) => s.id === "teglia_romana")?.warnings.join(" ") ?? "";
+    expect(warnings(false)).toMatch(/teglia/i);
+    expect(warnings(true)).not.toMatch(/Serve una teglia/);
+  });
+
+  it("con le ore disponibili tutto il procedimento sta prima del pasto", () => {
+    const total = (args: Record<string, unknown>) => {
+      const data = call("generate_recipe", { style_id: "ciaccino_senese", oven_type: "home", available_hours: 6, ...args })
+        .structuredContent as { outcome: string; steps: { duration_minutes: number }[] };
+      return data.steps.reduce((sum, step) => sum + step.duration_minutes, 0);
+    };
+    expect(total({})).toBeLessThanOrEqual(6 * 60);
+    // Senza orario del pasto le ore limitano solo la fermentazione.
+    expect(total({ meal_deadline: false })).toBeGreaterThan(6 * 60);
+  });
+
+  it("il pre-fermento ha dosi, temperatura e impasto finale che tornano coi totali", () => {
+    for (const pre_ferment of ["biga", "poolish"]) {
+      const data = call("generate_recipe", { style_id: "napoletana_canotto", oven_type: "gas_pizza", pre_ferment }).structuredContent as {
+        ingredients: { name: string; grams: number }[];
+        pre_ferment: Record<string, unknown> & { flour_g: number; water_g: number; hydration_pct: number; maturation_temp_c_range: number[]; final_dough: { flour_g: number; water_g: number } };
+      };
+      const grams = (name: string) => data.ingredients.find((i) => i.name === name)?.grams ?? 0;
+      const pf = data.pre_ferment;
+      expect(pf.type).toBe(pre_ferment);
+      expect(pf.flour_g + pf.final_dough.flour_g).toBe(grams("flour"));
+      expect(pf.water_g + pf.final_dough.water_g).toBe(grams("water"));
+      expect(pf.hydration_pct).toBe(pre_ferment === "biga" ? 44 : 100);
+      expect(pf.maturation_temp_c_range).toEqual(pre_ferment === "biga" ? [18, 20] : [20, 22]);
+      expect(Object.keys(pf).some((k) => k.startsWith("yeast_"))).toBe(true);
+    }
+  });
+
+  it("panetti non interi: errore, non arrotondamento", () => {
+    const result = call("generate_recipe", { style_id: "teglia_romana", dough_balls: 1.5 });
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("whole number");
+  });
+
+  it("i consigli dicono se uno stile ha riserve", () => {
+    const styles = (call("recommend_styles", { oven_type: "home", oven_max_temp_c: 250, available_hours: 6, limit: 30 }).structuredContent as {
+      styles: { warnings: string[]; has_caveats: boolean }[];
+    }).styles;
+    for (const s of styles) expect(s.has_caveats).toBe(s.warnings.length > 0);
+    expect(styles.some((s) => s.has_caveats)).toBe(true);
+  });
 });

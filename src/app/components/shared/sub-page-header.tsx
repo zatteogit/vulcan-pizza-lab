@@ -26,14 +26,17 @@ export function SubPageHeader({
   meta?: ReactNode;
 }) {
   return (
+    /* nav, non header: il banner è già quello della shell (bottone del
+       profilo); due banner confondono i lettori di schermo (audit n. 30). */
     <Surface
-      as="header"
+      as="nav"
+      aria-label={backLabel}
       variant="glass"
       data-region="toolbar"
       className="sub-page-header"
     >
-      {/* pr-16: riserva la corsia del ProfileButton fisso della shell,
-          che a viewport stretti tocca il bordo del contenitore. */}
+      {/* Il padding destro riserva la corsia del ProfileButton fisso
+          della shell (audit n. 25). */}
       <div className="sub-page-header__inner">
         <Link
           to={backTo}

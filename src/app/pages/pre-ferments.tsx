@@ -94,7 +94,8 @@ export function PreFermentsPage() {
               <table className="preferment-table__grid">
                 <thead>
                   <tr>
-                    <th className="preferment-table__th"> </th>
+                    {/* Angolo vuoto: td, non un th senza nome (audit n. 30). */}
+                    <td className="preferment-table__th" />
                     <th className="preferment-table__th preferment-table__th--biga">
                       {uiMessage("pages.pre-ferments.biga-a0b1ee2e")}</th>
                     <th className="preferment-table__th preferment-table__th--poolish">

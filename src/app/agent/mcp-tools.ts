@@ -21,6 +21,7 @@ import {
   type SkillLevel,
   type UserConstraints,
 } from "../domain/pizza-engine";
+import { computePreFermentSplit } from "../domain/pre-ferment-split";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../data/glossary-data";
 import { searchOvenModels } from "../data/oven-models";
 import { kitchenCompatibility } from "../features/recipe/kitchen-compatibility";
@@ -76,6 +77,13 @@ function num(args: Json, key: string, min: number, max: number, fallback?: numbe
   return value;
 }
 
+/** Numero intero: 1,5 panetti non si arrotonda in silenzio (verifica di GPT). */
+function wholeNumber(args: Json, key: string, min: number, max: number, fallback: number): number {
+  const value = num(args, key, min, max, fallback);
+  if (!Number.isInteger(value)) throw new ToolInputError(`"${key}" must be a whole number`);
+  return value;
+}
+
 function styleById(args: Json): PizzaStyle {
   const id = String(args.style_id ?? "");
   const style = STYLES_DB[id];
@@ -100,12 +108,14 @@ function constraintsFrom(args: Json): UserConstraints {
     oven_max_temp_c: num(args, "oven_max_temp_c", 150, 550, preset?.maxTemp ?? 250),
     skill_level: num(args, "skill_level", 1, 4, 2) as SkillLevel,
     available_hours: num(args, "available_hours", 1, 168, 24),
-    meal_deadline: args.meal_deadline === true,
-    dough_balls: Math.round(num(args, "dough_balls", 1, 200, 4)),
-    has_mixer: false,
-    has_pizza_stone: false,
-    has_pizza_steel: false,
-    has_baking_pan: false,
+    // Per un agente «ho 6 ore» vuol dire «si mangia fra 6 ore»: con le ore
+    // la scadenza vale, salvo meal_deadline: false esplicito.
+    meal_deadline: args.meal_deadline == null ? args.available_hours != null : args.meal_deadline === true,
+    dough_balls: wholeNumber(args, "dough_balls", 1, 200, 4),
+    has_mixer: args.has_mixer === true,
+    has_pizza_stone: args.has_pizza_stone === true,
+    has_pizza_steel: args.has_pizza_steel === true,
+    has_baking_pan: args.has_baking_pan === true,
     dietary_filters: [],
     pantry_flours: [],
     pantry_yeasts: [],
@@ -132,6 +142,41 @@ function styleSummary(style: PizzaStyle) {
   };
 }
 
+/** Temperatura di maturazione del pre-fermento, °C (fonti:
+ *  docs/ricerca/prefermenti-fonti-2026-10-24.md; stessi valori del CMS). */
+const PRE_FERMENT_TEMP_C = { biga: [18, 20], poolish: [20, 22] } as const;
+
+/** Composizione completa del pre-fermento e dell'impasto finale, come nella
+ *  ricetta dell'app (verifica di GPT: con solo tipo e quota non è eseguibile). */
+function preFermentData(recipe: GeneratedRecipe) {
+  if (!recipe.has_pre_ferment) return null;
+  const split = computePreFermentSplit({
+    flourG: recipe.flour_g,
+    waterG: recipe.water_g,
+    preFermentType: recipe.pre_ferment_type,
+    flourPct: recipe.pre_ferment_flour_pct,
+  });
+  const type = split.isPoolish ? "poolish" : "biga";
+  return {
+    type,
+    flour_pct: split.flourPct,
+    hydration_pct: split.hydrationPct,
+    flour_g: split.prefermentFlourG,
+    water_g: split.prefermentWaterG,
+    // Tutto il lievito va nel pre-fermento, il sale mai.
+    [`yeast_${recipe.yeast_type}_g`]: recipe.yeast_g,
+    maturation_minutes: recipe.timeline.find((step) => step.id === "preferment")?.duration_minutes ?? null,
+    maturation_temp_c_range: PRE_FERMENT_TEMP_C[type],
+    final_dough: {
+      flour_g: split.mainFlourG,
+      water_g: split.mainWaterG,
+      salt_g: recipe.salt_g,
+      fat_g: recipe.fat_g,
+      sugar_g: recipe.sugar_g,
+    },
+  };
+}
+
 function recipeData(recipe: GeneratedRecipe) {
   const pct = (g: number) => Math.round((g / recipe.flour_g) * 1000) / 10;
   const ingredients = [
@@ -155,9 +200,7 @@ function recipeData(recipe: GeneratedRecipe) {
     flour_w: recipe.flour_w,
     fermentation_hours: recipe.fermentation_hours,
     fermentation_temp_c: recipe.fermentation_temp_c,
-    pre_ferment: recipe.has_pre_ferment
-      ? { type: recipe.pre_ferment_type, flour_pct: recipe.pre_ferment_flour_pct }
-      : null,
+    pre_ferment: preFermentData(recipe),
     oven_temp_c: recipe.oven_temp_c,
     cook_time_sec: recipe.cook_time_sec,
     water_temp_c: recipe.water_temp_c,
@@ -179,9 +222,20 @@ const OVEN_INPUT = {
   },
   oven_type: { type: "string", enum: OVEN_TYPES, description: "Kind of oven. home = domestic oven (~250 °C)." },
   oven_max_temp_c: { type: "number", description: "Highest temperature the oven reaches, °C." },
-  available_hours: { type: "number", description: "Hours until the meal (limits fermentation)." },
+  available_hours: {
+    type: "number",
+    description: "Hours from now to the meal (default 24): the whole timeline, from mixing to baking, must fit.",
+  },
+  meal_deadline: {
+    type: "boolean",
+    description: "Default true when available_hours is given. false = no fixed meal time: the hours limit only the fermentation.",
+  },
   skill_level: { type: "number", enum: [1, 2, 3, 4], description: "1 beginner … 4 professional." },
   dough_balls: { type: "number", description: "How many dough balls / pans / pieces." },
+  has_mixer: { type: "boolean", description: "Has a stand or spiral mixer." },
+  has_baking_pan: { type: "boolean", description: "Has a baking pan (needed by pan styles)." },
+  has_pizza_stone: { type: "boolean", description: "Has a baking stone." },
+  has_pizza_steel: { type: "boolean", description: "Has a baking steel." },
 };
 
 export const MCP_TOOLS: McpTool[] = [
@@ -246,7 +300,6 @@ export const MCP_TOOLS: McpTool[] = [
       const limit = Math.round(num(args, "limit", 1, 30, 5));
       const recs = recommendStyles(constraints)
         .filter((rec) => rec.tier !== "not_feasible")
-        .slice(0, limit)
         .map((rec) => {
           const { now, best } = kitchenCompatibility(rec.style, constraints);
           return {
@@ -254,12 +307,18 @@ export const MCP_TOOLS: McpTool[] = [
             compatibility: now,
             compatibility_best: best,
             tier: rec.tier,
+            // Fattibile, ma con riserve da dire (forno sotto il minimo dello
+            // stile, teglia mancante…): l'agente non deve presentarlo come
+            // adatto senza riserve.
+            has_caveats: rec.warnings.length > 0,
             reasons: rec.reasons.map(msg),
             warnings: rec.warnings.map(msg),
           };
         })
-        // Per compatibilità con la cucina, il numero che l'agente mostra.
-        .sort((a, b) => b.compatibility - a.compatibility);
+        // Per compatibilità con la cucina, il numero che l'agente mostra;
+        // il limite si applica dopo, se no i migliori restano fuori.
+        .sort((a, b) => b.compatibility - a.compatibility)
+        .slice(0, limit);
       return {
         summary: recs.map((r) => `${r.name}: ${r.compatibility}/100`).join("; "),
         data: { constraints, styles: recs },

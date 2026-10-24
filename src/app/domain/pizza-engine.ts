@@ -1128,6 +1128,9 @@ function calculateDigestibilityScore(
   hasPreFerment: boolean,
   yeastPct: number,
   yeastType: "fresh" | "dry" | "sourdough" = "fresh",
+  /** Impasto senza lievito (Recco): le frasi sulla lievitazione non valgono
+   *  (verifica di GPT sul server MCP, 24/10/2026). */
+  unleavened = false,
 ): {
   score: number;
   category: string;
@@ -1199,11 +1202,15 @@ function calculateDigestibilityScore(
     claims.push(em("dig.coldFermentation", "Fermentazione fredda: attività enzimatica ottimale"));
   }
 
+  // Senza lievito non c'è lievitazione: niente frasi su fermentazione,
+  // amidi o FODMAP (il punteggio resta il segnale del tempo di riposo).
+  if (unleavened) claims.length = 0;
+
   return {
     score: Math.round(Math.max(0, score)),
     category,
     claims,
-    fodmap_reduction_pct: fodmapReductionPct,
+    fodmap_reduction_pct: unleavened ? null : fodmapReductionPct,
     effective_hours_18c: Math.round(effectiveHours * 10) / 10,
     q10_used: q10,
     q10_model: q10Model,
@@ -2029,6 +2036,7 @@ export function generateRecipe(
     hasPreFerment,
     yeastType === "sourdough" ? 0.2 : yeastPct,
     yeastType,
+    !!style.dough.unleavened,
   );
   const expResult = calculateExperimentationScore(
     style,
@@ -4261,6 +4269,8 @@ export function recommendStyles(
       estTemp,
       style.requires_pre_ferment,
       0.3,
+      "fresh",
+      !!style.dough.unleavened,
     );
 
     // ── Tier classification — Audit Sprint 12:
@@ -4378,7 +4388,11 @@ function calculateSustainabilityScore(
   let ingredientScore = 80;
   if (!style.allows_additives) {
     ingredientScore = 95;
-    claims.push(em("sust.pureDough", "Impasto puro: solo farina, acqua, sale, lievito"));
+    // La frase elenca gli ingredienti: solo se sono davvero quelli (non la
+    // Recco, senza lievito e con olio).
+    if (!style.dough.unleavened && style.dough.oil_pct === 0 && style.dough.sugar_pct === 0) {
+      claims.push(em("sust.pureDough", "Impasto puro: solo farina, acqua, sale, lievito"));
+    }
   } else if (
     style.dough.oil_pct > 0 &&
     style.dough.sugar_pct > 0

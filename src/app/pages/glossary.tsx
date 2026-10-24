@@ -138,6 +138,7 @@ export function GlossaryPage() {
             <input
               type="text"
               placeholder={gl.searchPlaceholder}
+              aria-label={gl.searchPlaceholder}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="glossary-searchbox__input"

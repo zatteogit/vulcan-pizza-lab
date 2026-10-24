@@ -166,9 +166,9 @@ function FeaturedRecipeCard({
           >
             {styleName}
           </span>
-          <h3 className="explore-feature__title">
+          <h2 className="explore-feature__title">
             {recipe.name}
-          </h3>
+          </h2>
           <p className="explore-feature__desc">
             {uiMessage("pages.explore.featuredLead")}
             <strong className="explore-feature__desc-strong">{styleName}</strong>
