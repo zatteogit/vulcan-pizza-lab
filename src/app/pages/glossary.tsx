@@ -11,6 +11,11 @@ import { t } from "../features/cms/i18n";
 import { FilterChip, Surface } from "../components/ds/index";
 import { motionDelay,motionSpring } from "../components/ds/motion";
 import { SubPageHeader } from "../components/shared/sub-page-header";
+import {
+  GLOSSARY_CATEGORY_ICONS,
+  glossaryCategoryDescription as catDesc,
+  glossaryCategoryLabel as catLabel,
+} from "../features/glossary/glossary-categories";
 import type {
   GlossaryCategory,
   GlossaryTerm,
@@ -180,7 +185,9 @@ export function GlossaryPage() {
                 GlossaryCategory,
                 (typeof GLOSSARY_CATEGORIES)[GlossaryCategory],
               ][]
-            ).map(([id, meta]) => (
+            ).map(([id]) => {
+              const Icon = GLOSSARY_CATEGORY_ICONS[id];
+              return (
               <motion.div
                 key={id}
                 variants={{
@@ -195,11 +202,12 @@ export function GlossaryPage() {
                   radius="xl"
                   count={categoryCounts[id] || 0}
                 >
-                  {meta.emoji && <span data-slot="emoji">{meta.emoji} </span>}
+                  <Icon size={14} aria-hidden="true" className="glossary-chip__icon" />
                   {catLabel(id, gl)}
                 </FilterChip>
               </motion.div>
-            ))}
+              );
+            })}
           </motion.div>
         </div>
 
@@ -223,17 +231,18 @@ export function GlossaryPage() {
               GlossaryCategory,
               (typeof GLOSSARY_CATEGORIES)[GlossaryCategory],
             ][]
-          ).map(([catId, catMeta]) => {
+          ).map(([catId]) => {
             const catTerms = termsByCategory[catId];
+            const CatIcon = GLOSSARY_CATEGORY_ICONS[catId];
             if (!catTerms || catTerms.length === 0) return null;
             return (
               <div key={catId} className="glossary-group">
                 <div className="glossary-group__header">
                   <span className="glossary-group__emoji">
-                    {catMeta.emoji}
+                    <CatIcon size={22} aria-hidden="true" />
                   </span>
                   <span className="glossary-group__title">
-                    {catLabel(catId as GlossaryCategory, gl)}
+                    {catLabel(catId, gl)}
                   </span>
                   <span className="glossary-group__count">
                     {catTerms.length}
@@ -241,7 +250,7 @@ export function GlossaryPage() {
                   <div className="glossary-group__divider" />
                 </div>
                 <span className="glossary-group__desc">
-                  {catDesc(catId as GlossaryCategory, gl)}
+                  {catDesc(catId, gl)}
                 </span>
                 {catTerms.map((term) => (
                   <TermCard
@@ -284,67 +293,6 @@ export function GlossaryPage() {
   );
 }
 
-/* ═══ HELPERS — CMS CATEGORY LOOKUP ═══ */
-type GlossaryCms = {
-  catRheology: string;
-  catRheologyDesc: string;
-  catFermentation: string;
-  catFermentationDesc: string;
-  catThermal: string;
-  catThermalDesc: string;
-  catChemistry: string;
-  catChemistryDesc: string;
-  catMechanics: string;
-  catMechanicsDesc: string;
-  catScoring: string;
-  catScoringDesc: string;
-  formulaLabel: string;
-  rangesLabel: string;
-  whyImportantLabel: string;
-  relatedLabel: string;
-  [k: string]: string;
-};
-const CAT_CMS_MAP: Record<
-  GlossaryCategory,
-  { label: keyof GlossaryCms; desc: keyof GlossaryCms }
-> = {
-  rheology: { label: "catRheology", desc: "catRheologyDesc" },
-  fermentation: {
-    label: "catFermentation",
-    desc: "catFermentationDesc",
-  },
-  thermal: { label: "catThermal", desc: "catThermalDesc" },
-  chemistry: {
-    label: "catChemistry",
-    desc: "catChemistryDesc",
-  },
-  mechanics: {
-    label: "catMechanics",
-    desc: "catMechanicsDesc",
-  },
-  scoring: { label: "catScoring", desc: "catScoringDesc" },
-};
-function catLabel(
-  id: GlossaryCategory | string,
-  gl: GlossaryCms,
-): string {
-  const m = CAT_CMS_MAP[id as GlossaryCategory];
-  return m
-    ? (gl[m.label] as string)
-    : (GLOSSARY_CATEGORIES[id as GlossaryCategory]?.label ??
-        id);
-}
-function catDesc(
-  id: GlossaryCategory | string,
-  gl: GlossaryCms,
-): string {
-  const m = CAT_CMS_MAP[id as GlossaryCategory];
-  return m
-    ? (gl[m.desc] as string)
-    : (GLOSSARY_CATEGORIES[id as GlossaryCategory]
-        ?.description ?? "");
-}
-
 /* ═══ TERM CARD ═══ */
 function TermCard({
   term,
@@ -357,7 +305,7 @@ function TermCard({
   onToggle: () => void;
   onNavigateToTerm?: (termId: string) => void;
 }) {
-  const catMeta = GLOSSARY_CATEGORIES[term.category];
+  const TermIcon = GLOSSARY_CATEGORY_ICONS[term.category];
   const { cms } = useCms();
   const gl = cms.glossary;
 
@@ -375,9 +323,7 @@ function TermCard({
         className="glossary-card__toggle"
       >
         <div className="glossary-card__icon">
-          <span className="glossary-card__emoji">
-            {catMeta.emoji}
-          </span>
+          <TermIcon size={16} aria-hidden="true" className="glossary-card__emoji" />
         </div>
 
         <div className="glossary-card__content">

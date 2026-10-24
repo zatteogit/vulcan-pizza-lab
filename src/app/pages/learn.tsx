@@ -17,9 +17,9 @@ import { useCms } from "../features/cms/cms-context";
 import { STYLES_DB, SKILL_LEVELS, type SkillLevel } from "../domain/pizza-engine";
 import {
   GLOSSARY_TERMS,
-  GLOSSARY_CATEGORIES,
   getLocalizedTerm,
 } from "../data/glossary-data";
+import { glossaryCategoryLabel } from "../features/glossary/glossary-categories";
 import { FireGlow } from "../features/cooking/fire-glow";
 import {
   Bowl,
@@ -96,7 +96,6 @@ export function LearnPage() {
     ? uiMessage("pages.learn.contextByStyle", [pg.learnPathLabel, activeStyle.name])
     : uiMessage("pages.learn.contextByLevel", [skillName]);
   const term = getLocalizedTerm(termOfTheDay(), cms);
-  const termCat = GLOSSARY_CATEGORIES[term.category];
 
   const SECTIONS = [
     {
@@ -229,7 +228,7 @@ export function LearnPage() {
           {/* Decorative thin rule — magazine section break */}
           <div className="learn-term__rule" />
           <div className="learn-term__kicker">
-            {t(pg.learnTermOfTheDay, { category: termCat.label })}
+            {t(pg.learnTermOfTheDay, { category: glossaryCategoryLabel(term.category, cms.glossary) })}
           </div>
 
           <Link to="/learn/glossary" className="learn-term__card">

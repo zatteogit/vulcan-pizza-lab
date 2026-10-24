@@ -2529,7 +2529,8 @@
   }
 
   .glossary-group__emoji {
-    font-size: var(--font-size-2xl);
+    display: inline-flex;
+    color: var(--primary);
   }
 
   .glossary-group__title {
@@ -2605,7 +2606,13 @@
   }
 
   .glossary-card__emoji {
-    font-size: var(--font-size-md);
+    color: var(--primary);
+  }
+
+  .glossary-chip__icon {
+    display: inline-block;
+    vertical-align: text-bottom;
+    margin-right: var(--space-1);
   }
 
   .glossary-card__content {
