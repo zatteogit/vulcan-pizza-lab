@@ -1,3 +1,4 @@
+import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
@@ -11,17 +12,17 @@ import {
   PizzaStyle,
   PIZZA_FAMILIES,
   recommendStyles,
-  resolveEngineMsgs,
   formatOrigin,
-  type EngineMsg,
   type UserConstraints,
 } from "../../domain/pizza-engine";
 import { getStyleDeviation, DEVIATION_CATEGORY_LABELS } from "../../domain/deviation-tags";
 import { getInterpretationsForStyle } from "../../data/interpretation-library";
 import { getStyleParametrics } from "../../data/parametric-databases";
 import { useCms } from "../cms/cms-context";
-import { t, createFormatter } from "../cms/i18n";
+import { engineMsgTexts } from "./engine-msg-text";
+import { t } from "../cms/i18n";
 import { CtaButton, IconButton } from "../../components/ds/index";
+import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
 import { uiMessage } from "../../i18n/ui-messages";
 
@@ -73,6 +74,11 @@ export function StyleDetailSheet({
     };
   }, []);
 
+  /* U-10 (F01): contratto da modale — focus iniziale nel pannello, Tab che
+     resta dentro, Escape che chiude, focus restituito alla card. Lo scroll del
+     body è già bloccato qui sopra. */
+  const panelRef = useDialogFocus<HTMLDivElement>({ open: true, onClose: onDismiss, lockScroll: false });
+
   const rec = React.useMemo(() => {
     if (!constraints) return null;
     return recommendStyles(constraints).find((r) => r.style.id === style.id);
@@ -81,17 +87,9 @@ export function StyleDetailSheet({
   /* VPL-C3: motivazioni di match articolate (lista completa, con dimensione). */
   const matchReasons = React.useMemo(() => {
     if (!rec || rec.tier === "not_feasible") return [];
-    const fmt = createFormatter(cms.ui, bcp47);
-    const texts = resolveEngineMsgs(
-      rec.reasons,
-      cms.engineMessages,
-      (_m: EngineMsg, key: string, value: string | number) =>
-        typeof value === "number" && ["temp", "ideal", "min"].includes(key)
-          ? fmt.celsius(value)
-          : value,
-    );
+    const texts = engineMsgTexts(rec.reasons, cms, bcp47);
     return texts.map((text, i) => ({ text, dim: reasonDimension(rec.reasons[i].key) }));
-  }, [rec, cms.engineMessages, cms.ui, bcp47]);
+  }, [rec, cms, bcp47]);
   const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "").toUpperCase();
   const pt = cms.parametricTips;
   const prefersReducedMotion = useReducedMotion();
@@ -142,6 +140,8 @@ export function StyleDetailSheet({
       />
 
       <motion.div
+        ref={panelRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-labelledby={`style-detail-title-${style.id}`}
@@ -249,6 +249,8 @@ export function StyleDetailSheet({
           {/* ── Nerd toggle — show/hide technical details ── */}
           <div className="style-detail-nerd">
             <motion.button
+              type="button"
+              aria-expanded={showNerd}
               onClick={() => setShowNerd(!showNerd)}
               className={`style-detail-nerd__toggle${showNerd ? " style-detail-nerd__toggle--active" : ""}`}
             >
@@ -277,7 +279,7 @@ export function StyleDetailSheet({
                       {compatVariants.map((v) => {
                         /* Etichetta autore: maestro/pizzeria/ente, + firma tecnica. */
                         const who = v.author ?? v.pizzeria ?? v.organization ?? "";
-                        const what = v.signature_name ?? "";
+                        const what = localizeInterpretation(v, cms.inspirationI18n).signature_name ?? "";
                         return (
                           <span key={v.id} className="style-detail-techniques__chip">
                             {v.emoji ? `${v.emoji} ` : ""}{who}{what ? ` — ${what}` : ""}

@@ -9,7 +9,9 @@ import { useState } from "react";
 import { Check, MoreHorizontal, X } from "lucide-react";
 import { Link } from "react-router";
 import { useCms } from "../cms/cms-context";
+import { t } from "../cms/i18n";
 import type { Interpretation } from "../../data/interpretation-library";
+import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import { ModalSheet, Surface } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
 
@@ -39,6 +41,7 @@ function changesParameters(it: Interpretation): boolean {
 /** Nome BREVE per le chip: gli enti si presentano come "SIGLA — Nome esteso"
  *  (AVPN, APITER…) — in chip va la sigla, il nome pieno vive nella modale. */
 function chipName(it: Interpretation): string {
+  if (it.short_name) return it.short_name;
   const name = primaryName(it);
   const short = name.split("—")[0].trim();
   return short || name;
@@ -226,10 +229,21 @@ function InterpretationNarrativeCard({
   onSelect?: () => void;
 }) {
   const { cms } = useCms();
-  const it = interpretation;
+  const it = localizeInterpretation(interpretation, cms.inspirationI18n);
   const meta = metaLine(it);
   const selectable = Boolean(onSelect);
-  return (
+  const urlLink = it.url ? (
+    <a
+      href={it.url}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={`interpretation-card__url${selectable ? " interpretation-card__url--outside" : ""}`}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {it.author ?? it.pizzeria ?? uiMessage("features.recipe.interpretation-narrative-card.approfondisci-44efee7c")} ↗
+    </a>
+  ) : null;
+  const card = (
     <Surface
       variant="container"
       {...(selectable
@@ -275,6 +289,9 @@ function InterpretationNarrativeCard({
             </span>
           )}
         </div>
+        {it.signature_name && it.signature_name !== primaryName(it) && (
+          <p className="interpretation-card__signature">{it.signature_name}</p>
+        )}
         {meta && (
           <div className="interpretation-card__meta">
             {meta}
@@ -288,18 +305,22 @@ function InterpretationNarrativeCard({
         <p className="interpretation-card__story">
           {it.story}
         </p>
-        {it.url && (
-          <a
-            href={it.url}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="interpretation-card__url"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {it.author ?? it.pizzeria ?? uiMessage("features.recipe.interpretation-narrative-card.approfondisci-44efee7c")} ↗
-          </a>
+        {(it.type === "master" || it.type === "pizzeria") && (
+          <p className="interpretation-card__disclaimer">
+            {t(cms.ui.interpretationDisclaimer, { who: it.author ?? it.pizzeria ?? "" })}
+          </p>
         )}
+        {!selectable && urlLink}
       </div>
     </Surface>
+  );
+  /* U-10 (F19): un link dentro un role="radio" non viene esposto (il ruolo
+     appiattisce i figli). Nella modale il link sta sotto la card. */
+  if (!selectable || !urlLink) return card;
+  return (
+    <div className="interpretation-card-item">
+      {card}
+      {urlLink}
+    </div>
   );
 }

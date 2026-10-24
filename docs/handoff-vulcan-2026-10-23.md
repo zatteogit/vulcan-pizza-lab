@@ -149,11 +149,104 @@ Fase 2:
 
 ## 6. Decisioni da chiedere a Matteo
 
-1. **`meal_deadline`** (M-1): confermi che «Nessuna preferenza» non è una scadenza? Opzione consigliata: sì, come è stato unito.
-2. **Arrotondamento degli slot** (M-2): (a, consigliata) quarto d'ora per difetto; (b) ore intere per difetto; (c) lasciare così.
+1. ~~**`meal_deadline`** (M-1)~~: confermato il 23/10 (D-010).
+2. ~~**Arrotondamento degli slot** (M-2)~~: quarto d'ora per difetto, deciso il 23/10 (D-011).
 3. ~~Quanto della fase 1 prima della fase 2~~: deciso il 23/10, tutta la fase 1 prima.
 4. **Primo tipo di partner da simulare:** (a, consigliata) mulino, perché catalogo farine e dati tecnici sono il cuore del motore; (b) produttore di forni.
 5. **Nome:** resta Vulcan finché non arriva un parere sul marchio. Non rinominare senza decisione: il marchio grafico è una «V».
+
+## 6bis. Avanzamento
+
+| Data | Voci chiuse | Dove |
+|---|---|---|
+| 23–24/10/2026 | M-1 (confermato), M-2, M-3, M-4, M-5, M-9, M-10, P-1, P-2 | ramo `claude/bold-brahmagupta-s484he`; dettaglio in `docs/motore-correzioni-2026-10-22.md` |
+| 24/10/2026 | I18N-1, U-1, U-2, M-11 | stesso ramo; vedi sotto |
+| 24/10/2026 | P-4 (pronto), M-6, M-8, C-4, I18N-2, C-5, P-3, P-5 (budget e font) | stesso ramo; vedi sotto |
+
+Emerse nel lavoro, da pianificare in fase 1:
+
+- ~~**I18N-1 (P1)**~~ chiuso il 24/10: catalogo `uiMessage` (360 stringhe) nelle
+  6 lingue, caricato con il bundle della lingua. Corretti anche: 129 chiamate
+  `uiMessage` eseguite al caricamento del modulo (restavano in italiano, ora getter;
+  un test lo impedisce), banner «CMS attivo — 1769 campi modificati» mostrato in
+  produzione a chi non usa l'italiano, nomi dei forni, dispensa, grasso, uso della
+  farina, sottotitolo del procedimento, tabella dei pre-fermenti, badge di Scopri,
+  P21 del troubleshooting, date relative del ricettario. Scansione IT↔EN/DE delle
+  pagine principali: restano solo nomi propri. Da rivedere da un madrelingua: i
+  cataloghi sono traduzioni automatiche controllate su chiavi e segnaposto.
+- ~~**U-1 (P0)**~~ chiuso il 24/10: ricettario che non si perde. Un JSON
+  corrotto non azzera più tutto (copia di sicurezza a specchio e quarantena delle
+  voci illeggibili); oltre il limite (ora 200) non si perde più nulla in silenzio;
+  esportazione e importazione da file versionato, con unione senza doppioni; copia
+  link per ricetta; «Annulla» dopo l'eliminazione; avviso che le ricette stanno
+  solo nel browser. Dal 24/10 anche l'avviso quando lo storage è pieno al
+  salvataggio dalla ricetta (prima il toast diceva «aggiunto» e l'uscita con
+  «Salva» perdeva la versione).
+- ~~**U-2 (P0)**~~ chiuso il 24/10: si parte da ciò che si ha. «Si cena sabato
+  alle 20»: voce «Scegli giorno e ora» accanto agli slot (da 1 h a 7 giorni, ore al
+  quarto d'ora per difetto, ripristinata dalla bozza). «Ho 750 g di farina»:
+  pannello sotto i panetti che dice quanti ne stanno e quanta farina avanza, e li
+  applica. Forno e farine della dispensa c'erano già.
+- ~~**C-4 (P1)**~~ chiuso il 24/10: registro delle fonti `docs/fonti-dati.md`
+  (stato verificato / plausibile / da verificare / errato per ogni dato) e
+  correzioni decise da Matteo (D-015…D-018): Pinsa, Napoletana STG con versione
+  AVPN, Recco, olio di frittura, W delle farine di marca, Petra 3, falling number
+  5 Stagioni, commento sul Q10. Restano «da verificare» gli stili senza
+  disciplinare: elenco in `docs/fonti-dati.md`, «Fonti mancanti».
+- ~~**I18N-2 (P1)**~~ chiuso il 24/10: libreria condimenti (61 concetti, 94
+  ricette, 128 passi, 1004 testi) tradotta nelle 6 lingue in
+  `src/app/data/topping-i18n/`, applicata dalla UI (il motore resta in italiano);
+  passi della timeline con chiave e parametri (`TimelineStep.msg`) invece del
+  testo italiano composto. Test di copertura per lingua. Traduzioni automatiche:
+  da rivedere da madrelingua (note dei traduttori nella PR).
+- ~~**C-5**~~ chiuso il 24/10: «Signature» diventa «Ispirazione» («Ispirato al
+  metodo Bonci»); le interpretazioni di maestri e pizzerie dicono che sono
+  ricostruzioni da fonti pubbliche, non ricette fornite da loro.
+- ~~**P-3**~~ chiuso il 24/10: annotazioni di debug archiviate in `docs/archivio/`.
+- **P-5** misurato il 24/10: `docs/budget-prestazioni.md`, controllo
+  `npm run check:budget` in CI. Restano P-5a (motore in idle sulla home), P-5c
+  (video, serve decisione) e P-5d.
+- ~~**M-7 (P1)**~~ chiuso il 24/10: nessuna fonte per una fritta aperta diversa
+  dalla montanara; aggiunta la «Pizza fritta tonda» dell'AVPN (D-022) e impasto
+  delle fritte allineato all'AVPN con lievitazione 8–24 h (D-023). Manca una
+  foto vera della tonda.
+- ~~**I18N-4**~~ chiuso il 24/10: 14 stili su 28 non avevano descrizione e
+  caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
+  lo vieta per ogni stile.
+- ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- ~~**I18N-5**~~ chiuso il 24/10: fact-check delle 14 ispirazioni (126
+  affermazioni, 21 errate: `docs/ricerca/ispirazioni-fact-check-2026-10-24.md`,
+  riassunto in `docs/fonti-dati.md` §5) e testi riscritti sulle fonti. Decisioni
+  D-024…D-027: tolte «Malati di pizza» e «Confraternita della pinsa»; APITER è il
+  disciplinare di una community; parametri di Martucci, Bianco e Bosco allineati
+  alle fonti; le ricette dei maestri si chiamano «Ispirata a…», anche nella card.
+  Ispirazioni e ricette iconiche tradotte in 6 lingue (`data/inspiration-i18n/`,
+  test di copertura con gli stessi numeri dell'italiano); `LOCALE_BUNDLE_REV` 3. Restano da verificare l'anno di
+  Capuano e il nome esatto del consorzio di Recco.
+- ~~**U-5 (P1)**~~ chiuso il 24/10: ricerca a tutta pagina secondo la spec
+  INT-NAV. Su mobile la capsula dei tab diventa il campo e la lente «Annulla»;
+  su desktop e nella pagina ricetta il campo sta in testa ai risultati. I
+  risultati prendono il posto della pagina, che resta montata (Annulla/Esc
+  riportano scroll e focus dove erano). Indice puro in
+  `features/search/search-index.ts` con test: testi della lingua attiva
+  (condimenti, prefermenti, glossario, problemi), accenti e maiuscole
+  ignorati, più parole in AND, ordinamento per pertinenza; problemi e
+  prefermenti aprono la voce giusta (`?issue=`, `#pf-`). `SearchOverlay`
+  rimosso. Le ricette iconiche restano in italiano finché non chiude I18N-5.
+- ~~**U-10 (P1)**~~ chiuso il 24/10: audit WCAG 2.1 AA del percorso principale
+  (`docs/accessibilita-audit-2026-10.md`, 30 voci) e correzioni di tutte le P1,
+  P2 e P3; F28 con D-019 (testo minimo 12 px, 11 px solo maiuscolo, controllo
+  `check:type-floor` in verify). axe sui 32 scenari: da 32 violazioni a 0.
+  Non è stato fatto un test con screen reader su un dispositivo reale.
+- ~~**I18N-3 (P1)**~~ chiuso il 24/10: i bundle CMS di es/fr/pt non avevano 310
+  testi e quelli di de/ja 193 (modalità cottura, durate, «domani», glossario
+  vuoto): ricadevano sull'inglese; a en ne mancavano 24 (ricadevano
+  sull'italiano). Tradotti e inseriti; un test (`locale-parity.test.ts`) vieta
+  nuovi buchi. Corretti anche «OGGI» e «ca.» fissi nella timeline, refusi in ja
+  (焦き→焼き, 麻棒→麺棒, 昇食→昼食 e altri), forme del portoghese europeo in pt
+  (pt = pt-BR), note del Q₁₀ in inglese nel glossario italiano.
+- Le chiavi `timeSlots.day_after` e `timeSlots.weekend` del CMS non corrispondono
+  a nessuno slot del motore, e i sottotitoli fissi degli slot non si usano più.
 
 ## 7. Riferimenti nel repository
 

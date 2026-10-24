@@ -221,6 +221,17 @@ export function createFormatter(
       return `${h}h ${m}min`;
     },
 
+    /** Compact duration from hours, e.g. "3 h 45 min" / "3 hr 45 min" / "3時間45分". */
+    durationShort: (hours: number): string => {
+      const total = Math.max(0, Math.round(hours * 60));
+      const h = Math.floor(total / 60);
+      const m = total % 60;
+      const unit = (value: number, u: "hour" | "minute") =>
+        new Intl.NumberFormat(bcp47, { style: "unit", unit: u, unitDisplay: "short" }).format(value);
+      if (h === 0) return unit(m, "minute");
+      return m === 0 ? unit(h, "hour") : `${unit(h, "hour")} ${unit(m, "minute")}`;
+    },
+
     /** Format a generic duration expressed in minutes. */
     durationMinutes: (minutes: number): string => {
       if (minutes <= 0) return "";

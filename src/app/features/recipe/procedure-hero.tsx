@@ -11,8 +11,10 @@ import type {
   MutableRefObject,
   SetStateAction,
 } from "react";
+import { useId } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
+import { timeSlotText } from "./time-slot-text";
 import { IconButton, Surface, Switch } from "../../components/ds/index";
 import type { TimeSlot } from "../../domain/pizza-engine";
 import {
@@ -71,9 +73,12 @@ export function ProcedureHeroControls({
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
+  // U-10 (F05): lo switch prende nome e descrizione dal testo che ha accanto.
+  const comfortTitleId = useId();
+  const comfortDescId = useId();
 
-  const startDayLabel = daySuffix(new Date(), startTime, cms.cooking).trim() || "oggi";
-  const endDayLabel = daySuffix(new Date(), endTime, cms.cooking).trim() || "oggi";
+  const startDayLabel = daySuffix(new Date(), startTime, cms.cooking).trim() || cms.cooking.dayToday;
+  const endDayLabel = daySuffix(new Date(), endTime, cms.cooking).trim() || cms.cooking.dayToday;
 
   const comfortDescClass = comfortToggled
     ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--success type-data-sm"
@@ -87,7 +92,7 @@ export function ProcedureHeroControls({
       <div className="procedure-hero__header">
         <div className="procedure-hero__title-group">
           <CalendarRange size={16} className="procedure-hero__title-icon" />
-          <h3 className="procedure-hero__title">{ui.timeline}</h3>
+          <h2 className="procedure-hero__title">{ui.timeline}</h2>
         </div>
         <span className="procedure-hero__total">
           {uiMessage("features.recipe.procedure-hero.tempo-totale-3c1f6a6f")}{fmt.durationMinutes(totalDurationMin)}
@@ -255,6 +260,7 @@ export function ProcedureHeroControls({
 
           {mealSlots.map((slot) => {
             if (!slot.isFeasible) return null;
+            const text = timeSlotText(slot, cms, bcp47);
             return (
               <button
                 key={slot.id}
@@ -262,7 +268,7 @@ export function ProcedureHeroControls({
                 onClick={() => setStartTime(roundToQuarter(slot.idealStart))}
                 className="procedure-hero__meal-chip"
               >
-                {slot.label} ({slot.sublabel})
+                {text.label} ({text.sublabel})
               </button>
             );
           })}
@@ -277,10 +283,10 @@ export function ProcedureHeroControls({
         }
       >
         <div className="procedure-hero__comfort-text">
-          <div className="procedure-hero__comfort-title type-data">
+          <div id={comfortTitleId} className="procedure-hero__comfort-title type-data">
             {engineMessage(cms, "timelineComfort.title", "Timeline comoda")}
           </div>
-          <div className={comfortDescClass}>
+          <div id={comfortDescId} className={comfortDescClass}>
             {comfortToggled
               ? engineMessage(cms, "timelineComfort.active", "Attiva: evita le fasi notturne.")
               : currentComfortPlan
@@ -289,6 +295,8 @@ export function ProcedureHeroControls({
           </div>
         </div>
         <Switch
+          aria-labelledby={comfortTitleId}
+          aria-describedby={comfortDescId}
           checked={comfortToggled}
           onCheckedChange={(checked) => {
             setComfortToggled(checked);

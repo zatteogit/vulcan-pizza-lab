@@ -20,6 +20,8 @@ import type {
   TroubleshootingMessages,
 } from "../../i18n/domain-contracts";
 import { UI_MESSAGES_IT } from "../../i18n/ui-messages.it";
+import type { ToppingTranslation } from "../../data/topping-i18n/types";
+import type { InspirationTranslation } from "../../data/inspiration-i18n/types";
 import {
   registerUiMessages,
   setActiveUiLocale,
@@ -118,6 +120,9 @@ export interface CmsUiStrings {
   // Stat strip
   statHydration: string;
   statOven: string;
+  /** M-6/M-8: stili fritti e non lievitati. */
+  statRest: string;
+  statOil: string;
   statCookTime: string;
   statFermentation: string;
   /** Tabella parametri (round 7): "Forza farina" + contesto lievitazione. */
@@ -140,6 +145,68 @@ export interface CmsUiStrings {
   minute: string;
   hours: string;
   hour: string;
+  /** Slot del pasto oltre domani: {day} = giorno della settimana per lingua. */
+  slotWeekdayLunch: string;
+  slotWeekdayDinner: string;
+  slotNoPreference: string;
+  slotNoPreferenceSub: string;
+  /** C-5: le interpretazioni d'autore non sono ricette firmate. */
+  interpretationDisclaimer: string;
+  /** M-11: lievito trasparente e correzione personale. */
+  yeastHowToggle: string;
+  yeastModelBody: string;
+  yeastDryNote: string;
+  yeastTempModelNote: string;
+  yeastEstimateNote: string;
+  yeastPersonalLegend: string;
+  yeastPersonalHint: string;
+  yeastSpeedMuchSlower: string;
+  yeastSpeedSlower: string;
+  yeastSpeedAsExpected: string;
+  yeastSpeedFaster: string;
+  yeastSpeedMuchFaster: string;
+  /** U-2: panetti a partire dalla farina disponibile. */
+  flourBudgetToggle: string;
+  flourBudgetInput: string;
+  flourBudgetResult: string;
+  flourBudgetTooLittle: string;
+  flourBudgetApply: string;
+  /** U-2: orario del pasto scelto a mano. */
+  slotCustom: string;
+  slotCustomInput: string;
+  slotCustomConfirm: string;
+  /** U-1 — salvataggio non riuscito: storage del browser pieno. */
+  saveFailedStorage: string;
+  saveFailedDismiss: string;
+  /** U-10 (F11) — annunci per lettori di schermo (regioni live). */
+  stylesFoundStatus: string;
+  searchResultsStatus: string;
+  quantitiesUpdatedStatus: string;
+  slotCustomOutOfRange: string;
+  /** Badge delle ricette iconiche in Scopri. */
+  badgeAvpnRules: string;
+  badgeIgpRules: string;
+  badgeBonciMethod: string;
+  badgeRomanSnack: string;
+  badgeRomanBakery: string;
+  /** Grasso dell'impasto e metodo (sottotitolo del procedimento). */
+  fatButter: string;
+  fatLard: string;
+  procedureDirect: string;
+  procedurePreferment: string;
+  /** Uso suggerito della farina per forza W (ingredienti). */
+  flourUseVeryStrong: string;
+  flourUseStrong: string;
+  flourUseMedium: string;
+  flourUseWeak: string;
+  /** M-10: esito «non fattibile così» della ricetta. */
+  verdictTitle: string;
+  verdictOvenTooCold: string;
+  verdictTimeWindow: string;
+  verdictFermentationTooShort: string;
+  verdictLaterTime: string;
+  verdictAlternatives: string;
+  verdictRecipeBelow: string;
   // Score dashboard
   recipeScore: string;
   nerdToggle: string;
@@ -347,6 +414,24 @@ interface CmsProfile {
   savedRecipesEmptyCta: string;
   savedRecipeRemove: string;
   savedRecipeRemoveAria: string;
+  /** U-1: esportazione, importazione, link e annulla nel ricettario. */
+  savedRecipesLocalNote: string;
+  savedRecipesExport: string;
+  savedRecipesImport: string;
+  savedRecipeCopyLink: string;
+  savedRecipeCopyLinkAria: string;
+  savedRecipeLinkCopied: string;
+  savedRecipeRemoved: string;
+  savedRecipeUndo: string;
+  savedRecipesImported: string;
+  savedRecipesImportDuplicates: string;
+  savedRecipesImportSkipped: string;
+  savedRecipesImportRejected: string;
+  savedRecipesImportNothing: string;
+  savedRecipesImportErrorFormat: string;
+  savedRecipesImportErrorNewer: string;
+  savedRecipesImportErrorStorage: string;
+  savedRecipesExportFileName: string;
   // Sections
   ovenTitle: string;
   ovenSubtitle: string;
@@ -636,6 +721,9 @@ interface CmsConfigurator {
   plLabel: string;
   plTip: string;
   fermentLabel: string;
+  /** M-8: impasti non lievitati (Recco). */
+  restLabel: string;
+  restTip: string;
   fermentTip: string;
   tempFridge: string;
   tempCool: string;
@@ -679,6 +767,10 @@ export interface CmsContent {
   locale: CmsLocale;
   /** Catalogo estensibile per copy montato non coperto dalle sezioni legacy. */
   messages?: Record<string, string>;
+  /** I18N-2: traduzioni della libreria condimenti (assenti in italiano). */
+  toppingI18n?: ToppingTranslation;
+  /** I18N-5: ispirazioni e ricette iconiche tradotte (assente in italiano, che è la fonte). */
+  inspirationI18n?: InspirationTranslation;
   /** Generic UI strings (buttons, labels, actions) */
   ui: CmsUiStrings;
   /** InlineTip contextual texts */
@@ -801,7 +893,11 @@ export interface CmsContent {
     finish: string;
     finishedEarly: string;
     phaseDone: string;
+    /** Giorno di oggi accanto a un orario («oggi»). */
+    dayToday: string;
     dayTomorrow: string;
+    /** Prefisso degli orari arrotondati («ca. 18:15»); spazio incluso se serve. */
+    approxPrefix: string;
     dayAfterTomorrow: string;
     dayOffset: string;
     etaNow: string;
@@ -1228,6 +1324,8 @@ export const CMS_DEFAULTS: CmsContent = {
     // Stat strip
     statHydration: "Idratazione",
     statOven: "Forno",
+    statRest: "Riposo",
+    statOil: "Olio",
     statCookTime: "Cottura",
     statFermentation: "Lievitazione",
     statFlourStrength: "Forza farina",
@@ -1252,6 +1350,57 @@ export const CMS_DEFAULTS: CmsContent = {
     minute: "minuto",
     hours: "ore",
     hour: "ora",
+    slotWeekdayLunch: "{day} a pranzo",
+    slotWeekdayDinner: "{day} sera",
+    slotNoPreference: "Nessuna preferenza",
+    slotNoPreferenceSub: "ci pensa {brand}",
+    interpretationDisclaimer: "Interpretazione di {brand} da fonti pubbliche: non è la ricetta originale di {who} e non è approvata da {who}.",
+    yeastHowToggle: "Come calcoliamo il lievito",
+    yeastModelBody: "Si parte da {ref} di lievito fresco sulla farina per {refHours} a {refTemp}. Con {hours} a {temp} il lievito lavora a {speed}× della velocità di riferimento: la dose diventa {pct}.",
+    yeastDryNote: "Con il lievito secco la dose è un terzo del fresco.",
+    yeastTempModelNote: "Come cambia la velocità con la temperatura (fattore Q10 di 2, 1,6 sotto i 10 °C) è una stima del modello, da confermare con le prove.",
+    yeastEstimateNote: "È una stima, non una misura: marca e freschezza del lievito e la temperatura reale la spostano. Dose plausibile: {low}–{high}.",
+    yeastPersonalLegend: "Nella tua cucina gli impasti lievitano",
+    yeastPersonalHint: "Se ti crescono sempre troppo, scegli «più in fretta»: useremo meno lievito in tutte le ricette.",
+    yeastSpeedMuchSlower: "Molto più piano",
+    yeastSpeedSlower: "Più piano",
+    yeastSpeedAsExpected: "Come previsto",
+    yeastSpeedFaster: "Più in fretta",
+    yeastSpeedMuchFaster: "Molto più in fretta",
+    flourBudgetToggle: "Parti dalla farina che hai",
+    flourBudgetInput: "Farina disponibile (g)",
+    flourBudgetResult: "Risultato: {n} {unit} con {used} di farina, avanzo {left}.",
+    flourBudgetTooLittle: "Non basta per 1 {unit}: servono almeno {min} di farina.",
+    flourBudgetApply: "Usa {n} {unit}",
+    slotCustom: "Scegli giorno e ora",
+    slotCustomInput: "Quando si mangia?",
+    slotCustomConfirm: "Usa questo orario",
+    saveFailedStorage: "Non c'è più spazio nel browser: la ricetta non è stata salvata. Dal Profilo puoi esportare il ricettario e togliere le ricette che non usi.",
+    saveFailedDismiss: "Ho capito",
+    stylesFoundStatus: "Stili trovati: {n}",
+    searchResultsStatus: "Risultati: {n}",
+    quantitiesUpdatedStatus: "Dosi aggiornate per {n}",
+    slotCustomOutOfRange: "Scegli un orario tra 1 ora e 7 giorni da adesso.",
+    badgeAvpnRules: "Disciplinare AVPN",
+    badgeIgpRules: "Disciplinare IGP",
+    badgeBonciMethod: "Ispirato al metodo Bonci",
+    badgeRomanSnack: "Spuntino romano",
+    badgeRomanBakery: "Stile panaria romana",
+    fatButter: "Burro",
+    fatLard: "Strutto",
+    procedureDirect: "Diretto",
+    procedurePreferment: "Prefermento",
+    flourUseVeryStrong: "Manitoba o tipo 0 molto forte",
+    flourUseStrong: "Tipo 0/00 forte per pizza",
+    flourUseMedium: "Tipo 0 media forza",
+    flourUseWeak: "Tipo 00 debole/media",
+    verdictTitle: "Così non è fattibile",
+    verdictOvenTooCold: "Il tuo forno arriva a {oven}, questo stile ne chiede almeno {min}: verrebbe un'altra pizza.",
+    verdictTimeWindow: "Servono circa {needed}, ne hai {available}: sarebbe pronta dopo l'orario scelto.",
+    verdictFermentationTooShort: "Lievitazione di {hours} contro un minimo di {min} per questo stile: sarebbe un altro impasto.",
+    verdictLaterTime: "Scegli un orario fra almeno {hours}.",
+    verdictAlternatives: "Con questi vincoli funzionano:",
+    verdictRecipeBelow: "Sotto trovi comunque la ricetta più vicina, se vuoi provarci.",
     // Score dashboard
     recipeScore: "Match",
     nerdToggle: "PizzaNerd",
@@ -1349,8 +1498,9 @@ export const CMS_DEFAULTS: CmsContent = {
   ovenPresets: {
     home:              { name: "Forno Domestico",    maxTemp: 250, icon: "home" },
     electric_standard: { name: "Elettrico Standard", maxTemp: 300, icon: "zap" },
-    gas:               { name: "Gas Professionale",  maxTemp: 350, icon: "flame" },
+    gas:               { name: "Forno a gas a platea", maxTemp: 350, icon: "flame" },
     electric_high:     { name: "Elettrico alta temperatura", maxTemp: 450, icon: "thermometer" },
+    gas_pizza:         { name: "Forno a gas da pizza", maxTemp: 500, icon: "flame" },
     wood:              { name: "Forno a Legna",      maxTemp: 500, icon: "flame-kindling" },
   },
   skillLevels: {
@@ -1493,7 +1643,7 @@ export const CMS_DEFAULTS: CmsContent = {
     resume: "Riprendi la pizzata",
     startShort: "Inizia",
     inProgressShort: "In corso",
-    followYou: "Ti seguiamo noi: timer, promemoria e widget anche se chiudi questa pagina.",
+    followYou: "Ti seguiamo noi finché {brand} resta aperto: conto alla rovescia, promemoria e widget.",
     reopen: "Riapri la pizzata in corso",
     completed: "Pizzata completata 🎉",
     waitOver: "Attesa finita: continua!",
@@ -1506,13 +1656,15 @@ export const CMS_DEFAULTS: CmsContent = {
     abortYes: "Sì, interrompi",
     abortNo: "Continua la pizzata",
     minimize: "Riduci — la pizzata continua in background",
-    minimizeHint: "Riduci: la pizzata continua, ti avvisiamo noi",
+    minimizeHint: "Riduci: la pizzata continua e, con {brand} aperto, ti avvisiamo noi",
     inProgress: "Pizzata in corso",
     done: "Pizza in tavola!",
     finish: "Concludi la pizzata",
     finishedEarly: "Ho finito prima — salta l'attesa",
     phaseDone: "Tempo completato",
+    dayToday: "oggi",
     dayTomorrow: "domani",
+    approxPrefix: "ca. ",
     dayAfterTomorrow: "dopodomani",
     dayOffset: "+{n} giorni",
     etaNow: "ora",
@@ -1536,7 +1688,7 @@ export const CMS_DEFAULTS: CmsContent = {
     passivePhaseMeta: "Fase passiva · {duration} · fine {time}",
     activePhaseMeta: "{duration} · fine {time}",
     yourTurn: "tocca a te",
-    passiveCloseHint: "Puoi chiudere l'app: ti avvisiamo noi quando è il momento.",
+    passiveCloseHint: "Lascia {brand} aperto in una scheda e ti avvisiamo quando è il momento. Se lo chiudi gli avvisi si fermano: riaprendolo riprendi da dove eri.",
     readyAt: "pronta {eta}",
     widgetStepReadyAt: "{title} · pronta {eta}",
     widgetStepDueIn: "{title} {eta}",
@@ -1658,14 +1810,14 @@ export const CMS_DEFAULTS: CmsContent = {
     badgeBeginnerFriendly: "Principianti",
     interpretationsLabel: "Interpretazioni",
     goToSite: "Vai al sito",
-    signatureLabel: "Firma",
-    noSignature: "nessuna firma",
+    signatureLabel: "Ispirazione",
+    noSignature: "nessuna ispirazione",
     fineParams: "Parametri fini",
     cmsRestoreContent: "Ripristina contenuti CMS",
     inspirationLabel: "Ispirazione",
     inspirationBase: "Tradizionale",
     inspirationSeeAll: "Vedi tutte",
-    inspirationModalTitle: "Ispirazioni d'autore",
+    inspirationModalTitle: "Ispirazioni da pizzaioli e disciplinari",
     inspirationLearnLink: "Scopri di più nella sezione Impara",
     inspirationSelect: "Seleziona",
     inspirationSelected: "Selezionata",
@@ -1810,10 +1962,10 @@ export const CMS_DEFAULTS: CmsContent = {
     "sust.pureDough": "Impasto puro: solo farina, acqua, sale, lievito",
     "sust.sourdoughZeroImpact": "Lievito madre: autoprodotto, a impatto zero",
     // Recommendation reasons/warnings
-    "rec.timeCompatible": "Fermentazione {fMin}-{fMax}h: compatibile con il tuo tempo",
-    "rec.timeAdaptable": "Fermentazione adattabile a ~{hours}h",
-    "rec.timeInsufficient": "Richiede minimo {fMin}h, hai {available}h",
-    "rec.needsWoodOven": "Richiede forno a legna",
+    "rec.timeCompatible": "Fermentazione {fMin}-{fMax}: compatibile con il tuo tempo",
+    "rec.timeAdaptable": "Fermentazione adattabile a ~{hours}",
+    "rec.timeInsufficient": "Richiede minimo {fMin}, hai {available}",
+    "rec.needsWoodOven": "Prevede il forno a legna: col tuo forno viene vicina, non canonica",
     "rec.ovenIdeal": "Il tuo forno raggiunge la temperatura ideale ({ideal})",
     "rec.ovenAdequate": "Forno adeguato (compensazione automatica tempo/temperatura)",
     "rec.ovenTooCold": "Forno troppo freddo: {temp} < min {min}",
@@ -1845,9 +1997,23 @@ export const CMS_DEFAULTS: CmsContent = {
     "tip.waterTempCold": "Regola 55: usa acqua dal frigo ({temp}). L'impasto a macchina scalda la massa.",
     "tip.waterTempNormal": "Regola 55: usa acqua a {temp} per raggiungere {ddt} di impasto.",
     "tip.frictionNote": "Compensazione attrito impastatrice: {friction}",
-    "gen.windowTooShort": "Con {available} h non c'è tempo per tutto: questa ricetta richiede circa {needed} h. Sarà pronta più tardi dell'orario scelto: scegli un orario più avanti o una lievitazione più breve.",
+    "gen.notWoodOven": "Lo stile prevede il forno a legna: con il tuo forno il risultato si avvicina, ma non è quello canonico.",
+    "gen.windowTooShort": "Con {available} non c'è tempo per tutto: questa ricetta richiede circa {needed}. Sarà pronta più tardi dell'orario scelto: scegli un orario più avanti o una lievitazione più breve.",
     "opt.hydrationOvenCompensated": "Idratazione {h}%: {base}% più {delta}% per compensare il forno più freddo dell'ideale.",
     "opt.hydrationOutOfStyleRange": "Con la compensazione l'idratazione esce dal range dello stile ({min}–{max}%).",
+    "auth.fermentOffCenter": "Fermentazione lontana dal canone (-{penalty}%)",
+    "auth.thermalUnviable": "Forno troppo freddo per lo stile ({oven} < {min}): leopardatura, cornicione e struttura canonici non raggiungibili (×{factor})",
+    "feas.thermalUnviable": "Con {oven} non otterrai una vera {style}: niente leopardatura né cornicione spinto. Per questo stile serve un forno da almeno {min}.",
+    "gen.timeBelowStyleWindow": "Con {available} non rientri nella finestra di questo stile (minimo {fMin}): fermentazione accorciata. Per l'autenticità piena servono almeno {fMin}.",
+    "opt.coldLongFerment": "Maturazione di {hours} in frigo ({temp}): massima digeribilità entro le tue {available}.",
+    "opt.roomFerment": "Fermentazione di {hours} a temperatura ambiente ({temp}): coerente con lo stile e senza frigo.",
+    "opt.hydrationLowered": "Idratazione abbassata a {h}% (canonica {canonical}%) per restare gestibile al tuo livello.",
+    "opt.hydrationForStyle": "Idratazione {h}% nel cuore dello stile.",
+    "opt.prefermentAdded": "Pre-fermento ({type}) aggiunto: più struttura, alveolatura e aroma.",
+    "opt.preferment": "Pre-fermento ({type}): più struttura, alveolatura e aroma.",
+    "opt.flourChanged": "Farina cambiata a W{w} (canonica W{canonical}).",
+    "opt.ovenAdapted": "Cottura adattata al tuo forno ({temp}) con compensazioni automatiche.",
+    "opt.pantryFlour": "Forza farina W{w} compatibile con la tua dispensa.",
     "tip.waterTempLimitMax": "Cucina fredda: anche con acqua a {temp} l'impasto resta sotto {ddt}. Non scaldare di più l'acqua: tieni la farina in un posto tiepido o allunga un po' la puntata.",
     "tip.waterTempLimitMin": "Cucina calda: anche con acqua a {temp} l'impasto supera {ddt}. Usa acqua ghiacciata, tieni la farina in frigo o accorcia un po' la puntata.",
     "timeline.preheat.descWholeProof": "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti fanno l'appretto.",
@@ -1895,11 +2061,86 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.preheat.equipmentNote": " (pietra o acciaio già dentro)",
     "timeline.preheat.tipBeginner": "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
     "timeline.preheat.tipNerd": "La massa termica della superficie domina il primo minuto di cottura: {minutes} min di soak assicurano che pietra/acciaio siano saturi, non solo l'aria del forno.",
-    "recipeSetup.noSignature": "Nessuna firma",
+    "timeline.heatOil.title": "Olio a temperatura",
+    "timeline.heatOil.desc": "Scalda l'olio (almeno 5 cm, in una pentola dai bordi alti) a {temp} e controllalo con un termometro. Intanto i panetti finiscono l'appretto.",
+    "timeline.heatOil.tipBeginner": "Sotto i 170 °C la pizza assorbe olio e diventa unta; sopra i 190 °C si colora fuori e resta cruda dentro.",
+    "timeline.heatOil.tipNerd": "Tra 180 e 190 °C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
+    "timeline.fry.title": "Frittura",
+    "timeline.fry.desc": "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
+    "timeline.fry.tipBeginner": "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
+    "timeline.fry.tipNerd": "Il vapore interno gonfia il disco nei primi secondi; girarla a metà uniforma la crosta e la cottura del ripieno.",
+    "timeline.mix.spiral.desc": "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura.",
+    "timeline.mix.spiral.tipBeginner": "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte.",
+    "timeline.mix.spiral.tipNerd": "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare.",
+    "timeline.mix.fork.desc": "Impastatrice a forcella: 12-15 min a velocità unica. Incordatura lenta, maglia molto estensibile.",
+    "timeline.mix.fork.tipBeginner": "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza.",
+    "timeline.mix.fork.tipNerd": "Movimento lento e ossigenante: ideale per impasti molli; incorda meno aggressivamente, estensibilità elevata.",
+    "timeline.mix.planetary.desc": "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo).",
+    "timeline.mix.planetary.tipBeginner": "Parti in 1ª per amalgamare, poi passa in 2ª. Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
+    "timeline.mix.planetary.tipNerd": "Sorveglia la temperatura impasto: oltre 26-28°C il glutine si indebolisce. Usa acqua fredda se la ciotola scalda.",
+    "timeline.mix.stand_domestic.desc": "Planetaria domestica (tipo KitchenAid): gancio a velocità 1-2, ~10-12 min. Pause di 1-2 min se la ciotola si scalda.",
+    "timeline.mix.stand_domestic.tipBeginner": "Non superare la 2ª velocità: il motore domestico fatica e scalda. Pronto = impasto liscio che si stacca dal fondo.",
+    "timeline.mix.stand_domestic.tipNerd": "Trasferisce più calore per attrito (K~0.25): parti con acqua a frigo e impasti corti, non sovraccaricare il motore.",
+    "timeline.mix.generic.desc": "Con l'impastatrice: gancio a bassa velocità ~10 min fino a incordatura. Liscio ed elastico.",
+    "timeline.mix.generic.tipBeginner": "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
+    "timeline.mix.generic.tipNerd": "Controlla la temperatura finale dell'impasto (~24°C): oltre, il glutine si degrada.",
+    "timeline.mix.hands.desc": "Impastare a mano fino a incordatura (~15-20 min): pieghe sul piano, slap & fold se l'idratazione è alta.",
+    "timeline.mix.hands.tipBeginner": "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
+    "timeline.mix.hands.tipNerd": "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica.",
+    "timeline.oven.topGrillStone": "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.",
+    "timeline.oven.topGrillShelf": "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.",
+    "timeline.oven.bottomBoost": "Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.",
+    "timeline.oven.fanAssisted": "Ventilato: usa una temperatura leggermente più bassa se il bordo asciuga, ruota a metà cottura e proteggi i topping delicati.",
+    "timeline.oven.gasRear": "Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.",
+    "timeline.oven.woodSideFlame": "Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.",
+    "timeline.oven.wood": "Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.",
+    "timeline.oven.electricHigh": "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.",
+    "timeline.oven.gas": "Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.",
+    "timeline.oven.gasPizza": "Forno a gas da pizza: scalda finché la pietra arriva in temperatura (misurala con un termometro a infrarossi), poi inforna e ruota spesso la pizza, perché la fiamma sta su un lato.",
+    "timeline.oven.staticStone": "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
+    "timeline.oven.staticShelf": "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
+    "timeline.mix.title": "Impasto",
+    "timeline.divide.title": "Staglio",
+    "timeline.divide.multiPiece": "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.",
+    "timeline.shape.foldedLayers": "Stendere una sfoglia sottilissima e ripiegare {folds} volte a libro, distribuendo la farcitura tra le pieghe.",
+    "timeline.shape.doubleThinSheet": "Stendere due sfoglie sottilissime quasi trasparenti col mattarello.",
+    "timeline.shape.stacked": "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.",
+    "timeline.shape.closedStuffed": "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.",
+    "timeline.shape.rectangular": "Stendere nella teglia oliata con le mani",
+    "timeline.shape.thin": "Stendere con mattarello, sottilissima",
+    "timeline.shape.round": "Allargare a mano dal centro, preservare il cornicione",
+    "timeline.shape.title": "Stesura",
+    "timeline.stack.title": "Sovrapposizione",
+    "timeline.stack.desc": "Spennellare il primo disco con olio EVO; adagiare sopra il secondo disco e sigillare leggermente i bordi.",
+    "timeline.stack.tipBeginner": "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli.",
+    "timeline.stack.tipNerd": "L'olio crea un layer idrofobo che impedisce la coalescenza dei due strati di glutine: facilita lo sdoppiamento post-bake.",
+    "timeline.fillClosed.title": "Ripieno e chiusura",
+    "timeline.fillClosed.desc": "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.",
+    "timeline.fillClosed.tipBeginner": "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce.",
+    "timeline.fillClosed.tipNerd": "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow).",
+    "timeline.fillSheets.title": "Farcitura tra sfoglie",
+    "timeline.fillSheets.desc": "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.",
+    "timeline.bakeWhite.title": "Prima cottura (in bianco)",
+    "timeline.bakeWhite.desc": "Cuocere a {temp} senza farcitura. La pizza deve essere dorata ma non bruciata.",
+    "timeline.bakeWhite.tipBeginner": "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti.",
+    "timeline.bakeWhite.tipNerd": "La cottura in bianco completa la gelatinizzazione dell'amido prima di introdurre umidità del topping.",
+    "timeline.splitFill.title": "Sdoppiamento e farcitura",
+    "timeline.splitFill.desc": "Estrarre dal forno. Con un coltello a sega tagliare orizzontalmente in due metà. Farcire l'interno con i condimenti scelti e richiudere.",
+    "timeline.splitFill.tipBeginner": "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle.",
+    "timeline.splitFill.tipNerd": "Sdoppiamento post-bake = ricetta cold-filled: la matrice amidacea è già stabile, le farciture non vengono cotte oltre i 60°C interni.",
+    "timeline.bake2.title": "Seconda cottura (breve)",
+    "timeline.bake2.desc": "Riportare in forno a {temp} solo per asciugare e amalgamare. Pochi minuti.",
+    "timeline.bake.title": "Cottura",
+    "timeline.bake.desc": "Cuocere a {temp}.",
+    "timeline.bake.tipBeginner": "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
+    "timeline.bake.tipNerd": "La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A {temp} la caramellizzazione crea ~600 composti aromatici.",
+    "timeline.topPost.title": "Farcitura post-cottura",
+    "timeline.topPost.desc": "Aggiungere i condimenti a freddo direttamente sulla superficie cotta.",
+    "recipeSetup.noSignature": "Nessuna ispirazione",
     "recipeSetup.currentParams": "parametri correnti",
-    "recipeSetup.noSignatureAlreadyActive": "Nessuna firma già attiva",
-    "recipeSetup.signatureApplied": "{label}: firma applicata",
-    "recipeSetup.signatureRemoved": "Firma rimossa: parametri ripristinati",
+    "recipeSetup.noSignatureAlreadyActive": "Nessuna ispirazione già attiva",
+    "recipeSetup.signatureApplied": "{label}: ispirazione applicata",
+    "recipeSetup.signatureRemoved": "Ispirazione rimossa: parametri ripristinati",
   },
   scienceLabels: {
     yeastBaker: "Lievito da forno",
@@ -1940,14 +2181,14 @@ export const CMS_DEFAULTS: CmsContent = {
     mix_noknead: {
       title: "Impasto",
       desc: "Mescolare senza impastare fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min.",
-      longDesc: "Niente impastatrice: usa solo una spatola o una mano. Versa l'acqua nel contenitore, aggiungi il lievito sciolto, poi la farina e infine il sale. Mescola in modo grossolano fino a quando non ci sono pi\u00F9 grumi di farina asciutta (sono sufficienti 2-3 minuti). L'impasto sar\u00E0 appiccicoso e irregolare \u2014 \u00E8 normale. Copri e lasciamo riposare: lo sviluppo del glutine avverr\u00E0 da solo con il tempo + le pieghe successive.",
+      longDesc: "Niente impastatrice: usa solo una spatola o una mano. Versa l'acqua nel contenitore, aggiungi il lievito sciolto, poi la farina e infine il sale. Mescola in modo grossolano fino a quando non ci sono pi\u00F9 grumi di farina asciutta (sono sufficienti 2-3 minuti). L'impasto sar\u00E0 appiccicoso e irregolare \u2014 \u00E8 normale. Copri e lascia riposare: lo sviluppo del glutine avverr\u00E0 da solo con il tempo + le pieghe successive.",
       tipBeginner: "Non serve impastare! Mescola con una spatola finch\u00E9 non ci sono pi\u00F9 grumi di farina asciutta.",
       tipNerd: "L'autolisi sfrutta le proteinasi endogene della farina per sviluppare il glutine senza lavoro meccanico.",
     },
     bulk: {
       title: "Puntata",
       desc: "Lievitazione in massa a {temp}",
-      longDesc: "L'impasto riposa in un'unica massa, dentro un contenitore unto d'olio e coperto a contatto con pellicola. \u00C8 in questa fase che il lievito lavora e sviluppa aroma, structure e digeribilit\u00E0. Se idratazione alta, esegui 2-3 \"pieghe di rinforzo\" (stretch & fold) nelle prime 2 ore: solleva un lembo, tiralo in alto e ripiegalo verso il centro, ruota e ripeti per i 4 lati. La fermentazione \u00E8 completa quando il volume \u00E8 raddoppiato e la superficie \u00E8 bombata e liscia.",
+      longDesc: "L'impasto riposa in un'unica massa, dentro un contenitore unto d'olio e coperto a contatto con pellicola. \u00C8 in questa fase che il lievito lavora e sviluppa aroma, struttura e digeribilit\u00E0. Se idratazione alta, esegui 2-3 \"pieghe di rinforzo\" (stretch & fold) nelle prime 2 ore: solleva un lembo, tiralo in alto e ripiegalo verso il centro, ruota e ripeti per i 4 lati. La fermentazione \u00E8 completa quando il volume \u00E8 raddoppiato e la superficie \u00E8 bombata e liscia.",
       tipBeginner: "L'impasto deve raddoppiare di volume. Se fa caldo, controlla più spesso!",
       tipNerd: "A {temp} la velocit\u00E0 di fermentazione \u00E8 {factor}\u00D7 rispetto al riferimento {refTemp}.",
     },
@@ -2055,7 +2296,7 @@ export const CMS_DEFAULTS: CmsContent = {
     turnsNone: "Non girare durante la cottura.",
   },
   styleDescriptions: {
-    napoletana_stg: "Standard aureo secondo disciplinare AVPN. Cornicione gonfio, centro sottile, leopardatura.",
+    napoletana_stg: "Pizza Napoletana STG secondo il regolamento UE 97/2010. Cornicione gonfio, centro sottile, leopardatura.",
     napoletana_canotto: "Cornicione esplosivo \"canotto d'aria\", alveolatura estrema, alta digeribilit\u00E0.",
     teglia_romana: "Alta idratazione, no-knead con pieghe. Base croccante, mollica nuvola.",
     tonda_romana: "Sottilissima, mattarello obbligatorio, croccante estrema. \"Scrocchiarella\".",
@@ -2069,6 +2310,21 @@ export const CMS_DEFAULTS: CmsContent = {
     grandma_style: "Sottile, croccante, teglia oliata. La pizza della nonna italo-americana. Mozzarella sotto, salsa sopra.",
     focaccia_recco: "Due sfoglie sottilissime con stracchino fuso. IGP dal 2015. Bolle dorate caratteristiche.",
     padellino_torino: "Cotta in padellino di ferro e finita in forno. Fondo croccante burro-olio, soffice al centro. Specialit\u00E0 torinese.",
+    pizza_baciata: "Doppio strato in teglia: due dischi sovrapposti spennellati d'olio, cotti in bianco, poi sdoppiati e farciti a freddo. Stile romano da panificio.",
+    ciaccino_senese: "Pizza ripiena toscana: due dischi sigillati con prosciutto cotto e formaggio filante all'interno. Tipico dei panifici senesi.",
+    pizza_spaccata: "UN SOLO disco/teglia di pizza bianca cotto e poi SPACCATO a metà col coltello e farcito a freddo. Diversa dalla Baciata (che parte da due dischi sovrapposti cotti insieme). Farciture: mortazza, crudo, e la patate e porchetta 'in crosta di patate' alla Sancho.",
+    trancio_milanese: "Trancio rettangolare tipico delle pizzerie milanesi a taglio. Soffice all'interno, fondo dorato dall'olio in teglia. Servito al banco a pranzo.",
+    chicago_tavern: "Sottilissima e croccante tagliata a quadrotti (party cut), alternativa al deep dish di Chicago. Servita nei tavern con birra ghiacciata.",
+    focaccia_barese: "Soffice e umida grazie alla patata nell'impasto. Pomodorini schiacciati, olive baresane, origano e tanto olio EVO. Cotta nel ruoto tondo.",
+    pizza_fritta: "Calzone fritto: un disco di circa 200 g farcito con ricotta, provola, cicoli e pepe, chiuso a mezzaluna e fritto in olio di semi a circa 175 °C.",
+    pizza_montanara: "Dischetto di impasto fritto in olio, scolato e poi condito sopra: pomodoro, formaggio e basilico. Aperta, non ripiena.",
+    pizza_fritta_tonda: "Due dischi sottili (circa 120 g sotto e 80 g sopra) farciti con ricotta, provola e cicoli, sigillati e fritti in olio di semi a circa 175 °C.",
+    calzone_napoletano: "Mezzaluna chiusa e sigillata con ripieno di ricotta, fior di latte, salame o cicoli e pepe. Cornicione gonfio, cotto in forno ad alta temperatura.",
+    pizza_al_metro: "Formato rettangolare lungo nato a Vico Equense, servito a metri con più condimenti affiancati. Impasto napoletano morbido, alveolato.",
+    new_haven_apizza: "Cotta in forno a carbone, sottile, irregolare e carbonizzata sui bordi. L'icona è la white clam pie (vongole, aglio, origano, niente pomodoro).",
+    fugazzeta: "Pizza alta 'al molde' a doppio strato, ripiena di abbondante mozzarella e ricoperta di cipolla. Niente pomodoro. Icona della pizza porteña.",
+    california_style: "Base sottile con ingredienti gourmet non convenzionali (pollo BBQ, capra, fichi, rucola). Nata da Chez Panisse e Wolfgang Puck negli anni '80.",
+    greek_pan: "Cotta in teglia tonda generosamente oliata: fondo croccante quasi fritto, mollica soffice. Mix mozzarella + cheddar. Classico dei diner greco-americani.",
   },
   styleChars: {
     napoletana_stg: "Cornicione 1-2cm gonfio|Centro 3-4mm sottile|Crosta leopardata|Cottura 60-90s",
@@ -2085,6 +2341,21 @@ export const CMS_DEFAULTS: CmsContent = {
     grandma_style: "Sottile e croccante|Mozzarella sotto salsa|Teglia ben oliata|Cottura 12-16min",
     focaccia_recco: "Sfoglia quasi trasparente|Ripiena di stracchino|Bolle dorate|Nessuna lievitazione",
     padellino_torino: "Padellino di ferro|Fondo ultra-croccante|Morbida al centro|Porzione individuale",
+    pizza_baciata: "Doppio disco con olio in mezzo|Cottura in bianco|Farcitura post-cottura a freddo|Stile panaria romana",
+    ciaccino_senese: "Due dischi sigillati ai bordi|Ripieno interno pre-cottura|Strutto/olio nell'impasto|Tradizione senese",
+    pizza_spaccata: "Base singola cotta in bianco|Spaccata a metà dopo la cottura|Farcita a freddo (mortazza, crudo, patate&porchetta)|Tradizione romana da forno / al taglio",
+    trancio_milanese: "Trancio rettangolare al taglio|Cottura in teglia oliata|Mollica soffice ~2cm|Stile tavola calda milanese",
+    chicago_tavern: "Sottile cracker-like|Taglio a quadrotti (party cut)|Bordo croccante|Stile tavern di quartiere",
+    focaccia_barese: "Patata lessa nell'impasto|Pomodorini e olive baresane|Mollica umida e soffice|Crosta inferiore dorata nell'olio",
+    pizza_fritta: "Cottura in frittura (no forno)|Ripiena (chiusa a mezzaluna)|Farcita prima di friggere|Lievitazione 8–24 h",
+    pizza_montanara: "Cottura in frittura (no forno)|Aperta (non ripiena)|Condita dopo la frittura|Lievitazione 8–24 h",
+    pizza_fritta_tonda: "Cottura in frittura (no forno)|Due dischi sovrapposti|Farcita prima di friggere|Lievitazione 8–24 h",
+    calzone_napoletano: "Chiuso a mezzaluna sigillata|Ripieno ricotta + fior di latte|Impasto napoletano STG|Cottura alta T per gonfiare",
+    pizza_al_metro: "Formato lungo servito a metri|Più gusti sulla stessa base|Impasto napoletano morbido|Conviviale, da condividere",
+    new_haven_apizza: "Forno a carbone, bordi carbonizzati|Sottile e irregolare|Niente zucchero nell'impasto|White clam pie iconica",
+    fugazzeta: "Doppio strato ripieno di mozzarella|Cipolla in superficie, niente pomodoro|Alta e morbida (al molde)|Origano e olio EVO finale",
+    california_style: "Base sottile artigianale|Ingredienti gourmet stagionali|Combinazioni non tradizionali|Approccio chef-driven",
+    greek_pan: "Teglia molto unta, fondo fritto|Mollica soffice e spessa|Mix mozzarella + cheddar|Diner greco-americano",
   },
   deviationLabels: {
     canonical: "Canonico",
@@ -2129,6 +2400,23 @@ export const CMS_DEFAULTS: CmsContent = {
     savedRecipesEmptyCta: "Esplora gli stili",
     savedRecipeRemove: "Rimuovi dal ricettario",
     savedRecipeRemoveAria: "Rimuovi {name} dal ricettario",
+    savedRecipesLocalNote: "Le ricette stanno solo in questo browser. Esportale in un file per non perderle o per portarle su un altro dispositivo.",
+    savedRecipesExport: "Esporta in un file",
+    savedRecipesImport: "Importa da file",
+    savedRecipeCopyLink: "Copia link",
+    savedRecipeCopyLinkAria: "Copia il link di {name}",
+    savedRecipeLinkCopied: "Link copiato",
+    savedRecipeRemoved: "Ricetta rimossa",
+    savedRecipeUndo: "Annulla",
+    savedRecipesImported: "Ricette importate: {n}",
+    savedRecipesImportDuplicates: "Già presenti: {n}",
+    savedRecipesImportSkipped: "Non entrate, il ricettario è pieno: {n}",
+    savedRecipesImportRejected: "Voci illeggibili ignorate: {n}",
+    savedRecipesImportNothing: "Nessuna ricetta nuova nel file",
+    savedRecipesImportErrorFormat: "Questo file non è un ricettario di {brand}.",
+    savedRecipesImportErrorNewer: "Il file viene da una versione più nuova di {brand}: ricarica la pagina e riprova.",
+    savedRecipesImportErrorStorage: "Lo spazio del browser è pieno: le ricette non sono state importate.",
+    savedRecipesExportFileName: "ricette",
     ovenTitle: "Il tuo forno",
     ovenSubtitle: "Determina temperature e stili disponibili",
     ovenStep: "01 — Forno",
@@ -2390,6 +2678,8 @@ export const CMS_DEFAULTS: CmsContent = {
     plLabel: "Rapporto P/L",
     plTip: "Rapporto alveografico tenacità/estensibilità della farina. P/L basso = impasto estensibile (pizza tonda). P/L alto = impasto tenace (lunga lievitazione). Stimato dalla W se non modificato manualmente.",
     fermentLabel: "Lievitazione e maturazione",
+    restLabel: "Riposo dell'impasto",
+    restTip: "Questo impasto non lievita: il riposo serve a rilassare il glutine, così la sfoglia si tira sottile senza strapparsi.",
     fermentTip: "Tempo totale di lievitazione e maturazione. La lievitazione produce i gas che gonfiano l'impasto; la maturazione scompone amidi e glutine, migliorando digeribilità e aroma. Più ore a basse temperature spostano l'equilibrio verso la maturazione.",
     tempFridge: "{fridgeTemp} frigo",
     tempCool: "{coolTemp}",
@@ -2719,10 +3009,16 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
   registerUiMessages(cms.locale.id, cms.messages);
   setActiveUiLocale(cms.locale.id);
 
-  const modifiedPaths = useMemo(
-    () => (overrides ? deepDiffPaths(CMS_DEFAULTS, rawCms) : []),
-    [overrides, rawCms],
-  );
+  /* Modifiche = differenze dalla lingua attiva, non dall'italiano: prima ogni
+     utente non italiano vedeva «CMS attivo — 1769 campi modificati» e
+     «Ripristina» lo riportava all'italiano. Finché il bundle non è in cache
+     la base non è affidabile e non si conta nulla. */
+  const modifiedPaths = useMemo(() => {
+    if (!overrides) return [];
+    const localeId = overrides.locale?.id;
+    if (localeId && localeId !== "it" && !getCachedLocaleBundle(localeId)) return [];
+    return deepDiffPaths(fallbackBase, rawCms);
+  }, [overrides, fallbackBase, rawCms]);
 
   const update = useCallback((path: string, value: any) => {
     setOverrides((prev) => {

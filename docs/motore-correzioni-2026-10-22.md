@@ -214,7 +214,7 @@ Correzioni dopo la revisione del ramo:
   `gen.windowTooShort`. I 7 stili con minimo 24 h tornano a 24 h in genera e
   ottimizza (es. California 87 → 88); sparisce l'avviso contraddittorio
   «Con 24h non rientri nella finestra (min 24h)». È l'opzione (a) proposta sopra:
-  **da confermare da Matteo prima del merge.**
+  **confermata da Matteo il 23/10/2026** (M-1 dell'handoff).
 - **Condimento scelto.** Ottimizzatore, soffitto e firma dell'ottimizzazione
   automatica usano lo stesso stile con condimento della ricetta mostrata
   (`styleWithSelectedTopping`). Sonda 28 stili × condimenti × 3/4/8 h × 2 forni:
@@ -235,12 +235,127 @@ Correzioni dopo la revisione del ramo:
 - Test: 81 → 90 (`use-recipe-state.test.ts` nuovo; proprietà su condimenti e caso
   senza orario).
 
+## Seguito del 23/10 (handoff M-1…M-5, M-9, M-10)
+
+Decisioni di Matteo del 23/10/2026: M-1 confermato; slot al quarto d'ora per
+difetto (M-2, opzione a); consigli allineati all'esito della ricetta sul forno.
+
+- **M-2 · Slot del pasto.** `generateTimeSlots` arrotonda al quarto d'ora per
+  difetto (`floorToQuarterHour`): mai oltre il tempo reale, al massimo 14 min in
+  meno. Prima: alle 16:20 «Stasera» valeva 4 h con 3 h 40 min reali. `TimeSlot`
+  porta `meal` e `dayOffset`; etichette e sottotitoli si compongono per lingua
+  (`features/recipe/time-slot-text.ts`). Prima i giorni della settimana e «Nessuna
+  preferenza» restavano in italiano e «Stasera» diceva «4-6 ore» a ogni ora.
+- **M-3.** `recommendStyles` legge le ore al quarto d'ora per difetto.
+- **M-4 · Recco.** Candidati delle ore al quarto d'ora; per gli impasti non
+  lievitati niente candidato oltre il massimo (×1,25). Recco, 24 h, forno di casa:
+  3 h → dentro 0,5–2 h, su 7 durate × con e senza orario.
+- **M-5 · Testi.** Un solo formattatore (`features/recipe/engine-msg-text.ts`):
+  decimali per lingua (63,7% / 63.7%), temperature in °C o °F, ore come durate
+  («3 h 45 min»). Aggiunti in 7 lingue i 13 template che mancavano nel CMS
+  (motivazioni dell'ottimizzatore, forno inadatto, finestra dello stile): prima
+  uscivano in italiano ovunque. `resolveEngineMsgs` sostituisce anche i parametri
+  ripetuti (`gen.timeBelowStyleWindow` lasciava un `{fMin}` visibile).
+- **M-10 · Esito esplicito.** `GeneratedRecipe.verdict`: `ok`, `warnings` o
+  `not_feasible`, con i motivi bloccanti: forno sotto la soglia termica dello stile
+  (stessa di `feas.thermalUnviable`), timeline oltre l'orario del pasto,
+  lievitazione sotto metà del minimo dello stile. `feasibleAlternativeStyles`
+  propone stili fattibili con gli stessi vincoli, i più simili per primi. La UI
+  mostra «Così non è fattibile» sopra la ricetta (sostituisce l'avviso ENG-4).
+  `recommendStyles` usa la stessa soglia termica: con forno di casa a 250 °C
+  Canotto, Calzone e Pinsa passano da «buono» a «non fattibile».
+- **M-9 · Golden test** (`src/app/domain/golden/`): 28 stili × 3 scenari (ideale,
+  forno di casa 24 h, pasto fra 2 h) con l'esito atteso scritto a mano; masse,
+  forno e tempi in `recipes.golden.json`.
+
+## M-11 · Lievito trasparente (24/10)
+
+- `UserConstraints.yeast_speed_factor`: correzione personale «la mia cucina
+  lievita più veloce/lenta», limitata a 0,5–2, salvata nel browser e valida per
+  tutte le ricette. La dose di lievito commerciale si divide per il fattore
+  (1,25 → 80% del lievito). Il lievito madre non cambia.
+- `science.yeast_model`: riferimento (0,1% di fresco per 24 h a 18 °C), esponente
+  sulle ore (0,7), velocità alla temperatura (Q10 a tratti), rapporto del secco
+  (1/3), fattore personale, intervallo plausibile −30%/+30%.
+- UI «Come calcoliamo il lievito» sotto la riga del lievito: formula a parole,
+  margine in grammi, correzione personale a 5 livelli.
+- **Fonte sbagliata corretta:** il Q10 1,6 sotto i 10 °C citava PMC7146123, che è
+  una review sui soft sensor di fermentazione e non parla di lievito. Tolto il
+  riferimento dal codice, dagli strumenti e dalla guida; in UI i valori di Q10
+  sono presentati come stima del modello. Serve una fonte vera (C-4).
+
+## C-4 · Dati con fonte (24/10)
+
+Decisioni D-015…D-018; fonti e stato di ogni dato in `docs/fonti-dati.md`.
+
+| Stile / dato | Prima | Dopo | Fonte |
+|---|---|---|---|
+| Pinsa: forno | 350–420 °C, ideale 380 | 280–320 °C, ideale 300 | PinsaRomana.it 2022 |
+| Pinsa: idratazione, sale, olio | 75–85%, 2,5%, 1,0% | 72–80%, 1,8%, 1,3% | OPR 2020 |
+| Pinsa: panetto e misure | 280 g, 35 × 25 cm | 240 g, 34 × 21 cm | OPR 2020 |
+| Pinsa, versione «Tradizionale» | idratazione 82% | 80% | OPR 2020 |
+| Napoletana STG: lievitazione | 8–24 h | 6–14 h | reg. UE 97/2010 |
+| Napoletana STG: panetto | 270 g | 250 g | reg. UE 97/2010 |
+| Versione «Disciplinare AVPN» | range dello stile | 12–24 h, panetto 280 g | AVPN 2024 |
+| Recco: forno e cottura | 300–340 °C (320), 480–600 s | 270–320 °C (300), 240–480 s | disciplinare IGP 2024 |
+| Recco, interpretazione IGP | W 190, P/L 0,48, «IGP dal 2012», «7 comuni», «crescenza ligure» | W 320, P/L 0,60, IGP dal 2015, 4 comuni, formaggio senza vincolo d'origine del latte | reg. UE 2015/39; disciplinare IGP 2024 |
+| Fritta e montanara: olio | 180–190 °C, ideale 185 | 175–190 °C, ideale 175 | AVPN 2024 |
+| `FLOUR_W_RANGES` | Pizzeria 240–280, Nuvola 240–280, Cuoco 300–340, Petra 5037 340–380 | 260–280, 270–290, 300–320, 300–340; chiavi allineate agli id del database; Petra 3 tolta | schede Caputo e Quaglia |
+| Petra 3 | W/P/L come dati, assorbimento 60% | `w_declared: false` (stime), assorbimento 85% | scheda Quaglia |
+| 5 Stagioni Napoletana Rossa | falling number 300 | 280 | scheda Agugiaro & Figna 2025 |
+
+Effetto sui golden (`recipes.golden.json`):
+
+| Scenario | Prima | Dopo |
+|---|---|---|
+| napoletana_stg · ideale | 669 g farina, panetto 270 g, 16 h, lievito 0,7 g | 619 g, 250 g, 10 h, 0,9 g |
+| pinsa_romana · ideale | 610 g farina, idratazione 80%, sale 15 g, forno 380 °C | 536 g, 76%, 10 g, 300 °C |
+| pinsa_romana · forno di casa | **non fattibile** (forno troppo freddo), idratazione 86,4%, cottura 559 s | **fattibile con avvisi**, 79,5%, 332 s |
+| pinsa_romana · pasto fra 2 h | non fattibile: forno + lievitazione | non fattibile: solo lievitazione |
+| focaccia_recco · ideale | 320 °C, 540 s | 300 °C, 360 s |
+| focaccia_recco · forno di casa | cottura 851 s | 498 s |
+| fritta e montanara | olio 185 °C | 175 °C |
+
+Il «Da decidere» sulla pinsa qui sotto è chiuso da D-015. Q10: il commento nel
+codice non dice più «Letteratura»; 2 tra 18 e 25 °C è coerente con Salvadó et al.
+2011, 1,6 sotto i 10 °C resta una scelta del modello senza fonte.
+
+## D-020, D-021 · Forno a legna e forni a gas (24/10)
+
+- **D-020:** `requires_wood_oven` non è più un blocco nei consigli. Il calore
+  decide (soglia termica unica, M-10); il forno a legna dà un avviso e 15 punti
+  in meno sul forno nei consigli (`rec.needsWoodOven`) e un avviso nella
+  ricetta (`gen.notWoodOven`). Prima la STG col forno a gas da 450 °C era «non
+  fattibile» nei consigli e fattibile nella ricetta. Test: golden, «forno a
+  legna dello stile: avviso, non blocco».
+- **D-021:** `OvenType` ha `gas_pizza` («Forno a gas da pizza», 500 °C, fonte
+  Ooni 2026) accanto a `gas` («Forno a gas a platea», 350 °C, da verificare).
+  Indicazione di cottura propria (`timeline.oven.gasPizza`), nomi in 7 lingue.
+  Chi aveva salvato `gas` resta sul forno a platea.
+
+## M-7 · Le pizze fritte con fonti (24/10)
+
+Decisioni D-022 e D-023; fonti in `docs/fonti-dati.md` §1.4.
+
+| Stile / dato | Prima | Dopo | Fonte |
+|---|---|---|---|
+| Pizza fritta (calzone fritto) | panetto 100 g, W 220–280, 4–8 h | 200 g, W 250–320, 8–24 h | AVPN 2024; Sorbillo per le 8 h |
+| Ripieno della fritta | ricotta 80, provola 70, cicoli 40 g | 85, 40, 55 g | AVPN 2024, §4.2 |
+| Montanara | W 220–280, 4–8 h | W 250–320, 8–24 h (stesso impasto); panetto 100 g invariato | AVPN 2024; Sorbillo |
+| Pizza fritta tonda | — | nuovo stile: due dischi 120 + 80 g, `closed_stuffed`, olio 175–190 °C | AVPN 2024 |
+
+Golden: la fritta passa da 242 g a 484 g di farina per 4 panetti e da 6 h a
+16 h (in frigo); la montanara da 6 a 16 h. Esiti invariati (ok / ok / pasto
+fra 2 h non fattibile). La foto della tonda è per ora quella della fritta chiusa.
+
 ## Da decidere o da fare
 
-- Gli slot del pasto arrotondano le ore (`Math.round`): la finestra può superare
-  di fino a 30 min il tempo reale fino al pasto, senza avviso. Opzioni: (a, consigliata)
-  ore al quarto d'ora per difetto, con i testi che mostrano le ore formattati per
-  lingua; (b) ore intere per difetto (fino a 59 min in meno); (c) lasciare così.
-- `recommendStyles` confronta ancora il minimo dello stile con le ore intere.
-- Ottimizzatore della Recco: i candidati arrotondati all'ora portano a 3 h (range 0,5–2 h).
-- Le motivazioni dell'ottimizzatore mostrano i decimali con il punto (63.7%).
+- **Q10 del lievito (C-4):** 2 sopra i 10 °C è coerente con Salvadó et al. 2011;
+  1,6 sotto è un valore del modello senza fonte verificata. Cercare uno studio sulla crescita di S. cerevisiae a
+  bassa temperatura (es. modello di Ratkowsky) o tarare con prove.
+- **Pinsa romana:** chiuso con D-015 (vedi C-4 sopra). Resta da verificare il tempo
+  di cottura professionale (180–300 s, senza fonte).
+- **Petra 3:** il dato `w_declared: false` c'è, ma la UI mostra ancora la W come
+  se fosse di scheda. Serve un'etichetta «stima» (stringa CMS in 7 lingue).
+- Lo slot «Nessuna preferenza» vale ancora 24 h fisse.
+- `requires_wood_oven`: deciso con D-020 (avviso, non blocco).

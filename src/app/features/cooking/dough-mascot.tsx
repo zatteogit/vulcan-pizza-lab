@@ -21,6 +21,10 @@ import { doughMotionDuration,motionEase } from "../../components/ds/motion";
 export type DoughVariant = 'stretch' | 'rise' | 'rest' | 'spin' | 'fold' | 'forge' | 'neural';
 
 interface DoughBlobProps {
+  /** Cicli delle animazioni continue. Default infinito (modalità cottura,
+   *  dove l'impasto «vive»); la home ne usa pochi (U-10, F25: un movimento
+   *  automatico oltre 5 s va fermato o reso controllabile). */
+  loops?: number;
   variant?: DoughVariant;
   size?: number;
   className?: string;
@@ -171,6 +175,7 @@ export function DoughBlob({
   className = '',
   animate: shouldAnimate = true,
   energy = 50,
+  loops = Infinity,
 }: DoughBlobProps) {
   const params = energyToParams(energy);
 
@@ -282,8 +287,8 @@ export function DoughBlob({
               : params.glowOpacityRange,
           }}
           transition={{
-            scale: { duration: params.glowDuration, repeat: Infinity, repeatType: 'mirror', ease: motionEase.standard },
-            opacity: { duration: params.glowDuration * 1.2, repeat: Infinity, repeatType: 'mirror', ease: motionEase.standard },
+            scale: { duration: params.glowDuration, repeat: loops, repeatType: 'mirror', ease: motionEase.standard },
+            opacity: { duration: params.glowDuration * 1.2, repeat: loops, repeatType: 'mirror', ease: motionEase.standard },
           }}
         />
       )}
@@ -298,9 +303,9 @@ export function DoughBlob({
             scale: params.scaleRange,
           },
           transition: {
-            borderRadius: { duration: params.mainDuration, repeat: Infinity, ease: motionEase.standard },
-            rotate: { duration: params.rotateDuration, repeat: Infinity, ease: motionEase.linear },
-            scale: { duration: params.scaleDuration, repeat: Infinity, ease: motionEase.standard },
+            borderRadius: { duration: params.mainDuration, repeat: loops, ease: motionEase.standard },
+            rotate: { duration: params.rotateDuration, repeat: loops, ease: motionEase.linear },
+            scale: { duration: params.scaleDuration, repeat: loops, ease: motionEase.standard },
           },
         } : {})}
       />
@@ -314,8 +319,8 @@ export function DoughBlob({
             rotate: [360, 0],
           },
           transition: {
-            borderRadius: { duration: params.accentDuration, repeat: Infinity, ease: motionEase.standard },
-            rotate: { duration: params.accentRotateDuration, repeat: Infinity, ease: motionEase.linear },
+            borderRadius: { duration: params.accentDuration, repeat: loops, ease: motionEase.standard },
+            rotate: { duration: params.accentRotateDuration, repeat: loops, ease: motionEase.linear },
           },
         } : {})}
       />
@@ -329,8 +334,8 @@ export function DoughBlob({
             scale: isForge ? [1, 1.15, 0.92, 1.08, 1] : [1, 1.1, 0.95, 1.05, 1],
           },
           transition: {
-            borderRadius: { duration: params.highlightDuration, repeat: Infinity, ease: motionEase.standard },
-            scale: { duration: params.highlightDuration * 1.3, repeat: Infinity, ease: motionEase.standard },
+            borderRadius: { duration: params.highlightDuration, repeat: loops, ease: motionEase.standard },
+            scale: { duration: params.highlightDuration * 1.3, repeat: loops, ease: motionEase.standard },
           },
         } : {})}
       />
@@ -344,8 +349,8 @@ export function DoughBlob({
             rotate: params.rotateRange,
           },
           transition: {
-            borderRadius: { duration: params.mainDuration * 1.1, repeat: Infinity, ease: motionEase.standard },
-            rotate: { duration: params.rotateDuration * 1.05, repeat: Infinity, ease: motionEase.linear },
+            borderRadius: { duration: params.mainDuration * 1.1, repeat: loops, ease: motionEase.standard },
+            rotate: { duration: params.rotateDuration * 1.05, repeat: loops, ease: motionEase.linear },
           },
         } : {})}
       />
@@ -366,9 +371,9 @@ export function DoughBlob({
             ],
           }}
           transition={{
-            borderRadius: { duration: params.satelliteDuration, repeat: Infinity, ease: motionEase.standard },
-            x: { duration: params.satelliteDuration * 3, repeat: Infinity, ease: motionEase.standard },
-            y: { duration: params.satelliteDuration * 3, repeat: Infinity, ease: motionEase.standard },
+            borderRadius: { duration: params.satelliteDuration, repeat: loops, ease: motionEase.standard },
+            x: { duration: params.satelliteDuration * 3, repeat: loops, ease: motionEase.standard },
+            y: { duration: params.satelliteDuration * 3, repeat: loops, ease: motionEase.standard },
           }}
         />
       )}

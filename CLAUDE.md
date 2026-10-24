@@ -60,7 +60,7 @@ All pages are **lazy-loaded** via React Router's `lazy()` for code-splitting.
 - **`context/`** — Shared React contexts
   - `styles-override-context.tsx` — Override custom style settings
 - **`components/`** — Global components and UI layout
-  - `shared/` — Shell layout, command search (`app-shell.tsx`, `search-overlay.tsx`)
+  - `shared/` — Shell layout and search field (`app-shell.tsx`, `search-field.tsx`); full-page search results and index live in `features/search/`
   - `ds/` — Tier 4 reusable design system tokens (CtaButton, Badge)
   - `design-system/`, `foundations/` — Design token interactive showcase pages
   - `media/` — Media wrappers (`ImageWithFallback.tsx`)

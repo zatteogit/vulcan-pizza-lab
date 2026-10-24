@@ -1,0 +1,100 @@
+import { describe, expect, it } from "vitest";
+import { CMS_DEFAULTS, type CmsContent } from "../cms/cms-context";
+import { EN_LOCALE } from "../cms/locales/en";
+import { JA_LOCALE } from "../cms/locales/ja";
+import {
+  buildSearchIndex,
+  fold,
+  groupResults,
+  highlightRanges,
+  searchIndex,
+} from "./search-index";
+
+/* U-5 — la ricerca trova i testi della lingua attiva, ignora accenti e
+ * maiuscole, vuole tutte le parole e mette prima i titoli che corrispondono. */
+
+const IT = buildSearchIndex(CMS_DEFAULTS);
+const EN = buildSearchIndex({ ...CMS_DEFAULTS, ...EN_LOCALE } as CmsContent);
+const JA = buildSearchIndex({ ...CMS_DEFAULTS, ...JA_LOCALE } as CmsContent);
+
+const ids = (index: typeof IT, q: string) => searchIndex(index, q).map((r) => r.id);
+
+describe("ricerca", () => {
+  it("sotto i due caratteri non cerca", () => {
+    expect(searchIndex(IT, "")).toEqual([]);
+    expect(searchIndex(IT, " a ")).toEqual([]);
+  });
+
+  it("accenti e maiuscole non contano", () => {
+    expect(fold("Pâte FERMENTÉE")).toBe("pate fermentee");
+    expect(ids(IT, "NAPOLETANA")).toEqual(ids(IT, "napoletana"));
+    expect(ids(IT, "napoletana").length).toBeGreaterThan(0);
+  });
+
+  it("i segni giapponesi restano (が non è か)", () => {
+    expect(fold("が")).not.toBe(fold("か"));
+  });
+
+  it("tutte le parole, in qualunque ordine", () => {
+    const both = ids(IT, "pizza fritta");
+    expect(both).toContain("style-pizza_fritta");
+    expect(ids(IT, "fritta pizza")).toEqual(expect.arrayContaining(both));
+    for (const r of searchIndex(IT, "pizza fritta")) {
+      expect(r.id).not.toBe("style-detroit");
+    }
+  });
+
+  it("il titolo che inizia con la ricerca viene prima", () => {
+    const [first] = searchIndex(IT, "detroit");
+    expect(first.id).toBe("style-detroit");
+    expect(first.score).toBe(3);
+  });
+
+  it("i condimenti si trovano nella lingua attiva e col nome italiano", () => {
+    const enTitles = searchIndex(EN, "margherita").filter((r) => r.type === "topping");
+    expect(enTitles.length).toBeGreaterThan(0);
+    // il nome italiano resta cercabile anche in inglese
+    expect(ids(EN, "boscaiola").length).toBeGreaterThan(0);
+  });
+
+  it("glossario e problemi in giapponese", () => {
+    const glossary = JA.filter((e) => e.type === "glossary");
+    const problems = JA.filter((e) => e.type === "problem");
+    expect(glossary.some((e) => /[぀-ヿ一-龯]/.test(e.title))).toBe(true);
+    expect(problems.some((e) => /[぀-ヿ一-龯]/.test(e.title))).toBe(true);
+  });
+
+  it("ogni risultato porta a una pagina precisa", () => {
+    for (const e of IT) {
+      expect(e.link.startsWith("/")).toBe(true);
+      if (e.type === "problem") expect(e.link).toMatch(/\?issue=/);
+      if (e.type === "glossary") expect(e.link).toMatch(/#/);
+      if (e.type === "guide") expect(e.link).toMatch(/#pf-/);
+    }
+  });
+
+  it("gruppi: prima quello col risultato più pertinente", () => {
+    const groups = groupResults(searchIndex(IT, "biga"));
+    expect(groups.length).toBeGreaterThan(0);
+    const best = Math.max(...groups.map(([, items]) => items[0].score));
+    expect(groups[0][1][0].score).toBe(best);
+  });
+});
+
+describe("evidenziazione", () => {
+  it("trova il tratto senza badare agli accenti", () => {
+    expect(highlightRanges("Pâte fermentée", "fermentee")).toEqual([[5, 14]]);
+  });
+
+  it("una parola per tratto, fusi se si toccano", () => {
+    expect(highlightRanges("Pizza al taglio romana", "romana taglio")).toEqual([
+      [9, 15],
+      [16, 22],
+    ]);
+    expect(highlightRanges("Margherita", "mar argh")).toEqual([[0, 5]]);
+  });
+
+  it("niente tratti sotto i due caratteri", () => {
+    expect(highlightRanges("Margherita", "m")).toEqual([]);
+  });
+});

@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { handleTablistKeyDown, tabIndexFor } from "../../components/ds/tablist-keys";
 import { ListChecks, Utensils, ChefHat } from "lucide-react";
 import { type ComponentType } from "react";
 import { useCms } from "../cms/cms-context";
@@ -153,11 +154,14 @@ function TabsCapsule({
   const hasSubtitles = Boolean(recipeSubtitle || procedureSubtitle || toppingSubtitle);
 
   return (
-    <nav
+    /* U-10 (F13): tablist su un div (su <nav> annullava il landmark), frecce e
+       una sola fermata del Tab. Il pannello è #recipe-tabpanel (recipe-view). */
+    <div
       data-region="filters"
       className={`section-tabs-capsule${navbar ? " section-tabs-capsule--navbar" : ""}${hasSubtitles ? " section-tabs-capsule--subtitles" : ""}`}
       role="tablist"
       aria-label={ariaLabel}
+      onKeyDown={(event) => handleTablistKeyDown(event, tabs.map((tab) => tab.id), activeTab, onTabChange)}
     >
       {tabs.map((tab) => {
         const active = activeTab === tab.id;
@@ -169,7 +173,11 @@ function TabsCapsule({
             type="button"
             onClick={() => onTabChange(tab.id)}
             role="tab"
+            id={`recipe-${navbar ? "navtab" : "tab"}-${tab.id}`}
+            data-tab-id={tab.id}
             aria-selected={active}
+            aria-controls="recipe-tabpanel"
+            tabIndex={tabIndexFor(active)}
             whileHover={{ scale: 1.015 }}
             whileTap={{ scale: 0.965 }}
             transition={motionSpring.quick}
@@ -205,6 +213,6 @@ function TabsCapsule({
           </motion.button>
         );
       })}
-    </nav>
+    </div>
   );
 }

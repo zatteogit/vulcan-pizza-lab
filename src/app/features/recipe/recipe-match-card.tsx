@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring,motionTiming } from "../../components/ds/motion";
 import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
-import { SCORE_DIMENSIONS, resolveEngineMsgs, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
+import { SCORE_DIMENSIONS, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
 import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
 import { useCms } from "../cms/cms-context";
+import { engineMsgTexts } from "./engine-msg-text";
 import { createFormatter, t } from "../cms/i18n";
 import { uiMessage } from "../../i18n/ui-messages";
 
@@ -33,37 +34,37 @@ const TONE_FALLBACKS: Record<
   MatchToneCopy & { low: boolean; icon: MatchIconKey }
 > = {
   t90: {
-    title: uiMessage("features.recipe.recipe-match-card.amore-a-prima-vista-d3108980"),
-    canonical: uiMessage("features.recipe.recipe-match-card.la-canonica-e-la-tua-cucina-parlano-gia-la-37bbb4fd"),
-    adapted: uiMessage("features.recipe.recipe-match-card.questa-versione-e-nata-per-il-tuo-setup-4ff2056a"),
+    get title() { return uiMessage("features.recipe.recipe-match-card.amore-a-prima-vista-d3108980"); },
+    get canonical() { return uiMessage("features.recipe.recipe-match-card.la-canonica-e-la-tua-cucina-parlano-gia-la-37bbb4fd"); },
+    get adapted() { return uiMessage("features.recipe.recipe-match-card.questa-versione-e-nata-per-il-tuo-setup-4ff2056a"); },
     low: false,
     icon: "handshake",
   },
   t75: {
-    title: uiMessage("features.recipe.recipe-match-card.ottima-intesa-55470040"),
-    canonical: uiMessage("features.recipe.recipe-match-card.qualche-micro-compromesso-ma-la-scintilla--62f59a12"),
-    adapted: uiMessage("features.recipe.recipe-match-card.pochi-aggiustamenti-tanta-sostanza-528675f6"),
+    get title() { return uiMessage("features.recipe.recipe-match-card.ottima-intesa-55470040"); },
+    get canonical() { return uiMessage("features.recipe.recipe-match-card.qualche-micro-compromesso-ma-la-scintilla--62f59a12"); },
+    get adapted() { return uiMessage("features.recipe.recipe-match-card.pochi-aggiustamenti-tanta-sostanza-528675f6"); },
     low: false,
     icon: "heart",
   },
   t60: {
-    title: uiMessage("features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af"),
-    canonical: uiMessage("features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69"),
-    adapted: uiMessage("features.recipe.recipe-match-card.la-ricetta-funziona-ma-chiede-un-minimo-di-7c183f59"),
+    get title() { return uiMessage("features.recipe.recipe-match-card.ci-vuole-un-po-di-corteggiamento-f93dd2af"); },
+    get canonical() { return uiMessage("features.recipe.recipe-match-card.si-puo-fare-bene-sblocchiamola-e-vulcan-si-1ee8bb69"); },
+    get adapted() { return uiMessage("features.recipe.recipe-match-card.la-ricetta-funziona-ma-chiede-un-minimo-di-7c183f59"); },
     low: false,
     icon: "pulse",
   },
   t40: {
-    title: uiMessage("features.recipe.recipe-match-card.per-le-cose-buone-ci-vuole-tempo-e6addc9c"),
-    canonical: uiMessage("features.recipe.recipe-match-card.la-ricetta-e-seria-meglio-adattarla-al-tuo-551e300f"),
-    adapted: uiMessage("features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050"),
+    get title() { return uiMessage("features.recipe.recipe-match-card.per-le-cose-buone-ci-vuole-tempo-e6addc9c"); },
+    get canonical() { return uiMessage("features.recipe.recipe-match-card.la-ricetta-e-seria-meglio-adattarla-al-tuo-551e300f"); },
+    get adapted() { return uiMessage("features.recipe.recipe-match-card.buona-direzione-ma-serve-ancora-qualche-co-fe018050"); },
     low: true,
     icon: "crack",
   },
   t0: {
-    title: uiMessage("features.recipe.recipe-match-card.cuore-spezzato-42157bb9"),
-    canonical: uiMessage("features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75"),
-    adapted: uiMessage("features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf"),
+    get title() { return uiMessage("features.recipe.recipe-match-card.cuore-spezzato-42157bb9"); },
+    get canonical() { return uiMessage("features.recipe.recipe-match-card.bellissima-ma-oggi-chiede-piu-fuoco-di-que-4d766f75"); },
+    get adapted() { return uiMessage("features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf"); },
     low: true,
     icon: "off",
   },
@@ -169,6 +170,7 @@ export function RecipeMatchCard({
      tono e azioni). Barre punteggio, stato forno e rationale arrivano a
      richiesta: erano una schermata intera prima degli ingredienti. */
   const [expanded, setExpanded] = useState(false);
+  const detailsToggleRef = useRef<HTMLButtonElement>(null);
   const ovenGap = idealTemp - ovenTemp;
   const ovenStatus =
     ovenGap <= 0
@@ -182,7 +184,7 @@ export function RecipeMatchCard({
   // Lo rendiamo qui — prima era calcolato ma mai mostrato.
   const unviableWarning = scores.warnings?.find((w) => w.key === "feas.thermalUnviable");
   const unviableText = unviableWarning
-    ? resolveEngineMsgs([unviableWarning], cms.engineMessages)[0]
+    ? engineMsgTexts([unviableWarning], cms, bcp47)[0]
     : null;
 
   // Learn-inline (audit lug 2026): ogni asse è tappabile → spiegazione dal CMS.
@@ -316,7 +318,7 @@ export function RecipeMatchCard({
       data-region="section"
       data-attention={tone.low ? "warning" : undefined}
       className={`match-card ${className}`}
-      aria-label={cms.ui.recipeScore}
+      /* U-10 (F29): il nome lo porta già l'aside che la contiene */
     >
       <div className="match-card__main">
       {/* ═══ Verdetto editoriale (redesign lug 2026, round 5) ═══
@@ -334,6 +336,7 @@ export function RecipeMatchCard({
         <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.match-0335207f")}</span>
         <span className="match-kicker__rule" aria-hidden="true" />
         <button
+          ref={detailsToggleRef}
           type="button"
           onClick={() =>
             setExpanded((v) => {
@@ -542,7 +545,14 @@ export function RecipeMatchCard({
         {onOptimize && (
           <motion.button
             type="button"
-            onClick={onOptimize}
+            onClick={() => {
+              onOptimize();
+              /* U-10 (F12): dopo l'ottimizzazione il pulsante sparisce; se il
+                 focus è caduto su <body> lo si riporta nella card. */
+              requestAnimationFrame(() => {
+                if (document.activeElement === document.body) detailsToggleRef.current?.focus();
+              });
+            }}
             whileHover={{ scale: 1.025, y: -1 }}
             whileTap={{ scale: 0.97 }}
             transition={motionSpring.highlightedMatch}

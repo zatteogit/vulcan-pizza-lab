@@ -449,12 +449,12 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     q10: {
       name: "Q₁₀ (Coefficiente di Temperatura)",
       definition: "Fattore moltiplicativo della velocità di reazione biochimica per ogni aumento di 10°C.",
-      whyImportant: "Fermentazione raddoppia ogni +10°C. 24h a 18°C ≈ 12h a 28°C.",
+      whyImportant: "Con Q₁₀ = 2 la fermentazione raddoppia ogni +10°C: 24h a 18°C ≈ 12h a 28°C. I valori qui sotto sono stime del modello di {brand}.",
       ranges: [
-        { label: "Lievito commerciale ≥10°C", value: "2.0", note: "Standard" },
-        { label: "Lievito commerciale <10°C", value: "1.6", note: "Cold adapted" },
-        { label: "Lievito madre >15°C", value: "2.2", note: "Sourdough" },
-        { label: "Lievito madre ≤15°C", value: "1.9", note: "Sourdough cold" },
+        { label: "Lievito commerciale ≥10°C", value: "2.0", note: "Stima del modello, coerente con i dati di crescita fra 18 e 25 °C" },
+        { label: "Lievito commerciale <10°C", value: "1.6", note: "Stima del modello, senza fonte" },
+        { label: "Lievito madre >15°C", value: "2.2", note: "Stima del modello" },
+        { label: "Lievito madre ≤15°C", value: "1.9", note: "Stima del modello" },
       ],
     },
     arrhenius: {

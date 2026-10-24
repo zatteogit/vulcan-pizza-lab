@@ -21,3 +21,27 @@ not_found_handling = "single-page-application"
 binding = "DB"
 database_name = "vulcan-annotations"
 database_id = "471d2a9d-1a54-418e-849c-479b85cbd979"
+
+# ── P-4: ambiente di test (vulcan-test) ─────────────────────────────────────
+# Merge su main → deploy qui (workflow .github/workflows/deploy-test.yml);
+# approvazione → produzione dello stesso commit. Accesso solo su invito con
+# Cloudflare Access, noindex dal Worker, D1 separato con giurisdizione UE.
+# Passi una tantum sull'account Cloudflare: docs/ambiente-test.md.
+[env.test]
+name = "vulcan-test"
+
+[env.test.assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+# Il Worker gira prima degli asset: serve per l'header X-Robots-Tag su tutto.
+run_worker_first = true
+
+[env.test.vars]
+DEPLOY_ENV = "test"
+
+[[env.test.d1_databases]]
+binding = "DB"
+database_name = "vulcan-test"
+# Da `npx wrangler d1 create vulcan-test --jurisdiction eu` (docs/ambiente-test.md).
+database_id = "SOSTITUIRE_CON_ID_D1_DI_TEST"

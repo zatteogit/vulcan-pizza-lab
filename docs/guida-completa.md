@@ -349,7 +349,7 @@ Il fattore Q10 modella la velocita della fermentazione al variare della temperat
 | Lievito madre, T > 15C        | 2.2 | `sourdough`    |
 | Lievito madre, T <= 15C       | 1.9 | `sourdough`    |
 
-Riferimento: PMC7146123, dati Saccharomyces cerevisiae.
+Riferimento: da verificare (C-4). PMC7146123, citato in precedenza, è una review sui soft sensor di fermentazione e non riporta il Q10 del lievito (verifica del 24/10/2026).
 
 #### Compensazioni forno (`calculateOvenCompensations()`)
 

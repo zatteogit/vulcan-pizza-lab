@@ -138,7 +138,7 @@ export function VulcanMark({
         }}
         transition={{
           duration: motionDuration.logoPulse,
-          repeat: Infinity,
+          repeat: 5, // U-10 (F25): si ferma invece di pulsare per sempre
           repeatType: "mirror",
           ease: motionEase.standard,
         }}

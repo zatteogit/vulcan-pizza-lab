@@ -115,7 +115,6 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     symbol: "P/L",
     category: "rheology",
     definition: "Indice di bilanciamento meccanico. Rapporto tra resistenza e estensibilità dell'impasto.",
-    unit: "adimensionale",
     formula: "P/L = P (mm H₂O) / L (mm)",
     ranges: [
       { label: "<0.4 Molto estensibile", value: "Collassa facilmente", note: "Pinsa" },
@@ -133,7 +132,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     symbol: "FN",
     category: "rheology",
     definition: "Tempo impiegato da un'asta a cadere attraverso una sospensione di farina riscaldata. Misura l'attività amilasica.",
-    unit: "secondi",
+    unit: "s",
     ranges: [
       { label: "<200 Altissima amilasi", value: "Impasto appiccicoso", note: "Sconsigliato pizza" },
       { label: "200–250 Alta", value: "Mollica umida", note: "Pane rapido" },
@@ -182,7 +181,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     name: "Stabilità Impasto",
     category: "rheology",
     definition: "Tempo durante il quale l'impasto mantiene consistenza ottimale durante mixing. Misurata con farinografo.",
-    unit: "minuti",
+    unit: "min",
     ranges: [
       { label: "Debole", value: "2–4 min" },
       { label: "Media", value: "5–8 min" },
@@ -220,15 +219,14 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     symbol: "Q₁₀",
     category: "fermentation",
     definition: "Fattore moltiplicativo della velocità di reazione biochimica per ogni aumento di 10°C.",
-    unit: "adimensionale",
     formula: "Q₁₀ = k(T+10) / k(T)",
     ranges: [
-      { label: "Lievito commerciale ≥10°C", value: "2.0", note: "Standard" },
-      { label: "Lievito commerciale <10°C", value: "1.6", note: "Cold adapted" },
-      { label: "Lievito madre >15°C", value: "2.2", note: "Sourdough" },
-      { label: "Lievito madre ≤15°C", value: "1.9", note: "Sourdough cold" },
+      { label: "Lievito commerciale ≥10°C", value: "2.0", note: "Stima del modello, coerente con i dati di crescita fra 18 e 25 °C" },
+      { label: "Lievito commerciale <10°C", value: "1.6", note: "Stima del modello, senza fonte" },
+      { label: "Lievito madre >15°C", value: "2.2", note: "Stima del modello" },
+      { label: "Lievito madre ≤15°C", value: "1.9", note: "Stima del modello" },
     ],
-    whyImportant: "Fermentazione raddoppia ogni +10°C. 24h a 18°C ≈ 12h a 28°C.",
+    whyImportant: `Con Q₁₀ = 2 la fermentazione raddoppia ogni +10°C: 24h a 18°C ≈ 12h a 28°C. I valori qui sotto sono stime del modello di ${BRAND.name}.`,
     relatedTerms: ["arrhenius", "yeast"],
   },
   {

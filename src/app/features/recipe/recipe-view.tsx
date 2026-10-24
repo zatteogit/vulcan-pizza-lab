@@ -11,6 +11,7 @@
  * PizzaNerd vive dentro Ricetta/Procedimento quando abilitato dal Profilo. */
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { localizeToppingRecipe, toppingConcept } from "../../data/topping-i18n/localize";
 import { Link } from "react-router";
 import {
   AnimatePresence,
@@ -25,7 +26,7 @@ import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import { RecipeOutput } from "./recipe-output";
 import { RecipeSectionTabs, type RecipePrimaryTab } from "./recipe-section-tabs";
-import { getToppingForStyle, getRecipesByAuthenticity, TOPPING_CONCEPTS } from "../../data/topping-library";
+import { getToppingForStyle, getRecipesByAuthenticity } from "../../data/topping-library";
 import { useIsMobile } from "../../hooks/use-mobile";
 import { FireGlow } from "../cooking/fire-glow";
 import { useCms, type CmsContent } from "../cms/cms-context";
@@ -97,7 +98,8 @@ interface RecipeViewProps {
   onSelectFlour?: (flour: import("../../data/flour-database").FlourEntry | null) => void;
   selectedTimeSlotId?: string | null;
   favorite?: boolean;
-  onToggleFavorite?: () => void;
+  /** Restituisce false se il salvataggio non è riuscito: la pagina lo dice. */
+  onToggleFavorite?: () => boolean | void;
 }
 
 export function RecipeView({
@@ -142,7 +144,7 @@ export function RecipeView({
 
   const handleFavoriteClick = () => {
     if (!onToggleFavorite) return;
-    onToggleFavorite();
+    if (onToggleFavorite() === false) return;
     const nextFavorite = !favorite;
     setToastMessage(
       nextFavorite
@@ -187,9 +189,9 @@ export function RecipeView({
 
   // Resolve topping using the exact same fallback hierarchy as recipe-output.tsx
   const allToppingChoices = useMemo(() => {
-    const ranked = getRecipesByAuthenticity(style).filter(
-      (item) => item.authenticity !== "taboo"
-    );
+    const ranked = getRecipesByAuthenticity(style)
+      .filter((item) => item.authenticity !== "taboo")
+      .map((item) => ({ ...item, recipe: localizeToppingRecipe(item.recipe, cms.toppingI18n) }));
     const seen = new Set<string>();
     return ranked.filter((item) => {
       const key = item.recipe.concept_ref;
@@ -197,7 +199,7 @@ export function RecipeView({
       seen.add(key);
       return true;
     });
-  }, [style]);
+  }, [style, cms.toppingI18n]);
 
   const toppingChoices = useMemo(() => {
     const featured = allToppingChoices.filter(
@@ -231,7 +233,7 @@ export function RecipeView({
         : undefined) ??
       allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe;
       
-    const conceptName = resolvedTopping ? TOPPING_CONCEPTS[resolvedTopping.concept_ref]?.name : undefined;
+    const conceptName = resolvedTopping ? toppingConcept(resolvedTopping.concept_ref, cms.toppingI18n)?.name : undefined;
     const recipeName = resolvedTopping ? (resolvedTopping as any).name : undefined;
     
     return recipeName || conceptName || resolvedTopping?.variant_name || (cms.cooking.toppingTitle ?? "Condimento");
@@ -240,9 +242,9 @@ export function RecipeView({
   const preFermentText = recipe.has_pre_ferment
     ? (recipe.pre_ferment_type 
         ? recipe.pre_ferment_type.charAt(0).toUpperCase() + recipe.pre_ferment_type.slice(1) 
-        : "Prefermento")
-    : "Diretto";
-  const procedureSubtitle = `${preFermentText} • ${recipe.fermentation_hours}h`;
+        : cms.ui.procedurePreferment)
+    : cms.ui.procedureDirect;
+  const procedureSubtitle = `${preFermentText} • ${fmt.durationShort(recipe.fermentation_hours)}`;
 
   /* Niente sottotitolo sul tab Ricetta: ripeteva il nome dello stile che
      campeggia già nell'hero (sempre visibile, anche a hero ridotto). */
@@ -521,6 +523,9 @@ export function RecipeView({
             />
           )}
           <motion.div
+            id="recipe-tabpanel"
+            role="tabpanel"
+            aria-labelledby={`recipe-tab-${activeTab}`}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...motionSpring.standard,delay: motionDelay.recipeReveal }}

@@ -27,6 +27,7 @@ export type OvenType =
   | "electric_high"
   | "electric_standard"
   | "gas"
+  | "gas_pizza"
   | "home";
 export type CrustType =
   | "leopard_soft"
@@ -288,6 +289,10 @@ export interface UserConstraints {
   mixer_type?: string | null;
   /** Advanced equipment — baking surfaces from profile */
   surfaces?: string[];
+  /** M-11: correzione personale della velocità di lievitazione («la mia
+   *  cucina lievita più veloce»). 1 = come il modello; 1,25 = lievita il 25%
+   *  più in fretta, quindi serve meno lievito. Limitata a 0,5–2. */
+  yeast_speed_factor?: number;
   /** Advanced oven heat profile — resistances/burner layout from profile */
   oven_heat_profile?:
     | "static_top_bottom"
@@ -321,7 +326,7 @@ export function resolveEngineMsgs(
     const tpl = templates?.[m.key] ?? m.fallback;
     if (!m.params) return tpl;
     return Object.entries(m.params).reduce(
-      (s, [k, v]) => s.replace(`{${k}}`, String(formatParam ? formatParam(m, k, v) : v)),
+      (s, [k, v]) => s.split(`{${k}}`).join(String(formatParam ? formatParam(m, k, v) : v)),
       tpl,
     );
   });
@@ -396,8 +401,37 @@ export function localizeCrustType(crust: string): string {
   );
 }
 
+/* ═══ M-10 — Esito della ricetta ═══
+ * Il motore non degrada in silenzio: dice se la ricetta riesce, riesce con
+ * avvisi o non è fattibile così, e perché. Ogni motivo bloccante ha i numeri
+ * per proporre un'alternativa (orario più avanti, forno o stile diverso). */
+export type RecipeOutcome = "ok" | "warnings" | "not_feasible";
+
+export type RecipeBlocker =
+  /** Il forno non arriva alla temperatura che lo stile richiede. */
+  | { kind: "oven_too_cold"; oven_c: number; style_min_c: number }
+  /** Con un orario del pasto, la timeline non ci sta. */
+  | { kind: "time_window"; available_h: number; needed_h: number }
+  /** Le ore costringono a meno della metà della lievitazione minima dello
+   *  stile. `needed_h`: ore fino al pasto per arrivare al minimo dello stile. */
+  | { kind: "fermentation_too_short"; fermentation_h: number; style_min_h: number; needed_h: number };
+
+export interface RecipeVerdict {
+  outcome: RecipeOutcome;
+  blockers: RecipeBlocker[];
+}
+
+/** Sotto questa viabilità termica lo stile non si ottiene (stessa soglia
+ *  dell'avviso feas.thermalUnviable). */
+const THERMAL_UNVIABLE_THRESHOLD = 0.6;
+/** Sotto questa frazione del minimo dello stile la lievitazione non è più
+ *  «accorciata» ma un'altra ricetta. */
+const FERMENTATION_FLOOR_FRACTION = 0.5;
+
 export interface GeneratedRecipe {
   schema_version: string; // Notion Pag.09: recipe data schema version
+  /** M-10: esito esplicito (riuscito, con avvisi, non fattibile così). */
+  verdict: RecipeVerdict;
   style: PizzaStyle;
   dough_balls: number;
   flour_g: number;
@@ -448,7 +482,43 @@ interface CompensationApplied {
   reason: string;
 }
 
+/** M-11: come è stata calcolata la dose di lievito commerciale, per mostrarlo
+ *  all'utente. Il margine è una stima (marca e freschezza del lievito,
+ *  oscillazioni di temperatura di ±2 °C), non una misura. */
+export interface YeastModelInfo {
+  /** Dose di riferimento: % di lievito fresco sulla farina per 24 h a 18 °C. */
+  reference_pct: number;
+  reference_hours: number;
+  reference_temp_c: number;
+  /** Esponente sulle ore: il lievito si moltiplica, la dose non scala 1:1. */
+  time_exponent: number;
+  /** Velocità alla temperatura di fermentazione rispetto a 18 °C (Q10 a tratti). */
+  speed_ratio: number;
+  q10_model: "standard" | "cold_adapted" | "sourdough";
+  /** Lievito secco: un terzo del fresco. */
+  dry_ratio: number;
+  /** Correzione personale applicata (1 = nessuna). */
+  personal_factor: number;
+  /** Intervallo plausibile della dose (% sulla farina). */
+  range_pct: [number, number];
+}
+
+/** Margine stimato della dose di lievito: −30% / +30%. */
+export const YEAST_DOSE_MARGIN: [number, number] = [0.7, 1.3];
+const YEAST_REFERENCE_PCT = 0.1;
+const YEAST_REFERENCE_HOURS = 24;
+const YEAST_TIME_EXPONENT = 0.7;
+const YEAST_DRY_RATIO = 0.33;
+
+/** Correzione personale accettata dal motore. */
+export function clampYeastSpeedFactor(value: number | undefined): number {
+  if (value === undefined || !Number.isFinite(value)) return 1;
+  return Math.min(2, Math.max(0.5, value));
+}
+
 interface ScientificLayer {
+  /** M-11: modello della dose di lievito commerciale (assente con lievito madre o senza lievito). */
+  yeast_model?: YeastModelInfo;
   yeast_baker_pct: number;
   effective_hours_18c: number;
   fodmap_reduction_pct: number | null;
@@ -492,7 +562,15 @@ export interface TimelineStep {
   };
   /** Variante di testo per la localizzazione (es. preriscaldo: cosa fanno i
    *  panetti mentre il forno scalda). Assente = testo standard. */
-  variant?: "whole_proof" | "during_rest";
+  /** I18N-2: testi del passo come messaggi con chiave CMS, parametri e
+   *  fallback italiano. La UI li traduce; title/description restano l'italiano. */
+  msg?: {
+    title?: EngineMsg;
+    description?: EngineMsg[];
+    tip?: { beginner: EngineMsg; nerd: EngineMsg };
+  };
+  /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. */
+  variant?: "whole_proof" | "during_rest" | "oil" | "fry";
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
@@ -520,8 +598,7 @@ function minimumFermentationHours(fermRange: [number, number]): number {
 /** Ore di fermentazione che stanno nella finestra togliendo l'overhead fisso,
  *  arrotondate per difetto al quarto d'ora (orari umani, somme esatte). */
 function fermentationWindowHours(availableHours: number, overheadMinutes: number): number {
-  const hours = (availableHours * 60 - overheadMinutes) / 60;
-  return Math.floor(hours * 4 + 1e-9) / 4;
+  return floorToQuarterHour((availableHours * 60 - overheadMinutes) / 60);
 }
 
 // ═══ STYLES DATABASE ═══
@@ -541,8 +618,11 @@ export {
 
 
 // ═══ Q10 MODEL — VARIABLE BY YEAST TYPE & TEMPERATURE ═══
-// Letteratura: Saccharomyces cerevisiae Q10=2.1±0.3 (15-30°C), scende a 1.6 sotto 10°C
-// Lievito madre: LAB (batteri lattici) hanno Q10 1.9-2.4, media diversa da S. cerevisiae
+// Stime del modello, non valori di letteratura (C-4, docs/fonti-dati.md §4).
+// Q10 ≈ 2 tra 18 e 25 °C è coerente con i tassi di crescita di S. cerevisiae
+// (Salvadó et al. 2011). Il valore 1,6 sotto i 10 °C è una scelta del modello
+// senza fonte. Per il lievito madre (batteri lattici + lieviti) i valori sono
+// anch'essi stime da verificare.
 //
 // getQ10 restituisce il Q10 LOCALE del tratto in cui cade la temperatura. Per la
 // velocità rispetto a 18°C si usa fermentationSpeedRatio, che applica i tratti in
@@ -564,8 +644,10 @@ export function getQ10(
     };
   }
   if (tempC < 10) {
-    // Cold fermentation: metabolismo rallentato più di quanto Q10=2.0 predica
-    // PMC7146123: S. cerevisiae Q10 ≈ 1.6 sotto 10°C
+    // Cold fermentation: Q10 1,6 sotto i 10°C. È una scelta del modello senza
+    // fonte verificata: il riferimento citato prima (PMC7146123) è una review sui
+    // soft sensor di fermentazione e non parla di lievito (verifica del 24/10/2026,
+    // voce C-4). In UI lo mostriamo come stima, non come dato misurato.
     return { q10: 1.6, model: "cold_adapted" };
   }
   return { q10: 2.0, model: "standard" };
@@ -1276,15 +1358,17 @@ export const FLOUR_W_RANGES: Record<string, [number, number]> =
     manitoba: [340, 380],
     integrale: [200, 260],
     semola: [220, 280],
-    // Branded flours (from flour-database.ts)
-    caputo_pizzeria_blu: [240, 280],
-    caputo_nuvola: [240, 280],
-    caputo_cuoco: [300, 340],
-    petra_5037: [340, 380],
-    petra_3_evolutiva: [320, 360],
+    // Farine di marca: chiavi = id di flour-database.ts. C-4: W dalle schede
+    // del produttore (Mulino Caputo 2024–2025, Molino Quaglia s.d.; fonti in
+    // docs/fonti-dati.md §2.2). Petra 3 è tolta: il produttore non dichiara W.
+    // Le ultime tre sono ancora da verificare.
+    caputo_pizzeria: [260, 280],
+    caputo_nuvola: [270, 290],
+    caputo_cuoco: [300, 320],
+    petra_5037: [300, 340],
     "5stagioni_rossa": [260, 300],
     "5stagioni_5lune": [330, 370],
-    dallagiovanna_manitoba: [360, 400],
+    dallagiovanna_manitoba_oro: [360, 400],
   };
 
 function calculateYeastPercentage(
@@ -1308,14 +1392,14 @@ function calculateYeastPercentage(
   //   - timeFactor lineare (24/h) → sub-lineare (24/h)^0.7: il lievito si
   //     RIPRODUCE durante la fermentazione, non si consuma. Curva log-like.
   //     Verificato su Napoletana 8h, 12h, 24h, Bonci 48h, Detroit 24h.
-  const referenceRate = 0.10; // % fresh yeast a 18°C per 24h (Caputo standard)
+  const referenceRate = YEAST_REFERENCE_PCT; // % fresh yeast a 18°C per 24h (Caputo standard)
   // ENG-2: fattore di velocità a tratti continuo (a 4°C ~+20% di lievito
   // rispetto al vecchio esponente con Q10 1,6 da 18°C).
   const tempFactor = fermentationSpeedRatio(yeastType, fermentationTempC);
-  const timeFactor = Math.pow(24 / fermentationHours, 0.7);
+  const timeFactor = Math.pow(YEAST_REFERENCE_HOURS / fermentationHours, YEAST_TIME_EXPONENT);
 
   let pct = (referenceRate * timeFactor) / tempFactor;
-  if (yeastType === "dry") pct *= 0.33; // dry = 1/3 of fresh
+  if (yeastType === "dry") pct *= YEAST_DRY_RATIO; // dry = 1/3 of fresh
 
   return Math.max(0.01, Math.min(3.0, pct));
 }
@@ -1712,10 +1796,12 @@ export function generateRecipe(
           ? 18
           : 20;
   } else {
-    yeastPct = calculateYeastPercentage(
-      fermentationHours,
-      fermentationTempC,
-      yeastType as "fresh" | "dry",
+    // M-11: la correzione personale («la mia cucina lievita più veloce»)
+    // divide la dose: più veloce → meno lievito per le stesse ore.
+    yeastPct = Math.max(
+      0.01,
+      calculateYeastPercentage(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry") /
+        clampYeastSpeedFactor(constraints.yeast_speed_factor),
     );
   }
 
@@ -1789,7 +1875,7 @@ export function generateRecipe(
   const ovenViability = thermalViability(style, ovenTemp);
   if (ovenViability < 1) {
     feasResult.score = Math.round(feasResult.score * (0.5 + 0.5 * ovenViability));
-    if (ovenViability <= 0.6) {
+    if (ovenViability <= THERMAL_UNVIABLE_THRESHOLD) {
       feasResult.warnings.unshift(
         em(
           "feas.thermalUnviable",
@@ -1876,6 +1962,15 @@ export function generateRecipe(
     sustainability_category: sustResult.category,
     penalties: authResult.penalties,
     warnings: [
+      // D-020: stesso avviso dei consigli sul forno a legna dello stile.
+      ...(style.requires_wood_oven && constraints.oven_type !== "wood"
+        ? [
+            em(
+              "gen.notWoodOven",
+              "Lo stile prevede il forno a legna: con il tuo forno il risultato si avvicina, ma non è quello canonico.",
+            ),
+          ]
+        : []),
       ...(windowTooShort
         ? [
             em(
@@ -2032,6 +2127,23 @@ export function generateRecipe(
       : waterTempLimit === "min"
         ? WATER_TEMP_MIN_C
         : Math.round(waterTempRaw * 10) / 10;
+  if (!style.dough.unleavened && yeastType !== "sourdough") {
+    const q10 = getQ10(yeastType, fermentationTempC);
+    science.yeast_model = {
+      reference_pct: YEAST_REFERENCE_PCT,
+      reference_hours: YEAST_REFERENCE_HOURS,
+      reference_temp_c: Q10_REFERENCE_TEMP_C,
+      time_exponent: YEAST_TIME_EXPONENT,
+      speed_ratio: Math.round(fermentationSpeedRatio(yeastType, fermentationTempC) * 100) / 100,
+      q10_model: q10.model,
+      dry_ratio: YEAST_DRY_RATIO,
+      personal_factor: clampYeastSpeedFactor(constraints.yeast_speed_factor),
+      range_pct: [
+        Math.round(yeastPct * YEAST_DOSE_MARGIN[0] * 1000) / 1000,
+        Math.round(yeastPct * YEAST_DOSE_MARGIN[1] * 1000) / 1000,
+      ],
+    };
+  }
   science.desired_dough_temp_c = ddt;
   science.friction_factor = frictionFactor;
   science.water_temp_c = waterTempC;
@@ -2049,8 +2161,30 @@ export function generateRecipe(
   science.deviation_score_effective = devResult.score;
   science.compensation_deviation_points = devResult.compensationPoints;
 
+  // ── M-10: esito esplicito ──
+  const blockers: RecipeBlocker[] = [];
+  if (ovenViability <= THERMAL_UNVIABLE_THRESHOLD) {
+    blockers.push({ kind: "oven_too_cold", oven_c: ovenTemp, style_min_c: style.baking.temp_c_range[0] });
+  }
+  if (windowTooShort) {
+    blockers.push({ kind: "time_window", available_h: constraints.available_hours, needed_h: neededHours });
+  }
+  if (timeClampedBelowMin && fermentationHours < fermRange[0] * FERMENTATION_FLOOR_FRACTION) {
+    blockers.push({
+      kind: "fermentation_too_short",
+      fermentation_h: fermentationHours,
+      style_min_h: fermRange[0],
+      needed_h: Math.ceil((fermRange[0] * 60 + timelineOverheadMinutes(timeline)) / 15) / 4,
+    });
+  }
+  const verdict: RecipeVerdict = {
+    outcome: blockers.length > 0 ? "not_feasible" : scores.warnings.length > 0 ? "warnings" : "ok",
+    blockers,
+  };
+
   return {
     schema_version: RECIPE_SCHEMA_VERSION,
+    verdict,
     style,
     dough_balls: doughBalls,
     flour_g: flourG,
@@ -2287,18 +2421,22 @@ export function optimizeRecipe(
 
   // ── Spazio ore: dentro la finestra dello stile, capato alle ore disponibili
   // MENO l'overhead fisso (ENG-4: la finestra arriva fino al pasto). Il filtro
-  // ora viene DOPO l'arrotondamento all'ora, così nessun candidato sfora; si
+  // ora viene DOPO l'arrotondamento, così nessun candidato sfora; si
   // aggiunge la fermentazione più lunga che sta nella finestra (al quarto
   // d'ora), se cade nel range dello stile. Senza orario del pasto
   // (meal_deadline assente) l'overhead non si toglie: le ore limitano solo
-  // la fermentazione, come in generateRecipe. ──
+  // la fermentazione, come in generateRecipe.
+  // M-4: candidati al quarto d'ora (all'ora intera la Recco, 0,5–2 h, finiva
+  // a 3 h). Il sondaggio oltre il massimo (×1,25) vale solo per gli impasti
+  // lievitati: per una sfoglia non lievitata un riposo più lungo non dà nulla. ──
   const avail = constraints.available_hours > 0 ? constraints.available_hours : Infinity;
   const fermentWindow =
     avail === Infinity || !constraints.meal_deadline
       ? avail
       : fermentationWindowHours(avail, overheadMinutes);
+  const beyondMax = effStyle.dough.unleavened ? [] : [fMax * 1.25];
   let hourCands = _uniqRounded([
-    ..._uniqRounded([fMin, (fMin + fMax) / 2, fMax, fMax * 1.25], 0),
+    ...[fMin, (fMin + fMax) / 2, fMax, ...beyondMax].map((h) => Math.max(fMin, floorToQuarterHour(h))),
     ...(fermentWindow >= fMin && fermentWindow <= fMax ? [fermentWindow] : []),
   ]).filter((h) => h <= fermentWindow);
   if (hourCands.length === 0) {
@@ -2565,48 +2703,80 @@ interface EquipmentContext {
   ovenHeatProfile?: UserConstraints["oven_heat_profile"];
 }
 
+/* ═══ I18N-2 — testi dei passi con chiave ═══ */
+/** Parametri che sono temperature in °C: nel testo italiano di riserva
+ *  prendono l'unità, nella UI il formattatore (°C o °F). */
+const STEP_TEMP_PARAMS = new Set(["temp"]);
+
+function renderStepIt(msgs: EngineMsg[]): string {
+  return msgs
+    .map((m) =>
+      Object.entries(m.params ?? {}).reduce(
+        (text, [k, v]) => text.split(`{${k}}`).join(STEP_TEMP_PARAMS.has(k) ? `${v}°C` : String(v)),
+        m.fallback,
+      ),
+    )
+    .join(" ");
+}
+
+/** Passo con testi a chiave: compila title/description/tip in italiano. */
+function keyedStep(
+  base: Omit<TimelineStep, "title" | "description" | "tip" | "msg">,
+  title: EngineMsg,
+  description: EngineMsg[],
+  tip?: { beginner: EngineMsg; nerd: EngineMsg },
+): TimelineStep {
+  return {
+    ...base,
+    title: renderStepIt([title]),
+    description: renderStepIt(description),
+    ...(tip ? { tip: { beginner: renderStepIt([tip.beginner]), nerd: renderStepIt([tip.nerd]) } } : {}),
+    msg: { title, description, ...(tip ? { tip } : {}) },
+  };
+}
+
 interface KneadGuidance {
-  description: string;
+  description: EngineMsg;
   duration_minutes: number;
-  tip: { beginner: string; nerd: string };
+  tip: { beginner: EngineMsg; nerd: EngineMsg };
 }
 
 function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
   switch (eq?.mixerType) {
     case "spiral":
       return {
-        description: "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura.",
+        description: em("timeline.mix.spiral.desc", "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura."),
         duration_minutes: 9,
         tip: {
-          beginner: "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte.",
-          nerd: "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare.",
+          beginner: em("timeline.mix.spiral.tipBeginner", "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte."),
+          nerd: em("timeline.mix.spiral.tipNerd", "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare."),
         },
       };
     case "fork":
       return {
-        description: "Impastatrice a forcella: 12-15 min a velocità unica. Incordatura lenta, maglia molto estensibile.",
+        description: em("timeline.mix.fork.desc", "Impastatrice a forcella: 12-15 min a velocità unica. Incordatura lenta, maglia molto estensibile."),
         duration_minutes: 14,
         tip: {
-          beginner: "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza.",
-          nerd: "Movimento lento e ossigenante: ideale per impasti molli; incorda meno aggressivamente, estensibilità elevata.",
+          beginner: em("timeline.mix.fork.tipBeginner", "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza."),
+          nerd: em("timeline.mix.fork.tipNerd", "Movimento lento e ossigenante: ideale per impasti molli; incorda meno aggressivamente, estensibilità elevata."),
         },
       };
     case "planetary":
       return {
-        description: "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo).",
+        description: em("timeline.mix.planetary.desc", "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo)."),
         duration_minutes: 10,
         tip: {
-          beginner: "Parti in 1ª per amalgamare, poi passa in 2ª. Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
-          nerd: "Sorveglia la temperatura impasto: oltre 26-28°C il glutine si indebolisce. Usa acqua fredda se la ciotola scalda.",
+          beginner: em("timeline.mix.planetary.tipBeginner", "Parti in 1ª per amalgamare, poi passa in 2ª. Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti."),
+          nerd: em("timeline.mix.planetary.tipNerd", "Sorveglia la temperatura impasto: oltre 26-28°C il glutine si indebolisce. Usa acqua fredda se la ciotola scalda."),
         },
       };
     case "stand_domestic":
       return {
-        description: "Planetaria domestica (tipo KitchenAid): gancio a velocità 1-2, ~10-12 min. Pause di 1-2 min se la ciotola si scalda.",
+        description: em("timeline.mix.stand_domestic.desc", "Planetaria domestica (tipo KitchenAid): gancio a velocità 1-2, ~10-12 min. Pause di 1-2 min se la ciotola si scalda."),
         duration_minutes: 12,
         tip: {
-          beginner: "Non superare la 2ª velocità: il motore domestico fatica e scalda. Pronto = impasto liscio che si stacca dal fondo.",
-          nerd: "Trasferisce più calore per attrito (K~0.25): parti con acqua a frigo e impasti corti, non sovraccaricare il motore.",
+          beginner: em("timeline.mix.stand_domestic.tipBeginner", "Non superare la 2ª velocità: il motore domestico fatica e scalda. Pronto = impasto liscio che si stacca dal fondo."),
+          nerd: em("timeline.mix.stand_domestic.tipNerd", "Trasferisce più calore per attrito (K~0.25): parti con acqua a frigo e impasti corti, non sovraccaricare il motore."),
         },
       };
     case "hands":
@@ -2614,58 +2784,69 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
     default:
       if (eq?.hasMixer) {
         return {
-          description: "Con l'impastatrice: gancio a bassa velocità ~10 min fino a incordatura. Liscio ed elastico.",
-          duration_minutes: 10,
-          tip: {
-            beginner: "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
-            nerd: "Controlla la temperatura finale dell'impasto (~24°C): oltre, il glutine si degrada.",
-          },
-        };
+        description: em("timeline.mix.generic.desc", "Con l'impastatrice: gancio a bassa velocità ~10 min fino a incordatura. Liscio ed elastico."),
+        duration_minutes: 10,
+        tip: {
+          beginner: em("timeline.mix.generic.tipBeginner", "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti."),
+          nerd: em("timeline.mix.generic.tipNerd", "Controlla la temperatura finale dell'impasto (~24°C): oltre, il glutine si degrada."),
+        },
+      };
       }
   }
   // A mano (default)
   return {
-    description: "Impastare a mano fino a incordatura (~15-20 min): pieghe sul piano, slap & fold se l'idratazione è alta.",
-    duration_minutes: 20,
-    tip: {
-      beginner: "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
-      nerd: "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica.",
-    },
-  };
+        description: em("timeline.mix.hands.desc", "Impastare a mano fino a incordatura (~15-20 min): pieghe sul piano, slap & fold se l'idratazione è alta."),
+        duration_minutes: 20,
+        tip: {
+          beginner: em("timeline.mix.hands.tipBeginner", "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova."),
+          nerd: em("timeline.mix.hands.tipNerd", "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica."),
+        },
+      };
 }
 
 /** Setup forno specifico per tipo: "a quanto metto le resistenze". */
-function ovenBakeSetup(eq: EquipmentContext | undefined, _ovenTemp: number): string {
+function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
   const hasStone = (eq?.surfaces ?? []).some((s) =>
     ["refractory_brick", "cordierite_stone", "steel_plate"].includes(s),
   );
   if (eq?.ovenHeatProfile === "top_grill") {
-    return ` Grill/resistenza superiore forte: preriscalda con ${hasStone ? "pietra o acciaio" : "ripiano"} medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.`;
+    return hasStone
+      ? em("timeline.oven.topGrillStone", "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.")
+      : em("timeline.oven.topGrillShelf", "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.");
   }
   if (eq?.ovenHeatProfile === "bottom_boost") {
-    return " Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.";
+    return em("timeline.oven.bottomBoost", "Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.");
   }
   if (eq?.ovenHeatProfile === "fan_assisted") {
-    return " Ventilato: usa una temperatura leggermente piu bassa se il bordo asciuga, ruota a meta cottura e proteggi i topping delicati.";
+    return em("timeline.oven.fanAssisted", "Ventilato: usa una temperatura leggermente più bassa se il bordo asciuga, ruota a metà cottura e proteggi i topping delicati.");
   }
   if (eq?.ovenHeatProfile === "gas_rear") {
-    return " Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.";
+    return em("timeline.oven.gasRear", "Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.");
   }
   if (eq?.ovenHeatProfile === "wood_side_flame") {
-    return " Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.";
+    return em("timeline.oven.woodSideFlame", "Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.");
   }
   switch (eq?.ovenType) {
     case "wood":
-      return " Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.";
+      return em("timeline.oven.wood", "Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.");
     case "electric_high":
-      return " Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.";
+      return em("timeline.oven.electricHigh", "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.");
     case "gas":
-      return " Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.";
+      return em("timeline.oven.gas", "Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.");
+    case "gas_pizza":
+      return em("timeline.oven.gasPizza", "Forno a gas da pizza: scalda finché la pietra arriva in temperatura (misurala con un termometro a infrarossi), poi inforna e ruota spesso la pizza, perché la fiamma sta su un lato.");
     case "home":
     case "electric_standard":
     default:
-      return ` Forno statico (resistenza sopra + sotto) al massimo${hasStone ? ", pietra/acciaio già caldi sul ripiano medio-alto" : ", ripiano medio-alto"}. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.`;
+      return hasStone
+        ? em("timeline.oven.staticStone", "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.")
+        : em("timeline.oven.staticShelf", "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.");
   }
+}
+
+/** M-6: stili che si friggono in olio (pizza fritta, montanara), non in forno. */
+export function isFriedStyle(style: PizzaStyle): boolean {
+  return style.baking.temp_c_range[1] < 200;
 }
 
 function generateTimeline(
@@ -2745,23 +2926,33 @@ function generateTimeline(
   // No-knead: l'impastatrice è irrilevante (mescola + pieghe a mano). Altrimenti
   // la descrizione/durata/consigli cambiano col tipo di impastatrice dichiarato.
   const knead = isNoKnead ? null : mixerKneadGuidance(equipment);
-  steps.push({
-    id: "mix",
-    title: "Impasto",
-    description: isNoKnead
-      ? "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min nelle prime 1,5–2 ore."
-      : (knead as KneadGuidance).description,
-    duration_minutes: isNoKnead ? 10 : (knead as KneadGuidance).duration_minutes,
-    icon: "hand",
-    timing_label: "Inizio",
-    tip: isNoKnead
-      ? {
-          beginner:
-            "Non serve impastare! Mescola finché non ci sono grumi asciutti. Poi, ogni ~30 min, bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro ruotando la ciotola: bastano 3 giri da 4 pieghe.",
-          nerd: "L'autolisi sviluppa il glutine senza lavoro meccanico; le pieghe a intervalli (stretch & fold) allineano e tendono le fibrille di glutine e redistribuiscono i gas, dando forza senza degassare.",
-        }
-      : (knead as KneadGuidance).tip,
-  });
+  if (isNoKnead) {
+    // No-knead: testi dal CMS (timelineLabels.mix_noknead) nella UI.
+    steps.push({
+      id: "mix",
+      title: "Impasto",
+      description:
+        "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min nelle prime 1,5–2 ore.",
+      duration_minutes: 10,
+      icon: "hand",
+      timing_label: "Inizio",
+      tip: {
+        beginner:
+          "Non serve impastare! Mescola finché non ci sono grumi asciutti. Poi, ogni ~30 min, bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro ruotando la ciotola: bastano 3 giri da 4 pieghe.",
+        nerd: "L'autolisi sviluppa il glutine senza lavoro meccanico; le pieghe a intervalli (stretch & fold) allineano e tendono le fibrille di glutine e redistribuiscono i gas, dando forza senza degassare.",
+      },
+    });
+  } else {
+    const k = knead as KneadGuidance;
+    steps.push(
+      keyedStep(
+        { id: "mix", duration_minutes: k.duration_minutes, icon: "hand", timing_label: "Inizio" },
+        em("timeline.mix.title", "Impasto"),
+        [k.description],
+        k.tip,
+      ),
+    );
+  }
 
   /* ─── PIANO PRERISCALDO (ENG-5, audit motore 22/10/2026) ───
    * Il preriscaldo avviene in parallelo al riposo dei panetti, quindi i suoi
@@ -2776,8 +2967,10 @@ function generateTimeline(
   const bulkMinutesFull = Math.round(fermentHours * 60 * (hasPreFerment ? 0.4 : 0.6));
   const proofMinutes = Math.round(fermentHours * 60 * (hasPreFerment ? 0.2 : 0.4));
   const ovenTempForPreheat = Math.round(actualOvenTemp ?? style.baking.temp_c_ideal);
-  const idealPreheat =
-    ovenTempForPreheat >= 400 ? 60 : ovenTempForPreheat >= 300 ? 45 : 30;
+  // M-6: per le fritte si scalda l'olio, non il forno: bastano 15 minuti.
+  const idealPreheat = isFriedStyle(style)
+    ? 15
+    : ovenTempForPreheat >= 400 ? 60 : ovenTempForPreheat >= 300 ? 45 : 30;
   const preheatDuringProof = proofMinutes - idealPreheat >= 15;
   const borrowedFromBulk = preheatDuringProof
     ? 0
@@ -2834,6 +3027,20 @@ function generateTimeline(
   steps.push({
     id: "divide",
     title: "Staglio",
+    ...(isMultiPiece
+      ? {
+          msg: {
+            title: em("timeline.divide.title", "Staglio"),
+            description: [
+              em(
+                "timeline.divide.multiPiece",
+                "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.",
+                { pieces: layout.pieces_per_unit ?? 2 },
+              ),
+            ],
+          },
+        }
+      : {}),
     description: isMultiPiece
       ? `Dividere in ${layout.pieces_per_unit} pezzi uguali per ogni unità. Formare pallina o disco.`
       : isGentleDivide
@@ -2892,7 +3099,23 @@ function generateTimeline(
       : preheatVariant === "whole_proof"
         ? "Intanto i panetti fanno l'appretto."
         : "Intanto i panetti finiscono l'appretto.";
-  steps.push({
+  // M-6: le fritte non vanno in forno: prima si porta l'olio a temperatura.
+  if (isFriedStyle(style)) {
+    const oilTemp = Math.round(style.baking.temp_c_ideal);
+    steps.push({
+      id: "preheat",
+      variant: "oil",
+      title: "Olio a temperatura",
+      description: `Scalda l'olio (almeno 5 cm, in una pentola dai bordi alti) a ${oilTemp}°C e controllalo con un termometro. ${preheatWhile}`,
+      duration_minutes: preheatMinutes,
+      icon: "flame",
+      timing_label: `${preheatMinutes} min`,
+      tip: {
+        beginner: "Sotto i 170°C la pizza assorbe olio e diventa unta; sopra i 190°C si colora fuori e resta cruda dentro.",
+        nerd: "Tra 180 e 190°C l'acqua in superficie evapora subito e forma una crosta che limita l'assorbimento d'olio; un panetto alla volta evita che la temperatura crolli.",
+      },
+    });
+  } else steps.push({
     id: "preheat",
     title: "Forno al massimo",
     description: `Accendi ora il forno a ${ovenTempForPreheat}°C${preheatMinutes >= 45 ? " (pietra o acciaio già dentro)" : ""}. ${preheatWhile}`,
@@ -2908,31 +3131,40 @@ function generateTimeline(
   });
 
   // ─── STESURA (layout-aware) ───
-  let shapeDesc: string;
+  let shapeMsg: EngineMsg;
   if (layout.type === "folded_layers") {
-    shapeDesc = `Stendere una sfoglia sottilissima e ripiegare ${layout.folds ?? 4} volte a libro, distribuendo la farcitura tra le pieghe.`;
+    shapeMsg = em(
+      "timeline.shape.foldedLayers",
+      "Stendere una sfoglia sottilissima e ripiegare {folds} volte a libro, distribuendo la farcitura tra le pieghe.",
+      { folds: layout.folds ?? 4 },
+    );
   } else if (layout.type === "double_thin_sheet") {
-    shapeDesc = "Stendere due sfoglie sottilissime quasi trasparenti col mattarello.";
+    shapeMsg = em("timeline.shape.doubleThinSheet", "Stendere due sfoglie sottilissime quasi trasparenti col mattarello.");
   } else if (layout.type === "stacked") {
-    shapeDesc = "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.";
+    shapeMsg = em("timeline.shape.stacked", "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.");
   } else if (layout.type === "closed_stuffed") {
-    shapeDesc = "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.";
+    shapeMsg = em("timeline.shape.closedStuffed", "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.");
   } else {
-    shapeDesc =
+    // Layout singolo: nella UI vale il testo del CMS (timelineLabels.shape).
+    shapeMsg =
       style.shape.shape_type === "rectangular"
-        ? "Stendere nella teglia oliata con le mani"
+        ? em("timeline.shape.rectangular", "Stendere nella teglia oliata con le mani")
         : style.crust_type === "crispy_thin"
-          ? "Stendere con mattarello, sottilissima"
-          : "Allargare a mano dal centro, preservare il cornicione";
+          ? em("timeline.shape.thin", "Stendere con mattarello, sottilissima")
+          : em("timeline.shape.round", "Allargare a mano dal centro, preservare il cornicione");
   }
-  steps.push({
-    id: "shape",
-    title: "Stesura",
-    description: shapeDesc,
-    duration_minutes: layout.type === "folded_layers" ? 10 : 5,
-    icon: "expand",
-    timing_label: layout.type === "folded_layers" ? "10 min" : "5 min",
-  });
+  steps.push(
+    keyedStep(
+      {
+        id: "shape",
+        duration_minutes: layout.type === "folded_layers" ? 10 : 5,
+        icon: "expand",
+        timing_label: layout.type === "folded_layers" ? "10 min" : "5 min",
+      },
+      em("timeline.shape.title", "Stesura"),
+      [shapeMsg],
+    ),
+  );
 
   // VPL-A1: i pre_prep "just_before_assembly" (es. saltare i funghi, patate in
   // ammollo) NON sono più step separati della timeline: cambiare condimento deve
@@ -2946,20 +3178,17 @@ function generateTimeline(
   // ─── FARCITURA / ASSEMBLAGGIO (layout-aware) ───
   if (layout.type === "stacked" && layout.interlayer === "oil_brush") {
     // Baciata / Marinella: spennellatura olio + sovrapposizione del secondo disco
-    steps.push({
-      id: "stack",
-      title: "Sovrapposizione",
-      description:
-        "Spennellare il primo disco con olio EVO; adagiare sopra il secondo disco e sigillare leggermente i bordi.",
-      duration_minutes: 3,
-      icon: "layers",
-      timing_label: "3 min",
-      tip: {
-        beginner:
-          "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli.",
-        nerd: "L'olio crea un layer idrofobo che impedisce la coalescenza dei due strati di glutine: facilita lo sdoppiamento post-bake.",
-      },
-    });
+    steps.push(
+      keyedStep(
+        { id: "stack", duration_minutes: 3, icon: "layers", timing_label: "3 min" },
+        em("timeline.stack.title", "Sovrapposizione"),
+        [em("timeline.stack.desc", "Spennellare il primo disco con olio EVO; adagiare sopra il secondo disco e sigillare leggermente i bordi.")],
+        {
+          beginner: em("timeline.stack.tipBeginner", "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli."),
+          nerd: em("timeline.stack.tipNerd", "L'olio crea un layer idrofobo che impedisce la coalescenza dei due strati di glutine: facilita lo sdoppiamento post-bake."),
+        },
+      ),
+    );
     // Topping step in after_stack (es. patate sopra per Patate e Porchetta)
     injectToppingAt("after_stack");
   } else if (layout.type === "closed_stuffed" && layout.filling_timing === "pre_bake_internal") {
@@ -2968,20 +3197,17 @@ function generateTimeline(
       (s) => s.insert_at === "after_fill_internal" && s.replaces_generic,
     );
     if (!internalFillReplaced) {
-      steps.push({
-        id: "fill_internal",
-        title: "Ripieno e chiusura",
-        description:
-          "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.",
-        duration_minutes: 8,
-        icon: "chef-hat",
-        timing_label: "8 min",
-        tip: {
-          beginner:
-            "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce.",
-          nerd: "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow).",
-        },
-      });
+      steps.push(
+        keyedStep(
+          { id: "fill_internal", duration_minutes: 8, icon: "chef-hat", timing_label: "8 min" },
+          em("timeline.fillClosed.title", "Ripieno e chiusura"),
+          [em("timeline.fillClosed.desc", "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.")],
+          {
+            beginner: em("timeline.fillClosed.tipBeginner", "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce."),
+            nerd: em("timeline.fillClosed.tipNerd", "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow)."),
+          },
+        ),
+      );
     }
     injectToppingAt("after_fill_internal");
   } else if (layout.type === "double_thin_sheet") {
@@ -2990,15 +3216,13 @@ function generateTimeline(
       (s) => s.insert_at === "after_fill_internal" && s.replaces_generic,
     );
     if (!internalFillReplaced) {
-      steps.push({
-        id: "fill_internal",
-        title: "Farcitura tra sfoglie",
-        description:
-          "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.",
-        duration_minutes: 5,
-        icon: "chef-hat",
-        timing_label: "5 min",
-      });
+      steps.push(
+        keyedStep(
+          { id: "fill_internal", duration_minutes: 5, icon: "chef-hat", timing_label: "5 min" },
+          em("timeline.fillSheets.title", "Farcitura tra sfoglie"),
+          [em("timeline.fillSheets.desc", "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.")],
+        ),
+      );
     }
     injectToppingAt("after_fill_internal");
   } else if (layout.filling_timing === "pre_bake" || layout.cook_mode === "topped") {
@@ -3024,75 +3248,99 @@ function generateTimeline(
   const baseTempC = actualOvenTemp ?? style.baking.temp_c_ideal;
   const ovenTempLabel = Math.round(baseTempC + (topping?.bake_adjustments?.temperature_delta_c ?? 0));
   const effectiveCookSec = cookTimeSec + (topping?.bake_adjustments?.additional_minutes ?? 0) * 60;
+  // Nota di cottura del condimento: la UI la traduce dall'id del condimento.
+  const toppingBakeNote: EngineMsg[] = topping?.bake_adjustments?.note
+    ? [em("topping.bakeNote", topping.bake_adjustments.note, { toppingId: topping.id })]
+    : [];
   if (layout.cook_mode === "white_then_top") {
     // Baciata: cottura in bianco
     const firstBakeMin = Math.max(8, Math.round((effectiveCookSec / 60) * 0.65));
     const secondBakeMin = Math.max(3, Math.round((effectiveCookSec / 60) * 0.35));
-    steps.push({
-      id: "bake",
-      title: "Prima cottura (in bianco)",
-      description: `Cuocere a ${ovenTempLabel}°C senza farcitura. La pizza deve essere dorata ma non bruciata.${topping?.bake_adjustments?.note ? ` ${topping.bake_adjustments.note}` : ""}${ovenBakeSetup(equipment, ovenTempLabel)}`,
-      duration_minutes: firstBakeMin,
-      icon: "flame",
-      timing_label: `${firstBakeMin} min`,
-      tip: {
-        beginner: "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti.",
-        nerd: "La cottura in bianco completa la gelatinizzazione dell'amido prima di introdurre umidità del topping.",
-      },
-    });
+    steps.push(
+      keyedStep(
+        { id: "bake", duration_minutes: firstBakeMin, icon: "flame", timing_label: `${firstBakeMin} min` },
+        em("timeline.bakeWhite.title", "Prima cottura (in bianco)"),
+        [
+          em("timeline.bakeWhite.desc", "Cuocere a {temp} senza farcitura. La pizza deve essere dorata ma non bruciata.", { temp: ovenTempLabel }),
+          ...toppingBakeNote,
+          ovenBakeSetup(equipment),
+        ],
+        {
+          beginner: em("timeline.bakeWhite.tipBeginner", "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti."),
+          nerd: em("timeline.bakeWhite.tipNerd", "La cottura in bianco completa la gelatinizzazione dell'amido prima di introdurre umidità del topping."),
+        },
+      ),
+    );
     injectToppingAt("after_bake");
     const splitReplaced = injectToppingAt("after_split_fill");
     if (!splitReplaced) {
-      steps.push({
-        id: "split_fill",
-        title: "Sdoppiamento e farcitura",
-        description:
-          "Estrarre dal forno. Con un coltello a sega tagliare orizzontalmente in due metà. Farcire l'interno con i condimenti scelti e richiudere.",
-        duration_minutes: 7,
-        icon: "scissors",
-        timing_label: "7 min",
-        tip: {
-          beginner:
-            "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle.",
-          nerd: "Sdoppiamento post-bake = ricetta cold-filled: la matrice amidacea è già stabile, le farciture non vengono cotte oltre i 60°C interni.",
-        },
-      });
+      steps.push(
+        keyedStep(
+          { id: "split_fill", duration_minutes: 7, icon: "scissors", timing_label: "7 min" },
+          em("timeline.splitFill.title", "Sdoppiamento e farcitura"),
+          [em("timeline.splitFill.desc", "Estrarre dal forno. Con un coltello a sega tagliare orizzontalmente in due metà. Farcire l'interno con i condimenti scelti e richiudere.")],
+          {
+            beginner: em("timeline.splitFill.tipBeginner", "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle."),
+            nerd: em("timeline.splitFill.tipNerd", "Sdoppiamento post-bake = ricetta cold-filled: la matrice amidacea è già stabile, le farciture non vengono cotte oltre i 60°C interni."),
+          },
+        ),
+      );
     }
-    steps.push({
-      id: "bake2",
-      title: "Seconda cottura (breve)",
-      description: `Riportare in forno a ${ovenTempLabel}°C solo per asciugare e amalgamare. Pochi minuti.`,
-      duration_minutes: secondBakeMin,
-      icon: "flame",
-      timing_label: `${secondBakeMin} min`,
-    });
+    steps.push(
+      keyedStep(
+        { id: "bake2", duration_minutes: secondBakeMin, icon: "flame", timing_label: `${secondBakeMin} min` },
+        em("timeline.bake2.title", "Seconda cottura (breve)"),
+        [em("timeline.bake2.desc", "Riportare in forno a {temp} solo per asciugare e amalgamare. Pochi minuti.", { temp: ovenTempLabel })],
+      ),
+    );
     injectToppingAt("after_bake2");
   } else {
-    // Cottura singola classica
-    steps.push({
-      id: "bake",
-      title: "Cottura",
-      description: `Cuocere a ${ovenTempLabel}°C${topping?.bake_adjustments?.note ? `. ${topping.bake_adjustments.note}` : ""}.${ovenBakeSetup(equipment, ovenTempLabel)}`,
-      duration_minutes: Math.round(effectiveCookSec / 60),
-      icon: "flame",
-      timing_label: formatCookTime(effectiveCookSec),
-      tip: {
-        beginner:
-          "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
-        nerd: `La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A ${ovenTempLabel}°C la caramellizzazione crea ~600 composti aromatici.`,
-      },
-    });
+    // Cottura singola classica (M-6: frittura per gli stili fritti)
+    if (isFriedStyle(style)) {
+      const oilTemp = Math.round(style.baking.temp_c_ideal);
+      steps.push({
+        id: "bake",
+        variant: "fry",
+        title: "Frittura",
+        description: `Friggi una pizza alla volta a ${oilTemp}°C per ${formatCookTime(effectiveCookSec)}, girandola a metà con una schiumarola. Scolala su carta assorbente.`,
+        duration_minutes: Math.max(1, Math.round(effectiveCookSec / 60)),
+        icon: "flame",
+        timing_label: formatCookTime(effectiveCookSec),
+        tip: {
+          beginner: "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
+          nerd: "Il vapore interno gonfia il disco nei primi secondi; girarla a metà uniforma la crosta e la cottura del ripieno.",
+        },
+      });
+    } else steps.push(
+      keyedStep(
+        {
+          id: "bake",
+          duration_minutes: Math.round(effectiveCookSec / 60),
+          icon: "flame",
+          timing_label: formatCookTime(effectiveCookSec),
+        },
+        em("timeline.bake.title", "Cottura"),
+        [em("timeline.bake.desc", "Cuocere a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, ovenBakeSetup(equipment)],
+        {
+          beginner: em("timeline.bake.tipBeginner", "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima."),
+          nerd: em(
+            "timeline.bake.tipNerd",
+            "La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A {temp} la caramellizzazione crea ~600 composti aromatici.",
+            { temp: ovenTempLabel },
+          ),
+        },
+      ),
+    );
 
     // Farcitura post-cottura esterna (es. Marinella ma non sdoppiata)
     if (layout.filling_timing === "post_bake_external") {
-      steps.push({
-        id: "top_post",
-        title: "Farcitura post-cottura",
-        description: "Aggiungere i condimenti a freddo direttamente sulla superficie cotta.",
-        duration_minutes: 3,
-        icon: "chef-hat",
-        timing_label: "3 min",
-      });
+      steps.push(
+        keyedStep(
+          { id: "top_post", duration_minutes: 3, icon: "chef-hat", timing_label: "3 min" },
+          em("timeline.topPost.title", "Farcitura post-cottura"),
+          [em("timeline.topPost.desc", "Aggiungere i condimenti a freddo direttamente sulla superficie cotta.")],
+        ),
+      );
     }
     injectToppingAt("after_bake");
   }
@@ -3204,8 +3452,10 @@ export const OVEN_PRESETS: {
     icon: "zap",
   },
   {
+    // D-021 (decisione di Matteo, 24/10/2026): due forni a gas. Questo è il
+    // forno a platea: 350 °C è un valore da verificare (docs/fonti-dati.md §3.1).
     id: "gas",
-    name: "Gas Professionale",
+    name: "Forno a gas a platea",
     maxTemp: 350,
     icon: "flame",
   },
@@ -3214,6 +3464,13 @@ export const OVEN_PRESETS: {
     name: "Elettrico alta temperatura",
     maxTemp: 450,
     icon: "thermometer",
+  },
+  {
+    // Forno a gas da pizza (portatile): Ooni 2026, Koda 16 «può raggiungere i 500 °C».
+    id: "gas_pizza",
+    name: "Forno a gas da pizza",
+    maxTemp: 500,
+    icon: "flame",
   },
   {
     id: "wood",
@@ -3269,12 +3526,23 @@ export interface StyleRecommendation {
   optimizedComposite?: number;
 }
 
+export type MealKind = "lunch" | "dinner";
+
 export interface TimeSlot {
   id: string;
+  /** Etichetta di riserva in italiano: la UI la ricompone per lingua da `meal`
+   *  e `dayOffset` (vedi features/recipe/time-slot-text.ts). */
   label: string;
   sublabel: string;
+  /** Ore fino al pasto, al quarto d'ora per difetto (M-2): la finestra non
+   *  supera mai il tempo reale. */
   hours: number;
   emoji: string;
+  /** Pasto e giorno (0 = oggi). Assenti per lo slot «Nessuna preferenza». */
+  meal?: MealKind;
+  dayOffset?: number;
+  /** U-2: istante esatto del pasto (epoch ms) per l'orario scelto a mano. */
+  targetAt?: number;
 }
 
 /* ═══ VPL-065: Dynamic time slots based on current time ═══
@@ -3290,15 +3558,22 @@ const MEAL_TARGETS = [
   { id: "long_ferment", meal: "lunch", emoji: "🕐", dayOffset: 3 },
 ] as const;
 
-const MEAL_HOURS: Record<string, number> = { lunch: 12.5, dinner: 20 };
+const MEAL_HOURS: Record<MealKind, number> = { lunch: 12.5, dinner: 20 };
 const MIN_PREP_HOURS = 3;
+
+/** M-2 — ore al quarto d'ora per difetto. Il margine assorbe l'errore in
+ *  virgola mobile (3,7499999 → 3,75, non 3,5). */
+export function floorToQuarterHour(hours: number): number {
+  return Math.floor(hours * 4 + 1e-9) / 4;
+}
 
 function formatHoursLabel(h: number): string {
   // Difensivo: se il calcolo dà un valore negativo (slot nel passato), skip.
   if (h <= 0) return "passato";
-  if (h < 1) return "<1 ora";
-  if (h < 2) return "~1 ora";
-  return `~${Math.round(h)} ore`;
+  const whole = Math.floor(h);
+  const minutes = Math.round((h - whole) * 60);
+  if (whole === 0) return `${minutes} min`;
+  return minutes === 0 ? `${whole} h` : `${whole} h ${minutes} min`;
 }
 
 function getDayLabel(dayOffset: number, meal: string, now: Date): string {
@@ -3308,6 +3583,55 @@ function getDayLabel(dayOffset: number, meal: string, now: Date): string {
   if (dayOffset === 1) return meal === "lunch" ? "Domani a pranzo" : "Domani sera";
   const targetDay = DAYS_IT[(weekday + dayOffset) % 7];
   return meal === "lunch" ? `${targetDay} a pranzo` : `${targetDay} sera`;
+}
+
+/* ═══ U-2: partire dalla farina che si ha («ho 750 g di farina») ═══
+ * Le masse sono lineari nei panetti: la farina per panetto della ricetta
+ * corrente dà quanti panetti ci stanno. Il numero esatto si rilegge dalla
+ * ricetta rigenerata dopo aver scelto i panetti. */
+export const MAX_DOUGH_BALLS = 20;
+
+export interface FlourBudgetFit {
+  balls: number;
+  /** Farina usata, stimata (±1 g di arrotondamento). */
+  flour_g: number;
+  leftover_g: number;
+  /** Farina per un panetto: il minimo per farne uno. */
+  per_ball_g: number;
+}
+
+export function doughBallsForFlour(recipe: GeneratedRecipe, flourBudgetG: number): FlourBudgetFit {
+  const perBall = recipe.dough_balls > 0 ? recipe.flour_g / recipe.dough_balls : recipe.flour_g;
+  const budget = Number.isFinite(flourBudgetG) ? Math.max(0, flourBudgetG) : 0;
+  const balls = perBall > 0 ? Math.min(MAX_DOUGH_BALLS, Math.floor(budget / perBall + 1e-9)) : 0;
+  const flour = Math.round(perBall * balls);
+  return { balls, flour_g: flour, leftover_g: Math.max(0, Math.round(budget - flour)), per_ball_g: Math.ceil(perBall) };
+}
+
+/* ═══ U-2: orario del pasto scelto a mano («si cena sabato alle 20») ═══ */
+export const CUSTOM_SLOT_ID = "custom";
+/** Sotto 1 h non c'è nulla da preparare; oltre 7 giorni nessuno stile serve. */
+export const CUSTOM_SLOT_MIN_HOURS = 1;
+export const CUSTOM_SLOT_MAX_HOURS = 7 * 24;
+
+/** Slot per un orario preciso: ore al quarto d'ora per difetto, come gli altri
+ *  slot (M-2). `null` se l'orario è troppo vicino o troppo lontano. */
+export function customMealSlot(target: Date, now: Date = new Date()): TimeSlot | null {
+  const hours = floorToQuarterHour((target.getTime() - now.getTime()) / 3_600_000);
+  if (!(hours >= CUSTOM_SLOT_MIN_HOURS && hours <= CUSTOM_SLOT_MAX_HOURS)) return null;
+  const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const dayOffset = Math.round((startOfDay(target) - startOfDay(now)) / 86_400_000);
+  const hh = String(target.getHours()).padStart(2, "0");
+  const mm = String(target.getMinutes()).padStart(2, "0");
+  return {
+    id: CUSTOM_SLOT_ID,
+    label: `${getDayLabel(dayOffset, target.getHours() < 16 ? "lunch" : "dinner", now)} · ${hh}:${mm}`,
+    sublabel: formatHoursLabel(hours),
+    hours,
+    emoji: "🗓️",
+    dayOffset,
+    targetAt: target.getTime(),
+  };
 }
 
 /** No-preference virtual slot: engine uses 24h @ kitchen temp */
@@ -3325,7 +3649,7 @@ export function generateTimeSlots(now: Date = new Date()): TimeSlot[] {
 
   for (const target of MEAL_TARGETS) {
     const mealHour = MEAL_HOURS[target.meal];
-    const hoursUntil = target.dayOffset * 24 + (mealHour - nowHour);
+    const hoursUntil = floorToQuarterHour(target.dayOffset * 24 + (mealHour - nowHour));
 
     if (hoursUntil < MIN_PREP_HOURS) continue;
     if (slots.length >= 4) break;
@@ -3334,18 +3658,23 @@ export function generateTimeSlots(now: Date = new Date()): TimeSlot[] {
       id: target.id,
       label: getDayLabel(target.dayOffset, target.meal, now),
       sublabel: formatHoursLabel(hoursUntil),
-      hours: Math.round(hoursUntil),
+      hours: hoursUntil,
       emoji: target.emoji,
+      meal: target.meal,
+      dayOffset: target.dayOffset,
     });
   }
 
   if (slots.length === 0) {
+    const hoursUntil = floorToQuarterHour(24 - nowHour + MEAL_HOURS.lunch);
     slots.push({
       id: "tomorrow_lunch",
       label: "Domani a pranzo",
-      sublabel: formatHoursLabel(24 - nowHour + 12.5),
-      hours: Math.round(24 - nowHour + 12.5),
+      sublabel: formatHoursLabel(hoursUntil),
+      hours: hoursUntil,
       emoji: "☀️",
+      meal: "lunch",
+      dayOffset: 1,
     });
   }
 
@@ -3398,6 +3727,41 @@ const ICONIC_BOOST: Record<string, number> = {
   pizza_montanara: 2,
 };
 
+/** M-10 — stili che con gli stessi vincoli danno una ricetta fattibile,
+ *  i più simili per primi (forma, crosta, famiglia, spessore), poi nell'ordine dei
+ *  consigli. Le pizze fritte si propongono solo al posto di una fritta: è un
+ *  altro metodo di cottura. Serve all'esito «non fattibile così». */
+export function feasibleAlternativeStyles(
+  current: PizzaStyle,
+  constraints: UserConstraints,
+  limit = 3,
+  stylesOverride?: Record<string, PizzaStyle>,
+): PizzaStyle[] {
+  const isFried = (style: PizzaStyle) => style.baking.temp_c_range[1] < 200;
+  const similarity = (style: PizzaStyle) =>
+    (style.shape.shape_type === current.shape.shape_type ? 2 : 0) +
+    (style.crust_type === current.crust_type ? 2 : 0) +
+    (style.family === current.family ? 1 : 0) +
+    // Spessore: fino a 2 punti, zero oltre 0,3 di differenza.
+    2 * Math.max(0, 1 - Math.abs(style.shape.thickness_factor - current.shape.thickness_factor) / 0.3);
+  const candidates = recommendStyles(constraints, stylesOverride)
+    .filter(
+      (rec) =>
+        rec.style.id !== current.id &&
+        rec.tier !== "not_feasible" &&
+        isFried(rec.style) === isFried(current),
+    )
+    .map((rec, rank) => ({ style: rec.style, rank, similarity: similarity(rec.style) }))
+    .sort((x, y) => y.similarity - x.similarity || x.rank - y.rank);
+  const alternatives: PizzaStyle[] = [];
+  for (const { style } of candidates) {
+    if (alternatives.length >= limit) break;
+    if (generateRecipe(style, constraints).verdict.outcome === "not_feasible") continue;
+    alternatives.push(style);
+  }
+  return alternatives;
+}
+
 export function recommendStyles(
   constraints: UserConstraints,
   stylesOverride?: Record<string, PizzaStyle>,
@@ -3420,34 +3784,33 @@ export function recommendStyles(
 
     // ── Time compatibility (25%) ──
     const [fMin, fMax] = style.dough.fermentation_hours_range;
+    // M-3: stesse ore degli slot del pasto, al quarto d'ora per difetto.
+    const availableHours = floorToQuarterHour(constraints.available_hours);
     let timeScore: number;
     if (
-      constraints.available_hours >= fMin &&
-      constraints.available_hours <= fMax * 1.5
+      availableHours >= fMin &&
+      availableHours <= fMax * 1.5
     ) {
       timeScore = 95;
       reasons.push(em("rec.timeCompatible", `Fermentazione ${fMin}-${fMax}h: compatibile con il tuo tempo`, { fMin, fMax }));
-    } else if (constraints.available_hours >= fMin * 0.85) {
+    } else if (availableHours >= fMin * 0.85) {
       /* Audit roleplay giugno 2026: il gradino 95→65 era brutale — 21h vs
        * 24h minime (-12%) non deve far sparire i classici dai consigli. */
       timeScore = 85;
-      const optimalHours = Math.min(constraints.available_hours, fMax);
+      const optimalHours = Math.min(availableHours, fMax);
       reasons.push(em("rec.timeAdaptable", `Fermentazione adattabile a ~${optimalHours}h`, { hours: optimalHours }));
-    } else if (constraints.available_hours >= fMin * 0.7) {
+    } else if (availableHours >= fMin * 0.7) {
       timeScore = 65;
-      const optimalHours = Math.min(constraints.available_hours, fMax);
+      const optimalHours = Math.min(availableHours, fMax);
       reasons.push(em("rec.timeAdaptable", `Fermentazione adattabile a ~${optimalHours}h`, { hours: optimalHours }));
     } else {
       timeScore = 25;
-      warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${constraints.available_hours}h`, { fMin, available: constraints.available_hours }));
+      warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${availableHours}h`, { fMin, available: availableHours }));
     }
 
     // ── Oven compatibility (25%) ──
     let ovenScore: number;
-    if (style.requires_wood_oven && constraints.oven_type !== "wood") {
-      ovenScore = 30;
-      warnings.push(em("rec.needsWoodOven", "Richiede forno a legna"));
-    } else if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
+    if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
       ovenScore = 95;
       reasons.push(em("rec.ovenIdeal", "Il tuo forno raggiunge la temperatura ideale ({ideal})", { ideal: style.baking.temp_c_ideal }));
     } else if (constraints.oven_max_temp_c >= style.baking.temp_c_range[0]) {
@@ -3456,6 +3819,13 @@ export function recommendStyles(
     } else {
       ovenScore = 30;
       warnings.push(em("rec.ovenTooCold", "Forno troppo freddo: {temp} < min {min}", { temp: constraints.oven_max_temp_c, min: style.baking.temp_c_range[0] }));
+    }
+    // D-020 (decisione di Matteo, 24/10/2026): il forno a legna dello stile è un
+    // avviso, non un blocco. Prima la STG col forno a gas da 450 °C era «non
+    // fattibile» nei consigli ma la ricetta la faceva. Resta il calore a decidere.
+    if (style.requires_wood_oven && constraints.oven_type !== "wood") {
+      ovenScore = Math.max(30, ovenScore - 15);
+      warnings.push(em("rec.needsWoodOven", "Prevede il forno a legna: col tuo forno viene vicina, non canonica"));
     }
 
     // ── Skill compatibility (20%) ──
@@ -3710,10 +4080,13 @@ export function recommendStyles(
     //    richiesto ma utente ha elettrico) o score molto basso. Permette di mostrare
     //    cosa NON puoi fare e perché, oltre a cosa puoi fare. ──
     let tier: "perfect" | "good" | "challenging" | "not_feasible";
+    // M-10 (decisione di Matteo, 23/10/2026): stessa soglia termica dell'esito
+    // della ricetta. Prima Canotto, Calzone e Pinsa risultavano «buoni» con il
+    // forno di casa a 250 °C e la ricetta poi diceva «non fattibile così».
     const hasHardBlocker =
-      (style.requires_wood_oven && constraints.oven_type !== "wood") ||
       (style.requires_pre_ferment === true &&
-        constraints.skill_level === 1);
+        constraints.skill_level === 1) ||
+      thermalViability(style, constraints.oven_max_temp_c) <= THERMAL_UNVIABLE_THRESHOLD;
     if (score < 30 || hasHardBlocker) tier = "not_feasible";
     else if (score >= 78) tier = "perfect";
     else if (score >= 55) tier = "good";

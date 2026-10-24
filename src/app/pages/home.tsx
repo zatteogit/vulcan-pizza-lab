@@ -25,12 +25,13 @@ import { useCookSession } from "../features/cooking/cook-session";
 import {
 getDefaultDoughBalls,
 generateTimeSlots,
+customMealSlot,
+CUSTOM_SLOT_ID,
 NO_PREFERENCE_SLOT,
 optimizeRecipe,
 thermalViability,
 FLOUR_W_RANGES,
 YEAST_LABELS,
-resolveEngineMsgs,
 type PanConfig,
 PizzaStyle,
 STYLES_DB,
@@ -39,6 +40,7 @@ UserConstraints,
 } from "../domain/pizza-engine";
 import { RecipeConfigurator } from "../features/recipe/recipe-configurator";
 import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
+import { SaveFailedNotice } from "../features/recipe/save-failed-notice";
 import { InterpretationSwitcher } from "../features/recipe/interpretation-narrative-card";
 import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
 import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
@@ -50,6 +52,7 @@ import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 import { VulcanHero } from "../components/shared/vulcan-hero";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
 import { useCms } from "../features/cms/cms-context";
+import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { t as tpl } from "../features/cms/i18n";
 import { getDietaryWarnings } from "../data/dietary-data";
 import { findSavedRecipe, removeRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
@@ -82,6 +85,7 @@ import {
 } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 import { BRAND } from "../config/brand";
+import { TOOLS_ENABLED } from "../config/tools";
 
 type AppStep = "settings" | "styles" | "result";
 type StyleSettingsPanel = SettingsTab | "time";
@@ -225,6 +229,20 @@ function resolveSavedTimeChoice(
     };
   }
 
+  /* U-2: giorno e ora scelti a mano — si ricalcolano le ore fino a quell'istante. */
+  if (draft.selectedTimeSlot === CUSTOM_SLOT_ID) {
+    const custom = customMealSlot(new Date(targetAt), new Date(now));
+    if (!custom) {
+      return { selectedTimeSlot: null, selectedTimeMeta: null, stale: true, needsReview: true };
+    }
+    return {
+      selectedTimeSlot: CUSTOM_SLOT_ID,
+      selectedTimeMeta: { selectedAt: now, hours: custom.hours, targetAt },
+      stale: false,
+      needsReview: targetAt - now <= TIME_REVIEW_BEFORE_TARGET_MS,
+    };
+  }
+
   const matchingSlot = generateTimeSlots(new Date(now))
     .map((slot) => ({
       slot,
@@ -354,7 +372,7 @@ function computeAutoOptSig(
   c: UserConstraints,
   toppingConcept: string | null,
 ): string {
-  return `${style.id}|${toppingConcept ?? ""}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.meal_deadline ? "deadline" : ""}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}`;
+  return `${style.id}|${toppingConcept ?? ""}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.meal_deadline ? "deadline" : ""}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}|${c.yeast_speed_factor ?? 1}`;
 }
 
 /* ═══ Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le
@@ -411,12 +429,22 @@ function WelcomeOnboardingCard({
   );
 }
 
+/** U-10 (F12): focus sul titolo del passo di Crea, senza scorrere la pagina. */
+function focusStep(step: string) {
+  const root = document.querySelector<HTMLElement>(`.home-step--${step}`);
+  if (!root) return;
+  const target = root.querySelector<HTMLElement>("h1") ?? root;
+  if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+  target.focus({ preventScroll: true });
+}
+
 export function HomePage() {
   const { setHideNavbar } = useDarkMode();
   const { isOverrideActive, clearOverride, effectiveStyles } =
     useStylesOverride();
   const {
     cms,
+    bcp47,
     modifiedCount,
     resetAll: cmsResetAll,
   } = useCms();
@@ -432,6 +460,15 @@ export function HomePage() {
   const initialCreateDraft = initialCreateDraftRef.current;
   const [currentStep, setCurrentStep] =
     useState<AppStep>(initialCreateDraft.step);
+  /* U-10 (F12): cambiando passo il controllo usato sparisce e il focus cadeva
+     su <body>. Si porta al titolo del passo nuovo (o al passo stesso). */
+  const previousStepRef = useRef(currentStep);
+  useEffect(() => {
+    if (previousStepRef.current === currentStep) return;
+    previousStepRef.current = currentStep;
+    const frame = requestAnimationFrame(() => focusStep(currentStep));
+    return () => cancelAnimationFrame(frame);
+  }, [currentStep]);
   const [selectedStyle, setSelectedStyle] =
     useState<PizzaStyle | null>(initialCreateDraft.selectedStyle);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<
@@ -457,6 +494,8 @@ export function HomePage() {
   });
   const dismissOnboarding = useCallback(() => {
     setShowOnboarding(false);
+    // U-10 (F12): la card sparisce col focus dentro: lo si porta al passo.
+    requestAnimationFrame(() => focusStep("settings"));
     try {
       localStorage.setItem(ONBOARDING_SEEN_KEY, "true");
     } catch {
@@ -641,6 +680,12 @@ export function HomePage() {
     createRecipeMode,
   ]);
 
+  /* U-2: lo slot su misura attivo, ricostruito dall'istante scelto. */
+  const customTimeSlot = useMemo(() => {
+    if (selectedTimeSlot !== CUSTOM_SLOT_ID || !selectedTimeMeta?.targetAt) return null;
+    return customMealSlot(new Date(selectedTimeMeta.targetAt), new Date(selectedTimeMeta.selectedAt));
+  }, [selectedTimeSlot, selectedTimeMeta]);
+
   const handleTimeSlotChange = useCallback((slot: TimeSlot) => {
     const selectedAt = Date.now();
     setSelectedTimeSlot(slot.id);
@@ -650,7 +695,7 @@ export function HomePage() {
       targetAt:
         slot.id === NO_PREFERENCE_SLOT.id
           ? null
-          : selectedAt + slot.hours * HOUR_MS,
+          : slot.targetAt ?? selectedAt + slot.hours * HOUR_MS,
     });
     setConstraints((c) => ({
       ...c,
@@ -835,8 +880,13 @@ export function HomePage() {
     // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
     [selectedStyle, currentSaveParams, savedTick],
   );
-  const handleToggleSaveRecipe = useCallback(() => {
-    if (!selectedStyle || !recipe) return;
+  const [saveFailed, setSaveFailed] = useState(false);
+  const closeSaveFailed = useCallback(() => setSaveFailed(false), []);
+  /** true se il ricettario ora riflette la scelta; false se la scrittura è
+   *  fallita (storage pieno o bloccato): lo si dice con SaveFailedNotice. */
+  const handleToggleSaveRecipe = useCallback((): boolean => {
+    if (!selectedStyle || !recipe) return false;
+    let ok = true;
     if (savedEntry) {
       removeRecipe(savedEntry.id);
     } else {
@@ -847,8 +897,11 @@ export function HomePage() {
         params: currentSaveParams,
         score: Math.round(recipe.scores.composite),
       });
+      ok = findSavedRecipe(selectedStyle.id, currentSaveParams) !== undefined;
+      setSaveFailed(!ok);
     }
     setSavedTick((v) => v + 1);
+    return ok;
   }, [selectedStyle, recipe, savedEntry, activeVersionId, currentSaveParams]);
 
   /* ═══ Modello "dirty" (redesign lug 2026) ═══
@@ -1117,16 +1170,6 @@ export function HomePage() {
 
   return (
     <div className="home-page" data-page="home">
-      {/* ═══ VPL-009: Skip-to-content link for screen readers ═══ */}
-      <CtaButton
-        as="a"
-        href="#main-content"
-        radius="lg"
-        elevated={false}
-        className="home-skiplink"
-      >
-        {cms.pages.skipToContent}
-      </CtaButton>
 
       {/* ═══ FIRE GLOW — ambient background ═══ */}
       <FireGlow intensity={fireIntensity} />
@@ -1191,7 +1234,7 @@ export function HomePage() {
       )}
 
       {/* ═══ CMS OVERRIDE BANNER ═══ */}
-      {modifiedCount > 0 && (
+      {TOOLS_ENABLED && modifiedCount > 0 && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -1215,12 +1258,14 @@ export function HomePage() {
                     : cms.ui.fieldsModified}
                 </span>
               </span>
-              <Link
-                to="/cms"
-                className="type-data home-banner__action home-banner__action--cms"
-              >
-                {cms.ui.modify}
-              </Link>
+              {TOOLS_ENABLED && (
+                <Link
+                  to="/cms"
+                  className="type-data home-banner__action home-banner__action--cms"
+                >
+                  {cms.ui.modify}
+                </Link>
+              )}
               <button
                 onClick={cmsResetAll}
                 className="type-data home-banner__dismiss"
@@ -1264,6 +1309,7 @@ export function HomePage() {
                   onConstraintsChange={setConstraints}
                   selectedTimeSlot={selectedTimeSlot}
                   onTimeSlotChange={handleTimeSlotChange}
+                  customTimeSlot={customTimeSlot}
                   hero={
                     <motion.div
                       className="home-hero"
@@ -1386,6 +1432,7 @@ export function HomePage() {
                       onConstraintsChange={setConstraints}
                       selectedTimeSlot={selectedTimeSlot}
                       onTimeSlotChange={handleTimeSlotChange}
+                      customTimeSlot={customTimeSlot}
                       hideTimeSlots={styleSettingsPanel !== "time"}
                       compact
                       showWeather={false}
@@ -1429,6 +1476,7 @@ export function HomePage() {
             transition={motionSpring.responsiveEnter}
             className="home-step home-step--result"
           >
+            <SaveFailedNotice open={saveFailed} onClose={closeSaveFailed} cms={cms} />
             <RecipeView
               recipe={recipe}
               style={selectedStyle}
@@ -1607,7 +1655,7 @@ export function HomePage() {
                   }
                   optimizationRationale={
                     createRecipeOptimized && lastOptimization
-                      ? resolveEngineMsgs(lastOptimization.rationale, cms.engineMessages)
+                      ? engineMsgTexts(lastOptimization.rationale, cms, bcp47)
                       : undefined
                   }
                   ceiling={ceilingInfo?.value}
@@ -1794,9 +1842,10 @@ export function HomePage() {
           {
             label: cms.cooking.saveVersion,
             onClick: () => {
-              handleToggleSaveRecipe();
+              const saved = handleToggleSaveRecipe();
               setExitConfirm(false);
-              proceedBackToStyles();
+              // Se il salvataggio non riesce si resta: uscendo la versione andrebbe persa.
+              if (saved) proceedBackToStyles();
             },
             variant: "cta",
           },

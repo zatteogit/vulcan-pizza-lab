@@ -90,7 +90,7 @@ Tutto in `pizza-engine.ts` (`STYLES_DB`), `topping-library.ts`, `parametric-data
 ## INT‑NAV — Navbar refinement (liquid glass)
 - **Bleed-through ✅** — `liquid-dock.ts`: superficie dock resa più opaca (96→91%, frostata) → niente più contenuto/tagline che traspare.
 - **Animazioni liquid-glass ✅** — `liquid-dock.ts` + `app-shell.tsx`: spring condivisa ritarata gel/viscosa (stiffness 390→230, damping 35→26, massa 0.72→1.05, leggero overshoot) per indicatore attivo + dock; sequenza hide/show coreografata (corpo y/scala con spring gel, blur+opacità su ease sfasato). *Da validare la motion dal vivo; eventuale "stretch" dell'indicatore in transito come step successivo.*
-- **⬜ Search redesign (Apple Music / liquid glass) — SPEC CONFERMATA, da costruire**:
+- **✅ Search redesign (Apple Music / liquid glass)** — costruita il 24/10/2026 (U-5): chip con il numero dei risultati, solo per i tipi trovati; risultati come link, non listbox:
   - Alla pressione del bottone search: il **dock si morfa** — i 3 tab lasciano spazio a un **campo di ricerca inline nella navbar** (espansione liquid-glass) + "Annulla".
   - La **pagina sotto** diventa una **view risultati a tutta pagina**: **chip categoria (Tutto/Stili/Guide/Farine/Glossario) + lista compatta raggruppata** (riuso `buildResults`); meno editoriale di Scopri.
   - **Sostituire del tutto** il bottom-sheet `SearchOverlay` (l'"intermedio" non voluto).

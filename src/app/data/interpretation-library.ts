@@ -7,8 +7,8 @@
  * I 4 type:
  *   master       — pizzaiolo singolo (Bonci, Pepe, Martucci, ecc.)
  *   pizzeria     — locale storico (Pizzarium, da Michele, Pepe in Grani)
- *   community    — gruppo/forum (Malati di Pizza, Pizzaioli Anonimi)
- *   disciplinare — ente ufficiale (AVPN, Confraternita, IGP, APITER)
+ *   community    — gruppo/forum (oggi nessuna voce: D-024, mancano le fonti)
+ *   disciplinare — testo di regole (AVPN, IGP Recco; APITER è di una community)
  *
  * Quando un'interpretazione è attiva sulla recipe page, i suoi
  * `parameter_overrides` vengono applicati come custom params, e una card
@@ -49,6 +49,8 @@ export interface Interpretation {
   pizzeria?: string;
   /** Per community/disciplinare, ente/gruppo. */
   organization?: string;
+  /** Nome breve per le chip, quando quello pieno è lungo (es. «APITER»). */
+  short_name?: string;
   /** Città / paese di origine. */
   location?: string;
   /** Anno di codificazione/fondazione. */
@@ -85,7 +87,9 @@ export interface Interpretation {
   verified_canonical?: boolean;
 }
 
-/* ═══ LIBRERIA — 10 voci iniziali ═══ */
+/* ═══ LIBRERIA — 12 voci, testi verificati sulle fonti il 24/10/2026 ═══
+ * Registro e fonti: docs/fonti-dati.md §5. Le ricette dei maestri sono
+ * «Ispirata a…» (C-5, D-027): ricostruzioni da fonti pubbliche. */
 const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
   /* ─── DISCIPLINARI (3) ─── */
   avpn_disciplinare: {
@@ -104,10 +108,9 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
       fermentation_temp_c: 22,
       use_pre_ferment: false,
     },
-    signature_name: "Verace Pizza Napoletana STG",
-    technique_signature: "Disco 32cm, cornicione 1-2cm gonfio, centro 4mm, leopardatura, cottura wood-oven 60-90s a 430-485°C.",
-    story:
-      "L'AVPN nasce nel 1984 per tutelare la verace pizza napoletana. Nel 2010 ottiene il marchio STG (Specialità Tradizionale Garantita) dall'Unione Europea. I parametri sono codificati: solo farina 0/00 W250-320, lievito di birra/madre, sale, acqua. Cottura solo in forno a legna.",
+    signature_name: "Verace Pizza Napoletana",
+    technique_signature: "Disco fino a 35 cm, cornicione 1–2 cm, centro di circa 4 mm. Cottura in 60–90 secondi; la STG vuole il forno a legna, con la platea a circa 485 °C.",
+    story: "L'AVPN nasce a Napoli nel 1984 per tutelare la verace pizza napoletana. Nel 2010 l'UE registra la «Pizza Napoletana» come STG, su domanda dell'AVPN e dell'Associazione Pizzaiuoli Napoletani. Il disciplinare AVPN chiede farina 00 o 0 con W 250–320, lievito di birra o naturale, sale e acqua; gas ed elettrico solo in deroga.",
     url: "https://www.pizzanapoletana.org",
     emoji: "📜",
     badge: "STG dal 2010",
@@ -119,32 +122,34 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     type: "disciplinare",
     organization: "Consorzio Focaccia di Recco IGP",
     location: "Recco, Liguria",
-    year_codified: 2012,
+    // C-4: registrata IGP con reg. UE 2015/39 del 13/01/2015 (era 2012). Farina
+    // dal disciplinare (CCIAA Genova 2024, art. 5): W > 300, P/L ≥ 0,50 (era
+    // W 190, P/L 0,48: fuori norma). docs/fonti-dati.md §1.3.
+    year_codified: 2015,
     base_style_id: "focaccia_recco",
     base_topping_concept_id: "crescenza_recco",
     parameter_overrides: {
       hydration_pct: 48,
-      flour_w: 190,
-      flour_pl: 0.48,
+      flour_w: 320,
+      flour_pl: 0.60,
       fermentation_hours: 1,
       fermentation_temp_c: 22,
       use_pre_ferment: false,
     },
     signature_name: "Focaccia di Recco col Formaggio IGP",
-    technique_signature: "Doppia sfoglia sottilissima tirata a mano, crescenza fondente all'interno, sigillatura bordi, cottura 270°C 5min.",
-    story:
-      "Ottenuta IGP nel 2012, la Focaccia di Recco è uno degli unici prodotti panari italiani senza lievito. Solo 7 comuni del Tigullio possono fregiarsi del marchio IGP. La crescenza deve essere ligure e non sostituibile.",
+    technique_signature: "Due sfoglie sottilissime tirate a mano, formaggio fresco a pezzetti in mezzo, bordi saldati e fori sulla sfoglia di sopra. Cottura a 270–320 °C per 4–8 minuti.",
+    story: "IGP dal 2015, la Focaccia di Recco col formaggio si fa senza lievito: farina, acqua, olio extravergine e sale. La zona di produzione è il comune di Recco con i confinanti Avegno, Sori e Camogli. Il formaggio è fresco, a pasta molle e cremoso, da latte vaccino fresco pastorizzato.",
     emoji: "📜",
-    badge: "IGP dal 2012",
+    badge: "IGP dal 2015",
     skill_required: 3,
     verified_canonical: true,
   },
   apiter_teglia: {
     id: "apiter_teglia",
     type: "disciplinare",
-    organization: "APITER — Confraternita Pizza in Teglia",
-    location: "Roma",
-    year_codified: 2018,
+    organization: "La Confraternita della Pizza (disciplinare APITER)",
+    short_name: "APITER",
+    year_codified: 2016,
     base_style_id: "teglia_romana",
     parameter_overrides: {
       hydration_pct: 80,
@@ -153,14 +158,12 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
       fermentation_temp_c: 4,
       use_pre_ferment: false,
     },
-    signature_name: "Teglia Romana APITER Standard",
-    technique_signature: "Idratazione 75-85%, W300-380, P/L 0.50-0.60, no-knead con 3-4 pieghe, maturazione 24-48h frigo.",
-    story:
-      "APITER nasce per tutelare l'identità della Pizza in Teglia Romana, codificando i parametri tradizionali contro la deriva 'alta idratazione spinta'. È diventato lo standard di riferimento per le pizzerie professionali e i corsi pro.",
+    signature_name: "Teglia romana secondo il disciplinare APITER",
+    technique_signature: "Farina 00 o 0 con W 300–380 e P/L 0,50–0,60, idratazione alta (dal 75% in su), pieghe di rinforzo a tre, maturazione in frigo da 24 a 72 ore.",
+    story: "APITER sta per «Autentica Pizza In TEglia alla Romana»: è il disciplinare firmato dai membri del forum La Confraternita della Pizza, intorno al 2016. È il testo di una community di appassionati, non una norma di legge.",
     emoji: "📜",
-    badge: "Standard pro",
+    badge: "Disciplinare di community",
     skill_required: 2,
-    verified_canonical: true,
   },
 
   /* ─── MAESTRI (4) ─── */
@@ -182,13 +185,12 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
       use_pre_ferment: false,
       impasto_ref: "bonci_metodo",
     },
-    signature_name: "Pizza al Taglio Pizzarium",
-    technique_signature: "No-knead totale, 4 pieghe ogni 30min con rotazione 90°, maturazione 48-72h frigo, stesa con sole dita, taglio a forbice, vendita a peso.",
-    story:
-      "Bonci ha codificato il metodo no-knead all'italiana nel 2003 col format Teglia. Pizzarium è il flagship: la pizza è tagliata a forbice e venduta a peso. Ha cambiato il paradigma della pizza al taglio italiana.",
+    signature_name: "Ispirata alla pizza al taglio di Pizzarium",
+    technique_signature: "Impasto molto idratato con lunga maturazione (le fonti parlano di 48–72 ore e oltre), stesura a mano in teglia, taglio con le forbici e vendita a peso.",
+    story: "Gabriele Bonci apre Pizzarium a Roma nel 2003, in via della Meloria. La pizza si sceglie al banco, si taglia con le forbici e si paga a peso. Per molti critici il suo lavoro ha cambiato la pizza al taglio romana.",
     url: "https://www.bonci.it",
     emoji: "☁️",
-    badge: "Pizza al taglio iconica",
+    badge: "Pizzarium dal 2003",
     skill_required: 3,
   },
   pepe_caiazzo: {
@@ -208,13 +210,12 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
       fermentation_temp_c: 12,
       use_pre_ferment: false,
     },
-    signature_name: "Margherita Sbagliata",
-    technique_signature: "Fior di latte e pomodoro applicati post-cottura in 3 momenti separati: dots geometrici di pomodoro, crema di mozzarella, basilico fresco. Tecnica del 'sensory layering'.",
-    story:
-      "Franco Pepe ha portato la pizza nel mondo della gastronomia gourmet. Pepe in Grani a Caiazzo è considerata una delle migliori pizzerie del mondo (50 Top Pizza). Il suo approccio è scientifico-territoriale: ingredienti del Sannio, fermentazioni controllate, tecnica chef.",
+    signature_name: "Ispirata alla Margherita Sbagliata",
+    technique_signature: "In forno va solo la mozzarella di bufala con un filo d'olio. Dopo la cottura si aggiungono il pomodoro riccio crudo, a strisce, e una riduzione di basilico: il pomodoro resta fresco.",
+    story: "Franco Pepe apre Pepe in Grani a Caiazzo nel 2012; la Margherita Sbagliata è del 2015. Lavora soprattutto con ingredienti dell'Alto Casertano. Per 50 Top Pizza, Pepe in Grani è stata la prima pizzeria d'Italia nel 2017, nel 2018 e nel 2019 (ex aequo).",
     url: "https://www.pepeingrani.it",
     emoji: "👨‍🍳",
-    badge: "50 Top Pizza #1 2017-2019",
+    badge: "1ª a 50 Top Pizza 2017–2019",
     skill_required: 4,
   },
   martucci_caserta: {
@@ -227,18 +228,15 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     base_style_id: "napoletana_canotto",
     parameter_overrides: {
       hydration_pct: 70,
-      flour_w: 320,
-      flour_pl: 0.55,
-      fermentation_hours: 48,
-      fermentation_temp_c: 4,
-      use_pre_ferment: true,
+      fermentation_hours: 24,
+      fermentation_temp_c: 22,
+      use_pre_ferment: false,
     },
-    signature_name: "Canotto a Biga Ibrida 50%",
-    technique_signature: "Biga 50% farina (18h a 18°C) + autolisi simultanea della restante farina. Fermentazione totale 48-72h, cornicione esplosivo controllato.",
-    story:
-      "Martucci ha portato il 'canotto' moderno al massimo livello tecnico. La sua tecnica di biga ibrida è studiata nei corsi professionali. 50 Top Pizza #1 nel 2020.",
+    signature_name: "Ispirata alla pizza dei Masanielli",
+    technique_signature: "Secondo una recensione del 2017: farina di tipo 0 poco proteica, impasto diretto, 24 ore di lievitazione a temperatura ambiente.",
+    story: "Francesco Martucci guida I Masanielli a Caserta. Per 50 Top Pizza è la prima pizzeria d'Italia nel 2019 (ex aequo con Pepe in Grani) e, da sola, nel 2020, quando guida anche la classifica mondiale.",
     emoji: "🏗️",
-    badge: "50 Top Pizza #1 2020",
+    badge: "1ª a 50 Top Pizza 2020",
     skill_required: 4,
   },
   sorbillo_napoli: {
@@ -256,12 +254,11 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
       fermentation_temp_c: 22,
       use_pre_ferment: false,
     },
-    signature_name: "Napoletana Sorbillo (3a generazione)",
-    technique_signature: "Stesura a libro velocissima, ruota di carro 32cm, cornicione gonfio classico. Tradizione di famiglia dal 1935 (terza generazione).",
-    story:
-      "Gino Sorbillo rappresenta la tradizione napoletana classica. Pizzeria storica in via dei Tribunali a Napoli. È diventato volto televisivo della cultura pizzaiola e ha aperto sedi in tutta Italia.",
+    signature_name: "Ispirata alla napoletana di Sorbillo",
+    technique_signature: "Napoletana classica a cornicione gonfio, nella tradizione di una famiglia di pizzaioli attiva in via dei Tribunali dal 1935.",
+    story: "Gino Sorbillo è il nipote di Luigi, che nel 1935 aprì la prima pizzeria di famiglia in via dei Tribunali 32, a Napoli. È spesso ospite in televisione e ha aperto locali in altre città italiane e all'estero.",
     emoji: "🍕",
-    badge: "Tradizione 1935",
+    badge: "Dal 1935",
     skill_required: 2,
   },
 
@@ -272,21 +269,20 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     author: "Renato Bosco",
     pizzeria: "Saporè",
     location: "San Martino Buon Albergo (VR)",
-    year_codified: 2010,
+    year_codified: 2009,
     base_style_id: "teglia_romana",
     compatible_style_ids: ["pala_romana", "pinsa_romana"],
     parameter_overrides: {
-      hydration_pct: 85,
+      hydration_pct: 80,
       flour_w: 320,
       flour_pl: 0.55,
       fermentation_hours: 48,
       fermentation_temp_c: 4,
       use_pre_ferment: false,
     },
-    signature_name: "Aria di Pane / Doppio Crunch",
-    technique_signature: "Metodo idrolisi (autolisi spinta) con lievito minimo, idratazione 80-90%, cottura bifasica per crosta vetrosa e mollica aerata.",
-    story:
-      "Renato Bosco, 'pizzaricercatore' di Saporè, ha codificato l'alta idratazione moderna in teglia. Le sue creazioni 'Aria di Pane' e 'Doppio Crunch' sono studiate nei corsi professionali. Tra i pizzaioli più premiati d'Italia (50 Top Pizza, Gambero Rosso).",
+    signature_name: "Ispirata ad Aria di Pane e Doppio Crunch",
+    technique_signature: "Impasto molto idratato (circa 80% nelle ricette che ha pubblicato) con lievito madre, cotto in teglia per avere crosta croccante e mollica leggera.",
+    story: "Renato Bosco, detto il «pizzaricercatore», fonda Saporè a San Martino Buon Albergo (VR) nel 2009. Aria di Pane e Doppio Crunch sono sue creazioni, con marchio registrato. Le sue pizzerie hanno ottenuto i Tre Spicchi del Gambero Rosso.",
     emoji: "🌬️",
     badge: "Pizzaricercatore",
     skill_required: 4,
@@ -308,10 +304,9 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
       fermentation_temp_c: 22,
       use_pre_ferment: false,
     },
-    signature_name: "Canotto e metodo forbici",
-    technique_signature: "Cornicione 'canotto' alto e areato; mozzarella tagliata a forbici da fredda per preservare il siero (~95% vs 70% col coltello).",
-    story:
-      "Vincenzo Capuano ha portato la napoletana contemporanea sui social con un seguito enorme, aprendo sedi in tutta Italia ed Europa. Il 'metodo forbici' per i latticini è la sua firma più imitata.",
+    signature_name: "Ispirata al canotto di Capuano",
+    technique_signature: "Cornicione «canotto» alto e alveolato. Al tavolo la pizza si taglia con le forbici: secondo la pizzeria, così si stressa meno l'impasto e non si schiaccia il cornicione.",
+    story: "Vincenzo Capuano ha portato la napoletana contemporanea sui social: nel 2025 aveva circa un milione di follower tra Instagram e TikTok. Ha aperto pizzerie in molte città italiane e anche all'estero.",
     emoji: "✂️",
     badge: "Canotto contemporaneo",
     skill_required: 3,
@@ -328,16 +323,15 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     parameter_overrides: {
       hydration_pct: 63,
       flour_w: 280,
-      fermentation_hours: 120,
+      fermentation_hours: 18,
       fermentation_temp_c: 4,
       use_pre_ferment: false,
     },
-    signature_name: "Fermentazione 5 giorni",
-    technique_signature: "Fermentazione fredda 5 giorni, farina macinata localmente (Arizona). Minimalismo assoluto: acqua, farina, sale, lievito.",
-    story:
-      "Chris Bianco è considerato il padre della pizza artigianale americana. Primo pizzaiolo a vincere il James Beard Award (3 volte). La sua filosofia: pochi ingredienti, lunga fermentazione, materia prima locale.",
+    signature_name: "Ispirata a Pizzeria Bianco",
+    technique_signature: "Impasto a mano con farina, acqua, sale e lievito, circa 18 ore di lievitazione, farine di mulini locali come Hayden Flour Mills (Arizona).",
+    story: "Chris Bianco apre Pizzeria Bianco a Phoenix alla fine degli anni Ottanta, nel retro di un negozio di alimentari. Nel 2003 è il primo pizzaiolo a vincere un James Beard Award (miglior chef del Southwest); nel 2022 ne vince un secondo. Filosofia: pochi ingredienti, materia prima locale.",
     emoji: "🇺🇸",
-    badge: "3× James Beard",
+    badge: "James Beard 2003",
     skill_required: 3,
   },
   forkish_portland: {
@@ -356,13 +350,12 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
       fermentation_temp_c: 4,
       use_pre_ferment: false,
     },
-    signature_name: "Saturday Pizza (FWSY)",
-    technique_signature: "Impasto venerdì sera, fermentazione fredda overnight, pizza il sabato. Workflow casalingo ottimizzato dal libro 'Flour Water Salt Yeast'.",
-    story:
-      "Ken Forkish, ex-tecnologo passato alla panificazione, ha reso accessibile la fermentazione lunga ai panificatori casalinghi col bestseller 'Flour Water Salt Yeast'. Il suo 'Saturday Pizza' è lo schema di riferimento per il weekend.",
+    signature_name: "Ispirata agli impasti di «Flour Water Salt Yeast»",
+    technique_signature: "Gli impasti «Saturday» si fanno al mattino per la pizza della sera; gli «overnight» si impastano la sera, lievitano di notte a temperatura ambiente e poi vanno in frigo.",
+    story: "Dopo vent'anni nell'informatica, Ken Forkish apre a Portland Ken's Artisan Bakery (2001) e Ken's Artisan Pizza (2006). Il suo «Flour Water Salt Yeast» (2012), premiato dalla James Beard Foundation e dall'IACP, ha portato la lievitazione lunga nelle cucine di casa.",
     url: "https://kensartisan.com",
     emoji: "📘",
-    badge: "Autore FWSY",
+    badge: "Autore di FWSY",
     skill_required: 2,
   },
 
@@ -381,63 +374,15 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
       fermentation_temp_c: 22,
       use_pre_ferment: false,
     },
-    signature_name: "Margherita o Marinara — niente altro",
-    technique_signature: "Da 150+ anni solo 2 pizze: Margherita e Marinara. Forno a legna acceso dalle 7 del mattino, impasto giornaliero, niente fronzoli.",
-    story:
-      "Aperta nel 1870 in via Cesare Sersale a Napoli, da Michele è la pizzeria simbolo della tradizione popolare. Il menu è composto da SOLO Margherita e Marinara. Resa famosa internazionalmente da 'Mangia Prega Ama' con Julia Roberts.",
+    signature_name: "Margherita e Marinara, e poco altro",
+    technique_signature: "Menu ridotto all'osso: per decenni solo Margherita e Marinara, oggi quattro pizze. Forno a legna e niente fronzoli.",
+    story: "Fondata nel 1870 dalla famiglia Condurro a Forcella, da Michele è in via Cesare Sersale dal 1930. È una delle pizzerie simbolo della tradizione popolare napoletana. Il film «Mangia prega ama» (2010), con Julia Roberts, l'ha resa famosa nel mondo.",
     emoji: "🏛️",
     badge: "Dal 1870",
     skill_required: 2,
     verified_canonical: true,
   },
 
-  /* ─── COMMUNITY (2) ─── */
-  malati_di_pizza: {
-    id: "malati_di_pizza",
-    type: "community",
-    organization: "Malati di Pizza (community)",
-    year_codified: 2010,
-    base_style_id: "teglia_romana",
-    compatible_style_ids: ["pala_romana", "pinsa_romana"],
-    parameter_overrides: {
-      hydration_pct: 75,
-      flour_w: 280,
-      fermentation_hours: 24,
-      fermentation_temp_c: 4,
-      use_pre_ferment: false,
-      dough_weight_g: 600,
-    },
-    signature_name: "Bonci Casalingo (dose dimezzata)",
-    technique_signature: "Versione 'casalinga' del Bonci: 0.5 g/cm² (era 0.75), pizza più sottile, accessibile a forno domestico standard. Testata su 200+ post di forum.",
-    story:
-      "Sviluppata sul forum Malati di Pizza dopo anni di test per replicare Bonci a casa senza forno professionale. La community ha codificato dose, idratazione e timing accessibili al pizzaiolo amatoriale italiano.",
-    url: "https://www.malatidipizza.com",
-    emoji: "🍕",
-    badge: "Community casalinga",
-    skill_required: 1,
-  },
-  confraternita_pinsa: {
-    id: "confraternita_pinsa",
-    type: "community",
-    organization: "Confraternita della Pizza",
-    year_codified: 2014,
-    base_style_id: "pinsa_romana",
-    compatible_style_ids: ["pala_romana"],
-    parameter_overrides: {
-      hydration_pct: 80,
-      flour_w: 290,
-      fermentation_hours: 48,
-      fermentation_temp_c: 4,
-      use_pre_ferment: false,
-    },
-    signature_name: "Pinsa Multicereali 48h",
-    technique_signature: "Mix farina (70% grano, 15% riso, 15% soia), 80% idratazione, 48h frigo, stesura ovale, crosta vetrosa.",
-    story:
-      "Il forum Confraternita della Pizza ha codificato la Pinsa Romana moderna divulgando ricette di Corrado Di Marco. Standard per la pinsa casalinga di qualità.",
-    emoji: "👥",
-    badge: "Community pinsa",
-    skill_required: 2,
-  },
 };
 
 /* ═══ API ═══ */

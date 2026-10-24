@@ -18,3 +18,5 @@ jobs:
       # Typecheck, test e guard architettura/DS/i18n/semantica/dead-code.
       - run: npm run verify
       - run: npm run build
+      # P-5: budget di JS, CSS, video e immagini (docs/budget-prestazioni.md).
+      - run: npm run check:budget

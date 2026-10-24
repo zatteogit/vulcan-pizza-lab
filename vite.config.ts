@@ -176,7 +176,9 @@ export default defineConfig({
   /* === Build === */
   build: {
     outDir: "dist",
-    sourcemap: true,
+    /* P-2: le mappe si generano (per il debug degli errori) ma i bundle non le
+       referenziano: in produzione il sorgente non è leggibile dal browser. */
+    sourcemap: "hidden",
     /* Limita i warning per bundle size durante il prototipo */
     chunkSizeWarningLimit: 800,
     rollupOptions: {

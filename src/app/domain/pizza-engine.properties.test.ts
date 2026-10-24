@@ -7,6 +7,7 @@ import {
   generateRecipe,
   getQ10,
   optimizeRecipe,
+  recommendStyles,
   type GeneratedRecipe,
   type PizzaStyle,
   type SkillLevel,
@@ -642,5 +643,90 @@ describe("Regola 55 ai limiti (ENG-7)", () => {
         previous = water as number;
       }
     }
+  });
+});
+
+describe("Ore al quarto d'ora (M-3, M-4)", () => {
+  it("M-4: l'ottimizzatore della Recco resta nel range di riposo 0,5–2 h", () => {
+    const recco = STYLES_DB.focaccia_recco;
+    for (const available of [1, 2, 3, 4, 8, 24, 72]) {
+      for (const meal of [{}, MEAL]) {
+        const result = optimizeRecipe(recco, makeConstraints({ ...HOME_OVEN, available_hours: available, ...meal }));
+        expect(result.recipe.fermentation_hours).toBeGreaterThanOrEqual(0.5);
+        expect(result.recipe.fermentation_hours).toBeLessThanOrEqual(2);
+        expect(result.recipe.fermentation_hours * 4).toBe(Math.floor(result.recipe.fermentation_hours * 4));
+      }
+    }
+  });
+
+  it("M-4: i candidati delle ore sono sempre al quarto d'ora", () => {
+    for (const style of STYLES) {
+      const result = optimizeRecipe(style, makeConstraints({ ...HOME_OVEN, available_hours: 24 }));
+      const hours = result.recipe.fermentation_hours;
+      expect(hours * 4, style.id).toBe(Math.floor(hours * 4));
+    }
+  });
+
+  it("M-3: recommendStyles legge le ore al quarto d'ora per difetto", () => {
+    const style = Object.values(STYLES_DB).find((s) => s.dough.fermentation_hours_range[0] === 24)!;
+    const justUnder = recommendStyles(makeConstraints({ available_hours: 23.9 })).find((r) => r.style.id === style.id)!;
+    const exact = recommendStyles(makeConstraints({ available_hours: 23.75 })).find((r) => r.style.id === style.id)!;
+    expect(justUnder.reasons).toEqual(exact.reasons);
+    expect(justUnder.warnings).toEqual(exact.warnings);
+  });
+});
+
+describe("Lievito trasparente e correzione personale (M-11)", () => {
+  const base = makeConstraints({ ...HOME_OVEN, available_hours: 24 });
+
+  it("una cucina che lievita il 25% più in fretta usa l'80% del lievito, su tutti gli stili lievitati", () => {
+    for (const style of STYLES) {
+      const normal = generateRecipe(style, base);
+      if (!normal.science.yeast_model) continue;
+      const faster = generateRecipe(style, { ...base, yeast_speed_factor: 1.25 });
+      expect(faster.science.yeast_baker_pct, style.id).toBeCloseTo(normal.science.yeast_baker_pct / 1.25, 1);
+      expect(faster.science.yeast_model?.personal_factor).toBe(1.25);
+    }
+  });
+
+  it("la correzione resta tra 0,5 e 2", () => {
+    const napoletana = STYLES_DB.napoletana_stg;
+    const extreme = generateRecipe(napoletana, { ...base, yeast_speed_factor: 10 });
+    expect(extreme.science.yeast_model?.personal_factor).toBe(2);
+    const none = generateRecipe(napoletana, { ...base, yeast_speed_factor: Number.NaN });
+    expect(none.science.yeast_model?.personal_factor).toBe(1);
+  });
+
+  it("il modello dichiarato spiega la dose: riferimento, ore, temperatura, margine", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, base);
+    const model = recipe.science.yeast_model!;
+    const dose = (model.reference_pct * Math.pow(model.reference_hours / recipe.fermentation_hours, model.time_exponent)) /
+      model.speed_ratio * (recipe.yeast_type === "dry" ? model.dry_ratio : 1);
+    expect(recipe.science.yeast_baker_pct).toBeCloseTo(dose, 2);
+    expect(model.range_pct[0]).toBeLessThan(recipe.science.yeast_baker_pct);
+    expect(model.range_pct[1]).toBeGreaterThan(recipe.science.yeast_baker_pct);
+  });
+
+  it("niente modello del lievito commerciale per la Recco (non lievitata)", () => {
+    expect(generateRecipe(STYLES_DB.focaccia_recco, base).science.yeast_model).toBeUndefined();
+  });
+});
+
+describe("Stili fritti: olio, non forno (M-6)", () => {
+  it("pizza fritta e montanara: olio a temperatura e frittura, niente «forno»", () => {
+    for (const style of STYLES.filter(isFried)) {
+      const recipe = generateRecipe(style, makeConstraints({ ...HOME_OVEN }));
+      const preheat = recipe.timeline.find((step) => step.id === "preheat")!;
+      const bake = recipe.timeline.find((step) => step.id === "bake")!;
+      expect(preheat.variant, style.id).toBe("oil");
+      expect(bake.variant, style.id).toBe("fry");
+      expect(`${preheat.title} ${preheat.description} ${bake.title} ${bake.description}`.toLowerCase()).not.toContain("forno");
+    }
+  });
+
+  it("gli stili al forno non cambiano", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, makeConstraints({ ...HOME_OVEN }));
+    expect(recipe.timeline.find((step) => step.id === "preheat")?.variant).not.toBe("oil");
+    expect(recipe.timeline.find((step) => step.id === "bake")?.variant).toBeUndefined();
   });
 });

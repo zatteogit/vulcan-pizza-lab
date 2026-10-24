@@ -4,6 +4,8 @@
 
 import type { CmsContent, CmsTimelineStep } from "../cms/cms-context";
 import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
+import { engineMsgTexts } from "./engine-msg-text";
+import { localizeToppingStepText } from "../../data/topping-i18n/localize";
 import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
 import {
   getBakingTimeByStyle,
@@ -16,6 +18,7 @@ import {
   type GeneratedRecipe,
   type PizzaStyle,
   type TimelineStep,
+  type EngineMsg,
   fermentationSpeedRatio,
   getLayoutSpec,
   getServingUnit,
@@ -173,13 +176,14 @@ export function displayStepTime(
   bcp47: string,
   copy?: CmsContent["cooking"],
 ): string {
+  const approx = copy?.approxPrefix ?? "ca. ";
   if (!FLEXIBLE_STEP_IDS.has(stepId)) {
     const rounded = new Date(Math.round(date.getTime() / 300_000) * 300_000);
-    const prefix = Math.abs(rounded.getTime() - date.getTime()) >= 60_000 ? "ca. " : "";
+    const prefix = Math.abs(rounded.getTime() - date.getTime()) >= 60_000 ? approx : "";
     return `${prefix}${clockWithDay(rounded, reference, bcp47, copy)}`;
   }
   const rounded = new Date(Math.round(date.getTime() / 900_000) * 900_000);
-  return `ca. ${clockWithDay(rounded, reference, bcp47, copy)}`;
+  return `${approx}${clockWithDay(rounded, reference, bcp47, copy)}`;
 }
 
 function normalizeTemperatureUnitSuffixes(text: string): string {
@@ -448,6 +452,40 @@ export function formatCompVal(type: string, val: number): string {
   return String(Math.round(val * 100) / 100);
 }
 
+/* ═══ I18N-2 — passi con testi a chiave e passi dei condimenti ═══ */
+function localizeKeyedStep(
+  step: TimelineStep,
+  cms: CmsContent,
+  bcp47: string,
+): { title: string; description: string; tip?: { beginner: string; nerd: string } } | null {
+  const toppingTr = cms.toppingI18n;
+  const text = (msg: EngineMsg) =>
+    msg.key === "topping.bakeNote"
+      ? (toppingTr?.recipes[String(msg.params?.toppingId)]?.bake_note ?? msg.fallback)
+      : engineMsgTexts([msg], cms, bcp47)[0];
+  if (step.msg) {
+    return {
+      title: step.msg.title ? text(step.msg.title) : step.title,
+      description: step.msg.description ? step.msg.description.map(text).join(" ") : step.description,
+      tip: step.msg.tip
+        ? { beginner: text(step.msg.tip.beginner), nerd: text(step.msg.tip.nerd) }
+        : step.tip,
+    };
+  }
+  // Passo di un condimento (assembly / pre_prep): si riconosce dall'id.
+  const topping = localizeToppingStepText(step.id, toppingTr);
+  if (topping) {
+    return {
+      title: topping.title ?? step.title,
+      description: topping.description ?? step.description,
+      tip: step.tip
+        ? { beginner: topping.tipBeginner ?? step.tip.beginner, nerd: topping.tipNerd ?? step.tip.nerd }
+        : undefined,
+    };
+  }
+  return null;
+}
+
 /* ═══ Timeline step localization ═══ */
 export function localizeStep(
   step: TimelineStep,
@@ -456,6 +494,9 @@ export function localizeStep(
   fmt?: ReturnType<typeof createFormatter>,
 ): { title: string; description: string; longDesc?: string; tip?: { beginner: string; nerd: string } } {
   const formatRawStep = (raw: TimelineStep) => {
+    // I18N-2: testi del motore con chiave → CMS nella lingua attiva.
+    const keyed = localizeKeyedStep(raw, cms, fmt?.bcp47 ?? "it-IT");
+    if (keyed) return keyed;
     if (!fmt) return raw;
     return {
       ...raw,
@@ -539,6 +580,26 @@ export function localizeStep(
       entry = labels.top;
       break;
     case "preheat": {
+      // M-6: per gli stili fritti il passo è l'olio, non il forno.
+      if (step.variant === "oil") {
+        return {
+          title: engineMessage(cms, "timeline.heatOil.title", "Olio a temperatura"),
+          description: t(
+            engineMessage(
+              cms,
+              "timeline.heatOil.desc",
+              "Scalda l'olio (almeno 5 cm, in una pentola dai bordi alti) a {temp} e controllalo con un termometro. Intanto i panetti finiscono l'appretto.",
+            ),
+            { temp: formatTemp(recipe.style.baking.temp_c_ideal) },
+          ),
+          tip: step.tip
+            ? {
+                beginner: engineMessage(cms, "timeline.heatOil.tipBeginner", step.tip.beginner),
+                nerd: engineMessage(cms, "timeline.heatOil.tipNerd", step.tip.nerd),
+              }
+            : undefined,
+        };
+      }
       const equipmentNote = step.description.includes("pietra o acciaio")
         ? engineMessage(cms, "timeline.preheat.equipmentNote", " (pietra o acciaio già dentro)")
         : "";
@@ -585,6 +646,28 @@ export function localizeStep(
       };
     }
     case "bake":
+      if (step.variant === "fry") {
+        return {
+          title: engineMessage(cms, "timeline.fry.title", "Frittura"),
+          description: t(
+            engineMessage(
+              cms,
+              "timeline.fry.desc",
+              "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
+            ),
+            {
+              temp: formatTemp(recipe.style.baking.temp_c_ideal),
+              time: fmt ? fmt.cookTime(recipe.cook_time_sec) : step.timing_label,
+            },
+          ),
+          tip: step.tip
+            ? {
+                beginner: engineMessage(cms, "timeline.fry.tipBeginner", step.tip.beginner),
+                nerd: engineMessage(cms, "timeline.fry.tipNerd", step.tip.nerd),
+              }
+            : undefined,
+        };
+      }
       // Con cook_mode "white_then_top", il motore genera "Prima cottura (in bianco)" custom
       if (layout.cook_mode === "white_then_top") return formatRawStep(step);
       // Audit role-play giugno 2026 (punto 2): il motore aggiunge il setup forno

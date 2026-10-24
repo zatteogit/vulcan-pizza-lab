@@ -9,6 +9,9 @@ export interface FlourEntry {
   producer: string;
   category: "grano_tenero" | "manitoba" | "semola" | "integrale" | "gluten_free" | "speciale";
   w: number;
+  /** C-4 — false quando il produttore non dichiara W e P/L: `w` e `pl` sono
+   *  allora stime di Vulcan, non dati di scheda. Assente = dichiarati. */
+  w_declared?: boolean;
   w_std: number; // Standard deviation W (batch-to-batch variation, typically ±10-20)
   w_seasonal_variation_pct: number; // Seasonal ±% (spring harvest higher, autumn lower)
   pl: number;
@@ -102,7 +105,7 @@ export const FLOURS_DB: FlourEntry[] = [
     proteine_pct: 13.0,
     assorbimento_pct: 57,
     idratazione_ideale_pct: 65,
-    falling_number: 300,
+    falling_number: 280, // C-4: scheda Agugiaro & Figna 2025 (era 300)
     stabilita_min: 13,
     autolisi_necessaria: false,
     fermentazione_min_h: 8,
@@ -265,12 +268,17 @@ export const FLOURS_DB: FlourEntry[] = [
     name: "Petra 3 Evolutiva",
     producer: "Petra (Molino Quaglia)",
     category: "grano_tenero",
+    // C-4: tipo 1 macinata a pietra. La scheda Molino Quaglia non dichiara W né
+    // P/L («l'elevato contenuto di fibra non consente di ottenere dei risultati
+    // significativi» all'alveografo): 340 e 0,65 sono stime di Vulcan.
+    // Assorbimento «fino a 85%».
     w: 340,
+    w_declared: false,
     w_std: 20,
     w_seasonal_variation_pct: 5,
     pl: 0.65,
     proteine_pct: 14.0,
-    assorbimento_pct: 60,
+    assorbimento_pct: 85,
     idratazione_ideale_pct: 65,
     falling_number: 390,
     stabilita_min: 15,

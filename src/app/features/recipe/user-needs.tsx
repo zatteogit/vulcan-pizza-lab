@@ -25,7 +25,9 @@ import { AnimatePresence,motion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring,motionTiming } from "../../components/ds/motion";
 import React,{ useEffect,useMemo,useState } from "react";
 import { Chip } from "../../components/ds/index";
-import { useCms } from "../cms/cms-context";
+import { useCms, type CmsContent } from "../cms/cms-context";
+import { timeSlotText } from "./time-slot-text";
+import { CustomTimeSlot } from "./custom-time-slot";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import {
 DEFAULT_KITCHEN_TEMP,
@@ -45,6 +47,8 @@ interface UserNeedsProps {
   onConstraintsChange: (c: UserConstraints) => void;
   selectedTimeSlot: string | null;
   onTimeSlotChange: (slot: TimeSlot) => void;
+  /** U-2: lo slot con giorno e ora scelti a mano, se attivo. */
+  customTimeSlot?: TimeSlot | null;
   hero?: React.ReactNode;
   hideTimeSlots?: boolean;
   compact?: boolean;
@@ -63,16 +67,13 @@ const TIME_COLORS: Record<
   string,
   { bg: string; text: string }
 > = {
-  tonight: { bg: "var(--time-tonight)", text: "var(--overlay-text)" },
-  tomorrow_lunch: { bg: "var(--time-lunch)", text: "var(--overlay-text)" },
-  tomorrow_dinner: {
-    bg: "var(--time-dinner)",
-    text: "var(--overlay-text)",
-  },
-  day_after: { bg: "var(--time-dayafter)", text: "var(--overlay-text)" },
-  day_after_lunch: { bg: "var(--time-dayafter)", text: "var(--overlay-text)" },
-  long_ferment: { bg: "var(--time-weekend)", text: "var(--overlay-text)" },
-  no_preference: { bg: "var(--secondary)", text: "var(--overlay-text)" },
+  tonight: { bg: "var(--time-tonight)", text: "var(--time-tonight-on)" },
+  tomorrow_lunch: { bg: "var(--time-lunch)", text: "var(--time-lunch-on)" },
+  tomorrow_dinner: { bg: "var(--time-dinner)", text: "var(--time-dinner-on)" },
+  day_after: { bg: "var(--time-dayafter)", text: "var(--time-dayafter-on)" },
+  day_after_lunch: { bg: "var(--time-dayafter)", text: "var(--time-dayafter-on)" },
+  long_ferment: { bg: "var(--time-weekend)", text: "var(--time-weekend-on)" },
+  no_preference: { bg: "var(--secondary)", text: "var(--time-any-on)" },
 };
 
 function getTimeColors(slotId?: string | null) {
@@ -100,6 +101,7 @@ const OVEN_ICONS: Record<
   electric_standard: Zap,
   electric_high: Zap,
   gas: Flame,
+  gas_pizza: Flame,
   wood: Flame,
 };
 
@@ -119,69 +121,69 @@ interface FlourOption {
 const FLOUR_OPTIONS_GENERIC: FlourOption[] = [
   {
     id: "00",
-    name: uiMessage("features.recipe.user-needs.farina-00-06dc5ab2"),
+    get name() { return uiMessage("features.recipe.user-needs.farina-00-06dc5ab2"); },
     w: "W170–220",
-    detail: uiMessage("features.recipe.user-needs.classica-versatile-21c9cc66"),
+    get detail() { return uiMessage("features.recipe.user-needs.classica-versatile-21c9cc66"); },
   },
   {
     id: "0",
-    name: uiMessage("features.recipe.user-needs.farina-0-625e81ec"),
+    get name() { return uiMessage("features.recipe.user-needs.farina-0-625e81ec"); },
     w: "W220–260",
-    detail: uiMessage("features.recipe.user-needs.media-forza-1dea8ed0"),
+    get detail() { return uiMessage("features.recipe.user-needs.media-forza-1dea8ed0"); },
   },
   {
     id: "tipo_1",
-    name: uiMessage("features.recipe.user-needs.farina-tipo-1-189a22b7"),
+    get name() { return uiMessage("features.recipe.user-needs.farina-tipo-1-189a22b7"); },
     w: "W220–280",
-    detail: uiMessage("features.recipe.user-needs.rustica-profumo-di-cereale-766e58ac"),
+    get detail() { return uiMessage("features.recipe.user-needs.rustica-profumo-di-cereale-766e58ac"); },
   },
   {
     id: "manitoba",
-    name: uiMessage("features.recipe.user-needs.manitoba-c1a38647"),
+    get name() { return uiMessage("features.recipe.user-needs.manitoba-c1a38647"); },
     w: "W340–380",
-    detail: uiMessage("features.recipe.user-needs.alta-forza-lunga-maturazione-58db76ea"),
+    get detail() { return uiMessage("features.recipe.user-needs.alta-forza-lunga-maturazione-58db76ea"); },
   },
   {
     id: "integrale",
-    name: uiMessage("features.recipe.user-needs.integrale-596f723e"),
+    get name() { return uiMessage("features.recipe.user-needs.integrale-596f723e"); },
     w: "W200–260",
-    detail: uiMessage("features.recipe.user-needs.piu-fibra-e-sapore-e0f02324"),
+    get detail() { return uiMessage("features.recipe.user-needs.piu-fibra-e-sapore-e0f02324"); },
   },
   {
     id: "semola",
-    name: uiMessage("features.recipe.user-needs.semola-rimacinata-8c3476b8"),
+    get name() { return uiMessage("features.recipe.user-needs.semola-rimacinata-8c3476b8"); },
     w: "W220–280",
-    detail: uiMessage("features.recipe.user-needs.croccantezza-colore-dorato-0119e353"),
+    get detail() { return uiMessage("features.recipe.user-needs.croccantezza-colore-dorato-0119e353"); },
   },
 ];
 
 const FLOUR_OPTIONS_SPECIAL: FlourOption[] = [
-  { id: "farro", name: uiMessage("features.recipe.user-needs.farina-di-farro-cba26b1c"), w: "W130–180", detail: uiMessage("features.recipe.user-needs.sapore-nocciolato-digeribile-7f620358") },
-  { id: "spelta", name: uiMessage("features.recipe.user-needs.farina-di-spelta-145c7e5d"), w: "W150–200", detail: uiMessage("features.recipe.user-needs.grano-antico-aromatica-6b49eff1") },
-  { id: "kamut", name: uiMessage("features.recipe.user-needs.farina-di-kamut-23160bf9"), w: "W200–260", detail: uiMessage("features.recipe.user-needs.khorasan-dolce-e-burrosa-1c0a0d60") },
-  { id: "segale", name: uiMessage("features.recipe.user-needs.farina-di-segale-4d6ef95b"), w: "W80–150", detail: uiMessage("features.recipe.user-needs.sapore-intenso-bassa-glutine-b955d1cb") },
-  { id: "riso", name: uiMessage("features.recipe.user-needs.farina-di-riso-1d5fb293"), w: "—", detail: uiMessage("features.recipe.user-needs.senza-glutine-croccantezza-c0379498") },
-  { id: "mais", name: uiMessage("features.recipe.user-needs.farina-di-mais-41910105"), w: "—", detail: uiMessage("features.recipe.user-needs.senza-glutine-colore-dorato-83a2168b") },
-  { id: "saraceno", name: uiMessage("features.recipe.user-needs.grano-saraceno-d1593536"), w: "—", detail: uiMessage("features.recipe.user-needs.senza-glutine-terroso-85af8327") },
-  { id: "avena", name: uiMessage("features.recipe.user-needs.farina-di-avena-d11c4a10"), w: "W100–140", detail: uiMessage("features.recipe.user-needs.fibra-alta-morbidezza-348c80f9") },
-  { id: "ceci", name: uiMessage("features.recipe.user-needs.farina-di-ceci-f7a159a1"), w: "—", detail: uiMessage("features.recipe.user-needs.proteica-sapore-deciso-6623765b") },
+  { id: "farro", get name() { return uiMessage("features.recipe.user-needs.farina-di-farro-cba26b1c"); }, w: "W130–180", get detail() { return uiMessage("features.recipe.user-needs.sapore-nocciolato-digeribile-7f620358"); } },
+  { id: "spelta", get name() { return uiMessage("features.recipe.user-needs.farina-di-spelta-145c7e5d"); }, w: "W150–200", get detail() { return uiMessage("features.recipe.user-needs.grano-antico-aromatica-6b49eff1"); } },
+  { id: "kamut", get name() { return uiMessage("features.recipe.user-needs.farina-di-kamut-23160bf9"); }, w: "W200–260", get detail() { return uiMessage("features.recipe.user-needs.khorasan-dolce-e-burrosa-1c0a0d60"); } },
+  { id: "segale", get name() { return uiMessage("features.recipe.user-needs.farina-di-segale-4d6ef95b"); }, w: "W80–150", get detail() { return uiMessage("features.recipe.user-needs.sapore-intenso-bassa-glutine-b955d1cb"); } },
+  { id: "riso", get name() { return uiMessage("features.recipe.user-needs.farina-di-riso-1d5fb293"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.senza-glutine-croccantezza-c0379498"); } },
+  { id: "mais", get name() { return uiMessage("features.recipe.user-needs.farina-di-mais-41910105"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.senza-glutine-colore-dorato-83a2168b"); } },
+  { id: "saraceno", get name() { return uiMessage("features.recipe.user-needs.grano-saraceno-d1593536"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.senza-glutine-terroso-85af8327"); } },
+  { id: "avena", get name() { return uiMessage("features.recipe.user-needs.farina-di-avena-d11c4a10"); }, w: "W100–140", get detail() { return uiMessage("features.recipe.user-needs.fibra-alta-morbidezza-348c80f9"); } },
+  { id: "ceci", get name() { return uiMessage("features.recipe.user-needs.farina-di-ceci-f7a159a1"); }, w: "—", get detail() { return uiMessage("features.recipe.user-needs.proteica-sapore-deciso-6623765b"); } },
 ];
 
 const YEAST_OPTIONS = [
   {
     id: "fresh",
-    name: uiMessage("features.recipe.user-needs.lievito-fresco-f3a7cabd"),
-    detail: uiMessage("features.recipe.user-needs.cubetto-classico-76ef5715"),
+    get name() { return uiMessage("features.recipe.user-needs.lievito-fresco-f3a7cabd"); },
+    get detail() { return uiMessage("features.recipe.user-needs.cubetto-classico-76ef5715"); },
   },
   {
     id: "dry",
-    name: uiMessage("features.recipe.user-needs.lievito-secco-0043f8c5"),
-    detail: uiMessage("features.recipe.user-needs.pratico-lunga-conservazione-8c39549a"),
+    get name() { return uiMessage("features.recipe.user-needs.lievito-secco-0043f8c5"); },
+    get detail() { return uiMessage("features.recipe.user-needs.pratico-lunga-conservazione-8c39549a"); },
   },
   {
     id: "sourdough",
-    name: uiMessage("features.recipe.user-needs.lievito-madre-180392fb"),
-    detail: uiMessage("features.recipe.user-needs.sapore-complesso-lunga-maturazione-9d8ec002"),
+    get name() { return uiMessage("features.recipe.user-needs.lievito-madre-180392fb"); },
+    get detail() { return uiMessage("features.recipe.user-needs.sapore-complesso-lunga-maturazione-9d8ec002"); },
   },
 ];
 
@@ -422,7 +424,8 @@ function SettingsSummaryBar({
   const cucinaText = cms.ui?.kitchenTitle ?? "La tua cucina";
 
   const count = constraints.pantry_flours.length + constraints.pantry_yeasts.length;
-  const pantryText = count > 0 ? `Dispensa (${count})` : "Dispensa";
+  const pantryLabel = cms.sections.pantry.title;
+  const pantryText = count > 0 ? `${pantryLabel} (${count})` : pantryLabel;
 
   const SKILL_NAMES: Record<number, string> = { 1: "Principiante", 2: "Intermedio", 3: "Esperto" };
   const skillLabel = cms.skillLevels[String(constraints.skill_level)]?.name ?? SKILL_NAMES[constraints.skill_level] ?? `Skill ${constraints.skill_level}`;
@@ -444,6 +447,8 @@ function SettingsSummaryBar({
         return (
           <button
             key={tab.id}
+            type="button"
+            aria-expanded={isActive}
             onClick={() => onTabSelect(isActive ? null : tab.id)}
             className={isActive ? "needs-summary__tab needs-summary__tab--active" : "needs-summary__tab"}
           >
@@ -508,6 +513,7 @@ export function UserNeeds({
   onConstraintsChange,
   selectedTimeSlot,
   onTimeSlotChange,
+  customTimeSlot = null,
   hero,
   hideTimeSlots = false,
   compact = false,
@@ -531,9 +537,11 @@ export function UserNeeds({
   /* Label della tempistica scelta — alimenta il chip "Quando" nella barra. */
   const selectedTimeLabel = useMemo(() => {
     if (!selectedTimeSlot) return null;
-    const slot = dynamicSlots.find((s) => s.id === selectedTimeSlot);
-    return cms.timeSlots[selectedTimeSlot]?.label ?? slot?.label ?? null;
-  }, [selectedTimeSlot, dynamicSlots, cms.timeSlots]);
+    const slot =
+      dynamicSlots.find((s) => s.id === selectedTimeSlot) ??
+      (customTimeSlot?.id === selectedTimeSlot ? customTimeSlot : undefined);
+    return slot ? timeSlotText(slot, cms, bcp47).label : null;
+  }, [selectedTimeSlot, dynamicSlots, customTimeSlot, cms, bcp47]);
   const weather = useLocationWeather();
 
   const [kitchenTempManual, setKitchenTempManual] =
@@ -703,7 +711,13 @@ export function UserNeeds({
                             {cms.ui.autoLabel}
                           </motion.button>
                         )}
-                        <button onClick={() => setShowTempTip(!showTempTip)} className="needs-kitchen-temp__help">
+                        <button
+                          type="button"
+                          onClick={() => setShowTempTip(!showTempTip)}
+                          aria-label={`${cms.misc.moreInfo}: ${cms.misc.kitchenTempLabel}`}
+                          aria-expanded={showTempTip}
+                          className="needs-kitchen-temp__help"
+                        >
                           <HelpCircle size={16} className={showTempTip ? "needs-kitchen-temp__help-icon needs-kitchen-temp__help-icon--active" : "needs-kitchen-temp__help-icon"} />
                         </button>
                       </div>
@@ -731,6 +745,8 @@ export function UserNeeds({
                           return (
                             <motion.button
                               key={preset.id}
+                              type="button"
+                              aria-pressed={active}
                               onClick={() => handleOvenSelect(preset.id, preset.maxTemp)}
                               className={
                                 active
@@ -815,6 +831,8 @@ export function UserNeeds({
                           return (
                             <motion.button
                               key={y.id}
+                              type="button"
+                              aria-pressed={active}
                               onClick={() => toggleYeast(y.id)}
                               className={
                                 active
@@ -874,6 +892,7 @@ export function UserNeeds({
                     suggestedSlot={suggestedSlot}
                     selectedTimeSlot={selectedTimeSlot}
                     onTimeSlotChange={onTimeSlotChange}
+                    customTimeSlot={customTimeSlot}
                     cms={cms}
                     compact
                   />
@@ -895,6 +914,7 @@ export function UserNeeds({
                   suggestedSlot={suggestedSlot}
                   selectedTimeSlot={selectedTimeSlot}
                   onTimeSlotChange={onTimeSlotChange}
+                  customTimeSlot={customTimeSlot}
                   cms={cms}
                 />
               </div>
@@ -914,6 +934,7 @@ function TimeSlotPicker({
   suggestedSlot,
   selectedTimeSlot,
   onTimeSlotChange,
+  customTimeSlot,
   cms,
   compact = false,
 }: {
@@ -921,9 +942,11 @@ function TimeSlotPicker({
   suggestedSlot: string;
   selectedTimeSlot: string | null;
   onTimeSlotChange: (slot: TimeSlot) => void;
-  cms: any;
+  customTimeSlot: TimeSlot | null;
+  cms: CmsContent;
   compact?: boolean;
 }) {
+  const { bcp47 } = useCms();
   return (
     <div className="needs-slot-picker">
       <div
@@ -935,12 +958,12 @@ function TimeSlotPicker({
           const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
-          const cmsSlot = cms.timeSlots[slot.id];
-          const displayLabel = cmsSlot?.label ?? slot.label;
-          const displaySublabel = cmsSlot?.sublabel ?? slot.sublabel;
+          const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);
           return (
             <button
               key={slot.id}
+              type="button"
+              aria-pressed={active}
               onClick={() => onTimeSlotChange(slot)}
               className={
                 (compact ? "needs-slot-list__item needs-slot-list__item--compact" : "needs-slot-list__item") +
@@ -999,12 +1022,12 @@ function TimeSlotPicker({
           const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
-          const cmsSlot = cms.timeSlots[slot.id];
-          const displayLabel = cmsSlot?.label ?? slot.label;
-          const displaySublabel = cmsSlot?.sublabel ?? slot.sublabel;
+          const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);
           return (
             <motion.button
               key={slot.id}
+              type="button"
+              aria-pressed={active}
               onClick={() => onTimeSlotChange(slot)}
               whileHover={{ y: compact ? -2 : -4 }}
               whileTap={{ scale: 0.97 }}
@@ -1068,6 +1091,13 @@ function TimeSlotPicker({
           );
         })}
       </div>
+
+      <CustomTimeSlot
+        activeSlot={selectedTimeSlot === customTimeSlot?.id ? customTimeSlot : null}
+        onSelect={onTimeSlotChange}
+        cms={cms}
+        bcp47={bcp47}
+      />
     </div>
   );
 }
@@ -1117,6 +1147,8 @@ function FlourChip({
 }) {
   return (
     <motion.button
+      type="button"
+      aria-pressed={active}
       onClick={() => onToggle(flour.id)}
       className={
         "needs-flour-chip" +

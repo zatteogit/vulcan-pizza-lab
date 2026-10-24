@@ -59,6 +59,7 @@ function sortByVisibleMatch(items: RecommendationWithVariant[]): RecommendationW
 
 /** Nome breve della variante per la card ("AVPN", "Franco Pepe"). */
 function variantShortName(it: Interpretation): string {
+  if (it.short_name) return it.short_name;
   const name =
     it.author ?? it.pizzeria ?? it.organization ?? it.signature_name ?? "";
   return name.split("—")[0].trim();
@@ -110,26 +111,26 @@ const TIER_META: Record<
   }
 > = {
   perfect: {
-    label: uiMessage("features.recipe.recommended-styles.perfetti-per-te-3530eb1d"),
-    subtitle: uiMessage("features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d"),
+    get label() { return uiMessage("features.recipe.recommended-styles.perfetti-per-te-3530eb1d"); },
+    get subtitle() { return uiMessage("features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d"); },
     color: "var(--text-success)",
     Icon: Award,
   },
   good: {
-    label: uiMessage("features.recipe.recommended-styles.fattibili-f3ba54d3"),
-    subtitle: uiMessage("features.recipe.recommended-styles.richiedono-qualche-compromesso-170fe3d8"),
+    get label() { return uiMessage("features.recipe.recommended-styles.fattibili-f3ba54d3"); },
+    get subtitle() { return uiMessage("features.recipe.recommended-styles.richiedono-qualche-compromesso-170fe3d8"); },
     color: "var(--text-warning)",
     Icon: Sparkles,
   },
   challenging: {
-    label: uiMessage("features.recipe.recommended-styles.sfidanti-354cbc9b"),
-    subtitle: uiMessage("features.recipe.recommended-styles.richiedono-piu-attrezzatura-o-esperienza-1685224c"),
+    get label() { return uiMessage("features.recipe.recommended-styles.sfidanti-354cbc9b"); },
+    get subtitle() { return uiMessage("features.recipe.recommended-styles.richiedono-piu-attrezzatura-o-esperienza-1685224c"); },
     color: "var(--text-accent)",
     Icon: Triangle,
   },
   not_feasible: {
-    label: uiMessage("features.recipe.recommended-styles.non-fattibili-327346d5"),
-    subtitle: uiMessage("features.recipe.recommended-styles.mancano-requisiti-chiave-763f98f6"),
+    get label() { return uiMessage("features.recipe.recommended-styles.non-fattibili-327346d5"); },
+    get subtitle() { return uiMessage("features.recipe.recommended-styles.mancano-requisiti-chiave-763f98f6"); },
     color: "var(--text-muted)",
     Icon: Triangle,
   },
@@ -468,6 +469,14 @@ export function RecommendedStyles({
         )}
       </AnimatePresence>
 
+      {/* U-10 (F11): quanti stili restano col filtro, detto al lettore di
+          schermo. La regione è sempre montata; parla solo se c'è un filtro. */}
+      <p role="status" className="sr-only">
+        {familyFilter !== "all" || hydrationFilter || textureFilter || skillFilter || ovenFilter || styleQuery.trim()
+          ? t(cms.ui.stylesFoundStatus, { n: filtered.length })
+          : ""}
+      </p>
+
       {/* ═══ Tier groups ═══ */}
       <motion.div className="recommended-styles__results" animate={resultsControls}>
       {tiers.length === 0 && (
@@ -663,7 +672,7 @@ function StyleCard({
             >
               <ImageWithFallback
                 src={photo}
-                alt={style.name}
+                alt="" /* U-10 (F24): il nome è già nel titolo della card */
                 loading="lazy"
                 sizes={IMAGE_SIZES.card}
                 className="recommended-card__img"
@@ -680,6 +689,11 @@ function StyleCard({
                 baseScore={compatibilityScore}
                 color={ringColor}
                 size={38}
+                label={
+                  compatibilityScore < displayScore
+                    ? uiMessage("pages.explore.compatibilityOptimizable", [Math.round(compatibilityScore), Math.round(displayScore)])
+                    : uiMessage("pages.explore.compatibility", [Math.round(displayScore)])
+                }
               />
             </div>
 

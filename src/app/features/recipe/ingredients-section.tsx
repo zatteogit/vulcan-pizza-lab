@@ -6,6 +6,9 @@ import { HelpCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
+import { FlourBudget } from "./flour-budget";
+import { YeastExplainer } from "./yeast-explainer";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { Stepper } from "../../components/ds/index";
@@ -37,6 +40,8 @@ interface IngredientsSectionProps {
   servingUnit: ReturnType<typeof getServingUnit>;
   panSizeLabel: string | null;
   updateBalls: (n: number) => void;
+  /** M-11: correzione personale della lievitazione. */
+  onYeastSpeedChange?: (factor: number) => void;
   showRule55Tip: boolean;
   setShowRule55Tip: Dispatch<SetStateAction<boolean>>;
   rule55Description: string;
@@ -50,6 +55,7 @@ export function IngredientsSection({
   servingUnit,
   panSizeLabel,
   updateBalls,
+  onYeastSpeedChange,
   showRule55Tip,
   setShowRule55Tip,
   rule55Description,
@@ -58,26 +64,31 @@ export function IngredientsSection({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
   const servingLabel = getServingUnitLabel(cms, servingUnit, 2);
+  const [ballsStatus, setBallsStatus] = useState("");
   const waterTempLimit = recipe.science.water_temp_limit ?? null;
   /* Baker's % sul totale farina — layer nerd accanto ai grammi. */
   const bakerPct = (grams: number, maxDecimals = 1) =>
     `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: maxDecimals }).format(
       (grams / recipe.flour_g) * 100,
     )}%`;
+  /* Nome del grasso nella lingua attiva (il motore dà un'etichetta italiana). */
+  const fatType = recipe.style.dough.fat_type;
+  const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
   const flourUseLabel = (() => {
-    if (recipe.flour_w >= 330) return "Manitoba o tipo 0 molto forte";
-    if (recipe.flour_w >= 280) return "Tipo 0/00 forte per pizza";
-    if (recipe.flour_w >= 220) return "Tipo 0 media forza";
-    return "Tipo 00 debole/media";
+    if (recipe.flour_w >= 330) return cms.ui.flourUseVeryStrong;
+    if (recipe.flour_w >= 280) return cms.ui.flourUseStrong;
+    if (recipe.flour_w >= 220) return cms.ui.flourUseMedium;
+    return cms.ui.flourUseWeak;
   })();
   return (
     <>
       {/* ── Ingredients + panetti stepper ── */}
       <div data-region="section">
         <div className="ingredients-header">
-          <h3 className="ingredients-header__title">
+          {/* U-10 (F16): h2 sotto l'h1 della ricetta (era h3, saltava un livello). */}
+          <h2 className="ingredients-header__title">
             {ui.ingredients}
-          </h3>
+          </h2>
           {/* Visore di sezione — come "Perfetti per te" */}
           <div className="ingredients-header__divider" />
         </div>
@@ -90,10 +101,19 @@ export function IngredientsSection({
             value={constraints.dough_balls}
             min={1}
             max={20}
-            onChange={updateBalls}
+            onChange={(n) => {
+              updateBalls(n);
+              /* U-10 (F11): le quantità cambiano tutte insieme; lo si dice. */
+              setBallsStatus(
+                t(ui.quantitiesUpdatedStatus, {
+                  n: `${n} ${getServingUnitLabel(cms, servingUnit, n, cms.locale.id !== "de")}`,
+                }),
+              );
+            }}
             decrementLabel={ui.ariaReduceBalls}
             incrementLabel={ui.ariaAddBalls}
           />
+          <p role="status" className="sr-only">{ballsStatus}</p>
           <span className="type-body ingredients-servings__note">
             {normalizeMeasureUnitSuffixes(t(ui.doughBallsFrom, { w: fmt.grams(recipe.ball_weight_g) }))}
             {panSizeLabel ? ` · ${panSizeLabel}` : ""}
@@ -123,6 +143,7 @@ export function IngredientsSection({
             );
           })()}
         </div>
+        <FlourBudget recipe={recipe} servingUnit={servingUnit} onApply={updateBalls} />
 
         <div className="ingredients-list">
           <IngRow
@@ -271,9 +292,12 @@ export function IngredientsSection({
               amount={fmt.grams(recipe.yeast_g)}
             />
           )}
+          {recipe.yeast_g > 0 && onYeastSpeedChange && (
+            <YeastExplainer recipe={recipe} onSpeedFactorChange={onYeastSpeedChange} />
+          )}
           {recipe.fat_g > 0 && (
             <IngRow
-              name={recipe.fat_label || ui.oilEvo}
+              name={fatLabel}
               detail={isNerd ? bakerPct(recipe.fat_g) : undefined}
               amount={fmt.grams(recipe.fat_g)}
             />
@@ -323,7 +347,7 @@ export function IngredientsSection({
                     {ui.water}: <b>{fmt.grams(split.mainWaterG)}</b>
                     <br />
                     {ui.salt}: <b>{fmt.grams(recipe.salt_g)}</b>
-                    {recipe.fat_g > 0 ? <> · {recipe.fat_label || ui.oilEvo}: <b>{fmt.grams(recipe.fat_g)}</b></> : null}
+                    {recipe.fat_g > 0 ? <> · {fatLabel}: <b>{fmt.grams(recipe.fat_g)}</b></> : null}
                   </div>
                 </div>
               </div>

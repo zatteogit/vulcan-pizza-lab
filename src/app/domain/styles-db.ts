@@ -62,8 +62,12 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "napoletana",
     origin: { city: "Napoli", region: "Campania", country: "Italia" },
     dough: {
-      flour_w_range: [250, 320], // Aggiornato da AVPN 2024 (era 220-280) — Audit Maestro S3
-      flour_pl_range: [0.55, 0.70], // AVPN 2024 disciplinare — Audit Maestro P0-1
+      // C-4 (D-016): lo stile segue la STG (reg. UE 97/2010); il disciplinare
+      // AVPN 2024 è la versione «stg_avpn». Fonti in docs/fonti-dati.md §1.1.
+      // W: la STG ammette 220–380; si tiene la forbice AVPN 250–320, che sta
+      // dentro i limiti di legge ed è più utile come guida.
+      flour_w_range: [250, 320],
+      flour_pl_range: [0.55, 0.70], // STG e AVPN: 0,50–0,70
       hydration_pct_range: [55, 62],
       // Audit motore 2026-06: ripristinato a 2.8% (disciplinare AVPN ~50 g/L
       // acqua → a H58-62 ≈ 2.6-3.0% sulla farina). Lo stile è certificato STG:
@@ -73,12 +77,14 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       oil_pct: 0.0,
       fat_type: "none",
       sugar_pct: 0.0,
-      fermentation_hours_range: [8, 24],
+      // STG: 2 h in massa + 4–6 h in panetti a circa 25 °C, poi uso entro 6 h
+      // → 6–14 h in tutto. Era 8–24, che nessun testo riporta.
+      fermentation_hours_range: [6, 14],
       process_type: "direct",
     },
     shape: {
       shape_type: "round",
-      dough_weight_g: 270,
+      dough_weight_g: 250, // STG: 180–250 g. Era 270 (valore AVPN, ora nella versione)
       thickness_factor: 0.34,
       diameter_cm: 32,
     },
@@ -95,7 +101,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: false,
     description:
-      "Standard aureo secondo disciplinare AVPN. Cornicione gonfio, centro sottile, leopardatura.",
+      "Pizza Napoletana STG secondo il regolamento UE 97/2010. Cornicione gonfio, centro sottile, leopardatura.",
     key_characteristics: [
       "Cornicione 1-2cm gonfio",
       "Centro 3-4mm sottile",
@@ -257,9 +263,12 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     dough: {
       flour_w_range: [280, 340],
       flour_pl_range: [0.55, 0.75], // Mix multicereale: P/L variabile
-      hydration_pct_range: [75, 85],
-      salt_pct: 2.5,
-      oil_pct: 1.0,
+      // C-4 (D-015): protocollo OPR 2020 — 1 L d'acqua per 1,25–1,4 kg di farina
+      // (71–80%), sale 20–25 g/L (1,4–2,0%), olio 15–20 g/L (1,1–1,6%).
+      // Erano 75–85%, 2,5% e 1,0%. Fonti in docs/fonti-dati.md §1.2.
+      hydration_pct_range: [72, 80],
+      salt_pct: 1.8,
+      oil_pct: 1.3,
       fat_type: "oil",
       sugar_pct: 0.0,
       fermentation_hours_range: [24, 72],
@@ -273,15 +282,17 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     shape: {
       shape_type: "oval",
-      dough_weight_g: 280,
+      dough_weight_g: 240, // OPR 2020: 230–250 g. Era 280
       thickness_factor: 0.35,
-      length_cm: 35,
-      width_cm: 25,
+      length_cm: 34, // OPR 2020: 32–35 × 20–22 cm da cotta. Era 35 × 25
+      width_cm: 21,
     },
     baking: {
       oven_type_required: "electric_high",
-      temp_c_range: [350, 420],
-      temp_c_ideal: 380,
+      // PinsaRomana.it 2022: «forno in pizzeria impostato a 300/310 °C, cottura
+      // su pietra». Era 350–420 (ideale 380), senza fonte. Tempo: da verificare.
+      temp_c_range: [280, 320],
+      temp_c_ideal: 300,
       cook_time_sec_range: [180, 300],
       cook_time_sec_ideal: 240,
     },
@@ -639,9 +650,12 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "contemporanea",
     origin: { city: "Recco", region: "Liguria", country: "Italia" },
     dough: {
-      flour_w_range: [300, 340], // Disciplinare IGP focaccia di Recco: W ≥ 300 — era [170,210] ERRATO
-      flour_pl_range: [0.55, 0.70], // Forza alta = P/L bilanciato/forte
-      hydration_pct_range: [45, 50], // Sfoglia non lievitata, disciplinare IGP 45-50% — era [50,55]
+      // C-4 (D-017): disciplinare IGP, CCIAA Genova 2024 (art. 5): «W > 300;
+      // P/L non inferiore a 0,50». Il tetto 340 è una scelta. docs/fonti-dati.md §1.3.
+      flour_w_range: [300, 340],
+      flour_pl_range: [0.55, 0.70],
+      // Il disciplinare non indica l'idratazione: 45–50% è una stima di Vulcan.
+      hydration_pct_range: [45, 50],
       salt_pct: 2.0,
       oil_pct: 4.0, // 3-4% nell'impasto, resto in teglia — era 5.0
       fat_type: "oil",
@@ -658,10 +672,12 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     baking: {
       oven_type_required: "electric_high",
-      temp_c_range: [300, 340],
-      temp_c_ideal: 320,
-      cook_time_sec_range: [480, 600],
-      cook_time_sec_ideal: 540,
+      // Disciplinare IGP: forno «tra 270° e 320°C» per «4-8 minuti».
+      // Erano 300–340 °C (ideale 320) e 8–10 min.
+      temp_c_range: [270, 320],
+      temp_c_ideal: 300,
+      cook_time_sec_range: [240, 480],
+      cook_time_sec_ideal: 360,
     },
     crust_type: "stuffed_thin",
     requires_wood_oven: false,
@@ -1068,27 +1084,33 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     name: "Pizza Fritta",
     family: "napoletana",
     origin: { city: "Napoli", region: "Campania", country: "Italia" },
+    // M-7 (D-022, D-023): impasto del disciplinare AVPN 2024 (una sola farina,
+    // W 250–320, niente grassi), lievitazione 8–24 h (8 h Sorbillo, fino a 24
+    // AVPN). Idratazione 60–65%: plausibile (le fonti vanno da 53 a 67%).
+    // Panetto circa 200 g (AVPN 2024, §4.2); era 100 g. Fonti in docs/fonti-dati.md §1.4.
     dough: {
-      flour_w_range: [220, 280],
-      flour_pl_range: [0.50, 0.60],
+      flour_w_range: [250, 320],
+      flour_pl_range: [0.50, 0.70],
       hydration_pct_range: [60, 65],
       salt_pct: 2.5,
       oil_pct: 0.0,
       fat_type: "none",
       sugar_pct: 0.0,
-      fermentation_hours_range: [4, 8], // Lievitazione breve, frittura veloce
+      fermentation_hours_range: [8, 24],
       process_type: "direct",
     },
     shape: {
       shape_type: "round",
-      dough_weight_g: 100, // Dischetto piccolo da friggere
-      thickness_factor: 0.5,
-      diameter_cm: 14,
+      dough_weight_g: 200,
+      thickness_factor: 0.53,
+      diameter_cm: 22, // da verificare: l'AVPN dà 22–24 cm per 200 g, ma per la pizza al forno
     },
     baking: {
       oven_type_required: "home", // Frittura in olio, non forno
-      temp_c_range: [180, 190], // VPL-B2: olio di frittura 180-190°C — era [170,180]
-      temp_c_ideal: 185,
+      // C-4 (D-018): AVPN 2024, frittura ideale «around 175 °C», friggitrice
+      // «between 175 °C and 190 °C». Era 180–190, ideale 185.
+      temp_c_range: [175, 190],
+      temp_c_ideal: 175,
       cook_time_sec_range: [60, 120],
       cook_time_sec_ideal: 90,
     },
@@ -1099,14 +1121,14 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     suitable_for_beginner: true,
     serving_unit: "panetto",
     default_dough_balls: 4,
-    servings_per_unit: [1, 2],
+    servings_per_unit: [1, 1],
     description:
-      "Disco di impasto farcito internamente (tipicamente con ricotta, provola e cicoli), sigillato a mezzaluna prima di essere fritto in olio bollente.",
+      "Calzone fritto: un disco di circa 200 g farcito con ricotta, provola, cicoli e pepe, chiuso a mezzaluna e fritto in olio di semi a circa 175 °C.",
     key_characteristics: [
       "Cottura in frittura (no forno)",
       "Ripiena (chiusa a mezzaluna)",
       "Farcita prima di friggere",
-      "Veloce, lievitazione breve",
+      "Lievitazione 8–24 h",
     ],
     hydration_category: "medium",
     emoji: "🍳",
@@ -1118,15 +1140,17 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     name: "Pizza Montanara",
     family: "napoletana",
     origin: { city: "Napoli", region: "Campania", country: "Italia" },
+    // M-7 (D-023): stesso impasto della pizza fritta. Panetto 100 g (Sorbillo:
+    // «pagnottine da circa 100 g»); diametro e tempo di frittura da verificare.
     dough: {
-      flour_w_range: [220, 280],
-      flour_pl_range: [0.50, 0.60],
+      flour_w_range: [250, 320],
+      flour_pl_range: [0.50, 0.70],
       hydration_pct_range: [60, 65],
       salt_pct: 2.5,
       oil_pct: 0.0,
       fat_type: "none",
       sugar_pct: 0.0,
-      fermentation_hours_range: [4, 8],
+      fermentation_hours_range: [8, 24],
       process_type: "direct",
     },
     shape: {
@@ -1137,8 +1161,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     baking: {
       oven_type_required: "home",
-      temp_c_range: [180, 190],
-      temp_c_ideal: 185,
+      temp_c_range: [175, 190], // Olio: come la pizza fritta (AVPN 2024)
+      temp_c_ideal: 175,
       cook_time_sec_range: [60, 120],
       cook_time_sec_ideal: 90,
     },
@@ -1151,16 +1175,78 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 4,
     servings_per_unit: [1, 2],
     description:
-      "Dischetto di impasto fritto in olio bollente, scolato e poi condito a caldo/crudo sopra con pomodoro, ricotta, pecorino e basilico fresco. Aperta, non ripiena.",
+      "Dischetto di impasto fritto in olio, scolato e poi condito sopra: pomodoro, formaggio e basilico. Aperta, non ripiena.",
     key_characteristics: [
       "Cottura in frittura (no forno)",
       "Aperta (non ripiena)",
       "Condita dopo la frittura",
-      "Veloce, lievitazione breve",
+      "Lievitazione 8–24 h",
     ],
     hydration_category: "medium",
     emoji: "🍳",
     default_topping_ref: "montanara_classica",
+  },
+
+  /* M-7 (D-022, decisione di Matteo, 24/10/2026): la «tonda fritta» del
+   * disciplinare AVPN 2024 — due dischi sovrapposti (circa 120 g sotto e 80 g
+   * sopra, 200 g in tutto), farciti e sigillati, fritti in olio di semi a circa
+   * 175 °C. Per la Masardona è la «pizza fritta tradizionale». Diametro e tempo
+   * di frittura non hanno fonte. docs/fonti-dati.md §1.4. */
+  pizza_fritta_tonda: {
+    id: "pizza_fritta_tonda",
+    name: "Pizza Fritta Tonda",
+    family: "napoletana",
+    origin: { city: "Napoli", region: "Campania", country: "Italia" },
+    dough: {
+      flour_w_range: [250, 320],
+      flour_pl_range: [0.50, 0.70],
+      hydration_pct_range: [60, 65],
+      salt_pct: 2.5,
+      oil_pct: 0.0,
+      fat_type: "none",
+      sugar_pct: 0.0,
+      fermentation_hours_range: [8, 24],
+      process_type: "direct",
+    },
+    shape: {
+      shape_type: "round",
+      dough_weight_g: 200,
+      thickness_factor: 0.53,
+      diameter_cm: 22, // da verificare (nessuna fonte per la fritta)
+    },
+    baking: {
+      oven_type_required: "home",
+      temp_c_range: [175, 190], // AVPN 2024
+      temp_c_ideal: 175,
+      cook_time_sec_range: [60, 120], // da verificare: l'AVPN dice solo «finché è dorata»
+      cook_time_sec_ideal: 90,
+    },
+    crust_type: "pan_crispy",
+    requires_wood_oven: false,
+    allows_additives: true,
+    requires_pre_ferment: false,
+    suitable_for_beginner: false,
+    layout: {
+      type: "closed_stuffed",
+      pieces_per_unit: 2,
+      interlayer: "internal_filling",
+      filling_timing: "pre_bake_internal",
+      cook_mode: "topped",
+    },
+    serving_unit: "panetto",
+    default_dough_balls: 4,
+    servings_per_unit: [1, 1],
+    description:
+      "Due dischi sottili (circa 120 g sotto e 80 g sopra) farciti con ricotta, provola e cicoli, sigillati e fritti in olio di semi a circa 175 °C.",
+    key_characteristics: [
+      "Cottura in frittura (no forno)",
+      "Due dischi sovrapposti",
+      "Farcita prima di friggere",
+      "Lievitazione 8–24 h",
+    ],
+    hydration_category: "medium",
+    emoji: "🍳",
+    default_topping_ref: "pizza_fritta_tonda_ripiena",
   },
 
   calzone_napoletano: {

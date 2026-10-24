@@ -1,4 +1,5 @@
 import { Check, CookingPot, Flame, Link as LinkIcon, ListChecks, Share2, Utensils } from "lucide-react";
+import { localizeToppingRecipe } from "../../data/topping-i18n/localize";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import React, { useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -9,10 +10,12 @@ import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
 import { addMinutes, localizeStep, optimizeComfort, roundToQuarter, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
+import { RecipeVerdictNotice } from "./recipe-verdict-notice";
+import { saveYeastSpeedFactor } from "../../adapters/browser/yeast-speed-storage";
 import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
 import type { FlourEntry } from "../../data/flour-database";
-import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, resolveEngineMsgs, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
+import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
 import { RecipeFeedbackForm } from "./recipe-feedback";
 import { getRecipesByAuthenticity, getToppingForStyle } from "../../data/topping-library";
 import { ConfirmDialog, IconButton } from "../../components/ds/index";
@@ -160,9 +163,9 @@ export function RecipeOutput({
   /* Label contestuale per il selettore di porzioni ("Panetti" / "Teglie" / ...). */
   const servingUnit = getServingUnit(recipe.style);
   const allToppingChoices = React.useMemo(() => {
-    const ranked = getRecipesByAuthenticity(recipe.style).filter(
-      (item) => item.authenticity !== "taboo",
-    );
+    const ranked = getRecipesByAuthenticity(recipe.style)
+      .filter((item) => item.authenticity !== "taboo")
+      .map((item) => ({ ...item, recipe: localizeToppingRecipe(item.recipe, cms.toppingI18n) }));
     /* «Ogni stile ha i suoi topping»: una sola voce per concept, tenendo la
        variante più specifica per questo stile. La lista è già ordinata per
        autenticità (canonical → natural → common → …), quindi il primo match
@@ -175,7 +178,7 @@ export function RecipeOutput({
       seen.add(key);
       return true;
     });
-  }, [recipe.style]);
+  }, [recipe.style, cms.toppingI18n]);
   const toppingChoices = React.useMemo(() => {
     /* Modello per-stile: getRecipesByAuthenticity ritorna SOLO i condimenti
        assegnati a questo stile (già esclusi i taboo). Sono tutti il "menù"
@@ -202,15 +205,15 @@ export function RecipeOutput({
       ? getToppingForStyle(selectedToppingConcept, recipe.style)
       : undefined;
     const fallbackToppingRefId = recipe.style.default_topping_ref;
-    return (
+    const resolved =
       selectedTopping ??
       toppingChoices[0]?.recipe ??
       (fallbackToppingRefId
         ? getToppingForStyle(fallbackToppingRefId, recipe.style)
         : undefined) ??
-      allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe
-    );
-  }, [selectedToppingConcept, recipe.style, toppingChoices, allToppingChoices]);
+      allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe;
+    return resolved ? localizeToppingRecipe(resolved, cms.toppingI18n) : resolved;
+  }, [selectedToppingConcept, recipe.style, toppingChoices, allToppingChoices, cms.toppingI18n]);
 
   /* UI proximity #54 — dimensioni teglia accanto al conteggio: solo per gli
      stili che usano una teglia/contenitore. Usa la config attiva (se
@@ -539,18 +542,8 @@ export function RecipeOutput({
   /* VPL-013: Compensations applied */
   const compensations = recipe.science?.compensations ?? [];
 
-  /* ENG-4: con un orario del pasto scelto, se la ricetta non sta nella finestra
-     (il motore ha già tolto l'overhead fisso dalla fermentazione) lo diciamo:
-     prima l'inizio cadeva nel passato e si partiva «adesso» senza avviso. */
-  const hasMealTarget = !!selectedTimeSlotId && selectedTimeSlotId !== "no_preference";
-  const windowWarning = hasMealTarget
-    ? recipe.scores.warnings.find((w) => w.key === "gen.windowTooShort")
-    : undefined;
-  const windowWarningText = windowWarning
-    ? resolveEngineMsgs([windowWarning], cms.engineMessages, (_msg, _key, value) =>
-        typeof value === "number" ? fmt.number(value, { maximumFractionDigits: 1 }) : value,
-      )[0]
-    : null;
+  /* ENG-4 → M-10: se la ricetta non sta nella finestra fino al pasto lo dice
+     RecipeVerdictNotice (blocker time_window), insieme agli altri motivi. */
 
 
   return (
@@ -661,6 +654,13 @@ export function RecipeOutput({
         </div>
       )}
 
+      {/* M-10: esito «non fattibile così», sopra il pager: vale per entrambe le schede. */}
+      <RecipeVerdictNotice
+        recipe={recipe}
+        constraints={constraints}
+        mealDeadline={!!selectedTimeSlotId && selectedTimeSlotId !== "no_preference"}
+      />
+
       {/* ═══ PAGER ORIZZONTALE (feedback giugno 2026) ═══
           Meno info per schermata, navigazione da app: Ricetta | Procedimento.
           Il layer PizzaNerd trasforma i contenuti inline, senza tab separata. */}
@@ -751,6 +751,10 @@ export function RecipeOutput({
           servingUnit={servingUnit}
           panSizeLabel={panSizeLabel}
           updateBalls={updateBalls}
+          onYeastSpeedChange={(factor) => {
+            saveYeastSpeedFactor(factor);
+            onConstraintsChange({ ...constraints, yeast_speed_factor: factor });
+          }}
           showRule55Tip={showRule55Tip}
           setShowRule55Tip={setShowRule55Tip}
           rule55Description={rule55Description}
@@ -776,9 +780,6 @@ export function RecipeOutput({
         className="recipe-output-panel recipe-output-panel--procedura"
       >
       <ScrollToTopOnMount />
-      {windowWarningText && (
-        <p className="type-body recipe-output-timing-notice">{windowWarningText}</p>
-      )}
       <div className="recipe-output-hero-wrap">
         <ProcedureHeroControls
           startTime={startTime}

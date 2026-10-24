@@ -19,6 +19,8 @@ useState,
 } from "react";
 import { Link,useLocation,useNavigate,useParams,useSearchParams } from "react-router";
 import { useCms,type CmsContent } from "../features/cms/cms-context";
+import { engineMsgTexts } from "../features/recipe/engine-msg-text";
+import { loadYeastSpeedFactor } from "../adapters/browser/yeast-speed-storage";
 import { t as tpl } from "../features/cms/i18n";
 import {
 getInterpretationById,
@@ -36,7 +38,6 @@ defaultPanShape,
 generateRecipe,
 getDefaultDoughBalls,
 optimizeRecipe,
-resolveEngineMsgs,
 thermalViability,
 type EngineMsg,
 type GeneratedRecipe,
@@ -52,6 +53,8 @@ RecipeConfigurator,
 } from "../features/recipe/recipe-configurator";
 import { applyStyleVersion } from "../use-cases/apply-style-version";
 import { RecipeLearningPanel } from "../features/recipe/recipe-learning-panel";
+import { SaveFailedNotice } from "../features/recipe/save-failed-notice";
+import { BRAND } from "../config/brand";
 import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
 import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
 import { InterpretationSwitcher } from "../features/recipe/interpretation-narrative-card";
@@ -222,6 +225,7 @@ function RecipeContent({
   style: PizzaStyle;
   cms: any;
 }) {
+  const { bcp47 } = useCms();
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -238,7 +242,8 @@ function RecipeContent({
     yeasts: string[];
   }>("vulcan_pantry");
   const savedDietary = loadJson<string[]>("vulcan_dietary");
-  const nerdAvailable = localStorage.getItem("vulcan_nerd_on") === "true";
+  // Storage bloccato (navigazione privata, cookie disattivati): getItem lancia.
+  const nerdAvailable = loadJson<boolean>("vulcan_nerd_on") === true;
   const initialRecipeMode = readRecipeMode(searchParams);
   const [recipeMode, setRecipeMode] = useState<RecipeMode>(initialRecipeMode);
   const useTailoredUrlParams = initialRecipeMode !== "canonical";
@@ -339,6 +344,7 @@ function RecipeContent({
     dietary_filters: savedDietary ?? [],
     pantry_flours: savedPantry?.flours ?? [],
     pantry_yeasts: savedPantry?.yeasts ?? [],
+    yeast_speed_factor: loadYeastSpeedFactor(),
   }));
 
   /* ── State: recipe params (from style preset/center + URL override) ── */
@@ -1014,7 +1020,17 @@ function RecipeContent({
     // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
     [style.id, currentSaveParams, savedTick],
   );
-  const handleToggleSaveRecipe = useCallback(() => {
+  // U-10 (F15): il titolo della scheda dice quale ricetta è (RouteTitle salta /recipe).
+  useEffect(() => {
+    document.title = `${style.name} · ${BRAND.name}`;
+  }, [style.name]);
+
+  const [saveFailed, setSaveFailed] = useState(false);
+  const closeSaveFailed = useCallback(() => setSaveFailed(false), []);
+  /** true se il ricettario ora riflette la scelta; false se la scrittura è
+   *  fallita (storage pieno o bloccato): lo si dice con SaveFailedNotice. */
+  const handleToggleSaveRecipe = useCallback((): boolean => {
+    let ok = true;
     if (savedEntry) {
       removeRecipe(savedEntry.id);
     } else {
@@ -1025,8 +1041,11 @@ function RecipeContent({
         params: currentSaveParams,
         score: Math.round(matchRecipe.scores.composite),
       });
+      ok = findSavedRecipe(style.id, currentSaveParams) !== undefined;
+      setSaveFailed(!ok);
     }
     setSavedTick((v) => v + 1);
+    return ok;
   }, [savedEntry, style.id, style.name, activeVersionId, currentSaveParams, matchRecipe]);
 
   const styleVersions = useMemo(() => getVersions(style.id), [style.id]);
@@ -1134,6 +1153,7 @@ function RecipeContent({
 
   return (
     <main id="main-content" data-region="page">
+      <SaveFailedNotice open={saveFailed} onClose={closeSaveFailed} cms={cms} />
       <RecipeView
         recipe={recipe}
         style={style}
@@ -1269,7 +1289,7 @@ function RecipeContent({
               onOptimize={isOptimized || optimizeGain < 2 ? undefined : handleOptimize}
               optimizationRationale={
                 isOptimized && lastOptimization
-                  ? resolveEngineMsgs(lastOptimization.rationale, cms.engineMessages)
+                  ? engineMsgTexts(lastOptimization.rationale, cms, bcp47)
                   : undefined
               }
               ceiling={ceilingInfo.value}
@@ -1353,9 +1373,10 @@ function RecipeContent({
           {
             label: cms.cooking.saveVersion,
             onClick: () => {
-              handleToggleSaveRecipe();
+              const saved = handleToggleSaveRecipe();
               setExitConfirm(false);
-              navigate(exploreBackTo);
+              // Se il salvataggio non riesce si resta: uscendo la versione andrebbe persa.
+              if (saved) navigate(exploreBackTo);
             },
             variant: "cta",
           },

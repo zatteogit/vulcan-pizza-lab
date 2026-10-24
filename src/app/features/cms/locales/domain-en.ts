@@ -419,6 +419,13 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         prevention:
           "Filter water or let it sit 12h uncovered (chlorine evaporates)",
       },
+      P21: {
+        symptom: "Fermentation varies from one batch to the next (home fridge)",
+        cause: "A home fridge doesn't hold a steady temperature: defrost cycles, door openings and different shelves make cold maturation swing, unlike a professional cold room",
+        testRapido: "Same style, same yeast amount: does the rise change a lot from one time to the next?",
+        fixImmediate: "Move the dough to the lowest/middle shelf (the most stable) and judge the dough ball by eye, not just by the clock",
+        prevention: "Bonci's tip for home bakers: 0.5–1% sugar gives the yeast ready food and makes fermentation more predictable when the fridge is unstable. Only for styles that allow additives — never for Napoletana STG/AVPN by the rules",
+      },
     },
     contextual: {
       sticky_dough: {
@@ -626,6 +633,13 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       name: "Water Absorption",
       definition:
         "Maximum amount of water a flour can absorb while maintaining workable consistency. Depends on proteins, damaged starch, fibre.",
+      ranges: [
+        { label: "Weak 00 (W150)", value: "50\u201352%" },
+        { label: "Medium 00 (W220)", value: "53\u201355%" },
+        { label: "Strong 00 (W280)", value: "56\u201358%" },
+        { label: "Wholegrain", value: "65\u201375%" },
+        { label: "Manitoba (W380)", value: "60\u201365%" },
+      ],
     },
     stability: {
       name: "Dough Stability",
@@ -633,6 +647,12 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         "Time during which the dough maintains optimal consistency during mixing. Measured with farinograph.",
       whyImportant:
         "Low stability (<5 min): degrades if overmixed. High (>10 min): tolerates operator errors.",
+      ranges: [
+        { label: "Weak", value: "2\u20134 min" },
+        { label: "Medium", value: "5\u20138 min" },
+        { label: "Strong", value: "10\u201315 min" },
+        { label: "Manitoba", value: "15\u201320 min" },
+      ],
     },
     yeast: {
       name: "Yeast (Saccharomyces cerevisiae)",
@@ -640,6 +660,11 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         "Single-celled fungus that converts sugars into CO\u2082 + ethanol + aromatic compounds.",
       whyImportant:
         "Optimal temp: 28-32\u00B0C. Min 4\u00B0C (dormant). Max 40\u00B0C (inhibited). Death >55\u00B0C.",
+      ranges: [
+        { label: "Fresh", value: "0.5\u20132.0%", note: "70% moisture, fridge 4\u00B0C" },
+        { label: "Active dry", value: "0.3\u20131.0%", note: "Rehydrate first" },
+        { label: "Instant dry", value: "0.2\u20130.8%", note: "Add directly" },
+      ],
     },
     lab: {
       name: "LAB (Lactic Acid Bacteria)",
@@ -653,7 +678,13 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Multiplicative factor of biochemical reaction rate for every 10\u00B0C increase.",
       whyImportant:
-        "Fermentation doubles every +10\u00B0C. 24h at 18\u00B0C \u2248 12h at 28\u00B0C.",
+        "With Q\u2081\u2080 = 2, fermentation doubles every +10\u00B0C: 24h at 18\u00B0C \u2248 12h at 28\u00B0C. The values below are estimates from the {brand} model.",
+      ranges: [
+        { label: "Commercial yeast \u226510\u00B0C", value: "2.0", note: "Model estimate, consistent with growth data between 18 and 25 \u00B0C" },
+        { label: "Commercial yeast <10\u00B0C", value: "1.6", note: "Model estimate, unsourced" },
+        { label: "Sourdough >15\u00B0C", value: "2.2", note: "Model estimate" },
+        { label: "Sourdough \u226415\u00B0C", value: "1.9", note: "Model estimate" },
+      ],
     },
     arrhenius: {
       name: "Arrhenius Equation",
@@ -730,6 +761,15 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition: "Ability of a material to conduct heat.",
       whyImportant:
         "Steel (k=50): ideal for home ovens 280\u00B0C, 6-8 min baking. Stone (k=2): ideal for wood ovens 450\u00B0C+, 60-90s baking.",
+      ranges: [
+        { label: "Copper", value: "400" },
+        { label: "Aluminium", value: "205" },
+        { label: "Carbon steel", value: "50" },
+        { label: "Stainless steel", value: "16" },
+        { label: "Cordierite (stone)", value: "2.5\u20133.5" },
+        { label: "Refractory stone", value: "1.0\u20131.5" },
+        { label: "Pizza dough", value: "0.5" },
+      ],
     },
     fodmap: {
       name: "FODMAP",
@@ -765,6 +805,12 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         "Dough surface density \u2014 mass per unit area. Indicates how much dough there is per cm\u00B2.",
       whyImportant:
         "Determines baking time, crispness and caloric density. Original {brand} Project metric.",
+      ranges: [
+        { label: "Neapolitan", value: "0.30\u20130.36", note: "6-7 mm" },
+        { label: "Roman tonda", value: "0.20\u20130.25", note: "4-5 mm" },
+        { label: "New York", value: "0.40\u20130.50", note: "8-10 mm" },
+        { label: "Chicago deep dish", value: "1.00\u20131.30", note: "20-26 mm" },
+      ],
     },
     friction_factor: {
       name: "Friction Factor",
@@ -772,6 +818,12 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         "Dough temperature increase (\u00B0C) per minute of mixing, due to mechanical friction.",
       whyImportant:
         "Mixing generates heat \u2192 raises temperature \u2192 fermentation too fast. Used in the Rule of 55.",
+      ranges: [
+        { label: "By hand", value: "0.0" },
+        { label: "Home stand mixer", value: "0.8\u20131.0" },
+        { label: "Professional spiral mixer", value: "0.4\u20130.6" },
+        { label: "Fork mixer", value: "0.2\u20130.3" },
+      ],
     },
     rule_of_55: {
       name: "Rule of 55",

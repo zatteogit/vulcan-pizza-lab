@@ -8,7 +8,7 @@ import { AnimatePresence,motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
 import { Heading, Surface } from "../components/ds/index";
-import { useCms } from "../features/cms/cms-context";
+import { useCms, type CmsContent } from "../features/cms/cms-context";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../components/media/responsive-images";
 import { FireGlow } from "../features/cooking/fire-glow";
@@ -30,10 +30,26 @@ import {
 SIGNATURE_RECIPES,
 type SignatureRecipe,
 } from "../data/signature-recipes";
+import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+
+/** Badge delle ricette iconiche nella lingua attiva: i dati restano in
+ *  italiano (servono anche al dedup con l'autore), il testo mostrato no. */
+const SIGNATURE_BADGE_KEYS: Record<string, keyof CmsContent["ui"]> = {
+  "Disciplinare AVPN": "badgeAvpnRules",
+  "Disciplinare IGP": "badgeIgpRules",
+  "Ispirata a Bonci": "badgeBonciMethod",
+  "Spuntino romano": "badgeRomanSnack",
+  "Stile panaria romana": "badgeRomanBakery",
+};
+
+function signatureBadgeText(badge: string, cms: CmsContent): string {
+  const key = SIGNATURE_BADGE_KEYS[badge];
+  return key ? String(cms.ui[key]) : badge;
+}
 
 function getAcronymTooltip(text: string | null | undefined): string | undefined {
   if (!text) return undefined;
@@ -92,7 +108,7 @@ function MatchHeartIcon({ score }: { score: number }) {
 
 /* ── Componente Editoriale per la Ricetta in Primo Piano ── */
 function FeaturedRecipeCard({
-  recipe,
+  recipe: rawRecipe,
   isNerd,
   exploreBackTo,
 }: {
@@ -101,6 +117,7 @@ function FeaturedRecipeCard({
   exploreBackTo: string;
 }) {
   const { cms } = useCms();
+  const recipe = localizeSignatureRecipe(rawRecipe, cms.inspirationI18n);
   const [hovered, setHovered] = useState(false);
   const photo =
     recipe.photo ||
@@ -148,7 +165,7 @@ function FeaturedRecipeCard({
             className="explore-feature__badge"
             title={getAcronymTooltip(recipe.authenticity_badge)}
           >
-            {recipe.authenticity_badge}
+            {signatureBadgeText(recipe.authenticity_badge, cms)}
           </div>
         )}
       </div>
@@ -308,6 +325,8 @@ export function ExplorePage() {
             return (
               <button
                 key={item.id}
+                type="button"
+                aria-pressed={active}
                 onClick={() => setExploreFilters(item.id as ExploreFilter)}
                 className={`explore-filters__chip${active ? " explore-filters__chip--active" : ""}${active && isNerd ? " explore-filters__chip--nerd" : ""}`}
               >
@@ -442,6 +461,8 @@ export function ExplorePage() {
                   return (
                     <button
                       key={fam}
+                      type="button"
+                      aria-pressed={active}
                       onClick={() => setExploreFilters("styles", fam)}
                       className={`explore-families__chip${active ? " explore-families__chip--active" : ""}${active && isNerd ? " explore-families__chip--nerd" : ""}`}
                     >
@@ -531,7 +552,7 @@ export function ExplorePage() {
    nome ricetta + badge "Disciplinare AVPN" / "Stile panaria romana" / ecc.
    Click → /recipe/{style_id}?topping={concept_id} (chip topping pre-selezionato). */
 function SignatureRecipeCard({
-  recipe,
+  recipe: rawRecipe,
   index,
   cms,
   isNerd,
@@ -543,6 +564,7 @@ function SignatureRecipeCard({
   isNerd?: boolean;
   exploreBackTo: string;
 }) {
+  const recipe = localizeSignatureRecipe(rawRecipe, cms.inspirationI18n);
   const photo =
     recipe.photo ||
     cms.media?.stylePhotos?.[recipe.style_id] ||
@@ -615,7 +637,7 @@ function SignatureRecipeCard({
               className="explore-card__badge explore-card__badge--auth"
               title={getAcronymTooltip(recipe.authenticity_badge)}
             >
-              {recipe.authenticity_badge}
+              {signatureBadgeText(recipe.authenticity_badge, cms)}
             </div>
           )}
 

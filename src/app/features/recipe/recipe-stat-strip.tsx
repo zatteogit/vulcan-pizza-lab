@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
-import { GeneratedRecipe } from "../../domain/pizza-engine";
+import { isFriedStyle, GeneratedRecipe } from "../../domain/pizza-engine";
 import { uiMessage } from "../../i18n/ui-messages";
 
 interface RecipeStatStripProps {
@@ -66,8 +66,15 @@ export function RecipeStatStrip({
   }[] = [
     { label: ui.statHydration, value: fmt.percent(recipe.hydration_pct), changed: hChanged },
     { label: ui.statFlourStrength ?? "Forza farina", value: `${recipe.flour_w} W`, changed: wChanged },
-    { label: ui.statFermentation, value: `${recipe.fermentation_hours}h ${fermentEnv}`, changed: fChanged },
-    { label: ui.statOven, value: fmt.celsius(recipe.oven_temp_c) },
+    {
+      label: recipe.style.dough.unleavened ? ui.statRest : ui.statFermentation,
+      value: `${fmt.durationShort(recipe.fermentation_hours)} ${fermentEnv}`,
+      changed: fChanged,
+    },
+    // M-6: le fritte non hanno forno, la temperatura è quella dell'olio.
+    isFriedStyle(recipe.style)
+      ? { label: ui.statOil, value: fmt.celsius(recipe.style.baking.temp_c_ideal) }
+      : { label: ui.statOven, value: fmt.celsius(recipe.oven_temp_c) },
   ];
 
   /* La tabella tecnica del sacco di farina: filetto d'apertura e filetti

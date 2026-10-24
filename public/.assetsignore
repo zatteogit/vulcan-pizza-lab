@@ -1,0 +1,4 @@
+# Cloudflare Workers Static Assets: file di dist/ che NON si pubblicano.
+# P-2: le sourcemap restano in dist/ per il debug locale e per un eventuale
+# caricamento su un servizio di error tracking, ma non sono servite in rete.
+*.map
