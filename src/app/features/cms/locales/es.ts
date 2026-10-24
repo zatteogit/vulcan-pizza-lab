@@ -661,7 +661,7 @@ export const ES_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "Masa madre: autoproducida, impacto cero",
     "rec.timeCompatible":
-      "Fermentación {fMin}-{fMax}: compatible con tu tiempo",
+      "Fermentación {fMin}–{fMax}: compatible con tu tiempo",
     "rec.timeAdaptable": "Fermentación adaptable a ~{hours}",
     "rec.timeInsufficient":
       "Requiere mínimo {fMin}, tienes {available}",
@@ -862,6 +862,7 @@ export const ES_LOCALE: CmsContent = {
     "timeline.topPost.title": "Cobertura tras el horneado",
     "timeline.topPost.desc": "Añade los ingredientes en frío directamente sobre la superficie horneada.",
     "version.label.Disciplinare AVPN": "Reglamento AVPN",
+    "rec.fried": "Se fr\u00EDe en una olla: no hace falta el horno",
   },
   scienceLabels: {
     yeastBaker: "Levadura de panadero",

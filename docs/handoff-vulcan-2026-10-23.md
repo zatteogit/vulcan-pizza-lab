@@ -214,6 +214,12 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- **U-6 (P2)** avanzato il 24/10: nel pannello dello stile le fritte dicevano
+  «il tuo forno raggiunge la temperatura ideale (175 °C)», che è l'olio: ora
+  «Si frigge in pentola: il forno non serve» (7 lingue, test). «Fermentazione
+  8 h-24 h» → «Lievitazione 8–24 h». Aperto per Matteo: con una cucina di casa
+  le tre fritte sono in cima a «Perfetti per te» (punteggio 85, coerente con la
+  fedeltà all'originale): va bene o vanno trattate a parte?
 - **C-2 (P1)** avanzato il 24/10: etichette «Da disciplinare» solo dove c'è un
   disciplinare (test), focaccia genovese con salamoia e Chicago tavern con
   salsiccia come predefiniti. Restano la pizza al metro con condimenti propri e

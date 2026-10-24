@@ -20,7 +20,8 @@ const TEMPERATURE_MIN_KEYS = new Set([
 ]);
 /** Parametri in ore, per messaggio. */
 const HOUR_PARAMS: Record<string, readonly string[]> = {
-  "rec.timeCompatible": ["fMin", "fMax"],
+  /* Solo l'estremo alto porta l'unità: «8–24 h», non «8 h-24 h». */
+  "rec.timeCompatible": ["fMax"],
   "rec.timeAdaptable": ["hours"],
   "rec.timeInsufficient": ["fMin", "available"],
   "gen.windowTooShort": ["available", "needed"],

@@ -3810,7 +3810,13 @@ export function recommendStyles(
 
     // ── Oven compatibility (25%) ──
     let ovenScore: number;
-    if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
+    if (style.baking.temp_c_range[1] < 200) {
+      /* U-6: le fritte (M-6) non usano il forno: nessun vincolo, come quando il
+       * forno arriva alla temperatura ideale. Prima il motivo diceva «il tuo forno
+       * raggiunge la temperatura ideale (175 °C)», che è l'olio. */
+      ovenScore = 95;
+      reasons.push(em("rec.fried", "Si frigge in pentola: il forno non serve"));
+    } else if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
       ovenScore = 95;
       reasons.push(em("rec.ovenIdeal", "Il tuo forno raggiunge la temperatura ideale ({ideal})", { ideal: style.baking.temp_c_ideal }));
     } else if (constraints.oven_max_temp_c >= style.baking.temp_c_range[0]) {

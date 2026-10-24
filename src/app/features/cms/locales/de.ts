@@ -648,7 +648,7 @@ export const DE_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "Sauerteig: selbst hergestellt, null Auswirkung",
     "rec.timeCompatible":
-      "Gärung {fMin}-{fMax}: passt zu deiner Zeit",
+      "Gärung {fMin}–{fMax}: passt zu deiner Zeit",
     "rec.timeAdaptable": "Gärung anpassbar auf ~{hours}",
     "rec.timeInsufficient":
       "Benötigt mindestens {fMin}, du hast {available}",
@@ -849,6 +849,7 @@ export const DE_LOCALE: CmsContent = {
     "recipeSetup.noSignatureAlreadyActive": "Keine Inspiration bereits aktiv",
     "recipeSetup.signatureApplied": "{label}: Inspiration übernommen",
     "recipeSetup.signatureRemoved": "Inspiration entfernt: Parameter zurückgesetzt",
+    "rec.fried": "Wird im Topf frittiert: kein Ofen n\u00F6tig",
   },
   scienceLabels: {
     yeastBaker: "B\u00E4ckerhefe",

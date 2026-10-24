@@ -712,7 +712,7 @@ export const JA_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "天然酵母: 自家製、ゼロインパクト",
     "rec.timeCompatible":
-      "発酵{fMin}-{fMax}: あなたの時間に適合",
+      "発酵{fMin}–{fMax}: あなたの時間に適合",
     "rec.timeAdaptable": "発酵は~{hours}に調整可能",
     "rec.timeInsufficient":
       "最低{fMin}必要、{available}しかありません",
@@ -900,6 +900,7 @@ export const JA_LOCALE: CmsContent = {
     "recipeSetup.noSignatureAlreadyActive": "インスピレーションなしはすでに有効です",
     "recipeSetup.signatureApplied": "{label}：インスピレーションを適用しました",
     "recipeSetup.signatureRemoved": "インスピレーションを解除：パラメータを元に戻しました",
+    "rec.fried": "\u934B\u3067\u63DA\u3052\u308B\u306E\u3067\u30AA\u30FC\u30D6\u30F3\u306F\u4E0D\u8981",
   },
   scienceLabels: {
     yeastBaker: "\u30D1\u30F3\u7528\u30A4\u30FC\u30B9\u30C8",

@@ -660,7 +660,7 @@ export const FR_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "Levain : fait maison, impact zéro",
     "rec.timeCompatible":
-      "Fermentation {fMin}-{fMax} : compatible avec votre temps",
+      "Fermentation {fMin}–{fMax} : compatible avec votre temps",
     "rec.timeAdaptable": "Fermentation adaptable à ~{hours}",
     "rec.timeInsufficient":
       "Nécessite minimum {fMin}, vous avez {available}",
@@ -861,6 +861,7 @@ export const FR_LOCALE: CmsContent = {
     "timeline.topPost.title": "Garniture après cuisson",
     "timeline.topPost.desc": "Ajoutez les garnitures froides directement sur la surface cuite.",
     "version.label.Disciplinare AVPN": "Cahier des charges AVPN",
+    "rec.fried": "Frite \u00E0 la casserole\u00A0: pas besoin de four",
   },
   scienceLabels: {
     yeastBaker: "Levure de boulanger",

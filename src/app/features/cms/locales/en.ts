@@ -863,7 +863,7 @@ export const EN_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "Sourdough: home-made, zero impact",
     "rec.timeCompatible":
-      "Fermentation {fMin}-{fMax}: fits your schedule",
+      "Fermentation {fMin}–{fMax}: fits your schedule",
     "rec.timeAdaptable": "Fermentation adaptable to ~{hours}",
     "rec.timeInsufficient":
       "Requires at least {fMin}, you have {available}",
@@ -1056,6 +1056,7 @@ export const EN_LOCALE: CmsContent = {
     "recipeSetup.noSignatureAlreadyActive": "No inspiration already active",
     "recipeSetup.signatureApplied": "{label}: inspiration applied",
     "recipeSetup.signatureRemoved": "Inspiration removed: parameters reset",
+    "rec.fried": "Fried in a pot: no oven needed",
   },
   scienceLabels: {
     yeastBaker: "Baker's yeast",

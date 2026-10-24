@@ -659,7 +659,7 @@ export const PT_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "Levain: feito em casa, impacto zero",
     "rec.timeCompatible":
-      "Fermentação {fMin}-{fMax}: compatível com seu tempo",
+      "Fermentação {fMin}–{fMax}: compatível com seu tempo",
     "rec.timeAdaptable": "Fermentação adaptável a ~{hours}",
     "rec.timeInsufficient":
       "Requer mínimo {fMin}, você tem {available}",
@@ -862,6 +862,7 @@ export const PT_LOCALE: CmsContent = {
     "timeline.topPost.title": "Cobertura pós-forno",
     "timeline.topPost.desc": "Coloque as coberturas frias direto sobre a superfície assada.",
     "version.label.Disciplinare AVPN": "Regulamento AVPN",
+    "rec.fried": "Frita na panela: n\u00E3o precisa de forno",
   },
   scienceLabels: {
     yeastBaker: "Fermento de padeiro",

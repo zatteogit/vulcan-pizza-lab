@@ -193,6 +193,18 @@ describe("impossibilità dichiarata (M-10)", () => {
     expect(rec.warnings.map((w) => w.key)).toContain("rec.needsWoodOven");
   });
 
+  it("le fritte non parlano del forno (U-6)", () => {
+    // Prima: «il tuo forno raggiunge la temperatura ideale (175 °C)», che è l'olio.
+    const recs = recommendStyles(constraints({}));
+    const fried = recs.filter((r) => r.style.baking.temp_c_range[1] < 200);
+    expect(fried.length).toBeGreaterThan(0);
+    for (const r of fried) {
+      const keys = r.reasons.map((m) => m.key);
+      expect(keys).toContain("rec.fried");
+      expect(keys).not.toContain("rec.ovenIdeal");
+    }
+  });
+
   it("consigli e ricetta dicono la stessa cosa sul forno", () => {
     for (const oven of [200, 250, 300, 350, 400, 485]) {
       const c = constraints({ oven_type: oven >= 400 ? "gas" : "home", oven_max_temp_c: oven });
