@@ -145,6 +145,17 @@ export interface CmsUiStrings {
   slotWeekdayDinner: string;
   slotNoPreference: string;
   slotNoPreferenceSub: string;
+  /** U-2: panetti a partire dalla farina disponibile. */
+  flourBudgetToggle: string;
+  flourBudgetInput: string;
+  flourBudgetResult: string;
+  flourBudgetTooLittle: string;
+  flourBudgetApply: string;
+  /** U-2: orario del pasto scelto a mano. */
+  slotCustom: string;
+  slotCustomInput: string;
+  slotCustomConfirm: string;
+  slotCustomOutOfRange: string;
   /** Badge delle ricette iconiche in Scopri. */
   badgeAvpnRules: string;
   badgeIgpRules: string;
@@ -1303,6 +1314,15 @@ export const CMS_DEFAULTS: CmsContent = {
     slotWeekdayDinner: "{day} sera",
     slotNoPreference: "Nessuna preferenza",
     slotNoPreferenceSub: "ci pensa {brand}",
+    flourBudgetToggle: "Parti dalla farina che hai",
+    flourBudgetInput: "Farina disponibile (g)",
+    flourBudgetResult: "Risultato: {n} {unit} con {used} di farina, avanzo {left}.",
+    flourBudgetTooLittle: "Non basta per 1 {unit}: servono almeno {min} di farina.",
+    flourBudgetApply: "Usa {n} {unit}",
+    slotCustom: "Scegli giorno e ora",
+    slotCustomInput: "Quando si mangia?",
+    slotCustomConfirm: "Usa questo orario",
+    slotCustomOutOfRange: "Scegli un orario tra 1 ora e 7 giorni da adesso.",
     badgeAvpnRules: "Disciplinare AVPN",
     badgeIgpRules: "Disciplinare IGP",
     badgeBonciMethod: "Metodo Bonci",

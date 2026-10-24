@@ -28,6 +28,16 @@ export function timeSlotText(
     return { label: cms.ui.slotNoPreference, sublabel: cms.ui.slotNoPreferenceSub };
   }
   const sublabel = fmt.durationShort(slot.hours);
+  if (slot.targetAt !== undefined) {
+    const when = new Date(slot.targetAt).toLocaleString(bcp47, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return { label: capitalize(when, bcp47), sublabel };
+  }
   if (slot.dayOffset === undefined || slot.dayOffset <= 1) {
     return { label: cms.timeSlots[slot.id]?.label ?? slot.label, sublabel };
   }

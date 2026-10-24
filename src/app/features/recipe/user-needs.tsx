@@ -27,6 +27,7 @@ import React,{ useEffect,useMemo,useState } from "react";
 import { Chip } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { timeSlotText } from "./time-slot-text";
+import { CustomTimeSlot } from "./custom-time-slot";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import {
 DEFAULT_KITCHEN_TEMP,
@@ -46,6 +47,8 @@ interface UserNeedsProps {
   onConstraintsChange: (c: UserConstraints) => void;
   selectedTimeSlot: string | null;
   onTimeSlotChange: (slot: TimeSlot) => void;
+  /** U-2: lo slot con giorno e ora scelti a mano, se attivo. */
+  customTimeSlot?: TimeSlot | null;
   hero?: React.ReactNode;
   hideTimeSlots?: boolean;
   compact?: boolean;
@@ -510,6 +513,7 @@ export function UserNeeds({
   onConstraintsChange,
   selectedTimeSlot,
   onTimeSlotChange,
+  customTimeSlot = null,
   hero,
   hideTimeSlots = false,
   compact = false,
@@ -533,9 +537,11 @@ export function UserNeeds({
   /* Label della tempistica scelta — alimenta il chip "Quando" nella barra. */
   const selectedTimeLabel = useMemo(() => {
     if (!selectedTimeSlot) return null;
-    const slot = dynamicSlots.find((s) => s.id === selectedTimeSlot);
+    const slot =
+      dynamicSlots.find((s) => s.id === selectedTimeSlot) ??
+      (customTimeSlot?.id === selectedTimeSlot ? customTimeSlot : undefined);
     return slot ? timeSlotText(slot, cms, bcp47).label : null;
-  }, [selectedTimeSlot, dynamicSlots, cms, bcp47]);
+  }, [selectedTimeSlot, dynamicSlots, customTimeSlot, cms, bcp47]);
   const weather = useLocationWeather();
 
   const [kitchenTempManual, setKitchenTempManual] =
@@ -876,6 +882,7 @@ export function UserNeeds({
                     suggestedSlot={suggestedSlot}
                     selectedTimeSlot={selectedTimeSlot}
                     onTimeSlotChange={onTimeSlotChange}
+                    customTimeSlot={customTimeSlot}
                     cms={cms}
                     compact
                   />
@@ -897,6 +904,7 @@ export function UserNeeds({
                   suggestedSlot={suggestedSlot}
                   selectedTimeSlot={selectedTimeSlot}
                   onTimeSlotChange={onTimeSlotChange}
+                  customTimeSlot={customTimeSlot}
                   cms={cms}
                 />
               </div>
@@ -916,6 +924,7 @@ function TimeSlotPicker({
   suggestedSlot,
   selectedTimeSlot,
   onTimeSlotChange,
+  customTimeSlot,
   cms,
   compact = false,
 }: {
@@ -923,6 +932,7 @@ function TimeSlotPicker({
   suggestedSlot: string;
   selectedTimeSlot: string | null;
   onTimeSlotChange: (slot: TimeSlot) => void;
+  customTimeSlot: TimeSlot | null;
   cms: CmsContent;
   compact?: boolean;
 }) {
@@ -1067,6 +1077,13 @@ function TimeSlotPicker({
           );
         })}
       </div>
+
+      <CustomTimeSlot
+        activeSlot={selectedTimeSlot === customTimeSlot?.id ? customTimeSlot : null}
+        onSelect={onTimeSlotChange}
+        cms={cms}
+        bcp47={bcp47}
+      />
     </div>
   );
 }

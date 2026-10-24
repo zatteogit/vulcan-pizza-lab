@@ -8030,6 +8030,88 @@
     display: block;
   }
 
+  /* U-2: giorno e ora scelti a mano */
+  .needs-custom-slot {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--gap-sm);
+  }
+
+  .needs-custom-slot__toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    min-height: var(--space-11);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3);
+    border-radius: var(--radius-2xl);
+    border: var(--border-width-thin) dashed var(--outline-variant);
+    background: transparent;
+    color: var(--text-default);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color var(--duration-normal) var(--ease-standard), background-color var(--duration-normal) var(--ease-standard);
+  }
+
+  .needs-custom-slot__toggle:hover {
+    border-color: var(--text-muted);
+  }
+
+  .needs-custom-slot__toggle--active {
+    border-style: solid;
+    border-color: var(--cta);
+    background: var(--surface-container-low, var(--chip-bg));
+  }
+
+  .needs-custom-slot__label {
+    flex: 1;
+    font-weight: var(--weight-semibold);
+  }
+
+  .needs-custom-slot__sublabel {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .needs-custom-slot__check {
+    color: var(--cta);
+  }
+
+  .needs-custom-slot__form {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border-radius: var(--radius-2xl);
+    background: var(--surface-container-low, var(--chip-bg));
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .needs-custom-slot__input {
+    min-height: var(--space-11);
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-lg);
+    border: var(--border-width-thin) solid var(--outline-variant);
+    background: var(--container-page);
+    color: var(--text-default);
+    font: inherit;
+  }
+
+  .needs-custom-slot__input[aria-invalid="true"] {
+    border-color: var(--text-warning);
+  }
+
+  .needs-custom-slot__error {
+    margin: 0;
+    color: var(--text-warning);
+  }
+
+  .needs-custom-slot__confirm {
+    justify-self: start;
+    min-height: var(--space-11);
+    padding-inline: var(--space-5);
+  }
+
   /* ═══ COMPONENT: RecipeSetupPanel (setup-*) ═══ */
 
   /* ── Trigger (full/card variant, default) ── */
@@ -9173,6 +9255,60 @@
   }
 
   /* ── Riga panetti/servings ── */
+  /* U-2: panetti a partire dalla farina che si ha */
+  .flour-budget {
+    display: grid;
+    gap: var(--space-2);
+    margin-block: var(--space-2) var(--space-4);
+  }
+
+  .flour-budget__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-self: start;
+    min-height: var(--space-11);
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--cta);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+    cursor: pointer;
+  }
+
+  .flour-budget__panel {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    border-radius: var(--radius-2xl);
+    background: var(--surface-container-low, var(--chip-bg));
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .flour-budget__input {
+    max-width: var(--measure-xs);
+    min-height: var(--space-11);
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-lg);
+    border: var(--border-width-thin) solid var(--outline-variant);
+    background: var(--container-page);
+    color: var(--text-default);
+    font: inherit;
+  }
+
+  .flour-budget__result {
+    margin: 0;
+    line-height: var(--leading-normal);
+  }
+
+  .flour-budget__apply {
+    justify-self: start;
+    min-height: var(--space-11);
+    padding-inline: var(--space-5);
+  }
+
   .ingredients-servings {
     display: flex;
     flex-wrap: wrap;

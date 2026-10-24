@@ -3,6 +3,8 @@ import {
   STYLES_DB,
   generateRecipe,
   generateTimeSlots,
+  customMealSlot,
+  doughBallsForFlour,
   optimizeRecipe,
   thermalViability,
   type UserConstraints,
@@ -180,5 +182,50 @@ describe("generateTimeSlots", () => {
     for (const slot of slots) {
       expect(slot.hours).toBeGreaterThanOrEqual(4);
     }
+  });
+});
+
+describe("customMealSlot (U-2)", () => {
+  const now = new Date(2026, 9, 22, 16, 20);
+  it("sabato alle 20: ore al quarto d'ora per difetto, istante esatto conservato", () => {
+    const target = new Date(2026, 9, 24, 20, 0);
+    const slot = customMealSlot(target, now)!;
+    expect(slot.id).toBe("custom");
+    expect(slot.hours).toBe(51.5);
+    expect(slot.dayOffset).toBe(2);
+    expect(slot.targetAt).toBe(target.getTime());
+  });
+
+  it("rifiuta orari troppo vicini, passati o oltre 7 giorni", () => {
+    expect(customMealSlot(new Date(2026, 9, 22, 17, 0), now)).toBeNull();
+    expect(customMealSlot(new Date(2026, 9, 21, 20, 0), now)).toBeNull();
+    expect(customMealSlot(new Date(2026, 9, 30, 20, 0), now)).toBeNull();
+  });
+});
+
+describe("doughBallsForFlour (U-2)", () => {
+  const constraints = {
+    oven_type: "home", oven_max_temp_c: 250, skill_level: 2, available_hours: 24, dough_balls: 4,
+    has_mixer: false, has_pizza_stone: false, has_pizza_steel: false, has_baking_pan: false,
+    dietary_filters: [], kitchen_temp_c: 22, pantry_flours: [], pantry_yeasts: [], mixer_type: "hands", surfaces: [],
+  } as unknown as UserConstraints;
+
+  it("con 750 g di farina dice quanti panetti e quanta ne avanza", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, constraints);
+    const fit = doughBallsForFlour(recipe, 750);
+    expect(fit.balls).toBeGreaterThan(0);
+    expect(fit.flour_g).toBeLessThanOrEqual(750);
+    expect(fit.flour_g + fit.leftover_g).toBe(750);
+    // la ricetta rigenerata con quei panetti sta davvero nella farina disponibile
+    const exact = generateRecipe(STYLES_DB.napoletana_stg, { ...constraints, dough_balls: fit.balls });
+    expect(exact.flour_g).toBeLessThanOrEqual(751);
+    // un panetto in più non ci sta
+    const more = generateRecipe(STYLES_DB.napoletana_stg, { ...constraints, dough_balls: fit.balls + 1 });
+    expect(more.flour_g).toBeGreaterThan(750);
+  });
+
+  it("sotto il minimo per un panetto restituisce zero panetti", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, constraints);
+    expect(doughBallsForFlour(recipe, 50)).toMatchObject({ balls: 0, flour_g: 0 });
   });
 });

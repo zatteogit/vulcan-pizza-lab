@@ -3338,6 +3338,8 @@ export interface TimeSlot {
   /** Pasto e giorno (0 = oggi). Assenti per lo slot «Nessuna preferenza». */
   meal?: MealKind;
   dayOffset?: number;
+  /** U-2: istante esatto del pasto (epoch ms) per l'orario scelto a mano. */
+  targetAt?: number;
 }
 
 /* ═══ VPL-065: Dynamic time slots based on current time ═══
@@ -3378,6 +3380,55 @@ function getDayLabel(dayOffset: number, meal: string, now: Date): string {
   if (dayOffset === 1) return meal === "lunch" ? "Domani a pranzo" : "Domani sera";
   const targetDay = DAYS_IT[(weekday + dayOffset) % 7];
   return meal === "lunch" ? `${targetDay} a pranzo` : `${targetDay} sera`;
+}
+
+/* ═══ U-2: partire dalla farina che si ha («ho 750 g di farina») ═══
+ * Le masse sono lineari nei panetti: la farina per panetto della ricetta
+ * corrente dà quanti panetti ci stanno. Il numero esatto si rilegge dalla
+ * ricetta rigenerata dopo aver scelto i panetti. */
+export const MAX_DOUGH_BALLS = 20;
+
+export interface FlourBudgetFit {
+  balls: number;
+  /** Farina usata, stimata (±1 g di arrotondamento). */
+  flour_g: number;
+  leftover_g: number;
+  /** Farina per un panetto: il minimo per farne uno. */
+  per_ball_g: number;
+}
+
+export function doughBallsForFlour(recipe: GeneratedRecipe, flourBudgetG: number): FlourBudgetFit {
+  const perBall = recipe.dough_balls > 0 ? recipe.flour_g / recipe.dough_balls : recipe.flour_g;
+  const budget = Number.isFinite(flourBudgetG) ? Math.max(0, flourBudgetG) : 0;
+  const balls = perBall > 0 ? Math.min(MAX_DOUGH_BALLS, Math.floor(budget / perBall + 1e-9)) : 0;
+  const flour = Math.round(perBall * balls);
+  return { balls, flour_g: flour, leftover_g: Math.max(0, Math.round(budget - flour)), per_ball_g: Math.ceil(perBall) };
+}
+
+/* ═══ U-2: orario del pasto scelto a mano («si cena sabato alle 20») ═══ */
+export const CUSTOM_SLOT_ID = "custom";
+/** Sotto 1 h non c'è nulla da preparare; oltre 7 giorni nessuno stile serve. */
+export const CUSTOM_SLOT_MIN_HOURS = 1;
+export const CUSTOM_SLOT_MAX_HOURS = 7 * 24;
+
+/** Slot per un orario preciso: ore al quarto d'ora per difetto, come gli altri
+ *  slot (M-2). `null` se l'orario è troppo vicino o troppo lontano. */
+export function customMealSlot(target: Date, now: Date = new Date()): TimeSlot | null {
+  const hours = floorToQuarterHour((target.getTime() - now.getTime()) / 3_600_000);
+  if (!(hours >= CUSTOM_SLOT_MIN_HOURS && hours <= CUSTOM_SLOT_MAX_HOURS)) return null;
+  const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const dayOffset = Math.round((startOfDay(target) - startOfDay(now)) / 86_400_000);
+  const hh = String(target.getHours()).padStart(2, "0");
+  const mm = String(target.getMinutes()).padStart(2, "0");
+  return {
+    id: CUSTOM_SLOT_ID,
+    label: `${getDayLabel(dayOffset, target.getHours() < 16 ? "lunch" : "dinner", now)} · ${hh}:${mm}`,
+    sublabel: formatHoursLabel(hours),
+    hours,
+    emoji: "🗓️",
+    dayOffset,
+    targetAt: target.getTime(),
+  };
 }
 
 /** No-preference virtual slot: engine uses 24h @ kitchen temp */

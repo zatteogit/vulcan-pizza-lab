@@ -6,6 +6,7 @@ import { HelpCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import type { Dispatch, SetStateAction } from "react";
+import { FlourBudget } from "./flour-budget";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { Stepper } from "../../components/ds/index";
@@ -126,6 +127,7 @@ export function IngredientsSection({
             );
           })()}
         </div>
+        <FlourBudget recipe={recipe} servingUnit={servingUnit} onApply={updateBalls} />
 
         <div className="ingredients-list">
           <IngRow

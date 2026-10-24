@@ -25,6 +25,8 @@ import { useCookSession } from "../features/cooking/cook-session";
 import {
 getDefaultDoughBalls,
 generateTimeSlots,
+customMealSlot,
+CUSTOM_SLOT_ID,
 NO_PREFERENCE_SLOT,
 optimizeRecipe,
 thermalViability,
@@ -223,6 +225,20 @@ function resolveSavedTimeChoice(
       selectedTimeMeta: null,
       stale: true,
       needsReview: true,
+    };
+  }
+
+  /* U-2: giorno e ora scelti a mano — si ricalcolano le ore fino a quell'istante. */
+  if (draft.selectedTimeSlot === CUSTOM_SLOT_ID) {
+    const custom = customMealSlot(new Date(targetAt), new Date(now));
+    if (!custom) {
+      return { selectedTimeSlot: null, selectedTimeMeta: null, stale: true, needsReview: true };
+    }
+    return {
+      selectedTimeSlot: CUSTOM_SLOT_ID,
+      selectedTimeMeta: { selectedAt: now, hours: custom.hours, targetAt },
+      stale: false,
+      needsReview: targetAt - now <= TIME_REVIEW_BEFORE_TARGET_MS,
     };
   }
 
@@ -643,6 +659,12 @@ export function HomePage() {
     createRecipeMode,
   ]);
 
+  /* U-2: lo slot su misura attivo, ricostruito dall'istante scelto. */
+  const customTimeSlot = useMemo(() => {
+    if (selectedTimeSlot !== CUSTOM_SLOT_ID || !selectedTimeMeta?.targetAt) return null;
+    return customMealSlot(new Date(selectedTimeMeta.targetAt), new Date(selectedTimeMeta.selectedAt));
+  }, [selectedTimeSlot, selectedTimeMeta]);
+
   const handleTimeSlotChange = useCallback((slot: TimeSlot) => {
     const selectedAt = Date.now();
     setSelectedTimeSlot(slot.id);
@@ -652,7 +674,7 @@ export function HomePage() {
       targetAt:
         slot.id === NO_PREFERENCE_SLOT.id
           ? null
-          : selectedAt + slot.hours * HOUR_MS,
+          : slot.targetAt ?? selectedAt + slot.hours * HOUR_MS,
     });
     setConstraints((c) => ({
       ...c,
@@ -1268,6 +1290,7 @@ export function HomePage() {
                   onConstraintsChange={setConstraints}
                   selectedTimeSlot={selectedTimeSlot}
                   onTimeSlotChange={handleTimeSlotChange}
+                  customTimeSlot={customTimeSlot}
                   hero={
                     <motion.div
                       className="home-hero"
@@ -1390,6 +1413,7 @@ export function HomePage() {
                       onConstraintsChange={setConstraints}
                       selectedTimeSlot={selectedTimeSlot}
                       onTimeSlotChange={handleTimeSlotChange}
+                      customTimeSlot={customTimeSlot}
                       hideTimeSlots={styleSettingsPanel !== "time"}
                       compact
                       showWeather={false}

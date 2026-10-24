@@ -160,7 +160,7 @@ Fase 2:
 | Data | Voci chiuse | Dove |
 |---|---|---|
 | 23–24/10/2026 | M-1 (confermato), M-2, M-3, M-4, M-5, M-9, M-10, P-1, P-2 | ramo `claude/bold-brahmagupta-s484he`; dettaglio in `docs/motore-correzioni-2026-10-22.md` |
-| 24/10/2026 | I18N-1, U-1 | stesso ramo; vedi sotto |
+| 24/10/2026 | I18N-1, U-1, U-2 | stesso ramo; vedi sotto |
 
 Emerse nel lavoro, da pianificare in fase 1:
 
@@ -180,6 +180,11 @@ Emerse nel lavoro, da pianificare in fase 1:
   link per ricetta; «Annulla» dopo l'eliminazione; avviso che le ricette stanno
   solo nel browser. Resta da fare: avviso quando lo storage è pieno al salvataggio
   dalla ricetta (oggi il pulsante semplicemente non si attiva).
+- ~~**U-2 (P0)**~~ chiuso il 24/10: si parte da ciò che si ha. «Si cena sabato
+  alle 20»: voce «Scegli giorno e ora» accanto agli slot (da 1 h a 7 giorni, ore al
+  quarto d'ora per difetto, ripristinata dalla bozza). «Ho 750 g di farina»:
+  pannello sotto i panetti che dice quanti ne stanno e quanta farina avanza, e li
+  applica. Forno e farine della dispensa c'erano già.
 - **C-4, Pinsa:** range 350–420 °C da verificare su fonti (decisione D-013).
 - Le chiavi `timeSlots.day_after` e `timeSlots.weekend` del CMS non corrispondono
   a nessuno slot del motore, e i sottotitoli fissi degli slot non si usano più.
