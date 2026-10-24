@@ -571,9 +571,15 @@ export function localizeStep(
       break;
     }
     case "proof":
-      entry = isUnleavened ? (labels.rest || labels.proof) : labels.proof;
+      entry = isUnleavened
+        ? (labels.rest || labels.proof)
+        : step.variant === "pan"
+          ? (labels.proof_pan || labels.proof)
+          : labels.proof;
       break;
     case "shape":
+      // Audit totale n. 7: stesura in teglia prima dell'appretto, testo del motore.
+      if (step.variant === "pan") return formatRawStep(step);
       // Con layout speciale, motore già genera desc specifica per il tipo di stesura
       if (hasSpecialLayout) return formatRawStep(step);
       entry = isThin ? (labels.shape_thin || labels.shape) : (isRect && labels.shape?.descAlt) ? labels.shape : labels.shape;
@@ -608,7 +614,19 @@ export function localizeStep(
       // ENG-5: cosa fanno i panetti mentre il forno scalda dipende dal piano
       // del motore (appretto lungo, appretto corto, impasto non lievitato).
       const preheatDesc =
-        step.variant === "whole_proof"
+        recipe.style.proof_in_pan && step.variant !== "during_rest"
+          ? step.variant === "whole_proof"
+            ? engineMessage(
+                cms,
+                "timeline.preheat.descPanWholeProof",
+                "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto fa l'appretto in teglia.",
+              )
+            : engineMessage(
+                cms,
+                "timeline.preheat.descPan",
+                "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto finisce l'appretto in teglia.",
+              )
+          : step.variant === "whole_proof"
           ? engineMessage(
               cms,
               "timeline.preheat.descWholeProof",

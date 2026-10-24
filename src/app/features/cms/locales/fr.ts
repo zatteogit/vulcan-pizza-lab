@@ -737,6 +737,8 @@ export const FR_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Cuisine froide : même avec une eau à {temp}, la pâte reste sous {ddt}. Ne chauffez pas davantage l'eau : gardez la farine dans un endroit tiède ou allongez un peu le pointage.",
     "tip.waterTempLimitMin": "Cuisine chaude : même avec une eau à {temp}, la pâte dépasse {ddt}. Utilisez de l'eau glacée, gardez la farine au frigo ou raccourcissez un peu le pointage.",
     "timeline.preheat.descWholeProof": "Allumez le four maintenant à {temp}{equipmentNote}. Pendant ce temps, les pâtons font leur apprêt.",
+    "timeline.preheat.descPan": "Allumez le four maintenant \u00E0 {temp}{equipmentNote}. Pendant ce temps, la p\u00E2te finit son appr\u00EAt en plaque.",
+    "timeline.preheat.descPanWholeProof": "Allumez le four maintenant \u00E0 {temp}{equipmentNote}. Pendant ce temps, la p\u00E2te fait son appr\u00EAt en plaque.",
     "timeline.preheat.descDuringRest": "Allumez le four maintenant à {temp}{equipmentNote}. Pendant ce temps, les pâtons reposent.",
     "tip.waterTemp": "",
     "hint.flourWeak": "farine faible (00 classique)",
@@ -832,6 +834,7 @@ export const FR_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Étalez le premier disque dans la plaque huilée ; gardez le second de côté.",
     "timeline.shape.closedStuffed": "Étalez le disque de base dans la plaque, en gardant le second pour fermer.",
     "timeline.shape.rectangular": "Étalez à la main dans la plaque huilée",
+    "timeline.shape.pan": "\u00C9talez la p\u00E2te \u00E0 la main dans la plaque huil\u00E9e, jusque dans les coins ; puis laissez-la pousser sur place.",
     "timeline.shape.thin": "Étalez au rouleau, très finement",
     "timeline.shape.round": "Étalez à la main depuis le centre, en préservant le bord",
     "timeline.shape.title": "Façonnage",
@@ -957,6 +960,13 @@ export const FR_LOCALE: CmsContent = {
       tipNerd:
         "Test du doigt : retour lent = fermentation optimale. Trop rapide = sous-ferment\u00E9. Pas de retour = sur-ferment\u00E9.",
       longDesc: "Apr\u00E8s la division, les p\u00E2tons doivent se d\u00E9tendre et gonfler une derni\u00E8re fois. Gardez-les couverts \u00E0 temp\u00E9rature ambiante. Il sera temps de les \u00E9taler quand : (1) ils ont doubl\u00E9 de volume, (2) la surface est bomb\u00E9e et lisse, (3) le test du doigt remonte lentement (appuyez avec le doigt : la p\u00E2te doit revenir en ~5 secondes). Si la p\u00E2te ne revient pas = surferment\u00E9e ; si elle revient tout de suite = pas encore pr\u00EAte.",
+    },
+    proof_pan: {
+      title: "Appr\u00EAt en plaque",
+      desc: "Pousse finale en plaque \u00E0 {temp}",
+      longDesc: "La p\u00E2te, d\u00E9j\u00E0 \u00E9tal\u00E9e dans la plaque, doit gonfler une derni\u00E8re fois. Couvrez la plaque et laissez-la \u00E0 temp\u00E9rature ambiante. Elle est pr\u00EAte quand elle a nettement gonfl\u00E9, que la surface est bomb\u00E9e et pleine de bulles et qu'une l\u00E9g\u00E8re pression du doigt remonte lentement. Si elle s'est r\u00E9tract\u00E9e des coins, \u00E9talez-la de nouveau du bout des doigts.",
+      tipBeginner: "La p\u00E2te en plaque est pr\u00EAte quand elle est gonfl\u00E9e et souple : press\u00E9e du doigt, elle remonte lentement.",
+      tipNerd: "La pousse en plaque fixe la forme : l'alv\u00E9olage se forme dans le r\u00E9cipient de cuisson, sans \u00E9talage ult\u00E9rieur qui d\u00E9gazerait la p\u00E2te.",
     },
     shape: {
       title: "Fa\u00E7onnage",

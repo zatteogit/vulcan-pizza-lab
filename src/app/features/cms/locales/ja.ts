@@ -776,6 +776,8 @@ export const JA_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "キッチンが寒い：{temp}の水でも生地は{ddt}に届きません。これ以上水を温めず、粉を暖かい場所に置くか、一次発酵を少し長くしてください。",
     "tip.waterTempLimitMin": "キッチンが暑い：{temp}の水でも生地は{ddt}を超えます。氷水を使い、粉を冷蔵庫に入れるか、一次発酵を少し短くしてください。",
     "timeline.preheat.descWholeProof": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に生地玉の最終発酵を行います。",
+    "timeline.preheat.descPan": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に型の中で生地の最終発酵を仕上げます。",
+    "timeline.preheat.descPanWholeProof": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に型の中で生地を最終発酵させます。",
     "timeline.preheat.descDuringRest": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に生地を休ませます。",
     "hint.flourWeak": "\u5F31\u529B\u306A\u5C0F\u9EA6\u7C89\uFF08\u30AF\u30E9\u30B7\u30C3\u30AF\u306A00\uFF09",
     "hint.flourMedium": "\u4E2D\u7A0B\u5EA6\u306E\u5F37\u3055\u306E\u5C0F\u9EA6\u7C89",
@@ -866,6 +868,7 @@ export const JA_LOCALE: CmsContent = {
     "timeline.shape.stacked": "1枚目の生地を油を塗った型に広げ、2枚目は取っておきます。",
     "timeline.shape.closedStuffed": "底になる生地を型に広げ、2枚目はふた用に取っておきます。",
     "timeline.shape.rectangular": "油を塗った型に手で広げます",
+    "timeline.shape.pan": "油を塗った型に生地を手で四隅まで広げ、そのまま型の中で発酵させます。",
     "timeline.shape.thin": "麺棒で極薄に伸ばします",
     "timeline.shape.round": "中心から手で広げ、縁を残します",
     "timeline.shape.title": "成形",
@@ -997,6 +1000,13 @@ export const JA_LOCALE: CmsContent = {
       tipNerd:
         "\u30D5\u30A3\u30F3\u30AC\u30FC\u30C6\u30B9\u30C8\uFF1A\u9045\u3044\u623B\u308A=\u6700\u9069\u306A\u767A\u9175\u3002\u901F\u3059\u304E\u308B=\u767A\u9175\u4E0D\u8DB3\u3002\u623B\u3089\u306A\u3044=\u904E\u767A\u9175\u3002",
       longDesc: "\u5206\u5272\u3057\u305F\u751F\u5730\u7389\u306F\u3001\u3082\u3046\u4E00\u5EA6\u3086\u308B\u3093\u3067\u81A8\u3089\u3080\u5FC5\u8981\u304C\u3042\u308A\u307E\u3059\u3002\u8986\u3063\u305F\u307E\u307E\u5E38\u6E29\u306B\u7F6E\u304D\u307E\u3059\u3002\u4F38\u3070\u3059\u30BF\u30A4\u30DF\u30F3\u30B0\u306F\u6B21\u306E\u3068\u304A\u308A\u3067\u3059\uFF1A(1) \u4F53\u7A4D\u304C2\u500D\u306B\u306A\u3063\u305F\u3001(2) \u8868\u9762\u304C\u3075\u3063\u304F\u3089\u3068\u6ED1\u3089\u304B\u3001(3) \u30D5\u30A3\u30F3\u30AC\u30FC\u30C6\u30B9\u30C8\u3067\u3086\u3063\u304F\u308A\u623B\u308B\uFF08\u6307\u3067\u62BC\u3057\u3066\u7D045\u79D2\u3067\u623B\u308B\u306E\u304C\u76EE\u5B89\uFF09\u3002\u623B\u3089\u306A\u3044\u5834\u5408\u306F\u904E\u767A\u9175\u3001\u3059\u3050\u306B\u623B\u308B\u5834\u5408\u306F\u307E\u3060\u767A\u9175\u4E0D\u8DB3\u3067\u3059\u3002",
+    },
+    proof_pan: {
+      title: "型で最終発酵",
+      desc: "型の中で{temp}で最終発酵",
+      longDesc: "型に広げた生地を、最後にもう一度膨らませます。型に覆いをして室温に置きます。はっきり膨らみ、表面がドーム状で泡がいっぱいになり、指で軽く押した跡がゆっくり戻れば完成です。四隅から縮んでいたら、指先でもう一度広げます。",
+      tipBeginner: "型の生地はふっくら柔らかくなれば完成。指で押すと、ゆっくり戻ります。",
+      tipNerd: "型で発酵させると形が決まります。気泡の構造が焼成容器の中でできるため、あとから広げてガスを抜くことがありません。",
     },
     shape: {
       title: "\u6210\u5F62",

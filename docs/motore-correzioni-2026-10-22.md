@@ -426,3 +426,12 @@ Golden: 42 casi su 58 cambiano solo nel lievito (e di 1 g su farina/acqua in
 Da verificare con Matteo: la costante di riferimento (0,1 % a 18 °C per 24 h)
 non cambia; se le dosi in frigo erano state tarate a occhio sul vecchio
 calcolo, ora risultano più basse di circa un quarto.
+
+## Audit totale n. 7 · Stili che lievitano in teglia (24/10/2026)
+
+Nuovo campo `proof_in_pan` (Detroit, Chicago deep, focaccia genovese e barese,
+sfincione, grandma, padellino, greek pan): dopo lo staglio l'impasto si stende
+in teglia e l'appretto si fa lì («Appretto in teglia»); prima la stesura veniva
+dopo 9–14 h di appretto, subito prima di infornare. Teglia e pala romana, al
+metro e tonde restano com'erano (appretto a panetti, stesura prima della
+cottura). Cambia solo l'ordine: durate e totali invariati (golden identico).

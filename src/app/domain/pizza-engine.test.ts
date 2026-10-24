@@ -253,3 +253,16 @@ describe("lievito sulle fasi reali (audit totale n. 5)", () => {
     expect(equivalentFermentationHours(36, 4, "fresh", false)).toBeGreaterThan(36);
   });
 });
+
+describe("stili in teglia: stesura prima dell'appretto (audit totale n. 7)", () => {
+  const order = (id: string) =>
+    generateRecipe(STYLES_DB[id], makeConstraints({ oven_type: "home", oven_max_temp_c: 250 })).timeline.map((s) => s.id);
+  it("Detroit si stende in teglia e lievita lì", () => {
+    const ids = order("detroit");
+    expect(ids.indexOf("shape")).toBeLessThan(ids.indexOf("proof"));
+  });
+  it("la teglia romana fa l'appretto a panetti e si stende prima di infornare", () => {
+    const ids = order("teglia_romana");
+    expect(ids.indexOf("proof")).toBeLessThan(ids.indexOf("shape"));
+  });
+});

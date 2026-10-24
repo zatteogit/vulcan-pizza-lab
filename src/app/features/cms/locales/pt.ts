@@ -738,6 +738,8 @@ export const PT_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Cozinha fria: mesmo com água a {temp} a massa fica abaixo de {ddt}. Não aqueça mais a água: guarde a farinha num lugar morno ou prolongue um pouco a fermentação em massa.",
     "tip.waterTempLimitMin": "Cozinha quente: mesmo com água a {temp} a massa passa de {ddt}. Use água gelada, guarde a farinha na geladeira ou encurte um pouco a fermentação em massa.",
     "timeline.preheat.descWholeProof": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, as bolas de massa fazem a fermentação final.",
+    "timeline.preheat.descPan": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, a massa termina a fermenta\u00E7\u00E3o na assadeira.",
+    "timeline.preheat.descPanWholeProof": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, a massa faz a fermenta\u00E7\u00E3o final na assadeira.",
     "timeline.preheat.descDuringRest": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, as bolas de massa descansam.",
     "tip.waterTemp": "",
     "hint.flourWeak": "farinha fraca (00 clássica)",
@@ -833,6 +835,7 @@ export const PT_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Abra o primeiro disco na assadeira untada; reserve o segundo.",
     "timeline.shape.closedStuffed": "Abra o disco de base na assadeira, reservando o segundo para fechar.",
     "timeline.shape.rectangular": "Abra a massa com as mãos na assadeira untada",
+    "timeline.shape.pan": "Abra a massa com as m\u00E3os na assadeira untada, at\u00E9 os cantos; depois deixe-a crescer ali.",
     "timeline.shape.thin": "Abra com o rolo, bem fininha",
     "timeline.shape.round": "Abra com as mãos a partir do centro, preservando a borda",
     "timeline.shape.title": "Abertura",
@@ -958,6 +961,13 @@ export const PT_LOCALE: CmsContent = {
       tipNerd:
         "Teste do dedo: retorno lento = fermenta\u00E7\u00E3o \u00F3tima. Muito r\u00E1pido = sub-fermentado. Sem retorno = sobre-fermentado.",
       longDesc: "Depois da divis\u00E3o, as bolas de massa precisam relaxar e crescer uma \u00FAltima vez. Mantenha-as cobertas em temperatura ambiente. Estar\u00E1 na hora de abri-las quando: (1) tiverem dobrado de volume, (2) a superf\u00EDcie estiver abaulada e lisa, (3) no teste do dedo a massa voltar devagar (pressione com o dedo: deve voltar em ~5 segundos). Se a massa n\u00E3o voltar = passou do ponto; se voltar na hora = ainda falta fermentar.",
+    },
+    proof_pan: {
+      title: "Fermenta\u00E7\u00E3o final na assadeira",
+      desc: "Fermenta\u00E7\u00E3o final na assadeira a {temp}",
+      longDesc: "A massa, j\u00E1 aberta na assadeira, precisa crescer uma \u00FAltima vez. Cubra a assadeira e deixe em temperatura ambiente. Est\u00E1 pronta quando cresceu bem, a superf\u00EDcie est\u00E1 abaulada e cheia de bolhas e, ao apertar de leve com o dedo, a marca volta devagar. Se encolheu dos cantos, abra de novo com as pontas dos dedos.",
+      tipBeginner: "A massa na assadeira est\u00E1 pronta quando est\u00E1 fofa e macia: apertada com o dedo, volta devagar.",
+      tipNerd: "Fermentar na assadeira fixa o formato: o alveolado se forma no recipiente de cozimento, sem uma abertura posterior que desgaseifique a massa.",
     },
     shape: {
       title: "Abertura",

@@ -932,6 +932,8 @@ export const EN_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Cold kitchen: even with water at {temp} the dough stays below {ddt}. Don't heat the water further: keep the flour somewhere warm or let the bulk rise a little longer.",
     "tip.waterTempLimitMin": "Warm kitchen: even with water at {temp} the dough goes above {ddt}. Use ice water, keep the flour in the fridge or shorten the bulk rise a little.",
     "timeline.preheat.descWholeProof": "Turn the oven on now to {temp}{equipmentNote}. The dough balls do their final proof while it heats.",
+    "timeline.preheat.descPan": "Turn the oven on now to {temp}{equipmentNote}. The dough finishes its final rise in the pan while it heats.",
+    "timeline.preheat.descPanWholeProof": "Turn the oven on now to {temp}{equipmentNote}. The dough does its final rise in the pan while it heats.",
     "timeline.preheat.descDuringRest": "Turn the oven on now to {temp}{equipmentNote}. The dough pieces rest while it heats.",
     "hint.flourWeak": "weak flour (classic 00)",
     "hint.flourMedium": "medium-strength flour",
@@ -1022,6 +1024,7 @@ export const EN_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Stretch the first disc in the oiled pan; set the second aside.",
     "timeline.shape.closedStuffed": "Stretch the base disc in the pan, keeping the second one to close it.",
     "timeline.shape.rectangular": "Stretch in the oiled pan by hand",
+    "timeline.shape.pan": "Stretch the dough in the oiled pan by hand, into the corners; then let it rise there.",
     "timeline.shape.thin": "Roll out with a rolling pin, ultra-thin",
     "timeline.shape.round": "Stretch by hand from the centre, preserving the rim",
     "timeline.shape.title": "Shaping",
@@ -1152,6 +1155,13 @@ export const EN_LOCALE: CmsContent = {
       tipNerd:
         "Poke test: slow return = optimal fermentation. Too fast = under-proofed. No return = over-proofed.",
       longDesc: "After dividing, the dough balls need to relax and rise one last time. Keep them covered at room temperature. They're ready to stretch when: (1) they've doubled in volume, (2) the surface is domed and smooth, (3) the poke test springs back slowly (press with a finger: it should spring back in ~5 seconds). If the dough doesn't spring back = over-proofed; if it springs back straight away = under-proofed.",
+    },
+    proof_pan: {
+      title: "Final rise in the pan",
+      desc: "Final rise in the pan at {temp}",
+      longDesc: "The dough, already stretched in the pan, needs to puff up one last time. Cover the pan and leave it at room temperature. It is ready when it has clearly grown, the surface is domed and bubbly, and a gentle press with a finger springs back slowly. If it has shrunk back from the corners, push it out again with your fingertips.",
+      tipBeginner: "The dough in the pan is ready when it is puffy and soft: pressed with a finger, it springs back slowly.",
+      tipNerd: "Proofing in the pan sets the shape: the crumb structure forms in the baking vessel, with no later stretching to degas the dough.",
     },
     shape: {
       title: "Shaping",

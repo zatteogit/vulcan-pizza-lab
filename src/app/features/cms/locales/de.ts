@@ -725,6 +725,8 @@ export const DE_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Kalte Küche: Selbst mit Wasser von {temp} bleibt der Teig unter {ddt}. Das Wasser nicht weiter erwärmen: Mehl an einem warmen Ort lagern oder die Stockgare etwas verlängern.",
     "tip.waterTempLimitMin": "Warme Küche: Selbst mit Wasser von {temp} wird der Teig wärmer als {ddt}. Eiswasser verwenden, Mehl im Kühlschrank lagern oder die Stockgare etwas verkürzen.",
     "timeline.preheat.descWholeProof": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. Währenddessen machen die Teiglinge ihre Stückgare.",
+    "timeline.preheat.descPan": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen beendet der Teig die Gare im Blech.",
+    "timeline.preheat.descPanWholeProof": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen macht der Teig die Gare im Blech.",
     "timeline.preheat.descDuringRest": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. Währenddessen ruhen die Teiglinge.",
     "hint.flourWeak": "schwaches Mehl (klassisches 00)",
     "hint.flourMedium": "mittelstarkes Mehl",
@@ -815,6 +817,7 @@ export const DE_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Breite die erste Scheibe im geölten Blech aus; leg die zweite beiseite.",
     "timeline.shape.closedStuffed": "Breite die Bodenscheibe im Blech aus; die zweite brauchst du zum Verschließen.",
     "timeline.shape.rectangular": "Breite den Teig mit den Händen im geölten Blech aus",
+    "timeline.shape.pan": "Den Teig mit den H\u00E4nden im ge\u00F6lten Blech bis in die Ecken ausbreiten und dort gehen lassen.",
     "timeline.shape.thin": "Roll den Teig mit dem Nudelholz hauchdünn aus",
     "timeline.shape.round": "Zieh den Teig von der Mitte aus von Hand auf, der Rand bleibt erhalten",
     "timeline.shape.title": "Formen",
@@ -945,6 +948,13 @@ export const DE_LOCALE: CmsContent = {
       tipNerd:
         "Fingertest: langsame R\u00FCckkehr = optimale G\u00E4rung. Zu schnell = unterg\u00E4rig. Keine R\u00FCckkehr = \u00FCberg\u00E4rig.",
       longDesc: "Nach dem Teilen m\u00FCssen sich die Teiglinge entspannen und ein letztes Mal aufgehen. Halte sie abgedeckt bei Raumtemperatur. Sie sind bereit zum Ausziehen, wenn: (1) sich ihr Volumen verdoppelt hat, (2) die Oberfl\u00E4che gew\u00F6lbt und glatt ist, (3) der Fingertest langsam zur\u00FCckfedert (mit dem Finger eindr\u00FCcken: Die Delle sollte sich in ~5 Sekunden f\u00FCllen). Federt der Teig nicht zur\u00FCck = \u00FCberg\u00E4rig; federt er sofort zur\u00FCck = noch nicht so weit.",
+    },
+    proof_pan: {
+      title: "St\u00FCckgare im Blech",
+      desc: "Letzte Gare im Blech bei {temp}",
+      longDesc: "Der Teig, schon im Blech ausgebreitet, muss ein letztes Mal aufgehen. Das Blech abdecken und bei Raumtemperatur stehen lassen. Er ist fertig, wenn er deutlich gewachsen ist, die Oberfl\u00E4che gew\u00F6lbt und voller Blasen ist und eine leichte Fingerdelle langsam zur\u00FCckkommt. Hat er sich von den Ecken zur\u00FCckgezogen, mit den Fingerspitzen erneut ausbreiten.",
+      tipBeginner: "Der Teig im Blech ist fertig, wenn er luftig und weich ist: Eine Fingerdelle kommt langsam zur\u00FCck.",
+      tipNerd: "Die Gare im Blech fixiert die Form: Die Porung entsteht im Backgef\u00E4\u00DF, ohne dass ein sp\u00E4teres Ausbreiten den Teig entgast.",
     },
     shape: {
       title: "Formen",

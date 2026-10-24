@@ -204,6 +204,11 @@ export interface PizzaStyle {
   /** C-2: moltiplicatore delle dosi dei condimenti quando lo stile usa ricette
    *  scritte per un altro formato (pizza al metro con il catalogo napoletano). */
   topping_scale?: number;
+  /** Audit totale n. 7: l'impasto si stende in teglia dopo lo staglio e fa
+   *  l'appretto lì (Detroit, grandma, focacce, sfincione…). Senza il flag
+   *  l'appretto si fa a panetti e la stesura viene subito prima della cottura
+   *  (teglia e pala romana, al metro, tonde). */
+  proof_in_pan?: boolean;
   /** Sprint 11 Fase 1 — struttura geometrica (stacked/closed/folded/double_sheet).
    * Opzionale: omesso = single (pizza/teglia/panetto monostrato classico). */
   layout?: LayoutSpec;
@@ -573,7 +578,7 @@ export interface TimelineStep {
     tip?: { beginner: EngineMsg; nerd: EngineMsg };
   };
   /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. */
-  variant?: "whole_proof" | "during_rest" | "oil" | "fry";
+  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan";
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
@@ -3153,13 +3158,28 @@ function generateTimeline(
    * Nessuna timeline diceva di ACCENDERE IL FORNO: si infornava a freddo.
    * Il preriscaldo corre in parallelo al riposo dei panetti (piano sopra):
    * il totale resta identico e l'orario del promemoria è esatto. */
+  /* Audit totale n. 7: negli stili che lievitano in teglia la stesura viene
+   * subito dopo lo staglio e l'appretto si fa nella teglia. */
+  const proofInPan = !!style.proof_in_pan && layout.type === "single" && !isUnleavened;
+  if (proofInPan) {
+    steps.push(
+      keyedStep(
+        { id: "shape", variant: "pan", duration_minutes: 5, icon: "expand", timing_label: "5 min" },
+        em("timeline.shape.title", "Stesura"),
+        [em("timeline.shape.pan", "Stendere l'impasto nella teglia oliata con le mani, fino agli angoli; poi lasciarlo lievitare lì.")],
+      ),
+    );
+  }
   if (proofStepMinutes > 0) {
     steps.push({
       id: "proof",
+      ...(proofInPan ? { variant: "pan" as const } : {}),
       title: isUnleavened ? "Riposo" : "Appretto",
       description: isUnleavened
         ? `Lasciare riposare l'impasto coperto a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
-        : `Lievitazione finale a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`,
+        : proofInPan
+          ? `Lievitazione finale in teglia a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
+          : `Lievitazione finale a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`,
       duration_minutes: proofStepMinutes,
       icon: "timer",
       timing_label: formatDuration(Math.round(proofStepMinutes / 60)),
@@ -3240,7 +3260,7 @@ function generateTimeline(
           ? em("timeline.shape.thin", "Stendere con mattarello, sottilissima")
           : em("timeline.shape.round", "Allargare a mano dal centro, preservare il cornicione");
   }
-  steps.push(
+  if (!proofInPan) steps.push(
     keyedStep(
       {
         id: "shape",

@@ -738,6 +738,8 @@ export const ES_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Cocina fría: incluso con agua a {temp} la masa queda por debajo de {ddt}. No calientes más el agua: guarda la harina en un lugar templado o alarga un poco la fermentación en bloque.",
     "tip.waterTempLimitMin": "Cocina cálida: incluso con agua a {temp} la masa supera {ddt}. Usa agua helada, guarda la harina en la nevera o acorta un poco la fermentación en bloque.",
     "timeline.preheat.descWholeProof": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, los bollos hacen el leudado final.",
+    "timeline.preheat.descPan": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, la masa termina de fermentar en la bandeja.",
+    "timeline.preheat.descPanWholeProof": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, la masa hace la fermentaci\u00F3n final en la bandeja.",
     "timeline.preheat.descDuringRest": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, los bollos reposan.",
     "tip.waterTemp": "",
     "hint.flourWeak": "harina floja (00 clásica)",
@@ -833,6 +835,7 @@ export const ES_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Estira el primer disco en la bandeja aceitada; reserva el segundo.",
     "timeline.shape.closedStuffed": "Estira el disco de base en la bandeja y reserva el segundo para cerrar.",
     "timeline.shape.rectangular": "Estira la masa con las manos en la bandeja aceitada",
+    "timeline.shape.pan": "Estira la masa con las manos en la bandeja aceitada, hasta las esquinas; despu\u00E9s d\u00E9jala levar ah\u00ED.",
     "timeline.shape.thin": "Estira con el rodillo, muy fina",
     "timeline.shape.round": "Estira a mano desde el centro, respetando el borde",
     "timeline.shape.title": "Estirado",
@@ -958,6 +961,13 @@ export const ES_LOCALE: CmsContent = {
       tipNerd:
         "Test del dedo: retorno lento = fermentaci\u00F3n \u00F3ptima. Demasiado r\u00E1pido = sub-fermentado. Sin retorno = sobre-fermentado.",
       longDesc: "Tras el boleado, los bollos deben relajarse e hincharse una \u00FAltima vez. Mantenlos tapados a temperatura ambiente. Ser\u00E1 el momento de estirarlos cuando: (1) hayan duplicado su volumen, (2) la superficie est\u00E9 abombada y lisa, (3) la prueba del dedo se recupere despacio (presiona con el dedo: debe volver en ~5 segundos). Si la masa no vuelve = sobrefermentada; si vuelve enseguida = todav\u00EDa le falta.",
+    },
+    proof_pan: {
+      title: "Fermentaci\u00F3n final en bandeja",
+      desc: "Fermentaci\u00F3n final en bandeja a {temp}",
+      longDesc: "La masa, ya estirada en la bandeja, debe hincharse una \u00FAltima vez. Tapa la bandeja y d\u00E9jala a temperatura ambiente. Est\u00E1 lista cuando ha crecido claramente, la superficie est\u00E1 abombada y llena de burbujas y, al presionar suave con un dedo, la marca vuelve despacio. Si se ha retirado de las esquinas, vuelve a extenderla con las yemas de los dedos.",
+      tipBeginner: "La masa en bandeja est\u00E1 lista cuando est\u00E1 hinchada y blanda: al presionarla con un dedo, vuelve despacio.",
+      tipNerd: "Fermentar en la bandeja fija la forma: el alveolado se forma en el recipiente de cocci\u00F3n, sin un estirado posterior que desgasifique la masa.",
     },
     shape: {
       title: "Estirado",
