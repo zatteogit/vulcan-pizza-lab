@@ -214,6 +214,8 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- **D-037** (24/10): Scopri è la prima tab e la pagina d'ingresso (`/` porta a
+  `/explore`); Crea è su `/crea`. Il profilo chiudendosi torna da dove si era.
 - **D-036, D-038** (24/10): Crea parte dagli stili col momento consigliato in
   un chip; tolto il passo iniziale con il grande logo. La scheda «Prima volta
   qui?» ora chiede solo il forno (finché non è scelto), con «Scegli il tuo

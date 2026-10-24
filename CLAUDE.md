@@ -27,8 +27,8 @@ npm run check:tokens # Design token compliance only
 ## Architecture
 
 ### Page Routes (`src/app/pages/`)
-- `home.tsx` — Recipe creator (main feature)
-- `explore.tsx` — Pizza style discovery with search/filtering
+- `home.tsx` — Recipe creator (Crea, at `/crea`)
+- `explore.tsx` — Pizza style discovery (Scopri, `/explore`; `/` redirects here and it is the first tab — D-037)
 - `learn.tsx` — Educational hub (techniques, methods)
 - `glossary.tsx`, `troubleshooting.tsx`, `pre-ferments.tsx` — Learn sub-pages
 - `recipe.tsx` — Detail view for a specific pizza style

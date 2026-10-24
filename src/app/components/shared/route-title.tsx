@@ -11,7 +11,7 @@ import { CtaButton } from "../ds/index";
  * del motore nel chunk della shell. */
 
 function sectionTitle(pathname: string, pages: ReturnType<typeof useCms>["cms"]["pages"]): string | null {
-  if (pathname === "/") return pages.navCreate;
+  if (pathname.startsWith("/crea")) return pages.navCreate;
   if (pathname.startsWith("/explore")) return pages.navExplore;
   if (pathname.startsWith("/learn/glossary")) return pages.learnGlossary;
   if (pathname.startsWith("/learn/troubleshooting")) return pages.learnTroubleshooting;
