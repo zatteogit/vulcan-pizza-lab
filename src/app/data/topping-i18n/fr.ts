@@ -247,6 +247,10 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       name: "Prosciutto e Funghi",
       description: "Jambon cuit et champignons de Paris sur mozzarella. L'indémodable classique.",
     },
+    italian_sausage: {
+      name: "Saucisse",
+      description: "Saucisse au fenouil en petits morceaux, pos\u00E9e crue sur la sauce et la mozzarella\u00A0: la garniture la plus courante dans les pizzerias de Chicago.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2172,6 +2176,38 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
         },
       },
     },
+    focaccia_genovese_classica: {
+      variant_name: "huile, sel et saumure",
+      ingredients: {
+        "0": {
+          name: "Saumure (eau, huile d'olive vierge extra, sel)",
+        },
+        "1": {
+          name: "Huile d'olive vierge extra de Ligurie",
+        },
+        "2": {
+          name: "Gros sel",
+        },
+      },
+    },
+    italian_sausage_tavern: {
+      variant_name: "au fenouil, crue",
+      ingredients: {
+        "0": {
+          name: "Sauce tomate (coulis de tomate, sel, origan, ail)",
+        },
+        "1": {
+          name: "Mozzarella low-moisture r\u00E2p\u00E9e",
+        },
+        "2": {
+          name: "Saucisse au fenouil crue (porc, sel, graines de fenouil, poivre)",
+          notes: "en petits morceaux",
+        },
+        "3": {
+          name: "Origan s\u00E9ch\u00E9",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2717,6 +2753,14 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       description: "Abaissez \u00E0 la main, sans farine, un disque d'environ 120 g et un autre d'environ 80 g, de 2\u20133 mm d'\u00E9paisseur. Sur le plus grand, r\u00E9partissez la ricotta, la provola, les cicoli et le poivre en laissant le bord libre ; couvrez avec le petit disque et scellez en pressant bien. Faites frire dans l'huile v\u00E9g\u00E9tale \u00E0 environ 175 \u00B0C, en la retournant lorsqu'elle est dor\u00E9e.",
       tip_beginner: "Le disque du dessous est plus grand : son bord se replie ainsi par-dessus et la tonda reste ferm\u00E9e pendant la friture.",
       tip_nerd: "Sans farine \u00E0 l'abaisse, l'huile reste propre plus longtemps ; un bord mal scell\u00E9 laisse entrer l'huile et s'\u00E9chapper la farce.",
+    },
+    spread_salamoia_genovese: {
+      title: "Saumure dans les alv\u00E9oles",
+      description: "Avant l'appr\u00EAt final, creuser les alv\u00E9oles du bout des doigts. Verser la saumure d'eau, d'huile d'olive vierge extra et de sel, puis un filet d'huile et du gros sel\u00A0: l'huile et le sel se rassemblent dans les alv\u00E9oles.",
+    },
+    spread_sausage_tavern: {
+      title: "Saucisse crue jusqu'au bord",
+      description: "Sauce fine presque jusqu'au bord, puis la mozzarella. R\u00E9partir la saucisse crue en petits morceaux sur toute la surface\u00A0: elle cuit au four avec la pizza. Origan. Apr\u00E8s cuisson, couper en carr\u00E9s.",
     },
   },
 };

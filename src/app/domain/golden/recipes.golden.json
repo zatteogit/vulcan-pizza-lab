@@ -552,7 +552,7 @@
     "fermentation_c": 4,
     "oven_c": 260,
     "cook_s": 720,
-    "timeline_min": 1675
+    "timeline_min": 1676
   },
   "chicago_tavern/home": {
     "flour_g": 940,
@@ -567,7 +567,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 768,
-    "timeline_min": 1496
+    "timeline_min": 1497
   },
   "focaccia_barese/ideal": {
     "flour_g": 1103,

@@ -373,3 +373,13 @@ partiva senza condimento.
 | `greek_pan` | `margherita` → nessuna ricetta | `greek_cheese_pan` | timeline −2 min |
 
 Masse, forno e lievitazione invariati.
+
+## C-2 · Etichette e predefiniti per stile (24/10/2026)
+
+- `authenticity_by_style`: margherita e marinara AVPN restano «Da disciplinare»
+  solo per la napoletana STG; per canotto e pizza al metro sono «Tradizionale».
+  La sardenaira (De.Co. di Sanremo) è «Tradizionale» nella focaccia genovese.
+- Focaccia genovese: predefinita `focaccia_genovese_classica` (salamoia, olio,
+  sale grosso), al posto di olio e rosmarino. Durata invariata.
+- Chicago tavern: predefinita `italian_sausage_tavern` (salsiccia al finocchio
+  cruda), al posto del pepperoni. Timeline +1 min.

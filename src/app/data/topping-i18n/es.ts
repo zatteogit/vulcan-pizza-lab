@@ -247,6 +247,10 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
       name: "Jamón y Champiñones",
       description: "Jamón cocido y champiñones sobre mozzarella. El clásico de siempre.",
     },
+    italian_sausage: {
+      name: "Salchicha",
+      description: "Salchicha al hinojo en trocitos, puesta cruda sobre la salsa y la mozzarella: el ingrediente m\u00E1s com\u00FAn en las pizzer\u00EDas de Chicago.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2172,6 +2176,38 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
         },
       },
     },
+    focaccia_genovese_classica: {
+      variant_name: "aceite, sal y salmuera",
+      ingredients: {
+        "0": {
+          name: "Salmuera (agua, AOVE, sal)",
+        },
+        "1": {
+          name: "AOVE de Liguria",
+        },
+        "2": {
+          name: "Sal gruesa",
+        },
+      },
+    },
+    italian_sausage_tavern: {
+      variant_name: "al hinojo, cruda",
+      ingredients: {
+        "0": {
+          name: "Salsa de tomate (tomate triturado, sal, or\u00E9gano, ajo)",
+        },
+        "1": {
+          name: "Mozzarella low-moisture rallada",
+        },
+        "2": {
+          name: "Salchicha al hinojo cruda (carne de cerdo, sal, semillas de hinojo, pimienta)",
+          notes: "en trocitos",
+        },
+        "3": {
+          name: "Or\u00E9gano seco",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2717,6 +2753,14 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
       description: "Estira a mano, sin harina, un disco de unos 120 g y otro de unos 80 g, de 2\u20133 mm de grosor. Sobre el disco m\u00E1s grande reparte la ricotta, la provola, los cicoli y la pimienta dejando libre el borde; cubre con el disco peque\u00F1o y sella presionando bien. Fr\u00EDela en aceite de semillas a unos 175 \u00B0C y dale la vuelta cuando est\u00E9 dorada.",
       tip_beginner: "El disco de abajo es m\u00E1s grande: as\u00ED su borde se dobla por encima y la tonda se mantiene cerrada al fre\u00EDrla.",
       tip_nerd: "Sin harina al estirar, el aceite se mantiene limpio m\u00E1s tiempo; un borde mal sellado deja entrar el aceite y salir el relleno.",
+    },
+    spread_salamoia_genovese: {
+      title: "Salmuera en los hoyuelos",
+      description: "Antes del \u00FAltimo levado, haz los hoyuelos con las yemas de los dedos. Vierte la salmuera de agua, aceite de oliva virgen extra y sal, luego un hilo de aceite y sal gruesa: el aceite y la sal se acumulan en los hoyuelos.",
+    },
+    spread_sausage_tavern: {
+      title: "Salchicha cruda hasta el borde",
+      description: "Salsa fina casi hasta el borde, luego la mozzarella. Reparte la salchicha cruda en trocitos por toda la superficie: se cocina en el horno con la pizza. Or\u00E9gano. Despu\u00E9s de hornear, corta en cuadrados.",
     },
   },
 };

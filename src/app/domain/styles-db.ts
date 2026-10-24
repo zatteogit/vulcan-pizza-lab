@@ -501,7 +501,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🫒",
-    default_topping_ref: "bianca",
+    default_topping_ref: "focaccia_genovese_classica",
   },
   sfincione: {
     id: "sfincione",
@@ -1024,7 +1024,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "low",
     emoji: "🟫",
-    default_topping_ref: "diavola",
+    default_topping_ref: "italian_sausage_tavern",
   },
 
   /* ═══ NUOVI STILI — Audit motore 2026-05 (italiani minori + internazionali) ═══ */

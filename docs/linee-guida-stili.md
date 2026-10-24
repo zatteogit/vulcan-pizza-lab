@@ -66,7 +66,7 @@ solo dal codice. Il numero di condimenti è quello mostrato nella scheda.
 | Stile | Parametri | Condimento predefinito | Condimenti | Note per C-2 |
 |---|---|---|---|---|
 | `napoletana_stg` | con fonte (STG, AVPN) | `margherita_napoletana_avpn` | 14 | — |
-| `napoletana_canotto` | senza fonte | `margherita_napoletana_avpn` (`canonical`) | 16 | Il canotto non è AVPN: l'etichetta «Da disciplinare» va tolta per questo stile |
+| `napoletana_canotto` | senza fonte | `margherita_napoletana_avpn` | 16 | Etichetta «Da disciplinare» tolta per questo stile (24/10) |
 | `teglia_romana` | senza fonte | `margherita_romana` | 12 | Il classico al taglio è rossa/bianca: valutare |
 | `tonda_romana` | senza fonte | `margherita_romana` | 11 | — |
 | `pinsa_romana` | con fonte (OPR 2020) | `margherita_romana` | 9 | — |
@@ -76,20 +76,20 @@ solo dal codice. Il numero di condimenti è quello mostrato nella scheda.
 | `new_york` | senza fonte | `margherita_new_york` | 6 | Il classico è la cheese pizza: valutare |
 | `detroit` | senza fonte | `detroit_brick` | 5 | — |
 | `chicago_deep` | senza fonte | `chicago_deep_classic` | 5 | — |
-| `chicago_tavern` | senza fonte | `diavola_americana` | 3 | Il classico tavern è con salsiccia: manca la ricetta |
+| `chicago_tavern` | senza fonte | `italian_sausage_tavern` | 4 | Salsiccia al finocchio a crudo, predefinita dal 24/10 (Wikipedia, «Tavern-style pizza») |
 | `grandma_style` | senza fonte | `margherita_grandma` | 4 | — |
 | `new_haven_apizza` | senza fonte | `white_clam_new_haven` | 2 | — |
 | `california_style` | senza fonte | `smoked_salmon_california` (`signature`) | 4 | Predefinito corretto il 24/10; attribuzione della BBQ chicken corretta (Ed LaDou, California Pizza Kitchen 1985) |
 | `greek_pan` | senza fonte | `greek_cheese_pan` | 3 | Predefinito corretto il 24/10 |
 | `fugazzeta` | senza fonte | `fugazzeta_rellena` | 2 | — |
-| `focaccia_genovese` | senza fonte | `bianca_olio_rosmarino` | 3 | La genovese classica è olio, sale e salamoia: il rosmarino è una variante |
+| `focaccia_genovese` | senza fonte | `focaccia_genovese_classica` | 4 | Olio, sale grosso e salamoia, predefinita dal 24/10 (Città dell'Olio 2016); sardenaira non più «Da disciplinare» qui |
 | `focaccia_recco` | con fonte (IGP) | `crescenza_recco` | 5 | — |
 | `focaccia_barese` | senza fonte | `focaccia_barese_classica` | 4 | — |
 | `sfincione` | senza fonte | `sfincione_palermitano` | 2 | — |
 | `padellino_torino` | senza fonte | `margherita_padellino` | 5 | — |
 | `trancio_milanese` | senza fonte | `margherita_trancio` | 5 | — |
 | `ciaccino_senese` | senza fonte | `ciaccino_senese_farcito` | 1 | — |
-| `pizza_al_metro` | senza fonte | `margherita_napoletana_avpn` (`canonical`) | 14 | Usa il catalogo della napoletana con l'etichetta AVPN: servono condimenti propri |
+| `pizza_al_metro` | senza fonte | `margherita_napoletana_avpn` | 14 | Etichetta AVPN tolta (24/10); servono ancora condimenti propri |
 | `pizza_fritta` | con fonte (AVPN) | `pizza_fritta_ripiena` | 1 | — |
 | `pizza_fritta_tonda` | con fonte (AVPN) | `pizza_fritta_tonda_ripiena` | 1 | Manca una foto vera |
 | `pizza_montanara` | con fonte (AVPN, parziale) | `montanara_classica` | 1 | — |
@@ -97,10 +97,10 @@ solo dal codice. Il numero di condimenti è quello mostrato nella scheda.
 
 ## 4. Priorità per C-2
 
-1. **Etichette sbagliate** (`canonical` fuori dal disciplinare): canotto e pizza
-   al metro mostrano la margherita AVPN come «Da disciplinare».
-2. **Predefiniti non tipici**: Chicago tavern (salsiccia), focaccia genovese
-   (senza rosmarino), con fonte.
+1. ~~**Etichette sbagliate**~~ fatto il 24/10: `authenticity_by_style` e test
+   «Da disciplinare solo negli stili con un disciplinare».
+2. ~~**Predefiniti non tipici**~~ fatto il 24/10: Chicago tavern (salsiccia),
+   focaccia genovese (salamoia, senza rosmarino).
 3. **Pizza al metro**: condimenti propri invece del catalogo napoletano.
 4. **Fonti dei parametri** per gli stili «senza fonte», a partire da quelli più
    visti (teglia, tonda, New York, Detroit).

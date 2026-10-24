@@ -247,6 +247,10 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
       name: "Presunto e Cogumelos",
       description: "Presunto cozido e cogumelos champignon sobre mozzarella. O clássico que nunca envelhece.",
     },
+    italian_sausage: {
+      name: "Lingui\u00E7a",
+      description: "Lingui\u00E7a com erva-doce em pedacinhos, colocada crua sobre o molho e a mussarela: a cobertura mais comum nas pizzarias de Chicago.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2172,6 +2176,38 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
         },
       },
     },
+    focaccia_genovese_classica: {
+      variant_name: "azeite, sal e salmoura",
+      ingredients: {
+        "0": {
+          name: "Salmoura (\u00E1gua, azeite extravirgem, sal)",
+        },
+        "1": {
+          name: "Azeite extravirgem l\u00EDgure",
+        },
+        "2": {
+          name: "Sal grosso",
+        },
+      },
+    },
+    italian_sausage_tavern: {
+      variant_name: "com erva-doce, crua",
+      ingredients: {
+        "0": {
+          name: "Molho de tomate (passata de tomate, sal, or\u00E9gano, alho)",
+        },
+        "1": {
+          name: "Mussarela low-moisture ralada",
+        },
+        "2": {
+          name: "Lingui\u00E7a com erva-doce crua (carne su\u00EDna, sal, sementes de erva-doce, pimenta)",
+          notes: "em pedacinhos",
+        },
+        "3": {
+          name: "Or\u00E9gano seco",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2717,6 +2753,14 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
       description: "Abra com as m\u00E3os, sem farinha, um disco de cerca de 120 g e outro de cerca de 80 g, com 2\u20133 mm de espessura. Sobre o disco maior, distribua ricota, provola, cicoli e pimenta deixando a borda livre; cubra com o disco menor e sele apertando bem. Frite em \u00F3leo vegetal a cerca de 175 \u00B0C, virando quando estiver dourada.",
       tip_beginner: "O disco de baixo \u00E9 maior: assim a borda dobra por cima e a tonda continua fechada na fritura.",
       tip_nerd: "Sem farinha na abertura, o \u00F3leo fica limpo por mais tempo; uma borda mal selada deixa o \u00F3leo entrar e o recheio vazar.",
+    },
+    spread_salamoia_genovese: {
+      title: "Salmoura nas covinhas",
+      description: "Antes da \u00FAltima fermenta\u00E7\u00E3o, fa\u00E7a as covinhas com a ponta dos dedos. Despeje a salmoura de \u00E1gua, azeite extravirgem e sal, depois um fio de azeite e sal grosso: o azeite e o sal se acumulam nas covinhas.",
+    },
+    spread_sausage_tavern: {
+      title: "Lingui\u00E7a crua at\u00E9 a borda",
+      description: "Molho fino quase at\u00E9 a borda, depois a mussarela. Espalhe a lingui\u00E7a crua em pedacinhos por toda a superf\u00EDcie: ela assa no forno junto com a pizza. Or\u00E9gano. Depois de assar, corte em quadrados.",
     },
   },
 };
