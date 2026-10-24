@@ -648,7 +648,7 @@ export const DE_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "Sauerteig: selbst hergestellt, null Auswirkung",
     "rec.timeCompatible":
-      "Gärung {fMin}-{fMax}: passt zu deiner Zeit",
+      "Gärung {fMin}–{fMax}: passt zu deiner Zeit",
     "rec.timeAdaptable": "Gärung anpassbar auf ~{hours}",
     "rec.timeInsufficient":
       "Benötigt mindestens {fMin}, du hast {available}",
@@ -849,6 +849,8 @@ export const DE_LOCALE: CmsContent = {
     "recipeSetup.noSignatureAlreadyActive": "Keine Inspiration bereits aktiv",
     "recipeSetup.signatureApplied": "{label}: Inspiration übernommen",
     "recipeSetup.signatureRemoved": "Inspiration entfernt: Parameter zurückgesetzt",
+    "rec.fried": "Wird im Topf frittiert: kein Ofen n\u00F6tig",
+    "rec.flourMix": "Wenn du deine Mehle mischst: {weakPct}% {weak} und {strongPct}% {strong}, etwa W {w}",
   },
   scienceLabels: {
     yeastBaker: "B\u00E4ckerhefe",
@@ -1028,7 +1030,7 @@ export const DE_LOCALE: CmsContent = {
     teglia_romana:
       "Hohe Hydratation, ohne Kneten mit Falten. Knusprige Basis, wolkige Krume.",
     tonda_romana:
-      'Hauchdnn, Nudelholz erforderlich, extrem knusprig. "Scrocchiarella".',
+      'Hauchdünn, mit Nudelholz oder von Hand ausgerollt, extrem knusprig. "Scrocchiarella".',
     pinsa_romana:
       "70% Weizen / 15% Soja / 15% Reis-Mischung. Ovale Form, glasige Kruste.",
     pala_romana:
@@ -1073,13 +1075,13 @@ export const DE_LOCALE: CmsContent = {
     teglia_romana:
       "H\u00F6he 2-3cm|Hydratation 80-100%|Ohne Kneten + Falten|Wolkenkrume",
     tonda_romana:
-      "Dicke 1-2mm|Nudelholz erforderlich|Extrem knusprig|Schwaches Mehl W<210",
+      "Dicke 1-2mm|Nudelholz oder von Hand|Extrem knusprig|Schwaches Mehl W<210",
     pinsa_romana:
       "Multi-Getreide-Mix|Ovale Form|Glasige Kruste|Reifung 24-72h",
     pala_romana:
       "L\u00E4ngliche Ovalform|Hohe Hydratation|Auf Schaufel serviert|Knusprig-wolkige Kruste",
     new_york:
-      "Faltbares St\u00FCck|Zucker + \u00D6l|Backzeit 12-15min|Charakteristische \u00D6ligkeit",
+      "Faltbares St\u00FCck|Zucker + \u00D6l|Backzeit 9–12 min|Charakteristische \u00D6ligkeit",
     detroit:
       "K\u00E4sekrone|Tiefe Pfanne|K\u00E4se am Rand|Karamellisierte Kruste",
     chicago_deep:

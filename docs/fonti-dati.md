@@ -292,6 +292,24 @@ cambia con la stagione. Non basta per fissare un numero.
 3. La dose di riferimento (0,1% a 24 h e 18 °C) e il rapporto secco/fresco sono coerenti con UE 2010 e AVPN 2024.
 4. In UI il Q10 sotto i 18 °C deve restare una **stima**, come già scritto nel codice. Per chiudere servono misure di gas nell'impasto (risografo o fermentometro) a 4, 8, 12 e 18 °C: è un buon lavoro per un mulino o un produttore di lievito partner.
 
+## 4bis. Pizza al metro, teglia, tonda, New York, Detroit (24/10/2026)
+
+Tabelle complete, con fonte e stato per ogni dato, in
+`docs/ricerca/stili-fonti-2026-10-24.md`. Applicato con le decisioni D-028…D-031:
+
+| Stile | Dato | Prima | Ora | Fonte | Stato |
+|---|---|---|---|---|---|
+| `pizza_al_metro` | Lunghezza, panetto | 70 cm, 700 g | 100 cm, 1000 g (peso: stima proporzionale) | Fucito 2017; menù Gigino 2026 | verificato (lunghezza), plausibile (peso) |
+| `pizza_al_metro` | Forno | elettrico | a legna, avviso | Fucito 2017; Scatti di Gusto 2017 | verificato |
+| `pizza_al_metro` | Lievitazione | 12–36 h | 6–12 h | Fucito 2017 (6 h; l'estremo alto è una scelta) | plausibile |
+| `pizza_al_metro` | Porzioni | 4–6 | 4–5 | menù Gigino 2026 | verificato |
+| `teglia_romana` | W, panetto | 280–320, 800 g | 300–380, 600 g | Confraternita 2016 (APITER) | verificato |
+| `teglia_romana` | Forno, cottura | 260–300 °C, 13–18 min | 250–320 (ideale 310), 8–15 min | Confraternita 2016; Alfè 2020; Trezzi 2020 | verificato (pizzeria), plausibile (casa) |
+| `tonda_romana` | Idratazione | 50–55% | 55–60% | Valdes 2012; Magenis 2020 | verificato |
+| `tonda_romana` | Forno, cottura | 300–340 °C, 5–8 min | 300–400 (ideale 380), 90–200 s | Magenis 2020; Valdes 2012; Pagano 2017 | verificato (ideale), scelta (minimo 300) |
+| `detroit` | Zucchero, lievitazione | 0,5%, 18–48 h | 0, 8–24 h | King Arthur s.d.; Our Place s.d. | plausibile (fonti per il forno di casa) |
+| `new_york` | Caratteristica «cottura» | 12–15 min | 9–12 min (come il codice) | coerenza interna | — |
+
 ## 5. Ispirazioni e ricette iconiche (`interpretation-library.ts`, `signature-recipes.ts`)
 
 Verifica del 24/10/2026: 126 affermazioni sulle 14 ispirazioni, di cui 40

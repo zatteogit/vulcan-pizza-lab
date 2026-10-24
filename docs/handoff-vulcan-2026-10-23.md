@@ -214,6 +214,28 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- ~~**C-3 (P2)**~~ chiuso il 24/10: i consigli e l'avviso «ti serve una farina
+  W…» tengono conto del mix di due farine della dispensa (`pantryFlourMix`,
+  quote al 5%, W stimata come media pesata e detta «circa»). Bug collaterale:
+  la Tipo 1 della dispensa non aveva una W nel motore e veniva ignorata.
+- **U-6 (P2)** avanzato il 24/10: nel pannello dello stile le fritte dicevano
+  «il tuo forno raggiunge la temperatura ideale (175 °C)», che è l'olio: ora
+  «Si frigge in pentola: il forno non serve» (7 lingue, test). «Fermentazione
+  8 h-24 h» → «Lievitazione 8–24 h». Aperto per Matteo: con una cucina di casa
+  le tre fritte sono in cima a «Perfetti per te» (punteggio 85, coerente con la
+  fedeltà all'originale): va bene o vanno trattate a parte?
+- **C-2 (P1)** avanzato il 24/10: etichette «Da disciplinare» solo dove c'è un
+  disciplinare (test), focaccia genovese con salamoia e Chicago tavern con
+  salsiccia come predefiniti. Poi (D-028…D-031) pizza al metro, teglia, tonda
+  e Detroit sulle fonti, con le dosi della pizza al metro scalate. Restano le
+  fonti di pizzeria per New York e Detroit e i parametri degli altri stili
+  «senza fonte» (`docs/linee-guida-stili.md` §3–4).
+- ~~**C-1 (P1)**~~ chiuso il 24/10: `docs/linee-guida-stili.md` (regole, modello
+  di scheda, stato dei 29 stili, priorità per C-2) e test
+  `style-editorial.test.ts`. Il test ha trovato tre stili (baciata, California,
+  greek pan) il cui condimento predefinito non portava a nessuna ricetta:
+  corretti. Corretta anche l'attribuzione della BBQ chicken (Ed LaDou per
+  California Pizza Kitchen, 1985, non Wolfgang Puck) in 7 lingue.
 - ~~**I18N-5**~~ chiuso il 24/10: fact-check delle 14 ispirazioni (126
   affermazioni, 21 errate: `docs/ricerca/ispirazioni-fact-check-2026-10-24.md`,
   riassunto in `docs/fonti-dati.md` §5) e testi riscritti sulle fonti. Decisioni

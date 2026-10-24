@@ -359,3 +359,44 @@ fra 2 h non fattibile). La foto della tonda è per ora quella della fritta chius
   se fosse di scheda. Serve un'etichetta «stima» (stringa CMS in 7 lingue).
 - Lo slot «Nessuna preferenza» vale ancora 24 h fisse.
 - `requires_wood_oven`: deciso con D-020 (avviso, non blocco).
+
+## C-1 · Condimenti predefiniti che non portavano a nessuna ricetta (24/10/2026)
+
+Il nuovo test `style-editorial.test.ts` ha trovato tre stili il cui
+`default_topping_ref` non si risolveva in una ricetta dello stile: la ricetta
+partiva senza condimento.
+
+| Stile | Prima | Dopo | Effetto sul golden |
+|---|---|---|---|
+| `pizza_baciata` | `bianca_mortazza` → nessuna ricetta | `bianca_mortazza_romana` (baciata aggiunta allo stile) | timeline +5 min; «di corsa» ora anche `time_window` |
+| `california_style` | `ortolana` → nessuna ricetta | `smoked_salmon_california` (Spago) | nessuno (fuori dal golden) |
+| `greek_pan` | `margherita` → nessuna ricetta | `greek_cheese_pan` | timeline −2 min |
+
+Masse, forno e lievitazione invariati.
+
+## C-2 · Etichette e predefiniti per stile (24/10/2026)
+
+- `authenticity_by_style`: margherita e marinara AVPN restano «Da disciplinare»
+  solo per la napoletana STG; per canotto e pizza al metro sono «Tradizionale».
+  La sardenaira (De.Co. di Sanremo) è «Tradizionale» nella focaccia genovese.
+- Focaccia genovese: predefinita `focaccia_genovese_classica` (salamoia, olio,
+  sale grosso), al posto di olio e rosmarino. Durata invariata.
+- Chicago tavern: predefinita `italian_sausage_tavern` (salsiccia al finocchio
+  cruda), al posto del pepperoni. Timeline +1 min.
+
+## C-2 · Parametri di al metro, teglia, tonda, Detroit con fonti (24/10/2026)
+
+Decisioni D-028…D-031; fonti in `docs/ricerca/stili-fonti-2026-10-24.md`.
+Golden: gli esiti non cambiano; cambiano i numeri.
+
+| Scenario | Prima | Dopo |
+|---|---|---|
+| teglia ideale | 800 g, forno 280 °C, 1020 s | 600 g, 310 °C, 720 s |
+| teglia casa | 800 g, 1240 s | 600 g, 1063 s |
+| tonda ideale | idratazione 52,5%, 320 °C, 360 s | 57,5%, 380 °C, 120 s |
+| tonda casa | 567 s | 279 s (il motore compensa il forno freddo con idratazione e zucchero, come prima) |
+| Detroit | lievitazione 33/24 h, zucchero 7 g | 16 h, zucchero 0 |
+| pizza al metro | 700 g, 24 h a 4 °C | 1000 g, 9 h a 22 °C |
+
+Dosi dei condimenti della pizza al metro: `topping_scale` 3,7 (3000 cm² contro
+804 cm² del disco napoletano da 32 cm), applicato solo in visualizzazione.

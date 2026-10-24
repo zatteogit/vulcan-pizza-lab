@@ -573,7 +573,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
   bbq_chicken: {
     id: "bbq_chicken",
     name: "BBQ Chicken",
-    description: "Pollo glassato alla barbecue, cipolla rossa e coriandolo. Firma californiana di Wolfgang Puck.",
+    description: "Pollo glassato alla barbecue, cipolla rossa e coriandolo. Resa celebre da California Pizza Kitchen (1985).",
     emoji: "🍗",
     thumbnail: thumbnailBbqChicken,
     flavor_profile: "sweet_savory",
@@ -734,6 +734,14 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
     flavor_profile: "rich",
     occasions: ["classico", "comfort", "famiglia"],
   },
+  italian_sausage: {
+    id: "italian_sausage",
+    name: "Salsiccia",
+    description: "Salsiccia al finocchio a pezzetti, messa cruda su salsa e mozzarella: il condimento più diffuso nelle pizzerie di Chicago.",
+    emoji: "🌭",
+    flavor_profile: "salty_savory",
+    occasions: ["classico", "birra"],
+  },
 };
 
 /* ═══ ToppingRecipe — la realizzazione concreta ═══ */
@@ -762,6 +770,11 @@ export interface ToppingRecipe {
    *                   Scarpetta, Nerano), pertinente allo stile ma non un canone.
    *  Non usare "common"/"experimental"/"taboo" qui (derivano dal match). */
   authenticity?: AuthenticityScore;
+
+  /** C-2: etichetta per uno stile preciso, quando la ricetta è da disciplinare
+   *  solo per alcuni degli stili a cui è assegnata (la margherita AVPN lo è per
+   *  la napoletana STG, non per il canotto o la pizza al metro). */
+  authenticity_by_style?: Partial<Record<string, AuthenticityScore>>;
 
   /** Layout compatibili. Se omesso = compatibile con tutti. */
   compatible_layouts?: LayoutType[];
@@ -798,6 +811,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "Verace AVPN",
     thumbnail: thumbnailVariantMargheritaAvpn,
     authenticity: "canonical", // disciplinare AVPN
+    /* Il disciplinare è della napoletana: canotto e pizza al metro non ne hanno uno. */
+    authenticity_by_style: { napoletana_canotto: "natural", pizza_al_metro: "natural" },
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pelati San Marzano DOP schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
@@ -874,6 +889,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "marinara",
     variant_name: "AVPN",
     authenticity: "canonical", // disciplinare AVPN
+    /* Il disciplinare è della napoletana: canotto e pizza al metro non ne hanno uno. */
+    authenticity_by_style: { napoletana_canotto: "natural", pizza_al_metro: "natural" },
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pelati San Marzano DOP (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
@@ -886,6 +903,38 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       id: "spread_marinara_avpn",
       title: "Condimento Marinara AVPN",
       description: "Pelati schiacciati salati. Aglio a fettine sottili distribuito. Origano abbondante. Filo d'olio EVO. Niente formaggio (è la Marinara!).",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
+  /* C-2 (D-028): il classico di Gigino a Vico Equense, con tre fonti (Becchi
+   * 2023; Scatti di Gusto 2017; menù 2026). Dosi per un disco da 32 cm come
+   * il resto del catalogo napoletano: la pizza al metro le scala (topping_scale). */
+  marinara_scarole_metro: {
+    id: "marinara_scarole_metro",
+    concept_ref: "marinara",
+    variant_name: "con scarole",
+    preferred_for_styles: ["pizza_al_metro"],
+    ingredients: [
+      { name: "Pelati (pomodoro, succo di pomodoro)", amount: { value: 70, unit: "g" } },
+      { name: "Scarola", amount: { value: 120, unit: "g" }, notes: "da stufare" },
+      { name: "Aglio", amount: { value: 1, unit: "pcs" }, notes: "spicchio" },
+      { name: "Origano secco", amount: { value: 1, unit: "g" } },
+      { name: "Olio EVO", amount: { value: 12, unit: "ml" } },
+    ],
+    pre_prep_steps: [{
+      id: "stufare_scarola_metro",
+      title: "Stufare la scarola",
+      description: "Lavare la scarola e tagliarla a strisce. Stufarla in padella con olio e aglio finché appassisce e perde l'acqua, poi salare. Farla raffreddare prima di metterla sulla pizza.",
+      duration_minutes: 15,
+      timing: "just_before_assembly",
+    }],
+    assembly_steps: [{
+      id: "spread_marinara_scarole",
+      title: "Marinara con scarole",
+      description: "Pelati schiacciati e salati, la scarola stufata ben scolata, origano e un filo d'olio. Niente formaggio.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -942,7 +991,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "boscaiola_napoletana",
     concept_ref: "boscaiola",
     variant_name: "porcini e salsiccia",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
       { name: "Pelati San Marzano (pomodoro, succo di pomodoro)", amount: { value: 60, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
@@ -1046,6 +1095,29 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     }],
   },
 
+  /* C-2: nelle pizzerie di Chicago il condimento più diffuso è la salsiccia
+   * italiana (Wikipedia, «Tavern-style pizza»), a pezzetti crudi fino al bordo. */
+  italian_sausage_tavern: {
+    id: "italian_sausage_tavern",
+    concept_ref: "italian_sausage",
+    variant_name: "al finocchio, a crudo",
+    preferred_for_styles: ["chicago_tavern"],
+    ingredients: [
+      { name: "Salsa di pomodoro (passata di pomodoro, sale, origano, aglio)", amount: { value: 90, unit: "g" } },
+      { name: "Low-moisture mozzarella grattugiata", amount: { value: 100, unit: "g" } },
+      { name: "Salsiccia al finocchio cruda (carne di maiale, sale, semi di finocchio, pepe)", amount: { value: 90, unit: "g" }, notes: "a pezzetti piccoli" },
+      { name: "Origano secco", amount: { value: 1, unit: "g" } },
+    ],
+    assembly_steps: [{
+      id: "spread_sausage_tavern",
+      title: "Salsiccia cruda fino al bordo",
+      description: "Salsa sottile fino quasi al bordo, poi la mozzarella. Distribuire la salsiccia cruda a pezzetti piccoli su tutta la superficie: cuoce in forno con la pizza. Origano. Dopo la cottura, tagliare a quadretti.",
+      insert_at: "after_shape",
+      duration_minutes: 4,
+      replaces_generic: true,
+    }],
+  },
+
   /* ─── CAPRICCIOSA — 1 classica ─── */
 
   /* ─── QUATTRO STAGIONI — 1 classica ─── */
@@ -1118,7 +1190,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "bianca_mortazza",
     variant_name: "IGP di Bologna",
     thumbnail: thumbnailVariantBiancaMortazzaRomana,
-    preferred_for_styles: ["pizza_spaccata", "pala_romana", "teglia_romana"],
+    preferred_for_styles: ["pizza_spaccata", "pala_romana", "teglia_romana", "pizza_baciata"],
     ingredients: [
       { name: "Olio EVO per spennellare", amount: { value: 12, unit: "ml" }, section: "base" },
       { name: "Fior di sale", amount: { value: 2, unit: "g" }, section: "base" },
@@ -1801,7 +1873,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   quattro_stagioni_napoletana: {
     id: "quattro_stagioni_napoletana",
     concept_ref: "quattro_stagioni",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
       { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
@@ -1847,7 +1919,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   ortolana_napoletana: {
     id: "ortolana_napoletana",
     concept_ref: "ortolana",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
       { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 70, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 70, unit: "g" } },
@@ -1878,7 +1950,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   cosacca_napoletana: {
     id: "cosacca_napoletana",
     concept_ref: "cosacca",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
       { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 90, unit: "g" } },
       { name: "Sale fino", amount: { value: 1, unit: "g" } },
@@ -1903,7 +1975,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   provola_pepe_napoletana: {
     id: "provola_pepe_napoletana",
     concept_ref: "provola_pepe",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
       { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 70, unit: "g" }, notes: "ombra di pomodoro, leggera" },
       { name: "Provola affumicata campana a cubetti", amount: { value: 90, unit: "g" } },
@@ -1924,7 +1996,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   nduja_napoletana: {
     id: "nduja_napoletana",
     concept_ref: "nduja",
-    preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
+    preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
       { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 80, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
@@ -2554,7 +2626,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   bbq_chicken_california: {
     id: "bbq_chicken_california",
     concept_ref: "bbq_chicken",
-    variant_name: "Wolfgang Puck",
+    variant_name: "California Pizza Kitchen",
     preferred_for_styles: ["california_style"],
     authenticity: "signature",
     ingredients: [
@@ -2567,7 +2639,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_bbq_chicken",
       title: "BBQ chicken alla californiana",
-      description: "Salsa barbecue al posto del pomodoro. Mozzarella, pollo glassato e cipolla rossa. Dopo cottura, coriandolo fresco. La pizza gourmet anni '80 di Wolfgang Puck.",
+      description: "Salsa barbecue al posto del pomodoro. Mozzarella, pollo glassato e cipolla rossa. Dopo cottura, coriandolo fresco. La pizza di Ed LaDou per il primo menu di California Pizza Kitchen (1985).",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -2719,6 +2791,28 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
   },
 
+  /* C-2: la genovese classica è olio, sale grosso e salamoia nelle fossette;
+   * il rosmarino è una variante (Città dell'Olio 2016; docs/linee-guida-stili.md). */
+  focaccia_genovese_classica: {
+    id: "focaccia_genovese_classica",
+    concept_ref: "bianca",
+    variant_name: "olio, sale e salamoia",
+    preferred_for_styles: ["focaccia_genovese"],
+    ingredients: [
+      { name: "Salamoia (acqua, olio EVO, sale)", amount: { value: 30, unit: "ml" }, section: "superficie" },
+      { name: "Olio EVO ligure", amount: { value: 15, unit: "ml" }, section: "superficie" },
+      { name: "Sale grosso", amount: { value: 3, unit: "g" }, section: "superficie" },
+    ],
+    assembly_steps: [{
+      id: "spread_salamoia_genovese",
+      title: "Salamoia nelle fossette",
+      description: "Prima della lievitazione finale fare le fossette con i polpastrelli. Versare la salamoia di acqua, olio extravergine e sale, poi olio a filo e sale grosso: olio e sale si raccolgono nelle fossette.",
+      insert_at: "after_shape",
+      duration_minutes: 3,
+      replaces_generic: true,
+    }],
+  },
+
   focaccia_cipolle_genovese: {
     id: "focaccia_cipolle_genovese",
     concept_ref: "focaccia_cipolle",
@@ -2745,6 +2839,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "De.Co. di Sanremo",
     preferred_for_styles: ["focaccia_genovese"],
     authenticity: "canonical",
+    /* La De.Co. è della sardenaira, non della focaccia genovese che la ospita. */
+    authenticity_by_style: { focaccia_genovese: "natural" },
     ingredients: [
       { name: "Salsa densa di pomodoro cotta con cipolla (pomodoro, cipolla, olio)", amount: { value: 150, unit: "g" }, section: "base" },
       { name: "Acciughe salate dissalate", amount: { value: 25, unit: "g" }, section: "base" },
@@ -3296,6 +3392,21 @@ export function resolveTopping(
 /** Risolve un topping per ID nel contesto di uno Style.
  *  Se ID è un concept, usa il resolver per scegliere la variante giusta.
  *  Se ID è una recipe specifica, ritorna quella. */
+/** C-2: dosi moltiplicate per `style.topping_scale` (pizza al metro). Grammi e
+ *  millilitri all'unità, pezzi al mezzo; la ricetta originale non cambia. */
+export function scaleToppingAmounts(recipe: ToppingRecipe, scale: number | undefined): ToppingRecipe {
+  if (!scale || scale === 1) return recipe;
+  const round = (value: number, unit: string) =>
+    unit === "g" || unit === "ml" ? Math.round(value * scale) : Math.max(1, Math.round(value * scale * 2) / 2);
+  return {
+    ...recipe,
+    ingredients: recipe.ingredients.map((ing) => ({
+      ...ing,
+      amount: { ...ing.amount, value: round(ing.amount.value, ing.amount.unit) },
+    })),
+  };
+}
+
 export function getToppingForStyle(
   id: string,
   style: PizzaStyle,
@@ -3563,7 +3674,7 @@ export function getRecipesByAuthenticity(style: PizzaStyle): Array<{
     )
     .map(({ recipe, sourceIndex }) => ({
       recipe,
-      authenticity: recipe.authenticity ?? "natural",
+      authenticity: recipe.authenticity_by_style?.[style.id] ?? recipe.authenticity ?? "natural",
       representativeOrder: representativeOrder(recipe, style, defaultTopping),
       preferredStyleOrder: recipe.preferred_for_styles?.indexOf(style.id) ?? REPRESENTATIVE_ORDER_MISS,
       sourceIndex,

@@ -177,7 +177,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     bbq_chicken: {
       name: "BBQ Chicken",
-      description: "Poulet laqué sauce barbecue, oignon rouge et coriandre. La signature californienne de Wolfgang Puck.",
+      description: "Poulet laqué sauce barbecue, oignon rouge et coriandre. Rendue célèbre par California Pizza Kitchen (1985).",
     },
     smoked_salmon: {
       name: "Saumon fumé",
@@ -246,6 +246,10 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     prosciutto_funghi: {
       name: "Prosciutto e Funghi",
       description: "Jambon cuit et champignons de Paris sur mozzarella. L'indémodable classique.",
+    },
+    italian_sausage: {
+      name: "Saucisse",
+      description: "Saucisse au fenouil en petits morceaux, pos\u00E9e crue sur la sauce et la mozzarella\u00A0: la garniture la plus courante dans les pizzerias de Chicago.",
     },
   },
   recipes: {
@@ -1571,7 +1575,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       },
     },
     bbq_chicken_california: {
-      variant_name: "Wolfgang Puck",
+      variant_name: "California Pizza Kitchen",
       ingredients: {
         "0": {
           name: "Sauce barbecue",
@@ -2172,6 +2176,60 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
         },
       },
     },
+    focaccia_genovese_classica: {
+      variant_name: "huile, sel et saumure",
+      ingredients: {
+        "0": {
+          name: "Saumure (eau, huile d'olive vierge extra, sel)",
+        },
+        "1": {
+          name: "Huile d'olive vierge extra de Ligurie",
+        },
+        "2": {
+          name: "Gros sel",
+        },
+      },
+    },
+    italian_sausage_tavern: {
+      variant_name: "au fenouil, crue",
+      ingredients: {
+        "0": {
+          name: "Sauce tomate (coulis de tomate, sel, origan, ail)",
+        },
+        "1": {
+          name: "Mozzarella low-moisture r\u00E2p\u00E9e",
+        },
+        "2": {
+          name: "Saucisse au fenouil crue (porc, sel, graines de fenouil, poivre)",
+          notes: "en petits morceaux",
+        },
+        "3": {
+          name: "Origan s\u00E9ch\u00E9",
+        },
+      },
+    },
+    marinara_scarole_metro: {
+      variant_name: "\u00E0 la scarole",
+      ingredients: {
+        "0": {
+          name: "Tomates pel\u00E9es (tomates, jus de tomate)",
+        },
+        "1": {
+          name: "Scarole",
+          notes: "\u00E0 \u00E9tuver",
+        },
+        "2": {
+          name: "Ail",
+          notes: "gousse",
+        },
+        "3": {
+          name: "Origan s\u00E9ch\u00E9",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2570,7 +2628,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     spread_bbq_chicken: {
       title: "BBQ chicken à la californienne",
-      description: "Sauce barbecue à la place de la tomate. Mozzarella, poulet laqué et oignon rouge. Après cuisson, coriandre fraîche. La pizza gourmet des années 80 de Wolfgang Puck.",
+      description: "Sauce barbecue à la place de la tomate. Mozzarella, poulet laqué et oignon rouge. Après cuisson, coriandre fraîche. La pizza d'Ed LaDou pour la première carte de California Pizza Kitchen (1985).",
     },
     salmon_bake: {
       title: "Base blanche à la crème fraîche",
@@ -2717,6 +2775,22 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       description: "Abaissez \u00E0 la main, sans farine, un disque d'environ 120 g et un autre d'environ 80 g, de 2\u20133 mm d'\u00E9paisseur. Sur le plus grand, r\u00E9partissez la ricotta, la provola, les cicoli et le poivre en laissant le bord libre ; couvrez avec le petit disque et scellez en pressant bien. Faites frire dans l'huile v\u00E9g\u00E9tale \u00E0 environ 175 \u00B0C, en la retournant lorsqu'elle est dor\u00E9e.",
       tip_beginner: "Le disque du dessous est plus grand : son bord se replie ainsi par-dessus et la tonda reste ferm\u00E9e pendant la friture.",
       tip_nerd: "Sans farine \u00E0 l'abaisse, l'huile reste propre plus longtemps ; un bord mal scell\u00E9 laisse entrer l'huile et s'\u00E9chapper la farce.",
+    },
+    spread_salamoia_genovese: {
+      title: "Saumure dans les alv\u00E9oles",
+      description: "Avant l'appr\u00EAt final, creuser les alv\u00E9oles du bout des doigts. Verser la saumure d'eau, d'huile d'olive vierge extra et de sel, puis un filet d'huile et du gros sel\u00A0: l'huile et le sel se rassemblent dans les alv\u00E9oles.",
+    },
+    spread_sausage_tavern: {
+      title: "Saucisse crue jusqu'au bord",
+      description: "Sauce fine presque jusqu'au bord, puis la mozzarella. R\u00E9partir la saucisse crue en petits morceaux sur toute la surface\u00A0: elle cuit au four avec la pizza. Origan. Apr\u00E8s cuisson, couper en carr\u00E9s.",
+    },
+    stufare_scarola_metro: {
+      title: "\u00C9tuver la scarole",
+      description: "Laver la scarole et la couper en lani\u00E8res. L'\u00E9tuver \u00E0 la po\u00EAle avec l'huile et l'ail jusqu'\u00E0 ce qu'elle fonde et perde son eau, puis saler. La laisser refroidir avant de la mettre sur la pizza.",
+    },
+    spread_marinara_scarole: {
+      title: "Marinara \u00E0 la scarole",
+      description: "Tomates pel\u00E9es \u00E9cras\u00E9es et sal\u00E9es, la scarole \u00E9tuv\u00E9e bien \u00E9goutt\u00E9e, origan et un filet d'huile. Pas de fromage.",
     },
   },
 };

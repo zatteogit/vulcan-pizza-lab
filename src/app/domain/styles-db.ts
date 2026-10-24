@@ -167,7 +167,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     family: "romana",
     origin: { city: "Roma", region: "Lazio", country: "Italia" },
     dough: {
-      flour_w_range: [280, 320], // Disciplinare APITER (Confraternita) W300-380 — Audit Maggio 2026
+      flour_w_range: [300, 380], // D-029: disciplinare APITER della Confraternita della Pizza (2016)
       flour_pl_range: [0.50, 0.60], // APITER: 0.50-0.60 stretto
       hydration_pct_range: [75, 85], // Teglia tradizionale 75-85%, moderna 85-90% — era [80,100]
       salt_pct: 2.5,
@@ -179,17 +179,17 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     shape: {
       shape_type: "rectangular",
-      dough_weight_g: 800,
+      dough_weight_g: 600, // D-029: APITER, peso = area/2 ± 20% → 600 g per 40 × 30
       thickness_factor: 0.6,
       length_cm: 40,
       width_cm: 30,
     },
     baking: {
       oven_type_required: "electric_standard",
-      temp_c_range: [260, 300],
-      temp_c_ideal: 280,
-      cook_time_sec_range: [780, 1080],
-      cook_time_sec_ideal: 1020,
+      temp_c_range: [250, 320], // D-029: platea 300–320 (APITER), 250 il forno di casa (Alfè 2020)
+      temp_c_ideal: 310,
+      cook_time_sec_range: [480, 900], // D-029: 8–13 min (APITER), 12–15 a casa (Trezzi 2020)
+      cook_time_sec_ideal: 720,
     },
     crust_type: "thick_airy",
     requires_wood_oven: false,
@@ -216,7 +216,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     dough: {
       flour_w_range: [200, 240], // Farina debole W170-220, max W230 — Audit Maggio 2026 (La Verace, Molino Vigevano)
       flour_pl_range: [0.40, 0.60], // Bassa tenacità: si stende col mattarello senza resistenza
-      hydration_pct_range: [50, 55], // Scrocchiarella tradizionale 55-60% — Audit Maggio 2026
+      hydration_pct_range: [55, 60], // D-030: Valdes 2012 «intorno al 55%», Magenis 2020 55–60%
       salt_pct: 2.5, // Standard romano — era 2.8
       oil_pct: 2.5,
       fat_type: "oil",
@@ -232,10 +232,10 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     },
     baking: {
       oven_type_required: "electric_standard",
-      temp_c_range: [300, 340],
-      temp_c_ideal: 320,
-      cook_time_sec_range: [300, 480],
-      cook_time_sec_ideal: 360,
+      temp_c_range: [300, 400], // D-030: ideale dalle fonti (380–400 a legna, Magenis 2020; ~350 elettrico, Pagano 2017); minimo 300 per il forno di casa (Matteo)
+      temp_c_ideal: 380,
+      cook_time_sec_range: [90, 200], // D-030: «non supera i due minuti» (Valdes 2012), poco più di 3 elettrico
+      cook_time_sec_ideal: 120,
     },
     crust_type: "crispy_thin",
     requires_wood_oven: false,
@@ -243,10 +243,10 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      'Sottilissima, mattarello obbligatorio, croccante estrema. "Scrocchiarella".',
+      'Sottilissima, stesa col mattarello o a mano, croccante estrema. "Scrocchiarella".',
     key_characteristics: [
       "Spessore 1-2mm",
-      "Mattarello obbligatorio",
+      "Mattarello o a mano",
       "Croccante estrema",
       "Farina debole W<210",
     ],
@@ -353,7 +353,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     key_characteristics: [
       "Fetta pieghevole",
       "Zucchero + olio",
-      "Cottura 12-15min",
+      "Cottura 9–12 min", // D-031: allineata al tempo di cottura del codice (540–720 s)
       "Oleosità caratteristica",
     ],
     hydration_category: "medium",
@@ -372,8 +372,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       salt_pct: 2.0, // Standard USA — era 2.5
       oil_pct: 3.0,
       fat_type: "oil",
-      sugar_pct: 0.5, // Standard Detroit 0.3-0.5% — era 1.0 (PizzaBlab, PizzaLogic)
-      fermentation_hours_range: [18, 48],
+      sugar_pct: 0, // D-031: niente zucchero nell'impasto (King Arthur s.d.; Our Place s.d.). Era 0,5 da blog
+      fermentation_hours_range: [8, 24], // D-031: 8–24 h (King Arthur s.d.; Our Place s.d.); 48 h senza fonte
       process_type: "direct",
     },
     shape: {
@@ -501,7 +501,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "high",
     emoji: "🫒",
-    default_topping_ref: "bianca",
+    default_topping_ref: "focaccia_genovese_classica",
   },
   sfincione: {
     id: "sfincione",
@@ -1024,7 +1024,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "low",
     emoji: "🟫",
-    default_topping_ref: "diavola",
+    default_topping_ref: "italian_sausage_tavern",
   },
 
   /* ═══ NUOVI STILI — Audit motore 2026-05 (italiani minori + internazionali) ═══ */
@@ -1319,31 +1319,34 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       oil_pct: 1.0,
       fat_type: "oil",
       sugar_pct: 0.0,
-      fermentation_hours_range: [12, 36],
+      fermentation_hours_range: [6, 12], // D-028: «sei ore di lievitazione» (Fucito 2017); l'estremo alto è una scelta
       process_type: "direct|biga",
     },
     shape: {
       shape_type: "rectangular",
-      dough_weight_g: 700,
+      dough_weight_g: 1000, // D-028: 700 g erano per 70 cm; stesso spessore su 100 cm (stima proporzionale)
       thickness_factor: 0.45,
-      length_cm: 70, // Servita "a metri"
+      length_cm: 100, // D-028: si vende al metro (menù Gigino 2026; Fucito 2017: «lunga un metro»)
       width_cm: 30,
     },
     baking: {
-      oven_type_required: "electric_high",
+      oven_type_required: "wood", // D-028: forni a legna (Fucito 2017; Scatti di Gusto 2017)
       temp_c_range: [300, 380],
       temp_c_ideal: 340,
       cook_time_sec_range: [240, 360],
       cook_time_sec_ideal: 300,
     },
     crust_type: "leopard_soft",
-    requires_wood_oven: false,
+    requires_wood_oven: true, // avviso, non blocco (D-020)
     allows_additives: true,
     requires_pre_ferment: false,
     suitable_for_beginner: false,
     serving_unit: "teglia",
     default_dough_balls: 1,
-    servings_per_unit: [4, 6],
+    servings_per_unit: [4, 5], // D-028: «fino a 5 persone» (menù Gigino 2026)
+    /* C-2: i condimenti vengono dal catalogo napoletano, scritto per un disco
+     * da 32 cm (804 cm²); un metro × 30 cm sono 3000 cm²: dosi × 3,7. */
+    topping_scale: 3.7,
     description:
       "Formato rettangolare lungo nato a Vico Equense, servito a metri con più condimenti affiancati. Impasto napoletano morbido, alveolato.",
     key_characteristics: [
@@ -1511,7 +1514,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🥑",
-    default_topping_ref: "ortolana",
+    default_topping_ref: "smoked_salmon_california",
   },
 
   greek_pan: {
@@ -1561,6 +1564,6 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🫓",
-    default_topping_ref: "margherita",
+    default_topping_ref: "greek_cheese_pan",
   },
 };

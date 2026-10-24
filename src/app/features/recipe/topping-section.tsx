@@ -22,7 +22,7 @@ import {
   type GeneratedRecipe,
   type getServingUnit,
 } from "../../domain/pizza-engine";
-import { getRecipesByAuthenticity } from "../../data/topping-library";
+import { getRecipesByAuthenticity, scaleToppingAmounts } from "../../data/topping-library";
 import { CondimentChoiceStrip } from "./condiment-choice-strip";
 import {
   fmtDuration,
@@ -58,7 +58,8 @@ export function ToppingSection({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
 
-    const topping = activeTopping;
+    // C-2: un formato diverso da quello per cui la ricetta è scritta scala le dosi.
+    const topping = activeTopping && scaleToppingAmounts(activeTopping, recipe.style.topping_scale);
     if (!topping || !topping.ingredients || topping.ingredients.length === 0) return null;
 
     const activeToppingId = topping.id;

@@ -177,7 +177,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     bbq_chicken: {
       name: "BBQ Chicken",
-      description: "Hähnchen mit Barbecue-Glasur, rote Zwiebel und Koriander. Die kalifornische Signatur von Wolfgang Puck.",
+      description: "Hähnchen mit Barbecue-Glasur, rote Zwiebel und Koriander. Bekannt geworden durch California Pizza Kitchen (1985).",
     },
     smoked_salmon: {
       name: "Räucherlachs",
@@ -246,6 +246,10 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     prosciutto_funghi: {
       name: "Prosciutto e Funghi",
       description: "Kochschinken und Champignons auf Mozzarella. Der zeitlose Klassiker.",
+    },
+    italian_sausage: {
+      name: "Salsiccia",
+      description: "Fenchelwurst in kleinen St\u00FCcken, roh auf So\u00DFe und Mozzarella gelegt: der h\u00E4ufigste Belag in den Pizzerien von Chicago.",
     },
   },
   recipes: {
@@ -1571,7 +1575,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
       },
     },
     bbq_chicken_california: {
-      variant_name: "Wolfgang Puck",
+      variant_name: "California Pizza Kitchen",
       ingredients: {
         "0": {
           name: "Barbecuesoße",
@@ -2172,6 +2176,60 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
         },
       },
     },
+    focaccia_genovese_classica: {
+      variant_name: "\u00D6l, Salz und Salamoia",
+      ingredients: {
+        "0": {
+          name: "Salamoia (Wasser, natives Oliven\u00F6l extra, Salz)",
+        },
+        "1": {
+          name: "Ligurisches natives Oliven\u00F6l extra",
+        },
+        "2": {
+          name: "Grobes Salz",
+        },
+      },
+    },
+    italian_sausage_tavern: {
+      variant_name: "mit Fenchel, roh",
+      ingredients: {
+        "0": {
+          name: "Tomatenso\u00DFe (passierte Tomaten, Salz, Oregano, Knoblauch)",
+        },
+        "1": {
+          name: "Geriebener Low-Moisture-Mozzarella",
+        },
+        "2": {
+          name: "Rohe Fenchelwurst (Schweinefleisch, Salz, Fenchelsamen, Pfeffer)",
+          notes: "in kleinen St\u00FCcken",
+        },
+        "3": {
+          name: "Getrockneter Oregano",
+        },
+      },
+    },
+    marinara_scarole_metro: {
+      variant_name: "mit Endivie",
+      ingredients: {
+        "0": {
+          name: "Gesch\u00E4lte Tomaten (Tomaten, Tomatensaft)",
+        },
+        "1": {
+          name: "Glatte Endivie (Scarola)",
+          notes: "zum Schmoren",
+        },
+        "2": {
+          name: "Knoblauch",
+          notes: "Zehe",
+        },
+        "3": {
+          name: "Getrockneter Oregano",
+        },
+        "4": {
+          name: "Natives Oliven\u00F6l extra",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2570,7 +2628,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     spread_bbq_chicken: {
       title: "BBQ Chicken auf kalifornische Art",
-      description: "Barbecuesoße statt Tomate. Mozzarella, glasiertes Hähnchen und rote Zwiebel. Nach dem Backen frischer Koriander. Die Gourmetpizza der 80er von Wolfgang Puck.",
+      description: "Barbecuesoße statt Tomate. Mozzarella, glasiertes Hähnchen und rote Zwiebel. Nach dem Backen frischer Koriander. Die Pizza von Ed LaDou für die erste Karte von California Pizza Kitchen (1985).",
     },
     salmon_bake: {
       title: "Weiße Basis mit Crème fraîche",
@@ -2717,6 +2775,22 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
       description: "Zieh ohne Mehl von Hand einen Fladen von etwa 120 g und einen von etwa 80 g aus, 2\u20133 mm d\u00FCnn. Verteile Ricotta, Provola, Cicoli und Pfeffer auf dem gr\u00F6\u00DFeren Fladen und lass den Rand frei; deck ihn mit dem kleinen Fladen ab und dr\u00FCck die R\u00E4nder gut fest. Bei etwa 175 \u00B0C in Pflanzen\u00F6l frittieren und wenden, sobald sie goldbraun ist.",
       tip_beginner: "Der untere Fladen ist gr\u00F6\u00DFer: So l\u00E4sst sich sein Rand nach oben umschlagen, und die Tonda bleibt beim Frittieren geschlossen.",
       tip_nerd: "Ohne Mehl beim Ausziehen bleibt das \u00D6l l\u00E4nger sauber; ein schlecht verschlossener Rand l\u00E4sst \u00D6l hinein und die F\u00FCllung heraus.",
+    },
+    spread_salamoia_genovese: {
+      title: "Salamoia in die Mulden",
+      description: "Vor der letzten Gare mit den Fingerkuppen Mulden dr\u00FCcken. Die Salamoia aus Wasser, nativem Oliven\u00F6l extra und Salz dar\u00FCbergie\u00DFen, dann etwas \u00D6l und grobes Salz: \u00D6l und Salz sammeln sich in den Mulden.",
+    },
+    spread_sausage_tavern: {
+      title: "Rohe Wurst bis zum Rand",
+      description: "So\u00DFe d\u00FCnn fast bis zum Rand, dann der Mozzarella. Die rohe Wurst in kleinen St\u00FCcken auf der ganzen Fl\u00E4che verteilen: sie gart im Ofen mit der Pizza. Oregano. Nach dem Backen in Quadrate schneiden.",
+    },
+    stufare_scarola_metro: {
+      title: "Endivie schmoren",
+      description: "Die Endivie waschen und in Streifen schneiden. In der Pfanne mit \u00D6l und Knoblauch schmoren, bis sie zusammenf\u00E4llt und ihr Wasser verliert, dann salzen. Abk\u00FChlen lassen, bevor sie auf die Pizza kommt.",
+    },
+    spread_marinara_scarole: {
+      title: "Marinara mit Endivie",
+      description: "Zerdr\u00FCckte, gesalzene gesch\u00E4lte Tomaten, die gut abgetropfte geschmorte Endivie, Oregano und etwas \u00D6l. Kein K\u00E4se.",
     },
   },
 };

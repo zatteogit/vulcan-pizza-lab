@@ -201,6 +201,9 @@ export interface PizzaStyle {
   default_dough_balls?: number;
   /** Quante persone serve UNA porzione (un panetto, una teglia, ecc.). Range [min, max]. */
   servings_per_unit?: [number, number];
+  /** C-2: moltiplicatore delle dosi dei condimenti quando lo stile usa ricette
+   *  scritte per un altro formato (pizza al metro con il catalogo napoletano). */
+  topping_scale?: number;
   /** Sprint 11 Fase 1 — struttura geometrica (stacked/closed/folded/double_sheet).
    * Opzionale: omesso = single (pizza/teglia/panetto monostrato classico). */
   layout?: LayoutSpec;
@@ -1358,6 +1361,9 @@ export const FLOUR_W_RANGES: Record<string, [number, number]> =
     manitoba: [340, 380],
     integrale: [200, 260],
     semola: [220, 280],
+    // C-3: la dispensa offre la Tipo 1 (W220–280) ma qui mancava: chi la
+    // sceglieva veniva ignorato in silenzio.
+    tipo_1: [220, 280],
     // Farine di marca: chiavi = id di flour-database.ts. C-4: W dalle schede
     // del produttore (Mulino Caputo 2024–2025, Molino Quaglia s.d.; fonti in
     // docs/fonti-dati.md §2.2). Petra 3 è tolta: il produttore non dichiara W.
@@ -1370,6 +1376,48 @@ export const FLOUR_W_RANGES: Record<string, [number, number]> =
     "5stagioni_5lune": [330, 370],
     dallagiovanna_manitoba_oro: [360, 400],
   };
+
+/* ═══ C-3 — mix di due farine della dispensa ═══
+ * Quando nessuna farina da sola cade nel range W dello stile, ma una sta sotto
+ * e una sopra, mescolarle ci arriva. La W di un mix si stima come media pesata
+ * sulle quote: è un'approssimazione (l'alveogramma non è lineare), per questo
+ * il messaggio dice «circa». Quote arrotondate al 5%, tra 10% e 90%. */
+export interface PantryFlourMix {
+  weak: string;
+  strong: string;
+  weakPct: number;
+  strongPct: number;
+  /** W stimata del mix. */
+  w: number;
+}
+
+export function pantryFlourMix(
+  pantryFlours: readonly string[],
+  [wMin, wMax]: readonly [number, number],
+): PantryFlourMix | null {
+  const target = (wMin + wMax) / 2;
+  const flours = pantryFlours
+    .filter((id) => FLOUR_W_RANGES[id])
+    .map((id) => ({ id, w: (FLOUR_W_RANGES[id][0] + FLOUR_W_RANGES[id][1]) / 2 }));
+  let best: PantryFlourMix | null = null;
+  let bestSpread = Infinity;
+  for (const weak of flours) {
+    for (const strong of flours) {
+      if (!(weak.w < target && strong.w > target)) continue;
+      const spread = strong.w - weak.w;
+      const strongPct = Math.round(((target - weak.w) / spread) * 20) * 5;
+      if (strongPct < 10 || strongPct > 90) continue;
+      const w = Math.round(weak.w + (strongPct / 100) * spread);
+      if (w < wMin || w > wMax) continue;
+      // A parità, la coppia più vicina: il mix si comporta meglio.
+      if (spread < bestSpread) {
+        bestSpread = spread;
+        best = { weak: weak.id, strong: strong.id, weakPct: 100 - strongPct, strongPct, w };
+      }
+    }
+  }
+  return best;
+}
 
 function calculateYeastPercentage(
   fermentationHours: number,
@@ -3810,7 +3858,13 @@ export function recommendStyles(
 
     // ── Oven compatibility (25%) ──
     let ovenScore: number;
-    if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
+    if (style.baking.temp_c_range[1] < 200) {
+      /* U-6: le fritte (M-6) non usano il forno: nessun vincolo, come quando il
+       * forno arriva alla temperatura ideale. Prima il motivo diceva «il tuo forno
+       * raggiunge la temperatura ideale (175 °C)», che è l'olio. */
+      ovenScore = 95;
+      reasons.push(em("rec.fried", "Si frigge in pentola: il forno non serve"));
+    } else if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
       ovenScore = 95;
       reasons.push(em("rec.ovenIdeal", "Il tuo forno raggiunge la temperatura ideale ({ideal})", { ideal: style.baking.temp_c_ideal }));
     } else if (constraints.oven_max_temp_c >= style.baking.temp_c_range[0]) {
@@ -3995,6 +4049,10 @@ export function recommendStyles(
       if (hasFlourMatch) {
         pantryScore = 95;
         reasons.push(em("rec.flourMatch", "Farina in dispensa compatibile"));
+      } else if (pantryFlourMix(constraints.pantry_flours, style.dough.flour_w_range)) {
+        const mix = pantryFlourMix(constraints.pantry_flours, style.dough.flour_w_range)!;
+        pantryScore = 85;
+        reasons.push(em("rec.flourMix", "Mescolando le tue farine: {weakPct}% {weak} e {strongPct}% {strong}, W {w} circa", { ...mix }));
       } else {
         // Check how close the closest flour is
         const closestGap = pantryWRanges.reduce(

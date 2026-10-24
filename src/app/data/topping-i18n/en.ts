@@ -177,7 +177,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     },
     bbq_chicken: {
       name: "BBQ Chicken",
-      description: "Barbecue-glazed chicken, red onion and coriander. Wolfgang Puck's Californian signature.",
+      description: "Barbecue-glazed chicken, red onion and coriander. Made famous by California Pizza Kitchen (1985).",
     },
     smoked_salmon: {
       name: "Smoked salmon",
@@ -246,6 +246,10 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     prosciutto_funghi: {
       name: "Ham and Mushroom",
       description: "Cooked ham and button mushrooms on mozzarella. The timeless classic.",
+    },
+    italian_sausage: {
+      name: "Sausage",
+      description: "Fennel sausage in small pieces, put on raw over sauce and mozzarella: the most common topping in Chicago pizzerias.",
     },
   },
 
@@ -889,7 +893,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       },
     },
     bbq_chicken_california: {
-      variant_name: "Wolfgang Puck",
+      variant_name: "California Pizza Kitchen",
       ingredients: {
         "0": { name: "Barbecue sauce", notes: "instead of tomato" },
         "1": { name: "Mozzarella (or mixed with smoked gouda)" },
@@ -1182,6 +1186,60 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
         },
         "3": {
           name: "Freshly ground black pepper",
+        },
+      },
+    },
+    focaccia_genovese_classica: {
+      variant_name: "oil, salt and brine",
+      ingredients: {
+        "0": {
+          name: "Brine (water, extra-virgin olive oil, salt)",
+        },
+        "1": {
+          name: "Ligurian extra-virgin olive oil",
+        },
+        "2": {
+          name: "Coarse salt",
+        },
+      },
+    },
+    italian_sausage_tavern: {
+      variant_name: "fennel, raw",
+      ingredients: {
+        "0": {
+          name: "Tomato sauce (tomato passata, salt, oregano, garlic)",
+        },
+        "1": {
+          name: "Grated low-moisture mozzarella",
+        },
+        "2": {
+          name: "Raw fennel sausage (pork, salt, fennel seeds, pepper)",
+          notes: "in small pieces",
+        },
+        "3": {
+          name: "Dried oregano",
+        },
+      },
+    },
+    marinara_scarole_metro: {
+      variant_name: "with escarole",
+      ingredients: {
+        "0": {
+          name: "Peeled tomatoes (tomatoes, tomato juice)",
+        },
+        "1": {
+          name: "Escarole",
+          notes: "to braise",
+        },
+        "2": {
+          name: "Garlic",
+          notes: "clove",
+        },
+        "3": {
+          name: "Dried oregano",
+        },
+        "4": {
+          name: "Extra-virgin olive oil",
         },
       },
     },
@@ -1697,7 +1755,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     spread_bbq_chicken: {
       title: "Californian BBQ chicken",
       description:
-        "Barbecue sauce instead of tomato. Mozzarella, glazed chicken and red onion. After baking, fresh coriander. Wolfgang Puck's 1980s gourmet pizza.",
+        "Barbecue sauce instead of tomato. Mozzarella, glazed chicken and red onion. After baking, fresh coriander. Ed LaDou's pizza for California Pizza Kitchen's first menu (1985).",
     },
     salmon_bake: {
       title: "White base with crème fraîche",
@@ -1875,6 +1933,22 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       description: "Stretch by hand, without flour, one disc of about 120 g and one of about 80 g, 2\u20133 mm thin. Spread ricotta, provola, cicoli and pepper over the larger disc, leaving the edge clear; cover with the small disc and seal by pressing firmly. Fry in seed oil at about 175 \u00B0C, turning it once golden.",
       tip_beginner: "The bottom disc is larger so its edge folds up over the top and the tonda stays closed while frying.",
       tip_nerd: "No flour when stretching keeps the oil clean for longer; a poorly sealed edge lets oil in and filling out.",
+    },
+    spread_salamoia_genovese: {
+      title: "Brine in the dimples",
+      description: "Before the final proof, press dimples with your fingertips. Pour over the brine of water, extra-virgin olive oil and salt, then a drizzle of oil and coarse salt: oil and salt collect in the dimples.",
+    },
+    spread_sausage_tavern: {
+      title: "Raw sausage to the edge",
+      description: "Thin sauce almost to the edge, then the mozzarella. Spread the raw sausage in small pieces over the whole surface: it cooks in the oven with the pizza. Oregano. After baking, cut into squares.",
+    },
+    stufare_scarola_metro: {
+      title: "Braise the escarole",
+      description: "Wash the escarole and cut it into strips. Braise it in a pan with oil and garlic until it wilts and loses its water, then salt it. Let it cool before putting it on the pizza.",
+    },
+    spread_marinara_scarole: {
+      title: "Marinara with escarole",
+      description: "Crushed, salted peeled tomatoes, the braised escarole well drained, oregano and a drizzle of oil. No cheese.",
     },
   },
 };

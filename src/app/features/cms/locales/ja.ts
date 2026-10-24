@@ -712,7 +712,7 @@ export const JA_LOCALE: CmsContent = {
     "sust.sourdoughZeroImpact":
       "天然酵母: 自家製、ゼロインパクト",
     "rec.timeCompatible":
-      "発酵{fMin}-{fMax}: あなたの時間に適合",
+      "発酵{fMin}–{fMax}: あなたの時間に適合",
     "rec.timeAdaptable": "発酵は~{hours}に調整可能",
     "rec.timeInsufficient":
       "最低{fMin}必要、{available}しかありません",
@@ -900,6 +900,8 @@ export const JA_LOCALE: CmsContent = {
     "recipeSetup.noSignatureAlreadyActive": "インスピレーションなしはすでに有効です",
     "recipeSetup.signatureApplied": "{label}：インスピレーションを適用しました",
     "recipeSetup.signatureRemoved": "インスピレーションを解除：パラメータを元に戻しました",
+    "rec.fried": "\u934B\u3067\u63DA\u3052\u308B\u306E\u3067\u30AA\u30FC\u30D6\u30F3\u306F\u4E0D\u8981",
+    "rec.flourMix": "\u624B\u6301\u3061\u306E\u7C89\u3092\u6DF7\u305C\u308B\u3068\uFF1A{weak} {weakPct}%\u3001{strong} {strongPct}%\u3001W {w}\u524D\u5F8C",
   },
   scienceLabels: {
     yeastBaker: "\u30D1\u30F3\u7528\u30A4\u30FC\u30B9\u30C8",
@@ -1088,7 +1090,7 @@ export const JA_LOCALE: CmsContent = {
     teglia_romana:
       "\u9AD8\u6C34\u5206\u3001\u6298\u308A\u305F\u305F\u307F\u306E\u307F\u3002\u30AB\u30EA\u30AB\u30EA\u306E\u30D9\u30FC\u30B9\u3001\u96F2\u306E\u3088\u3046\u306A\u30AF\u30E9\u30E0\u3002",
     tonda_romana:
-      "\u6975\u8584\u3001\u9EBA\u68D2\u5FC5\u9808\u3001\u6975\u9650\u306E\u30AB\u30EA\u30AB\u30EA\u3002\u300CScrocchiarella\u300D\u3002",
+      "極薄、麺棒または手でのばす、\u6975\u9650\u306E\u30AB\u30EA\u30AB\u30EA\u3002\u300CScrocchiarella\u300D\u3002",
     pinsa_romana:
       "\u5C0F\u9EA6\u7C8970% / \u5927\u8C4615% / \u7C7315%\u306E\u30D6\u30EC\u30F3\u30C9\u3002\u6955\u5186\u5F62\u3001\u30AC\u30E9\u30B9\u8CEA\u306E\u30AF\u30E9\u30B9\u30C8\u3002",
     pala_romana:
@@ -1133,13 +1135,13 @@ export const JA_LOCALE: CmsContent = {
     teglia_romana:
       "\u9AD8\u30552-3cm|\u6C34\u5206\u91CF80-100%|\u6298\u308A\u305F\u305F\u307F\u306E\u307F|\u96F2\u30AF\u30E9\u30E0",
     tonda_romana:
-      "\u539A\u30551-2mm|\u9EBA\u68D2\u5FC5\u9808|\u6975\u9650\u30AB\u30EA\u30AB\u30EA|\u5F31\u3044\u5C0F\u9EA6\u7C89W<210",
+      "\u539A\u30551-2mm|麺棒または手|\u6975\u9650\u30AB\u30EA\u30AB\u30EA|\u5F31\u3044\u5C0F\u9EA6\u7C89W<210",
     pinsa_romana:
       "\u30DE\u30EB\u30C1\u7A40\u7269\u30DF\u30C3\u30AF\u30B9|\u6955\u5186\u5F62|\u30AC\u30E9\u30B9\u8CEA\u30AF\u30E9\u30B9\u30C8|\u719F\u621024-72h",
     pala_romana:
       "\u7D30\u9577\u3044\u6955\u5186\u5F62|\u9AD8\u6C34\u5206|\u30D1\u30FC\u30EB\u3067\u63D0\u4F9B|\u30AB\u30EA\u30AB\u30EA\u96F2\u30AF\u30E9\u30B9\u30C8",
     new_york:
-      "\u6298\u308A\u305F\u305F\u307F\u30B9\u30E9\u30A4\u30B9|\u7802\u7CD6+\u30AA\u30A4\u30EB|\u713C\u304D12-15\u5206|\u7279\u5FB4\u7684\u306A\u6CB9\u611F",
+      "\u6298\u308A\u305F\u305F\u307F\u30B9\u30E9\u30A4\u30B9|\u7802\u7CD6+\u30AA\u30A4\u30EB|焼き9–12分|\u7279\u5FB4\u7684\u306A\u6CB9\u611F",
     detroit:
       "\u30C1\u30FC\u30BA\u30AF\u30E9\u30A6\u30F3|\u6DF1\u3044\u30D1\u30F3|\u7AEF\u306E\u30C1\u30FC\u30BA|\u30AB\u30E9\u30E1\u30EB\u30AF\u30E9\u30B9\u30C8",
     chicago_deep:

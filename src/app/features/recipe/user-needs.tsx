@@ -21,6 +21,7 @@ Timer,
 Wheat,
 Zap
 } from "lucide-react";
+import { pantryFlourName } from "./pantry-flour-names";
 import { AnimatePresence,motion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring,motionTiming } from "../../components/ds/motion";
 import React,{ useEffect,useMemo,useState } from "react";
@@ -121,37 +122,37 @@ interface FlourOption {
 const FLOUR_OPTIONS_GENERIC: FlourOption[] = [
   {
     id: "00",
-    get name() { return uiMessage("features.recipe.user-needs.farina-00-06dc5ab2"); },
+    get name() { return pantryFlourName("00"); },
     w: "W170–220",
     get detail() { return uiMessage("features.recipe.user-needs.classica-versatile-21c9cc66"); },
   },
   {
     id: "0",
-    get name() { return uiMessage("features.recipe.user-needs.farina-0-625e81ec"); },
+    get name() { return pantryFlourName("0"); },
     w: "W220–260",
     get detail() { return uiMessage("features.recipe.user-needs.media-forza-1dea8ed0"); },
   },
   {
     id: "tipo_1",
-    get name() { return uiMessage("features.recipe.user-needs.farina-tipo-1-189a22b7"); },
+    get name() { return pantryFlourName("tipo_1"); },
     w: "W220–280",
     get detail() { return uiMessage("features.recipe.user-needs.rustica-profumo-di-cereale-766e58ac"); },
   },
   {
     id: "manitoba",
-    get name() { return uiMessage("features.recipe.user-needs.manitoba-c1a38647"); },
+    get name() { return pantryFlourName("manitoba"); },
     w: "W340–380",
     get detail() { return uiMessage("features.recipe.user-needs.alta-forza-lunga-maturazione-58db76ea"); },
   },
   {
     id: "integrale",
-    get name() { return uiMessage("features.recipe.user-needs.integrale-596f723e"); },
+    get name() { return pantryFlourName("integrale"); },
     w: "W200–260",
     get detail() { return uiMessage("features.recipe.user-needs.piu-fibra-e-sapore-e0f02324"); },
   },
   {
     id: "semola",
-    get name() { return uiMessage("features.recipe.user-needs.semola-rimacinata-8c3476b8"); },
+    get name() { return pantryFlourName("semola"); },
     w: "W220–280",
     get detail() { return uiMessage("features.recipe.user-needs.croccantezza-colore-dorato-0119e353"); },
   },
