@@ -496,3 +496,15 @@ Golden invariato (riguarda solo la ricetta).
   1 kg di farina, biga 400 g di farina con 176 g d'acqua invece di 180 g.
 - `PanConfig.ballWeightG`: peso del panetto scelto; vince su teglia e
   spessore e non subisce la compensazione dello spessore del forno.
+
+## Verifica di GPT sul server MCP · Recco senza frasi da impasto lievitato (24/10/2026)
+
+- **Prima:** con la Recco (senza lievito, con olio) i punteggi riportavano
+  «Impasto puro: solo farina, acqua, sale, lievito» e «Fermentazione troppo
+  breve: amidi non degradati». Due frasi false su quell'impasto.
+- **Dopo:** per gli impasti `unleavened` la digeribilità non produce frasi su
+  fermentazione, amidi o FODMAP (`fodmap_reduction_pct` nullo); il numero
+  resta. «Impasto puro» compare solo se l'impasto è davvero farina, acqua,
+  sale e lievito (niente olio, zucchero, né impasto senza lievito).
+- Test: `pizza-engine.test.ts` («Recco senza lievito»). Golden invariato:
+  le frasi non sono nel golden.

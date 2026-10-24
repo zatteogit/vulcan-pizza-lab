@@ -312,3 +312,13 @@ describe("fattibilità nei consigli (audit totale n. 9)", () => {
     }
   });
 });
+
+describe("Recco senza lievito: niente frasi da impasto lievitato", () => {
+  it("né «solo farina, acqua, sale, lievito» né fermentazione o FODMAP", () => {
+    const recipe = generateRecipe(STYLES_DB["focaccia_recco"], makeConstraints({ oven_type: "home", oven_max_temp_c: 300 }));
+    const keys = recipe.scores.claims.map((c) => c.key);
+    expect(keys).not.toContain("sust.pureDough");
+    expect(keys.filter((k) => k.startsWith("dig."))).toEqual([]);
+    expect(recipe.science.fodmap_reduction_pct).toBeNull();
+  });
+});
