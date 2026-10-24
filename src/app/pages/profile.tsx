@@ -63,6 +63,7 @@ import {
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { AccountPanel } from "../features/account/account-panel";
 import { encodePan } from "../features/recipe/pan-url";
 import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { BRAND } from "../config/brand";
@@ -2138,6 +2139,8 @@ export function ProfilePage() {
         {/* ── LINGUA & TEMA ── */}
         {profileTab === "app" && (
           <div role="tabpanel" id="profile-panel-app" aria-labelledby="profile-tab-app" tabIndex={0}>
+        {/* D-046 / D-047: accesso, ruolo riconosciuto, demo */}
+        <AccountPanel locale={bcp47} />
         <ProfileSection
           title={p.prefsTitle}
           subtitle={p.prefsSubtitle}

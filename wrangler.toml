@@ -9,13 +9,31 @@
 #   (D1 already created: id below. Binding travels in this file — no dashboard.)
 #   Deploy: `npx wrangler deploy` (or the project's connected Workers build).
 name = "vulcan-pizza-lab"
-main = "worker/index.ts"
+# D-049: il Worker include il motore per il server MCP (/mcp); lo costruisce
+# scripts/build-worker.mjs (le immagini dei condimenti restano fuori) e
+# wrangler carica il file prodotto senza ri-impacchettarlo.
+main = ".worker-dist/index.js"
 compatibility_date = "2024-11-01"
+no_bundle = true
+
+[build]
+command = "node scripts/build-worker.mjs"
 
 [assets]
 directory = "./dist"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
+# /mcp va al Worker anche quando il resto è servito dagli asset.
+run_worker_first = ["/mcp", "/api/auth/*"]
+
+# D-046: ruoli per impronta SHA-256 dell'email normalizzata (il repository è
+# pubblico: niente email in chiaro). GOOGLE_CLIENT_ID è pubblico per natura;
+# vuoto = accesso con Google spento. Elenchi separati da virgole.
+[vars]
+GOOGLE_CLIENT_ID = "216267907893-r6f22fhk3bg9u6v7jttukmocbobfg5m1.apps.googleusercontent.com"
+ADMIN_EMAIL_SHA256 = "48d1cbb1b746c94b78a7c7c149d5500d0bc1117c948bd6730554c8c16954763f"
+EDITOR_EMAIL_SHA256 = ""
+TESTER_EMAIL_SHA256 = ""
 
 [[d1_databases]]
 binding = "DB"
@@ -39,6 +57,11 @@ run_worker_first = true
 
 [env.test.vars]
 DEPLOY_ENV = "test"
+# Le [vars] non si ereditano negli ambienti: stesse di produzione.
+GOOGLE_CLIENT_ID = "216267907893-r6f22fhk3bg9u6v7jttukmocbobfg5m1.apps.googleusercontent.com"
+ADMIN_EMAIL_SHA256 = "48d1cbb1b746c94b78a7c7c149d5500d0bc1117c948bd6730554c8c16954763f"
+EDITOR_EMAIL_SHA256 = ""
+TESTER_EMAIL_SHA256 = ""
 
 [[env.test.d1_databases]]
 binding = "DB"

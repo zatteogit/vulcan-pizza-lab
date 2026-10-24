@@ -3255,12 +3255,6 @@
     background: color-mix(in srgb, var(--primary) 90%, transparent);
   }
 
-  .explore-card__badge--beginner {
-    top: var(--space-3);
-    left: var(--space-3);
-    color: var(--cta-foreground);
-    background: color-mix(in srgb, var(--cta) 90%, transparent);
-  }
 
   .explore-card__match {
     position: absolute;
@@ -3268,7 +3262,7 @@
     right: var(--space-3);
   }
 
-  .explore-card__match-pill {
+  .compat-pill {
     display: flex;
     align-items: center;
     gap: var(--gap-2xs);
@@ -3285,21 +3279,21 @@
     box-shadow: var(--shadow-pill);
   }
 
-  .explore-card__match-icon {
+  .compat-pill__icon {
     color: var(--cta);
   }
 
-  .explore-card__match-mc {
+  .compat-pill__now {
     /* U-10 (F09): --cta pieno a testo piccolo era 4,2:1 */
     color: color-mix(in srgb, var(--cta) 70%, var(--text-default));
   }
 
-  .explore-card__match-arrow {
+  .compat-pill__arrow {
     color: var(--text-muted);
     opacity: 0.6;
   }
 
-  .explore-card__match-headroom {
+  .compat-pill__best {
     color: var(--time-dayafter);
   }
 
@@ -7173,6 +7167,108 @@
     font-size: var(--font-size-sm);
     line-height: var(--leading-normal);
     margin: 0;
+  }
+
+  /* ── Barra di contesto su schermi larghi (nota di Matteo, 24/10/2026) ──
+     Le pill centrate in un riquadro largo 42rem non stavano né sul margine del
+     titolo né al centro della pagina. Da 768 px diventano una sola barra
+     allineata al titolo, che si legge come una frase: prima «quando» (in
+     evidenza), poi cucina, dispensa e livello separati da filetti. */
+  @media (min-width: 768px) {
+    .needs-summary {
+      align-items: flex-start;
+    }
+
+    .needs-summary__row {
+      display: inline-flex;
+      width: auto;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-items: center;
+      gap: var(--space-0);
+      padding: var(--space-1);
+      border-radius: var(--radius-full);
+      background: color-mix(in srgb, var(--chip-bg) 60%, transparent);
+      border: var(--border-width-thin) solid var(--chip-border);
+    }
+
+    .needs-summary__time-chip {
+      order: -1;
+      margin-inline-end: var(--space-1);
+    }
+
+    .needs-summary__tab {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .needs-summary__tab + .needs-summary__tab {
+      position: relative;
+    }
+
+    .needs-summary__tab + .needs-summary__tab::before {
+      content: "";
+      position: absolute;
+      inset-inline-start: var(--space-0);
+      inset-block: var(--space-2);
+      border-inline-start: var(--border-width-thin) solid var(--chip-border);
+    }
+
+    .needs-summary__tab--active::before,
+    .needs-summary__tab--active + .needs-summary__tab::before {
+      display: none;
+    }
+
+    .needs-summary__help {
+      text-align: start;
+    }
+  }
+
+  /* ═══ COMPONENT: account-panel (D-046 / D-047) ═══ */
+  .account-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+    padding: var(--space-5);
+    border-radius: var(--radius-xl);
+    background: var(--surface-container);
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .account-panel__title {
+    margin: var(--space-0);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-xl);
+    color: var(--text-default);
+  }
+
+  .account-panel__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-0);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .account-panel__note {
+    margin: var(--space-0);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+  }
+
+  .account-panel__error {
+    margin: var(--space-0);
+    color: var(--text-error);
+    font-size: var(--font-size-sm);
+  }
+
+  .account-panel__google {
+    min-height: var(--space-10);
   }
 
   /* ── Drawer (cucina/pantry/tu/time expandable panels) ── */
@@ -15052,7 +15148,8 @@
     text-overflow: ellipsis;
   }
 
-  .recommended-card__badge {
+  .style-meta-chip {
+    --tone: var(--cta);
     display: inline-flex;
     align-items: center;
     gap: var(--space-1-5);
@@ -15070,7 +15167,7 @@
     line-height: var(--leading-none);
   }
 
-  .recommended-card__badge-icon {
+  .style-meta-chip__icon {
     color: var(--tone);
     flex-shrink: 0;
   }

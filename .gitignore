@@ -20,3 +20,4 @@ ds-bundle/
 .design-sync/node_modules
 
 .claude/worktrees/
+.worker-dist/

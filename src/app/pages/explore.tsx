@@ -3,7 +3,8 @@
    Layout editoriale e filtri flessibili (Spotify/Pinterest style).
    Tab: Stili — /explore */
 
-import { ArrowRight, Gauge } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { CompatibilityPill, StyleMetaChip } from "../features/recipe/style-card-parts";
 import { AnimatePresence,motion } from "motion/react";
 import { useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
@@ -678,8 +679,7 @@ function StyleCatalogCard({
   const match = useMemo(() => {
     try {
       // D-041: stesso numero di Crea, della scheda e della ricetta aperta.
-      const { now, best } = kitchenCompatibility(style, constraints, scoreWeightsFromCms(cms));
-      return { mc: now, headroom: best - now >= 8 ? best - now : 0 };
+      return kitchenCompatibility(style, constraints, scoreWeightsFromCms(cms));
     } catch {
       return null;
     }
@@ -716,36 +716,10 @@ function StyleCatalogCard({
           {/* Cinematic scrim */}
           <div className="explore-card__scrim" />
 
-          {/* Beginner badge — top left */}
-          {style.suitable_for_beginner && (
-            <div className="explore-card__badge explore-card__badge--beginner">
-              {cms.misc.badgeBeginnerFriendly}
-            </div>
-          )}
-
-          {/* Match canonico + margine ottimizzabile — top right (Fase 4) */}
+          {/* Compatibilità con la tua cucina — in alto a destra, come in Crea */}
           {match && (
             <div className="explore-card__match">
-              <div
-                className="explore-card__match-pill"
-                title={match.headroom > 0
-                  ? uiMessage("pages.explore.compatibilityOptimizable", [match.mc, match.mc + match.headroom])
-                  : uiMessage("pages.explore.compatibility", [match.mc])}
-                aria-label={match.headroom > 0
-                  ? uiMessage("pages.explore.compatibilityOptimizable", [match.mc, match.mc + match.headroom])
-                  : uiMessage("pages.explore.compatibility", [match.mc])}
-              >
-                <Gauge size={11} aria-hidden="true" className="explore-card__match-icon" />
-                <span className="explore-card__match-mc">{match.mc}</span>
-                {match.headroom > 0 && (
-                  <>
-                    <span className="explore-card__match-arrow">→</span>
-                    <span className="explore-card__match-headroom">
-                      {match.mc + match.headroom}
-                    </span>
-                  </>
-                )}
-              </div>
+              <CompatibilityPill now={match.now} best={match.best} />
             </div>
           )}
 
@@ -760,6 +734,7 @@ function StyleCatalogCard({
             <div className="explore-card__origin">
               {shortOrigin(style.origin)}
             </div>
+            <StyleMetaChip style={style} cms={cms} />
           </figcaption>
         </figure>
       </Surface>
