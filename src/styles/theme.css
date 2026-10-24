@@ -7224,6 +7224,53 @@
     }
   }
 
+  /* ═══ COMPONENT: account-panel (D-046 / D-047) ═══ */
+  .account-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-bottom: var(--space-8);
+    padding: var(--space-5);
+    border-radius: var(--radius-xl);
+    background: var(--surface-container);
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .account-panel__title {
+    margin: var(--space-0);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-xl);
+    color: var(--text-default);
+  }
+
+  .account-panel__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-0);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .account-panel__note {
+    margin: var(--space-0);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    line-height: var(--leading-normal);
+  }
+
+  .account-panel__error {
+    margin: var(--space-0);
+    color: var(--text-error);
+    font-size: var(--font-size-sm);
+  }
+
+  .account-panel__google {
+    min-height: var(--space-10);
+  }
+
   /* ── Drawer (cucina/pantry/tu/time expandable panels) ── */
   .needs-drawer {
     overflow: hidden;

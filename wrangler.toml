@@ -24,7 +24,16 @@ directory = "./dist"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
 # /mcp va al Worker anche quando il resto è servito dagli asset.
-run_worker_first = ["/mcp"]
+run_worker_first = ["/mcp", "/api/auth/*"]
+
+# D-046: ruoli per impronta SHA-256 dell'email normalizzata (il repository è
+# pubblico: niente email in chiaro). GOOGLE_CLIENT_ID è pubblico per natura;
+# vuoto = accesso con Google spento. Elenchi separati da virgole.
+[vars]
+GOOGLE_CLIENT_ID = ""
+ADMIN_EMAIL_SHA256 = "48d1cbb1b746c94b78a7c7c149d5500d0bc1117c948bd6730554c8c16954763f"
+EDITOR_EMAIL_SHA256 = ""
+TESTER_EMAIL_SHA256 = ""
 
 [[d1_databases]]
 binding = "DB"
@@ -48,6 +57,11 @@ run_worker_first = true
 
 [env.test.vars]
 DEPLOY_ENV = "test"
+# Le [vars] non si ereditano negli ambienti: stesse di produzione.
+GOOGLE_CLIENT_ID = ""
+ADMIN_EMAIL_SHA256 = "48d1cbb1b746c94b78a7c7c149d5500d0bc1117c948bd6730554c8c16954763f"
+EDITOR_EMAIL_SHA256 = ""
+TESTER_EMAIL_SHA256 = ""
 
 [[env.test.d1_databases]]
 binding = "DB"

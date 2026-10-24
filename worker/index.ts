@@ -20,6 +20,9 @@
  */
 
 import { handleMcpBody } from "../src/app/agent/mcp-server";
+import { handleAuthRequest, type AuthStore, type SessionRecord } from "../src/server/auth/handler";
+import { GOOGLE_JWKS_URL } from "../src/server/auth/google";
+import type { Role } from "../src/server/auth/roles";
 
 interface D1Result {
   results?: Record<string, unknown>[];
@@ -47,6 +50,12 @@ interface Env {
   TOOLS_API_ORIGINS?: string;
   /** P-4: "test" on the vulcan-test Worker (wrangler.toml [env.test]). */
   DEPLOY_ENV?: string;
+  /** D-046: OAuth Client ID di Google (pubblico, in wrangler.toml [vars]). */
+  GOOGLE_CLIENT_ID?: string;
+  /** D-046: impronte SHA-256 delle email per ruolo, separate da virgole. */
+  ADMIN_EMAIL_SHA256?: string;
+  EDITOR_EMAIL_SHA256?: string;
+  TESTER_EMAIL_SHA256?: string;
 }
 
 const TOOL_API_PATHS = new Set(["/api/annotations", "/api/config"]);
@@ -253,6 +262,50 @@ async function handleConfig(
   return json({ error: "method not allowed" }, 405, cors);
 }
 
+/* ═══ D-046 — archivio dell'accesso su D1 (tabelle users e sessions in schema.sql) ═══ */
+function d1AuthStore(db: D1Database): AuthStore {
+  return {
+    async upsertUser({ id, email, name, role, now }) {
+      await db
+        .prepare(
+          "INSERT INTO users (id, email, name, role, created_at, last_login) VALUES (?1, ?2, ?3, ?4, ?5, ?5) " +
+            "ON CONFLICT(id) DO UPDATE SET email = ?2, name = ?3, role = ?4, last_login = ?5",
+        )
+        .bind(id, email, name, role, now)
+        .run();
+    },
+    async createSession(s) {
+      await db
+        .prepare("INSERT INTO sessions (token_hash, user_id, role, email, name, expires_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6)")
+        .bind(s.tokenHash, s.userId, s.role, s.email, s.name, s.expiresAt)
+        .run();
+    },
+    async getSession(tokenHash) {
+      const { results } = await db.prepare("SELECT * FROM sessions WHERE token_hash = ?1").bind(tokenHash).all();
+      const row = results?.[0];
+      if (!row) return null;
+      return {
+        tokenHash: String(row.token_hash),
+        userId: row.user_id == null ? null : String(row.user_id),
+        role: String(row.role) as Role,
+        email: row.email == null ? null : String(row.email),
+        name: row.name == null ? null : String(row.name),
+        expiresAt: Number(row.expires_at),
+      } satisfies SessionRecord;
+    },
+    async deleteSession(tokenHash) {
+      await db.prepare("DELETE FROM sessions WHERE token_hash = ?1").bind(tokenHash).run();
+    },
+  };
+}
+
+/** Chiavi pubbliche di Google, tenute per un'ora nella cache di Cloudflare. */
+async function fetchGoogleJwks() {
+  const res = await fetch(GOOGLE_JWKS_URL, { cf: { cacheTtl: 3600, cacheEverything: true } } as RequestInit);
+  if (!res.ok) throw new Error(`Google JWKS ${res.status}`);
+  return (await res.json()) as { keys: (JsonWebKey & { kid?: string })[] };
+}
+
 const MCP_CORS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -280,6 +333,20 @@ export default {
     // D-049: server MCP per agenti (Claude, ChatGPT…). Pubblico, senza stato,
     // in sola lettura: motore e glossario, niente dati degli utenti.
     if (url.pathname === "/mcp") return handleMcp(request);
+
+    // D-046: accesso e ruoli. Stessa origine dell'app: niente CORS.
+    if (url.pathname.startsWith("/api/auth/")) {
+      const response = await handleAuthRequest(request, {
+        store: d1AuthStore(env.DB),
+        env,
+        fetchJwks: fetchGoogleJwks,
+        secureCookies: url.protocol === "https:",
+      });
+      if (response) {
+        const headers = withSecurityHeaders(new Headers(response.headers));
+        return new Response(response.body, { status: response.status, headers });
+      }
+    }
 
     if (TOOL_API_PATHS.has(url.pathname)) {
       // Off in production: same answer as a route that does not exist.

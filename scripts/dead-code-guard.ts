@@ -21,6 +21,8 @@ const ENTRY_FILES = [
   "src/app/components/ds/_sync-entry.ts",
   // D-049: server MCP, importato dal Worker (worker/index.ts), fuori dall'app.
   "src/app/agent/mcp-server.ts",
+  // D-046: accesso e ruoli, importato dal Worker.
+  "src/server/auth/handler.ts",
 ] as const;
 
 function rel(file: string): string {
