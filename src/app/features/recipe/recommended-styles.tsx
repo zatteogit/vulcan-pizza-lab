@@ -20,7 +20,7 @@ UserConstraints,
 type FamilyId,
 } from "../../domain/pizza-engine";
 import { type Interpretation } from "../../data/interpretation-library";
-import { ScoreRing } from "./score-ring";
+import { CompatibilityPill, StyleMetaChip } from "./style-card-parts";
 import { kitchenCompatibility } from "./kitchen-compatibility";
 import { useStylesOverride } from "../../context/styles-override-context";
 import { TiltCard } from "./tilt-card";
@@ -585,16 +585,10 @@ function StyleCard({
   /* VPL-C3 (rev): badge "difficoltà · impegno" — info che DIFFERENZIA le tile
    * (a parità di momento il match è uguale per tutte). La motivazione di match
    * completa vive nel pannello di dettaglio. */
-  const difficultyLabel = styleDifficultyLabel(style, cms);
-  const [fMin, fMax] = style.dough.fermentation_hours_range;
-  const timeLabel =
-    fMax <= 8 ? cms.filters.timeFast : `${Math.round(fMin)}–${Math.round(fMax)}h`;
   const cmsPhoto = cms.media.stylePhotos[style.id];
   const photo = cmsPhoto || STYLE_PHOTOS[style.id] || cms.media.fallbackPhoto || FALLBACK;
   const springT = motionSpring.responsiveSoft;
 
-  /* Resolve tier color to a CSS variable for the ring SVG — auto dark mode */
-  const ringColor = tierColor;
 
   return (
     <div
@@ -655,18 +649,9 @@ function StyleCard({
             {/* Cinematic scrim — heavy bottom for text legibility */}
             <div className="recommended-card__scrim" />
 
-            {/* ── Score ring badge — top right ── */}
+            {/* Compatibilità con la tua cucina — in alto a destra, come in Scopri */}
             <div className="recommended-card__score">
-              <ScoreRing
-                score={displayScore}
-                color={ringColor}
-                size={38}
-                label={
-                  displayScore < bestScore
-                    ? uiMessage("pages.explore.compatibilityOptimizable", [displayScore, bestScore])
-                    : uiMessage("pages.explore.compatibility", [displayScore])
-                }
-              />
+              <CompatibilityPill now={displayScore} best={bestScore} />
             </div>
 
             {/* ── Selected check ── */}
@@ -704,17 +689,8 @@ function StyleCard({
                   : ""}
               </div>
 
-              {/* VPL-C3 (rev): badge "difficoltà · impegno" — differenzia le tile
-                  (la motivazione di match completa è nel pannello di dettaglio). */}
-              <div
-                className="recommended-card__badge"
-                style={{ ["--tone" as any]: tierColor }}
-              >
-                <ChefHat size={13} strokeWidth={2.5} className="recommended-card__badge-icon" aria-hidden="true" />
-                <span data-region="meta">
-                  {difficultyLabel} · {timeLabel}
-                </span>
-              </div>
+              {/* Livello e durata — stessa chip delle card di Scopri */}
+              <StyleMetaChip style={style} cms={cms} />
             </div>
           </div>
         </motion.div>
