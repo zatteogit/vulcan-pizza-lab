@@ -81,4 +81,15 @@ describe("server MCP", () => {
     expect(warnings(false)).toMatch(/teglia/i);
     expect(warnings(true)).not.toMatch(/Serve una teglia/);
   });
+
+  it("con le ore disponibili tutto il procedimento sta prima del pasto", () => {
+    const total = (args: Record<string, unknown>) => {
+      const data = call("generate_recipe", { style_id: "ciaccino_senese", oven_type: "home", available_hours: 6, ...args })
+        .structuredContent as { outcome: string; steps: { duration_minutes: number }[] };
+      return data.steps.reduce((sum, step) => sum + step.duration_minutes, 0);
+    };
+    expect(total({})).toBeLessThanOrEqual(6 * 60);
+    // Senza orario del pasto le ore limitano solo la fermentazione.
+    expect(total({ meal_deadline: false })).toBeGreaterThan(6 * 60);
+  });
 });

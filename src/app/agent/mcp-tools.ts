@@ -100,7 +100,9 @@ function constraintsFrom(args: Json): UserConstraints {
     oven_max_temp_c: num(args, "oven_max_temp_c", 150, 550, preset?.maxTemp ?? 250),
     skill_level: num(args, "skill_level", 1, 4, 2) as SkillLevel,
     available_hours: num(args, "available_hours", 1, 168, 24),
-    meal_deadline: args.meal_deadline === true,
+    // Per un agente «ho 6 ore» vuol dire «si mangia fra 6 ore»: con le ore
+    // la scadenza vale, salvo meal_deadline: false esplicito.
+    meal_deadline: args.meal_deadline == null ? args.available_hours != null : args.meal_deadline === true,
     dough_balls: Math.round(num(args, "dough_balls", 1, 200, 4)),
     has_mixer: args.has_mixer === true,
     has_pizza_stone: args.has_pizza_stone === true,
@@ -179,10 +181,13 @@ const OVEN_INPUT = {
   },
   oven_type: { type: "string", enum: OVEN_TYPES, description: "Kind of oven. home = domestic oven (~250 °C)." },
   oven_max_temp_c: { type: "number", description: "Highest temperature the oven reaches, °C." },
-  available_hours: { type: "number", description: "Hours available (default 24). Without meal_deadline they limit only the fermentation." },
+  available_hours: {
+    type: "number",
+    description: "Hours from now to the meal (default 24): the whole timeline, from mixing to baking, must fit.",
+  },
   meal_deadline: {
     type: "boolean",
-    description: "true when available_hours run to a meal at a fixed time: the whole timeline (mixing, balling, baking) must fit.",
+    description: "Default true when available_hours is given. false = no fixed meal time: the hours limit only the fermentation.",
   },
   skill_level: { type: "number", enum: [1, 2, 3, 4], description: "1 beginner … 4 professional." },
   dough_balls: { type: "number", description: "How many dough balls / pans / pieces." },

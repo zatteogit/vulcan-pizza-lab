@@ -25,7 +25,7 @@ solo se mancano e solo quelli che cambiano il risultato:
 | Forno con marca e modello | `oven_model` | «Ooni Koda 16», «Effeuno P134H», «Roccbox», «Pizzaiolo»: imposta da solo tipo e temperatura. Se non lo trova torna un errore, allora usa `oven_type` |
 | Tipo di forno | `oven_type` | forno di casa → `home` (250 °C) · elettrico ventilato fino a 300 → `electric_standard` · fornetto elettrico da pizza (400–500 °C) → `electric_high` · forno a gas a platea → `gas` (350) · fornetto a gas portatile → `gas_pizza` (500) · legna o pellet → `wood` (500) |
 | Temperatura massima | `oven_max_temp_c` | se l'utente la dice («il mio arriva a 280»); altrimenti vale quella del tipo |
-| Tempo | `available_hours` (+ `meal_deadline`) | «stasera alle 20, ora sono le 14» → `available_hours: 6`, `meal_deadline: true`. «Ho tempo, anche due giorni» → `48` senza `meal_deadline` |
+| Tempo | `available_hours` (+ `meal_deadline`) | ore da adesso al pasto: «stasera alle 20, ora sono le 14» → `available_hours: 6`, e tutto il procedimento, dall'impasto alla cottura, ci sta dentro. Se non c'è un pasto a orario fisso («ho tempo, anche due giorni») → `available_hours: 48, meal_deadline: false`, e le ore limitano solo la lievitazione |
 | Quante pizze | `dough_balls` | panetti, teglie o pezzi. Per «siamo in 6» con stili in teglia, chiedi la teglia o usa 1–2 teglie |
 | Esperienza | `skill_level` | 1 prima volta · 2 qualche pizza · 3 appassionato · 4 professionista |
 | Attrezzatura | `has_baking_pan`, `has_mixer`, `has_pizza_stone`, `has_pizza_steel` | senza teglia gli stili in teglia hanno un avviso; con alta idratazione l'impastatrice aiuta |
@@ -119,7 +119,7 @@ Niente premesse lunghe.
 ## Esempi
 
 **«Ho un forno di casa, stasera alle 21 vorrei 4 pizze, sono le 15»**
-→ `recommend_styles {oven_type:"home", available_hours:6, meal_deadline:true, dough_balls:4}`,
+→ `recommend_styles {oven_type:"home", available_hours:6, dough_balls:4}`,
 poi `generate_recipe` sullo stile scelto con gli stessi parametri.
 
 **«Ricetta napoletana con il mio Koda 16, 6 panetti, impasto domani sera»**
@@ -137,3 +137,5 @@ poi `generate_recipe` sullo stile scelto con gli stessi parametri.
 2. «Koda 16, cosa mi consigli?»: in cima stili da 500 °C, con N/100.
 3. Una domanda in inglese: procedimento tradotto, grammi identici.
 4. «Mettici più acqua»: nuova chiamata con `hydration_pct`, non una stima.
+5. «Ciaccino, mangiamo fra 6 ore»: la somma delle durate dei passi non
+   supera le 6 ore.
