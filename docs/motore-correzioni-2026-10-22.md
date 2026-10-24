@@ -508,3 +508,25 @@ Golden invariato (riguarda solo la ricetta).
   sale e lievito (niente olio, zucchero, né impasto senza lievito).
 - Test: `pizza-engine.test.ts` («Recco senza lievito»). Golden invariato:
   le frasi non sono nel golden.
+
+## D-050 · Pre-fermento sulle ore delle fonti e cotture una alla volta (24/10/2026)
+
+Dalla verifica di GPT sul server MCP, approvato da Matteo.
+
+- **Pre-fermento.** *Prima:* sempre il 40 % delle ore, uguale per biga e
+  poolish (24 h → 9 h 36 per entrambi). *Dopo:* `fermentationPhases` usa le
+  ore delle fonti, biga 16 h e poolish 14 h (centro di 12–16 h), quando
+  all'impasto finale restano almeno 8 h (parametro del modello); altrimenti
+  il 40 % come prima. Il resto si divide fra puntata e appretto 2:1 come
+  prima. Con 24 h: biga 16 h + puntata 5 h 20 + appretto 2 h 40. La dose di
+  lievito non cambia, salvo il caso col frigo (Napoletana a canotto, profilo
+  di casa: 1,2 → 1,3 g), dove la quota di appretto a 18 °C è diversa.
+- **Cottura.** *Prima:* un solo passo da una pizza (4 Napoletane: 2 min).
+  *Dopo:* una pizza o teglia alla volta, `rounds` = pezzi e durata totale
+  (4 × 2 = 8 min), con la frase «4 cotture da 2 min, una alla volta» in 7
+  lingue. La finestra fino al pasto conta tutte le cotture: Napoletana con
+  4 h e forno a legna passa da 3,25 a 3 h di fermentazione.
+- **Golden:** cambiano solo `timeline_min` (le cotture ripetute) e il lievito
+  del canotto qui sopra; masse e forno invariati. Negli scenari «rush» (2 h)
+  gli stili restano non fattibili e dichiarano anche `time_window`.
+- Test: `pizza-engine.test.ts` (fasi, passo del pre-fermento, cotture).

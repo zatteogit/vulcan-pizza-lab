@@ -210,6 +210,8 @@ function recipeData(recipe: GeneratedRecipe) {
       title: step.title,
       description: step.description,
       duration_minutes: step.duration_minutes,
+      // D-050: cotture ripetute una alla volta; la durata è già il totale.
+      ...(step.rounds ? { rounds: step.rounds } : {}),
     })),
     scores: recipe.scores,
   };

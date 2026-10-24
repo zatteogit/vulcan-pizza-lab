@@ -581,6 +581,9 @@ export interface TimelineStep {
   };
   /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. */
   variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan";
+  /** D-050: quante volte si ripete la cottura (una pizza o teglia alla volta);
+   *  duration_minutes è già il totale. */
+  rounds?: number;
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
@@ -1433,10 +1436,35 @@ export function pantryFlourMix(
   return best;
 }
 
-/** Quota della fermentazione che la timeline fa come appretto (vedi
- *  generateTimeline: bulk 0,4/0,6, appretto 0,2/0,4). */
-function proofFraction(hasPreFerment: boolean): number {
-  return hasPreFerment ? 0.2 : 0.4;
+/** Ore di maturazione del pre-fermento dalle fonti
+ *  (docs/ricerca/prefermenti-fonti-2026-10-24.md): biga circa 16 h a
+ *  18–20 °C, poolish 12–16 h a 20–22 °C (qui il centro, 14 h). Prima era il
+ *  40 % delle ore totali, uguale per i due (verifica di GPT, 24/10/2026). */
+export const PRE_FERMENT_TARGET_HOURS = { biga: 16, poolish: 14 } as const;
+
+/** Ore lasciate all'impasto finale (puntata e appretto) prima di allungare il
+ *  pre-fermento verso le ore delle fonti. Parametro del modello, non una
+ *  fonte: sotto questa soglia vale la quota di prima (40 %). */
+const FINAL_DOUGH_MIN_HOURS = 8;
+
+/** Fasi della fermentazione in ore: pre-fermento, puntata, appretto. Senza
+ *  pre-fermento puntata 60 % e appretto 40 %. Con il pre-fermento: almeno il
+ *  40 % delle ore (come prima), di più se all'impasto finale restano
+ *  FINAL_DOUGH_MIN_HOURS, fino alle ore delle fonti; il resto si divide fra
+ *  puntata e appretto 2:1 (come prima, 0,4/0,2). */
+export function fermentationPhases(
+  fermentationHours: number,
+  hasPreFerment: boolean,
+  preFermentType: PreFermentType = "poolish",
+): { preferment: number; bulk: number; proof: number } {
+  if (!hasPreFerment) {
+    return { preferment: 0, bulk: fermentationHours * 0.6, proof: fermentationHours * 0.4 };
+  }
+  const target = PRE_FERMENT_TARGET_HOURS[preFermentType];
+  const floor = fermentationHours * 0.4;
+  const preferment = Math.max(floor, Math.min(target, fermentationHours - FINAL_DOUGH_MIN_HOURS));
+  const rest = fermentationHours - preferment;
+  return { preferment, bulk: (rest * 2) / 3, proof: rest / 3 };
 }
 
 /** Temperatura dell'appretto: sotto i 18 °C (frigo, cantina) l'appretto si fa
@@ -1453,9 +1481,10 @@ export function equivalentFermentationHours(
   fermentationTempC: number,
   yeastType: "fresh" | "dry" | "sourdough",
   hasPreFerment: boolean,
+  preFermentType: PreFermentType = "poolish",
 ): number {
-  if (fermentationTempC >= PROOF_MIN_TEMP_C) return fermentationHours;
-  const p = proofFraction(hasPreFerment);
+  if (fermentationTempC >= PROOF_MIN_TEMP_C || fermentationHours <= 0) return fermentationHours;
+  const p = fermentationPhases(fermentationHours, hasPreFerment, preFermentType).proof / fermentationHours;
   const slow = fermentationSpeedRatio(yeastType, fermentationTempC);
   const proof = fermentationSpeedRatio(yeastType, PROOF_MIN_TEMP_C);
   return fermentationHours * (1 - p) + (fermentationHours * p * proof) / slow;
@@ -1819,6 +1848,7 @@ export function generateRecipe(
       equipment,
       yeast,
       preFermentType,
+      constraints.dough_balls,
     );
 
   let fermentationHours =
@@ -1940,7 +1970,7 @@ export function generateRecipe(
     yeastPct = Math.max(
       0.01,
       calculateYeastPercentage(
-        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment),
+        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment, preFermentType),
         fermentationTempC,
         yeastType as "fresh" | "dry",
       ) /
@@ -2153,7 +2183,7 @@ export function generateRecipe(
   const { model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
   const sciSpeedRatio = fermentationSpeedRatio(yeastType, fermentationTempC);
   const effectiveHours18c =
-    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment) * sciSpeedRatio;
+    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment, preFermentType) * sciSpeedRatio;
 
   // Gluten network score: flour W strength + hydration sweet spot + kneading method
   const wNorm = Math.min(1, Math.max(0, (flourW - 150) / 250)); // 0 at W150, 1 at W400
@@ -3005,8 +3035,11 @@ function generateTimeline(
   equipment?: EquipmentContext,
   yeastType: "fresh" | "dry" | "sourdough" = "fresh",
   preFermentType: PreFermentType = preFermentKind(style),
+  /** Pizze o teglie da cuocere: una alla volta (D-050). */
+  bakeRounds = 1,
 ): TimelineStep[] {
   const steps: TimelineStep[] = [];
+  const phases = fermentationPhases(fermentHours, hasPreFerment, preFermentType);
   const isUnleavened = !!style.dough.unleavened;
 
   // Helper per iniettare assembly_steps del topping in un certo punto.
@@ -3057,9 +3090,9 @@ function generateTimeline(
       id: "preferment",
       title: "Pre-Fermento",
       description: `Mescolare ${preFermentType} e far maturare`,
-      duration_minutes: Math.round(fermentHours * 60 * 0.4),
+      duration_minutes: Math.round(phases.preferment * 60),
       icon: "beaker",
-      timing_label: `${Math.round(fermentHours * 0.4)}h prima`,
+      timing_label: `${Math.round(phases.preferment)}h prima`,
       tip: {
         beginner:
           'Il pre-fermento è come un "antipasto" per il lievito. Mescola e lascia riposare coperto.',
@@ -3110,8 +3143,8 @@ function generateTimeline(
    * - Appretto corto: il forno si accende subito dopo lo staglio e l'appretto
    *   avviene durante il preriscaldo; i minuti mancanti si tolgono dalla fine
    *   della puntata, così la fermentazione totale non cambia. */
-  const bulkMinutesFull = Math.round(fermentHours * 60 * (hasPreFerment ? 0.4 : 0.6));
-  const proofMinutes = Math.round(fermentHours * 60 * proofFraction(hasPreFerment));
+  const bulkMinutesFull = Math.round(phases.bulk * 60);
+  const proofMinutes = Math.round(phases.proof * 60);
   const ovenTempForPreheat = Math.round(actualOvenTemp ?? style.baking.temp_c_ideal);
   // M-6: per le fritte si scalda l'olio, non il forno: bastano 15 minuti.
   const idealPreheat = isFriedStyle(style)
@@ -3509,6 +3542,26 @@ function generateTimeline(
       );
     }
     injectToppingAt("after_bake");
+  }
+
+  // D-050: pizze e teglie si cuociono una alla volta, quindi la cottura si
+  // ripete. Prima il passo valeva per una sola pizza e il piano finiva prima
+  // del vero (verifica di GPT, 24/10/2026).
+  if (bakeRounds > 1) {
+    for (const step of steps) {
+      if (step.id !== "bake" && step.id !== "bake2") continue;
+      const perRound = step.duration_minutes;
+      step.duration_minutes = perRound * bakeRounds;
+      step.rounds = bakeRounds;
+      step.timing_label = `${bakeRounds} × ${step.timing_label}`;
+      if (step.msg?.description) {
+        step.msg.description = [
+          ...step.msg.description,
+          em("timeline.bake.rounds", "{n} cotture da {min} min, una alla volta.", { n: bakeRounds, min: perRound }),
+        ];
+        step.description = renderStepIt(step.msg.description);
+      }
+    }
   }
 
   return steps;

@@ -35,43 +35,46 @@ const WARN: [RecipeOutcome, Kind[]] = ["warnings", []];
 const OVEN: [RecipeOutcome, Kind[]] = ["not_feasible", ["oven_too_cold"]];
 const SHORT: [RecipeOutcome, Kind[]] = ["not_feasible", ["fermentation_too_short"]];
 const LATE_SHORT: [RecipeOutcome, Kind[]] = ["not_feasible", ["time_window", "fermentation_too_short"]];
-const OVEN_SHORT: [RecipeOutcome, Kind[]] = ["not_feasible", ["oven_too_cold", "fermentation_too_short"]];
+const OVEN_LATE_SHORT: [RecipeOutcome, Kind[]] = ["not_feasible", ["oven_too_cold", "time_window", "fermentation_too_short"]];
 
+/* D-050: in «rush» (2 h, 4 pezzi, forno di casa) le cotture si ripetono una
+   alla volta, quindi oltre alla fermentazione troppo corta anche il pasto
+   arriva prima della fine: stessi stili non fattibili, un motivo in più. */
 const EXPECTED: Record<string, Expected> = {
-  napoletana_stg: { ideal: OK, home: OVEN, rush: OVEN_SHORT },
-  napoletana_canotto: { ideal: OK, home: OVEN, rush: OVEN_SHORT },
-  teglia_romana: { ideal: OK, home: WARN, rush: SHORT },
-  tonda_romana: { ideal: OK, home: WARN, rush: SHORT },
+  napoletana_stg: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
+  napoletana_canotto: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
+  teglia_romana: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  tonda_romana: { ideal: OK, home: WARN, rush: LATE_SHORT },
   // C-4 (D-015): forno 280–320 °C (PinsaRomana.it 2022). Nel forno di casa a
   // 250 °C la pinsa si fa con avvisi; prima, con 350–420 °C, era impossibile.
-  pinsa_romana: { ideal: OK, home: WARN, rush: SHORT },
-  new_york: { ideal: OK, home: WARN, rush: SHORT },
+  pinsa_romana: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  new_york: { ideal: OK, home: WARN, rush: LATE_SHORT },
   detroit: { ideal: OK, home: WARN, rush: LATE_SHORT },
   chicago_deep: { ideal: OK, home: OK, rush: LATE_SHORT },
   focaccia_genovese: { ideal: OK, home: OK, rush: LATE_SHORT },
   sfincione: { ideal: OK, home: OK, rush: LATE_SHORT },
-  pala_romana: { ideal: OK, home: WARN, rush: SHORT },
-  grandma_style: { ideal: OK, home: OK, rush: SHORT },
+  pala_romana: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  grandma_style: { ideal: OK, home: OK, rush: LATE_SHORT },
   focaccia_recco: { ideal: OK, home: WARN, rush: WARN },
-  padellino_torino: { ideal: OK, home: OK, rush: SHORT },
+  padellino_torino: { ideal: OK, home: OK, rush: LATE_SHORT },
   // C-1: prima il condimento predefinito non portava a nessuna ricetta; con la
   // mortadella (farcitura dopo la cottura) in 2 h non ci sta neanche la finestra.
   pizza_baciata: { ideal: OK, home: WARN, rush: LATE_SHORT },
   ciaccino_senese: { ideal: OK, home: OK, rush: LATE_SHORT },
-  pizza_spaccata: { ideal: OK, home: WARN, rush: SHORT },
-  trancio_milanese: { ideal: OK, home: OK, rush: SHORT },
-  chicago_tavern: { ideal: OK, home: WARN, rush: SHORT },
+  pizza_spaccata: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  trancio_milanese: { ideal: OK, home: OK, rush: LATE_SHORT },
+  chicago_tavern: { ideal: OK, home: WARN, rush: LATE_SHORT },
   focaccia_barese: { ideal: OK, home: OK, rush: LATE_SHORT },
   pizza_fritta: { ideal: OK, home: OK, rush: SHORT },
   pizza_montanara: { ideal: OK, home: OK, rush: SHORT },
   // M-7 (D-022): tonda fritta AVPN, stesso impasto della pizza fritta.
   pizza_fritta_tonda: { ideal: OK, home: OK, rush: SHORT },
-  calzone_napoletano: { ideal: OK, home: OVEN, rush: OVEN_SHORT },
-  pizza_al_metro: { ideal: OK, home: WARN, rush: SHORT },
-  new_haven_apizza: { ideal: OK, home: OVEN, rush: OVEN_SHORT },
+  calzone_napoletano: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
+  pizza_al_metro: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  new_haven_apizza: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   fugazzeta: { ideal: OK, home: OK, rush: LATE_SHORT },
-  california_style: { ideal: OK, home: WARN, rush: SHORT },
-  greek_pan: { ideal: OK, home: OK, rush: SHORT },
+  california_style: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  greek_pan: { ideal: OK, home: OK, rush: LATE_SHORT },
 };
 
 const STYLES: PizzaStyle[] = Object.values(STYLES_DB);

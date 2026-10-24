@@ -1052,6 +1052,7 @@ export const EN_LOCALE: CmsContent = {
     "timeline.bake2.desc": "Return to the oven at {temp} just to dry out and bring it all together. A few minutes.",
     "timeline.bake.title": "Baking",
     "timeline.bake.desc": "Bake at {temp}.",
+    "timeline.bake.rounds": "{n} bakes of {min} min, one at a time.",
     "timeline.bake.tipBeginner": "The oven must be very hot. Preheat for at least 30 minutes beforehand.",
     "timeline.bake.tipNerd": "The Maillard reaction starts at ~140°C and accelerates exponentially. At {temp} caramelisation creates ~600 aroma compounds.",
     "timeline.topPost.title": "Post-bake topping",

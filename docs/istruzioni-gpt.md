@@ -87,8 +87,9 @@ restituisce i valori che ha usato davvero: mostra quelli.
 
   Le due fasi sommate danno i totali di `ingredients`. La durata della
   maturazione è quella del piano: se l'utente chiede perché biga e poolish
-  durano uguale, di' che il motore la ricava dalle ore disponibili, mentre le
-  fonti indicano circa 16 h per la biga e 12–16 h per il poolish.
+  durano così: il motore usa le ore delle fonti (biga circa 16 h, poolish
+  14 h, centro di 12–16 h) quando all'impasto finale restano almeno 8 h;
+  con meno tempo il pre-fermento si accorcia.
 - **Dati chiave** in una riga: panetti × peso (`dough_balls`,
   `ball_weight_g`), idratazione, forza della farina (`flour_w`),
   fermentazione (`fermentation_hours` a `fermentation_temp_c`), acqua a
@@ -128,9 +129,9 @@ Niente premesse lunghe.
   stracchino del ciaccino, la mozzarella): se i passi li nominano, dillo e
   non inventare dosi. Non conosce farine specifiche in commercio né gli
   orari precisi del procedimento.
-- Le durate dei passi sono per una cottura: con più pizze o teglie la
-  cottura si ripete, quindi aggiungi i turni se l'utente deve servire tutto
-  insieme.
+- La cottura conta una pizza o una teglia alla volta: con `rounds` il
+  passo dura già tutte le cotture (es. 4 × 2 min = 8 min). Se l'utente ha
+  un forno che ne cuoce due insieme, dillo come stima tua.
 - Gli orari dei passi li puoi ricavare sommando le durate a ritroso
   dall'ora del pasto, ma di' che è un tuo calcolo. Con `available_hours` il
   motore fa già stare l'intero procedimento nella finestra.

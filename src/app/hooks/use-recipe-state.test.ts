@@ -82,7 +82,7 @@ describe("centerParamsForStyle con l'orario del pasto", () => {
     expect(violations).toEqual([]);
   });
 
-  it("esempio della revisione: Napoletana, forno a legna, pasto fra 4 h → 3,25 h e niente avviso", () => {
+  it("esempio della revisione: Napoletana, forno a legna, pasto fra 4 h → 3 h e niente avviso (D-050)", () => {
     const constraints = makeConstraints({
       oven_type: "wood",
       oven_max_temp_c: 485,
@@ -90,7 +90,8 @@ describe("centerParamsForStyle con l'orario del pasto", () => {
       meal_deadline: true,
     });
     const { params, recipe } = buildFromCenter(STYLES_DB["napoletana_stg"], constraints, true);
-    expect(params.fermentHours).toBe(3.25);
+    // D-050: 4 cotture una alla volta (8 min, prima 2): 3 h invece di 3,25.
+    expect(params.fermentHours).toBe(3);
     expect(totalMinutes(recipe)).toBeLessThanOrEqual(240);
     expect(recipe.scores.warnings.some((w) => w.key === "gen.windowTooShort")).toBe(false);
   });

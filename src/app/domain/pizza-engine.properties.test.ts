@@ -220,12 +220,13 @@ describe("timeline dentro la finestra fino al pasto (ENG-4)", () => {
     expect(hasWarning(recipe, "gen.windowTooShort")).toBe(true);
   });
 
-  it("esempio documentato: Napoletana con 4 h e forno a legna → 3,25 h di fermentazione", () => {
+  it("esempio documentato: Napoletana con 4 h e forno a legna → 3 h di fermentazione (D-050: 4 cotture)", () => {
     const recipe = generateRecipe(
       STYLES_DB["napoletana_stg"],
       makeConstraints({ ...WOOD_OVEN, ...MEAL, available_hours: 4 }),
     );
-    expect(recipe.fermentation_hours).toBe(3.25);
+    // D-050: 4 pizze da 2 min una alla volta (8 min, prima 2): 3 h invece di 3,25.
+    expect(recipe.fermentation_hours).toBe(3);
     expect(totalMinutes(recipe)).toBeLessThanOrEqual(240);
   });
 

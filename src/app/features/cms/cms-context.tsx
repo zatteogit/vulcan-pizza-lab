@@ -2145,6 +2145,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.bake2.desc": "Riportare in forno a {temp} solo per asciugare e amalgamare. Pochi minuti.",
     "timeline.bake.title": "Cottura",
     "timeline.bake.desc": "Cuocere a {temp}.",
+    "timeline.bake.rounds": "{n} cotture da {min} min, una alla volta.",
     "timeline.bake.tipBeginner": "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
     "timeline.bake.tipNerd": "La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A {temp} la caramellizzazione crea ~600 composti aromatici.",
     "timeline.topPost.title": "Farcitura post-cottura",

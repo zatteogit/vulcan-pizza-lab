@@ -896,6 +896,7 @@ export const JA_LOCALE: CmsContent = {
     "timeline.bake2.desc": "{temp}のオーブンに戻し、水分を飛ばしてなじませます。数分で十分です。",
     "timeline.bake.title": "焼成",
     "timeline.bake.desc": "{temp}で焼きます。",
+    "timeline.bake.rounds": "{min}分の焼成を{n}回、1枚ずつ。",
     "timeline.bake.tipBeginner": "オーブンは十分に熱くしておく必要があります。焼く30分以上前から予熱しましょう。",
     "timeline.bake.tipNerd": "メイラード反応は~140°Cで始まり、指数関数的に加速します。{temp}ではカラメル化によって約600種類の香り成分が生まれます。",
     "timeline.topPost.title": "焼成後のトッピング",

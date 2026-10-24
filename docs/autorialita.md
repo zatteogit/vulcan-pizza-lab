@@ -86,6 +86,7 @@ firmato da un agente, «nessun segno» se non c'è traccia (non prova l'assenza)
 | D-047 | 2026-10-24 | Prodotto | Utenza demo: usa tutta l'app, ma ricette e profilo non restano oltre la sessione | solo consultazione; come un utente normale | idem | Matteo | proposta AI, decisione umana |
 | D-048 | 2026-10-24 | Dati | Database dei forni per marca e modello solo per i forni da pizza (temperatura massima e platea dalle schede del produttore, con fonte); il forno di casa resta generico | anche i forni di casa; rimandare | idem | Matteo | proposta AI, decisione umana |
 | D-049 | 2026-10-24 | Architettura | Motore e CMS accessibili agli agenti con un server MCP sul Worker (strumenti per generare ricette, consigliare stili, leggere stili e glossario; poi widget grafici) | API REST con OpenAPI; entrambi | idem | Matteo | proposta AI, decisione umana |
+| D-050 | 2026-10-24 | Motore | Dopo la verifica di GPT: il pre-fermento dura quanto dicono le fonti (biga 16 h, poolish 14 h) quando all'impasto finale restano almeno 8 h, altrimenti il 40 % come prima; pizze e teglie si cuociono una alla volta, quindi la cottura si ripete per il numero di pezzi | lasciare il 40 % fisso e la cottura singola dichiarati come limite; capienza del forno per tipo (senza fonte) | chat 24/10 («1. ok 2. ok») | Matteo | proposta AI, decisione umana |
 
 D-008 e D-009 arrivano dal brief del lavoro come decisioni del proprietario;
 nel repository non c'è ancora un riscontro scritto, quindi restano da

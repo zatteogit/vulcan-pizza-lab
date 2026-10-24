@@ -863,6 +863,7 @@ export const ES_LOCALE: CmsContent = {
     "timeline.bake2.desc": "Vuelve a meterla en el horno a {temp} solo para secar e integrar. Unos pocos minutos.",
     "timeline.bake.title": "Cocción",
     "timeline.bake.desc": "Hornea a {temp}.",
+    "timeline.bake.rounds": "{n} horneados de {min} min, de uno en uno.",
     "timeline.bake.tipBeginner": "El horno debe estar muy caliente. Precalienta al menos 30 minutos antes.",
     "timeline.bake.tipNerd": "La reacción de Maillard empieza a ~140°C y se acelera exponencialmente. A {temp} la caramelización crea ~600 compuestos aromáticos.",
     "timeline.topPost.title": "Cobertura tras el horneado",

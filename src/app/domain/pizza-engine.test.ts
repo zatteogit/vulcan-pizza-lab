@@ -10,6 +10,7 @@ import {
   thermalViability,
   recommendStyles,
   feasibleAlternativeStyles,
+  fermentationPhases,
   type UserConstraints,
 } from "./pizza-engine";
 
@@ -320,5 +321,47 @@ describe("Recco senza lievito: niente frasi da impasto lievitato", () => {
     expect(keys).not.toContain("sust.pureDough");
     expect(keys.filter((k) => k.startsWith("dig."))).toEqual([]);
     expect(recipe.science.fodmap_reduction_pct).toBeNull();
+  });
+});
+
+describe("pre-fermento sulle ore delle fonti (verifica di GPT, 24/10/2026)", () => {
+  it("con 24 h: biga 16 h, poolish 14 h, il resto puntata e appretto 2:1", () => {
+    const biga = fermentationPhases(24, true, "biga");
+    expect(biga.preferment).toBe(16);
+    expect(biga.bulk).toBeCloseTo(16 / 3, 5);
+    expect(biga.proof).toBeCloseTo(8 / 3, 5);
+    expect(fermentationPhases(24, true, "poolish").preferment).toBe(14);
+  });
+
+  it("con poche ore resta la quota di prima (40 %)", () => {
+    expect(fermentationPhases(10, true, "biga").preferment).toBe(4);
+    expect(fermentationPhases(1, true, "poolish").preferment).toBe(0.4);
+  });
+
+  it("senza pre-fermento puntata 60 % e appretto 40 %", () => {
+    expect(fermentationPhases(10, false)).toEqual({ preferment: 0, bulk: 6, proof: 4 });
+  });
+
+  it("il passo del pre-fermento nella ricetta dura quanto dicono le fonti", () => {
+    const style = STYLES_DB["napoletana_canotto"];
+    for (const [type, hours] of [["biga", 16], ["poolish", 14]] as const) {
+      const recipe = generateRecipe(style, makeConstraints({ available_hours: 48 }), {
+        customFermentationHours: 24,
+        usePreFerment: true,
+        preFerment: { type },
+      });
+      expect(recipe.timeline.find((s) => s.id === "preferment")?.duration_minutes).toBe(hours * 60);
+    }
+  });
+});
+
+describe("cotture una alla volta (D-050)", () => {
+  it("la cottura dura il tempo di una pizza per il numero di pizze", () => {
+    const one = generateRecipe(napoletana, makeConstraints({ dough_balls: 1 })).timeline.find((s) => s.id === "bake")!;
+    const six = generateRecipe(napoletana, makeConstraints({ dough_balls: 6 })).timeline.find((s) => s.id === "bake")!;
+    expect(one.rounds).toBeUndefined();
+    expect(six.rounds).toBe(6);
+    expect(six.duration_minutes).toBe(one.duration_minutes * 6);
+    expect(six.msg?.description?.some((m) => m.key === "timeline.bake.rounds")).toBe(true);
   });
 });
