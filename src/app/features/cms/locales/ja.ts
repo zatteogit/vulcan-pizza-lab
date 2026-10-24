@@ -117,6 +117,13 @@ export const JA_LOCALE: CmsContent = {
     slotWeekdayDinner: "{day}の夜",
     slotNoPreference: "指定なし",
     slotNoPreferenceSub: "{brand}におまかせ",
+    verdictTitle: "このままでは作れません",
+    verdictOvenTooCold: "お使いのオーブンは{oven}まで、このスタイルには{min}以上が必要です。別のピザになります。",
+    verdictTimeWindow: "約{needed}かかりますが、使えるのは{available}です。選んだ時刻より後に仕上がります。",
+    verdictFermentationTooShort: "発酵{hours}では、このスタイルの最低{min}に届きません。別の生地になります。",
+    verdictLaterTime: "{hours}以上先の時刻を選んでください。",
+    verdictAlternatives: "同じ条件で作れるスタイル：",
+    verdictRecipeBelow: "試したい場合は、いちばん近いレシピを下に表示しています。",
     // Score dashboard
     recipeScore: "Match",
     nerdToggle: "PizzaNerd",

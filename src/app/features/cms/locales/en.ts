@@ -109,6 +109,13 @@ export const EN_LOCALE: CmsContent = {
     slotWeekdayDinner: "{day} dinner",
     slotNoPreference: "No preference",
     slotNoPreferenceSub: "{brand} decides",
+    verdictTitle: "This won't work as set up",
+    verdictOvenTooCold: "Your oven reaches {oven}; this style needs at least {min}: you'd get a different pizza.",
+    verdictTimeWindow: "It takes about {needed} and you have {available}: it would be ready after the time you chose.",
+    verdictFermentationTooShort: "A {hours} rise against this style's minimum of {min}: it would be a different dough.",
+    verdictLaterTime: "Pick a time at least {hours} from now.",
+    verdictAlternatives: "These work with the same setup:",
+    verdictRecipeBelow: "The closest recipe is still below if you want to try it.",
     // Score dashboard
     recipeScore: "Match",
     nerdToggle: "PizzaNerd",

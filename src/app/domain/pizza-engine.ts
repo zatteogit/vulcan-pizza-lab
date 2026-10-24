@@ -396,8 +396,37 @@ export function localizeCrustType(crust: string): string {
   );
 }
 
+/* ═══ M-10 — Esito della ricetta ═══
+ * Il motore non degrada in silenzio: dice se la ricetta riesce, riesce con
+ * avvisi o non è fattibile così, e perché. Ogni motivo bloccante ha i numeri
+ * per proporre un'alternativa (orario più avanti, forno o stile diverso). */
+export type RecipeOutcome = "ok" | "warnings" | "not_feasible";
+
+export type RecipeBlocker =
+  /** Il forno non arriva alla temperatura che lo stile richiede. */
+  | { kind: "oven_too_cold"; oven_c: number; style_min_c: number }
+  /** Con un orario del pasto, la timeline non ci sta. */
+  | { kind: "time_window"; available_h: number; needed_h: number }
+  /** Le ore costringono a meno della metà della lievitazione minima dello
+   *  stile. `needed_h`: ore fino al pasto per arrivare al minimo dello stile. */
+  | { kind: "fermentation_too_short"; fermentation_h: number; style_min_h: number; needed_h: number };
+
+export interface RecipeVerdict {
+  outcome: RecipeOutcome;
+  blockers: RecipeBlocker[];
+}
+
+/** Sotto questa viabilità termica lo stile non si ottiene (stessa soglia
+ *  dell'avviso feas.thermalUnviable). */
+const THERMAL_UNVIABLE_THRESHOLD = 0.6;
+/** Sotto questa frazione del minimo dello stile la lievitazione non è più
+ *  «accorciata» ma un'altra ricetta. */
+const FERMENTATION_FLOOR_FRACTION = 0.5;
+
 export interface GeneratedRecipe {
   schema_version: string; // Notion Pag.09: recipe data schema version
+  /** M-10: esito esplicito (riuscito, con avvisi, non fattibile così). */
+  verdict: RecipeVerdict;
   style: PizzaStyle;
   dough_balls: number;
   flour_g: number;
@@ -1788,7 +1817,7 @@ export function generateRecipe(
   const ovenViability = thermalViability(style, ovenTemp);
   if (ovenViability < 1) {
     feasResult.score = Math.round(feasResult.score * (0.5 + 0.5 * ovenViability));
-    if (ovenViability <= 0.6) {
+    if (ovenViability <= THERMAL_UNVIABLE_THRESHOLD) {
       feasResult.warnings.unshift(
         em(
           "feas.thermalUnviable",
@@ -2048,8 +2077,30 @@ export function generateRecipe(
   science.deviation_score_effective = devResult.score;
   science.compensation_deviation_points = devResult.compensationPoints;
 
+  // ── M-10: esito esplicito ──
+  const blockers: RecipeBlocker[] = [];
+  if (ovenViability <= THERMAL_UNVIABLE_THRESHOLD) {
+    blockers.push({ kind: "oven_too_cold", oven_c: ovenTemp, style_min_c: style.baking.temp_c_range[0] });
+  }
+  if (windowTooShort) {
+    blockers.push({ kind: "time_window", available_h: constraints.available_hours, needed_h: neededHours });
+  }
+  if (timeClampedBelowMin && fermentationHours < fermRange[0] * FERMENTATION_FLOOR_FRACTION) {
+    blockers.push({
+      kind: "fermentation_too_short",
+      fermentation_h: fermentationHours,
+      style_min_h: fermRange[0],
+      needed_h: Math.ceil((fermRange[0] * 60 + timelineOverheadMinutes(timeline)) / 15) / 4,
+    });
+  }
+  const verdict: RecipeVerdict = {
+    outcome: blockers.length > 0 ? "not_feasible" : scores.warnings.length > 0 ? "warnings" : "ok",
+    blockers,
+  };
+
   return {
     schema_version: RECIPE_SCHEMA_VERSION,
+    verdict,
     style,
     dough_balls: doughBalls,
     flour_g: flourG,
@@ -3422,6 +3473,41 @@ const ICONIC_BOOST: Record<string, number> = {
   pizza_montanara: 2,
 };
 
+/** M-10 — stili che con gli stessi vincoli danno una ricetta fattibile,
+ *  i più simili per primi (forma, crosta, famiglia, spessore), poi nell'ordine dei
+ *  consigli. Le pizze fritte si propongono solo al posto di una fritta: è un
+ *  altro metodo di cottura. Serve all'esito «non fattibile così». */
+export function feasibleAlternativeStyles(
+  current: PizzaStyle,
+  constraints: UserConstraints,
+  limit = 3,
+  stylesOverride?: Record<string, PizzaStyle>,
+): PizzaStyle[] {
+  const isFried = (style: PizzaStyle) => style.baking.temp_c_range[1] < 200;
+  const similarity = (style: PizzaStyle) =>
+    (style.shape.shape_type === current.shape.shape_type ? 2 : 0) +
+    (style.crust_type === current.crust_type ? 2 : 0) +
+    (style.family === current.family ? 1 : 0) +
+    // Spessore: fino a 2 punti, zero oltre 0,3 di differenza.
+    2 * Math.max(0, 1 - Math.abs(style.shape.thickness_factor - current.shape.thickness_factor) / 0.3);
+  const candidates = recommendStyles(constraints, stylesOverride)
+    .filter(
+      (rec) =>
+        rec.style.id !== current.id &&
+        rec.tier !== "not_feasible" &&
+        isFried(rec.style) === isFried(current),
+    )
+    .map((rec, rank) => ({ style: rec.style, rank, similarity: similarity(rec.style) }))
+    .sort((x, y) => y.similarity - x.similarity || x.rank - y.rank);
+  const alternatives: PizzaStyle[] = [];
+  for (const { style } of candidates) {
+    if (alternatives.length >= limit) break;
+    if (generateRecipe(style, constraints).verdict.outcome === "not_feasible") continue;
+    alternatives.push(style);
+  }
+  return alternatives;
+}
+
 export function recommendStyles(
   constraints: UserConstraints,
   stylesOverride?: Record<string, PizzaStyle>,
@@ -3736,10 +3822,14 @@ export function recommendStyles(
     //    richiesto ma utente ha elettrico) o score molto basso. Permette di mostrare
     //    cosa NON puoi fare e perché, oltre a cosa puoi fare. ──
     let tier: "perfect" | "good" | "challenging" | "not_feasible";
+    // M-10 (decisione di Matteo, 23/10/2026): stessa soglia termica dell'esito
+    // della ricetta. Prima Canotto, Calzone e Pinsa risultavano «buoni» con il
+    // forno di casa a 250 °C e la ricetta poi diceva «non fattibile così».
     const hasHardBlocker =
       (style.requires_wood_oven && constraints.oven_type !== "wood") ||
       (style.requires_pre_ferment === true &&
-        constraints.skill_level === 1);
+        constraints.skill_level === 1) ||
+      thermalViability(style, constraints.oven_max_temp_c) <= THERMAL_UNVIABLE_THRESHOLD;
     if (score < 30 || hasHardBlocker) tier = "not_feasible";
     else if (score >= 78) tier = "perfect";
     else if (score >= 55) tier = "good";

@@ -10458,12 +10458,67 @@
     }
   }
 
-  /* ENG-4: la ricetta non sta nella finestra fino al pasto */
-  .recipe-output-timing-notice {
-    margin: 0 0 var(--space-3);
-    color: var(--text-warning);
-    font-weight: var(--weight-semibold);
+  /* M-10: esito «non fattibile così» (sostituisce l'avviso ENG-4 della finestra) */
+  .recipe-verdict {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+    padding: var(--space-4);
+    border-inline-start: var(--space-1) solid var(--text-warning);
+  }
+
+  .recipe-verdict__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .recipe-verdict__icon {
+    flex: none;
+    color: var(--icon-warning);
+  }
+
+  .recipe-verdict__title {
+    margin: 0;
+  }
+
+  .recipe-verdict__reasons,
+  .recipe-verdict__links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .recipe-verdict__reason,
+  .recipe-verdict__action {
+    margin: 0;
     line-height: var(--leading-normal);
+  }
+
+  .recipe-verdict__reason {
+    font-weight: var(--weight-semibold);
+  }
+
+  .recipe-verdict__links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+  }
+
+  .recipe-verdict__link {
+    color: var(--cta);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .recipe-verdict__footnote {
+    margin: 0;
+    color: var(--text-muted);
   }
 
   .recipe-output-feedback-wrap {

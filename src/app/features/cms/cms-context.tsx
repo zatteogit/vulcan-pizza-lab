@@ -145,6 +145,14 @@ export interface CmsUiStrings {
   slotWeekdayDinner: string;
   slotNoPreference: string;
   slotNoPreferenceSub: string;
+  /** M-10: esito «non fattibile così» della ricetta. */
+  verdictTitle: string;
+  verdictOvenTooCold: string;
+  verdictTimeWindow: string;
+  verdictFermentationTooShort: string;
+  verdictLaterTime: string;
+  verdictAlternatives: string;
+  verdictRecipeBelow: string;
   // Score dashboard
   recipeScore: string;
   nerdToggle: string;
@@ -1261,6 +1269,13 @@ export const CMS_DEFAULTS: CmsContent = {
     slotWeekdayDinner: "{day} sera",
     slotNoPreference: "Nessuna preferenza",
     slotNoPreferenceSub: "ci pensa {brand}",
+    verdictTitle: "Così non è fattibile",
+    verdictOvenTooCold: "Il tuo forno arriva a {oven}, questo stile ne chiede almeno {min}: verrebbe un'altra pizza.",
+    verdictTimeWindow: "Servono circa {needed}, ne hai {available}: sarebbe pronta dopo l'orario scelto.",
+    verdictFermentationTooShort: "Lievitazione di {hours} contro un minimo di {min} per questo stile: sarebbe un altro impasto.",
+    verdictLaterTime: "Scegli un orario fra almeno {hours}.",
+    verdictAlternatives: "Con questi vincoli funzionano:",
+    verdictRecipeBelow: "Sotto trovi comunque la ricetta più vicina, se vuoi provarci.",
     // Score dashboard
     recipeScore: "Match",
     nerdToggle: "PizzaNerd",

@@ -9,7 +9,7 @@ import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
 import { addMinutes, localizeStep, optimizeComfort, roundToQuarter, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
-import { engineMsgTexts } from "./engine-msg-text";
+import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
 import type { FlourEntry } from "../../data/flour-database";
@@ -540,16 +540,8 @@ export function RecipeOutput({
   /* VPL-013: Compensations applied */
   const compensations = recipe.science?.compensations ?? [];
 
-  /* ENG-4: con un orario del pasto scelto, se la ricetta non sta nella finestra
-     (il motore ha già tolto l'overhead fisso dalla fermentazione) lo diciamo:
-     prima l'inizio cadeva nel passato e si partiva «adesso» senza avviso. */
-  const hasMealTarget = !!selectedTimeSlotId && selectedTimeSlotId !== "no_preference";
-  const windowWarning = hasMealTarget
-    ? recipe.scores.warnings.find((w) => w.key === "gen.windowTooShort")
-    : undefined;
-  const windowWarningText = windowWarning
-    ? engineMsgTexts([windowWarning], cms, bcp47)[0]
-    : null;
+  /* ENG-4 → M-10: se la ricetta non sta nella finestra fino al pasto lo dice
+     RecipeVerdictNotice (blocker time_window), insieme agli altri motivi. */
 
 
   return (
@@ -659,6 +651,13 @@ export function RecipeOutput({
           </span>
         </div>
       )}
+
+      {/* M-10: esito «non fattibile così», sopra il pager: vale per entrambe le schede. */}
+      <RecipeVerdictNotice
+        recipe={recipe}
+        constraints={constraints}
+        mealDeadline={!!selectedTimeSlotId && selectedTimeSlotId !== "no_preference"}
+      />
 
       {/* ═══ PAGER ORIZZONTALE (feedback giugno 2026) ═══
           Meno info per schermata, navigazione da app: Ricetta | Procedimento.
@@ -775,9 +774,6 @@ export function RecipeOutput({
         className="recipe-output-panel recipe-output-panel--procedura"
       >
       <ScrollToTopOnMount />
-      {windowWarningText && (
-        <p className="type-body recipe-output-timing-notice">{windowWarningText}</p>
-      )}
       <div className="recipe-output-hero-wrap">
         <ProcedureHeroControls
           startTime={startTime}
