@@ -8,6 +8,8 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "Stile",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "Im Topf frittiert",
+  "features.recipe.recommended-styles.fried.subtitle": "Ohne Ofen: Teig in Öl frittiert",
   "features.search.filters": "Ergebnisse filtern",
   "features.search.showAll": "Alle anzeigen ({0})",
   "components.shared.search-overlay.condimenti-fc3218d7": "Beläge",

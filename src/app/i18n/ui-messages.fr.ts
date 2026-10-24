@@ -8,6 +8,8 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "Styles",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "Frites à la casserole",
+  "features.recipe.recommended-styles.fried.subtitle": "Sans four : pâte frite dans l'huile",
   "features.search.filters": "Filtrer les résultats",
   "features.search.showAll": "Tout afficher ({0})",
   "components.shared.search-overlay.condimenti-fc3218d7": "Garnitures",

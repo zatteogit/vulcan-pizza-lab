@@ -8,6 +8,8 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "スタイル",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "鍋で揚げるピッツァ",
+  "features.recipe.recommended-styles.fried.subtitle": "オーブン不要：生地を油で揚げる",
   "features.search.filters": "結果を絞り込む",
   "features.search.showAll": "すべて表示（{0}）",
   "components.shared.search-overlay.condimenti-fc3218d7": "トッピング",

@@ -8,6 +8,8 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "Explorar",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "Fritas na panela",
+  "features.recipe.recommended-styles.fried.subtitle": "Sem forno: massa frita no óleo",
   "features.search.filters": "Filtrar resultados",
   "features.search.showAll": "Ver todos ({0})",
   "components.shared.search-overlay.condimenti-fc3218d7": "Coberturas",

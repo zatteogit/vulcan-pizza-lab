@@ -11,6 +11,8 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "Scopri",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "Fritte in pentola",
+  "features.recipe.recommended-styles.fried.subtitle": "Senza forno: impasto fritto in olio",
   "features.search.filters": "Filtra i risultati",
   "features.search.showAll": "Mostra tutti ({0})",
   "components.shared.search-overlay.condimenti-fc3218d7": "Condimenti",

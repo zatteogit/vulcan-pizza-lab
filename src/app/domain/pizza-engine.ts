@@ -3785,7 +3785,6 @@ export function feasibleAlternativeStyles(
   limit = 3,
   stylesOverride?: Record<string, PizzaStyle>,
 ): PizzaStyle[] {
-  const isFried = (style: PizzaStyle) => style.baking.temp_c_range[1] < 200;
   const similarity = (style: PizzaStyle) =>
     (style.shape.shape_type === current.shape.shape_type ? 2 : 0) +
     (style.crust_type === current.crust_type ? 2 : 0) +
@@ -3797,7 +3796,7 @@ export function feasibleAlternativeStyles(
       (rec) =>
         rec.style.id !== current.id &&
         rec.tier !== "not_feasible" &&
-        isFried(rec.style) === isFried(current),
+        isFriedStyle(rec.style) === isFriedStyle(current),
     )
     .map((rec, rank) => ({ style: rec.style, rank, similarity: similarity(rec.style) }))
     .sort((x, y) => y.similarity - x.similarity || x.rank - y.rank);
@@ -3858,7 +3857,7 @@ export function recommendStyles(
 
     // ── Oven compatibility (25%) ──
     let ovenScore: number;
-    if (style.baking.temp_c_range[1] < 200) {
+    if (isFriedStyle(style)) {
       /* U-6: le fritte (M-6) non usano il forno: nessun vincolo, come quando il
        * forno arriva alla temperatura ideale. Prima il motivo diceva «il tuo forno
        * raggiunge la temperatura ideale (175 °C)», che è l'olio. */

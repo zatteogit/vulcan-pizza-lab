@@ -214,6 +214,8 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- **D-032** (24/10): le fritte in una sezione a parte dei consigli, «Fritte in
+  pentola», dopo gli stili al forno.
 - ~~**C-3 (P2)**~~ chiuso il 24/10: i consigli e l'avviso «ti serve una farina
   W…» tengono conto del mix di due farine della dispensa (`pantryFlourMix`,
   quote al 5%, W stimata come media pesata e detta «circa»). Bug collaterale:

@@ -8,6 +8,8 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "components.shared.app-shell.scopri-b4aad9f0": "Explore",
   "components.shared.search-button.k-64d86f33": "⌘K",
   "components.shared.search-button.value-k-b834ead1": "{0} (⌘K)",
+  "features.recipe.recommended-styles.fried.label": "Fried in a pot",
+  "features.recipe.recommended-styles.fried.subtitle": "No oven: dough fried in oil",
   "features.search.filters": "Filter results",
   "features.search.showAll": "Show all ({0})",
   "components.shared.search-overlay.condimenti-fc3218d7": "Toppings",
