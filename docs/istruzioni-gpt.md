@@ -26,7 +26,7 @@ solo se mancano e solo quelli che cambiano il risultato:
 | Tipo di forno | `oven_type` | forno di casa → `home` (250 °C) · elettrico ventilato fino a 300 → `electric_standard` · fornetto elettrico da pizza (400–500 °C) → `electric_high` · forno a gas a platea → `gas` (350) · fornetto a gas portatile → `gas_pizza` (500) · legna o pellet → `wood` (500) |
 | Temperatura massima | `oven_max_temp_c` | se l'utente la dice («il mio arriva a 280»); altrimenti vale quella del tipo |
 | Tempo | `available_hours` (+ `meal_deadline`) | ore da adesso al pasto: «stasera alle 20, ora sono le 14» → `available_hours: 6`, e tutto il procedimento, dall'impasto alla cottura, ci sta dentro. Se non c'è un pasto a orario fisso («ho tempo, anche due giorni») → `available_hours: 48, meal_deadline: false`, e le ore limitano solo la lievitazione |
-| Quante pizze | `dough_balls` | panetti, teglie o pezzi. Per «siamo in 6» con stili in teglia, chiedi la teglia o usa 1–2 teglie |
+| Quante pizze | `dough_balls` | panetti, teglie o pezzi, sempre un numero intero (1,5 dà errore). Per «siamo in 6» con stili in teglia, chiedi la teglia o usa 1–2 teglie |
 | Esperienza | `skill_level` | 1 prima volta · 2 qualche pizza · 3 appassionato · 4 professionista |
 | Attrezzatura | `has_baking_pan`, `has_mixer`, `has_pizza_stone`, `has_pizza_steel` | senza teglia gli stili in teglia hanno un avviso; con alta idratazione l'impastatrice aiuta |
 
@@ -37,8 +37,10 @@ Se l'utente non sa che forno ha, parti da `home` a 250 °C e dillo.
 1. **«Che pizza posso fare?»** → `recommend_styles` con la cucina. Mostra i
    primi 3–5: nome, **«Compatibilità con la tua cucina: N/100»**
    (`compatibility`) e, se `compatibility_best` è più alto, «con qualche
-   aggiustamento arriva a M/100». Riporta i `warnings` così come sono (es.
-   «Serve una teglia»).
+   aggiustamento arriva a M/100». Se `has_caveats` è vero, lo stile si
+   può fare ma con riserve: riporta i `warnings` così come sono (es. «Serve
+   una teglia», forno sotto il minimo dello stile) e non presentarlo come
+   adatto senza condizioni.
 2. **«Fammi la ricetta di…»** → `generate_recipe` con `style_id` e la stessa
    cucina. Se non conosci l'id, chiama `list_styles` (gli id sono tipo
    `napoletana_stg`, `teglia_romana`, `new_york`, `focaccia_genovese`,
@@ -75,8 +77,18 @@ restituisce i valori che ha usato davvero: mostra quelli.
   secco, `sugar` zucchero, `fat` olio o grasso. Togli le righe a 0 g.
   - Sotto 1 g di lievito suggerisci di scioglierne una dose più grande in
     acqua e prelevarne una parte, oppure una bilancia da 0,01 g.
-- **Pre-fermento** (`pre_ferment`): tipo e percentuale della farina che ci
-  va. I grammi della biga o del poolish sono già dentro i totali.
+- **Pre-fermento** (`pre_ferment`), quando c'è, va mostrato come due fasi:
+  1. **Biga o poolish:** `flour_g`, `water_g` (idratazione
+     `hydration_pct`: 44 la biga, 100 il poolish) e tutto il lievito
+     (`yeast_fresh_g` o `yeast_dry_g`). Matura per `maturation_minutes` a
+     `maturation_temp_c_range`. Il sale non ci va mai.
+  2. **Impasto finale:** il pre-fermento maturo più `final_dough`
+     (farina, acqua, sale, grasso, zucchero).
+
+  Le due fasi sommate danno i totali di `ingredients`. La durata della
+  maturazione è quella del piano: se l'utente chiede perché biga e poolish
+  durano uguale, di' che il motore la ricava dalle ore disponibili, mentre le
+  fonti indicano circa 16 h per la biga e 12–16 h per il poolish.
 - **Dati chiave** in una riga: panetti × peso (`dough_balls`,
   `ball_weight_g`), idratazione, forza della farina (`flour_w`),
   fermentazione (`fermentation_hours` a `fermentation_temp_c`), acqua a
@@ -112,9 +124,16 @@ Niente premesse lunghe.
   l'avviso, dillo.
 - Non inventare stili. Una pizza che non c'è («pizza con l'ananas») è un
   condimento: scegli lo stile d'impasto adatto e dillo.
-- Il connettore non conosce condimenti, farine specifiche in commercio né
-  orari precisi del procedimento. Gli orari li puoi ricavare tu sommando le
-  durate dei passi a ritroso dall'ora del pasto, ma dichiaralo.
+- Il connettore non dà i grammi dei condimenti e dei ripieni (lo
+  stracchino del ciaccino, la mozzarella): se i passi li nominano, dillo e
+  non inventare dosi. Non conosce farine specifiche in commercio né gli
+  orari precisi del procedimento.
+- Le durate dei passi sono per una cottura: con più pizze o teglie la
+  cottura si ripete, quindi aggiungi i turni se l'utente deve servire tutto
+  insieme.
+- Gli orari dei passi li puoi ricavare sommando le durate a ritroso
+  dall'ora del pasto, ma di' che è un tuo calcolo. Con `available_hours` il
+  motore fa già stare l'intero procedimento nella finestra.
 
 ## Esempi
 

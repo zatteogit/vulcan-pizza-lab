@@ -92,4 +92,35 @@ describe("server MCP", () => {
     // Senza orario del pasto le ore limitano solo la fermentazione.
     expect(total({ meal_deadline: false })).toBeGreaterThan(6 * 60);
   });
+
+  it("il pre-fermento ha dosi, temperatura e impasto finale che tornano coi totali", () => {
+    for (const pre_ferment of ["biga", "poolish"]) {
+      const data = call("generate_recipe", { style_id: "napoletana_canotto", oven_type: "gas_pizza", pre_ferment }).structuredContent as {
+        ingredients: { name: string; grams: number }[];
+        pre_ferment: Record<string, unknown> & { flour_g: number; water_g: number; hydration_pct: number; maturation_temp_c_range: number[]; final_dough: { flour_g: number; water_g: number } };
+      };
+      const grams = (name: string) => data.ingredients.find((i) => i.name === name)?.grams ?? 0;
+      const pf = data.pre_ferment;
+      expect(pf.type).toBe(pre_ferment);
+      expect(pf.flour_g + pf.final_dough.flour_g).toBe(grams("flour"));
+      expect(pf.water_g + pf.final_dough.water_g).toBe(grams("water"));
+      expect(pf.hydration_pct).toBe(pre_ferment === "biga" ? 44 : 100);
+      expect(pf.maturation_temp_c_range).toEqual(pre_ferment === "biga" ? [18, 20] : [20, 22]);
+      expect(Object.keys(pf).some((k) => k.startsWith("yeast_"))).toBe(true);
+    }
+  });
+
+  it("panetti non interi: errore, non arrotondamento", () => {
+    const result = call("generate_recipe", { style_id: "teglia_romana", dough_balls: 1.5 });
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("whole number");
+  });
+
+  it("i consigli dicono se uno stile ha riserve", () => {
+    const styles = (call("recommend_styles", { oven_type: "home", oven_max_temp_c: 250, available_hours: 6, limit: 30 }).structuredContent as {
+      styles: { warnings: string[]; has_caveats: boolean }[];
+    }).styles;
+    for (const s of styles) expect(s.has_caveats).toBe(s.warnings.length > 0);
+    expect(styles.some((s) => s.has_caveats)).toBe(true);
+  });
 });
