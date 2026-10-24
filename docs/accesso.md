@@ -34,8 +34,8 @@ verificato: da sole non provano l'email, quindi non possono assegnare un ruolo.
 2. Incollare il Client ID in `wrangler.toml`, nella variabile
    `GOOGLE_CLIENT_ID`, sia in `[vars]` sia in `[env.test.vars]`. Non è un
    segreto: lo vede ogni browser.
-3. **Tabelle su D1**: eseguire una volta, poi a ogni modifica dello schema:
-   `npx wrangler d1 execute vulcan-annotations --remote --file=./schema.sql`
+3. **Tabelle su D1**: non serve nulla, il Worker crea `users` e `sessions`
+   alla prima richiesta di accesso. Lo stesso schema è in `schema.sql`.
 4. **Altri ruoli**: calcolare l'impronta di un'email con
    `printf '%s' "nome@esempio.it" | sha256sum`, poi aggiungerla (separata da
    virgole) a `ADMIN_EMAIL_SHA256`, `EDITOR_EMAIL_SHA256` o

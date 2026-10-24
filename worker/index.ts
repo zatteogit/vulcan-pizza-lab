@@ -262,7 +262,26 @@ async function handleConfig(
   return json({ error: "method not allowed" }, 405, cors);
 }
 
-/* ═══ D-046 — archivio dell'accesso su D1 (tabelle users e sessions in schema.sql) ═══ */
+/* ═══ D-046 — archivio dell'accesso su D1 (tabelle users e sessions in schema.sql) ═══
+ * Eccezione alla regola «niente DDL nel Worker»: le due tabelle dell'accesso
+ * si creano da sole alla prima richiesta (IF NOT EXISTS, una volta per
+ * istanza), così l'accesso funziona appena pubblicato, senza un passo a mano
+ * su D1. Stesso schema di schema.sql. */
+const AUTH_SCHEMA = [
+  "CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, email TEXT NOT NULL, name TEXT, role TEXT NOT NULL, created_at INTEGER NOT NULL, last_login INTEGER NOT NULL)",
+  "CREATE TABLE IF NOT EXISTS sessions (token_hash TEXT PRIMARY KEY, user_id TEXT, role TEXT NOT NULL, email TEXT, name TEXT, expires_at INTEGER NOT NULL)",
+  "CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at)",
+];
+let authSchemaReady: Promise<unknown> | null = null;
+
+function ensureAuthSchema(db: D1Database): Promise<unknown> {
+  authSchemaReady ??= db.batch(AUTH_SCHEMA.map((sql) => db.prepare(sql))).catch((e) => {
+    authSchemaReady = null;
+    throw e;
+  });
+  return authSchemaReady;
+}
+
 function d1AuthStore(db: D1Database): AuthStore {
   return {
     async upsertUser({ id, email, name, role, now }) {
@@ -336,6 +355,7 @@ export default {
 
     // D-046: accesso e ruoli. Stessa origine dell'app: niente CORS.
     if (url.pathname.startsWith("/api/auth/")) {
+      await ensureAuthSchema(env.DB);
       const response = await handleAuthRequest(request, {
         store: d1AuthStore(env.DB),
         env,
