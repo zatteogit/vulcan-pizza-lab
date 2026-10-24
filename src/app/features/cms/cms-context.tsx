@@ -1648,7 +1648,7 @@ export const CMS_DEFAULTS: CmsContent = {
     inProgressShort: "In corso",
     followYou: "Ti seguiamo noi finché {brand} resta aperto: conto alla rovescia, promemoria e widget.",
     reopen: "Riapri la pizzata in corso",
-    completed: "Pizzata completata 🎉",
+    completed: "Pizzata completata",
     waitOver: "Attesa finita: continua!",
     dueNow: "È ora: {title}",
     stepProgress: "{style} · passo {n}/{total}",

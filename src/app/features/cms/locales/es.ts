@@ -1603,7 +1603,7 @@ export const ES_LOCALE: CmsContent = {
     inProgressShort: "En curso",
     followYou: "Te acompa\u00F1amos mientras {brand} siga abierto: cuenta atr\u00E1s, recordatorios y widget.",
     reopen: "Reabrir la elaboraci\u00F3n en curso",
-    completed: "Elaboraci\u00F3n completada \uD83C\uDF89",
+    completed: "Elaboraci\u00F3n completada",
     waitOver: "Se acab\u00F3 la espera: \u00A1sigue!",
     dueNow: "Ahora toca: {title}",
     stepProgress: "{style} \u00B7 paso {n}/{total}",

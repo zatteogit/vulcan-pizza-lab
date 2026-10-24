@@ -1609,7 +1609,7 @@ export const FR_LOCALE: CmsContent = {
     inProgressShort: "En cours",
     followYou: "On vous accompagne tant que {brand} reste ouvert : compte \u00E0 rebours, rappels et widget.",
     reopen: "Rouvrir la fourn\u00E9e en cours",
-    completed: "Fourn\u00E9e termin\u00E9e \uD83C\uDF89",
+    completed: "Fourn\u00E9e termin\u00E9e",
     waitOver: "Attente termin\u00E9e : continuez !",
     dueNow: "C'est l'heure : {title}",
     stepProgress: "{style} \u00B7 \u00E9tape {n}/{total}",

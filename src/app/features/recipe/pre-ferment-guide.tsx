@@ -3,6 +3,7 @@
 /* Si mostra in RecipeOutput quando nerdMode è attivo e has_pre_ferment */
 /* i18n: all user-facing strings resolved via useCms().preFerment */
 
+import { Lightbulb } from "lucide-react";
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { motionSpring } from "../../components/ds/motion";
@@ -209,7 +210,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
             </span>
           </div>
           <div className="preferment-guide-card__name">
-            {info.emoji} <span className="preferment-guide-card__name-text">{info.name}</span>
+            <span className="preferment-guide-card__name-text">{info.name}</span>
             <span className="preferment-guide-card__origin"> — {info.origin}</span>
           </div>
         </div>
@@ -254,7 +255,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
               {/* Tips */}
               <div className="preferment-guide-card__tips">
                 <div className="preferment-guide-card__tips-label">
-                  {`💡 ${pf.tipsLabel.toUpperCase()}`}
+                  <Lightbulb size={14} aria-hidden="true" className="tip-icon" /> {pf.tipsLabel.toUpperCase()}
                 </div>
                 <ul className="preferment-guide-card__tips-list">
                   {info.tips.map((tip, i) => (

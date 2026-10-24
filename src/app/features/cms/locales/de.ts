@@ -1650,7 +1650,7 @@ export const DE_LOCALE: CmsContent = {
     fillingTitle: "F\u00FCllung",
     followYou: "Wir begleiten dich, solange {brand} ge\u00F6ffnet bleibt: Countdown, Erinnerungen und Widget.",
     reopen: "Laufendes Backen wieder \u00F6ffnen",
-    completed: "Backen abgeschlossen \uD83C\uDF89",
+    completed: "Backen abgeschlossen",
     waitOver: "Wartezeit vorbei: weiter geht's!",
     dueNow: "Zeit f\u00FCr: {title}",
     stepProgress: "{style} \u00B7 Schritt {n}/{total}",

@@ -1,9 +1,4 @@
-import {
-Bookmark,
-ChevronRight,
-Heart,
-Sparkles,
-} from "lucide-react";
+import { Bookmark, ChevronRight, Heart, Info, Lightbulb, OctagonAlert, Sparkles, Stethoscope, TriangleAlert } from "lucide-react";
 import {
 motion,
 useReducedMotion,
@@ -1590,7 +1585,7 @@ export function HomePage() {
                         return (
                           <div className="home-dietary-warnings">
                             <div className="home-dietary-warnings__header">
-                              <span className="home-dietary-warnings__icon">🩺</span>
+                              <span className="home-dietary-warnings__icon"><Stethoscope size={16} aria-hidden="true" /></span>
                               <span className="home-dietary-warnings__title">
                                 {cms.pages.dietaryWarningsTitle}
                               </span>
@@ -1607,14 +1602,14 @@ export function HomePage() {
                                 className={`home-dietary-warning ${severityClass}`}
                               >
                                 <span className="home-dietary-warning__icon">
-                                  {w.severity === "critical" ? "🛑" : w.severity === "warning" ? "⚠️" : "ℹ️"}
+                                  {w.severity === "critical" ? <OctagonAlert size={16} aria-hidden="true" /> : w.severity === "warning" ? <TriangleAlert size={16} aria-hidden="true" /> : <Info size={16} aria-hidden="true" />}
                                 </span>
                                 <div className="home-dietary-warning__body">
                                   <div className="type-body home-dietary-warning__message">
                                     {w.message}
                                   </div>
                                   <div className="type-body-sm home-dietary-warning__tip">
-                                    💡 {w.tip}
+                                    <Lightbulb size={14} aria-hidden="true" className="tip-icon" /> {w.tip}
                                   </div>
                                 </div>
                               </div>

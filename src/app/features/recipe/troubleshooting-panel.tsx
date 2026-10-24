@@ -5,15 +5,18 @@
 import {
 AlertTriangle,
 ChevronDown,ChevronUp,
+FlaskConical,
 Info,
 Lightbulb,
 Search,
+ShieldCheck,
 Wrench,
-XCircle
+XCircle,
+type LucideIcon,
 } from 'lucide-react';
 import { AnimatePresence,motion } from 'motion/react';
 import { motionDelay,motionSpring } from "../../components/ds/motion";
-import { useEffect, useState } from 'react';
+import { createElement, useEffect, useState } from 'react';
 import { useCms } from "../cms/cms-context";
 import { FilterChip, Surface } from "../../components/ds/index";
 import {
@@ -104,7 +107,7 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
                   {w.message}
                 </div>
                 <div className="troubleshooting-warnings__item-tip">
-                  💡 {w.tip}
+                  <Lightbulb size={14} aria-hidden="true" className="tip-icon" /> {w.tip}
                 </div>
               </div>
             </div>
@@ -325,18 +328,18 @@ function IssueCard({
           >
             <div className="troubleshooting-card__detail-body">
               {/* Causa */}
-              <DetailRow icon="🔍" label={uiMessage("features.recipe.troubleshooting-panel.causa-2cff0350")} value={issue.cause} />
+              <DetailRow icon={Search} label={uiMessage("features.recipe.troubleshooting-panel.causa-2cff0350")} value={issue.cause} />
               {/* Test rapido */}
-              <DetailRow icon="🧪" label={uiMessage("features.recipe.troubleshooting-panel.test-rapido-5e89b688")} value={issue.testRapido} />
+              <DetailRow icon={FlaskConical} label={uiMessage("features.recipe.troubleshooting-panel.test-rapido-5e89b688")} value={issue.testRapido} />
               {/* Fix immediato */}
               <DetailRow
-                icon="🔧"
+                icon={Wrench}
                 label={uiMessage("features.recipe.troubleshooting-panel.fix-immediato-4a6dd0bf")}
                 value={issue.fixImmediate}
                 highlight={issue.severity === 'critical'}
               />
               {/* Prevenzione */}
-              <DetailRow icon="🛡️" label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
+              <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
             </div>
           </motion.div>
         )}
@@ -348,14 +351,14 @@ function IssueCard({
 function DetailRow({
   icon, label, value, highlight,
 }: {
-  icon: string; label: string; value: string; highlight?: boolean;
+  icon: LucideIcon; label: string; value: string; highlight?: boolean;
 }) {
   const rowClass = highlight
     ? 'troubleshooting-detail-row troubleshooting-detail-row--highlight'
     : 'troubleshooting-detail-row';
   return (
     <div className={rowClass}>
-      <span className="troubleshooting-detail-row__icon">{icon}</span>
+      <span className="troubleshooting-detail-row__icon">{createElement(icon, { size: 16, "aria-hidden": true })}</span>
       <div className="troubleshooting-detail-row__body">
         <span className="troubleshooting-detail-row__label">
           {label}

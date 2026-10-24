@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+import { Droplet, Droplets, Wheat } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
 import { useLocation } from "react-router";
@@ -136,21 +138,21 @@ export function PreFermentsPage() {
           </Heading>
           <div className="preferment-decisions__list">
             <DecisionCard
-              emoji="🍞"
+              icon={Wheat}
               title={pg.preFermentsBigaTitle}
               when={pg.preFermentsBigaWhen}
               best={pg.preFermentsBigaBest}
               color="var(--primary)"
             />
             <DecisionCard
-              emoji="💧"
+              icon={Droplet}
               title={pg.preFermentsPoolishTitle}
               when={pg.preFermentsPoolishWhen}
               best={pg.preFermentsPoolishBest}
               color="var(--cta)"
             />
             <DecisionCard
-              emoji="💦"
+              icon={Droplets}
               title={pg.preFermentsAutolisiTitle}
               when={pg.preFermentsAutolisiWhen}
               best={pg.preFermentsAutolisiBest}
@@ -165,13 +167,13 @@ export function PreFermentsPage() {
 
 /* === DECISION CARD === */
 function DecisionCard({
-  emoji,
+  icon: Icon,
   title,
   when,
   best,
   color,
 }: {
-  emoji: string;
+  icon: LucideIcon;
   title: string;
   when: string;
   best: string;
@@ -184,7 +186,7 @@ function DecisionCard({
     >
       <div className="preferment-decision__head">
         <span className="preferment-decision__emoji">
-          {emoji}
+          <Icon size={18} aria-hidden="true" />
         </span>
         <span className="preferment-decision__title">
           {title}

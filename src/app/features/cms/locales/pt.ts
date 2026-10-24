@@ -1600,7 +1600,7 @@ export const PT_LOCALE: CmsContent = {
     inProgressShort: "Em andamento",
     followYou: "A gente acompanha voc\u00EA enquanto o {brand} estiver aberto: contagem regressiva, lembretes e widget.",
     reopen: "Reabrir a fornada em andamento",
-    completed: "Fornada conclu\u00EDda \uD83C\uDF89",
+    completed: "Fornada conclu\u00EDda",
     waitOver: "Fim da espera: continue!",
     dueNow: "Chegou a hora: {title}",
     stepProgress: "{style} \u00B7 etapa {n}/{total}",
