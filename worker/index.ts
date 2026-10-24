@@ -43,6 +43,8 @@ interface Env {
   TOOLS_API_ENABLED?: string;
   /** Comma-separated CORS allowlist for the tool APIs (default: Vite dev server). */
   TOOLS_API_ORIGINS?: string;
+  /** P-4: "test" on the vulcan-test Worker (wrangler.toml [env.test]). */
+  DEPLOY_ENV?: string;
 }
 
 const TOOL_API_PATHS = new Set(["/api/annotations", "/api/config"]);
@@ -269,6 +271,15 @@ export default {
     // Everything else: serve the built SPA (assets + client-route fallback),
     // stamping cache headers so hashed assets are immutable and HTML is never
     // cached stale (see withCacheHeaders).
-    return withCacheHeaders(request, await env.ASSETS.fetch(request));
+    const response = withCacheHeaders(request, await env.ASSETS.fetch(request));
+    // P-4: the test environment must never be indexed. On vulcan-test the
+    // Worker runs first for every request (run_worker_first), so the header
+    // also covers index.html and the assets.
+    if (env.DEPLOY_ENV === "test") {
+      const headers = new Headers(response.headers);
+      headers.set("X-Robots-Tag", "noindex, nofollow");
+      return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+    }
+    return response;
   },
 };

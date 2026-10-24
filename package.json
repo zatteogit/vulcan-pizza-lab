@@ -27,6 +27,8 @@
     "lint": "npm run check:tokens && npm run check:semantics && npm run check:css-tokens && npm run ds:check && npm run i18n:check && npm run architecture:check && npm run semantics:check && npm run dead-code:check",
     "debug:pull": "node scripts/debug-pull.mjs",
     "deploy": "npm run build && wrangler deploy",
+    "build:test": "VITE_ENABLE_TOOLS=1 vite build",
+    "deploy:test": "npm run build:test && wrangler deploy --env test",
     "test": "vitest run",
     "quality:check": "npm run typecheck && npm test && npm run lint",
     "quality:full": "npm run quality:check && npm run build && npm run visual:check",
