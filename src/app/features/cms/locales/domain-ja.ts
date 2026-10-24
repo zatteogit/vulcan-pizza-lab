@@ -369,7 +369,7 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "\u713C\u304F\u524D\u306B\u30AA\u30A4\u30EB+\u30CF\u30C1\u30DF\u30C4\u3092\u5857\u308B\u304B\u3001\u6700\u5F8C\u306B\u30B0\u30EA\u30EB2\u5206",
         prevention:
-          "0.5-1%\u306E\u7802\u7CD6\u3092\u52A0\u3048\u308B\u3001\u30AA\u30FC\u30D6\u30F3\u6700\u4F4E280\u00B0C",
+          "砂糖かモルトを0.5〜1%加え、よく予熱した石か鋼板を入れてオーブンを最高温度にする",
       },
       P11: {
         symptom:

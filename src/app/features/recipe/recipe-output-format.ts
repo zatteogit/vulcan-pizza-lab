@@ -682,7 +682,7 @@ export function localizeStep(
                 "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti finiscono l'appretto.",
               );
       return {
-        title: engineMessage(cms, "timeline.preheat.title", "Forno al massimo"),
+        title: engineMessage(cms, "timeline.preheat.title", "Preriscalda il forno"),
         description: t(preheatDesc, { temp: formatTemp(bakeTemp), equipmentNote }),
         tip: step.tip
           ? {

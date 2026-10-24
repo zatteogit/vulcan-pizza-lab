@@ -194,6 +194,7 @@ export interface CmsUiStrings {
   fatLard: string;
   procedureDirect: string;
   procedurePreferment: string;
+  procedureUnleavened: string;
   /** Uso suggerito della farina per forza W (ingredienti). */
   flourUseVeryStrong: string;
   flourUseStrong: string;
@@ -1394,6 +1395,7 @@ export const CMS_DEFAULTS: CmsContent = {
     fatLard: "Strutto",
     procedureDirect: "Diretto",
     procedurePreferment: "Prefermento",
+    procedureUnleavened: "Senza lievito",
     flourUseVeryStrong: "Manitoba o tipo 0 molto forte",
     flourUseStrong: "Tipo 0/00 forte per pizza",
     flourUseMedium: "Tipo 0 media forza",
@@ -2066,7 +2068,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "timelineComfort.activePartial": "Attiva, ma alcune fasi restano di notte: scegli un altro pasto qui sopra.",
     "timelineComfort.nightDetected": "Fasi attive di notte rilevate.",
     "timelineComfort.idle": "Ottimizza gli orari se serve.",
-    "timeline.preheat.title": "Forno al massimo",
+    "timeline.preheat.title": "Preriscalda il forno",
     "timeline.preheat.desc": "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti finiscono l'appretto.",
     "timeline.preheat.equipmentNote": " (pietra o acciaio già dentro)",
     "timeline.preheat.tipBeginner": "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
@@ -2097,18 +2099,18 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.mix.hands.desc": "Impastare a mano fino a incordatura (~15-20 min): pieghe sul piano, slap & fold se l'idratazione è alta.",
     "timeline.mix.hands.tipBeginner": "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
     "timeline.mix.hands.tipNerd": "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica.",
-    "timeline.oven.topGrillStone": "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.",
-    "timeline.oven.topGrillShelf": "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.",
+    "timeline.oven.topGrillStone": "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare i bordi.",
+    "timeline.oven.topGrillShelf": "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare i bordi.",
     "timeline.oven.bottomBoost": "Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.",
     "timeline.oven.fanAssisted": "Ventilato: usa una temperatura leggermente più bassa se il bordo asciuga, ruota a metà cottura e proteggi i topping delicati.",
     "timeline.oven.gasRear": "Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.",
     "timeline.oven.woodSideFlame": "Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.",
     "timeline.oven.wood": "Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.",
-    "timeline.oven.electricHigh": "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.",
+    "timeline.oven.electricHigh": "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare i bordi tutt'intorno.",
     "timeline.oven.gas": "Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.",
     "timeline.oven.gasPizza": "Forno a gas da pizza: scalda finché la pietra arriva in temperatura (misurala con un termometro a infrarossi), poi inforna e ruota spesso la pizza, perché la fiamma sta su un lato.",
-    "timeline.oven.staticStone": "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
-    "timeline.oven.staticShelf": "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
+    "timeline.oven.staticStone": "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per dorare i bordi: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
+    "timeline.oven.staticShelf": "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per dorare i bordi: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
     "timeline.mix.title": "Impasto",
     "timeline.divide.title": "Staglio",
     "timeline.divide.multiPiece": "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.",
@@ -2130,7 +2132,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.fillClosed.tipBeginner": "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce.",
     "timeline.fillClosed.tipNerd": "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow).",
     "timeline.fillSheets.title": "Farcitura tra sfoglie",
-    "timeline.fillSheets.desc": "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.",
+    "timeline.fillSheets.desc": "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia, sigillare i bordi e condire la superficie con olio e sale.",
     "timeline.bakeWhite.title": "Prima cottura (in bianco)",
     "timeline.bakeWhite.desc": "Cuocere a {temp} senza farcitura. La pizza deve essere dorata ma non bruciata.",
     "timeline.bakeWhite.tipBeginner": "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti.",

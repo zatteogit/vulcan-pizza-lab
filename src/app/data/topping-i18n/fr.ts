@@ -2234,7 +2234,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
   steps: {
     spread_margherita_avpn: {
       title: "Garniture Margherita Verace",
-      description: "Étalez uniformément les tomates pelées écrasées à la main. Disposez le fior di latte en lanières ou en dés. Basilic frais et filet d'huile d'olive vierge extra AVANT le four (cuisson de 90s, il tient le coup).",
+      description: "Étalez uniformément les tomates pelées écrasées à la main. Disposez le fior di latte en lanières ou en dés. Un filet d'huile d'olive vierge extra avant le four. Basilic frais avant le four si la cuisson dure quelques minutes ; avec un four domestique, ajoutez-le à la sortie du four.",
       tip_beginner: "Cahier des charges AVPN : tomates pelées DOP, mozzarella de Campanie, basilic frais. De l'huile d'olive vierge extra, oui, mais peu.",
       tip_nerd: "La cuisson éclair de 90s à 450°C préserve le basilic frais (la pizza reste trop peu de temps au four pour l'abîmer). Contrairement aux fours domestiques lents, où il faut l'ajouter après.",
     },
@@ -2263,7 +2263,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     spread_boscaiola_nap: {
       title: "Garniture Boscaiola napolitaine",
       description: "Étalez les tomates pelées écrasées et salées. Répartissez le fior di latte. Ajoutez les cèpes égouttés et la saucisse crue émiettée. Saupoudrez de grana padano. Un filet d'huile.",
-      tip_beginner: "Cèpes à l'huile = déjà prêts, pas de cuisson préalable. La saucisse cuit pendant la cuisson éclair de 90s.",
+      tip_beginner: "Cèpes à l'huile = déjà prêts, pas de cuisson préalable. La saucisse, en petits morceaux, cuit directement au four.",
       tip_nerd: "L'huile des cèpes en conserve est déjà aromatisée (cèpes, laurier, ail) : elle apporte de la complexité aromatique. Le grana résiste mieux que le parmesan à la cuisson au four à bois à 450° (plus riche en gras).",
     },
     saltare_champignon: {

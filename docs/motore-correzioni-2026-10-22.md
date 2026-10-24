@@ -458,3 +458,17 @@ molti stili (Pala 350 g, Pinsa forno 380 °C contro 300 °C, Recco 8–10 min
 contro 4–8). I numeri sono stati allineati al motore, con un test che li
 tiene uguali; lo spessore in g/cm² mostrato è ora peso diviso area (Pala
 0,51), non l'indice relativo `thickness_factor` (0,35).
+
+## Audit totale n. 8 · Consigli coerenti con forno e impasto (24/10/2026)
+
+- **Recco, passo doppio:** il passo generico «Farcitura tra sfoglie» ospita
+  già il condimento scelto; il motore aggiungeva anche il passo del
+  condimento con la stessa farcitura. Ora il passo del condimento entra solo
+  quando sostituisce quello generico. Golden: Recco ideale 130 → 126 min,
+  casa 132 → 128 min; nient'altro cambia.
+- **Preriscaldo:** «pietra o acciaio già dentro» solo per forno di casa ed
+  elettrico statico (legna, gas ed elettrico da pizza hanno la platea). Il
+  titolo passa da «Forno al massimo» a «Preriscalda il forno»: la
+  temperatura indicata spesso non è il massimo.
+- **Cottura in forno di casa:** «per il cornicione» diventa «per dorare i
+  bordi», giusto anche per le pizze chiuse e la Recco.

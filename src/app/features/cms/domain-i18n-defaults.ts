@@ -246,7 +246,7 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
       cause: "Temperatura <250°C, zuccheri esauriti, o umidità eccessiva in superficie",
       testRapido: "Il forno raggiunge almeno 250°C? Fermentazione >48h?",
       fixImmediate: "Spennella olio+miele pre-cottura oppure usa grill finale 2min",
-      prevention: "Aggiungi 0.5-1% zucchero, forno almeno 280°C",
+      prevention: "Aggiungi 0,5–1% di zucchero o malto e porta il forno al massimo, con pietra o acciaio ben preriscaldati",
     },
     P11: {
       symptom: "Pizza gommosa, non croccante",

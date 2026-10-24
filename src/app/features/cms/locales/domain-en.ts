@@ -331,7 +331,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Brush with oil+honey before baking or use grill for final 2min",
         prevention:
-          "Add 0.5-1% sugar, oven at least 280\u00B0C",
+          "Add 0.5–1% sugar or malt and run the oven at its maximum, with a well-preheated stone or steel",
       },
       P11: {
         symptom: "Chewy, not crispy pizza",

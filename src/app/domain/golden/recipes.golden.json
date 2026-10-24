@@ -372,7 +372,7 @@
     "fermentation_c": 20,
     "oven_c": 300,
     "cook_s": 360,
-    "timeline_min": 130
+    "timeline_min": 126
   },
   "focaccia_recco/home": {
     "flour_g": 1019,
@@ -387,7 +387,7 @@
     "fermentation_c": 20,
     "oven_c": 250,
     "cook_s": 498,
-    "timeline_min": 132
+    "timeline_min": 128
   },
   "padellino_torino/ideal": {
     "flour_g": 429,

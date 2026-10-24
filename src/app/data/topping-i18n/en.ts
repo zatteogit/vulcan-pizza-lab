@@ -1249,7 +1249,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     spread_margherita_avpn: {
       title: "Margherita Verace topping",
       description:
-        "Spread the hand-crushed peeled tomatoes evenly. Arrange the fior di latte in strips or cubes. Fresh basil and a drizzle of extra-virgin olive oil BEFORE the oven (90s bake, it holds up).",
+        "Spread the hand-crushed peeled tomatoes evenly. Arrange the fior di latte in strips or cubes. A drizzle of extra-virgin olive oil before the oven. Fresh basil before the oven if the bake takes a couple of minutes; with a home oven, add it straight after baking.",
       tip_beginner:
         "AVPN rules: DOP peeled tomatoes, Campanian mozzarella, fresh basil. Extra-virgin olive oil yes, but only a little.",
       tip_nerd:
@@ -1288,7 +1288,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       description:
         "Spread the salted crushed peeled tomatoes. Scatter the fior di latte. Add the drained porcini and raw sausage broken into pieces. Dust with Grana Padano. Drizzle with oil.",
       tip_beginner:
-        "Porcini in oil = ready to use, no pre-cooking needed. The sausage cooks in the 90s flash bake.",
+        "Porcini in oil = ready to use, no pre-cooking needed. The sausage, in small pieces, cooks directly in the oven.",
       tip_nerd:
         "The oil from porcini in oil is already flavoured (porcini, bay, garlic): it adds aromatic complexity. Grana withstands a 450° wood-fired bake better than parmesan (higher fat content).",
     },

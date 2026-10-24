@@ -2917,8 +2917,8 @@ function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
   );
   if (eq?.ovenHeatProfile === "top_grill") {
     return hasStone
-      ? em("timeline.oven.topGrillStone", "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.")
-      : em("timeline.oven.topGrillShelf", "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.");
+      ? em("timeline.oven.topGrillStone", "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare i bordi.")
+      : em("timeline.oven.topGrillShelf", "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare i bordi.");
   }
   if (eq?.ovenHeatProfile === "bottom_boost") {
     return em("timeline.oven.bottomBoost", "Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.");
@@ -2936,7 +2936,7 @@ function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
     case "wood":
       return em("timeline.oven.wood", "Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.");
     case "electric_high":
-      return em("timeline.oven.electricHigh", "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.");
+      return em("timeline.oven.electricHigh", "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare i bordi tutt'intorno.");
     case "gas":
       return em("timeline.oven.gas", "Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.");
     case "gas_pizza":
@@ -2945,8 +2945,8 @@ function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
     case "electric_standard":
     default:
       return hasStone
-        ? em("timeline.oven.staticStone", "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.")
-        : em("timeline.oven.staticShelf", "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.");
+        ? em("timeline.oven.staticStone", "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per dorare i bordi: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.")
+        : em("timeline.oven.staticShelf", "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per dorare i bordi: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.");
   }
 }
 
@@ -3238,8 +3238,10 @@ function generateTimeline(
     });
   } else steps.push({
     id: "preheat",
-    title: "Forno al massimo",
-    description: `Accendi ora il forno a ${ovenTempForPreheat}°C${preheatMinutes >= 45 ? " (pietra o acciaio già dentro)" : ""}. ${preheatWhile}`,
+    title: "Preriscalda il forno",
+    /* Audit n. 8 (C-12): pietra o acciaio servono solo nei forni di casa; il
+       forno a legna, a gas e quello elettrico da pizza hanno già la platea. */
+    description: `Accendi ora il forno a ${ovenTempForPreheat}°C${preheatMinutes >= 45 && HOME_OVENS.has(equipment?.ovenType ?? "home") ? " (pietra o acciaio già dentro)" : ""}. ${preheatWhile}`,
     duration_minutes: preheatMinutes,
     icon: "flame",
     timing_label: `${preheatMinutes} min`,
@@ -3341,11 +3343,14 @@ function generateTimeline(
         keyedStep(
           { id: "fill_internal", duration_minutes: 5, icon: "chef-hat", timing_label: "5 min" },
           em("timeline.fillSheets.title", "Farcitura tra sfoglie"),
-          [em("timeline.fillSheets.desc", "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.")],
+          [em("timeline.fillSheets.desc", "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia, sigillare i bordi e condire la superficie con olio e sale.")],
         ),
       );
+    } else {
+      injectToppingAt("after_fill_internal");
     }
-    injectToppingAt("after_fill_internal");
+    /* Audit n. 8 (B-23): il passo generico ospita già il condimento scelto;
+       aggiungere anche quello del condimento ripeteva la farcitura. */
   } else if (layout.filling_timing === "pre_bake" || layout.cook_mode === "topped") {
     // Default: farcitura pre-cottura classica
     // Se il topping ha già inserito uno step "replaces_generic" in after_shape, non aggiungere il generico
@@ -3710,6 +3715,9 @@ function getDayLabel(dayOffset: number, meal: string, now: Date): string {
  * Le masse sono lineari nei panetti: la farina per panetto della ricetta
  * corrente dà quanti panetti ci stanno. Il numero esatto si rilegge dalla
  * ricetta rigenerata dopo aver scelto i panetti. */
+/** Forni senza platea propria: pietra o acciaio si aggiungono a parte. */
+const HOME_OVENS: ReadonlySet<OvenType> = new Set(["home", "electric_standard"]);
+
 /** D-043: fino a 200 unità (un impasto da laboratorio); prima 20. */
 export const MAX_DOUGH_BALLS = 200;
 

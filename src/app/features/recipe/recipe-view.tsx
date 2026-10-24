@@ -243,7 +243,9 @@ export function RecipeView({
     ? (recipe.pre_ferment_type 
         ? recipe.pre_ferment_type.charAt(0).toUpperCase() + recipe.pre_ferment_type.slice(1) 
         : cms.ui.procedurePreferment)
-    : cms.ui.procedureDirect;
+    : recipe.style.dough.unleavened
+      ? cms.ui.procedureUnleavened
+      : cms.ui.procedureDirect;
   const procedureSubtitle = `${preFermentText} • ${fmt.durationShort(recipe.fermentation_hours)}`;
 
   /* Niente sottotitolo sul tab Ricetta: ripeteva il nome dello stile che

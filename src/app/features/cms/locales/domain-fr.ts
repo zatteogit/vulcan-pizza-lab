@@ -348,7 +348,7 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Badigeonner huile+miel avant cuisson ou grill final 2min",
         prevention:
-          "Ajouter 0.5-1% sucre, four au moins 280\u00B0C",
+          "Ajouter 0,5–1 % de sucre ou de malt et pousser le four au maximum, avec une pierre ou un acier bien préchauffés",
       },
       P11: {
         symptom: "Pizza caoutchouteuse, pas croustillante",

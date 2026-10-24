@@ -329,7 +329,7 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
           "¿El horno alcanza al menos 250°C? ¿Fermentación >48h?",
         fixImmediate:
           "Pincelar aceite+miel antes de hornear o usar grill final 2min",
-        prevention: "Añade 0.5-1% azúcar, horno al menos 280°C",
+        prevention: "Añade 0,5–1 % de azúcar o malta y pon el horno al máximo, con piedra o acero bien precalentados",
       },
       P11: {
         symptom: "Pizza gomosa, no crujiente",

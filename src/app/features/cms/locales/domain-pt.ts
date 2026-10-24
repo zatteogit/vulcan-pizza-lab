@@ -345,7 +345,7 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "Pincelar azeite+mel antes de assar ou usar grill final 2min",
         prevention:
-          "Adicione 0.5-1% a\u00E7\u00FAcar, forno pelo menos 280\u00B0C",
+          "Adicione 0,5–1% de açúcar ou malte e use o forno no máximo, com pedra ou aço bem preaquecidos",
       },
       P11: {
         symptom: "Pizza borrachuda, n\u00E3o crocante",

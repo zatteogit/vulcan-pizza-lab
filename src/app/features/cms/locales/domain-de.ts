@@ -341,7 +341,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         fixImmediate:
           "\u00D6l+Honig vor dem Backen aufpinseln oder Grill 2min zum Schluss",
         prevention:
-          "0.5-1% Zucker hinzuf\u00FCgen, Ofen mindestens 280\u00B0C",
+          "0,5–1 % Zucker oder Malz zugeben und den Ofen auf Höchststufe stellen, mit gut vorgeheiztem Stein oder Stahl",
       },
       P11: {
         symptom: "Gummiartige, nicht knusprige Pizza",

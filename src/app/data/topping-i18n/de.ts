@@ -2234,7 +2234,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
   steps: {
     spread_margherita_avpn: {
       title: "Belag Margherita Verace",
-      description: "Verteile die von Hand zerdrückten geschälten Tomaten gleichmäßig. Lege den Fior di latte in Streifen oder Würfeln darauf. Frisches Basilikum und ein Faden natives Olivenöl extra VOR dem Ofen (90s Backzeit, das hält es aus).",
+      description: "Verteile die von Hand zerdrückten geschälten Tomaten gleichmäßig. Lege den Fior di latte in Streifen oder Würfeln darauf. Ein Faden natives Olivenöl extra vor dem Ofen. Frisches Basilikum vor dem Ofen, wenn das Backen nur ein paar Minuten dauert; im Heimofen direkt nach dem Backen dazugeben.",
       tip_beginner: "AVPN-Regelwerk: geschälte DOP-Tomaten, Mozzarella aus Kampanien, frisches Basilikum. Natives Olivenöl extra ja, aber sparsam.",
       tip_nerd: "Das 90s-Blitzbacken bei 450°C schont das frische Basilikum (die Pizza ist zu kurz im Ofen, um es abzubauen). Anders als im langsamen Heimofen, wo es danach dazukommt.",
     },
@@ -2263,7 +2263,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     spread_boscaiola_nap: {
       title: "Belag Boscaiola napoletana",
       description: "Verteile die gesalzenen zerdrückten geschälten Tomaten. Gib den Fior di latte darauf. Füge die abgetropften Steinpilze und die roh zerpflückte Salsiccia hinzu. Mit Grana Padano bestreuen. Ein Faden Öl.",
-      tip_beginner: "Steinpilze in Öl = schon fertig, kein Vorgaren nötig. Die Salsiccia gart beim 90s-Blitzbacken im Ofen.",
+      tip_beginner: "Steinpilze in Öl = schon fertig, kein Vorgaren nötig. Die Salsiccia gart in kleinen Stücken direkt im Ofen.",
       tip_nerd: "Das Öl der eingelegten Steinpilze ist bereits aromatisiert (Steinpilze, Lorbeer, Knoblauch): Es bringt aromatische Tiefe. Grana hält den 450° im Holzofen besser stand als Parmesan (mehr Fett).",
     },
     saltare_champignon: {
