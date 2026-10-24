@@ -19,6 +19,8 @@
  * Cloudflare-runtime types don't affect `tsc`.
  */
 
+import { handleMcpBody } from "../src/app/agent/mcp-server";
+
 interface D1Result {
   results?: Record<string, unknown>[];
 }
@@ -251,9 +253,33 @@ async function handleConfig(
   return json({ error: "method not allowed" }, 405, cors);
 }
 
+const MCP_CORS: Record<string, string> = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "content-type, mcp-protocol-version, mcp-session-id, authorization",
+  "Access-Control-Max-Age": "86400",
+};
+
+async function handleMcp(request: Request): Promise<Response> {
+  if (request.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: withSecurityHeaders(new Headers(MCP_CORS)) });
+  }
+  // Niente flusso SSE dal server: GET non è supportato (specifica MCP, 405).
+  if (request.method !== "POST") {
+    return new Response("Method not allowed", { status: 405, headers: withSecurityHeaders(new Headers({ ...MCP_CORS, Allow: "POST, OPTIONS" })) });
+  }
+  const { status, json } = handleMcpBody(await request.text());
+  const headers = withSecurityHeaders(new Headers({ ...MCP_CORS, "Content-Type": "application/json" }));
+  return new Response(json === null ? null : JSON.stringify(json), { status, headers });
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+
+    // D-049: server MCP per agenti (Claude, ChatGPT…). Pubblico, senza stato,
+    // in sola lettura: motore e glossario, niente dati degli utenti.
+    if (url.pathname === "/mcp") return handleMcp(request);
 
     if (TOOL_API_PATHS.has(url.pathname)) {
       // Off in production: same answer as a route that does not exist.

@@ -10,8 +10,22 @@ import {
   type PizzaStyle,
   type UserConstraints,
 } from "../../domain/pizza-engine";
-import { styleWithSelectedTopping } from "../../hooks/use-recipe-state";
 import type { CmsContent } from "../cms/cms-context";
+
+/** Stile con il condimento scelto dall'utente, come lo riceve il motore:
+ *  la ricetta mostrata, l'ottimizzatore e il soffitto devono usare lo stesso
+ *  (il condimento cambia passaggi di farcitura e minuti della timeline). */
+export function styleWithSelectedTopping(
+  style: PizzaStyle,
+  selectedToppingConcept: string | null,
+): PizzaStyle {
+  const isToppingValid = selectedToppingConcept
+    ? resolveTopping(selectedToppingConcept, style) !== undefined
+    : false;
+  return isToppingValid && selectedToppingConcept !== style.default_topping_ref
+    ? { ...style, default_topping_ref: selectedToppingConcept ?? undefined }
+    : style;
+}
 
 /* ═══ D-041 — Compatibilità con la tua cucina ═══
  * Un solo numero per uno stile, ovunque (card di Scopri e Crea, scheda dello

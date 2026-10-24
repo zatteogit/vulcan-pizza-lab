@@ -1,0 +1,60 @@
+import { describe, expect, it } from "vitest";
+import { handleMcpBody, handleMcpMessage } from "./mcp-server";
+
+/* D-049: il server MCP risponde come chiede il protocollo e i numeri sono
+   quelli del motore. */
+
+function call(name: string, args: Record<string, unknown> = {}) {
+  const res = handleMcpMessage({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } });
+  if (!res || !("result" in res)) throw new Error("expected a result");
+  return res.result as { content: { text: string }[]; structuredContent?: Record<string, unknown>; isError: boolean };
+}
+
+describe("server MCP", () => {
+  it("initialize dichiara gli strumenti e la versione chiesta", () => {
+    const res = handleMcpMessage({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-03-26" } });
+    expect(res && "result" in res && (res.result as { protocolVersion: string }).protocolVersion).toBe("2025-03-26");
+  });
+
+  it("tools/list elenca i cinque strumenti in sola lettura", () => {
+    const res = handleMcpMessage({ jsonrpc: "2.0", id: 2, method: "tools/list" });
+    const tools = (res && "result" in res ? (res.result as { tools: { name: string; annotations: { readOnlyHint: boolean } }[] }).tools : []);
+    expect(tools.map((t) => t.name)).toEqual(["list_styles", "get_style", "recommend_styles", "generate_recipe", "glossary"]);
+    expect(tools.every((t) => t.annotations.readOnlyHint)).toBe(true);
+  });
+
+  it("le notifiche non hanno risposta (202)", () => {
+    expect(handleMcpBody(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" })).status).toBe(202);
+  });
+
+  it("JSON non valido → errore di parsing", () => {
+    expect(handleMcpBody("{").status).toBe(400);
+  });
+
+  it("generate_recipe dà grammi e passi della napoletana", () => {
+    const result = call("generate_recipe", { style_id: "napoletana_stg", oven_type: "wood", oven_max_temp_c: 485, dough_balls: 4 });
+    expect(result.isError).toBe(false);
+    const data = result.structuredContent as { ingredients: { name: string; grams: number }[]; steps: unknown[]; outcome: string };
+    expect(data.ingredients.find((i) => i.name === "flour")?.grams).toBeGreaterThan(500);
+    expect(data.steps.length).toBeGreaterThan(3);
+    expect(data.outcome).not.toBe("not_feasible");
+  });
+
+  it("un input sbagliato torna come risultato con isError, non come errore di rete", () => {
+    const result = call("generate_recipe", { style_id: "non_esiste" });
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("list_styles");
+  });
+
+  it("recommend_styles usa la stessa compatibilità dell'app", () => {
+    const result = call("recommend_styles", { oven_type: "home", oven_max_temp_c: 250, limit: 3 });
+    const styles = (result.structuredContent as { styles: { compatibility: number; compatibility_best: number }[] }).styles;
+    expect(styles).toHaveLength(3);
+    for (const s of styles) expect(s.compatibility_best).toBeGreaterThanOrEqual(s.compatibility);
+  });
+
+  it("glossary in inglese", () => {
+    const result = call("glossary", { term: "biga", lang: "en" });
+    expect(result.content[0].text).toMatch(/pre-dough|pre-ferment/i);
+  });
+});

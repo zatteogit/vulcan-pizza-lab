@@ -120,20 +120,10 @@ function defaultRecipePanConfig(style: PizzaStyle): PanConfig {
   };
 }
 
-/** Stile con il condimento scelto dall'utente, come lo riceve il motore:
- *  la ricetta mostrata, l'ottimizzatore e il soffitto devono usare lo stesso
- *  (il condimento cambia passaggi di farcitura e minuti della timeline). */
-export function styleWithSelectedTopping(
-  style: PizzaStyle,
-  selectedToppingConcept: string | null,
-): PizzaStyle {
-  const isToppingValid = selectedToppingConcept
-    ? resolveTopping(selectedToppingConcept, style) !== undefined
-    : false;
-  return isToppingValid && selectedToppingConcept !== style.default_topping_ref
-    ? { ...style, default_topping_ref: selectedToppingConcept ?? undefined }
-    : style;
-}
+/* Stile con il condimento scelto: vive in kitchen-compatibility (puro, senza
+   React, così lo usa anche il server MCP del Worker). */
+export { styleWithSelectedTopping } from "../features/recipe/kitchen-compatibility";
+import { styleWithSelectedTopping } from "../features/recipe/kitchen-compatibility";
 
 /* Esportata (redesign lug 2026): è la definizione del polo "originale" del
    Crea — serve anche a home.tsx per calcolare isDirty in modo speculare al

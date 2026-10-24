@@ -19,6 +19,8 @@ const UNUSED_CODES = new Set([6133, 6192, 6196]);
 const ENTRY_FILES = [
   "src/main.tsx",
   "src/app/components/ds/_sync-entry.ts",
+  // D-049: server MCP, importato dal Worker (worker/index.ts), fuori dall'app.
+  "src/app/agent/mcp-server.ts",
 ] as const;
 
 function rel(file: string): string {
