@@ -123,7 +123,7 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           link: `/recipe/${rec.style_id}?mode=canonical&tab=condimento&topping=${rec.topping_concept_id}`,
           photo: rec.photo || STYLE_PHOTOS[rec.style_id],
         },
-        `${rec.description} ${concept?.name ?? ""} ${(rec.occasion_tags ?? []).join(" ")}`,
+        `${rec.description} ${raw.name} ${concept?.name ?? ""} ${(rec.occasion_tags ?? []).join(" ")}`,
       ),
     );
   }

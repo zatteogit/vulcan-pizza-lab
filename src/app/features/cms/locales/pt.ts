@@ -1,6 +1,7 @@
 import type { CmsContent } from "../cms-context";
 import { UI_MESSAGES_PT } from "../../../i18n/ui-messages.pt";
 import { TOPPING_I18N_PT } from "../../../data/topping-i18n/pt";
+import { INSPIRATION_I18N_PT } from "../../../data/inspiration-i18n/pt";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_PT,
@@ -15,6 +16,7 @@ export const PT_LOCALE: CmsContent = {
   /** I18N-1: catalogo delle stringhe di interfaccia (uiMessage). */
   messages: UI_MESSAGES_PT,
   toppingI18n: TOPPING_I18N_PT,
+  inspirationI18n: INSPIRATION_I18N_PT,
   ui: {
     copy: "Copiar",
     copied: "Copiado!",

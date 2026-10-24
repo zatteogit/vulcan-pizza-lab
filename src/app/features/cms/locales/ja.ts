@@ -1,6 +1,7 @@
 import type { CmsContent } from "../cms-context";
 import { UI_MESSAGES_JA } from "../../../i18n/ui-messages.ja";
 import { TOPPING_I18N_JA } from "../../../data/topping-i18n/ja";
+import { INSPIRATION_I18N_JA } from "../../../data/inspiration-i18n/ja";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_JA,
@@ -25,6 +26,7 @@ export const JA_LOCALE: CmsContent = {
   /** I18N-1: catalogo delle stringhe di interfaccia (uiMessage). */
   messages: UI_MESSAGES_JA,
   toppingI18n: TOPPING_I18N_JA,
+  inspirationI18n: INSPIRATION_I18N_JA,
   ui: {
     // Actions
     copy: "\u30B3\u30D4\u30FC",
