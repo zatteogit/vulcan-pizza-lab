@@ -177,7 +177,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     bbq_chicken: {
       name: "BBQ Chicken",
-      description: "Pollo glaseado con barbacoa, cebolla roja y cilantro. La firma californiana de Wolfgang Puck.",
+      description: "Pollo glaseado con barbacoa, cebolla roja y cilantro. Popularizada por California Pizza Kitchen (1985).",
     },
     smoked_salmon: {
       name: "Salmón ahumado",
@@ -1571,7 +1571,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
       },
     },
     bbq_chicken_california: {
-      variant_name: "Wolfgang Puck",
+      variant_name: "California Pizza Kitchen",
       ingredients: {
         "0": {
           name: "Salsa barbacoa",
@@ -2570,7 +2570,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     spread_bbq_chicken: {
       title: "BBQ chicken a la californiana",
-      description: "Salsa barbacoa en lugar de tomate. Mozzarella, pollo glaseado y cebolla roja. Tras el horneado, cilantro fresco. La pizza gourmet de los años 80 de Wolfgang Puck.",
+      description: "Salsa barbacoa en lugar de tomate. Mozzarella, pollo glaseado y cebolla roja. Tras el horneado, cilantro fresco. La pizza de Ed LaDou para el primer menú de California Pizza Kitchen (1985).",
     },
     salmon_bake: {
       title: "Base blanca con crème fraîche",

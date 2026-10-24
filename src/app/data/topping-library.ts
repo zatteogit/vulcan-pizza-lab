@@ -573,7 +573,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
   bbq_chicken: {
     id: "bbq_chicken",
     name: "BBQ Chicken",
-    description: "Pollo glassato alla barbecue, cipolla rossa e coriandolo. Firma californiana di Wolfgang Puck.",
+    description: "Pollo glassato alla barbecue, cipolla rossa e coriandolo. Resa celebre da California Pizza Kitchen (1985).",
     emoji: "🍗",
     thumbnail: thumbnailBbqChicken,
     flavor_profile: "sweet_savory",
@@ -1118,7 +1118,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "bianca_mortazza",
     variant_name: "IGP di Bologna",
     thumbnail: thumbnailVariantBiancaMortazzaRomana,
-    preferred_for_styles: ["pizza_spaccata", "pala_romana", "teglia_romana"],
+    preferred_for_styles: ["pizza_spaccata", "pala_romana", "teglia_romana", "pizza_baciata"],
     ingredients: [
       { name: "Olio EVO per spennellare", amount: { value: 12, unit: "ml" }, section: "base" },
       { name: "Fior di sale", amount: { value: 2, unit: "g" }, section: "base" },
@@ -2554,7 +2554,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   bbq_chicken_california: {
     id: "bbq_chicken_california",
     concept_ref: "bbq_chicken",
-    variant_name: "Wolfgang Puck",
+    variant_name: "California Pizza Kitchen",
     preferred_for_styles: ["california_style"],
     authenticity: "signature",
     ingredients: [
@@ -2567,7 +2567,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_bbq_chicken",
       title: "BBQ chicken alla californiana",
-      description: "Salsa barbecue al posto del pomodoro. Mozzarella, pollo glassato e cipolla rossa. Dopo cottura, coriandolo fresco. La pizza gourmet anni '80 di Wolfgang Puck.",
+      description: "Salsa barbecue al posto del pomodoro. Mozzarella, pollo glassato e cipolla rossa. Dopo cottura, coriandolo fresco. La pizza di Ed LaDou per il primo menu di California Pizza Kitchen (1985).",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,

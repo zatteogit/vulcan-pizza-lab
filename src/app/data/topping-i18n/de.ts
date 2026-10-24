@@ -177,7 +177,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     bbq_chicken: {
       name: "BBQ Chicken",
-      description: "Hähnchen mit Barbecue-Glasur, rote Zwiebel und Koriander. Die kalifornische Signatur von Wolfgang Puck.",
+      description: "Hähnchen mit Barbecue-Glasur, rote Zwiebel und Koriander. Bekannt geworden durch California Pizza Kitchen (1985).",
     },
     smoked_salmon: {
       name: "Räucherlachs",
@@ -1571,7 +1571,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
       },
     },
     bbq_chicken_california: {
-      variant_name: "Wolfgang Puck",
+      variant_name: "California Pizza Kitchen",
       ingredients: {
         "0": {
           name: "Barbecuesoße",
@@ -2570,7 +2570,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     spread_bbq_chicken: {
       title: "BBQ Chicken auf kalifornische Art",
-      description: "Barbecuesoße statt Tomate. Mozzarella, glasiertes Hähnchen und rote Zwiebel. Nach dem Backen frischer Koriander. Die Gourmetpizza der 80er von Wolfgang Puck.",
+      description: "Barbecuesoße statt Tomate. Mozzarella, glasiertes Hähnchen und rote Zwiebel. Nach dem Backen frischer Koriander. Die Pizza von Ed LaDou für die erste Karte von California Pizza Kitchen (1985).",
     },
     salmon_bake: {
       title: "Weiße Basis mit Crème fraîche",

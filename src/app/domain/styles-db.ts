@@ -1511,7 +1511,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🥑",
-    default_topping_ref: "ortolana",
+    default_topping_ref: "smoked_salmon_california",
   },
 
   greek_pan: {
@@ -1561,6 +1561,6 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     ],
     hydration_category: "medium",
     emoji: "🫓",
-    default_topping_ref: "margherita",
+    default_topping_ref: "greek_cheese_pan",
   },
 };

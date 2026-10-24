@@ -53,7 +53,9 @@ const EXPECTED: Record<string, Expected> = {
   grandma_style: { ideal: OK, home: OK, rush: SHORT },
   focaccia_recco: { ideal: OK, home: WARN, rush: WARN },
   padellino_torino: { ideal: OK, home: OK, rush: SHORT },
-  pizza_baciata: { ideal: OK, home: WARN, rush: SHORT },
+  // C-1: prima il condimento predefinito non portava a nessuna ricetta; con la
+  // mortadella (farcitura dopo la cottura) in 2 h non ci sta neanche la finestra.
+  pizza_baciata: { ideal: OK, home: WARN, rush: LATE_SHORT },
   ciaccino_senese: { ideal: OK, home: OK, rush: LATE_SHORT },
   pizza_spaccata: { ideal: OK, home: WARN, rush: SHORT },
   trancio_milanese: { ideal: OK, home: OK, rush: SHORT },

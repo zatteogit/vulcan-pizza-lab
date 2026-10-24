@@ -177,7 +177,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     bbq_chicken: {
       name: "BBQ Chicken",
-      description: "Frango glaceado com barbecue, cebola roxa e coentro. Assinatura californiana de Wolfgang Puck.",
+      description: "Frango glaceado com barbecue, cebola roxa e coentro. Popularizada pela California Pizza Kitchen (1985).",
     },
     smoked_salmon: {
       name: "Salmão defumado",
@@ -1571,7 +1571,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
       },
     },
     bbq_chicken_california: {
-      variant_name: "Wolfgang Puck",
+      variant_name: "California Pizza Kitchen",
       ingredients: {
         "0": {
           name: "Molho barbecue",
@@ -2570,7 +2570,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     spread_bbq_chicken: {
       title: "BBQ chicken à californiana",
-      description: "Molho barbecue no lugar do tomate. Mozzarella, frango glaceado e cebola roxa. Depois de assar, coentro fresco. A pizza gourmet dos anos 80 de Wolfgang Puck.",
+      description: "Molho barbecue no lugar do tomate. Mozzarella, frango glaceado e cebola roxa. Depois de assar, coentro fresco. A pizza de Ed LaDou para o primeiro cardápio da California Pizza Kitchen (1985).",
     },
     salmon_bake: {
       title: "Base branca com crème fraîche",

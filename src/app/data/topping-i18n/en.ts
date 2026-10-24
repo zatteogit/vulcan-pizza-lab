@@ -177,7 +177,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     },
     bbq_chicken: {
       name: "BBQ Chicken",
-      description: "Barbecue-glazed chicken, red onion and coriander. Wolfgang Puck's Californian signature.",
+      description: "Barbecue-glazed chicken, red onion and coriander. Made famous by California Pizza Kitchen (1985).",
     },
     smoked_salmon: {
       name: "Smoked salmon",
@@ -889,7 +889,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
       },
     },
     bbq_chicken_california: {
-      variant_name: "Wolfgang Puck",
+      variant_name: "California Pizza Kitchen",
       ingredients: {
         "0": { name: "Barbecue sauce", notes: "instead of tomato" },
         "1": { name: "Mozzarella (or mixed with smoked gouda)" },
@@ -1697,7 +1697,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     spread_bbq_chicken: {
       title: "Californian BBQ chicken",
       description:
-        "Barbecue sauce instead of tomato. Mozzarella, glazed chicken and red onion. After baking, fresh coriander. Wolfgang Puck's 1980s gourmet pizza.",
+        "Barbecue sauce instead of tomato. Mozzarella, glazed chicken and red onion. After baking, fresh coriander. Ed LaDou's pizza for California Pizza Kitchen's first menu (1985).",
     },
     salmon_bake: {
       title: "White base with crème fraîche",

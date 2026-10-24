@@ -177,7 +177,7 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     },
     bbq_chicken: {
       name: "BBQ Chicken",
-      description: "バーベキューソースでつやを出したチキン、赤玉ねぎ、パクチー。ウルフギャング・パックのカリフォルニアの看板メニューです。",
+      description: "バーベキューソースでつやを出したチキン、赤玉ねぎ、パクチー。カリフォルニア・ピザ・キッチン（1985年）で有名になりました。",
     },
     smoked_salmon: {
       name: "スモークサーモン",
@@ -1571,7 +1571,7 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
       },
     },
     bbq_chicken_california: {
-      variant_name: "Wolfgang Puck",
+      variant_name: "California Pizza Kitchen",
       ingredients: {
         "0": {
           name: "バーベキューソース",
@@ -2570,7 +2570,7 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     },
     spread_bbq_chicken: {
       title: "カリフォルニア風BBQチキン",
-      description: "トマトの代わりにバーベキューソース。モッツァレラ、つやを出したチキン、赤玉ねぎ。焼成後に生のパクチー。ウルフギャング・パックの80年代のグルメピザです。",
+      description: "トマトの代わりにバーベキューソース。モッツァレラ、つやを出したチキン、赤玉ねぎ。焼成後に生のパクチー。エド・ラドゥ（Ed LaDou）がカリフォルニア・ピザ・キッチンの最初のメニュー（1985年）のために考えたピザです。",
     },
     salmon_bake: {
       title: "クレームフレッシュの白いベース",

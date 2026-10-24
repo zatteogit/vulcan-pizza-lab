@@ -177,7 +177,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     bbq_chicken: {
       name: "BBQ Chicken",
-      description: "Poulet laqué sauce barbecue, oignon rouge et coriandre. La signature californienne de Wolfgang Puck.",
+      description: "Poulet laqué sauce barbecue, oignon rouge et coriandre. Rendue célèbre par California Pizza Kitchen (1985).",
     },
     smoked_salmon: {
       name: "Saumon fumé",
@@ -1571,7 +1571,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       },
     },
     bbq_chicken_california: {
-      variant_name: "Wolfgang Puck",
+      variant_name: "California Pizza Kitchen",
       ingredients: {
         "0": {
           name: "Sauce barbecue",
@@ -2570,7 +2570,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     spread_bbq_chicken: {
       title: "BBQ chicken à la californienne",
-      description: "Sauce barbecue à la place de la tomate. Mozzarella, poulet laqué et oignon rouge. Après cuisson, coriandre fraîche. La pizza gourmet des années 80 de Wolfgang Puck.",
+      description: "Sauce barbecue à la place de la tomate. Mozzarella, poulet laqué et oignon rouge. Après cuisson, coriandre fraîche. La pizza d'Ed LaDou pour la première carte de California Pizza Kitchen (1985).",
     },
     salmon_bake: {
       title: "Base blanche à la crème fraîche",

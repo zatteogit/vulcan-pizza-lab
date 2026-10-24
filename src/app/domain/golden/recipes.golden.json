@@ -432,7 +432,7 @@
     "fermentation_c": 4,
     "oven_c": 285,
     "cook_s": 960,
-    "timeline_min": 1856
+    "timeline_min": 1861
   },
   "pizza_baciata/home": {
     "flour_g": 1703,
@@ -447,7 +447,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 1205,
-    "timeline_min": 1500
+    "timeline_min": 1505
   },
   "ciaccino_senese/ideal": {
     "flour_g": 1650,
@@ -852,7 +852,7 @@
     "fermentation_c": 22,
     "oven_c": 245,
     "cook_s": 840,
-    "timeline_min": 539
+    "timeline_min": 537
   },
   "greek_pan/home": {
     "flour_g": 929,
@@ -867,6 +867,6 @@
     "fermentation_c": 22,
     "oven_c": 245,
     "cook_s": 840,
-    "timeline_min": 539
+    "timeline_min": 537
   }
 }

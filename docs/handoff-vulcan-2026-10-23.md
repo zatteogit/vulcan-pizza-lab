@@ -214,6 +214,12 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- ~~**C-1 (P1)**~~ chiuso il 24/10: `docs/linee-guida-stili.md` (regole, modello
+  di scheda, stato dei 29 stili, priorità per C-2) e test
+  `style-editorial.test.ts`. Il test ha trovato tre stili (baciata, California,
+  greek pan) il cui condimento predefinito non portava a nessuna ricetta:
+  corretti. Corretta anche l'attribuzione della BBQ chicken (Ed LaDou per
+  California Pizza Kitchen, 1985, non Wolfgang Puck) in 7 lingue.
 - ~~**I18N-5**~~ chiuso il 24/10: fact-check delle 14 ispirazioni (126
   affermazioni, 21 errate: `docs/ricerca/ispirazioni-fact-check-2026-10-24.md`,
   riassunto in `docs/fonti-dati.md` §5) e testi riscritti sulle fonti. Decisioni

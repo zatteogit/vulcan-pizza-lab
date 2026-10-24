@@ -359,3 +359,17 @@ fra 2 h non fattibile). La foto della tonda è per ora quella della fritta chius
   se fosse di scheda. Serve un'etichetta «stima» (stringa CMS in 7 lingue).
 - Lo slot «Nessuna preferenza» vale ancora 24 h fisse.
 - `requires_wood_oven`: deciso con D-020 (avviso, non blocco).
+
+## C-1 · Condimenti predefiniti che non portavano a nessuna ricetta (24/10/2026)
+
+Il nuovo test `style-editorial.test.ts` ha trovato tre stili il cui
+`default_topping_ref` non si risolveva in una ricetta dello stile: la ricetta
+partiva senza condimento.
+
+| Stile | Prima | Dopo | Effetto sul golden |
+|---|---|---|---|
+| `pizza_baciata` | `bianca_mortazza` → nessuna ricetta | `bianca_mortazza_romana` (baciata aggiunta allo stile) | timeline +5 min; «di corsa» ora anche `time_window` |
+| `california_style` | `ortolana` → nessuna ricetta | `smoked_salmon_california` (Spago) | nessuno (fuori dal golden) |
+| `greek_pan` | `margherita` → nessuna ricetta | `greek_cheese_pan` | timeline −2 min |
+
+Masse, forno e lievitazione invariati.
