@@ -178,6 +178,17 @@ describe("impossibilità dichiarata (M-10)", () => {
     }
   });
 
+  it("forno a legna dello stile: avviso, non blocco (D-020)", () => {
+    // Napoletana STG con un forno a gas da 450 °C: il calore basta, il legno no.
+    const c = constraints({ oven_type: "gas", oven_max_temp_c: 450 });
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, c);
+    expect(recipe.verdict.outcome).toBe("warnings");
+    expect(recipe.scores.warnings.map((w) => w.key)).toContain("gen.notWoodOven");
+    const rec = recommendStyles(c).find((r) => r.style.id === "napoletana_stg")!;
+    expect(rec.tier).not.toBe("not_feasible");
+    expect(rec.warnings.map((w) => w.key)).toContain("rec.needsWoodOven");
+  });
+
   it("consigli e ricetta dicono la stessa cosa sul forno", () => {
     for (const oven of [200, 250, 300, 350, 400, 485]) {
       const c = constraints({ oven_type: oven >= 400 ? "gas" : "home", oven_max_temp_c: oven });

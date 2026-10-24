@@ -320,7 +320,7 @@ export const EN_LOCALE: CmsContent = {
       icon: "zap",
     },
     gas: {
-      name: "Professional Gas",
+      name: "Gas deck oven",
       maxTemp: 350,
       icon: "flame",
     },
@@ -333,6 +333,11 @@ export const EN_LOCALE: CmsContent = {
       name: "Wood-Fired Oven",
       maxTemp: 500,
       icon: "flame-kindling",
+    },
+    gas_pizza: {
+      name: "Gas pizza oven",
+      maxTemp: 500,
+      icon: "flame",
     },
   },
   skillLevels: {
@@ -860,7 +865,7 @@ export const EN_LOCALE: CmsContent = {
     "rec.timeAdaptable": "Fermentation adaptable to ~{hours}",
     "rec.timeInsufficient":
       "Requires at least {fMin}, you have {available}",
-    "rec.needsWoodOven": "Requires wood-fired oven",
+    "rec.needsWoodOven": "Made in a wood-fired oven: yours gets close, not canonical",
     "rec.ovenIdeal":
       "Your oven reaches ideal temperature ({ideal})",
     "rec.ovenAdequate":
@@ -904,6 +909,7 @@ export const EN_LOCALE: CmsContent = {
       "Rule of 55: use water at {temp} to reach {ddt} dough temperature.",
     "tip.frictionNote":
       "Mixer friction compensation: {friction}",
+    "gen.notWoodOven": "This style is made in a wood-fired oven: with your oven the result gets close, but it isn't the canonical one.",
     "gen.windowTooShort": "With {available} there isn't time for everything: this recipe needs about {needed}. It will be ready later than the time you chose: pick a later time or a shorter rise.",
     "opt.hydrationOvenCompensated": "Hydration {h}%: {base}% plus {delta}% to make up for an oven cooler than ideal.",
     "opt.hydrationOutOfStyleRange": "With this compensation, hydration goes outside the style's range ({min}–{max}%).",
@@ -1002,6 +1008,7 @@ export const EN_LOCALE: CmsContent = {
     "timeline.oven.wood": "Wood-fired oven: clean floor, lively flame across the dome. Launch near the mouth and turn 180° after 30-40s for even leopard spotting.",
     "timeline.oven.electricHigh": "High-temperature electric oven: full power, stone thoroughly preheated. Turn the pizza halfway through baking to brown the rim all the way round.",
     "timeline.oven.gas": "Gas oven: flame on full, stone on the shelf for heat from below; turn the pizza halfway through for even baking.",
+    "timeline.oven.gasPizza": "Gas pizza oven: heat it until the stone is up to temperature (check with an infrared thermometer), then launch and turn the pizza often, because the flame is on one side.",
     "timeline.oven.staticStone": "Conventional oven (top + bottom heat) on max, stone/steel already hot on a medium-high shelf. For the rim: last 60-90s under the grill (top element only, on max), keeping a close eye on it.",
     "timeline.oven.staticShelf": "Conventional oven (top + bottom heat) on max, shelf in a medium-high position. For the rim: last 60-90s under the grill (top element only, on max), keeping a close eye on it.",
     "timeline.mix.title": "Mixing",

@@ -181,6 +181,7 @@ const OVEN_ICONS: Record<string, typeof Flame> = {
   electric_standard: Zap,
   electric_high: Thermometer,
   gas: Flame,
+  gas_pizza: Flame,
   wood: Trees, // Differenziato da gas (Flame) — gruppo di alberi più riconoscibile
 };
 
@@ -224,7 +225,7 @@ const OVEN_HEAT_PROFILES: {
     id: "gas_rear",
     get label() { return uiMessage("pages.profile.bruciatore-dietro-443293a0"); },
     get description() { return uiMessage("pages.profile.calore-direzionale-rotazioni-frequenti-e-p-b0292f9e"); },
-    bestFor: ["gas"],
+    bestFor: ["gas", "gas_pizza"],
   },
   {
     id: "wood_side_flame",

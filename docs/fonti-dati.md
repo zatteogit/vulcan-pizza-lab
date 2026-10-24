@@ -195,7 +195,8 @@ gli id della dispensa: va visto se la ricerca `FLOUR_W_RANGES[id]` trova queste 
 |---|---|---|---|---|---|
 | `home` (forno domestico) | 250 °C | 3428 | PinsaRomana.it 2022: «il forno di casa arriva di solito a una temperatura massima di 250°C» (fonte di cucina, non tecnica) | **plausibile** | Manca una fonte tecnica (norma o dati dei produttori). |
 | `electric_standard` | 300 °C | 3434 | Nessuna fonte | **da verificare** | |
-| `gas` («Gas Professionale») | 350 °C | 3440 | Ooni 2026: il forno a gas portatile Koda 16 «può raggiungere i 500 °C» | **errato** se il tipo copre i forni a gas da pizza. **da verificare** se indica il forno professionale a platea | Va chiarito che cosa intende il tipo. |
+| `gas` («Forno a gas a platea», dal 24/10) | 350 °C | `OVEN_PRESETS` | Nessuna fonte | **da verificare** | D-021: separato dal forno a gas da pizza. Serve la scheda di un forno a gas a platea per pizzeria. |
+| `gas_pizza` («Forno a gas da pizza», dal 24/10) | 500 °C | `OVEN_PRESETS` | Ooni 2026: il Koda 16 «può raggiungere i 500 °C» | **verificato** (per i portatili) | D-021. |
 | `electric_high` | 450 °C | 3446 | Pagina ufficiale Effeuno P134H senza dati di temperatura | **da verificare** | |
 | `wood` | 500 °C | 3452 | UE 2010: platea circa 485 °C. AVPN 2024: cupola circa 485 °C | **plausibile** | |
 

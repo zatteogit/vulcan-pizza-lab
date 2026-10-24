@@ -307,7 +307,7 @@ export const FR_LOCALE: CmsContent = {
       icon: "zap",
     },
     gas: {
-      name: "Gaz professionnel",
+      name: "Four \u00E0 gaz \u00E0 sole",
       maxTemp: 350,
       icon: "flame",
     },
@@ -320,6 +320,11 @@ export const FR_LOCALE: CmsContent = {
       name: "Four \u00E0 bois",
       maxTemp: 500,
       icon: "flame-kindling",
+    },
+    gas_pizza: {
+      name: "Four \u00E0 pizza au gaz",
+      maxTemp: 500,
+      icon: "flame",
     },
   },
   skillLevels: {
@@ -657,7 +662,7 @@ export const FR_LOCALE: CmsContent = {
     "rec.timeAdaptable": "Fermentation adaptable à ~{hours}",
     "rec.timeInsufficient":
       "Nécessite minimum {fMin}, vous avez {available}",
-    "rec.needsWoodOven": "Nécessite un four à bois",
+    "rec.needsWoodOven": "Se fait au four \u00E0 bois : avec le v\u00F4tre, on s'en approche sans \u00EAtre canonique",
     "rec.ovenIdeal":
       "Votre four atteint la température idéale ({ideal})",
     "rec.ovenAdequate":
@@ -709,6 +714,7 @@ export const FR_LOCALE: CmsContent = {
       "Règle du 55 : utiliser l'eau à {temp} pour atteindre {ddt} de température de pâte.",
     "tip.frictionNote":
       "Compensation de friction du pétrin : {friction}",
+    "gen.notWoodOven": "Ce style se fait au four \u00E0 bois : avec votre four, le r\u00E9sultat s'en approche, mais ce n'est pas le r\u00E9sultat canonique.",
     "gen.windowTooShort": "Avec {available}, il n'y a pas le temps pour tout : cette recette demande environ {needed}. Elle sera prête plus tard que l'heure choisie : choisissez une heure plus tardive ou une fermentation plus courte.",
     "opt.hydrationOvenCompensated": "Hydratation {h}% : {base}% plus {delta}% pour compenser un four moins chaud que l'idéal.",
     "opt.hydrationOutOfStyleRange": "Avec cette compensation, l'hydratation sort de la plage du style ({min}–{max}%).",
@@ -812,6 +818,7 @@ export const FR_LOCALE: CmsContent = {
     "timeline.oven.wood": "Four à bois : sole propre, flamme vive sous la voûte. Enfournez près de la bouche et tournez de 180° après 30-40s pour un léopardage homogène.",
     "timeline.oven.electricHigh": "Four électrique haute température : puissance maximale, pierre bien préchauffée. Tournez la pizza à mi-cuisson pour dorer le bord tout autour.",
     "timeline.oven.gas": "Four à gaz : flamme au maximum, pierre sur la grille pour la chaleur par le bas ; tournez la pizza à mi-cuisson pour une cuisson homogène.",
+    "timeline.oven.gasPizza": "Four \u00E0 pizza au gaz : chauffez jusqu'\u00E0 ce que la pierre soit \u00E0 temp\u00E9rature (mesurez-la au thermom\u00E8tre infrarouge), puis enfournez et tournez souvent la pizza, car la flamme est d'un seul c\u00F4t\u00E9.",
     "timeline.oven.staticStone": "Four en chaleur statique (résistance haut + bas) au maximum, pierre/acier déjà chauds en position mi-haute. Pour le bord : dernières 60-90s sous le gril (résistance du haut seule au maximum), sans le quitter des yeux.",
     "timeline.oven.staticShelf": "Four en chaleur statique (résistance haut + bas) au maximum, grille en position mi-haute. Pour le bord : dernières 60-90s sous le gril (résistance du haut seule au maximum), sans le quitter des yeux.",
     "timeline.mix.title": "Pétrissage",

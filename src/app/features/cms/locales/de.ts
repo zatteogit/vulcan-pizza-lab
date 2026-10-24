@@ -301,7 +301,7 @@ export const DE_LOCALE: CmsContent = {
       maxTemp: 300,
       icon: "zap",
     },
-    gas: { name: "Profi-Gasofen", maxTemp: 350, icon: "flame" },
+    gas: { name: "Gas-Etagenofen", maxTemp: 350, icon: "flame" },
     electric_high: {
       name: "Hochtemperatur-Elektro",
       maxTemp: 450,
@@ -311,6 +311,11 @@ export const DE_LOCALE: CmsContent = {
       name: "Holzofen",
       maxTemp: 500,
       icon: "flame-kindling",
+    },
+    gas_pizza: {
+      name: "Gas-Pizzaofen",
+      maxTemp: 500,
+      icon: "flame",
     },
   },
   skillLevels: {
@@ -645,7 +650,7 @@ export const DE_LOCALE: CmsContent = {
     "rec.timeAdaptable": "Gärung anpassbar auf ~{hours}",
     "rec.timeInsufficient":
       "Benötigt mindestens {fMin}, du hast {available}",
-    "rec.needsWoodOven": "Erfordert Holzofen",
+    "rec.needsWoodOven": "Geh\u00F6rt in den Holzofen: Mit deinem Ofen kommst du nah dran, aber nicht kanonisch",
     "rec.ovenIdeal":
       "Dein Ofen erreicht die ideale Temperatur ({ideal})",
     "rec.ovenAdequate":
@@ -697,6 +702,7 @@ export const DE_LOCALE: CmsContent = {
       "55er-Regel: Wasser mit {temp} verwenden, um {ddt} Teigtemperatur zu erreichen.",
     "tip.frictionNote":
       "Reibungskompensation der Knetmaschine: {friction}",
+    "gen.notWoodOven": "Dieser Stil geh\u00F6rt in den Holzofen: Mit deinem Ofen kommt das Ergebnis nah heran, ist aber nicht das kanonische.",
     "gen.windowTooShort": "Mit {available} reicht die Zeit nicht für alles: Dieses Rezept braucht etwa {needed}. Es wird später fertig als zur gewählten Uhrzeit: Wähle eine spätere Uhrzeit oder eine kürzere Gare.",
     "opt.hydrationOvenCompensated": "Hydratation {h}%: {base}% plus {delta}% als Ausgleich für einen Ofen, der kühler als ideal ist.",
     "opt.hydrationOutOfStyleRange": "Mit dieser Kompensation liegt die Hydratation außerhalb des Stilbereichs ({min}–{max}%).",
@@ -795,6 +801,7 @@ export const DE_LOCALE: CmsContent = {
     "timeline.oven.wood": "Holzofen: sauberer Ofenboden, lebhafte Flamme unter der Kuppel. Schieb die Pizza nahe der Ofenöffnung ein und dreh sie nach 30-40s um 180° für gleichmäßige Leopardenflecken.",
     "timeline.oven.electricHigh": "Elektro-Hochtemperaturofen: volle Leistung, Stein gut vorgeheizt. Dreh die Pizza nach der Hälfte der Backzeit, damit der Rand rundum bräunt.",
     "timeline.oven.gas": "Gasofen: Flamme auf Maximum, Stein auf dem Rost für Hitze von unten; dreh die Pizza nach der Hälfte, damit sie gleichmäßig backt.",
+    "timeline.oven.gasPizza": "Gas-Pizzaofen: Heize, bis der Stein Temperatur hat (mit einem Infrarotthermometer pr\u00FCfen), dann einschie\u00DFen und die Pizza oft drehen, weil die Flamme an einer Seite sitzt.",
     "timeline.oven.staticStone": "Ober-/Unterhitze auf Maximum, Stein/Stahl schon heiß auf mittlerer bis oberer Schiene. Für den Rand: die letzten 60-90s unter den Grill (nur Oberhitze auf Maximum) und dabei nicht aus den Augen lassen.",
     "timeline.oven.staticShelf": "Ober-/Unterhitze auf Maximum, Rost auf mittlerer bis oberer Schiene. Für den Rand: die letzten 60-90s unter den Grill (nur Oberhitze auf Maximum) und dabei nicht aus den Augen lassen.",
     "timeline.mix.title": "Kneten",

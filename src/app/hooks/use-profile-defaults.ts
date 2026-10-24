@@ -48,7 +48,8 @@ const OVEN_LABELS: Record<string, string> = {
   home: "Forno di casa",
   electric_standard: "Elettrico standard",
   electric_high: "Elettrico alta temp.",
-  gas: "Forno a gas",
+  gas: "Forno a gas a platea",
+  gas_pizza: "Forno a gas da pizza",
   wood: "Forno a legna",
 };
 

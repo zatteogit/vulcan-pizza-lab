@@ -27,6 +27,7 @@ export type OvenType =
   | "electric_high"
   | "electric_standard"
   | "gas"
+  | "gas_pizza"
   | "home";
 export type CrustType =
   | "leopard_soft"
@@ -1961,6 +1962,15 @@ export function generateRecipe(
     sustainability_category: sustResult.category,
     penalties: authResult.penalties,
     warnings: [
+      // D-020: stesso avviso dei consigli sul forno a legna dello stile.
+      ...(style.requires_wood_oven && constraints.oven_type !== "wood"
+        ? [
+            em(
+              "gen.notWoodOven",
+              "Lo stile prevede il forno a legna: con il tuo forno il risultato si avvicina, ma non è quello canonico.",
+            ),
+          ]
+        : []),
       ...(windowTooShort
         ? [
             em(
@@ -2823,6 +2833,8 @@ function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
       return em("timeline.oven.electricHigh", "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.");
     case "gas":
       return em("timeline.oven.gas", "Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.");
+    case "gas_pizza":
+      return em("timeline.oven.gasPizza", "Forno a gas da pizza: scalda finché la pietra arriva in temperatura (misurala con un termometro a infrarossi), poi inforna e ruota spesso la pizza, perché la fiamma sta su un lato.");
     case "home":
     case "electric_standard":
     default:
@@ -3440,8 +3452,10 @@ export const OVEN_PRESETS: {
     icon: "zap",
   },
   {
+    // D-021 (decisione di Matteo, 24/10/2026): due forni a gas. Questo è il
+    // forno a platea: 350 °C è un valore da verificare (docs/fonti-dati.md §3.1).
     id: "gas",
-    name: "Gas Professionale",
+    name: "Forno a gas a platea",
     maxTemp: 350,
     icon: "flame",
   },
@@ -3450,6 +3464,13 @@ export const OVEN_PRESETS: {
     name: "Elettrico alta temperatura",
     maxTemp: 450,
     icon: "thermometer",
+  },
+  {
+    // Forno a gas da pizza (portatile): Ooni 2026, Koda 16 «può raggiungere i 500 °C».
+    id: "gas_pizza",
+    name: "Forno a gas da pizza",
+    maxTemp: 500,
+    icon: "flame",
   },
   {
     id: "wood",
@@ -3789,10 +3810,7 @@ export function recommendStyles(
 
     // ── Oven compatibility (25%) ──
     let ovenScore: number;
-    if (style.requires_wood_oven && constraints.oven_type !== "wood") {
-      ovenScore = 30;
-      warnings.push(em("rec.needsWoodOven", "Richiede forno a legna"));
-    } else if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
+    if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
       ovenScore = 95;
       reasons.push(em("rec.ovenIdeal", "Il tuo forno raggiunge la temperatura ideale ({ideal})", { ideal: style.baking.temp_c_ideal }));
     } else if (constraints.oven_max_temp_c >= style.baking.temp_c_range[0]) {
@@ -3801,6 +3819,13 @@ export function recommendStyles(
     } else {
       ovenScore = 30;
       warnings.push(em("rec.ovenTooCold", "Forno troppo freddo: {temp} < min {min}", { temp: constraints.oven_max_temp_c, min: style.baking.temp_c_range[0] }));
+    }
+    // D-020 (decisione di Matteo, 24/10/2026): il forno a legna dello stile è un
+    // avviso, non un blocco. Prima la STG col forno a gas da 450 °C era «non
+    // fattibile» nei consigli ma la ricetta la faceva. Resta il calore a decidere.
+    if (style.requires_wood_oven && constraints.oven_type !== "wood") {
+      ovenScore = Math.max(30, ovenScore - 15);
+      warnings.push(em("rec.needsWoodOven", "Prevede il forno a legna: col tuo forno viene vicina, non canonica"));
     }
 
     // ── Skill compatibility (20%) ──
@@ -4059,7 +4084,6 @@ export function recommendStyles(
     // della ricetta. Prima Canotto, Calzone e Pinsa risultavano «buoni» con il
     // forno di casa a 250 °C e la ricetta poi diceva «non fattibile così».
     const hasHardBlocker =
-      (style.requires_wood_oven && constraints.oven_type !== "wood") ||
       (style.requires_pre_ferment === true &&
         constraints.skill_level === 1) ||
       thermalViability(style, constraints.oven_max_temp_c) <= THERMAL_UNVIABLE_THRESHOLD;

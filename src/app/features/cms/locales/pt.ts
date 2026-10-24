@@ -307,7 +307,7 @@ export const PT_LOCALE: CmsContent = {
       icon: "zap",
     },
     gas: {
-      name: "G\u00E1s profissional",
+      name: "Forno a g\u00E1s de lastro",
       maxTemp: 350,
       icon: "flame",
     },
@@ -320,6 +320,11 @@ export const PT_LOCALE: CmsContent = {
       name: "Forno a lenha",
       maxTemp: 500,
       icon: "flame-kindling",
+    },
+    gas_pizza: {
+      name: "Forno de pizza a g\u00E1s",
+      maxTemp: 500,
+      icon: "flame",
     },
   },
   skillLevels: {
@@ -656,7 +661,7 @@ export const PT_LOCALE: CmsContent = {
     "rec.timeAdaptable": "Fermentação adaptável a ~{hours}",
     "rec.timeInsufficient":
       "Requer mínimo {fMin}, você tem {available}",
-    "rec.needsWoodOven": "Requer forno a lenha",
+    "rec.needsWoodOven": "\u00C9 feita em forno a lenha: com o seu fica parecida, n\u00E3o can\u00F4nica",
     "rec.ovenIdeal":
       "Seu forno atinge a temperatura ideal ({ideal})",
     "rec.ovenAdequate":
@@ -710,6 +715,7 @@ export const PT_LOCALE: CmsContent = {
       "Regra dos 55: use água a {temp} para atingir {ddt} de temperatura da massa.",
     "tip.frictionNote":
       "Compensação de atrito da amassadeira: {friction}",
+    "gen.notWoodOven": "Este estilo \u00E9 feito em forno a lenha: com o seu forno o resultado fica parecido, mas n\u00E3o \u00E9 o can\u00F4nico.",
     "gen.windowTooShort": "Com {available} não há tempo para tudo: esta receita precisa de cerca de {needed}. Vai ficar pronta mais tarde do que o horário escolhido: escolha um horário mais tarde ou uma fermentação mais curta.",
     "opt.hydrationOvenCompensated": "Hidratação {h}%: {base}% mais {delta}% para compensar um forno mais frio do que o ideal.",
     "opt.hydrationOutOfStyleRange": "Com esta compensação a hidratação sai da faixa do estilo ({min}–{max}%).",
@@ -813,6 +819,7 @@ export const PT_LOCALE: CmsContent = {
     "timeline.oven.wood": "Forno a lenha: lastro limpo, chama viva na cúpula. Coloque a pizza perto da boca e gire 180° após 30-40s para um leopardado uniforme.",
     "timeline.oven.electricHigh": "Forno elétrico de alta temperatura: potência máxima, pedra bem pré-aquecida. Gire a pizza na metade do tempo para dourar a borda por inteiro.",
     "timeline.oven.gas": "Forno a gás: chama no máximo, pedra na grade para o calor vir de baixo; gire a pizza na metade do tempo para uniformizar.",
+    "timeline.oven.gasPizza": "Forno de pizza a g\u00E1s: aque\u00E7a at\u00E9 a pedra chegar \u00E0 temperatura (me\u00E7a com um term\u00F4metro infravermelho), depois asse e gire a pizza com frequ\u00EAncia, porque a chama fica de um lado.",
     "timeline.oven.staticStone": "Forno convencional (resistência em cima + embaixo) no máximo, pedra/aço já quentes na grade em altura média-alta. Para a borda: últimos 60-90s sob o grill (só a resistência superior no máximo), sempre de olho.",
     "timeline.oven.staticShelf": "Forno convencional (resistência em cima + embaixo) no máximo, grade em altura média-alta. Para a borda: últimos 60-90s sob o grill (só a resistência superior no máximo), sempre de olho.",
     "timeline.mix.title": "Amassamento",

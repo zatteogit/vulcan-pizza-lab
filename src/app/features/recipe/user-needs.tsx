@@ -101,6 +101,7 @@ const OVEN_ICONS: Record<
   electric_standard: Zap,
   electric_high: Zap,
   gas: Flame,
+  gas_pizza: Flame,
   wood: Flame,
 };
 

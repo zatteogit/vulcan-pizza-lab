@@ -320,6 +320,19 @@ Il «Da decidere» sulla pinsa qui sotto è chiuso da D-015. Q10: il commento ne
 codice non dice più «Letteratura»; 2 tra 18 e 25 °C è coerente con Salvadó et al.
 2011, 1,6 sotto i 10 °C resta una scelta del modello senza fonte.
 
+## D-020, D-021 · Forno a legna e forni a gas (24/10)
+
+- **D-020:** `requires_wood_oven` non è più un blocco nei consigli. Il calore
+  decide (soglia termica unica, M-10); il forno a legna dà un avviso e 15 punti
+  in meno sul forno nei consigli (`rec.needsWoodOven`) e un avviso nella
+  ricetta (`gen.notWoodOven`). Prima la STG col forno a gas da 450 °C era «non
+  fattibile» nei consigli e fattibile nella ricetta. Test: golden, «forno a
+  legna dello stile: avviso, non blocco».
+- **D-021:** `OvenType` ha `gas_pizza` («Forno a gas da pizza», 500 °C, fonte
+  Ooni 2026) accanto a `gas` («Forno a gas a platea», 350 °C, da verificare).
+  Indicazione di cottura propria (`timeline.oven.gasPizza`), nomi in 7 lingue.
+  Chi aveva salvato `gas` resta sul forno a platea.
+
 ## Da decidere o da fare
 
 - **Q10 del lievito (C-4):** 2 sopra i 10 °C è coerente con Salvadó et al. 2011;
@@ -330,6 +343,4 @@ codice non dice più «Letteratura»; 2 tra 18 e 25 °C è coerente con Salvadó
 - **Petra 3:** il dato `w_declared: false` c'è, ma la UI mostra ancora la W come
   se fosse di scheda. Serve un'etichetta «stima» (stringa CMS in 7 lingue).
 - Lo slot «Nessuna preferenza» vale ancora 24 h fisse.
-- `requires_wood_oven` blocca i consigli (Napoletana STG con forno a gas da 450 °C
-  è «non fattibile» nei consigli) ma non l'esito della ricetta: da decidere se il
-  forno a legna del disciplinare è un vincolo o un avviso.
+- `requires_wood_oven`: deciso con D-020 (avviso, non blocco).

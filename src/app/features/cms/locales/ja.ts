@@ -353,7 +353,7 @@ export const JA_LOCALE: CmsContent = {
       icon: "zap",
     },
     gas: {
-      name: "\u30AC\u30B9\u30AA\u30FC\u30D6\u30F3\uFF08\u696D\u52D9\u7528\uFF09",
+      name: "\u30AC\u30B9\u30C7\u30C3\u30AD\u30AA\u30FC\u30D6\u30F3",
       maxTemp: 350,
       icon: "flame",
     },
@@ -366,6 +366,11 @@ export const JA_LOCALE: CmsContent = {
       name: "\u85AA\u7AAF",
       maxTemp: 500,
       icon: "flame-kindling",
+    },
+    gas_pizza: {
+      name: "\u30AC\u30B9\u5F0F\u30D4\u30B6\u7AAF",
+      maxTemp: 500,
+      icon: "flame",
     },
   },
   skillLevels: {
@@ -709,7 +714,7 @@ export const JA_LOCALE: CmsContent = {
     "rec.timeAdaptable": "発酵は~{hours}に調整可能",
     "rec.timeInsufficient":
       "最低{fMin}必要、{available}しかありません",
-    "rec.needsWoodOven": "薪窯が必要です",
+    "rec.needsWoodOven": "\u672C\u6765\u306F\u85AA\u7AAF\u3067\u713C\u304F\u30B9\u30BF\u30A4\u30EB\u3067\u3059\u3002\u304A\u4F7F\u3044\u306E\u30AA\u30FC\u30D6\u30F3\u3067\u3082\u8FD1\u3065\u3051\u307E\u3059\u304C\u3001\u6B63\u7D71\u306A\u4ED5\u4E0A\u304C\u308A\u306B\u306F\u306A\u308A\u307E\u305B\u3093",
     "rec.ovenIdeal":
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3\u306F\u7406\u60F3\u6E29\u5EA6\u306B\u5230\u9054 ({ideal})",
     "rec.ovenAdequate": "オーブンは適切 (自動時間/温度補正)",
@@ -748,6 +753,7 @@ export const JA_LOCALE: CmsContent = {
     "tip.waterTempNormal":
       "55の法則: {temp}の水を使って{ddt}の生地温度を目指してください。",
     "tip.frictionNote": "ミキサー摩擦補正: {friction}",
+    "gen.notWoodOven": "\u3053\u306E\u30B9\u30BF\u30A4\u30EB\u306F\u672C\u6765\u3001\u85AA\u7AAF\u3067\u713C\u304D\u307E\u3059\u3002\u304A\u4F7F\u3044\u306E\u30AA\u30FC\u30D6\u30F3\u3067\u3082\u8FD1\u3044\u4ED5\u4E0A\u304C\u308A\u306B\u306A\u308A\u307E\u3059\u304C\u3001\u6B63\u7D71\u306A\u3082\u306E\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002",
     "gen.windowTooShort": "{available}ではすべてに足りません。このレシピには約{needed}かかります。選んだ時刻より遅く仕上がります。もっと遅い時刻を選ぶか、発酵を短くしてください。",
     "opt.hydrationOvenCompensated": "加水率{h}%：理想より温度の低いオーブンを補うため、{base}%に{delta}%を加えています。",
     "opt.hydrationOutOfStyleRange": "この補正により、加水率がスタイルの範囲（{min}–{max}%）を外れます。",
@@ -846,6 +852,7 @@ export const JA_LOCALE: CmsContent = {
     "timeline.oven.wood": "薪窯：炉床はきれいにし、ドームに勢いのある炎を立てます。窯口の近くに入れ、30-40s後に180°回転させて均一なレオパード模様にします。",
     "timeline.oven.electricHigh": "高温の電気オーブン：最大出力にし、石をしっかり予熱します。焼成の途中でピザを回し、縁全体に焼き色をつけます。",
     "timeline.oven.gas": "ガスオーブン：火力は最大にし、石を網に置いて下からの熱を確保します。途中でピザを回して均一に焼きます。",
+    "timeline.oven.gasPizza": "\u30AC\u30B9\u5F0F\u30D4\u30B6\u7AAF\uFF1A\u77F3\u304C\u9069\u6E29\u306B\u306A\u308B\u307E\u3067\u4E88\u71B1\u3057\u307E\u3059\uFF08\u8D64\u5916\u7DDA\u6E29\u5EA6\u8A08\u3067\u78BA\u8A8D\uFF09\u3002\u30D4\u30B6\u3092\u5165\u308C\u305F\u3089\u3001\u708E\u304C\u7247\u5074\u306B\u3042\u308B\u306E\u3067\u3053\u307E\u3081\u306B\u56DE\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
     "timeline.oven.staticStone": "上下火のオーブンを最大にし、石/スチールを中段より上で十分に熱しておきます。縁の仕上げ：最後の60-90sはグリル（上火のみ最大）で、目を離さずに焼きます。",
     "timeline.oven.staticShelf": "上下火のオーブンを最大にし、網は中段より上にします。縁の仕上げ：最後の60-90sはグリル（上火のみ最大）で、目を離さずに焼きます。",
     "timeline.mix.title": "こね",

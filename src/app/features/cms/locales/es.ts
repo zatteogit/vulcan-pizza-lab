@@ -310,7 +310,7 @@ export const ES_LOCALE: CmsContent = {
       icon: "zap",
     },
     gas: {
-      name: "Gas Profesional",
+      name: "Horno de gas de solera",
       maxTemp: 350,
       icon: "flame",
     },
@@ -323,6 +323,11 @@ export const ES_LOCALE: CmsContent = {
       name: "Horno de Le\u00F1a",
       maxTemp: 500,
       icon: "flame-kindling",
+    },
+    gas_pizza: {
+      name: "Horno de gas para pizza",
+      maxTemp: 500,
+      icon: "flame",
     },
   },
   skillLevels: {
@@ -658,7 +663,7 @@ export const ES_LOCALE: CmsContent = {
     "rec.timeAdaptable": "Fermentación adaptable a ~{hours}",
     "rec.timeInsufficient":
       "Requiere mínimo {fMin}, tienes {available}",
-    "rec.needsWoodOven": "Requiere horno de leña",
+    "rec.needsWoodOven": "Se hace en horno de le\u00F1a: con el tuyo queda cerca, no can\u00F3nica",
     "rec.ovenIdeal":
       "Tu horno alcanza la temperatura ideal ({ideal})",
     "rec.ovenAdequate":
@@ -710,6 +715,7 @@ export const ES_LOCALE: CmsContent = {
       "Regla del 55: usa agua a {temp} para alcanzar {ddt} de masa.",
     "tip.frictionNote":
       "Compensación por fricción de la amasadora: {friction}",
+    "gen.notWoodOven": "Este estilo se hace en horno de le\u00F1a: con tu horno el resultado se acerca, pero no es el can\u00F3nico.",
     "gen.windowTooShort": "Con {available} no hay tiempo para todo: esta receta necesita unas {needed}. Estará lista más tarde de la hora elegida: elige una hora posterior o un levado más corto.",
     "opt.hydrationOvenCompensated": "Hidratación {h}%: {base}% más {delta}% para compensar un horno más frío de lo ideal.",
     "opt.hydrationOutOfStyleRange": "Con esta compensación la hidratación sale del rango del estilo ({min}–{max}%).",
@@ -813,6 +819,7 @@ export const ES_LOCALE: CmsContent = {
     "timeline.oven.wood": "Horno de leña: solera limpia, llama viva en la cúpula. Mete la pizza cerca de la boca y gírala 180° tras 30-40s para un moteado de leopardo uniforme.",
     "timeline.oven.electricHigh": "Horno eléctrico de alta temperatura: máxima potencia, piedra bien precalentada. Gira la pizza a mitad de cocción para dorar el borde por todo el contorno.",
     "timeline.oven.gas": "Horno de gas: llama al máximo, piedra en la rejilla para el calor desde abajo; gira la pizza a mitad de cocción para que se haga por igual.",
+    "timeline.oven.gasPizza": "Horno de gas para pizza: cali\u00E9ntalo hasta que la piedra llegue a temperatura (m\u00EDdela con un term\u00F3metro de infrarrojos), luego hornea y gira la pizza a menudo, porque la llama est\u00E1 en un lado.",
     "timeline.oven.staticStone": "Horno convencional (resistencia arriba + abajo) al máximo, piedra/acero ya calientes en una altura media-alta. Para el borde: últimos 60-90s bajo el gratinador (solo resistencia superior al máximo), sin quitarle ojo.",
     "timeline.oven.staticShelf": "Horno convencional (resistencia arriba + abajo) al máximo, rejilla en una altura media-alta. Para el borde: últimos 60-90s bajo el gratinador (solo resistencia superior al máximo), sin quitarle ojo.",
     "timeline.mix.title": "Amasado",

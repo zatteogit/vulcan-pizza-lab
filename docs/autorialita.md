@@ -55,6 +55,10 @@ firmato da un agente, «nessun segno» se non c'è traccia (non prova l'assenza)
 | D-016 | 2026-10-24 | Contenuti | Napoletana: lo stile segue la STG (reg. UE 97/2010: 6–14 h, panetto 250 g); il disciplinare AVPN 2024 è la versione «Disciplinare AVPN» (12–24 h, 280 g) | stile su AVPN; range di compromesso 8–24 h | come D-015; `docs/fonti-dati.md` §1.1 | Matteo | come D-015 |
 | D-017 | 2026-10-24 | Contenuti | Focaccia di Recco sui valori del disciplinare IGP: forno 270–320 °C (ideale 300), cottura 4–8 min | tenere 300–340 °C e 8–10 min | come D-015; `docs/fonti-dati.md` §1.3 | Matteo | come D-015 |
 | D-018 | 2026-10-24 | Contenuti | Olio di frittura (pizza fritta e montanara): 175–190 °C, ideale 175 (AVPN 2024) | 180–190, ideale 185 | come D-015; `docs/fonti-dati.md` §1.4 | Matteo | come D-015 |
+| D-019 | 2026-10-24 | Accessibilità | Testo minimo 12 px per il testo informativo, 11 px solo per gli eyebrow maiuscoli (audit F28) | solo testo informativo; lasciare com'è | risposta a scelta nella sessione dell'agente del 24/10; `docs/accessibilita-audit-2026-10.md` | Matteo | proposta e modifiche: agente AI |
+| D-020 | 2026-10-24 | Motore | Forno a legna dello stile (STG, New Haven): avviso, non blocco, in consigli e ricetta | blocco ovunque; lasciare l'incoerenza | come D-019; `docs/motore-correzioni-2026-10-22.md` | Matteo | come D-019 |
+| D-021 | 2026-10-24 | Dati | Due forni a gas: «da pizza» fino a 500 °C (portatili) e «a platea» fino a 350 °C | un solo tipo a 450–500 °C; lasciare 350 °C | come D-019; `docs/fonti-dati.md` §3.1 | Matteo | come D-019 |
+| D-022 | 2026-10-24 | Contenuti | M-7: un terzo stile fritto (fritta aperta) accanto a fritta ripiena e montanara, solo con fonti | chiudere M-7 con le due voci attuali | come D-019 | Matteo | ricerca fonti e proposta: agente AI |
 
 D-008 e D-009 arrivano dal brief del lavoro come decisioni del proprietario;
 nel repository non c'è ancora un riscontro scritto, quindi restano da
