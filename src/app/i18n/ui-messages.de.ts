@@ -223,6 +223,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "features.recipe.recipe-stat-strip.prima-value-ottimizzato-value-e6e2e71f": "Vorher {0} → optimiert {1}",
   "features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8": "Optimierter Wert. Vorher: {0}. Jetzt: {1}",
   "features.recipe.recipe-stat-strip.w-value-f64b6332": "W{0}",
+  "features.recipe.recipe-stat-strip.idealOven": "ideal {0}",
   "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "Zu Favoriten hinzufügen",
   "features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success": "Rezept im Rezeptbuch gespeichert!",
   "features.recipe.recipe-view.rimosso-dai-preferiti-toast-info": "Rezept aus dem Rezeptbuch entfernt.",

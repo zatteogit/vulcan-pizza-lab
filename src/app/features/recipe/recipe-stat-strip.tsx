@@ -59,10 +59,15 @@ export function RecipeStatStrip({
     recipe.fermentation_temp_c < 10
       ? (ui.fermentEnvFridge ?? "frigo")
       : (ui.fermentEnvAmbient ?? "ambiente");
+  /* Audit totale n. 6: la ricetta (anche l'originale) si calcola sul TUO
+     forno; se resta sotto il minimo dello stile lo diciamo accanto al valore. */
+  const ovenBelowStyle =
+    !isFriedStyle(recipe.style) && recipe.oven_temp_c < recipe.style.baking.temp_c_range[0];
   const cells: {
     label: string;
     value: string;
     changed?: { canonical: string };
+    note?: string;
   }[] = [
     { label: ui.statHydration, value: fmt.percent(recipe.hydration_pct), changed: hChanged },
     { label: ui.statFlourStrength ?? "Forza farina", value: `${recipe.flour_w} W`, changed: wChanged },
@@ -74,7 +79,13 @@ export function RecipeStatStrip({
     // M-6: le fritte non hanno forno, la temperatura è quella dell'olio.
     isFriedStyle(recipe.style)
       ? { label: ui.statOil, value: fmt.celsius(recipe.style.baking.temp_c_ideal) }
-      : { label: ui.statOven, value: fmt.celsius(recipe.oven_temp_c) },
+      : {
+          label: ui.statOven,
+          value: fmt.celsius(recipe.oven_temp_c),
+          note: ovenBelowStyle
+            ? uiMessage("features.recipe.recipe-stat-strip.idealOven", [fmt.celsius(recipe.style.baking.temp_c_ideal)])
+            : undefined,
+        },
   ];
 
   /* La tabella tecnica del sacco di farina: filetto d'apertura e filetti
@@ -88,6 +99,7 @@ export function RecipeStatStrip({
           className={i > 0 ? "stat-strip__cell stat-strip__cell--divider" : "stat-strip__cell"}
         >
           <SpecCell label={cell.label} value={cell.value} index={i} changed={cell.changed} />
+          {cell.note && <p className="stat-strip__note">{cell.note}</p>}
         </div>
       ))}
     </div>

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { STYLES_DB } from "../domain/styles-db";
 import { STYLE_PHOTOS } from "./style-photos";
+import { getVersions } from "./style-versions";
 import { getRecipesByAuthenticity, getToppingForStyle, scaleToppingAmounts } from "./topping-library";
 
 /* ═══ C-1 — regole editoriali per stile controllabili dal codice ═══
@@ -48,5 +49,26 @@ describe("linee guida degli stili", () => {
 
   it("ogni stile ha almeno una foto", () => {
     expect(styles.filter((s) => !STYLE_PHOTOS[s.id]).map((s) => s.id)).toEqual([]);
+  });
+
+  /* Audit totale n. 6: una versione senza range propri resta nei range dello
+   * stile (la Detroit «classica» aveva 36 h su 8–24). */
+  it("le versioni senza range propri stanno nei range dello stile", () => {
+    const out = styles.flatMap((style) =>
+      getVersions(style.id)
+        .filter((v) => !v.ranges)
+        .flatMap((v) => {
+          const d = style.dough;
+          const checks: [string, number, [number, number]][] = [
+            ["idratazione", v.params.hydration_pct, d.hydration_pct_range],
+            ["W", v.params.flour_w, d.flour_w_range],
+            ["ore", v.params.fermentation_hours, d.fermentation_hours_range],
+          ];
+          return checks
+            .filter(([, x, [lo, hi]]) => x < lo || x > hi)
+            .map(([n, x, r]) => `${style.id}/${v.id}: ${n} ${x} fuori da ${r.join("–")}`);
+        }),
+    );
+    expect(out).toEqual([]);
   });
 });

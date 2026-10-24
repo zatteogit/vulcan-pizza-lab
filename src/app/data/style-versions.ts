@@ -399,13 +399,14 @@ const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       id: "detroit_classica",
       label: "Classica",
       emoji: "🚗",
-      description: "74% idratazione, 36h frigo, cheese crown",
+      description: "74% idratazione, 24h frigo, cheese crown",
       skill_hint: 2,
       params: {
         hydration_pct: 74,
         flour_w: 300,
         flour_pl: 0.62,
-        fermentation_hours: 36,
+        // Audit totale n. 6: 36 h era fuori dal range dello stile (8–24 h, D-031).
+        fermentation_hours: 24,
         fermentation_temp_c: 4,
         use_pre_ferment: false,
       },
@@ -685,6 +686,13 @@ const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       description: "Idratazione 85%, no-knead spinto, 48h frigo. Stile pizza al taglio Bonci.",
       skill_hint: 3,
       impasto_ref: "bonci_metodo",
+      /* Metodo ad alta idratazione: oltre il range dello stile, dichiarato qui
+       * come per le altre varianti (audit totale n. 6). */
+      ranges: {
+        hydration_pct_range: [80, 88],
+        flour_w_range: [300, 340],
+        fermentation_hours_range: [24, 72],
+      },
       params: {
         hydration_pct: 85,
         flour_w: 320,

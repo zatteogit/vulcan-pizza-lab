@@ -11546,6 +11546,12 @@
   }
 
   /* Voce dello spec-sheet: etichetta sopra, valore sotto. */
+  .stat-strip__note {
+    margin-top: var(--space-0-5);
+    font-size: var(--font-size-base);
+    color: var(--text-warning);
+  }
+
   .stat-strip__spec {
     text-align: left;
     min-width: 0;
