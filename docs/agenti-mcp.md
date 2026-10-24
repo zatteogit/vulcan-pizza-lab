@@ -26,6 +26,13 @@ Ogni risposta ha un riassunto leggibile (`content`) e i dati strutturati
 errori di input tornano come risultato con `isError: true`, così il modello
 può correggersi.
 
+La cucina si descrive con `oven_model` (marca e modello, D-048) oppure
+`oven_type` e `oven_max_temp_c`, più `available_hours` (con `meal_deadline`
+se c'è un pasto a orario fisso), `skill_level`, `dough_balls` e
+l'attrezzatura (`has_baking_pan`, `has_mixer`, `has_pizza_stone`,
+`has_pizza_steel`). Istruzioni pronte per un GPT o una skill:
+`docs/istruzioni-gpt.md`.
+
 I testi dei passi sono in italiano (sono i testi di riserva del motore); la
 traduzione dei passi resta nell'app. Prossimo passo previsto: widget grafici
 (Apps SDK di OpenAI e MCP UI) per mostrare ricetta e procedimento in chat.

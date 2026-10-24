@@ -102,10 +102,10 @@ function constraintsFrom(args: Json): UserConstraints {
     available_hours: num(args, "available_hours", 1, 168, 24),
     meal_deadline: args.meal_deadline === true,
     dough_balls: Math.round(num(args, "dough_balls", 1, 200, 4)),
-    has_mixer: false,
-    has_pizza_stone: false,
-    has_pizza_steel: false,
-    has_baking_pan: false,
+    has_mixer: args.has_mixer === true,
+    has_pizza_stone: args.has_pizza_stone === true,
+    has_pizza_steel: args.has_pizza_steel === true,
+    has_baking_pan: args.has_baking_pan === true,
     dietary_filters: [],
     pantry_flours: [],
     pantry_yeasts: [],
@@ -179,9 +179,17 @@ const OVEN_INPUT = {
   },
   oven_type: { type: "string", enum: OVEN_TYPES, description: "Kind of oven. home = domestic oven (~250 °C)." },
   oven_max_temp_c: { type: "number", description: "Highest temperature the oven reaches, °C." },
-  available_hours: { type: "number", description: "Hours until the meal (limits fermentation)." },
+  available_hours: { type: "number", description: "Hours available (default 24). Without meal_deadline they limit only the fermentation." },
+  meal_deadline: {
+    type: "boolean",
+    description: "true when available_hours run to a meal at a fixed time: the whole timeline (mixing, balling, baking) must fit.",
+  },
   skill_level: { type: "number", enum: [1, 2, 3, 4], description: "1 beginner … 4 professional." },
   dough_balls: { type: "number", description: "How many dough balls / pans / pieces." },
+  has_mixer: { type: "boolean", description: "Has a stand or spiral mixer." },
+  has_baking_pan: { type: "boolean", description: "Has a baking pan (needed by pan styles)." },
+  has_pizza_stone: { type: "boolean", description: "Has a baking stone." },
+  has_pizza_steel: { type: "boolean", description: "Has a baking steel." },
 };
 
 export const MCP_TOOLS: McpTool[] = [
@@ -246,7 +254,6 @@ export const MCP_TOOLS: McpTool[] = [
       const limit = Math.round(num(args, "limit", 1, 30, 5));
       const recs = recommendStyles(constraints)
         .filter((rec) => rec.tier !== "not_feasible")
-        .slice(0, limit)
         .map((rec) => {
           const { now, best } = kitchenCompatibility(rec.style, constraints);
           return {
@@ -258,8 +265,10 @@ export const MCP_TOOLS: McpTool[] = [
             warnings: rec.warnings.map(msg),
           };
         })
-        // Per compatibilità con la cucina, il numero che l'agente mostra.
-        .sort((a, b) => b.compatibility - a.compatibility);
+        // Per compatibilità con la cucina, il numero che l'agente mostra;
+        // il limite si applica dopo, se no i migliori restano fuori.
+        .sort((a, b) => b.compatibility - a.compatibility)
+        .slice(0, limit);
       return {
         summary: recs.map((r) => `${r.name}: ${r.compatibility}/100`).join("; "),
         data: { constraints, styles: recs },

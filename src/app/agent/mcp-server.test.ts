@@ -66,4 +66,19 @@ describe("server MCP", () => {
     const scores = data.styles.map((s) => s.compatibility);
     expect(scores).toEqual([...scores].sort((a, b) => b - a));
   });
+
+  it("il limite tiene i più compatibili, non i primi del motore", () => {
+    const top = (limit: number) =>
+      (call("recommend_styles", { oven_model: "Koda 16", limit }).structuredContent as { styles: { id: string }[] }).styles.map((s) => s.id);
+    expect(top(3)).toEqual(top(30).slice(0, 3));
+  });
+
+  it("con la teglia in casa gli stili in teglia non chiedono la teglia", () => {
+    const warnings = (has_baking_pan: boolean) =>
+      (call("recommend_styles", { oven_type: "home", oven_max_temp_c: 250, limit: 30, has_baking_pan }).structuredContent as {
+        styles: { id: string; warnings: string[] }[];
+      }).styles.find((s) => s.id === "teglia_romana")?.warnings.join(" ") ?? "";
+    expect(warnings(false)).toMatch(/teglia/i);
+    expect(warnings(true)).not.toMatch(/Serve una teglia/);
+  });
 });
