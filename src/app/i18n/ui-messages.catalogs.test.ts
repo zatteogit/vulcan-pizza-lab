@@ -37,3 +37,17 @@ describe("problemi del troubleshooting tradotti (I18N-1)", () => {
     }
   });
 });
+
+describe("passi del motore tradotti (I18N-2)", () => {
+  it("ogni chiave timeline.* emessa dal motore esiste in ogni lingua", async () => {
+    const engine = Object.values(
+      import.meta.glob("/src/app/domain/pizza-engine.ts", { query: "?raw", import: "default", eager: true }),
+    )[0] as string;
+    const keys = [...engine.matchAll(/em\(\s*"(timeline\.[\w.]+)"/g)].map((m) => m[1]);
+    expect(keys.length).toBeGreaterThan(50);
+    for (const [lang, bundle] of Object.entries(LOCALES)) {
+      const missing = [...new Set(keys)].filter((key) => !bundle.engineMessages?.[key]);
+      expect(missing, lang).toEqual([]);
+    }
+  });
+});

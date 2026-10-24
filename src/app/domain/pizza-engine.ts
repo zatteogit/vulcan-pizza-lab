@@ -561,6 +561,13 @@ export interface TimelineStep {
   };
   /** Variante di testo per la localizzazione (es. preriscaldo: cosa fanno i
    *  panetti mentre il forno scalda). Assente = testo standard. */
+  /** I18N-2: testi del passo come messaggi con chiave CMS, parametri e
+   *  fallback italiano. La UI li traduce; title/description restano l'italiano. */
+  msg?: {
+    title?: EngineMsg;
+    description?: EngineMsg[];
+    tip?: { beginner: EngineMsg; nerd: EngineMsg };
+  };
   /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. */
   variant?: "whole_proof" | "during_rest" | "oil" | "fry";
 }
@@ -610,8 +617,11 @@ export {
 
 
 // ═══ Q10 MODEL — VARIABLE BY YEAST TYPE & TEMPERATURE ═══
-// Letteratura: Saccharomyces cerevisiae Q10=2.1±0.3 (15-30°C), scende a 1.6 sotto 10°C
-// Lievito madre: LAB (batteri lattici) hanno Q10 1.9-2.4, media diversa da S. cerevisiae
+// Stime del modello, non valori di letteratura (C-4, docs/fonti-dati.md §4).
+// Q10 ≈ 2 tra 18 e 25 °C è coerente con i tassi di crescita di S. cerevisiae
+// (Salvadó et al. 2011). Il valore 1,6 sotto i 10 °C è una scelta del modello
+// senza fonte. Per il lievito madre (batteri lattici + lieviti) i valori sono
+// anch'essi stime da verificare.
 //
 // getQ10 restituisce il Q10 LOCALE del tratto in cui cade la temperatura. Per la
 // velocità rispetto a 18°C si usa fermentationSpeedRatio, che applica i tratti in
@@ -1347,15 +1357,17 @@ export const FLOUR_W_RANGES: Record<string, [number, number]> =
     manitoba: [340, 380],
     integrale: [200, 260],
     semola: [220, 280],
-    // Branded flours (from flour-database.ts)
-    caputo_pizzeria_blu: [240, 280],
-    caputo_nuvola: [240, 280],
-    caputo_cuoco: [300, 340],
-    petra_5037: [340, 380],
-    petra_3_evolutiva: [320, 360],
+    // Farine di marca: chiavi = id di flour-database.ts. C-4: W dalle schede
+    // del produttore (Mulino Caputo 2024–2025, Molino Quaglia s.d.; fonti in
+    // docs/fonti-dati.md §2.2). Petra 3 è tolta: il produttore non dichiara W.
+    // Le ultime tre sono ancora da verificare.
+    caputo_pizzeria: [260, 280],
+    caputo_nuvola: [270, 290],
+    caputo_cuoco: [300, 320],
+    petra_5037: [300, 340],
     "5stagioni_rossa": [260, 300],
     "5stagioni_5lune": [330, 370],
-    dallagiovanna_manitoba: [360, 400],
+    dallagiovanna_manitoba_oro: [360, 400],
   };
 
 function calculateYeastPercentage(
@@ -2681,48 +2693,80 @@ interface EquipmentContext {
   ovenHeatProfile?: UserConstraints["oven_heat_profile"];
 }
 
+/* ═══ I18N-2 — testi dei passi con chiave ═══ */
+/** Parametri che sono temperature in °C: nel testo italiano di riserva
+ *  prendono l'unità, nella UI il formattatore (°C o °F). */
+const STEP_TEMP_PARAMS = new Set(["temp"]);
+
+function renderStepIt(msgs: EngineMsg[]): string {
+  return msgs
+    .map((m) =>
+      Object.entries(m.params ?? {}).reduce(
+        (text, [k, v]) => text.split(`{${k}}`).join(STEP_TEMP_PARAMS.has(k) ? `${v}°C` : String(v)),
+        m.fallback,
+      ),
+    )
+    .join(" ");
+}
+
+/** Passo con testi a chiave: compila title/description/tip in italiano. */
+function keyedStep(
+  base: Omit<TimelineStep, "title" | "description" | "tip" | "msg">,
+  title: EngineMsg,
+  description: EngineMsg[],
+  tip?: { beginner: EngineMsg; nerd: EngineMsg },
+): TimelineStep {
+  return {
+    ...base,
+    title: renderStepIt([title]),
+    description: renderStepIt(description),
+    ...(tip ? { tip: { beginner: renderStepIt([tip.beginner]), nerd: renderStepIt([tip.nerd]) } } : {}),
+    msg: { title, description, ...(tip ? { tip } : {}) },
+  };
+}
+
 interface KneadGuidance {
-  description: string;
+  description: EngineMsg;
   duration_minutes: number;
-  tip: { beginner: string; nerd: string };
+  tip: { beginner: EngineMsg; nerd: EngineMsg };
 }
 
 function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
   switch (eq?.mixerType) {
     case "spiral":
       return {
-        description: "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura.",
+        description: em("timeline.mix.spiral.desc", "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura."),
         duration_minutes: 9,
         tip: {
-          beginner: "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte.",
-          nerd: "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare.",
+          beginner: em("timeline.mix.spiral.tipBeginner", "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte."),
+          nerd: em("timeline.mix.spiral.tipNerd", "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare."),
         },
       };
     case "fork":
       return {
-        description: "Impastatrice a forcella: 12-15 min a velocità unica. Incordatura lenta, maglia molto estensibile.",
+        description: em("timeline.mix.fork.desc", "Impastatrice a forcella: 12-15 min a velocità unica. Incordatura lenta, maglia molto estensibile."),
         duration_minutes: 14,
         tip: {
-          beginner: "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza.",
-          nerd: "Movimento lento e ossigenante: ideale per impasti molli; incorda meno aggressivamente, estensibilità elevata.",
+          beginner: em("timeline.mix.fork.tipBeginner", "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza."),
+          nerd: em("timeline.mix.fork.tipNerd", "Movimento lento e ossigenante: ideale per impasti molli; incorda meno aggressivamente, estensibilità elevata."),
         },
       };
     case "planetary":
       return {
-        description: "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo).",
+        description: em("timeline.mix.planetary.desc", "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo)."),
         duration_minutes: 10,
         tip: {
-          beginner: "Parti in 1ª per amalgamare, poi passa in 2ª. Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
-          nerd: "Sorveglia la temperatura impasto: oltre 26-28°C il glutine si indebolisce. Usa acqua fredda se la ciotola scalda.",
+          beginner: em("timeline.mix.planetary.tipBeginner", "Parti in 1ª per amalgamare, poi passa in 2ª. Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti."),
+          nerd: em("timeline.mix.planetary.tipNerd", "Sorveglia la temperatura impasto: oltre 26-28°C il glutine si indebolisce. Usa acqua fredda se la ciotola scalda."),
         },
       };
     case "stand_domestic":
       return {
-        description: "Planetaria domestica (tipo KitchenAid): gancio a velocità 1-2, ~10-12 min. Pause di 1-2 min se la ciotola si scalda.",
+        description: em("timeline.mix.stand_domestic.desc", "Planetaria domestica (tipo KitchenAid): gancio a velocità 1-2, ~10-12 min. Pause di 1-2 min se la ciotola si scalda."),
         duration_minutes: 12,
         tip: {
-          beginner: "Non superare la 2ª velocità: il motore domestico fatica e scalda. Pronto = impasto liscio che si stacca dal fondo.",
-          nerd: "Trasferisce più calore per attrito (K~0.25): parti con acqua a frigo e impasti corti, non sovraccaricare il motore.",
+          beginner: em("timeline.mix.stand_domestic.tipBeginner", "Non superare la 2ª velocità: il motore domestico fatica e scalda. Pronto = impasto liscio che si stacca dal fondo."),
+          nerd: em("timeline.mix.stand_domestic.tipNerd", "Trasferisce più calore per attrito (K~0.25): parti con acqua a frigo e impasti corti, non sovraccaricare il motore."),
         },
       };
     case "hands":
@@ -2730,57 +2774,61 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
     default:
       if (eq?.hasMixer) {
         return {
-          description: "Con l'impastatrice: gancio a bassa velocità ~10 min fino a incordatura. Liscio ed elastico.",
-          duration_minutes: 10,
-          tip: {
-            beginner: "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
-            nerd: "Controlla la temperatura finale dell'impasto (~24°C): oltre, il glutine si degrada.",
-          },
-        };
+        description: em("timeline.mix.generic.desc", "Con l'impastatrice: gancio a bassa velocità ~10 min fino a incordatura. Liscio ed elastico."),
+        duration_minutes: 10,
+        tip: {
+          beginner: em("timeline.mix.generic.tipBeginner", "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti."),
+          nerd: em("timeline.mix.generic.tipNerd", "Controlla la temperatura finale dell'impasto (~24°C): oltre, il glutine si degrada."),
+        },
+      };
       }
   }
   // A mano (default)
   return {
-    description: "Impastare a mano fino a incordatura (~15-20 min): pieghe sul piano, slap & fold se l'idratazione è alta.",
-    duration_minutes: 20,
-    tip: {
-      beginner: "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
-      nerd: "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica.",
-    },
-  };
+        description: em("timeline.mix.hands.desc", "Impastare a mano fino a incordatura (~15-20 min): pieghe sul piano, slap & fold se l'idratazione è alta."),
+        duration_minutes: 20,
+        tip: {
+          beginner: em("timeline.mix.hands.tipBeginner", "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova."),
+          nerd: em("timeline.mix.hands.tipNerd", "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica."),
+        },
+      };
 }
 
 /** Setup forno specifico per tipo: "a quanto metto le resistenze". */
-function ovenBakeSetup(eq: EquipmentContext | undefined, _ovenTemp: number): string {
+function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
   const hasStone = (eq?.surfaces ?? []).some((s) =>
     ["refractory_brick", "cordierite_stone", "steel_plate"].includes(s),
   );
   if (eq?.ovenHeatProfile === "top_grill") {
-    return ` Grill/resistenza superiore forte: preriscalda con ${hasStone ? "pietra o acciaio" : "ripiano"} medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.`;
+    return hasStone
+      ? em("timeline.oven.topGrillStone", "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.")
+      : em("timeline.oven.topGrillShelf", "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.");
   }
   if (eq?.ovenHeatProfile === "bottom_boost") {
-    return " Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.";
+    return em("timeline.oven.bottomBoost", "Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.");
   }
   if (eq?.ovenHeatProfile === "fan_assisted") {
-    return " Ventilato: usa una temperatura leggermente piu bassa se il bordo asciuga, ruota a meta cottura e proteggi i topping delicati.";
+    return em("timeline.oven.fanAssisted", "Ventilato: usa una temperatura leggermente più bassa se il bordo asciuga, ruota a metà cottura e proteggi i topping delicati.");
   }
   if (eq?.ovenHeatProfile === "gas_rear") {
-    return " Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.";
+    return em("timeline.oven.gasRear", "Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.");
   }
   if (eq?.ovenHeatProfile === "wood_side_flame") {
-    return " Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.";
+    return em("timeline.oven.woodSideFlame", "Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.");
   }
   switch (eq?.ovenType) {
     case "wood":
-      return " Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.";
+      return em("timeline.oven.wood", "Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.");
     case "electric_high":
-      return " Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.";
+      return em("timeline.oven.electricHigh", "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.");
     case "gas":
-      return " Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.";
+      return em("timeline.oven.gas", "Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.");
     case "home":
     case "electric_standard":
     default:
-      return ` Forno statico (resistenza sopra + sotto) al massimo${hasStone ? ", pietra/acciaio già caldi sul ripiano medio-alto" : ", ripiano medio-alto"}. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.`;
+      return hasStone
+        ? em("timeline.oven.staticStone", "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.")
+        : em("timeline.oven.staticShelf", "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.");
   }
 }
 
@@ -2866,23 +2914,33 @@ function generateTimeline(
   // No-knead: l'impastatrice è irrilevante (mescola + pieghe a mano). Altrimenti
   // la descrizione/durata/consigli cambiano col tipo di impastatrice dichiarato.
   const knead = isNoKnead ? null : mixerKneadGuidance(equipment);
-  steps.push({
-    id: "mix",
-    title: "Impasto",
-    description: isNoKnead
-      ? "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min nelle prime 1,5–2 ore."
-      : (knead as KneadGuidance).description,
-    duration_minutes: isNoKnead ? 10 : (knead as KneadGuidance).duration_minutes,
-    icon: "hand",
-    timing_label: "Inizio",
-    tip: isNoKnead
-      ? {
-          beginner:
-            "Non serve impastare! Mescola finché non ci sono grumi asciutti. Poi, ogni ~30 min, bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro ruotando la ciotola: bastano 3 giri da 4 pieghe.",
-          nerd: "L'autolisi sviluppa il glutine senza lavoro meccanico; le pieghe a intervalli (stretch & fold) allineano e tendono le fibrille di glutine e redistribuiscono i gas, dando forza senza degassare.",
-        }
-      : (knead as KneadGuidance).tip,
-  });
+  if (isNoKnead) {
+    // No-knead: testi dal CMS (timelineLabels.mix_noknead) nella UI.
+    steps.push({
+      id: "mix",
+      title: "Impasto",
+      description:
+        "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. Poi 3 giri di pieghe (stretch & fold) a intervalli di ~30 min nelle prime 1,5–2 ore.",
+      duration_minutes: 10,
+      icon: "hand",
+      timing_label: "Inizio",
+      tip: {
+        beginner:
+          "Non serve impastare! Mescola finché non ci sono grumi asciutti. Poi, ogni ~30 min, bagna le mani, afferra un lembo, tiralo verso l'alto e ripiegalo al centro ruotando la ciotola: bastano 3 giri da 4 pieghe.",
+        nerd: "L'autolisi sviluppa il glutine senza lavoro meccanico; le pieghe a intervalli (stretch & fold) allineano e tendono le fibrille di glutine e redistribuiscono i gas, dando forza senza degassare.",
+      },
+    });
+  } else {
+    const k = knead as KneadGuidance;
+    steps.push(
+      keyedStep(
+        { id: "mix", duration_minutes: k.duration_minutes, icon: "hand", timing_label: "Inizio" },
+        em("timeline.mix.title", "Impasto"),
+        [k.description],
+        k.tip,
+      ),
+    );
+  }
 
   /* ─── PIANO PRERISCALDO (ENG-5, audit motore 22/10/2026) ───
    * Il preriscaldo avviene in parallelo al riposo dei panetti, quindi i suoi
@@ -2957,6 +3015,20 @@ function generateTimeline(
   steps.push({
     id: "divide",
     title: "Staglio",
+    ...(isMultiPiece
+      ? {
+          msg: {
+            title: em("timeline.divide.title", "Staglio"),
+            description: [
+              em(
+                "timeline.divide.multiPiece",
+                "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.",
+                { pieces: layout.pieces_per_unit ?? 2 },
+              ),
+            ],
+          },
+        }
+      : {}),
     description: isMultiPiece
       ? `Dividere in ${layout.pieces_per_unit} pezzi uguali per ogni unità. Formare pallina o disco.`
       : isGentleDivide
@@ -3047,31 +3119,40 @@ function generateTimeline(
   });
 
   // ─── STESURA (layout-aware) ───
-  let shapeDesc: string;
+  let shapeMsg: EngineMsg;
   if (layout.type === "folded_layers") {
-    shapeDesc = `Stendere una sfoglia sottilissima e ripiegare ${layout.folds ?? 4} volte a libro, distribuendo la farcitura tra le pieghe.`;
+    shapeMsg = em(
+      "timeline.shape.foldedLayers",
+      "Stendere una sfoglia sottilissima e ripiegare {folds} volte a libro, distribuendo la farcitura tra le pieghe.",
+      { folds: layout.folds ?? 4 },
+    );
   } else if (layout.type === "double_thin_sheet") {
-    shapeDesc = "Stendere due sfoglie sottilissime quasi trasparenti col mattarello.";
+    shapeMsg = em("timeline.shape.doubleThinSheet", "Stendere due sfoglie sottilissime quasi trasparenti col mattarello.");
   } else if (layout.type === "stacked") {
-    shapeDesc = "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.";
+    shapeMsg = em("timeline.shape.stacked", "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.");
   } else if (layout.type === "closed_stuffed") {
-    shapeDesc = "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.";
+    shapeMsg = em("timeline.shape.closedStuffed", "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.");
   } else {
-    shapeDesc =
+    // Layout singolo: nella UI vale il testo del CMS (timelineLabels.shape).
+    shapeMsg =
       style.shape.shape_type === "rectangular"
-        ? "Stendere nella teglia oliata con le mani"
+        ? em("timeline.shape.rectangular", "Stendere nella teglia oliata con le mani")
         : style.crust_type === "crispy_thin"
-          ? "Stendere con mattarello, sottilissima"
-          : "Allargare a mano dal centro, preservare il cornicione";
+          ? em("timeline.shape.thin", "Stendere con mattarello, sottilissima")
+          : em("timeline.shape.round", "Allargare a mano dal centro, preservare il cornicione");
   }
-  steps.push({
-    id: "shape",
-    title: "Stesura",
-    description: shapeDesc,
-    duration_minutes: layout.type === "folded_layers" ? 10 : 5,
-    icon: "expand",
-    timing_label: layout.type === "folded_layers" ? "10 min" : "5 min",
-  });
+  steps.push(
+    keyedStep(
+      {
+        id: "shape",
+        duration_minutes: layout.type === "folded_layers" ? 10 : 5,
+        icon: "expand",
+        timing_label: layout.type === "folded_layers" ? "10 min" : "5 min",
+      },
+      em("timeline.shape.title", "Stesura"),
+      [shapeMsg],
+    ),
+  );
 
   // VPL-A1: i pre_prep "just_before_assembly" (es. saltare i funghi, patate in
   // ammollo) NON sono più step separati della timeline: cambiare condimento deve
@@ -3085,20 +3166,17 @@ function generateTimeline(
   // ─── FARCITURA / ASSEMBLAGGIO (layout-aware) ───
   if (layout.type === "stacked" && layout.interlayer === "oil_brush") {
     // Baciata / Marinella: spennellatura olio + sovrapposizione del secondo disco
-    steps.push({
-      id: "stack",
-      title: "Sovrapposizione",
-      description:
-        "Spennellare il primo disco con olio EVO; adagiare sopra il secondo disco e sigillare leggermente i bordi.",
-      duration_minutes: 3,
-      icon: "layers",
-      timing_label: "3 min",
-      tip: {
-        beginner:
-          "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli.",
-        nerd: "L'olio crea un layer idrofobo che impedisce la coalescenza dei due strati di glutine: facilita lo sdoppiamento post-bake.",
-      },
-    });
+    steps.push(
+      keyedStep(
+        { id: "stack", duration_minutes: 3, icon: "layers", timing_label: "3 min" },
+        em("timeline.stack.title", "Sovrapposizione"),
+        [em("timeline.stack.desc", "Spennellare il primo disco con olio EVO; adagiare sopra il secondo disco e sigillare leggermente i bordi.")],
+        {
+          beginner: em("timeline.stack.tipBeginner", "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli."),
+          nerd: em("timeline.stack.tipNerd", "L'olio crea un layer idrofobo che impedisce la coalescenza dei due strati di glutine: facilita lo sdoppiamento post-bake."),
+        },
+      ),
+    );
     // Topping step in after_stack (es. patate sopra per Patate e Porchetta)
     injectToppingAt("after_stack");
   } else if (layout.type === "closed_stuffed" && layout.filling_timing === "pre_bake_internal") {
@@ -3107,20 +3185,17 @@ function generateTimeline(
       (s) => s.insert_at === "after_fill_internal" && s.replaces_generic,
     );
     if (!internalFillReplaced) {
-      steps.push({
-        id: "fill_internal",
-        title: "Ripieno e chiusura",
-        description:
-          "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.",
-        duration_minutes: 8,
-        icon: "chef-hat",
-        timing_label: "8 min",
-        tip: {
-          beginner:
-            "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce.",
-          nerd: "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow).",
-        },
-      });
+      steps.push(
+        keyedStep(
+          { id: "fill_internal", duration_minutes: 8, icon: "chef-hat", timing_label: "8 min" },
+          em("timeline.fillClosed.title", "Ripieno e chiusura"),
+          [em("timeline.fillClosed.desc", "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.")],
+          {
+            beginner: em("timeline.fillClosed.tipBeginner", "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce."),
+            nerd: em("timeline.fillClosed.tipNerd", "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow)."),
+          },
+        ),
+      );
     }
     injectToppingAt("after_fill_internal");
   } else if (layout.type === "double_thin_sheet") {
@@ -3129,15 +3204,13 @@ function generateTimeline(
       (s) => s.insert_at === "after_fill_internal" && s.replaces_generic,
     );
     if (!internalFillReplaced) {
-      steps.push({
-        id: "fill_internal",
-        title: "Farcitura tra sfoglie",
-        description:
-          "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.",
-        duration_minutes: 5,
-        icon: "chef-hat",
-        timing_label: "5 min",
-      });
+      steps.push(
+        keyedStep(
+          { id: "fill_internal", duration_minutes: 5, icon: "chef-hat", timing_label: "5 min" },
+          em("timeline.fillSheets.title", "Farcitura tra sfoglie"),
+          [em("timeline.fillSheets.desc", "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.")],
+        ),
+      );
     }
     injectToppingAt("after_fill_internal");
   } else if (layout.filling_timing === "pre_bake" || layout.cook_mode === "topped") {
@@ -3163,48 +3236,51 @@ function generateTimeline(
   const baseTempC = actualOvenTemp ?? style.baking.temp_c_ideal;
   const ovenTempLabel = Math.round(baseTempC + (topping?.bake_adjustments?.temperature_delta_c ?? 0));
   const effectiveCookSec = cookTimeSec + (topping?.bake_adjustments?.additional_minutes ?? 0) * 60;
+  // Nota di cottura del condimento: la UI la traduce dall'id del condimento.
+  const toppingBakeNote: EngineMsg[] = topping?.bake_adjustments?.note
+    ? [em("topping.bakeNote", topping.bake_adjustments.note, { toppingId: topping.id })]
+    : [];
   if (layout.cook_mode === "white_then_top") {
     // Baciata: cottura in bianco
     const firstBakeMin = Math.max(8, Math.round((effectiveCookSec / 60) * 0.65));
     const secondBakeMin = Math.max(3, Math.round((effectiveCookSec / 60) * 0.35));
-    steps.push({
-      id: "bake",
-      title: "Prima cottura (in bianco)",
-      description: `Cuocere a ${ovenTempLabel}°C senza farcitura. La pizza deve essere dorata ma non bruciata.${topping?.bake_adjustments?.note ? ` ${topping.bake_adjustments.note}` : ""}${ovenBakeSetup(equipment, ovenTempLabel)}`,
-      duration_minutes: firstBakeMin,
-      icon: "flame",
-      timing_label: `${firstBakeMin} min`,
-      tip: {
-        beginner: "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti.",
-        nerd: "La cottura in bianco completa la gelatinizzazione dell'amido prima di introdurre umidità del topping.",
-      },
-    });
+    steps.push(
+      keyedStep(
+        { id: "bake", duration_minutes: firstBakeMin, icon: "flame", timing_label: `${firstBakeMin} min` },
+        em("timeline.bakeWhite.title", "Prima cottura (in bianco)"),
+        [
+          em("timeline.bakeWhite.desc", "Cuocere a {temp} senza farcitura. La pizza deve essere dorata ma non bruciata.", { temp: ovenTempLabel }),
+          ...toppingBakeNote,
+          ovenBakeSetup(equipment),
+        ],
+        {
+          beginner: em("timeline.bakeWhite.tipBeginner", "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti."),
+          nerd: em("timeline.bakeWhite.tipNerd", "La cottura in bianco completa la gelatinizzazione dell'amido prima di introdurre umidità del topping."),
+        },
+      ),
+    );
     injectToppingAt("after_bake");
     const splitReplaced = injectToppingAt("after_split_fill");
     if (!splitReplaced) {
-      steps.push({
-        id: "split_fill",
-        title: "Sdoppiamento e farcitura",
-        description:
-          "Estrarre dal forno. Con un coltello a sega tagliare orizzontalmente in due metà. Farcire l'interno con i condimenti scelti e richiudere.",
-        duration_minutes: 7,
-        icon: "scissors",
-        timing_label: "7 min",
-        tip: {
-          beginner:
-            "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle.",
-          nerd: "Sdoppiamento post-bake = ricetta cold-filled: la matrice amidacea è già stabile, le farciture non vengono cotte oltre i 60°C interni.",
-        },
-      });
+      steps.push(
+        keyedStep(
+          { id: "split_fill", duration_minutes: 7, icon: "scissors", timing_label: "7 min" },
+          em("timeline.splitFill.title", "Sdoppiamento e farcitura"),
+          [em("timeline.splitFill.desc", "Estrarre dal forno. Con un coltello a sega tagliare orizzontalmente in due metà. Farcire l'interno con i condimenti scelti e richiudere.")],
+          {
+            beginner: em("timeline.splitFill.tipBeginner", "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle."),
+            nerd: em("timeline.splitFill.tipNerd", "Sdoppiamento post-bake = ricetta cold-filled: la matrice amidacea è già stabile, le farciture non vengono cotte oltre i 60°C interni."),
+          },
+        ),
+      );
     }
-    steps.push({
-      id: "bake2",
-      title: "Seconda cottura (breve)",
-      description: `Riportare in forno a ${ovenTempLabel}°C solo per asciugare e amalgamare. Pochi minuti.`,
-      duration_minutes: secondBakeMin,
-      icon: "flame",
-      timing_label: `${secondBakeMin} min`,
-    });
+    steps.push(
+      keyedStep(
+        { id: "bake2", duration_minutes: secondBakeMin, icon: "flame", timing_label: `${secondBakeMin} min` },
+        em("timeline.bake2.title", "Seconda cottura (breve)"),
+        [em("timeline.bake2.desc", "Riportare in forno a {temp} solo per asciugare e amalgamare. Pochi minuti.", { temp: ovenTempLabel })],
+      ),
+    );
     injectToppingAt("after_bake2");
   } else {
     // Cottura singola classica (M-6: frittura per gli stili fritti)
@@ -3223,30 +3299,36 @@ function generateTimeline(
           nerd: "Il vapore interno gonfia il disco nei primi secondi; girarla a metà uniforma la crosta e la cottura del ripieno.",
         },
       });
-    } else steps.push({
-      id: "bake",
-      title: "Cottura",
-      description: `Cuocere a ${ovenTempLabel}°C${topping?.bake_adjustments?.note ? `. ${topping.bake_adjustments.note}` : ""}.${ovenBakeSetup(equipment, ovenTempLabel)}`,
-      duration_minutes: Math.round(effectiveCookSec / 60),
-      icon: "flame",
-      timing_label: formatCookTime(effectiveCookSec),
-      tip: {
-        beginner:
-          "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
-        nerd: `La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A ${ovenTempLabel}°C la caramellizzazione crea ~600 composti aromatici.`,
-      },
-    });
+    } else steps.push(
+      keyedStep(
+        {
+          id: "bake",
+          duration_minutes: Math.round(effectiveCookSec / 60),
+          icon: "flame",
+          timing_label: formatCookTime(effectiveCookSec),
+        },
+        em("timeline.bake.title", "Cottura"),
+        [em("timeline.bake.desc", "Cuocere a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, ovenBakeSetup(equipment)],
+        {
+          beginner: em("timeline.bake.tipBeginner", "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima."),
+          nerd: em(
+            "timeline.bake.tipNerd",
+            "La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A {temp} la caramellizzazione crea ~600 composti aromatici.",
+            { temp: ovenTempLabel },
+          ),
+        },
+      ),
+    );
 
     // Farcitura post-cottura esterna (es. Marinella ma non sdoppiata)
     if (layout.filling_timing === "post_bake_external") {
-      steps.push({
-        id: "top_post",
-        title: "Farcitura post-cottura",
-        description: "Aggiungere i condimenti a freddo direttamente sulla superficie cotta.",
-        duration_minutes: 3,
-        icon: "chef-hat",
-        timing_label: "3 min",
-      });
+      steps.push(
+        keyedStep(
+          { id: "top_post", duration_minutes: 3, icon: "chef-hat", timing_label: "3 min" },
+          em("timeline.topPost.title", "Farcitura post-cottura"),
+          [em("timeline.topPost.desc", "Aggiungere i condimenti a freddo direttamente sulla superficie cotta.")],
+        ),
+      );
     }
     injectToppingAt("after_bake");
   }

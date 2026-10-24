@@ -161,6 +161,7 @@ Fase 2:
 |---|---|---|
 | 23–24/10/2026 | M-1 (confermato), M-2, M-3, M-4, M-5, M-9, M-10, P-1, P-2 | ramo `claude/bold-brahmagupta-s484he`; dettaglio in `docs/motore-correzioni-2026-10-22.md` |
 | 24/10/2026 | I18N-1, U-1, U-2, M-11 | stesso ramo; vedi sotto |
+| 24/10/2026 | P-4 (pronto), M-6, M-8, C-4, I18N-2, C-5, P-3, P-5 (budget e font) | stesso ramo; vedi sotto |
 
 Emerse nel lavoro, da pianificare in fase 1:
 
@@ -185,7 +186,28 @@ Emerse nel lavoro, da pianificare in fase 1:
   quarto d'ora per difetto, ripristinata dalla bozza). «Ho 750 g di farina»:
   pannello sotto i panetti che dice quanti ne stanno e quanta farina avanza, e li
   applica. Forno e farine della dispensa c'erano già.
-- **C-4, Pinsa:** range 350–420 °C da verificare su fonti (decisione D-013).
+- ~~**C-4 (P1)**~~ chiuso il 24/10: registro delle fonti `docs/fonti-dati.md`
+  (stato verificato / plausibile / da verificare / errato per ogni dato) e
+  correzioni decise da Matteo (D-015…D-018): Pinsa, Napoletana STG con versione
+  AVPN, Recco, olio di frittura, W delle farine di marca, Petra 3, falling number
+  5 Stagioni, commento sul Q10. Restano «da verificare» gli stili senza
+  disciplinare: elenco in `docs/fonti-dati.md`, «Fonti mancanti».
+- ~~**I18N-2 (P1)**~~ chiuso il 24/10: libreria condimenti (61 concetti, 94
+  ricette, 128 passi, 1004 testi) tradotta nelle 6 lingue in
+  `src/app/data/topping-i18n/`, applicata dalla UI (il motore resta in italiano);
+  passi della timeline con chiave e parametri (`TimelineStep.msg`) invece del
+  testo italiano composto. Test di copertura per lingua. Traduzioni automatiche:
+  da rivedere da madrelingua (note dei traduttori nella PR).
+- ~~**C-5**~~ chiuso il 24/10: «Signature» diventa «Ispirazione» («Ispirato al
+  metodo Bonci»); le interpretazioni di maestri e pizzerie dicono che sono
+  ricostruzioni da fonti pubbliche, non ricette fornite da loro.
+- ~~**P-3**~~ chiuso il 24/10: annotazioni di debug archiviate in `docs/archivio/`.
+- **P-5** misurato il 24/10: `docs/budget-prestazioni.md`, controllo
+  `npm run check:budget` in CI. Restano P-5a (motore in idle sulla home), P-5c
+  (video, serve decisione) e P-5d.
+- **I18N-3 (P1, nuova):** i bundle CMS di es/fr/pt non hanno circa 300 chiavi e
+  quelli di de/ja circa 190 (modalità cottura, durate, «domani»…): ricadono
+  sull'inglese. Anche en manca di 22 chiavi (ricadono sull'italiano).
 - Le chiavi `timeSlots.day_after` e `timeSlots.weekend` del CMS non corrispondono
   a nessuno slot del motore, e i sottotitoli fissi degli slot non si usano più.
 

@@ -20,6 +20,7 @@ import type {
   TroubleshootingMessages,
 } from "../../i18n/domain-contracts";
 import { UI_MESSAGES_IT } from "../../i18n/ui-messages.it";
+import type { ToppingTranslation } from "../../data/topping-i18n/types";
 import {
   registerUiMessages,
   setActiveUiLocale,
@@ -148,6 +149,8 @@ export interface CmsUiStrings {
   slotWeekdayDinner: string;
   slotNoPreference: string;
   slotNoPreferenceSub: string;
+  /** C-5: le interpretazioni d'autore non sono ricette firmate. */
+  interpretationDisclaimer: string;
   /** M-11: lievito trasparente e correzione personale. */
   yeastHowToggle: string;
   yeastModelBody: string;
@@ -756,6 +759,8 @@ export interface CmsContent {
   locale: CmsLocale;
   /** Catalogo estensibile per copy montato non coperto dalle sezioni legacy. */
   messages?: Record<string, string>;
+  /** I18N-2: traduzioni della libreria condimenti (assenti in italiano). */
+  toppingI18n?: ToppingTranslation;
   /** Generic UI strings (buttons, labels, actions) */
   ui: CmsUiStrings;
   /** InlineTip contextual texts */
@@ -1335,6 +1340,7 @@ export const CMS_DEFAULTS: CmsContent = {
     slotWeekdayDinner: "{day} sera",
     slotNoPreference: "Nessuna preferenza",
     slotNoPreferenceSub: "ci pensa {brand}",
+    interpretationDisclaimer: "Interpretazione di {brand} da fonti pubbliche: non è la ricetta originale di {who} e non è approvata da {who}.",
     yeastHowToggle: "Come calcoliamo il lievito",
     yeastModelBody: "Si parte da {ref} di lievito fresco sulla farina per {refHours} a {refTemp}. Con {hours} a {temp} il lievito lavora a {speed}× della velocità di riferimento: la dose diventa {pct}.",
     yeastDryNote: "Con il lievito secco la dose è un terzo del fresco.",
@@ -1358,7 +1364,7 @@ export const CMS_DEFAULTS: CmsContent = {
     slotCustomOutOfRange: "Scegli un orario tra 1 ora e 7 giorni da adesso.",
     badgeAvpnRules: "Disciplinare AVPN",
     badgeIgpRules: "Disciplinare IGP",
-    badgeBonciMethod: "Metodo Bonci",
+    badgeBonciMethod: "Ispirato al metodo Bonci",
     badgeRomanSnack: "Spuntino romano",
     badgeRomanBakery: "Stile panaria romana",
     fatButter: "Burro",
@@ -1782,14 +1788,14 @@ export const CMS_DEFAULTS: CmsContent = {
     badgeBeginnerFriendly: "Principianti",
     interpretationsLabel: "Interpretazioni",
     goToSite: "Vai al sito",
-    signatureLabel: "Firma",
-    noSignature: "nessuna firma",
+    signatureLabel: "Ispirazione",
+    noSignature: "nessuna ispirazione",
     fineParams: "Parametri fini",
     cmsRestoreContent: "Ripristina contenuti CMS",
     inspirationLabel: "Ispirazione",
     inspirationBase: "Tradizionale",
     inspirationSeeAll: "Vedi tutte",
-    inspirationModalTitle: "Ispirazioni d'autore",
+    inspirationModalTitle: "Ispirazioni da pizzaioli e disciplinari",
     inspirationLearnLink: "Scopri di più nella sezione Impara",
     inspirationSelect: "Seleziona",
     inspirationSelected: "Selezionata",
@@ -2040,11 +2046,77 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.fry.desc": "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
     "timeline.fry.tipBeginner": "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
     "timeline.fry.tipNerd": "Il vapore interno gonfia il disco nei primi secondi; girarla a metà uniforma la crosta e la cottura del ripieno.",
-    "recipeSetup.noSignature": "Nessuna firma",
+    "timeline.mix.spiral.desc": "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura.",
+    "timeline.mix.spiral.tipBeginner": "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte.",
+    "timeline.mix.spiral.tipNerd": "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare.",
+    "timeline.mix.fork.desc": "Impastatrice a forcella: 12-15 min a velocità unica. Incordatura lenta, maglia molto estensibile.",
+    "timeline.mix.fork.tipBeginner": "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza.",
+    "timeline.mix.fork.tipNerd": "Movimento lento e ossigenante: ideale per impasti molli; incorda meno aggressivamente, estensibilità elevata.",
+    "timeline.mix.planetary.desc": "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo).",
+    "timeline.mix.planetary.tipBeginner": "Parti in 1ª per amalgamare, poi passa in 2ª. Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
+    "timeline.mix.planetary.tipNerd": "Sorveglia la temperatura impasto: oltre 26-28°C il glutine si indebolisce. Usa acqua fredda se la ciotola scalda.",
+    "timeline.mix.stand_domestic.desc": "Planetaria domestica (tipo KitchenAid): gancio a velocità 1-2, ~10-12 min. Pause di 1-2 min se la ciotola si scalda.",
+    "timeline.mix.stand_domestic.tipBeginner": "Non superare la 2ª velocità: il motore domestico fatica e scalda. Pronto = impasto liscio che si stacca dal fondo.",
+    "timeline.mix.stand_domestic.tipNerd": "Trasferisce più calore per attrito (K~0.25): parti con acqua a frigo e impasti corti, non sovraccaricare il motore.",
+    "timeline.mix.generic.desc": "Con l'impastatrice: gancio a bassa velocità ~10 min fino a incordatura. Liscio ed elastico.",
+    "timeline.mix.generic.tipBeginner": "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti.",
+    "timeline.mix.generic.tipNerd": "Controlla la temperatura finale dell'impasto (~24°C): oltre, il glutine si degrada.",
+    "timeline.mix.hands.desc": "Impastare a mano fino a incordatura (~15-20 min): pieghe sul piano, slap & fold se l'idratazione è alta.",
+    "timeline.mix.hands.tipBeginner": "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
+    "timeline.mix.hands.tipNerd": "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica.",
+    "timeline.oven.topGrillStone": "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.",
+    "timeline.oven.topGrillShelf": "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare il cornicione.",
+    "timeline.oven.bottomBoost": "Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.",
+    "timeline.oven.fanAssisted": "Ventilato: usa una temperatura leggermente più bassa se il bordo asciuga, ruota a metà cottura e proteggi i topping delicati.",
+    "timeline.oven.gasRear": "Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.",
+    "timeline.oven.woodSideFlame": "Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.",
+    "timeline.oven.wood": "Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.",
+    "timeline.oven.electricHigh": "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare il cornicione tutt'intorno.",
+    "timeline.oven.gas": "Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.",
+    "timeline.oven.staticStone": "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
+    "timeline.oven.staticShelf": "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per il cornicione: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.",
+    "timeline.mix.title": "Impasto",
+    "timeline.divide.title": "Staglio",
+    "timeline.divide.multiPiece": "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.",
+    "timeline.shape.foldedLayers": "Stendere una sfoglia sottilissima e ripiegare {folds} volte a libro, distribuendo la farcitura tra le pieghe.",
+    "timeline.shape.doubleThinSheet": "Stendere due sfoglie sottilissime quasi trasparenti col mattarello.",
+    "timeline.shape.stacked": "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.",
+    "timeline.shape.closedStuffed": "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.",
+    "timeline.shape.rectangular": "Stendere nella teglia oliata con le mani",
+    "timeline.shape.thin": "Stendere con mattarello, sottilissima",
+    "timeline.shape.round": "Allargare a mano dal centro, preservare il cornicione",
+    "timeline.shape.title": "Stesura",
+    "timeline.stack.title": "Sovrapposizione",
+    "timeline.stack.desc": "Spennellare il primo disco con olio EVO; adagiare sopra il secondo disco e sigillare leggermente i bordi.",
+    "timeline.stack.tipBeginner": "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli.",
+    "timeline.stack.tipNerd": "L'olio crea un layer idrofobo che impedisce la coalescenza dei due strati di glutine: facilita lo sdoppiamento post-bake.",
+    "timeline.fillClosed.title": "Ripieno e chiusura",
+    "timeline.fillClosed.desc": "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.",
+    "timeline.fillClosed.tipBeginner": "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce.",
+    "timeline.fillClosed.tipNerd": "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow).",
+    "timeline.fillSheets.title": "Farcitura tra sfoglie",
+    "timeline.fillSheets.desc": "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia e sigillare i bordi.",
+    "timeline.bakeWhite.title": "Prima cottura (in bianco)",
+    "timeline.bakeWhite.desc": "Cuocere a {temp} senza farcitura. La pizza deve essere dorata ma non bruciata.",
+    "timeline.bakeWhite.tipBeginner": "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti.",
+    "timeline.bakeWhite.tipNerd": "La cottura in bianco completa la gelatinizzazione dell'amido prima di introdurre umidità del topping.",
+    "timeline.splitFill.title": "Sdoppiamento e farcitura",
+    "timeline.splitFill.desc": "Estrarre dal forno. Con un coltello a sega tagliare orizzontalmente in due metà. Farcire l'interno con i condimenti scelti e richiudere.",
+    "timeline.splitFill.tipBeginner": "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle.",
+    "timeline.splitFill.tipNerd": "Sdoppiamento post-bake = ricetta cold-filled: la matrice amidacea è già stabile, le farciture non vengono cotte oltre i 60°C interni.",
+    "timeline.bake2.title": "Seconda cottura (breve)",
+    "timeline.bake2.desc": "Riportare in forno a {temp} solo per asciugare e amalgamare. Pochi minuti.",
+    "timeline.bake.title": "Cottura",
+    "timeline.bake.desc": "Cuocere a {temp}.",
+    "timeline.bake.tipBeginner": "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
+    "timeline.bake.tipNerd": "La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A {temp} la caramellizzazione crea ~600 composti aromatici.",
+    "timeline.topPost.title": "Farcitura post-cottura",
+    "timeline.topPost.desc": "Aggiungere i condimenti a freddo direttamente sulla superficie cotta.",
+    "recipeSetup.noSignature": "Nessuna ispirazione",
     "recipeSetup.currentParams": "parametri correnti",
-    "recipeSetup.noSignatureAlreadyActive": "Nessuna firma già attiva",
-    "recipeSetup.signatureApplied": "{label}: firma applicata",
-    "recipeSetup.signatureRemoved": "Firma rimossa: parametri ripristinati",
+    "recipeSetup.noSignatureAlreadyActive": "Nessuna ispirazione già attiva",
+    "recipeSetup.signatureApplied": "{label}: ispirazione applicata",
+    "recipeSetup.signatureRemoved": "Ispirazione rimossa: parametri ripristinati",
   },
   scienceLabels: {
     yeastBaker: "Lievito da forno",
@@ -2200,7 +2272,7 @@ export const CMS_DEFAULTS: CmsContent = {
     turnsNone: "Non girare durante la cottura.",
   },
   styleDescriptions: {
-    napoletana_stg: "Standard aureo secondo disciplinare AVPN. Cornicione gonfio, centro sottile, leopardatura.",
+    napoletana_stg: "Pizza Napoletana STG secondo il regolamento UE 97/2010. Cornicione gonfio, centro sottile, leopardatura.",
     napoletana_canotto: "Cornicione esplosivo \"canotto d'aria\", alveolatura estrema, alta digeribilit\u00E0.",
     teglia_romana: "Alta idratazione, no-knead con pieghe. Base croccante, mollica nuvola.",
     tonda_romana: "Sottilissima, mattarello obbligatorio, croccante estrema. \"Scrocchiarella\".",

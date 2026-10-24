@@ -4,6 +4,8 @@
 
 import type { CmsContent, CmsTimelineStep } from "../cms/cms-context";
 import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
+import { engineMsgTexts } from "./engine-msg-text";
+import { localizeToppingStepText } from "../../data/topping-i18n/localize";
 import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
 import {
   getBakingTimeByStyle,
@@ -16,6 +18,7 @@ import {
   type GeneratedRecipe,
   type PizzaStyle,
   type TimelineStep,
+  type EngineMsg,
   fermentationSpeedRatio,
   getLayoutSpec,
   getServingUnit,
@@ -448,6 +451,40 @@ export function formatCompVal(type: string, val: number): string {
   return String(Math.round(val * 100) / 100);
 }
 
+/* ═══ I18N-2 — passi con testi a chiave e passi dei condimenti ═══ */
+function localizeKeyedStep(
+  step: TimelineStep,
+  cms: CmsContent,
+  bcp47: string,
+): { title: string; description: string; tip?: { beginner: string; nerd: string } } | null {
+  const toppingTr = cms.toppingI18n;
+  const text = (msg: EngineMsg) =>
+    msg.key === "topping.bakeNote"
+      ? (toppingTr?.recipes[String(msg.params?.toppingId)]?.bake_note ?? msg.fallback)
+      : engineMsgTexts([msg], cms, bcp47)[0];
+  if (step.msg) {
+    return {
+      title: step.msg.title ? text(step.msg.title) : step.title,
+      description: step.msg.description ? step.msg.description.map(text).join(" ") : step.description,
+      tip: step.msg.tip
+        ? { beginner: text(step.msg.tip.beginner), nerd: text(step.msg.tip.nerd) }
+        : step.tip,
+    };
+  }
+  // Passo di un condimento (assembly / pre_prep): si riconosce dall'id.
+  const topping = localizeToppingStepText(step.id, toppingTr);
+  if (topping) {
+    return {
+      title: topping.title ?? step.title,
+      description: topping.description ?? step.description,
+      tip: step.tip
+        ? { beginner: topping.tipBeginner ?? step.tip.beginner, nerd: topping.tipNerd ?? step.tip.nerd }
+        : undefined,
+    };
+  }
+  return null;
+}
+
 /* ═══ Timeline step localization ═══ */
 export function localizeStep(
   step: TimelineStep,
@@ -456,6 +493,9 @@ export function localizeStep(
   fmt?: ReturnType<typeof createFormatter>,
 ): { title: string; description: string; longDesc?: string; tip?: { beginner: string; nerd: string } } {
   const formatRawStep = (raw: TimelineStep) => {
+    // I18N-2: testi del motore con chiave → CMS nella lingua attiva.
+    const keyed = localizeKeyedStep(raw, cms, fmt?.bcp47 ?? "it-IT");
+    if (keyed) return keyed;
     if (!fmt) return raw;
     return {
       ...raw,

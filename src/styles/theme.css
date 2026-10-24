@@ -11982,6 +11982,14 @@
     font-style: italic;
   }
 
+  /* C-5: interpretazione, non ricetta firmata */
+  .interpretation-card__disclaimer {
+    margin: var(--space-2) 0 0;
+    color: var(--text-muted);
+    font-size: var(--font-size-xs);
+    line-height: var(--leading-normal);
+  }
+
   .interpretation-card__story {
     margin-top: var(--space-2);
     color: var(--text-muted);

@@ -4,6 +4,7 @@
  * che prima erano chiusure su RecipeOutput. */
 
 import { ChevronLeft, ChevronRight, Lightbulb } from "lucide-react";
+import { toppingConcept } from "../../data/topping-i18n/localize";
 import { AnimatePresence, motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
@@ -12,7 +13,6 @@ import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { Badge, Heading, IconButton } from "../../components/ds/index";
 import {
-  TOPPING_CONCEPTS,
   getToppingThumbnail,
   type IngredientSection,
   type ToppingIngredient,
@@ -138,7 +138,7 @@ export function ToppingSection({
       (choice) => choice.recipe.id === activeToppingId,
     );
     const activeRecipe = activeChoice?.recipe ?? topping;
-    const activeConcept = TOPPING_CONCEPTS[activeRecipe.concept_ref];
+    const activeConcept = toppingConcept(activeRecipe.concept_ref, cms.toppingI18n);
     const toppingName = activeRecipe.name ?? activeConcept?.name ?? cms.cooking.toppingTitle;
     const toppingDescription = activeRecipe.description ?? activeConcept?.description;
     const toppingThumbnail = getToppingThumbnail(activeRecipe) ?? toppingPlaceholder;

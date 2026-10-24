@@ -163,7 +163,7 @@ export type FlavorProfile =
   | "sweet_savory"  // hawaiiana, tatin
   | "light";        // bianca semplice
 
-interface ToppingConcept {
+export interface ToppingConcept {
   id: string;
   name: string;
   description: string;
@@ -472,7 +472,7 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
   nerano: {
     id: "nerano",
     name: "Nerano",
-    description: "Crema di zucchine, zucchine fritte, provolone del Monaco DOP e menta. Omaggio alla Costiera.",
+    description: "Crema di zucchine, zucchine fritte, provolone del Monaco DOP e menta. Omaggio alla Costiera Sorrentina.",
     emoji: "🥒",
     thumbnail: thumbnailNerano,
     flavor_profile: "creamy",
@@ -1419,7 +1419,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "detroit_cheese_crown",
         title: "Cheese crown fino ai bordi",
-        description: "Distribuire il brick cheese su tutta la superficie spingendolo contro i bordi della teglia: in cottura caramella formando la crosta di formaggio (frico). Adagiare sopra the pepperoni.",
+        description: "Distribuire il brick cheese su tutta la superficie spingendolo contro i bordi della teglia: in cottura caramella formando la crosta di formaggio (frico). Adagiare sopra il pepperoni.",
         insert_at: "after_shape",
         duration_minutes: 4,
         replaces_generic: true,

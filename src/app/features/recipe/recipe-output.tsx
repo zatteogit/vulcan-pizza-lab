@@ -1,4 +1,5 @@
 import { Check, CookingPot, Flame, Link as LinkIcon, ListChecks, Share2, Utensils } from "lucide-react";
+import { localizeToppingRecipe } from "../../data/topping-i18n/localize";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import React, { useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -162,9 +163,9 @@ export function RecipeOutput({
   /* Label contestuale per il selettore di porzioni ("Panetti" / "Teglie" / ...). */
   const servingUnit = getServingUnit(recipe.style);
   const allToppingChoices = React.useMemo(() => {
-    const ranked = getRecipesByAuthenticity(recipe.style).filter(
-      (item) => item.authenticity !== "taboo",
-    );
+    const ranked = getRecipesByAuthenticity(recipe.style)
+      .filter((item) => item.authenticity !== "taboo")
+      .map((item) => ({ ...item, recipe: localizeToppingRecipe(item.recipe, cms.toppingI18n) }));
     /* «Ogni stile ha i suoi topping»: una sola voce per concept, tenendo la
        variante più specifica per questo stile. La lista è già ordinata per
        autenticità (canonical → natural → common → …), quindi il primo match
@@ -177,7 +178,7 @@ export function RecipeOutput({
       seen.add(key);
       return true;
     });
-  }, [recipe.style]);
+  }, [recipe.style, cms.toppingI18n]);
   const toppingChoices = React.useMemo(() => {
     /* Modello per-stile: getRecipesByAuthenticity ritorna SOLO i condimenti
        assegnati a questo stile (già esclusi i taboo). Sono tutti il "menù"
@@ -204,15 +205,15 @@ export function RecipeOutput({
       ? getToppingForStyle(selectedToppingConcept, recipe.style)
       : undefined;
     const fallbackToppingRefId = recipe.style.default_topping_ref;
-    return (
+    const resolved =
       selectedTopping ??
       toppingChoices[0]?.recipe ??
       (fallbackToppingRefId
         ? getToppingForStyle(fallbackToppingRefId, recipe.style)
         : undefined) ??
-      allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe
-    );
-  }, [selectedToppingConcept, recipe.style, toppingChoices, allToppingChoices]);
+      allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe;
+    return resolved ? localizeToppingRecipe(resolved, cms.toppingI18n) : resolved;
+  }, [selectedToppingConcept, recipe.style, toppingChoices, allToppingChoices, cms.toppingI18n]);
 
   /* UI proximity #54 — dimensioni teglia accanto al conteggio: solo per gli
      stili che usano una teglia/contenitore. Usa la config attiva (se

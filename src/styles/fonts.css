@@ -2,4 +2,5 @@
    · Vulcan (default) → Playfair Display · DM Sans · DM Mono
    · Sfornata         → stesse famiglie (nessun font-swap: cambia la
      composizione, non l'identità tipografica) */
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Mono:wght@400;500&display=swap");
+/* P-5b: il CSS di Google Fonts si carica da index.html (preconnect + link),
+   in parallelo al foglio principale invece che dopo, come faceva l'@import. */

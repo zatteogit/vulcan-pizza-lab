@@ -1,0 +1,2699 @@
+import type { ToppingTranslation } from "./types";
+
+/** Condimenti in fr: traduzione di topping-library.ts (I18N-2). Stessi id. */
+export const TOPPING_I18N_FR: ToppingTranslation = {
+  concepts: {
+    margherita: {
+      name: "Margherita",
+      description: "Tomate, mozzarella, basilic. La reine, l'origine, l'indémodable.",
+    },
+    marinara: {
+      name: "Marinara",
+      description: "Tomate, ail, origan, huile. Pas de fromage, un pur goût méditerranéen.",
+    },
+    bianca: {
+      name: "Bianca",
+      description: "Huile et sel, éventuellement du romarin. Base pour sandwichs ou pour goûter la croûte.",
+    },
+    boscaiola: {
+      name: "Boscaiola",
+      description: "Champignons et saucisse avec du fromage. Le réconfort de l'automne.",
+    },
+    diavola: {
+      name: "Diavola",
+      description: "Mozzarella et salami piquant. Pour les amateurs de feu.",
+    },
+    capricciosa: {
+      name: "Capricciosa",
+      description: "Tomate, mozzarella, champignons, jambon cuit, petits artichauts, olives. La pizza qui a tout.",
+    },
+    quattro_stagioni: {
+      name: "Quattro Stagioni",
+      description: "Les mêmes ingrédients que la Capricciosa, mais répartis en 4 quarts. Une variante plus spectaculaire.",
+    },
+    quattro_formaggi: {
+      name: "Quattro Formaggi",
+      description: "Mozzarella, gorgonzola, parmesan, fontina. En blanche ou en rouge.",
+    },
+    ortolana: {
+      name: "Ortolana",
+      description: "Légumes grillés ou sautés, mozzarella. La pizza du potager.",
+    },
+    patate_porchetta: {
+      name: "Patate e Porchetta",
+      description: "Lamelles de pommes de terre qui se recroquevillent dessus, porchetta en garniture après cuisson. Une icône romaine.",
+    },
+    crudo: {
+      name: "Crudo",
+      description: "Bianca ouverte en deux et garnie à froid de jambon cru affiné. Simple et noble.",
+    },
+    bianca_mortazza: {
+      name: "Bianca à la mortadelle",
+      description: "Pizza bianca ouverte en portefeuille, mortadelle IGP et pistache après cuisson. Renversante.",
+    },
+    cacio_e_pepe: {
+      name: "Cacio e Pepe",
+      description: "Crème de pecorino et poivre étalée dès la sortie du four. L'astuce de la chaleur résiduelle.",
+    },
+    salsiccia_friarielli: {
+      name: "Salsiccia e Friarielli",
+      description: "Classique napolitain : saucisse + brocoli-rave légèrement amer + provola. Aussi en blanche.",
+    },
+    hawaiiana: {
+      name: "Hawaïenne",
+      description: "Jambon cuit et ananas sur une base classique. Elle divise, mais a son public.",
+    },
+    crescenza_recco: {
+      name: "Crescenza alla Recco",
+      description: "Pâte très fine + crescenza à l'intérieur. Cahier des charges IGP, rien d'autre.",
+    },
+    recco_culatello: {
+      name: "Crescenza et Culatello",
+      description: "Crescenza classique, couverte après cuisson de tranches de Culatello di Zibello DOP.",
+    },
+    recco_cotto: {
+      name: "Crescenza et Cotto Millefiori",
+      description: "Crescenza avec jambon cuit artisanal Millefiori déposé à la sortie du four.",
+    },
+    recco_pizzata: {
+      name: "Focaccia Pizzata",
+      description: "Crescenza avec coulis de tomates, anchois, olives taggiasche et câpres. La Recco « pizzata ».",
+    },
+    sfincione: {
+      name: "Sfincione Palermitano",
+      description: "Sauce tomate et oignon, caciocavallo, anchois et chapelure grillée. Pas de mozzarella.",
+    },
+    focaccia_barese: {
+      name: "Tomates cerises et olives de Bari",
+      description: "Tomates cerises fraîches écrasées à la main, olives baresane, origan et huile d'olive vierge extra. La focaccia de Bari.",
+    },
+    fugazzeta: {
+      name: "Mozzarella et oignon (fugazzeta)",
+      description: "Double couche farcie de mozzarella, recouverte d'oignon en fines lamelles et d'origan. Pas de tomate.",
+    },
+    detroit: {
+      name: "Detroit (cheese crown)",
+      description: "Brick cheese jusqu'aux bords pour un frico croustillant, pepperoni et bandes de sauce en surface.",
+    },
+    chicago: {
+      name: "Chicago deep dish",
+      description: "Couches inversées : mozzarella au fond, garniture, sauce tomate en morceaux et parmesan en surface.",
+    },
+    montanara: {
+      name: "Montanara",
+      description: "Petit disque frit puis garni À CRU PAR-DESSUS : tomate cuite, ricotta, pecorino et basilic. Ouverte, pas farcie.",
+    },
+    pizza_fritta: {
+      name: "Pizza Fritta farcie",
+      description: "Chausson de pâte FARCI et scellé, puis frit : ricotta, provola, cicoli (ou poivre). Fermée, pas ouverte.",
+    },
+    calzone: {
+      name: "Calzone Napoletano",
+      description: "Fermé en demi-lune, farci de ricotta, fior di latte, salami ou cicoli et poivre.",
+    },
+    ciaccino: {
+      name: "Garniture siennoise",
+      description: "Deux disques fins scellés et garnis après cuisson : jambon toscan et pecorino. La schiacciata garnie de Sienne.",
+    },
+    white_clam: {
+      name: "White Clam (palourdes)",
+      description: "La clam pie de New Haven : palourdes fraîches, ail, origan, pecorino et huile. Ni tomate ni mozzarella.",
+    },
+    cosacca: {
+      name: "Cosacca",
+      description: "L'ancêtre de la Margherita : tomate, pecorino (ou parmesan affiné) et basilic. Pas de mozzarella.",
+    },
+    provola_pepe: {
+      name: "Provola e Pepe",
+      description: "Provola fumée fondue et poivre noir fraîchement moulu. Un fumé enveloppant, sur base rouge ou blanche.",
+    },
+    nduja: {
+      name: "'Nduja di Spilinga",
+      description: "Charcuterie calabraise à tartiner, très piquante, qui fond sur la pizza en libérant un gras épicé.",
+    },
+    nerano: {
+      name: "Nerano",
+      description: "Crème de courgettes, courgettes frites, provolone del Monaco DOP et menthe. Un hommage à la côte de Sorrente.",
+    },
+    margherita_sbagliata: {
+      name: "Margherita Sbagliata",
+      description: "Ordre inversé : seule la bufala fond à la cuisson, puis passata crue froide et basilic ajoutés APRÈS le four.",
+    },
+    scarpetta: {
+      name: "Scarpetta",
+      description: "Bufala et fondue de grana à la cuisson ; à la sortie du four, compotée de tomate crue, pesto et copeaux de grana 24 mois.",
+    },
+    patate_rosmarino: {
+      name: "Pommes de terre et romarin",
+      description: "Fines tranches de pommes de terre au four, romarin, sel et huile d'olive vierge extra. La part blanche des boulangeries romaines.",
+    },
+    hot_honey: {
+      name: "Hot Honey",
+      description: "Provola fumée, pepperoni et miel pimenté à la 'nduja. Le sucré-piquant qui cartonne.",
+    },
+    bresaola_rucola: {
+      name: "Bresaola, roquette et grana",
+      description: "Bianca sur base mozzarella ; après cuisson, bresaola IGP, roquette sauvage, copeaux de grana et zeste de citron.",
+    },
+    stracciata_bottarga: {
+      name: "Stracciatella et poutargue",
+      description: "Stracciatella di burrata à cru, courgettes alla scapece et poutargue de mulet râpée. Gourmet à la romaine.",
+    },
+    cheese_pizza: {
+      name: "Cheese Pizza",
+      description: "La plain cheese américaine : sauce tomate épicée et mozzarella low-moisture fondue jusqu'au bord.",
+    },
+    supreme: {
+      name: "Supreme",
+      description: "La généreuse américaine : pepperoni, saucisse, poivrons verts, oignon et champignons sur mozzarella.",
+    },
+    white_pizza: {
+      name: "White Pizza",
+      description: "Sans tomate : mozzarella, ricotta fouettée, ail et épinards. La white pie américaine.",
+    },
+    vodka_pizza: {
+      name: "Vodka",
+      description: "Sauce vodka crémeuse (tomate, crème, vodka), basilic et pecorino. Tendance italo-américaine.",
+    },
+    bbq_chicken: {
+      name: "BBQ Chicken",
+      description: "Poulet laqué sauce barbecue, oignon rouge et coriandre. La signature californienne de Wolfgang Puck.",
+    },
+    smoked_salmon: {
+      name: "Saumon fumé",
+      description: "Base blanche à la crème fraîche ; à cru, saumon fumé, aneth, oignon rouge et câpres.",
+    },
+    italian_beef: {
+      name: "Italian Beef",
+      description: "Lanières de bœuf braisé dans son jus et giardiniera piquante. La spécialité de Chicago.",
+    },
+    tomato_pie: {
+      name: "Tomato Pie",
+      description: "L'apizza de New Haven sans mozzarella : seulement sauce San Marzano, ail, origan et pecorino.",
+    },
+    greek_feta: {
+      name: "Grecque (feta et olives)",
+      description: "La pan pizza des diners grecs : feta émiettée, olives kalamata, oignon rouge et origan.",
+    },
+    zucca_speck: {
+      name: "Courge, speck et caciocavallo",
+      description: "Crème de courge rôtie, speck à froid et copeaux de caciocavallo. Le gourmet d'automne de Bonci.",
+    },
+    burrata_salmone: {
+      name: "Burrata et saumon",
+      description: "Stracciatella di burrata à cru, saumon fumé, zeste de citron et aneth. Un accord froid.",
+    },
+    focaccia_cipolle: {
+      name: "Focaccia aux oignons",
+      description: "Fines tranches d'oignon doré qui confisent à la cuisson avec beaucoup d'huile sur la focaccia ligure.",
+    },
+    sardenaira: {
+      name: "Sardenaira",
+      description: "La focaccia garnie de Sanremo : sauce tomate et oignon, anchois, olives taggiasche, câpres et ail.",
+    },
+    sfincione_bianco: {
+      name: "Sfincione bianco (de Bagheria)",
+      description: "La variante de Bagheria sans tomate : tuma, anchois, oignons confits, caciocavallo et mie de pain grillée.",
+    },
+    gorgonzola_pere: {
+      name: "Gorgonzola et poire",
+      description: "Base blanche avec tranches de poire douce et gorgonzola crémeux. Le sucré-salé du padellino.",
+    },
+    tonno_cipolla: {
+      name: "Thon et oignon",
+      description: "Tomate, mozzarella, thon à l'huile et oignon rouge de Tropea. Un classique simple et savoureux.",
+    },
+    scarola: {
+      name: "Scarole",
+      description: "Scarole étuvée à l'ail, olives et câpres (et provola). La farce classique du calzone napolitain.",
+    },
+    fugazza: {
+      name: "Fugazza (oignon seul)",
+      description: "L'originale argentine sans fromage : seulement de l'oignon en fines lamelles et de l'origan sur la pâte. L'ancêtre de la fugazzeta.",
+    },
+    ricotta_cicoli: {
+      name: "Ricotta e Cicoli",
+      description: "Farce rustique napolitaine : ricotta de brebis, cicoli (grattons de porc), fior di latte et poivre.",
+    },
+    meat_lovers: {
+      name: "Meat Lovers",
+      description: "Une fête de viandes : pepperoni, saucisse, bacon et bœuf sur fromage fondu. Pour les carnivores.",
+    },
+    spinaci: {
+      name: "Épinards",
+      description: "Épinards frais à la vapeur avec un mélange de fromages fondants. Une version végétarienne généreuse.",
+    },
+    prosciutto_funghi: {
+      name: "Prosciutto e Funghi",
+      description: "Jambon cuit et champignons de Paris sur mozzarella. L'indémodable classique.",
+    },
+  },
+  recipes: {
+    margherita_napoletana_avpn: {
+      variant_name: "Verace AVPN",
+      ingredients: {
+        "0": {
+          name: "Tomates pelées San Marzano DOP écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Sel fin sur la sauce",
+        },
+        "2": {
+          name: "Fior di latte de Campanie (ou mozzarella di bufala)",
+        },
+        "3": {
+          name: "Basilic frais",
+          notes: "feuilles entières",
+        },
+        "4": {
+          name: "Filet d'huile d'olive vierge extra",
+        },
+      },
+    },
+    margherita_romana: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Sel sur le coulis",
+        },
+        "2": {
+          name: "Fior di latte",
+        },
+        "3": {
+          name: "Basilic frais",
+          notes: "feuilles",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    margherita_americana: {
+      ingredients: {
+        "0": {
+          name: "Sauce tomate (coulis de tomates, origan, sucre, sel)",
+        },
+        "1": {
+          name: "Mozzarella low-moisture râpée",
+        },
+        "2": {
+          name: "Parmesan râpé en surface",
+        },
+        "3": {
+          name: "Filet d'huile d'olive",
+        },
+      },
+    },
+    marinara_avpn: {
+      variant_name: "AVPN",
+      ingredients: {
+        "0": {
+          name: "Tomates pelées San Marzano DOP (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Sel",
+        },
+        "2": {
+          name: "Ail",
+          notes: "gousses finement émincées",
+        },
+        "3": {
+          name: "Origan séché de Sicile",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    marinara_romana: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Sel",
+        },
+        "2": {
+          name: "Ail",
+        },
+        "3": {
+          name: "Origan",
+        },
+        "4": {
+          name: "Piment (facultatif)",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    bianca_olio_rosmarino: {
+      variant_name: "huile et romarin",
+      ingredients: {
+        "0": {
+          name: "Huile d'olive vierge extra",
+        },
+        "1": {
+          name: "Romarin frais",
+          notes: "brins",
+        },
+        "2": {
+          name: "Fleur de sel",
+          notes: "en surface",
+        },
+      },
+    },
+    boscaiola_napoletana: {
+      variant_name: "cèpes et saucisse",
+      ingredients: {
+        "0": {
+          name: "Tomates pelées San Marzano (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Fior di latte de Campanie",
+        },
+        "2": {
+          name: "Cèpes à l'huile égouttés (cèpes, huile, ail, sel, épices)",
+          notes: "type poêlés à l'ail (trifolati)",
+        },
+        "3": {
+          name: "Saucisse napolitaine au fenouil (viande de porc, sel, fenouil, poivre)",
+          notes: "émiettée en petits morceaux",
+        },
+        "4": {
+          name: "Grana padano râpé",
+          notes: "en surface",
+        },
+        "5": {
+          name: "Filet d'huile d'olive vierge extra",
+        },
+      },
+    },
+    boscaiola_romana: {
+      variant_name: "saucisse et champignons",
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Champignons de Paris frais",
+          notes: "émincés",
+        },
+        "3": {
+          name: "Saucisse (luganega ou artisanale) (viande de porc, sel, poivre)",
+        },
+        "4": {
+          name: "Ail + persil pour le revenu",
+          notes: "pour précuire les champignons",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra",
+          notes: "pour cuire les champignons et en filet",
+        },
+      },
+    },
+    diavola_napoletana: {
+      variant_name: "salami napolitain",
+      ingredients: {
+        "0": {
+          name: "Tomates pelées San Marzano (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Salami piquant napolitain (viande de porc, sel, piment, épices)",
+          notes: "en tranches épaisses",
+        },
+        "3": {
+          name: "Huile pimentée (huile d'olive vierge extra, piment)",
+        },
+      },
+    },
+    diavola_americana: {
+      variant_name: "Pepperoni",
+      ingredients: {
+        "0": {
+          name: "Sauce tomate (coulis de tomates, sel, sucre, origan, ail en poudre)",
+        },
+        "1": {
+          name: "Mozzarella low-moisture râpée",
+        },
+        "2": {
+          name: "Pepperoni en tranches (viande de porc et de bœuf, sel, épices, paprika)",
+          notes: "américain, plus doux et fumé",
+        },
+        "3": {
+          name: "Origan",
+        },
+      },
+    },
+    patate_porchetta: {
+      bake_note: "Les pommes de terre demandent une cuisson plus longue pour se recroqueviller et dorer.",
+      ingredients: {
+        "0": {
+          name: "Porchetta finement tranchée (viande de porc, sel, poivre, ail, romarin)",
+        },
+        "1": {
+          name: "Poivre noir",
+        },
+        "2": {
+          name: "Pommes de terre jaunes à chair ferme",
+        },
+        "3": {
+          name: "Romarin frais",
+          notes: "brins",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+        "5": {
+          name: "Fleur de sel",
+          notes: "seulement à la fin",
+        },
+      },
+    },
+    bianca_mortazza_romana: {
+      variant_name: "IGP de Bologne",
+      ingredients: {
+        "0": {
+          name: "Huile d'olive vierge extra pour badigeonner",
+        },
+        "1": {
+          name: "Fleur de sel",
+        },
+        "2": {
+          name: "Stracciatella di burrata (mozzarella, crème)",
+        },
+        "3": {
+          name: "Mortadella di Bologna IGP en fines tranches (viande de porc, sel, épices, pistache)",
+        },
+        "4": {
+          name: "Pistaches de Bronte concassées",
+        },
+      },
+    },
+    crudo_spaccata: {
+      ingredients: {
+        "0": {
+          name: "Huile d'olive vierge extra pour badigeonner",
+        },
+        "1": {
+          name: "Fleur de sel",
+        },
+        "2": {
+          name: "Jambon cru affiné en tranches (ex. Parme 24 mois)",
+        },
+      },
+    },
+    patate_porchetta_sancho: {
+      variant_name: "alla Sancho (en croûte de pommes de terre)",
+      bake_note: "Les pommes de terre en surface demandent quelques minutes de plus pour se recroqueviller.",
+      ingredients: {
+        "0": {
+          name: "Pommes de terre jaunes en tranches très fines (mandoline)",
+        },
+        "1": {
+          name: "Huile d'olive vierge extra",
+        },
+        "2": {
+          name: "Romarin frais",
+          notes: "aiguilles",
+        },
+        "3": {
+          name: "Fleur de sel",
+          notes: "en fin de cuisson",
+        },
+        "4": {
+          name: "Porchetta di Ariccia IGP finement tranchée",
+        },
+        "5": {
+          name: "Poivre noir",
+        },
+      },
+    },
+    crescenza_recco: {
+      variant_name: "IGP",
+      ingredients: {
+        "0": {
+          name: "Crescenza fraîche (fromage à pâte molle)",
+        },
+        "1": {
+          name: "Huile d'olive vierge extra de Ligurie",
+        },
+        "2": {
+          name: "Sel fin",
+        },
+      },
+    },
+    sfincione_palermitano: {
+      ingredients: {
+        "0": {
+          name: "Anchois à l'huile",
+          notes: "Filets",
+        },
+        "1": {
+          name: "Caciocavallo (ou primosale)",
+          notes: "En dés",
+        },
+        "2": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "3": {
+          name: "Oignon blanc",
+          notes: "En fines tranches, confit dans la sauce",
+        },
+        "4": {
+          name: "Pecorino râpé",
+        },
+        "5": {
+          name: "Chapelure",
+          notes: "Grillée à l'huile",
+        },
+        "6": {
+          name: "Origan séché",
+        },
+        "7": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    focaccia_barese_classica: {
+      ingredients: {
+        "0": {
+          name: "Tomates cerises fraîches (ciliegino)",
+          notes: "Écrasées à la main, pas de San Marzano",
+        },
+        "1": {
+          name: "Olives baresane",
+          notes: "Entières ou dénoyautées",
+        },
+        "2": {
+          name: "Origan séché",
+        },
+        "3": {
+          name: "Gros sel",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    focaccia_barese_patate: {
+      variant_name: "à la barese",
+      bake_note: "Les pommes de terre demandent quelques minutes de plus.",
+      ingredients: {
+        "0": {
+          name: "Pommes de terre jaunes en tranches de ~5 mm",
+          notes: "pour couvrir toute la surface",
+        },
+        "1": {
+          name: "Romarin frais",
+        },
+        "2": {
+          name: "Gros sel",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    focaccia_barese_cipolla: {
+      variant_name: "oignon d'Acquaviva",
+      ingredients: {
+        "0": {
+          name: "Oignon rouge d'Acquaviva (ou de Tropea) confit",
+        },
+        "1": {
+          name: "Origan séché",
+        },
+        "2": {
+          name: "Gros sel",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    fugazzeta_rellena: {
+      ingredients: {
+        "0": {
+          name: "Mozzarella pour pizza (peu humide)",
+          notes: "Farce intérieure",
+        },
+        "1": {
+          name: "Oignon blanc",
+          notes: "En fines lamelles, en surface",
+        },
+        "2": {
+          name: "Parmesan ou pecorino râpé",
+        },
+        "3": {
+          name: "Origan séché",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+        "5": {
+          name: "Sel fin",
+        },
+      },
+    },
+    fugazza_argentina: {
+      ingredients: {
+        "0": {
+          name: "Oignon blanc en fines lamelles, en abondance",
+        },
+        "1": {
+          name: "Origan séché",
+        },
+        "2": {
+          name: "Huile d'olive vierge extra",
+        },
+        "3": {
+          name: "Sel fin",
+        },
+      },
+    },
+    detroit_brick: {
+      ingredients: {
+        "0": {
+          name: "Brick cheese du Wisconsin (ou mozzarella low-moisture)",
+          notes: "Jusqu'aux bords : forme la cheese crown / le frico",
+        },
+        "1": {
+          name: "Pepperoni piquant (viande de porc, sel, épices)",
+        },
+        "2": {
+          name: "Sauce tomate concentrée (coulis de tomates, origan, sel)",
+          notes: "Bandes en surface (racing stripes)",
+        },
+        "3": {
+          name: "Parmesan ou pecorino râpé",
+        },
+        "4": {
+          name: "Origan séché",
+        },
+      },
+    },
+    chicago_deep_classic: {
+      ingredients: {
+        "0": {
+          name: "Mozzarella en tranches",
+          notes: "Au fond, au contact de la pâte",
+        },
+        "1": {
+          name: "Saucisse italienne émiettée (viande de porc, sel, poivre, graines de fenouil)",
+          notes: "Couche par-dessus la mozzarella",
+        },
+        "2": {
+          name: "Pulpe de tomate en morceaux (San Marzano) (tomates, jus de tomate, sel)",
+          notes: "Sauce rustique en surface",
+        },
+        "3": {
+          name: "Parmesan râpé",
+          notes: "En surface",
+        },
+        "4": {
+          name: "Origan et basilic séchés",
+        },
+      },
+    },
+    calzone_napoletano_classico: {
+      variant_name: "ricotta et salami",
+      ingredients: {
+        "0": {
+          name: "Ricotta fraîche (lactosérum, sel)",
+        },
+        "1": {
+          name: "Fior di latte de Campanie",
+        },
+        "2": {
+          name: "Salami napolitain (viande de porc, sel, poivre)",
+        },
+        "3": {
+          name: "Poivre noir fraîchement moulu",
+        },
+        "4": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "5": {
+          name: "Parmesan râpé",
+        },
+        "6": {
+          name: "Basilic frais",
+          notes: "feuilles",
+        },
+        "7": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    calzone_scarola: {
+      variant_name: "et provola",
+      ingredients: {
+        "0": {
+          name: "Scarole étuvée à l'ail (scarole, ail, huile)",
+        },
+        "1": {
+          name: "Olives de Gaeta dénoyautées",
+        },
+        "2": {
+          name: "Câpres dessalées",
+        },
+        "3": {
+          name: "Provola fumée en dés",
+        },
+        "4": {
+          name: "Anchois (facultatifs)",
+        },
+      },
+    },
+    calzone_ricotta_cicoli: {
+      ingredients: {
+        "0": {
+          name: "Ricotta de brebis (lactosérum, sel)",
+        },
+        "1": {
+          name: "Cicoli napolitains (grattons de porc)",
+        },
+        "2": {
+          name: "Fior di latte de Campanie",
+        },
+        "3": {
+          name: "Poivre noir fraîchement moulu",
+        },
+        "4": {
+          name: "Coulis de tomates (sur le dessus)",
+        },
+      },
+    },
+    margherita_new_york: {
+      ingredients: {
+        "0": {
+          name: "Sauce tomate (coulis de tomates, sel, sucre, origan)",
+        },
+        "1": {
+          name: "Mozzarella low-moisture",
+        },
+        "2": {
+          name: "Pecorino Romano râpé",
+          notes: "En surface : la signature de la slice new-yorkaise",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    montanara_classica: {
+      ingredients: {
+        "0": {
+          name: "Tomate (pelées écrasées ou coulis, sel)",
+        },
+        "1": {
+          name: "Ricotta fraîche (lactosérum, sel)",
+          notes: "En flocons, à cru",
+        },
+        "2": {
+          name: "Pecorino romano râpé",
+        },
+        "3": {
+          name: "Basilic frais",
+          notes: "feuilles",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    pizza_fritta_ripiena: {
+      variant_name: "ricotta, provola et cicoli",
+      ingredients: {
+        "0": {
+          name: "Ricotta de brebis (lactosérum, sel)",
+        },
+        "1": {
+          name: "Provola fumée en dés",
+        },
+        "2": {
+          name: "Cicoli napolitains (ou grattons de porc)",
+          notes: "à défaut : seulement du poivre noir",
+        },
+        "3": {
+          name: "Poivre noir fraîchement moulu",
+        },
+        "4": {
+          name: "Tomate San Marzano (un peu, à l'intérieur)",
+        },
+      },
+    },
+    ciaccino_senese_farcito: {
+      ingredients: {
+        "0": {
+          name: "Jambon cru toscan",
+          notes: "En tranches, dans la garniture",
+        },
+        "1": {
+          name: "Pecorino toscan mi-affiné",
+          notes: "En fines lamelles",
+        },
+        "2": {
+          name: "Poivre noir fraîchement moulu",
+        },
+      },
+    },
+    white_clam_new_haven: {
+      ingredients: {
+        "0": {
+          name: "Palourdes fraîches décortiquées (littleneck)",
+          notes: "Avec un peu de leur jus",
+        },
+        "1": {
+          name: "Ail frais haché",
+        },
+        "2": {
+          name: "Pecorino romano râpé",
+        },
+        "3": {
+          name: "Origan séché",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+        "5": {
+          name: "Poivre noir et persil",
+        },
+      },
+    },
+    salsiccia_friarielli_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Friarielli (brocoli-rave) nettoyés",
+          notes: "Sautés à l'ail et au piment",
+        },
+        "1": {
+          name: "Saucisse napolitaine émiettée (viande de porc, sel, poivre)",
+          notes: "Crue, en petits morceaux",
+        },
+        "2": {
+          name: "Provola fumée",
+          notes: "En dés",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    cacio_e_pepe_crema: {
+      variant_name: "après cuisson",
+      ingredients: {
+        "0": {
+          name: "Pecorino romano râpé",
+          notes: "Pour la crème",
+        },
+        "1": {
+          name: "Poivre noir en grains fraîchement moulu",
+        },
+        "2": {
+          name: "Eau tiède (ou un peu de crème)",
+          notes: "Pour monter la crème",
+        },
+      },
+    },
+    hawaiiana_classica: {
+      ingredients: {
+        "0": {
+          name: "Sauce tomate (coulis, sel, origan)",
+        },
+        "1": {
+          name: "Mozzarella low-moisture",
+        },
+        "2": {
+          name: "Jambon cuit en dés",
+        },
+        "3": {
+          name: "Ananas (frais ou bien égoutté)",
+          notes: "En petits morceaux, épongé",
+        },
+      },
+    },
+    capricciosa_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelées San Marzano écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Fior di latte de Campanie",
+        },
+        "2": {
+          name: "Jambon cuit en tranches (viande de porc, sel, arômes)",
+        },
+        "3": {
+          name: "Champignons de Paris sautés",
+        },
+        "4": {
+          name: "Petits artichauts de Paestum à l'huile (artichauts, huile, sel)",
+        },
+        "5": {
+          name: "Olives caiazzane (ou noires de Gaeta)",
+        },
+        "6": {
+          name: "Anchois de Cetara (facultatifs)",
+        },
+        "7": {
+          name: "Filet d'huile d'olive vierge extra des Colline Salernitane",
+        },
+      },
+    },
+    quattro_stagioni_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelées San Marzano écrasées à la main (tomate, jus de tomate)",
+        },
+        "1": {
+          name: "Fior di latte de Campanie",
+        },
+        "2": {
+          name: "Jambon cuit (viande de porc, sel, arômes)",
+          notes: "pour un quart",
+        },
+        "3": {
+          name: "Champignons de Paris sautés",
+          notes: "pour un quart",
+        },
+        "4": {
+          name: "Petits artichauts de Paestum à l'huile (artichauts, huile, sel)",
+          notes: "pour un quart",
+        },
+        "5": {
+          name: "Anchois de Cetara et olives",
+          notes: "pour un quart",
+        },
+      },
+    },
+    quattro_formaggi_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte de Campanie",
+        },
+        "1": {
+          name: "Provolone del Monaco DOP en copeaux",
+        },
+        "2": {
+          name: "Gorgonzola dolce en dés",
+        },
+        "3": {
+          name: "Parmigiano Reggiano râpé",
+        },
+      },
+    },
+    ortolana_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomate écrasée Casa Marrazzo (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte de Campanie",
+        },
+        "2": {
+          name: "Aubergines frites en dés",
+        },
+        "3": {
+          name: "Courgettes frites",
+        },
+        "4": {
+          name: "Poivrons grillés",
+        },
+        "5": {
+          name: "Basilic frais",
+        },
+        "6": {
+          name: "Huile d'olive vierge extra des Colline Salernitane",
+        },
+      },
+    },
+    cosacca_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomate écrasée Casa Marrazzo (tomate, sel)",
+        },
+        "1": {
+          name: "Sel fin",
+        },
+        "2": {
+          name: "Parmigiano Reggiano DOP 24 mois râpé",
+          notes: "ou pecorino",
+        },
+        "3": {
+          name: "Basilic frais",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra des Colline Salernitane",
+        },
+      },
+    },
+    provola_pepe_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomate écrasée Casa Marrazzo (tomate, sel)",
+          notes: "un voile de tomate, léger",
+        },
+        "1": {
+          name: "Provola fumée de Campanie en dés",
+        },
+        "2": {
+          name: "Poivre noir fraîchement moulu",
+        },
+        "3": {
+          name: "Basilic frais",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra des Colline Salernitane",
+        },
+      },
+    },
+    nduja_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomate écrasée Casa Marrazzo (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte de Campanie",
+        },
+        "2": {
+          name: "'Nduja piquante de Spilinga (viande de porc, piment, sel)",
+          notes: "en noisettes",
+        },
+        "3": {
+          name: "Basilic frais",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra des Colline Salernitane",
+        },
+      },
+    },
+    nerano_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Crème de courgettes (courgettes, huile d'olive vierge extra, sel)",
+        },
+        "1": {
+          name: "Fior di latte de Campanie",
+        },
+        "2": {
+          name: "Courgettes frites en julienne",
+        },
+        "3": {
+          name: "Provolone del Monaco DOP en copeaux",
+        },
+        "4": {
+          name: "Menthe fraîche (mentuccia)",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra des Colline Salernitane",
+        },
+      },
+    },
+    margherita_sbagliata_canotto: {
+      bake_note: "La tomate ne s'ajoute qu'en fin de cuisson : elle reste crue, acidulée et parfumée.",
+      ingredients: {
+        "0": {
+          name: "Mozzarella di bufala campana DOP en tranches (fondue à la cuisson)",
+        },
+        "1": {
+          name: "Coulis de tomate riccio cru, froid (tomate, sel)",
+        },
+        "2": {
+          name: "Basilic frais (ou réduction de basilic)",
+        },
+        "3": {
+          name: "Filet d'huile d'olive vierge extra",
+        },
+      },
+    },
+    scarpetta_canotto: {
+      variant_name: "Da Lioniello",
+      ingredients: {
+        "0": {
+          name: "Mozzarella di bufala campana DOP (fondue à la cuisson)",
+        },
+        "1": {
+          name: "Fondue de Grana Padano DOP 12 mois",
+        },
+        "2": {
+          name: "Compotée de tomate crue, froide (tomate, sel)",
+        },
+        "3": {
+          name: "Pesto au basilic",
+        },
+        "4": {
+          name: "Copeaux de Grana Padano DOP 24 mois",
+        },
+      },
+    },
+    capricciosa_romana: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jambon cuit à la braise en tranches (viande de porc, sel, arômes)",
+        },
+        "3": {
+          name: "Champignons de Paris frais émincés",
+        },
+        "4": {
+          name: "Petits artichauts à l'huile à la romaine (artichauts, huile, sel)",
+        },
+        "5": {
+          name: "Olives noires",
+        },
+        "6": {
+          name: "Œuf dur (facultatif, à la romaine)",
+        },
+        "7": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    quattro_stagioni_romana: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jambon cuit (viande de porc, sel, arômes)",
+          notes: "pour un quart",
+        },
+        "3": {
+          name: "Champignons de Paris",
+          notes: "pour un quart",
+        },
+        "4": {
+          name: "Petits artichauts à l'huile (artichauts, huile, sel)",
+          notes: "pour un quart",
+        },
+        "5": {
+          name: "Olives noires",
+          notes: "pour un quart",
+        },
+      },
+    },
+    quattro_formaggi_romana: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Gorgonzola dolce DOP en dés",
+        },
+        "2": {
+          name: "Provola fumée en dés",
+        },
+        "3": {
+          name: "Pecorino romano DOP râpé",
+        },
+      },
+    },
+    ortolana_romana: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Tranches de pommes de terre au four",
+        },
+        "2": {
+          name: "Aubergines grillées",
+        },
+        "3": {
+          name: "Courgettes grillées",
+        },
+        "4": {
+          name: "Tomates datterini fraîches",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    diavola_romana: {
+      variant_name: "salami piquant",
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Salami piquant en tranches (viande de porc, sel, piment)",
+        },
+        "3": {
+          name: "Origan séché",
+        },
+        "4": {
+          name: "Pecorino romano DOP râpé",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    provola_pepe_tonda: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Provola fumée de Campanie en dés",
+        },
+        "2": {
+          name: "Poivre noir fraîchement moulu",
+        },
+        "3": {
+          name: "Basilic frais",
+        },
+      },
+    },
+    hot_honey_tonda: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates épicé (tomate, sel, piment)",
+        },
+        "1": {
+          name: "Provola fumée de Campanie en dés",
+        },
+        "2": {
+          name: "Salami piquant type pepperoni en tranches",
+        },
+        "3": {
+          name: "Miel aromatisé à la 'nduja",
+          notes: "en filet après cuisson",
+        },
+        "4": {
+          name: "Pecorino romano DOP râpé",
+        },
+      },
+    },
+    bresaola_rucola_tonda: {
+      ingredients: {
+        "0": {
+          name: "Fior di latte",
+        },
+        "1": {
+          name: "Bresaola della Valtellina IGP en tranches (viande de bœuf, sel)",
+        },
+        "2": {
+          name: "Roquette sauvage fraîche",
+        },
+        "3": {
+          name: "Copeaux de Parmigiano Reggiano 24 mois",
+        },
+        "4": {
+          name: "Zeste de citron râpé",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    nduja_pinsa: {
+      variant_name: "Sapori del Sole",
+      ingredients: {
+        "0": {
+          name: "'Nduja piquante de Spilinga (viande de porc, piment, sel)",
+          notes: "en noisettes, fondue à la cuisson",
+        },
+        "1": {
+          name: "Stracciatella di burrata fraîche (mozzarella, crème)",
+          notes: "à cru après cuisson",
+        },
+        "2": {
+          name: "Tomates datterini fraîches",
+          notes: "à cru après cuisson",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    patate_rosmarino_romana: {
+      bake_note: "Les pommes de terre demandent quelques minutes de plus pour dorer et se recroqueviller sur les bords.",
+      ingredients: {
+        "0": {
+          name: "Fior di latte (facultatif, sur pinsa/teglia)",
+        },
+        "1": {
+          name: "Pommes de terre jaunes en fines tranches",
+        },
+        "2": {
+          name: "Romarin frais",
+          notes: "aiguilles",
+        },
+        "3": {
+          name: "Fleur de sel",
+          notes: "en fin de cuisson",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    stracciata_bottarga_pala: {
+      variant_name: "Roscioli",
+      ingredients: {
+        "0": {
+          name: "Stracciatella di burrata fraîche des Pouilles (mozzarella, crème)",
+          notes: "à cru après cuisson",
+        },
+        "1": {
+          name: "Courgettes romanesco alla scapece (courgettes, vinaigre, menthe)",
+        },
+        "2": {
+          name: "Poutargue de mulet râpée",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    cheese_ny: {
+      ingredients: {
+        "0": {
+          name: "Sauce tomate style Santa Barbara (coulis, origan, sucre, ail)",
+        },
+        "1": {
+          name: "Mozzarella low-moisture râpée",
+        },
+        "2": {
+          name: "Pecorino romano râpé",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    white_pizza_ny: {
+      ingredients: {
+        "0": {
+          name: "Mozzarella low-moisture",
+        },
+        "1": {
+          name: "Ricotta de vache fouettée",
+          notes: "en touffes",
+        },
+        "2": {
+          name: "Épinards frais sautés",
+        },
+        "3": {
+          name: "Ail frais haché",
+        },
+        "4": {
+          name: "Pecorino romano râpé",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    supreme_ny: {
+      ingredients: {
+        "0": {
+          name: "Sauce tomate Santa Barbara (coulis, origan, ail)",
+        },
+        "1": {
+          name: "Mozzarella low-moisture",
+        },
+        "2": {
+          name: "Pepperoni en tranches",
+        },
+        "3": {
+          name: "Saucisse de porc émiettée",
+        },
+        "4": {
+          name: "Poivrons verts en rondelles",
+        },
+        "5": {
+          name: "Oignon blanc émincé",
+        },
+        "6": {
+          name: "Champignons de Paris émincés",
+        },
+      },
+    },
+    vodka_detroit: {
+      ingredients: {
+        "0": {
+          name: "Brick cheese du Wisconsin en dés",
+          notes: "jusqu'aux bords : cheese crown / frico",
+        },
+        "1": {
+          name: "Sauce vodka (tomate, crème, vodka, oignon)",
+          notes: "en bandes en surface",
+        },
+        "2": {
+          name: "Basilic frais",
+        },
+        "3": {
+          name: "Pecorino romano râpé",
+        },
+      },
+    },
+    italian_beef_chicago: {
+      ingredients: {
+        "0": {
+          name: "Mozzarella en tranches",
+          notes: "au fond, protège la pâte",
+        },
+        "1": {
+          name: "Lanières de bœuf braisé (Italian beef) dans son jus",
+        },
+        "2": {
+          name: "Giardiniera piquante hachée (légumes au vinaigre)",
+        },
+        "3": {
+          name: "Pulpe de tomate en morceaux (San Marzano)",
+          notes: "sauce rustique en surface",
+        },
+        "4": {
+          name: "Parmesan râpé",
+        },
+      },
+    },
+    supreme_tavern: {
+      variant_name: "party cut",
+      ingredients: {
+        "0": {
+          name: "Sauce tomate",
+        },
+        "1": {
+          name: "Mozzarella low-moisture",
+        },
+        "2": {
+          name: "Saucisse de porc au fenouil émiettée",
+        },
+        "3": {
+          name: "Pepperoni",
+        },
+        "4": {
+          name: "Poivrons verts en rondelles",
+        },
+      },
+    },
+    margherita_grandma: {
+      ingredients: {
+        "0": {
+          name: "Mozzarella fior di latte fraîche",
+          notes: "à la base, au contact de la plaque huilée",
+        },
+        "1": {
+          name: "Sauce marinara épaisse de tomates confites (tomate, ail, huile)",
+          notes: "par cuillerées sur le fromage",
+        },
+        "2": {
+          name: "Pecorino romano râpé",
+        },
+        "3": {
+          name: "Basilic frais",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    vodka_grandma: {
+      variant_name: "Buzzy",
+      ingredients: {
+        "0": {
+          name: "Mozzarella fior di latte fraîche",
+        },
+        "1": {
+          name: "Sauce vodka (tomate, crème, jambon, vodka)",
+          notes: "par cuillerées dessus",
+        },
+        "2": {
+          name: "Pecorino romano râpé",
+        },
+        "3": {
+          name: "Basilic frais",
+        },
+      },
+    },
+    tomato_pie_newhaven: {
+      ingredients: {
+        "0": {
+          name: "Pulpe de tomate San Marzano (tomate, sel)",
+        },
+        "1": {
+          name: "Ail frais haché",
+        },
+        "2": {
+          name: "Origan séché",
+        },
+        "3": {
+          name: "Pecorino romano râpé",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    bbq_chicken_california: {
+      variant_name: "Wolfgang Puck",
+      ingredients: {
+        "0": {
+          name: "Sauce barbecue",
+          notes: "à la place de la tomate",
+        },
+        "1": {
+          name: "Mozzarella (ou mélange avec du gouda fumé)",
+        },
+        "2": {
+          name: "Poulet cuit laqué sauce barbecue",
+        },
+        "3": {
+          name: "Oignon rouge finement émincé",
+        },
+        "4": {
+          name: "Coriandre fraîche",
+          notes: "à cru après cuisson",
+        },
+      },
+    },
+    smoked_salmon_california: {
+      variant_name: "Spago",
+      ingredients: {
+        "0": {
+          name: "Crème fraîche",
+        },
+        "1": {
+          name: "Mozzarella",
+        },
+        "2": {
+          name: "Saumon fumé",
+          notes: "à cru après cuisson",
+        },
+        "3": {
+          name: "Aneth frais",
+        },
+        "4": {
+          name: "Oignon rouge en fines lamelles",
+        },
+        "5": {
+          name: "Câpres",
+        },
+      },
+    },
+    greek_feta_pan: {
+      ingredients: {
+        "0": {
+          name: "Sauce tomate à l'origan",
+        },
+        "1": {
+          name: "Mélange mozzarella et cheddar",
+        },
+        "2": {
+          name: "Feta émiettée",
+        },
+        "3": {
+          name: "Olives kalamata dénoyautées",
+        },
+        "4": {
+          name: "Oignon rouge en rondelles",
+        },
+        "5": {
+          name: "Origan séché",
+        },
+      },
+    },
+    greek_cheese_pan: {
+      variant_name: "Greek pan",
+      ingredients: {
+        "0": {
+          name: "Sauce tomate à l'origan",
+        },
+        "1": {
+          name: "Mélange mozzarella et cheddar",
+        },
+        "2": {
+          name: "Origan séché",
+        },
+      },
+    },
+    zucca_speck_bonci: {
+      variant_name: "Pizzarium",
+      ingredients: {
+        "0": {
+          name: "Crème de courge rôtie (courge, noix de muscade, sel)",
+        },
+        "1": {
+          name: "Speck artisanal en tranches",
+          notes: "à froid après cuisson",
+        },
+        "2": {
+          name: "Caciocavallo de Campanie en copeaux",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    burrata_salmone_bonci: {
+      variant_name: "Pizzarium",
+      ingredients: {
+        "0": {
+          name: "Huile d'olive vierge extra et sel pour la cuisson en blanc",
+        },
+        "1": {
+          name: "Stracciatella di burrata des Pouilles (mozzarella, crème)",
+          notes: "à cru après cuisson",
+        },
+        "2": {
+          name: "Saumon écossais fumé à froid",
+        },
+        "3": {
+          name: "Zeste de citron et aneth frais",
+        },
+      },
+    },
+    focaccia_cipolle_genovese: {
+      ingredients: {
+        "0": {
+          name: "Oignons jaunes en fines tranches",
+        },
+        "1": {
+          name: "Saumure (eau, huile d'olive vierge extra, sel)",
+        },
+        "2": {
+          name: "Huile d'olive vierge extra de Ligurie",
+        },
+        "3": {
+          name: "Gros sel",
+        },
+      },
+    },
+    sardenaira_sanremo: {
+      variant_name: "De.Co. de Sanremo",
+      ingredients: {
+        "0": {
+          name: "Sauce tomate épaisse cuite avec de l'oignon (tomate, oignon, huile)",
+        },
+        "1": {
+          name: "Anchois au sel dessalés",
+        },
+        "2": {
+          name: "Ail en chemise écrasé",
+        },
+        "3": {
+          name: "Olives taggiasche en saumure",
+        },
+        "4": {
+          name: "Câpres dessalées",
+        },
+        "5": {
+          name: "Origan sauvage séché",
+        },
+        "6": {
+          name: "Huile d'olive vierge extra de Ligurie",
+        },
+      },
+    },
+    sfincione_bianco_bagherese: {
+      variant_name: "de Bagheria",
+      ingredients: {
+        "0": {
+          name: "Anchois au sel fondus dans l'huile d'olive vierge extra",
+        },
+        "1": {
+          name: "Tuma fraîche (ou primosale) en tranches",
+          notes: "enfoncée dans la pâte",
+        },
+        "2": {
+          name: "Oignons blancs confits lentement",
+        },
+        "3": {
+          name: "Caciocavallo affiné râpé",
+        },
+        "4": {
+          name: "Mie de pain grillée à l'origan",
+        },
+        "5": {
+          name: "Poivre noir et huile d'olive vierge extra",
+        },
+      },
+    },
+    recco_nduja: {
+      ingredients: {
+        "0": {
+          name: "Crescenza ligure fraîche",
+        },
+        "1": {
+          name: "'Nduja piquante de Spilinga",
+          notes: "en petits morceaux, avant de refermer",
+        },
+        "2": {
+          name: "Huile d'olive vierge extra de Ligurie",
+        },
+        "3": {
+          name: "Sel fin",
+        },
+      },
+    },
+    recco_culatello_recipe: {
+      ingredients: {
+        "0": {
+          name: "Crescenza ligure fraîche",
+        },
+        "1": {
+          name: "Huile d'olive vierge extra de Ligurie",
+        },
+        "2": {
+          name: "Culatello di Zibello DOP en fines tranches",
+          notes: "à cru après cuisson",
+        },
+      },
+    },
+    recco_cotto_recipe: {
+      ingredients: {
+        "0": {
+          name: "Crescenza ligure fraîche",
+        },
+        "1": {
+          name: "Huile d'olive vierge extra de Ligurie",
+        },
+        "2": {
+          name: "Jambon cuit artisanal Millefiori en tranches",
+          notes: "à cru après cuisson",
+        },
+      },
+    },
+    recco_pizzata_recipe: {
+      ingredients: {
+        "0": {
+          name: "Crescenza ligure fraîche",
+        },
+        "1": {
+          name: "Coulis de tomates bio",
+        },
+        "2": {
+          name: "Anchois au sel dessalés",
+        },
+        "3": {
+          name: "Olives taggiasche",
+        },
+        "4": {
+          name: "Câpres de Pantelleria dessalées",
+        },
+        "5": {
+          name: "Huile d'olive vierge extra de Ligurie",
+        },
+      },
+    },
+    margherita_padellino: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates pelées italiennes (tomate, sel)",
+        },
+        "1": {
+          name: "Mozzarella fior di latte fondue",
+        },
+        "2": {
+          name: "Basilic frais",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    diavola_padellino: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Mozzarella fior di latte fondue",
+        },
+        "2": {
+          name: "Salami piquant en tranches",
+        },
+        "3": {
+          name: "Basilic frais",
+        },
+        "4": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    capricciosa_padellino: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Mozzarella fior di latte fondue",
+        },
+        "2": {
+          name: "Jambon cuit de grande qualité",
+        },
+        "3": {
+          name: "Champignons de Paris frais émincés",
+        },
+        "4": {
+          name: "Petits artichauts cuits à l'huile",
+        },
+        "5": {
+          name: "Olives noires",
+        },
+        "6": {
+          name: "Câpres et huile d'olive vierge extra",
+        },
+      },
+    },
+    tonno_cipolla_padellino: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Mozzarella fior di latte fondue",
+        },
+        "2": {
+          name: "Thon à l'huile de qualité, égoutté",
+        },
+        "3": {
+          name: "Oignon rouge de Tropea émincé",
+        },
+        "4": {
+          name: "Origan et huile d'olive vierge extra",
+        },
+      },
+    },
+    gorgonzola_pere_padellino: {
+      ingredients: {
+        "0": {
+          name: "Mozzarella fior di latte fondue",
+          notes: "base blanche",
+        },
+        "1": {
+          name: "Poires fraîches et douces en fines tranches",
+        },
+        "2": {
+          name: "Gorgonzola DOP crémeux",
+          notes: "en petits morceaux",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    margherita_trancio: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Mozzarella fior di latte en abondance",
+          notes: "coule sur les côtés de la part épaisse",
+        },
+        "2": {
+          name: "Basilic frais",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    diavola_trancio: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates (tomate, sel)",
+        },
+        "1": {
+          name: "Mozzarella fior di latte en abondance",
+        },
+        "2": {
+          name: "Salami piquant en tranches",
+        },
+        "3": {
+          name: "Huile d'olive vierge extra",
+        },
+      },
+    },
+    hot_honey_detroit: {
+      variant_name: "The Founders",
+      ingredients: {
+        "0": {
+          name: "Brick cheese du Wisconsin en dés",
+          notes: "jusqu'aux bords : cheese crown",
+        },
+        "1": {
+          name: "Pepperoni (Ezzo)",
+        },
+        "2": {
+          name: "Jalapeños confits au vinaigre",
+        },
+        "3": {
+          name: "Sauce tomate rouge en bandes",
+          notes: "après cuisson",
+        },
+        "4": {
+          name: "Miel pimenté fondu",
+          notes: "en filet après cuisson",
+        },
+      },
+    },
+    hawaiiana_detroit: {
+      variant_name: "Big Hawaiian",
+      ingredients: {
+        "0": {
+          name: "Brick cheese du Wisconsin en dés",
+          notes: "jusqu'aux bords",
+        },
+        "1": {
+          name: "Pepperoni (Ezzo)",
+        },
+        "2": {
+          name: "Bacon fumé croustillant",
+        },
+        "3": {
+          name: "Ananas frais en dés caramélisé",
+        },
+        "4": {
+          name: "Glaçage sucré au piment",
+          notes: "après cuisson",
+        },
+      },
+    },
+    meat_lovers_detroit: {
+      variant_name: "Meatsiah",
+      ingredients: {
+        "0": {
+          name: "Brick cheese du Wisconsin en dés",
+          notes: "jusqu'aux bords",
+        },
+        "1": {
+          name: "Pepperoni (Ezzo)",
+        },
+        "2": {
+          name: "Saucisse italienne émiettée",
+        },
+        "3": {
+          name: "Bacon fumé croustillant",
+        },
+        "4": {
+          name: "Lanières de faux-filet de bœuf",
+        },
+        "5": {
+          name: "Sauce tomate rouge en bandes",
+          notes: "après cuisson",
+        },
+      },
+    },
+    supreme_chicago: {
+      variant_name: "The Special",
+      ingredients: {
+        "0": {
+          name: "Mozzarella en tranches",
+          notes: "au fond",
+        },
+        "1": {
+          name: "Saucisse fraîche émiettée (sans nitrates)",
+        },
+        "2": {
+          name: "Champignons de Paris émincés",
+        },
+        "3": {
+          name: "Poivrons verts doux",
+        },
+        "4": {
+          name: "Oignon blanc haché",
+        },
+        "5": {
+          name: "Pulpe de tomate en morceaux (San Marzano)",
+        },
+      },
+    },
+    spinaci_chicago: {
+      variant_name: "Fresh Spinach",
+      ingredients: {
+        "0": {
+          name: "Mozzarella en tranches",
+          notes: "au fond",
+        },
+        "1": {
+          name: "Épinards frais à la vapeur",
+        },
+        "2": {
+          name: "Mélange de quatre fromages fondants",
+        },
+        "3": {
+          name: "Pulpe de tomate en morceaux",
+        },
+      },
+    },
+    meat_lovers_chicago: {
+      variant_name: "Meat and More Meat",
+      ingredients: {
+        "0": {
+          name: "Mozzarella en tranches",
+          notes: "au fond",
+        },
+        "1": {
+          name: "Pepperoni",
+        },
+        "2": {
+          name: "Salami de Milan doux",
+        },
+        "3": {
+          name: "Saucisse fraîche émiettée",
+        },
+        "4": {
+          name: "Bacon fumé croustillant",
+        },
+        "5": {
+          name: "Pulpe de tomate en morceaux",
+        },
+      },
+    },
+    cheese_tavern: {
+      variant_name: "Tavern (party cut)",
+      ingredients: {
+        "0": {
+          name: "Sauce tomate",
+        },
+        "1": {
+          name: "Mozzarella low-moisture",
+        },
+        "2": {
+          name: "Origan séché",
+        },
+      },
+    },
+    capricciosa_trancio: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates",
+        },
+        "1": {
+          name: "Mozzarella fior di latte en abondance",
+        },
+        "2": {
+          name: "Jambon cuit",
+        },
+        "3": {
+          name: "Champignons de Paris",
+        },
+        "4": {
+          name: "Petits artichauts à l'huile",
+        },
+        "5": {
+          name: "Olives noires",
+        },
+      },
+    },
+    prosciutto_funghi_trancio: {
+      ingredients: {
+        "0": {
+          name: "Coulis de tomates",
+        },
+        "1": {
+          name: "Mozzarella fior di latte en abondance",
+        },
+        "2": {
+          name: "Jambon cuit en tranches",
+        },
+        "3": {
+          name: "Champignons de Paris émincés",
+        },
+      },
+    },
+    quattro_formaggi_trancio: {
+      ingredients: {
+        "0": {
+          name: "Mozzarella fior di latte",
+        },
+        "1": {
+          name: "Gorgonzola dolce",
+        },
+        "2": {
+          name: "Fontina",
+        },
+        "3": {
+          name: "Parmesan râpé",
+        },
+      },
+    },
+  },
+  steps: {
+    spread_margherita_avpn: {
+      title: "Garniture Margherita Verace",
+      description: "Étalez uniformément les tomates pelées écrasées à la main. Disposez le fior di latte en lanières ou en dés. Basilic frais et filet d'huile d'olive vierge extra AVANT le four (cuisson de 90s, il tient le coup).",
+      tip_beginner: "Cahier des charges AVPN : tomates pelées DOP, mozzarella de Campanie, basilic frais. De l'huile d'olive vierge extra, oui, mais peu.",
+      tip_nerd: "La cuisson éclair de 90s à 450°C préserve le basilic frais (la pizza reste trop peu de temps au four pour l'abîmer). Contrairement aux fours domestiques lents, où il faut l'ajouter après.",
+    },
+    spread_margherita_romana: {
+      title: "Garniture Margherita romaine",
+      description: "Étalez uniformément le coulis salé. Répartissez la mozzarella en dés. Un filet d'huile. Le basilic seulement en fin de cuisson.",
+      tip_beginner: "Four domestique = cuisson longue (12-20 min). Ajoutez le basilic frais DÈS la sortie du four, sinon il brûle.",
+      tip_nerd: "Les composés volatils du basilic (linalol, eucalyptol) se dégradent au-delà de 100°C. Pour des cuissons >5min, mieux vaut l'ajouter après cuisson.",
+    },
+    spread_margherita_us: {
+      title: "Garniture Margherita américaine",
+      description: "Étalez la sauce en laissant le bord libre. Répartissez la mozzarella râpée par poignées. Saupoudrez de parmesan. Un filet d'huile. (Pas de basilic frais : le style américain n'en prévoit pas de base.)",
+    },
+    spread_marinara_avpn: {
+      title: "Garniture Marinara AVPN",
+      description: "Tomates pelées écrasées et salées. Ail en fines lamelles bien réparti. Origan généreux. Un filet d'huile d'olive vierge extra. Pas de fromage (c'est la Marinara !).",
+    },
+    spread_marinara_romana: {
+      title: "Garniture Marinara romaine",
+      description: "Coulis salé ; ail en fines lamelles ; origan ; piment en flocons en option ; huile d'olive vierge extra en abondance.",
+    },
+    spread_bianca: {
+      title: "Garniture bianca",
+      description: "Badigeonnez d'huile d'olive vierge extra ; répartissez des aiguilles de romarin frais ; gros sel en surface.",
+    },
+    spread_boscaiola_nap: {
+      title: "Garniture Boscaiola napolitaine",
+      description: "Étalez les tomates pelées écrasées et salées. Répartissez le fior di latte. Ajoutez les cèpes égouttés et la saucisse crue émiettée. Saupoudrez de grana padano. Un filet d'huile.",
+      tip_beginner: "Cèpes à l'huile = déjà prêts, pas de cuisson préalable. La saucisse cuit pendant la cuisson éclair de 90s.",
+      tip_nerd: "L'huile des cèpes en conserve est déjà aromatisée (cèpes, laurier, ail) : elle apporte de la complexité aromatique. Le grana résiste mieux que le parmesan à la cuisson au four à bois à 450° (plus riche en gras).",
+    },
+    saltare_champignon: {
+      title: "Faire sauter les champignons",
+      description: "Émincez les champignons. Faites chauffer l'huile d'olive vierge extra avec l'ail en chemise et le persil. Faites sauter les champignons 8-10 min à feu moyen-vif jusqu'à ce qu'ils rendent leur eau et commencent à dorer. Salez en fin de cuisson.",
+      tip_beginner: "Faites-les cuire AVANT. Crus sur la pizza, ils rendent de l'eau et détrempent la base, qui cuit mal.",
+      tip_nerd: "Les champignons de Paris contiennent 92% d'eau. Précuisson de 8min → réduction de masse d'environ 50% + réaction de Maillard sur les bords → goût concentré et aucune eau rendue pendant la cuisson de la pizza.",
+    },
+    spread_boscaiola_rom: {
+      title: "Garniture Boscaiola romaine",
+      description: "Étalez le coulis salé. Répartissez la mozzarella. Ajoutez les champignons sautés (à température ambiante). Émiettez la saucisse crue en petits morceaux bien répartis. Un filet d'huile.",
+    },
+    spread_diavola_nap: {
+      title: "Garniture Diavola napolitaine",
+      description: "Tomates pelées écrasées et salées. Fior di latte. Tranches de salami piquant disposées en rosace. Filet d'huile pimentée en option.",
+    },
+    spread_diavola_us: {
+      title: "Garniture Pepperoni",
+      description: "Sauce. Mozzarella râpée. Tranches de pepperoni qui se chevauchent (le fameux effet petites coupelles). Origan.",
+      tip_beginner: "Le pepperoni américain n'est pas le salami piquant : plus doux, plus fumé, il forme à la cuisson ces « petites coupelles » caractéristiques remplies de gras.",
+      tip_nerd: "Pepperoni US = boyau rigide + 35-40% de gras → il se recroqueville à la cuisson en formant des cuvettes (« cupping »). Le salami italien reste plat.",
+    },
+    patate_mandolina_ammollo: {
+      title: "Préparation des pommes de terre",
+      description: "Tranchez les pommes de terre très finement (1-2mm) à la mandoline. Plongez-les 30 min dans l'eau froide pour éliminer l'excès d'amidon. Égouttez et séchez bien entre des torchons propres.",
+      tip_beginner: "L'eau froide retire l'amidon : sans cela, les pommes de terre collent entre elles à la cuisson et leurs bords ne se recroquevillent pas.",
+      tip_nerd: "L'amidon de surface gélatinise vers ~60°C et forme un film collant. L'éliminer permet une déshydratation progressive à la cuisson et des bords qui se recroquevillent (effet chips).",
+    },
+    stesura_patate: {
+      title: "Disposer les pommes de terre dessus",
+      description: "Disposez les lamelles de pommes de terre en les faisant se chevaucher sur la pâte. Assaisonnez d'huile d'olive vierge extra et de romarin. Pas encore de sel.",
+      tip_beginner: "Ne salez pas maintenant : le sel ferait rendre de l'eau et détremperait la base. Ajoutez-le seulement en fin de cuisson.",
+      tip_nerd: "Par osmose, le NaCl extrait l'eau des cellules végétales (perte de turgescence). Saler à l'avance transforme des pommes de terre à ~80% d'eau en bouillie détrempée.",
+    },
+    farcitura_porchetta: {
+      title: "Garniture de porchetta",
+      description: "Après avoir ouvert en deux, disposez les tranches de porchetta sur la moitié inférieure. Un tour de moulin à poivre. Refermez avec la partie supérieure (avec les pommes de terre dessus).",
+    },
+    sale_finale: {
+      title: "Sel et service",
+      description: "Parsemez de fleur de sel la surface des pommes de terre. Servez chaud, coupé en carrés.",
+    },
+    spread_bianca_base: {
+      title: "Cuisson en blanc",
+      description: "Badigeonnez d'huile d'olive vierge extra et parsemez de fleur de sel. Faites cuire jusqu'à ce que la croûte soit dorée (rien d'autre avant le four).",
+    },
+    mortazza_post_bake: {
+      title: "Ajouter la mortadelle après cuisson",
+      description: "Sortez du four. Ouvrez en portefeuille s'il s'agit d'une Pala ou similaire, sinon déposez les tranches dessus. Répartissez la mortadelle IGP en tranches ondulées. Parsemez de pistaches. (Stracciatella di burrata en option pour une version gourmet.)",
+    },
+    crudo_bianca: {
+      title: "Cuisson en blanc",
+      description: "Badigeonnez d'huile d'olive vierge extra et de fleur de sel. Faites cuire la base jusqu'à ce qu'elle soit dorée et alvéolée. Rien d'autre avant le four.",
+    },
+    crudo_spacca_farci: {
+      title: "Ouvrir et garnir de jambon cru",
+      description: "Sortez du four, ouvrez en deux au couteau et garnissez de tranches de jambon cru. La chaleur résiduelle attendrit à peine le gras du jambon.",
+    },
+    patate_sancho_prep: {
+      title: "Trancher et faire tremper les pommes de terre",
+      description: "Tranchez les pommes de terre à 1-2 mm à la mandoline, faites-les tremper 20 min dans l'eau froide pour retirer l'amidon, égouttez et séchez.",
+    },
+    patate_sancho_top: {
+      title: "Lamelles de pommes de terre en surface",
+      description: "Disposez les lamelles de pommes de terre en les faisant se chevaucher sur la base (la « croûte de pommes de terre »). Huile d'olive vierge extra et romarin. Pas de sel pour l'instant. Faites cuire jusqu'à ce que les pommes de terre se recroquevillent et dorent.",
+    },
+    patate_sancho_split: {
+      title: "Ouvrir et garnir de porchetta",
+      description: "À la sortie du four, salez les pommes de terre. Ouvrez la teglia en deux (les pommes de terre restent à l'extérieur) et garnissez l'intérieur de tranches de porchetta di Ariccia et d'un tour de moulin à poivre. Refermez. Alla Sancho.",
+    },
+    crescenza_internal: {
+      title: "Crescenza entre les feuilles de pâte",
+      description: "Entre la feuille de pâte inférieure et la supérieure, répartissez des morceaux de crescenza à intervalles réguliers. Scellez les bords en pressant. Huile + gros sel en surface.",
+    },
+    sfincione_sauce: {
+      title: "Sauce à l'oignon et chapelure grillée",
+      description: "Faites fondre l'oignon émincé dans un peu d'huile, ajoutez le coulis et laissez cuire 15 min. À part, faites griller la chapelure à la poêle avec un filet d'huile jusqu'à ce qu'elle soit dorée.",
+    },
+    sfincione_top: {
+      title: "Garnir le sfincione",
+      description: "Étalez la sauce tomate à l'oignon sur la pâte. Répartissez le caciocavallo en dés et les filets d'anchois en les enfonçant légèrement. Saupoudrez de chapelure grillée, de pecorino et d'origan, puis terminez par un filet d'huile d'olive vierge extra.",
+    },
+    barese_top: {
+      title: "Tomates cerises, olives et origan",
+      description: "Enfoncez les tomates cerises écrasées dans la pâte levée. Répartissez les olives baresane en les pressant légèrement. Saupoudrez d'origan, arrosez généreusement d'huile d'olive vierge extra et terminez avec du gros sel.",
+    },
+    barese_patate: {
+      title: "Couverture de pommes de terre",
+      description: "Couvrez entièrement la focaccia de tranches de pommes de terre qui se chevauchent (~5 mm). Romarin, huile d'olive vierge extra en abondance et gros sel. Les pommes de terre se recroquevillent et dorent à la cuisson.",
+    },
+    barese_cipolla_prep: {
+      title: "Faire confire l'oignon",
+      description: "Émincez l'oignon rouge doux et faites-le confire doucement dans l'huile jusqu'à ce qu'il soit tendre et à peine doré.",
+    },
+    barese_cipolla: {
+      title: "Oignon confit sur la focaccia",
+      description: "Répartissez l'oignon confit sur la pâte levée. Origan, huile d'olive vierge extra et gros sel. La douceur de l'oignon d'Acquaviva est la signature de cette variante.",
+    },
+    fugazzeta_onion: {
+      title: "Adoucir l'oignon",
+      description: "Émincez l'oignon en fines lamelles et laissez-le 15 min dans de l'eau froide salée pour atténuer son piquant, puis égouttez-le et séchez-le bien.",
+    },
+    fugazzeta_fill_top: {
+      title: "Mozzarella à l'intérieur + oignon en surface",
+      description: "Répartissez la mozzarella sur la couche inférieure, couvrez avec le second disque et scellez les bords. En surface, disposez l'oignon en fines lamelles, l'origan et (selon votre goût) le fromage râpé ; terminez avec de l'huile d'olive vierge extra et du sel. Pas de tomate.",
+    },
+    fugazza_onion: {
+      title: "Adoucir l'oignon",
+      description: "Émincez l'oignon en fines lamelles, faites-le tremper 15 min dans de l'eau froide salée pour atténuer son piquant, égouttez et séchez.",
+    },
+    fugazza_top: {
+      title: "Seulement de l'oignon en surface (pas de fromage)",
+      description: "La fugazza ne se farcit pas de fromage : on couvre la surface d'un lit généreux d'oignon en fines lamelles, d'origan, d'huile d'olive vierge extra et de sel. C'est l'ancêtre « maigre » de la fugazzeta rellena.",
+    },
+    detroit_cheese_crown: {
+      title: "Cheese crown jusqu'aux bords",
+      description: "Répartissez le brick cheese sur toute la surface en le poussant contre les bords du moule : à la cuisson, il caramélise et forme la croûte de fromage (frico). Déposez le pepperoni par-dessus.",
+    },
+    detroit_sauce_stripes: {
+      title: "Bandes de sauce en surface",
+      description: "Sur le fromage, étalez 2-3 bandes de sauce tomate (racing stripes) dans le sens de la longueur. La sauce va DESSUS, pas dessous. Saupoudrez de parmesan et d'origan.",
+    },
+    chicago_cheese_base: {
+      title: "Mozzarella et garniture au fond",
+      description: "Foncez le moule profond avec la pâte en la faisant remonter sur les bords. Couvrez le fond de tranches de mozzarella (elles protègent la pâte de la sauce), puis répartissez la saucisse.",
+    },
+    chicago_sauce_top: {
+      title: "Sauce en morceaux et parmesan en surface",
+      description: "Versez la pulpe de tomate en morceaux PAR-DESSUS le fromage et la garniture. Saupoudrez de parmesan, d'origan et de basilic. Faites cuire longtemps (25-35 min) : c'est la sauce sur le dessus qui protège le fromage.",
+    },
+    calzone_assembly: {
+      title: "Fermeture du calzone",
+      description: "Abaissez le disque, étalez la ricotta mélangée au poivre sur une moitié. Répartissez le fior di latte et le salami. Repliez en demi-lune et scellez en appuyant fermement sur les bords. Nappez l'extérieur d'un voile de coulis, de parmesan, de basilic et d'un filet d'huile.",
+    },
+    scarola_stufata: {
+      title: "Étuver la scarole",
+      description: "Faites revenir la scarole à la poêle avec l'ail, les olives et les câpres jusqu'à ce qu'elle soit tendre et sèche. Essorez bien l'excès d'eau.",
+    },
+    calzone_scarola_fill: {
+      title: "Fermeture du calzone à la scarole",
+      description: "Répartissez la scarole étuvée avec olives et câpres sur la moitié du disque, ajoutez la provola (et des anchois si vous le souhaitez). Repliez en demi-lune et scellez. C'est le calzone d'hiver napolitain par excellence.",
+    },
+    calzone_cicoli_fill: {
+      title: "Fermeture du calzone ricotta et cicoli",
+      description: "Étalez la ricotta poivrée sur la moitié du disque, ajoutez le fior di latte et les cicoli. Repliez et scellez. Un voile de coulis en surface. La farce rustique traditionnelle.",
+    },
+    spread_margherita_ny: {
+      title: "Garniture New York",
+      description: "Étalez la sauce (avec une pincée de sucre pour équilibrer l'acidité) en laissant le bord libre. Couvrez de mozzarella low-moisture. Terminez avec du pecorino romano râpé et un filet d'huile. La part reste grande et pliable.",
+    },
+    montanara_a_crudo: {
+      title: "Garnir à cru après la friture",
+      description: "Faites frire le petit disque dans l'huile jusqu'à ce qu'il soit doré, égouttez-le bien. Sur le disque encore chaud, répartissez la tomate, les flocons de ricotta, le pecorino et le basilic ; terminez avec un filet d'huile d'olive vierge extra. Pas de passage au four : la garniture reste crue.",
+    },
+    pizza_fritta_fill_seal: {
+      title: "Farcir et sceller avant de frire",
+      description: "Abaissez le petit disque, répartissez la ricotta, la provola, les cicoli et le poivre sur une moitié (éventuellement un voile de tomate). Repliez en demi-lune et scellez bien les bords. Faites frire dans l'huile bouillante jusqu'à ce qu'elle gonfle et dore. On NE garnit PAS dessus : la farce est à l'intérieur.",
+      tip_beginner: "Elle est différente de la montanara : la montanara est ouverte et garnie dessus après la friture ; la pizza fritta est fermée et farcie avant de frire.",
+      tip_nerd: "Bien sceller les bords est crucial : un chausson ouvert laisse entrer l'huile et s'échapper la farce. La vapeur interne cuit la ricotta et la provola à l'étouffée pendant que l'extérieur frit.",
+    },
+    ciaccino_farcitura: {
+      title: "Garnir la schiacciata scellée",
+      description: "Abaissez deux disques fins. Sur celui du dessous, répartissez le jambon et le pecorino en laissant un bord libre, couvrez avec le second disque et scellez en pressant bien. Faites cuire jusqu'à ce qu'elle soit dorée : la garniture chauffe et le pecorino fond à peine. Pas de tomate.",
+      tip_beginner: "La garniture est essentielle : jambon toscan et pecorino, rien d'autre. C'est une schiacciata garnie, pas une pizza.",
+      tip_nerd: "Les disques doivent être fins (2-3 mm) : trop épais, le centre reste cru avant que les bords scellés ne dorent.",
+    },
+    white_clam_top: {
+      title: "Palourdes, ail et pecorino (white pie)",
+      description: "Sur la base abaissée, répartissez les palourdes décortiquées avec un peu de leur jus et l'ail haché. Arrosez d'huile d'olive vierge extra, saupoudrez de pecorino romano et d'origan. Ni tomate ni mozzarella. Faites cuire sur une pierre très chaude jusqu'à ce que les bords soient bien noircis (coal-fired).",
+    },
+    friarielli_saltati: {
+      title: "Faire sauter les friarielli",
+      description: "Faites revenir les friarielli à la poêle avec de l'ail, de l'huile et une pincée de piment jusqu'à ce qu'ils soient tendres et secs. Essorez bien l'excès d'eau avant de les utiliser.",
+    },
+    salsiccia_friarielli_top: {
+      title: "Provola, saucisse et friarielli",
+      description: "Répartissez la provola en dés sur la base (blanche, sans tomate). Ajoutez la saucisse crue en petits morceaux et les friarielli sautés. Un filet d'huile d'olive vierge extra. La saucisse cuit pendant la cuisson éclair ; pour les fours domestiques, faites-la d'abord revenir.",
+    },
+    cacio_pepe_cream: {
+      title: "Monter la crème de pecorino",
+      description: "Mélangez le pecorino avec de l'eau tiède (ou un peu de crème) et le poivre jusqu'à obtenir une crème lisse et sans grumeaux. Réservez à température ambiante.",
+    },
+    cacio_pepe_postbake: {
+      title: "Crème à cru sur la chaleur résiduelle",
+      description: "Faites cuire la base blanche. Dès la sortie du four, étalez la crème de pecorino et poivre sur le disque chaud : la chaleur résiduelle la rend soyeuse sans la faire trancher. Donnez quelques tours de moulin à poivre supplémentaires.",
+    },
+    hawaiiana_top: {
+      title: "Jambon cuit et ananas",
+      description: "Étalez la sauce et la mozzarella. Répartissez le jambon cuit et l'ananas bien épongé (pour qu'il ne rende pas d'eau). Faites cuire jusqu'à ce que le fromage soit fondu et l'ananas légèrement caramélisé.",
+    },
+    champignon_nap_capricciosa: {
+      title: "Faire sauter les champignons",
+      description: "Émincez les champignons et faites-les sauter 5 min à la poêle avec un filet d'huile jusqu'à ce qu'ils rendent leur eau. Salez à la fin.",
+    },
+    spread_capricciosa_nap: {
+      title: "Garniture Capricciosa napolitaine",
+      description: "Tomates pelées écrasées + fior di latte à la base. Répartissez le jambon cuit, les champignons sautés, les petits artichauts de Paestum égouttés et les olives caiazzane. Anchois de Cetara pour la version du Sud. Un filet d'huile d'olive vierge extra.",
+    },
+    spread_4stagioni_nap: {
+      title: "Garniture 4 Stagioni napolitaine",
+      description: "Tomates pelées + fior di latte à la base. DIVISEZ en 4 quarts : jambon cuit, champignons sautés, petits artichauts de Paestum, anchois de Cetara avec olives. Chaque quart bien séparé.",
+    },
+    spread_4formaggi_nap: {
+      title: "Garniture 4 Formaggi napolitaine",
+      description: "Base blanche. Répartissez le fior di latte ; ajoutez le provolone del Monaco et le gorgonzola en petits morceaux. Parmesan en surface. Une cuisson éclair qui fait fondre sans brûler.",
+      tip_beginner: "Le provolone del Monaco à la place de la fontina apporte la touche campanienne : plus doux-piquant et moins beurré.",
+      tip_nerd: "Provolone del Monaco DOP : pâte mi-dure au lait de vache d'Agerola, affinage ≥6 mois → il fond en filant mais garde sa tenue en copeaux, et supporte les 450°C du four à bois.",
+    },
+    verdure_fritte_nap: {
+      title: "Frire aubergines et courgettes",
+      description: "Coupez les aubergines en dés et les courgettes en tranches, faites-les frire dans l'huile chaude jusqu'à ce qu'elles soient dorées, égouttez sur du papier absorbant. Faites griller les poivrons et pelez-les.",
+    },
+    spread_ortolana_nap: {
+      title: "Garniture Ortolana napolitaine",
+      description: "Tomate écrasée + fior di latte. Répartissez les aubergines et courgettes frites et les poivrons grillés. Basilic et huile d'olive vierge extra. (Version végétarienne napolitaine, avec des légumes frits et non grillés.)",
+    },
+    spread_cosacca: {
+      title: "Garniture Cosacca",
+      description: "Étalez la tomate écrasée salée. Saupoudrez généreusement de parmesan (ou de pecorino). Basilic et huile d'olive vierge extra. PAS de mozzarella : c'est la pizza d'avant la Margherita.",
+      tip_beginner: "La Cosacca est l'ancêtre de la Margherita : seulement tomate, fromage affiné et basilic. Plus sapide et plus sèche.",
+      tip_nerd: "Sans mozzarella, il n'y a pas d'eau de lait : la base reste plus sèche et croustillante. Le parmesan râpé fond dans la tomate en formant de petites croûtes sapides (Maillard sur les bords du fromage).",
+    },
+    spread_provola_pepe: {
+      title: "Garniture Provola e Pepe",
+      description: "Un voile de tomate écrasée (juste une ombre). Répartissez la provola fumée en dés. Après cuisson, un généreux tour de moulin à poivre noir, du basilic et un filet d'huile.",
+    },
+    spread_nduja_nap: {
+      title: "Garniture 'Nduja di Spilinga",
+      description: "Tomate écrasée + fior di latte. Répartissez la 'nduja en petites noisettes (pas étalée) : à la cuisson, elle fond en libérant un gras rouge et piquant. Basilic et huile à la fin.",
+      tip_beginner: "Mettez-la en petites noisettes bien espacées : elle fond et se répartit toute seule. Trop = un piquant qui écrase tout.",
+      tip_nerd: "La 'nduja contient ~30-40% de gras de porc : à 450°C, le gras fond et diffuse la capsaïcine et le paprika, colorant la pizza d'un rouge orangé.",
+    },
+    nerano_prep: {
+      title: "Crème et courgettes frites",
+      description: "Faites frire la moitié des courgettes en julienne jusqu'à ce qu'elles soient dorées. Mixez l'autre moitié (sautée) avec de l'huile d'olive vierge extra, un peu de menthe et du sel pour la crème. Réservez.",
+    },
+    spread_nerano: {
+      title: "Garniture Nerano",
+      description: "Base blanche à la crème de courgettes. Répartissez le fior di latte et les courgettes frites. Après cuisson : copeaux de provolone del Monaco et menthe fraîche. Un filet d'huile.",
+    },
+    sbagliata_bake: {
+      title: "Seulement la bufala à la cuisson",
+      description: "Garnissez le disque UNIQUEMENT de mozzarella di bufala en tranches. Enfournez et faites cuire jusqu'à ce que la corniche gonfle et que la bufala fonde. Pas de tomate dans le four.",
+    },
+    sbagliata_post: {
+      title: "Tomate crue après le four",
+      description: "Dès la sortie du four, répartissez à la cuillère le coulis de tomate cru et froid, le basilic et un filet d'huile. Le contraste chaud/froid et la tomate fraîche sont la signature de la « sbagliata ».",
+    },
+    scarpetta_fonduta: {
+      title: "Fondue de grana",
+      description: "Faites chauffer doucement le Grana Padano 12 mois avec un peu de crème/lait jusqu'à obtenir une crème lisse. Maintenez au chaud.",
+    },
+    scarpetta_bake: {
+      title: "Bufala et fondue à la cuisson",
+      description: "Garnissez de bufala et de touches de fondue de grana. Enfournez jusqu'à ce que la corniche soit gonflée et les fromages fondus.",
+    },
+    scarpetta_post: {
+      title: "Compotée, pesto et grana à la fin",
+      description: "À la sortie du four, répartissez la compotée de tomate crue et froide, des points de pesto au basilic et des copeaux de Grana 24 mois. La signature « Scarpetta » de Lioniello.",
+    },
+    spread_capricciosa_rom: {
+      title: "Garniture Capricciosa romaine",
+      description: "Coulis + fior di latte. Répartissez le jambon cuit, les champignons émincés, les petits artichauts à la romaine et les olives noires. Des quartiers d'œuf dur pour la version romaine classique. Un filet d'huile.",
+    },
+    spread_4stagioni_rom: {
+      title: "Garniture 4 Stagioni romaine",
+      description: "Coulis + fior di latte. DIVISEZ en 4 quarts : jambon cuit, champignons, petits artichauts, olives noires. Des quarts bien nets.",
+    },
+    spread_4formaggi_rom: {
+      title: "Garniture 4 Formaggi romaine",
+      description: "Base blanche. Fior di latte, gorgonzola dolce et provola fumée en petits morceaux. Pecorino romano en surface : la note sapide du Latium à la place du parmesan.",
+    },
+    grigliare_verdure_rom: {
+      title: "Griller les légumes",
+      description: "Faites griller les aubergines et les courgettes en tranches ; faites cuire au four les tranches de pommes de terre. Salez à la fin.",
+    },
+    spread_ortolana_rom: {
+      title: "Garniture Ortolana romaine",
+      description: "Base blanche au fior di latte. Répartissez les pommes de terre au four, les aubergines et courgettes grillées, les tomates datterini. Un filet d'huile. (Version romaine aux pommes de terre et légumes grillés.)",
+    },
+    spread_diavola_rom: {
+      title: "Garniture Diavola romaine",
+      description: "Coulis + fior di latte. Tranches de salami piquant bien réparties. Origan et pecorino romano saupoudrés, un filet d'huile. Sur la tonda scrocchiarella, le salami devient croustillant.",
+    },
+    spread_provola_pepe_tonda: {
+      title: "Garniture Provola e Pepe (tonda)",
+      description: "Coulis + provola fumée en dés sur la base très fine. Après cuisson, un tour de moulin à poivre noir et du basilic. La scrocchiarella supporte le fumé sans ramollir.",
+    },
+    spread_hot_honey: {
+      title: "Garniture Hot Honey",
+      description: "Coulis épicé + provola + pepperoni. Faites cuire. À la sortie du four, un filet de miel à la 'nduja et du pecorino romano : du sucré-piquant sur le croustillant de la tonda.",
+      tip_beginner: "Le miel se met TOUJOURS après le four : à haute température, il caramélise et devient amer. En filet sur la pizza chaude, il reste brillant et doux.",
+      tip_nerd: "Le sucre du miel (fructose) brunit dès ~110°C : dans un four à 320°C, il brûlerait. Ajouté après cuisson, il ne profite que de la chaleur résiduelle (~70°C) et reste fluide.",
+    },
+    bresaola_bake: {
+      title: "Cuisson en blanc avec mozzarella",
+      description: "Garnissez uniquement de fior di latte et faites cuire la tonda jusqu'à ce qu'elle soit croustillante et le fromage fondu.",
+    },
+    bresaola_post: {
+      title: "Bresaola, roquette et grana à cru",
+      description: "À la sortie du four, déposez la bresaola en tranches, la roquette, les copeaux de grana, un peu de zeste de citron râpé et un filet d'huile. Tout à cru pour garder la fraîcheur.",
+    },
+    nduja_pinsa_bake: {
+      title: "'Nduja à la cuisson",
+      description: "Sur la pinsa abaissée, répartissez la 'nduja en noisettes et enfournez : elle fond et parfume la base croustillante.",
+    },
+    nduja_pinsa_post: {
+      title: "Stracciatella et datterini à froid",
+      description: "À la sortie du four, des touches de stracciatella et des tomates datterini fraîches disposées à cru. La fraîcheur crémeuse équilibre le piquant. Un filet d'huile.",
+    },
+    patate_mandolina_rom: {
+      title: "Trancher et faire tremper les pommes de terre",
+      description: "Tranchez les pommes de terre à 1-2 mm à la mandoline, faites-les tremper 20 min dans l'eau froide pour retirer l'amidon, égouttez et séchez bien.",
+    },
+    spread_patate_rosmarino: {
+      title: "Garniture Pommes de terre et romarin",
+      description: "Sur la base (blanche ou avec un voile de fior di latte), disposez les lamelles de pommes de terre en les faisant se chevaucher. Huile d'olive vierge extra et romarin. Salez UNIQUEMENT en fin de cuisson pour ne pas détremper la base.",
+    },
+    stracciata_bake: {
+      title: "Pala blanche à la cuisson",
+      description: "Faites cuire la pala en blanc (seulement huile et sel) jusqu'à ce qu'elle soit dorée, avec une mie bien alvéolée.",
+    },
+    stracciata_post: {
+      title: "Stracciatella, scapece et poutargue",
+      description: "À la sortie du four, des touches de stracciatella, des courgettes alla scapece et une pluie de poutargue de mulet râpée. Un filet d'huile. Tout à cru.",
+    },
+    spread_cheese_ny: {
+      title: "Sauce et mozzarella jusqu'au bord",
+      description: "Étalez la sauce en laissant 1 cm de bord. Couvrez d'une généreuse couche de mozzarella low-moisture presque jusqu'à la corniche. Pecorino et filet d'huile. La slice doit rester grande et pliable.",
+    },
+    spread_white_ny: {
+      title: "White pie sans tomate",
+      description: "Pas de sauce. Répartissez la mozzarella, des touches de ricotta fouettée, les épinards sautés et l'ail. Pecorino et huile. Cuisson sur pierre/acier.",
+    },
+    spread_supreme_ny: {
+      title: "Garniture Supreme",
+      description: "Sauce + mozzarella. Répartissez le pepperoni, la saucisse crue émiettée, les poivrons verts, l'oignon et les champignons. La garniture américaine complète et généreuse par excellence.",
+    },
+    spread_vodka_detroit: {
+      title: "Cheese crown et bandes de sauce vodka",
+      description: "Brick cheese jusqu'aux bords du moule (il caramélise en frico). Après cuisson, bandes de sauce vodka chaude, basilic et pecorino. La sauce va DESSUS, comme le veut le style Detroit.",
+    },
+    spread_italian_beef: {
+      title: "Couches inversées à l'Italian beef",
+      description: "Foncez le moule profond. Mozzarella en tranches au fond, puis l'Italian beef et la giardiniera. Couvrez de pulpe de tomate en morceaux et de parmesan. Cuisson longue.",
+    },
+    spread_supreme_tavern: {
+      title: "Garniture légère sur base cracker",
+      description: "Sur la base très fine, sauce et mozzarella jusqu'au bord. Répartissez la saucisse, le pepperoni et les poivrons de façon uniforme (elle se coupe en carrés). Peu de couches pour rester croustillante.",
+    },
+    spread_margherita_grandma: {
+      title: "Fromage dessous, sauce à la cuillère dessus",
+      description: "Dans la plaque huilée, répartissez la mozzarella au contact de la base (frico au fond). Par-dessus, des cuillerées irrégulières de marinara épaisse. Pecorino, basilic et huile. Style Grandma de Long Island.",
+    },
+    spread_vodka_grandma: {
+      title: "Grandma à la vodka",
+      description: "Mozzarella à la base, cuillerées de sauce vodka crémeuse par-dessus, pecorino et basilic. Fond croustillant grâce à l'huile dans la plaque.",
+    },
+    spread_tomato_pie: {
+      title: "Tomato pie sans mozzarella",
+      description: "Seulement de la tomate San Marzano et de l'ail sur la base fine. Origan, pecorino en abondance et huile. Pas de mozzarella (c'est la fameuse « plain tomato pie »). Cuisson au charbon jusqu'à ce que la croûte noircisse.",
+    },
+    spread_bbq_chicken: {
+      title: "BBQ chicken à la californienne",
+      description: "Sauce barbecue à la place de la tomate. Mozzarella, poulet laqué et oignon rouge. Après cuisson, coriandre fraîche. La pizza gourmet des années 80 de Wolfgang Puck.",
+    },
+    salmon_bake: {
+      title: "Base blanche à la crème fraîche",
+      description: "Faites cuire la base fine avec la crème fraîche et la mozzarella, sans le saumon.",
+    },
+    salmon_post: {
+      title: "Saumon à cru après le four",
+      description: "À la sortie du four, déposez le saumon fumé, l'aneth, l'oignon rouge en fines lamelles et les câpres. Le saumon reste cru : la signature de Spago.",
+    },
+    spread_greek: {
+      title: "Feta, kalamata et oignon",
+      description: "Dans le padellino graissé, sauce et mélange mozzarella-cheddar. Répartissez la feta, les olives kalamata et l'oignon rouge. Origan. Un fond frit et croustillant grâce à l'huile abondante.",
+    },
+    spread_greek_cheese: {
+      title: "Plain cheese au padellino",
+      description: "Sauce à l'origan et généreux mélange mozzarella-cheddar jusqu'au bord du padellino graissé. Le fond frit dans l'huile et reste croustillant. La cheese des diners gréco-américains.",
+    },
+    zucca_speck_bake: {
+      title: "Crème de courge à la cuisson",
+      description: "Étalez la crème de courge sur la teglia à haute hydratation et faites cuire jusqu'à ce que la base soit dorée et la mie mousseuse.",
+    },
+    zucca_speck_post: {
+      title: "Speck et caciocavallo à froid",
+      description: "À la sortie du four, déposez le speck en tranches et les copeaux de caciocavallo sur la pizza chaude. Un filet d'huile. Le speck reste moelleux, pas cuit.",
+    },
+    burrata_salmone_bake: {
+      title: "Teglia en blanc",
+      description: "Faites cuire la teglia en blanc (huile et sel) jusqu'à ce qu'elle soit dorée, avec une mie bien alvéolée.",
+    },
+    burrata_salmone_post: {
+      title: "Stracciatella et saumon à froid",
+      description: "À la sortie du four, des touches de stracciatella, des tranches de saumon fumé, du zeste de citron et de l'aneth. Tout à cru.",
+    },
+    spread_cipolle_genovese: {
+      title: "Oignons et saumure dans les alvéoles",
+      description: "Répartissez les oignons émincés sur la focaccia avant l'apprêt final. Versez la saumure dans les creux laissés par les doigts, ajoutez l'huile d'olive vierge extra et le gros sel. Les oignons confisent à la cuisson.",
+    },
+    spread_sardenaira: {
+      title: "Garnir la Sardenaira",
+      description: "Étalez la sauce épaisse tomate-oignon sur la pâte haute et moelleuse. Enfoncez les anchois et les gousses d'ail en chemise. Répartissez les olives taggiasche, les câpres et l'origan ; huile d'olive vierge extra en abondance. Cuisson lente en plaque. Ce n'est pas une pizza : c'est une focaccia garnie.",
+    },
+    bagherese_prep: {
+      title: "Oignons confits et mie grillée",
+      description: "Faites confire doucement les oignons blancs dans l'huile. À part, faites griller la mie de pain à la poêle avec de l'origan et un filet d'huile.",
+    },
+    spread_sfincione_bianco: {
+      title: "Sfincione bianco sans tomate",
+      description: "Pas de tomate. Enfoncez dans la pâte les tranches de tuma et les anchois fondus. Couvrez avec les oignons confits, le caciocavallo râpé et la mie grillée. Poivre et huile. La variante de Bagheria.",
+    },
+    recco_nduja_fill: {
+      title: "Crescenza et 'nduja entre les feuilles de pâte",
+      description: "Entre la feuille de pâte inférieure et la supérieure, répartissez la crescenza en petits morceaux et, çà et là, la 'nduja. Scellez les bords, piquez la surface. Huile et sel en surface. La 'nduja fond dans la garniture coulante.",
+    },
+    recco_culatello_fill: {
+      title: "Crescenza entre les feuilles de pâte",
+      description: "Répartissez la crescenza entre les deux feuilles de pâte très fines, scellez les bords, piquez la surface, huile et sel. Faites cuire à 300-320°C.",
+    },
+    recco_culatello_post: {
+      title: "Culatello à cru après le four",
+      description: "Dès la sortie du four, déposez les tranches de Culatello di Zibello DOP sur la focaccia brûlante : il tiédit à peine et reste fondant.",
+    },
+    recco_cotto_fill: {
+      title: "Crescenza entre les feuilles de pâte",
+      description: "Crescenza entre les deux feuilles de pâte, scellez, piquez la surface, huile et sel. Faites cuire jusqu'à obtenir des bulles dorées.",
+    },
+    recco_cotto_post: {
+      title: "Cotto Millefiori à la sortie du four",
+      description: "Déposez les tranches de jambon cuit Millefiori sur la focaccia tout juste sortie du four.",
+    },
+    recco_pizzata_fill: {
+      title: "Crescenza dedans, tomate et anchois dessus",
+      description: "Crescenza entre les deux feuilles de pâte fines, scellez et piquez la surface. En surface, quelques cuillerées de coulis, des anchois, des olives taggiasche et des câpres. Huile d'olive vierge extra. La version « pizzata » de la Recco.",
+    },
+    spread_margherita_padellino: {
+      title: "Garniture Margherita au padellino",
+      description: "Sur la pâte levée dans le padellino huilé, étalez le coulis et le fior di latte. Basilic et huile. Le fond frit dans l'huile du petit moule et reste croustillant, l'intérieur moelleux.",
+    },
+    spread_diavola_padellino: {
+      title: "Garniture Diavola au padellino",
+      description: "Coulis et fior di latte dans le padellino. Répartissez le salami piquant en tranches. Basilic et huile. Le salami devient croustillant à la cuisson.",
+    },
+    spread_capricciosa_padellino: {
+      title: "Garniture Capricciosa au padellino",
+      description: "Coulis + fior di latte. Répartissez le jambon cuit, les champignons, les petits artichauts, les olives noires et les câpres. Un filet d'huile. Une version turinoise généreuse.",
+    },
+    spread_tonno_padellino: {
+      title: "Garniture Thon et oignon",
+      description: "Coulis + fior di latte. Répartissez le thon égoutté et l'oignon rouge en fines lamelles. Origan et huile. Simple et savoureux.",
+    },
+    spread_gorgo_pere: {
+      title: "Garniture Gorgonzola et poire",
+      description: "Base blanche : fior di latte, fines tranches de poire et gorgonzola en petits morceaux. Pas de tomate. À la cuisson, les poires s'attendrissent et le gorgonzola fond : sucré-salé.",
+    },
+    spread_margherita_trancio: {
+      title: "Garniture Margherita al trancio",
+      description: "Sur la pâte haute et moelleuse en plaque, du coulis et une généreuse couche de mozzarella qui coule le long des côtés à la cuisson. Basilic et huile. Un fond doré et croustillant grâce à l'huile dans la plaque.",
+    },
+    spread_diavola_trancio: {
+      title: "Garniture Diavola al trancio",
+      description: "Coulis et mozzarella en abondance, salami piquant en tranches. Un filet d'huile. Le trancio milanais, épais et moelleux, au fond croustillant.",
+    },
+    founders_assembly: {
+      title: "Cheese crown, pepperoni, jalapeños et hot honey",
+      description: "Brick cheese jusqu'aux bords (frico), pepperoni et jalapeños par-dessus. Après cuisson, bandes de sauce rouge et un filet de miel pimenté. Du sucré-piquant avec la croûte caramélisée.",
+    },
+    big_hawaiian_assembly: {
+      title: "Pepperoni, bacon, ananas et glaçage pimenté",
+      description: "Brick cheese jusqu'aux bords. Pepperoni, bacon et ananas caramélisé. Après cuisson, glaçage sucré au piment. L'hawaïenne version Detroit.",
+    },
+    meatsiah_assembly: {
+      title: "Quatre viandes et cheese crown",
+      description: "Brick cheese jusqu'aux bords. Répartissez le pepperoni, la saucisse, le bacon et les lanières de bœuf. Après cuisson, bandes de sauce rouge. La « Meatsiah ».",
+    },
+    special_assembly: {
+      title: "Couches inversées : The Special",
+      description: "Foncez le moule profond. Mozzarella au fond, puis saucisse, champignons, poivrons et oignon. Couvrez de pulpe de tomate en morceaux. Cuisson longue.",
+    },
+    spinach_assembly: {
+      title: "Épinards et quatre fromages dans la coque",
+      description: "Mozzarella au fond, puis épinards vapeur et mélange de fromages. Couvrez de pulpe de tomate. La version végétarienne de la deep dish.",
+    },
+    meat_chicago_assembly: {
+      title: "Quatre viandes dans la coque profonde",
+      description: "Mozzarella au fond, puis pepperoni, salami de Milan, saucisse et bacon. Couvrez de pulpe de tomate. Cuisson longue.",
+    },
+    tavern_cheese_assembly: {
+      title: "Plain cheese sur base cracker",
+      description: "Sauce et mozzarella jusqu'au bord de la base très fine. Cuisson sur pierre jusqu'à ce qu'elle soit rigide et croustillante. Coupée en carrés (party cut).",
+    },
+    capricciosa_trancio_assembly: {
+      title: "Capricciosa al trancio",
+      description: "Coulis et mozzarella en abondance sur la pâte haute. Répartissez le jambon cuit, les champignons, les petits artichauts et les olives. Un fond croustillant grâce à l'huile dans la plaque.",
+    },
+    prosciutto_funghi_assembly: {
+      title: "Jambon et champignons al trancio",
+      description: "Coulis et mozzarella. Répartissez le jambon cuit et les champignons de Paris. Le grand classique du trancio milanais.",
+    },
+    "4formaggi_trancio_assembly": {
+      title: "Quatre fromages al trancio",
+      description: "Base blanche avec mozzarella, gorgonzola et fontina en petits morceaux. Parmesan en surface. Sur la pâte milanaise haute et moelleuse.",
+    },
+  },
+};

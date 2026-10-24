@@ -22,6 +22,7 @@
     "semantics:check": "tsx scripts/semantic-guard.test.ts && tsx scripts/semantic-guard.ts",
     "dead-code:check": "tsx scripts/dead-code-guard.ts",
     "i18n:check": "tsx scripts/i18n-ui-guard.test.ts && tsx scripts/i18n-ui-guard.ts",
+    "check:budget": "node scripts/check-budget.mjs",
     "visual:check": "node scripts/visual-check.mjs",
     "visual:self-test": "node scripts/visual-check.mjs --self-test",
     "lint": "npm run check:tokens && npm run check:semantics && npm run check:css-tokens && npm run ds:check && npm run i18n:check && npm run architecture:check && npm run semantics:check && npm run dead-code:check",

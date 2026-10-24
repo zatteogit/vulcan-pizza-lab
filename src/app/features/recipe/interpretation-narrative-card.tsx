@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Check, MoreHorizontal, X } from "lucide-react";
 import { Link } from "react-router";
 import { useCms } from "../cms/cms-context";
+import { t } from "../cms/i18n";
 import type { Interpretation } from "../../data/interpretation-library";
 import { ModalSheet, Surface } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -288,6 +289,11 @@ function InterpretationNarrativeCard({
         <p className="interpretation-card__story">
           {it.story}
         </p>
+        {(it.type === "master" || it.type === "pizzeria") && (
+          <p className="interpretation-card__disclaimer">
+            {t(cms.ui.interpretationDisclaimer, { who: it.author ?? it.pizzeria ?? "" })}
+          </p>
+        )}
         {it.url && (
           <a
             href={it.url}

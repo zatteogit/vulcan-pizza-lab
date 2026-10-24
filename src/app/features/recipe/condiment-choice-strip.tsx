@@ -1,13 +1,13 @@
 /* ═══ CONDIMENT CHOICE STRIP — selettore condimenti (estratto lug 2026) ═══ */
 
 import { Search, Utensils, X } from "lucide-react";
+import { toppingConcept } from "../../data/topping-i18n/localize";
 import { useEffect, useMemo, useRef, useState } from "react";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { IMAGE_SIZES, responsiveImgAttributes } from "../../components/media/responsive-images";
 import { useCms } from "../cms/cms-context";
 import { IconButton, ModalSheet } from "../../components/ds/index";
 import {
-  TOPPING_CONCEPTS,
   getToppingThumbnail,
   type AuthenticityScore,
   type FlavorProfile,
@@ -121,7 +121,7 @@ export function CondimentChoiceStrip({
     () =>
       FLAVOR_PROFILE_ORDER.filter((profile) =>
         pickerChoices.some((choice) => {
-          const concept = TOPPING_CONCEPTS[choice.recipe.concept_ref];
+          const concept = toppingConcept(choice.recipe.concept_ref, cms.toppingI18n);
           return concept?.flavor_profile === profile;
         }),
       ),
@@ -131,7 +131,7 @@ export function CondimentChoiceStrip({
   const filteredPickerChoices = useMemo(() => {
     const q = normalizeSearch(query.trim());
     return pickerChoices.filter(({ recipe, authenticity }) => {
-      const concept = TOPPING_CONCEPTS[recipe.concept_ref];
+      const concept = toppingConcept(recipe.concept_ref, cms.toppingI18n);
       if (activeFlavor !== "all" && concept?.flavor_profile !== activeFlavor) {
         return false;
       }
@@ -170,7 +170,7 @@ export function CondimentChoiceStrip({
         aria-label={cms.cooking.chooseTopping}
       >
         {railChoices.map(({ recipe }) => {
-          const concept = TOPPING_CONCEPTS[recipe.concept_ref];
+          const concept = toppingConcept(recipe.concept_ref, cms.toppingI18n);
           const active = activeConceptId === recipe.id;
           const thumbnail = getToppingThumbnail(recipe) ?? toppingPlaceholder;
 
@@ -352,7 +352,7 @@ export function CondimentChoiceStrip({
                       <div className="condiment-strip-picker__grid">
                         {filteredPickerChoices.length > 0 ? (
                           filteredPickerChoices.map(({ recipe }) => {
-                            const concept = TOPPING_CONCEPTS[recipe.concept_ref];
+                            const concept = toppingConcept(recipe.concept_ref, cms.toppingI18n);
                             const active = activeConceptId === recipe.id;
                             const thumbnail = getToppingThumbnail(recipe) ?? toppingPlaceholder;
                             return (
