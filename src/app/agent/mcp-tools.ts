@@ -34,6 +34,7 @@ import { GLOSSARY_TERMS_JA } from "../features/cms/locales/domain-ja";
 import { GLOSSARY_TERMS_PT } from "../features/cms/locales/domain-pt";
 import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
+import { MCP_GUIDE } from "./mcp-guide";
 
 export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.0.0" } as const;
 
@@ -292,7 +293,7 @@ export const MCP_TOOLS: McpTool[] = [
     name: "recommend_styles",
     title: "Styles for my kitchen",
     description:
-      "Rank pizza styles for a kitchen (oven type and temperature, hours available, skill). Each result has the compatibility with that kitchen (0–100, same number as the app), how far a tuned recipe can go, and whether the style is feasible.",
+      "Rank pizza styles for a kitchen (oven type and temperature, hours available, skill). Each result has the compatibility with that kitchen (0–100, same number as the app), how far a tuned recipe can go, and whether the style is feasible. has_caveats: feasible with reservations, repeat its warnings and never call it suitable without conditions.",
     inputSchema: {
       type: "object",
       properties: { ...OVEN_INPUT, limit: { type: "number", description: "How many styles (default 5)." } },
@@ -331,7 +332,7 @@ export const MCP_TOOLS: McpTool[] = [
     name: "generate_recipe",
     title: "Pizza recipe",
     description:
-      "Compute a complete recipe for a style and a kitchen: ingredients in grams and baker's percentages, fermentation, oven, timed steps and an explicit outcome (ok, warnings, not_feasible with the reasons).",
+      "Compute a complete recipe for a style and a kitchen: ingredients in grams and baker's percentages, fermentation, oven, timed steps and an explicit outcome (ok, warnings, not_feasible with the reasons). not_feasible: do not present it as a recipe to follow; explain the blockers and offer alternatives from recommend_styles. pre_ferment is two phases (pre-ferment with all the yeast, then final_dough) adding up to the totals. Step texts are Italian: translate without changing numbers. Call get_guide for the full rules.",
     inputSchema: {
       type: "object",
       properties: {
@@ -367,6 +368,14 @@ export const MCP_TOOLS: McpTool[] = [
         data,
       };
     },
+  },
+  {
+    name: "get_guide",
+    title: "How to use the pizza engine",
+    description:
+      "Full rules for presenting styles and recipes from this engine: kitchen questions, outcomes, pre-ferment phases, bake rounds, limits and answer format. Call it once before presenting a recipe.",
+    inputSchema: { type: "object", properties: {} },
+    run: () => ({ summary: MCP_GUIDE, data: { guide: MCP_GUIDE } }),
   },
   {
     name: "glossary",

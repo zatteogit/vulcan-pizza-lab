@@ -16,10 +16,10 @@ describe("server MCP", () => {
     expect(res && "result" in res && (res.result as { protocolVersion: string }).protocolVersion).toBe("2025-03-26");
   });
 
-  it("tools/list elenca i cinque strumenti in sola lettura", () => {
+  it("tools/list elenca gli strumenti in sola lettura", () => {
     const res = handleMcpMessage({ jsonrpc: "2.0", id: 2, method: "tools/list" });
     const tools = (res && "result" in res ? (res.result as { tools: { name: string; annotations: { readOnlyHint: boolean } }[] }).tools : []);
-    expect(tools.map((t) => t.name)).toEqual(["list_styles", "get_style", "recommend_styles", "generate_recipe", "glossary"]);
+    expect(tools.map((t) => t.name)).toEqual(["list_styles", "get_style", "recommend_styles", "generate_recipe", "get_guide", "glossary"]);
     expect(tools.every((t) => t.annotations.readOnlyHint)).toBe(true);
   });
 
@@ -122,5 +122,14 @@ describe("server MCP", () => {
     }).styles;
     for (const s of styles) expect(s.has_caveats).toBe(s.warnings.length > 0);
     expect(styles.some((s) => s.has_caveats)).toBe(true);
+  });
+
+  it("un agente senza skill riceve le regole: instructions e get_guide", () => {
+    const init = handleMcpMessage({ jsonrpc: "2.0", id: 1, method: "initialize", params: {} });
+    const instructions = (init && "result" in init ? (init.result as { instructions: string }).instructions : "");
+    expect(instructions).toContain("not_feasible");
+    expect(instructions).toContain("get_guide");
+    const guide = call("get_guide").content[0].text;
+    for (const rule of ["has_caveats", "final_dough", "rounds", "meal_deadline:false", "translate"]) expect(guide).toContain(rule);
   });
 });

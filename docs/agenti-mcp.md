@@ -20,6 +20,7 @@ del glossario, non legge né scrive dati degli utenti.
 | `recommend_styles` | Stili per una cucina (forno, ore, livello) | compatibilità 0–100 (lo stesso numero dell'app, D-041), margine ottimizzabile, motivi, avvisi e `has_caveats` |
 | `generate_recipe` | Ricetta completa per stile e cucina | grammi e percentuali del panettiere, pre-fermento con dosi, temperatura e impasto finale, forno, passi con durata, esito (`ok`, `warnings`, `not_feasible` con i motivi) |
 | `glossary` | Definizioni dei termini, in 7 lingue | nome, definizione, range, perché conta |
+| `get_guide` | Regole d'uso per qualsiasi agente | guida completa: cucina, esiti, pre-fermento, cotture, limiti, formato |
 
 Ogni risposta ha un riassunto leggibile (`content`) e i dati strutturati
 (`structuredContent`), che un client può mostrare come scheda o tabella. Gli
@@ -30,8 +31,13 @@ La cucina si descrive con `oven_model` (marca e modello, D-048) oppure
 `oven_type` e `oven_max_temp_c`, più `available_hours` (con `meal_deadline`
 se c'è un pasto a orario fisso), `skill_level`, `dough_balls` e
 l'attrezzatura (`has_baking_pan`, `has_mixer`, `has_pizza_stone`,
-`has_pizza_steel`). Istruzioni pronte per un GPT o una skill:
-`docs/istruzioni-gpt.md`.
+`has_pizza_steel`).
+
+Le regole d'uso arrivano a qualsiasi agente dal server stesso: versione breve
+in `instructions` (risposta a `initialize`), regole chiave nelle descrizioni
+degli strumenti, guida completa con `get_guide`. Testo unico in
+`src/app/agent/mcp-guide.ts`. Per un GPT o una skill basta aggiungere ruolo e
+tono: `docs/istruzioni-gpt.md`.
 
 I testi dei passi sono in italiano (sono i testi di riserva del motore); la
 traduzione dei passi resta nell'app. Prossimo passo previsto: widget grafici
