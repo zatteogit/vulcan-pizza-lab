@@ -199,7 +199,7 @@ export function LearnPage() {
             <div className="learn-path__content">
               <div className="learn-path__body">
                 <span className="learn-path__kicker">{pg.learnPathLabel}</span>
-                <h3 className="learn-path__title">{path.title}</h3>
+                <h2 className="learn-path__title">{path.title}</h2>
                 <p className="learn-path__copy">{path.copy}</p>
               </div>
 

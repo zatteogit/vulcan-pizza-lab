@@ -857,6 +857,10 @@ export function AppShell() {
             /* U-10 (F29): l'avatar sta in un landmark (banner) come il resto della shell */
             <header className="app-shell-header">
               <ProfileButton active={activeTab === "profile"} navState={navState} />
+              {/* Marchio in testata (D-040): solo sulle pagine delle tab, su
+                  mobile; su desktop il logo sta già nella barra laterale. Nel
+                  banner, non fuori dai landmark (audit n. 30). */}
+              {TABS.some((tab) => tab.path === location.pathname) && <ShellBrand />}
             </header>
           )}
 
@@ -867,11 +871,6 @@ export function AppShell() {
             className={`app-shell-main${showNav ? " app-shell-main--nav" : ""}`}
           >
             <RouteTitle />
-            {/* Marchio in testata (D-040): solo sulle pagine delle tab, su mobile;
-                su desktop il logo sta già nella barra laterale. */}
-            {hasProfileButton && TABS.some((tab) => tab.path === location.pathname) && (
-              <ShellBrand />
-            )}
             {/* U-5: la pagina resta montata (stato e scroll salvi) e si nasconde
                 mentre i risultati ne prendono il posto. */}
             <div className="app-shell-page" hidden={searchOpen}>
