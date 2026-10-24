@@ -64,6 +64,7 @@ import { useDarkMode } from "../hooks/use-dark-mode";
 import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 import { AccountPanel } from "../features/account/account-panel";
+import { OvenModelSearch } from "../features/profile/oven-model-search";
 import { encodePan } from "../features/recipe/pan-url";
 import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { BRAND } from "../config/brand";
@@ -1218,6 +1219,10 @@ export function ProfilePage() {
     const saved = loadJson<{ ovenType: OvenType; maxTemp: number }>(OVEN_STORAGE_KEY);
     return saved?.maxTemp ?? 250;
   });
+  /* D-048: modello di forno scelto per marca e modello (facoltativo). */
+  const [ovenModelId, setOvenModelId] = useState<string | null>(
+    () => loadJson<{ modelId?: string }>(OVEN_STORAGE_KEY)?.modelId ?? null,
+  );
 
   const [mixers, setMixers] = useState<string[]>(() => {
     try {
@@ -1402,13 +1407,13 @@ export function ProfilePage() {
 
   /* Auto-save on change */
   useEffect(() => {
-    saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp });
+    saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp, ...(ovenModelId ? { modelId: ovenModelId } : {}) });
     try {
       localStorage.setItem("vulcan_ovens", JSON.stringify(ovens));
     } catch (e) {
       // ignore
     }
-  }, [ovens, ovenType, ovenTemp]);
+  }, [ovens, ovenType, ovenTemp, ovenModelId]);
 
   useEffect(() => {
     try {
@@ -1571,6 +1576,16 @@ export function ProfilePage() {
           stepNum={p.ovenStep}
           delay={motionDelay.short}
         >
+          <OvenModelSearch
+            selectedId={ovenModelId}
+            formatTemp={(c) => fmt.celsius(c)}
+            onPick={(model) => {
+              setOvenModelId(model.id);
+              setOvens((prev) => [model.ovenType, ...prev.filter((x) => x !== model.ovenType)]);
+              setOvenTemp(model.maxTempC);
+            }}
+            onClear={() => setOvenModelId(null)}
+          />
           <div className="profile-oven-list">
             {OVEN_PRESETS.map((preset) => {
               const Icon = OVEN_ICONS[preset.id] || Flame;
@@ -1582,6 +1597,8 @@ export function ProfilePage() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => {
+                    // Un tipo scelto a mano non è più il modello cercato.
+                    setOvenModelId(null);
                     setOvens((prev) => {
                       if (prev.includes(preset.id)) {
                         if (prev.length === 1) return prev;

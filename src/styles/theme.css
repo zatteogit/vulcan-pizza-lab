@@ -7224,6 +7224,101 @@
     }
   }
 
+  /* ═══ COMPONENT: oven-model-search (D-048) ═══ */
+  .oven-model-search {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .oven-model-search__selected {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin: var(--space-0);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    background: var(--surface-container);
+    border: var(--border-width-thin) solid var(--primary);
+    color: var(--text-default);
+    font-weight: var(--weight-semibold);
+  }
+
+  .oven-model-search__label {
+    color: var(--text-muted);
+  }
+
+  .oven-model-search__field {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-0);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-full);
+    background: var(--container-bg-low);
+    border: var(--border-width-thin) solid var(--container-border);
+  }
+
+  .oven-model-search__field:focus-within {
+    border-color: var(--primary);
+  }
+
+  .oven-model-search__icon {
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .oven-model-search__input {
+    flex: 1;
+    min-width: var(--space-0);
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-default);
+    font-size: var(--font-size-md);
+  }
+
+  .oven-model-search__results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: var(--space-0);
+    padding: var(--space-0);
+    list-style: none;
+  }
+
+  .oven-model-search__result {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-0-5);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    border: var(--border-width-thin) solid var(--container-border);
+    background: var(--container-bg-low);
+    color: var(--text-default);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .oven-model-search__result:hover,
+  .oven-model-search__result:focus-visible {
+    border-color: var(--primary);
+  }
+
+  .oven-model-search__name {
+    font-weight: var(--weight-semibold);
+  }
+
+  .oven-model-search__meta,
+  .oven-model-search__empty {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
   /* ═══ COMPONENT: account-panel (D-046 / D-047) ═══ */
   .account-panel {
     display: flex;

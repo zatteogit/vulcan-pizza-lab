@@ -416,3 +416,15 @@ Data d'accesso per tutte: **24/10/2026**.
 
 Fonte non più valida: **PMC7146123**, citata prima per il Q10 a freddo. È una review sui soft
 sensor di fermentazione e non riguarda il lievito (verifica del 24/10/2026, già annotata in `getQ10`).
+
+## Forni da pizza per marca e modello (`src/app/data/oven-models.ts`, D-048)
+
+Temperatura massima, combustibile e diametro della pizza di 41 modelli (Ooni,
+Gozney, Effeuno, G3 Ferrari, Sage, Witt, Clementi, Alfa Forni, Solo Stove,
+Ninja, Bertello). Fonti, data di lettura e stato di ogni valore in
+`docs/ricerca/forni-fonti-2026-10-24.md`; nel codice il campo `source` dice
+se la temperatura viene dal produttore (V, verificato) o da una fonte
+secondaria (P, plausibile). Mappature decise in D-048: Ninja Woodfire
+(370 °C, elettrico) come elettrico standard; forni Alfa a gas come gas da
+pizza; G3 Ferrari Delizia e Sage Pizzaiolo (400 °C) come elettrici da pizza.
+Spidocchio e Cuisinart non inseriti (nessun dato del produttore).

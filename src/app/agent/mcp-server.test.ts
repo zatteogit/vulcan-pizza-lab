@@ -57,4 +57,13 @@ describe("server MCP", () => {
     const result = call("glossary", { term: "biga", lang: "en" });
     expect(result.content[0].text).toMatch(/pre-dough|pre-ferment/i);
   });
+
+  it("recommend_styles ordina per compatibilità e accetta un modello di forno", () => {
+    const result = call("recommend_styles", { oven_model: "Koda 16", limit: 5 });
+    const data = result.structuredContent as { constraints: { oven_type: string; oven_max_temp_c: number }; styles: { compatibility: number }[] };
+    expect(data.constraints.oven_type).toBe("gas_pizza");
+    expect(data.constraints.oven_max_temp_c).toBe(500);
+    const scores = data.styles.map((s) => s.compatibility);
+    expect(scores).toEqual([...scores].sort((a, b) => b - a));
+  });
 });
