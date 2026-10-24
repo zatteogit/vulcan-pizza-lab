@@ -206,7 +206,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
         <div className="preferment-guide-card__title-block">
           <div className="preferment-guide-card__eyebrow-row">
             <span className="preferment-guide-card__eyebrow">
-              {pf.sectionLabel.toUpperCase()}
+              {pf.sectionLabel}
             </span>
           </div>
           <div className="preferment-guide-card__name">
@@ -255,7 +255,7 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
               {/* Tips */}
               <div className="preferment-guide-card__tips">
                 <div className="preferment-guide-card__tips-label">
-                  <Lightbulb size={14} aria-hidden="true" className="tip-icon" /> {pf.tipsLabel.toUpperCase()}
+                  <Lightbulb size={14} aria-hidden="true" className="tip-icon" /> {pf.tipsLabel}
                 </div>
                 <ul className="preferment-guide-card__tips-list">
                   {info.tips.map((tip, i) => (

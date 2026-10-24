@@ -741,9 +741,9 @@ function StyleCard({
 
               {/* Subtitle — ALL CAPS, tracked, warm cream */}
               <div className="recommended-card__subtitle">
-                {shortOrigin(style.origin).toUpperCase()}
+                {shortOrigin(style.origin)}
                 {rec.bestInterpretation
-                  ? ` · ${variantShortName(rec.bestInterpretation).toUpperCase()}`
+                  ? ` · ${variantShortName(rec.bestInterpretation)}`
                   : ""}
               </div>
 

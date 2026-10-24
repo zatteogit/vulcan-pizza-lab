@@ -578,7 +578,7 @@ export const PT_LOCALE: CmsContent = {
     stylesSearchNoResults: "Nenhum estilo para \"{query}\"",
   },
   glossary: {
-    pageTitle: "Gloss\u00E1rio T\u00E9cnico",
+    pageTitle: "Gloss\u00E1rio t\u00E9cnico",
     searchPlaceholder:
       "Buscar termo, s\u00EDmbolo ou defini\u00E7\u00E3o...",
     cancelSearch: "Limpar",
@@ -1156,7 +1156,7 @@ export const PT_LOCALE: CmsContent = {
     forkish_saturday: "Ken Forkish",
   },
   profile: {
-    pageTitle: "Seu Perfil",
+    pageTitle: "Seu perfil",
     pageSubtitle: "Suas preferências, sempre à mão.",
     favoritesTitle: "Seus estilos favoritos",
     favoritesSubtitle: "Os estilos que você curtiu",
@@ -1373,7 +1373,7 @@ export const PT_LOCALE: CmsContent = {
     navProfile: "Perfil",
     navSearch: "Buscar",
     exploreStepNum: "15 estilos \u2014 4 fam\u00EDlias",
-    exploreTitle: "Explore os Estilos",
+    exploreTitle: "Explore os estilos",
     exploreSubtitle:
       "Da Napoletana STG \u00E0 Focaccia di Recco.",
     learnTitle: "Aprenda",
@@ -1382,7 +1382,7 @@ export const PT_LOCALE: CmsContent = {
     learnGlossary: "Gloss\u00E1rio",
     learnGlossaryDesc:
       "30+ termos t\u00E9cnicos de panifica\u00E7\u00E3o",
-    learnTroubleshooting: "Problemas & Solu\u00E7\u00F5es",
+    learnTroubleshooting: "Problemas e solu\u00E7\u00F5es",
     learnTroubleshootingDesc:
       "20 problemas comuns e como resolv\u00EA-los",
     learnPreFerments: "Pr\u00E9-fermentos",

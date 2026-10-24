@@ -100,7 +100,7 @@ export function StyleDetailSheet({
     const texts = engineMsgTexts(rec.reasons, cms, bcp47);
     return texts.map((text, i) => ({ text, dim: reasonDimension(rec.reasons[i].key) }));
   }, [rec, cms, bcp47]);
-  const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "").toUpperCase();
+  const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "");
   const pt = cms.parametricTips;
   const prefersReducedMotion = useReducedMotion();
   const [showNerd, setShowNerd] = useState(false);

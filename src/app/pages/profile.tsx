@@ -1768,7 +1768,7 @@ export function ProfilePage() {
             {/* ── Impastamento ── */}
             <EquipmentCategory
               title={p.equipMixerTitle}
-              stepLabel={p.equipMixerTitle.toUpperCase()}
+              stepLabel={p.equipMixerTitle}
               expanded={equipExpandedCat === "mixer"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "mixer" ? null : "mixer")}
               summary={mixers.length > 0
@@ -1833,7 +1833,7 @@ export function ProfilePage() {
             {/* ── Superficie di cottura ── */}
             <EquipmentCategory
               title={p.equipSurfaceTitle}
-              stepLabel={p.equipSurfaceTitle.toUpperCase()}
+              stepLabel={p.equipSurfaceTitle}
               expanded={equipExpandedCat === "surface"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "surface" ? null : "surface")}
               summary={equipment.surfaces.length > 0
@@ -1898,7 +1898,7 @@ export function ProfilePage() {
             {/* ── Utensili ── */}
             <EquipmentCategory
               title={p.equipToolsTitle}
-              stepLabel={(p.equipToolsTitle).toUpperCase()}
+              stepLabel={p.equipToolsTitle}
               expanded={equipExpandedCat === "tools"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "tools" ? null : "tools")}
               summary={equipment.tools.length > 0
