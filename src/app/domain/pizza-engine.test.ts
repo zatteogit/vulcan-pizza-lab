@@ -5,6 +5,7 @@ import {
   generateTimeSlots,
   customMealSlot,
   doughBallsForFlour,
+  equivalentFermentationHours,
   optimizeRecipe,
   thermalViability,
   type UserConstraints,
@@ -227,5 +228,41 @@ describe("doughBallsForFlour (U-2)", () => {
   it("sotto il minimo per un panetto restituisce zero panetti", () => {
     const recipe = generateRecipe(STYLES_DB.napoletana_stg, constraints);
     expect(doughBallsForFlour(recipe, 50)).toMatchObject({ balls: 0, flour_g: 0 });
+  });
+});
+
+describe("pre-fermento: un solo tipo per ricetta e procedimento (audit totale n. 3)", () => {
+  it.each(
+    Object.values(STYLES_DB)
+      .filter((s) => /biga|poolish/.test(s.dough.process_type))
+      .map((s) => [s.id, s] as const),
+  )("%s: il passo nomina lo stesso pre-fermento della ricetta", (_id, style) => {
+    const recipe = generateRecipe(style, makeConstraints(), { usePreFerment: true });
+    expect(recipe.has_pre_ferment).toBe(true);
+    const step = recipe.timeline.find((s) => s.id === "preferment");
+    expect(step?.description).toContain(recipe.pre_ferment_type);
+  });
+});
+
+describe("lievito sulle fasi reali (audit totale n. 5)", () => {
+  it("sopra i 18 °C le ore restano quelle", () => {
+    expect(equivalentFermentationHours(24, 22, "fresh", false)).toBe(24);
+    expect(equivalentFermentationHours(8, 18, "dry", true)).toBe(8);
+  });
+  it("in frigo l'appretto a 18 °C vale più ore fredde", () => {
+    expect(equivalentFermentationHours(36, 4, "fresh", false)).toBeGreaterThan(36);
+  });
+});
+
+describe("stili in teglia: stesura prima dell'appretto (audit totale n. 7)", () => {
+  const order = (id: string) =>
+    generateRecipe(STYLES_DB[id], makeConstraints({ oven_type: "home", oven_max_temp_c: 250 })).timeline.map((s) => s.id);
+  it("Detroit si stende in teglia e lievita lì", () => {
+    const ids = order("detroit");
+    expect(ids.indexOf("shape")).toBeLessThan(ids.indexOf("proof"));
+  });
+  it("la teglia romana fa l'appretto a panetti e si stende prima di infornare", () => {
+    const ids = order("teglia_romana");
+    expect(ids.indexOf("proof")).toBeLessThan(ids.indexOf("shape"));
   });
 });

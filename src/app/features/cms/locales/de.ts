@@ -148,7 +148,7 @@ export const DE_LOCALE: CmsContent = {
     verdictLaterTime: "Wähle eine Uhrzeit in mindestens {hours}.",
     verdictAlternatives: "Mit denselben Vorgaben funktionieren:",
     verdictRecipeBelow: "Das nächstliegende Rezept steht trotzdem unten, falls du es versuchen willst.",
-    recipeScore: "Match",
+    recipeScore: "Passt zu deiner K\u00FCche",
     nerdToggle: "PizzaNerd",
     nerdActive: "PizzaNerd aktivieren",
     scienceTitle: "{brand} Science",
@@ -700,9 +700,9 @@ export const DE_LOCALE: CmsContent = {
     "rec.sourdoughOnlyShort":
       "Nur Sauerteig: kurze Gärung schwierig",
     "tip.waterTempCold":
-      "55er-Regel: Wasser aus dem Kühlschrank verwenden ({temp}). Maschinelles Kneten erhitzt den Teig.",
+      "Nimm kaltes Wasser aus dem K\u00FChlschrank ({temp}): Die Maschine erw\u00E4rmt den Teig.",
     "tip.waterTempNormal":
-      "55er-Regel: Wasser mit {temp} verwenden, um {ddt} Teigtemperatur zu erreichen.",
+      "Wasser mit {temp} f\u00FCr einen Teig mit {ddt}.",
     "tip.frictionNote":
       "Reibungskompensation der Knetmaschine: {friction}",
     "gen.notWoodOven": "Dieser Stil geh\u00F6rt in den Holzofen: Mit deinem Ofen kommt das Ergebnis nah heran, ist aber nicht das kanonische.",
@@ -725,6 +725,8 @@ export const DE_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Kalte Küche: Selbst mit Wasser von {temp} bleibt der Teig unter {ddt}. Das Wasser nicht weiter erwärmen: Mehl an einem warmen Ort lagern oder die Stockgare etwas verlängern.",
     "tip.waterTempLimitMin": "Warme Küche: Selbst mit Wasser von {temp} wird der Teig wärmer als {ddt}. Eiswasser verwenden, Mehl im Kühlschrank lagern oder die Stockgare etwas verkürzen.",
     "timeline.preheat.descWholeProof": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. Währenddessen machen die Teiglinge ihre Stückgare.",
+    "timeline.preheat.descPan": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen beendet der Teig die Gare im Blech.",
+    "timeline.preheat.descPanWholeProof": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen macht der Teig die Gare im Blech.",
     "timeline.preheat.descDuringRest": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. Währenddessen ruhen die Teiglinge.",
     "hint.flourWeak": "schwaches Mehl (klassisches 00)",
     "hint.flourMedium": "mittelstarkes Mehl",
@@ -762,6 +764,7 @@ export const DE_LOCALE: CmsContent = {
     "version.label.Bilanciata": "Ausgewogen",
     "timelineComfort.title": "Komfort-Timeline",
     "timelineComfort.active": "Aktiv: vermeidet aktive Nachtschritte.",
+    "timelineComfort.activePartial": "Aktiv, aber einige Schritte fallen noch in die Nacht: W\u00E4hle oben eine andere Mahlzeit.",
     "timelineComfort.nightDetected": "Aktive Schritte in der Nacht erkannt.",
     "timelineComfort.idle": "Optimiere die Zeiten bei Bedarf.",
     "timeline.preheat.title": "Ofen voll vorheizen",
@@ -815,6 +818,7 @@ export const DE_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Breite die erste Scheibe im geölten Blech aus; leg die zweite beiseite.",
     "timeline.shape.closedStuffed": "Breite die Bodenscheibe im Blech aus; die zweite brauchst du zum Verschließen.",
     "timeline.shape.rectangular": "Breite den Teig mit den Händen im geölten Blech aus",
+    "timeline.shape.pan": "Den Teig mit den H\u00E4nden im ge\u00F6lten Blech bis in die Ecken ausbreiten und dort gehen lassen.",
     "timeline.shape.thin": "Roll den Teig mit dem Nudelholz hauchdünn aus",
     "timeline.shape.round": "Zieh den Teig von der Mitte aus von Hand auf, der Rand bleibt erhalten",
     "timeline.shape.title": "Formen",
@@ -881,7 +885,8 @@ export const DE_LOCALE: CmsContent = {
         'Die Vorstufe ist wie ein "Appetizer" f\u00FCr die Hefe. Mischen und abgedeckt ruhen lassen.',
       tipNerd:
         "Die Vorstufe produziert organische S\u00E4uren (Milch-/Essigs\u00E4ure), die den pH auf ~4,5 senken und das Glutennetzwerk verbessern.",
-      longDesc: "Der Vorteig ist eine kleine Portion Mehl und Wasser (mit wenig Hefe), die du VOR dem eigentlichen Teig reifen l\u00E4sst. Gib das zimmerwarme Wasser in den Beh\u00E4lter, l\u00F6se die Frischhefe darin auf, f\u00FCge das Mehl hinzu und r\u00FChre mit einem L\u00F6ffel, bis ein dicker Brei entsteht. Mit Frischhaltefolie abdecken und 16-18 Stunden bei 18\u00B0C reifen lassen (Keller/k\u00FChle Raumtemperatur). Er ist fertig, wenn du viele Blasen an der Oberfl\u00E4che siehst und er nach Zitrus/Joghurt duftet.",
+      longDesc: "Poolish ist Mehl und Wasser zu gleichen Teilen mit der Hefe, das vor dem Teig reift. L\u00F6se die Hefe im Wasser, gib das Mehl dazu und r\u00FChre mit einem L\u00F6ffel einen weichen Brei. Abdecken und {hours} bei {prefTemp} reifen lassen. Er ist fertig, wenn die Oberfl\u00E4che voller Blasen ist und die Mitte gerade einzusinken beginnt; er riecht leicht s\u00E4uerlich.",
+      longDescAlt: "Biga ist ein fester Vorteig: Mehl und Wasser mit etwa {prefHydration}, dazu die Hefe. L\u00F6se die Hefe im Wasser, gie\u00DFe es \u00FCber das Mehl und mische nur wenige Sekunden, bis das Wasser aufgenommen ist: Es sollen unregelm\u00E4\u00DFige Kl\u00FCmpchen bleiben, kein glatter Teig. Abdecken und {hours} bei {prefTemp} reifen lassen. Sie ist fertig, wenn sie aufgegangen ist, fruchtig riecht und innen voller F\u00E4den ist.",
     },
     mix: {
       title: "Kneten",
@@ -944,6 +949,13 @@ export const DE_LOCALE: CmsContent = {
       tipNerd:
         "Fingertest: langsame R\u00FCckkehr = optimale G\u00E4rung. Zu schnell = unterg\u00E4rig. Keine R\u00FCckkehr = \u00FCberg\u00E4rig.",
       longDesc: "Nach dem Teilen m\u00FCssen sich die Teiglinge entspannen und ein letztes Mal aufgehen. Halte sie abgedeckt bei Raumtemperatur. Sie sind bereit zum Ausziehen, wenn: (1) sich ihr Volumen verdoppelt hat, (2) die Oberfl\u00E4che gew\u00F6lbt und glatt ist, (3) der Fingertest langsam zur\u00FCckfedert (mit dem Finger eindr\u00FCcken: Die Delle sollte sich in ~5 Sekunden f\u00FCllen). Federt der Teig nicht zur\u00FCck = \u00FCberg\u00E4rig; federt er sofort zur\u00FCck = noch nicht so weit.",
+    },
+    proof_pan: {
+      title: "St\u00FCckgare im Blech",
+      desc: "Letzte Gare im Blech bei {temp}",
+      longDesc: "Der Teig, schon im Blech ausgebreitet, muss ein letztes Mal aufgehen. Das Blech abdecken und bei Raumtemperatur stehen lassen. Er ist fertig, wenn er deutlich gewachsen ist, die Oberfl\u00E4che gew\u00F6lbt und voller Blasen ist und eine leichte Fingerdelle langsam zur\u00FCckkommt. Hat er sich von den Ecken zur\u00FCckgezogen, mit den Fingerspitzen erneut ausbreiten.",
+      tipBeginner: "Der Teig im Blech ist fertig, wenn er luftig und weich ist: Eine Fingerdelle kommt langsam zur\u00FCck.",
+      tipNerd: "Die Gare im Blech fixiert die Form: Die Porung entsteht im Backgef\u00E4\u00DF, ohne dass ein sp\u00E4teres Ausbreiten den Teig entgast.",
     },
     shape: {
       title: "Formen",
@@ -1593,11 +1605,11 @@ export const DE_LOCALE: CmsContent = {
     comfortLabel: "{duration} komfortabel",
     totalDuration: "{duration} gesamt",
     finalDoughStageTitle: "Hauptteig",
-    rule55Title: "55er-Regel",
-    rule55AriaOpen: "Was ist die 55er-Regel?",
-    rule55AriaClose: "Erkl\u00E4rung zur 55er-Regel ausblenden",
+    rule55Title: "Wassertemperatur",
+    rule55AriaOpen: "Wie die Wassertemperatur berechnet wird",
+    rule55AriaClose: "Erkl\u00E4rung ausblenden",
     rule55Description:
-      "Faustregel: Raumtemperatur + Mehltemperatur + Wassertemperatur \u2248 55\u00B0C, um etwa 25\u00B0C Endteigtemperatur zu erreichen. Beim Kneten mit Maschine kommen durch Reibung weitere 1-3\u00B0C hinzu.",
+      "Raum, Mehl und Wasser sollten zusammen etwa {sum} ergeben: dreimal die gew\u00FCnschte Teigtemperatur ({ddt}) minus die W\u00E4rme der Knetmaschine ({friction}). Deshalb \u00E4ndert sich das Wasser mit der Temperatur deiner K\u00FCche.",
     stepDetailsShow: "So geht es",
     stepDetailsHide: "Details ausblenden",
     matchDetailsShow: "Match-Details",

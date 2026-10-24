@@ -82,7 +82,7 @@ Priorità: **P0** blocca fiducia o demo; **P1** contenuto sbagliato o incompleto
 | U-6 | P2 | Completare INT-C6 (transizione del momento) e INT-C10 (pannello dello stile) | idem |
 | U-7 | P2 | Notifiche: dire con onestà cosa funziona a app chiusa. Niente promesse senza service worker e push verificati | report ricerca §22 |
 | ~~U-8~~ | P3 | Fatto il 24/10: icone al posto delle emoji (D1), icone del glossario per categoria (D2), audit delle maiuscole (D5); D7 superata (nessun badge nella navigazione) | piano-interventi |
-| U-9 | P3 | Coerenza fotografica: niente foto visibilmente generate, ogni foto mostra il prodotto giusto (D3) | idem |
+| ~~U-9~~ | P3 | Fatto il 24/10 (D-039): foto rifatte con GPT per tonda romana, focaccia genovese e barese, sfincione; nuova la fritta tonda | idem |
 | U-10 | P1 | Audit di accessibilità WCAG 2.1 AA sul percorso principale; documentarlo, servirà al partner | analisi a rovescio |
 
 ### 3.4 Piattaforma e rilascio
@@ -204,8 +204,8 @@ Emerse nel lavoro, da pianificare in fase 1:
   ricostruzioni da fonti pubbliche, non ricette fornite da loro.
 - ~~**P-3**~~ chiuso il 24/10: annotazioni di debug archiviate in `docs/archivio/`.
 - **P-5** misurato il 24/10: `docs/budget-prestazioni.md`, controllo
-  `npm run check:budget` in CI. P-5a ridimensionata il 24/10 (Scopri usa
-  davvero il motore per i punteggi, vedi il budget); restano P-5b e P-5d.
+  `npm run check:budget` in CI. P-5a e P-5d ridimensionate il 24/10 (vedi il budget), P-5b fatta
+  (font in locale).
 - ~~**M-7 (P1)**~~ chiuso il 24/10: nessuna fonte per una fritta aperta diversa
   dalla montanara; aggiunta la «Pizza fritta tonda» dell'AVPN (D-022) e impasto
   delle fritte allineato all'AVPN con lievitazione 8–24 h (D-023). Manca una

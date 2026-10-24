@@ -813,24 +813,25 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       ],
     },
     friction_factor: {
-      name: "Friction Factor",
+      name: "Mixer friction",
       definition:
-        "Dough temperature increase (\u00B0C) per minute of mixing, due to mechanical friction.",
+        "Degrees the mixer adds to the dough while it works.",
       whyImportant:
-        "Mixing generates heat \u2192 raises temperature \u2192 fermentation too fast. Used in the Rule of 55.",
+        "Kneading warms the dough and starts the rise earlier: that is why the water should be colder when you use a machine.",
       ranges: [
-        { label: "By hand", value: "0.0" },
-        { label: "Home stand mixer", value: "0.8\u20131.0" },
-        { label: "Professional spiral mixer", value: "0.4\u20130.6" },
-        { label: "Fork mixer", value: "0.2\u20130.3" },
+        { label: "By hand", value: "0" },
+        { label: "Fork mixer", value: "2" },
+        { label: "Spiral mixer", value: "3" },
+        { label: "Home stand mixer (kitchen doughs)", value: "4" },
+        { label: "Stand mixer", value: "5" },
       ],
     },
     rule_of_55: {
-      name: "Rule of 55",
+      name: "Water temperature (three temperatures)",
       definition:
-        "Empirical formula to calculate water temperature needed to reach target dough temperature.",
+        "Works out how warm the water should be so the dough reaches the temperature you want.",
       whyImportant:
-        "55 = empirical constant (varies 50-60 for different machines). \u0394T_friction = Friction Factor \u00D7 mixing time.",
+        "Sum of the three temperatures = 3 \u00D7 desired dough \u2212 friction. Pizzerias also call it the \u00ABrule of 55\u00BB: with the sum fixed at 55 the dough lands around 18 \u00B0C (55 \u00F7 3); here the style's target is used, 22\u201324 \u00B0C.",
     },
     a_score: {
       name: "A-Score (Authenticity)",

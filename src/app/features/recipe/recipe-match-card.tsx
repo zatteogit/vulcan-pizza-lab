@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring,motionTiming } from "../../components/ds/motion";
-import { Bookmark, BookmarkCheck, Heart, HeartCrack, HeartHandshake, HeartPulse, HeartOff, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
-import { SCORE_DIMENSIONS, type RecipeScores, type ScoreDimensionKey } from "../../domain/pizza-engine";
+import { Bookmark, BookmarkCheck, Gauge, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
+import { SCORE_DIMENSIONS, type GeneratedRecipe, type RecipeScores, type ScoreDimensionKey, type UserConstraints } from "../../domain/pizza-engine";
+import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
@@ -129,6 +130,9 @@ export function RecipeMatchCard({
   softNeeds,
   saved = false,
   nerdMode = false,
+  verdictRecipe,
+  verdictConstraints,
+  mealDeadline = false,
   className = "",
 }: {
   scores: RecipeScores;
@@ -162,6 +166,11 @@ export function RecipeMatchCard({
   /** Nerd mode: mostra anche gli assi secondari pesati (sostenibilità,
    *  sperimentazione) e la scomposizione numerica del composite. */
   nerdMode?: boolean;
+  /** Ricetta e vincoli per l'esito «Così non è fattibile»: quando c'è, il
+   *  blocco lo dice al posto del tono e del soffitto, una volta sola. */
+  verdictRecipe?: GeneratedRecipe;
+  verdictConstraints?: UserConstraints;
+  mealDeadline?: boolean;
   className?: string;
 }) {
   const { cms, bcp47 } = useCms();
@@ -295,14 +304,9 @@ export function RecipeMatchCard({
   }
 
   const tone = matchTone(roundedScore, mode, cms.cooking.matchTones);
-  const MATCH_ICONS = {
-    handshake: HeartHandshake,
-    heart: Heart,
-    pulse: HeartPulse,
-    crack: HeartCrack,
-    off: HeartOff,
-  } as const;
-  const MatchIcon = MATCH_ICONS[tone.icon];
+  /* D-041: icona a indicatore, non a cuore (il cuore vuol dire preferiti). */
+  const notFeasible = verdictRecipe?.verdict.outcome === "not_feasible" && !!verdictConstraints;
+  const MatchIcon = notFeasible ? TriangleAlert : Gauge;
   // Un solo "movimento in avanti" verso su-misura: quando l'ottimizzatore è
   // disponibile, è LUI l'azione (subentra al vecchio "adatta alla cucina", che era
   // il midpoint ricalibrato — dominato dall'ottimo). Evita il doppio pulsante.
@@ -316,7 +320,7 @@ export function RecipeMatchCard({
     <motion.section
       layout
       data-region="section"
-      data-attention={tone.low ? "warning" : undefined}
+      data-attention={tone.low || notFeasible ? "warning" : undefined}
       className={`match-card ${className}`}
       /* U-10 (F29): il nome lo porta già l'aside che la contiene */
     >
@@ -329,8 +333,7 @@ export function RecipeMatchCard({
       <div className="match-kicker">
         <MatchIcon
           size={14}
-          fill="currentColor"
-          className={`match-kicker__icon ${tone.low ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
+          className={`match-kicker__icon ${tone.low || notFeasible ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
           aria-hidden="true"
         />
         <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.match-0335207f")}</span>
@@ -387,28 +390,36 @@ export function RecipeMatchCard({
         <span className="match-tone">
           <AnimatePresence mode="wait" initial={false}>
             <motion.span
-              key={tone.title}
+              key={notFeasible ? "not-feasible" : tone.title}
               className="match-tone__text"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={motionTiming.exit}
             >
-              {tone.title}
+              {notFeasible ? cms.ui.verdictTitle : tone.title}
             </motion.span>
           </AnimatePresence>
         </span>
       </div>
 
+      {notFeasible && verdictRecipe && verdictConstraints && (
+        <RecipeVerdictNotice
+          embedded
+          recipe={verdictRecipe}
+          constraints={verdictConstraints}
+          mealDeadline={mealDeadline}
+        />
+      )}
       {/* Avvisi onesti: visibili anche a card chiusa */}
-      {unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
+      {!notFeasible && unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
         <p className="match-notice match-notice--warn">
           {unviableText}
         </p>
       )}
       {/* Riga-soffitto SEMPRE visibile ("Puoi arrivare a {ceiling}…") —
           round 4, nota Matteo: è la promessa che dà senso a "Ottimizza". */}
-      {headroomLine && (
+      {!notFeasible && headroomLine && (
         <p className={`match-notice ${HEADROOM_TONE_CLASS[headroomLine.tone]}`}>
           {headroomLine.text}
         </p>

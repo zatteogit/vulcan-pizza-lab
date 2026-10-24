@@ -362,6 +362,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   },
   detroit: {
     id: "detroit",
+    proof_in_pan: true,
     name: "Detroit Style",
     family: "americana",
     origin: { city: "Detroit", region: "Michigan", country: "USA" },
@@ -409,6 +410,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   },
   chicago_deep: {
     id: "chicago_deep",
+    proof_in_pan: true,
     name: "Chicago Deep Dish",
     family: "americana",
     origin: { city: "Chicago", region: "Illinois", country: "USA" },
@@ -458,6 +460,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
 
   focaccia_genovese: {
     id: "focaccia_genovese",
+    proof_in_pan: true,
     name: "Focaccia Genovese",
     family: "contemporanea",
     origin: { city: "Genova", region: "Liguria", country: "Italia" },
@@ -505,6 +508,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   },
   sfincione: {
     id: "sfincione",
+    proof_in_pan: true,
     name: "Sfincione",
     family: "contemporanea",
     origin: { city: "Palermo", region: "Sicilia", country: "Italia" },
@@ -599,6 +603,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   },
   grandma_style: {
     id: "grandma_style",
+    proof_in_pan: true,
     name: "Grandma Style",
     family: "americana",
     origin: { city: "Long Island", region: "New York", country: "USA" },
@@ -705,6 +710,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   },
   padellino_torino: {
     id: "padellino_torino",
+    proof_in_pan: true,
     name: "Pizza al Padellino",
     family: "contemporanea",
     origin: { city: "Torino", region: "Piemonte", country: "Italia" },
@@ -1031,6 +1037,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
 
   focaccia_barese: {
     id: "focaccia_barese",
+    proof_in_pan: true,
     name: "Focaccia Barese",
     family: "contemporanea",
     origin: { city: "Bari", region: "Puglia", country: "Italia" },
@@ -1519,6 +1526,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
 
   greek_pan: {
     id: "greek_pan",
+    proof_in_pan: true,
     name: "Greek Pan Pizza",
     family: "americana",
     origin: { city: "New England", country: "USA" },

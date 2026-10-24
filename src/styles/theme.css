@@ -1047,8 +1047,10 @@
   --container-page: var(--background);
 
   /* ── Premium Glass tokens ── */
-  --premium-glass-bg: color-mix(in srgb, var(--container-page) 86%, transparent);
-  --premium-glass-border: color-mix(in srgb, var(--text-default) 8%, transparent);
+  /* Vetro: opacità bilanciata con lo scrim sotto il dock (il testo arriva già
+     sfumato), così resta il riflesso del vetro senza testo leggibile sotto. */
+  --premium-glass-bg: color-mix(in srgb, var(--container-page) 80%, transparent);
+  --premium-glass-border: color-mix(in srgb, var(--text-default) 9%, transparent);
   --premium-glass-shadow: 0 10px 30px color-mix(in srgb, var(--shadow-color) 6%, transparent),
     0 var(--border-w) 3px color-mix(in srgb, var(--shadow-color) 2%, transparent),
     inset 0 var(--border-w) 0 color-mix(in srgb, var(--overlay-text) 15%, transparent);
@@ -1401,8 +1403,10 @@
   --border-muted: var(--color-night-400);
 
   /* ── Premium Glass tokens ── */
-  --premium-glass-bg: color-mix(in srgb, var(--container-page) 86%, transparent);
-  --premium-glass-border: color-mix(in srgb, var(--text-default) 8%, transparent);
+  /* Al buio il vetro prende il tono della superficie, non della pagina:
+     altrimenti non si stacca dal fondo. */
+  --premium-glass-bg: color-mix(in srgb, var(--surface-container) 82%, transparent);
+  --premium-glass-border: color-mix(in srgb, var(--text-default) 14%, transparent);
   --premium-glass-shadow: 0 10px 30px color-mix(in srgb, var(--shadow-color) 6%, transparent),
     0 var(--border-w) 3px color-mix(in srgb, var(--shadow-color) 2%, transparent),
     inset 0 var(--border-w) 0 color-mix(in srgb, var(--overlay-text) 15%, transparent);
@@ -6424,97 +6428,18 @@
     color: var(--text-accent);
   }
 
-  .config-smart-link {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2-5);
-    padding-inline: var(--space-3-5);
-    padding-block: var(--space-2-5);
-    border-radius: var(--radius-xl);
-    text-align: left;
-    transition: background-color var(--duration-normal) var(--ease-standard), border-color var(--duration-normal) var(--ease-standard), color var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard), transform var(--duration-normal) var(--ease-standard), opacity var(--duration-normal) var(--ease-standard);
-    background: var(--surface-container);
-    border: var(--border-width-thin) solid var(--outline-variant);
-    cursor: pointer;
-  }
 
-  .config-smart-link:active {
-    transform: scale(0.99);
-  }
 
-  .config-smart-link--active {
-    background: color-mix(in srgb, var(--tertiary) 8%, transparent);
-    border: var(--border-width-medium) solid var(--tertiary);
-  }
 
-  .config-smart-link__icon {
-    flex-shrink: 0;
-    color: var(--text-muted);
-  }
 
-  .config-smart-link--active .config-smart-link__icon {
-    color: var(--tertiary);
-  }
 
-  .config-smart-link__title {
-    flex-shrink: 0;
-    color: var(--text-default);
-    font-size: var(--font-size-md);
-    font-weight: var(--weight-semibold);
-  }
 
-  .config-smart-link--active .config-smart-link__title {
-    color: var(--tertiary);
-  }
 
-  .config-smart-link__desc {
-    display: none;
-    flex: 1 1 0%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--text-muted);
-    font-size: var(--font-size-sm);
-  }
 
-  @media (min-width: 640px) {
-    .config-smart-link__desc {
-      display: block;
-    }
-  }
 
-  .config-smart-link__switch {
-    position: relative;
-    width: var(--space-11);
-    height: var(--space-6);
-    border-radius: var(--radius-full);
-    transition: background-color var(--duration-normal) var(--ease-standard), border-color var(--duration-normal) var(--ease-standard), color var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard), transform var(--duration-normal) var(--ease-standard), opacity var(--duration-normal) var(--ease-standard);
-    flex-shrink: 0;
-    margin-left: auto;
-    background: var(--switch-off);
-  }
 
-  @media (min-width: 640px) {
-    .config-smart-link__switch {
-      margin-left: 0;
-    }
-  }
 
-  .config-smart-link__switch--active {
-    background: var(--tertiary);
-  }
 
-  .config-smart-link__thumb {
-    position: absolute;
-    top: var(--space-0-5);
-    left: 0;
-    width: var(--space-5);
-    height: var(--space-5);
-    border-radius: var(--radius-full);
-    background: var(--switch-thumb);
-    display: block;
-    box-shadow: var(--shadow-sm);
-  }
 
   /* ── Pre-ferment toggle row ── */
   .config-toggle-row {
@@ -6612,6 +6537,65 @@
     color: var(--text-muted);
     font-size: var(--font-size-lg);
     font-weight: var(--weight-medium);
+  }
+
+  .config-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-xs) var(--gap-sm);
+    margin: 0 0 var(--space-3);
+  }
+
+  .config-toolbar .config-legend {
+    margin: 0;
+  }
+
+  /* Catenella «Parametri collegati»: pill compatta, piena quando attiva. */
+  .config-link-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    min-height: var(--space-8);
+    padding: 0 var(--space-3);
+    border-radius: var(--radius-full);
+    border: var(--border-width-thin) solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: var(--font-size-base);
+    font-weight: var(--weight-medium);
+    cursor: pointer;
+  }
+
+  .config-link-toggle--on {
+    border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+    color: var(--primary);
+  }
+
+  .config-legend {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin: 0 0 var(--space-3);
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+  }
+
+  .config-legend__marker {
+    flex-shrink: 0;
+    fill: var(--cta);
+    opacity: 0.7;
+  }
+
+  /* Area teglia: dato di servizio, senza riquadro. */
+  .config-summary-row.config-summary-row--quiet {
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
   }
 
   .config-summary-row {
@@ -6736,6 +6720,35 @@
 
   .config-slider__value--oor {
     color: var(--config-value-oor);
+  }
+
+  /* Valore toccabile: si legge come il numero, con una sottolineatura
+     tratteggiata che dice «si può scrivere». */
+  .config-slider__value--button {
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: text;
+    text-decoration: underline dotted;
+    text-decoration-thickness: var(--border-width-thin);
+    text-underline-offset: var(--space-1);
+  }
+
+  .config-slider__value--editing {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-0-5);
+  }
+
+  .config-slider__value-input {
+    width: var(--space-16);
+    padding: 0 var(--space-1);
+    border: var(--border-width-thin) solid var(--primary);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    font: inherit;
+    color: inherit;
+    text-align: right;
   }
 
   .config-slider__track-wrap {
@@ -7756,6 +7769,19 @@
 
   .needs-slot-list__badge--ideal {
     background: var(--needs-time-bg);
+  }
+
+  .needs-slot-list__check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--space-6);
+    height: var(--space-6);
+    border-radius: var(--radius-full);
+    color: var(--needs-time-text, currentColor);
+    background: color-mix(in srgb, var(--overlay-text) 25%, transparent);
+    border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 40%, transparent);
   }
 
   .needs-slot-list__badge--current {
@@ -9217,6 +9243,153 @@
     /* Era un h3: stessa resa ora che è h2 (U-10, F16). */
     font-weight: var(--weight-semibold);
     letter-spacing: var(--tracking-snug);
+  }
+
+  /* ── Scheda di produzione (D-043) — solo in stampa ── */
+  .print-sheet {
+    display: none;
+    color: var(--text-default);
+    background: none;
+    font-family: var(--font-sans);
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-normal);
+  }
+
+  .print-sheet__header {
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
+    border-bottom: var(--border-width-thick) solid var(--primary);
+  }
+
+  .print-sheet__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    color: var(--primary);
+  }
+
+  .print-sheet__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--font-size-5xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+  }
+
+  .print-sheet__meta {
+    margin: var(--space-1) 0 0;
+    color: var(--text-muted);
+  }
+
+  .print-sheet__section {
+    margin-bottom: var(--space-5);
+    break-inside: avoid-page;
+  }
+
+  .print-sheet__h2 {
+    margin: 0 0 var(--space-2);
+    padding-bottom: var(--space-1);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    border-bottom: var(--border-width-thin) solid var(--border);
+  }
+
+  .print-sheet__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .print-sheet__table th,
+  .print-sheet__table td {
+    padding: var(--space-1) var(--space-2);
+    text-align: left;
+    border-bottom: var(--border-width-thin) solid var(--border);
+  }
+
+  .print-sheet__table thead th {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .print-sheet__table tfoot th,
+  .print-sheet__table tfoot td {
+    font-weight: var(--weight-bold);
+    border-bottom: none;
+  }
+
+  .print-sheet__table .print-sheet__num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .print-sheet__note {
+    margin: var(--space-2) 0 0;
+    color: var(--text-muted);
+  }
+
+  .print-sheet__steps {
+    margin: 0;
+    padding-left: var(--space-5);
+  }
+
+  .print-sheet__step {
+    margin-bottom: var(--space-3);
+    break-inside: avoid;
+  }
+
+  .print-sheet__step-head {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gap-sm);
+    margin: 0;
+  }
+
+  .print-sheet__time {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .print-sheet__step-text {
+    margin: var(--space-0-5) 0 0;
+  }
+
+  .print-sheet__step-qty {
+    margin: var(--space-0-5) 0 0;
+    font-weight: var(--weight-semibold);
+  }
+
+  .print-sheet__footer {
+    margin-top: var(--space-6);
+    padding-top: var(--space-2);
+    border-top: var(--border-width-thin) solid var(--border);
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+  }
+
+  .print-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    border: none;
+  }
+
+  .ingredients-print {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    min-height: var(--space-10);
+    padding: 0 var(--space-3);
+    flex-shrink: 0;
   }
 
   .ingredients-header__divider {
@@ -10723,6 +10896,13 @@
     border-inline-start: var(--space-1) solid var(--text-warning);
   }
 
+  /* Dentro il blocco compatibilità: niente riquadro, il tono lo dà il blocco. */
+  .recipe-verdict--embedded {
+    margin: var(--space-2) 0 var(--space-1);
+    padding: 0;
+    border-inline-start: none;
+  }
+
   .recipe-verdict__header {
     display: flex;
     align-items: center;
@@ -11542,6 +11722,12 @@
   }
 
   /* Voce dello spec-sheet: etichetta sopra, valore sotto. */
+  .stat-strip__note {
+    margin-top: var(--space-0-5);
+    font-size: var(--font-size-base);
+    color: var(--text-warning);
+  }
+
   .stat-strip__spec {
     text-align: left;
     min-width: 0;
@@ -15233,8 +15419,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--space-10);
-    height: var(--space-10);
+    width: var(--space-11);
+    height: var(--space-11);
     border-radius: var(--radius-ml);
     background: var(--container-bg);
     border: var(--border-width-thin) solid var(--container-border);
@@ -15406,6 +15592,34 @@
     text-align: center;
     font-size: clamp(var(--font-size-cooking-step-title-min), var(--dimension-viewport-width-065), var(--font-size-cooking-step-title-max));
     line-height: var(--leading-cooking-step-title);
+  }
+
+  /* Audit totale n. 12: le dosi del passo, grandi e allineate. */
+  .cooking-mode-step__quantities {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--space-28), 1fr));
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+  }
+
+  .cooking-mode-step__quantity {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    background: var(--surface-container);
+  }
+
+  .cooking-mode-step__quantity dt {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+  }
+
+  .cooking-mode-step__quantity dd {
+    margin: 0;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-default);
   }
 
   .cooking-mode-step__description {
@@ -15967,6 +16181,30 @@
     padding-bottom: calc(var(--space-20) + env(safe-area-inset-bottom, var(--space-0)));
   }
 
+  /* Marchio in testata (D-040): in riga col bottone del profilo, scorre con la pagina. */
+  .app-shell-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0))) var(--space-4) var(--space-0);
+    min-height: var(--space-11);
+    color: var(--text-default);
+    text-decoration: none;
+  }
+
+  .app-shell-brand__name {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  @media (min-width: 768px) {
+    .app-shell-brand {
+      display: none;
+    }
+  }
+
   @media (min-width: 768px) {
     .app-shell-main--nav {
       margin-left: var(--space-28);
@@ -15981,11 +16219,13 @@
     inset-inline: 0;
     z-index: 40;
     pointer-events: none;
-    height: calc(var(--space-18) + env(safe-area-inset-bottom, var(--space-0)));
+    /* Copre tutta la pillola del dock (24 px + 56 px) più un margine, così
+       il testo della pagina sfuma prima di passarle sotto. */
+    height: calc(var(--space-28) + env(safe-area-inset-bottom, var(--space-0)));
     background: linear-gradient(to top,
         var(--container-page) 0%,
-        var(--container-page) 20%,
-        color-mix(in srgb, var(--container-page) 65%, transparent) 60%,
+        var(--container-page) 38%,
+        color-mix(in srgb, var(--container-page) 82%, transparent) 66%,
         transparent 100%);
   }
 
@@ -18116,6 +18356,23 @@
 
   .ds-stepper__btn:active {
     transform: scale(0.88);
+  }
+
+  /* Valore digitabile (D-043): senza frecce native, stessa resa del numero. */
+  .ds-stepper__input {
+    width: var(--space-14);
+    border: var(--border-width-thin) solid var(--border);
+    border-radius: var(--radius-lg);
+    background: transparent;
+    text-align: center;
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  .ds-stepper__input::-webkit-outer-spin-button,
+  .ds-stepper__input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 
   .ds-stepper__value {

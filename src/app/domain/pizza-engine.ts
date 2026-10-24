@@ -204,6 +204,11 @@ export interface PizzaStyle {
   /** C-2: moltiplicatore delle dosi dei condimenti quando lo stile usa ricette
    *  scritte per un altro formato (pizza al metro con il catalogo napoletano). */
   topping_scale?: number;
+  /** Audit totale n. 7: l'impasto si stende in teglia dopo lo staglio e fa
+   *  l'appretto lì (Detroit, grandma, focacce, sfincione…). Senza il flag
+   *  l'appretto si fa a panetti e la stesura viene subito prima della cottura
+   *  (teglia e pala romana, al metro, tonde). */
+  proof_in_pan?: boolean;
   /** Sprint 11 Fase 1 — struttura geometrica (stacked/closed/folded/double_sheet).
    * Opzionale: omesso = single (pizza/teglia/panetto monostrato classico). */
   layout?: LayoutSpec;
@@ -573,7 +578,7 @@ export interface TimelineStep {
     tip?: { beginner: EngineMsg; nerd: EngineMsg };
   };
   /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. */
-  variant?: "whole_proof" | "during_rest" | "oil" | "fry";
+  variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan";
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
@@ -1419,6 +1424,34 @@ export function pantryFlourMix(
   return best;
 }
 
+/** Quota della fermentazione che la timeline fa come appretto (vedi
+ *  generateTimeline: bulk 0,4/0,6, appretto 0,2/0,4). */
+function proofFraction(hasPreFerment: boolean): number {
+  return hasPreFerment ? 0.2 : 0.4;
+}
+
+/** Temperatura dell'appretto: sotto i 18 °C (frigo, cantina) l'appretto si fa
+ *  comunque a temperatura ambiente, come dice il passo della timeline. */
+export const PROOF_MIN_TEMP_C = 18;
+
+/** Audit totale n. 5 (24/10/2026): ore equivalenti alla temperatura di
+ *  fermentazione. Con il frigo la timeline fa l'appretto a 18 °C, che è più
+ *  veloce: prima la dose di lievito trattava tutte le ore come se fossero a
+ *  4 °C (Detroit 36 h: +70 % rispetto al modello). Sopra i 18 °C non cambia
+ *  nulla: appretto e puntata sono alla stessa temperatura. */
+export function equivalentFermentationHours(
+  fermentationHours: number,
+  fermentationTempC: number,
+  yeastType: "fresh" | "dry" | "sourdough",
+  hasPreFerment: boolean,
+): number {
+  if (fermentationTempC >= PROOF_MIN_TEMP_C) return fermentationHours;
+  const p = proofFraction(hasPreFerment);
+  const slow = fermentationSpeedRatio(yeastType, fermentationTempC);
+  const proof = fermentationSpeedRatio(yeastType, PROOF_MIN_TEMP_C);
+  return fermentationHours * (1 - p) + (fermentationHours * p * proof) / slow;
+}
+
 function calculateYeastPercentage(
   fermentationHours: number,
   fermentationTempC: number,
@@ -1578,6 +1611,15 @@ export interface GenerateRecipeOptions {
    *  customHydration (usato dall'ottimizzatore sui suoi candidati). Senza
    *  questo flag un valore custom è la scelta finale dell'utente. */
   compensateCustomHydration?: boolean;
+}
+
+/** Tipo di pre-fermento della ricetta: il primo dichiarato dallo stile
+ *  («direct|biga|poolish» → biga); poolish per gli stili diretti. Una sola
+ *  regola per ricetta, ingredienti e procedimento (audit totale n. 3: prima il
+ *  passo diceva «poolish» quando gli ingredienti scorporavano una biga). */
+export function preFermentKind(style: PizzaStyle): "biga" | "poolish" {
+  const kind = style.dough.process_type.split("|").find((m) => m === "biga" || m === "poolish");
+  return kind === "biga" ? "biga" : "poolish";
 }
 
 export function generateRecipe(
@@ -1848,7 +1890,11 @@ export function generateRecipe(
     // divide la dose: più veloce → meno lievito per le stesse ore.
     yeastPct = Math.max(
       0.01,
-      calculateYeastPercentage(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry") /
+      calculateYeastPercentage(
+        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment),
+        fermentationTempC,
+        yeastType as "fresh" | "dry",
+      ) /
         clampYeastSpeedFactor(constraints.yeast_speed_factor),
     );
   }
@@ -2054,7 +2100,8 @@ export function generateRecipe(
   // ── Scientific layer — con Q10 variabile a tratti continuo (ENG-2) ──
   const { model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
   const sciSpeedRatio = fermentationSpeedRatio(yeastType, fermentationTempC);
-  const effectiveHours18c = fermentationHours * sciSpeedRatio;
+  const effectiveHours18c =
+    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment) * sciSpeedRatio;
 
   // Gluten network score: flour W strength + hydration sweet spot + kneading method
   const wNorm = Math.min(1, Math.max(0, (flourW - 150) / 250)); // 0 at W150, 1 at W400
@@ -2272,10 +2319,7 @@ export function generateRecipe(
     fermentation_hours: fermentationHours,
     fermentation_temp_c: fermentationTempC,
     has_pre_ferment: hasPreFerment,
-    // ADV-04 fix: pick first method from process_type (biga|poolish → biga)
-    pre_ferment_type: hasPreFerment
-      ? (style.dough.process_type.split("|").find(m => m === "biga" || m === "poolish") ?? "poolish")
-      : undefined,
+    pre_ferment_type: hasPreFerment ? preFermentKind(style) : undefined,
     oven_temp_c: ovenTemp,
     cook_time_sec: cookTime,
     total_dough_g: totalDough,
@@ -2958,7 +3002,7 @@ function generateTimeline(
     steps.push({
       id: "preferment",
       title: "Pre-Fermento",
-      description: `Mescolare ${style.dough.process_type.includes("poolish") ? "poolish" : "biga"} e far maturare`,
+      description: `Mescolare ${preFermentKind(style)} e far maturare`,
       duration_minutes: Math.round(fermentHours * 60 * 0.4),
       icon: "beaker",
       timing_label: `${Math.round(fermentHours * 0.4)}h prima`,
@@ -3013,7 +3057,7 @@ function generateTimeline(
    *   avviene durante il preriscaldo; i minuti mancanti si tolgono dalla fine
    *   della puntata, così la fermentazione totale non cambia. */
   const bulkMinutesFull = Math.round(fermentHours * 60 * (hasPreFerment ? 0.4 : 0.6));
-  const proofMinutes = Math.round(fermentHours * 60 * (hasPreFerment ? 0.2 : 0.4));
+  const proofMinutes = Math.round(fermentHours * 60 * proofFraction(hasPreFerment));
   const ovenTempForPreheat = Math.round(actualOvenTemp ?? style.baking.temp_c_ideal);
   // M-6: per le fritte si scalda l'olio, non il forno: bastano 15 minuti.
   const idealPreheat = isFriedStyle(style)
@@ -3114,13 +3158,28 @@ function generateTimeline(
    * Nessuna timeline diceva di ACCENDERE IL FORNO: si infornava a freddo.
    * Il preriscaldo corre in parallelo al riposo dei panetti (piano sopra):
    * il totale resta identico e l'orario del promemoria è esatto. */
+  /* Audit totale n. 7: negli stili che lievitano in teglia la stesura viene
+   * subito dopo lo staglio e l'appretto si fa nella teglia. */
+  const proofInPan = !!style.proof_in_pan && layout.type === "single" && !isUnleavened;
+  if (proofInPan) {
+    steps.push(
+      keyedStep(
+        { id: "shape", variant: "pan", duration_minutes: 5, icon: "expand", timing_label: "5 min" },
+        em("timeline.shape.title", "Stesura"),
+        [em("timeline.shape.pan", "Stendere l'impasto nella teglia oliata con le mani, fino agli angoli; poi lasciarlo lievitare lì.")],
+      ),
+    );
+  }
   if (proofStepMinutes > 0) {
     steps.push({
       id: "proof",
+      ...(proofInPan ? { variant: "pan" as const } : {}),
       title: isUnleavened ? "Riposo" : "Appretto",
       description: isUnleavened
-        ? `Lasciare riposare l'impasto coperto a ${Math.max(fermentTemp, 18)}°C`
-        : `Lievitazione finale a ${Math.max(fermentTemp, 18)}°C`,
+        ? `Lasciare riposare l'impasto coperto a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
+        : proofInPan
+          ? `Lievitazione finale in teglia a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
+          : `Lievitazione finale a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`,
       duration_minutes: proofStepMinutes,
       icon: "timer",
       timing_label: formatDuration(Math.round(proofStepMinutes / 60)),
@@ -3201,7 +3260,7 @@ function generateTimeline(
           ? em("timeline.shape.thin", "Stendere con mattarello, sottilissima")
           : em("timeline.shape.round", "Allargare a mano dal centro, preservare il cornicione");
   }
-  steps.push(
+  if (!proofInPan) steps.push(
     keyedStep(
       {
         id: "shape",
@@ -3637,7 +3696,8 @@ function getDayLabel(dayOffset: number, meal: string, now: Date): string {
  * Le masse sono lineari nei panetti: la farina per panetto della ricetta
  * corrente dà quanti panetti ci stanno. Il numero esatto si rilegge dalla
  * ricetta rigenerata dopo aver scelto i panetti. */
-export const MAX_DOUGH_BALLS = 20;
+/** D-043: fino a 200 unità (un impasto da laboratorio); prima 20. */
+export const MAX_DOUGH_BALLS = 200;
 
 export interface FlourBudgetFit {
   balls: number;

@@ -2,7 +2,7 @@
  * Stepper panetti, lista ingredienti (baker's % in nerd), scorporo
  * pre-fermento, Regola 55 e blocchi scienza PizzaNerd. */
 
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Printer } from "lucide-react";
 import { motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import type { Dispatch, SetStateAction } from "react";
@@ -11,19 +11,19 @@ import { FlourBudget } from "./flour-budget";
 import { YeastExplainer } from "./yeast-explainer";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
-import { Stepper } from "../../components/ds/index";
+import { CtaButton, Stepper } from "../../components/ds/index";
 import { computePreFermentSplit } from "../../domain/pre-ferment-split";
 import {
   type GeneratedRecipe,
   type UserConstraints,
   type getServingUnit,
   getServingsRange,
+  MAX_DOUGH_BALLS,
   YEAST_LABELS,
 } from "../../domain/pizza-engine";
 import { PreFermentCard } from "./pre-ferment-guide";
 import { GlossaryWLink, IngRow, NerdAuraBlock } from "./recipe-output-bits";
 import {
-  engineMessage,
   flourStrengthLabel,
   getServingUnitLabel,
   gramsApprox,
@@ -65,6 +65,9 @@ export function IngredientsSection({
   const fmt = createFormatter(ui, bcp47);
   const servingLabel = getServingUnitLabel(cms, servingUnit, 2);
   const [ballsStatus, setBallsStatus] = useState("");
+  const [people, setPeople] = useState(
+    () => constraints.dough_balls * Math.max(1, getServingsRange(recipe.style)[0]),
+  );
   const waterTempLimit = recipe.science.water_temp_limit ?? null;
   /* Baker's % sul totale farina — layer nerd accanto ai grammi. */
   const bakerPct = (grams: number, maxDecimals = 1) =>
@@ -91,8 +94,46 @@ export function IngredientsSection({
           </h2>
           {/* Visore di sezione — come "Perfetti per te" */}
           <div className="ingredients-header__divider" />
+          {/* D-043: scheda di produzione stampabile (tutte le schede in fila). */}
+          <CtaButton
+            type="button"
+            variant="secondary"
+            elevated={false}
+            onClick={() => window.dispatchEvent(new CustomEvent("vulcan:print-request"))}
+            className="ingredients-print type-data"
+          >
+            <Printer size={14} aria-hidden="true" />
+            {uiMessage("features.recipe.recipe-output.print")}
+          </CtaButton>
         </div>
 
+        {/* D-042: si parte dalle persone; l'app decide quante unità servono
+            (una tonda a testa, le teglie in base all'area). */}
+        {(() => {
+          const perUnit = Math.max(1, getServingsRange(recipe.style)[0]);
+          const peopleShown =
+            Math.ceil(people / perUnit) === constraints.dough_balls ? people : constraints.dough_balls * perUnit;
+          return (
+            <div className="ingredients-servings ingredients-servings--people">
+              <span className="type-data ingredients-servings__label">
+                {uiMessage("features.recipe.ingredients-section.people")}
+              </span>
+              <Stepper
+                value={peopleShown}
+                min={1}
+                max={MAX_DOUGH_BALLS * perUnit}
+                inputLabel={uiMessage("features.recipe.ingredients-section.people")}
+                onChange={(n) => {
+                  setPeople(n);
+                  const units = Math.max(1, Math.ceil(n / perUnit));
+                  if (units !== constraints.dough_balls) updateBalls(units);
+                }}
+                decrementLabel={uiMessage("features.recipe.ingredients-section.peopleLess")}
+                incrementLabel={uiMessage("features.recipe.ingredients-section.peopleMore")}
+              />
+            </div>
+          );
+        })()}
         <div className="ingredients-servings">
           <span className="type-data ingredients-servings__label">
             {servingLabel}
@@ -100,7 +141,8 @@ export function IngredientsSection({
           <Stepper
             value={constraints.dough_balls}
             min={1}
-            max={20}
+            max={MAX_DOUGH_BALLS}
+            inputLabel={servingLabel}
             onChange={(n) => {
               updateBalls(n);
               /* U-10 (F11): le quantità cambiano tutte insieme; lo si dice. */
@@ -118,30 +160,6 @@ export function IngredientsSection({
             {normalizeMeasureUnitSuffixes(t(ui.doughBallsFrom, { w: fmt.grams(recipe.ball_weight_g) }))}
             {panSizeLabel ? ` · ${panSizeLabel}` : ""}
           </span>
-          {/* Stima persone (range) accanto al counter */}
-          {(() => {
-            const [perMin, perMax] = getServingsRange(recipe.style);
-            const totalMin = perMin * constraints.dough_balls;
-            const totalMax = perMax * constraints.dough_balls;
-            const peopleLabel = totalMin === totalMax
-              ? t(engineMessage(
-                  cms,
-                  totalMin === 1 ? "serving.peopleOne" : "serving.peopleMany",
-                  totalMin === 1 ? "≈ {n} persona" : "≈ {n} persone",
-                ), { n: totalMin })
-              : t(engineMessage(cms, "serving.peopleRange", "≈ {min}-{max} persone"), {
-                  min: totalMin,
-                  max: totalMax,
-                });
-            return (
-              <span
-                className="type-data ingredients-servings__estimate"
-                title={cms.cooking.ballEstimateTooltip}
-              >
-                {peopleLabel}
-              </span>
-            );
-          })()}
         </div>
         <FlourBudget recipe={recipe} servingUnit={servingUnit} onApply={updateBalls} />
 

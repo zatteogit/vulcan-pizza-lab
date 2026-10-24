@@ -356,6 +356,8 @@ export interface CmsTimelineStep {
   tipNerd?: string;
   /** Spiegazione estesa per il principiante: come si fa concretamente, cosa cercare, errori comuni */
   longDesc?: string;
+  /** Variante della spiegazione estesa (pre-fermento: longDesc = poolish, longDescAlt = biga) */
+  longDescAlt?: string;
 }
 
 /* ═══ DOMAIN DATA i18n INTERFACES ═══ */
@@ -1404,7 +1406,7 @@ export const CMS_DEFAULTS: CmsContent = {
     verdictAlternatives: "Con questi vincoli funzionano:",
     verdictRecipeBelow: "Sotto trovi comunque la ricetta più vicina, se vuoi provarci.",
     // Score dashboard
-    recipeScore: "Match",
+    recipeScore: "Compatibilit\u00E0 con la tua cucina",
     nerdToggle: "PizzaNerd",
     nerdActive: "Attiva PizzaNerd",
     scienceTitle: "{brand} Science",
@@ -1724,10 +1726,10 @@ export const CMS_DEFAULTS: CmsContent = {
     comfortLabel: "{duration} comfort",
     totalDuration: "{duration} totali",
     finalDoughStageTitle: "Impasto finale",
-    rule55Title: "Regola 55",
-    rule55AriaOpen: "Cos'è la Regola 55",
-    rule55AriaClose: "Nascondi spiegazione Regola 55",
-    rule55Description: "Regola empirica: T_ambiente + T_farina + T_acqua ≈ {target}, per ottenere ~{final} di impasto finale. Se impasti a macchina, l'attrito aggiunge {frictionMin}-{frictionMax} in più.",
+    rule55Title: "Temperatura dell'acqua",
+    rule55AriaOpen: "Come si calcola la temperatura dell'acqua",
+    rule55AriaClose: "Nascondi la spiegazione",
+    rule55Description: "Ambiente, farina e acqua devono sommare circa {sum}: tre volte la temperatura d'impasto che vuoi ({ddt}) meno il calore dell'impastatrice ({friction}). Per questo l'acqua cambia con la temperatura della tua cucina.",
     stepDetailsShow: "Come si fa",
     stepDetailsHide: "Nascondi dettagli",
     matchDetailsShow: "Dettagli punteggio",
@@ -1999,8 +2001,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "rec.sourdoughLongFerment": "Lievito madre ideale per maturazione lunga",
     "rec.sourdoughOnlyShort": "Solo lievito madre: fermentazione breve difficile",
     "tip.waterTemp": "",
-    "tip.waterTempCold": "Regola 55: usa acqua dal frigo ({temp}). L'impasto a macchina scalda la massa.",
-    "tip.waterTempNormal": "Regola 55: usa acqua a {temp} per raggiungere {ddt} di impasto.",
+    "tip.waterTempCold": "Usa acqua fredda di frigo ({temp}): l'impastatrice scalda la massa.",
+    "tip.waterTempNormal": "Acqua a {temp} per avere l'impasto a {ddt}.",
     "tip.frictionNote": "Compensazione attrito impastatrice: {friction}",
     "gen.notWoodOven": "Lo stile prevede il forno a legna: con il tuo forno il risultato si avvicina, ma non è quello canonico.",
     "gen.windowTooShort": "Con {available} non c'è tempo per tutto: questa ricetta richiede circa {needed}. Sarà pronta più tardi dell'orario scelto: scegli un orario più avanti o una lievitazione più breve.",
@@ -2022,6 +2024,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "tip.waterTempLimitMax": "Cucina fredda: anche con acqua a {temp} l'impasto resta sotto {ddt}. Non scaldare di più l'acqua: tieni la farina in un posto tiepido o allunga un po' la puntata.",
     "tip.waterTempLimitMin": "Cucina calda: anche con acqua a {temp} l'impasto supera {ddt}. Usa acqua ghiacciata, tieni la farina in frigo o accorcia un po' la puntata.",
     "timeline.preheat.descWholeProof": "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti fanno l'appretto.",
+    "timeline.preheat.descPan": "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto finisce l'appretto in teglia.",
+    "timeline.preheat.descPanWholeProof": "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto fa l'appretto in teglia.",
     "timeline.preheat.descDuringRest": "Accendi ora il forno a {temp}{equipmentNote}. Intanto i panetti riposano.",
     "hint.flourWeak": "farina debole (00 classica)",
     "hint.flourMedium": "farina di media forza",
@@ -2059,6 +2063,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "version.label.Bilanciata": "Bilanciata",
     "timelineComfort.title": "Timeline comoda",
     "timelineComfort.active": "Attiva: evita le fasi notturne.",
+    "timelineComfort.activePartial": "Attiva, ma alcune fasi restano di notte: scegli un altro pasto qui sopra.",
     "timelineComfort.nightDetected": "Fasi attive di notte rilevate.",
     "timelineComfort.idle": "Ottimizza gli orari se serve.",
     "timeline.preheat.title": "Forno al massimo",
@@ -2112,6 +2117,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.shape.stacked": "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.",
     "timeline.shape.closedStuffed": "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.",
     "timeline.shape.rectangular": "Stendere nella teglia oliata con le mani",
+    "timeline.shape.pan": "Stendere l'impasto nella teglia oliata con le mani, fino agli angoli; poi lasciarlo lievitare l\u00EC.",
     "timeline.shape.thin": "Stendere con mattarello, sottilissima",
     "timeline.shape.round": "Allargare a mano dal centro, preservare il cornicione",
     "timeline.shape.title": "Stesura",
@@ -2171,7 +2177,8 @@ export const CMS_DEFAULTS: CmsContent = {
     preferment: {
       title: "Pre-Fermento",
       desc: "Mescolare {type} e far maturare",
-      longDesc: "Il pre-fermento \u00E8 una piccola porzione di farina e acqua (con poco lievito) che fai maturare PRIMA dell'impasto vero. Versa nel contenitore l'acqua a temperatura ambiente, sciogli il lievito di birra, aggiungi la farina e mescola con un cucchiaio fino a ottenere una pappetta densa. Copri con pellicola e lascia maturare 16-18 ore a 18\u00B0C (cantina/temperatura ambiente bassa). Sar\u00E0 pronto quando vedi tante bolle in superficie e un profumo agrumato/yogurt.",
+      longDesc: "Il poolish \u00E8 farina e acqua in parti uguali con il lievito, fatto maturare prima dell'impasto. Sciogli il lievito nell'acqua, aggiungi la farina e mescola con un cucchiaio: viene una pastella morbida. Copri e lascia maturare {hours} a {prefTemp}. \u00C8 pronto quando la superficie \u00E8 piena di bolle e al centro comincia appena ad abbassarsi; profuma leggermente acidulo.",
+      longDescAlt: "La biga \u00E8 un preimpasto asciutto: farina e acqua al {prefHydration} circa, con il lievito. Sciogli il lievito nell'acqua, versala sulla farina e mescola pochi secondi, solo finch\u00E9 l'acqua \u00E8 assorbita: devono restare grumi irregolari, non un impasto liscio. Copri e lascia maturare {hours} a {prefTemp}. \u00C8 pronta quando \u00E8 cresciuta, profuma di frutta e dentro \u00E8 piena di filamenti.",
       tipBeginner: "Il pre-fermento \u00E8 come un \"antipasto\" per il lievito. Mescola e lascia riposare coperto.",
       tipNerd: "Il pre-fermento produce acidi organici (lattico/acetico) che abbassano il pH a ~4.5, migliorando la rete glutinica e la shelf life.",
     },
@@ -2231,6 +2238,13 @@ export const CMS_DEFAULTS: CmsContent = {
       longDesc: "I panetti dopo lo staglio devono rilassarsi e gonfiarsi un'ultima volta. Tienili coperti a temperatura ambiente. Sar\u00E0 ora di stenderli quando: (1) sono raddoppiati di volume, (2) la superficie \u00E8 bombata e liscia, (3) il poke-test torna su lentamente (premi col dito: deve tornare in ~5 secondi). Se la pasta non torna su = sovrafermentata; se torna su subito = ancora indietro.",
       tipBeginner: "I panetti devono essere morbidi. Se li premi con un dito, tornano su lentamente.",
       tipNerd: "Poke test: ritorno lento = fermentazione ottimale. Troppo rapido = sotto-lievitato. Nessun ritorno = over-proofed.",
+    },
+    proof_pan: {
+      title: "Appretto in teglia",
+      desc: "Lievitazione finale in teglia a {temp}",
+      longDesc: "L'impasto, gi\u00E0 steso nella teglia, deve gonfiarsi un'ultima volta. Copri la teglia e lasciala a temperatura ambiente. \u00C8 pronto quando \u00E8 cresciuto in modo evidente, la superficie \u00E8 bombata e piena di bolle e, premendo piano con un dito, il segno torna su lentamente. Se nel frattempo si \u00E8 ritirato dagli angoli, allargalo di nuovo con i polpastrelli.",
+      tipBeginner: "L'impasto in teglia \u00E8 pronto quando \u00E8 gonfio e morbido: premuto col dito, torna su lentamente.",
+      tipNerd: "La lievitazione in teglia fissa la forma: la struttura alveolare si forma nel contenitore di cottura, senza degassare l'impasto con una stesura successiva.",
     },
     shape: {
       title: "Stesura",

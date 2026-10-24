@@ -400,3 +400,38 @@ Golden: gli esiti non cambiano; cambiano i numeri.
 
 Dosi dei condimenti della pizza al metro: `topping_scale` 3,7 (3000 cm² contro
 804 cm² del disco napoletano da 32 cm), applicato solo in visualizzazione.
+
+## Audit totale n. 5 · Lievito sulle fasi reali della timeline (24/10/2026)
+
+Con la lievitazione in frigo (o comunque sotto i 18 °C) la timeline fa
+l'appretto a 18 °C (`PROOF_MIN_TEMP_C`), ma la dose di lievito trattava tutte
+le ore come se fossero alla temperatura del frigo. Ora
+`equivalentFermentationHours` converte l'appretto in ore equivalenti alla
+temperatura di fermentazione (stessa curva `fermentationSpeedRatio`) e la dose
+usa quelle. Sopra i 18 °C nulla cambia. Lo stesso valore entra nelle «ore
+equivalenti a 18 °C» del livello scientifico.
+
+Golden: 42 casi su 58 cambiano solo nel lievito (e di 1 g su farina/acqua in
+2 casi per arrotondamento); masse, forno e tempi invariati.
+
+| Scenario (ideale) | Fermentazione | Lievito prima → dopo |
+|---|---|---|
+| teglia romana | 36 h a 4 °C | 2,3 → 1,7 g (−26 %) |
+| Detroit | 16 h a 4 °C | 4,1 → 3,1 g (−24 %) |
+| New York | 33 h a 4 °C | 1,2 → 0,9 g (−25 %) |
+| canotto | 48 h a 4 °C | 1,0 → 0,8 g (−20 %) |
+| pizza fritta | 16 h a 4 °C | 1,5 → 1,1 g (−27 %) |
+| montanara | 16 h a 4 °C | 0,7 → 0,6 g (−14 %) |
+
+Da verificare con Matteo: la costante di riferimento (0,1 % a 18 °C per 24 h)
+non cambia; se le dosi in frigo erano state tarate a occhio sul vecchio
+calcolo, ora risultano più basse di circa un quarto.
+
+## Audit totale n. 7 · Stili che lievitano in teglia (24/10/2026)
+
+Nuovo campo `proof_in_pan` (Detroit, Chicago deep, focaccia genovese e barese,
+sfincione, grandma, padellino, greek pan): dopo lo staglio l'impasto si stende
+in teglia e l'appretto si fa lì («Appretto in teglia»); prima la stesura veniva
+dopo 9–14 h di appretto, subito prima di infornare. Teglia e pala romana, al
+metro e tonde restano com'erano (appretto a panetti, stesura prima della
+cottura). Cambia solo l'ordine: durate e totali invariati (golden identico).

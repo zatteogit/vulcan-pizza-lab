@@ -166,7 +166,7 @@ export const EN_LOCALE: CmsContent = {
     verdictAlternatives: "These work with the same setup:",
     verdictRecipeBelow: "The closest recipe is still below if you want to try it.",
     // Score dashboard
-    recipeScore: "Match",
+    recipeScore: "Fit with your kitchen",
     nerdToggle: "PizzaNerd",
     nerdActive: "Activate PizzaNerd",
     scienceTitle: "{brand} Science",
@@ -604,10 +604,10 @@ export const EN_LOCALE: CmsContent = {
     comfortLabel: "{duration} comfort",
     totalDuration: "{duration} total",
     finalDoughStageTitle: "Final dough",
-    rule55Title: "Rule 55",
-    rule55AriaOpen: "What is Rule 55?",
-    rule55AriaClose: "Hide Rule 55 explanation",
-    rule55Description: "Rule of thumb: room temperature + flour temperature + water temperature \u2248 {target}, to land around {final} final dough temperature. If you use a mixer, friction adds another {frictionMin}-{frictionMax}.",
+    rule55Title: "Water temperature",
+    rule55AriaOpen: "How the water temperature is worked out",
+    rule55AriaClose: "Hide the explanation",
+    rule55Description: "Room, flour and water should add up to about {sum}: three times the dough temperature you want ({ddt}) minus the heat from the mixer ({friction}). That is why the water changes with the temperature of your kitchen.",
     stepDetailsShow: "How to do it",
     stepDetailsHide: "Hide details",
     matchDetailsShow: "Score details",
@@ -907,9 +907,9 @@ export const EN_LOCALE: CmsContent = {
     "rec.sourdoughOnlyShort":
       "Sourdough only: short fermentation difficult",
     "tip.waterTempCold":
-      "Rule of 55: use fridge water ({temp}). Machine mixing heats the dough.",
+      "Use cold water from the fridge ({temp}): the mixer warms the dough.",
     "tip.waterTempNormal":
-      "Rule of 55: use water at {temp} to reach {ddt} dough temperature.",
+      "Water at {temp} for a dough at {ddt}.",
     "tip.frictionNote":
       "Mixer friction compensation: {friction}",
     "gen.notWoodOven": "This style is made in a wood-fired oven: with your oven the result gets close, but it isn't the canonical one.",
@@ -932,6 +932,8 @@ export const EN_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Cold kitchen: even with water at {temp} the dough stays below {ddt}. Don't heat the water further: keep the flour somewhere warm or let the bulk rise a little longer.",
     "tip.waterTempLimitMin": "Warm kitchen: even with water at {temp} the dough goes above {ddt}. Use ice water, keep the flour in the fridge or shorten the bulk rise a little.",
     "timeline.preheat.descWholeProof": "Turn the oven on now to {temp}{equipmentNote}. The dough balls do their final proof while it heats.",
+    "timeline.preheat.descPan": "Turn the oven on now to {temp}{equipmentNote}. The dough finishes its final rise in the pan while it heats.",
+    "timeline.preheat.descPanWholeProof": "Turn the oven on now to {temp}{equipmentNote}. The dough does its final rise in the pan while it heats.",
     "timeline.preheat.descDuringRest": "Turn the oven on now to {temp}{equipmentNote}. The dough pieces rest while it heats.",
     "hint.flourWeak": "weak flour (classic 00)",
     "hint.flourMedium": "medium-strength flour",
@@ -969,6 +971,7 @@ export const EN_LOCALE: CmsContent = {
     "version.label.Bilanciata": "Balanced",
     "timelineComfort.title": "Comfort timeline",
     "timelineComfort.active": "On: avoids active night steps.",
+    "timelineComfort.activePartial": "On, but some steps still fall at night: pick another meal above.",
     "timelineComfort.nightDetected": "Active night steps detected.",
     "timelineComfort.idle": "Optimize the schedule if needed.",
     "timeline.preheat.title": "Max out the oven",
@@ -1022,6 +1025,7 @@ export const EN_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Stretch the first disc in the oiled pan; set the second aside.",
     "timeline.shape.closedStuffed": "Stretch the base disc in the pan, keeping the second one to close it.",
     "timeline.shape.rectangular": "Stretch in the oiled pan by hand",
+    "timeline.shape.pan": "Stretch the dough in the oiled pan by hand, into the corners; then let it rise there.",
     "timeline.shape.thin": "Roll out with a rolling pin, ultra-thin",
     "timeline.shape.round": "Stretch by hand from the centre, preserving the rim",
     "timeline.shape.title": "Shaping",
@@ -1088,7 +1092,8 @@ export const EN_LOCALE: CmsContent = {
         'The pre-ferment is like an "appetizer" for the yeast. Mix and let it rest covered.',
       tipNerd:
         "The pre-ferment produces organic acids (lactic/acetic) that lower pH to ~4.5, improving the gluten network and shelf life.",
-      longDesc: "The pre-ferment is a small portion of flour and water (with a little yeast) that you leave to mature BEFORE the main dough. Pour room-temperature water into the container, dissolve the fresh yeast, add the flour and stir with a spoon until you get a thick paste. Cover with cling film and leave to mature for 16-18 hours at 18\u00B0C (cellar/cool room). It's ready when you see lots of bubbles on the surface and it smells citrusy, like yoghurt.",
+      longDesc: "Poolish is equal parts flour and water with the yeast, left to mature before the dough. Dissolve the yeast in the water, add the flour and stir with a spoon into a soft batter. Cover and let it mature {hours} at {prefTemp}. It is ready when the surface is full of bubbles and the centre is just starting to sink; it smells slightly tangy.",
+      longDescAlt: "Biga is a stiff pre-dough: flour and water at about {prefHydration}, with the yeast. Dissolve the yeast in the water, pour it over the flour and mix for a few seconds, only until the water is absorbed: it should stay lumpy and shaggy, not smooth. Cover and let it mature {hours} at {prefTemp}. It is ready when it has grown, smells fruity and is full of strands inside.",
     },
     mix: {
       title: "Mixing",
@@ -1151,6 +1156,13 @@ export const EN_LOCALE: CmsContent = {
       tipNerd:
         "Poke test: slow return = optimal fermentation. Too fast = under-proofed. No return = over-proofed.",
       longDesc: "After dividing, the dough balls need to relax and rise one last time. Keep them covered at room temperature. They're ready to stretch when: (1) they've doubled in volume, (2) the surface is domed and smooth, (3) the poke test springs back slowly (press with a finger: it should spring back in ~5 seconds). If the dough doesn't spring back = over-proofed; if it springs back straight away = under-proofed.",
+    },
+    proof_pan: {
+      title: "Final rise in the pan",
+      desc: "Final rise in the pan at {temp}",
+      longDesc: "The dough, already stretched in the pan, needs to puff up one last time. Cover the pan and leave it at room temperature. It is ready when it has clearly grown, the surface is domed and bubbly, and a gentle press with a finger springs back slowly. If it has shrunk back from the corners, push it out again with your fingertips.",
+      tipBeginner: "The dough in the pan is ready when it is puffy and soft: pressed with a finger, it springs back slowly.",
+      tipNerd: "Proofing in the pan sets the shape: the crumb structure forms in the baking vessel, with no later stretching to degas the dough.",
     },
     shape: {
       title: "Shaping",

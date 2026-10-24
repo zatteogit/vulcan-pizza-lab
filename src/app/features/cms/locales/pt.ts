@@ -145,7 +145,7 @@ export const PT_LOCALE: CmsContent = {
     verdictLaterTime: "Escolha um horário daqui a pelo menos {hours}.",
     verdictAlternatives: "Com estas condições funcionam:",
     verdictRecipeBelow: "A receita mais próxima continua abaixo, se você quiser tentar.",
-    recipeScore: "Match",
+    recipeScore: "Compatibilidade com a sua cozinha",
     nerdToggle: "PizzaNerd",
     nerdActive: "Ativar PizzaNerd",
     scienceTitle: "{brand} Science",
@@ -713,9 +713,9 @@ export const PT_LOCALE: CmsContent = {
     "rec.sourdoughOnlyShort":
       "Apenas levain: fermentação curta difícil",
     "tip.waterTempCold":
-      "Regra dos 55: use água da geladeira ({temp}). A amassadeira aquece a massa.",
+      "Use \u00E1gua gelada da geladeira ({temp}): a amassadeira aquece a massa.",
     "tip.waterTempNormal":
-      "Regra dos 55: use água a {temp} para atingir {ddt} de temperatura da massa.",
+      "\u00C1gua a {temp} para a massa ficar a {ddt}.",
     "tip.frictionNote":
       "Compensação de atrito da amassadeira: {friction}",
     "gen.notWoodOven": "Este estilo \u00E9 feito em forno a lenha: com o seu forno o resultado fica parecido, mas n\u00E3o \u00E9 o can\u00F4nico.",
@@ -738,6 +738,8 @@ export const PT_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Cozinha fria: mesmo com água a {temp} a massa fica abaixo de {ddt}. Não aqueça mais a água: guarde a farinha num lugar morno ou prolongue um pouco a fermentação em massa.",
     "tip.waterTempLimitMin": "Cozinha quente: mesmo com água a {temp} a massa passa de {ddt}. Use água gelada, guarde a farinha na geladeira ou encurte um pouco a fermentação em massa.",
     "timeline.preheat.descWholeProof": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, as bolas de massa fazem a fermentação final.",
+    "timeline.preheat.descPan": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, a massa termina a fermenta\u00E7\u00E3o na assadeira.",
+    "timeline.preheat.descPanWholeProof": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, a massa faz a fermenta\u00E7\u00E3o final na assadeira.",
     "timeline.preheat.descDuringRest": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, as bolas de massa descansam.",
     "tip.waterTemp": "",
     "hint.flourWeak": "farinha fraca (00 clássica)",
@@ -780,6 +782,7 @@ export const PT_LOCALE: CmsContent = {
     "version.label.Bilanciata": "Equilibrada",
     "timelineComfort.title": "Linha de tempo confortável",
     "timelineComfort.active": "Ativo: evita etapas noturnas.",
+    "timelineComfort.activePartial": "Ativa, mas algumas fases ainda caem \u00E0 noite: escolha outra refei\u00E7\u00E3o acima.",
     "timelineComfort.nightDetected": "Etapas noturnas ativas detectadas.",
     "timelineComfort.idle": "Otimize o horário se necessário.",
     "timeline.preheat.title": "Forno no máximo",
@@ -833,6 +836,7 @@ export const PT_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Abra o primeiro disco na assadeira untada; reserve o segundo.",
     "timeline.shape.closedStuffed": "Abra o disco de base na assadeira, reservando o segundo para fechar.",
     "timeline.shape.rectangular": "Abra a massa com as mãos na assadeira untada",
+    "timeline.shape.pan": "Abra a massa com as m\u00E3os na assadeira untada, at\u00E9 os cantos; depois deixe-a crescer ali.",
     "timeline.shape.thin": "Abra com o rolo, bem fininha",
     "timeline.shape.round": "Abra com as mãos a partir do centro, preservando a borda",
     "timeline.shape.title": "Abertura",
@@ -894,7 +898,8 @@ export const PT_LOCALE: CmsContent = {
         'O pr\u00E9-fermento \u00E9 como um "aperitivo" para o fermento. Misture e deixe repousar coberto.',
       tipNerd:
         "O pr\u00E9-fermento produz \u00E1cidos org\u00E2nicos (l\u00E1tico/ac\u00E9tico) que baixam o pH para ~4,5, melhorando a rede de gl\u00FAten.",
-      longDesc: "O pr\u00E9-fermento \u00E9 uma pequena por\u00E7\u00E3o de farinha e \u00E1gua (com pouco fermento) que voc\u00EA deixa maturar ANTES da massa propriamente dita. Coloque no recipiente a \u00E1gua em temperatura ambiente, dissolva o fermento biol\u00F3gico fresco, adicione a farinha e misture com uma colher at\u00E9 obter um mingau espesso. Cubra com filme pl\u00E1stico e deixe maturar por 16-18 horas a 18\u00B0C (um canto fresco da casa). Estar\u00E1 pronto quando voc\u00EA vir muitas bolhas na superf\u00EDcie e sentir um aroma c\u00EDtrico, de iogurte.",
+      longDesc: "O poolish \u00E9 farinha e \u00E1gua em partes iguais com o fermento, que matura antes da massa. Dissolva o fermento na \u00E1gua, junte a farinha e misture com uma colher at\u00E9 formar uma papa mole. Cubra e deixe maturar {hours} a {prefTemp}. Est\u00E1 pronto quando a superf\u00EDcie est\u00E1 cheia de bolhas e o centro come\u00E7a a baixar; cheira levemente \u00E1cido.",
+      longDescAlt: "A biga \u00E9 uma pr\u00E9-massa seca: farinha e \u00E1gua a cerca de {prefHydration}, com o fermento. Dissolva o fermento na \u00E1gua, despeje sobre a farinha e misture poucos segundos, s\u00F3 at\u00E9 a \u00E1gua ser absorvida: devem ficar grumos irregulares, n\u00E3o uma massa lisa. Cubra e deixe maturar {hours} a {prefTemp}. Est\u00E1 pronta quando cresceu, cheira a fruta e por dentro est\u00E1 cheia de filamentos.",
     },
     mix: {
       title: "Amassamento",
@@ -957,6 +962,13 @@ export const PT_LOCALE: CmsContent = {
       tipNerd:
         "Teste do dedo: retorno lento = fermenta\u00E7\u00E3o \u00F3tima. Muito r\u00E1pido = sub-fermentado. Sem retorno = sobre-fermentado.",
       longDesc: "Depois da divis\u00E3o, as bolas de massa precisam relaxar e crescer uma \u00FAltima vez. Mantenha-as cobertas em temperatura ambiente. Estar\u00E1 na hora de abri-las quando: (1) tiverem dobrado de volume, (2) a superf\u00EDcie estiver abaulada e lisa, (3) no teste do dedo a massa voltar devagar (pressione com o dedo: deve voltar em ~5 segundos). Se a massa n\u00E3o voltar = passou do ponto; se voltar na hora = ainda falta fermentar.",
+    },
+    proof_pan: {
+      title: "Fermenta\u00E7\u00E3o final na assadeira",
+      desc: "Fermenta\u00E7\u00E3o final na assadeira a {temp}",
+      longDesc: "A massa, j\u00E1 aberta na assadeira, precisa crescer uma \u00FAltima vez. Cubra a assadeira e deixe em temperatura ambiente. Est\u00E1 pronta quando cresceu bem, a superf\u00EDcie est\u00E1 abaulada e cheia de bolhas e, ao apertar de leve com o dedo, a marca volta devagar. Se encolheu dos cantos, abra de novo com as pontas dos dedos.",
+      tipBeginner: "A massa na assadeira est\u00E1 pronta quando est\u00E1 fofa e macia: apertada com o dedo, volta devagar.",
+      tipNerd: "Fermentar na assadeira fixa o formato: o alveolado se forma no recipiente de cozimento, sem uma abertura posterior que desgaseifique a massa.",
     },
     shape: {
       title: "Abertura",
@@ -1676,10 +1688,10 @@ export const PT_LOCALE: CmsContent = {
     comfortLabel: "{duration} no modo conforto",
     totalDuration: "{duration} no total",
     finalDoughStageTitle: "Massa final",
-    rule55Title: "Regra dos 55",
-    rule55AriaOpen: "O que \u00E9 a Regra dos 55",
-    rule55AriaClose: "Ocultar explica\u00E7\u00E3o da Regra dos 55",
-    rule55Description: "Regra pr\u00E1tica: T_ambiente + T_farinha + T_\u00E1gua \u2248 {target}, para obter ~{final} na massa final. Se voc\u00EA amassa na m\u00E1quina, o atrito acrescenta mais {frictionMin}-{frictionMax}.",
+    rule55Title: "Temperatura da \u00E1gua",
+    rule55AriaOpen: "Como se calcula a temperatura da \u00E1gua",
+    rule55AriaClose: "Ocultar a explica\u00E7\u00E3o",
+    rule55Description: "Ambiente, farinha e \u00E1gua devem somar cerca de {sum}: tr\u00EAs vezes a temperatura de massa que voc\u00EA quer ({ddt}) menos o calor da amassadeira ({friction}). Por isso a \u00E1gua muda com a temperatura da sua cozinha.",
     stepDetailsShow: "Como fazer",
     stepDetailsHide: "Ocultar detalhes",
     matchDetailsShow: "Detalhes da pontua\u00E7\u00E3o",

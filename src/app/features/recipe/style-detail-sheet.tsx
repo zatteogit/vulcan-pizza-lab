@@ -2,11 +2,12 @@ import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
-import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, Heart } from "lucide-react";
+import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, Gauge } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import { STYLE_PHOTOS, reasonDimension, MATCH_DIMENSION_ICON } from "./recommended-styles";
+import { kitchenCompatibility, scoreWeightsFromCms } from "./kitchen-compatibility";
 import { STYLE_VIDEOS, type StyleVideo } from "../../data/style-photos";
 import {
   PizzaStyle,
@@ -93,6 +94,11 @@ export function StyleDetailSheet({
     if (!constraints) return null;
     return recommendStyles(constraints).find((r) => r.style.id === style.id);
   }, [constraints, style.id]);
+  /* D-041: lo stesso numero delle card e della ricetta aperta. */
+  const kitchenNow = React.useMemo(
+    () => (constraints ? kitchenCompatibility(style, constraints, scoreWeightsFromCms(cms)).now : null),
+    [constraints, style, cms],
+  );
 
   /* VPL-C3: motivazioni di match articolate (lista completa, con dimensione). */
   const matchReasons = React.useMemo(() => {
@@ -229,9 +235,12 @@ export function StyleDetailSheet({
                   <span className="style-detail-title__dot">
                     ·
                   </span>
-                  <span className="style-detail-title__match">
-                    <Heart size={10} fill="currentColor" aria-hidden="true" />
-                    {rec.compatibilityScore}{uiMessage("features.recipe.style-detail-sheet.match-a3424e8a")}</span>
+                  <span
+                    className="style-detail-title__match"
+                    aria-label={uiMessage("pages.explore.compatibility", [kitchenNow ?? 0])}
+                  >
+                    <Gauge size={10} aria-hidden="true" />
+                    {uiMessage("features.recipe.style-detail-sheet.match-a3424e8a", [kitchenNow ?? 0])}</span>
                 </>
               )}
 

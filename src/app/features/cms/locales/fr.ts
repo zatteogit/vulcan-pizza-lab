@@ -145,7 +145,7 @@ export const FR_LOCALE: CmsContent = {
     verdictLaterTime: "Choisissez une heure dans au moins {hours}.",
     verdictAlternatives: "Avec les mêmes contraintes, ceux-ci fonctionnent :",
     verdictRecipeBelow: "La recette la plus proche reste ci-dessous si vous voulez essayer.",
-    recipeScore: "Match",
+    recipeScore: "Compatibilit\u00E9 avec votre cuisine",
     nerdToggle: "PizzaNerd",
     nerdActive: "Activer PizzaNerd",
     scienceTitle: "{brand} Science",
@@ -712,9 +712,9 @@ export const FR_LOCALE: CmsContent = {
     "rec.sourdoughOnlyShort":
       "Levain seul : fermentation courte difficile",
     "tip.waterTempCold":
-      "Règle du 55 : utiliser l'eau du réfrigérateur ({temp}). Le pétrissage mécanique chauffe la pâte.",
+      "Utilisez de l'eau froide du r\u00E9frig\u00E9rateur ({temp}) : le p\u00E9trin r\u00E9chauffe la p\u00E2te.",
     "tip.waterTempNormal":
-      "Règle du 55 : utiliser l'eau à {temp} pour atteindre {ddt} de température de pâte.",
+      "Eau \u00E0 {temp} pour une p\u00E2te \u00E0 {ddt}.",
     "tip.frictionNote":
       "Compensation de friction du pétrin : {friction}",
     "gen.notWoodOven": "Ce style se fait au four \u00E0 bois : avec votre four, le r\u00E9sultat s'en approche, mais ce n'est pas le r\u00E9sultat canonique.",
@@ -737,6 +737,8 @@ export const FR_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Cuisine froide : même avec une eau à {temp}, la pâte reste sous {ddt}. Ne chauffez pas davantage l'eau : gardez la farine dans un endroit tiède ou allongez un peu le pointage.",
     "tip.waterTempLimitMin": "Cuisine chaude : même avec une eau à {temp}, la pâte dépasse {ddt}. Utilisez de l'eau glacée, gardez la farine au frigo ou raccourcissez un peu le pointage.",
     "timeline.preheat.descWholeProof": "Allumez le four maintenant à {temp}{equipmentNote}. Pendant ce temps, les pâtons font leur apprêt.",
+    "timeline.preheat.descPan": "Allumez le four maintenant \u00E0 {temp}{equipmentNote}. Pendant ce temps, la p\u00E2te finit son appr\u00EAt en plaque.",
+    "timeline.preheat.descPanWholeProof": "Allumez le four maintenant \u00E0 {temp}{equipmentNote}. Pendant ce temps, la p\u00E2te fait son appr\u00EAt en plaque.",
     "timeline.preheat.descDuringRest": "Allumez le four maintenant à {temp}{equipmentNote}. Pendant ce temps, les pâtons reposent.",
     "tip.waterTemp": "",
     "hint.flourWeak": "farine faible (00 classique)",
@@ -779,6 +781,7 @@ export const FR_LOCALE: CmsContent = {
     "version.label.Bilanciata": "Équilibrée",
     "timelineComfort.title": "Timeline confortable",
     "timelineComfort.active": "Activé : évite les étapes nocturnes.",
+    "timelineComfort.activePartial": "Activ\u00E9e, mais certaines \u00E9tapes restent la nuit : choisissez un autre repas ci-dessus.",
     "timelineComfort.nightDetected": "Étapes nocturnes actives détectées.",
     "timelineComfort.idle": "Optimisez le planning si nécessaire.",
     "timeline.preheat.title": "Four au maximum",
@@ -832,6 +835,7 @@ export const FR_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Étalez le premier disque dans la plaque huilée ; gardez le second de côté.",
     "timeline.shape.closedStuffed": "Étalez le disque de base dans la plaque, en gardant le second pour fermer.",
     "timeline.shape.rectangular": "Étalez à la main dans la plaque huilée",
+    "timeline.shape.pan": "\u00C9talez la p\u00E2te \u00E0 la main dans la plaque huil\u00E9e, jusque dans les coins ; puis laissez-la pousser sur place.",
     "timeline.shape.thin": "Étalez au rouleau, très finement",
     "timeline.shape.round": "Étalez à la main depuis le centre, en préservant le bord",
     "timeline.shape.title": "Façonnage",
@@ -893,7 +897,8 @@ export const FR_LOCALE: CmsContent = {
         'Le pr\u00E9-ferment est comme un "ap\u00E9ritif" pour la levure. M\u00E9langer et laisser reposer couvert.',
       tipNerd:
         "Le pr\u00E9-ferment produit des acides organiques (lactique/ac\u00E9tique) qui abaissent le pH \u00E0 ~4,5, am\u00E9liorant le r\u00E9seau de gluten.",
-      longDesc: "Le pr\u00E9-ferment est une petite portion de farine et d'eau (avec peu de levure) que vous faites m\u00FBrir AVANT la vraie p\u00E2te. Versez dans le r\u00E9cipient l'eau \u00E0 temp\u00E9rature ambiante, dissolvez la levure de boulanger, ajoutez la farine et m\u00E9langez \u00E0 la cuill\u00E8re jusqu'\u00E0 obtenir une bouillie \u00E9paisse. Couvrez de film et laissez m\u00FBrir 16-18 heures \u00E0 18\u00B0C (cave/temp\u00E9rature ambiante basse). Il est pr\u00EAt quand vous voyez beaucoup de bulles en surface et sentez une odeur d'agrumes/de yaourt.",
+      longDesc: "Le poolish, c'est de la farine et de l'eau \u00E0 parts \u00E9gales avec la levure, qu'on laisse m\u00FBrir avant la p\u00E2te. Dissolvez la levure dans l'eau, ajoutez la farine et m\u00E9langez \u00E0 la cuill\u00E8re jusqu'\u00E0 obtenir une p\u00E2te molle. Couvrez et laissez m\u00FBrir {hours} \u00E0 {prefTemp}. Il est pr\u00EAt quand la surface est couverte de bulles et que le centre commence \u00E0 peine \u00E0 retomber ; il sent l\u00E9g\u00E8rement acidul\u00E9.",
+      longDescAlt: "La biga est une pr\u00E9-p\u00E2te ferme : farine et eau \u00E0 environ {prefHydration}, avec la levure. Dissolvez la levure dans l'eau, versez-la sur la farine et m\u00E9langez quelques secondes, juste le temps que l'eau soit absorb\u00E9e : il doit rester des grumeaux irr\u00E9guliers, pas une p\u00E2te lisse. Couvrez et laissez m\u00FBrir {hours} \u00E0 {prefTemp}. Elle est pr\u00EAte quand elle a gonfl\u00E9, sent le fruit et est pleine de filaments \u00E0 l'int\u00E9rieur.",
     },
     mix: {
       title: "P\u00E9trissage",
@@ -956,6 +961,13 @@ export const FR_LOCALE: CmsContent = {
       tipNerd:
         "Test du doigt : retour lent = fermentation optimale. Trop rapide = sous-ferment\u00E9. Pas de retour = sur-ferment\u00E9.",
       longDesc: "Apr\u00E8s la division, les p\u00E2tons doivent se d\u00E9tendre et gonfler une derni\u00E8re fois. Gardez-les couverts \u00E0 temp\u00E9rature ambiante. Il sera temps de les \u00E9taler quand : (1) ils ont doubl\u00E9 de volume, (2) la surface est bomb\u00E9e et lisse, (3) le test du doigt remonte lentement (appuyez avec le doigt : la p\u00E2te doit revenir en ~5 secondes). Si la p\u00E2te ne revient pas = surferment\u00E9e ; si elle revient tout de suite = pas encore pr\u00EAte.",
+    },
+    proof_pan: {
+      title: "Appr\u00EAt en plaque",
+      desc: "Pousse finale en plaque \u00E0 {temp}",
+      longDesc: "La p\u00E2te, d\u00E9j\u00E0 \u00E9tal\u00E9e dans la plaque, doit gonfler une derni\u00E8re fois. Couvrez la plaque et laissez-la \u00E0 temp\u00E9rature ambiante. Elle est pr\u00EAte quand elle a nettement gonfl\u00E9, que la surface est bomb\u00E9e et pleine de bulles et qu'une l\u00E9g\u00E8re pression du doigt remonte lentement. Si elle s'est r\u00E9tract\u00E9e des coins, \u00E9talez-la de nouveau du bout des doigts.",
+      tipBeginner: "La p\u00E2te en plaque est pr\u00EAte quand elle est gonfl\u00E9e et souple : press\u00E9e du doigt, elle remonte lentement.",
+      tipNerd: "La pousse en plaque fixe la forme : l'alv\u00E9olage se forme dans le r\u00E9cipient de cuisson, sans \u00E9talage ult\u00E9rieur qui d\u00E9gazerait la p\u00E2te.",
     },
     shape: {
       title: "Fa\u00E7onnage",
@@ -1685,10 +1697,10 @@ export const FR_LOCALE: CmsContent = {
     comfortLabel: "{duration} confort",
     totalDuration: "{duration} au total",
     finalDoughStageTitle: "P\u00E2te finale",
-    rule55Title: "R\u00E8gle du 55",
-    rule55AriaOpen: "Qu'est-ce que la R\u00E8gle du 55 ?",
-    rule55AriaClose: "Masquer l'explication de la R\u00E8gle du 55",
-    rule55Description: "R\u00E8gle empirique : T_ambiante + T_farine + T_eau \u2248 {target}, pour obtenir ~{final} de p\u00E2te finale. Si vous p\u00E9trissez \u00E0 la machine, la friction ajoute {frictionMin}-{frictionMax} de plus.",
+    rule55Title: "Temp\u00E9rature de l'eau",
+    rule55AriaOpen: "Comment se calcule la temp\u00E9rature de l'eau",
+    rule55AriaClose: "Masquer l'explication",
+    rule55Description: "Ambiante, farine et eau doivent faire environ {sum} au total : trois fois la temp\u00E9rature de p\u00E2te voulue ({ddt}) moins la chaleur du p\u00E9trin ({friction}). C'est pour cela que l'eau change avec la temp\u00E9rature de votre cuisine.",
     stepDetailsShow: "Comment faire",
     stepDetailsHide: "Masquer les d\u00E9tails",
     matchDetailsShow: "D\u00E9tails du score",

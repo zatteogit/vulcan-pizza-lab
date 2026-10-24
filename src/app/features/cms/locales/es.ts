@@ -148,7 +148,7 @@ export const ES_LOCALE: CmsContent = {
     verdictLaterTime: "Elige una hora dentro de al menos {hours}.",
     verdictAlternatives: "Con estas condiciones funcionan:",
     verdictRecipeBelow: "Abajo tienes igualmente la receta más cercana, si quieres intentarlo.",
-    recipeScore: "Match",
+    recipeScore: "Compatibilidad con tu cocina",
     nerdToggle: "PizzaNerd",
     nerdActive: "Activar PizzaNerd",
     scienceTitle: "{brand} Science",
@@ -713,9 +713,9 @@ export const ES_LOCALE: CmsContent = {
     "rec.sourdoughOnlyShort":
       "Solo masa madre: fermentación corta difícil",
     "tip.waterTempCold":
-      "Regla del 55: usa agua de la nevera ({temp}). El amasado a máquina calienta la masa.",
+      "Usa agua fr\u00EDa de la nevera ({temp}): la amasadora calienta la masa.",
     "tip.waterTempNormal":
-      "Regla del 55: usa agua a {temp} para alcanzar {ddt} de masa.",
+      "Agua a {temp} para tener la masa a {ddt}.",
     "tip.frictionNote":
       "Compensación por fricción de la amasadora: {friction}",
     "gen.notWoodOven": "Este estilo se hace en horno de le\u00F1a: con tu horno el resultado se acerca, pero no es el can\u00F3nico.",
@@ -738,6 +738,8 @@ export const ES_LOCALE: CmsContent = {
     "tip.waterTempLimitMax": "Cocina fría: incluso con agua a {temp} la masa queda por debajo de {ddt}. No calientes más el agua: guarda la harina en un lugar templado o alarga un poco la fermentación en bloque.",
     "tip.waterTempLimitMin": "Cocina cálida: incluso con agua a {temp} la masa supera {ddt}. Usa agua helada, guarda la harina en la nevera o acorta un poco la fermentación en bloque.",
     "timeline.preheat.descWholeProof": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, los bollos hacen el leudado final.",
+    "timeline.preheat.descPan": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, la masa termina de fermentar en la bandeja.",
+    "timeline.preheat.descPanWholeProof": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, la masa hace la fermentaci\u00F3n final en la bandeja.",
     "timeline.preheat.descDuringRest": "Enciende el horno ahora a {temp}{equipmentNote}. Mientras tanto, los bollos reposan.",
     "tip.waterTemp": "",
     "hint.flourWeak": "harina floja (00 clásica)",
@@ -780,6 +782,7 @@ export const ES_LOCALE: CmsContent = {
     "version.label.Bilanciata": "Equilibrada",
     "timelineComfort.title": "Línea de tiempo cómoda",
     "timelineComfort.active": "Activo: evita fases nocturnas.",
+    "timelineComfort.activePartial": "Activa, pero algunas fases siguen cayendo de noche: elige otra comida arriba.",
     "timelineComfort.nightDetected": "Fases nocturnas activas detectadas.",
     "timelineComfort.idle": "Optimiza el horario si es necesario.",
     "timeline.preheat.title": "Horno al máximo",
@@ -833,6 +836,7 @@ export const ES_LOCALE: CmsContent = {
     "timeline.shape.stacked": "Estira el primer disco en la bandeja aceitada; reserva el segundo.",
     "timeline.shape.closedStuffed": "Estira el disco de base en la bandeja y reserva el segundo para cerrar.",
     "timeline.shape.rectangular": "Estira la masa con las manos en la bandeja aceitada",
+    "timeline.shape.pan": "Estira la masa con las manos en la bandeja aceitada, hasta las esquinas; despu\u00E9s d\u00E9jala levar ah\u00ED.",
     "timeline.shape.thin": "Estira con el rodillo, muy fina",
     "timeline.shape.round": "Estira a mano desde el centro, respetando el borde",
     "timeline.shape.title": "Estirado",
@@ -894,7 +898,8 @@ export const ES_LOCALE: CmsContent = {
         'El pre-fermento es como un "aperitivo" para la levadura. Mezcla y deja reposar tapado.',
       tipNerd:
         "El pre-fermento produce \u00E1cidos org\u00E1nicos (l\u00E1ctico/ac\u00E9tico) que bajan el pH a ~4.5, mejorando la red de gluten y la vida \u00FAtil.",
-      longDesc: "El prefermento es una peque\u00F1a porci\u00F3n de harina y agua (con poca levadura) que dejas madurar ANTES de la masa propiamente dicha. Vierte en el recipiente el agua a temperatura ambiente, disuelve la levadura fresca, a\u00F1ade la harina y mezcla con una cuchara hasta obtener una papilla densa. Cubre con film y deja madurar 16-18 horas a 18\u00B0C (bodega o ambiente fresco). Estar\u00E1 listo cuando veas muchas burbujas en la superficie y un aroma c\u00EDtrico, a yogur.",
+      longDesc: "El poolish es harina y agua a partes iguales con la levadura, que madura antes de la masa. Disuelve la levadura en el agua, a\u00F1ade la harina y mezcla con una cuchara hasta obtener una papilla blanda. Tapa y deja madurar {hours} a {prefTemp}. Est\u00E1 listo cuando la superficie est\u00E1 llena de burbujas y el centro empieza a bajar; huele ligeramente \u00E1cido.",
+      longDescAlt: "La biga es una masa madre seca: harina y agua a un {prefHydration} aproximadamente, con la levadura. Disuelve la levadura en el agua, v\u00E9rtela sobre la harina y mezcla unos segundos, solo hasta que el agua se absorba: deben quedar grumos irregulares, no una masa lisa. Tapa y deja madurar {hours} a {prefTemp}. Est\u00E1 lista cuando ha crecido, huele a fruta y por dentro est\u00E1 llena de filamentos.",
     },
     mix: {
       title: "Amasado",
@@ -957,6 +962,13 @@ export const ES_LOCALE: CmsContent = {
       tipNerd:
         "Test del dedo: retorno lento = fermentaci\u00F3n \u00F3ptima. Demasiado r\u00E1pido = sub-fermentado. Sin retorno = sobre-fermentado.",
       longDesc: "Tras el boleado, los bollos deben relajarse e hincharse una \u00FAltima vez. Mantenlos tapados a temperatura ambiente. Ser\u00E1 el momento de estirarlos cuando: (1) hayan duplicado su volumen, (2) la superficie est\u00E9 abombada y lisa, (3) la prueba del dedo se recupere despacio (presiona con el dedo: debe volver en ~5 segundos). Si la masa no vuelve = sobrefermentada; si vuelve enseguida = todav\u00EDa le falta.",
+    },
+    proof_pan: {
+      title: "Fermentaci\u00F3n final en bandeja",
+      desc: "Fermentaci\u00F3n final en bandeja a {temp}",
+      longDesc: "La masa, ya estirada en la bandeja, debe hincharse una \u00FAltima vez. Tapa la bandeja y d\u00E9jala a temperatura ambiente. Est\u00E1 lista cuando ha crecido claramente, la superficie est\u00E1 abombada y llena de burbujas y, al presionar suave con un dedo, la marca vuelve despacio. Si se ha retirado de las esquinas, vuelve a extenderla con las yemas de los dedos.",
+      tipBeginner: "La masa en bandeja est\u00E1 lista cuando est\u00E1 hinchada y blanda: al presionarla con un dedo, vuelve despacio.",
+      tipNerd: "Fermentar en la bandeja fija la forma: el alveolado se forma en el recipiente de cocci\u00F3n, sin un estirado posterior que desgasifique la masa.",
     },
     shape: {
       title: "Estirado",
@@ -1679,10 +1691,10 @@ export const ES_LOCALE: CmsContent = {
     comfortLabel: "{duration} con margen",
     totalDuration: "{duration} en total",
     finalDoughStageTitle: "Masa final",
-    rule55Title: "Regla 55",
-    rule55AriaOpen: "Qu\u00E9 es la Regla 55",
-    rule55AriaClose: "Ocultar la explicaci\u00F3n de la Regla 55",
-    rule55Description: "Regla emp\u00EDrica: T_ambiente + T_harina + T_agua \u2248 {target}, para obtener ~{final} de masa final. Si amasas a m\u00E1quina, la fricci\u00F3n a\u00F1ade {frictionMin}-{frictionMax} m\u00E1s.",
+    rule55Title: "Temperatura del agua",
+    rule55AriaOpen: "C\u00F3mo se calcula la temperatura del agua",
+    rule55AriaClose: "Ocultar la explicaci\u00F3n",
+    rule55Description: "Ambiente, harina y agua deben sumar unos {sum}: tres veces la temperatura de masa que quieres ({ddt}) menos el calor de la amasadora ({friction}). Por eso el agua cambia con la temperatura de tu cocina.",
     stepDetailsShow: "C\u00F3mo se hace",
     stepDetailsHide: "Ocultar detalles",
     matchDetailsShow: "Detalles de la puntuaci\u00F3n",

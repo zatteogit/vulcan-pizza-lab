@@ -45,6 +45,8 @@ interface ProcedureHeroControlsProps {
   handleEndTimeInput: (e: ChangeEvent<HTMLInputElement> | FocusEvent<HTMLInputElement>) => void;
   mealSlots: (TimeSlot & { idealStart: Date; isFeasible: boolean })[];
   comfortToggled: boolean;
+  /** Audit totale n. 2: fasi attive che restano di notte col piano corrente. */
+  nightActivesLeft?: number;
   setComfortToggled: Dispatch<SetStateAction<boolean>>;
   currentComfortPlan: ReturnType<typeof optimizeComfort>;
   preComfortStart: MutableRefObject<Date | null>;
@@ -65,6 +67,7 @@ export function ProcedureHeroControls({
   handleEndTimeInput,
   mealSlots,
   comfortToggled,
+  nightActivesLeft = 0,
   setComfortToggled,
   currentComfortPlan,
   preComfortStart,
@@ -288,7 +291,9 @@ export function ProcedureHeroControls({
           </div>
           <div id={comfortDescId} className={comfortDescClass}>
             {comfortToggled
-              ? engineMessage(cms, "timelineComfort.active", "Attiva: evita le fasi notturne.")
+              ? nightActivesLeft > 0
+                ? engineMessage(cms, "timelineComfort.activePartial", "Attiva, ma alcune fasi restano di notte: scegli un altro pasto qui sopra.")
+                : engineMessage(cms, "timelineComfort.active", "Attiva: evita le fasi notturne.")
               : currentComfortPlan
                 ? engineMessage(cms, "timelineComfort.nightDetected", "Fasi attive di notte rilevate.")
                 : engineMessage(cms, "timelineComfort.idle", "Ottimizza gli orari se serve.")}

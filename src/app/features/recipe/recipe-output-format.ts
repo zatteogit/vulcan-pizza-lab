@@ -7,6 +7,7 @@ import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
 import { engineMsgTexts } from "./engine-msg-text";
 import { localizeToppingStepText } from "../../data/topping-i18n/localize";
 import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
+import { computePreFermentSplit } from "../../domain/pre-ferment-split";
 import {
   getBakingTimeByStyle,
   getEquipmentByStyle,
@@ -108,6 +109,29 @@ export function getParametricTip(
 
 
 /* ═══ CLOCK HELPERS ═══ */
+
+/** Audit totale n. 2: senza un pasto scelto il piano partiva «adesso» e la
+ *  pizza usciva alle 3 di notte. Ora si ancora al primo pranzo (12:30) o
+ *  cena (20:00) raggiungibile, come gli slot di Crea, e si parte
+ *  all'indietro. */
+export function defaultMealStart(totalMinutes: number, now: Date = new Date()): Date {
+  let firstReachable: Date | null = null;
+  for (let day = 0; day < 8; day++) {
+    for (const [h, m] of [[12, 30], [20, 0]] as const) {
+      const meal = new Date(now);
+      meal.setDate(meal.getDate() + day);
+      meal.setHours(h, m, 0, 0);
+      const start = new Date(meal.getTime() - totalMinutes * 60_000);
+      if (start.getTime() < now.getTime()) continue;
+      firstReachable ??= start;
+      // Anche l'impasto va fatto di giorno: si scarta un inizio fra le 22 e le 7.
+      const sh = start.getHours();
+      if (sh >= 7 && sh < 22) return roundToQuarter(start);
+    }
+  }
+  return roundToQuarter(firstReachable ?? now);
+}
+
 export function roundToQuarter(date: Date): Date {
   const d = new Date(date);
   const mins = d.getMinutes();
@@ -210,7 +234,7 @@ function isNightHour(h: number): boolean {
   return h >= 23 || h < 7;
 }
 
-function countNightActives(
+export function countNightActives(
   timeline: TimelineStep[],
   startMs: number,
   stretch: Record<number, number>,
@@ -529,7 +553,9 @@ export function localizeStep(
     ? fmt.number(fermRatio, { minimumFractionDigits: 1, maximumFractionDigits: 1 })
     : fermRatio.toFixed(1);
   const isUnleavened = !!recipe.style.dough.unleavened;
-  const prefType = recipe.style.dough.process_type.includes("poolish") ? "poolish" : "biga";
+  /* Audit totale n. 3: il tipo viene dalla ricetta, come lo scorporo degli
+   * ingredienti (prima «direct|biga|poolish» diventava poolish qui e biga là). */
+  const prefType = recipe.pre_ferment_type === "biga" ? "biga" : "poolish";
   const formatTemp = (value: number) =>
     fmt ? fmt.celsius(value) : `${Math.round(value)}°C`;
 
@@ -569,9 +595,15 @@ export function localizeStep(
       break;
     }
     case "proof":
-      entry = isUnleavened ? (labels.rest || labels.proof) : labels.proof;
+      entry = isUnleavened
+        ? (labels.rest || labels.proof)
+        : step.variant === "pan"
+          ? (labels.proof_pan || labels.proof)
+          : labels.proof;
       break;
     case "shape":
+      // Audit totale n. 7: stesura in teglia prima dell'appretto, testo del motore.
+      if (step.variant === "pan") return formatRawStep(step);
       // Con layout speciale, motore già genera desc specifica per il tipo di stesura
       if (hasSpecialLayout) return formatRawStep(step);
       entry = isThin ? (labels.shape_thin || labels.shape) : (isRect && labels.shape?.descAlt) ? labels.shape : labels.shape;
@@ -606,7 +638,19 @@ export function localizeStep(
       // ENG-5: cosa fanno i panetti mentre il forno scalda dipende dal piano
       // del motore (appretto lungo, appretto corto, impasto non lievitato).
       const preheatDesc =
-        step.variant === "whole_proof"
+        recipe.style.proof_in_pan && step.variant !== "during_rest"
+          ? step.variant === "whole_proof"
+            ? engineMessage(
+                cms,
+                "timeline.preheat.descPanWholeProof",
+                "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto fa l'appretto in teglia.",
+              )
+            : engineMessage(
+                cms,
+                "timeline.preheat.descPan",
+                "Accendi ora il forno a {temp}{equipmentNote}. Intanto l'impasto finisce l'appretto in teglia.",
+              )
+          : step.variant === "whole_proof"
           ? engineMessage(
               cms,
               "timeline.preheat.descWholeProof",
@@ -690,6 +734,14 @@ export function localizeStep(
     fridgeTemp: formatTemp(4),
     type: prefType,
     factor: fermFactor,
+    /* Durata del passo dalla timeline; temperatura e idratazione del tipo di
+     * pre-fermento (fonti in docs/ricerca/prefermenti-fonti-2026-10-24.md). */
+    /* al quarto d'ora, come la durata mostrata sopra il passo */
+    hours: fmt
+      ? fmt.durationMinutes(Math.round(step.duration_minutes / 15) * 15)
+      : `${Math.round(step.duration_minutes / 60)} h`,
+    prefTemp: prefType === "biga" ? `${formatTemp(18)}–${formatTemp(20)}` : `${formatTemp(20)}–${formatTemp(22)}`,
+    prefHydration: fmt ? fmt.percent(45) : "45%",
   };
   const title = entry.title || step.title;
   let desc = entry.desc || step.description;
@@ -710,8 +762,11 @@ export function localizeStep(
     : step.tip;
 
   // Spiegazione estesa opzionale (interpolata con le stesse vars)
-  const longDesc = entry.longDesc
-    ? normalizeTemperatureUnitSuffixes(t(entry.longDesc, vars))
+  const longText = step.id === "preferment" && prefType === "biga" && entry.longDescAlt
+    ? entry.longDescAlt
+    : entry.longDesc;
+  const longDesc = longText
+    ? normalizeTemperatureUnitSuffixes(t(longText, vars))
     : undefined;
 
   return { title, description: desc, longDesc, tip };
@@ -794,4 +849,64 @@ export function getToppingIngredientSectionOrder(ingredients: ToppingIngredient[
     }
   });
   return order;
+}
+
+
+/* ═══ Audit totale n. 12 — dosi dentro i passi ═══
+ * In modalità cottura i passi non riportavano i grammi (lo staglio rimandava a
+ * «ingredienti sotto», che lì non ci sono). Dosi per i passi che le usano:
+ * pre-fermento, impasto, staglio. */
+export interface StepQuantity {
+  label: string;
+  value: string;
+}
+
+export function stepQuantities(
+  stepId: string,
+  recipe: GeneratedRecipe,
+  cms: CmsContent,
+  fmt: ReturnType<typeof createFormatter>,
+): StepQuantity[] {
+  const ui = cms.ui;
+  const yeastLabel = cms.yeastLabels?.[recipe.yeast_type] ?? recipe.yeast_type;
+  const fatType = recipe.style.dough.fat_type;
+  const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
+  const split = recipe.has_pre_ferment
+    ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type })
+    : null;
+  const yeast = recipe.yeast_g > 0 ? [{ label: yeastLabel, value: fmt.grams(recipe.yeast_g) }] : [];
+  switch (stepId) {
+    case "preferment":
+      return split
+        ? [
+            { label: ui.flour, value: fmt.grams(split.prefermentFlourG) },
+            { label: ui.water, value: fmt.grams(split.prefermentWaterG) },
+            ...yeast,
+          ]
+        : [];
+    case "mix": {
+      const rest = [
+        ...(recipe.salt_g > 0 ? [{ label: ui.salt, value: fmt.grams(recipe.salt_g) }] : []),
+        ...(recipe.sugar_g > 0 ? [{ label: ui.sugar, value: fmt.grams(recipe.sugar_g) }] : []),
+        ...(recipe.fat_g > 0 ? [{ label: fatLabel, value: fmt.grams(recipe.fat_g) }] : []),
+      ];
+      return split
+        ? [
+            { label: split.name, value: fmt.grams(split.prefermentFlourG + split.prefermentWaterG) },
+            { label: ui.flour, value: fmt.grams(split.mainFlourG) },
+            { label: ui.water, value: fmt.grams(split.mainWaterG) },
+            ...rest,
+          ]
+        : [
+            { label: ui.flour, value: fmt.grams(recipe.flour_g) },
+            { label: ui.water, value: fmt.grams(recipe.water_g) },
+            ...yeast,
+            ...rest,
+          ];
+    }
+    case "divide":
+      return [{ label: `${recipe.dough_balls} ×`, value: fmt.grams(recipe.ball_weight_g) }];
+    default:
+      return [];
+  }
 }

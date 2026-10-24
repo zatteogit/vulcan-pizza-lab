@@ -28,11 +28,16 @@ export function RecipeVerdictNotice({
   recipe,
   constraints,
   mealDeadline,
+  embedded = false,
 }: {
   recipe: GeneratedRecipe;
   constraints: UserConstraints;
   /** Con un orario del pasto le alternative devono starci nella finestra. */
   mealDeadline: boolean;
+  /** Dentro il blocco «Compatibilità con la tua cucina»: senza riquadro né
+   *  titolo, che li dà il blocco (nota di Matteo: avviso e compatibilità
+   *  dicevano la stessa cosa due volte). */
+  embedded?: boolean;
 }) {
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
@@ -70,14 +75,8 @@ export function RecipeVerdictNotice({
   });
   const later = laterHours(verdict.blockers);
 
-  return (
-    <Surface as="section" className="recipe-verdict" aria-labelledby="recipe-verdict-title">
-      <header className="recipe-verdict__header">
-        <AlertTriangle aria-hidden="true" size={18} className="recipe-verdict__icon" />
-        <h2 id="recipe-verdict-title" className="type-heading-xs recipe-verdict__title">
-          {cms.ui.verdictTitle}
-        </h2>
-      </header>
+  const body = (
+    <>
       <ul className="recipe-verdict__reasons">
         {reasons.map((reason) => (
           <li key={reason} className="type-body recipe-verdict__reason">
@@ -105,6 +104,19 @@ export function RecipeVerdictNotice({
         </nav>
       )}
       <p className="type-body recipe-verdict__footnote">{cms.ui.verdictRecipeBelow}</p>
+    </>
+  );
+  if (embedded) return <div data-region="section" className="recipe-verdict recipe-verdict--embedded">{body}</div>;
+
+  return (
+    <Surface as="section" className="recipe-verdict" aria-labelledby="recipe-verdict-title">
+      <header className="recipe-verdict__header">
+        <AlertTriangle aria-hidden="true" size={18} className="recipe-verdict__icon" />
+        <h2 id="recipe-verdict-title" className="type-heading-xs recipe-verdict__title">
+          {cms.ui.verdictTitle}
+        </h2>
+      </header>
+      {body}
     </Surface>
   );
 }
