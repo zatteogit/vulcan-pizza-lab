@@ -214,7 +214,7 @@ Correzioni dopo la revisione del ramo:
   `gen.windowTooShort`. I 7 stili con minimo 24 h tornano a 24 h in genera e
   ottimizza (es. California 87 → 88); sparisce l'avviso contraddittorio
   «Con 24h non rientri nella finestra (min 24h)». È l'opzione (a) proposta sopra:
-  **da confermare da Matteo prima del merge.**
+  **confermata da Matteo il 23/10/2026** (M-1 dell'handoff).
 - **Condimento scelto.** Ottimizzatore, soffitto e firma dell'ottimizzazione
   automatica usano lo stesso stile con condimento della ricetta mostrata
   (`styleWithSelectedTopping`). Sonda 28 stili × condimenti × 3/4/8 h × 2 forni:
@@ -235,12 +235,44 @@ Correzioni dopo la revisione del ramo:
 - Test: 81 → 90 (`use-recipe-state.test.ts` nuovo; proprietà su condimenti e caso
   senza orario).
 
+## Seguito del 23/10 (handoff M-1…M-5, M-9, M-10)
+
+Decisioni di Matteo del 23/10/2026: M-1 confermato; slot al quarto d'ora per
+difetto (M-2, opzione a); consigli allineati all'esito della ricetta sul forno.
+
+- **M-2 · Slot del pasto.** `generateTimeSlots` arrotonda al quarto d'ora per
+  difetto (`floorToQuarterHour`): mai oltre il tempo reale, al massimo 14 min in
+  meno. Prima: alle 16:20 «Stasera» valeva 4 h con 3 h 40 min reali. `TimeSlot`
+  porta `meal` e `dayOffset`; etichette e sottotitoli si compongono per lingua
+  (`features/recipe/time-slot-text.ts`). Prima i giorni della settimana e «Nessuna
+  preferenza» restavano in italiano e «Stasera» diceva «4-6 ore» a ogni ora.
+- **M-3.** `recommendStyles` legge le ore al quarto d'ora per difetto.
+- **M-4 · Recco.** Candidati delle ore al quarto d'ora; per gli impasti non
+  lievitati niente candidato oltre il massimo (×1,25). Recco, 24 h, forno di casa:
+  3 h → dentro 0,5–2 h, su 7 durate × con e senza orario.
+- **M-5 · Testi.** Un solo formattatore (`features/recipe/engine-msg-text.ts`):
+  decimali per lingua (63,7% / 63.7%), temperature in °C o °F, ore come durate
+  («3 h 45 min»). Aggiunti in 7 lingue i 13 template che mancavano nel CMS
+  (motivazioni dell'ottimizzatore, forno inadatto, finestra dello stile): prima
+  uscivano in italiano ovunque. `resolveEngineMsgs` sostituisce anche i parametri
+  ripetuti (`gen.timeBelowStyleWindow` lasciava un `{fMin}` visibile).
+- **M-10 · Esito esplicito.** `GeneratedRecipe.verdict`: `ok`, `warnings` o
+  `not_feasible`, con i motivi bloccanti: forno sotto la soglia termica dello stile
+  (stessa di `feas.thermalUnviable`), timeline oltre l'orario del pasto,
+  lievitazione sotto metà del minimo dello stile. `feasibleAlternativeStyles`
+  propone stili fattibili con gli stessi vincoli, i più simili per primi. La UI
+  mostra «Così non è fattibile» sopra la ricetta (sostituisce l'avviso ENG-4).
+  `recommendStyles` usa la stessa soglia termica: con forno di casa a 250 °C
+  Canotto, Calzone e Pinsa passano da «buono» a «non fattibile».
+- **M-9 · Golden test** (`src/app/domain/golden/`): 28 stili × 3 scenari (ideale,
+  forno di casa 24 h, pasto fra 2 h) con l'esito atteso scritto a mano; masse,
+  forno e tempi in `recipes.golden.json`.
+
 ## Da decidere o da fare
 
-- Gli slot del pasto arrotondano le ore (`Math.round`): la finestra può superare
-  di fino a 30 min il tempo reale fino al pasto, senza avviso. Opzioni: (a, consigliata)
-  ore al quarto d'ora per difetto, con i testi che mostrano le ore formattati per
-  lingua; (b) ore intere per difetto (fino a 59 min in meno); (c) lasciare così.
-- `recommendStyles` confronta ancora il minimo dello stile con le ore intere.
-- Ottimizzatore della Recco: i candidati arrotondati all'ora portano a 3 h (range 0,5–2 h).
-- Le motivazioni dell'ottimizzatore mostrano i decimali con il punto (63.7%).
+- **Pinsa romana (C-4):** il catalogo le dà 350–420 °C, quindi in forno di casa
+  risulta non fattibile. Da verificare su fonti prima di cambiare il dato.
+- Lo slot «Nessuna preferenza» vale ancora 24 h fisse.
+- `requires_wood_oven` blocca i consigli (Napoletana STG con forno a gas da 450 °C
+  è «non fattibile» nei consigli) ma non l'esito della ricetta: da decidere se il
+  forno a legna del disciplinare è un vincolo o un avviso.

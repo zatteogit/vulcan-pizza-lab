@@ -149,11 +149,26 @@ Fase 2:
 
 ## 6. Decisioni da chiedere a Matteo
 
-1. **`meal_deadline`** (M-1): confermi che «Nessuna preferenza» non è una scadenza? Opzione consigliata: sì, come è stato unito.
-2. **Arrotondamento degli slot** (M-2): (a, consigliata) quarto d'ora per difetto; (b) ore intere per difetto; (c) lasciare così.
+1. ~~**`meal_deadline`** (M-1)~~: confermato il 23/10 (D-010).
+2. ~~**Arrotondamento degli slot** (M-2)~~: quarto d'ora per difetto, deciso il 23/10 (D-011).
 3. ~~Quanto della fase 1 prima della fase 2~~: deciso il 23/10, tutta la fase 1 prima.
 4. **Primo tipo di partner da simulare:** (a, consigliata) mulino, perché catalogo farine e dati tecnici sono il cuore del motore; (b) produttore di forni.
 5. **Nome:** resta Vulcan finché non arriva un parere sul marchio. Non rinominare senza decisione: il marchio grafico è una «V».
+
+## 6bis. Avanzamento
+
+| Data | Voci chiuse | Dove |
+|---|---|---|
+| 23–24/10/2026 | M-1 (confermato), M-2, M-3, M-4, M-5, M-9, M-10, P-1, P-2 | ramo `claude/bold-brahmagupta-s484he`; dettaglio in `docs/motore-correzioni-2026-10-22.md` |
+
+Emerse nel lavoro, da pianificare in fase 1:
+
+- **I18N-1 (P1):** il catalogo `uiMessage` (`src/app/i18n/ui-messages.it.ts`, circa
+  360 stringhe) esiste solo in italiano: in tutte le altre lingue quelle parti
+  dell'interfaccia restano in italiano. Va tradotto nelle 6 lingue.
+- **C-4, Pinsa:** range 350–420 °C da verificare su fonti (decisione D-013).
+- Le chiavi `timeSlots.day_after` e `timeSlots.weekend` del CMS non corrispondono
+  a nessuno slot del motore, e i sottotitoli fissi degli slot non si usano più.
 
 ## 7. Riferimenti nel repository
 

@@ -46,6 +46,10 @@ firmato da un agente, «nessun segno» se non c'è traccia (non prova l'assenza)
 | D-007 | 2026-07-04 → 2026-07-11 | UX | Correzioni chieste con le annotazioni del debug overlay | — | `vulcan-debug-registry.json` (52 voci locali, 51 risolte); commit `8876a83`, `7884d3b`, `573f5f4` | da confermare | da verificare |
 | D-008 | 2026-10 | Prodotto | Nome del prodotto in un solo punto; il nuovo nome non è ancora scelto | nome scritto in ogni file | PR di questo ramo; `docs/brand/nome-prodotto.md` | da confermare | autore delle modifiche: agente AI |
 | D-009 | 2026-10 | Sicurezza | Annotazioni, tema globale e debug spenti in produzione; `frame-ancestors 'self'` | API protette da segreto; nessun vincolo | PR di questo ramo; `worker/index.ts`, `public/_headers` | da confermare | autore delle modifiche: agente AI |
+| D-010 | 2026-10-23 | Motore | «Nessuna preferenza» non è una scadenza (`meal_deadline`) | trattare anche «Nessuna preferenza» come scadenza | risposta a scelta nella sessione dell'agente del 23/10; `docs/motore-correzioni-2026-10-22.md` | Matteo | domanda e modifiche: agente AI |
+| D-011 | 2026-10-23 | Motore | Slot del pasto al quarto d'ora per difetto | ore intere per difetto; `Math.round` | come D-010 | Matteo | domanda e modifiche: agente AI |
+| D-012 | 2026-10-23 | Motore | Consigli allineati all'esito della ricetta sul forno (soglia termica unica) | forno freddo come solo avviso; lasciare l'incoerenza | come D-010 | Matteo | domanda e modifiche: agente AI |
+| D-013 | 2026-10-23 | Contenuti | Il range di temperatura della Pinsa va verificato su fonti (C-4) prima di cambiarlo | range attuale corretto | come D-010 | Matteo | domanda: agente AI |
 
 D-008 e D-009 arrivano dal brief del lavoro come decisioni del proprietario;
 nel repository non c'è ancora un riscontro scritto, quindi restano da
