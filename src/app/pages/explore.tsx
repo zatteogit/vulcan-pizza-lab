@@ -30,6 +30,7 @@ import {
 SIGNATURE_RECIPES,
 type SignatureRecipe,
 } from "../data/signature-recipes";
+import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
 import { motionDelay, motionSpring } from "../components/ds/motion";
@@ -40,7 +41,7 @@ import { uiMessage } from "../i18n/ui-messages";
 const SIGNATURE_BADGE_KEYS: Record<string, keyof CmsContent["ui"]> = {
   "Disciplinare AVPN": "badgeAvpnRules",
   "Disciplinare IGP": "badgeIgpRules",
-  "Metodo Bonci": "badgeBonciMethod",
+  "Ispirata a Bonci": "badgeBonciMethod",
   "Spuntino romano": "badgeRomanSnack",
   "Stile panaria romana": "badgeRomanBakery",
 };
@@ -107,7 +108,7 @@ function MatchHeartIcon({ score }: { score: number }) {
 
 /* ── Componente Editoriale per la Ricetta in Primo Piano ── */
 function FeaturedRecipeCard({
-  recipe,
+  recipe: rawRecipe,
   isNerd,
   exploreBackTo,
 }: {
@@ -116,6 +117,7 @@ function FeaturedRecipeCard({
   exploreBackTo: string;
 }) {
   const { cms } = useCms();
+  const recipe = localizeSignatureRecipe(rawRecipe, cms.inspirationI18n);
   const [hovered, setHovered] = useState(false);
   const photo =
     recipe.photo ||
@@ -550,7 +552,7 @@ export function ExplorePage() {
    nome ricetta + badge "Disciplinare AVPN" / "Stile panaria romana" / ecc.
    Click → /recipe/{style_id}?topping={concept_id} (chip topping pre-selezionato). */
 function SignatureRecipeCard({
-  recipe,
+  recipe: rawRecipe,
   index,
   cms,
   isNerd,
@@ -562,6 +564,7 @@ function SignatureRecipeCard({
   isNerd?: boolean;
   exploreBackTo: string;
 }) {
+  const recipe = localizeSignatureRecipe(rawRecipe, cms.inspirationI18n);
   const photo =
     recipe.photo ||
     cms.media?.stylePhotos?.[recipe.style_id] ||

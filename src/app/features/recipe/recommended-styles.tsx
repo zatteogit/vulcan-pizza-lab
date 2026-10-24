@@ -59,6 +59,7 @@ function sortByVisibleMatch(items: RecommendationWithVariant[]): RecommendationW
 
 /** Nome breve della variante per la card ("AVPN", "Franco Pepe"). */
 function variantShortName(it: Interpretation): string {
+  if (it.short_name) return it.short_name;
   const name =
     it.author ?? it.pizzeria ?? it.organization ?? it.signature_name ?? "";
   return name.split("—")[0].trim();

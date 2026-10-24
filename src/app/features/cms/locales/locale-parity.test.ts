@@ -15,7 +15,7 @@ import { JA_LOCALE } from "./ja";
  * Qui ogni testo di CMS_DEFAULTS deve esistere in ogni bundle. Numeri e booleani
  * non sono testo; media e i cataloghi con test propri restano fuori. */
 
-const SKIP = /^(media|messages|toppingI18n|locale)\./;
+const SKIP = /^(media|messages|toppingI18n|inspirationI18n|locale)\./;
 
 function textLeaves(value: unknown, path = "", out: string[] = []): string[] {
   if (typeof value === "string" || Array.isArray(value)) {

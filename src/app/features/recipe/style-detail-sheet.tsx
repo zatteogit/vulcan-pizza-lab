@@ -1,3 +1,4 @@
+import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
@@ -278,7 +279,7 @@ export function StyleDetailSheet({
                       {compatVariants.map((v) => {
                         /* Etichetta autore: maestro/pizzeria/ente, + firma tecnica. */
                         const who = v.author ?? v.pizzeria ?? v.organization ?? "";
-                        const what = v.signature_name ?? "";
+                        const what = localizeInterpretation(v, cms.inspirationI18n).signature_name ?? "";
                         return (
                           <span key={v.id} className="style-detail-techniques__chip">
                             {v.emoji ? `${v.emoji} ` : ""}{who}{what ? ` — ${what}` : ""}

@@ -12016,6 +12016,14 @@
     background: color-mix(in srgb, var(--text-accent) 10%, transparent);
   }
 
+  /* D-027: «Ispirata a…» sotto il nome del maestro, non dentro la storia. */
+  .interpretation-card__signature {
+    margin: var(--space-0-5) 0 0;
+    color: var(--primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+  }
+
   .interpretation-card__meta {
     margin-top: var(--space-0-5);
     color: var(--text-muted);

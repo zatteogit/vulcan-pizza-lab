@@ -214,6 +214,15 @@ Emerse nel lavoro, da pianificare in fase 1:
   caratteristiche nel CMS e mostravano l'italiano in tutte le lingue; ora un test
   lo vieta per ogni stile.
 - ~~**D-020, D-021**~~: forno a legna come avviso; due forni a gas.
+- **I18N-5** in corso il 24/10: fact-check delle 14 ispirazioni (126
+  affermazioni, 21 errate: `docs/ricerca/ispirazioni-fact-check-2026-10-24.md`,
+  riassunto in `docs/fonti-dati.md` §5) e testi riscritti sulle fonti. Decisioni
+  D-024…D-027: tolte «Malati di pizza» e «Confraternita della pinsa»; APITER è il
+  disciplinare di una community; parametri di Martucci, Bianco e Bosco allineati
+  alle fonti; le ricette dei maestri si chiamano «Ispirata a…», anche nella card.
+  Cablaggio per tradurle pronto (`data/inspiration-i18n/`, `LOCALE_BUNDLE_REV`
+  3); mancano i file delle 6 lingue e il test di copertura. Restano da verificare l'anno di
+  Capuano e il nome esatto del consorzio di Recco.
 - ~~**U-5 (P1)**~~ chiuso il 24/10: ricerca a tutta pagina secondo la spec
   INT-NAV. Su mobile la capsula dei tab diventa il campo e la lente «Annulla»;
   su desktop e nella pagina ricetta il campo sta in testa ai risultati. I

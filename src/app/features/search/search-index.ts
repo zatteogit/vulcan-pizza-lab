@@ -3,6 +3,7 @@ import { GLOSSARY_TERMS, getLocalizedTerm } from "../../data/glossary-data";
 import { SIGNATURE_RECIPES } from "../../data/signature-recipes";
 import { TOPPING_CONCEPTS, getVariantsForConcept } from "../../data/topping-library";
 import { toppingConcept } from "../../data/topping-i18n/localize";
+import { localizeSignatureRecipe } from "../../data/inspiration-i18n/localize";
 import { ISSUES_DB, getLocalizedIssue } from "../../data/troubleshooting-data";
 import { formatOrigin, PIZZA_FAMILIES, STYLES_DB } from "../../domain/pizza-engine";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -106,9 +107,10 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
     );
   }
 
-  /* Ricette iconiche: deep link a stile + condimento. Testi ancora solo in
-   * italiano (I18N-5): si trovano anche col nome del condimento tradotto. */
-  for (const rec of SIGNATURE_RECIPES) {
+  /* Ricette iconiche: deep link a stile + condimento, testi nella lingua
+   * attiva (I18N-5); si trovano anche col nome del condimento. */
+  for (const raw of SIGNATURE_RECIPES) {
+    const rec = localizeSignatureRecipe(raw, cms.inspirationI18n);
     const style = STYLES_DB[rec.style_id];
     const concept = toppingConcept(rec.topping_concept_id, cms.toppingI18n);
     out.push(

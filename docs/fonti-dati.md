@@ -292,6 +292,39 @@ cambia con la stagione. Non basta per fissare un numero.
 3. La dose di riferimento (0,1% a 24 h e 18 °C) e il rapporto secco/fresco sono coerenti con UE 2010 e AVPN 2024.
 4. In UI il Q10 sotto i 18 °C deve restare una **stima**, come già scritto nel codice. Per chiudere servono misure di gas nell'impasto (risografo o fermentometro) a 4, 8, 12 e 18 °C: è un buon lavoro per un mulino o un produttore di lievito partner.
 
+## 5. Ispirazioni e ricette iconiche (`interpretation-library.ts`, `signature-recipes.ts`)
+
+Verifica del 24/10/2026: 126 affermazioni sulle 14 ispirazioni, di cui 40
+verificate, 34 plausibili, 31 da verificare e 21 errate. Tabelle, fonti e testi
+proposti in `docs/ricerca/ispirazioni-fact-check-2026-10-24.md`. I testi
+dell'app sono stati riscritti su quelle fonti: restano solo i fatti con una
+fonte, e i numeri senza fonte sono stati tolti.
+
+| Voce | Stato dopo la correzione | Cosa è cambiato | Fonti principali |
+|---|---|---|---|
+| `avpn_disciplinare` | verificato | La STG è una denominazione UE chiesta da AVPN e Associazione Pizzaiuoli Napoletani, non un marchio AVPN; il forno a legna è obbligatorio per la STG, l'AVPN ammette gas ed elettrico in deroga | UE 2010; AVPN 2024 |
+| `igp_recco` | verificato | Nessuna correzione di sostanza; nome esatto del consorzio da verificare | UE 2015; CCIAA Genova 2024 |
+| `apiter_teglia` | plausibile | Disciplinare della community La Confraternita della Pizza, circa 2016, per l'alta idratazione (D-025) | Trattoria da Martina 2017 (il thread originale dava 503) |
+| `bonci_pizzarium` | verificato | Tolti numeri senza fonte | Eating the World 2011; Scatti di Gusto |
+| `pepe_caiazzo` | verificato | La Margherita Sbagliata va in forno con la mozzarella: pomodoro e basilico dopo; ingredienti dell'Alto Casertano | Dissapore; Gazzetta del Gusto 2018 |
+| `martucci_caserta` | plausibile | Impasto diretto, 24 h a temperatura ambiente, farina 0 poco proteica (D-026); W 320 e biga tolte | Dissapore 2017; 50 Top Pizza 2020 |
+| `sorbillo_napoli` | verificato | Dal 1935, via dei Tribunali 32 | Sky TG24 2019 |
+| `bosco_aria_di_pane` | plausibile | Saporè dal 2009; idratazione circa 80% (D-026) | Veneto Around Me; RSI |
+| `capuano_napoli` | plausibile | Le forbici tagliano la pizza al tavolo; tolta la cifra «95% vs 70%»; anno 2018 da verificare | Dissapore 2023; menu Capuano 2024 |
+| `bianco_phoenix` | verificato | Circa 18 h di lievitazione (era 120 h); James Beard 2003 e 2022, non tre | Wikipedia; PizzaMaking.com 2013 |
+| `forkish_portland` | verificato | Schema degli impasti come nel libro | James Beard Foundation; WPR |
+| `da_michele_napoli` | verificato | Oggi quattro pizze; in via Sersale dal 1930 (il 1870 è contestato: Dissapore cita il 1863) | damichele.net 2026; Scatti di Gusto 2017; Smithsonian 2010 |
+| `malati_di_pizza` | errato | Tolta (D-024): è una scuola, non un forum; ricetta senza fonte | malatidipizza.com |
+| `confraternita_pinsa` | errato | Tolta (D-024): nessuna fonte sul ruolo del forum; mix non pubblico | §1.2 |
+
+Le 12 ricette iconiche non avevano un fact-check proprio: le descrizioni sono
+state riscritte togliendo ciò che contraddiceva le fonti già raccolte (cottura
+«90 s a 450 °C» → 60–90 s del disciplinare; «DOC» usato per un piatto;
+pistacchio «di Bronte» e mortadella detta male; lo «Sfincione bianco» che non è
+quello di Bagheria; la Cacio e pepe legata a Franco Pepe senza una fonte, ora
+senza ispirazione). Restano **plausibili**: sono descrizioni di piatti comuni,
+non affermazioni su persone.
+
 ---
 
 ## Valori da correggere

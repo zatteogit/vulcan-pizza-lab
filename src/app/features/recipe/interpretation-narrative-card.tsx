@@ -11,6 +11,7 @@ import { Link } from "react-router";
 import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
 import type { Interpretation } from "../../data/interpretation-library";
+import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import { ModalSheet, Surface } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
 
@@ -40,6 +41,7 @@ function changesParameters(it: Interpretation): boolean {
 /** Nome BREVE per le chip: gli enti si presentano come "SIGLA — Nome esteso"
  *  (AVPN, APITER…) — in chip va la sigla, il nome pieno vive nella modale. */
 function chipName(it: Interpretation): string {
+  if (it.short_name) return it.short_name;
   const name = primaryName(it);
   const short = name.split("—")[0].trim();
   return short || name;
@@ -227,7 +229,7 @@ function InterpretationNarrativeCard({
   onSelect?: () => void;
 }) {
   const { cms } = useCms();
-  const it = interpretation;
+  const it = localizeInterpretation(interpretation, cms.inspirationI18n);
   const meta = metaLine(it);
   const selectable = Boolean(onSelect);
   const urlLink = it.url ? (
@@ -287,6 +289,9 @@ function InterpretationNarrativeCard({
             </span>
           )}
         </div>
+        {it.signature_name && it.signature_name !== primaryName(it) && (
+          <p className="interpretation-card__signature">{it.signature_name}</p>
+        )}
         {meta && (
           <div className="interpretation-card__meta">
             {meta}

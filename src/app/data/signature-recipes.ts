@@ -63,7 +63,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   {
     id: "margherita_verace",
     name: "Margherita Verace",
-    description: "L'icona universale. San Marzano DOP, fior di latte campano, basilico fresco, cottura in 90s a 450°C.",
+    description: "L'icona universale: pomodoro, mozzarella, basilico e olio extravergine, cotta in 60–90 secondi come chiede il disciplinare.",
     emoji: "🍅",
     style_id: "napoletana_stg",
     topping_concept_id: "margherita",
@@ -75,7 +75,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   {
     id: "marinara_avpn",
     name: "Marinara",
-    description: "Niente formaggio. Pomodoro, aglio, origano, olio EVO. La pizza dei marinai partenopei.",
+    description: "Niente formaggio: pomodoro, aglio, origano e olio extravergine. Con la Margherita, è una delle due pizze della STG.",
     emoji: "🌿",
     photo: signatureMarinaraAvpn,
     style_id: "napoletana_stg",
@@ -88,19 +88,18 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   {
     id: "cacio_e_pepe_napoletana",
     name: "Cacio e Pepe",
-    description: "Crema di pecorino romano stesa sul calore residuo. Trucco dei pizzaioli gourmet napoletani.",
+    description: "Crema di pecorino e pepe nero stesa appena sfornata: la scioglie il calore della pizza.",
     emoji: "⚫",
     photo: signatureCacioEPepe,
     style_id: "napoletana_canotto",
     topping_concept_id: "cacio_e_pepe",
     family: "napoletana",
     occasion_tags: ["gourmet", "comfort"],
-    interpretation_id: "pepe_caiazzo",
   },
   {
     id: "salsiccia_friarielli",
     name: "Salsiccia & Friarielli",
-    description: "Classico napoletano DOC. Cime di rapa amarognole, salsiccia rosolata, provola affumicata.",
+    description: "Un classico delle pizzerie napoletane: friarielli amarognoli, salsiccia e provola affumicata.",
     emoji: "🥬",
     photo: signatureSalsicciaFriarielli,
     style_id: "napoletana_stg",
@@ -113,7 +112,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   {
     id: "patate_e_porchetta",
     name: "Patate e Porchetta",
-    description: "Spaccata in crosta di patate: base unica, patate a scaglie arricciate sopra, poi spaccata e farcita di porchetta post-cottura.",
+    description: "Una base cotta in bianco con patate a scaglie sopra, poi aperta e farcita di porchetta dopo la cottura.",
     emoji: "🥔",
     style_id: "pizza_spaccata",
     topping_concept_id: "patate_porchetta",
@@ -124,7 +123,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   {
     id: "mortazza_alla_pala",
     name: "Mortazza alla Pala",
-    description: "Pala romana aperta a libro con mortadella IGP e granella di pistacchio di Bronte post-bake.",
+    description: "Pizza bianca alla pala aperta a libro, con mortadella Bologna IGP e granella di pistacchio dopo la cottura.",
     emoji: "🥪",
     style_id: "pala_romana",
     topping_concept_id: "bianca_mortazza",
@@ -135,7 +134,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   {
     id: "scrocchiarella_boscaiola",
     name: "Scrocchiarella Boscaiola",
-    description: "Tonda sottilissima e croccante con champignon saltati, salsiccia luganega, mozzarella.",
+    description: "Tonda sottile e croccante con funghi saltati, salsiccia e mozzarella.",
     emoji: "🍄",
     style_id: "tonda_romana",
     topping_concept_id: "boscaiola",
@@ -144,23 +143,23 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   },
   {
     id: "bonci_margherita",
-    name: "Bonci al Taglio Margherita",
-    description: "Teglia 40×30 metodo Bonci: idratazione 85%, no-knead, 24-48h frigo. Margherita classica.",
+    name: "Margherita al taglio, ispirata a Bonci",
+    description: "Teglia con impasto molto idratato e lunga maturazione in frigo, come nelle ricette che Bonci ha reso pubbliche. Sopra, una margherita classica.",
     emoji: "☁️",
     photo: signatureBonciMargherita,
     style_id: "teglia_romana",
     topping_concept_id: "margherita",
     family: "romana", // Allineato allo stile bonci_teglia, ricollocato in "romana" (lug 2026)
     occasion_tags: ["pizza al taglio", "casual"],
-    authenticity_badge: "Metodo Bonci",
+    authenticity_badge: "Ispirata a Bonci",
     interpretation_id: "bonci_pizzarium",
   },
 
   /* ═══ SICILIANE / SUD ═══ */
   {
     id: "sfincione_bianca",
-    name: "Sfincione bianco",
-    description: "Pizza palermitana alta e soffice con olio EVO, rosmarino e fior di sale.",
+    name: "Sfincione in bianco",
+    description: "L'impasto alto e soffice dello sfincione palermitano, solo con olio extravergine, rosmarino e sale. Non è lo sfincione bianco di Bagheria, che porta ricotta e tuma.",
     emoji: "🏺",
     photo: signatureSfincioneBianco,
     style_id: "sfincione",
@@ -173,7 +172,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   {
     id: "ny_pepperoni",
     name: "New York Pepperoni",
-    description: "Fetta XL pieghevole. Pepperoni a fette coppette che si arricciano in cottura. Stile street USA.",
+    description: "Fetta larga e pieghevole, con pepperoni che in cottura si arricciano a coppetta.",
     emoji: "🗽",
     photo: signatureNyPepperoni,
     style_id: "new_york",
@@ -184,7 +183,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   {
     id: "detroit_pepperoni",
     name: "Detroit Pepperoni",
-    description: "Pan pizza profonda con cheese crown caramellato ai bordi e pepperoni distribuiti.",
+    description: "Pizza alta in teglia: il formaggio arriva fino ai bordi e li caramella. Sopra, pepperoni.",
     emoji: "🚗",
     photo: signatureDetroitPepperoni,
     style_id: "detroit",
@@ -194,8 +193,8 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   },
   {
     id: "crescenza_recco_igp",
-    name: "Focaccia di Recco IGP",
-    description: "Doppia sfoglia sottilissima senza lievito con crescenza fondente all'interno. Tradizione ligure.",
+    name: "Focaccia di Recco col formaggio IGP",
+    description: "Due sfoglie sottilissime senza lievito con formaggio fresco fuso in mezzo. Tradizione ligure, IGP dal 2015.",
     emoji: "🧀",
     style_id: "focaccia_recco",
     topping_concept_id: "crescenza_recco",

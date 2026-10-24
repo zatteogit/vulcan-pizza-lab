@@ -21,6 +21,7 @@ import type {
 } from "../../i18n/domain-contracts";
 import { UI_MESSAGES_IT } from "../../i18n/ui-messages.it";
 import type { ToppingTranslation } from "../../data/topping-i18n/types";
+import type { InspirationTranslation } from "../../data/inspiration-i18n/types";
 import {
   registerUiMessages,
   setActiveUiLocale,
@@ -768,6 +769,8 @@ export interface CmsContent {
   messages?: Record<string, string>;
   /** I18N-2: traduzioni della libreria condimenti (assenti in italiano). */
   toppingI18n?: ToppingTranslation;
+  /** I18N-5: ispirazioni e ricette iconiche tradotte (assente in italiano, che è la fonte). */
+  inspirationI18n?: InspirationTranslation;
   /** Generic UI strings (buttons, labels, actions) */
   ui: CmsUiStrings;
   /** InlineTip contextual texts */
