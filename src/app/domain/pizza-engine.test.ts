@@ -5,6 +5,7 @@ import {
   generateTimeSlots,
   customMealSlot,
   doughBallsForFlour,
+  equivalentFermentationHours,
   optimizeRecipe,
   thermalViability,
   type UserConstraints,
@@ -240,5 +241,15 @@ describe("pre-fermento: un solo tipo per ricetta e procedimento (audit totale n.
     expect(recipe.has_pre_ferment).toBe(true);
     const step = recipe.timeline.find((s) => s.id === "preferment");
     expect(step?.description).toContain(recipe.pre_ferment_type);
+  });
+});
+
+describe("lievito sulle fasi reali (audit totale n. 5)", () => {
+  it("sopra i 18 °C le ore restano quelle", () => {
+    expect(equivalentFermentationHours(24, 22, "fresh", false)).toBe(24);
+    expect(equivalentFermentationHours(8, 18, "dry", true)).toBe(8);
+  });
+  it("in frigo l'appretto a 18 °C vale più ore fredde", () => {
+    expect(equivalentFermentationHours(36, 4, "fresh", false)).toBeGreaterThan(36);
   });
 });

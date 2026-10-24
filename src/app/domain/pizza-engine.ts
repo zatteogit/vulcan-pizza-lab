@@ -1419,6 +1419,34 @@ export function pantryFlourMix(
   return best;
 }
 
+/** Quota della fermentazione che la timeline fa come appretto (vedi
+ *  generateTimeline: bulk 0,4/0,6, appretto 0,2/0,4). */
+function proofFraction(hasPreFerment: boolean): number {
+  return hasPreFerment ? 0.2 : 0.4;
+}
+
+/** Temperatura dell'appretto: sotto i 18 °C (frigo, cantina) l'appretto si fa
+ *  comunque a temperatura ambiente, come dice il passo della timeline. */
+export const PROOF_MIN_TEMP_C = 18;
+
+/** Audit totale n. 5 (24/10/2026): ore equivalenti alla temperatura di
+ *  fermentazione. Con il frigo la timeline fa l'appretto a 18 °C, che è più
+ *  veloce: prima la dose di lievito trattava tutte le ore come se fossero a
+ *  4 °C (Detroit 36 h: +70 % rispetto al modello). Sopra i 18 °C non cambia
+ *  nulla: appretto e puntata sono alla stessa temperatura. */
+export function equivalentFermentationHours(
+  fermentationHours: number,
+  fermentationTempC: number,
+  yeastType: "fresh" | "dry" | "sourdough",
+  hasPreFerment: boolean,
+): number {
+  if (fermentationTempC >= PROOF_MIN_TEMP_C) return fermentationHours;
+  const p = proofFraction(hasPreFerment);
+  const slow = fermentationSpeedRatio(yeastType, fermentationTempC);
+  const proof = fermentationSpeedRatio(yeastType, PROOF_MIN_TEMP_C);
+  return fermentationHours * (1 - p) + (fermentationHours * p * proof) / slow;
+}
+
 function calculateYeastPercentage(
   fermentationHours: number,
   fermentationTempC: number,
@@ -1857,7 +1885,11 @@ export function generateRecipe(
     // divide la dose: più veloce → meno lievito per le stesse ore.
     yeastPct = Math.max(
       0.01,
-      calculateYeastPercentage(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry") /
+      calculateYeastPercentage(
+        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment),
+        fermentationTempC,
+        yeastType as "fresh" | "dry",
+      ) /
         clampYeastSpeedFactor(constraints.yeast_speed_factor),
     );
   }
@@ -2063,7 +2095,8 @@ export function generateRecipe(
   // ── Scientific layer — con Q10 variabile a tratti continuo (ENG-2) ──
   const { model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
   const sciSpeedRatio = fermentationSpeedRatio(yeastType, fermentationTempC);
-  const effectiveHours18c = fermentationHours * sciSpeedRatio;
+  const effectiveHours18c =
+    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment) * sciSpeedRatio;
 
   // Gluten network score: flour W strength + hydration sweet spot + kneading method
   const wNorm = Math.min(1, Math.max(0, (flourW - 150) / 250)); // 0 at W150, 1 at W400
@@ -3019,7 +3052,7 @@ function generateTimeline(
    *   avviene durante il preriscaldo; i minuti mancanti si tolgono dalla fine
    *   della puntata, così la fermentazione totale non cambia. */
   const bulkMinutesFull = Math.round(fermentHours * 60 * (hasPreFerment ? 0.4 : 0.6));
-  const proofMinutes = Math.round(fermentHours * 60 * (hasPreFerment ? 0.2 : 0.4));
+  const proofMinutes = Math.round(fermentHours * 60 * proofFraction(hasPreFerment));
   const ovenTempForPreheat = Math.round(actualOvenTemp ?? style.baking.temp_c_ideal);
   // M-6: per le fritte si scalda l'olio, non il forno: bastano 15 minuti.
   const idealPreheat = isFriedStyle(style)
@@ -3125,8 +3158,8 @@ function generateTimeline(
       id: "proof",
       title: isUnleavened ? "Riposo" : "Appretto",
       description: isUnleavened
-        ? `Lasciare riposare l'impasto coperto a ${Math.max(fermentTemp, 18)}°C`
-        : `Lievitazione finale a ${Math.max(fermentTemp, 18)}°C`,
+        ? `Lasciare riposare l'impasto coperto a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
+        : `Lievitazione finale a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`,
       duration_minutes: proofStepMinutes,
       icon: "timer",
       timing_label: formatDuration(Math.round(proofStepMinutes / 60)),
