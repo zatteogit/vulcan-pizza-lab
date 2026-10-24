@@ -182,8 +182,11 @@ function TabItem({
       aria-current={active ? "page" : undefined}
     >
       {/* Active indicator pill (M3 style) */}
+      {/* tabIndex -1: whileTap su un div lo renderebbe un tab stop senza nome
+          (audit n. 23); il focus resta sul link. */}
       <motion.div
         className="app-shell-tab__pill"
+        tabIndex={-1}
         whileHover={prefersReducedMotion ? undefined : { scale: 1.045 }}
         whileTap={prefersReducedMotion ? undefined : { scale: 0.94 }}
         transition={navQuickSpring}
