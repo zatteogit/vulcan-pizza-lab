@@ -77,19 +77,14 @@ export function StyleDetailSheet({
   const video = STYLE_VIDEOS[style.id];
   const { cms, bcp47 } = useCms();
 
-  // Pin #15: lock body scroll when sheet is open
-  React.useEffect(() => {
-    const originalStyle = window.getComputedStyle(document.body).overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = originalStyle;
-    };
-  }, []);
-
-  /* U-10 (F01): contratto da modale — focus iniziale nel pannello, Tab che
-     resta dentro, Escape che chiude, focus restituito alla card. Lo scroll del
-     body è già bloccato qui sopra. */
-  const panelRef = useDialogFocus<HTMLDivElement>({ open: true, onClose: onDismiss, lockScroll: false });
+  /* Nota di Matteo (24/10/2026): con la scheda aperta la pagina sotto non
+     deve scorrere. Prima si bloccava il body, ma la pagina scorre su <html>:
+     ora il blocco condiviso dei dialoghi (html.ds-dialog-open). Da 640 px la
+     scheda è una card centrata, non un foglio largo quanto lo schermo. */
+  const [isWide] = React.useState(
+    () => typeof window !== "undefined" && window.matchMedia("(min-width: 640px)").matches,
+  );
+  const panelRef = useDialogFocus<HTMLDivElement>({ open: true, onClose: onDismiss });
 
   const rec = React.useMemo(() => {
     if (!constraints) return null;
@@ -162,9 +157,9 @@ export function StyleDetailSheet({
         role="dialog"
         aria-modal="true"
         aria-labelledby={`style-detail-title-${style.id}`}
-        initial={{ y: "100%" }}
-        animate={{ y: 0 }}
-        exit={{ y: "100%" }}
+        initial={isWide ? { y: 24, opacity: 0 } : { y: "100%" }}
+        animate={isWide ? { y: 0, opacity: 1 } : { y: 0 }}
+        exit={isWide ? { y: 24, opacity: 0 } : { y: "100%" }}
         transition={motionSpring.standard}
         className="style-detail-sheet__panel"
       >

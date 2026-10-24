@@ -898,13 +898,7 @@ export function RecipeConfigurator({
                     max={30}
                     step={1}
                     unit="°C"
-                    rangeMin={2}
-                    rangeMax={6}
                     gradient={SLIDER_GRADIENTS.temperature}
-                    zoneLabels={[
-                      uiMessage("features.recipe.recipe-configurator.frigo-51f4c92e"),
-                      uiMessage("features.recipe.recipe-configurator.ambiente-e6fefb74"),
-                    ]}
                   />
                 ) : (() => {
                   const activeVal = customFermentTemp <= 6 ? "fridge" : customFermentTemp <= 16 ? "cool" : "ambient";
