@@ -196,6 +196,7 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={cms.pages.troubleshootSearchPlaceholder}
+          aria-label={cms.pages.troubleshootSearchPlaceholder}
           className="troubleshooting-guide__search-input"
         />
       </div>

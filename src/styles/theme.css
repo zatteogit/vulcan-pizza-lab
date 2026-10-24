@@ -2474,7 +2474,7 @@
     align-items: center;
     gap: var(--gap-sm);
     padding-inline: var(--space-4);
-    padding-block: var(--space-3);
+    padding-block: var(--space-0);
     border-radius: var(--radius-2xl);
     background: var(--surface-container);
     border: var(--space-px) solid var(--outline-variant);
@@ -2485,8 +2485,11 @@
     flex-shrink: 0;
   }
 
+  /* Il campo occupa tutta l'altezza della pillola: area di tocco 44 px
+     (audit n. 26). */
   .glossary-searchbox__input {
     flex: 1;
+    min-height: var(--space-11);
     background: transparent;
     outline: none;
     color: var(--text-default);
@@ -6732,7 +6735,10 @@
 
   /* Valore toccabile: si legge come il numero, con una sottolineatura
      tratteggiata che dice «si può scrivere». */
+  /* Valore digitabile: area di tocco allargata senza spostare la riga
+     (audit n. 26). */
   .config-slider__value--button {
+    position: relative;
     padding: 0;
     border: none;
     background: none;
@@ -6740,6 +6746,12 @@
     text-decoration: underline dotted;
     text-decoration-thickness: var(--border-width-thin);
     text-underline-offset: var(--space-1);
+  }
+
+  .config-slider__value--button::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--space-3) * -1) calc(var(--space-2) * -1);
   }
 
   .config-slider__value--editing {
@@ -11146,10 +11158,14 @@
   .recipe-verdict__links {
     flex-direction: row;
     flex-wrap: wrap;
-    gap: var(--space-1) var(--space-4);
+    gap: var(--space-0) var(--space-4);
   }
 
+  /* Elenco di link, non testo corrente: 44 px d'altezza (audit n. 26). */
   .recipe-verdict__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--space-11);
     color: var(--cta);
     font-weight: var(--weight-semibold);
     text-decoration: underline;
@@ -11250,7 +11266,10 @@
   }
 
   /* ── GlossaryWLink ── */
+  /* Parola nel testo: l'area di tocco cresce con uno pseudo-elemento,
+     senza spostare la riga (audit n. 26). */
   .bits-glossary-w__trigger {
+    position: relative;
     background: none;
     border: none;
     padding: 0;
@@ -11260,6 +11279,12 @@
     text-decoration: underline;
     text-decoration-style: dotted;
     text-underline-offset: var(--space-0-75);
+  }
+
+  .bits-glossary-w__trigger::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--space-3) * -1) calc(var(--space-2) * -1);
   }
 
   .bits-glossary-w-modal__panel {
@@ -11817,6 +11842,7 @@
   }
 
   .recipe-view-reset {
+    position: relative;
     display: inline-flex;
     align-items: baseline;
     gap: var(--gap-2xs);
@@ -11831,6 +11857,13 @@
     text-decoration: underline;
     text-underline-offset: var(--space-0-75);
     text-decoration-color: color-mix(in srgb, var(--text-muted) 45%, transparent);
+  }
+
+  /* Link piccolo accanto all'etichetta: area di tocco 44 px (audit n. 26). */
+  .recipe-view-reset::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--space-4) * -1) calc(var(--space-2) * -1);
   }
 
   .recipe-view-reset__icon {
@@ -13537,7 +13570,7 @@
     background: var(--surface-container);
     border: var(--border-width-thin) solid var(--outline-variant);
     border-radius: var(--radius-md);
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-0) var(--space-3);
   }
 
   .troubleshooting-guide__search-icon {
@@ -13549,6 +13582,7 @@
 
   .troubleshooting-guide__search-input {
     flex: 1;
+    min-height: var(--space-11);
     border: none;
     background: transparent;
     outline: none;
@@ -14894,7 +14928,7 @@
     width: 100%;
     border-radius: var(--radius-xl);
     padding-inline: var(--space-3);
-    padding-block: var(--space-2);
+    padding-block: var(--space-0);
     background: var(--surface-container-low);
     border: var(--border-width-thin) solid var(--outline-variant);
   }
@@ -14912,6 +14946,7 @@
 
   .recommended-search__input {
     flex: 1 1 0%;
+    min-height: var(--space-11);
     min-width: 0;
     border: none;
     background: transparent;
@@ -17212,6 +17247,7 @@
   .sub-page-header__back {
     display: flex;
     align-items: center;
+    min-height: var(--space-11);
     gap: var(--gap-2xs);
     margin-left: calc(var(--space-1) * -1);
     flex-shrink: 0;
@@ -19027,11 +19063,12 @@
     position: relative;
   }
 
+  /* Area di tocco 44 px attorno al binario (audit n. 26). */
   .ds-switch::before {
     content: "";
     position: absolute;
-    inset-block: calc(var(--space-1-5) * -1);
-    inset-inline: 0;
+    inset-block: calc(var(--space-3-5) * -1);
+    inset-inline: calc(var(--space-2) * -1);
   }
 
 
