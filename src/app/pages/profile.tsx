@@ -3,6 +3,7 @@
    Tab: Profilo — /profile
    Include FTU (First Time Use) onboarding al primo accesso. */
 
+import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
 import {
 Beaker,
 Bug,
@@ -37,7 +38,7 @@ X,
 Zap,
 } from "lucide-react";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
-import { useCallback,useEffect,useMemo,useRef,useState } from "react";
+import { useCallback,useEffect,useMemo,useRef,useState, useId } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
@@ -403,6 +404,11 @@ function SavedRecipesSection() {
   const p = cms.profile;
   const [recipes, setRecipes] = useState<SavedRecipe[]>(() => loadSavedRecipes());
   const [notice, setNotice] = useState<SavedRecipesNotice | null>(null);
+  /* U-10 (F26): il tempo per «Annulla» si ferma finché l'avviso ha il focus o
+     il puntatore sopra. */
+  const [noticePaused, setNoticePaused] = useState(false);
+  const toastRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -415,21 +421,33 @@ function SavedRecipesSection() {
     };
   }, []);
 
+  /** Chiude l'avviso; se aveva il focus, lo riporta nella sezione (U-10, F12). */
+  const closeNotice = useCallback(() => {
+    const hadFocus = toastRef.current?.contains(document.activeElement) ?? false;
+    setNotice(null);
+    setNoticePaused(false);
+    if (hadFocus) requestAnimationFrame(() => sectionRef.current?.focus({ preventScroll: true }));
+  }, []);
+
   useEffect(() => {
-    if (!notice) return;
-    const timer = setTimeout(() => setNotice(null), notice.kind === "removed" ? 6000 : 4000);
+    if (!notice || noticePaused) return;
+    const timer = setTimeout(closeNotice, notice.kind === "removed" ? 6000 : 4000);
     return () => clearTimeout(timer);
-  }, [notice]);
+  }, [notice, noticePaused, closeNotice]);
 
   const handleRemove = (recipe: SavedRecipe) => {
     setRecipes(removeRecipe(recipe.id));
     setNotice({ kind: "removed", recipe });
+    // U-10 (F12): la riga sparisce col focus dentro; lo si porta su «Annulla».
+    requestAnimationFrame(() =>
+      toastRef.current?.querySelector<HTMLElement>(".ds-snackbar__action")?.focus(),
+    );
   };
 
   const handleUndo = () => {
     if (notice?.kind !== "removed") return;
     setRecipes(restoreRecipe(notice.recipe));
-    setNotice(null);
+    closeNotice();
   };
 
   const handleCopyLink = (recipe: SavedRecipe) => {
@@ -478,7 +496,7 @@ function SavedRecipesSection() {
       delay={motionDelay.profileIntroStep}
     >
       {recipes.length === 0 ? (
-        <div className="profile-saved-recipes__empty">
+        <div ref={(el) => { sectionRef.current = el; }} tabIndex={-1} className="profile-saved-recipes__empty">
           <span className="profile-saved-recipes__empty-icon" aria-hidden="true">
             <Bookmark size={22} />
           </span>
@@ -494,7 +512,7 @@ function SavedRecipesSection() {
           </CtaButton>
         </div>
       ) : (
-        <ul className="profile-saved-recipes">
+        <ul ref={(el) => { sectionRef.current = el; }} tabIndex={-1} className="profile-saved-recipes">
           {recipes.map((r) => {
             const styleName = STYLES_DB[r.styleId]?.name ?? r.styleName;
             const meta = [
@@ -595,6 +613,11 @@ function SavedRecipesSection() {
                 exit={{ opacity: 0, y: 12 }}
                 transition={motionSpring.standard}
                 className="profile-saved-recipes__toast"
+                ref={toastRef}
+                onFocus={() => setNoticePaused(true)}
+                onBlur={() => setNoticePaused(false)}
+                onMouseEnter={() => setNoticePaused(true)}
+                onMouseLeave={() => setNoticePaused(false)}
               >
                 {notice.kind === "removed" ? (
                   <Snackbar
@@ -614,6 +637,9 @@ function SavedRecipesSection() {
   );
 }
 
+/** Ordine delle tab del Profilo, come appaiono (frecce: U-10, F13). */
+const PROFILE_TAB_IDS = ["recipes", "setup", "app"] as const;
+
 /* ═══ EQUIPMENT CATEGORY ACCORDION ═══ */
 function EquipmentCategory({
   title,
@@ -632,11 +658,15 @@ function EquipmentCategory({
   hasSelection: boolean;
   children: React.ReactNode;
 }) {
+  const panelId = useId();
   return (
     <div
       className={`profile-equip-cat${hasSelection ? " profile-equip-cat--selected" : ""}`}
     >
       <motion.button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={panelId}
         onClick={onToggle}
         className="profile-equip-cat__trigger"
       >
@@ -673,6 +703,7 @@ function EquipmentCategory({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={motionSpring.standard}
+            id={panelId}
             className="profile-equip-cat__panel"
           >
             <div className="profile-equip-cat__panel-inner">
@@ -1508,7 +1539,12 @@ export function ProfilePage() {
           </p>
         </div>
 
-        <div className="profile-tabs" role="tablist" aria-label={p.pageTitle}>
+        <div
+          className="profile-tabs"
+          role="tablist"
+          aria-label={p.pageTitle}
+          onKeyDown={(event) => handleTablistKeyDown(event, PROFILE_TAB_IDS, profileTab, setProfileTab)}
+        >
           {[
             { id: "recipes" as const, label: uiMessage("pages.profile.ricette-salvate-b5c99ac7") },
             { id: "setup" as const, label: uiMessage("pages.profile.la-tua-cucina-c2d87895") },
@@ -1520,7 +1556,11 @@ export function ProfilePage() {
                 key={tab.id}
                 type="button"
                 role="tab"
+                id={`profile-tab-${tab.id}`}
+                data-tab-id={tab.id}
                 aria-selected={active}
+                aria-controls={`profile-panel-${tab.id}`}
+                tabIndex={tabIndexFor(active)}
                 onClick={() => setProfileTab(tab.id)}
                 className={active ? "profile-tabs__button profile-tabs__button--active" : "profile-tabs__button"}
               >
@@ -1539,15 +1579,15 @@ export function ProfilePage() {
 
         {/* ── STILI PREFERITI + RICETTARIO (R31) — visibili solo se ne hai ── */}
         {profileTab === "recipes" && (
-          <>
+          <div role="tabpanel" id="profile-panel-recipes" aria-labelledby="profile-tab-recipes" tabIndex={0}>
             <FavoriteStylesSection />
             <SavedRecipesSection />
-          </>
+          </div>
         )}
 
         {/* ── FORNO ── */}
         {profileTab === "setup" && (
-          <>
+          <div role="tabpanel" id="profile-panel-setup" aria-labelledby="profile-tab-setup" tabIndex={0}>
         <ProfileSection
           title={p.ovenTitle}
           subtitle={p.ovenSubtitle}
@@ -2115,12 +2155,12 @@ export function ProfilePage() {
             )}
           </div>
         </ProfileSection>
-          </>
+          </div>
         )}
 
         {/* ── LINGUA & TEMA ── */}
         {profileTab === "app" && (
-          <>
+          <div role="tabpanel" id="profile-panel-app" aria-labelledby="profile-tab-app" tabIndex={0}>
         <ProfileSection
           title={p.prefsTitle}
           subtitle={p.prefsSubtitle}
@@ -2308,7 +2348,7 @@ export function ProfilePage() {
             {devMode ? p.devModeOn : p.devModeOff}
           </motion.button>
         </div>
-          </>
+          </div>
         )}
 
         {/* Locale confirmation modal */}

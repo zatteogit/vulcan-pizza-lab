@@ -230,7 +230,18 @@ function InterpretationNarrativeCard({
   const it = interpretation;
   const meta = metaLine(it);
   const selectable = Boolean(onSelect);
-  return (
+  const urlLink = it.url ? (
+    <a
+      href={it.url}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={`interpretation-card__url${selectable ? " interpretation-card__url--outside" : ""}`}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {it.author ?? it.pizzeria ?? uiMessage("features.recipe.interpretation-narrative-card.approfondisci-44efee7c")} ↗
+    </a>
+  ) : null;
+  const card = (
     <Surface
       variant="container"
       {...(selectable
@@ -294,18 +305,17 @@ function InterpretationNarrativeCard({
             {t(cms.ui.interpretationDisclaimer, { who: it.author ?? it.pizzeria ?? "" })}
           </p>
         )}
-        {it.url && (
-          <a
-            href={it.url}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="interpretation-card__url"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {it.author ?? it.pizzeria ?? uiMessage("features.recipe.interpretation-narrative-card.approfondisci-44efee7c")} ↗
-          </a>
-        )}
+        {!selectable && urlLink}
       </div>
     </Surface>
+  );
+  /* U-10 (F19): un link dentro un role="radio" non viene esposto (il ruolo
+     appiattisce i figli). Nella modale il link sta sotto la card. */
+  if (!selectable || !urlLink) return card;
+  return (
+    <div className="interpretation-card-item">
+      {card}
+      {urlLink}
+    </div>
   );
 }

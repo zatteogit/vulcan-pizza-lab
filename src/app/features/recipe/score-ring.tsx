@@ -17,9 +17,12 @@ interface ScoreRingProps {
   /** Punteggio di partenza (pre-ottimizzazione). Se < score, l'anello mostra
    *  il salto partenza→ottimizzata come estensione soft dello stesso colore. */
   baseScore?: number;
+  /** U-10 (F24): nome accessibile («Compatibilità 83%»). Senza, l'anello è
+   *  decorativo (il numero sta già nel testo vicino). */
+  label?: string;
 }
 
-export function ScoreRing({ score, color, size = 36, baseScore }: ScoreRingProps) {
+export function ScoreRing({ score, color, size = 36, baseScore, label }: ScoreRingProps) {
   const r = (size - 4) / 2;
   const circ = 2 * Math.PI * r;
   const rounded = Math.round(score);
@@ -32,6 +35,9 @@ export function ScoreRing({ score, color, size = 36, baseScore }: ScoreRingProps
   return (
     <div
       className="score-ring"
+      role={label ? "img" : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : true}
       style={{
         ["--score-ring-size" as any]: `${size}px`,
         ["--score-ring-label-size" as any]: `${size * 0.33}px`,
@@ -41,6 +47,7 @@ export function ScoreRing({ score, color, size = 36, baseScore }: ScoreRingProps
         width={size}
         height={size}
         viewBox={`0 0 ${size} ${size}`}
+        aria-hidden="true"
         className="score-ring__svg"
       >
         {/* Background circle */}

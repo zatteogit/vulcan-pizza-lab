@@ -27,6 +27,7 @@ export function FlourBudget({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
   const inputId = useId();
+  const panelId = useId();
   const [open, setOpen] = useState(false);
   const [grams, setGrams] = useState("");
 
@@ -40,13 +41,14 @@ export function FlourBudget({
         type="button"
         className="type-body flour-budget__toggle"
         aria-expanded={open}
+        aria-controls={panelId}
         onClick={() => setOpen((value) => !value)}
       >
         <Wheat size={16} aria-hidden="true" />
         {ui.flourBudgetToggle}
       </button>
       {open && (
-        <div className="flour-budget__panel">
+        <div id={panelId} className="flour-budget__panel">
           <label htmlFor={inputId} className="type-label flour-budget__label">
             {ui.flourBudgetInput}
           </label>

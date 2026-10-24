@@ -523,6 +523,9 @@ export function RecipeView({
             />
           )}
           <motion.div
+            id="recipe-tabpanel"
+            role="tabpanel"
+            aria-labelledby={`recipe-tab-${activeTab}`}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...motionSpring.standard,delay: motionDelay.recipeReveal }}

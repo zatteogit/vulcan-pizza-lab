@@ -71,7 +71,7 @@ export function RecipeVerdictNotice({
   const later = laterHours(verdict.blockers);
 
   return (
-    <Surface as="section" className="recipe-verdict" role="alert" aria-labelledby="recipe-verdict-title">
+    <Surface as="section" className="recipe-verdict" aria-labelledby="recipe-verdict-title">
       <header className="recipe-verdict__header">
         <AlertTriangle aria-hidden="true" size={18} className="recipe-verdict__icon" />
         <h2 id="recipe-verdict-title" className="type-heading-xs recipe-verdict__title">

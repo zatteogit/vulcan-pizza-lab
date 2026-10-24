@@ -447,7 +447,7 @@ export function SearchOverlay({
             tabIndex={-1}
             role="dialog"
             aria-modal="true"
-            aria-label={cms.pages.searchFieldLabel}
+            aria-label={cms.pages.navSearch}
             initial={{ opacity: 0, y: 60, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
@@ -501,7 +501,6 @@ export function SearchOverlay({
                 <button
                   onClick={onClose}
                   className="search-overlay-x__cancel-btn"
-                  aria-label={cms.pages.searchCloseLabel}
                 >
                   {cms.ui.cancel}
                 </button>
@@ -528,6 +527,11 @@ export function SearchOverlay({
                 );
               })}
             </div>
+
+            {/* U-10 (F11): numero di risultati per il lettore di schermo. */}
+            <p role="status" className="sr-only">
+              {hasQuery ? cms.ui.searchResultsStatus.replace("{n}", String(results.length)) : ""}
+            </p>
 
             {/* Results area */}
             <div

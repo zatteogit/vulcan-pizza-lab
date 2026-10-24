@@ -468,6 +468,14 @@ export function RecommendedStyles({
         )}
       </AnimatePresence>
 
+      {/* U-10 (F11): quanti stili restano col filtro, detto al lettore di
+          schermo. La regione è sempre montata; parla solo se c'è un filtro. */}
+      <p role="status" className="sr-only">
+        {familyFilter !== "all" || hydrationFilter || textureFilter || skillFilter || ovenFilter || styleQuery.trim()
+          ? t(cms.ui.stylesFoundStatus, { n: filtered.length })
+          : ""}
+      </p>
+
       {/* ═══ Tier groups ═══ */}
       <motion.div className="recommended-styles__results" animate={resultsControls}>
       {tiers.length === 0 && (
@@ -663,7 +671,7 @@ function StyleCard({
             >
               <ImageWithFallback
                 src={photo}
-                alt={style.name}
+                alt="" /* U-10 (F24): il nome è già nel titolo della card */
                 loading="lazy"
                 sizes={IMAGE_SIZES.card}
                 className="recommended-card__img"
@@ -680,6 +688,11 @@ function StyleCard({
                 baseScore={compatibilityScore}
                 color={ringColor}
                 size={38}
+                label={
+                  compatibilityScore < displayScore
+                    ? uiMessage("pages.explore.compatibilityOptimizable", [Math.round(compatibilityScore), Math.round(displayScore)])
+                    : uiMessage("pages.explore.compatibility", [Math.round(displayScore)])
+                }
               />
             </div>
 

@@ -18,6 +18,7 @@ import { CmsProvider,useCms } from "../../features/cms/cms-context";
 import { CookSessionProvider,useCookSession } from "../../features/cooking/cook-session";
 import type { DarkModeContext,ThemeMode } from "../../hooks/use-dark-mode";
 import { SearchButton } from "./search-button";
+import { RouteTitle, SkipLink } from "./route-title";
 
 /* Audit bundle lug 2026: CookingMode e SearchOverlay trascinavano motore,
    topping, glossario e troubleshooting nel chunk d'ingresso (~400 kB di
@@ -663,6 +664,7 @@ export function AppShell() {
       <StylesOverrideProvider>
         <CookSessionProvider>
         <div className="app-shell-root">
+          <SkipLink />
           {/* Sidebar rail — desktop */}
           {showNav && (
             <SidebarRail
@@ -679,8 +681,11 @@ export function AppShell() {
 
           {/* Main content area */}
           <div
+            id="app-content"
+            tabIndex={-1}
             className={`app-shell-main${showNav ? " app-shell-main--nav" : ""}`}
           >
+            <RouteTitle />
             <Outlet
               context={{ darkMode, setDarkMode, themeMode, setThemeMode, devMode, setDevMode, hideNavbar, setHideNavbar } satisfies DarkModeContext}
             />

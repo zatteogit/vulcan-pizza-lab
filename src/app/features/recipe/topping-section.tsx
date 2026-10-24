@@ -194,7 +194,7 @@ export function ToppingSection({
                   {toppingSectionLabel(recipe.style, cms)}
                 </div>
 
-                <Heading level="page" color="var(--overlay-text)" className="topping-panel__carousel-title">
+                <Heading level="page" as="h2" color="var(--overlay-text)" className="topping-panel__carousel-title">
                   {toppingName}
                 </Heading>
 
@@ -297,7 +297,7 @@ export function ToppingSection({
                     <div key={sec} className="topping-panel__group">
                       <div className="topping-panel__group-header">
                         <span className="topping-panel__group-marker" />
-                        <Heading level="xl" className="topping-panel__group-title">
+                        <Heading level="xl" as="h3" className="topping-panel__group-title">
                           {headerText}
                         </Heading>
                       </div>

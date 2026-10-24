@@ -6,6 +6,7 @@ import { HelpCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import type { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import { FlourBudget } from "./flour-budget";
 import { YeastExplainer } from "./yeast-explainer";
 import { useCms } from "../cms/cms-context";
@@ -63,6 +64,7 @@ export function IngredientsSection({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
   const servingLabel = getServingUnitLabel(cms, servingUnit, 2);
+  const [ballsStatus, setBallsStatus] = useState("");
   const waterTempLimit = recipe.science.water_temp_limit ?? null;
   /* Baker's % sul totale farina — layer nerd accanto ai grammi. */
   const bakerPct = (grams: number, maxDecimals = 1) =>
@@ -83,9 +85,10 @@ export function IngredientsSection({
       {/* ── Ingredients + panetti stepper ── */}
       <div data-region="section">
         <div className="ingredients-header">
-          <h3 className="ingredients-header__title">
+          {/* U-10 (F16): h2 sotto l'h1 della ricetta (era h3, saltava un livello). */}
+          <h2 className="ingredients-header__title">
             {ui.ingredients}
-          </h3>
+          </h2>
           {/* Visore di sezione — come "Perfetti per te" */}
           <div className="ingredients-header__divider" />
         </div>
@@ -98,10 +101,19 @@ export function IngredientsSection({
             value={constraints.dough_balls}
             min={1}
             max={20}
-            onChange={updateBalls}
+            onChange={(n) => {
+              updateBalls(n);
+              /* U-10 (F11): le quantità cambiano tutte insieme; lo si dice. */
+              setBallsStatus(
+                t(ui.quantitiesUpdatedStatus, {
+                  n: `${n} ${getServingUnitLabel(cms, servingUnit, n, cms.locale.id !== "de")}`,
+                }),
+              );
+            }}
             decrementLabel={ui.ariaReduceBalls}
             incrementLabel={ui.ariaAddBalls}
           />
+          <p role="status" className="sr-only">{ballsStatus}</p>
           <span className="type-body ingredients-servings__note">
             {normalizeMeasureUnitSuffixes(t(ui.doughBallsFrom, { w: fmt.grams(recipe.ball_weight_g) }))}
             {panSizeLabel ? ` · ${panSizeLabel}` : ""}

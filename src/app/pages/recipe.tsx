@@ -54,6 +54,7 @@ RecipeConfigurator,
 import { applyStyleVersion } from "../use-cases/apply-style-version";
 import { RecipeLearningPanel } from "../features/recipe/recipe-learning-panel";
 import { SaveFailedNotice } from "../features/recipe/save-failed-notice";
+import { BRAND } from "../config/brand";
 import { deriveFeedbackCorrections, loadFeedback } from "../features/recipe/feedback-store";
 import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
 import { InterpretationSwitcher } from "../features/recipe/interpretation-narrative-card";
@@ -1019,6 +1020,11 @@ function RecipeContent({
     // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
     [style.id, currentSaveParams, savedTick],
   );
+  // U-10 (F15): il titolo della scheda dice quale ricetta è (RouteTitle salta /recipe).
+  useEffect(() => {
+    document.title = `${style.name} · ${BRAND.name}`;
+  }, [style.name]);
+
   const [saveFailed, setSaveFailed] = useState(false);
   const closeSaveFailed = useCallback(() => setSaveFailed(false), []);
   /** true se il ricettario ora riflette la scelta; false se la scrittura è

@@ -429,6 +429,15 @@ function WelcomeOnboardingCard({
   );
 }
 
+/** U-10 (F12): focus sul titolo del passo di Crea, senza scorrere la pagina. */
+function focusStep(step: string) {
+  const root = document.querySelector<HTMLElement>(`.home-step--${step}`);
+  if (!root) return;
+  const target = root.querySelector<HTMLElement>("h1") ?? root;
+  if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+  target.focus({ preventScroll: true });
+}
+
 export function HomePage() {
   const { setHideNavbar } = useDarkMode();
   const { isOverrideActive, clearOverride, effectiveStyles } =
@@ -451,6 +460,15 @@ export function HomePage() {
   const initialCreateDraft = initialCreateDraftRef.current;
   const [currentStep, setCurrentStep] =
     useState<AppStep>(initialCreateDraft.step);
+  /* U-10 (F12): cambiando passo il controllo usato sparisce e il focus cadeva
+     su <body>. Si porta al titolo del passo nuovo (o al passo stesso). */
+  const previousStepRef = useRef(currentStep);
+  useEffect(() => {
+    if (previousStepRef.current === currentStep) return;
+    previousStepRef.current = currentStep;
+    const frame = requestAnimationFrame(() => focusStep(currentStep));
+    return () => cancelAnimationFrame(frame);
+  }, [currentStep]);
   const [selectedStyle, setSelectedStyle] =
     useState<PizzaStyle | null>(initialCreateDraft.selectedStyle);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<
@@ -476,6 +494,8 @@ export function HomePage() {
   });
   const dismissOnboarding = useCallback(() => {
     setShowOnboarding(false);
+    // U-10 (F12): la card sparisce col focus dentro: lo si porta al passo.
+    requestAnimationFrame(() => focusStep("settings"));
     try {
       localStorage.setItem(ONBOARDING_SEEN_KEY, "true");
     } catch {
@@ -1150,16 +1170,6 @@ export function HomePage() {
 
   return (
     <div className="home-page" data-page="home">
-      {/* ═══ VPL-009: Skip-to-content link for screen readers ═══ */}
-      <CtaButton
-        as="a"
-        href="#main-content"
-        radius="lg"
-        elevated={false}
-        className="home-skiplink"
-      >
-        {cms.pages.skipToContent}
-      </CtaButton>
 
       {/* ═══ FIRE GLOW — ambient background ═══ */}
       <FireGlow intensity={fireIntensity} />

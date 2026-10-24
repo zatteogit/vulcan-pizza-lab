@@ -92,7 +92,7 @@ export function ProcedureHeroControls({
       <div className="procedure-hero__header">
         <div className="procedure-hero__title-group">
           <CalendarRange size={16} className="procedure-hero__title-icon" />
-          <h3 className="procedure-hero__title">{ui.timeline}</h3>
+          <h2 className="procedure-hero__title">{ui.timeline}</h2>
         </div>
         <span className="procedure-hero__total">
           {uiMessage("features.recipe.procedure-hero.tempo-totale-3c1f6a6f")}{fmt.durationMinutes(totalDurationMin)}

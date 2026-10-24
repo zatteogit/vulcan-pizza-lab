@@ -3296,7 +3296,8 @@
   }
 
   .explore-card__match-mc {
-    color: var(--cta);
+    /* U-10 (F09): --cta pieno a testo piccolo era 4,2:1 */
+    color: color-mix(in srgb, var(--cta) 70%, var(--text-default));
   }
 
   .explore-card__match-arrow {
@@ -4930,7 +4931,6 @@
     margin-top: var(--space-1);
     font-size: var(--font-size-xl);
     color: var(--text-muted);
-    opacity: 0.65;
   }
 
   /* ── FtuOnboarding step 0/1 — option cards (oven / skill) ── */
@@ -7203,7 +7203,6 @@
     color: var(--text-muted);
     font-size: var(--font-size-xs);
     line-height: var(--leading-normal);
-    opacity: 0.85;
     margin: 0;
   }
 
@@ -7784,7 +7783,7 @@
 
   .needs-slot-list__sublabel {
     font-size: var(--font-size-base);
-    opacity: 0.5;
+    opacity: 0.85; /* U-10 (F08): a 0,5 scendeva a 3,3:1 */
     margin-top: var(--space-0-5);
   }
 
@@ -7981,7 +7980,7 @@
 
   .needs-slot-grid__sublabel {
     font-size: var(--font-size-base);
-    opacity: 0.5;
+    opacity: 0.85; /* U-10 (F08): a 0,5 scendeva a 3,3:1 */
     margin-top: var(--space-1);
   }
 
@@ -9267,6 +9266,9 @@
     flex-shrink: 0;
     font-size: var(--font-size-7xl);
     line-height: var(--leading-heading);
+    /* Era un h3: stessa resa ora che è h2 (U-10, F16). */
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-snug);
   }
 
   .ingredients-header__divider {
@@ -10069,9 +10071,15 @@
   }
 
   .procedure-hero__title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    /* U-10 (F17): va a capo a 320 px invece di troncarsi in «Tabel…». */
+    min-width: 0;
+    overflow-wrap: anywhere;
+    /* Era un h3: stessa resa ora che è h2 (U-10, F16). */
+    font-family: var(--font-sans);
+    font-size: var(--font-size-5xl);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-normal);
+    letter-spacing: var(--tracking-snug);
   }
 
   .procedure-hero__total {
@@ -11592,9 +11600,8 @@
   }
 
   .stat-strip__label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    /* U-10 (F17): andava a capo invece di troncare («FORZA FARI…» a 390 px). */
+    overflow-wrap: anywhere;
     font-size: var(--font-size-xs);
     /* 9px — spec labels */
     font-weight: var(--weight-semibold);
@@ -12040,6 +12047,11 @@
     text-decoration: underline;
   }
 
+  /* Fuori dalla card selezionabile (U-10, F19): allineato al testo della card. */
+  .interpretation-card__url--outside {
+    margin-inline-start: var(--space-4);
+  }
+
   /* ═══ ONDATA 3 — COMPONENT: recipe-learning-panel (PREFIX: learning) ═══ */
   /* ═══ COMPONENT: recipe-learning-panel ═══ */
 
@@ -12269,7 +12281,7 @@
     font-family: var(--font-mono);
     font-weight: var(--weight-bold);
     background: var(--primary);
-    color: var(--overlay-text);
+    color: var(--primary-foreground);
   }
 
   .feedback-analysis__section-chevron {
@@ -12345,7 +12357,7 @@
 
   .feedback-analysis__issue-count--hot {
     background: var(--primary);
-    color: var(--overlay-text);
+    color: var(--primary-foreground);
   }
 
   /* Style success rate row */
@@ -12865,7 +12877,7 @@
   .recipe-feedback__issue-chip--active {
     border-color: var(--primary);
     background: var(--primary);
-    color: var(--overlay-text);
+    color: var(--primary-foreground);
   }
 
   /* Note libere */
@@ -13688,7 +13700,7 @@
 
   .condiment-strip__pill--active {
     background: var(--primary);
-    color: var(--overlay-text);
+    color: var(--primary-foreground);
     border-color: transparent;
     box-shadow: var(--elevation-chip-active);
     /* 0 4px 14px color-mix(in srgb, var(--primary) 30%, transparent) */
@@ -15138,7 +15150,8 @@
     white-space: nowrap;
     font-weight: var(--weight-regular);
     margin-top: var(--space-px);
-    opacity: 0.6;
+    /* U-10 (F08): prima opacità 0,6 → 2,7:1. Colore attenuato a contrasto pieno. */
+    color: var(--text-muted);
     font-size: clamp(var(--font-size-xs), var(--dimension-viewport-width-018), var(--font-size-sm));
   }
 
@@ -15147,6 +15160,7 @@
   }
 
   .section-tabs-capsule__subtitle--active {
+    color: inherit;
     opacity: 0.85;
   }
 
@@ -16653,7 +16667,6 @@
     text-transform: uppercase;
     letter-spacing: var(--tracking-ultra);
     margin-bottom: var(--space-2-5);
-    opacity: 0.6;
   }
 
   .search-overlay-x__suggestions-list {
@@ -16838,7 +16851,7 @@
     letter-spacing: var(--tracking-caps);
     text-transform: uppercase;
     line-height: 1;
-    color: var(--logo-solid);
+    color: var(--primary); /* U-10 (F09): --logo-solid era 3,1:1 */
     background: color-mix(in srgb, var(--logo-solid) 12%, var(--container-page));
     border-radius: var(--radius-full);
     padding: calc(2 * var(--space-px)) var(--space-0-75) var(--space-0-75) var(--space-1);
@@ -18565,6 +18578,13 @@
   outline: var(--space-0-5) solid var(--ring);
   outline-offset: var(--space-0-5);
   box-shadow: 0 0 0 var(--space-0-5) var(--surface);
+}
+
+/* U-10 (F20): il dock in basso e le barre sticky in alto coprivano l'elemento
+   a fuoco. Lo scroll del browser verso il focus tiene conto di questi margini. */
+html {
+  scroll-padding-block-start: var(--space-20);
+  scroll-padding-block-end: var(--space-24);
 }
 
 /* ═══════════════════════════════════════════════════════════════════

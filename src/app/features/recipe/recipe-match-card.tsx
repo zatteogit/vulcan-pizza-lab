@@ -170,6 +170,7 @@ export function RecipeMatchCard({
      tono e azioni). Barre punteggio, stato forno e rationale arrivano a
      richiesta: erano una schermata intera prima degli ingredienti. */
   const [expanded, setExpanded] = useState(false);
+  const detailsToggleRef = useRef<HTMLButtonElement>(null);
   const ovenGap = idealTemp - ovenTemp;
   const ovenStatus =
     ovenGap <= 0
@@ -335,6 +336,7 @@ export function RecipeMatchCard({
         <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.match-0335207f")}</span>
         <span className="match-kicker__rule" aria-hidden="true" />
         <button
+          ref={detailsToggleRef}
           type="button"
           onClick={() =>
             setExpanded((v) => {
@@ -543,7 +545,14 @@ export function RecipeMatchCard({
         {onOptimize && (
           <motion.button
             type="button"
-            onClick={onOptimize}
+            onClick={() => {
+              onOptimize();
+              /* U-10 (F12): dopo l'ottimizzazione il pulsante sparisce; se il
+                 focus è caduto su <body> lo si riporta nella card. */
+              requestAnimationFrame(() => {
+                if (document.activeElement === document.body) detailsToggleRef.current?.focus();
+              });
+            }}
             whileHover={{ scale: 1.025, y: -1 }}
             whileTap={{ scale: 0.97 }}
             transition={motionSpring.highlightedMatch}
