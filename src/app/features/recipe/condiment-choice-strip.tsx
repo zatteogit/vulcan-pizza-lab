@@ -327,6 +327,7 @@ export function CondimentChoiceStrip({
                     <div className="condiment-strip-picker__filters hide-scrollbar">
                       <button
                         type="button"
+                        aria-pressed={activeFlavor === "all"}
                         onClick={() => setActiveFlavor("all")}
                         className={`condiment-strip-picker__filter type-data${
                           activeFlavor === "all" ? " condiment-strip-picker__filter--active" : ""
@@ -338,6 +339,7 @@ export function CondimentChoiceStrip({
                         <button
                           key={profile}
                           type="button"
+                          aria-pressed={activeFlavor === profile}
                           onClick={() => setActiveFlavor(profile)}
                           className={`condiment-strip-picker__filter type-data${
                             activeFlavor === profile ? " condiment-strip-picker__filter--active" : ""

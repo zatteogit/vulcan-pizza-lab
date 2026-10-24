@@ -367,6 +367,7 @@ export function RecipeSetupPanel({
                     <button
                       key={version.id}
                       type="button"
+                      aria-pressed={active}
                       onClick={() => onSelectVersion(version)}
                       className={active ? "setup-option setup-option--binary setup-option--active" : "setup-option setup-option--binary"}
                     >
@@ -395,6 +396,7 @@ export function RecipeSetupPanel({
                       <button
                         key={interpretation.id}
                         type="button"
+                        aria-pressed={active}
                         onClick={() => onSelectInterpretation(interpretation)}
                         className={active ? "setup-option setup-option--active" : "setup-option"}
                       >

@@ -323,6 +323,8 @@ export function ExplorePage() {
             return (
               <button
                 key={item.id}
+                type="button"
+                aria-pressed={active}
                 onClick={() => setExploreFilters(item.id as ExploreFilter)}
                 className={`explore-filters__chip${active ? " explore-filters__chip--active" : ""}${active && isNerd ? " explore-filters__chip--nerd" : ""}`}
               >
@@ -457,6 +459,8 @@ export function ExplorePage() {
                   return (
                     <button
                       key={fam}
+                      type="button"
+                      aria-pressed={active}
                       onClick={() => setExploreFilters("styles", fam)}
                       className={`explore-families__chip${active ? " explore-families__chip--active" : ""}${active && isNerd ? " explore-families__chip--nerd" : ""}`}
                     >

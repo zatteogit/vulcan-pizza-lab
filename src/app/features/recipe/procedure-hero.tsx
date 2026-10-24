@@ -11,6 +11,7 @@ import type {
   MutableRefObject,
   SetStateAction,
 } from "react";
+import { useId } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { timeSlotText } from "./time-slot-text";
@@ -72,6 +73,9 @@ export function ProcedureHeroControls({
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
+  // U-10 (F05): lo switch prende nome e descrizione dal testo che ha accanto.
+  const comfortTitleId = useId();
+  const comfortDescId = useId();
 
   const startDayLabel = daySuffix(new Date(), startTime, cms.cooking).trim() || cms.cooking.dayToday;
   const endDayLabel = daySuffix(new Date(), endTime, cms.cooking).trim() || cms.cooking.dayToday;
@@ -279,10 +283,10 @@ export function ProcedureHeroControls({
         }
       >
         <div className="procedure-hero__comfort-text">
-          <div className="procedure-hero__comfort-title type-data">
+          <div id={comfortTitleId} className="procedure-hero__comfort-title type-data">
             {engineMessage(cms, "timelineComfort.title", "Timeline comoda")}
           </div>
-          <div className={comfortDescClass}>
+          <div id={comfortDescId} className={comfortDescClass}>
             {comfortToggled
               ? engineMessage(cms, "timelineComfort.active", "Attiva: evita le fasi notturne.")
               : currentComfortPlan
@@ -291,6 +295,8 @@ export function ProcedureHeroControls({
           </div>
         </div>
         <Switch
+          aria-labelledby={comfortTitleId}
+          aria-describedby={comfortDescId}
           checked={comfortToggled}
           onCheckedChange={(checked) => {
             setComfortToggled(checked);

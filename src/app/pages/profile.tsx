@@ -784,6 +784,8 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                   return (
                     <motion.button
                       key={preset.id}
+                      type="button"
+                      aria-pressed={active}
                       onClick={() => {
                         setOvenType(preset.id);
                         setOvenTemp(preset.maxTemp);
@@ -839,6 +841,8 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                   return (
                     <motion.button
                       key={skill.level}
+                      type="button"
+                      aria-pressed={active}
                       onClick={() => setSkillLevel(skill.level as SkillLevel)}
                       className="profile-ftu__option"
                       animate={{
@@ -1558,6 +1562,8 @@ export function ProfilePage() {
                 <motion.button
                   key={preset.id}
                   layout
+                  type="button"
+                  aria-pressed={active}
                   onClick={() => {
                     setOvens((prev) => {
                       if (prev.includes(preset.id)) {
@@ -1648,6 +1654,7 @@ export function ProfilePage() {
                   <motion.button
                     key={profile.id}
                     type="button"
+                    aria-pressed={active}
                     onClick={() => setOvenHeatProfile(profile.id)}
                     className={
                       active
@@ -1692,6 +1699,8 @@ export function ProfilePage() {
               return (
                 <motion.button
                   key={skill.level}
+                  type="button"
+                  aria-pressed={active}
                   onClick={() => setSkillLevel(skill.level as SkillLevel)}
                   className="profile-skill-grid__item"
                   animate={{
@@ -1769,6 +1778,8 @@ export function ProfilePage() {
                   return (
                     <motion.button
                       key={mixer.id}
+                      type="button"
+                      aria-pressed={active}
                       onClick={() => toggleMixer(mixer.id)}
                       className="profile-equip-option"
                       animate={{
@@ -1832,6 +1843,8 @@ export function ProfilePage() {
                   return (
                     <motion.button
                       key={surface.id}
+                      type="button"
+                      aria-pressed={active}
                       onClick={() => toggleSurface(surface.id)}
                       className="profile-equip-option"
                       animate={{

@@ -67,16 +67,13 @@ const TIME_COLORS: Record<
   string,
   { bg: string; text: string }
 > = {
-  tonight: { bg: "var(--time-tonight)", text: "var(--overlay-text)" },
-  tomorrow_lunch: { bg: "var(--time-lunch)", text: "var(--overlay-text)" },
-  tomorrow_dinner: {
-    bg: "var(--time-dinner)",
-    text: "var(--overlay-text)",
-  },
-  day_after: { bg: "var(--time-dayafter)", text: "var(--overlay-text)" },
-  day_after_lunch: { bg: "var(--time-dayafter)", text: "var(--overlay-text)" },
-  long_ferment: { bg: "var(--time-weekend)", text: "var(--overlay-text)" },
-  no_preference: { bg: "var(--secondary)", text: "var(--overlay-text)" },
+  tonight: { bg: "var(--time-tonight)", text: "var(--time-tonight-on)" },
+  tomorrow_lunch: { bg: "var(--time-lunch)", text: "var(--time-lunch-on)" },
+  tomorrow_dinner: { bg: "var(--time-dinner)", text: "var(--time-dinner-on)" },
+  day_after: { bg: "var(--time-dayafter)", text: "var(--time-dayafter-on)" },
+  day_after_lunch: { bg: "var(--time-dayafter)", text: "var(--time-dayafter-on)" },
+  long_ferment: { bg: "var(--time-weekend)", text: "var(--time-weekend-on)" },
+  no_preference: { bg: "var(--secondary)", text: "var(--time-any-on)" },
 };
 
 function getTimeColors(slotId?: string | null) {
@@ -449,6 +446,8 @@ function SettingsSummaryBar({
         return (
           <button
             key={tab.id}
+            type="button"
+            aria-expanded={isActive}
             onClick={() => onTabSelect(isActive ? null : tab.id)}
             className={isActive ? "needs-summary__tab needs-summary__tab--active" : "needs-summary__tab"}
           >
@@ -711,7 +710,13 @@ export function UserNeeds({
                             {cms.ui.autoLabel}
                           </motion.button>
                         )}
-                        <button onClick={() => setShowTempTip(!showTempTip)} className="needs-kitchen-temp__help">
+                        <button
+                          type="button"
+                          onClick={() => setShowTempTip(!showTempTip)}
+                          aria-label={`${cms.misc.moreInfo}: ${cms.misc.kitchenTempLabel}`}
+                          aria-expanded={showTempTip}
+                          className="needs-kitchen-temp__help"
+                        >
                           <HelpCircle size={16} className={showTempTip ? "needs-kitchen-temp__help-icon needs-kitchen-temp__help-icon--active" : "needs-kitchen-temp__help-icon"} />
                         </button>
                       </div>
@@ -739,6 +744,8 @@ export function UserNeeds({
                           return (
                             <motion.button
                               key={preset.id}
+                              type="button"
+                              aria-pressed={active}
                               onClick={() => handleOvenSelect(preset.id, preset.maxTemp)}
                               className={
                                 active
@@ -823,6 +830,8 @@ export function UserNeeds({
                           return (
                             <motion.button
                               key={y.id}
+                              type="button"
+                              aria-pressed={active}
                               onClick={() => toggleYeast(y.id)}
                               className={
                                 active
@@ -952,6 +961,8 @@ function TimeSlotPicker({
           return (
             <button
               key={slot.id}
+              type="button"
+              aria-pressed={active}
               onClick={() => onTimeSlotChange(slot)}
               className={
                 (compact ? "needs-slot-list__item needs-slot-list__item--compact" : "needs-slot-list__item") +
@@ -1014,6 +1025,8 @@ function TimeSlotPicker({
           return (
             <motion.button
               key={slot.id}
+              type="button"
+              aria-pressed={active}
               onClick={() => onTimeSlotChange(slot)}
               whileHover={{ y: compact ? -2 : -4 }}
               whileTap={{ scale: 0.97 }}
@@ -1133,6 +1146,8 @@ function FlourChip({
 }) {
   return (
     <motion.button
+      type="button"
+      aria-pressed={active}
       onClick={() => onToggle(flour.id)}
       className={
         "needs-flour-chip" +

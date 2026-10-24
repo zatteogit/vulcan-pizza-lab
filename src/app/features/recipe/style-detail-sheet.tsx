@@ -21,6 +21,7 @@ import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { t } from "../cms/i18n";
 import { CtaButton, IconButton } from "../../components/ds/index";
+import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
 import { uiMessage } from "../../i18n/ui-messages";
 
@@ -71,6 +72,11 @@ export function StyleDetailSheet({
       document.body.style.overflow = originalStyle;
     };
   }, []);
+
+  /* U-10 (F01): contratto da modale — focus iniziale nel pannello, Tab che
+     resta dentro, Escape che chiude, focus restituito alla card. Lo scroll del
+     body è già bloccato qui sopra. */
+  const panelRef = useDialogFocus<HTMLDivElement>({ open: true, onClose: onDismiss, lockScroll: false });
 
   const rec = React.useMemo(() => {
     if (!constraints) return null;
@@ -133,6 +139,8 @@ export function StyleDetailSheet({
       />
 
       <motion.div
+        ref={panelRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-labelledby={`style-detail-title-${style.id}`}
@@ -240,6 +248,8 @@ export function StyleDetailSheet({
           {/* ── Nerd toggle — show/hide technical details ── */}
           <div className="style-detail-nerd">
             <motion.button
+              type="button"
+              aria-expanded={showNerd}
               onClick={() => setShowNerd(!showNerd)}
               className={`style-detail-nerd__toggle${showNerd ? " style-detail-nerd__toggle--active" : ""}`}
             >

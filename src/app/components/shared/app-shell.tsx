@@ -285,13 +285,27 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
       setState((prev) => (prev.hidden ? { ...prev, hidden: false } : prev));
     };
 
+    /* U-10 (F02): dock, avatar e widget di cottura si ritirano allo scroll ma
+       restano nella sequenza del Tab. Quando il focus ci entra ricompaiono,
+       così chi usa la tastiera non finisce su controlli invisibili. */
+    const onFocusIn = (event: FocusEvent) => {
+      if (!(event.target instanceof Element)) return;
+      if (!event.target.closest(".app-shell-dock, .app-shell-profile, .cook-widget")) return;
+      acc = 0;
+      setState((prev) =>
+        prev.hidden || prev.nearBottom ? { ...prev, hidden: false, nearBottom: false } : prev,
+      );
+    };
+
     onScroll();
+    document.addEventListener("focusin", onFocusIn);
     window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("scroll", onScroll, { passive: true, capture: true });
     window.addEventListener("resize", onViewportChange, { passive: true });
     window.visualViewport?.addEventListener("resize", onViewportChange);
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
+      document.removeEventListener("focusin", onFocusIn);
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("scroll", onScroll, { capture: true } as EventListenerOptions);
       window.removeEventListener("resize", onViewportChange);

@@ -516,6 +516,8 @@ export function SearchOverlay({
                 return (
                   <button
                     key={opt.id}
+                    type="button"
+                    aria-pressed={isActive}
                     onClick={() => handleFilterClick(opt.id)}
                     className={`search-overlay-x__filter-btn${isActive ? " search-overlay-x__filter-btn--active" : ""}`}
                     aria-label={opt.id === "all" ? uiMessage("components.shared.search-overlay.mostra-tutto-d72ef3ee") : uiMessage("components.shared.search-overlay.filtra-per-value-7dca99ea", [opt.label])}

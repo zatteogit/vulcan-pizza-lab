@@ -550,6 +550,7 @@ export function RecipeConfigurator({
           {/* Hydration */}
           <div className="config-field">
             <GradientSlider
+              name={cfg.hydrationLabel}
               label={<><Label>{cfg.hydrationLabel}</Label><InfoTip termId="hydration">{cfg.hydrationTip}</InfoTip></>}
               value={customHydration}
               onChange={handleH}
@@ -595,6 +596,7 @@ export function RecipeConfigurator({
           {/* Flour W */}
           <div className="config-field">
             <GradientSlider
+              name={cfg.flourWLabel}
               label={<><Label>{cfg.flourWLabel}</Label><InfoTip termId="w_alveograph">{cfg.flourWTip}</InfoTip></>}
               value={customFlourW}
               onChange={handleW}
@@ -630,6 +632,7 @@ export function RecipeConfigurator({
           {customFlourPL !== undefined && onFlourPLChange && (
             <div className="config-field">
               <GradientSlider
+              name={cfg.plLabel}
                 label={<><Label>{cfg.plLabel}</Label><InfoTip termId="pl_ratio">{cfg.plTip}</InfoTip></>}
                 value={Math.round(customFlourPL * 100) / 100}
                 onChange={handlePL}
@@ -668,6 +671,7 @@ export function RecipeConfigurator({
           {customSalt !== undefined && onSaltChange && (
             <div className="config-field">
               <GradientSlider
+              name={uiMessage("features.recipe.recipe-configurator.sale-0028d743")}
                 label={<Label>{uiMessage("features.recipe.recipe-configurator.sale-0028d743")}</Label>}
                 value={Math.round(customSalt * 10) / 10}
                 onChange={onSaltChange}
@@ -694,6 +698,7 @@ export function RecipeConfigurator({
               {/* Lievitazione */}
               <div className="config-field">
                 <GradientSlider
+                  name={style.dough.unleavened ? cfg.restLabel : cfg.fermentLabel}
                   label={
                     style.dough.unleavened
                       ? <><Label>{cfg.restLabel}</Label><InfoTip>{cfg.restTip}</InfoTip></>
@@ -836,6 +841,7 @@ export function RecipeConfigurator({
           {/* Temperatura di cottura */}
           <div className="config-field">
             <GradientSlider
+              name={uiMessage("features.recipe.recipe-configurator.temperatura-di-cottura-85a0cbf5")}
               label={<Label>{uiMessage("features.recipe.recipe-configurator.temperatura-di-cottura-85a0cbf5")}</Label>}
               value={constraints.oven_max_temp_c}
               onChange={(v) =>
@@ -929,6 +935,7 @@ export function RecipeConfigurator({
                         <span className="config-dim-label__text">{cfg.panLength}</span>
                       </div>
                       <GradientSlider
+                        name={cfg.panLength}
                         value={panConfig.panLength ?? style.shape.length_cm ?? 30}
                         onChange={(v) => onPanConfigChange({ ...panConfig, panLength: v })}
                         min={20}
@@ -946,6 +953,7 @@ export function RecipeConfigurator({
                         <span className="config-dim-label__text">{cfg.panWidth}</span>
                       </div>
                       <GradientSlider
+                        name={cfg.panWidth}
                         value={panConfig.panWidth ?? style.shape.width_cm ?? 20}
                         onChange={(v) => onPanConfigChange({ ...panConfig, panWidth: v })}
                         min={15}
@@ -968,6 +976,7 @@ export function RecipeConfigurator({
                       <span className="config-dim-label__text">{cfg.panDiameter}</span>
                     </div>
                     <GradientSlider
+                        name={cfg.panDiameter}
                       value={panConfig.panDiameter ?? style.shape.diameter_cm ?? 26}
                       onChange={(v) => onPanConfigChange({ ...panConfig, panDiameter: v })}
                       min={15}
@@ -1006,6 +1015,7 @@ export function RecipeConfigurator({
                 <InfoTip>{cfg.thicknessTip}</InfoTip>
               </div>
               <GradientSlider
+                name={cfg.thicknessLabel}
                 value={Math.round((panConfig.thickness ?? style.shape.thickness_factor) * 100) / 100}
                 onChange={(v) => onPanConfigChange({ ...panConfig, thickness: Math.round(v * 100) / 100 })}
                 min={Math.max(0.05, Math.round((style.shape.thickness_factor * 0.4) * 100) / 100)}
@@ -1121,6 +1131,7 @@ function GradientSlider({
   adaptiveMax,
   optimalValue,
   label,
+  name,
 }: {
   value: number;
   onChange: (v: number) => void;
@@ -1135,6 +1146,8 @@ function GradientSlider({
   adaptiveMax?: number;
   optimalValue?: number;
   label?: React.ReactNode;
+  /** Nome accessibile dell'input (U-10, F05): il testo dell'etichetta visibile. */
+  name?: string;
 }) {
   const pct = ((value - min) / (max - min)) * 100;
   const inRange =
@@ -1239,6 +1252,8 @@ function GradientSlider({
         {/* Native input */}
         <input
           type="range"
+          aria-label={name}
+          aria-valuetext={`${value}${unit}`}
           min={min}
           max={max}
           step={step}

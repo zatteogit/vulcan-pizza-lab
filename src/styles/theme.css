@@ -778,6 +778,14 @@
   --time-dayafter-soft: var(--color-dayafter-400);
   --time-weekend: var(--color-weekend-500);
   --time-weekend-soft: var(--color-weekend-400);
+  /* Testo sopra i colori del momento (U-10, F06): bianco dove regge 4,5:1,
+     inchiostro scuro sull'oro del pranzo (il bianco era a 3:1). */
+  --time-tonight-on: var(--fixed-photo-text);
+  --time-lunch-on: var(--color-night-950);
+  --time-dinner-on: var(--fixed-photo-text);
+  --time-dayafter-on: var(--fixed-photo-text);
+  --time-weekend-on: var(--fixed-photo-text);
+  --time-any-on: var(--fixed-photo-text);
 
   /* ── CTA (action) ── */
   --cta: var(--color-sage-700);
@@ -788,6 +796,12 @@
       var(--color-terracotta-500) 0%,
       var(--color-terracotta-400) 50%,
       var(--color-amber-400) 100%);
+  /* U-10 (F07): fondo della card «Percorso didattico», scuro in entrambi i
+     temi (con --grad-ember il testo bianco scendeva a 2:1). Testo ≥ 4,5:1. */
+  --grad-learn-path: linear-gradient(135deg,
+      var(--color-terracotta-800) 0%,
+      var(--color-terracotta-700) 55%,
+      var(--color-amber-800) 100%);
   --grad-warm: linear-gradient(160deg,
       var(--color-parchment-50) 0%,
       var(--color-terracotta-50) 50%,
@@ -1476,6 +1490,14 @@
   --time-dayafter-soft: var(--color-dayafter-200);
   --time-weekend: var(--color-weekend-300);
   --time-weekend-soft: var(--color-weekend-200);
+  /* In scuro i colori del momento schiariscono: sotto il bianco scende fino a
+     2,2:1, quindi inchiostro scuro tranne che sul blu della sera. */
+  --time-tonight-on: var(--fixed-photo-text);
+  --time-lunch-on: var(--color-night-950);
+  --time-dinner-on: var(--color-night-950);
+  --time-dayafter-on: var(--color-night-950);
+  --time-weekend-on: var(--color-night-950);
+  --time-any-on: var(--color-night-950);
 
   --grad-ember: linear-gradient(135deg,
       var(--color-terracotta-300) 0%,
@@ -3449,7 +3471,7 @@
     border-radius: var(--radius-3xl);
     text-decoration: none;
     color: var(--overlay-text);
-    background: var(--grad-ember);
+    background: var(--grad-learn-path);
     border: var(--border-w) solid color-mix(in srgb, var(--overlay-text) 15%, transparent);
     box-shadow: var(--elevation-ember);
     padding: var(--space-12) var(--space-10);
@@ -3496,7 +3518,7 @@
     font-weight: var(--weight-bold);
     letter-spacing: var(--tracking-extreme);
     text-transform: uppercase;
-    color: color-mix(in srgb, var(--overlay-text) 70%, transparent);
+    color: color-mix(in srgb, var(--overlay-text) 90%, transparent);
     border-bottom: var(--border-w) solid color-mix(in srgb, var(--overlay-text) 25%, transparent);
     padding-bottom: var(--space-0-75);
     display: inline-block;
@@ -7701,7 +7723,8 @@
   }
 
   .needs-slot-list__item.needs-slot-list__item--active {
-    background: linear-gradient(155deg, var(--needs-time-bg), color-mix(in srgb, var(--needs-time-bg) 75%, var(--overlay-backdrop)));
+    /* U-10 (F06): sfumatura leggera (92%) — più scura, il testo scendeva sotto 4,5:1 */
+    background: linear-gradient(155deg, var(--needs-time-bg), color-mix(in srgb, var(--needs-time-bg) 92%, var(--overlay-backdrop)));
     color: var(--needs-time-text);
     border-color: transparent;
     box-shadow: 0 var(--space-3) var(--space-7) color-mix(in srgb, var(--needs-time-bg) 40%, transparent);
@@ -7861,7 +7884,8 @@
   }
 
   .needs-slot-grid__item.needs-slot-grid__item--active {
-    background: linear-gradient(155deg, var(--needs-time-bg), color-mix(in srgb, var(--needs-time-bg) 75%, var(--overlay-backdrop)));
+    /* U-10 (F06): sfumatura leggera (92%) — più scura, il testo scendeva sotto 4,5:1 */
+    background: linear-gradient(155deg, var(--needs-time-bg), color-mix(in srgb, var(--needs-time-bg) 92%, var(--overlay-backdrop)));
     color: var(--needs-time-text);
     border-color: transparent;
     box-shadow: 0 var(--space-3-5) var(--space-8) color-mix(in srgb, var(--needs-time-bg) 42%, transparent);
@@ -18516,6 +18540,31 @@
   }
 
 
+}
+
+/* ═══ U-10 (F03, F10) — anello di focus unico ═══
+   Fuori dai layer di proposito: vince su ogni `outline: none` dei componenti
+   (prima diversi controlli non mostravano il focus) e sugli anelli al 32–40%
+   di opacità, che sullo sfondo arrivavano a 2,4:1. --ring pieno con un bordo
+   interno del colore di superficie: resta visibile anche sopra le foto. */
+:where(
+  a[href],
+  button,
+  input,
+  select,
+  textarea,
+  summary,
+  [tabindex]:not([tabindex="-1"]),
+  [role="button"],
+  [role="tab"],
+  [role="switch"],
+  [role="radio"],
+  [role="checkbox"],
+  [role="slider"]
+):focus-visible {
+  outline: var(--space-0-5) solid var(--ring);
+  outline-offset: var(--space-0-5);
+  box-shadow: 0 0 0 var(--space-0-5) var(--surface);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
