@@ -755,7 +755,7 @@ export function localizeStep(
       ? fmt.durationMinutes(Math.round(step.duration_minutes / 15) * 15)
       : `${Math.round(step.duration_minutes / 60)} h`,
     prefTemp: prefType === "biga" ? `${formatTemp(18)}–${formatTemp(20)}` : `${formatTemp(20)}–${formatTemp(22)}`,
-    prefHydration: fmt ? fmt.percent(45) : "45%",
+    prefHydration: fmt ? fmt.percent(44) : "44%",
   };
   const title = entry.title || step.title;
   let desc = entry.desc || step.description;
@@ -886,7 +886,7 @@ export function stepQuantities(
   const fatType = recipe.style.dough.fat_type;
   const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
   const split = recipe.has_pre_ferment
-    ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type })
+    ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type, flourPct: recipe.pre_ferment_flour_pct })
     : null;
   const yeast = recipe.yeast_g > 0 ? [{ label: yeastLabel, value: fmt.grams(recipe.yeast_g) }] : [];
   switch (stepId) {

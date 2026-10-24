@@ -66,7 +66,7 @@ export function PrintSheet({
   ].filter(([, g]) => (g as number) > 0) as [string, number][];
   const total = rows.reduce((sum, [, g]) => sum + g, 0);
   const split = recipe.has_pre_ferment
-    ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type })
+    ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type, flourPct: recipe.pre_ferment_flour_pct })
     : null;
   const scaledTopping = topping ? scaleToppingAmounts(topping, recipe.style.topping_scale) : undefined;
   const concept = topping ? toppingConcept(topping.concept_ref, cms.toppingI18n) : undefined;

@@ -1,6 +1,6 @@
 /* Pure saved-recipe collection rules. Browser persistence lives in adapters/. */
 
-import type { OvenType, PanConfig } from "../domain/pizza-engine";
+import type { OvenType, PanConfig, PreFermentChoice } from "../domain/pizza-engine";
 
 /** U-1: prima 30, e oltre si perdevano in silenzio le più vecchie. Una voce
  *  pesa circa 400 byte: 200 voci stanno larghe in localStorage. */
@@ -13,6 +13,8 @@ export interface SavedRecipeParams {
   fermentHours: number;
   fermentTemp: number;
   usePreFerment: boolean;
+  /** D-043 — biga o poolish e quota di farina scelti. */
+  preFerment?: PreFermentChoice;
   doughBalls: number;
   ovenType?: OvenType;
   ovenTemp?: number;
@@ -40,6 +42,8 @@ export function savedRecipeKey(styleId: string, params: SavedRecipeParams): stri
     params.fermentHours,
     params.fermentTemp,
     params.usePreFerment ? 1 : 0,
+    params.preFerment?.type ?? "",
+    params.preFerment?.flourPct ?? "",
     params.doughBalls,
     params.ovenType ?? "",
     params.ovenTemp ?? "",

@@ -2,23 +2,23 @@ import { describe, expect, it } from "vitest";
 import { computePreFermentSplit } from "./pre-ferment-split";
 
 /* Convenzioni canoniche (audit roleplay giu 2026 + audit lug 2026):
-   biga = 40% farina @ 45% idro · poolish = 30% farina @ 100% idro.
+   biga = 40% farina @ 44% idro (fonti, audit n. 10) · poolish = 30% farina @ 100% idro.
    Il sale non entra mai nel pre-fermento (vive solo nell'impasto finale,
    quindi NON compare in questo split). */
 
 describe("computePreFermentSplit", () => {
-  it("biga: 40% della farina, idratata al 45%", () => {
+  it("biga: 40% della farina, idratata al 44%", () => {
     const split = computePreFermentSplit({
       flourG: 1000,
       waterG: 700,
       preFermentType: "biga",
     });
     expect(split.name).toBe("Biga");
-    expect(split.hydrationPct).toBe(45);
+    expect(split.hydrationPct).toBe(44);
     expect(split.prefermentFlourG).toBe(400);
-    expect(split.prefermentWaterG).toBe(180);
+    expect(split.prefermentWaterG).toBe(176);
     expect(split.mainFlourG).toBe(600);
-    expect(split.mainWaterG).toBe(520);
+    expect(split.mainWaterG).toBe(524);
   });
 
   it("poolish: 30% della farina, 1:1 con l'acqua", () => {
@@ -65,5 +65,14 @@ describe("computePreFermentSplit", () => {
       preFermentType: "poolish",
     });
     expect(split.mainWaterG).toBeGreaterThan(0);
+  });
+});
+
+describe("quota di farina scelta (D-043)", () => {
+  it("biga al 30%: 300 g di farina e 132 g d'acqua su 1 kg", () => {
+    const split = computePreFermentSplit({ flourG: 1000, waterG: 700, preFermentType: "biga", flourPct: 30 });
+    expect(split.flourPct).toBe(30);
+    expect(split.prefermentFlourG).toBe(300);
+    expect(split.prefermentWaterG).toBe(132);
   });
 });

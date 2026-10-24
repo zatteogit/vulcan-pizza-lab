@@ -486,3 +486,13 @@ tiene uguali; lo spessore in g/cm² mostrato è ora peso diviso area (Pala
   il 10 % della tua temperatura (Napoletana → ciaccino senese, New York,
   Chicago tavern).
 Golden invariato (riguarda solo la ricetta).
+
+## D-043 · Pre-fermento sceglibile e peso del panetto (24/10/2026)
+
+- `GenerateRecipeOptions.preFerment` ({ type, flourPct }): biga o poolish
+  scelti dall'utente e farina nel pre-fermento (20–50 %, default biga 40 %,
+  poolish 30 %). Senza scelta resta il tipo dello stile: golden invariato.
+- Scorporo della biga al 44 % d'acqua (fonti, audit n. 10; prima 45 %): su
+  1 kg di farina, biga 400 g di farina con 176 g d'acqua invece di 180 g.
+- `PanConfig.ballWeightG`: peso del panetto scelto; vince su teglia e
+  spessore e non subisce la compensazione dello spessore del forno.

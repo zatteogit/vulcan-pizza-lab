@@ -338,6 +338,7 @@ export function IngredientsSection({
             flourG: recipe.flour_g,
             waterG: recipe.water_g,
             preFermentType: recipe.pre_ferment_type,
+            flourPct: recipe.pre_ferment_flour_pct,
           });
           const { isPoolish, name } = split;
           const prefFlour = split.prefermentFlourG;

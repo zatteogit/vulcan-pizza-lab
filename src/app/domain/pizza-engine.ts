@@ -464,6 +464,8 @@ export interface GeneratedRecipe {
   fermentation_temp_c: number;
   has_pre_ferment: boolean;
   pre_ferment_type?: string;
+  /** D-043 — farina nel pre-fermento, % della farina totale. */
+  pre_ferment_flour_pct?: number;
   oven_temp_c: number;
   cook_time_sec: number;
   total_dough_g: number;
@@ -1566,6 +1568,9 @@ export interface PanConfig {
   panWidth?: number;        // cm — per rettangolare
   panDiameter?: number;     // cm — per tonda
   thickness?: number;       // custom thickness_factor
+  /** D-043 — peso del panetto scelto dall'utente (g): vince su teglia e
+   *  spessore e non subisce le compensazioni del forno. */
+  ballWeightG?: number;
 }
 
 export interface ScoreWeightsOverride {
@@ -1625,7 +1630,23 @@ export interface GenerateRecipeOptions {
    *  customHydration (usato dall'ottimizzatore sui suoi candidati). Senza
    *  questo flag un valore custom è la scelta finale dell'utente. */
   compensateCustomHydration?: boolean;
+  /** D-043 — biga o poolish scelti dall'utente e quota di farina nel
+   *  pre-fermento (% sulla farina totale). Assenti: quelli dello stile. */
+  preFerment?: PreFermentChoice;
 }
+
+export type PreFermentType = "biga" | "poolish";
+
+export interface PreFermentChoice {
+  type?: PreFermentType;
+  /** Farina nel pre-fermento, % della farina totale (20–50, fonti in
+   *  docs/ricerca/prefermenti-fonti-2026-10-24.md). */
+  flourPct?: number;
+}
+
+/** Quota di farina nel pre-fermento: default e limiti dalle fonti (biga in
+ *  genere 20–50 %, poolish 30–50 %; qui 20–50 per entrambi). */
+export const PRE_FERMENT_FLOUR_PCT = { biga: 40, poolish: 30, min: 20, max: 50 } as const;
 
 /** Tipo di pre-fermento della ricetta: il primo dichiarato dallo stile
  *  («direct|biga|poolish» → biga); poolish per gli stili diretti. Una sola
@@ -1656,6 +1677,7 @@ export function generateRecipe(
     interpretationCenter,
     customFlourBlend,
     compensateCustomHydration,
+    preFerment,
   } = options;
   const doughBalls = constraints.dough_balls;
 
@@ -1740,6 +1762,11 @@ export function generateRecipe(
 
   const hasPreFerment =
     usePreFerment ?? style.requires_pre_ferment;
+  const preFermentType: PreFermentType = preFerment?.type ?? preFermentKind(style);
+  const preFermentFlourPct = Math.min(
+    PRE_FERMENT_FLOUR_PCT.max,
+    Math.max(PRE_FERMENT_FLOUR_PCT.min, preFerment?.flourPct ?? PRE_FERMENT_FLOUR_PCT[preFermentType]),
+  );
 
   // Oven temperature
   let ovenTemp = Math.min(
@@ -1784,6 +1811,7 @@ export function generateRecipe(
       defaultTopping,
       equipment,
       yeast,
+      preFermentType,
     );
 
   let fermentationHours =
@@ -1918,9 +1946,11 @@ export function generateRecipe(
   const baseBallWeight = panConfig
     ? calcDoughWeight(style, panConfig)
     : style.shape.dough_weight_g;
-  const ballWeight = Math.round(
-    baseBallWeight * ovenCompensations.thickness_factor,
-  );
+  const customBallWeight = panConfig?.ballWeightG;
+  const ballWeight =
+    customBallWeight != null && customBallWeight > 0
+      ? Math.round(customBallWeight)
+      : Math.round(baseBallWeight * ovenCompensations.thickness_factor);
   const totalDough = ballWeight * doughBalls;
 
   // Total dough = flour × (1 + H/100 + salt/100 + oil/100 + sugar/100 + yeast/100)
@@ -2333,7 +2363,8 @@ export function generateRecipe(
     fermentation_hours: fermentationHours,
     fermentation_temp_c: fermentationTempC,
     has_pre_ferment: hasPreFerment,
-    pre_ferment_type: hasPreFerment ? preFermentKind(style) : undefined,
+    pre_ferment_type: hasPreFerment ? preFermentType : undefined,
+    pre_ferment_flour_pct: hasPreFerment ? preFermentFlourPct : undefined,
     oven_temp_c: ovenTemp,
     cook_time_sec: cookTime,
     total_dough_g: totalDough,
@@ -2965,6 +2996,7 @@ function generateTimeline(
   topping?: ToppingRecipe,
   equipment?: EquipmentContext,
   yeastType: "fresh" | "dry" | "sourdough" = "fresh",
+  preFermentType: PreFermentType = preFermentKind(style),
 ): TimelineStep[] {
   const steps: TimelineStep[] = [];
   const isUnleavened = !!style.dough.unleavened;
@@ -3016,7 +3048,7 @@ function generateTimeline(
     steps.push({
       id: "preferment",
       title: "Pre-Fermento",
-      description: `Mescolare ${preFermentKind(style)} e far maturare`,
+      description: `Mescolare ${preFermentType} e far maturare`,
       duration_minutes: Math.round(fermentHours * 60 * 0.4),
       icon: "beaker",
       timing_label: `${Math.round(fermentHours * 0.4)}h prima`,
