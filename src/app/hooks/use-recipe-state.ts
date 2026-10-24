@@ -22,6 +22,7 @@ import {
   type GeneratedRecipe,
   type PanConfig,
   type PizzaStyle,
+  type PreFermentChoice,
   type ScoreWeightsOverride,
   type UserConstraints,
   type VersionRangeOverrides,
@@ -45,6 +46,7 @@ export interface RecipeInitialState {
   fermentHours?: number;
   fermentTemp?: number;
   usePreFerment?: boolean;
+  preFerment?: PreFermentChoice;
   panConfig?: PanConfig;
   toppingConcept?: string | null;
   flourBlend?: { name: string; pct: number; w?: number }[];
@@ -87,6 +89,7 @@ interface RecipeBuildParams {
   customFermentHours: number;
   customFermentTemp: number;
   usePreFerment: boolean;
+  preFermentChoice: PreFermentChoice;
   customFlourPL: number;
   customSalt: number;
   panConfig: PanConfig;
@@ -232,6 +235,7 @@ function resolveInitialState(
       overrides?.use_pre_ferment ??
       version?.params.use_pre_ferment ??
       centered.usePreFerment,
+    preFermentChoice: initial?.preFerment ?? {},
     panConfig: initial?.panConfig ?? defaultRecipePanConfig(style),
     activeVersionId: version?.id ?? null,
     activeInterpretationId: interpretation?.id ?? null,
@@ -250,6 +254,7 @@ function buildGeneratedRecipe({
   customFermentHours,
   customFermentTemp,
   usePreFerment,
+  preFermentChoice,
   customFlourPL,
   customSalt,
   panConfig,
@@ -302,6 +307,7 @@ function buildGeneratedRecipe({
     activeImpastoRef: activeVersion?.impasto_ref,
     interpretationCenter,
     customFlourBlend,
+    preFerment: preFermentChoice,
   };
   // ENG-6: finché l'idratazione è quella scelta dall'ottimizzatore, la ricetta
   // si ricostruisce come l'ha valutata lui: base + compensazione del forno,
@@ -356,6 +362,9 @@ export function useRecipeState({
   const [usePreFerment, setUsePreFerment] = useState(
     resolvedInitial?.usePreFerment ?? false,
   );
+  const [preFermentChoice, setPreFermentChoice] = useState<PreFermentChoice>(
+    resolvedInitial?.preFermentChoice ?? {},
+  );
   const [panConfig, setPanConfig] = useState<PanConfig>(
     resolvedInitial?.panConfig ?? {},
   );
@@ -404,6 +413,7 @@ export function useRecipeState({
       setCustomFermentHours(next.customFermentHours);
       setCustomFermentTemp(next.customFermentTemp);
       setUsePreFerment(next.usePreFerment);
+      setPreFermentChoice(next.preFermentChoice);
       setPanConfig(next.panConfig);
       setActiveVersionId(next.activeVersionId);
       setActiveInterpretationId(next.activeInterpretationId);
@@ -480,6 +490,7 @@ export function useRecipeState({
           overrides?.fermentation_temp_c ?? centered.fermentTemp,
         );
         setUsePreFerment(overrides?.use_pre_ferment ?? centered.usePreFerment);
+        setPreFermentChoice({});
         setCustomSalt(style.dough.salt_pct);
       } else if (overrides) {
         if (overrides.hydration_pct !== undefined)
@@ -530,6 +541,7 @@ export function useRecipeState({
       setCustomFermentHours(centered.fermentHours);
       setCustomFermentTemp(centered.fermentTemp);
       setUsePreFerment(centered.usePreFerment);
+      setPreFermentChoice({});
       // Redesign lug 2026: anche il sale torna al valore dello stile — così
       // dopo il reset isDirty è false per costruzione (invariante Salva/Torna).
       setCustomSalt(style.dough.salt_pct);
@@ -599,6 +611,7 @@ export function useRecipeState({
         customFermentHours,
         customFermentTemp,
         usePreFerment,
+        preFermentChoice,
         customFlourPL,
         customSalt,
         panConfig,
@@ -625,6 +638,7 @@ export function useRecipeState({
       selectedToppingConcept,
       style,
       usePreFerment,
+      preFermentChoice,
     ],
   );
 
@@ -645,6 +659,8 @@ export function useRecipeState({
     setCustomFermentTemp,
     usePreFerment,
     setUsePreFerment,
+    preFermentChoice,
+    setPreFermentChoice,
     panConfig,
     setPanConfig,
     activeVersionId,
@@ -683,6 +699,8 @@ export function useRecipeState({
     setCustomFermentTemp: Dispatch<SetStateAction<number>>;
     usePreFerment: boolean;
     setUsePreFerment: Dispatch<SetStateAction<boolean>>;
+    preFermentChoice: PreFermentChoice;
+    setPreFermentChoice: Dispatch<SetStateAction<PreFermentChoice>>;
     panConfig: PanConfig;
     setPanConfig: Dispatch<SetStateAction<PanConfig>>;
     activeVersionId: string | null;

@@ -11,3 +11,11 @@ describe("teglia nel link (audit totale n. 16)", () => {
     expect(decodePan("")).toBeNull();
   });
 });
+
+describe("peso del panetto nel link (D-043)", () => {
+  it("andata e ritorno", () => {
+    expect(encodePan({ ballWeightG: 250 })).toBe(":::::250");
+    expect(decodePan(":::::250")?.ballWeightG).toBe(250);
+    expect(decodePan(":::::5")).toBeNull();
+  });
+});

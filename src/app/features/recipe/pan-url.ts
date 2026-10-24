@@ -3,8 +3,8 @@ import type { PanConfig } from "../../domain/pizza-engine";
 /* ═══ Audit totale n. 16 — teglia nel link ═══
  * Riaprendo una ricetta salvata o un link condiviso la teglia 60×40 tornava
  * 40×30 e le dosi si dimezzavano: le misure non erano nel link. Parametro
- * compatto `pan`: forma, lunghezza, larghezza, diametro, spessore
- * («r:60:40::0.6», «c:::32:0.5»). */
+ * compatto `pan`: forma, lunghezza, larghezza, diametro, spessore e, dal
+ * D-043, peso del panetto scelto («r:60:40::0.6», «c:::32:0.5», «:::::250»). */
 
 export function encodePan(pan: PanConfig | null | undefined): string | null {
   if (!pan) return null;
@@ -14,13 +14,14 @@ export function encodePan(pan: PanConfig | null | undefined): string | null {
     pan.panWidth ?? "",
     pan.panDiameter ?? "",
     pan.thickness ?? "",
+    pan.ballWeightG ?? "",
   ];
-  return parts.join(":");
+  return parts.join(":").replace(/:+$/, "");
 }
 
 export function decodePan(raw: string | null | undefined): PanConfig | null {
   if (!raw) return null;
-  const [shape, len, wid, diam, th] = raw.split(":");
+  const [shape, len, wid, diam, th, ball] = raw.split(":");
   const num = (v: string | undefined, lo: number, hi: number) => {
     if (v === undefined || v === "") return undefined;
     const n = Number(v);
@@ -32,6 +33,7 @@ export function decodePan(raw: string | null | undefined): PanConfig | null {
     panWidth: num(wid, 5, 200),
     panDiameter: num(diam, 5, 100),
     thickness: num(th, 0.05, 3),
+    ballWeightG: num(ball, 20, 5000),
   };
   return Object.values(pan).some((v) => v !== undefined) ? pan : null;
 }

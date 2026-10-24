@@ -1789,6 +1789,12 @@
     overflow: hidden;
   }
 
+  /* Con un dialogo aperto i comandi flottanti della pagina sotto non si
+     vedono: due «Genera ricetta» uno sopra l'altro confondono. */
+  html.ds-dialog-open .home-float-cta {
+    visibility: hidden;
+  }
+
   /* ── Pre-React startup surface ── */
   .app-splash {
     position: fixed;
@@ -6518,6 +6524,14 @@
     align-items: center;
     gap: var(--space-2);
     margin-bottom: var(--space-1-5);
+  }
+
+  /* D-043 — tipo e quota del pre-fermento, peso del panetto */
+  .config-field.config-preferment,
+  .config-field.config-ball-weight {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
   }
 
   .config-thickness-header {
@@ -14216,6 +14230,19 @@
     padding-inline: var(--space-5);
     padding-bottom: var(--space-6);
     padding-top: var(--space-9);
+  }
+
+  /* Schermi larghi: card centrata invece di un foglio largo quanto la finestra
+     (nota di Matteo, 24/10/2026; audit totale n. 31). */
+  @media (min-width: 640px) {
+    .style-detail-sheet__panel {
+      inset: var(--space-0);
+      margin: auto;
+      width: min(var(--measure-lg), calc(100% - var(--space-8) * 2));
+      height: fit-content;
+      border: var(--space-px) solid var(--outline-variant);
+      border-radius: var(--radius-xl);
+    }
   }
 
   @media (min-width: 640px) {

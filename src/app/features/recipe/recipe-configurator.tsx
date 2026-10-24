@@ -8,16 +8,19 @@ import { InfoTip } from "../../components/shared/info-tip";
 import {
 OVEN_PRESETS,
 OvenType,
+PRE_FERMENT_FLOUR_PCT,
 PanConfig,
 PanShape,
 PizzaStyle,
+PreFermentChoice,
+preFermentKind,
 UserConstraints,
 defaultPanShape,
 needsPan,
 optimizeRecipe,
 supportsThickness,
 } from "../../domain/pizza-engine";
-import { SegmentedControl, Switch } from "../../components/ds/index";
+import { SegmentedControl, Stepper, Switch } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
 import { flourStrength, type FlourStrength } from "./recipe-output-format";
 
@@ -217,6 +220,9 @@ interface RecipeConfiguratorProps {
   science?: unknown;
   panConfig?: PanConfig;
   onPanConfigChange?: (p: PanConfig) => void;
+  /** D-043 — biga o poolish e quota di farina nel pre-fermento. */
+  preFermentChoice?: PreFermentChoice;
+  onPreFermentChoiceChange?: (c: PreFermentChoice) => void;
 }
 
 /* ═══ ADAPTIVE CROSS-PARAMETER HINTS ═══
@@ -421,6 +427,8 @@ export function RecipeConfigurator({
   onSaltChange,
   panConfig,
   onPanConfigChange,
+  preFermentChoice,
+  onPreFermentChoiceChange,
 }: RecipeConfiguratorProps) {
   /* Single-call update for oven to avoid the double-update bug */
   const handleOvenSelect = (id: string, maxTemp: number) => {
@@ -813,6 +821,52 @@ export function RecipeConfigurator({
               </div>
               )}
 
+              {/* D-043 — biga o poolish e quanta farina ci va (fonti in
+                  docs/ricerca/prefermenti-fonti-2026-10-24.md) */}
+              {showAdvanced && usePreFerment && onPreFermentChoiceChange && (() => {
+                const type = preFermentChoice?.type ?? preFermentKind(style);
+                const flourPct = preFermentChoice?.flourPct ?? PRE_FERMENT_FLOUR_PCT[type];
+                return (
+                  <div className="config-field config-preferment">
+                    <SegmentedControl
+                      value={type}
+                      onValueChange={(next) =>
+                        onPreFermentChoiceChange({
+                          ...preFermentChoice,
+                          // il tipo dello stile non è una modifica
+                          type: next === preFermentKind(style) ? undefined : (next as "biga" | "poolish"),
+                          flourPct: undefined,
+                        })
+                      }
+                      ariaLabel={uiMessage("features.recipe.recipe-configurator.preFermentTypeLabel")}
+                      size="sm"
+                      fullWidth
+                      options={[
+                        { value: "biga", label: uiMessage("features.recipe.recipe-configurator.preFermentBiga") },
+                        { value: "poolish", label: uiMessage("features.recipe.recipe-configurator.preFermentPoolish") },
+                      ]}
+                    />
+                    <GradientSlider
+                      name={uiMessage("features.recipe.recipe-configurator.preFermentFlourLabel")}
+                      label={<Label>{uiMessage("features.recipe.recipe-configurator.preFermentFlourLabel")}</Label>}
+                      value={flourPct}
+                      onChange={(v) =>
+                        onPreFermentChoiceChange({
+                          ...preFermentChoice,
+                          flourPct: v === PRE_FERMENT_FLOUR_PCT[type] ? undefined : v,
+                        })
+                      }
+                      min={PRE_FERMENT_FLOUR_PCT.min}
+                      max={PRE_FERMENT_FLOUR_PCT.max}
+                      step={5}
+                      unit="%"
+                      gradient={SLIDER_GRADIENTS.fermentation}
+                      optimalValue={PRE_FERMENT_FLOUR_PCT[type]}
+                    />
+                  </div>
+                );
+              })()}
+
               {/* Temperatura di fermentazione */}
               <div className="config-field">
                 <div className="config-temp-header">
@@ -833,7 +887,20 @@ export function RecipeConfigurator({
                   )}
                 </div>
 
-                {(() => {
+                {/* D-043: nei parametri avanzati la temperatura è libera (1–30 °C);
+                    per tutti restano le tre scelte rapide. */}
+                {showAdvanced ? (
+                  <GradientSlider
+                    name={uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-e4ff14ef")}
+                    value={customFermentTemp}
+                    onChange={handleFT}
+                    min={1}
+                    max={30}
+                    step={1}
+                    unit="°C"
+                    gradient={SLIDER_GRADIENTS.temperature}
+                  />
+                ) : (() => {
                   const activeVal = customFermentTemp <= 6 ? "fridge" : customFermentTemp <= 16 ? "cool" : "ambient";
                   const tempMap = { fridge: 4, cool: 12, ambient: 22 };
                   const isFridgeActive = activeVal === "fridge";
@@ -1068,6 +1135,29 @@ export function RecipeConfigurator({
                   <span className="type-numeric config-summary-row__value">
                     {area} {uiMessage("features.recipe.recipe-configurator.cm2-7776ab6e")}</span>
                 </div>
+              </div>
+            );
+          })()}
+
+          {/* D-043 — peso del panetto per gli stili senza teglia (le teglie lo
+              ricavano da misure e spessore) */}
+          {showAdvanced && !supportsThickness(style) && panConfig && onPanConfigChange && (() => {
+            const base = style.shape.dough_weight_g;
+            const weight = panConfig.ballWeightG ?? base;
+            const step = base >= 500 ? 25 : 10;
+            return (
+              <div className="config-field config-ball-weight">
+                <Label>{uiMessage("features.recipe.recipe-configurator.ballWeightLabel")}</Label>
+                <Stepper
+                  value={weight}
+                  min={Math.round(base * 0.5)}
+                  max={Math.round(base * 2)}
+                  step={step}
+                  onChange={(v) => onPanConfigChange({ ...panConfig, ballWeightG: v === base ? undefined : v })}
+                  decrementLabel={t(uiMessage("features.recipe.recipe-configurator.ballWeightLess"), { step })}
+                  incrementLabel={t(uiMessage("features.recipe.recipe-configurator.ballWeightMore"), { step })}
+                  inputLabel={uiMessage("features.recipe.recipe-configurator.ballWeightLabel")}
+                />
               </div>
             );
           })()}

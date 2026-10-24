@@ -64,6 +64,7 @@ import { useDarkMode } from "../hooks/use-dark-mode";
 import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 import { encodePan } from "../features/recipe/pan-url";
+import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { BRAND } from "../config/brand";
 
 /* ═══ STORAGE KEYS ═══ */
@@ -350,6 +351,7 @@ function buildSavedRecipeUrl(r: SavedRecipe): string {
   if (pr.ovenType) q.set("oven", pr.ovenType);
   if (pr.ovenTemp !== undefined) q.set("temp", String(pr.ovenTemp));
   if (pr.usePreFerment) q.set("pf", "1");
+  if (pr.preFerment) writePreFermentChoice(q, pr.preFerment);
   if (pr.selectedToppingConcept) q.set("topping", pr.selectedToppingConcept);
   if (r.versionId) q.set("v", r.versionId);
   // Audit n. 16: senza le misure la teglia 60×40 tornava 40×30.

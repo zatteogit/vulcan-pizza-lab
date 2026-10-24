@@ -45,6 +45,7 @@ type EngineMsg,
 type GeneratedRecipe,
 type OvenType,
 type PanConfig,
+  type PreFermentChoice,
 type PizzaStyle,
 type SkillLevel,
 type UserConstraints
@@ -68,6 +69,7 @@ import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { defaultPL, getCanonicalVersion } from "../features/recipe/kitchen-compatibility";
 import { decodePan, encodePan } from "../features/recipe/pan-url";
+import { decodePreFermentChoice, writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
 import { motionSpring } from "../components/ds/motion";
@@ -354,6 +356,10 @@ function RecipeContent({
   const [customFermentTemp, setCustomFermentTemp] = useState(
     useTailoredUrlParams ? numParam(searchParams, "t", fTempDefault, 0, 35) : fTempDefault,
   );
+  /* D-043: biga o poolish e quota di farina scelti (vuoto = quelli dello stile). */
+  const [preFermentChoice, setPreFermentChoice] = useState<PreFermentChoice>(() =>
+    useTailoredUrlParams ? decodePreFermentChoice(searchParams) : {},
+  );
   const [usePreFerment, setUsePreFerment] = useState(() => {
     const pf = searchParams.get("pf");
     return useTailoredUrlParams && pf !== null ? pf === "1" : preFermentDefault;
@@ -513,6 +519,8 @@ function RecipeContent({
     customFermentHours !== canonicalTargets.fermentHours ||
     customFermentTemp !== canonicalTargets.fermentTemp ||
     usePreFerment !== canonicalTargets.preFerment ||
+    preFermentChoice.type !== undefined ||
+    preFermentChoice.flourPct !== undefined ||
     Math.abs(customSalt - canonicalTargets.salt) > 0.01;
 
   const applyVersionToState = useCallback(
@@ -568,6 +576,7 @@ function RecipeContent({
       ),
     );
     setUsePreFerment(style.requires_pre_ferment);
+    setPreFermentChoice({});
   }, [activeVersion, applyVersionToState, style]);
 
   const syncSearchParamsAfterFeedback = useCallback(
@@ -653,6 +662,7 @@ function RecipeContent({
         o?.fermentation_temp_c ?? defaultFermentTempC(style, fMidBase),
       );
       setUsePreFerment(o?.use_pre_ferment ?? style.requires_pre_ferment);
+      setPreFermentChoice({});
       setCustomSalt(style.dough.salt_pct);
       // L'override topping è opzionale: se l'interpretazione include un topping firmato,
       // pre-selezionalo (es. da Michele → Margherita).
@@ -681,6 +691,7 @@ function RecipeContent({
       params.set("n", String(doughBalls));
       if (usePreFerment) params.set("pf", "1");
       else params.delete("pf");
+      writePreFermentChoice(params, preFermentChoice);
       params.set("oven", constraints.oven_type);
       params.set("temp", String(constraints.oven_max_temp_c));
       const pan = encodePan(panConfig);
@@ -700,6 +711,7 @@ function RecipeContent({
       customFermentTemp,
       doughBalls,
       usePreFerment,
+      preFermentChoice,
       constraints.oven_type,
       constraints.oven_max_temp_c,
     ],
@@ -780,6 +792,7 @@ function RecipeContent({
       activeImpastoRef: activeVersion?.impasto_ref,
       interpretationCenter,
       customFlourBlend,
+      preFerment: preFermentChoice,
     };
     if (optimizedHydration && customHydration === optimizedHydration.final) {
       const compensated = generateRecipe(styleWithTopping, recipeConstraints, {
@@ -798,6 +811,7 @@ function RecipeContent({
       customFermentHours,
       customFermentTemp,
       usePreFerment,
+      preFermentChoice,
       customFlourPL,
       customSalt,
       panConfig,
@@ -1001,6 +1015,7 @@ function RecipeContent({
       fermentHours: customFermentHours,
       fermentTemp: customFermentTemp,
       usePreFerment,
+      preFerment: preFermentChoice,
       doughBalls,
       ovenType: effectiveConstraints.oven_type,
       ovenTemp: effectiveConstraints.oven_max_temp_c,
@@ -1014,6 +1029,7 @@ function RecipeContent({
       customFermentHours,
       customFermentTemp,
       usePreFerment,
+      preFermentChoice,
       doughBalls,
       effectiveConstraints.oven_type,
       effectiveConstraints.oven_max_temp_c,
@@ -1109,6 +1125,7 @@ function RecipeContent({
     setCustomFermentHours(canonicalTargets.fermentHours);
     setCustomFermentTemp(canonicalTargets.fermentTemp);
     setUsePreFerment(canonicalTargets.preFerment);
+    setPreFermentChoice({});
     setCustomSalt(canonicalTargets.salt);
     setActiveVersionId(canonicalTargets.versionId);
     setLastOptimization(null);
@@ -1269,6 +1286,11 @@ function RecipeContent({
                   onPreFermentChange={(v) => {
                     markAdapted();
                     setUsePreFerment(v);
+                  }}
+                  preFermentChoice={preFermentChoice}
+                  onPreFermentChoiceChange={(v) => {
+                    markAdapted();
+                    setPreFermentChoice(v);
                   }}
                   customSalt={customSalt}
                   onSaltChange={(v) => {

@@ -26,12 +26,14 @@ FLOUR_W_RANGES,
 pantryFlourMix,
 YEAST_LABELS,
 type PanConfig,
+type PreFermentChoice,
 PizzaStyle,
 STYLES_DB,
 TimeSlot,
 UserConstraints,
 } from "../domain/pizza-engine";
 import { RecipeConfigurator } from "../features/recipe/recipe-configurator";
+import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { RecipeMatchCard } from "../features/recipe/recipe-match-card";
 import { SaveFailedNotice } from "../features/recipe/save-failed-notice";
 import { InterpretationSwitcher } from "../features/recipe/interpretation-narrative-card";
@@ -114,6 +116,7 @@ interface PersistedCreateDraft {
     customFermentHours: number;
     customFermentTemp: number;
     usePreFerment: boolean;
+    preFerment?: PreFermentChoice;
     panConfig: PanConfig;
     selectedToppingConcept: string | null;
   } | null;
@@ -286,6 +289,7 @@ function resolveRecipeInitial(
     fermentHours: draft.recipe.customFermentHours,
     fermentTemp: draft.recipe.customFermentTemp,
     usePreFerment: draft.recipe.usePreFerment,
+    preFerment: draft.recipe.preFerment,
     panConfig: draft.recipe.panConfig,
     toppingConcept: draft.recipe.selectedToppingConcept,
   };
@@ -590,6 +594,8 @@ export function HomePage() {
     setCustomFermentTemp,
     usePreFerment,
     setUsePreFerment,
+    preFermentChoice,
+    setPreFermentChoice,
     panConfig,
     setPanConfig,
     activeVersionId,
@@ -621,6 +627,7 @@ export function HomePage() {
     params.set("t", String(customFermentTemp));
     params.set("n", String(constraints.dough_balls));
     if (usePreFerment) params.set("pf", "1");
+    writePreFermentChoice(params, preFermentChoice);
     if (constraints.oven_type !== "home")
       params.set("oven", constraints.oven_type);
     if (constraints.oven_max_temp_c !== 250)
@@ -643,6 +650,7 @@ export function HomePage() {
     customFermentTemp,
     constraints.dough_balls,
     usePreFerment,
+    preFermentChoice,
     constraints.oven_type,
     constraints.oven_max_temp_c,
     selectedToppingConcept,
@@ -822,6 +830,7 @@ export function HomePage() {
       fermentHours: customFermentHours,
       fermentTemp: customFermentTemp,
       usePreFerment,
+      preFerment: preFermentChoice,
       doughBalls: constraints.dough_balls,
       ovenType: constraints.oven_type,
       ovenTemp: constraints.oven_max_temp_c,
@@ -835,6 +844,7 @@ export function HomePage() {
       customFermentHours,
       customFermentTemp,
       usePreFerment,
+      preFermentChoice,
       constraints.dough_balls,
       constraints.oven_type,
       constraints.oven_max_temp_c,
@@ -896,6 +906,8 @@ export function HomePage() {
         customFermentHours !== createCanonicalTargets.fermentHours ||
         customFermentTemp !== createCanonicalTargets.fermentTemp ||
         usePreFerment !== createCanonicalTargets.usePreFerment ||
+        preFermentChoice.type !== undefined ||
+        preFermentChoice.flourPct !== undefined ||
         Math.abs(customSalt - createCanonicalTargets.salt) > 0.01),
   );
 
@@ -1102,6 +1114,7 @@ export function HomePage() {
             customFermentHours,
             customFermentTemp,
             usePreFerment,
+            preFerment: preFermentChoice,
             panConfig,
             selectedToppingConcept,
           }
@@ -1126,6 +1139,7 @@ export function HomePage() {
     selectedTimeSlot,
     selectedToppingConcept,
     usePreFerment,
+    preFermentChoice,
   ]);
 
   return (
@@ -1456,6 +1470,11 @@ export function HomePage() {
                     onPreFermentChange={(value) => {
                       setCreateRecipeMode("adapted");
                       setUsePreFerment(value);
+                    }}
+                    preFermentChoice={preFermentChoice}
+                    onPreFermentChoiceChange={(value) => {
+                      setCreateRecipeMode("adapted");
+                      setPreFermentChoice(value);
                     }}
                     customFlourPL={effectiveNerdMode ? customFlourPL : undefined}
                     onFlourPLChange={
