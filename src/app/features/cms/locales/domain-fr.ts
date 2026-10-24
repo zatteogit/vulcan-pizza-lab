@@ -630,6 +630,36 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       definition: "Second apprêt, après le boulage : en pâtons ou, pour les styles en plaque, directement dans la plaque. La durée dépend du style, de la température et de la levure : la bonne durée est celle du déroulé.",
       whyImportant: "Amène les pâtons au bon volume pour étaler et enfourner.",
     },
+    staglio: {
+      name: "Division (staglio)",
+      definition: "Division de la pâte en pâtons après le pointage : avec une corne on coupe une portion et on la façonne en boule (le règlement AVPN la compare au façonnage de la mozzarella). Pour la napolitaine, les pâtons pèsent 200–280 g.",
+      whyImportant: "Des pâtons de même poids donnent des pizzas identiques qui cuisent de la même façon.",
+    },
+    incordatura: {
+      name: "Développement du gluten (incordatura)",
+      definition: "Dans le langage courant, une pâte «incordata» est lisse et élastique : le réseau de gluten est formé et retient le gaz. Le règlement AVPN appelle au contraire «punto di pasta» et «punto di corda» le bon point, et «incordatura» l'excès de pétrissage qui chauffe la pâte et l'abîme.",
+      whyImportant: "Il faut s'arrêter au bon moment : trop peu et la pâte se déchire, trop et elle chauffe et perd son élasticité.",
+    },
+    cornicione: {
+      name: "Bord (cornicione)",
+      definition: "Le bord relevé de la pizza. À l'étalage, l'air est poussé vers l'extérieur et à la cuisson le bord gonfle. Pour la Verace Pizza Napoletana il fait environ 1–2 cm, alvéolé et doré, sans cloques ni brûlures (AVPN).",
+      whyImportant: "C'est la partie qui en dit le plus sur la levée et la cuisson.",
+    },
+    pirlatura: {
+      name: "Boulage (pirlatura)",
+      definition: "Arrondir un morceau de pâte en une boule lisse et tendue en le faisant tourner sur le plan avec les mains en coupe, sans le serrer.",
+      whyImportant: "Une boule tendue pousse vers le haut au lieu de s'étaler et s'étale mieux ensuite.",
+    },
+    slap_and_fold: {
+      name: "Slap & fold",
+      definition: "Technique de pétrissage à la main pour les pâtes très hydratées : on soulève la pâte, on la frappe sur le plan et on la replie sur elle-même, jusqu'à ce qu'elle soit lisse. Popularisée par le boulanger Richard Bertinet (French fold).",
+      whyImportant: "Développe le gluten des pâtes trop molles pour un pétrissage classique.",
+    },
+    stretch_and_fold: {
+      name: "Rabats (stretch & fold)",
+      definition: "Pendant le pointage, on étire un pan de pâte vers le haut et on le rabat, en tournant le bol, 3 à 4 fois ; puis on laisse reposer et on répète à intervalles.",
+      whyImportant: "Renforce la pâte sans long pétrissage : utile pour les pâtes hydratées et sans pétrin.",
+    },
     maillard: {
       name: "R\u00E9action de Maillard",
       definition: "R\u00E9action non enzymatique entre acides amin\u00E9s et sucres r\u00E9ducteurs \u00E0 haute temp\u00E9rature (>140\u00B0C).",

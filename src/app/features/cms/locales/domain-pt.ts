@@ -624,6 +624,36 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       definition: "Segunda fermentação, depois de bolear: em bolinhas ou, nos estilos de assadeira, direto na assadeira. Dura conforme estilo, temperatura e fermento: a duração certa é a do modo de preparo.",
       whyImportant: "Leva as bolinhas ao volume certo para abrir e assar.",
     },
+    staglio: {
+      name: "Divisão (staglio)",
+      definition: "Divisão da massa em bolinhas depois da primeira fermentação: com uma espátula corta-se uma porção e dá-se a ela forma de bola (o regulamento AVPN compara com a moldagem da muçarela). Para a napolitana as bolinhas pesam 200–280 g.",
+      whyImportant: "Bolinhas do mesmo peso dão pizzas iguais que assam do mesmo jeito.",
+    },
+    incordatura: {
+      name: "Desenvolvimento do glúten (incordatura)",
+      definition: "Na fala comum uma massa «incordata» é lisa e elástica: a rede de glúten está formada e retém o gás. O regulamento AVPN chama de «punto di pasta» e «punto di corda» o ponto certo, e de «incordatura» o excesso de sova que esquenta a massa e a estraga.",
+      whyImportant: "É preciso parar no ponto certo: pouco e a massa rasga, demais e ela esquenta e perde elasticidade.",
+    },
+    cornicione: {
+      name: "Borda (cornicione)",
+      definition: "A borda elevada da pizza. Ao abrir a massa o ar é empurrado para fora e no forno a borda cresce. Na Verace Pizza Napoletana tem cerca de 1–2 cm, aerada e dourada, sem bolhas nem queimaduras (AVPN).",
+      whyImportant: "É a parte que mais revela sobre a fermentação e o forno.",
+    },
+    pirlatura: {
+      name: "Boleamento (pirlatura)",
+      definition: "Arredondar um pedaço de massa em uma bola lisa e firme, girando-o na bancada com as mãos em concha, sem apertar.",
+      whyImportant: "Uma bola firme cresce para cima em vez de se espalhar e abre melhor.",
+    },
+    slap_and_fold: {
+      name: "Slap & fold",
+      definition: "Técnica de sova à mão para massas muito hidratadas: levanta-se a massa, bate-se na bancada e dobra-se sobre si mesma, repetindo até ficar lisa. Popularizada pelo padeiro Richard Bertinet (French fold).",
+      whyImportant: "Desenvolve o glúten em massas moles demais para a sova clássica.",
+    },
+    stretch_and_fold: {
+      name: "Dobras (stretch & fold)",
+      definition: "Durante a primeira fermentação, puxa-se uma ponta da massa para cima e dobra-se por cima, girando a tigela, 3–4 vezes; depois deixa-se descansar e repete-se em intervalos.",
+      whyImportant: "Fortalece a massa sem sovar muito: útil para massas hidratadas e sem batedeira.",
+    },
     maillard: {
       name: "Rea\u00E7\u00E3o de Maillard",
       definition: "Rea\u00E7\u00E3o n\u00E3o enzim\u00E1tica entre amino\u00E1cidos e a\u00E7\u00FAcares redutores em alta temperatura (>140\u00B0C).",

@@ -271,6 +271,56 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     whyImportant: "Porta i panetti al volume giusto per stendere e infornare.",
   },
 
+  /* ═══ GERGO DEL PROCEDIMENTO (D-044): fonti in docs/fonti-dati.md ═══ */
+  {
+    id: "staglio",
+    name: "Staglio",
+    category: "mechanics",
+    definition: "Divisione dell'impasto in panetti dopo la puntata: con una spatola si taglia una porzione e le si dà forma di pallina (il disciplinare AVPN lo paragona alla mozzatura delle mozzarelle). Per la napoletana i panetti pesano 200–280 g.",
+    whyImportant: "Panetti dello stesso peso danno pizze uguali che cuociono allo stesso modo.",
+    relatedTerms: ["bulk_fermentation", "ball_fermentation", "pirlatura"],
+  },
+  {
+    id: "incordatura",
+    name: "Incordatura",
+    category: "mechanics",
+    definition: "Nel parlare comune un impasto «incordato» è liscio ed elastico: la maglia di glutine è formata e trattiene il gas. Il disciplinare AVPN chiama invece «punto di pasta» e «punto di corda» il punto giusto, e «incordatura» l'eccesso di lavorazione che scalda l'impasto e lo rovina.",
+    whyImportant: "Bisogna fermarsi al punto giusto: troppo poco e l'impasto si strappa, troppo e si scalda e perde elasticità.",
+    relatedTerms: ["gluten", "slap_and_fold", "stretch_and_fold"],
+  },
+  {
+    id: "cornicione",
+    name: "Cornicione",
+    category: "mechanics",
+    definition: "Il bordo rialzato della pizza. In stesura l'aria viene spinta verso l'esterno e in cottura il bordo si gonfia. Nella Verace Pizza Napoletana è di circa 1–2 cm, alveolato e dorato, senza bolle né bruciature (AVPN).",
+    whyImportant: "È la parte che dice di più sulla lievitazione e sulla cottura.",
+    relatedTerms: ["ball_fermentation", "maillard"],
+  },
+  {
+    id: "pirlatura",
+    name: "Pirlatura",
+    category: "mechanics",
+    definition: "Il gesto con cui si arrotonda un pezzo d'impasto in una palla liscia e in tensione, facendolo ruotare sul banco con le mani a coppa, senza strizzarlo.",
+    whyImportant: "Una pallina in tensione cresce in alto invece di allargarsi e si stende meglio.",
+    relatedTerms: ["staglio", "ball_fermentation"],
+  },
+  {
+    id: "slap_and_fold",
+    name: "Slap & fold",
+    category: "mechanics",
+    definition: "Tecnica d'impasto a mano per impasti molto idratati: si solleva l'impasto, lo si sbatte sul banco e lo si ripiega su sé stesso, ripetendo finché diventa liscio. L'ha resa nota il panettiere Richard Bertinet (French fold).",
+    whyImportant: "Sviluppa il glutine negli impasti troppo morbidi per essere impastati nel modo classico.",
+    relatedTerms: ["incordatura", "hydration"],
+  },
+  {
+    id: "stretch_and_fold",
+    name: "Pieghe (stretch & fold)",
+    category: "mechanics",
+    definition: "Durante la puntata si tira un lembo d'impasto verso l'alto e lo si ripiega sopra, girando la ciotola, per 3–4 volte; poi si lascia riposare e si ripete a intervalli.",
+    whyImportant: "Rinforza l'impasto senza impastarlo a lungo: utile per gli impasti idratati e senza impastatrice.",
+    relatedTerms: ["bulk_fermentation", "incordatura"],
+  },
+
   /* ═══ TERMICA ═══ */
   {
     id: "maillard",

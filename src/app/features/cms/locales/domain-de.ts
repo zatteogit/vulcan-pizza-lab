@@ -620,6 +620,36 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       definition: "Zweite Gare nach dem Abwiegen: als Teiglinge oder, bei Blechstilen, direkt im Blech. Die Dauer hängt von Stil, Temperatur und Hefe ab: die richtige Dauer steht im Ablauf.",
       whyImportant: "Bringt die Teiglinge auf das richtige Volumen zum Ausziehen und Backen.",
     },
+    staglio: {
+      name: "Portionieren (Staglio)",
+      definition: "Aufteilen des Teigs in Teiglinge nach der Stockgare: Mit einem Schaber wird ein Stück abgestochen und zur Kugel geformt (die AVPN-Regeln vergleichen es mit dem Formen von Mozzarella). Für die neapolitanische Pizza wiegen die Teiglinge 200–280 g.",
+      whyImportant: "Gleich schwere Teiglinge ergeben gleiche Pizzen, die gleich backen.",
+    },
+    incordatura: {
+      name: "Glutenentwicklung (Incordatura)",
+      definition: "Umgangssprachlich ist ein «incordato» Teig glatt und elastisch: Das Glutennetz ist ausgebildet und hält das Gas. Die AVPN-Regeln nennen den richtigen Punkt dagegen «punto di pasta» und «punto di corda» und bezeichnen mit «incordatura» das Überkneten, das den Teig erwärmt und verdirbt.",
+      whyImportant: "Am richtigen Punkt aufhören: zu wenig und der Teig reißt, zu viel und er wird warm und verliert Elastizität.",
+    },
+    cornicione: {
+      name: "Rand (Cornicione)",
+      definition: "Der erhöhte Rand der Pizza. Beim Ausziehen wird die Luft nach außen gedrückt, im Ofen geht der Rand auf. Bei der Verace Pizza Napoletana ist er etwa 1–2 cm hoch, luftig und goldbraun, ohne Blasen oder Verbranntes (AVPN).",
+      whyImportant: "Er verrät am meisten über Gare und Backen.",
+    },
+    pirlatura: {
+      name: "Rundwirken (Pirlatura)",
+      definition: "Ein Teigstück mit hohlen Händen auf der Arbeitsfläche zu einer glatten, gespannten Kugel drehen, ohne es zu drücken.",
+      whyImportant: "Eine gespannte Kugel geht nach oben statt in die Breite und lässt sich besser ausziehen.",
+    },
+    slap_and_fold: {
+      name: "Slap & Fold",
+      definition: "Eine Handknettechnik für sehr weiche Teige: Teig anheben, auf die Arbeitsfläche schlagen und über sich selbst falten, bis er glatt ist. Bekannt gemacht vom Bäcker Richard Bertinet (French fold).",
+      whyImportant: "Baut Gluten in Teigen auf, die für klassisches Kneten zu weich sind.",
+    },
+    stretch_and_fold: {
+      name: "Dehnen und Falten (Stretch & Fold)",
+      definition: "Während der Stockgare einen Teiglappen nach oben ziehen und darüberfalten, dabei die Schüssel drehen, 3–4-mal; dann ruhen lassen und in Abständen wiederholen.",
+      whyImportant: "Stärkt den Teig ohne langes Kneten: hilfreich bei weichen Teigen und ohne Knetmaschine.",
+    },
     maillard: {
       name: "Maillard-Reaktion",
       definition: "Nicht-enzymatische Reaktion zwischen Aminos\u00E4uren und reduzierenden Zuckern bei hoher Temperatur (>140\u00B0C).",

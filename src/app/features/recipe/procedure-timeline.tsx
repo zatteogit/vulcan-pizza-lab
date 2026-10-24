@@ -2,6 +2,8 @@
  * Banner compensazioni (nerd) + timeline con orari assoluti, stretch
  * flessibili, StepDetails e ToppingSection inline allo step Condimento. */
 
+import { TermText } from "../glossary/term-text";
+import { hasChosenSkill, loadSkill } from "../../hooks/use-profile-defaults";
 import { FlaskConical } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { motionDelay,motionSpring } from "../../components/ds/motion";
@@ -53,6 +55,13 @@ interface ProcedureTimelineProps {
   onSelectTopping?: (conceptId: string) => void;
 }
 
+/** D-044: titolo semplice per i passi col gergo più ostico. */
+const PLAIN_TITLES: Record<string, () => string> = {
+  bulk: () => uiMessage("features.glossary.plain.bulk"),
+  divide: () => uiMessage("features.glossary.plain.divide"),
+  proof: () => uiMessage("features.glossary.plain.proof"),
+};
+
 export function ProcedureTimeline({
   recipe,
   isNerd,
@@ -70,6 +79,9 @@ export function ProcedureTimeline({
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
+  // D-044: al principiante (o a chi non ha scelto il livello) prima la parola
+  // semplice, poi il termine: «Seconda lievitazione (appretto)».
+  const plainFirst = !isNerd && (!hasChosenSkill() || loadSkill() === 1);
   return (
     <>
       {/* ── Procedure / Timeline with inline tips ── */}
@@ -187,7 +199,15 @@ export function ProcedureTimeline({
                       </span>
                     </div>
                     <span className="procedure-timeline-step__title">
-                      {isToppingTimelineStep(step.id) ? cms.cooking.toppingTitle : localizedStep.title}
+                      {isToppingTimelineStep(step.id) ? (
+                        cms.cooking.toppingTitle
+                      ) : plainFirst && PLAIN_TITLES[step.id] ? (
+                        <>
+                          {PLAIN_TITLES[step.id]()} (<TermText text={localizedStep.title} />)
+                        </>
+                      ) : (
+                        <TermText text={localizedStep.title} />
+                      )}
                     </span>
                     {isToppingTimelineStep(step.id) ? (
                       <AnimatePresence mode="wait" initial={false}>
@@ -207,7 +227,7 @@ export function ProcedureTimeline({
                       </AnimatePresence>
                     ) : (
                       <p className="procedure-timeline-step__desc">
-                        {localizedStep.description}
+                        <TermText text={localizedStep.description} />
                       </p>
                     )}
                     {step.duration_minutes > 0 && (

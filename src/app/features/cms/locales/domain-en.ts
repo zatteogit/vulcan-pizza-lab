@@ -718,6 +718,36 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       whyImportant:
         "Brings the dough to the right volume for stretching and baking.",
     },
+    staglio: {
+      name: "Dividing (staglio)",
+      definition: "Dividing the dough into balls after bulk fermentation: a portion is cut with a scraper and shaped into a ball (the AVPN rules compare it to shaping mozzarella). For Neapolitan pizza the balls weigh 200–280 g.",
+      whyImportant: "Balls of the same weight give identical pizzas that bake the same way.",
+    },
+    incordatura: {
+      name: "Gluten development (incordatura)",
+      definition: "In everyday Italian an «incordato» dough is smooth and elastic: the gluten network has formed and holds the gas. The AVPN rules instead call the right point «punto di pasta» and «punto di corda», and use «incordatura» for over-kneading that heats and spoils the dough.",
+      whyImportant: "Stop at the right point: too little and the dough tears, too much and it heats up and loses elasticity.",
+    },
+    cornicione: {
+      name: "Rim (cornicione)",
+      definition: "The raised edge of the pizza. When stretching, the air is pushed outwards and in the oven the edge puffs up. In Verace Pizza Napoletana it is about 1–2 cm, open-crumbed and golden, without blisters or burns (AVPN).",
+      whyImportant: "It is the part that tells you most about the rise and the bake.",
+    },
+    pirlatura: {
+      name: "Rounding (pirlatura)",
+      definition: "Rounding a piece of dough into a smooth, taut ball by turning it on the bench with cupped hands, without squeezing it.",
+      whyImportant: "A taut ball rises upwards instead of spreading and stretches better.",
+    },
+    slap_and_fold: {
+      name: "Slap & fold",
+      definition: "A hand-kneading technique for very wet doughs: lift the dough, slap it on the bench and fold it over itself, repeating until it is smooth. Popularised by the baker Richard Bertinet (French fold).",
+      whyImportant: "It builds gluten in doughs too soft to knead the classic way.",
+    },
+    stretch_and_fold: {
+      name: "Stretch & fold",
+      definition: "During bulk fermentation, pull a flap of dough up and fold it over, turning the bowl, 3–4 times; then let it rest and repeat at intervals.",
+      whyImportant: "It strengthens the dough without long kneading: useful for wet doughs and without a mixer.",
+    },
     maillard: {
       name: "Maillard Reaction",
       definition:

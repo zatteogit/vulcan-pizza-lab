@@ -606,6 +606,36 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       definition: "Segunda fermentación, después de bolear: en bolas o, en los estilos de bandeja, directamente en la bandeja. Dura según estilo, temperatura y levadura: la duración correcta es la del procedimiento.",
       whyImportant: "Lleva las bolas al volumen adecuado para estirar y hornear.",
     },
+    staglio: {
+      name: "División (staglio)",
+      definition: "División de la masa en bollos después del primer levado: con una rasqueta se corta una porción y se le da forma de bola (el reglamento AVPN lo compara con el formado de la mozzarella). Para la napolitana los bollos pesan 200–280 g.",
+      whyImportant: "Bollos del mismo peso dan pizzas iguales que se hornean igual.",
+    },
+    incordatura: {
+      name: "Desarrollo del gluten (incordatura)",
+      definition: "En el habla común una masa «incordata» es lisa y elástica: la red de gluten está formada y retiene el gas. El reglamento AVPN, en cambio, llama «punto di pasta» y «punto di corda» al punto justo, y «incordatura» al exceso de amasado que calienta la masa y la estropea.",
+      whyImportant: "Hay que parar en el punto justo: poco y la masa se rompe, demasiado y se calienta y pierde elasticidad.",
+    },
+    cornicione: {
+      name: "Borde (cornicione)",
+      definition: "El borde elevado de la pizza. Al estirar, el aire se empuja hacia fuera y en el horno el borde se hincha. En la Verace Pizza Napoletana mide unos 1–2 cm, alveolado y dorado, sin ampollas ni quemaduras (AVPN).",
+      whyImportant: "Es la parte que más dice sobre el levado y la cocción.",
+    },
+    pirlatura: {
+      name: "Boleado (pirlatura)",
+      definition: "Redondear un trozo de masa en una bola lisa y tensa haciéndolo girar sobre la mesa con las manos en forma de cuenco, sin apretarlo.",
+      whyImportant: "Una bola tensa crece hacia arriba en lugar de extenderse y se estira mejor.",
+    },
+    slap_and_fold: {
+      name: "Slap & fold",
+      definition: "Técnica de amasado a mano para masas muy hidratadas: se levanta la masa, se golpea contra la mesa y se dobla sobre sí misma, repitiendo hasta que queda lisa. La popularizó el panadero Richard Bertinet (French fold).",
+      whyImportant: "Desarrolla el gluten en masas demasiado blandas para amasarlas de forma clásica.",
+    },
+    stretch_and_fold: {
+      name: "Pliegues (stretch & fold)",
+      definition: "Durante el primer levado se estira un extremo de la masa hacia arriba y se dobla encima, girando el bol, 3–4 veces; luego se deja reposar y se repite a intervalos.",
+      whyImportant: "Refuerza la masa sin amasarla mucho: útil para masas hidratadas y sin amasadora.",
+    },
     maillard: {
       name: "Reacci\u00F3n de Maillard",
       definition: "Reacci\u00F3n no enzim\u00E1tica entre amino\u00E1cidos y az\u00FAcares reductores a alta temperatura (>140\u00B0C).",

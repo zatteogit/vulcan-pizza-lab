@@ -428,3 +428,14 @@ secondaria (P, plausibile). Mappature decise in D-048: Ninja Woodfire
 (370 °C, elettrico) come elettrico standard; forni Alfa a gas come gas da
 pizza; G3 Ferrari Delizia e Sage Pizzaiolo (400 °C) come elettrici da pizza.
 Spidocchio e Cuisinart non inseriti (nessun dato del produttore).
+
+## Glossario: gergo del procedimento (D-044, 24/10/2026)
+
+| Voce | Fonte | Stato |
+|---|---|---|
+| Staglio (200–280 g per la napoletana, spatola, «mozzatura») | AVPN, *Disciplinare* 2024, § 2.1.4 «Lievitazione e staglio» — https://www.pizzanapoletana.org/public/pdf/Disciplinare-2024-ITA.pdf | V |
+| Incordatura (uso comune) e «punto di pasta / punto di corda»; per l'AVPN «incordatura» è l'eccesso di lavorazione | AVPN, *Disciplinare* 2024, § impasto; uso comune: qualcherisposta.it, areasosta.com (fonti divulgative) | V per l'AVPN, P per l'uso comune |
+| Cornicione (circa 1–2 cm, alveolato, dorato) | AVPN, *Disciplinare* 2024, descrizione del prodotto e stesura | V |
+| Pirlatura (arrotondare senza strizzare) | Scatti di Gusto, ricetta del panettone (2012, 2017); G. Sorbillo, «Lezioni di pizza» (Scatti di Gusto 2017) sul formare i panetti senza stressarli | P |
+| Slap & fold (French fold, R. Bertinet) | The Perfect Loaf, *Slap and fold* — https://www.theperfectloaf.com/guides/slap-and-fold | P |
+| Pieghe (stretch & fold) | The Perfect Loaf, guide alle pieghe; prassi diffusa | P |

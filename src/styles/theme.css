@@ -18216,6 +18216,70 @@
     margin-top: var(--space-5);
   }
 
+  /* ═══ D-044: termini del gergo toccabili ═══ */
+  .term-link {
+    position: relative;
+    display: inline;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-decoration: underline dotted;
+    text-decoration-color: var(--primary);
+    text-decoration-thickness: var(--border-width-medium);
+    text-underline-offset: var(--space-1);
+    cursor: help;
+  }
+
+  /* Area di tocco più alta della riga, senza spostarla (audit n. 26). */
+  .term-link::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--space-2-5) * -1) calc(var(--space-1) * -1);
+  }
+
+  .term-link:hover {
+    color: var(--primary);
+  }
+
+  .ds-dialog-scrim:has(.term-dialog) {
+    z-index: var(--z-modal);
+  }
+
+  .term-dialog__definition {
+    margin: 0;
+    color: var(--text-default);
+  }
+
+  .term-dialog__why {
+    margin: var(--space-3) 0 0;
+  }
+
+  .term-dialog__open,
+  .term-dialog__close {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--space-11);
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+  }
+
+  .term-dialog__open {
+    color: var(--cta);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .term-dialog__close {
+    border: none;
+    background: var(--cta);
+    color: var(--text-on-accent);
+  }
+
   /* ═══ DS COMPONENT: BottomSheet ═══ */
   .ds-sheet-scrim {
     position: fixed;
