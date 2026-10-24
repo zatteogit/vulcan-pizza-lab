@@ -202,8 +202,13 @@ const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       id: "stg_avpn",
       label: "Disciplinare AVPN",
       emoji: "📜",
-      description: "60% / 24h ambiente / W300 — standard disciplinare",
+      // C-4 (D-016): lo stile segue la STG; qui i valori del disciplinare AVPN
+      // 2024 — lievitazione totale 12–24 h, panetto 280 g per 28–35 cm.
+      description: "60% / 24h ambiente / W300 / panetto 280 g — disciplinare AVPN 2024",
       skill_hint: 3,
+      ranges: {
+        fermentation_hours_range: [12, 24],
+      },
       params: {
         hydration_pct: 60,
         flour_w: 300,
@@ -211,6 +216,7 @@ const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
         fermentation_hours: 24,
         fermentation_temp_c: 22,
         use_pre_ferment: false,
+        dough_weight_g: 280,
       },
     },
   ],
@@ -317,10 +323,10 @@ const STYLE_VERSIONS: Record<string, StyleVersion[]> = {
       id: "pinsa_tradizionale",
       label: "Tradizionale",
       emoji: "📜",
-      description: "Idratazione spinta, 48h frigo, alveolatura aperta",
+      description: "Idratazione 80% (tetto del protocollo OPR), 48h frigo, alveolatura aperta",
       skill_hint: 3,
       params: {
-        hydration_pct: 82,
+        hydration_pct: 80, // C-4: era 82, sopra il protocollo OPR 2020 (71–80%)
         flour_w: 310,
         flour_pl: 0.66,
         fermentation_hours: 48,

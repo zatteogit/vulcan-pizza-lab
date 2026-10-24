@@ -51,6 +51,10 @@ firmato da un agente, «nessun segno» se non c'è traccia (non prova l'assenza)
 | D-012 | 2026-10-23 | Motore | Consigli allineati all'esito della ricetta sul forno (soglia termica unica) | forno freddo come solo avviso; lasciare l'incoerenza | come D-010 | Matteo | domanda e modifiche: agente AI |
 | D-013 | 2026-10-23 | Contenuti | Il range di temperatura della Pinsa va verificato su fonti (C-4) prima di cambiarlo | range attuale corretto | come D-010 | Matteo | domanda: agente AI |
 | D-014 | 2026-10-24 | Prodotto | Ordine di lavoro: I18N-1 prima di U-1 e U-2 | U-1/U-2 prima | messaggio di Matteo nella sessione dell'agente del 24/10 | Matteo | proposta e modifiche: agente AI |
+| D-015 | 2026-10-24 | Contenuti | Pinsa romana sui valori con fonte: forno 280–320 °C (ideale 300), idratazione 72–80%, sale 1,8%, olio 1,3%, panetto 240 g, 34 × 21 cm | tenere 350–420 °C senza fonte | risposta a scelta nella sessione dell'agente del 24/10; `docs/fonti-dati.md` §1.2 | Matteo | ricerca fonti, proposta e modifiche: agente AI |
+| D-016 | 2026-10-24 | Contenuti | Napoletana: lo stile segue la STG (reg. UE 97/2010: 6–14 h, panetto 250 g); il disciplinare AVPN 2024 è la versione «Disciplinare AVPN» (12–24 h, 280 g) | stile su AVPN; range di compromesso 8–24 h | come D-015; `docs/fonti-dati.md` §1.1 | Matteo | come D-015 |
+| D-017 | 2026-10-24 | Contenuti | Focaccia di Recco sui valori del disciplinare IGP: forno 270–320 °C (ideale 300), cottura 4–8 min | tenere 300–340 °C e 8–10 min | come D-015; `docs/fonti-dati.md` §1.3 | Matteo | come D-015 |
+| D-018 | 2026-10-24 | Contenuti | Olio di frittura (pizza fritta e montanara): 175–190 °C, ideale 175 (AVPN 2024) | 180–190, ideale 185 | come D-015; `docs/fonti-dati.md` §1.4 | Matteo | come D-015 |
 
 D-008 e D-009 arrivano dal brief del lavoro come decisioni del proprietario;
 nel repository non c'è ancora un riscontro scritto, quindi restano da

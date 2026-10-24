@@ -41,7 +41,9 @@ const EXPECTED: Record<string, Expected> = {
   napoletana_canotto: { ideal: OK, home: OVEN, rush: OVEN_SHORT },
   teglia_romana: { ideal: OK, home: WARN, rush: SHORT },
   tonda_romana: { ideal: OK, home: WARN, rush: SHORT },
-  pinsa_romana: { ideal: OK, home: OVEN, rush: OVEN_SHORT },
+  // C-4 (D-015): forno 280–320 °C (PinsaRomana.it 2022). Nel forno di casa a
+  // 250 °C la pinsa si fa con avvisi; prima, con 350–420 °C, era impossibile.
+  pinsa_romana: { ideal: OK, home: WARN, rush: SHORT },
   new_york: { ideal: OK, home: WARN, rush: SHORT },
   detroit: { ideal: OK, home: WARN, rush: LATE_SHORT },
   chicago_deep: { ideal: OK, home: OK, rush: LATE_SHORT },
@@ -154,7 +156,7 @@ describe("impossibilità dichiarata (M-10)", () => {
     const recipe = generateRecipe(STYLES_DB.napoletana_stg, SCENARIOS.rush(STYLES_DB.napoletana_stg));
     expect(recipe.verdict.outcome).toBe("not_feasible");
     expect(recipe.verdict.blockers).toContainEqual({ kind: "oven_too_cold", oven_c: 250, style_min_c: 430 });
-    expect(recipe.verdict.blockers.find((b) => b.kind === "fermentation_too_short")).toMatchObject({ style_min_h: 8 });
+    expect(recipe.verdict.blockers.find((b) => b.kind === "fermentation_too_short")).toMatchObject({ style_min_h: 6 }); // STG: 6–14 h (C-4)
   });
 
   it("ogni esito «non fattibile» ha almeno un motivo, e ogni motivo rende l'esito «non fattibile»", () => {

@@ -284,13 +284,51 @@ difetto (M-2, opzione a); consigli allineati all'esito della ricetta sul forno.
   riferimento dal codice, dagli strumenti e dalla guida; in UI i valori di Q10
   sono presentati come stima del modello. Serve una fonte vera (C-4).
 
+## C-4 · Dati con fonte (24/10)
+
+Decisioni D-015…D-018; fonti e stato di ogni dato in `docs/fonti-dati.md`.
+
+| Stile / dato | Prima | Dopo | Fonte |
+|---|---|---|---|
+| Pinsa: forno | 350–420 °C, ideale 380 | 280–320 °C, ideale 300 | PinsaRomana.it 2022 |
+| Pinsa: idratazione, sale, olio | 75–85%, 2,5%, 1,0% | 72–80%, 1,8%, 1,3% | OPR 2020 |
+| Pinsa: panetto e misure | 280 g, 35 × 25 cm | 240 g, 34 × 21 cm | OPR 2020 |
+| Pinsa, versione «Tradizionale» | idratazione 82% | 80% | OPR 2020 |
+| Napoletana STG: lievitazione | 8–24 h | 6–14 h | reg. UE 97/2010 |
+| Napoletana STG: panetto | 270 g | 250 g | reg. UE 97/2010 |
+| Versione «Disciplinare AVPN» | range dello stile | 12–24 h, panetto 280 g | AVPN 2024 |
+| Recco: forno e cottura | 300–340 °C (320), 480–600 s | 270–320 °C (300), 240–480 s | disciplinare IGP 2024 |
+| Recco, interpretazione IGP | W 190, P/L 0,48, «IGP dal 2012», «7 comuni», «crescenza ligure» | W 320, P/L 0,60, IGP dal 2015, 4 comuni, formaggio senza vincolo d'origine del latte | reg. UE 2015/39; disciplinare IGP 2024 |
+| Fritta e montanara: olio | 180–190 °C, ideale 185 | 175–190 °C, ideale 175 | AVPN 2024 |
+| `FLOUR_W_RANGES` | Pizzeria 240–280, Nuvola 240–280, Cuoco 300–340, Petra 5037 340–380 | 260–280, 270–290, 300–320, 300–340; chiavi allineate agli id del database; Petra 3 tolta | schede Caputo e Quaglia |
+| Petra 3 | W/P/L come dati, assorbimento 60% | `w_declared: false` (stime), assorbimento 85% | scheda Quaglia |
+| 5 Stagioni Napoletana Rossa | falling number 300 | 280 | scheda Agugiaro & Figna 2025 |
+
+Effetto sui golden (`recipes.golden.json`):
+
+| Scenario | Prima | Dopo |
+|---|---|---|
+| napoletana_stg · ideale | 669 g farina, panetto 270 g, 16 h, lievito 0,7 g | 619 g, 250 g, 10 h, 0,9 g |
+| pinsa_romana · ideale | 610 g farina, idratazione 80%, sale 15 g, forno 380 °C | 536 g, 76%, 10 g, 300 °C |
+| pinsa_romana · forno di casa | **non fattibile** (forno troppo freddo), idratazione 86,4%, cottura 559 s | **fattibile con avvisi**, 79,5%, 332 s |
+| pinsa_romana · pasto fra 2 h | non fattibile: forno + lievitazione | non fattibile: solo lievitazione |
+| focaccia_recco · ideale | 320 °C, 540 s | 300 °C, 360 s |
+| focaccia_recco · forno di casa | cottura 851 s | 498 s |
+| fritta e montanara | olio 185 °C | 175 °C |
+
+Il «Da decidere» sulla pinsa qui sotto è chiuso da D-015. Q10: il commento nel
+codice non dice più «Letteratura»; 2 tra 18 e 25 °C è coerente con Salvadó et al.
+2011, 1,6 sotto i 10 °C resta una scelta del modello senza fonte.
+
 ## Da decidere o da fare
 
-- **Q10 del lievito (C-4):** 2 sopra i 10 °C e 1,6 sotto sono valori del modello
-  senza fonte verificata. Cercare uno studio sulla crescita di S. cerevisiae a
+- **Q10 del lievito (C-4):** 2 sopra i 10 °C è coerente con Salvadó et al. 2011;
+  1,6 sotto è un valore del modello senza fonte verificata. Cercare uno studio sulla crescita di S. cerevisiae a
   bassa temperatura (es. modello di Ratkowsky) o tarare con prove.
-- **Pinsa romana (C-4):** il catalogo le dà 350–420 °C, quindi in forno di casa
-  risulta non fattibile. Da verificare su fonti prima di cambiare il dato.
+- **Pinsa romana:** chiuso con D-015 (vedi C-4 sopra). Resta da verificare il tempo
+  di cottura professionale (180–300 s, senza fonte).
+- **Petra 3:** il dato `w_declared: false` c'è, ma la UI mostra ancora la W come
+  se fosse di scheda. Serve un'etichetta «stima» (stringa CMS in 7 lingue).
 - Lo slot «Nessuna preferenza» vale ancora 24 h fisse.
 - `requires_wood_oven` blocca i consigli (Napoletana STG con forno a gas da 450 °C
   è «non fattibile» nei consigli) ma non l'esito della ricetta: da decidere se il

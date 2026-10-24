@@ -119,13 +119,16 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     type: "disciplinare",
     organization: "Consorzio Focaccia di Recco IGP",
     location: "Recco, Liguria",
-    year_codified: 2012,
+    // C-4: registrata IGP con reg. UE 2015/39 del 13/01/2015 (era 2012). Farina
+    // dal disciplinare (CCIAA Genova 2024, art. 5): W > 300, P/L ≥ 0,50 (era
+    // W 190, P/L 0,48: fuori norma). docs/fonti-dati.md §1.3.
+    year_codified: 2015,
     base_style_id: "focaccia_recco",
     base_topping_concept_id: "crescenza_recco",
     parameter_overrides: {
       hydration_pct: 48,
-      flour_w: 190,
-      flour_pl: 0.48,
+      flour_w: 320,
+      flour_pl: 0.60,
       fermentation_hours: 1,
       fermentation_temp_c: 22,
       use_pre_ferment: false,
@@ -133,9 +136,9 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     signature_name: "Focaccia di Recco col Formaggio IGP",
     technique_signature: "Doppia sfoglia sottilissima tirata a mano, crescenza fondente all'interno, sigillatura bordi, cottura 270°C 5min.",
     story:
-      "Ottenuta IGP nel 2012, la Focaccia di Recco è uno degli unici prodotti panari italiani senza lievito. Solo 7 comuni del Tigullio possono fregiarsi del marchio IGP. La crescenza deve essere ligure e non sostituibile.",
+      "IGP dal 2015, la Focaccia di Recco col formaggio è uno dei pochi prodotti da forno italiani senza lievito. La zona di produzione è il comune di Recco con i confinanti Avegno, Sori e Camogli. Il formaggio è fresco, a pasta molle e cremoso, da latte vaccino pastorizzato.",
     emoji: "📜",
-    badge: "IGP dal 2012",
+    badge: "IGP dal 2015",
     skill_required: 3,
     verified_canonical: true,
   },
