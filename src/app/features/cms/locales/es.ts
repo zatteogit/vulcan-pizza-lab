@@ -148,7 +148,7 @@ export const ES_LOCALE: CmsContent = {
     verdictLaterTime: "Elige una hora dentro de al menos {hours}.",
     verdictAlternatives: "Con estas condiciones funcionan:",
     verdictRecipeBelow: "Abajo tienes igualmente la receta más cercana, si quieres intentarlo.",
-    recipeScore: "Match",
+    recipeScore: "Compatibilidad con tu cocina",
     nerdToggle: "PizzaNerd",
     nerdActive: "Activar PizzaNerd",
     scienceTitle: "{brand} Science",

@@ -996,9 +996,11 @@ function TimeSlotPicker({
                     {cms.ui.badgeIdeal}
                   </span>
                 )}
+                {/* Fix di Matteo: «SELEZIONATO» copriva il testo; basta una
+                    spunta (lo stato lo dice già aria-pressed). */}
                 {active && (
-                  <span className="needs-slot-list__badge needs-slot-list__badge--current">
-                    {cms.misc.current}
+                  <span className="needs-slot-list__check" aria-hidden="true">
+                    <Check size={14} strokeWidth={3} />
                   </span>
                 )}
               </div>
@@ -1072,11 +1074,14 @@ function TimeSlotPicker({
               </div>
 
               {active && (
-                <div className={compact ? "needs-slot-grid__current needs-slot-grid__current--compact" : "needs-slot-grid__current"}>
-                  <span className="needs-slot-grid__badge needs-slot-grid__badge--current">
-                    {cms.misc.current}
+                <span
+                  className={compact ? "needs-slot-grid__current needs-slot-grid__current--compact" : "needs-slot-grid__current"}
+                  aria-hidden="true"
+                >
+                  <span className="needs-slot-list__check">
+                    <Check size={14} strokeWidth={3} />
                   </span>
-                </div>
+                </span>
               )}
             </motion.button>
           );

@@ -1,4 +1,4 @@
-import { Check,ChevronDown,Circle,Layers,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
+import { Check,ChevronDown,Circle,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { motionSpring,motionTiming } from "../../components/ds/motion";
 import React,{ useEffect,useMemo,useRef,useState } from "react";
@@ -605,6 +605,14 @@ export function RecipeConfigurator({
       </button>
       )}
 
+      {/* Fix di Matteo (24/10): il triangolo ha un solo significato, detto qui. */}
+      <p className="config-legend">
+        <svg width="10" height="6" viewBox="0 0 10 6" aria-hidden="true" className="config-legend__marker">
+          <path d="M5 6L0 0h10z" />
+        </svg>
+        {uiMessage("features.recipe.recipe-configurator.legend")}
+      </p>
+
       {/* 3-Column Grid Layout */}
       <div className="config-grid">
 
@@ -922,7 +930,7 @@ export function RecipeConfigurator({
               rangeMin={style.baking.temp_c_range[0]}
               rangeMax={style.baking.temp_c_range[1]}
               gradient={SLIDER_GRADIENTS.temperature}
-              optimalValue={Math.round((style.baking.temp_c_range[0] + style.baking.temp_c_range[1]) / 2 / 5) * 5}
+              optimalValue={style.baking.temp_c_ideal}
             />
           </div>
 
@@ -1056,8 +1064,8 @@ export function RecipeConfigurator({
                   </div>
                 )}
 
-                {/* Area summary */}
-                <div className="config-summary-row">
+                {/* Area: un dato di servizio, in piccolo (fix di Matteo). */}
+                <div className="config-summary-row config-summary-row--quiet">
                   {currentShape === "rectangular"
                     ? <RectangleHorizontal size={14} className="config-summary-row__icon" />
                     : <Circle size={14} className="config-summary-row__icon" />
@@ -1079,29 +1087,34 @@ export function RecipeConfigurator({
                 <Label>{cfg.thicknessLabel}</Label>
                 <InfoTip>{cfg.thicknessTip}</InfoTip>
               </div>
-              <GradientSlider
-                name={cfg.thicknessLabel}
-                value={Math.round((panConfig.thickness ?? style.shape.thickness_factor) * 100) / 100}
-                onChange={(v) => onPanConfigChange({ ...panConfig, thickness: Math.round(v * 100) / 100 })}
-                min={Math.max(0.05, Math.round((style.shape.thickness_factor * 0.4) * 100) / 100)}
-                max={Math.round((style.shape.thickness_factor * 2.0) * 100) / 100}
-                step={0.02}
-                unit=""
-                rangeMin={Math.round((style.shape.thickness_factor * 0.8) * 100) / 100}
-                rangeMax={Math.round((style.shape.thickness_factor * 1.2) * 100) / 100}
-                gradient={SLIDER_GRADIENTS.fermentation}
-                optimalValue={Math.round(style.shape.thickness_factor * 100) / 100}
-              />
-              <div className="config-summary-row">
-                <Layers size={14} className="config-summary-row__icon" />
-                <span className="config-summary-row__label">
-                  {(panConfig.thickness ?? style.shape.thickness_factor) < style.shape.thickness_factor * 0.7
-                    ? cfg.thicknessThin
-                    : (panConfig.thickness ?? style.shape.thickness_factor) > style.shape.thickness_factor * 1.3
-                      ? cfg.thicknessThick
-                      : cfg.thicknessStandard}
-                </span>
-              </div>
+              {(() => {
+                const tf = style.shape.thickness_factor;
+                const cur = panConfig.thickness ?? tf;
+                /* Fix di Matteo: lo spessore si legge a parole («Sottile e
+                   croccante», «Standard», «Alta e soffice»), non come 0,6. */
+                const state =
+                  cur < tf * 0.7 ? cfg.thicknessThin : cur > tf * 1.3 ? cfg.thicknessThick : cfg.thicknessStandard;
+                return (
+                  <GradientSlider
+                    name={cfg.thicknessLabel}
+                    value={Math.round(cur * 100) / 100}
+                    onChange={(v) => onPanConfigChange({ ...panConfig, thickness: Math.round(v * 100) / 100 })}
+                    min={Math.max(0.05, Math.round((tf * 0.4) * 100) / 100)}
+                    max={Math.round((tf * 2.0) * 100) / 100}
+                    step={0.02}
+                    unit=""
+                    valueText={state}
+                    zoneLabels={[
+                      uiMessage("features.recipe.recipe-configurator.thicknessTickThin"),
+                      uiMessage("features.recipe.recipe-configurator.thicknessTickThick"),
+                    ]}
+                    rangeMin={Math.round((tf * 0.8) * 100) / 100}
+                    rangeMax={Math.round((tf * 1.2) * 100) / 100}
+                    gradient={SLIDER_GRADIENTS.fermentation}
+                    optimalValue={Math.round(tf * 100) / 100}
+                  />
+                );
+              })()}
             </div>
           )}
         </div>
@@ -1197,6 +1210,8 @@ function GradientSlider({
   adaptiveMax,
   optimalValue,
   label,
+  valueText,
+  zoneLabels,
   name,
 }: {
   value: number;
@@ -1212,6 +1227,10 @@ function GradientSlider({
   adaptiveMax?: number;
   optimalValue?: number;
   label?: React.ReactNode;
+  /** Testo al posto del numero (es. spessore: «Standard per questo stile»). */
+  valueText?: string;
+  /** Parole al posto dei numeri sotto le tacche del range. */
+  zoneLabels?: [string, string];
   /** Nome accessibile dell'input (U-10, F05): il testo dell'etichetta visibile. */
   name?: string;
 }) {
@@ -1247,8 +1266,12 @@ function GradientSlider({
           <div className="config-slider__label-group">{label}</div>
         )}
         <span className={inRange ? "type-numeric config-slider__value" : "type-numeric config-slider__value config-slider__value--oor"}>
-          {value}
-          {unit}
+          {valueText ?? (
+            <>
+              {value}
+              {unit}
+            </>
+          )}
         </span>
       </div>
 
@@ -1319,7 +1342,7 @@ function GradientSlider({
         <input
           type="range"
           aria-label={name}
-          aria-valuetext={`${value}${unit}`}
+          aria-valuetext={valueText ?? `${value}${unit}`}
           min={min}
           max={max}
           step={step}
@@ -1333,10 +1356,10 @@ function GradientSlider({
       {rangeMin !== undefined && rangeMax !== undefined && (
         <div className="config-slider__zone-labels">
           <span className="type-numeric config-slider__zone-label">
-            {rangeMin}
+            {zoneLabels?.[0] ?? rangeMin}
           </span>
           <span className="type-numeric config-slider__zone-label config-slider__zone-label--end">
-            {rangeMax}
+            {zoneLabels?.[1] ?? rangeMax}
           </span>
         </div>
       )}

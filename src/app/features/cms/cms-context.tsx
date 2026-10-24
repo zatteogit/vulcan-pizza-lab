@@ -1406,7 +1406,7 @@ export const CMS_DEFAULTS: CmsContent = {
     verdictAlternatives: "Con questi vincoli funzionano:",
     verdictRecipeBelow: "Sotto trovi comunque la ricetta più vicina, se vuoi provarci.",
     // Score dashboard
-    recipeScore: "Match",
+    recipeScore: "Compatibilit\u00E0 con la tua cucina",
     nerdToggle: "PizzaNerd",
     nerdActive: "Attiva PizzaNerd",
     scienceTitle: "{brand} Science",

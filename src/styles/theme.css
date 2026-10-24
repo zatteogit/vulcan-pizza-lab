@@ -6618,6 +6618,30 @@
     font-weight: var(--weight-medium);
   }
 
+  .config-legend {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin: 0 0 var(--space-3);
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+  }
+
+  .config-legend__marker {
+    flex-shrink: 0;
+    fill: var(--cta);
+    opacity: 0.7;
+  }
+
+  /* Area teglia: dato di servizio, senza riquadro. */
+  .config-summary-row.config-summary-row--quiet {
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+  }
+
   .config-summary-row {
     display: flex;
     align-items: center;
@@ -7760,6 +7784,19 @@
 
   .needs-slot-list__badge--ideal {
     background: var(--needs-time-bg);
+  }
+
+  .needs-slot-list__check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--space-6);
+    height: var(--space-6);
+    border-radius: var(--radius-full);
+    color: var(--needs-time-text, currentColor);
+    background: color-mix(in srgb, var(--overlay-text) 25%, transparent);
+    border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 40%, transparent);
   }
 
   .needs-slot-list__badge--current {

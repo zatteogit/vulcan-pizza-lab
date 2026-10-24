@@ -1,7 +1,6 @@
 import {
   ChevronDown,
-  Heart,
-  HeartCrack,
+  Gauge,
   Sparkles,
   X,
   Check,
@@ -407,9 +406,17 @@ export function RecipeSetupPanel({
                           </span>
                           {/* D-027: sotto il nome, «Ispirata a…» nella lingua attiva (prima
                               ripeteva l'autore, o «D'autore» anche per APITER). */}
-                          <span className="setup-option__detail">
-                            {localizeInterpretation(interpretation, cms.inspirationI18n).signature_name ?? interpretation.pizzeria ?? ""}
-                          </span>
+                          {(() => {
+                            /* Fix di Matteo: niente sottotitolo che ripete il nome
+                               («Renato Bosco / Renato Bosco»). */
+                            const detail =
+                              localizeInterpretation(interpretation, cms.inspirationI18n).signature_name ??
+                              interpretation.pizzeria ??
+                              "";
+                            return detail && detail !== interpretationName(interpretation) ? (
+                              <span className="setup-option__detail">{detail}</span>
+                            ) : null;
+                          })()}
                         </div>
                         {active && <Check size={16} className="setup-option__check" />}
                       </button>
@@ -514,7 +521,8 @@ function MatchSummary({
   }));
 
   const toneColor = tone.low ? "var(--text-warning)" : "var(--text-accent)";
-  const MatchIcon = tone.low ? HeartCrack : Heart;
+  /* D-041: indicatore, non cuore. */
+  const MatchIcon = Gauge;
   const rootClass =
     variant === "desktop" ? "setup-match setup-match--desktop" : "setup-match";
   const iconClass = tone.low
@@ -533,7 +541,7 @@ function MatchSummary({
         title={tone.title}
       >
         <MatchIcon size={14} className={iconClass} />
-        <span className="setup-match__value">{roundedScore}</span>
+        <span className="setup-match__value">{roundedScore}/100</span>
       </span>
 
       <div className="setup-match__axes">

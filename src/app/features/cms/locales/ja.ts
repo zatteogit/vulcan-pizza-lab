@@ -174,7 +174,7 @@ export const JA_LOCALE: CmsContent = {
     verdictAlternatives: "同じ条件で作れるスタイル：",
     verdictRecipeBelow: "試したい場合は、いちばん近いレシピを下に表示しています。",
     // Score dashboard
-    recipeScore: "Match",
+    recipeScore: "あなたのキッチンとの相性",
     nerdToggle: "PizzaNerd",
     nerdActive: "PizzaNerd\u3092\u6709\u52B9\u5316",
     scienceTitle: "{brand} Science",

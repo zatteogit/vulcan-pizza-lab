@@ -166,7 +166,7 @@ export const EN_LOCALE: CmsContent = {
     verdictAlternatives: "These work with the same setup:",
     verdictRecipeBelow: "The closest recipe is still below if you want to try it.",
     // Score dashboard
-    recipeScore: "Match",
+    recipeScore: "Fit with your kitchen",
     nerdToggle: "PizzaNerd",
     nerdActive: "Activate PizzaNerd",
     scienceTitle: "{brand} Science",
