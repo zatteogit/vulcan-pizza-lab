@@ -15,7 +15,7 @@ ChevronRight,
 Clock,
 Lightbulb,
 Trash2,
-X,
+ChevronDown,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
@@ -293,7 +293,8 @@ export function CookingMode() {
             aria-label={cms.cooking.minimize}
             title={cms.cooking.minimizeHint}
           >
-            <X size={18} />
+            {/* Audit n. 20: «riduci» è una freccia giù, non una X accanto al cestino. */}
+            <ChevronDown size={20} aria-hidden="true" />
           </button>
         </div>
       </div>
@@ -418,6 +419,17 @@ export function CookingMode() {
                 <p className="cooking-mode-step__description">
                   {step.description}
                 </p>
+
+                {step.quantities && step.quantities.length > 0 && (
+                  <dl className="cooking-mode-step__quantities">
+                    {step.quantities.map((q) => (
+                      <div key={q.label} className="cooking-mode-step__quantity">
+                        <dt>{q.label}</dt>
+                        <dd className="type-numeric">{q.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
 
                 {step.longDesc && (
                   <p className="type-body-lg cooking-mode-step__long-desc">

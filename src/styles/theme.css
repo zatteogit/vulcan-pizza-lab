@@ -15243,8 +15243,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--space-10);
-    height: var(--space-10);
+    width: var(--space-11);
+    height: var(--space-11);
     border-radius: var(--radius-ml);
     background: var(--container-bg);
     border: var(--border-width-thin) solid var(--container-border);
@@ -15416,6 +15416,34 @@
     text-align: center;
     font-size: clamp(var(--font-size-cooking-step-title-min), var(--dimension-viewport-width-065), var(--font-size-cooking-step-title-max));
     line-height: var(--leading-cooking-step-title);
+  }
+
+  /* Audit totale n. 12: le dosi del passo, grandi e allineate. */
+  .cooking-mode-step__quantities {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--space-28), 1fr));
+    gap: var(--space-2);
+    margin: var(--space-3) 0;
+  }
+
+  .cooking-mode-step__quantity {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    background: var(--surface-container);
+  }
+
+  .cooking-mode-step__quantity dt {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+  }
+
+  .cooking-mode-step__quantity dd {
+    margin: 0;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-default);
   }
 
   .cooking-mode-step__description {

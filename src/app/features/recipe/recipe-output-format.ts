@@ -7,6 +7,7 @@ import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
 import { engineMsgTexts } from "./engine-msg-text";
 import { localizeToppingStepText } from "../../data/topping-i18n/localize";
 import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
+import { computePreFermentSplit } from "../../domain/pre-ferment-split";
 import {
   getBakingTimeByStyle,
   getEquipmentByStyle,
@@ -848,4 +849,64 @@ export function getToppingIngredientSectionOrder(ingredients: ToppingIngredient[
     }
   });
   return order;
+}
+
+
+/* ═══ Audit totale n. 12 — dosi dentro i passi ═══
+ * In modalità cottura i passi non riportavano i grammi (lo staglio rimandava a
+ * «ingredienti sotto», che lì non ci sono). Dosi per i passi che le usano:
+ * pre-fermento, impasto, staglio. */
+export interface StepQuantity {
+  label: string;
+  value: string;
+}
+
+export function stepQuantities(
+  stepId: string,
+  recipe: GeneratedRecipe,
+  cms: CmsContent,
+  fmt: ReturnType<typeof createFormatter>,
+): StepQuantity[] {
+  const ui = cms.ui;
+  const yeastLabel = cms.yeastLabels?.[recipe.yeast_type] ?? recipe.yeast_type;
+  const fatType = recipe.style.dough.fat_type;
+  const fatLabel = fatType === "butter" ? ui.fatButter : fatType === "lard" ? ui.fatLard : ui.oilEvo;
+  const split = recipe.has_pre_ferment
+    ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type })
+    : null;
+  const yeast = recipe.yeast_g > 0 ? [{ label: yeastLabel, value: fmt.grams(recipe.yeast_g) }] : [];
+  switch (stepId) {
+    case "preferment":
+      return split
+        ? [
+            { label: ui.flour, value: fmt.grams(split.prefermentFlourG) },
+            { label: ui.water, value: fmt.grams(split.prefermentWaterG) },
+            ...yeast,
+          ]
+        : [];
+    case "mix": {
+      const rest = [
+        ...(recipe.salt_g > 0 ? [{ label: ui.salt, value: fmt.grams(recipe.salt_g) }] : []),
+        ...(recipe.sugar_g > 0 ? [{ label: ui.sugar, value: fmt.grams(recipe.sugar_g) }] : []),
+        ...(recipe.fat_g > 0 ? [{ label: fatLabel, value: fmt.grams(recipe.fat_g) }] : []),
+      ];
+      return split
+        ? [
+            { label: split.name, value: fmt.grams(split.prefermentFlourG + split.prefermentWaterG) },
+            { label: ui.flour, value: fmt.grams(split.mainFlourG) },
+            { label: ui.water, value: fmt.grams(split.mainWaterG) },
+            ...rest,
+          ]
+        : [
+            { label: ui.flour, value: fmt.grams(recipe.flour_g) },
+            { label: ui.water, value: fmt.grams(recipe.water_g) },
+            ...yeast,
+            ...rest,
+          ];
+    }
+    case "divide":
+      return [{ label: `${recipe.dough_balls} ×`, value: fmt.grams(recipe.ball_weight_g) }];
+    default:
+      return [];
+  }
 }

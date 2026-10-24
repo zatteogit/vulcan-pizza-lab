@@ -8,7 +8,7 @@ import { ToppingSection } from "./topping-section";
 import { ProcedureHeroControls } from "./procedure-hero";
 import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
-import { addMinutes, countNightActives, localizeStep, optimizeComfort, roundToQuarter,
+import { addMinutes, countNightActives, localizeStep, stepQuantities, optimizeComfort, roundToQuarter,
   defaultMealStart, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
@@ -410,6 +410,7 @@ export function RecipeOutput({
           title: loc.title,
           description: loc.description,
           longDesc: loc.longDesc,
+          quantities: stepQuantities(step.id, recipe, cms, fmt),
           tip: loc.tip ? (isNerd ? loc.tip.nerd : loc.tip.beginner) : undefined,
           duration_minutes: step.duration_minutes,
           startMs: (stepTimes[i]?.start ?? startTime).getTime(),
@@ -441,6 +442,15 @@ export function RecipeOutput({
     window.addEventListener("vulcan:start-cooking", handler);
     return () => window.removeEventListener("vulcan:start-cooking", handler);
   }, [handleStartCooking]);
+
+  /* Audit totale n. 13: la ricetta di Crea si può cucinare come quella di
+     Scopri. La shell mostra «Inizia» finché c'è una ricetta sullo schermo. */
+  React.useEffect(() => {
+    window.dispatchEvent(new CustomEvent("vulcan:cook-available", { detail: true }));
+    return () => {
+      window.dispatchEvent(new CustomEvent("vulcan:cook-available", { detail: false }));
+    };
+  }, []);
 
   const confirmStartCooking = React.useCallback(() => {
     setConfirmReplace(false);

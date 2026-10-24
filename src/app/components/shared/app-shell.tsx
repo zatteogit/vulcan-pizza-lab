@@ -819,8 +819,16 @@ export function AppShell() {
     location.pathname.startsWith("/design-system") ||
     location.pathname.startsWith("/cms");
   const isRecipePage = location.pathname.startsWith("/recipe/");
+  /* Audit totale n. 13: anche la ricetta generata in Crea si può cucinare. */
+  const [cookAvailable, setCookAvailable] = useState(false);
+  useEffect(() => {
+    const onAvailable = (event: Event) => setCookAvailable(Boolean((event as CustomEvent<boolean>).detail));
+    window.addEventListener("vulcan:cook-available", onAvailable);
+    return () => window.removeEventListener("vulcan:cook-available", onAvailable);
+  }, []);
   const showNav = !isToolPage && !isRecipePage && !hideNavbar;
-  const showCookAction = !isToolPage && !hideNavbar;
+  /* La ricetta di Crea nasconde la navigazione ma si cucina (audit n. 13). */
+  const showCookAction = !isToolPage && (!hideNavbar || cookAvailable);
   const hasProfileButton = showNav && activeTab !== "profile" && !searchOpen;
   /* Il campo sta nel dock solo dove il dock c'è (mobile, pagine con i tab);
      altrove la pagina dei risultati ha il suo. */
@@ -929,7 +937,7 @@ export function AppShell() {
 
           {/* Pizzata attiva: sticky action + overlay (cross-page) */}
           <CookSessionUI
-            canStartRecipe={isRecipePage}
+            canStartRecipe={isRecipePage || cookAvailable}
             hasProfileButton={hasProfileButton}
             showAction={showCookAction && !searchOpen}
             compact={navState.scrolled}
