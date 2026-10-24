@@ -371,7 +371,7 @@ function computeAutoOptSig(
   c: UserConstraints,
   toppingConcept: string | null,
 ): string {
-  return `${style.id}|${toppingConcept ?? ""}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.meal_deadline ? "deadline" : ""}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}`;
+  return `${style.id}|${toppingConcept ?? ""}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.meal_deadline ? "deadline" : ""}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}|${c.yeast_speed_factor ?? 1}`;
 }
 
 /* ═══ Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le

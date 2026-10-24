@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import type { Dispatch, SetStateAction } from "react";
 import { FlourBudget } from "./flour-budget";
+import { YeastExplainer } from "./yeast-explainer";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { Stepper } from "../../components/ds/index";
@@ -38,6 +39,8 @@ interface IngredientsSectionProps {
   servingUnit: ReturnType<typeof getServingUnit>;
   panSizeLabel: string | null;
   updateBalls: (n: number) => void;
+  /** M-11: correzione personale della lievitazione. */
+  onYeastSpeedChange?: (factor: number) => void;
   showRule55Tip: boolean;
   setShowRule55Tip: Dispatch<SetStateAction<boolean>>;
   rule55Description: string;
@@ -51,6 +54,7 @@ export function IngredientsSection({
   servingUnit,
   panSizeLabel,
   updateBalls,
+  onYeastSpeedChange,
   showRule55Tip,
   setShowRule55Tip,
   rule55Description,
@@ -275,6 +279,9 @@ export function IngredientsSection({
                 .join(" · ")}
               amount={fmt.grams(recipe.yeast_g)}
             />
+          )}
+          {recipe.yeast_g > 0 && onYeastSpeedChange && (
+            <YeastExplainer recipe={recipe} onSpeedFactorChange={onYeastSpeedChange} />
           )}
           {recipe.fat_g > 0 && (
             <IngRow

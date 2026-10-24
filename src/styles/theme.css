@@ -9255,6 +9255,97 @@
   }
 
   /* ── Riga panetti/servings ── */
+  /* M-11: lievito trasparente */
+  .yeast-explainer {
+    display: grid;
+    gap: var(--space-2);
+    padding-block: var(--space-1) var(--space-3);
+  }
+
+  .yeast-explainer__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-self: start;
+    min-height: var(--space-11);
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--cta);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+    cursor: pointer;
+  }
+
+  .yeast-explainer__panel {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-2xl);
+    background: var(--surface-container-low, var(--chip-bg));
+    border: var(--border-width-thin) solid var(--outline-variant);
+  }
+
+  .yeast-explainer__text {
+    margin: 0;
+    line-height: var(--leading-relaxed);
+  }
+
+  .yeast-explainer__text--muted {
+    color: var(--text-muted);
+  }
+
+  .yeast-explainer__speed {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .yeast-explainer__legend {
+    margin-bottom: var(--space-2);
+    padding: 0;
+  }
+
+  .yeast-explainer__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .yeast-explainer__option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--space-11);
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-full);
+    border: var(--border-width-thin) solid var(--outline-variant);
+    background: var(--container-page);
+    color: var(--text-default);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+  }
+
+  .yeast-explainer__option--active {
+    border-color: var(--cta);
+    color: var(--cta);
+    font-weight: var(--weight-semibold);
+  }
+
+  .yeast-explainer__option:focus-within {
+    outline: var(--border-width-thick) solid var(--cta);
+    outline-offset: var(--space-0-5);
+  }
+
+  .yeast-explainer__radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
   /* U-2: panetti a partire dalla farina che si ha */
   .flour-budget {
     display: grid;

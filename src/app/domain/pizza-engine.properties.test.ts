@@ -675,3 +675,39 @@ describe("Ore al quarto d'ora (M-3, M-4)", () => {
     expect(justUnder.warnings).toEqual(exact.warnings);
   });
 });
+
+describe("Lievito trasparente e correzione personale (M-11)", () => {
+  const base = makeConstraints({ ...HOME_OVEN, available_hours: 24 });
+
+  it("una cucina che lievita il 25% più in fretta usa l'80% del lievito, su tutti gli stili lievitati", () => {
+    for (const style of STYLES) {
+      const normal = generateRecipe(style, base);
+      if (!normal.science.yeast_model) continue;
+      const faster = generateRecipe(style, { ...base, yeast_speed_factor: 1.25 });
+      expect(faster.science.yeast_baker_pct, style.id).toBeCloseTo(normal.science.yeast_baker_pct / 1.25, 1);
+      expect(faster.science.yeast_model?.personal_factor).toBe(1.25);
+    }
+  });
+
+  it("la correzione resta tra 0,5 e 2", () => {
+    const napoletana = STYLES_DB.napoletana_stg;
+    const extreme = generateRecipe(napoletana, { ...base, yeast_speed_factor: 10 });
+    expect(extreme.science.yeast_model?.personal_factor).toBe(2);
+    const none = generateRecipe(napoletana, { ...base, yeast_speed_factor: Number.NaN });
+    expect(none.science.yeast_model?.personal_factor).toBe(1);
+  });
+
+  it("il modello dichiarato spiega la dose: riferimento, ore, temperatura, margine", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, base);
+    const model = recipe.science.yeast_model!;
+    const dose = (model.reference_pct * Math.pow(model.reference_hours / recipe.fermentation_hours, model.time_exponent)) /
+      model.speed_ratio * (recipe.yeast_type === "dry" ? model.dry_ratio : 1);
+    expect(recipe.science.yeast_baker_pct).toBeCloseTo(dose, 2);
+    expect(model.range_pct[0]).toBeLessThan(recipe.science.yeast_baker_pct);
+    expect(model.range_pct[1]).toBeGreaterThan(recipe.science.yeast_baker_pct);
+  });
+
+  it("niente modello del lievito commerciale per la Recco (non lievitata)", () => {
+    expect(generateRecipe(STYLES_DB.focaccia_recco, base).science.yeast_model).toBeUndefined();
+  });
+});

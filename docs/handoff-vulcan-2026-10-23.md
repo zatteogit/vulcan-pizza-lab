@@ -160,7 +160,7 @@ Fase 2:
 | Data | Voci chiuse | Dove |
 |---|---|---|
 | 23–24/10/2026 | M-1 (confermato), M-2, M-3, M-4, M-5, M-9, M-10, P-1, P-2 | ramo `claude/bold-brahmagupta-s484he`; dettaglio in `docs/motore-correzioni-2026-10-22.md` |
-| 24/10/2026 | I18N-1, U-1, U-2 | stesso ramo; vedi sotto |
+| 24/10/2026 | I18N-1, U-1, U-2, M-11 | stesso ramo; vedi sotto |
 
 Emerse nel lavoro, da pianificare in fase 1:
 

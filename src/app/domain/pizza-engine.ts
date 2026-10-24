@@ -288,6 +288,10 @@ export interface UserConstraints {
   mixer_type?: string | null;
   /** Advanced equipment — baking surfaces from profile */
   surfaces?: string[];
+  /** M-11: correzione personale della velocità di lievitazione («la mia
+   *  cucina lievita più veloce»). 1 = come il modello; 1,25 = lievita il 25%
+   *  più in fretta, quindi serve meno lievito. Limitata a 0,5–2. */
+  yeast_speed_factor?: number;
   /** Advanced oven heat profile — resistances/burner layout from profile */
   oven_heat_profile?:
     | "static_top_bottom"
@@ -477,7 +481,43 @@ interface CompensationApplied {
   reason: string;
 }
 
+/** M-11: come è stata calcolata la dose di lievito commerciale, per mostrarlo
+ *  all'utente. Il margine è una stima (marca e freschezza del lievito,
+ *  oscillazioni di temperatura di ±2 °C), non una misura. */
+export interface YeastModelInfo {
+  /** Dose di riferimento: % di lievito fresco sulla farina per 24 h a 18 °C. */
+  reference_pct: number;
+  reference_hours: number;
+  reference_temp_c: number;
+  /** Esponente sulle ore: il lievito si moltiplica, la dose non scala 1:1. */
+  time_exponent: number;
+  /** Velocità alla temperatura di fermentazione rispetto a 18 °C (Q10 a tratti). */
+  speed_ratio: number;
+  q10_model: "standard" | "cold_adapted" | "sourdough";
+  /** Lievito secco: un terzo del fresco. */
+  dry_ratio: number;
+  /** Correzione personale applicata (1 = nessuna). */
+  personal_factor: number;
+  /** Intervallo plausibile della dose (% sulla farina). */
+  range_pct: [number, number];
+}
+
+/** Margine stimato della dose di lievito: −30% / +30%. */
+export const YEAST_DOSE_MARGIN: [number, number] = [0.7, 1.3];
+const YEAST_REFERENCE_PCT = 0.1;
+const YEAST_REFERENCE_HOURS = 24;
+const YEAST_TIME_EXPONENT = 0.7;
+const YEAST_DRY_RATIO = 0.33;
+
+/** Correzione personale accettata dal motore. */
+export function clampYeastSpeedFactor(value: number | undefined): number {
+  if (value === undefined || !Number.isFinite(value)) return 1;
+  return Math.min(2, Math.max(0.5, value));
+}
+
 interface ScientificLayer {
+  /** M-11: modello della dose di lievito commerciale (assente con lievito madre o senza lievito). */
+  yeast_model?: YeastModelInfo;
   yeast_baker_pct: number;
   effective_hours_18c: number;
   fodmap_reduction_pct: number | null;
@@ -592,8 +632,10 @@ export function getQ10(
     };
   }
   if (tempC < 10) {
-    // Cold fermentation: metabolismo rallentato più di quanto Q10=2.0 predica
-    // PMC7146123: S. cerevisiae Q10 ≈ 1.6 sotto 10°C
+    // Cold fermentation: Q10 1,6 sotto i 10°C. È una scelta del modello senza
+    // fonte verificata: il riferimento citato prima (PMC7146123) è una review sui
+    // soft sensor di fermentazione e non parla di lievito (verifica del 24/10/2026,
+    // voce C-4). In UI lo mostriamo come stima, non come dato misurato.
     return { q10: 1.6, model: "cold_adapted" };
   }
   return { q10: 2.0, model: "standard" };
@@ -1336,14 +1378,14 @@ function calculateYeastPercentage(
   //   - timeFactor lineare (24/h) → sub-lineare (24/h)^0.7: il lievito si
   //     RIPRODUCE durante la fermentazione, non si consuma. Curva log-like.
   //     Verificato su Napoletana 8h, 12h, 24h, Bonci 48h, Detroit 24h.
-  const referenceRate = 0.10; // % fresh yeast a 18°C per 24h (Caputo standard)
+  const referenceRate = YEAST_REFERENCE_PCT; // % fresh yeast a 18°C per 24h (Caputo standard)
   // ENG-2: fattore di velocità a tratti continuo (a 4°C ~+20% di lievito
   // rispetto al vecchio esponente con Q10 1,6 da 18°C).
   const tempFactor = fermentationSpeedRatio(yeastType, fermentationTempC);
-  const timeFactor = Math.pow(24 / fermentationHours, 0.7);
+  const timeFactor = Math.pow(YEAST_REFERENCE_HOURS / fermentationHours, YEAST_TIME_EXPONENT);
 
   let pct = (referenceRate * timeFactor) / tempFactor;
-  if (yeastType === "dry") pct *= 0.33; // dry = 1/3 of fresh
+  if (yeastType === "dry") pct *= YEAST_DRY_RATIO; // dry = 1/3 of fresh
 
   return Math.max(0.01, Math.min(3.0, pct));
 }
@@ -1740,10 +1782,12 @@ export function generateRecipe(
           ? 18
           : 20;
   } else {
-    yeastPct = calculateYeastPercentage(
-      fermentationHours,
-      fermentationTempC,
-      yeastType as "fresh" | "dry",
+    // M-11: la correzione personale («la mia cucina lievita più veloce»)
+    // divide la dose: più veloce → meno lievito per le stesse ore.
+    yeastPct = Math.max(
+      0.01,
+      calculateYeastPercentage(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry") /
+        clampYeastSpeedFactor(constraints.yeast_speed_factor),
     );
   }
 
@@ -2060,6 +2104,23 @@ export function generateRecipe(
       : waterTempLimit === "min"
         ? WATER_TEMP_MIN_C
         : Math.round(waterTempRaw * 10) / 10;
+  if (!style.dough.unleavened && yeastType !== "sourdough") {
+    const q10 = getQ10(yeastType, fermentationTempC);
+    science.yeast_model = {
+      reference_pct: YEAST_REFERENCE_PCT,
+      reference_hours: YEAST_REFERENCE_HOURS,
+      reference_temp_c: Q10_REFERENCE_TEMP_C,
+      time_exponent: YEAST_TIME_EXPONENT,
+      speed_ratio: Math.round(fermentationSpeedRatio(yeastType, fermentationTempC) * 100) / 100,
+      q10_model: q10.model,
+      dry_ratio: YEAST_DRY_RATIO,
+      personal_factor: clampYeastSpeedFactor(constraints.yeast_speed_factor),
+      range_pct: [
+        Math.round(yeastPct * YEAST_DOSE_MARGIN[0] * 1000) / 1000,
+        Math.round(yeastPct * YEAST_DOSE_MARGIN[1] * 1000) / 1000,
+      ],
+    };
+  }
   science.desired_dough_temp_c = ddt;
   science.friction_factor = frictionFactor;
   science.water_temp_c = waterTempC;

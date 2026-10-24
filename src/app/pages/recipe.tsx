@@ -20,6 +20,7 @@ useState,
 import { Link,useLocation,useNavigate,useParams,useSearchParams } from "react-router";
 import { useCms,type CmsContent } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
+import { loadYeastSpeedFactor } from "../adapters/browser/yeast-speed-storage";
 import { t as tpl } from "../features/cms/i18n";
 import {
 getInterpretationById,
@@ -340,6 +341,7 @@ function RecipeContent({
     dietary_filters: savedDietary ?? [],
     pantry_flours: savedPantry?.flours ?? [],
     pantry_yeasts: savedPantry?.yeasts ?? [],
+    yeast_speed_factor: loadYeastSpeedFactor(),
   }));
 
   /* ── State: recipe params (from style preset/center + URL override) ── */

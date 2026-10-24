@@ -145,6 +145,19 @@ export interface CmsUiStrings {
   slotWeekdayDinner: string;
   slotNoPreference: string;
   slotNoPreferenceSub: string;
+  /** M-11: lievito trasparente e correzione personale. */
+  yeastHowToggle: string;
+  yeastModelBody: string;
+  yeastDryNote: string;
+  yeastTempModelNote: string;
+  yeastEstimateNote: string;
+  yeastPersonalLegend: string;
+  yeastPersonalHint: string;
+  yeastSpeedMuchSlower: string;
+  yeastSpeedSlower: string;
+  yeastSpeedAsExpected: string;
+  yeastSpeedFaster: string;
+  yeastSpeedMuchFaster: string;
   /** U-2: panetti a partire dalla farina disponibile. */
   flourBudgetToggle: string;
   flourBudgetInput: string;
@@ -1314,6 +1327,18 @@ export const CMS_DEFAULTS: CmsContent = {
     slotWeekdayDinner: "{day} sera",
     slotNoPreference: "Nessuna preferenza",
     slotNoPreferenceSub: "ci pensa {brand}",
+    yeastHowToggle: "Come calcoliamo il lievito",
+    yeastModelBody: "Si parte da {ref} di lievito fresco sulla farina per {refHours} a {refTemp}. Con {hours} a {temp} il lievito lavora a {speed}× della velocità di riferimento: la dose diventa {pct}.",
+    yeastDryNote: "Con il lievito secco la dose è un terzo del fresco.",
+    yeastTempModelNote: "Come cambia la velocità con la temperatura (fattore Q10 di 2, 1,6 sotto i 10 °C) è una stima del modello, da confermare con le prove.",
+    yeastEstimateNote: "È una stima, non una misura: marca e freschezza del lievito e la temperatura reale la spostano. Dose plausibile: {low}–{high}.",
+    yeastPersonalLegend: "Nella tua cucina gli impasti lievitano",
+    yeastPersonalHint: "Se ti crescono sempre troppo, scegli «più in fretta»: useremo meno lievito in tutte le ricette.",
+    yeastSpeedMuchSlower: "Molto più piano",
+    yeastSpeedSlower: "Più piano",
+    yeastSpeedAsExpected: "Come previsto",
+    yeastSpeedFaster: "Più in fretta",
+    yeastSpeedMuchFaster: "Molto più in fretta",
     flourBudgetToggle: "Parti dalla farina che hai",
     flourBudgetInput: "Farina disponibile (g)",
     flourBudgetResult: "Risultato: {n} {unit} con {used} di farina, avanzo {left}.",

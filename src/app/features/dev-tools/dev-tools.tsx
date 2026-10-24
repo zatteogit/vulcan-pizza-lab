@@ -1265,7 +1265,7 @@ function Q10Content({
       <div className="flex items-start gap-2 p-3 rounded-xl" style={{ background: "var(--container-bg)", border: "1px solid var(--container-border)" }}>
         <Info size={14} style={{ color: "var(--icon-muted)", marginTop: "2px", flexShrink: 0 }} />
         <p className="type-data-xs" style={{ color: "var(--text-muted)", lineHeight: "var(--leading-reading)" }}>
-          Rif: PMC7146123. S. cerevisiae Q10=2.1±0.3 (15-30°C), 1.6 sotto 10°C. LAB Q10 1.9-2.4.
+          Q10 del modello: 2 (15-30°C), 1.6 sotto 10°C; LAB 1.9-2.4. Stime senza fonte verificata (C-4): PMC7146123, citato prima, non parla di lievito.
         </p>
       </div>
     </div>

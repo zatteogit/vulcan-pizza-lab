@@ -268,8 +268,27 @@ difetto (M-2, opzione a); consigli allineati all'esito della ricetta sul forno.
   forno di casa 24 h, pasto fra 2 h) con l'esito atteso scritto a mano; masse,
   forno e tempi in `recipes.golden.json`.
 
+## M-11 · Lievito trasparente (24/10)
+
+- `UserConstraints.yeast_speed_factor`: correzione personale «la mia cucina
+  lievita più veloce/lenta», limitata a 0,5–2, salvata nel browser e valida per
+  tutte le ricette. La dose di lievito commerciale si divide per il fattore
+  (1,25 → 80% del lievito). Il lievito madre non cambia.
+- `science.yeast_model`: riferimento (0,1% di fresco per 24 h a 18 °C), esponente
+  sulle ore (0,7), velocità alla temperatura (Q10 a tratti), rapporto del secco
+  (1/3), fattore personale, intervallo plausibile −30%/+30%.
+- UI «Come calcoliamo il lievito» sotto la riga del lievito: formula a parole,
+  margine in grammi, correzione personale a 5 livelli.
+- **Fonte sbagliata corretta:** il Q10 1,6 sotto i 10 °C citava PMC7146123, che è
+  una review sui soft sensor di fermentazione e non parla di lievito. Tolto il
+  riferimento dal codice, dagli strumenti e dalla guida; in UI i valori di Q10
+  sono presentati come stima del modello. Serve una fonte vera (C-4).
+
 ## Da decidere o da fare
 
+- **Q10 del lievito (C-4):** 2 sopra i 10 °C e 1,6 sotto sono valori del modello
+  senza fonte verificata. Cercare uno studio sulla crescita di S. cerevisiae a
+  bassa temperatura (es. modello di Ratkowsky) o tarare con prove.
 - **Pinsa romana (C-4):** il catalogo le dà 350–420 °C, quindi in forno di casa
   risulta non fattibile. Da verificare su fonti prima di cambiare il dato.
 - Lo slot «Nessuna preferenza» vale ancora 24 h fisse.

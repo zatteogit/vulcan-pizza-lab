@@ -11,6 +11,8 @@ import type {
 } from "../domain/pizza-engine";
 import { DEFAULT_KITCHEN_TEMP } from "../domain/pizza-engine";
 
+import { loadYeastSpeedFactor } from "../adapters/browser/yeast-speed-storage";
+
 /* ═══ STORAGE KEYS (must match profile.tsx) ═══ */
 const OVEN_STORAGE_KEY = "vulcan_oven_pref";
 const PANTRY_STORAGE_KEY = "vulcan_pantry";
@@ -93,6 +95,7 @@ function loadProfileDefaults(): ProfileDefaults {
     kitchen_temp_c: DEFAULT_KITCHEN_TEMP,
     pantry_flours: pantryFlours,
     pantry_yeasts: pantryYeasts,
+    yeast_speed_factor: loadYeastSpeedFactor(),
   };
 
   /* Equipment from profile — supports both old and new format */

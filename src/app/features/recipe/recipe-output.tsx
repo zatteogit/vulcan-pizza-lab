@@ -10,6 +10,7 @@ import { ProcedureTimeline } from "./procedure-timeline";
 import { addMinutes, localizeStep, optimizeComfort, roundToQuarter, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
+import { saveYeastSpeedFactor } from "../../adapters/browser/yeast-speed-storage";
 import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
 import type { FlourEntry } from "../../data/flour-database";
@@ -749,6 +750,10 @@ export function RecipeOutput({
           servingUnit={servingUnit}
           panSizeLabel={panSizeLabel}
           updateBalls={updateBalls}
+          onYeastSpeedChange={(factor) => {
+            saveYeastSpeedFactor(factor);
+            onConstraintsChange({ ...constraints, yeast_speed_factor: factor });
+          }}
           showRule55Tip={showRule55Tip}
           setShowRule55Tip={setShowRule55Tip}
           rule55Description={rule55Description}
