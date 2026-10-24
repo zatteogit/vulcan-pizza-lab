@@ -42,6 +42,8 @@ export interface ConfirmDialogProps {
   zIndex?: number;
   /** Larghezza card: sm = max-w-sm · md = max-w-md. */
   size?: "sm" | "md";
+  /** Contenuto fra testo e azioni (es. scelte prima di stampare). */
+  children?: ReactNode;
 }
 
 export function ConfirmDialog({
@@ -57,6 +59,7 @@ export function ConfirmDialog({
   position = "fixed",
   zIndex = 210,
   size = "sm",
+  children,
 }: ConfirmDialogProps) {
   const toneVar = tone === "destructive" ? "var(--destructive)" : "var(--primary)";
   const brand = emphasis === "brand";
@@ -107,6 +110,7 @@ export function ConfirmDialog({
                 {body}
               </p>
             </div>
+            {children && <div className="ds-confirm__content">{children}</div>}
             <div className="ds-confirm__actions">
               {actions.map((action, i) => {
                 const variant = action.variant ?? (i === 0 ? "cta" : "secondary");

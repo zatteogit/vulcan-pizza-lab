@@ -2,7 +2,7 @@
  * Stepper panetti, lista ingredienti (baker's % in nerd), scorporo
  * pre-fermento, Regola 55 e blocchi scienza PizzaNerd. */
 
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Printer } from "lucide-react";
 import { motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import type { Dispatch, SetStateAction } from "react";
@@ -11,7 +11,7 @@ import { FlourBudget } from "./flour-budget";
 import { YeastExplainer } from "./yeast-explainer";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
-import { Stepper } from "../../components/ds/index";
+import { CtaButton, Stepper } from "../../components/ds/index";
 import { computePreFermentSplit } from "../../domain/pre-ferment-split";
 import {
   type GeneratedRecipe,
@@ -94,6 +94,17 @@ export function IngredientsSection({
           </h2>
           {/* Visore di sezione — come "Perfetti per te" */}
           <div className="ingredients-header__divider" />
+          {/* D-043: scheda di produzione stampabile (tutte le schede in fila). */}
+          <CtaButton
+            type="button"
+            variant="secondary"
+            elevated={false}
+            onClick={() => window.dispatchEvent(new CustomEvent("vulcan:print-request"))}
+            className="ingredients-print type-data"
+          >
+            <Printer size={14} aria-hidden="true" />
+            {uiMessage("features.recipe.recipe-output.print")}
+          </CtaButton>
         </div>
 
         {/* D-042: si parte dalle persone; l'app decide quante unità servono

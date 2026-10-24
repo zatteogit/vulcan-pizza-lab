@@ -235,3 +235,29 @@
     gap: var(--gap-lg);
   }
 }
+
+
+/* ═══ Stampa (D-043, audit totale n. 18) ═══
+ * In stampa esce solo la scheda di produzione (print-sheet.tsx, fuori da
+ * #root): niente interfaccia, pulsanti o foto. */
+@media print {
+  #root {
+    display: none !important;
+  }
+
+  .print-sheet {
+    display: block !important;
+  }
+
+  html,
+  body {
+    margin: var(--space-0) !important;
+    padding: var(--space-0) !important;
+    background: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 14mm 14mm 16mm;
+  }
+}

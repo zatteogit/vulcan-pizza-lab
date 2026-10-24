@@ -1,7 +1,7 @@
-import { Check, CookingPot, Flame, Link as LinkIcon, ListChecks, Share2, Utensils } from "lucide-react";
+import { Check, CookingPot, Flame, Link as LinkIcon, ListChecks, Printer, Share2, Utensils } from "lucide-react";
 import { localizeToppingRecipe } from "../../data/topping-i18n/localize";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import React, { useState, type ReactNode } from "react";
+import React, { useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { ScrollToTopOnMount } from "./recipe-output-bits";
 import { ToppingSection } from "./topping-section";
@@ -12,6 +12,9 @@ import { addMinutes, countNightActives, localizeStep, stepQuantities, optimizeCo
   defaultMealStart, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
+import { PrintSheet, type PrintSections } from "./print-sheet";
+import { Checkbox } from "../../components/ds/index";
+import { uiMessage } from "../../i18n/ui-messages";
 import { saveYeastSpeedFactor } from "../../adapters/browser/yeast-speed-storage";
 import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
@@ -103,6 +106,17 @@ export function RecipeOutput({
 }: RecipeOutputProps) {
   const reduceMotion = useReducedMotion();
   const [linkCopied, setLinkCopied] = useState(false);
+  /* D-043 / audit n. 18: scheda di produzione stampabile. «Stampa» (riga
+     Ingredienti) apre la scelta delle parti; la scheda vive fuori da #root e
+     appare solo in stampa. */
+  const [printOpen, setPrintOpen] = useState(false);
+  const [printSections, setPrintSections] = useState<PrintSections>({ dough: true, steps: true, topping: true });
+  useEffect(() => {
+    const open = () => setPrintOpen(true);
+    window.addEventListener("vulcan:print-request", open);
+    return () => window.removeEventListener("vulcan:print-request", open);
+  }, []);
+
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
 
   React.useLayoutEffect(() => {
@@ -583,6 +597,59 @@ export function RecipeOutput({
       )}
 
 
+
+      {/* ── Stampa: scelta delle parti e scheda di produzione ── */}
+      <ConfirmDialog
+        open={printOpen}
+        onDismiss={() => setPrintOpen(false)}
+        ariaLabel={uiMessage("features.recipe.print-sheet.dialogTitle")}
+        icon={<Printer size={24} />}
+        title={uiMessage("features.recipe.print-sheet.dialogTitle")}
+        body={uiMessage("features.recipe.print-sheet.dialogBody")}
+        actions={[
+          {
+            label: uiMessage("features.recipe.print-sheet.printNow"),
+            onClick: () => {
+              setPrintOpen(false);
+              window.setTimeout(() => window.print(), 150);
+            },
+          },
+          {
+            label: uiMessage("features.recipe.print-sheet.cancel"),
+            onClick: () => setPrintOpen(false),
+            variant: "secondary",
+          },
+        ]}
+      >
+        <fieldset className="print-options">
+          <Checkbox
+            checked={printSections.dough}
+            onCheckedChange={(v) => setPrintSections((p) => ({ ...p, dough: v }))}
+            label={uiMessage("features.recipe.print-sheet.sectionDough")}
+          />
+          <Checkbox
+            checked={printSections.steps}
+            onCheckedChange={(v) => setPrintSections((p) => ({ ...p, steps: v }))}
+            label={uiMessage("features.recipe.print-sheet.sectionSteps")}
+          />
+          <Checkbox
+            checked={printSections.topping}
+            onCheckedChange={(v) => setPrintSections((p) => ({ ...p, topping: v }))}
+            label={uiMessage("features.recipe.print-sheet.sectionTopping")}
+          />
+        </fieldset>
+      </ConfirmDialog>
+      <PrintSheet
+        recipe={recipe}
+        cms={cms}
+        fmt={fmt}
+        bcp47={bcp47}
+        sections={printSections}
+        steps={cookingSteps}
+        topping={activeTopping}
+        unitLabel={getServingUnitLabel(cms, servingUnit, recipe.dough_balls, true)}
+        readyAt={endTime}
+      />
 
       {/* ── Conferma: nuova pizzata sovrascrive quella in corso ── */}
       <ConfirmDialog

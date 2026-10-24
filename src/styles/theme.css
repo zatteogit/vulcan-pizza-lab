@@ -9245,6 +9245,153 @@
     letter-spacing: var(--tracking-snug);
   }
 
+  /* ── Scheda di produzione (D-043) — solo in stampa ── */
+  .print-sheet {
+    display: none;
+    color: var(--text-default);
+    background: none;
+    font-family: var(--font-sans);
+    font-size: var(--font-size-xl);
+    line-height: var(--leading-normal);
+  }
+
+  .print-sheet__header {
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-4);
+    border-bottom: var(--border-width-thick) solid var(--primary);
+  }
+
+  .print-sheet__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    color: var(--primary);
+  }
+
+  .print-sheet__title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--font-size-5xl);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+  }
+
+  .print-sheet__meta {
+    margin: var(--space-1) 0 0;
+    color: var(--text-muted);
+  }
+
+  .print-sheet__section {
+    margin-bottom: var(--space-5);
+    break-inside: avoid-page;
+  }
+
+  .print-sheet__h2 {
+    margin: 0 0 var(--space-2);
+    padding-bottom: var(--space-1);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    border-bottom: var(--border-width-thin) solid var(--border);
+  }
+
+  .print-sheet__table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .print-sheet__table th,
+  .print-sheet__table td {
+    padding: var(--space-1) var(--space-2);
+    text-align: left;
+    border-bottom: var(--border-width-thin) solid var(--border);
+  }
+
+  .print-sheet__table thead th {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .print-sheet__table tfoot th,
+  .print-sheet__table tfoot td {
+    font-weight: var(--weight-bold);
+    border-bottom: none;
+  }
+
+  .print-sheet__table .print-sheet__num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .print-sheet__note {
+    margin: var(--space-2) 0 0;
+    color: var(--text-muted);
+  }
+
+  .print-sheet__steps {
+    margin: 0;
+    padding-left: var(--space-5);
+  }
+
+  .print-sheet__step {
+    margin-bottom: var(--space-3);
+    break-inside: avoid;
+  }
+
+  .print-sheet__step-head {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--gap-sm);
+    margin: 0;
+  }
+
+  .print-sheet__time {
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .print-sheet__step-text {
+    margin: var(--space-0-5) 0 0;
+  }
+
+  .print-sheet__step-qty {
+    margin: var(--space-0-5) 0 0;
+    font-weight: var(--weight-semibold);
+  }
+
+  .print-sheet__footer {
+    margin-top: var(--space-6);
+    padding-top: var(--space-2);
+    border-top: var(--border-width-thin) solid var(--border);
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+  }
+
+  .print-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: var(--space-3) 0 0;
+    padding: 0;
+    border: none;
+  }
+
+  .ingredients-print {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    min-height: var(--space-10);
+    padding: 0 var(--space-3);
+    flex-shrink: 0;
+  }
+
   .ingredients-header__divider {
     flex: 1;
     height: var(--border-width-thin);
