@@ -1047,8 +1047,10 @@
   --container-page: var(--background);
 
   /* ── Premium Glass tokens ── */
-  --premium-glass-bg: color-mix(in srgb, var(--container-page) 86%, transparent);
-  --premium-glass-border: color-mix(in srgb, var(--text-default) 8%, transparent);
+  /* Vetro: opacità bilanciata con lo scrim sotto il dock (il testo arriva già
+     sfumato), così resta il riflesso del vetro senza testo leggibile sotto. */
+  --premium-glass-bg: color-mix(in srgb, var(--container-page) 80%, transparent);
+  --premium-glass-border: color-mix(in srgb, var(--text-default) 9%, transparent);
   --premium-glass-shadow: 0 10px 30px color-mix(in srgb, var(--shadow-color) 6%, transparent),
     0 var(--border-w) 3px color-mix(in srgb, var(--shadow-color) 2%, transparent),
     inset 0 var(--border-w) 0 color-mix(in srgb, var(--overlay-text) 15%, transparent);
@@ -1401,8 +1403,10 @@
   --border-muted: var(--color-night-400);
 
   /* ── Premium Glass tokens ── */
-  --premium-glass-bg: color-mix(in srgb, var(--container-page) 86%, transparent);
-  --premium-glass-border: color-mix(in srgb, var(--text-default) 8%, transparent);
+  /* Al buio il vetro prende il tono della superficie, non della pagina:
+     altrimenti non si stacca dal fondo. */
+  --premium-glass-bg: color-mix(in srgb, var(--surface-container) 82%, transparent);
+  --premium-glass-border: color-mix(in srgb, var(--text-default) 14%, transparent);
   --premium-glass-shadow: 0 10px 30px color-mix(in srgb, var(--shadow-color) 6%, transparent),
     0 var(--border-w) 3px color-mix(in srgb, var(--shadow-color) 2%, transparent),
     inset 0 var(--border-w) 0 color-mix(in srgb, var(--overlay-text) 15%, transparent);
@@ -15967,6 +15971,30 @@
     padding-bottom: calc(var(--space-20) + env(safe-area-inset-bottom, var(--space-0)));
   }
 
+  /* Marchio in testata (D-040): in riga col bottone del profilo, scorre con la pagina. */
+  .app-shell-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0))) var(--space-4) var(--space-0);
+    min-height: var(--space-11);
+    color: var(--text-default);
+    text-decoration: none;
+  }
+
+  .app-shell-brand__name {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  @media (min-width: 768px) {
+    .app-shell-brand {
+      display: none;
+    }
+  }
+
   @media (min-width: 768px) {
     .app-shell-main--nav {
       margin-left: var(--space-28);
@@ -15981,11 +16009,13 @@
     inset-inline: 0;
     z-index: 40;
     pointer-events: none;
-    height: calc(var(--space-18) + env(safe-area-inset-bottom, var(--space-0)));
+    /* Copre tutta la pillola del dock (24 px + 56 px) più un margine, così
+       il testo della pagina sfuma prima di passarle sotto. */
+    height: calc(var(--space-28) + env(safe-area-inset-bottom, var(--space-0)));
     background: linear-gradient(to top,
         var(--container-page) 0%,
-        var(--container-page) 20%,
-        color-mix(in srgb, var(--container-page) 65%, transparent) 60%,
+        var(--container-page) 38%,
+        color-mix(in srgb, var(--container-page) 82%, transparent) 66%,
         transparent 100%);
   }
 

@@ -37,6 +37,8 @@ import { DebugOverlay } from "../../features/dev-tools/debug-overlay";
 import { ThemeSwitcher } from "../../features/dev-tools/theme-switcher";
 import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { VulcanMark } from "./vulcan-logo";
+import { VulcanHero } from "./vulcan-hero";
+import { BRAND } from "../../config/brand";
 import { motionDuration,motionEase,motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
 import { TOOLS_ENABLED } from "../../config/tools";
@@ -538,6 +540,17 @@ function SidebarRail({
   );
 }
 
+/* ═══ MARCHIO IN TESTATA — logo nel blob d'impasto + nome (D-040) ═══ */
+function ShellBrand() {
+  const { cms } = useCms();
+  return (
+    <Link to="/explore" className="app-shell-brand" aria-label={cms.pages.homeAria}>
+      <VulcanHero size={36} energy={30} markRatio={0.5} />
+      <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
+    </Link>
+  );
+}
+
 /* ═══ PROFILE BUTTON — fixed top-right, sostituisce la tab Profilo ═══
    Audit Sprint 12: Profilo è impostazione utente, non una tab di navigazione. */
 function ProfileButton({ active, navState }: { active: boolean; navState: LiquidNavState }) {
@@ -843,6 +856,11 @@ export function AppShell() {
             className={`app-shell-main${showNav ? " app-shell-main--nav" : ""}`}
           >
             <RouteTitle />
+            {/* Marchio in testata (D-040): solo sulle pagine delle tab, su mobile;
+                su desktop il logo sta già nella barra laterale. */}
+            {hasProfileButton && TABS.some((tab) => tab.path === location.pathname) && (
+              <ShellBrand />
+            )}
             {/* U-5: la pagina resta montata (stato e scroll salvi) e si nasconde
                 mentre i risultati ne prendono il posto. */}
             <div className="app-shell-page" hidden={searchOpen}>
