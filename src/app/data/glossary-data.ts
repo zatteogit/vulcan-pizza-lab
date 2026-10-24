@@ -27,35 +27,29 @@ export interface GlossaryTerm {
   relatedPages?: string[];
 }
 
-export const GLOSSARY_CATEGORIES: Record<GlossaryCategory, { label: string; emoji: string; description: string }> = {
+export const GLOSSARY_CATEGORIES: Record<GlossaryCategory, { label: string; description: string }> = {
   rheology: {
     label: "Reologia",
-    emoji: "📐",
     description: "Proprietà meccaniche della farina e dell'impasto",
   },
   fermentation: {
     label: "Fermentazione",
-    emoji: "🦠",
     description: "Lievitazione, maturazione e processi biologici",
   },
   thermal: {
     label: "Termica",
-    emoji: "🔥",
     description: "Trasferimento calore e cottura",
   },
   chemistry: {
     label: "Chimica",
-    emoji: "🔬",
     description: "Composizione e reazioni chimiche",
   },
   mechanics: {
     label: "Meccanica",
-    emoji: "⚙️",
     description: "Lavorazione, attrezzature e misure",
   },
   scoring: {
     label: "Punteggi",
-    emoji: "📊",
     description: `Metriche di qualità ${BRAND.name}`,
   },
 };

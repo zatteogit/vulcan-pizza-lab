@@ -530,7 +530,7 @@ export const EN_LOCALE: CmsContent = {
     inProgressShort: "In progress",
     followYou: "We follow along while {brand} stays open: countdown, reminders and widget.",
     reopen: "Reopen the active bake",
-    completed: "Bake complete \u{1F355}",
+    completed: "Bake complete",
     waitOver: "Wait\u2019s over: keep going!",
     dueNow: "Time for: {title}",
     stepProgress: "{style} \u00b7 step {n}/{total}",

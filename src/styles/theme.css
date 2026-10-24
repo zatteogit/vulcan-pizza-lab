@@ -2400,7 +2400,8 @@
   }
 
   .preferment-decision__emoji {
-    font-size: var(--font-size-xl);
+    display: inline-flex;
+    color: var(--tone);
   }
 
   .preferment-decision__title {
@@ -2528,7 +2529,8 @@
   }
 
   .glossary-group__emoji {
-    font-size: var(--font-size-2xl);
+    display: inline-flex;
+    color: var(--primary);
   }
 
   .glossary-group__title {
@@ -2604,7 +2606,13 @@
   }
 
   .glossary-card__emoji {
-    font-size: var(--font-size-md);
+    color: var(--primary);
+  }
+
+  .glossary-chip__icon {
+    display: inline-block;
+    vertical-align: text-bottom;
+    margin-right: var(--space-1);
   }
 
   .glossary-card__content {
@@ -4209,7 +4217,8 @@
   }
 
   .home-dietary-warnings__icon {
-    font-size: var(--font-size-base);
+    display: inline-flex;
+    color: var(--primary);
   }
 
   .home-dietary-warnings__title {
@@ -4244,8 +4253,8 @@
   }
 
   .home-dietary-warning__icon {
+    display: inline-flex;
     flex-shrink: 0;
-    font-size: var(--font-size-base);
     margin-top: var(--space-px);
   }
 
@@ -4938,8 +4947,9 @@
   }
 
   .profile-ftu__done-emoji {
-    text-align: center;
-    font-size: var(--font-size-8xl);
+    display: flex;
+    justify-content: center;
+    color: var(--primary);
   }
 
   .profile-ftu__done-title {
@@ -4968,8 +4978,9 @@
   }
 
   .profile-ftu__done-item-emoji {
-    font-size: var(--font-size-3xl);
+    display: inline-flex;
     flex-shrink: 0;
+    color: var(--primary);
   }
 
   .profile-ftu__done-item-title {
@@ -6404,6 +6415,13 @@
 
   .config-advanced-toggle[aria-expanded="true"] .config-advanced-toggle__chevron {
     transform: rotate(180deg);
+  }
+
+  /* U-8: icone al posto delle emoji, allineate al testo che accompagnano */
+  .tip-icon {
+    display: inline-block;
+    vertical-align: text-bottom;
+    color: var(--text-accent);
   }
 
   .config-smart-link {
@@ -13238,8 +13256,9 @@
   }
 
   .troubleshooting-detail-row__icon {
+    display: inline-flex;
     flex-shrink: 0;
-    font-size: var(--font-size-lg);
+    color: var(--text-muted);
   }
 
   .troubleshooting-detail-row__body {

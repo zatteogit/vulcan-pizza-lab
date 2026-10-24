@@ -578,7 +578,7 @@ export const FR_LOCALE: CmsContent = {
     stylesSearchNoResults: "Aucun style pour \u00AB {query} \u00BB",
   },
   glossary: {
-    pageTitle: "Glossaire Technique",
+    pageTitle: "Glossaire technique",
     searchPlaceholder:
       "Rechercher terme, symbole ou d\u00E9finition...",
     cancelSearch: "Effacer",
@@ -1160,7 +1160,7 @@ export const FR_LOCALE: CmsContent = {
     forkish_saturday: "Ken Forkish",
   },
   profile: {
-    pageTitle: "Votre Profil",
+    pageTitle: "Votre profil",
     pageSubtitle: "Vos préférences, toujours à portée de main.",
     favoritesTitle: "Vos styles favoris",
     favoritesSubtitle: "Les styles que vous avez aimés",
@@ -1381,7 +1381,7 @@ export const FR_LOCALE: CmsContent = {
     navProfile: "Profil",
     navSearch: "Rechercher",
     exploreStepNum: "15 styles \u2014 4 familles",
-    exploreTitle: "Explorer les Styles",
+    exploreTitle: "Explorer les styles",
     exploreSubtitle:
       "De la Napoletana STG \u00E0 la Focaccia di Recco.",
     learnTitle: "Apprendre",
@@ -1389,7 +1389,7 @@ export const FR_LOCALE: CmsContent = {
       "La science et l'art de la pizza, bien expliqu\u00E9s.",
     learnGlossary: "Glossaire",
     learnGlossaryDesc: "30+ termes techniques de boulangerie",
-    learnTroubleshooting: "Probl\u00E8mes & Solutions",
+    learnTroubleshooting: "Probl\u00E8mes et solutions",
     learnTroubleshootingDesc:
       "20 probl\u00E8mes courants et comment les r\u00E9soudre",
     learnPreFerments: "Pr\u00E9-ferments",
@@ -1446,7 +1446,7 @@ export const FR_LOCALE: CmsContent = {
     learnFilterSubtitle: "Les sections ci-dessous se concentrent sur ce style.",
     learnRemoveFilter: "Supprimer le filtre de style",
     learnOpenGlossary: "Ouvrir le glossaire",
-    learnPathLabel: "Parcours d'Apprentissage",
+    learnPathLabel: "Parcours d'apprentissage",
     learnStartPath: "Démarrer le parcours",
     learnTermOfTheDay: "Terme du jour — {category}",
     learnPath1Title: "Votre première pizza en plaque",
@@ -1609,7 +1609,7 @@ export const FR_LOCALE: CmsContent = {
     inProgressShort: "En cours",
     followYou: "On vous accompagne tant que {brand} reste ouvert : compte \u00E0 rebours, rappels et widget.",
     reopen: "Rouvrir la fourn\u00E9e en cours",
-    completed: "Fourn\u00E9e termin\u00E9e \uD83C\uDF89",
+    completed: "Fourn\u00E9e termin\u00E9e",
     waitOver: "Attente termin\u00E9e : continuez !",
     dueNow: "C'est l'heure : {title}",
     stepProgress: "{style} \u00B7 \u00E9tape {n}/{total}",

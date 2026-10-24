@@ -71,14 +71,14 @@ Tutto in `pizza-engine.ts` (`STYLES_DB`), `topping-library.ts`, `parametric-data
 - **INT‑C12** ✅ già coperto (moot) — search-overlay ha risultati sincroni + immagini con skeleton (A4) + stati no-results/empty; FTU step 2/3 sono contenuto statico; l'unico async (ricerca località in `profile.tsx`) ha già spinner `Loader2` + stato "detecting". Nessun gap di caricamento reale.
 
 ## WORKSTREAM D — Coerenza visiva & editoriale (P3)
-- **INT‑D1** ⬜ (S‑M) Emoji → icone SVG (Falsi Allarmi, pre-fermenti, onboarding, CTA "Inizia ✨").
-- **INT‑D2** ⬜ (M) Icone glossario per categoria — `glossary` + `glossary-data`.
+- **INT‑D1** ✅ (S‑M) Emoji → icone SVG — problemi, prefermenti, fine del primo avvio, avvisi alimentari usano icone lucide; emoji tolte dai testi CMS (24/10/2026, U-8).
+- **INT‑D2** ✅ (M) Icone glossario per categoria — `features/glossary/glossary-categories.ts` (icona + nome/descrizione dal CMS); «Termine del giorno» con la categoria nella lingua attiva (24/10/2026).
 - **INT‑D3** ⬜ (L) Coerenza fotografica — `STYLE_PHOTOS`/`cms.media`: no foto AI evidenti; foto = prodotto corretto.
 - **INT‑D-wow** 🔶 Video di cottura (effetto wow) — 6 video per-stile copiati in `public/videos/` (`STYLE_VIDEOS` in `style-photos.ts`). Nel **detail sheet** l'header è ora un **hero a tutta larghezza** con la foto-poster che sfuma nel video (componente `BlurInVideo`: opacity+blur+scale in dissolvenza, muted/loop/playsInline, lazy). Stili senza video → solo foto. ⬜ Possibile estensione: hero scheda ricetta.
 - **INT‑D4** ✅ (S) Nomenclatura card — `explore.tsx`: eyebrow unificate (featured + signature) a **"Ricetta · {stile}"** (rimosso "su {stile}" reso "SU …"). Verificato.
-- **INT‑D5** 🔶 (S) Capitalizzazione tag — `recipe-view.tsx`: tag hero non più `capitalize` (che faceva "Cheese **C**rown", "2-3 **C**m", "**A**i", "**K**nead"); ora prima lettera sola. ⬜ Audit capitalizzazione su altri microcopy: follow-up opzionale.
+- **INT‑D5** 🔶 (S) Capitalizzazione tag — `recipe-view.tsx`: tag hero non più `capitalize` (che faceva "Cheese **C**rown", "2-3 **C**m", "**A**i", "**K**nead"); ora prima lettera sola. ✅ Audit (24/10/2026): tolto il `.toUpperCase()` in JS dove il CSS fa già `uppercase` (gli screen reader leggono il testo normale); titoli it/es/fr/pt con la sola iniziale maiuscola e «e» al posto di «&».
 - **INT‑D6** ✅ (S) "Troubleshooting" → IT — già IT (`learnTroubleshooting`="Problemi & Soluzioni"); corretto l'ultimo anglicismo in `ftuDoneLearnDesc`.
-- **INT‑D7** ⬜ (S) Badge nav allineato a tile.
+- **INT‑D7** ➖ Superata: la navigazione attuale non ha badge (solo la pillola della voce attiva).
 
 ## WORKSTREAM E — Evoluzione prodotto (P4)
 - **INT‑E1** ⬜ (M) Peso culturale (Tradizionale/Bilanciato/Sperimentale) — scoring `pizza-engine`/`recommended-styles`.

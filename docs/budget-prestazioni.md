@@ -50,7 +50,7 @@ della lingua attiva.
 
 | # | Intervento | Effetto atteso | Costo |
 |---|---|---|---|
-| P-5a | Caricare motore e libreria condimenti nella home solo dopo la scelta dell'orario (o in idle) | −420 kB di JS sul primo caricamento; LCP della home vicino a quello di Scopri | Medio: `HomePage` usa `useRecipeState` al primo render, va separato lo step «quando» |
+| ~~P-5a~~ | Ridimensionata il 24/10: con D-036/D-037 l'ingresso è Scopri e lo step «quando» non c'è più. Misura in locale (build di produzione): Scopri scarica `pizza-engine` (118 kB) e `topping-library` (124 kB) non compressi perché ogni card calcola il punteggio sul forno dell'utente; LCP 0,9 s (la foto), Crea 0,92 s. Rimandarli farebbe comparire i punteggi dopo le card per circa 60 kB compressi: non conviene. Da riaprire solo se `styles-db` si stacca da `topping-library` per altri motivi | — | — |
 | P-5b | Fatto in parte: `<link>` con `preconnect` in `index.html`. Resta: font in locale con `preload` del peso del titolo, sottoinsieme latino | −1 round trip bloccante | Basso |
 | ~~P-5c~~ | Fatto il 24/10 (D-034): 480p, 24 fps, 8 s in loop, H.264 CRF 28, senza audio, faststart; niente video con «riduci movimento» o risparmio dati | da 48,6 MB a 2,6 MB (−95%) | — |
 | P-5d | Stili per pagina: spostare nel chunk della pagina gli stili di profilo, CMS e design system | −60/80 kB di CSS non compresso sul primo caricamento | Medio |

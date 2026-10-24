@@ -772,7 +772,7 @@ function StyleCatalogCard({
               {style.name}
             </h3>
             <div className="explore-card__origin">
-              {shortOrigin(style.origin).toUpperCase()}
+              {shortOrigin(style.origin)}
             </div>
           </figcaption>
         </figure>

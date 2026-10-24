@@ -4,39 +4,7 @@
    Include FTU (First Time Use) onboarding al primo accesso. */
 
 import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
-import {
-Beaker,
-Bug,
-Check,
-Download,
-Link as LinkIcon,
-Upload,
-ChevronDown,
-ChevronRight,
-CircleDot,
-Egg,
-Flame,
-Bookmark,
-Globe,
-Heart,
-Home,
-Loader2,
-MapPin,
-Milk,
-Monitor,
-Moon,
-Navigation,
-Search,
-Sparkles,
-Sun,
-Thermometer,
-Timer,
-Trees,
-User,
-WheatOff,
-X,
-Zap,
-} from "lucide-react";
+import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Egg, Flame, Globe, GraduationCap, Heart, Home, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Thermometer, Timer, Trees, Upload, User, WheatOff, X, Zap } from "lucide-react";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
 import { useCallback,useEffect,useMemo,useRef,useState, useId } from "react";
 import { createPortal } from "react-dom";
@@ -984,13 +952,13 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
 
             {step === 3 && (
               <div className="profile-ftu__done">
-                <div className="profile-ftu__done-emoji">🎉</div>
+                <div className="profile-ftu__done-emoji"><PartyPopper size={32} aria-hidden="true" /></div>
                 <p className="profile-ftu__done-title">
                   {p.ftuDoneTitle}
                 </p>
                 <ul className="profile-ftu__done-list">
                   <li className="profile-ftu__done-item">
-                    <span className="profile-ftu__done-item-emoji">🍕</span>
+                    <span className="profile-ftu__done-item-emoji"><Pizza size={20} aria-hidden="true" /></span>
                     <div className="profile-ftu__done-item-body">
                       <div className="profile-ftu__done-item-title">
                         {p.ftuDoneCreateTitle}
@@ -1002,7 +970,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                     </div>
                   </li>
                   <li className="profile-ftu__done-item">
-                    <span className="profile-ftu__done-item-emoji">📚</span>
+                    <span className="profile-ftu__done-item-emoji"><Compass size={20} aria-hidden="true" /></span>
                     <div className="profile-ftu__done-item-body">
                       <div className="profile-ftu__done-item-title">
                         {p.ftuDoneExploreTitle}
@@ -1014,7 +982,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                     </div>
                   </li>
                   <li className="profile-ftu__done-item">
-                    <span className="profile-ftu__done-item-emoji">🎓</span>
+                    <span className="profile-ftu__done-item-emoji"><GraduationCap size={20} aria-hidden="true" /></span>
                     <div className="profile-ftu__done-item-body">
                       <div className="profile-ftu__done-item-title">
                         {p.ftuDoneLearnTitle}
@@ -1800,7 +1768,7 @@ export function ProfilePage() {
             {/* ── Impastamento ── */}
             <EquipmentCategory
               title={p.equipMixerTitle}
-              stepLabel={p.equipMixerTitle.toUpperCase()}
+              stepLabel={p.equipMixerTitle}
               expanded={equipExpandedCat === "mixer"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "mixer" ? null : "mixer")}
               summary={mixers.length > 0
@@ -1865,7 +1833,7 @@ export function ProfilePage() {
             {/* ── Superficie di cottura ── */}
             <EquipmentCategory
               title={p.equipSurfaceTitle}
-              stepLabel={p.equipSurfaceTitle.toUpperCase()}
+              stepLabel={p.equipSurfaceTitle}
               expanded={equipExpandedCat === "surface"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "surface" ? null : "surface")}
               summary={equipment.surfaces.length > 0
@@ -1930,7 +1898,7 @@ export function ProfilePage() {
             {/* ── Utensili ── */}
             <EquipmentCategory
               title={p.equipToolsTitle}
-              stepLabel={(p.equipToolsTitle).toUpperCase()}
+              stepLabel={p.equipToolsTitle}
               expanded={equipExpandedCat === "tools"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "tools" ? null : "tools")}
               summary={equipment.tools.length > 0

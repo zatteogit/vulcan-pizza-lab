@@ -581,7 +581,7 @@ export const ES_LOCALE: CmsContent = {
     stylesSearchNoResults: "Ning\u00FAn estilo coincide con \"{query}\"",
   },
   glossary: {
-    pageTitle: "Glosario T\u00E9cnico",
+    pageTitle: "Glosario t\u00E9cnico",
     searchPlaceholder:
       "Buscar t\u00E9rmino, s\u00EDmbolo o definici\u00F3n...",
     cancelSearch: "Borrar",
@@ -1161,7 +1161,7 @@ export const ES_LOCALE: CmsContent = {
     forkish_saturday: "Ken Forkish",
   },
   profile: {
-    pageTitle: "Tu Perfil",
+    pageTitle: "Tu perfil",
     pageSubtitle: "Tus preferencias, siempre a mano.",
     favoritesTitle: "Tus estilos favoritos",
     favoritesSubtitle: "Los estilos que marcaste con el corazón",
@@ -1376,7 +1376,7 @@ export const ES_LOCALE: CmsContent = {
     navProfile: "Perfil",
     navSearch: "Buscar",
     exploreStepNum: "15 estilos — 4 familias",
-    exploreTitle: "Explora los Estilos",
+    exploreTitle: "Explora los estilos",
     exploreSubtitle:
       "De la Napoletana STG a la Focaccia di Recco.",
     learnTitle: "Aprende",
@@ -1385,7 +1385,7 @@ export const ES_LOCALE: CmsContent = {
     learnGlossary: "Glosario",
     learnGlossaryDesc:
       "30+ t\u00E9rminos t\u00E9cnicos de panificaci\u00F3n",
-    learnTroubleshooting: "Problemas & Soluciones",
+    learnTroubleshooting: "Problemas y soluciones",
     learnTroubleshootingDesc:
       "20 problemas comunes y c\u00F3mo resolverlos",
     learnPreFerments: "Pre-fermentos",
@@ -1440,7 +1440,7 @@ export const ES_LOCALE: CmsContent = {
     learnFilterSubtitle: "Las siguientes secciones se enfocan en este estilo.",
     learnRemoveFilter: "Eliminar filtro de estilo",
     learnOpenGlossary: "Abrir el glosario",
-    learnPathLabel: "Ruta de Aprendizaje",
+    learnPathLabel: "Ruta de aprendizaje",
     learnStartPath: "Iniciar ruta",
     learnTermOfTheDay: "Término del día — {category}",
     learnPath1Title: "Tu primera pizza en bandeja",
@@ -1603,7 +1603,7 @@ export const ES_LOCALE: CmsContent = {
     inProgressShort: "En curso",
     followYou: "Te acompa\u00F1amos mientras {brand} siga abierto: cuenta atr\u00E1s, recordatorios y widget.",
     reopen: "Reabrir la elaboraci\u00F3n en curso",
-    completed: "Elaboraci\u00F3n completada \uD83C\uDF89",
+    completed: "Elaboraci\u00F3n completada",
     waitOver: "Se acab\u00F3 la espera: \u00A1sigue!",
     dueNow: "Ahora toca: {title}",
     stepProgress: "{style} \u00B7 paso {n}/{total}",

@@ -213,7 +213,6 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "features.recipe.recipe-match-card.sperimentazione-d09679c9": "Experimentação",
   "features.recipe.recipe-match-card.troppo-per-questo-setup-alleggeriamo-tempi-2fd2fadf": "Demais para este setup: vamos aliviar tempos, forno ou ambição.",
   "features.recipe.recipe-output-bits.w-262d147c": "← W",
-  "features.recipe.recipe-setup-panel.d-autore-23e32e2a": "De autor",
   "features.recipe.recipe-setup-panel.firma-439145df": "Assinatura",
   "features.recipe.recipe-setup-panel.idr-w-6f351627": "hidr. · W",
   "features.recipe.recipe-setup-panel.interpretazione-b24004b7": "Interpretação",
