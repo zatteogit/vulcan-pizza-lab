@@ -22,6 +22,7 @@ import {
   type UserConstraints,
 } from "../domain/pizza-engine";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../data/glossary-data";
+import { searchOvenModels } from "../data/oven-models";
 import { kitchenCompatibility } from "../features/recipe/kitchen-compatibility";
 import { GLOSSARY_TERMS_DEFAULTS } from "../features/cms/domain-i18n-defaults";
 import { GLOSSARY_TERMS_DE } from "../features/cms/locales/domain-de";
@@ -83,6 +84,12 @@ function styleById(args: Json): PizzaStyle {
 }
 
 function constraintsFrom(args: Json): UserConstraints {
+  // D-048: un modello di forno («Koda 16», «Effeuno P134H») dà tipo e temperatura.
+  if (args.oven_model) {
+    const [model] = searchOvenModels(String(args.oven_model), 1);
+    if (!model) throw new ToolInputError(`no oven model matches "${args.oven_model}"; use oven_type and oven_max_temp_c`);
+    args = { ...args, oven_type: model.ovenType, oven_max_temp_c: args.oven_max_temp_c ?? model.maxTempC };
+  }
   const ovenType = String(args.oven_type ?? "home");
   if (!OVEN_TYPES.includes(ovenType as OvenType)) {
     throw new ToolInputError(`"oven_type" must be one of ${OVEN_TYPES.join(", ")}`);
@@ -166,6 +173,10 @@ function recipeData(recipe: GeneratedRecipe) {
 }
 
 const OVEN_INPUT = {
+  oven_model: {
+    type: "string",
+    description: "Brand and/or model of a pizza oven (e.g. \"Ooni Koda 16\", \"Effeuno P134H\", \"Roccbox\"): sets oven type and temperature.",
+  },
   oven_type: { type: "string", enum: OVEN_TYPES, description: "Kind of oven. home = domestic oven (~250 °C)." },
   oven_max_temp_c: { type: "number", description: "Highest temperature the oven reaches, °C." },
   available_hours: { type: "number", description: "Hours until the meal (limits fermentation)." },
@@ -246,7 +257,9 @@ export const MCP_TOOLS: McpTool[] = [
             reasons: rec.reasons.map(msg),
             warnings: rec.warnings.map(msg),
           };
-        });
+        })
+        // Per compatibilità con la cucina, il numero che l'agente mostra.
+        .sort((a, b) => b.compatibility - a.compatibility);
       return {
         summary: recs.map((r) => `${r.name}: ${r.compatibility}/100`).join("; "),
         data: { constraints, styles: recs },
