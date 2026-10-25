@@ -894,7 +894,7 @@
   /* prospettiva 3D stage tilt-card */
   --toggle-padding-block: var(--dimension-relative-110);
   /* padding verticale toggle header pre-ferment-guide (17.6px) */
-  --detail-sheet-hero-height: clamp(160px, 38vw, 220px);
+  --detail-sheet-hero-height: calc(var(--space-40) + var(--space-8));
   /* hero-media bottom-sheet stile (style-detail) */
   --video-blur-in: var(--dimension-fixed-016);
   /* blur iniziale fade-in video cottura (fra --blur-ml 14 e --blur-lg 22) */
@@ -15024,8 +15024,9 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     padding-inline: var(--space-5);
-    padding-bottom: var(--space-6);
-    padding-top: var(--space-9);
+    padding-bottom: var(--space-4);
+    padding-top: var(--space-3);
+    scroll-padding-block: var(--space-3);
   }
 
   /* Schermi larghi: card centrata invece di un foglio largo quanto la finestra
@@ -15047,24 +15048,75 @@
     }
   }
 
-  /* Controls stay outside the scrolling body; the veil separates them
-     from the photo and text passing underneath. */
+  /* Mobile actions are in the top bar; desktop CTA stays below the body. */
   .style-detail-sheet__toolbar {
-    position: absolute;
-    inset: 0 0 auto;
+    flex-shrink: 0;
     z-index: 3;
     display: flex;
-    justify-content: flex-end;
-    gap: var(--space-0-5);
-    padding: var(--space-3);
-    pointer-events: none;
-    background: color-mix(in srgb, var(--surface-container-low) 75%, transparent);
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border-width-thin) solid var(--outline-variant);
+    background: color-mix(in srgb, var(--surface-container-low) 92%, transparent);
     backdrop-filter: blur(var(--blur-sm));
     -webkit-backdrop-filter: blur(var(--blur-sm));
   }
 
-  .style-detail-sheet__toolbar > button {
-    pointer-events: auto;
+  .style-detail-sheet__close-btn {
+    order: -1;
+  }
+
+  .style-detail-sheet__toolbar > .style-detail-cta {
+    flex: 1;
+    min-width: 0;
+    padding-inline: var(--space-3);
+    font-size: var(--font-size-md);
+  }
+
+  .style-detail-sheet__footer {
+    display: none;
+    flex-shrink: 0;
+    padding: var(--space-3) var(--space-6);
+    border-top: var(--border-width-thin) solid var(--outline-variant);
+    background: color-mix(in srgb, var(--surface-container-low) 95%, transparent);
+    backdrop-filter: blur(var(--blur-sm));
+    -webkit-backdrop-filter: blur(var(--blur-sm));
+  }
+
+  @media (max-width: 639px) {
+    .style-detail-sheet__panel {
+      --detail-sheet-hero-height: var(--space-36);
+    }
+  }
+
+  @media (min-width: 640px) {
+    .style-detail-sheet__toolbar {
+      position: absolute;
+      top: var(--space-2);
+      right: var(--space-2);
+      padding: var(--space-1);
+      gap: var(--space-1);
+      border-bottom: none;
+      border-radius: var(--radius-full);
+      background: color-mix(in srgb, var(--surface-container-low) 75%, transparent);
+    }
+
+    .style-detail-sheet__close-btn {
+      order: 1;
+    }
+
+    .style-detail-sheet__toolbar > .style-detail-cta--toolbar {
+      display: none;
+    }
+
+    .style-detail-sheet__footer {
+      display: flex;
+    }
+
+    .style-detail-sheet__body .style-detail-match__list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   .style-detail-sheet__close-btn,
@@ -15101,7 +15153,7 @@
 
   /* ── Description ── */
   .style-detail-sheet__description {
-    margin-top: var(--space-4);
+    margin-top: var(--space-3);
     font-size: var(--font-size-md);
     color: var(--text-muted);
     line-height: var(--leading-cozy);
@@ -15208,7 +15260,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--gap-2xs);
-    margin-top: var(--space-4);
+    margin-top: var(--space-3);
   }
 
   .style-detail-chars__chip {
@@ -15227,7 +15279,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: var(--space-5);
+    margin-top: var(--space-3);
   }
 
   .style-detail-nerd__toggle {
@@ -15392,7 +15444,7 @@
 
   /* ── Match reasons (VPL-C3) ── */
   .style-detail-match {
-    margin-top: var(--space-6);
+    margin-top: var(--space-4);
   }
 
   .style-detail-match__heading {
@@ -15401,13 +15453,13 @@
     letter-spacing: var(--tracking-caps);
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-bottom: var(--space-3);
+    margin-bottom: var(--space-2);
   }
 
   .style-detail-match__list {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-sm);
+    gap: var(--gap-xs);
   }
 
   .style-detail-match__row {
@@ -15441,8 +15493,16 @@
   /* ── CTA — Genera ricetta ── */
   .style-detail-cta {
     width: 100%;
-    height: var(--space-13);
-    margin-top: var(--space-6);
+    height: var(--space-12);
+    margin: 0;
+  }
+
+  .style-detail-cta:disabled {
+    background: var(--surface-container);
+    color: var(--text-muted);
+    border: var(--border-width-thin) solid var(--outline-variant);
+    box-shadow: none;
+    cursor: not-allowed;
   }
 
   .style-detail-cta:active {
