@@ -77,3 +77,18 @@ describe("profileEquipment", () => {
     });
   });
 });
+
+describe("capacità fisica e temperatura di ricetta", () => {
+  it("conserva una temperatura scelta inferiore al massimo dello stesso forno", () => {
+    expect(mergeDraftConstraints(profile,{oven_type:"home",oven_max_temp_c:200}).oven_max_temp_c).toBe(200);
+  });
+  it("una bozza dello stesso forno non aumenta mai la capacità reale", () => {
+    expect(mergeDraftConstraints(profile,{oven_type:"home",oven_max_temp_c:500}).oven_max_temp_c).toBe(250);
+  });
+  it("le preferenze negative aggiornate nel profilo prevalgono sulla bozza", () => {
+    const p={...profile,allow_flour_purchase:false,excluded_flours:["riso"]};
+    const merged=mergeDraftConstraints(p,{allow_flour_purchase:true,excluded_flours:[]});
+    expect(merged.allow_flour_purchase).toBe(false);
+    expect(merged.excluded_flours).toEqual(["riso"]);
+  });
+});

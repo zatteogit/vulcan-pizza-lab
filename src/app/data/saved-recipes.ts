@@ -8,6 +8,9 @@ export const MAX_SAVED_RECIPES = 200;
 
 export interface SavedRecipeParams {
   hydration: number;
+  hydrationBase?: number;
+  salt?: number;
+  interpretationId?: string | null;
   flourW: number;
   flourPL: number;
   fermentHours: number;
@@ -37,6 +40,9 @@ export function savedRecipeKey(styleId: string, params: SavedRecipeParams): stri
   return [
     styleId,
     params.hydration,
+    params.hydrationBase ?? "",
+    params.salt ?? "",
+    params.interpretationId ?? "",
     params.flourW,
     params.flourPL,
     params.fermentHours,

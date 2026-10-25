@@ -1,3 +1,5 @@
+import { CtaButton } from "../../components/ds/index";
+import { RecipeChanges } from "./recipe-changes";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring,motionTiming } from "../../components/ds/motion";
@@ -121,10 +123,13 @@ export function RecipeMatchCard({
   minTemp,
   mode = "adapted",
   onPersonalize,
+  onCreate,
   onSave,
   onOptimize,
   dirty = false,
   optimizationRationale,
+  optimizationPreview,
+  originalRecipe,
   ceiling,
   hardLimited,
   softNeeds,
@@ -143,6 +148,7 @@ export function RecipeMatchCard({
   /** "Personalizza": apre il dialog dei parametri (sostituisce la vecchia
    *  leva "Regola a mano" — le azioni vivono tutte sulla match card). */
   onPersonalize?: () => void;
+  onCreate?: () => void;
   onSave?: () => void;
   /** "Ottimizza per me": cerca i parametri migliori per il setup dell'utente. */
   onOptimize?: () => void;
@@ -152,6 +158,8 @@ export function RecipeMatchCard({
   dirty?: boolean;
   /** Rationale dell'ultima ottimizzazione (stringhe già risolte) da mostrare. */
   optimizationRationale?: string[];
+  optimizationPreview?: GeneratedRecipe;
+  originalRecipe?: GeneratedRecipe;
   /** Soffitto: composite della ricetta OTTIMIZZATA per i vincoli dell'utente —
    *  il massimo raggiungibile. Abilita i "due livelli": +Δ sul pulsante, riga
    *  onesta sul margine, e il verdetto "non vale la pena" se < 40. */
@@ -579,6 +587,12 @@ export function RecipeMatchCard({
               </p>
             )}
 
+            {verdictRecipe?.optional_aids && verdictRecipe.optional_aids.length > 0 && (
+              <ul className="recipe-verdict__reasons">{engineMsgTexts(verdictRecipe.optional_aids, cms, bcp47).map(text => <li key={text} className="type-body-sm">{text}</li>)}</ul>
+            )}
+            {originalRecipe && verdictRecipe && mode !== "canonical" && (
+              <RecipeChanges from={originalRecipe} to={verdictRecipe} mode="included" />
+            )}
             {optimizationRationale && optimizationRationale.length > 0 && (
               <div className="match-rationale">
                 <div className="match-rationale__head">
@@ -601,6 +615,12 @@ export function RecipeMatchCard({
       </AnimatePresence>
       </div>
 
+      {onOptimize && optimizationPreview && verdictRecipe && (
+        <RecipeChanges from={verdictRecipe} to={optimizationPreview} mode="preview" />
+      )}
+      {onCreate && (
+        <CtaButton type="button" variant="secondary" elevated={false} onClick={onCreate}>{cms.ui.recipeOpenCreate}</CtaButton>
+      )}
       <div className="match-actions">
         {onOptimize && (
           <motion.button

@@ -16,7 +16,7 @@ describe("tre esiti sulla ricetta eseguibile, indipendenti dal punteggio", () =>
     const style = STYLES_DB.new_haven_apizza;
     expect(style.baking.oven_type_required).toBe("coal");
     expect(style.requires_wood_oven).toBe(false);
-    const coal = generateRecipe(style, kitchen({ oven_type: "coal", oven_max_temp_c: 400 }));
+    const coal = generateRecipe(style, kitchen({ oven_type: "coal", oven_max_temp_c: 400, pantry_inventory_complete: true, pantry_flours: ["caputo_pizzeria"], pantry_yeasts: ["fresh", "dry", "sourdough"] }));
     const wood = generateRecipe(style, kitchen({ oven_type: "wood", oven_max_temp_c: 450 }));
     const home = generateRecipe(style, kitchen());
     expect(coal.verdict.outcome).toBe("ok");
@@ -33,8 +33,8 @@ describe("tre esiti sulla ricetta eseguibile, indipendenti dal punteggio", () =>
     expect(getStyleDeviation("napoletana_stg").category).toBe("canonical");
   });
   it("Chicago con teglia e forno adeguato: fattibile senza adattamenti", () => {
-    const recipe = generateRecipe(STYLES_DB.chicago_deep, kitchen());
-    expect(recipe.verdict).toEqual({ outcome: "ok", blockers: [], adaptations: [] });
+    const recipe = generateRecipe(STYLES_DB.chicago_deep, kitchen({ pantry_inventory_complete: true, pantry_flours: ["caputo_pizzeria"], pantry_yeasts: ["fresh", "dry", "sourdough"] }), { customFlourW: 260 });
+    expect(recipe.verdict).toEqual({ outcome: "ok", blockers: [], adaptations: [], conditions: [] });
   });
 
   it("teglia romana a 250: fattibile modificando la cottura", () => {
@@ -81,9 +81,9 @@ describe("tre esiti sulla ricetta eseguibile, indipendenti dal punteggio", () =>
   });
 
   it("attrezzatura mancante: condizione esplicita, non un sì senza riserve", () => {
-    const recipe = generateRecipe(STYLES_DB.chicago_deep, kitchen({ has_baking_pan: false }));
+    const recipe = generateRecipe(STYLES_DB.chicago_deep, kitchen({ has_baking_pan: false, equipment_inventory_complete: true }));
     expect(recipe.verdict.outcome).toBe("warnings");
-    expect(recipe.verdict.adaptations.map((m) => m.key)).toContain("rec.needsPan");
+    expect(recipe.verdict.adaptations.map((m) => m.key)).toContain("need.pan");
   });
 
   it("temperatura di ricetta e URL non aumentano la capacità fisica del forno", () => {

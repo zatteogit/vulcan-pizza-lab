@@ -293,7 +293,7 @@ export const MCP_TOOLS: McpTool[] = [
     name: "recommend_styles",
     title: "Styles for my kitchen",
     description:
-      "Rank pizza styles for a kitchen (oven type and temperature, hours available, skill). Each result has the compatibility with that kitchen (0–100, same number as the app), how far a tuned recipe can go, and whether the style is feasible. has_caveats: feasible with reservations, repeat its warnings and never call it suitable without conditions.",
+      "Rank pizza styles for a kitchen (oven type and temperature, hours available, skill). Each result has the score of the proposed recipe (0–100), the separate headroom of a tuned recipe, and whether the style is feasible. has_caveats: feasible with reservations, repeat its warnings and never call it suitable without conditions.",
     inputSchema: {
       type: "object",
       properties: { ...OVEN_INPUT, limit: { type: "number", description: "How many styles (default 5)." } },
@@ -304,7 +304,8 @@ export const MCP_TOOLS: McpTool[] = [
       const recs = recommendStyles(constraints)
         .filter((rec) => rec.tier !== "not_feasible")
         .map((rec) => {
-          const { now, best } = kitchenCompatibility(rec.style, constraints);
+          const now = rec.recipe.scores.composite;
+          const best = Math.max(now, kitchenCompatibility(rec.style, constraints).best);
           return {
             ...styleSummary(rec.style),
             compatibility: now,

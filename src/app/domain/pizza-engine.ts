@@ -307,6 +307,12 @@ export interface UserConstraints {
   dietary_filters: string[];
   kitchen_temp_c?: number;
   pantry_flours: string[]; // e.g. ['00','0','manitoba','integrale','semola']
+  /** Partial inventory is the default: omission does not prove absence. */
+  pantry_inventory_complete?: boolean;
+  allow_flour_purchase?: boolean;
+  excluded_flours?: string[];
+  equipment_inventory_complete?: boolean;
+  allow_equipment_purchase?: boolean;
   pantry_yeasts: string[]; // e.g. ['fresh','dry','sourdough']
   /** Advanced equipment — mixer type from profile (hands/planetary/spiral/fork/stand_domestic) */
   mixer_type?: string | null;
@@ -441,13 +447,22 @@ export type RecipeBlocker =
    * le ore sono scelte a mano. `needed_h` include le lavorazioni. */
   | { kind: "fermentation_too_short"; fermentation_h: number; style_min_h: number; needed_h: number }
   | { kind: "fermentation_too_long"; fermentation_h: number; style_max_h: number }
-  | { kind: "fermentation_temperature"; actual_c: number; required_c: number };
+  | { kind: "fermentation_temperature"; actual_c: number; required_c: number }
+  | { kind: "resource_excluded"; resource: "flour" | "equipment"; message: EngineMsg };
+
+export interface RecipeCondition {
+  kind: "pan" | "deck" | "flour" | "flour_blend" | "yeast";
+  status: "missing" | "unverified";
+  message: EngineMsg;
+  acquisition?: "ingredient" | "accessory" | "appliance";
+}
 
 export interface RecipeVerdict {
   outcome: RecipeOutcome;
   blockers: RecipeBlocker[];
   /** Condizioni e modifiche da rispettare: senza applicarle non è un «sì». */
   adaptations: EngineMsg[];
+  conditions?: RecipeCondition[];
 }
 
 /** Sotto questa viabilità termica lo stile non si ottiene (stessa soglia
@@ -458,6 +473,7 @@ export interface GeneratedRecipe {
   schema_version: string; // Notion Pag.09: recipe data schema version
   /** M-10: esito esplicito (riuscito, con avvisi, non fattibile così). */
   verdict: RecipeVerdict;
+  optional_aids?: EngineMsg[];
   style: PizzaStyle;
   dough_balls: number;
   flour_g: number;
@@ -470,6 +486,7 @@ export interface GeneratedRecipe {
   yeast_g: number;
   yeast_type: "fresh" | "dry" | "sourdough";
   hydration_pct: number;
+  baker_pcts?: { salt: number; fat: number; sugar: number };
   flour_w: number;
   flour_pl: number; // P/L stimato
   /** VPL-B2 — mix di farine risolto (con grammi per componente). Presente solo
@@ -780,9 +797,9 @@ function minimumSupportedOvenTemp(style: PizzaStyle, constraints: UserConstraint
 /** Prerequisiti dichiarati, comuni a consiglio e ricetta: la dispensa vuota
  * non prova di avere una farina; l'attrezzatura non scelta non è disponibile
  * per magia. Queste sono condizioni da soddisfare, non blocchi fisici. */
-function kitchenPrerequisites(style: PizzaStyle, constraints: UserConstraints): EngineMsg[] {
-  const messages: EngineMsg[] = [];
-  if (isFriedStyle(style)) return messages;
+function kitchenPrerequisites(style: PizzaStyle, constraints: UserConstraints, flourW: number, yeastType: GeneratedRecipe["yeast_type"]): RecipeCondition[] {
+  const conditions: RecipeCondition[] = [];
+  const add = (kind: RecipeCondition["kind"], status: RecipeCondition["status"], message: EngineMsg) => conditions.push({ kind, status, message });
   const surfaces = constraints.surfaces ?? [];
   const hasPan = constraints.has_baking_pan || surfaces.some((s) =>
     ["aluminum_pan", "blue_steel_pan", "cast_iron"].includes(s),
@@ -790,21 +807,45 @@ function kitchenPrerequisites(style: PizzaStyle, constraints: UserConstraints): 
   const panStyle = style.proof_in_pan || style.shape.shape_type === "rectangular" ||
     ["chicago_deep", "padellino_torino", "focaccia_barese", "greek_pan", "focaccia_recco", "ciaccino_senese", "fugazzeta"].includes(style.id);
   const homeMethod = homeBakingAdaptation(style, constraints.oven_type, constraints.oven_max_temp_c);
-  if ((panStyle || homeMethod) && !hasPan) {
-    messages.push(em("rec.needsPan", "Serve una teglia per questo stile"));
+  if (!isFriedStyle(style) && (panStyle || homeMethod) && !hasPan) {
+    add("pan", constraints.equipment_inventory_complete ? "missing" : "unverified", constraints.equipment_inventory_complete
+      ? em("need.pan", "Se ti procuri una teglia") : em("need.checkPan", "Verifica di avere una teglia"));
   }
-  if (!panStyle && !homeMethod && HOME_OVENS.has(constraints.oven_type) &&
+  if (!isFriedStyle(style) && !panStyle && !homeMethod && HOME_OVENS.has(constraints.oven_type) &&
     !constraints.has_pizza_stone && !constraints.has_pizza_steel &&
     !surfaces.some((s) => ["cordierite_stone", "refractory_brick", "steel_plate"].includes(s))) {
-    messages.push(em("rec.needsDeck", "Per questa cottura serve pietra o acciaio preriscaldato: non risultano nella tua cucina"));
+    add("deck", constraints.equipment_inventory_complete ? "missing" : "unverified", constraints.equipment_inventory_complete
+      ? em("need.deck", "Serve pietra o acciaio") : em("need.checkDeck", "Verifica pietra o acciaio"));
   }
-  const pantryRanges = constraints.pantry_flours.map((id) => FLOUR_W_RANGES[id]).filter(Boolean);
-  if (pantryRanges.length > 0 && !pantryRanges.some(([lo, hi]) =>
-    lo <= style.dough.flour_w_range[1] && hi >= style.dough.flour_w_range[0],
-  ) && !pantryFlourMix(constraints.pantry_flours, style.dough.flour_w_range)) {
-    messages.push(em("rec.flourNoMatch", "Nessuna farina in dispensa nel range W richiesto"));
+  const pantryRanges = constraints.pantry_flours.map(id => FLOUR_W_RANGES[id]).filter(Boolean);
+  const unknownFlour = constraints.pantry_inventory_complete !== true || pantryRanges.length !== constraints.pantry_flours.length || constraints.pantry_flours.some(id => ["00", "0", "tipo_1", "integrale", "semola", "manitoba"].includes(id));
+  const coversW = pantryRanges.some(([lo, hi]) => lo <= flourW && flourW <= hi);
+  const mix = !coversW ? pantryFlourMix(constraints.pantry_flours, [flourW, flourW], true) : null;
+  if (unknownFlour || (!coversW && !mix)) {
+    add("flour", unknownFlour ? "unverified" : "missing", unknownFlour
+      ? em("need.checkFlour", "Verifica di avere farina W{w}", { w: flourW })
+      : em("need.flour", "Serve farina W{w}", { w: flourW }));
   }
-  return messages;
+  if ((style.dough.flour_blend?.length ?? 0) > 1) {
+    // La dispensa censisce prodotti/farine, non tutti i componenti di ogni blend.
+    // La compatibilità W del frumento non prova di avere anche soia/riso, ecc.
+    add("flour_blend", "unverified", em("need.checkBlend", "Verifica tutte le farine del mix"));
+  }
+  if (!style.dough.unleavened && !constraints.pantry_yeasts.includes(yeastType)) {
+    const unknown = constraints.pantry_inventory_complete !== true;
+    add("yeast", unknown ? "unverified" : "missing", unknown
+      ? em("need.checkYeast", "Verifica il lievito: {yeast}", { yeast: yeastType })
+      : em("need.yeast", "Serve lievito: {yeast}", { yeast: yeastType }));
+  }
+  for (const c of conditions) c.acquisition = c.kind === "pan" || c.kind === "deck" ? "accessory" : "ingredient";
+  return conditions;
+}
+
+/** Only exclusions that can be verified from the actual dough are blockers.
+ * An excluded generic flour category is not inferred from its W. */
+function excludedRecipeFlours(style: PizzaStyle, excluded: readonly string[]): string[] {
+  const names = (style.dough.flour_blend ?? []).filter(c => c.pct > 0).map(c => c.name.toLowerCase());
+  return excluded.filter(id => id === "frumento" || names.some(name => name.includes(id)));
 }
 
 // ═══ COMPENSATION ENGINE ═══
@@ -1497,6 +1538,7 @@ export interface PantryFlourMix {
 export function pantryFlourMix(
   pantryFlours: readonly string[],
   [wMin, wMax]: readonly [number, number],
+  exactTarget = false,
 ): PantryFlourMix | null {
   const target = (wMin + wMax) / 2;
   const flours = pantryFlours
@@ -1508,9 +1550,9 @@ export function pantryFlourMix(
     for (const strong of flours) {
       if (!(weak.w < target && strong.w > target)) continue;
       const spread = strong.w - weak.w;
-      const strongPct = Math.round(((target - weak.w) / spread) * 20) * 5;
+      const strongPct = exactTarget ? ((target - weak.w) / spread) * 100 : Math.round(((target - weak.w) / spread) * 20) * 5;
       if (strongPct < 10 || strongPct > 90) continue;
-      const w = Math.round(weak.w + (strongPct / 100) * spread);
+      const w = exactTarget ? target : Math.round(weak.w + (strongPct / 100) * spread);
       if (w < wMin || w > wMax) continue;
       // A parità, la coppia più vicina: il mix si comporta meglio.
       if (spread < bestSpread) {
@@ -1784,7 +1826,7 @@ export function generateRecipe(
   constraints: UserConstraints,
   options: GenerateRecipeOptions = {},
 ): GeneratedRecipe {
-  constraints = constrainOvenToCapacity(constraints);
+  constraints = { ...constrainOvenToCapacity(constraints), available_hours: floorToQuarterHour(constraints.available_hours) };
   const {
     customHydration,
     customFlourW,
@@ -2195,6 +2237,11 @@ export function generateRecipe(
     timelineMinutes > constraints.available_hours * 60;
   const neededHours = Math.ceil(timelineMinutes / 6) / 10;
 
+  const prerequisites = kitchenPrerequisites(style, constraints, flourW, yeastType);
+  const excludedFlours = excludedRecipeFlours(style, constraints.excluded_flours ?? []);
+  if (constraints.excluded_flours?.some(id => ["00", "0", "tipo_1", "manitoba"].includes(id) && !excludedFlours.includes(id))) {
+    prerequisites.push({ kind: "flour", status: "unverified", message: em("need.checkExclusions", "Verifica le esclusioni sulla farina scelta") });
+  }
   const scores: RecipeScores = {
     authenticity: authResult.score,
     feasibility: feasResult.score,
@@ -2215,7 +2262,7 @@ export function generateRecipe(
       ...(style.baking.oven_type_required === "coal" && constraints.oven_type !== "coal"
         ? [em("gen.notCoalOven", "Lo stile originale usa il carbone: il forno selezionato comporta una diversa cottura e impronta aromatica")]
         : []),
-      ...kitchenPrerequisites(style, constraints),
+      ...prerequisites.map(condition => condition.message),
       ...(homeMethod ? [em("gen.homeBakingMethod", "Cottura domestica a {temp} su teglia capovolta preriscaldata; risultato diverso dalla cottura originale a {ideal}", { temp: ovenTemp, ideal: style.baking.temp_c_ideal })] : []),
       // D-020: stesso avviso dei consigli sul forno a legna dello stile.
       ...(style.requires_wood_oven && constraints.oven_type !== "wood"
@@ -2434,6 +2481,17 @@ export function generateRecipe(
 
   // ── M-10: esito esplicito ──
   const blockers: RecipeBlocker[] = [];
+  for (const id of excludedFlours) {
+    blockers.push({ kind: "resource_excluded", resource: "flour", message: em("need.excludedFlour", "La ricetta richiede una farina che hai escluso: {flour}", { flour: id }) });
+  }
+  for (const condition of prerequisites) {
+    const refused = condition.kind === "flour" && constraints.allow_flour_purchase === false ||
+      (condition.kind === "pan" || condition.kind === "deck") && constraints.allow_equipment_purchase === false;
+    if (condition.status === "missing" && refused) {
+      blockers.push({ kind: "resource_excluded", resource: condition.kind === "flour" ? "flour" : "equipment",
+        message: em("need.purchaseRefused", "Manca un requisito e hai scelto di non procurartelo") });
+    }
+  }
   const supportedMin = minimumSupportedOvenTemp(style, constraints);
   if (!isFriedStyle(style) && ovenTemp < supportedMin) {
     blockers.push({ kind: "oven_too_cold", oven_c: ovenTemp, style_min_c: supportedMin });
@@ -2459,6 +2517,7 @@ export function generateRecipe(
     outcome: blockers.length > 0 ? "not_feasible" : scores.warnings.length > 0 ? "warnings" : "ok",
     blockers,
     adaptations: scores.warnings,
+    conditions: prerequisites,
   };
   const global = globalRecipeScore({
     authenticity: scores.authenticity,
@@ -2472,6 +2531,14 @@ export function generateRecipe(
 
   return {
     schema_version: RECIPE_SCHEMA_VERSION,
+    optional_aids: style.id !== "napoletana_stg" && !isFriedStyle(style) && !style.proof_in_pan && !style.dough.unleavened &&
+      style.shape.shape_type !== "rectangular" && !homeMethod &&
+      !(constraints.excluded_flours ?? []).includes("semola") &&
+      !(constraints.excluded_flours ?? []).includes("frumento") &&
+      (constraints.allow_flour_purchase !== false || constraints.pantry_flours.includes("semola")) && !constraints.dietary_filters.includes("gluten_free")
+        ? [em("aid.semolina", "Facoltativa: poca semola rimacinata per lo spolvero; puoi usare la farina della ricetta")]
+        : [],
+    baker_pcts: { salt: effectiveSaltPct, fat: effectiveOilPct, sugar: effectiveSugarPct },
     verdict,
     style,
     dough_balls: doughBalls,
@@ -2667,6 +2734,7 @@ export function optimizeRecipe(
   activeImpastoRef?: string,
   interpretationCenter?: AuthenticityCenter,
 ): OptimizedRecipe {
+  constraints = { ...constrainOvenToCapacity(constraints), available_hours: floorToQuarterHour(constraints.available_hours) };
   const safeRange = (r: [number, number]): [number, number] =>
     r[0] <= r[1] ? r : [r[1], r[0]];
 
@@ -2714,16 +2782,15 @@ export function optimizeRecipe(
   // (meal_deadline assente) l'overhead non si toglie: le ore limitano solo
   // la fermentazione, come in generateRecipe.
   // M-4: candidati al quarto d'ora (all'ora intera la Recco, 0,5–2 h, finiva
-  // a 3 h). Il sondaggio oltre il massimo (×1,25) vale solo per gli impasti
-  // lievitati: per una sfoglia non lievitata un riposo più lungo non dà nulla. ──
+  // a 3 h). Il massimo del metodo è un limite anche quando ogni candidata
+  // è bloccata da forno o preferenze: non si aggiungono altre violazioni. ──
   const avail = constraints.available_hours > 0 ? constraints.available_hours : Infinity;
   const fermentWindow =
     avail === Infinity || !constraints.meal_deadline
       ? avail
       : fermentationWindowHours(avail, overheadMinutes);
-  const beyondMax = effStyle.dough.unleavened ? [] : [fMax * 1.25];
   let hourCands = _uniqRounded([
-    ...[fMin, (fMin + fMax) / 2, fMax, ...beyondMax].map((h) => Math.max(fMin, floorToQuarterHour(h))),
+    ...[fMin, (fMin + fMax) / 2, fMax].map((h) => Math.max(fMin, floorToQuarterHour(h))),
     ...(fermentWindow >= fMin && fermentWindow <= fMax ? [fermentWindow] : []),
   ]).filter((h) => h <= fermentWindow);
   if (hourCands.length === 0) {
@@ -3881,6 +3948,7 @@ export interface StyleRecommendation {
   warnings: EngineMsg[];
   /** Esito della ricetta con gli stessi vincoli, compresa la scadenza del pasto. */
   verdict: RecipeVerdict;
+  recipe: GeneratedRecipe;
   /** Audit role-play giugno 2026: composite della ricetta OTTIMIZZATA per i vincoli
    *  dell'utente — il punteggio che otterrai davvero aprendo lo stile. Popolato
    *  dalla UI (recommended-styles) via optimizeRecipe; il ranking/tier resta sulla
@@ -4000,12 +4068,12 @@ export function customMealSlot(target: Date, now: Date = new Date()): TimeSlot |
   };
 }
 
-/** No-preference virtual slot: engine uses 24h @ kitchen temp */
+/** No-preference virtual slot: 0 means no user-imposed time limit. */
 export const NO_PREFERENCE_SLOT: TimeSlot = {
   id: "no_preference",
   label: "Nessuna preferenza",
   sublabel: `ci pensa ${BRAND.name}`,
-  hours: 24,
+  hours: 0,
   emoji: "⏳",
 };
 
@@ -4155,9 +4223,9 @@ export function recommendStyles(
   constraints: UserConstraints,
   stylesOverride?: Record<string, PizzaStyle>,
   recWeights?: RecWeightsOverride,
+  recipeForStyle: (style: PizzaStyle, constraints: UserConstraints) => GeneratedRecipe = generateRecipe,
 ): StyleRecommendation[] {
-  constraints = constrainOvenToCapacity(constraints);
-  constraints = { ...constraints, available_hours: floorToQuarterHour(constraints.available_hours) };
+  constraints = { ...constrainOvenToCapacity(constraints), available_hours: floorToQuarterHour(constraints.available_hours) };
   const weights = {
     time: recWeights?.time ?? 0.25,
     oven: recWeights?.oven ?? 0.25,
@@ -4169,14 +4237,14 @@ export function recommendStyles(
   const pantryRanges = constraints.pantry_flours.map((id) => FLOUR_W_RANGES[id]).filter(Boolean);
 
   return Object.values(stylesOverride ?? STYLES_DB).map((style): StyleRecommendation => {
-    const recipe = generateRecipe(style, constraints);
+    const recipe = recipeForStyle(style, constraints);
     const { verdict } = recipe;
     const reasons: EngineMsg[] = [];
     const timeLimited = verdict.blockers.some((b) => b.kind === "time_window" || b.kind === "fermentation_too_short");
     const ovenLimited = verdict.blockers.some((b) => b.kind === "oven_too_cold");
     const skillLimited = verdict.adaptations.some((m) => /hydration|prefermentNeedsExperience/i.test(m.key));
-    const equipmentLimited = verdict.adaptations.some((m) => m.key === "rec.needsPan" || m.key === "rec.needsDeck");
-    const flourLimited = verdict.adaptations.some((m) => m.key === "rec.flourNoMatch");
+    const equipmentLimited = verdict.conditions?.some(c => c.kind === "pan" || c.kind === "deck") ?? false;
+    const flourLimited = verdict.conditions?.some(c => c.kind === "flour" && c.status === "missing") ?? false;
     const [fMin, fMax] = style.dough.fermentation_hours_range;
     if (!timeLimited) {
       reasons.push(em("rec.timeCompatible", "Fermentazione {fMin}–{fMax}h: compatibile con il tuo tempo", { fMin, fMax }));
@@ -4189,9 +4257,9 @@ export function recommendStyles(
     if (!skillLimited && style.suitable_for_beginner) {
       reasons.push(em("rec.skillMatch", "Adatto al tuo livello"));
     }
-    const flourMatch = pantryRanges.some(([lo, hi]) => lo <= style.dough.flour_w_range[1] && hi >= style.dough.flour_w_range[0]);
-    const mix = !flourMatch ? pantryFlourMix(constraints.pantry_flours, style.dough.flour_w_range) : null;
-    if (flourMatch) reasons.push(em("rec.flourMatch", "Farina in dispensa compatibile"));
+    const flourMatch = pantryRanges.some(([lo, hi]) => lo <= recipe.flour_w && recipe.flour_w <= hi);
+    const mix = !flourMatch ? pantryFlourMix(constraints.pantry_flours, [recipe.flour_w, recipe.flour_w], true) : null;
+    if (flourMatch && !verdict.conditions?.some(c => c.kind === "flour")) reasons.push(em("rec.flourMatch", "Farina in dispensa compatibile"));
     else if (mix) reasons.push(em("rec.flourMix", "Mescolando le tue farine: {weakPct}% {weak} e {strongPct}% {strong}, W {w} circa", { ...mix }));
 
     // Il numero ordina le proposte, ma non può cambiare l'esito della ricetta.
@@ -4212,6 +4280,7 @@ export function recommendStyles(
       reasons,
       warnings: verdict.adaptations,
       verdict,
+      recipe,
     };
   }).sort((a, b) => b.rankingScore - a.rankingScore || b.compatibilityScore - a.compatibilityScore);
 }

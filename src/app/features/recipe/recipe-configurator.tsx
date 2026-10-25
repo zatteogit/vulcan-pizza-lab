@@ -1318,6 +1318,9 @@ function GradientSlider({
   /** Nome accessibile dell'input (U-10, F05): il testo dell'etichetta visibile. */
   name?: string;
 }) {
+  const { cms, bcp47 } = useCms();
+  const fmt = createFormatter(cms.ui, bcp47);
+  const numberLabel = (n: number) => fmt.number(n, { maximumFractionDigits: 2 });
   /* Fix di Matteo: al tocco del valore si digita il numero, per chi non ama
      gli slider. Invio o tocco fuori conferma, Esc annulla. */
   const [editing, setEditing] = useState(false);
@@ -1330,7 +1333,7 @@ function GradientSlider({
     const clamped = Math.max(min, Math.min(max, Math.round(snapped * 100) / 100));
     if (clamped !== value) onChange(clamped);
   };
-  const pct = ((value - min) / (max - min)) * 100;
+  const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
   const inRange =
     rangeMin !== undefined && rangeMax !== undefined
       ? value >= rangeMin && value <= rangeMax
@@ -1338,11 +1341,11 @@ function GradientSlider({
 
   const zoneLeftPct =
     rangeMin !== undefined
-      ? ((rangeMin - min) / (max - min)) * 100
+      ? Math.max(0, Math.min(100, ((rangeMin - min) / (max - min)) * 100))
       : 0;
   const zoneRightPct =
     rangeMax !== undefined
-      ? ((rangeMax - min) / (max - min)) * 100
+      ? Math.max(0, Math.min(100, ((rangeMax - min) / (max - min)) * 100))
       : 100;
 
   return (
@@ -1392,9 +1395,9 @@ function GradientSlider({
             }}
             className={inRange ? "type-numeric config-slider__value config-slider__value--button" : "type-numeric config-slider__value config-slider__value--button config-slider__value--oor"}
             title={uiMessage("features.recipe.recipe-configurator.typeValue")}
-            aria-label={`${name ?? ""}: ${value}${unit} · ${uiMessage("features.recipe.recipe-configurator.typeValue")}`}
+            aria-label={`${name ?? ""}: ${numberLabel(value)}${unit} · ${uiMessage("features.recipe.recipe-configurator.typeValue")}`}
           >
-            {value}
+            {numberLabel(value)}
             {unit}
           </button>
         )}
@@ -1407,7 +1410,7 @@ function GradientSlider({
         </div>
 
         {/* Optimal zone */}
-        {rangeMin !== undefined && rangeMax !== undefined && (
+        {rangeMin !== undefined && rangeMax !== undefined && rangeMax >= min && rangeMin <= max && (
           <div className={inRange ? "config-slider__zone-band" : "config-slider__zone-band config-slider__zone-band--out"} />
         )}
 
@@ -1417,12 +1420,12 @@ function GradientSlider({
         </div>
 
         {/* Zone markers */}
-        {rangeMin !== undefined && (
+        {rangeMin !== undefined && rangeMin >= min && rangeMin <= max && (
           <div className="config-slider__zone-tick--start">
             <div className="config-slider__zone-tick-bar" />
           </div>
         )}
-        {rangeMax !== undefined && (
+        {rangeMax !== undefined && rangeMax >= min && rangeMax <= max && (
           <div className="config-slider__zone-tick--end">
             <div className="config-slider__zone-tick-bar" />
           </div>
@@ -1467,7 +1470,7 @@ function GradientSlider({
         <input
           type="range"
           aria-label={name}
-          aria-valuetext={valueText ?? `${value}${unit}`}
+          aria-valuetext={valueText ?? `${numberLabel(value)}${unit}`}
           min={min}
           max={max}
           step={step}
@@ -1481,10 +1484,10 @@ function GradientSlider({
       {rangeMin !== undefined && rangeMax !== undefined && (
         <div className="config-slider__zone-labels">
           <span className="type-numeric config-slider__zone-label">
-            {zoneLabels?.[0] ?? rangeMin}
+            {zoneLabels?.[0] ?? numberLabel(rangeMin)}
           </span>
           <span className="type-numeric config-slider__zone-label config-slider__zone-label--end">
-            {zoneLabels?.[1] ?? rangeMax}
+            {zoneLabels?.[1] ?? numberLabel(rangeMax)}
           </span>
         </div>
       )}

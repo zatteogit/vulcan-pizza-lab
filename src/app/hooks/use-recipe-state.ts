@@ -1,3 +1,5 @@
+import { buildGeneratedRecipe, canonicalRecipeEntry, recipePresetState, optimizeSelectedRecipe, type OptimizedHydration } from "../use-cases/recipe-entry";
+import { scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import {
   useCallback,
   useEffect,
@@ -9,15 +11,12 @@ import {
 } from "react";
 import type { CmsContent } from "../features/cms/cms-context";
 import {
-  getInterpretationById,
   type Interpretation,
 } from "../data/interpretation-library";
 import {
   defaultPanShape,
   defaultFermentTempC,
-  generateRecipe,
   maxFermentationHoursForWindow,
-  optimizeRecipe,
   type OptimizedRecipe,
   type GeneratedRecipe,
   type PanConfig,
@@ -25,9 +24,7 @@ import {
   type PreFermentChoice,
   type ScoreWeightsOverride,
   type UserConstraints,
-  type VersionRangeOverrides,
 } from "../domain/pizza-engine";
-import { applyStyleVersion } from "../use-cases/apply-style-version";
 import {
   getVersions,
   type StyleVersion,
@@ -41,6 +38,7 @@ export interface RecipeInitialState {
   version?: StyleVersion | null;
   interpretation?: Interpretation | null;
   hydration?: number;
+  salt?: number;
   flourW?: number;
   flourPL?: number;
   fermentHours?: number;
@@ -50,6 +48,7 @@ export interface RecipeInitialState {
   panConfig?: PanConfig;
   toppingConcept?: string | null;
   flourBlend?: { name: string; pct: number; w?: number }[];
+  optimizedHydration?: OptimizedHydration | null;
 }
 
 interface UseRecipeStateArgs {
@@ -71,33 +70,6 @@ interface ResetStyleOptions {
   windowConstraints?: UserConstraints;
   preserveActiveVersion?: boolean;
   clearTopping?: boolean;
-}
-
-/** Ottimizzazione con compensazione d'idratazione del forno (ENG-6): la base
- *  del candidato e l'idratazione finale mostrata nello slider. */
-interface OptimizedHydration {
-  base: number;
-  final: number;
-}
-
-interface RecipeBuildParams {
-  style: PizzaStyle;
-  cms: CmsContent;
-  constraints: UserConstraints;
-  customHydration: number;
-  customFlourW: number;
-  customFermentHours: number;
-  customFermentTemp: number;
-  usePreFerment: boolean;
-  preFermentChoice: PreFermentChoice;
-  customFlourPL: number;
-  customSalt: number;
-  panConfig: PanConfig;
-  activeVersion: StyleVersion | null;
-  activeInterpretationId: string | null;
-  selectedToppingConcept: string | null;
-  customFlourBlend?: { name: string; pct: number; w?: number }[];
-  optimizedHydration?: OptimizedHydration | null;
 }
 
 export function defaultRecipePL(style: PizzaStyle | null): number {
@@ -139,7 +111,7 @@ export function centerParamsForStyle(
 ) {
   const fMin = style.dough.fermentation_hours_range[0];
   const fMax = style.dough.fermentation_hours_range[1];
-  let fermentHours = Math.min(Math.round((fMin + fMax) / 2), availableHours);
+  let fermentHours = Math.min(Math.round((fMin + fMax) / 2), availableHours > 0 ? availableHours : Infinity);
   if (windowConstraints?.meal_deadline) {
     fermentHours = Math.min(
       fermentHours,
@@ -209,7 +181,7 @@ function resolveInitialState(
       overrides?.flour_pl ??
       version?.params.flour_pl ??
       centered.flourPL,
-    customSalt: style.dough.salt_pct,
+    customSalt: initial?.salt ?? style.dough.salt_pct,
     customFermentHours:
       initial?.fermentHours ??
       overrides?.fermentation_hours ??
@@ -233,85 +205,6 @@ function resolveInitialState(
     customFlourBlend:
       initial?.flourBlend ?? style.dough.flour_blend?.map((c) => ({ ...c })),
   };
-}
-
-function buildGeneratedRecipe({
-  style,
-  cms,
-  constraints,
-  customHydration,
-  customFlourW,
-  customFermentHours,
-  customFermentTemp,
-  usePreFerment,
-  preFermentChoice,
-  customFlourPL,
-  customSalt,
-  panConfig,
-  activeVersion,
-  activeInterpretationId,
-  selectedToppingConcept,
-  customFlourBlend,
-  optimizedHydration,
-}: RecipeBuildParams): GeneratedRecipe {
-  const scoreWeights: ScoreWeightsOverride = {
-    authenticity: cms.scoreDimensions?.authenticity?.weight,
-    feasibility: cms.scoreDimensions?.feasibility?.weight,
-    digestibility: cms.scoreDimensions?.digestibility?.weight,
-    sustainability: cms.scoreDimensions?.sustainability?.weight,
-    experimentation: cms.scoreDimensions?.experimentation?.weight,
-  };
-  const versionOverrides: VersionRangeOverrides | undefined = activeVersion
-    ? {
-        ...activeVersion.ranges,
-        ...(activeVersion.params.dough_weight_g !== undefined
-          ? { dough_weight_g: activeVersion.params.dough_weight_g }
-          : {}),
-      }
-    : undefined;
-  const styleWithTopping = styleWithSelectedTopping(style, selectedToppingConcept);
-  const activeInterpretation = activeInterpretationId
-    ? getInterpretationById(activeInterpretationId)
-    : undefined;
-  const interpretationCenter = activeInterpretation?.parameter_overrides
-    ? {
-        hydration_pct: activeInterpretation.parameter_overrides.hydration_pct,
-        flour_w: activeInterpretation.parameter_overrides.flour_w,
-        flour_pl: activeInterpretation.parameter_overrides.flour_pl,
-        fermentation_hours:
-          activeInterpretation.parameter_overrides.fermentation_hours,
-      }
-    : undefined;
-
-  const options = {
-    customHydration,
-    customFlourW,
-    customFermentationHours: customFermentHours,
-    customFermentationTempC: customFermentTemp,
-    usePreFerment,
-    customFlourPL,
-    customSalt,
-    panConfig,
-    scoreWeights,
-    versionRanges: versionOverrides,
-    activeImpastoRef: activeVersion?.impasto_ref,
-    interpretationCenter,
-    customFlourBlend,
-    preFerment: preFermentChoice,
-  };
-  // ENG-6: finché l'idratazione è quella scelta dall'ottimizzatore, la ricetta
-  // si ricostruisce come l'ha valutata lui: base + compensazione del forno,
-  // dichiarata in science.compensations. Se l'utente sposta lo slider il
-  // valore torna a essere una scelta sua, senza compensazione.
-  if (optimizedHydration && customHydration === optimizedHydration.final) {
-    const compensated = generateRecipe(styleWithTopping, constraints, {
-      ...options,
-      customHydration: optimizedHydration.base,
-      compensateCustomHydration: true,
-    });
-    if (compensated.hydration_pct === optimizedHydration.final) return compensated;
-  }
-  return generateRecipe(styleWithTopping, constraints, options);
 }
 
 export function useRecipeState({
@@ -371,7 +264,7 @@ export function useRecipeState({
     { name: string; pct: number; w?: number }[] | undefined
   >(resolvedInitial?.customFlourBlend);
   const [optimizedHydration, setOptimizedHydration] =
-    useState<OptimizedHydration | null>(null);
+    useState<OptimizedHydration | null>(initial?.optimizedHydration ?? null);
   const previousStyleIdRef = useRef(style?.id ?? null);
 
   const styleVersions = useMemo(
@@ -395,11 +288,13 @@ export function useRecipeState({
         availableHours,
         nextWindowConstraints,
       );
-      setOptimizedHydration(null);
+      setOptimizedHydration(nextInitial?.optimizedHydration ?? null);
+      setLastOptimization(null);
       setRecipeMode(next.recipeMode);
       setCustomHydration(next.customHydration);
       setCustomFlourW(next.customFlourW);
       setCustomFlourPL(next.customFlourPL);
+      setCustomSalt(next.customSalt);
       setCustomFermentHours(next.customFermentHours);
       setCustomFermentTemp(next.customFermentTemp);
       setUsePreFerment(next.usePreFerment);
@@ -419,130 +314,22 @@ export function useRecipeState({
     resetForStyle(style, initial, defaultAvailableHours, windowConstraints);
   }, [defaultAvailableHours, initial, resetForStyle, style, windowConstraints]);
 
-  const applyVersionToState = useCallback(
-    (version: StyleVersion) => {
-      setOptimizedHydration(null);
-      applyStyleVersion(version, {
-        onHydrationChange: setCustomHydration,
-        onFlourWChange: setCustomFlourW,
-        onFlourPLChange: (value) =>
-          setCustomFlourPL(value ?? defaultRecipePL(style)),
-        onFermentHoursChange: setCustomFermentHours,
-        onFermentTempChange: setCustomFermentTemp,
-        onPreFermentChange: setUsePreFerment,
-        onVersionChange: setActiveVersionId,
-      });
-    },
-    [style],
-  );
+  const applyVersionToState = useCallback((version: StyleVersion) => {
+    if (!style) return;
+    resetForStyle(style, recipePresetState(style, version, null), defaultAvailableHours, windowConstraints);
+  }, [style, resetForStyle, defaultAvailableHours, windowConstraints]);
+  const selectVersion = applyVersionToState;
+  const applyInterpretationToState = useCallback((interpretation: Interpretation, _clearVersion = true) => {
+    if (!style) return;
+    resetForStyle(style, recipePresetState(style, null, interpretation), defaultAvailableHours, windowConstraints);
+  }, [style, resetForStyle, defaultAvailableHours, windowConstraints]);
 
-  const selectVersion = useCallback(
-    (version: StyleVersion) => {
-      setRecipeMode("adapted");
-      setActiveInterpretationId(null);
-      applyVersionToState(version);
-    },
-    [applyVersionToState],
-  );
-
-  const applyInterpretationToState = useCallback(
-    (interpretation: Interpretation, clearVersion = true) => {
-      setRecipeMode("adapted");
-      setActiveInterpretationId(interpretation.id);
-      if (clearVersion) setActiveVersionId(null);
-      /* Invariante "selezionare una firma NON è dirty" (fix 4 lug 2026): i
-         parametri NON overridati tornano ai centri dello stile — gli stessi
-         di createCanonicalTargets/reset — altrimenti si ereditano avanzi
-         della selezione precedente e la firma nasce già "modificata". */
-      const overrides = interpretation.parameter_overrides;
-      setOptimizedHydration(null);
-      if (style) {
-        // ENG-4: centri con la finestra fino al pasto, sullo stile con il
-        // condimento che resterà attivo dopo la scelta.
-        const resolvedBase = interpretation.base_topping_concept_id
-          ? resolveTopping(interpretation.base_topping_concept_id, style)
-          : undefined;
-        const nextTopping = interpretation.base_topping_concept_id
-          ? resolvedBase?.id ?? interpretation.base_topping_concept_id
-          : selectedToppingConcept;
-        const centered = centerParamsForStyle(
-          styleWithSelectedTopping(style, nextTopping),
-          defaultAvailableHours,
-          windowConstraints,
-        );
-        setCustomHydration(overrides?.hydration_pct ?? centered.hydration);
-        setCustomFlourW(overrides?.flour_w ?? centered.flourW);
-        setCustomFlourPL(overrides?.flour_pl ?? centered.flourPL);
-        setCustomFermentHours(
-          overrides?.fermentation_hours ?? centered.fermentHours,
-        );
-        setCustomFermentTemp(
-          overrides?.fermentation_temp_c ?? centered.fermentTemp,
-        );
-        setUsePreFerment(overrides?.use_pre_ferment ?? centered.usePreFerment);
-        setPreFermentChoice({});
-        setCustomSalt(style.dough.salt_pct);
-      } else if (overrides) {
-        if (overrides.hydration_pct !== undefined)
-          setCustomHydration(overrides.hydration_pct);
-        if (overrides.flour_w !== undefined) setCustomFlourW(overrides.flour_w);
-        if (overrides.flour_pl !== undefined)
-          setCustomFlourPL(overrides.flour_pl);
-        if (overrides.fermentation_hours !== undefined)
-          setCustomFermentHours(overrides.fermentation_hours);
-        if (overrides.fermentation_temp_c !== undefined)
-          setCustomFermentTemp(overrides.fermentation_temp_c);
-        if (overrides.use_pre_ferment !== undefined)
-          setUsePreFerment(overrides.use_pre_ferment);
-      }
-      if (interpretation.base_topping_concept_id) {
-        const resolved = style ? resolveTopping(interpretation.base_topping_concept_id, style) : undefined;
-        setSelectedToppingConcept(resolved ? resolved.id : interpretation.base_topping_concept_id);
-      }
-    },
-    [style, defaultAvailableHours, selectedToppingConcept, windowConstraints],
-  );
-
-  const resetToBaseRecipe = useCallback(
-    (options: ResetStyleOptions = {}) => {
-      if (!style) return;
-      if (options.preserveActiveVersion && activeVersion) {
-        applyVersionToState(activeVersion);
-        return;
-      }
-      // ENG-4: il condimento torna al default dello stile (salvo clearTopping
-      // false): la finestra si misura sullo stile con quel condimento.
-      const nextTopping =
-        options.clearTopping !== false
-          ? style.default_topping_ref ?? null
-          : selectedToppingConcept;
-      const centered = centerParamsForStyle(
-        styleWithSelectedTopping(style, nextTopping),
-        options.availableHours ?? defaultAvailableHours,
-        options.windowConstraints,
-      );
-      setOptimizedHydration(null);
-      setRecipeMode(options.mode ?? "adapted");
-      setActiveVersionId(null);
-      setActiveInterpretationId(null);
-      setCustomHydration(centered.hydration);
-      setCustomFlourW(centered.flourW);
-      setCustomFlourPL(centered.flourPL);
-      setCustomFermentHours(centered.fermentHours);
-      setCustomFermentTemp(centered.fermentTemp);
-      setUsePreFerment(centered.usePreFerment);
-      setPreFermentChoice({});
-      // Redesign lug 2026: anche il sale torna al valore dello stile — così
-      // dopo il reset isDirty è false per costruzione (invariante Salva/Torna).
-      setCustomSalt(style.dough.salt_pct);
-      setPanConfig(defaultRecipePanConfig(style));
-      setLastOptimization(null);
-      if (options.clearTopping !== false) {
-        setSelectedToppingConcept(style.default_topping_ref ?? null);
-      }
-    },
-    [activeVersion, applyVersionToState, defaultAvailableHours, selectedToppingConcept, style],
-  );
+  const resetToBaseRecipe = useCallback((options: ResetStyleOptions = {}) => {
+    if (!style) return;
+    const e = options.preserveActiveVersion && activeVersion
+      ? {version: activeVersion, interpretation: null} : canonicalRecipeEntry(style);
+    resetForStyle(style, recipePresetState(style, e.version, e.interpretation), options.availableHours ?? defaultAvailableHours, options.windowConstraints);
+  }, [style, activeVersion, resetForStyle, defaultAvailableHours]);
 
   // Audit role-play giugno 2026: esito dell'ultima ottimizzazione ("Ottimizza per
   // me"). Tiene la rationale da mostrare in UI; si azzera al reset/cambio stile.
@@ -563,18 +350,17 @@ export function useRecipeState({
       };
       // Stesso stile (con il condimento scelto) della ricetta mostrata, così
       // l'overhead misurato dall'ottimizzatore è quello della timeline vera.
-      const result = optimizeRecipe(
+      const result = optimizeSelectedRecipe(
         styleWithSelectedTopping(style, selectedToppingConcept),
-        constraints,
-        undefined,
-        panConfig,
-        scoreWeights,
+        constraints, scoreWeights, panConfig, activeVersion, activeInterpretationId,
       );
-      setActiveVersionId(null);
-      setActiveInterpretationId(null);
       setRecipeMode("adapted");
       setCustomHydration(result.params.hydration);
       setCustomFlourW(result.params.flour_w);
+      setCustomFlourPL(result.recipe.flour_pl);
+      setCustomSalt(result.recipe.baker_pcts?.salt ?? result.recipe.style.dough.salt_pct);
+      setPreFermentChoice({});
+      setCustomFlourBlend(result.recipe.flour_blend?.map(({name,pct,w}) => ({name,pct,w})));
       setCustomFermentHours(result.params.fermentation_hours);
       setCustomFermentTemp(result.params.fermentation_temp_c);
       setUsePreFerment(result.params.use_pre_ferment);
@@ -586,7 +372,7 @@ export function useRecipeState({
       setLastOptimization(result);
       return result;
     },
-    [cms, panConfig, selectedToppingConcept, style],
+    [cms, panConfig, selectedToppingConcept, style, activeVersion, activeInterpretationId],
   );
 
   const buildRecipe = useCallback(
@@ -594,7 +380,7 @@ export function useRecipeState({
       if (!style) return null;
       return buildGeneratedRecipe({
         style,
-        cms,
+        scoreWeights: scoreWeightsFromCms(cms),
         constraints,
         customHydration,
         customFlourW,
@@ -672,7 +458,9 @@ export function useRecipeState({
     optimizeForConstraints,
     lastOptimization,
     setLastOptimization,
+    optimizedHydration,
   } satisfies {
+    optimizedHydration: OptimizedHydration | null;
     recipeMode: RecipeMode;
     setRecipeMode: Dispatch<SetStateAction<RecipeMode>>;
     customHydration: number;

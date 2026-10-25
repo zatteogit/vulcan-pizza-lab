@@ -1,3 +1,5 @@
+import { migrateEquipment, syncLegacyFlags } from "../../data/equipment-data";
+import { SupplyPolicyControls } from "./supply-policy-controls";
 import {
 CalendarDays,
 Check,
@@ -206,7 +208,7 @@ function savePantry(flours: string[], yeasts: string[]) {
   try {
     localStorage.setItem(
       PANTRY_STORAGE_KEY,
-      JSON.stringify({ flours, yeasts }),
+      JSON.stringify({ ...loadPantry(), flours, yeasts }),
     );
   } catch {
     /* */
@@ -519,7 +521,23 @@ export function UserNeeds({
     key: keyof UserConstraints,
     value: unknown,
   ) => {
-    onConstraintsChange({ ...constraints, [key]: value });
+    let next = { ...constraints, [key]: value };
+    const flags: Record<string, string> = { has_mixer: "mixer", has_pizza_stone: "pizza_stone", has_pizza_steel: "pizza_steel", has_baking_pan: "baking_pan" };
+    if (key in flags) {
+      try {
+        const eq = migrateEquipment(JSON.parse(localStorage.getItem("vulcan_equipment") ?? "{}"));
+        if (key === "has_mixer") eq.mixer_type = value ? eq.mixer_type && eq.mixer_type !== "hands" ? eq.mixer_type : "stand_domestic" : "hands";
+        else {
+          const ids = key === "has_pizza_stone" ? ["cordierite_stone", "refractory_brick"] : key === "has_pizza_steel" ? ["steel_plate"] : ["aluminum_pan", "blue_steel_pan", "cast_iron"];
+          eq.surfaces = eq.surfaces.filter(id => !ids.includes(id));
+          if (value) eq.surfaces.push(ids[0] as typeof eq.surfaces[number]);
+        }
+        const saved = syncLegacyFlags(eq);
+        localStorage.setItem("vulcan_equipment", JSON.stringify(saved));
+        next = { ...next, mixer_type: saved.mixer_type, surfaces: saved.surfaces, has_mixer: saved.mixer, has_pizza_stone: saved.pizza_stone, has_pizza_steel: saved.pizza_steel, has_baking_pan: saved.baking_pan };
+      } catch { /* The current session still retains the selected equipment. */ }
+    }
+    onConstraintsChange(next);
   };
 
   const suggestedSlot = useMemo(() => getSuggestedSlot(), []);
@@ -763,6 +781,7 @@ export function UserNeeds({
 
                     {/* Equipment */}
                     <div data-slot="equipment">
+                      <SupplyPolicyControls kind="equipment" constraints={constraints} onChange={onConstraintsChange} />
                       <SectionHeader title={cms.sections.equipment.title} subtitle={cms.sections.equipment.description} compact={compact} />
                       <div className={compact ? "needs-equipment needs-equipment--compact" : "needs-equipment"}>
                         {/* Impastamento */}
@@ -802,6 +821,7 @@ export function UserNeeds({
                   className={compact ? "needs-drawer needs-drawer--compact" : "needs-drawer"}
                 >
                   <div className={compact ? "needs-drawer__stack needs-drawer__stack--compact" : "needs-drawer__stack"}>
+                    <SupplyPolicyControls kind="flour" constraints={constraints} onChange={onConstraintsChange} flourOptions={[...FLOUR_OPTIONS_GENERIC,...FLOUR_OPTIONS_SPECIAL].map(f=>({id:f.id,label:f.name}))} />
                     {/* Flours */}
                     <div data-slot="flours">
                       <div className="needs-pantry__group-header">

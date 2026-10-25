@@ -210,6 +210,30 @@ export interface CmsUiStrings {
   verdictRecipeBelow: string;
   // Score dashboard
   recipeScore: string;
+  recipeCustomizedFrom: string;
+  recipePresetReference: string;
+  recipeResetPreset: string;
+  recipeOpenCreate: string;
+  createSourceTitle: string;
+  createSourceHint: string;
+  createSourceAction: string;
+  supplyUnknownHint: string;
+  supplyPantryInventory: string;
+  supplyEquipmentInventory: string;
+  supplyPartial: string;
+  supplyComplete: string;
+  supplyFlourPurchase: string;
+  supplyEquipmentPurchase: string;
+  supplyUnspecified: string;
+  supplyAllowed: string;
+  supplyForbidden: string;
+  supplyExcludedFlours: string;
+  supplyAddExclusion: string;
+  recipeAdaptationsIncluded: string;
+  recipeOptimizationChanges: string;
+  recipeScoreTransition: string;
+  scoreBasisOriginal: string;
+  scoreBasisTailored: string;
   scoreLimitedAuthenticity: string;
   scoreLimitedFeasibility: string;
   scoreWeightedAverage: string;
@@ -1275,6 +1299,34 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   messages: UI_MESSAGES_IT,
   ui: {
+    recipeCustomizedFrom: "Personalizzata · base {name}",
+    recipePresetReference: "Profilo {name}",
+    recipeResetPreset: "Ripristina {name}",
+
+    recipeOpenCreate: "Porta questo stile in Crea",
+    createSourceTitle: "Parti da {style}",
+    createSourceHint: "Controlla i filtri in alto: qui trovi la proposta su misura e le modifiche rispetto allo stile originale.",
+    createSourceAction: "Vedi la proposta su misura",
+
+    supplyUnknownHint: "Non selezionato significa non specificato. Solo una lista dichiarata completa prova ciò che manca.",
+    supplyPantryInventory: "Elenco della dispensa",
+    supplyEquipmentInventory: "Elenco della dotazione",
+    supplyPartial: "Lista parziale",
+    supplyComplete: "Ho indicato tutto ciò che ho",
+    supplyFlourPurchase: "Procurare altre farine",
+    supplyEquipmentPurchase: "Procurare altra attrezzatura",
+    supplyUnspecified: "Non specificato",
+    supplyAllowed: "Posso procurarmene",
+    supplyForbidden: "Non voglio procurarmene",
+    supplyExcludedFlours: "Farine che non voglio usare",
+    supplyAddExclusion: "Aggiungi un’esclusione",
+
+    recipeAdaptationsIncluded: "Adattamenti già inclusi rispetto all’originale",
+    recipeOptimizationChanges: "Con l’ottimizzazione cambierà",
+    recipeScoreTransition: "Punteggio: {from}/100 → {to}/100",
+    scoreBasisOriginal: "Originale",
+    scoreBasisTailored: "Su misura",
+
     scoreLimitedAuthenticity: "Autenticità {score}/100: limita il punteggio globale.",
     scoreLimitedFeasibility: "Un requisito non soddisfatto limita il punteggio globale.",
     scoreWeightedAverage: "Media pesata dei cinque assi",
@@ -1490,12 +1542,12 @@ export const CMS_DEFAULTS: CmsContent = {
     title_line1: "La tua",
     title_line2: "pizza perfetta.",
     subtitle: "Seleziona il momento per calcolare i tempi di preparazione.",
-    onboardingEyebrow: "Prima volta qui?",
+    onboardingEyebrow: "Personalizza i consigli",
     onboardingBody:
-      "I consigli partono da questo forno: {oven}, {temp}. Se il tuo è diverso, sceglilo: è il dato che cambia di più la ricetta.",
-    onboardingCta: "Scegli il tuo forno",
+      "Per ora i consigli usano {oven} a {temp}. Controlla Cucina, Dispensa e Livello nei filtri in alto: indica cosa hai e cosa non vuoi usare o procurarti. I dati mancanti restano da verificare; nessun orario del pasto è scelto per te.",
+    onboardingCta: "Controlla i filtri",
     onboardingProfileCta: "Configura tutta la cucina",
-    onboardingDismiss: "Va bene così",
+    onboardingDismiss: "Ho capito",
   },
   steps: {
     context: { number: "01 — Contesto", title: "Quando e dove", subtitle: "Tempo, temperatura, ambiente" },
@@ -1996,6 +2048,37 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.homeTray.bake": "Inforna sulla teglia capovolta già calda. Controlla la doratura della base e la cottura prima di sfornare.",
     "gen.fermentationTooLong": "Lievitazione di {hours}: supera il massimo previsto da questa ricetta ({maxHours}). Scegli un metodo verificato per una durata maggiore.",
     "gen.fermentationTemperature": "Questo metodo prevede maturazione a {requiredTemp}; è stata impostata a {temp}. Ripristina il regime previsto o scegli un altro metodo verificato.",
+    "need.pan": "Se ti procuri una teglia",
+    "need.checkPan": "Verifica di avere una teglia",
+    "need.checkDeck": "Verifica pietra o acciaio",
+    "need.checkExclusions": "Verifica le esclusioni sulla farina scelta",
+    "need.excludedFlour": "La ricetta richiede una farina che hai escluso: {flour}",
+    "need.purchaseRefused": "Manca un requisito e hai scelto di non procurartelo",
+    "aid.semolina": "Facoltativa: poca semola rimacinata per lo spolvero; puoi usare la farina della ricetta",
+    "need.checkFlour": "Verifica di avere farina W{w}",
+    "need.flour": "Serve farina W{w}",
+    "need.checkBlend": "Verifica tutte le farine del mix",
+    "need.checkYeast": "Verifica il lievito: {yeast}",
+    "need.yeast": "Serve lievito: {yeast}",
+    "need.invertedTray": "Teglia capovolta",
+    "need.withoutCoal": "Cottura senza carbone",
+    "need.withoutWood": "Cottura senza legna",
+    "need.adaptedBake": "Cottura adattata",
+    "need.deck": "Serve pietra o acciaio",
+    "need.blockedOven": "Forno insufficiente",
+    "need.blockedMethod": "Regime non compatibile",
+    "need.blockedTime": "Tempi non compatibili",
+    "change.salt": "Sale: {from}% → {to}%",
+    "change.fat": "Grassi: {from}% → {to}%",
+    "change.sugar": "Zuccheri: {from}% → {to}%",
+    "change.hydration": "Idratazione: {from}% → {to}%",
+    "change.flour": "Forza farina: W{from} → W{to}",
+    "change.flourPL": "P/L farina: {from} → {to}",
+    "change.fermentation": "Fermentazione: {fromHours} a {fromTemp} → {toHours} a {toTemp}",
+    "change.prefermentOn": "Si aggiunge un pre-fermento",
+    "change.prefermentOff": "Si passa all’impasto diretto",
+    "change.prefermentDetails": "Pre-fermento: {fromType} {from}% → {toType} {to}%",
+    "change.cooking": "Cottura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "Il forno a carbone definisce il metodo originale: con un altro combustibile la ricetta è adattata",
     "gen.notCoalOven": "Lo stile originale usa il carbone: il forno selezionato comporta una diversa cottura e impronta aromatica",
     "timeline.oven.coal": "Forno a carbone con platea preriscaldata: controlla la colorazione di fondo e bordi e ruota per uniformare la cottura.",
