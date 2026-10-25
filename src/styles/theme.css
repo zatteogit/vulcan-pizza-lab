@@ -969,6 +969,7 @@
   --elevation-confirm-action: 0 12px 28px color-mix(in srgb, var(--primary) 24%, transparent);
   /* bottone azione primary ConfirmDialog (ds) */
   --nav-dock-max-width: var(--dimension-fixed-352);
+  --profile-close-size: var(--dimension-fixed-046);
   --nav-dock-target-min: var(--dimension-fixed-046);
   /* larghezza max capsula nav mobile (min con 92vw) */
   /* cap altezza pannello ricerca */
@@ -5305,16 +5306,20 @@
   }
 
   .profile-page__close {
-    position: absolute;
-    top: var(--space-4);
-    right: var(--space-4);
+    position: fixed;
+    top: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0)));
+    right: calc(var(--space-4) + env(safe-area-inset-right, var(--space-0)));
+    z-index: 60;
   }
 
-  @media (min-width: 640px) {
-    .profile-page__close {
-      top: var(--space-6);
-      right: var(--space-6);
-    }
+  .profile-page__close .ds-iconbtn {
+    width: max(var(--space-12), var(--profile-close-size));
+    height: max(var(--space-12), var(--profile-close-size));
+    color: var(--text-default);
+    background: color-mix(in srgb, var(--container-page) 92%, transparent);
+    backdrop-filter: var(--backdrop-glass-max);
+    -webkit-backdrop-filter: var(--backdrop-glass-max);
+    box-shadow: var(--elevation-profile-button);
   }
 
   .profile-page__header {
@@ -5361,6 +5366,12 @@
     box-shadow: var(--shadow-sm);
     backdrop-filter: blur(var(--blur-md));
     -webkit-backdrop-filter: blur(var(--blur-md));
+  }
+
+  @media (max-width: 767px) {
+    .profile-tabs {
+      top: calc(env(safe-area-inset-top, var(--space-0)) + var(--space-4) + max(var(--space-12), var(--profile-close-size)) + var(--space-3));
+    }
   }
 
   .profile-tabs__button {

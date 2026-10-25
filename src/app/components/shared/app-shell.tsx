@@ -691,12 +691,13 @@ export function AppShell() {
   const activeTab = getActiveTab(location.pathname);
 
   /* Determine if tab bar should be visible
-     Hidden on: /dev, /design-system, /cms (tool pages) or /recipe/:styleId or when hideNavbar is true */
+     Hidden on: /dev, /design-system, /cms (tool pages) or /recipe/:styleId, /profile or when hideNavbar is true */
   const isToolPage =
     location.pathname.startsWith("/dev") ||
     location.pathname.startsWith("/design-system") ||
     location.pathname.startsWith("/cms");
   const isRecipePage = location.pathname.startsWith("/recipe/");
+  const isProfilePage = activeTab === "profile";
   /* Audit totale n. 13: anche la ricetta generata in Crea si può cucinare. */
   const [cookAvailable, setCookAvailable] = useState(false);
   // Prima degli effect della ricetta: al primo caricamento il suo evento non
@@ -706,9 +707,9 @@ export function AppShell() {
     window.addEventListener("vulcan:cook-available", onAvailable);
     return () => window.removeEventListener("vulcan:cook-available", onAvailable);
   }, []);
-  const showNav = !isToolPage && !isRecipePage && !hideNavbar;
+  const showNav = !isToolPage && !isRecipePage && !isProfilePage && !hideNavbar;
   /* La ricetta di Crea nasconde la navigazione ma si cucina (audit n. 13). */
-  const showCookAction = !isToolPage && (!hideNavbar || cookAvailable);
+  const showCookAction = !isToolPage && !isProfilePage && (!hideNavbar || cookAvailable);
   const hasProfileButton = showNav && activeTab !== "profile" && !searchOpen;
   /* Il campo sta nel dock solo dove il dock c'è (mobile, pagine con i tab);
      altrove la pagina dei risultati ha il suo. */
