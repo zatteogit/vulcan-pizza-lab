@@ -1,6 +1,6 @@
 /* === APP SHELL — VPL-055 / VPL-072 ===
    Layout principale con Tab Bar Material 3.
-   Mobile: bottom bar 4 tab + search FAB.
+   Mobile: bottom bar 3 tab + search FAB, compact on downward scroll.
    Desktop: sidebar rail + search icon.
    ⌘K / Ctrl+K apre la ricerca a tutta pagina (U-5). */
 
@@ -40,7 +40,7 @@ import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { IconButton } from "../ds/index";
 import { VulcanHero } from "./vulcan-hero";
 import { BRAND } from "../../config/brand";
-import { motionDuration,motionEase,motionSpring } from "../ds/motion";
+import { motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
 import { TOOLS_ENABLED } from "../../config/tools";
 
@@ -210,6 +210,8 @@ function TabItem({
 
 type LiquidNavState = {
   hidden: boolean;
+  /** Mobile dock stays visible and drops labels while reading downwards. */
+  compact: boolean;
   /** Fondo pagina raggiunto: il dock in basso si mostra, ma l'avatar in alto
    *  NON deve ricomparire sopra i contenuti (audit lug 2026). */
   nearBottom: boolean;
@@ -224,10 +226,19 @@ const NAV_RESYNC_EVENT = "vulcan:nav-resync";
 function useLiquidNavState(threshold = 28): LiquidNavState {
   const [state, setState] = useState<LiquidNavState>({
     hidden: false,
+    compact: false,
     scrolled: false,
     nearBottom: false,
   });
+  const stateRef = useRef(state);
   useEffect(() => {
+    const updateState = (next: LiquidNavState) => {
+      const prev = stateRef.current;
+      if (prev.hidden === next.hidden && prev.compact === next.compact &&
+        prev.scrolled === next.scrolled && prev.nearBottom === next.nearBottom) return;
+      stateRef.current = next;
+      setState(next);
+    };
     let lastY = window.scrollY;
     let acc = 0;
     let frame = 0;
@@ -249,34 +260,19 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
       const nearBottom =
         window.innerHeight + y >= document.documentElement.scrollHeight - 120;
 
-      if (y < 96 || nearBottom) {
-        setState((prev) => {
-          const next = { hidden: false, scrolled: isScrolled, nearBottom };
-          return prev.hidden === next.hidden &&
-            prev.scrolled === next.scrolled &&
-            prev.nearBottom === next.nearBottom
-            ? prev
-            : next;
-        });
-        acc = 0;
-        return;
+      if (Math.abs(dy) >= 0.5) {
+        acc = Math.sign(dy) === Math.sign(acc) ? acc + dy : dy;
       }
 
-      if (Math.abs(dy) < 0.5) return;
-      acc = Math.sign(dy) === Math.sign(acc) ? acc + dy : dy;
-
-      setState((prev) => {
-        const hide = y > 140 && acc > threshold;
-        const show = acc < -threshold * 0.72;
-        const hidden = hide ? true : show ? false : prev.hidden;
-        const next = { hidden, scrolled: isScrolled, nearBottom };
-        if (hidden !== prev.hidden) acc = 0;
-        return prev.hidden === next.hidden &&
-          prev.scrolled === next.scrolled &&
-          prev.nearBottom === next.nearBottom
-          ? prev
-          : next;
-      });
+      const prev = stateRef.current;
+      const retract = y > 140 && acc > threshold;
+      const reveal = acc < -threshold * 0.72;
+      const compact = y < 96 ? false : retract ? true : reveal ? false : prev.compact;
+      // Keep the existing behaviour for the avatar/cooking widget. The dock
+      // remains compact at the bottom until the user actually scrolls up.
+      const hidden = y < 96 || nearBottom ? false : retract ? true : reveal ? false : prev.hidden;
+      if (y < 96 || compact !== prev.compact || hidden !== prev.hidden) acc = 0;
+      updateState({ hidden, compact, scrolled: isScrolled, nearBottom });
     };
 
     const onScroll = () => {
@@ -293,13 +289,13 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
     const onResync = () => {
       lastY = Math.min(Math.max(window.scrollY, 0), maxScroll());
       acc = 0;
-      setState((prev) => (prev.hidden ? { ...prev, hidden: false } : prev));
+      updateState({ ...stateRef.current, hidden: false, compact: false });
     };
 
     const onViewportChange = () => {
       lastY = Math.min(Math.max(window.scrollY, 0), maxScroll());
       acc = 0;
-      setState((prev) => (prev.hidden ? { ...prev, hidden: false } : prev));
+      updateState({ ...stateRef.current, hidden: false });
     };
 
     /* U-10 (F02): dock, avatar e widget di cottura si ritirano allo scroll ma
@@ -308,10 +304,12 @@ function useLiquidNavState(threshold = 28): LiquidNavState {
     const onFocusIn = (event: FocusEvent) => {
       if (!(event.target instanceof Element)) return;
       if (!event.target.closest(".app-shell-dock, .app-shell-profile, .cook-widget")) return;
+      // Pointer taps must not move their target mid-press. Keyboard focus
+      // reveals labels; opening search expands the dock explicitly.
+      if (event.target.closest(".app-shell-dock") &&
+        !event.target.matches(":focus-visible, input")) return;
       acc = 0;
-      setState((prev) =>
-        prev.hidden || prev.nearBottom ? { ...prev, hidden: false, nearBottom: false } : prev,
-      );
+      updateState({ ...stateRef.current, hidden: false, compact: false, nearBottom: false });
     };
 
     onScroll();
@@ -383,28 +381,13 @@ function BottomTabBar({
   const prefersReducedMotion = useReducedMotion();
   const dockRef = useRef<HTMLDivElement>(null);
   useKeyboardInset(dockRef, search.open);
-  const hidden = navState.hidden && !search.open;
+  const compact = navState.compact && !search.open;
   const { scrolled } = navState;
   const morph = prefersReducedMotion ? { duration: 0 } : navSpring;
   return (
     <motion.div
       ref={dockRef}
-      className={`app-shell-dock${scrolled ? " app-shell-dock--scrolled" : ""}${hidden ? " app-shell-dock--hidden" : ""}${search.open ? " app-shell-dock--search" : ""}`}
-      initial={{ y: 0, scale: 1, opacity: 1 }}
-      animate={{
-        y: hidden && !prefersReducedMotion ? 96 : 0,
-        scale: hidden && !prefersReducedMotion ? 0.98 : scrolled ? 0.99 : 1,
-        opacity: hidden ? 0 : 1,
-      }}
-      transition={
-        prefersReducedMotion
-          ? { duration: motionDuration.fast,ease: motionEase.exit }
-          : {
-              y: navSpring,
-              scale: navSpring,
-              opacity: { duration: hidden ? motionDuration.subtle : motionDuration.normal,ease: motionEase.exit },
-            }
-      }
+      className={`app-shell-dock${scrolled ? " app-shell-dock--scrolled" : ""}${compact ? " app-shell-dock--compact" : ""}${search.open ? " app-shell-dock--search" : ""}`}
     >
       {search.open ? (
         <motion.div
@@ -674,7 +657,6 @@ export function AppShell() {
   const navigate = useNavigate();
   const location = useLocation();
   const navState = useLiquidNavState();
-  const prefersReducedMotion = useReducedMotion();
 
   // Reset hideNavbar state during render when the pathname changes to avoid race conditions with children
   const [prevPathname, setPrevPathname] = useState(location.pathname);
@@ -924,22 +906,7 @@ export function AppShell() {
           {showNav && (
             <>
               {/* Bottom scrim — visually grounds the floating tab bar on mobile */}
-              <motion.div
-                className="app-shell-scrim"
-                initial={{ y: 0, opacity: 1 }}
-                animate={{
-                  y: navState.hidden && !prefersReducedMotion ? 48 : 0,
-                  opacity: navState.hidden ? 0 : 1,
-                }}
-                transition={
-                  prefersReducedMotion
-                    ? { duration: motionDuration.fast,ease: motionEase.exit }
-                    : {
-                        y: navSpring,
-                        opacity: { duration: navState.hidden ? motionDuration.subtle : motionDuration.normal,ease: motionEase.exit },
-                      }
-                }
-              />
+              <div className={`app-shell-scrim${navState.compact && !searchOpen ? " app-shell-scrim--compact" : ""}`} />
               <BottomTabBar
                 activeTab={activeTab}
                 onSearchOpen={openSearch}
