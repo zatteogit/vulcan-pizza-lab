@@ -22,6 +22,19 @@ describe("card: solo informazioni che aiutano a scegliere", () => {
       }));
     }
   });
+  it("Scopri non mostra prerequisiti di dispensa o attrezzatura; Crea li mantiene", () => {
+    const recipe=withVerdict({conditions:[
+      {kind:"pan",status:"unverified",message:{key:"need.checkPan",fallback:""}},
+      {kind:"flour",status:"unverified",message:{key:"need.checkFlour",fallback:"",params:{w:285}}},
+    ]});
+    expect(recipeCardSignals(recipe,"explore")).toEqual([]);
+    expect(recipeCardSignals(recipe,"create").map(signal=>signal.message.key)).toEqual(["card.panCheck","need.checkFlour"]);
+    expect(recipe.verdict.conditions).toHaveLength(2);
+  });
+  it("Scopri conserva gli avvisi sul metodo di cottura", () => {
+    const recipe=withVerdict({adaptations:[{key:"gen.notWoodOven",fallback:""}]});
+    expect(recipeCardSignals(recipe,"explore").map(signal=>signal.message.key)).toEqual(["need.withoutWood"]);
+  });
   it("un blocco termico precede qualsiasi suggerimento di acquisto", () => {
     const r = withVerdict({ outcome: "not_feasible", blockers: [{kind:"oven_too_cold",oven_c:250,style_min_c:350}],
       conditions:[{kind:"flour",status:"missing",message:{key:"need.flour",fallback:"",params:{w:300}}}] });

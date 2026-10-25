@@ -727,7 +727,7 @@ function StyleCatalogCard({
             <div className="explore-card__origin">
               {shortOrigin(style.origin)}
             </div>
-            <StyleMetaChip style={style} cms={cms} recipe={match?.recipe} />
+            <StyleMetaChip style={style} cms={cms} recipe={match?.recipe} context="explore" />
           </figcaption>
         </figure>
       </Surface>
