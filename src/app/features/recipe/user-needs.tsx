@@ -221,8 +221,9 @@ function getSuggestedSlot(): string {
 }
 
 /* ═══ VPL-003: Geolocation + Open-Meteo weather API ═══
- * Progressive enhancement: tries browser geolocation + Open-Meteo (free, no key).
- * Falls back to Roma + seasonal estimate if blocked (e.g. iframe restrictions). */
+ * Activated only when the kitchen temperature controls are first opened.
+ * A saved location avoids a permission request; otherwise use browser geolocation.
+ * Without weather, keep the standard/manual kitchen temperature. */
 interface WeatherData {
   city: string;
   temp: number;
@@ -234,12 +235,22 @@ function fallbackWeather(): WeatherData {
   return { city: "", temp: DEFAULT_KITCHEN_TEMP, kitchenTemp: DEFAULT_KITCHEN_TEMP };
 }
 
-function useLocationWeather() {
+function useLocationWeather(enabled: boolean) {
   const [data, setData] = useState<WeatherData>(fallbackWeather);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [available, setAvailable] = useState(false);
+  const [activated, setActivated] = useState(false);
+
+  // Latch the first use: closing/reopening the drawer does not ask again or
+  // cancel an in-flight request. Only unmounting the screen cancels updates.
+  useEffect(() => {
+    if (enabled) setActivated(true);
+  }, [enabled]);
 
   useEffect(() => {
+    if (!activated) return;
     let cancelled = false;
+    setLoading(true);
 
     /* Check for saved location from Profile first */
     let savedLat: number | null = null;
@@ -288,6 +299,7 @@ function useLocationWeather() {
 
         if (!cancelled) {
           setData({ city: resolvedCity, temp, kitchenTemp: outdoorToKitchenTemp(temp) });
+          setAvailable(true);
         }
       } catch {
         /* Weather API failed — if we have a saved city, still show it */
@@ -305,7 +317,7 @@ function useLocationWeather() {
     } else if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          fetchWeather(pos.coords.latitude, pos.coords.longitude);
+          if (!cancelled) fetchWeather(pos.coords.latitude, pos.coords.longitude);
         },
         () => {
           /* Geolocation denied/unavailable — keep fallback */
@@ -318,9 +330,9 @@ function useLocationWeather() {
     }
 
     return () => { cancelled = true; };
-  }, []);
+  }, [activated]);
 
-  return { data, loading };
+  return { data, loading, available };
 }
 
 const OVEN_STORAGE_KEY = "vulcan_oven_pref";
@@ -551,7 +563,11 @@ export function UserNeeds({
       (customTimeSlot?.id === selectedTimeSlot ? customTimeSlot : undefined);
     return slot ? timeSlotText(slot, cms, bcp47).label : null;
   }, [selectedTimeSlot, dynamicSlots, customTimeSlot, cms, bcp47]);
-  const weather = useLocationWeather();
+  const [internalActiveTab, setInternalActiveTab] = useState<SettingsTab | null>(null);
+  const activeTab =
+    controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
+  const setActiveTab = onActiveTabChange ?? setInternalActiveTab;
+  const weather = useLocationWeather(activeTab === "cucina");
 
   const [kitchenTempManual, setKitchenTempManual] =
     useState(false);
@@ -560,9 +576,9 @@ export function UserNeeds({
   );
 
   useEffect(() => {
-    if (weather.data && !kitchenTempManual && !compact)
+    if (weather.available && !kitchenTempManual)
       setKitchenTemp(weather.data.kitchenTemp);
-  }, [weather.data, kitchenTempManual, compact]);
+  }, [weather.data, weather.available, kitchenTempManual]);
 
   useEffect(() => {
     update("kitchen_temp_c", kitchenTemp);
@@ -627,10 +643,6 @@ export function UserNeeds({
     );
   };
 
-  const [internalActiveTab, setInternalActiveTab] = useState<SettingsTab | null>(null);
-  const activeTab =
-    controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
-  const setActiveTab = onActiveTabChange ?? setInternalActiveTab;
   const [showTempTip, setShowTempTip] = useState(false);
   const drawerTransition = compact ? motionSpring.drawerCompact : motionSpring.drawerRegular;
 
