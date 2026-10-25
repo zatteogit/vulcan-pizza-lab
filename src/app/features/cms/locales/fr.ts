@@ -766,7 +766,7 @@ export const FR_LOCALE: CmsContent = {
     "need.yeast": "Levure nécessaire : {yeast}",
     "need.invertedTray": "Plaque retournée",
     "need.withoutCoal": "Cuisson sans charbon",
-    "need.withoutWood": "Cuisson sans bois",
+    "need.withoutWood": "Même sans bois",
     "need.adaptedBake": "Cuisson adaptée",
     "need.deck": "Pierre ou acier nécessaire",
     "card.pantryCheck": "Vérifiez le placard",
