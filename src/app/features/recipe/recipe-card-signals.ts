@@ -8,8 +8,8 @@ export interface CardSignal {
 }
 const msg = (key: string, fallback: string, params?: EngineMsg["params"]): EngineMsg => ({ key, fallback, params });
 
-/** Card policy: at most two decision signals. Generic unknown pantry data is
- * explained in the detail, rather than repeated under every catalog item. */
+/** Card policy: at most two decision signals. Unverified flour is a concrete
+ * condition too: an empty inventory never implies the required flour is available. */
 export function recipeCardSignals(recipe: GeneratedRecipe): CardSignal[] {
   const { blockers, conditions = [], adaptations } = recipe.verdict;
   if (blockers.length) {
@@ -34,10 +34,12 @@ export function recipeCardSignals(recipe: GeneratedRecipe): CardSignal[] {
   }
   if (!method && recipe.scores.authenticity < 60) add("check", msg("card.authenticity", "Autenticità ridotta"));
   for (const c of [...conditions].sort((a, b) => Number(b.status === "missing") - Number(a.status === "missing"))) {
-    if (c.kind === "pan") add("pan", c.status === "missing" ? msg("card.panMissing", "Serve una teglia") : msg("card.panCheck", "Verifica la teglia"));
-    if (c.kind === "deck") add("oven", c.status === "missing" ? msg("need.deck", "Serve pietra o acciaio") : msg("need.checkDeck", "Verifica pietra o acciaio"));
-    if (c.kind === "flour" && c.status === "missing") add("flour", msg("need.flour", "Serve farina W{w}", c.message.params));
-    if (c.kind === "flour_blend") add("flour", msg("card.blendCheck", "Verifica il mix"));
+    if (c.kind === "pan") add("pan", c.status === "missing" ? msg("card.panMissing", "Serve una teglia") : msg("card.panCheck", "Se hai una teglia"));
+    if (c.kind === "deck") add("oven", c.status === "missing" ? msg("need.deck", "Serve pietra o acciaio") : msg("need.checkDeck", "Se hai pietra o acciaio"));
+    if (c.kind === "flour") add("flour", c.status === "missing"
+      ? msg("need.flour", "Serve farina W{w}", c.message.params)
+      : msg("need.checkFlour", "Se hai farina W{w}", c.message.params));
+    if (c.kind === "flour_blend") add("flour", msg("card.blendCheck", "Se hai le farine del mix"));
     if (c.kind === "yeast" && c.status === "missing") add("flour", msg("card.yeastMissing", "Serve il lievito"));
   }
   return result.slice(0, 2);

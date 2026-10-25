@@ -9,9 +9,18 @@ const base = generateRecipe(STYLES_DB.focaccia_genovese, constraints);
 const withVerdict = (patch: Partial<GeneratedRecipe["verdict"]>): GeneratedRecipe => ({ ...base, verdict: { ...base.verdict, ...patch } });
 
 describe("card: solo informazioni che aiutano a scegliere", () => {
-  it("la dispensa generica non compilata non ripete avvisi su ogni card", () => {
+  it("la dispensa non compilata espone la condizione sulla W della ricetta", () => {
     expect(base.verdict.conditions?.some(c => c.kind === "flour")).toBe(true);
-    expect(recipeCardSignals(base)).toEqual([]);
+    expect(recipeCardSignals(base)[0].message).toMatchObject({key:"need.checkFlour",params:{w:base.flour_w}});
+  });
+  it("Calzone e Chicago con tutte le farine rimosse mostrano la W effettiva", () => {
+    for (const style of [STYLES_DB.calzone_napoletano, STYLES_DB.chicago_deep]) {
+      const recipe = generateRecipe(style, {...constraints, oven_type:"wood", oven_max_temp_c:450, has_baking_pan:false});
+      expect(recipe.verdict.outcome).not.toBe("not_feasible");
+      expect(recipeCardSignals(recipe)).toContainEqual(expect.objectContaining({
+        icon:"flour",message:expect.objectContaining({key:"need.checkFlour",params:{w:recipe.flour_w}}),
+      }));
+    }
   });
   it("un blocco termico precede qualsiasi suggerimento di acquisto", () => {
     const r = withVerdict({ outcome: "not_feasible", blockers: [{kind:"oven_too_cold",oven_c:250,style_min_c:350}],
