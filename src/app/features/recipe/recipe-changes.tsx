@@ -33,9 +33,8 @@ export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: G
   const afterLabel = mode === "included" ? cms.ui.scoreBasisTailored : cms.ui.recipeOptimizedVersion;
   return (
     <section className="recipe-comparison" data-recipe-changes={mode}>
-      <h4 className="recipe-comparison__title">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</h4>
       <table className="recipe-comparison__table">
-        <thead><tr><td /><th scope="col">{beforeLabel}</th><td aria-hidden="true" /><th scope="col">{afterLabel}</th></tr></thead>
+        <thead><tr><th scope="col"><h4 className="recipe-comparison__title">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</h4></th><th scope="col">{beforeLabel}</th><td aria-hidden="true" /><th scope="col">{afterLabel}</th></tr></thead>
         <tbody>
           <tr className="recipe-comparison__score">
             <th scope="row"><span data-slot="label"><Gauge size={15} aria-hidden="true" />{cms.ui.recipeScoreLabel}</span></th>
