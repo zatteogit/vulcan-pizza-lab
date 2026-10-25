@@ -969,6 +969,7 @@
   --elevation-confirm-action: 0 12px 28px color-mix(in srgb, var(--primary) 24%, transparent);
   /* bottone azione primary ConfirmDialog (ds) */
   --nav-dock-max-width: var(--dimension-fixed-352);
+  --nav-dock-target-min: var(--dimension-fixed-046);
   /* larghezza max capsula nav mobile (min con 92vw) */
   /* cap altezza pannello ricerca */
   --drop-shadow-step-accent: drop-shadow(0 1px 2px color-mix(in srgb, var(--shadow-color) 24%, transparent));
@@ -17155,6 +17156,11 @@
         var(--container-page) 38%,
         color-mix(in srgb, var(--container-page) 82%, transparent) 66%,
         transparent 100%);
+    transition: height var(--duration-normal) var(--ease-standard);
+  }
+
+  .app-shell-scrim--compact {
+    height: calc(var(--space-20) + env(safe-area-inset-bottom, var(--space-0)));
   }
 
   @media (min-width: 768px) {
@@ -17175,7 +17181,7 @@
     bottom: calc(var(--space-6) + env(safe-area-inset-bottom, var(--space-0)));
     width: min(var(--nav-dock-max-width), var(--dimension-viewport-width-92));
     transform-origin: bottom center;
-    will-change: transform, opacity;
+    transition: width var(--duration-normal) var(--ease-standard), bottom var(--duration-normal) var(--ease-standard);
   }
 
   /* Contenitore «search» del pulsante di ricerca (U-10, F29): non cambia il
@@ -17187,6 +17193,10 @@
 
   .app-shell-dock--scrolled {
     bottom: calc(var(--space-4) + env(safe-area-inset-bottom, var(--space-0)));
+  }
+
+  .app-shell-dock--compact {
+    width: min(var(--space-60), var(--dimension-viewport-width-92));
   }
 
   @media (min-width: 768px) {
@@ -17212,10 +17222,6 @@
     box-shadow: var(--premium-glass-shadow), 0 0 0 var(--border-width-thin) color-mix(in srgb, var(--overlay-text) 5%, transparent);
   }
 
-  .app-shell-dock--hidden {
-    pointer-events: none;
-  }
-
   .app-shell-dock__gloss {
     position: absolute;
     inset-inline: 0;
@@ -17235,6 +17241,47 @@
     justify-content: space-around;
     padding-inline: var(--space-2);
     height: var(--space-14);
+    transition: height var(--duration-normal) var(--ease-standard);
+  }
+
+  .app-shell-dock--compact .app-shell-dock__row {
+    height: max(var(--space-12), var(--nav-dock-target-min));
+  }
+
+  .app-shell-dock__search .search-button {
+    transition: width var(--duration-normal) var(--ease-standard), height var(--duration-normal) var(--ease-standard);
+  }
+
+  .app-shell-dock--compact .app-shell-dock__search .search-button {
+    width: max(var(--space-12), var(--nav-dock-target-min));
+    height: max(var(--space-12), var(--nav-dock-target-min));
+  }
+
+  .app-shell-tab--bottom .app-shell-tab__label {
+    display: block;
+    max-height: var(--space-4);
+    overflow: hidden;
+    white-space: nowrap;
+    transition: max-height var(--duration-normal) var(--ease-standard), opacity var(--duration-moderate) var(--ease-standard), transform var(--duration-normal) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+  }
+
+  .app-shell-dock--compact .app-shell-tab--bottom {
+    gap: 0;
+  }
+
+  .app-shell-dock--compact .app-shell-tab--bottom .app-shell-tab__label,
+  .app-shell-dock--compact .app-shell-tab[aria-current="page"] .app-shell-tab__label {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(var(--space-1));
+  }
+
+  .app-shell-tab--bottom .app-shell-tab__pill {
+    transition: width var(--duration-normal) var(--ease-standard);
+  }
+
+  .app-shell-dock--compact .app-shell-tab__pill {
+    width: var(--space-12);
   }
 
   /* ─── Desktop sidebar rail (logo + tabs + dev shortcut + search FAB) ─── */
@@ -17372,8 +17419,9 @@
   .app-shell-tab--bottom {
     padding-block: var(--space-1);
     padding-inline: 0;
-    min-width: 0;
-    min-height: 0;
+    min-width: var(--nav-dock-target-min);
+    min-height: var(--nav-dock-target-min);
+    transition: gap var(--duration-normal) var(--ease-standard);
   }
 
   .app-shell-tab--rail {
