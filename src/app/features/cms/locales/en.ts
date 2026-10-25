@@ -28,13 +28,16 @@ export const EN_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_EN,
   inspirationI18n: INSPIRATION_I18N_EN,
   ui: {
+    aboutLabel: "About {brand}",
+    aboutDevelopment: "Software in development",
+    aboutDescription: "Features, recipes and recommendations are evolving. You may encounter errors or results that need refinement.",
     recipeNameEdit: "Edit recipe name",
     recipeNameLabel: "Recipe name",
     recipeNamePlaceholder: "E.g. Just how Mario likes it",
     recipeNameConfirm: "Confirm name",
     recipeResetPreset: "Reset",
 
-    recipeOpenCreate: "Use this style in Create",
+    recipeOpenCreate: "Customize in Create",
     createSourceTitle: "Start from {style}",
     createSourceHint: "Check the filters above: here you get a tailored proposal and changes from the original style.",
     createSourceAction: "View the tailored proposal",

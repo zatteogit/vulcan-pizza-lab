@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { VulcanMark } from "./vulcan-logo";
 import { DoughBlob } from "../../features/cooking/dough-mascot";
 import type { DoughVariant } from "../../features/cooking/dough-mascot";
@@ -37,6 +37,7 @@ interface VulcanHeroProps {
   /** Ratio of mark size to container size */
   markRatio?: number;
   className?: string;
+  loops?: number;
 }
 
 export function VulcanHero({
@@ -46,7 +47,9 @@ export function VulcanHero({
   logoVariant = "naturale",
   markRatio = 0.32,
   className,
+  loops = HERO_LOOPS,
 }: VulcanHeroProps) {
+  const reducedMotion = useReducedMotion();
   const markSize = Math.round(size * markRatio);
 
   return (
@@ -60,7 +63,7 @@ export function VulcanHero({
           variant={blobVariant}
           size={size}
           energy={energy}
-          loops={HERO_LOOPS}
+          loops={loops}
         />
       </div>
 
@@ -68,12 +71,12 @@ export function VulcanHero({
       <motion.div
         className="vulcan-hero__mark"
         animate={{
-          scale: [1, 1.015, 0.99, 1.01, 1],
+          scale: reducedMotion ? 1 : [1, 1.015, 0.99, 1.01, 1],
         }}
         transition={{
           scale: {
             duration: motionDuration.ambientLong - (energy / 100) * motionDuration.ambientRange,
-            repeat: HERO_LOOPS,
+            repeat: reducedMotion ? 0 : loops,
             ease: motionEase.standard,
           },
         }}

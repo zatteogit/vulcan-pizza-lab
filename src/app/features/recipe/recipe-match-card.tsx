@@ -1,4 +1,3 @@
-import { CtaButton } from "../../components/ds/index";
 import { RecipeMatchIcon } from "./recipe-match-icon";
 import { RecipeConditionChips } from "./recipe-condition-chips";
 import { recipePresentationState } from "./recipe-card-signals";
@@ -623,7 +622,7 @@ export function RecipeMatchCard({
       </div>
       <div className="match-actions">
       {onCreate && (
-        <CtaButton type="button" variant="secondary" elevated={false} onClick={onCreate}>{cms.ui.recipeOpenCreate}</CtaButton>
+        <button type="button" className="match-action-text match-action-text--personalize" onClick={onCreate}><SlidersHorizontal size={14} aria-hidden="true" />{cms.ui.recipeOpenCreate}</button>
       )}
         {onOptimize && (
           <motion.button

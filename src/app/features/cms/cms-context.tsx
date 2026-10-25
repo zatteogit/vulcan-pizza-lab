@@ -52,6 +52,9 @@ interface CmsLocale {
 
 /** Generic UI strings — buttons, labels, actions, placeholders */
 export interface CmsUiStrings {
+  aboutLabel: string;
+  aboutDevelopment: string;
+  aboutDescription: string;
   // Actions
   copy: string;
   copied: string;
@@ -1304,13 +1307,16 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   messages: UI_MESSAGES_IT,
   ui: {
+    aboutLabel: "Informazioni su {brand}",
+    aboutDevelopment: "Software in sviluppo",
+    aboutDescription: "Funzioni, ricette e suggerimenti sono in evoluzione. Potresti incontrare errori o risultati da perfezionare.",
     recipeNameEdit: "Modifica nome della ricetta",
     recipeNameLabel: "Nome della ricetta",
     recipeNamePlaceholder: "Es. Come piace a Mario",
     recipeNameConfirm: "Conferma nome",
     recipeResetPreset: "Ripristina",
 
-    recipeOpenCreate: "Porta questo stile in Crea",
+    recipeOpenCreate: "Personalizza in Crea",
     createSourceTitle: "Parti da {style}",
     createSourceHint: "Controlla i filtri in alto: qui trovi la proposta su misura e le modifiche rispetto allo stile originale.",
     createSourceAction: "Vedi la proposta su misura",

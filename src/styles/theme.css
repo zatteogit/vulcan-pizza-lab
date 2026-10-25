@@ -610,7 +610,6 @@
   --duration-second: 1s;
   --duration-splash: 1.7s;
   --duration-pulse: 2s;
-  --duration-drift: 12s;
   --ease-linear: linear;
   --ease-standard: ease;
   --ease-enter: ease-out;
@@ -14715,6 +14714,52 @@
     }
   }
 
+  .ds-dialog-scrim:has(.about-dialog) {
+    z-index: var(--z-modal);
+  }
+
+  .about-dialog {
+    position: relative;
+    max-height: var(--dimension-viewport-height-85);
+    overflow-y: auto;
+  }
+
+  .about-dialog__close {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+  }
+
+  .about-dialog__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    text-align: center;
+  }
+
+  .about-dialog__name {
+    font-family: var(--font-serif);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--weight-bold);
+    color: var(--text-default);
+  }
+
+  .about-dialog__status {
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    background: var(--tertiary-container);
+    color: var(--on-tertiary-container);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+  }
+
+  .about-dialog__description {
+    font-size: var(--font-size-md);
+    line-height: var(--leading-cozy);
+    color: var(--text-muted);
+  }
+
   /* ═══ COMPONENT: style-detail-sheet (ondata 4) ═══ */
   /* ═══ COMPONENT: style-detail-sheet ═══ */
 
@@ -16767,7 +16812,12 @@
   }
 
   /* Marchio in testata (D-040): in riga col bottone del profilo, scorre con la pagina. */
-  .app-shell-brand {
+  .app-shell-brand.ds-iconbtn {
+    width: auto;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: var(--gap-xs);
@@ -16785,7 +16835,7 @@
   }
 
   @media (min-width: 768px) {
-    .app-shell-brand {
+    .app-shell-brand.ds-iconbtn {
       display: none;
     }
   }
@@ -16941,6 +16991,10 @@
   }
 
   .app-shell-rail__logo {
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
     position: relative;
     isolation: isolate;
     display: flex;
@@ -16953,48 +17007,11 @@
     transition: transform var(--duration-fast) var(--ease-standard);
   }
 
-  .app-shell-rail__logo::before {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    left: 50%;
-    top: 50%;
-    width: var(--space-12);
-    height: var(--space-12);
+  .app-shell-rail__logo:focus-visible,
+  .app-shell-brand:focus-visible {
+    outline: var(--border-width-strong) solid var(--ring);
+    outline-offset: var(--space-1);
     border-radius: var(--radius-full);
-    background: radial-gradient(ellipse at center, color-mix(in srgb, var(--primary) 18%, transparent) 0%, color-mix(in srgb, var(--forge-glow) 8%, transparent) 42%, transparent 72%);
-    filter: blur(var(--blur-md));
-    pointer-events: none;
-    transform: translate(-51%, -49%);
-    will-change: transform;
-    animation: app-shell-logo-drift var(--duration-drift) var(--ease-emphasis) 3; /* U-10 (F25): non infinito */
-  }
-
-  @keyframes app-shell-logo-drift {
-
-    0%,
-    100% {
-      transform: translate(-51%, -49%);
-    }
-
-    38% {
-      transform: translate(-48%, -52%);
-    }
-
-    72% {
-      transform: translate(-52%, -47%);
-    }
-  }
-
-  .app-shell-rail__logo>svg {
-    position: relative;
-    z-index: 1;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .app-shell-rail__logo::before {
-      animation: none;
-    }
   }
 
   .app-shell-rail__logo:active {

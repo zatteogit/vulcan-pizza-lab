@@ -25,6 +25,7 @@ import { RouteTitle, SkipLink } from "./route-title";
 /* Audit bundle lug 2026: CookingMode e la ricerca trascinavano motore,
    topping, glossario e troubleshooting nel chunk d'ingresso (~400 kB di
    sorgente) pur montandosi solo su richiesta → lazy. */
+const AboutDialog = lazy(() => import("./about-dialog").then(m => ({ default: m.AboutDialog })));
 const CookingMode = lazy(() =>
   import("../../features/cooking/cooking-mode").then((m) => ({
     default: m.CookingMode,
@@ -36,7 +37,7 @@ const SearchResultsView = lazy(() =>
 import { DebugOverlay } from "../../features/dev-tools/debug-overlay";
 import { ThemeSwitcher } from "../../features/dev-tools/theme-switcher";
 import { StylesOverrideProvider } from "../../context/styles-override-context";
-import { VulcanMark } from "./vulcan-logo";
+import { IconButton } from "../ds/index";
 import { VulcanHero } from "./vulcan-hero";
 import { BRAND } from "../../config/brand";
 import { motionDuration,motionEase,motionSpring } from "../ds/motion";
@@ -474,10 +475,12 @@ function SidebarRail({
   activeTab,
   devMode,
   onSearchOpen,
+  onAboutOpen,
 }: {
   activeTab: string | null;
   devMode: boolean;
   onSearchOpen: () => void;
+  onAboutOpen: () => void;
 }) {
   const { cms } = useCms();
   return (
@@ -497,13 +500,16 @@ function SidebarRail({
           animate={{ opacity: 0.42 }}
         />
         {/* Logo */}
-        <Link
-          to="/"
+        <IconButton
+          variant="bare"
+          type="button"
+          onClick={onAboutOpen}
           className="app-shell-rail__logo"
-          aria-label={cms.pages.homeAria}
+          aria-label={cms.ui.aboutLabel}
+          aria-haspopup="dialog"
         >
-          <VulcanMark size={22} decorative />
-        </Link>
+          <VulcanHero size={48} energy={35} markRatio={0.46} loops={Infinity} />
+        </IconButton>
 
         {/* Tabs */}
         <div className="app-shell-rail__tabs">
@@ -544,13 +550,13 @@ function SidebarRail({
 }
 
 /* ═══ MARCHIO IN TESTATA — logo nel blob d'impasto + nome (D-040) ═══ */
-function ShellBrand() {
+function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
   const { cms } = useCms();
   return (
-    <Link to="/explore" className="app-shell-brand" aria-label={cms.pages.homeAria}>
-      <VulcanHero size={36} energy={30} markRatio={0.5} />
+    <IconButton variant="bare" type="button" onClick={onAboutOpen} className="app-shell-brand" aria-label={cms.ui.aboutLabel} aria-haspopup="dialog">
+      <VulcanHero size={36} energy={30} markRatio={0.5} loops={Infinity} />
       <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
-    </Link>
+    </IconButton>
   );
 }
 
@@ -627,6 +633,7 @@ function CookSessionUI({
 
 /* ═══ APP SHELL ═══ */
 export function AppShell() {
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [themeMode, setThemeModeState] = useState<ThemeMode>(loadThemeMode);
   const [darkMode, setDarkModeState] = useState(() => resolveThemeMode(loadThemeMode()));
   const [devMode, setDevModeState] = useState(loadDevMode);
@@ -853,11 +860,13 @@ export function AppShell() {
         <CookSessionProvider>
         <div className="app-shell-root">
           <SkipLink />
+          {aboutOpen && <Suspense fallback={null}><AboutDialog onClose={() => setAboutOpen(false)} /></Suspense>}
           {/* Sidebar rail — desktop */}
           {showNav && (
             <SidebarRail
               activeTab={activeTab}
               devMode={devMode}
+              onAboutOpen={() => setAboutOpen(true)}
               onSearchOpen={openSearch}
             />
           )}
@@ -870,7 +879,7 @@ export function AppShell() {
               {/* Marchio in testata (D-040): solo sulle pagine delle tab, su
                   mobile; su desktop il logo sta già nella barra laterale. Nel
                   banner, non fuori dai landmark (audit n. 30). */}
-              {TABS.some((tab) => tab.path === location.pathname) && <ShellBrand />}
+              {TABS.some((tab) => tab.path === location.pathname) && <ShellBrand onAboutOpen={() => setAboutOpen(true)} />}
             </header>
           )}
 
