@@ -79,8 +79,10 @@ import {
   findSavedRecipe,
   removeRecipe,
   saveRecipe,
+  renameSavedRecipe,
   type SavedRecipeParams,
 } from "../adapters/browser/saved-recipes-storage";
+import { normalizeRecipeName } from "../data/saved-recipes";
 import { uiMessage } from "../i18n/ui-messages";
 
 const FALLBACK =
@@ -220,6 +222,7 @@ function RecipeContent({
   const nerdAvailable = loadJson<boolean>("vulcan_nerd_on") === true;
   const initialRecipeMode = readRecipeMode(searchParams);
   const [recipeMode, setRecipeMode] = useState<RecipeMode>(initialRecipeMode);
+  const [recipeName, setRecipeName] = useState<string | undefined>(() => normalizeRecipeName(searchParams.get("name")));
   const useTailoredUrlParams = initialRecipeMode !== "canonical";
 
   /* ── Compute style defaults ──
@@ -409,6 +412,7 @@ function RecipeContent({
   }) || Math.min(constraints.oven_max_temp_c, style.baking.temp_c_ideal) !== Math.min(constraints.oven_capacity_temp_c ?? constraints.oven_max_temp_c, style.baking.temp_c_ideal);
 
   const applyPreset = useCallback((version: StyleVersion | null, interpretation: Interpretation | null) => {
+    setRecipeName("");
     const p = recipePresetState(style, version, interpretation);
     setRecipeMode("canonical");
     setCustomHydration(p.hydration); setCustomFlourW(p.flourW); setCustomFlourPL(p.flourPL);
@@ -479,6 +483,7 @@ function RecipeContent({
   /* ── Computed share URL (VPL-064) ── */
   const shareUrl = useMemo(() => {
     const params = new URLSearchParams();
+    if (recipeName) { params.set("name", recipeName); params.set("tab", "ricetta"); }
     if (activeVersionId) params.set("v", activeVersionId);
     if (activeInterpretationId) params.set("interpretation", activeInterpretationId);
     if (selectedToppingConcept && selectedToppingConcept !== style.default_topping_ref)
@@ -492,6 +497,7 @@ function RecipeContent({
     return `${window.location.origin}/recipe/${style.id}${query ? `?${query}` : ""}`;
   }, [
     recipeMode,
+    recipeName,
     activeVersionId,
     activeInterpretationId,
     selectedToppingConcept,
@@ -760,15 +766,27 @@ function RecipeContent({
     // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
     [style.id, currentSaveParams, savedTick],
   );
+  const resolvedRecipeName = recipeName ?? normalizeRecipeName(savedEntry?.name) ?? "";
   // U-10 (F15): il titolo della scheda dice quale ricetta è (RouteTitle salta /recipe).
   useEffect(() => {
-    document.title = `${style.name} · ${BRAND.name}`;
-  }, [style.name]);
+    document.title = `${resolvedRecipeName || style.name} · ${BRAND.name}`;
+  }, [style.name, resolvedRecipeName]);
 
+  useEffect(() => {
+    if (recipeName === undefined && savedEntry?.name) setRecipeName(normalizeRecipeName(savedEntry.name));
+  }, [recipeName, savedEntry]);
   const [saveFailed, setSaveFailed] = useState(false);
   const closeSaveFailed = useCallback(() => setSaveFailed(false), []);
   /** true se il ricettario ora riflette la scelta; false se la scrittura è
    *  fallita (storage pieno o bloccato): lo si dice con SaveFailedNotice. */
+  const handleRenameRecipe = useCallback((next: string): boolean => {
+    const name = normalizeRecipeName(next) ?? "";
+    if (savedEntry && !renameSavedRecipe(savedEntry.id, name)) { setSaveFailed(true); return false; }
+    setRecipeName(name);
+    replaceRecipeSearchParams(params => { if (name) params.set("name", name); else params.delete("name"); });
+    setSavedTick(tick => tick + 1);
+    return true;
+  }, [savedEntry]);
   const handleToggleSaveRecipe = useCallback((): boolean => {
     let ok = true;
     if (savedEntry) {
@@ -777,6 +795,7 @@ function RecipeContent({
       saveRecipe({
         styleId: style.id,
         styleName: style.name,
+        name: normalizeRecipeName(resolvedRecipeName),
         versionId: activeVersionId,
         params: currentSaveParams,
         score: Math.round(matchRecipe.scores.composite),
@@ -786,7 +805,7 @@ function RecipeContent({
     }
     setSavedTick((v) => v + 1);
     return ok;
-  }, [savedEntry, style.id, style.name, activeVersionId, currentSaveParams, matchRecipe]);
+  }, [savedEntry, style.id, style.name, activeVersionId, currentSaveParams, matchRecipe, resolvedRecipeName]);
 
   const styleVersions = useMemo(() => getVersions(style.id), [style.id]);
   /* Firma d'origine (redesign lug 2026): l'eyebrow dice l'origine UNA volta,
@@ -798,9 +817,9 @@ function RecipeContent({
   const recipeTabLabel =
     recipeMode === "lab"
       ? cmsMessage(cms, "recipeMode.lab", "Laboratorio")
-      : isDirty
-        ? tpl(cms.ui.recipeCustomizedFrom, {name: referenceName})
-        : tpl(cms.ui.recipePresetReference, {name: referenceName});
+      : isDirty || resolvedRecipeName
+        ? cms.ui.scoreBasisTailored
+        : cms.ui.scoreBasisOriginal;
 
   /* Photo */
   const photo =
@@ -871,15 +890,18 @@ function RecipeContent({
         back={{ label: (cms.pages as any).navExplore || cms.pages.recipeBackToStyles, onClick: handleBack }}
         recipeTabLabel={cms.cooking.tabRecipe}
         eyebrow={recipeTabLabel}
-        eyebrowTone={isDirty ? "tailored" : "canonical"}
+        eyebrowTone={isDirty || resolvedRecipeName ? "tailored" : "canonical"}
         shareUrl={shareUrl}
         showStickyHeader={false}
         favorite={Boolean(savedEntry)}
         onToggleFavorite={handleToggleSaveRecipe}
         isPersonalized={isDirty}
         onRequestPersonalization={handleOpenPersonalization}
-        onResetToOriginal={isDirty ? handleResetToCanonical : undefined}
-        resetLabel={tpl(cms.ui.recipeResetPreset, {name: referenceName})}
+        onResetToOriginal={isDirty || resolvedRecipeName ? handleResetToCanonical : undefined}
+        resetLabel={cms.ui.recipeResetPreset}
+        resetTitle={referenceName}
+        recipeName={resolvedRecipeName}
+        onRenameRecipe={isDirty || resolvedRecipeName ? handleRenameRecipe : undefined}
         selectedToppingConcept={selectedToppingConcept}
         onSelectTopping={(recipeId) => {
           const toppingRecipe = TOPPING_LIBRARY[recipeId];

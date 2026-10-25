@@ -28,9 +28,11 @@ export const JA_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_JA,
   inspirationI18n: INSPIRATION_I18N_JA,
   ui: {
-    recipeCustomizedFrom: "調整済み・基準 {name}",
-    recipePresetReference: "{name}の設定",
-    recipeResetPreset: "{name}に戻す",
+    recipeNameEdit: "レシピ名を変更",
+    recipeNameLabel: "レシピ名",
+    recipeNamePlaceholder: "例：マリオのお気に入り",
+    recipeNameConfirm: "名前を確定",
+    recipeResetPreset: "リセット",
 
     recipeOpenCreate: "このスタイルを作成画面で使う",
     createSourceTitle: "{style}から始める",

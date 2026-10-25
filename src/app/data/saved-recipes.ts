@@ -31,9 +31,20 @@ export interface SavedRecipe {
   createdAt: number;
   styleId: string;
   styleName: string;
+  name?: string;
   versionId: string | null;
   params: SavedRecipeParams;
   score?: number;
+}
+
+export const MAX_RECIPE_NAME_LENGTH = 80;
+export function normalizeRecipeName(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  return value.replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, MAX_RECIPE_NAME_LENGTH).trim() || undefined;
+}
+
+export function renameSavedRecipeIn(recipes: readonly SavedRecipe[], id: string, name: string): SavedRecipe[] {
+  return recipes.map(recipe => recipe.id === id ? { ...recipe, name: normalizeRecipeName(name) } : recipe);
 }
 
 export function savedRecipeKey(styleId: string, params: SavedRecipeParams): string {

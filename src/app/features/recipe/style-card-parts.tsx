@@ -16,25 +16,21 @@ import { uiMessage } from "../../i18n/ui-messages";
  * «livello · ore» in basso). Un solo linguaggio: in alto a destra la
  * compatibilità con la tua cucina, in basso solo segnali utili alla scelta. */
 
-/** Sotto questo margine il «→ migliore» è rumore: la card resta pulita. */
-const HEADROOM_MIN = 8;
-
-export function CompatibilityPill({ now, best, basis, blocked, className }: { now: number; best: number; basis?: string; blocked?: boolean; className?: string }) {
-  const headroom = best - now >= HEADROOM_MIN ? best : null;
-  const label = headroom
-    ? uiMessage("pages.explore.compatibilityOptimizable", [now, headroom])
-    : uiMessage("pages.explore.compatibility", [now]);
+/** The original is heart + score. A tailored proposal shows its actual
+ * starting score, then the resulting score, even when the two are equal. */
+export function CompatibilityPill({ now, original, blocked, labelled = false, className }: { now: number; original?: number; blocked?: boolean; labelled?: boolean; className?: string }) {
+  const { cms } = useCms();
+  const label = original === undefined ? `${cms.ui.scoreBasisOriginal} · ${uiMessage("pages.explore.compatibility", [now])}`
+    : `${cms.ui.scoreBasisOriginal} ${original} → ${cms.ui.scoreBasisTailored} ${now}`;
   return (
     <p className={`compat-pill${blocked ? " compat-pill--blocked" : ""}${className ? ` ${className}` : ""}`} title={label} aria-label={label}>
-      {basis && <span className="compat-pill__basis">{basis}</span>}
+      {original !== undefined && <>
+        <span className="compat-pill__original">{original}</span>
+        <span className="compat-pill__arrow" aria-hidden="true">→</span>
+        {labelled && <span className="compat-pill__label">{cms.ui.scoreBasisTailored}</span>}
+      </>}
       <RecipeMatchIcon score={now} blocked={blocked} size={14} aria-hidden="true" className="compat-pill__icon" />
       <span className="compat-pill__now">{now}</span>
-      {headroom && (
-        <>
-          <span className="compat-pill__arrow" aria-hidden="true">→</span>
-          <span className="compat-pill__best">{headroom}</span>
-        </>
-      )}
     </p>
   );
 }

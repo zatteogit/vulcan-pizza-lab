@@ -7,7 +7,7 @@
 | Punto | Domanda dell’utente | Informazione visibile | A richiesta |
 |---|---|---|---|
 | Primo Crea | Come ottengo consigli personali? | Richiamo compatto ai filtri, una riga, una sola azione e chiusura persistente | Cucina, dispensa e livello nei controlli esistenti |
-| Card | Mi interessa e c’è una condizione decisiva? | Foto, stile, origine, voto con riferimento originale/su misura e al massimo due pill dentro la foto | Requisiti completi, difficoltà e spiegazioni nella scheda |
+| Card | Mi interessa e c’è una condizione decisiva? | Foto, stile, origine, voto (cuore nell’originale, confronto originale → cuore nella proposta) e al massimo due pill dentro la foto | Requisiti completi, difficoltà e spiegazioni nella scheda |
 | Scheda | Cosa sto per generare? | Proposta, requisiti, confronto in colonne originale/su misura | Dettagli tecnici dello stile |
 | Ricetta | Quanto è adatta e cosa devo ancora controllare? | Voto globale, stato operativo, condizioni sintetiche, azioni | Cinque assi, limiti del voto, requisiti completi e confronto |
 | Ottimizzazione | Cosa cambierà se applico? | Confronto attuale/ottimizzata prima dell’azione | Motivazioni e assi nel dettaglio |
@@ -27,7 +27,7 @@ Le pill sostituiscono il vecchio livello “Principiante · ore”, non costitui
 
 ## Voto, stato e icone
 
-Il numero indica la compatibilità globale; il riferimento “Originale” o “Su misura” chiarisce quale ricetta è stata valutata. I cuori tornano come linguaggio visivo dell’affinità: stretta di mano/cuore, cuore, pulsazione, cuore spezzato, cuore disattivato nelle cinque fasce già previste. Il salvataggio conserva il segnalibro. Un blocco usa il cuore disattivato anche quando il punteggio, da solo, non raccontasse il vincolo.
+Il numero indica la compatibilità globale; sulle card di Scopri resta cuore + voto, su Crea il passaggio `85 → ♡ 91` confronta l’originale con la proposta. Le etichette testuali non vengono ripetute sulle card; dentro la scheda il confronto è esplicito: `85 → Su misura ♡ 91`. Le due pill usano gli stessi valori, e il riferimento completo resta accessibile. I cuori tornano come linguaggio visivo dell’affinità: stretta di mano/cuore, cuore, pulsazione, cuore spezzato, cuore disattivato nelle cinque fasce già previste. Il salvataggio conserva il segnalibro. Un blocco usa il cuore disattivato anche quando il punteggio, da solo, non raccontasse il vincolo.
 
 “Su misura” descrive modifiche effettive o un metodo adattato. “Da verificare” descrive avvisi senza modifiche effettive, ad esempio una dispensa incompleta. “Così non è fattibile” resta il blocco operativo. La sezione intermedia di Crea si chiama “Con condizioni”, perché l’esito `warnings` comprende sia adattamenti sia requisiti da verificare.
 
@@ -45,4 +45,12 @@ La tabella è semantica e mantiene le intestazioni anche a 390 px. Nella ricetta
 - Controllo visivo desktop e a 390 px di richiamo iniziale, card, confronto e riepilogo.
 - Controllo nel browser di apertura filtri, chiusura persistente, espansione dei dettagli, stato da verificare/su misura/bloccato e assenza di overflow.
 
-Esito finale: 501 test superati, uno saltato (36 file); typecheck, guard del progetto, build app/Worker e budget prestazionali superati. Le 29 card rispettano il limite di pill e nessun elemento deborda a 320, 390, 768 e 1440 px.
+Esito finale: 505 test superati, uno saltato (36 file); typecheck, guard del progetto, build app/Worker e budget prestazionali superati. Le 29 card rispettano il limite di pill e nessun elemento deborda a 320, 390, 768 e 1440 px.
+
+## Titolo e nomi delle versioni
+
+L’occhiello usa le stesse etichette “Originale” / “Su misura” del riepilogo. Il riferimento non viene ripetuto accanto al reset: il pulsante dice “Ripristina” e mantiene il profilo nel tooltip. La selezione del riferimento resta sotto.
+
+Una versione su misura può avere un nome facoltativo, modificabile dalla matita accanto al titolo. Il nome sostituisce il titolo principale; lo stile rimane sotto come contesto. Si salva nel ricettario, si conserva in bozza, esportazione/importazione e link. La rinomina di una voce salvata conserva ID, data e parametri; non rimuove e ricrea la voce. Annullare non cambia nulla; un nome vuoto torna al titolo dello stile. Il ripristino della base e la selezione di un altro preset cancellano il nome dalla proposta corrente, conservando le versioni già salvate.
+
+I link del ricettario aprono esplicitamente la scheda Ricetta: la presenza di un condimento non deve farli atterrare sul solo ripieno/condimento.

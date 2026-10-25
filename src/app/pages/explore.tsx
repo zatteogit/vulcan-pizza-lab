@@ -719,7 +719,7 @@ function StyleCatalogCard({
           {/* Compatibilità con la tua cucina — in alto a destra, come in Crea */}
           {match && (
             <div className="explore-card__match">
-              <CompatibilityPill now={match.now} best={match.best} basis={cms.ui.scoreBasisOriginal} blocked={match.recipe.verdict.outcome === "not_feasible"} />
+              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} />
             </div>
           )}
 
