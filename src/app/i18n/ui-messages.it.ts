@@ -3,6 +3,23 @@
  * Le chiavi sono stabili: namespace + slug + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "recipe.reference.outside": "Ispirata alla Napoletana STG · fuori disciplinare",
+  "recipe.reference.source": "Riferimento: Napoletana STG",
+  "recipe.reference.description": "Una versione ispirata alla Napoletana STG, adattata alla tua cucina. I requisiti che cambiano sono indicati qui sopra.",
+  "recipe.reference.details": "Ricetta e disciplinare",
+  "recipe.reference.disclaimer": "Il punteggio misura fattibilità e vicinanza allo stile: non attesta la conformità STG. L’app confronta alcuni parametri, ma non verifica l’intero disciplinare, la provenienza degli ingredienti o l’esecuzione.",
+  "recipe.reference.specification": "Disciplinare STG · MASAF, art. 3",
+  "recipe.reference.wood": "Cottura senza legna: il disciplinare richiede esclusivamente il forno a legna.",
+  "recipe.reference.bake": "Tempo di cottura fuori dall’intervallo di 60–90 secondi previsto dal disciplinare.",
+  "recipe.reference.flour": "Forza della farina fuori dall’intervallo W220–380 del disciplinare.",
+  "recipe.reference.pl": "Rapporto P/L fuori dall’intervallo 0,50–0,70 del disciplinare.",
+  "recipe.reference.fermentation": "Durata di lievitazione diversa dal processo a temperatura ambiente previsto dal disciplinare (6–14 ore complessive).",
+  "recipe.reference.cold": "Maturazione refrigerata anziché il processo a temperatura ambiente del disciplinare.",
+  "recipe.reference.preferment": "Uso di un preimpasto: il disciplinare prevede un impasto diretto.",
+  "recipe.reference.yeast": "Lievito madre al posto del lievito di birra previsto dal disciplinare.",
+  "recipe.reference.additions": "Grassi o zuccheri aggiunti all’impasto, assenti nella formula del disciplinare.",
+  "recipe.reference.weight": "Peso del panetto fuori dall’intervallo di 180–250 g previsto dal disciplinare.",
+  "recipe.reference.topping": "Condimento diverso dalle versioni Margherita e Marinara previste dal disciplinare.",
   "components.ds.select.placeholder": "Seleziona...",
   "components.ds.spinner.caricamento-9f21540f": "Caricamento",
   "components.shared.app-shell.crea-e7c107d0": "Crea",

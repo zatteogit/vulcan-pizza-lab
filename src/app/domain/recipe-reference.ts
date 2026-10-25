@@ -1,0 +1,32 @@
+import type { GeneratedRecipe, OvenType } from "./pizza-engine";
+
+export type StgDeparture = "wood" | "bake" | "flour" | "pl" | "fermentation" | "cold" | "preferment" | "yeast" | "additions" | "weight" | "topping";
+
+/** Known departures from the MASAF STG specification, art. 3.
+ * This is deliberately NOT a conformity certificate: provenance, shaping,
+ * dough temperature and the full production process are not verified here.
+ * Never use the authenticity score (distance from a style) as a legal test. */
+export function stgDepartures(recipe: GeneratedRecipe, oven?: OvenType): StgDeparture[] {
+  if (recipe.style.id !== "napoletana_stg") return [];
+  const result: StgDeparture[] = [];
+  if (oven ? oven !== "wood" : recipe.verdict.adaptations.some(a => a.key === "gen.notWoodOven")) result.push("wood");
+  if (recipe.cook_time_sec < 60 || recipe.cook_time_sec > 90) result.push("bake");
+  if (recipe.flour_w < 220 || recipe.flour_w > 380) result.push("flour");
+  if (recipe.flour_pl < 0.5 || recipe.flour_pl > 0.7) result.push("pl");
+  if (recipe.fermentation_hours < 6 || recipe.fermentation_hours > 14) result.push("fermentation");
+  // A refrigerated process is a known departure; ambient temperature alone
+  // cannot prove compliance with the required dough temperature.
+  if (recipe.fermentation_temp_c <= 10) result.push("cold");
+  if (recipe.has_pre_ferment) result.push("preferment");
+  if (recipe.yeast_type === "sourdough") result.push("yeast");
+  if (recipe.fat_g > 0 || recipe.sugar_g > 0) result.push("additions");
+  if (recipe.ball_weight_g < 180 || recipe.ball_weight_g > 250) result.push("weight");
+  if (recipe.style.default_topping_ref && !["margherita_napoletana_avpn", "marinara_avpn"].includes(recipe.style.default_topping_ref)) result.push("topping");
+  return result;
+}
+
+/** Catalog titles stay untouched. Executable recipes with known departures
+ * lose the protected qualifier, including when their numeric score is high. */
+export function recipeDisplayName(recipe: GeneratedRecipe, oven?: OvenType): string {
+  return stgDepartures(recipe, oven).length ? "Napoletana" : recipe.style.name;
+}

@@ -1,5 +1,23 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "recipe.reference.outside": "Inspirada na Napoletana STG · fora da especificação",
+  "recipe.reference.source": "Referência: Napoletana STG",
+  "recipe.reference.description": "Uma versão inspirada na Napoletana STG, adaptada à sua cozinha. Os requisitos alterados estão indicados acima.",
+  "recipe.reference.details": "Receita e especificação",
+  "recipe.reference.disclaimer": "A pontuação mede viabilidade e proximidade ao estilo; não certifica conformidade STG. A app compara alguns parâmetros, mas não verifica toda a especificação, a origem dos ingredientes ou a execução.",
+  "recipe.reference.specification": "Especificação STG · MASAF, art. 3",
+  "recipe.reference.wood": "Cozedura sem lenha: a especificação exige exclusivamente forno a lenha.",
+  "recipe.reference.bake": "Tempo de cozedura fora do intervalo previsto de 60–90 segundos.",
+  "recipe.reference.flour": "Força da farinha fora do intervalo previsto W220–380.",
+  "recipe.reference.pl": "Relação P/L fora do intervalo previsto 0,50–0,70.",
+  "recipe.reference.fermentation": "Duração de fermentação diferente do processo previsto à temperatura ambiente (6–14 horas no total).",
+  "recipe.reference.cold": "Maturação refrigerada em vez do processo previsto à temperatura ambiente.",
+  "recipe.reference.preferment": "Uso de pré-fermento: a especificação prevê massa direta.",
+  "recipe.reference.yeast": "Massa-mãe em vez do fermento de padeiro previsto.",
+  "recipe.reference.additions": "Gorduras ou açúcares adicionados à massa, ausentes da fórmula prevista.",
+  "recipe.reference.weight": "Peso da bola fora do intervalo previsto de 180–250 g.",
+  "recipe.reference.topping": "Cobertura diferente das versões Margherita e Marinara previstas.",
+
   "components.ds.select.placeholder": "Selecione...",
   "components.ds.spinner.caricamento-9f21540f": "Carregando",
   "components.shared.app-shell.crea-e7c107d0": "Criar",

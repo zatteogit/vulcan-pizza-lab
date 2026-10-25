@@ -1,3 +1,4 @@
+import { recipeDisplayName } from "../domain/recipe-reference";
 import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { Bookmark, ChevronRight, Heart, Info, Lightbulb, OctagonAlert, SlidersHorizontal, Sparkles, Stethoscope, TriangleAlert, X } from "lucide-react";
@@ -847,7 +848,7 @@ export function HomePage() {
     } else {
       saveRecipe({
         styleId: selectedStyle.id,
-        styleName: selectedStyle.name,
+        styleName: recipeDisplayName(recipe, engineConstraints.oven_type),
         name: normalizeRecipeName(resolvedRecipeName),
         versionId: activeVersionId,
         params: currentSaveParams,
@@ -858,7 +859,7 @@ export function HomePage() {
     }
     setSavedTick((v) => v + 1);
     return ok;
-  }, [selectedStyle, recipe, savedEntry, activeVersionId, currentSaveParams, resolvedRecipeName]);
+  }, [selectedStyle, recipe, savedEntry, activeVersionId, currentSaveParams, engineConstraints.oven_type, resolvedRecipeName]);
 
   /* ═══ Modello "dirty" (redesign lug 2026) ═══
      L'originale del Crea è il centro-range dello stile (lo stesso che

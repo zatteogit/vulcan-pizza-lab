@@ -1,5 +1,23 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "recipe.reference.outside": "Inspirée de la Napoletana STG · hors cahier des charges",
+  "recipe.reference.source": "Référence : Napoletana STG",
+  "recipe.reference.description": "Une version inspirée de la Napoletana STG, adaptée à votre cuisine. Les exigences modifiées figurent ci-dessus.",
+  "recipe.reference.details": "Recette et cahier des charges",
+  "recipe.reference.disclaimer": "Le score mesure la faisabilité et la proximité du style ; il ne certifie pas la conformité STG. L’application compare certains paramètres, sans vérifier tout le cahier des charges, la provenance des ingrédients ou l’exécution.",
+  "recipe.reference.specification": "Cahier des charges STG · MASAF, art. 3",
+  "recipe.reference.wood": "Cuisson sans bois : le cahier des charges impose exclusivement un four à bois.",
+  "recipe.reference.bake": "Temps de cuisson hors de l’intervalle prévu de 60–90 secondes.",
+  "recipe.reference.flour": "Force de farine hors de l’intervalle prévu W220–380.",
+  "recipe.reference.pl": "Rapport P/L hors de l’intervalle prévu 0,50–0,70.",
+  "recipe.reference.fermentation": "Durée de fermentation différente du procédé prévu à température ambiante (6–14 heures au total).",
+  "recipe.reference.cold": "Maturation réfrigérée au lieu du procédé à température ambiante prévu.",
+  "recipe.reference.preferment": "Utilisation d’un préferment : le cahier des charges prévoit une pâte directe.",
+  "recipe.reference.yeast": "Levain à la place de la levure de boulanger prévue.",
+  "recipe.reference.additions": "Graisses ou sucres ajoutés à la pâte, absents de la formule prévue.",
+  "recipe.reference.weight": "Poids du pâton hors de l’intervalle prévu de 180–250 g.",
+  "recipe.reference.topping": "Garniture différente des versions Margherita et Marinara prévues.",
+
   "components.ds.select.placeholder": "Sélectionner...",
   "components.ds.spinner.caricamento-9f21540f": "Chargement",
   "components.shared.app-shell.crea-e7c107d0": "Créer",

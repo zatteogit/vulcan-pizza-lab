@@ -66,7 +66,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       flour_pl_range: [0.55, 0.70], // STG e AVPN: 0,50–0,70
       hydration_pct_range: [55, 62],
       // Audit motore 2026-06: ripristinato a 2.8% (disciplinare AVPN ~50 g/L
-      // acqua → a H58-62 ≈ 2.6-3.0% sulla farina). Lo stile è certificato STG:
+      // acqua → a H58-62 ≈ 2.6-3.0% sulla farina). Lo stile ha la STG come riferimento:
       // l'omogeneità con Canotto/Teglia NON deve prevalere sul disciplinare per
       // lo stile-bandiera. (Audit role-play — finding F9.)
       salt_pct: 2.8,

@@ -21,7 +21,7 @@ export const FR_LOCALE: CmsContent = {
     scoreTipTitle: "Comprendre le score",
     scoreTipOriginal: "Recette originale, évaluée pour votre cuisine.",
     scoreTipTailored: "Version avec les adaptations proposées.",
-    scoreTipGlobal: "Le score tient compte de la faisabilité et de l’authenticité. Les compromis importants le réduisent.",
+    scoreTipGlobal: "Le score tient compte de la faisabilité et de l’authenticité. Il ne certifie pas la conformité à un cahier des charges.",
     scoreTipBlocked: "Certains prérequis ne sont pas remplis : ouvrez le détail.",
     pantrySelectionSummary: "Sélectionnés : {n} · Exclus : {excluded}",
     pantryWValue: "W{w}",

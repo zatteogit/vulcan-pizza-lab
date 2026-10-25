@@ -1,3 +1,5 @@
+import { RecipeReferenceNote } from "./recipe-reference-note";
+import { recipeDisplayName } from "../../domain/recipe-reference";
 /* ═══ RECIPE VIEW — impianto condiviso scheda ricetta (VPL-081) ═══
  * Unifica la scheda raggiunta da Scopri (/recipe/:id) e quella generata da
  * Crea (home result): STESSA view con tab Ricetta / Procedimento,
@@ -463,8 +465,10 @@ export function RecipeView({
               className="recipe-view-title-row"
               transition={motionSpring.recipeSection}
             >
-              <RecipeTitle styleName={style.name} name={recipeName} onRename={onRenameRecipe} />
+              <RecipeTitle styleName={recipeDisplayName(recipe, constraints.oven_type)} name={recipeName} onRename={onRenameRecipe} />
             </motion.div>
+
+            <RecipeReferenceNote recipe={recipe} oven={constraints.oven_type} />
 
             {/* Description + Tags inside the card (rendered only in Ricetta tab) */}
             <AnimatePresence>

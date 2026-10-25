@@ -1,5 +1,23 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "recipe.reference.outside": "Napoletana STGを参考にしたレシピ · 規定外",
+  "recipe.reference.source": "参考：Napoletana STG",
+  "recipe.reference.description": "Napoletana STGを参考に、キッチンに合わせたレシピです。変更された要件は上記をご覧ください。",
+  "recipe.reference.details": "レシピと規定",
+  "recipe.reference.disclaimer": "スコアは実現性とスタイルへの近さを示し、STG適合を認証しません。一部の数値は比較しますが、規定全体、材料の産地、実際の作業は確認しません。",
+  "recipe.reference.specification": "STG規定 · MASAF、第3条",
+  "recipe.reference.wood": "薪を使わない焼成：規定では薪窯のみが認められています。",
+  "recipe.reference.bake": "焼成時間が規定の60〜90秒の範囲外です。",
+  "recipe.reference.flour": "小麦粉の強度が規定のW220〜380の範囲外です。",
+  "recipe.reference.pl": "P/L比が規定の0.50〜0.70の範囲外です。",
+  "recipe.reference.fermentation": "発酵時間が規定の常温工程（合計6〜14時間）と異なります。",
+  "recipe.reference.cold": "規定の常温工程ではなく冷蔵熟成です。",
+  "recipe.reference.preferment": "前発酵種を使用：規定ではストレート法を指定しています。",
+  "recipe.reference.yeast": "規定のパン酵母ではなくサワードウを使用しています。",
+  "recipe.reference.additions": "規定の配合にない油脂または糖を生地に追加しています。",
+  "recipe.reference.weight": "生地玉の重さが規定の180〜250gの範囲外です。",
+  "recipe.reference.topping": "トッピングが規定のマルゲリータおよびマリナーラと異なります。",
+
   "components.ds.select.placeholder": "選択...",
   "components.ds.spinner.caricamento-9f21540f": "読み込み中",
   "components.shared.app-shell.crea-e7c107d0": "作る",

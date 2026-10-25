@@ -31,7 +31,7 @@ export const EN_LOCALE: CmsContent = {
     scoreTipTitle: "How to read the score",
     scoreTipOriginal: "Original recipe, assessed for your kitchen.",
     scoreTipTailored: "Version with the proposed adaptations.",
-    scoreTipGlobal: "The score considers feasibility and authenticity. Significant compromises lower it.",
+    scoreTipGlobal: "The score considers feasibility and authenticity. It does not certify compliance with a specification.",
     scoreTipBlocked: "Some requirements are unmet: open the details.",
     pantrySelectionSummary: "Selected: {n} · Excluded: {excluded}",
     pantryWValue: "W{w}",

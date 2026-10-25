@@ -21,7 +21,7 @@ export const DE_LOCALE: CmsContent = {
     scoreTipTitle: "So liest du die Bewertung",
     scoreTipOriginal: "Originalrezept, für deine Küche bewertet.",
     scoreTipTailored: "Version mit den vorgeschlagenen Anpassungen.",
-    scoreTipGlobal: "Die Bewertung berücksichtigt Machbarkeit und Authentizität. Größere Kompromisse senken sie.",
+    scoreTipGlobal: "Die Bewertung berücksichtigt Machbarkeit und Authentizität. Sie bestätigt keine Konformität mit einer Spezifikation.",
     scoreTipBlocked: "Einige Voraussetzungen fehlen: öffne die Details.",
     pantrySelectionSummary: "Ausgewählt: {n} · Ausgeschlossen: {excluded}",
     pantryWValue: "W{w}",

@@ -31,7 +31,7 @@ export const JA_LOCALE: CmsContent = {
     scoreTipTitle: "スコアの見方",
     scoreTipOriginal: "オリジナルのレシピを、あなたのキッチンに合わせて評価。",
     scoreTipTailored: "提案された調整を反映したバージョン。",
-    scoreTipGlobal: "スコアには実現性と本来のスタイルへの忠実さが反映されます。大きな妥協はスコアを下げます。",
+    scoreTipGlobal: "スコアは実現性と本来のスタイルへの忠実さを示します。規定への適合を認証するものではありません。",
     scoreTipBlocked: "満たされていない条件があります。詳細を開いてください。",
     pantrySelectionSummary: "選択：{n}・除外：{excluded}",
     pantryWValue: "W{w}",
