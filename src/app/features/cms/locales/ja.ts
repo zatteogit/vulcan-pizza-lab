@@ -452,23 +452,19 @@ export const JA_LOCALE: CmsContent = {
   skillLevels: {
     "1": {
       name: "\u521D\u5FC3\u8005",
-      description:
-        "\u30D4\u30B6\u4F5C\u308A\u304C\u521D\u3081\u3066",
+      description: "生地作りは初めて",
     },
     "2": {
       name: "\u4E2D\u7D1A\u8005",
-      description:
-        "\u4F55\u5EA6\u304B\u30D4\u30B6\u3092\u4F5C\u3063\u305F\u3053\u3068\u304C\u3042\u308B",
+      description: "何度かピザを作ったことがある",
     },
     "3": {
       name: "\u4E0A\u7D1A\u8005",
-      description:
-        "\u6280\u8853\u3068\u30D1\u30E9\u30E1\u30FC\u30BF\u3092\u7406\u89E3\u3057\u3066\u3044\u308B",
+      description: "折りたたみと発酵を管理できる",
     },
     "4": {
       name: "\u30A8\u30AD\u30B9\u30D1\u30FC\u30C8",
-      description:
-        "\u6280\u8853\u3092\u5B8C\u5168\u306B\u30DE\u30B9\u30BF\u30FC",
+      description: "生地・時間・技法を調整できる",
     },
   },
   families: {

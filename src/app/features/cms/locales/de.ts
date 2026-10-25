@@ -397,20 +397,19 @@ export const DE_LOCALE: CmsContent = {
   skillLevels: {
     "1": {
       name: "Anf\u00E4nger",
-      description: "Erste Pizza-Erfahrungen",
+      description: "Ich habe noch nie Teig gemacht",
     },
     "2": {
       name: "Fortgeschritten",
-      description: "Ich habe schon mehrmals Pizza gemacht",
+      description: "Ich habe schon einige Pizzen gemacht",
     },
     "3": {
       name: "Erfahren",
-      description: "Ich kenne Techniken und Parameter",
+      description: "Ich beherrsche Falten und Teigführung",
     },
     "4": {
       name: "Experte",
-      description:
-        "Vollst\u00E4ndige Beherrschung der Techniken",
+      description: "Ich passe Teige, Zeiten und Techniken an",
     },
   },
   families: {

@@ -906,10 +906,10 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
                       </motion.div>
                       <div className="profile-ftu__option-body">
                         <div className="profile-ftu__option-name">
-                          {skill.name}
+                          {cms.skillLevels[String(skill.level)]?.name ?? skill.name}
                         </div>
                         <div className="type-data-sm profile-ftu__option-meta">
-                          {skill.description}
+                          {cms.skillLevels[String(skill.level)]?.description ?? skill.description}
                         </div>
                       </div>
                       {active && (
@@ -1792,7 +1792,7 @@ export function ProfilePage() {
                       LV{skill.level}
                     </motion.span>
                     <span className="type-body-sm profile-skill-grid__name">
-                      {skill.name}
+                      {cms.skillLevels[String(skill.level)]?.name ?? skill.name}
                     </span>
                     <AnimatePresence>
                       {active && (
@@ -1809,7 +1809,7 @@ export function ProfilePage() {
                     </AnimatePresence>
                   </div>
                   <span className="type-data-xs profile-skill-grid__desc">
-                    {skill.description}
+                    {cms.skillLevels[String(skill.level)]?.description ?? skill.description}
                   </span>
                 </motion.button>
               );

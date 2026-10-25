@@ -7793,18 +7793,42 @@
     opacity: 1;
   }
 
-  /* ── Skill chips ── */
+  /* ── Skill choices: concrete experience alongside each level ── */
   .needs-skill-chips {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--gap-xs);
     margin-top: var(--space-3);
   }
 
+  .needs-skill-chips .ds-chip {
+    min-width: 0;
+    height: 100%;
+    justify-content: flex-start;
+    text-align: start;
+    white-space: normal;
+    border-radius: var(--radius-xl);
+  }
+
+  .needs-skill-chips__copy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .needs-skill-chips__name {
+    font-weight: var(--weight-semibold);
+  }
+
+  .needs-skill-chips__description {
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-regular);
+    line-height: var(--leading-normal);
+  }
+
   @media (min-width: 1024px) {
     .needs-skill-chips {
-      justify-content: flex-start;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 

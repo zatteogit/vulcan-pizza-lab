@@ -892,7 +892,7 @@ export function UserNeeds({
                     <div className={compact ? "needs-skill-chips needs-skill-chips--compact" : "needs-skill-chips"}>
                       {SKILL_LEVELS.map((sl) => {
                         const cmsSkill = cms.skillLevels[String(sl.level)];
-                        return (<Chip key={sl.level} label={cmsSkill?.name ?? sl.name} active={constraints.skill_level === sl.level} onToggle={() => update("skill_level", sl.level)} />);
+                        return (<Chip key={sl.level} label={<span className="needs-skill-chips__copy"><span className="needs-skill-chips__name">{cmsSkill?.name ?? sl.name}</span><span className="needs-skill-chips__description">{cmsSkill?.description ?? sl.description}</span></span>} active={constraints.skill_level === sl.level} onToggle={() => update("skill_level", sl.level)} />);
                       })}
                     </div>
                   </div>
