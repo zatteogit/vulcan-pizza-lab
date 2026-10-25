@@ -10,7 +10,7 @@ const msg = (key: string, fallback: string, params?: EngineMsg["params"]): Engin
 
 /** Card policy: at most two decision signals. Unverified flour is a concrete
  * condition too: an empty inventory never implies the required flour is available. */
-export function recipeCardSignals(recipe: GeneratedRecipe): CardSignal[] {
+export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "explore" = "create"): CardSignal[] {
   const { blockers, conditions = [], adaptations } = recipe.verdict;
   if (blockers.length) {
     const b = blockers.find(b => b.kind === "oven_too_cold") ?? blockers[0];
@@ -33,6 +33,9 @@ export function recipeCardSignals(recipe: GeneratedRecipe): CardSignal[] {
     add("oven", msg(...keys[method.key]));
   }
   if (!method && recipe.scores.authenticity < 60) add("check", msg("card.authenticity", "Autenticità ridotta"));
+  // Discovery cards introduce the style. Pantry/equipment prerequisites
+  // remain inspectable in the detail and actionable in Create.
+  if (context === "explore") return result.slice(0, 2);
   for (const c of [...conditions].sort((a, b) => Number(b.status === "missing") - Number(a.status === "missing"))) {
     if (c.kind === "pan") add("pan", c.status === "missing" ? msg("card.panMissing", "Serve una teglia") : msg("card.panCheck", "Se hai una teglia"));
     if (c.kind === "deck") add("oven", c.status === "missing" ? msg("need.deck", "Serve pietra o acciaio") : msg("need.checkDeck", "Se hai pietra o acciaio"));

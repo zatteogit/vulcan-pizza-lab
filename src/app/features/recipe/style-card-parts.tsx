@@ -101,10 +101,10 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
 
 /** A maximum of two useful signals, inside the photo. The duration describes
  * the complete generated timeline, not fermentation alone. */
-export function StyleMetaChip({ style, cms, recipe }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe }) {
+export function StyleMetaChip({ style, cms, recipe, context = "create" }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe; context?: "create" | "explore" }) {
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
-  const signals = recipe ? recipeCardSignals(recipe) : [];
+  const signals = recipe ? recipeCardSignals(recipe, context) : [];
   const icons = { oven: Flame, time: Clock, pan: Flame, flour: Wheat, check: ScanLine };
   const duration = recipe
     ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)
