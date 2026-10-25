@@ -10,6 +10,7 @@ import { savePantryConstraints } from "../../adapters/browser/pantry-storage";
 import { SupplyPolicyControls } from "./supply-policy-controls";
 import { t } from "../cms/i18n";
 import { useCms } from "../cms/cms-context";
+import { pantryIngredientNames } from "./pantry-ingredient-names";
 
 type Status = "unknown" | "available" | "excluded";
 type Tab = "flour" | "dough" | "topping";
@@ -19,7 +20,7 @@ export function PantryEditor({ constraints, onChange, onClose, flourOptions }: {
   constraints: UserConstraints; onChange: (next: UserConstraints) => void; onClose: () => void;
   flourOptions: { id: string; name: string; w: string; detail: string }[];
 }) {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const [tab, setTab] = useState<Tab>("flour");
   const [query, setQuery] = useState("");
@@ -30,7 +31,7 @@ export function PantryEditor({ constraints, onChange, onClose, flourOptions }: {
     onChange(next);
     savePantryConstraints(next);
   };
-  const extraIngredients = [ui.salt, ui.sugar, "Olio EVO", "Burro", "Strutto", "Acqua"];
+  const ingredientNames = useMemo(() => pantryIngredientNames(cms), [cms]);
   // Stable keys come from the engine's source ingredients, never translated copy.
   const doughNames = ["Sale", "Zucchero", "Olio EVO", "Burro", "Strutto", "Acqua"];
   const flourItems: Item[] = [
@@ -45,13 +46,13 @@ export function PantryEditor({ constraints, onChange, onClose, flourOptions }: {
     const unique = new Map<string, Item>();
     for (const recipe of Object.values(TOPPING_LIBRARY)) for (const ingredient of recipe.ingredients) {
       const id = pantryIngredientId(ingredient.name);
-      if (!unique.has(id)) unique.set(id, { id, name: ingredient.name });
+      if (!unique.has(id)) unique.set(id, { id, name: ingredientNames.get(id) ?? ingredient.name });
     }
-    return [...unique.values()].sort((a,b) => a.name.localeCompare(b.name));
-  }, []);
+    return [...unique.values()].sort((a,b) => a.name.localeCompare(b.name, bcp47));
+  }, [ingredientNames, bcp47]);
   const ingredients: Item[] = tab === "flour" ? flourItems : tab === "topping" ? toppings : [
     ...["fresh", "dry", "sourdough"].map(id => ({ id, name:cms.yeastLabels[id] ?? id, yeast:true })),
-    ...doughNames.map((name, i) => ({id:pantryIngredientId(name), name:extraIngredients[i]})),
+    ...doughNames.map(name => ({id:pantryIngredientId(name), name:ingredientNames.get(pantryIngredientId(name)) ?? name})),
   ];
   const normalizedQuery = query.trim().toLocaleLowerCase();
   const filtered = ingredients.filter(item => `${constraints.pantry_flour_details?.[item.id]?.name ?? ""} ${constraints.pantry_flour_details?.[item.id]?.producer ?? ""} ${item.name} ${item.producer ?? ""}`.toLocaleLowerCase().includes(normalizedQuery));
