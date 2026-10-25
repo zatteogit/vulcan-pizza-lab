@@ -3098,6 +3098,14 @@
   @media (min-width: 768px) {
     .explore-feature__media {
       width: 45%;
+      height: auto;
+      min-height: min(var(--feature-media-height), var(--dimension-viewport-height-40));
+    }
+
+    /* Fill the full row even when the adjacent copy makes the card taller. */
+    .explore-feature__media > .explore-feature__image {
+      position: absolute;
+      inset: 0;
     }
   }
 
