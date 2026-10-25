@@ -11,6 +11,8 @@ import { engineMsgTexts } from "./engine-msg-text";
 export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: GeneratedRecipe; mode: "included" | "preview" }) {
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
+  const fatType = to.style.dough.fat_type;
+  const fatLabel = fatType === "butter" ? cms.ui.fatButter : fatType === "lard" ? cms.ui.fatLard : cms.ui.oilEvo;
   const differences = recipeDifferences(from, to);
   if (!differences.length) return null;
   const pct = (n: number) => `${fmt.number(n, { maximumFractionDigits: 2 })}%`;
@@ -26,7 +28,7 @@ export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: G
       case "change.fermentation": return { key: d.key, label: cms.ui.statFermentation, icon: Timer, before: fmt.durationShort(from.fermentation_hours), after: fmt.durationShort(to.fermentation_hours), beforeSub: fmt.celsius(from.fermentation_temp_c), afterSub: fmt.celsius(to.fermentation_temp_c) };
       case "change.cooking": return { key: d.key, label: cms.ui.statOven, icon: Flame, before: fmt.celsius(from.oven_temp_c), after: fmt.celsius(to.oven_temp_c), beforeSub: fmt.cookTime(from.cook_time_sec), afterSub: fmt.cookTime(to.cook_time_sec) };
       case "change.prefermentOn": case "change.prefermentOff": case "change.prefermentDetails": return { key: d.key, label: cms.configurator.preFermentLabel, icon: FlaskConical, before: pre(from), after: pre(to) };
-      default: return { key: d.key, label: d.key === "change.salt" ? cms.ui.salt : d.key === "change.sugar" ? cms.ui.sugar : to.fat_label, icon: Droplets, before: pct(Number(p.from)), after: pct(Number(p.to)) };
+      default: return { key: d.key, label: d.key === "change.salt" ? cms.ui.salt : d.key === "change.sugar" ? cms.ui.sugar : fatLabel, icon: Droplets, before: pct(Number(p.from)), after: pct(Number(p.to)) };
     }
   });
   const beforeLabel = mode === "included" ? cms.ui.scoreBasisOriginal : cms.ui.recipeCurrentVersion;
