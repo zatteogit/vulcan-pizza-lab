@@ -140,7 +140,7 @@ export const FR_LOCALE: CmsContent = {
     flourUseMedium: "Type 0 de force moyenne",
     flourUseWeak: "Type 00 faible à moyenne",
     verdictTitle: "Ce n'est pas faisable ainsi",
-    verdictOvenTooCold: "Votre four atteint {oven}, ce style demande au moins {min} : ce serait une autre pizza.",
+    verdictOvenTooCold: "La cuisson est réglée à {oven} ; cette méthode nécessite au moins {min}.",
     verdictTimeWindow: "Il faut environ {needed} et vous avez {available} : elle serait prête après l'heure choisie.",
     verdictFermentationTooShort: "Une pousse de {hours} contre un minimum de {min} pour ce style : ce serait une autre pâte.",
     verdictLaterTime: "Choisissez une heure dans au moins {hours}.",
@@ -379,17 +379,17 @@ export const FR_LOCALE: CmsContent = {
   allFamiliesLabel: "Toutes les familles",
   tiers: {
     perfect: {
-      label: "Parfaits",
-      subtitle: "compatibilit\u00E9 maximale",
+      label: "Réalisables",
+      subtitle: "les conditions de la recette sont réunies",
     },
-    good: { label: "Bons", subtitle: "excellent choix" },
+    good: { label: "Avec adaptations", subtitle: "suivez les modifications et vérifiez le nécessaire" },
     challenging: {
       label: "Ambitieux",
       subtitle: "pour les audacieux",
     },
     not_feasible: {
-      label: "Non faisables",
-      subtitle: "il manque des pr\u00E9requis cl\u00E9s (four, exp\u00E9rience)",
+      label: "Non réalisables ainsi",
+      subtitle: "une condition essentielle manque pour cette recette",
     },
   },
   scoreDimensions: {
@@ -401,11 +401,11 @@ export const FR_LOCALE: CmsContent = {
         "\u00C0 quel point la recette respecte le canon du style : ingr\u00E9dients (hydratation, force et P/L de la farine), fermentation et \u00E9quipement. Si votre four reste sous le minimum du style, cet axe s'effondre : certaines pizzas exigent un feu qu'on ne peut pas simuler.",
     },
     feasibility: {
-      label: "Faisabilit\u00E9",
+      label: "Facilité",
       short: "Fais",
       weight: 0.25,
       explain:
-        "\u00C0 quel point c'est r\u00E9aliste pour vous, aujourd'hui : le four p\u00E8se 40 %, la farine 30 % et l'exp\u00E9rience requise 30 %. Baisse si le style demande plus de chaleur que vous n'en avez, ou si l'hydratation d\u00E9passe votre niveau.",
+        "Facilité de réalisation selon le four, la farine et l’expérience. La faisabilité dépend séparément des exigences de la méthode et des adaptations indiquées.",
     },
     digestibility: {
       label: "Digestibilit\u00E9",
@@ -668,6 +668,12 @@ export const FR_LOCALE: CmsContent = {
       "Nécessite minimum {fMin}, vous avez {available}",
     "rec.needsWoodOven": "Se fait au four \u00E0 bois : avec le v\u00F4tre, on s'en approche sans \u00EAtre canonique",
     "rec.ovenAdapted": "Votre four atteint {temp} : température idéale {ideal}, cuisson adaptée",
+    "gen.homeBakingMethod": "Cuisson domestique à {temp} sur plaque retournée préchauffée ; résultat différent de la cuisson originale à {ideal}",
+    "rec.needsDeck": "Cette cuisson nécessite une pierre ou un acier préchauffé, non renseigné dans votre cuisine",
+    "timeline.homeTray.preheat": "Préchauffez le four au maximum ({temp}) avec une plaque retournée à l’intérieur, jusqu’à ce qu’elle soit bien chaude. Terminez le repos de la pâte.",
+    "timeline.homeTray.bake": "Enfournez sur la plaque retournée préchauffée. Vérifiez la coloration de la base et la cuisson avant de sortir.",
+    "gen.fermentationTooLong": "La fermentation de {hours} dépasse le maximum de cette recette ({maxHours}). Choisissez une méthode vérifiée pour une durée plus longue.",
+    "gen.fermentationTemperature": "Cette méthode prévoit une maturation à {requiredTemp} ; {temp} a été sélectionné. Rétablissez le régime prévu ou choisissez une autre méthode vérifiée.",
     "rec.ovenIdeal":
       "Votre four atteint la température idéale ({ideal})",
     "rec.ovenAdequate":

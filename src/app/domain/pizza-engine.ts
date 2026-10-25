@@ -59,6 +59,9 @@ export interface DoughParameters {
   fat_type: "oil" | "butter" | "lard" | "none"; // Audit KB: Chicago usa burro, non olio
   sugar_pct: number;
   fermentation_hours_range: [number, number];
+  /** Temperatura nominale del metodo verificato, non una soglia di sicurezza.
+   * Le altre temperature richiedono un metodo distinto. */
+  fermentation_temp_c?: number;
   process_type: string;
   /** Impasto non lievitato (es. Focaccia di Recco): nessun lievito, le ore di
    *  "fermentazione" rappresentano solo il riposo della sfoglia. VPL-B2. */
@@ -87,6 +90,13 @@ interface BakingParameters {
   temp_c_ideal: number;
   cook_time_sec_range: [number, number];
   cook_time_sec_ideal: number;
+  /** Metodo alternativo documentato, distinto dal range della cottura originale.
+   * Senza questo dato, sotto il minimo non si promette una compensazione. */
+  home_adaptation?: {
+    min_temp_c: number;
+    method: "inverted_tray";
+    source_url: string;
+  };
 }
 
 /** Struttura geometrica della preparazione — Sprint 11 Fase 1.
@@ -277,6 +287,9 @@ export function getDefaultDoughBalls(style: PizzaStyle): number {
 export interface UserConstraints {
   oven_type: OvenType;
   oven_max_temp_c: number;
+  /** Limite fisico del forno scelto, distinto dalla temperatura di cottura.
+   * Una regolazione della ricetta non può aumentare la capacità del forno. */
+  oven_capacity_temp_c?: number;
   skill_level: SkillLevel;
   available_hours: number;
   /** true: available_hours sono le ore fino a un pasto scelto, quindi la
@@ -420,21 +433,22 @@ export type RecipeBlocker =
   | { kind: "oven_too_cold"; oven_c: number; style_min_c: number }
   /** Con un orario del pasto, la timeline non ci sta. */
   | { kind: "time_window"; available_h: number; needed_h: number }
-  /** Le ore costringono a meno della metà della lievitazione minima dello
-   *  stile. `needed_h`: ore fino al pasto per arrivare al minimo dello stile. */
-  | { kind: "fermentation_too_short"; fermentation_h: number; style_min_h: number; needed_h: number };
+  /** La ricetta scende sotto il minimo del metodo selezionato, anche quando
+   * le ore sono scelte a mano. `needed_h` include le lavorazioni. */
+  | { kind: "fermentation_too_short"; fermentation_h: number; style_min_h: number; needed_h: number }
+  | { kind: "fermentation_too_long"; fermentation_h: number; style_max_h: number }
+  | { kind: "fermentation_temperature"; actual_c: number; required_c: number };
 
 export interface RecipeVerdict {
   outcome: RecipeOutcome;
   blockers: RecipeBlocker[];
+  /** Condizioni e modifiche da rispettare: senza applicarle non è un «sì». */
+  adaptations: EngineMsg[];
 }
 
 /** Sotto questa viabilità termica lo stile non si ottiene (stessa soglia
  *  dell'avviso feas.thermalUnviable). */
 const THERMAL_UNVIABLE_THRESHOLD = 0.6;
-/** Sotto questa frazione del minimo dello stile la lievitazione non è più
- *  «accorciata» ma un'altra ricetta. */
-const FERMENTATION_FLOOR_FRACTION = 0.5;
 
 export interface GeneratedRecipe {
   schema_version: string; // Notion Pag.09: recipe data schema version
@@ -712,12 +726,15 @@ const ROOM_TEMP_DIRECT_STYLES = new Set<string>([
 ]);
 
 export function defaultFermentTempC(style: PizzaStyle, fermentationHours: number): number {
+  if (style.dough.fermentation_temp_c !== undefined) return style.dough.fermentation_temp_c;
   if (style.dough.unleavened) return 20; // sfoglia: solo riposo a TA
   if (ROOM_TEMP_DIRECT_STYLES.has(style.id)) return 22; // diretto a TA anche se lungo
   return fermentationHours > 12 ? 4 : 22;
 }
 
 // ═══ THERMAL VIABILITY — "il forno ce la fa?" (Audit role-play giugno 2026) ═══
+// Solo penalità di autenticità/scoring: NON stabilisce la fattibilità.
+// L'esito operativo usa i minimi del metodo e gli adattamenti documentati.
 // Per gli stili in cui la cottura È l'identità (forno a legna richiesto, o minimo
 // stile ≥ 350°C: Napoletana, Canotto, Pinsa, Pala), scendere sotto il minimo
 // significa che leopardatura, cornicione e struttura canonici sono FISICAMENTE
@@ -731,6 +748,59 @@ export function thermalViability(style: PizzaStyle, ovenTemp: number): number {
   if (!tempCritical || ovenTemp >= styleMinTemp) return 1;
   const deficitFrac = (styleMinTemp - ovenTemp) / styleMinTemp; // 0..1
   return Math.max(0.25, 1 - deficitFrac * 1.6);
+}
+
+/** Metodo domestico realmente implementato, non dedotto da un punteggio. */
+function homeBakingAdaptation(style: PizzaStyle, ovenType: OvenType, ovenTemp: number) {
+  const method = style.baking.home_adaptation;
+  return method && HOME_OVENS.has(ovenType) &&
+    ovenTemp >= method.min_temp_c && ovenTemp < style.baking.temp_c_range[0]
+    ? method : null;
+}
+
+function constrainOvenToCapacity(constraints: UserConstraints): UserConstraints {
+  const capacity = constraints.oven_capacity_temp_c;
+  return capacity !== undefined && Number.isFinite(capacity) && capacity > 0
+    ? { ...constraints, oven_max_temp_c: Math.min(constraints.oven_max_temp_c, capacity) }
+    : constraints;
+}
+
+/** Limite operativo: le euristiche di autenticità non stabiliscono se si può
+ * cucinare. Sotto il range serve un metodo alternativo documentato. */
+function minimumSupportedOvenTemp(style: PizzaStyle, constraints: UserConstraints): number {
+  return HOME_OVENS.has(constraints.oven_type)
+    ? Math.min(style.baking.temp_c_range[0], style.baking.home_adaptation?.min_temp_c ?? Infinity)
+    : style.baking.temp_c_range[0];
+}
+
+/** Prerequisiti dichiarati, comuni a consiglio e ricetta: la dispensa vuota
+ * non prova di avere una farina; l'attrezzatura non scelta non è disponibile
+ * per magia. Queste sono condizioni da soddisfare, non blocchi fisici. */
+function kitchenPrerequisites(style: PizzaStyle, constraints: UserConstraints): EngineMsg[] {
+  const messages: EngineMsg[] = [];
+  if (isFriedStyle(style)) return messages;
+  const surfaces = constraints.surfaces ?? [];
+  const hasPan = constraints.has_baking_pan || surfaces.some((s) =>
+    ["aluminum_pan", "blue_steel_pan", "cast_iron"].includes(s),
+  );
+  const panStyle = style.proof_in_pan || style.shape.shape_type === "rectangular" ||
+    ["chicago_deep", "padellino_torino", "focaccia_barese", "greek_pan", "focaccia_recco", "ciaccino_senese", "fugazzeta"].includes(style.id);
+  const homeMethod = homeBakingAdaptation(style, constraints.oven_type, constraints.oven_max_temp_c);
+  if ((panStyle || homeMethod) && !hasPan) {
+    messages.push(em("rec.needsPan", "Serve una teglia per questo stile"));
+  }
+  if (!panStyle && !homeMethod && HOME_OVENS.has(constraints.oven_type) &&
+    !constraints.has_pizza_stone && !constraints.has_pizza_steel &&
+    !surfaces.some((s) => ["cordierite_stone", "refractory_brick", "steel_plate"].includes(s))) {
+    messages.push(em("rec.needsDeck", "Per questa cottura serve pietra o acciaio preriscaldato: non risultano nella tua cucina"));
+  }
+  const pantryRanges = constraints.pantry_flours.map((id) => FLOUR_W_RANGES[id]).filter(Boolean);
+  if (pantryRanges.length > 0 && !pantryRanges.some(([lo, hi]) =>
+    lo <= style.dough.flour_w_range[1] && hi >= style.dough.flour_w_range[0],
+  ) && !pantryFlourMix(constraints.pantry_flours, style.dough.flour_w_range)) {
+    messages.push(em("rec.flourNoMatch", "Nessuna farina in dispensa nel range W richiesto"));
+  }
+  return messages;
 }
 
 // ═══ COMPENSATION ENGINE ═══
@@ -1698,6 +1768,7 @@ export function generateRecipe(
   constraints: UserConstraints,
   options: GenerateRecipeOptions = {},
 ): GeneratedRecipe {
+  constraints = constrainOvenToCapacity(constraints);
   const {
     customHydration,
     customFlourW,
@@ -1812,6 +1883,9 @@ export function generateRecipe(
   if (ovenTemp < style.baking.temp_c_range[0]) {
     ovenTemp = constraints.oven_max_temp_c;
   }
+  // La temperatura dell'olio non è limitata dalla temperatura del forno.
+  if (isFriedStyle(style)) ovenTemp = style.baking.temp_c_ideal;
+  const homeMethod = homeBakingAdaptation(style, constraints.oven_type, ovenTemp);
 
   // ── Full Compensation Engine — Audit Maestro P0-4 ──
   const ovenCompensations = calculateOvenCompensations(style, ovenTemp);
@@ -2037,7 +2111,7 @@ export function generateRecipe(
   );
   const feasResult = calculateFeasibilityScore(
     style,
-    constraints.oven_max_temp_c,
+    isFriedStyle(style) ? style.baking.temp_c_ideal : constraints.oven_max_temp_c,
     flourW,
     hydration,
     constraints.skill_level,
@@ -2138,6 +2212,8 @@ export function generateRecipe(
     sustainability_category: sustResult.category,
     penalties: authResult.penalties,
     warnings: [
+      ...kitchenPrerequisites(style, constraints),
+      ...(homeMethod ? [em("gen.homeBakingMethod", "Cottura domestica a {temp} su teglia capovolta preriscaldata; risultato diverso dalla cottura originale a {ideal}", { temp: ovenTemp, ideal: style.baking.temp_c_ideal })] : []),
       // D-020: stesso avviso dei consigli sul forno a legna dello stile.
       ...(style.requires_wood_oven && constraints.oven_type !== "wood"
         ? [
@@ -2180,7 +2256,7 @@ export function generateRecipe(
                 ),
           ]
         : []),
-      ...feasResult.warnings,
+      ...feasResult.warnings.filter((m) => !(homeMethod && m.key === "feas.ovenTooCold")),
     ],
     claims: [...digestResult.claims, ...sustResult.claims],
   };
@@ -2355,13 +2431,14 @@ export function generateRecipe(
 
   // ── M-10: esito esplicito ──
   const blockers: RecipeBlocker[] = [];
-  if (ovenViability <= THERMAL_UNVIABLE_THRESHOLD) {
-    blockers.push({ kind: "oven_too_cold", oven_c: ovenTemp, style_min_c: style.baking.temp_c_range[0] });
+  const supportedMin = minimumSupportedOvenTemp(style, constraints);
+  if (!isFriedStyle(style) && ovenTemp < supportedMin) {
+    blockers.push({ kind: "oven_too_cold", oven_c: ovenTemp, style_min_c: supportedMin });
   }
   if (windowTooShort) {
     blockers.push({ kind: "time_window", available_h: constraints.available_hours, needed_h: neededHours });
   }
-  if (timeClampedBelowMin && fermentationHours < fermRange[0] * FERMENTATION_FLOOR_FRACTION) {
+  if (fermentationHours < fermRange[0]) {
     blockers.push({
       kind: "fermentation_too_short",
       fermentation_h: fermentationHours,
@@ -2369,9 +2446,16 @@ export function generateRecipe(
       needed_h: Math.ceil((fermRange[0] * 60 + timelineOverheadMinutes(timeline)) / 15) / 4,
     });
   }
+  if (fermentationHours > fermRange[1]) {
+    blockers.push({ kind: "fermentation_too_long", fermentation_h: fermentationHours, style_max_h: fermRange[1] });
+  }
+  if (style.dough.fermentation_temp_c !== undefined && fermentationTempC !== style.dough.fermentation_temp_c) {
+    blockers.push({ kind: "fermentation_temperature", actual_c: fermentationTempC, required_c: style.dough.fermentation_temp_c });
+  }
   const verdict: RecipeVerdict = {
     outcome: blockers.length > 0 ? "not_feasible" : scores.warnings.length > 0 ? "warnings" : "ok",
     blockers,
+    adaptations: scores.warnings,
   };
 
   return {
@@ -2489,6 +2573,7 @@ interface OptimizedCandidate {
   /** Valore dell'obiettivo (0-100) per questa combinazione. */
   objective_score: number;
   composite: number;
+  outcome: RecipeOutcome;
 }
 
 export interface OptimizedRecipe {
@@ -2637,7 +2722,6 @@ export function optimizeRecipe(
   }
 
   // ── Spazio temperatura: frigo / cantina / ambiente (sfoglia non lievitata: TA) ──
-  const tempCands = effStyle.dough.unleavened ? [20] : [4, 18, 22];
 
   // ── Spazio idratazione: range stile, capato dal livello dell'utente ──
   // ENG-6: i candidati sono idratazioni BASE; la compensazione del forno si
@@ -2686,6 +2770,9 @@ export function optimizeRecipe(
   let evaluated = 0;
 
   for (const hours of hourCands) {
+    // Una maturazione fredda non diventa una fermentazione di giorni a TA
+    // soltanto perché così l'obiettivo numerico risulta più alto.
+    const tempCands = [defaultFermentTempC(effStyle, hours)];
     for (const temp of tempCands) {
       for (const hydr of hydrCands) {
         for (const w of wCands) {
@@ -2720,17 +2807,20 @@ export function optimizeRecipe(
               use_pre_ferment: pref,
               objective_score: Math.round(objScore * 10) / 10,
               composite: s.composite,
+              outcome: recipe.verdict.outcome,
             };
             all.push(cand);
             // Selezione: massimo obiettivo; a pari merito preferisci più
             // fattibile, poi più digeribile (pizze "perfette" ma eseguibili).
             if (
               best === null ||
-              objScore > best.cand.objective_score ||
+              (recipe.verdict.outcome !== "not_feasible" && best.recipe.verdict.outcome === "not_feasible") ||
+              ((recipe.verdict.outcome === "not_feasible") === (best.recipe.verdict.outcome === "not_feasible") &&
+              (objScore > best.cand.objective_score ||
               (Math.abs(objScore - best.cand.objective_score) < 0.05 &&
                 (s.feasibility > best.recipe.scores.feasibility ||
                   (s.feasibility === best.recipe.scores.feasibility &&
-                    s.digestibility > best.recipe.scores.digestibility)))
+                    s.digestibility > best.recipe.scores.digestibility)))))
             ) {
               best = { cand: { ...cand, objective_score: objScore }, recipe };
             }
@@ -2831,7 +2921,7 @@ export function optimizeRecipe(
       ),
     );
   }
-  if (r.oven_temp_c < style.baking.temp_c_ideal) {
+  if (r.verdict.outcome !== "not_feasible" && r.oven_temp_c < style.baking.temp_c_ideal) {
     rationale.push(
       em("opt.ovenAdapted", `Cottura adattata al tuo forno (${r.oven_temp_c}°C) con compensazioni automatiche.`, {
         temp: r.oven_temp_c,
@@ -2848,6 +2938,7 @@ export function optimizeRecipe(
   }
 
   const alternatives = all
+    .filter((candidate) => candidate.outcome !== "not_feasible")
     .map((c) => ({ ...c, objective_score: Math.round(c.objective_score * 10) / 10 }))
     .filter(
       (c) =>
@@ -3341,6 +3432,17 @@ function generateTimeline(
     },
   });
 
+  // Il metodo domestico ammesso dalla valutazione è parte del procedimento.
+  const homeMethod = homeBakingAdaptation(style, equipment?.ovenType ?? "home", actualOvenTemp ?? style.baking.temp_c_ideal);
+  if (homeMethod) {
+    const preheat = steps.find((step) => step.id === "preheat");
+    if (preheat) {
+      const message = em("timeline.homeTray.preheat", "Preriscalda il forno al massimo ({temp}) con una teglia capovolta già dentro, finché anche la teglia è ben calda. Intanto termina il riposo dell'impasto.", { temp: actualOvenTemp ?? style.baking.temp_c_ideal });
+      preheat.msg = { description: [message] };
+      preheat.description = renderStepIt([message]);
+    }
+  }
+
   // ─── STESURA (layout-aware) ───
   let shapeMsg: EngineMsg;
   if (layout.type === "folded_layers") {
@@ -3460,7 +3562,7 @@ function generateTimeline(
   // ─── COTTURA (layout-aware: singola o doppia) ───
   // Applica bake_adjustments del topping (es. patate richiedono +5 min)
   const baseTempC = actualOvenTemp ?? style.baking.temp_c_ideal;
-  const ovenTempLabel = Math.round(baseTempC + (topping?.bake_adjustments?.temperature_delta_c ?? 0));
+  const ovenTempLabel = Math.min(baseTempC, Math.round(baseTempC + (topping?.bake_adjustments?.temperature_delta_c ?? 0)));
   const effectiveCookSec = cookTimeSec + (topping?.bake_adjustments?.additional_minutes ?? 0) * 60;
   // Nota di cottura del condimento: la UI la traduce dall'id del condimento.
   const toppingBakeNote: EngineMsg[] = topping?.bake_adjustments?.note
@@ -3534,7 +3636,9 @@ function generateTimeline(
           timing_label: formatCookTime(effectiveCookSec),
         },
         em("timeline.bake.title", "Cottura"),
-        [em("timeline.bake.desc", "Cuocere a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, ovenBakeSetup(equipment)],
+        [em("timeline.bake.desc", "Cuocere a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, homeMethod
+          ? em("timeline.homeTray.bake", "Inforna sulla teglia capovolta già calda. Controlla la doratura della base e la cottura prima di sfornare.")
+          : ovenBakeSetup(equipment)],
         {
           beginner: em("timeline.bake.tipBeginner", "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima."),
           nerd: em(
@@ -4033,381 +4137,64 @@ export function recommendStyles(
   stylesOverride?: Record<string, PizzaStyle>,
   recWeights?: RecWeightsOverride,
 ): StyleRecommendation[] {
-  // Stessa finestra prudente degli slot, anche per la timeline e i suoi avvisi.
+  constraints = constrainOvenToCapacity(constraints);
   constraints = { ...constraints, available_hours: floorToQuarterHour(constraints.available_hours) };
-  const allStyles = Object.values(stylesOverride ?? STYLES_DB);
-  const recommendations: StyleRecommendation[] = [];
+  const weights = {
+    time: recWeights?.time ?? 0.25,
+    oven: recWeights?.oven ?? 0.25,
+    skill: recWeights?.skill ?? 0.20,
+    equipment: recWeights?.equipment ?? 0.10,
+    pantry: recWeights?.pantry ?? 0.20,
+  };
+  const weightTotal = Object.values(weights).reduce((sum, weight) => sum + weight, 0) || 1;
+  const pantryRanges = constraints.pantry_flours.map((id) => FLOUR_W_RANGES[id]).filter(Boolean);
 
-  // Pre-compute pantry W ranges for flour matching
-  const pantryWRanges = constraints.pantry_flours
-    .map((id) => FLOUR_W_RANGES[id])
-    .filter(Boolean);
-  const hasPantryFlours = pantryWRanges.length > 0;
-  const hasPantryYeasts = constraints.pantry_yeasts.length > 0;
-
-  for (const style of allStyles) {
-    const reasons: EngineMsg[] = [];
-    const warnings: EngineMsg[] = [];
-    // L'esito del motore è autorevole anche qui: include lavorazioni,
-    // farcitura e tutte le infornate, non soltanto le ore di lievitazione.
+  return Object.values(stylesOverride ?? STYLES_DB).map((style): StyleRecommendation => {
     const recipe = generateRecipe(style, constraints);
-    const timeWarnings = recipe.scores.warnings.filter((m) =>
-      m.key === "gen.windowTooShort" || m.key.startsWith("gen.timeBelowStyleWindow"),
-    );
-    let score = 0;
-
-    // ── Time compatibility (25%) ──
+    const { verdict } = recipe;
+    const reasons: EngineMsg[] = [];
+    const timeLimited = verdict.blockers.some((b) => b.kind === "time_window" || b.kind === "fermentation_too_short");
+    const ovenLimited = verdict.blockers.some((b) => b.kind === "oven_too_cold");
+    const skillLimited = verdict.adaptations.some((m) => /hydration|prefermentNeedsExperience/i.test(m.key));
+    const equipmentLimited = verdict.adaptations.some((m) => m.key === "rec.needsPan" || m.key === "rec.needsDeck");
+    const flourLimited = verdict.adaptations.some((m) => m.key === "rec.flourNoMatch");
     const [fMin, fMax] = style.dough.fermentation_hours_range;
-    // M-3: stesse ore degli slot del pasto, al quarto d'ora per difetto.
-    const availableHours = floorToQuarterHour(constraints.available_hours);
-    let timeScore: number;
-    if (timeWarnings.length > 0) {
-      timeScore = 25;
-      warnings.push(...timeWarnings);
-    } else if (availableHours >= fMin) {
-      timeScore = 95;
-      reasons.push(em("rec.timeCompatible", `Fermentazione ${fMin}-${fMax}h: compatibile con il tuo tempo`, { fMin, fMax }));
-    } else if (availableHours >= fMin * 0.85) {
-      /* Audit roleplay giugno 2026: il gradino 95→65 era brutale — 21h vs
-       * 24h minime (-12%) non deve far sparire i classici dai consigli. */
-      timeScore = 85;
-      warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${availableHours}h`, { fMin, available: availableHours }));
-    } else if (availableHours >= fMin * 0.7) {
-      timeScore = 65;
-      warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${availableHours}h`, { fMin, available: availableHours }));
-    } else {
-      timeScore = 25;
-      warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${availableHours}h`, { fMin, available: availableHours }));
+    if (!timeLimited) {
+      reasons.push(em("rec.timeCompatible", "Fermentazione {fMin}–{fMax}h: compatibile con il tuo tempo", { fMin, fMax }));
     }
-
-    // ── Oven compatibility (25%) ──
-    let ovenScore: number;
     if (isFriedStyle(style)) {
-      /* U-6: le fritte (M-6) non usano il forno: nessun vincolo, come quando il
-       * forno arriva alla temperatura ideale. Prima il motivo diceva «il tuo forno
-       * raggiunge la temperatura ideale (175 °C)», che è l'olio. */
-      ovenScore = 95;
       reasons.push(em("rec.fried", "Si frigge in pentola: il forno non serve"));
     } else if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
-      ovenScore = 95;
       reasons.push(em("rec.ovenIdeal", "Il tuo forno raggiunge la temperatura ideale ({ideal})", { ideal: style.baking.temp_c_ideal }));
-    } else if (constraints.oven_max_temp_c >= style.baking.temp_c_range[0]) {
-      ovenScore = 70;
-      warnings.push(em("rec.ovenAdapted", "Il tuo forno arriva a {temp}: temperatura ideale {ideal}, cottura adattata", { temp: constraints.oven_max_temp_c, ideal: style.baking.temp_c_ideal }));
-    } else {
-      ovenScore = 30;
-      warnings.push(em("rec.ovenTooCold", "Forno troppo freddo: {temp} < min {min}", { temp: constraints.oven_max_temp_c, min: style.baking.temp_c_range[0] }));
     }
-    // D-020 (decisione di Matteo, 24/10/2026): il forno a legna dello stile è un
-    // avviso, non un blocco. Prima la STG col forno a gas da 450 °C era «non
-    // fattibile» nei consigli ma la ricetta la faceva. Resta il calore a decidere.
-    if (style.requires_wood_oven && constraints.oven_type !== "wood") {
-      ovenScore = Math.max(30, ovenScore - 15);
-      warnings.push(em("rec.needsWoodOven", "Prevede il forno a legna: col tuo forno viene vicina, non canonica"));
+    if (!skillLimited && style.suitable_for_beginner) {
+      reasons.push(em("rec.skillMatch", "Adatto al tuo livello"));
     }
+    const flourMatch = pantryRanges.some(([lo, hi]) => lo <= style.dough.flour_w_range[1] && hi >= style.dough.flour_w_range[0]);
+    const mix = !flourMatch ? pantryFlourMix(constraints.pantry_flours, style.dough.flour_w_range) : null;
+    if (flourMatch) reasons.push(em("rec.flourMatch", "Farina in dispensa compatibile"));
+    else if (mix) reasons.push(em("rec.flourMix", "Mescolando le tue farine: {weakPct}% {weak} e {strongPct}% {strong}, W {w} circa", { ...mix }));
 
-    // ── Skill compatibility (20%) ──
-    let skillScore: number;
-    const hCenter =
-      (style.dough.hydration_pct_range[0] +
-        style.dough.hydration_pct_range[1]) /
-      2;
-
-    if (
-      style.suitable_for_beginner &&
-      constraints.skill_level >= 1
-    ) {
-      skillScore = 95;
-      if (constraints.skill_level <= 2)
-        reasons.push(em("rec.skillMatch", "Adatto al tuo livello"));
-    } else if (constraints.skill_level >= 3) {
-      skillScore = 90;
-      reasons.push(em("rec.skillExpert", "Il tuo livello permette qualsiasi stile"));
-    } else if (constraints.skill_level === 2) {
-      skillScore = hCenter > 75 ? 50 : 75;
-      if (hCenter > 75)
-        warnings.push(em("rec.hydrationNeedsPractice", "Idratazione alta richiede pratica"));
-    } else {
-      skillScore = hCenter > 65 ? 30 : 60;
-      if (!style.suitable_for_beginner)
-        warnings.push(em("rec.advancedForBeginner", "Stile avanzato per principianti"));
-    }
-
-    // ── Equipment bonus (10%) — enhanced with mixer_type & surfaces ──
-    let equipScore = 70;
-    const mixerType = constraints.mixer_type;
-    const userSurfaces = constraints.surfaces ?? [];
-    const hasSurfaces = userSurfaces.length > 0;
-
-    // Mixer scoring — uses advanced mixer_type when available
-    if (style.dough.process_type.includes("no_knead")) {
-      equipScore = 90;
-      if (!constraints.has_mixer)
-        reasons.push(em("rec.noKneadNoMixer", "Non serve impastatrice (no-knead)"));
-    } else if (mixerType) {
-      if (mixerType === "hands") {
-        if (hCenter > 75) {
-          equipScore = 35;
-          warnings.push(em("rec.handsHighHydration", "Idratazione alta: impasto a mano molto difficile"));
-        } else if (hCenter > 65) {
-          equipScore = 55;
-          warnings.push(em("rec.handsMedHydration", "Idratazione media-alta: impasto a mano richiede pratica"));
-        } else {
-          equipScore = 75;
-        }
-      } else if (mixerType === "fork") {
-        equipScore = hCenter > 75 ? 98 : 90;
-        if (hCenter > 75) reasons.push(em("rec.forkIdealHighH", "Forcella ideale per alta idratazione"));
-        else reasons.push(em("rec.forkLowFriction", "Impastatrice a forcella: basso attrito termico"));
-      } else if (mixerType === "spiral") {
-        equipScore = 95;
-        reasons.push(em("rec.spiralOptimal", "Spirale professionale: impasto ottimale"));
-      } else if (mixerType === "planetary" || mixerType === "stand_domestic") {
-        equipScore = mixerType === "planetary" ? 88 : 80;
-        if (hCenter > 80 && mixerType === "stand_domestic") {
-          equipScore = 60;
-          warnings.push(em("rec.domesticStrugglesHighH", "Planetaria domestica: può faticare con idratazione >80%"));
-        } else {
-          reasons.push(em("rec.mixerHelps", "La tua impastatrice facilita il processo"));
-        }
-      }
-    } else if (constraints.has_mixer) {
-      equipScore = 90;
-      reasons.push(em("rec.mixerHelps", "La tua impastatrice facilita il processo"));
-    } else if (hCenter > 70) {
-      equipScore = 50;
-      warnings.push(em("rec.mixerRecommended", "Idratazione alta: impastatrice consigliata"));
-    }
-
-    // Surface scoring — enhanced with specific surface types
-    if (hasSurfaces) {
-      // Map surfaces to style compatibility
-      const styleId = style.id;
-      const panStyles = [
-        "teglia_romana", "detroit", "chicago_deep", "grandma_style",
-        "focaccia_genovese", "sfincione", "padellino_torino",
-      ];
-      const stoneStyles = [
-        "napoletana_stg", "napoletana_canotto", "tonda_romana",
-        "pinsa_romana", "pala_romana", "new_york", "focaccia_recco",
-      ];
-
-      const hasPanSurface = userSurfaces.some((s) =>
-        ["aluminum_pan", "blue_steel_pan", "cast_iron"].includes(s),
-      );
-      const hasStoneSurface = userSurfaces.some((s) =>
-        ["refractory_brick", "cordierite_stone", "steel_plate"].includes(s),
-      );
-
-      if (panStyles.includes(styleId)) {
-        if (hasPanSurface) {
-          // Check for ideal surface match
-          const hasCastIron = userSurfaces.includes("cast_iron");
-          if (
-            (styleId === "chicago_deep" || styleId === "padellino_torino" || styleId === "detroit") &&
-            hasCastIron
-          ) {
-            equipScore = Math.min(100, equipScore + 18);
-            reasons.push(em("rec.castIronPerfect", "Ghisa perfetta per questo stile"));
-          } else {
-            equipScore = Math.min(100, equipScore + 15);
-            reasons.push(em("rec.panFits", "Teglia adatta a questo stile"));
-          }
-        } else {
-          equipScore = Math.max(20, equipScore - 20);
-          warnings.push(em("rec.needsPan", "Serve una teglia per questo stile"));
-        }
-      } else if (stoneStyles.includes(styleId)) {
-        if (hasStoneSurface) {
-          // Steel plate is fastest for NY/tonda
-          const hasSteel = userSurfaces.includes("steel_plate");
-          const hasRefractory = userSurfaces.includes("refractory_brick");
-          if (
-            (styleId === "napoletana_stg" || styleId === "napoletana_canotto") &&
-            hasRefractory
-          ) {
-            equipScore = Math.min(100, equipScore + 18);
-            reasons.push(em("rec.refractoryIdeal", "Biscotto refrattario: ideale per la napoletana"));
-          } else if (
-            (styleId === "new_york" || styleId === "tonda_romana") &&
-            hasSteel
-          ) {
-            equipScore = Math.min(100, equipScore + 15);
-            reasons.push(em("rec.steelPlateCrispy", "Piastra in acciaio: base croccante in secondi"));
-          } else {
-            equipScore = Math.min(100, equipScore + 10);
-          }
-        }
-      }
-    } else {
-      // Fallback to legacy booleans
-      if (
-        constraints.has_pizza_stone ||
-        constraints.has_pizza_steel
-      ) {
-        equipScore = Math.min(100, equipScore + 10);
-      }
-
-      // Pan bonus/malus for pan-based styles
-      if (style.shape.shape_type === "rectangular") {
-        if (constraints.has_baking_pan) {
-          equipScore = Math.min(100, equipScore + 15);
-          reasons.push(em("rec.panPerfect", "La tua teglia è perfetta per questo stile"));
-        } else {
-          equipScore = Math.max(20, equipScore - 20);
-          warnings.push(em("rec.needsPan", "Serve una teglia per questo stile"));
-        }
-      }
-    }
-
-    // ── Pantry compatibility (20% — only when pantry is populated) ──
-    let pantryScore = 80; // neutral default when pantry not filled
-
-    if (hasPantryFlours) {
-      // Check if any user flour's W range overlaps with style requirement
-      const [styleWMin, styleWMax] = style.dough.flour_w_range;
-      const hasFlourMatch = pantryWRanges.some(
-        ([pMin, pMax]) =>
-          pMin <= styleWMax && pMax >= styleWMin,
-      );
-      if (hasFlourMatch) {
-        pantryScore = 95;
-        reasons.push(em("rec.flourMatch", "Farina in dispensa compatibile"));
-      } else if (pantryFlourMix(constraints.pantry_flours, style.dough.flour_w_range)) {
-        const mix = pantryFlourMix(constraints.pantry_flours, style.dough.flour_w_range)!;
-        pantryScore = 85;
-        reasons.push(em("rec.flourMix", "Mescolando le tue farine: {weakPct}% {weak} e {strongPct}% {strong}, W {w} circa", { ...mix }));
-      } else {
-        // Check how close the closest flour is
-        const closestGap = pantryWRanges.reduce(
-          (minGap, [pMin, pMax]) => {
-            const gap =
-              pMax < styleWMin
-                ? styleWMin - pMax
-                : pMin - styleWMax;
-            return Math.min(minGap, Math.max(0, gap));
-          },
-          Infinity,
-        );
-        if (closestGap <= 40) {
-          pantryScore = 60;
-          warnings.push(em("rec.flourPartial", "Farina parzialmente adatta (W non ideale)"));
-        } else {
-          pantryScore = 30;
-          warnings.push(em("rec.flourNoMatch", "Nessuna farina in dispensa nel range W richiesto"));
-        }
-      }
-    }
-
-    if (hasPantryYeasts) {
-      const hasSourdough =
-        constraints.pantry_yeasts.includes("sourdough");
-      const hasCommercial =
-        constraints.pantry_yeasts.includes("fresh") ||
-        constraints.pantry_yeasts.includes("dry");
-
-      // Sourdough bonus for long-ferment/pre-ferment styles
-      if (
-        hasSourdough &&
-        (style.requires_pre_ferment || fMax >= 24)
-      ) {
-        pantryScore = Math.min(100, pantryScore + 8);
-        reasons.push(em("rec.sourdoughLongFerment", "Lievito madre ideale per maturazione lunga"));
-      }
-
-      // Warning if only sourdough but style needs short ferment
-      if (hasSourdough && !hasCommercial && fMax < 8) {
-        pantryScore = Math.max(20, pantryScore - 20);
-        warnings.push(em("rec.sourdoughOnlyShort", "Solo lievito madre: fermentazione breve difficile"));
-      }
-
-      // No commercial yeast warning for styles needing precise timing
-      if (!hasCommercial && !hasSourdough) {
-        pantryScore = Math.max(30, pantryScore - 15);
-      }
-    }
-
-    // ── Weighted composite — pantry takes 20% from time/oven/skill ──
-    const rw = {
-      time: recWeights?.time ?? 0.25,
-      oven: recWeights?.oven ?? 0.25,
-      skill: recWeights?.skill ?? 0.20,
-      equipment: recWeights?.equipment ?? 0.10,
-      pantry: recWeights?.pantry ?? 0.20,
-    };
-    score = Math.round(
-      timeScore * rw.time +
-        ovenScore * rw.oven +
-        skillScore * rw.skill +
-        equipScore * rw.equipment +
-        pantryScore * rw.pantry,
-    );
-
-
-    // ── Digestibility estimate ──
-    const estFermentHours = Math.min(
-      constraints.available_hours,
-      fMax,
-    );
-    const estTemp = defaultFermentTempC(style, estFermentHours);
-    const digestResult = calculateDigestibilityScore(
-      estFermentHours,
-      estTemp,
-      style.requires_pre_ferment,
-      0.3,
-      "fresh",
-      !!style.dough.unleavened,
-    );
-
-    // ── Tier classification — Audit Sprint 12:
-    //    Aggiunto "not_feasible" per stili con incompatibilità dura (es. wood-oven
-    //    richiesto ma utente ha elettrico) o score molto basso. Permette di mostrare
-    //    cosa NON puoi fare e perché, oltre a cosa puoi fare. ──
-    let tier: "perfect" | "good" | "challenging" | "not_feasible";
-    // M-10 (decisione di Matteo, 23/10/2026): stessa soglia termica dell'esito
-    // della ricetta. Prima Canotto, Calzone e Pinsa risultavano «buoni» con il
-    // forno di casa a 250 °C e la ricetta poi diceva «non fattibile così».
-    /* Audit n. 9 (A-09): con «Stasera» (5 h) uno stile che lievita almeno 6 h
-       non è fattibile, come dice poi la ricetta (lievitazione sotto il minimo). */
-    const tooLittleTime = constraints.available_hours < style.dough.fermentation_hours_range[0];
-    const hasHardBlocker =
-      (style.requires_pre_ferment === true &&
-        constraints.skill_level === 1) ||
-      tooLittleTime ||
-      recipe.verdict.outcome === "not_feasible";
-    if (score < 30 || hasHardBlocker) tier = "not_feasible";
-    else if (score >= 78 && warnings.length === 0) tier = "perfect";
-    else if (score >= 55) tier = "good";
-    else tier = "challenging";
-
-    const rankingScore = score + (ICONIC_BOOST[style.id] ?? 0);
-
-    recommendations.push({
+    // Il numero ordina le proposte, ma non può cambiare l'esito della ricetta.
+    const timeScore = timeLimited ? 25 : 95;
+    const ovenScore = ovenLimited ? 0 : isFriedStyle(style) || constraints.oven_max_temp_c >= style.baking.temp_c_ideal ? 95 : 65;
+    const skillScore = skillLimited ? 50 : 95;
+    const equipScore = equipmentLimited ? 40 : 95;
+    const pantryScore = flourLimited ? 30 : flourMatch ? 95 : mix ? 85 : 80;
+    const score = Math.round((timeScore * weights.time + ovenScore * weights.oven +
+      skillScore * weights.skill + equipScore * weights.equipment + pantryScore * weights.pantry) / weightTotal);
+    return {
       style,
       compatibilityScore: score,
-      rankingScore,
-      feasibilityScore: Math.round(
-        ovenScore * 0.5 + skillScore * 0.3 + equipScore * 0.2,
-      ),
-      digestibilityEstimate: digestResult.score,
-      tier,
+      feasibilityScore: recipe.scores.feasibility,
+      digestibilityEstimate: recipe.scores.digestibility,
+      rankingScore: score + (ICONIC_BOOST[style.id] ?? 0),
+      tier: verdict.outcome === "not_feasible" ? "not_feasible" : verdict.outcome === "warnings" ? "good" : "perfect",
       reasons,
-      warnings,
-      verdict: recipe.verdict,
-    });
-  }
-
-  // Sort by compatibility descending.
-  // Prior di rappresentatività (audit giugno 2026): il boost iconico pesa SOLO
-  // sull'ordinamento — punteggi e tier restano onesti. A parità di vincoli i
-  // classici emergono sulle rarità regionali (senza prior, "Perfetti per te"
-  // proponeva Ciaccino Senese e Pizza Fritta prima di Napoletana e Teglia).
-  recommendations.sort(
-    (a, b) =>
-      b.rankingScore - a.rankingScore ||
-      b.compatibilityScore - a.compatibilityScore,
-  );
-  return recommendations;
+      warnings: verdict.adaptations,
+      verdict,
+    };
+  }).sort((a, b) => b.rankingScore - a.rankingScore || b.compatibilityScore - a.compatibilityScore);
 }
 
 // ═══ SUSTAINABILITY CALCULATION ═══

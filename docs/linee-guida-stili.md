@@ -5,6 +5,33 @@ ogni stile: parametri, condimenti, testi, foto. Le voci C-2 (condimenti
 regionali) e ogni nuovo stile partono da qui. Le regole che una macchina può
 controllare stanno in `src/app/data/style-editorial.test.ts` (in `npm run verify`).
 
+## Fattibilità operativa — 25/10/2026
+
+La ricetta ha tre esiti: **fattibile**, **con adattamenti**, **non fattibile
+così**. Li decide `generateRecipe().verdict`, usato anche dai consigli, dal
+dettaglio e dal server MCP. I punteggi ordinano e confrontano le ricette;
+non stabiliscono l'esito. La dimensione numerica F si chiama **Facilità**.
+
+Sotto il minimo termico non basta una compensazione matematica: serve un
+metodo alternativo documentato in `baking.home_adaptation` e applicato al
+procedimento. Per la Pinsa il metodo domestico a 250 °C con teglia capovolta
+preriscaldata è descritto da [PinsaRomana.it / Marco Montuori](https://pinsaromana.it/ricetta/come-fare-la-pinsa-romana-metodo-originale-con-marco-montuori/),
+consultato il 25/10/2026. La precottura suggerita dalla stessa fonte resta
+un'opzione; non è necessaria per usare la teglia preriscaldata.
+
+Le durate devono rispettare l'intervallo del metodo selezionato, anche se
+impostate a mano; con una scadenza deve entrarci tutta la timeline. Gli
+eventuali vincoli nominali di temperatura restano quelli del metodo:
+la Pinsa segue la maturazione a 4 °C del [protocollo OPR, §2.2](https://www.pinsaromana.org/wp-content/uploads/2022/10/Regolamento-e-Protocollo.pdf),
+consultato il 25/10/2026. L'ottimizzatore non sostituisce il regime freddo
+con giorni a temperatura ambiente per aumentare un punteggio. Gli
+strumenti e gli ingredienti da procurarsi sono condizioni visibili. La
+temperatura scelta non può superare la capacità del forno. L'ottimizzatore
+preferisce una candidata eseguibile e non propone alternative bloccate.
+«Non fattibile così» riguarda questa ricetta e questi vincoli: non prova
+che nessun altro metodo possa funzionare. I limiti di qualità delle fonti
+registrati in `docs/fonti-dati.md` restano applicabili.
+
 ## 1. Regole
 
 1. **Ogni dato ha una fonte**, registrata in `docs/fonti-dati.md` con uno dei

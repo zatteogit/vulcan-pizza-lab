@@ -273,6 +273,8 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       sugar_pct: 0.0,
       fermentation_hours_range: [24, 72],
       process_type: "direct",
+      // OPR 2020, §2.2: maturazione a 4 °C (docs/fonti-dati.md §1.2).
+      fermentation_temp_c: 4,
       // VPL-B2: mix multicereale tipico della pinsa (non una farina "W305" singola)
       flour_blend: [
         { name: "Farina di frumento", pct: 70, w: 290 },
@@ -293,6 +295,11 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       // su pietra». Era 350–420 (ideale 380), senza fonte. Tempo: da verificare.
       temp_c_range: [280, 320],
       temp_c_ideal: 300,
+      home_adaptation: {
+        min_temp_c: 250,
+        method: "inverted_tray",
+        source_url: "https://pinsaromana.it/ricetta/come-fare-la-pinsa-romana-metodo-originale-con-marco-montuori/",
+      },
       cook_time_sec_range: [180, 300],
       cook_time_sec_ideal: 240,
     },

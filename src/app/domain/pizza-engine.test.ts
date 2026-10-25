@@ -300,7 +300,7 @@ describe("fattibilità nei consigli (audit totale n. 9)", () => {
       pantry_flours: ["manitoba"],
     })).find((r) => r.style.id === "pinsa_romana")!;
     expect(rec.reasons.map((m) => m.key)).not.toContain("rec.ovenIdeal");
-    expect(rec.warnings.map((m) => m.key)).toContain("rec.ovenTooCold");
+    expect(rec.warnings.map((m) => m.key)).toContain("gen.homeBakingMethod");
     expect(rec.tier).not.toBe("perfect");
   });
 

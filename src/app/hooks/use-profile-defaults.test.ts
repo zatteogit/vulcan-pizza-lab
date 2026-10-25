@@ -7,6 +7,7 @@ import { mergeDraftConstraints, profileEquipment } from "./use-profile-defaults"
 const profile: UserConstraints = {
   oven_type: "home",
   oven_max_temp_c: 250,
+  oven_capacity_temp_c: 250,
   skill_level: 3,
   available_hours: 24,
   dough_balls: 4,
@@ -42,12 +43,14 @@ describe("mergeDraftConstraints", () => {
     const merged = mergeDraftConstraints(profile, {
       oven_type: "electric_high",
       oven_max_temp_c: 400,
+      oven_capacity_temp_c: 450,
       available_hours: 30,
       dough_balls: 7,
       meal_deadline: true,
     });
     expect(merged.oven_type).toBe("home");
     expect(merged.oven_max_temp_c).toBe(250);
+    expect(merged.oven_capacity_temp_c).toBe(250);
     expect(merged.available_hours).toBe(30);
     expect(merged.dough_balls).toBe(7);
     expect(merged.meal_deadline).toBe(true);

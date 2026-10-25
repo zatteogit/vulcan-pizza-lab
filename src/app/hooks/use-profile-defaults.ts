@@ -85,6 +85,7 @@ export function loadProfileDefaults(): ProfileDefaults {
   const constraints: UserConstraints = {
     oven_type: ovenType,
     oven_max_temp_c: ovenTemp,
+    oven_capacity_temp_c: ovenTemp,
     skill_level: skillLevel,
     available_hours: 24,
     dough_balls: 4,
@@ -144,6 +145,7 @@ export function loadProfileDefaults(): ProfileDefaults {
 export const PROFILE_OWNED_CONSTRAINTS = [
   "oven_type",
   "oven_max_temp_c",
+  "oven_capacity_temp_c",
   "skill_level",
   "has_mixer",
   "has_pizza_stone",

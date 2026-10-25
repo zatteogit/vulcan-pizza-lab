@@ -10,6 +10,7 @@ import {
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { Surface } from "../../components/ds/index";
+import { engineMsgTexts } from "./engine-msg-text";
 
 /* ═══ M-10 — «Così non è fattibile» ═══
  * Quando il motore dichiara la ricetta non fattibile, lo diciamo in cima, con
@@ -71,6 +72,18 @@ export function RecipeVerdictNotice({
           hours: fmt.durationShort(blocker.fermentation_h),
           min: fmt.durationShort(blocker.style_min_h),
         });
+      case "fermentation_too_long":
+        return engineMsgTexts([{
+          key: "gen.fermentationTooLong",
+          fallback: "Lievitazione di {hours}: supera il massimo previsto da questa ricetta ({maxHours}). Scegli un metodo verificato per una durata maggiore.",
+          params: { hours: blocker.fermentation_h, maxHours: blocker.style_max_h },
+        }], cms, bcp47)[0];
+      case "fermentation_temperature":
+        return engineMsgTexts([{
+          key: "gen.fermentationTemperature",
+          fallback: "Questo metodo prevede maturazione a {requiredTemp}; è stata impostata a {temp}. Ripristina il regime previsto o scegli un altro metodo verificato.",
+          params: { temp: blocker.actual_c, requiredTemp: blocker.required_c },
+        }], cms, bcp47)[0];
     }
   });
   const later = laterHours(verdict.blockers);

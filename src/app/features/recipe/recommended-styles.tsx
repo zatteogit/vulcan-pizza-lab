@@ -1,4 +1,4 @@
-import { Award,Check,ChefHat,Clock,CookingPot,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
+import { Award,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
 import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
 import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
 import { useEffect,useMemo,useRef,useState } from "react";
@@ -11,7 +11,6 @@ import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import {
 PIZZA_FAMILIES,
 PizzaStyle,
-isFriedStyle,
 recommendStyles,
 shortOrigin,
 styleMatchesFamily,
@@ -130,20 +129,6 @@ const TIER_META: Record<
     color: "var(--text-warning)",
     Icon: Sparkles,
   },
-  challenging: {
-    get label() { return uiMessage("features.recipe.recommended-styles.sfidanti-354cbc9b"); },
-    get subtitle() { return uiMessage("features.recipe.recommended-styles.richiedono-piu-attrezzatura-o-esperienza-1685224c"); },
-    color: "var(--text-accent)",
-    Icon: Triangle,
-  },
-  /* D-032 (Matteo, 24/10/2026): le fritte non usano il forno, quindi con una
-     cucina di casa finivano in cima a «Perfetti per te». Stanno a parte. */
-  fried: {
-    get label() { return uiMessage("features.recipe.recommended-styles.fried.label"); },
-    get subtitle() { return uiMessage("features.recipe.recommended-styles.fried.subtitle"); },
-    color: "var(--text-accent)",
-    Icon: CookingPot,
-  },
   not_feasible: {
     get label() { return uiMessage("features.recipe.recommended-styles.non-fattibili-327346d5"); },
     get subtitle() { return uiMessage("features.recipe.recommended-styles.mancano-requisiti-chiave-763f98f6"); },
@@ -261,25 +246,15 @@ export function RecommendedStyles({
     [recommendations, familyFilter, hydrationFilter, textureFilter, skillFilter, ovenFilter, styleQuery],
   );
 
-  const baked = filtered.filter((r) => !isFriedStyle(r.style));
-  const fried = filtered.filter((r) => isFriedStyle(r.style));
   const tiers: { key: string; items: RecommendationWithVariant[] }[] =
     [
       {
         key: "perfect",
-        items: sortByVisibleMatch(baked.filter((r) => r.tier === "perfect")),
+        items: sortByVisibleMatch(filtered.filter((r) => r.tier === "perfect")),
       },
       {
         key: "good",
-        items: sortByVisibleMatch(baked.filter((r) => r.tier === "good")),
-      },
-      {
-        key: "challenging",
-        items: sortByVisibleMatch(baked.filter((r) => r.tier === "challenging")),
-      },
-      {
-        key: "fried",
-        items: sortByVisibleMatch(fried.filter((r) => r.tier !== "not_feasible")),
+        items: sortByVisibleMatch(filtered.filter((r) => r.tier === "good")),
       },
       {
         // Audit Sprint 12 — Sezione "Non fattibili": stili con incompatibilità

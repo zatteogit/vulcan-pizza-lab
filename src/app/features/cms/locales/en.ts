@@ -160,7 +160,7 @@ export const EN_LOCALE: CmsContent = {
     flourUseMedium: "Medium-strength type 0",
     flourUseWeak: "Weak/medium type 00",
     verdictTitle: "This won't work as set up",
-    verdictOvenTooCold: "Your oven reaches {oven}; this style needs at least {min}: you'd get a different pizza.",
+    verdictOvenTooCold: "Baking is set to {oven}; this method needs at least {min}.",
     verdictTimeWindow: "It takes about {needed} and you have {available}: it would be ready after the time you chose.",
     verdictFermentationTooShort: "A {hours} rise against this style's minimum of {min}: it would be a different dough.",
     verdictLaterTime: "Pick a time at least {hours} from now.",
@@ -391,17 +391,17 @@ export const EN_LOCALE: CmsContent = {
   allFamiliesLabel: "All families",
   tiers: {
     perfect: {
-      label: "Perfect",
-      subtitle: "maximum compatibility",
+      label: "Feasible",
+      subtitle: "recipe requirements are met",
     },
-    good: { label: "Good", subtitle: "great choice" },
+    good: { label: "With adaptations", subtitle: "follow the changes and check what you need" },
     challenging: {
       label: "Challenging",
       subtitle: "for those who dare",
     },
     not_feasible: {
-      label: "Not feasible",
-      subtitle: "key requirements missing (oven, experience)",
+      label: "Not feasible as configured",
+      subtitle: "an essential condition for this recipe is missing",
     },
   },
   scoreDimensions: {
@@ -413,11 +413,11 @@ export const EN_LOCALE: CmsContent = {
         "How closely the recipe follows the style's canon: ingredients (hydration, flour strength and P/L), fermentation process and equipment. If your oven stays below the style's minimum, this axis collapses: some pizzas demand a fire you can't simulate.",
     },
     feasibility: {
-      label: "Feasibility",
+      label: "Ease",
       short: "Feas",
       weight: 0.25,
       explain:
-        "How realistic it is for you, today: it weighs your oven (40%), flour (30%) and the skill required (30%). It drops when the style needs more heat than you have, or the hydration exceeds your level.",
+        "Ease of execution based on oven, flour and experience. It does not determine feasibility: that depends on method requirements and declared adaptations.",
     },
     digestibility: {
       label: "Digestibility",
@@ -871,6 +871,12 @@ export const EN_LOCALE: CmsContent = {
       "Requires at least {fMin}, you have {available}",
     "rec.needsWoodOven": "Made in a wood-fired oven: yours gets close, not canonical",
     "rec.ovenAdapted": "Your oven reaches {temp}: ideal temperature {ideal}, adapted baking",
+    "gen.homeBakingMethod": "Home baking at {temp} on a preheated inverted tray; the result differs from the original baking at {ideal}",
+    "rec.needsDeck": "This method needs a preheated stone or steel, not listed in your kitchen",
+    "timeline.homeTray.preheat": "Preheat the oven to its maximum ({temp}) with an inverted tray inside until the tray is hot too. Meanwhile, finish resting the dough.",
+    "timeline.homeTray.bake": "Bake on the preheated inverted tray. Check the base colour and doneness before removing.",
+    "gen.fermentationTooLong": "Fermentation of {hours} exceeds the maximum for this recipe ({maxHours}). Choose a verified method for a longer duration.",
+    "gen.fermentationTemperature": "This method requires maturation at {requiredTemp}; {temp} was selected. Restore the required regime or choose another verified method.",
     "rec.ovenIdeal":
       "Your oven reaches ideal temperature ({ideal})",
     "rec.ovenAdequate":

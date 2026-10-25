@@ -140,7 +140,7 @@ export const PT_LOCALE: CmsContent = {
     flourUseMedium: "Tipo 0 de força média",
     flourUseWeak: "Tipo 00 fraca/média",
     verdictTitle: "Assim não dá certo",
-    verdictOvenTooCold: "Seu forno chega a {oven} e este estilo pede pelo menos {min}: sairia outra pizza.",
+    verdictOvenTooCold: "A cozedura está definida para {oven}; este método precisa de pelo menos {min}.",
     verdictTimeWindow: "São necessárias cerca de {needed} e você tem {available}: ficaria pronta depois do horário escolhido.",
     verdictFermentationTooShort: "Fermentação de {hours} contra um mínimo de {min} para este estilo: seria outra massa.",
     verdictLaterTime: "Escolha um horário daqui a pelo menos {hours}.",
@@ -379,17 +379,17 @@ export const PT_LOCALE: CmsContent = {
   allFamiliesLabel: "Todas as fam\u00EDlias",
   tiers: {
     perfect: {
-      label: "Perfeitos",
-      subtitle: "compatibilidade m\u00E1xima",
+      label: "Viáveis",
+      subtitle: "os requisitos da receita são cumpridos",
     },
-    good: { label: "Bons", subtitle: "\u00F3tima escolha" },
+    good: { label: "Com adaptações", subtitle: "segue as alterações e verifica o necessário" },
     challenging: {
       label: "Desafiantes",
       subtitle: "para os corajosos",
     },
     not_feasible: {
-      label: "Invi\u00E1veis",
-      subtitle: "faltam requisitos-chave (forno, experi\u00EAncia)",
+      label: "Não viáveis assim",
+      subtitle: "falta uma condição essencial para esta receita",
     },
   },
   scoreDimensions: {
@@ -401,11 +401,11 @@ export const PT_LOCALE: CmsContent = {
         "O quanto a receita respeita o c\u00E2none do estilo: ingredientes (hidrata\u00E7\u00E3o, for\u00E7a e P/L da farinha), fermenta\u00E7\u00E3o e equipamento. Se o seu forno fica abaixo do m\u00EDnimo do estilo, este eixo desaba: algumas pizzas exigem um fogo que n\u00E3o d\u00E1 para simular.",
     },
     feasibility: {
-      label: "Viabilidade",
+      label: "Facilidade",
       short: "Via",
       weight: 0.25,
       explain:
-        "O quanto \u00E9 realista para voc\u00EA, hoje: pesa o forno (40%), a farinha (30%) e a experi\u00EAncia exigida (30%). Cai se o estilo pede mais calor do que voc\u00EA tem ou se a hidrata\u00E7\u00E3o supera o seu n\u00EDvel.",
+        "Facilidade de execução segundo forno, farinha e experiência. A viabilidade depende separadamente dos requisitos do método e das adaptações indicadas.",
     },
     digestibility: {
       label: "Digestibilidade",
@@ -667,6 +667,12 @@ export const PT_LOCALE: CmsContent = {
       "Requer mínimo {fMin}, você tem {available}",
     "rec.needsWoodOven": "\u00C9 feita em forno a lenha: com o seu fica parecida, n\u00E3o can\u00F4nica",
     "rec.ovenAdapted": "O teu forno atinge {temp}: temperatura ideal {ideal}, cozedura adaptada",
+    "gen.homeBakingMethod": "Cozedura doméstica a {temp} sobre um tabuleiro invertido pré-aquecido; resultado diferente da cozedura original a {ideal}",
+    "rec.needsDeck": "Esta cozedura precisa de pedra ou aço pré-aquecido, não indicado na tua cozinha",
+    "timeline.homeTray.preheat": "Pré-aquece o forno ao máximo ({temp}) com um tabuleiro invertido dentro, até também estar quente. Entretanto, termina o repouso da massa.",
+    "timeline.homeTray.bake": "Coze sobre o tabuleiro invertido pré-aquecido. Verifica o dourado da base e a cozedura antes de retirar.",
+    "gen.fermentationTooLong": "A fermentação de {hours} ultrapassa o máximo desta receita ({maxHours}). Escolhe um método verificado para uma duração maior.",
+    "gen.fermentationTemperature": "Este método prevê maturação a {requiredTemp}; foi selecionado {temp}. Repõe o regime previsto ou escolhe outro método verificado.",
     "rec.ovenIdeal":
       "Seu forno atinge a temperatura ideal ({ideal})",
     "rec.ovenAdequate":

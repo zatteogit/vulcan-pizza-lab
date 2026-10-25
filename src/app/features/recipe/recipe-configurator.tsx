@@ -436,6 +436,7 @@ export function RecipeConfigurator({
       ...constraints,
       oven_type: id as OvenType,
       oven_max_temp_c: maxTemp,
+      oven_capacity_temp_c: maxTemp,
     });
   };
 
@@ -982,8 +983,8 @@ export function RecipeConfigurator({
                   oven_max_temp_c: v,
                 })
               }
-              min={200}
-              max={550}
+              min={Math.min(200, constraints.oven_capacity_temp_c ?? 200)}
+              max={constraints.oven_capacity_temp_c ?? OVEN_PRESETS.find((preset) => preset.id === constraints.oven_type)?.maxTemp ?? 550}
               step={5}
               unit="°C"
               rangeMin={style.baking.temp_c_range[0]}

@@ -168,7 +168,7 @@ export const JA_LOCALE: CmsContent = {
     flourUseMedium: "中程度の強さのタイプ0",
     flourUseWeak: "弱め〜中程度のタイプ00",
     verdictTitle: "このままでは作れません",
-    verdictOvenTooCold: "お使いのオーブンは{oven}まで、このスタイルには{min}以上が必要です。別のピザになります。",
+    verdictOvenTooCold: "焼成温度は{oven}に設定されています。この製法には少なくとも{min}が必要です。",
     verdictTimeWindow: "約{needed}かかりますが、使えるのは{available}です。選んだ時刻より後に仕上がります。",
     verdictFermentationTooShort: "発酵{hours}では、このスタイルの最低{min}に届きません。別の生地になります。",
     verdictLaterTime: "{hours}以上先の時刻を選んでください。",
@@ -429,20 +429,20 @@ export const JA_LOCALE: CmsContent = {
     "\u3059\u3079\u3066\u306E\u30D5\u30A1\u30DF\u30EA\u30FC",
   tiers: {
     perfect: {
-      label: "\u6700\u9069",
-      subtitle: "\u6700\u9AD8\u306E\u76F8\u6027",
+      label: "作れる",
+      subtitle: "レシピの条件を満たしています",
     },
     good: {
-      label: "\u826F\u597D",
-      subtitle: "\u7D20\u6674\u3089\u3057\u3044\u9078\u629E",
+      label: "調整すれば作れる",
+      subtitle: "変更点と必要な道具を確認してください",
     },
     challenging: {
       label: "\u30C1\u30E3\u30EC\u30F3\u30B8\u30F3\u30B0",
       subtitle: "\u52C7\u6C17\u3042\u308B\u4EBA\u3078",
     },
     not_feasible: {
-      label: "\u5B9F\u73FE\u4E0D\u53EF",
-      subtitle: "\u4E3B\u306A\u6761\u4EF6\uFF08\u30AA\u30FC\u30D6\u30F3\u30FB\u7D4C\u9A13\uFF09\u304C\u4E0D\u8DB3",
+      label: "この条件では作れない",
+      subtitle: "このレシピに不可欠な条件が不足しています",
     },
   },
   scoreDimensions: {
@@ -454,11 +454,11 @@ export const JA_LOCALE: CmsContent = {
         "\u30EC\u30B7\u30D4\u304C\u305D\u306E\u30B9\u30BF\u30A4\u30EB\u306E\u898F\u7BC4\u306B\u3069\u308C\u3060\u3051\u5FE0\u5B9F\u304B\u3092\u793A\u3057\u307E\u3059\u3002\u6750\u6599\uFF08\u52A0\u6C34\u7387\u3001\u5C0F\u9EA6\u7C89\u306E\u5F37\u3055\u3068P/L\uFF09\u3001\u767A\u9175\u30D7\u30ED\u30BB\u30B9\u3001\u8A2D\u5099\u3092\u8A55\u4FA1\u3002\u30AA\u30FC\u30D6\u30F3\u304C\u30B9\u30BF\u30A4\u30EB\u306E\u6700\u4F4E\u6E29\u5EA6\u306B\u5C4A\u304B\u306A\u3044\u3068\u3001\u3053\u306E\u8EF8\u306F\u5927\u304D\u304F\u4E0B\u304C\u308A\u307E\u3059\u3002",
     },
     feasibility: {
-      label: "\u5B9F\u73FE\u53EF\u80FD\u6027",
+      label: "作りやすさ",
       short: "\u5B9F\u73FE",
       weight: 0.25,
       explain:
-        "\u4ECA\u306E\u3042\u306A\u305F\u306B\u3068\u3063\u3066\u3069\u308C\u3060\u3051\u73FE\u5B9F\u7684\u304B\u3092\u793A\u3057\u307E\u3059\u3002\u30AA\u30FC\u30D6\u30F3\uFF0840%\uFF09\u3001\u5C0F\u9EA6\u7C89\uFF0830%\uFF09\u3001\u5FC5\u8981\u306A\u7D4C\u9A13\uFF0830%\uFF09\u3067\u69CB\u6210\u3002\u30B9\u30BF\u30A4\u30EB\u304C\u624B\u6301\u3061\u4EE5\u4E0A\u306E\u706B\u529B\u3092\u6C42\u3081\u305F\u308A\u3001\u52A0\u6C34\u7387\u304C\u30EC\u30D9\u30EB\u3092\u8D85\u3048\u308B\u3068\u4E0B\u304C\u308A\u307E\u3059\u3002",
+        "オーブン、小麦粉、経験に基づく作りやすさの指標です。実際に作れるかどうかは、製法の条件と明示された調整内容で別に判定します。",
     },
     digestibility: {
       label: "\u6D88\u5316\u6027",
@@ -720,6 +720,12 @@ export const JA_LOCALE: CmsContent = {
       "最低{fMin}必要、{available}しかありません",
     "rec.needsWoodOven": "\u672C\u6765\u306F\u85AA\u7AAF\u3067\u713C\u304F\u30B9\u30BF\u30A4\u30EB\u3067\u3059\u3002\u304A\u4F7F\u3044\u306E\u30AA\u30FC\u30D6\u30F3\u3067\u3082\u8FD1\u3065\u3051\u307E\u3059\u304C\u3001\u6B63\u7D71\u306A\u4ED5\u4E0A\u304C\u308A\u306B\u306F\u306A\u308A\u307E\u305B\u3093",
     "rec.ovenAdapted": "オーブンの最高温度は{temp}、理想温度は{ideal}です。焼成を調整します",
+    "gen.homeBakingMethod": "予熱した裏返しの天板で{temp}で焼きます。標準の{ideal}での焼成とは仕上がりが異なります",
+    "rec.needsDeck": "この焼成には予熱したピザストーンまたはスチールが必要ですが、キッチンに登録されていません",
+    "timeline.homeTray.preheat": "裏返しの天板を入れてオーブンを最高温度（{temp}）に予熱し、天板も十分熱くします。その間に生地を休ませます。",
+    "timeline.homeTray.bake": "予熱した裏返しの天板で焼きます。取り出す前に底の焼き色と火の通りを確認してください。",
+    "gen.fermentationTooLong": "発酵時間{hours}はこのレシピの上限（{maxHours}）を超えています。より長時間に対応した確認済みの方法を選んでください。",
+    "gen.fermentationTemperature": "この製法は{requiredTemp}での熟成を想定していますが、{temp}が選択されています。指定の条件に戻すか、別の確認済みの製法を選んでください。",
     "rec.ovenIdeal":
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3\u306F\u7406\u60F3\u6E29\u5EA6\u306B\u5230\u9054 ({ideal})",
     "rec.ovenAdequate": "オーブンは適切 (自動時間/温度補正)",

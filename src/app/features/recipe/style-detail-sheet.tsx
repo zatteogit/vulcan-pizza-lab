@@ -400,7 +400,7 @@ export function StyleDetailSheet({
           {rec && (
             <div className="style-detail-match">
               <h3 className="style-detail-match__heading">
-                {rec.tier === "not_feasible" ? cms.ui.verdictTitle : cms.ui.recipeScore}
+                {cms.tiers[rec.tier].label}
               </h3>
               {constraints && (
                 <p className="style-detail-match__text">

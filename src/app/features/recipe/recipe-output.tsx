@@ -440,6 +440,7 @@ export function RecipeOutput({
      - altra ricetta in corso → chiedi conferma (sovrascrive)
      - nessuna sessione → parti subito */
   const handleStartCooking = React.useCallback(() => {
+    if (recipe.verdict.outcome === "not_feasible" && !isThisSession) return;
     if (isThisSession) {
       openOverlay();
     } else if (!isPersonalized) {
@@ -449,7 +450,7 @@ export function RecipeOutput({
     } else {
       startSession(recipe.style.id, recipe.style.name, cookingSteps);
     }
-  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe.style.name, cookingSteps]);
+  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe.style.name, recipe.verdict.outcome, cookingSteps]);
 
   React.useEffect(() => {
     const handler = () => handleStartCooking();
@@ -460,17 +461,18 @@ export function RecipeOutput({
   /* Audit totale n. 13: la ricetta di Crea si può cucinare come quella di
      Scopri. La shell mostra «Inizia» finché c'è una ricetta sullo schermo. */
   React.useEffect(() => {
-    window.dispatchEvent(new CustomEvent("vulcan:cook-available", { detail: true }));
+    window.dispatchEvent(new CustomEvent("vulcan:cook-available", { detail: recipe.verdict.outcome !== "not_feasible" }));
     return () => {
       window.dispatchEvent(new CustomEvent("vulcan:cook-available", { detail: false }));
     };
-  }, []);
+  }, [recipe.verdict.outcome]);
 
   const confirmStartCooking = React.useCallback(() => {
+    if (recipe.verdict.outcome === "not_feasible") return;
     setConfirmReplace(false);
     setConfirmPersonalize(false);
     startSession(recipe.style.id, recipe.style.name, cookingSteps);
-  }, [startSession, recipe.style.id, recipe.style.name, cookingSteps]);
+  }, [startSession, recipe.style.id, recipe.style.name, recipe.verdict.outcome, cookingSteps]);
 
   const handlePersonalizeBeforeCooking = React.useCallback(() => {
     setConfirmPersonalize(false);

@@ -965,7 +965,7 @@ export function HomePage() {
         (cms.yeastLabels?.[opt.yeast_type] ?? YEAST_LABELS[opt.yeast_type] ?? opt.yeast_type).toLowerCase(),
       );
     }
-    return { value: opt.scores.composite, hard, softNeeds };
+    return { value: opt.scores.composite, hard, softNeeds, outcome: opt.verdict.outcome };
   }, [
     selectedStyle,
     selectedToppingConcept,
@@ -1509,11 +1509,12 @@ export function HomePage() {
                   dirty={createDirty}
                   onPersonalize={handleOpenCreatePersonalization}
                   onOptimize={
-                    createRecipeOptimized ||
+                    ceilingInfo?.outcome === "not_feasible" ||
+                    (recipe.verdict.outcome !== "not_feasible" && (createRecipeOptimized ||
                     (ceilingInfo != null &&
                       Math.round(ceilingInfo.value) -
                         Math.round(recipe.scores.composite) <
-                        2)
+                        2)))
                       ? undefined
                       : () => optimizeForConstraints(engineConstraints)
                   }

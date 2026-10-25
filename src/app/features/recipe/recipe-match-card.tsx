@@ -266,7 +266,7 @@ export function RecipeMatchCard({
   //           < rassicurazione path-aware < compromesso generico.
   let headroomLine: { text: string; tone: "warn" | "accent" | "muted" | "ok" } | null = null;
   if (ceilingRounded != null) {
-    if (ceilingRounded < 40) {
+    if (ceilingRounded < 40 && !verdictRecipe) {
       // HARD: anche al massimo è sotto soglia → non vale la pena.
       headroomLine = {
         tone: "warn",
@@ -274,7 +274,7 @@ export function RecipeMatchCard({
           ceiling: ceilingRounded,
         }),
       };
-    } else if (ovenIsWall && ceilingRounded < 65) {
+    } else if (ovenIsWall && ceilingRounded < 65 && !verdictRecipe) {
       // HARD: il forno è il tetto, ma una pizza la fai → compromesso onesto.
       headroomLine = {
         tone: "muted",
@@ -304,6 +304,9 @@ export function RecipeMatchCard({
   }
 
   const tone = matchTone(roundedScore, mode, cms.cooking.matchTones);
+  // Con un esito operativo esplicito non aggiungere rassicurazioni ricavate
+  // dal punteggio: le condizioni sono già elencate nel verdetto.
+  if (verdictRecipe && headroom < 2) headroomLine = null;
   /* D-041: icona a indicatore, non a cuore (il cuore vuol dire preferiti). */
   const notFeasible = verdictRecipe?.verdict.outcome === "not_feasible" && !!verdictConstraints;
   const MatchIcon = notFeasible ? TriangleAlert : Gauge;
@@ -397,7 +400,9 @@ export function RecipeMatchCard({
               exit={{ opacity: 0 }}
               transition={motionTiming.exit}
             >
-              {notFeasible ? cms.ui.verdictTitle : tone.title}
+              {notFeasible ? cms.ui.verdictTitle : verdictRecipe
+                ? cms.tiers[verdictRecipe.verdict.outcome === "ok" ? "perfect" : "good"].label
+                : tone.title}
             </motion.span>
           </AnimatePresence>
         </span>
@@ -410,6 +415,13 @@ export function RecipeMatchCard({
           constraints={verdictConstraints}
           mealDeadline={mealDeadline}
         />
+      )}
+      {!notFeasible && verdictRecipe?.verdict.outcome === "warnings" && (
+        <ul className="recipe-verdict__reasons">
+          {engineMsgTexts(verdictRecipe.verdict.adaptations, cms, bcp47).map((text) => (
+            <li key={text} className="match-notice match-notice--warn">{text}</li>
+          ))}
+        </ul>
       )}
       {/* Avvisi onesti: visibili anche a card chiusa */}
       {!notFeasible && unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
@@ -439,7 +451,8 @@ export function RecipeMatchCard({
             {/* Copy emotivo del tono: apre il pannello. */}
             <div className="match-details__intro">
               <p className="match-details__body">
-                {tone.body}
+                {verdictRecipe ? cms.tiers[verdictRecipe.verdict.outcome === "not_feasible" ? "not_feasible"
+                  : verdictRecipe.verdict.outcome === "ok" ? "perfect" : "good"].subtitle : tone.body}
               </p>
             </div>
 

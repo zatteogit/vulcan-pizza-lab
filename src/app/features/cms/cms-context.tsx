@@ -1401,7 +1401,7 @@ export const CMS_DEFAULTS: CmsContent = {
     flourUseMedium: "Tipo 0 media forza",
     flourUseWeak: "Tipo 00 debole/media",
     verdictTitle: "Così non è fattibile",
-    verdictOvenTooCold: "Il tuo forno arriva a {oven}, questo stile ne chiede almeno {min}: verrebbe un'altra pizza.",
+    verdictOvenTooCold: "La cottura è impostata a {oven}; per questo metodo servono almeno {min}.",
     verdictTimeWindow: "Servono circa {needed}, ne hai {available}: sarebbe pronta dopo l'orario scelto.",
     verdictFermentationTooShort: "Lievitazione di {hours} contro un minimo di {min} per questo stile: sarebbe un altro impasto.",
     verdictLaterTime: "Scegli un orario fra almeno {hours}.",
@@ -1524,10 +1524,10 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   allFamiliesLabel: "Tutte le famiglie",
   tiers: {
-    perfect:      { label: "Perfetti per te",  subtitle: "ideali con il tuo forno e livello" },
-    good:         { label: "Fattibili",        subtitle: "richiedono qualche compromesso" },
+    perfect:      { label: "Fattibili",  subtitle: "requisiti della ricetta rispettati" },
+    good:         { label: "Con adattamenti",        subtitle: "segui le modifiche e verifica ciò che serve" },
     challenging:  { label: "Sfidanti",         subtitle: "richiedono più attrezzatura o esperienza" },
-    not_feasible: { label: "Non fattibili",    subtitle: "mancano requisiti chiave (forno, esperienza)" },
+    not_feasible: { label: "Non fattibili così",    subtitle: "manca una condizione essenziale per questa ricetta" },
   },
   scoreDimensions: {
     authenticity: {
@@ -1536,9 +1536,9 @@ export const CMS_DEFAULTS: CmsContent = {
         "Quanto la ricetta rispetta il canone dello stile: ingredienti (idratazione, forza e P/L della farina), processo di fermentazione e attrezzatura. Se il forno resta sotto il minimo dello stile, questo asse crolla: certe pizze chiedono un fuoco che non si può simulare.",
     },
     feasibility: {
-      label: "Fattibilità", short: "Fat", weight: 0.25,
+      label: "Facilità", short: "Fat", weight: 0.25,
       explain:
-        "Quanto è realistica per te, oggi: pesa il forno (40%), la farina (30%) e l'esperienza richiesta (30%). Cala se lo stile chiede più temperatura di quella che hai o se l'idratazione supera il tuo livello.",
+        "Indicatore di facilità di esecuzione: considera forno, farina ed esperienza. Non decide se la ricetta è fattibile: quello dipende dai requisiti del metodo e dagli adattamenti dichiarati.",
     },
     digestibility: {
       label: "Digeribilità", short: "Dig", weight: 0.20,
@@ -1974,6 +1974,12 @@ export const CMS_DEFAULTS: CmsContent = {
     "rec.timeInsufficient": "Richiede minimo {fMin}, hai {available}",
     "rec.needsWoodOven": "Prevede il forno a legna: col tuo forno viene vicina, non canonica",
     "rec.ovenAdapted": "Il tuo forno arriva a {temp}: temperatura ideale {ideal}, cottura adattata",
+    "gen.homeBakingMethod": "Cottura domestica a {temp} su teglia capovolta preriscaldata; risultato diverso dalla cottura originale a {ideal}",
+    "rec.needsDeck": "Per questa cottura serve pietra o acciaio preriscaldato: non risultano nella tua cucina",
+    "timeline.homeTray.preheat": "Preriscalda il forno al massimo ({temp}) con una teglia capovolta già dentro, finché anche la teglia è ben calda. Intanto termina il riposo dell’impasto.",
+    "timeline.homeTray.bake": "Inforna sulla teglia capovolta già calda. Controlla la doratura della base e la cottura prima di sfornare.",
+    "gen.fermentationTooLong": "Lievitazione di {hours}: supera il massimo previsto da questa ricetta ({maxHours}). Scegli un metodo verificato per una durata maggiore.",
+    "gen.fermentationTemperature": "Questo metodo prevede maturazione a {requiredTemp}; è stata impostata a {temp}. Ripristina il regime previsto o scegli un altro metodo verificato.",
     "rec.ovenIdeal": "Il tuo forno raggiunge la temperatura ideale ({ideal})",
     "rec.ovenAdequate": "Forno adeguato (compensazione automatica tempo/temperatura)",
     "rec.fried": "Si frigge in pentola: il forno non serve",

@@ -143,7 +143,7 @@ export const ES_LOCALE: CmsContent = {
     flourUseMedium: "Tipo 0 de fuerza media",
     flourUseWeak: "Tipo 00 floja/media",
     verdictTitle: "Así no es viable",
-    verdictOvenTooCold: "Tu horno llega a {oven} y este estilo pide al menos {min}: saldría otra pizza.",
+    verdictOvenTooCold: "La cocción está ajustada a {oven}; este método necesita al menos {min}.",
     verdictTimeWindow: "Hacen falta unas {needed} y tienes {available}: estaría lista después de la hora elegida.",
     verdictFermentationTooShort: "Levado de {hours} frente a un mínimo de {min} para este estilo: sería otra masa.",
     verdictLaterTime: "Elige una hora dentro de al menos {hours}.",
@@ -382,17 +382,17 @@ export const ES_LOCALE: CmsContent = {
   allFamiliesLabel: "Todas las familias",
   tiers: {
     perfect: {
-      label: "Perfectos",
-      subtitle: "m\u00E1xima compatibilidad",
+      label: "Factibles",
+      subtitle: "se cumplen los requisitos de la receta",
     },
-    good: { label: "Buenos", subtitle: "gran elecci\u00F3n" },
+    good: { label: "Con adaptaciones", subtitle: "sigue los cambios y comprueba lo necesario" },
     challenging: {
       label: "Desafiantes",
       subtitle: "para los atrevidos",
     },
     not_feasible: {
-      label: "No viables",
-      subtitle: "faltan requisitos clave (horno, experiencia)",
+      label: "No factibles así",
+      subtitle: "falta una condición esencial para esta receta",
     },
   },
   scoreDimensions: {
@@ -404,11 +404,11 @@ export const ES_LOCALE: CmsContent = {
         "Cu\u00E1nto respeta la receta el canon del estilo: ingredientes (hidrataci\u00F3n, fuerza y P/L de la harina), proceso de fermentaci\u00F3n y equipo. Si tu horno queda por debajo del m\u00EDnimo del estilo, este eje se derrumba: algunas pizzas exigen un fuego que no se puede simular.",
     },
     feasibility: {
-      label: "Viabilidad",
+      label: "Facilidad",
       short: "Via",
       weight: 0.25,
       explain:
-        "Qu\u00E9 tan realista es para ti, hoy: pondera el horno (40%), la harina (30%) y la experiencia requerida (30%). Baja si el estilo pide m\u00E1s calor del que tienes o la hidrataci\u00F3n supera tu nivel.",
+        "Facilidad de ejecución según horno, harina y experiencia. La viabilidad se determina por separado mediante los requisitos del método y las adaptaciones indicadas.",
     },
     digestibility: {
       label: "Digestibilidad",
@@ -669,6 +669,12 @@ export const ES_LOCALE: CmsContent = {
       "Requiere mínimo {fMin}, tienes {available}",
     "rec.needsWoodOven": "Se hace en horno de le\u00F1a: con el tuyo queda cerca, no can\u00F3nica",
     "rec.ovenAdapted": "Tu horno alcanza {temp}: temperatura ideal {ideal}, cocción adaptada",
+    "gen.homeBakingMethod": "Cocción doméstica a {temp} sobre una bandeja invertida precalentada; resultado distinto de la cocción original a {ideal}",
+    "rec.needsDeck": "Esta cocción necesita piedra o acero precalentado, no indicado en tu cocina",
+    "timeline.homeTray.preheat": "Precalienta el horno al máximo ({temp}) con una bandeja invertida dentro hasta que también esté caliente. Mientras, termina el reposo de la masa.",
+    "timeline.homeTray.bake": "Hornea sobre la bandeja invertida precalentada. Comprueba el dorado de la base y la cocción antes de sacar.",
+    "gen.fermentationTooLong": "La fermentación de {hours} supera el máximo de esta receta ({maxHours}). Elige un método verificado para una duración mayor.",
+    "gen.fermentationTemperature": "Este método prevé maduración a {requiredTemp}; se ha seleccionado {temp}. Restablece el régimen previsto o elige otro método verificado.",
     "rec.ovenIdeal":
       "Tu horno alcanza la temperatura ideal ({ideal})",
     "rec.ovenAdequate":

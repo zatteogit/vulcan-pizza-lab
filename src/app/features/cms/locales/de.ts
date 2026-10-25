@@ -143,7 +143,7 @@ export const DE_LOCALE: CmsContent = {
     flourUseMedium: "Tipo 0, mittlere Stärke",
     flourUseWeak: "Tipo 00, schwach bis mittel",
     verdictTitle: "So klappt es nicht",
-    verdictOvenTooCold: "Dein Ofen schafft {oven}, dieser Stil braucht mindestens {min}: Es würde eine andere Pizza.",
+    verdictOvenTooCold: "Die Backtemperatur ist auf {oven} eingestellt; diese Methode benötigt mindestens {min}.",
     verdictTimeWindow: "Es dauert etwa {needed}, du hast {available}: Sie wäre erst nach der gewählten Uhrzeit fertig.",
     verdictFermentationTooShort: "{hours} Gare statt mindestens {min} für diesen Stil: Das wäre ein anderer Teig.",
     verdictLaterTime: "Wähle eine Uhrzeit in mindestens {hours}.",
@@ -370,17 +370,17 @@ export const DE_LOCALE: CmsContent = {
   allFamiliesLabel: "Alle Familien",
   tiers: {
     perfect: {
-      label: "Perfekt",
-      subtitle: "maximale Kompatibilit\u00E4t",
+      label: "Machbar",
+      subtitle: "die Anforderungen des Rezepts sind erfüllt",
     },
-    good: { label: "Gut", subtitle: "tolle Wahl" },
+    good: { label: "Mit Anpassungen", subtitle: "Änderungen befolgen und benötigte Ausstattung prüfen" },
     challenging: {
       label: "Herausfordernd",
       subtitle: "f\u00FCr Mutige",
     },
     not_feasible: {
-      label: "Nicht machbar",
-      subtitle: "wichtige Voraussetzungen fehlen (Ofen, Erfahrung)",
+      label: "So nicht machbar",
+      subtitle: "eine wesentliche Voraussetzung für dieses Rezept fehlt",
     },
   },
   scoreDimensions: {
@@ -392,11 +392,11 @@ export const DE_LOCALE: CmsContent = {
         "Wie genau das Rezept dem Kanon des Stils folgt: Zutaten (Hydration, Mehlst\u00E4rke und P/L), G\u00E4rprozess und Ausstattung. Bleibt dein Ofen unter dem Minimum des Stils, bricht diese Achse ein: Manche Pizzen verlangen ein Feuer, das sich nicht simulieren l\u00E4sst.",
     },
     feasibility: {
-      label: "Machbarkeit",
+      label: "Einfachheit",
       short: "Mach",
       weight: 0.25,
       explain:
-        "Wie realistisch es heute f\u00FCr dich ist: gewichtet Ofen (40 %), Mehl (30 %) und geforderte Erfahrung (30 %). Sinkt, wenn der Stil mehr Hitze braucht, als du hast, oder die Hydration \u00FCber deinem Niveau liegt.",
+        "Ausführbarkeit nach Ofen, Mehl und Erfahrung. Die tatsächliche Machbarkeit wird getrennt anhand der Methodenanforderungen und angegebenen Anpassungen bestimmt.",
     },
     digestibility: {
       label: "Bek\u00F6mmlichkeit",
@@ -656,6 +656,12 @@ export const DE_LOCALE: CmsContent = {
       "Benötigt mindestens {fMin}, du hast {available}",
     "rec.needsWoodOven": "Geh\u00F6rt in den Holzofen: Mit deinem Ofen kommst du nah dran, aber nicht kanonisch",
     "rec.ovenAdapted": "Dein Ofen erreicht {temp}: ideale Temperatur {ideal}, angepasste Backzeit",
+    "gen.homeBakingMethod": "Backen zu Hause bei {temp} auf einem vorgeheizten umgedrehten Blech; anderes Ergebnis als beim Original bei {ideal}",
+    "rec.needsDeck": "Diese Methode braucht einen vorgeheizten Stein oder Backstahl, der in deiner Küche nicht angegeben ist",
+    "timeline.homeTray.preheat": "Heize den Ofen auf Maximum ({temp}) mit einem umgedrehten Blech vor, bis auch das Blech heiß ist. Lasse den Teig währenddessen fertig ruhen.",
+    "timeline.homeTray.bake": "Backe auf dem vorgeheizten umgedrehten Blech. Prüfe Bodenbräunung und Garzustand vor dem Herausnehmen.",
+    "gen.fermentationTooLong": "Die Gehzeit von {hours} überschreitet das Maximum dieses Rezepts ({maxHours}). Wähle für längere Zeiten eine geprüfte Methode.",
+    "gen.fermentationTemperature": "Diese Methode sieht eine Reifung bei {requiredTemp} vor; eingestellt sind {temp}. Stelle das vorgesehene Verfahren wieder her oder wähle eine andere geprüfte Methode.",
     "rec.ovenIdeal":
       "Dein Ofen erreicht die ideale Temperatur ({ideal})",
     "rec.ovenAdequate":

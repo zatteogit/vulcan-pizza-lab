@@ -11,7 +11,7 @@ import { pantryFlourName } from "./pantry-flour-names";
  * i template del CMS non scrivono l'unità dopo questi parametri. */
 
 /** Parametri che sono sempre temperature. */
-const TEMPERATURE_PARAMS = new Set(["temp", "ideal", "oven", "ddt"]);
+const TEMPERATURE_PARAMS = new Set(["temp", "ideal", "oven", "ddt", "requiredTemp"]);
 /** Messaggi in cui anche {min} è una temperatura (altrove è un'idratazione). */
 const TEMPERATURE_MIN_KEYS = new Set([
   "feas.ovenTooCold",
@@ -26,6 +26,7 @@ const HOUR_PARAMS: Record<string, readonly string[]> = {
   "rec.timeAdaptable": ["hours"],
   "rec.timeInsufficient": ["fMin", "available"],
   "gen.windowTooShort": ["available", "needed"],
+  "gen.fermentationTooLong": ["hours", "maxHours"],
   "gen.timeBelowStyleWindow": ["available", "fMin"],
   "gen.timeBelowStyleWindowMeal": ["available", "work", "ferment", "fMin", "needed"],
   "opt.coldLongFerment": ["hours", "available"],

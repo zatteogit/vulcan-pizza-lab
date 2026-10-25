@@ -11,7 +11,7 @@ GraduationCap,
 User,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
-import { Suspense,lazy,useCallback,useEffect,useRef,useState,type KeyboardEvent as ReactKeyboardEvent,type MutableRefObject,type RefObject } from "react";
+import { Suspense,lazy,useCallback,useEffect,useLayoutEffect,useRef,useState,type KeyboardEvent as ReactKeyboardEvent,type MutableRefObject,type RefObject } from "react";
 import { Link,Outlet,useLocation,useNavigate,useNavigationType } from "react-router";
 import { ActiveCookWidget } from "../../features/cooking/active-cook-widget";
 import { CmsProvider,useCms } from "../../features/cms/cms-context";
@@ -832,7 +832,9 @@ export function AppShell() {
   const isRecipePage = location.pathname.startsWith("/recipe/");
   /* Audit totale n. 13: anche la ricetta generata in Crea si può cucinare. */
   const [cookAvailable, setCookAvailable] = useState(false);
-  useEffect(() => {
+  // Prima degli effect della ricetta: al primo caricamento il suo evento non
+  // deve andare perso, altrimenti anche una ricetta fattibile perde «Inizia».
+  useLayoutEffect(() => {
     const onAvailable = (event: Event) => setCookAvailable(Boolean((event as CustomEvent<boolean>).detail));
     window.addEventListener("vulcan:cook-available", onAvailable);
     return () => window.removeEventListener("vulcan:cook-available", onAvailable);
@@ -947,7 +949,7 @@ export function AppShell() {
 
           {/* Pizzata attiva: sticky action + overlay (cross-page) */}
           <CookSessionUI
-            canStartRecipe={isRecipePage || cookAvailable}
+            canStartRecipe={cookAvailable}
             hasProfileButton={hasProfileButton}
             showAction={showCookAction && !searchOpen}
             compact={navState.scrolled}
