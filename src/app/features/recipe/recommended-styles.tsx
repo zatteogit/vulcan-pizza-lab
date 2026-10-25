@@ -1,7 +1,7 @@
 import { Award,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
 import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
 import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
-import { useEffect,useMemo,useRef,useState } from "react";
+import { useEffect,useMemo,useRef,useState,type ReactNode } from "react";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import { FilterChip, Surface } from "../../components/ds/index";
@@ -370,9 +370,11 @@ export function RecommendedStyles({
             className="recommended-advanced-panel"
           >
             <div className="recommended-advanced-panel__body">
-              {hasActiveAdvanced && (
-                <div className="recommended-advanced-panel__actions">
-                  <motion.button
+              {/* Hydration: reserve the reset action in the label row, so toggling
+                  any facet never changes the panel's geometry. */}
+              <FacetRow
+                action={
+                  <button
                     type="button"
                     onClick={() => {
                       setHydrationFilter(null);
@@ -380,14 +382,11 @@ export function RecommendedStyles({
                       setSkillFilter(null);
                       setOvenFilter(null);
                     }}
-                    className="recommended-advanced-panel__clear"
+                    className={`recommended-advanced-panel__clear${hasActiveAdvanced ? "" : " recommended-advanced-panel__clear--hidden"}`}
                   >
                     {cms.filters.removeFilters}
-                  </motion.button>
-                </div>
-              )}
-              {/* Hydration */}
-              <FacetRow
+                  </button>
+                }
                 label={cms.filters.hydrationLabel}
                 options={[
                   { id: "low", label: cms.filters.hydrationLow },
@@ -692,20 +691,25 @@ function StyleCard({
 /* ═══ FACET ROW — Tag-based filter row ═══ */
 function FacetRow({
   label,
+  action,
   options,
   active,
   onToggle,
 }: {
   label: string;
+  action?: ReactNode;
   options: { id: string; label: string }[];
   active: string | null;
   onToggle: (v: string) => void;
 }) {
   return (
     <div className="recommended-facet">
-      <span className="type-label recommended-facet__label">
-        {label}
-      </span>
+      <div className="recommended-facet__heading">
+        <span className="type-label recommended-facet__label">
+          {label}
+        </span>
+        {action}
+      </div>
       <div className="recommended-facet__options">
         {options.map((o) => {
           const isActive = active === o.id;
