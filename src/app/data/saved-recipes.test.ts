@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   findSavedRecipeIn,
+  normalizeRecipeName,
+  renameSavedRecipeIn,
+  savedRecipeKey,
   formatSavedDate,
   removeSavedRecipeFrom,
   toggleFavoriteStyleIn,
@@ -46,5 +49,24 @@ describe("formatSavedDate", () => {
     expect(formatSavedDate(now.getTime(), now, "it-IT")).toBe("oggi");
     expect(formatSavedDate(now.getTime() - 86_400_000, now, "en-GB")).toBe("yesterday");
     expect(formatSavedDate(now.getTime() - 3 * 86_400_000, now, "de-DE")).toBe("vor 3 Tagen");
+  });
+});
+
+describe("nomi personali delle versioni", () => {
+  it("rinomina senza cambiare identità, parametri o data del salvataggio", () => {
+    const renamed = renameSavedRecipeIn([base], base.id, "Come piace a Mario")[0];
+    expect(renamed).toEqual({...base,name:"Come piace a Mario"});
+    expect(savedRecipeKey(renamed.styleId,renamed.params)).toBe(savedRecipeKey(base.styleId,base.params));
+    expect(base.name).toBeUndefined();
+  });
+  it("un nome vuoto ripristina il titolo dello stile senza eliminare la ricetta", () => {
+    const renamed=renameSavedRecipeIn([{...base,name:"Mario"}],base.id,"  ");
+    expect(renamed).toHaveLength(1);
+    expect(renamed[0].name).toBeUndefined();
+  });
+  it("tratta il nome come testo facoltativo e limita input importati o da URL", () => {
+    expect(normalizeRecipeName({unexpected:true})).toBeUndefined();
+    expect(normalizeRecipeName("  Mario\nLuigi  ")).toBe("Mario Luigi");
+    expect(normalizeRecipeName("x".repeat(100))).toHaveLength(80);
   });
 });

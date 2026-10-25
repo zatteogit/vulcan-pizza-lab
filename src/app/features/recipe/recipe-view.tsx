@@ -21,7 +21,8 @@ import {
   useTransform,
 } from "motion/react";
 import { ChevronLeft, Bookmark, RotateCcw } from "lucide-react";
-import { Heading, IconButton, Snackbar } from "../../components/ds/index";
+import { IconButton, Snackbar } from "../../components/ds/index";
+import { RecipeTitle } from "./recipe-title";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import { RecipeOutput } from "./recipe-output";
@@ -94,6 +95,9 @@ interface RecipeViewProps {
    *  quando la ricetta è dirty. */
   onResetToOriginal?: () => void;
   resetLabel?: string;
+  resetTitle?: string;
+  recipeName?: string;
+  onRenameRecipe?: (name: string) => boolean;
   /* Usati da Crea (scheda su misura) */
   selectedFlourId?: string | null;
   onSelectFlour?: (flour: import("../../data/flour-database").FlourEntry | null) => void;
@@ -130,6 +134,9 @@ export function RecipeView({
   onRequestPersonalization,
   onResetToOriginal,
   resetLabel,
+  resetTitle,
+  recipeName,
+  onRenameRecipe,
   selectedFlourId,
   onSelectFlour,
   selectedTimeSlotId,
@@ -257,7 +264,6 @@ export function RecipeView({
     : "calc(-1 * var(--recipe-section-overlap))";
 
   const heroEyebrow = eyebrow;
-  const heroTitle = style.name;
   const localizedStyleTags =
     cms.styleChars?.[style.id]
       ?.split("|")
@@ -439,6 +445,7 @@ export function RecipeView({
                     exit={{ opacity: 0 }}
                     whileTap={{ scale: 0.95 }}
                     className="recipe-view-reset"
+                    title={resetTitle}
                   >
                     <RotateCcw size={12} className="recipe-view-reset__icon" aria-hidden="true" />
                     {resetLabel ?? cms.cooking.resetToOriginal}
@@ -456,9 +463,7 @@ export function RecipeView({
               className="recipe-view-title-row"
               transition={motionSpring.recipeSection}
             >
-              <Heading level="page" className="recipe-view-title">
-                {heroTitle}
-              </Heading>
+              <RecipeTitle styleName={style.name} name={recipeName} onRename={onRenameRecipe} />
             </motion.div>
 
             {/* Description + Tags inside the card (rendered only in Ricetta tab) */}

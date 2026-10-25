@@ -20,7 +20,7 @@ type FamilyId,
 } from "../../domain/pizza-engine";
 import { type Interpretation } from "../../data/interpretation-library";
 import { CompatibilityPill, StyleMetaChip } from "./style-card-parts";
-import { tailoredRecipeEntry } from "./kitchen-compatibility";
+import { canonicalRecipe, tailoredRecipeEntry } from "./kitchen-compatibility";
 import { useStylesOverride } from "../../context/styles-override-context";
 import { TiltCard } from "./tilt-card";
 
@@ -46,6 +46,7 @@ type RecommendationWithVariant = StyleRecommendation & {
   bestInterpretation: Interpretation | null;
   /** D-041: compatibilità con la tua cucina (su misura che si aprirà, 0–100). */
   kitchenNow: number;
+  originalScore: number;
 };
 
 function sortByVisibleMatch(items: RecommendationWithVariant[]): RecommendationWithVariant[] {
@@ -177,6 +178,7 @@ export function RecommendedStyles({
         return {
           ...rec,
           kitchenNow: preview.scores.composite,
+          originalScore: canonicalRecipe(rec.style, constraints, scoreWeights).scores.composite,
           optimizedComposite: preview.scores.composite,
           bestInterpretation: null,
         };
@@ -565,11 +567,10 @@ function StyleCard({
   index: number;
 }) {
   const { cms } = useCms();
-  const { style, kitchenNow, optimizedComposite } = rec;
+  const { style, kitchenNow } = rec;
   // Badge = punteggio della ricetta ottimizzata per i tuoi vincoli (ciò che
   // otterrai aprendo lo stile). Fallback alla compatibilità se non calcolato.
   const displayScore = kitchenNow;
-  const bestScore = Math.max(kitchenNow, Math.round(optimizedComposite ?? kitchenNow));
   /* VPL-C3 (rev): badge "difficoltà · impegno" — info che DIFFERENZIA le tile
    * (a parità di momento il match è uguale per tutte). La motivazione di match
    * completa vive nel pannello di dettaglio. */
@@ -639,7 +640,7 @@ function StyleCard({
 
             {/* Compatibilità con la tua cucina — in alto a destra, come in Scopri */}
             <div className="recommended-card__score">
-              <CompatibilityPill now={displayScore} best={bestScore} basis={cms.ui.scoreBasisTailored} blocked={rec.recipe.verdict.outcome === "not_feasible"} />
+              <CompatibilityPill now={displayScore} original={rec.originalScore} blocked={rec.recipe.verdict.outcome === "not_feasible"} />
             </div>
 
             {/* ── Selected check ── */}

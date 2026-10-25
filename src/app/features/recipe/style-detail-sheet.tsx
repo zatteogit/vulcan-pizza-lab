@@ -1,4 +1,4 @@
-import { RecipeMatchIcon } from "./recipe-match-icon";
+import { CompatibilityPill } from "./style-card-parts";
 import { RecipeChanges } from "./recipe-changes";
 import { canonicalRecipe } from "../../use-cases/recipe-entry";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
@@ -95,11 +95,8 @@ export function StyleDetailSheet({
     return recommendStyles(constraints, { [style.id]: style }, undefined,
       (s, c) => tailoredRecipeEntry(s, c, scoreWeightsFromCms(cms)).recipe)[0];
   }, [constraints, style, cms]);
-  /* D-041: lo stesso numero delle card e della ricetta aperta. */
-  const kitchenNow = React.useMemo(
-    () => (constraints ? tailoredRecipeEntry(style, constraints, scoreWeightsFromCms(cms)).recipe.scores.composite : null),
-    [constraints, style, cms],
-  );
+  const originalRecipe = React.useMemo(() => constraints ? canonicalRecipe(style, constraints, scoreWeightsFromCms(cms)) : null, [constraints, style, cms]);
+  const kitchenNow = rec?.recipe.scores.composite ?? null;
 
   /* VPL-C3: motivazioni di match articolate (lista completa, con dimensione). */
   const matchReasons = React.useMemo(() => {
@@ -240,12 +237,8 @@ export function StyleDetailSheet({
                   <span className="style-detail-title__dot">
                     ·
                   </span>
-                  <span
-                    className="style-detail-title__match"
-                    aria-label={uiMessage("pages.explore.compatibility", [kitchenNow ?? 0])}
-                  >
-                    <RecipeMatchIcon score={kitchenNow ?? 0} blocked={rec.recipe.verdict.outcome === "not_feasible"} size={14} aria-hidden="true" />
-                    {cms.ui.scoreBasisTailored}{" · "}{uiMessage("features.recipe.style-detail-sheet.match-a3424e8a", [kitchenNow ?? 0])}</span>
+                  <CompatibilityPill now={kitchenNow ?? 0} original={originalRecipe?.scores.composite} labelled
+                    blocked={rec.recipe.verdict.outcome === "not_feasible"} className="style-detail-title__match" />
                 </>
               )}
 
@@ -438,8 +431,8 @@ export function StyleDetailSheet({
             </div>
           )}
 
-          {rec && constraints && (
-            <RecipeChanges from={canonicalRecipe(style, constraints, scoreWeightsFromCms(cms))} to={rec.recipe} mode="included" />
+          {rec && originalRecipe && (
+            <RecipeChanges from={originalRecipe} to={rec.recipe} mode="included" />
           )}
 
           {/* ── CTA — Genera ricetta ── */}

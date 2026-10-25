@@ -21,9 +21,11 @@ export const ES_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_ES,
   inspirationI18n: INSPIRATION_I18N_ES,
   ui: {
-    recipeCustomizedFrom: "Personalizada · base {name}",
-    recipePresetReference: "Perfil {name}",
-    recipeResetPreset: "Restaurar {name}",
+    recipeNameEdit: "Cambiar nombre de la receta",
+    recipeNameLabel: "Nombre de la receta",
+    recipeNamePlaceholder: "Ej. Como le gusta a Mario",
+    recipeNameConfirm: "Confirmar nombre",
+    recipeResetPreset: "Restablecer",
 
     recipeOpenCreate: "Usar este estilo en Crear",
     createSourceTitle: "Parte de {style}",

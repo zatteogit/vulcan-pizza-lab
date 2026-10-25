@@ -3300,10 +3300,6 @@
     text-align: start;
   }
 
-  .compat-pill__basis {
-    font-weight: var(--weight-medium);
-  }
-
   .compat-pill__icon {
     color: var(--cta);
   }
@@ -3323,8 +3319,12 @@
     opacity: 0.6;
   }
 
-  .compat-pill__best {
-    color: var(--time-dayafter);
+  .compat-pill__label {
+    font-weight: var(--weight-medium);
+  }
+
+  .compat-pill__original {
+    color: var(--text-muted);
   }
 
   .explore-card__caption {
@@ -12075,6 +12075,52 @@
     align-self: center;
   }
 
+  .recipe-title-content {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .recipe-title-content__row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+
+  .recipe-title-content__row .recipe-view-title {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .recipe-title-content__edit {
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+
+  .recipe-title-content__style {
+    margin-top: var(--space-1);
+    color: var(--text-muted);
+    font-size: var(--font-size-md);
+  }
+
+  .recipe-title-editor {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    width: 100%;
+  }
+
+  .recipe-title-editor__input {
+    flex: 1;
+    min-width: 0;
+    padding: var(--space-2);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+    border-radius: var(--radius-lg);
+    background: var(--container-bg-low);
+    color: var(--text-default);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-2xl);
+  }
+
   .recipe-view-title-row {
     display: flex;
     align-items: center;
@@ -14829,11 +14875,11 @@
     gap: var(--space-1);
     padding-inline: var(--space-1-5);
     padding-block: var(--space-0-5);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-2xs);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
     font-weight: var(--weight-bold);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-loose);
+    text-transform: none;
+    letter-spacing: normal;
     background: color-mix(in srgb, var(--primary) 12%, var(--surface-container));
     color: var(--primary);
     border: var(--space-px) solid color-mix(in srgb, var(--primary) 20%, transparent);

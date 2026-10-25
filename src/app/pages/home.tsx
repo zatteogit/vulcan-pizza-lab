@@ -48,7 +48,7 @@ import { useCms } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { t as tpl } from "../features/cms/i18n";
 import { getDietaryWarnings } from "../data/dietary-data";
-import { findSavedRecipe, removeRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
+import { findSavedRecipe, removeRecipe, renameSavedRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
 import {
   getInterpretationById,
   getInterpretationsForStyle,
@@ -62,6 +62,7 @@ import {
 } from "../data/style-versions";
 import { useStylesOverride } from "../context/styles-override-context";
 import { ContextualWarnings } from "../features/recipe/troubleshooting-panel";
+import { normalizeRecipeName } from "../data/saved-recipes";
 import { mergeDraftConstraints, useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
   defaultRecipePL,
@@ -105,6 +106,7 @@ interface PersistedCreateDraft {
   recipeGenerated: boolean;
   constraints: UserConstraints;
   recipe: {
+    name?: string;
     mode: RecipeMode;
     activeVersionId: string | null;
     activeInterpretationId: string | null;
@@ -130,6 +132,7 @@ interface ResolvedCreateDraft {
   styleSettingsPanel: StyleSettingsPanel | null;
   constraints: UserConstraints;
   recipeInitial: RecipeInitialState | null;
+  recipeName?: string;
 }
 
 interface ResolvedTimeChoice {
@@ -347,6 +350,7 @@ function resolveCreateDraft(
         ? "time"
         : null,
     constraints: restoredConstraints,
+    recipeName: step === "result" ? normalizeRecipeName(draft.recipe?.name) : undefined,
     recipeInitial:
       step === "result" && !timeChoice.stale
         ? resolveRecipeInitial(draft, draftStyle)
@@ -435,9 +439,10 @@ export function HomePage() {
   const initialCreateDraftRef = useRef<ResolvedCreateDraft | null>(null);
   if (initialCreateDraftRef.current === null) {
     const draft = resolveCreateDraft(profileDefaults.constraints, effectiveStyles);
-    initialCreateDraftRef.current = sourceStyle ? { ...draft, step: "styles", selectedStyle: null, recipeInitial: null, constraints: { ...draft.constraints, oven_max_temp_c: draft.constraints.oven_capacity_temp_c ?? draft.constraints.oven_max_temp_c } } : draft;
+    initialCreateDraftRef.current = sourceStyle ? { ...draft, step: "styles", selectedStyle: null, recipeInitial: null, recipeName: undefined, constraints: { ...draft.constraints, oven_max_temp_c: draft.constraints.oven_capacity_temp_c ?? draft.constraints.oven_max_temp_c } } : draft;
   }
   const initialCreateDraft = initialCreateDraftRef.current;
+  const [recipeName, setRecipeName] = useState<string | undefined>(initialCreateDraft.recipeName);
   const [currentStep, setCurrentStep] =
     useState<AppStep>(initialCreateDraft.step);
   /* U-10 (F12): cambiando passo il controllo usato sparisce e il focus cadeva
@@ -597,6 +602,7 @@ export function HomePage() {
     if (!selectedStyle) return "";
     const params = new URLSearchParams();
     params.set("mode", createRecipeMode);
+    if (recipeName) { params.set("name", recipeName); params.set("tab", "ricetta"); }
     if (activeVersionId) params.set("v", activeVersionId);
     if (activeInterpretationId)
       params.set("interpretation", activeInterpretationId);
@@ -639,6 +645,7 @@ export function HomePage() {
     constraints.oven_max_temp_c,
     selectedToppingConcept,
     createRecipeMode,
+    recipeName,
   ]);
 
   /* U-2: lo slot su misura attivo, ricostruito dall'istante scelto. */
@@ -686,6 +693,7 @@ export function HomePage() {
     useState<Interpretation | null>(null);
   const applySelectStyle = useCallback(
     (style: PizzaStyle, interpretation: Interpretation | null = null) => {
+      setRecipeName("");
       const entry = tailoredRecipeEntry(style, engineConstraints, scoreWeightsFromCms(cms));
       const r = entry.recipe;
       resetForStyle(style, {
@@ -712,6 +720,7 @@ export function HomePage() {
   }, [pendingInterpretation, selectedStyle, applyInterpretationToState]);
 
   const handleResetCreateToCanonical = useCallback(() => {
+    setRecipeName("");
     if (!selectedStyle) return;
     const e = canonicalRecipeEntry(selectedStyle, undefined, activeInterpretationId ? getInterpretationById(activeInterpretationId) ?? null : activeVersion ? null : undefined, activeVersion ?? undefined);
     const o = e.options;
@@ -726,6 +735,7 @@ export function HomePage() {
   }, [selectedStyle, resetForStyle, constraints.available_hours, engineConstraints, activeVersion, activeInterpretationId]);
 
   const resetCreateBaseRecipe = useCallback(() => {
+    setRecipeName("");
     resetToBaseRecipe({
       availableHours: constraints.available_hours,
       windowConstraints: engineConstraints,
@@ -736,6 +746,7 @@ export function HomePage() {
     (version: StyleVersion) => {
       setSetupNotice(null);
       setSelectedFlourId(null);
+      setRecipeName("");
       selectVersion(version);
       if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: Math.min(selectedStyle.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c)}));
     },
@@ -750,6 +761,7 @@ export function HomePage() {
       }
       setSetupNotice(null);
       setSelectedFlourId(null);
+      setRecipeName("");
       applyInterpretationToState(interpretation);
       if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: Math.min(selectedStyle.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c)}));
     },
@@ -812,10 +824,21 @@ export function HomePage() {
     // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
     [selectedStyle, currentSaveParams, savedTick],
   );
+  const resolvedRecipeName = recipeName ?? normalizeRecipeName(savedEntry?.name) ?? "";
+  useEffect(() => {
+    if (recipeName === undefined && savedEntry?.name) setRecipeName(normalizeRecipeName(savedEntry.name));
+  }, [recipeName, savedEntry]);
   const [saveFailed, setSaveFailed] = useState(false);
   const closeSaveFailed = useCallback(() => setSaveFailed(false), []);
   /** true se il ricettario ora riflette la scelta; false se la scrittura è
    *  fallita (storage pieno o bloccato): lo si dice con SaveFailedNotice. */
+  const handleRenameRecipe = useCallback((next: string): boolean => {
+    const name = normalizeRecipeName(next) ?? "";
+    if (savedEntry && !renameSavedRecipe(savedEntry.id, name)) { setSaveFailed(true); return false; }
+    setRecipeName(name);
+    setSavedTick(tick => tick + 1);
+    return true;
+  }, [savedEntry]);
   const handleToggleSaveRecipe = useCallback((): boolean => {
     if (!selectedStyle || !recipe) return false;
     let ok = true;
@@ -825,6 +848,7 @@ export function HomePage() {
       saveRecipe({
         styleId: selectedStyle.id,
         styleName: selectedStyle.name,
+        name: normalizeRecipeName(resolvedRecipeName),
         versionId: activeVersionId,
         params: currentSaveParams,
         score: Math.round(recipe.scores.composite),
@@ -834,7 +858,7 @@ export function HomePage() {
     }
     setSavedTick((v) => v + 1);
     return ok;
-  }, [selectedStyle, recipe, savedEntry, activeVersionId, currentSaveParams]);
+  }, [selectedStyle, recipe, savedEntry, activeVersionId, currentSaveParams, resolvedRecipeName]);
 
   /* ═══ Modello "dirty" (redesign lug 2026) ═══
      L'originale del Crea è il centro-range dello stile (lo stesso che
@@ -1041,6 +1065,7 @@ export function HomePage() {
       constraints,
       recipe: selectedStyle
         ? {
+            name: normalizeRecipeName(recipeName),
             mode: createRecipeMode,
             activeVersionId,
             activeInterpretationId,
@@ -1063,6 +1088,7 @@ export function HomePage() {
     activeVersionId,
     constraints,
     createRecipeMode,
+    recipeName,
     currentStep,
     customSalt,
     optimizedHydration,
@@ -1304,11 +1330,11 @@ export function HomePage() {
                   : cms.cooking.tabRecipeTailored
               }
               eyebrow={
-                createDirty
-                  ? tpl(cms.ui.recipeCustomizedFrom, {name: createReferenceName})
-                  : tpl(cms.ui.recipePresetReference, {name: createReferenceName})
+                createDirty || resolvedRecipeName
+                  ? cms.ui.scoreBasisTailored
+                  : cms.ui.scoreBasisOriginal
               }
-              eyebrowTone={createDirty ? "tailored" : "canonical"}
+              eyebrowTone={createDirty || resolvedRecipeName ? "tailored" : "canonical"}
               shareUrl={shareUrl}
               selectedToppingConcept={selectedToppingConcept}
               onSelectTopping={(conceptId) => {
@@ -1343,9 +1369,12 @@ export function HomePage() {
               isPersonalized={createDirty}
               onRequestPersonalization={handleOpenCreatePersonalization}
               onResetToOriginal={
-                createDirty ? handleResetCreateToCanonical : undefined
+                createDirty || resolvedRecipeName ? handleResetCreateToCanonical : undefined
               }
-              resetLabel={tpl(cms.ui.recipeResetPreset, {name: createReferenceName})}
+              resetLabel={cms.ui.recipeResetPreset}
+              resetTitle={createReferenceName}
+              recipeName={resolvedRecipeName}
+              onRenameRecipe={createDirty || resolvedRecipeName ? handleRenameRecipe : undefined}
               matchSlot={
                 /* Round 4-5 (note Matteo): ordine Ispirazione → parametri →
                    match. Chip e tabella sono UN'unità; il verdetto respira. */

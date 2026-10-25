@@ -78,3 +78,10 @@ describe("unione dei ricettari (U-1)", () => {
     expect(upsertSavedRecipe(full, recipe("n", 0, 99), { id: "n", createdAt: 1000 }).map((r) => r.id)).not.toContain("n");
   });
 });
+
+it("conserva nome personale e stile nell’esportazione e reimportazione", () => {
+  const named={...recipe("mario",10),name:"Come piace a Mario"};
+  const parsed=parseRecipeBook(serializeRecipeBook([named],[],20));
+  expect(parsed.ok).toBe(true);
+  if(parsed.ok) expect(parsed.recipes).toEqual([named]);
+});

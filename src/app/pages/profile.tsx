@@ -47,6 +47,7 @@ OVEN_PRESETS,
 SKILL_LEVELS,
 STYLES_DB,
 } from "../domain/pizza-engine";
+import { normalizeRecipeName } from "../data/saved-recipes";
 import { ImageWithFallback } from "../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../components/media/responsive-images";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
@@ -358,7 +359,10 @@ function FavoriteStylesSection() {
 function buildSavedRecipeUrl(r: SavedRecipe): string {
   const pr = r.params;
   const q = new URLSearchParams();
+  const name = normalizeRecipeName(r.name);
+  if (name) q.set("name", name);
   q.set("mode", "adapted");
+  q.set("tab", "ricetta");
   q.set("h", String(pr.hydration));
   if (pr.hydrationBase !== undefined) q.set("hb", String(pr.hydrationBase));
   if (pr.salt !== undefined) q.set("s", String(pr.salt));
@@ -510,7 +514,10 @@ function SavedRecipesSection() {
         <ul ref={(el) => { sectionRef.current = el; }} tabIndex={-1} className="profile-saved-recipes">
           {recipes.map((r) => {
             const styleName = STYLES_DB[r.styleId]?.name ?? r.styleName;
+            const name = normalizeRecipeName(r.name);
+            const displayName = name || styleName;
             const meta = [
+              name ? styleName : null,
               formatSavedDate(r.createdAt, new Date(), bcp47),
               r.score != null ? `${r.score}/100` : null,
             ]
@@ -527,7 +534,7 @@ function SavedRecipesSection() {
                   </span>
                   <span className="profile-saved-recipes__info">
                     <span className="profile-saved-recipes__name">
-                      {styleName}
+                      {displayName}
                     </span>
                     <span className="type-data profile-saved-recipes__meta">
                       {meta}
@@ -538,7 +545,7 @@ function SavedRecipesSection() {
                   type="button"
                   onClick={() => handleCopyLink(r)}
                   className="profile-saved-recipes__action"
-                  aria-label={t(p.savedRecipeCopyLinkAria, { name: styleName })}
+                  aria-label={t(p.savedRecipeCopyLinkAria, { name: displayName })}
                   title={p.savedRecipeCopyLink}
                 >
                   <LinkIcon size={16} aria-hidden="true" />
@@ -547,7 +554,7 @@ function SavedRecipesSection() {
                   type="button"
                   onClick={() => handleRemove(r)}
                   className="profile-saved-recipes__action"
-                  aria-label={t(p.savedRecipeRemoveAria, { name: styleName })}
+                  aria-label={t(p.savedRecipeRemoveAria, { name: displayName })}
                   title={p.savedRecipeRemove}
                 >
                   <X size={16} aria-hidden="true" />

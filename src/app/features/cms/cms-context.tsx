@@ -210,8 +210,10 @@ export interface CmsUiStrings {
   verdictRecipeBelow: string;
   // Score dashboard
   recipeScore: string;
-  recipeCustomizedFrom: string;
-  recipePresetReference: string;
+  recipeNameEdit: string;
+  recipeNameLabel: string;
+  recipeNamePlaceholder: string;
+  recipeNameConfirm: string;
   recipeResetPreset: string;
   recipeOpenCreate: string;
   createSourceTitle: string;
@@ -1302,9 +1304,11 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   messages: UI_MESSAGES_IT,
   ui: {
-    recipeCustomizedFrom: "Personalizzata · base {name}",
-    recipePresetReference: "Profilo {name}",
-    recipeResetPreset: "Ripristina {name}",
+    recipeNameEdit: "Modifica nome della ricetta",
+    recipeNameLabel: "Nome della ricetta",
+    recipeNamePlaceholder: "Es. Come piace a Mario",
+    recipeNameConfirm: "Conferma nome",
+    recipeResetPreset: "Ripristina",
 
     recipeOpenCreate: "Porta questo stile in Crea",
     createSourceTitle: "Parti da {style}",

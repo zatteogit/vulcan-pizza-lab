@@ -10,6 +10,7 @@
 import {
   findSavedRecipeIn,
   removeSavedRecipeFrom,
+  renameSavedRecipeIn,
   sortSavedRecipes,
   toggleFavoriteStyleIn,
   upsertSavedRecipe,
@@ -122,6 +123,11 @@ export function saveRecipe(
 export function removeRecipe(id: string): SavedRecipe[] {
   const next = removeSavedRecipeFrom(readRecipes(), id);
   return writeRecipes(next) ? next : readRecipes();
+}
+
+export function renameSavedRecipe(id: string, name: string): boolean {
+  const recipes = readRecipes();
+  return recipes.some(recipe => recipe.id === id) && writeRecipes(renameSavedRecipeIn(recipes, id, name));
 }
 
 /** Rimette una ricetta appena tolta (azione «Annulla»). */
