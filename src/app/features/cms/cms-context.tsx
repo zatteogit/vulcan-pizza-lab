@@ -1650,10 +1650,10 @@ export const CMS_DEFAULTS: CmsContent = {
     wood:              { name: "Forno a Legna",      maxTemp: 500, icon: "flame-kindling" },
   },
   skillLevels: {
-    "1": { name: "Principiante", description: "Prime esperienze con la pizza" },
-    "2": { name: "Intermedio",   description: "Ho fatto pizza diverse volte" },
-    "3": { name: "Avanzato",     description: "Conosco le tecniche e i parametri" },
-    "4": { name: "Esperto",      description: "Padronanza completa delle tecniche" },
+    "1": { name: "Principiante", description: "Non ho mai impastato" },
+    "2": { name: "Intermedio",   description: "Ho già fatto qualche pizza" },
+    "3": { name: "Avanzato",     description: "Gestisco pieghe e lievitazioni" },
+    "4": { name: "Esperto",      description: "Adatto impasti, tempi e tecniche" },
   },
   families: {
     napoletana:    { name: "Napoletana",    description: "Leggerezza, lievitazione naturale, cottura veloce ad altissima temperatura", emoji: "\u{1F1EE}\u{1F1F9}" },

@@ -3956,22 +3956,22 @@ export const SKILL_LEVELS: {
   {
     level: 1,
     name: "Principiante",
-    description: "Prime esperienze con la pizza",
+    description: "Non ho mai impastato",
   },
   {
     level: 2,
     name: "Intermedio",
-    description: "Ho fatto pizza diverse volte",
+    description: "Ho già fatto qualche pizza",
   },
   {
     level: 3,
     name: "Avanzato",
-    description: "Conosco le tecniche e i parametri",
+    description: "Gestisco pieghe e lievitazioni",
   },
   {
     level: 4,
     name: "Esperto",
-    description: "Padronanza completa delle tecniche",
+    description: "Adatto impasti, tempi e tecniche",
   },
 ];
 
