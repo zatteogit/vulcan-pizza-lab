@@ -18,6 +18,14 @@ export const DE_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_DE,
   inspirationI18n: INSPIRATION_I18N_DE,
   ui: {
+    scoreLimitedAuthenticity: "Authentizität {score}/100 begrenzt die Gesamtwertung.",
+    scoreLimitedFeasibility: "Eine nicht erfüllte Voraussetzung begrenzt die Gesamtwertung.",
+    scoreWeightedAverage: "Gewichteter Mittelwert der fünf Achsen",
+    scoreAuthenticityCeiling: "Authentizitätsgrenze",
+    scoreFeasibilityCeiling: "Grenze bei fehlender Machbarkeit",
+    scoreNotWeighted: "Informative Achse: Mit diesem Gewicht verändert sie die Gesamtwertung nicht.",
+    scoreReferencePending: "Das Abweichungsprofil dieses Stils ist noch nicht geprüft.",
+
     copy: "Kopieren",
     copied: "Kopiert!",
     share: "Teilen",
@@ -143,12 +151,12 @@ export const DE_LOCALE: CmsContent = {
     flourUseMedium: "Tipo 0, mittlere Stärke",
     flourUseWeak: "Tipo 00, schwach bis mittel",
     verdictTitle: "So klappt es nicht",
-    verdictOvenTooCold: "Dein Ofen schafft {oven}, dieser Stil braucht mindestens {min}: Es würde eine andere Pizza.",
+    verdictOvenTooCold: "Die Backtemperatur ist auf {oven} eingestellt; diese Methode benötigt mindestens {min}.",
     verdictTimeWindow: "Es dauert etwa {needed}, du hast {available}: Sie wäre erst nach der gewählten Uhrzeit fertig.",
     verdictFermentationTooShort: "{hours} Gare statt mindestens {min} für diesen Stil: Das wäre ein anderer Teig.",
     verdictLaterTime: "Wähle eine Uhrzeit in mindestens {hours}.",
     verdictAlternatives: "Mit denselben Vorgaben funktionieren:",
-    verdictRecipeBelow: "Das nächstliegende Rezept steht trotzdem unten, falls du es versuchen willst.",
+    verdictRecipeBelow: "Das Rezept bleibt unten einsehbar, damit du die zu ändernden Bedingungen prüfen kannst.",
     recipeScore: "Passt zu deiner K\u00FCche",
     nerdToggle: "PizzaNerd",
     nerdActive: "PizzaNerd aktivieren",
@@ -299,6 +307,7 @@ export const DE_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
+    coal: { name: "Kohleofen", maxTemp: 400, icon: "flame" },
     home: { name: "Heimofen", maxTemp: 250, icon: "home" },
     electric_standard: {
       name: "Standard-Elektroofen",
@@ -370,54 +379,54 @@ export const DE_LOCALE: CmsContent = {
   allFamiliesLabel: "Alle Familien",
   tiers: {
     perfect: {
-      label: "Perfekt",
-      subtitle: "maximale Kompatibilit\u00E4t",
+      label: "Machbar",
+      subtitle: "die Anforderungen des Rezepts sind erfüllt",
     },
-    good: { label: "Gut", subtitle: "tolle Wahl" },
+    good: { label: "Mit Anpassungen", subtitle: "Änderungen befolgen und benötigte Ausstattung prüfen" },
     challenging: {
       label: "Herausfordernd",
       subtitle: "f\u00FCr Mutige",
     },
     not_feasible: {
-      label: "Nicht machbar",
-      subtitle: "wichtige Voraussetzungen fehlen (Ofen, Erfahrung)",
+      label: "So nicht machbar",
+      subtitle: "eine wesentliche Voraussetzung für dieses Rezept fehlt",
     },
   },
   scoreDimensions: {
     authenticity: {
-      label: "Authentizit\u00E4t",
+      label: "Authentizität",
       short: "Auth",
       weight: 0.3,
       explain:
-        "Wie genau das Rezept dem Kanon des Stils folgt: Zutaten (Hydration, Mehlst\u00E4rke und P/L), G\u00E4rprozess und Ausstattung. Bleibt dein Ofen unter dem Minimum des Stils, bricht diese Achse ein: Manche Pizzen verlangen ein Feuer, das sich nicht simulieren l\u00E4sst.",
+        "Geschätzte Treue zur verfügbaren Stilreferenz anhand von Teig, Verfahren und Ofen. Geringe Authentizität begrenzt die Gesamtwertung trotz hoher anderer Werte. Keine Zertifizierung.",
     },
     feasibility: {
-      label: "Machbarkeit",
+      label: "Einfachheit",
       short: "Mach",
       weight: 0.25,
       explain:
-        "Wie realistisch es heute f\u00FCr dich ist: gewichtet Ofen (40 %), Mehl (30 %) und geforderte Erfahrung (30 %). Sinkt, wenn der Stil mehr Hitze braucht, als du hast, oder die Hydration \u00FCber deinem Niveau liegt.",
+        "Ausführbarkeit nach Ofen, Mehl und Erfahrung. Die tatsächliche Machbarkeit wird getrennt anhand der Methodenanforderungen und angegebenen Anpassungen bestimmt.",
     },
     digestibility: {
-      label: "Bek\u00F6mmlichkeit",
-      short: "Bek",
+      label: "Geschätzte Reifung",
+      short: "Reif",
       weight: 0.2,
       explain:
-        "Sch\u00E4tzung der Teigreife: G\u00E4rstunden normalisiert auf 18 \u00B0C (Vorteige z\u00E4hlen st\u00E4rker). Je reifer der Teig, desto weiter sind St\u00E4rke und Gluten abgebaut \u2014 und desto bek\u00F6mmlicher die Pizza.",
+        "Modellindex aus Zeit, Temperatur, Hefe und Vorteig. Er beschreibt die geschätzte Teigreifung, nicht die individuelle Verdauung.",
     },
     sustainability: {
-      label: "Nachhaltigkeit",
-      short: "Nach",
+      label: "Geschätzte Nachhaltigkeit",
+      short: "Nachh",
       weight: 0.15,
       explain:
-        "Gesch\u00E4tzte Energie: Backtemperatur und -dauer, K\u00FChlschrankzeit f\u00FCr die G\u00E4rung, Hefetyp. Kurzes Backen und G\u00E4rung bei Raumtemperatur helfen.",
+        "Relative Schätzung anhand von Backvorgang, Gärung und Zutaten. Keine Messung des tatsächlichen Energieverbrauchs oder CO₂-Fußabdrucks.",
     },
     experimentation: {
-      label: "Experimentierung",
+      label: "Experimentieren",
       short: "Exp",
       weight: 0.1,
       explain:
-        "Wie weit du vom Kanon abweichst: Abweichungen bei Hydration und G\u00E4rung, Vorteige au\u00DFerhalb der Vorgabe, vom Setup erzwungene Kompensationen. Kein Makel: Es misst Mut.",
+        "Abweichung von Teig, Verfahren und Backweise von der Referenz. Ein hoher Wert bedeutet mehr Experimente, nicht besseres Gelingen. Einige Stilprofile sind noch ungeprüft. In die Gesamtwertung geht 100 minus dieser Wert ein.",
     },
   },
   recommendationWeights: {
@@ -655,6 +664,16 @@ export const DE_LOCALE: CmsContent = {
     "rec.timeInsufficient":
       "Benötigt mindestens {fMin}, du hast {available}",
     "rec.needsWoodOven": "Geh\u00F6rt in den Holzofen: Mit deinem Ofen kommst du nah dran, aber nicht kanonisch",
+    "rec.ovenAdapted": "Dein Ofen erreicht {temp}: ideale Temperatur {ideal}, angepasste Backzeit",
+    "gen.homeBakingMethod": "Backen zu Hause bei {temp} auf einem vorgeheizten umgedrehten Blech; anderes Ergebnis als beim Original bei {ideal}",
+    "rec.needsDeck": "Diese Methode braucht einen vorgeheizten Stein oder Backstahl, der in deiner Küche nicht angegeben ist",
+    "timeline.homeTray.preheat": "Heize den Ofen auf Maximum ({temp}) mit einem umgedrehten Blech vor, bis auch das Blech heiß ist. Lasse den Teig währenddessen fertig ruhen.",
+    "timeline.homeTray.bake": "Backe auf dem vorgeheizten umgedrehten Blech. Prüfe Bodenbräunung und Garzustand vor dem Herausnehmen.",
+    "gen.fermentationTooLong": "Die Gehzeit von {hours} überschreitet das Maximum dieses Rezepts ({maxHours}). Wähle für längere Zeiten eine geprüfte Methode.",
+    "gen.fermentationTemperature": "Diese Methode sieht eine Reifung bei {requiredTemp} vor; eingestellt sind {temp}. Stelle das vorgesehene Verfahren wieder her oder wähle eine andere geprüfte Methode.",
+    "auth.notCoalOven": "Kohlefeuer gehört zur Originalmethode: Ein anderer Brennstoff bedeutet eine Anpassung",
+    "gen.notCoalOven": "Der Originalstil wird mit Kohle gebacken: Der gewählte Ofen verändert Backweise und Aroma",
+    "timeline.oven.coal": "Kohleofen mit vorgeheiztem Backboden: Boden und Rand beobachten und für gleichmäßiges Backen drehen.",
     "rec.ovenIdeal":
       "Dein Ofen erreicht die ideale Temperatur ({ideal})",
     "rec.ovenAdequate":
@@ -711,8 +730,8 @@ export const DE_LOCALE: CmsContent = {
     "opt.hydrationOvenCompensated": "Hydratation {h}%: {base}% plus {delta}% als Ausgleich für einen Ofen, der kühler als ideal ist.",
     "opt.hydrationOutOfStyleRange": "Mit dieser Kompensation liegt die Hydratation außerhalb des Stilbereichs ({min}–{max}%).",
     "auth.fermentOffCenter": "Gärung weit vom Kanon entfernt (-{penalty}%)",
-    "auth.thermalUnviable": "Ofen zu kalt für diesen Stil ({oven} < {min}): kanonische Leopardenflecken, Rand und Struktur sind nicht erreichbar (×{factor})",
-    "feas.thermalUnviable": "Bei {oven} gelingt keine echte {style}: keine Leopardenflecken, kein aufgegangener Rand. Dieser Stil braucht einen Ofen mit mindestens {min}.",
+    "auth.thermalUnviable": "Temperatur unter der Stilreferenz ({oven} < {min}): geringere Treue zur Backmethode (×{factor})",
+    "feas.thermalUnviable": "Bei {oven} bildet die verfügbare Methode die Backweise von {style} nicht ab. Die aktuelle Methode braucht mindestens {min}; eine geprüfte Anpassung ist nötig.",
     "gen.timeBelowStyleWindow": "Mit {available} liegst du unter dem Zeitfenster dieses Stils (mindestens {fMin}): Gärung verkürzt. Für volle Authentizität braucht es mindestens {fMin}.",
     "gen.timeBelowStyleWindowMeal": "Mit {available} bis zum Essen bleiben nach Kneten, Formen und Backen ({work}) {ferment} zum Gehen: weniger als das Minimum des Stils ({fMin}). Für den vollen Stil braucht es insgesamt etwa {needed}.",
     "opt.coldLongFerment": "{hours} Reifung im Kühlschrank ({temp}): maximale Bekömmlichkeit innerhalb deiner {available}.",
@@ -1129,6 +1148,7 @@ export const DE_LOCALE: CmsContent = {
     greek_pan: "Stark ge\u00F6lte Form, frittierter Boden|Weiche, dicke Krume|Mix Mozzarella + Cheddar|Griechisch-amerikanischer Diner",
   },
   deviationLabels: {
+    unclassified: "Ungeprüft",
     canonical: "Kanonisch",
     parameter_variant: "Parametervariation",
     technique_variant: "Technikvariante",

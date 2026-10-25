@@ -18,6 +18,7 @@ type DeviationPoint =
   | "service_format";
 
 export type DeviationCategory =
+  | "unclassified"
   | "canonical"
   | "parameter_variant"
   | "technique_variant"
@@ -329,6 +330,7 @@ const STYLE_TAGS: Record<string, RecipeTags> = {
 
 /* === DEVIATION CATEGORY LABELS === */
 export const DEVIATION_CATEGORY_LABELS: Record<DeviationCategory, { label: string; emoji: string }> = {
+  unclassified: { label: "Da verificare", emoji: "❔" },
   canonical: { label: "Canonico", emoji: "📜" },
   parameter_variant: { label: "Variazione parametrica", emoji: "🔧" },
   technique_variant: { label: "Variante tecnica", emoji: "⚙️" },
@@ -341,7 +343,7 @@ export function getStyleDeviation(styleId: string): DeviationSignature {
   return STYLE_DEVIATIONS[styleId] ?? {
     deviation_points: [],
     deviation_score: 0,
-    category: "canonical" as DeviationCategory,
+    category: "unclassified" as DeviationCategory,
     description: "",
   };
 }

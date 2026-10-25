@@ -310,6 +310,7 @@ export const MCP_TOOLS: McpTool[] = [
             compatibility: now,
             compatibility_best: best,
             tier: rec.tier,
+            outcome: rec.verdict.outcome,
             // Fattibile, ma con riserve da dire (forno sotto il minimo dello
             // stile, teglia mancante…): l'agente non deve presentarlo come
             // adatto senza riserve.

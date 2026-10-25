@@ -30,7 +30,6 @@ type Interpretation
 } from "../data/interpretation-library";
 import {
 FLOUR_W_RANGES,
-OVEN_PRESETS,
 PIZZA_FAMILIES,
 STYLES_DB,
 YEAST_LABELS,
@@ -92,7 +91,6 @@ import { uiMessage } from "../i18n/ui-messages";
 const FALLBACK =
   "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80";
 
-const VALID_OVEN_TYPES = new Set(OVEN_PRESETS.map((p) => p.id));
 const TAILORING_PARAM_KEYS = [
   "h",
   "w",
@@ -296,28 +294,16 @@ function RecipeContent({
     initialVersion?.params.use_pre_ferment ??
     style.requires_pre_ferment;
 
-  /* ── URL params override (VPL-064) ──
-   * La modalità canonica è una scheda cristallizzata: forno e parametri ideali
-   * dello stile, indipendenti dal profilo. La modalità adattata/lab usa invece
-   * forno salvato, oppure un default casalingo esplicito. */
-  const urlOven = useTailoredUrlParams ? searchParams.get("oven") : null;
-  const adaptedFallbackOvenType = savedOven?.ovenType ?? "home";
-  const adaptedFallbackOvenTemp = savedOven?.maxTemp ?? 250;
-  const resolvedOvenType: OvenType =
-    initialRecipeMode === "canonical"
-      ? style.baking.oven_type_required
-      : urlOven && VALID_OVEN_TYPES.has(urlOven as OvenType)
-      ? (urlOven as OvenType)
-      : adaptedFallbackOvenType;
-  const resolvedOvenTemp =
-    initialRecipeMode === "canonical"
-      ? style.baking.temp_c_ideal
-      : numParam(searchParams, "temp", adaptedFallbackOvenTemp, 180, 500);
+  /* Il forno della cucina prevale anche sui link condivisi. Un link descrive
+   * una ricetta, non dimostra che chi lo apre possieda un forno più potente. */
+  const resolvedOvenType: OvenType = savedOven?.ovenType ?? "home";
+  const resolvedOvenTemp = savedOven?.maxTemp ?? 250;
 
   /* ── State: constraints (from profile + URL override) ── */
   const [constraints, setConstraints] = useState<UserConstraints>(() => ({
     oven_type: resolvedOvenType,
     oven_max_temp_c: resolvedOvenTemp,
+    oven_capacity_temp_c: savedOven?.maxTemp ?? resolvedOvenTemp,
     skill_level: skillLevel,
     available_hours: 24,
     // Default contestuale: 4 panetti per tonde, 1 teglia/pala/focaccia, 4 padellini.
@@ -330,7 +316,7 @@ function RecipeContent({
     pantry_flours: savedPantry?.flours ?? [],
     pantry_yeasts: savedPantry?.yeasts ?? [],
     yeast_speed_factor: loadYeastSpeedFactor(),
-    ...(initialRecipeMode === "canonical" ? {} : personalEquipment),
+    ...personalEquipment,
   }));
 
   /* ── State: recipe params (from style preset/center + URL override) ── */
@@ -837,6 +823,7 @@ function RecipeContent({
         ...base,
         oven_type: savedOven?.ovenType ?? "home",
         oven_max_temp_c: savedOven?.maxTemp ?? 250,
+        oven_capacity_temp_c: savedOven?.maxTemp ?? 250,
       };
     }
     return base;
@@ -855,6 +842,7 @@ function RecipeContent({
       ...effectiveConstraints,
       oven_type: savedOven?.ovenType ?? "home",
       oven_max_temp_c: savedOven?.maxTemp ?? 250,
+      oven_capacity_temp_c: savedOven?.maxTemp ?? 250,
     };
   }, [
     recipeMode,
@@ -906,7 +894,7 @@ function RecipeContent({
         (cms.yeastLabels?.[opt.yeast_type] ?? YEAST_LABELS[opt.yeast_type] ?? opt.yeast_type).toLowerCase(),
       );
     }
-    return { value: opt.scores.composite, hard, softNeeds };
+    return { value: opt.scores.composite, hard, softNeeds, outcome: opt.verdict.outcome };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [style, selectedToppingConcept, matchConstraints, panConfig, cms.scoreDimensions, cms.cooking.needFlour, cms.yeastLabels]);
 
@@ -934,6 +922,7 @@ function RecipeContent({
       ...personalEquipment,
       oven_type: personalOvenType,
       oven_max_temp_c: personalOvenTemp,
+      oven_capacity_temp_c: personalOvenTemp,
     }));
     setCustomHydration(o.params.hydration);
     setCustomFlourW(o.params.flour_w);
@@ -992,6 +981,7 @@ function RecipeContent({
       ...personalEquipment,
       oven_type: savedOven?.ovenType ?? "home",
       oven_max_temp_c: savedOven?.maxTemp ?? 250,
+      oven_capacity_temp_c: savedOven?.maxTemp ?? 250,
     }));
     if (feedbackCorrection.hydrationDelta !== 0) {
       setCustomHydration((h) => Math.max(40, Math.min(105, h + feedbackCorrection.hydrationDelta)));
@@ -1112,8 +1102,9 @@ function RecipeContent({
     setRecipeMode("canonical");
     setConstraints((current) => ({
       ...current,
-      oven_type: style.baking.oven_type_required,
-      oven_max_temp_c: style.baking.temp_c_ideal,
+      oven_type: savedOven?.ovenType ?? "home",
+      oven_max_temp_c: savedOven?.maxTemp ?? 250,
+      oven_capacity_temp_c: savedOven?.maxTemp ?? 250,
       dough_balls: getDefaultDoughBalls(style),
     }));
     setDoughBalls(getDefaultDoughBalls(style));
@@ -1309,13 +1300,15 @@ function RecipeContent({
             >
             <RecipeMatchCard
               scores={matchRecipe.scores}
-              ovenTemp={matchConstraints.oven_max_temp_c}
+              ovenTemp={matchRecipe.oven_temp_c}
               idealTemp={style.baking.temp_c_ideal}
               minTemp={style.baking.temp_c_range[0]}
               mode={recipeMode === "lab" ? "lab" : isDirty ? "adapted" : "canonical"}
               dirty={isDirty}
               onPersonalize={handleOpenPersonalization}
-              onOptimize={isOptimized || optimizeGain < 2 ? undefined : handleOptimize}
+              onOptimize={ceilingInfo.outcome === "not_feasible" ||
+                (recipe?.verdict.outcome !== "not_feasible" && (isOptimized || optimizeGain < 2))
+                ? undefined : handleOptimize}
               optimizationRationale={
                 isOptimized && lastOptimization
                   ? engineMsgTexts(lastOptimization.rationale, cms, bcp47)

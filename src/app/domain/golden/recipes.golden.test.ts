@@ -44,24 +44,24 @@ const EXPECTED: Record<string, Expected> = {
   napoletana_stg: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   napoletana_canotto: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   teglia_romana: { ideal: OK, home: WARN, rush: LATE_SHORT },
-  tonda_romana: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  tonda_romana: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   // C-4 (D-015): forno 280–320 °C (PinsaRomana.it 2022). Nel forno di casa a
   // 250 °C la pinsa si fa con avvisi; prima, con 350–420 °C, era impossibile.
   pinsa_romana: { ideal: OK, home: WARN, rush: LATE_SHORT },
-  new_york: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  new_york: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   detroit: { ideal: OK, home: WARN, rush: LATE_SHORT },
   chicago_deep: { ideal: OK, home: OK, rush: LATE_SHORT },
   focaccia_genovese: { ideal: OK, home: OK, rush: LATE_SHORT },
   sfincione: { ideal: OK, home: OK, rush: LATE_SHORT },
-  pala_romana: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  pala_romana: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   grandma_style: { ideal: OK, home: OK, rush: LATE_SHORT },
-  focaccia_recco: { ideal: OK, home: WARN, rush: WARN },
+  focaccia_recco: { ideal: OK, home: OVEN, rush: OVEN },
   padellino_torino: { ideal: OK, home: OK, rush: LATE_SHORT },
   // C-1: prima il condimento predefinito non portava a nessuna ricetta; con la
   // mortadella (farcitura dopo la cottura) in 2 h non ci sta neanche la finestra.
-  pizza_baciata: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  pizza_baciata: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   ciaccino_senese: { ideal: OK, home: OK, rush: LATE_SHORT },
-  pizza_spaccata: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  pizza_spaccata: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   trancio_milanese: { ideal: OK, home: OK, rush: LATE_SHORT },
   chicago_tavern: { ideal: OK, home: WARN, rush: LATE_SHORT },
   focaccia_barese: { ideal: OK, home: OK, rush: LATE_SHORT },
@@ -70,10 +70,10 @@ const EXPECTED: Record<string, Expected> = {
   // M-7 (D-022): tonda fritta AVPN, stesso impasto della pizza fritta.
   pizza_fritta_tonda: { ideal: OK, home: OK, rush: SHORT },
   calzone_napoletano: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
-  pizza_al_metro: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  pizza_al_metro: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   new_haven_apizza: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   fugazzeta: { ideal: OK, home: OK, rush: LATE_SHORT },
-  california_style: { ideal: OK, home: WARN, rush: LATE_SHORT },
+  california_style: { ideal: OK, home: OVEN, rush: OVEN_LATE_SHORT },
   greek_pan: { ideal: OK, home: OK, rush: LATE_SHORT },
 };
 
@@ -89,7 +89,8 @@ function constraints(overrides: Partial<UserConstraints>): UserConstraints {
     has_mixer: false,
     has_pizza_stone: false,
     has_pizza_steel: false,
-    has_baking_pan: false,
+    // Cucina con una teglia; la mancanza di attrezzatura si verifica a parte.
+    has_baking_pan: true,
     dietary_filters: [],
     kitchen_temp_c: 22,
     pantry_flours: [],
@@ -103,10 +104,12 @@ function constraints(overrides: Partial<UserConstraints>): UserConstraints {
 const SCENARIOS: Record<Scenario, (style: PizzaStyle) => UserConstraints> = {
   ideal: (style) =>
     constraints({
-      oven_type: style.requires_wood_oven ? "wood" : style.baking.temp_c_ideal >= 350 ? "gas" : "home",
+      oven_type: style.baking.oven_type_required === "coal" ? "coal"
+        : style.requires_wood_oven ? "wood" : style.baking.temp_c_ideal >= 350 ? "gas" : "home",
       oven_max_temp_c: style.baking.temp_c_ideal,
       skill_level: 4,
       available_hours: 72,
+      has_pizza_stone: true,
     }),
   home: () => constraints({}),
   rush: () => constraints({ available_hours: 2, meal_deadline: true }),
@@ -194,7 +197,7 @@ describe("impossibilità dichiarata (M-10)", () => {
     expect(recipe.scores.warnings.map((w) => w.key)).toContain("gen.notWoodOven");
     const rec = recommendStyles(c).find((r) => r.style.id === "napoletana_stg")!;
     expect(rec.tier).not.toBe("not_feasible");
-    expect(rec.warnings.map((w) => w.key)).toContain("rec.needsWoodOven");
+    expect(rec.warnings.map((w) => w.key)).toContain("gen.notWoodOven");
   });
 
   it("mix di due farine della dispensa (C-3)", () => {

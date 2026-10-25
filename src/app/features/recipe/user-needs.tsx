@@ -562,6 +562,7 @@ export function UserNeeds({
     if (saved) {
       updates.oven_type = saved.ovenType;
       updates.oven_max_temp_c = saved.maxTemp;
+      updates.oven_capacity_temp_c = saved.maxTemp;
       setOvenSet(true);
     }
     if (pantry) {
@@ -578,6 +579,7 @@ export function UserNeeds({
       ...constraints,
       oven_type: id as OvenType,
       oven_max_temp_c: maxTemp,
+      oven_capacity_temp_c: maxTemp,
     });
     saveOven(id as OvenType, maxTemp);
     setOvenSet(true);

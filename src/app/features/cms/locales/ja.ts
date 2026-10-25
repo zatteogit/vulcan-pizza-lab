@@ -28,6 +28,14 @@ export const JA_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_JA,
   inspirationI18n: INSPIRATION_I18N_JA,
   ui: {
+    scoreLimitedAuthenticity: "本来のスタイルへの忠実度{score}/100が総合スコアの上限になります。",
+    scoreLimitedFeasibility: "満たされていない条件により総合スコアが制限されています。",
+    scoreWeightedAverage: "5つの軸の加重平均",
+    scoreAuthenticityCeiling: "忠実度による上限",
+    scoreFeasibilityCeiling: "実行不可による上限",
+    scoreNotWeighted: "参考情報の軸です。この重みでは総合スコアに影響しません。",
+    scoreReferencePending: "このスタイルの変更度の基準はまだ確認されていません。",
+
     // Actions
     copy: "\u30B3\u30D4\u30FC",
     copied: "\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F\uFF01",
@@ -168,12 +176,12 @@ export const JA_LOCALE: CmsContent = {
     flourUseMedium: "中程度の強さのタイプ0",
     flourUseWeak: "弱め〜中程度のタイプ00",
     verdictTitle: "このままでは作れません",
-    verdictOvenTooCold: "お使いのオーブンは{oven}まで、このスタイルには{min}以上が必要です。別のピザになります。",
+    verdictOvenTooCold: "焼成温度は{oven}に設定されています。この製法には少なくとも{min}が必要です。",
     verdictTimeWindow: "約{needed}かかりますが、使えるのは{available}です。選んだ時刻より後に仕上がります。",
     verdictFermentationTooShort: "発酵{hours}では、このスタイルの最低{min}に届きません。別の生地になります。",
     verdictLaterTime: "{hours}以上先の時刻を選んでください。",
     verdictAlternatives: "同じ条件で作れるスタイル：",
-    verdictRecipeBelow: "試したい場合は、いちばん近いレシピを下に表示しています。",
+    verdictRecipeBelow: "下のレシピで、変更が必要な条件を確認できます。",
     // Score dashboard
     recipeScore: "あなたのキッチンとの相性",
     nerdToggle: "PizzaNerd",
@@ -346,6 +354,7 @@ export const JA_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
+    coal: { name: "石炭窯", maxTemp: 400, icon: "flame" },
     home: {
       name: "\u5BB6\u5EAD\u7528\u30AA\u30FC\u30D6\u30F3",
       maxTemp: 250,
@@ -429,57 +438,57 @@ export const JA_LOCALE: CmsContent = {
     "\u3059\u3079\u3066\u306E\u30D5\u30A1\u30DF\u30EA\u30FC",
   tiers: {
     perfect: {
-      label: "\u6700\u9069",
-      subtitle: "\u6700\u9AD8\u306E\u76F8\u6027",
+      label: "作れる",
+      subtitle: "レシピの条件を満たしています",
     },
     good: {
-      label: "\u826F\u597D",
-      subtitle: "\u7D20\u6674\u3089\u3057\u3044\u9078\u629E",
+      label: "調整すれば作れる",
+      subtitle: "変更点と必要な道具を確認してください",
     },
     challenging: {
       label: "\u30C1\u30E3\u30EC\u30F3\u30B8\u30F3\u30B0",
       subtitle: "\u52C7\u6C17\u3042\u308B\u4EBA\u3078",
     },
     not_feasible: {
-      label: "\u5B9F\u73FE\u4E0D\u53EF",
-      subtitle: "\u4E3B\u306A\u6761\u4EF6\uFF08\u30AA\u30FC\u30D6\u30F3\u30FB\u7D4C\u9A13\uFF09\u304C\u4E0D\u8DB3",
+      label: "この条件では作れない",
+      subtitle: "このレシピに不可欠な条件が不足しています",
     },
   },
   scoreDimensions: {
     authenticity: {
-      label: "\u6B63\u7D71\u6027",
-      short: "\u6B63\u7D71",
+      label: "スタイルへの忠実度",
+      short: "忠実度",
       weight: 0.3,
       explain:
-        "\u30EC\u30B7\u30D4\u304C\u305D\u306E\u30B9\u30BF\u30A4\u30EB\u306E\u898F\u7BC4\u306B\u3069\u308C\u3060\u3051\u5FE0\u5B9F\u304B\u3092\u793A\u3057\u307E\u3059\u3002\u6750\u6599\uFF08\u52A0\u6C34\u7387\u3001\u5C0F\u9EA6\u7C89\u306E\u5F37\u3055\u3068P/L\uFF09\u3001\u767A\u9175\u30D7\u30ED\u30BB\u30B9\u3001\u8A2D\u5099\u3092\u8A55\u4FA1\u3002\u30AA\u30FC\u30D6\u30F3\u304C\u30B9\u30BF\u30A4\u30EB\u306E\u6700\u4F4E\u6E29\u5EA6\u306B\u5C4A\u304B\u306A\u3044\u3068\u3001\u3053\u306E\u8EF8\u306F\u5927\u304D\u304F\u4E0B\u304C\u308A\u307E\u3059\u3002",
+        "生地、工程、窯をもとに、利用できるスタイルの基準への忠実度を推定します。忠実度が低い場合、他の軸が高くても総合スコアの上限になります。認証ではありません。",
     },
     feasibility: {
-      label: "\u5B9F\u73FE\u53EF\u80FD\u6027",
+      label: "作りやすさ",
       short: "\u5B9F\u73FE",
       weight: 0.25,
       explain:
-        "\u4ECA\u306E\u3042\u306A\u305F\u306B\u3068\u3063\u3066\u3069\u308C\u3060\u3051\u73FE\u5B9F\u7684\u304B\u3092\u793A\u3057\u307E\u3059\u3002\u30AA\u30FC\u30D6\u30F3\uFF0840%\uFF09\u3001\u5C0F\u9EA6\u7C89\uFF0830%\uFF09\u3001\u5FC5\u8981\u306A\u7D4C\u9A13\uFF0830%\uFF09\u3067\u69CB\u6210\u3002\u30B9\u30BF\u30A4\u30EB\u304C\u624B\u6301\u3061\u4EE5\u4E0A\u306E\u706B\u529B\u3092\u6C42\u3081\u305F\u308A\u3001\u52A0\u6C34\u7387\u304C\u30EC\u30D9\u30EB\u3092\u8D85\u3048\u308B\u3068\u4E0B\u304C\u308A\u307E\u3059\u3002",
+        "オーブン、小麦粉、経験に基づく作りやすさの指標です。実際に作れるかどうかは、製法の条件と明示された調整内容で別に判定します。",
     },
     digestibility: {
-      label: "\u6D88\u5316\u6027",
-      short: "\u6D88\u5316",
+      label: "熟成の推定",
+      short: "熟成",
       weight: 0.2,
       explain:
-        "\u751F\u5730\u306E\u719F\u6210\u5EA6\u306E\u63A8\u5B9A\u5024\u3002\u767A\u9175\u6642\u9593\u309218\u00B0C\u63DB\u7B97\u3067\u8A55\u4FA1\u3057\u307E\u3059\uFF08\u524D\u7A2E\u306F\u52A0\u7B97\uFF09\u3002\u719F\u6210\u304C\u9032\u3080\u307B\u3069\u30C7\u30F3\u30D7\u30F3\u3068\u30B0\u30EB\u30C6\u30F3\u304C\u5206\u89E3\u3055\u308C\u3001\u6D88\u5316\u3057\u3084\u3059\u3044\u30D4\u30C3\u30C4\u30A1\u306B\u306A\u308A\u307E\u3059\u3002",
+        "時間、温度、酵母、予備発酵をもとにしたモデル指標です。生地の熟成の推定であり、個人の消化反応を示すものではありません。",
     },
     sustainability: {
-      label: "\u6301\u7D9A\u53EF\u80FD\u6027",
-      short: "\u6301\u7D9A",
+      label: "持続可能性の推定",
+      short: "持続性",
       weight: 0.15,
       explain:
-        "\u63A8\u5B9A\u30A8\u30CD\u30EB\u30AE\u30FC\u6D88\u8CBB\u3002\u713C\u6210\u6E29\u5EA6\u3068\u6642\u9593\u3001\u767A\u9175\u306E\u51B7\u8535\u6642\u9593\u3001\u9175\u6BCD\u306E\u7A2E\u985E\u3092\u8A55\u4FA1\u3002\u77ED\u3044\u713C\u6210\u3068\u5E38\u6E29\u767A\u9175\u304C\u6709\u5229\u3067\u3059\u3002",
+        "焼成、発酵、材料に基づく相対的な推定です。実際の消費電力やカーボンフットプリントを測定したものではありません。",
     },
     experimentation: {
-      label: "\u5B9F\u9A13\u6027",
-      short: "\u5B9F\u9A13",
+      label: "アレンジ度",
+      short: "変更度",
       weight: 0.1,
       explain:
-        "\u898F\u7BC4\u304B\u3089\u3069\u308C\u3060\u3051\u96E2\u308C\u3066\u3044\u308B\u304B\u3092\u793A\u3057\u307E\u3059\u3002\u52A0\u6C34\u7387\u3084\u767A\u9175\u306E\u9038\u8131\u3001\u898F\u5B9A\u5916\u306E\u524D\u7A2E\u3001\u8A2D\u5099\u306B\u3088\u308B\u5F37\u5236\u7684\u306A\u88DC\u6B63\u306A\u3069\u3002\u6B20\u70B9\u3067\u306F\u306A\u304F\u3001\u6311\u6226\u306E\u5EA6\u5408\u3044\u3067\u3059\u3002",
+        "基準に対する生地、工程、焼成の変更度です。値が高いほど変更が多く、成功度が高いわけではありません。一部のスタイルは基準が未確認です。 総合点への寄与は100からこの値を引いたものです。",
     },
   },
   recommendationWeights: {
@@ -719,6 +728,16 @@ export const JA_LOCALE: CmsContent = {
     "rec.timeInsufficient":
       "最低{fMin}必要、{available}しかありません",
     "rec.needsWoodOven": "\u672C\u6765\u306F\u85AA\u7AAF\u3067\u713C\u304F\u30B9\u30BF\u30A4\u30EB\u3067\u3059\u3002\u304A\u4F7F\u3044\u306E\u30AA\u30FC\u30D6\u30F3\u3067\u3082\u8FD1\u3065\u3051\u307E\u3059\u304C\u3001\u6B63\u7D71\u306A\u4ED5\u4E0A\u304C\u308A\u306B\u306F\u306A\u308A\u307E\u305B\u3093",
+    "rec.ovenAdapted": "オーブンの最高温度は{temp}、理想温度は{ideal}です。焼成を調整します",
+    "gen.homeBakingMethod": "予熱した裏返しの天板で{temp}で焼きます。標準の{ideal}での焼成とは仕上がりが異なります",
+    "rec.needsDeck": "この焼成には予熱したピザストーンまたはスチールが必要ですが、キッチンに登録されていません",
+    "timeline.homeTray.preheat": "裏返しの天板を入れてオーブンを最高温度（{temp}）に予熱し、天板も十分熱くします。その間に生地を休ませます。",
+    "timeline.homeTray.bake": "予熱した裏返しの天板で焼きます。取り出す前に底の焼き色と火の通りを確認してください。",
+    "gen.fermentationTooLong": "発酵時間{hours}はこのレシピの上限（{maxHours}）を超えています。より長時間に対応した確認済みの方法を選んでください。",
+    "gen.fermentationTemperature": "この製法は{requiredTemp}での熟成を想定していますが、{temp}が選択されています。指定の条件に戻すか、別の確認済みの製法を選んでください。",
+    "auth.notCoalOven": "元の製法は石炭窯による焼成です。別の燃料を使う場合はアレンジになります",
+    "gen.notCoalOven": "本来のスタイルは石炭窯を使います。選んだ窯では焼き方と香りが変わります",
+    "timeline.oven.coal": "炉床を予熱した石炭窯：底と縁の焼き色を確認し、均一に焼けるよう回転させます。",
     "rec.ovenIdeal":
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3\u306F\u7406\u60F3\u6E29\u5EA6\u306B\u5230\u9054 ({ideal})",
     "rec.ovenAdequate": "オーブンは適切 (自動時間/温度補正)",
@@ -762,8 +781,8 @@ export const JA_LOCALE: CmsContent = {
     "opt.hydrationOvenCompensated": "加水率{h}%：理想より温度の低いオーブンを補うため、{base}%に{delta}%を加えています。",
     "opt.hydrationOutOfStyleRange": "この補正により、加水率がスタイルの範囲（{min}–{max}%）を外れます。",
     "auth.fermentOffCenter": "発酵が基準から離れています（-{penalty}%）",
-    "auth.thermalUnviable": "このスタイルにはオーブンの温度が低すぎます（{oven} < {min}）：本来のレオパード模様、コルニチョーネ、生地構造は再現できません（×{factor}）",
-    "feas.thermalUnviable": "{oven}では本物の{style}にはなりません。レオパード模様も膨らんだ縁もできません。このスタイルには{min}以上になるオーブンが必要です。",
+    "auth.thermalUnviable": "温度がスタイルの基準未満です（{oven} < {min}）：焼成方法への忠実度が低下します（×{factor}）",
+    "feas.thermalUnviable": "{oven}では利用可能な方法で{style}の焼成を再現できません。現在の方法には少なくとも{min}が必要です。検証済みのアレンジ方法が必要です。",
     "gen.timeBelowStyleWindow": "{available}ではこのスタイルの発酵時間（最低{fMin}）に届きません。発酵を短縮しています。本来の仕上がりには{fMin}以上が必要です。",
     "gen.timeBelowStyleWindowMeal": "食事まで{available}のうち、こね・成形・焼成（{work}）を除くと発酵に使えるのは{ferment}で、このスタイルの最低（{fMin}）に足りません。本来の仕上がりには合計で約{needed}必要です。",
     "opt.coldLongFerment": "冷蔵庫（{temp}）で{hours}熟成：使える{available}の中で消化しやすさを最大にします。",
@@ -1189,6 +1208,7 @@ export const JA_LOCALE: CmsContent = {
     greek_pan: "\u6CB9\u305F\u3063\u3077\u308A\u306E\u578B\u3001\u63DA\u3052\u713C\u304D\u306E\u5E95|\u539A\u304F\u3075\u3093\u308F\u308A\u3057\u305F\u30AF\u30E9\u30E0|\u30E2\u30C3\u30C4\u30A1\u30EC\u30E9+\u30C1\u30A7\u30C0\u30FC\u306E\u30DF\u30C3\u30AF\u30B9|\u30AE\u30EA\u30B7\u30E3\u7CFB\u30A2\u30E1\u30EA\u30AB\u30F3\u30C0\u30A4\u30CA\u30FC",
   },
   deviationLabels: {
+    unclassified: "未確認",
     canonical: "\u6B63\u5178",
     parameter_variant:
       "\u30D1\u30E9\u30E1\u30FC\u30BF\u30FC\u5909\u52D5",

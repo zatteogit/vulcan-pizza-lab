@@ -2,7 +2,7 @@ import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
-import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, Gauge } from "lucide-react";
+import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, Gauge, AlertTriangle } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -89,8 +89,8 @@ export function StyleDetailSheet({
 
   const rec = React.useMemo(() => {
     if (!constraints) return null;
-    return recommendStyles(constraints).find((r) => r.style.id === style.id);
-  }, [constraints, style.id]);
+    return recommendStyles(constraints, { [style.id]: style })[0];
+  }, [constraints, style]);
   /* D-041: lo stesso numero delle card e della ricetta aperta. */
   const kitchenNow = React.useMemo(
     () => (constraints ? kitchenCompatibility(style, constraints, scoreWeightsFromCms(cms)).now : null),
@@ -103,6 +103,10 @@ export function StyleDetailSheet({
     const texts = engineMsgTexts(rec.reasons, cms, bcp47);
     return texts.map((text, i) => ({ text, dim: reasonDimension(rec.reasons[i].key) }));
   }, [rec, cms, bcp47]);
+  const matchWarnings = React.useMemo(
+    () => engineMsgTexts(rec?.warnings ?? [], cms, bcp47),
+    [rec, cms, bcp47],
+  );
   const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "");
   const pt = cms.parametricTips;
   const prefersReducedMotion = useReducedMotion();
@@ -393,12 +397,26 @@ export function StyleDetailSheet({
           </AnimatePresence>
 
           {/* ── VPL-C3: motivazioni di match articolate ── */}
-          {matchReasons.length > 0 && (
+          {rec && (
             <div className="style-detail-match">
               <h3 className="style-detail-match__heading">
-                {pt.sheetMatchTitle}
+                {cms.tiers[rec.tier].label}
               </h3>
+              {constraints && (
+                <p className="style-detail-match__text">
+                  {cms.ovenPresets[constraints.oven_type]?.name ?? constraints.oven_type}
+                  {" · "}{fmt.celsius(constraints.oven_max_temp_c)}
+                </p>
+              )}
               <div className="style-detail-match__list">
+                {matchWarnings.map((text) => (
+                  <div key={text} className="style-detail-match__row" data-warning="true">
+                    <span className="style-detail-match__icon">
+                      <AlertTriangle size={13} aria-hidden="true" />
+                    </span>
+                    <span className="style-detail-match__text">{text}</span>
+                  </div>
+                ))}
                 {matchReasons.map((r, i) => {
                   const DimIcon = MATCH_DIMENSION_ICON[r.dim];
                   return (
@@ -419,6 +437,7 @@ export function StyleDetailSheet({
           {/* ── CTA — Genera ricetta ── */}
           <CtaButton
             as={motion.button}
+            disabled={rec?.tier === "not_feasible"}
             onClick={onGenerate}
             whileHover={{ scale: 1.02 }}
             deepShadow

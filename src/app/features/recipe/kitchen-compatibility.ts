@@ -146,13 +146,16 @@ export function kitchenCompatibility(
   constraints: UserConstraints,
   scoreWeights?: ScoreWeights,
 ): KitchenCompatibility {
-  const now = canonicalRecipe(style, constraints, scoreWeights).scores.composite;
-  let best = optimizeRecipe(style, constraints, undefined, undefined, scoreWeights).recipe.scores.composite;
+  const original = canonicalRecipe(style, constraints, scoreWeights);
+  const now = original.scores.composite;
+  const optimized = optimizeRecipe(style, constraints, undefined, undefined, scoreWeights).recipe;
+  let best = original.verdict.outcome !== "not_feasible" ? now : 0;
+  if (optimized.verdict.outcome !== "not_feasible") best = Math.max(best, optimized.scores.composite);
   let bestInterpretation: Interpretation | null = null;
   for (const it of getInterpretationsForStyle(style.id)) {
     const o = it.parameter_overrides;
     if (!o || Object.keys(o).length === 0) continue;
-    const composite = generateRecipe(style, constraints, {
+    const candidate = generateRecipe(style, constraints, {
       customHydration: o.hydration_pct,
       customFlourW: o.flour_w,
       customFlourPL: o.flour_pl,
@@ -166,11 +169,14 @@ export function kitchenCompatibility(
         flour_pl: o.flour_pl,
         fermentation_hours: o.fermentation_hours,
       },
-    }).scores.composite;
+    });
+    if (candidate.verdict.outcome === "not_feasible") continue;
+    const composite = candidate.scores.composite;
     if (composite > best + 0.5) {
       best = composite;
       bestInterpretation = it;
     }
   }
-  return { now: Math.round(now), best: Math.round(Math.max(best, now)), bestInterpretation };
+  // Nessuna candidata eseguibile: non promettere un guadagno teorico.
+  return { now: Math.round(now), best: Math.round(best || now), bestInterpretation };
 }
