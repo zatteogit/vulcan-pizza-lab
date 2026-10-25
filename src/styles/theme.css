@@ -3878,7 +3878,7 @@
     -webkit-backdrop-filter: blur(var(--blur-md));
   }
 
-  .home-onboarding--session-active {
+  .create-welcome.home-onboarding--session-active {
     margin-top: var(--space-20);
   }
 
