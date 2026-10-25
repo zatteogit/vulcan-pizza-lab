@@ -528,7 +528,6 @@
   --dimension-fixed-168: 168px;
   --dimension-fixed-220: 220px;
   --dimension-fixed-352: 352px;
-  --dimension-fixed-360: 360px;
   --dimension-fixed-380: 380px;
   --dimension-fixed-440: 440px;
   --dimension-fixed-900: 900px;
@@ -908,10 +907,11 @@
   /* area risultati picker da sm in su */
   --font-size-picker-title-min: var(--dimension-relative-145);
   /* bound min clamp titolo picker (23.2px; max = --font-size-8xl) */
+  --section-tabs-resting-offset: var(--space-6);
+  --section-tabs-reading-offset: var(--space-4);
+  --section-tabs-target-min: var(--dimension-fixed-046);
   --section-tabs-navbar-dock-max-width: var(--dimension-fixed-440);
   /* riga dock mobile variante navbar */
-  --section-tabs-wrap-navbar-width: var(--dimension-fixed-360);
-  /* wrapper fisso variante navbar (ramo senza onSearchOpen, non instradato) */
   --section-tabs-capsule-height-navbar-subtitles: var(--dimension-fixed-058);
   /* min-height pillola navbar + sottotitoli */
   --section-tabs-tab-height-inline-min: var(--dimension-fixed-042);
@@ -15982,7 +15982,7 @@
     inset-inline: 0;
     z-index: 40;
     pointer-events: none;
-    height: calc(var(--space-28) + env(safe-area-inset-bottom, var(--space-0)));
+    height: calc(var(--space-28) * (1 - var(--section-tabs-collapse, 0)) + var(--space-20) * var(--section-tabs-collapse, 0) + env(safe-area-inset-bottom, var(--space-0)));
     background: linear-gradient(to top,
         var(--container-page) 0%,
         var(--container-page) 46%,
@@ -16001,9 +16001,10 @@
     position: fixed;
     inset-inline: 0;
     z-index: 50;
-    padding-inline: var(--space-2);
+    padding-inline-start: max(var(--space-2), env(safe-area-inset-left, var(--space-0)));
+    padding-inline-end: max(var(--space-2), env(safe-area-inset-right, var(--space-0)));
     pointer-events: none;
-    bottom: calc(var(--space-6) + env(safe-area-inset-bottom, var(--space-0)));
+    bottom: calc(var(--section-tabs-resting-offset) * (1 - var(--section-tabs-collapse, 0)) + var(--section-tabs-reading-offset) * var(--section-tabs-collapse, 0) + env(safe-area-inset-bottom, var(--space-0)));
   }
 
   @media (min-width: 768px) {
@@ -16015,11 +16016,12 @@
   .section-tabs-dock__grid {
     margin-inline: auto;
     display: grid;
-    width: 100%;
+    width: calc(min(100%, var(--section-tabs-navbar-dock-max-width)) * (1 - var(--section-tabs-collapse, 0)) + min(100%, var(--dimension-fixed-352)) * var(--section-tabs-collapse, 0));
     max-width: var(--section-tabs-navbar-dock-max-width);
     align-items: center;
     gap: var(--space-1-5);
-    grid-template-columns: minmax(0, 1fr) var(--space-13);
+    grid-template-columns: minmax(0, 1fr);
+    contain: layout;
   }
 
   .section-tabs-dock__tabs {
@@ -16027,17 +16029,8 @@
     min-width: 0;
   }
 
-  .section-tabs-dock__search {
-    pointer-events: auto;
-    background: linear-gradient(180deg,
-        color-mix(in srgb, var(--container-page) 97%, transparent),
-        color-mix(in srgb, var(--container-page) 91%, transparent));
-    box-shadow: var(--elevation-dock);
-  }
 
-  /* Wrapper della capsula tab: variante "inline" (sticky, in pagina) o
-   "navbar" (fissa, centrata in basso — ramo raggiungibile solo senza
-   onSearchOpen, oggi non instradato ma mantenuto per fedeltà). */
+  /* Wrapper della capsula inline, sticky nella pagina desktop. */
   .section-tabs-wrap--inline {
     max-width: var(--measure-xl);
     margin-inline: auto;
@@ -16071,14 +16064,7 @@
     top: calc(var(--space-16) + env(safe-area-inset-top, var(--space-0)));
   }
 
-  .section-tabs-wrap--navbar {
-    position: fixed;
-    left: 50%;
-    z-index: 50;
-    transform: translateX(-50%);
-    width: min(var(--section-tabs-wrap-navbar-width), calc(var(--dimension-viewport-width-full) - var(--space-8)));
-    bottom: calc(var(--space-6) + env(safe-area-inset-bottom, var(--space-0)));
-  }
+
 
   /* Capsula pillola dei tab (nav) — superficie "liquid glass". */
   .section-tabs-capsule {
@@ -16229,6 +16215,77 @@
   .section-tabs-capsule__subtitle--active {
     color: inherit;
     opacity: 0.85;
+  }
+
+  .section-tabs-dock .section-tabs-capsule.section-tabs-capsule--navbar {
+    padding: calc(var(--space-1) * (1 - var(--section-tabs-collapse, 0)) + var(--space-px) * var(--section-tabs-collapse, 0));
+    min-height: calc(var(--section-tabs-capsule-height-navbar-subtitles) * (1 - var(--section-tabs-collapse, 0)) + (var(--section-tabs-target-min) + var(--space-1)) * var(--section-tabs-collapse, 0));
+  }
+
+  .section-tabs-dock .section-tabs-capsule__tab.section-tabs-capsule__tab--navbar {
+    min-height: var(--section-tabs-target-min);
+  }
+
+  .section-tabs-dock .section-tabs-capsule__text--navbar {
+    width: 100%;
+  }
+
+  .section-tabs-dock .section-tabs-capsule__label {
+    max-height: calc(var(--space-5) * (1 - var(--section-tabs-collapse, 0)));
+    opacity: var(--section-tabs-label-opacity, 1);
+    transform: translateY(calc(var(--space-1) * var(--section-tabs-collapse, 0) * -1));
+  }
+
+  .section-tabs-dock .section-tabs-capsule__subtitle {
+    margin-top: calc(var(--space-px) * (1 - var(--section-tabs-collapse, 0)));
+  }
+
+  .section-tabs-capsule__compact-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    max-height: calc(var(--space-6) * var(--section-tabs-collapse, 0));
+    width: calc(var(--space-6) * var(--section-tabs-collapse, 0));
+    overflow: hidden;
+    opacity: var(--section-tabs-icon-opacity, 0);
+  }
+
+  .section-tabs-dock .section-tabs-capsule__tab--icon-value {
+    flex-grow: calc(1 - var(--section-tabs-collapse, 0));
+    flex-basis: calc(var(--section-tabs-target-min) * var(--section-tabs-collapse, 0));
+  }
+
+  .section-tabs-dock .section-tabs-capsule__tab + .section-tabs-capsule__tab::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    translate: 0 -50%;
+    width: var(--border-width-thin);
+    height: var(--space-4);
+    background: var(--outline-variant);
+    opacity: var(--section-tabs-collapse, 0);
+    z-index: 20;
+  }
+
+  .section-tabs-dock[data-keyboard-open="true"],
+  .section-tabs-fade[data-keyboard-open="true"] {
+    visibility: hidden;
+  }
+
+  @media (max-width: 767px) and (max-height: 500px), (pointer: coarse) and (max-width: 1023px) and (max-height: 500px) {
+    .section-tabs-dock {
+      --section-tabs-resting-offset: var(--space-3);
+      --section-tabs-reading-offset: var(--space-2);
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) and (max-height: 500px) and (pointer: coarse) {
+    .section-tabs-dock,
+    .section-tabs-fade {
+      display: block;
+    }
   }
 
   /* ═══ COMPONENT: tilt-card (ondata 4) ═══ */

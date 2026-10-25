@@ -169,7 +169,7 @@ export function RecipeView({
      solo scrim, che è una dissolvenza, non un moto). */
   const { scrollY } = useScroll();
   const prefersReducedMotion = useReducedMotion();
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(true);
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
   const heroImageY = useTransform(
@@ -538,7 +538,7 @@ export function RecipeView({
           <motion.div
             id="recipe-tabpanel"
             role="tabpanel"
-            aria-labelledby={`recipe-tab-${activeTab}`}
+            aria-labelledby={`recipe-${isMobile ? "navtab" : "tab"}-${activeTab}`}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...motionSpring.standard,delay: motionDelay.recipeReveal }}
@@ -578,7 +578,6 @@ export function RecipeView({
           recipeLabel={recipeTabLabel}
           onChange={onTabChange}
           fillingMode={isFillingStyle(recipe.style)}
-          onSearchOpen={() => {}}
           procedureSubtitle={procedureSubtitle}
           toppingSubtitle={toppingSubtitle}
         />
