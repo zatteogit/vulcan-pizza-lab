@@ -270,7 +270,6 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "features.recipe.user-needs.farina-di-segale-4d6ef95b": "Rye flour",
   "features.recipe.user-needs.farina-di-spelta-145c7e5d": "Spelt flour",
   "features.recipe.user-needs.farina-tipo-1-189a22b7": "Type 1 flour",
-  "features.recipe.user-needs.farine-di-marca-d5a34a3b": "Brand-name flours",
   "features.recipe.user-needs.fibra-alta-morbidezza-348c80f9": "High fibre, softness",
   "features.recipe.user-needs.grano-antico-aromatica-6b49eff1": "Ancient grain, aromatic",
   "features.recipe.user-needs.grano-saraceno-d1593536": "Buckwheat",

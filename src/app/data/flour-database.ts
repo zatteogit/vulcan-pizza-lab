@@ -1,7 +1,7 @@
 /* === DATABASE FARINE ESPANSO === */
 /* Dati da Notion Database 🌾 Database Farine — allineato 15 marzo 2026 */
 
-import { STYLES_DB } from "../domain/pizza-engine";
+import { STYLES_DB } from "../domain/styles-db";
 
 export interface FlourEntry {
   id: string;

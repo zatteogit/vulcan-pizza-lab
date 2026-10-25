@@ -21,7 +21,7 @@ customMealSlot,
 CUSTOM_SLOT_ID,
 NO_PREFERENCE_SLOT,
 thermalViability,
-FLOUR_W_RANGES,
+pantryFlourRange,
 pantryFlourMix,
 YEAST_LABELS,
 type PanConfig,
@@ -907,11 +907,11 @@ export function HomePage() {
     if (opt.verdict.conditions?.some(c => c.kind === "flour" && c.status === "missing")) {
       const covered =
         constraints.pantry_flours.some((id) => {
-          const rng = FLOUR_W_RANGES[id];
+          const rng = pantryFlourRange(constraints, id);
           return rng && opt.flour_w >= rng[0] - 1 && opt.flour_w <= rng[1] + 1;
         }) ||
         // C-3: due farine della dispensa mescolate arrivano alla W richiesta.
-        pantryFlourMix(constraints.pantry_flours, [opt.flour_w - 15, opt.flour_w + 15]) !== null;
+        pantryFlourMix(constraints.pantry_flours, [opt.flour_w - 15, opt.flour_w + 15], false, constraints.pantry_flour_details) !== null;
       if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: opt.flour_w }));
     }
     if (

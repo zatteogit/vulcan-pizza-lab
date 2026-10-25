@@ -270,7 +270,6 @@ export const UI_MESSAGES_ES: Record<string, string> = {
   "features.recipe.user-needs.farina-di-segale-4d6ef95b": "Harina de centeno",
   "features.recipe.user-needs.farina-di-spelta-145c7e5d": "Harina de espelta",
   "features.recipe.user-needs.farina-tipo-1-189a22b7": "Harina tipo 1",
-  "features.recipe.user-needs.farine-di-marca-d5a34a3b": "Harinas de marca",
   "features.recipe.user-needs.fibra-alta-morbidezza-348c80f9": "Rica en fibra, tierna",
   "features.recipe.user-needs.grano-antico-aromatica-6b49eff1": "Trigo antiguo, aromática",
   "features.recipe.user-needs.grano-saraceno-d1593536": "Trigo sarraceno",

@@ -270,7 +270,6 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "features.recipe.user-needs.farina-di-segale-4d6ef95b": "Roggenmehl",
   "features.recipe.user-needs.farina-di-spelta-145c7e5d": "Dinkelmehl",
   "features.recipe.user-needs.farina-tipo-1-189a22b7": "Tipo 1",
-  "features.recipe.user-needs.farine-di-marca-d5a34a3b": "Markenmehle",
   "features.recipe.user-needs.fibra-alta-morbidezza-348c80f9": "Viele Ballaststoffe, weich",
   "features.recipe.user-needs.grano-antico-aromatica-6b49eff1": "Urgetreide, aromatisch",
   "features.recipe.user-needs.grano-saraceno-d1593536": "Buchweizen",

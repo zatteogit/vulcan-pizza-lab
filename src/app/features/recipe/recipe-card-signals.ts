@@ -40,6 +40,7 @@ export function recipeCardSignals(recipe: GeneratedRecipe): CardSignal[] {
       ? msg("need.flour", "Serve farina W{w}", c.message.params)
       : msg("need.checkFlour", "Se hai farina W{w}", c.message.params));
     if (c.kind === "flour_blend") add("flour", msg("card.blendCheck", "Se hai le farine del mix"));
+    if (c.kind === "ingredient" && c.status === "missing" && !result.some(signal=>signal.message.key==="card.ingredientsMissing")) add("check",msg("card.ingredientsMissing","Ingredienti da procurare"));
     if (c.kind === "yeast" && c.status === "missing") add("flour", msg("card.yeastMissing", "Serve il lievito"));
   }
   return result.slice(0, 2);

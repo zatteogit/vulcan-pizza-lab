@@ -753,7 +753,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
     saveJson(SKILL_STORAGE_KEY, skillLevel);
     // Pantry: salviamo solo se valorizzata
     if (ftuFlours.length > 0 || ftuYeasts.length > 0) {
-      saveJson(PANTRY_STORAGE_KEY, { flours: ftuFlours, yeasts: ftuYeasts });
+      saveJson(PANTRY_STORAGE_KEY, { ...(loadJson<Record<string, unknown>>(PANTRY_STORAGE_KEY) ?? {}), flours: ftuFlours, yeasts: ftuYeasts });
     }
     try {
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");

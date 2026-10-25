@@ -52,6 +52,34 @@ interface CmsLocale {
 
 /** Generic UI strings — buttons, labels, actions, placeholders */
 export interface CmsUiStrings {
+  pantrySelectionSummary: string;
+  pantryWValue: string;
+  pantryWEstimate: string;
+  pantryFull: string;
+  pantryQuickHint: string;
+  pantryStatusHint: string;
+  pantryHave: string;
+  pantryUnspecified: string;
+  pantryDoNotUse: string;
+  pantryDough: string;
+  pantryToppings: string;
+  pantrySearch: string;
+  pantryDetails: string;
+  pantryMyFlour: string;
+  pantryAddFlour: string;
+  pantryFlourName: string;
+  pantryProducer: string;
+  pantryFlourW: string;
+  pantryFlourPL: string;
+  pantryProtein: string;
+  pantryFlourDataHint: string;
+  pantryInvalidValue: string;
+  pantryPolicies: string;
+  pantryToppingsComplete: string;
+  pantryAutoSaved: string;
+  pantryNoResults: string;
+  pantryShowMore: string;
+
   aboutLabel: string;
   aboutDevelopment: string;
   aboutDescription: string;
@@ -1307,6 +1335,33 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   messages: UI_MESSAGES_IT,
   ui: {
+    pantrySelectionSummary: "Selezionati: {n} · Esclusi: {excluded}",
+    pantryWValue: "W{w}",
+    pantryWEstimate: "≈ W{w}",
+    pantryFull: "Dispensa completa",
+    pantryQuickHint: "Seleziona cosa hai. Marche, dettagli ed esclusioni sono nella dispensa completa.",
+    pantryStatusHint: "Non specificato non significa mancante. “Non usare” esclude esplicitamente l’ingrediente.",
+    pantryHave: "Ce l’ho",
+    pantryUnspecified: "Non specificato",
+    pantryDoNotUse: "Non usare",
+    pantryDough: "Impasto",
+    pantryToppings: "Condimenti",
+    pantrySearch: "Cerca ingrediente, farina o marca",
+    pantryDetails: "Dettagli",
+    pantryMyFlour: "La mia farina",
+    pantryAddFlour: "Aggiungi la tua farina",
+    pantryFlourName: "Nome della farina",
+    pantryProducer: "Marca / molino",
+    pantryFlourW: "Forza W",
+    pantryFlourPL: "Rapporto P/L",
+    pantryProtein: "Proteine (%)",
+    pantryFlourDataHint: "Inserisci i dati della confezione. La W precisa la disponibilità; proteine e P/L descrivono il prodotto. Senza W dichiarata, la forza resta da verificare.",
+    pantryInvalidValue: "Inserisci un valore positivo valido.",
+    pantryPolicies: "Disponibilità e acquisti",
+    pantryToppingsComplete: "Ho elencato tutti i condimenti che ho",
+    pantryAutoSaved: "Modifiche salvate automaticamente",
+    pantryNoResults: "Nessun ingrediente trovato",
+    pantryShowMore: "Mostra altri",
     aboutLabel: "Informazioni su {brand}",
     aboutDevelopment: "Software in sviluppo",
     aboutDescription: "Funzioni, ricette e suggerimenti sono in evoluzione. Potresti incontrare errori o risultati da perfezionare.",
@@ -2068,6 +2123,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "need.checkPan": "Se hai una teglia",
     "need.checkDeck": "Se hai pietra o acciaio",
     "need.checkExclusions": "Verifica le esclusioni sulla farina scelta",
+    "need.excludedIngredient": "La ricetta contiene un ingrediente che non vuoi usare: {ingredient}",
+    "need.ingredient": "Serve: {ingredient}",
     "need.excludedFlour": "La ricetta richiede una farina che hai escluso: {flour}",
     "need.purchaseRefused": "Manca un requisito e hai scelto di non procurartelo",
     "aid.semolina": "Facoltativa: poca semola rimacinata per lo spolvero; puoi usare la farina della ricetta",
@@ -2087,6 +2144,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "card.panMissing": "Serve una teglia",
     "card.panCheck": "Se hai una teglia",
     "card.blendCheck": "Se hai le farine del mix",
+    "card.ingredientsMissing": "Ingredienti da procurare",
     "card.yeastMissing": "Serve il lievito",
     "card.toVerify": "Da verificare",
     "card.authenticity": "Autenticità ridotta",

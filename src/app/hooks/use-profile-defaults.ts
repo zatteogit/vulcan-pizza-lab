@@ -11,6 +11,7 @@ import type {
 } from "../domain/pizza-engine";
 import { DEFAULT_KITCHEN_TEMP } from "../domain/pizza-engine";
 
+import { normalizePantryFlourDetails, type PantryFlourDetails } from "../domain/pantry-ingredients";
 import { loadYeastSpeedFactor } from "../adapters/browser/yeast-speed-storage";
 
 /* ═══ STORAGE KEYS (must match profile.tsx) ═══ */
@@ -77,11 +78,11 @@ export function loadProfileDefaults(): ProfileDefaults {
     if (skill) skillLevel = skill as SkillLevel;
     const dietary = loadJson<string[]>(DIETARY_STORAGE_KEY);
     if (dietary) dietaryFilters = dietary;
-    const pantry = loadJson<{ flours?: string[]; yeasts?: string[]; inventory_complete?: boolean; allow_purchase?: boolean; excluded_flours?: string[] }>(PANTRY_STORAGE_KEY);
+    const pantry = loadJson<{ flours?: string[]; yeasts?: string[]; inventory_complete?: boolean; allow_purchase?: boolean; excluded_flours?: string[]; flour_details?: Record<string, PantryFlourDetails>; ingredients?: string[]; ingredients_complete?: boolean; excluded_ingredients?: string[]; excluded_yeasts?: string[] }>(PANTRY_STORAGE_KEY);
     if (pantry) {
       pantryFlours = pantry.flours ?? [];
       pantryYeasts = pantry.yeasts ?? [];
-      pantryPolicy = { pantry_inventory_complete: pantry.inventory_complete, allow_flour_purchase: pantry.allow_purchase, excluded_flours: pantry.excluded_flours };
+      pantryPolicy = { pantry_inventory_complete: pantry.inventory_complete, allow_flour_purchase: pantry.allow_purchase, excluded_flours: pantry.excluded_flours, pantry_flour_details: normalizePantryFlourDetails(pantry.flour_details), pantry_ingredients: pantry.ingredients, pantry_ingredients_complete: pantry.ingredients_complete, excluded_ingredients: pantry.excluded_ingredients, excluded_yeasts: pantry.excluded_yeasts };
     }
   } catch { /* */ }
 
@@ -166,6 +167,11 @@ export const PROFILE_OWNED_CONSTRAINTS = [
   "pantry_inventory_complete",
   "allow_flour_purchase",
   "excluded_flours",
+  "pantry_flour_details",
+  "pantry_ingredients",
+  "pantry_ingredients_complete",
+  "excluded_ingredients",
+  "excluded_yeasts",
   "equipment_inventory_complete",
   "allow_equipment_purchase",
   "yeast_speed_factor",
