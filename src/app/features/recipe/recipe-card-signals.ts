@@ -27,7 +27,7 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
     const keys: Record<string, [string, string]> = {
       "gen.homeBakingMethod": ["need.invertedTray", "Teglia capovolta"],
       "gen.notCoalOven": ["need.withoutCoal", "Cottura senza carbone"],
-      "gen.notWoodOven": ["need.withoutWood", "Cottura senza legna"],
+      "gen.notWoodOven": ["need.withoutWood", "Anche senza legna"],
       "feas.ovenSuboptimal": ["need.adaptedBake", "Cottura adattata"],
     };
     add("oven", msg(...keys[method.key]));

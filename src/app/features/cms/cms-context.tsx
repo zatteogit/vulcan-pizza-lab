@@ -2146,7 +2146,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "need.yeast": "Serve lievito: {yeast}",
     "need.invertedTray": "Teglia capovolta",
     "need.withoutCoal": "Cottura senza carbone",
-    "need.withoutWood": "Cottura senza legna",
+    "need.withoutWood": "Anche senza legna",
     "need.adaptedBake": "Cottura adattata",
     "need.deck": "Serve pietra o acciaio",
     "card.pantryCheck": "Verifica la dispensa",

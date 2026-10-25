@@ -970,7 +970,7 @@ export const EN_LOCALE: CmsContent = {
     "need.yeast": "Yeast needed: {yeast}",
     "need.invertedTray": "Inverted tray",
     "need.withoutCoal": "Baking without coal",
-    "need.withoutWood": "Baking without wood",
+    "need.withoutWood": "Also without wood",
     "need.adaptedBake": "Adapted baking",
     "need.deck": "Stone or steel needed",
     "card.pantryCheck": "Check your pantry",

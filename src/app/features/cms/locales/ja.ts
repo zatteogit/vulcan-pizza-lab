@@ -815,7 +815,7 @@ export const JA_LOCALE: CmsContent = {
     "need.yeast": "必要なイースト：{yeast}",
     "need.invertedTray": "裏返した天板",
     "need.withoutCoal": "石炭を使わない焼成",
-    "need.withoutWood": "薪を使わない焼成",
+    "need.withoutWood": "薪なしでも可能",
     "need.adaptedBake": "調整した焼成",
     "need.deck": "石板または鋼板が必要",
     "card.pantryCheck": "食材を確認",
