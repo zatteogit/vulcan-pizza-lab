@@ -270,7 +270,6 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "features.recipe.user-needs.farina-di-segale-4d6ef95b": "Farinha de centeio",
   "features.recipe.user-needs.farina-di-spelta-145c7e5d": "Farinha de espelta",
   "features.recipe.user-needs.farina-tipo-1-189a22b7": "Farinha tipo 1",
-  "features.recipe.user-needs.farine-di-marca-d5a34a3b": "Farinhas de marca",
   "features.recipe.user-needs.fibra-alta-morbidezza-348c80f9": "Rica em fibra, macia",
   "features.recipe.user-needs.grano-antico-aromatica-6b49eff1": "Grão antigo, aromática",
   "features.recipe.user-needs.grano-saraceno-d1593536": "Trigo-sarraceno",

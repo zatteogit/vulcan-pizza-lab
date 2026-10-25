@@ -18,6 +18,8 @@ getToppingForStyle,
 type TimelineInsertPoint,
 type ToppingRecipe
 } from "../data/topping-library";
+import { FLOURS_DB } from "../data/flour-database";
+import { pantryIngredientId, type PantryFlourDetails } from "./pantry-ingredients";
 import { BRAND } from "../config/brand";
 
 // ═══ TYPES ═══
@@ -312,6 +314,11 @@ export interface UserConstraints {
   pantry_inventory_complete?: boolean;
   allow_flour_purchase?: boolean;
   excluded_flours?: string[];
+  pantry_flour_details?: Record<string, PantryFlourDetails>;
+  pantry_ingredients?: string[];
+  pantry_ingredients_complete?: boolean;
+  excluded_ingredients?: string[];
+  excluded_yeasts?: string[];
   equipment_inventory_complete?: boolean;
   allow_equipment_purchase?: boolean;
   pantry_yeasts: string[]; // e.g. ['fresh','dry','sourdough']
@@ -449,10 +456,10 @@ export type RecipeBlocker =
   | { kind: "fermentation_too_short"; fermentation_h: number; style_min_h: number; needed_h: number }
   | { kind: "fermentation_too_long"; fermentation_h: number; style_max_h: number }
   | { kind: "fermentation_temperature"; actual_c: number; required_c: number }
-  | { kind: "resource_excluded"; resource: "flour" | "equipment"; message: EngineMsg };
+  | { kind: "resource_excluded"; resource: "flour" | "equipment" | "ingredient"; message: EngineMsg };
 
 export interface RecipeCondition {
-  kind: "pan" | "deck" | "flour" | "flour_blend" | "yeast";
+  kind: "pan" | "deck" | "flour" | "flour_blend" | "yeast" | "ingredient";
   status: "missing" | "unverified";
   message: EngineMsg;
   acquisition?: "ingredient" | "accessory" | "appliance";
@@ -781,6 +788,10 @@ function homeBakingAdaptation(style: PizzaStyle, ovenType: OvenType, ovenTemp: n
 }
 
 function constrainOvenToCapacity(constraints: UserConstraints): UserConstraints {
+  constraints = { ...constraints,
+    pantry_flours: constraints.pantry_flours.filter(id => !(constraints.excluded_flours ?? []).includes(id)),
+    pantry_yeasts: constraints.pantry_yeasts.filter(id => !(constraints.excluded_yeasts ?? []).includes(id)),
+  };
   const capacity = constraints.oven_capacity_temp_c;
   return capacity !== undefined && Number.isFinite(capacity) && capacity > 0
     ? { ...constraints, oven_max_temp_c: Math.min(constraints.oven_max_temp_c, capacity) }
@@ -818,10 +829,13 @@ function kitchenPrerequisites(style: PizzaStyle, constraints: UserConstraints, f
     add("deck", constraints.equipment_inventory_complete ? "missing" : "unverified", constraints.equipment_inventory_complete
       ? em("need.deck", "Serve pietra o acciaio") : em("need.checkDeck", "Se hai pietra o acciaio"));
   }
-  const pantryRanges = constraints.pantry_flours.map(id => FLOUR_W_RANGES[id]).filter(Boolean);
-  const unknownFlour = constraints.pantry_inventory_complete !== true || pantryRanges.length !== constraints.pantry_flours.length || constraints.pantry_flours.some(id => ["00", "0", "tipo_1", "integrale", "semola", "manitoba"].includes(id));
+  const pantryRanges = constraints.pantry_flours.map(id => pantryFlourRange(constraints, id)).filter((range): range is [number, number] => Boolean(range));
+  const confirmed = constraints.pantry_flours.filter(id => pantryFlourIsDeclared(constraints, id));
+  const confirmedCoversW = confirmed.some(id => { const range = pantryFlourRange(constraints, id); return range && range[0] <= flourW && flourW <= range[1]; });
+  const confirmedMix = pantryFlourMix(confirmed, [flourW, flourW], true, constraints.pantry_flour_details);
+  const unknownFlour = !confirmedCoversW && !confirmedMix && (constraints.pantry_inventory_complete !== true || constraints.pantry_flours.some(id => !pantryFlourIsDeclared(constraints, id)));
   const coversW = pantryRanges.some(([lo, hi]) => lo <= flourW && flourW <= hi);
-  const mix = !coversW ? pantryFlourMix(constraints.pantry_flours, [flourW, flourW], true) : null;
+  const mix = !coversW ? pantryFlourMix(constraints.pantry_flours, [flourW, flourW], true, constraints.pantry_flour_details) : null;
   if (unknownFlour || (!coversW && !mix)) {
     add("flour", unknownFlour ? "unverified" : "missing", unknownFlour
       ? em("need.checkFlour", "Se hai farina W{w}", { w: flourW })
@@ -1522,6 +1536,21 @@ export const FLOUR_W_RANGES: Record<string, [number, number]> =
     dallagiovanna_manitoba_oro: [360, 400],
   };
 
+/** Explicit per-product data overrides catalog values for this kitchen only. */
+export function pantryFlourRange(constraints: Pick<UserConstraints, "pantry_flour_details">, id: string): [number, number] | undefined {
+  const w = constraints.pantry_flour_details?.[id]?.w;
+  if (typeof w === "number" && Number.isFinite(w) && w > 0 && w <= 1000) return [w, w];
+  const known = FLOUR_W_RANGES[id];
+  if (known) return known;
+  const product = FLOURS_DB.find(flour => flour.id === id);
+  return product?.w_declared !== false && product?.w ? [product.w, product.w] : undefined;
+}
+
+function pantryFlourIsDeclared(constraints: UserConstraints, id: string): boolean {
+  if (constraints.pantry_flour_details?.[id]?.w && pantryFlourRange(constraints, id)) return true;
+  return !["00", "0", "tipo_1", "integrale", "semola", "manitoba"].includes(id) && Boolean(pantryFlourRange(constraints, id));
+}
+
 /* ═══ C-3 — mix di due farine della dispensa ═══
  * Quando nessuna farina da sola cade nel range W dello stile, ma una sta sotto
  * e una sopra, mescolarle ci arriva. La W di un mix si stima come media pesata
@@ -1540,11 +1569,11 @@ export function pantryFlourMix(
   pantryFlours: readonly string[],
   [wMin, wMax]: readonly [number, number],
   exactTarget = false,
+  details?: UserConstraints["pantry_flour_details"],
 ): PantryFlourMix | null {
   const target = (wMin + wMax) / 2;
   const flours = pantryFlours
-    .filter((id) => FLOUR_W_RANGES[id])
-    .map((id) => ({ id, w: (FLOUR_W_RANGES[id][0] + FLOUR_W_RANGES[id][1]) / 2 }));
+    .flatMap(id => { const range = pantryFlourRange({ pantry_flour_details: details }, id); return range ? [{ id, w: (range[0] + range[1]) / 2 }] : []; });
   let best: PantryFlourMix | null = null;
   let bestSpread = Infinity;
   for (const weak of flours) {
@@ -2065,7 +2094,7 @@ export function generateRecipe(
   let yeastType: "fresh" | "dry" | "sourdough";
   const py = constraints.pantry_yeasts;
   if (py.length === 0) {
-    yeastType = "fresh"; // default when no pantry info
+    yeastType = (["fresh", "dry", "sourdough"] as const).find(id => !(constraints.excluded_yeasts ?? []).includes(id)) ?? "fresh";
   } else if (
     py.includes("sourdough") &&
     fermentationHours >= 12 &&
@@ -2482,6 +2511,17 @@ export function generateRecipe(
 
   // ── M-10: esito esplicito ──
   const blockers: RecipeBlocker[] = [];
+  const requiredIngredients = ["Acqua", "Sale", ...(fatG > 0 && fatLabel ? [fatLabel] : []), ...(effectiveSugarPct > 0 ? ["Zucchero"] : []), ...(defaultTopping?.ingredients.map(ingredient => ingredient.name) ?? [])];
+  const excludedIngredientIds = new Set(constraints.excluded_ingredients ?? []);
+  const excludedNames = requiredIngredients.filter(name => excludedIngredientIds.has(pantryIngredientId(name)));
+  if (!style.dough.unleavened && (constraints.excluded_yeasts ?? []).includes(yeastType)) excludedNames.push(yeastType);
+  for (const name of [...new Set(excludedNames)]) blockers.push({kind:"resource_excluded",resource:"ingredient",message:em("need.excludedIngredient","La ricetta contiene un ingrediente che non vuoi usare: {ingredient}",{ingredient:name})});
+  if (constraints.pantry_ingredients_complete) {
+    const present = new Set(constraints.pantry_ingredients ?? []);
+    for (const name of [...new Map((defaultTopping?.ingredients ?? []).filter(ingredient => !ingredient.optional).map(ingredient => [pantryIngredientId(ingredient.name), ingredient.name])).values()]) {
+      if (!present.has(pantryIngredientId(name)) && !excludedIngredientIds.has(pantryIngredientId(name))) prerequisites.push({kind:"ingredient",status:"missing",acquisition:"ingredient",message:em("need.ingredient","Serve: {ingredient}",{ingredient:name})});
+    }
+  }
   for (const id of excludedFlours) {
     blockers.push({ kind: "resource_excluded", resource: "flour", message: em("need.excludedFlour", "La ricetta richiede una farina che hai escluso: {flour}", { flour: id }) });
   }
@@ -2820,7 +2860,7 @@ export function optimizeRecipe(
   const wMid = Math.round((wMin + wMax) / 2);
   const wCandSet: number[] = [wMid];
   for (const id of constraints.pantry_flours) {
-    const r = FLOUR_W_RANGES[id];
+    const r = pantryFlourRange(constraints, id);
     if (!r) continue;
     const w = Math.round(Math.max(wMin, Math.min(wMax, (r[0] + r[1]) / 2)));
     if (r[0] <= wMax && r[1] >= wMin) wCandSet.push(w); // overlap col range stile
@@ -3005,7 +3045,7 @@ export function optimizeRecipe(
     );
   }
   const fromPantry = constraints.pantry_flours.some((id) => {
-    const range = FLOUR_W_RANGES[id];
+    const range = pantryFlourRange(constraints, id);
     return range && r.flour_w >= range[0] - 1 && r.flour_w <= range[1] + 1;
   });
   if (fromPantry && Math.abs(r.flour_w - wMidStyle) < 15) {
@@ -4235,7 +4275,7 @@ export function recommendStyles(
     pantry: recWeights?.pantry ?? 0.20,
   };
   const weightTotal = Object.values(weights).reduce((sum, weight) => sum + weight, 0) || 1;
-  const pantryRanges = constraints.pantry_flours.map((id) => FLOUR_W_RANGES[id]).filter(Boolean);
+  const pantryRanges = constraints.pantry_flours.map((id) => pantryFlourRange(constraints, id)).filter((range): range is [number, number] => Boolean(range));
 
   return Object.values(stylesOverride ?? STYLES_DB).map((style): StyleRecommendation => {
     const recipe = recipeForStyle(style, constraints);
@@ -4259,9 +4299,9 @@ export function recommendStyles(
       reasons.push(em("rec.skillMatch", "Adatto al tuo livello"));
     }
     const flourMatch = pantryRanges.some(([lo, hi]) => lo <= recipe.flour_w && recipe.flour_w <= hi);
-    const mix = !flourMatch ? pantryFlourMix(constraints.pantry_flours, [recipe.flour_w, recipe.flour_w], true) : null;
+    const mix = !flourMatch ? pantryFlourMix(constraints.pantry_flours, [recipe.flour_w, recipe.flour_w], true, constraints.pantry_flour_details) : null;
     if (flourMatch && !verdict.conditions?.some(c => c.kind === "flour")) reasons.push(em("rec.flourMatch", "Farina in dispensa compatibile"));
-    else if (mix) reasons.push(em("rec.flourMix", "Mescolando le tue farine: {weakPct}% {weak} e {strongPct}% {strong}, W {w} circa", { ...mix }));
+    else if (mix) reasons.push(em("rec.flourMix", "Mescolando le tue farine: {weakPct}% {weak} e {strongPct}% {strong}, W {w} circa", { ...mix, weak: constraints.pantry_flour_details?.[mix.weak]?.name ?? mix.weak, strong: constraints.pantry_flour_details?.[mix.strong]?.name ?? mix.strong }));
 
     // Il numero ordina le proposte, ma non può cambiare l'esito della ricetta.
     const timeScore = timeLimited ? 25 : 95;

@@ -1,4 +1,6 @@
 import { migrateEquipment, syncLegacyFlags } from "../../data/equipment-data";
+import { PantryEditor } from "./pantry-editor";
+import { savePantryConstraints } from "../../adapters/browser/pantry-storage";
 import { SupplyPolicyControls } from "./supply-policy-controls";
 import {
 CalendarDays,
@@ -204,17 +206,6 @@ function loadPantry(): {
   }
   return null;
 }
-function savePantry(flours: string[], yeasts: string[]) {
-  try {
-    localStorage.setItem(
-      PANTRY_STORAGE_KEY,
-      JSON.stringify({ ...loadPantry(), flours, yeasts }),
-    );
-  } catch {
-    /* */
-  }
-}
-
 /* suggested slot = the dynamic slot closest to the 24h fermentation sweet spot */
 function getSuggestedSlot(): string {
   return suggestedTimeSlot()?.id ?? "tomorrow_lunch";
@@ -586,6 +577,7 @@ export function UserNeeds({
   }, [kitchenTemp]);
 
   const [ovenSet, setOvenSet] = useState(false);
+  const [pantryOpen, setPantryOpen] = useState(false);
   const [recentFlours, setRecentFlours] = useState<string[]>([]);
   const [recentYeasts, setRecentYeasts] = useState<string[]>([]);
 
@@ -624,8 +616,9 @@ export function UserNeeds({
     const next = current.includes(id)
       ? current.filter((f) => f !== id)
       : [...current, id];
-    update("pantry_flours", next);
-    savePantry(next, constraints.pantry_yeasts);
+    const changed = {...constraints,pantry_flours:next,excluded_flours:(constraints.excluded_flours??[]).filter(value=>!next.includes(value))};
+    onConstraintsChange(changed);
+    savePantryConstraints(changed);
     setRecentFlours((prev) =>
       Array.from(new Set([...prev, ...next])),
     );
@@ -636,8 +629,9 @@ export function UserNeeds({
     const next = current.includes(id)
       ? current.filter((f) => f !== id)
       : [...current, id];
-    update("pantry_yeasts", next);
-    savePantry(constraints.pantry_flours, next);
+    const changed = {...constraints,pantry_yeasts:next,excluded_yeasts:(constraints.excluded_yeasts??[]).filter(value=>!next.includes(value))};
+    onConstraintsChange(changed);
+    savePantryConstraints(changed);
     setRecentYeasts((prev) =>
       Array.from(new Set([...prev, ...next])),
     );
@@ -648,6 +642,7 @@ export function UserNeeds({
 
   return (
     <div className="needs-root">
+      {pantryOpen && <PantryEditor constraints={constraints} onChange={onConstraintsChange} onClose={()=>setPantryOpen(false)} flourOptions={[...FLOUR_OPTIONS_GENERIC,...FLOUR_OPTIONS_SPECIAL]} />}
       {/* ═══ VPL-068: Single continuous flow ═══ */}
       <div
         data-section="context"
@@ -833,15 +828,15 @@ export function UserNeeds({
                   className={compact ? "needs-drawer needs-drawer--compact" : "needs-drawer"}
                 >
                   <div className={compact ? "needs-drawer__stack needs-drawer__stack--compact" : "needs-drawer__stack"}>
-                    <SupplyPolicyControls kind="flour" constraints={constraints} onChange={onConstraintsChange} flourOptions={[...FLOUR_OPTIONS_GENERIC,...FLOUR_OPTIONS_SPECIAL].map(f=>({id:f.id,label:f.name}))} />
+                    <p className="pantry-quick__hint">{cms.ui.pantryQuickHint}</p>
                     {/* Flours */}
                     <div data-slot="flours">
                       <div className="needs-pantry__group-header">
                         <Wheat size={14} className="needs-pantry__group-icon" />
                         <span className="needs-pantry__group-title">{cms.ui.pantryFlours}</span>
                       </div>
-                      <FlourChipGrid options={FLOUR_OPTIONS_GENERIC} activeFlours={constraints.pantry_flours} recentFlours={recentFlours} onToggle={toggleFlour} cms={cms} />
-                      <BrandedFloursSection options={FLOUR_OPTIONS_SPECIAL} activeFlours={constraints.pantry_flours} recentFlours={recentFlours} onToggle={toggleFlour} cms={cms} labelOverride={cms.ui.specialFlours} />
+                      <FlourChipGrid options={FLOUR_OPTIONS_GENERIC.map(option=>constraints.pantry_flour_details?.[option.id]?.w ? {...option,w:`W${constraints.pantry_flour_details[option.id].w}`} : option)} activeFlours={constraints.pantry_flours} recentFlours={recentFlours} onToggle={toggleFlour} cms={cms} />
+
                     </div>
                     {/* Yeasts */}
                     <div data-slot="yeasts">
@@ -878,6 +873,7 @@ export function UserNeeds({
                         })}
                       </div>
                     </div>
+                    <div className="pantry-quick__footer"><button type="button" className="pantry-quick__open" onClick={()=>setPantryOpen(true)}>{cms.ui.pantryFull}<ChevronRight size={16}/></button><span className="pantry-quick__hint">{t(cms.ui.pantrySelectionSummary,{n:constraints.pantry_flours.length+constraints.pantry_yeasts.length+(constraints.pantry_ingredients?.length??0),excluded:(constraints.excluded_flours?.length??0)+(constraints.excluded_yeasts?.length??0)+(constraints.excluded_ingredients?.length??0)})}</span></div>
                   </div>
                 </motion.div>
               )}
@@ -1223,69 +1219,3 @@ function FlourChip({
 }
 
 /* ═══ BRANDED FLOURS SECTION ═══ */
-function BrandedFloursSection({
-  options,
-  activeFlours,
-  recentFlours,
-  onToggle,
-  cms,
-  labelOverride,
-}: {
-  options: FlourOption[];
-  activeFlours: string[];
-  recentFlours: string[];
-  onToggle: (id: string) => void;
-  cms: any;
-  labelOverride?: string;
-}) {
-  const [expanded, setExpanded] = React.useState(
-    () => options.some((f) => activeFlours.includes(f.id)),
-  );
-  const activeBrandedCount = options.filter((f) => activeFlours.includes(f.id)).length;
-
-  return (
-    <div className="needs-branded-flours">
-      <motion.button
-        onClick={() => setExpanded(!expanded)}
-        className="needs-branded-flours__toggle"
-      >
-        <motion.span
-          animate={{ rotate: expanded ? 90 : 0 }}
-          transition={motionSpring.crispControl}
-          className="needs-branded-flours__chevron"
-        >
-          <ChevronRight size={14} />
-        </motion.span>
-        <span className="needs-branded-flours__label">
-          {labelOverride ?? cms.ui?.brandedFlours ?? uiMessage("features.recipe.user-needs.farine-di-marca-d5a34a3b")}
-        </span>
-        {activeBrandedCount > 0 && (
-          <span className="needs-branded-flours__count">
-            {activeBrandedCount}
-          </span>
-        )}
-      </motion.button>
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={motionSpring.standard}
-            className="needs-branded-flours__panel"
-          >
-            <div className="needs-branded-flours__panel-inner">
-              <FlourChipGrid
-                options={options}
-                activeFlours={activeFlours}
-                recentFlours={recentFlours}
-                onToggle={onToggle}
-                cms={cms}
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}

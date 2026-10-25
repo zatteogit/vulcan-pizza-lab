@@ -29,7 +29,7 @@ getInterpretationsForStyle,
 type Interpretation
 } from "../data/interpretation-library";
 import {
-FLOUR_W_RANGES,
+pantryFlourRange,
 PIZZA_FAMILIES,
 STYLES_DB,
 YEAST_LABELS,
@@ -603,7 +603,7 @@ function RecipeContent({
     const softNeeds: string[] = [];
     if (opt.verdict.conditions?.some(c => c.kind === "flour" && c.status === "missing")) {
       const covered = matchConstraints.pantry_flours.some((id) => {
-        const rng = FLOUR_W_RANGES[id];
+        const rng = pantryFlourRange(matchConstraints, id);
         return rng && opt.flour_w >= rng[0] - 1 && opt.flour_w <= rng[1] + 1;
       });
       if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: opt.flour_w }));

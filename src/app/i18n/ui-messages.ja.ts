@@ -270,7 +270,6 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "features.recipe.user-needs.farina-di-segale-4d6ef95b": "ライ麦粉",
   "features.recipe.user-needs.farina-di-spelta-145c7e5d": "スペルト小麦粉",
   "features.recipe.user-needs.farina-tipo-1-189a22b7": "タイプ1小麦粉",
-  "features.recipe.user-needs.farine-di-marca-d5a34a3b": "ブランド小麦粉",
   "features.recipe.user-needs.fibra-alta-morbidezza-348c80f9": "食物繊維が豊富、やわらか",
   "features.recipe.user-needs.grano-antico-aromatica-6b49eff1": "古代小麦、香り豊か",
   "features.recipe.user-needs.grano-saraceno-d1593536": "そば粉",
