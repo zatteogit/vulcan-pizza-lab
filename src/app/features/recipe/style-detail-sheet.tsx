@@ -1,10 +1,11 @@
+import { RecipeMatchIcon } from "./recipe-match-icon";
 import { RecipeChanges } from "./recipe-changes";
 import { canonicalRecipe } from "../../use-cases/recipe-entry";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
-import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, Gauge, AlertTriangle } from "lucide-react";
+import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -243,7 +244,7 @@ export function StyleDetailSheet({
                     className="style-detail-title__match"
                     aria-label={uiMessage("pages.explore.compatibility", [kitchenNow ?? 0])}
                   >
-                    <Gauge size={10} aria-hidden="true" />
+                    <RecipeMatchIcon score={kitchenNow ?? 0} blocked={rec.recipe.verdict.outcome === "not_feasible"} size={14} aria-hidden="true" />
                     {cms.ui.scoreBasisTailored}{" · "}{uiMessage("features.recipe.style-detail-sheet.match-a3424e8a", [kitchenNow ?? 0])}</span>
                 </>
               )}

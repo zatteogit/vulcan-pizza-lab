@@ -1,23 +1,59 @@
+import { ArrowRight, Droplets, Flame, FlaskConical, Gauge, Timer, Wheat } from "lucide-react";
 import { RecipeConditionChips } from "./recipe-condition-chips";
 import type { GeneratedRecipe } from "../../domain/pizza-engine";
 import { recipeDifferences } from "../../use-cases/recipe-entry";
 import { useCms } from "../cms/cms-context";
-import { t } from "../cms/i18n";
+import { createFormatter } from "../cms/i18n";
 import { engineMsgTexts } from "./engine-msg-text";
 
-/** Il confronto è prima del gesto di ottimizzazione, o prima di generare una
- * proposta che contiene già gli adattamenti. Non richiede una conferma. */
+/** Same underlying differences as the recipe; aligned values make the before
+ * and after readable without parsing sentences or repeating units in labels. */
 export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: GeneratedRecipe; mode: "included" | "preview" }) {
   const { cms, bcp47 } = useCms();
-  const changes = engineMsgTexts(recipeDifferences(from, to), cms, bcp47);
-  if (changes.length === 0) return null;
+  const fmt = createFormatter(cms.ui, bcp47);
+  const differences = recipeDifferences(from, to);
+  if (!differences.length) return null;
+  const pct = (n: number) => `${fmt.number(n, { maximumFractionDigits: 2 })}%`;
+  const pre = (r: GeneratedRecipe) => r.has_pre_ferment
+    ? `${r.pre_ferment_type ?? ""} · ${pct(r.pre_ferment_flour_pct ?? 0)}`
+    : engineMsgTexts([{key:"card.directDough",fallback:"Impasto diretto"}], cms, bcp47)[0];
+  const rows = differences.map(d => {
+    const p = d.params ?? {};
+    switch (d.key) {
+      case "change.hydration": return { key: d.key, label: cms.ui.statHydration, icon: Droplets, before: pct(from.hydration_pct), after: pct(to.hydration_pct) };
+      case "change.flour": return { key: d.key, label: cms.ui.statFlourStrength, icon: Wheat, before: `W${fmt.number(from.flour_w)}`, after: `W${fmt.number(to.flour_w)}` };
+      case "change.flourPL": return { key: d.key, label: cms.configurator.plLabel, icon: Wheat, before: fmt.number(from.flour_pl, { maximumFractionDigits: 2 }), after: fmt.number(to.flour_pl, { maximumFractionDigits: 2 }), tip: cms.configurator.plTip };
+      case "change.fermentation": return { key: d.key, label: cms.ui.statFermentation, icon: Timer, before: fmt.durationShort(from.fermentation_hours), after: fmt.durationShort(to.fermentation_hours), beforeSub: fmt.celsius(from.fermentation_temp_c), afterSub: fmt.celsius(to.fermentation_temp_c) };
+      case "change.cooking": return { key: d.key, label: cms.ui.statOven, icon: Flame, before: fmt.celsius(from.oven_temp_c), after: fmt.celsius(to.oven_temp_c), beforeSub: fmt.cookTime(from.cook_time_sec), afterSub: fmt.cookTime(to.cook_time_sec) };
+      case "change.prefermentOn": case "change.prefermentOff": case "change.prefermentDetails": return { key: d.key, label: cms.configurator.preFermentLabel, icon: FlaskConical, before: pre(from), after: pre(to) };
+      default: return { key: d.key, label: d.key === "change.salt" ? cms.ui.salt : d.key === "change.sugar" ? cms.ui.sugar : to.fat_label, icon: Droplets, before: pct(Number(p.from)), after: pct(Number(p.to)) };
+    }
+  });
+  const beforeLabel = mode === "included" ? cms.ui.scoreBasisOriginal : cms.ui.recipeCurrentVersion;
+  const afterLabel = mode === "included" ? cms.ui.scoreBasisTailored : cms.ui.recipeOptimizedVersion;
   return (
-    <section className="match-rationale" data-recipe-changes={mode}>
-      <p className="type-label">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</p>
-      <p className="type-body-sm">{t(cms.ui.recipeScoreTransition, { from: from.scores.composite, to: to.scores.composite })}</p>
-      <ul className="recipe-verdict__reasons">
-        {changes.map(text => <li key={text} className="type-body-sm">{text}</li>)}
-      </ul>
+    <section className="recipe-comparison" data-recipe-changes={mode}>
+      <h4 className="recipe-comparison__title">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</h4>
+      <table className="recipe-comparison__table">
+        <thead><tr><td /><th scope="col">{beforeLabel}</th><td aria-hidden="true" /><th scope="col">{afterLabel}</th></tr></thead>
+        <tbody>
+          <tr className="recipe-comparison__score">
+            <th scope="row"><span data-slot="label"><Gauge size={15} aria-hidden="true" />{cms.ui.recipeScoreLabel}</span></th>
+            <td>{fmt.number(from.scores.composite)}<small>/100</small></td>
+            <td aria-hidden="true"><ArrowRight size={14} /></td>
+            <td>{fmt.number(to.scores.composite)}<small>/100</small></td>
+          </tr>
+          {rows.map(row => {
+            const Icon = row.icon;
+            return <tr key={row.key}>
+              <th scope="row" title={row.tip}><span data-slot="label"><Icon size={15} aria-hidden="true" />{row.label}</span></th>
+              <td>{row.before}{row.beforeSub && <small>{row.beforeSub}</small>}</td>
+              <td aria-hidden="true"><ArrowRight size={14} /></td>
+              <td>{row.after}{row.afterSub && <small>{row.afterSub}</small>}</td>
+            </tr>;
+          })}
+        </tbody>
+      </table>
       {mode === "preview" && <RecipeConditionChips recipe={to} />}
     </section>
   );

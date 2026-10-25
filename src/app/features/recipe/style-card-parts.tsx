@@ -1,29 +1,33 @@
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
-import { ChefHat, Gauge } from "lucide-react";
+import { Clock, CookingPot, Flame, ScanLine, Wheat } from "lucide-react";
+import { Badge } from "../../components/ds/index";
+import { RecipeMatchIcon } from "./recipe-match-icon";
+import { recipeCardSignals } from "./recipe-card-signals";
+import { engineMsgTexts } from "./engine-msg-text";
 import type { GeneratedRecipe, PizzaStyle } from "../../domain/pizza-engine";
 import type { CmsContent } from "../cms/cms-context";
 import { uiMessage } from "../../i18n/ui-messages";
-import { styleDifficultyLabel } from "./recommended-styles";
+
 
 /* ═══ Parti comuni delle card di uno stile (Scopri e Crea) ═══
  * Nota di Matteo (24/10/2026): le card delle due pagine erano due componenti
  * diversi (anello del punteggio contro pill, «Principianti» in alto contro
  * «livello · ore» in basso). Un solo linguaggio: in alto a destra la
- * compatibilità con la tua cucina (D-041), in basso la chip livello e ore. */
+ * compatibilità con la tua cucina, in basso solo segnali utili alla scelta. */
 
 /** Sotto questo margine il «→ migliore» è rumore: la card resta pulita. */
 const HEADROOM_MIN = 8;
 
-export function CompatibilityPill({ now, best, basis, className }: { now: number; best: number; basis?: string; className?: string }) {
+export function CompatibilityPill({ now, best, basis, blocked, className }: { now: number; best: number; basis?: string; blocked?: boolean; className?: string }) {
   const headroom = best - now >= HEADROOM_MIN ? best : null;
   const label = headroom
     ? uiMessage("pages.explore.compatibilityOptimizable", [now, headroom])
     : uiMessage("pages.explore.compatibility", [now]);
   return (
-    <p className={`compat-pill${className ? ` ${className}` : ""}`} title={label} aria-label={label}>
+    <p className={`compat-pill${blocked ? " compat-pill--blocked" : ""}${className ? ` ${className}` : ""}`} title={label} aria-label={label}>
       {basis && <span className="compat-pill__basis">{basis}</span>}
-      <Gauge size={11} aria-hidden="true" className="compat-pill__icon" />
+      <RecipeMatchIcon score={now} blocked={blocked} size={14} aria-hidden="true" className="compat-pill__icon" />
       <span className="compat-pill__now">{now}</span>
       {headroom && (
         <>
@@ -35,21 +39,28 @@ export function CompatibilityPill({ now, best, basis, className }: { now: number
   );
 }
 
-/** «Principiante · 18–48h»: quanto è difficile e quanto dura. */
-export function styleMetaLabel(style: PizzaStyle, cms: CmsContent): string {
-  const [fMin, fMax] = style.dough.fermentation_hours_range;
-  const time = fMax <= 8 ? cms.filters.timeFast : `${Math.round(fMin)}–${Math.round(fMax)}h`;
-  return `${styleDifficultyLabel(style, cms)} · ${time}`;
-}
-
+/** A maximum of two useful signals, inside the photo. The duration describes
+ * the complete generated timeline, not fermentation alone. */
 export function StyleMetaChip({ style, cms, recipe }: { style: PizzaStyle; cms: CmsContent; recipe?: GeneratedRecipe }) {
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
-  const label = recipe ? `${styleDifficultyLabel(style, cms)} · ${fmt.durationShort(recipe.fermentation_hours)}` : styleMetaLabel(style, cms);
+  const signals = recipe ? recipeCardSignals(recipe) : [];
+  const icons = { oven: Flame, time: Clock, pan: CookingPot, flour: Wheat, check: ScanLine };
+  const duration = recipe
+    ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)
+    : `${style.dough.fermentation_hours_range[0]}–${style.dough.fermentation_hours_range[1]}h`;
   return (
-    <p className="style-meta-chip">
-      <ChefHat size={13} strokeWidth={2.5} className="style-meta-chip__icon" aria-hidden="true" />
-      <span data-region="meta">{label}</span>
-    </p>
+    <div className="style-signals" data-region="meta">
+      {signals.map(signal => {
+        const Icon = icons[signal.icon];
+        const text = engineMsgTexts([signal.message], cms, bcp47)[0];
+        return <Badge key={text} tone={signal.tone} className={signal.tone === "error" ? "style-signal style-signal--error" : "style-signal style-signal--warning"}>
+          <Icon size={13} aria-hidden="true" /><span data-slot="label">{text}</span>
+        </Badge>;
+      })}
+      {signals.length < 2 && recipe?.verdict.outcome !== "not_feasible" && (
+        <Badge tone="muted" className="style-signal"><Clock size={13} aria-hidden="true" /><span data-slot="label">≈ {duration}</span></Badge>
+      )}
+    </div>
   );
 }

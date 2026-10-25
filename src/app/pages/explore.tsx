@@ -1,4 +1,3 @@
-import { RecipeConditionChips } from "../features/recipe/recipe-condition-chips";
 /* === EXPLORE PAGE — VPL-059 ===
    Catalogo completo stili pizza con filtri famiglia e ricette iconiche.
    Layout editoriale e filtri flessibili (Spotify/Pinterest style).
@@ -701,7 +700,6 @@ function StyleCatalogCard({
           as={Link}
           variant="container"
           to={`/recipe/${style.id}?mode=canonical`}
-          aria-describedby={match && (match.recipe.verdict.blockers.length || match.recipe.verdict.adaptations.length) ? `conditions-explore-${style.id}` : undefined}
           state={{ exploreBackTo }}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
@@ -721,7 +719,7 @@ function StyleCatalogCard({
           {/* Compatibilità con la tua cucina — in alto a destra, come in Crea */}
           {match && (
             <div className="explore-card__match">
-              <CompatibilityPill now={match.now} best={match.best} basis={cms.ui.scoreBasisOriginal} />
+              <CompatibilityPill now={match.now} best={match.best} basis={cms.ui.scoreBasisOriginal} blocked={match.recipe.verdict.outcome === "not_feasible"} />
             </div>
           )}
 
@@ -736,11 +734,10 @@ function StyleCatalogCard({
             <div className="explore-card__origin">
               {shortOrigin(style.origin)}
             </div>
-            <StyleMetaChip style={style} cms={cms} />
+            <StyleMetaChip style={style} cms={cms} recipe={match?.recipe} />
           </figcaption>
         </figure>
       </Surface>
-      {match && <RecipeConditionChips recipe={match.recipe} id={`conditions-explore-${style.id}`} />}
       </TiltCard>
     </motion.article>
   );
