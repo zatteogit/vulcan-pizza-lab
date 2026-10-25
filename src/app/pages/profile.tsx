@@ -721,7 +721,7 @@ function EquipmentCategory({
 }
 
 /* ═══ FTU ONBOARDING ═══ */
-function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
+function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; closeControl: React.ReactNode }) {
   const { cms } = useCms();
   const p = cms.profile;
   const [step, setStep] = useState(0);
@@ -781,6 +781,7 @@ function FtuOnboarding({ onComplete }: { onComplete: () => void }) {
       id="main-content"
       className="profile-ftu"
     >
+      {closeControl}
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -1495,10 +1496,24 @@ export function ProfilePage() {
   const [profileTab, setProfileTab] = useState<"setup" | "app" | "recipes">("setup");
   const reduceMotion = useReducedMotion();
 
+  const closeControl = (
+    <div className="profile-page__close">
+      <IconButton
+        size="lg"
+        /* D-037: chiudendo si torna da dove si è arrivati (es. Crea). */
+        onClick={() => (window.history.state?.idx > 0 ? navigate(-1) : navigate("/"))}
+        aria-label={cms.ui.close}
+      >
+        <X size={20} aria-hidden="true" />
+      </IconButton>
+    </div>
+  );
+
   /* FTU */
   if (showFtu) {
     return (
       <FtuOnboarding
+        closeControl={closeControl}
         onComplete={() => {
           setShowFtu(false);
           /* Reload state from localStorage after FTU writes */
@@ -1524,6 +1539,7 @@ export function ProfilePage() {
       id="main-content"
       className="profile-shell"
     >
+      {closeControl}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -1531,17 +1547,6 @@ export function ProfilePage() {
         className="profile-page"
         data-region="page"
       >
-        {/* Close Button */}
-        <div className="profile-page__close">
-          <IconButton
-            size="md"
-            /* D-037: chiudendo si torna da dove si è arrivati (es. Crea). */
-            onClick={() => (window.history.state?.idx > 0 ? navigate(-1) : navigate("/"))}
-            aria-label={cms.ui.close}
-          >
-            <X size={15} />
-          </IconButton>
-        </div>
         {/* Header */}
         <div data-region="page-header" className="profile-page__header">
           <div className="profile-page__header-icon">
