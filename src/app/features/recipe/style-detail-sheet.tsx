@@ -151,8 +151,8 @@ export function StyleDetailSheet({
       whileHover={rec?.tier === "not_feasible" ? undefined : { scale: 1.01 }}
       className={`style-detail-cta style-detail-cta--${placement}`}
     >
-      <Sparkles size={15} aria-hidden="true" />
-      {pt.sheetGenerateBtn}
+      {placement === "footer" && <Sparkles size={15} aria-hidden="true" />}
+      {placement === "toolbar" ? cms.pages.navCreate : pt.sheetGenerateBtn}
     </CtaButton>
   );
 

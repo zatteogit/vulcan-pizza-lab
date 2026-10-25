@@ -15067,9 +15067,12 @@
   }
 
   .style-detail-sheet__toolbar > .style-detail-cta {
-    flex: 1;
-    min-width: 0;
-    padding-inline: var(--space-3);
+    flex: 0 0 auto;
+    width: auto;
+    min-width: var(--space-15);
+    height: var(--space-10);
+    margin-inline-start: auto;
+    padding-inline: var(--space-4);
     font-size: var(--font-size-md);
   }
 
