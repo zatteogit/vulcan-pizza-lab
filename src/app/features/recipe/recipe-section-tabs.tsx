@@ -1,9 +1,10 @@
-import { motion } from "motion/react";
+import { motion, useReducedMotion, useSpring, useTransform, type MotionStyle } from "motion/react";
 import { handleTablistKeyDown, tabIndexFor } from "../../components/ds/tablist-keys";
 import { ListChecks, Utensils, ChefHat } from "lucide-react";
-import { type ComponentType } from "react";
+import { useEffect, useRef, type ComponentType } from "react";
 import { useCms } from "../cms/cms-context";
-import { SearchButton } from "../../components/shared/search-button";
+import { useLiquidNavState } from "../../hooks/use-liquid-nav";
+import { useVirtualKeyboard } from "../../hooks/use-virtual-keyboard";
 import { motionSpring } from "../../components/ds/motion";
 
 export type RecipePrimaryTab = "ricetta" | "procedimento" | "condimento";
@@ -22,7 +23,6 @@ export function RecipeSectionTabs({
   sticky = true,
   variant = "inline",
   stickyTop,
-  onSearchOpen,
   fillingMode = false,
   recipeSubtitle,
   procedureSubtitle,
@@ -34,7 +34,6 @@ export function RecipeSectionTabs({
   sticky?: boolean;
   variant?: "inline" | "navbar";
   stickyTop?: 44 | 56 | 64;
-  onSearchOpen?: () => void;
   /** Stili farciti → la tab "Condimento" diventa "Farcitura". */
   fillingMode?: boolean;
   recipeSubtitle?: string;
@@ -43,6 +42,43 @@ export function RecipeSectionTabs({
 }) {
   const navbar = variant === "navbar";
   const { cms } = useCms();
+  const { compact } = useLiquidNavState(28, navbar);
+  const reducedMotion = useReducedMotion();
+  const keyboardOpen = useVirtualKeyboard(navbar);
+  // A single interruptible spring keeps geometry and fades in sync, including
+  // when scroll direction reverses before the previous morph has finished.
+  const morph = useSpring(0, motionSpring.navigation);
+  const collapse = useTransform(morph, value => Math.min(1, Math.max(0, value)));
+  const labelOpacity = useTransform(collapse, value => Math.max(0, 1 - value * 1.7));
+  const iconOpacity = useTransform(collapse, value => Math.min(1, Math.max(0, value * 1.6 - 0.3)));
+  const morphStyle = { "--section-tabs-collapse": collapse, "--section-tabs-label-opacity": labelOpacity, "--section-tabs-icon-opacity": iconOpacity } as MotionStyle;
+  const fadeStyle = { "--section-tabs-collapse": collapse } as MotionStyle;
+  const pressing = useRef(false);
+  const target = useRef({ compact, reducedMotion });
+  useEffect(() => {
+    target.current = { compact, reducedMotion };
+    if (pressing.current) return;
+    if (reducedMotion) morph.jump(compact ? 1 : 0);
+    else morph.set(compact ? 1 : 0);
+  }, [compact, reducedMotion, morph]);
+  useEffect(() => {
+    if (!navbar) return;
+    const release = () => {
+      if (!pressing.current) return;
+      pressing.current = false;
+      const next = target.current.compact ? 1 : 0;
+      if (target.current.reducedMotion) morph.jump(next);
+      else morph.set(next);
+    };
+    window.addEventListener("pointerup", release);
+    window.addEventListener("pointercancel", release);
+    window.addEventListener("blur", release);
+    return () => {
+      window.removeEventListener("pointerup", release);
+      window.removeEventListener("pointercancel", release);
+      window.removeEventListener("blur", release);
+    };
+  }, [navbar, morph]);
 
   const toppingLabel = fillingMode
     ? cms.cooking.fillingTitle ?? cms.cooking.toppingTitle
@@ -72,20 +108,18 @@ export function RecipeSectionTabs({
     onChange(tab);
   };
 
-  const openSearch = () => {
-    onSearchOpen?.();
-    window.dispatchEvent(new CustomEvent("vulcan:open-search"));
-  };
-
-  if (navbar && onSearchOpen) {
+  if (navbar) {
     return (
       <>
-        <div className="section-tabs-fade" />
+        <motion.div className="section-tabs-fade" data-keyboard-open={keyboardOpen || undefined} style={fadeStyle} />
         <motion.div
-          className="section-tabs-dock"
-          initial={{ opacity: 0, y: 12 }}
+          className={`section-tabs-dock${compact ? " section-tabs-dock--compact" : ""}`}
+          style={morphStyle}
+          data-keyboard-open={keyboardOpen || undefined}
+          onPointerDownCapture={() => { pressing.current = true; morph.stop(); }}
+          initial={reducedMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={motionSpring.liquid}
+          transition={reducedMotion ? { duration: 0 } : motionSpring.liquid}
         >
           <div className="section-tabs-dock__grid">
             <div className="section-tabs-dock__tabs">
@@ -100,12 +134,6 @@ export function RecipeSectionTabs({
                 toppingSubtitle={toppingSubtitle}
               />
             </div>
-
-            <SearchButton
-              size="md"
-              onOpen={openSearch}
-              className="section-tabs-dock__search"
-            />
           </div>
         </motion.div>
       </>
@@ -114,9 +142,7 @@ export function RecipeSectionTabs({
 
   return (
     <div
-      className={navbar
-        ? "section-tabs-wrap section-tabs-wrap--navbar"
-        : `section-tabs-wrap section-tabs-wrap--inline${sticky ? " section-tabs-wrap--sticky" : ""}${stickyTop === 56 ? " section-tabs-wrap--below-subheader" : stickyTop === 64 ? " section-tabs-wrap--below-header" : ""}`}
+      className={`section-tabs-wrap section-tabs-wrap--inline${sticky ? " section-tabs-wrap--sticky" : ""}${stickyTop === 56 ? " section-tabs-wrap--below-subheader" : stickyTop === 64 ? " section-tabs-wrap--below-header" : ""}`}
     >
       <TabsCapsule
         tabs={tabs}
@@ -152,6 +178,7 @@ function TabsCapsule({
   toppingSubtitle?: string;
 }) {
   const hasSubtitles = Boolean(recipeSubtitle || procedureSubtitle || toppingSubtitle);
+  const reducedMotion = useReducedMotion();
 
   return (
     /* U-10 (F13): tablist su un div (su <nav> annullava il landmark), frecce e
@@ -176,12 +203,13 @@ function TabsCapsule({
             id={`recipe-${navbar ? "navtab" : "tab"}-${tab.id}`}
             data-tab-id={tab.id}
             aria-selected={active}
+            aria-label={tab.subtitle ? `${tab.label}: ${tab.subtitle}` : tab.label}
             aria-controls="recipe-tabpanel"
             tabIndex={tabIndexFor(active)}
-            whileHover={{ scale: 1.015 }}
-            whileTap={{ scale: 0.965 }}
+            whileHover={reducedMotion ? undefined : { scale: 1.015 }}
+            whileTap={reducedMotion ? undefined : { scale: 0.965 }}
             transition={motionSpring.quick}
-            className={`section-tabs-capsule__tab${navbar ? " section-tabs-capsule__tab--navbar" : ""}${hasSubtitles ? " section-tabs-capsule__tab--subtitles" : ""}${active ? " section-tabs-capsule__tab--active" : ""}`}
+            className={`section-tabs-capsule__tab${navbar ? " section-tabs-capsule__tab--navbar" : ""}${hasSubtitles ? " section-tabs-capsule__tab--subtitles" : ""}${navbar && !tab.subtitle ? " section-tabs-capsule__tab--icon-value" : ""}${active ? " section-tabs-capsule__tab--active" : ""}`}
           >
             {active && (
               <motion.span
@@ -191,11 +219,10 @@ function TabsCapsule({
               />
             )}
             <div className={`section-tabs-capsule__content${navbar ? " section-tabs-capsule__content--navbar" : ""}`}>
-              {!navbar && (
-                <TabIcon
-                  size={14}
-                  className={`section-tabs-capsule__icon${active ? " section-tabs-capsule__icon--active" : ""}`}
-                />
+              {(!navbar || !tab.subtitle) && (
+                <span className={navbar ? "section-tabs-capsule__compact-icon" : "section-tabs-capsule__icon"} aria-hidden="true">
+                  <TabIcon size={navbar ? 18 : 14} className={active ? "section-tabs-capsule__icon--active" : undefined} />
+                </span>
               )}
               <div className={`section-tabs-capsule__text${navbar ? " section-tabs-capsule__text--navbar" : ""}`}>
                 <span className="section-tabs-capsule__label">

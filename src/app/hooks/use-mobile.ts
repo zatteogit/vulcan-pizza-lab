@@ -2,20 +2,23 @@ import * as React from "react";
 
 const MOBILE_BREAKPOINT = 768;
 
-export function useIsMobile() {
+export function useIsMobile(touchLandscape = false) {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
     undefined,
   );
 
   React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const narrow = `(max-width: ${MOBILE_BREAKPOINT - 1}px)`;
+    const mql = window.matchMedia(touchLandscape
+      ? `${narrow}, (pointer: coarse) and (max-width: 1023px) and (max-height: 500px)`
+      : narrow);
     const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+      setIsMobile(mql.matches);
     };
     mql.addEventListener("change", onChange);
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    setIsMobile(mql.matches);
     return () => mql.removeEventListener("change", onChange);
-  }, []);
+  }, [touchLandscape]);
 
   return !!isMobile;
 }
