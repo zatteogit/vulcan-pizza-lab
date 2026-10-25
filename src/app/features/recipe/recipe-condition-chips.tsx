@@ -25,9 +25,6 @@ export function RecipeConditionChips({ recipe, id, compact = false }: { recipe: 
   }
   if (compact) {
     messages.splice(0, messages.length, ...recipeCardSignals(recipe).map(s => s.message));
-    if (!blocked && messages.length < 2 && recipe.verdict.conditions?.some(c => c.status === "unverified" && ["flour", "yeast"].includes(c.kind))) {
-      messages.push({key:"card.pantryCheck",fallback:"Verifica la dispensa"});
-    }
   }
   const texts = [...new Set(engineMsgTexts(messages, cms, bcp47))];
   if (texts.length === 0) return null;

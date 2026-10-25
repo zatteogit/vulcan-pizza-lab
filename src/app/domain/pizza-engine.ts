@@ -809,13 +809,13 @@ function kitchenPrerequisites(style: PizzaStyle, constraints: UserConstraints, f
   const homeMethod = homeBakingAdaptation(style, constraints.oven_type, constraints.oven_max_temp_c);
   if (!isFriedStyle(style) && (panStyle || homeMethod) && !hasPan) {
     add("pan", constraints.equipment_inventory_complete ? "missing" : "unverified", constraints.equipment_inventory_complete
-      ? em("need.pan", "Se ti procuri una teglia") : em("need.checkPan", "Verifica di avere una teglia"));
+      ? em("need.pan", "Se ti procuri una teglia") : em("need.checkPan", "Se hai una teglia"));
   }
   if (!isFriedStyle(style) && !panStyle && !homeMethod && HOME_OVENS.has(constraints.oven_type) &&
     !constraints.has_pizza_stone && !constraints.has_pizza_steel &&
     !surfaces.some((s) => ["cordierite_stone", "refractory_brick", "steel_plate"].includes(s))) {
     add("deck", constraints.equipment_inventory_complete ? "missing" : "unverified", constraints.equipment_inventory_complete
-      ? em("need.deck", "Serve pietra o acciaio") : em("need.checkDeck", "Verifica pietra o acciaio"));
+      ? em("need.deck", "Serve pietra o acciaio") : em("need.checkDeck", "Se hai pietra o acciaio"));
   }
   const pantryRanges = constraints.pantry_flours.map(id => FLOUR_W_RANGES[id]).filter(Boolean);
   const unknownFlour = constraints.pantry_inventory_complete !== true || pantryRanges.length !== constraints.pantry_flours.length || constraints.pantry_flours.some(id => ["00", "0", "tipo_1", "integrale", "semola", "manitoba"].includes(id));
@@ -823,18 +823,18 @@ function kitchenPrerequisites(style: PizzaStyle, constraints: UserConstraints, f
   const mix = !coversW ? pantryFlourMix(constraints.pantry_flours, [flourW, flourW], true) : null;
   if (unknownFlour || (!coversW && !mix)) {
     add("flour", unknownFlour ? "unverified" : "missing", unknownFlour
-      ? em("need.checkFlour", "Verifica di avere farina W{w}", { w: flourW })
+      ? em("need.checkFlour", "Se hai farina W{w}", { w: flourW })
       : em("need.flour", "Serve farina W{w}", { w: flourW }));
   }
   if ((style.dough.flour_blend?.length ?? 0) > 1) {
     // La dispensa censisce prodotti/farine, non tutti i componenti di ogni blend.
     // La compatibilità W del frumento non prova di avere anche soia/riso, ecc.
-    add("flour_blend", "unverified", em("need.checkBlend", "Verifica tutte le farine del mix"));
+    add("flour_blend", "unverified", em("need.checkBlend", "Se hai tutte le farine del mix"));
   }
   if (!style.dough.unleavened && !constraints.pantry_yeasts.includes(yeastType)) {
     const unknown = constraints.pantry_inventory_complete !== true;
     add("yeast", unknown ? "unverified" : "missing", unknown
-      ? em("need.checkYeast", "Verifica il lievito: {yeast}", { yeast: yeastType })
+      ? em("need.checkYeast", "Se hai lievito: {yeast}", { yeast: yeastType })
       : em("need.yeast", "Serve lievito: {yeast}", { yeast: yeastType }));
   }
   for (const c of conditions) c.acquisition = c.kind === "pan" || c.kind === "deck" ? "accessory" : "ingredient";
