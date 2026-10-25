@@ -1,3 +1,4 @@
+import { recipeDisplayName } from "../../domain/recipe-reference";
 import { createPortal } from "react-dom";
 import { BRAND } from "../../config/brand";
 import { VulcanMark } from "../../components/shared/vulcan-logo";
@@ -80,7 +81,7 @@ export function PrintSheet({
           <VulcanMark size={28} decorative />
           {BRAND.name}
         </p>
-        <h1 className="print-sheet__title">{recipe.style.name}</h1>
+        <h1 className="print-sheet__title">{recipeDisplayName(recipe)}</h1>
         <p className="print-sheet__meta">
           {recipe.dough_balls} {unitLabel} · {fmt.grams(recipe.ball_weight_g)} ·{" "}
           {ui.statHydration} {fmt.percent(recipe.hydration_pct)} ·{" "}
@@ -195,7 +196,7 @@ export function PrintSheet({
       )}
 
       <footer className="print-sheet__footer">
-        {BRAND.fullName} · {recipe.style.name}
+        {BRAND.fullName} · {recipeDisplayName(recipe)}
       </footer>
     </article>,
     document.body,

@@ -1,5 +1,23 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "recipe.reference.outside": "Inspiriert von Napoletana STG · außerhalb der Spezifikation",
+  "recipe.reference.source": "Referenz: Napoletana STG",
+  "recipe.reference.description": "Eine von Napoletana STG inspirierte, an deine Küche angepasste Version. Geänderte Anforderungen stehen oben.",
+  "recipe.reference.details": "Rezept und Spezifikation",
+  "recipe.reference.disclaimer": "Die Bewertung misst Machbarkeit und Stiltreue; sie bescheinigt keine STG-Konformität. Die App vergleicht einige Parameter, prüft aber weder die vollständige Spezifikation noch die Herkunft der Zutaten oder die Ausführung.",
+  "recipe.reference.specification": "STG-Spezifikation · MASAF, Art. 3",
+  "recipe.reference.wood": "Backen ohne Holz: Die Spezifikation verlangt ausschließlich einen Holzofen.",
+  "recipe.reference.bake": "Backzeit außerhalb der vorgesehenen 60–90 Sekunden.",
+  "recipe.reference.flour": "Mehlstärke außerhalb des vorgesehenen Bereichs W220–380.",
+  "recipe.reference.pl": "P/L-Verhältnis außerhalb des vorgesehenen Bereichs 0,50–0,70.",
+  "recipe.reference.fermentation": "Gärdauer weicht vom vorgesehenen Verfahren bei Raumtemperatur ab (insgesamt 6–14 Stunden).",
+  "recipe.reference.cold": "Gekühlte Reifung statt des vorgesehenen Verfahrens bei Raumtemperatur.",
+  "recipe.reference.preferment": "Vorteig verwendet: Die Spezifikation sieht einen direkt geführten Teig vor.",
+  "recipe.reference.yeast": "Sauerteig statt der vorgesehenen Backhefe.",
+  "recipe.reference.additions": "Zugesetzte Fette oder Zucker im Teig, die in der vorgesehenen Rezeptur fehlen.",
+  "recipe.reference.weight": "Teiglingsgewicht außerhalb der vorgesehenen 180–250 g.",
+  "recipe.reference.topping": "Belag weicht von den vorgesehenen Varianten Margherita und Marinara ab.",
+
   "components.ds.select.placeholder": "Auswählen...",
   "components.ds.spinner.caricamento-9f21540f": "Wird geladen",
   "components.shared.app-shell.crea-e7c107d0": "Erstellen",

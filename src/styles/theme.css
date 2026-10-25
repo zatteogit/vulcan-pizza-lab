@@ -20369,3 +20369,21 @@ html {
     white-space: nowrap;
   }
 }
+
+/* Reference status is independent of the compatibility score. */
+.recipe-reference-note {
+  margin-block: var(--space-3);
+  padding-inline-start: var(--space-3);
+  border-inline-start: var(--border-width-strong) solid var(--text-muted);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-cozy);
+}
+.recipe-reference-note__title {
+  color: var(--text-default);
+  font-weight: var(--weight-semibold);
+  margin-block-end: var(--space-1);
+}
+.recipe-reference-note summary { cursor: pointer; }
+.recipe-reference-note ul { padding-inline-start: var(--space-5); margin-block: var(--space-2); }
+.recipe-reference-note a { text-decoration: underline; text-underline-offset: var(--space-1); }

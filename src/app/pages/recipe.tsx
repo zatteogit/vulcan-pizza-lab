@@ -1,3 +1,4 @@
+import { recipeDisplayName } from "../domain/recipe-reference";
 import { buildGeneratedRecipe, recipeFromEntry, canonicalRecipeEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 /* === RECIPE PAGE — VPL-058 + VPL-064 ===
@@ -769,8 +770,8 @@ function RecipeContent({
   const resolvedRecipeName = recipeName ?? normalizeRecipeName(savedEntry?.name) ?? "";
   // U-10 (F15): il titolo della scheda dice quale ricetta è (RouteTitle salta /recipe).
   useEffect(() => {
-    document.title = `${resolvedRecipeName || style.name} · ${BRAND.name}`;
-  }, [style.name, resolvedRecipeName]);
+    document.title = `${resolvedRecipeName || recipeDisplayName(recipe ?? matchRecipe, effectiveConstraints.oven_type)} · ${BRAND.name}`;
+  }, [recipe, matchRecipe, effectiveConstraints.oven_type, resolvedRecipeName]);
 
   useEffect(() => {
     if (recipeName === undefined && savedEntry?.name) setRecipeName(normalizeRecipeName(savedEntry.name));
@@ -794,7 +795,7 @@ function RecipeContent({
     } else {
       saveRecipe({
         styleId: style.id,
-        styleName: style.name,
+        styleName: recipeDisplayName(recipe ?? matchRecipe, effectiveConstraints.oven_type),
         name: normalizeRecipeName(resolvedRecipeName),
         versionId: activeVersionId,
         params: currentSaveParams,
@@ -805,7 +806,7 @@ function RecipeContent({
     }
     setSavedTick((v) => v + 1);
     return ok;
-  }, [savedEntry, style.id, style.name, activeVersionId, currentSaveParams, matchRecipe, resolvedRecipeName]);
+  }, [savedEntry, style.id, style.name, activeVersionId, currentSaveParams, recipe, matchRecipe, effectiveConstraints.oven_type, resolvedRecipeName]);
 
   const styleVersions = useMemo(() => getVersions(style.id), [style.id]);
   /* Firma d'origine (redesign lug 2026): l'eyebrow dice l'origine UNA volta,

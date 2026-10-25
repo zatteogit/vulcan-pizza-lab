@@ -1,3 +1,4 @@
+import { recipeDisplayName } from "../../domain/recipe-reference";
 import { Award,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
 import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
 import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
@@ -662,7 +663,7 @@ function StyleCard({
             <div className="recommended-card__info">
               {/* Title — Playfair Display, large and confident */}
               <span className="recommended-card__title">
-                {style.name}
+                {recipeDisplayName(rec.recipe)}
               </span>
 
               {/* Subtitle — ALL CAPS, tracked, warm cream */}

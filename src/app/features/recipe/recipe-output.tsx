@@ -1,3 +1,4 @@
+import { recipeDisplayName } from "../../domain/recipe-reference";
 import { Check, CookingPot, Flame, Link as LinkIcon, ListChecks, Printer, Share2, Utensils } from "lucide-react";
 import { localizeToppingRecipe } from "../../data/topping-i18n/localize";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -448,9 +449,9 @@ export function RecipeOutput({
     } else if (conflictingSession) {
       setConfirmReplace(true);
     } else {
-      startSession(recipe.style.id, recipe.style.name, cookingSteps);
+      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps);
     }
-  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe.style.name, recipe.verdict.outcome, cookingSteps]);
+  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, recipe.verdict.outcome, cookingSteps]);
 
   React.useEffect(() => {
     const handler = () => handleStartCooking();
@@ -471,8 +472,8 @@ export function RecipeOutput({
     if (recipe.verdict.outcome === "not_feasible") return;
     setConfirmReplace(false);
     setConfirmPersonalize(false);
-    startSession(recipe.style.id, recipe.style.name, cookingSteps);
-  }, [startSession, recipe.style.id, recipe.style.name, recipe.verdict.outcome, cookingSteps]);
+    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps);
+  }, [startSession, recipe.style.id, recipe, constraints.oven_type, recipe.verdict.outcome, cookingSteps]);
 
   const handlePersonalizeBeforeCooking = React.useCallback(() => {
     setConfirmPersonalize(false);
@@ -662,14 +663,14 @@ export function RecipeOutput({
         title={cms.cooking.replaceTitle}
         body={t(cms.cooking.replaceBody, {
           current: session?.styleName ?? "",
-          next: recipe.style.name,
+          next: recipeDisplayName(recipe, constraints.oven_type),
         })}
         actions={[
           {
             label: (
               <>
                 <Flame size={16} />
-                {t(cms.cooking.replaceStart, { style: recipe.style.name })}
+                {t(cms.cooking.replaceStart, { style: recipeDisplayName(recipe, constraints.oven_type) })}
               </>
             ),
             onClick: confirmStartCooking,

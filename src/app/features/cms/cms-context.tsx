@@ -1344,7 +1344,7 @@ export const CMS_DEFAULTS: CmsContent = {
     scoreTipTitle: "Come leggere il punteggio",
     scoreTipOriginal: "Ricetta originale, valutata con la tua cucina.",
     scoreTipTailored: "Versione con gli adattamenti proposti.",
-    scoreTipGlobal: "Il voto tiene conto di fattibilità e autenticità. I compromessi importanti lo abbassano.",
+    scoreTipGlobal: "Il voto tiene conto di fattibilità e autenticità. Non attesta la conformità a un disciplinare.",
     scoreTipBlocked: "Ci sono requisiti non rispettati: apri il dettaglio.",
     pantrySelectionSummary: "Selezionati: {n} · Esclusi: {excluded}",
     pantryWValue: "W{w}",

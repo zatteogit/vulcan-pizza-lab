@@ -1,5 +1,23 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "recipe.reference.outside": "Inspired by Napoletana STG · outside the specification",
+  "recipe.reference.source": "Reference: Napoletana STG",
+  "recipe.reference.description": "A version inspired by Napoletana STG, adapted to your kitchen. Changed requirements are listed above.",
+  "recipe.reference.details": "Recipe and specification",
+  "recipe.reference.disclaimer": "The score measures feasibility and closeness to the style: it does not certify STG compliance. The app compares some parameters, but does not verify the full specification, ingredient provenance or execution.",
+  "recipe.reference.specification": "STG specification · MASAF, art. 3",
+  "recipe.reference.wood": "Baking without wood: the specification requires a wood-fired oven exclusively.",
+  "recipe.reference.bake": "Baking time outside the specified 60–90 seconds.",
+  "recipe.reference.flour": "Flour strength outside the specified W220–380 range.",
+  "recipe.reference.pl": "P/L ratio outside the specified 0.50–0.70 range.",
+  "recipe.reference.fermentation": "Fermentation duration differs from the specified room-temperature process (6–14 hours overall).",
+  "recipe.reference.cold": "Refrigerated maturation instead of the specified room-temperature process.",
+  "recipe.reference.preferment": "Use of a preferment: the specification requires a direct dough.",
+  "recipe.reference.yeast": "Sourdough instead of the specified baker’s yeast.",
+  "recipe.reference.additions": "Added fats or sugars in the dough, absent from the specified formula.",
+  "recipe.reference.weight": "Dough ball weight outside the specified 180–250 g range.",
+  "recipe.reference.topping": "Topping differs from the specified Margherita and Marinara versions.",
+
   "components.ds.select.placeholder": "Select...",
   "components.ds.spinner.caricamento-9f21540f": "Loading",
   "components.shared.app-shell.crea-e7c107d0": "Create",

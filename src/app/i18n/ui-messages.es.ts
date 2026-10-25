@@ -1,5 +1,23 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "recipe.reference.outside": "Inspirada en la Napoletana STG · fuera del pliego",
+  "recipe.reference.source": "Referencia: Napoletana STG",
+  "recipe.reference.description": "Una versión inspirada en la Napoletana STG, adaptada a tu cocina. Los requisitos modificados aparecen arriba.",
+  "recipe.reference.details": "Receta y pliego",
+  "recipe.reference.disclaimer": "La puntuación mide viabilidad y cercanía al estilo; no certifica la conformidad STG. La app compara algunos parámetros, pero no verifica todo el pliego, la procedencia de los ingredientes ni la ejecución.",
+  "recipe.reference.specification": "Pliego STG · MASAF, art. 3",
+  "recipe.reference.wood": "Cocción sin leña: el pliego exige exclusivamente un horno de leña.",
+  "recipe.reference.bake": "Tiempo de cocción fuera del intervalo previsto de 60–90 segundos.",
+  "recipe.reference.flour": "Fuerza de harina fuera del intervalo previsto W220–380.",
+  "recipe.reference.pl": "Relación P/L fuera del intervalo previsto 0,50–0,70.",
+  "recipe.reference.fermentation": "Duración de fermentación distinta del proceso previsto a temperatura ambiente (6–14 horas en total).",
+  "recipe.reference.cold": "Maduración refrigerada en lugar del proceso previsto a temperatura ambiente.",
+  "recipe.reference.preferment": "Uso de un prefermento: el pliego prevé una masa directa.",
+  "recipe.reference.yeast": "Masa madre en lugar de la levadura de panadería prevista.",
+  "recipe.reference.additions": "Grasas o azúcares añadidos a la masa, ausentes de la fórmula prevista.",
+  "recipe.reference.weight": "Peso de la bola fuera del intervalo previsto de 180–250 g.",
+  "recipe.reference.topping": "Cobertura distinta de las versiones Margherita y Marinara previstas.",
+
   "components.ds.select.placeholder": "Seleccionar...",
   "components.ds.spinner.caricamento-9f21540f": "Cargando",
   "components.shared.app-shell.crea-e7c107d0": "Crear",

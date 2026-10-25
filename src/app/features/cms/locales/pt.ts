@@ -21,7 +21,7 @@ export const PT_LOCALE: CmsContent = {
     scoreTipTitle: "Como ler a pontuação",
     scoreTipOriginal: "Receita original, avaliada para a sua cozinha.",
     scoreTipTailored: "Versão com as adaptações propostas.",
-    scoreTipGlobal: "A pontuação considera viabilidade e autenticidade. Compromissos importantes reduzem-na.",
+    scoreTipGlobal: "A pontuação considera viabilidade e autenticidade. Não certifica a conformidade com uma especificação.",
     scoreTipBlocked: "Existem requisitos por cumprir: abra os detalhes.",
     pantrySelectionSummary: "Selecionados: {n} · Excluídos: {excluded}",
     pantryWValue: "W{w}",

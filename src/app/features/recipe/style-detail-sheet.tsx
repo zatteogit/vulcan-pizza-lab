@@ -1,3 +1,5 @@
+import { RecipeReferenceNote } from "./recipe-reference-note";
+import { recipeDisplayName, stgDepartures } from "../../domain/recipe-reference";
 import { CompatibilityPill } from "./style-card-parts";
 import { RecipeChanges } from "./recipe-changes";
 import { canonicalRecipe } from "../../use-cases/recipe-entry";
@@ -97,6 +99,8 @@ export function StyleDetailSheet({
   }, [constraints, style, cms]);
   const originalRecipe = React.useMemo(() => constraints ? canonicalRecipe(style, constraints, scoreWeightsFromCms(cms)) : null, [constraints, style, cms]);
   const kitchenNow = rec?.recipe.scores.composite ?? null;
+  const displayName = rec ? recipeDisplayName(rec.recipe, constraints?.oven_type) : style.name;
+  const outsideStg = rec ? stgDepartures(rec.recipe, constraints?.oven_type).length > 0 : false;
 
   /* VPL-C3: motivazioni di match articolate (lista completa, con dimensione). */
   const matchReasons = React.useMemo(() => {
@@ -224,7 +228,7 @@ export function StyleDetailSheet({
           <div className="style-detail-media">
             <ImageWithFallback
               src={photo}
-              alt={style.name}
+              alt={displayName}
               sizes={IMAGE_SIZES.full}
               className="style-detail-media__img"
             />
@@ -259,19 +263,21 @@ export function StyleDetailSheet({
 
               {/* Title */}
               <h3 id={`style-detail-title-${style.id}`} className="style-detail-title__heading">
-                {style.name}
+                {displayName}
               </h3>
             </div>
           </div>
 
+          {rec && <RecipeReferenceNote recipe={rec.recipe} oven={constraints?.oven_type} />}
+
           {/* ── Description ── */}
           <p className="style-detail-sheet__description">
-            {cmsDescription}
+            {outsideStg ? uiMessage("recipe.reference.description") : cmsDescription}
           </p>
 
           {/* ── Key characteristics ── */}
           <div className="style-detail-chars">
-            {cmsChars.map((c) => (
+            {(outsideStg ? [] : cmsChars).map((c) => (
               <span key={c} className="style-detail-chars__chip">
                 {c}
               </span>

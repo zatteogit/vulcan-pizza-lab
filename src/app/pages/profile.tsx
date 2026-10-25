@@ -513,7 +513,7 @@ function SavedRecipesSection() {
       ) : (
         <ul ref={(el) => { sectionRef.current = el; }} tabIndex={-1} className="profile-saved-recipes">
           {recipes.map((r) => {
-            const styleName = STYLES_DB[r.styleId]?.name ?? r.styleName;
+            const styleName = r.styleId === "napoletana_stg" ? (r.params.ovenType && r.params.ovenType !== "wood" ? "Napoletana" : r.styleName) : STYLES_DB[r.styleId]?.name ?? r.styleName;
             const name = normalizeRecipeName(r.name);
             const displayName = name || styleName;
             const meta = [
