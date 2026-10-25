@@ -668,6 +668,7 @@ export const ES_LOCALE: CmsContent = {
     "rec.timeInsufficient":
       "Requiere mínimo {fMin}, tienes {available}",
     "rec.needsWoodOven": "Se hace en horno de le\u00F1a: con el tuyo queda cerca, no can\u00F3nica",
+    "rec.ovenAdapted": "Tu horno alcanza {temp}: temperatura ideal {ideal}, cocción adaptada",
     "rec.ovenIdeal":
       "Tu horno alcanza la temperatura ideal ({ideal})",
     "rec.ovenAdequate":

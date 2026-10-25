@@ -38,7 +38,7 @@ describe("mergeDraftConstraints", () => {
     expect(merged.skill_level).toBe(3);
   });
 
-  it("forno, ore e panetti scelti in Crea restano quelli della bozza", () => {
+  it("il forno corrente vince sulla bozza; ore e panetti restano quelli scelti", () => {
     const merged = mergeDraftConstraints(profile, {
       oven_type: "electric_high",
       oven_max_temp_c: 400,
@@ -46,8 +46,8 @@ describe("mergeDraftConstraints", () => {
       dough_balls: 7,
       meal_deadline: true,
     });
-    expect(merged.oven_type).toBe("electric_high");
-    expect(merged.oven_max_temp_c).toBe(400);
+    expect(merged.oven_type).toBe("home");
+    expect(merged.oven_max_temp_c).toBe(250);
     expect(merged.available_hours).toBe(30);
     expect(merged.dough_balls).toBe(7);
     expect(merged.meal_deadline).toBe(true);

@@ -1623,15 +1623,19 @@ export function ProfilePage() {
                   onClick={() => {
                     // Un tipo scelto a mano non è più il modello cercato.
                     setOvenModelId(null);
-                    setOvens((prev) => {
-                      if (prev.includes(preset.id)) {
-                        if (prev.length === 1) return prev;
-                        return prev.filter((x) => x !== preset.id);
+                    if (ovens.includes(preset.id)) {
+                      if (ovens.length === 1) return;
+                      const next = ovens.filter((id) => id !== preset.id);
+                      setOvens(next);
+                      // Tipo e temperatura devono cambiare insieme anche quando
+                      // si rimuove il forno principale da una selezione multipla.
+                      if (ovens[0] === preset.id) {
+                        setOvenTemp(OVEN_PRESETS.find((p) => p.id === next[0])?.maxTemp ?? 250);
                       }
-
+                    } else {
+                      setOvens([preset.id, ...ovens]);
                       setOvenTemp(preset.maxTemp);
-                      return [preset.id, ...prev.filter((x) => x !== preset.id)];
-                    });
+                    }
                   }}
                   className="profile-oven-list__item"
                   animate={{

@@ -870,6 +870,7 @@ export const EN_LOCALE: CmsContent = {
     "rec.timeInsufficient":
       "Requires at least {fMin}, you have {available}",
     "rec.needsWoodOven": "Made in a wood-fired oven: yours gets close, not canonical",
+    "rec.ovenAdapted": "Your oven reaches {temp}: ideal temperature {ideal}, adapted baking",
     "rec.ovenIdeal":
       "Your oven reaches ideal temperature ({ideal})",
     "rec.ovenAdequate":

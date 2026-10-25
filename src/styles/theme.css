@@ -14887,6 +14887,10 @@
     color: var(--text-default);
   }
 
+  .style-detail-match__row[data-warning="true"] .style-detail-match__icon {
+    color: var(--text-warning);
+  }
+
   /* ── CTA — Genera ricetta ── */
   .style-detail-cta {
     width: 100%;

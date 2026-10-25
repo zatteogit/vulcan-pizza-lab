@@ -293,6 +293,59 @@ describe("teglia di default delle forme ovali (audit totale n. 11, B-15)", () =>
 });
 
 describe("fattibilità nei consigli (audit totale n. 9)", () => {
+  it("pinsa con forno domestico 250: adattamento esplicito, mai perfetta o ideale", () => {
+    const rec = recommendStyles(makeConstraints({
+      oven_type: "home", oven_max_temp_c: 250, skill_level: 4,
+      available_hours: 72, mixer_type: "spiral", has_mixer: true,
+      pantry_flours: ["manitoba"],
+    })).find((r) => r.style.id === "pinsa_romana")!;
+    expect(rec.reasons.map((m) => m.key)).not.toContain("rec.ovenIdeal");
+    expect(rec.warnings.map((m) => m.key)).toContain("rec.ovenTooCold");
+    expect(rec.tier).not.toBe("perfect");
+  });
+
+  it("i consigli rispettano l'esito della timeline, comprese le cotture in serie", () => {
+    for (const available_hours of [2, 6, 8, 24]) {
+      const c = makeConstraints({ oven_type: "home", oven_max_temp_c: 250,
+        available_hours, meal_deadline: true, dough_balls: 20 });
+      for (const rec of recommendStyles(c)) {
+        const recipe = generateRecipe(rec.style, c);
+        if (recipe.verdict.outcome === "not_feasible") {
+          expect(rec.tier, `${rec.style.id}: ${available_hours}h`).toBe("not_feasible");
+        }
+        if (recipe.verdict.blockers.some((b) => b.kind === "time_window" || b.kind === "fermentation_too_short")) {
+          expect(rec.reasons.map((m) => m.key)).not.toContain("rec.timeCompatible");
+        }
+      }
+    }
+  });
+
+  it("nessuna riserva di forno o attrezzatura finisce fra i perfetti", () => {
+    for (const oven_max_temp_c of [200, 250, 280, 300, 450]) {
+      for (const rec of recommendStyles(makeConstraints({ oven_max_temp_c }))) {
+        if (rec.tier === "perfect") expect(rec.warnings).toEqual([]);
+      }
+    }
+  });
+
+  it("ogni dichiarazione di forno ideale è vera per tutto il catalogo", () => {
+    for (const oven_max_temp_c of [200, 250, 280, 300, 350, 450, 485]) {
+      const c = makeConstraints({ oven_max_temp_c });
+      for (const rec of recommendStyles(c)) {
+        for (const reason of rec.reasons.filter((m) => m.key === "rec.ovenIdeal")) {
+          expect(oven_max_temp_c).toBeGreaterThanOrEqual(Number(reason.params?.ideal));
+        }
+        expect(generateRecipe(rec.style, c).oven_temp_c).toBeLessThanOrEqual(oven_max_temp_c);
+      }
+    }
+  });
+
+  it("più tempo del massimo dello stile non diventa un avviso di tempo insufficiente", () => {
+    const rec = recommendStyles(makeConstraints({ available_hours: 72 }))
+      .find((r) => r.style.id === "napoletana_stg")!;
+    expect(rec.warnings.map((m) => m.key)).not.toContain("rec.timeInsufficient");
+  });
+
   it("con 5 ore gli stili che lievitano di più non sono fattibili", () => {
     const recs = recommendStyles(makeConstraints({ oven_type: "home", oven_max_temp_c: 250, available_hours: 5 }));
     for (const rec of recs) {

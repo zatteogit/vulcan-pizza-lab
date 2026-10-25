@@ -719,6 +719,7 @@ export const JA_LOCALE: CmsContent = {
     "rec.timeInsufficient":
       "最低{fMin}必要、{available}しかありません",
     "rec.needsWoodOven": "\u672C\u6765\u306F\u85AA\u7AAF\u3067\u713C\u304F\u30B9\u30BF\u30A4\u30EB\u3067\u3059\u3002\u304A\u4F7F\u3044\u306E\u30AA\u30FC\u30D6\u30F3\u3067\u3082\u8FD1\u3065\u3051\u307E\u3059\u304C\u3001\u6B63\u7D71\u306A\u4ED5\u4E0A\u304C\u308A\u306B\u306F\u306A\u308A\u307E\u305B\u3093",
+    "rec.ovenAdapted": "オーブンの最高温度は{temp}、理想温度は{ideal}です。焼成を調整します",
     "rec.ovenIdeal":
       "\u3042\u306A\u305F\u306E\u30AA\u30FC\u30D6\u30F3\u306F\u7406\u60F3\u6E29\u5EA6\u306B\u5230\u9054 ({ideal})",
     "rec.ovenAdequate": "オーブンは適切 (自動時間/温度補正)",

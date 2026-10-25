@@ -667,6 +667,7 @@ export const FR_LOCALE: CmsContent = {
     "rec.timeInsufficient":
       "Nécessite minimum {fMin}, vous avez {available}",
     "rec.needsWoodOven": "Se fait au four \u00E0 bois : avec le v\u00F4tre, on s'en approche sans \u00EAtre canonique",
+    "rec.ovenAdapted": "Votre four atteint {temp} : température idéale {ideal}, cuisson adaptée",
     "rec.ovenIdeal":
       "Votre four atteint la température idéale ({ideal})",
     "rec.ovenAdequate":

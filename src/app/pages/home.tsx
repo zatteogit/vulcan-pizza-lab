@@ -1314,7 +1314,7 @@ export function HomePage() {
                   </p>
                 </div>
                 <RecommendedStyles
-                  constraints={constraints}
+                  constraints={engineConstraints}
                   selectedStyle={selectedStyle}
                   onSelectStyle={applySelectStyle}
                 />
@@ -1687,7 +1687,7 @@ export function HomePage() {
           <StyleDetailSheet
             key={selectedStyle.id}
             style={selectedStyle}
-            constraints={constraints}
+            constraints={engineConstraints}
             onGenerate={handleGenerateRecipe}
             onDismiss={() => setSelectedStyle(null)}
           />

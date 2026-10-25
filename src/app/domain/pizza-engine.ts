@@ -3756,6 +3756,8 @@ export interface StyleRecommendation {
   tier: "perfect" | "good" | "challenging" | "not_feasible";
   reasons: EngineMsg[];
   warnings: EngineMsg[];
+  /** Esito della ricetta con gli stessi vincoli, compresa la scadenza del pasto. */
+  verdict: RecipeVerdict;
   /** Audit role-play giugno 2026: composite della ricetta OTTIMIZZATA per i vincoli
    *  dell'utente — il punteggio che otterrai davvero aprendo lo stile. Popolato
    *  dalla UI (recommended-styles) via optimizeRecipe; il ranking/tier resta sulla
@@ -3896,12 +3898,19 @@ export function suggestedTimeSlot(now: Date = new Date()): TimeSlot | null {
 }
 
 export function generateTimeSlots(now: Date = new Date()): TimeSlot[] {
-  const nowHour = now.getHours() + now.getMinutes() / 60;
   const slots: TimeSlot[] = [];
+  // Il giorno locale può durare 23 o 25 ore: il pasto è un istante, non
+  // dayOffset * 24 (al cambio d'ora la finestra risultava sbagliata di un'ora).
+  const hoursToMeal = (dayOffset: number, mealHour: number) => {
+    const target = new Date(now);
+    target.setDate(target.getDate() + dayOffset);
+    target.setHours(Math.floor(mealHour), Math.round((mealHour % 1) * 60), 0, 0);
+    return floorToQuarterHour((target.getTime() - now.getTime()) / 3_600_000);
+  };
 
   for (const target of MEAL_TARGETS) {
     const mealHour = MEAL_HOURS[target.meal];
-    const hoursUntil = floorToQuarterHour(target.dayOffset * 24 + (mealHour - nowHour));
+    const hoursUntil = hoursToMeal(target.dayOffset, mealHour);
 
     if (hoursUntil < MIN_PREP_HOURS) continue;
     if (slots.length >= 4) break;
@@ -3918,7 +3927,7 @@ export function generateTimeSlots(now: Date = new Date()): TimeSlot[] {
   }
 
   if (slots.length === 0) {
-    const hoursUntil = floorToQuarterHour(24 - nowHour + MEAL_HOURS.lunch);
+    const hoursUntil = hoursToMeal(1, MEAL_HOURS.lunch);
     slots.push({
       id: "tomorrow_lunch",
       label: "Domani a pranzo",
@@ -4024,6 +4033,8 @@ export function recommendStyles(
   stylesOverride?: Record<string, PizzaStyle>,
   recWeights?: RecWeightsOverride,
 ): StyleRecommendation[] {
+  // Stessa finestra prudente degli slot, anche per la timeline e i suoi avvisi.
+  constraints = { ...constraints, available_hours: floorToQuarterHour(constraints.available_hours) };
   const allStyles = Object.values(stylesOverride ?? STYLES_DB);
   const recommendations: StyleRecommendation[] = [];
 
@@ -4037,6 +4048,12 @@ export function recommendStyles(
   for (const style of allStyles) {
     const reasons: EngineMsg[] = [];
     const warnings: EngineMsg[] = [];
+    // L'esito del motore è autorevole anche qui: include lavorazioni,
+    // farcitura e tutte le infornate, non soltanto le ore di lievitazione.
+    const recipe = generateRecipe(style, constraints);
+    const timeWarnings = recipe.scores.warnings.filter((m) =>
+      m.key === "gen.windowTooShort" || m.key.startsWith("gen.timeBelowStyleWindow"),
+    );
     let score = 0;
 
     // ── Time compatibility (25%) ──
@@ -4044,22 +4061,20 @@ export function recommendStyles(
     // M-3: stesse ore degli slot del pasto, al quarto d'ora per difetto.
     const availableHours = floorToQuarterHour(constraints.available_hours);
     let timeScore: number;
-    if (
-      availableHours >= fMin &&
-      availableHours <= fMax * 1.5
-    ) {
+    if (timeWarnings.length > 0) {
+      timeScore = 25;
+      warnings.push(...timeWarnings);
+    } else if (availableHours >= fMin) {
       timeScore = 95;
       reasons.push(em("rec.timeCompatible", `Fermentazione ${fMin}-${fMax}h: compatibile con il tuo tempo`, { fMin, fMax }));
     } else if (availableHours >= fMin * 0.85) {
       /* Audit roleplay giugno 2026: il gradino 95→65 era brutale — 21h vs
        * 24h minime (-12%) non deve far sparire i classici dai consigli. */
       timeScore = 85;
-      const optimalHours = Math.min(availableHours, fMax);
-      reasons.push(em("rec.timeAdaptable", `Fermentazione adattabile a ~${optimalHours}h`, { hours: optimalHours }));
+      warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${availableHours}h`, { fMin, available: availableHours }));
     } else if (availableHours >= fMin * 0.7) {
       timeScore = 65;
-      const optimalHours = Math.min(availableHours, fMax);
-      reasons.push(em("rec.timeAdaptable", `Fermentazione adattabile a ~${optimalHours}h`, { hours: optimalHours }));
+      warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${availableHours}h`, { fMin, available: availableHours }));
     } else {
       timeScore = 25;
       warnings.push(em("rec.timeInsufficient", `Richiede minimo ${fMin}h, hai ${availableHours}h`, { fMin, available: availableHours }));
@@ -4078,7 +4093,7 @@ export function recommendStyles(
       reasons.push(em("rec.ovenIdeal", "Il tuo forno raggiunge la temperatura ideale ({ideal})", { ideal: style.baking.temp_c_ideal }));
     } else if (constraints.oven_max_temp_c >= style.baking.temp_c_range[0]) {
       ovenScore = 70;
-      reasons.push(em("rec.ovenAdequate", "Forno adeguato (compensazione automatica tempo/temperatura)"));
+      warnings.push(em("rec.ovenAdapted", "Il tuo forno arriva a {temp}: temperatura ideale {ideal}, cottura adattata", { temp: constraints.oven_max_temp_c, ideal: style.baking.temp_c_ideal }));
     } else {
       ovenScore = 30;
       warnings.push(em("rec.ovenTooCold", "Forno troppo freddo: {temp} < min {min}", { temp: constraints.oven_max_temp_c, min: style.baking.temp_c_range[0] }));
@@ -4359,9 +4374,9 @@ export function recommendStyles(
       (style.requires_pre_ferment === true &&
         constraints.skill_level === 1) ||
       tooLittleTime ||
-      thermalViability(style, constraints.oven_max_temp_c) <= THERMAL_UNVIABLE_THRESHOLD;
+      recipe.verdict.outcome === "not_feasible";
     if (score < 30 || hasHardBlocker) tier = "not_feasible";
-    else if (score >= 78) tier = "perfect";
+    else if (score >= 78 && warnings.length === 0) tier = "perfect";
     else if (score >= 55) tier = "good";
     else tier = "challenging";
 
@@ -4376,8 +4391,9 @@ export function recommendStyles(
       ),
       digestibilityEstimate: digestResult.score,
       tier,
-      reasons: reasons.slice(0, 3),
-      warnings: warnings.slice(0, 2),
+      reasons,
+      warnings,
+      verdict: recipe.verdict,
     });
   }
 
