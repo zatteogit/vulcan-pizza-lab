@@ -18,6 +18,11 @@ export const DE_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_DE,
   inspirationI18n: INSPIRATION_I18N_DE,
   ui: {
+    scoreTipTitle: "So liest du die Bewertung",
+    scoreTipOriginal: "Originalrezept, für deine Küche bewertet.",
+    scoreTipTailored: "Version mit den vorgeschlagenen Anpassungen.",
+    scoreTipGlobal: "Die Bewertung berücksichtigt Machbarkeit und Authentizität. Größere Kompromisse senken sie.",
+    scoreTipBlocked: "Einige Voraussetzungen fehlen: öffne die Details.",
     pantrySelectionSummary: "Ausgewählt: {n} · Ausgeschlossen: {excluded}",
     pantryWValue: "W{w}",
     pantryWEstimate: "≈ W{w}",

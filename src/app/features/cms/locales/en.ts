@@ -28,6 +28,11 @@ export const EN_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_EN,
   inspirationI18n: INSPIRATION_I18N_EN,
   ui: {
+    scoreTipTitle: "How to read the score",
+    scoreTipOriginal: "Original recipe, assessed for your kitchen.",
+    scoreTipTailored: "Version with the proposed adaptations.",
+    scoreTipGlobal: "The score considers feasibility and authenticity. Significant compromises lower it.",
+    scoreTipBlocked: "Some requirements are unmet: open the details.",
     pantrySelectionSummary: "Selected: {n} · Excluded: {excluded}",
     pantryWValue: "W{w}",
     pantryWEstimate: "≈ W{w}",

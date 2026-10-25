@@ -21,6 +21,11 @@ export const ES_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_ES,
   inspirationI18n: INSPIRATION_I18N_ES,
   ui: {
+    scoreTipTitle: "Cómo leer la puntuación",
+    scoreTipOriginal: "Receta original, evaluada para tu cocina.",
+    scoreTipTailored: "Versión con las adaptaciones propuestas.",
+    scoreTipGlobal: "La puntuación considera viabilidad y autenticidad. Los compromisos importantes la reducen.",
+    scoreTipBlocked: "Hay requisitos sin cumplir: abre el detalle.",
     pantrySelectionSummary: "Seleccionados: {n} · Excluidos: {excluded}",
     pantryWValue: "W{w}",
     pantryWEstimate: "≈ W{w}",

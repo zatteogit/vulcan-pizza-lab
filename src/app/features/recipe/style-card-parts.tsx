@@ -1,5 +1,7 @@
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import { Clock, Flame, ScanLine, Wheat } from "lucide-react";
 import { Badge } from "../../components/ds/index";
 import { RecipeMatchIcon } from "./recipe-match-icon";
@@ -20,10 +22,63 @@ import { uiMessage } from "../../i18n/ui-messages";
  * starting score, then the resulting score, even when the two are equal. */
 export function CompatibilityPill({ now, original, blocked, labelled = false, className }: { now: number; original?: number; blocked?: boolean; labelled?: boolean; className?: string }) {
   const { cms } = useCms();
+  const [open, setOpen] = useState(false);
+  const pinned = useRef(false);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const tip = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout>>();
+  const id = useId();
+  const [position, setPosition] = useState({ left: 0, top: 0, width: 320 });
+  const cancelClose = () => clearTimeout(closeTimer.current);
+  const show = () => { cancelClose(); setOpen(true); };
+  const hide = () => {
+    cancelClose();
+    if (!pinned.current) closeTimer.current = setTimeout(() => setOpen(false), 160);
+  };
+  const close = () => { cancelClose(); pinned.current = false; setOpen(false); };
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+  const place = useCallback(() => {
+    if (!trigger.current || !tip.current) return;
+    const rect = trigger.current.getBoundingClientRect();
+    const width = Math.min(320, window.innerWidth - 32);
+    const height = tip.current.getBoundingClientRect().height;
+    setPosition({ width,
+      left: Math.max(16, Math.min(rect.right - width, window.innerWidth - width - 16)),
+      top: rect.bottom + height + 24 <= window.innerHeight ? rect.bottom + 8 : Math.max(16, rect.top - height - 8),
+    });
+  }, []);
+  useLayoutEffect(() => { if (open) place(); }, [open, now, original, position.width, place]);
+  useEffect(() => {
+    if (!open) return;
+    const outside = (event: PointerEvent) => {
+      if (!trigger.current?.contains(event.target as Node) && !tip.current?.contains(event.target as Node)) close();
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.stopPropagation(); event.preventDefault(); close(); }
+    };
+    const scroll = (event: Event) => {
+      if (tip.current?.contains(event.target as Node)) return;
+      if (document.activeElement === trigger.current && !pinned.current) place();
+      else close();
+    };
+    document.addEventListener("pointerdown", outside);
+    window.addEventListener("keydown", escape, true);
+    window.addEventListener("scroll", scroll, true);
+    window.addEventListener("resize", close);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      window.removeEventListener("keydown", escape, true);
+      window.removeEventListener("scroll", scroll, true);
+      window.removeEventListener("resize", close);
+    };
+  }, [open, place]);
   const label = original === undefined ? `${cms.ui.scoreBasisOriginal} · ${uiMessage("pages.explore.compatibility", [now])}`
     : `${cms.ui.scoreBasisOriginal} ${original} → ${cms.ui.scoreBasisTailored} ${now}`;
   return (
-    <p className={`compat-pill${blocked ? " compat-pill--blocked" : ""}${className ? ` ${className}` : ""}`} title={label} aria-label={label}>
+    <>
+    <button ref={trigger} type="button" className={`compat-pill${blocked ? " compat-pill--blocked" : ""}${className ? ` ${className}` : ""}`} aria-label={label} aria-expanded={open} aria-describedby={open ? id : undefined}
+      onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide}
+      onClick={event => { event.preventDefault(); event.stopPropagation(); cancelClose(); pinned.current = !pinned.current; setOpen(pinned.current); }}>
       {original !== undefined && <>
         <span className="compat-pill__original">{original}</span>
         <span className="compat-pill__arrow" aria-hidden="true">→</span>
@@ -31,7 +86,16 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
       </>}
       <RecipeMatchIcon score={now} blocked={blocked} size={14} aria-hidden="true" className="compat-pill__icon" />
       <span className="compat-pill__now">{now}</span>
-    </p>
+    </button>
+    {open && createPortal(<div ref={tip} id={id} role="tooltip" className="score-tip" onMouseEnter={cancelClose} onMouseLeave={hide}
+      style={{"--score-tip-left":`${position.left}px`,"--score-tip-top":`${position.top}px`,"--score-tip-width":`${position.width}px`} as CSSProperties}>
+      <p className="score-tip__title">{cms.ui.scoreTipTitle}</p>
+      <div className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisOriginal}</span><strong>{original ?? now}/100</strong></div>
+      <p className="score-tip__description">{cms.ui.scoreTipOriginal}</p>
+      {original !== undefined && <><div className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisTailored}</span><strong>{now}/100</strong></div><p className="score-tip__description">{cms.ui.scoreTipTailored}</p></>}
+      <p className="score-tip__note">{blocked ? cms.ui.scoreTipBlocked : cms.ui.scoreTipGlobal}</p>
+    </div>, document.body)}
+    </>
   );
 }
 

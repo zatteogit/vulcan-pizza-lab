@@ -637,10 +637,6 @@ function StyleCard({
             {/* Cinematic scrim — heavy bottom for text legibility */}
             <div className="recommended-card__scrim" />
 
-            {/* Compatibilità con la tua cucina — in alto a destra, come in Scopri */}
-            <div className="recommended-card__score">
-              <CompatibilityPill now={displayScore} original={rec.originalScore} blocked={rec.recipe.verdict.outcome === "not_feasible"} />
-            </div>
 
             {/* ── Selected check ── */}
             <AnimatePresence>
@@ -684,6 +680,9 @@ function StyleCard({
         </motion.div>
         </TiltCard>
       </motion.button>
+      <div className="recommended-card__score">
+        <CompatibilityPill now={displayScore} original={rec.originalScore} blocked={rec.recipe.verdict.outcome === "not_feasible"} />
+      </div>
     </div>
   );
 }

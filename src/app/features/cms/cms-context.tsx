@@ -52,6 +52,12 @@ interface CmsLocale {
 
 /** Generic UI strings — buttons, labels, actions, placeholders */
 export interface CmsUiStrings {
+  scoreTipTitle: string;
+  scoreTipOriginal: string;
+  scoreTipTailored: string;
+  scoreTipGlobal: string;
+  scoreTipBlocked: string;
+
   pantrySelectionSummary: string;
   pantryWValue: string;
   pantryWEstimate: string;
@@ -1335,6 +1341,11 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   messages: UI_MESSAGES_IT,
   ui: {
+    scoreTipTitle: "Come leggere il punteggio",
+    scoreTipOriginal: "Ricetta originale, valutata con la tua cucina.",
+    scoreTipTailored: "Versione con gli adattamenti proposti.",
+    scoreTipGlobal: "Il voto tiene conto di fattibilità e autenticità. I compromessi importanti lo abbassano.",
+    scoreTipBlocked: "Ci sono requisiti non rispettati: apri il dettaglio.",
     pantrySelectionSummary: "Selezionati: {n} · Esclusi: {excluded}",
     pantryWValue: "W{w}",
     pantryWEstimate: "≈ W{w}",

@@ -716,13 +716,6 @@ function StyleCatalogCard({
           {/* Cinematic scrim */}
           <div className="explore-card__scrim" />
 
-          {/* Compatibilità con la tua cucina — in alto a destra, come in Crea */}
-          {match && (
-            <div className="explore-card__match">
-              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} />
-            </div>
-          )}
-
           {/* Title + subtitle — overlaid on image (editorial style) */}
           <figcaption className="explore-card__caption">
             <h3
@@ -738,6 +731,14 @@ function StyleCatalogCard({
           </figcaption>
         </figure>
       </Surface>
+          {/* Compatibilità con la tua cucina — in alto a destra, come in Crea */}
+          {match && (
+            <div className="explore-card__match">
+              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} />
+            </div>
+          )}
+
+
       </TiltCard>
     </motion.article>
   );
