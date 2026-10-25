@@ -169,6 +169,7 @@ export function StyleDetailSheet({
         transition={motionSpring.standard}
         className="style-detail-sheet__panel"
       >
+        <div className="style-detail-sheet__toolbar">
         {/* Preferito (canonico) — il bookmark marca lo STILE che ami, non la tua
             versione su misura (quella si salva dalla scheda ricetta). */}
         <IconButton
@@ -204,6 +205,7 @@ export function StyleDetailSheet({
           <X size={15} />
         </IconButton>
 
+        </div>
         <div className="style-detail-sheet__body">
           {/* ── Hero media (foto, o video di cottura con blur-in) ── */}
           <div className="style-detail-media">

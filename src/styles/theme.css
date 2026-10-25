@@ -9446,7 +9446,7 @@
   }
 
   .recipe-comparison__title {
-    margin: 0 0 var(--space-3);
+    margin: 0;
     font-size: var(--font-size-md);
     font-weight: var(--weight-semibold);
     color: var(--text-default);
@@ -11526,6 +11526,7 @@
   .bits-glossary-w-modal__panel {
     overflow-y: auto;
     overscroll-behavior: contain;
+    scroll-padding-top: calc(var(--space-10) + var(--space-3) * 2);
     padding-inline: var(--space-5);
     padding-block: var(--space-4);
   }
@@ -14739,7 +14740,9 @@
     right: 0;
     pointer-events: auto;
     max-height: var(--dimension-viewport-height-85);
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
     border-top-left-radius: var(--radius-xl);
@@ -14750,6 +14753,9 @@
   }
 
   .style-detail-sheet__body {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding-inline: var(--space-5);
     padding-bottom: var(--space-6);
     padding-top: var(--space-9);
@@ -14774,19 +14780,24 @@
     }
   }
 
-  /* ── Close / favorite icon-buttons (overlaid on hero) ── */
-  .style-detail-sheet__close-btn {
+  /* Controls stay outside the scrolling body; the veil separates them
+     from the photo and text passing underneath. */
+  .style-detail-sheet__toolbar {
     position: absolute;
-    top: var(--space-3);
-    right: var(--space-3);
+    inset: 0 0 auto;
     z-index: 3;
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-0-5);
+    padding: var(--space-3);
+    pointer-events: none;
+    background: color-mix(in srgb, var(--surface-container-low) 75%, transparent);
+    backdrop-filter: blur(var(--blur-sm));
+    -webkit-backdrop-filter: blur(var(--blur-sm));
   }
 
-  .style-detail-sheet__fav-btn {
-    position: absolute;
-    top: var(--space-3);
-    right: calc(var(--space-3) + var(--space-10) + var(--space-0-5));
-    z-index: 3;
+  .style-detail-sheet__toolbar > button {
+    pointer-events: auto;
   }
 
   .style-detail-sheet__close-btn,
