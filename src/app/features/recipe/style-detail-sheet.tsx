@@ -143,6 +143,19 @@ export function StyleDetailSheet({
     { icon: FlaskConical, label: pt.pillExperimentation, value: `${devEmoji} ${devCmsLabel}` },
   ];
 
+  const generateAction = (placement: "toolbar" | "footer") => (
+    <CtaButton
+      as={motion.button}
+      disabled={rec?.tier === "not_feasible"}
+      onClick={onGenerate}
+      whileHover={rec?.tier === "not_feasible" ? undefined : { scale: 1.01 }}
+      className={`style-detail-cta style-detail-cta--${placement}`}
+    >
+      <Sparkles size={15} aria-hidden="true" />
+      {pt.sheetGenerateBtn}
+    </CtaButton>
+  );
+
   const sheet = (
     <div className="style-detail-sheet__portal">
       {/* Backdrop — subtle, dismissible */}
@@ -170,6 +183,17 @@ export function StyleDetailSheet({
         className="style-detail-sheet__panel"
       >
         <div className="style-detail-sheet__toolbar">
+        {/* Close button — stessa apparenza `bare` del fav: entrambi i controlli
+            in overlay condividono chrome e stati via `.style-detail-sheet__*`. */}
+        <IconButton
+          size="md"
+          variant="bare"
+          onClick={onDismiss}
+          className="style-detail-sheet__close-btn"
+          aria-label={cms.ui.closeDetails}
+        >
+          <X size={15} />
+        </IconButton>
         {/* Preferito (canonico) — il bookmark marca lo STILE che ami, non la tua
             versione su misura (quella si salva dalla scheda ricetta). */}
         <IconButton
@@ -193,18 +217,7 @@ export function StyleDetailSheet({
           </motion.span>
         </IconButton>
 
-        {/* Close button — stessa apparenza `bare` del fav: entrambi i controlli
-            in overlay condividono chrome e stati via `.style-detail-sheet__*`. */}
-        <IconButton
-          size="md"
-          variant="bare"
-          onClick={onDismiss}
-          className="style-detail-sheet__close-btn"
-          aria-label={cms.ui.closeDetails}
-        >
-          <X size={15} />
-        </IconButton>
-
+        {generateAction("toolbar")}
         </div>
         <div className="style-detail-sheet__body">
           {/* ── Hero media (foto, o video di cottura con blur-in) ── */}
@@ -437,18 +450,9 @@ export function StyleDetailSheet({
             <RecipeChanges from={originalRecipe} to={rec.recipe} mode="included" />
           )}
 
-          {/* ── CTA — Genera ricetta ── */}
-          <CtaButton
-            as={motion.button}
-            disabled={rec?.tier === "not_feasible"}
-            onClick={onGenerate}
-            whileHover={{ scale: 1.02 }}
-            deepShadow
-            className="style-detail-cta"
-          >
-            <Sparkles size={15} />
-            {pt.sheetGenerateBtn}
-          </CtaButton>
+        </div>
+        <div className="style-detail-sheet__footer">
+          {generateAction("footer")}
         </div>
       </motion.div>
     </div>
