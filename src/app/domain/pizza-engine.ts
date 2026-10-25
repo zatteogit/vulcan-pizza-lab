@@ -180,6 +180,7 @@ export const SERVING_UNIT_LABELS: Record<ServingUnit, ServingUnitLabel> = {
 
 export interface StyleOrigin {
   city: string;
+  province?: string; // riferimento provinciale/metropolitano per località non capoluogo
   region?: string;   // regione italiana o stato USA
   country?: string;  // es. "Italia", "USA", "Argentina"
 }

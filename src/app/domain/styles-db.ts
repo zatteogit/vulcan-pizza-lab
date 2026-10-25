@@ -42,17 +42,13 @@ export function styleMatchesFamily(style: PizzaStyle, family: FamilyId): boolean
   return style.family === family || (style.families?.includes(family) ?? false);
 }
 
-/** Origine "corta" per le card: la città, senza regione/stato/paese né note fra
- * parentesi. "Chicago, Illinois, USA" → "Chicago"; "Roma (Gabriele Bonci)" →
- * "Roma"; "Napoli (evoluzione moderna)" → "Napoli". La stringa piena resta nel
- * DB per la pagina di dettaglio. */
-/** Città sola, per le card. */
+/** Compact origin for cards, with provincial context for smaller localities. */
 export function shortOrigin(origin: StyleOrigin): string {
-  return origin.city;
+  return origin.province ? `${origin.city} (${origin.province})` : origin.city;
 }
 /** Origine completa per viste di dettaglio: "Napoli, Campania, Italia". */
 export function formatOrigin(origin: StyleOrigin): string {
-  return [origin.city, origin.region, origin.country].filter(Boolean).join(", ");
+  return [shortOrigin(origin), origin.region, origin.country].filter(Boolean).join(", ");
 }
 
 export const STYLES_DB: Record<string, PizzaStyle> = {
@@ -660,7 +656,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "focaccia_recco",
     name: "Focaccia di Recco",
     family: "contemporanea",
-    origin: { city: "Recco", region: "Liguria", country: "Italia" },
+    origin: { city: "Recco", province: "Genova", region: "Liguria", country: "Italia" },
     dough: {
       // C-4 (D-017): disciplinare IGP, CCIAA Genova 2024 (art. 5): «W > 300;
       // P/L non inferiore a 0,50». Il tetto 340 è una scelta. docs/fonti-dati.md §1.3.
@@ -1324,7 +1320,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "pizza_al_metro",
     name: "Pizza al Metro",
     family: "napoletana",
-    origin: { city: "Vico Equense", region: "Campania", country: "Italia" },
+    origin: { city: "Vico Equense", province: "Napoli", region: "Campania", country: "Italia" },
     dough: {
       flour_w_range: [260, 320],
       flour_pl_range: [0.55, 0.65],
