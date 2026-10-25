@@ -6,6 +6,7 @@
 //          sustainability score documented, fat_type model
 
 import { STYLE_DEVIATIONS } from "./deviation-tags";
+import { globalRecipeScore, type GlobalScoreCalculation } from "./recipe-score";
 import {
 getImpasto,
 mergeImpastoIntoDough,
@@ -24,6 +25,7 @@ import { BRAND } from "../config/brand";
 export type ShapeType = "round" | "oval" | "rectangular";
 export type OvenType =
   | "wood"
+  | "coal"
   | "electric_high"
   | "electric_standard"
   | "gas"
@@ -360,6 +362,8 @@ export interface RecipeScores {
   experimentation: number;
   sustainability: number;
   composite: number;
+  /** Calcolo ispezionabile del globale: media e limiti non compensabili. */
+  global_calculation?: GlobalScoreCalculation;
   authenticity_category: string;
   feasibility_category: string;
   digestibility_category: string;
@@ -744,7 +748,7 @@ export function defaultFermentTempC(style: PizzaStyle, fermentationHours: number
 // (teglia, detroit, focacce…) ritorna sempre 1: la loro temperatura è raggiungibile.
 export function thermalViability(style: PizzaStyle, ovenTemp: number): number {
   const styleMinTemp = style.baking.temp_c_range[0];
-  const tempCritical = style.requires_wood_oven || styleMinTemp >= 350;
+  const tempCritical = style.requires_wood_oven || style.baking.oven_type_required === "coal" || styleMinTemp >= 350;
   if (!tempCritical || ovenTemp >= styleMinTemp) return 1;
   const deficitFrac = (styleMinTemp - ovenTemp) / styleMinTemp; // 0..1
   return Math.max(0.25, 1 - deficitFrac * 1.6);
@@ -1078,6 +1082,17 @@ function calculateAuthenticityScore(
     ),
   );
 
+  // Un combustibile identitario sostituito non può restare «rigorosamente
+  // autentico», anche quando fornisce il calore necessario. 75 è il confine
+  // editoriale di «fedele con adattamenti», non una misura fisica di qualità.
+  if ((style.requires_wood_oven && ovenType !== "wood") ||
+    (style.baking.oven_type_required === "coal" && ovenType !== "coal")) {
+    score = Math.min(score, 75);
+    if (style.baking.oven_type_required === "coal") {
+      penalties.push(em("auth.notCoalOven", "Il forno a carbone definisce il metodo originale: con un altro combustibile la ricetta è adattata"));
+    }
+  }
+
   // ── Cap di VIABILITÀ TERMICA (Audit role-play giugno 2026, finding "ottimismo") ──
   // Problema: con la media a 3 assi, l'autenticità ha un pavimento strutturale ~65
   // se l'impasto è canonico — anche cuocendo una Napoletana a 250°C (impossibile da
@@ -1090,7 +1105,7 @@ function calculateAuthenticityScore(
     penalties.push(
       em(
         "auth.thermalUnviable",
-        `Forno troppo freddo per lo stile ({oven}°C < {min}°C): leopardatura, cornicione e struttura canonici non raggiungibili (×{factor})`,
+        `Temperatura inferiore al riferimento dello stile ({oven}°C < {min}°C): fedeltà al metodo di cottura ridotta (×{factor})`,
         { oven: ovenTemp, min: style.baking.temp_c_range[0], factor: viability.toFixed(2) },
       ),
     );
@@ -1333,7 +1348,8 @@ function calculateExperimentationScore(
 
   // 4. Process deviations (0-20 pts)
   if (hasPreFerment && !style.requires_pre_ferment) score += 12;
-  if (style.requires_wood_oven && ovenType !== "wood") score += 8;
+  if ((style.requires_wood_oven && ovenType !== "wood") ||
+    (style.baking.oven_type_required === "coal" && ovenType !== "coal")) score += 8;
 
   // 5. Compensation severity — NEW (Notion Pag.04/08)
   // Each oven compensation is a forced deviation from the canonical process
@@ -1358,7 +1374,7 @@ function _getStyleDeviationScore(styleId: string): number {
 }
 
 function _getStyleDeviationCategory(styleId: string): string {
-  return STYLE_DEVIATIONS[styleId]?.category ?? "canonical";
+  return STYLE_DEVIATIONS[styleId]?.category ?? "unclassified";
 }
 
 /**
@@ -2128,7 +2144,7 @@ export function generateRecipe(
       feasResult.warnings.unshift(
         em(
           "feas.thermalUnviable",
-          `Con {oven}°C non otterrai una vera {style}: niente leopardatura né cornicione spinto. Per questo stile serve un forno da almeno {min}°C.`,
+          `A {oven}°C il metodo disponibile non riproduce la cottura di {style}. Il metodo attuale richiede almeno {min}°C; serve un adattamento verificato.`,
           { oven: ovenTemp, style: style.name, min: style.baking.temp_c_range[0] },
         ),
       );
@@ -2167,23 +2183,7 @@ export function generateRecipe(
     sustainability: scoreWeights?.sustainability ?? 0.0,
     experimentation: scoreWeights?.experimentation ?? 0.0,
   };
-  // Audit role-play giugno 2026 (finding F1): il composite sommava SOLO 3 dei 5
-  // pesi. Sul path di default (sust/exp = 0, Σ = 1.0) era corretto, ma se una
-  // versione/CMS passava un peso a sustainability o experimentation quel peso
-  // spariva e i restanti non sommavano più a 1 → scala distorta. Ora include
-  // tutti e cinque i termini e rinormalizza per la somma dei pesi: identico sul
-  // path di default, corretto su qualsiasi override.
-  const totalScoreWeight =
-    sw.authenticity + sw.feasibility + sw.digestibility + sw.sustainability + sw.experimentation;
-  const composite = Math.round(
-    (authResult.score * sw.authenticity +
-      feasResult.score * sw.feasibility +
-      digestResult.score * sw.digestibility +
-      sustResult.score * sw.sustainability +
-      expResult.score * sw.experimentation) /
-      (totalScoreWeight || 1),
-  );
-
+  // Il globale si finalizza dopo il verdetto operativo, con la politica unica.
   // Timeline finale (topping e attrezzatura risolti sopra, prima del clamp).
   const timeline = buildTimeline(fermentationHours, fermentationTempC, yeastType);
   // ENG-4: se anche con la fermentazione minima (o con le ore scelte) la timeline
@@ -2201,7 +2201,7 @@ export function generateRecipe(
     digestibility: digestResult.score,
     experimentation: expResult.score,
     sustainability: sustResult.score,
-    composite,
+    composite: 0,
     authenticity_category: classifyScore("A", authResult.score),
     feasibility_category: classifyScore("F", feasResult.score),
     digestibility_category: classifyScore(
@@ -2212,6 +2212,9 @@ export function generateRecipe(
     sustainability_category: sustResult.category,
     penalties: authResult.penalties,
     warnings: [
+      ...(style.baking.oven_type_required === "coal" && constraints.oven_type !== "coal"
+        ? [em("gen.notCoalOven", "Lo stile originale usa il carbone: il forno selezionato comporta una diversa cottura e impronta aromatica")]
+        : []),
       ...kitchenPrerequisites(style, constraints),
       ...(homeMethod ? [em("gen.homeBakingMethod", "Cottura domestica a {temp} su teglia capovolta preriscaldata; risultato diverso dalla cottura originale a {ideal}", { temp: ovenTemp, ideal: style.baking.temp_c_ideal })] : []),
       // D-020: stesso avviso dei consigli sul forno a legna dello stile.
@@ -2457,6 +2460,15 @@ export function generateRecipe(
     blockers,
     adaptations: scores.warnings,
   };
+  const global = globalRecipeScore({
+    authenticity: scores.authenticity,
+    feasibility: scores.feasibility,
+    digestibility: scores.digestibility,
+    sustainability: scores.sustainability,
+    experimentation: scores.experimentation,
+  }, sw, verdict.outcome);
+  scores.composite = global.score;
+  scores.global_calculation = global.calculation;
 
   return {
     schema_version: RECIPE_SCHEMA_VERSION,
@@ -2762,8 +2774,6 @@ export function optimizeRecipe(
     sustainability: objective?.sustainability ?? scoreWeights?.sustainability ?? 0.0,
     experimentation: objective?.experimentation ?? scoreWeights?.experimentation ?? 0.0,
   };
-  const objTotal =
-    obj.authenticity + obj.feasibility + obj.digestibility + obj.sustainability + obj.experimentation || 1;
 
   let best: { cand: OptimizedCandidate; recipe: GeneratedRecipe } | null = null;
   const all: OptimizedCandidate[] = [];
@@ -2792,13 +2802,11 @@ export function optimizeRecipe(
             });
             evaluated++;
             const s = recipe.scores;
-            const objScore =
-              (s.authenticity * obj.authenticity +
-                s.feasibility * obj.feasibility +
-                s.digestibility * obj.digestibility +
-                s.sustainability * obj.sustainability +
-                s.experimentation * obj.experimentation) /
-              objTotal;
+            const objScore = globalRecipeScore({
+              authenticity: s.authenticity, feasibility: s.feasibility,
+              digestibility: s.digestibility, sustainability: s.sustainability,
+              experimentation: s.experimentation,
+            }, obj, recipe.verdict.outcome).score;
             const cand: OptimizedCandidate = {
               hydration: hydr,
               flour_w: w,
@@ -3108,6 +3116,8 @@ function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
     return em("timeline.oven.woodSideFlame", "Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.");
   }
   switch (eq?.ovenType) {
+    case "coal":
+      return em("timeline.oven.coal", "Forno a carbone con platea preriscaldata: controlla la colorazione di fondo e bordi e ruota per uniformare la cottura.");
     case "wood":
       return em("timeline.oven.wood", "Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.");
     case "electric_high":
@@ -3818,6 +3828,15 @@ export const OVEN_PRESETS: {
     name: "Forno a Legna",
     maxTemp: 500,
     icon: "flame-kindling",
+  },
+  {
+    id: "coal",
+    name: "Forno a carbone",
+    // Valore iniziale dal range di lavoro del modello Apizza, da sostituire
+    // con la temperatura effettiva della propria dotazione; non è un massimo
+    // universale dei forni a carbone. Fonte identità: sallysapizza.com/experience/.
+    maxTemp: 400,
+    icon: "flame",
   },
 ];
 

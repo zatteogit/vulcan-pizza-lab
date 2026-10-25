@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generateRecipe, optimizeRecipe, recommendStyles, STYLES_DB, type UserConstraints } from "./pizza-engine";
+import { getStyleDeviation } from "./deviation-tags";
 
 function kitchen(overrides: Partial<UserConstraints> = {}): UserConstraints {
   return {
@@ -11,6 +12,26 @@ function kitchen(overrides: Partial<UserConstraints> = {}): UserConstraints {
 }
 
 describe("tre esiti sulla ricetta eseguibile, indipendenti dal punteggio", () => {
+  it("Apizza: carbone, legna e forno domestico non sono la stessa dotazione", () => {
+    const style = STYLES_DB.new_haven_apizza;
+    expect(style.baking.oven_type_required).toBe("coal");
+    expect(style.requires_wood_oven).toBe(false);
+    const coal = generateRecipe(style, kitchen({ oven_type: "coal", oven_max_temp_c: 400 }));
+    const wood = generateRecipe(style, kitchen({ oven_type: "wood", oven_max_temp_c: 450 }));
+    const home = generateRecipe(style, kitchen());
+    expect(coal.verdict.outcome).toBe("ok");
+    expect(wood.verdict.outcome).toBe("warnings");
+    expect(wood.verdict.adaptations.map((m) => m.key)).toContain("gen.notCoalOven");
+    expect(wood.scores.authenticity).toBeLessThanOrEqual(75);
+    expect(wood.scores.composite).toBeLessThan(coal.scores.composite);
+    expect(home.verdict.outcome).toBe("not_feasible");
+    expect(home.scores.composite).toBeLessThanOrEqual(39);
+  });
+
+  it("un profilo di deviazione mancante non diventa canonico per ripiego", () => {
+    expect(getStyleDeviation("new_haven_apizza").category).toBe("unclassified");
+    expect(getStyleDeviation("napoletana_stg").category).toBe("canonical");
+  });
   it("Chicago con teglia e forno adeguato: fattibile senza adattamenti", () => {
     const recipe = generateRecipe(STYLES_DB.chicago_deep, kitchen());
     expect(recipe.verdict).toEqual({ outcome: "ok", blockers: [], adaptations: [] });
@@ -110,6 +131,8 @@ describe("tre esiti sulla ricetta eseguibile, indipendenti dal punteggio", () =>
               const recipe = generateRecipe(rec.style, c);
               expect(rec.tier, `${rec.style.id}/${oven_max_temp_c}/${available_hours}`).toBe(tiers[recipe.verdict.outcome]);
               expect(rec.warnings).toEqual(recipe.verdict.adaptations);
+              expect(recipe.scores.composite).toBeLessThanOrEqual(recipe.scores.authenticity);
+              if (recipe.verdict.outcome === "not_feasible") expect(recipe.scores.composite).toBeLessThanOrEqual(39);
               if (recipe.verdict.outcome === "ok") expect(recipe.verdict.adaptations).toEqual([]);
               if (recipe.verdict.outcome === "warnings") expect(recipe.verdict.adaptations.length).toBeGreaterThan(0);
               if (recipe.verdict.outcome === "not_feasible") expect(recipe.verdict.blockers.length).toBeGreaterThan(0);

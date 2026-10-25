@@ -51,6 +51,7 @@ const OVEN_LABELS: Record<string, string> = {
   gas: "Forno a gas a platea",
   gas_pizza: "Forno a gas da pizza",
   wood: "Forno a legna",
+  coal: "Forno a carbone",
 };
 
 export function loadProfileDefaults(): ProfileDefaults {

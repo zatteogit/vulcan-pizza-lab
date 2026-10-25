@@ -1300,7 +1300,7 @@ function RecipeContent({
             >
             <RecipeMatchCard
               scores={matchRecipe.scores}
-              ovenTemp={matchConstraints.oven_max_temp_c}
+              ovenTemp={matchRecipe.oven_temp_c}
               idealTemp={style.baking.temp_c_ideal}
               minTemp={style.baking.temp_c_range[0]}
               mode={recipeMode === "lab" ? "lab" : isDirty ? "adapted" : "canonical"}

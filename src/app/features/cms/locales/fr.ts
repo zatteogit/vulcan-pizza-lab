@@ -18,6 +18,14 @@ export const FR_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_FR,
   inspirationI18n: INSPIRATION_I18N_FR,
   ui: {
+    scoreLimitedAuthenticity: "L’authenticité de {score}/100 limite le score global.",
+    scoreLimitedFeasibility: "Une condition non remplie limite le score global.",
+    scoreWeightedAverage: "Moyenne pondérée des cinq axes",
+    scoreAuthenticityCeiling: "Plafond lié à l’authenticité",
+    scoreFeasibilityCeiling: "Plafond lié à la non-faisabilité",
+    scoreNotWeighted: "Axe informatif : avec ce poids, il ne modifie pas le score global.",
+    scoreReferencePending: "Le profil de variation de ce style reste à vérifier.",
+
     copy: "Copier",
     copied: "Copi\u00E9 !",
     share: "Partager",
@@ -145,7 +153,7 @@ export const FR_LOCALE: CmsContent = {
     verdictFermentationTooShort: "Une pousse de {hours} contre un minimum de {min} pour ce style : ce serait une autre pâte.",
     verdictLaterTime: "Choisissez une heure dans au moins {hours}.",
     verdictAlternatives: "Avec les mêmes contraintes, ceux-ci fonctionnent :",
-    verdictRecipeBelow: "La recette la plus proche reste ci-dessous si vous voulez essayer.",
+    verdictRecipeBelow: "La recette reste consultable ci-dessous pour identifier les contraintes à modifier.",
     recipeScore: "Compatibilit\u00E9 avec votre cuisine",
     nerdToggle: "PizzaNerd",
     nerdActive: "Activer PizzaNerd",
@@ -300,6 +308,7 @@ export const FR_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
+    coal: { name: "Four à charbon", maxTemp: 400, icon: "flame" },
     home: {
       name: "Four domestique",
       maxTemp: 250,
@@ -394,11 +403,11 @@ export const FR_LOCALE: CmsContent = {
   },
   scoreDimensions: {
     authenticity: {
-      label: "Authenticit\u00E9",
+      label: "Authenticité",
       short: "Auth",
       weight: 0.3,
       explain:
-        "\u00C0 quel point la recette respecte le canon du style : ingr\u00E9dients (hydratation, force et P/L de la farine), fermentation et \u00E9quipement. Si votre four reste sous le minimum du style, cet axe s'effondre : certaines pizzas exigent un feu qu'on ne peut pas simuler.",
+        "Estimation de fidélité au référentiel disponible : pâte, procédé et four. Une authenticité basse plafonne le score global, même si les autres axes sont élevés. Ce n’est pas une certification.",
     },
     feasibility: {
       label: "Facilité",
@@ -408,25 +417,25 @@ export const FR_LOCALE: CmsContent = {
         "Facilité de réalisation selon le four, la farine et l’expérience. La faisabilité dépend séparément des exigences de la méthode et des adaptations indiquées.",
     },
     digestibility: {
-      label: "Digestibilit\u00E9",
-      short: "Dig",
+      label: "Maturation estimée",
+      short: "Mat",
       weight: 0.2,
       explain:
-        "Estimation de la maturation de la p\u00E2te : heures de fermentation normalis\u00E9es \u00E0 18 \u00B0C (les pr\u00E9ferments comptent davantage). Plus la p\u00E2te m\u00FBrit, plus amidons et gluten se d\u00E9composent \u2014 et mieux la pizza se dig\u00E8re.",
+        "Indice du modèle fondé sur la durée, la température, la levure et le préferment. Il estime la maturation de la pâte, pas la réponse digestive individuelle.",
     },
     sustainability: {
-      label: "Durabilit\u00E9",
+      label: "Durabilité estimée",
       short: "Dur",
       weight: 0.15,
       explain:
-        "\u00C9nergie estim\u00E9e : temp\u00E9rature et dur\u00E9e de cuisson, frigo pour la fermentation, type de levure. Cuissons courtes et fermentation \u00E0 temp\u00E9rature ambiante aident.",
+        "Estimation relative fondée sur la cuisson, la fermentation et les ingrédients. Elle ne mesure ni la consommation réelle ni l’empreinte carbone.",
     },
     experimentation: {
-      label: "Exp\u00E9rimentation",
+      label: "Expérimentation",
       short: "Exp",
       weight: 0.1,
       explain:
-        "\u00C0 quel point vous vous \u00E9loignez du canon : \u00E9carts d'hydratation et de fermentation, pr\u00E9ferments hors cadre, compensations impos\u00E9es par votre mat\u00E9riel. Pas un d\u00E9faut : \u00E7a mesure l'audace.",
+        "Écart de la pâte, du procédé et de la cuisson par rapport au référentiel. Une valeur élevée indique plus d’expérimentation, pas une meilleure réussite. Certains profils restent à vérifier. Sa contribution au score global est 100 moins cette valeur.",
     },
   },
   recommendationWeights: {
@@ -674,6 +683,9 @@ export const FR_LOCALE: CmsContent = {
     "timeline.homeTray.bake": "Enfournez sur la plaque retournée préchauffée. Vérifiez la coloration de la base et la cuisson avant de sortir.",
     "gen.fermentationTooLong": "La fermentation de {hours} dépasse le maximum de cette recette ({maxHours}). Choisissez une méthode vérifiée pour une durée plus longue.",
     "gen.fermentationTemperature": "Cette méthode prévoit une maturation à {requiredTemp} ; {temp} a été sélectionné. Rétablissez le régime prévu ou choisissez une autre méthode vérifiée.",
+    "auth.notCoalOven": "La cuisson au charbon définit la méthode originale : un autre combustible en fait une adaptation",
+    "gen.notCoalOven": "Le style original utilise le charbon : le four choisi modifie la cuisson et le profil aromatique",
+    "timeline.oven.coal": "Four à charbon avec sole préchauffée : surveillez le fond et les bords et tournez pour une cuisson uniforme.",
     "rec.ovenIdeal":
       "Votre four atteint la température idéale ({ideal})",
     "rec.ovenAdequate":
@@ -730,8 +742,8 @@ export const FR_LOCALE: CmsContent = {
     "opt.hydrationOvenCompensated": "Hydratation {h}% : {base}% plus {delta}% pour compenser un four moins chaud que l'idéal.",
     "opt.hydrationOutOfStyleRange": "Avec cette compensation, l'hydratation sort de la plage du style ({min}–{max}%).",
     "auth.fermentOffCenter": "Fermentation éloignée du canon (-{penalty}%)",
-    "auth.thermalUnviable": "Four trop froid pour le style ({oven} < {min}) : léopardage, cornicione et structure canoniques hors de portée (×{factor})",
-    "feas.thermalUnviable": "À {oven}, vous n'obtiendrez pas une vraie {style} : ni léopardage ni cornicione gonflé. Ce style demande un four d'au moins {min}.",
+    "auth.thermalUnviable": "Température inférieure à la référence du style ({oven} < {min}) : fidélité au mode de cuisson réduite (×{factor})",
+    "feas.thermalUnviable": "À {oven}, le procédé disponible ne reproduit pas la cuisson de {style}. Le procédé actuel demande au moins {min} ; une adaptation vérifiée est nécessaire.",
     "gen.timeBelowStyleWindow": "Avec {available}, vous êtes sous la fenêtre de ce style (minimum {fMin}) : fermentation raccourcie. Pour une authenticité complète, il faut au moins {fMin}.",
     "gen.timeBelowStyleWindowMeal": "Avec {available} avant le repas, une fois retirés pétrissage, façonnage et cuisson ({work}), il reste {ferment} de fermentation : moins que le minimum du style ({fMin}). Pour le style complet, il faut environ {needed} au total.",
     "opt.coldLongFerment": "Maturation de {hours} au réfrigérateur ({temp}) : digestibilité maximale dans vos {available}.",
@@ -1152,6 +1164,7 @@ export const FR_LOCALE: CmsContent = {
     greek_pan: "Moule tr\u00E8s huil\u00E9, fond frit|Mie moelleuse et \u00E9paisse|M\u00E9lange mozzarella + cheddar|Diner gr\u00E9co-am\u00E9ricain",
   },
   deviationLabels: {
+    unclassified: "À vérifier",
     canonical: "Canonique",
     parameter_variant: "Variation param\u00E9trique",
     technique_variant: "Variante technique",

@@ -28,6 +28,14 @@ export const EN_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_EN,
   inspirationI18n: INSPIRATION_I18N_EN,
   ui: {
+    scoreLimitedAuthenticity: "Authenticity {score}/100 limits the overall score.",
+    scoreLimitedFeasibility: "An unmet requirement limits the overall score.",
+    scoreWeightedAverage: "Weighted average of the five dimensions",
+    scoreAuthenticityCeiling: "Authenticity ceiling",
+    scoreFeasibilityCeiling: "Non-feasibility ceiling",
+    scoreNotWeighted: "Informational dimension: at this weight it does not change the overall score.",
+    scoreReferencePending: "The deviation profile for this style has not yet been verified.",
+
     // Actions
     copy: "Copy",
     copied: "Copied!",
@@ -165,7 +173,7 @@ export const EN_LOCALE: CmsContent = {
     verdictFermentationTooShort: "A {hours} rise against this style's minimum of {min}: it would be a different dough.",
     verdictLaterTime: "Pick a time at least {hours} from now.",
     verdictAlternatives: "These work with the same setup:",
-    verdictRecipeBelow: "The closest recipe is still below if you want to try it.",
+    verdictRecipeBelow: "You can inspect the recipe below to see which constraints need changing.",
     // Score dashboard
     recipeScore: "Fit with your kitchen",
     nerdToggle: "PizzaNerd",
@@ -317,6 +325,7 @@ export const EN_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
+    coal: { name: "Coal-fired oven", maxTemp: 400, icon: "flame" },
     home: { name: "Home Oven", maxTemp: 250, icon: "home" },
     electric_standard: {
       name: "Standard Electric",
@@ -410,7 +419,7 @@ export const EN_LOCALE: CmsContent = {
       short: "Auth",
       weight: 0.3,
       explain:
-        "How closely the recipe follows the style's canon: ingredients (hydration, flour strength and P/L), fermentation process and equipment. If your oven stays below the style's minimum, this axis collapses: some pizzas demand a fire you can't simulate.",
+        "Estimated fidelity to the available reference for this style, based on dough, process and oven. Low authenticity caps the overall score even when other dimensions are high. This is not certification.",
     },
     feasibility: {
       label: "Ease",
@@ -420,25 +429,25 @@ export const EN_LOCALE: CmsContent = {
         "Ease of execution based on oven, flour and experience. It does not determine feasibility: that depends on method requirements and declared adaptations.",
     },
     digestibility: {
-      label: "Digestibility",
-      short: "Dig",
+      label: "Estimated maturation",
+      short: "Mat",
       weight: 0.2,
       explain:
-        "An estimate of dough maturation: fermentation hours normalized to 18 °C (pre-ferments count extra). The more the dough matures, the more starches and gluten break down — and the easier the pizza is to digest.",
+        "A model index based on time, temperature, yeast and pre-ferment. It describes estimated dough maturation, not an individual digestive response.",
     },
     sustainability: {
-      label: "Sustainability",
-      short: "Sus",
+      label: "Estimated sustainability",
+      short: "Sust",
       weight: 0.15,
       explain:
-        "Estimated energy: baking temperature and duration, fridge time for fermentation, yeast type. Short bakes and room-temperature fermentation help.",
+        "A relative estimate based on baking, fermentation and ingredients. It does not measure actual energy use or carbon footprint.",
     },
     experimentation: {
       label: "Experimentation",
       short: "Exp",
       weight: 0.1,
       explain:
-        "How far you stray from the canon: hydration and fermentation deviations, off-spec pre-ferments, compensations forced by your setup. Not a flaw: it measures courage.",
+        "How much dough, process and baking differ from the reference. A high value means more experimentation, not greater success. Some style profiles remain unverified. Its contribution to the global score is 100 minus this value.",
     },
   },
   recommendationWeights: {
@@ -877,6 +886,9 @@ export const EN_LOCALE: CmsContent = {
     "timeline.homeTray.bake": "Bake on the preheated inverted tray. Check the base colour and doneness before removing.",
     "gen.fermentationTooLong": "Fermentation of {hours} exceeds the maximum for this recipe ({maxHours}). Choose a verified method for a longer duration.",
     "gen.fermentationTemperature": "This method requires maturation at {requiredTemp}; {temp} was selected. Restore the required regime or choose another verified method.",
+    "auth.notCoalOven": "Coal firing defines the original method: another fuel makes this an adaptation",
+    "gen.notCoalOven": "The original style uses coal: the selected oven changes the bake and flavour profile",
+    "timeline.oven.coal": "Coal-fired oven with a preheated deck: check the base and edges and rotate for even baking.",
     "rec.ovenIdeal":
       "Your oven reaches ideal temperature ({ideal})",
     "rec.ovenAdequate":
@@ -925,8 +937,8 @@ export const EN_LOCALE: CmsContent = {
     "opt.hydrationOvenCompensated": "Hydration {h}%: {base}% plus {delta}% to make up for an oven cooler than ideal.",
     "opt.hydrationOutOfStyleRange": "With this compensation, hydration goes outside the style's range ({min}–{max}%).",
     "auth.fermentOffCenter": "Fermentation far from the canon (-{penalty}%)",
-    "auth.thermalUnviable": "Oven too cold for this style ({oven} < {min}): canonical leopard spotting, rim and structure are out of reach (×{factor})",
-    "feas.thermalUnviable": "At {oven} you won't get a true {style}: no leopard spotting and no puffy rim. This style needs an oven that reaches at least {min}.",
+    "auth.thermalUnviable": "Temperature below the style reference ({oven} < {min}): reduced fidelity to the baking method (×{factor})",
+    "feas.thermalUnviable": "At {oven}, the available method cannot reproduce the baking of {style}. The current method requires at least {min}; a verified adaptation is needed.",
     "gen.timeBelowStyleWindow": "With {available} you're below this style's window (minimum {fMin}): fermentation shortened. Full authenticity needs at least {fMin}.",
     "gen.timeBelowStyleWindowMeal": "With {available} until the meal, after mixing, shaping and baking ({work}) {ferment} are left for rising: less than the style minimum ({fMin}). The full style needs about {needed} in total.",
     "opt.coldLongFerment": "{hours} maturation in the fridge ({temp}): maximum digestibility within your {available}.",
@@ -1342,6 +1354,7 @@ export const EN_LOCALE: CmsContent = {
     greek_pan: "Heavily oiled pan, fried bottom|Thick, soft crumb|Mozzarella + cheddar blend|Greek-American diner",
   },
   deviationLabels: {
+    unclassified: "Unverified",
     canonical: "Canonical",
     parameter_variant: "Parameter variation",
     technique_variant: "Technique variant",

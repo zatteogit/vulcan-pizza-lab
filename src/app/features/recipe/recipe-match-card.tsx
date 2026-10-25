@@ -163,8 +163,7 @@ export function RecipeMatchCard({
    *  soffitto ma sono precondizioni per raggiungerlo → "ti serve X". */
   softNeeds?: string[];
   saved?: boolean;
-  /** Nerd mode: mostra anche gli assi secondari pesati (sostenibilità,
-   *  sperimentazione) e la scomposizione numerica del composite. */
+  /** Nerd mode: aggiunge la scomposizione numerica della media pesata. */
   nerdMode?: boolean;
   /** Ricetta e vincoli per l'esito «Così non è fattibile»: quando c'è, il
    *  blocco lo dice al posto del tono e del soffitto, una volta sola. */
@@ -182,7 +181,7 @@ export function RecipeMatchCard({
   const detailsToggleRef = useRef<HTMLButtonElement>(null);
   const ovenGap = idealTemp - ovenTemp;
   const ovenStatus =
-    ovenGap <= 0
+    minTemp < 200 ? cms.ui.statOil : ovenGap <= 0
       ? cms.cooking.ovenOptimal
       : ovenTemp >= minTemp
         ? cms.cooking.ovenLimited
@@ -197,11 +196,10 @@ export function RecipeMatchCard({
     : null;
 
   // Learn-inline (audit lug 2026): ogni asse è tappabile → spiegazione dal CMS.
-  // In nerd compaiono anche gli assi secondari pesati e la scomposizione numerica:
-  // il composite del motore è la media pesata dei 5 assi (pesi CMS, rinormalizzati),
-  // quindi la formula mostrata usa gli STESSI pesi passati a generateRecipe.
+  // Tutti e cinque gli assi sono ispezionabili. La media pesata usa gli stessi
+  // pesi del motore; i tetti non compensabili determinano poi il globale.
   const [explainKey, setExplainKey] = useState<ScoreDimensionKey | null>(null);
-  const NERD_EXTRA_DIMENSIONS = [
+  const EXTRA_DIMENSIONS = [
     { key: "sustainability" as const, label: uiMessage("features.recipe.recipe-match-card.sostenibilita-7cea5449"), short: "Sos", color: "var(--secondary)", weight: 0 },
     { key: "experimentation" as const, label: uiMessage("features.recipe.recipe-match-card.sperimentazione-d09679c9"), short: "Spe", color: "var(--text-accent)", weight: 0 },
   ];
@@ -210,7 +208,7 @@ export function RecipeMatchCard({
       ...dimension,
       color: SCORE_DIMENSION_COLORS[dimension.key],
     })),
-    ...(nerdMode ? NERD_EXTRA_DIMENSIONS : []),
+    ...EXTRA_DIMENSIONS,
   ]
     .map((dimension) => ({
       ...dimension,
@@ -219,9 +217,7 @@ export function RecipeMatchCard({
       value: scores[dimension.key],
       weight: cms.scoreDimensions[dimension.key]?.weight ?? dimension.weight,
       explain: cms.scoreDimensions[dimension.key]?.explain,
-    }))
-    // Gli assi secondari compaiono solo se pesano davvero sul composite.
-    .filter((axis) => SCORE_DIMENSIONS.some((d) => d.key === axis.key) || axis.weight > 0);
+    }));
   const totalWeight = axes.reduce((sum, axis) => sum + axis.weight, 0);
   const weightedAxes = totalWeight > 0
     ? axes
@@ -408,6 +404,14 @@ export function RecipeMatchCard({
         </span>
       </div>
 
+      {scores.global_calculation?.limited_by === "authenticity" && (
+        <p className="match-notice match-notice--warn">
+          {t(cms.ui.scoreLimitedAuthenticity, { score: fmt.number(scores.authenticity) })}
+        </p>
+      )}
+      {scores.global_calculation?.limited_by === "feasibility" && (
+        <p className="match-notice match-notice--warn">{cms.ui.scoreLimitedFeasibility}</p>
+      )}
       {notFeasible && verdictRecipe && verdictConstraints && (
         <RecipeVerdictNotice
           embedded
@@ -523,22 +527,54 @@ export function RecipeMatchCard({
                     <p className="match-explain__body">
                       {explainedAxis.explain}
                     </p>
+                    {explainedAxis.weight === 0 && explainKey !== "authenticity" && (
+                      <p className="match-explain__body">{cms.ui.scoreNotWeighted}</p>
+                    )}
+                    {explainKey === "authenticity" && scores.penalties.length > 0 && (
+                      <ul className="recipe-verdict__reasons">
+                        {engineMsgTexts(scores.penalties, cms, bcp47).map((text) => (
+                          <li key={text} className="match-explain__body">{text}</li>
+                        ))}
+                      </ul>
+                    )}
+                    {explainKey === "experimentation" && verdictRecipe?.science.deviation_category === "unclassified" && (
+                      <p className="match-notice match-notice--warn">{cms.ui.scoreReferencePending}</p>
+                    )}
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
 
+            {scores.global_calculation && (
+              <dl className="match-calculation" aria-label={cms.ui.recipeScore}>
+                <div className="match-calculation__row">
+                  <dt>{cms.ui.scoreWeightedAverage}</dt>
+                  <dd className="type-numeric">{scores.global_calculation.weighted_average}/100</dd>
+                </div>
+                <div className="match-calculation__row">
+                  <dt>{cms.ui.scoreAuthenticityCeiling}</dt>
+                  <dd className="type-numeric">{scores.global_calculation.authenticity_ceiling}/100</dd>
+                </div>
+                {scores.global_calculation.feasibility_ceiling !== null && (
+                  <div className="match-calculation__row">
+                    <dt>{cms.ui.scoreFeasibilityCeiling}</dt>
+                    <dd className="type-numeric">{scores.global_calculation.feasibility_ceiling}/100</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+
             {/* Scomposizione numerica (nerd): stessi pesi passati al motore,
-             * rinormalizzati — la somma è il Match mostrato (±1 di rounding). */}
+             * rinormalizzati — la somma è la media prima dei tetti. */}
             {nerdMode && weightedAxes.length > 0 && (
               <p className="type-numeric match-breakdown">
                 {cms.cooking.matchBreakdownLabel ?? uiMessage("features.recipe.recipe-match-card.media-pesata-e31351dd")}:{" "}
                 {weightedAxes
-                  .map((axis) => `${axis.shortLabel} ${Math.round(axis.value)}·${axis.weightPct}%`)
+                  .map((axis) => `${axis.key === "experimentation" ? `(100−${axis.shortLabel})` : axis.shortLabel} ${Math.round(scores.global_calculation?.weighted_values[axis.key] ?? axis.value)}·${axis.weightPct}%`)
                   .join(" + ")}
                 {" ≈ "}
                 <span className="match-breakdown__total">
-                  {roundedScore}
+                  {scores.global_calculation?.weighted_average ?? roundedScore}
                 </span>
               </p>
             )}

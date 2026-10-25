@@ -32,6 +32,8 @@ preferisce una candidata eseguibile e non propone alternative bloccate.
 che nessun altro metodo possa funzionare. I limiti di qualità delle fonti
 registrati in `docs/fonti-dati.md` restano applicabili.
 
+Vedi anche l’[audit degli assi e dei vincoli del 25/10/2026](ricerca/audit-assi-e-vincoli-2026-10-25.md) per formula del globale, copertura effettiva e limiti ancora aperti.
+
 ## 1. Regole
 
 1. **Ogni dato ha una fonte**, registrata in `docs/fonti-dati.md` con uno dei

@@ -9134,6 +9134,26 @@
     overflow: hidden;
   }
 
+  .match-calculation {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .match-calculation__row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .match-calculation__row dd {
+    margin: 0;
+    flex-shrink: 0;
+    color: var(--text-default);
+  }
+
   .match-details__intro {
     margin-top: var(--space-3);
     padding-top: var(--space-3);

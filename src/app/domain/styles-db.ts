@@ -1397,14 +1397,14 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       diameter_cm: 38,
     },
     baking: {
-      oven_type_required: "wood", // Forno a carbone (coal-fired)
+      oven_type_required: "coal", // Sally's: coal-fired; legna è un adattamento.
       temp_c_range: [340, 400],
       temp_c_ideal: 370,
       cook_time_sec_range: [240, 360],
       cook_time_sec_ideal: 300,
     },
     crust_type: "crispy_thin",
-    requires_wood_oven: true,
+    requires_wood_oven: false,
     allows_additives: true,
     requires_pre_ferment: false,
     suitable_for_beginner: false,

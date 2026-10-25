@@ -444,7 +444,7 @@ function runScoreBounds(): TestResult[] {
     results.push({ id: "T03-01", name: "Score bounds [0, 100]", status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 5).join("; ") : `${styles.length * 6} valori OK`, ms });
   }
 
-  // T03-02: Composite = weighted sum (±1 rounding)
+  // T03-02: media a pesi completa, poi limiti di autenticità e fattibilità.
   {
     const errs: string[] = [];
     const { ms } = timed(() => {
@@ -454,10 +454,12 @@ function runScoreBounds(): TestResult[] {
         const expected = Math.round(
           dims.reduce((sum, d) => sum + r.scores[d] * (weights[d] || 0), 0)
         );
-        if (Math.abs(r.scores.composite - expected) > 1) errs.push(`${s.id}: comp=${r.scores.composite}, expected=${expected}`);
+        const limited = Math.min(expected, r.scores.authenticity, r.verdict.outcome === "not_feasible" ? 39 : 100);
+        if (Math.abs((r.scores.global_calculation?.weighted_average ?? -1) - expected) > 1 ||
+          r.scores.composite !== limited) errs.push(`${s.id}: comp=${r.scores.composite}, expected=${limited}`);
       }
     });
-    results.push({ id: "T03-02", name: "Composite = somma pesata (±1)", status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 3).join("; ") : "OK", ms });
+    results.push({ id: "T03-02", name: "Globale: media pesata e limiti non compensabili", status: errs.length === 0 ? "pass" : "fail", detail: errs.length ? errs.slice(0, 3).join("; ") : "OK", ms });
   }
 
   // T03-03: Weights sum to 1.0
@@ -1338,7 +1340,8 @@ function runOptimizer(): TestResult[] {
     );
     // Il bug F1 avrebbe ignorato il peso sustainability → composite diverso (e ≠ scala 0-100).
     const bugValue = Math.round(r.scores.authenticity * 0.3 + r.scores.feasibility * 0.3 + r.scores.digestibility * 0.2);
-    const ok = Math.abs(r.scores.composite - expected) <= 1 && r.scores.composite !== bugValue;
+    const average = r.scores.global_calculation?.weighted_average ?? -1;
+    const ok = Math.abs(average - expected) <= 1 && average !== bugValue;
     results.push({ id: "T13-08", name: "F1: composite a 5 pesi normalizzato", status: ok ? "pass" : "fail", detail: `composite=${r.scores.composite}, atteso=${expected}, bug-sarebbe=${bugValue}`, ms });
   }
 

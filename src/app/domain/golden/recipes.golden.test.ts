@@ -104,7 +104,8 @@ function constraints(overrides: Partial<UserConstraints>): UserConstraints {
 const SCENARIOS: Record<Scenario, (style: PizzaStyle) => UserConstraints> = {
   ideal: (style) =>
     constraints({
-      oven_type: style.requires_wood_oven ? "wood" : style.baking.temp_c_ideal >= 350 ? "gas" : "home",
+      oven_type: style.baking.oven_type_required === "coal" ? "coal"
+        : style.requires_wood_oven ? "wood" : style.baking.temp_c_ideal >= 350 ? "gas" : "home",
       oven_max_temp_c: style.baking.temp_c_ideal,
       skill_level: 4,
       available_hours: 72,

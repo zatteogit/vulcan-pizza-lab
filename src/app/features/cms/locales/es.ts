@@ -21,6 +21,14 @@ export const ES_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_ES,
   inspirationI18n: INSPIRATION_I18N_ES,
   ui: {
+    scoreLimitedAuthenticity: "La autenticidad de {score}/100 limita la puntuación global.",
+    scoreLimitedFeasibility: "Un requisito no cumplido limita la puntuación global.",
+    scoreWeightedAverage: "Media ponderada de los cinco ejes",
+    scoreAuthenticityCeiling: "Límite por autenticidad",
+    scoreFeasibilityCeiling: "Límite por inviabilidad",
+    scoreNotWeighted: "Eje informativo: con este peso no modifica la puntuación global.",
+    scoreReferencePending: "El perfil de desviación de este estilo aún no se ha verificado.",
+
     copy: "Copiar",
     copied: "\u00A1Copiado!",
     share: "Compartir",
@@ -148,7 +156,7 @@ export const ES_LOCALE: CmsContent = {
     verdictFermentationTooShort: "Levado de {hours} frente a un mínimo de {min} para este estilo: sería otra masa.",
     verdictLaterTime: "Elige una hora dentro de al menos {hours}.",
     verdictAlternatives: "Con estas condiciones funcionan:",
-    verdictRecipeBelow: "Abajo tienes igualmente la receta más cercana, si quieres intentarlo.",
+    verdictRecipeBelow: "Puedes consultar la receta abajo para ver qué condiciones hay que cambiar.",
     recipeScore: "Compatibilidad con tu cocina",
     nerdToggle: "PizzaNerd",
     nerdActive: "Activar PizzaNerd",
@@ -303,6 +311,7 @@ export const ES_LOCALE: CmsContent = {
     },
   },
   ovenPresets: {
+    coal: { name: "Horno de carbón", maxTemp: 400, icon: "flame" },
     home: {
       name: "Horno Dom\u00E9stico",
       maxTemp: 250,
@@ -401,7 +410,7 @@ export const ES_LOCALE: CmsContent = {
       short: "Aut",
       weight: 0.3,
       explain:
-        "Cu\u00E1nto respeta la receta el canon del estilo: ingredientes (hidrataci\u00F3n, fuerza y P/L de la harina), proceso de fermentaci\u00F3n y equipo. Si tu horno queda por debajo del m\u00EDnimo del estilo, este eje se derrumba: algunas pizzas exigen un fuego que no se puede simular.",
+        "Fidelidad estimada a la referencia disponible según masa, proceso y horno. Una autenticidad baja limita la puntuación global aunque los demás ejes sean altos. No es una certificación.",
     },
     feasibility: {
       label: "Facilidad",
@@ -411,25 +420,25 @@ export const ES_LOCALE: CmsContent = {
         "Facilidad de ejecución según horno, harina y experiencia. La viabilidad se determina por separado mediante los requisitos del método y las adaptaciones indicadas.",
     },
     digestibility: {
-      label: "Digestibilidad",
-      short: "Dig",
+      label: "Maduración estimada",
+      short: "Mad",
       weight: 0.2,
       explain:
-        "Estimaci\u00F3n de la maduraci\u00F3n de la masa: horas de fermentaci\u00F3n normalizadas a 18 \u00B0C (los prefermentos cuentan m\u00E1s). Cuanto m\u00E1s madura la masa, m\u00E1s se descomponen almidones y gluten \u2014 y mejor se digiere la pizza.",
+        "Índice del modelo según tiempo, temperatura, levadura y prefermento. Estima la maduración de la masa, no la respuesta digestiva individual.",
     },
     sustainability: {
-      label: "Sostenibilidad",
-      short: "Sos",
+      label: "Sostenibilidad estimada",
+      short: "Sost",
       weight: 0.15,
       explain:
-        "Energ\u00EDa estimada: temperatura y duraci\u00F3n del horneado, nevera para la fermentaci\u00F3n, tipo de levadura. Horneados cortos y fermentaci\u00F3n a temperatura ambiente ayudan.",
+        "Estimación relativa según cocción, fermentación e ingredientes. No mide el consumo real ni la huella de carbono.",
     },
     experimentation: {
-      label: "Experimentaci\u00F3n",
+      label: "Experimentación",
       short: "Exp",
       weight: 0.1,
       explain:
-        "Cu\u00E1nto te alejas del canon: desviaciones de hidrataci\u00F3n y fermentaci\u00F3n, prefermentos fuera de norma, compensaciones forzadas por tu equipo. No es un defecto: mide el coraje.",
+        "Desviación de masa, proceso y cocción respecto a la referencia. Un valor alto indica más experimentación, no mayor éxito. Algunos perfiles siguen sin verificar. Su contribución al resultado global es 100 menos este valor.",
     },
   },
   recommendationWeights: {
@@ -675,6 +684,9 @@ export const ES_LOCALE: CmsContent = {
     "timeline.homeTray.bake": "Hornea sobre la bandeja invertida precalentada. Comprueba el dorado de la base y la cocción antes de sacar.",
     "gen.fermentationTooLong": "La fermentación de {hours} supera el máximo de esta receta ({maxHours}). Elige un método verificado para una duración mayor.",
     "gen.fermentationTemperature": "Este método prevé maduración a {requiredTemp}; se ha seleccionado {temp}. Restablece el régimen previsto o elige otro método verificado.",
+    "auth.notCoalOven": "La cocción con carbón define el método original: otro combustible supone una adaptación",
+    "gen.notCoalOven": "El estilo original usa carbón: el horno elegido cambia la cocción y el perfil aromático",
+    "timeline.oven.coal": "Horno de carbón con solera precalentada: vigila base y bordes y gira para una cocción uniforme.",
     "rec.ovenIdeal":
       "Tu horno alcanza la temperatura ideal ({ideal})",
     "rec.ovenAdequate":
@@ -731,8 +743,8 @@ export const ES_LOCALE: CmsContent = {
     "opt.hydrationOvenCompensated": "Hidratación {h}%: {base}% más {delta}% para compensar un horno más frío de lo ideal.",
     "opt.hydrationOutOfStyleRange": "Con esta compensación la hidratación sale del rango del estilo ({min}–{max}%).",
     "auth.fermentOffCenter": "Fermentación alejada del canon (-{penalty}%)",
-    "auth.thermalUnviable": "Horno demasiado frío para el estilo ({oven} < {min}): el leopardo, el cornicione y la estructura canónicos no se alcanzan (×{factor})",
-    "feas.thermalUnviable": "Con {oven} no conseguirás una auténtica {style}: sin leopardo ni cornicione hinchado. Este estilo necesita un horno de al menos {min}.",
+    "auth.thermalUnviable": "Temperatura inferior a la referencia del estilo ({oven} < {min}): menor fidelidad al método de cocción (×{factor})",
+    "feas.thermalUnviable": "A {oven}, el método disponible no reproduce la cocción de {style}. El método actual requiere al menos {min}; hace falta una adaptación verificada.",
     "gen.timeBelowStyleWindow": "Con {available} quedas por debajo de la ventana de este estilo (mínimo {fMin}): fermentación acortada. Para la autenticidad plena hacen falta al menos {fMin}.",
     "gen.timeBelowStyleWindowMeal": "Con {available} hasta la comida, quitando el amasado, el formado y el horneado ({work}), quedan {ferment} de levado: menos que el mínimo del estilo ({fMin}). Para el estilo completo hacen falta unas {needed} en total.",
     "opt.coldLongFerment": "Maduración de {hours} en nevera ({temp}): máxima digestibilidad dentro de tus {available}.",
@@ -1150,6 +1162,7 @@ export const ES_LOCALE: CmsContent = {
     greek_pan: "Bandeja muy aceitada, base frita|Miga tierna y gruesa|Mezcla mozzarella + cheddar|Diner grecoamericano",
   },
   deviationLabels: {
+    unclassified: "Por verificar",
     canonical: "Can\u00F3nico",
     parameter_variant: "Variaci\u00F3n param\u00E9trica",
     technique_variant: "Variante t\u00E9cnica",
