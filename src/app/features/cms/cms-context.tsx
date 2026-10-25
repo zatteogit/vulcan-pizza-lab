@@ -2624,7 +2624,7 @@ export const CMS_DEFAULTS: CmsContent = {
     savedRecipesSubtitle: "Le versioni su misura che hai messo da parte",
     savedRecipesEmptyTitle: "Nessuna ricetta salvata",
     savedRecipesEmptyBody: "Le versioni su misura che salverai compariranno qui.",
-    savedRecipesEmptyCta: "Esplora gli stili",
+    savedRecipesEmptyCta: "Crea una ricetta",
     savedRecipeRemove: "Rimuovi dal ricettario",
     savedRecipeRemoveAria: "Rimuovi {name} dal ricettario",
     savedRecipesLocalNote: "Le ricette stanno solo in questo browser. Esportale in un file per non perderle o per portarle su un altro dispositivo.",

@@ -1315,7 +1315,7 @@ export const FR_LOCALE: CmsContent = {
     savedRecipesSubtitle: "Les versions sur mesure que vous avez gardées",
     savedRecipesEmptyTitle: "Aucune recette enregistrée",
     savedRecipesEmptyBody: "Les versions sur mesure que vous garderez apparaîtront ici.",
-    savedRecipesEmptyCta: "Explorer les styles",
+    savedRecipesEmptyCta: "Créer une recette",
     savedRecipeRemove: "Retirer du carnet",
     savedRecipeRemoveAria: "Retirer {name} du carnet",
     savedRecipesLocalNote: "Vos recettes ne sont que dans ce navigateur. Exportez-les dans un fichier pour ne pas les perdre ou pour les emporter sur un autre appareil.",

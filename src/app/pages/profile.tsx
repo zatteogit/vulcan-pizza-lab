@@ -505,7 +505,7 @@ function SavedRecipesSection() {
             </Heading>
             <p>{p.savedRecipesEmptyBody}</p>
           </div>
-          <CtaButton as={Link} to="/explore" variant="secondary" radius="lg">
+          <CtaButton as={Link} to="/crea" variant="secondary" radius="lg" className="profile-saved-recipes__empty-cta">
             {p.savedRecipesEmptyCta}
             <ChevronRight size={17} aria-hidden="true" />
           </CtaButton>
