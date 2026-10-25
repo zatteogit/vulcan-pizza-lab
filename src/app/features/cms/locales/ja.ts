@@ -28,13 +28,16 @@ export const JA_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_JA,
   inspirationI18n: INSPIRATION_I18N_JA,
   ui: {
+    aboutLabel: "{brand}について",
+    aboutDevelopment: "開発中のソフトウェア",
+    aboutDescription: "機能、レシピ、提案は改良中です。エラーや調整が必要な結果が生じる場合があります。",
     recipeNameEdit: "レシピ名を変更",
     recipeNameLabel: "レシピ名",
     recipeNamePlaceholder: "例：マリオのお気に入り",
     recipeNameConfirm: "名前を確定",
     recipeResetPreset: "リセット",
 
-    recipeOpenCreate: "このスタイルを作成画面で使う",
+    recipeOpenCreate: "作成画面でカスタマイズ",
     createSourceTitle: "{style}から始める",
     createSourceHint: "上のフィルターを確認してください。条件に合わせた提案とオリジナルからの変更を確認できます。",
     createSourceAction: "条件に合う提案を見る",

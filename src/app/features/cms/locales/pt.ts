@@ -18,13 +18,16 @@ export const PT_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_PT,
   inspirationI18n: INSPIRATION_I18N_PT,
   ui: {
+    aboutLabel: "Sobre {brand}",
+    aboutDevelopment: "Software em desenvolvimento",
+    aboutDescription: "As funções, receitas e sugestões estão em evolução. Pode encontrar erros ou resultados a melhorar.",
     recipeNameEdit: "Alterar o nome da receita",
     recipeNameLabel: "Nome da receita",
     recipeNamePlaceholder: "Ex. Como o Mário gosta",
     recipeNameConfirm: "Confirmar nome",
     recipeResetPreset: "Repor",
 
-    recipeOpenCreate: "Usar este estilo em Criar",
+    recipeOpenCreate: "Personalizar em Criar",
     createSourceTitle: "Partir de {style}",
     createSourceHint: "Verifique os filtros superiores: aqui encontra a proposta adaptada e as alterações ao estilo original.",
     createSourceAction: "Ver a proposta adaptada",
