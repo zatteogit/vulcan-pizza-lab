@@ -1,9 +1,12 @@
 import { CtaButton } from "../../components/ds/index";
+import { RecipeMatchIcon } from "./recipe-match-icon";
+import { RecipeConditionChips } from "./recipe-condition-chips";
+import { recipePresentationState } from "./recipe-card-signals";
 import { RecipeChanges } from "./recipe-changes";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring,motionTiming } from "../../components/ds/motion";
-import { Bookmark, BookmarkCheck, Gauge, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
+import { Bookmark, BookmarkCheck, ChevronDown, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, type GeneratedRecipe, type RecipeScores, type ScoreDimensionKey, type UserConstraints } from "../../domain/pizza-engine";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
@@ -311,9 +314,13 @@ export function RecipeMatchCard({
   // Con un esito operativo esplicito non aggiungere rassicurazioni ricavate
   // dal punteggio: le condizioni sono già elencate nel verdetto.
   if (verdictRecipe && headroom < 2) headroomLine = null;
-  /* D-041: icona a indicatore, non a cuore (il cuore vuol dire preferiti). */
-  const notFeasible = verdictRecipe?.verdict.outcome === "not_feasible" && !!verdictConstraints;
-  const MatchIcon = notFeasible ? TriangleAlert : Gauge;
+  // The affinity icon describes the score; bookmarks describe saving.
+  const notFeasible = verdictRecipe?.verdict.outcome === "not_feasible";
+  const presentationState = verdictRecipe ? recipePresentationState(verdictRecipe, originalRecipe) : null;
+  const statusLabel = notFeasible ? cms.ui.verdictTitle : presentationState === "adapted" ? cms.ui.scoreBasisTailored
+    : presentationState === "check"
+      ? engineMsgTexts([{key:"card.toVerify",fallback:"Da verificare"}],cms,bcp47)[0]
+      : verdictRecipe ? cms.tiers.perfect.label : tone.title;
   // Un solo "movimento in avanti" verso su-misura: quando l'ottimizzatore è
   // disponibile, è LUI l'azione (subentra al vecchio "adatta alla cucina", che era
   // il midpoint ricalibrato — dominato dall'ottimo). Evita il doppio pulsante.
@@ -338,7 +345,7 @@ export function RecipeMatchCard({
           Niente scatola: kicker con filetto, stessa grammatica di
           Ingredienti. Dettagli (copy, forno, barre) a richiesta. */}
       <div className="match-kicker">
-        <MatchIcon
+        <RecipeMatchIcon score={roundedScore} blocked={notFeasible}
           size={14}
           className={`match-kicker__icon ${tone.low || notFeasible ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
           aria-hidden="true"
@@ -367,7 +374,7 @@ export function RecipeMatchCard({
           }
           className={`match-info-toggle${expanded ? " match-info-toggle--active" : ""}`}
         >
-          <Info size={16} />
+          <span data-slot="label">{expanded ? cms.cooking.matchDetailsHide : cms.cooking.matchDetails}</span><ChevronDown size={14} aria-hidden="true" />
         </button>
       </div>
 
@@ -404,9 +411,7 @@ export function RecipeMatchCard({
               exit={{ opacity: 0 }}
               transition={motionTiming.exit}
             >
-              {notFeasible ? cms.ui.verdictTitle : verdictRecipe
-                ? cms.tiers[verdictRecipe.verdict.outcome === "ok" ? "perfect" : "good"].label
-                : tone.title}
+              {statusLabel}
             </motion.span>
           </AnimatePresence>
         </span>
@@ -428,13 +433,7 @@ export function RecipeMatchCard({
           mealDeadline={mealDeadline}
         />
       )}
-      {!notFeasible && verdictRecipe?.verdict.outcome === "warnings" && (
-        <ul className="recipe-verdict__reasons">
-          {engineMsgTexts(verdictRecipe.verdict.adaptations, cms, bcp47).map((text) => (
-            <li key={text} className="match-notice match-notice--warn">{text}</li>
-          ))}
-        </ul>
-      )}
+      {!notFeasible && verdictRecipe && <RecipeConditionChips recipe={verdictRecipe} compact />}
       {/* Avvisi onesti: visibili anche a card chiusa */}
       {!notFeasible && unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
         <p className="match-notice match-notice--warn">
@@ -587,6 +586,11 @@ export function RecipeMatchCard({
               </p>
             )}
 
+            {verdictRecipe && verdictRecipe.verdict.adaptations.length > 0 && (
+              <ul className="recipe-verdict__reasons">
+                {engineMsgTexts(verdictRecipe.verdict.adaptations, cms, bcp47).map(text => <li key={text} className="type-body-sm">{text}</li>)}
+              </ul>
+            )}
             {verdictRecipe?.optional_aids && verdictRecipe.optional_aids.length > 0 && (
               <ul className="recipe-verdict__reasons">{engineMsgTexts(verdictRecipe.optional_aids, cms, bcp47).map(text => <li key={text} className="type-body-sm">{text}</li>)}</ul>
             )}
@@ -613,15 +617,14 @@ export function RecipeMatchCard({
           </motion.div>
         )}
       </AnimatePresence>
-      </div>
-
       {onOptimize && optimizationPreview && verdictRecipe && (
         <RecipeChanges from={verdictRecipe} to={optimizationPreview} mode="preview" />
       )}
+      </div>
+      <div className="match-actions">
       {onCreate && (
         <CtaButton type="button" variant="secondary" elevated={false} onClick={onCreate}>{cms.ui.recipeOpenCreate}</CtaButton>
       )}
-      <div className="match-actions">
         {onOptimize && (
           <motion.button
             type="button"

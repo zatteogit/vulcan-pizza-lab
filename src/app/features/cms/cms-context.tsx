@@ -231,6 +231,9 @@ export interface CmsUiStrings {
   supplyAddExclusion: string;
   recipeAdaptationsIncluded: string;
   recipeOptimizationChanges: string;
+  recipeCurrentVersion: string;
+  recipeOptimizedVersion: string;
+  recipeScoreLabel: string;
   recipeScoreTransition: string;
   scoreBasisOriginal: string;
   scoreBasisTailored: string;
@@ -1321,8 +1324,11 @@ export const CMS_DEFAULTS: CmsContent = {
     supplyExcludedFlours: "Farine che non voglio usare",
     supplyAddExclusion: "Aggiungi un’esclusione",
 
-    recipeAdaptationsIncluded: "Adattamenti già inclusi rispetto all’originale",
-    recipeOptimizationChanges: "Con l’ottimizzazione cambierà",
+    recipeAdaptationsIncluded: "Cosa cambia",
+    recipeOptimizationChanges: "Con l’ottimizzazione",
+    recipeCurrentVersion: "Attuale",
+    recipeOptimizedVersion: "Ottimizzata",
+    recipeScoreLabel: "Punteggio",
     recipeScoreTransition: "Punteggio: {from}/100 → {to}/100",
     scoreBasisOriginal: "Originale",
     scoreBasisTailored: "Su misura",
@@ -1542,10 +1548,10 @@ export const CMS_DEFAULTS: CmsContent = {
     title_line1: "La tua",
     title_line2: "pizza perfetta.",
     subtitle: "Seleziona il momento per calcolare i tempi di preparazione.",
-    onboardingEyebrow: "Personalizza i consigli",
+    onboardingEyebrow: "Consigli su misura",
     onboardingBody:
-      "Per ora i consigli usano {oven} a {temp}. Controlla Cucina, Dispensa e Livello nei filtri in alto: indica cosa hai e cosa non vuoi usare o procurarti. I dati mancanti restano da verificare; nessun orario del pasto è scelto per te.",
-    onboardingCta: "Controlla i filtri",
+      "Imposta cucina, dispensa e livello nei filtri.",
+    onboardingCta: "Personalizza",
     onboardingProfileCta: "Configura tutta la cucina",
     onboardingDismiss: "Ho capito",
   },
@@ -1593,7 +1599,7 @@ export const CMS_DEFAULTS: CmsContent = {
   allFamiliesLabel: "Tutte le famiglie",
   tiers: {
     perfect:      { label: "Fattibili",  subtitle: "requisiti della ricetta rispettati" },
-    good:         { label: "Con adattamenti",        subtitle: "segui le modifiche e verifica ciò che serve" },
+    good:         { label: "Con condizioni",        subtitle: "segui le modifiche e verifica ciò che serve" },
     challenging:  { label: "Sfidanti",         subtitle: "richiedono più attrezzatura o esperienza" },
     not_feasible: { label: "Non fattibili così",    subtitle: "manca una condizione essenziale per questa ricetta" },
   },
@@ -2065,6 +2071,15 @@ export const CMS_DEFAULTS: CmsContent = {
     "need.withoutWood": "Cottura senza legna",
     "need.adaptedBake": "Cottura adattata",
     "need.deck": "Serve pietra o acciaio",
+    "card.pantryCheck": "Verifica la dispensa",
+    "card.directDough": "Impasto diretto",
+    "card.resourceExcluded": "Requisito escluso",
+    "card.panMissing": "Serve una teglia",
+    "card.panCheck": "Verifica la teglia",
+    "card.blendCheck": "Verifica il mix",
+    "card.yeastMissing": "Serve il lievito",
+    "card.toVerify": "Da verificare",
+    "card.authenticity": "Autenticità ridotta",
     "need.blockedOven": "Forno insufficiente",
     "need.blockedMethod": "Regime non compatibile",
     "need.blockedTime": "Tempi non compatibili",

@@ -1,6 +1,6 @@
 import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
-import { Bookmark, ChevronRight, Heart, Info, Lightbulb, OctagonAlert, Sparkles, Stethoscope, TriangleAlert } from "lucide-react";
+import { Bookmark, ChevronRight, Heart, Info, Lightbulb, OctagonAlert, SlidersHorizontal, Sparkles, Stethoscope, TriangleAlert, X } from "lucide-react";
 import {
 motion,
 useReducedMotion,
@@ -46,7 +46,7 @@ import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
 import { useCms } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
-import { createFormatter, t as tpl } from "../features/cms/i18n";
+import { t as tpl } from "../features/cms/i18n";
 import { getDietaryWarnings } from "../data/dietary-data";
 import { findSavedRecipe, removeRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
 import {
@@ -70,7 +70,7 @@ import {
   type RecipeMode,
   useRecipeState,
 } from "../hooks/use-recipe-state";
-import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
+import { ConfirmDialog, CtaButton, Heading, IconButton } from "../components/ds/index";
 import {
   motionSpring,
 } from "../components/ds/motion";
@@ -360,15 +360,11 @@ function resolveCreateDraft(
    wizard, niente overlay: il flusso Crea È già l'onboarding. ═══ */
 const ONBOARDING_SEEN_KEY = "vulcan_create_context_seen_v2";
 
-/* D-038 (Matteo, 24/10/2026): niente wizard all'avvio (NN/g, «Mobile
-   Tutorials»: i tutorial iniziali non migliorano i risultati). Si chiede solo
-   il forno, il dato che cambia di più la ricetta, e solo finché non è scelto;
-   il resto della cucina si configura a richiesta dal profilo. */
+/* Un richiamo ai filtri, non un tutorial: un'azione e chiusura persistente. */
 function WelcomeOnboardingCard({
   eyebrow,
   body,
   cta,
-  profileCta,
   dismissLabel,
   onChooseOven,
   onDismiss,
@@ -377,7 +373,6 @@ function WelcomeOnboardingCard({
   eyebrow: string;
   body: string;
   cta: string;
-  profileCta: string;
   dismissLabel: string;
   onChooseOven: () => void;
   onDismiss: () => void;
@@ -388,29 +383,28 @@ function WelcomeOnboardingCard({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={motionSpring.emphasisEnter}
-      className={`home-onboarding ${className}`}
+      className={`create-welcome ${className}`}
     >
-      <div className="home-onboarding__eyebrow">
-        <Sparkles size={14} aria-hidden="true" />
-        {eyebrow}
+      <div className="create-welcome__icon" aria-hidden="true">
+        <SlidersHorizontal size={21} />
       </div>
-      <p className="home-onboarding__body">{body}</p>
-      <div className="home-onboarding__actions">
-        <button
+      <div className="create-welcome__copy">
+        <p className="create-welcome__title">{eyebrow}</p>
+        <p className="create-welcome__body">{body}</p>
+      </div>
+        <CtaButton
           type="button"
+          variant="secondary"
+          elevated={false}
           onClick={onChooseOven}
-          className="home-onboarding__cta"
+          className="create-welcome__cta"
         >
           {cta}
-          <ChevronRight size={13} />
-        </button>
-        <button type="button" onClick={onDismiss} className="home-onboarding__dismiss">
-          {dismissLabel}
-        </button>
-        <Link to="/profile" onClick={onDismiss} className="home-onboarding__link">
-          {profileCta}
-        </Link>
-      </div>
+          <ChevronRight size={15} aria-hidden="true" />
+        </CtaButton>
+        <IconButton type="button" variant="ghost" size="sm" onClick={onDismiss} aria-label={dismissLabel} className="create-welcome__close">
+          <X size={17} aria-hidden="true" />
+        </IconButton>
     </motion.div>
   );
 }
@@ -1215,13 +1209,9 @@ export function HomePage() {
                 {showOnboarding && (
                   <WelcomeOnboardingCard
                     eyebrow={cms.hero.onboardingEyebrow ?? ""}
-                    body={tpl(cms.hero.onboardingBody ?? "", {
-                      oven: cms.ovenPresets[constraints.oven_type]?.name ?? constraints.oven_type,
-                      temp: createFormatter(cms.ui, bcp47).celsius(constraints.oven_max_temp_c),
-                    })}
+                    body={cms.hero.onboardingBody ?? ""}
                     cta={cms.hero.onboardingCta ?? ""}
-                    profileCta={cms.hero.onboardingProfileCta ?? ""}
-                    dismissLabel={cms.hero.onboardingDismiss ?? ""}
+                    dismissLabel={cms.ui.close}
                     onChooseOven={() => {
                       dismissOnboarding();
                       setStyleSettingsPanel("cucina");

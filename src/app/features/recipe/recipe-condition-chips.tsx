@@ -1,3 +1,5 @@
+import { CircleHelp, TriangleAlert } from "lucide-react";
+import { recipeCardSignals } from "./recipe-card-signals";
 import { Badge } from "../../components/ds/index";
 import type { EngineMsg, GeneratedRecipe } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
@@ -5,7 +7,7 @@ import { engineMsgTexts } from "./engine-msg-text";
 
 /** The badge never suggests a purchase can repair a failed cooking method.
  * Missing supplies and unverified pantry contents retain distinct wording. */
-export function RecipeConditionChips({ recipe, id }: { recipe: GeneratedRecipe; id?: string }) {
+export function RecipeConditionChips({ recipe, id, compact = false }: { recipe: GeneratedRecipe; id?: string; compact?: boolean }) {
   const { cms, bcp47 } = useCms();
   const blocked = recipe.verdict.outcome === "not_feasible";
   const messages: EngineMsg[] = blocked ? recipe.verdict.blockers.map(b => b.kind === "resource_excluded" ? b.message : b.kind === "oven_too_cold"
@@ -21,11 +23,17 @@ export function RecipeConditionChips({ recipe, id }: { recipe: GeneratedRecipe; 
       if (key) messages.push({ key, fallback: warning.fallback, params: warning.params });
     }
   }
+  if (compact) {
+    messages.splice(0, messages.length, ...recipeCardSignals(recipe).map(s => s.message));
+    if (!blocked && messages.length < 2 && recipe.verdict.conditions?.some(c => c.status === "unverified" && ["flour", "yeast"].includes(c.kind))) {
+      messages.push({key:"card.pantryCheck",fallback:"Verifica la dispensa"});
+    }
+  }
   const texts = [...new Set(engineMsgTexts(messages, cms, bcp47))];
   if (texts.length === 0) return null;
   return (
     <div id={id} className="recipe-condition-chips">
-      {texts.map(text => <Badge key={text} tone={blocked ? "error" : "warning"}>{text}</Badge>)}
+      {texts.map(text => <Badge key={text} tone={blocked ? "error" : "warning"} className="recipe-condition-chip">{blocked ? <TriangleAlert size={14} aria-hidden="true" /> : <CircleHelp size={14} aria-hidden="true" />}{text}</Badge>)}
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import { RecipeConditionChips } from "./recipe-condition-chips";
 import { Award,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
 import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
 import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
@@ -586,7 +585,6 @@ function StyleCard({
     >
       <motion.button
         onClick={onSelect}
-        aria-describedby={rec.verdict.blockers.length || rec.verdict.adaptations.length ? `conditions-create-${style.id}` : undefined}
         initial={{ opacity: 0, y: 14 }}
         animate={{
           opacity: 1,
@@ -641,7 +639,7 @@ function StyleCard({
 
             {/* Compatibilità con la tua cucina — in alto a destra, come in Scopri */}
             <div className="recommended-card__score">
-              <CompatibilityPill now={displayScore} best={bestScore} basis={cms.ui.scoreBasisTailored} />
+              <CompatibilityPill now={displayScore} best={bestScore} basis={cms.ui.scoreBasisTailored} blocked={rec.recipe.verdict.outcome === "not_feasible"} />
             </div>
 
             {/* ── Selected check ── */}
@@ -686,7 +684,6 @@ function StyleCard({
         </motion.div>
         </TiltCard>
       </motion.button>
-      <RecipeConditionChips recipe={rec.recipe} id={`conditions-create-${style.id}`} />
     </div>
   );
 }

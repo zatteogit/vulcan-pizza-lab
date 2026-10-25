@@ -1,6 +1,5 @@
 import {
   ChevronDown,
-  Gauge,
   Sparkles,
   X,
   Check,
@@ -32,6 +31,7 @@ import {
   type RecipeScores,
 } from "../../domain/pizza-engine";
 import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
+import { RecipeMatchIcon } from "./recipe-match-icon";
 import { matchTone } from "./recipe-match-card";
 import type { StyleVersion } from "../../data/style-versions";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -521,8 +521,6 @@ function MatchSummary({
   }));
 
   const toneColor = tone.low ? "var(--text-warning)" : "var(--text-accent)";
-  /* D-041: indicatore, non cuore. */
-  const MatchIcon = Gauge;
   const rootClass =
     variant === "desktop" ? "setup-match setup-match--desktop" : "setup-match";
   const iconClass = tone.low
@@ -540,7 +538,7 @@ function MatchSummary({
         style={{ ["--tone" as any]: toneColor }}
         title={tone.title}
       >
-        <MatchIcon size={14} className={iconClass} />
+        <RecipeMatchIcon score={roundedScore} size={16} className={iconClass} aria-hidden="true" />
         <span className="setup-match__value">{roundedScore}/100</span>
       </span>
 
