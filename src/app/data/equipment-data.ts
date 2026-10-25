@@ -205,6 +205,8 @@ const TOOL_CATEGORIES: Record<ToolCategory, { label: string; emoji: string }> = 
 /* ═══ FULL EQUIPMENT STATE ═══ */
 
 export interface EquipmentState {
+  inventory_complete?: boolean;
+  allow_purchase?: boolean;
   /* Legacy booleans for backward compat with use-profile-defaults.ts */
   mixer: boolean;
   pizza_stone: boolean;
@@ -248,7 +250,7 @@ export function migrateEquipment(saved: Record<string, any>): EquipmentState {
     return { ...DEFAULT_EQUIPMENT, ...saved };
   }
   // Old format: { mixer: bool, pizza_stone: bool, pizza_steel: bool, baking_pan: bool }
-  const state = { ...DEFAULT_EQUIPMENT };
+  const state: EquipmentState = { ...DEFAULT_EQUIPMENT, inventory_complete: saved.inventory_complete, allow_purchase: saved.allow_purchase, surfaces: [...DEFAULT_EQUIPMENT.surfaces] };
   if (saved.mixer) {
     state.mixer_type = "stand_domestic";
     state.mixer_level = "domestic";

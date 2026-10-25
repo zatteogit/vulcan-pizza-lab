@@ -223,10 +223,10 @@ export function RecipeOutput({
     const fallbackToppingRefId = recipe.style.default_topping_ref;
     const resolved =
       selectedTopping ??
-      toppingChoices[0]?.recipe ??
       (fallbackToppingRefId
         ? getToppingForStyle(fallbackToppingRefId, recipe.style)
         : undefined) ??
+      toppingChoices[0]?.recipe ??
       allToppingChoices.find((c) => c.authenticity !== "taboo")?.recipe;
     return resolved ? localizeToppingRecipe(resolved, cms.toppingI18n) : resolved;
   }, [selectedToppingConcept, recipe.style, toppingChoices, allToppingChoices, cms.toppingI18n]);

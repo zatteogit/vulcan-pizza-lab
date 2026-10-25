@@ -360,6 +360,9 @@ function buildSavedRecipeUrl(r: SavedRecipe): string {
   const q = new URLSearchParams();
   q.set("mode", "adapted");
   q.set("h", String(pr.hydration));
+  if (pr.hydrationBase !== undefined) q.set("hb", String(pr.hydrationBase));
+  if (pr.salt !== undefined) q.set("s", String(pr.salt));
+  if (pr.interpretationId) q.set("interpretation", pr.interpretationId);
   q.set("w", String(pr.flourW));
   q.set("pl", String(pr.flourPL));
   q.set("f", String(pr.fermentHours));

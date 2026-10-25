@@ -1,3 +1,5 @@
+import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
+import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { Bookmark, ChevronRight, Heart, Info, Lightbulb, OctagonAlert, Sparkles, Stethoscope, TriangleAlert } from "lucide-react";
 import {
 motion,
@@ -10,17 +12,14 @@ useMemo,
 useRef,
 useState,
 } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { FireGlow } from "../features/cooking/fire-glow";
 import { useCookSession } from "../features/cooking/cook-session";
 import {
-getDefaultDoughBalls,
 generateTimeSlots,
-suggestedTimeSlot,
 customMealSlot,
 CUSTOM_SLOT_ID,
 NO_PREFERENCE_SLOT,
-optimizeRecipe,
 thermalViability,
 FLOUR_W_RANGES,
 pantryFlourMix,
@@ -65,7 +64,6 @@ import { useStylesOverride } from "../context/styles-override-context";
 import { ContextualWarnings } from "../features/recipe/troubleshooting-panel";
 import { mergeDraftConstraints, useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
-  centerParamsForStyle,
   defaultRecipePL,
   styleWithSelectedTopping,
   type RecipeInitialState,
@@ -111,6 +109,8 @@ interface PersistedCreateDraft {
     activeVersionId: string | null;
     activeInterpretationId: string | null;
     customHydration: number;
+    customSalt?: number;
+    optimizedHydration?: { base: number; final: number } | null;
     customFlourW: number;
     customFlourPL: number;
     customFermentHours: number;
@@ -206,7 +206,7 @@ function resolveSavedTimeChoice(
       selectedTimeSlot: NO_PREFERENCE_SLOT.id,
       selectedTimeMeta: {
         selectedAt: draft.selectedTimeAt ?? now,
-        hours: draft.selectedTimeHours ?? NO_PREFERENCE_SLOT.hours,
+        hours: NO_PREFERENCE_SLOT.hours,
         targetAt: null,
       },
       stale: false,
@@ -284,6 +284,8 @@ function resolveRecipeInitial(
     version,
     interpretation,
     hydration: draft.recipe.customHydration,
+    salt: draft.recipe.customSalt,
+    optimizedHydration: draft.recipe.optimizedHydration,
     flourW: draft.recipe.customFlourW,
     flourPL: draft.recipe.customFlourPL,
     fermentHours: draft.recipe.customFermentHours,
@@ -299,18 +301,13 @@ function resolveCreateDraft(
   profileConstraints: UserConstraints,
   styles: Record<string, PizzaStyle>,
 ): ResolvedCreateDraft {
-  const nowMs = Date.now();
-  const suggested = suggestedTimeSlot(new Date(nowMs));
-  const suggestedMeta = suggested
-    ? { selectedAt: nowMs, hours: suggested.hours, targetAt: suggested.targetAt ?? nowMs + suggested.hours * HOUR_MS }
-    : null;
   const fallback: ResolvedCreateDraft = {
     step: "styles",
     selectedStyle: null,
-    selectedTimeSlot: suggested?.id ?? null,
-    selectedTimeMeta: suggestedMeta,
+    selectedTimeSlot: NO_PREFERENCE_SLOT.id,
+    selectedTimeMeta: null,
     styleSettingsPanel: null,
-    constraints: suggested ? { ...profileConstraints, available_hours: suggested.hours } : profileConstraints,
+    constraints: { ...profileConstraints, available_hours: 0 },
     recipeInitial: null,
   };
   const draft = readCreateDraft();
@@ -357,22 +354,11 @@ function resolveCreateDraft(
   };
 }
 
-/* Firma dei vincoli per l'auto-ottimizzazione una-tantum per stile: condivisa
-   tra l'effect e la ripresa di una ricetta parcheggiata (che NON deve
-   ri-ottimizzare, o sovrascriverebbe i ritocchi manuali dell'utente). */
-function computeAutoOptSig(
-  style: PizzaStyle,
-  c: UserConstraints,
-  toppingConcept: string | null,
-): string {
-  return `${style.id}|${toppingConcept ?? ""}|${c.oven_type}|${c.oven_max_temp_c}|${c.skill_level}|${c.available_hours}|${c.meal_deadline ? "deadline" : ""}|${c.dough_balls}|${(c.pantry_flours || []).join(",")}|${(c.pantry_yeasts || []).join(",")}|${c.mixer_type ?? ""}|${c.yeast_speed_factor ?? 1}`;
-}
-
 /* ═══ Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le
    domande del passo 1: una frase sul patto dell'app (su misura + punteggio
    onesto), dismiss esplicito o automatico appena l'utente avanza. Niente
    wizard, niente overlay: il flusso Crea È già l'onboarding. ═══ */
-const ONBOARDING_SEEN_KEY = "vulcan_onboarding_seen";
+const ONBOARDING_SEEN_KEY = "vulcan_create_context_seen_v2";
 
 /* D-038 (Matteo, 24/10/2026): niente wizard all'avvio (NN/g, «Mobile
    Tutorials»: i tutorial iniziali non migliorano i risultati). Si chiede solo
@@ -450,12 +436,12 @@ export function HomePage() {
   } = useCms();
   /* ═══ VPL-067: Profile data bridge — load constraints from profile ═══ */
   const profileDefaults = useProfileDefaults();
+  const [entrySearch] = useSearchParams();
+  const sourceStyle = effectiveStyles[entrySearch.get("style") ?? ""] ?? null;
   const initialCreateDraftRef = useRef<ResolvedCreateDraft | null>(null);
   if (initialCreateDraftRef.current === null) {
-    initialCreateDraftRef.current = resolveCreateDraft(
-      profileDefaults.constraints,
-      effectiveStyles,
-    );
+    const draft = resolveCreateDraft(profileDefaults.constraints, effectiveStyles);
+    initialCreateDraftRef.current = sourceStyle ? { ...draft, step: "styles", selectedStyle: null, recipeInitial: null, constraints: { ...draft.constraints, oven_max_temp_c: draft.constraints.oven_capacity_temp_c ?? draft.constraints.oven_max_temp_c } } : draft;
   }
   const initialCreateDraft = initialCreateDraftRef.current;
   const [currentStep, setCurrentStep] =
@@ -487,8 +473,6 @@ export function HomePage() {
      o avanzando nel flusso (chi ha già generato una ricetta non ne ha bisogno). */
   const [showOnboarding, setShowOnboarding] = useState(() => {
     try {
-      // D-038: chi ha già scelto il forno non ha niente da rispondere.
-      if (localStorage.getItem("vulcan_oven_pref")) return false;
       return localStorage.getItem(ONBOARDING_SEEN_KEY) !== "true";
     } catch {
       return false;
@@ -518,7 +502,6 @@ export function HomePage() {
   /* Redesign lug 2026: niente bozze/parcheggi — all'uscita dal result con
      modifiche non salvate si avvisa e basta. */
   const [exitConfirm, setExitConfirm] = useState(false);
-  const autoOptSigRef = useRef<string>("");
 
   /* ═══ VPL-023: Respect prefers-reduced-motion ═══ */
   const prefersReducedMotion = useReducedMotion();
@@ -539,6 +522,7 @@ export function HomePage() {
 
   const proceedBackToStyles = useCallback(() => {
     setSelectedStyle(null);
+    setConstraints(c => ({...c, oven_max_temp_c: c.oven_capacity_temp_c ?? c.oven_max_temp_c}));
     setSetupPanelOpen(false);
     setSetupNotice(null);
     setNerdMode(false);
@@ -611,6 +595,8 @@ export function HomePage() {
     buildRecipe,
     optimizeForConstraints,
     lastOptimization,
+    customFlourBlend,
+    optimizedHydration,
   } = recipeState;
 
   const shareUrl = useMemo(() => {
@@ -621,6 +607,8 @@ export function HomePage() {
     if (activeInterpretationId)
       params.set("interpretation", activeInterpretationId);
     params.set("h", String(customHydration));
+    if (optimizedHydration && customHydration === optimizedHydration.final) params.set("hb", String(optimizedHydration.base));
+    if (Math.abs(customSalt - selectedStyle.dough.salt_pct) > 0.01) params.set("s", String(customSalt));
     params.set("w", String(customFlourW));
     params.set("pl", String(customFlourPL));
     params.set("f", String(customFermentHours));
@@ -644,6 +632,8 @@ export function HomePage() {
     activeVersionId,
     activeInterpretationId,
     customHydration,
+    customSalt,
+    optimizedHydration,
     customFlourW,
     customFlourPL,
     customFermentHours,
@@ -702,12 +692,15 @@ export function HomePage() {
     useState<Interpretation | null>(null);
   const applySelectStyle = useCallback(
     (style: PizzaStyle, interpretation: Interpretation | null = null) => {
-      resetForStyle(
-        style,
-        { mode: "adapted" },
-        constraints.available_hours,
-        engineConstraints,
-      );
+      const entry = tailoredRecipeEntry(style, engineConstraints, scoreWeightsFromCms(cms));
+      const r = entry.recipe;
+      resetForStyle(style, {
+        mode: "adapted", salt: entry.options.customSalt, flourBlend: entry.options.customFlourBlend, hydration: r.hydration_pct, flourW: r.flour_w, flourPL: r.flour_pl,
+        fermentHours: r.fermentation_hours, fermentTemp: r.fermentation_temp_c,
+        usePreFerment: r.has_pre_ferment, panConfig: entry.options.panConfig,
+        optimizedHydration: entry.optimizedHydration,
+        toppingConcept: style.default_topping_ref ?? null,
+      }, constraints.available_hours, engineConstraints);
       setSelectedStyle(style);
       setSetupPanelOpen(false);
       setSetupNotice(null);
@@ -715,7 +708,7 @@ export function HomePage() {
       setStyleSettingsPanel(null);
       setPendingInterpretation(interpretation);
     },
-    [constraints.available_hours, engineConstraints, resetForStyle],
+    [constraints.available_hours, engineConstraints, resetForStyle, cms],
   );
 
   useEffect(() => {
@@ -726,30 +719,17 @@ export function HomePage() {
 
   const handleResetCreateToCanonical = useCallback(() => {
     if (!selectedStyle) return;
-    const fCenter = Math.round(
-      (selectedStyle.dough.fermentation_hours_range[0] +
-        selectedStyle.dough.fermentation_hours_range[1]) /
-        2,
-    );
-    resetToBaseRecipe({
-      mode: "canonical",
-      availableHours: selectedStyle.dough.fermentation_hours_range[1],
-    });
+    const e = canonicalRecipeEntry(selectedStyle, undefined, activeInterpretationId ? getInterpretationById(activeInterpretationId) ?? null : activeVersion ? null : undefined, activeVersion ?? undefined);
+    const o = e.options;
+    resetForStyle(selectedStyle, { mode: "canonical", version: e.version, interpretation: e.interpretation,
+      hydration: o.customHydration, flourW: o.customFlourW, flourPL: o.customFlourPL,
+      fermentHours: o.customFermentationHours, fermentTemp: o.customFermentationTempC,
+      usePreFerment: o.usePreFerment, panConfig: o.panConfig, toppingConcept: e.topping,
+    }, constraints.available_hours, engineConstraints);
     setSetupNotice(null);
     setSelectedFlourId(null);
-    setSelectedTimeSlot(null);
-    setSelectedTimeMeta(null);
-    // Audit role-play giugno 2026: il canonico va valutato sul TUO forno, non su
-    // quello ideale. Prima forzava oven=ideale → il canonico mostrava ~95 e
-    // nascondeva la verità ("la vera Napoletana a casa tua fa 44"). Ora il forno
-    // resta il tuo: la canonica è onesta e i due livelli (canonica↔su misura)
-    // hanno senso. La "versione del maestro" a 485° resta un riferimento futuro.
-    setConstraints((current) => ({
-      ...current,
-      available_hours: fCenter,
-      dough_balls: getDefaultDoughBalls(selectedStyle),
-    }));
-  }, [resetToBaseRecipe, selectedStyle]);
+    setConstraints(c => ({...c, oven_max_temp_c: Math.min(selectedStyle.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c)}));
+  }, [selectedStyle, resetForStyle, constraints.available_hours, engineConstraints, activeVersion, activeInterpretationId]);
 
   const resetCreateBaseRecipe = useCallback(() => {
     resetToBaseRecipe({
@@ -758,43 +738,14 @@ export function HomePage() {
     });
   }, [constraints.available_hours, engineConstraints, resetToBaseRecipe]);
 
-  // Audit role-play giugno 2026: la ricetta del "Crea" deve essere GIÀ su misura,
-  // non il midpoint. Quando entri in uno stile in modalità adattata (senza versione
-  // o interpretazione attiva), il motore ottimizza una volta per stile+vincoli.
-  // Il midpoint canonico resta accessibile via "Torna all'originale".
-  useEffect(() => {
-    if (!selectedStyle) {
-      autoOptSigRef.current = "";
-      return;
-    }
-    if (createRecipeMode !== "adapted") return; // canonico: lascia il riferimento da manuale
-    if (activeVersionId || activeInterpretationId) return; // rispetta la scelta dell'utente
-    // Il condimento che arriva al motore entra nella firma: cambia i minuti
-    // della timeline, quindi la fermentazione che sta nella finestra fino al
-    // pasto. Si usa quello effettivo, così una scelta che non cambia la
-    // ricetta del motore non riottimizza (e non cancella i ritocchi).
-    const engineTopping =
-      styleWithSelectedTopping(selectedStyle, selectedToppingConcept).default_topping_ref ?? null;
-    const sig = computeAutoOptSig(selectedStyle, engineConstraints, engineTopping);
-    if (autoOptSigRef.current === sig) return;
-    autoOptSigRef.current = sig;
-    optimizeForConstraints(engineConstraints);
-  }, [
-    selectedStyle,
-    createRecipeMode,
-    activeVersionId,
-    activeInterpretationId,
-    engineConstraints,
-    selectedToppingConcept,
-    optimizeForConstraints,
-  ]);
-
   const handleCreateVersionSelect = useCallback(
     (version: StyleVersion) => {
       setSetupNotice(null);
+      setSelectedFlourId(null);
       selectVersion(version);
+      if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: Math.min(selectedStyle.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c)}));
     },
-    [selectVersion],
+    [selectVersion, selectedStyle],
   );
 
   const handleCreateInterpretationSelect = useCallback(
@@ -804,9 +755,11 @@ export function HomePage() {
         return;
       }
       setSetupNotice(null);
+      setSelectedFlourId(null);
       applyInterpretationToState(interpretation);
+      if (selectedStyle) setConstraints(c => ({...c, oven_max_temp_c: Math.min(selectedStyle.baking.temp_c_ideal, c.oven_capacity_temp_c ?? c.oven_max_temp_c)}));
     },
-    [applyInterpretationToState, resetCreateBaseRecipe],
+    [applyInterpretationToState, resetCreateBaseRecipe, selectedStyle],
   );
 
   /* "Personalizza": apre il dialog e basta — la ricetta diventa
@@ -825,6 +778,9 @@ export function HomePage() {
   const currentSaveParams = useMemo(
     () => ({
       hydration: customHydration,
+      salt: customSalt,
+      hydrationBase: optimizedHydration && customHydration === optimizedHydration.final ? optimizedHydration.base : undefined,
+      interpretationId: activeInterpretationId,
       flourW: customFlourW,
       flourPL: customFlourPL,
       fermentHours: customFermentHours,
@@ -839,6 +795,9 @@ export function HomePage() {
     }),
     [
       customHydration,
+      customSalt,
+      optimizedHydration,
+      activeInterpretationId,
       customFlourW,
       customFlourPL,
       customFermentHours,
@@ -888,28 +847,17 @@ export function HomePage() {
      "Torna all'originale" ripristina via resetToBaseRecipe). isDirty =
      i parametri attuali se ne discostano — vero anche subito dopo
      l'auto-ottimizzazione, che È una personalizzazione. */
-  const createCanonicalTargets = useMemo(() => {
-    if (!selectedStyle) return null;
-    const centered = centerParamsForStyle(
-      selectedStyle,
-      selectedStyle.dough.fermentation_hours_range[1],
-    );
-    return { ...centered, salt: selectedStyle.dough.salt_pct };
-  }, [selectedStyle]);
-
-  const createDirty = Boolean(
-    selectedStyle &&
-      createCanonicalTargets &&
-      (customHydration !== createCanonicalTargets.hydration ||
-        customFlourW !== createCanonicalTargets.flourW ||
-        Math.abs(customFlourPL - createCanonicalTargets.flourPL) > 0.001 ||
-        customFermentHours !== createCanonicalTargets.fermentHours ||
-        customFermentTemp !== createCanonicalTargets.fermentTemp ||
-        usePreFerment !== createCanonicalTargets.usePreFerment ||
-        preFermentChoice.type !== undefined ||
-        preFermentChoice.flourPct !== undefined ||
-        Math.abs(customSalt - createCanonicalTargets.salt) > 0.01),
-  );
+  const createReferenceEntry = useMemo(() => selectedStyle ? canonicalRecipeEntry(selectedStyle, undefined,
+    activeInterpretationId ? getInterpretationById(activeInterpretationId) ?? null : activeVersion ? null : undefined,
+    activeVersion ?? undefined) : null, [selectedStyle, activeVersion, activeInterpretationId]);
+  const createReferencePreset = selectedStyle && createReferenceEntry ? recipePresetState(selectedStyle, createReferenceEntry.version, createReferenceEntry.interpretation) : null;
+  const createDirty = Boolean(selectedStyle && createReferencePreset && (isRecipePresetModified(createReferencePreset, {
+    hydration: customHydration, flourW: customFlourW, flourPL: customFlourPL, salt: customSalt,
+    fermentHours: customFermentHours, fermentTemp: customFermentTemp, usePreFerment,
+    preFerment: preFermentChoice, panConfig, toppingConcept: selectedToppingConcept, flourBlend: customFlourBlend,
+  }) || Math.min(constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal) !== Math.min(constraints.oven_capacity_temp_c ?? constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal)));
+  const createOrigin = activeInterpretationId ? getInterpretationById(activeInterpretationId) : null;
+  const createReferenceName = createOrigin?.author ?? createOrigin?.pizzeria ?? createOrigin?.organization ?? (activeVersion ? cms.messages?.[`version.label.${activeVersion.label}`] ?? activeVersion.label : selectedStyle?.name ?? "");
 
   /* Back dal result: se la ricetta è modificata e non salvata, avvisa —
      sostituisce la vecchia gestione bozze/parcheggio (nota Matteo lug 2026). */
@@ -932,22 +880,13 @@ export function HomePage() {
   // tu li prenda — ma sono precondizioni per raggiungerlo → lista della spesa).
   const ceilingInfo = useMemo(() => {
     if (!selectedStyle) return undefined;
-    const opt = optimizeRecipe(
+    const opt = optimizeSelectedRecipe(
       styleWithSelectedTopping(selectedStyle, selectedToppingConcept),
-      engineConstraints,
-      undefined,
-      undefined,
-      {
-        authenticity: cms.scoreDimensions?.authenticity?.weight,
-        feasibility: cms.scoreDimensions?.feasibility?.weight,
-        digestibility: cms.scoreDimensions?.digestibility?.weight,
-        sustainability: cms.scoreDimensions?.sustainability?.weight,
-        experimentation: cms.scoreDimensions?.experimentation?.weight,
-      },
+      engineConstraints, scoreWeightsFromCms(cms), panConfig, activeVersion, activeInterpretationId,
     ).recipe;
     const hard = thermalViability(selectedStyle, opt.oven_temp_c) < 1;
     const softNeeds: string[] = [];
-    if (constraints.pantry_flours.length > 0) {
+    if (opt.verdict.conditions?.some(c => c.kind === "flour" && c.status === "missing")) {
       const covered =
         constraints.pantry_flours.some((id) => {
           const rng = FLOUR_W_RANGES[id];
@@ -958,14 +897,14 @@ export function HomePage() {
       if (!covered) softNeeds.push(tpl(cms.cooking.needFlour, { w: opt.flour_w }));
     }
     if (
-      constraints.pantry_yeasts.length > 0 &&
+      constraints.pantry_inventory_complete === true && constraints.pantry_yeasts.length > 0 &&
       !constraints.pantry_yeasts.includes(opt.yeast_type)
     ) {
       softNeeds.push(
         (cms.yeastLabels?.[opt.yeast_type] ?? YEAST_LABELS[opt.yeast_type] ?? opt.yeast_type).toLowerCase(),
       );
     }
-    return { value: opt.scores.composite, hard, softNeeds, outcome: opt.verdict.outcome };
+    return { value: opt.scores.composite, hard, softNeeds, outcome: opt.verdict.outcome, recipe: opt };
   }, [
     selectedStyle,
     selectedToppingConcept,
@@ -974,6 +913,7 @@ export function HomePage() {
     cms.scoreDimensions,
     cms.cooking.needFlour,
     cms.yeastLabels,
+    panConfig, activeVersion, activeInterpretationId,
   ]);
 
   // La ricetta è "già ottimizzata" se siamo in modalità adattata, senza versione/
@@ -999,6 +939,8 @@ export function HomePage() {
     activeVersionId,
     activeInterpretationId,
     customHydration,
+    customSalt,
+    optimizedHydration,
     customFlourW,
     customFermentHours,
     customFermentTemp,
@@ -1109,6 +1051,8 @@ export function HomePage() {
             activeVersionId,
             activeInterpretationId,
             customHydration,
+            customSalt,
+            optimizedHydration,
             customFlourW,
             customFlourPL,
             customFermentHours,
@@ -1126,6 +1070,8 @@ export function HomePage() {
     constraints,
     createRecipeMode,
     currentStep,
+    customSalt,
+    optimizedHydration,
     customFermentHours,
     customFermentTemp,
     customFlourPL,
@@ -1313,6 +1259,13 @@ export function HomePage() {
                     {cms.steps.styles.subtitle}
                   </p>
                 </div>
+                {sourceStyle && (
+                  <section className="home-onboarding">
+                    <p className="type-label">{tpl(cms.ui.createSourceTitle, {style: sourceStyle.name})}</p>
+                    <p className="type-body-sm">{cms.ui.createSourceHint}</p>
+                    <button type="button" className="home-onboarding__cta" onClick={()=>applySelectStyle(sourceStyle)}>{cms.ui.createSourceAction}</button>
+                  </section>
+                )}
                 <RecommendedStyles
                   constraints={engineConstraints}
                   selectedStyle={selectedStyle}
@@ -1362,8 +1315,8 @@ export function HomePage() {
               }
               eyebrow={
                 createDirty
-                  ? cms.cooking.recipeAdapted
-                  : cms.cooking.recipeCanonicalEyebrow ?? cms.cooking.recipeCanonical
+                  ? tpl(cms.ui.recipeCustomizedFrom, {name: createReferenceName})
+                  : tpl(cms.ui.recipePresetReference, {name: createReferenceName})
               }
               eyebrowTone={createDirty ? "tailored" : "canonical"}
               shareUrl={shareUrl}
@@ -1402,6 +1355,7 @@ export function HomePage() {
               onResetToOriginal={
                 createDirty ? handleResetCreateToCanonical : undefined
               }
+              resetLabel={tpl(cms.ui.recipeResetPreset, {name: createReferenceName})}
               matchSlot={
                 /* Round 4-5 (note Matteo): ordine Ispirazione → parametri →
                    match. Chip e tabella sono UN'unità; il verdetto respira. */
@@ -1516,13 +1470,15 @@ export function HomePage() {
                         Math.round(recipe.scores.composite) <
                         2)))
                       ? undefined
-                      : () => optimizeForConstraints(engineConstraints)
+                      : () => {setSelectedFlourId(null); optimizeForConstraints(engineConstraints);}
                   }
                   optimizationRationale={
                     createRecipeOptimized && lastOptimization
                       ? engineMsgTexts(lastOptimization.rationale, cms, bcp47)
                       : undefined
                   }
+                  optimizationPreview={ceilingInfo?.recipe}
+                  originalRecipe={createReferenceEntry ? recipeFromEntry(createReferenceEntry, engineConstraints, scoreWeightsFromCms(cms)) : undefined}
                   ceiling={ceilingInfo?.value}
                   hardLimited={ceilingInfo?.hard}
                   softNeeds={ceilingInfo?.softNeeds}

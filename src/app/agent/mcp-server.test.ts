@@ -133,3 +133,16 @@ describe("server MCP", () => {
     for (const rule of ["has_caveats", "final_dough", "rounds", "meal_deadline:false", "translate"]) expect(guide).toContain(rule);
   });
 });
+
+describe("raccomandazione e ricetta MCP coerenti", () => {
+  it("il voto della proposta è quello della ricetta generata con gli stessi vincoli", () => {
+    const args={oven_type:"home",oven_max_temp_c:250,available_hours:24,has_baking_pan:true,limit:30};
+    const styles=(call("recommend_styles",args).structuredContent as {styles:{id:string;compatibility:number;outcome:string}[]}).styles;
+    expect(styles.length).toBeGreaterThan(0);
+    for(const s of styles){
+      const r=call("generate_recipe",{...args,style_id:s.id}).structuredContent as {scores:{composite:number};outcome:string};
+      expect(r.scores.composite,s.id).toBe(s.compatibility);
+      expect(r.outcome).toBe(s.outcome);
+    }
+  });
+});

@@ -1,3 +1,5 @@
+import { RecipeChanges } from "./recipe-changes";
+import { canonicalRecipe } from "../../use-cases/recipe-entry";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
@@ -7,7 +9,7 @@ import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
 import { STYLE_PHOTOS, reasonDimension, MATCH_DIMENSION_ICON, styleDifficultyLabel } from "./recommended-styles";
-import { kitchenCompatibility, scoreWeightsFromCms } from "./kitchen-compatibility";
+import { tailoredRecipeEntry, scoreWeightsFromCms } from "./kitchen-compatibility";
 import { STYLE_VIDEOS, type StyleVideo } from "../../data/style-photos";
 import {
   PizzaStyle,
@@ -89,11 +91,12 @@ export function StyleDetailSheet({
 
   const rec = React.useMemo(() => {
     if (!constraints) return null;
-    return recommendStyles(constraints, { [style.id]: style })[0];
-  }, [constraints, style]);
+    return recommendStyles(constraints, { [style.id]: style }, undefined,
+      (s, c) => tailoredRecipeEntry(s, c, scoreWeightsFromCms(cms)).recipe)[0];
+  }, [constraints, style, cms]);
   /* D-041: lo stesso numero delle card e della ricetta aperta. */
   const kitchenNow = React.useMemo(
-    () => (constraints ? kitchenCompatibility(style, constraints, scoreWeightsFromCms(cms)).now : null),
+    () => (constraints ? tailoredRecipeEntry(style, constraints, scoreWeightsFromCms(cms)).recipe.scores.composite : null),
     [constraints, style, cms],
   );
 
@@ -231,7 +234,7 @@ export function StyleDetailSheet({
                 {formatOrigin(style.origin)}
               </span>
 
-              {rec && rec.tier !== "not_feasible" && (
+              {rec && (
                 <>
                   <span className="style-detail-title__dot">
                     ·
@@ -241,7 +244,7 @@ export function StyleDetailSheet({
                     aria-label={uiMessage("pages.explore.compatibility", [kitchenNow ?? 0])}
                   >
                     <Gauge size={10} aria-hidden="true" />
-                    {uiMessage("features.recipe.style-detail-sheet.match-a3424e8a", [kitchenNow ?? 0])}</span>
+                    {cms.ui.scoreBasisTailored}{" · "}{uiMessage("features.recipe.style-detail-sheet.match-a3424e8a", [kitchenNow ?? 0])}</span>
                 </>
               )}
 
@@ -432,6 +435,10 @@ export function StyleDetailSheet({
                 })}
               </div>
             </div>
+          )}
+
+          {rec && constraints && (
+            <RecipeChanges from={canonicalRecipe(style, constraints, scoreWeightsFromCms(cms))} to={rec.recipe} mode="included" />
           )}
 
           {/* ── CTA — Genera ricetta ── */}

@@ -11,7 +11,7 @@ import { pantryFlourName } from "./pantry-flour-names";
  * i template del CMS non scrivono l'unità dopo questi parametri. */
 
 /** Parametri che sono sempre temperature. */
-const TEMPERATURE_PARAMS = new Set(["temp", "ideal", "oven", "ddt", "requiredTemp"]);
+const TEMPERATURE_PARAMS = new Set(["temp", "ideal", "oven", "ddt", "requiredTemp", "fromTemp", "toTemp"]);
 /** Messaggi in cui anche {min} è una temperatura (altrove è un'idratazione). */
 const TEMPERATURE_MIN_KEYS = new Set([
   "feas.ovenTooCold",
@@ -21,6 +21,7 @@ const TEMPERATURE_MIN_KEYS = new Set([
 ]);
 /** Parametri in ore, per messaggio. */
 const HOUR_PARAMS: Record<string, readonly string[]> = {
+  "change.fermentation": ["fromHours", "toHours"],
   /* Solo l'estremo alto porta l'unità: «8–24 h», non «8 h-24 h». */
   "rec.timeCompatible": ["fMax"],
   "rec.timeAdaptable": ["hours"],
@@ -49,6 +50,8 @@ export function engineMsgTexts(
 ): string[] {
   const fmt = createFormatter(cms.ui, bcp47);
   return resolveEngineMsgs(msgs, cms.engineMessages, (msg, key, value) => {
+    if (msg.key === "need.excludedFlour" && key === "flour") return pantryFlourName(String(value));
+    if ((msg.key === "need.yeast" || msg.key === "need.checkYeast") && key === "yeast") return cms.yeastLabels[String(value)] ?? String(value);
     if (FLOUR_PARAMS[msg.key]?.includes(key)) return pantryFlourName(String(value));
     const number =
       typeof value === "number" ? value : NUMERIC.test(value) ? Number(value) : null;

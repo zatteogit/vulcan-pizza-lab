@@ -57,10 +57,11 @@ const OVEN_LABELS: Record<string, string> = {
 export function loadProfileDefaults(): ProfileDefaults {
   let ovenType: OvenType = "home";
   let ovenTemp = 250;
-  let skillLevel: SkillLevel = 2;
+  let skillLevel: SkillLevel = 1;
   let dietaryFilters: string[] = [];
   let pantryFlours: string[] = [];
   let pantryYeasts: string[] = [];
+  let pantryPolicy: Partial<UserConstraints> = {};
   let isProfileComplete = false;
   let pizzaNerdEnabled = false;
 
@@ -76,10 +77,11 @@ export function loadProfileDefaults(): ProfileDefaults {
     if (skill) skillLevel = skill as SkillLevel;
     const dietary = loadJson<string[]>(DIETARY_STORAGE_KEY);
     if (dietary) dietaryFilters = dietary;
-    const pantry = loadJson<{ flours?: string[]; yeasts?: string[] }>(PANTRY_STORAGE_KEY);
+    const pantry = loadJson<{ flours?: string[]; yeasts?: string[]; inventory_complete?: boolean; allow_purchase?: boolean; excluded_flours?: string[] }>(PANTRY_STORAGE_KEY);
     if (pantry) {
       pantryFlours = pantry.flours ?? [];
       pantryYeasts = pantry.yeasts ?? [];
+      pantryPolicy = { pantry_inventory_complete: pantry.inventory_complete, allow_flour_purchase: pantry.allow_purchase, excluded_flours: pantry.excluded_flours };
     }
   } catch { /* */ }
 
@@ -88,7 +90,7 @@ export function loadProfileDefaults(): ProfileDefaults {
     oven_max_temp_c: ovenTemp,
     oven_capacity_temp_c: ovenTemp,
     skill_level: skillLevel,
-    available_hours: 24,
+    available_hours: 0,
     dough_balls: 4,
     has_mixer: false,
     has_pizza_stone: false,
@@ -99,12 +101,15 @@ export function loadProfileDefaults(): ProfileDefaults {
     pantry_flours: pantryFlours,
     pantry_yeasts: pantryYeasts,
     yeast_speed_factor: loadYeastSpeedFactor(),
+    ...pantryPolicy,
   };
 
   /* Equipment from profile — supports both old and new format */
   try {
     const equip = loadJson<Record<string, any>>(EQUIPMENT_STORAGE_KEY);
     if (equip) {
+      constraints.equipment_inventory_complete = equip.inventory_complete;
+      constraints.allow_equipment_purchase = equip.allow_purchase;
       // Legacy boolean flags (work with both formats)
       if (equip.mixer) constraints.has_mixer = true;
       if (equip.pizza_stone) constraints.has_pizza_stone = true;
@@ -158,10 +163,17 @@ export const PROFILE_OWNED_CONSTRAINTS = [
   "dietary_filters",
   "pantry_flours",
   "pantry_yeasts",
+  "pantry_inventory_complete",
+  "allow_flour_purchase",
+  "excluded_flours",
+  "equipment_inventory_complete",
+  "allow_equipment_purchase",
   "yeast_speed_factor",
 ] as const satisfies readonly (keyof UserConstraints)[];
 
 const EQUIPMENT_KEYS = [
+  "equipment_inventory_complete",
+  "allow_equipment_purchase",
   "has_mixer",
   "has_pizza_stone",
   "has_pizza_steel",
@@ -191,6 +203,9 @@ export function mergeDraftConstraints(
     } else {
       delete (merged as unknown as Record<string, unknown>)[key];
     }
+  }
+  if (draft?.oven_type === profile.oven_type && typeof draft.oven_max_temp_c === "number" && draft.oven_max_temp_c > 0) {
+    merged.oven_max_temp_c = Math.min(draft.oven_max_temp_c, profile.oven_capacity_temp_c ?? profile.oven_max_temp_c);
   }
   return merged;
 }

@@ -3282,6 +3282,28 @@
     box-shadow: var(--shadow-pill);
   }
 
+  .supply-policy-controls {
+    display: grid;
+    gap: var(--space-3);
+    margin-block: var(--space-3);
+  }
+
+  .recipe-condition-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-2xs);
+    padding-block: var(--space-2);
+  }
+
+  .recipe-condition-chips .badge-base {
+    white-space: normal;
+    text-align: start;
+  }
+
+  .compat-pill__basis {
+    font-weight: var(--weight-medium);
+  }
+
   .compat-pill__icon {
     color: var(--cta);
   }
@@ -6965,20 +6987,21 @@
   }
 
   .config-slider__zone-labels {
-    position: relative;
-    height: var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-3);
+    min-height: var(--space-4);
   }
 
   .config-slider__zone-label {
-    position: absolute;
-    transform: translateX(-50%);
+    max-width: 48%;
     color: var(--text-muted);
     font-size: var(--font-size-sm);
-    left: var(--slider-zone-left);
   }
 
   .config-slider__zone-label--end {
-    left: var(--slider-zone-right);
+    text-align: end;
   }
 
 

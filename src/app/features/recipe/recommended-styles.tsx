@@ -1,3 +1,4 @@
+import { RecipeConditionChips } from "./recipe-condition-chips";
 import { Award,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
 import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
 import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
@@ -20,7 +21,7 @@ type FamilyId,
 } from "../../domain/pizza-engine";
 import { type Interpretation } from "../../data/interpretation-library";
 import { CompatibilityPill, StyleMetaChip } from "./style-card-parts";
-import { kitchenCompatibility } from "./kitchen-compatibility";
+import { tailoredRecipeEntry } from "./kitchen-compatibility";
 import { useStylesOverride } from "../../context/styles-override-context";
 import { TiltCard } from "./tilt-card";
 
@@ -44,7 +45,7 @@ interface RecommendedStylesProps {
  *  coi vincoli dell'utente. */
 type RecommendationWithVariant = StyleRecommendation & {
   bestInterpretation: Interpretation | null;
-  /** D-041: compatibilità con la tua cucina (originale, 0–100). */
+  /** D-041: compatibilità con la tua cucina (su misura che si aprirà, 0–100). */
   kitchenNow: number;
 };
 
@@ -168,16 +169,17 @@ export function RecommendedStyles({
           equipment: cms.recommendationWeights.equipment,
           pantry: cms.recommendationWeights.pantry,
         },
+        (style, current) => tailoredRecipeEntry(style, current, scoreWeights).recipe,
       ).map((rec): RecommendationWithVariant => {
         /* D-041: lo stesso numero di Scopri, della scheda e della ricetta
            aperta (originale sulla tua cucina); il meglio raggiungibile
            (ottimizzata o versione d'autore) è il secondo valore. */
-        const compat = kitchenCompatibility(rec.style, constraints, scoreWeights);
+        const preview = rec.recipe;
         return {
           ...rec,
-          kitchenNow: compat.now,
-          optimizedComposite: compat.best,
-          bestInterpretation: compat.bestInterpretation,
+          kitchenNow: preview.scores.composite,
+          optimizedComposite: preview.scores.composite,
+          bestInterpretation: null,
         };
       }),
     [constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
@@ -584,6 +586,7 @@ function StyleCard({
     >
       <motion.button
         onClick={onSelect}
+        aria-describedby={rec.verdict.blockers.length || rec.verdict.adaptations.length ? `conditions-create-${style.id}` : undefined}
         initial={{ opacity: 0, y: 14 }}
         animate={{
           opacity: 1,
@@ -638,7 +641,7 @@ function StyleCard({
 
             {/* Compatibilità con la tua cucina — in alto a destra, come in Scopri */}
             <div className="recommended-card__score">
-              <CompatibilityPill now={displayScore} best={bestScore} />
+              <CompatibilityPill now={displayScore} best={bestScore} basis={cms.ui.scoreBasisTailored} />
             </div>
 
             {/* ── Selected check ── */}
@@ -677,12 +680,13 @@ function StyleCard({
               </div>
 
               {/* Livello e durata — stessa chip delle card di Scopri */}
-              <StyleMetaChip style={style} cms={cms} />
+              <StyleMetaChip style={style} cms={cms} recipe={rec.recipe} />
             </div>
           </div>
         </motion.div>
         </TiltCard>
       </motion.button>
+      <RecipeConditionChips recipe={rec.recipe} id={`conditions-create-${style.id}`} />
     </div>
   );
 }

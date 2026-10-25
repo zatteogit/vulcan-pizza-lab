@@ -89,7 +89,7 @@ export function InterpretationSwitcher({
           <button
             type="button"
             onClick={() => {
-              if (!defaultActive) onSelect(defaultInterpretation);
+              onSelect(defaultInterpretation);
             }}
             aria-pressed={defaultActive}
             className={`interpretation-switcher__chip${defaultActive ? " interpretation-switcher__chip--active" : ""}`}
@@ -104,7 +104,7 @@ export function InterpretationSwitcher({
               <button
                 key={it.id}
                 type="button"
-                onClick={() => onSelect(isActive ? defaultInterpretation : it)}
+                onClick={() => onSelect(it)}
                 aria-pressed={isActive}
                 className={`interpretation-switcher__chip${isActive ? " interpretation-switcher__chip--active" : ""}`}
               >

@@ -93,6 +93,7 @@ interface RecipeViewProps {
    *  — chi dichiara la divergenza offre anche il ritorno. Passato solo
    *  quando la ricetta è dirty. */
   onResetToOriginal?: () => void;
+  resetLabel?: string;
   /* Usati da Crea (scheda su misura) */
   selectedFlourId?: string | null;
   onSelectFlour?: (flour: import("../../data/flour-database").FlourEntry | null) => void;
@@ -128,6 +129,7 @@ export function RecipeView({
   isPersonalized = true,
   onRequestPersonalization,
   onResetToOriginal,
+  resetLabel,
   selectedFlourId,
   onSelectFlour,
   selectedTimeSlotId,
@@ -439,7 +441,7 @@ export function RecipeView({
                     className="recipe-view-reset"
                   >
                     <RotateCcw size={12} className="recipe-view-reset__icon" aria-hidden="true" />
-                    {cms.cooking.resetToOriginal}
+                    {resetLabel ?? cms.cooking.resetToOriginal}
                   </motion.button>
                 )}
               </AnimatePresence>
