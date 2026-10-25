@@ -1375,7 +1375,7 @@ export const JA_LOCALE: CmsContent = {
     savedRecipesSubtitle: "あなた好みに調整したバージョン",
     savedRecipesEmptyTitle: "保存したレシピはまだありません",
     savedRecipesEmptyBody: "保存したレシピはここに表示されます。",
-    savedRecipesEmptyCta: "スタイルを見る",
+    savedRecipesEmptyCta: "レシピを作成",
     savedRecipeRemove: "レシピ帳から削除",
     savedRecipeRemoveAria: "{name}をレシピ帳から削除",
     savedRecipesLocalNote: "レシピはこのブラウザにだけ保存されています。なくさないように、また別の端末に移すために、ファイルに書き出してください。",

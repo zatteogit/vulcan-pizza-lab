@@ -1506,7 +1506,7 @@ export const EN_LOCALE: CmsContent = {
     savedRecipesSubtitle: "The tailored versions you set aside",
     savedRecipesEmptyTitle: "No saved recipes yet",
     savedRecipesEmptyBody: "The tailored versions you save will appear here.",
-    savedRecipesEmptyCta: "Explore styles",
+    savedRecipesEmptyCta: "Create a recipe",
     savedRecipeRemove: "Remove from recipe book",
     savedRecipeRemoveAria: "Remove {name} from recipe book",
     savedRecipesLocalNote: "Your recipes live only in this browser. Export them to a file so you don't lose them or to move them to another device.",
