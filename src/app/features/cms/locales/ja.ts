@@ -28,6 +28,11 @@ export const JA_LOCALE: CmsContent = {
   toppingI18n: TOPPING_I18N_JA,
   inspirationI18n: INSPIRATION_I18N_JA,
   ui: {
+    scoreTipTitle: "スコアの見方",
+    scoreTipOriginal: "オリジナルのレシピを、あなたのキッチンに合わせて評価。",
+    scoreTipTailored: "提案された調整を反映したバージョン。",
+    scoreTipGlobal: "スコアには実現性と本来のスタイルへの忠実さが反映されます。大きな妥協はスコアを下げます。",
+    scoreTipBlocked: "満たされていない条件があります。詳細を開いてください。",
     pantrySelectionSummary: "選択：{n}・除外：{excluded}",
     pantryWValue: "W{w}",
     pantryWEstimate: "≈ W{w}",
