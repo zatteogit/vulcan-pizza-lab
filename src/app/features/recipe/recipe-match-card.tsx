@@ -343,6 +343,14 @@ export function RecipeMatchCard({
       /* U-10 (F29): il nome lo porta già l'aside che la contiene */
     >
       <div className="match-card__main">
+        <div className="match-kicker">
+          <RecipeMatchIcon score={roundedScore} blocked={notFeasible}
+            size={14}
+            className={`match-kicker__icon ${tone.low || notFeasible ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
+            aria-hidden="true"
+          />
+          <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.match-0335207f")}</span>
+        </div>
         <button
           ref={detailsToggleRef}
           type="button"
@@ -353,9 +361,9 @@ export function RecipeMatchCard({
           aria-label={`${fmt.number(roundedScore)}/100 · ${detailsActionLabel}`}
           title={detailsActionLabel}
         >
-          <AnimatedScore value={roundedScore} />
-          <span className="type-numeric match-score-suffix">
-            /100
+          <span className="match-score-number">
+            <AnimatedScore value={roundedScore} />
+            <span className="type-numeric match-score-suffix">/100</span>
           </span>
           <AnimatePresence>
             {scoreBump && (
@@ -376,16 +384,6 @@ export function RecipeMatchCard({
         </button>
         <div className="match-card__summary">
           <div className="match-card__copy">
-            <div className="match-kicker">
-              <RecipeMatchIcon score={roundedScore} blocked={notFeasible}
-                size={14}
-                className={`match-kicker__icon ${tone.low || notFeasible ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
-                aria-hidden="true"
-              />
-              <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.match-0335207f")}</span>
-
-            </div>
-
             {/* Esito operativo accanto al punteggio. */}
             <div className="match-verdict">
               <span className="match-tone">

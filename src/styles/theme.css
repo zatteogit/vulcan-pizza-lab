@@ -9144,29 +9144,32 @@
 
   .match-card {
     position: relative;
+    container: recipe-match / inline-size;
     width: 100%;
-    max-width: var(--measure-md);
     min-width: 0;
     padding: var(--space-4);
     border: var(--border-width-thin) solid var(--container-border-subtle);
-    border-radius: var(--radius-2xl);
-    background: var(--container-card);
+    border-radius: var(--radius-xl);
+    background: var(--container-bg-low);
   }
 
   .match-card__main {
     display: grid;
-    grid-template-columns: var(--space-20) minmax(0, 1fr);
-    column-gap: var(--space-4);
-    row-gap: var(--space-1-5);
-    align-items: start;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: var(--space-3);
+    row-gap: var(--space-3);
+    align-items: center;
   }
 
   .match-card__summary {
     grid-column: 2;
+    grid-row: 2;
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-1-5);
     min-width: 0;
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--border-width-thin) solid var(--container-border);
   }
 
   .match-card__copy,
@@ -9178,6 +9181,7 @@
 
   /* The label and verdict form one reading block beside the score. */
   .match-kicker {
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     gap: var(--space-1-5);
@@ -9204,7 +9208,7 @@
 
   /* ── Verdetto: numero serifa + tono corsivo ── */
   .match-verdict {
-    margin-top: var(--space-1);
+    margin-top: 0;
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
@@ -9218,22 +9222,28 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--space-0-5);
+    gap: var(--space-1);
     flex-shrink: 0;
     grid-column: 1;
-    grid-row: 1 / span 2;
-    min-height: var(--space-24);
+    grid-row: 2;
+    min-height: var(--space-11);
     align-self: start;
-    padding-block: var(--space-2);
+    padding-block: 0;
     padding-inline: 0;
     cursor: pointer;
-    border-radius: var(--radius-xl);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-    background: var(--container-bg);
+    border-radius: var(--radius-sm);
+    border: none;
+    background: transparent;
     color: var(--text-default);
   }
 
-  .match-score-group:hover { border-color: var(--text-accent); }
+  .match-score-group:hover .match-score-details { text-decoration: underline; }
+
+  .match-score-number {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+  }
 
   .match-score-group:focus-visible {
     outline: var(--border-width-medium) solid var(--text-accent);
@@ -9246,7 +9256,7 @@
     justify-content: center;
     gap: var(--space-0-5);
     white-space: nowrap;
-    margin-top: var(--space-1);
+    margin-top: 0;
     font-family: var(--font-sans);
     font-size: var(--font-size-sm);
     font-weight: var(--weight-medium);
@@ -9259,7 +9269,6 @@
 
   .match-card--blocked .match-score-group {
     color: var(--text-warning);
-    border-color: var(--text-warning);
   }
 
   .match-score-value {
@@ -9267,7 +9276,7 @@
     font-feature-settings: "tnum";
     font-family: var(--font-serif);
     color: inherit;
-    font-size: var(--font-size-8xl);
+    font-size: var(--font-size-9xl);
     font-weight: var(--weight-bold);
     line-height: var(--leading-none);
   }
@@ -9688,11 +9697,13 @@
 
   /* ── Azioni ── */
   .match-actions {
-    grid-column: 2;
+    grid-column: 1 / -1;
+    grid-row: 3;
     min-width: 0;
-    margin-top: var(--space-1);
+    margin-top: 0;
     display: flex;
-    width: 100%;
+    padding-top: var(--space-3);
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-2);
@@ -9701,7 +9712,7 @@
   .match-action-cta,
   .match-action-text {
     box-sizing: border-box;
-    min-height: var(--space-10);
+    min-height: var(--space-11);
     padding-block: var(--space-2);
   }
 
@@ -9754,21 +9765,25 @@
     border-color: color-mix(in srgb, var(--primary) 30%, var(--container-border-subtle));
   }
 
-  @media (max-width: 480px) {
-    .match-card__main {
-      grid-template-columns: var(--space-20) minmax(0, 1fr);
-      column-gap: var(--space-3);
-      row-gap: var(--space-3);
+  .match-actions .match-action-cta { flex-basis: 100%; order: -1; }
+  .match-actions .match-action-text { flex: 1 1 var(--space-28); min-width: 0; }
+  .match-actions .match-action-text--save { flex-basis: calc(var(--space-28) + var(--space-8)); }
+  .match-actions .match-action-text--personalize { flex-basis: auto; flex-shrink: 0; white-space: nowrap; }
+
+  /* The recipe shoulder can be narrow on a large screen: use its actual
+     space, with the stacked layout as the fallback for older browsers. */
+  @container recipe-match (min-width: 640px) {
+    .match-card__main { grid-template-columns: max-content minmax(0, 1fr) auto; column-gap: var(--space-5); }
+    .match-card__summary { padding-inline-start: var(--space-5); }
+    .match-actions {
+      grid-column: 3;
+      grid-row: 2;
+      max-width: var(--space-64);
+      padding-top: 0;
+      border-top: 0;
     }
-    .match-score-group {
-      grid-row: 1;
-      min-height: var(--space-24);
-    }
-    .match-actions { grid-column: 1 / -1; margin-top: 0; }
-    .match-actions .match-action-cta { flex-basis: 100%; order: -1; }
-    .match-actions .match-action-text { flex: 1 1 var(--space-28); min-width: 0; }
-    .match-actions .match-action-text--save { flex-basis: calc(var(--space-28) + var(--space-8)); }
-    .match-actions .match-action-text--personalize { flex-basis: auto; flex-shrink: 0; white-space: nowrap; }
+    .match-actions .match-action-cta { flex-basis: auto; order: 0; }
+    .match-actions .match-action-text { flex: 0 1 auto; }
   }
 
   /* ═══ ONDATA 3 — COMPONENT: ingredients-section (PREFIX: ingredients) ═══ */
@@ -13814,10 +13829,7 @@
 
   /* --- ContextualWarnings (inline in recipe) --- */
   .troubleshooting-warnings {
-    background: var(--surface-container-low);
-    border: var(--border-width-thin) solid var(--outline-variant);
-    border-radius: var(--radius-lg);
-    padding: var(--space-4) var(--space-5);
+    padding-block: var(--space-3);
     display: flex;
     flex-direction: column;
     gap: var(--gap-sm);
@@ -13836,23 +13848,21 @@
   }
 
   .troubleshooting-warnings__label {
-    font-size: var(--font-size-base);
-    letter-spacing: var(--tracking-extreme);
-    text-transform: uppercase;
+    font-size: var(--font-size-sm);
     color: var(--tertiary);
     font-weight: var(--weight-semibold);
   }
 
   .troubleshooting-warnings__count {
     margin-left: auto;
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm);
     color: var(--muted-foreground);
   }
 
   .troubleshooting-warnings__item {
-    border: var(--border-width-thin) solid transparent;
-    border-radius: var(--radius-md);
-    padding: var(--space-1-5) var(--space-4);
+    border-inline-start: var(--border-width-medium) solid transparent;
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
     display: flex;
     flex-direction: column;
     gap: var(--space-1-5);

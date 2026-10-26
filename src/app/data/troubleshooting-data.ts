@@ -246,6 +246,8 @@ export function getContextualWarnings(params: {
   fermentHours: number;
   fermentTemp: number;
   ovenTemp: number;
+  /** La temperatura di frittura non è una temperatura del forno. */
+  usesOven?: boolean;
   skillLevel: number;
   usePreFerment: boolean;
   /** Grammi di farina della ricetta corrente: se presenti, i tip in % diventano
@@ -309,7 +311,7 @@ export function getContextualWarnings(params: {
   }
 
   /* Forno freddo per stili che richiedono alta temperatura */
-  if (params.ovenTemp < 250) {
+  if (params.usesOven !== false && params.ovenTemp < 250) {
     const loc = cmsCtx?.cold_oven;
     warnings.push({
       issueId: 'P09',
