@@ -5147,14 +5147,17 @@
 
   /* ── FtuOnboarding nav ── */
   .profile-ftu__nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    justify-content: space-between;
+    gap: var(--space-2) var(--space-3);
     margin-top: var(--space-10);
   }
 
   /* «Salta» (audit n. 33): azione secondaria, testo sottolineato. */
   .profile-ftu__nav-skip {
+    grid-column: 1 / -1;
+    justify-self: center;
     min-height: var(--space-11);
     padding-inline: var(--space-2);
     background: none;
@@ -5166,7 +5169,18 @@
     cursor: pointer;
   }
 
+  .profile-ftu__nav-skip:hover {
+    color: var(--primary);
+  }
+
+  .profile-ftu__nav-skip:focus-visible {
+    outline: var(--border-width-medium) solid var(--primary);
+    outline-offset: var(--space-1);
+    border-radius: var(--radius-sm);
+  }
+
   .profile-ftu__nav-back {
+    justify-self: start;
     padding-inline: var(--space-5);
     padding-block: var(--space-2-5);
     border-radius: var(--radius-full);

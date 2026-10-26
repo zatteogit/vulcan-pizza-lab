@@ -1056,10 +1056,6 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             >
               {p.ftuBack}
             </button>
-          ) : step < lastStep ? (
-            <button type="button" onClick={handleSkip} className="profile-ftu__nav-skip">
-              {uiMessage("pages.profile.ftu-skip")}
-            </button>
           ) : (
             <div />
           )}
@@ -1071,6 +1067,9 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step < lastStep ? p.ftuNext : p.ftuStart}
             {step < lastStep ? <ChevronRight size={16} /> : <Sparkles size={16} />}
           </CtaButton>
+          <button type="button" onClick={handleSkip} className="profile-ftu__nav-skip">
+            {uiMessage("pages.profile.ftu-skip")}
+          </button>
         </div>
       </motion.div>
     </main>
