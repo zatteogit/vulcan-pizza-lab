@@ -1381,7 +1381,7 @@ export const CMS_DEFAULTS: CmsContent = {
     recipeNameLabel: "Nome della ricetta",
     recipeNamePlaceholder: "Es. Come piace a Mario",
     recipeNameConfirm: "Conferma nome",
-    recipeResetPreset: "Ripristina",
+    recipeResetPreset: "Ripristina originale",
 
     recipeOpenCreate: "Personalizza in Crea",
     createSourceTitle: "Parti da {style}",
