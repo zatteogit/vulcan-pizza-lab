@@ -39,9 +39,10 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  10 → azione esplicita «Ripristina originale» nelle sette lingue.
  *  11 → diete su impasto e condimento, versioni alternative e range del metodo.
  *  12 → azione «Apri in Crea» distinta dalla personalizzazione rapida.
+ *  15 → troubleshooting contestuale, frittura e descrizioni senza conteggi fissi.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 14;
+export const LOCALE_BUNDLE_REV = 15;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

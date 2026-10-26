@@ -917,6 +917,7 @@
   --section-tabs-target-min: var(--dimension-fixed-046);
   --recipe-match-action-target-min: var(--dimension-fixed-046);
   --recipe-quantity-target-min: var(--dimension-fixed-046);
+  --troubleshooting-target-min: var(--dimension-fixed-046);
   --section-tabs-navbar-dock-max-width: var(--dimension-fixed-440);
   /* riga dock mobile variante navbar */
   --section-tabs-capsule-height-navbar-subtitles: var(--dimension-fixed-058);
@@ -12012,6 +12013,7 @@
   }
 
   .step-details__trouble-link {
+    cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: var(--space-1-5);
@@ -12025,6 +12027,8 @@
   .step-details__trouble-link--indented {
     margin-left: var(--space-4);
   }
+
+  .step-details > .step-details__trouble-link { margin-top: 0; }
 
   .step-details__trouble-link-icon {
     flex-shrink: 0;
@@ -14093,6 +14097,41 @@
     width: var(--font-size-xl);
     height: var(--font-size-xl);
   }
+
+  .troubleshooting-sheet {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .troubleshooting-sheet__header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border-bottom: var(--border-width-thin) solid var(--container-border);
+  }
+
+  .troubleshooting-sheet__intro { flex: 1; min-width: 0; }
+  .troubleshooting-sheet__eyebrow { color: var(--text-accent); font-size: var(--font-size-sm); }
+  .troubleshooting-sheet__title { margin-top: var(--space-1); font-family: var(--font-serif); font-size: var(--font-size-7xl); line-height: var(--leading-heading); }
+
+  .troubleshooting-sheet .troubleshooting-sheet__close {
+    flex-shrink: 0;
+    width: max(var(--space-12), var(--troubleshooting-target-min));
+    height: max(var(--space-12), var(--troubleshooting-target-min));
+  }
+
+  .troubleshooting-sheet__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-4);
+  }
+
+  .troubleshooting-sheet .troubleshooting-card__meta-row { display: none; }
 
   /* --- TroubleshootingGuide (full database) --- */
   .troubleshooting-guide {

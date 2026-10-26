@@ -1,6 +1,6 @@
 /* === TROUBLESHOOTING PANEL === */
 /* Pannello contestuale con avvisi basati sulla ricetta generata */
-/* + database completo 20 problemi espandibile */
+/* Catalogo completo e pannello contestuale per fase/metodo. */
 
 import {
 AlertTriangle,
@@ -12,15 +12,17 @@ Search,
 ShieldCheck,
 Wrench,
 XCircle,
+X,
 type LucideIcon,
 } from 'lucide-react';
 import { AnimatePresence,motion } from 'motion/react';
 import { motionDelay,motionSpring } from "../../components/ds/motion";
-import { createElement, useEffect, useState } from 'react';
+import { createElement, useEffect, useId, useState } from 'react';
 import { useCms } from "../cms/cms-context";
-import { FilterChip, Surface } from "../../components/ds/index";
+import { FilterChip, IconButton, ModalSheet, Surface } from "../../components/ds/index";
 import {
 type TroubleshootingIssue,
+type StepTroubleshooting,
 CATEGORY_LABELS,
 getContextualWarnings,
 getLocalizedCategoryLabel,
@@ -146,16 +148,18 @@ interface TroubleshootingGuideProps {
   /** Deep-link (audit lug 2026): issue da aprire e portare in vista all'arrivo,
    *  usato dai link "è andata lunga?" delle fasi della ricetta (?issue=Pxx). */
   initialIssueId?: string;
+  /** Elenco chiuso: nel pannello della fase non si può ricadere nel catalogo generico. */
+  contextIssueIds?: readonly string[];
 }
 
-export function TroubleshootingGuide({ filterCategory, initialIssueId }: TroubleshootingGuideProps) {
+export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIssueIds }: TroubleshootingGuideProps) {
   const { cms } = useCms();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(initialIssueId ?? null);
   const [activeCategory, setActiveCategory] = useState<string | null>(filterCategory || null);
 
   useEffect(() => {
-    if (!initialIssueId) return;
+    if (!initialIssueId || contextIssueIds) return;
     // Dopo lo stagger di entrata delle card, porta l'issue aperta in vista.
     const timer = window.setTimeout(() => {
       document
@@ -163,11 +167,14 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
         ?.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [initialIssueId]);
+  }, [initialIssueId, contextIssueIds]);
 
   const categories = Object.entries(CATEGORY_LABELS);
 
-  const filtered = ISSUES_DB.map(issue => getLocalizedIssue(issue, cms)).filter((issue) => {
+  const sourceIssues = contextIssueIds
+    ? contextIssueIds.flatMap(id => { const issue = ISSUES_DB.find(item => item.id === id); return issue ? [issue] : []; })
+    : ISSUES_DB;
+  const filtered = sourceIssues.map(issue => getLocalizedIssue(issue, cms)).filter((issue) => {
     if (activeCategory && issue.category !== activeCategory) return false;
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -182,65 +189,67 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
 
   return (
     <div data-region="section" className="troubleshooting-guide">
-      {/* Title */}
-      <div className="troubleshooting-guide__title-row">
-        <Wrench className="troubleshooting-guide__title-icon" />
-        <h1 className="troubleshooting-guide__title">
-          {uiMessage("features.recipe.troubleshooting-panel.guida-troubleshooting-ada8fe75")}</h1>
-      </div>
+      {!contextIssueIds && <>
+        {/* Title */}
+        <div className="troubleshooting-guide__title-row">
+          <Wrench className="troubleshooting-guide__title-icon" />
+          <h1 className="troubleshooting-guide__title">
+            {uiMessage("features.recipe.troubleshooting-panel.guida-troubleshooting-ada8fe75")}</h1>
+        </div>
 
-      {/* Search */}
-      <div className="troubleshooting-guide__search">
-        <Search className="troubleshooting-guide__search-icon" />
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={cms.pages.troubleshootSearchPlaceholder}
-          aria-label={cms.pages.troubleshootSearchPlaceholder}
-          className="troubleshooting-guide__search-input"
-        />
-      </div>
+        {/* Search */}
+        <div className="troubleshooting-guide__search">
+          <Search className="troubleshooting-guide__search-icon" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={cms.pages.troubleshootSearchPlaceholder}
+            aria-label={cms.pages.troubleshootSearchPlaceholder}
+            className="troubleshooting-guide__search-input"
+          />
+        </div>
 
-      {/* Category chips */}
-      <motion.div
-        className="troubleshooting-guide__chips"
-        initial="hidden"
-        animate="visible"
-        variants={{
-          hidden: {},
-          visible: { transition: { staggerChildren: 0.04 } },
-        }}
-      >
-        <FilterChip
-          active={!activeCategory}
-          onClick={() => setActiveCategory(null)}
-          radius="md"
+        {/* Category chips */}
+        <motion.div
+          className="troubleshooting-guide__chips"
+          initial="hidden"
+          animate="visible"
           variants={{
-            hidden: { opacity: 0, y: 8, scale: 0.95 },
-            visible: { opacity: 1, y: 0, scale: 1 },
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.04 } },
           }}
-          transition={motionSpring.crispDisclosure}
         >
-          {uiMessage("features.recipe.troubleshooting-panel.tutti-d4ef129b")}</FilterChip>
-        {categories.map(([key, { emoji }]) => (
           <FilterChip
-            key={key}
-            active={activeCategory === key}
-            onClick={() => setActiveCategory(activeCategory === key ? null : key)}
-            size="sm"
-            radius="lg"
+            active={!activeCategory}
+            onClick={() => setActiveCategory(null)}
+            radius="md"
             variants={{
               hidden: { opacity: 0, y: 8, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
             }}
             transition={motionSpring.crispDisclosure}
           >
-            {emoji} {getLocalizedCategoryLabel(key, cms)}
-          </FilterChip>
-        ))}
-      </motion.div>
+            {uiMessage("features.recipe.troubleshooting-panel.tutti-d4ef129b")}</FilterChip>
+          {categories.map(([key, { emoji }]) => (
+            <FilterChip
+              key={key}
+              active={activeCategory === key}
+              onClick={() => setActiveCategory(activeCategory === key ? null : key)}
+              size="sm"
+              radius="lg"
+              variants={{
+                hidden: { opacity: 0, y: 8, scale: 0.95 },
+                visible: { opacity: 1, y: 0, scale: 1 },
+              }}
+              transition={motionSpring.crispDisclosure}
+            >
+              {emoji} {getLocalizedCategoryLabel(key, cms)}
+            </FilterChip>
+          ))}
+        </motion.div>
 
+      </>}
       {/* Issues list */}
       <AnimatePresence mode="popLayout">
         <div className="troubleshooting-guide__list">
@@ -279,6 +288,33 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId }: Trouble
   );
 }
 
+/** Lo stesso catalogo, limitato alla fase effettiva, senza abbandonare la ricetta. */
+export function TroubleshootingSheet({ open, context, onClose }: {
+  open: boolean;
+  context: StepTroubleshooting & { title: string };
+  onClose: () => void;
+}) {
+  const { cms } = useCms();
+  const titleId = useId();
+  // Lo scrim reagisce a pointerdown: lascia terminare il focus nativo del clic
+  // prima di chiudere, così il focus ripristinato non viene perso sul body.
+  const dismiss = () => requestAnimationFrame(onClose);
+  return (
+    <ModalSheet open={open} onClose={dismiss} ariaLabelledby={titleId} size="md" surface="solid" scrim="soft" panelClassName="troubleshooting-sheet">
+      <header className="troubleshooting-sheet__header">
+        <div className="troubleshooting-sheet__intro">
+          <p className="troubleshooting-sheet__eyebrow">{uiMessage("features.recipe.troubleshooting-panel.guida-troubleshooting-ada8fe75")}</p>
+          <h2 id={titleId} className="troubleshooting-sheet__title">{context.title}</h2>
+        </div>
+        <IconButton size="lg" onClick={onClose} aria-label={cms.ui.close} className="troubleshooting-sheet__close"><X size={20} aria-hidden="true" /></IconButton>
+      </header>
+      <div className="troubleshooting-sheet__body">
+        <TroubleshootingGuide key={context.issueIds.join("|")} contextIssueIds={context.issueIds} initialIssueId={context.initialIssueId} />
+      </div>
+    </ModalSheet>
+  );
+}
+
 /* === ISSUE CARD === */
 function IssueCard({
   issue,
@@ -297,6 +333,7 @@ function IssueCard({
       {/* Header — always visible */}
       <motion.button
         className="troubleshooting-card__toggle"
+        aria-expanded={expanded}
         onClick={onToggle}
       >
         <SeverityIcon severity={issue.severity} />

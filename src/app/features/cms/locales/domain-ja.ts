@@ -150,6 +150,7 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
 export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
   {
     categories: {
+      frying: "揚げ調理",
       dough: "\u751F\u5730",
       fermentation: "\u767A\u9175",
       shaping: "\u6210\u5F62",
@@ -158,6 +159,28 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
       false_positive: "\u8AA4\u691C\u77E5",
     },
     issues: {
+      FR01: {
+        symptom: "外はきつね色でも中は生",
+        cause: "油温が高すぎるか、生地が厚すぎます。",
+        testRapido: "試しに揚げた一つを切り、中心を確認します。",
+        fixImmediate: "次の分は火力を下げ、色だけで火の通りを判断しないでください。",
+        prevention: "温度計を使い、レシピの油温を守ります。",
+      },
+      FR02: {
+        symptom: "油っぽく、カリッとしない",
+        cause: "油温が低いか、一度に入れすぎて温度が下がっています。",
+        testRapido: "揚げる合間に油温を確認します。",
+        fixImmediate: "油温がレシピの指定に戻るのを待ち、少量ずつ揚げて油をよく切ります。",
+        prevention: "鍋に入れすぎず、調理中も油温を確認します。",
+      },
+      FR03: {
+        symptom: "具が油の中に漏れる",
+        cause: "縁の閉じ方が弱い、穴がある、または縁に具が付いています。",
+        testRapido: "まだ揚げていない生地の閉じ目を確認します。",
+        fixImmediate: "次の分はしっかり閉じ、熱い油に水を加えないでください。",
+        prevention: "縁を清潔に保ち、具を入れすぎず、生地に穴を開けずに閉じます。",
+      },
+
       P01: {
         symptom:
           "\u6301\u7D9A\u7684\u306B\u3079\u305F\u3064\u304F\u751F\u5730",

@@ -1570,7 +1570,7 @@ export const FR_LOCALE: CmsContent = {
     learnGlossaryDesc: "30+ termes techniques de boulangerie",
     learnTroubleshooting: "Probl\u00E8mes et solutions",
     learnTroubleshootingDesc:
-      "20 probl\u00E8mes courants et comment les r\u00E9soudre",
+      "Problèmes courants et solutions à chaque étape",
     learnPreFerments: "Pr\u00E9-ferments",
     learnPreFermentsDesc: "Guide Biga, Poolish et Autolyse",
     recipeLabel: "Recette",
@@ -1616,7 +1616,7 @@ export const FR_LOCALE: CmsContent = {
     troubleshootingTitle:
       "Problèmes avec la recette\u00A0?",
     troubleshootingDesc:
-      "Consultez le guide de 20 problèmes courants et solutions",
+      "Trouve les causes et solutions pour la pâte, le four et la friture",
     exploreRecipe: "Explorer la recette",
     exploreHeroDesc: "Des grands classiques de la tradition aux créations de créateurs. Trouvez votre inspiration.",
     exploreFilterFeatured: "À la une",

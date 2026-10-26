@@ -140,6 +140,7 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
 export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
   {
     categories: {
+      frying: "Frittieren",
       dough: "Teig",
       fermentation: "G\u00E4rung",
       shaping: "Formen",
@@ -148,6 +149,28 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
       false_positive: "Fehlalarme",
     },
     issues: {
+      FR01: {
+        symptom: "Außen goldbraun, innen roh",
+        cause: "Öl zu heiß oder Teig zu dick.",
+        testRapido: "Ein Probestück aufschneiden und die Mitte prüfen.",
+        fixImmediate: "Für die nächsten Stücke die Hitze reduzieren; die Farbe allein zeigt den Garzustand nicht.",
+        prevention: "Ein Thermometer verwenden und die Öltemperatur des Rezepts beachten.",
+      },
+      FR02: {
+        symptom: "Fettig und nicht knusprig",
+        cause: "Öl zu kühl oder durch zu viele Stücke abgekühlt.",
+        testRapido: "Die Öltemperatur zwischen den Durchgängen prüfen.",
+        fixImmediate: "Das Öl wieder auf Rezepttemperatur bringen; kleine Mengen frittieren und gut abtropfen lassen.",
+        prevention: "Den Topf nicht überfüllen und die Temperatur überwachen.",
+      },
+      FR03: {
+        symptom: "Füllung läuft ins Öl",
+        cause: "Schlecht verschlossene Ränder, Löcher oder Füllung auf den Rändern.",
+        testRapido: "Den Verschluss der noch rohen Stücke prüfen.",
+        fixImmediate: "Die nächsten Stücke sorgfältiger verschließen; niemals Wasser ins heiße Öl geben.",
+        prevention: "Ränder sauber halten, Füllung dosieren und den Teig ohne Löcher verschließen.",
+      },
+
       P01: {
         symptom: "Anhaltend klebriger Teig",
         cause:

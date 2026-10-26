@@ -140,6 +140,7 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
 export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
   {
     categories: {
+      frying: "Friture",
       dough: "P\u00E2te",
       fermentation: "Fermentation",
       shaping: "\u00C9talage",
@@ -148,6 +149,28 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
       false_positive: "Fausses alertes",
     },
     issues: {
+      FR01: {
+        symptom: "Dorée dehors, crue dedans",
+        cause: "Huile trop chaude ou pâte trop épaisse.",
+        testRapido: "Ouvre une pièce test et vérifie le centre.",
+        fixImmediate: "Baisse le feu pour les pièces suivantes ; la couleur seule ne suffit pas.",
+        prevention: "Utilise un thermomètre et respecte la température d’huile de la recette.",
+      },
+      FR02: {
+        symptom: "Trop grasse et peu croustillante",
+        cause: "Huile trop froide ou refroidie par trop de pièces à la fois.",
+        testRapido: "Vérifie la température entre les fournées.",
+        fixImmediate: "Laisse l’huile revenir à la température prévue ; cuis de petites quantités et égoutte bien.",
+        prevention: "Ne surcharge pas le récipient et surveille la température pendant la friture.",
+      },
+      FR03: {
+        symptom: "La farce fuit dans l’huile",
+        cause: "Bords mal scellés, trous ou farce sur les bords.",
+        testRapido: "Vérifie la fermeture des pièces encore crues.",
+        fixImmediate: "Scelle mieux les pièces suivantes ; ne verse jamais d’eau dans l’huile chaude.",
+        prevention: "Garde les bords propres, dose la farce et ferme sans percer la pâte.",
+      },
+
       P01: {
         symptom: "P\u00E2te collante persistante",
         cause:

@@ -136,6 +136,7 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
 export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
   {
     categories: {
+      frying: "Frying",
       dough: "Dough",
       fermentation: "Fermentation",
       shaping: "Shaping",
@@ -144,6 +145,28 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       false_positive: "False Alarms",
     },
     issues: {
+      FR01: {
+        symptom: "Golden outside, raw inside",
+        cause: "Oil too hot or dough too thick.",
+        testRapido: "Cut open a test piece and check the centre.",
+        fixImmediate: "Lower the heat for the next pieces; do not judge doneness by colour alone.",
+        prevention: "Use a thermometer and follow the recipe’s oil temperature.",
+      },
+      FR02: {
+        symptom: "Greasy and not crisp",
+        cause: "Oil too cool or cooled by too many pieces at once.",
+        testRapido: "Check the oil temperature between batches.",
+        fixImmediate: "Let the oil return to the recipe temperature; fry small batches and drain well.",
+        prevention: "Avoid overcrowding and monitor the oil during frying.",
+      },
+      FR03: {
+        symptom: "Filling leaks into the oil",
+        cause: "Poorly sealed edges, holes or filling on the edges.",
+        testRapido: "Check the seals of the uncooked pieces.",
+        fixImmediate: "Seal the next pieces more carefully; never add water to hot oil.",
+        prevention: "Keep edges clean, measure the filling and seal without puncturing the dough.",
+      },
+
       P01: {
         symptom: "Persistently sticky dough",
         cause: "Hydration exceeds flour absorption capacity",
