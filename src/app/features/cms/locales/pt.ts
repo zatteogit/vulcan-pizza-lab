@@ -704,7 +704,7 @@ export const PT_LOCALE: CmsContent = {
     "feas.ovenTooCold":
       "Forno muito frio: {temp} < mínimo {min}",
     "feas.wTooLow": "W muito baixo: {w} < {wMin}",
-    "feas.wTooHigh": "W muito alto ({w}). Massa tenaz.",
+    "feas.wTooHigh": "W acima do intervalo do estilo ({w}): verifica também P/L",
     "feas.hydrationBeginnerHigh":
       "Hidratação >75% não recomendada para iniciantes",
     "feas.hydrationNeedsPractice":
@@ -715,18 +715,6 @@ export const PT_LOCALE: CmsContent = {
       "Farinha muito fraca para esta hidratação",
     "feas.prefermentNeedsExperience":
       "Pré-fermento requer experiência",
-    "dig.fermentTooShort":
-      "Fermentação muito curta: amidos não degradados",
-    "dig.fermentShort":
-      "Fermentação curta: digestibilidade limitada",
-    "dig.fodmapReduced": "FODMAPs reduzidos ~{pct}%",
-    "dig.fodmapHighReduction": "FODMAPs reduzidos >80%",
-    "dig.extremeMaturation":
-      "Maturação extrema: máxima complexidade aromática",
-    "dig.highYeastDosage":
-      "Dosagem alta de fermento ({pct}%): -{penalty}% digestibilidade",
-    "dig.coldFermentation":
-      "Fermentação fria: atividade enzimática ótima",
     "sust.quickCook":
       "Cozimento rápido: baixo consumo energético",
     "sust.longCook": "Cozimento longo: alto consumo energético",
@@ -857,7 +845,7 @@ export const PT_LOCALE: CmsContent = {
     "feas.thermalUnviable": "A {oven}, o método disponível não reproduz a cozedura de {style}. O método atual exige pelo menos {min}; é necessária uma adaptação verificada.",
     "gen.timeBelowStyleWindow": "Com {available} você fica abaixo da janela deste estilo (mínimo {fMin}): fermentação encurtada. Para a autenticidade plena são necessárias pelo menos {fMin}.",
     "gen.timeBelowStyleWindowMeal": "Com {available} até a refeição, tirando sova, modelagem e forno ({work}), restam {ferment} de fermentação: menos que o mínimo do estilo ({fMin}). Para o estilo completo são necessárias cerca de {needed} no total.",
-    "opt.coldLongFerment": "Maturação de {hours} na geladeira ({temp}): máxima digestibilidade dentro das suas {available}.",
+    "opt.coldLongFerment": "Maturação prevista: {hours} no frigorífico ({temp}), dentro da janela de {available}.",
     "opt.roomFerment": "Fermentação de {hours} em temperatura ambiente ({temp}): fiel ao estilo e sem geladeira.",
     "opt.hydrationLowered": "Hidratação reduzida para {h}% (canônica {canonical}%) para continuar fácil de trabalhar no seu nível.",
     "opt.hydrationForStyle": "Hidratação {h}%, no coração do estilo.",
@@ -1003,6 +991,15 @@ export const PT_LOCALE: CmsContent = {
     "version.label.Disciplinare AVPN": "Regulamento AVPN",
     "rec.fried": "Frita na panela: n\u00E3o precisa de forno",
     "rec.flourMix": "Misturando suas farinhas: {weakPct}% {weak} e {strongPct}% {strong}, cerca de W {w}",
+    "dig.fermentTooShort": "Repouso muito curto: índice de maturação baixo",
+    "dig.fermentShort": "Fermentação curta: índice de maturação limitado",
+    "dig.extremeMaturation": "Fermentação prolongada: verifica a resistência da massa",
+    "dig.highYeastDosage": "Dose de fermento {pct}%: ajuste heurístico da pontuação (-{penalty})",
+    "dig.coldFermentation": "Maturação no frigorífico: tempo e desenvolvimento dependem da temperatura",
+    "dig.fodmapReduced": "A redução de FODMAP não pode ser determinada apenas pelas horas",
+    "dig.fodmapHighReduction": "A redução de FODMAP não pode ser determinada apenas pelas horas",
+    "hint.yeastPrecisionScale": "Usa uma balança de 0,01 g",
+    "timeline.batchModel": "Tempos estimados para uma pessoa: abrir e cobrir todas as unidades e depois cozer uma de cada vez. Serviço faseado; sem tarefas sobrepostas.",
   },
   scienceLabels: {
     yeastBaker: "Fermento de padeiro",
@@ -1061,7 +1058,7 @@ export const PT_LOCALE: CmsContent = {
       tipBeginner:
         "A massa deve duplicar de volume. Se estiver quente, verifique mais vezes!",
       tipNerd:
-        "A {temp} a velocidade de fermenta\u00E7\u00E3o \u00E9 {factor}\u00D7 em rela\u00E7\u00E3o \u00E0 refer\u00EAncia de 18\u00B0C.",
+        "A {temp}, o modelo estima uma velocidade de fermentação de {factor}× em relação a {refTemp}. Não mede a redução de FODMAP nem a digestibilidade.",
       longDesc: "A massa descansa em um \u00FAnico bloco, dentro de um recipiente untado com azeite e coberto com filme pl\u00E1stico em contato. \u00C9 nesta fase que o fermento trabalha e desenvolve aroma, estrutura e digestibilidade. Se a hidrata\u00E7\u00E3o for alta, fa\u00E7a 2-3 \"dobras de refor\u00E7o\" (stretch & fold) nas primeiras 2 horas: levante uma ponta da massa, puxe para cima e dobre em dire\u00E7\u00E3o ao centro, gire e repita nos 4 lados. A fermenta\u00E7\u00E3o est\u00E1 completa quando o volume dobrou e a superf\u00EDcie est\u00E1 abaulada e lisa.",
     },
     bulk_cold: {
@@ -1070,7 +1067,7 @@ export const PT_LOCALE: CmsContent = {
       tipBeginner:
         "Na geladeira a massa cresce devagar mas ganha sabor. Cubra bem com filme em contato.",
       tipNerd:
-        "A {temp} a fermentação desacelera para {factor}× em relação à referência de {refTemp}. A atividade proteolítica domina, degradando os FODMAP.",
+        "A {temp}, o modelo estima uma velocidade de fermentação de {factor}× em relação a {refTemp}. Não mede a redução de FODMAP nem a digestibilidade.",
       longDesc: "Leve o recipiente com a massa \u00E0 geladeira ({fridgeTemp}). Na geladeira o fermento trabalha bem mais devagar: leva muito mais tempo, mas em troca voc\u00EA ganha complexidade de aroma, digestibilidade e uma rede de gl\u00FAten mais desenvolvida. Cubra sempre com filme pl\u00E1stico em contato para a superf\u00EDcie n\u00E3o ressecar. Ao tirar da geladeira, deixe a massa aclimatar 1-2 horas em temperatura ambiente antes da divis\u00E3o.",
     },
     rest: {

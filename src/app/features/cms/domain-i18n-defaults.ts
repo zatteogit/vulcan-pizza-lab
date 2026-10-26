@@ -99,13 +99,13 @@ export const DIETARY_I18N_DEFAULTS: DietaryMessages = {
   info: {
     low_fodmap: {
       name: "Low FODMAP",
-      description: "Riduce fruttani e oligosaccaridi fermentabili",
-      scienceNote: "Fermentazione ≥24h riduce FODMAP 70% (Costabile 2014)",
+      description: "Valuta ingredienti, processo e porzione",
+      scienceNote: "La fermentazione può modificare i FODMAP, ma il risultato dipende da farine, microrganismi, processo e porzione. Le sole ore non permettono di calcolare una riduzione o attestare una ricetta low FODMAP.",
     },
     histamine: {
       name: "Bassa istamina",
-      description: "Limita accumulo istamina da fermentazione lunga",
-      scienceNote: "Istamina si accumula linearmente. Lievito fresco <6h: safe (<5 mg/kg)",
+      description: "Valuta ingredienti, processo e porzione",
+      scienceNote: "Il contenuto dipende da microrganismi, ingredienti, processo e conservazione. Non è calcolabile con un tasso fisso per ora; una fermentazione breve non ne garantisce l'assenza.",
     },
     gluten_free: {
       name: "Senza glutine",
@@ -115,12 +115,12 @@ export const DIETARY_I18N_DEFAULTS: DietaryMessages = {
     lactose_free: {
       name: "Senza lattosio",
       description: "Per intolleranza al lattosio",
-      scienceNote: "Cottura >200°C degrada 90%+ lattosio. Solo SEVERE richiede sostituzione",
+      scienceNote: "La cottura non garantisce l'eliminazione del lattosio: verifica gli ingredienti e le indicazioni del produttore.",
     },
     nickel: {
       name: "Basso nichel",
       description: "Per allergia sistemica al nichel (SNAS)",
-      scienceNote: "Farina 00 (~50 µg/100g) vs integrale (~200 µg/100g). Soglia <200 µg/die",
+      scienceNote: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità.",
     },
     vegan: {
       name: "Vegano",
@@ -130,40 +130,40 @@ export const DIETARY_I18N_DEFAULTS: DietaryMessages = {
   },
   conflicts: {
     fodmap_histamine: {
-      message: "FODMAP richiede fermentazione lunga (≥24h), istamina richiede fermentazione breve (≤12h)",
-      compromiseTip: "Compromesso: 8-12h con lievito fresco a 18°C. FODMAP ridotti ~40% (sub-ottimale), istamina ~8 mg/kg (accettabile)",
+      message: "Ore di fermentazione e tipo di lievito non certificano l'idoneità per FODMAP o istamina.",
+      compromiseTip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità.",
     },
     gf_fodmap: {
-      message: "Compatibili! Il mix GF elimina la fonte principale di FODMAP (fruttani del grano)",
+      message: "Senza glutine non significa automaticamente low FODMAP: contano ingredienti e porzione.",
     },
     nickel_general: {
-      message: "Per basso nichel preferisci farina 00 (50 µg/100g) rispetto a integrale (200 µg/100g)",
+      message: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità.",
     },
   },
   warnings: {
     fodmap_low: {
-      message: "FODMAP ridotti solo {pct}% — fermentazione troppo breve",
-      tip: "Aumenta a ≥24h per raggiungere 70%+ di riduzione",
+      message: "Riduzione FODMAP non determinabile dalle sole ore",
+      tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità.",
     },
     fodmap_good: {
-      message: "FODMAP ridotti {pct}% — buon livello per IBS",
-      tip: "La fermentazione è sufficientemente lunga per degradare i fruttani",
+      message: "Riduzione FODMAP non determinabile dalle sole ore",
+      tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità.",
     },
     histamine_high: {
-      message: "Istamina stimata ~{val} mg/kg — livello alto",
-      tip: "Riduci fermentazione a ≤12h o usa lievito fresco a ≤20°C",
+      message: "Contenuto di istamina non determinabile da tempo e temperatura",
+      tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro.",
     },
     histamine_moderate: {
-      message: "Istamina stimata ~{val} mg/kg — livello moderato",
-      tip: "Monitora i sintomi. Per sicurezza, riduci tempo o temperatura",
+      message: "Contenuto di istamina non determinabile da tempo e temperatura",
+      tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro.",
     },
     gluten_free: {
       message: "Ricetta usa farina di grano — incompatibile con celiachia",
       tip: "Sostituisci con mix GF (riso 40% + mais 30% + quinoa 10% + sorgo 10% + amido 10%) + xantana 1.5%",
     },
     nickel_highW: {
-      message: "Farine forti (W alto) tendono ad essere meno raffinate, con più nichel",
-      tip: "Preferisci farina 00 raffinata (W 200-260) per minimizzare nichel",
+      message: "Il valore W non misura il contenuto di nichel",
+      tip: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità.",
     },
   },
 };
@@ -346,7 +346,7 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     w_alveograph: {
       name: "W (Alveografo di Chopin)",
       definition: "Energia totale necessaria per espandere un alveolo di impasto fino a rottura. Misura la forza complessiva della farina.",
-      whyImportant: "W basso (<180): impasto estensibile, fermentazione breve. W medio (220-280): ideale napoletana, tollera 18-30h. W alto (>300): impasto tenace, serve per impasti ricchi.",
+      whyImportant: "W descrive la forza complessiva della farina. Tenacità ed estensibilità si valutano con P, L e P/L: una W alta non implica da sola un impasto più tenace.",
       ranges: [
         { label: "Debole", value: "90–160", note: "Biscotti, cialde" },
         { label: "Media", value: "160–200", note: "Pan carrè, focaccia" },
@@ -525,12 +525,12 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     fodmap: {
       name: "FODMAP",
       definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. Carboidrati a catena corta fermentabili (fruttani 1-3% nel grano).",
-      whyImportant: "Intestino non digerisce fruttani → batteri fermentano → gas/gonfiore. Fermentazione lunga riduce: 24h→60-70%, 48h→80-85%.",
+      whyImportant: "La fermentazione può modificare i FODMAP, ma il risultato dipende da farine, microrganismi, processo e porzione. Le sole ore non permettono di calcolare una riduzione o attestare una ricetta low FODMAP.",
     },
     histamine: {
       name: "Istamina",
       definition: "Ammina biogena da decarbossilazione dell'istidina. Prodotta da LAB durante fermentazione, presente in formaggi stagionati e salumi.",
-      whyImportant: "Accumulo lineare con tempo. Madre 24h/28°C → 30-50 mg/kg. Soggetti con deficit DAO: reazione pseudo-allergica. Soluzione: fermentazione breve (<12h) + lievito commerciale.",
+      whyImportant: "Il contenuto dipende da microrganismi, ingredienti, processo e conservazione. Non è calcolabile con un tasso fisso per ora; una fermentazione breve non ne garantisce l'assenza.",
     },
     gluten: {
       name: "Glutine",
@@ -592,13 +592,8 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     },
     d_score: {
       name: "D-Score (Digeribilità)",
-      definition: "Punteggio 0-100 che stima digeribilità basato su ore fermentazione normalizzate e riduzione FODMAP.",
-      ranges: [
-        { label: "85-100", value: "Alta (>48h equivalenti)" },
-        { label: "70-84", value: "Media-alta (24-48h)" },
-        { label: "50-69", value: "Media (12-24h)" },
-        { label: "<50", value: "Bassa (<12h)" },
-      ],
+      definition: "Indice euristico di maturazione, non una misura della digeribilità individuale o dei FODMAP. Usa ore equivalenti a 18°C, un correttivo per pre-fermento, dose di lievito e freddo.",
+      ranges: [{"label":"85-100","value":"Indice alto"},{"label":"70-84","value":"Indice medio-alto"},{"label":"50-69","value":"Indice medio"},{"label":"<50","value":"Indice basso"}],
     },
   },
 };

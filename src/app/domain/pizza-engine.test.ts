@@ -193,6 +193,7 @@ describe("generateTimeSlots", () => {
     expect(tonight?.hours).toBe(3.5);
     expect(tonight?.meal).toBe("dinner");
     expect(tonight?.dayOffset).toBe(0);
+    expect(tonight?.targetAt).toBe(new Date(2026, 9, 23, 20, 0).getTime());
   });
 
   it("a tarda sera i pasti di oggi sono già esclusi", () => {

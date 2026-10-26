@@ -707,7 +707,7 @@ export const ES_LOCALE: CmsContent = {
     "feas.ovenTooCold":
       "Horno demasiado frío: {temp} < mínimo {min}",
     "feas.wTooLow": "W demasiado bajo: {w} < {wMin}",
-    "feas.wTooHigh": "W muy alto ({w}). Masa tenaz.",
+    "feas.wTooHigh": "W por encima del intervalo del estilo ({w}): comprueba también P/L",
     "feas.hydrationBeginnerHigh":
       "Hidratación >75% no recomendada para principiantes",
     "feas.hydrationNeedsPractice":
@@ -718,18 +718,6 @@ export const ES_LOCALE: CmsContent = {
       "Harina demasiado débil para esta hidratación",
     "feas.prefermentNeedsExperience":
       "Pre-fermento requiere experiencia",
-    "dig.fermentTooShort":
-      "Fermentación demasiado corta: almidones no degradados",
-    "dig.fermentShort":
-      "Fermentación corta: digestibilidad limitada",
-    "dig.fodmapReduced": "FODMAPs reducidos ~{pct}%",
-    "dig.fodmapHighReduction": "FODMAPs reducidos >80%",
-    "dig.extremeMaturation":
-      "Maduración extrema: máxima complejidad aromática",
-    "dig.highYeastDosage":
-      "Dosificación alta de levadura ({pct}%): -{penalty}% digestibilidad",
-    "dig.coldFermentation":
-      "Fermentación fría: actividad enzimática óptima",
     "sust.quickCook": "Cocción rápida: bajo consumo energético",
     "sust.longCook": "Cocción larga: alto consumo energético",
     "sust.ambientFerment":
@@ -857,7 +845,7 @@ export const ES_LOCALE: CmsContent = {
     "feas.thermalUnviable": "A {oven}, el método disponible no reproduce la cocción de {style}. El método actual requiere al menos {min}; hace falta una adaptación verificada.",
     "gen.timeBelowStyleWindow": "Con {available} quedas por debajo de la ventana de este estilo (mínimo {fMin}): fermentación acortada. Para la autenticidad plena hacen falta al menos {fMin}.",
     "gen.timeBelowStyleWindowMeal": "Con {available} hasta la comida, quitando el amasado, el formado y el horneado ({work}), quedan {ferment} de levado: menos que el mínimo del estilo ({fMin}). Para el estilo completo hacen falta unas {needed} en total.",
-    "opt.coldLongFerment": "Maduración de {hours} en nevera ({temp}): máxima digestibilidad dentro de tus {available}.",
+    "opt.coldLongFerment": "Maduración prevista: {hours} en frigorífico ({temp}), dentro de la ventana de {available}.",
     "opt.roomFerment": "Fermentación de {hours} a temperatura ambiente ({temp}): fiel al estilo y sin nevera.",
     "opt.hydrationLowered": "Hidratación bajada al {h}% (canónica {canonical}%) para que sea manejable a tu nivel.",
     "opt.hydrationForStyle": "Hidratación {h}%, en el corazón del estilo.",
@@ -1003,6 +991,15 @@ export const ES_LOCALE: CmsContent = {
     "version.label.Disciplinare AVPN": "Reglamento AVPN",
     "rec.fried": "Se fr\u00EDe en una olla: no hace falta el horno",
     "rec.flourMix": "Mezclando tus harinas: {weakPct}% {weak} y {strongPct}% {strong}, W {w} aprox.",
+    "dig.fermentTooShort": "Reposo muy breve: índice de maduración bajo",
+    "dig.fermentShort": "Fermentación breve: índice de maduración limitado",
+    "dig.extremeMaturation": "Fermentación prolongada: comprueba la resistencia de la masa",
+    "dig.highYeastDosage": "Dosis de levadura {pct}%: ajuste heurístico de puntuación (-{penalty})",
+    "dig.coldFermentation": "Maduración en frigorífico: tiempo y desarrollo dependen de la temperatura",
+    "dig.fodmapReduced": "La reducción de FODMAP no puede determinarse solo por las horas",
+    "dig.fodmapHighReduction": "La reducción de FODMAP no puede determinarse solo por las horas",
+    "hint.yeastPrecisionScale": "Usa una báscula de 0,01 g",
+    "timeline.batchModel": "Tiempos estimados para una persona: estirar y cubrir todas las unidades y después hornear de una en una. Servicio escalonado; sin tareas solapadas.",
   },
   scienceLabels: {
     yeastBaker: "Levadura de panadero",
@@ -1061,7 +1058,7 @@ export const ES_LOCALE: CmsContent = {
       tipBeginner:
         "La masa debe duplicar su volumen. \u00A1Si hace calor, revisa m\u00E1s seguido!",
       tipNerd:
-        "A {temp} la velocidad de fermentaci\u00F3n es {factor}\u00D7 respecto a la referencia de 18\u00B0C.",
+        "A {temp}, el modelo estima una velocidad de fermentación de {factor}× respecto a {refTemp}. No mide la reducción de FODMAP ni la digestibilidad.",
       longDesc: "La masa reposa en una sola pieza, dentro de un recipiente untado con aceite y cubierta con film en contacto. Es en esta fase cuando la levadura trabaja y desarrolla aroma, estructura y digestibilidad. Si la hidrataci\u00F3n es alta, haz 2-3 \u00ABpliegues de refuerzo\u00BB (stretch & fold) en las primeras 2 horas: levanta un extremo, est\u00EDralo hacia arriba y d\u00F3blalo hacia el centro; gira el recipiente y repite en los 4 lados. La fermentaci\u00F3n est\u00E1 completa cuando el volumen se ha duplicado y la superficie est\u00E1 abombada y lisa.",
     },
     bulk_cold: {
@@ -1070,7 +1067,7 @@ export const ES_LOCALE: CmsContent = {
       tipBeginner:
         "En la nevera la masa crece lento pero gana sabor. Cubre bien con film en contacto.",
       tipNerd:
-        "A {temp} la fermentación se ralentiza a {factor}× respecto a la referencia de {refTemp}. La actividad proteolítica domina, degradando los FODMAP.",
+        "A {temp}, el modelo estima una velocidad de fermentación de {factor}× respecto a {refTemp}. No mide la reducción de FODMAP ni la digestibilidad.",
       longDesc: "Pasa el recipiente con la masa a la nevera ({fridgeTemp}). En fr\u00EDo la levadura trabaja mucho m\u00E1s despacio: hace falta bastante m\u00E1s tiempo, pero a cambio ganas complejidad arom\u00E1tica, digestibilidad y una malla glut\u00EDnica m\u00E1s desarrollada. Cubre siempre con film en contacto para que no se forme costra. Cuando la saques, d\u00E9jala aclimatarse 1-2 horas a temperatura ambiente antes del boleado.",
     },
     rest: {

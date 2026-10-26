@@ -49,7 +49,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.1.0" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.1.1" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -298,6 +298,8 @@ function recipeData(recipe: GeneratedRecipe, constraints?: UserConstraints) {
     cook_time_sec: recipe.cook_time_sec,
     water_temp_c: recipe.water_temp_c,
     ingredients,
+    fat_type: recipe.style.dough.fat_type ?? null,
+    schedule: { model: "sequential_single_operator", bake_capacity: 1, total_minutes: recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0), digestibility_is_heuristic: true },
     steps: recipe.timeline.map((step) => ({
       id: step.id,
       title: step.title,
@@ -305,6 +307,7 @@ function recipeData(recipe: GeneratedRecipe, constraints?: UserConstraints) {
       duration_minutes: step.duration_minutes,
       // D-050: cotture ripetute una alla volta; la durata è già il totale.
       ...(step.rounds ? { rounds: step.rounds } : {}),
+      ...(step.work_units ? { work_units: step.work_units, minutes_per_unit: step.minutes_per_unit } : {}),
     })),
     scores: recipe.scores,
   };

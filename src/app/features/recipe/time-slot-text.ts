@@ -28,7 +28,7 @@ export function timeSlotText(
     return { label: cms.ui.slotNoPreference, sublabel: cms.ui.slotNoPreferenceSub };
   }
   const sublabel = fmt.durationShort(slot.hours);
-  if (slot.targetAt !== undefined) {
+  if (slot.targetAt !== undefined && slot.meal === undefined) {
     const when = new Date(slot.targetAt).toLocaleString(bcp47, {
       weekday: "short",
       day: "numeric",

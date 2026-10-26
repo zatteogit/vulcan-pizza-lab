@@ -151,16 +151,16 @@ export const DIETARY_JA: Partial<CmsDietaryI18n> = {
     low_fodmap: {
       name: "Low FODMAP",
       description:
-        "\u767A\u9175\u6027\u30D5\u30EB\u30AF\u30BF\u30F3\u3068\u30AA\u30EA\u30B4\u7CD6\u3092\u524A\u6E1B",
+        "材料・製法・一食分の量を確認",
       scienceNote:
-        "24\u6642\u9593\u4EE5\u4E0A\u306E\u767A\u9175\u3067FODMAP\u304670%\u524A\u6E1B\uFF08Costabile 2014\uFF09",
+        "発酵でFODMAP量が変わることはありますが、粉、微生物、製法、一食分の量によって異なります。時間だけで削減率や低FODMAPへの適合を判定することはできません。",
     },
     histamine: {
       name: "\u4F4E\u30D2\u30B9\u30BF\u30DF\u30F3",
       description:
-        "\u9577\u6642\u9593\u767A\u9175\u306B\u3088\u308B\u30D2\u30B9\u30BF\u30DF\u30F3\u84C4\u7A4D\u3092\u5236\u9650",
+        "材料・製法・一食分の量を確認",
       scienceNote:
-        "\u30D2\u30B9\u30BF\u30DF\u30F3\u306F\u7DDA\u5F62\u306B\u84C4\u7A4D\u3002\u751F\u30A4\u30FC\u30B9\u30C8<6h\uFF1A\u5B89\u5168\uFF08<5 mg/kg\uFF09",
+        "含有量は微生物、材料、製法、保存方法に左右されます。一定の時間当たり増加率では計算できず、短時間発酵でも不含有は保証されません。",
     },
     gluten_free: {
       name: "\u30B0\u30EB\u30C6\u30F3\u30D5\u30EA\u30FC",
@@ -173,14 +173,14 @@ export const DIETARY_JA: Partial<CmsDietaryI18n> = {
       name: "\u30E9\u30AF\u30C8\u30FC\u30B9\u30D5\u30EA\u30FC",
       description: "\u4E73\u7CD6\u4E0D\u8010\u75C7\u5411\u3051",
       scienceNote:
-        "200\u00B0C\u4EE5\u4E0A\u306E\u8ABF\u7406\u3067\u4E73\u7CD6\u306E90%\u4EE5\u4E0A\u304C\u5206\u89E3\u3002\u91CD\u5EA6\u306E\u307F\u4EE3\u66FF\u304C\u5FC5\u8981",
+        "加熱で乳糖が除去される保証はありません。材料とメーカー表示を確認してください。",
     },
     nickel: {
       name: "\u4F4E\u30CB\u30C3\u30B1\u30EB",
       description:
         "\u5168\u8EAB\u6027\u30CB\u30C3\u30B1\u30EB\u30A2\u30EC\u30EB\u30AE\u30FC\uFF08SNAS\uFF09\u5411\u3051",
       scienceNote:
-        "00\u7C89\uFF08~50 \u00B5g/100g\uFF09vs \u5168\u7C92\u7C89\uFF08~200 \u00B5g/100g\uFF09\u3002\u95BE\u5024 <200 \u00B5g/\u65E5",
+        "製品データが必要です。小麦粉の強さだけでは適合を判断できません。",
     },
     vegan: {
       name: "\u30F4\u30A3\u30FC\u30AC\u30F3",
@@ -193,39 +193,39 @@ export const DIETARY_JA: Partial<CmsDietaryI18n> = {
   conflicts: {
     fodmap_histamine: {
       message:
-        "FODMAP\u306F\u9577\u6642\u9593\u767A\u9175\uFF08\u226524h\uFF09\u3001\u30D2\u30B9\u30BF\u30DF\u30F3\u306F\u77ED\u6642\u9593\u767A\u9175\uFF08\u226412h\uFF09\u304C\u5FC5\u8981",
+        "発酵時間と酵母の種類だけでは、FODMAPやヒスタミン制限への適合を保証できません。",
       compromiseTip:
-        "\u59A5\u5354\uFF1A18\u00B0C\u3067\u751F\u30A4\u30FC\u30B9\u30C8\u30928-12h\u3002FODMAP~40%\u524A\u6E1B\uFF08\u6B21\u5584\uFF09\u3001\u30D2\u30B9\u30BF\u30DF\u30F3~8 mg/kg\uFF08\u8A31\u5BB9\u7BC4\u56F2\uFF09",
+        "検証済みのデータで材料と一食分の量を確認してください。長時間発酵でも適合は保証されません。",
     },
     gf_fodmap: {
       message:
-        "\u4E92\u63DB\u6027\u3042\u308A\uFF01GF\u30DF\u30C3\u30AF\u30B9\u306FFODMAP\u306E\u4E3B\u8981\u6E90\uFF08\u5C0F\u9EA6\u30D5\u30EB\u30AF\u30BF\u30F3\uFF09\u3092\u9664\u53BB",
+        "グルテンフリーでも低FODMAPとは限りません。材料と一食分の量が重要です。",
     },
     nickel_general: {
       message:
-        "\u4F4E\u30CB\u30C3\u30B1\u30EB\u306B\u306F00\u7C89\uFF0850 \u00B5g/100g\uFF09\u3092\u5168\u7C92\u7C89\uFF08200 \u00B5g/100g\uFF09\u3088\u308A\u512A\u5148",
+        "製品データが必要です。小麦粉の強さだけでは適合を判断できません。",
     },
   },
   warnings: {
     fodmap_low: {
       message:
-        "FODMAP\u524A\u6E1B{pct}%\u306E\u307F \u2014 \u767A\u9175\u304C\u77ED\u3059\u304E\u308B",
-      tip: "70%\u4EE5\u4E0A\u306E\u524A\u6E1B\u306B\u306F\u226524h\u306B\u5897\u3084\u3059",
+        "時間だけではFODMAP削減率を算出できません",
+      tip: "検証済みのデータで材料と一食分の量を確認してください。長時間発酵でも適合は保証されません。",
     },
     fodmap_good: {
       message:
-        "FODMAP {pct}%\u524A\u6E1B \u2014 IBS\u306B\u826F\u3044\u30EC\u30D9\u30EB",
-      tip: "\u767A\u9175\u306F\u30D5\u30EB\u30AF\u30BF\u30F3\u3092\u5206\u89E3\u3059\u308B\u306E\u306B\u5341\u5206\u306A\u9577\u3055",
+        "時間だけではFODMAP削減率を算出できません",
+      tip: "検証済みのデータで材料と一食分の量を確認してください。長時間発酵でも適合は保証されません。",
     },
     histamine_high: {
       message:
-        "\u63A8\u5B9A\u30D2\u30B9\u30BF\u30DF\u30F3~{val} mg/kg \u2014 \u9AD8\u30EC\u30D9\u30EB",
-      tip: "\u767A\u9175\u3092\u226412h\u306B\u6E1B\u3089\u3059\u304B\u3001\u226420\u00B0C\u3067\u751F\u30A4\u30FC\u30B9\u30C8\u3092\u4F7F\u7528",
+        "時間と温度だけではヒスタミン量を算出できません",
+      tip: "材料と製法を確認してください。このモデルは安全な含有量を保証しません。",
     },
     histamine_moderate: {
       message:
-        "\u63A8\u5B9A\u30D2\u30B9\u30BF\u30DF\u30F3~{val} mg/kg \u2014 \u4E2D\u7A0B\u5EA6",
-      tip: "\u75C7\u72B6\u3092\u76E3\u8996\u3002\u5B89\u5168\u306E\u305F\u3081\u6642\u9593\u307E\u305F\u306F\u6E29\u5EA6\u3092\u4E0B\u3052\u308B",
+        "時間と温度だけではヒスタミン量を算出できません",
+      tip: "材料と製法を確認してください。このモデルは安全な含有量を保証しません。",
     },
     gluten_free: {
       message:
@@ -234,8 +234,8 @@ export const DIETARY_JA: Partial<CmsDietaryI18n> = {
     },
     nickel_highW: {
       message:
-        "\u5F37\u529B\u7C89\uFF08\u9AD8W\uFF09\u306F\u7CBE\u88FD\u5EA6\u304C\u4F4E\u304F\u3001\u30CB\u30C3\u30B1\u30EB\u304C\u591A\u3044\u50BE\u5411",
-      tip: "\u30CB\u30C3\u30B1\u30EB\u3092\u6700\u5C0F\u9650\u306B\u3059\u308B\u305F\u3081\u7CBE\u88FD00\u7C89\uFF08W 200-260\uFF09\u3092\u512A\u5148",
+        "Wはニッケル含有量を示しません",
+      tip: "製品データが必要です。小麦粉の強さだけでは適合を判断できません。",
     },
   },
 };
@@ -521,7 +521,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     w_alveograph: {
       name: "W\uFF08\u30B7\u30E7\u30D1\u30F3\u30FB\u30A2\u30EB\u30D9\u30AA\u30B0\u30E9\u30D5\uFF09",
       definition: "\u751F\u5730\u306E\u6C17\u6CE1\u3092\u7834\u88C2\u3059\u308B\u307E\u3067\u81A8\u3089\u307E\u305B\u308B\u306E\u306B\u5FC5\u8981\u306A\u7DCF\u30A8\u30CD\u30EB\u30AE\u30FC\u3002\u5C0F\u9EA6\u7C89\u306E\u7DCF\u5408\u7684\u306A\u5F37\u3055\u3092\u793A\u3057\u307E\u3059\u3002",
-      whyImportant: "\u4F4EW\uFF08<180\uFF09\uFF1A\u4F38\u3073\u3084\u3059\u3044\u751F\u5730\u3001\u77ED\u6642\u9593\u767A\u9175\u5411\u304D\u3002\u4E2DW\uFF08220-280\uFF09\uFF1A\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1\u306B\u6700\u9069\u300118-30h\u306B\u8010\u3048\u307E\u3059\u3002\u9AD8W\uFF08>300\uFF09\uFF1A\u7C98\u308A\u306E\u5F37\u3044\u751F\u5730\u3067\u3001\u30EA\u30C3\u30C1\u306A\u751F\u5730\u306B\u4F7F\u3044\u307E\u3059\u3002",
+      whyImportant: "Wは小麦粉の総合的な強さを示します。粘り強さと伸びやすさはP・L・P/Lで評価します。Wが高いだけで生地が硬いとは限りません。",
       ranges: [
         { label: "\u5F31\u3044", value: "90\u2013160", note: "\u30D3\u30B9\u30B1\u30C3\u30C8\u3001\u30A6\u30A8\u30CF\u30FC\u30B9" },
         { label: "\u4E2D", value: "160\u2013200", note: "\u98DF\u30D1\u30F3\u3001\u30D5\u30A9\u30AB\u30C3\u30C1\u30E3" },
@@ -700,12 +700,12 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     fodmap: {
       name: "FODMAP",
       definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols\u3002\u767A\u9175\u3057\u3084\u3059\u3044\u77ED\u9396\u70AD\u6C34\u5316\u7269\uFF08\u5C0F\u9EA6\u306B\u306F\u30D5\u30EB\u30AF\u30BF\u30F3\u304C1-3%\uFF09\u3002",
-      whyImportant: "\u8178\u306F\u30D5\u30EB\u30AF\u30BF\u30F3\u3092\u6D88\u5316\u3067\u304D\u306A\u3044 \u2192 \u8178\u5185\u7D30\u83CC\u304C\u767A\u9175 \u2192 \u30AC\u30B9\u30FB\u81A8\u6E80\u611F\u3002\u9577\u6642\u9593\u767A\u9175\u3067\u6E1B\u5C11\uFF1A24h\u219260-70%\u300148h\u219280-85%\u3002",
+      whyImportant: "発酵でFODMAP量が変わることはありますが、粉、微生物、製法、一食分の量によって異なります。時間だけで削減率や低FODMAPへの適合を判定することはできません。",
     },
     histamine: {
       name: "\u30D2\u30B9\u30BF\u30DF\u30F3",
       definition: "\u30D2\u30B9\u30C1\u30B8\u30F3\u306E\u8131\u70AD\u9178\u306B\u3088\u3063\u3066\u751F\u3058\u308B\u751F\u4F53\u30A2\u30DF\u30F3\u3002\u767A\u9175\u4E2D\u306BLAB\u304C\u751F\u6210\u3057\u3001\u719F\u6210\u30C1\u30FC\u30BA\u3084\u52A0\u5DE5\u8089\u306B\u3082\u542B\u307E\u308C\u307E\u3059\u3002",
-      whyImportant: "\u6642\u9593\u3068\u3068\u3082\u306B\u76F4\u7DDA\u7684\u306B\u84C4\u7A4D\u3057\u307E\u3059\u3002\u5929\u7136\u9175\u6BCD 24h/28\u00B0C \u2192 30-50 mg/kg\u3002DAO\u6B20\u4E4F\u306E\u4EBA\uFF1A\u507D\u30A2\u30EC\u30EB\u30AE\u30FC\u53CD\u5FDC\u3002\u5BFE\u7B56\uFF1A\u77ED\u6642\u9593\u767A\u9175\uFF08<12h\uFF09+ \u5E02\u8CA9\u30A4\u30FC\u30B9\u30C8\u3002",
+      whyImportant: "含有量は微生物、材料、製法、保存方法に左右されます。一定の時間当たり増加率では計算できず、短時間発酵でも不含有は保証されません。",
     },
     gluten: {
       name: "\u30B0\u30EB\u30C6\u30F3",
@@ -767,13 +767,8 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     },
     d_score: {
       name: "D-Score\uFF08\u6D88\u5316\u6027\uFF09",
-      definition: "\u6B63\u898F\u5316\u3057\u305F\u767A\u9175\u6642\u9593\u3068FODMAP\u306E\u6E1B\u5C11\u91CF\u306B\u3082\u3068\u3065\u304D\u3001\u6D88\u5316\u6027\u3092\u63A8\u5B9A\u3059\u308B0-100\u306E\u30B9\u30B3\u30A2\u3002",
-      ranges: [
-        { label: "85-100", value: "\u9AD8\u3044\uFF0848h\u76F8\u5F53\u8D85\uFF09" },
-        { label: "70-84", value: "\u3084\u3084\u9AD8\u3044\uFF0824-48h\uFF09" },
-        { label: "50-69", value: "\u4E2D\u7A0B\u5EA6\uFF0812-24h\uFF09" },
-        { label: "<50", value: "\u4F4E\u3044\uFF0812h\u672A\u6E80\uFF09" },
-      ],
+      definition: "熟成の目安となる経験的な指数です。個人の消化のしやすさやFODMAP量の測定値ではありません。18°C換算時間に、前発酵種、酵母量、冷蔵の補正を加えます。",
+      ranges: [{"label":"85-100","value":"高い指数"},{"label":"70-84","value":"やや高い指数"},{"label":"50-69","value":"中程度の指数"},{"label":"<50","value":"低い指数"}],
     },
   },
 };

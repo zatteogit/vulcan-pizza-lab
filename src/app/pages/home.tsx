@@ -189,7 +189,7 @@ function getDraftTargetAt(draft: PersistedCreateDraft): number | null {
 }
 
 function getSlotTargetAt(now: number, slot: TimeSlot) {
-  return now + slot.hours * HOUR_MS;
+  return slot.targetAt ?? now + slot.hours * HOUR_MS;
 }
 
 function resolveSavedTimeChoice(
@@ -1367,6 +1367,7 @@ export function HomePage() {
                 }
               }}
               selectedTimeSlotId={selectedTimeSlot}
+              mealTargetAt={selectedTimeMeta?.targetAt}
               isPersonalized={createDirty}
               onRequestPersonalization={handleOpenCreatePersonalization}
               onResetToOriginal={

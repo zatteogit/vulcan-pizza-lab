@@ -167,7 +167,7 @@ describe("server MCP", () => {
   });
 
   it("i consigli dicono se uno stile ha riserve", () => {
-    const styles = (call("recommend_styles", { oven_type: "home", oven_max_temp_c: 250, available_hours: 6, limit: 30 }).structuredContent as {
+    const styles = (call("recommend_styles", { oven_type: "home", oven_max_temp_c: 250, available_hours: 6, limit: 30, include_not_feasible: true }).structuredContent as {
       styles: { warnings: string[]; has_caveats: boolean }[];
     }).styles;
     for (const s of styles) expect(s.has_caveats).toBe(s.warnings.length > 0);

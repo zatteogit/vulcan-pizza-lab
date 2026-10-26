@@ -253,7 +253,8 @@ export function createFormatter(
         unitDisplay: "long",
         maximumFractionDigits: 0,
       }).format(d);
-      return h === 0 ? day : `${day} ${formatNumber(bcp47, h)} ${h === 1 ? ui.hour : ui.hours}`;
+      return [day, h > 0 ? `${formatNumber(bcp47, h)} ${h === 1 ? ui.hour : ui.hours}` : "",
+        m > 0 ? `${formatNumber(bcp47, m)} ${m === 1 ? ui.minute : ui.minutes}` : ""].filter(Boolean).join(" ");
     },
 
     number: (value: number, options?: Intl.NumberFormatOptions) =>

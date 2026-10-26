@@ -21,6 +21,7 @@ import {
   formatCompVal,
   getParametricTip,
   localizeStep,
+  engineMessage,
 } from "./recipe-output-format";
 import { StepDetails } from "./recipe-step-details";
 import { ToppingSection, type ToppingSectionProps } from "./topping-section";
@@ -74,6 +75,11 @@ export function ProcedureTimeline({
     <>
       {/* ── Procedure / Timeline with inline tips ── */}
       <div data-region="section">
+        {recipe.dough_balls > 1 && (
+          <p className="procedure-timeline-step__desc">
+            {engineMessage(cms, "timeline.batchModel", "Tempi stimati per una persona: stesura e condimento di tutte le unità, poi cotture una alla volta. Servizio scaglionato; nessuna sovrapposizione prevista.")}
+          </p>
+        )}
         {/* ── Compensations banner (PizzaNerd inline) ── */}
         {isNerd && compensations.length > 0 && (
           <NerdAuraBlock className="procedure-timeline-comp">
@@ -213,6 +219,7 @@ export function ProcedureTimeline({
                     {step.duration_minutes > 0 && (
                       <span className="type-numeric procedure-timeline-step__duration">
                         {t(cms.cooking.durationLabel, { duration: fmtDuration(effDuration(i), fmt) })}
+                        {step.work_units && ` · ${step.work_units} × ${fmt.durationMinutes(step.minutes_per_unit!)}`}
                         {(stretch[i] ?? 0) !== 0 && (
                           <span className="type-data-sm procedure-timeline-step__stretch">
                             {stretch[i]! > 0 ? "+" : "−"}

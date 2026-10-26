@@ -27,7 +27,6 @@ import {
   flourStrength,
   flourStrengthLabel,
   getServingUnitLabel,
-  gramsApprox,
   normalizeMeasureUnitSuffixes,
   yeastPracticalHint,
 } from "./recipe-output-format";
@@ -183,7 +182,7 @@ export function IngredientsSection({
                       </>
                     )
             }
-            amount={gramsApprox(recipe.flour_g, fmt)}
+            amount={fmt.grams(recipe.flour_g)}
           />
           {recipe.flour_blend && recipe.flour_blend.length > 0 && (
             /* VPL-B2: breakdown del mix risolto. Ogni farina di frumento mostra la
@@ -243,7 +242,7 @@ export function IngredientsSection({
                 )}
               </>
             }
-            amount={gramsApprox(recipe.water_g, fmt)}
+            amount={fmt.grams(recipe.water_g)}
           />
           {/* ENG-7: fuori dal range pratico dell'acqua (2–40 °C) la Regola 55 non
               basta da sola: diciamo cosa fare invece di tacere. */}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defaultMealStart, flourStrength } from "./recipe-output-format";
+import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, yeastPracticalHint } from "./recipe-output-format";
 describe("defaultMealStart (audit totale n. 2)", () => {
   it("ancora la fine a pranzo o cena, mai di notte", () => {
     const now = new Date(2026, 9, 24, 14, 30);
@@ -20,4 +20,25 @@ describe("flourStrength (audit totale n. 11, B-24)", () => {
     expect(flourStrength(300)).toBe("strong");
     expect(flourStrength(360)).toBe("veryStrong");
   });
+});
+
+describe('orari e dosi: secondo collaudo',()=>{
+ it('puntata dopo impasto di 20 minuti: lo stesso istante in timeline e guida',()=>{
+  const start=new Date(2026,9,26,9,30);
+  expect(displayStepTime('bulk',addMinutes(start,20),start,'it-IT')).toBe('ca. 09:50');
+  expect(displayStepTime('shape',addMinutes(start,23),start,'it-IT')).toBe('09:53');
+  expect(fmtDuration(24*60+8)).toBe('1 giorno 8min');
+  expect(fmtDuration(68)).toBe('1h 8min');expect(fmtDuration(1134)).toBe('18h 54min');
+ });
+ it('pasto 15:30, 368 minuti: inizio 09:22 e fine 15:30, senza arrotondamento tardivo',()=>{
+  const meal=new Date(2026,9,26,15,30), now=new Date(2026,9,26,8,0);
+  const start=startForDeadline(meal,368,now);
+  expect(start.getHours()).toBe(9);expect(start.getMinutes()).toBe(22);
+  expect(addMinutes(start,368)).toEqual(meal);
+  const quarter=roundToQuarter(new Date(2026,9,26,9,58));
+  expect(quarter.getHours()).toBe(10);expect(quarter.getMinutes()).toBe(0);
+ });
+ it('sotto il grammo serve una bilancia, non una dose a occhio',()=>{
+  for(const type of ['fresh','dry']) for(const g of [0.1,0.8]) expect(yeastPracticalHint(g,type,undefined)).toContain('0,01');
+ });
 });

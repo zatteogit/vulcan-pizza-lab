@@ -21,7 +21,6 @@ import {
   daySuffix,
   engineMessage,
   optimizeComfort,
-  roundToQuarter,
   shiftQuarter,
 } from "./recipe-output-format";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -121,7 +120,7 @@ export function ProcedureHeroControls({
                 type="datetime-local"
                 autoFocus
                 defaultValue={localDateTimeValue(startTime)}
-                step={900}
+                step={60}
                 onBlur={handleTimeInput}
                 onChange={handleTimeInput}
                 onKeyDown={(e) => {
@@ -193,7 +192,7 @@ export function ProcedureHeroControls({
                 type="datetime-local"
                 autoFocus
                 defaultValue={localDateTimeValue(endTime)}
-                step={900}
+                step={60}
                 onBlur={handleEndTimeInput}
                 onChange={handleEndTimeInput}
                 onKeyDown={(e) => {
@@ -256,7 +255,7 @@ export function ProcedureHeroControls({
         <div className="procedure-hero__meals-row">
           <button
             type="button"
-            onClick={() => setStartTime(roundToQuarter(new Date()))}
+            onClick={() => setStartTime(new Date())}
             className="procedure-hero__meal-chip"
           >
             {uiMessage("features.recipe.procedure-hero.inizia-ora-895d8504")}</button>
@@ -268,7 +267,7 @@ export function ProcedureHeroControls({
               <button
                 key={slot.id}
                 type="button"
-                onClick={() => setStartTime(roundToQuarter(slot.idealStart))}
+                onClick={() => setStartTime(slot.idealStart)}
                 className="procedure-hero__meal-chip"
               >
                 {text.label} ({text.sublabel})

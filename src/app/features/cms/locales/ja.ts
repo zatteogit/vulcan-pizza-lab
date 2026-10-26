@@ -764,7 +764,7 @@ export const JA_LOCALE: CmsContent = {
     "feas.ovenTooCold":
       "\u30AA\u30FC\u30D6\u30F3\u6E29\u5EA6\u4E0D\u8DB3: {temp} < \u6700\u4F4E{min}",
     "feas.wTooLow": "Wが低すぎます: {w} < {wMin}",
-    "feas.wTooHigh": "Wが非常に高い ({w})。硬い生地。",
+    "feas.wTooHigh": "Wがスタイルの範囲を超えています（{w}）。P/Lも確認してください",
     "feas.hydrationBeginnerHigh": "加水率>75%は初心者に不向き",
     "feas.hydrationNeedsPractice": "高加水は練習が必要です",
     "feas.hydrationMedBeginner": "初心者には中〜高加水",
@@ -772,14 +772,6 @@ export const JA_LOCALE: CmsContent = {
       "この加水率には小麦粉が弱すぎます",
     "feas.prefermentNeedsExperience":
       "種生地には経験が必要です",
-    "dig.fermentTooShort": "発酵が短すぎ: でんぷん未分解",
-    "dig.fermentShort": "短い発酵: 消化性が限定的",
-    "dig.fodmapReduced": "FODMAP削減 ~{pct}%",
-    "dig.fodmapHighReduction": "FODMAP削減 >80%",
-    "dig.extremeMaturation": "極限熟成: 最大の風味の複雑さ",
-    "dig.highYeastDosage":
-      "酵母投入量が多い ({pct}%): -{penalty}% 消化性",
-    "dig.coldFermentation": "低温発酵: 最適な酵素活性",
     "sust.quickCook": "短時間焼成: 低エネルギー消費",
     "sust.longCook": "長時間焼成: 高エネルギー消費",
     "sust.ambientFerment": "室温発酵: 冷蔵庫エネルギー不要",
@@ -892,7 +884,7 @@ export const JA_LOCALE: CmsContent = {
     "feas.thermalUnviable": "{oven}では利用可能な方法で{style}の焼成を再現できません。現在の方法には少なくとも{min}が必要です。検証済みのアレンジ方法が必要です。",
     "gen.timeBelowStyleWindow": "{available}ではこのスタイルの発酵時間（最低{fMin}）に届きません。発酵を短縮しています。本来の仕上がりには{fMin}以上が必要です。",
     "gen.timeBelowStyleWindowMeal": "食事まで{available}のうち、こね・成形・焼成（{work}）を除くと発酵に使えるのは{ferment}で、このスタイルの最低（{fMin}）に足りません。本来の仕上がりには合計で約{needed}必要です。",
-    "opt.coldLongFerment": "冷蔵庫（{temp}）で{hours}熟成：使える{available}の中で消化しやすさを最大にします。",
+    "opt.coldLongFerment": "予定の熟成：冷蔵（{temp}）で{hours}、利用可能な{available}以内。",
     "opt.roomFerment": "室温（{temp}）で{hours}発酵：スタイルに忠実で、冷蔵庫は不要です。",
     "opt.hydrationLowered": "あなたのレベルで扱いやすいよう、加水率を{h}%に下げています（基準は{canonical}%）。",
     "opt.hydrationForStyle": "加水率{h}%：スタイルのど真ん中です。",
@@ -1038,6 +1030,15 @@ export const JA_LOCALE: CmsContent = {
     "recipeSetup.signatureRemoved": "インスピレーションを解除：パラメータを元に戻しました",
     "rec.fried": "\u934B\u3067\u63DA\u3052\u308B\u306E\u3067\u30AA\u30FC\u30D6\u30F3\u306F\u4E0D\u8981",
     "rec.flourMix": "\u624B\u6301\u3061\u306E\u7C89\u3092\u6DF7\u305C\u308B\u3068\uFF1A{weak} {weakPct}%\u3001{strong} {strongPct}%\u3001W {w}\u524D\u5F8C",
+    "dig.fermentTooShort": "休ませる時間が非常に短く、熟成指数は低めです",
+    "dig.fermentShort": "短時間発酵：熟成指数は控えめです",
+    "dig.extremeMaturation": "長時間発酵：生地の状態を確認してください",
+    "dig.highYeastDosage": "酵母量{pct}%：経験的なスコア補正（-{penalty}）",
+    "dig.coldFermentation": "冷蔵熟成：時間と進み方は温度によって変わります",
+    "dig.fodmapReduced": "時間だけではFODMAP削減率を算出できません",
+    "dig.fodmapHighReduction": "時間だけではFODMAP削減率を算出できません",
+    "hint.yeastPrecisionScale": "0.01 g単位のはかりを使ってください",
+    "timeline.batchModel": "1人での作業を想定した目安時間です。すべてを成形・トッピングしてから1枚ずつ焼きます。焼き上がりは順次提供し、作業の重複は想定していません。",
   },
   scienceLabels: {
     yeastBaker: "\u30D1\u30F3\u7528\u30A4\u30FC\u30B9\u30C8",
@@ -1097,7 +1098,7 @@ export const JA_LOCALE: CmsContent = {
       tipBeginner:
         "\u751F\u5730\u304C2\u500D\u306B\u81A8\u3089\u3080\u307E\u3067\u5F85\u3061\u307E\u3057\u3087\u3046\u3002\u6696\u304B\u3044\u5834\u6240\u3067\u306F\u3053\u307E\u3081\u306B\u78BA\u8A8D\uFF01",
       tipNerd:
-        "{temp}\u3067\u306E\u767A\u9175\u901F\u5EA6\u306F18\u00B0C\u57FA\u6E96\u306E{factor}\u00D7\u3067\u3059\u3002",
+        "{temp}では、モデル上の発酵速度は{refTemp}に対して{factor}倍です。FODMAP削減率や消化のしやすさの測定値ではありません。",
       longDesc: "\u751F\u5730\u3092\u3072\u3068\u307E\u3068\u3081\u306E\u307E\u307E\u3001\u30AA\u30A4\u30EB\u3092\u5857\u3063\u305F\u5BB9\u5668\u306B\u5165\u308C\u3001\u30E9\u30C3\u30D7\u3092\u751F\u5730\u306B\u5BC6\u7740\u3055\u305B\u3066\u8986\u3044\u307E\u3059\u3002\u3053\u306E\u6BB5\u968E\u3067\u30A4\u30FC\u30B9\u30C8\u304C\u50CD\u304D\u3001\u9999\u308A\u3001\u69CB\u9020\u3001\u6D88\u5316\u306E\u826F\u3055\u304C\u80B2\u3061\u307E\u3059\u3002\u52A0\u6C34\u7387\u304C\u9AD8\u3044\u5834\u5408\u306F\u3001\u6700\u521D\u306E2\u6642\u9593\u306B2-3\u56DE\u300C\u30B9\u30C8\u30EC\u30C3\u30C1&\u30D5\u30A9\u30FC\u30EB\u30C9\u300D\u3092\u884C\u3044\u307E\u3059\u3002\u751F\u5730\u306E\u7AEF\u3092\u6301\u3061\u4E0A\u3052\u3066\u4E0A\u306B\u5F15\u304D\u4F38\u3070\u3057\u3001\u4E2D\u5FC3\u306B\u5411\u3051\u3066\u6298\u308A\u305F\u305F\u307F\u3001\u5BB9\u5668\u3092\u56DE\u3057\u30664\u8FBA\u3067\u7E70\u308A\u8FD4\u3057\u307E\u3059\u3002\u4F53\u7A4D\u304C2\u500D\u306B\u306A\u308A\u3001\u8868\u9762\u304C\u3075\u3063\u304F\u3089\u3068\u6ED1\u3089\u304B\u306B\u306A\u3063\u305F\u3089\u767A\u9175\u5B8C\u4E86\u3067\u3059\u3002",
     },
     bulk_cold: {
@@ -1106,7 +1107,7 @@ export const JA_LOCALE: CmsContent = {
       tipBeginner:
         "\u51B7\u8535\u5EAB\u3067\u306F\u751F\u5730\u304C\u3086\u3063\u304F\u308A\u81A8\u3089\u307F\u307E\u3059\u304C\u3001\u98A8\u5473\u304C\u5897\u3057\u307E\u3059\u3002\u5BC6\u7740\u30E9\u30C3\u30D7\u3067\u3057\u3063\u304B\u308A\u8986\u3063\u3066\u304F\u3060\u3055\u3044\u3002",
       tipNerd:
-        "{temp}では発酵速度が{refTemp}基準の{factor}倍に落ちます。タンパク分解活性が優勢となり、FODMAPを分解します。",
+        "{temp}では、モデル上の発酵速度は{refTemp}に対して{factor}倍です。FODMAP削減率や消化のしやすさの測定値ではありません。",
       longDesc: "\u751F\u5730\u306E\u5165\u3063\u305F\u5BB9\u5668\u3092\u51B7\u8535\u5EAB\uFF08{fridgeTemp}\uFF09\u306B\u79FB\u3057\u307E\u3059\u3002\u51B7\u8535\u5EAB\u3067\u306F\u30A4\u30FC\u30B9\u30C8\u306E\u50CD\u304D\u304C\u305A\u3063\u3068\u9045\u304F\u306A\u308B\u305F\u3081\u6642\u9593\u306F\u304B\u304B\u308A\u307E\u3059\u304C\u3001\u305D\u306E\u5206\u3001\u9999\u308A\u306E\u8907\u96D1\u3055\u3001\u6D88\u5316\u306E\u826F\u3055\u3001\u3088\u304F\u767A\u9054\u3057\u305F\u30B0\u30EB\u30C6\u30F3\u306E\u7DB2\u76EE\u304C\u5F97\u3089\u308C\u307E\u3059\u3002\u8868\u9762\u304C\u4E7E\u304B\u306A\u3044\u3088\u3046\u3001\u5FC5\u305A\u30E9\u30C3\u30D7\u3092\u5BC6\u7740\u3055\u305B\u3066\u8986\u3063\u3066\u304F\u3060\u3055\u3044\u3002\u53D6\u308A\u51FA\u3057\u305F\u3089\u3001\u5206\u5272\u306E\u524D\u306B\u5E38\u6E29\u30671-2\u6642\u9593\u306A\u3058\u307E\u305B\u307E\u3059\u3002",
     },
     rest: {

@@ -142,6 +142,7 @@ export function PrintSheet({
       {sections.steps && (
         <section className="print-sheet__section">
           <h2 className="print-sheet__h2">{uiMessage("features.recipe.print-sheet.method")}</h2>
+          {recipe.dough_balls > 1 && <p className="print-sheet__step-text">{cms.engineMessages["timeline.batchModel"]}</p>}
           <ol className="print-sheet__steps">
             {steps.map((step) => (
               <li key={step.id} className="print-sheet__step">
