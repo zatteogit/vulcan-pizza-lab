@@ -1,7 +1,6 @@
 /* === DOMAIN DATA i18n — Deutsch === */
 import type {
   CmsPreFerment,
-  CmsDietaryI18n,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
 } from "../cms-context";
@@ -136,97 +135,7 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
   },
 };
 
-export const DIETARY_DE: Partial<CmsDietaryI18n> = {
-  info: {
-    low_fodmap: {
-      name: "Low FODMAP",
-      description:
-        "Zutaten, Verfahren und Portionsgröße bewerten",
-      scienceNote:
-        "Fermentation kann den FODMAP-Gehalt verändern. Das Ergebnis hängt von Mehl, Mikroorganismen, Verfahren und Portionsgröße ab. Stunden allein erlauben weder eine Mengenangabe noch die Einstufung als FODMAP-arm.",
-    },
-    histamine: {
-      name: "Histaminarm",
-      description:
-        "Zutaten, Verfahren und Portionsgröße bewerten",
-      scienceNote:
-        "Der Gehalt hängt von Mikroorganismen, Zutaten, Verarbeitung und Lagerung ab. Ein fester stündlicher Anstieg lässt sich nicht berechnen; kurze Gärung garantiert keine Abwesenheit.",
-    },
-    gluten_free: {
-      name: "Glutenfrei",
-      description:
-        "F\u00FCr Z\u00F6liakie oder Glutensensitivit\u00E4t",
-      scienceNote:
-        "EU-Schwelle: <20 ppm. Erfordert GF-Mix (Reis/Mais/Quinoa + Xanthan 1.5%)",
-    },
-    lactose_free: {
-      name: "Laktosefrei",
-      description: "Bei Laktoseintoleranz",
-      scienceNote:
-        "Backen garantiert keinen Laktoseabbau: Zutaten und Herstellerangaben prüfen.",
-    },
-    nickel: {
-      name: "Nickelarm",
-      description: "Bei systemischer Nickelallergie (SNAS)",
-      scienceNote:
-        "Produktdaten sind nötig; Mehlstärke allein bestätigt keine Eignung.",
-    },
-    vegan: {
-      name: "Vegan",
-      description: "Keine tierischen Produkte",
-      scienceNote:
-        "Grundteig ist bereits vegan. Achtung bei Belag und Fetten (Butter \u2192 \u00D6l)",
-    },
-  },
-  conflicts: {
-    fodmap_histamine: {
-      message:
-        "Gärdauer und Hefetyp bestätigen keine Eignung bei FODMAP- oder Histaminbeschränkungen.",
-      compromiseTip:
-        "Zutaten und Portionsgröße anhand geprüfter Daten bewerten; lange Gärung garantiert keine Eignung.",
-    },
-    gf_fodmap: {
-      message:
-        "Glutenfrei bedeutet nicht automatisch FODMAP-arm: Zutaten und Portionsgröße sind entscheidend.",
-    },
-    nickel_general: {
-      message:
-        "Produktdaten sind nötig; Mehlstärke allein bestätigt keine Eignung.",
-    },
-  },
-  warnings: {
-    fodmap_low: {
-      message:
-        "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
-      tip: "Zutaten und Portionsgröße anhand geprüfter Daten bewerten; lange Gärung garantiert keine Eignung.",
-    },
-    fodmap_good: {
-      message:
-        "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
-      tip: "Zutaten und Portionsgröße anhand geprüfter Daten bewerten; lange Gärung garantiert keine Eignung.",
-    },
-    histamine_high: {
-      message:
-        "Der Histamingehalt ist aus Zeit und Temperatur nicht bestimmbar",
-      tip: "Zutaten und Verfahren prüfen: Das Modell bestätigt keinen sicheren Gehalt.",
-    },
-    histamine_moderate: {
-      message:
-        "Der Histamingehalt ist aus Zeit und Temperatur nicht bestimmbar",
-      tip: "Zutaten und Verfahren prüfen: Das Modell bestätigt keinen sicheren Gehalt.",
-    },
-    gluten_free: {
-      message:
-        "Rezept verwendet Weizenmehl \u2014 unvertr\u00E4glich bei Z\u00F6liakie",
-      tip: "Ersetzen mit GF-Mix (Reis 40% + Mais 30% + Quinoa 10% + Sorghum 10% + St\u00E4rke 10%) + Xanthan 1.5%",
-    },
-    nickel_highW: {
-      message:
-        "W misst nicht den Nickelgehalt",
-      tip: "Produktdaten sind nötig; Mehlstärke allein bestätigt keine Eignung.",
-    },
-  },
-};
+
 
 export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
   {
@@ -287,7 +196,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         testRapido:
           "Hat der Teig in weniger als 3 Stunden verdoppelt?",
         fixImmediate:
-          "Sofort auf 4\u00B0C umstellen um G\u00E4rung zu stoppen",
+          "Den Teig kühlen, um die Fermentation zu verlangsamen; Kälte stoppt sie nicht sofort.",
         prevention:
           "Die für Ihre Stunden und Temperatur berechnete Hefemenge verwenden (bei 18 °C für 24 h etwa 0,1 % Frischhefe)",
       },
@@ -298,8 +207,8 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         testRapido:
           "Teig-pH \u2014 sollte 4.5-5.5 sein, problematisch wenn <4.2",
         fixImmediate:
-          "0.5-1% Zucker hinzuf\u00FCgen um S\u00E4ure zu maskieren",
-        prevention: "G\u00E4rungen >24h immer bei 4-8\u00B0C",
+          "Zucker überdeckt den Geschmack, korrigiert aber keine Übergare. Teig vor Gebrauch prüfen.",
+        prevention: "Zeit, Temperatur und Hefe nach Methode wählen; Reife ohne universelle Stundengrenze prüfen.",
       },
       P07: {
         symptom:
@@ -428,7 +337,7 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
         cause: "Ein Haushaltskühlschrank hält die Temperatur nicht stabil: Abtauzyklen, Türöffnungen und unterschiedliche Fächer lassen die kalte Reifung schwanken, anders als eine Profi-Kühlzelle",
         testRapido: "Gleicher Stil, gleiche Hefemenge: Geht der Teig jedes Mal deutlich anders auf?",
         fixImmediate: "Stell den Teig ins unterste/mittlere Fach (am stabilsten) und beurteile den Teigling mit dem Auge, nicht nur nach der Uhr",
-        prevention: "Boncis Tipp für zu Hause: 0,5–1 % Zucker gibt der Hefe sofort Nahrung und macht die Gärung berechenbarer, wenn der Kühlschrank schwankt. Nur bei Stilen, die Zusätze erlauben — nie bei Napoletana STG/AVPN nach Regelwerk",
+        prevention: "Temperatur am genutzten Fach messen und Teigreife beobachten. Zucker gleicht Kühlschwankungen nicht aus.",
       },
     },
     contextual: {
@@ -448,8 +357,8 @@ export const TROUBLESHOOTING_DE: Partial<CmsTroubleshootingI18n> =
       },
       pale_crust: {
         message:
-          "Kurze G\u00E4rung ({h}h): blasse Kruste und begrenzte Verdaulichkeit",
-        tip: "0.5-1% Zucker f\u00FCr Maillard-Br\u00E4unung hinzuf\u00FCgen",
+          "Kurze Fermentation: vor dem Fortfahren die Teigentwicklung prüfen.",
+        tip: "Volumen, Elastizität und Druckreaktion prüfen: Die Stunden allein belegen keine Verdaulichkeit.",
       },
       cold_oven: {
         message:
@@ -509,7 +418,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     pl_ratio: {
       name: "P/L (Verh\u00E4ltnis Z\u00E4higkeit/Dehnbarkeit)",
       definition: "Kennzahl f\u00FCr das mechanische Gleichgewicht. Verh\u00E4ltnis zwischen Widerstand und Dehnbarkeit des Teigs.",
-      whyImportant: "Optimaler P/L (0.5-0.6): hoher Rand + d\u00FCnner Boden. <0.4: flache Pizza. >0.8: \u201Egummiartiger\u201C Teig.",
+      whyImportant: "Beschreibt das rheologische Gleichgewicht. Der passende Wert hängt von Mehl, Hydration und Methode ab; keine Garantie für Höhe oder Textur.",
       ranges: [
         { label: "<0.4 Sehr dehnbar", value: "F\u00E4llt leicht zusammen", note: "Pinsa" },
         { label: "0.4\u20130.5 Dehnbar", value: "Leicht zu verarbeiten", note: "Klassische Neapolitanische" },
@@ -567,7 +476,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     yeast: {
       name: "Hefe (Saccharomyces cerevisiae)",
       definition: "Einzelliger Pilz, der Zucker in CO\u2082 + Ethanol + Aromastoffe umwandelt.",
-      whyImportant: "Optimale Temp.: 28-32\u00B0C. Min. 4\u00B0C (ruhend). Max. 40\u00B0C (gehemmt). Abt\u00F6tung >55\u00B0C.",
+      whyImportant: "Aktivität hängt von Stamm, Menge, Temperatur und Teig ab. Kälte verlangsamt die Fermentation; keine universelle sofortige Stoppgrenze.",
       ranges: [
         { label: "Frischhefe", value: "0.5\u20132.0%", note: "Feuchtigkeit 70%, K\u00FChlschrank 4\u00B0C" },
         { label: "Aktive Trockenhefe", value: "0.3\u20131.0%", note: "Vorher in Wasser aufl\u00F6sen" },
@@ -577,7 +486,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     lab: {
       name: "LAB (Milchs\u00E4urebakterien)",
       definition: "Bakterien, die Zucker verg\u00E4ren und dabei Milchs\u00E4ure (und Essigs\u00E4ure) bilden. Im Sauerteig enthalten.",
-      whyImportant: "Senken den pH (4.0-4.5), erh\u00F6hen die S\u00E4ure, bauen FODMAP (Fruktane) ab, hemmen Schimmel. Optimale Temp.: 28-32\u00B0C.",
+      whyImportant: "Sie können Säure und Fruktane je nach Stämmen, Mehl und Verfahren verändern. Ihre Anwesenheit belegt keine Low-FODMAP-Eignung.",
     },
     q10: {
       name: "Q\u2081\u2080 (Temperaturkoeffizient)",
@@ -622,18 +531,18 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     },
     maillard: {
       name: "Maillard-Reaktion",
-      definition: "Nicht-enzymatische Reaktion zwischen Aminos\u00E4uren und reduzierenden Zuckern bei hoher Temperatur (>140\u00B0C).",
-      whyImportant: "Goldene Kruste (Melanoidine), R\u00F6staroma (Pyrazine), Leopardenflecken ab 300\u00B0C+. Optimal 160-180\u00B0C.",
+      definition: "Eine Gruppe nichtenzymatischer Reaktionen zwischen Aminoverbindungen und reduzierenden Zuckern, die durch Erhitzen begünstigt werden.",
+      whyImportant: "Sie trägt zu Farbe und Aroma der Kruste bei. Stärke und Geschwindigkeit hängen von Oberflächentemperatur, Zeit, Feuchte und Zutaten ab; Ofen- und Lebensmitteltemperatur sind nicht identisch.",
     },
     caramelization: {
       name: "Karamellisierung",
-      definition: "Thermischer Abbau von Zucker (ohne Proteine) bei hoher Temperatur (>150\u00B0C Saccharose, >120\u00B0C Fruktose).",
-      whyImportant: "Tr\u00E4gt zu dunklen Flecken am Rand bei. Bei Pizza weniger relevant als Maillard (wenig Proteine an der Oberfl\u00E4che).",
+      definition: "Veränderungen von Zuckern beim Erhitzen, getrennt von Maillard-Reaktionen und ohne erforderliche Aminoverbindungen.",
+      whyImportant: "Sie kann Farbe und Röstaromen beitragen. Der Effekt hängt von Zuckerart, Feuchte, Zeit und Oberflächentemperatur ab.",
     },
     starch_gelatinization: {
       name: "St\u00E4rkeverkleisterung",
-      definition: "\u00DCbergang der St\u00E4rke vom kristallinen in den gelartigen Zustand unter Wasseraufnahme. Beginn 55-60\u00B0C, H\u00F6hepunkt 65-70\u00B0C, abgeschlossen 80-85\u00B0C.",
-      whyImportant: "Krume: macht St\u00E4rke verdaulich (<55\u00B0C im Kern = rohe St\u00E4rke). Kruste: >100\u00B0C \u2192 knusprig.",
+      definition: "Durch Wasser und Wärme nehmen Stärkekörner Wasser auf, quellen und verlieren einen Teil ihrer Kristallstruktur. Der Temperaturbereich hängt von Stärke und Rezeptur ab.",
+      whyImportant: "Sie trägt zur Krumenstruktur und Stärkeveränderung bei. Eine einzelne Kerntemperatur bestätigt weder vollständiges Durchbacken noch individuelle Verdaulichkeit.",
     },
     retrogradation: {
       name: "Retrogradation",
@@ -672,7 +581,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     proteolysis: {
       name: "Proteolyse",
       definition: "Abbau von Proteinen zu Peptiden und Aminos\u00E4uren durch Protease-Enzyme. Ziel: Gluten.",
-      whyImportant: "Leichteres Ausziehen, bessere Bek\u00F6mmlichkeit, freie Aminos\u00E4uren \u2192 Umami-Geschmack. Zu viel (>72h): Teig zu weich. Optimal: 24-48h.",
+      whyImportant: "Sie kann Dehnbarkeit und Stabilität des Teigs verändern. Mehl, Mikroorganismen, Temperatur und Verfahren beeinflussen sie: Es gibt keine universelle optimale Dauer und keine Messung der individuellen Verdaulichkeit.",
     },
     thickness_factor: {
       name: "Thickness Factor (TF)",

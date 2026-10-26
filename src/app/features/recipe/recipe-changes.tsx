@@ -2,6 +2,8 @@ import { ArrowRight, Droplets, Flame, FlaskConical, Gauge, Timer, Wheat } from "
 import { RecipeConditionChips } from "./recipe-condition-chips";
 import type { GeneratedRecipe } from "../../domain/pizza-engine";
 import { recipeDifferences } from "../../use-cases/recipe-entry";
+import { getToppingForStyle } from "../../data/topping-library";
+import { localizeToppingRecipe, toppingConcept } from "../../data/topping-i18n/localize";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { engineMsgTexts } from "./engine-msg-text";
@@ -22,6 +24,14 @@ export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: G
   const rows = differences.map(d => {
     const p = d.params ?? {};
     switch (d.key) {
+      case "change.topping": {
+        const name = (r: GeneratedRecipe) => {
+          const topping = getToppingForStyle(r.style.default_topping_ref ?? "", r.style);
+          const localized = topping ? localizeToppingRecipe(topping, cms.toppingI18n) : undefined;
+          return localized?.name ?? (topping ? toppingConcept(topping.concept_ref, cms.toppingI18n)?.name : undefined) ?? localized?.variant_name ?? "—";
+        };
+        return {key:d.key, label:cms.cooking.toppingTitle, icon:Wheat, before:name(from), after:name(to)};
+      }
       case "change.hydration": return { key: d.key, label: cms.ui.statHydration, icon: Droplets, before: pct(from.hydration_pct), after: pct(to.hydration_pct) };
       case "change.flour": return { key: d.key, label: cms.ui.statFlourStrength, icon: Wheat, before: `W${fmt.number(from.flour_w)}`, after: `W${fmt.number(to.flour_w)}` };
       case "change.flourPL": return { key: d.key, label: cms.configurator.plLabel, icon: Wheat, before: fmt.number(from.flour_pl, { maximumFractionDigits: 2 }), after: fmt.number(to.flour_pl, { maximumFractionDigits: 2 }), tip: cms.configurator.plTip };

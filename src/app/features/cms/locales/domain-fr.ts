@@ -1,7 +1,6 @@
 /* === DOMAIN DATA i18n — Français === */
 import type {
   CmsPreFerment,
-  CmsDietaryI18n,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
 } from "../cms-context";
@@ -136,98 +135,7 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
   },
 };
 
-export const DIETARY_FR: Partial<CmsDietaryI18n> = {
-  info: {
-    low_fodmap: {
-      name: "Low FODMAP",
-      description:
-        "Évaluer ingrédients, procédé et portion",
-      scienceNote:
-        "La fermentation peut modifier les FODMAP, mais le résultat dépend des farines, des micro-organismes, du procédé et de la portion. Les seules heures ne permettent ni de chiffrer la réduction ni de qualifier la recette de pauvre en FODMAP.",
-    },
-    histamine: {
-      name: "Faible histamine",
-      description:
-        "Évaluer ingrédients, procédé et portion",
-      scienceNote:
-        "La teneur dépend des micro-organismes, ingrédients, procédé et conservation. Elle ne se calcule pas avec un taux horaire fixe ; une fermentation courte ne garantit pas son absence.",
-    },
-    gluten_free: {
-      name: "Sans gluten",
-      description:
-        "Pour maladie c\u0153liaque ou sensibilit\u00E9 au gluten",
-      scienceNote:
-        "Seuil UE : <20 ppm. N\u00E9cessite mix GF (riz/ma\u00EFs/quinoa + xanthane 1.5%)",
-    },
-    lactose_free: {
-      name: "Sans lactose",
-      description: "Pour intol\u00E9rance au lactose",
-      scienceNote:
-        "La cuisson ne garantit pas l'élimination du lactose : vérifier ingrédients et indications du fabricant.",
-    },
-    nickel: {
-      name: "Faible nickel",
-      description:
-        "Pour allergie syst\u00E9mique au nickel (SNAS)",
-      scienceNote:
-        "Des données sur le produit sont nécessaires ; la force de la farine ne certifie pas la compatibilité.",
-    },
-    vegan: {
-      name: "V\u00E9gan",
-      description: "Aucun d\u00E9riv\u00E9 animal",
-      scienceNote:
-        "La p\u00E2te de base est d\u00E9j\u00E0 v\u00E9gane. Attention aux garnitures et graisses (beurre \u2192 huile)",
-    },
-  },
-  conflicts: {
-    fodmap_histamine: {
-      message:
-        "La durée de fermentation et le type de levure ne certifient pas la compatibilité avec les restrictions FODMAP ou histamine.",
-      compromiseTip:
-        "Évaluer ingrédients et portion avec des données vérifiées ; une fermentation longue ne garantit pas la compatibilité.",
-    },
-    gf_fodmap: {
-      message:
-        "Sans gluten ne signifie pas automatiquement pauvre en FODMAP : les ingrédients et la portion comptent.",
-    },
-    nickel_general: {
-      message:
-        "Des données sur le produit sont nécessaires ; la force de la farine ne certifie pas la compatibilité.",
-    },
-  },
-  warnings: {
-    fodmap_low: {
-      message:
-        "La réduction des FODMAP ne se détermine pas avec les seules heures",
-      tip: "Évaluer ingrédients et portion avec des données vérifiées ; une fermentation longue ne garantit pas la compatibilité.",
-    },
-    fodmap_good: {
-      message:
-        "La réduction des FODMAP ne se détermine pas avec les seules heures",
-      tip: "Évaluer ingrédients et portion avec des données vérifiées ; une fermentation longue ne garantit pas la compatibilité.",
-    },
-    histamine_high: {
-      message:
-        "La teneur en histamine ne se détermine pas par la durée et la température",
-      tip: "Vérifier ingrédients et procédé : le moteur ne certifie pas un niveau sûr.",
-    },
-    histamine_moderate: {
-      message:
-        "La teneur en histamine ne se détermine pas par la durée et la température",
-      tip: "Vérifier ingrédients et procédé : le moteur ne certifie pas un niveau sûr.",
-    },
-    gluten_free: {
-      message:
-        "La recette utilise de la farine de bl\u00E9 \u2014 incompatible avec la maladie c\u0153liaque",
-      tip: "Remplacer par mix GF (riz 40% + ma\u00EFs 30% + quinoa 10% + sorgho 10% + amidon 10%) + xanthane 1.5%",
-    },
-    nickel_highW: {
-      message:
-        "W ne mesure pas la teneur en nickel",
-      tip: "Des données sur le produit sont nécessaires ; la force de la farine ne certifie pas la compatibilité.",
-    },
-  },
-};
+
 
 export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
   {
@@ -290,7 +198,7 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         testRapido:
           "La p\u00E2te a doubl\u00E9 en moins de 3 heures ?",
         fixImmediate:
-          "Transf\u00E9rer imm\u00E9diatement \u00E0 4\u00B0C pour bloquer la fermentation",
+          "Réfrigérer la pâte pour ralentir la fermentation ; le froid ne l’arrête pas immédiatement.",
         prevention:
           "Utiliser la dose de levure calculée pour vos heures et votre température (à 18 °C pendant 24 h, environ 0,1 % de levure fraîche)",
       },
@@ -301,9 +209,9 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         testRapido:
           "pH p\u00E2te \u2014 devrait \u00EAtre 4.5-5.5, probl\u00E9matique si <4.2",
         fixImmediate:
-          "Ajouter 0.5-1% sucre pour masquer l'acidit\u00E9",
+          "Le sucre masque le goût sans corriger la surfermentation. Réévaluer la pâte avant usage.",
         prevention:
-          "Fermentations >24h toujours \u00E0 4-8\u00B0C",
+          "Choisir durée, température et levure selon la méthode ; aucun seuil horaire universel.",
       },
       P07: {
         symptom:
@@ -436,7 +344,7 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
         cause: "Un réfrigérateur domestique ne garde pas une température stable : dégivrages, ouvertures et étagères différentes font varier la maturation à froid, contrairement à une chambre froide professionnelle",
         testRapido: "Même style, même dose de levure : la pousse change-t-elle beaucoup d'une fois à l'autre ?",
         fixImmediate: "Placez la pâte sur l'étagère du bas ou du milieu (la plus stable) et jugez le pâton à l'œil, pas seulement à la montre",
-        prevention: "Astuce de Bonci pour la maison : 0,5–1 % de sucre donne à la levure une nourriture immédiate et rend la fermentation plus prévisible quand le réfrigérateur est instable. Seulement pour les styles qui admettent des additifs — jamais pour la Napoletana STG/AVPN selon le cahier des charges",
+        prevention: "Mesurer la température du rayon utilisé et observer la pâte. Le sucre ne corrige pas les variations du réfrigérateur.",
       },
     },
     contextual: {
@@ -457,8 +365,8 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
       },
       pale_crust: {
         message:
-          "Fermentation courte ({h}h) : cro\u00FBte p\u00E2le et digestibilit\u00E9 limit\u00E9e",
-        tip: "Ajouter 0.5-1% sucre pour favoriser le brunissement Maillard",
+          "Fermentation courte : vérifier le développement de la pâte avant de poursuivre.",
+        tip: "Vérifier volume, élasticité et réaction à la pression : les heures seules ne prouvent pas la digestibilité.",
       },
       cold_oven: {
         message:
@@ -519,7 +427,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     pl_ratio: {
       name: "P/L (Rapport T\u00E9nacit\u00E9/Extensibilit\u00E9)",
       definition: "Indice d'\u00E9quilibre m\u00E9canique. Rapport entre la r\u00E9sistance et l'extensibilit\u00E9 de la p\u00E2te.",
-      whyImportant: "P/L optimal (0.5-0.6) : corniche haute + base fine. <0.4 : pizza plate. >0.8 : p\u00E2te \u00AB caoutchouteuse \u00BB.",
+      whyImportant: "Décrit l’équilibre rhéologique. La valeur adaptée dépend de la farine, de l’hydratation et de la méthode ; sans garantie de hauteur ou texture.",
       ranges: [
         { label: "<0.4 Tr\u00E8s extensible", value: "S'affaisse facilement", note: "Pinsa" },
         { label: "0.4\u20130.5 Extensible", value: "Facile \u00E0 travailler", note: "Napolitaine classique" },
@@ -577,7 +485,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     yeast: {
       name: "Levure (Saccharomyces cerevisiae)",
       definition: "Champignon unicellulaire qui convertit les sucres en CO\u2082 + \u00E9thanol + compos\u00E9s aromatiques.",
-      whyImportant: "Temp. optimale : 28-32\u00B0C. Min 4\u00B0C (dormante). Max 40\u00B0C (inhib\u00E9e). Mort >55\u00B0C.",
+      whyImportant: "L’activité dépend de la souche, de la dose, de la température et de la pâte. Le froid ralentit la fermentation sans seuil universel d’arrêt immédiat.",
       ranges: [
         { label: "Fra\u00EEche", value: "0.5\u20132.0%", note: "Humidit\u00E9 70%, frigo 4\u00B0C" },
         { label: "S\u00E8che active", value: "0.3\u20131.0%", note: "R\u00E9hydrater avant" },
@@ -587,7 +495,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     lab: {
       name: "LAB (Bact\u00E9ries lactiques)",
       definition: "Bact\u00E9ries qui fermentent les sucres en produisant de l'acide lactique (et ac\u00E9tique). Pr\u00E9sentes dans le levain.",
-      whyImportant: "Abaissent le pH (4.0-4.5), augmentent l'acidit\u00E9, d\u00E9gradent les FODMAP (fructanes), inhibent les moisissures. Temp. optimale : 28-32\u00B0C.",
+      whyImportant: "Ils peuvent modifier acidité et fructanes selon souches, farine et procédé. Leur présence ne certifie pas une pâte low FODMAP.",
     },
     q10: {
       name: "Q\u2081\u2080 (Coefficient de temp\u00E9rature)",
@@ -632,18 +540,18 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     },
     maillard: {
       name: "R\u00E9action de Maillard",
-      definition: "R\u00E9action non enzymatique entre acides amin\u00E9s et sucres r\u00E9ducteurs \u00E0 haute temp\u00E9rature (>140\u00B0C).",
-      whyImportant: "Cro\u00FBte dor\u00E9e (m\u00E9lano\u00EFdines), ar\u00F4me grill\u00E9 (pyrazines), l\u00E9opardage \u00E0 300\u00B0C+. Optimale \u00E0 160-180\u00B0C.",
+      definition: "Ensemble de réactions non enzymatiques entre composés aminés et sucres réducteurs, favorisées par le chauffage.",
+      whyImportant: "Elle contribue à la couleur et aux arômes de la croûte. Son intensité dépend de la température de surface, du temps, de l’humidité et des ingrédients ; la température du four n’est pas celle de l’aliment.",
     },
     caramelization: {
       name: "Caram\u00E9lisation",
-      definition: "D\u00E9gradation thermique des sucres (sans prot\u00E9ines) \u00E0 haute temp\u00E9rature (>150\u00B0C saccharose, >120\u00B0C fructose).",
-      whyImportant: "Contribue aux taches sombres sur la corniche. Moins d\u00E9terminante que la r\u00E9action de Maillard dans la pizza (peu de prot\u00E9ines en surface).",
+      definition: "Transformations des sucres au chauffage, distinctes des réactions de Maillard et ne nécessitant pas de composés aminés.",
+      whyImportant: "Elle peut contribuer à la couleur et aux arômes grillés. Son effet dépend des sucres présents, de l’humidité, du temps et de la température de surface.",
     },
     starch_gelatinization: {
       name: "G\u00E9latinisation de l'amidon",
-      definition: "Passage de l'amidon d'un \u00E9tat cristallin \u00E0 un \u00E9tat g\u00E9lifi\u00E9 par absorption d'eau. D\u00E9but 55-60\u00B0C, pic 65-70\u00B0C, fin 80-85\u00B0C.",
-      whyImportant: "Mie : rend l'amidon digestible (<55\u00B0C \u00E0 c\u0153ur = amidon cru). Cro\u00FBte : >100\u00B0C \u2192 croustillante.",
+      definition: "Avec l’eau et la chaleur, les granules d’amidon s’hydratent, gonflent et perdent une partie de leur structure cristalline. La plage dépend de l’amidon et de la formulation.",
+      whyImportant: "Elle contribue à la structure de la mie et à la transformation de l’amidon. Une température à cœur seule ne certifie ni la cuisson complète ni la digestibilité individuelle.",
     },
     retrogradation: {
       name: "R\u00E9trogradation",
@@ -682,7 +590,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     proteolysis: {
       name: "Prot\u00E9olyse",
       definition: "D\u00E9gradation des prot\u00E9ines en peptides et acides amin\u00E9s par les enzymes prot\u00E9ases. Cible : le gluten.",
-      whyImportant: "\u00C9talage plus facile, meilleure digestibilit\u00E9, acides amin\u00E9s libres \u2192 go\u00FBt umami. Excessive (>72h) : p\u00E2te trop molle. Optimale : 24-48h.",
+      whyImportant: "Elle peut modifier l’extensibilité et la tenue de la pâte. Elle dépend de la farine, des micro-organismes, de la température et du procédé : aucune durée optimale universelle et aucune mesure de la digestibilité individuelle.",
     },
     thickness_factor: {
       name: "Thickness Factor (TF)",

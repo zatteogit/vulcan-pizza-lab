@@ -61,7 +61,7 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     symptom: 'Lievitazione troppo rapida (raddoppio in <3h)',
     cause: 'Troppo lievito (>1.5%) o temperatura ambiente >28°C',
     testRapido: "L'impasto ha raddoppiato in meno di 3 ore?",
-    fixImmediate: 'Trasferisci immediatamente a 4°C per bloccare la fermentazione',
+    fixImmediate: "Metti l’impasto in frigorifero per rallentare la fermentazione; il freddo non la blocca subito.",
     prevention: 'Usa la dose di lievito calcolata per le tue ore e la tua temperatura (a 18 °C per 24 h circa 0,1% di lievito fresco)',
     severity: 'warning',
   },
@@ -70,8 +70,8 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     symptom: 'Sapore troppo acido/acetico',
     cause: 'LAB eterofermentativi attivi >48h a >18°C (specialmente con lievito madre)',
     testRapido: 'pH impasto — dovrebbe essere 4.5-5.5, problematico se <4.2',
-    fixImmediate: 'Aggiungi 0.5-1% zucchero per mascherare acidita',
-    prevention: 'Fermentazioni >24h sempre a 4-8°C',
+    fixImmediate: "Lo zucchero maschera il sapore ma non corregge una fermentazione eccessiva. Rivaluta l’impasto prima di usarlo.",
+    prevention: "Scegli tempo, temperatura e lievito secondo il metodo; controlla lo sviluppo senza una soglia oraria universale.",
     severity: 'warning',
   },
   {
@@ -80,7 +80,7 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     cause: 'Il frigo domestico non ha temperatura stabile: sbrinamenti, aperture e ripiani diversi fanno oscillare la maturazione a freddo, a differenza di una cella professionale',
     testRapido: 'Stesso stile, stessa dose di lievito: la lievitazione cambia parecchio tra una volta e l\'altra?',
     fixImmediate: 'Sposta l\'impasto sul ripiano più basso/centrale (più stabile) e valuta lo stesso panetto a vista, non solo a orologio',
-    prevention: 'Trucco di Bonci per il casalingo: 0.5-1% di zucchero dà al lievito nutrimento pronto e rende la fermentazione più prevedibile quando il frigo è instabile. Solo su stili che ammettono additivi — mai su Napoletana STG/AVPN a disciplinare',
+    prevention: "Misura la temperatura sul ripiano usato e osserva lo sviluppo dell’impasto. Lo zucchero non corregge gli sbalzi del frigo.",
     severity: 'info',
   },
   /* === CATEGORIA 3: Stesura === */
@@ -248,11 +248,10 @@ export function getContextualWarnings(params: {
   ovenTemp: number;
   /** La temperatura di frittura non è una temperatura del forno. */
   usesOven?: boolean;
+  /** Flour mass used by the existing blend advice. */
+  flourG?: number;
   skillLevel: number;
   usePreFerment: boolean;
-  /** Grammi di farina della ricetta corrente: se presenti, i tip in % diventano
-   * dinamici (es. "0.5-1% zucchero → ≈ 8-15g"). */
-  flourG?: number;
 }, cms?: TroubleshootingMessageSource): ContextualWarning[] {
   const warnings: ContextualWarning[] = [];
   const cmsCtx = cms?.troubleshootingI18n?.contextual;
@@ -296,16 +295,11 @@ export function getContextualWarnings(params: {
   /* Fermentazione breve = rischio P10 + D-Score basso */
   if (params.fermentHours < 6) {
     const loc = cmsCtx?.pale_crust;
-    // Quantità precisa di zucchero per la farina corrente (0.5-1%), appesa al tip
-    // così resta corretta in tutte le lingue senza toccare le stringhe CMS.
-    const sugarNote = params.flourG
-      ? ` → ≈ ${Math.round(params.flourG * 0.005)}-${Math.round(params.flourG * 0.01)}g`
-      : '';
     warnings.push({
       issueId: 'P10',
       message: loc ? interpolate(loc.message, { h: String(params.fermentHours) })
-        : `Fermentazione breve (${params.fermentHours}h): crosta pallida e digeribilita limitata`,
-      tip: (loc?.tip ?? 'Aggiungi 0.5-1% zucchero per favorire la doratura Maillard') + sugarNote,
+        : "Fermentazione breve: verifica lo sviluppo dell’impasto prima di proseguire.",
+      tip: loc?.tip ?? 'Controlla volume, elasticità e risposta alla pressione: le sole ore non attestano la digeribilità.',
       severity: 'info',
     });
   }

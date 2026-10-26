@@ -60,6 +60,7 @@ export function RecipeVerdictNotice({
 
   const reasons = verdict.blockers.map((blocker) => {
     switch (blocker.kind) {
+      case "dietary_conflict":
       case "resource_excluded":
         return engineMsgTexts([blocker.message], cms, bcp47)[0];
       case "oven_too_cold":

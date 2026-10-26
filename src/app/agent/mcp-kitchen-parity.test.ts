@@ -22,7 +22,7 @@ function sameRecipe(data: Record<string,any>, recipe: GeneratedRecipe, context: 
   expect(data.blockers,context).toEqual(recipe.verdict.blockers);
   expect(data.conditions,context).toEqual(recipe.verdict.conditions ?? []);
   for (const key of ["hydration_pct","flour_w","flour_pl","fermentation_hours","fermentation_temp_c","oven_temp_c","cook_time_sec","ball_weight_g","total_dough_g"] as const) expect(data[key],`${context}/${key}`).toEqual(recipe[key]);
-  expect(data.steps,context).toEqual(recipe.timeline.map(s=>({id:s.id,title:s.title,description:s.description,duration_minutes:s.duration_minutes,...(s.rounds?{rounds:s.rounds}:{}),...(s.work_units?{work_units:s.work_units,minutes_per_unit:s.minutes_per_unit}:{})})));
+  expect(data.steps,context).toEqual(recipe.timeline.map(s=>({id:s.id,title:s.title,description:s.description,duration_minutes:s.duration_minutes,...(s.rounds?{rounds:s.rounds}:{}),...(s.parallel_activity?{parallel_activity:s.parallel_activity}:{}),...(s.work_units?{work_units:s.work_units,minutes_per_unit:s.minutes_per_unit}:{})})));
   for (const [name,key] of [["flour","flour_g"],["water","water_g"],["salt","salt_g"]] as const) expect(data.ingredients.find((i:{name:string})=>i.name===name)?.grams ?? 0,context).toBe(recipe[key]);
 }
 

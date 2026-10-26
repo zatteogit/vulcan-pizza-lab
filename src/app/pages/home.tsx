@@ -1,7 +1,7 @@
 import { recipeDisplayName } from "../domain/recipe-reference";
 import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
-import { Bookmark, ChevronRight, Heart, Info, Lightbulb, OctagonAlert, SlidersHorizontal, Sparkles, Stethoscope, TriangleAlert, X } from "lucide-react";
+import { Bookmark, ChevronRight, Heart, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import {
 motion,
 useReducedMotion,
@@ -49,7 +49,6 @@ import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 import { useCms } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { t as tpl } from "../features/cms/i18n";
-import { getDietaryWarnings } from "../data/dietary-data";
 import { findSavedRecipe, removeRecipe, renameSavedRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
 import {
   getInterpretationById,
@@ -508,7 +507,8 @@ export function HomePage() {
   const prefersReducedMotion = useReducedMotion();
 
   /* ═══ Generate recipe — clean crossfade, no overlay ═══ */
-  const handleGenerateRecipe = useCallback(() => {
+  const handleGenerateRecipe = useCallback((toppingId?: string) => {
+    if (toppingId) setSelectedToppingConcept(toppingId);
     setCreateRecipeMode("adapted");
     window.scrollTo({
       top: 0,
@@ -1416,7 +1416,8 @@ export function HomePage() {
                   recipe={recipe}
                 >
                   <RecipeConfigurator
-                    style={selectedStyle}
+                    style={recipe.style}
+                    referenceStyle={selectedStyle}
                     constraints={constraints}
                     onConstraintsChange={(next) => {
                       setCreateRecipeMode("adapted");
@@ -1563,60 +1564,7 @@ export function HomePage() {
                       usePreFerment={usePreFerment}
                       flourG={recipe.flour_g}
                     />
-                    {constraints.dietary_filters.length > 0 &&
-                      (() => {
-                        const dw = getDietaryWarnings(
-                          constraints.dietary_filters,
-                          {
-                            fermentHours: customFermentHours,
-                            fermentTemp: customFermentTemp,
-                            yeastType: constraints.pantry_yeasts.includes("sourdough")
-                              ? "sourdough"
-                              : constraints.pantry_yeasts.includes("fresh")
-                                ? "fresh"
-                                : "dry",
-                            hydration: customHydration,
-                            flourW: customFlourW,
-                          },
-                          cms,
-                        );
-                        if (dw.length === 0) return null;
-                        return (
-                          <div className="home-dietary-warnings">
-                            <div className="home-dietary-warnings__header">
-                              <span className="home-dietary-warnings__icon"><Stethoscope size={16} aria-hidden="true" /></span>
-                              <span className="home-dietary-warnings__title">
-                                {cms.pages.dietaryWarningsTitle}
-                              </span>
-                            </div>
-                            {dw.map((w, i) => {
-                              const severityClass = {
-                                critical: "home-dietary-warning--critical",
-                                warning: "home-dietary-warning--warning",
-                                info: "home-dietary-warning--info",
-                              }[w.severity];
-                              return (
-                              <div
-                                key={w.filterId + i}
-                                className={`home-dietary-warning ${severityClass}`}
-                              >
-                                <span className="home-dietary-warning__icon">
-                                  {w.severity === "critical" ? <OctagonAlert size={16} aria-hidden="true" /> : w.severity === "warning" ? <TriangleAlert size={16} aria-hidden="true" /> : <Info size={16} aria-hidden="true" />}
-                                </span>
-                                <div className="home-dietary-warning__body">
-                                  <div className="type-body home-dietary-warning__message">
-                                    {w.message}
-                                  </div>
-                                  <div className="type-body-sm home-dietary-warning__tip">
-                                    <Lightbulb size={14} aria-hidden="true" className="tip-icon" /> {w.tip}
-                                  </div>
-                                </div>
-                              </div>
-                              );
-                            })}
-                          </div>
-                        );
-                      })()}
+
                   </div>
                 </div>
               }
@@ -1650,7 +1598,7 @@ export function HomePage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
               transition={motionSpring.responsiveEnter}
-              onClick={handleGenerateRecipe}
+              onClick={() => handleGenerateRecipe()}
               whileHover={{ scale: 1.03, y: -1 }}
               deepShadow
               className="home-float-cta__button"

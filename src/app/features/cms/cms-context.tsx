@@ -1,3 +1,4 @@
+import { DIETARY_MESSAGES_IT } from "../../data/dietary-data";
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../../domain/recipe-score";
 import {
@@ -10,13 +11,11 @@ import {
 } from "./locales/index";
 import {
   PRE_FERMENT_DEFAULTS,
-  DIETARY_I18N_DEFAULTS,
   TROUBLESHOOTING_I18N_DEFAULTS,
   GLOSSARY_TERMS_DEFAULTS,
 } from "./domain-i18n-defaults";
 import { STYLE_PHOTOS } from "../../data/style-photos";
 import type {
-  DietaryMessages,
   GlossaryMessages,
   TroubleshootingMessages,
 } from "../../i18n/domain-contracts";
@@ -469,7 +468,6 @@ export interface CmsPreFerment {
 }
 
 /** Dietary data — info, conflict & warning messages */
-export type CmsDietaryI18n = DietaryMessages;
 
 /** Troubleshooting — category labels + issue content + contextual warnings */
 export type CmsTroubleshootingI18n = TroubleshootingMessages;
@@ -1326,7 +1324,6 @@ export interface CmsContent {
   /** Pre-ferment guide i18n */
   preFerment: CmsPreFerment;
   /** Dietary data i18n */
-  dietaryI18n: CmsDietaryI18n;
   /** Troubleshooting i18n */
   troubleshootingI18n: CmsTroubleshootingI18n;
   /** Glossary term content i18n */
@@ -2086,6 +2083,18 @@ export const CMS_DEFAULTS: CmsContent = {
     catScoringDesc: "Metriche di qualit\u00E0 {brand}",
   },
   engineMessages: {
+    ...DIETARY_MESSAGES_IT,
+    "change.topping": "Condimento: {from} → {to}",
+
+
+    "card.ready": "Fattibile",
+    "range.hydrationBasis": "Idratazione — riferimento di catalogo: {catalogMin}–{catalogMax}%; metodo selezionato: {methodMin}–{methodMax}%.",
+    "learn.theoryTitle": "Prima la teoria",
+    "learn.compatiblePath": "Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta.",
+    "learn.theoryOnly": "Con questi vincoli manca una ricetta verificata: puoi approfondire la teoria.",
+    "learn.openTheory": "Esplora la teoria",
+    "timeline.preheat.includesProof": "Questo blocco comprende {minutes} minuti di appretto, già inclusi nel tempo totale: non aggiungerli di nuovo.",
+    "timeline.preheat.includesRest": "Questo blocco comprende {minutes} minuti di riposo, già inclusi nel tempo totale: non aggiungerli di nuovo.",
     // Authenticity penalties
     "auth.hydrationOff": "Idratazione fuori centro (-{penalty}%)",
     "auth.wOutOfRange": "W farina fuori range (-{penalty}%)",
@@ -2560,7 +2569,7 @@ export const CMS_DEFAULTS: CmsContent = {
   styleChars: {
     napoletana_stg: "Cornicione 1-2cm gonfio|Centro 3-4mm sottile|Crosta leopardata|Cottura 60-90s",
     napoletana_canotto: "Cornicione 3-4cm \"canotto\"|Alveolatura estrema|Maturazione 24-72h|Digeribilit\u00E0 alta",
-    teglia_romana: "Altezza 2-3cm|Idratazione 80-100%|No-knead + pieghe|Mollica nuvola",
+    teglia_romana: "Altezza 2-3cm|Idratazione secondo la versione|No-knead + pieghe|Mollica nuvola",
     tonda_romana: "Spessore 1-2mm|Mattarello o a mano|Croccante estrema|Farina debole W<210",
     pinsa_romana: "Mix multi-cereale|Forma ovale|Crosta vetrosa|Maturazione 24-72h",
     pala_romana: "Forma ovale allungata|Alta idratazione|Servita su pala|Crosta croccante-nuvola",
@@ -2945,11 +2954,10 @@ export const CMS_DEFAULTS: CmsContent = {
     hintLowPLForHighHydration: "Con idratazione alta, consigliato P/L ≤ {pl} per estensibilità",
     hintHighWAllowsMoreHydration: "Con W {w}, puoi arrivare fino al {h}% di idratazione",
     hintAdaptiveLabel: "suggerito",
-    hintLimitMinLabel: "limite min",
-    hintLimitMaxLabel: "limite max",
+    hintLimitMinLabel: "min consigliato",
+    hintLimitMaxLabel: "max consigliato",
   },
   preFerment: PRE_FERMENT_DEFAULTS,
-  dietaryI18n: DIETARY_I18N_DEFAULTS,
   troubleshootingI18n: TROUBLESHOOTING_I18N_DEFAULTS,
   glossaryTerms: GLOSSARY_TERMS_DEFAULTS,
 };

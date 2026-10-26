@@ -39,7 +39,7 @@ interface IngredientsSectionProps {
   isNerd: boolean;
   servingUnit: ReturnType<typeof getServingUnit>;
   panSizeLabel: string | null;
-  updateBalls: (n: number) => void;
+  updateBalls: (n: number) => number;
   /** M-11: correzione personale della lievitazione. */
   onYeastSpeedChange?: (factor: number) => void;
   showRule55Tip: boolean;
@@ -144,11 +144,11 @@ export function IngredientsSection({
             max={MAX_DOUGH_BALLS}
             inputLabel={servingLabel}
             onChange={(n) => {
-              updateBalls(n);
+              const actual = updateBalls(n);
               /* U-10 (F11): le quantità cambiano tutte insieme; lo si dice. */
               setBallsStatus(
                 t(ui.quantitiesUpdatedStatus, {
-                  n: `${n} ${getServingUnitLabel(cms, servingUnit, n, cms.locale.id !== "de")}`,
+                  n: `${actual} ${getServingUnitLabel(cms, servingUnit, actual, cms.locale.id !== "de")}`,
                 }),
               );
             }}

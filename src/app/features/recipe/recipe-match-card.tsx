@@ -320,11 +320,10 @@ export function RecipeMatchCard({
   if (verdictRecipe && headroom < 2) headroomLine = null;
   // The affinity icon describes the score; bookmarks describe saving.
   const notFeasible = verdictRecipe?.verdict.outcome === "not_feasible";
-  const presentationState = verdictRecipe ? recipePresentationState(verdictRecipe, originalRecipe) : null;
-  const statusLabel = notFeasible ? cms.ui.verdictTitle : presentationState === "adapted" ? cms.ui.scoreBasisTailored
-    : presentationState === "check"
+  const presentationState = verdictRecipe ? recipePresentationState(verdictRecipe) : null;
+  const statusLabel = notFeasible ? cms.ui.verdictTitle : presentationState === "check"
       ? engineMsgTexts([{key:"card.toVerify",fallback:"Da verificare"}],cms,bcp47)[0]
-      : verdictRecipe ? cms.tiers.perfect.label : tone.title;
+      : verdictRecipe ? engineMsgTexts([{key:"card.ready",fallback:"Fattibile"}], cms, bcp47)[0] : tone.title;
   // Un solo "movimento in avanti" verso su-misura: quando l'ottimizzatore è
   // disponibile, è LUI l'azione (subentra al vecchio "adatta alla cucina", che era
   // il midpoint ricalibrato — dominato dall'ottimo). Evita il doppio pulsante.
@@ -410,6 +409,11 @@ export function RecipeMatchCard({
               />
             )}
             {!notFeasible && verdictRecipe && <RecipeConditionChips recipe={verdictRecipe} compact />}
+            {!notFeasible && (verdictRecipe?.dietary_warnings ?? []).map((warning, i) => (
+              <p key={`${warning.filterId}-${i}`} className="match-notice match-notice--warn">
+                {engineMsgTexts([warning.message], cms, bcp47)[0]}
+              </p>
+            ))}
             {/* Avvisi onesti: visibili anche a card chiusa */}
             {!notFeasible && unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
               <p className="match-notice match-notice--warn">

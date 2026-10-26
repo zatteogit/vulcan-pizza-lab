@@ -21,7 +21,7 @@ import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
 import { resolveStepVisual } from "../cooking/step-visual";
 import type { FlourEntry } from "../../data/flour-database";
-import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
+import { GeneratedRecipe, generateTimeSlots, getServingUnit, normalizeDoughBallCount, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
 import { RecipeFeedbackForm } from "./recipe-feedback";
 import { getRecipesByAuthenticity, getToppingForStyle } from "../../data/topping-library";
 import { ConfirmDialog, IconButton } from "../../components/ds/index";
@@ -563,10 +563,12 @@ export function RecipeOutput({
   }
 
   const updateBalls = (n: number) => {
+    const count = normalizeDoughBallCount(n);
     onConstraintsChange({
       ...constraints,
-      dough_balls: Math.max(1, Math.min(20, n)),
+      dough_balls: count,
     });
+    return count;
   };
 
   /* VPL-013: Compensations applied */

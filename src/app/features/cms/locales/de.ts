@@ -5,7 +5,6 @@ import { INSPIRATION_I18N_DE } from "../../../data/inspiration-i18n/de";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_DE,
-  DIETARY_DE,
   TROUBLESHOOTING_DE,
   GLOSSARY_TERMS_DE,
 } from "./domain-de";
@@ -675,6 +674,35 @@ export const DE_LOCALE: CmsContent = {
     catScoringDesc: "{brand}-Qualit\u00E4tsmetriken",
   },
   engineMessages: {
+    "diet.variant": "Variante von {recipe} ohne {ingredients}",
+    "diet.variantChanges": "Anderer Belag: {topping}. Entfällt: {ingredients}.",
+    "diet.variantAdded": "Hinzugefügte Zutaten: {ingredients}.",
+    "diet.useVariant": "Diese Variante verwenden",
+    "diet.variantAvailable": "Alternative verfügbar",
+    "change.topping": "Belag: {from} → {to}",
+    "diet.glutenConflict": "Glutenfrei-Filter schließt aus: {ingredients}.",
+    "diet.glutenUnsupported": "Keine geprüfte glutenfreie Methode für dieses Rezept.",
+    "diet.veganConflict": "Vegan-Filter schließt aus: {ingredients}.",
+    "diet.lactoseConflict": "Laktosefrei-Filter schließt aus: {ingredients}.",
+    "diet.verifyVegan": "Vegane Eignung auf dem Etikett prüfen: {ingredients}.",
+    "diet.verifyLactose": "Laktosefreiheit auf dem Etikett prüfen: {ingredients}.",
+    "diet.changeRecipe": "Ein passendes Rezept wählen oder die Zutaten ausdrücklich ändern und neu berechnen.",
+    "diet.noValidatedMethod": "Mehl nicht bei gleichen Mengen austauschen: Eine geprüfte glutenfreie Rezeptur ist erforderlich.",
+    "diet.labelCheck": "Vor dem Fortfahren die Zutaten auf dem Etikett prüfen.",
+    "diet.omitOptional": "Für die gewählten Filter diese optionalen Zutaten weglassen: {ingredients}.",
+    "diet.fodmapUnknown": "Die Fermentationsdauer allein belegt keine Low-FODMAP-Eignung.",
+    "diet.histamineUnknown": "Zeit und Temperatur bestimmen nicht den Histamingehalt.",
+    "diet.processCheck": "Zutaten-, Produkt- und Portionsdaten sind nötig; keine Eignungsbestätigung.",
+    "diet.nickelUnknown": "Die Mehlstärke W misst nicht den Nickelgehalt.",
+    "diet.cardConflict": "Unvereinbar mit den Ernährungsfiltern",
+    "card.ready": "Machbar",
+    "range.hydrationBasis": "Hydration — Katalogreferenz: {catalogMin}–{catalogMax}%; gewählte Methode: {methodMin}–{methodMax}%.",
+    "learn.theoryTitle": "Zuerst die Theorie",
+    "learn.compatiblePath": "Ein praktischer Lernpfad passend zu deiner Küche: die Rezeptbedingungen prüfen.",
+    "learn.theoryOnly": "Keine geprüfte Rezeptur passt zu diesen Vorgaben. Entdecke die Theorie.",
+    "learn.openTheory": "Theorie entdecken",
+    "timeline.preheat.includesProof": "Dieser Block enthält {minutes} Minuten Stückgare, die bereits in der Gesamtzeit enthalten sind: nicht erneut addieren.",
+    "timeline.preheat.includesRest": "Dieser Block enthält {minutes} Minuten Ruhezeit, die bereits in der Gesamtzeit enthalten sind: nicht erneut addieren.",
     "auth.hydrationOff":
       "Hydration außerhalb der Mitte (-{penalty}%)",
     "auth.wOutOfRange":
@@ -1217,7 +1245,7 @@ export const DE_LOCALE: CmsContent = {
     napoletana_canotto:
       'Rand 3-4cm "Canotto"|Extreme Porung|Reifung 24-72h|Hohe Verdaulichkeit',
     teglia_romana:
-      "H\u00F6he 2-3cm|Hydratation 80-100%|Ohne Kneten + Falten|Wolkenkrume",
+      "H\u00F6he 2-3cm|Hydration je nach Variante|Ohne Kneten + Falten|Wolkenkrume",
     tonda_romana:
       "Dicke 1-2mm|Nudelholz oder von Hand|Extrem knusprig|Schwaches Mehl W<210",
     pinsa_romana:
@@ -1653,8 +1681,8 @@ export const DE_LOCALE: CmsContent = {
     hintLowPLForHighHydration: "Bei hoher Hydratation wird ein P/L-Wert ≤ {pl} für die Dehnbarkeit empfohlen",
     hintHighWAllowsMoreHydration: "Mit W {w} können Sie bis zu {h}% Hydratation gehen",
     hintAdaptiveLabel: "vorgeschlagen",
-    hintLimitMinLabel: "Min-Grenze",
-    hintLimitMaxLabel: "Max-Grenze",
+    hintLimitMinLabel: "empfohlenes Min.",
+    hintLimitMaxLabel: "empfohlenes Max.",
   },
   cooking: {
     sectionsAria: "Rezeptabschnitte",
@@ -1859,7 +1887,6 @@ export const DE_LOCALE: CmsContent = {
     confirmNewAria: "Neues Backen best\u00E4tigen",
   } as any,
   preFerment: PRE_FERMENT_DE as any,
-  dietaryI18n: DIETARY_DE as any,
   troubleshootingI18n: TROUBLESHOOTING_DE as any,
   glossaryTerms: GLOSSARY_TERMS_DE as any,
 };

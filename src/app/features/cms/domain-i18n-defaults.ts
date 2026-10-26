@@ -1,10 +1,10 @@
+import { GLOSSARY_COPY_IT } from "../../data/glossary-copy";
 /* === DOMAIN DATA i18n — Italian defaults === */
 /* Pre-ferment guide, dietary data, troubleshooting, glossary terms */
 /* Separated from cms-context.tsx for maintainability */
 
 import type { CmsPreFerment } from "./cms-context";
 import type {
-  DietaryMessages,
   GlossaryMessages,
   TroubleshootingMessages,
 } from "../../i18n/domain-contracts";
@@ -95,78 +95,7 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
   },
 };
 
-export const DIETARY_I18N_DEFAULTS: DietaryMessages = {
-  info: {
-    low_fodmap: {
-      name: "Low FODMAP",
-      description: "Valuta ingredienti, processo e porzione",
-      scienceNote: "La fermentazione può modificare i FODMAP, ma il risultato dipende da farine, microrganismi, processo e porzione. Le sole ore non permettono di calcolare una riduzione o attestare una ricetta low FODMAP.",
-    },
-    histamine: {
-      name: "Bassa istamina",
-      description: "Valuta ingredienti, processo e porzione",
-      scienceNote: "Il contenuto dipende da microrganismi, ingredienti, processo e conservazione. Non è calcolabile con un tasso fisso per ora; una fermentazione breve non ne garantisce l'assenza.",
-    },
-    gluten_free: {
-      name: "Senza glutine",
-      description: "Per celiachia o sensibilità al glutine",
-      scienceNote: "Soglia EU: <20 ppm. Richiede mix GF (riso/mais/quinoa + xantana 1.5%)",
-    },
-    lactose_free: {
-      name: "Senza lattosio",
-      description: "Per intolleranza al lattosio",
-      scienceNote: "La cottura non garantisce l'eliminazione del lattosio: verifica gli ingredienti e le indicazioni del produttore.",
-    },
-    nickel: {
-      name: "Basso nichel",
-      description: "Per allergia sistemica al nichel (SNAS)",
-      scienceNote: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità.",
-    },
-    vegan: {
-      name: "Vegano",
-      description: "Nessun derivato animale",
-      scienceNote: "Impasto base è già vegano. Attenzione a topping e grassi (burro → olio)",
-    },
-  },
-  conflicts: {
-    fodmap_histamine: {
-      message: "Ore di fermentazione e tipo di lievito non certificano l'idoneità per FODMAP o istamina.",
-      compromiseTip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità.",
-    },
-    gf_fodmap: {
-      message: "Senza glutine non significa automaticamente low FODMAP: contano ingredienti e porzione.",
-    },
-    nickel_general: {
-      message: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità.",
-    },
-  },
-  warnings: {
-    fodmap_low: {
-      message: "Riduzione FODMAP non determinabile dalle sole ore",
-      tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità.",
-    },
-    fodmap_good: {
-      message: "Riduzione FODMAP non determinabile dalle sole ore",
-      tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità.",
-    },
-    histamine_high: {
-      message: "Contenuto di istamina non determinabile da tempo e temperatura",
-      tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro.",
-    },
-    histamine_moderate: {
-      message: "Contenuto di istamina non determinabile da tempo e temperatura",
-      tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro.",
-    },
-    gluten_free: {
-      message: "Ricetta usa farina di grano — incompatibile con celiachia",
-      tip: "Sostituisci con mix GF (riso 40% + mais 30% + quinoa 10% + sorgo 10% + amido 10%) + xantana 1.5%",
-    },
-    nickel_highW: {
-      message: "Il valore W non misura il contenuto di nichel",
-      tip: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità.",
-    },
-  },
-};
+
 
 export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
   categories: {
@@ -210,15 +139,15 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
       symptom: "Lievitazione troppo rapida (raddoppio in <3h)",
       cause: "Troppo lievito (>1.5%) o temperatura ambiente >28°C",
       testRapido: "L'impasto ha raddoppiato in meno di 3 ore?",
-      fixImmediate: "Trasferisci immediatamente a 4°C per bloccare la fermentazione",
+      fixImmediate: "Metti l’impasto in frigorifero per rallentare la fermentazione; il freddo non la blocca subito.",
       prevention: "Usa la dose di lievito calcolata per le tue ore e la tua temperatura (a 18 °C per 24 h circa 0,1% di lievito fresco)",
     },
     P06: {
       symptom: "Sapore troppo acido/acetico",
       cause: "LAB eterofermentativi attivi >48h a >18°C (specialmente con lievito madre)",
       testRapido: "pH impasto — dovrebbe essere 4.5-5.5, problematico se <4.2",
-      fixImmediate: "Aggiungi 0.5-1% zucchero per mascherare acidità",
-      prevention: "Fermentazioni >24h sempre a 4-8°C",
+      fixImmediate: "Lo zucchero maschera il sapore ma non corregge una fermentazione eccessiva. Rivaluta l’impasto prima di usarlo.",
+      prevention: "Scegli tempo, temperatura e lievito secondo il metodo; controlla lo sviluppo senza una soglia oraria universale.",
     },
     P07: {
       symptom: "Il panetto torna elastico dopo la stesura ('effetto molla')",
@@ -319,8 +248,8 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
       tip: "Per fermentazioni >24h, usa temperatura 4-8°C",
     },
     pale_crust: {
-      message: "Fermentazione breve ({h}h): crosta pallida e digeribilità limitata",
-      tip: "Aggiungi 0.5-1% zucchero per favorire la doratura Maillard",
+      message: "Fermentazione breve: verifica lo sviluppo dell’impasto prima di proseguire.",
+      tip: "Controlla volume, elasticità e risposta alla pressione: le sole ore non attestano la digeribilità.",
     },
     cold_oven: {
       message: "Forno a {t}°C: rischio base cruda con bordo bruciato",
@@ -344,9 +273,9 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
 export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
   terms: {
     w_alveograph: {
-      name: "W (Alveografo di Chopin)",
-      definition: "Energia totale necessaria per espandere un alveolo di impasto fino a rottura. Misura la forza complessiva della farina.",
-      whyImportant: "W descrive la forza complessiva della farina. Tenacità ed estensibilità si valutano con P, L e P/L: una W alta non implica da sola un impasto più tenace.",
+      name: GLOSSARY_COPY_IT.w_alveograph.name,
+      definition: GLOSSARY_COPY_IT.w_alveograph.definition,
+      whyImportant: GLOSSARY_COPY_IT.w_alveograph.whyImportant,
       ranges: [
         { label: "Debole", value: "90–160", note: "Biscotti, cialde" },
         { label: "Media", value: "160–200", note: "Pan carrè, focaccia" },
@@ -356,9 +285,9 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     p_tenacity: {
-      name: "P (Tenacità)",
-      definition: "Resistenza massima alla deformazione. Picco della curva alveografica — quanto l'impasto resiste allo stiramento.",
-      whyImportant: "P alto: impasto 'duro', tiene forma in cottura. P basso: impasto 'molle', facile stendere, può collassare.",
+      name: GLOSSARY_COPY_IT.p_tenacity.name,
+      definition: GLOSSARY_COPY_IT.p_tenacity.definition,
+      whyImportant: GLOSSARY_COPY_IT.p_tenacity.whyImportant,
       ranges: [
         { label: "Pizza", value: "40–80 mm" },
         { label: "Pane", value: "80–120 mm" },
@@ -366,18 +295,18 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     l_extensibility: {
-      name: "L (Estensibilità)",
-      definition: "Lunghezza massima raggiunta dall'alveolo prima di rottura. Misura quanto l'impasto si può allungare.",
-      whyImportant: "L alto: impasto estensibile, facile stendere senza strappi. L basso: impasto corto, si strappa.",
+      name: GLOSSARY_COPY_IT.l_extensibility.name,
+      definition: GLOSSARY_COPY_IT.l_extensibility.definition,
+      whyImportant: GLOSSARY_COPY_IT.l_extensibility.whyImportant,
       ranges: [
         { label: "Pizza", value: "80–120 mm" },
         { label: "Pane", value: "60–100 mm" },
       ],
     },
     pl_ratio: {
-      name: "P/L (Rapporto Tenacità/Estensibilità)",
-      definition: "Indice di bilanciamento meccanico. Rapporto tra resistenza e estensibilità dell'impasto.",
-      whyImportant: "P/L ottimale (0.5-0.6): cornicione alto + base sottile. <0.4: pizza piatta. >0.8: impasto 'di gomma'.",
+      name: GLOSSARY_COPY_IT.pl_ratio.name,
+      definition: GLOSSARY_COPY_IT.pl_ratio.definition,
+      whyImportant: GLOSSARY_COPY_IT.pl_ratio.whyImportant,
       ranges: [
         { label: "<0.4 Molto estensibile", value: "Collassa facilmente", note: "Pinsa" },
         { label: "0.4–0.5 Estensibile", value: "Facile lavorare", note: "Napoletana classica" },
@@ -387,9 +316,9 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     falling_number: {
-      name: "Falling Number (Hagberg-Perten)",
-      definition: "Tempo impiegato da un'asta a cadere attraverso una sospensione di farina riscaldata. Misura l'attività amilasica.",
-      whyImportant: "FN basso (<250): fermentazione rapida ma impasto instabile. FN alto (>300): stabile per lunghe maturazioni.",
+      name: GLOSSARY_COPY_IT.falling_number.name,
+      definition: GLOSSARY_COPY_IT.falling_number.definition,
+      whyImportant: GLOSSARY_COPY_IT.falling_number.whyImportant,
       ranges: [
         { label: "<200 Altissima amilasi", value: "Impasto appiccicoso", note: "Sconsigliato pizza" },
         { label: "200–250 Alta", value: "Mollica umida", note: "Pane rapido" },
@@ -399,9 +328,9 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     hydration: {
-      name: "Idratazione (H%)",
-      definition: "Percentuale in peso di acqua rispetto alla farina nell'impasto.",
-      whyImportant: "H bassa (<55%): croccante, facile. H media (60-65%): bilanciamento. H alta (>70%): serve farina forte (W>280) e abilità.",
+      name: GLOSSARY_COPY_IT.hydration.name,
+      definition: GLOSSARY_COPY_IT.hydration.definition,
+      whyImportant: GLOSSARY_COPY_IT.hydration.whyImportant,
       ranges: [
         { label: "Napoletana classica", value: "55–60%", note: "Morbido, lavorabile" },
         { label: "Napoletana contemporanea", value: "60–65%", note: "Cornicione leggero" },
@@ -411,8 +340,8 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     absorption: {
-      name: "Assorbimento Acqua",
-      definition: "Massima quantità d'acqua che una farina può assorbire mantenendo consistenza lavorabile. Dipende da proteine, amido danneggiato, fibre.",
+      name: GLOSSARY_COPY_IT.absorption.name,
+      definition: GLOSSARY_COPY_IT.absorption.definition,
       ranges: [
         { label: "00 debole (W150)", value: "50–52%" },
         { label: "00 media (W220)", value: "53–55%" },
@@ -422,9 +351,9 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     stability: {
-      name: "Stabilità Impasto",
-      definition: "Tempo durante il quale l'impasto mantiene consistenza ottimale durante mixing. Misurata con farinografo.",
-      whyImportant: "Stabilità bassa (<5 min): degrada se overmixed. Alta (>10 min): tollera errori operativi.",
+      name: GLOSSARY_COPY_IT.stability.name,
+      definition: GLOSSARY_COPY_IT.stability.definition,
+      whyImportant: GLOSSARY_COPY_IT.stability.whyImportant,
       ranges: [
         { label: "Debole", value: "2–4 min" },
         { label: "Media", value: "5–8 min" },
@@ -433,9 +362,9 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     yeast: {
-      name: "Lievito (Saccharomyces cerevisiae)",
-      definition: "Fungo unicellulare che converte zuccheri in CO₂ + etanolo + composti aromatici.",
-      whyImportant: "Temp ottimale: 28-32°C. Min 4°C (dormiente). Max 40°C (inibito). Morte >55°C.",
+      name: GLOSSARY_COPY_IT.yeast.name,
+      definition: GLOSSARY_COPY_IT.yeast.definition,
+      whyImportant: GLOSSARY_COPY_IT.yeast.whyImportant,
       ranges: [
         { label: "Fresco", value: "0.5–2.0%", note: "Umidità 70%, frigo 4°C" },
         { label: "Secco attivo", value: "0.3–1.0%", note: "Idratare prima" },
@@ -443,13 +372,13 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     lab: {
-      name: "LAB (Batteri Lattici)",
-      definition: "Batteri che fermentano zuccheri producendo acido lattico (e acetico). Presenti nel lievito madre.",
-      whyImportant: "Abbassano pH (4.0-4.5), aumentano acidità, degradano FODMAP (fruttani), inibiscono muffe. Temp ottimale: 28-32°C.",
+      name: GLOSSARY_COPY_IT.lab.name,
+      definition: GLOSSARY_COPY_IT.lab.definition,
+      whyImportant: GLOSSARY_COPY_IT.lab.whyImportant,
     },
     q10: {
-      name: "Q₁₀ (Coefficiente di Temperatura)",
-      definition: "Fattore moltiplicativo della velocità di reazione biochimica per ogni aumento di 10°C.",
+      name: GLOSSARY_COPY_IT.q10.name,
+      definition: GLOSSARY_COPY_IT.q10.definition,
       whyImportant: "Con Q₁₀ = 2 la fermentazione raddoppia ogni +10°C: 24h a 18°C ≈ 12h a 28°C. I valori qui sotto sono stime del modello di {brand}.",
       ranges: [
         { label: "Lievito commerciale ≥10°C", value: "2.0", note: "Stima del modello, coerente con i dati di crescita fra 18 e 25 °C" },
@@ -459,59 +388,59 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     arrhenius: {
-      name: "Equazione di Arrhenius",
-      definition: "Descrive la dipendenza della velocità di reazione dalla temperatura assoluta.",
+      name: GLOSSARY_COPY_IT.arrhenius.name,
+      definition: GLOSSARY_COPY_IT.arrhenius.definition,
       whyImportant: "Con β=0.075 e T_ref=18°C → Q₁₀ ≈ 2.12. Usato nel motore {brand} per calcolare dosaggio lievito e tempi.",
     },
     biga: {
-      name: "Biga",
-      definition: "Pre-impasto asciutto di farina, 44% d'acqua (fino al 50% con farine integrali) e 1% di lievito, maturato circa 16 h a 18–20 °C; la biga lunga fa 24 h a 4–5 °C più 24 h a 18–20 °C.",
-      whyImportant: "Porta aroma e struttura all'impasto finale. Di solito un terzo della farina totale (20–50%). Non è ammessa nella Napoletana STG, che è a impasto diretto.",
+      name: GLOSSARY_COPY_IT.biga.name,
+      definition: GLOSSARY_COPY_IT.biga.definition,
+      whyImportant: GLOSSARY_COPY_IT.biga.whyImportant,
     },
     poolish: {
-      name: "Poolish",
-      definition: "Pre-impasto liquido: farina e acqua in parti uguali con poco lievito, maturato 12–16 h a 20–22 °C (0,1% di lievito per 15–16 h, 0,3% per 10–12 h).",
-      whyImportant: "Matura in fretta e rende l'impasto estensibile. Di solito il 30–50% della farina totale. È pronto quando la superficie è piena di bollicine e il centro comincia a cedere.",
+      name: GLOSSARY_COPY_IT.poolish.name,
+      definition: GLOSSARY_COPY_IT.poolish.definition,
+      whyImportant: GLOSSARY_COPY_IT.poolish.whyImportant,
     },
     autolysis: {
-      name: "Autolisi",
-      definition: "Riposo di farina e acqua, senza lievito né sale, per 20–60 minuti prima dell'impasto (R. Calvel, 1974). Non è un pre-fermento.",
-      whyImportant: "L'impasto diventa più estensibile e più facile da lavorare.",
+      name: GLOSSARY_COPY_IT.autolysis.name,
+      definition: GLOSSARY_COPY_IT.autolysis.definition,
+      whyImportant: GLOSSARY_COPY_IT.autolysis.whyImportant,
     },
     bulk_fermentation: {
-      name: "Puntata (Bulk Fermentation)",
-      definition: "Prima lievitazione, in massa unica, dopo l'impasto e prima dello staglio. Secondo lo stile dura da meno di un'ora a più di un giorno in frigo: la durata giusta è quella del procedimento.",
-      whyImportant: "Il glutine si rilassa, la fermentazione parte e l'impasto prende aroma.",
+      name: GLOSSARY_COPY_IT.bulk_fermentation.name,
+      definition: GLOSSARY_COPY_IT.bulk_fermentation.definition,
+      whyImportant: GLOSSARY_COPY_IT.bulk_fermentation.whyImportant,
     },
     ball_fermentation: {
-      name: "Appretto (Ball Fermentation)",
-      definition: "Seconda lievitazione, dopo lo staglio: in panetti o, per gli stili in teglia, direttamente in teglia. Dura secondo stile, temperatura e lievito: la durata giusta è quella del procedimento.",
-      whyImportant: "Porta i panetti al volume giusto per stendere e infornare.",
+      name: GLOSSARY_COPY_IT.ball_fermentation.name,
+      definition: GLOSSARY_COPY_IT.ball_fermentation.definition,
+      whyImportant: GLOSSARY_COPY_IT.ball_fermentation.whyImportant,
     },
     maillard: {
-      name: "Reazione di Maillard",
-      definition: "Reazione non-enzimatica tra aminoacidi e zuccheri riducenti ad alta temperatura (>140°C).",
-      whyImportant: "Crosta dorata (melanoidine), aroma tostato (pirazine), leopard spotting a 300°C+. Ottimale 160-180°C.",
+      name: GLOSSARY_COPY_IT.maillard.name,
+      definition: GLOSSARY_COPY_IT.maillard.definition,
+      whyImportant: GLOSSARY_COPY_IT.maillard.whyImportant,
     },
     caramelization: {
-      name: "Caramellizzazione",
-      definition: "Degradazione termica degli zuccheri (senza proteine) ad alta temperatura (>150°C saccarosio, >120°C fruttosio).",
-      whyImportant: "Contribuisce a macchie scure su cornicione. Meno rilevante di Maillard nella pizza (poche proteine in superficie).",
+      name: GLOSSARY_COPY_IT.caramelization.name,
+      definition: GLOSSARY_COPY_IT.caramelization.definition,
+      whyImportant: GLOSSARY_COPY_IT.caramelization.whyImportant,
     },
     starch_gelatinization: {
-      name: "Gelatinizzazione Amido",
-      definition: "Transizione amido da stato cristallino a gelatinoso assorbendo acqua. Inizio 55-60°C, picco 65-70°C, completamento 80-85°C.",
-      whyImportant: "Mollica: rende amido digeribile (<55°C al cuore = amido crudo). Crosta: >100°C → croccante.",
+      name: GLOSSARY_COPY_IT.starch_gelatinization.name,
+      definition: GLOSSARY_COPY_IT.starch_gelatinization.definition,
+      whyImportant: GLOSSARY_COPY_IT.starch_gelatinization.whyImportant,
     },
     retrogradation: {
-      name: "Retrogradazione",
-      definition: "Ricristallizzazione dell'amido gelatinizzato durante conservazione. Massima a 4°C (frigo).",
-      whyImportant: "Mollica diventa dura e 'stantia'. Ritardare con: grassi 2-3%, zuccheri 1-2%, fermentazione lunga, idratazione alta.",
+      name: GLOSSARY_COPY_IT.retrogradation.name,
+      definition: GLOSSARY_COPY_IT.retrogradation.definition,
+      whyImportant: GLOSSARY_COPY_IT.retrogradation.whyImportant,
     },
     thermal_conductivity: {
-      name: "Conducibilità Termica",
-      definition: "Capacità di un materiale di condurre calore.",
-      whyImportant: "Acciaio (k=50): ideale forni casa 280°C, cottura 6-8 min. Pietra (k=2): ideale forni legna 450°C+, cottura 60-90s.",
+      name: GLOSSARY_COPY_IT.thermal_conductivity.name,
+      definition: GLOSSARY_COPY_IT.thermal_conductivity.definition,
+      whyImportant: GLOSSARY_COPY_IT.thermal_conductivity.whyImportant,
       ranges: [
         { label: "Rame", value: "400" },
         { label: "Alluminio", value: "205" },
@@ -523,28 +452,28 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     fodmap: {
-      name: "FODMAP",
-      definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. Carboidrati a catena corta fermentabili (fruttani 1-3% nel grano).",
-      whyImportant: "La fermentazione può modificare i FODMAP, ma il risultato dipende da farine, microrganismi, processo e porzione. Le sole ore non permettono di calcolare una riduzione o attestare una ricetta low FODMAP.",
+      name: GLOSSARY_COPY_IT.fodmap.name,
+      definition: GLOSSARY_COPY_IT.fodmap.definition,
+      whyImportant: GLOSSARY_COPY_IT.fodmap.whyImportant,
     },
     histamine: {
-      name: "Istamina",
-      definition: "Ammina biogena da decarbossilazione dell'istidina. Prodotta da LAB durante fermentazione, presente in formaggi stagionati e salumi.",
-      whyImportant: "Il contenuto dipende da microrganismi, ingredienti, processo e conservazione. Non è calcolabile con un tasso fisso per ora; una fermentazione breve non ne garantisce l'assenza.",
+      name: GLOSSARY_COPY_IT.histamine.name,
+      definition: GLOSSARY_COPY_IT.histamine.definition,
+      whyImportant: GLOSSARY_COPY_IT.histamine.whyImportant,
     },
     gluten: {
-      name: "Glutine",
-      definition: "Complesso proteico viscoelastico formato da gliadina (estensibile) + glutenina (tenace) in presenza di acqua e mixing.",
-      whyImportant: "Elasticità da glutenine (legami S-S), viscosità da gliadine (legami H). Proteolisi lunga taglia legami → impasto più estensibile.",
+      name: GLOSSARY_COPY_IT.gluten.name,
+      definition: GLOSSARY_COPY_IT.gluten.definition,
+      whyImportant: GLOSSARY_COPY_IT.gluten.whyImportant,
     },
     proteolysis: {
-      name: "Proteolisi",
-      definition: "Degradazione proteine in peptidi e aminoacidi da parte di enzimi proteasi. Target: glutine.",
-      whyImportant: "Facilità stesura, aumento digeribilità, aminoacidi liberi → sapore umami. Eccessiva (>72h): impasto troppo molle. Ottimale: 24-48h.",
+      name: GLOSSARY_COPY_IT.proteolysis.name,
+      definition: GLOSSARY_COPY_IT.proteolysis.definition,
+      whyImportant: GLOSSARY_COPY_IT.proteolysis.whyImportant,
     },
     thickness_factor: {
-      name: "Thickness Factor (TF)",
-      definition: "Densità superficiale impasto — massa per unità area. Indica quanto impasto c'è per cm².",
+      name: GLOSSARY_COPY_IT.thickness_factor.name,
+      definition: GLOSSARY_COPY_IT.thickness_factor.definition,
       whyImportant: "Determina tempo cottura, croccantezza e densità calorica. Metrica originale Progetto {brand}.",
       ranges: [
         { label: "Napoletana", value: "0.30–0.36", note: "6-7 mm" },
@@ -554,9 +483,9 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     friction_factor: {
-      name: "Attrito dell'impastatrice",
-      definition: "Gradi in pi\u00F9 che l'impastatrice aggiunge all'impasto mentre lavora.",
-      whyImportant: "Impastare scalda l'impasto e fa partire prima la lievitazione: per questo l'acqua va pi\u00F9 fredda quando usi una macchina.",
+      name: GLOSSARY_COPY_IT.friction_factor.name,
+      definition: GLOSSARY_COPY_IT.friction_factor.definition,
+      whyImportant: GLOSSARY_COPY_IT.friction_factor.whyImportant,
       ranges: [
         { label: "A mano", value: "0" },
         { label: "Impastatrice a forcella", value: "2" },
@@ -566,13 +495,13 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     rule_of_55: {
-      name: "Temperatura dell'acqua (tre temperature)",
-      definition: "Calcola a che temperatura mettere l'acqua perch\u00E9 l'impasto arrivi alla temperatura voluta.",
-      whyImportant: "Somma delle tre temperature = 3 \u00D7 impasto voluto \u2212 attrito. In pizzeria si dice anche \u00ABregola del 55\u00BB: con la somma fissa a 55 l'impasto viene intorno ai 18 \u00B0C (55 \u00F7 3); qui si usa la temperatura voluta dallo stile, 22\u201324 \u00B0C.",
+      name: GLOSSARY_COPY_IT.rule_of_55.name,
+      definition: GLOSSARY_COPY_IT.rule_of_55.definition,
+      whyImportant: GLOSSARY_COPY_IT.rule_of_55.whyImportant,
     },
     a_score: {
-      name: "A-Score (Autenticità)",
-      definition: "Punteggio 0-100 che misura aderenza di una ricetta al disciplinare dello stile target.",
+      name: GLOSSARY_COPY_IT.a_score.name,
+      definition: GLOSSARY_COPY_IT.a_score.definition,
       ranges: [
         { label: "90-100", value: "Rigorosamente autentica" },
         { label: "75-89", value: "Sostanzialmente autentica" },
@@ -581,8 +510,8 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     f_score: {
-      name: "F-Score (Fattibilità)",
-      definition: "Punteggio 0-100 che misura realizzabilità pratica data equipaggiamento e abilità utente.",
+      name: GLOSSARY_COPY_IT.f_score.name,
+      definition: GLOSSARY_COPY_IT.f_score.definition,
       ranges: [
         { label: "90-100", value: "Altamente fattibile" },
         { label: "75-89", value: "Fattibile con attenzione" },
@@ -591,8 +520,8 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
       ],
     },
     d_score: {
-      name: "D-Score (Digeribilità)",
-      definition: "Indice euristico di maturazione, non una misura della digeribilità individuale o dei FODMAP. Usa ore equivalenti a 18°C, un correttivo per pre-fermento, dose di lievito e freddo.",
+      name: GLOSSARY_COPY_IT.d_score.name,
+      definition: GLOSSARY_COPY_IT.d_score.definition,
       ranges: [{"label":"85-100","value":"Indice alto"},{"label":"70-84","value":"Indice medio-alto"},{"label":"50-69","value":"Indice medio"},{"label":"<50","value":"Indice basso"}],
     },
   },

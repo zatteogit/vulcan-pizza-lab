@@ -5,7 +5,6 @@ import { INSPIRATION_I18N_JA } from "../../../data/inspiration-i18n/ja";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_JA,
-  DIETARY_JA,
   TROUBLESHOOTING_JA,
   GLOSSARY_TERMS_JA,
 } from "./domain-ja";
@@ -747,6 +746,35 @@ export const JA_LOCALE: CmsContent = {
     catScoringDesc: "{brand}\u54C1\u8CEA\u6307\u6A19",
   },
   engineMessages: {
+    "diet.variant": "{ingredients}を使わない{recipe}のアレンジ",
+    "diet.variantChanges": "具材を「{topping}」に変更。除く材料：{ingredients}。",
+    "diet.variantAdded": "加える材料：{ingredients}。",
+    "diet.useVariant": "このアレンジを使う",
+    "diet.variantAvailable": "別のアレンジがあります",
+    "change.topping": "具材：{from} → {to}",
+    "diet.glutenConflict": "グルテンフリーの条件に合いません：{ingredients}。",
+    "diet.glutenUnsupported": "このレシピには検証済みのグルテンフリー製法がありません。",
+    "diet.veganConflict": "ヴィーガンの条件に合いません：{ingredients}。",
+    "diet.lactoseConflict": "ラクトースフリーの条件に合いません：{ingredients}。",
+    "diet.verifyVegan": "ヴィーガン対応を表示で確認してください：{ingredients}。",
+    "diet.verifyLactose": "ラクトース不使用を表示で確認してください：{ingredients}。",
+    "diet.changeRecipe": "条件に合うレシピを選ぶか、材料を明示的に変更して再計算してください。",
+    "diet.noValidatedMethod": "同じ分量で粉を置き換えないでください。検証済みのグルテンフリー配合が必要です。",
+    "diet.labelCheck": "進む前にラベルの原材料を確認してください。",
+    "diet.omitOptional": "条件を満たすため、次の任意の材料は使わないでください：{ingredients}。",
+    "diet.fodmapUnknown": "発酵時間だけでは低FODMAP対応を判断できません。",
+    "diet.histamineUnknown": "時間と温度だけではヒスタミン量を判断できません。",
+    "diet.processCheck": "材料・製品・一食分のデータが必要です。適合性は認証しません。",
+    "diet.nickelUnknown": "粉のW値はニッケル量を示しません。",
+    "diet.cardConflict": "食事条件に適合しません",
+    "card.ready": "作れます",
+    "range.hydrationBasis": "加水率 — カタログ基準：{catalogMin}〜{catalogMax}%、選択した製法：{methodMin}〜{methodMax}%。",
+    "learn.theoryTitle": "まずは理論から",
+    "learn.compatiblePath": "お使いのキッチンに合う実践コースです。レシピの条件を確認してください。",
+    "learn.theoryOnly": "この条件に合う検証済みレシピはありません。理論を学べます。",
+    "learn.openTheory": "理論を学ぶ",
+    "timeline.preheat.includesProof": "この工程には、合計時間に計上済みの最終発酵が{minutes}分含まれます。重複して加算しないでください。",
+    "timeline.preheat.includesRest": "この工程には、合計時間に計上済みの休ませ時間が{minutes}分含まれます。重複して加算しないでください。",
     "auth.hydrationOff":
       "加水率が中心から外れています (-{penalty}%)",
     "auth.wOutOfRange": "小麦粉Wが範囲外 (-{penalty}%)",
@@ -1278,7 +1306,7 @@ export const JA_LOCALE: CmsContent = {
     napoletana_canotto:
       "\u30B3\u30EB\u30CB\u30C1\u30E7\u30FC\u30CD3-4cm\u300C\u30AB\u30CC\u30C3\u30C8\u300D|\u6975\u9650\u6C17\u6CE1|\u719F\u621024-72h|\u9AD8\u6D88\u5316\u6027",
     teglia_romana:
-      "\u9AD8\u30552-3cm|\u6C34\u5206\u91CF80-100%|\u6298\u308A\u305F\u305F\u307F\u306E\u307F|\u96F2\u30AF\u30E9\u30E0",
+      "\u9AD8\u30552-3cm|製法により加水率が異なります|\u6298\u308A\u305F\u305F\u307F\u306E\u307F|\u96F2\u30AF\u30E9\u30E0",
     tonda_romana:
       "\u539A\u30551-2mm|麺棒または手|\u6975\u9650\u30AB\u30EA\u30AB\u30EA|\u5F31\u3044\u5C0F\u9EA6\u7C89W<210",
     pinsa_romana:
@@ -1788,8 +1816,8 @@ export const JA_LOCALE: CmsContent = {
     hintLowPLForHighHydration: "高加水の場合、伸展性のために推奨 P/L ≤ {pl} です",
     hintHighWAllowsMoreHydration: "W値が {w} の場合、最大 {h}% の加水率まで対応可能です",
     hintAdaptiveLabel: "推奨値",
-    hintLimitMinLabel: "最小限界",
-    hintLimitMaxLabel: "最大限界",
+    hintLimitMinLabel: "推奨最小値",
+    hintLimitMaxLabel: "推奨最大値",
   },
   cooking: {
     sectionsAria: "\u30EC\u30B7\u30D4\u30BB\u30AF\u30B7\u30E7\u30F3",
@@ -1996,7 +2024,6 @@ export const JA_LOCALE: CmsContent = {
     confirmNewAria: "\u65B0\u3057\u3044\u30D4\u30B6\u4F5C\u308A\u306E\u958B\u59CB\u3092\u78BA\u8A8D",
   } as any,
   preFerment: PRE_FERMENT_JA as any,
-  dietaryI18n: DIETARY_JA as any,
   troubleshootingI18n: TROUBLESHOOTING_JA as any,
   glossaryTerms: GLOSSARY_TERMS_JA as any,
 };

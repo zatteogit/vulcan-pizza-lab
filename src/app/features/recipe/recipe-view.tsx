@@ -28,6 +28,7 @@ import { IconButton, Snackbar } from "../../components/ds/index";
 import { RecipeTitle } from "./recipe-title";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
+import { RecipeDietaryNotice, RecipeDietaryAlternatives } from "./recipe-dietary-notice";
 import { RecipeOutput } from "./recipe-output";
 import { RecipeSectionTabs, type RecipePrimaryTab } from "./recipe-section-tabs";
 import { getToppingForStyle, getRecipesByAuthenticity } from "../../data/topping-library";
@@ -540,6 +541,8 @@ export function RecipeView({
               toppingSubtitle={toppingSubtitle}
             />
           )}
+          {activeTab !== "ricetta" && <RecipeDietaryNotice recipe={recipe} />}
+          {onSelectTopping && <RecipeDietaryAlternatives recipe={recipe} constraints={constraints} onSelect={onSelectTopping} />}
           <motion.div
             id="recipe-tabpanel"
             role="tabpanel"

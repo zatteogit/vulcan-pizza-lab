@@ -5,7 +5,6 @@ import { INSPIRATION_I18N_PT } from "../../../data/inspiration-i18n/pt";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_PT,
-  DIETARY_PT,
   TROUBLESHOOTING_PT,
   GLOSSARY_TERMS_PT,
 } from "./domain-pt";
@@ -684,6 +683,35 @@ export const PT_LOCALE: CmsContent = {
     catScoringDesc: "M\u00E9tricas de qualidade {brand}",
   },
   engineMessages: {
+    "diet.variant": "Versão de {recipe} sem {ingredients}",
+    "diet.variantChanges": "Outra cobertura: {topping}. Retirados: {ingredients}.",
+    "diet.variantAdded": "Ingredientes adicionados: {ingredients}.",
+    "diet.useVariant": "Usar esta versão",
+    "diet.variantAvailable": "Alternativa disponível",
+    "change.topping": "Cobertura: {from} → {to}",
+    "diet.glutenConflict": "O filtro sem glúten exclui: {ingredients}.",
+    "diet.glutenUnsupported": "Falta um método sem glúten verificado para esta receita.",
+    "diet.veganConflict": "O filtro vegano exclui: {ingredients}.",
+    "diet.lactoseConflict": "O filtro sem lactose exclui: {ingredients}.",
+    "diet.verifyVegan": "Verifique no rótulo a adequação vegana: {ingredients}.",
+    "diet.verifyLactose": "Verifique no rótulo a ausência de lactose: {ingredients}.",
+    "diet.changeRecipe": "Escolha uma receita compatível ou altere explicitamente os ingredientes e recalcule.",
+    "diet.noValidatedMethod": "Não substitua a farinha mantendo as quantidades: é necessária uma fórmula sem glúten verificada.",
+    "diet.labelCheck": "Verifique a composição no rótulo antes de prosseguir.",
+    "diet.omitOptional": "Para respeitar os filtros, omita estes ingredientes opcionais: {ingredients}.",
+    "diet.fodmapUnknown": "As horas de fermentação, por si só, não determinam a adequação low FODMAP.",
+    "diet.histamineUnknown": "O tempo e a temperatura não determinam o teor de histamina.",
+    "diet.processCheck": "São necessários dados de ingredientes, produto e porção; adequação não certificada.",
+    "diet.nickelUnknown": "A força W não mede o teor de níquel.",
+    "diet.cardConflict": "Incompatível com os filtros alimentares",
+    "card.ready": "Viável",
+    "range.hydrationBasis": "Hidratação — referência do catálogo: {catalogMin}–{catalogMax}%; método selecionado: {methodMin}–{methodMax}%.",
+    "learn.theoryTitle": "Primeiro a teoria",
+    "learn.compatiblePath": "Um percurso prático compatível com a sua cozinha: verifique as condições da receita.",
+    "learn.theoryOnly": "Não há receita verificada para estas condições; explore a teoria.",
+    "learn.openTheory": "Explore a teoria",
+    "timeline.preheat.includesProof": "Este bloco inclui {minutes} minutos de fermentação final, já contabilizados no tempo total: não os some novamente.",
+    "timeline.preheat.includesRest": "Este bloco inclui {minutes} minutos de repouso, já contabilizados no tempo total: não os some novamente.",
     "auth.hydrationOff":
       "Hidratação fora do centro (-{penalty}%)",
     "auth.wOutOfRange":
@@ -1227,7 +1255,7 @@ export const PT_LOCALE: CmsContent = {
     napoletana_canotto:
       'Borda 3-4cm "canotto"|Alveolagem extrema|Matura\u00E7\u00E3o 24-72h|Alta digestibilidade',
     teglia_romana:
-      "Altura 2-3cm|Hidrata\u00E7\u00E3o 80-100%|Sem sovar + dobras|Miolo nuvem",
+      "Altura 2-3cm|Hidratação conforme a versão|Sem sovar + dobras|Miolo nuvem",
     tonda_romana:
       "Espessura 1-2mm|Rolo ou à mão|Crocante extrema|Farinha fraca W<210",
     pinsa_romana:
@@ -1665,8 +1693,8 @@ export const PT_LOCALE: CmsContent = {
     hintLowPLForHighHydration: "Com hidratação alta, recomenda-se P/L ≤ {pl} para extensibilidade",
     hintHighWAllowsMoreHydration: "Com W {w}, você pode ir até {h}% de hidratação",
     hintAdaptiveLabel: "sugerido",
-    hintLimitMinLabel: "limite mín",
-    hintLimitMaxLabel: "limite máx",
+    hintLimitMinLabel: "mín. recomendado",
+    hintLimitMaxLabel: "máx. recomendado",
   },
   cooking: {
     recipeCanonicalEyebrow: "Original",
@@ -1878,7 +1906,6 @@ export const PT_LOCALE: CmsContent = {
     },
   } as any,
   preFerment: PRE_FERMENT_PT as any,
-  dietaryI18n: DIETARY_PT as any,
   troubleshootingI18n: TROUBLESHOOTING_PT as any,
   glossaryTerms: GLOSSARY_TERMS_PT as any,
 };

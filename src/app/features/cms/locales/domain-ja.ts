@@ -1,7 +1,6 @@
 /* === DOMAIN DATA i18n — 日本語 === */
 import type {
   CmsPreFerment,
-  CmsDietaryI18n,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
 } from "../cms-context";
@@ -146,99 +145,7 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
   },
 };
 
-export const DIETARY_JA: Partial<CmsDietaryI18n> = {
-  info: {
-    low_fodmap: {
-      name: "Low FODMAP",
-      description:
-        "材料・製法・一食分の量を確認",
-      scienceNote:
-        "発酵でFODMAP量が変わることはありますが、粉、微生物、製法、一食分の量によって異なります。時間だけで削減率や低FODMAPへの適合を判定することはできません。",
-    },
-    histamine: {
-      name: "\u4F4E\u30D2\u30B9\u30BF\u30DF\u30F3",
-      description:
-        "材料・製法・一食分の量を確認",
-      scienceNote:
-        "含有量は微生物、材料、製法、保存方法に左右されます。一定の時間当たり増加率では計算できず、短時間発酵でも不含有は保証されません。",
-    },
-    gluten_free: {
-      name: "\u30B0\u30EB\u30C6\u30F3\u30D5\u30EA\u30FC",
-      description:
-        "\u30BB\u30EA\u30A2\u30C3\u30AF\u75C5\u307E\u305F\u306F\u30B0\u30EB\u30C6\u30F3\u904E\u654F\u75C7\u5411\u3051",
-      scienceNote:
-        "EU\u57FA\u6E96\uFF1A<20 ppm\u3002GF\u30DF\u30C3\u30AF\u30B9\u304C\u5FC5\u8981\uFF08\u7C73/\u30C8\u30A6\u30E2\u30ED\u30B3\u30B7/\u30AD\u30CC\u30A2 + \u30AD\u30B5\u30F3\u30BF\u30F31.5%\uFF09",
-    },
-    lactose_free: {
-      name: "\u30E9\u30AF\u30C8\u30FC\u30B9\u30D5\u30EA\u30FC",
-      description: "\u4E73\u7CD6\u4E0D\u8010\u75C7\u5411\u3051",
-      scienceNote:
-        "加熱で乳糖が除去される保証はありません。材料とメーカー表示を確認してください。",
-    },
-    nickel: {
-      name: "\u4F4E\u30CB\u30C3\u30B1\u30EB",
-      description:
-        "\u5168\u8EAB\u6027\u30CB\u30C3\u30B1\u30EB\u30A2\u30EC\u30EB\u30AE\u30FC\uFF08SNAS\uFF09\u5411\u3051",
-      scienceNote:
-        "製品データが必要です。小麦粉の強さだけでは適合を判断できません。",
-    },
-    vegan: {
-      name: "\u30F4\u30A3\u30FC\u30AC\u30F3",
-      description:
-        "\u52D5\u7269\u6027\u539F\u6599\u4E0D\u4F7F\u7528",
-      scienceNote:
-        "\u30D9\u30FC\u30B9\u751F\u5730\u306F\u65E2\u306B\u30F4\u30A3\u30FC\u30AC\u30F3\u3002\u30C8\u30C3\u30D4\u30F3\u30B0\u3068\u6CB9\u8102\u306B\u6CE8\u610F\uFF08\u30D0\u30BF\u30FC \u2192 \u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB\uFF09",
-    },
-  },
-  conflicts: {
-    fodmap_histamine: {
-      message:
-        "発酵時間と酵母の種類だけでは、FODMAPやヒスタミン制限への適合を保証できません。",
-      compromiseTip:
-        "検証済みのデータで材料と一食分の量を確認してください。長時間発酵でも適合は保証されません。",
-    },
-    gf_fodmap: {
-      message:
-        "グルテンフリーでも低FODMAPとは限りません。材料と一食分の量が重要です。",
-    },
-    nickel_general: {
-      message:
-        "製品データが必要です。小麦粉の強さだけでは適合を判断できません。",
-    },
-  },
-  warnings: {
-    fodmap_low: {
-      message:
-        "時間だけではFODMAP削減率を算出できません",
-      tip: "検証済みのデータで材料と一食分の量を確認してください。長時間発酵でも適合は保証されません。",
-    },
-    fodmap_good: {
-      message:
-        "時間だけではFODMAP削減率を算出できません",
-      tip: "検証済みのデータで材料と一食分の量を確認してください。長時間発酵でも適合は保証されません。",
-    },
-    histamine_high: {
-      message:
-        "時間と温度だけではヒスタミン量を算出できません",
-      tip: "材料と製法を確認してください。このモデルは安全な含有量を保証しません。",
-    },
-    histamine_moderate: {
-      message:
-        "時間と温度だけではヒスタミン量を算出できません",
-      tip: "材料と製法を確認してください。このモデルは安全な含有量を保証しません。",
-    },
-    gluten_free: {
-      message:
-        "\u30EC\u30B7\u30D4\u306F\u5C0F\u9EA6\u7C89\u3092\u4F7F\u7528 \u2014 \u30BB\u30EA\u30A2\u30C3\u30AF\u75C5\u306B\u4E0D\u9069\u5408",
-      tip: "GF\u30DF\u30C3\u30AF\u30B9\uFF08\u7C73\u7C8940% + \u30C8\u30A6\u30E2\u30ED\u30B3\u30B730% + \u30AD\u30CC\u30A210% + \u30BD\u30EB\u30AC\u30E010% + \u6FB1\u7C8910%\uFF09+ \u30AD\u30B5\u30F3\u30BF\u30F31.5%\u3067\u4EE3\u66FF",
-    },
-    nickel_highW: {
-      message:
-        "Wはニッケル含有量を示しません",
-      tip: "製品データが必要です。小麦粉の強さだけでは適合を判断できません。",
-    },
-  },
-};
+
 
 export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
   {
@@ -307,7 +214,7 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
         testRapido:
           "3\u6642\u9593\u672A\u6E80\u3067\u500D\u5897\u3057\u305F\uFF1F",
         fixImmediate:
-          "\u3059\u3050\u306B4\u00B0C\u306B\u79FB\u3057\u3066\u767A\u9175\u3092\u505C\u6B62",
+          "冷蔵で発酵を遅らせます。冷やしても直ちに止まるわけではありません。",
         prevention:
           "時間と温度に合わせて計算したイースト量を使う（18 °Cで24時間なら生イースト約0.1%）",
       },
@@ -319,9 +226,9 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
         testRapido:
           "\u751F\u5730pH \u2014 4.5-5.5\u304C\u6B63\u5E38\u3001<4.2\u306F\u554F\u984C",
         fixImmediate:
-          "0.5-1%\u306E\u7802\u7CD6\u3092\u52A0\u3048\u3066\u9178\u5473\u3092\u30DE\u30B9\u30AF",
+          "砂糖は味を隠しても過発酵を修正しません。使う前に生地を見直してください。",
         prevention:
-          ">24h\u306E\u767A\u9175\u306F\u5E38\u306B4-8\u00B0C\u3067",
+          "製法に合わせて時間・温度・酵母を選び、生地を確認します。一律の時間基準はありません。",
       },
       P07: {
         symptom:
@@ -469,7 +376,7 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
         cause: "家庭用冷蔵庫は温度が安定しません。霜取り、扉の開閉、棚の位置の違いで低温熟成が揺らぎます。業務用の冷蔵室とは違います",
         testRapido: "同じスタイル、同じイースト量なのに、毎回の発酵の進み方が大きく違いますか？",
         fixImmediate: "生地をいちばん下か中段の棚（最も安定）に移し、時計だけでなく見た目で生地玉を判断してください",
-        prevention: "家庭向けのボンチのコツ：砂糖を0.5〜1%加えるとイーストにすぐ使える栄養が入り、冷蔵庫が不安定でも発酵が読みやすくなります。添加物を認めるスタイルのみ。規定上、ナポレターナSTG/AVPNには使いません",
+        prevention: "使用する棚の温度と生地の変化を確認します。砂糖では冷蔵庫の温度変動を補正できません。",
       },
     },
     contextual: {
@@ -490,8 +397,8 @@ export const TROUBLESHOOTING_JA: Partial<CmsTroubleshootingI18n> =
       },
       pale_crust: {
         message:
-          "\u77ED\u3044\u767A\u9175\uFF08{h}h\uFF09\uFF1A\u8272\u306E\u6DE1\u3044\u30AF\u30E9\u30B9\u30C8\u3068\u9650\u3089\u308C\u305F\u6D88\u5316\u6027",
-        tip: "\u30E1\u30A4\u30E9\u30FC\u30C9\u8910\u5909\u3092\u4FC3\u9032\u3059\u308B\u305F\u3081\u306B0.5-1%\u306E\u7802\u7CD6\u3092\u52A0\u3048\u308B",
+          "短い発酵です。次へ進む前に生地の状態を確認してください。",
+        tip: "体積・弾力・押した時の戻りを確認してください。時間だけでは消化性を判断できません。",
       },
       cold_oven: {
         message:
@@ -552,7 +459,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     pl_ratio: {
       name: "P/L\uFF08\u7C98\u308A\u5F37\u3055/\u4F38\u5C55\u6027\u306E\u6BD4\uFF09",
       definition: "\u6A5F\u68B0\u7684\u306A\u30D0\u30E9\u30F3\u30B9\u306E\u6307\u6A19\u3002\u751F\u5730\u306E\u62B5\u6297\u3068\u4F38\u5C55\u6027\u306E\u6BD4\u7387\u3067\u3059\u3002",
-      whyImportant: "\u6700\u9069\u306AP/L\uFF080.5-0.6\uFF09\uFF1A\u9AD8\u3044\u30B3\u30EB\u30CB\u30C1\u30E7\u30FC\u30CD + \u8584\u3044\u5E95\u3002<0.4\uFF1A\u5E73\u305F\u3044\u30D4\u30B6\u3002>0.8\uFF1A\u300C\u30B4\u30E0\u306E\u3088\u3046\u306A\u300D\u751F\u5730\u3002",
+      whyImportant: "生地の粘弾性のバランスを表します。適切な値は粉・加水率・製法で変わり、ピザの高さや食感を保証しません。",
       ranges: [
         { label: "<0.4 \u975E\u5E38\u306B\u4F38\u3073\u3084\u3059\u3044", value: "\u3064\u3076\u308C\u3084\u3059\u3044", note: "\u30D4\u30F3\u30B5" },
         { label: "0.4\u20130.5 \u4F38\u3073\u3084\u3059\u3044", value: "\u6271\u3044\u3084\u3059\u3044", note: "\u30AF\u30E9\u30B7\u30C3\u30AF\u306A\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1" },
@@ -610,7 +517,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     yeast: {
       name: "\u30A4\u30FC\u30B9\u30C8\uFF08Saccharomyces cerevisiae\uFF09",
       definition: "\u7CD6\u3092CO\u2082 + \u30A8\u30BF\u30CE\u30FC\u30EB + \u82B3\u9999\u5316\u5408\u7269\u306B\u5909\u3048\u308B\u5358\u7D30\u80DE\u306E\u83CC\u985E\u3002",
-      whyImportant: "\u6700\u9069\u6E29\u5EA6\uFF1A28-32\u00B0C\u3002\u6700\u4F4E4\u00B0C\uFF08\u4F11\u7720\uFF09\u3002\u6700\u9AD840\u00B0C\uFF08\u6291\u5236\uFF09\u3002>55\u00B0C\u3067\u6B7B\u6EC5\u3002",
+      whyImportant: "活性は菌株・量・温度・生地によって変わります。低温で発酵は遅くなりますが、一律に直ちに止まる温度はありません。",
       ranges: [
         { label: "\u751F\u30A4\u30FC\u30B9\u30C8", value: "0.5\u20132.0%", note: "\u6C34\u520670%\u3001\u51B7\u85354\u00B0C" },
         { label: "\u30A2\u30AF\u30C6\u30A3\u30D6\u30C9\u30E9\u30A4\u30A4\u30FC\u30B9\u30C8", value: "0.3\u20131.0%", note: "\u5148\u306B\u6C34\u3067\u623B\u3059" },
@@ -620,7 +527,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     lab: {
       name: "LAB\uFF08\u4E73\u9178\u83CC\uFF09",
       definition: "\u7CD6\u3092\u767A\u9175\u3055\u305B\u3066\u4E73\u9178\uFF08\u304A\u3088\u3073\u9162\u9178\uFF09\u3092\u751F\u6210\u3059\u308B\u7D30\u83CC\u3002\u5929\u7136\u9175\u6BCD\u306B\u542B\u307E\u308C\u307E\u3059\u3002",
-      whyImportant: "pH\u3092\u4E0B\u3052\uFF084.0-4.5\uFF09\u3001\u9178\u5473\u3092\u9AD8\u3081\u3001FODMAP\uFF08\u30D5\u30EB\u30AF\u30BF\u30F3\uFF09\u3092\u5206\u89E3\u3057\u3001\u30AB\u30D3\u3092\u6291\u3048\u307E\u3059\u3002\u6700\u9069\u6E29\u5EA6\uFF1A28-32\u00B0C\u3002",
+      whyImportant: "菌株・粉・製法により酸度やフルクタンが変わります。乳酸菌がいても低FODMAP対応の証明にはなりません。",
     },
     q10: {
       name: "Q\u2081\u2080\uFF08\u6E29\u5EA6\u4FC2\u6570\uFF09",
@@ -665,18 +572,18 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     },
     maillard: {
       name: "\u30E1\u30A4\u30E9\u30FC\u30C9\u53CD\u5FDC",
-      definition: "\u9AD8\u6E29\uFF08>140\u00B0C\uFF09\u3067\u30A2\u30DF\u30CE\u9178\u3068\u9084\u5143\u7CD6\u306E\u9593\u306B\u8D77\u3053\u308B\u975E\u9175\u7D20\u7684\u306A\u53CD\u5FDC\u3002",
-      whyImportant: "\u304D\u3064\u306D\u8272\u306E\u30AF\u30E9\u30B9\u30C8\uFF08\u30E1\u30E9\u30CE\u30A4\u30B8\u30F3\uFF09\u3001\u9999\u3070\u3057\u3044\u9999\u308A\uFF08\u30D4\u30E9\u30B8\u30F3\uFF09\u3001300\u00B0C+\u3067\u306E\u30EC\u30AA\u30D1\u30FC\u30C9\u6A21\u69D8\u3002\u6700\u9069\u306F160-180\u00B0C\u3002",
+      definition: "加熱によって進みやすくなる、アミノ化合物と還元糖の非酵素的反応の総称です。",
+      whyImportant: "クラストの色と香りに関わります。進み方は表面温度・時間・水分・材料で変わり、オーブンの温度と食品の温度は同じではありません。",
     },
     caramelization: {
       name: "\u30AB\u30E9\u30E1\u30EB\u5316",
-      definition: "\u9AD8\u6E29\u3067\u306E\u7CD6\u306E\u71B1\u5206\u89E3\uFF08\u30BF\u30F3\u30D1\u30AF\u8CEA\u306F\u95A2\u4E0E\u3057\u306A\u3044\uFF09\uFF08\u30B7\u30E7\u7CD6 >150\u00B0C\u3001\u679C\u7CD6 >120\u00B0C\uFF09\u3002",
-      whyImportant: "\u30B3\u30EB\u30CB\u30C1\u30E7\u30FC\u30CD\u306E\u9ED2\u3044\u6591\u70B9\u306E\u3082\u3068\u306B\u306A\u308A\u307E\u3059\u3002\u30D4\u30B6\u3067\u306F\u30E1\u30A4\u30E9\u30FC\u30C9\u53CD\u5FDC\u307B\u3069\u91CD\u8981\u3067\u306F\u3042\u308A\u307E\u305B\u3093\uFF08\u8868\u9762\u306E\u30BF\u30F3\u30D1\u30AF\u8CEA\u304C\u5C11\u306A\u3044\u305F\u3081\uFF09\u3002",
+      definition: "加熱中に起こる糖の変化です。メイラード反応とは異なり、アミノ化合物を必要としません。",
+      whyImportant: "色や焼き香に関わることがあります。糖の種類・水分・時間・表面温度によって効果が変わります。",
     },
     starch_gelatinization: {
       name: "\u30C7\u30F3\u30D7\u30F3\u306E\u7CCA\u5316",
-      definition: "\u30C7\u30F3\u30D7\u30F3\u304C\u6C34\u3092\u5438\u53CE\u3057\u3066\u3001\u7D50\u6676\u72B6\u614B\u304B\u3089\u30B2\u30EB\u72B6\u614B\u3078\u5909\u5316\u3059\u308B\u3053\u3068\u3002\u958B\u59CB55-60\u00B0C\u3001\u30D4\u30FC\u30AF65-70\u00B0C\u3001\u5B8C\u4E8680-85\u00B0C\u3002",
-      whyImportant: "\u30AF\u30E9\u30E0\uFF1A\u30C7\u30F3\u30D7\u30F3\u3092\u6D88\u5316\u3057\u3084\u3059\u304F\u3057\u307E\u3059\uFF08\u4E2D\u5FC3\u304C<55\u00B0C = \u751F\u306E\u30C7\u30F3\u30D7\u30F3\uFF09\u3002\u30AF\u30E9\u30B9\u30C8\uFF1A>100\u00B0C \u2192 \u30AB\u30EA\u30C3\u3068\u306A\u308A\u307E\u3059\u3002",
+      definition: "水と熱によってデンプン粒が吸水・膨潤し、結晶構造の一部を失います。起こる温度帯はデンプンの種類や配合で変わります。",
+      whyImportant: "クラムの構造やデンプンの変化に関わります。中心温度一つだけで、完全な焼き上がりや個人の消化性を保証することはできません。",
     },
     retrogradation: {
       name: "\u30C7\u30F3\u30D7\u30F3\u306E\u8001\u5316",
@@ -715,7 +622,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     proteolysis: {
       name: "\u30BF\u30F3\u30D1\u30AF\u8CEA\u5206\u89E3",
       definition: "\u30D7\u30ED\u30C6\u30A2\u30FC\u30BC\u9175\u7D20\u306B\u3088\u3063\u3066\u30BF\u30F3\u30D1\u30AF\u8CEA\u304C\u30DA\u30D7\u30C1\u30C9\u3068\u30A2\u30DF\u30CE\u9178\u306B\u5206\u89E3\u3055\u308C\u308B\u3053\u3068\u3002\u5BFE\u8C61\uFF1A\u30B0\u30EB\u30C6\u30F3\u3002",
-      whyImportant: "\u4F38\u3070\u3057\u3084\u3059\u304F\u306A\u308A\u3001\u6D88\u5316\u6027\u304C\u5411\u4E0A\u3057\u3001\u904A\u96E2\u30A2\u30DF\u30CE\u9178 \u2192 \u3046\u307E\u5473\u3002\u904E\u5270\uFF08>72h\uFF09\uFF1A\u751F\u5730\u304C\u67D4\u3089\u304B\u304F\u306A\u308A\u3059\u304E\u307E\u3059\u3002\u6700\u9069\uFF1A24-48h\u3002",
+      whyImportant: "生地の伸びや強度が変化します。粉・微生物・温度・製法によって異なり、すべてに共通する最適時間はありません。個人の消化性を測るものではありません。",
     },
     thickness_factor: {
       name: "Thickness Factor\uFF08TF\u30FB\u539A\u3055\u4FC2\u6570\uFF09",

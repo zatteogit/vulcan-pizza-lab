@@ -956,7 +956,8 @@ function RecipeContent({
                 recipe={recipe}
               >
                 <RecipeConfigurator
-                  style={style}
+                  style={recipe.style}
+                  referenceStyle={style}
                   constraints={constraints}
                   onConstraintsChange={(c) => {
                     markAdapted();

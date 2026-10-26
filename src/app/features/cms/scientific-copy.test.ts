@@ -18,8 +18,12 @@ describe('contenuto scientifico: tutte le sette lingue',()=>{
    expect(fodmap.whyImportant).not.toMatch(/\d+\s*%/);
    expect(getTermById('d_score',cms)!.formula).toBeUndefined();
    expect(getTermById('w_alveograph',cms)!.formula).not.toContain('dt');
-   const warnings=getDietaryWarnings(['low_fodmap','histamine'],{fermentHours:72,fermentTemp:4,yeastType:'sourdough',hydration:70,flourW:340},cms);
+   const warnings=getDietaryWarnings(['low_fodmap','histamine'],[{name:'Farina di grano',gluten:true}]);
    expect(warnings).toHaveLength(2);
+   for(const warning of warnings) expect(cms.engineMessages![warning.message.key], `${lang}: ${warning.message.key}`).toBeTruthy();
+   for(const key of Object.keys(CMS_DEFAULTS.engineMessages).filter(k => /^(diet\.|learn\.|range\.|timeline\.preheat\.includes|card\.ready$|change\.topping$)/.test(k))) {
+    expect(cms.engineMessages![key], `${lang}: ${key}`).toBeTruthy();
+   }
    expect(JSON.stringify(warnings)).not.toMatch(/\d+\s*%|mg\/kg|IBS/);
    expect(cms.engineMessages!['hint.yeastPrecisionScale']).toBeTruthy();
    expect(cms.engineMessages!['timeline.batchModel']).toBeTruthy();

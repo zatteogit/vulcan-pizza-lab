@@ -15,12 +15,14 @@ type ImpastoRecipe,
 import { getToppingByStyle } from "../data/parametric-databases";
 import {
 getToppingForStyle,
+getRecipesByAuthenticity,
 type TimelineInsertPoint,
 type ToppingRecipe
 } from "../data/topping-library";
 import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId, type PantryFlourDetails } from "./pantry-ingredients";
 import { BRAND } from "../config/brand";
+import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
 
 // ═══ TYPES ═══
 
@@ -345,7 +347,7 @@ export interface UserConstraints {
 export interface EngineMsg {
   key: string;
   fallback: string;
-  params?: Record<string, string | number>;
+  params?: Record<string, string | number | string[]>;
 }
 
 /** Shorthand to create an EngineMsg */
@@ -357,13 +359,13 @@ function em(key: string, fallback: string, params?: Record<string, string | numb
 export function resolveEngineMsgs(
   msgs: EngineMsg[],
   templates?: Record<string, string>,
-  formatParam?: (msg: EngineMsg, key: string, value: string | number) => string | number,
+  formatParam?: (msg: EngineMsg, key: string, value: string | number | string[]) => string | number,
 ): string[] {
   return msgs.map((m) => {
     const tpl = templates?.[m.key] ?? m.fallback;
     if (!m.params) return tpl;
     return Object.entries(m.params).reduce(
-      (s, [k, v]) => s.split(`{${k}}`).join(String(formatParam ? formatParam(m, k, v) : v)),
+      (s, [k, v]) => s.split(`{${k}}`).join(String(formatParam ? formatParam(m, k, v) : Array.isArray(v) ? v.join(", ") : v)),
       tpl,
     );
   });
@@ -456,7 +458,8 @@ export type RecipeBlocker =
   | { kind: "fermentation_too_short"; fermentation_h: number; style_min_h: number; needed_h: number }
   | { kind: "fermentation_too_long"; fermentation_h: number; style_max_h: number }
   | { kind: "fermentation_temperature"; actual_c: number; required_c: number }
-  | { kind: "resource_excluded"; resource: "flour" | "equipment" | "ingredient"; message: EngineMsg };
+  | { kind: "resource_excluded"; resource: "flour" | "equipment" | "ingredient"; message: EngineMsg }
+  | { kind: "dietary_conflict"; filter_id: string; ingredients: string[]; message: EngineMsg };
 
 export interface RecipeCondition {
   kind: "pan" | "deck" | "flour" | "flour_blend" | "yeast" | "ingredient";
@@ -482,6 +485,8 @@ export interface GeneratedRecipe {
   /** M-10: esito esplicito (riuscito, con avvisi, non fattibile così). */
   verdict: RecipeVerdict;
   optional_aids?: EngineMsg[];
+  dietary_warnings?: DietaryWarning[];
+  dietary_variant?: { reference_topping_id: string; topping_id: string; omitted_conflicts: string[] };
   style: PizzaStyle;
   dough_balls: number;
   flour_g: number;
@@ -627,9 +632,20 @@ export interface TimelineStep {
   /** D-050: quante volte si ripete la cottura (una pizza o teglia alla volta);
    *  duration_minutes è già il totale. */
   rounds?: number;
+  /** Passive activity already contained in this timeline block. Never subtract it again. */
+  parallel_activity?: { kind: "proof" | "rest"; duration_minutes: number; included_in_fermentation: true };
   /** Lavoro per unità: duration_minutes include già tutte le unità. */
   work_units?: number;
   minutes_per_unit?: number;
+}
+
+export function passiveActivityMessage(step: TimelineStep): EngineMsg | null {
+  if (!step.parallel_activity) return null;
+  const rest = step.parallel_activity.kind === "rest";
+  return em(rest ? "timeline.preheat.includesRest" : "timeline.preheat.includesProof",
+    rest ? "Questo blocco comprende {minutes} minuti di riposo, già inclusi nel tempo totale: non aggiungerli di nuovo."
+      : "Questo blocco comprende {minutes} minuti di appretto, già inclusi nella fermentazione totale: non aggiungerli di nuovo.",
+    { minutes: step.parallel_activity.duration_minutes });
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
@@ -2502,7 +2518,28 @@ export function generateRecipe(
   science.compensation_deviation_points = devResult.compensationPoints;
 
   // ── M-10: esito esplicito ──
-  const blockers: RecipeBlocker[] = [];
+  const dietaryWarnings = getDietaryWarnings(constraints.dietary_filters, [
+    ...(flourG > 0 ? (flourBlend?.length
+      ? flourBlend.filter(c => c.pct > 0).map(c => ({ name: c.name, gluten: c.w !== undefined }))
+      : [{ name: "Farina di grano", gluten: true }]) : []),
+    { name: "Acqua" }, { name: "Sale" },
+    ...(fatG > 0 && fatLabel ? [{ name: fatLabel }] : []),
+    ...(effectiveSugarPct > 0 ? [{ name: "Zucchero" }] : []),
+    ...(defaultTopping?.ingredients.filter(i => i.amount.value > 0) ?? []),
+  ]);
+  const referenceRef = STYLES_DB[style.id]?.default_topping_ref;
+  const referenceTopping = referenceRef ? getToppingForStyle(referenceRef, style) : undefined;
+  const omittedConflicts = referenceTopping && referenceTopping.id !== defaultTopping?.id
+    ? [...new Set(getDietaryWarnings(constraints.dietary_filters, referenceTopping.ingredients)
+      .filter(w => w.severity === "critical").flatMap(w => w.ingredients))]
+    : [];
+  const dietaryVariant = defaultTopping && referenceTopping && omittedConflicts.length > 0 &&
+    !dietaryWarnings.some(w => w.severity === "critical") &&
+    !defaultTopping.ingredients.some(i => omittedConflicts.includes(i.name))
+    ? { reference_topping_id:referenceTopping.id, topping_id:defaultTopping.id, omitted_conflicts:omittedConflicts } : undefined;
+  const blockers: RecipeBlocker[] = dietaryWarnings.filter(w => w.severity === "critical").map(w => ({
+    kind: "dietary_conflict", filter_id: w.filterId, ingredients: w.ingredients, message: w.message,
+  }));
   const requiredIngredients = ["Acqua", "Sale", ...(fatG > 0 && fatLabel ? [fatLabel] : []), ...(effectiveSugarPct > 0 ? ["Zucchero"] : []), ...(defaultTopping?.ingredients.map(ingredient => ingredient.name) ?? [])];
   const excludedIngredientIds = new Set(constraints.excluded_ingredients ?? []);
   const excludedNames = requiredIngredients.filter(name => excludedIngredientIds.has(pantryIngredientId(name)));
@@ -2547,7 +2584,7 @@ export function generateRecipe(
     blockers.push({ kind: "fermentation_temperature", actual_c: fermentationTempC, required_c: style.dough.fermentation_temp_c });
   }
   const verdict: RecipeVerdict = {
-    outcome: blockers.length > 0 ? "not_feasible" : scores.warnings.length > 0 ? "warnings" : "ok",
+    outcome: blockers.length > 0 ? "not_feasible" : scores.warnings.length > 0 || dietaryWarnings.length > 0 ? "warnings" : "ok",
     blockers,
     adaptations: scores.warnings,
     conditions: prerequisites,
@@ -2564,6 +2601,8 @@ export function generateRecipe(
 
   return {
     schema_version: RECIPE_SCHEMA_VERSION,
+    dietary_warnings: dietaryWarnings,
+    dietary_variant: dietaryVariant,
     optional_aids: style.id !== "napoletana_stg" && !isFriedStyle(style) && !style.proof_in_pan && !style.dough.unleavened &&
       style.shape.shape_type !== "rectangular" && !homeMethod &&
       !(constraints.excluded_flours ?? []).includes("semola") &&
@@ -3779,6 +3818,12 @@ function generateTimeline(
     injectToppingAt("after_bake");
   }
 
+  const heatStep = steps.find(step => step.id === "preheat");
+  if (heatStep && heatStep.duration_minutes > 0) {
+    heatStep.parallel_activity = { kind: isUnleavened ? "rest" : "proof", duration_minutes: heatStep.duration_minutes, included_in_fermentation: true };
+    heatStep.description += " " + renderStepIt([passiveActivityMessage(heatStep)!]);
+  }
+
   // D-050: pizze e teglie si cuociono una alla volta, quindi la cottura si
   // ripete. Prima il passo valeva per una sola pizza e il piano finiva prima
   // del vero (verifica di GPT, 24/10/2026).
@@ -4001,6 +4046,7 @@ export interface StyleRecommendation {
   /** Esito della ricetta con gli stessi vincoli, compresa la scadenza del pasto. */
   verdict: RecipeVerdict;
   recipe: GeneratedRecipe;
+  dietary_alternatives?: DietaryRecipeAlternative[];
   /** Audit role-play giugno 2026: composite della ricetta OTTIMIZZATA per i vincoli
    *  dell'utente — il punteggio che otterrai davvero aprendo lo stile. Popolato
    *  dalla UI (recommended-styles) via optimizeRecipe; il ranking/tier resta sulla
@@ -4076,6 +4122,9 @@ const HOME_OVENS: ReadonlySet<OvenType> = new Set(["home", "electric_standard"])
 
 /** D-043: fino a 200 unità (un impasto da laboratorio); prima 20. */
 export const MAX_DOUGH_BALLS = 200;
+export function normalizeDoughBallCount(value: number): number {
+  return Number.isFinite(value) ? Math.max(1, Math.min(MAX_DOUGH_BALLS, Math.round(value))) : 1;
+}
 
 export interface FlourBudgetFit {
   balls: number;
@@ -4272,6 +4321,49 @@ export function feasibleAlternativeStyles(
   return alternatives;
 }
 
+export interface DietaryRecipeAlternative {
+  topping_id: string;
+  omitted_conflicts: string[];
+  removed: string[];
+  added: string[];
+  recipe: GeneratedRecipe;
+}
+
+/** A proposal is a complete, existing topping recipe, not a text-only omission.
+ * Only style-supported toppings are considered. Dough, equipment, exclusions
+ * and deadline are evaluated again; structural ingredients are never swapped. */
+export function dietaryRecipeAlternatives(recipe: GeneratedRecipe, constraints: UserConstraints,
+  rebuild?: (style: PizzaStyle) => GeneratedRecipe): DietaryRecipeAlternative[] {
+  const conflicts = recipe.verdict.blockers.filter(b => b.kind === "dietary_conflict");
+  if (!conflicts.length || constraints.dietary_filters.includes("gluten_free")) return [];
+  const current = recipe.style.default_topping_ref ? getToppingForStyle(recipe.style.default_topping_ref, recipe.style) : undefined;
+  if (!current) return [];
+  const build = rebuild ?? ((style: PizzaStyle) => generateRecipe(style, constraints, {
+    customHydration: recipe.hydration_pct, customFlourW: recipe.flour_w,
+    customFlourPL: recipe.flour_pl, customFermentationHours: recipe.fermentation_hours,
+    customFermentationTempC: recipe.fermentation_temp_c, usePreFerment: recipe.has_pre_ferment,
+    customSalt: recipe.baker_pcts?.salt, customFlourBlend: recipe.flour_blend,
+    preFerment: { type: recipe.pre_ferment_type === "biga" || recipe.pre_ferment_type === "poolish" ? recipe.pre_ferment_type : undefined, flourPct: recipe.pre_ferment_flour_pct },
+  }));
+  const names = (t: ToppingRecipe) => t.ingredients.filter(i => i.amount.value > 0).map(i => i.name);
+  const before = names(current);
+  const seen = new Set<string>();
+  return getRecipesByAuthenticity(recipe.style).flatMap(({ recipe: topping }) => {
+    if (topping.id === current.id || seen.has(topping.concept_ref)) return [];
+    const candidate = build({ ...recipe.style, default_topping_ref: topping.id });
+    if (getToppingForStyle(candidate.style.default_topping_ref ?? "", candidate.style)?.id !== topping.id) return [];
+    if (candidate.verdict.outcome === "not_feasible" || candidate.dietary_warnings?.some(w =>
+      (w.filterId === "vegan" || w.filterId === "lactose_free") && w.severity !== "info")) return [];
+    const after = names(topping);
+    const omitted = [...new Set(conflicts.flatMap(b => b.ingredients))];
+    if (omitted.some(name => after.includes(name))) return [];
+    seen.add(topping.concept_ref);
+    return [{ topping_id: topping.id, omitted_conflicts: omitted,
+      removed: before.filter(n => !after.some(a => pantryIngredientId(a) === pantryIngredientId(n))),
+      added: after.filter(n => !before.some(b => pantryIngredientId(b) === pantryIngredientId(n))), recipe: candidate }];
+  }).sort((a, b) => a.removed.length + a.added.length - b.removed.length - b.added.length).slice(0, 2);
+}
+
 export function recommendStyles(
   constraints: UserConstraints,
   stylesOverride?: Record<string, PizzaStyle>,
@@ -4334,6 +4426,7 @@ export function recommendStyles(
       warnings: verdict.adaptations,
       verdict,
       recipe,
+      dietary_alternatives: dietaryRecipeAlternatives(recipe, constraints, s => recipeForStyle(s, constraints)),
     };
   }).sort((a, b) => b.rankingScore - a.rankingScore || b.compatibilityScore - a.compatibilityScore);
 }

@@ -66,14 +66,14 @@ describe("card: solo informazioni che aiutano a scegliere", () => {
 
 describe("voto e stato operativo distinti", () => {
   it("una dispensa incompleta non è un adattamento della ricetta", () => {
-    expect(recipePresentationState(base, base)).toBe("check");
+    expect(recipePresentationState(base)).toBe("check");
   });
   it("una modifica effettiva conserva anche i controlli pendenti nel verdetto", () => {
     const changed = { ...base, hydration_pct: base.hydration_pct - 1 };
-    expect(recipePresentationState(changed, base)).toBe("adapted");
+    expect(recipePresentationState(changed)).toBe("check");
     expect(changed.verdict.conditions).toEqual(base.verdict.conditions);
   });
   it("il blocco resta prioritario rispetto a un voto alto e alle modifiche", () => {
-    expect(recipePresentationState(withVerdict({outcome:"not_feasible"}),base)).toBe("blocked");
+    expect(recipePresentationState(withVerdict({outcome:"not_feasible"}))).toBe("blocked");
   });
 });

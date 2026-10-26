@@ -53,9 +53,9 @@ interface ContextualWarningsProps {
   fermentTemp: number;
   ovenTemp: number;
   usesOven?: boolean;
+  flourG?: number;
   skillLevel: number;
   usePreFerment: boolean;
-  flourG?: number;
 }
 
 export function ContextualWarnings(props: ContextualWarningsProps) {
