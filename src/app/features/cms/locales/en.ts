@@ -67,7 +67,7 @@ export const EN_LOCALE: CmsContent = {
     recipeNameLabel: "Recipe name",
     recipeNamePlaceholder: "E.g. Just how Mario likes it",
     recipeNameConfirm: "Confirm name",
-    recipeResetPreset: "Reset",
+    recipeResetPreset: "Restore original",
 
     recipeOpenCreate: "Customize in Create",
     createSourceTitle: "Start from {style}",
