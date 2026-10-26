@@ -20,6 +20,7 @@ import React, {
 } from "react";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { t } from "../cms/i18n";
+import type { StepVisual } from "./step-visual";
 
 const STORAGE_KEY = "vulcan_cook_session";
 type CookingCopy = CmsContent["cooking"];
@@ -41,6 +42,7 @@ export const FLEXIBLE_STEP_IDS = new Set(["bulk", "proof", "preferment"]);
 
 export interface CookSessionStep {
   id: string;
+  visual?: StepVisual;
   title: string;
   description: string;
   longDesc?: string;

@@ -19,6 +19,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 import { saveYeastSpeedFactor } from "../../adapters/browser/yeast-speed-storage";
 import { createFormatter, t } from "../cms/i18n";
 import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cooking/cook-session";
+import { resolveStepVisual } from "../cooking/step-visual";
 import type { FlourEntry } from "../../data/flour-database";
 import { GeneratedRecipe, generateTimeSlots, getServingUnit, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
 import { RecipeFeedbackForm } from "./recipe-feedback";
@@ -422,6 +423,7 @@ export function RecipeOutput({
         const loc = localizeStep(step, recipe, cms, fmt);
         return {
           id: step.id,
+          visual: resolveStepVisual(step, { unleavened: !!recipe.style.dough.unleavened }),
           title: loc.title,
           description: loc.description,
           longDesc: loc.longDesc,
