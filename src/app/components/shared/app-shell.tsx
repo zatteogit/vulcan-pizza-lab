@@ -41,7 +41,7 @@ import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { IconButton } from "../ds/index";
 import { VulcanHero } from "./vulcan-hero";
 import { BRAND } from "../../config/brand";
-import { motionSpring } from "../ds/motion";
+import { motionDuration, motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
 import { TOOLS_ENABLED } from "../../config/tools";
 
@@ -471,16 +471,23 @@ function CookSessionUI({
   hidden: boolean;
 }) {
   const { session, overlayOpen } = useCookSession();
+  const reduceMotion = useReducedMotion();
   return (
     <>
-      {showAction && (
+      <motion.div className="cook-actions" hidden={!showAction || overlayOpen} initial={false}
+        animate={{ right: hasProfileButton ? (compact ? 64 : 68) : 16 }}
+        transition={reduceMotion ? { duration: motionDuration.reduced } : motionSpring.quick}>
+        {showAction && (
         <ActiveCookWidget
           canStartRecipe={canStartRecipe}
           hasProfileButton={hasProfileButton}
           compact={compact}
           hidden={hidden}
+          inline
         />
-      )}
+        )}
+        <div id="recipe-floating-actions" className="cook-actions__recipe" />
+      </motion.div>
       <AnimatePresence>
         {overlayOpen && session && (
           <Suspense fallback={null}>
