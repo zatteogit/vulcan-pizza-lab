@@ -29,7 +29,7 @@ type KneadingMethod =
   | "biga_indirect"         // biga + impasto finale (Canotto Martucci, Pala pro)
   | "poolish_indirect"      // poolish + impasto finale
   | "autolisi_then_knead"   // autolisi 30-60 min, poi impasto (Detroit moderna)
-  | "rolled_no_yeast";      // tirato col mattarello, senza lievito (Focaccia Recco)
+  | "rolled_no_yeast";      // legacy id: sfoglia senza lievito, tirata a mano per Recco
 
 export interface ImpastoRecipe {
   id: string;

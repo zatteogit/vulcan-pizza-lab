@@ -1,5 +1,6 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "recipe.reference.avpn": "AVPN 2024",
   "recipe.reference.outside": "Napoletana STGを参考にしたレシピ · 規定外",
   "recipe.reference.source": "参考：Napoletana STG",
   "recipe.reference.description": "Napoletana STGを参考に、キッチンに合わせたレシピです。変更された要件は上記をご覧ください。",

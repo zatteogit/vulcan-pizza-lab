@@ -79,6 +79,12 @@ export function canonicalInterpretation(style: PizzaStyle): Interpretation | nul
 
 /** La ricetta originale sulla cucina dell'utente, con gli stessi parametri
  *  con cui la scheda dello stile si apre in modalità canonica. */
+function styleWithMethodProfile(style: PizzaStyle, interpretation?: Interpretation | null): PizzaStyle {
+  const profile = interpretation?.process_profile;
+  return profile ? { ...style, method_profile: profile,
+    ...(profile.proof_in_pan !== undefined ? { proof_in_pan: profile.proof_in_pan } : {}) } : style;
+}
+
 export function canonicalRecipeEntry(style: PizzaStyle, scoreWeights?: ScoreWeightsOverride, interpretation: Interpretation | null = canonicalInterpretation(style), selectedVersion?: StyleVersion | null) {
   const interp = interpretation;
   const o = interp?.parameter_overrides;
@@ -133,7 +139,7 @@ export function canonicalRecipeEntry(style: PizzaStyle, scoreWeights?: ScoreWeig
         }
       : undefined,
   };
-  return { style: styleWithSelectedTopping(style, topping), version, interpretation: interp, topping, options };
+  return { style: styleWithMethodProfile(styleWithSelectedTopping(style, topping), interp), version, interpretation: interp, topping, options };
 }
 
 export function recipeFromEntry(entry: ReturnType<typeof canonicalRecipeEntry>, constraints: UserConstraints, scoreWeights = entry.options.scoreWeights) {
@@ -171,10 +177,10 @@ export function buildGeneratedRecipe({
           : {}),
       }
     : undefined;
-  const styleWithTopping = styleWithSelectedTopping(style, selectedToppingConcept);
   const activeInterpretation = activeInterpretationId
     ? getInterpretationById(activeInterpretationId)
     : undefined;
+  const styleWithTopping = styleWithMethodProfile(styleWithSelectedTopping(style, selectedToppingConcept), activeInterpretation);
   const interpretationCenter = activeInterpretation?.parameter_overrides
     ? {
         hydration_pct: activeInterpretation.parameter_overrides.hydration_pct,
@@ -290,7 +296,7 @@ export function optimizeSelectedRecipe(style: PizzaStyle, constraints: UserConst
   panConfig?: PanConfig, version: StyleVersion | null = null, interpretationId: string | null = null) {
   const it = interpretationId ? getInterpretationById(interpretationId) ?? null : null;
   const o = canonicalRecipeEntry(style, scoreWeights, it, version).options;
-  return optimizeRecipe(style, constraints, undefined, panConfig, scoreWeights,
+  return optimizeRecipe(styleWithMethodProfile(style, it), constraints, undefined, panConfig, scoreWeights,
     o.versionRanges, o.activeImpastoRef, o.interpretationCenter);
 }
 

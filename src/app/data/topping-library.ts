@@ -108,7 +108,7 @@ import thumbnailVariantReccoCulatello from "../../assets/toppings/variants/recco
 import thumbnailVariantReccoCotto from "../../assets/toppings/variants/recco_cotto.webp";
 import thumbnailVariantReccoPizzata from "../../assets/toppings/variants/recco_pizzata.webp";
 
-export type IngredientSection = "ripieno" | "base" | "crosta" | "superficie";
+export type IngredientSection = "ripieno" | "base" | "crosta" | "superficie" | "salamoia" | "finitura";
 
 export interface ToppingIngredient {
   name: string;
@@ -2800,14 +2800,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "olio, sale e salamoia",
     preferred_for_styles: ["focaccia_genovese"],
     ingredients: [
-      { name: "Salamoia (acqua, olio EVO, sale)", amount: { value: 30, unit: "ml" }, section: "superficie" },
-      { name: "Olio EVO ligure", amount: { value: 15, unit: "ml" }, section: "superficie" },
-      { name: "Sale grosso", amount: { value: 3, unit: "g" }, section: "superficie" },
+      { name: "Acqua", amount: { value: 30, unit: "ml" }, section: "salamoia" },
+      { name: "Sale fino", amount: { value: 1.5, unit: "g" }, section: "salamoia" },
+      { name: "Olio EVO ligure", amount: { value: 15, unit: "ml" }, section: "finitura" },
+      { name: "Sale grosso", amount: { value: 3, unit: "g" }, section: "finitura" },
     ],
     assembly_steps: [{
       id: "spread_salamoia_genovese",
       title: "Salamoia nelle fossette",
-      description: "Prima della lievitazione finale fare le fossette con i polpastrelli. Versare la salamoia di acqua, olio extravergine e sale, poi olio a filo e sale grosso: olio e sale si raccolgono nelle fossette.",
+      description: "Prima della lievitazione finale, fare le fossette con i polpastrelli. Sciogliere il sale fino nell’acqua della salamoia, nelle dosi indicate. Versare nelle fossette; distribuire separatamente l’olio EVO e il sale grosso di finitura.",
       insert_at: "before_proof",
       duration_minutes: 3,
       replaces_generic: true,
@@ -2820,14 +2821,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["focaccia_genovese"],
     ingredients: [
       { name: "Cipolle dorate a fette sottili", amount: { value: 120, unit: "g" }, section: "superficie" },
-      { name: "Salamoia (acqua, olio EVO, sale)", amount: { value: 30, unit: "ml" }, section: "superficie" },
-      { name: "Olio EVO ligure", amount: { value: 15, unit: "ml" }, section: "superficie" },
-      { name: "Sale grosso", amount: { value: 3, unit: "g" }, section: "superficie" },
+      { name: "Acqua", amount: { value: 30, unit: "ml" }, section: "salamoia" },
+      { name: "Sale fino", amount: { value: 1.5, unit: "g" }, section: "salamoia" },
+      { name: "Olio EVO ligure", amount: { value: 15, unit: "ml" }, section: "finitura" },
+      { name: "Sale grosso", amount: { value: 3, unit: "g" }, section: "finitura" },
     ],
     assembly_steps: [{
       id: "spread_cipolle_genovese",
       title: "Cipolle e salamoia nelle fossette",
-      description: "Distribuire le cipolle a fette sulla focaccia prima della lievitazione finale. Versare la salamoia nelle fossette dei polpastrelli, olio EVO e sale grosso. Le cipolle stufano in cottura.",
+      description: "Distribuire le cipolle prima della lievitazione finale. Sciogliere il sale fino nell’acqua della salamoia, nelle dosi indicate, e versare nelle fossette. Distribuire separatamente l’olio EVO e il sale grosso di finitura.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,

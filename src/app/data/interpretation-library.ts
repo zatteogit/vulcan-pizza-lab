@@ -18,7 +18,7 @@
  * migrato qui (Audit motore 2026-05). Questa libreria è l'unica fonte di
  * verità per maestri, pizzerie, disciplinari e community.
  */
-import type { SkillLevel } from "../domain/pizza-engine";
+import type { MethodProcessProfile, SkillLevel } from "../domain/pizza-engine";
 
 type InterpretationType =
   | "master"
@@ -39,6 +39,7 @@ interface InterpretationParameterOverrides {
 }
 
 export interface Interpretation {
+  process_profile?: MethodProcessProfile;
   id: string;
   type: InterpretationType;
 
@@ -94,6 +95,10 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
   /* ─── DISCIPLINARI (3) ─── */
   avpn_disciplinare: {
     id: "avpn_disciplinare",
+    process_profile: {
+      id: "avpn_disciplinare", direct_only: true,
+      source_url: "https://www.pizzanapoletana.org/public/pdf/Disciplinare-2024-ITA.pdf",
+    },
     type: "disciplinare",
     organization: "AVPN — Associazione Verace Pizza Napoletana",
     location: "Napoli",
@@ -119,6 +124,10 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
   },
   igp_recco: {
     id: "igp_recco",
+    process_profile: {
+      id: "igp_recco",
+      source_url: "https://www.ge.camcom.gov.it/it/promuovi/prodotti-tipici/prodotti-dop-e-igp/disciplinare_focaccia_di_recco_settembre_2024.pdf",
+    },
     type: "disciplinare",
     organization: "Consorzio Focaccia di Recco IGP",
     location: "Recco, Liguria",
@@ -146,6 +155,10 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
   },
   apiter_teglia: {
     id: "apiter_teglia",
+    process_profile: {
+      id: "apiter_teglia", direct_only: true, proof_hours: 3.5, proof_in_pan: false,
+      source_url: "https://www.laconfraternitadellapizza.net/documenti/Disciplinare-Autentica-Pizza-In-Teglia-Alla-Romana.pdf",
+    },
     type: "disciplinare",
     organization: "La Confraternita della Pizza (disciplinare APITER)",
     short_name: "APITER",

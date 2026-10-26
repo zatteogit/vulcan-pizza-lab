@@ -272,7 +272,7 @@ const EQUIPMENT_DB: EquipmentCompat[] = [
   { styleId: "grandma_style", mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 10, surfaceType: "teglia", specialEquipment: ["Teglia rettangolare", "Olio abbondante"], note: "Semplice, funziona a mano. Teglia oliata generosamente." },
   { styleId: "focaccia_genovese", mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 10, surfaceType: "teglia", specialEquipment: ["Teglia rotonda bassa", "Olio EVO ligure"], note: "Semplice, funziona a mano. Olio abbondante è l'ingrediente chiave." },
   { styleId: "sfincione", mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 12, surfaceType: "teglia", specialEquipment: ["Teglia rettangolare", "Pangrattato"], note: "Impasto semplice, funziona a mano." },
-  { styleId: "focaccia_recco", mixerRequired: false, mixerType: "manuale", mixingTime_min: 15, surfaceType: "teglia", specialEquipment: ["Teglia rotonda larga", "Mattarello sottile"], note: "Sfoglia a mano, serve pratica per la sottigliezza." },
+  { styleId: "focaccia_recco", mixerRequired: false, mixerType: "manuale", mixingTime_min: 15, surfaceType: "teglia", specialEquipment: ["Teglia rotonda larga"], note: "Sfoglia a mano, serve pratica per la sottigliezza." },
   { styleId: "padellino_torino", mixerRequired: false, mixerType: "qualsiasi", mixingTime_min: 10, surfaceType: "padella", specialEquipment: ["Tegamino individuale 18cm", "Forno domestico"], note: "Tegamino specifico, impasto semplice." },
 ];
 

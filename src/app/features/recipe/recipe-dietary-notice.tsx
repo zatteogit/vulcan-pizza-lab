@@ -44,13 +44,11 @@ export function RecipeDietaryAlternatives({ recipe, constraints, onSelect }: {
       return <div key={a.topping_id} className="home-dietary-warning home-dietary-warning--info">
         <Info size={16} aria-hidden="true" />
         <div className="home-dietary-warning__body">
-          <p className="home-dietary-warning__message">{text("diet.variant", "Versione di {recipe} senza {ingredients}", {recipe:recipeDisplayName(recipe, constraints.oven_type), ingredients:a.omitted_conflicts})}</p>
-          <details>
-            <summary>{cms.ui.recipeOptimizationChanges}</summary>
-            <p className="home-dietary-warning__tip">{text("diet.variantChanges", "Altro condimento: {topping}. Rimossi: {ingredients}.", {topping:localized.name ?? toppingConcept(topping.concept_ref, cms.toppingI18n)?.name ?? localized.variant_name ?? topping.concept_ref, ingredients:a.removed})}</p>
-            {a.added.length > 0 && <p className="home-dietary-warning__tip">{text("diet.variantAdded", "Ingredienti aggiunti: {ingredients}.", {ingredients:a.added})}</p>}
-          </details>
-          <CtaButton type="button" variant="secondary" onClick={() => onSelect(a.topping_id)}>{text("diet.useVariant", "Usa questa versione")}</CtaButton>
+          <p className="home-dietary-warning__message"><strong>{localized.name ?? toppingConcept(topping.concept_ref, cms.toppingI18n)?.name ?? localized.variant_name ?? topping.concept_ref}</strong></p>
+          <p className="home-dietary-warning__tip">{text("diet.variant", "Versione di {recipe} senza {ingredients}", {recipe:recipeDisplayName(recipe, constraints.oven_type), ingredients:a.omitted_conflicts})}</p>
+          <p className="home-dietary-warning__tip">{text("diet.variantChanges", "Rimossi: {ingredients}.", {ingredients:a.removed})}</p>
+          {a.added.length > 0 && <p className="home-dietary-warning__tip">{text("diet.variantAdded", "Ingredienti aggiunti: {ingredients}.", {ingredients:a.added})}</p>}
+          <CtaButton type="button" variant="secondary" className="home-dietary-variant__action" onClick={() => onSelect(a.topping_id)}>{text("diet.useVariant", "Usa questa versione")}</CtaButton>
         </div>
       </div>;
     })}

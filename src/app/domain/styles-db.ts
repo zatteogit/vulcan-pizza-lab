@@ -1,3 +1,4 @@
+import { METHOD_MESSAGES_IT } from "../data/method-messages";
 /* ═══ STYLES DB — dati puri, separati dal motore (audit lug 2026) ═══
  * Questo modulo NON deve importare valori dal motore: è ciò che permette
  * alla shell (styles-override-context) di caricare gli stili senza
@@ -1040,6 +1041,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
 
   focaccia_barese: {
     id: "focaccia_barese",
+    formula_variant: { key: "formula.withoutPotato", fallback: METHOD_MESSAGES_IT["formula.withoutPotato"] },
     proof_in_pan: true,
     name: "Focaccia Barese",
     family: "contemporanea",
@@ -1047,7 +1049,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     dough: {
       flour_w_range: [220, 280], // Farina media + semola rimacinata
       flour_pl_range: [0.45, 0.55],
-      hydration_pct_range: [70, 80], // Impasto morbido con patata lessa
+      hydration_pct_range: [70, 80], // Variante modellata senza patate
       salt_pct: 2.0,
       oil_pct: 4.0, // EVO generoso nell'impasto e nel ruoto
       fat_type: "oil",
@@ -1077,9 +1079,9 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 1,
     servings_per_unit: [3, 4],
     description:
-      "Soffice e umida grazie alla patata nell'impasto. Pomodorini schiacciati, olive baresane, origano e tanto olio EVO. Cotta nel ruoto tondo.",
+      "Versione senza patate nell’impasto, soffice e umida. Pomodorini, olive baresane, origano e olio EVO. Cotta nel ruoto tondo.",
     key_characteristics: [
-      "Patata lessa nell'impasto",
+      "Impasto senza patate",
       "Pomodorini e olive baresane",
       "Mollica umida e soffice",
       "Crosta inferiore dorata nell'olio",

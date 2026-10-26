@@ -955,9 +955,10 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     focaccia_cipolle_genovese: {
       ingredients: {
         "0": { name: "Thinly sliced golden onions" },
-        "1": { name: "Brine (water, extra-virgin olive oil, salt)" },
-        "2": { name: "Ligurian extra-virgin olive oil" },
-        "3": { name: "Coarse salt" },
+        "1": { name: "Water" },
+        "2": { name: "Fine salt" },
+        "3": { name: "Ligurian extra-virgin olive oil" },
+        "4": { name: "Coarse salt" },
       },
     },
     sardenaira_sanremo: {
@@ -1192,13 +1193,12 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     focaccia_genovese_classica: {
       variant_name: "oil, salt and brine",
       ingredients: {
-        "0": {
-          name: "Brine (water, extra-virgin olive oil, salt)",
-        },
-        "1": {
+        "0": { name: "Water" },
+        "1": { name: "Fine salt" },
+        "2": {
           name: "Ligurian extra-virgin olive oil",
         },
-        "2": {
+        "3": {
           name: "Coarse salt",
         },
       },
@@ -1797,8 +1797,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     },
     spread_cipolle_genovese: {
       title: "Onions and brine in the dimples",
-      description:
-        "Spread the sliced onions over the focaccia before the final proof. Pour the brine into the fingertip dimples, then add extra-virgin olive oil and coarse salt. The onions soften as it bakes.",
+      description: "Spread the onions before the final proof. Dissolve the fine salt in the brine water using the listed amounts and pour into the dimples. Add the finishing EVO oil and coarse salt separately.",
     },
     spread_sardenaira: {
       title: "Top the Sardenaira",
@@ -1936,7 +1935,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     },
     spread_salamoia_genovese: {
       title: "Brine in the dimples",
-      description: "Before the final proof, press dimples with your fingertips. Pour over the brine of water, extra-virgin olive oil and salt, then a drizzle of oil and coarse salt: oil and salt collect in the dimples.",
+      description: "Before the final proof, make fingertip dimples. Dissolve the fine salt in the brine water using the listed amounts. Pour into the dimples; add the finishing EVO oil and coarse salt separately.",
     },
     spread_sausage_tavern: {
       title: "Raw sausage to the edge",
