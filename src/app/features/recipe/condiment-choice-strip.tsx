@@ -3,6 +3,7 @@
 import { Search, Utensils, X } from "lucide-react";
 import { toppingConcept } from "../../data/topping-i18n/localize";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useReducedMotion } from "motion/react";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { IMAGE_SIZES, responsiveImgAttributes } from "../../components/media/responsive-images";
 import { useCms } from "../cms/cms-context";
@@ -59,6 +60,7 @@ export function CondimentChoiceStrip({
 }) {
   const { cms } = useCms();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeFlavor, setActiveFlavor] = useState<FlavorProfile | "all">("all");
@@ -101,20 +103,21 @@ export function CondimentChoiceStrip({
   }, [railChoices.length]);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const frame = requestAnimationFrame(() => {
       const el = scrollRef.current;
       if (!el) return;
       const activeBtn = el.querySelector('[aria-pressed="true"]');
-      if (activeBtn) {
-        activeBtn.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
-        });
-      }
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [activeConceptId]);
+      if (!activeBtn) return;
+      const rail = el.getBoundingClientRect();
+      const button = activeBtn.getBoundingClientRect();
+      const delta = button.left < rail.left ? button.left - rail.left
+        : button.right > rail.right ? button.right - rail.right : 0;
+      // Only reveal an offscreen choice. Never scroll the page or recenter
+      // a button the user can already see and interact with.
+      if (Math.abs(delta) > 1) el.scrollTo({ left: el.scrollLeft + delta, behavior: reduceMotion ? "auto" : "smooth" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [activeConceptId, reduceMotion]);
 
 
   const flavorFilters = useMemo(

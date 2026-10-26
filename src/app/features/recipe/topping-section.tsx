@@ -5,8 +5,9 @@
 
 import { ChevronLeft, ChevronRight, Lightbulb } from "lucide-react";
 import { toppingConcept } from "../../data/topping-i18n/localize";
-import { AnimatePresence, motion } from "motion/react";
-import { motionSpring } from "../../components/ds/motion";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { motionSpring, motionTiming, motionDuration } from "../../components/ds/motion";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { IMAGE_SIZES, responsiveImgAttributes } from "../../components/media/responsive-images";
 import { useCms } from "../cms/cms-context";
@@ -43,6 +44,37 @@ export interface ToppingSectionProps {
   allToppingChoices: RankedToppings;
   servingUnit: ReturnType<typeof getServingUnit>;
   onSelectTopping?: (conceptId: string) => void;
+  /** Timeline description, duration and details belong to the changing body. */
+  children?: ReactNode;
+}
+
+function ToppingBody({ contentKey, children }: { contentKey: string; children: ReactNode }) {
+  const reduceMotion = useReducedMotion();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number | "auto">("auto");
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+    if (typeof ResizeObserver === "undefined") {
+      setHeight("auto");
+      return;
+    }
+    const measure = () => setHeight(content.getBoundingClientRect().height);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(content);
+    return () => observer.disconnect();
+  }, [contentKey]);
+  return (
+    <motion.div className="topping-inline__body" initial={false} animate={{ height }}
+      transition={reduceMotion ? { duration: motionDuration.reduced } : motionSpring.denseDisclosure}>
+      <motion.div key={contentKey} ref={contentRef} className="topping-inline__content"
+        initial={reduceMotion ? false : { opacity: 0.6 }} animate={{ opacity: 1 }}
+        transition={reduceMotion ? { duration: motionDuration.reduced } : motionTiming.feedback}>
+        {children}
+      </motion.div>
+    </motion.div>
+  );
 }
 
 export function ToppingSection({
@@ -53,6 +85,7 @@ export function ToppingSection({
   allToppingChoices,
   servingUnit,
   onSelectTopping,
+  children,
 }: ToppingSectionProps) {
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
@@ -60,7 +93,7 @@ export function ToppingSection({
 
     // C-2: un formato diverso da quello per cui la ricetta è scritta scala le dosi.
     const topping = activeTopping && scaleToppingAmounts(activeTopping, recipe.style.topping_scale);
-    if (!topping || !topping.ingredients || topping.ingredients.length === 0) return null;
+    if (!topping || !topping.ingredients || topping.ingredients.length === 0) return <>{children}</>;
 
     const activeToppingId = topping.id;
     const multiplier = recipe.dough_balls;
@@ -112,25 +145,28 @@ export function ToppingSection({
             onSelect={onSelectTopping}
             mode="timeline"
           />
-          {inlinePrep.length > 0 && (
-            <div className="topping-inline__preps">
-              {inlinePrep.map((p) => (
-                <div key={p.id} className="topping-inline__prep">
-                  <span className="topping-inline__prep-title type-data">
-                    {p.title}
-                    {p.duration_minutes > 0 && (
-                      <span className="topping-inline__prep-duration">
-                        {" · "}{fmtDuration(p.duration_minutes, fmt)}
-                      </span>
-                    )}
-                  </span>
-                  <span className="topping-inline__prep-desc type-body">
-                    {p.description}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
+          <ToppingBody contentKey={activeToppingId}>
+            {inlinePrep.length > 0 && (
+              <div className="topping-inline__preps">
+                {inlinePrep.map((p) => (
+                  <div key={p.id} className="topping-inline__prep">
+                    <span className="topping-inline__prep-title type-data">
+                      {p.title}
+                      {p.duration_minutes > 0 && (
+                        <span className="topping-inline__prep-duration">
+                          {" · "}{fmtDuration(p.duration_minutes, fmt)}
+                        </span>
+                      )}
+                    </span>
+                    <span className="topping-inline__prep-desc type-body">
+                      {p.description}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {children}
+          </ToppingBody>
         </div>
       );
     }

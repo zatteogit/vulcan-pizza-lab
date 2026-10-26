@@ -3,12 +3,12 @@
  * flessibili, StepDetails e ToppingSection inline allo step Condimento. */
 
 import { FlaskConical } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { StepIllustration } from "../cooking/step-illustrations";
-import { TOPPING_LIBRARY } from "../../data/topping-library";
+import { procedureTimelineRows } from "./procedure-step-identity";
 import type {
   GeneratedRecipe,
   getServingUnit,
@@ -26,16 +26,6 @@ import {
 import { StepDetails } from "./recipe-step-details";
 import { ToppingSection, type ToppingSectionProps } from "./topping-section";
 import { uiMessage } from "../../i18n/ui-messages";
-
-const TOPPING_TIMELINE_STEP_IDS = new Set([
-  "top",
-  "top_post",
-  "fill_internal",
-  "split_fill",
-  "after_bake_top",
-]);
-const isToppingTimelineStep = (stepId: string) =>
-  TOPPING_TIMELINE_STEP_IDS.has(stepId) || stepId.startsWith("spread_");
 
 type Compensation = NonNullable<GeneratedRecipe["science"]>["compensations"][number];
 
@@ -120,22 +110,14 @@ export function ProcedureTimeline({
         <div className="procedure-timeline-spine">
           <div className="procedure-timeline-spine__rail" />
           <div className="procedure-timeline-list">
-            {recipe.timeline.map((step, i) => {
+            {procedureTimelineRows(recipe.timeline).map(({ step, phase, ordinal, key }, i) => {
               const isFirst = i === 0;
               const isLast = i === recipe.timeline.length - 1;
               const times = stepTimes[i];
               
               let displayStep = step;
-              if (isToppingTimelineStep(step.id) && activeTopping) {
-                // Find the original step to check its insert_at timing
-                const originalToppingRecipe = Object.values(TOPPING_LIBRARY).find(r => 
-                  r.assembly_steps?.some(s => s.id === step.id)
-                );
-                const originalStep = originalToppingRecipe?.assembly_steps?.find(s => s.id === step.id);
-                
-                const activeStep = activeTopping.assembly_steps?.find(s => 
-                  s.insert_at === originalStep?.insert_at
-                ) || activeTopping.assembly_steps?.[0];
+              if (phase && activeTopping) {
+                const activeStep = activeTopping.assembly_steps?.filter(s => s.insert_at === phase)[ordinal];
                 
                 if (activeStep) {
                   displayStep = {
@@ -153,9 +135,36 @@ export function ProcedureTimeline({
                   : localizedStep.tip.beginner
                 : null;
               const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips);
+              const stepFooter = <>
+                {step.duration_minutes > 0 && (
+                  <span className="type-numeric procedure-timeline-step__duration">
+                    {t(cms.cooking.durationLabel, { duration: fmtDuration(effDuration(i), fmt) })}
+                    {step.work_units && ` · ${step.work_units} × ${fmt.durationMinutes(step.minutes_per_unit!)}`}
+                    {(stretch[i] ?? 0) !== 0 && (
+                      <span className="type-data-sm procedure-timeline-step__stretch">
+                        {stretch[i]! > 0 ? "+" : "−"}
+                        {t(cms.cooking.comfortLabel, {
+                          duration: fmtDuration(Math.abs(stretch[i]!), fmt),
+                        })}
+                      </span>
+                    )}
+                  </span>
+                )}
+                {/* Audit UI giugno 2026 — "come si fa" e consigli vivono
+                    dietro un toggle: la timeline si SCANSIONA, il dettaglio
+                    arriva al tocco (e per intero nella Pizzata). */}
+                <StepDetails
+                  longDesc={localizedStep.longDesc}
+                  tips={[tipText, parametricTip].filter(Boolean) as string[]}
+                  isNerd={isNerd}
+                  stepId={step.id}
+                  unleavened={!!recipe.style.dough.unleavened}
+                  cms={cms}
+                />
+              </>;
               return (
                 <motion.div
-                  key={step.id}
+                  key={key}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ ...motionSpring.balanced,delay: i * motionDelay.collectionStep }}
@@ -195,54 +204,25 @@ export function ProcedureTimeline({
                       </span>
                     </div>
                     <span className="procedure-timeline-step__title">
-                      {isToppingTimelineStep(step.id) ? cms.cooking.toppingTitle : localizedStep.title}
+                      {phase ? cms.cooking.toppingTitle : localizedStep.title}
                     </span>
-                    {isToppingTimelineStep(step.id) ? (
-                      <AnimatePresence mode="wait" initial={false}>
-                        <motion.div
-                          key={activeTopping?.id ?? "no-topping"}
-                          className="procedure-timeline-step__topping"
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -6 }}
-                          transition={motionSpring.denseDisclosure}
-                        >
-                        <ToppingSection mode="timeline" recipe={recipe} activeTopping={activeTopping} toppingChoices={toppingChoices} allToppingChoices={allToppingChoices} servingUnit={servingUnit} onSelectTopping={onSelectTopping} />
-                        <p className="procedure-timeline-step__desc procedure-timeline-step__desc--topping">
+                    {phase ? (
+                      <div className="procedure-timeline-step__topping">
+                        <ToppingSection mode="timeline" recipe={recipe} activeTopping={activeTopping} toppingChoices={toppingChoices} allToppingChoices={allToppingChoices} servingUnit={servingUnit} onSelectTopping={onSelectTopping}>
+                          <p className="procedure-timeline-step__desc procedure-timeline-step__desc--topping">
+                            {localizedStep.description}
+                          </p>
+                          {stepFooter}
+                        </ToppingSection>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="procedure-timeline-step__desc">
                           {localizedStep.description}
                         </p>
-                        </motion.div>
-                      </AnimatePresence>
-                    ) : (
-                      <p className="procedure-timeline-step__desc">
-                        {localizedStep.description}
-                      </p>
+                        {stepFooter}
+                      </>
                     )}
-                    {step.duration_minutes > 0 && (
-                      <span className="type-numeric procedure-timeline-step__duration">
-                        {t(cms.cooking.durationLabel, { duration: fmtDuration(effDuration(i), fmt) })}
-                        {step.work_units && ` · ${step.work_units} × ${fmt.durationMinutes(step.minutes_per_unit!)}`}
-                        {(stretch[i] ?? 0) !== 0 && (
-                          <span className="type-data-sm procedure-timeline-step__stretch">
-                            {stretch[i]! > 0 ? "+" : "−"}
-                            {t(cms.cooking.comfortLabel, {
-                              duration: fmtDuration(Math.abs(stretch[i]!), fmt),
-                            })}
-                          </span>
-                        )}
-                      </span>
-                    )}
-                    {/* Audit UI giugno 2026 — "come si fa" e consigli vivono
-                        dietro un toggle: la timeline si SCANSIONA, il dettaglio
-                        arriva al tocco (e per intero nella Pizzata). */}
-                    <StepDetails
-                      longDesc={localizedStep.longDesc}
-                      tips={[tipText, parametricTip].filter(Boolean) as string[]}
-                      isNerd={isNerd}
-                      stepId={step.id}
-                      unleavened={!!recipe.style.dough.unleavened}
-                      cms={cms}
-                    />
                   </div>
                 </motion.div>
               );
