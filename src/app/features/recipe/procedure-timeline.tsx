@@ -7,6 +7,8 @@ import { motion } from "motion/react";
 import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
+import { getStepTroubleshooting } from "../../data/troubleshooting-data";
+import { resolveStepVisual } from "../cooking/step-visual";
 import { StepIllustration } from "../cooking/step-illustrations";
 import { procedureTimelineRows } from "./procedure-step-identity";
 import type {
@@ -61,6 +63,7 @@ export function ProcedureTimeline({
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
+  const filled = recipe.timeline.some(step => resolveStepVisual(step) === "fill_internal");
   return (
     <>
       {/* ── Procedure / Timeline with inline tips ── */}
@@ -135,6 +138,7 @@ export function ProcedureTimeline({
                   : localizedStep.tip.beginner
                 : null;
               const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips);
+              const trouble = getStepTroubleshooting(step, { unleavened: !!recipe.style.dough.unleavened, filled });
               const stepFooter = <>
                 {step.duration_minutes > 0 && (
                   <span className="type-numeric procedure-timeline-step__duration">
@@ -160,6 +164,7 @@ export function ProcedureTimeline({
                   stepId={step.id}
                   unleavened={!!recipe.style.dough.unleavened}
                   cms={cms}
+                  troubleshooting={trouble ? { ...trouble, title: localizedStep.title } : undefined}
                 />
               </>;
               return (

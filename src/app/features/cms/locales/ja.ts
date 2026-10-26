@@ -1674,7 +1674,7 @@ export const JA_LOCALE: CmsContent = {
     learnTroubleshooting:
       "\u554F\u984C\u3068\u89E3\u6C7A\u7B56",
     learnTroubleshootingDesc:
-      "20\u306E\u3088\u304F\u3042\u308B\u554F\u984C\u3068\u305D\u306E\u89E3\u6C7A\u65B9\u6CD5",
+      "工程ごとのよくある問題と対処法",
     learnPreFerments: "\u524D\u767A\u9175",
     learnPreFermentsDesc:
       "\u30D3\u30AC\u3001\u30DD\u30FC\u30EA\u30C3\u30B7\u30E5\u3001\u30AA\u30FC\u30C8\u30EA\u30FC\u30BA\u306E\u30AC\u30A4\u30C9",
@@ -1729,7 +1729,7 @@ export const JA_LOCALE: CmsContent = {
     troubleshootingTitle:
       "\u30EC\u30B7\u30D4\u306B\u554F\u984C\u304C\u3042\u308A\u307E\u3059\u304B\uFF1F",
     troubleshootingDesc:
-      "20\u306E\u3088\u304F\u3042\u308B\u554F\u984C\u3068\u89E3\u6C7A\u7B56\u306E\u30AC\u30A4\u30C9\u3092\u3054\u89A7\u304F\u3060\u3055\u3044",
+      "生地・焼成・揚げ調理の原因と対処法を確認",
     exploreRecipe: "レシピを見る",
     exploreHeroDesc: "伝統的な定番からシェフ考案 of オリジナルレシピまで。あなたのインスピレーションを見つけてください。",
     exploreFilterFeatured: "おすすめ",

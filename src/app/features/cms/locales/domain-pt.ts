@@ -140,6 +140,7 @@ export const PRE_FERMENT_PT: Partial<CmsPreFerment> = {
 export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
   {
     categories: {
+      frying: "Fritura",
       dough: "Massa",
       fermentation: "Fermenta\u00E7\u00E3o",
       shaping: "Modelagem",
@@ -148,6 +149,28 @@ export const TROUBLESHOOTING_PT: Partial<CmsTroubleshootingI18n> =
       false_positive: "Falsos alarmes",
     },
     issues: {
+      FR01: {
+        symptom: "Dourada por fora, crua por dentro",
+        cause: "Óleo demasiado quente ou massa demasiado grossa.",
+        testRapido: "Abre uma peça de teste e verifica o centro.",
+        fixImmediate: "Reduz o lume para as próximas peças; não avalies a cozedura apenas pela cor.",
+        prevention: "Usa um termómetro e respeita a temperatura do óleo indicada na receita.",
+      },
+      FR02: {
+        symptom: "Gordurosa e pouco crocante",
+        cause: "Óleo demasiado frio ou arrefecido por demasiadas peças juntas.",
+        testRapido: "Verifica a temperatura entre as levas.",
+        fixImmediate: "Deixa o óleo recuperar a temperatura prevista; frita poucas peças e escorre bem.",
+        prevention: "Não sobrecarregues o recipiente e controla a temperatura durante a fritura.",
+      },
+      FR03: {
+        symptom: "O recheio sai para o óleo",
+        cause: "Bordos mal selados, furos ou recheio nos bordos.",
+        testRapido: "Verifica o fecho das peças ainda cruas.",
+        fixImmediate: "Sela melhor as próximas peças; nunca juntes água ao óleo quente.",
+        prevention: "Mantém os bordos limpos, doseia o recheio e fecha sem furar a massa.",
+      },
+
       P01: {
         symptom: "Massa pegajosa persistente",
         cause:

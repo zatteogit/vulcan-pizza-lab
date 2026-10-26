@@ -1756,7 +1756,7 @@ export const EN_LOCALE: CmsContent = {
     learnGlossaryDesc: "30+ technical baking terms",
     learnTroubleshooting: "Problems & Solutions",
     learnTroubleshootingDesc:
-      "20 common problems and how to fix them",
+      "Common problems and fixes for each stage",
     learnPreFerments: "Pre-ferments",
     learnPreFermentsDesc: "Guide to Biga, Poolish and Autolyse",
     recipeLabel: "Recipe",
@@ -1798,7 +1798,7 @@ export const EN_LOCALE: CmsContent = {
     dietaryWarningsTitle: "Dietary warnings",
     troubleshootingTitle: "Issues with the recipe?",
     troubleshootingDesc:
-      "Check our guide to 20 common problems and solutions",
+      "Find causes and fixes for dough, baking and frying",
     exploreRecipe: "Explore recipe",
     exploreHeroDesc: "From great classics of tradition to signature creations. Find your inspiration.",
     exploreFilterFeatured: "Featured",

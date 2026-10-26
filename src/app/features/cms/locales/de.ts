@@ -1551,7 +1551,7 @@ export const DE_LOCALE: CmsContent = {
     learnGlossaryDesc: "30+ technische Backbegriffe",
     learnTroubleshooting: "Probleme & L\u00F6sungen",
     learnTroubleshootingDesc:
-      "20 h\u00E4ufige Probleme und ihre L\u00F6sungen",
+      "Häufige Probleme und Lösungen für jede Phase",
     learnPreFerments: "Vorteige",
     learnPreFermentsDesc:
       "Leitfaden zu Biga, Poolish und Autolyse",
@@ -1595,7 +1595,7 @@ export const DE_LOCALE: CmsContent = {
     dietaryWarningsTitle: "Ernährungshinweise",
     troubleshootingTitle: "Probleme mit dem Rezept?",
     troubleshootingDesc:
-      "Schau dir den Leitfaden zu 20 häufigen Problemen und Lösungen an",
+      "Finde Ursachen und Lösungen für Teig, Backen und Frittieren",
     exploreRecipe: "Rezept anzeigen",
     exploreHeroDesc: "Von großen Klassikern der Tradition bis hin zu Signatur-Kreationen. Finden Sie Ihre Inspiration.",
     exploreFilterFeatured: "Im Fokus",

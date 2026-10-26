@@ -1566,7 +1566,7 @@ export const ES_LOCALE: CmsContent = {
       "30+ t\u00E9rminos t\u00E9cnicos de panificaci\u00F3n",
     learnTroubleshooting: "Problemas y soluciones",
     learnTroubleshootingDesc:
-      "20 problemas comunes y c\u00F3mo resolverlos",
+      "Problemas frecuentes y soluciones para cada fase",
     learnPreFerments: "Pre-fermentos",
     learnPreFermentsDesc:
       "Gu\u00EDa de Biga, Poolish y Aut\u00F3lisis",
@@ -1610,7 +1610,7 @@ export const ES_LOCALE: CmsContent = {
     dietaryWarningsTitle: "Avisos dietéticos",
     troubleshootingTitle: "¿Problemas con la receta?",
     troubleshootingDesc:
-      "Consulta la guía de 20 problemas comunes y soluciones",
+      "Encuentra causas y soluciones para la masa, el horno y la fritura",
     exploreRecipe: "Explorar la receta",
     exploreHeroDesc: "Desde los grandes clásicos tradicionales hasta creaciones de autor. Encuentra tu inspiración.",
     exploreFilterFeatured: "Destacados",

@@ -1,3 +1,4 @@
+import { ISSUES_DB } from "../../data/troubleshooting-data";
 import { GLOSSARY_COPY_IT } from "../../data/glossary-copy";
 /* === DOMAIN DATA i18n — Italian defaults === */
 /* Pre-ferment guide, dietary data, troubleshooting, glossary terms */
@@ -99,6 +100,7 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
 
 export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
   categories: {
+    frying: "Frittura",
     dough: "Impasto",
     fermentation: "Fermentazione",
     shaping: "Stesura",
@@ -107,6 +109,7 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
     false_positive: "Falsi Allarmi",
   },
   issues: {
+    ...Object.fromEntries(ISSUES_DB.filter(issue => issue.category === "frying").map(({ id, symptom, cause, testRapido, fixImmediate, prevention }) => [id, { symptom, cause, testRapido, fixImmediate, prevention }])),
     P01: {
       symptom: "Impasto appiccicoso persistente",
       cause: "Idratazione superiore alla capacità di assorbimento della farina",

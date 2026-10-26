@@ -4,7 +4,8 @@ import { ChevronRight, FlaskConical, LifeBuoy, Lightbulb } from "lucide-react";
 import { motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import { useMemo, useState } from "react";
-import { Link } from "react-router";
+import type { StepTroubleshooting } from "../../data/troubleshooting-data";
+import { TroubleshootingSheet } from "./troubleshooting-panel";
 import type { CmsContent } from "../cms/cms-context";
 import { t } from "../cms/i18n";
 
@@ -16,20 +17,6 @@ const STEP_GLOSSARY: Record<string, { hash: string }> = {
   proof: { hash: "ball_fermentation" },
   bake: { hash: "maillard" },
   mix: { hash: "hydration" },
-};
-
-/* ═══ "È andata lunga?" (audit lug 2026): ogni fase critica porta all'issue di
-   troubleshooting più probabile quando qualcosa va storto in QUELLA fase.
-   La label è per-fase (cms.cooking.troubleStepLinks), l'id apre l'issue via
-   deep-link ?issue=Pxx su /learn/troubleshooting. ═══ */
-export const STEP_TROUBLE: Record<string, { issueId: string; labelKey: string }> = {
-  preferment: { issueId: "P06", labelKey: "preferment" }, // troppo acido
-  mix: { issueId: "P01", labelKey: "mix" },               // appiccicoso
-  bulk: { issueId: "P03", labelKey: "bulk" },             // over-fermentato
-  proof: { issueId: "P03", labelKey: "proof" },           // over-fermentato
-  shape: { issueId: "P02", labelKey: "shape" },           // si strappa
-  bake: { issueId: "P09", labelKey: "bake" },             // cruda/bruciata
-  bake2: { issueId: "P09", labelKey: "bake" },
 };
 
 /* Impasto non lievitato (Focaccia di Recco): puntata e appretto sono un
@@ -46,6 +33,7 @@ export function StepDetails({
   stepId,
   unleavened = false,
   cms,
+  troubleshooting,
 }: {
   longDesc?: string;
   tips: string[];
@@ -54,9 +42,11 @@ export function StepDetails({
   /** Impasto non lievitato: niente rimandi alla lievitazione nei riposi. */
   unleavened?: boolean;
   cms: CmsContent;
+  troubleshooting?: StepTroubleshooting & { title: string };
 }) {
   const [open, setOpen] = useState(false);
   const [glossaryOpen, setGlossaryOpen] = useState(false);
+  const [troubleOpen, setTroubleOpen] = useState(false);
   const learnStepId =
     stepId && !(unleavened && REST_STEP_IDS.has(stepId)) ? stepId : undefined;
 
@@ -72,10 +62,27 @@ export function StepDetails({
     }
   }, [learnStepId, cms.cooking]);
 
-  if (!longDesc && tips.length === 0) return null;
+  const hasDetails = Boolean(longDesc || tips.length);
+  const troubleLabel = troubleshooting && cms.cooking.troubleStepLinks?.[troubleshooting.labelKey];
+  const troubleAction = troubleLabel ? (
+    <button
+      type="button"
+      onClick={() => setTroubleOpen(true)}
+      aria-haspopup="dialog"
+      aria-expanded={troubleOpen}
+      className={hasDetails && learnStepId && STEP_GLOSSARY[learnStepId]
+        ? "step-details__trouble-link step-details__trouble-link--indented type-data"
+        : "step-details__trouble-link type-data"}
+    >
+      <LifeBuoy size={13} aria-hidden="true" className="step-details__trouble-link-icon" />
+      {troubleLabel}
+    </button>
+  ) : null;
+
+  if (!hasDetails && !troubleAction) return null;
   return (
     <div className="step-details">
-      <button
+      {hasDetails && <button
         onClick={() => setOpen((v) => !v)}
         className="step-details__toggle type-data"
         aria-expanded={open}
@@ -93,7 +100,8 @@ export function StepDetails({
             · {t(tips.length === 1 ? cms.cooking.tipsCountOne : cms.cooking.tipsCountMany, { n: tips.length })}
           </span>
         )}
-      </button>
+      </button>}
+      {!hasDetails && troubleAction}
       {open && (
         <motion.div
           initial={{ height: 0, opacity: 0 }}
@@ -144,25 +152,11 @@ export function StepDetails({
             )}
             </>
           )}
-          {learnStepId && STEP_TROUBLE[learnStepId] && (() => {
-            const trouble = STEP_TROUBLE[learnStepId];
-            const label = cms.cooking.troubleStepLinks?.[trouble.labelKey];
-            if (!label) return null;
-            return (
-              <Link
-                to={`/learn/troubleshooting?issue=${trouble.issueId}`}
-                className={
-                  STEP_GLOSSARY[learnStepId]
-                    ? "step-details__trouble-link step-details__trouble-link--indented type-data"
-                    : "step-details__trouble-link type-data"
-                }
-              >
-                <LifeBuoy size={13} aria-hidden="true" className="step-details__trouble-link-icon" />
-                {label}
-              </Link>
-            );
-          })()}
+          {troubleAction}
         </motion.div>
+      )}
+      {troubleshooting && (
+        <TroubleshootingSheet open={troubleOpen} context={troubleshooting} onClose={() => setTroubleOpen(false)} />
       )}
     </div>
   );

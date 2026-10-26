@@ -1,14 +1,15 @@
 /* === TROUBLESHOOTING DATABASE === */
 /* Basato su Notion Pagina 11 · Troubleshooting & Testing */
-/* 21 problemi comuni, 6 categorie, diagnostica contestuale */
+/* Problemi comuni per fase e metodo, con diagnostica contestuale. */
 /* i18n: presenters accept a neutral message-source contract. */
 
 import type { TroubleshootingMessageSource } from "../i18n/domain-contracts";
 import { interpolate } from "../i18n/interpolate";
+import type { TimelineStep } from "../domain/pizza-engine";
 
 export interface TroubleshootingIssue {
   id: string;
-  category: 'dough' | 'fermentation' | 'shaping' | 'baking' | 'solver' | 'false_positive';
+  category: 'dough' | 'fermentation' | 'shaping' | 'baking' | 'frying' | 'solver' | 'false_positive';
   symptom: string;
   cause: string;
   testRapido: string;
@@ -158,7 +159,7 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     severity: 'warning',
   },
   {
-    id: 'P19', category: 'baking',
+    id: 'P19', category: 'shaping',
     symptom: 'Impossibile stendere il panetto',
     cause: 'Farina Manitoba pura (W >380), impasto troppo tenace',
     testRapido: 'Quale farina hai usato? W >350?',
@@ -167,7 +168,7 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     severity: 'warning',
   },
   {
-    id: 'P20', category: 'baking',
+    id: 'P20', category: 'dough',
     symptom: "Odore 'chimico' nell'impasto",
     cause: 'Acqua con cloro alto dal rubinetto',
     testRapido: "Senti odore forte aprendo il rubinetto dell'acqua?",
@@ -194,7 +195,64 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
     prevention: 'Pre-riscaldo pietra controllato, non oltre 400°C per pietra',
     severity: 'info',
   },
+  /* Frittura: rimedi qualitativi, la temperatura resta quella della ricetta.
+   * Fonti: kingarthurbaking.com/blog/2021/11/17/how-to-fry-without-fear
+   * e /recipes/fried-apple-pies-recipe; london-fire.gov.uk/safety/the-home/cooking/deep-fat-fryers/ */
+  {
+    id: 'FR01', category: 'frying', severity: 'warning',
+    symptom: 'Dorata fuori, cruda dentro',
+    cause: 'Olio troppo caldo o impasto troppo spesso.',
+    testRapido: 'Apri un pezzo di prova e controlla il centro.',
+    fixImmediate: 'Riduci il calore per i pezzi successivi; non basarti solo sul colore.',
+    prevention: 'Controlla l’olio con un termometro e segui la temperatura della ricetta.',
+  },
+  {
+    id: 'FR02', category: 'frying', severity: 'warning',
+    symptom: 'Troppo unta e poco croccante',
+    cause: 'Olio troppo freddo o raffreddato da troppi pezzi insieme.',
+    testRapido: 'Controlla la temperatura dell’olio fra un turno e l’altro.',
+    fixImmediate: 'Lascia tornare l’olio alla temperatura prevista; friggi pochi pezzi e scola bene.',
+    prevention: 'Evita di sovraccaricare il recipiente e controlla la temperatura durante i turni.',
+  },
+  {
+    id: 'FR03', category: 'frying', severity: 'warning',
+    symptom: 'Il ripieno fuoriesce nell’olio',
+    cause: 'Bordi poco sigillati, fori o ripieno sui bordi.',
+    testRapido: 'Controlla la chiusura dei pezzi ancora crudi.',
+    fixImmediate: 'Sigilla meglio i pezzi successivi; non aggiungere acqua nell’olio caldo.',
+    prevention: 'Tieni puliti i bordi, dosa il ripieno e chiudi senza forare l’impasto.',
+  },
 ];
+
+export interface StepTroubleshooting {
+  labelKey: string;
+  issueIds: readonly string[];
+  initialIssueId?: string;
+}
+
+const STEP_TROUBLE: Record<string, StepTroubleshooting> = {
+  preferment: { labelKey: 'preferment', issueIds: ['P06', 'P04', 'P05'], initialIssueId: 'P06' },
+  mix: { labelKey: 'mix', issueIds: ['P01', 'P20'], initialIssueId: 'P01' },
+  bulk: { labelKey: 'bulk', issueIds: ['P03', 'P04', 'P05', 'P06', 'P21'], initialIssueId: 'P03' },
+  proof: { labelKey: 'proof', issueIds: ['P03', 'P04', 'P05', 'P06', 'P21'], initialIssueId: 'P03' },
+  shape: { labelKey: 'shape', issueIds: ['P02', 'P07', 'P08', 'P19'], initialIssueId: 'P02' },
+};
+
+/** Il metodo del singolo passo prevale sul nome condiviso "bake".
+ * Nessun fallback a un problema del forno per passi sconosciuti o riposi non lievitati. */
+export function getStepTroubleshooting(
+  step: Pick<TimelineStep, 'id' | 'variant' | 'msg'>,
+  context: { unleavened?: boolean; filled?: boolean } = {},
+): StepTroubleshooting | undefined {
+  if (context.unleavened && (step.id === 'bulk' || step.id === 'proof')) return undefined;
+  if (context.unleavened && step.id === 'shape') return { labelKey: 'shape', issueIds: ['P07', 'P19'], initialIssueId: 'P07' };
+  if (step.id === 'bake' || step.id === 'bake2') {
+    return { labelKey: 'bake', issueIds: step.variant === 'fry'
+      ? ['FR01', 'FR02', ...(context.filled ? ['FR03'] : [])]
+      : ['P09', 'P10', 'P11', 'P17', ...(step.msg?.title?.key === 'timeline.bakeWhite.title' ? [] : ['P18'])] };
+  }
+  return STEP_TROUBLE[step.id];
+}
 
 /* === CATEGORY LABELS === */
 export const CATEGORY_LABELS: Record<string, { label: string; emoji: string }> = {
@@ -202,6 +260,7 @@ export const CATEGORY_LABELS: Record<string, { label: string; emoji: string }> =
   fermentation: { label: 'Fermentazione', emoji: '🫧' },
   shaping: { label: 'Stesura', emoji: '🤲' },
   baking: { label: 'Cottura', emoji: '🔥' },
+  frying: { label: 'Frittura', emoji: '🫕' },
   solver: { label: 'Algoritmo', emoji: '⚙️' },
   false_positive: { label: 'Falsi Allarmi', emoji: '✅' },
 };
