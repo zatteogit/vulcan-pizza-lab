@@ -22,6 +22,7 @@ customMealSlot,
 CUSTOM_SLOT_ID,
 NO_PREFERENCE_SLOT,
 thermalViability,
+isFriedStyle,
 pantryFlourRange,
 pantryFlourMix,
 YEAST_LABELS,
@@ -1557,6 +1558,7 @@ export function HomePage() {
                       fermentHours={customFermentHours}
                       fermentTemp={customFermentTemp}
                       ovenTemp={constraints.oven_max_temp_c}
+                      usesOven={!isFriedStyle(selectedStyle)}
                       skillLevel={constraints.skill_level}
                       usePreFerment={usePreFerment}
                       flourG={recipe.flour_g}
