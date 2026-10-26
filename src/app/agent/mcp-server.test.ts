@@ -69,7 +69,7 @@ describe("server MCP", () => {
   it("tools/list elenca gli strumenti in sola lettura", () => {
     const res = handleMcpMessage({ jsonrpc: "2.0", id: 2, method: "tools/list" });
     const tools = (res && "result" in res ? (res.result as { tools: { name: string; annotations: { readOnlyHint: boolean } }[] }).tools : []);
-    expect(tools.map((t) => t.name)).toEqual(["list_styles", "get_style", "recommend_styles", "generate_recipe", "get_guide", "glossary"]);
+    expect(tools.map((t) => t.name)).toEqual(["list_styles", "get_style", "recommend_styles", "generate_recipe", "list_pantry_items", "get_guide", "glossary"]);
     expect(tools.every((t) => t.annotations.readOnlyHint)).toBe(true);
   });
 
@@ -190,7 +190,8 @@ describe("raccomandazione e ricetta MCP coerenti", () => {
     const styles=(call("recommend_styles",args).structuredContent as {styles:{id:string;compatibility:number;outcome:string}[]}).styles;
     expect(styles.length).toBeGreaterThan(0);
     for(const s of styles){
-      const r=call("generate_recipe",{...args,style_id:s.id}).structuredContent as {scores:{composite:number};outcome:string};
+      const {limit:_limit,...recipeArgs}=args;
+      const r=call("generate_recipe",{...recipeArgs,style_id:s.id}).structuredContent as {scores:{composite:number};outcome:string};
       expect(r.scores.composite,s.id).toBe(s.compatibility);
       expect(r.outcome).toBe(s.outcome);
     }

@@ -1,5 +1,11 @@
 import type { RecipeOutcome, ScoreDimensionKey } from "./pizza-engine";
 
+/** Product defaults shared by the browser and browser-equivalent MCP modes. */
+export const DEFAULT_UI_SCORE_WEIGHTS = {
+  authenticity: 0.30, feasibility: 0.25, digestibility: 0.20,
+  sustainability: 0.15, experimentation: 0.10,
+} as const;
+
 export interface GlobalScoreCalculation {
   weighted_average: number;
   /** Valori effettivamente mediati: E è una distanza, quindi entra come 100−E. */

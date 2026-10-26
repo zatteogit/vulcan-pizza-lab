@@ -18,10 +18,21 @@ import {
   type GeneratedRecipe,
   type OvenType,
   type PizzaStyle,
-  type PreFermentType,
   type SkillLevel,
   type UserConstraints,
+  type GenerateRecipeOptions,
+  FLOUR_W_RANGES,
 } from "../domain/pizza-engine";
+import { ToolInputError, numberInput as num, kitchenInputs, KITCHEN_INPUT, PAN_INPUT, panInput, enumInput, optionalBoolean } from "./mcp-inputs";
+export { ToolInputError } from "./mcp-inputs";
+import { canonicalRecipeEntry, tailoredRecipeEntry, optimizeSelectedRecipe } from "../use-cases/recipe-entry";
+import { getInterpretationsForStyle } from "../data/interpretation-library";
+import { getVersions } from "../data/style-versions";
+import { TOPPING_LIBRARY, getToppingForStyle, scaleToppingAmounts } from "../data/topping-library";
+import { FLOURS_DB } from "../data/flour-database";
+import { pantryIngredientId } from "../domain/pantry-ingredients";
+import { getDietaryWarnings } from "../data/dietary-data";
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../domain/recipe-score";
 import { computePreFermentSplit } from "../domain/pre-ferment-split";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../data/glossary-data";
@@ -38,7 +49,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.0.0" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.1.0" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -64,22 +75,6 @@ const GLOSSARY_BY_LANG: Record<Lang, Partial<GlossaryMessages>> = {
   ja: GLOSSARY_TERMS_JA,
 };
 
-/** Errore di input: il server lo restituisce come risultato con isError. */
-export class ToolInputError extends Error {}
-
-function num(args: Json, key: string, min: number, max: number, fallback?: number): number {
-  const raw = args[key];
-  if (raw === undefined || raw === null) {
-    if (fallback === undefined) throw new ToolInputError(`missing "${key}"`);
-    return fallback;
-  }
-  const value = Number(raw);
-  if (!Number.isFinite(value) || value < min || value > max) {
-    throw new ToolInputError(`"${key}" must be a number between ${min} and ${max}`);
-  }
-  return value;
-}
-
 /** Numero intero: 1,5 panetti non si arrotonda in silenzio (verifica di GPT). */
 function wholeNumber(args: Json, key: string, min: number, max: number, fallback: number): number {
   const value = num(args, key, min, max, fallback);
@@ -95,6 +90,7 @@ function styleById(args: Json): PizzaStyle {
 }
 
 function constraintsFrom(args: Json): UserConstraints {
+  if (args.available_hours === 0 && args.meal_deadline === true) throw new ToolInputError('available_hours:0 means no time preference; use meal_deadline:false');
   // D-048: un modello di forno («Koda 16», «Effeuno P134H») dà tipo e temperatura.
   if (args.oven_model) {
     const [model] = searchOvenModels(String(args.oven_model), 1);
@@ -106,23 +102,102 @@ function constraintsFrom(args: Json): UserConstraints {
     throw new ToolInputError(`"oven_type" must be one of ${OVEN_TYPES.join(", ")}`);
   }
   const preset = OVEN_PRESETS.find((p) => p.id === ovenType);
-  return {
+  const constraints: UserConstraints = {
     oven_type: ovenType as OvenType,
     oven_max_temp_c: num(args, "oven_max_temp_c", 150, 550, preset?.maxTemp ?? 250),
-    skill_level: num(args, "skill_level", 1, 4, 2) as SkillLevel,
-    available_hours: num(args, "available_hours", 1, 168, 24),
+    ...(args.oven_capacity_temp_c !== undefined ? { oven_capacity_temp_c: num(args, "oven_capacity_temp_c", 150, 550) } : {}),
+    skill_level: wholeNumber(args, "skill_level", 1, 4, 2) as SkillLevel,
+    available_hours: num(args, "available_hours", 0, 168, 24),
     // Per un agente «ho 6 ore» vuol dire «si mangia fra 6 ore»: con le ore
     // la scadenza vale, salvo meal_deadline: false esplicito.
-    meal_deadline: args.meal_deadline == null ? args.available_hours != null : args.meal_deadline === true,
+    meal_deadline: args.meal_deadline === undefined ? args.available_hours != null && args.available_hours !== 0 : optionalBoolean(args, "meal_deadline"),
     dough_balls: wholeNumber(args, "dough_balls", 1, 200, 4),
-    has_mixer: args.has_mixer === true,
-    has_pizza_stone: args.has_pizza_stone === true,
-    has_pizza_steel: args.has_pizza_steel === true,
-    has_baking_pan: args.has_baking_pan === true,
+    has_mixer: optionalBoolean(args, "has_mixer") ?? false,
+    has_pizza_stone: optionalBoolean(args, "has_pizza_stone") ?? false,
+    has_pizza_steel: optionalBoolean(args, "has_pizza_steel") ?? false,
+    has_baking_pan: optionalBoolean(args, "has_baking_pan") ?? false,
     dietary_filters: [],
     pantry_flours: [],
     pantry_yeasts: [],
+    ...kitchenInputs(args),
   };
+  const flourIds = new Set([...Object.keys(FLOUR_W_RANGES),...Object.keys(GENERIC_FLOURS),...FLOURS_DB.map(f=>f.id)]);
+  for (const id of [...constraints.pantry_flours,...(constraints.excluded_flours??[])]) if (!flourIds.has(id) && !id.startsWith("custom:") && !constraints.pantry_flour_details?.[id]) throw new ToolInputError(`unknown flour ID "${id}"; call list_pantry_items or supply custom flour details`);
+  for (const id of [...(constraints.pantry_ingredients??[]),...(constraints.excluded_ingredients??[])]) if (!PANTRY_INGREDIENTS.has(id)) throw new ToolInputError(`unknown ingredient ID "${id}"; call list_pantry_items`);
+  return constraints;
+}
+
+/** The same preset and optimization entries used by the browser. Omitted mode
+ * preserves the historical direct-engine defaults for existing clients. */
+function recipeForInput(source: PizzaStyle, constraints: UserConstraints, args: Json) {
+  const mode = enumInput(args, "recipe_mode", ["default", "canonical", "adapted"]) ?? (args.version_id !== undefined || args.interpretation_id !== undefined ? "canonical" : "default");
+  let weights: GenerateRecipeOptions["scoreWeights"] = mode === "default" ? undefined : DEFAULT_UI_SCORE_WEIGHTS;
+  if (args.score_weights !== undefined) {
+    if (!args.score_weights || typeof args.score_weights !== "object" || Array.isArray(args.score_weights)) throw new ToolInputError('score_weights must be an object');
+    const raw = args.score_weights as Json;
+    if (Object.keys(raw).some(k=>!Object.prototype.hasOwnProperty.call(DEFAULT_UI_SCORE_WEIGHTS,k))) throw new ToolInputError('unknown score weight');
+    weights = Object.fromEntries(Object.keys(DEFAULT_UI_SCORE_WEIGHTS).map(k=>[k,num(raw,k,0,1)]));
+    if (Object.values(weights).reduce((sum,v)=>sum+(v??0),0)<=0) throw new ToolInputError('score weights must have a positive total');
+  }
+  const version = args.version_id === undefined ? null : getVersions(source.id).find(v => v.id === args.version_id);
+  const interpretation = args.interpretation_id === undefined ? null : getInterpretationsForStyle(source.id).find(v => v.id === args.interpretation_id);
+  if (args.version_id !== undefined && !version) throw new ToolInputError('unknown version_id for this style; call get_style');
+  if (args.interpretation_id !== undefined && !interpretation) throw new ToolInputError('unknown interpretation_id for this style; call get_style');
+  if (version && interpretation) throw new ToolInputError('choose version_id or interpretation_id, not both');
+  if (mode === "default" && (version || interpretation)) throw new ToolInputError('presets require recipe_mode canonical or adapted');
+  const selectedTopping = args.topping_id === undefined ? undefined : typeof args.topping_id === "string" ? getToppingForStyle(args.topping_id, source) : undefined;
+  if (args.topping_id !== undefined && !selectedTopping) throw new ToolInputError('unknown topping_id; call get_style for toppings');
+  const pan = panInput(args);
+  let style = source;
+  let options: GenerateRecipeOptions = {scoreWeights:weights};
+  if (mode === "canonical" || version || interpretation) {
+    const entry = canonicalRecipeEntry(source, weights, interpretation ?? (version ? null : undefined), version ?? undefined);
+    style = entry.style;
+    options = { ...entry.options };
+  }
+  if (selectedTopping) style = { ...style, default_topping_ref: selectedTopping.id };
+  if (mode === "adapted") {
+    if (!version && !interpretation) options = tailoredRecipeEntry(style, constraints, weights, pan).options;
+    else {
+      const opt = optimizeSelectedRecipe(style, constraints, weights, pan ?? options.panConfig, version, interpretation?.id);
+      const r = opt.recipe;
+      options = { ...options, customHydration: opt.params.hydration_compensated ? opt.params.hydration_base : r.hydration_pct,
+        compensateCustomHydration: opt.params.hydration_compensated, customFlourW: r.flour_w, customFlourPL: r.flour_pl,
+        customFermentationHours: r.fermentation_hours, customFermentationTempC: r.fermentation_temp_c,
+        usePreFerment: r.has_pre_ferment, customSalt: r.baker_pcts?.salt, customFlourBlend: r.flour_blend };
+    }
+  }
+  if (pan) options.panConfig = { ...options.panConfig, ...pan };
+  for (const [key, target, min, max] of [
+    ["hydration_pct", "customHydration", 40, 110], ["flour_w", "customFlourW", 50, 1000], ["flour_pl", "customFlourPL", 0.1, 10],
+    ["salt_pct", "customSalt", 0, 10], ["fermentation_hours", "customFermentationHours", 0.5, 168], ["fermentation_temp_c", "customFermentationTempC", 1, 35],
+  ] as const) if (args[key] !== undefined) options[target] = num(args, key, min, max);
+  if (args.hydration_pct !== undefined) options.compensateCustomHydration = optionalBoolean(args, "compensate_hydration") ?? false;
+  else if (args.compensate_hydration !== undefined) options.compensateCustomHydration = optionalBoolean(args, "compensate_hydration");
+  if (args.flour_blend !== undefined) {
+    if (!Array.isArray(args.flour_blend) || args.flour_blend.length === 0 || args.flour_blend.length > 20) throw new ToolInputError('flour_blend must have 1–20 components');
+    options.customFlourBlend = args.flour_blend.map(raw => {
+      if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new ToolInputError('invalid flour_blend component');
+      const c = raw as Json;
+      if (Object.keys(c).some(k=>!["name","pct","w"].includes(k))) throw new ToolInputError('unknown flour_blend component field');
+      if (typeof c.name !== "string" || !c.name.trim() || c.name.length > 120) throw new ToolInputError('flour_blend component needs a name');
+      return { name: c.name.trim(), pct: num(c, "pct", 0, 100), ...(c.w !== undefined ? {w:num(c,"w",1,1000)} : {}) };
+    });
+    if (Math.abs(options.customFlourBlend.reduce((sum,c)=>sum+c.pct,0)-100)>0.01) throw new ToolInputError('flour_blend percentages must total 100');
+  }
+  // Match the browser's W edit for a blend with one wheat component (Pinsa).
+  if (args.flour_w !== undefined && !options.customFlourBlend && source.dough.flour_blend) options.customFlourBlend = source.dough.flour_blend;
+  if (args.flour_w !== undefined && options.customFlourBlend?.filter(c=>c.w!==undefined&&c.pct>0).length===1) {
+    options.customFlourBlend = options.customFlourBlend.map(c=>c.w!==undefined&&c.pct>0?{...c,w:options.customFlourW}:c);
+  }
+  const pref = enumInput(args, "pre_ferment", ["none", "biga", "poolish"]);
+  if (pref && pref !== "none" && source.dough.unleavened) throw new ToolInputError(`${source.name} is unleavened: pre_ferment must be none`);
+  if (pref) { options.usePreFerment = pref !== "none"; options.preFerment = pref === "none" ? undefined : {type:pref}; }
+  if (args.pre_ferment_flour_pct !== undefined) {
+    if (pref === "none" || (!pref && !options.usePreFerment && !source.requires_pre_ferment)) throw new ToolInputError('pre_ferment_flour_pct requires biga or poolish');
+    options.preFerment = { ...options.preFerment, flourPct: num(args,"pre_ferment_flour_pct",20,50) };
+  }
+  return { recipe: generateRecipe(style, constraints, options), mode, version_id: version?.id ?? null, interpretation_id: interpretation?.id ?? null, options };
 }
 
 /** Testo italiano di riserva di un messaggio del motore, con i parametri. */
@@ -183,7 +258,9 @@ function preFermentData(recipe: GeneratedRecipe) {
   };
 }
 
-function recipeData(recipe: GeneratedRecipe) {
+function recipeData(recipe: GeneratedRecipe, constraints?: UserConstraints) {
+  const topping = recipe.style.default_topping_ref ? getToppingForStyle(recipe.style.default_topping_ref, recipe.style) : undefined;
+  const scaled = topping ? scaleToppingAmounts(topping, recipe.style.topping_scale) : undefined;
   const pct = (g: number) => Math.round((g / recipe.flour_g) * 1000) / 10;
   const ingredients = [
     { name: "flour", grams: recipe.flour_g },
@@ -205,6 +282,15 @@ function recipeData(recipe: GeneratedRecipe) {
     total_dough_g: recipe.total_dough_g,
     hydration_pct: recipe.hydration_pct,
     flour_w: recipe.flour_w,
+    flour_pl: recipe.flour_pl,
+    baker_pcts: recipe.baker_pcts,
+    flour_blend: recipe.flour_blend,
+    conditions: recipe.verdict.conditions ?? [],
+    adaptations: recipe.verdict.adaptations,
+    optional_aids: recipe.optional_aids,
+    dietary_warnings: getDietaryWarnings(constraints?.dietary_filters ?? [], {fermentHours:recipe.fermentation_hours,fermentTemp:recipe.fermentation_temp_c,yeastType:recipe.yeast_type,hydration:recipe.hydration_pct,flourW:recipe.flour_w}),
+    topping: scaled ? { id: scaled.id, ingredients_per_unit: scaled.ingredients,
+      ingredients_total: scaled.ingredients.map(i => ({...i,amount:{...i.amount,value:i.amount.value*recipe.dough_balls}})) } : null,
     fermentation_hours: recipe.fermentation_hours,
     fermentation_temp_c: recipe.fermentation_temp_c,
     pre_ferment: preFermentData(recipe),
@@ -225,6 +311,8 @@ function recipeData(recipe: GeneratedRecipe) {
 }
 
 const OVEN_INPUT = {
+  ...KITCHEN_INPUT,
+  oven_capacity_temp_c: { type: "number", minimum: 150, maximum: 550, description: "Physical oven limit; a lower oven_max_temp_c can be the selected setting." },
   oven_model: {
     type: "string",
     description: "Brand and/or model of a pizza oven (e.g. \"Ooni Koda 16\", \"Effeuno P134H\", \"Roccbox\"): sets oven type and temperature.",
@@ -246,6 +334,30 @@ const OVEN_INPUT = {
   has_pizza_stone: { type: "boolean", description: "Has a baking stone." },
   has_pizza_steel: { type: "boolean", description: "Has a baking steel." },
 };
+
+const RECIPE_INPUT = {
+  score_weights: {type:"object",additionalProperties:false,required:Object.keys(DEFAULT_UI_SCORE_WEIGHTS),description:"Optional complete set of five weights for a browser with customized scoring. Canonical/adapted default to the shared app weights; default mode preserves historical engine weights.",properties:Object.fromEntries(Object.keys(DEFAULT_UI_SCORE_WEIGHTS).map(k=>[k,{type:"number",minimum:0,maximum:1}]))},
+  recipe_mode: { type: "string", enum: ["default", "canonical", "adapted"], description: "default preserves legacy engine defaults; canonical = original browser preset; adapted = browser Create recommendation." },
+  version_id: { type: "string", description: "Style preset ID from get_style. Mutually exclusive with interpretation_id." },
+  interpretation_id: { type: "string", description: "Signature/disciplinare ID from get_style. The style must match." },
+  topping_id: { type: "string", description: "Topping recipe or concept ID from get_style." },
+  pan: PAN_INPUT,
+  flour_w: { type: "number", minimum: 50, maximum: 1000, description: "Recipe flour strength, distinct from flour available in pantry." },
+  flour_pl: { type: "number", minimum: 0.1, maximum: 10 },
+  salt_pct: { type: "number", minimum: 0, maximum: 10, description: "Salt as baker's percentage." },
+  flour_blend: { type: "array", minItems: 1, maxItems: 20, description: "Custom recipe blend; percentages must sum to 100. Pantry details do not change recipe proportions.", items: { type: "object", required: ["name", "pct"], properties: { name: {type:"string"}, pct:{type:"number",minimum:0,maximum:100}, w:{type:"number",minimum:1,maximum:1000} } } },
+  compensate_hydration: { type: "boolean", description: "Apply oven compensation to hydration_pct as a base. Default false for an explicit hydration." },
+  hydration_pct: { type: "number", description: "Override hydration (%)." },
+  fermentation_hours: { type: "number", description: "Override fermentation hours." },
+  fermentation_temp_c: { type: "number", description: "Override fermentation temperature (°C)." },
+  pre_ferment: { type: "string", enum: ["none", "biga", "poolish"], description: "Override the pre-ferment." },
+  pre_ferment_flour_pct: { type: "number", minimum: 20, maximum: 50 },
+  ball_weight_g: { type: "number", description: "Override the weight of one dough ball/unit (g), taking precedence over pan geometry." },
+};
+
+const GENERIC_FLOURS: Record<string,string> = {"00":"Farina 00","0":"Farina 0",tipo_1:"Farina tipo 1",manitoba:"Manitoba",integrale:"Integrale",semola:"Semola rimacinata",farro:"Farina di farro",spelta:"Farina di spelta",kamut:"Farina di kamut",segale:"Farina di segale",riso:"Farina di riso",soia:"Farina di soia",mais:"Farina di mais",saraceno:"Grano saraceno",avena:"Farina di avena",ceci:"Farina di ceci",frumento:"Farina di frumento"};
+const PANTRY_INGREDIENTS = new Map<string,{id:string;name:string;kind:string}>();
+for (const name of ["Sale","Zucchero","Olio EVO","Burro","Strutto","Acqua",...Object.values(TOPPING_LIBRARY).flatMap(t=>t.ingredients.map(i=>i.name))]) PANTRY_INGREDIENTS.set(pantryIngredientId(name),{id:pantryIngredientId(name),name,kind:"ingredient"});
 
 export const MCP_TOOLS: McpTool[] = [
   {
@@ -273,7 +385,7 @@ export const MCP_TOOLS: McpTool[] = [
   {
     name: "get_style",
     title: "Pizza style",
-    description: "Full parameters of one pizza style: dough, shape, baking, characteristics.",
+    description: "Full parameters of one pizza style, including dough, shape, baking, preset versions, signature interpretations and topping IDs for generate_recipe.",
     inputSchema: {
       type: "object",
       properties: { style_id: { type: "string" } },
@@ -291,6 +403,9 @@ export const MCP_TOOLS: McpTool[] = [
           shape: style.shape,
           baking: style.baking,
           requires_pre_ferment: style.requires_pre_ferment,
+          versions: getVersions(style.id),
+          interpretations: getInterpretationsForStyle(style.id),
+          toppings: Object.values(TOPPING_LIBRARY).filter(t=>t.preferred_for_styles?.includes(style.id)).map(t=>({id:t.id,concept_id:t.concept_ref,variant:t.variant_name,ingredients:t.ingredients})),
         },
       };
     },
@@ -302,28 +417,48 @@ export const MCP_TOOLS: McpTool[] = [
       "Rank pizza styles for a kitchen (oven type and temperature, hours available, skill). Each result has the score of the proposed recipe (0–100), the separate headroom of a tuned recipe, and whether the style is feasible. has_caveats: feasible with reservations, repeat its warnings and never call it suitable without conditions.",
     inputSchema: {
       type: "object",
-      properties: { ...OVEN_INPUT, limit: { type: "number", description: "How many styles (default 5)." } },
+      properties: { ...OVEN_INPUT, ...RECIPE_INPUT, style_id: {type:"string",description:"Optional scope; required when selecting version_id or interpretation_id."},
+        include_not_feasible: {type:"boolean",description:"Include blocked styles with reasons, instead of only usable proposals."},
+        include_recipe: {type:"boolean",description:"Include the evaluated recipe for each proposal."},
+        limit: { type: "number", description: "How many styles (default 5)." } },
     },
     run: (args) => {
       const constraints = constraintsFrom(args);
+      if ((args.version_id !== undefined || args.interpretation_id !== undefined) && args.style_id === undefined) throw new ToolInputError('style_id is required with a preset or signature');
+      const onlyStyle = args.style_id === undefined ? undefined : styleById(args);
       const limit = Math.round(num(args, "limit", 1, 30, 5));
-      const recs = recommendStyles(constraints)
-        .filter((rec) => rec.tier !== "not_feasible")
+      const includeBlocked = optionalBoolean(args,"include_not_feasible") ?? false;
+      const includeRecipe = optionalBoolean(args,"include_recipe") ?? false;
+      const candidates = onlyStyle ? {[onlyStyle.id]:onlyStyle} : Object.fromEntries(Object.values(STYLES_DB).filter(s=>!s.dough.unleavened || !["biga","poolish"].includes(String(args.pre_ferment))).map(s=>[s.id,s]));
+      const recs = recommendStyles(constraints, candidates, undefined,
+        (style,c)=>recipeForInput(style,c,args).recipe)
+        .filter((rec) => includeBlocked || rec.tier !== "not_feasible")
         .map((rec) => {
           const now = rec.recipe.scores.composite;
-          const best = Math.max(now, kitchenCompatibility(rec.style, constraints).best);
+          const evaluated = recipeData(rec.recipe,constraints);
+          const scoped = Object.keys(RECIPE_INPUT).some(k=>args[k]!==undefined);
+          const tunedArgs: Json = {...args,recipe_mode:"adapted"};
+          for (const key of ["hydration_pct","flour_w","flour_pl","salt_pct","flour_blend","compensate_hydration","fermentation_hours","fermentation_temp_c","pre_ferment","pre_ferment_flour_pct"]) delete tunedArgs[key];
+          const tuned = scoped ? recipeForInput(rec.style,constraints,tunedArgs).recipe : null;
+          const best = Math.max(now, tuned ? tuned.verdict.outcome === "not_feasible" ? now : tuned.scores.composite : kitchenCompatibility(rec.style, constraints).best);
           return {
             ...styleSummary(rec.style),
+            name: recipeDisplayName(rec.recipe,constraints.oven_type),
+            reference_name: rec.style.name,
             compatibility: now,
             compatibility_best: best,
             tier: rec.tier,
             outcome: rec.verdict.outcome,
+            blockers: rec.verdict.blockers,
+            conditions: rec.verdict.conditions ?? [],
+            dietary_warnings: evaluated.dietary_warnings,
+            ...(includeRecipe ? {recipe:evaluated} : {}),
             // Fattibile, ma con riserve da dire (forno sotto il minimo dello
             // stile, teglia mancante…): l'agente non deve presentarlo come
             // adatto senza riserve.
-            has_caveats: rec.warnings.length > 0,
+            has_caveats: rec.warnings.length > 0 || evaluated.dietary_warnings.length > 0,
             reasons: rec.reasons.map(msg),
-            warnings: rec.warnings.map(msg),
+            warnings: [...rec.warnings.map(msg), ...evaluated.dietary_warnings.map(w=>w.message)],
           };
         })
         // Per compatibilità con la cucina, il numero che l'agente mostra;
@@ -346,38 +481,39 @@ export const MCP_TOOLS: McpTool[] = [
       properties: {
         style_id: { type: "string" },
         ...OVEN_INPUT,
-        hydration_pct: { type: "number", description: "Override hydration (%)." },
-        fermentation_hours: { type: "number", description: "Override fermentation hours." },
-        fermentation_temp_c: { type: "number", description: "Override fermentation temperature (°C)." },
-        pre_ferment: { type: "string", enum: ["none", "biga", "poolish"], description: "Override the pre-ferment." },
-        ball_weight_g: { type: "number", description: "Override the weight of one dough ball (g)." },
+        ...RECIPE_INPUT,
       },
       required: ["style_id"],
     },
     run: (args) => {
       const style = styleById(args);
       const constraints = constraintsFrom(args);
-      const preFerment = args.pre_ferment ? String(args.pre_ferment) : null;
-      if (preFerment && !["none", "biga", "poolish"].includes(preFerment)) {
-        throw new ToolInputError(`"pre_ferment" must be none, biga or poolish`);
-      }
-      if (style.dough.unleavened && preFerment && preFerment !== "none") {
-        throw new ToolInputError(`${style.name} is unleavened: pre_ferment must be none`);
-      }
-      const recipe = generateRecipe(style, constraints, {
-        customHydration: args.hydration_pct != null ? num(args, "hydration_pct", 40, 110) : undefined,
-        customFermentationHours: args.fermentation_hours != null ? num(args, "fermentation_hours", 0.5, 168) : undefined,
-        customFermentationTempC: args.fermentation_temp_c != null ? num(args, "fermentation_temp_c", 1, 35) : undefined,
-        usePreFerment: preFerment ? preFerment !== "none" : undefined,
-        preFerment: preFerment && preFerment !== "none" ? { type: preFerment as PreFermentType } : undefined,
-        panConfig: args.ball_weight_g != null ? { ballWeightG: num(args, "ball_weight_g", 20, 5000) } : undefined,
-      });
-      const data = recipeData(recipe);
+      const resolved = recipeForInput(style,constraints,args);
+      const recipe = resolved.recipe;
+      const data = { ...recipeData(recipe,constraints), constraints, selection: {recipe_mode:resolved.mode,version_id:resolved.version_id,interpretation_id:resolved.interpretation_id},
+        effective_options: resolved.options };
       const grams = data.ingredients.map((i) => `${i.name} ${i.grams} g`).join(", ");
       return {
         summary: `${data.style.name}, ${recipe.dough_balls} × ${recipe.ball_weight_g} g (${recipe.verdict.outcome}): ${grams}. Fermentation ${recipe.fermentation_hours} h at ${recipe.fermentation_temp_c} °C, oven ${recipe.oven_temp_c} °C.`,
         data,
       };
+    },
+  },
+  {
+    name: "list_pantry_items",
+    title: "Find flour and pantry ingredient IDs",
+    description: "Search the same flour brands and dough/topping ingredients as the browser. Returns stable IDs for pantry and exclusion inputs; catalog W estimates are explicitly marked, never inferred from protein.",
+    inputSchema: {type:"object",properties:{query:{type:"string"},kind:{type:"string",enum:["flour","ingredient","yeast","all"]}}},
+    run: args => {
+      const kind = enumInput(args,"kind",["flour","ingredient","yeast","all"]) ?? "all";
+      if (args.query !== undefined && typeof args.query !== "string") throw new ToolInputError('query must be a string');
+      const q = String(args.query ?? "").trim().toLocaleLowerCase("it");
+      const items = [
+        ...Object.entries(GENERIC_FLOURS).map(([id,name])=>({id,name,kind:"flour",w_range:FLOUR_W_RANGES[id],w_declared:false})),
+        ...FLOURS_DB.filter(f=>!Object.prototype.hasOwnProperty.call(GENERIC_FLOURS,f.id)).map(f=>({id:f.id,name:f.name,kind:"flour",producer:f.producer,...(f.w>0?{w:f.w}:{}),...(f.pl>0?{pl:f.pl}:{}),protein_pct:f.proteine_pct,w_declared:f.w>0&&f.w_declared!==false})),
+        ...PANTRY_INGREDIENTS.values(),...Object.entries(YEAST_LABELS).map(([id,name])=>({id,name,kind:"yeast"})),
+      ].filter(item=>(kind==="all"||item.kind===kind)&&JSON.stringify(item).toLocaleLowerCase("it").includes(q));
+      return {summary:`${items.length} pantry items`,data:{items}};
     },
   },
   {
