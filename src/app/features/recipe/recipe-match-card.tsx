@@ -2,9 +2,9 @@ import { RecipeMatchIcon } from "./recipe-match-icon";
 import { RecipeConditionChips } from "./recipe-condition-chips";
 import { recipePresentationState } from "./recipe-card-signals";
 import { RecipeChanges } from "./recipe-changes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
-import { motionSpring,motionTiming } from "../../components/ds/motion";
+import { motionSpring } from "../../components/ds/motion";
 import { Bookmark, BookmarkCheck, ChevronDown, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, type GeneratedRecipe, type RecipeScores, type ScoreDimensionKey, type UserConstraints } from "../../domain/pizza-engine";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
@@ -188,6 +188,11 @@ export function RecipeMatchCard({
      tono e azioni). Barre punteggio, stato forno e rationale arrivano a
      richiesta: erano una schermata intera prima degli ingredienti. */
   const [expanded, setExpanded] = useState(false);
+  const detailsId = useId();
+  const detailsLabel = cms.cooking.matchDetails ?? uiMessage("features.recipe.recipe-match-card.dettagli-8f4ce7d9");
+  const detailsActionLabel = expanded
+    ? cms.cooking.matchDetailsHide ?? uiMessage("features.recipe.recipe-match-card.nascondi-f6ef7782")
+    : detailsLabel;
   const detailsToggleRef = useRef<HTMLButtonElement>(null);
   const ovenGap = idealTemp - ovenTemp;
   const ovenStatus =
@@ -334,52 +339,20 @@ export function RecipeMatchCard({
       layout
       data-region="section"
       data-attention={tone.low || notFeasible ? "warning" : undefined}
-      className={`match-card ${className}`}
+      className={`match-card${notFeasible ? " match-card--blocked" : ""} ${className}`}
       /* U-10 (F29): il nome lo porta già l'aside che la contiene */
     >
       <div className="match-card__main">
-      {/* ═══ Verdetto editoriale (redesign lug 2026, round 5) ═══
-          Il Match È un verdetto da guida gastronomica: punteggio in serifa,
-          tono in corsivo — "85/100 · Ottima intesa" come su una guida.
-          Niente scatola: kicker con filetto, stessa grammatica di
-          Ingredienti. Dettagli (copy, forno, barre) a richiesta. */}
-      <div className="match-kicker">
-        <RecipeMatchIcon score={roundedScore} blocked={notFeasible}
-          size={14}
-          className={`match-kicker__icon ${tone.low || notFeasible ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
-          aria-hidden="true"
-        />
-        <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.match-0335207f")}</span>
-        <span className="match-kicker__rule" aria-hidden="true" />
         <button
           ref={detailsToggleRef}
           type="button"
-          onClick={() =>
-            setExpanded((v) => {
-              if (v) setExplainKey(null);
-              return !v;
-            })
-          }
+          className={`match-score-group${expanded ? " match-score-group--expanded" : ""}`}
+          onClick={() => setExpanded(value => { if (value) setExplainKey(null); return !value; })}
           aria-expanded={expanded}
-          aria-label={
-            expanded
-              ? (cms.cooking.matchDetailsHide ?? uiMessage("features.recipe.recipe-match-card.nascondi-f6ef7782"))
-              : (cms.cooking.matchDetails ?? uiMessage("features.recipe.recipe-match-card.dettagli-8f4ce7d9"))
-          }
-          title={
-            expanded
-              ? (cms.cooking.matchDetailsHide ?? uiMessage("features.recipe.recipe-match-card.nascondi-f6ef7782"))
-              : (cms.cooking.matchDetails ?? uiMessage("features.recipe.recipe-match-card.dettagli-8f4ce7d9"))
-          }
-          className={`match-info-toggle${expanded ? " match-info-toggle--active" : ""}`}
+          aria-controls={detailsId}
+          aria-label={`${fmt.number(roundedScore)}/100 · ${detailsActionLabel}`}
+          title={detailsActionLabel}
         >
-          <span data-slot="label">{expanded ? cms.cooking.matchDetailsHide : cms.cooking.matchDetails}</span><ChevronDown size={14} aria-hidden="true" />
-        </button>
-      </div>
-
-      {/* Verdetto: numero serifa + tono corsivo, stesso baseline. */}
-      <div className="match-verdict">
-        <span className="match-score-group">
           <AnimatedScore value={roundedScore} />
           <span className="type-numeric match-score-suffix">
             /100
@@ -399,54 +372,123 @@ export function RecipeMatchCard({
               </motion.span>
             )}
           </AnimatePresence>
-        </span>
-        <span className="match-tone">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.span
-              key={notFeasible ? "not-feasible" : tone.title}
-              className="match-tone__text"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={motionTiming.exit}
+          <span className="match-score-details">{detailsLabel}<ChevronDown size={12} aria-hidden="true" /></span>
+        </button>
+        <div className="match-card__summary">
+          <div className="match-card__copy">
+            <div className="match-kicker">
+              <RecipeMatchIcon score={roundedScore} blocked={notFeasible}
+                size={14}
+                className={`match-kicker__icon ${tone.low || notFeasible ? "match-kicker__icon--warn" : "match-kicker__icon--primary"}`}
+                aria-hidden="true"
+              />
+              <span className="match-kicker__label">{uiMessage("features.recipe.recipe-match-card.match-0335207f")}</span>
+
+            </div>
+
+            {/* Esito operativo accanto al punteggio. */}
+            <div className="match-verdict">
+              <span className="match-tone">
+                <span className="match-tone__text">{statusLabel}</span>
+              </span>
+            </div>
+
+          </div>
+          <div className="match-card__context">
+            {scores.global_calculation?.limited_by === "authenticity" && (
+              <p className="match-notice match-notice--warn">
+                {t(cms.ui.scoreLimitedAuthenticity, { score: fmt.number(scores.authenticity) })}
+              </p>
+            )}
+            {scores.global_calculation?.limited_by === "feasibility" && (
+              <p className="match-notice match-notice--warn">{cms.ui.scoreLimitedFeasibility}</p>
+            )}
+            {notFeasible && verdictRecipe && verdictConstraints && (
+              <RecipeVerdictNotice
+                embedded
+                recipe={verdictRecipe}
+                constraints={verdictConstraints}
+                mealDeadline={mealDeadline}
+              />
+            )}
+            {!notFeasible && verdictRecipe && <RecipeConditionChips recipe={verdictRecipe} compact />}
+            {/* Avvisi onesti: visibili anche a card chiusa */}
+            {!notFeasible && unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
+              <p className="match-notice match-notice--warn">
+                {unviableText}
+              </p>
+            )}
+            {/* Riga-soffitto SEMPRE visibile ("Puoi arrivare a {ceiling}…") —
+                round 4, nota Matteo: è la promessa che dà senso a "Ottimizza". */}
+            {!notFeasible && headroomLine && (
+              <p className={`match-notice ${HEADROOM_TONE_CLASS[headroomLine.tone]}`}>
+                {headroomLine.text}
+              </p>
+            )}
+
+          </div>
+        </div>
+        <div className="match-actions">
+          {onCreate && (
+            <button type="button" className="match-action-text match-action-text--personalize" onClick={onCreate}><SlidersHorizontal size={14} aria-hidden="true" />{cms.ui.recipeOpenCreate}</button>
+          )}
+          {onOptimize && (
+            <motion.button
+              type="button"
+              onClick={() => {
+                onOptimize();
+                /* U-10 (F12): dopo l'ottimizzazione il pulsante sparisce; se il
+                   focus è caduto su <body> lo si riporta nella card. */
+                requestAnimationFrame(() => {
+                  if (document.activeElement === document.body) detailsToggleRef.current?.focus();
+                });
+              }}
+              whileHover={{ scale: 1.025, y: -1 }}
+              whileTap={{ scale: 0.97 }}
+              transition={motionSpring.highlightedMatch}
+              className="match-action-cta"
             >
-              {statusLabel}
-            </motion.span>
+              <Sparkles size={15} aria-hidden="true" />
+              {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}
+            </motion.button>
+          )}
+          {/* Gerarchia (redesign lug 2026, round 2): UN solo pulsante pieno
+              (Ottimizza). Personalizza e Salva sono azioni testuali in accento —
+              niente scatole in competizione; Torna resta il peso minimo in coda. */}
+          {onPersonalize && (
+            <motion.button
+              type="button"
+              onClick={onPersonalize}
+              whileTap={{ scale: 0.95 }}
+              className="match-action-text match-action-text--personalize"
+            >
+              <SlidersHorizontal size={14} aria-hidden="true" />
+              {cms.ui.personalize ?? uiMessage("features.recipe.recipe-match-card.personalizza-0beadff3")}
+            </motion.button>
+          )}
+          <AnimatePresence initial={false}>
+            {showSaveAction && (
+              <motion.button
+                key="save"
+                type="button"
+                onClick={onSave}
+                aria-pressed={saved}
+                aria-label={saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
+                title={saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                whileTap={{ scale: 0.95 }}
+                className={`match-action-text match-action-text--save${saved ? " match-action-text--save-active" : ""}`}
+              >
+                {saved ? <BookmarkCheck size={14} aria-hidden="true" /> : <Bookmark size={14} aria-hidden="true" />}
+                <span data-slot="label">{saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}</span>
+              </motion.button>
+            )}
           </AnimatePresence>
-        </span>
+
+        </div>
       </div>
-
-      {scores.global_calculation?.limited_by === "authenticity" && (
-        <p className="match-notice match-notice--warn">
-          {t(cms.ui.scoreLimitedAuthenticity, { score: fmt.number(scores.authenticity) })}
-        </p>
-      )}
-      {scores.global_calculation?.limited_by === "feasibility" && (
-        <p className="match-notice match-notice--warn">{cms.ui.scoreLimitedFeasibility}</p>
-      )}
-      {notFeasible && verdictRecipe && verdictConstraints && (
-        <RecipeVerdictNotice
-          embedded
-          recipe={verdictRecipe}
-          constraints={verdictConstraints}
-          mealDeadline={mealDeadline}
-        />
-      )}
-      {!notFeasible && verdictRecipe && <RecipeConditionChips recipe={verdictRecipe} compact />}
-      {/* Avvisi onesti: visibili anche a card chiusa */}
-      {!notFeasible && unviableText && !(headroomLine && (headroomLine.tone === "warn" || headroomLine.tone === "muted")) && (
-        <p className="match-notice match-notice--warn">
-          {unviableText}
-        </p>
-      )}
-      {/* Riga-soffitto SEMPRE visibile ("Puoi arrivare a {ceiling}…") —
-          round 4, nota Matteo: è la promessa che dà senso a "Ottimizza". */}
-      {!notFeasible && headroomLine && (
-        <p className={`match-notice ${HEADROOM_TONE_CLASS[headroomLine.tone]}`}>
-          {headroomLine.text}
-        </p>
-      )}
-
       {/* ── Dettagli a richiesta: stato forno, barre punteggio, rationale ── */}
       <AnimatePresence initial={false}>
         {expanded && (
@@ -457,6 +499,7 @@ export function RecipeMatchCard({
             exit={{ height: 0, opacity: 0 }}
             transition={motionSpring.matchPanel}
             className="match-details"
+            id={detailsId}
           >
             {/* Copy emotivo del tono: apre il pannello. */}
             <div className="match-details__intro">
@@ -619,64 +662,7 @@ export function RecipeMatchCard({
       {onOptimize && optimizationPreview && verdictRecipe && (
         <RecipeChanges from={verdictRecipe} to={optimizationPreview} mode="preview" />
       )}
-      </div>
-      <div className="match-actions">
-      {onCreate && (
-        <button type="button" className="match-action-text match-action-text--personalize" onClick={onCreate}><SlidersHorizontal size={14} aria-hidden="true" />{cms.ui.recipeOpenCreate}</button>
-      )}
-        {onOptimize && (
-          <motion.button
-            type="button"
-            onClick={() => {
-              onOptimize();
-              /* U-10 (F12): dopo l'ottimizzazione il pulsante sparisce; se il
-                 focus è caduto su <body> lo si riporta nella card. */
-              requestAnimationFrame(() => {
-                if (document.activeElement === document.body) detailsToggleRef.current?.focus();
-              });
-            }}
-            whileHover={{ scale: 1.025, y: -1 }}
-            whileTap={{ scale: 0.97 }}
-            transition={motionSpring.highlightedMatch}
-            className="match-action-cta"
-          >
-            <Sparkles size={15} />
-            {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}
-          </motion.button>
-        )}
-        {/* Gerarchia (redesign lug 2026, round 2): UN solo pulsante pieno
-            (Ottimizza). Personalizza e Salva sono azioni testuali in accento —
-            niente scatole in competizione; Torna resta il peso minimo in coda. */}
-        {onPersonalize && (
-          <motion.button
-            type="button"
-            onClick={onPersonalize}
-            whileTap={{ scale: 0.95 }}
-            className="match-action-text match-action-text--personalize"
-          >
-            <SlidersHorizontal size={14} />
-            {cms.ui.personalize ?? uiMessage("features.recipe.recipe-match-card.personalizza-0beadff3")}
-          </motion.button>
-        )}
-        <AnimatePresence initial={false}>
-          {showSaveAction && (
-            <motion.button
-              key="save"
-              type="button"
-              onClick={onSave}
-              aria-pressed={saved}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              whileTap={{ scale: 0.95 }}
-              className={`match-action-text match-action-text--save${saved ? " match-action-text--save-active" : ""}`}
-            >
-              {saved ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
-              {saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
-            </motion.button>
-          )}
-        </AnimatePresence>
-      </div>
+
 
 
 

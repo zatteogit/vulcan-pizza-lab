@@ -9130,32 +9130,43 @@
 
   .match-card {
     position: relative;
-    isolation: isolate;
     width: 100%;
-    padding-block: var(--space-4);
+    max-width: var(--measure-md);
+    min-width: 0;
+    padding: var(--space-4);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+    border-radius: var(--radius-2xl);
+    background: var(--container-card);
   }
 
-  .match-card::before {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    inset: var(--space-0);
-    background: radial-gradient(ellipse at 18% 38%, color-mix(in srgb, var(--primary) 18%, transparent) 0%, color-mix(in srgb, var(--forge-glow) 8%, transparent) 36%, transparent 70%);
-    filter: blur(var(--blur-xl));
-    opacity: 0.7;
-    pointer-events: none;
+  .match-card__main {
+    display: grid;
+    grid-template-columns: var(--space-20) minmax(0, 1fr);
+    column-gap: var(--space-4);
+    row-gap: var(--space-1-5);
+    align-items: start;
   }
 
-  .match-card>* {
-    position: relative;
-    z-index: 1;
+  .match-card__summary {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
   }
 
-  /* ── Kicker: icona + "Match" + filetto ── */
+  .match-card__copy,
+  .match-card__context { min-width: 0; }
+
+  .match-card__context:empty {
+    display: none;
+  }
+
+  /* The label and verdict form one reading block beside the score. */
   .match-kicker {
     display: flex;
     align-items: center;
-    gap: var(--gap-xs);
+    gap: var(--space-1-5);
   }
 
   .match-kicker__icon {
@@ -9172,22 +9183,14 @@
 
   .match-kicker__label {
     color: var(--text-muted);
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
     font-weight: var(--weight-semibold);
-    letter-spacing: var(--tracking-caps);
-    text-transform: uppercase;
-    line-height: var(--leading-none);
-  }
-
-  .match-kicker__rule {
-    flex: 1;
-    height: var(--border-width-thin);
-    background: var(--container-border-subtle);
+    line-height: var(--leading-normal);
   }
 
   /* ── Verdetto: numero serifa + tono corsivo ── */
   .match-verdict {
-    margin-top: var(--space-2-5);
+    margin-top: var(--space-1);
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
@@ -9196,30 +9199,75 @@
   }
 
   .match-score-group {
+    position: relative;
     display: flex;
-    align-items: baseline;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-0-5);
     flex-shrink: 0;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    min-height: var(--space-24);
+    align-self: start;
+    padding-block: var(--space-2);
+    padding-inline: 0;
+    cursor: pointer;
+    border-radius: var(--radius-xl);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
+    background: var(--container-bg);
+    color: var(--text-default);
+  }
+
+  .match-score-group:hover { border-color: var(--text-accent); }
+
+  .match-score-group:focus-visible {
+    outline: var(--border-width-medium) solid var(--text-accent);
+    outline-offset: var(--space-1);
+  }
+
+  .match-score-details {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-0-5);
+    white-space: nowrap;
+    margin-top: var(--space-1);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-medium);
+    color: var(--text-accent);
+    line-height: var(--leading-normal);
+  }
+
+  .match-score-details svg { transition: transform var(--duration-normal) var(--ease-standard); }
+  .match-score-group--expanded .match-score-details svg { transform: rotate(180deg); }
+
+  .match-card--blocked .match-score-group {
+    color: var(--text-warning);
+    border-color: var(--text-warning);
   }
 
   .match-score-value {
     display: inline-block;
     font-feature-settings: "tnum";
     font-family: var(--font-serif);
-    color: var(--text-default);
-    font-size: clamp(var(--font-size-7xl), var(--dimension-viewport-width-060), var(--font-size-8xl));
+    color: inherit;
+    font-size: var(--font-size-8xl);
     font-weight: var(--weight-bold);
     line-height: var(--leading-none);
   }
 
   .match-score-suffix {
-    margin-left: var(--space-1);
     color: var(--text-muted);
     font-size: var(--font-size-sm);
     font-weight: var(--weight-semibold);
   }
 
   .match-score-bump {
-    margin-left: var(--space-1-5);
+    position: absolute;
+    inset-block-start: calc(var(--space-2) * -1);
+    inset-inline-end: calc(var(--space-2) * -1);
     color: var(--cta);
     font-size: var(--font-size-md);
     font-weight: var(--weight-bold);
@@ -9229,50 +9277,13 @@
     min-width: 0;
     font-family: var(--font-sans);
     color: var(--text-default);
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-3xl);
     font-weight: var(--weight-semibold);
     line-height: var(--leading-normal);
   }
 
   .match-tone__text {
     display: block;
-    padding: var(--space-1) var(--space-3);
-    background: var(--container-bg-low);
-    border-radius: var(--radius-full);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-  }
-
-  .match-info-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1-5);
-    min-height: var(--space-8);
-    font-size: var(--font-size-sm);
-    flex-shrink: 0;
-    align-self: center;
-    padding: var(--space-1);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: var(--icon-muted);
-    line-height: var(--leading-none);
-    transition: color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
-  }
-
-  .match-kicker .match-info-toggle {
-    margin-left: calc(var(--space-1) * -1);
-  }
-
-  .match-info-toggle:active {
-    transform: scale(0.9);
-  }
-
-  .match-info-toggle--active {
-    color: var(--text-accent);
-  }
-
-  .match-info-toggle--active > svg {
-    transform: rotate(180deg);
   }
 
   /* ── Avvisi (unviable + riga-soffitto) ── */
@@ -9305,6 +9316,22 @@
   .match-details {
     overflow: hidden;
   }
+
+  .match-details > :first-child {
+    margin-top: var(--space-4);
+  }
+
+  .match-card__context > .match-notice:first-child,
+  .match-card__context > .recipe-condition-chips:first-child {
+    margin-top: 0;
+  }
+
+  .match-card__context .recipe-condition-chip.badge-base {
+    font-size: var(--font-size-sm);
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .match-card__context .recipe-condition-chips { padding-block: 0; }
 
   .match-calculation {
     display: grid;
@@ -9647,18 +9674,20 @@
 
   /* ── Azioni ── */
   .match-actions {
-    margin-top: var(--space-4);
+    grid-column: 2;
+    min-width: 0;
+    margin-top: var(--space-1);
     display: flex;
     width: 100%;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--gap-sm);
+    gap: var(--space-2);
   }
 
   .match-action-cta,
   .match-action-text {
     box-sizing: border-box;
-    min-height: var(--space-9);
+    min-height: var(--space-10);
     padding-block: var(--space-2);
   }
 
@@ -9685,8 +9714,8 @@
     gap: var(--space-1-5);
     border-radius: var(--radius-full);
     padding-inline: var(--space-3);
-    background: color-mix(in srgb, var(--container-bg) 76%, transparent);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
+    background: transparent;
+    border: var(--border-width-thin) solid transparent;
     cursor: pointer;
     font-size: var(--font-size-sm);
     font-weight: var(--weight-semibold);
@@ -9695,6 +9724,7 @@
 
   .match-action-text--personalize {
     color: var(--primary);
+    border-color: var(--container-border);
   }
 
   .match-action-text--save {
@@ -9710,37 +9740,21 @@
     border-color: color-mix(in srgb, var(--primary) 30%, var(--container-border-subtle));
   }
 
-  /* Desktop (nota Matteo, pin VPL-452410 + VPL-419292): la card verdetto era
-     alta e vuota a destra, con le azioni poco visibili in coda. Su schermo largo
-     diventa a due colonne — verdetto a sinistra, cluster azioni impilato a
-     destra: riempie il vuoto e dà peso alle azioni. Sotto i 768px resta la
-     riga di azioni a piena larghezza. */
-  @media (min-width: 768px) {
-    .match-card {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--gap-lg);
-    }
-
+  @media (max-width: 480px) {
     .match-card__main {
-      flex: 1 1 0%;
-      min-width: 0;
+      grid-template-columns: var(--space-20) minmax(0, 1fr);
+      column-gap: var(--space-3);
+      row-gap: var(--space-3);
     }
-
-    .match-actions {
-      margin-top: var(--space-1);
-      flex: 0 0 auto;
-      width: auto;
-      min-width: max-content;
-      flex-direction: column;
-      align-items: stretch;
-      flex-wrap: nowrap;
+    .match-score-group {
+      grid-row: 1;
+      min-height: var(--space-24);
     }
-
-    .match-action-cta,
-    .match-action-text {
-      width: 100%;
-    }
+    .match-actions { grid-column: 1 / -1; margin-top: 0; }
+    .match-actions .match-action-cta { flex-basis: 100%; order: -1; }
+    .match-actions .match-action-text { flex: 1 1 var(--space-28); min-width: 0; }
+    .match-actions .match-action-text--save { flex-basis: calc(var(--space-28) + var(--space-8)); }
+    .match-actions .match-action-text--personalize { flex-basis: auto; flex-shrink: 0; white-space: nowrap; }
   }
 
   /* ═══ ONDATA 3 — COMPONENT: ingredients-section (PREFIX: ingredients) ═══ */
@@ -20502,7 +20516,9 @@ html {
 }
 
 [data-theme="editorial-fire"] [data-page="recipe"] [data-slot="recipe-shoulder"] .match-card {
-  padding-block-start: 0;
+  border-inline: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 [data-theme="editorial-fire"] [data-page="recipe"] .recipe-output-ingredients {
