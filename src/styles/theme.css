@@ -16193,7 +16193,7 @@
   }
 
   .section-tabs-capsule__tab.section-tabs-capsule__tab--active {
-    color: var(--text-default);
+    color: var(--segmented-text-active-brand);
     font-weight: var(--weight-semibold);
   }
 
@@ -16203,14 +16203,11 @@
     position: absolute;
     inset: 0;
     border-radius: var(--radius-full);
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
+    background: var(--segmented-bg-active-brand);
   }
 
   .section-tabs-capsule__indicator--navbar {
-    background: linear-gradient(180deg,
-        color-mix(in srgb, var(--primary) 13%, var(--container-page)),
-        color-mix(in srgb, var(--primary) 7%, var(--container-page)));
-    border: var(--border-width-thin) solid color-mix(in srgb, var(--primary) 18%, transparent);
+    border: var(--border-width-thin) solid var(--segmented-bg-active-brand);
     box-shadow: var(--elevation-dock-active);
   }
 
@@ -16239,8 +16236,10 @@
   }
 
   .section-tabs-capsule__icon--active {
-    opacity: 0.9;
+    opacity: 1;
   }
+
+  .section-tabs-capsule__tab--active .section-tabs-capsule__icon { opacity: 1; }
 
   .section-tabs-capsule__text {
     display: flex;
@@ -16279,8 +16278,8 @@
   }
 
   .section-tabs-capsule__subtitle--active {
-    color: inherit;
-    opacity: 0.85;
+    color: var(--segmented-text-active-brand);
+    opacity: 1;
   }
 
   .section-tabs-dock .section-tabs-capsule.section-tabs-capsule--navbar {
