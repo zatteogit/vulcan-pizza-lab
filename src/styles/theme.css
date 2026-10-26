@@ -842,6 +842,11 @@
   --layout-recipe-offset-expanded: var(--space-20);
   --layout-recipe-overlap: var(--space-19);
   --control-track-height: var(--dimension-relative-115);
+  --control-marker-size: var(--space-3-5);
+  --control-content-gap: var(--space-2);
+  --control-content-gap-tight: var(--space-1-5);
+  --motion-selection-duration: var(--duration-fast);
+  --motion-selection-ease: var(--ease-standard);
   --dialog-compact-measure: var(--dimension-relative-2375);
 
   /* ── Elevation / Shadows ── */
@@ -1070,6 +1075,11 @@
   --chip-font-size: var(--type-chip-size);
   --chip-weight: var(--type-chip-weight);
   --chip-weight-active: var(--type-chip-weight-active);
+  --selection-mark-size: var(--control-marker-size);
+  --selection-mark-gap: var(--control-content-gap);
+  --selection-mark-gap-compact: var(--control-content-gap-tight);
+  --selection-mark-duration: var(--motion-selection-duration);
+  --selection-mark-ease: var(--motion-selection-ease);
 
   /* ── C2. Segmented Control ── */
   --segmented-bg: var(--surface-container);
@@ -7864,7 +7874,7 @@
   .needs-yeast-chip__row {
     display: flex;
     align-items: center;
-    gap: var(--gap-xs);
+    gap: 0;
   }
 
   .needs-yeast-chip__name {
@@ -7981,7 +7991,7 @@
   .needs-flour-chip__row {
     display: flex;
     align-items: center;
-    gap: var(--space-1-5);
+    gap: 0;
   }
 
   .needs-flour-chip__name {
@@ -19418,7 +19428,7 @@
   .ds-chip {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: 0;
     border-radius: var(--radius-xl);
     padding-block: var(--space-2-5);
     padding-inline: var(--space-4);
@@ -19441,8 +19451,65 @@
     font-weight: var(--chip-weight-active);
   }
 
-  .ds-chip__icon {
+  .ds-selection-mark {
+    display: inline-flex;
     flex-shrink: 0;
+    width: 0;
+    overflow: hidden;
+    transition: width var(--selection-mark-duration) var(--selection-mark-ease);
+  }
+
+  .ds-selection-mark--active {
+    width: calc(var(--selection-mark-size) + var(--selection-mark-gap));
+  }
+
+  .ds-selection-mark--icon {
+    width: auto;
+  }
+
+  .ds-selection-mark--compact {
+    --selection-mark-gap: var(--selection-mark-gap-compact);
+  }
+
+  .ds-selection-mark__content {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    flex-shrink: 0;
+    padding-inline-end: var(--selection-mark-gap);
+  }
+
+  .ds-selection-mark__check,
+  .ds-selection-mark__icon {
+    display: flex;
+    grid-area: 1 / 1;
+    align-items: center;
+    justify-content: center;
+    transition: opacity var(--selection-mark-duration) var(--selection-mark-ease), transform var(--selection-mark-duration) var(--selection-mark-ease);
+  }
+
+  .ds-selection-mark__check {
+    width: var(--selection-mark-size);
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  .ds-selection-mark--active .ds-selection-mark__check {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .ds-selection-mark--active .ds-selection-mark__icon {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-selection-mark,
+    .ds-selection-mark__check,
+    .ds-selection-mark__icon {
+      transition: none;
+    }
   }
 
   /* ═══ DS COMPONENT: CtaButton ═══ */

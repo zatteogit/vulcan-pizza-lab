@@ -29,7 +29,7 @@ import { pantryFlourName } from "./pantry-flour-names";
 import { AnimatePresence,motion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring,motionTiming } from "../../components/ds/motion";
 import React,{ useEffect,useMemo,useState } from "react";
-import { Chip } from "../../components/ds/index";
+import { Chip, SelectionMark } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { timeSlotText } from "./time-slot-text";
 import { CustomTimeSlot } from "./custom-time-slot";
@@ -864,7 +864,7 @@ export function UserNeeds({
                             >
                               {isRecent && (<div className="needs-yeast-chip__badge">{cms.ui.badgeRecent}</div>)}
                               <div className="needs-yeast-chip__row">
-                                <AnimatePresence>{active && (<motion.span initial={{ scale: 0, width: 0 }} animate={{ scale: 1, width: 14 }} exit={{ scale: 0, width: 0 }} transition={motionSpring.crisp}><Check size={14} /></motion.span>)}</AnimatePresence>
+                                <SelectionMark active={active} />
                                 <span className="needs-yeast-chip__name">{cms.yeastLabels[y.id] ?? y.name}</span>
                               </div>
                               <span className="needs-yeast-chip__detail">{cms.yeastDetails[y.id] ?? y.detail}</span>
@@ -1187,18 +1187,7 @@ function FlourChip({
         </div>
       )}
       <div className="needs-flour-chip__row">
-        <AnimatePresence>
-          {active && (
-            <motion.span
-              initial={{ scale: 0, width: 0 }}
-              animate={{ scale: 1, width: 14 }}
-              exit={{ scale: 0, width: 0 }}
-              transition={motionSpring.crisp}
-            >
-              <Check size={14} />
-            </motion.span>
-          )}
-        </AnimatePresence>
+        <SelectionMark active={active} compact />
         <span className="needs-flour-chip__name">
           {cms.flourLabels[flour.id] ?? flour.name}
         </span>

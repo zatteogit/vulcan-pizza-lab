@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ImageWithFallback } from "../media/ImageWithFallback";
 import type { SectionEntry } from "./shared";
 import { AccessibilitaInfo,LineeGuida,Panoramica,SectionHeader,SubSectionLabel } from "./shared";
-import { CtaButton, Badge, StepHeader, Chip, Surface, Slider } from "../ds/index";
+import { CtaButton, Badge, StepHeader, Chip, Surface, Slider, SelectionMark } from "../ds/index";
 import { toShowcaseCssValue } from "./showcase-style";
 import { showcaseTransition } from "./showcase-motion";
 import { showcaseMessage } from "../../i18n/showcase-messages";
@@ -242,6 +242,12 @@ function ChipsSpec() {
               <Chip key={c.id} label={c.label} active={a} onToggle={() => toggle(c.id)} icon={<I size={14} />} />
             );
           })}
+        </div>
+        <div className="mt-4 flex items-center gap-2.5">
+          <SelectionMark active />
+          <SelectionMark active={false} />
+          <SelectionMark active icon={<Flame size={14} />} />
+          <SelectionMark active={false} icon={<Flame size={14} />} />
         </div>
       </Surface>
 
