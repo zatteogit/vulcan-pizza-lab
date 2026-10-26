@@ -915,6 +915,7 @@
   --section-tabs-resting-offset: var(--space-6);
   --section-tabs-reading-offset: var(--space-4);
   --section-tabs-target-min: var(--dimension-fixed-046);
+  --recipe-match-action-target-min: var(--dimension-fixed-046);
   --section-tabs-navbar-dock-max-width: var(--dimension-fixed-440);
   /* riga dock mobile variante navbar */
   --section-tabs-capsule-height-navbar-subtitles: var(--dimension-fixed-058);
@@ -9164,17 +9165,22 @@
     display: grid;
     grid-template-columns: max-content minmax(0, 1fr);
     column-gap: var(--space-5);
-    row-gap: var(--space-5);
+    row-gap: var(--space-3);
     align-items: start;
   }
 
   .match-card__summary {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 1;
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
     min-width: 0;
+  }
+
+  .match-card__copy {
+    display: grid;
+    gap: var(--space-1);
   }
 
   .match-card__copy,
@@ -9186,7 +9192,6 @@
 
   /* The label and verdict form one reading block beside the score. */
   .match-kicker {
-    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     gap: var(--space-1-5);
@@ -9211,7 +9216,7 @@
     line-height: var(--leading-normal);
   }
 
-  /* ── Verdetto: numero serifa + tono corsivo ── */
+  /* The score is the entry point; its details stay in the same control. */
   .match-verdict {
     margin-top: 0;
     display: flex;
@@ -9226,20 +9231,20 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: var(--space-1);
+    justify-content: flex-start;
+    gap: var(--space-2);
     flex-shrink: 0;
     grid-column: 1;
-    grid-row: 2;
+    grid-row: 1 / span 2;
     min-width: var(--space-20);
-    min-height: var(--space-24);
     align-self: start;
-    padding-block: var(--space-3);
-    padding-inline: var(--space-2);
+    padding-block: var(--space-1);
+    padding-inline: 0 var(--space-5);
     cursor: pointer;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
     border: none;
-    background: color-mix(in srgb, var(--primary) 7%, var(--surface-bright));
+    border-inline-end: var(--border-width-thin) solid var(--container-border);
+    background: transparent;
     color: var(--text-default);
   }
 
@@ -9709,22 +9714,20 @@
 
   /* ── Azioni ── */
   .match-actions {
-    grid-column: 1 / -1;
-    grid-row: 3;
+    grid-column: 2;
+    grid-row: 2;
     min-width: 0;
     margin-top: 0;
     display: flex;
-    padding-top: var(--space-4);
-    border-top: var(--border-width-thin) solid var(--container-border-subtle);
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-2) var(--space-3);
+    gap: var(--space-1) var(--space-2);
   }
 
   .match-action-cta,
   .match-action-text {
     box-sizing: border-box;
-    min-height: var(--space-11);
+    min-height: max(var(--space-11), var(--recipe-match-action-target-min));
     padding-block: var(--space-2);
   }
 
@@ -9784,24 +9787,36 @@
 
   .match-actions .match-action-cta { flex-basis: 100%; order: -1; }
   .match-actions .match-action-text { flex: 0 1 auto; min-width: 0; }
-  .match-actions .match-action-text--save { margin-inline-start: auto; }
+  .match-actions .match-action-text--save { margin-inline-start: 0; }
 
   /* The recipe shoulder can be narrow on a large screen: use its actual
      space, with the stacked layout as the fallback for older browsers. */
   @container recipe-match (min-width: 640px) {
     .match-card__main { column-gap: var(--space-6); }
-    .match-score-group { min-width: var(--space-28); padding: var(--space-4); }
+    .match-score-group { min-width: var(--space-24); }
     .match-actions .match-action-cta { flex-basis: auto; order: 0; }
   }
 
+  @container recipe-match (min-width: 720px) {
+    .match-card__main { grid-template-columns: max-content minmax(0, 1fr) max-content; }
+    .match-score-group { grid-row: 1; }
+    .match-actions {
+      grid-column: 3;
+      grid-row: 1;
+      flex-direction: column;
+      align-items: stretch;
+      align-self: center;
+    }
+  }
+
   @container recipe-match (max-width: 480px) {
-    .match-card__main { column-gap: var(--space-4); row-gap: var(--space-4); }
+    .match-card__main { column-gap: var(--space-3); row-gap: var(--space-3); }
+    .match-score-group { grid-row: 1; padding-inline-end: var(--space-3); }
     .match-card__summary { display: contents; }
-    .match-card__copy { grid-column: 2; grid-row: 2; align-self: center; }
-    .match-card__context { grid-column: 1 / -1; grid-row: 3; }
-    .match-actions { grid-row: 4; }
-    .match-actions .match-action-text { flex: 1 1 auto; }
-    .match-actions .match-action-text--save { flex-basis: 100%; margin-inline-start: 0; }
+    .match-card__copy { grid-column: 2; grid-row: 1; align-self: center; }
+    .match-card__context { grid-column: 1 / -1; grid-row: 2; }
+    .match-actions { grid-column: 1 / -1; grid-row: 3; }
+    .match-actions .match-action-text { flex: 0 1 auto; }
   }
 
   /* ═══ ONDATA 3 — COMPONENT: ingredients-section (PREFIX: ingredients) ═══ */
