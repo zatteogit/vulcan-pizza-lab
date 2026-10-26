@@ -168,6 +168,18 @@ export function RecipeOutput({
   };
 
   const { cms, bcp47 } = useCms();
+  const [calendarReference, setCalendarReference] = useState(() => new Date());
+  useEffect(() => {
+    const refresh = () => {
+      const now = new Date();
+      setCalendarReference(previous => previous.toDateString() === now.toDateString() ? previous : now);
+    };
+    const midnight = new Date();
+    midnight.setHours(24, 0, 0, 50);
+    const timer = window.setTimeout(refresh, midnight.getTime() - Date.now());
+    document.addEventListener("visibilitychange", refresh);
+    return () => { window.clearTimeout(timer); document.removeEventListener("visibilitychange", refresh); };
+  }, [calendarReference]);
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
   /* Audit totale n. 4: la spiegazione usa i numeri del motore (metodo delle
@@ -868,6 +880,7 @@ export function RecipeOutput({
       <ScrollToTopOnMount />
       <div className="recipe-output-hero-wrap">
         <ProcedureHeroControls
+          calendarReference={calendarReference}
           startTime={startTime}
           setStartTime={setStartTime}
           endTime={endTime}
@@ -893,7 +906,7 @@ export function RecipeOutput({
         recipe={recipe}
         isNerd={isNerd}
         compensations={compensations}
-        startTime={startTime}
+        calendarReference={calendarReference}
         stepTimes={stepTimes}
         stretch={stretch}
         effDuration={effDuration}

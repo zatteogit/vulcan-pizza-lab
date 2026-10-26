@@ -21,7 +21,7 @@ type TimelineInsertPoint,
 type ToppingRecipe
 } from "../data/topping-library";
 import { FLOURS_DB } from "../data/flour-database";
-import { pantryIngredientId, type PantryFlourDetails } from "./pantry-ingredients";
+import { pantryIngredientId, pantryIngredientReferences, type PantryFlourDetails } from "./pantry-ingredients";
 import { BRAND } from "../config/brand";
 import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
 
@@ -123,7 +123,7 @@ export type LayoutType =
   | "folded_layers"
   | "double_thin_sheet";
 
-interface LayoutSpec {
+export interface LayoutSpec {
   type: LayoutType;
   /** Quanti pezzi compongono UNA unità servita (default 1, Baciata = 2, ecc.) */
   pieces_per_unit?: number;
@@ -242,6 +242,8 @@ export interface PizzaStyle {
   /** Sprint 11 Fase 1 — struttura geometrica (stacked/closed/folded/double_sheet).
    * Opzionale: omesso = single (pizza/teglia/panetto monostrato classico). */
   layout?: LayoutSpec;
+  /** Preserve the selected style layout when a topping declares another method. */
+  reference_layout?: LayoutSpec;
   /** Sprint 11 Fase 2 — id del topping di default (cercato in TOPPING_LIBRARY).
    * Le sue pre_prep, assembly_steps e bake_adjustments si iniettano nella timeline. */
   default_topping_ref?: string;
@@ -494,6 +496,10 @@ export interface RecipeVerdict {
 const THERMAL_UNVIABLE_THRESHOLD = 0.6;
 
 export interface GeneratedRecipe {
+  topping_scale: number;
+  topping_geometry: { reference_area_cm2: number; area_cm2: number; area_scale: number };
+  pan_config?: PanConfig;
+  method_changes?: EngineMsg[];
   schema_version: string; // Notion Pag.09: recipe data schema version
   /** M-10: esito esplicito (riuscito, con avvisi, non fattibile così). */
   verdict: RecipeVerdict;
@@ -1166,6 +1172,11 @@ function calculateAuthenticityScore(
     penalties.push(em("auth.directMethod", METHOD_MESSAGES_IT["auth.directMethod"]));
   }
 
+  if (style.reference_layout && style.reference_layout.type !== style.layout?.type) {
+    breakdown.processo -= 40;
+    penalties.push(em("auth.layoutChanged", METHOD_MESSAGES_IT["auth.layoutChanged"]));
+  }
+
   let score = Math.round(
     Math.max(
       0,
@@ -1229,7 +1240,7 @@ function calculateFeasibilityScore(
     const position = ovenMaxTemp - style.baking.temp_c_range[0];
     ovenScore = 60 + (position / range) * 35;
     warnings.push(
-      em("feas.ovenSuboptimal", "Forno sotto-ottimale: {temp} vs ideale {ideal}", { temp: ovenMaxTemp, ideal: style.baking.temp_c_ideal }),
+      em("feas.ovenSuboptimal", METHOD_MESSAGES_IT["feas.ovenSuboptimal"], { temp: ovenMaxTemp, ideal: style.baking.temp_c_ideal }),
     );
   } else {
     const deficit = style.baking.temp_c_range[0] - ovenMaxTemp;
@@ -1238,7 +1249,7 @@ function calculateFeasibilityScore(
     const floor = deficit > 200 ? 5 : deficit > 100 ? 10 : 20;
     ovenScore = Math.max(floor, 60 - deficit * 0.5);
     warnings.push(
-      em("feas.ovenTooCold", "Forno troppo freddo: {temp} < minimo {min}", { temp: ovenMaxTemp, min: style.baking.temp_c_range[0] }),
+      em("feas.ovenTooCold", METHOD_MESSAGES_IT["feas.ovenTooCold"], { temp: ovenMaxTemp, min: style.baking.temp_c_range[0] }),
     );
   }
 
@@ -1250,7 +1261,7 @@ function calculateFeasibilityScore(
     warnings.push(em("feas.wTooLow", `W troppo basso: ${flourW} < ${wMin}`, { w: flourW, wMin }));
   } else if (flourW > wMax * 1.3) {
     flourScore = Math.max(60, 90 - (flourW - wMax) * 0.2);
-    warnings.push(em("feas.wTooHigh", "W oltre l’intervallo dello stile ({w}): verifica anche P/L", { w: flourW }));
+    warnings.push(em("feas.wTooHigh", METHOD_MESSAGES_IT["feas.wTooHigh"], { w: flourW }));
   } else {
     flourScore = 95;
   }
@@ -1262,7 +1273,7 @@ function calculateFeasibilityScore(
   if (hydration > 75 && skillLevel === 1) {
     skillScore = 30;
     warnings.push(
-      em("feas.hydrationBeginnerHigh", "Idratazione >75% sconsigliata per principianti"),
+      em("feas.hydrationBeginnerHigh", METHOD_MESSAGES_IT["feas.hydrationBeginnerHigh"]),
     );
   } else if (hydration > 85 && skillLevel === 2) {
     // Solo idratazioni davvero estreme (>85%) generano warning per Intermedio
@@ -1270,7 +1281,7 @@ function calculateFeasibilityScore(
     warnings.push(em("feas.hydrationNeedsPractice", "Idratazione estrema (>85%) richiede pratica"));
   } else if (hydration > 65 && skillLevel === 1) {
     skillScore = 50;
-    warnings.push(em("feas.hydrationMedBeginner", "Idratazione media-alta per principiante"));
+    warnings.push(em("feas.hydrationMedBeginner", METHOD_MESSAGES_IT["feas.hydrationMedBeginner"]));
   }
 
   // W × hydration interaction — Audit Scientifico S3: W alto aiuta idratazione alta
@@ -1278,7 +1289,7 @@ function calculateFeasibilityScore(
     skillScore = Math.min(95, skillScore + 10); // farina forte assorbe bene
   } else if (hydration > 70 && flourW < 220) {
     skillScore = Math.max(20, skillScore - 10); // farina debole + alta H = disastro
-    warnings.push(em("feas.flourTooWeakForHydration", "Farina troppo debole per questa idratazione"));
+    warnings.push(em("feas.flourTooWeakForHydration", METHOD_MESSAGES_IT["feas.flourTooWeakForHydration"]));
   }
 
   // Method bonus — no_knead è più facile
@@ -1296,7 +1307,7 @@ function calculateFeasibilityScore(
   ) {
     if (skillLevel === 1) {
       skillScore = Math.max(25, skillScore - 15);
-      warnings.push(em("feas.prefermentNeedsExperience", "Pre-fermento richiede esperienza"));
+      warnings.push(em("feas.prefermentNeedsExperience", METHOD_MESSAGES_IT["feas.prefermentNeedsExperience"]));
     }
   }
 
@@ -1342,11 +1353,11 @@ function calculateDigestibilityScore(
   if (effectiveHours < 3) {
     score = 20;
     category = "Pessima";
-    claims.push(em("dig.fermentTooShort", "Riposo molto breve: indice di maturazione basso"));
+    claims.push(em("dig.fermentTooShort", METHOD_MESSAGES_IT["dig.fermentTooShort"]));
   } else if (effectiveHours < 8) {
     score = 20 + ((effectiveHours - 3) / 5) * 30;
     category = "Bassa";
-    claims.push(em("dig.fermentShort", "Fermentazione breve: indice di maturazione contenuto"));
+    claims.push(em("dig.fermentShort", METHOD_MESSAGES_IT["dig.fermentShort"]));
   } else if (effectiveHours < 18) {
     score = 50 + ((effectiveHours - 8) / 10) * 20;
     category = "Media";
@@ -1359,18 +1370,18 @@ function calculateDigestibilityScore(
       85 + ((effectiveHours - 30) / 20) * 10,
     );
     category = "Eccellente";
-    claims.push(em("dig.extremeMaturation", "Fermentazione prolungata: controlla la tenuta dell'impasto"));
+    claims.push(em("dig.extremeMaturation", METHOD_MESSAGES_IT["dig.extremeMaturation"]));
   }
 
   if (yeastPct > 1.5) {
     const penalty = Math.min(20, (yeastPct - 1.5) * 10);
     score -= penalty;
-    claims.push(em("dig.highYeastDosage", "Dose lievito {pct}%: correzione euristica del punteggio (-{penalty})", { pct: yeastPct, penalty: Math.round(penalty) }));
+    claims.push(em("dig.highYeastDosage", METHOD_MESSAGES_IT["dig.highYeastDosage"], { pct: yeastPct, penalty: Math.round(penalty) }));
   }
 
   if (fermentationTempC <= 4) {
     score = Math.min(100, score + 5);
-    claims.push(em("dig.coldFermentation", "Maturazione in frigorifero: tempi e sviluppo dipendono dalla temperatura"));
+    claims.push(em("dig.coldFermentation", METHOD_MESSAGES_IT["dig.coldFermentation"]));
   }
 
   // Senza lievito non c'è lievitazione: niente frasi su fermentazione,
@@ -1738,14 +1749,9 @@ export function doughThicknessGPerCm2(style: PizzaStyle, weightG = style.shape.d
   return area > 0 ? Math.round((weightG / area) * 100) / 100 : 0;
 }
 
-/** Recalculate dough weight from custom pan dimensions + thickness */
-function calcDoughWeight(
-  style: PizzaStyle,
-  panConfig?: PanConfig,
-): number {
-  if (!panConfig) return style.shape.dough_weight_g;
-
+function panArea(style: PizzaStyle, panConfig?: PanConfig): number {
   const defaultArea = getDefaultShapeArea(style.shape);
+  if (!panConfig) return defaultArea;
   const shape = panConfig.panShape ?? defaultPanShape(style);
   let customArea: number;
 
@@ -1762,6 +1768,19 @@ function calcDoughWeight(
     const d = panConfig.panDiameter ?? style.shape.diameter_cm ?? 30;
     customArea = Math.PI * (d / 2) * (d / 2);
   }
+
+  return customArea;
+}
+
+/** Recalculate dough weight from custom pan dimensions + thickness */
+function calcDoughWeight(
+  style: PizzaStyle,
+  panConfig?: PanConfig,
+): number {
+  if (!panConfig) return style.shape.dough_weight_g;
+
+  const defaultArea = getDefaultShapeArea(style.shape);
+  const customArea = panArea(style, panConfig);
 
   const areaRatio = customArea / defaultArea;
   const thicknessRatio = (panConfig.thickness ?? style.shape.thickness_factor) / style.shape.thickness_factor;
@@ -2020,6 +2039,13 @@ export function generateRecipe(
   const defaultTopping = style.default_topping_ref
     ? getToppingForStyle(style.default_topping_ref, style)
     : undefined;
+  if (defaultTopping?.layout_override || style.reference_layout) {
+    style = { ...style, reference_layout: style.reference_layout ?? style.layout,
+      layout: defaultTopping?.layout_override ?? style.reference_layout };
+  }
+  const toppingArea = panArea(style, panConfig);
+  const referenceArea = getDefaultShapeArea(style.shape);
+  const toppingScale = (style.topping_scale ?? 1) * toppingArea / referenceArea;
   const equipment: EquipmentContext = {
     mixerType: constraints.mixer_type,
     hasMixer: constraints.has_mixer,
@@ -2304,7 +2330,7 @@ export function generateRecipe(
   const prerequisites = kitchenPrerequisites(style, constraints, flourW, yeastType);
   const excludedFlours = excludedRecipeFlours(style, constraints.excluded_flours ?? []);
   if (constraints.excluded_flours?.some(id => ["00", "0", "tipo_1", "manitoba"].includes(id) && !excludedFlours.includes(id))) {
-    prerequisites.push({ kind: "flour", status: "unverified", message: em("need.checkExclusions", "Verifica le esclusioni sulla farina scelta") });
+    prerequisites.push({ kind: "flour", status: "unverified", message: em("need.checkExclusions", METHOD_MESSAGES_IT["need.checkExclusions"]) });
   }
   const scores: RecipeScores = {
     authenticity: authResult.score,
@@ -2566,11 +2592,11 @@ export function generateRecipe(
   const blockers: RecipeBlocker[] = dietaryWarnings.filter(w => w.severity === "critical").map(w => ({
     kind: "dietary_conflict", filter_id: w.filterId, ingredients: w.ingredients, message: w.message,
   }));
-  const requiredIngredients = ["Acqua", "Sale", ...(fatG > 0 && fatLabel ? [fatLabel] : []), ...(effectiveSugarPct > 0 ? ["Zucchero"] : []), ...(defaultTopping?.ingredients.map(ingredient => ingredient.name) ?? [])];
+  const requiredIngredients: {name:string;components?:string[]}[] = [{name:"Acqua"}, {name:"Sale"}, ...(fatG > 0 && fatLabel ? [{name:fatLabel}] : []), ...(effectiveSugarPct > 0 ? [{name:"Zucchero"}] : []), ...(defaultTopping?.ingredients ?? [])];
   const excludedIngredientIds = new Set(constraints.excluded_ingredients ?? []);
-  const excludedNames = requiredIngredients.filter(name => excludedIngredientIds.has(pantryIngredientId(name)));
+  const excludedNames = requiredIngredients.flatMap(ingredient => pantryIngredientReferences(ingredient.name,ingredient.components).filter(row => excludedIngredientIds.has(row.id)).map(row => row.name));
   if (!style.dough.unleavened && (constraints.excluded_yeasts ?? []).includes(yeastType)) excludedNames.push(yeastType);
-  for (const name of [...new Set(excludedNames)]) blockers.push({kind:"resource_excluded",resource:"ingredient",message:em("need.excludedIngredient","La ricetta contiene un ingrediente che non vuoi usare: {ingredient}",{ingredient:name})});
+  for (const name of new Map(excludedNames.map(name => [pantryIngredientId(name), name])).values()) blockers.push({kind:"resource_excluded",resource:"ingredient",message:em("need.excludedIngredient",METHOD_MESSAGES_IT["need.excludedIngredient"],{ingredient:name})});
   if (constraints.pantry_ingredients_complete) {
     const present = new Set(constraints.pantry_ingredients ?? []);
     for (const name of [...new Map((defaultTopping?.ingredients ?? []).filter(ingredient => !ingredient.optional).map(ingredient => [pantryIngredientId(ingredient.name), ingredient.name])).values()]) {
@@ -2578,14 +2604,14 @@ export function generateRecipe(
     }
   }
   for (const id of excludedFlours) {
-    blockers.push({ kind: "resource_excluded", resource: "flour", message: em("need.excludedFlour", "La ricetta richiede una farina che hai escluso: {flour}", { flour: id }) });
+    blockers.push({ kind: "resource_excluded", resource: "flour", message: em("need.excludedFlour", METHOD_MESSAGES_IT["need.excludedFlour"], { flour: id }) });
   }
   for (const condition of prerequisites) {
     const refused = condition.kind === "flour" && constraints.allow_flour_purchase === false ||
       (condition.kind === "pan" || condition.kind === "deck") && constraints.allow_equipment_purchase === false;
     if (condition.status === "missing" && refused) {
       blockers.push({ kind: "resource_excluded", resource: condition.kind === "flour" ? "flour" : "equipment",
-        message: em("need.purchaseRefused", "Manca un requisito e hai scelto di non procurartelo") });
+        message: em("need.purchaseRefused", METHOD_MESSAGES_IT["need.purchaseRefused"]) });
     }
   }
   const supportedMin = minimumSupportedOvenTemp(style, constraints);
@@ -2626,6 +2652,10 @@ export function generateRecipe(
   scores.global_calculation = global.calculation;
 
   return {
+    topping_scale: toppingScale,
+    topping_geometry: { reference_area_cm2: referenceArea, area_cm2: toppingArea, area_scale: toppingArea / referenceArea },
+    pan_config: panConfig,
+    method_changes: defaultTopping?.method_note ? [defaultTopping.method_note] : undefined,
     schema_version: RECIPE_SCHEMA_VERSION,
     dietary_warnings: dietaryWarnings,
     dietary_variant: dietaryVariant,
@@ -2634,7 +2664,7 @@ export function generateRecipe(
       !(constraints.excluded_flours ?? []).includes("semola") &&
       !(constraints.excluded_flours ?? []).includes("frumento") &&
       (constraints.allow_flour_purchase !== false || constraints.pantry_flours.includes("semola")) && !constraints.dietary_filters.includes("gluten_free")
-        ? [em("aid.semolina", "Facoltativa: poca semola rimacinata per lo spolvero; puoi usare la farina della ricetta")]
+        ? [em("aid.semolina", METHOD_MESSAGES_IT["aid.semolina"])]
         : [],
     baker_pcts: { salt: effectiveSaltPct, fat: effectiveOilPct, sugar: effectiveSugarPct },
     verdict,
@@ -3202,7 +3232,7 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
         description: em("timeline.mix.spiral.desc", METHOD_MESSAGES_IT["timeline.mix.spiral.desc"]),
         duration_minutes: 9,
         tip: {
-          beginner: em("timeline.mix.spiral.tipBeginner", "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte."),
+          beginner: em("timeline.mix.spiral.tipBeginner", METHOD_MESSAGES_IT["timeline.mix.spiral.tipBeginner"]),
           nerd: em("timeline.mix.spiral.tipNerd", METHOD_MESSAGES_IT["timeline.mix.spiral.tipNerd"]),
         },
       };
@@ -3211,13 +3241,13 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
         description: em("timeline.mix.fork.desc", METHOD_MESSAGES_IT["timeline.mix.fork.desc"]),
         duration_minutes: 14,
         tip: {
-          beginner: em("timeline.mix.fork.tipBeginner", "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza."),
+          beginner: em("timeline.mix.fork.tipBeginner", METHOD_MESSAGES_IT["timeline.mix.fork.tipBeginner"]),
           nerd: em("timeline.mix.fork.tipNerd", METHOD_MESSAGES_IT["timeline.mix.fork.tipNerd"]),
         },
       };
     case "planetary":
       return {
-        description: em("timeline.mix.planetary.desc", "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo)."),
+        description: em("timeline.mix.planetary.desc", METHOD_MESSAGES_IT["timeline.mix.planetary.desc"]),
         duration_minutes: 10,
         tip: {
           beginner: em("timeline.mix.planetary.tipBeginner", METHOD_MESSAGES_IT["timeline.mix.planetary.tipBeginner"]),
@@ -3241,8 +3271,8 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
         description: em("timeline.mix.generic.desc", METHOD_MESSAGES_IT["timeline.mix.generic.desc"]),
         duration_minutes: 10,
         tip: {
-          beginner: em("timeline.mix.generic.tipBeginner", "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti."),
-          nerd: em("timeline.mix.generic.tipNerd", "Controlla la temperatura finale dell'impasto (~24°C): oltre, il glutine si degrada."),
+          beginner: em("timeline.mix.generic.tipBeginner", METHOD_MESSAGES_IT["timeline.mix.generic.tipBeginner"]),
+          nerd: em("timeline.mix.generic.tipNerd", METHOD_MESSAGES_IT["timeline.mix.generic.tipNerd"]),
         },
       };
       }
@@ -3479,7 +3509,7 @@ function generateTimeline(
   const unequalDiscs = style.id === "pizza_fritta_tonda";
   const divideMessage = unequalDiscs
     ? em("timeline.divide.unequalDiscs", METHOD_MESSAGES_IT["timeline.divide.unequalDiscs"])
-    : em("timeline.divide.multiPiece", "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.", { pieces: layout.pieces_per_unit ?? 2 });
+    : em("timeline.divide.multiPiece", METHOD_MESSAGES_IT["timeline.divide.multiPiece"], { pieces: layout.pieces_per_unit ?? 2 });
   // Teglia/pala/focaccia: staglio delicato senza pirlatura stretta — l'alveolatura
   // costruita in puntata non va sgonfiata (coerente con divide_teglia del CMS).
   const servingUnitForDivide = getServingUnit(style);
@@ -3678,7 +3708,7 @@ function generateTimeline(
         em("timeline.stack.title", "Sovrapposizione"),
         [em("timeline.stack.desc", METHOD_MESSAGES_IT["timeline.stack.desc"])],
         {
-          beginner: em("timeline.stack.tipBeginner", "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli."),
+          beginner: em("timeline.stack.tipBeginner", METHOD_MESSAGES_IT["timeline.stack.tipBeginner"]),
           nerd: em("timeline.stack.tipNerd", METHOD_MESSAGES_IT["timeline.stack.tipNerd"]),
         },
       ),
@@ -3697,7 +3727,7 @@ function generateTimeline(
           em("timeline.fillClosed.title", "Ripieno e chiusura"),
           [em("timeline.fillClosed.desc", METHOD_MESSAGES_IT["timeline.fillClosed.desc"])],
           {
-            beginner: em("timeline.fillClosed.tipBeginner", "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce."),
+            beginner: em("timeline.fillClosed.tipBeginner", METHOD_MESSAGES_IT["timeline.fillClosed.tipBeginner"]),
             nerd: em("timeline.fillClosed.tipNerd", METHOD_MESSAGES_IT["timeline.fillClosed.tipNerd"]),
           },
         ),
@@ -3761,12 +3791,12 @@ function generateTimeline(
         { id: "bake", duration_minutes: firstBakeMin, icon: "flame", timing_label: `${firstBakeMin} min` },
         em("timeline.bakeWhite.title", "Prima cottura (in bianco)"),
         [
-          em("timeline.bakeWhite.desc", "Cuocere a {temp} senza farcitura. La pizza deve essere dorata ma non bruciata.", { temp: ovenTempLabel }),
+          em("timeline.bakeWhite.desc", METHOD_MESSAGES_IT["timeline.bakeWhite.desc"], { temp: ovenTempLabel }),
           ...toppingBakeNote,
           ovenBakeSetup(equipment),
         ],
         {
-          beginner: em("timeline.bakeWhite.tipBeginner", "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti."),
+          beginner: em("timeline.bakeWhite.tipBeginner", METHOD_MESSAGES_IT["timeline.bakeWhite.tipBeginner"]),
           nerd: em("timeline.bakeWhite.tipNerd", METHOD_MESSAGES_IT["timeline.bakeWhite.tipNerd"]),
         },
       ),
@@ -3780,7 +3810,7 @@ function generateTimeline(
           em("timeline.splitFill.title", "Sdoppiamento e farcitura"),
           [em("timeline.splitFill.desc", METHOD_MESSAGES_IT["timeline.splitFill.desc"])],
           {
-            beginner: em("timeline.splitFill.tipBeginner", "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle."),
+            beginner: em("timeline.splitFill.tipBeginner", METHOD_MESSAGES_IT["timeline.splitFill.tipBeginner"]),
             nerd: em("timeline.splitFill.tipNerd", METHOD_MESSAGES_IT["timeline.splitFill.tipNerd"]),
           },
         ),
@@ -3790,7 +3820,7 @@ function generateTimeline(
       keyedStep(
         { id: "bake2", duration_minutes: secondBakeMin, icon: "flame", timing_label: `${secondBakeMin} min` },
         em("timeline.bake2.title", "Seconda cottura (breve)"),
-        [em("timeline.bake2.desc", "Riportare in forno a {temp} solo per asciugare e amalgamare. Pochi minuti.", { temp: ovenTempLabel })],
+        [em("timeline.bake2.desc", METHOD_MESSAGES_IT["timeline.bake2.desc"], { temp: ovenTempLabel })],
       ),
     );
     injectToppingAt("after_bake2");
@@ -3824,7 +3854,7 @@ function generateTimeline(
           ? em("timeline.homeTray.bake", METHOD_MESSAGES_IT["timeline.homeTray.bake"])
           : ovenBakeSetup(equipment)],
         {
-          beginner: em("timeline.bake.tipBeginner", "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima."),
+          beginner: em("timeline.bake.tipBeginner", METHOD_MESSAGES_IT["timeline.bake.tipBeginner"]),
           nerd: em(
             "timeline.bake.tipNerd",
             METHOD_MESSAGES_IT["timeline.bake.tipNerd"],
@@ -3840,7 +3870,7 @@ function generateTimeline(
         keyedStep(
           { id: "top_post", duration_minutes: 3, icon: "chef-hat", timing_label: "3 min" },
           em("timeline.topPost.title", "Farcitura post-cottura"),
-          [em("timeline.topPost.desc", "Aggiungere i condimenti a freddo direttamente sulla superficie cotta.")],
+          [em("timeline.topPost.desc", METHOD_MESSAGES_IT["timeline.topPost.desc"])],
         ),
       );
     }
@@ -4372,6 +4402,7 @@ export function dietaryRecipeAlternatives(recipe: GeneratedRecipe, constraints: 
     customFlourPL: recipe.flour_pl, customFermentationHours: recipe.fermentation_hours,
     customFermentationTempC: recipe.fermentation_temp_c, usePreFerment: recipe.has_pre_ferment,
     customSalt: recipe.baker_pcts?.salt, customFlourBlend: recipe.flour_blend,
+    panConfig: recipe.pan_config,
     preFerment: { type: recipe.pre_ferment_type === "biga" || recipe.pre_ferment_type === "poolish" ? recipe.pre_ferment_type : undefined, flourPct: recipe.pre_ferment_flour_pct },
   }));
   const names = (t: ToppingRecipe) => t.ingredients.filter(i => i.amount.value > 0).map(i => i.name);
@@ -4424,9 +4455,9 @@ export function recommendStyles(
       reasons.push(em("rec.timeCompatible", "Fermentazione {fMin}–{fMax}h: compatibile con il tuo tempo", { fMin, fMax }));
     }
     if (isFriedStyle(style)) {
-      reasons.push(em("rec.fried", "Si frigge in pentola: il forno non serve"));
+      reasons.push(em("rec.fried", METHOD_MESSAGES_IT["rec.fried"]));
     } else if (constraints.oven_max_temp_c >= style.baking.temp_c_ideal) {
-      reasons.push(em("rec.ovenIdeal", "Il tuo forno raggiunge la temperatura ideale ({ideal})", { ideal: style.baking.temp_c_ideal }));
+      reasons.push(em("rec.ovenIdeal", METHOD_MESSAGES_IT["rec.ovenIdeal"], { ideal: style.baking.temp_c_ideal }));
     }
     if (!skillLimited && style.suitable_for_beginner) {
       reasons.push(em("rec.skillMatch", "Adatto al tuo livello"));
@@ -4434,7 +4465,7 @@ export function recommendStyles(
     const flourMatch = pantryRanges.some(([lo, hi]) => lo <= recipe.flour_w && recipe.flour_w <= hi);
     const mix = !flourMatch ? pantryFlourMix(constraints.pantry_flours, [recipe.flour_w, recipe.flour_w], true, constraints.pantry_flour_details) : null;
     if (flourMatch && !verdict.conditions?.some(c => c.kind === "flour")) reasons.push(em("rec.flourMatch", "Farina in dispensa compatibile"));
-    else if (mix) reasons.push(em("rec.flourMix", "Mescolando le tue farine: {weakPct}% {weak} e {strongPct}% {strong}, W {w} circa", { ...mix, weak: constraints.pantry_flour_details?.[mix.weak]?.name ?? mix.weak, strong: constraints.pantry_flour_details?.[mix.strong]?.name ?? mix.strong }));
+    else if (mix) reasons.push(em("rec.flourMix", METHOD_MESSAGES_IT["rec.flourMix"], { ...mix, weak: constraints.pantry_flour_details?.[mix.weak]?.name ?? mix.weak, strong: constraints.pantry_flour_details?.[mix.strong]?.name ?? mix.strong }));
 
     // Il numero ordina le proposte, ma non può cambiare l'esito della ricetta.
     const timeScore = timeLimited ? 25 : 95;
@@ -4500,21 +4531,21 @@ function calculateSustainabilityScore(
   let cookEfficiency: number;
   if (cookTimeSec <= 180) {
     cookEfficiency = 95; // very short cook
-    claims.push(em("sust.quickCook", "Cottura rapida: basso consumo energetico"));
+    claims.push(em("sust.quickCook", METHOD_MESSAGES_IT["sust.quickCook"]));
   } else if (cookTimeSec <= 600) {
     cookEfficiency = 80;
   } else if (cookTimeSec <= 1200) {
     cookEfficiency = 60;
   } else {
     cookEfficiency = 40;
-    claims.push(em("sust.longCook", "Cottura lunga: consumo energetico elevato"));
+    claims.push(em("sust.longCook", METHOD_MESSAGES_IT["sust.longCook"]));
   }
 
   // ── Fermentation efficiency (20%): ambient temp = no fridge energy ──
   let ferEfficiency: number;
   if (fermentationTempC >= 18 && fermentationTempC <= 26) {
     ferEfficiency = 95;
-    claims.push(em("sust.ambientFerment", "Fermentazione a temperatura ambiente: nessun consumo frigorifero"));
+    claims.push(em("sust.ambientFerment", METHOD_MESSAGES_IT["sust.ambientFerment"]));
   } else if (fermentationTempC <= 4) {
     ferEfficiency = 55;
   } else {
@@ -4528,7 +4559,7 @@ function calculateSustainabilityScore(
     // La frase elenca gli ingredienti: solo se sono davvero quelli (non la
     // Recco, senza lievito e con olio).
     if (!style.dough.unleavened && style.dough.oil_pct === 0 && style.dough.sugar_pct === 0) {
-      claims.push(em("sust.pureDough", "Impasto puro: solo farina, acqua, sale, lievito"));
+      claims.push(em("sust.pureDough", METHOD_MESSAGES_IT["sust.pureDough"]));
     }
   } else if (
     style.dough.oil_pct > 0 &&
@@ -4541,7 +4572,7 @@ function calculateSustainabilityScore(
   let yeastScore: number;
   if (yeastType === "sourdough") {
     yeastScore = 95;
-    claims.push(em("sust.sourdoughZeroImpact", "Lievito madre: autoprodotto, a impatto zero"));
+    claims.push(em("sust.sourdoughZeroImpact", METHOD_MESSAGES_IT["sust.sourdoughZeroImpact"]));
   } else if (yeastType === "dry") {
     yeastScore = 75;
   } else {

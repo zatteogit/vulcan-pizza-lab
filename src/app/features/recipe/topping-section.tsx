@@ -1,3 +1,5 @@
+import { METHOD_MESSAGES_IT } from "../../data/method-messages";
+import { engineMsgTexts } from "./engine-msg-text";
 /* ═══ TOPPING SECTION — condimento/farcitura (estratto fase 2, lug 2026) ═══
  * Due modalità: "ingredients" (tab Condimento) e "timeline" (inline nello
  * step Condimento del procedimento). Le props sono le dipendenze esplicite
@@ -98,7 +100,7 @@ export function ToppingSection({
   const fmt = createFormatter(ui, bcp47);
 
     // C-2: un formato diverso da quello per cui la ricetta è scritta scala le dosi.
-    const topping = activeTopping && scaleToppingAmounts(activeTopping, recipe.style.topping_scale);
+    const topping = activeTopping && scaleToppingAmounts(activeTopping, recipe.topping_scale ?? recipe.style.topping_scale);
     if (!topping || !topping.ingredients || topping.ingredients.length === 0) return <>{children}</>;
 
     const activeToppingId = topping.id;
@@ -311,6 +313,10 @@ export function ToppingSection({
             })}
           </p>
         </div>
+
+        {recipe.topping_geometry && recipe.topping_geometry.area_scale !== 1 && <p className="topping-panel__details-note type-body">
+          {engineMsgTexts([{key:"topping.geometry",fallback:METHOD_MESSAGES_IT["topping.geometry"],params:{area:recipe.topping_geometry.area_cm2,reference:recipe.topping_geometry.reference_area_cm2,scale:recipe.topping_geometry.area_scale}}],cms,bcp47)[0]}
+        </p>}
 
         {/* Separator line */}
         <div className="topping-panel__divider" />

@@ -10769,6 +10769,7 @@
 
   .procedure-hero__header {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--gap-sm);
@@ -10777,6 +10778,7 @@
 
   .procedure-hero__title-group {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     gap: var(--space-1-5);
     min-width: 0;
@@ -10788,9 +10790,10 @@
   }
 
   .procedure-hero__title {
-    /* U-10 (F17): va a capo a 320 px invece di troncarsi in «Tabel…». */
+    /* Wrap whole words; the duration badge gets its own row when needed. */
     min-width: 0;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
     /* Era un h3: stessa resa ora che è h2 (U-10, F16). */
     font-family: var(--font-sans);
     font-size: var(--font-size-5xl);
@@ -10800,6 +10803,9 @@
   }
 
   .procedure-hero__total {
+    max-width: 100%;
+    overflow-wrap: normal;
+    word-break: normal;
     padding-inline: var(--space-2-5);
     padding-block: var(--space-1);
     border-radius: var(--radius-full);
@@ -10931,6 +10937,9 @@
     min-height: var(--linebox-1);
     max-width: 100%;
     white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    text-align: center;
     visibility: visible;
     letter-spacing: var(--tracking-caps);
     text-transform: uppercase;

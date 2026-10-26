@@ -8,6 +8,7 @@
  */
 
 import {
+getLayoutSpec,
   OVEN_PRESETS,
   PIZZA_FAMILIES,
   STYLES_DB,
@@ -32,7 +33,7 @@ import { getInterpretationsForStyle } from "../data/interpretation-library";
 import { getVersions } from "../data/style-versions";
 import { TOPPING_LIBRARY, getToppingForStyle, scaleToppingAmounts } from "../data/topping-library";
 import { FLOURS_DB } from "../data/flour-database";
-import { pantryIngredientId } from "../domain/pantry-ingredients";
+import { pantryIngredientReferences } from "../domain/pantry-ingredients";
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../domain/recipe-score";
 import { computePreFermentSplit } from "../domain/pre-ferment-split";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
@@ -50,7 +51,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.3.0" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.4.0" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -262,7 +263,8 @@ function preFermentData(recipe: GeneratedRecipe) {
 
 function recipeData(recipe: GeneratedRecipe) {
   const topping = recipe.style.default_topping_ref ? getToppingForStyle(recipe.style.default_topping_ref, recipe.style) : undefined;
-  const scaled = topping ? scaleToppingAmounts(topping, recipe.style.topping_scale) : undefined;
+  const scaled = topping ? scaleToppingAmounts(topping, recipe.topping_scale ?? recipe.style.topping_scale) : undefined;
+  const toppingIngredients = scaled?.ingredients.map(i=>({...i,declared_components:pantryIngredientReferences(i.name,i.components).slice(1)}));
   const pct = (g: number) => Math.round((g / recipe.flour_g) * 1000) / 10;
   const ingredients = [
     { name: "flour", grams: recipe.flour_g },
@@ -294,8 +296,8 @@ function recipeData(recipe: GeneratedRecipe) {
     optional_aids: recipe.optional_aids,
     dietary_warnings: (recipe.dietary_warnings ?? []).map(w => ({ ...w, message: msg(w.message), tip: msg(w.tip) })),
     dietary_variant: recipe.dietary_variant,
-    topping: scaled ? { id: scaled.id, ingredients_per_unit: scaled.ingredients,
-      ingredients_total: scaled.ingredients.map(i => ({...i,amount:{...i.amount,value:i.amount.value*recipe.dough_balls}})) } : null,
+    topping: scaled ? { id: scaled.id, ingredients_per_unit: toppingIngredients!,
+      ingredients_total: toppingIngredients!.map(i => ({...i,amount:{...i.amount,value:i.amount.value*recipe.dough_balls}})) } : null,
     fermentation_hours: recipe.fermentation_hours,
     fermentation_temp_c: recipe.fermentation_temp_c,
     pre_ferment: preFermentData(recipe),
@@ -304,6 +306,9 @@ function recipeData(recipe: GeneratedRecipe) {
     water_temp_c: recipe.water_temp_c,
     ingredients,
     fat_type: recipe.style.dough.fat_type ?? null,
+    layout: getLayoutSpec(recipe.style),
+    method_changes: recipe.method_changes ?? [],
+    topping_geometry: recipe.topping_geometry,
     schedule: { model: "sequential_single_operator", overlap_policy: "only_declared_passive_activity", bake_capacity: 1, total_minutes: recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0), digestibility_is_heuristic: true },
     steps: recipe.timeline.map((step) => ({
       id: step.id,
@@ -366,7 +371,7 @@ const RECIPE_INPUT = {
 
 const GENERIC_FLOURS: Record<string,string> = {"00":"Farina 00","0":"Farina 0",tipo_1:"Farina tipo 1",manitoba:"Manitoba",integrale:"Integrale",semola:"Semola rimacinata",farro:"Farina di farro",spelta:"Farina di spelta",kamut:"Farina di kamut",segale:"Farina di segale",riso:"Farina di riso",soia:"Farina di soia",mais:"Farina di mais",saraceno:"Grano saraceno",avena:"Farina di avena",ceci:"Farina di ceci",frumento:"Farina di frumento"};
 const PANTRY_INGREDIENTS = new Map<string,{id:string;name:string;kind:string}>();
-for (const name of ["Sale","Zucchero","Olio EVO","Burro","Strutto","Acqua",...Object.values(TOPPING_LIBRARY).flatMap(t=>t.ingredients.map(i=>i.name))]) PANTRY_INGREDIENTS.set(pantryIngredientId(name),{id:pantryIngredientId(name),name,kind:"ingredient"});
+for (const ingredient of [...["Sale","Zucchero","Olio EVO","Burro","Strutto","Acqua"].map(name=>({name,components:undefined})),...Object.values(TOPPING_LIBRARY).flatMap(t=>t.ingredients)]) for (const row of pantryIngredientReferences(ingredient.name,ingredient.components)) PANTRY_INGREDIENTS.set(row.id,{...row,kind:"ingredient"});
 
 export const MCP_TOOLS: McpTool[] = [
   {
@@ -415,7 +420,7 @@ export const MCP_TOOLS: McpTool[] = [
           requires_pre_ferment: style.requires_pre_ferment,
           versions: getVersions(style.id),
           interpretations: getInterpretationsForStyle(style.id),
-          toppings: Object.values(TOPPING_LIBRARY).filter(t=>t.preferred_for_styles?.includes(style.id)).map(t=>({id:t.id,concept_id:t.concept_ref,variant:t.variant_name,ingredients:t.ingredients})),
+          toppings: Object.values(TOPPING_LIBRARY).filter(t=>t.preferred_for_styles?.includes(style.id)).map(t=>({id:t.id,concept_id:t.concept_ref,variant:t.variant_name,layout_override:t.layout_override,method_note:t.method_note,ingredients:t.ingredients.map(i=>({...i,declared_components:pantryIngredientReferences(i.name,i.components).slice(1)}))})),
         },
       };
     },
