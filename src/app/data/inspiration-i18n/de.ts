@@ -102,10 +102,12 @@ export const INSPIRATION_I18N_DE: InspirationTranslation = {
       description: "Pizza bianca alla pala, wie ein Buch aufgeklappt, nach dem Backen mit Mortadella Bologna g.g.A. und gehackten Pistazien.",
     },
     scrocchiarella_boscaiola: {
+      card: {"context": "Römische Rundpizza"},
       name: "Scrocchiarella Boscaiola",
       description: "Dünn, rund und knusprig, mit gebratenen Pilzen, Salsiccia und Mozzarella.",
     },
     bonci_margherita: {
+      card: {"name": "Margherita al taglio"},
       name: "Margherita al taglio, inspiriert von Bonci",
       description: "Teglia aus sehr hoch hydriertem Teig mit langer Reifung im Kühlschrank, wie in den Rezepten, die Bonci veröffentlicht hat. Obendrauf eine klassische Margherita.",
     },
@@ -122,6 +124,7 @@ export const INSPIRATION_I18N_DE: InspirationTranslation = {
       description: "Hohe Pizza aus dem Blech: Der Käse reicht bis an die Ränder und karamellisiert sie. Obendrauf Pepperoni.",
     },
     crescenza_recco_igp: {
+      card: {"name": "Focaccia di Recco col formaggio"},
       name: "Focaccia di Recco col formaggio g.g.A.",
       description: "Zwei hauchdünne Teigblätter ohne Hefe, dazwischen geschmolzener Frischkäse. Ligurische Tradition, g.g.A. seit 2015.",
     },

@@ -102,10 +102,12 @@ export const INSPIRATION_I18N_ES: InspirationTranslation = {
       description: "Pizza bianca alla pala abierta como un libro, con mortadella Bologna IGP y pistacho picado después de la cocción.",
     },
     scrocchiarella_boscaiola: {
+      card: {"context": "Pizza redonda romana"},
       name: "Scrocchiarella Boscaiola",
       description: "Redonda, fina y crujiente, con setas salteadas, salchicha y mozzarella.",
     },
     bonci_margherita: {
+      card: {"name": "Margherita al taglio"},
       name: "Margherita al taglio, inspirada en Bonci",
       description: "Teglia con masa muy hidratada y larga maduración en nevera, como en las recetas que Bonci ha hecho públicas. Encima, una margherita clásica.",
     },
@@ -122,6 +124,7 @@ export const INSPIRATION_I18N_ES: InspirationTranslation = {
       description: "Pizza alta en bandeja: el queso llega hasta los bordes y los carameliza. Encima, pepperoni.",
     },
     crescenza_recco_igp: {
+      card: {"name": "Focaccia di Recco col formaggio"},
       name: "Focaccia di Recco col formaggio IGP",
       description: "Dos láminas finísimas sin levadura con queso fresco fundido en medio. Tradición de Liguria, IGP desde 2015.",
     },

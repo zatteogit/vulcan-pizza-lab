@@ -11,5 +11,5 @@ export interface InspirationTranslation {
     { signature_name?: string; technique_signature?: string; story?: string; badge?: string }
   >;
   /** Per id di SIGNATURE_RECIPES. */
-  recipes: Record<string, { name?: string; description?: string }>;
+  recipes: Record<string, { name?: string; description?: string; card?: { name?: string; context?: string | null } }>;
 }

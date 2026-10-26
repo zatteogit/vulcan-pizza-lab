@@ -102,10 +102,12 @@ export const INSPIRATION_I18N_JA: InspirationTranslation = {
       description: "本のように開いたピッツァ・ビアンカ・アッラ・パーラ。焼き上がり後にモルタデッラ・ボローニャ（mortadella Bologna）PGIと刻んだピスタチオを挟む。",
     },
     scrocchiarella_boscaiola: {
+      card: {"context": "ローマ風の丸いピザ"},
       name: "Scrocchiarella Boscaiola",
       description: "薄くてクリスピーな丸型。ソテーしたキノコ、サルシッチャ、モッツァレラ。",
     },
     bonci_margherita: {
+      card: {"name": "Margherita al taglio"},
       name: "Margherita al taglio（ボンチに着想を得た）",
       description: "ボンチが公開しているレシピのように、高加水の生地を冷蔵庫で長時間熟成させたテーリア。上には定番のマルゲリータ。",
     },
@@ -122,6 +124,7 @@ export const INSPIRATION_I18N_JA: InspirationTranslation = {
       description: "型で焼く厚みのあるピッツァ。チーズを縁まで広げてキャラメリゼさせる。上にはペパロニ。",
     },
     crescenza_recco_igp: {
+      card: {"name": "Focaccia di Recco col formaggio"},
       name: "Focaccia di Recco col formaggio PGI",
       description: "酵母を使わない極薄の生地2枚の間に、溶けたフレッシュチーズ。リグーリアの伝統で、2015年からPGI。",
     },
