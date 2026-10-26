@@ -28,7 +28,10 @@ import {
   Oven as OvenIllustration,
   Slice,
 } from "../features/cooking/step-illustrations";
-import { hasChosenSkill, loadSkill } from "../hooks/use-profile-defaults";
+import { learningStyleForKitchen } from "../use-cases/learning-path";
+import { tailoredRecipeEntry } from "../use-cases/recipe-entry";
+import { engineMsgTexts } from "../features/recipe/engine-msg-text";
+import { hasChosenSkill, loadSkill, useProfileDefaults } from "../hooks/use-profile-defaults";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 
@@ -49,7 +52,8 @@ function termOfTheDay() {
 }
 
 export function LearnPage() {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
+  const { constraints } = useProfileDefaults();
   const pg = cms.pages;
   const [searchParams, setSearchParams] = useSearchParams();
   const styleParam = searchParams.get("style");
@@ -84,13 +88,19 @@ export function LearnPage() {
     };
   }, [pg]);
 
+  const practicalStyle = useMemo(() => activeStyle
+    ? tailoredRecipeEntry(activeStyle, constraints).recipe.verdict.outcome === "not_feasible" ? null : activeStyle
+    : learningStyleForKitchen(PATH_STYLE_IDS[skill], constraints, STYLES_DB), [activeStyle, constraints, skill]);
+  const theoretical = !practicalStyle;
+  const fallbackPath = practicalStyle && practicalStyle.id !== PATH_STYLE_IDS[skill];
   const path = activeStyle
-    ? {
-        title: activeStyle.name,
-        copy: activeStyle.description,
-        styleId: activeStyle.id,
-      }
-    : localizedPaths[skill];
+    ? { title: activeStyle.name, copy: activeStyle.description, styleId: activeStyle.id }
+    : theoretical
+      ? { title: engineMsgTexts([{key:"learn.theoryTitle",fallback:"Prima la teoria"}],cms,bcp47)[0], copy: "", styleId: "" }
+      : fallbackPath
+        ? { title: practicalStyle.name, copy: engineMsgTexts([{key:"learn.compatiblePath",fallback:"Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta."}],cms,bcp47)[0], styleId: practicalStyle.id }
+        : localizedPaths[skill];
+  if (theoretical) path.copy = engineMsgTexts([{key:"learn.theoryOnly",fallback:"Con i vincoli attivi non c'è una ricetta verificata da proporti. Puoi approfondire le tecniche nella teoria."}],cms,bcp47)[0];
   const skillName = SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
   const pathContextLabel = activeStyle
     ? uiMessage("pages.learn.contextByStyle", [pg.learnPathLabel, activeStyle.name])
@@ -189,7 +199,7 @@ export function LearnPage() {
         >
           <div className="learn-path__label">{pathContextLabel}</div>
           <Link
-            to={`/recipe/${path.styleId}?mode=adapted`}
+            to={theoretical ? `/learn/glossary${linkSearch}` : `/recipe/${path.styleId}?mode=adapted`}
             className="learn-path__card"
             data-attention="recommended"
           >
@@ -207,7 +217,7 @@ export function LearnPage() {
 
               <div className="learn-path__cta-row">
                 <span className="learn-path__cta">
-                  {pg.learnStartPath}
+                  {theoretical ? engineMsgTexts([{key:"learn.openTheory",fallback:"Esplora la teoria"}],cms,bcp47)[0] : pg.learnStartPath}
                   <ArrowRight size={12} className="learn-path__cta-icon" />
                 </span>
               </div>

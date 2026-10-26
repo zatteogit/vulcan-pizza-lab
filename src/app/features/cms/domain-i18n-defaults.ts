@@ -1,10 +1,10 @@
+import { GLOSSARY_SCIENCE } from "../../data/glossary-science";
 /* === DOMAIN DATA i18n — Italian defaults === */
 /* Pre-ferment guide, dietary data, troubleshooting, glossary terms */
 /* Separated from cms-context.tsx for maintainability */
 
 import type { CmsPreFerment } from "./cms-context";
 import type {
-  DietaryMessages,
   GlossaryMessages,
   TroubleshootingMessages,
 } from "../../i18n/domain-contracts";
@@ -95,78 +95,7 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
   },
 };
 
-export const DIETARY_I18N_DEFAULTS: DietaryMessages = {
-  info: {
-    low_fodmap: {
-      name: "Low FODMAP",
-      description: "Valuta ingredienti, processo e porzione",
-      scienceNote: "La fermentazione può modificare i FODMAP, ma il risultato dipende da farine, microrganismi, processo e porzione. Le sole ore non permettono di calcolare una riduzione o attestare una ricetta low FODMAP.",
-    },
-    histamine: {
-      name: "Bassa istamina",
-      description: "Valuta ingredienti, processo e porzione",
-      scienceNote: "Il contenuto dipende da microrganismi, ingredienti, processo e conservazione. Non è calcolabile con un tasso fisso per ora; una fermentazione breve non ne garantisce l'assenza.",
-    },
-    gluten_free: {
-      name: "Senza glutine",
-      description: "Per celiachia o sensibilità al glutine",
-      scienceNote: "Soglia EU: <20 ppm. Richiede mix GF (riso/mais/quinoa + xantana 1.5%)",
-    },
-    lactose_free: {
-      name: "Senza lattosio",
-      description: "Per intolleranza al lattosio",
-      scienceNote: "La cottura non garantisce l'eliminazione del lattosio: verifica gli ingredienti e le indicazioni del produttore.",
-    },
-    nickel: {
-      name: "Basso nichel",
-      description: "Per allergia sistemica al nichel (SNAS)",
-      scienceNote: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità.",
-    },
-    vegan: {
-      name: "Vegano",
-      description: "Nessun derivato animale",
-      scienceNote: "Impasto base è già vegano. Attenzione a topping e grassi (burro → olio)",
-    },
-  },
-  conflicts: {
-    fodmap_histamine: {
-      message: "Ore di fermentazione e tipo di lievito non certificano l'idoneità per FODMAP o istamina.",
-      compromiseTip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità.",
-    },
-    gf_fodmap: {
-      message: "Senza glutine non significa automaticamente low FODMAP: contano ingredienti e porzione.",
-    },
-    nickel_general: {
-      message: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità.",
-    },
-  },
-  warnings: {
-    fodmap_low: {
-      message: "Riduzione FODMAP non determinabile dalle sole ore",
-      tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità.",
-    },
-    fodmap_good: {
-      message: "Riduzione FODMAP non determinabile dalle sole ore",
-      tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità.",
-    },
-    histamine_high: {
-      message: "Contenuto di istamina non determinabile da tempo e temperatura",
-      tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro.",
-    },
-    histamine_moderate: {
-      message: "Contenuto di istamina non determinabile da tempo e temperatura",
-      tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro.",
-    },
-    gluten_free: {
-      message: "Ricetta usa farina di grano — incompatibile con celiachia",
-      tip: "Sostituisci con mix GF (riso 40% + mais 30% + quinoa 10% + sorgo 10% + amido 10%) + xantana 1.5%",
-    },
-    nickel_highW: {
-      message: "Il valore W non misura il contenuto di nichel",
-      tip: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità.",
-    },
-  },
-};
+
 
 export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
   categories: {
@@ -210,15 +139,15 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
       symptom: "Lievitazione troppo rapida (raddoppio in <3h)",
       cause: "Troppo lievito (>1.5%) o temperatura ambiente >28°C",
       testRapido: "L'impasto ha raddoppiato in meno di 3 ore?",
-      fixImmediate: "Trasferisci immediatamente a 4°C per bloccare la fermentazione",
+      fixImmediate: "Metti l’impasto in frigorifero per rallentare la fermentazione; il freddo non la blocca subito.",
       prevention: "Usa la dose di lievito calcolata per le tue ore e la tua temperatura (a 18 °C per 24 h circa 0,1% di lievito fresco)",
     },
     P06: {
       symptom: "Sapore troppo acido/acetico",
       cause: "LAB eterofermentativi attivi >48h a >18°C (specialmente con lievito madre)",
       testRapido: "pH impasto — dovrebbe essere 4.5-5.5, problematico se <4.2",
-      fixImmediate: "Aggiungi 0.5-1% zucchero per mascherare acidità",
-      prevention: "Fermentazioni >24h sempre a 4-8°C",
+      fixImmediate: "Lo zucchero maschera il sapore ma non corregge una fermentazione eccessiva. Rivaluta l’impasto prima di usarlo.",
+      prevention: "Scegli tempo, temperatura e lievito secondo il metodo; controlla lo sviluppo senza una soglia oraria universale.",
     },
     P07: {
       symptom: "Il panetto torna elastico dopo la stesura ('effetto molla')",
@@ -319,8 +248,8 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
       tip: "Per fermentazioni >24h, usa temperatura 4-8°C",
     },
     pale_crust: {
-      message: "Fermentazione breve ({h}h): crosta pallida e digeribilità limitata",
-      tip: "Aggiungi 0.5-1% zucchero per favorire la doratura Maillard",
+      message: "Fermentazione breve: verifica lo sviluppo dell’impasto prima di proseguire.",
+      tip: "Controlla volume, elasticità e risposta alla pressione: le sole ore non attestano la digeribilità.",
     },
     cold_oven: {
       message: "Forno a {t}°C: rischio base cruda con bordo bruciato",
@@ -376,8 +305,8 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     },
     pl_ratio: {
       name: "P/L (Rapporto Tenacità/Estensibilità)",
-      definition: "Indice di bilanciamento meccanico. Rapporto tra resistenza e estensibilità dell'impasto.",
-      whyImportant: "P/L ottimale (0.5-0.6): cornicione alto + base sottile. <0.4: pizza piatta. >0.8: impasto 'di gomma'.",
+      definition: GLOSSARY_SCIENCE.pl_ratio.definition,
+      whyImportant: GLOSSARY_SCIENCE.pl_ratio.whyImportant,
       ranges: [
         { label: "<0.4 Molto estensibile", value: "Collassa facilmente", note: "Pinsa" },
         { label: "0.4–0.5 Estensibile", value: "Facile lavorare", note: "Napoletana classica" },
@@ -434,8 +363,8 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     },
     yeast: {
       name: "Lievito (Saccharomyces cerevisiae)",
-      definition: "Fungo unicellulare che converte zuccheri in CO₂ + etanolo + composti aromatici.",
-      whyImportant: "Temp ottimale: 28-32°C. Min 4°C (dormiente). Max 40°C (inibito). Morte >55°C.",
+      definition: GLOSSARY_SCIENCE.yeast.definition,
+      whyImportant: GLOSSARY_SCIENCE.yeast.whyImportant,
       ranges: [
         { label: "Fresco", value: "0.5–2.0%", note: "Umidità 70%, frigo 4°C" },
         { label: "Secco attivo", value: "0.3–1.0%", note: "Idratare prima" },
@@ -444,8 +373,8 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     },
     lab: {
       name: "LAB (Batteri Lattici)",
-      definition: "Batteri che fermentano zuccheri producendo acido lattico (e acetico). Presenti nel lievito madre.",
-      whyImportant: "Abbassano pH (4.0-4.5), aumentano acidità, degradano FODMAP (fruttani), inibiscono muffe. Temp ottimale: 28-32°C.",
+      definition: GLOSSARY_SCIENCE.lab.definition,
+      whyImportant: GLOSSARY_SCIENCE.lab.whyImportant,
     },
     q10: {
       name: "Q₁₀ (Coefficiente di Temperatura)",
@@ -490,18 +419,18 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     },
     maillard: {
       name: "Reazione di Maillard",
-      definition: "Reazione non-enzimatica tra aminoacidi e zuccheri riducenti ad alta temperatura (>140°C).",
-      whyImportant: "Crosta dorata (melanoidine), aroma tostato (pirazine), leopard spotting a 300°C+. Ottimale 160-180°C.",
+      definition: GLOSSARY_SCIENCE.maillard.definition,
+      whyImportant: GLOSSARY_SCIENCE.maillard.whyImportant,
     },
     caramelization: {
       name: "Caramellizzazione",
-      definition: "Degradazione termica degli zuccheri (senza proteine) ad alta temperatura (>150°C saccarosio, >120°C fruttosio).",
-      whyImportant: "Contribuisce a macchie scure su cornicione. Meno rilevante di Maillard nella pizza (poche proteine in superficie).",
+      definition: GLOSSARY_SCIENCE.caramelization.definition,
+      whyImportant: GLOSSARY_SCIENCE.caramelization.whyImportant,
     },
     starch_gelatinization: {
       name: "Gelatinizzazione Amido",
-      definition: "Transizione amido da stato cristallino a gelatinoso assorbendo acqua. Inizio 55-60°C, picco 65-70°C, completamento 80-85°C.",
-      whyImportant: "Mollica: rende amido digeribile (<55°C al cuore = amido crudo). Crosta: >100°C → croccante.",
+      definition: GLOSSARY_SCIENCE.starch_gelatinization.definition,
+      whyImportant: GLOSSARY_SCIENCE.starch_gelatinization.whyImportant,
     },
     retrogradation: {
       name: "Retrogradazione",
@@ -539,8 +468,8 @@ export const GLOSSARY_TERMS_DEFAULTS: GlossaryMessages = {
     },
     proteolysis: {
       name: "Proteolisi",
-      definition: "Degradazione proteine in peptidi e aminoacidi da parte di enzimi proteasi. Target: glutine.",
-      whyImportant: "Facilità stesura, aumento digeribilità, aminoacidi liberi → sapore umami. Eccessiva (>72h): impasto troppo molle. Ottimale: 24-48h.",
+      definition: GLOSSARY_SCIENCE.proteolysis.definition,
+      whyImportant: GLOSSARY_SCIENCE.proteolysis.whyImportant,
     },
     thickness_factor: {
       name: "Thickness Factor (TF)",

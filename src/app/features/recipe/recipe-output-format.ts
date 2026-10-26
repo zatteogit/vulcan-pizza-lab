@@ -1,3 +1,4 @@
+import { passiveActivityMessage } from "../../domain/pizza-engine";
 /* ═══ RECIPE OUTPUT — helper puri (estratti dall'audit lug 2026) ═══
  * Formattazione, clock, ottimizzatore comodità, localizzazione step.
  * Nessun JSX: solo funzioni pure riusate da recipe-output e dalle sue sezioni. */
@@ -487,6 +488,16 @@ function localizeKeyedStep(
 
 /* ═══ Timeline step localization ═══ */
 export function localizeStep(
+  step: TimelineStep, recipe: GeneratedRecipe, cms: CmsContent, fmt?: ReturnType<typeof createFormatter>,
+) {
+  const localized = localizeStepBase(step, recipe, cms, fmt);
+  const activity = passiveActivityMessage(step);
+  if (!activity) return localized;
+  const note = engineMsgTexts([activity], cms, fmt?.bcp47 ?? "it-IT")[0];
+  return { ...localized, description: `${localized.description} ${note}` };
+}
+
+function localizeStepBase(
   step: TimelineStep,
   recipe: GeneratedRecipe,
   cms: CmsContent,

@@ -13,6 +13,7 @@ import {
   STYLES_DB,
   YEAST_LABELS,
   generateRecipe,
+  dietaryRecipeAlternatives,
   recommendStyles,
   type EngineMsg,
   type GeneratedRecipe,
@@ -22,6 +23,7 @@ import {
   type UserConstraints,
   type GenerateRecipeOptions,
   FLOUR_W_RANGES,
+  MAX_DOUGH_BALLS,
 } from "../domain/pizza-engine";
 import { ToolInputError, numberInput as num, kitchenInputs, KITCHEN_INPUT, PAN_INPUT, panInput, enumInput, optionalBoolean } from "./mcp-inputs";
 export { ToolInputError } from "./mcp-inputs";
@@ -31,7 +33,6 @@ import { getVersions } from "../data/style-versions";
 import { TOPPING_LIBRARY, getToppingForStyle, scaleToppingAmounts } from "../data/topping-library";
 import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId } from "../domain/pantry-ingredients";
-import { getDietaryWarnings } from "../data/dietary-data";
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../domain/recipe-score";
 import { computePreFermentSplit } from "../domain/pre-ferment-split";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
@@ -49,7 +50,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.1.1" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.2.0" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -111,7 +112,7 @@ function constraintsFrom(args: Json): UserConstraints {
     // Per un agente «ho 6 ore» vuol dire «si mangia fra 6 ore»: con le ore
     // la scadenza vale, salvo meal_deadline: false esplicito.
     meal_deadline: args.meal_deadline === undefined ? args.available_hours != null && args.available_hours !== 0 : optionalBoolean(args, "meal_deadline"),
-    dough_balls: wholeNumber(args, "dough_balls", 1, 200, 4),
+    dough_balls: wholeNumber(args, "dough_balls", 1, MAX_DOUGH_BALLS, 4),
     has_mixer: optionalBoolean(args, "has_mixer") ?? false,
     has_pizza_stone: optionalBoolean(args, "has_pizza_stone") ?? false,
     has_pizza_steel: optionalBoolean(args, "has_pizza_steel") ?? false,
@@ -215,6 +216,7 @@ function styleSummary(style: PizzaStyle) {
     family: style.family,
     origin: style.origin,
     hydration_pct_range: style.dough.hydration_pct_range,
+    parameter_range_basis: "catalog_model_reference",
     fermentation_hours_range: style.dough.fermentation_hours_range,
     oven_temp_c_range: style.baking.temp_c_range,
     oven_temp_c_ideal: style.baking.temp_c_ideal,
@@ -258,7 +260,7 @@ function preFermentData(recipe: GeneratedRecipe) {
   };
 }
 
-function recipeData(recipe: GeneratedRecipe, constraints?: UserConstraints) {
+function recipeData(recipe: GeneratedRecipe) {
   const topping = recipe.style.default_topping_ref ? getToppingForStyle(recipe.style.default_topping_ref, recipe.style) : undefined;
   const scaled = topping ? scaleToppingAmounts(topping, recipe.style.topping_scale) : undefined;
   const pct = (g: number) => Math.round((g / recipe.flour_g) * 1000) / 10;
@@ -284,11 +286,14 @@ function recipeData(recipe: GeneratedRecipe, constraints?: UserConstraints) {
     flour_w: recipe.flour_w,
     flour_pl: recipe.flour_pl,
     baker_pcts: recipe.baker_pcts,
+    parameter_ranges: { basis: "selected_method", hydration_pct: recipe.style.dough.hydration_pct_range,
+      flour_w: recipe.style.dough.flour_w_range, fermentation_hours: recipe.style.dough.fermentation_hours_range },
     flour_blend: recipe.flour_blend,
     conditions: recipe.verdict.conditions ?? [],
     adaptations: recipe.verdict.adaptations,
     optional_aids: recipe.optional_aids,
-    dietary_warnings: getDietaryWarnings(constraints?.dietary_filters ?? [], {fermentHours:recipe.fermentation_hours,fermentTemp:recipe.fermentation_temp_c,yeastType:recipe.yeast_type,hydration:recipe.hydration_pct,flourW:recipe.flour_w}),
+    dietary_warnings: (recipe.dietary_warnings ?? []).map(w => ({ ...w, message: msg(w.message), tip: msg(w.tip) })),
+    dietary_variant: recipe.dietary_variant,
     topping: scaled ? { id: scaled.id, ingredients_per_unit: scaled.ingredients,
       ingredients_total: scaled.ingredients.map(i => ({...i,amount:{...i.amount,value:i.amount.value*recipe.dough_balls}})) } : null,
     fermentation_hours: recipe.fermentation_hours,
@@ -299,7 +304,7 @@ function recipeData(recipe: GeneratedRecipe, constraints?: UserConstraints) {
     water_temp_c: recipe.water_temp_c,
     ingredients,
     fat_type: recipe.style.dough.fat_type ?? null,
-    schedule: { model: "sequential_single_operator", bake_capacity: 1, total_minutes: recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0), digestibility_is_heuristic: true },
+    schedule: { model: "sequential_single_operator", overlap_policy: "only_declared_passive_activity", bake_capacity: 1, total_minutes: recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0), digestibility_is_heuristic: true },
     steps: recipe.timeline.map((step) => ({
       id: step.id,
       title: step.title,
@@ -307,6 +312,7 @@ function recipeData(recipe: GeneratedRecipe, constraints?: UserConstraints) {
       duration_minutes: step.duration_minutes,
       // D-050: cotture ripetute una alla volta; la durata è già il totale.
       ...(step.rounds ? { rounds: step.rounds } : {}),
+      ...(step.parallel_activity ? { parallel_activity: step.parallel_activity } : {}),
       ...(step.work_units ? { work_units: step.work_units, minutes_per_unit: step.minutes_per_unit } : {}),
     })),
     scores: recipe.scores,
@@ -435,10 +441,12 @@ export const MCP_TOOLS: McpTool[] = [
       const candidates = onlyStyle ? {[onlyStyle.id]:onlyStyle} : Object.fromEntries(Object.values(STYLES_DB).filter(s=>!s.dough.unleavened || !["biga","poolish"].includes(String(args.pre_ferment))).map(s=>[s.id,s]));
       const recs = recommendStyles(constraints, candidates, undefined,
         (style,c)=>recipeForInput(style,c,args).recipe)
-        .filter((rec) => includeBlocked || rec.tier !== "not_feasible")
+        .map(rec => ({...rec, dietary_alternatives: dietaryRecipeAlternatives(rec.recipe, constraints,
+          s => recipeForInput(s, constraints, {...args, topping_id:s.default_topping_ref}).recipe)}))
+        .filter((rec) => includeBlocked || rec.tier !== "not_feasible" || rec.dietary_alternatives.length > 0)
         .map((rec) => {
           const now = rec.recipe.scores.composite;
-          const evaluated = recipeData(rec.recipe,constraints);
+          const evaluated = recipeData(rec.recipe);
           const scoped = Object.keys(RECIPE_INPUT).some(k=>args[k]!==undefined);
           const tunedArgs: Json = {...args,recipe_mode:"adapted"};
           for (const key of ["hydration_pct","flour_w","flour_pl","salt_pct","flour_blend","compensate_hydration","fermentation_hours","fermentation_temp_c","pre_ferment","pre_ferment_flour_pct"]) delete tunedArgs[key];
@@ -455,6 +463,12 @@ export const MCP_TOOLS: McpTool[] = [
             blockers: rec.verdict.blockers,
             conditions: rec.verdict.conditions ?? [],
             dietary_warnings: evaluated.dietary_warnings,
+            dietary_alternatives: rec.dietary_alternatives.map(a => ({
+              topping_id:a.topping_id, omitted_conflicts:a.omitted_conflicts, removed:a.removed, added:a.added,
+              outcome:a.recipe.verdict.outcome, compatibility:a.recipe.scores.composite,
+              selection:{style_id:rec.style.id, recipe_mode:args.recipe_mode ?? "default", topping_id:a.topping_id},
+              recipe:recipeData(a.recipe),
+            })),
             ...(includeRecipe ? {recipe:evaluated} : {}),
             // Fattibile, ma con riserve da dire (forno sotto il minimo dello
             // stile, teglia mancante…): l'agente non deve presentarlo come
@@ -493,7 +507,8 @@ export const MCP_TOOLS: McpTool[] = [
       const constraints = constraintsFrom(args);
       const resolved = recipeForInput(style,constraints,args);
       const recipe = resolved.recipe;
-      const data = { ...recipeData(recipe,constraints), constraints, selection: {recipe_mode:resolved.mode,version_id:resolved.version_id,interpretation_id:resolved.interpretation_id},
+      const alternatives = dietaryRecipeAlternatives(recipe, constraints, s => recipeForInput(s,constraints,{...args,topping_id:s.default_topping_ref}).recipe);
+      const data = { ...recipeData(recipe), constraints, dietary_alternatives:alternatives.map(a => ({topping_id:a.topping_id, omitted_conflicts:a.omitted_conflicts,removed:a.removed,added:a.added,recipe:recipeData(a.recipe)})), selection: {recipe_mode:resolved.mode,version_id:resolved.version_id,interpretation_id:resolved.interpretation_id},
         effective_options: resolved.options };
       const grams = data.ingredients.map((i) => `${i.name} ${i.grams} g`).join(", ");
       return {

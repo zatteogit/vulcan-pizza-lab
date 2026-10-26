@@ -51,9 +51,10 @@ export function engineMsgTexts(
   bcp47: string,
 ): string[] {
   const fmt = createFormatter(cms.ui, bcp47);
-  const ingredients = msgs.some(msg => msg.key === "need.ingredient" || msg.key === "need.excludedIngredient")
+  const ingredients = msgs.some(msg => msg.key === "need.ingredient" || msg.key === "need.excludedIngredient" || Array.isArray(msg.params?.ingredients))
     ? pantryIngredientNames(cms) : null;
   return resolveEngineMsgs(msgs, cms.engineMessages, (msg, key, value) => {
+    if (Array.isArray(value)) return value.map(name => name === "Farina di grano" ? cms.ui.flour : ingredients?.get(pantryIngredientId(name)) ?? name).join(", ");
     if (ingredients && key === "ingredient") return cms.yeastLabels[String(value)] ?? ingredients.get(pantryIngredientId(String(value))) ?? value;
     if (msg.key === "need.excludedFlour" && key === "flour") return pantryFlourName(String(value));
     if ((msg.key === "need.yeast" || msg.key === "need.checkYeast") && key === "yeast") return cms.yeastLabels[String(value)] ?? String(value);

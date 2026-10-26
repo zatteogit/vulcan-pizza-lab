@@ -1,69 +1,90 @@
-/* === DIETARY CONSTRAINTS ENGINE === */
-/* Basato su Notion Pagina 10 · Gestione Intolleranze */
-/* 6 intolleranze: FODMAP, Istamina, Celiachia, Lattosio, Nickel, Vegan */
-/* Conflitti, validazione, avvisi contestuali */
-/* i18n: accepts a neutral message-source contract, never the CMS feature. */
+import type { EngineMsg } from "../domain/pizza-engine";
 
-import type { DietaryMessageSource } from "../i18n/domain-contracts";
-
-const DEFAULT_WARNINGS = {
-  fodmap_low: { message: "Riduzione FODMAP non determinabile dalle sole ore", tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità." },
-  fodmap_good: { message: "Riduzione FODMAP non determinabile dalle sole ore", tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità." },
-  histamine_high: { message: "Contenuto di istamina non determinabile da tempo e temperatura", tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro." },
-  histamine_moderate: { message: "Contenuto di istamina non determinabile da tempo e temperatura", tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro." },
-  gluten_free: { message: "Ricetta usa farina di grano — incompatibile con celiachia", tip: "Sostituisci con mix GF (riso 40% + mais 30% + quinoa 10% + sorgo 10% + amido 10%) + xantana 1.5%" },
-  nickel_highW: { message: "Il valore W non misura il contenuto di nichel", tip: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità." },
-} as const;
-
-/* === CONTEXTUAL DIETARY WARNINGS (based on recipe params) === */
-interface DietaryWarning {
+/** Recipe-level findings, shared by the browser and MCP. A missing product
+ * label is unverified, never proof that lactose or animal ingredients are absent. */
+export interface DietaryIngredient {
+  name: string;
+  optional?: boolean;
+  gluten?: boolean;
+}
+export interface DietaryWarning {
   filterId: string;
-  message: string;
-  tip: string;
-  severity: 'info' | 'warning' | 'critical';
+  ingredients: string[];
+  severity: "info" | "warning" | "critical";
+  message: EngineMsg;
+  tip: EngineMsg;
+}
+export const DIETARY_MESSAGES_IT: Record<string, string> = {
+  "diet.variant": "Versione di {recipe} senza {ingredients}",
+  "diet.variantChanges": "Altro condimento: {topping}. Rimossi: {ingredients}.",
+  "diet.variantAdded": "Ingredienti aggiunti: {ingredients}.",
+  "diet.useVariant": "Usa questa versione",
+  "diet.variantAvailable": "Versione alternativa disponibile",
+  "diet.glutenConflict": "Il filtro senza glutine esclude: {ingredients}.",
+  "diet.glutenUnsupported": "Manca un metodo senza glutine verificato per questa ricetta.",
+  "diet.veganConflict": "Il filtro vegano esclude: {ingredients}.",
+  "diet.lactoseConflict": "Il filtro senza lattosio esclude: {ingredients}.",
+  "diet.verifyVegan": "Idoneità vegana da verificare in etichetta: {ingredients}.",
+  "diet.verifyLactose": "Assenza di lattosio da verificare in etichetta: {ingredients}.",
+  "diet.changeRecipe": "Scegli una ricetta compatibile o modifica esplicitamente gli ingredienti e ricalcola.",
+  "diet.noValidatedMethod": "Non sostituire la farina a parità di dosi: serve una formula senza glutine verificata.",
+  "diet.labelCheck": "Verifica la composizione sull’etichetta prima di procedere.",
+  "diet.omitOptional": "Per rispettare i filtri, non usare questi ingredienti facoltativi: {ingredients}.",
+  "diet.fodmapUnknown": "L’idoneità low FODMAP non si determina dalle sole ore di fermentazione.",
+  "diet.histamineUnknown": "Il contenuto di istamina non si determina da tempo e temperatura.",
+  "diet.processCheck": "Servono dati su ingredienti, prodotto e porzione: il motore non attesta l’idoneità.",
+  "diet.nickelUnknown": "La forza W non misura il contenuto di nichel.",
+  "diet.cardConflict": "Incompatibile con i filtri alimentari"
+};
+
+const message = (key: string, ingredients?: string[]): EngineMsg => ({
+  key, fallback: DIETARY_MESSAGES_IT[key], ...(ingredients ? { params: { ingredients } } : {}),
+});
+
+type IngredientStatus = "compatible" | "incompatible" | "unverified";
+/** These rules classify declared ingredients, not cross-contamination, clinical
+ * tolerance or laboratory composition. Sources: docs/ricerca/dietary-audit-2026-10-26.md. */
+export function ingredientDietaryStatus(name: string, filter: "vegan" | "lactose_free"): IngredientStatus {
+  const n = name.normalize("NFKC").toLocaleLowerCase("it");
+  // The recipe has not selected either branch of this alternative.
+  if (/acqua.*\bo\s+poca panna/.test(n)) return "unverified";
+  if (/^(latte|bevanda) (di soia|di riso|di mandorla|d.avena)|^(formaggio|mozzarella) vegetale/.test(n)) return "compatible";
+  const freshDairy = /crescenza|ricotta|mozzarella|fior di latte|stracciatella|burrata|crème fraîche|panna|\blatte\b|\bburro\b|\bfeta\b|\btuma\b|primosale|mix di quattro formaggi/;
+  const agedDairy = /parmigiano|grana padano|pecorino|caciocavallo|gorgonzola|provolone|provola|fontina|brick cheese|cheddar|gouda/;
+  const animal = freshDairy.test(n) || agedDairy.test(n) || /\bstrutto\b|\buov[oa]\b|miele|prosciutto|salsiccia|salame|pepperoni|bacon|speck|porchetta|culatello|mortadella|cicoli|ciccioli|nduja|bresaola|\bmanzo\b|\bpollo\b|acciughe|alici|salmone|tonno|vongole|bottarga/.test(n);
+  if (filter === "vegan" && animal) return "incompatible";
+  if (filter === "lactose_free") {
+    if (/senza lattosio|delattosat|lactose[ -]?free/.test(n)) return "compatible";
+    if (freshDairy.test(n)) return "incompatible";
+    if (agedDairy.test(n) || /prosciutto cotto|salsiccia|salame|pepperoni|bacon|speck|mortadella|cicoli|ciccioli|nduja|pollo.*barbecue/.test(n)) return "unverified";
+    if (animal) return "compatible";
+  }
+  if (/^(acqua|sale|olio|olive oil|farina|lievito|zucchero|aglio|ananas|aneto|basilico|capperi|carciof|champignon|cipoll|composta di pomodoro|coriandolo|crema di zucca|crema di zucchine|fette di patate|fior di sale|friarielli|funghi|giardiniera|granella di pistacchio|jalapeños|melanzane|mentuccia|olive|origano|passata|patate|pelati|pepe|peperon|pere|polpa di pomodoro|pomodor|porcini|rosmarino|rucola|salamoia|salsa (densa di pomodoro|di pomodoro|marinara)|scarola|spinaci|zest|zucchin)/.test(n)) return "compatible";
+  return "unverified";
 }
 
-export function getDietaryWarnings(
-  activeFilters: string[],
-  _params: {
-    fermentHours: number;
-    fermentTemp: number;
-    yeastType: string;
-    hydration: number;
-    flourW: number;
-  },
-  cms?: DietaryMessageSource
-): DietaryWarning[] {
+export function getDietaryWarnings(activeFilters: string[], ingredients: DietaryIngredient[]): DietaryWarning[] {
   const warnings: DietaryWarning[] = [];
-  const cmsW = cms?.dietaryI18n?.warnings;
-
-  // Tempo, temperatura e lievito non misurano FODMAP o istamina.
-  // Un avviso resta presente anche dopo una fermentazione lunga.
-  for (const [filterId, key] of [["low_fodmap", "fodmap_low"], ["histamine", "histamine_high"]] as const) {
-    if (!activeFilters.includes(filterId)) continue;
-    const loc = cmsW?.[key] ?? DEFAULT_WARNINGS[key];
-    warnings.push({ filterId, message: loc.message, tip: loc.tip, severity: "warning" });
+  const add = (filterId: string, severity: DietaryWarning["severity"], names: string[], key: string, tipKey = "diet.changeRecipe") => {
+    warnings.push({ filterId, ingredients: names, severity, message: message(key, names.length ? names : undefined), tip: message(tipKey) });
+  };
+  for (const filter of new Set(activeFilters)) {
+    if (filter === "gluten_free") {
+      const gluten = ingredients.filter(i => i.gluten || /farina.*(grano|frumento|segale|orzo)|pangrattato|mollica di pane/.test(i.name.toLowerCase())).map(i => i.name);
+      add(filter, "critical", gluten, gluten.length ? "diet.glutenConflict" : "diet.glutenUnsupported", "diet.noValidatedMethod");
+    } else if (filter === "vegan" || filter === "lactose_free") {
+      const findings = ingredients.map(i => ({ ...i, status: ingredientDietaryStatus(i.name, filter) }));
+      const incompatible = [...new Set(findings.filter(i => !i.optional && i.status === "incompatible").map(i => i.name))];
+      const unknown = [...new Set(findings.filter(i => i.status === "unverified").map(i => i.name))];
+      const optional = [...new Set(findings.filter(i => i.optional && i.status === "incompatible").map(i => i.name))];
+      if (incompatible.length) add(filter, "critical", incompatible, filter === "vegan" ? "diet.veganConflict" : "diet.lactoseConflict");
+      if (unknown.length) add(filter, "warning", unknown, filter === "vegan" ? "diet.verifyVegan" : "diet.verifyLactose", "diet.labelCheck");
+      if (optional.length) add(filter, "warning", optional, "diet.omitOptional");
+    } else if (filter === "low_fodmap" || filter === "histamine") {
+      add(filter, "warning", [], filter === "low_fodmap" ? "diet.fodmapUnknown" : "diet.histamineUnknown", "diet.processCheck");
+    } else if (filter === "nickel") {
+      add(filter, "info", [], "diet.nickelUnknown", "diet.labelCheck");
+    }
   }
-
-  if (activeFilters.includes('gluten_free')) {
-    const loc = cmsW?.gluten_free ?? DEFAULT_WARNINGS.gluten_free;
-    warnings.push({
-      filterId: 'gluten_free',
-      message: loc.message,
-      tip: loc.tip,
-      severity: 'critical',
-    });
-  }
-
-  if (activeFilters.includes('nickel')) {
-    const loc = cmsW?.nickel_highW ?? DEFAULT_WARNINGS.nickel_highW;
-    warnings.push({
-      filterId: 'nickel',
-      message: loc.message,
-      tip: loc.tip,
-      severity: 'info',
-    });
-  }
-
   return warnings;
 }

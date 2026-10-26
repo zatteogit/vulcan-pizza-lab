@@ -5,7 +5,6 @@ import { INSPIRATION_I18N_FR } from "../../../data/inspiration-i18n/fr";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_FR,
-  DIETARY_FR,
   TROUBLESHOOTING_FR,
   GLOSSARY_TERMS_FR,
 } from "./domain-fr";
@@ -685,6 +684,35 @@ export const FR_LOCALE: CmsContent = {
     catScoringDesc: "M\u00E9triques de qualit\u00E9 {brand}",
   },
   engineMessages: {
+    "diet.variant": "Version de {recipe} sans {ingredients}",
+    "diet.variantChanges": "Autre garniture : {topping}. Retirés : {ingredients}.",
+    "diet.variantAdded": "Ingrédients ajoutés : {ingredients}.",
+    "diet.useVariant": "Utiliser cette version",
+    "diet.variantAvailable": "Autre version disponible",
+    "change.topping": "Garniture : {from} → {to}",
+    "diet.glutenConflict": "Le filtre sans gluten exclut : {ingredients}.",
+    "diet.glutenUnsupported": "Pas de méthode sans gluten vérifiée pour cette recette.",
+    "diet.veganConflict": "Le filtre végane exclut : {ingredients}.",
+    "diet.lactoseConflict": "Le filtre sans lactose exclut : {ingredients}.",
+    "diet.verifyVegan": "Vérifier sur l’étiquette la compatibilité végane : {ingredients}.",
+    "diet.verifyLactose": "Vérifier l’absence de lactose sur l’étiquette : {ingredients}.",
+    "diet.changeRecipe": "Choisir une recette compatible ou modifier explicitement les ingrédients puis recalculer.",
+    "diet.noValidatedMethod": "Ne pas remplacer la farine à quantités égales : une formule sans gluten vérifiée est nécessaire.",
+    "diet.labelCheck": "Vérifier la composition sur l’étiquette avant de poursuivre.",
+    "diet.omitOptional": "Pour respecter les filtres, omettre ces ingrédients facultatifs : {ingredients}.",
+    "diet.fodmapUnknown": "La durée de fermentation seule ne détermine pas la compatibilité low FODMAP.",
+    "diet.histamineUnknown": "Le temps et la température ne déterminent pas la teneur en histamine.",
+    "diet.processCheck": "Il faut des données sur ingrédients, produit et portion ; compatibilité non certifiée.",
+    "diet.nickelUnknown": "La force W ne mesure pas la teneur en nickel.",
+    "diet.cardConflict": "Incompatible avec les filtres alimentaires",
+    "card.ready": "Réalisable",
+    "range.hydrationBasis": "Hydratation — référence du catalogue : {catalogMin}–{catalogMax} % ; méthode choisie : {methodMin}–{methodMax} %.",
+    "learn.theoryTitle": "La théorie d’abord",
+    "learn.compatiblePath": "Un parcours pratique compatible avec votre cuisine : vérifier les conditions de la recette.",
+    "learn.theoryOnly": "Aucune recette vérifiée ne correspond à ces contraintes ; explorer la théorie.",
+    "learn.openTheory": "Explorer la théorie",
+    "timeline.preheat.includesProof": "Ce bloc comprend {minutes} minutes de fermentation finale, déjà comptées dans le temps total : ne pas les ajouter à nouveau.",
+    "timeline.preheat.includesRest": "Ce bloc comprend {minutes} minutes de repos, déjà comptées dans le temps total : ne pas les ajouter à nouveau.",
     "auth.hydrationOff":
       "Hydratation hors centre (-{penalty}%)",
     "auth.wOutOfRange": "W farine hors plage (-{penalty}%)",
@@ -1233,7 +1261,7 @@ export const FR_LOCALE: CmsContent = {
     napoletana_canotto:
       "Corniche 3-4cm \u00AB canotto \u00BB|Alv\u00E9olage extr\u00EAme|Maturation 24-72h|Haute digestibilit\u00E9",
     teglia_romana:
-      "Hauteur 2-3cm|Hydratation 80-100%|Sans p\u00E9trissage + pliages|Mie nuage",
+      "Hauteur 2-3cm|Hydratation selon la version|Sans p\u00E9trissage + pliages|Mie nuage",
     tonda_romana:
       "\u00C9paisseur 1-2mm|Rouleau ou à la main|Croustillance extr\u00EAme|Farine faible W<210",
     pinsa_romana:
@@ -1674,8 +1702,8 @@ export const FR_LOCALE: CmsContent = {
     hintLowPLForHighHydration: "Avec une hydratation élevée, un P/L ≤ {pl} est recommandé pour l'extensibilité",
     hintHighWAllowsMoreHydration: "Avec un W de {w}, vous pouvez aller jusqu'à {h}% d'hydratation",
     hintAdaptiveLabel: "suggéré",
-    hintLimitMinLabel: "limite min",
-    hintLimitMaxLabel: "limite max",
+    hintLimitMinLabel: "min. conseillé",
+    hintLimitMaxLabel: "max. conseillé",
   },
   cooking: {
     recipeCanonicalEyebrow: "Originale",
@@ -1887,7 +1915,6 @@ export const FR_LOCALE: CmsContent = {
     },
   } as any,
   preFerment: PRE_FERMENT_FR as any,
-  dietaryI18n: DIETARY_FR as any,
   troubleshootingI18n: TROUBLESHOOTING_FR as any,
   glossaryTerms: GLOSSARY_TERMS_FR as any,
 };

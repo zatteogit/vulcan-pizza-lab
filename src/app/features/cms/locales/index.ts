@@ -37,9 +37,10 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *   6 → fattibilità/autenticità, Su misura, dispensa progressiva, livelli,
  *       CTA Crea, tooltip del voto e distinzione del riferimento STG.
  *  10 → azione esplicita «Ripristina originale» nelle sette lingue.
+ *  11 → diete su impasto e condimento, versioni alternative e range del metodo.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 10;
+export const LOCALE_BUNDLE_REV = 11;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

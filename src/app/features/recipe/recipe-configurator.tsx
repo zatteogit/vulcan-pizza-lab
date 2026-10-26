@@ -1,3 +1,4 @@
+import { engineMsgTexts } from "./engine-msg-text";
 import { Check,ChevronDown,Circle,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
 import { AnimatePresence,motion } from "motion/react";
 import { motionSpring,motionTiming } from "../../components/ds/motion";
@@ -200,6 +201,7 @@ function PremiumSelectRow({
 
 interface RecipeConfiguratorProps {
   style: PizzaStyle;
+  referenceStyle?: PizzaStyle;
   constraints: UserConstraints;
   onConstraintsChange: (c: UserConstraints) => void;
   customHydration: number;
@@ -409,6 +411,7 @@ function saveAdvancedOpen(open: boolean) {
 
 export function RecipeConfigurator({
   style,
+  referenceStyle,
   constraints,
   onConstraintsChange,
   customHydration,
@@ -613,6 +616,13 @@ export function RecipeConfigurator({
           </button>
         )}
       </div>
+
+      {referenceStyle && referenceStyle.dough.hydration_pct_range.some((v, i) => v !== sH[i]) && (
+        <p className="config-legend">{engineMsgTexts([{
+          key: "range.hydrationBasis", fallback: "Idratazione — riferimento di catalogo: {catalogMin}–{catalogMax}%; metodo selezionato: {methodMin}–{methodMax}%.",
+          params: { catalogMin: referenceStyle.dough.hydration_pct_range[0], catalogMax: referenceStyle.dough.hydration_pct_range[1], methodMin: sH[0], methodMax: sH[1] },
+        }], cms, bcp47)[0]}</p>
+      )}
 
       {/* 3-Column Grid Layout */}
       <div className="config-grid">

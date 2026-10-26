@@ -1,7 +1,6 @@
 /* === DOMAIN DATA i18n — English === */
 import type {
   CmsPreFerment,
-  CmsDietaryI18n,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
 } from "../cms-context";
@@ -132,96 +131,7 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
   },
 };
 
-export const DIETARY_EN: Partial<CmsDietaryI18n> = {
-  info: {
-    low_fodmap: {
-      name: "Low FODMAP",
-      description:
-        "Assess ingredients, process and serving size",
-      scienceNote:
-        "Fermentation can change FODMAP content, but the result depends on flour, microorganisms, process and serving size. Hours alone cannot quantify a reduction or establish that a recipe is low FODMAP.",
-    },
-    histamine: {
-      name: "Low histamine",
-      description:
-        "Assess ingredients, process and serving size",
-      scienceNote:
-        "Content depends on microorganisms, ingredients, processing and storage. It cannot be calculated at a fixed hourly rate; short fermentation does not guarantee its absence.",
-    },
-    gluten_free: {
-      name: "Gluten-free",
-      description: "For coeliac disease or gluten sensitivity",
-      scienceNote:
-        "EU threshold: <20 ppm. Requires GF mix (rice/corn/quinoa + xanthan 1.5%)",
-    },
-    lactose_free: {
-      name: "Lactose-free",
-      description: "For lactose intolerance",
-      scienceNote:
-        "Baking does not guarantee lactose removal: check ingredients and manufacturer information.",
-    },
-    nickel: {
-      name: "Low nickel",
-      description: "For systemic nickel allergy (SNAS)",
-      scienceNote:
-        "Product data is needed; flour strength alone does not establish suitability.",
-    },
-    vegan: {
-      name: "Vegan",
-      description: "No animal-derived ingredients",
-      scienceNote:
-        "Base dough is already vegan. Watch toppings and fats (butter \u2192 oil)",
-    },
-  },
-  conflicts: {
-    fodmap_histamine: {
-      message:
-        "Fermentation hours and yeast type do not certify suitability for FODMAP or histamine restrictions.",
-      compromiseTip:
-        "Assess ingredients and serving size using verified data; long fermentation does not guarantee suitability.",
-    },
-    gf_fodmap: {
-      message:
-        "Gluten-free does not automatically mean low FODMAP: ingredients and serving size matter.",
-    },
-    nickel_general: {
-      message:
-        "Product data is needed; flour strength alone does not establish suitability.",
-    },
-  },
-  warnings: {
-    fodmap_low: {
-      message:
-        "FODMAP reduction cannot be determined from hours alone",
-      tip: "Assess ingredients and serving size using verified data; long fermentation does not guarantee suitability.",
-    },
-    fodmap_good: {
-      message:
-        "FODMAP reduction cannot be determined from hours alone",
-      tip: "Assess ingredients and serving size using verified data; long fermentation does not guarantee suitability.",
-    },
-    histamine_high: {
-      message:
-        "Histamine content cannot be determined from time and temperature",
-      tip: "Check ingredients and process: the engine does not establish a safe level.",
-    },
-    histamine_moderate: {
-      message:
-        "Histamine content cannot be determined from time and temperature",
-      tip: "Check ingredients and process: the engine does not establish a safe level.",
-    },
-    gluten_free: {
-      message:
-        "Recipe uses wheat flour \u2014 incompatible with coeliac disease",
-      tip: "Substitute with GF mix (rice 40% + corn 30% + quinoa 10% + sorghum 10% + starch 10%) + xanthan 1.5%",
-    },
-    nickel_highW: {
-      message:
-        "W does not measure nickel content",
-      tip: "Product data is needed; flour strength alone does not establish suitability.",
-    },
-  },
-};
+
 
 export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
   {
@@ -280,7 +190,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         testRapido:
           "Has the dough doubled in less than 3 hours?",
         fixImmediate:
-          "Move immediately to 4\u00B0C to halt fermentation",
+          "Refrigerate the dough to slow fermentation; chilling does not stop it immediately.",
         prevention:
           "Use the yeast dose calculated for your hours and temperature (at 18 °C for 24 h, about 0.1% fresh yeast)",
       },
@@ -290,8 +200,8 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
           "Heterofermentative LAB active >48h at >18\u00B0C (especially with sourdough)",
         testRapido:
           "Dough pH \u2014 should be 4.5-5.5, problematic if <4.2",
-        fixImmediate: "Add 0.5-1% sugar to mask acidity",
-        prevention: "Fermentations >24h always at 4-8\u00B0C",
+        fixImmediate: "Sugar masks flavour but does not correct overfermentation. Reassess the dough before use.",
+        prevention: "Choose time, temperature and yeast for the method; check development without a universal hourly threshold.",
       },
       P07: {
         symptom:
@@ -414,7 +324,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         cause: "A home fridge doesn't hold a steady temperature: defrost cycles, door openings and different shelves make cold maturation swing, unlike a professional cold room",
         testRapido: "Same style, same yeast amount: does the rise change a lot from one time to the next?",
         fixImmediate: "Move the dough to the lowest/middle shelf (the most stable) and judge the dough ball by eye, not just by the clock",
-        prevention: "Bonci's tip for home bakers: 0.5–1% sugar gives the yeast ready food and makes fermentation more predictable when the fridge is unstable. Only for styles that allow additives — never for Napoletana STG/AVPN by the rules",
+        prevention: "Measure the temperature on the shelf used and observe dough development. Sugar does not correct fridge temperature swings.",
       },
     },
     contextual: {
@@ -434,8 +344,8 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       },
       pale_crust: {
         message:
-          "Short fermentation ({h}h): pale crust and limited digestibility",
-        tip: "Add 0.5-1% sugar to boost Maillard browning",
+          "Short fermentation: check dough development before continuing.",
+        tip: "Check volume, elasticity and response to pressure: hours alone do not establish digestibility.",
       },
       cold_oven: {
         message:
@@ -522,7 +432,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Mechanical balance index. Ratio between resistance and extensibility of the dough.",
       whyImportant:
-        "Optimal P/L (0.5-0.6): tall crust + thin base. <0.4: flat pizza. >0.8: \u2018rubbery\u2019 dough.",
+        "It describes rheological balance. The suitable value depends on flour, hydration and method; it does not guarantee pizza height or texture.",
       ranges: [
         {
           label: "<0.4 Very extensible",
@@ -649,7 +559,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Single-celled fungus that converts sugars into CO\u2082 + ethanol + aromatic compounds.",
       whyImportant:
-        "Optimal temp: 28-32\u00B0C. Min 4\u00B0C (dormant). Max 40\u00B0C (inhibited). Death >55\u00B0C.",
+        "Activity depends on strain, dose, temperature and dough. Cold slows fermentation; there is no universal immediate stopping threshold.",
       ranges: [
         { label: "Fresh", value: "0.5\u20132.0%", note: "70% moisture, fridge 4\u00B0C" },
         { label: "Active dry", value: "0.3\u20131.0%", note: "Rehydrate first" },
@@ -661,7 +571,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Bacteria that ferment sugars producing lactic acid (and acetic acid). Present in sourdough starter.",
       whyImportant:
-        "Lower pH (4.0-4.5), increase acidity, degrade FODMAP (fructans), inhibit moulds. Optimal temp: 28-32\u00B0C.",
+        "They can change acidity and fructans depending on strains, flour and process. Their presence does not certify low FODMAP dough.",
     },
     q10: {
       name: "Q\u2081\u2080 (Temperature Coefficient)",
@@ -721,23 +631,23 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     maillard: {
       name: "Maillard Reaction",
       definition:
-        "Non-enzymatic reaction between amino acids and reducing sugars at high temperature (>140\u00B0C).",
+        "A group of non-enzymatic reactions between amino compounds and reducing sugars, promoted by heating.",
       whyImportant:
-        "Golden crust (melanoidins), toasted aroma (pyrazines), leopard spotting at 300\u00B0C+. Optimal 160-180\u00B0C.",
+        "It contributes to crust colour and aroma. Rate and intensity depend on surface temperature, time, moisture and ingredients; oven temperature is not the same as food temperature.",
     },
     caramelization: {
       name: "Caramelisation",
       definition:
-        "Thermal degradation of sugars (without proteins) at high temperature (>150\u00B0C sucrose, >120\u00B0C fructose).",
+        "Transformations of sugars during heating, distinct from Maillard reactions and not requiring amino compounds.",
       whyImportant:
-        "Contributes to dark spots on crust. Less relevant than Maillard in pizza (few proteins on surface).",
+        "It can contribute colour and toasted aromas. Its effect depends on the sugars present, moisture, time and surface temperature.",
     },
     starch_gelatinization: {
       name: "Starch Gelatinisation",
       definition:
-        "Transition of starch from crystalline to gel state by absorbing water. Onset 55-60\u00B0C, peak 65-70\u00B0C, completion 80-85\u00B0C.",
+        "With water and heat, starch granules hydrate, swell and lose part of their crystalline structure. The temperature range depends on starch type and formulation.",
       whyImportant:
-        "Crumb: makes starch digestible (<55\u00B0C at core = raw starch). Crust: >100\u00B0C \u2192 crispy.",
+        "It contributes to crumb structure and starch transformation. A single core temperature alone does not certify complete baking or individual digestibility.",
     },
     retrogradation: {
       name: "Retrogradation",
@@ -787,7 +697,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Degradation of proteins into peptides and amino acids by protease enzymes. Target: gluten.",
       whyImportant:
-        "Easier stretching, increased digestibility, free amino acids \u2192 umami flavour. Excessive (>72h): dough too soft. Optimal: 24-48h.",
+        "It can change dough extensibility and strength. It depends on flour, microorganisms, temperature and process: there is no universal optimal duration, and it does not measure individual digestibility.",
     },
     thickness_factor: {
       name: "Thickness Factor (TF)",

@@ -1,7 +1,6 @@
 /* === DOMAIN DATA i18n — Español === */
 import type {
   CmsPreFerment,
-  CmsDietaryI18n,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
 } from "../cms-context";
@@ -131,94 +130,7 @@ export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
   },
 };
 
-export const DIETARY_ES: Partial<CmsDietaryI18n> = {
-  info: {
-    low_fodmap: {
-      name: "Low FODMAP",
-      description:
-        "Evalúa ingredientes, proceso y porción",
-      scienceNote:
-        "La fermentación puede modificar los FODMAP, pero el resultado depende de la harina, los microorganismos, el proceso y la porción. Las horas por sí solas no permiten cuantificar una reducción ni clasificar la receta como baja en FODMAP.",
-    },
-    histamine: {
-      name: "Baja histamina",
-      description:
-        "Evalúa ingredientes, proceso y porción",
-      scienceNote:
-        "El contenido depende de microorganismos, ingredientes, proceso y conservación. No se calcula con una tasa fija por hora; una fermentación breve no garantiza su ausencia.",
-    },
-    gluten_free: {
-      name: "Sin gluten",
-      description: "Para celiaquía o sensibilidad al gluten",
-      scienceNote:
-        "Umbral UE: <20 ppm. Requiere mezcla GF (arroz/maíz/quinoa + xantana 1.5%)",
-    },
-    lactose_free: {
-      name: "Sin lactosa",
-      description: "Para intolerancia a la lactosa",
-      scienceNote:
-        "El horneado no garantiza la eliminación de lactosa: comprueba los ingredientes y la información del fabricante.",
-    },
-    nickel: {
-      name: "Bajo níquel",
-      description: "Para alergia sistémica al níquel (SNAS)",
-      scienceNote:
-        "Se necesitan datos del producto; la fuerza de la harina por sí sola no certifica la idoneidad.",
-    },
-    vegan: {
-      name: "Vegano",
-      description: "Sin derivados animales",
-      scienceNote:
-        "La masa base ya es vegana. Atención a toppings y grasas (mantequilla → aceite)",
-    },
-  },
-  conflicts: {
-    fodmap_histamine: {
-      message:
-        "Las horas de fermentación y el tipo de levadura no certifican la idoneidad para restricciones de FODMAP o histamina.",
-      compromiseTip:
-        "Evalúa ingredientes y porción con datos verificados; una fermentación larga no garantiza la idoneidad.",
-    },
-    gf_fodmap: {
-      message:
-        "Sin gluten no significa automáticamente bajo en FODMAP: importan los ingredientes y la porción.",
-    },
-    nickel_general: {
-      message:
-        "Se necesitan datos del producto; la fuerza de la harina por sí sola no certifica la idoneidad.",
-    },
-  },
-  warnings: {
-    fodmap_low: {
-      message:
-        "La reducción de FODMAP no puede determinarse solo por las horas",
-      tip: "Evalúa ingredientes y porción con datos verificados; una fermentación larga no garantiza la idoneidad.",
-    },
-    fodmap_good: {
-      message: "La reducción de FODMAP no puede determinarse solo por las horas",
-      tip: "Evalúa ingredientes y porción con datos verificados; una fermentación larga no garantiza la idoneidad.",
-    },
-    histamine_high: {
-      message: "El contenido de histamina no puede determinarse por tiempo y temperatura",
-      tip: "Comprueba ingredientes y proceso: el motor no certifica un nivel seguro.",
-    },
-    histamine_moderate: {
-      message:
-        "El contenido de histamina no puede determinarse por tiempo y temperatura",
-      tip: "Comprueba ingredientes y proceso: el motor no certifica un nivel seguro.",
-    },
-    gluten_free: {
-      message:
-        "La receta usa harina de trigo — incompatible con celiaquía",
-      tip: "Sustituye con mezcla GF (arroz 40% + maíz 30% + quinoa 10% + sorgo 10% + almidón 10%) + xantana 1.5%",
-    },
-    nickel_highW: {
-      message:
-        "W no mide el contenido de níquel",
-      tip: "Se necesitan datos del producto; la fuerza de la harina por sí sola no certifica la idoneidad.",
-    },
-  },
-};
+
 
 export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
   {
@@ -277,7 +189,7 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
           "Demasiada levadura (>1.5%) o temperatura ambiente >28°C",
         testRapido: "¿La masa ha doblado en menos de 3 horas?",
         fixImmediate:
-          "Transfiere inmediatamente a 4°C para bloquear la fermentación",
+          "Refrigera la masa para ralentizar la fermentación; el frío no la detiene de inmediato.",
         prevention:
           "Usa la dosis de levadura calculada para tus horas y tu temperatura (a 18 °C durante 24 h, cerca del 0,1 % de levadura fresca)",
       },
@@ -288,8 +200,8 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
         testRapido:
           "pH masa — debería ser 4.5-5.5, problemático si <4.2",
         fixImmediate:
-          "Añade 0.5-1% azúcar para enmascarar la acidez",
-        prevention: "Fermentaciones >24h siempre a 4-8°C",
+          "El azúcar enmascara el sabor, pero no corrige la sobrefermentación. Reevalúa la masa antes de usarla.",
+        prevention: "Elige tiempo, temperatura y levadura según el método; no hay un umbral horario universal.",
       },
       P07: {
         symptom:
@@ -415,7 +327,7 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
         cause: "La nevera doméstica no mantiene una temperatura estable: descongelaciones, aperturas y baldas distintas hacen oscilar la maduración en frío, a diferencia de una cámara profesional",
         testRapido: "Mismo estilo, misma dosis de levadura: ¿el levado cambia mucho de una vez a otra?",
         fixImmediate: "Pon la masa en la balda más baja/central (la más estable) y valora el bollo a ojo, no solo por el reloj",
-        prevention: "Truco de Bonci para casa: un 0,5–1 % de azúcar da a la levadura alimento inmediato y hace la fermentación más previsible cuando la nevera es inestable. Solo en estilos que admiten aditivos — nunca en Napoletana STG/AVPN según el reglamento",
+        prevention: "Mide la temperatura del estante usado y observa la masa. El azúcar no corrige las oscilaciones del frigorífico.",
       },
     },
     contextual: {
@@ -434,8 +346,8 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
       },
       pale_crust: {
         message:
-          "Fermentación corta ({h}h): corteza pálida y digestibilidad limitada",
-        tip: "Añade 0.5-1% azúcar para favorecer el dorado Maillard",
+          "Fermentación breve: comprueba el desarrollo de la masa antes de seguir.",
+        tip: "Comprueba el volumen, la elasticidad y la respuesta a la presión: las horas no acreditan la digestibilidad.",
       },
       cold_oven: {
         message:
@@ -495,7 +407,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     pl_ratio: {
       name: "P/L (Relaci\u00F3n Tenacidad/Extensibilidad)",
       definition: "\u00CDndice de equilibrio mec\u00E1nico. Relaci\u00F3n entre la resistencia y la extensibilidad de la masa.",
-      whyImportant: "P/L \u00F3ptimo (0.5-0.6): cornicione alto + base fina. <0.4: pizza plana. >0.8: masa \u00ABgomosa\u00BB.",
+      whyImportant: "Describe el equilibrio reológico. El valor adecuado depende de harina, hidratación y método; no garantiza altura ni textura.",
       ranges: [
         { label: "<0.4 Muy extensible", value: "Se hunde f\u00E1cilmente", note: "Pinsa" },
         { label: "0.4\u20130.5 Extensible", value: "F\u00E1cil de trabajar", note: "Napolitana cl\u00E1sica" },
@@ -553,7 +465,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     yeast: {
       name: "Levadura (Saccharomyces cerevisiae)",
       definition: "Hongo unicelular que convierte los az\u00FAcares en CO\u2082 + etanol + compuestos arom\u00E1ticos.",
-      whyImportant: "Temp. \u00F3ptima: 28-32\u00B0C. M\u00EDn. 4\u00B0C (latente). M\u00E1x. 40\u00B0C (inhibida). Muere a >55\u00B0C.",
+      whyImportant: "La actividad depende de cepa, dosis, temperatura y masa. El frío ralentiza la fermentación; no hay un umbral universal de parada inmediata.",
       ranges: [
         { label: "Fresca", value: "0.5\u20132.0%", note: "Humedad 70%, nevera 4\u00B0C" },
         { label: "Seca activa", value: "0.3\u20131.0%", note: "Hidratar antes" },
@@ -563,7 +475,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     lab: {
       name: "LAB (Bacterias l\u00E1cticas)",
       definition: "Bacterias que fermentan az\u00FAcares produciendo \u00E1cido l\u00E1ctico (y ac\u00E9tico). Presentes en la masa madre.",
-      whyImportant: "Bajan el pH (4.0-4.5), aumentan la acidez, degradan los FODMAP (fructanos), inhiben el moho. Temp. \u00F3ptima: 28-32\u00B0C.",
+      whyImportant: "Pueden modificar acidez y fructanos según cepas, harina y proceso. Su presencia no certifica una masa low FODMAP.",
     },
     q10: {
       name: "Q\u2081\u2080 (Coeficiente de temperatura)",
@@ -608,18 +520,18 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     },
     maillard: {
       name: "Reacci\u00F3n de Maillard",
-      definition: "Reacci\u00F3n no enzim\u00E1tica entre amino\u00E1cidos y az\u00FAcares reductores a alta temperatura (>140\u00B0C).",
-      whyImportant: "Corteza dorada (melanoidinas), aroma tostado (pirazinas), moteado de leopardo a 300\u00B0C+. \u00D3ptima a 160-180\u00B0C.",
+      definition: "Conjunto de reacciones no enzimáticas entre compuestos amino y azúcares reductores, favorecidas por el calentamiento.",
+      whyImportant: "Contribuye al color y al aroma de la corteza. Su intensidad y velocidad dependen de la temperatura superficial, el tiempo, la humedad y los ingredientes; la temperatura del horno no es la del alimento.",
     },
     caramelization: {
       name: "Caramelizaci\u00F3n",
-      definition: "Degradaci\u00F3n t\u00E9rmica de los az\u00FAcares (sin prote\u00EDnas) a alta temperatura (>150\u00B0C sacarosa, >120\u00B0C fructosa).",
-      whyImportant: "Contribuye a las manchas oscuras del cornicione. Menos relevante que la Maillard en la pizza (pocas prote\u00EDnas en superficie).",
+      definition: "Transformaciones de los azúcares durante el calentamiento, distintas de Maillard y sin requerir compuestos amino.",
+      whyImportant: "Puede contribuir al color y a los aromas tostados. Depende de los azúcares presentes, la humedad, el tiempo y la temperatura superficial.",
     },
     starch_gelatinization: {
       name: "Gelatinizaci\u00F3n del almid\u00F3n",
-      definition: "Paso del almid\u00F3n de estado cristalino a gelatinoso al absorber agua. Inicio 55-60\u00B0C, pico 65-70\u00B0C, final 80-85\u00B0C.",
-      whyImportant: "Miga: hace digerible el almid\u00F3n (<55\u00B0C en el centro = almid\u00F3n crudo). Corteza: >100\u00B0C \u2192 crujiente.",
+      definition: "Con agua y calor, los gránulos de almidón se hidratan, se hinchan y pierden parte de su estructura cristalina. El intervalo depende del almidón y de la formulación.",
+      whyImportant: "Contribuye a la estructura de la miga y a la transformación del almidón. Una sola temperatura central no certifica la cocción completa ni la digestibilidad individual.",
     },
     retrogradation: {
       name: "Retrogradaci\u00F3n",
@@ -658,7 +570,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     proteolysis: {
       name: "Prote\u00F3lisis",
       definition: "Degradaci\u00F3n de las prote\u00EDnas en p\u00E9ptidos y amino\u00E1cidos por enzimas proteasas. Objetivo: el gluten.",
-      whyImportant: "Estirado m\u00E1s f\u00E1cil, mayor digestibilidad, amino\u00E1cidos libres \u2192 sabor umami. Excesiva (>72h): masa demasiado blanda. \u00D3ptima: 24-48h.",
+      whyImportant: "Puede modificar la extensibilidad y la resistencia de la masa. Depende de la harina, los microorganismos, la temperatura y el proceso: no existe una duración óptima universal ni mide la digestibilidad individual.",
     },
     thickness_factor: {
       name: "Thickness Factor (TF, factor de grosor)",

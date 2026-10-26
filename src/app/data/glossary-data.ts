@@ -1,3 +1,4 @@
+import { GLOSSARY_SCIENCE } from "./glossary-science";
 /* === GLOSSARIO TECNICO — Appendice C === */
 /* Basato su Notion Appendice C · Glossario Tecnico (302ed0f7e12081379cf4ce959ef2b1b3) */
 /* i18n: localized getters depend on a neutral message-source contract. */
@@ -108,7 +109,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     name: "P/L (Rapporto Tenacità/Estensibilità)",
     symbol: "P/L",
     category: "rheology",
-    definition: "Indice di bilanciamento meccanico. Rapporto tra resistenza e estensibilità dell'impasto.",
+    definition: GLOSSARY_SCIENCE.pl_ratio.definition,
     formula: "P/L = P (mm H₂O) / L (mm)",
     ranges: [
       { label: "<0.4 Molto estensibile", value: "Collassa facilmente", note: "Pinsa" },
@@ -117,7 +118,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
       { label: "0.7–1.0 Tenace", value: "Resistente", note: "Pane grande lievitazione" },
       { label: ">1.0 Molto tenace", value: "Elastico, ritorna", note: "Croissant" },
     ],
-    whyImportant: "P/L ottimale (0.5-0.6): cornicione alto + base sottile. <0.4: pizza piatta. >0.8: impasto 'di gomma'.",
+    whyImportant: GLOSSARY_SCIENCE.pl_ratio.whyImportant,
     relatedTerms: ["w_alveograph", "p_tenacity", "l_extensibility"],
   },
   {
@@ -190,21 +191,21 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     id: "yeast",
     name: "Lievito (Saccharomyces cerevisiae)",
     category: "fermentation",
-    definition: "Fungo unicellulare che converte zuccheri in CO₂ + etanolo + composti aromatici.",
+    definition: GLOSSARY_SCIENCE.yeast.definition,
     ranges: [
       { label: "Fresco", value: "0.5–2.0%", note: "Umidità 70%, frigo 4°C" },
       { label: "Secco attivo", value: "0.3–1.0%", note: "Idratare prima" },
       { label: "Secco istantaneo", value: "0.2–0.8%", note: "Diretto" },
     ],
-    whyImportant: "Temp ottimale: 28-32°C. Min 4°C (dormiente). Max 40°C (inibito). Morte >55°C.",
+    whyImportant: GLOSSARY_SCIENCE.yeast.whyImportant,
     relatedTerms: ["q10", "arrhenius"],
   },
   {
     id: "lab",
     name: "LAB (Batteri Lattici)",
     category: "fermentation",
-    definition: "Batteri che fermentano zuccheri producendo acido lattico (e acetico). Presenti nel lievito madre.",
-    whyImportant: "Abbassano pH (4.0-4.5), aumentano acidità, degradano FODMAP (fruttani), inibiscono muffe. Temp ottimale: 28-32°C.",
+    definition: GLOSSARY_SCIENCE.lab.definition,
+    whyImportant: GLOSSARY_SCIENCE.lab.whyImportant,
     relatedTerms: ["fodmap", "yeast"],
   },
   {
@@ -276,24 +277,24 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     id: "maillard",
     name: "Reazione di Maillard",
     category: "thermal",
-    definition: "Reazione non-enzimatica tra aminoacidi e zuccheri riducenti ad alta temperatura (>140°C).",
-    whyImportant: "Crosta dorata (melanoidine), aroma tostato (pirazine), leopard spotting a 300°C+. Ottimale 160-180°C.",
+    definition: GLOSSARY_SCIENCE.maillard.definition,
+    whyImportant: GLOSSARY_SCIENCE.maillard.whyImportant,
     relatedTerms: ["caramelization"],
   },
   {
     id: "caramelization",
     name: "Caramellizzazione",
     category: "thermal",
-    definition: "Degradazione termica degli zuccheri (senza proteine) ad alta temperatura (>150°C saccarosio, >120°C fruttosio).",
-    whyImportant: "Contribuisce a macchie scure su cornicione. Meno rilevante di Maillard nella pizza (poche proteine in superficie).",
+    definition: GLOSSARY_SCIENCE.caramelization.definition,
+    whyImportant: GLOSSARY_SCIENCE.caramelization.whyImportant,
     relatedTerms: ["maillard"],
   },
   {
     id: "starch_gelatinization",
     name: "Gelatinizzazione Amido",
     category: "thermal",
-    definition: "Transizione amido da stato cristallino a gelatinoso assorbendo acqua. Inizio 55-60°C, picco 65-70°C, completamento 80-85°C.",
-    whyImportant: "Mollica: rende amido digeribile (<55°C al cuore = amido crudo). Crosta: >100°C → croccante.",
+    definition: GLOSSARY_SCIENCE.starch_gelatinization.definition,
+    whyImportant: GLOSSARY_SCIENCE.starch_gelatinization.whyImportant,
     relatedTerms: ["retrogradation"],
   },
   {
@@ -353,8 +354,8 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     id: "proteolysis",
     name: "Proteolisi",
     category: "chemistry",
-    definition: "Degradazione proteine in peptidi e aminoacidi da parte di enzimi proteasi. Target: glutine.",
-    whyImportant: "Facilità stesura, aumento digeribilità, aminoacidi liberi → sapore umami. Eccessiva (>72h): impasto troppo molle. Ottimale: 24-48h.",
+    definition: GLOSSARY_SCIENCE.proteolysis.definition,
+    whyImportant: GLOSSARY_SCIENCE.proteolysis.whyImportant,
     relatedTerms: ["gluten"],
   },
 

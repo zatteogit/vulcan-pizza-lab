@@ -3,6 +3,7 @@ import { recipeDisplayName, stgDepartures } from "../../domain/recipe-reference"
 import { CompatibilityPill } from "./style-card-parts";
 import { RecipeChanges } from "./recipe-changes";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
+import { RecipeDietaryAlternatives } from "./recipe-dietary-notice";
 import { canonicalRecipe } from "../../use-cases/recipe-entry";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
@@ -38,7 +39,7 @@ interface StyleDetailSheetProps {
   style: PizzaStyle;
   /** VPL-C3 — vincoli utente per spiegare in modo articolato perché lo stile combacia. */
   constraints?: UserConstraints;
-  onGenerate: () => void;
+  onGenerate: (toppingId?: string) => void;
   onDismiss: () => void;
 }
 
@@ -152,7 +153,7 @@ export function StyleDetailSheet({
     <CtaButton
       as={motion.button}
       disabled={rec?.tier === "not_feasible"}
-      onClick={onGenerate}
+      onClick={() => onGenerate()}
       whileHover={rec?.tier === "not_feasible" ? undefined : { scale: 1.01 }}
       className={`style-detail-cta style-detail-cta--${placement}`}
     >
@@ -431,6 +432,7 @@ export function StyleDetailSheet({
                 {rec.tier === "not_feasible" && constraints && (
                   <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false} />
                 )}
+                {constraints && <RecipeDietaryAlternatives recipe={rec.recipe} constraints={constraints} onSelect={id => onGenerate(id)} />}
                 {matchWarnings.map((text) => (
                   <div key={text} className="style-detail-match__row" data-warning="true">
                     <span className="style-detail-match__icon">

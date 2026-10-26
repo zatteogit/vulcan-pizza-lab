@@ -1,7 +1,7 @@
 import { getImpasto, mergeImpastoIntoDough } from "../data/impasto-library";
 import { getInterpretationById, getInterpretationsForStyle, type Interpretation } from "../data/interpretation-library";
 import { getVersions, type StyleVersion } from "../data/style-versions";
-import { resolveTopping } from "../data/topping-library";
+import { resolveTopping, getToppingForStyle } from "../data/topping-library";
 import { defaultFermentTempC, defaultPanShape, generateRecipe, optimizeRecipe,
   type GeneratedRecipe, type GenerateRecipeOptions, type PanConfig, type PizzaStyle,
   type PreFermentChoice, type ScoreWeightsOverride, type UserConstraints, type VersionRangeOverrides,
@@ -15,7 +15,7 @@ export function styleWithSelectedTopping(
   selectedToppingConcept: string | null,
 ): PizzaStyle {
   const isToppingValid = selectedToppingConcept
-    ? resolveTopping(selectedToppingConcept, style) !== undefined
+    ? getToppingForStyle(selectedToppingConcept, style) !== undefined
     : false;
   return isToppingValid && selectedToppingConcept !== style.default_topping_ref
     ? { ...style, default_topping_ref: selectedToppingConcept ?? undefined }
@@ -247,6 +247,9 @@ export function tailoredRecipeEntry(style: PizzaStyle, constraints: UserConstrai
 export function recipeDifferences(from: GeneratedRecipe, to: GeneratedRecipe) {
   const changes: import("../domain/pizza-engine").EngineMsg[] = [];
   const add = (key: string, message: string, params: Record<string, number | string> = {}) => changes.push({ key, fallback: message, params });
+  const fromTopping = from.style.default_topping_ref ? getToppingForStyle(from.style.default_topping_ref, from.style) : undefined;
+  const toTopping = to.style.default_topping_ref ? getToppingForStyle(to.style.default_topping_ref, to.style) : undefined;
+  if (fromTopping?.id !== toTopping?.id) add("change.topping", "Condimento: {from} → {to}", {from:fromTopping?.id ?? "", to:toTopping?.id ?? ""});
   if (from.baker_pcts && to.baker_pcts) {
     for (const kind of ["salt", "fat", "sugar"] as const) {
       if (from.baker_pcts[kind] !== to.baker_pcts[kind]) add(`change.${kind}`, "{from}% → {to}%", { from: from.baker_pcts[kind], to: to.baker_pcts[kind] });

@@ -20,7 +20,7 @@ describe('secondo collaudo: expected behavior independent of parity',()=>{
    const r=generateRecipe(STYLES_DB.napoletana_canotto,kitchen,{customFermentationHours:hours});
    expect(r.science.fodmap_reduction_pct).toBeNull();
    expect(r.scores.claims.some(c=>c.key.startsWith('dig.fodmap'))).toBe(false);
-   const warnings=getDietaryWarnings(['low_fodmap','histamine'],{fermentHours:hours,fermentTemp:22,yeastType:'fresh',hydration:65,flourW:300});
+   const warnings=getDietaryWarnings(['low_fodmap','histamine'],[{name:'Farina di grano',gluten:true}]);
    expect(warnings.map(w=>w.filterId)).toEqual(['low_fodmap','histamine']);
    expect(JSON.stringify(warnings)).not.toMatch(/\d+%|mg\/kg|IBS/);
   }

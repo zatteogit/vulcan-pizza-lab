@@ -5,7 +5,6 @@ import { INSPIRATION_I18N_EN } from "../../../data/inspiration-i18n/en";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_EN,
-  DIETARY_EN,
   TROUBLESHOOTING_EN,
   GLOSSARY_TERMS_EN,
 } from "./domain-en";
@@ -892,6 +891,35 @@ export const EN_LOCALE: CmsContent = {
     catScoringDesc: "{brand} quality metrics",
   },
   engineMessages: {
+    "diet.variant": "Version of {recipe} without {ingredients}",
+    "diet.variantChanges": "Different topping: {topping}. Removed: {ingredients}.",
+    "diet.variantAdded": "Added ingredients: {ingredients}.",
+    "diet.useVariant": "Use this version",
+    "diet.variantAvailable": "Alternative available",
+    "change.topping": "Topping: {from} → {to}",
+    "diet.glutenConflict": "Gluten-free filter excludes: {ingredients}.",
+    "diet.glutenUnsupported": "No validated gluten-free method for this recipe.",
+    "diet.veganConflict": "Vegan filter excludes: {ingredients}.",
+    "diet.lactoseConflict": "Lactose-free filter excludes: {ingredients}.",
+    "diet.verifyVegan": "Check the label for vegan suitability: {ingredients}.",
+    "diet.verifyLactose": "Check the label for the absence of lactose: {ingredients}.",
+    "diet.changeRecipe": "Choose a compatible recipe or explicitly change the ingredients and recalculate.",
+    "diet.noValidatedMethod": "Do not swap flour at the same quantities: a validated gluten-free formula is needed.",
+    "diet.labelCheck": "Check the product label before proceeding.",
+    "diet.omitOptional": "To respect the filters, omit these optional ingredients: {ingredients}.",
+    "diet.fodmapUnknown": "Fermentation hours alone do not establish low FODMAP suitability.",
+    "diet.histamineUnknown": "Time and temperature do not determine histamine content.",
+    "diet.processCheck": "Ingredient, product and serving data are needed; suitability is not certified.",
+    "diet.nickelUnknown": "Flour strength W does not measure nickel content.",
+    "diet.cardConflict": "Conflicts with dietary filters",
+    "card.ready": "Feasible",
+    "range.hydrationBasis": "Hydration — catalog reference: {catalogMin}–{catalogMax}%; selected method: {methodMin}–{methodMax}%.",
+    "learn.theoryTitle": "Theory first",
+    "learn.compatiblePath": "A practical path compatible with your kitchen: check the recipe conditions.",
+    "learn.theoryOnly": "No validated recipe matches these constraints; explore the theory.",
+    "learn.openTheory": "Explore the theory",
+    "timeline.preheat.includesProof": "This block includes {minutes} minutes of proofing, already counted in the total time: do not add them again.",
+    "timeline.preheat.includesRest": "This block includes {minutes} minutes of rest, already counted in the total time: do not add them again.",
     "auth.hydrationOff": "Hydration off-centre (-{penalty}%)",
     "auth.wOutOfRange": "Flour W out of range (-{penalty}%)",
     "auth.plOutOfRange":
@@ -1424,7 +1452,7 @@ export const EN_LOCALE: CmsContent = {
     napoletana_canotto:
       'Cornicione 3-4cm "canotto"|Extreme alveolation|24-72h maturation|High digestibility',
     teglia_romana:
-      "Height 2-3cm|Hydration 80-100%|No-knead + folds|Cloud crumb",
+      "Height 2-3cm|Hydration varies by version|No-knead + folds|Cloud crumb",
     tonda_romana:
       "Thickness 1-2mm|Rolling pin or by hand|Extremely crispy|Weak flour W<210",
     pinsa_romana:
@@ -1864,11 +1892,10 @@ export const EN_LOCALE: CmsContent = {
     hintHighWAllowsMoreHydration:
       "With W {w}, you can go up to {h}% hydration",
     hintAdaptiveLabel: "suggested",
-    hintLimitMinLabel: "min limit",
-    hintLimitMaxLabel: "max limit",
+    hintLimitMinLabel: "suggested min",
+    hintLimitMaxLabel: "suggested max",
   },
   preFerment: PRE_FERMENT_EN as any,
-  dietaryI18n: DIETARY_EN as any,
   troubleshootingI18n: TROUBLESHOOTING_EN as any,
   glossaryTerms: GLOSSARY_TERMS_EN as any,
 };

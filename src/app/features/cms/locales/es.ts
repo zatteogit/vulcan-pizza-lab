@@ -5,7 +5,6 @@ import { INSPIRATION_I18N_ES } from "../../../data/inspiration-i18n/es";
 import { STYLE_PHOTOS } from "../../../data/style-photos";
 import {
   PRE_FERMENT_ES,
-  DIETARY_ES,
   TROUBLESHOOTING_ES,
   GLOSSARY_TERMS_ES,
 } from "./domain-es";
@@ -687,6 +686,35 @@ export const ES_LOCALE: CmsContent = {
     catScoringDesc: "M\u00E9tricas de calidad {brand}",
   },
   engineMessages: {
+    "diet.variant": "Versión de {recipe} sin {ingredients}",
+    "diet.variantChanges": "Otra cobertura: {topping}. Se retiran: {ingredients}.",
+    "diet.variantAdded": "Ingredientes añadidos: {ingredients}.",
+    "diet.useVariant": "Usar esta versión",
+    "diet.variantAvailable": "Alternativa disponible",
+    "change.topping": "Cobertura: {from} → {to}",
+    "diet.glutenConflict": "El filtro sin gluten excluye: {ingredients}.",
+    "diet.glutenUnsupported": "Falta un método sin gluten verificado para esta receta.",
+    "diet.veganConflict": "El filtro vegano excluye: {ingredients}.",
+    "diet.lactoseConflict": "El filtro sin lactosa excluye: {ingredients}.",
+    "diet.verifyVegan": "Comprueba en la etiqueta si es vegano: {ingredients}.",
+    "diet.verifyLactose": "Comprueba en la etiqueta la ausencia de lactosa: {ingredients}.",
+    "diet.changeRecipe": "Elige una receta compatible o cambia expresamente los ingredientes y vuelve a calcular.",
+    "diet.noValidatedMethod": "No sustituyas la harina manteniendo las cantidades: hace falta una fórmula sin gluten verificada.",
+    "diet.labelCheck": "Comprueba la composición en la etiqueta antes de seguir.",
+    "diet.omitOptional": "Para respetar los filtros, omite estos ingredientes opcionales: {ingredients}.",
+    "diet.fodmapUnknown": "Las horas de fermentación por sí solas no determinan la idoneidad low FODMAP.",
+    "diet.histamineUnknown": "El tiempo y la temperatura no determinan el contenido de histamina.",
+    "diet.processCheck": "Se necesitan datos de ingredientes, producto y porción; no se certifica la idoneidad.",
+    "diet.nickelUnknown": "La fuerza W no mide el contenido de níquel.",
+    "diet.cardConflict": "Incompatible con los filtros alimentarios",
+    "card.ready": "Factible",
+    "range.hydrationBasis": "Hidratación — referencia del catálogo: {catalogMin}–{catalogMax}%; método elegido: {methodMin}–{methodMax}%.",
+    "learn.theoryTitle": "Primero la teoría",
+    "learn.compatiblePath": "Un recorrido práctico compatible con tu cocina: comprueba las condiciones de la receta.",
+    "learn.theoryOnly": "No hay una receta verificada para estas condiciones; explora la teoría.",
+    "learn.openTheory": "Explora la teoría",
+    "timeline.preheat.includesProof": "Este bloque incluye {minutes} minutos de fermentación final, ya incluidos en el tiempo total: no los sumes otra vez.",
+    "timeline.preheat.includesRest": "Este bloque incluye {minutes} minutos de reposo, ya incluidos en el tiempo total: no los sumes otra vez.",
     "auth.hydrationOff":
       "Hidratación fuera de centro (-{penalty}%)",
     "auth.wOutOfRange":
@@ -1231,7 +1259,7 @@ export const ES_LOCALE: CmsContent = {
     napoletana_canotto:
       'Cornisa 3-4cm "canotto"|Alveolado extremo|Maduraci\u00F3n 24-72h|Alta digestibilidad',
     teglia_romana:
-      "Altura 2-3cm|Hidrataci\u00F3n 80-100%|Sin amasado + pliegues|Miga nube",
+      "Altura 2-3cm|Hidratación según la versión|Sin amasado + pliegues|Miga nube",
     tonda_romana:
       "Grosor 1-2mm|Rodillo o a mano|Crujiente extrema|Harina d\u00E9bil W<210",
     pinsa_romana:
@@ -1668,8 +1696,8 @@ export const ES_LOCALE: CmsContent = {
     hintLowPLForHighHydration: "Con alta hidratación, se recomienda un P/L ≤ {pl} para la extensibilidad",
     hintHighWAllowsMoreHydration: "Con W {w}, puedes llegar hasta el {h}% de hidratación",
     hintAdaptiveLabel: "sugerido",
-    hintLimitMinLabel: "límite mín",
-    hintLimitMaxLabel: "límite máx",
+    hintLimitMinLabel: "mín. recomendado",
+    hintLimitMaxLabel: "máx. recomendado",
   },
   cooking: {
     recipeCanonicalEyebrow: "Original",
@@ -1881,7 +1909,6 @@ export const ES_LOCALE: CmsContent = {
     },
   } as any,
   preFerment: PRE_FERMENT_ES as any,
-  dietaryI18n: DIETARY_ES as any,
   troubleshootingI18n: TROUBLESHOOTING_ES as any,
   glossaryTerms: GLOSSARY_TERMS_ES as any,
 };

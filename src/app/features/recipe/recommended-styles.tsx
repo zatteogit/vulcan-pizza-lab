@@ -676,6 +676,7 @@ function StyleCard({
 
               {/* Livello e durata — stessa chip delle card di Scopri */}
               <StyleMetaChip style={style} cms={cms} recipe={rec.recipe} />
+              {rec.dietary_alternatives?.length ? <span className="recommended-card__subtitle">{cms.engineMessages["diet.variantAvailable"]}</span> : null}
             </div>
           </div>
         </motion.div>
