@@ -10341,6 +10341,15 @@
     margin-top: var(--space-1);
   }
 
+  .topping-inline__body {
+    overflow: clip;
+    overflow-clip-margin: var(--space-1);
+  }
+
+  .topping-inline__content {
+    display: flow-root;
+  }
+
   .topping-inline__prep {
     border-radius: var(--radius-xl);
     padding-inline: var(--space-3-5);
