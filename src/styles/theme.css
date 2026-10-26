@@ -4269,13 +4269,13 @@
   .home-result__match {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-6);
   }
 
   .home-result__match-primary {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2-5);
+    gap: var(--space-4);
   }
 
   .home-result__controls {
@@ -9147,18 +9147,19 @@
     container: recipe-match / inline-size;
     width: 100%;
     min-width: 0;
-    padding: var(--space-4);
+    padding: var(--space-5);
     border: var(--border-width-thin) solid var(--container-border-subtle);
     border-radius: var(--radius-xl);
-    background: var(--container-bg-low);
+    background: var(--surface-bright);
+    box-shadow: var(--shadow-sm);
   }
 
   .match-card__main {
     display: grid;
     grid-template-columns: max-content minmax(0, 1fr);
-    column-gap: var(--space-3);
-    row-gap: var(--space-3);
-    align-items: center;
+    column-gap: var(--space-5);
+    row-gap: var(--space-5);
+    align-items: start;
   }
 
   .match-card__summary {
@@ -9166,10 +9167,8 @@
     grid-row: 2;
     display: flex;
     flex-direction: column;
-    gap: var(--space-1-5);
+    gap: var(--space-3);
     min-width: 0;
-    padding-inline-start: var(--space-3);
-    border-inline-start: var(--border-width-thin) solid var(--container-border);
   }
 
   .match-card__copy,
@@ -9226,14 +9225,15 @@
     flex-shrink: 0;
     grid-column: 1;
     grid-row: 2;
-    min-height: var(--space-11);
+    min-width: var(--space-20);
+    min-height: var(--space-24);
     align-self: start;
-    padding-block: 0;
-    padding-inline: 0;
+    padding-block: var(--space-3);
+    padding-inline: var(--space-2);
     cursor: pointer;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-lg);
     border: none;
-    background: transparent;
+    background: color-mix(in srgb, var(--primary) 7%, var(--surface-bright));
     color: var(--text-default);
   }
 
@@ -9331,6 +9331,12 @@
   }
 
   .match-notice--muted {
+    color: var(--text-muted);
+    font-weight: var(--weight-medium);
+  }
+
+  .match-notice--limit {
+    margin: 0;
     color: var(--text-muted);
     font-weight: var(--weight-medium);
   }
@@ -9702,11 +9708,11 @@
     min-width: 0;
     margin-top: 0;
     display: flex;
-    padding-top: var(--space-3);
+    padding-top: var(--space-4);
     border-top: var(--border-width-thin) solid var(--container-border-subtle);
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-2) var(--space-3);
   }
 
   .match-action-cta,
@@ -9750,6 +9756,11 @@
   .match-action-text--personalize {
     color: var(--primary);
     border-color: var(--container-border);
+    background: var(--container-bg-low);
+  }
+
+  .match-action-text--create {
+    color: var(--text-muted);
   }
 
   .match-action-text--save {
@@ -9766,24 +9777,25 @@
   }
 
   .match-actions .match-action-cta { flex-basis: 100%; order: -1; }
-  .match-actions .match-action-text { flex: 1 1 var(--space-28); min-width: 0; }
-  .match-actions .match-action-text--save { flex-basis: calc(var(--space-28) + var(--space-8)); }
-  .match-actions .match-action-text--personalize { flex-basis: auto; flex-shrink: 0; white-space: nowrap; }
+  .match-actions .match-action-text { flex: 0 1 auto; min-width: 0; }
+  .match-actions .match-action-text--save { margin-inline-start: auto; }
 
   /* The recipe shoulder can be narrow on a large screen: use its actual
      space, with the stacked layout as the fallback for older browsers. */
   @container recipe-match (min-width: 640px) {
-    .match-card__main { grid-template-columns: max-content minmax(0, 1fr) auto; column-gap: var(--space-5); }
-    .match-card__summary { padding-inline-start: var(--space-5); }
-    .match-actions {
-      grid-column: 3;
-      grid-row: 2;
-      max-width: var(--space-64);
-      padding-top: 0;
-      border-top: 0;
-    }
+    .match-card__main { column-gap: var(--space-6); }
+    .match-score-group { min-width: var(--space-28); padding: var(--space-4); }
     .match-actions .match-action-cta { flex-basis: auto; order: 0; }
-    .match-actions .match-action-text { flex: 0 1 auto; }
+  }
+
+  @container recipe-match (max-width: 480px) {
+    .match-card__main { column-gap: var(--space-4); row-gap: var(--space-4); }
+    .match-card__summary { display: contents; }
+    .match-card__copy { grid-column: 2; grid-row: 2; align-self: center; }
+    .match-card__context { grid-column: 1 / -1; grid-row: 3; }
+    .match-actions { grid-row: 4; }
+    .match-actions .match-action-text { flex: 1 1 auto; }
+    .match-actions .match-action-text--save { flex-basis: 100%; margin-inline-start: 0; }
   }
 
   /* ═══ ONDATA 3 — COMPONENT: ingredients-section (PREFIX: ingredients) ═══ */
@@ -11536,6 +11548,43 @@
     color: var(--text-muted);
   }
 
+  .match-card .recipe-verdict--embedded {
+    gap: var(--space-4);
+    margin: var(--space-3) 0 0;
+  }
+
+  .match-card .recipe-verdict__alternatives {
+    display: grid;
+    gap: var(--space-2);
+    padding-top: var(--space-4);
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
+  }
+
+  .match-card .recipe-verdict__action {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .match-card .recipe-verdict__links {
+    gap: var(--space-2);
+  }
+
+  .match-card .recipe-verdict__link {
+    gap: var(--space-2);
+    padding-inline: var(--space-3);
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--cta) 8%, var(--surface-bright));
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+  }
+
+  .recipe-verdict__link svg { flex: none; }
+
+  .match-card .recipe-verdict__link:hover {
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-75);
+  }
+
   .recipe-output-feedback-wrap {
     margin-top: var(--space-6);
   }
@@ -12335,6 +12384,22 @@
     margin-inline: auto;
     padding-top: var(--space-6);
     padding-bottom: var(--space-28);
+  }
+
+  .recipe-view-match-layout {
+    display: grid;
+    gap: var(--space-6);
+    min-width: 0;
+  }
+
+  .recipe-view-match-primary {
+    display: grid;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+
+  .recipe-view-match-primary .stat-strip {
+    padding-block: 0;
   }
 
   @media (min-width: 640px) {

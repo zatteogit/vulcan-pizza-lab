@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "react-router";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, ChevronRight } from "lucide-react";
 import {
   feasibleAlternativeStyles,
   type GeneratedRecipe,
@@ -116,6 +116,7 @@ export function RecipeVerdictNotice({
               <li key={style.id}>
                 <Link to={`/recipe/${style.id}`} className="type-body recipe-verdict__link">
                   {style.name}
+                  <ChevronRight size={14} aria-hidden="true" />
                 </Link>
               </li>
             ))}

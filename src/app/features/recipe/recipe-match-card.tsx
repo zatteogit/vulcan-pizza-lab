@@ -5,7 +5,7 @@ import { RecipeChanges } from "./recipe-changes";
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
-import { Bookmark, BookmarkCheck, ChevronDown, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
+import { ArrowUpRight, Bookmark, BookmarkCheck, ChevronDown, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
 import { SCORE_DIMENSIONS, type GeneratedRecipe, type RecipeScores, type ScoreDimensionKey, type UserConstraints } from "../../domain/pizza-engine";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
@@ -393,12 +393,12 @@ export function RecipeMatchCard({
           </div>
           <div className="match-card__context">
             {scores.global_calculation?.limited_by === "authenticity" && (
-              <p className="match-notice match-notice--warn">
+              <p className="match-notice match-notice--limit">
                 {t(cms.ui.scoreLimitedAuthenticity, { score: fmt.number(scores.authenticity) })}
               </p>
             )}
             {scores.global_calculation?.limited_by === "feasibility" && (
-              <p className="match-notice match-notice--warn">{cms.ui.scoreLimitedFeasibility}</p>
+              <p className="match-notice match-notice--limit">{cms.ui.scoreLimitedFeasibility}</p>
             )}
             {notFeasible && verdictRecipe && verdictConstraints && (
               <RecipeVerdictNotice
@@ -406,6 +406,7 @@ export function RecipeMatchCard({
                 recipe={verdictRecipe}
                 constraints={verdictConstraints}
                 mealDeadline={mealDeadline}
+                showRecipeBelow={false}
               />
             )}
             {!notFeasible && verdictRecipe && <RecipeConditionChips recipe={verdictRecipe} compact />}
@@ -431,9 +432,6 @@ export function RecipeMatchCard({
           </div>
         </div>
         <div className="match-actions">
-          {onCreate && (
-            <button type="button" className="match-action-text match-action-text--personalize" onClick={onCreate}><SlidersHorizontal size={14} aria-hidden="true" />{cms.ui.recipeOpenCreate}</button>
-          )}
           {onOptimize && (
             <motion.button
               type="button"
@@ -467,6 +465,11 @@ export function RecipeMatchCard({
               <SlidersHorizontal size={14} aria-hidden="true" />
               {cms.ui.personalize ?? uiMessage("features.recipe.recipe-match-card.personalizza-0beadff3")}
             </motion.button>
+          )}
+          {onCreate && (
+            <button type="button" className="match-action-text match-action-text--create" onClick={onCreate}>
+              {cms.ui.recipeOpenCreate}<ArrowUpRight size={14} aria-hidden="true" />
+            </button>
           )}
           <AnimatePresence initial={false}>
             {showSaveAction && (
