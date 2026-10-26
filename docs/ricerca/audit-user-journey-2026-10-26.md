@@ -51,6 +51,10 @@ reimportazione su un secondo dispositivo non sono coperti da queste evidenze.
 
 ## Confine fra browser e MCP
 
+Questa sezione documenta il limite osservato nella PR #88. È superato
+dall'estensione MCP 1.1.0: gli input aggiunti e le regole correnti sono in
+`docs/agenti-mcp.md`.
+
 Il motore è condiviso; i parametri esposti non sono identici. Il MCP attuale non
 accetta dispensa, esclusioni, marca/W/P-L della farina, condimenti, geometria
 della teglia né firme/preset. Una ricetta MCP di default non equivale a una

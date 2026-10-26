@@ -48,6 +48,9 @@ function callTool(params: Record<string, unknown> | undefined) {
   if (!tool) return null;
   const args = (params?.arguments ?? {}) as Record<string, unknown>;
   try {
+    if (!args || typeof args !== "object" || Array.isArray(args)) throw new ToolInputError("arguments must be an object");
+    const properties = tool.inputSchema.properties as Record<string, unknown>;
+    for (const key of Object.keys(args)) if (!Object.prototype.hasOwnProperty.call(properties,key)) throw new ToolInputError(`unknown input "${key}" for ${name}; call tools/list for the supported schema`);
     const { summary, data } = tool.run(args);
     return { content: [{ type: "text", text: summary }], structuredContent: data, isError: false };
   } catch (e) {
@@ -90,7 +93,7 @@ export function handleMcpMessage(message: unknown): JsonRpcResponse | null {
             name,
             title,
             description,
-            inputSchema,
+            inputSchema: { ...inputSchema, additionalProperties: false },
             annotations: { readOnlyHint: true, openWorldHint: false },
           })),
         },

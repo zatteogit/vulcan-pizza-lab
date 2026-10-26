@@ -21,6 +21,7 @@ del glossario, non legge né scrive dati degli utenti.
 | `generate_recipe` | Ricetta completa per stile e cucina | grammi e percentuali del panettiere, pre-fermento con dosi, temperatura e impasto finale, forno, passi con durata, esito (`ok`, `warnings`, `not_feasible` con i motivi) |
 | `glossary` | Definizioni dei termini, in 7 lingue | nome, definizione, range, perché conta |
 | `get_guide` | Regole d'uso per qualsiasi agente | guida completa: cucina, esiti, pre-fermento, cotture, limiti, formato |
+| `list_pantry_items` | Cerca marche di farine, ingredienti e lieviti | ID stabili, dati dichiarati/stimati, ingredienti da usare nella dispensa o nelle esclusioni |
 
 Ogni risposta ha un riassunto leggibile (`content`) e i dati strutturati
 (`structuredContent`), che un client può mostrare come scheda o tabella. Gli
@@ -33,12 +34,46 @@ se c'è un pasto a orario fisso), `skill_level`, `dough_balls` e
 l'attrezzatura (`has_baking_pan`, `has_mixer`, `has_pizza_stone`,
 `has_pizza_steel`).
 
-Il motore è condiviso con l'app, ma non tutti gli input dell'interfaccia sono
-esposti dal MCP: dispensa, esclusioni, marche/dati delle farine, condimenti,
-geometria della teglia e firme/preset non sono parametri di questi strumenti.
-Il confronto numerico richiede gli stessi parametri effettivi; una versione
-su misura o una firma del browser non equivale al default di `generate_recipe`.
-I dati non comunicati restano da verificare, non provano una mancanza.
+Da MCP 1.1.0, consigli e generazione accettano anche gli input del configuratore:
+
+- Dispensa: `pantry_flours`, `pantry_yeasts`, `pantry_ingredients`, inventari
+  `pantry_inventory_complete`/`pantry_ingredients_complete`, esclusioni
+  `excluded_flours`/`excluded_yeasts`/`excluded_ingredients`, disponibilità ad
+  acquistare `allow_flour_purchase` e `allow_equipment_purchase`.
+- Farine: ID di marca ricercabili con `list_pantry_items`; dati di etichetta
+  `pantry_flour_details: {ID: {name, producer, w, pl, protein_pct}}`. Le proteine
+  non vengono convertite in W. Una farina personalizzata può usare un ID `custom:`.
+- Attrezzatura: `equipment_inventory_complete`, `mixer_type`, `surfaces`,
+  `oven_heat_profile`, `oven_capacity_temp_c`, `kitchen_temp_c`, `yeast_speed_factor`.
+- Ricetta: `flour_w`, `flour_pl`, `salt_pct`, `flour_blend` (quote per 100%),
+  `topping_id`, `pan: {shape, length_cm, width_cm, diameter_cm, thickness}`,
+  `pre_ferment_flour_pct`, oltre agli override già presenti. Il peso esplicito
+  `ball_weight_g` prevale sulla geometria. Un'idratazione esplicita è finale,
+  salvo `compensate_hydration:true` per riprodurre una base compensata.
+- Preset/firme: `version_id` oppure `interpretation_id`, ottenuti da `get_style`.
+  `recipe_mode:"canonical"` usa la stessa base originale del browser;
+  `"adapted"` usa la proposta Crea. Senza modo né preset rimane il comportamento
+  storico (`"default"`). Gli override espliciti vengono applicati dopo il preset.
+
+Le modalità `canonical` e `adapted` condividono anche i pesi del punteggio
+predefiniti dell'interfaccia. `default` conserva quelli storici del motore.
+`score_weights` accetta tutti e cinque i pesi espliciti per riprodurre un CMS
+personalizzato; `effective_options.scoreWeights` rende la scelta ispezionabile.
+
+Il confronto numerico richiede gli stessi parametri effettivi e la stessa
+modalità. `available_hours:0, meal_deadline:false` equivale a nessuna preferenza.
+Gli input errati o sconosciuti sono respinti: non si ignorano le esclusioni
+scritte con una chiave errata. Inventario omesso/parziale, mancanza confermata
+e rifiuto sono distinti. Un permesso di acquisto non annulla mai un'esclusione.
+In presenza di superfici o impastatrice dettagliate, i flag legacy sono derivati
+come nel browser.
+
+`generate_recipe` restituisce anche vincoli effettivi, selezione, opzioni,
+P/L, mix, condizioni, adattamenti, dosi del condimento per unità/totali e avvisi
+dietetici. Un avviso dietetico critico non va presentato come compatibilità.
+`recommend_styles` può includere i bloccati (`include_not_feasible:true`) e la
+ricetta valutata (`include_recipe:true`). Per un preset/firma serve anche
+`style_id`, poiché gli ID appartengono a uno stile specifico.
 
 Nella ricetta `style.name` è il nome eseguibile e `style.reference_name` quello
 del catalogo. Per Napoletana, `reference.stg_departures` elenca gli scostamenti

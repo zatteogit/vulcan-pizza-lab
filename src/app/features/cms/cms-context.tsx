@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from "react";
+import { DEFAULT_UI_SCORE_WEIGHTS } from "../../domain/recipe-score";
 import {
   LOCALE_BCP47,
   LOCALE_BUNDLE_REV,
@@ -1681,27 +1682,27 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   scoreDimensions: {
     authenticity: {
-      label: "Autenticità", short: "Aut", weight: 0.30,
+      label: "Autenticità", short: "Aut", weight: DEFAULT_UI_SCORE_WEIGHTS.authenticity,
       explain:
         "Stima di fedeltà al riferimento disponibile per questo stile: considera impasto, procedimento e forno. Se l’autenticità è bassa, limita il punteggio globale anche quando gli altri assi sono alti. Non è una certificazione.",
     },
     feasibility: {
-      label: "Facilità", short: "Fat", weight: 0.25,
+      label: "Facilità", short: "Fat", weight: DEFAULT_UI_SCORE_WEIGHTS.feasibility,
       explain:
         "Indicatore di facilità di esecuzione: considera forno, farina ed esperienza. Non decide se la ricetta è fattibile: quello dipende dai requisiti del metodo e dagli adattamenti dichiarati.",
     },
     digestibility: {
-      label: "Maturazione stimata", short: "Mat", weight: 0.20,
+      label: "Maturazione stimata", short: "Mat", weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
         "Indice del modello ricavato da tempi, temperature, lievito e pre-fermento. Descrive la maturazione stimata dell’impasto, non la risposta digestiva personale.",
     },
     sustainability: {
-      label: "Sostenibilità stimata", short: "Sos", weight: 0.15,
+      label: "Sostenibilità stimata", short: "Sos", weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
       explain:
         "Stima relativa basata su cottura, regime di fermentazione e ingredienti. Non è una misura del consumo reale né dell’impronta di carbonio.",
     },
     experimentation: {
-      label: "Sperimentazione", short: "Spe", weight: 0.10,
+      label: "Sperimentazione", short: "Spe", weight: DEFAULT_UI_SCORE_WEIGHTS.experimentation,
       explain:
         "Quanto cambiano impasto, procedimento e cottura rispetto al riferimento. Un valore alto indica più sperimentazione, non una riuscita migliore. Il profilo di alcuni stili è ancora da verificare. Il contributo al globale è 100 meno questo valore.",
     },
