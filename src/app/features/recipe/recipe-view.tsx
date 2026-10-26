@@ -12,7 +12,8 @@ import { recipeDisplayName } from "../../domain/recipe-reference";
  * Il selettore tab (RecipeSectionTabs) qui è finalmente montato: il layer
  * PizzaNerd vive dentro Ricetta/Procedimento quando abilitato dal Profilo. */
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { localizeToppingRecipe, toppingConcept } from "../../data/topping-i18n/localize";
 import { Link } from "react-router";
 import {
@@ -166,6 +167,19 @@ export function RecipeView({
     );
   };
 
+  const [actionTarget, setActionTarget] = useState<HTMLElement | null>(null);
+  useLayoutEffect(() => {
+    setActionTarget(document.getElementById("recipe-floating-actions"));
+  }, []);
+  const favoriteAction = onToggleFavorite && (
+    <IconButton type="button"
+      className={`recipe-view-favorite${!showStickyHeader && !actionTarget ? " recipe-view-favorite--floating" : ""}`}
+      aria-label={favorite ? uiMessage("features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb") : uiMessage("features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86")}
+      aria-pressed={favorite} onClick={handleFavoriteClick} size="lg" variant="bare">
+      <Bookmark size={20} fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
+    </IconButton>
+  );
+
   /* Parallax hero (identico alla scheda Scopri originale). Con
      prefers-reduced-motion il movimento scroll-driven si spegne (resta il
      solo scrim, che è una dissolvenza, non un moto). */
@@ -313,7 +327,7 @@ export function RecipeView({
               </button>
             )}
             <div className="recipe-view-toolbar__spacer" />
-            <div id="recipe-header-actions" className="recipe-view-toolbar__actions" />
+            <div id="recipe-header-actions" className="recipe-view-toolbar__actions">{favoriteAction}</div>
           </div>
         </header>
       ) : (
@@ -350,6 +364,8 @@ export function RecipeView({
         </motion.div>
       )}
 
+      {!showStickyHeader && favoriteAction && (actionTarget ? createPortal(favoriteAction, actionTarget) : favoriteAction)}
+
       {/* ── Hero photo ── */}
       <motion.div
         data-region="hero"
@@ -377,19 +393,6 @@ export function RecipeView({
             />
             <div className="recipe-view-hero__gradient" />
           </div>
-          {onToggleFavorite && (
-            <IconButton
-              type="button"
-              className="recipe-view-favorite"
-              aria-label={favorite ? uiMessage("features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb") : uiMessage("features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86")}
-              aria-pressed={favorite}
-              onClick={handleFavoriteClick}
-              size="lg"
-              variant="bare"
-            >
-              <Bookmark size={20} fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
-            </IconButton>
-          )}
         </div>
       </motion.div>
 

@@ -17,6 +17,7 @@ export function ActiveCookWidget({
   hasProfileButton = false,
   compact = false,
   hidden = false,
+  inline = false,
 }: {
   canStartRecipe?: boolean;
   hasProfileButton?: boolean;
@@ -24,6 +25,8 @@ export function ActiveCookWidget({
   /** Chrome liquida ritirata (scroll verso il basso). Il widget idle si ritira
    *  con lei; una pizzata ATTIVA resta sempre visibile (è un timer live). */
   hidden?: boolean;
+  /** Participate in the shell's shared action row instead of fixed positioning. */
+  inline?: boolean;
 }) {
   const { session, overlayOpen, openOverlay } = useCookSession();
   const { cms } = useCms();
@@ -52,7 +55,7 @@ export function ActiveCookWidget({
   const actionHeight = compact ? 40 : 44;
   const iconBox = compact ? 24 : 28;
 
-  const rightVal = hasProfileButton ? (compact ? 64 : 68) : 16;
+  const rightVal = inline ? 0 : hasProfileButton ? (compact ? 64 : 68) : 16;
 
   const handleClick = () => {
     if (session) {
@@ -84,6 +87,7 @@ export function ActiveCookWidget({
         onClick={handleClick}
         className={[
           "cook-widget",
+          inline && "cook-widget--inline",
           active && "cook-widget--active",
           compact && "cook-widget--compact",
           due && "cook-widget--due",

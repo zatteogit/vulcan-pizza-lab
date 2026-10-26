@@ -12012,13 +12012,9 @@
     background: linear-gradient(to top, var(--overlay-backdrop) 0%, transparent 50%, color-mix(in srgb, var(--overlay-backdrop) 67%, transparent) 100%);
   }
 
-  /* Accanto all'indietro, non sotto «Inizia» (larghezza variabile per
-     lingua e stato della pizzata): audit n. 25. */
+  /* Bookmark belongs to the right action row, independently of hero scroll. */
   .recipe-view-favorite {
-    position: absolute;
-    z-index: 4;
-    top: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0)));
-    left: calc(var(--space-4) + var(--space-11) + var(--space-2));
+    flex-shrink: 0;
     color: var(--overlay-text);
     border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 34%, transparent);
     background: color-mix(in srgb, var(--overlay-backdrop) 62%, transparent);
@@ -12026,6 +12022,13 @@
     backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
     box-shadow: var(--shadow-md);
     transition: transform var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .recipe-view-favorite--floating {
+    position: fixed;
+    z-index: var(--z-widget);
+    top: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0)));
+    right: var(--space-4);
   }
 
   .ds-iconbtn.recipe-view-favorite:hover {
@@ -16850,6 +16853,28 @@
 
   /* ═══ COMPONENT: active-cook-widget (cook-widget) ═══ */
 
+  .cook-actions {
+    position: fixed;
+    z-index: var(--z-widget);
+    right: var(--space-4);
+    top: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0)));
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    max-width: calc(var(--dimension-viewport-width-full) - var(--space-21));
+    pointer-events: none;
+  }
+
+  .cook-actions[hidden] { display: none; }
+
+  .cook-actions__recipe {
+    display: flex;
+    align-items: center;
+    pointer-events: auto;
+  }
+
+  .cook-actions__recipe:empty { display: none; }
+
   .cook-widget {
     position: fixed;
     z-index: var(--z-widget);
@@ -16882,6 +16907,13 @@
     gap: var(--space-2);
     padding-left: var(--space-3);
     padding-right: var(--space-3);
+  }
+
+  .cook-widget--inline {
+    position: relative;
+    top: auto;
+    min-width: 0;
+    flex-shrink: 1;
   }
 
   .cook-widget--with-profile {
