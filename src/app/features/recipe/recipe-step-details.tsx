@@ -104,8 +104,8 @@ export function StepDetails({
         >
           <ChevronRight size={16} />
         </motion.span>
-        {open ? cms.cooking.stepDetailsHide : cms.cooking.stepDetailsShow}
-        {!open && tips.length > 0 && (
+        {cms.cooking.stepDetailsShow}
+        {tips.length > 0 && (
           <span className="step-details__tips-count">
             · {t(tips.length === 1 ? cms.cooking.tipsCountOne : cms.cooking.tipsCountMany, { n: tips.length })}
           </span>
