@@ -141,6 +141,12 @@ export function roundToQuarter(date: Date): Date {
   return d;
 }
 
+/** Precisione del riepilogo: le stime biologiche si leggono ai quarti d'ora.
+ * È solo presentazione: gli istanti del programma e i target scelti restano precisi. */
+export function readyTimeForDisplay(date: Date, approximate: boolean): Date {
+  return approximate ? new Date(Math.round(date.getTime() / 900_000) * 900_000) : date;
+}
+
 /** Una scadenza si calcola a ritroso senza arrotondare in avanti l'inizio. */
 export function startForDeadline(meal: Date, totalMinutes: number, now = new Date()): Date {
   return new Date(Math.max(now.getTime(), meal.getTime() - totalMinutes * 60_000));

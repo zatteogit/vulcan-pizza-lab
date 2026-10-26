@@ -39,6 +39,7 @@ export function PrintSheet({
   topping,
   unitLabel,
   readyAt,
+  readyApproximate,
 }: {
   recipe: GeneratedRecipe;
   cms: CmsContent;
@@ -49,6 +50,7 @@ export function PrintSheet({
   topping?: ToppingRecipe;
   unitLabel: string;
   readyAt: Date;
+  readyApproximate: boolean;
 }) {
   const ui = cms.ui;
   const pct = (g: number) =>
@@ -89,7 +91,7 @@ export function PrintSheet({
           {ui.statOven} {fmt.celsius(recipe.oven_temp_c)}
         </p>
         <p className="print-sheet__meta">
-          {uiMessage("features.recipe.print-sheet.readyAt", [time(readyAt.getTime())])} ·{" "}
+          {uiMessage("features.recipe.print-sheet.readyAt", [`${readyApproximate ? cms.cooking.approxPrefix : ""}${time(readyAt.getTime())}`])} ·{" "}
           {uiMessage("features.recipe.print-sheet.printedOn", [new Date().toLocaleDateString(bcp47)])}
         </p>
       </header>

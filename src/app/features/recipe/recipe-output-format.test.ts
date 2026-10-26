@@ -1,5 +1,29 @@
 import { describe, expect, it } from "vitest";
-import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, yeastPracticalHint } from "./recipe-output-format";
+import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint } from "./recipe-output-format";
+
+describe("fine stimata: precisione del riepilogo", () => {
+  it("mostra 12:31 come circa 12:30 senza cambiare l'istante del programma", () => {
+    const exact = new Date(2026, 9, 26, 12, 31, 49);
+    const original = exact.getTime();
+    const displayed = readyTimeForDisplay(exact, true);
+    expect([displayed.getHours(), displayed.getMinutes(), displayed.getSeconds()]).toEqual([12, 30, 0]);
+    expect(exact.getTime()).toBe(original);
+  });
+
+  it("aggiorna anche il giorno quando la stima arrotonda oltre mezzanotte", () => {
+    const exact = new Date(2026, 9, 26, 23, 59);
+    const displayed = readyTimeForDisplay(exact, true);
+    expect([displayed.getHours(), displayed.getMinutes()]).toEqual([0, 0]);
+    expect(dayOffset(exact, displayed)).toBe(1);
+    expect(readyTimeForDisplay(new Date(2026, 9, 26, 12, 38), true).getMinutes()).toBe(45);
+  });
+
+  it("mantiene i minuti scelti dall'utente e gli orari senza fasi flessibili", () => {
+    const target = new Date(2026, 9, 26, 12, 31);
+    expect(readyTimeForDisplay(target, false)).toBe(target);
+    expect(addMinutes(startForDeadline(target, 368, new Date(2026, 9, 26, 0)), 368)).toEqual(target);
+  });
+});
 describe("defaultMealStart (audit totale n. 2)", () => {
   it("ancora la fine a pranzo o cena, mai di notte", () => {
     const now = new Date(2026, 9, 24, 14, 30);

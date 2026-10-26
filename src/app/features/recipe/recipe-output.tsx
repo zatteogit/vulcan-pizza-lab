@@ -10,7 +10,7 @@ import { ProcedureHeroControls } from "./procedure-hero";
 import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
 import { addMinutes, countNightActives, localizeStep, stepQuantities, optimizeComfort,
-  defaultMealStart, startForDeadline, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
+  defaultMealStart, startForDeadline, readyTimeForDisplay, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { PrintSheet, type PrintSections } from "./print-sheet";
@@ -283,6 +283,9 @@ export function RecipeOutput({
 
   const [editingTime, setEditingTime] = useState(false);
   const [editingEndTime, setEditingEndTime] = useState(false);
+  const [preciseEndTime, setPreciseEndTime] = useState(
+    () => Boolean(mealTargetAt || (selectedTimeSlotId && selectedTimeSlotId !== "no_preference" && constraints.available_hours > 0)),
+  );
 
   const showNerdToggle = nerdAvailable && !!onNerdModeChange;
   const isNerd = showNerdToggle && !!nerdMode;
@@ -305,6 +308,7 @@ export function RecipeOutput({
       prevMealTarget.current = mealTargetAt;
       prevTimelineKey.current = timelineKey;
       setStretch({});
+      setPreciseEndTime(Boolean(mealTargetAt));
       if (mealTargetAt) setStartTime(startForDeadline(new Date(mealTargetAt), totalDurationMinStatic));
     }
   }, [timelineKey, mealTargetAt, totalDurationMinStatic]);
@@ -502,6 +506,7 @@ export function RecipeOutput({
     () => recipe.timeline.some((s) => FLEXIBLE_STEP_IDS.has(s.id)),
     [recipe.timeline],
   );
+  const endDisplayTime = readyTimeForDisplay(endTime, hasFlexiblePhases && !preciseEndTime);
 
   /* Total duration in minutes for back-calculating start from end (stretch incluso) */
   const totalDurationMin = React.useMemo(
@@ -533,6 +538,7 @@ export function RecipeOutput({
   function handleTimeInput(
     e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>,
   ) {
+    if (e.type === "blur") { setEditingTime(false); return; }
     const value = e.target.value;
     if (!value) return;
     const d = value.includes("T") ? new Date(value) : (() => {
@@ -541,13 +547,16 @@ export function RecipeOutput({
       if (!isNaN(h) && !isNaN(m)) next.setHours(h, m, 0, 0);
       return next;
     })();
-    if (!isNaN(d.getTime())) setStartTime(d);
-    if (e.type === "blur") setEditingTime(false);
+    if (!isNaN(d.getTime())) {
+      setPreciseEndTime(false);
+      setStartTime(d);
+    }
   }
 
   function handleEndTimeInput(
     e: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>,
   ) {
+    if (e.type === "blur") { setEditingEndTime(false); return; }
     const value = e.target.value;
     if (!value) return;
     const desired = value.includes("T") ? new Date(value) : (() => {
@@ -570,8 +579,8 @@ export function RecipeOutput({
         newStart = addMinutes(desired, -totalDurationMin);
       }
       setStartTime(newStart);
+      setPreciseEndTime(true);
     }
-    if (e.type === "blur") setEditingEndTime(false);
   }
 
   const updateBalls = (n: number) => {
@@ -666,7 +675,8 @@ export function RecipeOutput({
         steps={cookingSteps}
         topping={activeTopping}
         unitLabel={getServingUnitLabel(cms, servingUnit, recipe.dough_balls, true)}
-        readyAt={endTime}
+        readyAt={endDisplayTime}
+        readyApproximate={hasFlexiblePhases}
       />
 
       {/* ── Conferma: nuova pizzata sovrascrive quella in corso ── */}
@@ -742,9 +752,9 @@ export function RecipeOutput({
             {t(cms.cooking.ovenSummary, { temp: fmt.celsius(constraints.oven_max_temp_c) })} · {recipe.dough_balls}{" "}
             {getServingUnitLabel(cms, servingUnit, recipe.dough_balls, true)}
             {" · "}
-            <time dateTime={endTime.toISOString()}>
+            <time dateTime={endDisplayTime.toISOString()}>
               {t(cms.cooking.readyAt, {
-                eta: `${hasFlexiblePhases ? "~" : ""}${endTime.toLocaleTimeString(bcp47, { hour: "2-digit", minute: "2-digit" })}`,
+                eta: `${hasFlexiblePhases ? cms.cooking.approxPrefix : ""}${fmt.clockTime(endDisplayTime)}`,
               })}
             </time>
           </span>
@@ -884,6 +894,8 @@ export function RecipeOutput({
           startTime={startTime}
           setStartTime={setStartTime}
           endTime={endTime}
+          endDisplayTime={endDisplayTime}
+          setPreciseEndTime={setPreciseEndTime}
           totalDurationMin={totalDurationMin}
           hasFlexiblePhases={hasFlexiblePhases}
           editingTime={editingTime}
