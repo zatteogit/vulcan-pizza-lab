@@ -11,6 +11,13 @@ export function pantryIngredientId(name: string): string {
   return normalized;
 }
 
+/** Only catalog-declared composition participates: never parse preparation
+ * notes or infer the recipe of an unknown sauce. Components have identities,
+ * not invented fractions of the compound's amount. */
+export function pantryIngredientReferences(name: string, components: readonly string[] = []): { id: string; name: string }[] {
+  return [...new Map([name, ...components].map(part => [pantryIngredientId(part), {id:pantryIngredientId(part),name:part}])).values()];
+}
+
 export interface PantryFlourDetails {
   name?: string;
   producer?: string;

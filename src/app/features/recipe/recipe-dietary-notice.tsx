@@ -48,6 +48,7 @@ export function RecipeDietaryAlternatives({ recipe, constraints, onSelect }: {
           <p className="home-dietary-warning__tip">{text("diet.variant", "Versione di {recipe} senza {ingredients}", {recipe:recipeDisplayName(recipe, constraints.oven_type), ingredients:a.omitted_conflicts})}</p>
           <p className="home-dietary-warning__tip">{text("diet.variantChanges", "Rimossi: {ingredients}.", {ingredients:a.removed})}</p>
           {a.added.length > 0 && <p className="home-dietary-warning__tip">{text("diet.variantAdded", "Ingredienti aggiunti: {ingredients}.", {ingredients:a.added})}</p>}
+          {a.recipe.method_changes?.map(note => <p key={note.key} className="home-dietary-warning__tip">{engineMsgTexts([note],cms,bcp47)[0]}</p>)}
           <CtaButton type="button" variant="secondary" className="home-dietary-variant__action" onClick={() => onSelect(a.topping_id)}>{text("diet.useVariant", "Usa questa versione")}</CtaButton>
         </div>
       </div>;

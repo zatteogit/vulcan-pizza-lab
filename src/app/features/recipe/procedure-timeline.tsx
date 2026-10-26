@@ -33,7 +33,7 @@ interface ProcedureTimelineProps {
   recipe: GeneratedRecipe;
   isNerd: boolean;
   compensations: Compensation[];
-  startTime: Date;
+  calendarReference: Date;
   stepTimes: { start: Date; end: Date }[];
   stretch: Record<number, number>;
   effDuration: (i: number) => number;
@@ -48,7 +48,7 @@ export function ProcedureTimeline({
   recipe,
   isNerd,
   compensations,
-  startTime,
+  calendarReference,
   stepTimes,
   stretch,
   effDuration,
@@ -199,7 +199,7 @@ export function ProcedureTimeline({
                         }`}
                       >
                         {times
-                          ? displayStepTime(step.id, times.start, startTime, bcp47, cms.cooking)
+                          ? displayStepTime(step.id, times.start, calendarReference, bcp47, cms.cooking)
                           : step.timing_label}
                       </span>
                     </div>

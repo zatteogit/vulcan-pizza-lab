@@ -41,7 +41,7 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  12 → azione «Apri in Crea» distinta dalla personalizzazione rapida.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 13;
+export const LOCALE_BUNDLE_REV = 14;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

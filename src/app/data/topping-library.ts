@@ -1,3 +1,4 @@
+import { METHOD_MESSAGES_IT } from "./method-messages";
 /* ═══ TOPPING LIBRARY — Sprint 11 Fase 2 + Sprint 12 Fase 2 ═══
  *
  * REGOLA DI STRATIFICAZIONE:
@@ -27,7 +28,7 @@
  * latte campano (boscaiola_napoletana); sulla Romana usa champignon freschi pre-
  * cotti + solo fior di latte (boscaiola_romana). Stesso concetto, ricetta diversa.
  */
-import type { FamilyId, LayoutType, PizzaStyle } from "../domain/pizza-engine";
+import type { EngineMsg, FamilyId, LayoutSpec, LayoutType, PizzaStyle } from "../domain/pizza-engine";
 import thumbnailMargherita from "../../assets/toppings/topping_margherita.webp";
 import thumbnailMarinara from "../../assets/toppings/topping_marinara.webp";
 import thumbnailBianca from "../../assets/toppings/topping_bianca.webp";
@@ -111,6 +112,8 @@ import thumbnailVariantReccoPizzata from "../../assets/toppings/variants/recco_p
 export type IngredientSection = "ripieno" | "base" | "crosta" | "superficie" | "salamoia" | "finitura";
 
 export interface ToppingIngredient {
+  /** Explicit catalog composition IDs; amounts remain on the whole preparation. */
+  components?: string[];
   name: string;
   /** Quantità per UNA unità servita (panetto/teglia). Per stile multi-piece moltiplicare per dough_balls. */
   amount: { value: number; unit: "g" | "ml" | "pcs" };
@@ -748,6 +751,9 @@ export const TOPPING_CONCEPTS: Record<string, ToppingConcept> = {
 /* ═══ ToppingRecipe — la realizzazione concreta ═══ */
 
 export interface ToppingRecipe {
+  /** A real preparation variant, not merely a topping omission. */
+  layout_override?: LayoutSpec;
+  method_note?: EngineMsg;
   id: string;
   /** Link al concetto culturale di alto livello. */
   concept_ref: string;
@@ -816,7 +822,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     authenticity_by_style: { napoletana_canotto: "natural", pizza_al_metro: "natural" },
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
-      { name: "Pelati San Marzano DOP schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
+      { name: "Pelati San Marzano DOP schiacciati a mano (pomodoro, succo di pomodoro)",  components: ["pomodoro", "succo di pomodoro"],amount: { value: 80, unit: "g" } },
       { name: "Sale fino sulla salsa", amount: { value: 1, unit: "g" } },
       { name: "Fior di latte campano (o mozzarella di bufala)", amount: { value: 90, unit: "g" } },
       { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, notes: "foglie intere" },
@@ -842,7 +848,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     thumbnail: thumbnailVariantMargheritaRomana,
     preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 100, unit: "g" } },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 100, unit: "g" } },
       { name: "Sale sulla passata", amount: { value: 1, unit: "g" } },
       { name: "Fior di latte", amount: { value: 80, unit: "g" } },
       { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, notes: "foglie" },
@@ -868,7 +874,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     thumbnail: thumbnailVariantMargheritaAmericana,
     preferred_for_styles: ["california_style"],
     ingredients: [
-      { name: "Salsa di pomodoro (passata di pomodoro, origano, zucchero, sale)", amount: { value: 100, unit: "g" } },
+      { name: "Salsa di pomodoro (passata di pomodoro, origano, zucchero, sale)",  components: ["passata di pomodoro", "origano", "zucchero", "sale"],amount: { value: 100, unit: "g" } },
       { name: "Low-moisture mozzarella shredded", amount: { value: 100, unit: "g" } },
       { name: "Parmigiano grattugiato in superficie", amount: { value: 5, unit: "g" } },
       { name: "Olive oil drizzle", amount: { value: 5, unit: "ml" } },
@@ -894,7 +900,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     authenticity_by_style: { napoletana_canotto: "natural", pizza_al_metro: "natural" },
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
-      { name: "Pelati San Marzano DOP (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
+      { name: "Pelati San Marzano DOP (pomodoro, succo di pomodoro)",  components: ["pomodoro", "succo di pomodoro"],amount: { value: 80, unit: "g" } },
       { name: "Sale", amount: { value: 1, unit: "g" } },
       { name: "Aglio", amount: { value: 2, unit: "pcs" }, notes: "spicchi affettati sottili" },
       { name: "Origano secco siciliano", amount: { value: 1, unit: "g" } },
@@ -919,7 +925,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "con scarole",
     preferred_for_styles: ["pizza_al_metro"],
     ingredients: [
-      { name: "Pelati (pomodoro, succo di pomodoro)", amount: { value: 70, unit: "g" } },
+      { name: "Pelati (pomodoro, succo di pomodoro)",  components: ["pomodoro", "succo di pomodoro"],amount: { value: 70, unit: "g" } },
       { name: "Scarola", amount: { value: 120, unit: "g" }, notes: "da stufare" },
       { name: "Aglio", amount: { value: 1, unit: "pcs" }, notes: "spicchio" },
       { name: "Origano secco", amount: { value: 1, unit: "g" } },
@@ -947,7 +953,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "marinara",
     preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 100, unit: "g" } },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 100, unit: "g" } },
       { name: "Sale", amount: { value: 1, unit: "g" } },
       { name: "Aglio", amount: { value: 1, unit: "pcs" } },
       { name: "Origano", amount: { value: 1, unit: "g" } },
@@ -994,10 +1000,10 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "porcini e salsiccia",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
-      { name: "Pelati San Marzano (pomodoro, succo di pomodoro)", amount: { value: 60, unit: "g" } },
+      { name: "Pelati San Marzano (pomodoro, succo di pomodoro)",  components: ["pomodoro", "succo di pomodoro"],amount: { value: 60, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
-      { name: "Porcini sottolio scolati (funghi porcini, olio, aglio, sale, spezie)", amount: { value: 50, unit: "g" }, notes: "qualità trifolati" },
-      { name: "Salsiccia napoletana al finocchio (carne di maiale, sale, finocchietto, pepe)", amount: { value: 50, unit: "g" }, notes: "spezzata a tocchetti" },
+      { name: "Porcini sottolio scolati (funghi porcini, olio, aglio, sale, spezie)",  components: ["funghi porcini", "olio", "aglio", "sale", "spezie"],amount: { value: 50, unit: "g" }, notes: "qualità trifolati" },
+      { name: "Salsiccia napoletana al finocchio (carne di maiale, sale, finocchietto, pepe)",  components: ["carne di maiale", "sale", "finocchietto", "pepe"],amount: { value: 50, unit: "g" }, notes: "spezzata a tocchetti" },
       { name: "Grana padano grattugiato", amount: { value: 8, unit: "g" }, notes: "in superficie" },
       { name: "Olio EVO a filo", amount: { value: 5, unit: "ml" } },
     ],
@@ -1021,10 +1027,10 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "salsiccia e funghi",
     preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 70, unit: "g" } },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 70, unit: "g" } },
       { name: "Fior di latte", amount: { value: 80, unit: "g" } },
       { name: "Champignon freschi", amount: { value: 70, unit: "g" }, notes: "affettati" },
-      { name: "Salsiccia (luganega o casereccia) (carne di maiale, sale, pepe)", amount: { value: 60, unit: "g" } },
+      { name: "Salsiccia (luganega o casereccia) (carne di maiale, sale, pepe)",  components: ["carne di maiale", "sale", "pepe"],amount: { value: 60, unit: "g" } },
       { name: "Aglio + prezzemolo per soffritto", amount: { value: 5, unit: "g" }, notes: "usati per pre-cottura funghi" },
       { name: "Olio EVO", amount: { value: 8, unit: "ml" }, notes: "usato in cottura funghi e a filo" },
     ],
@@ -1056,10 +1062,10 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "salame napoletano",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
-      { name: "Pelati San Marzano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
+      { name: "Pelati San Marzano (pomodoro, succo di pomodoro)",  components: ["pomodoro", "succo di pomodoro"],amount: { value: 80, unit: "g" } },
       { name: "Fior di latte", amount: { value: 80, unit: "g" } },
-      { name: "Salame piccante napoletano (carne di maiale, sale, peperoncino, spezie)", amount: { value: 50, unit: "g" }, notes: "a fette spesse" },
-      { name: "Olio piccante (olio EVO, peperoncino)", amount: { value: 5, unit: "ml" }, optional: true },
+      { name: "Salame piccante napoletano (carne di maiale, sale, peperoncino, spezie)",  components: ["carne di maiale", "sale", "peperoncino", "spezie"],amount: { value: 50, unit: "g" }, notes: "a fette spesse" },
+      { name: "Olio piccante (olio EVO, peperoncino)",  components: ["olio EVO", "peperoncino"],amount: { value: 5, unit: "ml" }, optional: true },
     ],
     assembly_steps: [{
       id: "spread_diavola_nap",
@@ -1077,9 +1083,9 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "Pepperoni",
     preferred_for_styles: ["new_york", "chicago_tavern", "grandma_style", "california_style", "greek_pan"],
     ingredients: [
-      { name: "Salsa di pomodoro (passata di pomodoro, sale, zucchero, origano, aglio in polvere)", amount: { value: 100, unit: "g" } },
+      { name: "Salsa di pomodoro (passata di pomodoro, sale, zucchero, origano, aglio in polvere)",  components: ["passata di pomodoro", "sale", "zucchero", "origano", "aglio"],amount: { value: 100, unit: "g" } },
       { name: "Low-moisture mozzarella shredded", amount: { value: 100, unit: "g" } },
-      { name: "Pepperoni a fette (carne di maiale e manzo, sale, spezie, paprika)", amount: { value: 70, unit: "g" }, notes: "americano, più dolce-affumicato" },
+      { name: "Pepperoni a fette (carne di maiale e manzo, sale, spezie, paprika)",  components: ["carne di maiale", "manzo", "sale", "spezie", "paprika"],amount: { value: 70, unit: "g" }, notes: "americano, più dolce-affumicato" },
       { name: "Origano", amount: { value: 1, unit: "g" } },
     ],
     assembly_steps: [{
@@ -1104,9 +1110,9 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "al finocchio, a crudo",
     preferred_for_styles: ["chicago_tavern"],
     ingredients: [
-      { name: "Salsa di pomodoro (passata di pomodoro, sale, origano, aglio)", amount: { value: 90, unit: "g" } },
+      { name: "Salsa di pomodoro (passata di pomodoro, sale, origano, aglio)",  components: ["passata di pomodoro", "sale", "origano", "aglio"],amount: { value: 90, unit: "g" } },
       { name: "Low-moisture mozzarella grattugiata", amount: { value: 100, unit: "g" } },
-      { name: "Salsiccia al finocchio cruda (carne di maiale, sale, semi di finocchio, pepe)", amount: { value: 90, unit: "g" }, notes: "a pezzetti piccoli" },
+      { name: "Salsiccia al finocchio cruda (carne di maiale, sale, semi di finocchio, pepe)",  components: ["carne di maiale", "sale", "semi di finocchio", "pepe"],amount: { value: 90, unit: "g" }, notes: "a pezzetti piccoli" },
       { name: "Origano secco", amount: { value: 1, unit: "g" } },
     ],
     assembly_steps: [{
@@ -1134,7 +1140,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["pizza_baciata"],
     compatible_layouts: ["stacked"],
     ingredients: [
-      { name: "Porchetta affettata sottile (carne di maiale, sale, pepe, aglio, rosmarino)", amount: { value: 200, unit: "g" }, section: "ripieno" },
+      { name: "Porchetta affettata sottile (carne di maiale, sale, pepe, aglio, rosmarino)",  components: ["carne di maiale", "sale", "pepe", "aglio", "rosmarino"],amount: { value: 200, unit: "g" }, section: "ripieno" },
       { name: "Pepe nero", amount: { value: 1, unit: "g" }, optional: true, section: "ripieno" },
       { name: "Patate gialle a tessuto compatto", amount: { value: 400, unit: "g" }, section: "superficie" },
       { name: "Rosmarino fresco", amount: { value: 3, unit: "pcs" }, notes: "rametti", section: "superficie" },
@@ -1195,8 +1201,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ingredients: [
       { name: "Olio EVO per spennellare", amount: { value: 12, unit: "ml" }, section: "base" },
       { name: "Fior di sale", amount: { value: 2, unit: "g" }, section: "base" },
-      { name: "Stracciatella di burrata (mozzarella, panna)", amount: { value: 50, unit: "g" }, optional: true, section: "ripieno" },
-      { name: "Mortadella IGP di Bologna a fette sottili (carne di suino, sale, spezie, pistacchio)", amount: { value: 100, unit: "g" }, section: "ripieno" },
+      { name: "Stracciatella di burrata (mozzarella, panna)",  components: ["mozzarella", "panna"],amount: { value: 50, unit: "g" }, optional: true, section: "ripieno" },
+      { name: "Mortadella IGP di Bologna a fette sottili (carne di suino, sale, spezie, pistacchio)",  components: ["carne di suino", "sale", "spezie", "pistacchio"],amount: { value: 100, unit: "g" }, section: "ripieno" },
       { name: "Granella di pistacchio di Bronte", amount: { value: 10, unit: "g" }, section: "superficie" },
     ],
     assembly_steps: [
@@ -1322,7 +1328,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ingredients: [
       { name: "Acciughe sott'olio", amount: { value: 30, unit: "g" }, notes: "Filetti" },
       { name: "Caciocavallo (o primosale)", amount: { value: 150, unit: "g" }, notes: "A dadini" },
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 250, unit: "g" } },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 250, unit: "g" } },
       { name: "Cipolla bianca", amount: { value: 200, unit: "g" }, notes: "A fette sottili, stufata nella salsa" },
       { name: "Pecorino grattugiato", amount: { value: 30, unit: "g" }, optional: true },
       { name: "Pangrattato", amount: { value: 40, unit: "g" }, notes: "Tostato in olio" },
@@ -1453,7 +1459,9 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     id: "fugazza_argentina",
     concept_ref: "fugazza",
     preferred_for_styles: ["fugazzeta"],
-    compatible_layouts: ["closed_stuffed"],
+    compatible_layouts: ["single"],
+    layout_override: { type: "single", pieces_per_unit: 1, interlayer: "none", filling_timing: "pre_bake", cook_mode: "topped" },
+    method_note: { key: "diet.singleBase", fallback: METHOD_MESSAGES_IT["diet.singleBase"] },
     ingredients: [
       { name: "Cipolla bianca a velo abbondante", amount: { value: 250, unit: "g" }, section: "superficie" },
       { name: "Origano secco", amount: { value: 3, unit: "g" }, section: "superficie" },
@@ -1471,7 +1479,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       id: "fugazza_top",
       title: "Solo cipolla in superficie (niente formaggio)",
       description: "La fugazza non si farcisce di formaggio: si copre la superficie con un letto abbondante di cipolla a velo, origano, olio EVO e sale. È l'antenata 'magra' della fugazzeta rellena.",
-      insert_at: "after_fill_internal",
+      insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
     }],
@@ -1483,8 +1491,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["detroit"],
     ingredients: [
       { name: "Brick cheese del Wisconsin (o mozzarella low-moisture)", amount: { value: 250, unit: "g" }, notes: "Fino ai bordi: forma il cheese crown / frico", section: "crosta" },
-      { name: "Pepperoni piccante (carne di maiale, sale, spezie)", amount: { value: 80, unit: "g" }, optional: true, section: "base" },
-      { name: "Salsa di pomodoro concentrata (passata di pomodoro, origano, sale)", amount: { value: 150, unit: "g" }, notes: "Strisce in superficie (racing stripes)", section: "superficie" },
+      { name: "Pepperoni piccante (carne di maiale, sale, spezie)",  components: ["carne di maiale", "sale", "spezie"],amount: { value: 80, unit: "g" }, optional: true, section: "base" },
+      { name: "Salsa di pomodoro concentrata (passata di pomodoro, origano, sale)",  components: ["passata di pomodoro", "origano", "sale"],amount: { value: 150, unit: "g" }, notes: "Strisce in superficie (racing stripes)", section: "superficie" },
       { name: "Parmigiano o pecorino grattugiato", amount: { value: 10, unit: "g" }, optional: true, section: "superficie" },
       { name: "Origano secco", amount: { value: 1, unit: "g" }, section: "superficie" },
     ],
@@ -1512,8 +1520,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["chicago_deep"],
     ingredients: [
       { name: "Mozzarella a fette", amount: { value: 200, unit: "g" }, notes: "Sul fondo, a contatto con l'impasto", section: "base" },
-      { name: "Salsiccia italiana sbriciolata (carne di suino, sale, pepe, semi di finocchio)", amount: { value: 150, unit: "g" }, optional: true, notes: "Strato sopra la mozzarella", section: "ripieno" },
-      { name: "Polpa di pomodoro a pezzi (San Marzano) (pomodori, succo di pomodoro, sale)", amount: { value: 250, unit: "g" }, notes: "Salsa grezza in superficie", section: "superficie" },
+      { name: "Salsiccia italiana sbriciolata (carne di suino, sale, pepe, semi di finocchio)",  components: ["carne di suino", "sale", "pepe", "semi di finocchio"],amount: { value: 150, unit: "g" }, optional: true, notes: "Strato sopra la mozzarella", section: "ripieno" },
+      { name: "Polpa di pomodoro a pezzi (San Marzano) (pomodori, succo di pomodoro, sale)",  components: ["pomodori", "succo di pomodoro", "sale"],amount: { value: 250, unit: "g" }, notes: "Salsa grezza in superficie", section: "superficie" },
       { name: "Parmigiano grattugiato", amount: { value: 20, unit: "g" }, notes: "In superficie", section: "superficie" },
       { name: "Origano e basilico secco", amount: { value: 2, unit: "g" }, section: "superficie" },
     ],
@@ -1542,11 +1550,11 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["calzone_napoletano"],
     compatible_layouts: ["closed_stuffed"],
     ingredients: [
-      { name: "Ricotta fresca (siero di latte, sale)", amount: { value: 100, unit: "g" }, section: "ripieno" },
+      { name: "Ricotta fresca (siero di latte, sale)",  components: ["siero di latte", "sale"],amount: { value: 100, unit: "g" }, section: "ripieno" },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" }, section: "ripieno" },
-      { name: "Salame napoletano (carne di maiale, sale, pepe)", amount: { value: 50, unit: "g" }, section: "ripieno" },
+      { name: "Salame napoletano (carne di maiale, sale, pepe)",  components: ["carne di maiale", "sale", "pepe"],amount: { value: 50, unit: "g" }, section: "ripieno" },
       { name: "Pepe nero macinato fresco", amount: { value: 2, unit: "g" }, section: "ripieno" },
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 40, unit: "g" }, section: "superficie" },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 40, unit: "g" }, section: "superficie" },
       { name: "Parmigiano grattugiato", amount: { value: 5, unit: "g" }, section: "superficie" },
       { name: "Basilico fresco", amount: { value: 2, unit: "pcs" }, notes: "foglie", section: "superficie" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
@@ -1570,7 +1578,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["calzone_napoletano"],
     compatible_layouts: ["closed_stuffed"],
     ingredients: [
-      { name: "Scarola stufata con aglio (scarola, aglio, olio)", amount: { value: 120, unit: "g" }, section: "ripieno" },
+      { name: "Scarola stufata con aglio (scarola, aglio, olio)",  components: ["scarola", "aglio", "olio"],amount: { value: 120, unit: "g" }, section: "ripieno" },
       { name: "Olive di Gaeta denocciolate", amount: { value: 25, unit: "g" }, section: "ripieno" },
       { name: "Capperi dissalati", amount: { value: 10, unit: "g" }, section: "ripieno" },
       { name: "Provola affumicata a cubetti", amount: { value: 70, unit: "g" }, section: "ripieno" },
@@ -1600,7 +1608,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["calzone_napoletano"],
     compatible_layouts: ["closed_stuffed"],
     ingredients: [
-      { name: "Ricotta di pecora (siero di latte, sale)", amount: { value: 110, unit: "g" }, section: "ripieno" },
+      { name: "Ricotta di pecora (siero di latte, sale)",  components: ["siero di latte", "sale"],amount: { value: 110, unit: "g" }, section: "ripieno" },
       { name: "Cicoli napoletani (ciccioli di maiale)", amount: { value: 50, unit: "g" }, section: "ripieno" },
       { name: "Fior di latte campano", amount: { value: 70, unit: "g" }, section: "ripieno" },
       { name: "Pepe nero macinato fresco", amount: { value: 2, unit: "g" }, section: "ripieno" },
@@ -1622,7 +1630,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     thumbnail: thumbnailVariantMargheritaNewYork,
     preferred_for_styles: ["new_york"],
     ingredients: [
-      { name: "Salsa di pomodoro (passata di pomodoro, sale, zucchero, origano)", amount: { value: 110, unit: "g" }, section: "base" },
+      { name: "Salsa di pomodoro (passata di pomodoro, sale, zucchero, origano)",  components: ["passata di pomodoro", "sale", "zucchero", "origano"],amount: { value: 110, unit: "g" }, section: "base" },
       { name: "Low-moisture mozzarella", amount: { value: 110, unit: "g" }, section: "base" },
       { name: "Pecorino Romano grattugiato", amount: { value: 8, unit: "g" }, notes: "In superficie: hallmark della slice newyorkese", section: "superficie" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
@@ -1641,8 +1649,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "montanara",
     preferred_for_styles: ["pizza_montanara"],
     ingredients: [
-      { name: "Pomodoro (pelati schiacciati o passata, sale)", amount: { value: 40, unit: "g" }, section: "base" },
-      { name: "Ricotta fresca (siero di latte, sale)", amount: { value: 30, unit: "g" }, notes: "A fiocchi, a crudo", section: "superficie" },
+      { name: "Pomodoro (pelati schiacciati o passata, sale)",  components: ["sale"],amount: { value: 40, unit: "g" }, section: "base" },
+      { name: "Ricotta fresca (siero di latte, sale)",  components: ["siero di latte", "sale"],amount: { value: 30, unit: "g" }, notes: "A fiocchi, a crudo", section: "superficie" },
       { name: "Pecorino romano grattugiato", amount: { value: 5, unit: "g" }, section: "superficie" },
       { name: "Basilico fresco", amount: { value: 2, unit: "pcs" }, notes: "foglie", section: "superficie" },
       { name: "Olio EVO", amount: { value: 3, unit: "ml" }, section: "superficie" },
@@ -1667,7 +1675,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ingredients: [
       // M-7: dosi del disciplinare AVPN 2024 (§4.2) per un panetto di circa 200 g:
       // ricotta 80–90 g, provola o fiordilatte 30–50 g, cicoli o salame 50–60 g.
-      { name: "Ricotta di pecora (siero di latte, sale)", amount: { value: 85, unit: "g" }, section: "ripieno" },
+      { name: "Ricotta di pecora (siero di latte, sale)",  components: ["siero di latte", "sale"],amount: { value: 85, unit: "g" }, section: "ripieno" },
       { name: "Provola affumicata a cubetti", amount: { value: 40, unit: "g" }, section: "ripieno" },
       { name: "Cicoli napoletani (o ciccioli di maiale)", amount: { value: 55, unit: "g" }, notes: "in alternativa: solo pepe nero", section: "ripieno" },
       { name: "Pepe nero macinato fresco", amount: { value: 2, unit: "g" }, section: "ripieno" },
@@ -1695,7 +1703,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["pizza_fritta_tonda"],
     compatible_layouts: ["closed_stuffed"],
     ingredients: [
-      { name: "Ricotta di pecora (siero di latte, sale)", amount: { value: 85, unit: "g" }, section: "ripieno" },
+      { name: "Ricotta di pecora (siero di latte, sale)",  components: ["siero di latte", "sale"],amount: { value: 85, unit: "g" }, section: "ripieno" },
       { name: "Provola affumicata a cubetti", amount: { value: 40, unit: "g" }, section: "ripieno" },
       { name: "Cicoli napoletani (o salame napoletano)", amount: { value: 55, unit: "g" }, section: "ripieno" },
       { name: "Pepe nero macinato fresco", amount: { value: 1, unit: "g" }, section: "ripieno" },
@@ -1765,7 +1773,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Friarielli (cime di rapa) puliti", amount: { value: 120, unit: "g" }, notes: "Saltati aglio e peperoncino", section: "base" },
-      { name: "Salsiccia napoletana sbriciolata (carne di maiale, sale, pepe)", amount: { value: 100, unit: "g" }, notes: "Cruda, a tocchetti", section: "base" },
+      { name: "Salsiccia napoletana sbriciolata (carne di maiale, sale, pepe)",  components: ["carne di maiale", "sale", "pepe"],amount: { value: 100, unit: "g" }, notes: "Cruda, a tocchetti", section: "base" },
       { name: "Provola affumicata", amount: { value: 80, unit: "g" }, notes: "A cubetti", section: "base" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
     ],
@@ -1817,7 +1825,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["new_york", "grandma_style"],
     authenticity: "experimental", // l'ananas: innovazione/eresia, tenuta in coda
     ingredients: [
-      { name: "Salsa di pomodoro (passata, sale, origano)", amount: { value: 80, unit: "g" }, section: "base" },
+      { name: "Salsa di pomodoro (passata, sale, origano)",  components: ["passata", "sale", "origano"],amount: { value: 80, unit: "g" }, section: "base" },
       { name: "Mozzarella low-moisture", amount: { value: 90, unit: "g" }, section: "base" },
       { name: "Prosciutto cotto a cubetti", amount: { value: 60, unit: "g" }, section: "base" },
       { name: "Ananas (fresco o ben sgocciolato)", amount: { value: 70, unit: "g" }, notes: "A pezzetti, asciugato", section: "base" },
@@ -1845,11 +1853,11 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "capricciosa",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
-      { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
+      { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)",  components: ["pomodoro", "succo di pomodoro"],amount: { value: 80, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
-      { name: "Prosciutto cotto a fette (carne di suino, sale, aromi)", amount: { value: 35, unit: "g" } },
+      { name: "Prosciutto cotto a fette (carne di suino, sale, aromi)",  components: ["carne di suino", "sale", "aromi"],amount: { value: 35, unit: "g" } },
       { name: "Funghi champignon saltati", amount: { value: 30, unit: "g" } },
-      { name: "Carciofini di Paestum sottolio (carciofi, olio, sale)", amount: { value: 30, unit: "g" } },
+      { name: "Carciofini di Paestum sottolio (carciofi, olio, sale)",  components: ["carciofi", "olio", "sale"],amount: { value: 30, unit: "g" } },
       { name: "Olive caiazzane (o nere di Gaeta)", amount: { value: 20, unit: "g" } },
       { name: "Alici di Cetara (opzionali)", amount: { value: 10, unit: "g" }, optional: true },
       { name: "Olio EVO delle Colline Salernitane a filo", amount: { value: 5, unit: "ml" } },
@@ -1876,11 +1884,11 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "quattro_stagioni",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
-      { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)", amount: { value: 80, unit: "g" } },
+      { name: "Pelati San Marzano schiacciati a mano (pomodoro, succo di pomodoro)",  components: ["pomodoro", "succo di pomodoro"],amount: { value: 80, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
-      { name: "Prosciutto cotto (carne di suino, sale, aromi)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Prosciutto cotto (carne di suino, sale, aromi)",  components: ["carne di suino", "sale", "aromi"],amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
       { name: "Funghi champignon saltati", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
-      { name: "Carciofini di Paestum sottolio (carciofi, olio, sale)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Carciofini di Paestum sottolio (carciofi, olio, sale)",  components: ["carciofi", "olio", "sale"],amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
       { name: "Alici di Cetara e olive", amount: { value: 25, unit: "g" }, notes: "per un quadrante" },
     ],
     assembly_steps: [{
@@ -1922,7 +1930,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "ortolana",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
-      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 70, unit: "g" } },
+      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 70, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 70, unit: "g" } },
       { name: "Melanzane fritte a cubetti", amount: { value: 45, unit: "g" } },
       { name: "Zucchine fritte", amount: { value: 45, unit: "g" } },
@@ -1953,7 +1961,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "cosacca",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
-      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 90, unit: "g" } },
+      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 90, unit: "g" } },
       { name: "Sale fino", amount: { value: 1, unit: "g" } },
       { name: "Parmigiano Reggiano DOP 24 mesi grattugiato", amount: { value: 25, unit: "g" }, notes: "o pecorino" },
       { name: "Basilico fresco", amount: { value: 4, unit: "pcs" } },
@@ -1978,7 +1986,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "provola_pepe",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
-      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 70, unit: "g" }, notes: "ombra di pomodoro, leggera" },
+      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 70, unit: "g" }, notes: "ombra di pomodoro, leggera" },
       { name: "Provola affumicata campana a cubetti", amount: { value: 90, unit: "g" } },
       { name: "Pepe nero macinato fresco", amount: { value: 2, unit: "g" }, section: "superficie" },
       { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
@@ -1999,9 +2007,9 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "nduja",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto"],
     ingredients: [
-      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)", amount: { value: 80, unit: "g" } },
+      { name: "Pomodoro schiacciato Casa Marrazzo (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 80, unit: "g" } },
       { name: "Fior di latte campano", amount: { value: 80, unit: "g" } },
-      { name: "'Nduja piccante di Spilinga (carne di maiale, peperoncino, sale)", amount: { value: 40, unit: "g" }, notes: "a fiocchi" },
+      { name: "'Nduja piccante di Spilinga (carne di maiale, peperoncino, sale)",  components: ["carne di maiale", "peperoncino", "sale"],amount: { value: 40, unit: "g" }, notes: "a fiocchi" },
       { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
       { name: "Olio EVO delle Colline Salernitane", amount: { value: 5, unit: "ml" }, section: "superficie" },
     ],
@@ -2025,7 +2033,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     authenticity: "signature",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
-      { name: "Crema di zucchine (zucchine, olio EVO, sale)", amount: { value: 80, unit: "g" }, section: "base" },
+      { name: "Crema di zucchine (zucchine, olio EVO, sale)",  components: ["zucchine", "olio EVO", "sale"],amount: { value: 80, unit: "g" }, section: "base" },
       { name: "Fior di latte campano", amount: { value: 70, unit: "g" }, section: "base" },
       { name: "Zucchine fritte a julienne", amount: { value: 60, unit: "g" }, section: "base" },
       { name: "Provolone del Monaco DOP a scaglie", amount: { value: 20, unit: "g" }, section: "superficie" },
@@ -2056,7 +2064,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["napoletana_canotto"],
     ingredients: [
       { name: "Mozzarella di bufala campana DOP a fette (fusa in cottura)", amount: { value: 100, unit: "g" }, section: "base" },
-      { name: "Passata di pomodoro riccio a crudo, fredda (pomodoro, sale)", amount: { value: 80, unit: "g" }, section: "superficie" },
+      { name: "Passata di pomodoro riccio a crudo, fredda (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 80, unit: "g" }, section: "superficie" },
       { name: "Basilico fresco (o riduzione di basilico)", amount: { value: 4, unit: "pcs" }, section: "superficie" },
       { name: "Olio EVO a filo", amount: { value: 6, unit: "ml" }, section: "superficie" },
     ],
@@ -2091,7 +2099,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ingredients: [
       { name: "Mozzarella di bufala campana DOP (fusa in cottura)", amount: { value: 90, unit: "g" }, section: "base" },
       { name: "Fonduta di Grana Padano DOP 12 mesi", amount: { value: 40, unit: "g" }, section: "base" },
-      { name: "Composta di pomodoro a crudo, fredda (pomodoro, sale)", amount: { value: 70, unit: "g" }, section: "superficie" },
+      { name: "Composta di pomodoro a crudo, fredda (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 70, unit: "g" }, section: "superficie" },
       { name: "Pesto di basilico", amount: { value: 10, unit: "g" }, section: "superficie" },
       { name: "Scaglie di Grana Padano DOP 24 mesi", amount: { value: 15, unit: "g" }, section: "superficie" },
     ],
@@ -2135,11 +2143,11 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "capricciosa",
     preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 90, unit: "g" } },
       { name: "Fior di latte", amount: { value: 80, unit: "g" } },
-      { name: "Prosciutto cotto alla brace a fette (carne di suino, sale, aromi)", amount: { value: 40, unit: "g" } },
+      { name: "Prosciutto cotto alla brace a fette (carne di suino, sale, aromi)",  components: ["carne di suino", "sale", "aromi"],amount: { value: 40, unit: "g" } },
       { name: "Funghi champignon freschi affettati", amount: { value: 30, unit: "g" } },
-      { name: "Carciofini sottolio alla romana (carciofi, olio, sale)", amount: { value: 30, unit: "g" } },
+      { name: "Carciofini sottolio alla romana (carciofi, olio, sale)",  components: ["carciofi", "olio", "sale"],amount: { value: 30, unit: "g" } },
       { name: "Olive nere", amount: { value: 20, unit: "g" } },
       { name: "Uovo sodo (opzionale, alla romana)", amount: { value: 1, unit: "pcs" }, optional: true },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" } },
@@ -2159,11 +2167,11 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "quattro_stagioni",
     preferred_for_styles: ["teglia_romana", "tonda_romana", "pinsa_romana", "pala_romana"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 90, unit: "g" } },
       { name: "Fior di latte", amount: { value: 80, unit: "g" } },
-      { name: "Prosciutto cotto (carne di suino, sale, aromi)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Prosciutto cotto (carne di suino, sale, aromi)",  components: ["carne di suino", "sale", "aromi"],amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
       { name: "Funghi champignon", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
-      { name: "Carciofini sottolio (carciofi, olio, sale)", amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
+      { name: "Carciofini sottolio (carciofi, olio, sale)",  components: ["carciofi", "olio", "sale"],amount: { value: 30, unit: "g" }, notes: "per un quadrante" },
       { name: "Olive nere", amount: { value: 20, unit: "g" }, notes: "per un quadrante" },
     ],
     assembly_steps: [{
@@ -2232,9 +2240,9 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     variant_name: "salame piccante",
     preferred_for_styles: ["tonda_romana", "pala_romana"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" } },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 90, unit: "g" } },
       { name: "Fior di latte", amount: { value: 80, unit: "g" } },
-      { name: "Salame piccante a fette (carne di maiale, sale, peperoncino)", amount: { value: 50, unit: "g" } },
+      { name: "Salame piccante a fette (carne di maiale, sale, peperoncino)",  components: ["carne di maiale", "sale", "peperoncino"],amount: { value: 50, unit: "g" } },
       { name: "Origano secco", amount: { value: 1, unit: "g" }, section: "superficie" },
       { name: "Pecorino romano DOP grattugiato", amount: { value: 8, unit: "g" }, section: "superficie" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
@@ -2254,7 +2262,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "provola_pepe",
     preferred_for_styles: ["tonda_romana"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 85, unit: "g" } },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 85, unit: "g" } },
       { name: "Provola affumicata campana a cubetti", amount: { value: 85, unit: "g" } },
       { name: "Pepe nero macinato fresco", amount: { value: 2, unit: "g" }, section: "superficie" },
       { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
@@ -2275,7 +2283,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     authenticity: "signature",
     preferred_for_styles: ["tonda_romana"],
     ingredients: [
-      { name: "Passata di pomodoro speziata (pomodoro, sale, peperoncino)", amount: { value: 85, unit: "g" } },
+      { name: "Passata di pomodoro speziata (pomodoro, sale, peperoncino)",  components: ["pomodoro", "sale", "peperoncino"],amount: { value: 85, unit: "g" } },
       { name: "Provola affumicata campana a cubetti", amount: { value: 80, unit: "g" } },
       { name: "Salame piccante tipo pepperoni a fette", amount: { value: 45, unit: "g" } },
       { name: "Miele aromatizzato alla 'nduja", amount: { value: 12, unit: "g" }, notes: "a filo dopo cottura", section: "superficie" },
@@ -2302,7 +2310,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["tonda_romana"],
     ingredients: [
       { name: "Fior di latte", amount: { value: 85, unit: "g" }, section: "base" },
-      { name: "Bresaola della Valtellina IGP a fette (carne di manzo, sale)", amount: { value: 50, unit: "g" }, section: "superficie" },
+      { name: "Bresaola della Valtellina IGP a fette (carne di manzo, sale)",  components: ["carne di manzo", "sale"],amount: { value: 50, unit: "g" }, section: "superficie" },
       { name: "Rucola selvatica fresca", amount: { value: 20, unit: "g" }, section: "superficie" },
       { name: "Scaglie di Parmigiano Reggiano 24 mesi", amount: { value: 15, unit: "g" }, section: "superficie" },
       { name: "Zest di limone grattugiato", amount: { value: 1, unit: "g" }, section: "superficie" },
@@ -2334,8 +2342,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     authenticity: "signature",
     preferred_for_styles: ["pinsa_romana"],
     ingredients: [
-      { name: "'Nduja piccante di Spilinga (carne di maiale, peperoncino, sale)", amount: { value: 40, unit: "g" }, section: "base", notes: "a fiocchi, fusa in cottura" },
-      { name: "Stracciatella di burrata fresca (mozzarella, panna)", amount: { value: 70, unit: "g" }, section: "superficie", notes: "a crudo dopo cottura" },
+      { name: "'Nduja piccante di Spilinga (carne di maiale, peperoncino, sale)",  components: ["carne di maiale", "peperoncino", "sale"],amount: { value: 40, unit: "g" }, section: "base", notes: "a fiocchi, fusa in cottura" },
+      { name: "Stracciatella di burrata fresca (mozzarella, panna)",  components: ["mozzarella", "panna"],amount: { value: 70, unit: "g" }, section: "superficie", notes: "a crudo dopo cottura" },
       { name: "Pomodorini datterini freschi", amount: { value: 50, unit: "g" }, section: "superficie", notes: "a crudo dopo cottura" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
     ],
@@ -2397,8 +2405,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     authenticity: "signature",
     preferred_for_styles: ["pala_romana"],
     ingredients: [
-      { name: "Stracciatella di burrata fresca pugliese (mozzarella, panna)", amount: { value: 90, unit: "g" }, section: "superficie", notes: "a crudo dopo cottura" },
-      { name: "Zucchine romanesche alla scapece (zucchine, aceto, menta)", amount: { value: 60, unit: "g" }, section: "superficie" },
+      { name: "Stracciatella di burrata fresca pugliese (mozzarella, panna)",  components: ["mozzarella", "panna"],amount: { value: 90, unit: "g" }, section: "superficie", notes: "a crudo dopo cottura" },
+      { name: "Zucchine romanesche alla scapece (zucchine, aceto, menta)",  components: ["zucchine", "aceto", "menta"],amount: { value: 60, unit: "g" }, section: "superficie" },
       { name: "Bottarga di muggine grattugiata", amount: { value: 8, unit: "g" }, section: "superficie" },
       { name: "Olio EVO", amount: { value: 6, unit: "ml" }, section: "superficie" },
     ],
@@ -2434,7 +2442,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "cheese_pizza",
     preferred_for_styles: ["new_york"],
     ingredients: [
-      { name: "Salsa di pomodoro stile Santa Barbara (passata, origano, zucchero, aglio)", amount: { value: 110, unit: "g" }, section: "base" },
+      { name: "Salsa di pomodoro stile Santa Barbara (passata, origano, zucchero, aglio)",  components: ["passata", "origano", "zucchero", "aglio"],amount: { value: 110, unit: "g" }, section: "base" },
       { name: "Mozzarella low-moisture grattugiata", amount: { value: 130, unit: "g" }, section: "base" },
       { name: "Pecorino romano grattugiato", amount: { value: 8, unit: "g" }, section: "superficie" },
       { name: "Olio EVO", amount: { value: 4, unit: "ml" }, section: "superficie" },
@@ -2476,7 +2484,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "supreme",
     preferred_for_styles: ["new_york"],
     ingredients: [
-      { name: "Salsa di pomodoro Santa Barbara (passata, origano, aglio)", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Salsa di pomodoro Santa Barbara (passata, origano, aglio)",  components: ["passata", "origano", "aglio"],amount: { value: 100, unit: "g" }, section: "base" },
       { name: "Mozzarella low-moisture", amount: { value: 110, unit: "g" }, section: "base" },
       { name: "Salame pepperoni a fette", amount: { value: 40, unit: "g" }, section: "base" },
       { name: "Salsiccia di maiale sbriciolata", amount: { value: 40, unit: "g" }, section: "base" },
@@ -2501,7 +2509,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     authenticity: "signature",
     ingredients: [
       { name: "Brick cheese del Wisconsin a cubetti", amount: { value: 200, unit: "g" }, notes: "fino ai bordi: cheese crown / frico", section: "crosta" },
-      { name: "Salsa vodka (pomodoro, panna, vodka, cipolla)", amount: { value: 100, unit: "g" }, notes: "a strisce in superficie", section: "superficie" },
+      { name: "Salsa vodka (pomodoro, panna, vodka, cipolla)",  components: ["pomodoro", "panna", "vodka", "cipolla"],amount: { value: 100, unit: "g" }, notes: "a strisce in superficie", section: "superficie" },
       { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
       { name: "Pecorino romano grattugiato", amount: { value: 12, unit: "g" }, section: "superficie" },
     ],
@@ -2566,7 +2574,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["grandma_style"],
     ingredients: [
       { name: "Mozzarella fior di latte fresca", amount: { value: 110, unit: "g" }, notes: "alla base, a contatto con la teglia oliata", section: "base" },
-      { name: "Salsa marinara densa di pomodori confit (pomodoro, aglio, olio)", amount: { value: 90, unit: "g" }, notes: "a cucchiaiate sopra il formaggio", section: "superficie" },
+      { name: "Salsa marinara densa di pomodori confit (pomodoro, aglio, olio)",  components: ["pomodoro", "aglio", "olio"],amount: { value: 90, unit: "g" }, notes: "a cucchiaiate sopra il formaggio", section: "superficie" },
       { name: "Pecorino romano grattugiato", amount: { value: 12, unit: "g" }, section: "superficie" },
       { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, section: "superficie" },
       { name: "Olio EVO", amount: { value: 6, unit: "ml" }, section: "superficie" },
@@ -2589,7 +2597,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     authenticity: "signature",
     ingredients: [
       { name: "Mozzarella fior di latte fresca", amount: { value: 110, unit: "g" }, section: "base" },
-      { name: "Salsa vodka (pomodoro, panna, prosciutto, vodka)", amount: { value: 100, unit: "g" }, notes: "a cucchiaiate sopra", section: "superficie" },
+      { name: "Salsa vodka (pomodoro, panna, prosciutto, vodka)",  components: ["pomodoro", "panna", "prosciutto", "vodka"],amount: { value: 100, unit: "g" }, notes: "a cucchiaiate sopra", section: "superficie" },
       { name: "Pecorino romano grattugiato", amount: { value: 12, unit: "g" }, section: "superficie" },
       { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
     ],
@@ -2608,7 +2616,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "tomato_pie",
     preferred_for_styles: ["new_haven_apizza"],
     ingredients: [
-      { name: "Polpa di pomodoro San Marzano (pomodoro, sale)", amount: { value: 130, unit: "g" }, section: "base" },
+      { name: "Polpa di pomodoro San Marzano (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 130, unit: "g" }, section: "base" },
       { name: "Aglio fresco tritato", amount: { value: 8, unit: "g" }, section: "base" },
       { name: "Origano secco", amount: { value: 2, unit: "g" }, section: "superficie" },
       { name: "Pecorino romano grattugiato", amount: { value: 18, unit: "g" }, section: "superficie" },
@@ -2737,7 +2745,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     preferred_for_styles: ["teglia_romana"],
     authenticity: "signature",
     ingredients: [
-      { name: "Crema di zucca arrosto (zucca, noce moscata, sale)", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Crema di zucca arrosto (zucca, noce moscata, sale)",  components: ["zucca", "noce moscata", "sale"],amount: { value: 100, unit: "g" }, section: "base" },
       { name: "Speck artigianale a fette", amount: { value: 50, unit: "g" }, notes: "a freddo dopo cottura", section: "superficie" },
       { name: "Caciocavallo campano a scaglie", amount: { value: 30, unit: "g" }, section: "superficie" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
@@ -2769,7 +2777,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     authenticity: "signature",
     ingredients: [
       { name: "Olio EVO e sale per la cottura in bianco", amount: { value: 10, unit: "ml" }, section: "base" },
-      { name: "Stracciatella di burrata pugliese (mozzarella, panna)", amount: { value: 80, unit: "g" }, notes: "a crudo dopo cottura", section: "superficie" },
+      { name: "Stracciatella di burrata pugliese (mozzarella, panna)",  components: ["mozzarella", "panna"],amount: { value: 80, unit: "g" }, notes: "a crudo dopo cottura", section: "superficie" },
       { name: "Salmone scozzese affumicato a freddo", amount: { value: 60, unit: "g" }, section: "superficie" },
       { name: "Zest di limone e aneto fresco", amount: { value: 3, unit: "g" }, section: "superficie" },
     ],
@@ -2845,7 +2853,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     /* La De.Co. è della sardenaira, non della focaccia genovese che la ospita. */
     authenticity_by_style: { focaccia_genovese: "natural" },
     ingredients: [
-      { name: "Salsa densa di pomodoro cotta con cipolla (pomodoro, cipolla, olio)", amount: { value: 150, unit: "g" }, section: "base" },
+      { name: "Salsa densa di pomodoro cotta con cipolla (pomodoro, cipolla, olio)",  components: ["pomodoro", "cipolla", "olio"],amount: { value: 150, unit: "g" }, section: "base" },
       { name: "Acciughe salate dissalate", amount: { value: 25, unit: "g" }, section: "base" },
       { name: "Aglio in camicia schiacciato", amount: { value: 3, unit: "pcs" }, section: "base" },
       { name: "Olive taggiasche in salamoia", amount: { value: 40, unit: "g" }, section: "superficie" },
@@ -3007,7 +3015,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     thumbnail: thumbnailVariantMargheritaPadellino,
     preferred_for_styles: ["padellino_torino"],
     ingredients: [
-      { name: "Passata di pomodoro pelato italiano (pomodoro, sale)", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Passata di pomodoro pelato italiano (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 90, unit: "g" }, section: "base" },
       { name: "Mozzarella fior di latte fusa", amount: { value: 100, unit: "g" }, section: "base" },
       { name: "Basilico fresco", amount: { value: 4, unit: "pcs" }, section: "superficie" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
@@ -3027,7 +3035,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "diavola",
     preferred_for_styles: ["padellino_torino"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 90, unit: "g" }, section: "base" },
       { name: "Mozzarella fior di latte fusa", amount: { value: 100, unit: "g" }, section: "base" },
       { name: "Salame piccante a fette", amount: { value: 50, unit: "g" }, section: "base" },
       { name: "Basilico fresco", amount: { value: 2, unit: "pcs" }, section: "superficie" },
@@ -3048,7 +3056,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "capricciosa",
     preferred_for_styles: ["padellino_torino"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 85, unit: "g" }, section: "base" },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 85, unit: "g" }, section: "base" },
       { name: "Mozzarella fior di latte fusa", amount: { value: 95, unit: "g" }, section: "base" },
       { name: "Prosciutto cotto di alta qualità", amount: { value: 35, unit: "g" }, section: "base" },
       { name: "Funghi champignon freschi affettati", amount: { value: 30, unit: "g" }, section: "base" },
@@ -3071,7 +3079,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "tonno_cipolla",
     preferred_for_styles: ["padellino_torino"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 90, unit: "g" }, section: "base" },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 90, unit: "g" }, section: "base" },
       { name: "Mozzarella fior di latte fusa", amount: { value: 95, unit: "g" }, section: "base" },
       { name: "Tonno sott'olio di qualità sgocciolato", amount: { value: 60, unit: "g" }, section: "base" },
       { name: "Cipolla rossa di Tropea affettata", amount: { value: 30, unit: "g" }, section: "base" },
@@ -3114,7 +3122,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     thumbnail: thumbnailVariantMargheritaTrancio,
     preferred_for_styles: ["trancio_milanese"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 100, unit: "g" }, section: "base" },
       { name: "Mozzarella fior di latte abbondante", amount: { value: 120, unit: "g" }, notes: "cola sui lati del trancio alto", section: "base" },
       { name: "Basilico fresco", amount: { value: 3, unit: "pcs" }, section: "superficie" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
@@ -3134,7 +3142,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "diavola",
     preferred_for_styles: ["trancio_milanese"],
     ingredients: [
-      { name: "Passata di pomodoro (pomodoro, sale)", amount: { value: 100, unit: "g" }, section: "base" },
+      { name: "Passata di pomodoro (pomodoro, sale)",  components: ["pomodoro", "sale"],amount: { value: 100, unit: "g" }, section: "base" },
       { name: "Mozzarella fior di latte abbondante", amount: { value: 120, unit: "g" }, section: "base" },
       { name: "Salame piccante a fette", amount: { value: 50, unit: "g" }, section: "base" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
@@ -3400,7 +3408,7 @@ export function resolveTopping(
 export function scaleToppingAmounts(recipe: ToppingRecipe, scale: number | undefined): ToppingRecipe {
   if (!scale || scale === 1) return recipe;
   const round = (value: number, unit: string) =>
-    unit === "g" || unit === "ml" ? Math.round(value * scale) : Math.max(1, Math.round(value * scale * 2) / 2);
+    unit === "g" || unit === "ml" ? Math.round(value * scale * 10) / 10 : Math.max(1, Math.round(value * scale * 2) / 2);
   return {
     ...recipe,
     ingredients: recipe.ingredients.map((ing) => ({
@@ -3416,7 +3424,7 @@ export function getToppingForStyle(
 ): ToppingRecipe | undefined {
   // 1. Match diretto su recipe id (priorità: l'utente ha scelto esplicitamente)
   const direct = TOPPING_LIBRARY[id];
-  if (direct) return direct;
+  if (direct) return direct.layout_override && !direct.preferred_for_styles?.includes(style.id) ? undefined : direct;
 
   // 2. Match su concept id → resolver intelligente
   if (TOPPING_CONCEPTS[id]) {
@@ -3658,9 +3666,10 @@ export function getRecipesByAuthenticity(style: PizzaStyle): Array<{
      fallback per famiglia o "generico": la boscaiola romana NON sborda sulla
      focaccia genovese. L'autenticità è solo un tag per ordinamento/ricerca. */
   const SEALED_LAYOUTS = new Set<LayoutType>(["closed_stuffed", "double_thin_sheet"]);
-  const styleLayout = style.layout?.type as LayoutType | undefined;
+  const styleLayout = (style.reference_layout ?? style.layout)?.type as LayoutType | undefined;
   const layoutIncompatible = (recipe: ToppingRecipe): boolean => {
     if (!styleLayout) return false;
+    if (recipe.layout_override) return !recipe.preferred_for_styles?.includes(style.id);
     if (recipe.compatible_layouts) return !recipe.compatible_layouts.includes(styleLayout);
     return SEALED_LAYOUTS.has(styleLayout);
   };

@@ -69,7 +69,7 @@ export function PrintSheet({
   const split = recipe.has_pre_ferment
     ? computePreFermentSplit({ flourG: recipe.flour_g, waterG: recipe.water_g, preFermentType: recipe.pre_ferment_type, flourPct: recipe.pre_ferment_flour_pct })
     : null;
-  const scaledTopping = topping ? scaleToppingAmounts(topping, recipe.style.topping_scale) : undefined;
+  const scaledTopping = topping ? scaleToppingAmounts(topping, recipe.topping_scale ?? recipe.style.topping_scale) : undefined;
   const concept = topping ? toppingConcept(topping.concept_ref, cms.toppingI18n) : undefined;
   const amount = (value: number, unit: string) =>
     unit === "g" ? fmt.grams(value) : unit === "ml" ? fmt.milliliters(value) : `${value}`;

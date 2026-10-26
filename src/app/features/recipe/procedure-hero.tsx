@@ -31,6 +31,7 @@ function localDateTimeValue(date: Date): string {
 }
 
 interface ProcedureHeroControlsProps {
+  calendarReference: Date;
   startTime: Date;
   setStartTime: Dispatch<SetStateAction<Date>>;
   endTime: Date;
@@ -53,6 +54,7 @@ interface ProcedureHeroControlsProps {
 }
 
 export function ProcedureHeroControls({
+  calendarReference,
   startTime,
   setStartTime,
   endTime,
@@ -79,8 +81,8 @@ export function ProcedureHeroControls({
   const comfortTitleId = useId();
   const comfortDescId = useId();
 
-  const startDayLabel = daySuffix(new Date(), startTime, cms.cooking).trim() || cms.cooking.dayToday;
-  const endDayLabel = daySuffix(new Date(), endTime, cms.cooking).trim() || cms.cooking.dayToday;
+  const startDayLabel = daySuffix(calendarReference, startTime, cms.cooking).trim() || cms.cooking.dayToday;
+  const endDayLabel = daySuffix(calendarReference, endTime, cms.cooking).trim() || cms.cooking.dayToday;
 
   const comfortDescClass = comfortToggled
     ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--success type-data-sm"
@@ -142,13 +144,11 @@ export function ProcedureHeroControls({
                     setStartTime((s) => shiftQuarter(s, -1));
                   }
                 }}
+                aria-label={`${ui.startTime} ${fmt.clockTime(startTime)} ${startDayLabel}`}
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
                   {fmt.clockTime(startTime)}
-                </span>
-                <span className="procedure-hero__time-suffix type-data-sm">
-                  {startDayLabel}
                 </span>
               </button>
             )}
@@ -161,6 +161,9 @@ export function ProcedureHeroControls({
               <Plus size={13} />
             </button>
           </div>
+          <time className="procedure-hero__time-suffix type-data-sm" dateTime={startTime.toISOString()} title={startDayLabel}>
+            {startTime.toLocaleDateString(bcp47,{weekday:"short",day:"numeric",month:"short"})}
+          </time>
           <IconButton
             type="button"
             size="sm"
@@ -214,14 +217,12 @@ export function ProcedureHeroControls({
                     setStartTime((s) => shiftQuarter(s, -1));
                   }
                 }}
+                aria-label={`${ui.endTime} ${hasFlexiblePhases ? uiMessage("features.recipe.procedure-hero.ca-dfd4ac18") : ""}${fmt.clockTime(endTime)} ${endDayLabel}`}
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
-                  {hasFlexiblePhases ? uiMessage("features.recipe.procedure-hero.ca-dfd4ac18") : ""}
+                  {hasFlexiblePhases ? "≈ " : ""}
                   {fmt.clockTime(endTime)}
-                </span>
-                <span className="procedure-hero__time-suffix type-data-sm">
-                  {endDayLabel}
                 </span>
               </button>
             )}
@@ -234,6 +235,9 @@ export function ProcedureHeroControls({
               <Plus size={13} />
             </button>
           </div>
+          <time className="procedure-hero__time-suffix type-data-sm" dateTime={endTime.toISOString()} title={endDayLabel}>
+            {endTime.toLocaleDateString(bcp47,{weekday:"short",day:"numeric",month:"short"})}
+          </time>
           <IconButton
             type="button"
             size="sm"

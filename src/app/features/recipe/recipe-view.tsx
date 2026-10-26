@@ -298,7 +298,8 @@ export function RecipeView({
 
   /* Round 4 (nota Matteo): l'hero è eyebrow · titolo · riga meta — la
      descrizione lunga duplicava la meta e vive nell'Approfondisci. */
-  const heroTags =
+  // The reference's filled/two-disc traits must not describe a structural variant.
+  const heroTags = recipe.method_changes?.length ? [] :
     localizedStyleTags.length > 0 ? localizedStyleTags : fallbackStyleTags;
 
   const eyebrowIsTailored = eyebrowTone === "tailored";

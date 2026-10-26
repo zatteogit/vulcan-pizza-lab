@@ -6,6 +6,7 @@ import { uiMessage } from "../../i18n/ui-messages";
 
 export function RecipeReferenceNote({ recipe, oven }: { recipe: GeneratedRecipe; oven?: OvenType }) {
   const { cms, bcp47 } = useCms();
+  if (recipe.method_changes?.length) return <aside className="recipe-reference-note">{engineMsgTexts(recipe.method_changes,cms,bcp47).map((note,i)=><p key={i}>{note}</p>)}</aside>;
   if (recipe.style.formula_variant) return <aside className="recipe-reference-note"><p>{engineMsgTexts([recipe.style.formula_variant], cms, bcp47)[0]}</p></aside>;
   if (recipe.style.id !== "napoletana_stg") return null;
   const departures = stgDepartures(recipe, oven);
