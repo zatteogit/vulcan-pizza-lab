@@ -109,57 +109,61 @@ export function IngredientsSection({
 
         {/* D-042: si parte dalle persone; l'app decide quante unità servono
             (una tonda a testa, le teglie in base all'area). */}
-        {(() => {
-          const perUnit = Math.max(1, getServingsRange(recipe.style)[0]);
-          const peopleShown =
-            Math.ceil(people / perUnit) === constraints.dough_balls ? people : constraints.dough_balls * perUnit;
-          return (
-            <div className="ingredients-servings ingredients-servings--people">
+        <div className="ingredients-quantities">
+          {(() => {
+            const perUnit = Math.max(1, getServingsRange(recipe.style)[0]);
+            const peopleShown =
+              Math.ceil(people / perUnit) === constraints.dough_balls ? people : constraints.dough_balls * perUnit;
+            return (
+              <div className="ingredients-servings ingredients-servings--people">
+                <span className="type-data ingredients-servings__label">
+                  {uiMessage("features.recipe.ingredients-section.people")}
+                </span>
+                <Stepper
+                  value={peopleShown}
+                  min={1}
+                  max={MAX_DOUGH_BALLS * perUnit}
+                  inputLabel={uiMessage("features.recipe.ingredients-section.people")}
+                  onChange={(n) => {
+                    setPeople(n);
+                    const units = Math.max(1, Math.ceil(n / perUnit));
+                    if (units !== constraints.dough_balls) updateBalls(units);
+                  }}
+                  decrementLabel={uiMessage("features.recipe.ingredients-section.peopleLess")}
+                  incrementLabel={uiMessage("features.recipe.ingredients-section.peopleMore")}
+                />
+              </div>
+            );
+          })()}
+          <div className="ingredients-servings">
+            <div className="ingredients-servings__heading">
               <span className="type-data ingredients-servings__label">
-                {uiMessage("features.recipe.ingredients-section.people")}
+                {servingLabel}
               </span>
-              <Stepper
-                value={peopleShown}
-                min={1}
-                max={MAX_DOUGH_BALLS * perUnit}
-                inputLabel={uiMessage("features.recipe.ingredients-section.people")}
-                onChange={(n) => {
-                  setPeople(n);
-                  const units = Math.max(1, Math.ceil(n / perUnit));
-                  if (units !== constraints.dough_balls) updateBalls(units);
-                }}
-                decrementLabel={uiMessage("features.recipe.ingredients-section.peopleLess")}
-                incrementLabel={uiMessage("features.recipe.ingredients-section.peopleMore")}
-              />
+              <span className="type-body ingredients-servings__note">
+                {normalizeMeasureUnitSuffixes(t(ui.doughBallsFrom, { w: fmt.grams(recipe.ball_weight_g) }))}
+                {panSizeLabel ? ` · ${panSizeLabel}` : ""}
+              </span>
             </div>
-          );
-        })()}
-        <div className="ingredients-servings">
-          <span className="type-data ingredients-servings__label">
-            {servingLabel}
-          </span>
-          <Stepper
-            value={constraints.dough_balls}
-            min={1}
-            max={MAX_DOUGH_BALLS}
-            inputLabel={servingLabel}
-            onChange={(n) => {
-              const actual = updateBalls(n);
-              /* U-10 (F11): le quantità cambiano tutte insieme; lo si dice. */
-              setBallsStatus(
-                t(ui.quantitiesUpdatedStatus, {
-                  n: `${actual} ${getServingUnitLabel(cms, servingUnit, actual, cms.locale.id !== "de")}`,
-                }),
-              );
-            }}
-            decrementLabel={ui.ariaReduceBalls}
-            incrementLabel={ui.ariaAddBalls}
-          />
-          <p role="status" className="sr-only">{ballsStatus}</p>
-          <span className="type-body ingredients-servings__note">
-            {normalizeMeasureUnitSuffixes(t(ui.doughBallsFrom, { w: fmt.grams(recipe.ball_weight_g) }))}
-            {panSizeLabel ? ` · ${panSizeLabel}` : ""}
-          </span>
+            <Stepper
+              value={constraints.dough_balls}
+              min={1}
+              max={MAX_DOUGH_BALLS}
+              inputLabel={servingLabel}
+              onChange={(n) => {
+                const actual = updateBalls(n);
+                /* U-10 (F11): le quantità cambiano tutte insieme; lo si dice. */
+                setBallsStatus(
+                  t(ui.quantitiesUpdatedStatus, {
+                    n: `${actual} ${getServingUnitLabel(cms, servingUnit, actual, cms.locale.id !== "de")}`,
+                  }),
+                );
+              }}
+              decrementLabel={ui.ariaReduceBalls}
+              incrementLabel={ui.ariaAddBalls}
+            />
+            <p role="status" className="sr-only">{ballsStatus}</p>
+          </div>
         </div>
         <FlourBudget recipe={recipe} servingUnit={servingUnit} onApply={updateBalls} />
 

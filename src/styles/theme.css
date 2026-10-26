@@ -916,6 +916,7 @@
   --section-tabs-reading-offset: var(--space-4);
   --section-tabs-target-min: var(--dimension-fixed-046);
   --recipe-match-action-target-min: var(--dimension-fixed-046);
+  --recipe-quantity-target-min: var(--dimension-fixed-046);
   --section-tabs-navbar-dock-max-width: var(--dimension-fixed-440);
   /* riga dock mobile variante navbar */
   --section-tabs-capsule-height-navbar-subtitles: var(--dimension-fixed-058);
@@ -10149,13 +10150,34 @@
     padding-inline: var(--space-5);
   }
 
+  .ingredients-quantities {
+    container: recipe-quantities / inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+
   .ingredients-servings {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-3) var(--space-4);
-    margin-bottom: var(--space-5);
-    padding-bottom: var(--space-4);
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
+  .ingredients-servings + .ingredients-servings {
+    padding-inline-start: var(--space-4);
+    border-inline-start: var(--border-width-thin) solid var(--container-border);
+  }
+
+  .ingredients-servings__heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-0-5) var(--space-1-5);
+    min-width: 0;
   }
 
   .ingredients-servings__label {
@@ -10178,15 +10200,52 @@
     border: var(--border-width-thin) solid var(--container-border);
   }
 
-  .ingredients-servings .ds-stepper__btn {
-    background: var(--recipe-bg);
+  .ingredients-servings .ds-stepper {
+    gap: 0;
+    border-radius: var(--radius-full);
+    background: var(--container-bg-low);
     border: var(--border-width-thin) solid var(--recipe-border);
+  }
+
+  .ingredients-servings .ds-stepper__btn {
+    width: var(--recipe-quantity-target-min);
+    height: var(--recipe-quantity-target-min);
+    border: none;
+    border-radius: var(--radius-full);
+    background: transparent;
+  }
+
+  .ingredients-servings .ds-stepper__btn:hover:not(:disabled) {
+    background: var(--container-bg);
+  }
+
+  .ingredients-servings .ds-stepper__input {
+    width: var(--space-10);
+    min-height: var(--recipe-quantity-target-min);
+    border: none;
+    border-radius: var(--radius-sm);
   }
 
   .ingredients-servings .ds-stepper__value {
     color: var(--recipe-highlight);
     font-size: var(--recipe-stepper-value-size);
     font-weight: var(--recipe-stepper-value-weight);
+  }
+
+  @container recipe-quantities (max-width: 639px) {
+    .ingredients-servings {
+      flex: 1 1 0;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: start;
+      justify-items: start;
+      gap: var(--space-1-5);
+    }
+
+    .ingredients-servings + .ingredients-servings {
+      padding-inline-start: 0;
+      border-inline-start: none;
+    }
   }
 
   /* ── Lista ingredienti ── */
