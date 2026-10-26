@@ -35,6 +35,8 @@ interface ProcedureHeroControlsProps {
   startTime: Date;
   setStartTime: Dispatch<SetStateAction<Date>>;
   endTime: Date;
+  endDisplayTime: Date;
+  setPreciseEndTime: Dispatch<SetStateAction<boolean>>;
   totalDurationMin: number;
   hasFlexiblePhases: boolean;
   editingTime: boolean;
@@ -58,6 +60,8 @@ export function ProcedureHeroControls({
   startTime,
   setStartTime,
   endTime,
+  endDisplayTime,
+  setPreciseEndTime,
   totalDurationMin,
   hasFlexiblePhases,
   editingTime,
@@ -82,7 +86,7 @@ export function ProcedureHeroControls({
   const comfortDescId = useId();
 
   const startDayLabel = daySuffix(calendarReference, startTime, cms.cooking).trim() || cms.cooking.dayToday;
-  const endDayLabel = daySuffix(calendarReference, endTime, cms.cooking).trim() || cms.cooking.dayToday;
+  const endDayLabel = daySuffix(calendarReference, endDisplayTime, cms.cooking).trim() || cms.cooking.dayToday;
 
   const comfortDescClass = comfortToggled
     ? "procedure-hero__comfort-desc procedure-hero__comfort-desc--success type-data-sm"
@@ -217,12 +221,12 @@ export function ProcedureHeroControls({
                     setStartTime((s) => shiftQuarter(s, -1));
                   }
                 }}
-                aria-label={`${ui.endTime} ${hasFlexiblePhases ? uiMessage("features.recipe.procedure-hero.ca-dfd4ac18") : ""}${fmt.clockTime(endTime)} ${endDayLabel}`}
+                aria-label={`${ui.endTime} ${hasFlexiblePhases ? uiMessage("features.recipe.procedure-hero.ca-dfd4ac18") : ""}${fmt.clockTime(endDisplayTime)} ${endDayLabel}`}
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
                   {hasFlexiblePhases ? "≈ " : ""}
-                  {fmt.clockTime(endTime)}
+                  {fmt.clockTime(endDisplayTime)}
                 </span>
               </button>
             )}
@@ -235,8 +239,8 @@ export function ProcedureHeroControls({
               <Plus size={13} />
             </button>
           </div>
-          <time className="procedure-hero__time-suffix type-data-sm" dateTime={endTime.toISOString()} title={endDayLabel}>
-            {endTime.toLocaleDateString(bcp47,{weekday:"short",day:"numeric",month:"short"})}
+          <time className="procedure-hero__time-suffix type-data-sm" dateTime={endDisplayTime.toISOString()} title={endDayLabel}>
+            {endDisplayTime.toLocaleDateString(bcp47,{weekday:"short",day:"numeric",month:"short"})}
           </time>
           <IconButton
             type="button"
@@ -259,7 +263,7 @@ export function ProcedureHeroControls({
         <div className="procedure-hero__meals-row">
           <button
             type="button"
-            onClick={() => setStartTime(new Date())}
+            onClick={() => { setPreciseEndTime(false); setStartTime(new Date()); }}
             className="procedure-hero__meal-chip"
           >
             {uiMessage("features.recipe.procedure-hero.inizia-ora-895d8504")}</button>
@@ -271,7 +275,7 @@ export function ProcedureHeroControls({
               <button
                 key={slot.id}
                 type="button"
-                onClick={() => setStartTime(slot.idealStart)}
+                onClick={() => { setPreciseEndTime(true); setStartTime(slot.idealStart); }}
                 className="procedure-hero__meal-chip"
               >
                 {text.label} ({text.sublabel})
@@ -307,6 +311,7 @@ export function ProcedureHeroControls({
           aria-describedby={comfortDescId}
           checked={comfortToggled}
           onCheckedChange={(checked) => {
+            setPreciseEndTime(false);
             setComfortToggled(checked);
             if (!checked) {
               setStretch({});
