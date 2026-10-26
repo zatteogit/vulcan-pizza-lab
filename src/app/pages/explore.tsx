@@ -51,6 +51,18 @@ function signatureBadgeText(badge: string, cms: CmsContent): string {
   return key ? String(cms.ui[key]) : badge;
 }
 
+/** Each line has a role: style context, recipe identity, provenance.
+ * Editorial omissions are explicit, rather than guessed from translated words. */
+function signatureCardText(recipe: SignatureRecipe, styleName: string) {
+  const interpretation = recipe.interpretation_id ? getInterpretationById(recipe.interpretation_id) : undefined;
+  return {
+    title: recipe.card?.name ?? recipe.name,
+    context: recipe.card?.context === undefined ? styleName : recipe.card.context,
+    author: recipe.card?.attribution === "badge" ? null
+      : interpretation?.author ?? interpretation?.pizzeria ?? interpretation?.organization ?? null,
+  };
+}
+
 function getAcronymTooltip(text: string | null | undefined): string | undefined {
   if (!text) return undefined;
   const acronyms: Record<string, string> = {
@@ -112,12 +124,7 @@ function FeaturedRecipeCard({
     FALLBACK;
   const styleName = STYLES_DB[recipe.style_id]?.name ?? recipe.style_id;
 
-  const interpretation = recipe.interpretation_id
-    ? getInterpretationById(recipe.interpretation_id)
-    : undefined;
-  const authorLabel = interpretation
-    ? interpretation.author ?? interpretation.pizzeria ?? interpretation.organization ?? null
-    : null;
+  const cardText = signatureCardText(recipe, styleName);
 
   const linkParams = new URLSearchParams();
   linkParams.set("mode", "canonical");
@@ -160,21 +167,19 @@ function FeaturedRecipeCard({
       {/* Colonna Testo Solido */}
       <div className="explore-feature__body">
         <div className="explore-feature__head">
-          <span
+          {cardText.context && <span
             className="explore-feature__eyebrow"
-            title={getAcronymTooltip(styleName)}
+            title={getAcronymTooltip(cardText.context)}
           >
-            {styleName}
-          </span>
+            {cardText.context}
+          </span>}
           <h2 className="explore-feature__title">
-            {recipe.name}
+            {cardText.title}
           </h2>
           <p className="explore-feature__desc">
-            {uiMessage("pages.explore.featuredLead")}
-            <strong className="explore-feature__desc-strong">{styleName}</strong>
-            {authorLabel ? uiMessage("pages.explore.featuredBy", [authorLabel]) : ""}
-            {uiMessage("pages.explore.featuredTail")}
+            {recipe.description}
           </p>
+          {cardText.author && <p className="explore-feature__desc">{uiMessage("pages.explore.recipeBy", [cardText.author])}</p>}
         </div>
 
         <div className="explore-feature__cta">
@@ -560,27 +565,7 @@ function SignatureRecipeCard({
   const styleName =
     STYLES_DB[recipe.style_id]?.name ?? recipe.style_id;
 
-  /* Autore/locale dall'interpretazione (se mappata): mostrato come "Secondo X"
-   * sopra al titolo, e propagato come deep-link ?interpretation=<id>.
-   * Audit motore 2026-05: dedup vs authenticity_badge — se il badge in alto
-   * già contiene il nome dell'organizzazione (es. badge "Disciplinare AVPN"
-   * + organization "AVPN — Associazione Verace Pizza Napoletana"),
-   * sopprime "Secondo X" perché ridondante. */
-  const interpretation = recipe.interpretation_id
-    ? getInterpretationById(recipe.interpretation_id)
-    : undefined;
-  let authorLabel: string | null = interpretation
-    ? interpretation.author ??
-      interpretation.pizzeria ??
-      interpretation.organization ??
-      null
-    : null;
-  if (authorLabel && recipe.authenticity_badge) {
-    const orgKeyword = (interpretation?.organization ?? "").split(/[\s—]/)[0];
-    if (orgKeyword && recipe.authenticity_badge.toLowerCase().includes(orgKeyword.toLowerCase())) {
-      authorLabel = null;
-    }
-  }
+  const cardText = signatureCardText(recipe, styleName);
 
   const linkParams = new URLSearchParams();
   linkParams.set("mode", "canonical");
@@ -630,19 +615,19 @@ function SignatureRecipeCard({
 
           {/* Title + sotto-titolo stile */}
           <figcaption className="explore-card__caption">
-            <div
+            {cardText.context && <div
               className="explore-card__eyebrow"
-              title={getAcronymTooltip(styleName)}
+              title={getAcronymTooltip(cardText.context)}
             >
-              {styleName}
-            </div>
+              {cardText.context}
+            </div>}
             <h3 className="explore-card__title explore-card__title--recipe">
-              {recipe.name}
+              {cardText.title}
             </h3>
             {/* Sprint 12 — autore/locale dell'interpretazione (se mappata). */}
-            {authorLabel && (
+            {cardText.author && (
               <div className="explore-card__author">
-                {uiMessage("pages.explore.recipeBy", [authorLabel])}
+                {uiMessage("pages.explore.recipeBy", [cardText.author])}
               </div>
             )}
           </figcaption>

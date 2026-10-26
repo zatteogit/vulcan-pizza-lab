@@ -41,6 +41,16 @@ describe.each(Object.entries(LOCALES))("ispirazioni tradotte · %s", (locale, tr
     expect(missing).toEqual([]);
   });
 
+  it("il testo breve delle card è tradotto, senza perdere le omissioni editoriali", () => {
+    for (const recipe of SIGNATURE_RECIPES) {
+      const card = localizeSignatureRecipe(recipe,tr).card;
+      if (recipe.card?.name) expect(tr.recipes[recipe.id]?.card?.name,recipe.id).toBeTruthy();
+      if (recipe.card?.context) expect(tr.recipes[recipe.id]?.card?.context,recipe.id).toBeTruthy();
+      if (recipe.card?.context === null) expect(card?.context,recipe.id).toBeNull();
+      expect(card?.attribution,recipe.id).toBe(recipe.card?.attribution);
+    }
+  });
+
   it("nessuna voce orfana", () => {
     const ids = new Set(getAllInterpretations().map((it) => it.id));
     const recipeIds = new Set(SIGNATURE_RECIPES.map((r) => r.id));

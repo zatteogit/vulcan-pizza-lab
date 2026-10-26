@@ -28,6 +28,13 @@ import signatureSfincioneBianco from "../../assets/signatures/signature_sfincion
 export interface SignatureRecipe {
   id: string;
   name: string;
+  /** Card-only editorial hierarchy; full reference names remain available in detail/search. */
+  card?: {
+    name?: string;
+    /** null omits a style already identified by the recipe title. */
+    context?: string | null;
+    attribution?: "badge" | "subtitle";
+  };
   description: string;
   emoji?: string;
   /** Foto override; se omesso, eredita STYLE_PHOTOS[style_id]. */
@@ -62,6 +69,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   /* ═══ NAPOLETANE ═══ */
   {
     id: "margherita_verace",
+    card: { attribution: "badge" },
     name: "Margherita Verace",
     description: "L'icona universale: pomodoro, mozzarella, basilico e olio extravergine, cotta in 60–90 secondi come chiede il disciplinare.",
     emoji: "🍅",
@@ -74,6 +82,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   },
   {
     id: "marinara_avpn",
+    card: { attribution: "badge" },
     name: "Marinara",
     description: "Niente formaggio: pomodoro, aglio, origano e olio extravergine. Con la Margherita, è una delle due pizze della STG.",
     emoji: "🌿",
@@ -122,6 +131,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   },
   {
     id: "mortazza_alla_pala",
+    card: { context: null },
     name: "Mortazza alla Pala",
     description: "Pizza bianca alla pala aperta a libro, con mortadella Bologna IGP e granella di pistacchio dopo la cottura.",
     emoji: "🥪",
@@ -133,6 +143,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   },
   {
     id: "scrocchiarella_boscaiola",
+    card: { context: "Tonda romana" },
     name: "Scrocchiarella Boscaiola",
     description: "Tonda sottile e croccante con funghi saltati, salsiccia e mozzarella.",
     emoji: "🍄",
@@ -143,6 +154,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   },
   {
     id: "bonci_margherita",
+    card: { name: "Margherita al taglio", attribution: "badge" },
     name: "Margherita al taglio, ispirata a Bonci",
     description: "Teglia con impasto molto idratato e lunga maturazione in frigo, come nelle ricette che Bonci ha reso pubbliche. Sopra, una margherita classica.",
     emoji: "☁️",
@@ -158,6 +170,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   /* ═══ SICILIANE / SUD ═══ */
   {
     id: "sfincione_bianca",
+    card: { context: null },
     name: "Sfincione in bianco",
     description: "L'impasto alto e soffice dello sfincione palermitano, solo con olio extravergine, rosmarino e sale. Non è lo sfincione bianco di Bagheria, che porta ricotta e tuma.",
     emoji: "🏺",
@@ -171,6 +184,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   /* ═══ INTERNAZIONALI ═══ */
   {
     id: "ny_pepperoni",
+    card: { context: null },
     name: "New York Pepperoni",
     description: "Fetta larga e pieghevole, con pepperoni che in cottura si arricciano a coppetta.",
     emoji: "🗽",
@@ -182,6 +196,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   },
   {
     id: "detroit_pepperoni",
+    card: { context: null },
     name: "Detroit Pepperoni",
     description: "Pizza alta in teglia: il formaggio arriva fino ai bordi e li caramella. Sopra, pepperoni.",
     emoji: "🚗",
@@ -193,6 +208,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
   },
   {
     id: "crescenza_recco_igp",
+    card: { name: "Focaccia di Recco col formaggio", context: null, attribution: "badge" },
     name: "Focaccia di Recco col formaggio IGP",
     description: "Due sfoglie sottilissime senza lievito con formaggio fresco fuso in mezzo. Tradizione ligure, IGP dal 2015.",
     emoji: "🧀",

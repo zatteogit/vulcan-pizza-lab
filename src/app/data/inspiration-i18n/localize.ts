@@ -20,5 +20,7 @@ export function localizeInterpretation(it: Interpretation, tr?: InspirationTrans
 export function localizeSignatureRecipe(recipe: SignatureRecipe, tr?: InspirationTranslation): SignatureRecipe {
   const t = tr?.recipes[recipe.id];
   if (!t) return recipe;
-  return { ...recipe, name: t.name ?? recipe.name, description: t.description ?? recipe.description };
+  return { ...recipe, name: t.name ?? recipe.name, description: t.description ?? recipe.description,
+    ...(recipe.card || t.card ? {card:{...recipe.card,...t.card}} : {}),
+  };
 }

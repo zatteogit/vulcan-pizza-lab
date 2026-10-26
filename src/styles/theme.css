@@ -3186,11 +3186,6 @@
     line-height: var(--leading-reading);
   }
 
-  .explore-feature__desc-strong {
-    color: var(--text-default);
-    font-weight: var(--weight-semibold);
-  }
-
   .explore-feature__cta {
     margin-top: var(--space-6);
     display: flex;
@@ -19994,10 +19989,6 @@ html {
   [data-theme="sfornata"] .explore-feature__desc {
     color: color-mix(in srgb, #fdf8ee 88%, transparent);
     text-shadow: 0 var(--space-px) 6px rgba(24, 11, 3, 0.45);
-  }
-
-  [data-theme="sfornata"] .explore-feature__desc-strong {
-    color: #fdf8ee;
   }
 
   [data-theme="sfornata"] .explore-feature__cta {

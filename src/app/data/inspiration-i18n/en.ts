@@ -102,10 +102,12 @@ export const INSPIRATION_I18N_EN: InspirationTranslation = {
       description: "Pizza bianca alla pala opened like a book, with mortadella Bologna PGI and chopped pistachios added after baking.",
     },
     scrocchiarella_boscaiola: {
+      card: {"context": "Roman round pizza"},
       name: "Scrocchiarella Boscaiola",
       description: "Thin, crisp round pizza with sautéed mushrooms, sausage and mozzarella.",
     },
     bonci_margherita: {
+      card: {"name": "Margherita al taglio"},
       name: "Margherita al taglio, inspired by Bonci",
       description: "Teglia with a very high-hydration dough and long cold maturation, as in the recipes Bonci has made public. On top, a classic margherita.",
     },
@@ -122,6 +124,7 @@ export const INSPIRATION_I18N_EN: InspirationTranslation = {
       description: "Thick pan pizza: the cheese goes right to the edges and caramelizes them. Pepperoni on top.",
     },
     crescenza_recco_igp: {
+      card: {"name": "Focaccia di Recco col formaggio"},
       name: "Focaccia di Recco col formaggio PGI",
       description: "Two very thin unleavened sheets of dough with fresh cheese melted in between. A Ligurian tradition, PGI since 2015.",
     },
