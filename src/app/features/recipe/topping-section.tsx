@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, Lightbulb } from "lucide-react";
 import { toppingConcept } from "../../data/topping-i18n/localize";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { motionSpring, motionTiming, motionDuration } from "../../components/ds/motion";
+import { motionSpring, motionDuration } from "../../components/ds/motion";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { IMAGE_SIZES, responsiveImgAttributes } from "../../components/media/responsive-images";
 import { useCms } from "../cms/cms-context";
@@ -65,14 +65,20 @@ function ToppingBody({ contentKey, children }: { contentKey: string; children: R
     observer.observe(content);
     return () => observer.disconnect();
   }, [contentKey]);
+  useLayoutEffect(() => {
+    const content = contentRef.current;
+    if (!content || reduceMotion || typeof content.animate !== "function") return;
+    // An ancestor Presence boundary suppresses descendant initial animations.
+    // Animate only this replaced body, without introducing an exit queue.
+    const enter = content.animate({ opacity: [0.6, 1] }, { duration: motionDuration.feedback * 1000 });
+    return () => enter.cancel();
+  }, [contentKey, reduceMotion]);
   return (
     <motion.div className="topping-inline__body" initial={false} animate={{ height }}
       transition={reduceMotion ? { duration: motionDuration.reduced } : motionSpring.denseDisclosure}>
-      <motion.div key={contentKey} ref={contentRef} className="topping-inline__content"
-        initial={reduceMotion ? false : { opacity: 0.6 }} animate={{ opacity: 1 }}
-        transition={reduceMotion ? { duration: motionDuration.reduced } : motionTiming.feedback}>
+      <div key={contentKey} ref={contentRef} className="topping-inline__content">
         {children}
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
