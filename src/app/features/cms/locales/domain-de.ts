@@ -141,16 +141,16 @@ export const DIETARY_DE: Partial<CmsDietaryI18n> = {
     low_fodmap: {
       name: "Low FODMAP",
       description:
-        "Reduziert fermentierbare Fruktane und Oligosaccharide",
+        "Zutaten, Verfahren und Portionsgröße bewerten",
       scienceNote:
-        "G\u00E4rung \u226524h reduziert FODMAP 70% (Costabile 2014)",
+        "Fermentation kann den FODMAP-Gehalt verändern. Das Ergebnis hängt von Mehl, Mikroorganismen, Verfahren und Portionsgröße ab. Stunden allein erlauben weder eine Mengenangabe noch die Einstufung als FODMAP-arm.",
     },
     histamine: {
       name: "Histaminarm",
       description:
-        "Begrenzt Histaminaufbau durch lange G\u00E4rung",
+        "Zutaten, Verfahren und Portionsgröße bewerten",
       scienceNote:
-        "Histamin akkumuliert linear. Frischhefe <6h: sicher (<5 mg/kg)",
+        "Der Gehalt hängt von Mikroorganismen, Zutaten, Verarbeitung und Lagerung ab. Ein fester stündlicher Anstieg lässt sich nicht berechnen; kurze Gärung garantiert keine Abwesenheit.",
     },
     gluten_free: {
       name: "Glutenfrei",
@@ -163,13 +163,13 @@ export const DIETARY_DE: Partial<CmsDietaryI18n> = {
       name: "Laktosefrei",
       description: "Bei Laktoseintoleranz",
       scienceNote:
-        "Backen >200\u00B0C baut 90%+ Laktose ab. Nur SCHWER erfordert Ersatz",
+        "Backen garantiert keinen Laktoseabbau: Zutaten und Herstellerangaben prüfen.",
     },
     nickel: {
       name: "Nickelarm",
       description: "Bei systemischer Nickelallergie (SNAS)",
       scienceNote:
-        "Mehl 00 (~50 \u00B5g/100g) vs Vollkorn (~200 \u00B5g/100g). Schwelle <200 \u00B5g/Tag",
+        "Produktdaten sind nötig; Mehlstärke allein bestätigt keine Eignung.",
     },
     vegan: {
       name: "Vegan",
@@ -181,39 +181,39 @@ export const DIETARY_DE: Partial<CmsDietaryI18n> = {
   conflicts: {
     fodmap_histamine: {
       message:
-        "FODMAP erfordert lange G\u00E4rung (\u226524h), Histamin erfordert kurze G\u00E4rung (\u226412h)",
+        "Gärdauer und Hefetyp bestätigen keine Eignung bei FODMAP- oder Histaminbeschränkungen.",
       compromiseTip:
-        "Kompromiss: 8-12h mit Frischhefe bei 18\u00B0C. FODMAP reduziert ~40% (suboptimal), Histamin ~8 mg/kg (akzeptabel)",
+        "Zutaten und Portionsgröße anhand geprüfter Daten bewerten; lange Gärung garantiert keine Eignung.",
     },
     gf_fodmap: {
       message:
-        "Kompatibel! GF-Mix eliminiert die Hauptquelle von FODMAP (Weizenfruktane)",
+        "Glutenfrei bedeutet nicht automatisch FODMAP-arm: Zutaten und Portionsgröße sind entscheidend.",
     },
     nickel_general: {
       message:
-        "F\u00FCr nickelarm Mehl 00 (50 \u00B5g/100g) statt Vollkorn (200 \u00B5g/100g) bevorzugen",
+        "Produktdaten sind nötig; Mehlstärke allein bestätigt keine Eignung.",
     },
   },
   warnings: {
     fodmap_low: {
       message:
-        "FODMAP nur {pct}% reduziert \u2014 G\u00E4rung zu kurz",
-      tip: "Auf \u226524h erh\u00F6hen f\u00FCr 70%+ Reduktion",
+        "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
+      tip: "Zutaten und Portionsgröße anhand geprüfter Daten bewerten; lange Gärung garantiert keine Eignung.",
     },
     fodmap_good: {
       message:
-        "FODMAP {pct}% reduziert \u2014 gutes Niveau f\u00FCr RDS",
-      tip: "Die G\u00E4rung ist lang genug um Fruktane abzubauen",
+        "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
+      tip: "Zutaten und Portionsgröße anhand geprüfter Daten bewerten; lange Gärung garantiert keine Eignung.",
     },
     histamine_high: {
       message:
-        "Gesch\u00E4tztes Histamin ~{val} mg/kg \u2014 hohes Niveau",
-      tip: "G\u00E4rung auf \u226412h reduzieren oder Frischhefe bei \u226420\u00B0C verwenden",
+        "Der Histamingehalt ist aus Zeit und Temperatur nicht bestimmbar",
+      tip: "Zutaten und Verfahren prüfen: Das Modell bestätigt keinen sicheren Gehalt.",
     },
     histamine_moderate: {
       message:
-        "Gesch\u00E4tztes Histamin ~{val} mg/kg \u2014 m\u00E4\u00DFiges Niveau",
-      tip: "Symptome beobachten. Sicherheitshalber Zeit oder Temperatur reduzieren",
+        "Der Histamingehalt ist aus Zeit und Temperatur nicht bestimmbar",
+      tip: "Zutaten und Verfahren prüfen: Das Modell bestätigt keinen sicheren Gehalt.",
     },
     gluten_free: {
       message:
@@ -222,8 +222,8 @@ export const DIETARY_DE: Partial<CmsDietaryI18n> = {
     },
     nickel_highW: {
       message:
-        "Starke Mehle (hoher W) sind weniger raffiniert, mit mehr Nickel",
-      tip: "Raffiniertes Mehl 00 (W 200-260) bevorzugen um Nickel zu minimieren",
+        "W misst nicht den Nickelgehalt",
+      tip: "Produktdaten sind nötig; Mehlstärke allein bestätigt keine Eignung.",
     },
   },
 };
@@ -478,7 +478,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     w_alveograph: {
       name: "W (Chopin-Alveograph)",
       definition: "Gesamtenergie, die n\u00F6tig ist, um eine Teigblase bis zum Platzen aufzubl\u00E4hen. Misst die Mehlst\u00E4rke insgesamt.",
-      whyImportant: "Niedriger W (<180): dehnbarer Teig, kurze G\u00E4rung. Mittlerer W (220-280): ideal f\u00FCr Neapolitanische, vertr\u00E4gt 18-30h. Hoher W (>300): z\u00E4her Teig, n\u00F6tig f\u00FCr reichhaltige Teige.",
+      whyImportant: "W beschreibt die Gesamtstärke des Mehls. Zähigkeit und Dehnbarkeit werden mit P, L und P/L beurteilt: Ein hoher W-Wert allein bedeutet keinen zäheren Teig.",
       ranges: [
         { label: "Schwach", value: "90\u2013160", note: "Kekse, Waffeln" },
         { label: "Mittel", value: "160\u2013200", note: "Kastenwei\u00DFbrot, Focaccia" },
@@ -657,12 +657,12 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     fodmap: {
       name: "FODMAP",
       definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. Kurzkettige, fermentierbare Kohlenhydrate (Fruktane 1-3% im Weizen).",
-      whyImportant: "Der Darm verdaut Fruktane nicht \u2192 Bakterien verg\u00E4ren sie \u2192 Gase/Bl\u00E4hungen. Lange G\u00E4rung reduziert sie: 24h\u219260-70%, 48h\u219280-85%.",
+      whyImportant: "Fermentation kann den FODMAP-Gehalt verändern. Das Ergebnis hängt von Mehl, Mikroorganismen, Verfahren und Portionsgröße ab. Stunden allein erlauben weder eine Mengenangabe noch die Einstufung als FODMAP-arm.",
     },
     histamine: {
       name: "Histamin",
       definition: "Biogenes Amin aus der Decarboxylierung von Histidin. Wird von LAB w\u00E4hrend der G\u00E4rung gebildet und kommt in gereiftem K\u00E4se und Wurstwaren vor.",
-      whyImportant: "Reichert sich linear mit der Zeit an. Sauerteig 24h/28\u00B0C \u2192 30-50 mg/kg. Bei DAO-Mangel: pseudoallergische Reaktion. L\u00F6sung: kurze G\u00E4rung (<12h) + B\u00E4ckerhefe.",
+      whyImportant: "Der Gehalt hängt von Mikroorganismen, Zutaten, Verarbeitung und Lagerung ab. Ein fester stündlicher Anstieg lässt sich nicht berechnen; kurze Gärung garantiert keine Abwesenheit.",
     },
     gluten: {
       name: "Gluten",
@@ -724,13 +724,8 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     },
     d_score: {
       name: "D-Score (Bek\u00F6mmlichkeit)",
-      definition: "Wert von 0-100, der die Bek\u00F6mmlichkeit anhand normalisierter G\u00E4rstunden und der FODMAP-Reduktion sch\u00E4tzt.",
-      ranges: [
-        { label: "85-100", value: "Hoch (>48h \u00E4quivalent)" },
-        { label: "70-84", value: "Mittel bis hoch (24-48h)" },
-        { label: "50-69", value: "Mittel (12-24h)" },
-        { label: "<50", value: "Niedrig (<12h)" },
-      ],
+      definition: "Heuristischer Reifungsindex, kein Maß für individuelle Verträglichkeit oder FODMAPs. Nutzt äquivalente Stunden bei 18°C mit Korrekturen für Vorteig, Hefemenge und Kühlung.",
+      ranges: [{"label":"85-100","value":"Hoher Index"},{"label":"70-84","value":"Mittelhoher Index"},{"label":"50-69","value":"Mittlerer Index"},{"label":"<50","value":"Niedriger Index"}],
     },
   },
 };

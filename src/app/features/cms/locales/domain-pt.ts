@@ -141,16 +141,16 @@ export const DIETARY_PT: Partial<CmsDietaryI18n> = {
     low_fodmap: {
       name: "Baixo FODMAP",
       description:
-        "Reduz frutanos e oligossacar\u00EDdeos ferment\u00E1veis",
+        "Avalia ingredientes, processo e porção",
       scienceNote:
-        "Fermenta\u00E7\u00E3o \u226524h reduz FODMAP 70% (Costabile 2014)",
+        "A fermentação pode alterar os FODMAP, mas o resultado depende da farinha, dos microrganismos, do processo e da porção. Só as horas não permitem quantificar a redução nem classificar a receita como baixa em FODMAP.",
     },
     histamine: {
       name: "Baixa histamina",
       description:
-        "Limita ac\u00FAmulo de histamina por fermenta\u00E7\u00E3o longa",
+        "Avalia ingredientes, processo e porção",
       scienceNote:
-        "Histamina acumula linearmente. Fermento fresco <6h: seguro (<5 mg/kg)",
+        "O teor depende de microrganismos, ingredientes, processo e conservação. Não é calculável com uma taxa fixa por hora; uma fermentação curta não garante a sua ausência.",
     },
     gluten_free: {
       name: "Sem gl\u00FAten",
@@ -163,14 +163,14 @@ export const DIETARY_PT: Partial<CmsDietaryI18n> = {
       name: "Sem lactose",
       description: "Para intoler\u00E2ncia \u00E0 lactose",
       scienceNote:
-        "Cozimento >200\u00B0C degrada 90%+ da lactose. Apenas SEVERO requer substitui\u00E7\u00E3o",
+        "A cozedura não garante a eliminação da lactose: verifica os ingredientes e a informação do fabricante.",
     },
     nickel: {
       name: "Baixo n\u00EDquel",
       description:
         "Para alergia sist\u00EAmica ao n\u00EDquel (SNAS)",
       scienceNote:
-        "Farinha 00 (~50 \u00B5g/100g) vs integral (~200 \u00B5g/100g). Limiar <200 \u00B5g/dia",
+        "São necessários dados do produto; a força da farinha, por si só, não certifica adequação.",
     },
     vegan: {
       name: "Vegano",
@@ -182,39 +182,39 @@ export const DIETARY_PT: Partial<CmsDietaryI18n> = {
   conflicts: {
     fodmap_histamine: {
       message:
-        "FODMAP requer fermenta\u00E7\u00E3o longa (\u226524h), histamina requer fermenta\u00E7\u00E3o curta (\u226412h)",
+        "As horas de fermentação e o tipo de fermento não certificam adequação a restrições de FODMAP ou histamina.",
       compromiseTip:
-        "Compromisso: 8-12h com fermento fresco a 18\u00B0C. FODMAP reduzidos ~40% (sub\u00F3timo), histamina ~8 mg/kg (aceit\u00E1vel)",
+        "Avalia ingredientes e porção com dados verificados; uma fermentação longa não garante adequação.",
     },
     gf_fodmap: {
       message:
-        "Compat\u00EDveis! O mix GF elimina a fonte principal de FODMAP (frutanos do trigo)",
+        "Sem glúten não significa automaticamente baixo em FODMAP: os ingredientes e a porção contam.",
     },
     nickel_general: {
       message:
-        "Para baixo n\u00EDquel preferir farinha 00 (50 \u00B5g/100g) em vez de integral (200 \u00B5g/100g)",
+        "São necessários dados do produto; a força da farinha, por si só, não certifica adequação.",
     },
   },
   warnings: {
     fodmap_low: {
       message:
-        "FODMAP reduzidos apenas {pct}% \u2014 fermenta\u00E7\u00E3o muito curta",
-      tip: "Aumente para \u226524h para atingir 70%+ de redu\u00E7\u00E3o",
+        "A redução de FODMAP não pode ser determinada apenas pelas horas",
+      tip: "Avalia ingredientes e porção com dados verificados; uma fermentação longa não garante adequação.",
     },
     fodmap_good: {
       message:
-        "FODMAP reduzidos {pct}% \u2014 bom n\u00EDvel para SII",
-      tip: "A fermenta\u00E7\u00E3o \u00E9 longa o suficiente para degradar os frutanos",
+        "A redução de FODMAP não pode ser determinada apenas pelas horas",
+      tip: "Avalia ingredientes e porção com dados verificados; uma fermentação longa não garante adequação.",
     },
     histamine_high: {
       message:
-        "Histamina estimada ~{val} mg/kg \u2014 n\u00EDvel alto",
-      tip: "Reduza a fermenta\u00E7\u00E3o para \u226412h ou use fermento fresco a \u226420\u00B0C",
+        "O teor de histamina não pode ser determinado pelo tempo e temperatura",
+      tip: "Verifica ingredientes e processo: o motor não certifica um nível seguro.",
     },
     histamine_moderate: {
       message:
-        "Histamina estimada ~{val} mg/kg \u2014 n\u00EDvel moderado",
-      tip: "Monitore os sintomas. Por seguran\u00E7a, reduza tempo ou temperatura",
+        "O teor de histamina não pode ser determinado pelo tempo e temperatura",
+      tip: "Verifica ingredientes e processo: o motor não certifica um nível seguro.",
     },
     gluten_free: {
       message:
@@ -223,8 +223,8 @@ export const DIETARY_PT: Partial<CmsDietaryI18n> = {
     },
     nickel_highW: {
       message:
-        "Farinhas fortes (W alto) tendem a ser menos refinadas, com mais n\u00EDquel",
-      tip: "Prefira farinha 00 refinada (W 200-260) para minimizar n\u00EDquel",
+        "W não mede o teor de níquel",
+      tip: "São necessários dados do produto; a força da farinha, por si só, não certifica adequação.",
     },
   },
 };
@@ -482,7 +482,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     w_alveograph: {
       name: "W (Alve\u00F3grafo de Chopin)",
       definition: "Energia total necess\u00E1ria para expandir uma bolha de massa at\u00E9 ela se romper. Mede a for\u00E7a geral da farinha.",
-      whyImportant: "W baixo (<180): massa extens\u00EDvel, fermenta\u00E7\u00E3o curta. W m\u00E9dio (220-280): ideal para a napolitana, tolera 18-30h. W alto (>300): massa tenaz, indicada para massas enriquecidas.",
+      whyImportant: "W descreve a força global da farinha. Tenacidade e extensibilidade são avaliadas com P, L e P/L: um W alto, por si só, não implica uma massa mais tenaz.",
       ranges: [
         { label: "Fraca", value: "90\u2013160", note: "Biscoitos, wafers" },
         { label: "M\u00E9dia", value: "160\u2013200", note: "P\u00E3o de forma, focaccia" },
@@ -661,12 +661,12 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     fodmap: {
       name: "FODMAP",
       definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. Carboidratos ferment\u00E1veis de cadeia curta (frutanos: 1-3% no trigo).",
-      whyImportant: "O intestino n\u00E3o digere os frutanos \u2192 as bact\u00E9rias os fermentam \u2192 gases/incha\u00E7o. A fermenta\u00E7\u00E3o longa reduz: 24h\u219260-70%, 48h\u219280-85%.",
+      whyImportant: "A fermentação pode alterar os FODMAP, mas o resultado depende da farinha, dos microrganismos, do processo e da porção. Só as horas não permitem quantificar a redução nem classificar a receita como baixa em FODMAP.",
     },
     histamine: {
       name: "Histamina",
       definition: "Amina biog\u00EAnica resultante da descarboxila\u00E7\u00E3o da histidina. Produzida pelas LAB durante a fermenta\u00E7\u00E3o, presente em queijos maturados e embutidos.",
-      whyImportant: "Ac\u00FAmulo linear com o tempo. Fermento natural 24h/28\u00B0C \u2192 30-50 mg/kg. Pessoas com defici\u00EAncia de DAO: rea\u00E7\u00E3o pseudoal\u00E9rgica. Solu\u00E7\u00E3o: fermenta\u00E7\u00E3o curta (<12h) + fermento comercial.",
+      whyImportant: "O teor depende de microrganismos, ingredientes, processo e conservação. Não é calculável com uma taxa fixa por hora; uma fermentação curta não garante a sua ausência.",
     },
     gluten: {
       name: "Gl\u00FAten",
@@ -728,13 +728,8 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     },
     d_score: {
       name: "D-Score (Digestibilidade)",
-      definition: "Pontua\u00E7\u00E3o de 0-100 que estima a digestibilidade com base nas horas de fermenta\u00E7\u00E3o normalizadas e na redu\u00E7\u00E3o de FODMAP.",
-      ranges: [
-        { label: "85-100", value: "Alta (>48h equivalentes)" },
-        { label: "70-84", value: "M\u00E9dia-alta (24-48h)" },
-        { label: "50-69", value: "M\u00E9dia (12-24h)" },
-        { label: "<50", value: "Baixa (<12h)" },
-      ],
+      definition: "Índice heurístico de maturação, não uma medida da digestibilidade individual ou dos FODMAP. Usa horas equivalentes a 18°C, com ajustes para pré-fermento, dose de fermento e frio.",
+      ranges: [{"label":"85-100","value":"Índice alto"},{"label":"70-84","value":"Índice médio-alto"},{"label":"50-69","value":"Índice médio"},{"label":"<50","value":"Índice baixo"}],
     },
   },
 };

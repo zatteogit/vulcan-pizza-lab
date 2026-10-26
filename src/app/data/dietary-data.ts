@@ -5,50 +5,15 @@
 /* i18n: accepts a neutral message-source contract, never the CMS feature. */
 
 import type { DietaryMessageSource } from "../i18n/domain-contracts";
-import { interpolate } from "../i18n/interpolate";
 
 const DEFAULT_WARNINGS = {
-  fodmap_low: { message: "FODMAP ridotti solo {pct}% — fermentazione troppo breve", tip: "Aumenta a ≥24h per raggiungere 70%+ di riduzione" },
-  fodmap_good: { message: "FODMAP ridotti {pct}% — buon livello per IBS", tip: "La fermentazione è sufficientemente lunga per degradare i fruttani" },
-  histamine_high: { message: "Istamina stimata ~{val} mg/kg — livello alto", tip: "Riduci fermentazione a ≤12h o usa lievito fresco a ≤20°C" },
-  histamine_moderate: { message: "Istamina stimata ~{val} mg/kg — livello moderato", tip: "Monitora i sintomi. Per sicurezza, riduci tempo o temperatura" },
+  fodmap_low: { message: "Riduzione FODMAP non determinabile dalle sole ore", tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità." },
+  fodmap_good: { message: "Riduzione FODMAP non determinabile dalle sole ore", tip: "Valuta ingredienti e porzione con dati verificati; una fermentazione lunga non garantisce l'idoneità." },
+  histamine_high: { message: "Contenuto di istamina non determinabile da tempo e temperatura", tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro." },
+  histamine_moderate: { message: "Contenuto di istamina non determinabile da tempo e temperatura", tip: "Verifica ingredienti e processo: il motore non attesta un livello sicuro." },
   gluten_free: { message: "Ricetta usa farina di grano — incompatibile con celiachia", tip: "Sostituisci con mix GF (riso 40% + mais 30% + quinoa 10% + sorgo 10% + amido 10%) + xantana 1.5%" },
-  nickel_highW: { message: "Farine forti (W alto) tendono ad essere meno raffinate, con più nichel", tip: "Preferisci farina 00 raffinata (W 200-260) per minimizzare nichel" },
+  nickel_highW: { message: "Il valore W non misura il contenuto di nichel", tip: "Servono dati sul prodotto; la sola forza della farina non attesta l'idoneità." },
 } as const;
-
-/* === FODMAP REDUCTION === */
-function calculateFodmapReduction(
-  fermentationHours: number,
-  fermentationTempC: number,
-  hasSourdough: boolean
-): number {
-  const kBase = 0.0336; // h^-1, da fit Costabile (80% in 48h)
-  const kTemp =
-    fermentationTempC >= 28 && fermentationTempC <= 32
-      ? 1.2
-      : fermentationTempC >= 18
-        ? 1.0
-        : 0.8;
-  const kSourdough = hasSourdough ? 1.3 : 1.0;
-  const kEff = kBase * kTemp * kSourdough;
-  const reduction = (1 - Math.exp(-kEff * fermentationHours)) * 100;
-  return Math.min(95, reduction);
-}
-
-/* === HISTAMINE ACCUMULATION === */
-function calculateHistamine(
-  fermentationHours: number,
-  fermentationTempC: number,
-  yeastType: string
-): number {
-  const baseRate =
-    yeastType === 'sourdough' ? 1.5 : yeastType === 'fresh' ? 0.3 : 0.2;
-  const tempFactor =
-    fermentationTempC > 25
-      ? 1.0 + (fermentationTempC - 25) * 0.1
-      : 0.5;
-  return baseRate * fermentationHours * tempFactor;
-}
 
 /* === CONTEXTUAL DIETARY WARNINGS (based on recipe params) === */
 interface DietaryWarning {
@@ -60,7 +25,7 @@ interface DietaryWarning {
 
 export function getDietaryWarnings(
   activeFilters: string[],
-  params: {
+  _params: {
     fermentHours: number;
     fermentTemp: number;
     yeastType: string;
@@ -72,54 +37,12 @@ export function getDietaryWarnings(
   const warnings: DietaryWarning[] = [];
   const cmsW = cms?.dietaryI18n?.warnings;
 
-  if (activeFilters.includes('low_fodmap')) {
-    const reduction = calculateFodmapReduction(
-      params.fermentHours,
-      params.fermentTemp,
-      params.yeastType === 'sourdough'
-    );
-    if (reduction < 50) {
-      const loc = cmsW?.fodmap_low ?? DEFAULT_WARNINGS.fodmap_low;
-      warnings.push({
-        filterId: 'low_fodmap',
-        message: interpolate(loc.message, { pct: reduction.toFixed(0) }),
-        tip: loc.tip,
-        severity: 'warning',
-      });
-    } else if (reduction >= 70) {
-      const loc = cmsW?.fodmap_good ?? DEFAULT_WARNINGS.fodmap_good;
-      warnings.push({
-        filterId: 'low_fodmap',
-        message: interpolate(loc.message, { pct: reduction.toFixed(0) }),
-        tip: loc.tip,
-        severity: 'info',
-      });
-    }
-  }
-
-  if (activeFilters.includes('histamine')) {
-    const histamine = calculateHistamine(
-      params.fermentHours,
-      params.fermentTemp,
-      params.yeastType
-    );
-    if (histamine > 10) {
-      const loc = cmsW?.histamine_high ?? DEFAULT_WARNINGS.histamine_high;
-      warnings.push({
-        filterId: 'histamine',
-        message: interpolate(loc.message, { val: histamine.toFixed(0) }),
-        tip: loc.tip,
-        severity: 'critical',
-      });
-    } else if (histamine > 5) {
-      const loc = cmsW?.histamine_moderate ?? DEFAULT_WARNINGS.histamine_moderate;
-      warnings.push({
-        filterId: 'histamine',
-        message: interpolate(loc.message, { val: histamine.toFixed(0) }),
-        tip: loc.tip,
-        severity: 'warning',
-      });
-    }
+  // Tempo, temperatura e lievito non misurano FODMAP o istamina.
+  // Un avviso resta presente anche dopo una fermentazione lunga.
+  for (const [filterId, key] of [["low_fodmap", "fodmap_low"], ["histamine", "histamine_high"]] as const) {
+    if (!activeFilters.includes(filterId)) continue;
+    const loc = cmsW?.[key] ?? DEFAULT_WARNINGS[key];
+    warnings.push({ filterId, message: loc.message, tip: loc.tip, severity: "warning" });
   }
 
   if (activeFilters.includes('gluten_free')) {
@@ -132,7 +55,7 @@ export function getDietaryWarnings(
     });
   }
 
-  if (activeFilters.includes('nickel') && params.flourW > 300) {
+  if (activeFilters.includes('nickel')) {
     const loc = cmsW?.nickel_highW ?? DEFAULT_WARNINGS.nickel_highW;
     warnings.push({
       filterId: 'nickel',

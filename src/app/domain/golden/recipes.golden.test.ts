@@ -34,7 +34,7 @@ type Expected = Record<Scenario, [RecipeOutcome, Kind[]]>;
 const CHECK_PANTRY: [RecipeOutcome, Kind[]] = ["warnings", []];
 const WARN: [RecipeOutcome, Kind[]] = ["warnings", []];
 const OVEN: [RecipeOutcome, Kind[]] = ["not_feasible", ["oven_too_cold"]];
-const SHORT: [RecipeOutcome, Kind[]] = ["not_feasible", ["fermentation_too_short"]];
+const OVEN_LATE: [RecipeOutcome, Kind[]] = ["not_feasible", ["oven_too_cold", "time_window"]];
 const LATE_SHORT: [RecipeOutcome, Kind[]] = ["not_feasible", ["time_window", "fermentation_too_short"]];
 const OVEN_LATE_SHORT: [RecipeOutcome, Kind[]] = ["not_feasible", ["oven_too_cold", "time_window", "fermentation_too_short"]];
 
@@ -56,7 +56,7 @@ const EXPECTED: Record<string, Expected> = {
   sfincione: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
   pala_romana: { ideal: CHECK_PANTRY, home: OVEN, rush: OVEN_LATE_SHORT },
   grandma_style: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
-  focaccia_recco: { ideal: CHECK_PANTRY, home: OVEN, rush: OVEN },
+  focaccia_recco: { ideal: CHECK_PANTRY, home: OVEN, rush: OVEN_LATE },
   padellino_torino: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
   // C-1: prima il condimento predefinito non portava a nessuna ricetta; con la
   // mortadella (farcitura dopo la cottura) in 2 h non ci sta neanche la finestra.
@@ -66,10 +66,10 @@ const EXPECTED: Record<string, Expected> = {
   trancio_milanese: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
   chicago_tavern: { ideal: CHECK_PANTRY, home: WARN, rush: LATE_SHORT },
   focaccia_barese: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
-  pizza_fritta: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: SHORT },
-  pizza_montanara: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: SHORT },
+  pizza_fritta: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
+  pizza_montanara: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
   // M-7 (D-022): tonda fritta AVPN, stesso impasto della pizza fritta.
-  pizza_fritta_tonda: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: SHORT },
+  pizza_fritta_tonda: { ideal: CHECK_PANTRY, home: CHECK_PANTRY, rush: LATE_SHORT },
   calzone_napoletano: { ideal: CHECK_PANTRY, home: OVEN, rush: OVEN_LATE_SHORT },
   pizza_al_metro: { ideal: CHECK_PANTRY, home: OVEN, rush: OVEN_LATE_SHORT },
   new_haven_apizza: { ideal: CHECK_PANTRY, home: OVEN, rush: OVEN_LATE_SHORT },

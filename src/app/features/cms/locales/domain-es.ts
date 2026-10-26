@@ -136,16 +136,16 @@ export const DIETARY_ES: Partial<CmsDietaryI18n> = {
     low_fodmap: {
       name: "Low FODMAP",
       description:
-        "Reduce fructanos y oligosacáridos fermentables",
+        "Evalúa ingredientes, proceso y porción",
       scienceNote:
-        "Fermentación ≥24h reduce FODMAP 70% (Costabile 2014)",
+        "La fermentación puede modificar los FODMAP, pero el resultado depende de la harina, los microorganismos, el proceso y la porción. Las horas por sí solas no permiten cuantificar una reducción ni clasificar la receta como baja en FODMAP.",
     },
     histamine: {
       name: "Baja histamina",
       description:
-        "Limita la acumulación de histamina por fermentación larga",
+        "Evalúa ingredientes, proceso y porción",
       scienceNote:
-        "La histamina se acumula linealmente. Levadura fresca <6h: seguro (<5 mg/kg)",
+        "El contenido depende de microorganismos, ingredientes, proceso y conservación. No se calcula con una tasa fija por hora; una fermentación breve no garantiza su ausencia.",
     },
     gluten_free: {
       name: "Sin gluten",
@@ -157,13 +157,13 @@ export const DIETARY_ES: Partial<CmsDietaryI18n> = {
       name: "Sin lactosa",
       description: "Para intolerancia a la lactosa",
       scienceNote:
-        "Cocción >200°C degrada 90%+ de lactosa. Solo SEVERO requiere sustitución",
+        "El horneado no garantiza la eliminación de lactosa: comprueba los ingredientes y la información del fabricante.",
     },
     nickel: {
       name: "Bajo níquel",
       description: "Para alergia sistémica al níquel (SNAS)",
       scienceNote:
-        "Harina 00 (~50 µg/100g) vs integral (~200 µg/100g). Umbral <200 µg/día",
+        "Se necesitan datos del producto; la fuerza de la harina por sí sola no certifica la idoneidad.",
     },
     vegan: {
       name: "Vegano",
@@ -175,37 +175,37 @@ export const DIETARY_ES: Partial<CmsDietaryI18n> = {
   conflicts: {
     fodmap_histamine: {
       message:
-        "FODMAP requiere fermentación larga (≥24h), histamina requiere fermentación corta (≤12h)",
+        "Las horas de fermentación y el tipo de levadura no certifican la idoneidad para restricciones de FODMAP o histamina.",
       compromiseTip:
-        "Compromiso: 8-12h con levadura fresca a 18°C. FODMAP reducidos ~40% (sub-óptimo), histamina ~8 mg/kg (aceptable)",
+        "Evalúa ingredientes y porción con datos verificados; una fermentación larga no garantiza la idoneidad.",
     },
     gf_fodmap: {
       message:
-        "¡Compatibles! La mezcla GF elimina la fuente principal de FODMAP (fructanos del trigo)",
+        "Sin gluten no significa automáticamente bajo en FODMAP: importan los ingredientes y la porción.",
     },
     nickel_general: {
       message:
-        "Para bajo níquel prefiere harina 00 (50 µg/100g) sobre integral (200 µg/100g)",
+        "Se necesitan datos del producto; la fuerza de la harina por sí sola no certifica la idoneidad.",
     },
   },
   warnings: {
     fodmap_low: {
       message:
-        "FODMAP reducidos solo {pct}% — fermentación demasiado corta",
-      tip: "Aumenta a ≥24h para alcanzar 70%+ de reducción",
+        "La reducción de FODMAP no puede determinarse solo por las horas",
+      tip: "Evalúa ingredientes y porción con datos verificados; una fermentación larga no garantiza la idoneidad.",
     },
     fodmap_good: {
-      message: "FODMAP reducidos {pct}% — buen nivel para SII",
-      tip: "La fermentación es suficientemente larga para degradar los fructanos",
+      message: "La reducción de FODMAP no puede determinarse solo por las horas",
+      tip: "Evalúa ingredientes y porción con datos verificados; una fermentación larga no garantiza la idoneidad.",
     },
     histamine_high: {
-      message: "Histamina estimada ~{val} mg/kg — nivel alto",
-      tip: "Reduce la fermentación a ≤12h o usa levadura fresca a ≤20°C",
+      message: "El contenido de histamina no puede determinarse por tiempo y temperatura",
+      tip: "Comprueba ingredientes y proceso: el motor no certifica un nivel seguro.",
     },
     histamine_moderate: {
       message:
-        "Histamina estimada ~{val} mg/kg — nivel moderado",
-      tip: "Monitoriza los síntomas. Por seguridad, reduce tiempo o temperatura",
+        "El contenido de histamina no puede determinarse por tiempo y temperatura",
+      tip: "Comprueba ingredientes y proceso: el motor no certifica un nivel seguro.",
     },
     gluten_free: {
       message:
@@ -214,8 +214,8 @@ export const DIETARY_ES: Partial<CmsDietaryI18n> = {
     },
     nickel_highW: {
       message:
-        "Harinas fuertes (W alto) tienden a ser menos refinadas, con más níquel",
-      tip: "Prefiere harina 00 refinada (W 200-260) para minimizar níquel",
+        "W no mide el contenido de níquel",
+      tip: "Se necesitan datos del producto; la fuerza de la harina por sí sola no certifica la idoneidad.",
     },
   },
 };
@@ -464,7 +464,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     w_alveograph: {
       name: "W (Alve\u00F3grafo de Chopin)",
       definition: "Energ\u00EDa total necesaria para expandir un alveolo de masa hasta su rotura. Mide la fuerza global de la harina.",
-      whyImportant: "W bajo (<180): masa extensible, fermentaci\u00F3n corta. W medio (220-280): ideal para la napolitana, tolera 18-30h. W alto (>300): masa tenaz, necesaria para masas enriquecidas.",
+      whyImportant: "W describe la fuerza global de la harina. La tenacidad y la extensibilidad se evalúan con P, L y P/L: una W alta por sí sola no implica una masa más tenaz.",
       ranges: [
         { label: "Floja", value: "90\u2013160", note: "Galletas, barquillos" },
         { label: "Media", value: "160\u2013200", note: "Pan de molde, focaccia" },
@@ -643,12 +643,12 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     fodmap: {
       name: "FODMAP",
       definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols (oligosac\u00E1ridos, disac\u00E1ridos, monosac\u00E1ridos y polioles fermentables). Carbohidratos de cadena corta fermentables (fructanos 1-3% en el trigo).",
-      whyImportant: "El intestino no digiere los fructanos \u2192 las bacterias los fermentan \u2192 gases/hinchaz\u00F3n. La fermentaci\u00F3n larga los reduce: 24h\u219260-70%, 48h\u219280-85%.",
+      whyImportant: "La fermentación puede modificar los FODMAP, pero el resultado depende de la harina, los microorganismos, el proceso y la porción. Las horas por sí solas no permiten cuantificar una reducción ni clasificar la receta como baja en FODMAP.",
     },
     histamine: {
       name: "Histamina",
       definition: "Amina bi\u00F3gena procedente de la descarboxilaci\u00F3n de la histidina. La producen las LAB durante la fermentaci\u00F3n; presente en quesos curados y embutidos.",
-      whyImportant: "Se acumula de forma lineal con el tiempo. Masa madre 24h/28\u00B0C \u2192 30-50 mg/kg. Personas con d\u00E9ficit de DAO: reacci\u00F3n pseudoal\u00E9rgica. Soluci\u00F3n: fermentaci\u00F3n corta (<12h) + levadura comercial.",
+      whyImportant: "El contenido depende de microorganismos, ingredientes, proceso y conservación. No se calcula con una tasa fija por hora; una fermentación breve no garantiza su ausencia.",
     },
     gluten: {
       name: "Gluten",
@@ -710,13 +710,8 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     },
     d_score: {
       name: "D-Score (Digestibilidad)",
-      definition: "Puntuaci\u00F3n de 0-100 que estima la digestibilidad a partir de las horas de fermentaci\u00F3n normalizadas y la reducci\u00F3n de FODMAP.",
-      ranges: [
-        { label: "85-100", value: "Alta (>48h equivalentes)" },
-        { label: "70-84", value: "Media-alta (24-48h)" },
-        { label: "50-69", value: "Media (12-24h)" },
-        { label: "<50", value: "Baja (<12h)" },
-      ],
+      definition: "Índice heurístico de maduración, no una medida de digestibilidad individual ni de FODMAP. Usa horas equivalentes a 18°C, con ajustes por prefermento, dosis de levadura y frío.",
+      ranges: [{"label":"85-100","value":"Índice alto"},{"label":"70-84","value":"Índice medio-alto"},{"label":"50-69","value":"Índice medio"},{"label":"<50","value":"Índice bajo"}],
     },
   },
 };

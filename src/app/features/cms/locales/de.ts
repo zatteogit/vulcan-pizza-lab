@@ -693,7 +693,7 @@ export const DE_LOCALE: CmsContent = {
     "feas.ovenTooCold":
       "Ofen zu kalt: {temp} < Minimum {min}",
     "feas.wTooLow": "W zu niedrig: {w} < {wMin}",
-    "feas.wTooHigh": "W sehr hoch ({w}). Zäher Teig.",
+    "feas.wTooHigh": "W über dem Stilbereich ({w}): auch P/L prüfen",
     "feas.hydrationBeginnerHigh":
       "Hydration >75% für Anfänger nicht empfohlen",
     "feas.hydrationNeedsPractice":
@@ -704,18 +704,6 @@ export const DE_LOCALE: CmsContent = {
       "Mehl zu schwach für diese Hydration",
     "feas.prefermentNeedsExperience":
       "Vorteig erfordert Erfahrung",
-    "dig.fermentTooShort":
-      "Gärung zu kurz: Stärke nicht abgebaut",
-    "dig.fermentShort":
-      "Kurze Gärung: begrenzte Verdaulichkeit",
-    "dig.fodmapReduced": "FODMAPs reduziert ~{pct}%",
-    "dig.fodmapHighReduction": "FODMAPs reduziert >80%",
-    "dig.extremeMaturation":
-      "Extreme Reifung: maximale Aromenkomplexität",
-    "dig.highYeastDosage":
-      "Hohe Hefedosierung ({pct}%): -{penalty}% Verdaulichkeit",
-    "dig.coldFermentation":
-      "Kalte Gärung: optimale Enzymaktivität",
     "sust.quickCook":
       "Schnelles Backen: geringer Energieverbrauch",
     "sust.longCook": "Langes Backen: hoher Energieverbrauch",
@@ -844,7 +832,7 @@ export const DE_LOCALE: CmsContent = {
     "feas.thermalUnviable": "Bei {oven} bildet die verfügbare Methode die Backweise von {style} nicht ab. Die aktuelle Methode braucht mindestens {min}; eine geprüfte Anpassung ist nötig.",
     "gen.timeBelowStyleWindow": "Mit {available} liegst du unter dem Zeitfenster dieses Stils (mindestens {fMin}): Gärung verkürzt. Für volle Authentizität braucht es mindestens {fMin}.",
     "gen.timeBelowStyleWindowMeal": "Mit {available} bis zum Essen bleiben nach Kneten, Formen und Backen ({work}) {ferment} zum Gehen: weniger als das Minimum des Stils ({fMin}). Für den vollen Stil braucht es insgesamt etwa {needed}.",
-    "opt.coldLongFerment": "{hours} Reifung im Kühlschrank ({temp}): maximale Bekömmlichkeit innerhalb deiner {available}.",
+    "opt.coldLongFerment": "Geplante Reifung: {hours} im Kühlschrank ({temp}), im Zeitfenster von {available}.",
     "opt.roomFerment": "{hours} Gärung bei Raumtemperatur ({temp}): stiltreu und ohne Kühlschrank.",
     "opt.hydrationLowered": "Hydratation auf {h}% gesenkt (kanonisch {canonical}%), damit der Teig für dein Niveau handhabbar bleibt.",
     "opt.hydrationForStyle": "Hydratation {h}%, mitten im Stil.",
@@ -990,6 +978,15 @@ export const DE_LOCALE: CmsContent = {
     "recipeSetup.signatureRemoved": "Inspiration entfernt: Parameter zurückgesetzt",
     "rec.fried": "Wird im Topf frittiert: kein Ofen n\u00F6tig",
     "rec.flourMix": "Wenn du deine Mehle mischst: {weakPct}% {weak} und {strongPct}% {strong}, etwa W {w}",
+    "dig.fermentTooShort": "Sehr kurze Ruhe: niedriger Reifungsindex",
+    "dig.fermentShort": "Kurze Gärung: begrenzter Reifungsindex",
+    "dig.extremeMaturation": "Lange Gärung: Teigstabilität prüfen",
+    "dig.highYeastDosage": "Hefemenge {pct}%: heuristische Wertkorrektur (-{penalty})",
+    "dig.coldFermentation": "Reifung im Kühlschrank: Zeit und Entwicklung hängen von der Temperatur ab",
+    "dig.fodmapReduced": "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
+    "dig.fodmapHighReduction": "Die FODMAP-Reduktion ist aus Stunden allein nicht bestimmbar",
+    "hint.yeastPrecisionScale": "Eine Waage mit 0,01 g Auflösung verwenden",
+    "timeline.batchModel": "Geschätzte Zeiten für eine Person: alle Stücke formen und belegen, danach einzeln backen. Zeitversetztes Servieren; keine parallelen Arbeiten angenommen.",
   },
   scienceLabels: {
     yeastBaker: "B\u00E4ckerhefe",
@@ -1048,7 +1045,7 @@ export const DE_LOCALE: CmsContent = {
       tipBeginner:
         "Der Teig sollte sein Volumen verdoppeln. Bei W\u00E4rme h\u00E4ufiger kontrollieren!",
       tipNerd:
-        "Bei {temp} betr\u00E4gt die G\u00E4rgeschwindigkeit {factor}\u00D7 gegen\u00FCber dem 18\u00B0C-Referenzwert.",
+        "Bei {temp} schätzt das Modell eine Gärgeschwindigkeit von {factor}× gegenüber {refTemp}. Das misst weder FODMAP-Reduktion noch Verträglichkeit.",
       longDesc: "Der Teig ruht als ein St\u00FCck in einem ge\u00F6lten Beh\u00E4lter, direkt mit Folie abgedeckt. In dieser Phase arbeitet die Hefe und entwickelt Aroma, Struktur und Bek\u00F6mmlichkeit. Bei hoher Hydratation machst du in den ersten 2 Stunden 2-3 St\u00E4rkungsfalten (Stretch & Fold): einen Teiglappen anheben, nach oben ziehen und zur Mitte falten, den Beh\u00E4lter drehen und f\u00FCr alle 4 Seiten wiederholen. Die G\u00E4rung ist abgeschlossen, wenn sich das Volumen verdoppelt hat und die Oberfl\u00E4che gew\u00F6lbt und glatt ist.",
     },
     bulk_cold: {
@@ -1057,7 +1054,7 @@ export const DE_LOCALE: CmsContent = {
       tipBeginner:
         "Im K\u00FChlschrank w\u00E4chst der Teig langsam, gewinnt aber an Geschmack. Gut mit Kontaktfolie abdecken.",
       tipNerd:
-        "Bei {temp} verlangsamt sich die Gärung auf {factor}× gegenüber dem Referenzwert {refTemp}. Proteolytische Aktivität dominiert und baut FODMAP ab.",
+        "Bei {temp} schätzt das Modell eine Gärgeschwindigkeit von {factor}× gegenüber {refTemp}. Das misst weder FODMAP-Reduktion noch Verträglichkeit.",
       longDesc: "Stell den Beh\u00E4lter mit dem Teig in den K\u00FChlschrank ({fridgeTemp}). Im K\u00FChlschrank arbeitet die Hefe viel langsamer: Es dauert deutlich l\u00E4nger, daf\u00FCr gewinnst du Aromakomplexit\u00E4t, Bek\u00F6mmlichkeit und ein besser entwickeltes Glutennetz. Immer direkt mit Folie abdecken, damit die Oberfl\u00E4che nicht austrocknet. Wenn du ihn herausnimmst, lass ihn vor dem Teilen 1-2 Stunden bei Raumtemperatur akklimatisieren.",
     },
     rest: {

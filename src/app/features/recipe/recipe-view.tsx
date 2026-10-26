@@ -104,6 +104,7 @@ interface RecipeViewProps {
   selectedFlourId?: string | null;
   onSelectFlour?: (flour: import("../../data/flour-database").FlourEntry | null) => void;
   selectedTimeSlotId?: string | null;
+  mealTargetAt?: number | null;
   favorite?: boolean;
   /** Restituisce false se il salvataggio non è riuscito: la pagina lo dice. */
   onToggleFavorite?: () => boolean | void;
@@ -142,6 +143,7 @@ export function RecipeView({
   selectedFlourId,
   onSelectFlour,
   selectedTimeSlotId,
+  mealTargetAt,
   favorite = false,
   onToggleFavorite,
 }: RecipeViewProps) {
@@ -560,6 +562,7 @@ export function RecipeView({
               selectedFlourId={selectedFlourId}
               onSelectFlour={onSelectFlour}
               selectedTimeSlotId={selectedTimeSlotId}
+              mealTargetAt={mealTargetAt}
               nerdAvailable={nerdAvailable}
               onNerdModeChange={onNerdModeChange}
               isPersonalized={isPersonalized}

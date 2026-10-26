@@ -704,7 +704,7 @@ export const FR_LOCALE: CmsContent = {
     "feas.ovenTooCold":
       "Four trop froid : {temp} < minimum {min}",
     "feas.wTooLow": "W trop bas : {w} < {wMin}",
-    "feas.wTooHigh": "W très élevé ({w}). Pâte tenace.",
+    "feas.wTooHigh": "W au-dessus de la plage du style ({w}) : vérifier aussi P/L",
     "feas.hydrationBeginnerHigh":
       "Hydratation >75% déconseillée pour débutants",
     "feas.hydrationNeedsPractice":
@@ -715,18 +715,6 @@ export const FR_LOCALE: CmsContent = {
       "Farine trop faible pour cette hydratation",
     "feas.prefermentNeedsExperience":
       "Pré-ferment nécessite de l'expérience",
-    "dig.fermentTooShort":
-      "Fermentation trop courte : amidons non dégradés",
-    "dig.fermentShort":
-      "Fermentation courte : digestibilité limitée",
-    "dig.fodmapReduced": "FODMAPs réduits ~{pct}%",
-    "dig.fodmapHighReduction": "FODMAPs réduits >80%",
-    "dig.extremeMaturation":
-      "Maturation extrême : complexité aromatique maximale",
-    "dig.highYeastDosage":
-      "Dosage levure élevé ({pct}%) : -{penalty}% digestibilité",
-    "dig.coldFermentation":
-      "Fermentation froide : activité enzymatique optimale",
     "sust.quickCook":
       "Cuisson rapide : faible consommation énergétique",
     "sust.longCook":
@@ -856,7 +844,7 @@ export const FR_LOCALE: CmsContent = {
     "feas.thermalUnviable": "À {oven}, le procédé disponible ne reproduit pas la cuisson de {style}. Le procédé actuel demande au moins {min} ; une adaptation vérifiée est nécessaire.",
     "gen.timeBelowStyleWindow": "Avec {available}, vous êtes sous la fenêtre de ce style (minimum {fMin}) : fermentation raccourcie. Pour une authenticité complète, il faut au moins {fMin}.",
     "gen.timeBelowStyleWindowMeal": "Avec {available} avant le repas, une fois retirés pétrissage, façonnage et cuisson ({work}), il reste {ferment} de fermentation : moins que le minimum du style ({fMin}). Pour le style complet, il faut environ {needed} au total.",
-    "opt.coldLongFerment": "Maturation de {hours} au réfrigérateur ({temp}) : digestibilité maximale dans vos {available}.",
+    "opt.coldLongFerment": "Maturation prévue : {hours} au réfrigérateur ({temp}), dans le créneau de {available}.",
     "opt.roomFerment": "Fermentation de {hours} à température ambiante ({temp}) : fidèle au style, sans réfrigérateur.",
     "opt.hydrationLowered": "Hydratation abaissée à {h}% (canonique {canonical}%) pour rester maniable à votre niveau.",
     "opt.hydrationForStyle": "Hydratation {h}%, au cœur du style.",
@@ -1002,6 +990,15 @@ export const FR_LOCALE: CmsContent = {
     "version.label.Disciplinare AVPN": "Cahier des charges AVPN",
     "rec.fried": "Frite \u00E0 la casserole\u00A0: pas besoin de four",
     "rec.flourMix": "En m\u00E9langeant vos farines\u00A0: {weakPct}\u00A0% {weak} et {strongPct}\u00A0% {strong}, W {w} environ",
+    "dig.fermentTooShort": "Repos très court : faible indice de maturation",
+    "dig.fermentShort": "Fermentation courte : indice de maturation limité",
+    "dig.extremeMaturation": "Fermentation prolongée : vérifier la tenue de la pâte",
+    "dig.highYeastDosage": "Dose de levure {pct}% : correction heuristique du score (-{penalty})",
+    "dig.coldFermentation": "Maturation au réfrigérateur : durée et développement dépendent de la température",
+    "dig.fodmapReduced": "La réduction des FODMAP ne se détermine pas avec les seules heures",
+    "dig.fodmapHighReduction": "La réduction des FODMAP ne se détermine pas avec les seules heures",
+    "hint.yeastPrecisionScale": "Utiliser une balance à 0,01 g",
+    "timeline.batchModel": "Durées estimées pour une personne : étaler et garnir toutes les unités, puis cuire une à une. Service échelonné ; aucune tâche simultanée prévue.",
   },
   scienceLabels: {
     yeastBaker: "Levure de boulanger",
@@ -1060,7 +1057,7 @@ export const FR_LOCALE: CmsContent = {
       tipBeginner:
         "La p\u00E2te doit doubler de volume. S'il fait chaud, v\u00E9rifier plus souvent !",
       tipNerd:
-        "\u00C0 {temp} la vitesse de fermentation est {factor}\u00D7 par rapport \u00E0 la r\u00E9f\u00E9rence 18\u00B0C.",
+        "À {temp}, le modèle estime une vitesse de fermentation de {factor}× par rapport à {refTemp}. Cela ne mesure ni la réduction des FODMAP ni la digestibilité.",
       longDesc: "La p\u00E2te repose en une seule masse, dans un r\u00E9cipient huil\u00E9 et couvert d'un film au contact. C'est pendant cette phase que la levure travaille et d\u00E9veloppe ar\u00F4me, structure et digestibilit\u00E9. Si l'hydratation est \u00E9lev\u00E9e, faites 2-3 \u00AB plis de renforcement \u00BB (stretch & fold) pendant les 2 premi\u00E8res heures : soulevez un pan de p\u00E2te, \u00E9tirez-le vers le haut et rabattez-le vers le centre, tournez et r\u00E9p\u00E9tez sur les 4 c\u00F4t\u00E9s. La fermentation est termin\u00E9e quand le volume a doubl\u00E9 et que la surface est bomb\u00E9e et lisse.",
     },
     bulk_cold: {
@@ -1069,7 +1066,7 @@ export const FR_LOCALE: CmsContent = {
       tipBeginner:
         "Au frigo la p\u00E2te monte lentement mais gagne en saveur. Bien couvrir avec un film au contact.",
       tipNerd:
-        "À {temp} la fermentation ralentit à {factor}× par rapport à la référence {refTemp}. L'activité protéolytique domine, dégradant les FODMAP.",
+        "À {temp}, le modèle estime une vitesse de fermentation de {factor}× par rapport à {refTemp}. Cela ne mesure ni la réduction des FODMAP ni la digestibilité.",
       longDesc: "Placez le r\u00E9cipient avec la p\u00E2te au r\u00E9frig\u00E9rateur ({fridgeTemp}). Au frigo, la levure travaille beaucoup plus lentement : il faut bien plus de temps, mais en \u00E9change vous gagnez en complexit\u00E9 aromatique, en digestibilit\u00E9 et en r\u00E9seau de gluten plus d\u00E9velopp\u00E9. Couvrez toujours d'un film au contact pour \u00E9viter que la surface ne s\u00E8che. Une fois sortie, laissez la p\u00E2te s'acclimater 1-2 heures \u00E0 temp\u00E9rature ambiante avant la division.",
     },
     rest: {

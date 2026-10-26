@@ -63,7 +63,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     category: "rheology",
     definition: "Energia totale necessaria per espandere un alveolo di impasto fino a rottura. Misura la forza complessiva della farina.",
     unit: "10⁻⁴ J",
-    formula: "W = ∫₀ᵗ P(t) dt",
+    formula: "W ∝ ∫ P dV",
     ranges: [
       { label: "Debole", value: "90–160", note: "Biscotti, cialde" },
       { label: "Media", value: "160–200", note: "Pan carrè, focaccia" },
@@ -71,7 +71,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
       { label: "Forte", value: "280–350", note: "Pane grande lievitazione" },
       { label: "Molto forte", value: "350–450", note: "Panettone, croissant" },
     ],
-    whyImportant: "W basso (<180): impasto estensibile, fermentazione breve. W medio (220-280): ideale napoletana, tollera 18-30h. W alto (>300): impasto tenace, serve per impasti ricchi.",
+    whyImportant: "W descrive la forza complessiva della farina. Tenacità ed estensibilità si valutano con P, L e P/L: una W alta non implica da sola un impasto più tenace.",
     relatedTerms: ["p_tenacity", "l_extensibility", "pl_ratio"],
   },
   {
@@ -330,7 +330,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     name: "FODMAP",
     category: "chemistry",
     definition: "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. Carboidrati a catena corta fermentabili (fruttani 1-3% nel grano).",
-    whyImportant: "Intestino non digerisce fruttani → batteri fermentano → gas/gonfiore. Fermentazione lunga riduce: 24h→60-70%, 48h→80-85%.",
+    whyImportant: "La fermentazione può modificare i FODMAP, ma il risultato dipende da farine, microrganismi, processo e porzione. Le sole ore non permettono di calcolare una riduzione o attestare una ricetta low FODMAP.",
     relatedTerms: ["lab"],
   },
   {
@@ -338,7 +338,7 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     name: "Istamina",
     category: "chemistry",
     definition: "Ammina biogena da decarbossilazione dell'istidina. Prodotta da LAB durante fermentazione, presente in formaggi stagionati e salumi.",
-    whyImportant: "Accumulo lineare con tempo. Madre 24h/28°C → 30-50 mg/kg. Soggetti con deficit DAO: reazione pseudo-allergica. Soluzione: fermentazione breve (<12h) + lievito commerciale.",
+    whyImportant: "Il contenuto dipende da microrganismi, ingredienti, processo e conservazione. Non è calcolabile con un tasso fisso per ora; una fermentazione breve non ne garantisce l'assenza.",
     relatedTerms: ["lab", "fodmap"],
   },
   {
@@ -432,14 +432,8 @@ export const GLOSSARY_TERMS: GlossaryTerm[] = [
     id: "d_score",
     name: "D-Score (Digeribilità)",
     category: "scoring",
-    definition: "Punteggio 0-100 che stima digeribilità basato su ore fermentazione normalizzate e riduzione FODMAP.",
-    formula: "D = min(100, 20 + 1.5 × t_eff,18°C)",
-    ranges: [
-      { label: "85-100", value: "Alta (>48h equivalenti)" },
-      { label: "70-84", value: "Media-alta (24-48h)" },
-      { label: "50-69", value: "Media (12-24h)" },
-      { label: "<50", value: "Bassa (<12h)" },
-    ],
+    definition: "Indice euristico di maturazione, non una misura della digeribilità individuale o dei FODMAP. Usa ore equivalenti a 18°C, un correttivo per pre-fermento, dose di lievito e freddo.",
+    ranges: [{"label":"85-100","value":"Indice alto"},{"label":"70-84","value":"Indice medio-alto"},{"label":"50-69","value":"Indice medio"},{"label":"<50","value":"Indice basso"}],
     relatedTerms: ["fodmap", "q10"],
   },
 ];

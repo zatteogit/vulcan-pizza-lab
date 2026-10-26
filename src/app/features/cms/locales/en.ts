@@ -910,7 +910,7 @@ export const EN_LOCALE: CmsContent = {
     "feas.ovenTooCold":
       "Oven too cold: {temp} < minimum {min}",
     "feas.wTooLow": "W too low: {w} < {wMin}",
-    "feas.wTooHigh": "W very high ({w}). Tough dough.",
+    "feas.wTooHigh": "W above the style range ({w}): also check P/L",
     "feas.hydrationBeginnerHigh":
       "Hydration >75% not recommended for beginners",
     "feas.hydrationNeedsPractice":
@@ -921,18 +921,6 @@ export const EN_LOCALE: CmsContent = {
       "Flour too weak for this hydration",
     "feas.prefermentNeedsExperience":
       "Pre-ferment requires experience",
-    "dig.fermentTooShort":
-      "Fermentation too short: starches not degraded",
-    "dig.fermentShort":
-      "Short fermentation: limited digestibility",
-    "dig.fodmapReduced": "FODMAPs reduced ~{pct}%",
-    "dig.fodmapHighReduction": "FODMAPs reduced >80%",
-    "dig.extremeMaturation":
-      "Extreme maturation: maximum aromatic complexity",
-    "dig.highYeastDosage":
-      "High yeast dosage ({pct}%): -{penalty}% digestibility",
-    "dig.coldFermentation":
-      "Cold fermentation: optimal enzymatic activity",
     "sust.quickCook": "Quick bake: low energy consumption",
     "sust.longCook": "Long bake: high energy consumption",
     "sust.ambientFerment":
@@ -1052,7 +1040,7 @@ export const EN_LOCALE: CmsContent = {
     "feas.thermalUnviable": "At {oven}, the available method cannot reproduce the baking of {style}. The current method requires at least {min}; a verified adaptation is needed.",
     "gen.timeBelowStyleWindow": "With {available} you're below this style's window (minimum {fMin}): fermentation shortened. Full authenticity needs at least {fMin}.",
     "gen.timeBelowStyleWindowMeal": "With {available} until the meal, after mixing, shaping and baking ({work}) {ferment} are left for rising: less than the style minimum ({fMin}). The full style needs about {needed} in total.",
-    "opt.coldLongFerment": "{hours} maturation in the fridge ({temp}): maximum digestibility within your {available}.",
+    "opt.coldLongFerment": "Planned maturation: {hours} refrigerated ({temp}), within the {available} window.",
     "opt.roomFerment": "{hours} fermentation at room temperature ({temp}): true to the style, no fridge needed.",
     "opt.hydrationLowered": "Hydration lowered to {h}% (canonical {canonical}%) to stay manageable at your level.",
     "opt.hydrationForStyle": "Hydration {h}%, right at the heart of the style.",
@@ -1198,6 +1186,15 @@ export const EN_LOCALE: CmsContent = {
     "recipeSetup.signatureRemoved": "Inspiration removed: parameters reset",
     "rec.fried": "Fried in a pot: no oven needed",
     "rec.flourMix": "Mixing your flours: {weakPct}% {weak} and {strongPct}% {strong}, about W {w}",
+    "dig.fermentTooShort": "Very short rest: low maturation index",
+    "dig.fermentShort": "Short fermentation: limited maturation index",
+    "dig.extremeMaturation": "Extended fermentation: check dough strength",
+    "dig.highYeastDosage": "Yeast dose {pct}%: heuristic score adjustment (-{penalty})",
+    "dig.coldFermentation": "Refrigerated maturation: timing and development depend on temperature",
+    "dig.fodmapReduced": "FODMAP reduction cannot be determined from hours alone",
+    "dig.fodmapHighReduction": "FODMAP reduction cannot be determined from hours alone",
+    "hint.yeastPrecisionScale": "Use a 0.01 g scale",
+    "timeline.batchModel": "Estimated times for one person: shape and top all units, then bake one at a time. Staggered service; no overlapping tasks assumed.",
   },
   scienceLabels: {
     yeastBaker: "Baker's yeast",
@@ -1256,7 +1253,7 @@ export const EN_LOCALE: CmsContent = {
       tipBeginner:
         "The dough should double in volume. If it's warm, check more often!",
       tipNerd:
-        "At {temp} fermentation speed is {factor}\u00D7 vs the 18\u00B0C reference.",
+        "At {temp}, the model estimates a fermentation rate of {factor}× relative to {refTemp}. This does not measure FODMAP reduction or digestibility.",
       longDesc: "The dough rests as a single mass in an oiled container, with cling film pressed onto the surface. This is when the yeast gets to work, developing flavour, structure and digestibility. If the hydration is high, do 2-3 \"strengthening folds\" (stretch & fold) in the first 2 hours: lift a flap, pull it up and fold it towards the centre, rotate and repeat on all 4 sides. Fermentation is complete when the volume has doubled and the surface is domed and smooth.",
     },
     bulk_cold: {
@@ -1265,7 +1262,7 @@ export const EN_LOCALE: CmsContent = {
       tipBeginner:
         "In the fridge the dough rises slowly but gains flavor. Cover well with contact wrap.",
       tipNerd:
-        "At {temp} fermentation slows to {factor}× vs the {refTemp} reference. Proteolytic activity dominates, degrading FODMAPs.",
+        "At {temp}, the model estimates a fermentation rate of {factor}× relative to {refTemp}. This does not measure FODMAP reduction or digestibility.",
       longDesc: "Move the container with the dough into the fridge ({fridgeTemp}). In the fridge the yeast works much more slowly: it takes far longer, but in return you gain more complex flavour, better digestibility and a more developed gluten network. Always cover with cling film pressed onto the surface so the dough doesn't form a dry skin. When you take it out, let it come up to room temperature for 1-2 hours before dividing.",
     },
     rest: {

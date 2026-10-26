@@ -165,17 +165,17 @@ describe("lievito monotono su tutti gli stili (ENG-2, ENG-3)", () => {
 });
 
 describe("timeline dentro la finestra fino al pasto (ENG-4)", () => {
-  it("generateRecipe: ≤ available_hours × 60 su tutti gli stili, forno di casa e a legna", () => {
+  it("generateRecipe: rispetta la scadenza o restituisce un blocco temporale esplicito", () => {
     const violations: string[] = [];
     for (const style of STYLES) {
       for (const oven of [HOME_OVEN, WOOD_OVEN]) {
         for (const available of [4, 6, 8, 12, 24, 48]) {
           const recipe = generateRecipe(style, makeConstraints({ ...oven, ...MEAL, available_hours: available }));
           const total = totalMinutes(recipe);
-          if (total > available * 60) {
+          if (total > available * 60 && (recipe.verdict.outcome !== "not_feasible" || !recipe.verdict.blockers.some(b => b.kind === "time_window"))) {
             violations.push(`${style.id} @${oven.oven_max_temp_c} ${available}h: ${total} min`);
           }
-          if (hasWarning(recipe, "gen.windowTooShort")) {
+          if (total <= available * 60 && hasWarning(recipe, "gen.windowTooShort")) {
             violations.push(`${style.id} ${available}h: avviso finestra senza motivo`);
           }
         }
@@ -184,14 +184,14 @@ describe("timeline dentro la finestra fino al pasto (ENG-4)", () => {
     expect(violations).toEqual([]);
   });
 
-  it("optimizeRecipe: ≤ available_hours × 60 su tutti gli stili", () => {
+  it("optimizeRecipe: rispetta la scadenza o restituisce un blocco temporale esplicito", () => {
     const violations: string[] = [];
     for (const style of STYLES) {
       for (const oven of [HOME_OVEN, WOOD_OVEN]) {
         for (const available of [4, 8, 24]) {
           const { recipe } = optimizeRecipe(style, makeConstraints({ ...oven, ...MEAL, available_hours: available }));
           const total = totalMinutes(recipe);
-          if (total > available * 60) {
+          if (total > available * 60 && (recipe.verdict.outcome !== "not_feasible" || !recipe.verdict.blockers.some(b => b.kind === "time_window"))) {
             violations.push(`${style.id} @${oven.oven_max_temp_c} ${available}h: ${total} min`);
           }
         }
@@ -220,13 +220,13 @@ describe("timeline dentro la finestra fino al pasto (ENG-4)", () => {
     expect(hasWarning(recipe, "gen.windowTooShort")).toBe(true);
   });
 
-  it("esempio documentato: Napoletana con 4 h e forno a legna → 3 h di fermentazione (D-050: 4 cotture)", () => {
+  it("esempio documentato: Napoletana con 4 h: quattro lavorazioni e cotture lasciano meno ore alla fermentazione", () => {
     const recipe = generateRecipe(
       STYLES_DB["napoletana_stg"],
       makeConstraints({ ...WOOD_OVEN, ...MEAL, available_hours: 4 }),
     );
-    // D-050: 4 pizze da 2 min una alla volta (8 min, prima 2): 3 h invece di 3,25.
-    expect(recipe.fermentation_hours).toBe(3);
+    // Anche stesura e condimento vengono conteggiati per quattro unità.
+    expect(recipe.fermentation_hours).toBe(2.75);
     expect(totalMinutes(recipe)).toBeLessThanOrEqual(240);
   });
 

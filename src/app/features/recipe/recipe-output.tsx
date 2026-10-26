@@ -9,8 +9,8 @@ import { ToppingSection } from "./topping-section";
 import { ProcedureHeroControls } from "./procedure-hero";
 import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
-import { addMinutes, countNightActives, localizeStep, stepQuantities, optimizeComfort, roundToQuarter,
-  defaultMealStart, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
+import { addMinutes, countNightActives, localizeStep, stepQuantities, optimizeComfort,
+  defaultMealStart, startForDeadline, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { PrintSheet, type PrintSections } from "./print-sheet";
@@ -37,6 +37,7 @@ interface RecipeOutputProps {
   selectedFlourId?: string | null;
   onSelectFlour?: (flour: FlourEntry | null) => void;
   selectedTimeSlotId?: string | null;
+  mealTargetAt?: number | null;
   /** Config teglia attiva — usata per mostrare le dimensioni accanto al
    *  conteggio (co-locazione UI proximity #54). Se assente, fallback ai
    *  default dello stile. */
@@ -89,6 +90,7 @@ export function RecipeOutput({
   nerdMode,
   simple,
   selectedTimeSlotId,
+  mealTargetAt,
   panConfig,
   forcedTab,
   hidePager = false,
@@ -260,13 +262,8 @@ export function RecipeOutput({
 
   const [startTime, setStartTime] = useState(() => {
     if (selectedTimeSlotId && selectedTimeSlotId !== "no_preference" && constraints.available_hours > 0) {
-      const eatingTime = new Date(Date.now() + constraints.available_hours * 3600_000);
-      const idealStart = new Date(eatingTime.getTime() - totalDurationMinStatic * 60_000);
-      // If ideal start is in the past, use now + 15min rounded
-      if (idealStart.getTime() < Date.now()) {
-        return roundToQuarter(new Date());
-      }
-      return roundToQuarter(idealStart);
+      const eatingTime = new Date(mealTargetAt ?? Date.now() + constraints.available_hours * 3600_000);
+      return startForDeadline(eatingTime, totalDurationMinStatic);
     }
     return defaultMealStart(totalDurationMinStatic);
   });
@@ -289,12 +286,15 @@ export function RecipeOutput({
   /* Reset dello stretch quando cambia la ricetta */
   const timelineKey = recipe.timeline.map((s) => s.id + s.duration_minutes).join("|");
   const prevTimelineKey = React.useRef(timelineKey);
+  const prevMealTarget = React.useRef(mealTargetAt);
   React.useEffect(() => {
-    if (prevTimelineKey.current !== timelineKey) {
+    if (prevTimelineKey.current !== timelineKey || prevMealTarget.current !== mealTargetAt) {
+      prevMealTarget.current = mealTargetAt;
       prevTimelineKey.current = timelineKey;
       setStretch({});
+      if (mealTargetAt) setStartTime(startForDeadline(new Date(mealTargetAt), totalDurationMinStatic));
     }
-  }, [timelineKey]);
+  }, [timelineKey, mealTargetAt, totalDurationMinStatic]);
 
   const stepTimes = React.useMemo(() => {
     let cursor = new Date(startTime);
@@ -504,7 +504,7 @@ export function RecipeOutput({
     const totalDurationMs = totalDurationMin * 60_000;
     const nowMs = Date.now();
     return slots.map(slot => {
-      const mealTimeMs = nowMs + slot.hours * 3600_000;
+      const mealTimeMs = slot.targetAt ?? nowMs + slot.hours * 3600_000;
       const idealStartMs = mealTimeMs - totalDurationMs;
       const isFeasible = idealStartMs >= nowMs;
       return {
@@ -527,7 +527,7 @@ export function RecipeOutput({
       if (!isNaN(h) && !isNaN(m)) next.setHours(h, m, 0, 0);
       return next;
     })();
-    if (!isNaN(d.getTime())) setStartTime(roundToQuarter(d));
+    if (!isNaN(d.getTime())) setStartTime(d);
     if (e.type === "blur") setEditingTime(false);
   }
 
@@ -555,8 +555,7 @@ export function RecipeOutput({
         desired.setDate(desired.getDate() + 1);
         newStart = addMinutes(desired, -totalDurationMin);
       }
-      // Inizio sempre su un quarto d'ora: "parti alle 07:37" è precisione finta.
-      setStartTime(roundToQuarter(newStart));
+      setStartTime(newStart);
     }
     if (e.type === "blur") setEditingEndTime(false);
   }

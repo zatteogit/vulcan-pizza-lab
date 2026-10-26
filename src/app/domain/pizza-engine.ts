@@ -627,6 +627,9 @@ export interface TimelineStep {
   /** D-050: quante volte si ripete la cottura (una pizza o teglia alla volta);
    *  duration_minutes è già il totale. */
   rounds?: number;
+  /** Lavoro per unità: duration_minutes include già tutte le unità. */
+  work_units?: number;
+  minutes_per_unit?: number;
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
@@ -1210,7 +1213,7 @@ function calculateFeasibilityScore(
     warnings.push(em("feas.wTooLow", `W troppo basso: ${flourW} < ${wMin}`, { w: flourW, wMin }));
   } else if (flourW > wMax * 1.3) {
     flourScore = Math.max(60, 90 - (flourW - wMax) * 0.2);
-    warnings.push(em("feas.wTooHigh", `W molto alto (${flourW}). Impasto tenace.`, { w: flourW }));
+    warnings.push(em("feas.wTooHigh", "W oltre l’intervallo dello stile ({w}): verifica anche P/L", { w: flourW }));
   } else {
     flourScore = 95;
   }
@@ -1298,52 +1301,39 @@ function calculateDigestibilityScore(
 
   let score: number;
   let category: string;
-  let fodmapReductionPct: number | null = null;
 
   if (effectiveHours < 3) {
     score = 20;
     category = "Pessima";
-    claims.push(em("dig.fermentTooShort", "Fermentazione troppo breve: amidi non degradati"));
+    claims.push(em("dig.fermentTooShort", "Riposo molto breve: indice di maturazione basso"));
   } else if (effectiveHours < 8) {
     score = 20 + ((effectiveHours - 3) / 5) * 30;
     category = "Bassa";
-    claims.push(em("dig.fermentShort", "Fermentazione breve: digeribilità limitata"));
+    claims.push(em("dig.fermentShort", "Fermentazione breve: indice di maturazione contenuto"));
   } else if (effectiveHours < 18) {
     score = 50 + ((effectiveHours - 8) / 10) * 20;
     category = "Media";
   } else if (effectiveHours < 30) {
     score = 70 + ((effectiveHours - 18) / 12) * 15;
     category = "Alta";
-    if (effectiveHours >= 24) {
-      fodmapReductionPct = Math.min(
-        80,
-        Math.round(70 + (effectiveHours - 24) * 1.5),
-      );
-      claims.push(em("dig.fodmapReduced", `FODMAP ridotti ~${fodmapReductionPct}%`, { pct: fodmapReductionPct }));
-    }
   } else {
     score = Math.min(
       95,
       85 + ((effectiveHours - 30) / 20) * 10,
     );
     category = "Eccellente";
-    fodmapReductionPct = Math.min(
-      95,
-      Math.round(80 + (effectiveHours - 30) * 0.5),
-    );
-    claims.push(em("dig.fodmapHighReduction", "FODMAP ridotti >80%"));
-    claims.push(em("dig.extremeMaturation", "Maturazione estrema: massima complessità aromatica"));
+    claims.push(em("dig.extremeMaturation", "Fermentazione prolungata: controlla la tenuta dell'impasto"));
   }
 
   if (yeastPct > 1.5) {
     const penalty = Math.min(20, (yeastPct - 1.5) * 10);
     score -= penalty;
-    claims.push(em("dig.highYeastDosage", `Dosaggio lievito alto (${yeastPct}%): -${Math.round(penalty)}% digeribilità`, { pct: yeastPct, penalty: Math.round(penalty) }));
+    claims.push(em("dig.highYeastDosage", "Dose lievito {pct}%: correzione euristica del punteggio (-{penalty})", { pct: yeastPct, penalty: Math.round(penalty) }));
   }
 
   if (fermentationTempC <= 4) {
     score = Math.min(100, score + 5);
-    claims.push(em("dig.coldFermentation", "Fermentazione fredda: attività enzimatica ottimale"));
+    claims.push(em("dig.coldFermentation", "Maturazione in frigorifero: tempi e sviluppo dipendono dalla temperatura"));
   }
 
   // Senza lievito non c'è lievitazione: niente frasi su fermentazione,
@@ -1354,7 +1344,8 @@ function calculateDigestibilityScore(
     score: Math.round(Math.max(0, score)),
     category,
     claims,
-    fodmap_reduction_pct: unleavened ? null : fodmapReductionPct,
+    // Non è misurabile dalle sole ore/temperature: nessuna percentuale sanitaria.
+    fodmap_reduction_pct: null,
     effective_hours_18c: Math.round(effectiveHours * 10) / 10,
     q10_used: q10,
     q10_model: q10Model,
@@ -1606,9 +1597,9 @@ export const PRE_FERMENT_TARGET_HOURS = { biga: 16, poolish: 14 } as const;
 const FINAL_DOUGH_MIN_HOURS = 8;
 
 /** Fasi della fermentazione in ore: pre-fermento, puntata, appretto. Senza
- *  pre-fermento puntata 60 % e appretto 40 %. Con il pre-fermento: almeno il
- *  40 % delle ore (come prima), di più se all'impasto finale restano
- *  FINAL_DOUGH_MIN_HOURS, fino alle ore delle fonti; il resto si divide fra
+ *  pre-fermento puntata 60 % e appretto 40 %. Con il pre-fermento: quota del
+ *  40 % nelle finestre brevi, aumentata se all'impasto finale restano
+ *  FINAL_DOUGH_MIN_HOURS, senza superare il target; il resto si divide fra
  *  puntata e appretto 2:1 (come prima, 0,4/0,2). */
 export function fermentationPhases(
   fermentationHours: number,
@@ -1619,8 +1610,9 @@ export function fermentationPhases(
     return { preferment: 0, bulk: fermentationHours * 0.6, proof: fermentationHours * 0.4 };
   }
   const target = PRE_FERMENT_TARGET_HOURS[preFermentType];
-  const floor = fermentationHours * 0.4;
-  const preferment = Math.max(floor, Math.min(target, fermentationHours - FINAL_DOUGH_MIN_HOURS));
+  const preferment = Math.min(target, Math.max(fermentationHours * 0.4, fermentationHours - FINAL_DOUGH_MIN_HOURS));
+  // Il target è un tetto: con finestre lunghe si allunga l'impasto finale,
+  // non la biga a 18–20 °C. Con meno tempo il pre-fermento si accorcia.
   const rest = fermentationHours - preferment;
   return { preferment, bulk: (rest * 2) / 3, proof: rest / 3 };
 }
@@ -2956,7 +2948,7 @@ export function optimizeRecipe(
     rationale.push(
       em(
         "opt.coldLongFerment",
-        `Maturazione ${r.fermentation_hours}h in frigo (${r.fermentation_temp_c}°C): massima digeribilità entro le tue ${constraints.available_hours}h.`,
+        `Maturazione prevista: ${r.fermentation_hours}h in frigo (${r.fermentation_temp_c}°C), entro la finestra di ${constraints.available_hours}h.`,
         { hours: r.fermentation_hours, temp: r.fermentation_temp_c, available: constraints.available_hours },
       ),
     );
@@ -3406,7 +3398,7 @@ function generateTimeline(
           ? {
               beginner:
                 "In frigo l'impasto cresce lento ma guadagna sapore. Copri bene con pellicola a contatto.",
-              nerd: `A ${fermentTemp}°C la fermentazione rallenta a ${speedFactorLabel}× rispetto a 18°C. L'attività proteolitica prevale, degradando i FODMAP.`,
+              nerd: `A ${fermentTemp}°C il modello stima una velocità di fermentazione di ${speedFactorLabel}× rispetto a 18°C. Non è una misura della riduzione FODMAP o della digeribilità.`,
             }
           : {
               beginner:
@@ -3811,6 +3803,18 @@ function generateTimeline(
     }
   }
 
+  // Modello esplicito e prudente: un operatore, lavorazioni per unità
+  // sequenziali, poi tutte le cotture. Non presumiamo sovrapposizioni di servizio.
+  const firstShape = steps.findIndex(step => step.id === "shape");
+  if (bakeRounds > 1 && firstShape >= 0) {
+    for (const step of steps.slice(firstShape)) {
+      if (["proof", "preheat", "bake", "bake2"].includes(step.id) || step.duration_minutes <= 0) continue;
+      step.minutes_per_unit = step.duration_minutes;
+      step.work_units = bakeRounds;
+      step.duration_minutes *= bakeRounds;
+      step.timing_label = `${bakeRounds} × ${step.minutes_per_unit} min`;
+    }
+  }
   return steps;
 }
 
@@ -4162,6 +4166,7 @@ export function generateTimeSlots(now: Date = new Date()): TimeSlot[] {
       emoji: target.emoji,
       meal: target.meal,
       dayOffset: target.dayOffset,
+      targetAt: (() => { const at = new Date(now); at.setDate(at.getDate() + target.dayOffset); at.setHours(Math.floor(mealHour), Math.round(mealHour % 1 * 60), 0, 0); return at.getTime(); })(),
     });
   }
 

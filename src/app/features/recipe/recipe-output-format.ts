@@ -126,22 +126,23 @@ export function defaultMealStart(totalMinutes: number, now: Date = new Date()): 
       firstReachable ??= start;
       // Anche l'impasto va fatto di giorno: si scarta un inizio fra le 22 e le 7.
       const sh = start.getHours();
-      if (sh >= 7 && sh < 22) return roundToQuarter(start);
+      if (sh >= 7 && sh < 22) return start;
     }
   }
-  return roundToQuarter(firstReachable ?? now);
+  return firstReachable ?? roundToQuarter(now);
 }
 
 export function roundToQuarter(date: Date): Date {
   const d = new Date(date);
-  const mins = d.getMinutes();
+  const mins = d.getMinutes() + (d.getSeconds() > 0 || d.getMilliseconds() > 0 ? 0.001 : 0);
   const rounded = Math.ceil(mins / 15) * 15;
   d.setMinutes(rounded, 0, 0);
-  if (rounded >= 60) {
-    d.setHours(d.getHours() + 1);
-    d.setMinutes(0);
-  }
   return d;
+}
+
+/** Una scadenza si calcola a ritroso senza arrotondare in avanti l'inizio. */
+export function startForDeadline(meal: Date, totalMinutes: number, now = new Date()): Date {
+  return new Date(Math.max(now.getTime(), meal.getTime() - totalMinutes * 60_000));
 }
 export function addMinutes(date: Date, mins: number): Date {
   return new Date(date.getTime() + mins * 60 * 1000);
@@ -188,11 +189,8 @@ function clockWithDay(
   return hhmm + daySuffix(reference, date, copy);
 }
 
-/** Orario "onesto" (feedback giugno 2026): le fasi flessibili (puntata,
- * appretto, pre-fermento) durano ore — "inizia alle 18:17" è precisione
- * finta. Arrotondiamo ai 15' con prefisso ~. Anche le fasi operative derivate
- * dalla timeline vengono arrotondate ai 5': i minuti esatti restano solo nei
- * controlli inizio/fine, dove l'utente sta scegliendo l'orario. */
+/** Tutte le viste usano gli stessi istanti. «ca.» indica la variabilità
+ * biologica delle fasi flessibili, senza spostarle rispetto alla fase prima. */
 export function displayStepTime(
   stepId: string,
   date: Date,
@@ -202,12 +200,9 @@ export function displayStepTime(
 ): string {
   const approx = copy?.approxPrefix ?? "ca. ";
   if (!FLEXIBLE_STEP_IDS.has(stepId)) {
-    const rounded = new Date(Math.round(date.getTime() / 300_000) * 300_000);
-    const prefix = Math.abs(rounded.getTime() - date.getTime()) >= 60_000 ? approx : "";
-    return `${prefix}${clockWithDay(rounded, reference, bcp47, copy)}`;
+    return clockWithDay(date, reference, bcp47, copy);
   }
-  const rounded = new Date(Math.round(date.getTime() / 900_000) * 900_000);
-  return `${approx}${clockWithDay(rounded, reference, bcp47, copy)}`;
+  return `${approx}${clockWithDay(date, reference, bcp47, copy)}`;
 }
 
 function normalizeTemperatureUnitSuffixes(text: string): string {
@@ -364,25 +359,6 @@ export function flourStrengthLabel(w: number, cms: CmsContent | undefined): stri
   }
 }
 
-/** Arrotondamento "caso per caso" dei numeri grandi (farina/acqua/totale).
- * La risoluzione scala con la grandezza: <100g al grammo, <1kg a 5g, ≥1kg a 10g.
- * Nessuno pesa 1346g di farina — 1350g è più leggibile e l'errore è <0.3%.
- * `approx` è true quando l'arrotondamento ha semplificato il numero, così la UI
- * può anteporre "~" (Q1+Q3, audit precisione lug 2026). Il lievito NON passa di
- * qui: mantiene 0.1g, dove il sotto-grammo conta. */
-function roundGramsMagnitude(grams: number): { value: number; approx: boolean } {
-  if (grams <= 0) return { value: 0, approx: false };
-  const step = grams < 100 ? 1 : grams < 1000 ? 5 : 10;
-  const value = Math.round(grams / step) * step;
-  return { value, approx: value !== Math.round(grams) };
-}
-
-/** Formatta un peso grande con "~" se arrotondato. */
-export function gramsApprox(grams: number, fmt: ReturnType<typeof createFormatter>): string {
-  const { value, approx } = roundGramsMagnitude(grams);
-  return `${approx ? "~" : ""}${fmt.grams(value)}`;
-}
-
 /** Delta in grammi di una compensazione forno espressa in % sulla farina
  * (idratazione/olio/zucchero) — rende dinamico il "+X%" mostrando anche la
  * quantità reale, come per il tip zucchero (lug 2026). Vuoto per compensazioni
@@ -396,26 +372,17 @@ export function compGramsSuffix(
   return g > 0 ? ` · ≈ +${g}g` : "";
 }
 
-/** "Versione misurabile" del lievito, mostrata come sottotitolo accanto al peso
- * preciso (che resta sempre a 0.1g). Serve a chi NON ha la bilancia di precisione
- * (decisione owner lug 2026: preciso + misurabile insieme).
- * - Secco: frazioni di cucchiaino (idiomatiche, coprono tutto il range reale).
- * - Fresco: sotto il grammo "un pizzico" (la bilancia da 1g non lo legge); da 1g
- *   in su il target al grammo intero sulla bilancia da cucina — ma solo se il
- *   valore preciso ha un decimale (se è già intero è già pesabile, niente nota).
- * - Madre / ≥10g: nessuna nota (già pesabile e intero). */
+/** Le microdosi richiedono una bilancia di precisione, senza sostituire il peso. */
 export function yeastPracticalHint(grams: number, type: string, cms: CmsContent | undefined): string | undefined {
   if (grams <= 0) return undefined;
+  if (grams < 1) return engineMessage(cms, "hint.yeastPrecisionScale", "Usa una bilancia da 0,01 g");
   if (type === "dry") {
     if (grams >= 5) return undefined; // pesabile con precisione sufficiente
-    if (grams <= 0.4) return engineMessage(cms, "hint.yeastDryPinch", "≈ una punta di cucchiaino");
-    if (grams <= 0.9) return engineMessage(cms, "hint.yeastDryQuarterTsp", "≈ ¼ di cucchiaino");
     if (grams <= 1.8) return engineMessage(cms, "hint.yeastDryHalfTsp", "≈ ½ cucchiaino");
     if (grams <= 3.5) return engineMessage(cms, "hint.yeastDryOneTsp", "≈ 1 cucchiaino raso");
     return engineMessage(cms, "hint.yeastDryOneHalfTsp", "≈ 1 cucchiaino e ½");
   }
   if (type === "fresh") {
-    if (grams < 1) return engineMessage(cms, "hint.yeastFreshPinch", "≈ un pizzico");
     const whole = Math.round(grams);
     if (grams >= 10 || whole === grams) return undefined; // già pesabile/intero
     return t(engineMessage(cms, "hint.yeastFreshWeighable", "≈ {g} g sulla bilancia da cucina"), { g: whole });
@@ -424,15 +391,10 @@ export function yeastPracticalHint(grams: number, type: string, cms: CmsContent 
 }
 
 function honestDurationMinutes(minutes: number): number {
-  if (minutes <= 0) return 0;
-  if (minutes < 10) return Math.max(1, Math.round(minutes));
-  if (minutes < 180) return Math.max(5, Math.round(minutes / 5) * 5);
-  return Math.max(15, Math.round(minutes / 15) * 15);
+  return minutes <= 0 ? 0 : Math.max(1, Math.round(minutes));
 }
 
-/** Unified duration formatter: "15 min" / "1h 30min" / "16h" / "1g 4h" / "2g 3h".
- * Display only: long timeline blocks are rounded to human increments so the UI
- * does not imply false minute-level precision for fermentation windows. */
+/** Durate del programma al minuto, coerenti con gli orari della guida. */
 export function fmtDuration(minutes: number, fmt?: ReturnType<typeof createFormatter>): string {
   const roundedMinutes = honestDurationMinutes(minutes);
   if (roundedMinutes <= 0) return "";
@@ -447,8 +409,7 @@ export function fmtDuration(minutes: number, fmt?: ReturnType<typeof createForma
   const d = Math.floor(totalH / 24);
   const h = totalH % 24;
   const dayLabel = d === 1 ? "1 giorno" : `${d} giorni`;
-  if (h === 0) return dayLabel;
-  return `${dayLabel} ${h}h`;
+  return [dayLabel, h > 0 ? `${h}h` : "", m > 0 ? `${m}min` : ""].filter(Boolean).join(" ");
 }
 
 /* ═══ Clipboard helpers ═══ */
@@ -752,8 +713,8 @@ export function localizeStep(
      * pre-fermento (fonti in docs/ricerca/prefermenti-fonti-2026-10-24.md). */
     /* al quarto d'ora, come la durata mostrata sopra il passo */
     hours: fmt
-      ? fmt.durationMinutes(Math.round(step.duration_minutes / 15) * 15)
-      : `${Math.round(step.duration_minutes / 60)} h`,
+      ? fmt.durationMinutes(Math.round(step.duration_minutes))
+      : fmtDuration(step.duration_minutes),
     prefTemp: prefType === "biga" ? `${formatTemp(18)}–${formatTemp(20)}` : `${formatTemp(20)}–${formatTemp(22)}`,
     prefHydration: fmt ? fmt.percent(44) : "44%",
   };

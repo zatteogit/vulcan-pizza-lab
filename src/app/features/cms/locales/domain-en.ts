@@ -137,16 +137,16 @@ export const DIETARY_EN: Partial<CmsDietaryI18n> = {
     low_fodmap: {
       name: "Low FODMAP",
       description:
-        "Reduces fermentable fructans and oligosaccharides",
+        "Assess ingredients, process and serving size",
       scienceNote:
-        "Fermentation \u226524h reduces FODMAP 70% (Costabile 2014)",
+        "Fermentation can change FODMAP content, but the result depends on flour, microorganisms, process and serving size. Hours alone cannot quantify a reduction or establish that a recipe is low FODMAP.",
     },
     histamine: {
       name: "Low histamine",
       description:
-        "Limits histamine build-up from long fermentation",
+        "Assess ingredients, process and serving size",
       scienceNote:
-        "Histamine accumulates linearly. Fresh yeast <6h: safe (<5 mg/kg)",
+        "Content depends on microorganisms, ingredients, processing and storage. It cannot be calculated at a fixed hourly rate; short fermentation does not guarantee its absence.",
     },
     gluten_free: {
       name: "Gluten-free",
@@ -158,13 +158,13 @@ export const DIETARY_EN: Partial<CmsDietaryI18n> = {
       name: "Lactose-free",
       description: "For lactose intolerance",
       scienceNote:
-        "Baking >200\u00B0C degrades 90%+ lactose. Only SEVERE requires substitution",
+        "Baking does not guarantee lactose removal: check ingredients and manufacturer information.",
     },
     nickel: {
       name: "Low nickel",
       description: "For systemic nickel allergy (SNAS)",
       scienceNote:
-        "00 flour (~50 \u00B5g/100g) vs wholegrain (~200 \u00B5g/100g). Threshold <200 \u00B5g/day",
+        "Product data is needed; flour strength alone does not establish suitability.",
     },
     vegan: {
       name: "Vegan",
@@ -176,39 +176,39 @@ export const DIETARY_EN: Partial<CmsDietaryI18n> = {
   conflicts: {
     fodmap_histamine: {
       message:
-        "FODMAP requires long fermentation (\u226524h), histamine requires short fermentation (\u226412h)",
+        "Fermentation hours and yeast type do not certify suitability for FODMAP or histamine restrictions.",
       compromiseTip:
-        "Compromise: 8-12h with fresh yeast at 18\u00B0C. FODMAP reduced ~40% (sub-optimal), histamine ~8 mg/kg (acceptable)",
+        "Assess ingredients and serving size using verified data; long fermentation does not guarantee suitability.",
     },
     gf_fodmap: {
       message:
-        "Compatible! GF mix eliminates the main FODMAP source (wheat fructans)",
+        "Gluten-free does not automatically mean low FODMAP: ingredients and serving size matter.",
     },
     nickel_general: {
       message:
-        "For low nickel prefer 00 flour (50 \u00B5g/100g) over wholegrain (200 \u00B5g/100g)",
+        "Product data is needed; flour strength alone does not establish suitability.",
     },
   },
   warnings: {
     fodmap_low: {
       message:
-        "FODMAP reduced only {pct}% \u2014 fermentation too short",
-      tip: "Increase to \u226524h to reach 70%+ reduction",
+        "FODMAP reduction cannot be determined from hours alone",
+      tip: "Assess ingredients and serving size using verified data; long fermentation does not guarantee suitability.",
     },
     fodmap_good: {
       message:
-        "FODMAP reduced {pct}% \u2014 good level for IBS",
-      tip: "Fermentation is long enough to degrade fructans",
+        "FODMAP reduction cannot be determined from hours alone",
+      tip: "Assess ingredients and serving size using verified data; long fermentation does not guarantee suitability.",
     },
     histamine_high: {
       message:
-        "Estimated histamine ~{val} mg/kg \u2014 high level",
-      tip: "Reduce fermentation to \u226412h or use fresh yeast at \u226420\u00B0C",
+        "Histamine content cannot be determined from time and temperature",
+      tip: "Check ingredients and process: the engine does not establish a safe level.",
     },
     histamine_moderate: {
       message:
-        "Estimated histamine ~{val} mg/kg \u2014 moderate level",
-      tip: "Monitor symptoms. For safety, reduce time or temperature",
+        "Histamine content cannot be determined from time and temperature",
+      tip: "Check ingredients and process: the engine does not establish a safe level.",
     },
     gluten_free: {
       message:
@@ -217,8 +217,8 @@ export const DIETARY_EN: Partial<CmsDietaryI18n> = {
     },
     nickel_highW: {
       message:
-        "Strong flours (high W) tend to be less refined, with more nickel",
-      tip: "Prefer refined 00 flour (W 200-260) to minimise nickel",
+        "W does not measure nickel content",
+      tip: "Product data is needed; flour strength alone does not establish suitability.",
     },
   },
 };
@@ -465,7 +465,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Total energy required to expand a dough bubble until rupture. Measures the overall flour strength.",
       whyImportant:
-        "Low W (<180): extensible dough, short fermentation. Medium W (220-280): ideal Neapolitan, tolerates 18-30h. High W (>300): tenacious dough, needed for enriched doughs.",
+        "W describes overall flour strength. Tenacity and extensibility are assessed with P, L and P/L: a high W alone does not mean a more tenacious dough.",
       ranges: [
         {
           label: "Weak",
@@ -766,14 +766,14 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Fermentable Oligosaccharides, Disaccharides, Monosaccharides And Polyols. Short-chain fermentable carbohydrates (fructans 1-3% in wheat).",
       whyImportant:
-        "Gut cannot digest fructans \u2192 bacteria ferment \u2192 gas/bloating. Long fermentation reduces: 24h\u219260-70%, 48h\u219280-85%.",
+        "Fermentation can change FODMAP content, but the result depends on flour, microorganisms, process and serving size. Hours alone cannot quantify a reduction or establish that a recipe is low FODMAP.",
     },
     histamine: {
       name: "Histamine",
       definition:
         "Biogenic amine from histidine decarboxylation. Produced by LAB during fermentation, present in aged cheeses and cured meats.",
       whyImportant:
-        "Linear accumulation with time. Sourdough 24h/28\u00B0C \u2192 30-50 mg/kg. DAO-deficient subjects: pseudo-allergic reaction. Solution: short fermentation (<12h) + commercial yeast.",
+        "Content depends on microorganisms, ingredients, processing and storage. It cannot be calculated at a fixed hourly rate; short fermentation does not guarantee its absence.",
     },
     gluten: {
       name: "Gluten",
@@ -848,13 +848,8 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     d_score: {
       name: "D-Score (Digestibility)",
       definition:
-        "0-100 score estimating digestibility based on normalised fermentation hours and FODMAP reduction.",
-      ranges: [
-        { label: "85-100", value: "High (>48h equivalent)" },
-        { label: "70-84", value: "Medium-high (24-48h)" },
-        { label: "50-69", value: "Medium (12-24h)" },
-        { label: "<50", value: "Low (<12h)" },
-      ],
+        "A heuristic maturation index, not a measure of individual digestibility or FODMAPs. Uses equivalent hours at 18°C, with adjustments for pre-ferment, yeast dose and refrigeration.",
+      ranges: [{"label":"85-100","value":"High index"},{"label":"70-84","value":"Medium-high index"},{"label":"50-69","value":"Medium index"},{"label":"<50","value":"Low index"}],
     },
   },
 };
