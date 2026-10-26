@@ -1697,13 +1697,12 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
         "0": {
           name: "薄切りの黄玉ねぎ",
         },
-        "1": {
-          name: "サラモイア（水、エキストラバージンオリーブオイル、塩）",
-        },
-        "2": {
+        "1": { name: "水" },
+        "2": { name: "細粒塩" },
+        "3": {
           name: "リグーリア産エキストラバージンオリーブオイル",
         },
-        "3": {
+        "4": {
           name: "粗塩",
         },
       },
@@ -2179,13 +2178,12 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     focaccia_genovese_classica: {
       variant_name: "\u30AA\u30A4\u30EB\u3001\u5869\u3001\u30B5\u30E9\u30E2\u30A4\u30A2",
       ingredients: {
-        "0": {
-          name: "\u30B5\u30E9\u30E2\u30A4\u30A2\uFF08\u6C34\u3001\u30A8\u30AD\u30B9\u30C8\u30E9\u30D0\u30FC\u30B8\u30F3\u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB\u3001\u5869\uFF09",
-        },
-        "1": {
+        "0": { name: "水" },
+        "1": { name: "細粒塩" },
+        "2": {
           name: "\u30EA\u30B0\u30FC\u30EA\u30A2\u7523\u30A8\u30AD\u30B9\u30C8\u30E9\u30D0\u30FC\u30B8\u30F3\u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB",
         },
-        "2": {
+        "3": {
           name: "\u7C97\u5869",
         },
       },
@@ -2664,7 +2662,7 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     },
     spread_cipolle_genovese: {
       title: "くぼみに玉ねぎとサラモイア",
-      description: "最終発酵の前に、玉ねぎの薄切りをフォカッチャに広げます。指でつけたくぼみにサラモイアを注ぎ、エキストラバージンオリーブオイルと粗塩を。玉ねぎは焼成中に蒸し煮になります。",
+      description: "最終発酵の前に玉ねぎを広げる。分量表の塩水用の水に細粒塩を溶かし、くぼみに注ぐ。仕上げ用のオリーブ油と粗塩は別に加える。",
     },
     spread_sardenaira: {
       title: "Sardenairaに具をのせる",
@@ -2778,7 +2776,7 @@ export const TOPPING_I18N_JA: ToppingTranslation = {
     },
     spread_salamoia_genovese: {
       title: "\u304F\u307C\u307F\u306B\u30B5\u30E9\u30E2\u30A4\u30A2",
-      description: "\u6700\u7D42\u767A\u9175\u306E\u524D\u306B\u3001\u6307\u5148\u3067\u304F\u307C\u307F\u3092\u3064\u3051\u308B\u3002\u6C34\u3001\u30A8\u30AD\u30B9\u30C8\u30E9\u30D0\u30FC\u30B8\u30F3\u30AA\u30EA\u30FC\u30D6\u30AA\u30A4\u30EB\u3001\u5869\u306E\u30B5\u30E9\u30E2\u30A4\u30A2\u3092\u6CE8\u304E\u3001\u30AA\u30A4\u30EB\u3092\u56DE\u3057\u304B\u3051\u3066\u7C97\u5869\u3092\u3075\u308B\u3002\u30AA\u30A4\u30EB\u3068\u5869\u304C\u304F\u307C\u307F\u306B\u305F\u307E\u308B\u3002",
+      description: "最終発酵の前に指でくぼみを作る。分量表の塩水用の水に細粒塩を溶かし、くぼみに注ぐ。仕上げ用のオリーブ油と粗塩は別に加える。",
     },
     spread_sausage_tavern: {
       title: "\u751F\u306E\u30BD\u30FC\u30BB\u30FC\u30B8\u3092\u7E01\u307E\u3067",

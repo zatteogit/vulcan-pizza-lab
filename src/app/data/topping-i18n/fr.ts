@@ -1697,13 +1697,12 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
         "0": {
           name: "Oignons jaunes en fines tranches",
         },
-        "1": {
-          name: "Saumure (eau, huile d'olive vierge extra, sel)",
-        },
-        "2": {
+        "1": { name: "Eau" },
+        "2": { name: "Sel fin" },
+        "3": {
           name: "Huile d'olive vierge extra de Ligurie",
         },
-        "3": {
+        "4": {
           name: "Gros sel",
         },
       },
@@ -2179,13 +2178,12 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     focaccia_genovese_classica: {
       variant_name: "huile, sel et saumure",
       ingredients: {
-        "0": {
-          name: "Saumure (eau, huile d'olive vierge extra, sel)",
-        },
-        "1": {
+        "0": { name: "Eau" },
+        "1": { name: "Sel fin" },
+        "2": {
           name: "Huile d'olive vierge extra de Ligurie",
         },
-        "2": {
+        "3": {
           name: "Gros sel",
         },
       },
@@ -2664,7 +2662,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     spread_cipolle_genovese: {
       title: "Oignons et saumure dans les alvéoles",
-      description: "Répartissez les oignons émincés sur la focaccia avant l'apprêt final. Versez la saumure dans les creux laissés par les doigts, ajoutez l'huile d'olive vierge extra et le gros sel. Les oignons confisent à la cuisson.",
+      description: "Répartir les oignons avant l’apprêt final. Dissoudre le sel fin dans l’eau de la saumure selon les doses indiquées et verser dans les alvéoles. Répartir séparément l’huile d’olive et le gros sel de finition.",
     },
     spread_sardenaira: {
       title: "Garnir la Sardenaira",
@@ -2778,7 +2776,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     spread_salamoia_genovese: {
       title: "Saumure dans les alv\u00E9oles",
-      description: "Avant l'appr\u00EAt final, creuser les alv\u00E9oles du bout des doigts. Verser la saumure d'eau, d'huile d'olive vierge extra et de sel, puis un filet d'huile et du gros sel\u00A0: l'huile et le sel se rassemblent dans les alv\u00E9oles.",
+      description: "Avant l’apprêt final, creuser des alvéoles avec les doigts. Dissoudre le sel fin dans l’eau de la saumure selon les doses indiquées. Verser dans les alvéoles ; répartir séparément l’huile d’olive et le gros sel de finition.",
     },
     spread_sausage_tavern: {
       title: "Saucisse crue jusqu'au bord",

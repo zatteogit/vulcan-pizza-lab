@@ -4397,6 +4397,12 @@
     margin-top: var(--space-px);
   }
 
+  .home-dietary-variant__action {
+    min-height: var(--space-14);
+    padding: var(--space-2-5) var(--space-4);
+    margin-top: var(--space-3);
+  }
+
   .home-dietary-warning__body {
     /* hook strutturale: nessuno stile nell'originale */
   }

@@ -16,7 +16,7 @@ export interface DietaryWarning {
 }
 export const DIETARY_MESSAGES_IT: Record<string, string> = {
   "diet.variant": "Versione di {recipe} senza {ingredients}",
-  "diet.variantChanges": "Altro condimento: {topping}. Rimossi: {ingredients}.",
+  "diet.variantChanges": "Rimossi: {ingredients}.",
   "diet.variantAdded": "Ingredienti aggiunti: {ingredients}.",
   "diet.useVariant": "Usa questa versione",
   "diet.variantAvailable": "Versione alternativa disponibile",

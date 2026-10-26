@@ -3,6 +3,7 @@
  * Le chiavi sono stabili: namespace + slug + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "recipe.reference.avpn": "AVPN 2024",
   "recipe.reference.outside": "Ispirata alla Napoletana STG · fuori disciplinare",
   "recipe.reference.source": "Riferimento: Napoletana STG",
   "recipe.reference.description": "Una versione ispirata alla Napoletana STG, adattata alla tua cucina. I requisiti che cambiano sono indicati qui sopra.",

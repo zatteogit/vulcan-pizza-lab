@@ -581,6 +581,12 @@ function localizeStepBase(
       break;
     }
     case "proof":
+      if (recipe.style.method_profile?.id === "apiter_teglia") {
+        const specific = formatRawStep(step);
+        return { ...specific, title: labels.proof?.title ?? specific.title,
+          tip: { beginner: labels.proof?.tipBeginner ?? specific.tip?.beginner ?? "",
+            nerd: labels.proof?.tipNerd ?? specific.tip?.nerd ?? "" } };
+      }
       entry = isUnleavened
         ? (labels.rest || labels.proof)
         : step.variant === "pan"
@@ -588,6 +594,7 @@ function localizeStepBase(
           : labels.proof;
       break;
     case "shape":
+      if (recipe.style.method_profile?.id === "apiter_teglia") return formatRawStep(step);
       // Audit totale n. 7: stesura in teglia prima dell'appretto, testo del motore.
       if (step.variant === "pan") return formatRawStep(step);
       // Con layout speciale, motore già genera desc specifica per il tipo di stesura
@@ -784,6 +791,8 @@ export function getServingUnitLabel(
 }
 
 export function getSectionHeader(section: string, locale: string): string {
+  const brineLabels: Record<string, [string, string]> = {"it": ["Salamoia", "Finitura"], "en": ["Brine", "Finishing"], "de": ["Salzlake", "Zum Abschluss"], "es": ["Salmuera", "Acabado"], "fr": ["Saumure", "Finition"], "pt": ["Salmoura", "Finalização"], "ja": ["塩水", "仕上げ"]};
+  if (section === "salamoia" || section === "finitura") return (brineLabels[locale.split("-")[0]] ?? brineLabels.en)[section === "salamoia" ? 0 : 1];
   const isIt = locale.toLowerCase().startsWith("it");
   const isDe = locale.toLowerCase().startsWith("de");
   const isJa = locale.toLowerCase().startsWith("ja");

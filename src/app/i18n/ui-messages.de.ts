@@ -1,5 +1,6 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "recipe.reference.avpn": "AVPN 2024",
   "recipe.reference.outside": "Inspiriert von Napoletana STG · außerhalb der Spezifikation",
   "recipe.reference.source": "Referenz: Napoletana STG",
   "recipe.reference.description": "Eine von Napoletana STG inspirierte, an deine Küche angepasste Version. Geänderte Anforderungen stehen oben.",

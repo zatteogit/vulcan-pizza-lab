@@ -1,3 +1,4 @@
+import { METHOD_MESSAGES_IT } from "../data/method-messages";
 // ═══ VULCAN PIZZA ENGINE ═══
 // Scientific pizza recipe generation based on Progetto Vulcan
 // Last audit alignment: 14 feb 2026 — Audit Verifica Implementativa v1
@@ -189,7 +190,19 @@ export interface StyleOrigin {
   country?: string;  // es. "Italia", "USA", "Argentina"
 }
 
+/** Declared method rules; targets are model choices within the cited source.
+ * A profile does not attest legal or association conformity. */
+export interface MethodProcessProfile {
+  id: string;
+  source_url: string;
+  direct_only?: boolean;
+  proof_hours?: number;
+  proof_in_pan?: boolean;
+}
+
 export interface PizzaStyle {
+  method_profile?: MethodProcessProfile;
+  formula_variant?: EngineMsg;
   id: string;
   name: string;
   /** Famiglia primaria (per grouping/badge). */
@@ -1034,6 +1047,7 @@ function calculateAuthenticityScore(
   fermentationHours: number,
   /** Centro auth da interpretazione attiva (override sul centro range). */
   interpretationCenter?: AuthenticityCenter,
+  hasPreFerment = false,
 ): {
   score: number;
   penalties: EngineMsg[];
@@ -1145,6 +1159,13 @@ function calculateAuthenticityScore(
     }
   }
 
+  // A direct reference is changed by a preferment. Forty process points is a
+  // product scoring rule (12 global authenticity points), not a lab measure.
+  if (hasPreFerment && (style.method_profile?.direct_only || style.id === "napoletana_stg")) {
+    breakdown.processo -= 40;
+    penalties.push(em("auth.directMethod", METHOD_MESSAGES_IT["auth.directMethod"]));
+  }
+
   let score = Math.round(
     Math.max(
       0,
@@ -1164,7 +1185,7 @@ function calculateAuthenticityScore(
     (style.baking.oven_type_required === "coal" && ovenType !== "coal")) {
     score = Math.min(score, 75);
     if (style.baking.oven_type_required === "coal") {
-      penalties.push(em("auth.notCoalOven", "Il forno a carbone definisce il metodo originale: con un altro combustibile la ricetta è adattata"));
+      penalties.push(em("auth.notCoalOven", METHOD_MESSAGES_IT["auth.notCoalOven"]));
     }
   }
 
@@ -1621,16 +1642,19 @@ export function fermentationPhases(
   fermentationHours: number,
   hasPreFerment: boolean,
   preFermentType: PreFermentType = "poolish",
+  profile?: MethodProcessProfile,
 ): { preferment: number; bulk: number; proof: number } {
   if (!hasPreFerment) {
-    return { preferment: 0, bulk: fermentationHours * 0.6, proof: fermentationHours * 0.4 };
+    const proof = Math.min(fermentationHours, profile?.proof_hours ?? fermentationHours * 0.4);
+    return { preferment: 0, bulk: fermentationHours - proof, proof };
   }
   const target = PRE_FERMENT_TARGET_HOURS[preFermentType];
   const preferment = Math.min(target, Math.max(fermentationHours * 0.4, fermentationHours - FINAL_DOUGH_MIN_HOURS));
   // Il target è un tetto: con finestre lunghe si allunga l'impasto finale,
   // non la biga a 18–20 °C. Con meno tempo il pre-fermento si accorcia.
   const rest = fermentationHours - preferment;
-  return { preferment, bulk: (rest * 2) / 3, proof: rest / 3 };
+  const proof = Math.min(rest, profile?.proof_hours ?? rest / 3);
+  return { preferment, bulk: rest - proof, proof };
 }
 
 /** Temperatura dell'appretto: sotto i 18 °C (frigo, cantina) l'appretto si fa
@@ -1648,9 +1672,10 @@ export function equivalentFermentationHours(
   yeastType: "fresh" | "dry" | "sourdough",
   hasPreFerment: boolean,
   preFermentType: PreFermentType = "poolish",
+  profile?: MethodProcessProfile,
 ): number {
   if (fermentationTempC >= PROOF_MIN_TEMP_C || fermentationHours <= 0) return fermentationHours;
-  const p = fermentationPhases(fermentationHours, hasPreFerment, preFermentType).proof / fermentationHours;
+  const p = fermentationPhases(fermentationHours, hasPreFerment, preFermentType, profile).proof / fermentationHours;
   const slow = fermentationSpeedRatio(yeastType, fermentationTempC);
   const proof = fermentationSpeedRatio(yeastType, PROOF_MIN_TEMP_C);
   return fermentationHours * (1 - p) + (fermentationHours * p * proof) / slow;
@@ -2140,7 +2165,7 @@ export function generateRecipe(
     yeastPct = Math.max(
       0.01,
       calculateYeastPercentage(
-        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment, preFermentType),
+        equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType as "fresh" | "dry", hasPreFerment, preFermentType, style.method_profile),
         fermentationTempC,
         yeastType as "fresh" | "dry",
       ) /
@@ -2204,6 +2229,7 @@ export function generateRecipe(
     flourPL,
     fermentationHours,
     interpretationCenter,
+    hasPreFerment,
   );
   const feasResult = calculateFeasibilityScore(
     style,
@@ -2298,16 +2324,16 @@ export function generateRecipe(
     penalties: authResult.penalties,
     warnings: [
       ...(style.baking.oven_type_required === "coal" && constraints.oven_type !== "coal"
-        ? [em("gen.notCoalOven", "Lo stile originale usa il carbone: il forno selezionato comporta una diversa cottura e impronta aromatica")]
+        ? [em("gen.notCoalOven", METHOD_MESSAGES_IT["gen.notCoalOven"])]
         : []),
       ...prerequisites.map(condition => condition.message),
-      ...(homeMethod ? [em("gen.homeBakingMethod", "Cottura domestica a {temp} su teglia capovolta preriscaldata; risultato diverso dalla cottura originale a {ideal}", { temp: ovenTemp, ideal: style.baking.temp_c_ideal })] : []),
+      ...(homeMethod ? [em("gen.homeBakingMethod", METHOD_MESSAGES_IT["gen.homeBakingMethod"], { temp: ovenTemp, ideal: style.baking.temp_c_ideal })] : []),
       // D-020: stesso avviso dei consigli sul forno a legna dello stile.
       ...(style.requires_wood_oven && constraints.oven_type !== "wood"
         ? [
             em(
               "gen.notWoodOven",
-              "Lo stile prevede il forno a legna: con il tuo forno il risultato si avvicina, ma non è quello canonico.",
+              METHOD_MESSAGES_IT["gen.notWoodOven"],
             ),
           ]
         : []),
@@ -2362,7 +2388,7 @@ export function generateRecipe(
   const { model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
   const sciSpeedRatio = fermentationSpeedRatio(yeastType, fermentationTempC);
   const effectiveHours18c =
-    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment, preFermentType) * sciSpeedRatio;
+    equivalentFermentationHours(fermentationHours, fermentationTempC, yeastType, hasPreFerment, preFermentType, style.method_profile) * sciSpeedRatio;
 
   // Gluten network score: flour W strength + hydration sweet spot + kneading method
   const wNorm = Math.min(1, Math.max(0, (flourW - 150) / 250)); // 0 at W150, 1 at W400
@@ -3173,20 +3199,20 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
   switch (eq?.mixerType) {
     case "spiral":
       return {
-        description: em("timeline.mix.spiral.desc", "Impastatrice a spirale: 1ª velocità 4-5 min per amalgamare, poi 2ª velocità 3-4 min fino a incordatura."),
+        description: em("timeline.mix.spiral.desc", METHOD_MESSAGES_IT["timeline.mix.spiral.desc"]),
         duration_minutes: 9,
         tip: {
           beginner: em("timeline.mix.spiral.tipBeginner", "La spirale scalda poco l'impasto: gestisce bene anche le idratazioni alte."),
-          nerd: em("timeline.mix.spiral.tipNerd", "Basso attrito termico (ΔT ~3°C): imita il movimento manuale, sviluppa glutine senza surriscaldare né ossidare."),
+          nerd: em("timeline.mix.spiral.tipNerd", METHOD_MESSAGES_IT["timeline.mix.spiral.tipNerd"]),
         },
       };
     case "fork":
       return {
-        description: em("timeline.mix.fork.desc", "Impastatrice a forcella: 12-15 min a velocità unica. Incordatura lenta, maglia molto estensibile."),
+        description: em("timeline.mix.fork.desc", METHOD_MESSAGES_IT["timeline.mix.fork.desc"]),
         duration_minutes: 14,
         tip: {
           beginner: em("timeline.mix.fork.tipBeginner", "Delicata e ossigenante: perfetta per alta idratazione, ma serve pazienza."),
-          nerd: em("timeline.mix.fork.tipNerd", "Movimento lento e ossigenante: ideale per impasti molli; incorda meno aggressivamente, estensibilità elevata."),
+          nerd: em("timeline.mix.fork.tipNerd", METHOD_MESSAGES_IT["timeline.mix.fork.tipNerd"]),
         },
       };
     case "planetary":
@@ -3194,17 +3220,17 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
         description: em("timeline.mix.planetary.desc", "Planetaria: gancio a velocità 2, ~8-10 min fino a incordatura completa (test del velo)."),
         duration_minutes: 10,
         tip: {
-          beginner: em("timeline.mix.planetary.tipBeginner", "Parti in 1ª per amalgamare, poi passa in 2ª. Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti."),
-          nerd: em("timeline.mix.planetary.tipNerd", "Sorveglia la temperatura impasto: oltre 26-28°C il glutine si indebolisce. Usa acqua fredda se la ciotola scalda."),
+          beginner: em("timeline.mix.planetary.tipBeginner", METHOD_MESSAGES_IT["timeline.mix.planetary.tipBeginner"]),
+          nerd: em("timeline.mix.planetary.tipNerd", METHOD_MESSAGES_IT["timeline.mix.planetary.tipNerd"]),
         },
       };
     case "stand_domestic":
       return {
-        description: em("timeline.mix.stand_domestic.desc", "Planetaria domestica (tipo KitchenAid): gancio a velocità 1-2, ~10-12 min. Pause di 1-2 min se la ciotola si scalda."),
+        description: em("timeline.mix.stand_domestic.desc", METHOD_MESSAGES_IT["timeline.mix.stand_domestic.desc"]),
         duration_minutes: 12,
         tip: {
-          beginner: em("timeline.mix.stand_domestic.tipBeginner", "Non superare la 2ª velocità: il motore domestico fatica e scalda. Pronto = impasto liscio che si stacca dal fondo."),
-          nerd: em("timeline.mix.stand_domestic.tipNerd", "Trasferisce più calore per attrito (K~0.25): parti con acqua a frigo e impasti corti, non sovraccaricare il motore."),
+          beginner: em("timeline.mix.stand_domestic.tipBeginner", METHOD_MESSAGES_IT["timeline.mix.stand_domestic.tipBeginner"]),
+          nerd: em("timeline.mix.stand_domestic.tipNerd", METHOD_MESSAGES_IT["timeline.mix.stand_domestic.tipNerd"]),
         },
       };
     case "hands":
@@ -3212,7 +3238,7 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
     default:
       if (eq?.hasMixer) {
         return {
-        description: em("timeline.mix.generic.desc", "Con l'impastatrice: gancio a bassa velocità ~10 min fino a incordatura. Liscio ed elastico."),
+        description: em("timeline.mix.generic.desc", METHOD_MESSAGES_IT["timeline.mix.generic.desc"]),
         duration_minutes: 10,
         tip: {
           beginner: em("timeline.mix.generic.tipBeginner", "Pronto quando l'impasto si avvolge al gancio e si stacca dalle pareti."),
@@ -3223,11 +3249,11 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
   }
   // A mano (default)
   return {
-        description: em("timeline.mix.hands.desc", "Impastare a mano fino a incordatura (~15-20 min): pieghe sul piano, slap & fold se l'idratazione è alta."),
+        description: em("timeline.mix.hands.desc", METHOD_MESSAGES_IT["timeline.mix.hands.desc"]),
         duration_minutes: 20,
         tip: {
-          beginner: em("timeline.mix.hands.tipBeginner", "L'impasto è pronto quando è liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova."),
-          nerd: em("timeline.mix.hands.tipNerd", "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica."),
+          beginner: em("timeline.mix.hands.tipBeginner", METHOD_MESSAGES_IT["timeline.mix.hands.tipBeginner"]),
+          nerd: em("timeline.mix.hands.tipNerd", METHOD_MESSAGES_IT["timeline.mix.hands.tipNerd"]),
         },
       };
 }
@@ -3239,38 +3265,38 @@ function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
   );
   if (eq?.ovenHeatProfile === "top_grill") {
     return hasStone
-      ? em("timeline.oven.topGrillStone", "Grill/resistenza superiore forte: preriscalda con pietra o acciaio medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare i bordi.")
-      : em("timeline.oven.topGrillShelf", "Grill/resistenza superiore forte: preriscalda con ripiano medio-alto, poi passa al grill solo negli ultimi 45-75s per colorare i bordi.");
+      ? em("timeline.oven.topGrillStone", METHOD_MESSAGES_IT["timeline.oven.topGrillStone"])
+      : em("timeline.oven.topGrillShelf", METHOD_MESSAGES_IT["timeline.oven.topGrillShelf"]);
   }
   if (eq?.ovenHeatProfile === "bottom_boost") {
-    return em("timeline.oven.bottomBoost", "Resistenza inferiore dominante: cuoci nella parte bassa per spinta di base, poi alza di un livello se il top resta pallido.");
+    return em("timeline.oven.bottomBoost", METHOD_MESSAGES_IT["timeline.oven.bottomBoost"]);
   }
   if (eq?.ovenHeatProfile === "fan_assisted") {
-    return em("timeline.oven.fanAssisted", "Ventilato: usa una temperatura leggermente più bassa se il bordo asciuga, ruota a metà cottura e proteggi i topping delicati.");
+    return em("timeline.oven.fanAssisted", METHOD_MESSAGES_IT["timeline.oven.fanAssisted"]);
   }
   if (eq?.ovenHeatProfile === "gas_rear") {
-    return em("timeline.oven.gasRear", "Bruciatore posteriore: tieni la pizza verso il centro e ruotala spesso di piccoli angoli per evitare un lato bruciato.");
+    return em("timeline.oven.gasRear", METHOD_MESSAGES_IT["timeline.oven.gasRear"]);
   }
   if (eq?.ovenHeatProfile === "wood_side_flame") {
-    return em("timeline.oven.woodSideFlame", "Fiamma laterale viva: inforna sul lato opposto alla fiamma e ruota ogni 20-30s per colorare in modo uniforme.");
+    return em("timeline.oven.woodSideFlame", METHOD_MESSAGES_IT["timeline.oven.woodSideFlame"]);
   }
   switch (eq?.ovenType) {
     case "coal":
-      return em("timeline.oven.coal", "Forno a carbone con platea preriscaldata: controlla la colorazione di fondo e bordi e ruota per uniformare la cottura.");
+      return em("timeline.oven.coal", METHOD_MESSAGES_IT["timeline.oven.coal"]);
     case "wood":
-      return em("timeline.oven.wood", "Forno a legna: platea pulita, fiamma viva sulla cupola. Inforna vicino alla bocca e ruota di 180° dopo 30-40s per leopardare uniformemente.");
+      return em("timeline.oven.wood", METHOD_MESSAGES_IT["timeline.oven.wood"]);
     case "electric_high":
-      return em("timeline.oven.electricHigh", "Forno elettrico ad alta T: massima potenza, pietra ben preriscaldata. Gira la pizza a metà cottura per dorare i bordi tutt'intorno.");
+      return em("timeline.oven.electricHigh", METHOD_MESSAGES_IT["timeline.oven.electricHigh"]);
     case "gas":
-      return em("timeline.oven.gas", "Forno a gas: fiamma al massimo, pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.");
+      return em("timeline.oven.gas", METHOD_MESSAGES_IT["timeline.oven.gas"]);
     case "gas_pizza":
-      return em("timeline.oven.gasPizza", "Forno a gas da pizza: scalda finché la pietra arriva in temperatura (misurala con un termometro a infrarossi), poi inforna e ruota spesso la pizza, perché la fiamma sta su un lato.");
+      return em("timeline.oven.gasPizza", METHOD_MESSAGES_IT["timeline.oven.gasPizza"]);
     case "home":
     case "electric_standard":
     default:
       return hasStone
-        ? em("timeline.oven.staticStone", "Forno statico (resistenza sopra + sotto) al massimo, pietra/acciaio già caldi sul ripiano medio-alto. Per dorare i bordi: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.")
-        : em("timeline.oven.staticShelf", "Forno statico (resistenza sopra + sotto) al massimo, ripiano medio-alto. Per dorare i bordi: ultimi 60-90s sotto il grill (solo resistenza superiore al max), sorvegliando a vista.");
+        ? em("timeline.oven.staticStone", METHOD_MESSAGES_IT["timeline.oven.staticStone"])
+        : em("timeline.oven.staticShelf", METHOD_MESSAGES_IT["timeline.oven.staticShelf"]);
   }
 }
 
@@ -3294,7 +3320,7 @@ function generateTimeline(
   bakeRounds = 1,
 ): TimelineStep[] {
   const steps: TimelineStep[] = [];
-  const phases = fermentationPhases(fermentHours, hasPreFerment, preFermentType);
+  const phases = fermentationPhases(fermentHours, hasPreFerment, preFermentType, style.method_profile);
   const isUnleavened = !!style.dough.unleavened;
 
   // Helper per iniettare assembly_steps del topping in un certo punto.
@@ -3452,7 +3478,7 @@ function generateTimeline(
   const isMultiPiece = (layout.pieces_per_unit ?? 1) > 1;
   const unequalDiscs = style.id === "pizza_fritta_tonda";
   const divideMessage = unequalDiscs
-    ? em("timeline.divide.unequalDiscs", "Dividere ogni unità in due porzioni: 60% per la base e 40% per la copertura. Formare due dischi.")
+    ? em("timeline.divide.unequalDiscs", METHOD_MESSAGES_IT["timeline.divide.unequalDiscs"])
     : em("timeline.divide.multiPiece", "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.", { pieces: layout.pieces_per_unit ?? 2 });
   // Teglia/pala/focaccia: staglio delicato senza pirlatura stretta — l'alveolatura
   // costruita in puntata non va sgonfiata (coerente con divide_teglia del CMS).
@@ -3507,18 +3533,20 @@ function generateTimeline(
     steps.push(
       keyedStep(
         { id: "shape", variant: "pan", duration_minutes: 5, icon: "expand", timing_label: "5 min" },
-        em("timeline.shape.title", "Stesura"),
-        [em("timeline.shape.pan", "Stendere l'impasto nella teglia oliata con le mani, fino agli angoli; poi lasciarlo lievitare lì.")],
+        em("timeline.shape.title", METHOD_MESSAGES_IT["timeline.shape.title"]),
+        [em("timeline.shape.pan", METHOD_MESSAGES_IT["timeline.shape.pan"])],
       ),
     );
   }
   const toppingBeforeProof = injectToppingAt("before_proof");
+  const proofMessage = style.method_profile?.id === "apiter_teglia" ? em("timeline.proof.apiter", METHOD_MESSAGES_IT["timeline.proof.apiter"]) : undefined;
   if (proofStepMinutes > 0) {
     steps.push({
       id: "proof",
+      ...(proofMessage ? { msg: { description: [proofMessage] } } : {}),
       ...(proofInPan ? { variant: "pan" as const } : {}),
       title: isUnleavened ? "Riposo" : "Appretto",
-      description: isUnleavened
+      description: proofMessage ? renderStepIt([proofMessage]) : isUnleavened
         ? `Lasciare riposare l'impasto coperto a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
         : proofInPan
           ? `Lievitazione finale in teglia a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
@@ -3598,26 +3626,27 @@ function generateTimeline(
   if (layout.type === "folded_layers") {
     shapeMsg = em(
       "timeline.shape.foldedLayers",
-      "Stendere una sfoglia sottilissima e ripiegare {folds} volte a libro, distribuendo la farcitura tra le pieghe.",
+      METHOD_MESSAGES_IT["timeline.shape.foldedLayers"],
       { folds: layout.folds ?? 4 },
     );
   } else if (layout.type === "double_thin_sheet") {
-    shapeMsg = em("timeline.shape.doubleThinSheet", "Stendere due sfoglie sottilissime quasi trasparenti col mattarello.");
+    shapeMsg = em("timeline.shape.doubleThinSheet", METHOD_MESSAGES_IT["timeline.shape.doubleThinSheet"]);
   } else if (layout.type === "stacked") {
-    shapeMsg = em("timeline.shape.stacked", "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.");
+    shapeMsg = em("timeline.shape.stacked", METHOD_MESSAGES_IT["timeline.shape.stacked"]);
   } else if (layout.type === "closed_stuffed") {
     shapeMsg = isFriedStyle(style)
-      ? em("timeline.shape.closedStuffedFried", "Stendere il disco di base, lasciando il secondo per la chiusura.")
-      : em("timeline.shape.closedStuffed", "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.");
+      ? em("timeline.shape.closedStuffedFried", METHOD_MESSAGES_IT["timeline.shape.closedStuffedFried"])
+      : em("timeline.shape.closedStuffed", METHOD_MESSAGES_IT["timeline.shape.closedStuffed"]);
   } else {
     // Layout singolo: nella UI vale il testo del CMS (timelineLabels.shape).
     shapeMsg =
       style.shape.shape_type === "rectangular"
-        ? em("timeline.shape.rectangular", "Stendere nella teglia oliata con le mani")
+        ? em("timeline.shape.rectangular", METHOD_MESSAGES_IT["timeline.shape.rectangular"])
         : style.crust_type === "crispy_thin"
-          ? em("timeline.shape.thin", "Stendere con mattarello, sottilissima")
-          : em("timeline.shape.round", "Allargare a mano dal centro, preservare il cornicione");
+          ? em("timeline.shape.thin", METHOD_MESSAGES_IT["timeline.shape.thin"])
+          : em("timeline.shape.round", METHOD_MESSAGES_IT["timeline.shape.round"]);
   }
+  if (style.method_profile?.id === "apiter_teglia") shapeMsg = em("timeline.shape.apiter", METHOD_MESSAGES_IT["timeline.shape.apiter"]);
   if (!proofInPan) steps.push(
     keyedStep(
       {
@@ -3626,7 +3655,7 @@ function generateTimeline(
         icon: "expand",
         timing_label: layout.type === "folded_layers" ? "10 min" : "5 min",
       },
-      em("timeline.shape.title", "Stesura"),
+      em("timeline.shape.title", METHOD_MESSAGES_IT["timeline.shape.title"]),
       [shapeMsg],
     ),
   );
@@ -3647,10 +3676,10 @@ function generateTimeline(
       keyedStep(
         { id: "stack", duration_minutes: 3, icon: "layers", timing_label: "3 min" },
         em("timeline.stack.title", "Sovrapposizione"),
-        [em("timeline.stack.desc", "Spennellare il primo disco con olio EVO; adagiare sopra il secondo disco e sigillare leggermente i bordi.")],
+        [em("timeline.stack.desc", METHOD_MESSAGES_IT["timeline.stack.desc"])],
         {
           beginner: em("timeline.stack.tipBeginner", "L'olio in mezzo permetterà di separare i due strati dopo la cottura senza romperli."),
-          nerd: em("timeline.stack.tipNerd", "L'olio crea un layer idrofobo che impedisce la coalescenza dei due strati di glutine: facilita lo sdoppiamento post-bake."),
+          nerd: em("timeline.stack.tipNerd", METHOD_MESSAGES_IT["timeline.stack.tipNerd"]),
         },
       ),
     );
@@ -3666,10 +3695,10 @@ function generateTimeline(
         keyedStep(
           { id: "fill_internal", duration_minutes: 8, icon: "chef-hat", timing_label: "8 min" },
           em("timeline.fillClosed.title", "Ripieno e chiusura"),
-          [em("timeline.fillClosed.desc", "Disporre la farcitura sul disco di base; coprire con il secondo disco e sigillare bene tutto il bordo.")],
+          [em("timeline.fillClosed.desc", METHOD_MESSAGES_IT["timeline.fillClosed.desc"])],
           {
             beginner: em("timeline.fillClosed.tipBeginner", "Sigilla con cura: se i bordi non chiudono, in cottura il ripieno fuoriesce."),
-            nerd: em("timeline.fillClosed.tipNerd", "La pressione del bordo è critica: l'aria intrappolata gonfia durante la cottura (effetto pillow)."),
+            nerd: em("timeline.fillClosed.tipNerd", METHOD_MESSAGES_IT["timeline.fillClosed.tipNerd"]),
           },
         ),
       );
@@ -3685,7 +3714,7 @@ function generateTimeline(
         keyedStep(
           { id: "fill_internal", duration_minutes: 5, icon: "chef-hat", timing_label: "5 min" },
           em("timeline.fillSheets.title", "Farcitura tra sfoglie"),
-          [em("timeline.fillSheets.desc", "Distribuire lo stracchino a fiocchi sulla prima sfoglia; coprire con la seconda sfoglia, sigillare i bordi e condire la superficie con olio e sale.")],
+          [em("timeline.fillSheets.desc", METHOD_MESSAGES_IT["timeline.fillSheets.desc"])],
         ),
       );
     } else {
@@ -3738,7 +3767,7 @@ function generateTimeline(
         ],
         {
           beginner: em("timeline.bakeWhite.tipBeginner", "In bianco la pizza cuoce più velocemente. Sorveglia gli ultimi minuti."),
-          nerd: em("timeline.bakeWhite.tipNerd", "La cottura in bianco completa la gelatinizzazione dell'amido prima di introdurre umidità del topping."),
+          nerd: em("timeline.bakeWhite.tipNerd", METHOD_MESSAGES_IT["timeline.bakeWhite.tipNerd"]),
         },
       ),
     );
@@ -3749,10 +3778,10 @@ function generateTimeline(
         keyedStep(
           { id: "split_fill", duration_minutes: 7, icon: "scissors", timing_label: "7 min" },
           em("timeline.splitFill.title", "Sdoppiamento e farcitura"),
-          [em("timeline.splitFill.desc", "Estrarre dal forno. Con un coltello a sega tagliare orizzontalmente in due metà. Farcire l'interno con i condimenti scelti e richiudere.")],
+          [em("timeline.splitFill.desc", METHOD_MESSAGES_IT["timeline.splitFill.desc"])],
           {
             beginner: em("timeline.splitFill.tipBeginner", "Lo strato d'olio steso prima della cottura permette di aprire le due metà senza romperle."),
-            nerd: em("timeline.splitFill.tipNerd", "Sdoppiamento post-bake = ricetta cold-filled: la matrice amidacea è già stabile, le farciture non vengono cotte oltre i 60°C interni."),
+            nerd: em("timeline.splitFill.tipNerd", METHOD_MESSAGES_IT["timeline.splitFill.tipNerd"]),
           },
         ),
       );
@@ -3792,13 +3821,13 @@ function generateTimeline(
         },
         em("timeline.bake.title", "Cottura"),
         [em("timeline.bake.desc", "Cuocere a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, homeMethod
-          ? em("timeline.homeTray.bake", "Inforna sulla teglia capovolta già calda. Controlla la doratura della base e la cottura prima di sfornare.")
+          ? em("timeline.homeTray.bake", METHOD_MESSAGES_IT["timeline.homeTray.bake"])
           : ovenBakeSetup(equipment)],
         {
           beginner: em("timeline.bake.tipBeginner", "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima."),
           nerd: em(
             "timeline.bake.tipNerd",
-            "La reazione di Maillard inizia a ~140°C e accelera esponenzialmente. A {temp} la caramellizzazione crea ~600 composti aromatici.",
+            METHOD_MESSAGES_IT["timeline.bake.tipNerd"],
             { temp: ovenTempLabel },
           ),
         },

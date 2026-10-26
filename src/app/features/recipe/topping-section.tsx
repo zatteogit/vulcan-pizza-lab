@@ -324,6 +324,8 @@ export function ToppingSection({
               base: [],
               crosta: [],
               superficie: [],
+              salamoia: [],
+              finitura: [],
             };
             topping.ingredients.forEach((ing, index) => {
               const sec = ing.section ?? "superficie";

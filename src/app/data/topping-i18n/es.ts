@@ -1697,13 +1697,12 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
         "0": {
           name: "Cebollas doradas en láminas finas",
         },
-        "1": {
-          name: "Salmuera (agua, AOVE, sal)",
-        },
-        "2": {
+        "1": { name: "Agua" },
+        "2": { name: "Sal fina" },
+        "3": {
           name: "AOVE de Liguria",
         },
-        "3": {
+        "4": {
           name: "Sal gruesa",
         },
       },
@@ -2179,13 +2178,12 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     focaccia_genovese_classica: {
       variant_name: "aceite, sal y salmuera",
       ingredients: {
-        "0": {
-          name: "Salmuera (agua, AOVE, sal)",
-        },
-        "1": {
+        "0": { name: "Agua" },
+        "1": { name: "Sal fina" },
+        "2": {
           name: "AOVE de Liguria",
         },
-        "2": {
+        "3": {
           name: "Sal gruesa",
         },
       },
@@ -2664,7 +2662,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     spread_cipolle_genovese: {
       title: "Cebollas y salmuera en los hoyuelos",
-      description: "Reparte la cebolla en láminas sobre la focaccia antes del levado final. Vierte la salmuera en los hoyuelos hechos con las yemas de los dedos, AOVE y sal gruesa. Las cebollas se pochan en el horno.",
+      description: "Repartir las cebollas antes de la fermentación final. Disolver la sal fina en el agua de la salmuera con las cantidades indicadas y verter en los hoyuelos. Añadir por separado el AOVE y la sal gruesa de acabado.",
     },
     spread_sardenaira: {
       title: "Aliñar la Sardenaira",
@@ -2778,7 +2776,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     spread_salamoia_genovese: {
       title: "Salmuera en los hoyuelos",
-      description: "Antes del \u00FAltimo levado, haz los hoyuelos con las yemas de los dedos. Vierte la salmuera de agua, aceite de oliva virgen extra y sal, luego un hilo de aceite y sal gruesa: el aceite y la sal se acumulan en los hoyuelos.",
+      description: "Antes de la fermentación final, hacer hoyuelos con los dedos. Disolver la sal fina en el agua de la salmuera con las cantidades indicadas. Verter en los hoyuelos; añadir por separado el AOVE y la sal gruesa de acabado.",
     },
     spread_sausage_tavern: {
       title: "Salchicha cruda hasta el borde",

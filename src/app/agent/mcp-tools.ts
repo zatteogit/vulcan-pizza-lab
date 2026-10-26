@@ -50,7 +50,7 @@ import type { GlossaryMessages } from "../i18n/domain-contracts";
 import { BRAND } from "../config/brand";
 import { MCP_GUIDE } from "./mcp-guide";
 
-export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.2.0" } as const;
+export const MCP_SERVER_INFO = { name: `${BRAND.name.toLowerCase()}-pizza-engine`, version: "1.3.0" } as const;
 
 type Json = Record<string, unknown>;
 
@@ -276,7 +276,7 @@ function recipeData(recipe: GeneratedRecipe) {
     .map((row) => ({ ...row, baker_pct: pct(row.grams) }));
   return {
     style: { id: recipe.style.id, name: recipeDisplayName(recipe), reference_name: recipe.style.name },
-    reference: { stg_departures: stgDepartures(recipe), conformity_certified: false },
+    reference: { stg_departures: stgDepartures(recipe), conformity_certified: false, method: recipe.style.method_profile ?? null, formula_variant: recipe.style.formula_variant ?? null },
     outcome: recipe.verdict.outcome,
     blockers: recipe.verdict.blockers,
     dough_balls: recipe.dough_balls,
@@ -408,6 +408,7 @@ export const MCP_TOOLS: McpTool[] = [
           ...styleSummary(style),
           description: style.description,
           key_characteristics: style.key_characteristics,
+          formula_variant: style.formula_variant ?? null,
           dough: style.dough,
           shape: style.shape,
           baking: style.baking,

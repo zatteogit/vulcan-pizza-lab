@@ -1697,13 +1697,12 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
         "0": {
           name: "Goldgelbe Zwiebeln in dünnen Scheiben",
         },
-        "1": {
-          name: "Salamoia (Wasser, natives Olivenöl extra, Salz)",
-        },
-        "2": {
+        "1": { name: "Wasser" },
+        "2": { name: "Feines Salz" },
+        "3": {
           name: "Ligurisches natives Olivenöl extra",
         },
-        "3": {
+        "4": {
           name: "Grobes Salz",
         },
       },
@@ -2179,13 +2178,12 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     focaccia_genovese_classica: {
       variant_name: "\u00D6l, Salz und Salamoia",
       ingredients: {
-        "0": {
-          name: "Salamoia (Wasser, natives Oliven\u00F6l extra, Salz)",
-        },
-        "1": {
+        "0": { name: "Wasser" },
+        "1": { name: "Feines Salz" },
+        "2": {
           name: "Ligurisches natives Oliven\u00F6l extra",
         },
-        "2": {
+        "3": {
           name: "Grobes Salz",
         },
       },
@@ -2664,7 +2662,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     spread_cipolle_genovese: {
       title: "Zwiebeln und Salamoia in die Mulden",
-      description: "Verteile die Zwiebelscheiben vor der letzten Gare auf der Focaccia. Gieß die Salamoia in die mit den Fingerkuppen gedrückten Mulden, dazu natives Olivenöl extra und grobes Salz. Die Zwiebeln schmoren beim Backen.",
+      description: "Die Zwiebeln vor der Stückgare verteilen. Das feine Salz in der angegebenen Wassermenge für die Salzlake auflösen und in die Mulden gießen. Olivenöl und grobes Salz separat darauf verteilen.",
     },
     spread_sardenaira: {
       title: "Sardenaira belegen",
@@ -2778,7 +2776,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     spread_salamoia_genovese: {
       title: "Salamoia in die Mulden",
-      description: "Vor der letzten Gare mit den Fingerkuppen Mulden dr\u00FCcken. Die Salamoia aus Wasser, nativem Oliven\u00F6l extra und Salz dar\u00FCbergie\u00DFen, dann etwas \u00D6l und grobes Salz: \u00D6l und Salz sammeln sich in den Mulden.",
+      description: "Vor der Stückgare mit den Fingerspitzen Mulden drücken. Das feine Salz in der angegebenen Wassermenge für die Salzlake auflösen. In die Mulden gießen; Olivenöl und grobes Salz separat darauf verteilen.",
     },
     spread_sausage_tavern: {
       title: "Rohe Wurst bis zum Rand",

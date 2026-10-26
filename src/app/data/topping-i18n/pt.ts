@@ -1697,13 +1697,12 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
         "0": {
           name: "Cebolas douradas em fatias finas",
         },
-        "1": {
-          name: "Salmoura (água, azeite extravirgem, sal)",
-        },
-        "2": {
+        "1": { name: "Água" },
+        "2": { name: "Sal fino" },
+        "3": {
           name: "Azeite extravirgem lígure",
         },
-        "3": {
+        "4": {
           name: "Sal grosso",
         },
       },
@@ -2179,13 +2178,12 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     focaccia_genovese_classica: {
       variant_name: "azeite, sal e salmoura",
       ingredients: {
-        "0": {
-          name: "Salmoura (\u00E1gua, azeite extravirgem, sal)",
-        },
-        "1": {
+        "0": { name: "Água" },
+        "1": { name: "Sal fino" },
+        "2": {
           name: "Azeite extravirgem l\u00EDgure",
         },
-        "2": {
+        "3": {
           name: "Sal grosso",
         },
       },
@@ -2664,7 +2662,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     spread_cipolle_genovese: {
       title: "Cebolas e salmoura nas covinhas",
-      description: "Distribua as cebolas fatiadas sobre a focaccia antes da fermentação final. Despeje a salmoura nas covinhas feitas com a ponta dos dedos, azeite extravirgem e sal grosso. As cebolas cozinham lentamente no forno.",
+      description: "Distribuir as cebolas antes da fermentação final. Dissolver o sal fino na água da salmoura nas quantidades indicadas e verter nas covinhas. Distribuir separadamente o azeite e o sal grosso de finalização.",
     },
     spread_sardenaira: {
       title: "Cobrir a Sardenaira",
@@ -2778,7 +2776,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     spread_salamoia_genovese: {
       title: "Salmoura nas covinhas",
-      description: "Antes da \u00FAltima fermenta\u00E7\u00E3o, fa\u00E7a as covinhas com a ponta dos dedos. Despeje a salmoura de \u00E1gua, azeite extravirgem e sal, depois um fio de azeite e sal grosso: o azeite e o sal se acumulam nas covinhas.",
+      description: "Antes da fermentação final, fazer covinhas com os dedos. Dissolver o sal fino na água da salmoura nas quantidades indicadas. Verter nas covinhas; distribuir separadamente o azeite e o sal grosso de finalização.",
     },
     spread_sausage_tavern: {
       title: "Lingui\u00E7a crua at\u00E9 a borda",
