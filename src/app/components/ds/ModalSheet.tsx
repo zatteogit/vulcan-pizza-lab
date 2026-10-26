@@ -53,13 +53,13 @@ const SCRIM_STYLE: Record<
 > = {
   glass: {
     background: "var(--dialog-scrim-strong)",
-    backdropFilter: "var(--backdrop-glass)",
-    WebkitBackdropFilter: "var(--backdrop-glass)",
+    backdropFilter: "var(--glass-fallback-filter, var(--backdrop-glass))",
+    WebkitBackdropFilter: "var(--glass-fallback-filter, var(--backdrop-glass))",
   },
   soft: {
     background: "var(--dialog-scrim)",
-    backdropFilter: "var(--backdrop-glass-soft)",
-    WebkitBackdropFilter: "var(--backdrop-glass-soft)",
+    backdropFilter: "var(--glass-fallback-filter, var(--backdrop-glass-soft))",
+    WebkitBackdropFilter: "var(--glass-fallback-filter, var(--backdrop-glass-soft))",
   },
   plain: { background: "var(--dialog-scrim)" },
 };
@@ -69,21 +69,21 @@ const SURFACE_STYLE: Record<
   React.CSSProperties
 > = {
   glass: {
-    background: "var(--sheet-glass-bg)",
+    background: "var(--glass-fallback-bg, var(--sheet-glass-bg))",
     color: "var(--text-default)",
     borderColor: "var(--container-border)",
     boxShadow: "var(--dialog-shadow)",
-    backdropFilter: "var(--backdrop-glass-strong)",
-    WebkitBackdropFilter: "var(--backdrop-glass-strong)",
+    backdropFilter: "var(--glass-fallback-filter, var(--backdrop-glass-strong))",
+    WebkitBackdropFilter: "var(--glass-fallback-filter, var(--backdrop-glass-strong))",
   },
   "glass-dense": {
-    background: "var(--sheet-glass-bg)",
+    background: "var(--glass-fallback-bg, var(--sheet-glass-bg))",
     color: "var(--text-default)",
     borderColor: "var(--container-border)",
     boxShadow:
       "var(--dialog-shadow), inset 0 1px 0 color-mix(in srgb, var(--overlay-text) 18%, transparent)",
-    backdropFilter: "var(--backdrop-glass-max)",
-    WebkitBackdropFilter: "var(--backdrop-glass-max)",
+    backdropFilter: "var(--glass-fallback-filter, var(--backdrop-glass-max))",
+    WebkitBackdropFilter: "var(--glass-fallback-filter, var(--backdrop-glass-max))",
   },
   solid: {
     background: "var(--container-bg)",
