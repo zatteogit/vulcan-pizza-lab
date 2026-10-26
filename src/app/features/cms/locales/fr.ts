@@ -961,6 +961,8 @@ export const FR_LOCALE: CmsContent = {
     "timeline.mix.title": "Pétrissage",
     "timeline.divide.title": "Division",
     "timeline.divide.multiPiece": "Divisez chaque portion en {pieces} morceaux égaux. Formez une boule ou un disque.",
+    "timeline.divide.unequalDiscs": "Divisez chaque unité en deux portions : 60% pour la base et 40% pour le dessus. Formez deux disques.",
+    "timeline.shape.closedStuffedFried": "Abaissez le disque de base et réservez le second pour fermer.",
     "timeline.shape.foldedLayers": "Étalez une feuille de pâte très fine et pliez-la {folds} fois en livre, en répartissant la garniture entre les plis.",
     "timeline.shape.doubleThinSheet": "Étalez au rouleau deux feuilles très fines, presque transparentes.",
     "timeline.shape.stacked": "Étalez le premier disque dans la plaque huilée ; gardez le second de côté.",

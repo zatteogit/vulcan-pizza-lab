@@ -2772,7 +2772,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Rellenar y cerrar los dos discos",
-      description: "Estira a mano, sin harina, un disco de unos 120 g y otro de unos 80 g, de 2\u20133 mm de grosor. Sobre el disco m\u00E1s grande reparte la ricotta, la provola, los cicoli y la pimienta dejando libre el borde; cubre con el disco peque\u00F1o y sella presionando bien. Fr\u00EDela en aceite de semillas a unos 175 \u00B0C y dale la vuelta cuando est\u00E9 dorada.",
+      description: "Estira las dos porciones a mano, sin harina, en discos de 2–3 mm de grosor. Sobre el disco más grande reparte la ricotta, la provola, los cicoli y la pimienta dejando libre el borde; cubre con el disco pequeño y sella presionando bien. Fríela en aceite de semillas a unos 175 °C y dale la vuelta cuando esté dorada.",
       tip_beginner: "El disco de abajo es m\u00E1s grande: as\u00ED su borde se dobla por encima y la tonda se mantiene cerrada al fre\u00EDrla.",
       tip_nerd: "Sin harina al estirar, el aceite se mantiene limpio m\u00E1s tiempo; un borde mal sellado deja entrar el aceite y salir el relleno.",
     },

@@ -33,6 +33,18 @@ se c'è un pasto a orario fisso), `skill_level`, `dough_balls` e
 l'attrezzatura (`has_baking_pan`, `has_mixer`, `has_pizza_stone`,
 `has_pizza_steel`).
 
+Il motore è condiviso con l'app, ma non tutti gli input dell'interfaccia sono
+esposti dal MCP: dispensa, esclusioni, marche/dati delle farine, condimenti,
+geometria della teglia e firme/preset non sono parametri di questi strumenti.
+Il confronto numerico richiede gli stessi parametri effettivi; una versione
+su misura o una firma del browser non equivale al default di `generate_recipe`.
+I dati non comunicati restano da verificare, non provano una mancanza.
+
+Nella ricetta `style.name` è il nome eseguibile e `style.reference_name` quello
+del catalogo. Per Napoletana, `reference.stg_departures` elenca gli scostamenti
+noti; `conformity_certified: false` precisa che il voto non certifica la STG.
+I nomi di `list_styles` e `get_style` restano quelli degli originali.
+
 Le regole d'uso arrivano a qualsiasi agente dal server stesso: versione breve
 in `instructions` (risposta a `initialize`), regole chiave nelle descrizioni
 degli strumenti, guida completa con `get_guide`. Testo unico in

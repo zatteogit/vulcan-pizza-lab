@@ -2772,7 +2772,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Farcir et fermer les deux disques",
-      description: "Abaissez \u00E0 la main, sans farine, un disque d'environ 120 g et un autre d'environ 80 g, de 2\u20133 mm d'\u00E9paisseur. Sur le plus grand, r\u00E9partissez la ricotta, la provola, les cicoli et le poivre en laissant le bord libre ; couvrez avec le petit disque et scellez en pressant bien. Faites frire dans l'huile v\u00E9g\u00E9tale \u00E0 environ 175 \u00B0C, en la retournant lorsqu'elle est dor\u00E9e.",
+      description: "Abaissez les deux portions à la main, sans farine, en disques de 2–3 mm d’épaisseur. Sur le plus grand, répartissez la ricotta, la provola, les cicoli et le poivre en laissant le bord libre ; couvrez avec le petit disque et scellez en pressant bien. Faites frire dans l'huile végétale à environ 175 °C, en la retournant lorsqu'elle est dorée.",
       tip_beginner: "Le disque du dessous est plus grand : son bord se replie ainsi par-dessus et la tonda reste ferm\u00E9e pendant la friture.",
       tip_nerd: "Sans farine \u00E0 l'abaisse, l'huile reste propre plus longtemps ; un bord mal scell\u00E9 laisse entrer l'huile et s'\u00E9chapper la farce.",
     },

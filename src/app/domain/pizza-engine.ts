@@ -1955,8 +1955,8 @@ export function generateRecipe(
   // P/L estimation from W — Audit Maestro P0-1 (VPL-012: accept custom P/L)
   const flourPL = customFlourPL ?? estimatePL(flourW, plRange);
 
-  const hasPreFerment =
-    usePreFerment ?? style.requires_pre_ferment;
+  const hasPreFerment = !style.dough.unleavened &&
+    (usePreFerment ?? style.requires_pre_ferment);
   const preFermentType: PreFermentType = preFerment?.type ?? preFermentKind(style);
   const preFermentFlourPct = Math.min(
     PRE_FERMENT_FLOUR_PCT.max,
@@ -3419,6 +3419,10 @@ function generateTimeline(
   // ─── STAGLIO (layout-aware: descrizione cambia con pieces_per_unit) ───
   const layout = getLayoutSpec(style);
   const isMultiPiece = (layout.pieces_per_unit ?? 1) > 1;
+  const unequalDiscs = style.id === "pizza_fritta_tonda";
+  const divideMessage = unequalDiscs
+    ? em("timeline.divide.unequalDiscs", "Dividere ogni unità in due porzioni: 60% per la base e 40% per la copertura. Formare due dischi.")
+    : em("timeline.divide.multiPiece", "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.", { pieces: layout.pieces_per_unit ?? 2 });
   // Teglia/pala/focaccia: staglio delicato senza pirlatura stretta — l'alveolatura
   // costruita in puntata non va sgonfiata (coerente con divide_teglia del CMS).
   const servingUnitForDivide = getServingUnit(style);
@@ -3435,17 +3439,13 @@ function generateTimeline(
           msg: {
             title: em("timeline.divide.title", "Staglio"),
             description: [
-              em(
-                "timeline.divide.multiPiece",
-                "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.",
-                { pieces: layout.pieces_per_unit ?? 2 },
-              ),
+              divideMessage,
             ],
           },
         }
       : {}),
     description: isMultiPiece
-      ? `Dividere in ${layout.pieces_per_unit} pezzi uguali per ogni unità. Formare pallina o disco.`
+      ? renderStepIt([divideMessage])
       : isGentleDivide
         ? "Dividere con delicatezza, senza sgonfiare l'impasto."
         : "Dividere in panetti del peso corretto. Formare pallina.",
@@ -3481,6 +3481,7 @@ function generateTimeline(
       ),
     );
   }
+  const toppingBeforeProof = injectToppingAt("before_proof");
   if (proofStepMinutes > 0) {
     steps.push({
       id: "proof",
@@ -3574,7 +3575,9 @@ function generateTimeline(
   } else if (layout.type === "stacked") {
     shapeMsg = em("timeline.shape.stacked", "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.");
   } else if (layout.type === "closed_stuffed") {
-    shapeMsg = em("timeline.shape.closedStuffed", "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.");
+    shapeMsg = isFriedStyle(style)
+      ? em("timeline.shape.closedStuffedFried", "Stendere il disco di base, lasciando il secondo per la chiusura.")
+      : em("timeline.shape.closedStuffed", "Stendere il disco di base in teglia, lasciando il secondo per la chiusura.");
   } else {
     // Layout singolo: nella UI vale il testo del CMS (timelineLabels.shape).
     shapeMsg =
@@ -3662,11 +3665,14 @@ function generateTimeline(
   } else if (layout.filling_timing === "pre_bake" || layout.cook_mode === "topped") {
     // Default: farcitura pre-cottura classica
     // Se il topping ha già inserito uno step "replaces_generic" in after_shape, non aggiungere il generico
-    if (!toppingReplacesGenericTop) {
+    const toppingAfterBake = topping?.assembly_steps?.some(
+      step => step.insert_at === "after_bake" && step.replaces_generic,
+    );
+    if (!toppingReplacesGenericTop && !toppingAfterBake && !toppingBeforeProof) {
       steps.push({
         id: "top",
         title: "Farcitura",
-        description: topping
+        description: topping?.name
           ? `Condire con ${topping.name} secondo la ricetta.`
           : "Condire la pizza secondo gusto",
         duration_minutes: 5,
@@ -3689,7 +3695,7 @@ function generateTimeline(
   if (layout.cook_mode === "white_then_top") {
     // Baciata: cottura in bianco
     const firstBakeMin = Math.max(8, Math.round((effectiveCookSec / 60) * 0.65));
-    const secondBakeMin = Math.max(3, Math.round((effectiveCookSec / 60) * 0.35));
+    const secondBakeMin = Math.max(3, Math.ceil(effectiveCookSec / 60) - firstBakeMin);
     steps.push(
       keyedStep(
         { id: "bake", duration_minutes: firstBakeMin, icon: "flame", timing_label: `${firstBakeMin} min` },
@@ -3737,7 +3743,7 @@ function generateTimeline(
         variant: "fry",
         title: "Frittura",
         description: `Friggi una pizza alla volta a ${oilTemp}°C per ${formatCookTime(effectiveCookSec)}, girandola a metà con una schiumarola. Scolala su carta assorbente.`,
-        duration_minutes: Math.max(1, Math.round(effectiveCookSec / 60)),
+        duration_minutes: Math.max(1, Math.ceil(effectiveCookSec / 60)),
         icon: "flame",
         timing_label: formatCookTime(effectiveCookSec),
         tip: {
@@ -3749,7 +3755,7 @@ function generateTimeline(
       keyedStep(
         {
           id: "bake",
-          duration_minutes: Math.round(effectiveCookSec / 60),
+          duration_minutes: Math.ceil(effectiveCookSec / 60),
           icon: "flame",
           timing_label: formatCookTime(effectiveCookSec),
         },
@@ -3791,7 +3797,8 @@ function generateTimeline(
     for (const step of steps) {
       if (step.id !== "bake" && step.id !== "bake2") continue;
       const perRoundSec = step.id === "bake" && !hasSecondBake ? effectiveCookSec : step.duration_minutes * 60;
-      step.duration_minutes = Math.max(1, Math.round((perRoundSec * bakeRounds) / 60));
+      // La pianificazione in minuti non deve finire prima dei secondi reali.
+      step.duration_minutes = Math.max(1, Math.ceil((perRoundSec * bakeRounds) / 60));
       step.rounds = bakeRounds;
       step.timing_label = `${bakeRounds} × ${formatCookTime(perRoundSec)}`;
       if (step.msg?.description) {

@@ -727,7 +727,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const [step, setStep] = useState(0);
   const [ovenType, setOvenType] = useState<OvenType>("home");
   const [ovenTemp, setOvenTemp] = useState(250);
-  const [skillLevel, setSkillLevel] = useState<SkillLevel>(2);
+  const [skillLevel, setSkillLevel] = useState<SkillLevel>(1);
   /* Pantry: farine e lieviti per onboarding */
   const [ftuFlours, setFtuFlours] = useState<string[]>([]);
   const [ftuYeasts, setFtuYeasts] = useState<string[]>([]);
@@ -1297,7 +1297,7 @@ export function ProfilePage() {
   });
   const [skillLevel, setSkillLevel] = useState<SkillLevel>(() => {
     const saved = loadJson<SkillLevel>(SKILL_STORAGE_KEY);
-    return saved ?? 2;
+    return saved ?? 1;
   });
   const [pizzaNerd, setPizzaNerd] = useState<boolean>(() => {
     try {

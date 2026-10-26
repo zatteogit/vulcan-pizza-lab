@@ -962,6 +962,8 @@ export const ES_LOCALE: CmsContent = {
     "timeline.mix.title": "Amasado",
     "timeline.divide.title": "Boleado",
     "timeline.divide.multiPiece": "Divide cada porción en {pieces} trozos iguales. Forma una bola o un disco.",
+    "timeline.divide.unequalDiscs": "Divide cada unidad en dos porciones: 60% para la base y 40% para la tapa. Forma dos discos.",
+    "timeline.shape.closedStuffedFried": "Estira el disco de la base y reserva el segundo para cerrarla.",
     "timeline.shape.foldedLayers": "Estira una lámina finísima y dóblala {folds} veces como un libro, repartiendo el relleno entre los pliegues.",
     "timeline.shape.doubleThinSheet": "Estira con el rodillo dos láminas finísimas, casi transparentes.",
     "timeline.shape.stacked": "Estira el primer disco en la bandeja aceitada; reserva el segundo.",

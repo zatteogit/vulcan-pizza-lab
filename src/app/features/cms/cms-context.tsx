@@ -2318,6 +2318,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.mix.title": "Impasto",
     "timeline.divide.title": "Staglio",
     "timeline.divide.multiPiece": "Dividere in {pieces} pezzi uguali per ogni unità. Formare pallina o disco.",
+    "timeline.divide.unequalDiscs": "Dividere ogni unità in due porzioni: 60% per la base e 40% per la copertura. Formare due dischi.",
+    "timeline.shape.closedStuffedFried": "Stendere il disco di base, lasciando il secondo per la chiusura.",
     "timeline.shape.foldedLayers": "Stendere una sfoglia sottilissima e ripiegare {folds} volte a libro, distribuendo la farcitura tra le pieghe.",
     "timeline.shape.doubleThinSheet": "Stendere due sfoglie sottilissime quasi trasparenti col mattarello.",
     "timeline.shape.stacked": "Stendere il primo disco nella teglia oliata; tenere il secondo da parte.",

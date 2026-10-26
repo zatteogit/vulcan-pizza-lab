@@ -944,6 +944,8 @@ export const DE_LOCALE: CmsContent = {
     "timeline.mix.title": "Kneten",
     "timeline.divide.title": "Teilen",
     "timeline.divide.multiPiece": "Teile jede Portion in {pieces} gleich große Stücke. Forme jeweils eine Kugel oder Scheibe.",
+    "timeline.divide.unequalDiscs": "Teile jede Einheit in zwei Portionen: 60% für den Boden und 40% für den Deckel. Forme zwei Fladen.",
+    "timeline.shape.closedStuffedFried": "Zieh den unteren Fladen aus und lege den zweiten zum Verschließen beiseite.",
     "timeline.shape.foldedLayers": "Roll eine hauchdünne Teigplatte aus und falte sie {folds}-mal wie ein Buch; verteile die Füllung zwischen den Lagen.",
     "timeline.shape.doubleThinSheet": "Roll mit dem Nudelholz zwei hauchdünne, fast durchsichtige Teigplatten aus.",
     "timeline.shape.stacked": "Breite die erste Scheibe im geölten Blech aus; leg die zweite beiseite.",

@@ -18,6 +18,9 @@ export const MCP_GUIDE = `# How to use the pizza engine
 ## Numbers
 Every gram, percentage, hour, temperature and score comes from a tool call. Do not round by eye, do not "adjust" the yeast, do not write "to taste" for dough ingredients. If the user wants a change, call the tool again with the parameter (hydration_pct, fermentation_hours, fermentation_temp_c, pre_ferment, ball_weight_g) and show the values the engine returns.
 
+Scope: the browser additionally supports pantry, exclusions, flour products/details, toppings, pan geometry and signature presets; these are not inputs of the current MCP tools. Do not claim a default MCP recipe reproduces a browser preset with different effective inputs. Unspecified supplies remain unverified, not confirmed absent.
+Catalog names describe the original reference. In a generated recipe, use style.name as its executable name and style.reference_name for the reference. reference.stg_departures lists known departures from Napoletana STG; conformity_certified is false. A score never certifies conformity. Unleavened styles cannot use biga or poolish.
+
 ## The kitchen (ask once, only what is missing)
 - Oven: oven_model with brand and model ("Ooni Koda 16", "Effeuno P134H", "Roccbox"); if it is not found you get an error, then use oven_type: home (domestic, 250 °C), electric_standard (300), gas (deck, 350), electric_high (pizza oven 400-500), gas_pizza (portable, 500), wood (wood or pellet, 500), plus oven_max_temp_c if the user knows it. Unknown oven: home at 250 °C, and say so.
 - Time: available_hours are the hours from now to the meal ("dinner at 8 pm, it is 2 pm" → 6). The whole procedure, from mixing to the last bake, fits in them. With no fixed meal time ("I have two days") pass meal_deadline:false and the hours limit only the fermentation.

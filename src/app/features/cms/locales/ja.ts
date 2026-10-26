@@ -992,6 +992,8 @@ export const JA_LOCALE: CmsContent = {
     "timeline.mix.title": "こね",
     "timeline.divide.title": "分割",
     "timeline.divide.multiPiece": "1単位ごとに{pieces}等分にし、丸めるか円盤状にします。",
+    "timeline.divide.unequalDiscs": "1個分の生地を底用60%、ふた用40%に分け、2枚の円盤にします。",
+    "timeline.shape.closedStuffedFried": "底の生地を円盤に伸ばし、ふた用の生地は残しておきます。",
     "timeline.shape.foldedLayers": "生地を極薄に伸ばし、本のように{folds}回折りたたみながら、層の間に具を広げます。",
     "timeline.shape.doubleThinSheet": "麺棒で、ほぼ透けるほど極薄の生地を2枚伸ばします。",
     "timeline.shape.stacked": "1枚目の生地を油を塗った型に広げ、2枚目は取っておきます。",
