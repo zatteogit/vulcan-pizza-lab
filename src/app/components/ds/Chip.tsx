@@ -8,10 +8,8 @@
  *
  * Vedi docs/design-system-tiers.md (T4, F2-2).
  */
-import { Check } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
 import type { ReactNode } from "react";
-import { motionSpring } from "./motion";
+import { SelectionMark } from "./SelectionMark";
 
 export interface ChipProps {
   label: ReactNode;
@@ -23,23 +21,12 @@ export interface ChipProps {
 export function Chip({ label, active, onToggle, icon }: ChipProps) {
   return (
     <button
+      type="button"
       onClick={onToggle}
       className={`ds-chip${active ? " ds-chip--active" : ""}`}
       aria-pressed={active}
     >
-      <AnimatePresence>
-        {active && (
-          <motion.span
-            initial={{ scale: 0, width: 0 }}
-            animate={{ scale: 1, width: 14 }}
-            exit={{ scale: 0, width: 0 }}
-            transition={motionSpring.crisp}
-          >
-            <Check size={14} />
-          </motion.span>
-        )}
-      </AnimatePresence>
-      {icon && !active && <span className="ds-chip__icon">{icon}</span>}
+      <SelectionMark active={active} icon={icon} />
       {label}
     </button>
   );
