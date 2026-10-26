@@ -68,7 +68,7 @@ export const JA_LOCALE: CmsContent = {
     recipeNameConfirm: "名前を確定",
     recipeResetPreset: "元のレシピに戻す",
 
-    recipeOpenCreate: "作成画面でカスタマイズ",
+    recipeOpenCreate: "作成画面で開く",
     createSourceTitle: "{style}から始める",
     createSourceHint: "上のフィルターを確認してください。条件に合わせた提案とオリジナルからの変更を確認できます。",
     createSourceAction: "条件に合う提案を見る",

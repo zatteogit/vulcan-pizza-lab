@@ -68,7 +68,7 @@ export const EN_LOCALE: CmsContent = {
     recipeNameConfirm: "Confirm name",
     recipeResetPreset: "Restore original",
 
-    recipeOpenCreate: "Customize in Create",
+    recipeOpenCreate: "Open in Create",
     createSourceTitle: "Start from {style}",
     createSourceHint: "Check the filters above: here you get a tailored proposal and changes from the original style.",
     createSourceAction: "View the tailored proposal",

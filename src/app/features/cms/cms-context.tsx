@@ -1380,7 +1380,7 @@ export const CMS_DEFAULTS: CmsContent = {
     recipeNameConfirm: "Conferma nome",
     recipeResetPreset: "Ripristina originale",
 
-    recipeOpenCreate: "Personalizza in Crea",
+    recipeOpenCreate: "Apri in Crea",
     createSourceTitle: "Parti da {style}",
     createSourceHint: "Controlla i filtri in alto: qui trovi la proposta su misura e le modifiche rispetto allo stile originale.",
     createSourceAction: "Vedi la proposta su misura",
