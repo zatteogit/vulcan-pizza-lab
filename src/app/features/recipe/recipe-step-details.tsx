@@ -1,9 +1,10 @@
 /* ═══ STEP DETAILS — "come si fa" collassabile + learn-inline (estratto lug 2026) ═══ */
 
 import { ChevronRight, FlaskConical, LifeBuoy, Lightbulb } from "lucide-react";
-import { motion } from "motion/react";
-import { motionSpring } from "../../components/ds/motion";
-import { useMemo, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { motionDuration, motionSpring } from "../../components/ds/motion";
+import { useId, useMemo, useState } from "react";
+import { useDisclosureScroll } from "../../hooks/use-disclosure-scroll";
 import type { StepTroubleshooting } from "../../data/troubleshooting-data";
 import { TroubleshootingSheet } from "./troubleshooting-panel";
 import type { CmsContent } from "../cms/cms-context";
@@ -47,6 +48,12 @@ export function StepDetails({
   const [open, setOpen] = useState(false);
   const [glossaryOpen, setGlossaryOpen] = useState(false);
   const [troubleOpen, setTroubleOpen] = useState(false);
+  const detailsScroll = useDisclosureScroll(open);
+  const glossaryScroll = useDisclosureScroll(glossaryOpen && open);
+  const reducedMotion = useReducedMotion();
+  const transition = reducedMotion ? { duration: motionDuration.reduced } : motionSpring.denseDisclosure;
+  const detailsId = useId();
+  const glossaryId = useId();
   const learnStepId =
     stepId && !(unleavened && REST_STEP_IDS.has(stepId)) ? stepId : undefined;
 
@@ -83,13 +90,16 @@ export function StepDetails({
   return (
     <div className="step-details">
       {hasDetails && <button
-        onClick={() => setOpen((v) => !v)}
+        ref={detailsScroll.anchorRef}
+        type="button"
+        onClick={() => { if (!open) detailsScroll.prepare(); setOpen((v) => !v); }}
         className="step-details__toggle type-data"
         aria-expanded={open}
+        aria-controls={open ? detailsId : undefined}
       >
         <motion.span
           animate={{ rotate: open ? 90 : 0 }}
-          transition={motionSpring.crispControl}
+          transition={reducedMotion ? { duration: motionDuration.reduced } : motionSpring.crispControl}
           className="step-details__chevron"
         >
           <ChevronRight size={16} />
@@ -104,9 +114,13 @@ export function StepDetails({
       {!hasDetails && troubleAction}
       {open && (
         <motion.div
+          ref={detailsScroll.contentRef}
+          id={detailsId}
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
-          transition={motionSpring.denseDisclosure}
+          transition={transition}
+          onUpdate={(latest) => { if (typeof latest.height === "number" || typeof latest.height === "string") detailsScroll.follow(latest.height); }}
+          onAnimationComplete={detailsScroll.complete}
           className="step-details__content"
         >
           {longDesc && <p className="step-details__desc type-body-lg">{longDesc}</p>}
@@ -134,20 +148,29 @@ export function StepDetails({
           {learnStepId && STEP_GLOSSARY[learnStepId] && (
             <>
             <button
+              ref={glossaryScroll.anchorRef}
               type="button"
-              onClick={() => setGlossaryOpen((value) => !value)}
+              onClick={() => { if (!glossaryOpen) glossaryScroll.prepare(); setGlossaryOpen((value) => !value); }}
               className="step-details__glossary-toggle type-data"
               aria-expanded={glossaryOpen}
+              aria-controls={glossaryOpen ? glossaryId : undefined}
             >
               {t(cms.cooking.learnInlineTitle, { label: glossaryLabel })}
             </button>
             {glossaryOpen && (
               <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="step-details__glossary-content type-body"
+                ref={glossaryScroll.contentRef}
+                id={glossaryId}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                transition={transition}
+                onUpdate={(latest) => { if (typeof latest.height === "number" || typeof latest.height === "string") glossaryScroll.follow(latest.height); }}
+                onAnimationComplete={glossaryScroll.complete}
+                className="step-details__content"
               >
-                {t(cms.cooking.learnInlineBody, { label: glossaryLabel })}
+                <div className="step-details__glossary-content type-body">
+                  {t(cms.cooking.learnInlineBody, { label: glossaryLabel })}
+                </div>
               </motion.div>
             )}
             </>
