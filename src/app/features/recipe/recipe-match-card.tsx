@@ -298,7 +298,7 @@ export function RecipeMatchCard({
             })
           : t(cms.cooking.ceilingNeeds, { ceiling: ceilingRounded, needs: needs.join(", ") }),
       };
-    } else if (headroom >= 8 && onOptimize) {
+    } else if (headroom >= 8 && onOptimize && (!verdictRecipe || optimizationPreview?.verdict.outcome === "ok")) {
       // Hai tutto: basta ottimizzare.
       headroomLine = { tone: "accent", text: t(cms.cooking.ceilingOptimize, { ceiling: ceilingRounded }) };
     } else if (atCeiling && mode === "canonical" && ceilingRounded >= 60) {

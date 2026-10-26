@@ -11,6 +11,7 @@ import {
   OVEN_PRESETS,
   PIZZA_FAMILIES,
   STYLES_DB,
+  YEAST_LABELS,
   generateRecipe,
   recommendStyles,
   type EngineMsg,
@@ -22,6 +23,7 @@ import {
   type UserConstraints,
 } from "../domain/pizza-engine";
 import { computePreFermentSplit } from "../domain/pre-ferment-split";
+import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../data/glossary-data";
 import { searchOvenModels } from "../data/oven-models";
 import { kitchenCompatibility } from "../features/recipe/kitchen-compatibility";
@@ -125,7 +127,10 @@ function constraintsFrom(args: Json): UserConstraints {
 
 /** Testo italiano di riserva di un messaggio del motore, con i parametri. */
 function msg(m: EngineMsg): string {
-  return m.fallback.replace(/\{(\w+)\}/g, (_, k: string) => String(m.params?.[k] ?? `{${k}}`));
+  return m.fallback.replace(/\{(\w+)\}/g, (_, k: string) => {
+    const value = m.params?.[k];
+    return String(k === "yeast" ? YEAST_LABELS[String(value)] ?? value ?? `{${k}}` : value ?? `{${k}}`);
+  });
 }
 
 function styleSummary(style: PizzaStyle) {
@@ -191,7 +196,8 @@ function recipeData(recipe: GeneratedRecipe) {
     .filter((row) => row.grams > 0)
     .map((row) => ({ ...row, baker_pct: pct(row.grams) }));
   return {
-    style: { id: recipe.style.id, name: recipe.style.name },
+    style: { id: recipe.style.id, name: recipeDisplayName(recipe), reference_name: recipe.style.name },
+    reference: { stg_departures: stgDepartures(recipe), conformity_certified: false },
     outcome: recipe.verdict.outcome,
     blockers: recipe.verdict.blockers,
     dough_balls: recipe.dough_balls,
@@ -355,6 +361,9 @@ export const MCP_TOOLS: McpTool[] = [
       if (preFerment && !["none", "biga", "poolish"].includes(preFerment)) {
         throw new ToolInputError(`"pre_ferment" must be none, biga or poolish`);
       }
+      if (style.dough.unleavened && preFerment && preFerment !== "none") {
+        throw new ToolInputError(`${style.name} is unleavened: pre_ferment must be none`);
+      }
       const recipe = generateRecipe(style, constraints, {
         customHydration: args.hydration_pct != null ? num(args, "hydration_pct", 40, 110) : undefined,
         customFermentationHours: args.fermentation_hours != null ? num(args, "fermentation_hours", 0.5, 168) : undefined,
@@ -366,7 +375,7 @@ export const MCP_TOOLS: McpTool[] = [
       const data = recipeData(recipe);
       const grams = data.ingredients.map((i) => `${i.name} ${i.grams} g`).join(", ");
       return {
-        summary: `${style.name}, ${recipe.dough_balls} × ${recipe.ball_weight_g} g (${recipe.verdict.outcome}): ${grams}. Fermentation ${recipe.fermentation_hours} h at ${recipe.fermentation_temp_c} °C, oven ${recipe.oven_temp_c} °C.`,
+        summary: `${data.style.name}, ${recipe.dough_balls} × ${recipe.ball_weight_g} g (${recipe.verdict.outcome}): ${grams}. Fermentation ${recipe.fermentation_hours} h at ${recipe.fermentation_temp_c} °C, oven ${recipe.oven_temp_c} °C.`,
         data,
       };
     },

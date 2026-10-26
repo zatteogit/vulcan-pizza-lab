@@ -57,7 +57,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 440,
-    "timeline_min": 1512
+    "timeline_min": 1513
   },
   "teglia_romana/ideal": {
     "flour_g": 1296,
@@ -147,7 +147,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 332,
-    "timeline_min": 1506
+    "timeline_min": 1507
   },
   "new_york/ideal": {
     "flour_g": 668,
@@ -207,7 +207,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 888,
-    "timeline_min": 1065
+    "timeline_min": 1066
   },
   "chicago_deep/ideal": {
     "flour_g": 1051,
@@ -327,7 +327,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 575,
-    "timeline_min": 1523
+    "timeline_min": 1524
   },
   "grandma_style/ideal": {
     "flour_g": 1297,
@@ -387,7 +387,7 @@
     "fermentation_c": 20,
     "oven_c": 250,
     "cook_s": 498,
-    "timeline_min": 153
+    "timeline_min": 154
   },
   "padellino_torino/ideal": {
     "flour_g": 429,
@@ -447,7 +447,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 1205,
-    "timeline_min": 1565
+    "timeline_min": 1569
   },
   "ciaccino_senese/ideal": {
     "flour_g": 1650,
@@ -507,7 +507,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 1281,
-    "timeline_min": 1560
+    "timeline_min": 1561
   },
   "trancio_milanese/ideal": {
     "flour_g": 1357,
@@ -567,7 +567,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 768,
-    "timeline_min": 1535
+    "timeline_min": 1536
   },
   "focaccia_barese/ideal": {
     "flour_g": 1104,
@@ -642,7 +642,7 @@
     "fermentation_c": 4,
     "oven_c": 175,
     "cook_s": 90,
-    "timeline_min": 1014
+    "timeline_min": 1009
   },
   "pizza_montanara/home": {
     "flour_g": 242,
@@ -657,7 +657,7 @@
     "fermentation_c": 4,
     "oven_c": 175,
     "cook_s": 90,
-    "timeline_min": 1014
+    "timeline_min": 1009
   },
   "pizza_fritta_tonda/ideal": {
     "flour_g": 484,
@@ -837,7 +837,7 @@
     "fermentation_c": 4,
     "oven_c": 250,
     "cook_s": 498,
-    "timeline_min": 1518
+    "timeline_min": 1519
   },
   "greek_pan/ideal": {
     "flour_g": 929,

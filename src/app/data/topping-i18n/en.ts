@@ -1930,7 +1930,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Fill and seal the two discs",
-      description: "Stretch by hand, without flour, one disc of about 120 g and one of about 80 g, 2\u20133 mm thin. Spread ricotta, provola, cicoli and pepper over the larger disc, leaving the edge clear; cover with the small disc and seal by pressing firmly. Fry in seed oil at about 175 \u00B0C, turning it once golden.",
+      description: "Stretch the two portions by hand, without flour, into discs 2–3 mm thin. Spread ricotta, provola, cicoli and pepper over the larger disc, leaving the edge clear; cover with the small disc and seal by pressing firmly. Fry in seed oil at about 175 °C, turning it once golden.",
       tip_beginner: "The bottom disc is larger so its edge folds up over the top and the tonda stays closed while frying.",
       tip_nerd: "No flour when stretching keeps the oil clean for longer; a poorly sealed edge lets oil in and filling out.",
     },

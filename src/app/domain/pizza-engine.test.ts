@@ -43,6 +43,21 @@ function makeConstraints(overrides: Partial<UserConstraints> = {}): UserConstrai
 }
 
 describe("generateRecipe — Napoletana STG con forno capace", () => {
+  it("il piano di cottura non sottostima i secondi reali, nemmeno con più infornate", () => {
+    for (const style of Object.values(STYLES_DB)) for (const dough_balls of [1, 4]) {
+      const r = generateRecipe(style, makeConstraints({ oven_type: "home", oven_max_temp_c: 250, dough_balls }));
+      const minutes = r.timeline.filter(s => s.id === "bake" || s.id === "bake2")
+        .reduce((sum, s) => sum + s.duration_minutes, 0);
+      expect(minutes * 60, `${style.id} × ${dough_balls}`).toBeGreaterThanOrEqual(r.cook_time_sec * dough_balls);
+    }
+  });
+
+  it("Recco resta senza lievito anche se una bozza chiede un pre-fermento", () => {
+    const r = generateRecipe(STYLES_DB.focaccia_recco, makeConstraints(), { usePreFerment: true });
+    expect(r.has_pre_ferment).toBe(false);
+    expect(r.yeast_g).toBe(0);
+    expect(r.timeline.some(s => s.id === "preferment")).toBe(false);
+  });
   const recipe = generateRecipe(napoletana, makeConstraints());
 
   it("lo stile esiste nel DB", () => {

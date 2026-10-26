@@ -2772,7 +2772,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Rechear e fechar os dois discos",
-      description: "Abra com as m\u00E3os, sem farinha, um disco de cerca de 120 g e outro de cerca de 80 g, com 2\u20133 mm de espessura. Sobre o disco maior, distribua ricota, provola, cicoli e pimenta deixando a borda livre; cubra com o disco menor e sele apertando bem. Frite em \u00F3leo vegetal a cerca de 175 \u00B0C, virando quando estiver dourada.",
+      description: "Abra as duas porções com as mãos, sem farinha, em discos com 2–3 mm de espessura. Sobre o disco maior, distribua ricota, provola, cicoli e pimenta deixando a borda livre; cubra com o disco menor e sele apertando bem. Frite em óleo vegetal a cerca de 175 °C, virando quando estiver dourada.",
       tip_beginner: "O disco de baixo \u00E9 maior: assim a borda dobra por cima e a tonda continua fechada na fritura.",
       tip_nerd: "Sem farinha na abertura, o \u00F3leo fica limpo por mais tempo; uma borda mal selada deixa o \u00F3leo entrar e o recheio vazar.",
     },

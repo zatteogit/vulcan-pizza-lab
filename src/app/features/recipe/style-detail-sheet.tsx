@@ -2,6 +2,7 @@ import { RecipeReferenceNote } from "./recipe-reference-note";
 import { recipeDisplayName, stgDepartures } from "../../domain/recipe-reference";
 import { CompatibilityPill } from "./style-card-parts";
 import { RecipeChanges } from "./recipe-changes";
+import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { canonicalRecipe } from "../../use-cases/recipe-entry";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
@@ -427,6 +428,9 @@ export function StyleDetailSheet({
                 </p>
               )}
               <div className="style-detail-match__list">
+                {rec.tier === "not_feasible" && constraints && (
+                  <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false} />
+                )}
                 {matchWarnings.map((text) => (
                   <div key={text} className="style-detail-match__row" data-warning="true">
                     <span className="style-detail-match__icon">

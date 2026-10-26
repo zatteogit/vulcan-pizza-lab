@@ -133,6 +133,7 @@ interface ToppingPrepStep {
 
 /** Punto della timeline dove inserire uno step di assemblaggio. */
 export type TimelineInsertPoint =
+  | "before_proof"       // dopo la stesura in teglia, prima dell'appretto
   | "after_shape"        // dopo stesura, prima della cottura
   | "after_stack"        // tra sovrapposizione e cottura (per layout stacked)
   | "after_fill_internal" // dopo ripieno+sigillatura (per closed_stuffed)
@@ -1702,7 +1703,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "pizza_fritta_tonda_fill",
       title: "Farcire e chiudere i due dischi",
-      description: "Stendere a mano, senza farina, un disco da circa 120 g e uno da circa 80 g, sottili 2–3 mm. Sul disco più grande distribuire ricotta, provola, cicoli e pepe lasciando libero il bordo; coprire con il disco piccolo e sigillare premendo bene. Friggere in olio di semi a circa 175 °C, girandola quando è dorata.",
+      description: "Stendere a mano, senza farina, le due porzioni in dischi sottili 2–3 mm. Sul disco più grande distribuire ricotta, provola, cicoli e pepe lasciando libero il bordo; coprire con il disco piccolo e sigillare premendo bene. Friggere in olio di semi a circa 175 °C, girandola quando è dorata.",
       insert_at: "after_fill_internal",
       duration_minutes: 6,
       replaces_generic: true,
@@ -2807,7 +2808,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       id: "spread_salamoia_genovese",
       title: "Salamoia nelle fossette",
       description: "Prima della lievitazione finale fare le fossette con i polpastrelli. Versare la salamoia di acqua, olio extravergine e sale, poi olio a filo e sale grosso: olio e sale si raccolgono nelle fossette.",
-      insert_at: "after_shape",
+      insert_at: "before_proof",
       duration_minutes: 3,
       replaces_generic: true,
     }],

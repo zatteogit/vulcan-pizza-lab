@@ -42,7 +42,8 @@ interface ProfileDefaults {
 const SKILL_LABELS: Record<number, string> = {
   1: "Principiante",
   2: "Intermedio",
-  3: "Esperto",
+  3: "Avanzato",
+  4: "Esperto",
 };
 
 const OVEN_LABELS: Record<string, string> = {
@@ -221,7 +222,7 @@ export function useProfileDefaults(): ProfileDefaults {
 }
 
 /** Audit n. 33: il livello è stato scelto (percorso o profilo)? Senza
- *  scelta l'app usa 2 per i calcoli ma non lo presenta come «il tuo livello». */
+ *  scelta l'app usa 1, come Crea e Profilo, senza presentarlo come una scelta. */
 export function hasChosenSkill(): boolean {
   try {
     return localStorage.getItem(SKILL_STORAGE_KEY) !== null;
@@ -240,5 +241,5 @@ export function loadSkill(): SkillLevel {
       }
     }
   } catch { /* */ }
-  return 2;
+  return 1;
 }

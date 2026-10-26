@@ -30,6 +30,7 @@ export function RecipeVerdictNotice({
   constraints,
   mealDeadline,
   embedded = false,
+  showRecipeBelow = true,
 }: {
   recipe: GeneratedRecipe;
   constraints: UserConstraints;
@@ -39,6 +40,8 @@ export function RecipeVerdictNotice({
    *  titolo, che li dà il blocco (nota di Matteo: avviso e compatibilità
    *  dicevano la stessa cosa due volte). */
   embedded?: boolean;
+  /** A style preview has no generated recipe below its blocker explanation. */
+  showRecipeBelow?: boolean;
 }) {
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
@@ -118,7 +121,7 @@ export function RecipeVerdictNotice({
           </ul>
         </nav>
       )}
-      <p className="type-body recipe-verdict__footnote">{cms.ui.verdictRecipeBelow}</p>
+      {showRecipeBelow && <p className="type-body recipe-verdict__footnote">{cms.ui.verdictRecipeBelow}</p>}
     </>
   );
   if (embedded) return <div data-region="section" className="recipe-verdict recipe-verdict--embedded">{body}</div>;

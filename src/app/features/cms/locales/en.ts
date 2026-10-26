@@ -1152,6 +1152,8 @@ export const EN_LOCALE: CmsContent = {
     "timeline.mix.title": "Mixing",
     "timeline.divide.title": "Dividing",
     "timeline.divide.multiPiece": "Divide each portion into {pieces} equal pieces. Shape into a ball or disc.",
+    "timeline.divide.unequalDiscs": "Divide each unit into two portions: 60% for the base and 40% for the cover. Shape two discs.",
+    "timeline.shape.closedStuffedFried": "Stretch the base disc, keeping the second disc aside to close it.",
     "timeline.shape.foldedLayers": "Roll out a paper-thin sheet and book-fold it {folds} times, spreading the filling between the folds.",
     "timeline.shape.doubleThinSheet": "Roll out two paper-thin, almost translucent sheets with a rolling pin.",
     "timeline.shape.stacked": "Stretch the first disc in the oiled pan; set the second aside.",

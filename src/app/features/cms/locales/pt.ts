@@ -962,6 +962,8 @@ export const PT_LOCALE: CmsContent = {
     "timeline.mix.title": "Amassamento",
     "timeline.divide.title": "Divisão",
     "timeline.divide.multiPiece": "Divida cada porção em {pieces} pedaços iguais. Forme uma bolinha ou um disco.",
+    "timeline.divide.unequalDiscs": "Divida cada unidade em duas porções: 60% para a base e 40% para a cobertura. Forme dois discos.",
+    "timeline.shape.closedStuffedFried": "Abra o disco da base e reserve o segundo para fechar.",
     "timeline.shape.foldedLayers": "Abra uma folha bem fininha e dobre {folds} vezes como um livro, distribuindo o recheio entre as dobras.",
     "timeline.shape.doubleThinSheet": "Abra com o rolo duas folhas bem fininhas, quase transparentes.",
     "timeline.shape.stacked": "Abra o primeiro disco na assadeira untada; reserve o segundo.",

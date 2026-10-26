@@ -2772,7 +2772,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Beide Fladen f\u00FCllen und verschlie\u00DFen",
-      description: "Zieh ohne Mehl von Hand einen Fladen von etwa 120 g und einen von etwa 80 g aus, 2\u20133 mm d\u00FCnn. Verteile Ricotta, Provola, Cicoli und Pfeffer auf dem gr\u00F6\u00DFeren Fladen und lass den Rand frei; deck ihn mit dem kleinen Fladen ab und dr\u00FCck die R\u00E4nder gut fest. Bei etwa 175 \u00B0C in Pflanzen\u00F6l frittieren und wenden, sobald sie goldbraun ist.",
+      description: "Zieh die beiden Portionen ohne Mehl von Hand zu 2–3 mm dünnen Fladen aus. Verteile Ricotta, Provola, Cicoli und Pfeffer auf dem größeren Fladen und lass den Rand frei; deck ihn mit dem kleinen Fladen ab und drück die Ränder gut fest. Bei etwa 175 °C in Pflanzenöl frittieren und wenden, sobald sie goldbraun ist.",
       tip_beginner: "Der untere Fladen ist gr\u00F6\u00DFer: So l\u00E4sst sich sein Rand nach oben umschlagen, und die Tonda bleibt beim Frittieren geschlossen.",
       tip_nerd: "Ohne Mehl beim Ausziehen bleibt das \u00D6l l\u00E4nger sauber; ein schlecht verschlossener Rand l\u00E4sst \u00D6l hinein und die F\u00FCllung heraus.",
     },

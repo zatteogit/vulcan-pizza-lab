@@ -11,6 +11,56 @@ function call(name: string, args: Record<string, unknown> = {}) {
 }
 
 describe("server MCP", () => {
+  it("una biga non può trasformare Recco in una ricetta lievitata", () => {
+    for (const pre_ferment of ["biga", "poolish"]) {
+      const result = call("generate_recipe", { style_id: "focaccia_recco", pre_ferment });
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain("unleavened");
+    }
+  });
+
+  it("la Montanara si condisce solo dopo la frittura, senza istruzioni irrisolte", () => {
+    const result = call("generate_recipe", { style_id: "pizza_montanara" });
+    const data = result.structuredContent as { steps: { id: string; description: string }[] };
+    expect(data.steps.some(s => s.id === "top")).toBe(false);
+    expect(data.steps.findIndex(s => s.id === "montanara_a_crudo"))
+      .toBeGreaterThan(data.steps.findIndex(s => s.id === "bake"));
+    expect(JSON.stringify(data.steps)).not.toMatch(/undefined|\[object Object\]/);
+  });
+
+  it("la ricetta senza legna distingue Napoletana dal riferimento STG", () => {
+    const result = call("generate_recipe", { style_id: "napoletana_stg", oven_type: "electric_high", oven_max_temp_c: 450 });
+    const data = result.structuredContent as { style: { name: string; reference_name: string }; reference: { stg_departures: string[]; conformity_certified: boolean } };
+    expect(data.style.name).toBe("Napoletana");
+    expect(data.style.reference_name).toBe("Napoletana STG");
+    expect(data.reference.stg_departures).toContain("wood");
+    expect(data.reference.conformity_certified).toBe(false);
+    expect(result.content[0].text).not.toContain("Napoletana STG,");
+  });
+
+  it("la salamoia genovese precede l'appretto come dicono le istruzioni", () => {
+    const result = call("generate_recipe", { style_id: "focaccia_genovese", has_baking_pan: true });
+    const steps = (result.structuredContent as { steps: { id: string }[] }).steps.map(s => s.id);
+    expect(steps.indexOf("spread_salamoia_genovese")).toBeGreaterThan(steps.indexOf("shape"));
+    expect(steps.indexOf("spread_salamoia_genovese")).toBeLessThan(steps.indexOf("proof"));
+    expect(steps).not.toContain("top");
+  });
+
+  it("gli avvisi leggibili traducono il tipo di lievito, senza esporre enum", () => {
+    const result = call("recommend_styles", { oven_type: "home", limit: 29 });
+    const styles = (result.structuredContent as { styles: { warnings: string[] }[] }).styles;
+    expect(styles.flatMap(s => s.warnings).join(" ")).toContain("Lievito fresco");
+    expect(styles.flatMap(s => s.warnings).join(" ")).not.toContain("lievito: fresh");
+  });
+
+  it("cambiare peso alla fritta tonda non lascia due dischi statici da 200 g", () => {
+    const result = call("generate_recipe", { style_id: "pizza_fritta_tonda", ball_weight_g: 300 });
+    const data = result.structuredContent as { ball_weight_g: number; steps: { id: string; description: string }[] };
+    expect(data.ball_weight_g).toBe(300);
+    expect(data.steps.find(s => s.id === "divide")?.description).toContain("60%");
+    expect(JSON.stringify(data.steps)).not.toMatch(/120 g|80 g|pezzi uguali/);
+  });
+
   it("initialize dichiara gli strumenti e la versione chiesta", () => {
     const res = handleMcpMessage({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-03-26" } });
     expect(res && "result" in res && (res.result as { protocolVersion: string }).protocolVersion).toBe("2025-03-26");
