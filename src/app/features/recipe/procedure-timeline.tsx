@@ -173,7 +173,9 @@ export function ProcedureTimeline({
                   >
                     <StepIllustration
                       stepId={step.id}
-                      size={34}
+                      size={24}
+                      variant={step.variant}
+                      unleavened={!!recipe.style.dough.unleavened}
                       tone={isFirst || isLast ? "onAccent" : "accent"}
                       className="procedure-timeline-step__icon"
                     />

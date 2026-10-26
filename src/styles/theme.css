@@ -11130,9 +11130,7 @@
     border: none;
   }
 
-  /* Forza l'opacità piena dell'illustrazione (default 0.9 nel componente
-     figlio StepIllustration): !important necessario per vincere lo style
-     inline che il componente applica da sé, fuori dal nostro perimetro. */
+  /* Opaque symbols keep small timeline markers legible in every theme. */
   .procedure-timeline-step__icon {
     opacity: 1 !important;
   }
@@ -17131,6 +17129,12 @@
 
   .step-illustration--on-accent {
     filter: var(--drop-shadow-step-accent);
+  }
+
+  .step-illustration--symbol {
+    opacity: 1;
+    flex-shrink: 0;
+    filter: none;
   }
 
   .step-illustration--muted {

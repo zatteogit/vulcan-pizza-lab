@@ -33,6 +33,9 @@ type CookSessionStep
 import { ConfirmDialog, CtaButton } from "../../components/ds/index";
 import { DoughBlob } from "./dough-mascot";
 import { StepIllustration } from "./step-illustrations";
+import { resolveStepVisual } from "./step-visual";
+import { STYLES_DB } from "../../domain/styles-db";
+import { isFriedStyle } from "../../domain/pizza-engine";
 
 type CookingCopy = CmsContent["cooking"];
 
@@ -394,7 +397,11 @@ export function CookingMode() {
                     animate={{ y: [0, -5, 0] }}
                     transition={{ duration: motionDuration.ambientPulse,repeat: Infinity,ease: motionEase.standard }}
                   >
-                    <StepIllustration stepId={step.id} size={120} />
+                    <StepIllustration stepId={step.id} visual={step.visual ?? resolveStepVisual(step, {
+                      fried: STYLES_DB[session.styleId] && isFriedStyle(STYLES_DB[session.styleId]),
+                      unleavened: !!STYLES_DB[session.styleId]?.dough.unleavened,
+                      proofInPan: !!STYLES_DB[session.styleId]?.proof_in_pan,
+                    })} size={120} />
                   </motion.div>
                 </div>
 

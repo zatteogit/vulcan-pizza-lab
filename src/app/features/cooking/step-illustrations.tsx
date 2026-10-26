@@ -1,9 +1,12 @@
-/* ═══ STEP ILLUSTRATIONS — Imagen asset set (luglio 2026) ═══
- * Illustrazioni raster coerenti con il tono Vulcan: terracotta, impasto caldo,
- * forno vivo, dettagli morbidi. Il componente mantiene la stessa API degli
- * SVG precedenti per Recipe Timeline, Cooking Mode e Learn.
+/* Small timeline markers use crisp, theme-aware symbols. Large educational
+ * illustrations retain their detail, only when the pictured action is true.
  */
 
+import { Beaker, ChefHat, Clock3, CookingPot, Flame, Hand, Layers,
+  Scissors, Sandwich, Thermometer, Timer, Utensils, type LucideProps } from "lucide-react";
+import type { ComponentType, CSSProperties } from "react";
+import type { TimelineStep } from "../../domain/pizza-engine";
+import { resolveStepVisual, type StepVisual } from "./step-visual";
 import bakeSrc from "../../../assets/timeline/timeline-bake.webp";
 import bulkSrc from "../../../assets/timeline/timeline-bulk.webp";
 import divideSrc from "../../../assets/timeline/timeline-divide.webp";
@@ -26,6 +29,10 @@ interface Props {
   size?: number;
   tone?: StepIllustrationTone;
   className?: string;
+  variant?: TimelineStep["variant"];
+  unleavened?: boolean;
+  /** Persist the resolved action in cooking sessions, including variants. */
+  visual?: StepVisual;
 }
 
 interface IllustrationProps {
@@ -56,7 +63,7 @@ const ASSETS = {
   slice: sliceSrc,
 } as const;
 
-const STEP_ASSETS: Record<string, string> = {
+const STEP_ASSETS: Partial<Record<StepVisual, string>> = {
   preferment: ASSETS.preferment,
   mix: ASSETS.mix,
   bulk: ASSETS.bulk,
@@ -65,22 +72,26 @@ const STEP_ASSETS: Record<string, string> = {
   shape: ASSETS.shape,
   top: ASSETS.top,
   top_post: ASSETS.top_post,
-  after_bake_top: ASSETS.top_post,
-  preheat: ASSETS.preheat,
-  bake: ASSETS.bake,
-  bake2: ASSETS.bake,
   stack: ASSETS.stack,
   fill_internal: ASSETS.fill_internal,
   split_fill: ASSETS.split_fill,
 };
 
-function resolveAsset(stepId: string) {
-  if (STEP_ASSETS[stepId]) return STEP_ASSETS[stepId];
-  if (stepId.startsWith("spread_")) return ASSETS.top;
-  if (stepId.includes("fill")) return ASSETS.fill_internal;
-  if (stepId.includes("bake")) return ASSETS.bake;
-  if (stepId.includes("top")) return ASSETS.top_post;
-  return ASSETS.slice;
+const STEP_SYMBOLS: Record<StepVisual, ComponentType<LucideProps>> = {
+  preferment: Beaker, mix: MixSymbol, bulk: Clock3, divide: Scissors,
+  proof: Timer, proof_pan: Timer, rest: Clock3, shape: Hand,
+  top: Utensils, top_post: Utensils, preheat: Thermometer, bake: Flame,
+  oil: Thermometer, fry: CookingPot, stack: Layers,
+  fill_internal: Sandwich, split_fill: Sandwich, prep: ChefHat,
+};
+
+// Same 24-unit grid and rounded strokes as the rest of the icon family.
+function MixSymbol({ size = 24, strokeWidth = 2, ...props }: LucideProps) {
+  return <svg {...props} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 11h18c0 6-3 9-9 9s-9-3-9-9Z" />
+    <path d="m14 11 5-8 2 1-4 7M7 7c1-2 3-2 4 0" />
+  </svg>;
 }
 
 function TimelineImage({
@@ -97,7 +108,7 @@ function TimelineImage({
   return (
     <span
       className={`step-illustration ${TONE_CLASSES[tone]} ${className ?? ""}`}
-      style={{ ["--illustration-size" as any]: `${size}px` }}
+      style={{ "--illustration-size": `${size}px` } as CSSProperties}
       aria-hidden="true"
     >
       <img
@@ -113,15 +124,15 @@ function TimelineImage({
 }
 
 export function Bowl({ size }: IllustrationProps) {
-  return <TimelineImage src={ASSETS.mix} size={size} />;
+  return <StepIllustration stepId="mix" size={size} />;
 }
 
 export function Flask({ size }: IllustrationProps) {
-  return <TimelineImage src={ASSETS.preferment} size={size} />;
+  return <StepIllustration stepId="preferment" size={size} />;
 }
 
 export function RisingDough({ size }: IllustrationProps) {
-  return <TimelineImage src={ASSETS.bulk} size={size} />;
+  return <StepIllustration stepId="bulk" size={size} />;
 }
 
 export function Oven({ size }: IllustrationProps) {
@@ -137,10 +148,29 @@ export function StepIllustration({
   size = 110,
   tone = "default",
   className,
+  variant,
+  unleavened = false,
+  visual,
 }: Props) {
+  const action = visual && visual in STEP_SYMBOLS ? visual
+    : resolveStepVisual({ id: stepId, variant }, { unleavened });
+  const src = STEP_ASSETS[action];
+  // A wood-fired oven, risen dough or a proofing box must not illustrate
+  // frying, unleavened rest or final proof in a tray. Symbols stay neutral.
+  if (size <= 48 || !src) {
+    const Symbol = STEP_SYMBOLS[action];
+    return <span
+      className={`step-illustration step-illustration--symbol ${TONE_CLASSES[tone]} ${className ?? ""}`}
+      style={{ "--illustration-size": `${size}px` } as CSSProperties}
+      data-step-visual={action}
+      aria-hidden="true"
+    >
+      <Symbol size={size} aria-hidden="true" focusable="false" />
+    </span>;
+  }
   return (
     <TimelineImage
-      src={resolveAsset(stepId)}
+      src={src}
       size={size}
       tone={tone}
       className={className}
