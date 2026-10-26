@@ -1363,6 +1363,10 @@
   /* 380px — card modale compatta */
 
   /* ── AE2. Glass (backdrop-filter) — scala unica per scrim e superfici ── */
+  /* «initial» rende il custom property invalido: var() usa il materiale
+     normale. Nei fallback i due token diventano superficie opaca / none. */
+  --glass-fallback-bg: initial;
+  --glass-fallback-filter: initial;
   --backdrop-glass-soft: blur(10px);
   /* scrim leggero (panel solidi) */
   --backdrop-glass: blur(20px) saturate(1.4);
@@ -2198,11 +2202,11 @@
 
   /** Glass: sticky header / overlay glassmorphism */
   .surface-glass {
-    background: color-mix(in srgb,
+    background: var(--glass-fallback-bg, color-mix(in srgb,
         var(--background) 88%,
-        transparent);
-    backdrop-filter: blur(var(--blur-xl)) saturate(1.6);
-    -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(1.6);
+        transparent));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.6));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.6));
     border-bottom: var(--space-px) solid var(--border-muted);
   }
 
@@ -3058,11 +3062,11 @@
     transition: background-color var(--duration-slow), border-color var(--duration-slow), color var(--duration-slow), box-shadow var(--duration-slow), transform var(--duration-slow), opacity var(--duration-slow);
     text-decoration: none;
     color: inherit;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--container-page) 76%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 34%, transparent));
+    background: var(--glass-fallback-bg, linear-gradient(135deg, color-mix(in srgb, var(--container-page) 76%, transparent), color-mix(in srgb, var(--recipe-hero-badge-bg) 34%, transparent)));
     border: var(--space-px) solid color-mix(in srgb, var(--container-border) 72%, transparent);
     box-shadow: var(--elevation-feature);
-    backdrop-filter: blur(var(--blur-lg)) saturate(1.55);
-    -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(1.55);
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-lg)) saturate(1.55));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-lg)) saturate(1.55));
   }
 
   @media (min-width: 768px) {
@@ -3131,7 +3135,7 @@
     border-radius: var(--radius-lg);
     color: var(--primary-foreground);
     background: color-mix(in srgb, var(--primary) 90%, transparent);
-    backdrop-filter: blur(var(--blur-sm));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
     font-size: var(--font-size-base);
     font-weight: var(--weight-semibold);
   }
@@ -3254,7 +3258,7 @@
     border-radius: var(--radius-lg);
     font-size: var(--font-size-sm);
     font-weight: var(--weight-semibold);
-    backdrop-filter: blur(var(--blur-sm));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
   }
 
   .explore-card__badge--auth {
@@ -3279,10 +3283,10 @@
     padding-block: var(--space-0-5);
     border-radius: var(--radius-full);
     color: var(--text-default);
-    background: color-mix(in srgb, var(--container-page) 82%, transparent);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 82%, transparent));
     border: var(--space-px) solid color-mix(in srgb, var(--overlay-text) 12%, transparent);
-    backdrop-filter: blur(var(--blur-md));
-    -webkit-backdrop-filter: blur(var(--blur-md));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
     font-size: var(--font-size-sm);
     font-weight: var(--weight-bold);
     box-shadow: var(--shadow-pill);
@@ -3934,10 +3938,10 @@
     padding-inline-end: var(--space-14);
     margin-bottom: var(--space-1);
     margin-top: var(--space-4);
-    background: color-mix(in srgb, var(--container-page) 84%, transparent);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 84%, transparent));
     border: var(--blob-edge);
-    backdrop-filter: blur(var(--blur-md));
-    -webkit-backdrop-filter: blur(var(--blur-md));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
   }
 
   .create-welcome.home-onboarding--session-active {
@@ -4220,11 +4224,11 @@
     z-index: 60;
     transition: transform var(--duration-fast) var(--ease-standard);
     color: var(--text-default);
-    background: color-mix(in srgb, var(--container-bg) 85%, transparent);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-bg) 85%, transparent));
     border: var(--border-width-thin) solid var(--container-border);
     box-shadow: var(--shadow-float);
-    backdrop-filter: blur(var(--blur-md));
-    -webkit-backdrop-filter: blur(var(--blur-md));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
   }
 
   .home-step__back:active {
@@ -4617,8 +4621,8 @@
     border-radius: var(--radius-full);
     width: var(--space-7-5);
     height: var(--space-7-5);
-    background: color-mix(in srgb, var(--container-page) 70%, transparent);
-    backdrop-filter: blur(var(--blur-sm));
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 70%, transparent));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
     border: var(--border-width-thin) solid var(--container-border-subtle);
     cursor: pointer;
     transition: transform var(--duration-normal) var(--ease-standard);
@@ -5190,7 +5194,7 @@
     position: absolute;
     inset: 0;
     background: var(--dialog-scrim);
-    backdrop-filter: blur(var(--blur-sm));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
   }
 
   .profile-locale-modal__card {
@@ -5311,9 +5315,9 @@
     width: max(var(--space-12), var(--profile-close-size));
     height: max(var(--space-12), var(--profile-close-size));
     color: var(--text-default);
-    background: color-mix(in srgb, var(--container-page) 92%, transparent);
-    backdrop-filter: var(--backdrop-glass-max);
-    -webkit-backdrop-filter: var(--backdrop-glass-max);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 92%, transparent));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, var(--backdrop-glass-max));
+    backdrop-filter: var(--glass-fallback-filter, var(--backdrop-glass-max));
     box-shadow: var(--elevation-profile-button);
   }
 
@@ -5356,11 +5360,11 @@
     margin-bottom: var(--space-5);
     padding: var(--space-1);
     border-radius: var(--radius-2xl);
-    background: color-mix(in srgb, var(--container-page) 86%, transparent);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 86%, transparent));
     border: var(--border-width-thin) solid var(--container-border-subtle);
     box-shadow: var(--shadow-sm);
-    backdrop-filter: blur(var(--blur-md));
-    -webkit-backdrop-filter: blur(var(--blur-md));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
   }
 
   @media (max-width: 767px) {
@@ -6360,8 +6364,8 @@
     background: var(--popover-surface);
     border: var(--border-width-thin) solid var(--popover-border-color);
     box-shadow: var(--popover-shadow);
-    backdrop-filter: blur(var(--blur-lg));
-    -webkit-backdrop-filter: blur(var(--blur-lg));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-lg)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-lg)));
   }
 
   .config-select__group {
@@ -11289,9 +11293,9 @@
     flex: 1;
     padding: var(--space-1);
     border-radius: var(--radius-full);
-    background: color-mix(in srgb, var(--container-bg) 82%, transparent);
-    backdrop-filter: blur(var(--blur-xl)) saturate(1.8);
-    -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(1.8);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-bg) 82%, transparent));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.8));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.8));
     border: var(--border-width-thin) solid var(--container-border);
     /* --recipe-pager-shadow non è mai stata definita: bug latente preservato. */
     box-shadow: none;
@@ -11331,10 +11335,10 @@
   }
 
   .recipe-output-pager__share {
-    background: color-mix(in srgb, var(--container-bg) 82%, transparent);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-bg) 82%, transparent));
     border: var(--border-width-thin) solid var(--container-border);
-    backdrop-filter: blur(var(--blur-xl)) saturate(1.8);
-    -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(1.8);
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.8));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.8));
     color: var(--text-muted);
     box-shadow: none;
     transition: transform var(--duration-fast);
@@ -11844,9 +11848,9 @@
     position: sticky;
     top: 0;
     z-index: 40;
-    background: color-mix(in srgb, var(--container-page) 88%, transparent);
-    backdrop-filter: var(--backdrop-glass-strong);
-    -webkit-backdrop-filter: var(--backdrop-glass-strong);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 88%, transparent));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, var(--backdrop-glass-strong));
+    backdrop-filter: var(--glass-fallback-filter, var(--backdrop-glass-strong));
     border-bottom: var(--border-width-thin) solid var(--container-border-subtle);
     /* Notch / status bar (Safari iOS, PWA, landscape) */
     padding-top: env(safe-area-inset-top, var(--space-0));
@@ -11907,9 +11911,9 @@
   }
 
   .recipe-view-back__button {
-    background: var(--premium-glass-bg);
-    backdrop-filter: blur(var(--blur-dock-glass)) saturate(1.8);
-    -webkit-backdrop-filter: blur(var(--blur-dock-glass)) saturate(1.8);
+    background: var(--glass-fallback-bg, var(--premium-glass-bg));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-dock-glass)) saturate(1.8));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-dock-glass)) saturate(1.8));
     color: var(--text-default);
     border: var(--border-width-thin) solid var(--premium-glass-border);
     box-shadow: var(--premium-glass-shadow);
@@ -11917,7 +11921,7 @@
   }
 
   .recipe-view-back__button:hover {
-    background: color-mix(in srgb, var(--container-page) 94%, transparent);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 94%, transparent));
     border-color: color-mix(in srgb, var(--text-default) 14%, transparent);
     box-shadow: var(--premium-glass-shadow);
   }
@@ -12001,8 +12005,8 @@
     color: var(--overlay-text);
     border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 34%, transparent);
     background: color-mix(in srgb, var(--overlay-backdrop) 62%, transparent);
-    backdrop-filter: blur(var(--blur-md));
-    -webkit-backdrop-filter: blur(var(--blur-md));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
     box-shadow: var(--shadow-md);
     transition: transform var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard);
   }
@@ -12058,9 +12062,9 @@
   .recipe-view-card {
     border-radius: var(--radius-2xl);
     text-align: left;
-    background: var(--recipe-hero-card-bg);
-    backdrop-filter: blur(var(--blur-xl)) saturate(1.7);
-    -webkit-backdrop-filter: blur(var(--blur-xl)) saturate(1.7);
+    background: var(--glass-fallback-bg, var(--recipe-hero-card-bg));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.7));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.7));
     border: var(--border-width-thin) solid var(--container-border);
     box-shadow: var(--recipe-hero-card-shadow);
     padding-top: var(--space-5);
@@ -12073,8 +12077,6 @@
       background 0.4s cubic-bezier(0.16, 1, 0.3, 1),
       border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
       box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-      backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-      -webkit-backdrop-filter 0.4s cubic-bezier(0.16, 1, 0.3, 1),
       padding 0.4s cubic-bezier(0.16, 1, 0.3, 1),
       margin 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -12092,8 +12094,8 @@
 
   .recipe-view-card--reduced {
     background: transparent;
-    backdrop-filter: blur(0) saturate(1);
-    -webkit-backdrop-filter: blur(0) saturate(1);
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(0) saturate(1));
+    backdrop-filter: var(--glass-fallback-filter, blur(0) saturate(1));
     border-color: transparent;
     box-shadow: none;
     padding-top: 0;
@@ -15072,9 +15074,9 @@
     gap: var(--space-2);
     padding: var(--space-3) var(--space-4);
     border-bottom: var(--border-width-thin) solid var(--outline-variant);
-    background: color-mix(in srgb, var(--surface-container-low) 92%, transparent);
-    backdrop-filter: blur(var(--blur-sm));
-    -webkit-backdrop-filter: blur(var(--blur-sm));
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--surface-container-low) 92%, transparent));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
   }
 
   .style-detail-sheet__close-btn {
@@ -15096,9 +15098,9 @@
     flex-shrink: 0;
     padding: var(--space-3) var(--space-6);
     border-top: var(--border-width-thin) solid var(--outline-variant);
-    background: color-mix(in srgb, var(--surface-container-low) 95%, transparent);
-    backdrop-filter: blur(var(--blur-sm));
-    -webkit-backdrop-filter: blur(var(--blur-sm));
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--surface-container-low) 95%, transparent));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
   }
 
   @media (max-width: 639px) {
@@ -15116,7 +15118,7 @@
       gap: var(--space-1);
       border-bottom: none;
       border-radius: var(--radius-full);
-      background: color-mix(in srgb, var(--surface-container-low) 75%, transparent);
+      background: var(--glass-fallback-bg, color-mix(in srgb, var(--surface-container-low) 75%, transparent));
     }
 
     .style-detail-sheet__close-btn {
@@ -15963,7 +15965,7 @@
     letter-spacing: normal;
     font-size: var(--font-size-sm);
     line-height: var(--leading-compact);
-    backdrop-filter: blur(var(--blur-2xs));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-2xs)));
   }
 
   .style-signal svg {
@@ -16855,8 +16857,8 @@
     color: var(--cta-btn-text);
     border: var(--border-width-thin) solid color-mix(in srgb, var(--cta) 44%, transparent);
     box-shadow: var(--elevation-cook-widget);
-    backdrop-filter: blur(var(--blur-dock-glass)) saturate(1.8);
-    -webkit-backdrop-filter: blur(var(--blur-dock-glass)) saturate(1.8);
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-dock-glass)) saturate(1.8));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-dock-glass)) saturate(1.8));
   }
 
   .cook-widget--compact {
@@ -17272,16 +17274,16 @@
     position: relative;
     flex: 1 1 0%;
     overflow: hidden;
-    background: var(--premium-glass-bg);
-    backdrop-filter: blur(var(--blur-dock-glass)) saturate(1.8);
-    -webkit-backdrop-filter: blur(var(--blur-dock-glass)) saturate(1.8);
+    background: var(--glass-fallback-bg, var(--premium-glass-bg));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-dock-glass)) saturate(1.8));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-dock-glass)) saturate(1.8));
     border: var(--border-width-thin) solid var(--premium-glass-border);
     box-shadow: var(--premium-glass-shadow);
     border-radius: var(--radius-2xl);
   }
 
   .app-shell-dock--scrolled .app-shell-dock__nav {
-    background: color-mix(in srgb, var(--container-page) 94%, transparent);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 94%, transparent));
     box-shadow: var(--premium-glass-shadow), 0 0 0 var(--border-width-thin) color-mix(in srgb, var(--overlay-text) 5%, transparent);
   }
 
@@ -17374,9 +17376,9 @@
     overflow: hidden;
     padding-block: var(--space-5);
     flex: 1 1 0%;
-    background: var(--premium-glass-bg);
-    backdrop-filter: blur(var(--blur-dock-glass)) saturate(1.8);
-    -webkit-backdrop-filter: blur(var(--blur-dock-glass)) saturate(1.8);
+    background: var(--glass-fallback-bg, var(--premium-glass-bg));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-dock-glass)) saturate(1.8));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-dock-glass)) saturate(1.8));
     border: var(--border-width-thin) solid var(--premium-glass-border);
     box-shadow: var(--premium-glass-shadow);
     border-radius: var(--radius-2xl);
@@ -17553,9 +17555,9 @@
     top: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0)));
     z-index: 60;
     /* sopra gli header sticky z-50 delle pagine */
-    background: color-mix(in srgb, var(--container-page) 86%, transparent);
-    backdrop-filter: blur(var(--blur-lg)) saturate(1.55);
-    -webkit-backdrop-filter: blur(var(--blur-lg)) saturate(1.55);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 86%, transparent));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-lg)) saturate(1.55));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-lg)) saturate(1.55));
     border: var(--border-width-thin) solid color-mix(in srgb, var(--text-default) 10%, transparent);
     color: var(--text-default);
     box-shadow: var(--elevation-profile-button);
@@ -17565,7 +17567,7 @@
   }
 
   .app-shell-profile--scrolled {
-    background: color-mix(in srgb, var(--container-page) 72%, transparent);
+    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 72%, transparent));
   }
 
   .app-shell-profile--hidden {
@@ -17654,10 +17656,10 @@
     padding-inline: var(--space-4);
     border: var(--border-width-thin) solid var(--premium-glass-border);
     border-radius: var(--radius-full);
-    background: var(--premium-glass-bg);
+    background: var(--glass-fallback-bg, var(--premium-glass-bg));
     box-shadow: var(--premium-glass-shadow);
-    backdrop-filter: var(--backdrop-glass-max);
-    -webkit-backdrop-filter: var(--backdrop-glass-max);
+    -webkit-backdrop-filter: var(--glass-fallback-filter, var(--backdrop-glass-max));
+    backdrop-filter: var(--glass-fallback-filter, var(--backdrop-glass-max));
     color: var(--primary);
     font-size: var(--font-size-lg);
     font-weight: var(--weight-semibold);
@@ -17927,10 +17929,10 @@
     border: var(--border-width-thin) solid var(--premium-glass-border);
     border-radius: var(--radius-full);
     color: var(--icon-muted);
-    background: var(--premium-glass-bg);
+    background: var(--glass-fallback-bg, var(--premium-glass-bg));
     box-shadow: var(--premium-glass-shadow);
-    backdrop-filter: var(--backdrop-glass-max);
-    -webkit-backdrop-filter: var(--backdrop-glass-max);
+    -webkit-backdrop-filter: var(--glass-fallback-filter, var(--backdrop-glass-max));
+    backdrop-filter: var(--glass-fallback-filter, var(--backdrop-glass-max));
   }
 
   .search-button--sm {
@@ -18141,8 +18143,8 @@
     background: var(--popover-surface);
     border: var(--border-width-thin) solid var(--popover-border-color);
     box-shadow: var(--popover-shadow);
-    backdrop-filter: blur(var(--blur-md));
-    -webkit-backdrop-filter: blur(var(--blur-md));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-md)));
   }
 
   .info-tip__content {
@@ -19089,8 +19091,8 @@
     padding: var(--space-4);
     z-index: var(--ds-confirm-z);
     background: color-mix(in srgb, var(--container-page) 70%, transparent);
-    backdrop-filter: blur(var(--blur-3xs));
-    -webkit-backdrop-filter: blur(var(--blur-3xs));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-3xs)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-3xs)));
   }
 
   @media (min-width: 640px) {
@@ -19105,8 +19107,8 @@
 
   .ds-confirm-scrim--brand {
     background: color-mix(in srgb, var(--container-page) 72%, transparent);
-    backdrop-filter: blur(var(--blur-2xs));
-    -webkit-backdrop-filter: blur(var(--blur-2xs));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-2xs)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-2xs)));
   }
 
   .ds-confirm__card {
@@ -19265,8 +19267,8 @@
     background: color-mix(in srgb, var(--shadow-color) 40%, transparent);
     color: var(--overlay-text);
     border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 10%, transparent);
-    backdrop-filter: blur(var(--blur-sm));
-    -webkit-backdrop-filter: blur(var(--blur-sm));
+    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
+    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-sm)));
     transition: background-color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard);
   }
 
@@ -19969,8 +19971,8 @@ html {
         rgba(24, 11, 3, 0.88) 0%,
         rgba(24, 11, 3, 0.6) 45%,
         rgba(24, 11, 3, 0) 100%);
-    backdrop-filter: none;
     -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   [data-theme="sfornata"] .explore-feature__title {
@@ -20298,7 +20300,7 @@ html {
 
 [data-theme="editorial-fire"] [data-page="explore"] .explore-feature {
   border-radius: var(--radius-2xl);
-  background: var(--surface-container-lowest);
+  background: var(--glass-fallback-bg, var(--surface-container-lowest));
   box-shadow: var(--shadow-lg);
 }
 
@@ -20447,11 +20449,11 @@ html {
 
 @media (min-width: 768px) {
   [data-theme="editorial-fire"] .recipe-view-card {
-    background: transparent;
+    background: var(--glass-fallback-bg, transparent);
     border-color: transparent;
     box-shadow: none;
-    backdrop-filter: none;
     -webkit-backdrop-filter: none;
+    backdrop-filter: none;
     padding-inline: 0;
   }
 
@@ -20502,3 +20504,19 @@ html {
 .recipe-reference-note summary { cursor: pointer; }
 .recipe-reference-note ul { padding-inline-start: var(--space-5); margin-block: var(--space-2); }
 .recipe-reference-note a { text-decoration: underline; text-underline-offset: var(--space-1); }
+
+/* Il materiale resta leggibile anche senza filtri. La regola è successiva ai
+   temi perché la preferenza dell'utente prevale sulla direzione grafica. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --glass-fallback-bg: var(--container-bg);
+    --glass-fallback-filter: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-fallback-bg: var(--container-bg);
+    --glass-fallback-filter: none;
+  }
+}
