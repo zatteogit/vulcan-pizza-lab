@@ -1,5 +1,12 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "recipe.schedule.fromNowHelp": "Define o início para agora e atualiza todos os horários.",
+  "recipe.schedule.updated": "Horários atualizados.",
+  "recipe.schedule.startEarlier": "Antecipar o início em 15 minutos",
+  "recipe.schedule.startLater": "Adiar o início em 15 minutos",
+  "recipe.schedule.endEarlier": "Antecipar o fim em 15 minutos",
+  "recipe.schedule.endLater": "Adiar o fim em 15 minutos",
+
   "recipe.save.title": "Guardar no livro de receitas",
   "recipe.save.confirm": "Guardar receita",
   "recipe.save.source": "Receita de origem: {0}",
@@ -169,9 +176,9 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "features.recipe.pre-ferment-guide.biga-4e43b430": "🍞 Biga",
   "features.recipe.pre-ferment-guide.poolish-40fc939a": "💧 Poolish",
   "features.recipe.procedure-hero.ca-dfd4ac18": "aprox. ",
-  "features.recipe.procedure-hero.inizia-ora-895d8504": "⚡ Começar agora ",
+  "features.recipe.procedure-hero.inizia-ora-895d8504": "Recalcular a partir de agora",
   "features.recipe.procedure-hero.modifica-value-f8c9ece2": "Editar {0}",
-  "features.recipe.procedure-hero.pronto-per-il-pasto-503f1512": "Pronta para comer: ",
+  "features.recipe.procedure-hero.pronto-per-il-pasto-503f1512": "Ou escolhe a refeição",
   "features.recipe.procedure-hero.tempo-totale-3c1f6a6f": "Tempo total: ",
   "features.recipe.procedure-timeline.nerd-2de974af": "Nerd ",
   "features.recipe.recipe-configurator.ambiente-e6fefb74": "Ambiente",

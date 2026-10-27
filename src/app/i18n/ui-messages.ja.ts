@@ -1,5 +1,12 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "recipe.schedule.fromNowHelp": "開始を今に設定し、すべての工程の時刻を更新します。",
+  "recipe.schedule.updated": "予定を更新しました。",
+  "recipe.schedule.startEarlier": "開始を15分早める",
+  "recipe.schedule.startLater": "開始を15分遅らせる",
+  "recipe.schedule.endEarlier": "終了を15分早める",
+  "recipe.schedule.endLater": "終了を15分遅らせる",
+
   "recipe.save.title": "レシピ帳に保存",
   "recipe.save.confirm": "レシピを保存",
   "recipe.save.source": "元のレシピ：{0}",
@@ -169,9 +176,9 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "features.recipe.pre-ferment-guide.biga-4e43b430": "🍞 ビガ",
   "features.recipe.pre-ferment-guide.poolish-40fc939a": "💧 ポーリッシュ",
   "features.recipe.procedure-hero.ca-dfd4ac18": "約",
-  "features.recipe.procedure-hero.inizia-ora-895d8504": "⚡ 今すぐ開始",
+  "features.recipe.procedure-hero.inizia-ora-895d8504": "今からの予定を再計算",
   "features.recipe.procedure-hero.modifica-value-f8c9ece2": "{0}を編集",
-  "features.recipe.procedure-hero.pronto-per-il-pasto-503f1512": "食事の時間に合わせる：",
+  "features.recipe.procedure-hero.pronto-per-il-pasto-503f1512": "または食事の時間を選ぶ",
   "features.recipe.procedure-hero.tempo-totale-3c1f6a6f": "合計時間：",
   "features.recipe.procedure-timeline.nerd-2de974af": "Nerd",
   "features.recipe.recipe-configurator.ambiente-e6fefb74": "室温",

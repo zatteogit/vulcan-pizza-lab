@@ -1,5 +1,12 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
+  "recipe.schedule.fromNowHelp": "Set the start to now and update every step’s time.",
+  "recipe.schedule.updated": "Schedule updated.",
+  "recipe.schedule.startEarlier": "Move the start 15 minutes earlier",
+  "recipe.schedule.startLater": "Move the start 15 minutes later",
+  "recipe.schedule.endEarlier": "Move the finish 15 minutes earlier",
+  "recipe.schedule.endLater": "Move the finish 15 minutes later",
+
   "recipe.save.title": "Save to recipe book",
   "recipe.save.confirm": "Save recipe",
   "recipe.save.source": "Based on: {0}",
@@ -169,9 +176,9 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "features.recipe.pre-ferment-guide.biga-4e43b430": "🍞 Biga",
   "features.recipe.pre-ferment-guide.poolish-40fc939a": "💧 Poolish",
   "features.recipe.procedure-hero.ca-dfd4ac18": "approx. ",
-  "features.recipe.procedure-hero.inizia-ora-895d8504": "⚡ Start now ",
+  "features.recipe.procedure-hero.inizia-ora-895d8504": "Recalculate from now",
   "features.recipe.procedure-hero.modifica-value-f8c9ece2": "Edit {0}",
-  "features.recipe.procedure-hero.pronto-per-il-pasto-503f1512": "Ready for: ",
+  "features.recipe.procedure-hero.pronto-per-il-pasto-503f1512": "Or choose a meal",
   "features.recipe.procedure-hero.tempo-totale-3c1f6a6f": "Total time: ",
   "features.recipe.procedure-timeline.nerd-2de974af": "Nerd ",
   "features.recipe.recipe-configurator.ambiente-e6fefb74": "Room temp",

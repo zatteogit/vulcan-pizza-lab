@@ -3,7 +3,7 @@
  * "pronto per il pasto" e Timeline comoda. Stato e handler restano in
  * RecipeOutput (gli orari guidano anche la timeline): qui arrivano via props. */
 
-import { CalendarRange, Minus, Pencil, Plus } from "lucide-react";
+import { CalendarClock, CalendarRange, Minus, Pencil, Plus } from "lucide-react";
 import type {
   ChangeEvent,
   Dispatch,
@@ -11,7 +11,7 @@ import type {
   MutableRefObject,
   SetStateAction,
 } from "react";
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { timeSlotText } from "./time-slot-text";
@@ -84,6 +84,10 @@ export function ProcedureHeroControls({
   // U-10 (F05): lo switch prende nome e descrizione dal testo che ha accanto.
   const comfortTitleId = useId();
   const comfortDescId = useId();
+  const nowHelpId = useId();
+  const [plannedFromNow, setPlannedFromNow] = useState<number | null>(null);
+  const fromNowHelp = uiMessage("recipe.schedule.fromNowHelp");
+  const feasibleMeals = mealSlots.filter(slot => slot.isFeasible);
 
   const startDayLabel = daySuffix(calendarReference, startTime, cms.cooking).trim() || cms.cooking.dayToday;
   const endDayLabel = daySuffix(calendarReference, endDisplayTime, cms.cooking).trim() || cms.cooking.dayToday;
@@ -116,8 +120,8 @@ export function ProcedureHeroControls({
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, -1))}
               className="procedure-hero__shift-btn"
-              aria-label={ui.ariaEarlier}
-              title={ui.ariaEarlier}
+              aria-label={uiMessage("recipe.schedule.startEarlier")}
+              title={uiMessage("recipe.schedule.startEarlier")}
             >
               <Minus size={13} />
             </button>
@@ -159,8 +163,8 @@ export function ProcedureHeroControls({
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, 1))}
               className="procedure-hero__shift-btn"
-              aria-label={ui.ariaLater}
-              title={ui.ariaLater}
+              aria-label={uiMessage("recipe.schedule.startLater")}
+              title={uiMessage("recipe.schedule.startLater")}
             >
               <Plus size={13} />
             </button>
@@ -189,8 +193,8 @@ export function ProcedureHeroControls({
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, -1))}
               className="procedure-hero__shift-btn"
-              aria-label={ui.ariaEarlier}
-              title={ui.ariaEarlier}
+              aria-label={uiMessage("recipe.schedule.endEarlier")}
+              title={uiMessage("recipe.schedule.endEarlier")}
             >
               <Minus size={13} />
             </button>
@@ -233,8 +237,8 @@ export function ProcedureHeroControls({
             <button
               onClick={() => setStartTime((s) => shiftQuarter(s, 1))}
               className="procedure-hero__shift-btn"
-              aria-label={ui.ariaLater}
-              title={ui.ariaLater}
+              aria-label={uiMessage("recipe.schedule.endLater")}
+              title={uiMessage("recipe.schedule.endLater")}
             >
               <Plus size={13} />
             </button>
@@ -258,18 +262,37 @@ export function ProcedureHeroControls({
 
       {/* Smart Eating Planner Shortcuts */}
       <div className="procedure-hero__meals">
+        <div className="procedure-hero__now">
+          <button
+            type="button"
+            onClick={() => {
+              const now = new Date();
+              // Explicit scheduling from now replaces the comfort adjustments;
+              // otherwise its effect could immediately move the start again.
+              setComfortToggled(false);
+              preComfortStart.current = null;
+              setStretch({});
+              setPreciseEndTime(false);
+              setStartTime(now);
+              setPlannedFromNow(now.getTime());
+            }}
+            aria-describedby={nowHelpId}
+            title={fromNowHelp}
+            className="procedure-hero__meal-chip"
+          >
+            <CalendarClock size={15} aria-hidden="true" />
+            {uiMessage("features.recipe.procedure-hero.inizia-ora-895d8504")}</button>
+          <p id={nowHelpId} className="procedure-hero__now-help">{fromNowHelp}</p>
+        </div>
+        {plannedFromNow === startTime.getTime() && <p role="status" className="procedure-hero__now-status">
+          {uiMessage("recipe.schedule.updated")}
+        </p>}
+
+        {feasibleMeals.length > 0 && <>
         <div className="procedure-hero__meals-label">
           {uiMessage("features.recipe.procedure-hero.pronto-per-il-pasto-503f1512")}</div>
         <div className="procedure-hero__meals-row">
-          <button
-            type="button"
-            onClick={() => { setPreciseEndTime(false); setStartTime(new Date()); }}
-            className="procedure-hero__meal-chip"
-          >
-            {uiMessage("features.recipe.procedure-hero.inizia-ora-895d8504")}</button>
-
-          {mealSlots.map((slot) => {
-            if (!slot.isFeasible) return null;
+          {feasibleMeals.map((slot) => {
             const text = timeSlotText(slot, cms, bcp47);
             return (
               <button
@@ -283,6 +306,7 @@ export function ProcedureHeroControls({
             );
           })}
         </div>
+        </>}
       </div>
 
       <div

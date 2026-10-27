@@ -3,6 +3,13 @@
  * Le chiavi sono stabili: namespace + slug + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "recipe.schedule.fromNowHelp": "Imposta l’inizio ad adesso e aggiorna tutti gli orari.",
+  "recipe.schedule.updated": "Orari aggiornati.",
+  "recipe.schedule.startEarlier": "Anticipa l’inizio di 15 minuti",
+  "recipe.schedule.startLater": "Posticipa l’inizio di 15 minuti",
+  "recipe.schedule.endEarlier": "Anticipa la fine di 15 minuti",
+  "recipe.schedule.endLater": "Posticipa la fine di 15 minuti",
+
   "recipe.save.title": "Salva nel ricettario",
   "recipe.save.confirm": "Salva ricetta",
   "recipe.save.source": "Ricetta di partenza: {0}",
@@ -171,9 +178,9 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "features.recipe.pre-ferment-guide.biga-4e43b430": "🍞 Biga",
   "features.recipe.pre-ferment-guide.poolish-40fc939a": "💧 Poolish",
   "features.recipe.procedure-hero.ca-dfd4ac18": "ca. ",
-  "features.recipe.procedure-hero.inizia-ora-895d8504": "⚡ Inizia ora ",
+  "features.recipe.procedure-hero.inizia-ora-895d8504": "Ricalcola da adesso",
   "features.recipe.procedure-hero.modifica-value-f8c9ece2": "Modifica {0}",
-  "features.recipe.procedure-hero.pronto-per-il-pasto-503f1512": "Pronto per il pasto: ",
+  "features.recipe.procedure-hero.pronto-per-il-pasto-503f1512": "Oppure scegli il pasto",
   "features.recipe.procedure-hero.tempo-totale-3c1f6a6f": "Tempo totale: ",
   "features.recipe.procedure-timeline.nerd-2de974af": "Nerd ",
   "features.recipe.recipe-configurator.ambiente-e6fefb74": "Ambiente",
