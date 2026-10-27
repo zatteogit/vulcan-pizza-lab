@@ -66,15 +66,17 @@ export function RecipeAllergens({ report: fullReport, scope }: { report: RecipeA
       initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
       transition={reduced ? { duration: 0 } : motionSpring.denseDisclosure}
       onUpdate={latest => { if (latest.height !== undefined) scroll.follow(latest.height); }} onAnimationComplete={() => scroll.complete()}>
-      {report.contains.length > 0 && groups(report.contains, uiMessage("allergen.contains"))}
-      {report.conditional.length > 0 && groups(report.conditional, uiMessage("allergen.ifAdded"))}
-      {report.may_contain.length > 0 && groups(report.may_contain, uiMessage("allergen.mayContain"), true)}
-      {report.unverified.length > 0 && <section className="recipe-allergens__group">
-        <h4>{uiMessage("allergen.toCheck")}</h4>
-        <p>{[...new Set(report.unverified.map(ingredient => `${name(ingredient.ingredient)}${ingredient.optional ? ` · ${uiMessage("allergen.optional")}` : ""}`))].join("; ")}</p>
-      </section>}
-      <p className="recipe-allergens__note">{uiMessage("allergen.labelNote")}</p>
-      {needsMilkNote(report) && <p className="recipe-allergens__note">{uiMessage("allergen.milkNote")}</p>}
+      <div className="recipe-allergens__body">
+        {report.contains.length > 0 && groups(report.contains, uiMessage("allergen.contains"))}
+        {report.conditional.length > 0 && groups(report.conditional, uiMessage("allergen.ifAdded"))}
+        {report.may_contain.length > 0 && groups(report.may_contain, uiMessage("allergen.mayContain"), true)}
+        {report.unverified.length > 0 && <section className="recipe-allergens__group">
+          <h4>{uiMessage("allergen.toCheck")}</h4>
+          <p>{[...new Set(report.unverified.map(ingredient => `${name(ingredient.ingredient)}${ingredient.optional ? ` · ${uiMessage("allergen.optional")}` : ""}`))].join("; ")}</p>
+        </section>}
+        <p className="recipe-allergens__note">{uiMessage("allergen.labelNote")}</p>
+        {needsMilkNote(report) && <p className="recipe-allergens__note">{uiMessage("allergen.milkNote")}</p>}
+      </div>
     </motion.div>}</AnimatePresence>
   </aside>;
 }
