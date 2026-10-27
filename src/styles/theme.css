@@ -3417,6 +3417,9 @@
     padding-inline: var(--space-4);
     padding-bottom: var(--space-3-5);
     padding-top: var(--space-16);
+    hyphens: none;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 
   @media (min-width: 640px) {
@@ -3435,9 +3438,14 @@
     margin-bottom: var(--space-1);
   }
 
+  @container (max-width: 180px) {
+    .explore-card__caption { padding-inline: var(--space-3); }
+    .explore-card__eyebrow { letter-spacing: var(--tracking-normal); }
+  }
+
   .explore-card__title {
     font-family: var(--font-serif);
-    hyphens: manual;
+    hyphens: none;
     overflow-wrap: normal;
     word-break: normal;
     text-wrap: balance;
