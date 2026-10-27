@@ -113,6 +113,7 @@ export const motionDelay = {
 /** Spatial motion intents, kept beside timing/physics so components never own offsets. */
 export const motionOffset = {
   controlHoverLift: -1,
+  toppingSlide: 24,
 } as const;
 
 export const doughMotionDuration = {

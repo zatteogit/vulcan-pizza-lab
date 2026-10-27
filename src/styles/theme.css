@@ -12431,7 +12431,9 @@
 
   .recipe-title-content__row {
     display: flex;
-    align-items: baseline;
+    align-items: center;
+    /* Renaming becomes available on custom recipes without shifting the carousel. */
+    min-height: var(--space-10);
     gap: var(--space-2);
   }
 
@@ -12441,6 +12443,7 @@
   }
 
   .recipe-title-content__edit {
+    display: flex;
     flex-shrink: 0;
     color: var(--text-muted);
   }
@@ -14647,6 +14650,7 @@
     display: flex;
     gap: var(--gap-xs);
     overflow-x: auto;
+    overscroll-behavior-x: contain;
     padding-bottom: var(--space-1-5);
   }
 
@@ -14664,7 +14668,7 @@
     color: var(--text-default);
     border: var(--border-width-thin) solid var(--outline-variant);
     cursor: pointer;
-    transition: transform var(--duration-fast);
+    transition: transform var(--duration-fast), background-color var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast);
   }
 
   .condiment-strip__card:active {
@@ -14711,6 +14715,7 @@
     font-weight: var(--weight-medium);
     line-height: var(--leading-normal);
     opacity: 1;
+    transition: color var(--duration-fast), opacity var(--duration-fast);
   }
 
   .condiment-strip__card-variant--active {
@@ -14735,7 +14740,7 @@
     color: var(--text-default);
     border: var(--border-width-thin) solid var(--container-border-subtle);
     cursor: pointer;
-    transition: transform var(--duration-fast);
+    transition: transform var(--duration-fast), background-color var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast), box-shadow var(--duration-fast);
   }
 
   .condiment-strip__pill:active {
@@ -14780,6 +14785,7 @@
     color: var(--text-muted);
     font-weight: var(--weight-medium);
     line-height: var(--leading-none);
+    transition: color var(--duration-fast);
   }
 
   .condiment-strip__pill-variant--active {

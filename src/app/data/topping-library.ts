@@ -3691,7 +3691,7 @@ function representativeOrder(
   );
 }
 
-export function getRecipesByAuthenticity(style: PizzaStyle): Array<{
+export function getRecipesByAuthenticity(style: PizzaStyle, { prioritizeDefault = true }: { prioritizeDefault?: boolean } = {}): Array<{
   recipe: ToppingRecipe;
   authenticity: AuthenticityScore;
 }> {
@@ -3711,7 +3711,7 @@ export function getRecipesByAuthenticity(style: PizzaStyle): Array<{
     if (recipe.compatible_layouts) return !recipe.compatible_layouts.includes(styleLayout);
     return SEALED_LAYOUTS.has(styleLayout);
   };
-  const defaultTopping = style.default_topping_ref
+  const defaultTopping = prioritizeDefault && style.default_topping_ref
     ? getToppingForStyle(style.default_topping_ref, style)
     : undefined;
   return Object.values(TOPPING_LIBRARY)
