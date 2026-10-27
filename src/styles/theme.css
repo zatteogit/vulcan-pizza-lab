@@ -17586,13 +17586,12 @@
     inset-inline: 0;
     z-index: 40;
     pointer-events: none;
-    /* Copre tutta la pillola del dock (24 px + 56 px) più un margine, così
-       il testo della pagina sfuma prima di passarle sotto. */
+    /* Una velina leggera accompagna la barra senza cancellare le immagini.
+       Il contrasto dei controlli è assicurato dalle capsule, anche senza blur. */
     height: calc(var(--space-28) + env(safe-area-inset-bottom, var(--space-0)));
     background: linear-gradient(to top,
-        var(--container-page) 0%,
-        var(--container-page) 38%,
-        color-mix(in srgb, var(--container-page) 82%, transparent) 66%,
+        color-mix(in srgb, var(--container-page) 36%, transparent) 0%,
+        color-mix(in srgb, var(--container-page) 12%, transparent) 45%,
         transparent 100%);
     transition: height var(--duration-normal) var(--ease-standard);
   }
