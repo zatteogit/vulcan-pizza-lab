@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "motion/react";
+import { useDecorativeMotion } from "../../context/visual-quality-context";
+import { motion } from "motion/react";
 import { VulcanMark } from "./vulcan-logo";
 import { DoughBlob } from "../../features/cooking/dough-mascot";
 import type { DoughVariant } from "../../features/cooking/dough-mascot";
@@ -49,7 +50,7 @@ export function VulcanHero({
   className,
   loops = HERO_LOOPS,
 }: VulcanHeroProps) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = !useDecorativeMotion();
   const markSize = Math.round(size * markRatio);
 
   return (

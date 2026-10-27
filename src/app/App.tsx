@@ -1,11 +1,11 @@
 import { RouterProvider } from "react-router";
-import { MotionConfig } from "motion/react";
 import { router } from "./routes";
+import { VisualQualityProvider } from "./context/visual-quality-context";
 
 export default function App() {
   return (
-    <MotionConfig reducedMotion="user">
+    <VisualQualityProvider>
       <RouterProvider router={router} />
-    </MotionConfig>
+    </VisualQualityProvider>
   );
 }

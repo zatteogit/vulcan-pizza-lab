@@ -1,3 +1,4 @@
+import { useDecorativeMotion } from "../../context/visual-quality-context";
 import { RecipeAllergens } from "./recipe-allergens";
 import { RecipeReferenceNote } from "./recipe-reference-note";
 import { recipeDisplayName, stgDepartures } from "../../domain/recipe-reference";
@@ -57,8 +58,8 @@ function prefersSaveData(): boolean {
 
 function BlurInVideo({ src, poster }: StyleVideo) {
   const [ready, setReady] = useState(false);
-  const reduceMotion = useReducedMotion();
-  if (reduceMotion || prefersSaveData()) return null;
+  const animateDecorations = useDecorativeMotion();
+  if (!animateDecorations || prefersSaveData()) return null;
   return (
     <video
       src={src}

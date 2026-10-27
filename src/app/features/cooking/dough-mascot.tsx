@@ -1,4 +1,4 @@
-import React from 'react';
+import { useDecorativeMotion } from "../../context/visual-quality-context";
 import { motion } from 'motion/react';
 import { doughMotionDuration,motionEase } from "../../components/ds/motion";
 
@@ -179,17 +179,8 @@ export function DoughBlob({
 }: DoughBlobProps) {
   const params = energyToParams(energy);
 
-  /* ═══ VPL-001: Respect prefers-reduced-motion ═══ */
-  const [reducedMotion, setReducedMotion] = React.useState(false);
-  React.useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReducedMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
-
-  const isAnimated = shouldAnimate && !reducedMotion;
+  const animateDecorations = useDecorativeMotion();
+  const isAnimated = shouldAnimate && animateDecorations;
 
   const mainRadii = BLOB_RADII[variant];
   const accentRadii = ACCENT_RADII[variant];
