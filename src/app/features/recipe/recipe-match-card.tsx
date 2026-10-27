@@ -448,18 +448,18 @@ export function RecipeMatchCard({
               transition={motionSpring.highlightedMatch}
               className="match-action-cta"
             >
-              <Sparkles size={15} aria-hidden="true" />
+              <Sparkles size={18} aria-hidden="true" />
               {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}
             </motion.button>
           )}
-          {/* Personalization is a green creative action; saving stays a quieter
-              labelled bookmark so the two actions remain easy to distinguish. */}
+          {/* Automatic adaptation is primary when available. Manual edits stay
+              secondary beside it, and become primary once it is no longer offered. */}
           {onPersonalize && (
             <motion.button
               type="button"
               onClick={onPersonalize}
               whileTap={{ scale: 0.95 }}
-              className="match-action-text match-action-text--personalize"
+              className={`match-action-text match-action-text--personalize${onOptimize ? " match-action-text--secondary" : ""}`}
             >
               <WandSparkles size={18} aria-hidden="true" />
               {cms.ui.personalize ?? uiMessage("features.recipe.recipe-match-card.personalizza-0beadff3")}
