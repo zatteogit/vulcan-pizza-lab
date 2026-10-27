@@ -920,6 +920,7 @@
   --troubleshooting-target-min: var(--dimension-fixed-046);
   --allergen-target-min: var(--dimension-fixed-046);
   --account-action-target-min: var(--dimension-fixed-046);
+  --create-saved-target-min: var(--dimension-fixed-046);
   --section-tabs-navbar-dock-max-width: var(--dimension-fixed-440);
   /* riga dock mobile variante navbar */
   --section-tabs-capsule-height-navbar-subtitles: var(--dimension-fixed-058);
@@ -4255,8 +4256,37 @@
     max-width: var(--measure-ml);
   }
 
-  .home-step__title {
+  .home-step__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
     margin-top: var(--space-7);
+  }
+
+  .home-step__intro-copy {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .home-step__title {
+    margin: 0;
+  }
+
+  .home-saved-recipes {
+    --btn-secondary-bg: var(--surface-container-low);
+    --btn-secondary-text: var(--text-accent);
+    flex-shrink: 0;
+    min-height: max(var(--space-11), var(--create-saved-target-min));
+    padding: var(--space-2) var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .home-step__intro {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-6);
+    }
   }
 
   .home-step__subtitle {

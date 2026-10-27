@@ -1270,12 +1270,21 @@ export function HomePage() {
                       }
                     />
                   </div>
-                  <Heading level="page" className="home-step__title">
-                    {cms.steps.styles.title}
-                  </Heading>
-                  <p className="home-step__subtitle">
-                    {cms.steps.styles.subtitle}
-                  </p>
+                  <div className="home-step__intro">
+                    <div className="home-step__intro-copy">
+                      <Heading level="page" className="home-step__title">
+                        {cms.steps.styles.title}
+                      </Heading>
+                      <p className="home-step__subtitle">
+                        {cms.steps.styles.subtitle}
+                      </p>
+                    </div>
+                    <CtaButton as={Link} to="/profile?tab=recipes" variant="secondary" elevated={false} className="home-saved-recipes">
+                      <Bookmark size={18} aria-hidden="true" />
+                      <span data-region="label">{uiMessage("pages.profile.ricette-salvate-b5c99ac7")}</span>
+                      <ChevronRight size={16} aria-hidden="true" />
+                    </CtaButton>
+                  </div>
                 </div>
                 {sourceStyle && (
                   <section className="home-onboarding">
