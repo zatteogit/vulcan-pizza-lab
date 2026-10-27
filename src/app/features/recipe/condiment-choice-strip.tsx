@@ -87,10 +87,12 @@ export function CondimentChoiceStrip({
   const updateFades = () => {
     const el = scrollRef.current;
     if (!el) return;
-    setFade({
+    const next = {
       start: el.scrollLeft > 1,
       end: el.scrollLeft + el.clientWidth < el.scrollWidth - 1,
-    });
+    };
+    // Native smooth scrolling emits many events; render only when an edge changes.
+    setFade(current => current.start === next.start && current.end === next.end ? current : next);
   };
   useEffect(() => {
     updateFades();

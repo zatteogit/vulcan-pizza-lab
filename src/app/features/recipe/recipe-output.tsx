@@ -196,7 +196,8 @@ export function RecipeOutput({
   /* Label contestuale per il selettore di porzioni ("Panetti" / "Teglie" / ...). */
   const servingUnit = getServingUnit(recipe.style);
   const allToppingChoices = React.useMemo(() => {
-    const ranked = getRecipesByAuthenticity(recipe.style)
+    // Selection changes the generated recipe's default, not the browsing order.
+    const ranked = getRecipesByAuthenticity(recipe.style, { prioritizeDefault: false })
       .filter((item) => item.authenticity !== "taboo")
       .map((item) => ({ ...item, recipe: localizeToppingRecipe(item.recipe, cms.toppingI18n) }));
     /* «Ogni stile ha i suoi topping»: una sola voce per concept, tenendo la
@@ -212,26 +213,7 @@ export function RecipeOutput({
       return true;
     });
   }, [recipe.style, cms.toppingI18n]);
-  const toppingChoices = React.useMemo(() => {
-    /* Modello per-stile: getRecipesByAuthenticity ritorna SOLO i condimenti
-       assegnati a questo stile (già esclusi i taboo). Sono tutti il "menù"
-       dello stile → li mostriamo tutti, incluse le innovazioni/sperimentazioni
-       (tier "experimental"), che l'ordinamento tiene comunque in coda. */
-    const featured = allToppingChoices.filter(
-      (item) => item.authenticity !== "taboo",
-    );
-    const activeConceptId = selectedToppingConcept ?? null;
-    if (
-      activeConceptId &&
-      !featured.some((item) => item.recipe.id === activeConceptId)
-    ) {
-      const activeChoice = allToppingChoices.find(
-        (item) => item.recipe.id === activeConceptId,
-      );
-      if (activeChoice) return [activeChoice, ...featured];
-    }
-    return featured;
-  }, [allToppingChoices, selectedToppingConcept]);
+  const toppingChoices = allToppingChoices;
 
   const activeTopping = React.useMemo(() => {
     const selectedTopping = selectedToppingConcept

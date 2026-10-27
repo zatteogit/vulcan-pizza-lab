@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight, Lightbulb } from "lucide-react";
 import { toppingConcept } from "../../data/topping-i18n/localize";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { motionSpring, motionDuration } from "../../components/ds/motion";
+import { motionSpring, motionDuration, motionOffset } from "../../components/ds/motion";
 import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { IMAGE_SIZES, responsiveImgAttributes } from "../../components/media/responsive-images";
 import { useCms } from "../cms/cms-context";
@@ -37,6 +37,12 @@ import {
 } from "./recipe-output-format";
 
 type RankedToppings = ReturnType<typeof getRecipesByAuthenticity>;
+
+const toppingFrames = {
+  enter: (direction: number) => ({ opacity: 0, x: direction * motionOffset.toppingSlide }),
+  visible: { opacity: 1, x: 0 },
+  exit: (direction: number) => ({ opacity: 0, x: -direction * motionOffset.toppingSlide }),
+};
 
 export interface ToppingSectionProps {
   mode: "ingredients" | "timeline";
@@ -96,6 +102,8 @@ export function ToppingSection({
   children,
 }: ToppingSectionProps) {
   const { cms, bcp47 } = useCms();
+  const reduceMotion = useReducedMotion();
+  const [direction, setDirection] = useState(1);
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
 
@@ -196,12 +204,14 @@ export function ToppingSection({
     const prevTopping = () => {
       if (toppingChoices.length <= 1 || !onSelectTopping) return;
       const prevIndex = (safeCurrentIndex - 1 + toppingChoices.length) % toppingChoices.length;
+      setDirection(-1);
       onSelectTopping(toppingChoices[prevIndex].recipe.id);
     };
 
     const nextTopping = () => {
       if (toppingChoices.length <= 1 || !onSelectTopping) return;
       const nextIndex = (safeCurrentIndex + 1) % toppingChoices.length;
+      setDirection(1);
       onSelectTopping(toppingChoices[nextIndex].recipe.id);
     };
 
@@ -209,17 +219,19 @@ export function ToppingSection({
       <section data-region="section" className="topping-panel">
         {/* Carousel image with title & badges overlayed */}
         <div className="topping-panel__carousel">
-          <AnimatePresence initial={false} mode="popLayout">
+          <AnimatePresence initial={false} mode="popLayout" custom={direction}>
             <motion.div
               key={activeToppingId}
-              initial={{ opacity: 0, x: 80 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -80 }}
-              transition={motionSpring.topping}
+              custom={direction}
+              variants={toppingFrames}
+              initial={reduceMotion ? false : "enter"}
+              animate="visible"
+              exit="exit"
+              transition={reduceMotion ? { duration: motionDuration.reduced } : motionSpring.topping}
               className="topping-panel__carousel-frame"
             >
               <img
-                loading="lazy"
+                loading="eager"
                 decoding="async"
                 {...responsiveImgAttributes(toppingThumbnail, IMAGE_SIZES.fluid)}
                 src={toppingThumbnail}
@@ -292,7 +304,11 @@ export function ToppingSection({
             choices={toppingChoices}
             allChoices={allToppingChoices}
             activeConceptId={activeToppingId}
-            onSelect={onSelectTopping}
+            onSelect={onSelectTopping ? id => {
+              const target = toppingChoices.findIndex(choice => choice.recipe.id === id);
+              setDirection(target < safeCurrentIndex ? -1 : 1);
+              onSelectTopping(id);
+            } : undefined}
             mode="ingredients"
           />
         </div>
