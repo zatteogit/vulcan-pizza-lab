@@ -572,7 +572,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     },
     salsiccia_friarielli_napoletana: {
       ingredients: {
-        "0": { name: "Cleaned friarielli (turnip tops)", notes: "Sautéed with garlic and chilli" },
+        "0": { name: "Cleaned friarielli (turnip tops)", notes: "To sauté with garlic, oil and chilli" },
         "1": { name: "Crumbled Neapolitan sausage (pork, salt, pepper)", notes: "Raw, in small chunks" },
         "2": { name: "Smoked provola", notes: "Diced" },
         "3": { name: "Extra-virgin olive oil" },
@@ -1341,21 +1341,21 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     farcitura_porchetta: {
       title: "Porchetta filling",
       description:
-        "Once split, lay the porchetta slices on the bottom half. A grinding of pepper. Close with the top half (with the potatoes on it).",
+        "Separate the two baked layers. Arrange the porchetta slices on the bottom half and add pepper if desired. Close with the top half, potatoes facing up.",
     },
     sale_finale: {
       title: "Salt and serve",
       description: "Sprinkle fleur de sel over the potatoes. Serve hot, cut into squares.",
     },
     spread_bianca_base: {
-      title: "White bake",
+      title: "Prepare the plain base",
       description:
-        "Brush with extra-virgin olive oil and sprinkle with fleur de sel. Bake until the crust is golden (nothing else before the oven).",
+        "Brush with extra-virgin olive oil and sprinkle with fleur de sel. Leave the base unfilled: it will bake in the next phase.",
     },
     mortazza_post_bake: {
       title: "Add the mortadella after baking",
       description:
-        "Take it out of the oven. Split it open like a book if it's a Pala/Pala-style base, or lay the slices on top. Arrange folds of sliced Mortadella IGP. Sprinkle with pistachio. (Stracciatella di burrata optional for a gourmet version.)",
+        "Arrange folds of mortadella and chopped pistachios on the baked base. Add the burrata stracciatella only if selected. Serve without returning it to the oven.",
     },
     crudo_bianca: {
       title: "White bake",
@@ -1489,7 +1489,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     pizza_fritta_fill_seal: {
       title: "Fill and seal before frying",
       description:
-        "Stretch the dough round and spread ricotta, provola, cicoli and pepper over one half (a thin layer of tomato if you like). Fold into a half-moon and seal the edges well. Fry in hot oil until puffed and golden. It is NOT topped: the filling is inside.",
+        "Stretch the disc and spread ricotta, provola, cicoli and pepper over one half, with tomato if selected. Fold into a half-moon and seal the edges firmly. Keep the filling inside; frying is in the next phase.",
       tip_beginner:
         "It's different from the montanara: the montanara is open and topped after frying; the pizza fritta is closed and filled before frying.",
       tip_nerd:
@@ -1929,7 +1929,7 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Fill and seal the two discs",
-      description: "Stretch the two portions by hand, without flour, into discs 2–3 mm thin. Spread ricotta, provola, cicoli and pepper over the larger disc, leaving the edge clear; cover with the small disc and seal by pressing firmly. Fry in seed oil at about 175 °C, turning it once golden.",
+      description: "Stretch the two portions by hand, without flour, into discs 2–3 mm thin. Spread ricotta, provola, cicoli and pepper over the larger disc, leaving the edge clear; cover with the smaller disc and seal by pressing firmly. Frying is in the next phase.",
       tip_beginner: "The bottom disc is larger so its edge folds up over the top and the tonda stays closed while frying.",
       tip_nerd: "No flour when stretching keeps the oil clean for longer; a poorly sealed edge lets oil in and filling out.",
     },
@@ -1948,6 +1948,18 @@ export const TOPPING_I18N_EN: ToppingTranslation = {
     spread_marinara_scarole: {
       title: "Marinara with escarole",
       description: "Crushed, salted peeled tomatoes, the braised escarole well drained, oregano and a drizzle of oil. No cheese.",
+    },
+    mortazza_spaccata_fill: {
+      title: "Open and fill the baked base",
+      description: "Cut the baked base horizontally with a serrated knife. Arrange mortadella and chopped pistachios on the bottom half; add stracciatella only if selected. Close and serve without returning it to the oven."
+    },
+    spread_baciata_surface: {
+      title: "Dress the surface",
+      description: "Once the discs are stacked, brush the outer surface with extra-virgin olive oil and fleur de sel. The filling goes in after baking."
+    },
+    mortazza_split_fill: {
+      title: "Open and fill the Baciata",
+      description: "Separate the two baked layers, using a serrated knife along the edge if needed. Arrange mortadella and chopped pistachios on the bottom layer; add stracciatella only if selected. Close and serve without returning it to the oven."
     },
   },
 };

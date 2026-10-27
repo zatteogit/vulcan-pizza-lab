@@ -898,7 +898,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
       ingredients: {
         "0": {
           name: "Friarielli (grelos) limpios",
-          notes: "Salteados con ajo y guindilla",
+          notes: "Para saltear con ajo, aceite y guindilla",
         },
         "1": {
           name: "Salchicha napolitana desmenuzada (carne de cerdo, sal, pimienta)",
@@ -2298,19 +2298,19 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     farcitura_porchetta: {
       title: "Relleno de porchetta",
-      description: "Tras abrirla en dos, coloca las lonchas de porchetta sobre la mitad inferior. Un poco de pimienta molida. Cierra con la parte superior (con las patatas encima).",
+      description: "Separar las dos capas horneadas. Distribuir las lonchas de porchetta sobre la mitad inferior y añadir pimienta si se desea. Cerrar con la mitad superior, dejando las patatas hacia arriba.",
     },
     sale_finale: {
       title: "Sal y servicio",
       description: "Espolvorea flor de sal sobre las patatas. Sírvela caliente, cortada en cuadrados.",
     },
     spread_bianca_base: {
-      title: "Horneado en blanco",
-      description: "Pincela con AOVE y espolvorea flor de sal. Hornea hasta que la corteza se dore (nada más antes del horno).",
+      title: "Preparar la base sin relleno",
+      description: "Pincelar con aceite de oliva virgen extra y espolvorear flor de sal. Dejar la base sin relleno: se horneará en la fase siguiente.",
     },
     mortazza_post_bake: {
       title: "Añadir la mortadela tras el horneado",
-      description: "Saca la pizza del horno. Ábrela como un libro si es Pala o similar, o coloca las lonchas por encima. Reparte la mortadela IGP en lonchas onduladas. Espolvorea el pistacho. (Stracciatella de burrata opcional para la versión gourmet).",
+      description: "Distribuir la mortadela formando pliegues y el pistacho picado sobre la base horneada. Añadir la stracciatella de burrata solo si se ha elegido. Servir sin volver a meter en el horno.",
     },
     crudo_bianca: {
       title: "Horneado en blanco",
@@ -2418,7 +2418,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     pizza_fritta_fill_seal: {
       title: "Rellenar y sellar antes de freír",
-      description: "Estira el disco y reparte ricotta, provola, cicoli y pimienta sobre una mitad (y, si quieres, un velo de tomate). Dóblalo en media luna y sella bien los bordes. Fríelo en aceite bien caliente hasta que se hinche y se dore. NO se aliña por encima: el relleno va dentro.",
+      description: "Estirar el disco y distribuir ricotta, provola, cicoli y pimienta sobre una mitad, con tomate si se ha elegido. Doblar en forma de media luna y sellar bien los bordes. El relleno queda dentro; la fritura corresponde a la fase siguiente.",
       tip_beginner: "Es distinta de la montanara: la montanara es abierta y se aliña por encima tras freírla; la pizza fritta es cerrada y se rellena antes de freírla.",
       tip_nerd: "Sellar bien los bordes es clave: un bolsillo abierto deja entrar el aceite y salir el relleno. El vapor interno cuece al vapor la ricotta y la provola mientras el exterior se fríe.",
     },
@@ -2770,7 +2770,7 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Rellenar y cerrar los dos discos",
-      description: "Estira las dos porciones a mano, sin harina, en discos de 2–3 mm de grosor. Sobre el disco más grande reparte la ricotta, la provola, los cicoli y la pimienta dejando libre el borde; cubre con el disco pequeño y sella presionando bien. Fríela en aceite de semillas a unos 175 °C y dale la vuelta cuando esté dorada.",
+      description: "Estirar las dos porciones a mano, sin harina, formando discos de 2–3 mm de grosor. Distribuir ricotta, provola, cicoli y pimienta sobre el disco grande dejando libre el borde; cubrir con el pequeño y sellar presionando bien. La fritura corresponde a la fase siguiente.",
       tip_beginner: "El disco de abajo es m\u00E1s grande: as\u00ED su borde se dobla por encima y la tonda se mantiene cerrada al fre\u00EDrla.",
       tip_nerd: "Sin harina al estirar, el aceite se mantiene limpio m\u00E1s tiempo; un borde mal sellado deja entrar el aceite y salir el relleno.",
     },
@@ -2789,6 +2789,18 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     spread_marinara_scarole: {
       title: "Marinara con escarola",
       description: "Tomates pelados aplastados y salados, la escarola rehogada bien escurrida, or\u00E9gano y un hilo de aceite. Sin queso.",
+    },
+    mortazza_spaccata_fill: {
+      title: "Abrir y rellenar la base horneada",
+      description: "Cortar la base horneada horizontalmente con un cuchillo de sierra. Distribuir mortadela y pistacho picado sobre la mitad inferior; añadir stracciatella solo si se ha elegido. Cerrar y servir sin volver a meter en el horno."
+    },
+    spread_baciata_surface: {
+      title: "Aliñar la superficie",
+      description: "Después de superponer los discos, pincelar la superficie exterior con aceite de oliva virgen extra y flor de sal. El relleno se añadirá después del horneado."
+    },
+    mortazza_split_fill: {
+      title: "Abrir y rellenar la Baciata",
+      description: "Separar las dos capas horneadas, ayudándose con un cuchillo de sierra por el borde. Distribuir mortadela y pistacho picado en la capa inferior; añadir stracciatella solo si se ha elegido. Cerrar y servir sin volver a meter en el horno."
     },
   },
 };

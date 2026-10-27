@@ -2272,7 +2272,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.stack.title": "Sovrapposizione",
     "timeline.fillClosed.title": "Ripieno e chiusura",
     "timeline.fillSheets.title": "Farcitura tra sfoglie",
-    "timeline.bakeWhite.title": "Prima cottura (in bianco)",
+    "timeline.bakeWhite.title": "Cottura in bianco",
     "timeline.splitFill.title": "Sdoppiamento e farcitura",
     "timeline.bake2.title": "Seconda cottura (breve)",
     "timeline.bake.title": "Cottura",

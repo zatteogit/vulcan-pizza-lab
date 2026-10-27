@@ -1051,7 +1051,7 @@ export const JA_LOCALE: CmsContent = {
     "timeline.fillClosed.tipNerd": "縁の圧着が重要です。閉じ込められた空気が焼成中に膨らみます（ピロー効果）。",
     "timeline.fillSheets.title": "生地の間に具を挟む",
     "timeline.fillSheets.desc": "1枚目の生地にストラッキーノを小さくちぎって散らし、2枚目の生地をかぶせて縁を閉じ、表面にオイルと塩をふります。",
-    "timeline.bakeWhite.title": "1回目の焼成（具なし）",
+    "timeline.bakeWhite.title": "具なしで焼く",
     "timeline.bakeWhite.desc": "具をのせずに{temp}で焼きます。焦がさず、きつね色に焼き上げます。",
     "timeline.bakeWhite.tipBeginner": "具がないと早く焼けます。最後の数分は目を離さないでください。",
     "timeline.bakeWhite.tipNerd": "具なしで焼くことで、トッピングの水分が加わる前にでんぷんの糊化を完了させます。",
