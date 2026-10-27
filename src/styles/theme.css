@@ -9194,22 +9194,23 @@
   }
 
   .recipe-allergens {
-    margin-block: var(--space-4);
-    border-block: var(--border-width-thin) solid var(--container-border-subtle);
-    color: var(--foreground);
+    margin-block-start: var(--space-2);
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
   }
   .recipe-allergens__toggle {
     display: flex;
-    width: 100%;
+    max-width: 100%;
     min-height: var(--allergen-target-min);
     align-items: center;
-    gap: var(--space-3);
-    padding-block: var(--space-3);
+    gap: var(--space-2);
+    padding-block: var(--space-2);
     text-align: start;
   }
   .recipe-allergens__toggle > svg { flex-shrink: 0; }
-  .recipe-allergens__toggle > span { flex: 1; min-width: 0; }
-  .recipe-allergens__summary { display: block; color: var(--text-muted); font-size: var(--font-size-sm); margin-block-start: var(--space-1); overflow-wrap: anywhere; }
+  .recipe-allergens__copy { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-2); min-width: 0; }
+  .recipe-allergens__copy strong { font-weight: var(--weight-semibold); color: var(--text-default); }
+  .recipe-allergens__summary { overflow-wrap: anywhere; }
   .recipe-allergens__detail { overflow: hidden; padding-block-end: var(--space-4); }
   .recipe-allergens__group { margin-block-start: var(--space-4); }
   .recipe-allergens__group h4 { font-weight: var(--weight-semibold); margin-block-end: var(--space-2); }

@@ -1,3 +1,4 @@
+import { RecipeAllergens } from "./recipe-allergens";
 import { METHOD_MESSAGES_IT } from "../../data/method-messages";
 import { engineMsgTexts } from "./engine-msg-text";
 /* ═══ TOPPING SECTION — condimento/farcitura (estratto fase 2, lug 2026) ═══
@@ -456,6 +457,8 @@ export function ToppingSection({
             );
           }
         })()}
+
+        <RecipeAllergens key={activeToppingId} report={recipe.allergens} scope="topping" />
 
         {technicalNotes.length > 0 && (
           <div className="topping-panel__notes">

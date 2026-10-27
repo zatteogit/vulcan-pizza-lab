@@ -459,7 +459,7 @@ export function StyleDetailSheet({
             </div>
           )}
 
-          {rec && <RecipeAllergens report={rec.recipe.allergens}/>}
+          {rec && <RecipeAllergens report={rec.recipe.allergens} scope="recipe" />}
           {rec && originalRecipe && (
             <RecipeChanges from={originalRecipe} to={rec.recipe} mode="included" />
           )}
