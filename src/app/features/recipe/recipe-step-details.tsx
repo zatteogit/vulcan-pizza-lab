@@ -3,12 +3,13 @@
 import { ChevronRight, FlaskConical, LifeBuoy, Lightbulb } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { motionDuration, motionSpring } from "../../components/ds/motion";
-import { useId, useMemo, useState } from "react";
+import { useId, useState } from "react";
 import { useDisclosureScroll } from "../../hooks/use-disclosure-scroll";
 import type { StepTroubleshooting } from "../../data/troubleshooting-data";
 import { TroubleshootingSheet } from "./troubleshooting-panel";
 import type { CmsContent } from "../cms/cms-context";
 import { t } from "../cms/i18n";
+import { getTermById } from "../../data/glossary-data";
 
 /* ═══ Learning contestuale: ogni fase porta al suo termine nel glossario ═══
    (feedback giugno 2026 — il "come si impara" richiamabile dalla ricetta) */
@@ -33,6 +34,7 @@ export function StepDetails({
   isNerd,
   stepId,
   unleavened = false,
+  preFermentType,
   cms,
   troubleshooting,
 }: {
@@ -42,6 +44,7 @@ export function StepDetails({
   stepId?: string;
   /** Impasto non lievitato: niente rimandi alla lievitazione nei riposi. */
   unleavened?: boolean;
+  preFermentType?: string;
   cms: CmsContent;
   troubleshooting?: StepTroubleshooting & { title: string };
 }) {
@@ -57,17 +60,10 @@ export function StepDetails({
   const learnStepId =
     stepId && !(unleavened && REST_STEP_IDS.has(stepId)) ? stepId : undefined;
 
-  const glossaryLabel = useMemo(() => {
-    if (!learnStepId) return "";
-    switch (learnStepId) {
-      case "preferment": return cms.cooking.glossaryPreferment;
-      case "bulk": return cms.cooking.glossaryBulk;
-      case "proof": return cms.cooking.glossaryProof;
-      case "bake": return cms.cooking.glossaryBake;
-      case "mix": return cms.cooking.glossaryMix;
-      default: return "";
-    }
-  }, [learnStepId, cms.cooking]);
+  const glossaryHash = learnStepId === "preferment"
+    ? preFermentType === "poolish" ? "poolish" : preFermentType === "biga" ? "biga" : undefined
+    : learnStepId ? STEP_GLOSSARY[learnStepId]?.hash : undefined;
+  const glossaryTerm = glossaryHash ? getTermById(glossaryHash, cms) : undefined;
 
   const hasDetails = Boolean(longDesc || tips.length);
   const troubleLabel = troubleshooting && cms.cooking.troubleStepLinks?.[troubleshooting.labelKey];
@@ -77,7 +73,7 @@ export function StepDetails({
       onClick={() => setTroubleOpen(true)}
       aria-haspopup="dialog"
       aria-expanded={troubleOpen}
-      className={hasDetails && learnStepId && STEP_GLOSSARY[learnStepId]
+      className={hasDetails && glossaryTerm
         ? "step-details__trouble-link step-details__trouble-link--indented type-data"
         : "step-details__trouble-link type-data"}
     >
@@ -145,7 +141,7 @@ export function StepDetails({
               </span>
             </div>
           ))}
-          {learnStepId && STEP_GLOSSARY[learnStepId] && (
+          {glossaryTerm && (
             <>
             <button
               ref={glossaryScroll.anchorRef}
@@ -155,7 +151,7 @@ export function StepDetails({
               aria-expanded={glossaryOpen}
               aria-controls={glossaryOpen ? glossaryId : undefined}
             >
-              {t(cms.cooking.learnInlineTitle, { label: glossaryLabel })}
+              {t(cms.cooking.learnInlineTitle, { label: glossaryTerm.name })}
             </button>
             {glossaryOpen && (
               <motion.div
@@ -168,8 +164,13 @@ export function StepDetails({
                 onAnimationComplete={glossaryScroll.complete}
                 className="step-details__content"
               >
-                <div className="step-details__glossary-content type-body">
-                  {t(cms.cooking.learnInlineBody, { label: glossaryLabel })}
+                <div className="step-details__glossary-content type-body" data-glossary-term={glossaryTerm.id}
+                  role="region" aria-label={glossaryTerm.name}>
+                  <p>{glossaryTerm.definition}</p>
+                  {glossaryTerm.whyImportant && <div className="step-details__glossary-why">
+                    <h4>{cms.glossary.whyImportantLabel}</h4>
+                    <p>{glossaryTerm.whyImportant}</p>
+                  </div>}
                 </div>
               </motion.div>
             )}

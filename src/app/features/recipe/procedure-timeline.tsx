@@ -166,6 +166,7 @@ export function ProcedureTimeline({
                   isNerd={isNerd}
                   stepId={step.id}
                   unleavened={!!recipe.style.dough.unleavened}
+                  preFermentType={recipe.pre_ferment_type}
                   cms={cms}
                   troubleshooting={trouble ? { ...trouble, title: localizedStep.title } : undefined}
                 />

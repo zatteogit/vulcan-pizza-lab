@@ -12113,6 +12113,9 @@
     line-height: var(--leading-normal);
   }
 
+  .step-details__glossary-why { margin-block-start: var(--space-3); }
+  .step-details__glossary-why h4 { color: var(--text-default); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); margin-block-end: var(--space-1); }
+
   .step-details__trouble-link {
     cursor: pointer;
     display: inline-flex;

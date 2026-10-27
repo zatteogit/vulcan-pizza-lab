@@ -1817,8 +1817,6 @@ export const DE_LOCALE: CmsContent = {
     learnedFromAttempts: "Ich habe aus deinen {n} Versuchen gelernt",
     applyCorrections: "Korrekturen anwenden",
     learnInlineTitle: "Mehr erfahren: {label}",
-    learnInlineBody:
-      "{label}: lies die Erklärung, ohne das Rezept zu verlassen. Mehr findest du unter Lernen.",
     tipsCountOne: "{n} Tipp",
     tipsCountMany: "{n} Tipps",
     glossaryPreferment: "Biga und Vorteige",
