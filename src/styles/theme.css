@@ -9266,8 +9266,12 @@
     padding: var(--space-5);
     border: var(--border-width-thin) solid var(--container-border-subtle);
     border-radius: var(--radius-xl);
-    background: var(--surface-bright);
-    box-shadow: var(--shadow-sm);
+    background:
+      radial-gradient(ellipse at top left,
+        color-mix(in srgb, var(--primary) 8%, transparent), transparent 60%),
+      linear-gradient(135deg, var(--surface-container-low), var(--surface-container-lowest));
+    box-shadow: var(--elevation-hero-soft),
+      inset 0 var(--border-width-thin) 0 color-mix(in srgb, var(--text-default) 7%, transparent);
   }
 
   .match-card__main {
@@ -9354,7 +9358,7 @@
     border: none;
     border-inline-end: var(--border-width-thin) solid var(--container-border);
     background: transparent;
-    color: var(--text-default);
+    color: var(--primary);
   }
 
   .match-score-group:hover .match-score-details { text-decoration: underline; }
@@ -9478,6 +9482,9 @@
   .match-card__context .recipe-condition-chip.badge-base {
     font-size: var(--font-size-sm);
     padding: var(--space-1) var(--space-2);
+    --ds-badge-bg: color-mix(in srgb, var(--ds-badge-color) 7%, transparent);
+    box-shadow: inset 0 0 0 var(--border-width-thin)
+      color-mix(in srgb, var(--ds-badge-color) 24%, transparent);
   }
 
   .match-card__context .recipe-condition-chips { padding-block: 0; }
@@ -9874,6 +9881,12 @@
     color: var(--cta-foreground);
     border-color: transparent;
     background: var(--cta);
+  }
+
+  .match-action-cta,
+  .match-action-text--personalize:not(.match-action-text--secondary) {
+    box-shadow: var(--shadow-cta),
+      inset 0 var(--border-width-thin) 0 color-mix(in srgb, var(--cta-foreground) 12%, transparent);
   }
 
   .match-action-text--create {
