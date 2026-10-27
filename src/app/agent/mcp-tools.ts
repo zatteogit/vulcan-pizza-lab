@@ -26,6 +26,7 @@ getLayoutSpec,
   FLOUR_W_RANGES,
   MAX_DOUGH_BALLS,
 } from "../domain/pizza-engine";
+import { ALLERGEN_NAMES_IT, type AllergenId } from "../data/allergen-data";
 import { ToolInputError, numberInput as num, kitchenInputs, KITCHEN_INPUT, PAN_INPUT, panInput, enumInput, optionalBoolean } from "./mcp-inputs";
 export { ToolInputError } from "./mcp-inputs";
 import { canonicalRecipeEntry, tailoredRecipeEntry, optimizeSelectedRecipe } from "../use-cases/recipe-entry";
@@ -33,7 +34,7 @@ import { getInterpretationsForStyle } from "../data/interpretation-library";
 import { getVersions } from "../data/style-versions";
 import { TOPPING_LIBRARY, getToppingForStyle, scaleToppingAmounts } from "../data/topping-library";
 import { FLOURS_DB } from "../data/flour-database";
-import { pantryIngredientReferences } from "../domain/pantry-ingredients";
+import { pantryIngredientId, pantryIngredientReferences } from "../domain/pantry-ingredients";
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../domain/recipe-score";
 import { computePreFermentSplit } from "../domain/pre-ferment-split";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
@@ -206,6 +207,7 @@ function recipeForInput(source: PizzaStyle, constraints: UserConstraints, args: 
 function msg(m: EngineMsg): string {
   return m.fallback.replace(/\{(\w+)\}/g, (_, k: string) => {
     const value = m.params?.[k];
+    if (k === "allergen") return ALLERGEN_NAMES_IT[String(value) as AllergenId] ?? String(value);
     return String(k === "yeast" ? YEAST_LABELS[String(value)] ?? value ?? `{${k}}` : value ?? `{${k}}`);
   });
 }
@@ -264,7 +266,7 @@ function preFermentData(recipe: GeneratedRecipe) {
 function recipeData(recipe: GeneratedRecipe) {
   const topping = recipe.style.default_topping_ref ? getToppingForStyle(recipe.style.default_topping_ref, recipe.style) : undefined;
   const scaled = topping ? scaleToppingAmounts(topping, recipe.topping_scale ?? recipe.style.topping_scale) : undefined;
-  const toppingIngredients = scaled?.ingredients.map(i=>({...i,declared_components:pantryIngredientReferences(i.name,i.components).slice(1)}));
+  const toppingIngredients = scaled?.ingredients.map(i=>({...i,...(i.optional?{included:recipe.allergens.optional_ingredients.find(row=>row.id===pantryIngredientId(i.name))?.selected??false}:{}),declared_components:pantryIngredientReferences(i.name,i.components).slice(1)}));
   const pct = (g: number) => Math.round((g / recipe.flour_g) * 1000) / 10;
   const ingredients = [
     { name: "flour", grams: recipe.flour_g },
@@ -277,6 +279,7 @@ function recipeData(recipe: GeneratedRecipe) {
     .filter((row) => row.grams > 0)
     .map((row) => ({ ...row, baker_pct: pct(row.grams) }));
   return {
+    schema_version: recipe.schema_version,
     style: { id: recipe.style.id, name: recipeDisplayName(recipe), reference_name: recipe.style.name },
     reference: { stg_departures: stgDepartures(recipe), conformity_certified: false, method: recipe.style.method_profile ?? null, formula_variant: recipe.style.formula_variant ?? null },
     outcome: recipe.verdict.outcome,
@@ -294,6 +297,7 @@ function recipeData(recipe: GeneratedRecipe) {
     conditions: recipe.verdict.conditions ?? [],
     adaptations: recipe.verdict.adaptations,
     optional_aids: recipe.optional_aids,
+    allergens: recipe.allergens,
     dietary_warnings: (recipe.dietary_warnings ?? []).map(w => ({ ...w, message: msg(w.message), tip: msg(w.tip) })),
     dietary_variant: recipe.dietary_variant,
     topping: scaled ? { id: scaled.id, ingredients_per_unit: toppingIngredients!,
@@ -468,6 +472,7 @@ export const MCP_TOOLS: McpTool[] = [
             outcome: rec.verdict.outcome,
             blockers: rec.verdict.blockers,
             conditions: rec.verdict.conditions ?? [],
+            allergens: evaluated.allergens,
             dietary_warnings: evaluated.dietary_warnings,
             dietary_alternatives: rec.dietary_alternatives.map(a => ({
               topping_id:a.topping_id, omitted_conflicts:a.omitted_conflicts, removed:a.removed, added:a.added,

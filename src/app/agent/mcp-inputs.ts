@@ -1,5 +1,6 @@
 import type { PanConfig, UserConstraints } from "../domain/pizza-engine";
 import { normalizePantryFlourDetails, pantryIngredientId } from "../domain/pantry-ingredients";
+import { ALLERGEN_IDS, normalizeAllergenLabels } from "../data/allergen-data";
 
 export type ToolArgs = Record<string, unknown>;
 export class ToolInputError extends Error {}
@@ -47,6 +48,9 @@ const diets = ["gluten_free", "lactose_free", "vegan", "low_fodmap", "histamine"
 const listSchema = (description: string, values?: readonly string[]) => ({ type: "array", maxItems: 1000, items: { type: "string", ...(values ? { enum: values } : {}) }, description });
 
 export const KITCHEN_INPUT = {
+  allergens_avoid: listSchema("EU Annex II groups explicitly to avoid, separate from vegan/lactose-free preferences.", ALLERGEN_IDS),
+  included_optional_ingredients: listSchema("Optional ingredient IDs/names explicitly included. Omission keeps them conditional."),
+  allergen_labels: {type:"object",maxProperties:100,description:"Actual product labels keyed by ingredient ID/name. Cannot erase intrinsic allergens.",additionalProperties:{type:"object",additionalProperties:false,required:["product","contains","may_contain","complete"],properties:{product:{type:"string",minLength:1,maxLength:120},contains:listSchema("Declared as present.",ALLERGEN_IDS),may_contain:listSchema("Precautionary allergens explicitly stated on this label only.",ALLERGEN_IDS),complete:{type:"boolean"}}}},
   pantry_flours: listSchema("Available flour IDs from list_pantry_items, or custom IDs with pantry_flour_details. Omission/empty partial inventory does not mean absent."),
   pantry_yeasts: listSchema("Available yeasts.", yeasts),
   pantry_inventory_complete: { type: "boolean", description: "True only if the user confirms this flour/yeast inventory is complete." },
@@ -72,6 +76,21 @@ export const KITCHEN_INPUT = {
 
 export function kitchenInputs(args: ToolArgs): Partial<UserConstraints> {
   const result: Partial<UserConstraints> = {};
+  const allergens = stringList(args,"allergens_avoid",ALLERGEN_IDS);
+  if(allergens)result.allergens_avoid=allergens as typeof ALLERGEN_IDS[number][];
+  const optional = stringList(args,"included_optional_ingredients");
+  if(optional)result.included_optional_ingredients=optional.map(pantryIngredientId);
+  if(args.allergen_labels!==undefined){
+    const raw=args.allergen_labels;
+    if(!raw||typeof raw!=="object"||Array.isArray(raw)||Object.keys(raw).length>100)throw new ToolInputError('allergen_labels must contain up to 100 ingredient labels');
+    for(const [id,value]of Object.entries(raw)){
+      if(!id.trim()||["__proto__","constructor","prototype"].includes(id)||!value||typeof value!=="object"||Array.isArray(value))throw new ToolInputError('invalid allergen label');
+      const d=value as ToolArgs;
+      if(Object.keys(d).some(k=>!["product","contains","may_contain","complete"].includes(k))||typeof d.product!=="string"||!d.product.trim()||d.product.length>120||typeof d.complete!=="boolean"||!Array.isArray(d.contains)||!Array.isArray(d.may_contain))throw new ToolInputError('a label requires product, contains, may_contain and complete');
+      stringList(d,"contains",ALLERGEN_IDS);stringList(d,"may_contain",ALLERGEN_IDS);
+    }
+    result.allergen_labels=normalizeAllergenLabels(raw);
+  }
   for (const key of ["pantry_inventory_complete", "allow_flour_purchase", "pantry_ingredients_complete", "equipment_inventory_complete", "allow_equipment_purchase"] as const) {
     if (args[key] !== undefined) result[key] = optionalBoolean(args, key);
   }

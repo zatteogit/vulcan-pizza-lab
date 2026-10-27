@@ -1,5 +1,6 @@
 import { STYLES_DB } from "../../domain/styles-db";
 import { METHOD_MESSAGES_IT } from "../../data/method-messages";
+import { ALLERGEN_MESSAGES_IT } from "../../data/allergen-data";
 import { DIETARY_MESSAGES_IT } from "../../data/dietary-data";
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../../domain/recipe-score";
@@ -2086,6 +2087,7 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   engineMessages: {
     ...DIETARY_MESSAGES_IT,
+    ...ALLERGEN_MESSAGES_IT,
     "change.topping": "Condimento: {from} → {to}",
 
 
@@ -2531,7 +2533,7 @@ export const CMS_DEFAULTS: CmsContent = {
     dietTitle: "Preferenze dietetiche",
     dietSubtitle: "Filtra stili e ingredienti incompatibili",
     dietStep: "04 — Dieta",
-    noDietNote: "Nessuna restrizione — tutti gli stili disponibili.",
+    noDietNote: "Nessuna preferenza dietetica selezionata.",
     prefsTitle: "Lingua e tema",
     prefsSubtitle: "Personalizza l'interfaccia",
     prefsStep: "06 — Preferenze",

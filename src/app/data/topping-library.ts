@@ -112,6 +112,8 @@ import thumbnailVariantReccoPizzata from "../../assets/toppings/variants/recco_p
 export type IngredientSection = "ripieno" | "base" | "crosta" | "superficie" | "salamoia" | "finitura";
 
 export interface ToppingIngredient {
+  /** Product-label data only; precautionary traces are never inferred. */
+  allergen_declaration?: import("./allergen-data").AllergenDeclaration;
   /** Explicit catalog composition IDs; amounts remain on the whole preparation. */
   components?: string[];
   name: string;

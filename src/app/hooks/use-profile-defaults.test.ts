@@ -92,3 +92,9 @@ describe("capacità fisica e temperatura di ricetta", () => {
     expect(merged.excluded_flours).toEqual(["riso"]);
   });
 });
+
+// Health preferences belong to the current profile, never an old shared/saved draft.
+it("current allergen avoidance cannot be cleared by a draft",()=>{
+ expect(mergeDraftConstraints({...profile,allergens_avoid:["milk"]},{allergens_avoid:[]}).allergens_avoid).toEqual(["milk"]);
+ expect(mergeDraftConstraints({...profile,allergens_avoid:[]},{allergens_avoid:["nuts"]}).allergens_avoid).toEqual([]);
+});

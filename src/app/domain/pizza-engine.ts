@@ -24,6 +24,7 @@ import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId, pantryIngredientReferences, type PantryFlourDetails } from "./pantry-ingredients";
 import { BRAND } from "../config/brand";
 import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
+import { assessAllergens, allergenWarnings, type AllergenId, type AllergenDeclaration, type RecipeAllergens } from "../data/allergen-data";
 
 // ═══ TYPES ═══
 
@@ -325,6 +326,10 @@ export interface UserConstraints {
   has_pizza_steel: boolean;
   has_baking_pan: boolean;
   dietary_filters: string[];
+  allergens_avoid?: AllergenId[];
+  /** Optional ingredients explicitly chosen for this recipe, not assumed. */
+  included_optional_ingredients?: string[];
+  allergen_labels?: Record<string, AllergenDeclaration>;
   kitchen_temp_c?: number;
   pantry_flours: string[]; // e.g. ['00','0','manitoba','integrale','semola']
   /** Partial inventory is the default: omission does not prove absence. */
@@ -505,6 +510,7 @@ export interface GeneratedRecipe {
   verdict: RecipeVerdict;
   optional_aids?: EngineMsg[];
   dietary_warnings?: DietaryWarning[];
+  allergens: RecipeAllergens;
   dietary_variant?: { reference_topping_id: string; topping_id: string; omitted_conflicts: string[] };
   style: PizzaStyle;
   dough_balls: number;
@@ -2570,7 +2576,16 @@ export function generateRecipe(
   science.compensation_deviation_points = devResult.compensationPoints;
 
   // ── M-10: esito esplicito ──
-  const dietaryWarnings = getDietaryWarnings(constraints.dietary_filters, [
+  const allergens = assessAllergens([
+    ...(flourG > 0 ? (flourBlend?.length ? flourBlend.filter(c=>c.pct>0).map(c=>({name:c.name,section:"dough" as const})) : [{name:"Farina di grano",section:"dough" as const}]) : []),
+    {name:"Acqua",section:"dough"},{name:"Sale",section:"dough"},
+    ...(fatG>0&&fatLabel?[{name:fatLabel,section:"dough" as const}]:[]),
+    ...(effectiveSugarPct>0?[{name:"Zucchero",section:"dough" as const}]:[]),
+    ...(!style.dough.unleavened&&yeastG>0?[{name:YEAST_LABELS[yeastType],section:"dough" as const}]:[]),
+    ...(defaultTopping?.ingredients.filter(i=>i.amount.value>0).map(i=>({...i,section:"topping" as const}))??[]),
+    ...(isFriedStyle(style)?[{name:"Olio per frittura",section:"cooking" as const}]:[]),
+  ],constraints.allergens_avoid,constraints.included_optional_ingredients,constraints.allergen_labels);
+  const dietaryWarnings = [...getDietaryWarnings(constraints.dietary_filters, [
     ...(flourG > 0 ? (flourBlend?.length
       ? flourBlend.filter(c => c.pct > 0).map(c => ({ name: c.name, gluten: c.w !== undefined }))
       : [{ name: "Farina di grano", gluten: true }]) : []),
@@ -2578,12 +2593,14 @@ export function generateRecipe(
     ...(fatG > 0 && fatLabel ? [{ name: fatLabel }] : []),
     ...(effectiveSugarPct > 0 ? [{ name: "Zucchero" }] : []),
     ...(defaultTopping?.ingredients.filter(i => i.amount.value > 0) ?? []),
-  ]);
+  ]), ...allergenWarnings(allergens)];
   const referenceRef = STYLES_DB[style.id]?.default_topping_ref;
   const referenceTopping = referenceRef ? getToppingForStyle(referenceRef, style) : undefined;
   const omittedConflicts = referenceTopping && referenceTopping.id !== defaultTopping?.id
-    ? [...new Set(getDietaryWarnings(constraints.dietary_filters, referenceTopping.ingredients)
-      .filter(w => w.severity === "critical").flatMap(w => w.ingredients))]
+    ? [...new Set([
+      ...getDietaryWarnings(constraints.dietary_filters, referenceTopping.ingredients),
+      ...allergenWarnings(assessAllergens(referenceTopping.ingredients.filter(i=>i.amount.value>0).map(i=>({...i,section:"topping" as const})),constraints.allergens_avoid,constraints.included_optional_ingredients,constraints.allergen_labels)),
+    ].filter(w => w.severity === "critical").flatMap(w => w.ingredients))]
     : [];
   const dietaryVariant = defaultTopping && referenceTopping && omittedConflicts.length > 0 &&
     !dietaryWarnings.some(w => w.severity === "critical") &&
@@ -2658,12 +2675,13 @@ export function generateRecipe(
     method_changes: defaultTopping?.method_note ? [defaultTopping.method_note] : undefined,
     schema_version: RECIPE_SCHEMA_VERSION,
     dietary_warnings: dietaryWarnings,
+    allergens,
     dietary_variant: dietaryVariant,
     optional_aids: style.id !== "napoletana_stg" && !isFriedStyle(style) && !style.proof_in_pan && !style.dough.unleavened &&
       style.shape.shape_type !== "rectangular" && !homeMethod &&
       !(constraints.excluded_flours ?? []).includes("semola") &&
       !(constraints.excluded_flours ?? []).includes("frumento") &&
-      (constraints.allow_flour_purchase !== false || constraints.pantry_flours.includes("semola")) && !constraints.dietary_filters.includes("gluten_free")
+      (constraints.allow_flour_purchase !== false || constraints.pantry_flours.includes("semola")) && !constraints.dietary_filters.includes("gluten_free") && !constraints.allergens_avoid?.includes("gluten")
         ? [em("aid.semolina", METHOD_MESSAGES_IT["aid.semolina"])]
         : [],
     baker_pcts: { salt: effectiveSaltPct, fat: effectiveOilPct, sugar: effectiveSugarPct },
@@ -4312,7 +4330,7 @@ export const DEFAULT_KITCHEN_TEMP = 21;
  *   1.4 — deviation_signature tracking, E-Score enhanced, Regola 55,
  *          engineMessages i18n, effective_deviation_score, compensation_deviation_points
  */
-export const RECIPE_SCHEMA_VERSION = "1.4" as const;
+export const RECIPE_SCHEMA_VERSION = "1.5" as const;
 
 
 
