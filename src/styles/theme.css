@@ -918,6 +918,7 @@
   --recipe-match-action-target-min: var(--dimension-fixed-046);
   --recipe-quantity-target-min: var(--dimension-fixed-046);
   --troubleshooting-target-min: var(--dimension-fixed-046);
+  --account-action-target-min: var(--dimension-fixed-046);
   --section-tabs-navbar-dock-max-width: var(--dimension-fixed-440);
   /* riga dock mobile variante navbar */
   --section-tabs-capsule-height-navbar-subtitles: var(--dimension-fixed-058);
@@ -7594,6 +7595,18 @@
     min-height: var(--space-10);
   }
 
+  .account-panel__action {
+    min-height: var(--account-action-target-min);
+    max-width: 100%;
+    padding: var(--space-3) var(--space-5);
+    line-height: var(--leading-tight);
+  }
+
+  .account-panel__action:hover {
+    background: var(--container-bg);
+    border-color: var(--outline);
+  }
+
   /* ── Drawer (cucina/pantry/tu/time expandable panels) ── */
   .needs-drawer {
     overflow: hidden;
@@ -9765,9 +9778,9 @@
   }
 
   .match-action-text--personalize {
-    color: var(--primary);
-    border-color: var(--container-border);
-    background: var(--container-bg-low);
+    color: var(--cta-foreground);
+    border-color: transparent;
+    background: var(--cta);
   }
 
   .match-action-text--create {
@@ -9785,6 +9798,11 @@
   .match-action-text:hover {
     background: var(--container-bg);
     border-color: color-mix(in srgb, var(--primary) 30%, var(--container-border-subtle));
+  }
+
+  .match-action-text--personalize:hover {
+    background: color-mix(in srgb, var(--cta) 90%, var(--foreground) 10%);
+    border-color: transparent;
   }
 
   .match-actions .match-action-cta { flex-basis: 100%; order: -1; }

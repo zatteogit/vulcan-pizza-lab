@@ -128,7 +128,8 @@ export function AccountPanel({ locale }: { locale: string }) {
         <CtaButton
           type="button"
           variant="secondary"
-          radius="lg"
+          radius="pill"
+          className="account-panel__action"
           onClick={async () => {
             await signOut(session);
             setSession(null);
@@ -159,14 +160,15 @@ export function AccountPanel({ locale }: { locale: string }) {
         <CtaButton
           type="button"
           variant="secondary"
-          radius="lg"
+          radius="pill"
+          className="account-panel__action"
           onClick={async () => {
             const next = await startDemo();
             setFailed(!next);
             if (next) setSession(next);
           }}
         >
-          <Sparkles size={15} aria-hidden="true" />
+          <Sparkles size={18} aria-hidden="true" />
           {uiMessage("features.account.account-panel.tryDemo")}
         </CtaButton>
       )}
