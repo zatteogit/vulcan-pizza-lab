@@ -20999,3 +20999,14 @@ html {
     --glass-fallback-filter: none;
   }
 }
+
+/* Rendering quality is observed at runtime, independently of OS or viewport.
+   Interaction feedback remains enabled; only expensive decorative materials
+   fall back to the same accessible opaque surface used without glass support. */
+:root[data-visual-quality="reduced"] {
+  --glass-fallback-bg: var(--container-bg);
+  --glass-fallback-filter: none;
+}
+:root[data-visual-quality="reduced"] .recipe-view-hero__parallax {
+  will-change: auto;
+}

@@ -1,3 +1,4 @@
+import { useDecorativeMotion } from "../../context/visual-quality-context";
 import { useId } from "react";
 import { motion } from "motion/react";
 import { motionDuration,motionEase } from "../ds/motion";
@@ -88,6 +89,7 @@ export function VulcanMark({
   glow = false,
   variant = "naturale",
 }: VulcanMarkProps) {
+  const animateDecorations = useDecorativeMotion();
   const uid = useId().replace(/:/g, "");
   const gradId = `vm-${uid}`;
   const resolved = VARIANTS[variant] ?? VARIANTS.naturale;
@@ -133,12 +135,12 @@ export function VulcanMark({
         className="vulcan-logo__glow-ring"
         initial={{ scale: 1, opacity: 0.12 }}
         animate={{
-          scale: 1.12,
-          opacity: 0.22,
+          scale: animateDecorations ? 1.12 : 1,
+          opacity: animateDecorations ? 0.22 : 0.12,
         }}
         transition={{
           duration: motionDuration.logoPulse,
-          repeat: 5, // U-10 (F25): si ferma invece di pulsare per sempre
+          repeat: animateDecorations ? 5 : 0, // U-10 (F25): si ferma invece di pulsare per sempre
           repeatType: "mirror",
           ease: motionEase.standard,
         }}

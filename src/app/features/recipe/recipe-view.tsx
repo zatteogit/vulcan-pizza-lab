@@ -1,3 +1,4 @@
+import { useDecorativeMotion, useVisualMotionPreference } from "../../context/visual-quality-context";
 import { RecipeReferenceNote } from "./recipe-reference-note";
 import { recipeDisplayName } from "../../domain/recipe-reference";
 /* ═══ RECIPE VIEW — impianto condiviso scheda ricetta (VPL-081) ═══
@@ -19,8 +20,9 @@ import { Link } from "react-router";
 import {
   AnimatePresence,
   motion,
-  useReducedMotion,
   useScroll,
+  useMotionValue,
+  useMotionValueEvent,
   useTransform,
 } from "motion/react";
 import { ChevronLeft, Bookmark, RotateCcw } from "lucide-react";
@@ -202,25 +204,32 @@ export function RecipeView({
      prefers-reduced-motion il movimento scroll-driven si spegne (resta il
      solo scrim, che è una dissolvenza, non un moto). */
   const { scrollY } = useScroll();
-  const prefersReducedMotion = useReducedMotion();
+  const parallaxEnabled = useDecorativeMotion();
+  const reducedMotion = useVisualMotionPreference();
+  // Freeze at the current offset when quality drops instead of snapping the
+  // hero/card back to zero in the middle of reading.
+  const decorativeScroll = useMotionValue(scrollY.get());
+  useMotionValueEvent(scrollY, "change", y => {
+    if (parallaxEnabled) decorativeScroll.set(y);
+  });
   const isMobile = useIsMobile(true);
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
   const heroImageY = useTransform(
-    scrollY,
+    decorativeScroll,
     [0, 400],
-    prefersReducedMotion ? [0, 0] : [0, 80]
+    reducedMotion ? [0, 0] : [0, 80]
   );
   const heroImageScale = useTransform(
-    scrollY,
+    decorativeScroll,
     [0, 400],
-    prefersReducedMotion ? [1, 1] : [1.02, 1.15]
+    reducedMotion ? [1, 1] : [1.02, 1.15]
   );
   const heroOverlayOpacity = useTransform(scrollY, [0, 300], [0, 0.65]);
   const cardY = useTransform(
-    scrollY,
+    decorativeScroll,
     [0, 400],
-    prefersReducedMotion ? [0, 0] : [0, -20]
+    reducedMotion ? [0, 0] : [0, -20]
   );
 
   useEffect(() => {

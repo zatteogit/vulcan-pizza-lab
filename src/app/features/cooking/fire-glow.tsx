@@ -1,4 +1,4 @@
-import React from 'react';
+import { useDecorativeMotion } from "../../context/visual-quality-context";
 import { motion } from 'motion/react';
 import { motionDelay,motionDuration,motionEase } from "../../components/ds/motion";
 
@@ -12,14 +12,7 @@ import { motionDelay,motionDuration,motionEase } from "../../components/ds/motio
 export function FireGlow({ intensity = 0.5, variant = 'warm' }: { intensity?: number; variant?: 'warm' | 'neural' }) {
   const baseOpacity = Math.min(0.35, intensity * 0.4);
 
-  const [reducedMotion, setReducedMotion] = React.useState(false);
-  React.useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReducedMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
+  const animateDecorations = useDecorativeMotion();
 
   const glowPrimary = variant === 'neural' ? 'var(--glow-primary-neural)' : 'var(--glow-primary)';
   const glowSecondary = variant === 'neural' ? 'var(--glow-secondary-neural)' : 'var(--glow-secondary)';
@@ -33,7 +26,7 @@ export function FireGlow({ intensity = 0.5, variant = 'warm' }: { intensity?: nu
   };
 
   // When reduced motion is preferred, render a static warm wash instead
-  if (reducedMotion) {
+  if (!animateDecorations) {
     return (
       <div className="fire-glow" style={toneVars}>
         <div className="fire-glow__primary" />
