@@ -1,6 +1,6 @@
 import { ChevronDown, Info } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { motionSpring } from "../../components/ds/motion";
 import { useDisclosureScroll } from "../../hooks/use-disclosure-scroll";
 import type { RecipeAllergens, AllergenFinding, AllergenSource } from "../../data/allergen-data";
@@ -9,7 +9,7 @@ import { useCms } from "../cms/cms-context";
 import { pantryIngredientNames } from "./pantry-ingredient-names";
 import { pantryIngredientId } from "../../domain/pantry-ingredients";
 import { allergenName } from "./allergen-names";
-import { allergenSummary, needsMilkNote } from "./allergen-copy";
+import { allergenSummary, allergensForSection, needsMilkNote } from "./allergen-copy";
 
 function sectionName(section: AllergenSource["section"]): string {
   if (section === "dough") return uiMessage("allergen.dough");
@@ -17,8 +17,10 @@ function sectionName(section: AllergenSource["section"]): string {
   return uiMessage("allergen.topping");
 }
 
-/** Always describes the actual dough + topping, independently of compatibility scores. */
-export function RecipeAllergens({ report }: { report: RecipeAllergens }) {
+/** A quiet ingredient disclosure; compatibility still uses the whole recipe. */
+export function RecipeAllergens({ report: fullReport, scope }: { report: RecipeAllergens; scope: "recipe" | "topping" }) {
+  const report = allergensForSection(fullReport, scope);
+  const detailsId = useId();
   const [open, setOpen] = useState(false);
   const scroll = useDisclosureScroll(open);
   const reduced = useReducedMotion();
@@ -49,17 +51,18 @@ export function RecipeAllergens({ report }: { report: RecipeAllergens }) {
     </div>)}</dl>
   </section>;
 
-  return <aside className="recipe-allergens" aria-label={uiMessage("allergen.title")}>
+  return <aside className="recipe-allergens" data-allergen-scope={scope}
+    aria-label={`${uiMessage("allergen.title")} · ${uiMessage(scope === "topping" ? "allergen.topping" : "allergen.dough")}`}>
     <button type="button" className="recipe-allergens__toggle" ref={scroll.anchorRef}
-      onClick={() => { if (!open) scroll.prepare(); setOpen(!open); }} aria-expanded={open}>
-      <Info size={18} aria-hidden="true" />
+      onClick={() => { if (!open) scroll.prepare(); setOpen(!open); }} aria-expanded={open} aria-controls={detailsId}>
+      <Info size={14} aria-hidden="true" />
       <span className="recipe-allergens__copy">
         <strong>{uiMessage("allergen.title")}</strong>
         {allergenSummary(report).map(part => <span className="recipe-allergens__summary" key={part}>{part}</span>)}
       </span>
       <ChevronDown size={16} className={open ? "recipe-allergens__chevron--open" : ""} aria-hidden="true" />
     </button>
-    <AnimatePresence initial={false}>{open && <motion.div ref={scroll.contentRef} className="recipe-allergens__detail"
+    <AnimatePresence initial={false}>{open && <motion.div id={detailsId} ref={scroll.contentRef} className="recipe-allergens__detail"
       initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
       transition={reduced ? { duration: 0 } : motionSpring.denseDisclosure}
       onUpdate={latest => { if (latest.height !== undefined) scroll.follow(latest.height); }} onAnimationComplete={() => scroll.complete()}>

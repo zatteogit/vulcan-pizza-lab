@@ -1,4 +1,3 @@
-import { RecipeAllergens } from "./recipe-allergens";
 import { recipeDisplayName } from "../../domain/recipe-reference";
 import { Check, CookingPot, Flame, Link as LinkIcon, ListChecks, Printer, Share2, Utensils } from "lucide-react";
 import { localizeToppingRecipe } from "../../data/topping-i18n/localize";
@@ -808,7 +807,6 @@ export function RecipeOutput({
       </div>
       )}
 
-      <RecipeAllergens report={recipe.allergens}/>
       <AnimatePresence initial={false} custom={{ direction: pagerDir, reduceMotion }} mode="wait">
       {activeTabView === "ricetta" && (
       <motion.div

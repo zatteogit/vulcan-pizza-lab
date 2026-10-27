@@ -1,6 +1,23 @@
-import type { RecipeAllergens } from "../../data/allergen-data";
+import type { AllergenFinding, RecipeAllergens } from "../../data/allergen-data";
 import { uiMessage } from "../../i18n/ui-messages";
 import { allergenName } from "./allergen-names";
+
+/** Scope a presentation to its ingredients without changing the combined
+ * report used for dietary exclusions and the recipe verdict. */
+export function allergensForSection(report: RecipeAllergens, scope: "recipe" | "topping"): RecipeAllergens {
+  const includes = (section: "dough" | "topping" | "cooking") => scope === "topping"
+    ? section === "topping" : section !== "topping";
+  const findings = (groups: AllergenFinding[]) => groups
+    .map(group => ({ ...group, sources: group.sources.filter(source => includes(source.section)) }))
+    .filter(group => group.sources.length > 0);
+  return {
+    ...report,
+    contains: findings(report.contains),
+    conditional: findings(report.conditional),
+    may_contain: findings(report.may_contain),
+    unverified: report.unverified.filter(source => includes(source.section)),
+  };
+}
 
 /** Name the relevant allergens rather than exposing the engine's group count.
  * Optional sources never imply that an allergen in the base recipe disappears. */
