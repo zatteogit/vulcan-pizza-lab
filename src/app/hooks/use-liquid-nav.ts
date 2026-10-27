@@ -4,8 +4,7 @@ export type LiquidNavState = {
   hidden: boolean;
   /** Mobile dock stays visible and drops labels while reading downwards. */
   compact: boolean;
-  /** Fondo pagina raggiunto: il dock in basso si mostra, ma l'avatar in alto
-   *  NON deve ricomparire sopra i contenuti (audit lug 2026). */
+  /** Reading position; fixed top actions remain visible at the page end. */
   nearBottom: boolean;
   scrolled: boolean;
 };
@@ -61,8 +60,8 @@ export function useLiquidNavState(threshold = 28, enabled = true): LiquidNavStat
       const retract = y > 140 && acc > threshold;
       const reveal = acc < -threshold * 0.72;
       const compact = y < 96 ? false : retract ? true : reveal ? false : prev.compact;
-      // Keep the existing behaviour for the avatar/cooking widget. The dock
-      // remains compact at the bottom until the user actually scrolls up.
+      // Keep the direction signal independent of the compact dock. Top
+      // actions consume only scrolled, so neither direction hides them.
       const hidden = y < 96 || nearBottom ? false : retract ? true : reveal ? false : prev.hidden;
       if (y < 96 || compact !== prev.compact || hidden !== prev.hidden) acc = 0;
       updateState({ hidden, compact, scrolled: isScrolled, nearBottom });
@@ -91,9 +90,8 @@ export function useLiquidNavState(threshold = 28, enabled = true): LiquidNavStat
       updateState({ ...stateRef.current, hidden: false });
     };
 
-    /* U-10 (F02): dock, avatar e widget di cottura si ritirano allo scroll ma
-       restano nella sequenza del Tab. Quando il focus ci entra ricompaiono,
-       così chi usa la tastiera non finisce su controlli invisibili. */
+    /* Keyboard focus restores the expanded navigation; fixed top actions
+       remain visible independently of this navigation state. */
     const onFocusIn = (event: FocusEvent) => {
       if (!(event.target instanceof Element)) return;
       if (!event.target.closest(".app-shell-dock, .section-tabs-dock, .app-shell-profile, .cook-widget")) return;
