@@ -9807,6 +9807,7 @@
     box-sizing: border-box;
     min-height: max(var(--space-11), var(--recipe-match-action-target-min));
     padding-block: var(--space-2);
+    padding-inline: var(--space-4);
   }
 
   .match-action-cta {
@@ -9815,7 +9816,6 @@
     justify-content: center;
     gap: var(--space-2);
     border-radius: var(--radius-full);
-    padding-inline: var(--space-4);
     background: var(--cta);
     color: var(--cta-foreground);
     border: none;
@@ -9831,7 +9831,6 @@
     justify-content: center;
     gap: var(--space-1-5);
     border-radius: var(--radius-full);
-    padding-inline: var(--space-3);
     background: transparent;
     border: var(--border-width-thin) solid transparent;
     cursor: pointer;
@@ -9868,7 +9867,18 @@
     border-color: transparent;
   }
 
-  .match-actions .match-action-cta { flex-basis: 100%; order: -1; }
+  .match-action-text--secondary {
+    color: var(--text-default);
+    background: transparent;
+    border-color: var(--container-border-subtle);
+  }
+
+  .match-action-text--secondary:hover {
+    background: var(--container-bg);
+    border-color: var(--text-muted);
+  }
+
+  .match-actions .match-action-cta { flex: 0 1 auto; min-width: 0; }
   .match-actions .match-action-text { flex: 0 1 auto; min-width: 0; }
   .match-actions .match-action-text--save { margin-inline-start: 0; }
 
@@ -9877,7 +9887,6 @@
   @container recipe-match (min-width: 640px) {
     .match-card__main { column-gap: var(--space-6); }
     .match-score-group { min-width: var(--space-24); }
-    .match-actions .match-action-cta { flex-basis: auto; order: 0; }
   }
 
   @container recipe-match (min-width: 720px) {
@@ -9900,6 +9909,8 @@
     .match-card__context { grid-column: 1 / -1; grid-row: 2; }
     .match-actions { grid-column: 1 / -1; grid-row: 3; }
     .match-actions .match-action-text { flex: 0 1 auto; }
+    .match-actions .match-action-cta,
+    .match-actions .match-action-text--secondary { flex: 1 1 auto; }
   }
 
   /* ═══ ONDATA 3 — COMPONENT: ingredients-section (PREFIX: ingredients) ═══ */
