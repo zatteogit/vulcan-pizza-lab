@@ -12,7 +12,7 @@ import { recipeDisplayName } from "../../domain/recipe-reference";
  * Il selettore tab (RecipeSectionTabs) qui è finalmente montato: il layer
  * PizzaNerd vive dentro Ricetta/Procedimento quando abilitato dal Profilo. */
 
-import { useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { localizeToppingRecipe, toppingConcept } from "../../data/topping-i18n/localize";
 import { Link } from "react-router";
@@ -152,6 +152,7 @@ export function RecipeView({
   onToggleFavorite,
 }: RecipeViewProps) {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const favoriteFeedbackId = useId();
 
   useEffect(() => {
     if (!toastMessage) return;
@@ -175,12 +176,26 @@ export function RecipeView({
     setActionTarget(document.getElementById("recipe-floating-actions"));
   }, []);
   const favoriteAction = onToggleFavorite && (
+    <div className={`recipe-view-favorite-anchor${!showStickyHeader && !actionTarget ? " recipe-view-favorite-anchor--floating" : ""}`}>
     <IconButton type="button"
-      className={`recipe-view-favorite${!showStickyHeader && !actionTarget ? " recipe-view-favorite--floating" : ""}`}
+      className="recipe-view-favorite"
+      aria-describedby={toastMessage ? favoriteFeedbackId : undefined}
       aria-label={favorite ? uiMessage("features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb") : uiMessage("features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86")}
       aria-pressed={favorite} onClick={handleFavoriteClick} size="lg" variant="bare">
       <Bookmark size={20} fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
     </IconButton>
+    <AnimatePresence>
+      {toastMessage && <motion.div
+        className="recipe-view-favorite-feedback"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={motionTiming.feedback}
+      >
+        <Snackbar message={<span id={favoriteFeedbackId}>{toastMessage}</span>} />
+      </motion.div>}
+    </AnimatePresence>
+    </div>
   );
 
   /* Parallax hero (identico alla scheda Scopri originale). Con
@@ -595,21 +610,6 @@ export function RecipeView({
         />
       )}
 
-      <AnimatePresence>
-        {toastMessage && (
-          <div className="recipe-view-favorite-toast">
-            <motion.div
-              initial={{ opacity: 0, y: 50, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              transition={motionSpring.recipeStage}
-              className="recipe-view-favorite-toast__motion"
-            >
-              <Snackbar message={toastMessage} />
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
