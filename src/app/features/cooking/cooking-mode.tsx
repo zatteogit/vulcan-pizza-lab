@@ -1,3 +1,4 @@
+import { KeepScreenAwake } from "./keep-screen-awake";
 /* ═══ COOKING MODE — vista della Pizzata attiva (v2, giugno 2026) ═══
  * Ripensata dopo feedback: le fasi durano ore, quindi NON è un wizard da
  * tenere aperto. È la vista full-screen di una sessione persistente
@@ -165,35 +166,6 @@ export function CookingMode() {
     };
   }, []);
 
-  /* Wake Lock: schermo acceso finché la vista è aperta (best effort) */
-  useEffect(() => {
-    let lock: { release: () => Promise<void> } | null = null;
-    let cancelled = false;
-    const request = async () => {
-      try {
-        const nav = navigator as Navigator & {
-          wakeLock?: { request: (t: "screen") => Promise<{ release: () => Promise<void> }> };
-        };
-        if (!nav.wakeLock) return;
-        const l = await nav.wakeLock.request("screen");
-        if (cancelled) l.release().catch(() => {});
-        else lock = l;
-      } catch {
-        /* negato: non bloccante */
-      }
-    };
-    request();
-    const onVis = () => {
-      if (document.visibilityState === "visible") request();
-    };
-    document.addEventListener("visibilitychange", onVis);
-    return () => {
-      cancelled = true;
-      document.removeEventListener("visibilitychange", onVis);
-      lock?.release().catch(() => {});
-    };
-  }, []);
-
   const step = steps[viewIndex];
   const isCurrent = viewIndex === activeIdx && !allDone;
   const viewingDone = step?.done ?? false;
@@ -347,6 +319,7 @@ export function CookingMode() {
       {/* ── Contenuto ── */}
       <div className="cooking-mode-body">
         <div className="cooking-mode-body__inner">
+          {!finished && <KeepScreenAwake />}
           <AnimatePresence mode="wait">
             {finished ? (
               <motion.div

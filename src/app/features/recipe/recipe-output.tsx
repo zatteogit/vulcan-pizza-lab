@@ -1,5 +1,6 @@
+import { RecipeShare } from "./recipe-share";
 import { recipeDisplayName } from "../../domain/recipe-reference";
-import { Check, CookingPot, Flame, Link as LinkIcon, ListChecks, Printer, Share2, Utensils } from "lucide-react";
+import { CookingPot, Flame, ListChecks, Printer, Utensils } from "lucide-react";
 import { localizeToppingRecipe } from "../../data/topping-i18n/localize";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import React, { useEffect, useState, type ReactNode } from "react";
@@ -24,7 +25,7 @@ import type { FlourEntry } from "../../data/flour-database";
 import { GeneratedRecipe, generateTimeSlots, getServingUnit, normalizeDoughBallCount, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
 import { RecipeFeedbackForm } from "./recipe-feedback";
 import { getRecipesByAuthenticity, getToppingForStyle } from "../../data/topping-library";
-import { ConfirmDialog, IconButton } from "../../components/ds/index";
+import { ConfirmDialog } from "../../components/ds/index";
 import { motionSpring } from "../../components/ds/motion";
 
 
@@ -109,7 +110,6 @@ export function RecipeOutput({
   onRequestPersonalization,
 }: RecipeOutputProps) {
   const reduceMotion = useReducedMotion();
-  const [linkCopied, setLinkCopied] = useState(false);
   /* D-043 / audit n. 18: scheda di produzione stampabile. «Stampa» (riga
      Ingredienti) apre la scelta delle parti; la scheda vive fuori da #root e
      appare solo in stampa. */
@@ -134,38 +134,6 @@ export function RecipeOutput({
   /* Audit motore 2026-05: spiegazione Regola 55 espandibile per mobile (su
      desktop c'è già il tooltip via title, ma su touch non è raggiungibile). */
   const [showRule55Tip, setShowRule55Tip] = useState(false);
-
-  const handleCopyLink = () => {
-    if (!shareUrl) return;
-    if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(shareUrl).then(
-        () => {
-          setLinkCopied(true);
-          setTimeout(() => setLinkCopied(false), 2000);
-        },
-        () => fallbackCopy(shareUrl)
-      );
-    } else {
-      fallbackCopy(shareUrl);
-    }
-
-    function fallbackCopy(text: string) {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      try {
-        document.execCommand("copy");
-        setLinkCopied(true);
-        setTimeout(() => setLinkCopied(false), 2000);
-      } catch (err) {
-        console.error("Fallback copy failed", err);
-      }
-      document.body.removeChild(ta);
-    }
-  };
 
   const { cms, bcp47 } = useCms();
   const [calendarReference, setCalendarReference] = useState(() => new Date());
@@ -583,29 +551,9 @@ export function RecipeOutput({
 
   return (
     <div className="recipe-output">
-      {/* Sticky header portal actions */}
-      {portalTarget && createPortal(
-        <>
-          {/* Share button (Copia link) in the header */}
-          {shareUrl && (
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleCopyLink}
-              className={`recipe-output-share-btn type-data${linkCopied ? " recipe-output-share-btn--copied" : ""}`}
-              title={linkCopied ? cms.ui.copied : cms.ui.share}
-              aria-label={cms.pages.recipeCopyLinkAria}
-            >
-              {linkCopied ? <Check size={14} /> : <LinkIcon size={14} />}
-              <span data-slot="label">{linkCopied ? cms.ui.copied : cms.ui.share}</span>
-            </motion.button>
-          )}
-        </>,
-        portalTarget
+      {portalTarget && shareUrl && createPortal(
+        <RecipeShare url={shareUrl} title={recipeDisplayName(recipe, constraints.oven_type)} />, portalTarget
       )}
-
-
 
       {/* ── Stampa: scelta delle parti e scheda di produzione ── */}
       <ConfirmDialog
@@ -788,22 +736,7 @@ export function RecipeOutput({
             );
           })}
         </div>
-        {shareUrl && (
-          <IconButton
-            as={motion.button}
-            type="button"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleCopyLink}
-            size="lg"
-            variant="ghost"
-            className={`recipe-output-pager__share${linkCopied ? " recipe-output-pager__share--copied" : ""}`}
-            title={linkCopied ? cms.ui.copied : cms.ui.share}
-            aria-label={cms.pages.recipeCopyLinkAria}
-          >
-            {linkCopied ? <Check size={16} /> : <Share2 size={15} />}
-          </IconButton>
-        )}
+        {shareUrl && <RecipeShare url={shareUrl} title={recipeDisplayName(recipe, constraints.oven_type)} />}
       </div>
       )}
 

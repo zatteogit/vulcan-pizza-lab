@@ -1,3 +1,4 @@
+import { encodePan } from "../features/recipe/pan-url";
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
 import { recipeDisplayName } from "../domain/recipe-reference";
 import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
@@ -617,6 +618,8 @@ export function HomePage() {
     params.set("f", String(customFermentHours));
     params.set("t", String(customFermentTemp));
     params.set("n", String(constraints.dough_balls));
+    const sharedPan = encodePan(panConfig);
+    if (sharedPan) params.set("pan", sharedPan);
     if (usePreFerment) params.set("pf", "1");
     writePreFermentChoice(params, preFermentChoice);
     if (constraints.oven_type !== "home")
@@ -649,6 +652,7 @@ export function HomePage() {
     selectedToppingConcept,
     createRecipeMode,
     recipeName,
+    panConfig,
   ]);
 
   /* U-2: lo slot su misura attivo, ricostruito dall'istante scelto. */

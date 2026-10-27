@@ -11491,33 +11491,6 @@
     }
   }
 
-  /* ── Share button flottante nel portal header ── */
-  .recipe-output-share-btn {
-    display: flex;
-    height: var(--space-11);
-    align-items: center;
-    gap: var(--space-2);
-    border-radius: var(--radius-full);
-    padding-inline: var(--space-4);
-    font-weight: var(--weight-semibold);
-    line-height: var(--leading-none);
-    cursor: pointer;
-    background: var(--container-bg);
-    border: var(--border-width-thin) solid var(--container-border);
-    color: var(--text-muted);
-    transition: transform var(--duration-fast);
-  }
-
-  .recipe-output-share-btn:active {
-    transform: scale(0.95);
-  }
-
-  .recipe-output-share-btn--copied {
-    background: color-mix(in srgb, var(--cta) 15%, transparent);
-    border-color: var(--cta);
-    color: var(--cta);
-  }
-
   /* ── Riepilogo contesto: ricetta adattata vs canonica ── */
   .recipe-output-context {
     display: flex;
@@ -11609,32 +11582,6 @@
     background: transparent;
   }
 
-  .recipe-output-pager__share {
-    background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-bg) 82%, transparent));
-    border: var(--border-width-thin) solid var(--container-border);
-    -webkit-backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.8));
-    backdrop-filter: var(--glass-fallback-filter, blur(var(--blur-xl)) saturate(1.8));
-    color: var(--text-muted);
-    box-shadow: none;
-    transition: transform var(--duration-fast);
-  }
-
-  .recipe-output-pager__share:active {
-    transform: scale(0.95);
-  }
-
-  .recipe-output-pager__share--copied {
-    /* --recipe-header-action-bg-active non è mai stata definita: bug preservato. */
-    background: transparent;
-    /* --recipe-header-action-border-active non è mai stata definita: il
-       var() invalido invalida l'intero shorthand `border`, che ricade sui
-       valori iniziali (nessun bordo visibile). */
-    border: none;
-    /* --recipe-header-action-text-active non è mai stata definita: `color`
-       è una proprietà ereditata, quindi il var() invalido ricade sul valore
-       ereditato dal genitore, non su nero/iniziale. */
-    color: inherit;
-  }
 
   /* ── Pannelli dello swipe (Ricetta / Procedimento / Condimento) ── */
   .recipe-output-panel {
@@ -21010,3 +20957,34 @@ html {
 :root[data-visual-quality="reduced"] .recipe-view-hero__parallax {
   will-change: auto;
 }
+
+/* Recipe sharing stays with the editorial utilities, clear of fixed actions. */
+.recipe-share { display: inline-flex; vertical-align: middle; }
+.recipe-share__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--dimension-fixed-046);
+  padding-inline: var(--space-2);
+  border: 0;
+  background: transparent;
+  color: var(--text-accent);
+  font-size: var(--font-size-md);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+.recipe-share__trigger:hover { text-decoration: underline; text-underline-offset: var(--space-1); }
+.recipe-share-dialog { padding: var(--space-5); }
+.recipe-share-dialog__heading { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-4); }
+.recipe-share-dialog__label { display: block; color: var(--text-muted); font-size: var(--font-size-sm); margin-bottom: var(--space-2); }
+.recipe-share-dialog__url { width: 100%; min-width: 0; padding: var(--space-3); border: var(--border-width-thin) solid var(--container-border); border-radius: var(--radius-lg); background: var(--container-bg); color: var(--text-default); font-size: max(var(--font-size-lg), var(--dimension-fixed-016)); }
+.recipe-share-dialog__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-4); }
+.recipe-share-dialog__actions > button { flex: 1 1 100%; min-height: var(--dimension-fixed-046); padding: var(--space-3) var(--space-4); line-height: var(--leading-normal); }
+.recipe-share-dialog__actions > button > svg { flex-shrink: 0; }
+.recipe-share-dialog__feedback { min-height: var(--space-6); margin-top: var(--space-3); color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.cooking-screen { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: var(--space-3); margin-bottom: var(--space-5); padding: var(--space-3); border: var(--border-width-thin) solid var(--container-border-subtle); border-radius: var(--radius-lg); background: var(--container-bg); }
+.cooking-screen__label { display: flex; align-items: center; gap: var(--space-2); min-height: var(--dimension-fixed-046); color: var(--text-default); font-size: var(--font-size-sm); line-height: var(--leading-normal); cursor: pointer; }
+.cooking-screen__label > svg { flex-shrink: 0; }
+.cooking-screen__detail { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.cooking-screen__status { color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+.cooking-screen__retry { min-height: var(--dimension-fixed-046); color: var(--text-accent); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); cursor: pointer; text-decoration: underline; text-underline-offset: var(--space-1); background: transparent; border: 0; }

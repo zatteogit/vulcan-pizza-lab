@@ -1,3 +1,4 @@
+import { RecipeShare } from "./recipe-share";
 import { useDecorativeMotion, useVisualMotionPreference } from "../../context/visual-quality-context";
 import { RecipeReferenceNote } from "./recipe-reference-note";
 import { recipeDisplayName } from "../../domain/recipe-reference";
@@ -132,6 +133,7 @@ export function RecipeView({
   matchSlot,
   introExtraSlot,
   recipeControls,
+  shareUrl,
   showStickyHeader = false,
   selectedToppingConcept,
   onSelectTopping,
@@ -521,7 +523,7 @@ export function RecipeView({
                   {/* Round 3 "pulizia": le caratteristiche non sono più 3 chip
                       (scatole che ricalcavano la descrizione) ma UNA riga meta
                       muta — è metadata, non azione. */}
-                  {(heroTags.length > 0 || introExtraSlot) && (
+                  {heroTags.length > 0 && (
                     <div className="recipe-view-meta-row">
                       {heroTags.length > 0 && (
                         <p className="recipe-view-tags">
@@ -535,12 +537,15 @@ export function RecipeView({
                             .join(" · ")}
                         </p>
                       )}
-                      {introExtraSlot}
                     </div>
                   )}
                 </motion.div>
               )}
             </AnimatePresence>
+            {(introExtraSlot || shareUrl) && <div className="recipe-view-meta-row">
+              {!isHeroReduced && introExtraSlot}
+              {shareUrl && <RecipeShare url={shareUrl} title={recipeName || recipeDisplayName(recipe, constraints.oven_type)} />}
+            </div>}
           </div>
         </motion.div>
       </motion.div>

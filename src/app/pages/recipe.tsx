@@ -321,6 +321,7 @@ function RecipeContent({
       panWidth: fromUrl.panWidth ?? base.panWidth,
       panDiameter: fromUrl.panDiameter ?? base.panDiameter,
       thickness: fromUrl.thickness ?? base.thickness,
+      ...(fromUrl.ballWeightG !== undefined ? { ballWeightG: fromUrl.ballWeightG } : {}),
     };
   });
   const [doughBalls, setDoughBalls] = useState(
@@ -485,6 +486,7 @@ function RecipeContent({
   /* ── Computed share URL (VPL-064) ── */
   const shareUrl = useMemo(() => {
     const params = new URLSearchParams();
+    params.set("mode", recipeMode);
     if (recipeName) { params.set("name", recipeName); params.set("tab", "ricetta"); }
     if (activeVersionId) params.set("v", activeVersionId);
     if (activeInterpretationId) params.set("interpretation", activeInterpretationId);
