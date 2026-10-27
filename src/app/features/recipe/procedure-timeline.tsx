@@ -132,6 +132,9 @@ export function ProcedureTimeline({
                 }
               }
               const localizedStep = localizeStep(displayStep, recipe, cms, fmt);
+              const visual = resolveStepVisual(displayStep, { unleavened: !!recipe.style.dough.unleavened });
+              const filling = visual === "fill_internal" || visual === "split_fill";
+              const assemblyTitle = filling ? cms.cooking.fillingTitle ?? cms.cooking.toppingTitle : cms.cooking.toppingTitle;
               const tipText = localizedStep.tip
                 ? isNerd
                   ? localizedStep.tip.nerd
@@ -186,9 +189,10 @@ export function ProcedureTimeline({
                     }`}
                   >
                     <StepIllustration
-                      stepId={step.id}
+                      stepId={displayStep.id}
+                      visual={visual}
                       size={24}
-                      variant={step.variant}
+                      variant={displayStep.variant}
                       unleavened={!!recipe.style.dough.unleavened}
                       tone={isFirst || isLast ? "onAccent" : "accent"}
                       className="procedure-timeline-step__icon"
@@ -209,7 +213,7 @@ export function ProcedureTimeline({
                       </span>
                     </div>
                     <span className="procedure-timeline-step__title">
-                      {phase ? cms.cooking.toppingTitle : localizedStep.title}
+                      {phase ? assemblyTitle : localizedStep.title}
                     </span>
                     {phase ? (
                       <div className="procedure-timeline-step__topping">

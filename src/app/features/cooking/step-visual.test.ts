@@ -28,6 +28,7 @@ describe("procedure icon semantics", () => {
     expect(resolveStepVisual({ id: "crudo_spacca_farci" })).toBe("split_fill");
     expect(resolveStepVisual({ id: "pizza_fritta_fill_seal" })).toBe("fill_internal");
     expect(resolveStepVisual({ id: "fugazza_top" })).toBe("top");
+    expect(resolveStepVisual({ id: "spread_custom_topping" })).toBe("top");
   });
 
   it("covers every catalog assembly and preparation without falling back to a pizza slice", () => {
