@@ -79,7 +79,7 @@ export const INSPIRATION_I18N_FR: InspirationTranslation = {
   recipes: {
     margherita_verace: {
       name: "Margherita Verace",
-      description: "L’icône universelle : tomate, mozzarella, basilic et huile d’olive vierge extra, cuite en 60–90 secondes comme le demande le cahier des charges.",
+      description: "Tomate, mozzarella, basilic et huile d’olive vierge extra sur la base napolitaine de référence.",
     },
     marinara_avpn: {
       name: "Marinara",
@@ -121,7 +121,7 @@ export const INSPIRATION_I18N_FR: InspirationTranslation = {
     },
     detroit_pepperoni: {
       name: "Detroit Pepperoni",
-      description: "Pizza épaisse cuite en plaque : le fromage va jusqu’aux bords et les caramélise. Dessus, des pepperoni.",
+      description: "Pizza épaisse en plaque, avec pepperoni et fromage jusqu’aux bords où il forme une croûte dorée et croustillante.",
     },
     crescenza_recco_igp: {
       card: {"name": "Focaccia di Recco col formaggio"},

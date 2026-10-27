@@ -134,16 +134,16 @@ export function assessAllergens(ingredients: AllergenIngredient[], avoid: readon
 }
 
 export const ALLERGEN_MESSAGES_IT:Record<string,string>={
-  "allergen.conflict":"La ricetta contiene {allergen}: {ingredients}.",
-  "allergen.traceConflict":"L’etichetta dichiara «può contenere {allergen}»: {ingredients}.",
-  "allergen.optional":"Per evitare {allergen}, non aggiungere gli ingredienti facoltativi: {ingredients}.",
-  "allergen.verify":"Allergeni da evitare: verifica le etichette dei prodotti e la contaminazione in cucina.",
-  "allergen.change":"Modifica gli ingredienti e ricalcola prima di procedere.",
-  "allergen.labels":"Le diciture «vegano» o «senza lattosio» non attestano l’assenza di allergeni. Controlla il prodotto che userai.",
-  "allergen.cardConflict":"Contiene {allergen}",
-  "allergen.cardTrace":"Etichetta: può contenere {allergen}",
-  "allergen.cardOptional":"Ometti gli extra con {allergen}",
-  "allergen.cardCheck":"Allergeni da verificare",
+  "allergen.conflict": "Contiene {allergen}: {ingredients}.",
+  "allergen.traceConflict": "Possibili tracce di {allergen}, segnalate in etichetta: {ingredients}.",
+  "allergen.optional": "Per evitare {allergen}, non aggiungere: {ingredients}.",
+  "allergen.verify": "Controlla le etichette dei prodotti che userai.",
+  "allergen.change": "Scegli un’alternativa prima di prepararla.",
+  "allergen.labels": "Considera anche le possibili contaminazioni durante la preparazione.",
+  "allergen.cardConflict": "Contiene {allergen}",
+  "allergen.cardTrace": "Possibili tracce di {allergen}",
+  "allergen.cardOptional": "Evita le aggiunte con {allergen}",
+  "allergen.cardCheck": "Controlla le etichette",
 };
 export function allergenWarnings(report:RecipeAllergens):DietaryWarning[]{
   const warnings:DietaryWarning[]=[];

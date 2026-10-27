@@ -19,3 +19,9 @@ export function allergenName(id: AllergenId): string {
     case "molluscs": return uiMessage("allergen.name.molluscs");
   }
 }
+
+/** Sentence nouns are lower case except where the language requires capitals. */
+export function inlineAllergenName(id: AllergenId, bcp47: string): string {
+  const label = allergenName(id);
+  return /^de(?:-|$)/i.test(bcp47) ? label : label.charAt(0).toLocaleLowerCase(bcp47) + label.slice(1);
+}

@@ -449,7 +449,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     },
     pl_ratio: {
       name: "P/L (Rapport T\u00E9nacit\u00E9/Extensibilit\u00E9)",
-      definition: "Indice d'\u00E9quilibre m\u00E9canique. Rapport entre la r\u00E9sistance et l'extensibilit\u00E9 de la p\u00E2te.",
+      definition: "Le rapport entre la résistance de la pâte à la déformation et sa capacité à s’étirer.",
       whyImportant: "Décrit l’équilibre rhéologique. La valeur adaptée dépend de la farine, de l’hydratation et de la méthode ; sans garantie de hauteur ou texture.",
       ranges: [
         { label: "<0.4 Tr\u00E8s extensible", value: "S'affaisse facilement", note: "Pinsa" },
@@ -496,7 +496,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     },
     stability: {
       name: "Stabilit\u00E9 de la p\u00E2te",
-      definition: "Dur\u00E9e pendant laquelle la p\u00E2te garde une consistance optimale au p\u00E9trissage. Mesur\u00E9e au farinographe.",
+      definition: "La durée pendant laquelle la pâte garde sa consistance au pétrissage. Elle se mesure au farinographe.",
       whyImportant: "Stabilit\u00E9 faible (<5 min) : se d\u00E9grade si elle est trop p\u00E9trie. \u00C9lev\u00E9e (>10 min) : tol\u00E8re les erreurs de manipulation.",
       ranges: [
         { label: "Faible", value: "2\u20134 min" },
@@ -507,7 +507,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     },
     yeast: {
       name: "Levure (Saccharomyces cerevisiae)",
-      definition: "Champignon unicellulaire qui convertit les sucres en CO\u2082 + \u00E9thanol + compos\u00E9s aromatiques.",
+      definition: "Un champignon unicellulaire qui fermente les sucres en produisant du dioxyde de carbone, de l’alcool et des composés aromatiques.",
       whyImportant: "L’activité dépend de la souche, de la dose, de la température et de la pâte. Le froid ralentit la fermentation sans seuil universel d’arrêt immédiat.",
       ranges: [
         { label: "Fra\u00EEche", value: "0.5\u20132.0%", note: "Humidit\u00E9 70%, frigo 4\u00B0C" },
@@ -607,17 +607,17 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     },
     gluten: {
       name: "Gluten",
-      definition: "Complexe prot\u00E9ique visco\u00E9lastique form\u00E9 par la gliadine (extensible) + la glut\u00E9nine (tenace) en pr\u00E9sence d'eau et de p\u00E9trissage.",
+      definition: "La gliadine et la gluténine forment, avec l’eau et le travail de la pâte, un réseau élastique et extensible.",
       whyImportant: "\u00C9lasticit\u00E9 due aux glut\u00E9nines (liaisons S-S), viscosit\u00E9 due aux gliadines (liaisons H). Une prot\u00E9olyse longue coupe les liaisons \u2192 p\u00E2te plus extensible.",
     },
     proteolysis: {
       name: "Prot\u00E9olyse",
-      definition: "D\u00E9gradation des prot\u00E9ines en peptides et acides amin\u00E9s par les enzymes prot\u00E9ases. Cible : le gluten.",
+      definition: "Les enzymes protéases décomposent les protéines de la pâte en molécules plus petites, comme les peptides et les acides aminés.",
       whyImportant: "Elle peut modifier l’extensibilité et la tenue de la pâte. Elle dépend de la farine, des micro-organismes, de la température et du procédé : aucune durée optimale universelle et aucune mesure de la digestibilité individuelle.",
     },
     thickness_factor: {
       name: "Thickness Factor (TF)",
-      definition: "Densit\u00E9 surfacique de la p\u00E2te \u2014 masse par unit\u00E9 de surface. Indique la quantit\u00E9 de p\u00E2te par cm\u00B2.",
+      definition: "Quantité de pâte par unité de surface : les grammes de pâte pour chaque cm² de pizza.",
       whyImportant: "D\u00E9termine le temps de cuisson, le croustillant et la densit\u00E9 calorique. M\u00E9trique originale du Projet {brand}.",
       ranges: [
         { label: "Napolitaine", value: "0.30\u20130.36", note: "6-7 mm" },
@@ -645,7 +645,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     },
     a_score: {
       name: "A-Score (Authenticit\u00E9)",
-      definition: "Score 0-100 qui mesure la fid\u00E9lit\u00E9 d'une recette au cahier des charges du style vis\u00E9.",
+      definition: "Score de 0 à 100 sur la proximité avec le style de référence. Il ne certifie pas le respect d’un cahier des charges.",
       ranges: [
         { label: "90-100", value: "Rigoureusement authentique" },
         { label: "75-89", value: "Globalement authentique" },
@@ -654,8 +654,8 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     f_score: {
-      name: "F-Score (Faisabilit\u00E9)",
-      definition: "Score 0-100 qui mesure la faisabilit\u00E9 pratique compte tenu de l'\u00E9quipement et du niveau de l'utilisateur.",
+      name: "F-Score (Facilité)",
+      definition: "Score de 0 à 100 sur la facilité de préparation avec le four, la farine et l’expérience disponibles. Les conditions qui bloquent une recette sont évaluées à part.",
       ranges: [
         { label: "90-100", value: "Tr\u00E8s faisable" },
         { label: "75-89", value: "Faisable avec attention" },
@@ -664,8 +664,8 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       ],
     },
     d_score: {
-      name: "D-Score (Digestibilit\u00E9)",
-      definition: "Indice heuristique de maturation, pas une mesure de digestibilité individuelle ni des FODMAP. Utilise les heures équivalentes à 18°C, corrigées selon le préferment, la dose de levure et le froid.",
+      name: "D-Score (Maturation estimée)",
+      definition: "Estimation du modèle selon le temps, la température, la levure et les préferments. Elle ne mesure pas la digestibilité individuelle et ne calcule pas les FODMAP.",
       ranges: [{"label":"85-100","value":"Indice élevé"},{"label":"70-84","value":"Indice moyen-élevé"},{"label":"50-69","value":"Indice moyen"},{"label":"<50","value":"Indice faible"}],
     },
   },

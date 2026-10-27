@@ -13,6 +13,5 @@ export function AllergenPreferences({ value, onChange }: { value: readonly Aller
       try { localStorage.setItem("vulcan_allergens",JSON.stringify(next)); } catch { /* Session preferences still apply. */ }
       onChange(next);
     }}/>)}</div>
-    <p>{uiMessage("allergen.preferenceNote")}</p>
   </details>;
 }

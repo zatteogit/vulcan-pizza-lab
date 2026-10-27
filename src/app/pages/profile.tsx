@@ -246,7 +246,7 @@ function ProfileSection({
   children,
   delay = motionDelay.none,
 }: {
-  title: string;
+  title?: string;
   subtitle?: string;
   stepNum?: string;
   children: React.ReactNode;
@@ -260,7 +260,7 @@ function ProfileSection({
       transition={{ ...motionSpring.standard,delay }}
       className="profile-section"
     >
-      <div data-region="section-header" className="profile-section__header">
+      {title && <div data-region="section-header" className="profile-section__header">
         {stepNum && (() => {
           const cleanStepNum = stepNum.split(/[-—]/)[0].trim();
           return (
@@ -281,7 +281,7 @@ function ProfileSection({
             {subtitle}
           </p>
         )}
-      </div>
+      </div>}
       {children}
     </motion.section>
   );
@@ -493,8 +493,8 @@ function SavedRecipesSection() {
 
   return (
     <ProfileSection
-      title={p.savedRecipesTitle}
-      subtitle={p.savedRecipesSubtitle}
+      title={recipes.length > 0 ? p.savedRecipesTitle : undefined}
+      subtitle={recipes.length > 0 ? p.savedRecipesSubtitle : undefined}
       delay={motionDelay.profileIntroStep}
     >
       {recipes.length === 0 ? (
@@ -503,7 +503,7 @@ function SavedRecipesSection() {
             <Bookmark size={22} />
           </span>
           <div className="profile-saved-recipes__empty-copy">
-            <Heading level="sm" as="h3">
+            <Heading level="sm" as="h2">
               {p.savedRecipesEmptyTitle}
             </Heading>
             <p>{p.savedRecipesEmptyBody}</p>

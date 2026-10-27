@@ -59,7 +59,7 @@ describe("allergens across the actual recipe and MCP",()=>{
  it("explicit label traces block while an unknown sauce never invents traces",()=>{
   const r=call({...kitchen,style_id:"napoletana_stg",topping_id:"marinara",allergens_avoid:["peanuts"],allergen_labels:{"Olio EVO":{product:"Bottiglia scelta",contains:[],may_contain:["peanuts"],complete:true}}});
   expect(r.isError).toBe(false);expect(r.structuredContent.outcome).toBe("not_feasible");expect(r.structuredContent.allergens.may_contain[0].id).toBe("peanuts");
-  expect(r.structuredContent.dietary_warnings.find((w:any)=>w.filterId==="allergen:peanuts").message).toContain("Arachidi");
+  expect(r.structuredContent.dietary_warnings.find((w:any)=>w.filterId==="allergen:peanuts").message).toContain("arachidi");
  });
  it.each([{allergens_avoid:["lactose"]},{allergens_avoid:"milk"},{allergen_labels:{x:{product:"P",contains:[],may_contain:[],complete:"yes"}}},{allergen_labels:{x:{product:"P",contains:["milk"],may_contain:["unknown"],complete:true}}}])("rejects malformed allergy inputs: %j",bad=>{
   expect(call({style_id:"napoletana_stg",...bad}).isError).toBe(true);

@@ -440,7 +440,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     },
     pl_ratio: {
       name: "P/L (Verh\u00E4ltnis Z\u00E4higkeit/Dehnbarkeit)",
-      definition: "Kennzahl f\u00FCr das mechanische Gleichgewicht. Verh\u00E4ltnis zwischen Widerstand und Dehnbarkeit des Teigs.",
+      definition: "Verhältnis zwischen dem Verformungswiderstand des Teigs und seiner Dehnbarkeit.",
       whyImportant: "Beschreibt das rheologische Gleichgewicht. Der passende Wert hängt von Mehl, Hydration und Methode ab; keine Garantie für Höhe oder Textur.",
       ranges: [
         { label: "<0.4 Sehr dehnbar", value: "F\u00E4llt leicht zusammen", note: "Pinsa" },
@@ -487,7 +487,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     },
     stability: {
       name: "Teigstabilit\u00E4t",
-      definition: "Zeitspanne, in der der Teig beim Kneten die optimale Konsistenz beh\u00E4lt. Gemessen mit dem Farinographen.",
+      definition: "Wie lange der Teig beim Kneten seine Konsistenz behält. Gemessen mit dem Farinographen.",
       whyImportant: "Geringe Stabilit\u00E4t (<5 min): baut bei \u00DCberkneten ab. Hohe (>10 min): verzeiht Fehler bei der Verarbeitung.",
       ranges: [
         { label: "Schwach", value: "2\u20134 min" },
@@ -498,7 +498,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     },
     yeast: {
       name: "Hefe (Saccharomyces cerevisiae)",
-      definition: "Einzelliger Pilz, der Zucker in CO\u2082 + Ethanol + Aromastoffe umwandelt.",
+      definition: "Ein einzelliger Pilz, der Zucker vergärt und dabei Kohlendioxid, Alkohol und Aromastoffe bildet.",
       whyImportant: "Aktivität hängt von Stamm, Menge, Temperatur und Teig ab. Kälte verlangsamt die Fermentation; keine universelle sofortige Stoppgrenze.",
       ranges: [
         { label: "Frischhefe", value: "0.5\u20132.0%", note: "Feuchtigkeit 70%, K\u00FChlschrank 4\u00B0C" },
@@ -598,17 +598,17 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     },
     gluten: {
       name: "Gluten",
-      definition: "Viskoelastischer Proteinkomplex aus Gliadin (dehnbar) + Glutenin (z\u00E4h), der mit Wasser und durch Kneten entsteht.",
+      definition: "Gliadin und Glutenin bilden mit Wasser und Kneten ein elastisches, dehnbares Netzwerk im Teig.",
       whyImportant: "Elastizit\u00E4t durch Glutenine (S-S-Bindungen), Viskosit\u00E4t durch Gliadine (H-Bindungen). Lange Proteolyse spaltet Bindungen \u2192 dehnbarerer Teig.",
     },
     proteolysis: {
       name: "Proteolyse",
-      definition: "Abbau von Proteinen zu Peptiden und Aminos\u00E4uren durch Protease-Enzyme. Ziel: Gluten.",
+      definition: "Protease-Enzyme zerlegen die Proteine im Teig in kleinere Moleküle wie Peptide und Aminosäuren.",
       whyImportant: "Sie kann Dehnbarkeit und Stabilität des Teigs verändern. Mehl, Mikroorganismen, Temperatur und Verfahren beeinflussen sie: Es gibt keine universelle optimale Dauer und keine Messung der individuellen Verdaulichkeit.",
     },
     thickness_factor: {
       name: "Thickness Factor (TF)",
-      definition: "Fl\u00E4chendichte des Teigs \u2014 Masse pro Fl\u00E4cheneinheit. Gibt an, wie viel Teig auf einen cm\u00B2 kommt.",
+      definition: "Teigmenge pro Fläche: Gramm Teig je cm² Pizza.",
       whyImportant: "Bestimmt Backzeit, Knusprigkeit und Kaloriendichte. Eigene Kennzahl des Projekts {brand}.",
       ranges: [
         { label: "Neapolitanische", value: "0.30\u20130.36", note: "6-7 mm" },
@@ -636,7 +636,7 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
     },
     a_score: {
       name: "A-Score (Authentizit\u00E4t)",
-      definition: "Wert von 0-100, der misst, wie genau ein Rezept dem Regelwerk des Zielstils folgt.",
+      definition: "Punktzahl von 0 bis 100 für die Nähe zur Stilreferenz. Sie bestätigt keine Konformität mit einem Regelwerk.",
       ranges: [
         { label: "90-100", value: "Streng authentisch" },
         { label: "75-89", value: "Weitgehend authentisch" },
@@ -645,8 +645,8 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       ],
     },
     f_score: {
-      name: "F-Score (Machbarkeit)",
-      definition: "Wert von 0-100, der die praktische Umsetzbarkeit bei gegebener Ausstattung und Erfahrung misst.",
+      name: "F-Score (Schwierigkeitsgrad)",
+      definition: "Punktzahl von 0 bis 100 für die einfache Zubereitung mit vorhandenem Ofen, Mehl und Erfahrung. Ausschlusskriterien werden gesondert geprüft.",
       ranges: [
         { label: "90-100", value: "Gut machbar" },
         { label: "75-89", value: "Mit Sorgfalt machbar" },
@@ -655,8 +655,8 @@ export const GLOSSARY_TERMS_DE: Partial<CmsGlossaryTerms> = {
       ],
     },
     d_score: {
-      name: "D-Score (Bek\u00F6mmlichkeit)",
-      definition: "Heuristischer Reifungsindex, kein Maß für individuelle Verträglichkeit oder FODMAPs. Nutzt äquivalente Stunden bei 18°C mit Korrekturen für Vorteig, Hefemenge und Kühlung.",
+      name: "D-Score (Geschätzte Reife)",
+      definition: "Modellschätzung anhand von Zeit, Temperatur, Hefe und Vorteigen. Sie misst weder die persönliche Verdaulichkeit noch den FODMAP-Gehalt.",
       ranges: [{"label":"85-100","value":"Hoher Index"},{"label":"70-84","value":"Mittelhoher Index"},{"label":"50-69","value":"Mittlerer Index"},{"label":"<50","value":"Niedriger Index"}],
     },
   },

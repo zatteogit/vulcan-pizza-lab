@@ -429,7 +429,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     },
     pl_ratio: {
       name: "P/L (Relaci\u00F3n Tenacidad/Extensibilidad)",
-      definition: "\u00CDndice de equilibrio mec\u00E1nico. Relaci\u00F3n entre la resistencia y la extensibilidad de la masa.",
+      definition: "La relación entre la resistencia de la masa a deformarse y su capacidad para estirarse.",
       whyImportant: "Describe el equilibrio reológico. El valor adecuado depende de harina, hidratación y método; no garantiza altura ni textura.",
       ranges: [
         { label: "<0.4 Muy extensible", value: "Se hunde f\u00E1cilmente", note: "Pinsa" },
@@ -476,7 +476,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     },
     stability: {
       name: "Estabilidad de la masa",
-      definition: "Tiempo durante el cual la masa mantiene una consistencia \u00F3ptima durante el amasado. Se mide con el farin\u00F3grafo.",
+      definition: "Cuánto tiempo mantiene la masa su consistencia durante el amasado. Se mide con el farinógrafo.",
       whyImportant: "Estabilidad baja (<5 min): se degrada si se sobreamasa. Alta (>10 min): tolera errores de manejo.",
       ranges: [
         { label: "Floja", value: "2\u20134 min" },
@@ -487,7 +487,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     },
     yeast: {
       name: "Levadura (Saccharomyces cerevisiae)",
-      definition: "Hongo unicelular que convierte los az\u00FAcares en CO\u2082 + etanol + compuestos arom\u00E1ticos.",
+      definition: "Un hongo unicelular que fermenta los azúcares y produce dióxido de carbono, alcohol y compuestos aromáticos.",
       whyImportant: "La actividad depende de cepa, dosis, temperatura y masa. El frío ralentiza la fermentación; no hay un umbral universal de parada inmediata.",
       ranges: [
         { label: "Fresca", value: "0.5\u20132.0%", note: "Humedad 70%, nevera 4\u00B0C" },
@@ -587,17 +587,17 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     },
     gluten: {
       name: "Gluten",
-      definition: "Complejo proteico viscoel\u00E1stico formado por gliadina (extensible) + glutenina (tenaz) en presencia de agua y amasado.",
+      definition: "La gliadina y la glutenina forman, con agua y amasado, una red elástica y extensible en la masa.",
       whyImportant: "Elasticidad gracias a las gluteninas (enlaces S-S), viscosidad gracias a las gliadinas (enlaces H). Una prote\u00F3lisis larga rompe enlaces \u2192 masa m\u00E1s extensible.",
     },
     proteolysis: {
       name: "Prote\u00F3lisis",
-      definition: "Degradaci\u00F3n de las prote\u00EDnas en p\u00E9ptidos y amino\u00E1cidos por enzimas proteasas. Objetivo: el gluten.",
+      definition: "Las enzimas proteasas descomponen las proteínas de la masa en moléculas más pequeñas, como péptidos y aminoácidos.",
       whyImportant: "Puede modificar la extensibilidad y la resistencia de la masa. Depende de la harina, los microorganismos, la temperatura y el proceso: no existe una duración óptima universal ni mide la digestibilidad individual.",
     },
     thickness_factor: {
       name: "Thickness Factor (TF, factor de grosor)",
-      definition: "Densidad superficial de la masa \u2014 masa por unidad de \u00E1rea. Indica cu\u00E1nta masa hay por cm\u00B2.",
+      definition: "Cantidad de masa por unidad de superficie: los gramos de masa por cada cm² de pizza.",
       whyImportant: "Determina el tiempo de cocci\u00F3n, el crujiente y la densidad cal\u00F3rica. M\u00E9trica original del Proyecto {brand}.",
       ranges: [
         { label: "Napolitana", value: "0.30\u20130.36", note: "6-7 mm" },
@@ -625,7 +625,7 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
     },
     a_score: {
       name: "A-Score (Autenticidad)",
-      definition: "Puntuaci\u00F3n de 0-100 que mide la adherencia de una receta al reglamento del estilo de referencia.",
+      definition: "Puntuación de 0 a 100 sobre la cercanía a la referencia del estilo. No certifica el cumplimiento de un pliego.",
       ranges: [
         { label: "90-100", value: "Rigurosamente aut\u00E9ntica" },
         { label: "75-89", value: "Sustancialmente aut\u00E9ntica" },
@@ -634,8 +634,8 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       ],
     },
     f_score: {
-      name: "F-Score (Viabilidad)",
-      definition: "Puntuaci\u00F3n de 0-100 que mide la viabilidad pr\u00E1ctica seg\u00FAn el equipo y la destreza del usuario.",
+      name: "F-Score (Facilidad)",
+      definition: "Puntuación de 0 a 100 sobre la facilidad de preparación con el horno, harina y experiencia disponibles. Los requisitos que bloquean la receta se evalúan aparte.",
       ranges: [
         { label: "90-100", value: "Muy factible" },
         { label: "75-89", value: "Factible con cuidado" },
@@ -644,8 +644,8 @@ export const GLOSSARY_TERMS_ES: Partial<CmsGlossaryTerms> = {
       ],
     },
     d_score: {
-      name: "D-Score (Digestibilidad)",
-      definition: "Índice heurístico de maduración, no una medida de digestibilidad individual ni de FODMAP. Usa horas equivalentes a 18°C, con ajustes por prefermento, dosis de levadura y frío.",
+      name: "D-Score (Maduración estimada)",
+      definition: "Estimación del modelo basada en tiempo, temperatura, levadura y prefermentos. No mide la digestibilidad individual ni calcula los FODMAP.",
       ranges: [{"label":"85-100","value":"Índice alto"},{"label":"70-84","value":"Índice medio-alto"},{"label":"50-69","value":"Índice medio"},{"label":"<50","value":"Índice bajo"}],
     },
   },

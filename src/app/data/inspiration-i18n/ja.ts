@@ -79,7 +79,7 @@ export const INSPIRATION_I18N_JA: InspirationTranslation = {
   recipes: {
     margherita_verace: {
       name: "Margherita Verace",
-      description: "普遍的なアイコン。トマト、モッツァレラ、バジル、エクストラバージンオリーブオイル。規定どおり60–90秒で焼き上げる。",
+      description: "基本のナポリ生地に、トマト、モッツァレラ、バジル、エキストラバージンオリーブオイルを合わせます。",
     },
     marinara_avpn: {
       name: "Marinara",
@@ -121,7 +121,7 @@ export const INSPIRATION_I18N_JA: InspirationTranslation = {
     },
     detroit_pepperoni: {
       name: "Detroit Pepperoni",
-      description: "型で焼く厚みのあるピッツァ。チーズを縁まで広げてキャラメリゼさせる。上にはペパロニ。",
+      description: "厚みのある天板ピザにペパロニとチーズをのせます。縁のチーズはこんがり香ばしく焼き上がります。",
     },
     crescenza_recco_igp: {
       card: {"name": "Focaccia di Recco col formaggio"},

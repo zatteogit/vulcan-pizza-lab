@@ -79,7 +79,7 @@ export const INSPIRATION_I18N_PT: InspirationTranslation = {
   recipes: {
     margherita_verace: {
       name: "Margherita Verace",
-      description: "O ícone universal: tomate, mozzarella, manjericão e azeite extravirgem, assada em 60–90 segundos, como pede o regulamento.",
+      description: "Tomate, mozzarella, manjericão e azeite virgem extra sobre a base napolitana de referência.",
     },
     marinara_avpn: {
       name: "Marinara",
@@ -121,7 +121,7 @@ export const INSPIRATION_I18N_PT: InspirationTranslation = {
     },
     detroit_pepperoni: {
       name: "Detroit Pepperoni",
-      description: "Pizza alta de assadeira: o queijo vai até as bordas e as carameliza. Por cima, pepperoni.",
+      description: "Pizza alta em tabuleiro, com pepperoni e queijo até aos bordos, onde forma uma crosta dourada e crocante.",
     },
     crescenza_recco_igp: {
       card: {"name": "Focaccia di Recco col formaggio"},

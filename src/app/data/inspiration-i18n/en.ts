@@ -79,7 +79,7 @@ export const INSPIRATION_I18N_EN: InspirationTranslation = {
   recipes: {
     margherita_verace: {
       name: "Margherita Verace",
-      description: "The universal icon: tomato, mozzarella, basil and extra-virgin olive oil, baked in 60–90 seconds as the rules require.",
+      description: "Tomato, mozzarella, basil and extra-virgin olive oil on the reference Neapolitan base.",
     },
     marinara_avpn: {
       name: "Marinara",
@@ -121,7 +121,7 @@ export const INSPIRATION_I18N_EN: InspirationTranslation = {
     },
     detroit_pepperoni: {
       name: "Detroit Pepperoni",
-      description: "Thick pan pizza: the cheese goes right to the edges and caramelizes them. Pepperoni on top.",
+      description: "A thick tray pizza with pepperoni and cheese right to the edges, where it forms a golden, crisp crust.",
     },
     crescenza_recco_igp: {
       card: {"name": "Focaccia di Recco col formaggio"},

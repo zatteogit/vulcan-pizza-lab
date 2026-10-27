@@ -79,7 +79,7 @@ export const INSPIRATION_I18N_DE: InspirationTranslation = {
   recipes: {
     margherita_verace: {
       name: "Margherita Verace",
-      description: "Die universelle Ikone: Tomate, Mozzarella, Basilikum und natives Olivenöl extra, gebacken in 60–90 Sekunden, wie es das Regelwerk verlangt.",
+      description: "Tomate, Mozzarella, Basilikum und natives Olivenöl extra auf der neapolitanischen Referenzbasis.",
     },
     marinara_avpn: {
       name: "Marinara",
@@ -121,7 +121,7 @@ export const INSPIRATION_I18N_DE: InspirationTranslation = {
     },
     detroit_pepperoni: {
       name: "Detroit Pepperoni",
-      description: "Hohe Pizza aus dem Blech: Der Käse reicht bis an die Ränder und karamellisiert sie. Obendrauf Pepperoni.",
+      description: "Hohe Blechpizza mit Pepperoni und Käse bis zum Rand, wo er eine goldene, knusprige Kruste bildet.",
     },
     crescenza_recco_igp: {
       card: {"name": "Focaccia di Recco col formaggio"},
