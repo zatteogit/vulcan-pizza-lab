@@ -11171,7 +11171,12 @@
     text-transform: uppercase;
     margin-bottom: var(--space-2);
     color: var(--text-muted);
+    margin-top: var(--space-3);
   }
+
+  .procedure-hero__now { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+  .procedure-hero__now-help { flex: 1 1 var(--space-40); min-width: 0; color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
+  .procedure-hero__now-status { margin-top: var(--space-2); color: var(--cta); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); }
 
   .procedure-hero__meals-row {
     display: flex;
@@ -11180,6 +11185,11 @@
   }
 
   .procedure-hero__meal-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1-5);
+    min-height: var(--dimension-fixed-046);
     padding-inline: var(--space-3);
     padding-block: var(--space-1-5);
     border-radius: var(--radius-full);
@@ -11196,6 +11206,8 @@
   .procedure-hero__meal-chip:active {
     transform: scale(0.95);
   }
+
+  .procedure-hero__meal-chip > svg { flex-shrink: 0; }
 
   .procedure-hero__comfort {
     margin-top: var(--space-3);
