@@ -12,7 +12,7 @@ import { WoodOvenIcon } from "../components/shared/wood-oven-icon";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
 import { useCallback,useEffect,useMemo,useRef,useState, useId } from "react";
 import { createPortal } from "react-dom";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
 import { Chip, CtaButton, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
 import {
@@ -1206,6 +1206,7 @@ export function ProfilePage() {
   const { themeMode, setThemeMode, devMode, setDevMode } = useDarkMode();
   const { cms, switchLocale, bcp47 } = useCms();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const p = cms.profile;
 
   /* CMS-localized equipment data */
@@ -1217,6 +1218,7 @@ export function ProfilePage() {
   /* FTU detection */
   const [showFtu, setShowFtu] = useState(() => {
     return (
+      !PROFILE_TAB_IDS.some(tab => tab === searchParams.get("tab")) &&
       loadString(PROFILE_COMPLETE_KEY) !== "true" &&
       loadSavedRecipes().length === 0 &&
       loadFavoriteStyles().length === 0
@@ -1497,7 +1499,16 @@ export function ProfilePage() {
   const currentLocale = useMemo(() => {
     return LOCALE_META.find((l) => l.id === cms.locale?.id) ?? LOCALE_META[0];
   }, [cms.locale?.id]);
-  const [profileTab, setProfileTab] = useState<"setup" | "app" | "recipes">("setup");
+  const requestedTab = searchParams.get("tab");
+  const profileTab = requestedTab === "recipes" || requestedTab === "app" ? requestedTab : "setup";
+  const setProfileTab = (tab: typeof PROFILE_TAB_IDS[number]) => {
+    // Tab changes must not add extra Back/Close steps between the library and Crea.
+    setSearchParams(previous => {
+      const next = new URLSearchParams(previous);
+      next.set("tab", tab);
+      return next;
+    }, { replace: true });
+  };
   const reduceMotion = useReducedMotion();
 
   const closeControl = (
@@ -1605,8 +1616,8 @@ export function ProfilePage() {
         {/* ── STILI PREFERITI + RICETTARIO (R31) — visibili solo se ne hai ── */}
         {profileTab === "recipes" && (
           <div role="tabpanel" id="profile-panel-recipes" aria-labelledby="profile-tab-recipes" tabIndex={0}>
-            <FavoriteStylesSection />
             <SavedRecipesSection />
+            <FavoriteStylesSection />
           </div>
         )}
 
