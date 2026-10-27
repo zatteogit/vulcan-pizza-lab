@@ -12762,15 +12762,19 @@
      PREFIX: interpretation ═══ */
 
   /* ── Switcher (riga chip) ── */
+  .interpretation-picker {
+    display: grid;
+    gap: var(--space-2);
+    min-width: 0;
+  }
+
   .interpretation-switcher {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "label label"
-      "scroll more";
+    grid-template-areas: "scroll more";
+    min-width: 0;
     align-items: center;
     column-gap: var(--gap-xs);
-    row-gap: var(--space-0-5);
     padding: var(--space-1);
     border-radius: var(--radius-2xl);
     background: color-mix(in srgb, var(--surface-container-low) 74%, transparent);
@@ -12779,9 +12783,8 @@
   }
 
   .interpretation-switcher__label {
-    grid-area: label;
     flex-shrink: 0;
-    padding-inline: var(--space-1);
+    padding-inline: var(--space-2);
     color: var(--text-muted);
     font-size: var(--font-size-xs);
     font-weight: var(--weight-semibold);
@@ -12798,10 +12801,9 @@
     align-items: center;
     gap: var(--gap-xs);
     overflow-x: auto;
-    padding-inline: var(--space-0-5);
+    padding-inline: var(--space-1);
+    padding-inline-end: var(--space-7);
     padding-block: var(--space-1);
-    margin-inline: calc(var(--space-0-5) * -1);
-    margin-block: calc(var(--space-1) * -1);
     scrollbar-width: none;
     -webkit-mask-image: linear-gradient(to right, var(--color-black) 0%, var(--color-black) calc(100% - var(--space-7)), transparent 100%);
     mask-image: linear-gradient(to right, var(--color-black) 0%, var(--color-black) calc(100% - var(--space-7)), transparent 100%);
@@ -12812,8 +12814,13 @@
   }
 
   @media (min-width: 768px) {
+    .interpretation-picker {
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: var(--space-3);
+    }
+
     .interpretation-switcher {
-      display: flex;
       padding: var(--space-1-5);
       box-shadow: inset 0 0 0 var(--border-width-thin) color-mix(in srgb, var(--overlay-text) 4%, transparent);
     }
@@ -12824,6 +12831,7 @@
 
     .interpretation-switcher__scroll {
       gap: var(--space-1-5);
+      padding-inline-end: var(--space-1);
       -webkit-mask-image: none;
       mask-image: none;
     }
@@ -12832,6 +12840,7 @@
   .interpretation-switcher__chip {
     flex-shrink: 0;
     display: inline-flex;
+    min-height: var(--dimension-fixed-046);
     align-items: center;
     border-radius: var(--radius-full);
     padding-inline: var(--space-2-5);
@@ -12869,6 +12878,9 @@
   .interpretation-switcher__more {
     flex-shrink: 0;
     display: inline-flex;
+    min-height: var(--dimension-fixed-046);
+    min-width: var(--dimension-fixed-046);
+    justify-content: center;
     align-items: center;
     gap: var(--gap-2xs);
     border-radius: var(--radius-full);
@@ -20215,8 +20227,6 @@
     .home-onboarding__cta,
     .explore-section__link,
     .recipe-page__learn-more-btn,
-    .interpretation-switcher__chip,
-    .interpretation-switcher__more,
     .step-details__toggle,
     .profile-location__search-input,
     .profile-oven-temp__slider

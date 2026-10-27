@@ -5,7 +5,8 @@
  * Le storie dei maestri (badge, tecnica, narrativa) NON stanno più inline:
  * "Vedi tutte" apre una modale con tutte le interpretazioni dello stile e il
  * link alla sezione Impara. */
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useReducedMotion } from "motion/react";
 import { Check, MoreHorizontal, X } from "lucide-react";
 import { Link } from "react-router";
 import { useCms } from "../cms/cms-context";
@@ -63,6 +64,21 @@ export function InterpretationSwitcher({
 }) {
   const { cms } = useCms();
   const [modalOpen, setModalOpen] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const reducedMotion = useReducedMotion();
+  useEffect(() => {
+    const scroller = scrollRef.current;
+    const selected = scroller?.querySelector<HTMLButtonElement>('[aria-pressed="true"]');
+    if (!scroller || !selected) return;
+    const viewport = scroller.getBoundingClientRect();
+    const chip = selected.getBoundingClientRect();
+    const style = getComputedStyle(scroller);
+    const right = viewport.right - parseFloat(style.paddingRight);
+    const left = viewport.left + parseFloat(style.paddingLeft);
+    const overflow = chip.right > right ? chip.right - right
+      : chip.left < left ? chip.left - left : 0;
+    if (overflow) scroller.scrollTo({ left: scroller.scrollLeft + overflow, behavior: reducedMotion ? "instant" : "smooth" });
+  }, [activeId, reducedMotion]);
   if (interpretations.length === 0) return null;
   const parametric = interpretations
     .filter(changesParameters)
@@ -78,57 +94,60 @@ export function InterpretationSwitcher({
   return (
     <div data-region="filters">
       {/* "Vedi tutte" resta SEMPRE in vista (fuori dallo scroller delle chip). */}
-      <div className="interpretation-switcher">
+      <div className="interpretation-picker">
         <span className="interpretation-switcher__label">
           {uiMessage("features.recipe.interpretation-narrative-card.versione-96d474e8")}</span>
-        <div
-          className="interpretation-switcher__scroll"
-          role="group"
-          aria-label={cms.misc.inspirationLabel ?? uiMessage("features.recipe.interpretation-narrative-card.ispirazione-fea568b8")}
-        >
+        <div className="interpretation-switcher">
+          <div
+            ref={scrollRef}
+            className="interpretation-switcher__scroll"
+            role="group"
+            aria-label={cms.misc.inspirationLabel ?? uiMessage("features.recipe.interpretation-narrative-card.ispirazione-fea568b8")}
+          >
+            <button
+              type="button"
+              onClick={() => {
+                onSelect(defaultInterpretation);
+              }}
+              aria-pressed={defaultActive}
+              className={`interpretation-switcher__chip${defaultActive ? " interpretation-switcher__chip--active" : ""}`}
+            >
+              {defaultInterpretation
+                ? chipName(defaultInterpretation)
+                : (cms.misc.inspirationBase ?? uiMessage("features.recipe.interpretation-narrative-card.tradizionale-57d82228"))}
+            </button>
+            {parametric.map((it) => {
+              const isActive = it.id === activeId;
+              return (
+                <button
+                  key={it.id}
+                  type="button"
+                  onClick={() => onSelect(it)}
+                  aria-pressed={isActive}
+                  className={`interpretation-switcher__chip${isActive ? " interpretation-switcher__chip--active" : ""}`}
+                >
+                  {chipName(it)}
+                </button>
+              );
+            })}
+          </div>
+          {/* Overflow sobrio (round 7): "+N" = quante varianti NON sono in
+              riga; se sono tutte in vista, resta l'accesso alle storie. */}
           <button
             type="button"
-            onClick={() => {
-              onSelect(defaultInterpretation);
-            }}
-            aria-pressed={defaultActive}
-            className={`interpretation-switcher__chip${defaultActive ? " interpretation-switcher__chip--active" : ""}`}
+            onClick={() => setModalOpen(true)}
+            aria-haspopup="dialog"
+            aria-label={cms.misc.inspirationSeeAll ?? uiMessage("features.recipe.interpretation-narrative-card.vedi-tutte-82e02261")}
+            title={cms.misc.inspirationSeeAll ?? uiMessage("features.recipe.interpretation-narrative-card.vedi-tutte-82e02261")}
+            className="interpretation-switcher__more"
           >
-            {defaultInterpretation
-              ? chipName(defaultInterpretation)
-              : (cms.misc.inspirationBase ?? uiMessage("features.recipe.interpretation-narrative-card.tradizionale-57d82228"))}
+            {hiddenCount > 0 ? (
+              <span className="type-numeric">+{hiddenCount}</span>
+            ) : (
+              <MoreHorizontal size={14} aria-hidden="true" />
+            )}
           </button>
-          {parametric.map((it) => {
-            const isActive = it.id === activeId;
-            return (
-              <button
-                key={it.id}
-                type="button"
-                onClick={() => onSelect(it)}
-                aria-pressed={isActive}
-                className={`interpretation-switcher__chip${isActive ? " interpretation-switcher__chip--active" : ""}`}
-              >
-                {chipName(it)}
-              </button>
-            );
-          })}
         </div>
-        {/* Overflow sobrio (round 7): "+N" = quante varianti NON sono in
-            riga; se sono tutte in vista, resta l'accesso alle storie. */}
-        <button
-          type="button"
-          onClick={() => setModalOpen(true)}
-          aria-haspopup="dialog"
-          aria-label={cms.misc.inspirationSeeAll ?? uiMessage("features.recipe.interpretation-narrative-card.vedi-tutte-82e02261")}
-          title={cms.misc.inspirationSeeAll ?? uiMessage("features.recipe.interpretation-narrative-card.vedi-tutte-82e02261")}
-          className="interpretation-switcher__more"
-        >
-          {hiddenCount > 0 ? (
-            <span className="type-numeric">+{hiddenCount}</span>
-          ) : (
-            <MoreHorizontal size={14} aria-hidden="true" />
-          )}
-        </button>
       </div>
 
       <InterpretationsModal
