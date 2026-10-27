@@ -3282,7 +3282,7 @@
     pointer-events: none;
   }
 
-  .explore-card__image {
+  .explore-card__media > .explore-card__image {
     position: absolute;
     inset: 0;
     width: 100%;
