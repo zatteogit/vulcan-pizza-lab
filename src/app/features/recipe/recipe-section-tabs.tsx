@@ -49,9 +49,8 @@ export function RecipeSectionTabs({
   // when scroll direction reverses before the previous morph has finished.
   const morph = useSpring(0, motionSpring.navigation);
   const collapse = useTransform(morph, value => Math.min(1, Math.max(0, value)));
-  const labelOpacity = useTransform(collapse, value => Math.max(0, 1 - value * 1.7));
-  const iconOpacity = useTransform(collapse, value => Math.min(1, Math.max(0, value * 1.6 - 0.3)));
-  const morphStyle = { "--section-tabs-collapse": collapse, "--section-tabs-label-opacity": labelOpacity, "--section-tabs-icon-opacity": iconOpacity } as MotionStyle;
+  const detailOpacity = useTransform(collapse, value => Math.max(0, 1 - value * 1.7));
+  const morphStyle = { "--section-tabs-collapse": collapse, "--section-tabs-detail-opacity": detailOpacity } as MotionStyle;
   const fadeStyle = { "--section-tabs-collapse": collapse } as MotionStyle;
   const pressing = useRef(false);
   const target = useRef({ compact, reducedMotion });
@@ -209,7 +208,7 @@ function TabsCapsule({
             whileHover={reducedMotion ? undefined : { scale: 1.015 }}
             whileTap={reducedMotion ? undefined : { scale: 0.965 }}
             transition={motionSpring.quick}
-            className={`section-tabs-capsule__tab${navbar ? " section-tabs-capsule__tab--navbar" : ""}${hasSubtitles ? " section-tabs-capsule__tab--subtitles" : ""}${navbar && !tab.subtitle ? " section-tabs-capsule__tab--icon-value" : ""}${active ? " section-tabs-capsule__tab--active" : ""}`}
+            className={`section-tabs-capsule__tab${navbar ? " section-tabs-capsule__tab--navbar" : ""}${hasSubtitles ? " section-tabs-capsule__tab--subtitles" : ""}${active ? " section-tabs-capsule__tab--active" : ""}`}
           >
             {active && (
               <motion.span
@@ -219,9 +218,9 @@ function TabsCapsule({
               />
             )}
             <div className={`section-tabs-capsule__content${navbar ? " section-tabs-capsule__content--navbar" : ""}`}>
-              {(!navbar || !tab.subtitle) && (
-                <span className={navbar ? "section-tabs-capsule__compact-icon" : "section-tabs-capsule__icon"} aria-hidden="true">
-                  <TabIcon size={navbar ? 18 : 14} className={active ? "section-tabs-capsule__icon--active" : undefined} />
+              {!navbar && (
+                <span className="section-tabs-capsule__icon" aria-hidden="true">
+                  <TabIcon size={14} className={active ? "section-tabs-capsule__icon--active" : undefined} />
                 </span>
               )}
               <div className={`section-tabs-capsule__text${navbar ? " section-tabs-capsule__text--navbar" : ""}`}>

@@ -16342,7 +16342,7 @@
     }
   }
 
-  /* Dock flottante mobile (tabs + bottone ricerca), fisso in fondo. */
+  /* Dock flottante mobile delle sezioni della ricetta, fisso in fondo. */
   .section-tabs-dock {
     position: fixed;
     inset-inline: 0;
@@ -16575,30 +16575,11 @@
     width: 100%;
   }
 
-  .section-tabs-dock .section-tabs-capsule__label {
-    max-height: calc(var(--space-5) * (1 - var(--section-tabs-collapse, 0)));
-    opacity: var(--section-tabs-label-opacity, 1);
-    transform: translateY(calc(var(--space-1) * var(--section-tabs-collapse, 0) * -1));
-  }
-
+  /* Section names remain visible; only the secondary values fold away. */
   .section-tabs-dock .section-tabs-capsule__subtitle {
+    max-height: calc(var(--space-5) * (1 - var(--section-tabs-collapse, 0)));
+    opacity: var(--section-tabs-detail-opacity, 1);
     margin-top: calc(var(--space-px) * (1 - var(--section-tabs-collapse, 0)));
-  }
-
-  .section-tabs-capsule__compact-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    max-height: calc(var(--space-6) * var(--section-tabs-collapse, 0));
-    width: calc(var(--space-6) * var(--section-tabs-collapse, 0));
-    overflow: hidden;
-    opacity: var(--section-tabs-icon-opacity, 0);
-  }
-
-  .section-tabs-dock .section-tabs-capsule__tab--icon-value {
-    flex-grow: calc(1 - var(--section-tabs-collapse, 0));
-    flex-basis: calc(var(--section-tabs-target-min) * var(--section-tabs-collapse, 0));
   }
 
   .section-tabs-dock .section-tabs-capsule__tab + .section-tabs-capsule__tab::before {
