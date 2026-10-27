@@ -1,5 +1,9 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
+  "recipe.save.title": "Enregistrer dans le carnet",
+  "recipe.save.confirm": "Enregistrer la recette",
+  "recipe.save.source": "Recette d’origine : {0}",
+
   "allergen.traceHelp": "Signalées sur les étiquettes des produits.",
   "allergen.optionalTraceSummary": "Traces possibles dans les ajouts : {0}",
   "allergen.traceSummary": "Traces possibles : {0}",

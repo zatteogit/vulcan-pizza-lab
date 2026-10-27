@@ -101,6 +101,7 @@ interface RecipeViewProps {
   resetLabel?: string;
   resetTitle?: string;
   recipeName?: string;
+  recipeSource?: { href: string; name: string };
   onRenameRecipe?: (name: string) => boolean;
   /* Usati da Crea (scheda su misura) */
   selectedFlourId?: string | null;
@@ -141,6 +142,7 @@ export function RecipeView({
   resetLabel,
   resetTitle,
   recipeName,
+  recipeSource,
   onRenameRecipe,
   selectedFlourId,
   onSelectFlour,
@@ -472,7 +474,7 @@ export function RecipeView({
               className="recipe-view-title-row"
               transition={motionSpring.recipeSection}
             >
-              <RecipeTitle styleName={recipeDisplayName(recipe, constraints.oven_type)} name={recipeName} onRename={onRenameRecipe} />
+              <RecipeTitle styleName={recipeDisplayName(recipe, constraints.oven_type)} name={recipeName} onRename={onRenameRecipe} source={recipeSource} />
             </motion.div>
 
             <RecipeReferenceNote recipe={recipe} oven={constraints.oven_type} />

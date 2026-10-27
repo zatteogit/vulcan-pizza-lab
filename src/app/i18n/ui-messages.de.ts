@@ -1,5 +1,9 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
+  "recipe.save.title": "Im Rezeptbuch speichern",
+  "recipe.save.confirm": "Rezept speichern",
+  "recipe.save.source": "Ausgangsrezept: {0}",
+
   "allergen.traceHelp": "Auf den Produktetiketten angegeben.",
   "allergen.optionalTraceSummary": "Mögliche Spuren in Zugaben: {0}",
   "allergen.traceSummary": "Mögliche Spuren: {0}",

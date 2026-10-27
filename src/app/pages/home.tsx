@@ -1,3 +1,4 @@
+import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
 import { recipeDisplayName } from "../domain/recipe-reference";
 import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
@@ -63,7 +64,7 @@ import {
 } from "../data/style-versions";
 import { useStylesOverride } from "../context/styles-override-context";
 import { ContextualWarnings } from "../features/recipe/troubleshooting-panel";
-import { normalizeRecipeName } from "../data/saved-recipes";
+import { normalizeRecipeName, recipeSourceUrl } from "../data/saved-recipes";
 import { mergeDraftConstraints, useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
   defaultRecipePL,
@@ -841,7 +842,7 @@ export function HomePage() {
     setSavedTick(tick => tick + 1);
     return true;
   }, [savedEntry]);
-  const handleToggleSaveRecipe = useCallback((): boolean => {
+  const handleCommitRecipe = useCallback((nextName?: string): boolean => {
     if (!selectedStyle || !recipe) return false;
     let ok = true;
     if (savedEntry) {
@@ -850,13 +851,17 @@ export function HomePage() {
       saveRecipe({
         styleId: selectedStyle.id,
         styleName: recipeDisplayName(recipe, engineConstraints.oven_type),
-        name: normalizeRecipeName(resolvedRecipeName),
+        name: normalizeRecipeName(nextName ?? resolvedRecipeName),
         versionId: activeVersionId,
         params: currentSaveParams,
         score: Math.round(recipe.scores.composite),
       });
       ok = findSavedRecipe(selectedStyle.id, currentSaveParams) !== undefined;
       setSaveFailed(!ok);
+      if (ok && nextName !== undefined) {
+        const name = normalizeRecipeName(nextName) ?? "";
+        setRecipeName(name);
+      }
     }
     setSavedTick((v) => v + 1);
     return ok;
@@ -878,6 +883,13 @@ export function HomePage() {
   }) || Math.min(constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal) !== Math.min(constraints.oven_capacity_temp_c ?? constraints.oven_max_temp_c, selectedStyle.baking.temp_c_ideal)));
   const createOrigin = activeInterpretationId ? getInterpretationById(activeInterpretationId) : null;
   const createReferenceName = createOrigin?.author ?? createOrigin?.pizzeria ?? createOrigin?.organization ?? (activeVersion ? cms.messages?.[`version.label.${activeVersion.label}`] ?? activeVersion.label : selectedStyle?.name ?? "");
+
+  const recipeSource = selectedStyle ? {
+    href: recipeSourceUrl(selectedStyle.id, activeVersionId, activeInterpretationId),
+    name: createReferenceName === selectedStyle.name ? selectedStyle.name : `${selectedStyle.name} · ${createReferenceName}`,
+  } : null;
+  const saveFlow = useRecipeSave({ personalized: createDirty || Boolean(resolvedRecipeName), saved: Boolean(savedEntry), onCommit: handleCommitRecipe });
+  const handleToggleSaveRecipe = () => saveFlow.requestSave();
 
   /* Back dal result: se la ricetta è modificata e non salvata, avvisa —
      sostituisce la vecchia gestione bozze/parcheggio (nota Matteo lug 2026). */
@@ -1386,6 +1398,7 @@ export function HomePage() {
               resetLabel={cms.ui.recipeResetPreset}
               resetTitle={createReferenceName}
               recipeName={resolvedRecipeName}
+              recipeSource={recipeSource ?? undefined}
               onRenameRecipe={createDirty || resolvedRecipeName ? handleRenameRecipe : undefined}
               matchSlot={
                 /* Round 4-5 (note Matteo): ordine Ispirazione → parametri →
@@ -1630,6 +1643,9 @@ export function HomePage() {
           />
       )}
 
+      {recipe && recipeSource && <SaveRecipeDialog open={saveFlow.open} onClose={saveFlow.cancel} onConfirm={saveFlow.confirm}
+        defaultName={resolvedRecipeName || recipeDisplayName(recipe, engineConstraints.oven_type)} source={recipeSource} />}
+
       {/* ═══ Avviso uscita: modifiche non salvate (redesign lug 2026) ═══ */}
       <ConfirmDialog
         open={exitConfirm}
@@ -1646,10 +1662,8 @@ export function HomePage() {
           {
             label: cms.cooking.saveVersion,
             onClick: () => {
-              const saved = handleToggleSaveRecipe();
               setExitConfirm(false);
-              // Se il salvataggio non riesce si resta: uscendo la versione andrebbe persa.
-              if (saved) proceedBackToStyles();
+              saveFlow.requestSave(proceedBackToStyles);
             },
             variant: "cta",
           },

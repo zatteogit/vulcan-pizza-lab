@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   findSavedRecipeIn,
   normalizeRecipeName,
+  recipeSourceUrl,
   renameSavedRecipeIn,
   savedRecipeKey,
   formatSavedDate,
@@ -29,6 +30,14 @@ const base: SavedRecipe = {
 };
 
 describe("saved recipe rules", () => {
+  it("keeps the original style, preset and signature accessible independently of a custom name", () => {
+    const named = renameSavedRecipeIn([{ ...base, versionId: "traditional", params: { ...base.params, interpretationId: "signature" } }], base.id, "Come piace a Mario")[0];
+    const url = new URL(recipeSourceUrl(named.styleId, named.versionId, named.params.interpretationId), "https://example.test");
+    expect(named.name).toBe("Come piace a Mario");
+    expect(url.pathname).toBe("/recipe/napoletana");
+    expect(Object.fromEntries(url.searchParams)).toEqual({ mode: "canonical", tab: "ricetta", v: "traditional", interpretation: "signature" });
+    expect(named.params.hydration).toBe(base.params.hydration);
+  });
   it("replaces the same recipe identity without duplicating it", () => {
     const next = upsertSavedRecipe([base], { ...base, score: 91 }, { id: "new", createdAt: 2 });
     expect(next).toHaveLength(1);

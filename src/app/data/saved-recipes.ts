@@ -38,6 +38,14 @@ export interface SavedRecipe {
 }
 
 export const MAX_RECIPE_NAME_LENGTH = 80;
+/** Source identity is independent of the custom name and tailored values. */
+export function recipeSourceUrl(styleId: string, versionId: string | null, interpretationId?: string | null): string {
+  const params = new URLSearchParams({ mode: "canonical", tab: "ricetta" });
+  if (versionId) params.set("v", versionId);
+  if (interpretationId) params.set("interpretation", interpretationId);
+  return `/recipe/${encodeURIComponent(styleId)}?${params}`;
+}
+
 export function normalizeRecipeName(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   return value.replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, MAX_RECIPE_NAME_LENGTH).trim() || undefined;
