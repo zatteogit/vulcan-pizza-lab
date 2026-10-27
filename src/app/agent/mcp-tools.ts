@@ -207,7 +207,7 @@ function recipeForInput(source: PizzaStyle, constraints: UserConstraints, args: 
 function msg(m: EngineMsg): string {
   return m.fallback.replace(/\{(\w+)\}/g, (_, k: string) => {
     const value = m.params?.[k];
-    if (k === "allergen") return ALLERGEN_NAMES_IT[String(value) as AllergenId] ?? String(value);
+    if (k === "allergen") return ALLERGEN_NAMES_IT[String(value) as AllergenId]?.toLocaleLowerCase("it") ?? String(value);
     return String(k === "yeast" ? YEAST_LABELS[String(value)] ?? value ?? `{${k}}` : value ?? `{${k}}`);
   });
 }

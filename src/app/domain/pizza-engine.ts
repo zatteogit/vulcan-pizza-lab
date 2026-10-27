@@ -3088,7 +3088,7 @@ export function optimizeRecipe(
     rationale.push(
       em(
         "opt.hydrationLowered",
-        `Idratazione abbassata a ${r.hydration_pct}% (canonica ${hMidStyle}%) per restare gestibile al tuo livello.`,
+        `Idratazione ridotta a ${r.hydration_pct}% per facilitare la lavorazione. Riferimento dello stile: ${hMidStyle}%.`,
         { h: r.hydration_pct, canonical: hMidStyle },
       ),
     );
@@ -3137,7 +3137,7 @@ export function optimizeRecipe(
     rationale.push(
       em(
         "opt.flourChanged",
-        `Farina cambiata a W${r.flour_w} (canonica W${wMidStyle}).`,
+        `Farina W${r.flour_w}; riferimento dello stile: W${wMidStyle}.`,
         { w: r.flour_w, canonical: wMidStyle },
       ),
     );

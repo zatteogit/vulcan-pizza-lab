@@ -14,25 +14,25 @@ export const PIZZA_FAMILIES: Record<
   napoletana: {
     name: "Napoletana",
     description:
-      "Leggerezza, lievitazione naturale, cottura veloce ad altissima temperatura",
+      "Cornicione pronunciato, centro sottile e cottura ad alta temperatura.",
     emoji: "🇮🇹",
   },
   romana: {
     name: "Romana",
     description:
-      "Dalla croccantezza estrema della Scrocchiarella all'alta idratazione della Teglia",
+      "Dalla tonda sottile e croccante alla pizza alta in teglia.",
     emoji: "🏛️",
   },
   americana: {
     name: "Americana",
     description:
-      "Adattamento italo-americano: praticità, street food, varietà regionali",
+      "Formati, impasti e tradizioni regionali della pizza negli Stati Uniti.",
     emoji: "🗽",
   },
   contemporanea: {
     name: "Contemporanea",
     description:
-      "Digeribilità, sperimentazione, alta idratazione, tecniche avanzate",
+      "Nuove interpretazioni di impasti, consistenze e tecniche.",
     emoji: "🔬",
   },
 };
@@ -98,7 +98,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: false,
     description:
-      "Pizza Napoletana STG secondo il regolamento UE 97/2010. Cornicione gonfio, centro sottile, leopardatura.",
+      "Cornicione gonfio, centro sottile e macchie scure sulla crosta: il riferimento della tradizione napoletana.",
     key_characteristics: [
       "Cornicione 1-2cm gonfio",
       "Centro 3-4mm sottile",
@@ -146,7 +146,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: true,
     suitable_for_beginner: false,
     description:
-      'Cornicione esplosivo "canotto d\'aria", alveolatura estrema, alta digeribilità.',
+      "Un cornicione molto sviluppato racchiude una mollica aperta e leggera. L’impasto ricco d’acqua richiede cura nella stesura.",
     key_characteristics: [
       'Cornicione 3-4cm "canotto"',
       "Alveolatura estrema",
@@ -194,7 +194,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      "Alta idratazione, no-knead con pieghe. Base croccante, mollica nuvola.",
+      "Base croccante e interno soffice, con grandi alveoli. Un impasto molto idratato, lavorato con le pieghe.",
     key_characteristics: [
       "Altezza 2-3cm",
       "Idratazione 75-90%",
@@ -240,7 +240,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      'Sottilissima, stesa col mattarello o a mano, croccante estrema. "Scrocchiarella".',
+      "Una pizza sottile e croccante fino al bordo. Si stende a mano o con il mattarello: è la scrocchiarella romana.",
     key_characteristics: [
       "Spessore 1-2mm",
       "Mattarello o a mano",
@@ -306,7 +306,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: false,
     description:
-      "Mix 70% frumento / 15% soia / 15% riso. Forma ovale, crosta vetrosa.",
+      "Forma ovale e crosta croccante, con un impasto che unisce frumento, soia e riso.",
     key_characteristics: [
       "Mix multi-cereale",
       "Forma ovale",
@@ -353,7 +353,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      "Fetta grande pieghevole, crosta croccante ma flessibile. Street food.",
+      "Una fetta larga da piegare con le mani: croccante all’esterno, flessibile al centro.",
     key_characteristics: [
       "Fetta pieghevole",
       "Zucchero + olio",
@@ -401,7 +401,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      "Cheese crown croccante, teglia Blue Steel. Formaggio fino ai bordi.",
+      "Alta e soffice, con il formaggio fino ai bordi: in teglia forma una crosta dorata e croccante.",
     key_characteristics: [
       "Cheese crown",
       "Teglia profonda",
@@ -448,7 +448,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      "Pizza profonda come una torta salata. Strati invertiti: formaggio-ripieno-salsa.",
+      "Un bordo alto contiene il ripieno. Prima il formaggio, poi gli altri ingredienti e infine la salsa di pomodoro.",
     key_characteristics: [
       "Profondità 5cm",
       "Burro 18%",
@@ -499,7 +499,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      "Soffice e unta, con crosta dorata e crateri caratteristici. Salamoia olio-acqua in superficie.",
+      "Soffice all’interno e dorata in superficie, con le tipiche fossette che raccolgono la salamoia di acqua e olio.",
     key_characteristics: [
       "Olio EVO generoso",
       "Crateri superficiali",
@@ -547,7 +547,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      "Pizza spessa siciliana con pomodoro, cipolla, acciughe, caciocavallo e pangrattato. Street food di Palermo.",
+      "La pizza spessa di Palermo, con pomodoro, cipolla, acciughe, caciocavallo e pangrattato.",
     key_characteristics: [
       "Spesso e soffice",
       "Pangrattato tostato",
@@ -594,7 +594,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false, // Può essere diretta o con biga — non più obbligatorio
     suitable_for_beginner: false,
     description:
-      "Formato ovale allungato servito su pala. Via di mezzo tra tonda e teglia: croccante fuori, nuvola dentro.",
+      "Allungata e servita sulla pala, con una crosta croccante e un interno soffice e alveolato.",
     key_characteristics: [
       "Forma ovale allungata",
       "Alta idratazione",
@@ -642,7 +642,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      "Sottile, croccante, teglia oliata. La pizza della nonna italo-americana. Mozzarella sotto, salsa sopra.",
+      "Sottile e croccante, cotta in una teglia oliata. La mozzarella va sotto la salsa di pomodoro.",
     key_characteristics: [
       "Sottile e croccante",
       "Mozzarella sotto salsa",
@@ -701,7 +701,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       cook_mode: "topped",
     },
     description:
-      "Due sfoglie sottilissime con stracchino fuso. IGP dal 2015. Bolle dorate caratteristiche.",
+      "Due sfoglie sottilissime racchiudono il formaggio fresco, che fonde durante la cottura.",
     key_characteristics: [
       "Sfoglia quasi trasparente",
       "Ripiena di stracchino",
@@ -749,7 +749,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     suitable_for_beginner: true,
     default_dough_balls: 4, // Padellini sono individuali: default 4 (uno a testa per 4 persone)
     description:
-      "Cotta in padellino di ferro e finita in forno. Fondo croccante burro-olio, soffice al centro. Specialità torinese.",
+      "La specialità torinese cotta nel padellino di ferro: centro soffice e fondo dorato da burro e olio.",
     key_characteristics: [
       "Padellino di ferro",
       "Fondo ultra-croccante",
@@ -808,7 +808,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 1,
     servings_per_unit: [4, 6],
     description:
-      "Doppio strato in teglia: due dischi sovrapposti spennellati d'olio, cotti in bianco, poi sdoppiati e farciti a freddo. Stile romano da panificio.",
+      "Due strati di impasto sovrapposti, separati da un velo d’olio. Dopo la cottura si aprono e si farciscono a freddo.",
     key_characteristics: [
       "Doppio disco con olio in mezzo",
       "Cottura in bianco",
@@ -864,7 +864,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 1,
     servings_per_unit: [4, 6],
     description:
-      "Pizza ripiena toscana: due dischi sigillati con prosciutto cotto e formaggio filante all'interno. Tipico dei panifici senesi.",
+      "Due dischi di impasto sigillati racchiudono prosciutto cotto e formaggio filante. Una specialità dei panifici senesi.",
     key_characteristics: [
       "Due dischi sigillati ai bordi",
       "Ripieno interno pre-cottura",
@@ -929,7 +929,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 1,
     servings_per_unit: [2, 4],
     description:
-      "UN SOLO disco/teglia di pizza bianca cotto e poi SPACCATO a metà col coltello e farcito a freddo. Diversa dalla Baciata (che parte da due dischi sovrapposti cotti insieme). Farciture: mortazza, crudo, e la patate e porchetta 'in crosta di patate' alla Sancho.",
+      "Un’unica base di pizza bianca, cotta e poi tagliata a metà per farcirla a freddo. Si distingue dalla baciata, fatta con due strati sovrapposti.",
     key_characteristics: [
       "Base singola cotta in bianco",
       "Spaccata a metà dopo la cottura",
@@ -977,7 +977,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     requires_pre_ferment: false,
     suitable_for_beginner: true,
     description:
-      "Trancio rettangolare tipico delle pizzerie milanesi a taglio. Soffice all'interno, fondo dorato dall'olio in teglia. Servito al banco a pranzo.",
+      "Un trancio rettangolare, soffice all’interno e dorato sul fondo grazie all’olio in teglia.",
     key_characteristics: [
       "Trancio rettangolare al taglio",
       "Cottura in teglia oliata",
@@ -1025,7 +1025,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     suitable_for_beginner: true,
     servings_per_unit: [2, 3],
     description:
-      "Sottilissima e croccante tagliata a quadrotti (party cut), alternativa al deep dish di Chicago. Servita nei tavern con birra ghiacciata.",
+      "Una base molto sottile e croccante, tagliata a quadrotti. È l’altro volto della pizza di Chicago, accanto alla deep dish.",
     key_characteristics: [
       "Sottile cracker-like",
       "Taglio a quadrotti (party cut)",
@@ -1079,7 +1079,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 1,
     servings_per_unit: [3, 4],
     description:
-      "Versione senza patate nell’impasto, soffice e umida. Pomodorini, olive baresane, origano e olio EVO. Cotta nel ruoto tondo.",
+      "In questa versione l’impasto è senza patate. Pomodorini, olive baresane e origano su una base soffice, cotta nel ruoto tondo.",
     key_characteristics: [
       "Impasto senza patate",
       "Pomodorini e olive baresane",
@@ -1135,7 +1135,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 4,
     servings_per_unit: [1, 1],
     description:
-      "Calzone fritto: un disco di circa 200 g farcito con ricotta, provola, cicoli e pepe, chiuso a mezzaluna e fritto in olio di semi a circa 175 °C.",
+      "Una mezzaluna ripiena di ricotta, provola, cicoli e pepe, sigillata e fritta nell’olio.",
     key_characteristics: [
       "Cottura in frittura (no forno)",
       "Ripiena (chiusa a mezzaluna)",
@@ -1187,7 +1187,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 4,
     servings_per_unit: [1, 2],
     description:
-      "Dischetto di impasto fritto in olio, scolato e poi condito sopra: pomodoro, formaggio e basilico. Aperta, non ripiena.",
+      "Un disco di impasto fritto e poi condito in superficie con pomodoro, formaggio e basilico.",
     key_characteristics: [
       "Cottura in frittura (no forno)",
       "Aperta (non ripiena)",
@@ -1249,7 +1249,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 4,
     servings_per_unit: [1, 1],
     description:
-      "Due dischi sottili (circa 120 g sotto e 80 g sopra) farciti con ricotta, provola e cicoli, sigillati e fritti in olio di semi a circa 175 °C.",
+      "Due dischi sottili racchiudono ricotta, provola e cicoli. Si sigillano lungo il bordo e si friggono insieme.",
     key_characteristics: [
       "Cottura in frittura (no forno)",
       "Due dischi sovrapposti",
@@ -1306,7 +1306,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 4,
     servings_per_unit: [1, 1],
     description:
-      "Mezzaluna chiusa e sigillata con ripieno di ricotta, fior di latte, salame o cicoli e pepe. Cornicione gonfio, cotto in forno ad alta temperatura.",
+      "Cotto in forno e chiuso a mezzaluna, con ricotta, fior di latte, salame o cicoli e pepe.",
     key_characteristics: [
       "Chiuso a mezzaluna sigillata",
       "Ripieno ricotta + fior di latte",
@@ -1360,7 +1360,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
      * da 32 cm (804 cm²); un metro × 30 cm sono 3000 cm²: dosi × 3,7. */
     topping_scale: 3.7,
     description:
-      "Formato rettangolare lungo nato a Vico Equense, servito a metri con più condimenti affiancati. Impasto napoletano morbido, alveolato.",
+      "Lunga e rettangolare, con più condimenti affiancati. Nasce a Vico Equense e mantiene un impasto morbido e alveolato.",
     key_characteristics: [
       "Formato lungo servito a metri",
       "Più gusti sulla stessa base",
@@ -1410,7 +1410,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 2,
     servings_per_unit: [2, 3],
     description:
-      "Cotta in forno a carbone, sottile, irregolare e carbonizzata sui bordi. L'icona è la white clam pie (vongole, aglio, origano, niente pomodoro).",
+      "Sottile e irregolare, con bordi molto tostati dalla cottura a carbone. La white clam pie si condisce con vongole, aglio e origano.",
     key_characteristics: [
       "Forno a carbone, bordi carbonizzati",
       "Sottile e irregolare",
@@ -1467,7 +1467,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 1,
     servings_per_unit: [4, 6],
     description:
-      "Pizza alta 'al molde' a doppio strato, ripiena di abbondante mozzarella e ricoperta di cipolla. Niente pomodoro. Icona della pizza porteña.",
+      "Due strati di impasto racchiudono un ripieno abbondante di mozzarella. Sopra, cipolla e niente pomodoro: un classico di Buenos Aires.",
     key_characteristics: [
       "Doppio strato ripieno di mozzarella",
       "Cipolla in superficie, niente pomodoro",
@@ -1517,7 +1517,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 2,
     servings_per_unit: [1, 2],
     description:
-      "Base sottile con ingredienti gourmet non convenzionali (pollo BBQ, capra, fichi, rucola). Nata da Chez Panisse e Wolfgang Puck negli anni '80.",
+      "Una base sottile accoglie combinazioni insolite, dal pollo barbecue al formaggio di capra, fichi e rucola.",
     key_characteristics: [
       "Base sottile artigianale",
       "Ingredienti gourmet stagionali",
@@ -1568,7 +1568,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     default_dough_balls: 1,
     servings_per_unit: [3, 4],
     description:
-      "Cotta in teglia tonda generosamente oliata: fondo croccante quasi fritto, mollica soffice. Mix mozzarella + cheddar. Classico dei diner greco-americani.",
+      "Cotta in una teglia tonda ben oliata, con fondo croccante e interno soffice. Il condimento unisce mozzarella e cheddar.",
     key_characteristics: [
       "Teglia molto unta, fondo fritto",
       "Mollica soffice e spessa",

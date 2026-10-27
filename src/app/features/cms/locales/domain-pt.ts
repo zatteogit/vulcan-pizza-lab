@@ -443,7 +443,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     },
     pl_ratio: {
       name: "P/L (Rela\u00E7\u00E3o Tenacidade/Extensibilidade)",
-      definition: "\u00CDndice de equil\u00EDbrio mec\u00E2nico. Rela\u00E7\u00E3o entre a resist\u00EAncia e a extensibilidade da massa.",
+      definition: "A relação entre a resistência da massa à deformação e a capacidade de se esticar.",
       whyImportant: "Descreve o equilíbrio reológico. O valor adequado depende da farinha, hidratação e método; não garante altura ou textura.",
       ranges: [
         { label: "<0.4 Muito extens\u00EDvel", value: "Desaba facilmente", note: "Pinsa" },
@@ -490,7 +490,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     },
     stability: {
       name: "Estabilidade da Massa",
-      definition: "Tempo durante o qual a massa mant\u00E9m a consist\u00EAncia ideal durante a sova. Medida com o farin\u00F3grafo.",
+      definition: "Durante quanto tempo a massa mantém a consistência ao amassar. Mede-se com o farinógrafo.",
       whyImportant: "Estabilidade baixa (<5 min): degrada se for sovada demais. Alta (>10 min): tolera erros operacionais.",
       ranges: [
         { label: "Fraca", value: "2\u20134 min" },
@@ -501,7 +501,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     },
     yeast: {
       name: "Fermento (Saccharomyces cerevisiae)",
-      definition: "Fungo unicelular que converte a\u00E7\u00FAcares em CO\u2082 + etanol + compostos arom\u00E1ticos.",
+      definition: "Um fungo unicelular que fermenta açúcares, produzindo dióxido de carbono, álcool e compostos aromáticos.",
       whyImportant: "A atividade depende da estirpe, dose, temperatura e massa. O frio abranda a fermentação; não há limiar universal de paragem imediata.",
       ranges: [
         { label: "Fresco", value: "0.5\u20132.0%", note: "Umidade 70%, geladeira a 4\u00B0C" },
@@ -601,17 +601,17 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     },
     gluten: {
       name: "Gl\u00FAten",
-      definition: "Complexo proteico viscoel\u00E1stico formado por gliadina (extens\u00EDvel) + glutenina (tenaz) na presen\u00E7a de \u00E1gua e sova.",
+      definition: "A gliadina e a glutenina formam, com água e trabalho da massa, uma rede elástica e extensível.",
       whyImportant: "Elasticidade vinda das gluteninas (liga\u00E7\u00F5es S-S), viscosidade das gliadinas (liga\u00E7\u00F5es H). Prote\u00F3lise longa quebra as liga\u00E7\u00F5es \u2192 massa mais extens\u00EDvel.",
     },
     proteolysis: {
       name: "Prote\u00F3lise",
-      definition: "Degrada\u00E7\u00E3o das prote\u00EDnas em pept\u00EDdeos e amino\u00E1cidos por enzimas proteases. Alvo: gl\u00FAten.",
+      definition: "As enzimas proteases decompõem as proteínas da massa em moléculas mais pequenas, como péptidos e aminoácidos.",
       whyImportant: "Pode alterar a extensibilidade e a resistência da massa. Depende da farinha, dos microrganismos, da temperatura e do processo: não há uma duração ideal universal e não mede a digestibilidade individual.",
     },
     thickness_factor: {
       name: "Thickness Factor (TF)",
-      definition: "Densidade superficial da massa \u2014 massa por unidade de \u00E1rea. Indica quanta massa h\u00E1 por cm\u00B2.",
+      definition: "Quantidade de massa por unidade de superfície: os gramas de massa por cada cm² de pizza.",
       whyImportant: "Determina o tempo de cozimento, a croc\u00E2ncia e a densidade cal\u00F3rica. M\u00E9trica original do Projeto {brand}.",
       ranges: [
         { label: "Napolitana", value: "0.30\u20130.36", note: "6-7 mm" },
@@ -639,7 +639,7 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
     },
     a_score: {
       name: "A-Score (Autenticidade)",
-      definition: "Pontua\u00E7\u00E3o de 0-100 que mede a ader\u00EAncia de uma receita ao regulamento do estilo-alvo.",
+      definition: "Pontuação de 0 a 100 sobre a proximidade à referência do estilo. Não certifica o cumprimento de um caderno de especificações.",
       ranges: [
         { label: "90-100", value: "Rigorosamente aut\u00EAntica" },
         { label: "75-89", value: "Substancialmente aut\u00EAntica" },
@@ -648,8 +648,8 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     f_score: {
-      name: "F-Score (Viabilidade)",
-      definition: "Pontua\u00E7\u00E3o de 0-100 que mede a viabilidade pr\u00E1tica, considerando o equipamento e a habilidade do usu\u00E1rio.",
+      name: "F-Score (Facilidade)",
+      definition: "Pontuação de 0 a 100 sobre a facilidade de preparação com o forno, farinha e experiência disponíveis. Os requisitos que bloqueiam a receita são avaliados à parte.",
       ranges: [
         { label: "90-100", value: "Muito vi\u00E1vel" },
         { label: "75-89", value: "Vi\u00E1vel com aten\u00E7\u00E3o" },
@@ -658,8 +658,8 @@ export const GLOSSARY_TERMS_PT: Partial<CmsGlossaryTerms> = {
       ],
     },
     d_score: {
-      name: "D-Score (Digestibilidade)",
-      definition: "Índice heurístico de maturação, não uma medida da digestibilidade individual ou dos FODMAP. Usa horas equivalentes a 18°C, com ajustes para pré-fermento, dose de fermento e frio.",
+      name: "D-Score (Maturação estimada)",
+      definition: "Estimativa do modelo baseada em tempo, temperatura, levedura e pré-fermentos. Não mede a digestibilidade individual nem calcula os FODMAP.",
       ranges: [{"label":"85-100","value":"Índice alto"},{"label":"70-84","value":"Índice médio-alto"},{"label":"50-69","value":"Índice médio"},{"label":"<50","value":"Índice baixo"}],
     },
   },

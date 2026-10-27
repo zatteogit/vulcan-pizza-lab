@@ -481,7 +481,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     },
     pl_ratio: {
       name: "P/L\uFF08\u7C98\u308A\u5F37\u3055/\u4F38\u5C55\u6027\u306E\u6BD4\uFF09",
-      definition: "\u6A5F\u68B0\u7684\u306A\u30D0\u30E9\u30F3\u30B9\u306E\u6307\u6A19\u3002\u751F\u5730\u306E\u62B5\u6297\u3068\u4F38\u5C55\u6027\u306E\u6BD4\u7387\u3067\u3059\u3002",
+      definition: "生地が変形に抵抗する力と、伸びる性質の比率です。",
       whyImportant: "生地の粘弾性のバランスを表します。適切な値は粉・加水率・製法で変わり、ピザの高さや食感を保証しません。",
       ranges: [
         { label: "<0.4 \u975E\u5E38\u306B\u4F38\u3073\u3084\u3059\u3044", value: "\u3064\u3076\u308C\u3084\u3059\u3044", note: "\u30D4\u30F3\u30B5" },
@@ -528,7 +528,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     },
     stability: {
       name: "\u751F\u5730\u306E\u5B89\u5B9A\u5EA6",
-      definition: "\u30DF\u30AD\u30B7\u30F3\u30B0\u4E2D\u306B\u751F\u5730\u304C\u6700\u9069\u306A\u72B6\u614B\u3092\u4FDD\u3064\u6642\u9593\u3002\u30D5\u30A1\u30EA\u30CE\u30B0\u30E9\u30D5\u3067\u6E2C\u5B9A\u3057\u307E\u3059\u3002",
+      definition: "捏ねている間、生地が一定の状態を保つ時間です。ファリノグラフで測定します。",
       whyImportant: "\u5B89\u5B9A\u5EA6\u304C\u4F4E\u3044\uFF08<5 min\uFF09\uFF1A\u3053\u306D\u3059\u304E\u308B\u3068\u52A3\u5316\u3057\u307E\u3059\u3002\u9AD8\u3044\uFF08>10 min\uFF09\uFF1A\u4F5C\u696D\u30DF\u30B9\u306B\u5F37\u304F\u306A\u308A\u307E\u3059\u3002",
       ranges: [
         { label: "\u5F31\u3044", value: "2\u20134 min" },
@@ -539,7 +539,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     },
     yeast: {
       name: "\u30A4\u30FC\u30B9\u30C8\uFF08Saccharomyces cerevisiae\uFF09",
-      definition: "\u7CD6\u3092CO\u2082 + \u30A8\u30BF\u30CE\u30FC\u30EB + \u82B3\u9999\u5316\u5408\u7269\u306B\u5909\u3048\u308B\u5358\u7D30\u80DE\u306E\u83CC\u985E\u3002",
+      definition: "糖を発酵させ、二酸化炭素、アルコール、香りの成分を作る単細胞の菌類です。",
       whyImportant: "活性は菌株・量・温度・生地によって変わります。低温で発酵は遅くなりますが、一律に直ちに止まる温度はありません。",
       ranges: [
         { label: "\u751F\u30A4\u30FC\u30B9\u30C8", value: "0.5\u20132.0%", note: "\u6C34\u520670%\u3001\u51B7\u85354\u00B0C" },
@@ -639,17 +639,17 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     },
     gluten: {
       name: "\u30B0\u30EB\u30C6\u30F3",
-      definition: "\u6C34\u3068\u30DF\u30AD\u30B7\u30F3\u30B0\u306B\u3088\u3063\u3066\u3001\u30B0\u30EA\u30A2\u30B8\u30F3\uFF08\u4F38\u5C55\u6027\uFF09+ \u30B0\u30EB\u30C6\u30CB\u30F3\uFF08\u7C98\u308A\u5F37\u3055\uFF09\u304B\u3089\u5F62\u6210\u3055\u308C\u308B\u7C98\u5F3E\u6027\u306E\u30BF\u30F3\u30D1\u30AF\u8CEA\u8907\u5408\u4F53\u3002",
+      definition: "グリアジンとグルテニンが、水と捏ねる操作によって、生地に弾力と伸びのある網目を作ります。",
       whyImportant: "\u5F3E\u6027\u306F\u30B0\u30EB\u30C6\u30CB\u30F3\uFF08S-S\u7D50\u5408\uFF09\u3001\u7C98\u6027\u306F\u30B0\u30EA\u30A2\u30B8\u30F3\uFF08H\u7D50\u5408\uFF09\u306B\u3088\u308B\u3082\u306E\u3067\u3059\u3002\u9577\u6642\u9593\u306E\u30BF\u30F3\u30D1\u30AF\u8CEA\u5206\u89E3\u3067\u7D50\u5408\u304C\u5207\u308C \u2192 \u751F\u5730\u304C\u3088\u308A\u4F38\u3073\u3084\u3059\u304F\u306A\u308A\u307E\u3059\u3002",
     },
     proteolysis: {
       name: "\u30BF\u30F3\u30D1\u30AF\u8CEA\u5206\u89E3",
-      definition: "\u30D7\u30ED\u30C6\u30A2\u30FC\u30BC\u9175\u7D20\u306B\u3088\u3063\u3066\u30BF\u30F3\u30D1\u30AF\u8CEA\u304C\u30DA\u30D7\u30C1\u30C9\u3068\u30A2\u30DF\u30CE\u9178\u306B\u5206\u89E3\u3055\u308C\u308B\u3053\u3068\u3002\u5BFE\u8C61\uFF1A\u30B0\u30EB\u30C6\u30F3\u3002",
+      definition: "プロテアーゼという酵素が、生地のタンパク質をペプチドやアミノ酸などの小さな分子に分解します。",
       whyImportant: "生地の伸びや強度が変化します。粉・微生物・温度・製法によって異なり、すべてに共通する最適時間はありません。個人の消化性を測るものではありません。",
     },
     thickness_factor: {
       name: "Thickness Factor\uFF08TF\u30FB\u539A\u3055\u4FC2\u6570\uFF09",
-      definition: "\u751F\u5730\u306E\u9762\u5BC6\u5EA6 \u2014 \u5358\u4F4D\u9762\u7A4D\u3042\u305F\u308A\u306E\u8CEA\u91CF\u3002cm\u00B2\u3042\u305F\u308A\u306E\u751F\u5730\u91CF\u3092\u793A\u3057\u307E\u3059\u3002",
+      definition: "ピザの面積あたりの生地量です。1cm²あたりに使う生地のグラム数を表します。",
       whyImportant: "\u713C\u6210\u6642\u9593\u3001\u30AB\u30EA\u30C3\u3068\u611F\u3001\u30AB\u30ED\u30EA\u30FC\u5BC6\u5EA6\u3092\u5DE6\u53F3\u3057\u307E\u3059\u3002{brand}\u30D7\u30ED\u30B8\u30A7\u30AF\u30C8\u72EC\u81EA\u306E\u6307\u6A19\u3067\u3059\u3002",
       ranges: [
         { label: "\u30CA\u30DD\u30EA\u30D4\u30C3\u30C4\u30A1", value: "0.30\u20130.36", note: "6-7 mm" },
@@ -677,7 +677,7 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
     },
     a_score: {
       name: "A-Score\uFF08\u6B63\u7D71\u6027\uFF09",
-      definition: "\u30EC\u30B7\u30D4\u304C\u76EE\u6A19\u30B9\u30BF\u30A4\u30EB\u306E\u898F\u5B9A\u306B\u3069\u308C\u3060\u3051\u5FE0\u5B9F\u304B\u3092\u6E2C\u308B0-100\u306E\u30B9\u30B3\u30A2\u3002",
+      definition: "元のスタイルへの近さを0〜100点で示します。規定への適合を認証するものではありません。",
       ranges: [
         { label: "90-100", value: "\u53B3\u5BC6\u306B\u672C\u683C\u7684" },
         { label: "75-89", value: "\u307B\u307C\u672C\u683C\u7684" },
@@ -686,8 +686,8 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
       ],
     },
     f_score: {
-      name: "F-Score\uFF08\u5B9F\u73FE\u53EF\u80FD\u6027\uFF09",
-      definition: "\u8A2D\u5099\u3068\u30E6\u30FC\u30B6\u30FC\u306E\u6280\u8853\u3092\u8E0F\u307E\u3048\u3001\u5B9F\u969B\u306B\u3069\u308C\u3060\u3051\u4F5C\u308A\u3084\u3059\u3044\u304B\u3092\u6E2C\u308B0-100\u306E\u30B9\u30B3\u30A2\u3002",
+      name: "Fスコア（作りやすさ）",
+      definition: "オーブン、粉、経験に応じた作りやすさを0〜100点で示します。レシピを作れない条件は別に判定します。",
       ranges: [
         { label: "90-100", value: "\u5341\u5206\u306B\u4F5C\u308C\u308B" },
         { label: "75-89", value: "\u6CE8\u610F\u3059\u308C\u3070\u4F5C\u308C\u308B" },
@@ -696,8 +696,8 @@ export const GLOSSARY_TERMS_JA: Partial<CmsGlossaryTerms> = {
       ],
     },
     d_score: {
-      name: "D-Score\uFF08\u6D88\u5316\u6027\uFF09",
-      definition: "熟成の目安となる経験的な指数です。個人の消化のしやすさやFODMAP量の測定値ではありません。18°C換算時間に、前発酵種、酵母量、冷蔵の補正を加えます。",
+      name: "Dスコア（熟成の推定）",
+      definition: "時間、温度、イースト、前発酵の生地に基づくモデルの推定です。個人の消化やFODMAP量を測るものではありません。",
       ranges: [{"label":"85-100","value":"高い指数"},{"label":"70-84","value":"やや高い指数"},{"label":"50-69","value":"中程度の指数"},{"label":"<50","value":"低い指数"}],
     },
   },

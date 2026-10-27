@@ -453,7 +453,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     pl_ratio: {
       name: "P/L (Tenacity/Extensibility Ratio)",
       definition:
-        "Mechanical balance index. Ratio between resistance and extensibility of the dough.",
+        "The ratio between dough’s resistance to deformation and its ability to stretch.",
       whyImportant:
         "It describes rheological balance. The suitable value depends on flour, hydration and method; it does not guarantee pizza height or texture.",
       ranges: [
@@ -567,7 +567,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     stability: {
       name: "Dough Stability",
       definition:
-        "Time during which the dough maintains optimal consistency during mixing. Measured with farinograph.",
+        "How long dough maintains its consistency during mixing. Measured with a farinograph.",
       whyImportant:
         "Low stability (<5 min): degrades if overmixed. High (>10 min): tolerates operator errors.",
       ranges: [
@@ -580,7 +580,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     yeast: {
       name: "Yeast (Saccharomyces cerevisiae)",
       definition:
-        "Single-celled fungus that converts sugars into CO\u2082 + ethanol + aromatic compounds.",
+        "A single-celled fungus that ferments sugars, producing carbon dioxide, alcohol and aroma compounds.",
       whyImportant:
         "Activity depends on strain, dose, temperature and dough. Cold slows fermentation; there is no universal immediate stopping threshold.",
       ranges: [
@@ -711,21 +711,21 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     gluten: {
       name: "Gluten",
       definition:
-        "Viscoelastic protein complex formed by gliadin (extensible) + glutenin (tenacious) in presence of water and mixing.",
+        "Gliadin and glutenin combine with water and mixing to form an elastic, extensible network in dough.",
       whyImportant:
         "Elasticity from glutenins (S-S bonds), viscosity from gliadins (H bonds). Long proteolysis cuts bonds \u2192 more extensible dough.",
     },
     proteolysis: {
       name: "Proteolysis",
       definition:
-        "Degradation of proteins into peptides and amino acids by protease enzymes. Target: gluten.",
+        "Protease enzymes break down dough proteins into smaller molecules, such as peptides and amino acids.",
       whyImportant:
         "It can change dough extensibility and strength. It depends on flour, microorganisms, temperature and process: there is no universal optimal duration, and it does not measure individual digestibility.",
     },
     thickness_factor: {
       name: "Thickness Factor (TF)",
       definition:
-        "Dough surface density \u2014 mass per unit area. Indicates how much dough there is per cm\u00B2.",
+        "Dough quantity per unit of surface area: the grams of dough for each cm² of pizza.",
       whyImportant:
         "Determines baking time, crispness and caloric density. Original {brand} Project metric.",
       ranges: [
@@ -759,7 +759,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
     a_score: {
       name: "A-Score (Authenticity)",
       definition:
-        "0-100 score measuring adherence of a recipe to the target style\u2019s specification.",
+        "A score from 0 to 100 for closeness to the style reference. It does not certify compliance with a specification.",
       ranges: [
         { label: "90-100", value: "Rigorously authentic" },
         { label: "75-89", value: "Substantially authentic" },
@@ -768,9 +768,9 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       ],
     },
     f_score: {
-      name: "F-Score (Feasibility)",
+      name: "F-Score (Ease)",
       definition:
-        "0-100 score measuring practical achievability given equipment and user skill.",
+        "A score from 0 to 100 for ease of preparation with the available oven, flour and experience. Requirements that block a recipe are assessed separately.",
       ranges: [
         { label: "90-100", value: "Highly feasible" },
         { label: "75-89", value: "Feasible with care" },
@@ -779,9 +779,9 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       ],
     },
     d_score: {
-      name: "D-Score (Digestibility)",
+      name: "D-Score (Estimated maturation)",
       definition:
-        "A heuristic maturation index, not a measure of individual digestibility or FODMAPs. Uses equivalent hours at 18°C, with adjustments for pre-ferment, yeast dose and refrigeration.",
+        "A model estimate based on time, temperature, yeast and preferments. It does not measure personal digestibility or calculate FODMAP content.",
       ranges: [{"label":"85-100","value":"High index"},{"label":"70-84","value":"Medium-high index"},{"label":"50-69","value":"Medium index"},{"label":"<50","value":"Low index"}],
     },
   },

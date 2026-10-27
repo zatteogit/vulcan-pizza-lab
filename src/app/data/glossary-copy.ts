@@ -17,17 +17,17 @@ export const GLOSSARY_COPY_IT = {
     "name": "Gelatinizzazione Amido"
   },
   "proteolysis": {
-    "definition": "Degradazione proteine in peptidi e aminoacidi da parte di enzimi proteasi. Target: glutine.",
+    "definition": "Gli enzimi proteasi scompongono le proteine dell’impasto in molecole più piccole, come peptidi e amminoacidi.",
     "whyImportant": "Può modificare estensibilità e tenuta dell’impasto. Dipende da farina, microrganismi, temperatura e processo: non esiste una durata ottimale universale e non misura la digeribilità individuale.",
     "name": "Proteolisi"
   },
   "pl_ratio": {
-    "definition": "Indice di bilanciamento meccanico. Rapporto tra resistenza e estensibilità dell'impasto.",
+    "definition": "Rapporto tra la resistenza dell’impasto alla deformazione e la sua capacità di allungarsi.",
     "whyImportant": "Descrive un equilibrio reologico: il valore adatto dipende da farina, idratazione e metodo, non garantisce altezza o consistenza della pizza.",
     "name": "P/L (Rapporto Tenacità/Estensibilità)"
   },
   "yeast": {
-    "definition": "Fungo unicellulare che converte zuccheri in CO₂ + etanolo + composti aromatici.",
+    "definition": "Un fungo unicellulare che fermenta gli zuccheri, producendo anidride carbonica, alcol e composti aromatici.",
     "whyImportant": "L’attività dipende da ceppo, dose, temperatura e impasto. Il freddo rallenta la fermentazione; non esiste una soglia universale di arresto immediato.",
     "name": "Lievito (Saccharomyces cerevisiae)"
   },
@@ -67,7 +67,7 @@ export const GLOSSARY_COPY_IT = {
   },
   "stability": {
     "name": "Stabilità Impasto",
-    "definition": "Tempo durante il quale l'impasto mantiene consistenza ottimale durante mixing. Misurata con farinografo.",
+    "definition": "Quanto a lungo l’impasto mantiene la sua consistenza durante la lavorazione. Si misura con il farinografo.",
     "whyImportant": "Stabilità bassa (<5 min): degrada se overmixed. Alta (>10 min): tollera errori operativi."
   },
   "q10": {
@@ -125,12 +125,12 @@ export const GLOSSARY_COPY_IT = {
   },
   "gluten": {
     "name": "Glutine",
-    "definition": "Complesso proteico viscoelastico formato da gliadina (estensibile) + glutenina (tenace) in presenza di acqua e mixing.",
+    "definition": "Complesso di gliadina e glutenina che, con acqua e lavorazione, forma una rete elastica ed estensibile nell’impasto.",
     "whyImportant": "Elasticità da glutenine (legami S-S), viscosità da gliadine (legami H). Proteolisi lunga taglia legami → impasto più estensibile."
   },
   "thickness_factor": {
     "name": "Thickness Factor (TF)",
-    "definition": "Densità superficiale impasto — massa per unità area. Indica quanto impasto c'è per cm²."
+    "definition": "Quantità di impasto per unità di superficie: indica quanti grammi servono per ogni cm² di pizza."
   },
   "friction_factor": {
     "name": "Attrito dell'impastatrice",
@@ -144,14 +144,14 @@ export const GLOSSARY_COPY_IT = {
   },
   "a_score": {
     "name": "A-Score (Autenticità)",
-    "definition": "Punteggio 0-100 che misura aderenza di una ricetta al disciplinare dello stile target."
+    "definition": "Punteggio da 0 a 100 sulla vicinanza al riferimento dello stile. Non certifica la conformità a un disciplinare."
   },
   "f_score": {
-    "name": "F-Score (Fattibilità)",
-    "definition": "Punteggio 0-100 che misura realizzabilità pratica data equipaggiamento e abilità utente."
+    "name": "F-Score (Facilità)",
+    "definition": "Punteggio da 0 a 100 sulla facilità di preparazione con forno, farina ed esperienza disponibili. I requisiti che bloccano la ricetta sono valutati a parte."
   },
   "d_score": {
-    "name": "D-Score (Digeribilità)",
-    "definition": "Indice euristico di maturazione, non una misura della digeribilità individuale o dei FODMAP. Usa ore equivalenti a 18°C, un correttivo per pre-fermento, dose di lievito e freddo."
+    "name": "D-Score (Maturazione stimata)",
+    "definition": "Stima del modello basata su tempi, temperature, lievito e preimpasti. Non misura la digeribilità personale e non permette di calcolare i FODMAP."
   }
 } as const;

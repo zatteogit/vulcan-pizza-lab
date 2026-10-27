@@ -79,7 +79,7 @@ export const INSPIRATION_I18N_ES: InspirationTranslation = {
   recipes: {
     margherita_verace: {
       name: "Margherita Verace",
-      description: "El icono universal: tomate, mozzarella, albahaca y aceite de oliva virgen extra, cocida en 60–90 segundos como pide el reglamento.",
+      description: "Tomate, mozzarella, albahaca y aceite de oliva virgen extra sobre la base napolitana de referencia.",
     },
     marinara_avpn: {
       name: "Marinara",
@@ -121,7 +121,7 @@ export const INSPIRATION_I18N_ES: InspirationTranslation = {
     },
     detroit_pepperoni: {
       name: "Detroit Pepperoni",
-      description: "Pizza alta en bandeja: el queso llega hasta los bordes y los carameliza. Encima, pepperoni.",
+      description: "Pizza alta en bandeja, con pepperoni y queso hasta los bordes, donde forma una corteza dorada y crujiente.",
     },
     crescenza_recco_igp: {
       card: {"name": "Focaccia di Recco col formaggio"},
