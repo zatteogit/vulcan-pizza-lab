@@ -1074,7 +1074,6 @@ export interface CmsContent {
     learnedFromAttempts?: string;
     applyCorrections?: string;
     learnInlineTitle: string;
-    learnInlineBody: string;
     tipsCountOne: string;
     tipsCountMany: string;
     glossaryPreferment: string;
@@ -1912,7 +1911,6 @@ export const CMS_DEFAULTS: CmsContent = {
     learnedFromAttempts: "Ho imparato dai tuoi {n} tentativi",
     applyCorrections: "Applica le correzioni",
     learnInlineTitle: "Approfondisci: {label}",
-    learnInlineBody: "{label}: leggi la spiegazione senza uscire dalla ricetta. Trovi gli altri approfondimenti in Impara.",
     tipsCountOne: "{n} consiglio",
     tipsCountMany: "{n} consigli",
     glossaryPreferment: "Biga e pre-fermenti",

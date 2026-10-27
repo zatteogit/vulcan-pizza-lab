@@ -1953,8 +1953,6 @@ export const JA_LOCALE: CmsContent = {
     learnedFromAttempts: "\u3053\u308C\u307E\u3067\u306E{n}\u56DE\u306E\u8A18\u9332\u304B\u3089\u5B66\u3073\u307E\u3057\u305F",
     applyCorrections: "\u88DC\u6B63\u3092\u9069\u7528",
     learnInlineTitle: "\u8A73\u3057\u304F\uFF1A{label}",
-    learnInlineBody:
-      "{label}：レシピを開いたまま解説を読めます。ほかの解説は「学ぶ」で確認できます。",
     tipsCountOne: "{n}件のアドバイス",
     tipsCountMany: "{n}件のアドバイス",
     glossaryPreferment: "ビガと発酵種",

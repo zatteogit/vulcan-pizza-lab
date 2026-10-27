@@ -714,7 +714,6 @@ export const EN_LOCALE: CmsContent = {
     learnedFromAttempts: "I learned from your {n} attempts",
     applyCorrections: "Apply the corrections",
     learnInlineTitle: "Learn more: {label}",
-    learnInlineBody: "{label}: read the explanation without leaving the recipe. Find more in Learn.",
     tipsCountOne: "{n} tip",
     tipsCountMany: "{n} tips",
     glossaryPreferment: "Biga and pre-ferments",
