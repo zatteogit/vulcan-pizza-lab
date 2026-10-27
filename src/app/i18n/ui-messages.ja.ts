@@ -1,5 +1,22 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "recipe.share.title": "レシピを共有",
+  "recipe.share.link": "レシピのリンク",
+  "recipe.share.native": "アプリで共有",
+  "recipe.share.copy": "リンクをコピー",
+  "recipe.share.copied": "リンクをコピーしました",
+  "recipe.share.manual": "リンクを選択してコピーしてください。",
+  "recipe.share.unavailable": "共有を利用できません。リンクをコピーできます。",
+  "cooking.screen.label": "画面をオンに保つ",
+  "cooking.screen.off": "オフ",
+  "cooking.screen.requesting": "有効にしています…",
+  "cooking.screen.active": "有効",
+  "cooking.screen.paused": "一時停止中",
+  "cooking.screen.released": "端末によって解除されました",
+  "cooking.screen.denied": "現在利用できません",
+  "cooking.screen.unsupported": "画面は端末の設定に従います。",
+  "cooking.screen.retry": "再試行",
+
   "recipe.schedule.fromNowHelp": "開始を今に設定し、すべての工程の時刻を更新します。",
   "recipe.schedule.updated": "予定を更新しました。",
   "recipe.schedule.startEarlier": "開始を15分早める",

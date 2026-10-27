@@ -3,6 +3,23 @@
  * Le chiavi sono stabili: namespace + slug + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "recipe.share.title": "Condividi ricetta",
+  "recipe.share.link": "Link della ricetta",
+  "recipe.share.native": "Condividi con un’app",
+  "recipe.share.copy": "Copia link",
+  "recipe.share.copied": "Link copiato",
+  "recipe.share.manual": "Seleziona e copia il link.",
+  "recipe.share.unavailable": "Condivisione non disponibile. Puoi copiare il link.",
+  "cooking.screen.label": "Mantieni lo schermo acceso",
+  "cooking.screen.off": "Disattivato",
+  "cooking.screen.requesting": "Attivazione…",
+  "cooking.screen.active": "Attivo",
+  "cooking.screen.paused": "In pausa",
+  "cooking.screen.released": "Interrotto dal dispositivo",
+  "cooking.screen.denied": "Non disponibile ora",
+  "cooking.screen.unsupported": "Lo schermo segue le impostazioni del dispositivo.",
+  "cooking.screen.retry": "Riprova",
+
   "recipe.schedule.fromNowHelp": "Imposta l’inizio ad adesso e aggiorna tutti gli orari.",
   "recipe.schedule.updated": "Orari aggiornati.",
   "recipe.schedule.startEarlier": "Anticipa l’inizio di 15 minuti",

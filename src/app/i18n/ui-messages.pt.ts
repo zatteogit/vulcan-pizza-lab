@@ -1,5 +1,22 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "recipe.share.title": "Partilhar receita",
+  "recipe.share.link": "Ligação da receita",
+  "recipe.share.native": "Partilhar com uma app",
+  "recipe.share.copy": "Copiar ligação",
+  "recipe.share.copied": "Ligação copiada",
+  "recipe.share.manual": "Selecione e copie a ligação.",
+  "recipe.share.unavailable": "A partilha não está disponível. Pode copiar a ligação.",
+  "cooking.screen.label": "Manter o ecrã ligado",
+  "cooking.screen.off": "Desativado",
+  "cooking.screen.requesting": "A ativar…",
+  "cooking.screen.active": "Ativo",
+  "cooking.screen.paused": "Em pausa",
+  "cooking.screen.released": "Interrompido pelo dispositivo",
+  "cooking.screen.denied": "Indisponível neste momento",
+  "cooking.screen.unsupported": "O ecrã segue as definições do dispositivo.",
+  "cooking.screen.retry": "Tentar novamente",
+
   "recipe.schedule.fromNowHelp": "Define o início para agora e atualiza todos os horários.",
   "recipe.schedule.updated": "Horários atualizados.",
   "recipe.schedule.startEarlier": "Antecipar o início em 15 minutos",
