@@ -1731,13 +1731,18 @@ export function ProfilePage() {
             />
           </div>
 
-          <div className="profile-oven-heat">
-            <div className="profile-oven-heat__head">
+          <details className="profile-oven-heat">
+            <summary className="profile-oven-heat__head">
               <span className="type-data-sm profile-oven-heat__label">
                 {uiMessage("pages.profile.distribuzione-del-calore-bfa0da90")}</span>
-              <span className="type-data-xs profile-oven-heat__hint">
-                {uiMessage("pages.profile.cambia-preriscaldo-ripiano-e-rotazioni-8f2fcd03")}</span>
-            </div>
+              <span className="profile-oven-heat__current">
+                {OVEN_HEAT_PROFILES.find(profile => profile.id === (equipment.oven_heat_profile ?? "static_top_bottom"))?.label}
+              </span>
+              <ChevronDown size={16} aria-hidden="true" />
+            </summary>
+            <p className="type-data-xs profile-oven-heat__hint">
+              {uiMessage("pages.profile.cambia-preriscaldo-ripiano-e-rotazioni-8f2fcd03")}
+            </p>
             <div className="profile-oven-heat__grid">
               {OVEN_HEAT_PROFILES.map((profile) => {
                 const active = (equipment.oven_heat_profile ?? "static_top_bottom") === profile.id;
@@ -1775,7 +1780,7 @@ export function ProfilePage() {
                 );
               })}
             </div>
-          </div>
+          </details>
         </ProfileSection>
 
         {/* ── SKILL ── */}

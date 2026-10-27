@@ -288,25 +288,25 @@ export function ProcedureHeroControls({
           {uiMessage("recipe.schedule.updated")}
         </p>}
 
-        {feasibleMeals.length > 0 && <>
-        <div className="procedure-hero__meals-label">
-          {uiMessage("features.recipe.procedure-hero.pronto-per-il-pasto-503f1512")}</div>
-        <div className="procedure-hero__meals-row">
-          {feasibleMeals.map((slot) => {
-            const text = timeSlotText(slot, cms, bcp47);
-            return (
-              <button
-                key={slot.id}
-                type="button"
-                onClick={() => { setPreciseEndTime(true); setStartTime(slot.idealStart); }}
-                className="procedure-hero__meal-chip"
-              >
-                {text.label} ({text.sublabel})
-              </button>
-            );
-          })}
-        </div>
-        </>}
+        {feasibleMeals.length > 0 && <div className="procedure-hero__meal-picker">
+          <div className="procedure-hero__meals-label">
+            {uiMessage("features.recipe.procedure-hero.pronto-per-il-pasto-503f1512")}</div>
+          <div className="procedure-hero__meals-row">
+            {feasibleMeals.map((slot) => {
+              const text = timeSlotText(slot, cms, bcp47);
+              return (
+                <button
+                  key={slot.id}
+                  type="button"
+                  onClick={() => { setPreciseEndTime(true); setStartTime(slot.idealStart); }}
+                  className="procedure-hero__meal-chip"
+                >
+                  {text.label} ({text.sublabel})
+                </button>
+              );
+            })}
+          </div>
+        </div>}
       </div>
 
       <div
