@@ -1017,7 +1017,7 @@ export const PT_LOCALE: CmsContent = {
     "timeline.fillClosed.tipNerd": "A pressão na borda é crítica: o ar preso infla durante o cozimento (efeito travesseiro).",
     "timeline.fillSheets.title": "Recheio entre as folhas",
     "timeline.fillSheets.desc": "Distribua o stracchino em pedacinhos sobre a primeira folha; cubra com a segunda folha, sele as bordas e tempere a superfície com azeite e sal.",
-    "timeline.bakeWhite.title": "Primeira cocção (sem cobertura)",
+    "timeline.bakeWhite.title": "Assar sem recheio",
     "timeline.bakeWhite.desc": "Asse a {temp} sem recheio. A pizza deve ficar dourada, mas não queimada.",
     "timeline.bakeWhite.tipBeginner": "Sem cobertura, a pizza assa mais rápido. Fique de olho nos últimos minutos.",
     "timeline.bakeWhite.tipNerd": "Assar sem cobertura completa a gelatinização do amido antes de entrar a umidade da cobertura.",

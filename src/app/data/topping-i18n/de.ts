@@ -898,7 +898,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
       ingredients: {
         "0": {
           name: "Geputzte Friarielli (Stängelkohl)",
-          notes: "Mit Knoblauch und Chili angebraten",
+          notes: "Mit Knoblauch, Öl und Chili anbraten",
         },
         "1": {
           name: "Zerbröselte neapolitanische Salsiccia (Schweinefleisch, Salz, Pfeffer)",
@@ -2298,19 +2298,19 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     farcitura_porchetta: {
       title: "Mit Porchetta füllen",
-      description: "Nach dem Aufschneiden die Porchetta-Scheiben auf die untere Hälfte legen. Etwas Pfeffer darübermahlen. Mit der oberen Hälfte (mit den Kartoffeln obenauf) wieder schließen.",
+      description: "Die beiden gebackenen Schichten trennen. Die Porchetta-Scheiben auf der unteren Hälfte verteilen und nach Wunsch pfeffern. Mit der oberen Hälfte schließen, die Kartoffeln zeigen nach oben.",
     },
     sale_finale: {
       title: "Salz und Servieren",
       description: "Bestreue die Kartoffeloberfläche mit Fleur de Sel. Heiß servieren, in Quadrate geschnitten.",
     },
     spread_bianca_base: {
-      title: "Weiß backen",
-      description: "Mit nativem Olivenöl extra bestreichen und mit Fleur de Sel bestreuen. Backen, bis die Kruste goldbraun ist (sonst nichts vor dem Ofen).",
+      title: "Den Boden ohne Belag vorbereiten",
+      description: "Mit Olivenöl extra vergine bestreichen und mit Fleur de Sel bestreuen. Den Boden ungefüllt lassen: Er wird im nächsten Schritt gebacken.",
     },
     mortazza_post_bake: {
       title: "Mortadella nach dem Backen hinzufügen",
-      description: "Aus dem Ofen nehmen. Bei Pala oder Pala-ähnlichem Teig wie ein Buch aufschneiden, sonst die Scheiben obenauf legen. Die Mortadella IGP in gewellten Scheiben verteilen. Mit Pistazien bestreuen. (Stracciatella di burrata optional für die Gourmetversion.)",
+      description: "Mortadella locker in Falten auf dem gebackenen Boden verteilen und mit gehackten Pistazien bestreuen. Burrata-Stracciatella nur hinzufügen, wenn ausgewählt. Ohne erneutes Backen servieren.",
     },
     crudo_bianca: {
       title: "Weiß backen",
@@ -2418,7 +2418,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     pizza_fritta_fill_seal: {
       title: "Vor dem Frittieren füllen und verschließen",
-      description: "Zieh den Teigfladen aus, verteile Ricotta, Provola, Cicoli und Pfeffer auf einer Hälfte (eventuell ein Hauch Tomate). Zum Halbmond umklappen und die Ränder gut verschließen. In heißem Öl frittieren, bis sie aufgeht und goldbraun ist. Sie wird NICHT obenauf belegt: Die Füllung ist innen.",
+      description: "Den Teig ausziehen und Ricotta, Provola, Cicoli und Pfeffer auf einer Hälfte verteilen, dazu Tomate, falls ausgewählt. Zum Halbmond falten und die Ränder gut verschließen. Die Füllung bleibt innen; frittiert wird im nächsten Schritt.",
       tip_beginner: "Sie ist anders als die Montanara: Die Montanara ist offen und wird nach dem Frittieren belegt; die Pizza fritta ist geschlossen und wird vor dem Frittieren gefüllt.",
       tip_nerd: "Die Ränder gut zu verschließen ist entscheidend: Durch eine offene Tasche dringt Öl ein und die Füllung tritt aus. Der Dampf im Inneren gart Ricotta und Provola, während die Außenseite frittiert.",
     },
@@ -2770,7 +2770,7 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Beide Fladen f\u00FCllen und verschlie\u00DFen",
-      description: "Zieh die beiden Portionen ohne Mehl von Hand zu 2–3 mm dünnen Fladen aus. Verteile Ricotta, Provola, Cicoli und Pfeffer auf dem größeren Fladen und lass den Rand frei; deck ihn mit dem kleinen Fladen ab und drück die Ränder gut fest. Bei etwa 175 °C in Pflanzenöl frittieren und wenden, sobald sie goldbraun ist.",
+      description: "Die beiden Portionen von Hand ohne Mehl zu 2–3 mm dünnen Scheiben ausziehen. Ricotta, Provola, Cicoli und Pfeffer auf der größeren Scheibe verteilen, den Rand frei lassen. Mit der kleineren Scheibe bedecken und die Ränder fest verschließen. Frittiert wird im nächsten Schritt.",
       tip_beginner: "Der untere Fladen ist gr\u00F6\u00DFer: So l\u00E4sst sich sein Rand nach oben umschlagen, und die Tonda bleibt beim Frittieren geschlossen.",
       tip_nerd: "Ohne Mehl beim Ausziehen bleibt das \u00D6l l\u00E4nger sauber; ein schlecht verschlossener Rand l\u00E4sst \u00D6l hinein und die F\u00FCllung heraus.",
     },
@@ -2789,6 +2789,18 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
     spread_marinara_scarole: {
       title: "Marinara mit Endivie",
       description: "Zerdr\u00FCckte, gesalzene gesch\u00E4lte Tomaten, die gut abgetropfte geschmorte Endivie, Oregano und etwas \u00D6l. Kein K\u00E4se.",
+    },
+    mortazza_spaccata_fill: {
+      title: "Den gebackenen Boden öffnen und füllen",
+      description: "Den gebackenen Boden mit einem Sägemesser waagerecht aufschneiden. Mortadella und gehackte Pistazien auf der unteren Hälfte verteilen; Stracciatella nur hinzufügen, wenn ausgewählt. Zuklappen und ohne erneutes Backen servieren."
+    },
+    spread_baciata_surface: {
+      title: "Die Oberfläche würzen",
+      description: "Nach dem Aufeinanderlegen der Teigplatten die äußere Oberfläche mit Olivenöl extra vergine und Fleur de Sel bestreichen. Die Füllung kommt erst nach dem Backen hinein."
+    },
+    mortazza_split_fill: {
+      title: "Die Baciata öffnen und füllen",
+      description: "Die beiden gebackenen Schichten trennen; bei Bedarf mit einem Sägemesser am Rand entlangfahren. Mortadella und gehackte Pistazien auf der unteren Schicht verteilen; Stracciatella nur hinzufügen, wenn ausgewählt. Zuklappen und ohne erneutes Backen servieren."
     },
   },
 };

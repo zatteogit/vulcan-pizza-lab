@@ -3801,13 +3801,12 @@ function generateTimeline(
     ? [em("topping.bakeNote", topping.bake_adjustments.note, { toppingId: topping.id })]
     : [];
   if (layout.cook_mode === "white_then_top") {
-    // Baciata: cottura in bianco
-    const firstBakeMin = Math.max(8, Math.round((effectiveCookSec / 60) * 0.65));
-    const secondBakeMin = Math.max(3, Math.ceil(effectiveCookSec / 60) - firstBakeMin);
+    // Complete the white bake before cold filling; the filling never returns to the oven.
+    const whiteBakeMin = Math.ceil(effectiveCookSec / 60);
     steps.push(
       keyedStep(
-        { id: "bake", duration_minutes: firstBakeMin, icon: "flame", timing_label: `${firstBakeMin} min` },
-        em("timeline.bakeWhite.title", "Prima cottura (in bianco)"),
+        { id: "bake", duration_minutes: whiteBakeMin, icon: "flame", timing_label: `${whiteBakeMin} min` },
+        em("timeline.bakeWhite.title", "Cottura in bianco"),
         [
           em("timeline.bakeWhite.desc", METHOD_MESSAGES_IT["timeline.bakeWhite.desc"], { temp: ovenTempLabel }),
           ...toppingBakeNote,
@@ -3834,13 +3833,7 @@ function generateTimeline(
         ),
       );
     }
-    steps.push(
-      keyedStep(
-        { id: "bake2", duration_minutes: secondBakeMin, icon: "flame", timing_label: `${secondBakeMin} min` },
-        em("timeline.bake2.title", "Seconda cottura (breve)"),
-        [em("timeline.bake2.desc", METHOD_MESSAGES_IT["timeline.bake2.desc"], { temp: ovenTempLabel })],
-      ),
-    );
+    // Legacy final-garnish insertion point, also used after a single complete bake.
     injectToppingAt("after_bake2");
   } else {
     // Cottura singola classica (M-6: frittura per gli stili fritti)

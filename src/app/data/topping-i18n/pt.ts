@@ -898,7 +898,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
       ingredients: {
         "0": {
           name: "Friarielli (brotos de nabo) limpos",
-          notes: "Salteados com alho e pimenta calabresa",
+          notes: "Para refogar com alho, azeite e pimenta",
         },
         "1": {
           name: "Linguiça napolitana esfarelada (carne suína, sal, pimenta)",
@@ -2298,19 +2298,19 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     farcitura_porchetta: {
       title: "Recheio de porchetta",
-      description: "Depois de abrir ao meio, disponha as fatias de porchetta na metade de baixo. Moa pimenta por cima. Feche com a parte de cima (com as batatas).",
+      description: "Separe as duas camadas assadas. Distribua as fatias de porchetta na metade inferior e acrescente pimenta se desejar. Feche com a metade superior, com as batatas voltadas para cima.",
     },
     sale_finale: {
       title: "Sal e serviço",
       description: "Polvilhe flor de sal sobre as batatas. Sirva quente, cortada em quadrados.",
     },
     spread_bianca_base: {
-      title: "Assar em branco",
-      description: "Pincele com azeite extravirgem e salpique flor de sal. Asse até a crosta dourar (nada mais antes do forno).",
+      title: "Preparar a base sem recheio",
+      description: "Pincele com azeite extravirgem e polvilhe flor de sal. Deixe a base sem recheio: ela será assada na próxima etapa.",
     },
     mortazza_post_bake: {
       title: "Adicionar a mortadela pós-forno",
-      description: "Tire do forno. Abra como um livro se for Pala/tipo Pala, ou então disponha as fatias por cima. Distribua a mortadela IGP em fatias onduladas. Salpique o pistache. (Stracciatella de burrata opcional para a versão gourmet.)",
+      description: "Distribua a mortadela em dobras e o pistache picado sobre a base assada. Acrescente a stracciatella de burrata apenas se escolhida. Sirva sem levar novamente ao forno.",
     },
     crudo_bianca: {
       title: "Assar em branco",
@@ -2418,7 +2418,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     pizza_fritta_fill_seal: {
       title: "Rechear e selar antes de fritar",
-      description: "Abra o disquinho e distribua ricota, provola, cicoli e pimenta sobre metade (se quiser, um véu de tomate). Dobre em meia-lua e sele bem as bordas. Frite em óleo bem quente até estufar e dourar. NÃO se cobre por cima: o recheio fica dentro.",
+      description: "Abra o disco e distribua ricota, provola, cicoli e pimenta sobre uma metade, com tomate se escolhido. Dobre em meia-lua e sele bem as bordas. O recheio fica dentro; a fritura acontece na próxima etapa.",
       tip_beginner: "É diferente da montanara: a montanara é aberta e coberta por cima depois de frita; a pizza fritta é fechada e recheada antes de fritar.",
       tip_nerd: "Selar bem as bordas é crucial: um bolso aberto deixa o óleo entrar e o recheio vazar. O vapor interno cozinha a ricota e a provola no vapor enquanto o lado de fora frita.",
     },
@@ -2770,7 +2770,7 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Rechear e fechar os dois discos",
-      description: "Abra as duas porções com as mãos, sem farinha, em discos com 2–3 mm de espessura. Sobre o disco maior, distribua ricota, provola, cicoli e pimenta deixando a borda livre; cubra com o disco menor e sele apertando bem. Frite em óleo vegetal a cerca de 175 °C, virando quando estiver dourada.",
+      description: "Abra as duas porções à mão, sem farinha, em discos de 2–3 mm de espessura. Distribua ricota, provola, cicoli e pimenta sobre o disco maior, deixando a borda livre; cubra com o menor e sele apertando bem. A fritura acontece na próxima etapa.",
       tip_beginner: "O disco de baixo \u00E9 maior: assim a borda dobra por cima e a tonda continua fechada na fritura.",
       tip_nerd: "Sem farinha na abertura, o \u00F3leo fica limpo por mais tempo; uma borda mal selada deixa o \u00F3leo entrar e o recheio vazar.",
     },
@@ -2789,6 +2789,18 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     spread_marinara_scarole: {
       title: "Marinara com escarola",
       description: "Tomates pelados amassados e salgados, a escarola refogada bem escorrida, or\u00E9gano e um fio de azeite. Sem queijo.",
+    },
+    mortazza_spaccata_fill: {
+      title: "Abrir e rechear a base assada",
+      description: "Corte a base assada horizontalmente com uma faca de serra. Distribua mortadela e pistache picado na metade inferior; acrescente stracciatella apenas se escolhida. Feche e sirva sem levar novamente ao forno."
+    },
+    spread_baciata_surface: {
+      title: "Temperar a superfície",
+      description: "Depois de sobrepor os discos, pincele a superfície externa com azeite extravirgem e flor de sal. O recheio será colocado depois de assar."
+    },
+    mortazza_split_fill: {
+      title: "Abrir e rechear a Baciata",
+      description: "Separe as duas camadas assadas, usando uma faca de serra ao longo da borda se necessário. Distribua mortadela e pistache picado na camada inferior; acrescente stracciatella apenas se escolhida. Feche e sirva sem levar novamente ao forno."
     },
   },
 };

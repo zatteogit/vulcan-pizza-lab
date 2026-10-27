@@ -999,7 +999,7 @@ export const DE_LOCALE: CmsContent = {
     "timeline.fillClosed.tipNerd": "Der Druck am Rand ist entscheidend: Eingeschlossene Luft bläht sich beim Backen auf (Kissen-Effekt).",
     "timeline.fillSheets.title": "Füllung zwischen den Teigplatten",
     "timeline.fillSheets.desc": "Verteile den Stracchino in Flöckchen auf der ersten Teigplatte; deck sie mit der zweiten ab, verschließ die Ränder und würze die Oberfläche mit Öl und Salz.",
-    "timeline.bakeWhite.title": "Erster Backgang (ohne Belag)",
+    "timeline.bakeWhite.title": "Ohne Belag backen",
     "timeline.bakeWhite.desc": "Backe bei {temp} ohne Belag. Die Pizza soll goldbraun, aber nicht verbrannt sein.",
     "timeline.bakeWhite.tipBeginner": "Ohne Belag backt die Pizza schneller. Behalte die letzten Minuten im Blick.",
     "timeline.bakeWhite.tipNerd": "Das Backen ohne Belag schließt die Stärkeverkleisterung ab, bevor Feuchtigkeit vom Belag dazukommt.",

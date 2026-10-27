@@ -1207,7 +1207,7 @@ export const EN_LOCALE: CmsContent = {
     "timeline.fillClosed.tipNerd": "Edge pressure is critical: trapped air expands during baking (pillow effect).",
     "timeline.fillSheets.title": "Filling between sheets",
     "timeline.fillSheets.desc": "Dot the stracchino in small pieces over the first sheet; cover with the second sheet, seal the edges and dress the top with oil and salt.",
-    "timeline.bakeWhite.title": "First bake (plain)",
+    "timeline.bakeWhite.title": "Plain bake",
     "timeline.bakeWhite.desc": "Bake at {temp} with no filling. The pizza should be golden but not burnt.",
     "timeline.bakeWhite.tipBeginner": "Without toppings the pizza bakes faster. Keep an eye on it in the last few minutes.",
     "timeline.bakeWhite.tipNerd": "Baking it plain completes starch gelatinisation before any moisture from the toppings is introduced.",

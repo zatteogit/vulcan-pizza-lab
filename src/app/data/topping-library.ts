@@ -147,6 +147,8 @@ export type TimelineInsertPoint =
   | "after_bake2";       // dopo seconda cottura
 
 interface ToppingAssemblyStep {
+  /** The same filling can require different operations on different bases. */
+  for_styles?: string[];
   id: string;
   title: string;
   description: string;
@@ -1033,7 +1035,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       { name: "Fior di latte", amount: { value: 80, unit: "g" } },
       { name: "Champignon freschi", amount: { value: 70, unit: "g" }, notes: "affettati" },
       { name: "Salsiccia (luganega o casereccia) (carne di maiale, sale, pepe)",  components: ["carne di maiale", "sale", "pepe"],amount: { value: 60, unit: "g" } },
-      { name: "Aglio + prezzemolo per soffritto", amount: { value: 5, unit: "g" }, notes: "usati per pre-cottura funghi" },
+      { name: "Aglio + prezzemolo per soffritto", components: ["aglio", "prezzemolo"], amount: { value: 5, unit: "g" }, notes: "usati per pre-cottura funghi" },
       { name: "Olio EVO", amount: { value: 8, unit: "ml" }, notes: "usato in cottura funghi e a filo" },
     ],
     pre_prep_steps: [{
@@ -1175,7 +1177,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
       {
         id: "farcitura_porchetta",
         title: "Farcitura porchetta",
-        description: "Dopo aver sdoppiato, disporre le fette di porchetta sulla metà inferiore. Macinata di pepe. Richiudere con la parte alta (con patate sopra).",
+        description: "Separare i due strati cotti. Disporre le fette di porchetta sulla metà inferiore e aggiungere il pepe, se desiderato. Richiudere con la parte alta, con le patate sopra.",
         insert_at: "after_split_fill",
         duration_minutes: 4,
         replaces_generic: true,
@@ -1210,18 +1212,45 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [
       {
         id: "spread_bianca_base",
-        title: "Cottura in bianco",
-        description: "Spennellare con olio EVO e cospargere di fior di sale. Cuocere fino a doratura della crosta (niente altro prima del forno).",
+        for_styles: ["pala_romana", "teglia_romana", "pizza_spaccata"],
+        title: "Preparare la base in bianco",
+        description: "Spennellare con olio EVO e cospargere di fior di sale. Lasciare la base senza farcitura: cuocerà nella fase successiva.",
         insert_at: "after_shape",
         duration_minutes: 2,
         replaces_generic: true,
       },
       {
         id: "mortazza_post_bake",
+        for_styles: ["pala_romana", "teglia_romana"],
         title: "Aggiungere mortadella post-cottura",
-        description: "Estrarre dal forno. Sdoppiare a libro se Pala/Pala-ish, oppure adagiare le fette sopra. Distribuire mortadella IGP a fette ondulate. Cospargere di pistacchio. (Stracciatella di burrata opzionale per versione gourmet).",
+        description: "Sulla base cotta distribuire la mortadella a fette ondulate e la granella di pistacchio. Aggiungere la stracciatella di burrata solo se scelta. Servire senza rimettere in forno.",
         insert_at: "after_bake",
         duration_minutes: 3,
+      },
+      {
+        id: "mortazza_spaccata_fill",
+        for_styles: ["pizza_spaccata"],
+        title: "Aprire e farcire la base cotta",
+        description: "Tagliare la base cotta orizzontalmente con un coltello a sega. Distribuire mortadella e granella di pistacchio nella metà inferiore; aggiungere la stracciatella solo se scelta. Richiudere e servire senza rimettere in forno.",
+        insert_at: "after_bake",
+        duration_minutes: 7,
+      },
+      {
+        id: "spread_baciata_surface",
+        for_styles: ["pizza_baciata"],
+        title: "Condire la superficie",
+        description: "Dopo aver sovrapposto i dischi, spennellare la superficie esterna con olio EVO e fior di sale. Il ripieno si aggiungerà dopo la cottura.",
+        insert_at: "after_stack",
+        duration_minutes: 2,
+      },
+      {
+        id: "mortazza_split_fill",
+        for_styles: ["pizza_baciata"],
+        title: "Aprire e farcire la Baciata",
+        description: "Separare i due strati cotti, aiutandosi con un coltello a sega lungo il bordo. Distribuire mortadella e granella di pistacchio nello strato inferiore; aggiungere la stracciatella solo se scelta. Richiudere e servire senza rimettere in forno.",
+        insert_at: "after_split_fill",
+        duration_minutes: 7,
+        replaces_generic: true,
       },
     ],
   },
@@ -1686,7 +1715,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "pizza_fritta_fill_seal",
       title: "Farcire e sigillare prima di friggere",
-      description: "Stendere il dischetto, distribuire ricotta, provola, cicoli e pepe su metà (eventuale velo di pomodoro). Ripiegare a mezzaluna e sigillare bene i bordi. Friggere in olio bollente finché gonfia e dora. NON si condisce sopra: il ripieno è dentro.",
+      description: "Stendere il dischetto e distribuire ricotta, provola, cicoli e pepe su metà, con il pomodoro se scelto. Ripiegare a mezzaluna e sigillare bene i bordi. Il ripieno resta all’interno; la frittura è nella fase successiva.",
       insert_at: "after_shape",
       duration_minutes: 5,
       replaces_generic: true,
@@ -1713,7 +1742,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "pizza_fritta_tonda_fill",
       title: "Farcire e chiudere i due dischi",
-      description: "Stendere a mano, senza farina, le due porzioni in dischi sottili 2–3 mm. Sul disco più grande distribuire ricotta, provola, cicoli e pepe lasciando libero il bordo; coprire con il disco piccolo e sigillare premendo bene. Friggere in olio di semi a circa 175 °C, girandola quando è dorata.",
+      description: "Stendere a mano, senza farina, le due porzioni in dischi sottili 2–3 mm. Sul disco più grande distribuire ricotta, provola, cicoli e pepe lasciando libero il bordo; coprire con il disco piccolo e sigillare premendo bene. La frittura è nella fase successiva.",
       insert_at: "after_fill_internal",
       duration_minutes: 6,
       replaces_generic: true,
@@ -1774,7 +1803,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     concept_ref: "salsiccia_friarielli",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
-      { name: "Friarielli (cime di rapa) puliti", amount: { value: 120, unit: "g" }, notes: "Saltati aglio e peperoncino", section: "base" },
+      { name: "Friarielli (cime di rapa) puliti", components: ["cime di rapa", "aglio", "olio EVO", "peperoncino"], amount: { value: 120, unit: "g" }, notes: "Da ripassare con aglio, olio e peperoncino", section: "base" },
       { name: "Salsiccia napoletana sbriciolata (carne di maiale, sale, pepe)",  components: ["carne di maiale", "sale", "pepe"],amount: { value: 100, unit: "g" }, notes: "Cruda, a tocchetti", section: "base" },
       { name: "Provola affumicata", amount: { value: 80, unit: "g" }, notes: "A cubetti", section: "base" },
       { name: "Olio EVO", amount: { value: 5, unit: "ml" }, section: "superficie" },
@@ -3392,12 +3421,19 @@ export function resolveTopping(
   /* Per-stile, punto: la variante di un concept per uno stile è SOLO quella
    * esplicitamente assegnata a quello stile (preferred_for_styles). Niente
    * fallback per famiglia o "generico": ogni stile ha i suoi condimenti. */
-  return Object.values(TOPPING_LIBRARY).find(
+  const recipe = Object.values(TOPPING_LIBRARY).find(
     (r) =>
       r.concept_ref === conceptId &&
       (r.preferred_for_styles?.includes(style.id) ?? false) &&
       !r.taboo_for_styles?.includes(style.id),
   );
+  return recipe && toppingForSelectedStyle(recipe, style);
+}
+
+/** Keep the catalog, generated timeline and translated detail on the same method. */
+function toppingForSelectedStyle(recipe: ToppingRecipe, style: PizzaStyle): ToppingRecipe {
+  if (!recipe.assembly_steps?.some(step => step.for_styles)) return recipe;
+  return { ...recipe, assembly_steps: recipe.assembly_steps.filter(step => !step.for_styles || step.for_styles.includes(style.id)) };
 }
 
 /* ═══ API esistenti (backward compat) ═══ */
@@ -3426,7 +3462,7 @@ export function getToppingForStyle(
 ): ToppingRecipe | undefined {
   // 1. Match diretto su recipe id (priorità: l'utente ha scelto esplicitamente)
   const direct = TOPPING_LIBRARY[id];
-  if (direct) return direct.layout_override && !direct.preferred_for_styles?.includes(style.id) ? undefined : direct;
+  if (direct) return direct.layout_override && !direct.preferred_for_styles?.includes(style.id) ? undefined : toppingForSelectedStyle(direct, style);
 
   // 2. Match su concept id → resolver intelligente
   if (TOPPING_CONCEPTS[id]) {
@@ -3700,5 +3736,5 @@ export function getRecipesByAuthenticity(style: PizzaStyle): Array<{
         a.preferredStyleOrder - b.preferredStyleOrder ||
         a.sourceIndex - b.sourceIndex,
     )
-    .map(({ recipe, authenticity }) => ({ recipe, authenticity }));
+    .map(({ recipe, authenticity }) => ({ recipe: toppingForSelectedStyle(recipe, style), authenticity }));
 }

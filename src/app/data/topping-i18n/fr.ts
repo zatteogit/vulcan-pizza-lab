@@ -898,7 +898,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
       ingredients: {
         "0": {
           name: "Friarielli (brocoli-rave) nettoyés",
-          notes: "Sautés à l'ail et au piment",
+          notes: "À faire revenir avec ail, huile et piment",
         },
         "1": {
           name: "Saucisse napolitaine émiettée (viande de porc, sel, poivre)",
@@ -2298,19 +2298,19 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     farcitura_porchetta: {
       title: "Garniture de porchetta",
-      description: "Après avoir ouvert en deux, disposez les tranches de porchetta sur la moitié inférieure. Un tour de moulin à poivre. Refermez avec la partie supérieure (avec les pommes de terre dessus).",
+      description: "Séparez les deux couches cuites. Disposez les tranches de porchetta sur la moitié inférieure et poivrez si vous le souhaitez. Refermez avec la moitié supérieure, pommes de terre vers le haut.",
     },
     sale_finale: {
       title: "Sel et service",
       description: "Parsemez de fleur de sel la surface des pommes de terre. Servez chaud, coupé en carrés.",
     },
     spread_bianca_base: {
-      title: "Cuisson en blanc",
-      description: "Badigeonnez d'huile d'olive vierge extra et parsemez de fleur de sel. Faites cuire jusqu'à ce que la croûte soit dorée (rien d'autre avant le four).",
+      title: "Préparer la base sans garniture",
+      description: "Badigeonnez d’huile d’olive vierge extra et parsemez de fleur de sel. Laissez la base sans garniture : elle cuira à l’étape suivante.",
     },
     mortazza_post_bake: {
       title: "Ajouter la mortadelle après cuisson",
-      description: "Sortez du four. Ouvrez en portefeuille s'il s'agit d'une Pala ou similaire, sinon déposez les tranches dessus. Répartissez la mortadelle IGP en tranches ondulées. Parsemez de pistaches. (Stracciatella di burrata en option pour une version gourmet.)",
+      description: "Disposez la mortadelle en plis et les pistaches concassées sur la base cuite. Ajoutez la stracciatella de burrata uniquement si elle a été choisie. Servez sans remettre au four.",
     },
     crudo_bianca: {
       title: "Cuisson en blanc",
@@ -2418,7 +2418,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     pizza_fritta_fill_seal: {
       title: "Farcir et sceller avant de frire",
-      description: "Abaissez le petit disque, répartissez la ricotta, la provola, les cicoli et le poivre sur une moitié (éventuellement un voile de tomate). Repliez en demi-lune et scellez bien les bords. Faites frire dans l'huile bouillante jusqu'à ce qu'elle gonfle et dore. On NE garnit PAS dessus : la farce est à l'intérieur.",
+      description: "Étalez le disque et répartissez ricotta, provola, cicoli et poivre sur une moitié, avec la tomate si elle a été choisie. Repliez en demi-lune et soudez bien les bords. La farce reste à l’intérieur ; la friture a lieu à l’étape suivante.",
       tip_beginner: "Elle est différente de la montanara : la montanara est ouverte et garnie dessus après la friture ; la pizza fritta est fermée et farcie avant de frire.",
       tip_nerd: "Bien sceller les bords est crucial : un chausson ouvert laisse entrer l'huile et s'échapper la farce. La vapeur interne cuit la ricotta et la provola à l'étouffée pendant que l'extérieur frit.",
     },
@@ -2770,7 +2770,7 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     },
     pizza_fritta_tonda_fill: {
       title: "Farcir et fermer les deux disques",
-      description: "Abaissez les deux portions à la main, sans farine, en disques de 2–3 mm d’épaisseur. Sur le plus grand, répartissez la ricotta, la provola, les cicoli et le poivre en laissant le bord libre ; couvrez avec le petit disque et scellez en pressant bien. Faites frire dans l'huile végétale à environ 175 °C, en la retournant lorsqu'elle est dorée.",
+      description: "Étalez les deux portions à la main, sans farine, en disques de 2–3 mm d’épaisseur. Répartissez ricotta, provola, cicoli et poivre sur le grand disque en laissant le bord libre ; couvrez avec le petit disque et soudez en pressant fermement. La friture a lieu à l’étape suivante.",
       tip_beginner: "Le disque du dessous est plus grand : son bord se replie ainsi par-dessus et la tonda reste ferm\u00E9e pendant la friture.",
       tip_nerd: "Sans farine \u00E0 l'abaisse, l'huile reste propre plus longtemps ; un bord mal scell\u00E9 laisse entrer l'huile et s'\u00E9chapper la farce.",
     },
@@ -2789,6 +2789,18 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
     spread_marinara_scarole: {
       title: "Marinara \u00E0 la scarole",
       description: "Tomates pel\u00E9es \u00E9cras\u00E9es et sal\u00E9es, la scarole \u00E9tuv\u00E9e bien \u00E9goutt\u00E9e, origan et un filet d'huile. Pas de fromage.",
+    },
+    mortazza_spaccata_fill: {
+      title: "Ouvrir et garnir la base cuite",
+      description: "Coupez la base cuite horizontalement avec un couteau à dents. Répartissez mortadelle et pistaches concassées sur la moitié inférieure ; ajoutez la stracciatella uniquement si elle a été choisie. Refermez et servez sans remettre au four."
+    },
+    spread_baciata_surface: {
+      title: "Assaisonner la surface",
+      description: "Après avoir superposé les disques, badigeonnez la surface extérieure d’huile d’olive vierge extra et de fleur de sel. La garniture sera ajoutée après cuisson."
+    },
+    mortazza_split_fill: {
+      title: "Ouvrir et garnir la Baciata",
+      description: "Séparez les deux couches cuites, en passant au besoin un couteau à dents le long du bord. Répartissez mortadelle et pistaches concassées sur la couche inférieure ; ajoutez la stracciatella uniquement si elle a été choisie. Refermez et servez sans remettre au four."
     },
   },
 };

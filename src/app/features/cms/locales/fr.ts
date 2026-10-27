@@ -1016,7 +1016,7 @@ export const FR_LOCALE: CmsContent = {
     "timeline.fillClosed.tipNerd": "La pression sur le bord est cruciale : l'air emprisonné gonfle pendant la cuisson (effet coussin).",
     "timeline.fillSheets.title": "Garniture entre les feuilles",
     "timeline.fillSheets.desc": "Répartissez le stracchino en petits morceaux sur la première feuille ; couvrez avec la seconde, soudez les bords et assaisonnez le dessus d'huile et de sel.",
-    "timeline.bakeWhite.title": "Première cuisson (à blanc)",
+    "timeline.bakeWhite.title": "Cuisson à blanc",
     "timeline.bakeWhite.desc": "Faites cuire à {temp} sans garniture. La pizza doit être dorée mais pas brûlée.",
     "timeline.bakeWhite.tipBeginner": "À blanc, la pizza cuit plus vite. Surveillez les dernières minutes.",
     "timeline.bakeWhite.tipNerd": "La cuisson à blanc achève la gélatinisation de l'amidon avant l'apport d'humidité de la garniture.",

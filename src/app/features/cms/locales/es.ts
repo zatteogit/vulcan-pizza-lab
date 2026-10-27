@@ -1017,7 +1017,7 @@ export const ES_LOCALE: CmsContent = {
     "timeline.fillClosed.tipNerd": "La presión del borde es crítica: el aire atrapado se hincha durante la cocción (efecto almohada).",
     "timeline.fillSheets.title": "Relleno entre láminas",
     "timeline.fillSheets.desc": "Reparte el stracchino a pellizcos sobre la primera lámina; cúbrela con la segunda, sella los bordes y aliña la superficie con aceite y sal.",
-    "timeline.bakeWhite.title": "Primera cocción (sin cobertura)",
+    "timeline.bakeWhite.title": "Horneado sin relleno",
     "timeline.bakeWhite.desc": "Hornea a {temp} sin relleno. La pizza debe quedar dorada, pero no quemada.",
     "timeline.bakeWhite.tipBeginner": "Sin cobertura, la pizza se hace más rápido. Vigila los últimos minutos.",
     "timeline.bakeWhite.tipNerd": "Hornear sin cobertura completa la gelatinización del almidón antes de añadir la humedad de los ingredientes.",
