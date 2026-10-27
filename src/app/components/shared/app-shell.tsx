@@ -425,23 +425,17 @@ function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
    Audit Sprint 12: Profilo è impostazione utente, non una tab di navigazione. */
 function ProfileButton({ active, navState }: { active: boolean; navState: LiquidNavState }) {
   const { cms } = useCms();
-  const prefersReducedMotion = useReducedMotion();
   const label = (cms.pages as any)?.navProfile || "Profilo";
-  const { scrolled, nearBottom } = navState;
-  /* A fondo pagina il force-show serve al dock di navigazione, non a questo
-     avatar: qui ricomparirebbe SOPRA i contenuti (badge card, titoli). */
-  const hidden = navState.hidden || (nearBottom && scrolled);
+  const { scrolled } = navState;
   const size = scrolled ? 40 : 44;
   return (
     <MotionLink
       to="/profile"
-      className={`app-shell-profile${scrolled ? " app-shell-profile--scrolled" : ""}${hidden ? " app-shell-profile--hidden" : ""}`}
+      className={`app-shell-profile${scrolled ? " app-shell-profile--scrolled" : ""}`}
       animate={{
         width: size,
         height: size,
         borderRadius: scrolled ? "14px" : "16px",
-        y: hidden && !prefersReducedMotion ? -(size + 24) : 0,
-        opacity: hidden ? 0 : 1,
       }}
       transition={motionSpring.quick}
       whileHover={{ scale: 1.05 }}
@@ -462,13 +456,11 @@ function CookSessionUI({
   hasProfileButton,
   showAction,
   compact,
-  hidden,
 }: {
   canStartRecipe: boolean;
   hasProfileButton: boolean;
   showAction: boolean;
   compact: boolean;
-  hidden: boolean;
 }) {
   const { session, overlayOpen } = useCookSession();
   const reduceMotion = useReducedMotion();
@@ -482,7 +474,6 @@ function CookSessionUI({
           canStartRecipe={canStartRecipe}
           hasProfileButton={hasProfileButton}
           compact={compact}
-          hidden={hidden}
           inline
         />
         )}
@@ -815,10 +806,6 @@ export function AppShell() {
             hasProfileButton={hasProfileButton}
             showAction={showCookAction && !searchOpen}
             compact={navState.scrolled}
-            /* Come il ProfileButton: a fondo pagina il force-show serve al
-               dock in basso, non ai flottanti in alto (audit lug 2026). Una
-               pizzata ATTIVA resta comunque visibile (gestito nel widget). */
-            hidden={navState.hidden || (navState.nearBottom && navState.scrolled)}
           />
 
           {/* Strumento di debug AI per annotazioni e bug-fix (se non disattivato nelle impostazioni) */}
