@@ -1,3 +1,4 @@
+import { ALLERGEN_MESSAGES_IT } from "../../data/allergen-data";
 import type { EngineMsg, GeneratedRecipe } from "../../domain/pizza-engine";
 
 export interface CardSignal {
@@ -12,16 +13,21 @@ const msg = (key: string, fallback: string, params?: EngineMsg["params"]): Engin
 export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "explore" = "create"): CardSignal[] {
   const { blockers, conditions = [], adaptations } = recipe.verdict;
   if (blockers.length) {
-    const b = blockers.find(b => b.kind === "dietary_conflict") ?? blockers.find(b => b.kind === "oven_too_cold") ?? blockers[0];
+    const b = blockers.find(b => b.kind === "dietary_conflict" && b.filter_id.startsWith("allergen:")) ?? blockers.find(b => b.kind === "dietary_conflict") ?? blockers.find(b => b.kind === "oven_too_cold") ?? blockers[0];
     return [{ icon: b.kind === "oven_too_cold" ? "oven" : b.kind === "resource_excluded" || b.kind === "dietary_conflict" ? "check" : "time", tone: "error",
       message: b.kind === "oven_too_cold" ? msg("need.blockedOven", "Forno insufficiente")
-        : b.kind === "dietary_conflict" ? msg("diet.cardConflict", "Incompatibile con i filtri alimentari")
+        : b.kind === "dietary_conflict" ? b.filter_id.startsWith("allergen:")
+          ? msg(b.message.key === "allergen.traceConflict" ? "allergen.cardTrace" : "allergen.cardConflict", ALLERGEN_MESSAGES_IT[b.message.key === "allergen.traceConflict" ? "allergen.cardTrace" : "allergen.cardConflict"], b.message.params)
+          : msg("diet.cardConflict", "Incompatibile con i filtri alimentari")
         : b.kind === "resource_excluded" ? msg("card.resourceExcluded", "Requisito escluso")
         : b.kind === "fermentation_temperature" ? msg("need.blockedMethod", "Regime non compatibile")
         : msg("need.blockedTime", "Tempi non compatibili") }];
   }
   const result: CardSignal[] = [];
   const add = (icon: CardSignal["icon"], message: EngineMsg) => result.push({ icon, tone: "warning", message });
+  const optionalAllergen=recipe.dietary_warnings?.find(w=>w.message.key==="allergen.optional");
+  if (optionalAllergen) add("check", msg("allergen.cardOptional", ALLERGEN_MESSAGES_IT["allergen.cardOptional"], optionalAllergen.message.params));
+  else if (recipe.allergens?.avoided.length) add("check", msg("allergen.cardCheck", ALLERGEN_MESSAGES_IT["allergen.cardCheck"]));
   const method = adaptations.find(a => ["gen.homeBakingMethod", "gen.notCoalOven", "gen.notWoodOven", "feas.ovenSuboptimal"].includes(a.key));
   if (method) {
     const keys: Record<string, [string, string]> = {

@@ -53,6 +53,7 @@
     "@vitejs/plugin-react": "4.7.0",
     "axe-core": "^4.12.1",
     "tailwindcss": "4.1.12",
+    "terser": "5.51.2",
     "ts-morph": "^27.0.2",
     "tsx": "^4.23.1",
     "typescript": "5.7.3",

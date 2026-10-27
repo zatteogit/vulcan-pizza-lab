@@ -1,3 +1,4 @@
+import { AllergenPreferences } from "./allergen-preferences";
 import { migrateEquipment, syncLegacyFlags } from "../../data/equipment-data";
 import { PantryEditor } from "./pantry-editor";
 import { savePantryConstraints } from "../../adapters/browser/pantry-storage";
@@ -888,6 +889,7 @@ export function UserNeeds({
                   transition={drawerTransition}
                   className={compact ? "needs-drawer needs-drawer--compact" : "needs-drawer"}
                 >
+                  <AllergenPreferences value={constraints.allergens_avoid??[]} onChange={allergens_avoid=>onConstraintsChange({...constraints,allergens_avoid})}/>
                   <div data-slot="skill">
                     <SectionHeader title={cms.sections.skill.title} subtitle={cms.sections.skill.description} compact={compact} />
                     <div className={compact ? "needs-skill-chips needs-skill-chips--compact" : "needs-skill-chips"}>

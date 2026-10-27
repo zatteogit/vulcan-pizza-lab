@@ -179,6 +179,10 @@ export default defineConfig({
     /* P-2: le mappe si generano (per il debug degli errori) ma i bundle non le
        referenziano: in produzione il sorgente non è leggibile dal browser. */
     sourcemap: "hidden",
+    // Keep the existing transfer budget while adding recipe safety metadata.
+    // No unsafe transforms or property mangling: public recipe keys stay intact.
+    minify: "terser",
+    terserOptions: { compress: { passes: 2 }, format: { comments: false } },
     /* Limita i warning per bundle size durante il prototipo */
     chunkSizeWarningLimit: 800,
     rollupOptions: {

@@ -1,4 +1,9 @@
+import { allergenName } from "./allergen-names";
 import { recipeDisplayName } from "../../domain/recipe-reference";
+import { useMemo } from "react";
+import { engineMsgTexts } from "./engine-msg-text";
+import { pantryIngredientNames } from "./pantry-ingredient-names";
+import { pantryIngredientId } from "../../domain/pantry-ingredients";
 import { createPortal } from "react-dom";
 import { BRAND } from "../../config/brand";
 import { VulcanMark } from "../../components/shared/vulcan-logo";
@@ -53,6 +58,8 @@ export function PrintSheet({
   readyApproximate: boolean;
 }) {
   const ui = cms.ui;
+  const ingredientNames=useMemo(()=>pantryIngredientNames(cms),[cms]);
+  const unverified=recipe.allergens.unverified.map(i=>i.ingredient==="Olio per frittura"?uiMessage("allergen.fryingOil"):ingredientNames.get(pantryIngredientId(i.ingredient))??i.ingredient);
   const pct = (g: number) =>
     `${new Intl.NumberFormat(bcp47, { maximumFractionDigits: 1 }).format((g / recipe.flour_g) * 100)}%`;
   const time = (ms: number) => new Intl.DateTimeFormat(bcp47, STEP_TIME_FORMAT).format(new Date(ms));
@@ -96,6 +103,15 @@ export function PrintSheet({
         </p>
       </header>
 
+      <section className="print-sheet__section">
+        <h2 className="print-sheet__h2">{uiMessage("allergen.title")}</h2>
+        <p>{uiMessage("allergen.contains")}: {recipe.allergens.contains.map(g=>allergenName(g.id)).join(", ")||uiMessage("allergen.noKnown")}</p>
+        {recipe.allergens.conditional.length>0&&<p>{uiMessage("allergen.ifAdded")}: {recipe.allergens.conditional.map(g=>allergenName(g.id)).join(", ")}</p>}
+        {recipe.allergens.may_contain.length>0&&<p>{uiMessage("allergen.mayContain")}: {recipe.allergens.may_contain.map(g=>allergenName(g.id)).join(", ")}</p>}
+        {unverified.length>0&&<p>{uiMessage("allergen.toCheck")}: {[...new Set(unverified)].join(", ")}</p>}
+        {recipe.dietary_warnings?.filter(w=>w.severity==="critical").map(w=><p key={w.filterId}><strong>{engineMsgTexts([w.message,w.tip],cms,bcp47).join(" ")}</strong></p>)}
+        <p>{uiMessage("allergen.labelNote")}</p>
+      </section>
       {sections.dough && (
         <section className="print-sheet__section">
           <h2 className="print-sheet__h2">{ui.ingredients}</h2>

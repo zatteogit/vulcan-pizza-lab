@@ -686,6 +686,17 @@ export const ES_LOCALE: CmsContent = {
     catScoringDesc: "M\u00E9tricas de calidad {brand}",
   },
   engineMessages: {
+    "allergen.conflict": "La receta contiene {allergen}: {ingredients}.",
+    "allergen.traceConflict": "La etiqueta indica «puede contener {allergen}»: {ingredients}.",
+    "allergen.optional": "Para evitar {allergen}, no añadas los ingredientes opcionales: {ingredients}.",
+    "allergen.verify": "Alérgenos que debes evitar: comprueba las etiquetas y el contacto cruzado en cocina.",
+    "allergen.change": "Cambia los ingredientes y vuelve a calcular antes de continuar.",
+    "allergen.labels": "«Vegano» o «sin lactosa» no acredita la ausencia de alérgenos. Comprueba el producto real.",
+    "allergen.cardConflict": "Contiene {allergen}",
+    "allergen.cardTrace": "Etiqueta: puede contener {allergen}",
+    "allergen.cardOptional":"Omite extras con {allergen}",
+    "allergen.cardCheck": "Alérgenos por comprobar",
+
     "diet.variant": "Versión de {recipe} sin {ingredients}",
     "diet.variantChanges": "Se retiran: {ingredients}.",
     "diet.variantAdded": "Ingredientes añadidos: {ingredients}.",
@@ -1385,8 +1396,7 @@ export const ES_LOCALE: CmsContent = {
     dietTitle: "Preferencias dietéticas",
     dietSubtitle: "Filtra estilos e ingredientes incompatibles",
     dietStep: "04 — Dieta",
-    noDietNote:
-      "Sin restricciones — todos los estilos disponibles.",
+    noDietNote: "Sin preferencias dietéticas seleccionadas.",
     prefsTitle: "Idioma y tema",
     prefsSubtitle: "Personaliza la interfaz",
     prefsStep: "05 — Preferencias",

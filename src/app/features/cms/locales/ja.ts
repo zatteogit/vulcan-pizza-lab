@@ -746,6 +746,17 @@ export const JA_LOCALE: CmsContent = {
     catScoringDesc: "{brand}\u54C1\u8CEA\u6307\u6A19",
   },
   engineMessages: {
+    "allergen.conflict": "このレシピには{allergen}が含まれます：{ingredients}。",
+    "allergen.traceConflict": "製品表示に「{allergen}を含む可能性あり」と記載されています：{ingredients}。",
+    "allergen.optional": "{allergen}を避けるには、任意の材料を追加しないでください：{ingredients}。",
+    "allergen.verify": "避けるアレルゲン：製品表示と調理環境での交差接触を確認してください。",
+    "allergen.change": "材料を変更して再計算してから進んでください。",
+    "allergen.labels": "「ヴィーガン」や「乳糖不使用」はアレルゲン不使用の証明ではありません。実際に使う製品を確認してください。",
+    "allergen.cardConflict": "{allergen}を含む",
+    "allergen.cardTrace": "製品表示：{allergen}を含む可能性あり",
+    "allergen.cardOptional":"{allergen}を含む任意の追加材料は省く",
+    "allergen.cardCheck": "アレルゲンの確認が必要",
+
     "diet.variant": "{ingredients}を使わない{recipe}のアレンジ",
     "diet.variantChanges": "除く材料：{ingredients}。",
     "diet.variantAdded": "加える材料：{ingredients}。",
@@ -1454,8 +1465,7 @@ export const JA_LOCALE: CmsContent = {
     dietSubtitle:
       "\u975E\u5BFE\u5FDC\u306E\u30B9\u30BF\u30A4\u30EB\u3068\u6750\u6599\u3092\u30D5\u30A3\u30EB\u30BF\u30FC",
     dietStep: "04 \u2014 \u98DF\u4E8B",
-    noDietNote:
-      "\u5236\u9650\u306A\u3057 \u2014 \u3059\u3079\u3066\u306E\u30B9\u30BF\u30A4\u30EB\u304C\u5229\u7528\u53EF\u80FD\u3067\u3059\u3002",
+    noDietNote: "食事の好みは選択されていません。",
     prefsTitle: "\u8A00\u8A9E\u3068\u30C6\u30FC\u30DE",
     prefsSubtitle:
       "\u30A4\u30F3\u30BF\u30FC\u30D5\u30A7\u30FC\u30B9\u3092\u30AB\u30B9\u30BF\u30DE\u30A4\u30BA",

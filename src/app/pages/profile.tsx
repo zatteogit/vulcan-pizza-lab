@@ -1,3 +1,5 @@
+import { AllergenPreferences } from "../features/recipe/allergen-preferences";
+import { normalizeAllergenIds, type AllergenId } from "../data/allergen-data";
 /* === PROFILE PAGE — VPL-057 ===
    Setup utente: forno, skill, pantry, dieta, lingua, dark mode.
    Tab: Profilo — /profile
@@ -1320,6 +1322,8 @@ export function ProfilePage() {
     return saved ?? [];
   });
 
+  const [allergens, setAllergens] = useState<AllergenId[]>(() => normalizeAllergenIds(loadJson("vulcan_allergens")));
+
   /* Equipment state — advanced, migrates from old format */
   const [equipment, setEquipment] = useState<EquipmentState>(() => {
     const saved = loadJson<Record<string, any>>(EQUIPMENT_STORAGE_KEY);
@@ -2051,7 +2055,8 @@ export function ProfilePage() {
               );
             })}
           </div>
-          {dietary.length === 0 && (
+          <AllergenPreferences value={allergens} onChange={setAllergens}/>
+          {dietary.length === 0 && allergens.length === 0 && (
             <p className="type-data-sm profile-diet-empty">
               {p.noDietNote}
             </p>

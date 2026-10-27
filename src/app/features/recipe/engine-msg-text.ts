@@ -1,6 +1,9 @@
 import { resolveEngineMsgs, type EngineMsg } from "../../domain/pizza-engine";
 import type { CmsContent } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
+import { uiMessage } from "../../i18n/ui-messages";
+import { allergenName } from "./allergen-names";
+import type { AllergenId } from "../../data/allergen-data";
 import { pantryFlourName } from "./pantry-flour-names";
 import { pantryIngredientNames } from "./pantry-ingredient-names";
 import { pantryIngredientId } from "../../domain/pantry-ingredients";
@@ -54,7 +57,8 @@ export function engineMsgTexts(
   const ingredients = msgs.some(msg => msg.key === "need.ingredient" || msg.key === "need.excludedIngredient" || Array.isArray(msg.params?.ingredients))
     ? pantryIngredientNames(cms) : null;
   return resolveEngineMsgs(msgs, cms.engineMessages, (msg, key, value) => {
-    if (Array.isArray(value)) return value.map(name => name === "Farina di grano" ? cms.ui.flour : ingredients?.get(pantryIngredientId(name)) ?? name).join(", ");
+    if (key === "allergen") return allergenName(String(value) as AllergenId);
+    if (Array.isArray(value)) return value.map(name => name === "Olio per frittura" ? uiMessage("allergen.fryingOil") : name === "Farina di grano" ? cms.ui.flour : ingredients?.get(pantryIngredientId(name)) ?? name).join(", ");
     if (ingredients && key === "ingredient") return cms.yeastLabels[String(value)] ?? ingredients.get(pantryIngredientId(String(value))) ?? value;
     if (msg.key === "need.excludedFlour" && key === "flour") return pantryFlourName(String(value));
     if ((msg.key === "need.yeast" || msg.key === "need.checkYeast") && key === "yeast") return cms.yeastLabels[String(value)] ?? String(value);

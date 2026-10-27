@@ -3,6 +3,7 @@
  * (written by ProfilePage) and returns them as UserConstraints.
  * Used by HomePage wizard and RecipePage. */
 
+import { normalizeAllergenIds } from "../data/allergen-data";
 import { useMemo } from "react";
 import type {
   UserConstraints,
@@ -99,6 +100,7 @@ export function loadProfileDefaults(): ProfileDefaults {
     has_pizza_steel: false,
     has_baking_pan: false,
     dietary_filters: dietaryFilters,
+    allergens_avoid: normalizeAllergenIds(loadJson("vulcan_allergens")),
     kitchen_temp_c: DEFAULT_KITCHEN_TEMP,
     pantry_flours: pantryFlours,
     pantry_yeasts: pantryYeasts,
@@ -163,6 +165,7 @@ export const PROFILE_OWNED_CONSTRAINTS = [
   "surfaces",
   "oven_heat_profile",
   "dietary_filters",
+  "allergens_avoid",
   "pantry_flours",
   "pantry_yeasts",
   "pantry_inventory_complete",
