@@ -1,5 +1,9 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "recipe.save.title": "レシピ帳に保存",
+  "recipe.save.confirm": "レシピを保存",
+  "recipe.save.source": "元のレシピ：{0}",
+
   "allergen.traceHelp": "製品の表示に記載されています。",
   "allergen.optionalTraceSummary": "追加材料への混入の可能性：{0}",
   "allergen.traceSummary": "混入の可能性：{0}",

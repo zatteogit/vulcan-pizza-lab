@@ -3,6 +3,10 @@
  * Le chiavi sono stabili: namespace + slug + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "recipe.save.title": "Salva nel ricettario",
+  "recipe.save.confirm": "Salva ricetta",
+  "recipe.save.source": "Ricetta di partenza: {0}",
+
   "allergen.traceHelp": "Segnalate sulle etichette dei prodotti.",
   "allergen.optionalTraceSummary": "Possibili tracce nelle aggiunte: {0}",
   "allergen.traceSummary": "Possibili tracce: {0}",

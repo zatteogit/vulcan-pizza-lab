@@ -1,3 +1,4 @@
+import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
 import { recipeDisplayName } from "../domain/recipe-reference";
 import { buildGeneratedRecipe, recipeFromEntry, canonicalRecipeEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
@@ -83,7 +84,7 @@ import {
   renameSavedRecipe,
   type SavedRecipeParams,
 } from "../adapters/browser/saved-recipes-storage";
-import { normalizeRecipeName } from "../data/saved-recipes";
+import { normalizeRecipeName, recipeSourceUrl } from "../data/saved-recipes";
 import { uiMessage } from "../i18n/ui-messages";
 
 const FALLBACK =
@@ -788,7 +789,7 @@ function RecipeContent({
     setSavedTick(tick => tick + 1);
     return true;
   }, [savedEntry]);
-  const handleToggleSaveRecipe = useCallback((): boolean => {
+  const handleCommitRecipe = useCallback((nextName?: string): boolean => {
     let ok = true;
     if (savedEntry) {
       removeRecipe(savedEntry.id);
@@ -796,13 +797,18 @@ function RecipeContent({
       saveRecipe({
         styleId: style.id,
         styleName: recipeDisplayName(recipe ?? matchRecipe, effectiveConstraints.oven_type),
-        name: normalizeRecipeName(resolvedRecipeName),
+        name: normalizeRecipeName(nextName ?? resolvedRecipeName),
         versionId: activeVersionId,
         params: currentSaveParams,
         score: Math.round(matchRecipe.scores.composite),
       });
       ok = findSavedRecipe(style.id, currentSaveParams) !== undefined;
       setSaveFailed(!ok);
+      if (ok && nextName !== undefined) {
+        const name = normalizeRecipeName(nextName) ?? "";
+        setRecipeName(name);
+        replaceRecipeSearchParams(params => { if (name) params.set("name", name); else params.delete("name"); });
+      }
     }
     setSavedTick((v) => v + 1);
     return ok;
@@ -815,6 +821,12 @@ function RecipeContent({
   const originInterpretation = activeInterpretationId ? getInterpretationById(activeInterpretationId) : null;
   const referenceName = originInterpretation?.author ?? originInterpretation?.pizzeria ?? originInterpretation?.organization ??
     (activeVersion ? cmsMessage(cms, `version.label.${activeVersion.label}`, activeVersion.label) : style.name);
+  const recipeSource = {
+    href: recipeSourceUrl(style.id, activeVersionId, activeInterpretationId),
+    name: referenceName === style.name ? style.name : `${style.name} · ${referenceName}`,
+  };
+  const saveFlow = useRecipeSave({ personalized: isDirty || Boolean(resolvedRecipeName), saved: Boolean(savedEntry), onCommit: handleCommitRecipe });
+  const handleToggleSaveRecipe = () => saveFlow.requestSave();
   const recipeTabLabel =
     recipeMode === "lab"
       ? cmsMessage(cms, "recipeMode.lab", "Laboratorio")
@@ -902,6 +914,7 @@ function RecipeContent({
         resetLabel={cms.ui.recipeResetPreset}
         resetTitle={referenceName}
         recipeName={resolvedRecipeName}
+        recipeSource={recipeSource}
         onRenameRecipe={isDirty || resolvedRecipeName ? handleRenameRecipe : undefined}
         selectedToppingConcept={selectedToppingConcept}
         onSelectTopping={(recipeId) => {
@@ -1095,6 +1108,9 @@ function RecipeContent({
         onClose={() => setLearningOpen(false)}
       />
 
+      <SaveRecipeDialog open={saveFlow.open} onClose={saveFlow.cancel} onConfirm={saveFlow.confirm}
+        defaultName={resolvedRecipeName || recipeDisplayName(recipe ?? matchRecipe, effectiveConstraints.oven_type)} source={recipeSource} />
+
       {/* ── Avviso uscita: modifiche non salvate ── */}
       <ConfirmDialog
         open={exitConfirm}
@@ -1111,10 +1127,8 @@ function RecipeContent({
           {
             label: cms.cooking.saveVersion,
             onClick: () => {
-              const saved = handleToggleSaveRecipe();
               setExitConfirm(false);
-              // Se il salvataggio non riesce si resta: uscendo la versione andrebbe persa.
-              if (saved) navigate(exploreBackTo);
+              saveFlow.requestSave(() => navigate(exploreBackTo));
             },
             variant: "cta",
           },

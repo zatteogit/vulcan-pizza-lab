@@ -1,13 +1,17 @@
+import { Link } from "react-router";
+import { ArrowUpRight } from "lucide-react";
+import { uiMessage } from "../../i18n/ui-messages";
 import { useEffect, useRef, useState } from "react";
 import { Check, Pencil, X } from "lucide-react";
 import { Heading, IconButton } from "../../components/ds/index";
 import { MAX_RECIPE_NAME_LENGTH, normalizeRecipeName } from "../../data/saved-recipes";
 import { useCms } from "../cms/cms-context";
 
-export function RecipeTitle({ styleName, name, onRename }: {
+export function RecipeTitle({ styleName, name, onRename, source }: {
   styleName: string;
   name?: string;
   onRename?: (name: string) => boolean;
+  source?: { href: string; name: string };
 }) {
   const { cms } = useCms();
   const [editing, setEditing] = useState(false);
@@ -37,7 +41,11 @@ export function RecipeTitle({ styleName, name, onRename }: {
             title={cms.ui.recipeNameEdit} onClick={() => { setDraft(name ?? ""); setEditing(true); }}><Pencil size={18} /></IconButton></span>}
         </div>
       )}
-      {name && name !== styleName && <p className="recipe-title-content__style">{styleName}</p>}
+      {name && (source || name !== styleName) && <p className="recipe-title-content__style">
+        {source ? <Link to={source.href} target="_blank" rel="noreferrer" className="recipe-save-dialog__source">
+          {uiMessage("recipe.save.source", [source.name])}<ArrowUpRight size={15} aria-hidden="true" />
+        </Link> : styleName}
+      </p>}
     </div>
   );
 }

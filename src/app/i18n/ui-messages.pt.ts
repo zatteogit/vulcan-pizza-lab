@@ -1,5 +1,9 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
+  "recipe.save.title": "Guardar no livro de receitas",
+  "recipe.save.confirm": "Guardar receita",
+  "recipe.save.source": "Receita de origem: {0}",
+
   "allergen.traceHelp": "Declarados nos rótulos dos produtos.",
   "allergen.optionalTraceSummary": "Possíveis vestígios nos ingredientes opcionais: {0}",
   "allergen.traceSummary": "Possíveis vestígios: {0}",
