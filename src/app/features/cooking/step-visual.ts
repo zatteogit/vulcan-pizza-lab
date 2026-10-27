@@ -40,5 +40,5 @@ export function resolveStepVisual(
   if ((step.id === "bake" || step.id === "bake2") && (step.variant === "fry" || context.fried)) return "fry";
   if ((step.id === "bulk" || step.id === "proof") && context.unleavened) return "rest";
   if (step.id === "proof" && (step.variant === "pan" || context.proofInPan)) return "proof_pan";
-  return CORE[step.id] ?? TOPPING_VISUALS.get(step.id) ?? "prep";
+  return CORE[step.id] ?? TOPPING_VISUALS.get(step.id) ?? (step.id.startsWith("spread_") ? "top" : "prep");
 }

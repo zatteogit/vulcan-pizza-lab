@@ -2,11 +2,10 @@
  * illustrations retain their detail, only when the pictured action is true.
  */
 
-import { Beaker, ChefHat, Clock3, CookingPot, Flame, Hand, Layers,
-  Scissors, Sandwich, Thermometer, Timer, Utensils, type LucideProps } from "lucide-react";
-import type { ComponentType, CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import type { TimelineStep } from "../../domain/pizza-engine";
 import { resolveStepVisual, type StepVisual } from "./step-visual";
+import { STEP_SYMBOLS } from "./step-symbols";
 import bakeSrc from "../../../assets/timeline/timeline-bake.webp";
 import bulkSrc from "../../../assets/timeline/timeline-bulk.webp";
 import divideSrc from "../../../assets/timeline/timeline-divide.webp";
@@ -76,23 +75,6 @@ const STEP_ASSETS: Partial<Record<StepVisual, string>> = {
   fill_internal: ASSETS.fill_internal,
   split_fill: ASSETS.split_fill,
 };
-
-const STEP_SYMBOLS: Record<StepVisual, ComponentType<LucideProps>> = {
-  preferment: Beaker, mix: MixSymbol, bulk: Clock3, divide: Scissors,
-  proof: Timer, proof_pan: Timer, rest: Clock3, shape: Hand,
-  top: Utensils, top_post: Utensils, preheat: Thermometer, bake: Flame,
-  oil: Thermometer, fry: CookingPot, stack: Layers,
-  fill_internal: Sandwich, split_fill: Sandwich, prep: ChefHat,
-};
-
-// Same 24-unit grid and rounded strokes as the rest of the icon family.
-function MixSymbol({ size = 24, strokeWidth = 2, ...props }: LucideProps) {
-  return <svg {...props} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 11h18c0 6-3 9-9 9s-9-3-9-9Z" />
-    <path d="m14 11 5-8 2 1-4 7M7 7c1-2 3-2 4 0" />
-  </svg>;
-}
 
 function TimelineImage({
   src,
