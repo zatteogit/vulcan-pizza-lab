@@ -822,6 +822,8 @@
   --fixed-photo-text: var(--color-white);
   --fixed-photo-surface: var(--color-parchment-0);
   --fixed-photo-warm: var(--color-parchment-200);
+  --fixed-photo-shade: var(--color-night-1000);
+  --photo-caption-fade-space: var(--space-16);
   --brand-accent-deep: var(--color-terracotta-700);
   --brand-mark-solid-color: var(--color-brand-mark-solid);
   --brand-mark-gradient-start: var(--color-brand-mark-start);
@@ -1299,6 +1301,11 @@
   --overlay-shadow-text:
     0 2px 8px rgba(0, 0, 0, 0.6), 0 0 24px rgba(0, 0, 0, 0.25);
   --overlay-shadow-text-sm: 0 var(--border-w) 4px rgba(0, 0, 0, 0.5);
+  /* The fade follows the caption, whose top padding stays clear of text. */
+  --card-caption-scrim: linear-gradient(to bottom,
+      transparent 0%,
+      color-mix(in srgb, var(--fixed-photo-shade) 72%, transparent) var(--photo-caption-fade-space),
+      color-mix(in srgb, var(--fixed-photo-shade) 92%, transparent) 100%);
   --scrim-modal: var(--scrim-black-modal);
   /* velo modale Dialog/BottomSheet (ds) */
   --overlay-scrim: linear-gradient(180deg,
@@ -3261,14 +3268,9 @@
     transform: scale(1.05);
   }
 
-  .explore-card__scrim {
-    position: absolute;
-    inset: 0;
-    background: var(--overlay-scrim);
-  }
-
   .explore-card__badge {
     position: absolute;
+    z-index: 1;
     padding-inline: var(--space-2);
     padding-block: var(--space-1);
     border-radius: var(--radius-lg);
@@ -3416,7 +3418,8 @@
     right: 0;
     padding-inline: var(--space-4);
     padding-bottom: var(--space-3-5);
-    padding-top: var(--space-16);
+    padding-top: var(--photo-caption-fade-space);
+    background: var(--card-caption-scrim);
     hyphens: none;
     overflow-wrap: normal;
     word-break: normal;
@@ -12621,6 +12624,7 @@
 
   .recipe-view-match-primary .stat-strip {
     padding-block: 0;
+    padding-inline: calc(var(--space-3) + var(--border-width-thin));
   }
 
   @media (min-width: 640px) {
@@ -12790,6 +12794,10 @@
     display: grid;
     gap: var(--space-2);
     min-width: 0;
+    padding: var(--space-1-5) var(--space-3);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--surface-container-low) 74%, transparent);
+    border: var(--border-width-thin) solid var(--container-border-subtle);
   }
 
   .interpretation-switcher {
@@ -12799,16 +12807,11 @@
     min-width: 0;
     align-items: center;
     column-gap: var(--gap-xs);
-    padding: var(--space-1);
-    border-radius: var(--radius-2xl);
-    background: color-mix(in srgb, var(--surface-container-low) 74%, transparent);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
     overflow: visible;
   }
 
   .interpretation-switcher__label {
     flex-shrink: 0;
-    padding-inline: var(--space-2);
     color: var(--text-muted);
     font-size: var(--font-size-xs);
     font-weight: var(--weight-semibold);
@@ -12842,15 +12845,8 @@
       grid-template-columns: auto minmax(0, 1fr);
       align-items: center;
       gap: var(--space-3);
-    }
-
-    .interpretation-switcher {
-      padding: var(--space-1-5);
+      border-radius: var(--radius-2xl);
       box-shadow: inset 0 0 0 var(--border-width-thin) color-mix(in srgb, var(--overlay-text) 4%, transparent);
-    }
-
-    .interpretation-switcher__label {
-      padding-inline: var(--space-2);
     }
 
     .interpretation-switcher__scroll {
@@ -16267,12 +16263,6 @@
     transform: scale(1.05);
   }
 
-  .recommended-card__scrim {
-    position: absolute;
-    inset: 0;
-    background: var(--overlay-scrim);
-  }
-
   .recommended-card__score {
     position: absolute;
     top: var(--space-3);
@@ -16281,6 +16271,7 @@
 
   .recommended-card__check {
     position: absolute;
+    z-index: 1;
     top: var(--space-3);
     left: var(--space-3);
     width: var(--space-8);
@@ -16300,7 +16291,8 @@
     right: 0;
     padding-inline: var(--space-4);
     padding-bottom: var(--space-3-5);
-    padding-top: var(--space-16);
+    padding-top: var(--photo-caption-fade-space);
+    background: var(--card-caption-scrim);
   }
 
   @media (min-width: 640px) {
@@ -17589,16 +17581,30 @@
     align-items: center;
     gap: var(--gap-xs);
     margin: calc(var(--space-4) + env(safe-area-inset-top, var(--space-0))) var(--space-4) var(--space-0);
-    min-height: var(--space-11);
+    min-height: var(--dimension-fixed-046);
     color: var(--text-default);
     text-decoration: none;
   }
 
   .app-shell-brand__name {
     font-family: var(--font-serif);
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-4xl);
     font-weight: var(--weight-bold);
     letter-spacing: var(--tracking-tight);
+  }
+
+  .app-shell-brand .vulcan-hero { isolation: isolate; }
+
+  .app-shell-brand .vulcan-hero::before {
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--space-6));
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse closest-side at 50% 50%,
+      color-mix(in srgb, var(--forge-glow) 55%, transparent),
+      color-mix(in srgb, var(--forge-core) 34%, transparent) 38%,
+      transparent 100%);
   }
 
   @media (min-width: 768px) {

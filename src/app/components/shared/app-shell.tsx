@@ -415,7 +415,7 @@ function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
   const { cms } = useCms();
   return (
     <IconButton variant="bare" type="button" onClick={onAboutOpen} className="app-shell-brand" aria-label={cms.ui.aboutLabel} aria-haspopup="dialog">
-      <VulcanHero size={36} energy={30} markRatio={0.5} loops={Infinity} />
+      <VulcanHero size={42} energy={45} markRatio={0.5} loops={Infinity} />
       <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
     </IconButton>
   );

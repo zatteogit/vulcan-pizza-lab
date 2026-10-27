@@ -601,7 +601,6 @@ function SignatureRecipeCard({
             loading="lazy"
             sizes={IMAGE_SIZES.card}
           />
-          <div className="explore-card__scrim" />
 
           {/* Badge autenticità — top right */}
           {recipe.authenticity_badge && (
@@ -697,9 +696,6 @@ function StyleCatalogCard({
             loading="lazy"
             sizes={IMAGE_SIZES.card}
           />
-
-          {/* Cinematic scrim */}
-          <div className="explore-card__scrim" />
 
           {/* Title + subtitle — overlaid on image (editorial style) */}
           <figcaption className="explore-card__caption">
