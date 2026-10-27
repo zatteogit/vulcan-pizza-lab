@@ -14779,7 +14779,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: var(--weight-semibold);
-    line-height: var(--leading-tight);
+    line-height: var(--leading-normal);
   }
 
   .condiment-strip__card-variant {
@@ -14808,7 +14808,7 @@
     padding-left: var(--space-2);
     padding-right: var(--space-5);
     padding-block: var(--space-2);
-    height: var(--space-14);
+    min-height: var(--space-14);
     /* 56px */
     background: color-mix(in srgb, var(--container-bg-low) 50%, transparent);
     color: var(--text-default);
@@ -14850,7 +14850,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: var(--weight-semibold);
-    line-height: var(--leading-none);
+    line-height: var(--leading-normal);
   }
 
   .condiment-strip__pill-variant {
@@ -14858,13 +14858,16 @@
     margin-top: var(--space-0-5);
     color: var(--text-muted);
     font-weight: var(--weight-medium);
-    line-height: var(--leading-none);
+    line-height: var(--leading-normal);
     transition: color var(--duration-fast);
   }
 
   .condiment-strip__pill-variant--active {
     color: color-mix(in srgb, var(--overlay-text) 80%, transparent);
   }
+
+  .condiment-strip__pill-variant:empty,
+  .condiment-strip__card-variant:empty { display: none; }
 
   /* ── "Vedi tutti" ── */
   .condiment-strip__more {
@@ -15125,7 +15128,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: var(--weight-semibold);
-    line-height: var(--leading-tight);
+    line-height: var(--leading-normal);
   }
 
   .condiment-strip-picker__choice-variant {
