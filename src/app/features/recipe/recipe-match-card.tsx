@@ -5,7 +5,7 @@ import { RecipeChanges } from "./recipe-changes";
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
-import { ArrowUpRight, Bookmark, BookmarkCheck, ChevronDown, Info, SlidersHorizontal, Sparkles, TriangleAlert } from "lucide-react";
+import { ArrowUpRight, Bookmark, BookmarkCheck, ChevronDown, Info, Sparkles, TriangleAlert, WandSparkles } from "lucide-react";
 import { SCORE_DIMENSIONS, type GeneratedRecipe, type RecipeScores, type ScoreDimensionKey, type UserConstraints } from "../../domain/pizza-engine";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { SCORE_DIMENSION_COLORS } from "./score-dimension-presentation";
@@ -452,9 +452,8 @@ export function RecipeMatchCard({
               {tone.low ? cms.cooking.makePossible : cms.cooking.optimizeForMe}
             </motion.button>
           )}
-          {/* Gerarchia (redesign lug 2026, round 2): UN solo pulsante pieno
-              (Ottimizza). Personalizza e Salva sono azioni testuali in accento —
-              niente scatole in competizione; Torna resta il peso minimo in coda. */}
+          {/* Personalization is a green creative action; saving stays a quieter
+              labelled bookmark so the two actions remain easy to distinguish. */}
           {onPersonalize && (
             <motion.button
               type="button"
@@ -462,7 +461,7 @@ export function RecipeMatchCard({
               whileTap={{ scale: 0.95 }}
               className="match-action-text match-action-text--personalize"
             >
-              <SlidersHorizontal size={14} aria-hidden="true" />
+              <WandSparkles size={18} aria-hidden="true" />
               {cms.ui.personalize ?? uiMessage("features.recipe.recipe-match-card.personalizza-0beadff3")}
             </motion.button>
           )}

@@ -2,6 +2,7 @@ import { migrateEquipment, syncLegacyFlags } from "../../data/equipment-data";
 import { PantryEditor } from "./pantry-editor";
 import { savePantryConstraints } from "../../adapters/browser/pantry-storage";
 import { SupplyPolicyControls } from "./supply-policy-controls";
+import { WoodOvenIcon } from "../../components/shared/wood-oven-icon";
 import {
 CalendarDays,
 Check,
@@ -108,7 +109,7 @@ const OVEN_ICONS: Record<
   electric_high: Zap,
   gas: Flame,
   gas_pizza: Flame,
-  wood: Flame,
+  wood: WoodOvenIcon,
 };
 
 /* Dietary filters moved to recommended-styles — data defined there */

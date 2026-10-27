@@ -5,7 +5,8 @@
 
 import { TOOLS_ENABLED } from "../config/tools";
 import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
-import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Egg, Flame, Globe, GraduationCap, Heart, Home, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Thermometer, Timer, Trees, Upload, User, WheatOff, X, Zap } from "lucide-react";
+import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Egg, Flame, Globe, GraduationCap, Heart, Home, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Thermometer, Timer, Upload, User, WheatOff, X, Zap } from "lucide-react";
+import { WoodOvenIcon } from "../components/shared/wood-oven-icon";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
 import { useCallback,useEffect,useMemo,useRef,useState, useId } from "react";
 import { createPortal } from "react-dom";
@@ -170,7 +171,7 @@ const OVEN_ICONS: Record<string, typeof Flame> = {
   electric_high: Thermometer,
   gas: Flame,
   gas_pizza: Flame,
-  wood: Trees, // Differenziato da gas (Flame) — gruppo di alberi più riconoscibile
+  wood: WoodOvenIcon,
 };
 
 const OVEN_HEAT_PROFILES: {
