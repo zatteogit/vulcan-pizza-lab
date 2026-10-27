@@ -635,10 +635,6 @@ function StyleCard({
               />
             </motion.div>
 
-            {/* Cinematic scrim — heavy bottom for text legibility */}
-            <div className="recommended-card__scrim" />
-
-
             {/* ── Selected check ── */}
             <AnimatePresence>
               {isSelected && (
