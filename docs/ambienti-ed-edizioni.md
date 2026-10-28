@@ -49,8 +49,8 @@ nel codice: decide il dato, non il nome del cliente.
 | Ambiente | Cosa | Come ci arriva il codice | Chi lo vede |
 |---|---|---|---|
 | **Sviluppo** | `npm run dev` (porta 5174) e, per le API, `wrangler dev` con `.dev.vars` (vedi `.env.example`) | in locale | tu |
-| **Anteprima PR** | Workers Builds di Cloudflare sulle PR | a ogni push su una PR | chi ha il link |
-| **Test** | `vulcan-test` (generalista con strumenti `/dev`, `/cms`, `/design-system` e D1 di test UE) e `vulcan-<id>-test` per ogni edizione (senza strumenti né D1) | automatico a ogni merge su `main` (`deploy-test.yml`) | solo su invito (Cloudflare Access), `noindex` |
+| **Anteprima PR** | solo il controllo `verify` su GitHub; le anteprime di Workers Builds sono spente (stato del 28/10/2026) | a ogni push su una PR | — |
+| **Test** | `vulcan-test` (generalista con strumenti `/dev`, `/cms`, `/design-system` e D1 di test UE) e `vulcan-<id>-test` per ogni edizione (senza strumenti né D1) | automatico a ogni merge su `main` (`deploy-test.yml`) | solo su invito (Cloudflare Access), `noindex`; senza Access il Worker risponde 403 |
 | **Produzione** | `vulcan-pizza-lab` (generalista) e `vulcan-<id>` per i partner con contratto | **solo** dal workflow `deploy-production`, con la tua approvazione, con lo sha già passato da `main` | pubblico (generalista) o come da contratto |
 
 ### Comandi
@@ -81,32 +81,46 @@ La generalista si pubblica come prima: `npm run deploy:test` in test, il workflo
 4. Al merge su `main` (o al push sul repository privato e poi «Run workflow» su
    `deploy-test`) parte `vulcan-<id>-test`.
 
-## 4. Passi una tantum (Matteo)
+## 4. Passi una tantum
 
-Ciò che è nel repository è pronto. Restano le impostazioni sugli account, che solo tu
-puoi fare:
+### Già fatti (28/10/2026, dal connettore Cloudflare)
 
-1. **Repository privato** `zatteogit/vulcan-editions`. Da questa sessione GitHub non
+- D1 `vulcan-test` creato con giurisdizione UE (`f5c0620f-440b-4256-aced-2564c7cb5e87`),
+  con lo schema di `schema.sql` caricato. L'ID è in `wrangler.toml`.
+- `account_id` è in `wrangler.toml`: non è un segreto, quindi su GitHub basta il token.
+- Sicura **fail-closed**: i Worker di test (`vulcan-test`, `vulcan-<id>-test`) hanno
+  `REQUIRE_ACCESS=1` e rispondono 403 a ogni richiesta che non arriva da Cloudflare
+  Access. Il controllo guarda l'header `Cf-Access-Jwt-Assertion`. È una protezione
+  contro gli errori di configurazione, non l'autenticazione: quella la fa Access.
+  Se pubblichi prima di aver configurato Access, i Worker restano chiusi invece di
+  essere pubblici.
+
+### Da fare (Matteo), in quest'ordine
+
+1. **Attiva Zero Trust**: dashboard Cloudflare → Zero Trust, scegli il nome del team e
+   il piano Free. Via API non si può fare: oggi l'account risponde «Access is not enabled».
+2. **Applicazioni Access** (Zero Trust → Access → Applications → Self-hosted), una per
+   Worker di test, ciascuna con la sua policy «Allow» e l'accesso con One-time PIN:
+   - `vulcan-test.zatteo.workers.dev`: tu e i tester;
+   - `vulcan-demo-forno-test.zatteo.workers.dev`: tu e chi deve vedere la demo;
+   - `vulcan-effeuno-test.zatteo.workers.dev`: tu e le email di Effeuno.
+3. **Repository privato** `zatteogit/vulcan-editions`. Da questa sessione GitHub non
    permette di crearlo. Crealo privato e carica il contenuto di `.editions-private/`
-   (`README.md` ed `editions/effeuno.json`).
-2. **Token per leggerlo dalla CI**: un fine-grained token con «Contents: Read-only»
-   solo su `vulcan-editions`. Salvalo in `vulcan-pizza-lab` → Settings → Secrets → Actions
-   come `VULCAN_EDITIONS_TOKEN`.
-3. **Cloudflare**: i passi 1–3 di `docs/ambiente-test.md` (D1 di test UE, segreti
-   `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`, primo deploy).
-4. **Accesso su invito**: in Cloudflare Zero Trust → Access, un'applicazione
-   Self-hosted per ogni Worker di test, ciascuna con la sua policy:
-   - `vulcan-test`: tu e i tester;
-   - `vulcan-demo-forno-test`: tu e chi deve vedere la demo;
-   - `vulcan-effeuno-test`: tu e le email di Effeuno.
-5. **Produzione con approvazione**:
-   - In GitHub → Settings → Environments crea `production` con «Required reviewers»
-     (tu) e aggiungi ai suoi segreti `CLOUDFLARE_API_TOKEN` e `CLOUDFLARE_ACCOUNT_ID`,
-     oppure lasciali a livello di repository.
-   - Fai girare `deploy-production` una volta con lo sha di `main` e `edition = vulcan`.
-   - Poi, in Cloudflare → Workers → vulcan-pizza-lab → Settings → Builds, spegni il
-     deploy automatico del ramo di produzione. Le anteprime delle PR possono restare.
-     Finché non lo spegni, la produzione esce ancora da sola a ogni merge.
+   (`README.md` ed `editions/effeuno.json`). Poi crea un fine-grained token con
+   «Contents: Read-only» solo su quel repository e salvalo in `vulcan-pizza-lab` →
+   Settings → Secrets → Actions come `VULCAN_EDITIONS_TOKEN`.
+4. **Token Cloudflare per GitHub**: Cloudflare → My Profile → API Tokens → modello
+   «Edit Cloudflare Workers», limitato a questo account. In `vulcan-pizza-lab` →
+   Settings → Secrets → Actions aggiungi `CLOUDFLARE_API_TOKEN`. Da quel momento
+   ogni merge su `main` pubblica in test.
+5. **Ambiente `production`** su GitHub: Settings → Environments → `production`, con
+   «Required reviewers» (tu). Fai girare `deploy-production` una volta con lo sha di
+   `main` e `edition = vulcan`.
+6. **Spegni il deploy automatico** di Workers Builds su `vulcan-pizza-lab` (oggi
+   pubblica `main` in produzione a ogni merge). Dalla dashboard: Workers →
+   vulcan-pizza-lab → Settings → Builds. Oppure chiedilo a Claude, che può farlo dal
+   connettore Cloudflare. Va fatto solo dopo il passo 5, altrimenti la produzione resta
+   senza una strada per uscire.
 
 ## 5. Cosa non fa (ancora)
 

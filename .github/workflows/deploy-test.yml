@@ -18,7 +18,6 @@ concurrency:
 
 env:
   CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
   VULCAN_EDITIONS_TOKEN: ${{ secrets.VULCAN_EDITIONS_TOKEN }}
 
 jobs:
@@ -26,24 +25,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Segreti Cloudflare presenti?
-        if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == ''
-        run: echo "::notice::Ambiente di test non configurato (mancano CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID). Vedi docs/ambiente-test.md."
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "::notice::Ambiente di test non configurato (manca il segreto CLOUDFLARE_API_TOKEN). Vedi docs/ambiente-test.md."
       - uses: actions/checkout@v4
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        if: env.CLOUDFLARE_API_TOKEN != ''
       - uses: actions/setup-node@v4
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        if: env.CLOUDFLARE_API_TOKEN != ''
         with:
           node-version: 20
           cache: npm
-      - if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+      - if: env.CLOUDFLARE_API_TOKEN != ''
         run: npm ci
-      - if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+      - if: env.CLOUDFLARE_API_TOKEN != ''
         run: npm run verify
       - name: Build con gli strumenti accesi (solo test)
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        if: env.CLOUDFLARE_API_TOKEN != ''
         run: npm run build:test
       - name: Deploy su vulcan-test
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        if: env.CLOUDFLARE_API_TOKEN != ''
         run: npx wrangler deploy --env test
 
   list-editions:
@@ -74,26 +73,26 @@ jobs:
         edition: ${{ fromJSON(needs.list-editions.outputs.editions) }}
     steps:
       - name: Segreti Cloudflare presenti?
-        if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == ''
-        run: echo "::notice::Edizione ${{ matrix.edition }} non pubblicata: mancano i segreti Cloudflare."
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "::notice::Edizione ${{ matrix.edition }} non pubblicata: manca il segreto CLOUDFLARE_API_TOKEN."
       - uses: actions/checkout@v4
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        if: env.CLOUDFLARE_API_TOKEN != ''
       - name: Edizioni private
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.VULCAN_EDITIONS_TOKEN != ''
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.VULCAN_EDITIONS_TOKEN != ''
         uses: actions/checkout@v4
         with:
           repository: zatteogit/vulcan-editions
           token: ${{ secrets.VULCAN_EDITIONS_TOKEN }}
           path: .editions-private
       - uses: actions/setup-node@v4
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        if: env.CLOUDFLARE_API_TOKEN != ''
         with:
           node-version: 20
           cache: npm
-      - if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+      - if: env.CLOUDFLARE_API_TOKEN != ''
         run: npm ci
       - name: Deploy su vulcan-${{ matrix.edition }}-test
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        if: env.CLOUDFLARE_API_TOKEN != ''
         run: |
           if [ -d .editions-private/editions ]; then export VULCAN_EDITIONS_DIR=.editions-private/editions; fi
           node scripts/deploy-edition.mjs "${{ matrix.edition }}" test

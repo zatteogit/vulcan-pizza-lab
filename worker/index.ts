@@ -53,6 +53,8 @@ interface Env {
   DEPLOY_ENV?: string;
   /** "1" sui Worker delle edizioni noindex (demo, partner): scripts/deploy-edition.mjs. */
   NOINDEX?: string;
+  /** "1" sui Worker di test: senza Cloudflare Access davanti si risponde 403. */
+  REQUIRE_ACCESS?: string;
   /** D-046: OAuth Client ID di Google (pubblico, in wrangler.toml [vars]). */
   GOOGLE_CLIENT_ID?: string;
   /** D-046: impronte SHA-256 delle email per ruolo, separate da virgole. */
@@ -351,6 +353,22 @@ async function handleMcp(request: Request): Promise<Response> {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+
+    // Test e demo dei partner sono solo su invito. Cloudflare Access aggiunge
+    // Cf-Access-Jwt-Assertion a ogni richiesta che lascia passare: se manca,
+    // Access non è (ancora) davanti al Worker e si chiude invece di esporre.
+    // È una sicura contro gli errori di configurazione, non l'autenticazione
+    // (quella la fa Access): docs/ambienti-ed-edizioni.md.
+    if (env.REQUIRE_ACCESS === "1" && !request.headers.get("Cf-Access-Jwt-Assertion")) {
+      return new Response("Accesso solo su invito.\n", {
+        status: 403,
+        headers: withSecurityHeaders(new Headers({
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "no-store",
+          "X-Robots-Tag": "noindex, nofollow",
+        })),
+      });
+    }
 
     // D-049: server MCP per agenti (Claude, ChatGPT…). Pubblico, senza stato,
     // in sola lettura: motore e glossario, niente dati degli utenti.

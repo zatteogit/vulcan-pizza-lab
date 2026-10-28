@@ -18,6 +18,11 @@ Senza i segreti Cloudflare il workflow si ferma con un avviso e non fallisce.
 
 ## Passi una tantum sull'account Cloudflare (Matteo)
 
+> Aggiornamento del 28/10/2026: il D1 di test esiste già, l'`account_id` è in
+> `wrangler.toml` e il segreto `CLOUDFLARE_ACCOUNT_ID` non serve più. L'elenco
+> aggiornato è il §4 di `docs/ambienti-ed-edizioni.md`; i passi qui sotto restano
+> come riferimento.
+
 1. **D1 di test in UE**
    `npx wrangler d1 create vulcan-test --jurisdiction eu`
    Copia l'`database_id` restituito in `wrangler.toml` al posto di

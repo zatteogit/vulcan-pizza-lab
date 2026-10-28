@@ -40,6 +40,8 @@ const run = (cmd, args) => {
 run("npm", ["run", "build"]);
 const deploy = ["wrangler", "deploy", "--env", "edition", "--name", worker];
 if (edition.indexing === "noindex") deploy.push("--var", "NOINDEX:1");
+// In test le edizioni si vedono solo dietro Cloudflare Access (fail-closed).
+if (target === "test") deploy.push("--var", "REQUIRE_ACCESS:1");
 if (dryRun) deploy.push("--dry-run");
 run("npx", deploy);
 console.log(`✓ ${id} → ${worker}${dryRun ? " (dry run)" : ""}`);

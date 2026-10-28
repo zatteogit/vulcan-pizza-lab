@@ -27,8 +27,7 @@ jobs:
     environment: production
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      VULCAN_EDITIONS_TOKEN: ${{ secrets.VULCAN_EDITIONS_TOKEN }}
+          VULCAN_EDITIONS_TOKEN: ${{ secrets.VULCAN_EDITIONS_TOKEN }}
       EDITION: ${{ inputs.edition }}
       SHA: ${{ inputs.sha }}
     steps:
