@@ -177,7 +177,7 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     photo: signatureSfincioneBianco,
     style_id: "sfincione",
     topping_concept_id: "bianca",
-    family: "contemporanea",
+    family: "regionale",
     occasion_tags: ["street food", "tradizione siciliana"],
   },
 
@@ -214,9 +214,22 @@ export const SIGNATURE_RECIPES: SignatureRecipe[] = [
     emoji: "🧀",
     style_id: "focaccia_recco",
     topping_concept_id: "crescenza_recco",
-    family: "contemporanea",
+    family: "regionale",
     occasion_tags: ["antipasto", "tradizione IGP"],
     authenticity_badge: "Disciplinare IGP",
     interpretation_id: "igp_recco",
   },
 ];
+
+/* FW-14 (S04-B-03): un solo deep link per ricetta iconica, usato da Scopri e
+ * dalla ricerca. Porta stile, condimento e, se c'è, la versione dichiarata
+ * (?interpretation=): «ispirata a Bonci» apre la versione di Bonci, non la
+ * Teglia generica. */
+export function signatureRecipeLink(recipe: Pick<SignatureRecipe, "style_id" | "topping_concept_id" | "interpretation_id">): string {
+  const params = new URLSearchParams();
+  params.set("mode", "canonical");
+  params.set("tab", "condimento");
+  params.set("topping", recipe.topping_concept_id);
+  if (recipe.interpretation_id) params.set("interpretation", recipe.interpretation_id);
+  return `/recipe/${recipe.style_id}?${params.toString()}`;
+}

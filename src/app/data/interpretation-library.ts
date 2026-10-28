@@ -130,6 +130,7 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     },
     type: "disciplinare",
     organization: "Consorzio Focaccia di Recco IGP",
+    short_name: "IGP", // FW-14: chip ed eyebrow «Disciplinare IGP»
     location: "Recco, Liguria",
     // C-4: registrata IGP con reg. UE 2015/39 del 13/01/2015 (era 2012). Farina
     // dal disciplinare (CCIAA Genova 2024, art. 5): W > 300, P/L ≥ 0,50 (era
@@ -214,7 +215,6 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     location: "Caiazzo (CE)",
     year_codified: 2012,
     base_style_id: "napoletana_canotto",
-    compatible_style_ids: ["napoletana_stg"],
     base_topping_concept_id: "margherita",
     parameter_overrides: {
       hydration_pct: 65,
@@ -308,7 +308,6 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     location: "Napoli",
     year_codified: 2018,
     base_style_id: "napoletana_canotto",
-    compatible_style_ids: ["napoletana_stg"],
     base_topping_concept_id: "margherita",
     parameter_overrides: {
       hydration_pct: 70,

@@ -29,7 +29,7 @@ export const JA_LOCALE: CmsContent = {
   inspirationI18n: INSPIRATION_I18N_JA,
   ui: {
     scoreTipTitle: "スコアの見方",
-    scoreTipOriginal: "オリジナルのレシピを、あなたのキッチンに合わせて評価。",
+    scoreTipOriginal: "あなたのキッチンでのスタイル基準。",
     scoreTipTailored: "提案された調整を反映したバージョン。",
     scoreTipGlobal: "スコアは実現性と本来のスタイルへの忠実さを示します。規定への適合を認証するものではありません。",
     scoreTipBlocked: "満たされていない条件があります。詳細を開いてください。",
@@ -67,7 +67,7 @@ export const JA_LOCALE: CmsContent = {
     recipeNameLabel: "レシピ名",
     recipeNamePlaceholder: "例：マリオのお気に入り",
     recipeNameConfirm: "名前を確定",
-    recipeResetPreset: "元のレシピに戻す",
+    recipeResetPreset: "元に戻す",
 
     recipeOpenCreate: "作成画面で開く",
     createSourceTitle: "{style}から始める",
@@ -93,7 +93,7 @@ export const JA_LOCALE: CmsContent = {
     recipeOptimizedVersion: "提案",
     recipeScoreLabel: "スコア",
     recipeScoreTransition: "スコア：{from}/100 → {to}/100",
-    scoreBasisOriginal: "オリジナル",
+    scoreBasisOriginal: "基準",
     scoreBasisTailored: "調整済み",
 
     scoreLimitedAuthenticity: "元のスタイルへの忠実度（{score}/100）が総合点の上限になっています。",
@@ -471,30 +471,11 @@ export const JA_LOCALE: CmsContent = {
     },
   },
   families: {
-    napoletana: {
-      name: "\u30CA\u30DD\u30EA\u30BF\u30F3",
-      description:
-        "ふくらんだ縁、薄い中心、高温での焼き上げ。",
-      emoji: "\u{1F1EE}\u{1F1F9}",
-    },
-    romana: {
-      name: "\u30ED\u30FC\u30DE\u30F3",
-      description:
-        "薄く香ばしい丸形から、厚みのある天板ピザまで。",
-      emoji: "\u{1F3DB}\uFE0F",
-    },
-    americana: {
-      name: "\u30A2\u30E1\u30EA\u30AB\u30F3",
-      description:
-        "アメリカ各地で育まれた形、生地、ピザの伝統。",
-      emoji: "\u{1F5FD}",
-    },
-    contemporanea: {
-      name: "\u30B3\u30F3\u30C6\u30F3\u30DD\u30E9\u30EA\u30FC",
-      description:
-        "生地、食感、技法を探る新しい解釈。",
-      emoji: "\u{1F52C}",
-    },
+    napoletana: { name: "\u30CA\u30DD\u30EA\u30BF\u30F3" },
+    romana: { name: "\u30ED\u30FC\u30DE\u30F3" },
+    americana: { name: "\u30A2\u30E1\u30EA\u30AB\u30F3" },
+    contemporanea: { name: "\u30B3\u30F3\u30C6\u30F3\u30DD\u30E9\u30EA\u30FC" },
+    regionale: { name: "地方の伝統" },
   },
   allFamiliesLabel:
     "\u3059\u3079\u3066\u306E\u30D5\u30A1\u30DF\u30EA\u30FC",
@@ -609,18 +590,17 @@ export const JA_LOCALE: CmsContent = {
     notFeasibleExplainer: "これらのレシピは必要な条件を満たしていません。詳細を開くと、変更が必要な点を確認できます。",
     exploreHeroTitle1: "スタイルとレシピを",
     exploreHeroTitle2: "見つける。",
-    exploreSectionTraditional: "伝統的なスタイル",
     badgeBeginnerFriendly: "初心者向け",
     interpretationsLabel: "解釈",
     goToSite: "サイトへ",
-    signatureLabel: "インスピレーション",
+    signatureLabel: "バージョン",
     noSignature: "インスピレーションなし",
     fineParams: "詳細設定",
     cmsRestoreContent: "CMSコンテンツを復元",
-    inspirationLabel: "インスピレーション",
-    inspirationBase: "伝統レシピ",
+    inspirationLabel: "バージョン",
+    inspirationBase: "基準",
     inspirationSeeAll: "すべて見る",
-    inspirationModalTitle: "ピッツァイオーロと規定からのインスピレーション",
+    inspirationModalTitle: "ピッツァイオーロと規定のバージョン",
     inspirationLearnLink: "「学ぶ」セクションで詳しく",
     inspirationSelect: "選択",
     inspirationSelected: "選択中",
@@ -1883,7 +1863,7 @@ export const JA_LOCALE: CmsContent = {
     adaptToKitchen: "\u79C1\u306E\u30AD\u30C3\u30C1\u30F3\u306B\u5408\u308F\u305B\u308B",
     optimizeForMe: "自分のキッチンに合わせる",
     resetToOriginal: "\u30AA\u30EA\u30B8\u30CA\u30EB\u306B\u623B\u3059",
-    saveVersion: "\u3053\u306E\u30D0\u30FC\u30B8\u30E7\u30F3\u3092\u4FDD\u5B58",
+    saveVersion: "レシピ帳に保存",
     savedVersion: "\u30EC\u30B7\u30D4\u5E33\u306B\u4FDD\u5B58\u6E08\u307F",
     optimizedForSetup: "自分のキッチンに合わせて調整済み",
     doneBody: "{style}\u306E\u3059\u3079\u3066\u306E\u5DE5\u7A0B\u304C\u5B8C\u4E86\u3057\u307E\u3057\u305F\u3002\u53EC\u3057\u4E0A\u304C\u308C!",
@@ -1944,7 +1924,7 @@ export const JA_LOCALE: CmsContent = {
       "{current}\u306F\u3059\u3067\u306B\u3042\u306A\u305F\u306E\u4E88\u5B9A\u306B\u5408\u308F\u305B\u3066\u8ABF\u6574\u6E08\u307F\u3067\u3059\u3002{next}\u3092\u9078\u3076\u3068\u7F6E\u304D\u63DB\u3048\u3089\u308C\u3001\u8A2D\u5B9A\u306F\u5931\u308F\u308C\u307E\u3059\u3002",
     draftReplaceConfirm: "{next}\u306B\u5207\u308A\u66FF\u3048\u308B",
     prefermentSaltNote:
-      "このレシピでは、塩は前発酵の生地ではなく、本捏ねの段階で加えます。",
+      "塩は前発酵ではなく本捏ねで加えます。前発酵に入れると酵母の働きが鈍ります。",
     learnedFromAttempts: "\u3053\u308C\u307E\u3067\u306E{n}\u56DE\u306E\u8A18\u9332\u304B\u3089\u5B66\u3073\u307E\u3057\u305F",
     applyCorrections: "\u88DC\u6B63\u3092\u9069\u7528",
     learnInlineTitle: "\u8A73\u3057\u304F\uFF1A{label}",

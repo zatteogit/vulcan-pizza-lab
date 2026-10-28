@@ -59,7 +59,7 @@ export const STYLE_DEVIATIONS: Record<string, DeviationSignature> = {
     deviation_points: ["dough_structure", "fermentation_extreme"],
     deviation_score: 0.35,
     category: "technique_variant",
-    description: "Cornicione esplosivo 'canotto', pre-fermento obbligatorio, fermentazione 24-72h",
+    description: "Cornicione esplosivo 'canotto', prefermento obbligatorio, fermentazione 24-72h",
   },
   teglia_romana: {
     deviation_points: [],

@@ -416,8 +416,8 @@ export function getContextualWarnings(params: {
     warnings.push({
       issueId: 'P06',
       message: loc ? interpolate(loc.message, { h: String(params.fermentHours) })
-        : `${params.fermentHours}h in frigo senza pre-fermento: possibile sapore piatto`,
-      tip: loc?.tip ?? 'Aggiungi un pre-fermento (poolish o biga) per complessita aromatica',
+        : `${params.fermentHours}h in frigo senza prefermento: possibile sapore piatto`,
+      tip: loc?.tip ?? 'Aggiungi un prefermento (poolish o biga) per complessita aromatica',
       severity: 'info',
     });
   }

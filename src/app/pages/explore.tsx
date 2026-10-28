@@ -27,8 +27,11 @@ import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
 import { useProfileDefaults } from "../hooks/use-profile-defaults";
 import {
 SIGNATURE_RECIPES,
+signatureRecipeLink,
 type SignatureRecipe,
 } from "../data/signature-recipes";
+import { canonicalRecipeEntry, recipeFromEntry } from "../use-cases/recipe-entry";
+import { stgDepartures } from "../domain/recipe-reference";
 import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
@@ -95,6 +98,7 @@ const FAMILY_IDS: (FamilyId | "all")[] = [
   "romana",
   "americana",
   "contemporanea",
+  "regionale",
 ];
 
 type ExploreFilter = "all" | "styles" | "recipes";
@@ -133,13 +137,7 @@ function FeaturedRecipeCard({
   const acronymHelpId = useId();
   const acronymHelp = getAcronymTooltip(recipe.authenticity_badge, cardText.context);
 
-  const linkParams = new URLSearchParams();
-  linkParams.set("mode", "canonical");
-  linkParams.set("tab", "condimento");
-  linkParams.set("topping", recipe.topping_concept_id);
-  if (recipe.interpretation_id)
-    linkParams.set("interpretation", recipe.interpretation_id);
-  const linkTo = `/recipe/${recipe.style_id}?${linkParams.toString()}`;
+  const linkTo = signatureRecipeLink(recipe);
 
   return (
     <article className="explore-feature-shell">
@@ -261,7 +259,25 @@ export function ExplorePage() {
       const base = (effectiveStyles ?? STYLES_DB)[recipe.style_id];
       return base ? styleWithSelectedTopping(base, recipe.topping_concept_id) : undefined;
     });
-    const featured = recipesRanked.find((r) => !r.blocked)?.item ?? SIGNATURE_RECIPES[0];
+    /* FW-14 (S02-A-01): in primo piano la prima ricetta iconica che sulla tua
+     * cucina si apre davvero come promette la card: fattibile e, se è STG,
+     * senza scostamenti dal disciplinare. Prima era sempre la Margherita
+     * «Disciplinare AVPN», che col forno di casa apriva «fuori disciplinare». */
+    const opensAsPromised = (rec: SignatureRecipe) => {
+      const style = STYLES_DB[rec.style_id];
+      if (!style) return false;
+      try {
+        const interpretation = rec.interpretation_id ? getInterpretationById(rec.interpretation_id) ?? null : undefined;
+        const recipe = recipeFromEntry(canonicalRecipeEntry(style, undefined, interpretation), profileConstraints);
+        return recipe.verdict.outcome !== "not_feasible"
+          && stgDepartures(recipe, profileConstraints.oven_type).length === 0;
+      } catch {
+        return false;
+      }
+    };
+    const featured = recipesRanked.find((r) => !r.blocked && opensAsPromised(r.item))?.item
+      ?? recipesRanked.find((r) => !r.blocked)?.item
+      ?? SIGNATURE_RECIPES[0];
     return {
       styles: stylesRanked.slice(0, 4),
       featured,
@@ -276,34 +292,26 @@ export function ExplorePage() {
     return styles.filter((s) => styleMatchesFamily(s, activeFamily as FamilyId));
   }, [styles, activeFamily]);
 
-  /* Group styles by family for "all" and style tab when no family filter is applied */
-  const groupedStyles = useMemo(() => {
-    if (activeFamily !== "all") return null;
-    const groups: Record<FamilyId, PizzaStyle[]> = {
-      napoletana: [],
-      romana: [],
-      americana: [],
-      contemporanea: [],
-    };
+  /* FW-14 (S02-A-08): gruppi e conteggi delle chip dalla stessa funzione
+   * (styleMatchesFamily, filtro non esclusivo). Un gruppo elenca anche i membri
+   * secondari, con la famiglia principale in didascalia: così «Contemporanea 8»
+   * sulla chip e «(8)» sul gruppo coincidono. Prima il gruppo contava solo la
+   * primaria (7). */
+  const stylesByFamily = useMemo(() => {
+    const groups = Object.fromEntries(
+      FAMILY_IDS.filter((f): f is FamilyId => f !== "all").map((f) => [f, [] as PizzaStyle[]]),
+    ) as Record<FamilyId, PizzaStyle[]>;
     for (const s of styles) {
-      if (groups[s.family]) groups[s.family].push(s);
-    }
-    return groups;
-  }, [styles, activeFamily]);
-
-  /* Family counts for badges — coerenti col filtro non esclusivo: uno stile
-   * conta nella primaria e in ogni secondaria (la somma può superare il totale). */
-  const familyCounts = useMemo(() => {
-    const counts: Record<string, number> = {
-      all: styles.length,
-    };
-    for (const s of styles) {
-      for (const fam of [s.family, ...(s.families ?? [])]) {
-        counts[fam] = (counts[fam] || 0) + 1;
+      for (const fam of Object.keys(groups) as FamilyId[]) {
+        if (styleMatchesFamily(s, fam)) groups[fam].push(s);
       }
     }
-    return counts;
+    return groups;
   }, [styles]);
+  const groupedStyles = activeFamily === "all" ? stylesByFamily : null;
+  const familyCounts: Record<string, number> = { all: styles.length };
+  for (const [fam, list] of Object.entries(stylesByFamily)) familyCounts[fam] = list.length;
+
 
   return (
     <main
@@ -411,7 +419,7 @@ export function ExplorePage() {
               <section>
                 <div className="explore-section__head">
                   <Heading level="md" as="h2">
-                    {previewForKitchen ? uiMessage("explore.forKitchen") : cms.misc.exploreSectionTraditional}
+                    {previewForKitchen ? uiMessage("explore.forKitchen") : cms.pages.exploreFilterStyles}
                   </Heading>
                   <button
                     onClick={() => setExploreFilters("styles")}
@@ -535,6 +543,9 @@ export function ExplorePage() {
                                 isNerd={isNerd}
                                 exploreBackTo={exploreBackTo}
                                 constraints={profileConstraints}
+                                primaryFamily={style.family !== familyId
+                                  ? cms.families[style.family]?.name || PIZZA_FAMILIES[style.family]?.name
+                                  : undefined}
                               />
                             ))}
                           </div>
@@ -615,13 +626,7 @@ function SignatureRecipeCard({
   const acronymHelpId = useId();
   const acronymHelp = getAcronymTooltip(recipe.authenticity_badge, cardText.context);
 
-  const linkParams = new URLSearchParams();
-  linkParams.set("mode", "canonical");
-  linkParams.set("tab", "condimento");
-  linkParams.set("topping", recipe.topping_concept_id);
-  if (recipe.interpretation_id)
-    linkParams.set("interpretation", recipe.interpretation_id);
-  const linkTo = `/recipe/${recipe.style_id}?${linkParams.toString()}`;
+  const linkTo = signatureRecipeLink(recipe);
 
   return (
     <motion.article
@@ -715,6 +720,7 @@ function StyleCatalogCard({
   isNerd,
   exploreBackTo,
   constraints,
+  primaryFamily,
 }: {
   style: PizzaStyle;
   index: number;
@@ -722,6 +728,8 @@ function StyleCatalogCard({
   isNerd?: boolean;
   exploreBackTo: string;
   constraints: UserConstraints;
+  /** FW-14: in un gruppo di famiglia secondaria, il nome della primaria. */
+  primaryFamily?: string;
 }) {
   const photo =
     cms.media?.stylePhotos?.[style.id] ||
@@ -779,6 +787,11 @@ function StyleCatalogCard({
             <div className="explore-card__origin">
               {shortOrigin(style.origin)}
             </div>
+            {primaryFamily && (
+              <p className="explore-card__family-note">
+                {uiMessage("pages.explore.primaryFamily", [primaryFamily])}
+              </p>
+            )}
             <StyleMetaChip style={style} cms={cms} recipe={match?.recipe} context="explore" />
             {isNerd && <StyleTechLine style={style} cms={cms} />}
           </figcaption>

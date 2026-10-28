@@ -3635,6 +3635,18 @@
     text-overflow: ellipsis;
   }
 
+  /* FW-14 (S02-A-08): nel gruppo di una famiglia secondaria la card dice la
+     famiglia principale dello stile. */
+  .explore-card__family-note {
+    margin: var(--space-0-5) 0 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    font-family: var(--font-sans);
+    color: var(--overlay-text-warm);
+    text-shadow: var(--overlay-shadow-text-sm);
+    line-height: var(--leading-normal);
+  }
+
   /* ═══ PAGE: learn (resto pagina, hero già in .page-lead) ═══ */
   /* === LEARN PAGE — markup semantico (resto della pagina, hero escluso) === */
 
@@ -12987,6 +12999,20 @@
     .stat-strip__value-prev,
     .stat-strip__value-arrow {
       display: none;
+    }
+  }
+
+  /* FW-14 (S07-A-04): su mobile il valore di riferimento non sparisce (prima
+     restava solo la stellina): va su una riga sua sopra il valore attuale. */
+  @media (max-width: 479px) {
+    .stat-strip__value--changed {
+      flex-wrap: wrap;
+      row-gap: 0;
+    }
+
+    .stat-strip__value-prev {
+      display: inline;
+      flex-basis: 100%;
     }
   }
 

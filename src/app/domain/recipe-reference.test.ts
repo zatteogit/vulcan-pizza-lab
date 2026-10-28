@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { generateRecipe, STYLES_DB, type UserConstraints } from "./pizza-engine";
-import { recipeDisplayName, stgDepartures } from "./recipe-reference";
+import { compareToReference, recipeDisplayName, stgDepartures } from "./recipe-reference";
 
 const kitchen: UserConstraints = {
   oven_type: "wood", oven_max_temp_c: 485, available_hours: 24,
@@ -45,5 +45,31 @@ describe("STG reference and executable recipe are distinct", () => {
     const other = { ...recipe, style: STYLES_DB.teglia_romana };
     expect(stgDepartures(other, "home")).toEqual([]);
     expect(recipeDisplayName(other, "home")).toBe(other.style.name);
+  });
+});
+
+/* FW-14: i delta partono dalla ricetta di riferimento, non dal centro del range. */
+describe("compareToReference", () => {
+  it("a ricetta invariata non segnala nulla, anche se è lontana dal centro degli intervalli", () => {
+    const recipe = reference();
+    expect(compareToReference(recipe, reference())).toEqual([]);
+  });
+  it("cambiare solo il sale non marca idratazione, W o lievitazione", () => {
+    const salted = generateRecipe(STYLES_DB.napoletana_stg, kitchen, {
+      customHydration: 58, customFlourW: 280, customFlourPL: 0.6,
+      customFermentationHours: 10, customFermentationTempC: 22, customSalt: 3.2,
+    });
+    expect(compareToReference(salted, reference())).toEqual([]);
+  });
+  it("riporta il valore di riferimento vero, compreso il passaggio in frigo", () => {
+    const changed = generateRecipe(STYLES_DB.napoletana_stg, kitchen, {
+      customHydration: 62, customFlourW: 300, customFlourPL: 0.6,
+      customFermentationHours: 10, customFermentationTempC: 4,
+    });
+    expect(compareToReference(changed, reference())).toEqual([
+      { param: "hydration", reference: { value: 58 }, current: { value: 62 } },
+      { param: "flourW", reference: { value: 280 }, current: { value: 300 } },
+      { param: "fermentation", reference: { value: 10, tempC: 22 }, current: { value: 10, tempC: 4 } },
+    ]);
   });
 });

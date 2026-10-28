@@ -19,7 +19,7 @@ export const FR_LOCALE: CmsContent = {
   inspirationI18n: INSPIRATION_I18N_FR,
   ui: {
     scoreTipTitle: "Comprendre le score",
-    scoreTipOriginal: "Recette originale, évaluée pour votre cuisine.",
+    scoreTipOriginal: "Référence du style, pour votre cuisine.",
     scoreTipTailored: "Version avec les adaptations proposées.",
     scoreTipGlobal: "Le score tient compte de la faisabilité et de l’authenticité. Il ne certifie pas la conformité à un cahier des charges.",
     scoreTipBlocked: "Certains prérequis ne sont pas remplis : ouvrez le détail.",
@@ -57,7 +57,7 @@ export const FR_LOCALE: CmsContent = {
     recipeNameLabel: "Nom de la recette",
     recipeNamePlaceholder: "Ex. Comme Mario l’aime",
     recipeNameConfirm: "Confirmer le nom",
-    recipeResetPreset: "Rétablir l’original",
+    recipeResetPreset: "Rétablir",
 
     recipeOpenCreate: "Ouvrir dans Créer",
     createSourceTitle: "Partir de {style}",
@@ -83,7 +83,7 @@ export const FR_LOCALE: CmsContent = {
     recipeOptimizedVersion: "Proposition",
     recipeScoreLabel: "Score",
     recipeScoreTransition: "Score : {from}/100 → {to}/100",
-    scoreBasisOriginal: "Original",
+    scoreBasisOriginal: "Référence",
     scoreBasisTailored: "Sur mesure",
 
     scoreLimitedAuthenticity: "L’authenticité ({score}/100) limite le score.",
@@ -426,30 +426,11 @@ export const FR_LOCALE: CmsContent = {
     },
   },
   families: {
-    napoletana: {
-      name: "Napolitaine",
-      description:
-        "Bord marqué, centre fin et cuisson à haute température.",
-      emoji: "\u{1F1EE}\u{1F1F9}",
-    },
-    romana: {
-      name: "Romaine",
-      description:
-        "De la pizza ronde fine et croustillante à la pizza épaisse en plaque.",
-      emoji: "\u{1F3DB}\uFE0F",
-    },
-    americana: {
-      name: "Am\u00E9ricaine",
-      description:
-        "Formats, pâvos et traditions régionales de la pizza aux États-Unis.",
-      emoji: "\u{1F5FD}",
-    },
-    contemporanea: {
-      name: "Contemporaine",
-      description:
-        "Nouvelles interprétations des pâvos, des textures et des techniques.",
-      emoji: "\u{1F52C}",
-    },
+    napoletana: { name: "Napolitaine" },
+    romana: { name: "Romaine" },
+    americana: { name: "Am\u00E9ricaine" },
+    contemporanea: { name: "Contemporaine" },
+    regionale: { name: "Traditions régionales" },
   },
   allFamiliesLabel: "Toutes les familles",
   tiers: {
@@ -558,18 +539,17 @@ export const FR_LOCALE: CmsContent = {
     notFeasibleExplainer: "Une condition manque pour ces recettes. Ouvrez le détail pour voir quoi modifier.",
     exploreHeroTitle1: "Explorez les styles",
     exploreHeroTitle2: "et les recettes.",
-    exploreSectionTraditional: "Styles traditionnels",
     badgeBeginnerFriendly: "Débutants",
     interpretationsLabel: "Interprétations",
     goToSite: "Aller au site",
-    signatureLabel: "Inspiration",
+    signatureLabel: "Version",
     noSignature: "aucune inspiration",
     fineParams: "Paramètres avancés",
     cmsRestoreContent: "Réinitialiser le contenu CMS",
-    inspirationLabel: "Inspiration",
-    inspirationBase: "Traditionnelle",
+    inspirationLabel: "Version",
+    inspirationBase: "Référence",
     inspirationSeeAll: "Voir toutes",
-    inspirationModalTitle: "Inspirées de pizzaïolos et de cahiers des charges",
+    inspirationModalTitle: "Versions de pizzaïolos et de cahiers des charges",
     inspirationLearnLink: "En savoir plus dans la section Apprendre",
     inspirationSelect: "Sélectionner",
     inspirationSelected: "Sélectionnée",
@@ -1774,7 +1754,7 @@ export const FR_LOCALE: CmsContent = {
     adaptToKitchen: "Adapter \u00E0 ma cuisine",
     optimizeForMe: "Adapter à ma cuisine",
     resetToOriginal: "Revenir \u00E0 l'original",
-    saveVersion: "Enregistrer cette version",
+    saveVersion: "Enregistrer dans le carnet",
     savedVersion: "Enregistr\u00E9e dans le carnet",
     optimizedForSetup: "Adaptée à votre cuisine",
     doneBody: "Vous avez termin\u00E9 toutes les \u00E9tapes de votre {style}. Bon app\u00E9tit !",
@@ -1894,7 +1874,7 @@ export const FR_LOCALE: CmsContent = {
     draftReplaceTitle: "Remplacer la recette en cours ?",
     draftReplaceBody: "Vous avez d\u00E9j\u00E0 {current} pr\u00EAte et r\u00E9gl\u00E9e sur votre planning. En choisissant {next}, vous la remplacez et ses param\u00E8tres seront perdus.",
     draftReplaceConfirm: "Passer \u00E0 {next}",
-    prefermentSaltNote: "Dans cette recette, le sel s’ajoute à la pâte finale, pas au préferment.",
+    prefermentSaltNote: "Le sel va dans la pâte finale, pas dans le préferment, où il freinerait la levure.",
     learnedFromAttempts: "J'ai appris de vos {n} essais",
     applyCorrections: "Appliquer les corrections",
     learnInlineTitle: "En savoir plus : {label}",

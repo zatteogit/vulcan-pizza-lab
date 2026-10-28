@@ -1,6 +1,7 @@
 import { encodePan } from "../features/recipe/pan-url";
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
-import { recipeDisplayName } from "../domain/recipe-reference";
+import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
+import { referenceEyebrow } from "../features/recipe/reference-label";
 import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { Bookmark, ChevronRight, Heart, Sparkles } from "lucide-react";
@@ -881,6 +882,11 @@ export function HomePage() {
   // interpretazione, e i parametri correnti coincidono con l'ultimo ottimo. In quel
   // caso mostriamo la rationale e NASCONDIAMO il pulsante (sarebbe ridondante). Se
   // l'utente è su canonico o ha spostato gli slider, il pulsante riappare.
+  /* FW-14: riferimento sugli stessi vincoli della ricetta mostrata. */
+  const createReferenceRecipe = useMemo(
+    () => (createReferenceEntry ? recipeFromEntry(createReferenceEntry, engineConstraints) : undefined),
+    [createReferenceEntry, engineConstraints],
+  );
   const createRecipeOptimized = useMemo(() => {
     const p = lastOptimization?.params;
     return (
@@ -1277,11 +1283,17 @@ export function HomePage() {
                   ? cms.cooking.tabRecipe
                   : cms.cooking.tabRecipeTailored
               }
-              eyebrow={
-                createDirty || resolvedRecipeName
-                  ? cms.ui.scoreBasisTailored
-                  : cms.ui.scoreBasisOriginal
-              }
+              eyebrow={referenceEyebrow({
+                styleId: selectedStyle.id,
+                tailored: createDirty || Boolean(resolvedRecipeName),
+                tailoredLabel: cms.ui.scoreBasisTailored,
+                referenceLabel: cms.ui.scoreBasisOriginal,
+                interpretation: createOrigin ?? null,
+                version: activeVersion,
+                versionLabel: activeVersion ? cms.messages?.[`version.label.${activeVersion.label}`] ?? activeVersion.label : undefined,
+                adaptedToOven: stgDepartures(recipe, engineConstraints.oven_type).length > 0
+                  || (!isFriedStyle(selectedStyle) && recipe.oven_temp_c < selectedStyle.baking.temp_c_range[0]),
+              })}
               eyebrowTone={createDirty || resolvedRecipeName ? "tailored" : "canonical"}
               shareUrl={shareUrl}
               selectedToppingConcept={selectedToppingConcept}
@@ -1336,6 +1348,8 @@ export function HomePage() {
                 <RecipeStatStrip
                   recipe={recipe}
                   isPersonalized={createDirty}
+                  reference={createReferenceRecipe}
+                  optimized={createRecipeOptimized}
                 />
                 {/* Il dialog Personalizza: si apre dal pulsante sulla match
                     card (niente trigger proprio — nota Matteo lug 2026). */}

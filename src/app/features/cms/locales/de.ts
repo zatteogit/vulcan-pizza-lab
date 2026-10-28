@@ -19,7 +19,7 @@ export const DE_LOCALE: CmsContent = {
   inspirationI18n: INSPIRATION_I18N_DE,
   ui: {
     scoreTipTitle: "So liest du die Bewertung",
-    scoreTipOriginal: "Originalrezept, für deine Küche bewertet.",
+    scoreTipOriginal: "Stilreferenz, für deine Küche.",
     scoreTipTailored: "Version mit den vorgeschlagenen Anpassungen.",
     scoreTipGlobal: "Die Bewertung berücksichtigt Machbarkeit und Authentizität. Sie bestätigt keine Konformität mit einer Spezifikation.",
     scoreTipBlocked: "Einige Voraussetzungen fehlen: öffne die Details.",
@@ -57,7 +57,7 @@ export const DE_LOCALE: CmsContent = {
     recipeNameLabel: "Rezeptname",
     recipeNamePlaceholder: "Z. B. So mag Mario es",
     recipeNameConfirm: "Namen bestätigen",
-    recipeResetPreset: "Original wiederherstellen",
+    recipeResetPreset: "Wiederherstellen",
 
     recipeOpenCreate: "In Erstellen öffnen",
     createSourceTitle: "Mit {style} beginnen",
@@ -83,7 +83,7 @@ export const DE_LOCALE: CmsContent = {
     recipeOptimizedVersion: "Vorschlag",
     recipeScoreLabel: "Bewertung",
     recipeScoreTransition: "Punktzahl: {from}/100 → {to}/100",
-    scoreBasisOriginal: "Original",
+    scoreBasisOriginal: "Referenz",
     scoreBasisTailored: "Angepasst",
 
     scoreLimitedAuthenticity: "Die Authentizität ({score}/100) begrenzt die Punktzahl.",
@@ -416,30 +416,11 @@ export const DE_LOCALE: CmsContent = {
     },
   },
   families: {
-    napoletana: {
-      name: "Neapolitanisch",
-      description:
-        "Ausgeprägter Rand, dünne Mitte und Backen bei hoher Temperatur.",
-      emoji: "\u{1F1EE}\u{1F1F9}",
-    },
-    romana: {
-      name: "R\u00F6misch",
-      description:
-        "Von dünnen, knusprigen runden Pizzen bis zur hohen Blechpizza.",
-      emoji: "\u{1F3DB}\uFE0F",
-    },
-    americana: {
-      name: "Amerikanisch",
-      description:
-        "Pizzaformen, Teige und regionale Traditionen der USA.",
-      emoji: "\u{1F5FD}",
-    },
-    contemporanea: {
-      name: "Zeitgen\u00F6ssisch",
-      description:
-        "Neue Interpretationen von Teigen, Texturen und Techniken.",
-      emoji: "\u{1F52C}",
-    },
+    napoletana: { name: "Neapolitanisch" },
+    romana: { name: "R\u00F6misch" },
+    americana: { name: "Amerikanisch" },
+    contemporanea: { name: "Zeitgen\u00F6ssisch" },
+    regionale: { name: "Regionale Traditionen" },
   },
   allFamiliesLabel: "Alle Familien",
   tiers: {
@@ -548,18 +529,17 @@ export const DE_LOCALE: CmsContent = {
     notFeasibleExplainer: "Bei diesen Rezepten fehlt eine Voraussetzung. Öffne die Details, um zu sehen, was sich ändern muss.",
     exploreHeroTitle1: "Entdecke Stile",
     exploreHeroTitle2: "und Rezepte.",
-    exploreSectionTraditional: "Traditionelle Stile",
     badgeBeginnerFriendly: "Für Anfänger",
     interpretationsLabel: "Interpretationen",
     goToSite: "Zur Website",
-    signatureLabel: "Inspiration",
+    signatureLabel: "Version",
     noSignature: "keine Inspiration",
     fineParams: "Erweiterte Einstellungen",
     cmsRestoreContent: "CMS-Inhalte zurücksetzen",
-    inspirationLabel: "Inspiration",
-    inspirationBase: "Traditionell",
+    inspirationLabel: "Version",
+    inspirationBase: "Referenz",
     inspirationSeeAll: "Alle ansehen",
-    inspirationModalTitle: "Inspiriert von Pizzaioli und Regelwerken",
+    inspirationModalTitle: "Versionen von Pizzaioli und Regelwerken",
     inspirationLearnLink: "Mehr im Bereich Lernen",
     inspirationSelect: "Auswählen",
     inspirationSelected: "Ausgewählt",
@@ -1750,7 +1730,7 @@ export const DE_LOCALE: CmsContent = {
     adaptToKitchen: "An meine K\u00FCche anpassen",
     optimizeForMe: "An meine Küche anpassen",
     resetToOriginal: "Zur\u00FCck zum Original",
-    saveVersion: "Diese Version speichern",
+    saveVersion: "Im Rezeptbuch speichern",
     savedVersion: "Im Rezeptbuch gespeichert",
     optimizedForSetup: "An deine Küche angepasst",
     doneBody: "Du hast alle Schritte deiner {style} abgeschlossen. Guten Appetit!",
@@ -1809,7 +1789,7 @@ export const DE_LOCALE: CmsContent = {
       "{current} ist bereits auf deinen Zeitplan abgestimmt. Mit {next} ersetzt du es und die Einstellungen gehen verloren.",
     draftReplaceConfirm: "Zu {next} wechseln",
     prefermentSaltNote:
-      "In diesem Rezept kommt das Salz in den Hauptteig, nicht in den Vorteig.",
+      "Das Salz kommt in den Hauptteig, nicht in den Vorteig: Dort bremst es die Hefe.",
     learnedFromAttempts: "Ich habe aus deinen {n} Versuchen gelernt",
     applyCorrections: "Korrekturen anwenden",
     learnInlineTitle: "Mehr erfahren: {label}",

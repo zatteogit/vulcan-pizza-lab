@@ -188,7 +188,7 @@ const IMPASTO_LIBRARY: Record<string, ImpastoRecipe> = {
     name: "Metodo a Biga",
     short_name: "Biga",
     description:
-      "Pre-fermento biga 18h, poi rinfresco + 48h frigo. Cornicione esplosivo, mollica aperta.",
+      "Prefermento biga 18h, poi rinfresco + 48h frigo. Cornicione esplosivo, mollica aperta.",
     emoji: "🏗️",
     dough_overrides: {
       hydration_pct_range: [65, 78],

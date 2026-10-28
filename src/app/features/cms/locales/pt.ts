@@ -19,7 +19,7 @@ export const PT_LOCALE: CmsContent = {
   inspirationI18n: INSPIRATION_I18N_PT,
   ui: {
     scoreTipTitle: "Como ler a pontuação",
-    scoreTipOriginal: "Receita original, avaliada para a sua cozinha.",
+    scoreTipOriginal: "Referência do estilo, na sua cozinha.",
     scoreTipTailored: "Versão com as adaptações propostas.",
     scoreTipGlobal: "A pontuação considera viabilidade e autenticidade. Não certifica a conformidade com uma especificação.",
     scoreTipBlocked: "Existem requisitos por cumprir: abra os detalhes.",
@@ -57,7 +57,7 @@ export const PT_LOCALE: CmsContent = {
     recipeNameLabel: "Nome da receita",
     recipeNamePlaceholder: "Ex. Como o Mário gosta",
     recipeNameConfirm: "Confirmar nome",
-    recipeResetPreset: "Restaurar original",
+    recipeResetPreset: "Restaurar",
 
     recipeOpenCreate: "Abrir em Criar",
     createSourceTitle: "Partir de {style}",
@@ -83,7 +83,7 @@ export const PT_LOCALE: CmsContent = {
     recipeOptimizedVersion: "Proposta",
     recipeScoreLabel: "Pontuação",
     recipeScoreTransition: "Pontuação: {from}/100 → {to}/100",
-    scoreBasisOriginal: "Original",
+    scoreBasisOriginal: "Referência",
     scoreBasisTailored: "Adaptada",
 
     scoreLimitedAuthenticity: "A autenticidade ({score}/100) limita a pontuação.",
@@ -426,30 +426,11 @@ export const PT_LOCALE: CmsContent = {
     },
   },
   families: {
-    napoletana: {
-      name: "Napolitana",
-      description:
-        "Bordo pronunciado, centro fino e cozedura a alta temperatura.",
-      emoji: "\u{1F1EE}\u{1F1F9}",
-    },
-    romana: {
-      name: "Romana",
-      description:
-        "Da redonda fina e crocante à pizza alta em tabuleiro.",
-      emoji: "\u{1F3DB}\uFE0F",
-    },
-    americana: {
-      name: "Americana",
-      description:
-        "Formatos, massas e tradições regionais da pizza nos Estados Unidos.",
-      emoji: "\u{1F5FD}",
-    },
-    contemporanea: {
-      name: "Contempor\u00E2nea",
-      description:
-        "Novas interpretações de massas, texturas e técnicas.",
-      emoji: "\u{1F52C}",
-    },
+    napoletana: { name: "Napolitana" },
+    romana: { name: "Romana" },
+    americana: { name: "Americana" },
+    contemporanea: { name: "Contempor\u00E2nea" },
+    regionale: { name: "Tradições regionais" },
   },
   allFamiliesLabel: "Todas as fam\u00EDlias",
   tiers: {
@@ -558,18 +539,17 @@ export const PT_LOCALE: CmsContent = {
     notFeasibleExplainer: "Estas receitas têm um requisito por cumprir. Abra o detalhe para ver o que mudar.",
     exploreHeroTitle1: "Explore estilos",
     exploreHeroTitle2: "e receitas.",
-    exploreSectionTraditional: "Estilos tradicionais",
     badgeBeginnerFriendly: "Iniciantes",
     interpretationsLabel: "Interpretações",
     goToSite: "Ir ao site",
-    signatureLabel: "Inspiração",
+    signatureLabel: "Versão",
     noSignature: "sem inspiração",
     fineParams: "Parâmetros avançados",
     cmsRestoreContent: "Restaurar conteúdo do CMS",
-    inspirationLabel: "Inspiração",
-    inspirationBase: "Tradicional",
+    inspirationLabel: "Versão",
+    inspirationBase: "Referência",
     inspirationSeeAll: "Ver todas",
-    inspirationModalTitle: "Inspiradas em pizzaioli e regulamentos",
+    inspirationModalTitle: "Versões de pizzaioli e regulamentos",
     inspirationLearnLink: "Saiba mais na seção Aprenda",
     inspirationSelect: "Selecionar",
     inspirationSelected: "Selecionada",
@@ -1766,7 +1746,7 @@ export const PT_LOCALE: CmsContent = {
     adaptToKitchen: "Adaptar \u00E0 minha cozinha",
     optimizeForMe: "Adaptar à minha cozinha",
     resetToOriginal: "Voltar ao original",
-    saveVersion: "Salvar esta vers\u00E3o",
+    saveVersion: "Guardar no livro de receitas",
     savedVersion: "Salva no livro de receitas",
     optimizedForSetup: "Adaptada à sua cozinha",
     doneBody: "Voc\u00EA concluiu todas as etapas da sua {style}. Bom apetite!",
@@ -1886,7 +1866,7 @@ export const PT_LOCALE: CmsContent = {
     draftReplaceTitle: "Substituir a receita em andamento?",
     draftReplaceBody: "Voc\u00EA j\u00E1 tem {current} pronta e ajustada aos seus hor\u00E1rios. Ao escolher {next}, ela ser\u00E1 substitu\u00EDda e os par\u00E2metros dela ser\u00E3o perdidos.",
     draftReplaceConfirm: "Mudar para {next}",
-    prefermentSaltNote: "Nesta receita, o sal entra na massa final, não no pré-fermento.",
+    prefermentSaltNote: "O sal entra na massa final, não no pré-fermento, onde travaria o fermento.",
     learnedFromAttempts: "Aprendi com as suas {n} tentativas",
     applyCorrections: "Aplicar as corre\u00E7\u00F5es",
     learnInlineTitle: "Saiba mais: {label}",

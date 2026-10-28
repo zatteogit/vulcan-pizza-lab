@@ -384,8 +384,9 @@ export function IngredientsSection({
                 </div>
               </div>
               <div className="type-body ingredients-preferment__note">
-                {cms.cooking.prefermentSaltNote ??
-                  uiMessage("features.recipe.ingredients-section.il-sale-va-sempre-e-solo-nell-impasto-fina-0ceb4736")}
+                {/* FW-14 (S08-A-18): una sola nota sul sale, quella del CMS
+                    (il testo di riserva diceva il perché ma non si vedeva mai). */}
+                {cms.cooking.prefermentSaltNote}
               </div>
             </div>
           );

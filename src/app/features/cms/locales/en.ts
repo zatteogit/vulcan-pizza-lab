@@ -29,7 +29,7 @@ export const EN_LOCALE: CmsContent = {
   inspirationI18n: INSPIRATION_I18N_EN,
   ui: {
     scoreTipTitle: "How to read the score",
-    scoreTipOriginal: "Original recipe, assessed for your kitchen.",
+    scoreTipOriginal: "Style reference, on your kitchen.",
     scoreTipTailored: "Version with the proposed adaptations.",
     scoreTipGlobal: "The score considers feasibility and authenticity. It does not certify compliance with a specification.",
     scoreTipBlocked: "Some requirements are unmet: open the details.",
@@ -67,7 +67,7 @@ export const EN_LOCALE: CmsContent = {
     recipeNameLabel: "Recipe name",
     recipeNamePlaceholder: "E.g. Just how Mario likes it",
     recipeNameConfirm: "Confirm name",
-    recipeResetPreset: "Restore original",
+    recipeResetPreset: "Restore",
 
     recipeOpenCreate: "Open in Create",
     createSourceTitle: "Start from {style}",
@@ -93,7 +93,7 @@ export const EN_LOCALE: CmsContent = {
     recipeOptimizedVersion: "Proposal",
     recipeScoreLabel: "Score",
     recipeScoreTransition: "Score: {from}/100 → {to}/100",
-    scoreBasisOriginal: "Original",
+    scoreBasisOriginal: "Reference",
     scoreBasisTailored: "Tailored",
 
     scoreLimitedAuthenticity: "Authenticity ({score}/100) limits the score.",
@@ -392,9 +392,9 @@ export const EN_LOCALE: CmsContent = {
   },
   ovenPresets: {
     coal: { name: "Coal-fired oven", maxTemp: 400, icon: "flame" },
-    home: { name: "Home Oven", maxTemp: 250, icon: "home" },
+    home: { name: "Home oven", maxTemp: 250, icon: "home" },
     electric_standard: {
-      name: "Standard Electric",
+      name: "Standard electric",
       maxTemp: 300,
       icon: "zap",
     },
@@ -404,12 +404,12 @@ export const EN_LOCALE: CmsContent = {
       icon: "flame",
     },
     electric_high: {
-      name: "High-Temp Electric",
+      name: "High-temperature electric",
       maxTemp: 450,
       icon: "thermometer",
     },
     wood: {
-      name: "Wood-Fired Oven",
+      name: "Wood-fired oven",
       maxTemp: 500,
       icon: "flame-kindling",
     },
@@ -438,30 +438,11 @@ export const EN_LOCALE: CmsContent = {
     },
   },
   families: {
-    napoletana: {
-      name: "Neapolitan",
-      description:
-        "A raised rim, thin centre and high-temperature baking.",
-      emoji: "\u{1F1EE}\u{1F1F9}",
-    },
-    romana: {
-      name: "Roman",
-      description:
-        "From thin, crisp rounds to thick tray-baked pizza.",
-      emoji: "\u{1F3DB}\uFE0F",
-    },
-    americana: {
-      name: "American",
-      description:
-        "Pizza shapes, doughs and regional traditions across the United States.",
-      emoji: "\u{1F5FD}",
-    },
-    contemporanea: {
-      name: "Contemporary",
-      description:
-        "New interpretations of doughs, textures and techniques.",
-      emoji: "\u{1F52C}",
-    },
+    napoletana: { name: "Neapolitan" },
+    romana: { name: "Roman" },
+    americana: { name: "American" },
+    contemporanea: { name: "Contemporary" },
+    regionale: { name: "Regional traditions" },
   },
   allFamiliesLabel: "All families",
   tiers: {
@@ -590,7 +571,7 @@ export const EN_LOCALE: CmsContent = {
     adaptToKitchen: "Adapt to my kitchen",
     optimizeForMe: "Adapt to my kitchen",
     resetToOriginal: "Back to the original",
-    saveVersion: "Save this version",
+    saveVersion: "Save to recipe book",
     savedVersion: "Saved to your recipe book",
     optimizedForSetup: "Adapted to your kitchen",
     doneBody: "You’ve completed every step of your {style}. Enjoy!",
@@ -710,7 +691,7 @@ export const EN_LOCALE: CmsContent = {
       "{current} is already dialed in for your schedule. Choosing {next} replaces it and its settings are lost.",
     draftReplaceConfirm: "Switch to {next}",
     prefermentSaltNote:
-      "In this recipe, salt goes into the final dough, not the preferment.",
+      "Salt goes into the final dough, not the preferment, where it would slow the yeast.",
     learnedFromAttempts: "I learned from your {n} attempts",
     applyCorrections: "Apply the corrections",
     learnInlineTitle: "Learn more: {label}",
@@ -762,18 +743,17 @@ export const EN_LOCALE: CmsContent = {
     notFeasibleExplainer: "These recipes have an unmet requirement. Open the details to see what needs to change.",
     exploreHeroTitle1: "Explore styles",
     exploreHeroTitle2: "and recipes.",
-    exploreSectionTraditional: "Traditional styles",
     badgeBeginnerFriendly: "Beginner-friendly",
     interpretationsLabel: "Interpretations",
     goToSite: "Go to site",
-    signatureLabel: "Inspiration",
+    signatureLabel: "Version",
     noSignature: "no inspiration",
     fineParams: "Advanced settings",
     cmsRestoreContent: "Restore CMS content",
-    inspirationLabel: "Inspiration",
-    inspirationBase: "Traditional",
+    inspirationLabel: "Version",
+    inspirationBase: "Reference",
     inspirationSeeAll: "See all",
-    inspirationModalTitle: "Inspired by pizzaioli and official rules",
+    inspirationModalTitle: "Versions from pizzaioli and official rules",
     inspirationLearnLink: "Learn more in the Learn section",
     inspirationSelect: "Select",
     inspirationSelected: "Selected",

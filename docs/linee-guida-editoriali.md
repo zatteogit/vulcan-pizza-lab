@@ -27,8 +27,9 @@ immediatamente utilizzabili.
 - **Scopri** presenta stili, storie e ricette di riferimento. **Crea** aiuta ad
   adattare una ricetta alla propria cucina. I nomi della navigazione e i rimandi
   nel testo devono coincidere anche nelle altre lingue.
-- **Originale** identifica la versione di partenza. **Su misura** indica
-  modifiche applicate. Una modifica non ancora applicata è una **proposta**.
+- **Riferimento** identifica la ricetta di partenza di uno stile, dichiarata nei
+  dati (D-B). **Su misura** indica modifiche applicate. Una modifica non ancora
+  applicata è una **proposta**. Vedi la tabella §Termini.
 - La **compatibilità** non è una certificazione. Il voto e i requisiti
   indispensabili hanno ruoli diversi: non dedurre la fattibilità dal solo numero.
 - Il criterio F descrive la **facilità**; il D la **maturazione stimata**.
@@ -56,6 +57,30 @@ immediatamente utilizzabili.
   default; il **livello di esperienza** cambia invece la ricetta proposta (tetto
   d'idratazione, prefermenti). Non usarli come sinonimi e non scrivere che i
   dettagli tecnici rendono la ricetta più difficile.
+
+### Termini (tabella vincolante, FW-14)
+
+Lo stesso oggetto ha lo stesso nome in ogni schermata, lingua e canale
+(scheda, ricerca, profilo, stampa, MCP). Un pacchetto che introduce un termine
+lo aggiunge qui e, se è tecnico, al glossario.
+
+| Termine | Che cosa indica | Dove | Da non usare |
+|---|---|---|---|
+| **Riferimento** | La ricetta di partenza dello stile, dichiarata in `STYLE_REFERENCES` (`style-versions.ts`): il disciplinare dove esiste, altrimenti una versione «da confermare». Tutti i «Prima → Ora» partono da qui | eyebrow della scheda, chip di default del selettore, punteggio delle card | «Originale», «Tradizionale», «canonica» (nei testi) |
+| **Riferimento sul tuo forno** | Il riferimento ricalcolato sulla cucina dell'utente, quando se ne scosta (forno sotto il minimo dello stile, STG senza forno a legna) | eyebrow | «Originale» sopra «fuori disciplinare» |
+| **Disciplinare {sigla}** | Il riferimento è un disciplinare (AVPN/STG, IGP, APITER) e la ricetta lo rispetta | eyebrow, badge | «Disciplinare» su una ricetta che se ne scosta |
+| **Su misura** | Parametri modificati dall'utente o dall'ottimizzatore | eyebrow, punteggi | «Personalizzata», «Adattata» |
+| **Versione** | Il selettore delle interpretazioni (disciplinari, maestri, pizzerie) | etichetta, aria-label, titolo della modale, pannello Personalizza | «Ispirazione», «Firma», «Interpretazione» come nome del selettore |
+| **Ispirata a {nome}** | Una versione d'autore: ricostruzione da fonti pubbliche, non la ricetta del maestro (D-027) | eyebrow, card | «di {nome}», «ricetta originale di» |
+| **Profilo impasto** | Le varianti dello stile in `style-versions.ts` (Casalinga, Classica…) | pannello Personalizza, eyebrow «Profilo {nome}» | «Versione» (è il selettore delle interpretazioni) |
+| **prefermento** | Biga, poolish e simili; una sola grafia, minuscola in frase | ovunque in italiano | «pre-fermento», «Pre-Fermento», «preimpasto» |
+| **Salva nel ricettario / Rimuovi dal ricettario** | Salvare una ricetta | segnalibro, card, toast, dialog | «preferiti» (sono gli stili preferiti, un'altra cosa), «Salva questa versione» |
+| **Nome del prodotto** | `BRAND.name` da `src/app/config/brand.ts` nei titoli («Scopri · Vulcan»); `BRAND.fullName` solo per `<title>` statico e manifest | titoli delle viste, dialog | nomi scritti a mano |
+| **Nomi dei forni** | Dal catalogo `cms.ovenPresets`, in sentence case («Forno di casa», «Forno a legna»); elenchi in ordine di temperatura massima; temperatura sempre dal formatter (`fmt.celsius`), mai concatenata a mano | profilo, Crea, scheda stile | «Forno Domestico», «Forno a Legna», «Max » + numero + «°C» |
+| **Livello {n}** | Livello di esperienza 1–4, con i nomi del CMS (1 Principiante, 2 Intermedio, 3 Avanzato, 4 Esperto) | profilo, Crea | «LV1», elenchi locali dei nomi |
+| **Stili di pizza** | La sezione e il filtro degli stili in Scopri; un solo verbo per «vedi tutto» («Vedi tutti/tutte») | Scopri | «Stili tradizionali», «Esplora tutti» |
+| **Tradizioni regionali** | Famiglia degli stili storici non napoletani né romani (D-G, da confermare stile per stile) | Scopri, Crea, MCP | «Contemporanea» per focacce e pizze storiche |
+| **Genera ricetta** | La CTA del pannello stile, su ogni breakpoint | pannello stile | «Crea» (è il nome della tab) |
 
 ## Contenuti e traduzioni
 

@@ -22,7 +22,7 @@ export const ES_LOCALE: CmsContent = {
   inspirationI18n: INSPIRATION_I18N_ES,
   ui: {
     scoreTipTitle: "Cómo leer la puntuación",
-    scoreTipOriginal: "Receta original, evaluada para tu cocina.",
+    scoreTipOriginal: "Referencia del estilo, en tu cocina.",
     scoreTipTailored: "Versión con las adaptaciones propuestas.",
     scoreTipGlobal: "La puntuación considera viabilidad y autenticidad. No certifica el cumplimiento de un pliego de condiciones.",
     scoreTipBlocked: "Hay requisitos sin cumplir: abre el detalle.",
@@ -60,7 +60,7 @@ export const ES_LOCALE: CmsContent = {
     recipeNameLabel: "Nombre de la receta",
     recipeNamePlaceholder: "Ej. Como le gusta a Mario",
     recipeNameConfirm: "Confirmar nombre",
-    recipeResetPreset: "Restaurar original",
+    recipeResetPreset: "Restaurar",
 
     recipeOpenCreate: "Abrir en Crear",
     createSourceTitle: "Parte de {style}",
@@ -86,7 +86,7 @@ export const ES_LOCALE: CmsContent = {
     recipeOptimizedVersion: "Propuesta",
     recipeScoreLabel: "Puntuación",
     recipeScoreTransition: "Puntuación: {from}/100 → {to}/100",
-    scoreBasisOriginal: "Original",
+    scoreBasisOriginal: "Referencia",
     scoreBasisTailored: "Adaptada",
 
     scoreLimitedAuthenticity: "La autenticidad ({score}/100) limita la puntuación.",
@@ -380,12 +380,12 @@ export const ES_LOCALE: CmsContent = {
   ovenPresets: {
     coal: { name: "Horno de carbón", maxTemp: 400, icon: "flame" },
     home: {
-      name: "Horno Dom\u00E9stico",
+      name: "Horno dom\u00E9stico",
       maxTemp: 250,
       icon: "home",
     },
     electric_standard: {
-      name: "El\u00E9ctrico Est\u00E1ndar",
+      name: "El\u00E9ctrico est\u00E1ndar",
       maxTemp: 300,
       icon: "zap",
     },
@@ -400,7 +400,7 @@ export const ES_LOCALE: CmsContent = {
       icon: "thermometer",
     },
     wood: {
-      name: "Horno de Le\u00F1a",
+      name: "Horno de le\u00F1a",
       maxTemp: 500,
       icon: "flame-kindling",
     },
@@ -429,30 +429,11 @@ export const ES_LOCALE: CmsContent = {
     },
   },
   families: {
-    napoletana: {
-      name: "Napolitana",
-      description:
-        "Borde pronunciado, centro fino y cocción a alta temperatura.",
-      emoji: "\u{1F1EE}\u{1F1F9}",
-    },
-    romana: {
-      name: "Romana",
-      description:
-        "Desde la redonda fina y crujiente hasta la pizza alta en bandeja.",
-      emoji: "\u{1F3DB}\uFE0F",
-    },
-    americana: {
-      name: "Americana",
-      description:
-        "Formatos, masas y tradiciones regionales de la pizza en Estados Unidos.",
-      emoji: "\u{1F5FD}",
-    },
-    contemporanea: {
-      name: "Contempor\u00E1nea",
-      description:
-        "Nuevas interpretaciones de masas, texturas y técnicas.",
-      emoji: "\u{1F52C}",
-    },
+    napoletana: { name: "Napolitana" },
+    romana: { name: "Romana" },
+    americana: { name: "Americana" },
+    contemporanea: { name: "Contempor\u00E1nea" },
+    regionale: { name: "Tradiciones regionales" },
   },
   allFamiliesLabel: "Todas las familias",
   tiers: {
@@ -561,18 +542,17 @@ export const ES_LOCALE: CmsContent = {
     notFeasibleExplainer: "Estas recetas tienen un requisito incumplido. Abre el detalle para ver qué cambiar.",
     exploreHeroTitle1: "Explora estilos",
     exploreHeroTitle2: "y recetas.",
-    exploreSectionTraditional: "Estilos tradicionales",
     badgeBeginnerFriendly: "Principiantes",
     interpretationsLabel: "Interpretaciones",
     goToSite: "Ir al sitio",
-    signatureLabel: "Inspiración",
+    signatureLabel: "Versión",
     noSignature: "sin inspiración",
     fineParams: "Parámetros avanzados",
     cmsRestoreContent: "Restaurar contenido del CMS",
-    inspirationLabel: "Inspiración",
-    inspirationBase: "Tradicional",
+    inspirationLabel: "Versión",
+    inspirationBase: "Referencia",
     inspirationSeeAll: "Ver todas",
-    inspirationModalTitle: "Inspiradas en pizzaioli y reglamentos",
+    inspirationModalTitle: "Versiones de pizzaioli y reglamentos",
     inspirationLearnLink: "Descubre más en la sección Aprende",
     inspirationSelect: "Seleccionar",
     inspirationSelected: "Seleccionada",
@@ -757,7 +737,7 @@ export const ES_LOCALE: CmsContent = {
     "feas.flourTooWeakForHydration":
       "Harina demasiado débil para esta hidratación",
     "feas.prefermentNeedsExperience":
-      "Pre-fermento requiere experiencia",
+      "Prefermento requiere experiencia",
     "sust.quickCook": "Cocción rápida: bajo consumo energético",
     "sust.longCook": "Cocción larga: alto consumo energético",
     "sust.ambientFerment":
@@ -1074,12 +1054,12 @@ export const ES_LOCALE: CmsContent = {
   },
   timelineLabels: {
     preferment: {
-      title: "Pre-Fermento",
+      title: "Prefermento",
       desc: "Mezclar {type} y dejar madurar",
       tipBeginner:
-        'El pre-fermento es como un "aperitivo" para la levadura. Mezcla y deja reposar tapado.',
+        'El prefermento es como un "aperitivo" para la levadura. Mezcla y deja reposar tapado.',
       tipNerd:
-        "El pre-fermento produce \u00E1cidos org\u00E1nicos (l\u00E1ctico/ac\u00E9tico) que bajan el pH a ~4.5, mejorando la red de gluten y la vida \u00FAtil.",
+        "El prefermento produce \u00E1cidos org\u00E1nicos (l\u00E1ctico/ac\u00E9tico) que bajan el pH a ~4.5, mejorando la red de gluten y la vida \u00FAtil.",
       longDesc: "El poolish es harina y agua a partes iguales con la levadura, que madura antes de la masa. Disuelve la levadura en el agua, a\u00F1ade la harina y mezcla con una cuchara hasta obtener una papilla blanda. Tapa y deja madurar {hours} a {prefTemp}. Est\u00E1 listo cuando la superficie est\u00E1 llena de burbujas y el centro empieza a bajar; huele ligeramente \u00E1cido.",
       longDescAlt: "La biga es una masa madre seca: harina y agua a un {prefHydration} aproximadamente, con la levadura. Disuelve la levadura en el agua, v\u00E9rtela sobre la harina y mezcla unos segundos, solo hasta que el agua se absorba: deben quedar grumos irregulares, no una masa lisa. Tapa y deja madurar {hours} a {prefTemp}. Est\u00E1 lista cuando ha crecido, huele a fruta y por dentro est\u00E1 llena de filamentos.",
     },
@@ -1678,7 +1658,7 @@ export const ES_LOCALE: CmsContent = {
     tempFridge: "{fridgeTemp} nevera",
     tempCool: "{coolTemp}",
     tempAmbient: "{ambientTemp} amb.",
-    preFermentLabel: "Pre-fermento",
+    preFermentLabel: "Prefermento",
     preFermentTip:
       "La biga y el poolish se preparan antes y se incorporan a la masa final. Pueden cambiar aromas y estructura: sigue los tiempos y cantidades del procedimiento.",
     ovenLabel: "Horno",
@@ -1769,7 +1749,7 @@ export const ES_LOCALE: CmsContent = {
     adaptToKitchen: "Adaptar a mi cocina",
     optimizeForMe: "Adaptar a mi cocina",
     resetToOriginal: "Volver a la original",
-    saveVersion: "Guardar esta versi\u00F3n",
+    saveVersion: "Guardar en el recetario",
     savedVersion: "Guardada en el recetario",
     optimizedForSetup: "Adaptada a tu cocina",
     doneBody: "Has completado todos los pasos de tu {style}. \u00A1Buen provecho!",
@@ -1889,7 +1869,7 @@ export const ES_LOCALE: CmsContent = {
     draftReplaceTitle: "\u00BFSustituir la receta en curso?",
     draftReplaceBody: "Ya tienes {current} lista y ajustada a tus tiempos. Si eliges {next}, la sustituyes y se pierden sus par\u00E1metros.",
     draftReplaceConfirm: "Cambiar a {next}",
-    prefermentSaltNote: "En esta receta, la sal se añade a la masa final, no al prefermento.",
+    prefermentSaltNote: "La sal va en la masa final, no en el prefermento, donde frenaría la levadura.",
     learnedFromAttempts: "He aprendido de tus {n} intentos",
     applyCorrections: "Aplicar las correcciones",
     learnInlineTitle: "Saber m\u00E1s: {label}",

@@ -189,7 +189,9 @@ export function StyleDetailSheet({
       className={`style-detail-cta style-detail-cta--${placement}`}
     >
       {placement === "footer" && <Sparkles size={15} aria-hidden="true" />}
-      {placement === "toolbar" ? cms.pages.navCreate : pt.sheetGenerateBtn}
+      {/* FW-14 (S03-A-16): stessa etichetta su ogni breakpoint; «Crea» era il
+          nome della tab in cui l'utente si trova già. */}
+      {pt.sheetGenerateBtn}
     </CtaButton>
   );
 

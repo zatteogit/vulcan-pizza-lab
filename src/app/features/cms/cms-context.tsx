@@ -393,8 +393,9 @@ interface CmsSkillLevel {
 
 interface CmsFamily {
   name: string;
-  description: string;
-  emoji: string;
+  /** Non mostrata dall'app (FW-14): facoltativa, assente dai default. */
+  description?: string;
+  emoji?: string;
 }
 
 interface CmsTier {
@@ -1121,7 +1122,6 @@ export interface CmsContent {
     notFeasibleExplainer: string;
     exploreHeroTitle1: string;
     exploreHeroTitle2: string;
-    exploreSectionTraditional: string;
     badgeBeginnerFriendly: string;
     interpretationsLabel: string;
     goToSite: string;
@@ -1347,7 +1347,7 @@ export const CMS_DEFAULTS: CmsContent = {
   messages: UI_MESSAGES_IT,
   ui: {
     scoreTipTitle: "Come leggere il punteggio",
-    scoreTipOriginal: "Ricetta originale, valutata con la tua cucina.",
+    scoreTipOriginal: "Riferimento dello stile, sulla tua cucina.",
     scoreTipTailored: "Versione con gli adattamenti proposti.",
     scoreTipGlobal: "Il voto tiene conto di fattibilità e autenticità. Non attesta la conformità a un disciplinare.",
     scoreTipBlocked: "Ci sono requisiti non rispettati: apri il dettaglio.",
@@ -1385,7 +1385,7 @@ export const CMS_DEFAULTS: CmsContent = {
     recipeNameLabel: "Nome della ricetta",
     recipeNamePlaceholder: "Es. Come piace a Mario",
     recipeNameConfirm: "Conferma nome",
-    recipeResetPreset: "Ripristina originale",
+    recipeResetPreset: "Ripristina",
 
     recipeOpenCreate: "Apri in Crea",
     createSourceTitle: "Parti da {style}",
@@ -1411,7 +1411,7 @@ export const CMS_DEFAULTS: CmsContent = {
     recipeOptimizedVersion: "Proposta",
     recipeScoreLabel: "Punteggio",
     recipeScoreTransition: "Punteggio: {from}/100 → {to}/100",
-    scoreBasisOriginal: "Originale",
+    scoreBasisOriginal: "Riferimento",
     scoreBasisTailored: "Su misura",
 
     scoreLimitedAuthenticity: "L’autenticità ({score}/100) limita il punteggio.",
@@ -1656,7 +1656,7 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   ovenPresets: {
     coal: { name: "Forno a carbone", maxTemp: 400, icon: "flame" },
-    home:              { name: "Forno domestico",    maxTemp: 250, icon: "home" },
+    home:              { name: "Forno di casa",      maxTemp: 250, icon: "home" },
     electric_standard: { name: "Elettrico standard", maxTemp: 300, icon: "zap" },
     gas:               { name: "Forno a gas a platea", maxTemp: 350, icon: "flame" },
     electric_high:     { name: "Elettrico alta temperatura", maxTemp: 450, icon: "thermometer" },
@@ -1669,11 +1669,15 @@ export const CMS_DEFAULTS: CmsContent = {
     "3": { name: "Avanzato",     description: "Gestisco pieghe e lievitazioni" },
     "4": { name: "Esperto",      description: "Adatto impasti, tempi e tecniche" },
   },
+  /* FW-14 (D-G): le famiglie hanno solo il nome. Descrizioni ed emoji non le
+     mostrava nessuna schermata (e la descrizione di «Contemporanea» era falsa
+     per metà dei membri): tolte da tutte le lingue per il budget JS. */
   families: {
-    napoletana:    { name: "Napoletana",    description: "Cornicione pronunciato, centro sottile e cottura ad alta temperatura.", emoji: "\u{1F1EE}\u{1F1F9}" },
-    romana:        { name: "Romana",        description: "Dalla tonda sottile e croccante alla pizza alta in teglia.", emoji: "\u{1F3DB}\uFE0F" },
-    americana:     { name: "Americana",     description: "Formati, impasti e tradizioni regionali della pizza negli Stati Uniti.", emoji: "\u{1F5FD}" },
-    contemporanea: { name: "Contemporanea", description: "Nuove interpretazioni di impasti, consistenze e tecniche.", emoji: "\u{1F52C}" },
+    napoletana:    { name: "Napoletana" },
+    romana:        { name: "Romana" },
+    americana:     { name: "Americana" },
+    contemporanea: { name: "Contemporanea" },
+    regionale:     { name: "Tradizioni regionali" },
   },
   allFamiliesLabel: "Tutte le famiglie",
   tiers: {
@@ -1697,7 +1701,7 @@ export const CMS_DEFAULTS: CmsContent = {
     digestibility: {
       label: "Maturazione stimata", short: "Mat", weight: DEFAULT_UI_SCORE_WEIGHTS.digestibility,
       explain:
-        "Stima la maturazione in base a tempo, temperatura, lievito e preimpasto. Non misura come digerirai la pizza.",
+        "Stima la maturazione in base a tempo, temperatura, lievito e prefermento. Non misura come digerirai la pizza.",
     },
     sustainability: {
       label: "Sostenibilità stimata", short: "Sos", weight: DEFAULT_UI_SCORE_WEIGHTS.sustainability,
@@ -1789,7 +1793,7 @@ export const CMS_DEFAULTS: CmsContent = {
     adaptToKitchen: "Adatta alla mia cucina",
     optimizeForMe: "Adatta alla mia cucina",
     resetToOriginal: "Torna all'originale",
-    saveVersion: "Salva questa versione",
+    saveVersion: "Salva nel ricettario",
     savedVersion: "Salvata nel ricettario",
     optimizedForSetup: "Adattata alla tua cucina",
     doneBody: "Hai completato tutti i passaggi della tua {style}. Buon appetito!",
@@ -1911,7 +1915,7 @@ export const CMS_DEFAULTS: CmsContent = {
       "Hai già {current} pronta e regolata sui tuoi tempi. Scegliendo {next} la sostituisci e i suoi parametri vanno persi.",
     draftReplaceConfirm: "Passa a {next}",
     prefermentSaltNote:
-      "In questa ricetta il sale si aggiunge all’impasto finale, non al preimpasto.",
+      "Il sale va nell’impasto finale, non nel prefermento: lì frenerebbe il lievito.",
     learnedFromAttempts: "Ho imparato dai tuoi {n} tentativi",
     applyCorrections: "Applica le correzioni",
     learnInlineTitle: "Approfondisci: {label}",
@@ -1961,18 +1965,17 @@ export const CMS_DEFAULTS: CmsContent = {
     notFeasibleExplainer: "Queste ricette hanno un requisito non rispettato. Apri il dettaglio per capire cosa cambiare.",
     exploreHeroTitle1: "Esplora stili",
     exploreHeroTitle2: "e ricette.",
-    exploreSectionTraditional: "Stili tradizionali",
     badgeBeginnerFriendly: "Principianti",
     interpretationsLabel: "Interpretazioni",
     goToSite: "Vai al sito",
-    signatureLabel: "Ispirazione",
+    signatureLabel: "Versione",
     noSignature: "nessuna ispirazione",
     fineParams: "Parametri avanzati",
     cmsRestoreContent: "Ripristina contenuti CMS",
-    inspirationLabel: "Ispirazione",
-    inspirationBase: "Tradizionale",
+    inspirationLabel: "Versione",
+    inspirationBase: "Riferimento",
     inspirationSeeAll: "Vedi tutte",
-    inspirationModalTitle: "Ispirazioni da pizzaioli e disciplinari",
+    inspirationModalTitle: "Versioni di pizzaioli e disciplinari",
     inspirationLearnLink: "Scopri di più nella sezione Impara",
     inspirationSelect: "Seleziona",
     inspirationSelected: "Selezionata",
@@ -2156,9 +2159,9 @@ export const CMS_DEFAULTS: CmsContent = {
     "change.flour": "Forza farina: W{from} → W{to}",
     "change.flourPL": "P/L farina: {from} → {to}",
     "change.fermentation": "Fermentazione: {fromHours} a {fromTemp} → {toHours} a {toTemp}",
-    "change.prefermentOn": "Si aggiunge un pre-fermento",
+    "change.prefermentOn": "Si aggiunge un prefermento",
     "change.prefermentOff": "Si passa all’impasto diretto",
-    "change.prefermentDetails": "Pre-fermento: {fromType} {from}% → {toType} {to}%",
+    "change.prefermentDetails": "Prefermento: {fromType} {from}% → {toType} {to}%",
     "change.cooking": "Cottura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "rec.ovenAdequate": "Forno adeguato (compensazione automatica tempo/temperatura)",
     "rec.ovenTooCold": "Forno troppo freddo: {temp} < min {min}",
@@ -2202,8 +2205,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "opt.roomFerment": "Fermentazione di {hours} a temperatura ambiente ({temp}): coerente con lo stile e senza frigo.",
     "opt.hydrationLowered": "Idratazione ridotta a {h}% per facilitare la lavorazione. Riferimento dello stile: {canonical}%.",
     "opt.hydrationForStyle": "Idratazione {h}% nel cuore dello stile.",
-    "opt.prefermentAdded": "Pre-fermento ({type}) aggiunto: più struttura, alveolatura e aroma.",
-    "opt.preferment": "Pre-fermento ({type}): più struttura, alveolatura e aroma.",
+    "opt.prefermentAdded": "Prefermento ({type}) aggiunto: più struttura, alveolatura e aroma.",
+    "opt.preferment": "Prefermento ({type}): più struttura, alveolatura e aroma.",
     "opt.flourChanged": "Farina W{w}; riferimento dello stile: W{canonical}.",
     "opt.ovenAdapted": "Cottura adattata al tuo forno ({temp}) con compensazioni automatiche.",
     "opt.pantryFlour": "Forza farina W{w} compatibile con la tua dispensa.",
@@ -2312,12 +2315,12 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   timelineLabels: {
     preferment: {
-      title: "Pre-Fermento",
+      title: "Prefermento",
       desc: "Mescolare {type} e far maturare",
       longDesc: "Il poolish \u00E8 farina e acqua in parti uguali con il lievito, fatto maturare prima dell'impasto. Sciogli il lievito nell'acqua, aggiungi la farina e mescola con un cucchiaio: viene una pastella morbida. Copri e lascia maturare {hours} a {prefTemp}. \u00C8 pronto quando la superficie \u00E8 piena di bolle e al centro comincia appena ad abbassarsi; profuma leggermente acidulo.",
-      longDescAlt: "La biga \u00E8 un preimpasto asciutto: farina e acqua al {prefHydration} circa, con il lievito. Sciogli il lievito nell'acqua, versala sulla farina e mescola pochi secondi, solo finch\u00E9 l'acqua \u00E8 assorbita: devono restare grumi irregolari, non un impasto liscio. Copri e lascia maturare {hours} a {prefTemp}. \u00C8 pronta quando \u00E8 cresciuta, profuma di frutta e dentro \u00E8 piena di filamenti.",
-      tipBeginner: "Il pre-fermento \u00E8 come un \"antipasto\" per il lievito. Mescola e lascia riposare coperto.",
-      tipNerd: "Il pre-fermento produce acidi organici (lattico/acetico) che abbassano il pH a ~4.5, migliorando la rete glutinica e la shelf life.",
+      longDescAlt: "La biga \u00E8 un prefermento asciutto: farina e acqua al {prefHydration} circa, con il lievito. Sciogli il lievito nell'acqua, versala sulla farina e mescola pochi secondi, solo finch\u00E9 l'acqua \u00E8 assorbita: devono restare grumi irregolari, non un impasto liscio. Copri e lascia maturare {hours} a {prefTemp}. \u00C8 pronta quando \u00E8 cresciuta, profuma di frutta e dentro \u00E8 piena di filamenti.",
+      tipBeginner: "Il prefermento \u00E8 come un \"antipasto\" per il lievito. Mescola e lascia riposare coperto.",
+      tipNerd: "Il prefermento produce acidi organici (lattico/acetico) che abbassano il pH a ~4.5, migliorando la rete glutinica e la shelf life.",
     },
     mix: {
       title: "Impasto",
@@ -2748,7 +2751,7 @@ export const CMS_DEFAULTS: CmsContent = {
     learnPath4Title: UI_MESSAGES_IT["pages.learn.path4.title"],
     learnPath4Copy: UI_MESSAGES_IT["pages.learn.path4.copy"],
     preFermentsSubtitle: "Come usarli e quando inserirli nella preparazione.",
-    preFermentsDescription: "Biga e poolish si preparano prima dell’impasto finale. La <strong>biga</strong> è un impasto asciutto, con il 44% d’acqua; il <strong>poolish</strong> ha farina e acqua in parti uguali. L’<strong>autolisi</strong> è invece un riposo di farina e acqua, senza lievito né sale: non è un pre-fermento.",
+    preFermentsDescription: "Biga e poolish si preparano prima dell’impasto finale. La <strong>biga</strong> è un impasto asciutto, con il 44% d’acqua; il <strong>poolish</strong> ha farina e acqua in parti uguali. L’<strong>autolisi</strong> è invece un riposo di farina e acqua, senza lievito né sale: non è un prefermento.",
     preFermentsChoiceTitle: "Quale scegliere?",
     preFermentsBigaTitle: "Biga",
     preFermentsBigaWhen: "Quando vuoi un impasto aromatico e hai circa 16 h a 18–20 °C",
@@ -2782,7 +2785,7 @@ export const CMS_DEFAULTS: CmsContent = {
     tempFridge: "{fridgeTemp} frigo",
     tempCool: "{coolTemp}",
     tempAmbient: "{ambientTemp} amb.",
-    preFermentLabel: "Pre-fermento",
+    preFermentLabel: "Prefermento",
     preFermentTip: "Biga e poolish sono impasti preparati in anticipo e poi uniti all’impasto finale. Possono cambiare aromi e struttura: segui tempi e dosi del procedimento.",
     ovenLabel: "Forno",
     ovenTip: "Imposta il forno e la temperatura di cottura. Il risultato dipende anche dallo stile e dalla superficie su cui cuoci.",
@@ -3646,20 +3649,13 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
     id: "families",
     label: "Famiglie & Tiers",
     icon: "layers",
-    description: "Nomi e descrizioni delle 4 famiglie pizza e delle 3 fasce di compatibilita",
+    description: "Nomi delle 5 famiglie pizza e delle 3 fasce di compatibilita",
     fields: [
       { path: "families.napoletana.name", label: "Napoletana — Nome", type: "text" },
-      { path: "families.napoletana.description", label: "Napoletana — Desc", type: "textarea" },
-      { path: "families.napoletana.emoji", label: "Napoletana — Emoji", type: "text" },
       { path: "families.romana.name", label: "Romana — Nome", type: "text" },
-      { path: "families.romana.description", label: "Romana — Desc", type: "textarea" },
-      { path: "families.romana.emoji", label: "Romana — Emoji", type: "text" },
       { path: "families.americana.name", label: "Americana — Nome", type: "text" },
-      { path: "families.americana.description", label: "Americana — Desc", type: "textarea" },
-      { path: "families.americana.emoji", label: "Americana — Emoji", type: "text" },
       { path: "families.contemporanea.name", label: "Contemporanea — Nome", type: "text" },
-      { path: "families.contemporanea.description", label: "Contemporanea — Desc", type: "textarea" },
-      { path: "families.contemporanea.emoji", label: "Contemporanea — Emoji", type: "text" },
+      { path: "families.regionale.name", label: "Tradizioni regionali — Nome", type: "text" },
       // Tiers
       { path: "tiers.perfect.label", label: "Tier Perfetto — Label", type: "text" },
       { path: "tiers.perfect.subtitle", label: "Tier Perfetto — Sub", type: "text" },
@@ -3677,10 +3673,10 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
     fields: [
       { path: "timelineUi.startLabel", label: "Label: Inizio", type: "text" },
       { path: "timelineUi.beforeSuffix", label: "Suffisso: prima", type: "text" },
-      { path: "timelineLabels.preferment.title", label: "Pre-fermento — Titolo", type: "text" },
-      { path: "timelineLabels.preferment.desc", label: "Pre-fermento — Desc", type: "textarea", description: "Template: {type} = biga/poolish" },
-      { path: "timelineLabels.preferment.tipBeginner", label: "Pre-fermento — Tip beginner", type: "textarea" },
-      { path: "timelineLabels.preferment.tipNerd", label: "Pre-fermento — Tip nerd", type: "textarea" },
+      { path: "timelineLabels.preferment.title", label: "Prefermento — Titolo", type: "text" },
+      { path: "timelineLabels.preferment.desc", label: "Prefermento — Desc", type: "textarea", description: "Template: {type} = biga/poolish" },
+      { path: "timelineLabels.preferment.tipBeginner", label: "Prefermento — Tip beginner", type: "textarea" },
+      { path: "timelineLabels.preferment.tipNerd", label: "Prefermento — Tip nerd", type: "textarea" },
       { path: "timelineLabels.mix.title", label: "Impasto — Titolo", type: "text" },
       { path: "timelineLabels.mix.desc", label: "Impasto — Desc", type: "textarea" },
       { path: "timelineLabels.mix.descAlt", label: "Impasto — Desc (no knead)", type: "textarea" },
@@ -3891,7 +3887,7 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "engineMessages.feas.hydrationNeedsPractice", label: "Feas: H richiede pratica", type: "text" },
       { path: "engineMessages.feas.hydrationMedBeginner", label: "Feas: H media principiante", type: "text" },
       { path: "engineMessages.feas.flourTooWeakForHydration", label: "Feas: Farina debole", type: "text" },
-      { path: "engineMessages.feas.prefermentNeedsExperience", label: "Feas: Pre-fermento esperienza", type: "text" },
+      { path: "engineMessages.feas.prefermentNeedsExperience", label: "Feas: Prefermento esperienza", type: "text" },
       // Digestibility
       { path: "engineMessages.dig.fermentTooShort", label: "Dig: Ferment breve amidi", type: "text" },
       { path: "engineMessages.dig.fermentShort", label: "Dig: Ferment breve digeribilità", type: "text" },

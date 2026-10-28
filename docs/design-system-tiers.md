@@ -136,6 +136,12 @@ Escape, scroll lock e ripristino del trigger. Controlli compositi espongono
 ruoli, stati, naming e navigazione coerenti. Contrasto e target size sono
 verificati sulla build production con Axe e controlli geometrici.
 
+Card di stile (FW-14, S03-B-18): in Crea la card apre il pannello dello stile
+(`aria-haspopup="dialog"`), perché si sceglie uno stile da configurare; in
+Scopri la card è un link alla scheda ricetta (`/recipe/<id>`), perché si
+consulta il riferimento. La CTA del pannello ha la stessa etichetta su ogni
+breakpoint («Genera ricetta»), mai il nome della tab corrente.
+
 ## Enforcement
 
 Il gate canonico è:

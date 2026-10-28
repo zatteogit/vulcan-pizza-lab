@@ -413,8 +413,8 @@ function SettingsSummaryBar({
   const pantryLabel = cms.sections.pantry.title;
   const pantryText = count > 0 ? `${pantryLabel} (${count})` : pantryLabel;
 
-  const SKILL_NAMES: Record<number, string> = { 1: "Principiante", 2: "Intermedio", 3: "Esperto" };
-  const skillLabel = cms.skillLevels[String(constraints.skill_level)]?.name ?? SKILL_NAMES[constraints.skill_level] ?? `Skill ${constraints.skill_level}`;
+  // FW-14 (S05-B-18): un solo elenco dei livelli, quello del CMS.
+  const skillLabel = cms.skillLevels[String(constraints.skill_level)]?.name ?? String(constraints.skill_level);
   const tuText = skillLabel;
 
   const tabs = [

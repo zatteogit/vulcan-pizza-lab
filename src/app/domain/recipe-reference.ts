@@ -30,3 +30,28 @@ export function stgDepartures(recipe: GeneratedRecipe, oven?: OvenType): StgDepa
 export function recipeDisplayName(recipe: GeneratedRecipe, oven?: OvenType): string {
   return stgDepartures(recipe, oven).length ? "Napoletana" : recipe.style.name;
 }
+
+/* ═══ FW-14 · Delta dal riferimento (S07-A-04, S07-B-01) ═══
+ * I «Prima → Ora» della tabella parametri si calcolano dalla ricetta di
+ * riferimento effettivamente generata (preset attivo), mai dal centro degli
+ * intervalli dello stile. Solo i parametri mostrati nella tabella. */
+export type ReferenceParam = "hydration" | "flourW" | "fermentation";
+export interface ReferenceDelta {
+  param: ReferenceParam;
+  reference: { value: number; tempC?: number };
+  current: { value: number; tempC?: number };
+}
+
+export function compareToReference(recipe: GeneratedRecipe, reference: GeneratedRecipe): ReferenceDelta[] {
+  const side = (r: GeneratedRecipe, param: ReferenceParam) => param === "hydration" ? { value: r.hydration_pct }
+    : param === "flourW" ? { value: r.flour_w } : { value: r.fermentation_hours, tempC: r.fermentation_temp_c };
+  // Idratazione e ore mostrate con un decimale al massimo: sotto non è una modifica.
+  const changed: Record<ReferenceParam, boolean> = {
+    hydration: Math.abs(recipe.hydration_pct - reference.hydration_pct) >= 0.05,
+    flourW: Math.round(recipe.flour_w) !== Math.round(reference.flour_w),
+    fermentation: Math.abs(recipe.fermentation_hours - reference.fermentation_hours) >= 0.05
+      || recipe.fermentation_temp_c !== reference.fermentation_temp_c,
+  };
+  return (Object.keys(changed) as ReferenceParam[]).filter((p) => changed[p])
+    .map((param) => ({ param, reference: side(reference, param), current: side(recipe, param) }));
+}

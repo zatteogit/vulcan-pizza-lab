@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { SIGNATURE_RECIPES, signatureRecipeLink } from "../../data/signature-recipes";
 import { CMS_DEFAULTS, type CmsContent } from "../cms/cms-context";
 import { EN_LOCALE } from "../cms/locales/en";
 import { JA_LOCALE } from "../cms/locales/ja";
@@ -117,5 +118,16 @@ describe("FW-10: stili e cucina", () => {
     expect(stg.link).toContain("mode=adapted");
     expect(ranked.map((r) => r.score)).toEqual([...ranked.map((r) => r.score)].sort((a, b) => b - a));
     expect(ranked).toHaveLength(hits.length);
+  });
+});
+
+/* FW-14 (S04-B-03): le ricette iconiche dalla ricerca aprono la loro versione. */
+describe("ricette iconiche dalla ricerca", () => {
+  it("ogni ricetta con una versione dichiarata porta ?interpretation= nel link", () => {
+    for (const rec of SIGNATURE_RECIPES) {
+      const hit = IT.find((e) => e.id === `recipe-${rec.id}`);
+      expect(hit?.link, rec.id).toBe(signatureRecipeLink(rec));
+      if (rec.interpretation_id) expect(hit?.link, rec.id).toContain(`interpretation=${rec.interpretation_id}`);
+    }
   });
 });
