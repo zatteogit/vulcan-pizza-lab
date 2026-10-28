@@ -11864,6 +11864,115 @@
     text-underline-offset: var(--space-0-75);
   }
 
+  /* ═══ FW-10 — esito di fattibilità deduplicato e ordinato ═══
+     Una causa, prima, con il rimedio; il resto in «Perché e cosa servirebbe». */
+  .recipe-verdict__more {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .recipe-verdict__more-summary {
+    display: flex;
+    align-items: center;
+    min-height: var(--space-11);
+    color: var(--text-muted);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+  }
+
+  .recipe-verdict__more .recipe-verdict__reasons {
+    color: var(--text-muted);
+  }
+
+  .match-card {
+    scroll-margin-block-start: var(--space-20);
+  }
+
+  .match-notice__action {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    min-height: var(--space-11);
+    margin-top: var(--space-1);
+    padding: 0;
+    color: var(--cta);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .recipe-verdict-badge {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-2) 0 0;
+  }
+
+  .recipe-verdict-badge__label {
+    gap: var(--space-1);
+  }
+
+  .recipe-verdict-badge__why {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-height: var(--space-11);
+    padding: 0;
+    color: var(--cta);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
+  .recipe-output-blocked-note {
+    margin: 0 0 var(--space-3);
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--space-1) solid var(--text-error);
+    color: var(--text-muted);
+  }
+
+  .style-detail-match__row[data-tone="muted"] .style-detail-match__icon {
+    color: var(--text-muted);
+  }
+
+  .search-page__fit {
+    align-self: flex-start;
+    gap: var(--space-1);
+    margin-top: var(--space-1);
+  }
+
+  /* Il badge d'autenticità sta nella didascalia: l'angolo è della compatibilità. */
+  .explore-card__caption .explore-card__badge--auth {
+    position: static;
+    display: inline-block;
+    margin-bottom: var(--space-2);
+  }
+
+  .profile-diet-note {
+    display: grid;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
+    padding-inline-start: var(--space-3);
+    border-inline-start: var(--space-1) solid var(--text-warning);
+  }
+
+  .profile-diet-note__why summary {
+    min-height: var(--space-11);
+    display: flex;
+    align-items: center;
+    color: var(--cta);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+  }
+
+  .profile-diet-note__why p {
+    color: var(--text-muted);
+  }
+  /* ═══ /FW-10 ═══ */
+
   .recipe-output-feedback-wrap {
     margin-top: var(--space-6);
   }

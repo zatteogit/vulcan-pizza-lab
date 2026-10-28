@@ -949,7 +949,7 @@ export const EN_LOCALE: CmsContent = {
     "feas.hydrationNeedsPractice":
       "High hydration requires practice",
     "feas.hydrationMedBeginner":
-      "Medium-high hydration for beginner",
+      "Medium-high hydration: tricky for a beginner",
     "feas.flourTooWeakForHydration":
       "Flour too weak for this hydration",
     "feas.prefermentNeedsExperience":
@@ -1004,6 +1004,8 @@ export const EN_LOCALE: CmsContent = {
     "card.yeastMissing": "Yeast needed",
     "card.toVerify": "To verify",
     "card.authenticity": "Reduced authenticity",
+    // FW-10
+    "card.hydrationBeginner": "Tricky dough for beginners",
     "need.blockedOven": "Oven insufficient",
     "need.blockedMethod": "Incompatible method",
     "need.blockedTime": "Incompatible timing",
@@ -1581,7 +1583,7 @@ export const EN_LOCALE: CmsContent = {
     pantrySubtitle: "Flours and yeasts you have at home",
     pantryStep: "03 — Ingredients",
     dietTitle: "Dietary preferences",
-    dietSubtitle: "Tell us what you want to avoid in the recipe.",
+    dietSubtitle: "We warn you when a recipe contains something you avoid.",
     dietStep: "04 — Diet",
     noDietNote: "No dietary preferences selected.",
     prefsTitle: "Language & theme",

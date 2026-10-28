@@ -449,5 +449,13 @@ export const UI_MESSAGES_ES: Record<string, string> = {
   "pages.recipe.ingredientsUpdated": "{0}: ingredientes actualizados",
   "shared.unsavedChanges": "Cambios sin guardar",
   "pages.profile.surfaceConductivity": "≈ {0} W/(m·K)",
-  "pages.profile.surfaceNoContact": "sin contacto"
+  "pages.profile.surfaceNoContact": "sin contacto",
+  "verdict.whyMore": "Por qué y qué haría falta",
+  "verdict.reviewDiet": "Revisa los filtros alimentarios del perfil",
+  "verdict.ovenBlocked": "Horno insuficiente: {0} · mínimo {1} · ideal {2}",
+  "verdict.lowerHydration": "Baja la hidratación",
+  "verdict.why": "Por qué",
+  "explore.forKitchen": "Adecuados para tu cocina",
+  "profile.dietGlutenNote": "Con «Sin gluten», las recetas con harina de trigo aparecen como no factibles: {brand} aún no tiene un método sin gluten verificado.",
+  "profile.dietGlutenWhy": "¿Por qué?"
 };

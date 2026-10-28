@@ -449,5 +449,13 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "pages.recipe.ingredientsUpdated": "{0}: Zutaten aktualisiert",
   "shared.unsavedChanges": "Ungespeicherte Änderungen",
   "pages.profile.surfaceConductivity": "≈ {0} W/(m·K)",
-  "pages.profile.surfaceNoContact": "kein Kontakt"
+  "pages.profile.surfaceNoContact": "kein Kontakt",
+  "verdict.whyMore": "Warum, und was nötig wäre",
+  "verdict.reviewDiet": "Ernährungsfilter im Profil prüfen",
+  "verdict.ovenBlocked": "Ofen unzureichend: {0} · Minimum {1} · ideal {2}",
+  "verdict.lowerHydration": "Hydration senken",
+  "verdict.why": "Warum",
+  "explore.forKitchen": "Passend zu deiner Küche",
+  "profile.dietGlutenNote": "Mit „Glutenfrei“ gelten Rezepte mit Weizenmehl als nicht machbar: {brand} hat noch keine geprüfte glutenfreie Methode.",
+  "profile.dietGlutenWhy": "Warum?"
 };

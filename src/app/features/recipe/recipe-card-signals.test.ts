@@ -64,6 +64,20 @@ describe("card: solo informazioni che aiutano a scegliere", () => {
   });
 });
 
+describe("FW-10: l'idratazione per chi comincia è un segnale di livello 1", () => {
+  it("Teglia romana per un principiante a 250 °C: prima l'impasto, poi la cottura", () => {
+    const recipe = generateRecipe(STYLES_DB.teglia_romana, { ...constraints, skill_level: 1 });
+    expect(recipe.verdict.adaptations.map(a => a.key)).toContain("feas.hydrationBeginnerHigh");
+    const signals = recipeCardSignals(recipe);
+    expect(signals[0]).toMatchObject({ icon: "water", tone: "warning", message: { key: "card.hydrationBeginner" } });
+    expect(recipeCardSignals(recipe, "explore")[0].message.key).toBe("card.hydrationBeginner");
+  });
+  it("chi è esperto non vede il segnale", () => {
+    const recipe = generateRecipe(STYLES_DB.teglia_romana, constraints);
+    expect(recipeCardSignals(recipe).some(s => s.message.key === "card.hydrationBeginner")).toBe(false);
+  });
+});
+
 describe("voto e stato operativo distinti", () => {
   it("una dispensa incompleta non è un adattamento della ricetta", () => {
     expect(recipePresentationState(base)).toBe("check");

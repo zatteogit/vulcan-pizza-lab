@@ -808,6 +808,8 @@ export const ES_LOCALE: CmsContent = {
     "card.yeastMissing": "Necesitas levadura",
     "card.toVerify": "Por verificar",
     "card.authenticity": "Menor autenticidad",
+    // FW-10
+    "card.hydrationBeginner": "Masa difícil para principiantes",
     "need.blockedOven": "Horno insuficiente",
     "need.blockedMethod": "Método incompatible",
     "need.blockedTime": "Tiempos incompatibles",
@@ -1398,7 +1400,7 @@ export const ES_LOCALE: CmsContent = {
     pantrySubtitle: "Harinas y levaduras que tienes en casa",
     pantryStep: "03 — Ingredientes",
     dietTitle: "Preferencias dietéticas",
-    dietSubtitle: "Indica qué quieres evitar en la receta.",
+    dietSubtitle: "Te avisamos cuando una receta contiene lo que evitas.",
     dietStep: "04 — Dieta",
     noDietNote: "Sin preferencias dietéticas seleccionadas.",
     prefsTitle: "Idioma y tema",

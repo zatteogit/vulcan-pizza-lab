@@ -2037,6 +2037,17 @@ export function ProfilePage() {
               );
             })}
           </div>
+          {/* FW-10 (S16-A-03): «Senza glutine» blocca le ricette con farina di
+              frumento; lo diciamo dove si sceglie, con il perché. */}
+          {dietary.includes("gluten_free") && (
+            <div className="profile-diet-note" role="status">
+              <p className="type-body-sm">{uiMessage("profile.dietGlutenNote")}</p>
+              <details className="profile-diet-note__why">
+                <summary className="type-body-sm">{uiMessage("profile.dietGlutenWhy")}</summary>
+                <p className="type-body-sm">{cms.engineMessages["diet.noValidatedMethod"]}</p>
+              </details>
+            </div>
+          )}
           <AllergenPreferences value={allergens} onChange={setAllergens}/>
           {dietary.length === 0 && allergens.length === 0 && (
             <p className="type-data-sm profile-diet-empty">

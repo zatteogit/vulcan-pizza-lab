@@ -2144,6 +2144,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "card.yeastMissing": "Serve il lievito",
     "card.toVerify": "Da verificare",
     "card.authenticity": "Autenticità ridotta",
+    // FW-10
+    "card.hydrationBeginner": "Impasto difficile per chi inizia",
     "need.blockedOven": "Forno insufficiente",
     "need.blockedMethod": "Regime non compatibile",
     "need.blockedTime": "Tempi non compatibili",
@@ -2531,7 +2533,7 @@ export const CMS_DEFAULTS: CmsContent = {
     pantrySubtitle: "Farine e lieviti che hai a disposizione",
     pantryStep: "03 — Dispensa",
     dietTitle: "Preferenze dietetiche",
-    dietSubtitle: "Indica cosa vuoi evitare nella ricetta.",
+    dietSubtitle: "Ti avvisiamo quando una ricetta contiene ciò che eviti.",
     dietStep: "04 — Dieta",
     noDietNote: "Nessuna preferenza dietetica selezionata.",
     prefsTitle: "Lingua e tema",

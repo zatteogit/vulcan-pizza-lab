@@ -5,7 +5,7 @@ import { TOPPING_CONCEPTS, getVariantsForConcept } from "../../data/topping-libr
 import { toppingConcept } from "../../data/topping-i18n/localize";
 import { localizeSignatureRecipe } from "../../data/inspiration-i18n/localize";
 import { ISSUES_DB, getLocalizedIssue } from "../../data/troubleshooting-data";
-import { formatOrigin, PIZZA_FAMILIES, STYLES_DB } from "../../domain/pizza-engine";
+import { formatOrigin, PIZZA_FAMILIES, shortOrigin, STYLES_DB } from "../../domain/pizza-engine";
 import { uiMessage } from "../../i18n/ui-messages";
 import type { CmsContent } from "../cms/cms-context";
 import { PRE_FERMENT_IDS, preFermentName } from "../recipe/pre-ferment-guide";
@@ -91,18 +91,21 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
       cms.families?.[style.family]?.name ||
       PIZZA_FAMILIES[style.family as keyof typeof PIZZA_FAMILIES]?.name ||
       "";
-    /* Luogo e maestro nell'indice: «Bonci», «Napoli», «Genova» trovano gli stili. */
+    /* Luogo e maestro nell'indice: «Bonci», «Napoli», «Genova» trovano gli stili.
+     * FW-10 (S04-A-07): il sottotitolo dice origine e prima caratteristica,
+     * non la famiglia (che ripeteva il titolo); la famiglia resta cercabile. */
+    const firstChar = (cms.styleChars?.[style.id] ?? "").split("|")[0]?.trim();
     out.push(
       entry(
         {
           id: `style-${style.id}`,
           type: "style",
           title: style.name,
-          subtitle: familyName,
+          subtitle: [shortOrigin(style.origin), firstChar].filter(Boolean).join(" · "),
           link: `/recipe/${style.id}?mode=canonical`,
           photo: STYLE_PHOTOS[style.id],
         },
-        `${style.id.replace(/_/g, " ")} ${formatOrigin(style.origin)} ${cms.styleDescriptions?.[style.id] ?? ""} ${cms.styleChars?.[style.id] ?? ""}`,
+        `${familyName} ${style.id.replace(/_/g, " ")} ${formatOrigin(style.origin)} ${cms.styleDescriptions?.[style.id] ?? ""} ${cms.styleChars?.[style.id] ?? ""}`,
       ),
     );
   }
@@ -249,6 +252,34 @@ export function searchIndex(index: readonly SearchEntry[], query: string): Searc
   });
   /* sort stabile: a parità di punteggio resta l'ordine dell'indice */
   return hits.sort((a, b) => b.score - a.score);
+}
+
+/** FW-10 (S04-A-07): come la tua cucina accoglie uno stile. */
+export interface KitchenFit {
+  blocked: boolean;
+  now: number;
+}
+
+/** Id dello stile di un risultato «Stili», o null. */
+export function styleIdOf(result: Pick<SearchResult, "id" | "type">): string | null {
+  return result.type === "style" ? result.id.slice("style-".length) : null;
+}
+
+/** A parità di pertinenza, prima gli stili che la tua cucina permette; uno
+ *  stile bloccato apre la versione adattata alla tua cucina invece della
+ *  canonica. Gli altri risultati non cambiano. */
+export function rankForKitchen(
+  results: readonly SearchResult[],
+  fit: (styleId: string) => KitchenFit | undefined,
+): SearchResult[] {
+  const blockedOf = (r: SearchResult) => {
+    const id = styleIdOf(r);
+    return id ? fit(id)?.blocked === true : false;
+  };
+  return results
+    .map((r, index) => ({ r, index, blocked: blockedOf(r) }))
+    .sort((a, b) => b.r.score - a.r.score || Number(a.blocked) - Number(b.blocked) || a.index - b.index)
+    .map(({ r, blocked }) => (blocked ? { ...r, link: r.link.replace("mode=canonical", "mode=adapted") } : r));
 }
 
 /** Gruppi per tipo; prima i gruppi col risultato più pertinente, poi
