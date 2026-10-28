@@ -5,6 +5,7 @@ import {
   Carousel,
   ConfirmDialog,
   CtaButton,
+  Disclosure,
   FilterChip,
   Heading,
   IconButton,
@@ -93,6 +94,25 @@ function RuntimeComponentContractSpec() {
             ]}
           />
         </div>
+      </section>
+
+      {/* FW-03: ds/Disclosure nelle due varianti */}
+      <section className="surface-card p-5 flex flex-col gap-4" aria-label={showcaseMessage("components.design-system.components-runtime.disclosure-fw03")}>
+        <Heading level="sm">{showcaseMessage("components.design-system.components-runtime.disclosure-fw03")}</Heading>
+        <Disclosure
+          variant="card"
+          summary={showcaseMessage("components.design-system.components-runtime.disclosure-fw03-card")}
+          meta={showcaseMessage("components.design-system.components-runtime.disclosure-fw03-meta")}
+        >
+          <p className="type-body">{showcaseMessage("components.design-system.components-runtime.disclosure-fw03-body")}</p>
+        </Disclosure>
+        <Disclosure
+          variant="inline"
+          headingLevel={3}
+          summary={showcaseMessage("components.design-system.components-runtime.disclosure-fw03-inline")}
+        >
+          <p className="type-body">{showcaseMessage("components.design-system.components-runtime.disclosure-fw03-body")}</p>
+        </Disclosure>
       </section>
 
       <section className="surface-card p-5 flex flex-col gap-4" aria-label={showcaseMessage("components.design-system.components-runtime.composizione-e-carousel-3bf9f777")}>

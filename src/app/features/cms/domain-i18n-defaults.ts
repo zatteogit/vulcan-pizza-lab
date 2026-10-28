@@ -14,7 +14,6 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
   sectionLabel: "Pre-fermento",
   tipsLabel: "Consigli",
   showComparison: "Confronta Biga vs Poolish vs Autolisi",
-  hideComparison: "Nascondi confronto",
   paramHydration: "Idratazione",
   paramDuration: "Durata",
   paramTemperature: "Temperatura",

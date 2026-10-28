@@ -6,7 +6,7 @@
 import { ArrowRight } from "lucide-react";
 import { CompatibilityPill, StyleMetaChip } from "../features/recipe/style-card-parts";
 import { AnimatePresence,motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { Link,useSearchParams } from "react-router";
 import { Heading, Surface } from "../components/ds/index";
 import { useCms, type CmsContent } from "../features/cms/cms-context";
@@ -63,7 +63,10 @@ function signatureCardText(recipe: SignatureRecipe, styleName: string) {
   };
 }
 
-function getAcronymTooltip(text: string | null | undefined): string | undefined {
+/** FW-03 (S02-A-10): spiegazione delle sigle per aria-describedby sul link
+ * della card, non più in title= (irraggiungibile al tocco e da tastiera). */
+function getAcronymTooltip(...texts: (string | null | undefined)[]): string | undefined {
+  const text = texts.filter(Boolean).join(" ");
   if (!text) return undefined;
   const acronyms: Record<string, string> = {
     AVPN: uiMessage("pages.explore.acronym.avpn"),
@@ -125,6 +128,8 @@ function FeaturedRecipeCard({
   const styleName = STYLES_DB[recipe.style_id]?.name ?? recipe.style_id;
 
   const cardText = signatureCardText(recipe, styleName);
+  const acronymHelpId = useId();
+  const acronymHelp = getAcronymTooltip(recipe.authenticity_badge, cardText.context);
 
   const linkParams = new URLSearchParams();
   linkParams.set("mode", "canonical");
@@ -138,6 +143,7 @@ function FeaturedRecipeCard({
     <article className="explore-feature-shell">
     <Link
       to={linkTo}
+      aria-describedby={acronymHelp ? acronymHelpId : undefined}
       state={{ exploreBackTo }}
       data-region="feature"
       onMouseEnter={() => setHovered(true)}
@@ -155,10 +161,7 @@ function FeaturedRecipeCard({
         />
         {/* Badge autenticità posizionato sull'immagine */}
         {recipe.authenticity_badge && (
-          <div
-            className="explore-feature__badge"
-            title={getAcronymTooltip(recipe.authenticity_badge)}
-          >
+          <div className="explore-feature__badge">
             {signatureBadgeText(recipe.authenticity_badge, cms)}
           </div>
         )}
@@ -167,10 +170,8 @@ function FeaturedRecipeCard({
       {/* Colonna Testo Solido */}
       <div className="explore-feature__body">
         <div className="explore-feature__head">
-          {cardText.context && <span
-            className="explore-feature__eyebrow"
-            title={getAcronymTooltip(cardText.context)}
-          >
+          {acronymHelp && <span hidden id={acronymHelpId}>{acronymHelp}</span>}
+          {cardText.context && <span className="explore-feature__eyebrow">
             {cardText.context}
           </span>}
           <h2 className="explore-feature__title">
@@ -566,6 +567,8 @@ function SignatureRecipeCard({
     STYLES_DB[recipe.style_id]?.name ?? recipe.style_id;
 
   const cardText = signatureCardText(recipe, styleName);
+  const acronymHelpId = useId();
+  const acronymHelp = getAcronymTooltip(recipe.authenticity_badge, cardText.context);
 
   const linkParams = new URLSearchParams();
   linkParams.set("mode", "canonical");
@@ -591,6 +594,7 @@ function SignatureRecipeCard({
           variant="container"
           to={linkTo}
           state={{ exploreBackTo }}
+          aria-describedby={acronymHelp ? acronymHelpId : undefined}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
           <figure className="explore-card__media">
@@ -604,20 +608,15 @@ function SignatureRecipeCard({
 
           {/* Badge autenticità — top right */}
           {recipe.authenticity_badge && (
-            <div
-              className="explore-card__badge explore-card__badge--auth"
-              title={getAcronymTooltip(recipe.authenticity_badge)}
-            >
+            <div className="explore-card__badge explore-card__badge--auth">
               {signatureBadgeText(recipe.authenticity_badge, cms)}
             </div>
           )}
 
           {/* Title + sotto-titolo stile */}
           <figcaption className="explore-card__caption">
-            {cardText.context && <div
-              className="explore-card__eyebrow"
-              title={getAcronymTooltip(cardText.context)}
-            >
+            {acronymHelp && <span hidden id={acronymHelpId}>{acronymHelp}</span>}
+            {cardText.context && <div className="explore-card__eyebrow">
               {cardText.context}
             </div>}
             <h3 className="explore-card__title explore-card__title--recipe">
@@ -668,6 +667,8 @@ function StyleCatalogCard({
       return null;
     }
   }, [style, constraints, cms]);
+  const acronymHelpId = useId();
+  const acronymHelp = getAcronymTooltip(style.name);
 
   return (
     <motion.article
@@ -685,6 +686,7 @@ function StyleCatalogCard({
           variant="container"
           to={`/recipe/${style.id}?mode=canonical`}
           state={{ exploreBackTo }}
+          aria-describedby={acronymHelp ? acronymHelpId : undefined}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
           {/* Photo area — 3/4 aspect like Create cards */}
@@ -699,12 +701,10 @@ function StyleCatalogCard({
 
           {/* Title + subtitle — overlaid on image (editorial style) */}
           <figcaption className="explore-card__caption">
-            <h3
-              className="explore-card__title explore-card__title--style"
-              title={getAcronymTooltip(style.name)}
-            >
+            <h3 className="explore-card__title explore-card__title--style">
               {style.name}
             </h3>
+            {acronymHelp && <span hidden id={acronymHelpId}>{acronymHelp}</span>}
             <div className="explore-card__origin">
               {shortOrigin(style.origin)}
             </div>

@@ -15,11 +15,11 @@ XCircle,
 X,
 type LucideIcon,
 } from 'lucide-react';
-import { AnimatePresence,motion } from 'motion/react';
+import { AnimatePresence,motion,useReducedMotion } from 'motion/react';
 import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { createElement, useEffect, useId, useState } from 'react';
 import { useCms } from "../cms/cms-context";
-import { FilterChip, IconButton, ModalSheet, Surface } from "../../components/ds/index";
+import { Disclosure, FilterChip, IconButton, ModalSheet, Surface } from "../../components/ds/index";
 import {
 type TroubleshootingIssue,
 type StepTroubleshooting,
@@ -121,7 +121,9 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
       {/* Show more */}
       {hasMore && (
         <motion.button
+          type="button"
           className="troubleshooting-warnings__toggle"
+          aria-expanded={expanded}
           onClick={() => setExpanded(!expanded)}
         >
           {expanded ? (
@@ -157,17 +159,23 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(initialIssueId ?? null);
   const [activeCategory, setActiveCategory] = useState<string | null>(filterCategory || null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (!initialIssueId || contextIssueIds) return;
     // Dopo lo stagger di entrata delle card, porta l'issue aperta in vista.
+    // FW-03 (S13-B-11): rispetta «riduci movimento» e sposta il focus sul
+    // pulsante della card aperta, così lo screen reader la annuncia.
     const timer = window.setTimeout(() => {
       document
         .getElementById(`trouble-${initialIssueId}`)
-        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+        ?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      document
+        .getElementById(`trouble-${initialIssueId}-toggle`)
+        ?.focus({ preventScroll: true });
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [initialIssueId, contextIssueIds]);
+  }, [initialIssueId, contextIssueIds, reduceMotion]);
 
   const categories = Object.entries(CATEGORY_LABELS);
 
@@ -277,6 +285,7 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
             >
               <IssueCard
                 issue={issue}
+                headingLevel={contextIssueIds ? 3 : 2}
                 expanded={expandedId === issue.id}
                 onToggle={() => setExpandedId(expandedId === issue.id ? null : issue.id)}
               />
@@ -318,10 +327,13 @@ export function TroubleshootingSheet({ open, context, onClose }: {
 /* === ISSUE CARD === */
 function IssueCard({
   issue,
+  headingLevel,
   expanded,
   onToggle,
 }: {
   issue: TroubleshootingIssue;
+  /** FW-03: h2 nella pagina (sotto l'h1), h3 nel foglio della fase (sotto il titolo h2). */
+  headingLevel: 2 | 3;
   expanded: boolean;
   onToggle: () => void;
 }) {
@@ -330,41 +342,30 @@ function IssueCard({
 
   return (
     <Surface as={motion.div} variant="card" className="troubleshooting-card">
-      {/* Header — always visible */}
-      <motion.button
-        className="troubleshooting-card__toggle"
-        aria-expanded={expanded}
-        onClick={onToggle}
-      >
-        <SeverityIcon severity={issue.severity} />
-        <div className="troubleshooting-card__toggle-body">
-          <div className="troubleshooting-card__meta-row">
-            <span className="troubleshooting-card__badge">
-              {catLabel}
+      {/* FW-03: ds/Disclosure con heading, aria-controls e id per il deep link;
+          dentro il pulsante solo span (S13-B-11). */}
+      <Disclosure
+        variant="inline"
+        headingLevel={headingLevel}
+        id={`trouble-${issue.id}-toggle`}
+        open={expanded}
+        onOpenChange={onToggle}
+        triggerClassName="troubleshooting-card__toggle"
+        panelClassName="troubleshooting-card__detail"
+        summary={<>
+          <SeverityIcon severity={issue.severity} />
+          <span className="troubleshooting-card__toggle-body">
+            <span className="troubleshooting-card__meta-row">
+              <span className="troubleshooting-card__badge">
+                {catLabel}
+              </span>
             </span>
-          </div>
-          <div className="troubleshooting-card__symptom">
-            {issue.symptom}
-          </div>
-        </div>
-        <div className="troubleshooting-card__chevron">
-          {expanded
-            ? <ChevronUp className="troubleshooting-card__chevron-icon" />
-            : <ChevronDown className="troubleshooting-card__chevron-icon" />
-          }
-        </div>
-      </motion.button>
-
-      {/* Detail — expandable */}
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            className="troubleshooting-card__detail"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={motionSpring.standard}
-          >
+            <span className="troubleshooting-card__symptom">
+              {issue.symptom}
+            </span>
+          </span>
+        </>}
+      >
             <div className="troubleshooting-card__detail-body">
               {/* Causa */}
               <DetailRow icon={Search} label={uiMessage("features.recipe.troubleshooting-panel.causa-2cff0350")} value={issue.cause} />
@@ -380,9 +381,7 @@ function IssueCard({
               {/* Prevenzione */}
               <DetailRow icon={ShieldCheck} label={uiMessage("features.recipe.troubleshooting-panel.prevenzione-f9797745")} value={issue.prevention} />
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </Disclosure>
     </Surface>
   );
 }

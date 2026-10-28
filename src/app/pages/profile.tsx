@@ -10,11 +10,11 @@ import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys
 import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Egg, Flame, Globe, GraduationCap, Heart, Home, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Thermometer, Timer, Upload, User, WheatOff, X, Zap } from "lucide-react";
 import { WoodOvenIcon } from "../components/shared/wood-oven-icon";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
-import { useCallback,useEffect,useMemo,useRef,useState, useId } from "react";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
-import { Chip, CtaButton, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
+import { Chip, CtaButton, Disclosure, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
 import {
 createFormatter,
 getPreferredUnitSystem,
@@ -646,9 +646,10 @@ function SavedRecipesSection() {
 const PROFILE_TAB_IDS = ["recipes", "setup", "app"] as const;
 
 /* ═══ EQUIPMENT CATEGORY ACCORDION ═══ */
+/* FW-03 (S16-B-10/A-15, S16-B-11): ds/Disclosure come gli altri «mostra di
+   più» del Profilo; niente eyebrow che ripeteva il titolo (doppio annuncio). */
 function EquipmentCategory({
   title,
-  stepLabel,
   expanded,
   onToggle,
   summary,
@@ -656,70 +657,37 @@ function EquipmentCategory({
   children,
 }: {
   title: string;
-  stepLabel: string;
   expanded: boolean;
   onToggle: () => void;
   summary: string;
   hasSelection: boolean;
   children: React.ReactNode;
 }) {
-  const panelId = useId();
   return (
-    <div
+    <Disclosure
+      variant="inline"
+      open={expanded}
+      onOpenChange={onToggle}
       className={`profile-equip-cat${hasSelection ? " profile-equip-cat--selected" : ""}`}
-    >
-      <motion.button
-        type="button"
-        aria-expanded={expanded}
-        aria-controls={panelId}
-        onClick={onToggle}
-        className="profile-equip-cat__trigger"
-      >
-        <div className="profile-equip-cat__body">
-          <div className="profile-equip-cat__step-row">
-            <span
-              className={`profile-equip-cat__step${hasSelection ? " profile-equip-cat__step--selected" : ""}`}
-            >
-              {stepLabel}
-            </span>
-          </div>
-          <span className="type-data-base profile-equip-cat__title">
-            {title}
-          </span>
-          <div
-            className={`type-data-xs profile-equip-cat__summary${hasSelection ? " profile-equip-cat__summary--selected" : ""}`}
-          >
-            {summary}
-          </div>
-        </div>
-        <motion.div
-          animate={{ rotate: expanded ? 180 : 0 }}
-          transition={motionSpring.crispControl}
-          className="profile-equip-cat__chevron"
+      triggerClassName="profile-equip-cat__trigger"
+      panelClassName="profile-equip-cat__panel"
+      summary={<>
+        <span className="type-data-base profile-equip-cat__title">
+          {title}
+        </span>
+        <span
+          className={`type-data-xs profile-equip-cat__summary${hasSelection ? " profile-equip-cat__summary--selected" : ""}`}
         >
-          <ChevronDown size={16} className="profile-equip-cat__chevron-icon" />
-        </motion.div>
-      </motion.button>
-
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={motionSpring.standard}
-            id={panelId}
-            className="profile-equip-cat__panel"
-          >
-            <div className="profile-equip-cat__panel-inner">
-              <div className="profile-equip-cat__panel-content">
-                {children}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+          {summary}
+        </span>
+      </>}
+    >
+      <div className="profile-equip-cat__panel-inner">
+        <div className="profile-equip-cat__panel-content">
+          {children}
+        </div>
+      </div>
+    </Disclosure>
   );
 }
 
@@ -1736,15 +1704,12 @@ export function ProfilePage() {
             />
           </div>
 
-          <details className="profile-oven-heat">
-            <summary className="profile-oven-heat__head">
-              <span className="type-data-sm profile-oven-heat__label">
-                {uiMessage("pages.profile.distribuzione-del-calore-bfa0da90")}</span>
-              <span className="profile-oven-heat__current">
-                {OVEN_HEAT_PROFILES.find(profile => profile.id === (equipment.oven_heat_profile ?? "static_top_bottom"))?.label}
-              </span>
-              <ChevronDown size={16} aria-hidden="true" />
-            </summary>
+          <Disclosure
+            className="profile-oven-heat"
+            variant="card"
+            summary={uiMessage("pages.profile.distribuzione-del-calore-bfa0da90")}
+            meta={OVEN_HEAT_PROFILES.find(profile => profile.id === (equipment.oven_heat_profile ?? "static_top_bottom"))?.label}
+          >
             <p className="type-data-xs profile-oven-heat__hint">
               {uiMessage("pages.profile.cambia-preriscaldo-ripiano-e-rotazioni-8f2fcd03")}
             </p>
@@ -1785,7 +1750,7 @@ export function ProfilePage() {
                 );
               })}
             </div>
-          </details>
+          </Disclosure>
         </ProfileSection>
 
         {/* ── SKILL ── */}
@@ -1860,7 +1825,6 @@ export function ProfilePage() {
             {/* ── Impastamento ── */}
             <EquipmentCategory
               title={p.equipMixerTitle}
-              stepLabel={p.equipMixerTitle}
               expanded={equipExpandedCat === "mixer"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "mixer" ? null : "mixer")}
               summary={mixers.length > 0
@@ -1925,7 +1889,6 @@ export function ProfilePage() {
             {/* ── Superficie di cottura ── */}
             <EquipmentCategory
               title={p.equipSurfaceTitle}
-              stepLabel={p.equipSurfaceTitle}
               expanded={equipExpandedCat === "surface"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "surface" ? null : "surface")}
               summary={equipment.surfaces.length > 0
@@ -1993,7 +1956,6 @@ export function ProfilePage() {
             {/* ── Utensili ── */}
             <EquipmentCategory
               title={p.equipToolsTitle}
-              stepLabel={p.equipToolsTitle}
               expanded={equipExpandedCat === "tools"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "tools" ? null : "tools")}
               summary={equipment.tools.length > 0

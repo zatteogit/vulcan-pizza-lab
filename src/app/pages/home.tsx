@@ -5,6 +5,7 @@ import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePre
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { Bookmark, ChevronRight, Heart, Sparkles } from "lucide-react";
 import {
+AnimatePresence,
 motion,
 useReducedMotion,
 } from "motion/react";
@@ -1544,6 +1545,8 @@ export function HomePage() {
       )}
 
       {/* ═══ STYLE DETAIL SHEET — bottom sheet with selected style details ═══ */}
+      {/* FW-03 (S03-B-17): AnimatePresence fa partire l'animazione di uscita */}
+      <AnimatePresence>
       {currentStep === "styles" && selectedStyle && (
           <StyleDetailSheet
             key={selectedStyle.id}
@@ -1553,6 +1556,7 @@ export function HomePage() {
             onDismiss={() => setSelectedStyle(null)}
           />
       )}
+      </AnimatePresence>
 
       {recipe && recipeSource && <SaveRecipeDialog open={saveFlow.open} onClose={saveFlow.cancel} onConfirm={saveFlow.confirm}
         defaultName={resolvedRecipeName || recipeDisplayName(recipe, engineConstraints.oven_type)} source={recipeSource} />}

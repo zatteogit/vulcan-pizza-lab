@@ -60,3 +60,6 @@ export type { BottomSheetProps } from "./BottomSheet";
 export { Carousel } from "./Carousel";
 export type { CarouselProps } from "./Carousel";
 
+/* FW-03: l'unico contenitore di disclosure in pagina. */
+export { Disclosure } from "./Disclosure";
+export type { DisclosureProps } from "./Disclosure";

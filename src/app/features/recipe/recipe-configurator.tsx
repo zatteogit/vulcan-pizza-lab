@@ -783,8 +783,8 @@ export function RecipeConfigurator({
                   name={style.dough.unleavened ? cfg.restLabel : cfg.fermentLabel}
                   label={
                     style.dough.unleavened
-                      ? <><Label>{cfg.restLabel}</Label><InfoTip>{cfg.restTip}</InfoTip></>
-                      : <><Label>{cfg.fermentLabel}</Label><InfoTip>{cfg.fermentTip}</InfoTip></>
+                      ? <><Label>{cfg.restLabel}</Label><InfoTip label={cfg.restLabel}>{cfg.restTip}</InfoTip></>
+                      : <><Label>{cfg.fermentLabel}</Label><InfoTip label={cfg.fermentLabel}>{cfg.fermentTip}</InfoTip></>
                   }
                   value={customFermentHours}
                   onChange={handleFH}
@@ -823,10 +823,11 @@ export function RecipeConfigurator({
                   <span className="config-toggle-row__label">
                     {cfg.preFermentLabel}
                   </span>
-                  <InfoTip size={14}>{cfg.preFermentTip}</InfoTip>
+                  <InfoTip size={14} label={cfg.preFermentLabel}>{cfg.preFermentTip}</InfoTip>
                 </div>
                 <Switch
                   checked={usePreFerment}
+                  aria-label={cfg.preFermentLabel}
                   onCheckedChange={onPreFermentChange}
                 />
               </div>
@@ -883,7 +884,7 @@ export function RecipeConfigurator({
                 <div className="config-temp-header">
                   <div className="config-temp-header__label-group">
                     <Label>{uiMessage("features.recipe.recipe-configurator.temperatura-df12789a")}</Label>
-                    <InfoTip>{uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-dell-impasto-737f1c50")}</InfoTip>
+                    <InfoTip label={uiMessage("features.recipe.recipe-configurator.temperatura-df12789a")}>{uiMessage("features.recipe.recipe-configurator.temperatura-di-fermentazione-dell-impasto-737f1c50")}</InfoTip>
                   </div>
                   {suggestedTemp && (
                     <span className="config-temp-header__badge">
@@ -1054,7 +1055,7 @@ export function RecipeConfigurator({
                 <div className="config-field">
                   <div className="config-field-label">
                     <Label>{cfg.panLabel}</Label>
-                    <InfoTip>
+                    <InfoTip label={cfg.panLabel}>
                       {defaultPanShape(style) === "rectangular" ? cfg.panTipRect : cfg.panTipRound}
                     </InfoTip>
                   </div>
@@ -1178,7 +1179,7 @@ export function RecipeConfigurator({
             <div className="config-field">
               <div className="config-thickness-header">
                 <Label>{cfg.thicknessLabel}</Label>
-                <InfoTip>{cfg.thicknessTip}</InfoTip>
+                <InfoTip label={cfg.thicknessLabel}>{cfg.thicknessTip}</InfoTip>
               </div>
               {(() => {
                 const tf = style.shape.thickness_factor;
