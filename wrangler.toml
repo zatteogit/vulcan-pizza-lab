@@ -25,8 +25,10 @@ command = "node scripts/build-worker.mjs"
 directory = "./dist"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
-# /mcp va al Worker anche quando il resto è servito dagli asset.
-run_worker_first = ["/mcp", "/api/auth/*"]
+# /mcp, accesso e API degli strumenti vanno al Worker anche quando il resto è
+# servito dagli asset: senza, /api/annotations e /api/config in produzione
+# finivano sul fallback SPA (200 con l'HTML) invece del 404 del Worker.
+run_worker_first = ["/mcp", "/api/auth/*", "/api/annotations", "/api/config"]
 
 # D-046: ruoli per impronta SHA-256 dell'email normalizzata (il repository è
 # pubblico: niente email in chiaro). GOOGLE_CLIENT_ID è pubblico per natura;
