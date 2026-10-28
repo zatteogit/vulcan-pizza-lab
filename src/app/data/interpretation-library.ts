@@ -215,7 +215,6 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     location: "Caiazzo (CE)",
     year_codified: 2012,
     base_style_id: "napoletana_canotto",
-    compatible_style_ids: ["napoletana_stg"],
     base_topping_concept_id: "margherita",
     parameter_overrides: {
       hydration_pct: 65,
@@ -309,7 +308,6 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     location: "Napoli",
     year_codified: 2018,
     base_style_id: "napoletana_canotto",
-    compatible_style_ids: ["napoletana_stg"],
     base_topping_concept_id: "margherita",
     parameter_overrides: {
       hydration_pct: 70,

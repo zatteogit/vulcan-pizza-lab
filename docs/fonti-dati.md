@@ -335,6 +335,17 @@ fonte, e i numeri senza fonte sono stati tolti.
 | `malati_di_pizza` | errato | Tolta (D-024): è una scuola, non un forum; ricetta senza fonte | malatidipizza.com |
 | `confraternita_pinsa` | errato | Tolta (D-024): nessuna fonte sul ruolo del forum; mix non pubblico | §1.2 |
 
+**Legami con gli stili (FW-14, decisione B del 28/10/2026).** `pepe_caiazzo` e
+`capuano_napoli` hanno base `napoletana_canotto` e non sono più compatibili con
+`napoletana_stg`: una versione canotto offerta sulla STG contraddiceva il
+disciplinare citato dalla scheda (S07-A-01). `bianco_phoenix` resta con base
+STG: è dichiarato «Ispirata a…» e la base è una scelta difendibile (forno a
+legna, impasto diretto), anche se le sue circa 18 h superano le 6–14 h della
+STG e oggi la scheda lo segnala come non fattibile. Misure: le ricette
+canoniche e la classifica di `recommendStyles` per P1 (forno di casa 250 °C) e
+P3 (elettrico 509 °C) non cambiano; `recipe-preset.test` e
+`mcp-kitchen-parity.test` restano verdi.
+
 Le 12 ricette iconiche non avevano un fact-check proprio: le descrizioni sono
 state riscritte togliendo ciò che contraddiceva le fonti già raccolte (cottura
 «90 s a 450 °C» → 60–90 s del disciplinare; «DOC» usato per un piatto;
