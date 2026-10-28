@@ -288,9 +288,6 @@ export const FR_LOCALE: CmsContent = {
     title_line2: "prochaine pizza.",
     subtitle:
       "Choisissez quand vous voulez la servir.",
-    onboardingEyebrow: "Des conseils sur mesure",
-    onboardingBody: "Indiquez votre four, vos ingrédients et votre expérience dans les filtres ci-dessus.",
-    onboardingCta: "Personnaliser",
     onboardingProfileCta: "Configurer toute la cuisine",
     onboardingDismiss: "Compris",
   },
@@ -1224,6 +1221,7 @@ export const FR_LOCALE: CmsContent = {
     mixerHand: "P\u00E9trissage \u00E0 la main possible",
     turnsSingle: "Tourner {n} fois pour une cuisson uniforme.",
     turnsNone: "Ne pas tourner pendant la cuisson.",
+    bakeAdaptedNerd: "Estimation du moteur pour ton four ({temp}) : {minM}\u2013{maxM} min par cuisson. Référence du style : {refMin}\u2013{refMax} s à {refTemp}.",
   },
   styleDescriptions: {
     napoletana_stg:

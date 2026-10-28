@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint } from "./recipe-output-format";
+import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip } from "./recipe-output-format";
+import { CMS_DEFAULTS } from "../cms/cms-context";
 
 describe("fine stimata: precisione del riepilogo", () => {
   it("mostra 12:31 come circa 12:30 senza cambiare l'istante del programma", () => {
@@ -65,4 +66,34 @@ describe('orari e dosi: secondo collaudo',()=>{
  it('sotto il grammo serve una bilancia, non una dose a occhio',()=>{
   for(const type of ['fresh','dry']) for(const g of [0.1,0.8]) expect(yeastPracticalHint(g,type,undefined)).toContain('0,01');
  });
+});
+
+describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09-A-01)", () => {
+  const pt = CMS_DEFAULTS.parametricTips;
+  const home = { ovenTempC: 250, cookSec: 360, referenceMinTempC: 430, ovenTempLabel: "250 °C", referenceTempLabel: "485 °C" };
+  const wood = { ovenTempC: 485, cookSec: 75, referenceMinTempC: 430, ovenTempLabel: "485 °C", referenceTempLabel: "485 °C" };
+
+  it("forno di casa con la napoletana: tempo dalla stima del motore, non 1–2 min", () => {
+    const tip = getParametricTip("bake", "napoletana_stg", false, pt, home)!;
+    expect(tip).toContain("5–7 min");
+    expect(tip).not.toContain("1–2 min");
+    expect(tip).not.toMatch(/Ruota 3/);
+  });
+
+  it("in modalità Nerd mostra la stima e, come confronto, il riferimento dello stile", () => {
+    const tip = getParametricTip("bake", "napoletana_stg", true, pt, home)!;
+    expect(tip).toContain("250 °C");
+    expect(tip).toContain("60–90 s a 485 °C");
+  });
+
+  it("nel regime di riferimento resta il consiglio dello stile", () => {
+    expect(getParametricTip("bake", "napoletana_stg", false, pt, wood)).toContain("1–2 min");
+    expect(getParametricTip("bake", "napoletana_stg", false, pt)).toContain("1–2 min");
+  });
+
+  it("il consiglio dell'impasto non parla del forno", () => {
+    const tip = getParametricTip("mix", "napoletana_stg", false, pt, home)!;
+    expect(tip).not.toMatch(/Forno|°C/);
+    expect(tip.endsWith(" ")).toBe(false);
+  });
 });

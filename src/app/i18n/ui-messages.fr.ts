@@ -1,6 +1,10 @@
 /** Catalogo UI francese (fr-FR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_FR: Record<string, string> = {
   "edition.partner": "pour {0}",
+  "recipe.slots.noneFeasibleTitle": "Pas assez de temps pour ce moment",
+  "recipe.slots.noneFeasibleBody": "Avec ta cuisine, aucun style ne tient dans le temps : la pousse, le façonnage et le préchauffage demandent plus. Le premier moment possible est {0}.",
+  "recipe.slots.noneFeasibleNoSlot": "Avec ta cuisine, aucun style n’est faisable, même sans limite de temps. Vérifie le four et l’équipement dans « Ta cuisine ».",
+  "recipe.slots.chooseSlot": "Choisir {0}",
   "recipe.share.title": "Partager la recette",
   "recipe.share.link": "Lien de la recette",
   "recipe.share.native": "Partager avec une appli",

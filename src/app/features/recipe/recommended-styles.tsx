@@ -1,11 +1,11 @@
 import { recipeDisplayName } from "../../domain/recipe-reference";
-import { Award,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
+import { Award,CalendarClock,Check,ChefHat,Clock,Flame,Search,SlidersHorizontal,Sparkles,Triangle,Wheat,X } from "lucide-react";
 import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "motion/react";
 import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
 import { useEffect,useMemo,useRef,useState,type ReactNode } from "react";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
-import { FilterChip, Surface } from "../../components/ds/index";
+import { CtaButton, FilterChip, Surface } from "../../components/ds/index";
 import { getStyleTags } from "../../domain/deviation-tags";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -18,6 +18,7 @@ styleMatchesFamily,
 StyleRecommendation,
 UserConstraints,
 type FamilyId,
+type TimeSlot,
 } from "../../domain/pizza-engine";
 import { type Interpretation } from "../../data/interpretation-library";
 import { CompatibilityPill, StyleMetaChip } from "./style-card-parts";
@@ -29,8 +30,14 @@ import { STYLE_PHOTOS } from "../../data/style-photos";
 import { getVersions } from "../../data/style-versions";
 import { TOPPING_CONCEPTS, TOPPING_LIBRARY } from "../../data/topping-library";
 import { uiMessage } from "../../i18n/ui-messages";
+import { timeSlotText } from "./time-slot-text";
+import { firstFeasibleSlot } from "../../domain/feasible-slot";
 
 interface RecommendedStylesProps {
+  /** Momenti proponibili, dal più vicino: se in quello scelto nessuno stile
+   *  è fattibile si propone il primo che ne ha (audit 28/10/2026, S05-A-01). */
+  timeSlots?: TimeSlot[];
+  onSelectTimeSlot?: (slot: TimeSlot) => void;
   constraints: UserConstraints;
   selectedStyle: PizzaStyle | null;
   /** La scelta porta con sé la variante migliore (round 7, nota Matteo):
@@ -143,6 +150,8 @@ export function RecommendedStyles({
   constraints,
   selectedStyle,
   onSelectStyle,
+  timeSlots,
+  onSelectTimeSlot,
 }: RecommendedStylesProps) {
   const { effectiveStyles, isOverrideActive } = useStylesOverride();
   const { cms, bcp47 } = useCms();
@@ -185,6 +194,21 @@ export function RecommendedStyles({
         };
       }),
     [constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
+  );
+  /* «Stasera» col forno di casa: nessuno stile ci sta nei tempi. Invece di 29
+     card «non fattibili» senza uscita, si cerca il primo momento in cui almeno
+     uno stile lo è (stesso motore e stesse ricette delle card). */
+  const noneFeasible = constraints.available_hours > 0 && recommendations.every((rec) => rec.tier === "not_feasible");
+  const rescueSlot = useMemo(
+    () => noneFeasible && timeSlots
+      ? firstFeasibleSlot(constraints, timeSlots, (candidate) => recommendStyles(
+          candidate,
+          isOverrideActive ? effectiveStyles : undefined,
+          cms.recommendationWeights,
+          (style, current) => tailoredRecipeEntry(style, current, scoreWeights).recipe,
+        ))
+      : null,
+    [noneFeasible, timeSlots, constraints, effectiveStyles, isOverrideActive, cms.recommendationWeights, cms.scoreDimensions],
   );
   const [familyFilter, setFamilyFilter] = useState<FamilyId | "all">("all");
   const [styleQuery, setStyleQuery] = useState("");
@@ -447,6 +471,25 @@ export function RecommendedStyles({
           ? t(cms.ui.stylesFoundStatus, { n: filtered.length })
           : ""}
       </p>
+
+      {noneFeasible && (
+        <Surface as="section" className="recommended-rescue" aria-labelledby="recommended-rescue-title">
+          <p id="recommended-rescue-title" className="type-label recommended-rescue__title">
+            <CalendarClock size={16} aria-hidden="true" />
+            {uiMessage("recipe.slots.noneFeasibleTitle")}
+          </p>
+          <p className="type-body-sm recommended-rescue__body">
+            {rescueSlot
+              ? uiMessage("recipe.slots.noneFeasibleBody", [timeSlotText(rescueSlot, cms, bcp47).label])
+              : uiMessage("recipe.slots.noneFeasibleNoSlot")}
+          </p>
+          {rescueSlot && onSelectTimeSlot && (
+            <CtaButton elevated={false} className="recommended-rescue__action" onClick={() => onSelectTimeSlot(rescueSlot)}>
+              {uiMessage("recipe.slots.chooseSlot", [timeSlotText(rescueSlot, cms, bcp47).label])}
+            </CtaButton>
+          )}
+        </Surface>
+      )}
 
       {/* ═══ Tier groups ═══ */}
       <motion.div className="recommended-styles__results" animate={resultsControls}>

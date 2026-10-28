@@ -4,6 +4,10 @@
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
   "edition.partner": "per {0}",
+  "recipe.slots.noneFeasibleTitle": "Per questo momento non c'è tempo",
+  "recipe.slots.noneFeasibleBody": "Con la tua cucina nessuno stile sta nei tempi: lievitazione, stesura e preriscaldo richiedono di più. Il primo momento possibile è {0}.",
+  "recipe.slots.noneFeasibleNoSlot": "Con la tua cucina nessuno stile è fattibile, nemmeno senza limiti di tempo. Controlla forno e attrezzatura in «La tua cucina».",
+  "recipe.slots.chooseSlot": "Scegli {0}",
   "recipe.share.title": "Condividi ricetta",
   "recipe.share.link": "Link della ricetta",
   "recipe.share.native": "Condividi con un’app",

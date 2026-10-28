@@ -288,9 +288,6 @@ export const PT_LOCALE: CmsContent = {
     title_line2: "próxima pizza.",
     subtitle:
       "Escolha quando quer servir.",
-    onboardingEyebrow: "Conselhos à sua medida",
-    onboardingBody: "Indique o forno, ingredientes e experiência nos filtros acima.",
-    onboardingCta: "Personalizar",
     onboardingProfileCta: "Configure toda a cozinha",
     onboardingDismiss: "Entendido",
   },
@@ -1218,6 +1215,7 @@ export const PT_LOCALE: CmsContent = {
     mixerHand: "Sova manual poss\u00EDvel",
     turnsSingle: "Girar {n} vez(es) para cozimento uniforme.",
     turnsNone: "N\u00E3o girar durante o cozimento.",
+    bakeAdaptedNerd: "Estimativa do motor para o seu forno ({temp}): {minM}\u2013{maxM} min por fornada. Referência do estilo: {refMin}\u2013{refMax} s a {refTemp}.",
   },
   styleDescriptions: {
     napoletana_stg:

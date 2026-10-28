@@ -305,10 +305,6 @@ export const EN_LOCALE: CmsContent = {
     title_line2: "next pizza.",
     subtitle:
       "Choose when you want to serve it.",
-    onboardingEyebrow: "Recommendations for you",
-    onboardingBody:
-      "Set your oven, ingredients and experience in the filters above.",
-    onboardingCta: "Personalize",
     onboardingProfileCta: "Set up your whole kitchen",
     onboardingDismiss: "Got it",
   },
@@ -1409,6 +1405,7 @@ export const EN_LOCALE: CmsContent = {
     mixerHand: "Hand mixing possible",
     turnsSingle: "Rotate {n} time(s) for even baking.",
     turnsNone: "Do not rotate during baking.",
+    bakeAdaptedNerd: "Engine estimate for your oven ({temp}): {minM}\u2013{maxM} min per bake. Style reference: {refMin}\u2013{refMax} s at {refTemp}.",
   },
   styleDescriptions: {
     napoletana_stg:

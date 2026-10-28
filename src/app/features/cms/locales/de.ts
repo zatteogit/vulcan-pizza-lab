@@ -286,10 +286,6 @@ export const DE_LOCALE: CmsContent = {
     title_line2: "nächste Pizza.",
     subtitle:
       "Wähle, wann die Pizza auf den Tisch soll.",
-    onboardingEyebrow: "Empfehlungen für dich",
-    onboardingBody:
-      "Gib oben in den Filtern Ofen, Zutaten und Erfahrung an.",
-    onboardingCta: "Personalisieren",
     onboardingProfileCta: "Ganze Küche einrichten",
     onboardingDismiss: "Verstanden",
   },
@@ -1208,6 +1204,7 @@ export const DE_LOCALE: CmsContent = {
     turnsSingle:
       "{n}-mal drehen f\u00FCr gleichm\u00E4\u00DFiges Backen.",
     turnsNone: "W\u00E4hrend des Backens nicht drehen.",
+    bakeAdaptedNerd: "Schätzung der Engine für deinen Ofen ({temp}): {minM}\u2013{maxM} Min. pro Backvorgang. Referenz des Stils: {refMin}\u2013{refMax} s bei {refTemp}.",
   },
   styleDescriptions: {
     napoletana_stg:

@@ -291,9 +291,6 @@ export const ES_LOCALE: CmsContent = {
     title_line2: "próxima pizza.",
     subtitle:
       "Elige cuándo quieres servirla.",
-    onboardingEyebrow: "Consejos a tu medida",
-    onboardingBody: "Indica tu horno, ingredientes y experiencia en los filtros de arriba.",
-    onboardingCta: "Personalizar",
     onboardingProfileCta: "Configura toda la cocina",
     onboardingDismiss: "Entendido",
   },
@@ -1222,6 +1219,7 @@ export const ES_LOCALE: CmsContent = {
     turnsSingle:
       "Rotar {n} vez/veces para cocci\u00F3n uniforme.",
     turnsNone: "No girar durante la cocci\u00F3n.",
+    bakeAdaptedNerd: "Estimación del motor para tu horno ({temp}): {minM}\u2013{maxM} min por horneado. Referencia del estilo: {refMin}\u2013{refMax} s a {refTemp}.",
   },
   styleDescriptions: {
     napoletana_stg:

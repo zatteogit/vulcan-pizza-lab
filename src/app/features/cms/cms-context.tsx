@@ -353,9 +353,6 @@ interface CmsHero {
   subtitle: string;
   /** Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le
    *  domande del passo 1. Opzionali: i locale non tradotti cadono sul default. */
-  onboardingEyebrow?: string;
-  onboardingBody?: string;
-  onboardingCta?: string;
   onboardingProfileCta?: string;
   /** D-038: chiude l'avviso del forno senza cambiarlo. */
   onboardingDismiss?: string;
@@ -1297,6 +1294,8 @@ export interface CmsContent {
     mixerHand: string;
     turnsSingle: string;
     turnsNone: string;
+    /** Cottura fuori dal regime di riferimento dello stile: stima del motore. */
+    bakeAdaptedNerd: string;
   };
   /** Style descriptions — keyed by style ID */
   styleDescriptions: Record<string, string>;
@@ -1612,10 +1611,6 @@ export const CMS_DEFAULTS: CmsContent = {
     title_line1: "La tua",
     title_line2: "prossima pizza.",
     subtitle: "Scegli quando vuoi portarla in tavola.",
-    onboardingEyebrow: "Consigli su misura",
-    onboardingBody:
-      "Imposta forno, ingredienti ed esperienza nei filtri in alto.",
-    onboardingCta: "Personalizza",
     onboardingProfileCta: "Configura tutta la cucina",
     onboardingDismiss: "Ho capito",
   },
@@ -2430,6 +2425,7 @@ export const CMS_DEFAULTS: CmsContent = {
     mixerHand: "Impasto a mano possibile",
     turnsSingle: "Ruota {n} {turn} per cottura uniforme.",
     turnsNone: "Non girare durante la cottura.",
+    bakeAdaptedNerd: "Stima del motore per il tuo forno ({temp}): {minM}\u2013{maxM} min per cottura. Riferimento dello stile: {refMin}\u2013{refMax} s a {refTemp}.",
   },
   styleDescriptions: {
     ...Object.fromEntries(Object.entries(STYLES_DB).map(([id, style]) => [id, style.description])),
@@ -3746,6 +3742,7 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "parametricTips.mixerHand", label: "Frammento: A mano", type: "text" },
       { path: "parametricTips.turnsSingle", label: "Frammento: Ruota", type: "text", description: "Template: {n}" },
       { path: "parametricTips.turnsNone", label: "Frammento: Non girare", type: "text" },
+      { path: "parametricTips.bakeAdaptedNerd", label: "Bake — Nerd, forno diverso dal riferimento", type: "textarea", description: "Template: {temp}, {minM}, {maxM}, {refMin}, {refMax}, {refTemp}" },
     ],
   },
   {
