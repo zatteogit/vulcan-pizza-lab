@@ -35,6 +35,8 @@ import { Chip, SelectionMark } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { timeSlotText } from "./time-slot-text";
 import { CustomTimeSlot } from "./custom-time-slot";
+import { useRecommend } from "./use-recommend";
+import { earliestFeasibleMeal, slotsWithoutFeasibleStyle, type EarliestFeasibleMeal } from "../../domain/feasible-slot";
 import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
 import {
 DEFAULT_KITCHEN_TEMP,
@@ -548,6 +550,21 @@ export function UserNeeds({
   const suggestedSlot = useMemo(() => getSuggestedSlot(), []);
   /* VPL-065: dynamic time slots based on current time */
   const dynamicSlots = useMemo(() => [...generateTimeSlots(), NO_PREFERENCE_SLOT], []);
+  /* FW-09 (S05-A-01): gli slot in cui con questa cucina nessuno stile sta nei
+     tempi lo dicono, invece di portare a 29 card «non fattibili». Il conto non
+     dipende dal momento scelto, solo dalla cucina. */
+  const recommend = useRecommend();
+  const kitchenKey = JSON.stringify({ ...constraints, available_hours: 0, meal_deadline: true });
+  const slotsWithoutStyle = useMemo(
+    () => hideTimeSlots ? new Set<string>() : slotsWithoutFeasibleStyle(JSON.parse(kitchenKey) as UserConstraints, dynamicSlots, recommend),
+    [hideTimeSlots, kitchenKey, dynamicSlots, recommend],
+  );
+  /* S05-A-13: il primo orario possibile per «Scegli giorno e ora», calcolato
+     solo quando serve (alla conferma). */
+  const earliestMeal = React.useCallback(
+    () => earliestFeasibleMeal(JSON.parse(kitchenKey) as UserConstraints, new Date(), recommend),
+    [kitchenKey, recommend],
+  );
   /* Label della tempistica scelta — alimenta il chip "Quando" nella barra. */
   const selectedTimeLabel = useMemo(() => {
     if (!selectedTimeSlot) return null;
@@ -921,6 +938,8 @@ export function UserNeeds({
                     customTimeSlot={customTimeSlot}
                     cms={cms}
                     compact
+                    slotsWithoutStyle={slotsWithoutStyle}
+                    earliestMeal={earliestMeal}
                   />
                 </motion.div>
               )}
@@ -942,6 +961,8 @@ export function UserNeeds({
                   onTimeSlotChange={onTimeSlotChange}
                   customTimeSlot={customTimeSlot}
                   cms={cms}
+                  slotsWithoutStyle={slotsWithoutStyle}
+                  earliestMeal={earliestMeal}
                 />
               </div>
               <InlineTip>
@@ -963,7 +984,12 @@ function TimeSlotPicker({
   customTimeSlot,
   cms,
   compact = false,
+  slotsWithoutStyle,
+  earliestMeal,
 }: {
+  /** FW-09: slot in cui nessuno stile sta nei tempi. */
+  slotsWithoutStyle: ReadonlySet<string>;
+  earliestMeal: () => EarliestFeasibleMeal | null;
   slots: TimeSlot[];
   suggestedSlot: string;
   selectedTimeSlot: string | null;
@@ -1022,6 +1048,9 @@ function TimeSlotPicker({
                   >
                     {displaySublabel}
                   </span>
+                  {slotsWithoutStyle.has(slot.id) && (
+                    <span className="type-body-xs needs-slot__none">{uiMessage("ui.slotNoneFeasible")}</span>
+                  )}
                 </div>
               </div>
 
@@ -1106,6 +1135,9 @@ function TimeSlotPicker({
                 >
                   {displaySublabel}
                 </span>
+                {slotsWithoutStyle.has(slot.id) && (
+                  <span className="type-body-xs needs-slot__none">{uiMessage("ui.slotNoneFeasible")}</span>
+                )}
               </div>
 
               {active && (
@@ -1128,6 +1160,7 @@ function TimeSlotPicker({
         onSelect={onTimeSlotChange}
         cms={cms}
         bcp47={bcp47}
+        earliestMeal={earliestMeal}
       />
     </div>
   );

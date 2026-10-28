@@ -719,6 +719,12 @@ interface CmsPages {
   searchNoResults: string;
   searchHint: string;
   searchSuggestions: string;
+  /** FW-09: «Cerca una ricetta» nelle pagine «non trovato». */
+  notFoundSearch: string;
+  /** FW-09: parole vuote della ricerca, separate da spazi. */
+  searchStopwords: string;
+  /** FW-09: sinonimi della ricerca, un gruppo per riga, espressioni separate da «;». */
+  searchSynonyms: string;
   // Search flour categories
   searchFlourWheat: string;
   searchFlourManitoba: string;
@@ -1208,6 +1214,14 @@ export interface CmsContent {
     relatedLabel: string;
     backToHome: string;
     termCount: string;
+    /** FW-09 */
+    termCountOne: string;
+    emptyCategory: string;
+    emptyInCategory: string;
+    emptyReason: string;
+    showAllCategories: string;
+    cancelSearchLong: string;
+    searchEverywhere: string;
     catRheology: string;
     catRheologyDesc: string;
     catFermentation: string;
@@ -2040,7 +2054,7 @@ export const CMS_DEFAULTS: CmsContent = {
     pageTitle: "Glossario tecnico",
     searchPlaceholder: "Cerca termine, simbolo o definizione...",
     cancelSearch: "Cancella",
-    noResults: "Nessun termine trovato per \"{query}\"",
+    noResults: "Nessun termine per «{query}»",
     allCategories: "Tutti",
     formulaLabel: "Formula",
     rangesLabel: "Range tipici",
@@ -2048,6 +2062,14 @@ export const CMS_DEFAULTS: CmsContent = {
     relatedLabel: "Correlati",
     backToHome: "Torna alla home",
     termCount: "{count} termini",
+    // FW-09
+    termCountOne: "{count} termine",
+    emptyCategory: "Nessun termine in questa categoria",
+    emptyInCategory: "In questa categoria no, ma in altre categorie ci sono {count} risultati.",
+    emptyReason: "Nessun termine contiene queste parole. Prova con un'altra parola o cerca in tutta l'app: problemi, stili e guide.",
+    showAllCategories: "Cerca in tutte le categorie",
+    cancelSearchLong: "Cancella la ricerca",
+    searchEverywhere: "Cerca in tutta l'app",
     catRheology: "Reologia",
     catRheologyDesc: "Propriet\u00E0 meccaniche della farina e dell\u2019impasto",
     catFermentation: "Fermentazione",
@@ -2475,7 +2497,7 @@ export const CMS_DEFAULTS: CmsContent = {
     savedRecipesTitle: "Le tue ricette salvate",
     savedRecipesSubtitle: "Le versioni che vuoi preparare di nuovo.",
     savedRecipesEmptyTitle: "Nessuna ricetta salvata",
-    savedRecipesEmptyBody: "Conserva qui le versioni che vuoi rifare.",
+    savedRecipesEmptyBody: "Nella ricetta tocca il segnalibro per salvarla qui. Puoi darle un nome, per esempio «Sabato con biga».",
     savedRecipesEmptyCta: "Crea una ricetta",
     savedRecipeRemove: "Rimuovi dal ricettario",
     savedRecipeRemoveAria: "Rimuovi {name} dal ricettario",
@@ -2679,17 +2701,21 @@ export const CMS_DEFAULTS: CmsContent = {
     recipeStyleNotFoundDesc: "Non troviamo lo stile “{id}”. Puoi sceglierne un altro dal catalogo.",
     recipeExploreStyles: "Esplora stili",
     notFoundTitle: "Pagina non trovata",
-    notFoundSubtitle: "Il link potrebbe essere cambiato. Riparti da Scopri.",
+    notFoundSubtitle: "Il link potrebbe essere cambiato o la ricetta avere un nuovo nome. Cercala o riparti da Scopri.",
     notFoundBack: "Vai a Scopri",
-    searchPlaceholder: "Cerca stile, farina, termine, problema…",
+    searchPlaceholder: "Cerca stile, ricetta, condimento, farina, termine, problema…",
     searchCatStyles: "Stili",
     searchCatFlours: "Farine",
     searchCatGlossary: "Glossario",
     searchCatProblems: "Problemi",
     searchCatGuides: "Guide",
-    searchNoResults: "Nessun risultato per \"{query}\"",
-    searchHint: "Digita per cercare tra stili, farine, glossario e problemi",
+    searchNoResults: "Nessun risultato per «{query}»",
+    searchHint: "Cerca tra stili, ricette, condimenti, farine, glossario, guide e problemi. Puoi scrivere come parli: «pizza bruciata sotto», «lievito di birra».",
     searchSuggestions: "Suggerimenti",
+    // FW-09
+    notFoundSearch: "Cerca una ricetta",
+    searchStopwords: "di da del dello della dei degli delle il lo la i gli le un uno una e ed o per con su in al allo alla ai agli alle nel nello nella mi mia pizza",
+    searchSynonyms: "lievito di birra; saccharomyces; lievito compresso; lievito fresco\nceliachia; celiaco; celiaca; celiaci; senza glutine; glutine\nforno di casa; forno casa; forno domestico; forno casalingo\npinza; pinsa\nnon lievita; nessuna lievitazione; non cresce\nbruciata sotto; bruciato sotto; fondo scuro\nattacca; appiccicoso; appiccica\nacidita; acido; acida\nlievito madre; pasta madre; licoli; criscito\nforno a legna; legna",
     searchFlourWheat: "Grano tenero",
     searchFlourManitoba: "Manitoba",
     searchFlourSemola: "Semola",
@@ -3463,6 +3489,9 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "glossary.relatedLabel", label: "Correlati", type: "text" },
       { path: "glossary.backToHome", label: "Torna alla home", type: "text" },
       { path: "glossary.termCount", label: "Conteggio termini ({count})", type: "text" },
+      { path: "glossary.termCountOne", label: "Conteggio, un termine ({count})", type: "text" },
+      { path: "glossary.emptyReason", label: "Nessun risultato: motivo", type: "textarea" },
+      { path: "glossary.emptyInCategory", label: "Nessun risultato nella categoria ({count} altrove)", type: "text" },
       { path: "glossary.catRheology", label: "Categoria: Reologia", type: "text" },
       { path: "glossary.catRheologyDesc", label: "Desc: Reologia", type: "text" },
       { path: "glossary.catFermentation", label: "Categoria: Fermentazione", type: "text" },

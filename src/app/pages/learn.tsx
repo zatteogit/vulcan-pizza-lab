@@ -12,7 +12,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router";
-import { Heading } from "../components/ds/index";
+import { CtaButton, Heading } from "../components/ds/index";
+import { blockerText, primaryBlocker } from "../features/recipe/blocker-text";
 import { useCms } from "../features/cms/cms-context";
 import { STYLES_DB, SKILL_LEVELS, type SkillLevel } from "../domain/pizza-engine";
 import {
@@ -93,6 +94,22 @@ export function LearnPage() {
     : learningStyleForKitchen(PATH_STYLE_IDS[skill], constraints, STYLES_DB), [activeStyle, constraints, skill]);
   const theoretical = !practicalStyle;
   const fallbackPath = practicalStyle && practicalStyle.id !== PATH_STYLE_IDS[skill];
+  /* FW-09 (S11-A-07, S11-B-04, S11-B-09): quando la proposta cambia o manca,
+     si dice perché, con il primo blocco del verdetto dello stile preferito. */
+  const preferredStyle = activeStyle ?? STYLES_DB[PATH_STYLE_IDS[skill]];
+  const preferredBlocker = useMemo(
+    () => (theoretical || fallbackPath) && preferredStyle
+      ? primaryBlocker(tailoredRecipeEntry(preferredStyle, constraints).recipe.verdict)
+      : null,
+    [theoretical, fallbackPath, preferredStyle, constraints],
+  );
+  const glutenOnly = preferredBlocker?.kind === "dietary_conflict" && preferredBlocker.filter_id === "allergen:gluten";
+  const blockerReason = preferredBlocker && preferredStyle
+    ? glutenOnly
+      ? uiMessage("pages.learn.glutenNone")
+      : uiMessage("pages.learn.blockerLead", [preferredStyle.name, blockerText(preferredBlocker, cms, bcp47)])
+    : null;
+  const allergenBlocked = preferredBlocker?.kind === "dietary_conflict";
   const path = activeStyle
     ? { title: activeStyle.name, copy: activeStyle.description, styleId: activeStyle.id }
     : theoretical
@@ -100,9 +117,14 @@ export function LearnPage() {
       : fallbackPath
         ? { title: practicalStyle.name, copy: engineMsgTexts([{key:"learn.compatiblePath",fallback:"Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta."}],cms,bcp47)[0], styleId: practicalStyle.id }
         : localizedPaths[skill];
-  if (theoretical) path.copy = engineMsgTexts([{key:"learn.theoryOnly",fallback:"Con i vincoli attivi non c'è una ricetta verificata da proporti. Puoi approfondire le tecniche nella teoria."}],cms,bcp47)[0];
+  if (theoretical) path.copy = blockerReason ?? engineMsgTexts([{key:"learn.theoryOnly",fallback:"Con i vincoli attivi non c'è una ricetta verificata da proporti. Puoi approfondire le tecniche nella teoria."}],cms,bcp47)[0];
+  else if (fallbackPath && blockerReason && practicalStyle && !activeStyle) {
+    path.copy = uiMessage("pages.learn.fallbackReason", [blockerReason, practicalStyle.name]);
+  }
   const skillName = SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
-  const pathContextLabel = activeStyle
+  const pathContextLabel = theoretical || fallbackPath
+    ? uiMessage("pages.learn.contextProfile")
+    : activeStyle
     ? uiMessage("pages.learn.contextByStyle", [pg.learnPathLabel, activeStyle.name])
     : hasChosenSkill()
       ? uiMessage("pages.learn.contextByLevel", [skillName])
@@ -222,6 +244,21 @@ export function LearnPage() {
               </div>
             </div>
           </Link>
+          {(theoretical || fallbackPath) && (
+            <p className="learn-path__actions">
+              <CtaButton as={Link} to="/profile" variant="secondary" radius="lg" elevated={false} className="learn-path__action">
+                {uiMessage("pages.learn.changeConstraints")}
+              </CtaButton>
+              <CtaButton as={Link} to="/explore" variant="secondary" radius="lg" elevated={false} className="learn-path__action">
+                {uiMessage("pages.learn.compatibleStyles")}
+              </CtaButton>
+              {theoretical && preferredStyle && !allergenBlocked && (
+                <CtaButton as={Link} to={`/recipe/${preferredStyle.id}?mode=canonical`} variant="secondary" radius="lg" elevated={false} className="learn-path__action">
+                  {uiMessage("pages.learn.seeReference", [preferredStyle.name])}
+                </CtaButton>
+              )}
+            </p>
+          )}
         </motion.section>
 
         {/* ══════════════════════════════════════════════════════════

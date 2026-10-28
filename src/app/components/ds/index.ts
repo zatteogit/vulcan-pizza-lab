@@ -59,4 +59,7 @@ export { BottomSheet } from "./BottomSheet";
 export type { BottomSheetProps } from "./BottomSheet";
 export { Carousel } from "./Carousel";
 export type { CarouselProps } from "./Carousel";
+// FW-09: stati vuoti con motivo e via d'uscita.
+export { EmptyState } from "./EmptyState";
+export type { EmptyStateAction, EmptyStateProps } from "./EmptyState";
 

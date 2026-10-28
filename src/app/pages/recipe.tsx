@@ -10,17 +10,15 @@ import { scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 
 import {
 Bookmark,
-ChevronLeft,
 Sparkles,
 } from "lucide-react";
-import { motion } from "motion/react";
 import {
 useCallback,
 useEffect,
 useMemo,
 useState,
 } from "react";
-import { Link,useLocation,useNavigate,useParams,useSearchParams } from "react-router";
+import { useLocation,useNavigate,useParams,useSearchParams } from "react-router";
 import { useCms,type CmsContent } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { loadProfileDefaults, profileEquipment } from "../hooks/use-profile-defaults";
@@ -67,8 +65,8 @@ import { RecipeView } from "../features/recipe/recipe-view";
 import { decodePan, encodePan } from "../features/recipe/pan-url";
 import { decodePreFermentChoice, writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { STYLE_PHOTOS } from "../features/recipe/recommended-styles";
-import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
-import { motionSpring } from "../components/ds/motion";
+import { ConfirmDialog } from "../components/ds/index";
+import { NotFoundState } from "../components/shared/not-found-state";
 import {
 getDefaultVersion,
 getVersionById,
@@ -1154,31 +1152,12 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
   const location = useLocation();
   const exploreBackTo = readExploreBackTo(location.state);
   return (
-    <main id="main-content" className="recipe-page__notfound">
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={motionSpring.standard}
-        className="recipe-page__notfound-inner"
-      >
-        <Heading level="page">
-          {cms.pages.recipeStyleNotFound}
-        </Heading>
-        <p className="recipe-page__notfound-sub">
-          {cms.pages.recipeStyleNotFoundDesc.replace(
-            "{id}",
-            styleId || "?",
-          )}
-        </p>
-        <CtaButton
-          as={Link}
-          to={exploreBackTo}
-          className="recipe-page__notfound-cta"
-        >
-          <ChevronLeft size={16} />
-          {cms.pages.recipeExploreStyles}
-        </CtaButton>
-      </motion.div>
-    </main>
+    <NotFoundState
+      title={cms.pages.recipeStyleNotFound}
+      subtitle={cms.pages.recipeStyleNotFoundDesc.replace("{id}", styleId || "?")}
+      backTo={exploreBackTo}
+      backLabel={cms.pages.recipeExploreStyles}
+      searchLabel={cms.pages.notFoundSearch}
+    />
   );
 }

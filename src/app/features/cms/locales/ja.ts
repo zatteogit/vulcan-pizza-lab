@@ -712,8 +712,7 @@ export const JA_LOCALE: CmsContent = {
     searchPlaceholder:
       "\u7528\u8A9E\u3001\u8A18\u53F7\u3001\u5B9A\u7FA9\u3092\u691C\u7D22...",
     cancelSearch: "\u30AF\u30EA\u30A2",
-    noResults:
-      "\u300C{query}\u300D\u306B\u4E00\u81F4\u3059\u308B\u7528\u8A9E\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093",
+    noResults: "「{query}」の用語はありません",
     allCategories: "\u3059\u3079\u3066",
     formulaLabel: "\u5F0F",
     rangesLabel: "\u4EE3\u8868\u7684\u306A\u7BC4\u56F2",
@@ -721,6 +720,14 @@ export const JA_LOCALE: CmsContent = {
     relatedLabel: "\u95A2\u9023",
     backToHome: "\u30DB\u30FC\u30E0\u306B\u623B\u308B",
     termCount: "{count}\u7528\u8A9E",
+    // FW-09
+    termCountOne: "{count}用語",
+    emptyCategory: "このカテゴリーに用語はありません",
+    emptyInCategory: "このカテゴリーにはありませんが、ほかのカテゴリーに{count}件あります。",
+    emptyReason: "この言葉を含む用語はありません。別の言葉で試すか、アプリ全体（トラブル、スタイル、ガイド）を検索してください。",
+    showAllCategories: "すべてのカテゴリーで検索",
+    cancelSearchLong: "検索をクリア",
+    searchEverywhere: "アプリ全体を検索",
     catRheology: "\u30EC\u30AA\u30ED\u30B8\u30FC",
     catRheologyDesc:
       "\u5C0F\u9EA6\u7C89\u3068\u751F\u5730\u306E\u6A5F\u68B0\u7684\u7279\u6027",
@@ -1417,7 +1424,7 @@ export const JA_LOCALE: CmsContent = {
     savedRecipesTitle: "保存したレシピ",
     savedRecipesSubtitle: "もう一度作りたいレシピをまとめておけます。",
     savedRecipesEmptyTitle: "保存したレシピはまだありません",
-    savedRecipesEmptyBody: "また作りたいレシピを、ここに保存できます。",
+    savedRecipesEmptyBody: "レシピでしおりをタップすると、ここに保存されます。「土曜日のビガ」のように名前も付けられます。",
     savedRecipesEmptyCta: "レシピを作成",
     savedRecipeRemove: "レシピ帳から削除",
     savedRecipeRemoveAria: "{name}をレシピ帳から削除",
@@ -1692,21 +1699,21 @@ export const JA_LOCALE: CmsContent = {
       "\u30B9\u30BF\u30A4\u30EB\u3092\u63A2\u7D22",
     notFoundTitle:
       "\u30DA\u30FC\u30B8\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093",
-    notFoundSubtitle:
-      "リンクが変わった可能性があります。「見つける」から探してください。",
+    notFoundSubtitle: "リンクが変わったか、レシピの名前が変わった可能性があります。検索するか、「見つける」からやり直してください。",
     notFoundBack: "「見つける」へ",
-    searchPlaceholder:
-      "\u30B9\u30BF\u30A4\u30EB\u3001\u5C0F\u9EA6\u7C89\u3001\u7528\u8A9E\u3001\u554F\u984C\u3092\u691C\u7D22\u2026",
+    searchPlaceholder: "スタイル、レシピ、トッピング、粉、用語、トラブルを検索…",
     searchCatStyles: "\u30B9\u30BF\u30A4\u30EB",
     searchCatFlours: "\u5C0F\u9EA6\u7C89",
     searchCatGlossary: "\u7528\u8A9E\u96C6",
     searchCatProblems: "\u554F\u984C",
     searchCatGuides: "\u30AC\u30A4\u30C9",
-    searchNoResults:
-      "\u300C{query}\u300D\u306E\u691C\u7D22\u7D50\u679C\u306F\u3042\u308A\u307E\u305B\u3093",
-    searchHint:
-      "\u30B9\u30BF\u30A4\u30EB\u3001\u5C0F\u9EA6\u7C89\u3001\u7528\u8A9E\u96C6\u3001\u554F\u984C\u3092\u691C\u7D22",
+    searchNoResults: "「{query}」の結果はありません",
+    searchHint: "スタイル、レシピ、トッピング、粉、用語集、ガイド、トラブルを検索できます。話すように入力できます：「底が焦げた」「生イースト」。",
     searchSuggestions: "\u5019\u88DC",
+    // FW-09
+    notFoundSearch: "レシピを検索",
+    searchStopwords: "",
+    searchSynonyms: "パン酵母; 生イースト; イースト; サッカロミセス\nセリアック病; グルテンフリー; グルテン\n家庭用オーブン; 家のオーブン; 自宅のオーブン\n膨らまない; 発酵しない\n底が焦げた; 底が黒い\nべたつく; くっつく\nサワードウ; 天然酵母; ルヴァン\n薪窯; 薪",
     searchFlourWheat: "\u8584\u529B\u7C89",
     searchFlourManitoba: "\u30DE\u30CB\u30C8\u30D0",
     searchFlourSemola: "\u30BB\u30E2\u30EA\u30CA",

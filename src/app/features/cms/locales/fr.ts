@@ -652,8 +652,7 @@ export const FR_LOCALE: CmsContent = {
     searchPlaceholder:
       "Rechercher terme, symbole ou d\u00E9finition...",
     cancelSearch: "Effacer",
-    noResults:
-      "Aucun terme trouv\u00E9 pour \u00AB{query}\u00BB",
+    noResults: "Aucun terme pour « {query} »",
     allCategories: "Tous",
     formulaLabel: "Formule",
     rangesLabel: "Plages typiques",
@@ -661,6 +660,14 @@ export const FR_LOCALE: CmsContent = {
     relatedLabel: "Apparent\u00E9s",
     backToHome: "Retour \u00E0 l\u2019accueil",
     termCount: "{count} termes",
+    // FW-09
+    termCountOne: "{count} terme",
+    emptyCategory: "Aucun terme dans cette catégorie",
+    emptyInCategory: "Pas dans cette catégorie, mais il y a {count} résultats dans d'autres catégories.",
+    emptyReason: "Aucun terme ne contient ces mots. Essaie un autre mot ou cherche dans toute l'app : problèmes, styles et guides.",
+    showAllCategories: "Chercher dans toutes les catégories",
+    cancelSearchLong: "Effacer la recherche",
+    searchEverywhere: "Chercher dans toute l'app",
     catRheology: "Rh\u00E9ologie",
     catRheologyDesc:
       "Propri\u00E9t\u00E9s m\u00E9caniques de la farine et de la p\u00E2te",
@@ -1354,7 +1361,7 @@ export const FR_LOCALE: CmsContent = {
     savedRecipesTitle: "Vos recettes enregistrées",
     savedRecipesSubtitle: "Les versions que vous voulez préparer à nouveau.",
     savedRecipesEmptyTitle: "Aucune recette enregistrée",
-    savedRecipesEmptyBody: "Gardez ici les versions que vous voulez refaire.",
+    savedRecipesEmptyBody: "Dans une recette, touche le signet pour l'enregistrer ici. Tu peux lui donner un nom, par exemple « Samedi avec biga ».",
     savedRecipesEmptyCta: "Créer une recette",
     savedRecipeRemove: "Retirer du carnet",
     savedRecipeRemoveAria: "Retirer {name} du carnet",
@@ -1585,21 +1592,21 @@ export const FR_LOCALE: CmsContent = {
       "Le style « {id} » est introuvable. Choisissez-en un autre dans le catalogue.",
     recipeExploreStyles: "Explorer les styles",
     notFoundTitle: "Page introuvable",
-    notFoundSubtitle:
-      "Le lien a peut-être changé. Repartez de Découvrir.",
+    notFoundSubtitle: "Le lien a peut-être changé ou la recette a un nouveau nom. Cherche-la ou repars de Découvrir.",
     notFoundBack: "Aller à Découvrir",
-    searchPlaceholder:
-      "Rechercher style, farine, terme, probl\u00E8me\u2026",
+    searchPlaceholder: "Chercher style, recette, garniture, farine, terme, problème…",
     searchCatStyles: "Styles",
     searchCatFlours: "Farines",
     searchCatGlossary: "Glossaire",
     searchCatProblems: "Probl\u00E8mes",
     searchCatGuides: "Guides",
-    searchNoResults:
-      "Aucun r\u00E9sultat pour \u00AB {query} \u00BB",
-    searchHint:
-      "Tapez pour rechercher styles, farines, glossaire et probl\u00E8mes",
+    searchNoResults: "Aucun résultat pour « {query} »",
+    searchHint: "Cherche parmi styles, recettes, garnitures, farines, glossaire, guides et problèmes. Tu peux écrire comme tu parles : « brûlée dessous », « levure de boulanger ».",
     searchSuggestions: "Suggestions",
+    // FW-09
+    notFoundSearch: "Chercher une recette",
+    searchStopwords: "le la les l un une des de du d et ou pour avec sur dans au aux en ma mon mes pizza",
+    searchSynonyms: "levure de boulanger; levure fraîche; saccharomyces; levure\nmaladie cœliaque; coeliaque; cœliaque; sans gluten; gluten\nfour de cuisine; four domestique; four maison\nne lève pas; pas de pousse\nbrûlée dessous; dessous brûlé; fond foncé\ncollante; colle; collant\nlevain; levain naturel; levain chef\nfour à bois; bois",
     searchFlourWheat: "Bl\u00E9 tendre",
     searchFlourManitoba: "Manitoba",
     searchFlourSemola: "Semoule",

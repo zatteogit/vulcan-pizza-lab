@@ -2,8 +2,8 @@ import type { LucideIcon } from "lucide-react";
 import { Droplet, Droplets, Wheat } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
-import { useLocation } from "react-router";
-import { Heading } from "../components/ds/index";
+import { Link, useLocation } from "react-router";
+import { CtaButton, Heading } from "../components/ds/index";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import { useCms } from "../features/cms/cms-context";
 import {
@@ -13,6 +13,12 @@ import {
 import { Flask } from "../features/cooking/step-illustrations";
 import { motionDelay,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+
+/* FW-09 (S14-A-09): dalla teoria alla pratica. La Pala romana dichiara diretto,
+ * biga e poolish (process_type), quindi apre la ricetta col prefermento scelto
+ * (link D-043: pf, pft). */
+const TRY_STYLE_ID = "pala_romana";
+const tryLink = (type: "biga" | "poolish") => `/recipe/${TRY_STYLE_ID}?mode=adapted&pf=1&pft=${type}`;
 
 const PRE_FERMENT_ORDER = [
   "biga",
@@ -144,6 +150,8 @@ export function PreFermentsPage() {
               when={pg.preFermentsBigaWhen}
               best={pg.preFermentsBigaBest}
               color="var(--primary)"
+              tryHref={tryLink("biga")}
+              tryLabel={uiMessage("pages.preFerments.tryBiga")}
             />
             <DecisionCard
               icon={Droplet}
@@ -151,6 +159,8 @@ export function PreFermentsPage() {
               when={pg.preFermentsPoolishWhen}
               best={pg.preFermentsPoolishBest}
               color="var(--cta)"
+              tryHref={tryLink("poolish")}
+              tryLabel={uiMessage("pages.preFerments.tryPoolish")}
             />
             <DecisionCard
               icon={Droplets}
@@ -173,12 +183,16 @@ function DecisionCard({
   when,
   best,
   color,
+  tryHref,
+  tryLabel,
 }: {
   icon: LucideIcon;
   title: string;
   when: string;
   best: string;
   color: string;
+  tryHref?: string;
+  tryLabel?: string;
 }) {
   return (
     <div
@@ -199,6 +213,11 @@ function DecisionCard({
       <div className="preferment-decision__best">
         {uiMessage("pages.pre-ferments.ideale-per-0aebda24")}{best}
       </div>
+      {tryHref && tryLabel && (
+        <CtaButton as={Link} to={tryHref} variant="secondary" radius="lg" elevated={false} className="preferment-decision__try">
+          {tryLabel}
+        </CtaButton>
+      )}
     </div>
   );
 }

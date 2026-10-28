@@ -5,6 +5,7 @@ import {
   Carousel,
   ConfirmDialog,
   CtaButton,
+  EmptyState,
   FilterChip,
   Heading,
   IconButton,
@@ -108,6 +109,27 @@ function RuntimeComponentContractSpec() {
             </Surface>
           ))}
         </Carousel>
+      </section>
+
+      {/* FW-09: stato vuoto con motivo e via d'uscita. */}
+      <section className="surface-card p-5 flex flex-col gap-4" aria-label={showcaseMessage("components.design-system.components-runtime.fw09-empty-state")}>
+        <Heading level="sm">{showcaseMessage("components.design-system.components-runtime.fw09-empty-state")}</Heading>
+        <EmptyState
+          title={showcaseMessage("components.design-system.components-runtime.fw09-empty-title")}
+          reason={showcaseMessage("components.design-system.components-runtime.fw09-empty-reason")}
+          actions={[{ label: showcaseMessage("components.design-system.components-runtime.fw09-empty-action"), onClick: () => setFilter("all") }]}
+          headingLevel={3}
+        />
+        <EmptyState
+          tone="warning"
+          title={showcaseMessage("components.design-system.components-runtime.fw09-empty-title")}
+          reason={showcaseMessage("components.design-system.components-runtime.fw09-empty-reason")}
+          actions={[
+            { label: showcaseMessage("components.design-system.components-runtime.fw09-empty-action"), onClick: () => setFilter("all") },
+            { label: showcaseMessage("components.design-system.components-runtime.annulla-6c3de538"), onClick: () => setFilter("all") },
+          ]}
+          headingLevel={3}
+        />
       </section>
 
       <section className="surface-card p-5 flex flex-col gap-4" aria-label={showcaseMessage("components.design-system.components-runtime.overlay-e-focus-management-f2265657")}>

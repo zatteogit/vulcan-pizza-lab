@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { CalendarClock, Check } from "lucide-react";
+import { AlertCircle, CalendarClock, Check } from "lucide-react";
 import {
   CUSTOM_SLOT_ID,
   CUSTOM_SLOT_MAX_HOURS,
@@ -10,6 +10,8 @@ import {
 import type { CmsContent } from "../cms/cms-context";
 import { CtaButton } from "../../components/ds/index";
 import { timeSlotText } from "./time-slot-text";
+import type { EarliestFeasibleMeal } from "../../domain/feasible-slot";
+import { uiMessage } from "../../i18n/ui-messages";
 
 /* ═══ U-2 — «si cena sabato alle 20» ═══
  * Oltre agli slot fissi (pranzo 12:30, cena 20:00) si sceglie giorno e ora.
@@ -37,7 +39,10 @@ export function CustomTimeSlot({
   onSelect,
   cms,
   bcp47,
+  earliestMeal,
 }: {
+  /** FW-09 (S05-A-13): il primo pasto possibile con questa cucina, dal motore. */
+  earliestMeal?: () => EarliestFeasibleMeal | null;
   /** Lo slot su misura attualmente scelto, se c'è. */
   activeSlot: TimeSlot | null;
   onSelect: (slot: TimeSlot) => void;
@@ -49,24 +54,38 @@ export function CustomTimeSlot({
   const hintId = useId();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
-  const [error, setError] = useState(false);
+  /* FW-09 (S05-A-13): l'errore dice se l'orario è troppo vicino o troppo
+     lontano e propone il primo orario valido, calcolato dal motore. */
+  const [error, setError] = useState<null | { kind: "soon"; fix: TimeSlot | null } | { kind: "far"; until: Date }>(null);
   const active = activeSlot?.id === CUSTOM_SLOT_ID;
   const activeText = active && activeSlot ? timeSlotText(activeSlot, cms, bcp47) : null;
 
   const openForm = () => {
     const now = new Date();
     setValue(toLocalInputValue(activeSlot?.targetAt ? new Date(activeSlot.targetAt) : defaultTarget(now)));
-    setError(false);
+    setError(null);
     setOpen(true);
   };
 
   const confirm = () => {
-    const slot = value ? customMealSlot(new Date(value)) : null;
-    if (!slot) {
-      setError(true);
+    const now = new Date();
+    const target = value ? new Date(value) : null;
+    const slot = target ? customMealSlot(target, now) : null;
+    if (target && !slot && target.getTime() > now.getTime() + CUSTOM_SLOT_MIN_HOURS * HOUR_MS) {
+      setError({ kind: "far", until: new Date(now.getTime() + CUSTOM_SLOT_MAX_HOURS * HOUR_MS) });
+      return;
+    }
+    const earliest = earliestMeal?.() ?? null;
+    if (!slot || (earliest && slot.hours < earliest.hours)) {
+      setError({ kind: "soon", fix: earliest ? customMealSlot(earliest.at, now) : null });
       return;
     }
     setOpen(false);
+    onSelect(slot);
+  };
+  const choose = (slot: TimeSlot) => {
+    setOpen(false);
+    setError(null);
     onSelect(slot);
   };
 
@@ -102,18 +121,23 @@ export function CustomTimeSlot({
             min={min}
             max={max}
             step={900}
-            aria-invalid={error}
+            aria-invalid={error !== null}
             aria-describedby={error ? errorId : hintId}
             onChange={(event) => {
               setValue(event.target.value);
-              setError(false);
+              setError(null);
             }}
             className="needs-custom-slot__input"
           />
           {/* U-10 (F27): il vincolo si legge prima di sbagliare, non solo dopo. */}
           {error ? (
             <p id={errorId} role="alert" className="type-body needs-custom-slot__error">
-              {cms.ui.slotCustomOutOfRange}
+              <AlertCircle size={16} aria-hidden="true" />
+              {error.kind === "far"
+                ? uiMessage("ui.slotCustomTooFar", [error.until.toLocaleString(bcp47, { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })])
+                : error.fix
+                  ? uiMessage("ui.slotCustomTooSoon", [timeSlotText(error.fix, cms, bcp47).label])
+                  : cms.ui.slotCustomOutOfRange}
             </p>
           ) : (
             <p id={hintId} className="type-body needs-custom-slot__hint">
@@ -123,6 +147,11 @@ export function CustomTimeSlot({
           <CtaButton type="button" radius="lg" onClick={confirm} className="needs-custom-slot__confirm">
             {cms.ui.slotCustomConfirm}
           </CtaButton>
+          {error?.kind === "soon" && error.fix && (
+            <CtaButton type="button" radius="lg" variant="secondary" elevated={false} onClick={() => choose(error.fix!)} className="needs-custom-slot__confirm">
+              {uiMessage("ui.slotCustomUse", [timeSlotText(error.fix, cms, bcp47).label])}
+            </CtaButton>
+          )}
         </div>
       )}
     </div>

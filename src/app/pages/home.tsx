@@ -50,7 +50,7 @@ import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 import { useCms } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { t as tpl } from "../features/cms/i18n";
-import { findSavedRecipe, removeRecipe, renameSavedRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
+import { findSavedRecipe, loadSavedRecipes, removeRecipe, renameSavedRecipe, saveRecipe } from "../adapters/browser/saved-recipes-storage";
 import {
   getInterpretationById,
   getInterpretationsForStyle,
@@ -750,6 +750,8 @@ export function HomePage() {
     // savedTick forza il ricalcolo dopo salva/rimuovi (localStorage non è reattivo)
     [selectedStyle, currentSaveParams, savedTick],
   );
+  /* FW-09 (S05-A-16): «Ricette salvate» in Crea solo se ce n'è almeno una. */
+  const savedRecipeCount = useMemo(() => loadSavedRecipes().length, [savedTick, currentStep]);
   const resolvedRecipeName = recipeName ?? normalizeRecipeName(savedEntry?.name) ?? "";
   useEffect(() => {
     if (recipeName === undefined && savedEntry?.name) setRecipeName(normalizeRecipeName(savedEntry.name));
@@ -1200,11 +1202,14 @@ export function HomePage() {
                         {cms.steps.styles.subtitle}
                       </p>
                     </div>
+                    {savedRecipeCount > 0 && (
                     <CtaButton as={Link} to="/profile?tab=recipes" variant="secondary" elevated={false} className="home-saved-recipes">
                       <Bookmark size={18} aria-hidden="true" />
                       <span data-region="label">{uiMessage("pages.profile.ricette-salvate-b5c99ac7")}</span>
+                      <span data-region="count" className="type-numeric">{savedRecipeCount}</span>
                       <ChevronRight size={16} aria-hidden="true" />
                     </CtaButton>
+                    )}
                   </div>
                 </div>
                 {sourceStyle && (
@@ -1220,6 +1225,10 @@ export function HomePage() {
                   onSelectStyle={applySelectStyle}
                   timeSlots={rescueTimeSlots}
                   onSelectTimeSlot={handleTimeSlotChange}
+                  onOpenSettings={(tab) => {
+                    setStyleSettingsPanel(tab);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 />
               </div>
             </div>

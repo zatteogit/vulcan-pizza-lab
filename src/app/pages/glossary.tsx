@@ -8,7 +8,7 @@ import { useEffect,useMemo,useState } from "react";
 import { useLocation } from "react-router";
 import { useCms } from "../features/cms/cms-context";
 import { t } from "../features/cms/i18n";
-import { FilterChip, Surface } from "../components/ds/index";
+import { EmptyState, FilterChip, Surface } from "../components/ds/index";
 import { motionDelay,motionSpring } from "../components/ds/motion";
 import { SubPageHeader } from "../components/shared/sub-page-header";
 import {
@@ -23,9 +23,15 @@ import type {
 import {
   GLOSSARY_CATEGORIES,
   GLOSSARY_TERMS,
+  getLocalizedTerm,
   getTermById,
   getTermsByCategory,
 } from "../data/glossary-data";
+
+/* FW-09 (S12-A-19): accenti e maiuscole non contano («stabilita», «perche»). */
+function foldText(text: string): string {
+  return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
 
 export function GlossaryPage() {
   const location = useLocation();
@@ -68,36 +74,32 @@ export function GlossaryPage() {
     }
   }, [location.hash, cms]);
 
-  const filteredTerms = useMemo(() => {
-    let terms =
-      activeCategory === "all"
-        ? GLOSSARY_TERMS
-        : GLOSSARY_TERMS.filter(
-            (t) => t.category === activeCategory,
-          );
+  /* FW-09 (S12-A-19, S12-B-15): la ricerca guarda i testi della lingua
+     attiva senza badare agli accenti, e i conteggi dei chip la seguono. */
+  const searchedTerms = useMemo(() => {
+    const q = foldText(search.trim());
+    if (!q) return GLOSSARY_TERMS;
+    return GLOSSARY_TERMS.filter((raw) => {
+      const term = getLocalizedTerm(raw, cms);
+      return [term.name, term.definition, term.symbol ?? "", raw.name, raw.id.replace(/_/g, " ")]
+        .some((field) => foldText(field).includes(q));
+    });
+  }, [search, cms]);
 
-    if (search.trim()) {
-      const q = search.toLowerCase().trim();
-      terms = terms.filter(
-        (t) =>
-          t.name.toLowerCase().includes(q) ||
-          t.definition.toLowerCase().includes(q) ||
-          (t.symbol && t.symbol.toLowerCase().includes(q)) ||
-          t.id.includes(q),
-      );
-    }
-    return terms;
-  }, [activeCategory, search]);
+  const filteredTerms = useMemo(
+    () => activeCategory === "all" ? searchedTerms : searchedTerms.filter((t) => t.category === activeCategory),
+    [activeCategory, searchedTerms],
+  );
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {
-      all: GLOSSARY_TERMS.length,
+      all: searchedTerms.length,
     };
-    for (const t of GLOSSARY_TERMS) {
+    for (const t of searchedTerms) {
       counts[t.category] = (counts[t.category] || 0) + 1;
     }
     return counts;
-  }, []);
+  }, [searchedTerms]);
 
   const handleNavigateToTerm = (termId: string) => {
     setExpandedTerm(termId);
@@ -123,7 +125,7 @@ export function GlossaryPage() {
         title={gl.pageTitle}
         meta={
           <span className="glossary-meta">
-            {t(gl.termCount, {
+            {t(filteredTerms.length === 1 ? gl.termCountOne : gl.termCount, {
               count: String(filteredTerms.length),
             })}
           </span>
@@ -145,6 +147,7 @@ export function GlossaryPage() {
             />
             {search && (
               <motion.button
+                type="button"
                 onClick={() => setSearch("")}
                 className="glossary-searchbox__clear"
               >
@@ -213,16 +216,26 @@ export function GlossaryPage() {
         </div>
 
         {/* ── Terms list ── */}
+        {/* FW-09 (S12-A-19, S12-B-15): il motivo e le vie d'uscita. */}
         {filteredTerms.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="glossary-empty"
-          >
-            <p className="glossary-empty__text">
-              {t(gl.noResults, { query: search })}
-            </p>
-          </motion.div>
+          <EmptyState
+            live
+            title={search.trim() ? t(gl.noResults, { query: search.trim() }) : gl.emptyCategory}
+            reason={search.trim() && activeCategory !== "all" && searchedTerms.length > 0
+              ? t(gl.emptyInCategory, { count: String(searchedTerms.length) })
+              : gl.emptyReason}
+            actions={[
+              {
+                label: activeCategory !== "all" && searchedTerms.length > 0 ? gl.showAllCategories : gl.cancelSearchLong,
+                onClick: () => {
+                  if (!(activeCategory !== "all" && searchedTerms.length > 0)) setSearch("");
+                  setActiveCategory("all");
+                },
+              },
+              { label: gl.searchEverywhere, onClick: () => window.dispatchEvent(new Event("vulcan:open-search")) },
+            ]}
+            className="glossary-empty-state"
+          />
         )}
 
         {activeCategory === "all" && !search.trim() ? (
