@@ -787,8 +787,6 @@ export function AppShell() {
           {/* Bottom tab bar — mobile */}
           {showNav && (
             <>
-              {/* Bottom scrim — visually grounds the floating tab bar on mobile */}
-              <div className={`app-shell-scrim${navState.compact && !searchOpen ? " app-shell-scrim--compact" : ""}`} />
               <BottomTabBar
                 activeTab={activeTab}
                 onSearchOpen={openSearch}
