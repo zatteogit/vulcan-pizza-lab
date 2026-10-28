@@ -32,7 +32,7 @@ type SignatureRecipe,
 import { localizeSignatureRecipe } from "../data/inspiration-i18n/localize";
 import { useStylesOverride } from "../context/styles-override-context";
 import { TiltCard } from "../features/recipe/tilt-card";
-import { kitchenCompatibility, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
+import { canonicalRecipe, kitchenCompatibility, scoreWeightsFromCms, styleWithSelectedTopping } from "../features/recipe/kitchen-compatibility";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
 
@@ -239,6 +239,39 @@ export function ExplorePage() {
     return Object.values(db);
   }, [effectiveStyles]);
 
+  /* FW-10 (D-H, S02-A-03): l'anteprima apre con ciò che la tua cucina
+     permette. Prima gli stili fattibili, poi per compatibilità decrescente;
+     a parità resta l'ordine del database. La vista completa non cambia. */
+  const kitchenRank = useMemo(() => {
+    const weights = scoreWeightsFromCms(cms);
+    const rank = (style: PizzaStyle | undefined) => {
+      if (!style) return { blocked: true, now: 0 };
+      try {
+        const recipe = canonicalRecipe(style, profileConstraints, weights);
+        return { blocked: recipe.verdict.outcome === "not_feasible", now: recipe.scores.composite };
+      } catch {
+        return { blocked: true, now: 0 };
+      }
+    };
+    const sortBy = <T,>(items: readonly T[], styleOf: (item: T) => PizzaStyle | undefined) => {
+      const ranked = items.map((item, index) => ({ item, index, ...rank(styleOf(item)) }));
+      ranked.sort((a, b) => Number(a.blocked) - Number(b.blocked) || b.now - a.now || a.index - b.index);
+      return ranked;
+    };
+    const stylesRanked = sortBy(styles, (style) => style);
+    const recipesRanked = sortBy(SIGNATURE_RECIPES, (recipe) => {
+      const base = (effectiveStyles ?? STYLES_DB)[recipe.style_id];
+      return base ? styleWithSelectedTopping(base, recipe.topping_concept_id) : undefined;
+    });
+    const featured = recipesRanked.find((r) => !r.blocked)?.item ?? SIGNATURE_RECIPES[0];
+    return {
+      styles: stylesRanked.slice(0, 4),
+      featured,
+      recipes: recipesRanked.filter((r) => r.item !== featured).slice(0, 4).map((r) => r.item),
+    };
+  }, [styles, effectiveStyles, profileConstraints, cms]);
+  const previewForKitchen = kitchenRank.styles.some((entry) => !entry.blocked);
+
   const filteredStyles = useMemo(() => {
     if (activeFamily === "all") return styles;
     // Filtro non esclusivo: include chi ha activeFamily come primaria O secondaria.
@@ -342,7 +375,7 @@ export function ExplorePage() {
               {/* 1. Hero Card "In primo piano" */}
               {SIGNATURE_RECIPES.length > 0 && (
                 <FeaturedRecipeCard
-                  recipe={SIGNATURE_RECIPES[0]}
+                  recipe={kitchenRank.featured}
                   isNerd={isNerd}
                   exploreBackTo={exploreBackTo}
                 />
@@ -362,7 +395,7 @@ export function ExplorePage() {
                   </button>
                 </div>
                 <div data-region="collection" className="explore-grid--preview">
-                  {SIGNATURE_RECIPES.slice(1, 5).map((recipe, i) => (
+                  {kitchenRank.recipes.map((recipe, i) => (
                     <SignatureRecipeCard
                       key={recipe.id}
                       recipe={recipe}
@@ -370,6 +403,7 @@ export function ExplorePage() {
                       cms={cms}
                       isNerd={isNerd}
                       exploreBackTo={exploreBackTo}
+                      constraints={profileConstraints}
                     />
                   ))}
                 </div>
@@ -379,7 +413,7 @@ export function ExplorePage() {
               <section>
                 <div className="explore-section__head">
                   <Heading level="md" as="h2">
-                    {cms.misc.exploreSectionTraditional}
+                    {previewForKitchen ? uiMessage("explore.forKitchen") : cms.misc.exploreSectionTraditional}
                   </Heading>
                   <button
                     onClick={() => setExploreFilters("styles")}
@@ -389,7 +423,7 @@ export function ExplorePage() {
                   </button>
                 </div>
                 <div data-region="collection" className="explore-grid--preview">
-                  {styles.slice(0, 4).map((style, i) => (
+                  {kitchenRank.styles.map(({ item: style }, i) => (
                     <StyleCatalogCard
                       key={style.id}
                       style={style}
@@ -422,6 +456,7 @@ export function ExplorePage() {
                     cms={cms}
                     isNerd={isNerd}
                     exploreBackTo={exploreBackTo}
+                    constraints={profileConstraints}
                   />
                 ))}
               </div>
@@ -549,14 +584,27 @@ function SignatureRecipeCard({
   cms,
   isNerd,
   exploreBackTo,
+  constraints,
 }: {
   recipe: SignatureRecipe;
   index: number;
   cms: any;
   isNerd?: boolean;
   exploreBackTo: string;
+  constraints: UserConstraints;
 }) {
   const recipe = localizeSignatureRecipe(rawRecipe, cms.inspirationI18n);
+  /* FW-10 (S02-A-07): le ricette iconiche dicono se si possono fare, come gli
+     stili, con il condimento della ricetta. */
+  const baseStyle = STYLES_DB[rawRecipe.style_id];
+  const match = useMemo(() => {
+    if (!baseStyle) return null;
+    try {
+      return kitchenCompatibility(styleWithSelectedTopping(baseStyle, rawRecipe.topping_concept_id), constraints, scoreWeightsFromCms(cms));
+    } catch {
+      return null;
+    }
+  }, [baseStyle, rawRecipe.topping_concept_id, constraints, cms]);
   const photo =
     recipe.photo ||
     cms.media?.stylePhotos?.[recipe.style_id] ||
@@ -602,18 +650,18 @@ function SignatureRecipeCard({
             sizes={IMAGE_SIZES.card}
           />
 
-          {/* Badge autenticità — top right */}
-          {recipe.authenticity_badge && (
-            <div
-              className="explore-card__badge explore-card__badge--auth"
-              title={getAcronymTooltip(recipe.authenticity_badge)}
-            >
-              {signatureBadgeText(recipe.authenticity_badge, cms)}
-            </div>
-          )}
-
           {/* Title + sotto-titolo stile */}
           <figcaption className="explore-card__caption">
+            {/* Badge autenticità: nella didascalia, l'angolo in alto è della
+                compatibilità con la tua cucina (FW-10). */}
+            {recipe.authenticity_badge && (
+              <div
+                className="explore-card__badge explore-card__badge--auth"
+                title={getAcronymTooltip(recipe.authenticity_badge)}
+              >
+                {signatureBadgeText(recipe.authenticity_badge, cms)}
+              </div>
+            )}
             {cardText.context && <div
               className="explore-card__eyebrow"
               title={getAcronymTooltip(cardText.context)}
@@ -629,9 +677,15 @@ function SignatureRecipeCard({
                 {uiMessage("pages.explore.recipeBy", [cardText.author])}
               </div>
             )}
+            {baseStyle && match && <StyleMetaChip style={baseStyle} cms={cms} recipe={match.recipe} context="explore" />}
           </figcaption>
         </figure>
       </Surface>
+          {match && (
+            <div className="explore-card__match">
+              <CompatibilityPill now={match.now} blocked={match.recipe.verdict.outcome === "not_feasible"} />
+            </div>
+          )}
       </TiltCard>
     </motion.article>
   );

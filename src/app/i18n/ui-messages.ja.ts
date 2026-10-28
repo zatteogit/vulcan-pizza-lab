@@ -435,5 +435,13 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "pages.recipe.applyCorrections": "補正を適用",
   "pages.recipe.defaultTopping": "トッピング",
   "pages.recipe.ingredientsUpdated": "{0}：材料を更新しました",
-  "shared.unsavedChanges": "未保存の変更"
+  "shared.unsavedChanges": "未保存の変更",
+  "verdict.whyMore": "理由と必要なもの",
+  "verdict.reviewDiet": "プロフィールの食事フィルターを見直す",
+  "verdict.ovenBlocked": "オーブン性能が不足：{0} · 最低 {1} · 理想 {2}",
+  "verdict.lowerHydration": "加水率を下げる",
+  "verdict.why": "理由",
+  "explore.forKitchen": "あなたのキッチンに合うスタイル",
+  "profile.dietGlutenNote": "「グルテンフリー」を選ぶと、小麦粉を使うレシピは実行不可と表示されます。{brand}には検証済みのグルテンフリーの方法がまだありません。",
+  "profile.dietGlutenWhy": "なぜ？"
 };

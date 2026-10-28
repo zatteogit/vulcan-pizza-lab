@@ -435,5 +435,13 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "pages.recipe.applyCorrections": "Apply the corrections",
   "pages.recipe.defaultTopping": "Topping",
   "pages.recipe.ingredientsUpdated": "{0}: ingredients updated",
-  "shared.unsavedChanges": "Unsaved changes"
+  "shared.unsavedChanges": "Unsaved changes",
+  "verdict.whyMore": "Why, and what it would take",
+  "verdict.reviewDiet": "Review the dietary filters in your profile",
+  "verdict.ovenBlocked": "Oven insufficient: {0} · minimum {1} · ideal {2}",
+  "verdict.lowerHydration": "Lower the hydration",
+  "verdict.why": "Why",
+  "explore.forKitchen": "Suited to your kitchen",
+  "profile.dietGlutenNote": "With “Gluten-free”, recipes with wheat flour show as not feasible: {brand} does not yet have a verified gluten-free method.",
+  "profile.dietGlutenWhy": "Why?"
 };

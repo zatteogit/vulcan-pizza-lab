@@ -1,8 +1,9 @@
 import { ALLERGEN_MESSAGES_IT } from "../../data/allergen-data";
 import type { EngineMsg, GeneratedRecipe } from "../../domain/pizza-engine";
+import { SKILL_WARNING_KEYS } from "../../domain/verdict-summary";
 
 export interface CardSignal {
-  icon: "oven" | "time" | "pan" | "flour" | "check";
+  icon: "oven" | "time" | "pan" | "flour" | "check" | "water";
   tone: "warning" | "error";
   message: EngineMsg;
 }
@@ -28,6 +29,11 @@ export function recipeCardSignals(recipe: GeneratedRecipe, context: "create" | "
   const optionalAllergen=recipe.dietary_warnings?.find(w=>w.message.key==="allergen.optional");
   if (optionalAllergen) add("check", msg("allergen.cardOptional", ALLERGEN_MESSAGES_IT["allergen.cardOptional"], optionalAllergen.message.params));
   else if (recipe.allergens?.avoided.length) add("check", msg("allergen.cardCheck", ALLERGEN_MESSAGES_IT["allergen.cardCheck"]));
+  // FW-10 (S07-A-06): l'impasto troppo idratato per chi comincia viene prima
+  // del metodo e delle condizioni: è ciò che fa fallire la pizza.
+  if (adaptations.some(a => SKILL_WARNING_KEYS.includes(a.key))) {
+    add("water", msg("card.hydrationBeginner", "Impasto difficile per chi inizia"));
+  }
   const method = adaptations.find(a => ["gen.homeBakingMethod", "gen.notCoalOven", "gen.notWoodOven", "feas.ovenSuboptimal"].includes(a.key));
   if (method) {
     const keys: Record<string, [string, string]> = {

@@ -751,6 +751,11 @@ export function RecipeOutput({
       </div>
 
       <div className="recipe-output-ingredients" data-slot="recipe-main">
+        {/* FW-10 (S07-B-05): sotto un esito non fattibile la ricetta più vicina
+            resta consultabile, ma lo dice in testa agli ingredienti. */}
+        {matchSlot && recipe.verdict.outcome === "not_feasible" && (
+          <p className="type-body-sm recipe-output-blocked-note" role="note">{cms.ui.verdictRecipeBelow}</p>
+        )}
         <IngredientsSection
           recipe={recipe}
           constraints={constraints}

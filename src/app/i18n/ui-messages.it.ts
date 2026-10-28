@@ -437,5 +437,13 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "pages.recipe.applyCorrections": "Applica le correzioni",
   "pages.recipe.defaultTopping": "Condimento",
   "pages.recipe.ingredientsUpdated": "{0}: ingredienti aggiornati",
-  "shared.unsavedChanges": "Modifiche non salvate"
+  "shared.unsavedChanges": "Modifiche non salvate",
+  "verdict.whyMore": "Perché e cosa servirebbe",
+  "verdict.reviewDiet": "Rivedi i filtri alimentari nel profilo",
+  "verdict.ovenBlocked": "Forno insufficiente: {0} · minimo {1} · ideale {2}",
+  "verdict.lowerHydration": "Abbassa l’idratazione",
+  "verdict.why": "Perché",
+  "explore.forKitchen": "Adatti alla tua cucina",
+  "profile.dietGlutenNote": "Con «Senza glutine» le ricette con farina di frumento risultano non fattibili: {brand} non ha ancora un metodo senza glutine verificato.",
+  "profile.dietGlutenWhy": "Perché?"
 };

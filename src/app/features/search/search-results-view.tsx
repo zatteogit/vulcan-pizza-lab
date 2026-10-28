@@ -12,7 +12,7 @@ import {
 import { motion, useReducedMotion } from "motion/react";
 import { useMemo, useRef, useState, type KeyboardEvent, type MutableRefObject, type ReactNode } from "react";
 import { Link } from "react-router";
-import { Heading } from "../../components/ds/index";
+import { Badge, Heading } from "../../components/ds/index";
 import { motionSpring } from "../../components/ds/motion";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -24,9 +24,18 @@ import {
   groupResults,
   highlightRanges,
   queryTokens,
+  rankForKitchen,
   searchIndex,
+  styleIdOf,
+  type KitchenFit,
   type ResultType,
 } from "./search-index";
+import { STYLES_DB } from "../../domain/pizza-engine";
+import { useProfileDefaults } from "../../hooks/use-profile-defaults";
+import { canonicalRecipe, scoreWeightsFromCms } from "../recipe/kitchen-compatibility";
+import { recipeCardSignals } from "../recipe/recipe-card-signals";
+import { RecipeMatchIcon } from "../recipe/recipe-match-icon";
+import { engineMsgTexts } from "../recipe/engine-msg-text";
 
 /* ═══ U-5 — risultati della ricerca a tutta pagina ═══
  * Prende il posto della pagina corrente (che resta montata, nascosta) invece
@@ -105,13 +114,37 @@ export function SearchResultsView({
   /** Campo proprio quando il dock non c'è (desktop, pagina ricetta). */
   field?: ReactNode;
 }) {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
   const reduceMotion = useReducedMotion();
+  const { constraints: kitchen } = useProfileDefaults();
   const [filter, setFilter] = useState<Filter>("all");
   const listRef = useRef<HTMLElement>(null);
 
   const index = useMemo(() => buildSearchIndex(cms), [cms]);
-  const all = useMemo(() => searchIndex(index, query), [index, query]);
+  const hits = useMemo(() => searchIndex(index, query), [index, query]);
+  /* FW-10 (S04-A-07): per gli stili trovati, la compatibilità con la cucina
+     del profilo, con la stessa ricetta canonica delle card di Scopri. */
+  const fits = useMemo(() => {
+    const weights = scoreWeightsFromCms(cms);
+    const map = new Map<string, KitchenFit & { signal?: string }>();
+    for (const hit of hits) {
+      const id = styleIdOf(hit);
+      const style = id ? STYLES_DB[id] : undefined;
+      if (!id || !style) continue;
+      try {
+        const recipe = canonicalRecipe(style, kitchen, weights);
+        const blocked = recipe.verdict.outcome === "not_feasible";
+        const signal = blocked ? recipeCardSignals(recipe, "explore")[0] : undefined;
+        map.set(id, {
+          blocked,
+          now: Math.round(recipe.scores.composite),
+          signal: signal ? engineMsgTexts([signal.message], cms, bcp47)[0] : undefined,
+        });
+      } catch { /* senza esito, nessun segnale */ }
+    }
+    return map;
+  }, [hits, kitchen, cms, bcp47]);
+  const all = useMemo(() => rankForKitchen(hits, (id) => fits.get(id)), [hits, fits]);
   const groups = useMemo(() => groupResults(all), [all]);
   const labels = categoryLabels(cms.pages);
   const hasQuery = queryTokens(query).length > 0;
@@ -251,6 +284,20 @@ export function SearchResultsView({
                               <Highlight text={item.subtitle} query={query} />
                             </small>
                           )}
+                          {(() => {
+                            const styleId = styleIdOf(item);
+                            const fit = styleId ? fits.get(styleId) : undefined;
+                            if (!fit) return null;
+                            return (
+                              <Badge tone={fit.blocked ? "error" : fit.now >= 60 ? "success" : "warning"} size="xs" className="search-page__fit">
+                                <RecipeMatchIcon score={fit.now} blocked={fit.blocked} size={12} aria-hidden="true" />
+                                {fit.blocked && fit.signal ? <span data-slot="label">{fit.signal}</span> : <>
+                                  <span className="sr-only">{uiMessage("pages.explore.compatibility", [fit.now])}</span>
+                                  <span data-slot="label" aria-hidden="true">{fit.now}</span>
+                                </>}
+                              </Badge>
+                            );
+                          })()}
                         </span>
                         <CornerDownLeft size={14} aria-hidden="true" className="search-page__enter" />
                       </Link>

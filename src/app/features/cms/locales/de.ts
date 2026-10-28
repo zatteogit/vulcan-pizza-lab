@@ -787,6 +787,8 @@ export const DE_LOCALE: CmsContent = {
     "card.yeastMissing": "Hefe erforderlich",
     "card.toVerify": "Zu prüfen",
     "card.authenticity": "Geringere Authentizität",
+    // FW-10
+    "card.hydrationBeginner": "Schwieriger Teig für Einsteiger",
     "need.blockedOven": "Ofen unzureichend",
     "need.blockedMethod": "Unpassende Methode",
     "need.blockedTime": "Unpassende Zeiten",
@@ -1369,7 +1371,7 @@ export const DE_LOCALE: CmsContent = {
     pantrySubtitle: "Mehle und Hefen, die du zuhause hast",
     pantryStep: "03 — Zutaten",
     dietTitle: "Ernährungspräferenzen",
-    dietSubtitle: "Gib an, was du im Rezept vermeiden möchtest.",
+    dietSubtitle: "Wir warnen dich, wenn ein Rezept etwas enthält, das du meidest.",
     dietStep: "04 — Diät",
     noDietNote: "Keine Ernährungsvorlieben ausgewählt.",
     prefsTitle: "Sprache & Design",

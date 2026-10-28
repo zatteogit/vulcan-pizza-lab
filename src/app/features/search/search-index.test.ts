@@ -7,6 +7,7 @@ import {
   fold,
   groupResults,
   highlightRanges,
+  rankForKitchen,
   searchIndex,
 } from "./search-index";
 
@@ -96,5 +97,25 @@ describe("evidenziazione", () => {
 
   it("niente tratti sotto i due caratteri", () => {
     expect(highlightRanges("Margherita", "m")).toEqual([]);
+  });
+});
+
+describe("FW-10: stili e cucina", () => {
+  it("il sottotitolo non ripete la famiglia, che resta cercabile", () => {
+    const fritta = searchIndex(IT, "fritta").find((r) => r.id === "style-pizza_fritta");
+    expect(fritta?.subtitle).not.toBe("Napoletana");
+    expect(fritta?.subtitle).toMatch(/Napoli/);
+    expect(ids(IT, "napoletana")).toContain("style-pizza_fritta");
+  });
+  it("a parità di pertinenza prima gli stili fattibili; quelli bloccati aprono la versione adattata", () => {
+    const hits = searchIndex(IT, "napoletana");
+    const blocked = new Set(["napoletana_stg"]);
+    const ranked = rankForKitchen(hits, (id) => ({ blocked: blocked.has(id), now: blocked.has(id) ? 25 : 80 }));
+    const stg = ranked.find((r) => r.id === "style-napoletana_stg")!;
+    const sameScore = ranked.filter((r) => r.score === stg.score && r.type === "style");
+    expect(sameScore[sameScore.length - 1].id).toBe("style-napoletana_stg");
+    expect(stg.link).toContain("mode=adapted");
+    expect(ranked.map((r) => r.score)).toEqual([...ranked.map((r) => r.score)].sort((a, b) => b - a));
+    expect(ranked).toHaveLength(hits.length);
   });
 });

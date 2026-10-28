@@ -800,6 +800,8 @@ export const FR_LOCALE: CmsContent = {
     "card.yeastMissing": "Levure nécessaire",
     "card.toVerify": "À vérifier",
     "card.authenticity": "Authenticité réduite",
+    // FW-10
+    "card.hydrationBeginner": "Pâte difficile pour débuter",
     "need.blockedOven": "Four insuffisant",
     "need.blockedMethod": "Procédé incompatible",
     "need.blockedTime": "Durées incompatibles",
@@ -1390,7 +1392,7 @@ export const FR_LOCALE: CmsContent = {
     pantryStep: "03 — Ingrédients",
     dietTitle: "Préférences alimentaires",
     dietSubtitle:
-      "Indiquez ce que vous voulez éviter dans la recette.",
+      "Nous vous prévenons quand une recette contient ce que vous évitez.",
     dietStep: "04 — Régime",
     noDietNote: "Aucune préférence alimentaire sélectionnée.",
     prefsTitle: "Langue et thème",

@@ -7,11 +7,12 @@ import { RecipeChanges } from "./recipe-changes";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { RecipeDietaryAlternatives } from "./recipe-dietary-notice";
 import { canonicalRecipe } from "../../use-cases/recipe-entry";
+import { summarizeVerdict } from "../../domain/verdict-summary";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
-import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle } from "lucide-react";
+import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle, Info } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -112,9 +113,24 @@ export function StyleDetailSheet({
     const texts = engineMsgTexts(rec.reasons, cms, bcp47);
     return texts.map((text, i) => ({ text, dim: reasonDimension(rec.reasons[i].key) }));
   }, [rec, cms, bcp47]);
-  const matchWarnings = React.useMemo(
-    () => engineMsgTexts(rec?.warnings ?? [], cms, bcp47),
-    [rec, cms, bcp47],
+  /* FW-10: avvisi senza le ripetizioni del blocco; le condizioni («Se hai…»)
+     separate dagli avvisi, e assenti quando lo stile non è fattibile. */
+  const matchNotes = React.useMemo(() => {
+    if (!rec) return [];
+    const summary = summarizeVerdict(rec.recipe.verdict);
+    const conditionKeys = new Set(summary.conditions.map((c) => c.message.key));
+    const notes = summary.adaptations.map((m) => ({ msg: m, condition: conditionKeys.has(m.key) || m.key.startsWith("need.") }));
+    const texts = engineMsgTexts(notes.map((n) => n.msg), cms, bcp47);
+    return notes.map((n, i) => ({ text: texts[i], condition: n.condition }));
+  }, [rec, cms, bcp47]);
+  const notFeasible = rec?.tier === "not_feasible";
+  const noteRow = ({ text, condition }: { text: string; condition: boolean }) => (
+    <div key={text} className="style-detail-match__row" data-warning={condition ? undefined : "true"} data-tone={condition ? "muted" : undefined}>
+      <span className="style-detail-match__icon">
+        {condition ? <Info size={13} aria-hidden="true" /> : <AlertTriangle size={13} aria-hidden="true" />}
+      </span>
+      <span className="style-detail-match__text">{text}</span>
+    </div>
   );
   const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "");
   const pt = cms.parametricTips;
@@ -431,18 +447,12 @@ export function StyleDetailSheet({
                 </p>
               )}
               <div className="style-detail-match__list">
-                {rec.tier === "not_feasible" && constraints && (
-                  <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false} />
+                {notFeasible && constraints && (
+                  <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false}
+                    details={matchNotes.length > 0 ? <div className="style-detail-match__list">{matchNotes.map(noteRow)}</div> : undefined} />
                 )}
                 {constraints && <RecipeDietaryAlternatives recipe={rec.recipe} constraints={constraints} onSelect={id => onGenerate(id)} />}
-                {matchWarnings.map((text) => (
-                  <div key={text} className="style-detail-match__row" data-warning="true">
-                    <span className="style-detail-match__icon">
-                      <AlertTriangle size={13} aria-hidden="true" />
-                    </span>
-                    <span className="style-detail-match__text">{text}</span>
-                  </div>
-                ))}
+                {!notFeasible && matchNotes.map(noteRow)}
                 {matchReasons.map((r, i) => {
                   const DimIcon = MATCH_DIMENSION_ICON[r.dim];
                   return (
@@ -461,7 +471,7 @@ export function StyleDetailSheet({
           )}
 
           {rec && <RecipeAllergens report={rec.recipe.allergens} scope="recipe" />}
-          {rec && originalRecipe && (
+          {rec && originalRecipe && !notFeasible && (
             <RecipeChanges from={originalRecipe} to={rec.recipe} mode="included" />
           )}
 

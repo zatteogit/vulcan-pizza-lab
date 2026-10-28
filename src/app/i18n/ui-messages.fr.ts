@@ -435,5 +435,13 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "pages.recipe.applyCorrections": "Appliquer les corrections",
   "pages.recipe.defaultTopping": "Garniture",
   "pages.recipe.ingredientsUpdated": "{0} : ingrédients mis à jour",
-  "shared.unsavedChanges": "Modifications non enregistrées"
+  "shared.unsavedChanges": "Modifications non enregistrées",
+  "verdict.whyMore": "Pourquoi, et ce qu’il faudrait",
+  "verdict.reviewDiet": "Revoir les filtres alimentaires du profil",
+  "verdict.ovenBlocked": "Four insuffisant : {0} · minimum {1} · idéal {2}",
+  "verdict.lowerHydration": "Baisser l’hydratation",
+  "verdict.why": "Pourquoi",
+  "explore.forKitchen": "Adaptés à votre cuisine",
+  "profile.dietGlutenNote": "Avec « Sans gluten », les recettes à la farine de blé apparaissent non réalisables : {brand} n’a pas encore de méthode sans gluten vérifiée.",
+  "profile.dietGlutenWhy": "Pourquoi ?"
 };

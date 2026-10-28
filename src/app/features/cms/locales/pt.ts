@@ -799,6 +799,8 @@ export const PT_LOCALE: CmsContent = {
     "card.yeastMissing": "Precisa de fermento",
     "card.toVerify": "Por verificar",
     "card.authenticity": "Autenticidade reduzida",
+    // FW-10
+    "card.hydrationBeginner": "Massa difícil para iniciantes",
     "need.blockedOven": "Forno insuficiente",
     "need.blockedMethod": "Método incompatível",
     "need.blockedTime": "Tempos incompatíveis",
@@ -1384,7 +1386,7 @@ export const PT_LOCALE: CmsContent = {
     pantrySubtitle: "Farinhas e fermentos que você tem em casa",
     pantryStep: "03 — Ingredientes",
     dietTitle: "Preferências alimentares",
-    dietSubtitle: "Indique o que você quer evitar na receita.",
+    dietSubtitle: "Avisamos quando uma receita contém o que você evita.",
     dietStep: "04 — Dieta",
     noDietNote: "Nenhuma preferência alimentar selecionada.",
     prefsTitle: "Idioma e tema",

@@ -1,6 +1,7 @@
 import { RecipeShare } from "./recipe-share";
 import { useDecorativeMotion, useVisualMotionPreference } from "../../context/visual-quality-context";
 import { RecipeReferenceNote } from "./recipe-reference-note";
+import { RecipeVerdictBadge } from "./recipe-verdict-badge";
 import { recipeDisplayName } from "../../domain/recipe-reference";
 /* ═══ RECIPE VIEW — impianto condiviso scheda ricetta (VPL-081) ═══
  * Unifica la scheda raggiunta da Scopri (/recipe/:id) e quella generata da
@@ -504,6 +505,7 @@ export function RecipeView({
             </motion.div>
 
             <RecipeReferenceNote recipe={recipe} oven={constraints.oven_type} />
+            <RecipeVerdictBadge recipe={recipe} hasMatchSlot={Boolean(matchSlot)} activeTab={activeTab} onTabChange={onTabChange} />
 
             {/* Description + Tags inside the card (rendered only in Ricetta tab) */}
             <AnimatePresence>

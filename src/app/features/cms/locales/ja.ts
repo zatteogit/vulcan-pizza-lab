@@ -852,6 +852,8 @@ export const JA_LOCALE: CmsContent = {
     "card.yeastMissing": "イーストが必要",
     "card.toVerify": "要確認",
     "card.authenticity": "本来のスタイルから変化",
+    // FW-10
+    "card.hydrationBeginner": "初心者には難しい生地",
     "need.blockedOven": "オーブン性能が不足",
     "need.blockedMethod": "対応しない工程",
     "need.blockedTime": "時間条件が不適合",
@@ -1457,7 +1459,7 @@ export const JA_LOCALE: CmsContent = {
     pantryStep: "03 \u2014 \u6750\u6599",
     dietTitle: "\u98DF\u4E8B\u306E\u597D\u307F",
     dietSubtitle:
-      "レシピで避けたいものを指定してください。",
+      "避けたいものがレシピに含まれるとお知らせします。",
     dietStep: "04 \u2014 \u98DF\u4E8B",
     noDietNote: "食事の好みは選択されていません。",
     prefsTitle: "\u8A00\u8A9E\u3068\u30C6\u30FC\u30DE",
