@@ -60,7 +60,7 @@ lo aggiunge qui e, se è tecnico, al glossario.
 | **prefermento** | Biga, poolish e simili; una sola grafia, minuscola in frase | ovunque in italiano | «pre-fermento», «Pre-Fermento», «preimpasto» |
 | **Salva nel ricettario / Rimuovi dal ricettario** | Salvare una ricetta | segnalibro, card, toast, dialog | «preferiti» (sono gli stili preferiti, un'altra cosa), «Salva questa versione» |
 | **Nome del prodotto** | `BRAND.name` da `src/app/config/brand.ts` nei titoli («Scopri · Vulcan»); `BRAND.fullName` solo per `<title>` statico e manifest | titoli delle viste, dialog | nomi scritti a mano |
-| **Nomi dei forni** | Dal catalogo `cms.ovenPresets`, in sentence case («Forno di casa», «Forno a legna»); elenchi in ordine di temperatura massima; temperatura con spazio («250 °C») | profilo, Crea, scheda stile | «Forno Domestico», «Forno a Legna», «250°C» |
+| **Nomi dei forni** | Dal catalogo `cms.ovenPresets`, in sentence case («Forno di casa», «Forno a legna»); elenchi in ordine di temperatura massima; temperatura sempre dal formatter (`fmt.celsius`), mai concatenata a mano | profilo, Crea, scheda stile | «Forno Domestico», «Forno a Legna», «Max » + numero + «°C» |
 | **Livello {n}** | Livello di esperienza 1–4, con i nomi del CMS (1 Principiante, 2 Intermedio, 3 Avanzato, 4 Esperto) | profilo, Crea | «LV1», elenchi locali dei nomi |
 | **Stili di pizza** | La sezione e il filtro degli stili in Scopri; un solo verbo per «vedi tutto» («Vedi tutti/tutte») | Scopri | «Stili tradizionali», «Esplora tutti» |
 | **Tradizioni regionali** | Famiglia degli stili storici non napoletani né romani (D-G, da confermare stile per stile) | Scopri, Crea, MCP | «Contemporanea» per focacce e pizze storiche |

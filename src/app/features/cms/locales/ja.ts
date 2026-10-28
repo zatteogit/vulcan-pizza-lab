@@ -66,7 +66,7 @@ export const JA_LOCALE: CmsContent = {
     recipeNameLabel: "レシピ名",
     recipeNamePlaceholder: "例：マリオのお気に入り",
     recipeNameConfirm: "名前を確定",
-    recipeResetPreset: "元のレシピに戻す",
+    recipeResetPreset: "元に戻す",
 
     recipeOpenCreate: "作成画面で開く",
     createSourceTitle: "{style}から始める",
