@@ -382,7 +382,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "pages.explore.acronym.igp": "地理的表示保護（Indicazione Geografica Protetta）",
   "pages.explore.acronym.stg": "伝統的特産品保証（Specialità Tradizionale Garantita）",
   "pages.explore.allRecipes": "すべて見る（{0}）",
-  "pages.explore.allStyles": "すべて探す（{0}）",
+  "pages.explore.allStyles": "すべて見る（{0}）",
   "pages.explore.compatibility": "あなたのキッチンとの相性: {0}/100",
   "pages.explore.recipeBy": "{0}による",
   "pages.home.applyCorrections": "補正を適用",
@@ -442,5 +442,6 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "recipe.referenceLabel.onYourOven": "あなたのオーブンでの基準",
   "recipe.referenceLabel.disciplinare": "{0} 規定",
   "recipe.referenceLabel.inspired": "{0}に着想を得たレシピ",
-  "recipe.referenceLabel.profile": "{0} プロファイル"
+  "recipe.referenceLabel.profile": "{0} プロファイル",
+  "pages.explore.primaryFamily": "主な系統：{0}"
 };

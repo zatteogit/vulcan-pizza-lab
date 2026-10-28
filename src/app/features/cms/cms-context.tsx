@@ -1652,8 +1652,10 @@ export const CMS_DEFAULTS: CmsContent = {
   families: {
     napoletana:    { name: "Napoletana",    description: "Cornicione pronunciato, centro sottile e cottura ad alta temperatura.", emoji: "\u{1F1EE}\u{1F1F9}" },
     romana:        { name: "Romana",        description: "Dalla tonda sottile e croccante alla pizza alta in teglia.", emoji: "\u{1F3DB}\uFE0F" },
-    americana:     { name: "Americana",     description: "Formati, impasti e tradizioni regionali della pizza negli Stati Uniti.", emoji: "\u{1F5FD}" },
+    americana:     { name: "Americana",     description: "Formati, impasti e tradizioni regionali della pizza nelle Americhe: Stati Uniti e Argentina.", emoji: "\u{1F5FD}" },
     contemporanea: { name: "Contemporanea", description: "Nuove interpretazioni di impasti, consistenze e tecniche.", emoji: "\u{1F52C}" },
+    // FW-14 (D-G): stili storici non napoletani né romani.
+    regionale:     { name: "Tradizioni regionali", description: "Pizze e focacce storiche delle regioni italiane, fuori dalla tradizione napoletana e romana.", emoji: "\u{1F5FA}\uFE0F" },
   },
   allFamiliesLabel: "Tutte le famiglie",
   tiers: {
@@ -3633,6 +3635,9 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "families.contemporanea.name", label: "Contemporanea — Nome", type: "text" },
       { path: "families.contemporanea.description", label: "Contemporanea — Desc", type: "textarea" },
       { path: "families.contemporanea.emoji", label: "Contemporanea — Emoji", type: "text" },
+      { path: "families.regionale.name", label: "Tradizioni regionali — Nome", type: "text" },
+      { path: "families.regionale.description", label: "Tradizioni regionali — Desc", type: "textarea" },
+      { path: "families.regionale.emoji", label: "Tradizioni regionali — Emoji", type: "text" },
       // Tiers
       { path: "tiers.perfect.label", label: "Tier Perfetto — Label", type: "text" },
       { path: "tiers.perfect.subtitle", label: "Tier Perfetto — Sub", type: "text" },

@@ -384,7 +384,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "pages.explore.acronym.igp": "Indicazione Geografica Protetta",
   "pages.explore.acronym.stg": "Specialità Tradizionale Garantita",
   "pages.explore.allRecipes": "Vedi tutte ({0})",
-  "pages.explore.allStyles": "Esplora tutti ({0})",
+  "pages.explore.allStyles": "Vedi tutti ({0})",
   "pages.explore.compatibility": "Compatibilità con la tua cucina: {0}/100",
   "pages.explore.recipeBy": "Secondo {0}",
   "pages.home.applyCorrections": "Applica le correzioni",
@@ -444,5 +444,6 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "recipe.referenceLabel.onYourOven": "Riferimento sul tuo forno",
   "recipe.referenceLabel.disciplinare": "Disciplinare {0}",
   "recipe.referenceLabel.inspired": "Ispirata a {0}",
-  "recipe.referenceLabel.profile": "Profilo {0}"
+  "recipe.referenceLabel.profile": "Profilo {0}",
+  "pages.explore.primaryFamily": "Famiglia principale: {0}"
 };

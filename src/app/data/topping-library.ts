@@ -3660,6 +3660,7 @@ const REPRESENTATIVE_CONCEPT_ORDER_BY_FAMILY: Partial<Record<FamilyId, readonly 
   romana: ["margherita", "marinara", "bianca", "capricciosa", "boscaiola"],
   americana: ["cheese_pizza", "diavola", "supreme", "margherita"],
   contemporanea: ["bianca", "margherita"],
+  regionale: ["bianca", "margherita"], // FW-14: come prima, quando erano «contemporanea»
 };
 
 function conceptOrderIndex(

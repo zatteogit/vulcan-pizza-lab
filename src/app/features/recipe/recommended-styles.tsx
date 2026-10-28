@@ -324,6 +324,7 @@ export function RecommendedStyles({
     { id: "romana", label: cms.families.romana?.name ?? PIZZA_FAMILIES.romana.name },
     { id: "americana", label: cms.families.americana?.name ?? PIZZA_FAMILIES.americana.name },
     { id: "contemporanea", label: cms.families.contemporanea?.name ?? PIZZA_FAMILIES.contemporanea.name },
+    { id: "regionale", label: cms.families.regionale?.name ?? PIZZA_FAMILIES.regionale.name },
   ];
 
   return (

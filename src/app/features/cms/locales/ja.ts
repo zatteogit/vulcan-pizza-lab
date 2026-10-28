@@ -480,7 +480,7 @@ export const JA_LOCALE: CmsContent = {
     americana: {
       name: "\u30A2\u30E1\u30EA\u30AB\u30F3",
       description:
-        "アメリカ各地で育まれた形、生地、ピザの伝統。",
+        "アメリカ大陸（アメリカ合衆国とアルゼンチン）のピッツァの形、生地、地域の伝統。",
       emoji: "\u{1F5FD}",
     },
     contemporanea: {
@@ -488,6 +488,13 @@ export const JA_LOCALE: CmsContent = {
       description:
         "生地、食感、技法を探る新しい解釈。",
       emoji: "\u{1F52C}",
+    },
+    // FW-14 (D-G): stili storici non napoletani né romani.
+    regionale: {
+      name: "地方の伝統",
+      description:
+        "ナポリとローマ以外のイタリア各地に伝わる歴史あるピッツァとフォカッチャ。",
+      emoji: "\u{1F5FA}\uFE0F",
     },
   },
   allFamiliesLabel:

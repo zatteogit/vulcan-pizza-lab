@@ -56,7 +56,8 @@ export type FamilyId =
   | "napoletana"
   | "romana"
   | "americana"
-  | "contemporanea";
+  | "contemporanea"
+  | "regionale";
 
 export interface DoughParameters {
   flour_w_range: [number, number];

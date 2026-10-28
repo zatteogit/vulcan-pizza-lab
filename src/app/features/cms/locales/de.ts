@@ -425,7 +425,7 @@ export const DE_LOCALE: CmsContent = {
     americana: {
       name: "Amerikanisch",
       description:
-        "Pizzaformen, Teige und regionale Traditionen der USA.",
+        "Formen, Teige und regionale Pizzatraditionen in Amerika: USA und Argentinien.",
       emoji: "\u{1F5FD}",
     },
     contemporanea: {
@@ -433,6 +433,13 @@ export const DE_LOCALE: CmsContent = {
       description:
         "Neue Interpretationen von Teigen, Texturen und Techniken.",
       emoji: "\u{1F52C}",
+    },
+    // FW-14 (D-G): stili storici non napoletani né romani.
+    regionale: {
+      name: "Regionale Traditionen",
+      description:
+        "Historische Pizzen und Focacce aus italienischen Regionen jenseits der neapolitanischen und römischen Tradition.",
+      emoji: "\u{1F5FA}\uFE0F",
     },
   },
   allFamiliesLabel: "Alle Familien",

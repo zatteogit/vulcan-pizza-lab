@@ -14,14 +14,15 @@ I dati sono stati estratti direttamente dai database e file di configurazione de
 
 ## 1. Famiglie di Pizze
 
-Gli stili sono raggruppati in **4 famiglie principali** che determinano l'approccio culturale ed i flussi di lavoro:
+Gli stili sono raggruppati in **5 famiglie principali** (FW-14, D-G: «Tradizioni regionali» da confermare da Matteo stile per stile) che determinano l'approccio culturale ed i flussi di lavoro:
 
 | Famiglia | Emoji | Descrizione |
 | :--- | :--- | :--- |
 | **Napoletana** | 🇮🇹 | Leggerezza, lievitazione naturale, stesura a mano e cottura velocissima ad altissima temperatura. |
 | **Romana** | 🏛️ | Dalla croccantezza estrema della Scrocchiarella tonda all'alta idratazione della teglia e della pala. |
-| **Americana** | 🗽 | Adattamenti italo-americani incentrati su praticità, street food, teglie generose e combinazioni ricche. |
+| **Americana** | 🗽 | Adattamenti italo-americani e delle Americhe (anche la Fugazzeta argentina): praticità, street food, teglie generose e combinazioni ricche. |
 | **Contemporanea** | 🔬 | Sperimentazione su digeribilità, farine alternative, altissime idratazioni e tecniche di lievitazione avanzate. |
+| **Tradizioni regionali** | 🗺️ | Pizze e focacce storiche delle regioni italiane fuori dalla tradizione napoletana e romana: Genovese, Recco IGP, Sfincione, Padellino, Ciaccino, Trancio milanese, Barese. |
 
 ---
 
@@ -93,14 +94,14 @@ Di seguito l'elenco ordinato di tutti i **28 stili di pizza** configurati nel mo
 *   **Descrizione**: Impasto ad altissima idratazione, leggerissimo e spumoso, caratterizzato da riposi contiui ed assenza di impastamento meccanico.
 
 ### 10. Focaccia Genovese (`focaccia_genovese`)
-*   **Famiglia**: Contemporanea | **Origine**: Genova, Liguria | **Emoji**: 🥖
+*   **Famiglia**: Tradizioni regionali | **Origine**: Genova, Liguria | **Emoji**: 🥖
 *   **Impasto**: Idratazione `55% - 62%`, farina `W 240 - 280`, sale `2.0%`, olio EVO `6.0%`, malto `1.0%`. Fermentazione `4h - 24h`.
 *   **Cottura**: Teglia oliata. Ideale `230°C` per `22 min` (`1320s`).
 *   **Forma**: Rettangolare o tonda spessa, panetto da `600g`.
 *   **Descrizione**: Focaccia caratteristica con fossette marcate create con le dita unte, in cui si raccoglie la tipica salamoia di acqua, sale e olio EVO.
 
 ### 11. Sfincione Palermitano (`sfincione`)
-*   **Famiglia**: Contemporanea | **Origine**: Palermo, Sicilia | **Emoji**: 🧅
+*   **Famiglia**: Tradizioni regionali | **Origine**: Palermo, Sicilia | **Emoji**: 🧅
 *   **Impasto**: Idratazione `60% - 70%`, farina `W 240 - 280`, sale `2.5%`, olio `3.0%`. Fermentazione `4h - 24h`.
 *   **Cottura**: Teglia oliata. Ideale `220°C` per `23 min` (`1380s`).
 *   **Forma**: Rettangolare spessa, panetto da `500g`.
@@ -121,14 +122,14 @@ Di seguito l'elenco ordinato di tutti i **28 stili di pizza** configurati nel mo
 *   **Descrizione**: Nata nelle case degli immigrati italo-americani. Bassa, rustica, cotta velocemente, con formaggio sul fondo e salsa di pomodoro a cucchiaiate stesa sopra.
 
 ### 14. Focaccia di Recco IGP (`focaccia_recco`)
-*   **Famiglia**: Contemporanea | **Origine**: Recco, Liguria | **Emoji**: 🧀
+*   **Famiglia**: Tradizioni regionali | **Origine**: Recco, Liguria | **Emoji**: 🧀
 *   **Impasto**: Idratazione `45% - 50%`, farina forte `W 300 - 340`, sale `2.0%`, olio EVO `5.0%`. *Niente lievito*. Fermentazione/riposo `1h - 4h` a temp ambiente per distendere il glutine.
 *   **Cottura**: Teglia di rame oliata. Ideale `320°C` per `9 min` (`540s`).
 *   **Forma**: Tonda sottilissima, due dischi da `150g` ciascuno.
 *   **Descrizione**: Focaccia sottilissima, quasi trasparente, farcita all'interno con crescenza/stracchino ligure fondente.
 
 ### 15. Padellino Torinese (`padellino_torino`)
-*   **Famiglia**: Contemporanea | **Origine**: Torino, Piemonte | **Emoji**: 🍳
+*   **Famiglia**: Tradizioni regionali | **Origine**: Torino, Piemonte | **Emoji**: 🍳
 *   **Impasto**: Idratazione `60% - 65%`, farina `W 240 - 280`, sale `2.5%`, olio EVO `2.0%`, zucchero `0.5%`. Fermentazione `6h - 24h`.
 *   **Cottura**: In tegamino/padellino individuale di ferro o alluminio. Ideale `250°C` per `15 min` (`900s`).
 *   **Forma**: Tonda spessa individuale, panetto da `200g` per diametro `18cm`.
@@ -142,7 +143,7 @@ Di seguito l'elenco ordinato di tutti i **28 stili di pizza** configurati nel mo
 *   **Descrizione**: Stile romano da panificio: i due dischi cotti si sdoppiano facilmente grazie alla spennellata di olio centrale, venendo farciti a freddo.
 
 ### 17. Ciaccino Senese (`ciaccino_senese`)
-*   **Famiglia**: Contemporanea | **Origine**: Siena, Toscana | **Emoji**: 🥪
+*   **Famiglia**: Tradizioni regionali | **Origine**: Siena, Toscana | **Emoji**: 🥪
 *   **Impasto**: Idratazione `60% - 65%`, farina `W 220 - 280` (`P/L 0.50 - 0.65`), sale `2.0%`, strutto/olio `5.0%`. Fermentazione `4h - 12h`.
 *   **Cottura**: Teglia chiusa. Ideale `250°C` per `17 min` (`1020s`).
 *   **Forma**: Tonda spessa ripiena, panetto da `700g` (due dischi da `350g` sigillati ai bordi).
@@ -156,7 +157,7 @@ Di seguito l'elenco ordinato di tutti i **28 stili di pizza** configurati nel mo
 *   **Descrizione**: Variante della baciata con patate a velo sulla superficie in cottura e farcitura post-bake di porchetta d'Ariccia IGP.
 
 ### 19. Trancio Milanese (`trancio_milanese`)
-*   **Famiglia**: Contemporanea | **Origine**: Milano, Lombardia | **Emoji**: 🥪
+*   **Famiglia**: Tradizioni regionali | **Origine**: Milano, Lombardia | **Emoji**: 🥪
 *   **Impasto**: Idratazione `65% - 75%`, farina forte `W 280 - 340`, sale `2.2%`, olio `4.0%`, zucchero `0.5%`. Fermentazione `18h - 36h`.
 *   **Cottura**: Cotta in teglia oliata. Ideale `240°C` per `16 min` (`960s`).
 *   **Forma**: Rettangolare spessa, panetto da `600g` per teglia `33x25cm`.
@@ -170,7 +171,7 @@ Di seguito l'elenco ordinato di tutti i **28 stili di pizza** configurati nel mo
 *   **Descrizione**: Pizza sottile e croccante cracker-like tagliata a quadrotti ("party cut"), nata come spuntino nei bar di Chicago.
 
 ### 21. Focaccia Barese (`focaccia_barese`)
-*   **Famiglia**: Contemporanea | **Origine**: Bari, Puglia | **Emoji**: 🫒
+*   **Famiglia**: Tradizioni regionali | **Origine**: Bari, Puglia | **Emoji**: 🫒
 *   **Impasto**: Idratazione `70% - 80%`, farina mix semola rimacinata `W 220 - 280`, sale `2.0%`, olio `4.0%`. Contiene patata lessa nell'impasto. Fermentazione `8h - 24h`.
 *   **Cottura**: In teglia tonda di ferro ("ruoto"). Ideale `240°C` per `22 min` (`1320s`).
 *   **Forma**: Tonda spessa, panetto da `500g` per diametro `32cm`.

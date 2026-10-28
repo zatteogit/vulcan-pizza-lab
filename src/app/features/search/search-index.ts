@@ -1,6 +1,6 @@
 import { FLOURS_DB } from "../../data/flour-database";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../../data/glossary-data";
-import { SIGNATURE_RECIPES } from "../../data/signature-recipes";
+import { SIGNATURE_RECIPES, signatureRecipeLink } from "../../data/signature-recipes";
 import { TOPPING_CONCEPTS, getVariantsForConcept } from "../../data/topping-library";
 import { toppingConcept } from "../../data/topping-i18n/localize";
 import { localizeSignatureRecipe } from "../../data/inspiration-i18n/localize";
@@ -120,7 +120,7 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           type: "recipe",
           title: rec.name,
           subtitle: style?.name ?? "",
-          link: `/recipe/${rec.style_id}?mode=canonical&tab=condimento&topping=${rec.topping_concept_id}`,
+          link: signatureRecipeLink(rec),
           photo: rec.photo || STYLE_PHOTOS[rec.style_id],
         },
         `${rec.description} ${raw.name} ${concept?.name ?? ""} ${(rec.occasion_tags ?? []).join(" ")}`,

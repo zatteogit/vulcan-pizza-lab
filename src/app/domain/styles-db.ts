@@ -26,7 +26,7 @@ export const PIZZA_FAMILIES: Record<
   americana: {
     name: "Americana",
     description:
-      "Formati, impasti e tradizioni regionali della pizza negli Stati Uniti.",
+      "Formati, impasti e tradizioni regionali della pizza nelle Americhe: Stati Uniti e Argentina.",
     emoji: "🗽",
   },
   contemporanea: {
@@ -34,6 +34,14 @@ export const PIZZA_FAMILIES: Record<
     description:
       "Nuove interpretazioni di impasti, consistenze e tecniche.",
     emoji: "🔬",
+  },
+  // FW-14 (D-G, S02-A-04): stili storici non napoletani né romani, prima
+  // classificati come «Contemporanea». Da confermare da Matteo stile per stile.
+  regionale: {
+    name: "Tradizioni regionali",
+    description:
+      "Pizze e focacce storiche delle regioni italiane, fuori dalla tradizione napoletana e romana.",
+    emoji: "🗺️",
   },
 };
 
@@ -466,7 +474,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "focaccia_genovese",
     proof_in_pan: true,
     name: "Focaccia Genovese",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Genova", region: "Liguria", country: "Italia" },
     dough: {
       flour_w_range: [240, 280], // Farina 0 standard ligure W200-250 — era [220,280]
@@ -514,7 +522,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "sfincione",
     proof_in_pan: true,
     name: "Sfincione",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Palermo", region: "Sicilia", country: "Italia" },
     dough: {
       flour_w_range: [240, 280],
@@ -656,7 +664,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   focaccia_recco: {
     id: "focaccia_recco",
     name: "Focaccia di Recco",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Recco", province: "Genova", region: "Liguria", country: "Italia" },
     dough: {
       // C-4 (D-017): disciplinare IGP, CCIAA Genova 2024 (art. 5): «W > 300;
@@ -716,7 +724,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     id: "padellino_torino",
     proof_in_pan: true,
     name: "Pizza al Padellino",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Torino", region: "Piemonte", country: "Italia" },
     dough: {
       flour_w_range: [220, 260], // Farina 0/1 forte — era [280,330]
@@ -823,7 +831,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   ciaccino_senese: {
     id: "ciaccino_senese",
     name: "Ciaccino Senese",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Siena", region: "Toscana", country: "Italia" },
     dough: {
       flour_w_range: [220, 280],
@@ -944,7 +952,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
   trancio_milanese: {
     id: "trancio_milanese",
     name: "Trancio Milanese",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Milano", region: "Lombardia", country: "Italia" },
     dough: {
       flour_w_range: [280, 340], // Farina forte 0/1 — pizzerie Spontini, Cocco, Di Gennaro
@@ -1044,7 +1052,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
     formula_variant: { key: "formula.withoutPotato", fallback: METHOD_MESSAGES_IT["formula.withoutPotato"] },
     proof_in_pan: true,
     name: "Focaccia Barese",
-    family: "contemporanea",
+    family: "regionale",
     origin: { city: "Bari", region: "Puglia", country: "Italia" },
     dough: {
       flour_w_range: [220, 280], // Farina media + semola rimacinata
