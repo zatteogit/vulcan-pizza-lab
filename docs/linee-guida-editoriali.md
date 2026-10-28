@@ -51,6 +51,11 @@ immediatamente utilizzabili.
 - Nessuna caratteristica di stile, chip o descrizione breve promette
   digeribilità o idoneità dietetica: se serve, se ne parla al livello 2 con la
   nota che dice cosa il modello non misura.
+- **Dettagli tecnici** (nel Profilo «Mostra i dettagli tecnici», soprannome
+  **PizzaNerd**, D-056) decide solo quante informazioni si vedono aperte di
+  default; il **livello di esperienza** cambia invece la ricetta proposta (tetto
+  d'idratazione, prefermenti). Non usarli come sinonimi e non scrivere che i
+  dettagli tecnici rendono la ricetta più difficile.
 
 ## Contenuti e traduzioni
 

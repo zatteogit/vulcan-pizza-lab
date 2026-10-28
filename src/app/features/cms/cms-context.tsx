@@ -553,11 +553,6 @@ interface CmsProfile {
   unitMetricDesc: string;
   unitImperial: string;
   unitImperialDesc: string;
-  pizzaNerdTitle: string;
-  pizzaNerdSubtitle: string;
-  pizzaNerdStep: string;
-  pizzaNerdCardTitle: string;
-  pizzaNerdCardDesc: string;
   resetProfile: string;
   resetConfirmMessage: string;
   devModeOn: string;
@@ -2556,11 +2551,6 @@ export const CMS_DEFAULTS: CmsContent = {
     unitMetricDesc: "Grammi, millilitri e gradi Celsius",
     unitImperial: "Imperiale / US",
     unitImperialDesc: "Once, fluid ounces e gradi Fahrenheit",
-    pizzaNerdTitle: "PizzaNerd",
-    pizzaNerdSubtitle: "Controlla quando mostrare dati tecnici avanzati",
-    pizzaNerdStep: "08 — PizzaNerd",
-    pizzaNerdCardTitle: "PizzaNerd",
-    pizzaNerdCardDesc: "Apri anche i dettagli su farina, impasto e calcoli della ricetta.",
     resetProfile: "Riconfigura profilo",
     resetConfirmMessage: "Riaprirai la configurazione iniziale. Le nuove scelte sostituiranno le preferenze attuali.",
     devModeOn: "Modalità sviluppo attiva",
@@ -2569,7 +2559,7 @@ export const CMS_DEFAULTS: CmsContent = {
     ftuOvenTitle: "Che forno hai?",
     ftuOvenSubtitle: "Il forno definisce gli stili possibili",
     ftuSkillTitle: "Quanta esperienza hai?",
-    ftuSkillSubtitle: "Ti guideremo al livello giusto",
+    ftuSkillSubtitle: "Decide quanto è facile l'impasto che ti proponiamo",
     ftuPantryTitle: "Cosa hai in dispensa?",
     ftuPantrySubtitle: "Farine e lieviti disponibili",
     ftuBack: "Indietro",

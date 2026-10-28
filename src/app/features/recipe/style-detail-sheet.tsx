@@ -37,6 +37,7 @@ import { CtaButton, IconButton } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
 import { uiMessage } from "../../i18n/ui-messages";
+import { useDetailLevel } from "../../hooks/use-detail-level";
 
 interface StyleDetailSheetProps {
   style: PizzaStyle;
@@ -128,7 +129,10 @@ export function StyleDetailSheet({
   const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "");
   const pt = cms.parametricTips;
   const prefersReducedMotion = useReducedMotion();
-  const [showNerd, setShowNerd] = useState(false);
+  /* FW-08 (S03-B-11): con «Dettagli tecnici» attivo la scheda si apre già
+     sui dettagli tecnici; il bottone resta per chiuderli o aprirli qui. */
+  const { level: detailLevel } = useDetailLevel();
+  const [showNerd, setShowNerd] = useState(() => detailLevel === "technical");
   const [fav, setFav] = useState(() => isFavoriteStyle(style.id));
 
   const hRange = `${style.dough.hydration_pct_range[0]}–${style.dough.hydration_pct_range[1]}%`;

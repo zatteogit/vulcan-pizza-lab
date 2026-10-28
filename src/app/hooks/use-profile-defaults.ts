@@ -22,7 +22,6 @@ const SKILL_STORAGE_KEY = "vulcan_skill_level";
 const DIETARY_STORAGE_KEY = "vulcan_dietary";
 const EQUIPMENT_STORAGE_KEY = "vulcan_equipment";
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
-const NERD_STORAGE_KEY = "vulcan_nerd_on";
 
 function loadJson<T>(key: string): T | null {
   try {
@@ -35,7 +34,6 @@ function loadJson<T>(key: string): T | null {
 interface ProfileDefaults {
   constraints: UserConstraints;
   isProfileComplete: boolean;
-  pizzaNerdEnabled: boolean;
   /** Summary label: "Forno elettrico 250°C · Intermedio" */
   summaryLabel: string;
 }
@@ -66,11 +64,9 @@ export function loadProfileDefaults(): ProfileDefaults {
   let pantryYeasts: string[] = [];
   let pantryPolicy: Partial<UserConstraints> = {};
   let isProfileComplete = false;
-  let pizzaNerdEnabled = false;
 
   try {
     isProfileComplete = localStorage.getItem(PROFILE_COMPLETE_KEY) === "true";
-    pizzaNerdEnabled = localStorage.getItem(NERD_STORAGE_KEY) === "true";
     const oven = loadJson<{ ovenType?: OvenType; maxTemp?: number }>(OVEN_STORAGE_KEY);
     if (oven) {
       ovenType = oven.ovenType ?? ovenType;
@@ -140,7 +136,7 @@ export function loadProfileDefaults(): ProfileDefaults {
   const skillLabel = SKILL_LABELS[skillLevel] ?? `Skill ${skillLevel}`;
   const summaryLabel = `${ovenLabel} ${ovenTemp}°C · ${skillLabel}`;
 
-  return { constraints, isProfileComplete, pizzaNerdEnabled, summaryLabel };
+  return { constraints, isProfileComplete, summaryLabel };
 }
 
 /* ═══ Audit n. 11 (C-03): il profilo vince sulla bozza per ciò che non si

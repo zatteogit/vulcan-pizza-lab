@@ -67,6 +67,7 @@ import { useStylesOverride } from "../context/styles-override-context";
 import { ContextualWarnings } from "../features/recipe/troubleshooting-panel";
 import { normalizeRecipeName, recipeSourceUrl } from "../data/saved-recipes";
 import { mergeDraftConstraints, useProfileDefaults } from "../hooks/use-profile-defaults";
+import { useDetailLevel } from "../hooks/use-detail-level";
 import {
   defaultRecipePL,
   styleWithSelectedTopping,
@@ -415,7 +416,6 @@ export function HomePage() {
     );
   const [setupPanelOpen, setSetupPanelOpen] = useState(false);
   const [setupNotice, setSetupNotice] = useState<string | null>(null);
-  const [nerdMode, setNerdMode] = useState(false);
 
   /* Redesign lug 2026: niente bozze/parcheggi — all'uscita dal result con
      modifiche non salvate si avvisa e basta. */
@@ -444,7 +444,6 @@ export function HomePage() {
     setConstraints(c => ({...c, oven_max_temp_c: c.oven_capacity_temp_c ?? c.oven_max_temp_c}));
     setSetupPanelOpen(false);
     setSetupNotice(null);
-    setNerdMode(false);
     setStyleSettingsPanel(null);
     window.scrollTo({
       top: 0,
@@ -453,8 +452,9 @@ export function HomePage() {
     setCurrentStep("styles");
   }, []);
 
-  const nerdAvailable = profileDefaults.pizzaNerdEnabled;
-  const effectiveNerdMode = nerdAvailable && nerdMode;
+  /* FW-08: «Dettagli tecnici» è uno stato globale (useDetailLevel): si
+     accende dal Profilo o dall'interruttore nella testata della ricetta. */
+  const effectiveNerdMode = useDetailLevel().level === "technical";
   const [constraints, setConstraints] =
     useState<UserConstraints>(initialCreateDraft.constraints);
   /* ENG-4: i vincoli che vanno al motore. Solo un orario del pasto vero è una
@@ -1277,8 +1277,6 @@ export function HomePage() {
                 setSelectedToppingConcept(conceptId);
               }}
               nerdMode={effectiveNerdMode}
-              nerdAvailable={nerdAvailable}
-              onNerdModeChange={setNerdMode}
               selectedFlourId={selectedFlourId}
               onSelectFlour={(flour) => {
                 setCreateRecipeMode("adapted");
@@ -1387,15 +1385,11 @@ export function HomePage() {
                       setCreateRecipeMode("adapted");
                       setPreFermentChoice(value);
                     }}
-                    customFlourPL={effectiveNerdMode ? customFlourPL : undefined}
-                    onFlourPLChange={
-                      effectiveNerdMode
-                        ? (value) => {
-                            setCreateRecipeMode("adapted");
-                            setCustomFlourPL(value);
-                          }
-                        : undefined
-                    }
+                    customFlourPL={customFlourPL}
+                    onFlourPLChange={(value) => {
+                      setCreateRecipeMode("adapted");
+                      setCustomFlourPL(value);
+                    }}
                     customSalt={customSalt}
                     onSaltChange={(value) => {
                       setCreateRecipeMode("adapted");

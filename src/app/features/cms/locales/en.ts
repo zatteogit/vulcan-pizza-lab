@@ -1594,12 +1594,6 @@ export const EN_LOCALE: CmsContent = {
     unitMetricDesc: "Grams, millilitres and degrees Celsius",
     unitImperial: "Imperial / US",
     unitImperialDesc: "Ounces, fluid ounces and degrees Fahrenheit",
-    pizzaNerdTitle: "PizzaNerd",
-    pizzaNerdSubtitle: "Control when advanced technical data appears",
-    pizzaNerdStep: "08 — PizzaNerd",
-    pizzaNerdCardTitle: "PizzaNerd",
-    pizzaNerdCardDesc:
-      "Show extra detail about flour, dough and recipe calculations.",
     resetProfile: "Reset profile",
     resetConfirmMessage:
       "You’ll reopen the initial setup. Your new choices will replace your current preferences.",
@@ -1620,7 +1614,7 @@ export const EN_LOCALE: CmsContent = {
     ftuOvenSubtitle:
       "Your oven defines which styles are possible",
     ftuSkillTitle: "How experienced are you?",
-    ftuSkillSubtitle: "We'll guide you at the right level",
+    ftuSkillSubtitle: "It sets how easy the dough we suggest will be",
     ftuPantryTitle: "What's in your pantry?",
     ftuPantrySubtitle: "Flours and yeasts available",
     ftuBack: "Back",

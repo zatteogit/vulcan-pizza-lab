@@ -6175,90 +6175,117 @@
     flex-shrink: 0;
   }
 
-  /* ── PizzaNerd toggle ── */
-  .profile-nerd-toggle {
-    width: 100%;
+  /* ── FW-08 — «Mostra i dettagli tecnici» (PizzaNerd) e livello ── */
+  .detail-level-setting {
     display: flex;
-    align-items: center;
-    gap: var(--gap-sm);
+    flex-direction: column;
+    gap: var(--space-1-5);
+    margin-top: var(--space-4);
     border-radius: var(--radius-2xl);
     padding-inline: var(--space-4);
     padding-block: var(--space-3-5);
-    text-align: left;
     background: var(--container-bg-low);
     border: var(--border-width-thin) solid var(--container-border);
     color: var(--text-default);
-    cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
   }
 
-  .profile-nerd-toggle:active {
-    transform: scale(0.99);
-  }
-
-  .profile-nerd-toggle--active {
-    background: color-mix(in srgb, var(--primary) 10%, var(--container-bg));
-    border-color: color-mix(in srgb, var(--primary) 32%, var(--container-border));
-  }
-
-  .profile-nerd-toggle__icon {
+  .detail-level-setting__head {
     display: flex;
     align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-xl);
-    flex-shrink: 0;
-    width: var(--space-9-5);
-    height: var(--space-9-5);
-    background: var(--surface-container);
-    color: var(--text-muted);
+    gap: var(--gap-sm);
   }
 
-  .profile-nerd-toggle__icon--active {
-    background: color-mix(in srgb, var(--primary) 14%, var(--container-bg));
+  .detail-level-setting__icon {
+    flex-shrink: 0;
     color: var(--primary);
   }
 
-  .profile-nerd-toggle__body {
+  .detail-level-setting__title {
     flex: 1;
     min-width: 0;
-  }
-
-  .profile-nerd-toggle__title {
-    display: block;
-    font-size: var(--font-size-lg);
     font-weight: var(--weight-semibold);
     line-height: var(--leading-tight);
+    cursor: pointer;
   }
 
-  .profile-nerd-toggle__desc {
-    display: block;
+  .detail-level-setting__desc,
+  .detail-level-setting__relation {
+    margin: 0;
     color: var(--text-muted);
-    font-size: var(--font-size-md);
     line-height: var(--leading-normal);
-    margin-top: var(--space-0-5);
   }
 
-  .profile-nerd-toggle__track {
-    position: relative;
-    border-radius: var(--radius-full);
-    flex-shrink: 0;
-    width: var(--space-11);
-    height: var(--space-6-5);
-    background: var(--container-border);
+  .detail-level-setting__relation {
+    padding-top: var(--space-1-5);
+    border-top: var(--border-width-thin) solid var(--container-border-subtle);
   }
 
-  .profile-nerd-toggle__track--active {
-    background: var(--primary);
+  .skill-level-effect {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin-top: var(--space-3);
   }
 
-  .profile-nerd-toggle__thumb {
-    position: absolute;
-    top: var(--space-1);
-    border-radius: var(--radius-full);
-    width: var(--space-4-5);
-    height: var(--space-4-5);
-    background: var(--container-bg);
-    box-shadow: var(--switch-thumb-shadow);
+  .skill-level-effect__text {
+    margin: 0;
+    color: var(--text-default);
+    line-height: var(--leading-normal);
+  }
+
+  .skill-level-effect__note {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
+  .detail-level-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  .detail-level-switch__label {
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-semibold);
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .config-field.config-pl-readonly {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--gap-sm);
+    row-gap: var(--gap-xs);
+    margin: 0;
+    font-size: var(--font-size-md);
+    color: var(--text-muted);
+  }
+
+  .config-pl-readonly__value {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .config-pl-readonly__action {
+    font: inherit;
+    font-weight: var(--weight-semibold);
+    color: var(--primary);
+    background: none;
+    border: 0;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-5);
+    cursor: pointer;
+  }
+
+  .explore-card__tech {
+    margin-top: var(--space-1-5);
+    color: var(--overlay-text-warm);
+    text-shadow: var(--overlay-shadow-text-sm);
+    font-variant-numeric: tabular-nums;
   }
 
   /* ── Footer: reset + dev mode ── */

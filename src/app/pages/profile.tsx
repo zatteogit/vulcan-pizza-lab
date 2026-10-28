@@ -73,6 +73,9 @@ import { OvenModelSearch } from "../features/profile/oven-model-search";
 import { encodePan } from "../features/recipe/pan-url";
 import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { BRAND } from "../config/brand";
+import { DetailLevelSetting, DetailLevelOffer } from "../features/profile/detail-level-setting";
+import { SkillLevelEffect } from "../features/profile/skill-level-effect";
+import { useDetailLevel } from "../hooks/use-detail-level";
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
@@ -82,7 +85,6 @@ const PANTRY_STORAGE_KEY = "vulcan_pantry";
 const DIETARY_STORAGE_KEY = "vulcan_dietary";
 const LOCATION_STORAGE_KEY = "vulcan_location";
 const EQUIPMENT_STORAGE_KEY = "vulcan_equipment";
-const NERD_STORAGE_KEY = "vulcan_nerd_on";
 
 /* ═══ FTU pantry options — versione semplificata per onboarding ═══ */
 const FTU_FLOURS = [
@@ -702,6 +704,11 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const [ovenType, setOvenType] = useState<OvenType>(savedOven?.ovenType ?? "home");
   const [ovenTemp, setOvenTemp] = useState(savedOven?.maxTemp ?? 250);
   const [skillLevel, setSkillLevel] = useState<SkillLevel>(1);
+  /* FW-08 (S15-B-11, D-C): a chi sceglie Esperto proponiamo «Mostra i
+     dettagli tecnici», spento di default; si salva solo alla fine. */
+  const { setLevel: setDetailLevel } = useDetailLevel();
+  const [ftuTechnical, setFtuTechnical] = useState(false);
+  const offerTechnical = skillLevel === 4;
   /* Pantry: farine e lieviti per onboarding */
   const [ftuFlours, setFtuFlours] = useState<string[]>([]);
   const [ftuYeasts, setFtuYeasts] = useState<string[]>([]);
@@ -727,6 +734,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
     const keepModel = savedOven?.modelId && savedOven.ovenType === ovenType && savedOven.maxTemp === ovenTemp;
     saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp, ...(keepModel ? { modelId: savedOven.modelId } : {}) });
     saveJson(SKILL_STORAGE_KEY, skillLevel);
+    if (offerTechnical && ftuTechnical) setDetailLevel("technical");
     // Pantry: salviamo solo se valorizzata
     if (ftuFlours.length > 0 || ftuYeasts.length > 0) {
       saveJson(PANTRY_STORAGE_KEY, { ...(loadJson<Record<string, unknown>>(PANTRY_STORAGE_KEY) ?? {}), flours: ftuFlours, yeasts: ftuYeasts });
@@ -735,17 +743,19 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     } catch { /* */ }
     onComplete();
-  }, [savedOven, ovenType, ovenTemp, skillLevel, ftuFlours, ftuYeasts, onComplete]);
+  }, [savedOven, ovenType, ovenTemp, skillLevel, offerTechnical, ftuTechnical, setDetailLevel, ftuFlours, ftuYeasts, onComplete]);
 
   /* Audit n. 33 / D-038: il percorso si può saltare. Forno e livello restano
      «non scelti» (niente valori di default salvati come se li avessi scelti
      tu): li chiedono Crea e il profilo quando servono. */
   const handleSkip = useCallback(() => {
+    /* FW-08: un «sì» esplicito ai dettagli tecnici vale anche se salti. */
+    if (offerTechnical && ftuTechnical) setDetailLevel("technical");
     try {
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     } catch { /* */ }
     onComplete();
-  }, [onComplete]);
+  }, [offerTechnical, ftuTechnical, setDetailLevel, onComplete]);
 
   const handleNext = useCallback(() => {
     if (step < lastStep) setStep((s) => s + 1);
@@ -855,6 +865,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             )}
 
             {step === 1 && (
+              <>
               <div className="profile-ftu__option-list">
                 {SKILL_LEVELS.map((skill) => {
                   const active = skillLevel === skill.level;
@@ -902,6 +913,12 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                   );
                 })}
               </div>
+              {/* FW-08 (S15-A-02/B-02): cosa cambia scegliendo il livello. */}
+              <SkillLevelEffect level={skillLevel} />
+              {offerTechnical && (
+                <DetailLevelOffer checked={ftuTechnical} onCheckedChange={setFtuTechnical} />
+              )}
+              </>
             )}
 
             {step === 2 && (
@@ -1276,16 +1293,6 @@ export function ProfilePage() {
     const saved = loadJson<SkillLevel>(SKILL_STORAGE_KEY);
     return saved ?? 1;
   });
-  const [pizzaNerd, setPizzaNerd] = useState<boolean>(() => {
-    try {
-      return (
-        localStorage.getItem(NERD_STORAGE_KEY) === "true" ||
-        localStorage.getItem("vulcan_view_mode") === "nerd"
-      );
-    } catch {
-      return false;
-    }
-  });
   const [unitSystem, setUnitSystem] = useState<UnitSystem>(() => getPreferredUnitSystem());
   const fmt = useMemo(
     () => createFormatter(cms.ui, bcp47, unitSystem),
@@ -1455,13 +1462,6 @@ export function ProfilePage() {
   useSaveOnChange(skillLevel, () => saveJson(SKILL_STORAGE_KEY, skillLevel));
 
   useSaveOnChange(dietary, () => saveJson(DIETARY_STORAGE_KEY, dietary));
-
-  useSaveOnChange(pizzaNerd, () => {
-    try {
-      localStorage.setItem(NERD_STORAGE_KEY, String(pizzaNerd));
-      localStorage.removeItem("vulcan_view_mode");
-    } catch { /* */ }
-  });
 
   useSaveOnChange(unitSystem, () => savePreferredUnitSystem(unitSystem));
   const toggleDietary = (id: string) =>
@@ -1810,6 +1810,10 @@ export function ProfilePage() {
               );
             })}
           </div>
+          {/* FW-08 (S15-A-02, S16-B-14, S17-A-07/B-13): cosa cambia il livello
+              e, subito accanto, «Mostra i dettagli tecnici» (D-C). */}
+          <SkillLevelEffect level={skillLevel} />
+          <DetailLevelSetting />
         </ProfileSection>
 
         {/* Dispensa rimossa dal profilo — gestita nel wizard Crea */}
@@ -2307,44 +2311,6 @@ export function ProfilePage() {
               })}
             </div>
           </div>
-        </ProfileSection>
-
-        {/* ── PIZZANERD ── */}
-        <ProfileSection
-          title={p.pizzaNerdTitle}
-          subtitle={p.pizzaNerdSubtitle}
-          stepNum={p.pizzaNerdStep}
-          delay={motionDelay.profileSectionFinal}
-        >
-          <button
-            type="button"
-            onClick={() => setPizzaNerd((value) => !value)}
-            className={`profile-nerd-toggle${pizzaNerd ? " profile-nerd-toggle--active" : ""}`}
-            aria-pressed={pizzaNerd}
-          >
-            <span
-              className={`profile-nerd-toggle__icon${pizzaNerd ? " profile-nerd-toggle__icon--active" : ""}`}
-            >
-              <Beaker size={17} />
-            </span>
-            <span className="profile-nerd-toggle__body">
-              <span className="profile-nerd-toggle__title">
-                {p.pizzaNerdCardTitle}
-              </span>
-              <span className="profile-nerd-toggle__desc">
-                {p.pizzaNerdCardDesc}
-              </span>
-            </span>
-            <span
-              className={`profile-nerd-toggle__track${pizzaNerd ? " profile-nerd-toggle__track--active" : ""}`}
-            >
-              <motion.span
-                className="profile-nerd-toggle__thumb"
-                animate={{ left: pizzaNerd ? 22 : 4 }}
-                transition={motionSpring.crispSettled}
-              />
-            </span>
-          </button>
         </ProfileSection>
 
         {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}

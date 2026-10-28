@@ -1,4 +1,5 @@
 import { RecipeShare } from "./recipe-share";
+import { DetailLevelSwitch } from "./detail-level-switch";
 import { useDecorativeMotion, useVisualMotionPreference } from "../../context/visual-quality-context";
 import { RecipeReferenceNote } from "./recipe-reference-note";
 import { recipeDisplayName } from "../../domain/recipe-reference";
@@ -91,9 +92,8 @@ interface RecipeViewProps {
   showStickyHeader?: boolean;
   selectedToppingConcept?: string | null;
   onSelectTopping?: (conceptId: string) => void;
+  /** FW-08: livello «Dettagli tecnici» già risolto (useDetailLevel). */
   nerdMode?: boolean;
-  nerdAvailable?: boolean;
-  onNerdModeChange?: (nerd: boolean) => void;
   isPersonalized?: boolean;
   onRequestPersonalization?: () => void;
   /** "Torna all'originale" (round 6, nota Matteo): riporta alla BASE attiva
@@ -138,8 +138,6 @@ export function RecipeView({
   selectedToppingConcept,
   onSelectTopping,
   nerdMode = false,
-  nerdAvailable = false,
-  onNerdModeChange,
   isPersonalized = true,
   onRequestPersonalization,
   onResetToOriginal,
@@ -542,10 +540,13 @@ export function RecipeView({
                 </motion.div>
               )}
             </AnimatePresence>
-            {(introExtraSlot || shareUrl) && <div className="recipe-view-meta-row">
+            {/* FW-08: «Dettagli tecnici» sempre raggiungibile dalla testata,
+                accanto alle azioni quiete (Approfondisci, Condividi). */}
+            <div className="recipe-view-meta-row">
               {!isHeroReduced && introExtraSlot}
               {shareUrl && <RecipeShare url={shareUrl} title={recipeName || recipeDisplayName(recipe, constraints.oven_type)} />}
-            </div>}
+              <DetailLevelSwitch />
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -601,8 +602,6 @@ export function RecipeView({
               onSelectFlour={onSelectFlour}
               selectedTimeSlotId={selectedTimeSlotId}
               mealTargetAt={mealTargetAt}
-              nerdAvailable={nerdAvailable}
-              onNerdModeChange={onNerdModeChange}
               isPersonalized={isPersonalized}
               onRequestPersonalization={onRequestPersonalization}
               matchSlot={matchSlot}

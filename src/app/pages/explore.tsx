@@ -35,6 +35,8 @@ import { TiltCard } from "../features/recipe/tilt-card";
 import { kitchenCompatibility, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { useDetailLevel } from "../hooks/use-detail-level";
+import { createFormatter } from "../features/cms/i18n";
 
 /** Badge delle ricette iconiche nella lingua attiva: i dati restano in
  *  italiano (servono anche al dedup con l'autore), il testo mostrato no. */
@@ -227,13 +229,8 @@ export function ExplorePage() {
     );
   };
 
-  const isNerd = useMemo(() => {
-    try {
-      return localStorage.getItem("vulcan_nerd_on") === "true";
-    } catch {
-      return false;
-    }
-  }, []);
+  /* FW-08: stesso stato «Dettagli tecnici» di Profilo, Crea e scheda. */
+  const isNerd = useDetailLevel().level === "technical";
 
   const styles = useMemo(() => {
     const db = effectiveStyles ?? STYLES_DB;
@@ -636,6 +633,26 @@ function SignatureRecipeCard({
   );
 }
 
+/* ═══ FW-08 (S02-A-05/B-13): riga tecnica delle card con «Dettagli tecnici» ═══
+   Valori di riferimento dello stile (idratazione, forno ideale, lievitazione),
+   per confrontare gli stili senza aprire ogni scheda. */
+function StyleTechLine({ style, cms }: { style: PizzaStyle; cms: CmsContent }) {
+  const { bcp47 } = useCms();
+  const fmt = createFormatter(cms.ui, bcp47);
+  const [hLo, hHi] = style.dough.hydration_pct_range;
+  const [fLo, fHi] = style.dough.fermentation_hours_range;
+  const range = (lo: number, hi: string) => uiMessage("detailLevel.range", [fmt.number(lo), hi]);
+  return (
+    <p className="type-data-xs explore-card__tech" data-region="tech">
+      {uiMessage("detailLevel.styleTechLine", [
+        range(hLo, fmt.percent(hHi)),
+        fmt.celsius(style.baking.temp_c_ideal),
+        range(fLo, fmt.durationShort(fHi)),
+      ])}
+    </p>
+  );
+}
+
 /* ═══ STYLE CATALOG CARD — Editorial magazine style (unified with Create) ═══ */
 function StyleCatalogCard({
   style,
@@ -709,6 +726,7 @@ function StyleCatalogCard({
               {shortOrigin(style.origin)}
             </div>
             <StyleMetaChip style={style} cms={cms} recipe={match?.recipe} context="explore" />
+            {isNerd && <StyleTechLine style={style} cms={cms} />}
           </figcaption>
         </figure>
       </Surface>

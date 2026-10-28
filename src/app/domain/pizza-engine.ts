@@ -2845,6 +2845,15 @@ function _hydrationCeilingForSkill(skill: SkillLevel): number {
   }
 }
 
+/** FW-08 (S15-A-02): il tetto d'idratazione che l'ottimizzatore applica al
+ *  livello, per i testi che spiegano cosa cambia scegliendolo. `null` = nessun
+ *  tetto oltre ai limiti dello stile (esperto). Stessi valori del motore: la
+ *  copy non scrive numeri propri. È una scelta di Vulcan, non una misura. */
+export function hydrationCeilingForSkill(skill: SkillLevel): number | null {
+  const ceiling = _hydrationCeilingForSkill(skill);
+  return ceiling >= 200 ? null : ceiling;
+}
+
 /** ENG-4 — ore di fermentazione massime che stanno nella finestra fino al
  *  pasto, tolto l'overhead fisso della timeline (stesso calcolo del clamp di
  *  generateRecipe), arrotondate per difetto al quarto d'ora e mai sotto il

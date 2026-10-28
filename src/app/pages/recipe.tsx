@@ -24,6 +24,7 @@ import { Link,useLocation,useNavigate,useParams,useSearchParams } from "react-ro
 import { useCms,type CmsContent } from "../features/cms/cms-context";
 import { engineMsgTexts } from "../features/recipe/engine-msg-text";
 import { loadProfileDefaults, profileEquipment } from "../hooks/use-profile-defaults";
+import { useDetailLevel } from "../hooks/use-detail-level";
 import { t as tpl } from "../features/cms/i18n";
 import {
 getInterpretationById,
@@ -220,8 +221,6 @@ function RecipeContent({
      propria impastatrice e le proprie superfici. La canonica no: è la scheda
      dello stile, uguale per tutti. */
   const [personalEquipment] = useState(() => profileEquipment(loadProfileDefaults().constraints));
-  // Storage bloccato (navigazione privata, cookie disattivati): getItem lancia.
-  const nerdAvailable = loadJson<boolean>("vulcan_nerd_on") === true;
   const initialRecipeMode = readRecipeMode(searchParams);
   const [recipeMode, setRecipeMode] = useState<RecipeMode>(initialRecipeMode);
   const [recipeName, setRecipeName] = useState<string | undefined>(() => normalizeRecipeName(searchParams.get("name")));
@@ -349,8 +348,9 @@ function RecipeContent({
       else next.set("tab", tab);
     });
   }, []);
-  const [nerdMode, setNerdMode] = useState(false);
-  const effectiveNerdMode = nerdAvailable && nerdMode;
+  /* FW-08: un solo stato «Dettagli tecnici» per tutta l'app; l'interruttore
+     sta nella testata della scheda (RecipeView) e nel Profilo. */
+  const effectiveNerdMode = useDetailLevel().level === "technical";
 
   const [setupNotice, setSetupNotice] = useState<string | null>(null);
   const [learningOpen, setLearningOpen] = useState(false);
@@ -927,8 +927,6 @@ function RecipeContent({
           setSelectedToppingConcept(recipeId);
         }}
         nerdMode={effectiveNerdMode}
-        nerdAvailable={nerdAvailable}
-        onNerdModeChange={setNerdMode}
         matchSlot={
           <>
             {/* Round 4-5 (note Matteo): ordine Ispirazione → parametri →
@@ -1013,6 +1011,11 @@ function RecipeContent({
                   onSaltChange={(v) => {
                     markAdapted();
                     setCustomSalt(v);
+                  }}
+                  customFlourPL={customFlourPL}
+                  onFlourPLChange={(v) => {
+                    markAdapted();
+                    setCustomFlourPL(v);
                   }}
                   panConfig={panConfig}
                   onPanConfigChange={(config) => {markAdapted(); setPanConfig(config);}}
