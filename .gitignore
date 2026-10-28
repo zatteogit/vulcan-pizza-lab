@@ -21,3 +21,6 @@ ds-bundle/
 
 .claude/worktrees/
 .worker-dist/
+
+# Snapshot e log di playwright-cli (artefatti locali)
+.playwright-cli/
