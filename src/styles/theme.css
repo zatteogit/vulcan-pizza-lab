@@ -1623,6 +1623,9 @@
   }
 
   html {
+    /* Colore della tela esplicito: le fasce che Safari dipinge dietro barra di
+       stato e barra degli indirizzi prendono il colore della pagina, non il nero. */
+    background-color: var(--background);
     font-size: var(--font-size);
     /* `clip` non forza `overflow-y: auto` (a differenza di `hidden`), così html
        e body non diventano scroll-container e `position: sticky` funziona
@@ -17679,32 +17682,9 @@
     }
   }
 
-  /* ─── Bottom scrim (mobile, grounds the floating dock) ─── */
-  .app-shell-scrim {
-    position: fixed;
-    bottom: 0;
-    inset-inline: 0;
-    z-index: 40;
-    pointer-events: none;
-    /* Una velina leggera accompagna la barra senza cancellare le immagini.
-       Il contrasto dei controlli è assicurato dalle capsule, anche senza blur. */
-    height: calc(var(--space-28) + env(safe-area-inset-bottom, var(--space-0)));
-    background: linear-gradient(to top,
-        color-mix(in srgb, var(--container-page) 36%, transparent) 0%,
-        color-mix(in srgb, var(--container-page) 12%, transparent) 45%,
-        transparent 100%);
-    transition: height var(--duration-normal) var(--ease-standard);
-  }
-
-  .app-shell-scrim--compact {
-    height: calc(var(--space-20) + env(safe-area-inset-bottom, var(--space-0)));
-  }
-
-  @media (min-width: 768px) {
-    .app-shell-scrim {
-      display: none;
-    }
-  }
+  /* Niente velina fissa sotto il dock: Safari 26 su iPhone, con un elemento
+     fisso a contatto col bordo, dipinge una fascia piena dietro la barra degli
+     indirizzi (WebKit bug 301756). Il contrasto lo danno le capsule del dock. */
 
   /* ─── Mobile bottom dock (tabs capsule + search FAB) ─── */
   .app-shell-dock {
