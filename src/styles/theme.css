@@ -9610,6 +9610,24 @@
     opacity: 0.9;
   }
 
+  /* FW-11 (S07-A-13, S07-B-12): con le etichette lunghe (en, de, fr) il
+     numero non va a capo cifra per cifra; l'etichetta si restringe lei. */
+  .match-bar__head > .match-bar__label {
+    min-width: 0;
+  }
+
+  .match-bar__head > .type-numeric {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* FW-11 (S17-A-01, D-J): nota sulle microdosi sotto il sistema di misura. */
+  .profile-unit-note {
+    margin-top: var(--space-2);
+    color: var(--text-muted);
+    line-height: var(--leading-normal);
+  }
+
   .match-bar-track {
     border-radius: var(--radius-full);
     overflow: hidden;

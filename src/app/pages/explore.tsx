@@ -35,6 +35,7 @@ import { TiltCard } from "../features/recipe/tilt-card";
 import { kitchenCompatibility, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 import { motionDelay, motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { placeNameLocalizer } from "../features/cms/i18n";
 
 /** Badge delle ricette iconiche nella lingua attiva: i dati restano in
  *  italiano (servono anche al dedup con l'autore), il testo mostrato no. */
@@ -442,7 +443,7 @@ export function ExplorePage() {
                   const active = activeFamily === fam;
                   const label =
                     fam === "all"
-                      ? "Tutti"
+                      ? uiMessage("pages.explore.familyAll")
                       : cms.families[fam]?.name ||
                         PIZZA_FAMILIES[fam]?.name ||
                         fam;
@@ -706,7 +707,7 @@ function StyleCatalogCard({
               {style.name}
             </h3>
             <div className="explore-card__origin">
-              {shortOrigin(style.origin)}
+              {shortOrigin(style.origin, placeNameLocalizer(cms))}
             </div>
             <StyleMetaChip style={style} cms={cms} recipe={match?.recipe} context="explore" />
           </figcaption>

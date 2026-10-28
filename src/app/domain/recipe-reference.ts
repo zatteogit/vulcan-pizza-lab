@@ -1,5 +1,11 @@
 import type { GeneratedRecipe, OvenType } from "./pizza-engine";
 
+/** FW-11 (S07-A-18): il disciplinare STG (PDF, MASAF) accanto alle regole che
+ *  ne derivano, non incollato nel componente. Fonte verificata in
+ *  docs/ricerca/identita-stg-2026-10-25.md. */
+export const STG_SPECIFICATION_URL =
+  "https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F4%252Fa%252FD.54ec78491c37356fe33f/P/BLOB:ID=24230/E/pdf?mode=download";
+
 export type StgDeparture = "wood" | "bake" | "flour" | "pl" | "fermentation" | "cold" | "preferment" | "yeast" | "additions" | "weight" | "topping";
 
 /** Known departures from the MASAF STG specification, art. 3.

@@ -12,6 +12,8 @@ export function pantryIngredientNames(cms: CmsContent): Map<string, string> {
     [pantryIngredientId("Burro"), cms.ui.fatButter],
     [pantryIngredientId("Strutto"), cms.ui.fatLard],
     [pantryIngredientId("Acqua"), cms.ui.water],
+    /* FW-11 (S08-B-08): «Lievito madre» negli allergeni e nelle etichette. */
+    [pantryIngredientId("Lievito madre"), cms.yeastLabels.sourdough],
   ]);
   for (const recipe of Object.values(TOPPING_LIBRARY)) {
     const translated = cms.toppingI18n?.recipes[recipe.id]?.ingredients;

@@ -4026,13 +4026,13 @@ export const OVEN_PRESETS: {
 }[] = [
   {
     id: "home",
-    name: "Forno Domestico",
+    name: "Forno domestico",
     maxTemp: 250,
     icon: "home",
   },
   {
     id: "electric_standard",
-    name: "Elettrico Standard",
+    name: "Elettrico standard",
     maxTemp: 300,
     icon: "zap",
   },
@@ -4059,7 +4059,7 @@ export const OVEN_PRESETS: {
   },
   {
     id: "wood",
-    name: "Forno a Legna",
+    name: "Forno a legna",
     maxTemp: 500,
     icon: "flame-kindling",
   },

@@ -37,25 +37,9 @@ interface ProfileDefaults {
   isProfileComplete: boolean;
   pizzaNerdEnabled: boolean;
   /** Summary label: "Forno elettrico 250°C · Intermedio" */
-  summaryLabel: string;
 }
 
-const SKILL_LABELS: Record<number, string> = {
-  1: "Principiante",
-  2: "Intermedio",
-  3: "Avanzato",
-  4: "Esperto",
-};
 
-const OVEN_LABELS: Record<string, string> = {
-  home: "Forno di casa",
-  electric_standard: "Elettrico standard",
-  electric_high: "Elettrico alta temp.",
-  gas: "Forno a gas a platea",
-  gas_pizza: "Forno a gas da pizza",
-  wood: "Forno a legna",
-  coal: "Forno a carbone",
-};
 
 export function loadProfileDefaults(): ProfileDefaults {
   let ovenType: OvenType = "home";
@@ -136,11 +120,8 @@ export function loadProfileDefaults(): ProfileDefaults {
     }
   } catch { /* */ }
 
-  const ovenLabel = OVEN_LABELS[ovenType] ?? ovenType;
-  const skillLabel = SKILL_LABELS[skillLevel] ?? `Skill ${skillLevel}`;
-  const summaryLabel = `${ovenLabel} ${ovenTemp}°C · ${skillLabel}`;
 
-  return { constraints, isProfileComplete, pizzaNerdEnabled, summaryLabel };
+  return { constraints, isProfileComplete, pizzaNerdEnabled };
 }
 
 /* ═══ Audit n. 11 (C-03): il profilo vince sulla bozza per ciò che non si

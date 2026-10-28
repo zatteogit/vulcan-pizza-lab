@@ -712,7 +712,7 @@ export function UserNeeds({
                           <Minus size={14} />
                         </button>
                         <span className="type-numeric needs-kitchen-temp__value">
-                          {kitchenTemp}°C
+                          {fmt.celsius(kitchenTemp)}
                         </span>
                         <button
                           onClick={() => { setKitchenTempManual(true); setKitchenTemp((prev) => Math.min(40, prev + 1)); }}
@@ -777,7 +777,7 @@ export function UserNeeds({
                               <Icon size={18} className={active ? "needs-oven-card__icon needs-oven-card__icon--active" : "needs-oven-card__icon"} />
                               <div data-slot="body">
                                 <div className="needs-oven-card__name">{displayName}</div>
-                                <div className="type-numeric needs-oven-card__temp">{preset.maxTemp}°C</div>
+                                <div className="type-numeric needs-oven-card__temp">{fmt.celsius(preset.maxTemp)}</div>
                               </div>
                             </motion.button>
                           );

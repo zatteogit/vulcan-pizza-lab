@@ -22,8 +22,10 @@ import { AnimatePresence,motion,useReducedMotion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
 import { useCallback,useEffect,useMemo,useState } from "react";
 import { createPortal } from "react-dom";
-import { useCms,type CmsContent } from "../cms/cms-context";
+import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
+import { formatDuration } from "../../i18n/format";
+import { uiMessage } from "../../i18n/ui-messages";
 import {
 currentStepIndex,
 formatEta,
@@ -38,26 +40,6 @@ import { resolveStepVisual } from "./step-visual";
 import { STYLES_DB } from "../../domain/styles-db";
 import { isFriedStyle } from "../../domain/pizza-engine";
 
-type CookingCopy = CmsContent["cooking"];
-
-function formatDurationLabel(min: number, copy: CookingCopy): string {
-  if (min < 60) return t(copy.durationMinutes, { n: min });
-  const h = Math.floor(min / 60);
-  const m = min % 60;
-  if (h < 24) {
-    return m > 0
-      ? t(copy.durationHoursMinutes, { h, m })
-      : t(copy.durationHours, { h });
-  }
-  const d = Math.floor(h / 24);
-  const hr = h % 24;
-  return hr > 0
-    ? t(copy.durationDaysHours, { d, h: hr })
-    : t(copy.durationDays, {
-        d,
-        unit: d === 1 ? copy.durationDayUnit : copy.durationDaysUnit,
-      });
-}
 
 /* ── Countdown automatico della fase, ancorato a endMs ── */
 function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent: boolean }) {
@@ -77,14 +59,11 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
 
   const remainingLabel = (() => {
     const min = Math.ceil(remainingMs / 60_000);
-    if (min >= 60) return formatDurationLabel(min, cms.cooking);
-    if (min > 1 || step.duration_minutes >= 90) {
-      return t(cms.cooking.durationMinutes, { n: min });
-    }
+    if (min > 1 || step.duration_minutes >= 90) return formatDuration(min, bcp47);
     const sec = Math.ceil(remainingMs / 1000);
     return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
   })();
-  const phaseDuration = formatDurationLabel(step.duration_minutes, cms.cooking);
+  const phaseDuration = formatDuration(step.duration_minutes, bcp47);
   const phaseEnd = formatStepClock(step.endMs, step.flexible, bcp47);
 
   return (
@@ -95,7 +74,7 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
           <div className="type-numeric cooking-mode-phase__value">
             {notStarted
               ? t(cms.cooking.stepStartsIn, {
-                  eta: formatEta(step.startMs, Date.now(), cms.cooking),
+                  eta: formatEta(step.startMs, Date.now(), bcp47),
                 })
               : phaseDone
                 ? cms.cooking.phaseDone
@@ -381,7 +360,12 @@ export function CookingMode() {
                 {/* Orario onesto + stato */}
                 <div className="cooking-mode-step__status-row">
                   <span className="type-numeric cooking-mode-step__clock">
-                    {formatStepClock(step.startMs, step.flexible, bcp47)}
+                    {/* FW-11 (S10-B-18): l'orario dice se è inizio o fine. */}
+                    {step.flexible
+                      ? uiMessage("cooking.chip.readyAt", [formatStepClock(step.endMs, true, bcp47)])
+                      : isCurrent && !viewingDone && now >= step.startMs
+                        ? uiMessage("cooking.chip.now")
+                        : uiMessage("cooking.chip.startsAt", [formatStepClock(step.startMs, false, bcp47)])}
                   </span>
                   {viewingDone && (
                     <span className="cooking-mode-step__done-badge">
@@ -472,7 +456,7 @@ export function CookingMode() {
                   <>
                     <Clock size={18} />
                     {t(cms.cooking.waitingReadyAt, {
-                      eta: formatEta(step.endMs, Date.now(), cms.cooking),
+                      eta: formatEta(step.endMs, Date.now(), bcp47),
                     })}
                   </>
                 ) : waitOver ? (

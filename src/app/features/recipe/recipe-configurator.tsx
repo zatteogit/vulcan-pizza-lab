@@ -247,6 +247,9 @@ function computeAdaptiveHints(
   fermentTemp: number,
   flourPL: number | undefined,
   cfg: any,
+  /* FW-11 (S06-A-10): le temperature già formattate, perché i testi
+     {fridgeTemp}/{coolTemp}/{ambientTemp} non restino segnaposto. */
+  temps: { fridgeTemp: string; coolTemp: string; ambientTemp: string },
 ): AdaptiveHints {
   const hints: AdaptiveHints = {
     hydration: null,
@@ -303,19 +306,19 @@ function computeAdaptiveHints(
   if (fPos > 0.6 && fermentTemp > 16) {
     // Upper 40% of fermentation range + ambient temp → suggest fridge
     hints.fermentTemp = {
-      hint: t(cfg.hintLongFermentUseFridge, { hours: String(fermentHours) }),
+      hint: t(cfg.hintLongFermentUseFridge, { hours: String(fermentHours), ...temps }),
       suggestedTemp: "fridge",
     };
   } else if (fPos < 0.3 && fermentTemp <= 6) {
     // Lower 30% of fermentation range + fridge → suggest ambient
     hints.fermentTemp = {
-      hint: t(cfg.hintShortFermentUseWarm, { hours: String(fermentHours) }),
+      hint: t(cfg.hintShortFermentUseWarm, { hours: String(fermentHours), ...temps }),
       suggestedTemp: "ambient",
     };
   } else if (fPos >= 0.3 && fPos <= 0.6 && (fermentTemp <= 6 || fermentTemp > 16)) {
     // Middle range → suggest cool
     hints.fermentTemp = {
-      hint: t(cfg.hintMediumFermentUseCool, { hours: String(fermentHours) }),
+      hint: t(cfg.hintMediumFermentUseCool, { hours: String(fermentHours), ...temps }),
       suggestedTemp: "cool",
     };
   }
@@ -560,6 +563,7 @@ export function RecipeConfigurator({
     customFermentTemp,
     customFlourPL,
     cfg,
+    { fridgeTemp, coolTemp, ambientTemp },
   );
 
   const suggestedTemp = adaptiveHints.fermentTemp?.suggestedTemp;
@@ -909,6 +913,7 @@ export function RecipeConfigurator({
                     max={30}
                     step={1}
                     unit="°C"
+                    format={fmt.celsius}
                     gradient={SLIDER_GRADIENTS.temperature}
                   />
                 ) : (() => {
@@ -997,6 +1002,7 @@ export function RecipeConfigurator({
               max={constraints.oven_capacity_temp_c ?? OVEN_PRESETS.find((preset) => preset.id === constraints.oven_type)?.maxTemp ?? 550}
               step={5}
               unit="°C"
+              format={fmt.celsius}
               rangeMin={style.baking.temp_c_range[0]}
               rangeMax={style.baking.temp_c_range[1]}
               gradient={SLIDER_GRADIENTS.temperature}
@@ -1019,7 +1025,7 @@ export function RecipeConfigurator({
                 return {
                   value: preset.id,
                   label: name,
-                  subLabel: `max ${preset.maxTemp}°C`,
+                  subLabel: uiMessage("format.maxValue", [fmt.celsius(preset.maxTemp)]),
                 };
               })}
             />
@@ -1085,6 +1091,7 @@ export function RecipeConfigurator({
                         max={60}
                         step={1}
                         unit=" cm"
+                        format={fmt.centimeters}
                         rangeMin={style.shape.length_cm ? style.shape.length_cm - 5 : undefined}
                         rangeMax={style.shape.length_cm ? style.shape.length_cm + 5 : undefined}
                         gradient={SLIDER_GRADIENTS.flourW}
@@ -1103,6 +1110,7 @@ export function RecipeConfigurator({
                         max={45}
                         step={1}
                         unit=" cm"
+                        format={fmt.centimeters}
                         rangeMin={style.shape.width_cm ? style.shape.width_cm - 5 : undefined}
                         rangeMax={style.shape.width_cm ? style.shape.width_cm + 5 : undefined}
                         gradient={SLIDER_GRADIENTS.flourW}
@@ -1126,6 +1134,7 @@ export function RecipeConfigurator({
                       max={45}
                       step={1}
                       unit=" cm"
+                      format={fmt.centimeters}
                       rangeMin={style.shape.diameter_cm ? style.shape.diameter_cm - 3 : undefined}
                       rangeMax={style.shape.diameter_cm ? style.shape.diameter_cm + 3 : undefined}
                       gradient={SLIDER_GRADIENTS.flourW}
@@ -1307,6 +1316,7 @@ function GradientSlider({
   valueText,
   zoneLabels,
   name,
+  format,
 }: {
   value: number;
   onChange: (v: number) => void;
@@ -1327,10 +1337,15 @@ function GradientSlider({
   zoneLabels?: [string, string];
   /** Nome accessibile dell'input (U-10, F05): il testo dell'etichetta visibile. */
   name?: string;
+  /** FW-11 (S06-B-06): valore con unità nel sistema dell'utente (°F, in).
+   *  Il dominio resta metrico; nell'imperiale il valore non si digita. */
+  format?: (value: number) => string;
 }) {
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
   const numberLabel = (n: number) => fmt.number(n, { maximumFractionDigits: 2 });
+  const valueLabel = (n: number) => (format ? format(n) : `${numberLabel(n)}${unit}`);
+  const editable = !format || fmt.unitSystem === "metric";
   /* Fix di Matteo: al tocco del valore si digita il numero, per chi non ama
      gli slider. Invio o tocco fuori conferma, Esc annulla. */
   const [editing, setEditing] = useState(false);
@@ -1378,6 +1393,10 @@ function GradientSlider({
           <span className={inRange ? "type-numeric config-slider__value" : "type-numeric config-slider__value config-slider__value--oor"}>
             {valueText}
           </span>
+        ) : !editable ? (
+          <span className={inRange ? "type-numeric config-slider__value" : "type-numeric config-slider__value config-slider__value--oor"}>
+            {valueLabel(value)}
+          </span>
         ) : editing ? (
           <span className="type-numeric config-slider__value config-slider__value--editing">
             <input
@@ -1405,10 +1424,9 @@ function GradientSlider({
             }}
             className={inRange ? "type-numeric config-slider__value config-slider__value--button" : "type-numeric config-slider__value config-slider__value--button config-slider__value--oor"}
             title={uiMessage("features.recipe.recipe-configurator.typeValue")}
-            aria-label={`${name ?? ""}: ${numberLabel(value)}${unit} · ${uiMessage("features.recipe.recipe-configurator.typeValue")}`}
+            aria-label={`${name ?? ""}: ${valueLabel(value)} · ${uiMessage("features.recipe.recipe-configurator.typeValue")}`}
           >
-            {numberLabel(value)}
-            {unit}
+            {valueLabel(value)}
           </button>
         )}
       </div>
@@ -1480,7 +1498,7 @@ function GradientSlider({
         <input
           type="range"
           aria-label={name}
-          aria-valuetext={valueText ?? `${numberLabel(value)}${unit}`}
+          aria-valuetext={valueText ?? valueLabel(value)}
           min={min}
           max={max}
           step={step}
@@ -1494,10 +1512,10 @@ function GradientSlider({
       {rangeMin !== undefined && rangeMax !== undefined && (
         <div className="config-slider__zone-labels">
           <span className="type-numeric config-slider__zone-label">
-            {zoneLabels?.[0] ?? numberLabel(rangeMin)}
+            {zoneLabels?.[0] ?? (format ? format(rangeMin) : numberLabel(rangeMin))}
           </span>
           <span className="type-numeric config-slider__zone-label config-slider__zone-label--end">
-            {zoneLabels?.[1] ?? numberLabel(rangeMax)}
+            {zoneLabels?.[1] ?? (format ? format(rangeMax) : numberLabel(rangeMax))}
           </span>
         </div>
       )}

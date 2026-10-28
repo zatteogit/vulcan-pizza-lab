@@ -94,14 +94,15 @@ export function LearnPage() {
   const theoretical = !practicalStyle;
   const fallbackPath = practicalStyle && practicalStyle.id !== PATH_STYLE_IDS[skill];
   const path = activeStyle
-    ? { title: activeStyle.name, copy: activeStyle.description, styleId: activeStyle.id }
+    ? { title: activeStyle.name, copy: cms.styleDescriptions?.[activeStyle.id] ?? activeStyle.description, styleId: activeStyle.id }
     : theoretical
       ? { title: engineMsgTexts([{key:"learn.theoryTitle",fallback:"Prima la teoria"}],cms,bcp47)[0], copy: "", styleId: "" }
       : fallbackPath
         ? { title: practicalStyle.name, copy: engineMsgTexts([{key:"learn.compatiblePath",fallback:"Un percorso pratico compatibile con la tua cucina: verifica le condizioni della ricetta."}],cms,bcp47)[0], styleId: practicalStyle.id }
         : localizedPaths[skill];
   if (theoretical) path.copy = engineMsgTexts([{key:"learn.theoryOnly",fallback:"Con i vincoli attivi non c'è una ricetta verificata da proporti. Puoi approfondire le tecniche nella teoria."}],cms,bcp47)[0];
-  const skillName = SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
+  /* FW-11 (S11-A-08): il nome del livello dal CMS, non il dato italiano del motore. */
+  const skillName = cms.skillLevels[String(skill)]?.name ?? SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
   const pathContextLabel = activeStyle
     ? uiMessage("pages.learn.contextByStyle", [pg.learnPathLabel, activeStyle.name])
     : hasChosenSkill()

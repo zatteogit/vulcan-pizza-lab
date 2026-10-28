@@ -68,6 +68,7 @@ import {
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { MICRO_DOSE_GRAMS, formatMass } from "../i18n/format";
 import { AccountPanel } from "../features/account/account-panel";
 import { OvenModelSearch } from "../features/profile/oven-model-search";
 import { encodePan } from "../features/recipe/pan-url";
@@ -516,7 +517,9 @@ function SavedRecipesSection() {
       ) : (
         <ul ref={(el) => { sectionRef.current = el; }} tabIndex={-1} className="profile-saved-recipes">
           {recipes.map((r) => {
-            const styleName = r.styleId === "napoletana_stg" ? (r.params.ovenType && r.params.ovenType !== "wood" ? "Napoletana" : r.styleName) : STYLES_DB[r.styleId]?.name ?? r.styleName;
+            /* FW-11 (S17-A-05): il nome salvato è già quello giusto
+               (recipeDisplayName al salvataggio), niente ramo per stile. */
+            const styleName = r.styleName || STYLES_DB[r.styleId]?.name || "";
             const name = normalizeRecipeName(r.name);
             const displayName = name || styleName;
             const meta = [
@@ -725,7 +728,9 @@ function EquipmentCategory({
 
 /* ═══ FTU ONBOARDING ═══ */
 function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; closeControl: React.ReactNode }) {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
+  /* FW-11: «max 250 °C» / «max 482 °F» nella lingua e nel sistema dell'utente. */
+  const ftuFmt = createFormatter(cms.ui, bcp47);
   const p = cms.profile;
   const [step, setStep] = useState(0);
   /* Si parte dal forno già salvato (anche quello preimpostato da un'edizione
@@ -868,7 +873,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                           {cms.ovenPresets[preset.id]?.name ?? preset.name}
                         </div>
                         <div className="type-data-sm profile-ftu__option-meta">
-                          {uiMessage("pages.profile.max-3c624fea")}{preset.maxTemp}°C
+                          {uiMessage("format.maxValue", [ftuFmt.celsius(preset.maxTemp)])}
                         </div>
                       </div>
                       {active && (
@@ -2230,7 +2235,6 @@ export function ProfilePage() {
         <ProfileSection
           title={p.prefsTitle}
           subtitle={p.prefsSubtitle}
-          stepNum={p.prefsStep}
           delay={motionDelay.profileSectionLate}
         >
           <div className="profile-prefs">
@@ -2289,7 +2293,6 @@ export function ProfilePage() {
         <ProfileSection
           title={p.unitTitle}
           subtitle={p.unitSubtitle}
-          stepNum={p.unitStep}
           delay={motionDelay.deliberate}
         >
           <div data-slot="unit-system">
@@ -2341,6 +2344,10 @@ export function ProfilePage() {
                 );
               })}
             </div>
+            {/* FW-11 (S17-A-01, D-J): le microdosi restano in grammi. */}
+            <p className="type-data-xs profile-unit-note">
+              {uiMessage("profile.unitImperialSmallNote", [formatMass(MICRO_DOSE_GRAMS, bcp47)])}
+            </p>
           </div>
         </ProfileSection>
 
@@ -2348,7 +2355,6 @@ export function ProfilePage() {
         <ProfileSection
           title={p.pizzaNerdTitle}
           subtitle={p.pizzaNerdSubtitle}
-          stepNum={p.pizzaNerdStep}
           delay={motionDelay.profileSectionFinal}
         >
           <button

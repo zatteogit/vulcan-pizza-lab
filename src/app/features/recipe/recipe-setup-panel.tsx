@@ -220,11 +220,7 @@ export function RecipeSetupPanel({
   const triggerSubtitle = notice
     ? notice
     : isCanonical
-      ? cmsMessage(
-          cms,
-          "recipeSetup.triggerCanonical",
-          "Adatta idratazione, lievitazione e cottura alla tua cucina",
-        )
+      ? uiMessage("recipe.setup.triggerCanonical")
       : fullSummary || summary;
   /* Il titolo del trigger dice già "Personalizza parametri": la pill
      ripete il verbo breve, non il titolo (duplicava su desktop). */
@@ -345,21 +341,17 @@ export function RecipeSetupPanel({
           <div className="setup-profile">
             <div className="setup-profile__intro">
               <span className="setup-profile__label">
-                {cmsMessage(cms, "recipeSetup.profileLabel", "Profilo impasto")}
+                {uiMessage("recipe.setup.profileLabel")}
               </span>
               <span className="type-body setup-profile__hint">
-                {cmsMessage(
-                  cms,
-                  "recipeSetup.profileHint",
-                  "Scegli un preset bilanciato dai nostri pizzaioli o un'interpretazione d'autore per configurare l'impasto.",
-                )}
+                {uiMessage("recipe.setup.profileHint")}
               </span>
             </div>
             <div className="setup-profile__body">
               <div
                 className="setup-versions setup-versions--binary"
                 role="group"
-                aria-label={cmsMessage(cms, "recipeSetup.profileLabel", "Profilo impasto")}
+                aria-label={uiMessage("recipe.setup.profileLabel")}
               >
                 {versions.map((version) => {
                   const active = !activeInterpretationId && activeVersion?.id === version.id;
@@ -435,7 +427,8 @@ export function RecipeSetupPanel({
             <div className="setup-science">
               <span className="setup-science__label">
                 <Beaker size={13} className="setup-science__icon" />
-                {bcp47.startsWith("it") ? uiMessage("features.recipe.recipe-setup-panel.parametri-nerd-104a1e9b") : uiMessage("features.recipe.recipe-setup-panel.nerd-parameters-b375fda3")}
+                {/* FW-11 (S06-A-08): un solo titolo, diverso dal toggle «Parametri avanzati». */}
+                {uiMessage("recipe.setup.modelData")}
               </span>
               <NerdAuraBlock compact>
                 <div className="setup-science__grid">
@@ -450,7 +443,7 @@ export function RecipeSetupPanel({
                     small
                     science
                     label={cms.ui.nerdPL}
-                    value={`${recipe.flour_pl}`}
+                    value={fmt.number(recipe.flour_pl, { maximumFractionDigits: 2 })}
                     index={1}
                   />
                   <SpecCell
@@ -472,14 +465,14 @@ export function RecipeSetupPanel({
                       formatTemperatureCopy(cms.ui.nerdQ10, fmt),
                       { refTemp: fmt.celsius(18) },
                     )}
-                    value={`${recipe.science.q10_factor}×`}
+                    value={uiMessage("format.timesFactor", [fmt.number(Number(recipe.science.q10_factor), { maximumFractionDigits: 2 })])}
                     index={3}
                   />
                   <SpecCell
                     small
                     science
                     label={cms.ui.nerdAw}
-                    value={`${recipe.science.water_activity}`}
+                    value={fmt.number(Number(recipe.science.water_activity), { maximumFractionDigits: 3 })}
                     index={4}
                   />
                 </div>
@@ -494,7 +487,7 @@ export function RecipeSetupPanel({
             onClick={() => setOpen(false)}
             className="setup-footer__cta"
           >
-            {cmsMessage(cms, "recipeSetup.done", "Fatto")}
+            {uiMessage("recipe.setup.done")}
           </CtaButton>
         </div>
       </ModalSheet>

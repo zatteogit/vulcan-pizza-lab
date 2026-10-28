@@ -135,7 +135,7 @@ export function ToppingSection({
                   ? `${topping.bake_adjustments.temperature_delta_c > 0 ? "+" : ""}${fmt.celsiusDelta(topping.bake_adjustments.temperature_delta_c)} ${cms.ui.relativeToBase}`
                   : null,
                 topping.bake_adjustments.additional_minutes
-                  ? `+${topping.bake_adjustments.additional_minutes} min`
+                  ? `+${fmt.durationMinutes(topping.bake_adjustments.additional_minutes)}`
                   : null,
                 topping.bake_adjustments.note,
               ]

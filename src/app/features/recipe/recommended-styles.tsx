@@ -4,7 +4,7 @@ import { AnimatePresence,motion,useAnimationControls,useReducedMotion } from "mo
 import { motionDelay,motionSpring,motionTiming } from "../../components/ds/motion";
 import { useEffect,useMemo,useRef,useState,type ReactNode } from "react";
 import { useCms, type CmsContent } from "../cms/cms-context";
-import { createFormatter,formatTemperatureCopy,t } from "../cms/i18n";
+import { createFormatter,formatTemperatureCopy,placeNameLocalizer,t } from "../cms/i18n";
 import { CtaButton, FilterChip, Surface } from "../../components/ds/index";
 import { getStyleTags } from "../../domain/deviation-tags";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
@@ -707,7 +707,7 @@ function StyleCard({
 
               {/* Subtitle — ALL CAPS, tracked, warm cream */}
               <div className="recommended-card__subtitle">
-                {shortOrigin(style.origin)}
+                {shortOrigin(style.origin, placeNameLocalizer(cms))}
                 {rec.bestInterpretation
                   ? ` · ${variantShortName(rec.bestInterpretation)}`
                   : ""}

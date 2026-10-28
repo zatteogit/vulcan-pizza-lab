@@ -6,6 +6,8 @@ import { passiveActivityMessage } from "../../domain/pizza-engine";
 import type { CmsContent, CmsTimelineStep } from "../cms/cms-context";
 import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
 import { engineMsgTexts } from "./engine-msg-text";
+import { formatDuration, formatMass, formatTemp as formatTempLocale, pluralPick } from "../../i18n/format";
+import { getActiveUiLocale, uiMessage } from "../../i18n/ui-messages";
 import { localizeToppingStepText } from "../../data/topping-i18n/localize";
 import { FLEXIBLE_STEP_IDS } from "../cooking/cook-session";
 import { computePreFermentSplit } from "../../domain/pre-ferment-split";
@@ -35,6 +37,14 @@ import {
 } from "../../data/topping-library";
 
 /* ═══ PARAMETRIC CONTEXT TIPS ═══ */
+
+/** FW-11 (S09-A-20): «Ruota 1 volta / 3 volte», plurale secondo la lingua. */
+function turnsNote(turns: number): string {
+  return pluralPick(turns, getActiveUiLocale(), {
+    one: uiMessage("recipe.bake.turnsOne", [turns]),
+    other: uiMessage("recipe.bake.turnsOther", [turns]),
+  });
+}
 /** Forno e cottura della ricetta generata. I dati parametrici descrivono la
  *  cottura di riferimento dello stile (es. 60–90 s a 485 °C): fuori da quel
  *  regime il consiglio usa la stima del motore, non il riferimento (audit
@@ -62,6 +72,7 @@ export function getParametricTip(
   isNerd: boolean,
   pt: CmsContent["parametricTips"],
   ctx?: ParametricTipContext,
+  text?: CmsContent["parametricText"],
 ): string | null {
   switch (stepId) {
     case "mix": {
@@ -80,7 +91,7 @@ export function getParametricTip(
     case "bulk": {
       const fold = getFoldingByStyle(styleId);
       if (!fold || fold.foldCount === 0) return null;
-      const foldName = fold.foldType.replace(/_/g, " ");
+      const foldName = text?.fold?.[fold.foldType] ?? fold.foldType.replace(/_/g, " ");
       if (isNerd) {
         return t(pt.bulkNerd, {
           count: fold.foldCount,
@@ -130,21 +141,13 @@ export function getParametricTip(
             refTemp: ctx.referenceTempLabel,
           });
         }
-        return t(pt.bakeBeginner, { minM, maxM, turnsNote: t(pt.turnsSingle, { n: 1, turn: "volta" }) });
+        return t(pt.bakeBeginner, { minM, maxM, turnsNote: turnsNote(1) });
       }
       const minM = Math.floor(bt.minSeconds / 60);
       const maxM = Math.ceil(bt.maxSeconds / 60);
-      const turnsNote = bt.turns > 0
-        ? t(pt.turnsSingle, {
-            n: bt.turns,
-            // Plurale italiano (volta / volte); negli altri locale il placeholder
-            // resta letterale finché non viene migrato all'i18n con plurali.
-            turn: bt.turns === 1 ? "volta" : "volte",
-          })
-        : pt.turnsNone;
       return isNerd
         ? t(pt.bakeNerd, { idealSec: bt.idealSeconds, minM, maxM, turns: bt.turns, note: bt.note })
-        : t(pt.bakeBeginner, { minM, maxM, turnsNote });
+        : t(pt.bakeBeginner, { minM, maxM, turnsNote: bt.turns > 0 ? turnsNote(bt.turns) : pt.turnsNone });
     }
     default:
       return null;
@@ -419,7 +422,8 @@ export function compGramsSuffix(
 ): string {
   if (!["hydration", "oil", "sugar"].includes(c.type)) return "";
   const g = Math.round((flourG * (c.compensated - c.original)) / 100);
-  return g > 0 ? ` · ≈ +${g}g` : "";
+  /* FW-11: grammi con lo spazio e i decimali della lingua. */
+  return g > 0 ? ` · ≈ +${formatMass(g, getActiveUiLocale())}` : "";
 }
 
 /** Le microdosi richiedono una bilancia di precisione, senza sostituire il peso. */
@@ -449,17 +453,8 @@ export function fmtDuration(minutes: number, fmt?: ReturnType<typeof createForma
   const roundedMinutes = honestDurationMinutes(minutes);
   if (roundedMinutes <= 0) return "";
   if (fmt) return fmt.durationMinutes(roundedMinutes);
-  if (roundedMinutes < 60) return `${roundedMinutes} min`;
-  const totalH = Math.floor(roundedMinutes / 60);
-  const m = roundedMinutes % 60;
-  if (totalH < 24) {
-    if (m === 0) return `${totalH}h`;
-    return `${totalH}h ${m}min`;
-  }
-  const d = Math.floor(totalH / 24);
-  const h = totalH % 24;
-  const dayLabel = d === 1 ? "1 giorno" : `${d} giorni`;
-  return [dayLabel, h > 0 ? `${h}h` : "", m > 0 ? `${m}min` : ""].filter(Boolean).join(" ");
+  /* FW-11 (S10-B-17): lo stesso formato di fmt.durationMinutes. */
+  return formatDuration(roundedMinutes, getActiveUiLocale());
 }
 
 /* ═══ Clipboard helpers ═══ */
@@ -592,7 +587,7 @@ function localizeStepBase(
    * ingredienti (prima «direct|biga|poolish» diventava poolish qui e biga là). */
   const prefType = recipe.pre_ferment_type === "biga" ? "biga" : "poolish";
   const formatTemp = (value: number) =>
-    fmt ? fmt.celsius(value) : `${Math.round(value)}°C`;
+    fmt ? fmt.celsius(value) : formatTempLocale(Math.round(value), getActiveUiLocale());
 
   // Sprint 11 Fase 1: con layout speciale, gli step shape/divide/bake hanno
   // descrizioni layout-aware nel motore. Skippiamo la localizzazione CMS per quegli step

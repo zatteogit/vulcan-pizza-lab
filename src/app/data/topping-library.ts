@@ -1827,7 +1827,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
   cacio_e_pepe_crema: {
     id: "cacio_e_pepe_crema",
     concept_ref: "cacio_e_pepe",
-    variant_name: "post-bake",
+    variant_name: "dopo la cottura",
     preferred_for_styles: ["napoletana_stg", "napoletana_canotto", "pizza_al_metro"],
     ingredients: [
       { name: "Pecorino romano grattugiato", amount: { value: 60, unit: "g" }, notes: "Per la crema", section: "superficie" },

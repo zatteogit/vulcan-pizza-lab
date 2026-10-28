@@ -15,17 +15,22 @@ import {
   type ToppingRecipe,
 } from "../../data/topping-library";
 import { authenticityLabel, engineMessage } from "./recipe-output-format";
+import { uiMessage } from "../../i18n/ui-messages";
 
-const FLAVOR_PROFILE_LABELS: Record<FlavorProfile, string> = {
-  fresh: "Freschi",
-  earthy: "Bosco",
-  spicy: "Piccanti",
-  creamy: "Cremosi",
-  rich: "Ricchi",
-  salty_savory: "Sapidi",
-  sweet_savory: "Agrodolci",
-  light: "Leggeri",
-};
+/* FW-11 (S06-A-21, S06-B-05): filtri di gusto dal catalogo, nelle 7 lingue. */
+function flavorProfileLabel(profile: FlavorProfile): string {
+  const labels: Record<FlavorProfile, string> = {
+    fresh: uiMessage("topping.flavor.fresh"),
+    earthy: uiMessage("topping.flavor.earthy"),
+    spicy: uiMessage("topping.flavor.spicy"),
+    creamy: uiMessage("topping.flavor.creamy"),
+    rich: uiMessage("topping.flavor.rich"),
+    salty_savory: uiMessage("topping.flavor.saltySavory"),
+    sweet_savory: uiMessage("topping.flavor.sweetSavory"),
+    light: uiMessage("topping.flavor.light"),
+  };
+  return labels[profile];
+}
 
 const FLAVOR_PROFILE_ORDER: FlavorProfile[] = [
   "fresh",
@@ -38,9 +43,9 @@ const FLAVOR_PROFILE_ORDER: FlavorProfile[] = [
   "sweet_savory",
 ];
 
-function normalizeSearch(value: string): string {
+function normalizeSearch(value: string, locale: string): string {
   return value
-    .toLocaleLowerCase("it")
+    .toLocaleLowerCase(locale)
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 }
@@ -134,7 +139,7 @@ export function CondimentChoiceStrip({
   );
 
   const filteredPickerChoices = useMemo(() => {
-    const q = normalizeSearch(query.trim());
+    const q = normalizeSearch(query.trim(), cms.locale.id);
     return pickerChoices.filter(({ recipe, authenticity }) => {
       const concept = toppingConcept(recipe.concept_ref, cms.toppingI18n);
       if (activeFlavor !== "all" && concept?.flavor_profile !== activeFlavor) {
@@ -148,11 +153,12 @@ export function CondimentChoiceStrip({
           concept?.name,
           concept?.description,
           concept?.occasions?.join(" "),
-          concept ? FLAVOR_PROFILE_LABELS[concept.flavor_profile] : "",
+          concept ? flavorProfileLabel(concept.flavor_profile) : "",
           authenticityLabel(authenticity, cms),
         ]
           .filter(Boolean)
           .join(" "),
+        cms.locale.id,
       );
       return searchable.includes(q);
     });
@@ -312,6 +318,7 @@ export function CondimentChoiceStrip({
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                         placeholder={engineMessage(cms, "topping.searchPlaceholder", "Cerca gusto, ingrediente o occasione")}
+                        aria-label={engineMessage(cms, "topping.searchPlaceholder", "Cerca gusto, ingrediente o occasione")}
                         className="condiment-strip-picker__search-input type-data"
                         autoFocus
                       />
@@ -350,7 +357,7 @@ export function CondimentChoiceStrip({
                             activeFlavor === profile ? " condiment-strip-picker__filter--active" : ""
                           }`}
                         >
-                          {FLAVOR_PROFILE_LABELS[profile]}
+                          {flavorProfileLabel(profile)}
                         </button>
                       ))}
                     </div>

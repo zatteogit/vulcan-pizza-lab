@@ -148,7 +148,7 @@ export function ProcedureTimeline({
                   ? localizedStep.tip.nerd
                   : localizedStep.tip.beginner
                 : null;
-              const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips, tipContext);
+              const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips, tipContext, cms.parametricText);
               const trouble = getStepTroubleshooting(step, { unleavened: !!recipe.style.dough.unleavened, filled });
               const stepFooter = <>
                 {step.duration_minutes > 0 && (

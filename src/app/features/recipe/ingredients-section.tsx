@@ -402,9 +402,9 @@ export function IngredientsSection({
               <div className="ingredients-science__grid">
                 {[
                   { l: `${cms.scienceLabels.yeastBaker} (baker's %)`, v: fmt.percent(recipe.science.yeast_baker_pct) },
-                  { l: `${cms.scienceLabels.effectiveHours} @${fmt.celsius(18)}`, v: `${recipe.science.effective_hours_18c}h` },
-                  { l: `${cms.scienceLabels.q10Factor} vs ${fmt.celsius(18)}`, v: `${recipe.science.q10_factor}×` },
-                  { l: cms.scienceLabels.waterActivity, v: `${recipe.science.water_activity}` },
+                  { l: `${cms.scienceLabels.effectiveHours} @${fmt.celsius(18)}`, v: fmt.durationShort(recipe.science.effective_hours_18c) },
+                  { l: `${cms.scienceLabels.q10Factor} vs ${fmt.celsius(18)}`, v: uiMessage("format.timesFactor", [fmt.number(Number(recipe.science.q10_factor), { maximumFractionDigits: 2 })]) },
+                  { l: cms.scienceLabels.waterActivity, v: fmt.number(Number(recipe.science.water_activity), { maximumFractionDigits: 3 }) },
                   { l: cms.scienceLabels.glutenNetwork, v: `${recipe.science.gluten_network}/100` },
                   { l: cms.scienceLabels.proteolysis, v: `${recipe.science.proteolysis_index}/100` },
                   { l: cms.scienceLabels.desiredDoughTemp, v: fmt.celsius(recipe.science.desired_dough_temp_c) },
