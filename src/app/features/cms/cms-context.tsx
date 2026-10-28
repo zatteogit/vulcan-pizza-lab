@@ -94,7 +94,6 @@ export interface CmsUiStrings {
   aboutDescription: string;
   // Actions
   copy: string;
-  copied: string;
   share: string;
   back: string;
   reset: string;
@@ -155,8 +154,6 @@ export interface CmsUiStrings {
   // Recipe output — aria labels
   ariaReduceBalls: string;
   ariaAddBalls: string;
-  ariaEarlier: string;
-  ariaLater: string;
   // Stat strip
   statHydration: string;
   statOven: string;
@@ -711,7 +708,6 @@ interface CmsPages {
   recipeStyleNotFound: string;
   recipeStyleNotFoundDesc: string;
   recipeExploreStyles: string;
-  recipeCopyLinkAria: string;
   // Not found page
   notFoundTitle: string;
   notFoundSubtitle: string;
@@ -1076,11 +1072,6 @@ export interface CmsContent {
     learnInlineTitle: string;
     tipsCountOne: string;
     tipsCountMany: string;
-    glossaryPreferment: string;
-    glossaryBulk: string;
-    glossaryProof: string;
-    glossaryBake: string;
-    glossaryMix: string;
     servingUnits: Record<string, { singular: string; plural: string }>;
   };
   /** Stringhe UI varie prima hard-coded nei componenti (VPL-082) */
@@ -1418,7 +1409,6 @@ export const CMS_DEFAULTS: CmsContent = {
     scoreReferencePending: "Profilo di deviazione non ancora verificato per questo stile.",
 
     copy: "Copia",
-    copied: "Copiato!",
     share: "Condividi",
     back: "Indietro",
     reset: "Resetta",
@@ -1473,8 +1463,6 @@ export const CMS_DEFAULTS: CmsContent = {
     // Recipe output — aria labels
     ariaReduceBalls: "Riduci il numero di panetti",
     ariaAddBalls: "Aumenta il numero di panetti",
-    ariaEarlier: "Inizia prima",
-    ariaLater: "Inizia più tardi",
     // Stat strip
     statHydration: "Idratazione",
     statOven: "Forno",
@@ -1913,11 +1901,6 @@ export const CMS_DEFAULTS: CmsContent = {
     learnInlineTitle: "Approfondisci: {label}",
     tipsCountOne: "{n} consiglio",
     tipsCountMany: "{n} consigli",
-    glossaryPreferment: "Biga e pre-fermenti",
-    glossaryBulk: "La puntata",
-    glossaryProof: "L'appretto",
-    glossaryBake: "Reazione di Maillard",
-    glossaryMix: "L'idratazione",
     servingUnits: {
       panetto: { singular: "Panetto", plural: "Panetti" },
       teglia: { singular: "Teglia", plural: "Teglie" },
@@ -2699,7 +2682,6 @@ export const CMS_DEFAULTS: CmsContent = {
     recipeStyleNotFound: "Stile non trovato",
     recipeStyleNotFoundDesc: "Non troviamo lo stile “{id}”. Puoi sceglierne un altro dal catalogo.",
     recipeExploreStyles: "Esplora stili",
-    recipeCopyLinkAria: "Copia link ricetta",
     notFoundTitle: "Pagina non trovata",
     notFoundSubtitle: "Il link potrebbe essere cambiato. Riparti da Scopri.",
     notFoundBack: "Vai a Scopri",
@@ -3305,7 +3287,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
     fields: [
       // Actions
       { path: "ui.copy", label: "Copia", type: "text" },
-      { path: "ui.copied", label: "Copiato", type: "text" },
       { path: "ui.share", label: "Condividi", type: "text" },
       { path: "ui.back", label: "Indietro", type: "text" },
       { path: "ui.close", label: "Chiudi", type: "text" },
@@ -3348,8 +3329,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       // Recipe output — aria labels
       { path: "ui.ariaReduceBalls", label: "Aria: Riduci panetti", type: "text" },
       { path: "ui.ariaAddBalls", label: "Aria: Aumenta panetti", type: "text" },
-      { path: "ui.ariaEarlier", label: "Aria: Inizia prima", type: "text" },
-      { path: "ui.ariaLater", label: "Aria: Inizia più tardi", type: "text" },
       // Stat strip
       { path: "ui.statHydration", label: "Stat: Idratazione", type: "text" },
       { path: "ui.statOven", label: "Stat: Forno", type: "text" },

@@ -1,10 +1,8 @@
-import { RecipeShare } from "./recipe-share";
 import { recipeDisplayName } from "../../domain/recipe-reference";
 import { CookingPot, Flame, ListChecks, Printer, Utensils } from "lucide-react";
 import { localizeToppingRecipe } from "../../data/topping-i18n/localize";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import React, { useEffect, useState, type ReactNode } from "react";
-import { createPortal } from "react-dom";
 import { ScrollToTopOnMount } from "./recipe-output-bits";
 import { ToppingSection } from "./topping-section";
 import { ProcedureHeroControls } from "./procedure-hero";
@@ -54,7 +52,6 @@ interface RecipeOutputProps {
   selectedToppingConcept?: string | null;
   onSelectTopping?: (conceptId: string) => void;
   onTabChange?: (tab: PagerTabId) => void;
-  shareUrl?: string;
   nerdAvailable?: boolean;
   onNerdModeChange?: (nerd: boolean) => void;
   isPersonalized?: boolean;
@@ -103,7 +100,6 @@ export function RecipeOutput({
   selectedToppingConcept,
   onSelectTopping,
   onTabChange,
-  shareUrl,
   nerdAvailable = false,
   onNerdModeChange,
   isPersonalized = true,
@@ -119,12 +115,6 @@ export function RecipeOutput({
     const open = () => setPrintOpen(true);
     window.addEventListener("vulcan:print-request", open);
     return () => window.removeEventListener("vulcan:print-request", open);
-  }, []);
-
-  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
-
-  React.useLayoutEffect(() => {
-    setPortalTarget(document.getElementById("recipe-header-actions"));
   }, []);
 
   /* Warning prima di rimpiazzare una pizzata in corso di un ALTRO stile:
@@ -551,10 +541,6 @@ export function RecipeOutput({
 
   return (
     <div className="recipe-output">
-      {portalTarget && shareUrl && createPortal(
-        <RecipeShare url={shareUrl} title={recipeDisplayName(recipe, constraints.oven_type)} />, portalTarget
-      )}
-
       {/* ── Stampa: scelta delle parti e scheda di produzione ── */}
       <ConfirmDialog
         open={printOpen}
@@ -736,7 +722,6 @@ export function RecipeOutput({
             );
           })}
         </div>
-        {shareUrl && <RecipeShare url={shareUrl} title={recipeDisplayName(recipe, constraints.oven_type)} />}
       </div>
       )}
 

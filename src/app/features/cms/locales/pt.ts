@@ -94,7 +94,6 @@ export const PT_LOCALE: CmsContent = {
     scoreReferencePending: "O perfil de desvio deste estilo ainda não foi verificado.",
 
     copy: "Copiar",
-    copied: "Copiado!",
     share: "Compartilhar",
     back: "Voltar",
     reset: "Redefinir",
@@ -145,8 +144,6 @@ export const PT_LOCALE: CmsContent = {
     relativeToBase: "em relação à base",
     ariaReduceBalls: "Reduzir bolas de massa",
     ariaAddBalls: "Aumentar bolas de massa",
-    ariaEarlier: "Come\u00E7ar mais cedo",
-    ariaLater: "Come\u00E7ar mais tarde",
     statHydration: "Hidrata\u00E7\u00E3o",
     statOven: "Forno",
     statRest: "Descanso",
@@ -1583,7 +1580,6 @@ export const PT_LOCALE: CmsContent = {
     recipeStyleNotFoundDesc:
       "Não encontramos o estilo «{id}». Você pode escolher outro no catálogo.",
     recipeExploreStyles: "Explorar estilos",
-    recipeCopyLinkAria: "Copiar link da receita",
     notFoundTitle: "P\u00E1gina n\u00E3o encontrada",
     notFoundSubtitle:
       "O endereço pode ter mudado. Volta a Explorar.",
@@ -1715,11 +1711,6 @@ export const PT_LOCALE: CmsContent = {
   },
   cooking: {
     recipeCanonicalEyebrow: "Original",
-    glossaryPreferment: "Biga e prefermentos",
-    glossaryBulk: "Fermentação em massa",
-    glossaryProof: "Fermentação final (appretto)",
-    glossaryBake: "Reação de Maillard",
-    glossaryMix: "Hidratação",
     sectionsAria: "Se\u00E7\u00F5es da receita",
     toppingPrevAria: "Cobertura anterior",
     toppingNextAria: "Pr\u00F3xima cobertura",

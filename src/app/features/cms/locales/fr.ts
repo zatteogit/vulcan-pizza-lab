@@ -94,7 +94,6 @@ export const FR_LOCALE: CmsContent = {
     scoreReferencePending: "Le profil de variation de ce style reste à vérifier.",
 
     copy: "Copier",
-    copied: "Copi\u00E9 !",
     share: "Partager",
     back: "Retour",
     reset: "R\u00E9initialiser",
@@ -145,8 +144,6 @@ export const FR_LOCALE: CmsContent = {
     relativeToBase: "par rapport à la base",
     ariaReduceBalls: "R\u00E9duire le nombre de p\u00E2tons",
     ariaAddBalls: "Augmenter le nombre de p\u00E2tons",
-    ariaEarlier: "Commencer plus t\u00F4t",
-    ariaLater: "Commencer plus tard",
     statHydration: "Hydratation",
     statOven: "Four",
     statRest: "Repos",
@@ -1589,7 +1586,6 @@ export const FR_LOCALE: CmsContent = {
     recipeStyleNotFoundDesc:
       "Le style « {id} » est introuvable. Choisissez-en un autre dans le catalogue.",
     recipeExploreStyles: "Explorer les styles",
-    recipeCopyLinkAria: "Copier le lien de la recette",
     notFoundTitle: "Page introuvable",
     notFoundSubtitle:
       "Le lien a peut-être changé. Repartez de Découvrir.",
@@ -1724,11 +1720,6 @@ export const FR_LOCALE: CmsContent = {
   },
   cooking: {
     recipeCanonicalEyebrow: "Originale",
-    glossaryPreferment: "Biga et pré-ferments",
-    glossaryBulk: "Fermentation en masse",
-    glossaryProof: "Apprêt",
-    glossaryBake: "Réaction de Maillard",
-    glossaryMix: "Hydratation",
     sectionsAria: "Sections de la recette",
     toppingPrevAria: "Garniture pr\u00E9c\u00E9dente",
     toppingNextAria: "Garniture suivante",

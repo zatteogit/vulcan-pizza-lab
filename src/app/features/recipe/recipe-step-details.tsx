@@ -14,7 +14,6 @@ import { getTermById } from "../../data/glossary-data";
 /* ═══ Learning contestuale: ogni fase porta al suo termine nel glossario ═══
    (feedback giugno 2026 — il "come si impara" richiamabile dalla ricetta) */
 const STEP_GLOSSARY: Record<string, { hash: string }> = {
-  preferment: { hash: "biga" },
   bulk: { hash: "bulk_fermentation" },
   proof: { hash: "ball_fermentation" },
   bake: { hash: "maillard" },

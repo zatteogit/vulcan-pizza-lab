@@ -105,7 +105,6 @@ export const EN_LOCALE: CmsContent = {
 
     // Actions
     copy: "Copy",
-    copied: "Copied!",
     share: "Share",
     back: "Back",
     reset: "Reset",
@@ -161,8 +160,6 @@ export const EN_LOCALE: CmsContent = {
     // Recipe output — aria labels
     ariaReduceBalls: "Reduce number of dough balls",
     ariaAddBalls: "Increase number of dough balls",
-    ariaEarlier: "Start earlier",
-    ariaLater: "Start later",
     // Stat strip
     statHydration: "Hydration",
     statOven: "Oven",
@@ -716,11 +713,6 @@ export const EN_LOCALE: CmsContent = {
     learnInlineTitle: "Learn more: {label}",
     tipsCountOne: "{n} tip",
     tipsCountMany: "{n} tips",
-    glossaryPreferment: "Biga and pre-ferments",
-    glossaryBulk: "Bulk fermentation",
-    glossaryProof: "Proofing",
-    glossaryBake: "Maillard reaction",
-    glossaryMix: "Hydration",
     servingUnits: {
       panetto: { singular: "Dough ball", plural: "Dough balls" },
       teglia: { singular: "Tray", plural: "Trays" },
@@ -1775,7 +1767,6 @@ export const EN_LOCALE: CmsContent = {
     recipeStyleNotFoundDesc:
       "We can’t find “{id}”. Choose another style from the catalogue.",
     recipeExploreStyles: "Explore styles",
-    recipeCopyLinkAria: "Copy recipe link",
     notFoundTitle: "Page not found",
     notFoundSubtitle: "The link may have changed. Start again from Explore.",
     notFoundBack: "Go to Explore",
