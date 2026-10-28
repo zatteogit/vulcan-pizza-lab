@@ -1273,6 +1273,7 @@ export function HomePage() {
                 styleId: selectedStyle.id,
                 tailored: createDirty || Boolean(resolvedRecipeName),
                 tailoredLabel: cms.ui.scoreBasisTailored,
+                referenceLabel: cms.ui.scoreBasisOriginal,
                 interpretation: createOrigin ?? null,
                 version: activeVersion,
                 versionLabel: activeVersion ? cms.messages?.[`version.label.${activeVersion.label}`] ?? activeVersion.label : undefined,

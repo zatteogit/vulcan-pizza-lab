@@ -388,7 +388,7 @@ export function RecipeSetupPanel({
               {interpretations.length > 0 && (
                 <div className="setup-signatures">
                   <div className="setup-signatures__label">
-                    {cms.misc.signatureLabel || uiMessage("features.recipe.recipe-setup-panel.firma-439145df")}
+                    {cms.misc.signatureLabel}
                   </div>
                   {interpretations.map((interpretation) => {
                     const active = activeInterpretationId === interpretation.id;

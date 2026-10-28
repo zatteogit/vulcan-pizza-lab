@@ -43,19 +43,15 @@ export interface ReferenceDelta {
 }
 
 export function compareToReference(recipe: GeneratedRecipe, reference: GeneratedRecipe): ReferenceDelta[] {
-  const deltas: ReferenceDelta[] = [];
-  // Idratazione mostrata con un decimale al massimo: sotto non è una modifica.
-  if (Math.abs(recipe.hydration_pct - reference.hydration_pct) >= 0.05) {
-    deltas.push({ param: "hydration", reference: { value: reference.hydration_pct }, current: { value: recipe.hydration_pct } });
-  }
-  if (Math.round(recipe.flour_w) !== Math.round(reference.flour_w)) {
-    deltas.push({ param: "flourW", reference: { value: reference.flour_w }, current: { value: recipe.flour_w } });
-  }
-  if (Math.abs(recipe.fermentation_hours - reference.fermentation_hours) >= 0.05
-    || recipe.fermentation_temp_c !== reference.fermentation_temp_c) {
-    deltas.push({ param: "fermentation",
-      reference: { value: reference.fermentation_hours, tempC: reference.fermentation_temp_c },
-      current: { value: recipe.fermentation_hours, tempC: recipe.fermentation_temp_c } });
-  }
-  return deltas;
+  const side = (r: GeneratedRecipe, param: ReferenceParam) => param === "hydration" ? { value: r.hydration_pct }
+    : param === "flourW" ? { value: r.flour_w } : { value: r.fermentation_hours, tempC: r.fermentation_temp_c };
+  // Idratazione e ore mostrate con un decimale al massimo: sotto non è una modifica.
+  const changed: Record<ReferenceParam, boolean> = {
+    hydration: Math.abs(recipe.hydration_pct - reference.hydration_pct) >= 0.05,
+    flourW: Math.round(recipe.flour_w) !== Math.round(reference.flour_w),
+    fermentation: Math.abs(recipe.fermentation_hours - reference.fermentation_hours) >= 0.05
+      || recipe.fermentation_temp_c !== reference.fermentation_temp_c,
+  };
+  return (Object.keys(changed) as ReferenceParam[]).filter((p) => changed[p])
+    .map((param) => ({ param, reference: side(reference, param), current: side(recipe, param) }));
 }

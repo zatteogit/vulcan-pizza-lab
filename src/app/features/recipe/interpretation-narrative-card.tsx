@@ -15,6 +15,7 @@ import type { Interpretation } from "../../data/interpretation-library";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import { ModalSheet, Surface } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
+import { interpretationShortName } from "./reference-label";
 
 /** Nome primario dell'interpretazione (maestro › locale › ente › firma). */
 function primaryName(it: Interpretation): string {
@@ -42,10 +43,7 @@ function changesParameters(it: Interpretation): boolean {
 /** Nome BREVE per le chip: gli enti si presentano come "SIGLA — Nome esteso"
  *  (AVPN, APITER…) — in chip va la sigla, il nome pieno vive nella modale. */
 function chipName(it: Interpretation): string {
-  if (it.short_name) return it.short_name;
-  const name = primaryName(it);
-  const short = name.split("—")[0].trim();
-  return short || name;
+  return interpretationShortName(it) || primaryName(it);
 }
 
 export function InterpretationSwitcher({
@@ -96,13 +94,13 @@ export function InterpretationSwitcher({
       {/* "Vedi tutte" resta SEMPRE in vista (fuori dallo scroller delle chip). */}
       <div className="interpretation-picker">
         <span className="interpretation-switcher__label">
-          {cms.misc.inspirationLabel ?? uiMessage("features.recipe.interpretation-narrative-card.versione-96d474e8")}</span>
+          {cms.misc.inspirationLabel}</span>
         <div className="interpretation-switcher">
           <div
             ref={scrollRef}
             className="interpretation-switcher__scroll"
             role="group"
-            aria-label={cms.misc.inspirationLabel ?? uiMessage("features.recipe.interpretation-narrative-card.ispirazione-fea568b8")}
+            aria-label={cms.misc.inspirationLabel}
           >
             <button
               type="button"
@@ -114,7 +112,7 @@ export function InterpretationSwitcher({
             >
               {defaultInterpretation
                 ? chipName(defaultInterpretation)
-                : (cms.misc.inspirationBase ?? uiMessage("features.recipe.interpretation-narrative-card.tradizionale-57d82228"))}
+                : cms.misc.inspirationBase}
             </button>
             {parametric.map((it) => {
               const isActive = it.id === activeId;

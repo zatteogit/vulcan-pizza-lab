@@ -814,25 +814,28 @@ export interface StyleReference {
   basis: StyleReferenceBasis;
 }
 
+const disciplinare = (id: string): StyleReference => ({ referenceVersionId: null, referenceInterpretationId: id, basis: "disciplinare" });
+const provisional = (id: string | null): StyleReference => ({ referenceVersionId: id, basis: "provisional" });
+
 const STYLE_REFERENCES: Record<string, StyleReference> = {
-  napoletana_stg: { referenceVersionId: null, referenceInterpretationId: "avpn_disciplinare", basis: "disciplinare" },
-  focaccia_recco: { referenceVersionId: null, referenceInterpretationId: "igp_recco", basis: "disciplinare" },
-  teglia_romana: { referenceVersionId: null, referenceInterpretationId: "apiter_teglia", basis: "disciplinare" },
-  napoletana_canotto: { referenceVersionId: "canotto_martucci", basis: "provisional" },
-  tonda_romana: { referenceVersionId: "tonda_scrocchiarella", basis: "provisional" },
-  pinsa_romana: { referenceVersionId: "pinsa_tradizionale", basis: "provisional" },
-  new_york: { referenceVersionId: "ny_classica", basis: "provisional" },
-  detroit: { referenceVersionId: "detroit_classica", basis: "provisional" },
-  chicago_deep: { referenceVersionId: "chicago_tradizionale", basis: "provisional" },
-  focaccia_genovese: { referenceVersionId: null, basis: "provisional" },
-  sfincione: { referenceVersionId: "sfincione_casalingo", basis: "provisional" },
-  pala_romana: { referenceVersionId: "pala_pro", basis: "provisional" },
-  grandma_style: { referenceVersionId: "grandma_long_island", basis: "provisional" },
-  padellino_torino: { referenceVersionId: null, basis: "provisional" },
-  pizza_baciata: { referenceVersionId: "baciata_bonci", basis: "provisional" },
-  pizza_spaccata: { referenceVersionId: "spaccata_tradizionale", basis: "provisional" },
-  trancio_milanese: { referenceVersionId: "trancio_pizzeria", basis: "provisional" },
-  chicago_tavern: { referenceVersionId: "tavern_cracker", basis: "provisional" },
+  napoletana_stg: disciplinare("avpn_disciplinare"),
+  focaccia_recco: disciplinare("igp_recco"),
+  teglia_romana: disciplinare("apiter_teglia"),
+  napoletana_canotto: provisional("canotto_martucci"),
+  tonda_romana: provisional("tonda_scrocchiarella"),
+  pinsa_romana: provisional("pinsa_tradizionale"),
+  new_york: provisional("ny_classica"),
+  detroit: provisional("detroit_classica"),
+  chicago_deep: provisional("chicago_tradizionale"),
+  focaccia_genovese: provisional(null),
+  sfincione: provisional("sfincione_casalingo"),
+  pala_romana: provisional("pala_pro"),
+  grandma_style: provisional("grandma_long_island"),
+  padellino_torino: provisional(null),
+  pizza_baciata: provisional("baciata_bonci"),
+  pizza_spaccata: provisional("spaccata_tradizionale"),
+  trancio_milanese: provisional("trancio_pizzeria"),
+  chicago_tavern: provisional("tavern_cracker"),
 };
 
 /** Riferimento dichiarato dello stile; senza voce: centro degli intervalli. */

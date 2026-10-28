@@ -21,7 +21,7 @@ export const ES_LOCALE: CmsContent = {
   inspirationI18n: INSPIRATION_I18N_ES,
   ui: {
     scoreTipTitle: "Cómo leer la puntuación",
-    scoreTipOriginal: "Receta de referencia del estilo, evaluada para tu cocina.",
+    scoreTipOriginal: "Referencia del estilo, en tu cocina.",
     scoreTipTailored: "Versión con las adaptaciones propuestas.",
     scoreTipGlobal: "La puntuación considera viabilidad y autenticidad. No certifica el cumplimiento de un pliego de condiciones.",
     scoreTipBlocked: "Hay requisitos sin cumplir: abre el detalle.",
@@ -423,37 +423,11 @@ export const ES_LOCALE: CmsContent = {
     },
   },
   families: {
-    napoletana: {
-      name: "Napolitana",
-      description:
-        "Borde pronunciado, centro fino y cocción a alta temperatura.",
-      emoji: "\u{1F1EE}\u{1F1F9}",
-    },
-    romana: {
-      name: "Romana",
-      description:
-        "Desde la redonda fina y crujiente hasta la pizza alta en bandeja.",
-      emoji: "\u{1F3DB}\uFE0F",
-    },
-    americana: {
-      name: "Americana",
-      description:
-        "Formatos, masas y tradiciones regionales de la pizza en las Américas: Estados Unidos y Argentina.",
-      emoji: "\u{1F5FD}",
-    },
-    contemporanea: {
-      name: "Contempor\u00E1nea",
-      description:
-        "Nuevas interpretaciones de masas, texturas y técnicas.",
-      emoji: "\u{1F52C}",
-    },
-    // FW-14 (D-G): stili storici non napoletani né romani.
-    regionale: {
-      name: "Tradiciones regionales",
-      description:
-        "Pizzas y focaccias históricas de las regiones italianas, más allá de la tradición napolitana y romana.",
-      emoji: "\u{1F5FA}\uFE0F",
-    },
+    napoletana: { name: "Napolitana" },
+    romana: { name: "Romana" },
+    americana: { name: "Americana" },
+    contemporanea: { name: "Contempor\u00E1nea" },
+    regionale: { name: "Tradiciones regionales" },
   },
   allFamiliesLabel: "Todas las familias",
   tiers: {
@@ -561,7 +535,6 @@ export const ES_LOCALE: CmsContent = {
     notFeasibleExplainer: "Estas recetas tienen un requisito incumplido. Abre el detalle para ver qué cambiar.",
     exploreHeroTitle1: "Explora estilos",
     exploreHeroTitle2: "y recetas.",
-    exploreSectionTraditional: "Estilos tradicionales",
     badgeBeginnerFriendly: "Principiantes",
     interpretationsLabel: "Interpretaciones",
     goToSite: "Ir al sitio",
@@ -1891,7 +1864,7 @@ export const ES_LOCALE: CmsContent = {
     draftReplaceTitle: "\u00BFSustituir la receta en curso?",
     draftReplaceBody: "Ya tienes {current} lista y ajustada a tus tiempos. Si eliges {next}, la sustituyes y se pierden sus par\u00E1metros.",
     draftReplaceConfirm: "Cambiar a {next}",
-    prefermentSaltNote: "En esta receta, la sal se añade a la masa final, no al prefermento, donde frenaría la levadura.",
+    prefermentSaltNote: "La sal va en la masa final, no en el prefermento, donde frenaría la levadura.",
     learnedFromAttempts: "He aprendido de tus {n} intentos",
     applyCorrections: "Aplicar las correcciones",
     learnInlineTitle: "Saber m\u00E1s: {label}",

@@ -28,7 +28,7 @@ export const EN_LOCALE: CmsContent = {
   inspirationI18n: INSPIRATION_I18N_EN,
   ui: {
     scoreTipTitle: "How to read the score",
-    scoreTipOriginal: "The style's reference recipe, assessed for your kitchen.",
+    scoreTipOriginal: "Style reference, on your kitchen.",
     scoreTipTailored: "Version with the proposed adaptations.",
     scoreTipGlobal: "The score considers feasibility and authenticity. It does not certify compliance with a specification.",
     scoreTipBlocked: "Some requirements are unmet: open the details.",
@@ -432,37 +432,11 @@ export const EN_LOCALE: CmsContent = {
     },
   },
   families: {
-    napoletana: {
-      name: "Neapolitan",
-      description:
-        "A raised rim, thin centre and high-temperature baking.",
-      emoji: "\u{1F1EE}\u{1F1F9}",
-    },
-    romana: {
-      name: "Roman",
-      description:
-        "From thin, crisp rounds to thick tray-baked pizza.",
-      emoji: "\u{1F3DB}\uFE0F",
-    },
-    americana: {
-      name: "American",
-      description:
-        "Pizza shapes, doughs and regional traditions across the Americas: the United States and Argentina.",
-      emoji: "\u{1F5FD}",
-    },
-    contemporanea: {
-      name: "Contemporary",
-      description:
-        "New interpretations of doughs, textures and techniques.",
-      emoji: "\u{1F52C}",
-    },
-    // FW-14 (D-G): stili storici non napoletani né romani.
-    regionale: {
-      name: "Regional traditions",
-      description:
-        "Historic pizzas and focaccias from Italian regions beyond the Neapolitan and Roman traditions.",
-      emoji: "\u{1F5FA}\uFE0F",
-    },
+    napoletana: { name: "Neapolitan" },
+    romana: { name: "Roman" },
+    americana: { name: "American" },
+    contemporanea: { name: "Contemporary" },
+    regionale: { name: "Regional traditions" },
   },
   allFamiliesLabel: "All families",
   tiers: {
@@ -710,7 +684,7 @@ export const EN_LOCALE: CmsContent = {
       "{current} is already dialed in for your schedule. Choosing {next} replaces it and its settings are lost.",
     draftReplaceConfirm: "Switch to {next}",
     prefermentSaltNote:
-      "In this recipe, salt goes into the final dough, not the preferment, where it would slow the yeast.",
+      "Salt goes into the final dough, not the preferment, where it would slow the yeast.",
     learnedFromAttempts: "I learned from your {n} attempts",
     applyCorrections: "Apply the corrections",
     learnInlineTitle: "Learn more: {label}",
@@ -762,7 +736,6 @@ export const EN_LOCALE: CmsContent = {
     notFeasibleExplainer: "These recipes have an unmet requirement. Open the details to see what needs to change.",
     exploreHeroTitle1: "Explore styles",
     exploreHeroTitle2: "and recipes.",
-    exploreSectionTraditional: "Traditional styles",
     badgeBeginnerFriendly: "Beginner-friendly",
     interpretationsLabel: "Interpretations",
     goToSite: "Go to site",

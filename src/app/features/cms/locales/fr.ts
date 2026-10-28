@@ -18,7 +18,7 @@ export const FR_LOCALE: CmsContent = {
   inspirationI18n: INSPIRATION_I18N_FR,
   ui: {
     scoreTipTitle: "Comprendre le score",
-    scoreTipOriginal: "Recette de référence du style, évaluée pour votre cuisine.",
+    scoreTipOriginal: "Référence du style, pour votre cuisine.",
     scoreTipTailored: "Version avec les adaptations proposées.",
     scoreTipGlobal: "Le score tient compte de la faisabilité et de l’authenticité. Il ne certifie pas la conformité à un cahier des charges.",
     scoreTipBlocked: "Certains prérequis ne sont pas remplis : ouvrez le détail.",
@@ -420,37 +420,11 @@ export const FR_LOCALE: CmsContent = {
     },
   },
   families: {
-    napoletana: {
-      name: "Napolitaine",
-      description:
-        "Bord marqué, centre fin et cuisson à haute température.",
-      emoji: "\u{1F1EE}\u{1F1F9}",
-    },
-    romana: {
-      name: "Romaine",
-      description:
-        "De la pizza ronde fine et croustillante à la pizza épaisse en plaque.",
-      emoji: "\u{1F3DB}\uFE0F",
-    },
-    americana: {
-      name: "Am\u00E9ricaine",
-      description:
-        "Formats, pâtes et traditions régionales de la pizza dans les Amériques : États-Unis et Argentine.",
-      emoji: "\u{1F5FD}",
-    },
-    contemporanea: {
-      name: "Contemporaine",
-      description:
-        "Nouvelles interprétations des pâvos, des textures et des techniques.",
-      emoji: "\u{1F52C}",
-    },
-    // FW-14 (D-G): stili storici non napoletani né romani.
-    regionale: {
-      name: "Traditions régionales",
-      description:
-        "Pizzas et focaccias historiques des régions italiennes, au-delà des traditions napolitaine et romaine.",
-      emoji: "\u{1F5FA}\uFE0F",
-    },
+    napoletana: { name: "Napolitaine" },
+    romana: { name: "Romaine" },
+    americana: { name: "Am\u00E9ricaine" },
+    contemporanea: { name: "Contemporaine" },
+    regionale: { name: "Traditions régionales" },
   },
   allFamiliesLabel: "Toutes les familles",
   tiers: {
@@ -558,7 +532,6 @@ export const FR_LOCALE: CmsContent = {
     notFeasibleExplainer: "Une condition manque pour ces recettes. Ouvrez le détail pour voir quoi modifier.",
     exploreHeroTitle1: "Explorez les styles",
     exploreHeroTitle2: "et les recettes.",
-    exploreSectionTraditional: "Styles traditionnels",
     badgeBeginnerFriendly: "Débutants",
     interpretationsLabel: "Interprétations",
     goToSite: "Aller au site",
@@ -1897,7 +1870,7 @@ export const FR_LOCALE: CmsContent = {
     draftReplaceTitle: "Remplacer la recette en cours ?",
     draftReplaceBody: "Vous avez d\u00E9j\u00E0 {current} pr\u00EAte et r\u00E9gl\u00E9e sur votre planning. En choisissant {next}, vous la remplacez et ses param\u00E8tres seront perdus.",
     draftReplaceConfirm: "Passer \u00E0 {next}",
-    prefermentSaltNote: "Dans cette recette, le sel s’ajoute à la pâte finale, pas au préferment, où il freinerait la levure.",
+    prefermentSaltNote: "Le sel va dans la pâte finale, pas dans le préferment, où il freinerait la levure.",
     learnedFromAttempts: "J'ai appris de vos {n} essais",
     applyCorrections: "Appliquer les corrections",
     learnInlineTitle: "En savoir plus : {label}",

@@ -9,40 +9,17 @@ import type { FamilyId, PizzaStyle, StyleOrigin } from "./pizza-engine";
 
 export const PIZZA_FAMILIES: Record<
   FamilyId,
-  { name: string; description: string; emoji: string }
+  { name: string }
 > = {
-  napoletana: {
-    name: "Napoletana",
-    description:
-      "Cornicione pronunciato, centro sottile e cottura ad alta temperatura.",
-    emoji: "🇮🇹",
-  },
-  romana: {
-    name: "Romana",
-    description:
-      "Dalla tonda sottile e croccante alla pizza alta in teglia.",
-    emoji: "🏛️",
-  },
-  americana: {
-    name: "Americana",
-    description:
-      "Formati, impasti e tradizioni regionali della pizza nelle Americhe: Stati Uniti e Argentina.",
-    emoji: "🗽",
-  },
-  contemporanea: {
-    name: "Contemporanea",
-    description:
-      "Nuove interpretazioni di impasti, consistenze e tecniche.",
-    emoji: "🔬",
-  },
+  napoletana: { name: "Napoletana" },
+  romana: { name: "Romana" },
+  americana: { name: "Americana" },
+  contemporanea: { name: "Contemporanea" },
   // FW-14 (D-G, S02-A-04): stili storici non napoletani né romani, prima
   // classificati come «Contemporanea». Da confermare da Matteo stile per stile.
-  regionale: {
-    name: "Tradizioni regionali",
-    description:
-      "Pizze e focacce storiche delle regioni italiane, fuori dalla tradizione napoletana e romana.",
-    emoji: "🗺️",
-  },
+  // Le famiglie hanno solo il nome: descrizioni ed emoji non le mostrava
+  // nessuna schermata (budget JS); il nome localizzato è in cms.families.
+  regionale: { name: "Tradizioni regionali" },
 };
 
 /** Uno stile appartiene a una famiglia se è la sua primaria O una secondaria.

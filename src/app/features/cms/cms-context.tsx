@@ -389,8 +389,9 @@ interface CmsSkillLevel {
 
 interface CmsFamily {
   name: string;
-  description: string;
-  emoji: string;
+  /** Non mostrata dall'app (FW-14): facoltativa, assente dai default. */
+  description?: string;
+  emoji?: string;
 }
 
 interface CmsTier {
@@ -1108,7 +1109,6 @@ export interface CmsContent {
     notFeasibleExplainer: string;
     exploreHeroTitle1: string;
     exploreHeroTitle2: string;
-    exploreSectionTraditional: string;
     badgeBeginnerFriendly: string;
     interpretationsLabel: string;
     goToSite: string;
@@ -1332,7 +1332,7 @@ export const CMS_DEFAULTS: CmsContent = {
   messages: UI_MESSAGES_IT,
   ui: {
     scoreTipTitle: "Come leggere il punteggio",
-    scoreTipOriginal: "Ricetta di riferimento dello stile, valutata con la tua cucina.",
+    scoreTipOriginal: "Riferimento dello stile, sulla tua cucina.",
     scoreTipTailored: "Versione con gli adattamenti proposti.",
     scoreTipGlobal: "Il voto tiene conto di fattibilità e autenticità. Non attesta la conformità a un disciplinare.",
     scoreTipBlocked: "Ci sono requisiti non rispettati: apri il dettaglio.",
@@ -1649,13 +1649,15 @@ export const CMS_DEFAULTS: CmsContent = {
     "3": { name: "Avanzato",     description: "Gestisco pieghe e lievitazioni" },
     "4": { name: "Esperto",      description: "Adatto impasti, tempi e tecniche" },
   },
+  /* FW-14 (D-G): le famiglie hanno solo il nome. Descrizioni ed emoji non le
+     mostrava nessuna schermata (e la descrizione di «Contemporanea» era falsa
+     per metà dei membri): tolte da tutte le lingue per il budget JS. */
   families: {
-    napoletana:    { name: "Napoletana",    description: "Cornicione pronunciato, centro sottile e cottura ad alta temperatura.", emoji: "\u{1F1EE}\u{1F1F9}" },
-    romana:        { name: "Romana",        description: "Dalla tonda sottile e croccante alla pizza alta in teglia.", emoji: "\u{1F3DB}\uFE0F" },
-    americana:     { name: "Americana",     description: "Formati, impasti e tradizioni regionali della pizza nelle Americhe: Stati Uniti e Argentina.", emoji: "\u{1F5FD}" },
-    contemporanea: { name: "Contemporanea", description: "Nuove interpretazioni di impasti, consistenze e tecniche.", emoji: "\u{1F52C}" },
-    // FW-14 (D-G): stili storici non napoletani né romani.
-    regionale:     { name: "Tradizioni regionali", description: "Pizze e focacce storiche delle regioni italiane, fuori dalla tradizione napoletana e romana.", emoji: "\u{1F5FA}\uFE0F" },
+    napoletana:    { name: "Napoletana" },
+    romana:        { name: "Romana" },
+    americana:     { name: "Americana" },
+    contemporanea: { name: "Contemporanea" },
+    regionale:     { name: "Tradizioni regionali" },
   },
   allFamiliesLabel: "Tutte le famiglie",
   tiers: {
@@ -1892,7 +1894,7 @@ export const CMS_DEFAULTS: CmsContent = {
       "Hai già {current} pronta e regolata sui tuoi tempi. Scegliendo {next} la sostituisci e i suoi parametri vanno persi.",
     draftReplaceConfirm: "Passa a {next}",
     prefermentSaltNote:
-      "In questa ricetta il sale si aggiunge all’impasto finale, non al prefermento: lì rallenterebbe il lievito.",
+      "Il sale va nell’impasto finale, non nel prefermento: lì frenerebbe il lievito.",
     learnedFromAttempts: "Ho imparato dai tuoi {n} tentativi",
     applyCorrections: "Applica le correzioni",
     learnInlineTitle: "Approfondisci: {label}",
@@ -1942,7 +1944,6 @@ export const CMS_DEFAULTS: CmsContent = {
     notFeasibleExplainer: "Queste ricette hanno un requisito non rispettato. Apri il dettaglio per capire cosa cambiare.",
     exploreHeroTitle1: "Esplora stili",
     exploreHeroTitle2: "e ricette.",
-    exploreSectionTraditional: "Stili tradizionali",
     badgeBeginnerFriendly: "Principianti",
     interpretationsLabel: "Interpretazioni",
     goToSite: "Vai al sito",
@@ -3621,23 +3622,13 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
     id: "families",
     label: "Famiglie & Tiers",
     icon: "layers",
-    description: "Nomi e descrizioni delle 4 famiglie pizza e delle 3 fasce di compatibilita",
+    description: "Nomi delle 5 famiglie pizza e delle 3 fasce di compatibilita",
     fields: [
       { path: "families.napoletana.name", label: "Napoletana — Nome", type: "text" },
-      { path: "families.napoletana.description", label: "Napoletana — Desc", type: "textarea" },
-      { path: "families.napoletana.emoji", label: "Napoletana — Emoji", type: "text" },
       { path: "families.romana.name", label: "Romana — Nome", type: "text" },
-      { path: "families.romana.description", label: "Romana — Desc", type: "textarea" },
-      { path: "families.romana.emoji", label: "Romana — Emoji", type: "text" },
       { path: "families.americana.name", label: "Americana — Nome", type: "text" },
-      { path: "families.americana.description", label: "Americana — Desc", type: "textarea" },
-      { path: "families.americana.emoji", label: "Americana — Emoji", type: "text" },
       { path: "families.contemporanea.name", label: "Contemporanea — Nome", type: "text" },
-      { path: "families.contemporanea.description", label: "Contemporanea — Desc", type: "textarea" },
-      { path: "families.contemporanea.emoji", label: "Contemporanea — Emoji", type: "text" },
       { path: "families.regionale.name", label: "Tradizioni regionali — Nome", type: "text" },
-      { path: "families.regionale.description", label: "Tradizioni regionali — Desc", type: "textarea" },
-      { path: "families.regionale.emoji", label: "Tradizioni regionali — Emoji", type: "text" },
       // Tiers
       { path: "tiers.perfect.label", label: "Tier Perfetto — Label", type: "text" },
       { path: "tiers.perfect.subtitle", label: "Tier Perfetto — Sub", type: "text" },

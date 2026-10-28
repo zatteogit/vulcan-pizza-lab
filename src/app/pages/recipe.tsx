@@ -848,6 +848,7 @@ function RecipeContent({
           styleId: style.id,
           tailored: isDirty || Boolean(resolvedRecipeName),
           tailoredLabel: cms.ui.scoreBasisTailored,
+          referenceLabel: cms.ui.scoreBasisOriginal,
           interpretation: originInterpretation ?? null,
           version: activeVersion,
           versionLabel: activeVersion ? cmsMessage(cms, `version.label.${activeVersion.label}`, activeVersion.label) : undefined,
