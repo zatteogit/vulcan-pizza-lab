@@ -963,6 +963,7 @@ export const EN_LOCALE: CmsContent = {
     "rec.needsWoodOven": "The original uses a wood-fired oven; baking changes with your oven.",
     "rec.ovenAdapted": "Your oven reaches {temp}: ideal temperature {ideal}, adapted baking",
     "gen.homeBakingMethod": "Home baking at {temp} on a preheated inverted tray; the result differs from the original baking at {ideal}",
+    "gen.ovenTooNarrow": "Your oven takes pizzas up to {max} cm (manufacturer's figure) and this recipe calls for {diameter} cm: stretch the disc to {max} cm at most.",
     "rec.needsDeck": "This method needs a preheated stone or steel, not listed in your kitchen",
     "timeline.homeTray.preheat": "Preheat the oven to its maximum ({temp}) with an inverted tray inside until the tray is hot too. Meanwhile, finish resting the dough.",
     "timeline.homeTray.bake": "Bake on the preheated inverted tray. Check the base colour and doneness before removing.",
@@ -1163,6 +1164,8 @@ export const EN_LOCALE: CmsContent = {
     "timeline.oven.gasPizza": "Gas pizza oven: heat it until the stone is up to temperature (check with an infrared thermometer), then launch and turn the pizza often, because the flame is on one side.",
     "timeline.oven.staticStone": "Conventional oven (top + bottom heat) on max, stone/steel already hot on a medium-high shelf. For the rim: last 60-90s under the grill (top element only, on max), keeping a close eye on it.",
     "timeline.oven.staticShelf": "Conventional oven (top + bottom heat) on max, shelf in a medium-high position. For the rim: last 60-90s under the grill (top element only, on max), keeping a close eye on it.",
+    "timeline.oven.staticStoneSet": "Conventional oven (top + bottom heat) set to {temp}, not on max; stone/steel already hot on a medium-high shelf.",
+    "timeline.oven.staticShelfSet": "Conventional oven (top + bottom heat) set to {temp}, not on max; shelf in a medium-high position.",
     "timeline.mix.title": "Mixing",
     "timeline.divide.title": "Dividing",
     "timeline.divide.multiPiece": "Divide each portion into {pieces} equal pieces. Shape into a ball or disc.",
@@ -1373,7 +1376,7 @@ export const EN_LOCALE: CmsContent = {
     pillExperimentation: "Experimentation",
     pillLevelBeginner: "Beginner",
     pillLevelExpert: "Expert",
-    sheetSectionTitle: "Baking Details",
+    sheetSectionTitle: "Style reference",
     sheetOvenLabel: "Ideal oven",
     sheetOvenPreheat: "Preheat: {min} min",
     sheetBakeLabel: "Bake time",
@@ -1386,7 +1389,7 @@ export const EN_LOCALE: CmsContent = {
     sheetGenerateBtn: "Generate recipe",
     sheetMatchTitle: "Why it suits your kitchen",
     sheetTechniquesLabel: "Compatible author techniques",
-    mixBeginner: "{mixer} (~{time} min mixing). {equipment}",
+    mixBeginner: "{mixer} (~{time} min mixing).",
     bulkBeginner:
       "Perform {count} folds ({type}) every {interval} minutes to develop structure.",
     shapeBeginner: "{note}",
@@ -1406,6 +1409,13 @@ export const EN_LOCALE: CmsContent = {
     turnsSingle: "Rotate {n} time(s) for even baking.",
     turnsNone: "Do not rotate during baking.",
     bakeAdaptedNerd: "Engine estimate for your oven ({temp}): {minM}\u2013{maxM} min per bake. Style reference: {refMin}\u2013{refMax} s at {refTemp}.",
+    // FW-07
+    turnsHalfway: "Turn it once halfway through.",
+    turnsFrequent: "Turn it often: the heat comes mostly from one side.",
+    sheetYourBakeLabel: "Your bake",
+    sheetOilLabel: "Oil temperature",
+    sheetOilHeat: "Bring the oil to temperature before frying: no oven needed.",
+    sheetFryTurn: "Turn it halfway through frying",
   },
   styleDescriptions: {
     napoletana_stg:

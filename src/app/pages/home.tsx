@@ -1324,6 +1324,7 @@ export function HomePage() {
                 <RecipeStatStrip
                   recipe={recipe}
                   isPersonalized={createDirty}
+                  ovenType={constraints.oven_type}
                 />
                 {/* Il dialog Personalizza: si apre dal pulsante sulla match
                     card (niente trigger proprio — nota Matteo lug 2026). */}

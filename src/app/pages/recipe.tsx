@@ -945,6 +945,7 @@ function RecipeContent({
             <RecipeStatStrip
               recipe={recipe}
               isPersonalized={isDirty}
+              ovenType={effectiveConstraints.oven_type}
             />
             {/* Il dialog Personalizza: si apre dal pulsante sulla match card
                 (niente trigger proprio — nota Matteo lug 2026). */}

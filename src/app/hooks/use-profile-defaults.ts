@@ -7,9 +7,15 @@ import { normalizeAllergenIds } from "../data/allergen-data";
 import { useMemo } from "react";
 import type {
   UserConstraints,
-  OvenType,
   SkillLevel,
 } from "../domain/pizza-engine";
+import {
+  kitchenConstraints,
+  resolveEffectiveKitchen,
+  type EffectiveKitchen,
+  type SavedEquipment,
+  type SavedOvenPref,
+} from "../use-cases/effective-kitchen";
 import { DEFAULT_KITCHEN_TEMP } from "../domain/pizza-engine";
 
 import { normalizePantryFlourDetails, type PantryFlourDetails } from "../domain/pantry-ingredients";
@@ -34,32 +40,22 @@ function loadJson<T>(key: string): T | null {
 
 interface ProfileDefaults {
   constraints: UserConstraints;
+  /** FW-07: la cucina effettiva (forno con modello, impastatrice, calore). */
+  kitchen: EffectiveKitchen;
   isProfileComplete: boolean;
   pizzaNerdEnabled: boolean;
-  /** Summary label: "Forno elettrico 250°C · Intermedio" */
-  summaryLabel: string;
 }
 
-const SKILL_LABELS: Record<number, string> = {
-  1: "Principiante",
-  2: "Intermedio",
-  3: "Avanzato",
-  4: "Esperto",
-};
-
-const OVEN_LABELS: Record<string, string> = {
-  home: "Forno di casa",
-  electric_standard: "Elettrico standard",
-  electric_high: "Elettrico alta temp.",
-  gas: "Forno a gas a platea",
-  gas_pizza: "Forno a gas da pizza",
-  wood: "Forno a legna",
-  coal: "Forno a carbone",
-};
+/** FW-07: forno e attrezzatura salvati, risolti nella cucina effettiva. */
+export function loadEffectiveKitchen(): EffectiveKitchen {
+  return resolveEffectiveKitchen({
+    oven: loadJson<SavedOvenPref>(OVEN_STORAGE_KEY),
+    equipment: loadJson<SavedEquipment>(EQUIPMENT_STORAGE_KEY),
+  });
+}
 
 export function loadProfileDefaults(): ProfileDefaults {
-  let ovenType: OvenType = "home";
-  let ovenTemp = 250;
+  const kitchen = loadEffectiveKitchen();
   let skillLevel: SkillLevel = 1;
   let dietaryFilters: string[] = [];
   let pantryFlours: string[] = [];
@@ -71,11 +67,6 @@ export function loadProfileDefaults(): ProfileDefaults {
   try {
     isProfileComplete = localStorage.getItem(PROFILE_COMPLETE_KEY) === "true";
     pizzaNerdEnabled = localStorage.getItem(NERD_STORAGE_KEY) === "true";
-    const oven = loadJson<{ ovenType?: OvenType; maxTemp?: number }>(OVEN_STORAGE_KEY);
-    if (oven) {
-      ovenType = oven.ovenType ?? ovenType;
-      ovenTemp = oven.maxTemp ?? ovenTemp;
-    }
     const skill = loadJson<number>(SKILL_STORAGE_KEY);
     if (skill) skillLevel = skill as SkillLevel;
     const dietary = loadJson<string[]>(DIETARY_STORAGE_KEY);
@@ -88,10 +79,9 @@ export function loadProfileDefaults(): ProfileDefaults {
     }
   } catch { /* */ }
 
+  const { oven_heat_profile: kitchenHeat, ...kitchenOven } = kitchenConstraints(kitchen);
   const constraints: UserConstraints = {
-    oven_type: ovenType,
-    oven_max_temp_c: ovenTemp,
-    oven_capacity_temp_c: ovenTemp,
+    ...kitchenOven,
     skill_level: skillLevel,
     available_hours: 0,
     dough_balls: 4,
@@ -131,16 +121,13 @@ export function loadProfileDefaults(): ProfileDefaults {
         constraints.has_pizza_stone = constraints.surfaces.includes("refractory_brick") || constraints.surfaces.includes("cordierite_stone");
         constraints.has_pizza_steel = constraints.surfaces.includes("steel_plate");
         constraints.has_baking_pan = constraints.surfaces.includes("aluminum_pan") || constraints.surfaces.includes("blue_steel_pan") || constraints.surfaces.includes("cast_iron");
-        constraints.oven_heat_profile = equip.oven_heat_profile ?? constraints.oven_heat_profile;
+        // FW-07: solo una distribuzione del calore valida per il tipo di forno.
+        if (kitchenHeat) constraints.oven_heat_profile = kitchenHeat;
       }
     }
   } catch { /* */ }
 
-  const ovenLabel = OVEN_LABELS[ovenType] ?? ovenType;
-  const skillLabel = SKILL_LABELS[skillLevel] ?? `Skill ${skillLevel}`;
-  const summaryLabel = `${ovenLabel} ${ovenTemp}°C · ${skillLabel}`;
-
-  return { constraints, isProfileComplete, pizzaNerdEnabled, summaryLabel };
+  return { constraints, kitchen, isProfileComplete, pizzaNerdEnabled };
 }
 
 /* ═══ Audit n. 11 (C-03): il profilo vince sulla bozza per ciò che non si
@@ -156,6 +143,7 @@ export const PROFILE_OWNED_CONSTRAINTS = [
   "oven_type",
   "oven_max_temp_c",
   "oven_capacity_temp_c",
+  "oven_max_pizza_cm",
   "skill_level",
   "has_mixer",
   "has_pizza_stone",

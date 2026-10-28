@@ -117,6 +117,15 @@ describe("server MCP", () => {
     expect(scores).toEqual([...scores].sort((a, b) => b - a));
   });
 
+  it("FW-07: il modello porta la sua temperatura (509 °C) e la bocca del forno", () => {
+    const data = call("recommend_styles", { oven_model: "Effeuno P134H", limit: 1 }).structuredContent as { constraints: { oven_max_temp_c: number; oven_max_pizza_cm?: number } };
+    expect(data.constraints.oven_max_temp_c).toBe(509);
+    expect(data.constraints.oven_max_pizza_cm).toBe(34);
+    const ny = JSON.stringify(call("generate_recipe", { oven_model: "Koda 12", style_id: "new_york" }).structuredContent);
+    expect(ny).toContain(`"key":"gen.ovenTooNarrow"`);
+    expect(ny).toContain(`"params":{"max":30,"diameter":35}`);
+  });
+
   it("il limite tiene i più compatibili, non i primi del motore", () => {
     const top = (limit: number) =>
       (call("recommend_styles", { oven_model: "Koda 16", limit }).structuredContent as { styles: { id: string }[] }).styles.map((s) => s.id);

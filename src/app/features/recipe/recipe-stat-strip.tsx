@@ -3,12 +3,17 @@ import { AnimatePresence, motion } from "motion/react";
 import { motionDelay,motionSpring } from "../../components/ds/motion";
 import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
-import { isFriedStyle, GeneratedRecipe } from "../../domain/pizza-engine";
+import { isFriedStyle, GeneratedRecipe, type OvenType } from "../../domain/pizza-engine";
+import { useState } from "react";
+import { Link } from "react-router";
+import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { uiMessage } from "../../i18n/ui-messages";
 
 interface RecipeStatStripProps {
   recipe: GeneratedRecipe;
   isPersonalized?: boolean;
+  /** FW-07: tipo di forno della ricetta, per nominare il modello del profilo. */
+  ovenType?: OvenType;
 }
 
 /**
@@ -21,10 +26,15 @@ interface RecipeStatStripProps {
 export function RecipeStatStrip({
   recipe,
   isPersonalized = true,
+  ovenType,
 }: RecipeStatStripProps) {
   const { cms, bcp47 } = useCms();
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
+  /* FW-07 (S18-A-08, S18-B-01): la ricetta nomina il forno per cui è
+     calcolata e dice quando è quello preimpostato dall'edizione. */
+  const [kitchen] = useState(() => loadEffectiveKitchen());
+  const ownOven = !!kitchen.oven.modelId && kitchen.oven.type === ovenType && !isFriedStyle(recipe.style);
 
   // #3(b) trasparenza: marca i parametri che SI DISCOSTANO dalla canonica (il
   // centro range dello stile) — di norma le scelte dell'ottimizzatore.
@@ -71,6 +81,7 @@ export function RecipeStatStrip({
     value: string;
     changed?: { canonical: string };
     note?: string;
+    model?: string;
   }[] = [
     { label: ui.statHydration, value: fmt.percent(recipe.hydration_pct), changed: hChanged },
     { label: ui.statFlourStrength ?? "Forza farina", value: `${recipe.flour_w} W`, changed: wChanged },
@@ -85,6 +96,7 @@ export function RecipeStatStrip({
       : {
           label: ui.statOven,
           value: fmt.celsius(recipe.oven_temp_c),
+          model: ownOven ? kitchen.oven.label : undefined,
           note: ovenBelowStyle
             ? uiMessage("features.recipe.recipe-stat-strip.idealOven", [fmt.celsius(recipe.style.baking.temp_c_ideal)])
             : undefined,
@@ -102,9 +114,18 @@ export function RecipeStatStrip({
           className={i > 0 ? "stat-strip__cell stat-strip__cell--divider" : "stat-strip__cell"}
         >
           <SpecCell label={cell.label} value={cell.value} index={i} changed={cell.changed} />
+          {cell.model && <small className="type-data-sm recipe-oven-model">{cell.model}</small>}
           {cell.note && <p className="stat-strip__note">{cell.note}</p>}
         </div>
       ))}
+      {ownOven && kitchen.oven.fromEdition && (
+        <p className="type-data-sm needs-oven-model" data-region="edition-oven">
+          <span data-region="oven-model-name">
+            {uiMessage("recipe.editionOven.note", [kitchen.oven.label, fmt.celsius(kitchen.oven.maxTempC)])}
+          </span>
+          <Link to="/profile?tab=setup" className="needs-oven-model__link">{uiMessage("recipe.editionOven.change")}</Link>
+        </p>
+      )}
     </div>
   );
 }

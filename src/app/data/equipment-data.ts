@@ -1,3 +1,5 @@
+import type { OvenType } from "../domain/pizza-engine";
+
 /* === EQUIPMENT DATA — basato su Database Notion ===
    Fonte: 🔥 Forni, ♨️ Teglie & Piastre, 🥣 Impastatrici, 🔧 Utensili
    Sincronizzato: 17 marzo 2026 */
@@ -84,6 +86,31 @@ export type OvenHeatProfile =
   | "gas_bottom"
   | "gas_rear"
   | "wood_side_flame";
+
+/* ═══ FW-07 — distribuzione del calore valida per tipo di forno ═══
+ * Scelta di Vulcan (mappatura editoriale, non una misura): quali disposizioni
+ * di resistenze o bruciatori esistono su ciascun tipo di forno. Un forno a
+ * legna non ha un grill superiore e un forno di casa non ha una fiamma
+ * laterale: il profilo mostra solo le opzioni valide e il motore ignora una
+ * combinazione impossibile (audit 28/10/2026, S16-B-03/A-13). */
+export const HEAT_PROFILE_OVENS: Record<OvenHeatProfile, readonly OvenType[]> = {
+  static_top_bottom: ["home", "electric_standard", "electric_high"],
+  top_grill: ["home", "electric_standard"],
+  bottom_boost: ["home", "electric_standard", "electric_high"],
+  fan_assisted: ["home", "electric_standard"],
+  gas_bottom: ["gas", "gas_pizza"],
+  gas_rear: ["gas", "gas_pizza"],
+  wood_side_flame: ["wood"],
+};
+
+export function isHeatProfileCompatible(profile: OvenHeatProfile | undefined | null, ovenType: OvenType): boolean {
+  return !!profile && (HEAT_PROFILE_OVENS[profile]?.includes(ovenType) ?? false);
+}
+
+/** Distribuzioni valide per il forno, nell'ordine in cui si mostrano. */
+export function compatibleHeatProfiles(ovenType: OvenType): OvenHeatProfile[] {
+  return (Object.keys(HEAT_PROFILE_OVENS) as OvenHeatProfile[]).filter((id) => HEAT_PROFILE_OVENS[id].includes(ovenType));
+}
 
 interface SurfaceOption {
   id: SurfaceType;

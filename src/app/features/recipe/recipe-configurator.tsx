@@ -17,12 +17,15 @@ PreFermentChoice,
 preFermentKind,
 UserConstraints,
 defaultPanShape,
+isFriedStyle,
 needsPan,
 optimizeRecipe,
 supportsThickness,
 } from "../../domain/pizza-engine";
 import { SegmentedControl, Stepper, Switch } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
+import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
+import { kitchenConstraints, resolveEffectiveKitchen } from "../../use-cases/effective-kitchen";
 import { flourStrength, type FlourStrength } from "./recipe-output-format";
 
 interface PremiumSelectOption {
@@ -433,14 +436,14 @@ export function RecipeConfigurator({
   preFermentChoice,
   onPreFermentChoiceChange,
 }: RecipeConfiguratorProps) {
+  /* FW-07 (S06-B-04): il forno della cucina effettiva, con il modello del
+     profilo; un altro tipo scelto qui vale solo per questa ricetta. */
+  const kitchen = useMemo(() => loadEffectiveKitchen(), []);
   /* Single-call update for oven to avoid the double-update bug */
-  const handleOvenSelect = (id: string, maxTemp: number) => {
-    onConstraintsChange({
-      ...constraints,
-      oven_type: id as OvenType,
-      oven_max_temp_c: maxTemp,
-      oven_capacity_temp_c: maxTemp,
-    });
+  const handleOvenSelect = (id: OvenType) => {
+    const oven = kitchenConstraints(resolveEffectiveKitchen({ oven: kitchen.oven.type === id ? { ovenType: id, maxTemp: kitchen.oven.maxTempC, modelId: kitchen.oven.modelId } : null }, undefined, { ovenType: id }));
+    const { oven_max_pizza_cm: _mouth, ...rest } = constraints;
+    onConstraintsChange({ ...rest, ...oven });
   };
 
   const { cms, bcp47 } = useCms();
@@ -984,8 +987,8 @@ export function RecipeConfigurator({
           {/* Temperatura di cottura */}
           <div className="config-field">
             <GradientSlider
-              name={uiMessage("features.recipe.recipe-configurator.temperatura-di-cottura-85a0cbf5")}
-              label={<Label>{uiMessage("features.recipe.recipe-configurator.temperatura-di-cottura-85a0cbf5")}</Label>}
+              name={uiMessage("recipe.oven.maxLabel")}
+              label={<Label>{uiMessage("recipe.oven.maxLabel")}</Label>}
               value={constraints.oven_max_temp_c}
               onChange={(v) =>
                 onConstraintsChange({
@@ -999,9 +1002,17 @@ export function RecipeConfigurator({
               unit="°C"
               rangeMin={style.baking.temp_c_range[0]}
               rangeMax={style.baking.temp_c_range[1]}
+              ceiling
               gradient={SLIDER_GRADIENTS.temperature}
               optimalValue={style.baking.temp_c_ideal}
             />
+            {/* FW-07 (S06-A-02): il cursore è un tetto; il motore cuoce
+                alla temperatura ideale dello stile quando il forno la supera. */}
+            {constraints.oven_max_temp_c > style.baking.temp_c_ideal && !isFriedStyle(style) && (
+              <p className="type-data-sm recipe-config-oven-hint">
+                {uiMessage("recipe.oven.bakeAt", [fmt.celsius(style.baking.temp_c_ideal)])}
+              </p>
+            )}
           </div>
 
           {/* Oven Selector */}
@@ -1011,17 +1022,21 @@ export function RecipeConfigurator({
               onChange={(val) => {
                 const preset = OVEN_PRESETS.find((p) => p.id === val);
                 if (preset) {
-                  handleOvenSelect(preset.id, preset.maxTemp);
+                  handleOvenSelect(preset.id);
                 }
               }}
-              options={OVEN_PRESETS.map((preset) => {
-                const name = cms.ovenPresets[preset.id]?.name ?? preset.name;
-                return {
-                  value: preset.id,
-                  label: name,
-                  subLabel: `max ${preset.maxTemp}°C`,
-                };
-              })}
+              options={[...OVEN_PRESETS]
+                // Il forno del profilo per primo, col nome del modello e la sua massima.
+                .sort((a, b) => Number(b.id === kitchen.oven.type) - Number(a.id === kitchen.oven.type))
+                .map((preset) => {
+                  const mine = preset.id === kitchen.oven.type;
+                  const name = cms.ovenPresets[preset.id]?.name ?? preset.name;
+                  return {
+                    value: preset.id,
+                    label: mine && kitchen.oven.modelId ? uiMessage("features.profile.oven-model-search.selected", [kitchen.oven.label]) : name,
+                    subLabel: uiMessage("features.profile.oven-model-search.upTo", [fmt.celsius(mine ? kitchen.oven.maxTempC : preset.maxTemp)]),
+                  };
+                })}
             />
           </div>
 
@@ -1299,6 +1314,7 @@ function GradientSlider({
   unit,
   rangeMin,
   rangeMax,
+  ceiling,
   gradient,
   adaptiveMin,
   adaptiveMax,
@@ -1316,6 +1332,8 @@ function GradientSlider({
   unit: string;
   rangeMin?: number;
   rangeMax?: number;
+  /** FW-07: il valore è un tetto, sopra rangeMax non è «fuori range». */
+  ceiling?: boolean;
   gradient: string;
   adaptiveMin?: number;
   adaptiveMax?: number;
@@ -1346,7 +1364,7 @@ function GradientSlider({
   const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
   const inRange =
     rangeMin !== undefined && rangeMax !== undefined
-      ? value >= rangeMin && value <= rangeMax
+      ? value >= rangeMin && (ceiling || value <= rangeMax)
       : true;
 
   const zoneLeftPct =

@@ -8,7 +8,9 @@ export function seedEditionOven(storage: Pick<Storage, "getItem" | "setItem"> | 
   if (!storage || !oven) return false;
   try {
     if (storage.getItem(OVEN_STORAGE_KEY) !== null) return false;
-    storage.setItem(OVEN_STORAGE_KEY, JSON.stringify({ ovenType: oven.ovenType, maxTemp: oven.maxTempC, modelId: oven.id }));
+    // FW-07 (S18-A-01): il forno del partner non diventa in silenzio il tuo:
+    // resta marcato «edizione» finché non lo confermi (Crea, profilo, percorso).
+    storage.setItem(OVEN_STORAGE_KEY, JSON.stringify({ ovenType: oven.ovenType, maxTemp: oven.maxTempC, modelId: oven.id, origin: "edition" }));
     return true;
   } catch {
     return false;

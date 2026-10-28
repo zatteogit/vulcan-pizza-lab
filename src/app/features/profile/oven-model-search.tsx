@@ -27,11 +27,17 @@ export function OvenModelSearch({
   onPick,
   onClear,
   formatTemp,
+  currentTempC,
+  onRestore,
 }: {
   selectedId: string | null;
   onPick: (model: OvenModel) => void;
   onClear: () => void;
   formatTemp: (celsius: number) => string;
+  /** FW-07 (S16-A-02): temperatura impostata nel profilo, °C. */
+  currentTempC?: number;
+  /** FW-07: torna alla temperatura dichiarata dal produttore. */
+  onRestore?: (model: OvenModel) => void;
 }) {
   const inputId = useId();
   const listId = useId();
@@ -54,6 +60,19 @@ export function OvenModelSearch({
           >
             <X size={14} />
           </IconButton>
+        </p>
+      )}
+      {/* FW-07 (S16-A-02): modello e cursore non si contraddicono in silenzio. */}
+      {selected && currentTempC !== undefined && currentTempC !== selected.maxTempC && (
+        <p className="type-data-sm oven-model-search__adjusted" role="status">
+          <span data-region="adjusted-temp">
+            {uiMessage("features.profile.oven-model-search.adjusted", [`${selected.brand} ${selected.model}`, formatTemp(currentTempC), formatTemp(selected.maxTempC)])}
+          </span>
+          {onRestore && (
+            <button type="button" className="needs-oven-model__link" onClick={() => onRestore(selected)}>
+              {uiMessage("features.profile.oven-model-search.restore")}
+            </button>
+          )}
         </p>
       )}
       <label id={`${inputId}-label`} htmlFor={inputId} className="type-label oven-model-search__label">

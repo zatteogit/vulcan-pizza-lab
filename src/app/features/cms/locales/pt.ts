@@ -765,6 +765,7 @@ export const PT_LOCALE: CmsContent = {
     "rec.needsWoodOven": "O original usa forno a lenha; com o seu forno, a cozedura muda.",
     "rec.ovenAdapted": "O seu forno atinge {temp}: temperatura ideal {ideal}, cozedura adaptada",
     "gen.homeBakingMethod": "Cozedura doméstica a {temp} sobre um tabuleiro invertido pré-aquecido; resultado diferente da cozedura original a {ideal}",
+    "gen.ovenTooNarrow": "O seu forno aceita pizzas até {max} cm (dado do fabricante) e esta receita prevê {diameter} cm: estenda o disco a {max} cm no máximo.",
     "rec.needsDeck": "Esta cozedura precisa de pedra ou aço pré-aquecido, não indicado na sua cozinha",
     "timeline.homeTray.preheat": "Pré-aquece o forno ao máximo ({temp}) com um tabuleiro invertido dentro, até também estar quente. Entretanto, termina o repouso da massa.",
     "timeline.homeTray.bake": "Coze sobre o tabuleiro invertido pré-aquecido. Verifique o dourado da base e a cozedura antes de retirar.",
@@ -980,6 +981,8 @@ export const PT_LOCALE: CmsContent = {
     "timeline.oven.gasPizza": "Forno de pizza a g\u00E1s: aque\u00E7a at\u00E9 a pedra chegar \u00E0 temperatura (me\u00E7a com um term\u00F4metro infravermelho), depois asse e gire a pizza com frequ\u00EAncia, porque a chama fica de um lado.",
     "timeline.oven.staticStone": "Forno convencional (resistência em cima + embaixo) no máximo, pedra/aço já quentes na grade em altura média-alta. Para a borda: últimos 60-90s sob o grill (só a resistência superior no máximo), sempre de olho.",
     "timeline.oven.staticShelf": "Forno convencional (resistência em cima + embaixo) no máximo, grade em altura média-alta. Para a borda: últimos 60-90s sob o grill (só a resistência superior no máximo), sempre de olho.",
+    "timeline.oven.staticStoneSet": "Forno convencional (resistência em cima + embaixo) a {temp}, não no máximo; pedra/aço já quentes em altura média-alta.",
+    "timeline.oven.staticShelfSet": "Forno convencional (resistência em cima + embaixo) a {temp}, não no máximo; grade em altura média-alta.",
     "timeline.mix.title": "Amassamento",
     "timeline.divide.title": "Divisão",
     "timeline.divide.multiPiece": "Divida cada porção em {pieces} pedaços iguais. Forme uma bolinha ou um disco.",
@@ -1182,7 +1185,7 @@ export const PT_LOCALE: CmsContent = {
     pillExperimentation: "Experimenteção",
     pillLevelBeginner: "Iniciante",
     pillLevelExpert: "Especialista",
-    sheetSectionTitle: "Detalhes de cozimento",
+    sheetSectionTitle: "Referência do estilo",
     sheetOvenLabel: "Forno ideal",
     sheetOvenPreheat: "Pr\u00E9-aquecimento: {min} min",
     sheetBakeLabel: "Tempo de cozimento",
@@ -1196,7 +1199,7 @@ export const PT_LOCALE: CmsContent = {
     sheetMatchTitle: "Por que combina com a sua cozinha",
     sheetTechniquesLabel:
       "T\u00E9cnicas de autor compat\u00EDveis",
-    mixBeginner: "{mixer} (~{time} min de sova). {equipment}",
+    mixBeginner: "{mixer} (~{time} min de sova).",
     bulkBeginner:
       "Fa\u00E7a {count} dobras ({type}) a cada {interval} minutos para desenvolver a estrutura.",
     shapeBeginner: "{note}",
@@ -1216,6 +1219,13 @@ export const PT_LOCALE: CmsContent = {
     turnsSingle: "Girar {n} vez(es) para cozimento uniforme.",
     turnsNone: "N\u00E3o girar durante o cozimento.",
     bakeAdaptedNerd: "Estimativa do motor para o seu forno ({temp}): {minM}\u2013{maxM} min por fornada. Referência do estilo: {refMin}\u2013{refMax} s a {refTemp}.",
+    // FW-07
+    turnsHalfway: "Rode-a uma vez a meio da cozedura.",
+    turnsFrequent: "Rode-a muitas vezes: o calor vem sobretudo de um lado.",
+    sheetYourBakeLabel: "A sua cozedura",
+    sheetOilLabel: "Temperatura do óleo",
+    sheetOilHeat: "Leve o óleo à temperatura antes de fritar: o forno não é preciso.",
+    sheetFryTurn: "Vire-a a meio da fritura",
   },
   styleDescriptions: {
     napoletana_stg:

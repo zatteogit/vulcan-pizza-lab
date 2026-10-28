@@ -816,6 +816,7 @@ export function RecipeOutput({
 
       <ProcedureTimeline
         recipe={recipe}
+        ovenType={constraints.oven_type}
         isNerd={isNerd}
         compensations={compensations}
         calendarReference={calendarReference}

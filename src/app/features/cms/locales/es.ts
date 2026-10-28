@@ -767,6 +767,7 @@ export const ES_LOCALE: CmsContent = {
     "rec.needsWoodOven": "El original usa horno de leña; con tu horno cambia la cocción.",
     "rec.ovenAdapted": "Tu horno alcanza {temp}: temperatura ideal {ideal}, cocción adaptada",
     "gen.homeBakingMethod": "Cocción doméstica a {temp} sobre una bandeja invertida precalentada; resultado distinto de la cocción original a {ideal}",
+    "gen.ovenTooNarrow": "Tu horno admite pizzas de hasta {max} cm (dato del fabricante) y esta receta prevé {diameter} cm: estira el disco a {max} cm como máximo.",
     "rec.needsDeck": "Esta cocción necesita piedra o acero precalentado, no indicado en tu cocina",
     "timeline.homeTray.preheat": "Precalienta el horno al máximo ({temp}) con una bandeja invertida dentro hasta que también esté caliente. Mientras, termina el reposo de la masa.",
     "timeline.homeTray.bake": "Hornea sobre la bandeja invertida precalentada. Comprueba el dorado de la base y la cocción antes de sacar.",
@@ -980,6 +981,8 @@ export const ES_LOCALE: CmsContent = {
     "timeline.oven.gasPizza": "Horno de gas para pizza: cali\u00E9ntalo hasta que la piedra llegue a temperatura (m\u00EDdela con un term\u00F3metro de infrarrojos), luego hornea y gira la pizza a menudo, porque la llama est\u00E1 en un lado.",
     "timeline.oven.staticStone": "Horno convencional (resistencia arriba + abajo) al máximo, piedra/acero ya calientes en una altura media-alta. Para el borde: últimos 60-90s bajo el gratinador (solo resistencia superior al máximo), sin quitarle ojo.",
     "timeline.oven.staticShelf": "Horno convencional (resistencia arriba + abajo) al máximo, rejilla en una altura media-alta. Para el borde: últimos 60-90s bajo el gratinador (solo resistencia superior al máximo), sin quitarle ojo.",
+    "timeline.oven.staticStoneSet": "Horno convencional (resistencia arriba + abajo) a {temp}, no al máximo; piedra/acero ya calientes en una altura media-alta.",
+    "timeline.oven.staticShelfSet": "Horno convencional (resistencia arriba + abajo) a {temp}, no al máximo; rejilla en una altura media-alta.",
     "timeline.mix.title": "Amasado",
     "timeline.divide.title": "Boleado",
     "timeline.divide.multiPiece": "Divide cada porción en {pieces} trozos iguales. Forma una bola o un disco.",
@@ -1185,7 +1188,7 @@ export const ES_LOCALE: CmsContent = {
     pillExperimentation: "Experimentaci\u00F3n",
     pillLevelBeginner: "Principiante",
     pillLevelExpert: "Experto",
-    sheetSectionTitle: "Detalles de cocci\u00F3n",
+    sheetSectionTitle: "Referencia del estilo",
     sheetOvenLabel: "Horno ideal",
     sheetOvenPreheat: "Precalentar: {min} min",
     sheetBakeLabel: "Tiempo de cocci\u00F3n",
@@ -1199,7 +1202,7 @@ export const ES_LOCALE: CmsContent = {
     sheetMatchTitle: "Por qué encaja con tu cocina",
     sheetTechniquesLabel: "T\u00E9cnicas de autor compatibles",
     mixBeginner:
-      "{mixer} (~{time} min de amasado). {equipment}",
+      "{mixer} (~{time} min de amasado).",
     bulkBeginner:
       "Realiza {count} pliegues ({type}) cada {interval} minutos para desarrollar la estructura.",
     shapeBeginner: "{note}",
@@ -1220,6 +1223,13 @@ export const ES_LOCALE: CmsContent = {
       "Rotar {n} vez/veces para cocci\u00F3n uniforme.",
     turnsNone: "No girar durante la cocci\u00F3n.",
     bakeAdaptedNerd: "Estimación del motor para tu horno ({temp}): {minM}\u2013{maxM} min por horneado. Referencia del estilo: {refMin}\u2013{refMax} s a {refTemp}.",
+    // FW-07
+    turnsHalfway: "Gírala una vez a mitad de cocción.",
+    turnsFrequent: "Gírala a menudo: el calor llega sobre todo de un lado.",
+    sheetYourBakeLabel: "Tu cocción",
+    sheetOilLabel: "Temperatura del aceite",
+    sheetOilHeat: "Lleva el aceite a temperatura antes de freír: no hace falta horno.",
+    sheetFryTurn: "Dale la vuelta a mitad de fritura",
   },
   styleDescriptions: {
     napoletana_stg:

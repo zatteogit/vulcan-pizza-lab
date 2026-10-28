@@ -14,6 +14,8 @@ import { procedureTimelineRows } from "./procedure-step-identity";
 import type {
   GeneratedRecipe,
   getServingUnit,
+  OvenType,
+  TimelineStep,
 } from "../../domain/pizza-engine";
 import { NerdAuraBlock } from "./recipe-output-bits";
 import {
@@ -21,6 +23,7 @@ import {
   displayStepTime,
   fmtDuration,
   formatCompVal,
+  bakeSecondsPerRound,
   getParametricTip,
   type ParametricTipContext,
   localizeStep,
@@ -34,6 +37,8 @@ type Compensation = NonNullable<GeneratedRecipe["science"]>["compensations"][num
 
 interface ProcedureTimelineProps {
   recipe: GeneratedRecipe;
+  /** FW-07: forno della cucina effettiva, per la regola delle rotazioni. */
+  ovenType?: OvenType;
   isNerd: boolean;
   compensations: Compensation[];
   calendarReference: Date;
@@ -49,6 +54,7 @@ interface ProcedureTimelineProps {
 
 export function ProcedureTimeline({
   recipe,
+  ovenType,
   isNerd,
   compensations,
   calendarReference,
@@ -65,13 +71,15 @@ export function ProcedureTimeline({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
   const filled = recipe.timeline.some(step => resolveStepVisual(step) === "fill_internal");
-  const tipContext: ParametricTipContext = {
+  // FW-07: il consiglio di cottura parla del forno della ricetta, passo per passo.
+  const tipContext = (step: TimelineStep): ParametricTipContext => ({
     ovenTempC: recipe.oven_temp_c,
-    cookSec: recipe.cook_time_sec,
-    referenceMinTempC: recipe.style.baking.temp_c_range[0],
+    cookSec: step.id === "bake" ? bakeSecondsPerRound(step, recipe.cook_time_sec) : recipe.cook_time_sec,
     ovenTempLabel: fmt.celsius(recipe.oven_temp_c),
     referenceTempLabel: fmt.celsius(recipe.style.baking.temp_c_ideal),
-  };
+    ovenType,
+    frying: step.variant === "fry",
+  });
   return (
     <>
       {/* ── Procedure / Timeline with inline tips ── */}
@@ -148,7 +156,7 @@ export function ProcedureTimeline({
                   ? localizedStep.tip.nerd
                   : localizedStep.tip.beginner
                 : null;
-              const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips, tipContext);
+              const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips, tipContext(step));
               const trouble = getStepTroubleshooting(step, { unleavened: !!recipe.style.dough.unleavened, filled });
               const stepFooter = <>
                 {step.duration_minutes > 0 && (

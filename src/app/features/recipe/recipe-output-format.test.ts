@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip } from "./recipe-output-format";
+import { defaultMealStart, flourStrength, displayStepTime, addMinutes, fmtDuration, startForDeadline, roundToQuarter, readyTimeForDisplay, dayOffset, yeastPracticalHint, getParametricTip, bakeSecondsPerRound } from "./recipe-output-format";
+import { generateRecipe, STYLES_DB, type UserConstraints } from "../../domain/pizza-engine";
 import { CMS_DEFAULTS } from "../cms/cms-context";
 
 describe("fine stimata: precisione del riepilogo", () => {
@@ -68,16 +69,17 @@ describe('orari e dosi: secondo collaudo',()=>{
  });
 });
 
-describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09-A-01)", () => {
+describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09-A-01; FW-07)", () => {
   const pt = CMS_DEFAULTS.parametricTips;
-  const home = { ovenTempC: 250, cookSec: 360, referenceMinTempC: 430, ovenTempLabel: "250 °C", referenceTempLabel: "485 °C" };
-  const wood = { ovenTempC: 485, cookSec: 75, referenceMinTempC: 430, ovenTempLabel: "485 °C", referenceTempLabel: "485 °C" };
+  const home = { ovenTempC: 250, cookSec: 360, ovenTempLabel: "250 °C", referenceTempLabel: "485 °C", ovenType: "home" as const };
+  const wood = { ovenTempC: 485, cookSec: 75, ovenTempLabel: "485 °C", referenceTempLabel: "485 °C", ovenType: "wood" as const };
 
-  it("forno di casa con la napoletana: tempo dalla stima del motore, non 1–2 min", () => {
+  it("forno di casa con la napoletana: tempo dalla stima del motore (±20 %), non 1–2 min", () => {
     const tip = getParametricTip("bake", "napoletana_stg", false, pt, home)!;
-    expect(tip).toContain("5–7 min");
+    expect(tip).toContain("4–8 min");
     expect(tip).not.toContain("1–2 min");
     expect(tip).not.toMatch(/Ruota 3/);
+    expect(tip).toContain(pt.turnsHalfway);
   });
 
   it("in modalità Nerd mostra la stima e, come confronto, il riferimento dello stile", () => {
@@ -86,9 +88,21 @@ describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09
     expect(tip).toContain("60–90 s a 485 °C");
   });
 
-  it("nel regime di riferimento resta il consiglio dello stile", () => {
-    expect(getParametricTip("bake", "napoletana_stg", false, pt, wood)).toContain("1–2 min");
+  it("forno a legna: tempo del motore e rotazioni frequenti; senza ricetta, il riferimento", () => {
+    const tip = getParametricTip("bake", "napoletana_stg", false, pt, wood)!;
+    expect(tip).toContain("1–2 min");
+    expect(tip).toContain(pt.turnsFrequent);
     expect(getParametricTip("bake", "napoletana_stg", false, pt)).toContain("1–2 min");
+  });
+
+  it("forno elettrico ad alta temperatura: una volta a metà, come il passo (non «Ruota 3 volte»)", () => {
+    const tip = getParametricTip("bake", "napoletana_stg", false, pt, { ...wood, ovenType: "electric_high" })!;
+    expect(tip).toContain(pt.turnsHalfway);
+    expect(tip).not.toMatch(/Ruota 3/);
+  });
+
+  it("frittura: nessun consiglio di forno", () => {
+    expect(getParametricTip("bake", "pizza_fritta", false, pt, { ...home, frying: true })).toBeNull();
   });
 
   it("il consiglio dell'impasto non parla del forno", () => {
@@ -96,4 +110,21 @@ describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09
     expect(tip).not.toMatch(/Forno|°C/);
     expect(tip.endsWith(" ")).toBe(false);
   });
+
+  const kitchen: UserConstraints = { oven_type: "home", oven_max_temp_c: 250, skill_level: 2, available_hours: 0, dough_balls: 4, has_mixer: false, has_pizza_stone: false, has_pizza_steel: false, has_baking_pan: false, dietary_filters: [], pantry_flours: [], pantry_yeasts: [] };
+  const interval = (tip: string) => tip.match(/(\d+)–(\d+) min/)!.slice(1).map(Number);
+
+  for (const id of ["napoletana_stg", "teglia_romana", "new_york"]) {
+    it(`${id} col forno di casa a 250 °C: l'intervallo del consiglio contiene la durata per giro del passo`, () => {
+      const recipe = generateRecipe(STYLES_DB[id], kitchen);
+      const bake = recipe.timeline.find((s) => s.id === "bake")!;
+      const perRound = bakeSecondsPerRound(bake, recipe.cook_time_sec);
+      const tip = getParametricTip("bake", id, false, pt, { ...home, cookSec: perRound })!;
+      const [minM, maxM] = interval(tip);
+      expect(perRound / 60).toBeGreaterThanOrEqual(minM);
+      expect(perRound / 60).toBeLessThanOrEqual(maxM);
+      // Un solo tempo per la cottura: niente intervallo del riferimento dello stile.
+      if (id === "teglia_romana") expect(tip).not.toContain("8–15 min");
+    });
+  }
 });
