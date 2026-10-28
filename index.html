@@ -39,6 +39,16 @@
           }
           var theme = qTheme !== null ? qTheme : localStorage.getItem("vulcan_theme");
           if (theme) el.setAttribute("data-theme", theme);
+          /* Barra del browser (Chrome e Samsung su Android, Safari fino a iOS
+             18, Edge): colore del tema scelto nell'app, anche se diverso da
+             quello del sistema. Il colore esatto lo riallinea poi
+             adapters/browser/browser-chrome.ts. */
+          var metas = document.querySelectorAll('meta[name="theme-color"]');
+          for (var i = 0; i < metas.length; i++) metas[i].parentNode.removeChild(metas[i]);
+          var meta = document.createElement("meta");
+          meta.name = "theme-color";
+          meta.content = dark ? "#131211" : "#FDFBF7";
+          document.head.appendChild(meta);
         } catch (e) {
           /* storage inaccessibile: resta il default chiaro */
         }

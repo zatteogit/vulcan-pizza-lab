@@ -1626,12 +1626,19 @@
     /* Colore della tela esplicito: le fasce che Safari dipinge dietro barra di
        stato e barra degli indirizzi prendono il colore della pagina, non il nero. */
     background-color: var(--background);
+    /* Barre di scorrimento, controlli nativi e rimbalzo dello scorrimento
+       seguono il tema dell'app, non solo quello del sistema. */
+    color-scheme: light;
     font-size: var(--font-size);
     /* `clip` non forza `overflow-y: auto` (a differenza di `hidden`), così html
        e body non diventano scroll-container e `position: sticky` funziona
        (pin VPL-149713). */
     overflow-x: clip;
     max-width: 100%;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   body {
@@ -17605,6 +17612,8 @@
   /* ═══ COMPONENT: app-shell (shell root, nav, dock/rail, profile) ═══ */
 
   .app-shell-root {
+    /* Altezza statica per i browser senza unità dinamiche (Safari < 15.4, Chrome < 108). */
+    min-height: var(--dimension-viewport-height-full);
     min-height: 100dvh;
     background: var(--container-page);
     /* `clip` invece di `hidden`: taglia il bleed orizzontale SENZA diventare
