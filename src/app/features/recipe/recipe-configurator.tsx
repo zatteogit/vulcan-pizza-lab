@@ -23,6 +23,7 @@ supportsThickness,
 } from "../../domain/pizza-engine";
 import { SegmentedControl, Stepper, Switch } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
+import { useDetailLevel } from "../../hooks/use-detail-level";
 import { flourStrength, type FlourStrength } from "./recipe-output-format";
 
 interface PremiumSelectOption {
@@ -425,7 +426,7 @@ export function RecipeConfigurator({
   usePreFerment,
   onPreFermentChange,
   customFlourPL,
-  onFlourPLChange,
+  onFlourPLChange: onFlourPLChangeProp,
   customSalt,
   onSaltChange,
   panConfig,
@@ -433,6 +434,12 @@ export function RecipeConfigurator({
   preFermentChoice,
   onPreFermentChoiceChange,
 }: RecipeConfiguratorProps) {
+  /* FW-08 (S06-A-19/B-17): P/L si modifica negli avanzati con «Dettagli
+     tecnici» attivo; altrimenti gli avanzati ne mostrano il valore e dicono
+     dove si sblocca. Senza dettagli tecnici P/L non segue nemmeno i
+     «Parametri collegati», come prima. */
+  const { level: detailLevel, setLevel: setDetailLevel } = useDetailLevel();
+  const onFlourPLChange = detailLevel === "technical" ? onFlourPLChangeProp : undefined;
   /* Single-call update for oven to avoid the double-update bug */
   const handleOvenSelect = (id: string, maxTemp: number) => {
     onConstraintsChange({
@@ -745,6 +752,23 @@ export function RecipeConfigurator({
                 />
               )}
             </div>
+          )}
+          {/* FW-08: P/L in sola lettura, con la via per modificarlo. */}
+          {customFlourPL !== undefined && onFlourPLChangeProp && !onFlourPLChange && (
+            <p className="config-field config-pl-readonly" data-region="pl-readonly">
+              <span className="config-pl-readonly__value">
+                {uiMessage("detailLevel.plReadOnly", [
+                  fmt.number(customFlourPL, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                ])}
+              </span>
+              <button
+                type="button"
+                className="config-pl-readonly__action"
+                onClick={() => setDetailLevel("technical")}
+              >
+                {uiMessage("detailLevel.enable")}
+              </button>
+            </p>
           )}
           </>
           )}

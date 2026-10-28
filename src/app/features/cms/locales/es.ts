@@ -1408,12 +1408,6 @@ export const ES_LOCALE: CmsContent = {
     unitMetricDesc: "Gramos, mililitros y grados Celsius",
     unitImperial: "Imperial / US",
     unitImperialDesc: "Onzas, onzas líquidas y grados Fahrenheit",
-    pizzaNerdTitle: "PizzaNerd",
-    pizzaNerdSubtitle: "Controla cuándo se muestran los datos técnicos",
-    pizzaNerdStep: "08 — PizzaNerd",
-    pizzaNerdCardTitle: "PizzaNerd",
-    pizzaNerdCardDesc:
-      "Muestra más detalles sobre la harina, la masa y los cálculos de la receta.",
     resetProfile: "Reconfigurar perfil",
     resetConfirmMessage:
       "Volverás a la configuración inicial. Las nuevas elecciones sustituirán a las preferencias actuales.",
@@ -1433,7 +1427,7 @@ export const ES_LOCALE: CmsContent = {
     ftuOvenTitle: "¿Qué horno tienes?",
     ftuOvenSubtitle: "El horno define los estilos posibles",
     ftuSkillTitle: "¿Cuánta experiencia?",
-    ftuSkillSubtitle: "Te guiaremos al nivel adecuado",
+    ftuSkillSubtitle: "Decide lo fácil que será la masa que te proponemos",
     ftuPantryTitle: "¿Qué hay en tu despensa?",
     ftuPantrySubtitle: "Harinas y levaduras disponibles",
     ftuBack: "Atrás",

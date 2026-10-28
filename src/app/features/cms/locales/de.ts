@@ -1389,13 +1389,6 @@ export const DE_LOCALE: CmsContent = {
     unitMetricDesc: "Gramm, Milliliter und Grad Celsius",
     unitImperial: "Imperial / US",
     unitImperialDesc: "Unzen, Fluid Ounces und Grad Fahrenheit",
-    pizzaNerdTitle: "PizzaNerd",
-    pizzaNerdSubtitle:
-      "Steuere, wann erweiterte technische Daten erscheinen",
-    pizzaNerdStep: "08 — PizzaNerd",
-    pizzaNerdCardTitle: "PizzaNerd",
-    pizzaNerdCardDesc:
-      "Zeige zusätzliche Details zu Mehl, Teig und Rezeptberechnungen.",
     resetProfile: "Profil zurücksetzen",
     resetConfirmMessage:
       "Die Ersteinrichtung wird erneut geöffnet. Deine neuen Angaben ersetzen die bisherigen Einstellungen.",
@@ -1415,8 +1408,7 @@ export const DE_LOCALE: CmsContent = {
     ftuOvenTitle: "Welchen Ofen hast du?",
     ftuOvenSubtitle: "Der Ofen bestimmt die möglichen Stile",
     ftuSkillTitle: "Wie viel Erfahrung?",
-    ftuSkillSubtitle:
-      "Wir führen dich auf dem richtigen Niveau",
+    ftuSkillSubtitle: "Bestimmt, wie einfach der vorgeschlagene Teig ist",
     ftuPantryTitle: "Was ist in deiner Vorratskammer?",
     ftuPantrySubtitle: "Verfügbare Mehle und Hefen",
     ftuBack: "Zurück",

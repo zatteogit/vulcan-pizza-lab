@@ -40,6 +40,11 @@ immediatamente utilizzabili.
   dichiarate. Un conteggio di «gruppi» non aiuta la scelta.
 - Le istruzioni del procedimento valgono per la ricetta generata. Evitare di
   trasformarle in regole universali per tutti i metodi.
+- **Dettagli tecnici** (nel Profilo «Mostra i dettagli tecnici», soprannome
+  **PizzaNerd**, D-056) decide solo quante informazioni si vedono aperte di
+  default; il **livello di esperienza** cambia invece la ricetta proposta (tetto
+  d'idratazione, prefermenti). Non usarli come sinonimi e non scrivere che i
+  dettagli tecnici rendono la ricetta più difficile.
 
 ## Contenuti e traduzioni
 

@@ -1478,13 +1478,6 @@ export const JA_LOCALE: CmsContent = {
     unitMetricDesc: "g\u3001ml\u3001\u6442\u6C0F",
     unitImperial: "\u30A4\u30F3\u30DA\u30EA\u30A2\u30EB / US",
     unitImperialDesc: "oz\u3001fl oz\u3001\u83EF\u6C0F",
-    pizzaNerdTitle: "PizzaNerd",
-    pizzaNerdSubtitle:
-      "\u9AD8\u5EA6\u306A\u6280\u8853\u30C7\u30FC\u30BF\u306E\u8868\u793A\u3092\u5236\u5FA1\u3057\u307E\u3059",
-    pizzaNerdStep: "08 \u2014 PizzaNerd",
-    pizzaNerdCardTitle: "PizzaNerd",
-    pizzaNerdCardDesc:
-      "粉、生地、レシピの計算について詳しく表示します。",
     resetProfile:
       "\u30D7\u30ED\u30D5\u30A3\u30FC\u30EB\u3092\u30EA\u30BB\u30C3\u30C8",
     resetConfirmMessage:
@@ -1509,8 +1502,7 @@ export const JA_LOCALE: CmsContent = {
       "\u30AA\u30FC\u30D6\u30F3\u304C\u53EF\u80FD\u306A\u30B9\u30BF\u30A4\u30EB\u3092\u6C7A\u3081\u307E\u3059",
     ftuSkillTitle:
       "\u7D4C\u9A13\u306F\u3069\u306E\u304F\u3089\u3044\uFF1F",
-    ftuSkillSubtitle:
-      "\u9069\u5207\u306A\u30EC\u30D9\u30EB\u3067\u30AC\u30A4\u30C9\u3057\u307E\u3059",
+    ftuSkillSubtitle: "提案する生地の扱いやすさが決まります",
     ftuPantryTitle:
       "\u30D1\u30F3\u30C8\u30EA\u30FC\u306B\u306F\u4F55\u304C\u3042\u308A\u307E\u3059\u304B\uFF1F",
     ftuPantrySubtitle:

@@ -52,8 +52,6 @@ interface RecipeOutputProps {
   selectedToppingConcept?: string | null;
   onSelectTopping?: (conceptId: string) => void;
   onTabChange?: (tab: PagerTabId) => void;
-  nerdAvailable?: boolean;
-  onNerdModeChange?: (nerd: boolean) => void;
   isPersonalized?: boolean;
   onRequestPersonalization?: () => void;
   /** Nasconde la capsula flottante in alto a destra (Inizia + condividi):
@@ -100,8 +98,6 @@ export function RecipeOutput({
   selectedToppingConcept,
   onSelectTopping,
   onTabChange,
-  nerdAvailable = false,
-  onNerdModeChange,
   isPersonalized = true,
   onRequestPersonalization,
 }: RecipeOutputProps) {
@@ -227,8 +223,9 @@ export function RecipeOutput({
     () => Boolean(mealTargetAt || (selectedTimeSlotId && selectedTimeSlotId !== "no_preference" && constraints.available_hours > 0)),
   );
 
-  const showNerdToggle = nerdAvailable && !!onNerdModeChange;
-  const isNerd = showNerdToggle && !!nerdMode;
+  /* FW-08: il livello «Dettagli tecnici» arriva già risolto dalla pagina
+     (useDetailLevel); l'interruttore vive nella testata della scheda. */
+  const isNerd = !!nerdMode;
 
   /* ── Timeline comoda (feedback giugno 2026): minuti extra per fase ──
    * Le fasi flessibili possono stirarsi/accorciarsi entro tolleranze: un'ora
