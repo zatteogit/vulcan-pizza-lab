@@ -141,3 +141,12 @@ GitHub PR, review e merge.
 - Revisione mensile di circa 15 minuti: nuove voci dal template delle PR e
   conferma del campo «Decisore» da parte di Matteo.
 - Uno script che rigeneri l'indice non è previsto in questa fase.
+- Guardie delle decisioni (FW-20, audit del 28/10/2026): D-032, D-036 e D-038
+  erano state annullate da una PR successiva senza una nuova decisione, e
+  Matteo le ha confermate (D-R, dentro D-058). Ogni decisione che ha un
+  comportamento verificabile ha un test in
+  `src/app/domain/decision-guards.test.ts`, con l'ID nel nome
+  (`D-036: Crea si apre sul momento consigliato`). **Chi rovescia una
+  decisione cambia il test e registra una nuova D-0xx** in questo registro,
+  che dice quale decisione supera. Un
+  test di guardia rosso non si corregge cambiando il test senza la decisione.

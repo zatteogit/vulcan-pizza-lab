@@ -305,8 +305,13 @@ export const EN_LOCALE: CmsContent = {
     title_line2: "next pizza.",
     subtitle:
       "Choose when you want to serve it.",
+    /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
+    onboardingEyebrow: "First time here?",
+    onboardingBody:
+      "Recommendations assume this oven: {oven}, {temp}. If yours is different, pick it: it's what changes the recipe most.",
+    onboardingCta: "Choose your oven",
     onboardingProfileCta: "Set up your whole kitchen",
-    onboardingDismiss: "Got it",
+    onboardingDismiss: "That's fine",
   },
   steps: {
     context: {
@@ -322,7 +327,7 @@ export const EN_LOCALE: CmsContent = {
     styles: {
       number: "03 \u2014 Style",
       title: "Pick your style",
-      subtitle: "Based on the filters above.",
+      subtitle: "Worked out for your kitchen and your time.",
     },
   },
   sections: {
@@ -464,9 +469,10 @@ export const EN_LOCALE: CmsContent = {
       subtitle: "recipe requirements are met",
     },
     good: { label: "With conditions", subtitle: "follow the changes and check what you need" },
-    challenging: {
-      label: "Challenging",
-      subtitle: "for those who dare",
+    /* FW-20 · D-032: le fritte in una sezione a parte dei consigli. */
+    fried: {
+      label: "Fried in a pot",
+      subtitle: "no oven: dough fried in oil",
     },
     not_feasible: {
       label: "Not feasible as configured",

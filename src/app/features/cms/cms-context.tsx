@@ -351,8 +351,11 @@ interface CmsHero {
   title_line1: string;
   title_line2: string;
   subtitle: string;
-  /** Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le
-   *  domande del passo 1. Opzionali: i locale non tradotti cadono sul default. */
+  /** D-038 (ripristinata da FW-20): avviso di Crea che chiede solo il forno,
+   *  finché non è scelto. `onboardingBody` riceve {oven} e {temp}. */
+  onboardingEyebrow?: string;
+  onboardingBody?: string;
+  onboardingCta?: string;
   onboardingProfileCta?: string;
   /** D-038: chiude l'avviso del forno senza cambiarlo. */
   onboardingDismiss?: string;
@@ -1611,13 +1614,18 @@ export const CMS_DEFAULTS: CmsContent = {
     title_line1: "La tua",
     title_line2: "prossima pizza.",
     subtitle: "Scegli quando vuoi portarla in tavola.",
+    /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
+    onboardingEyebrow: "Prima volta qui?",
+    onboardingBody:
+      "I consigli partono da questo forno: {oven}, {temp}. Se il tuo è diverso, sceglilo: è il dato che cambia di più la ricetta.",
+    onboardingCta: "Scegli il tuo forno",
     onboardingProfileCta: "Configura tutta la cucina",
-    onboardingDismiss: "Ho capito",
+    onboardingDismiss: "Va bene così",
   },
   steps: {
     context: { number: "01 — Contesto", title: "Quando e dove", subtitle: "Tempo, temperatura, ambiente" },
     setup: { number: "02 — Cucina", title: "La tua cucina", subtitle: "Strumenti, esperienza, dispensa" },
-    styles: { number: "03 — Stile", title: "Scegli il tuo stile", subtitle: "Proposte basate sui filtri in alto." },
+    styles: { number: "03 — Stile", title: "Scegli il tuo stile", subtitle: "Proposte calcolate per la tua cucina e il tuo tempo." },
   },
   sections: {
     when: { title: "Quando vuoi la pizza?", description: "Seleziona il momento per calcolare i tempi di lievitazione" },
@@ -1659,7 +1667,8 @@ export const CMS_DEFAULTS: CmsContent = {
   tiers: {
     perfect:      { label: "Fattibili",  subtitle: "requisiti della ricetta rispettati" },
     good:         { label: "Con condizioni",        subtitle: "segui le modifiche e verifica ciò che serve" },
-    challenging:  { label: "Sfidanti",         subtitle: "richiedono più attrezzatura o esperienza" },
+    /* FW-20 · D-032: le fritte in una sezione a parte dei consigli. */
+    fried:        { label: "Fritte in pentola", subtitle: "senza forno: impasto fritto in olio" },
     not_feasible: { label: "Non fattibili così",    subtitle: "manca una condizione essenziale per questa ricetta" },
   },
   scoreDimensions: {
@@ -3499,6 +3508,12 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "hero.title_line1", label: "Titolo riga 1", type: "text", description: "Prima riga del titolo hero" },
       { path: "hero.title_line2", label: "Titolo riga 2", type: "text", description: "Seconda riga (accent color)" },
       { path: "hero.subtitle", label: "Sottotitolo", type: "textarea", description: "Paragrafo sotto il titolo hero" },
+      /* FW-20 · D-038: avviso del forno in Crea. */
+      { path: "hero.onboardingEyebrow", label: "Avviso forno — Titolo", type: "text" },
+      { path: "hero.onboardingBody", label: "Avviso forno — Testo", type: "textarea", description: "Segnaposto {oven} e {temp}" },
+      { path: "hero.onboardingCta", label: "Avviso forno — Scegli il forno", type: "text" },
+      { path: "hero.onboardingDismiss", label: "Avviso forno — Va bene così", type: "text" },
+      { path: "hero.onboardingProfileCta", label: "Avviso forno — Tutta la cucina", type: "text" },
       { path: "result.breadcrumb", label: "Breadcrumb risultato", type: "text" },
       { path: "result.heading", label: "Titolo risultato", type: "text" },
       { path: "result.backLabel", label: "Pulsante indietro", type: "text" },
@@ -3638,8 +3653,8 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "tiers.perfect.subtitle", label: "Tier Perfetto — Sub", type: "text" },
       { path: "tiers.good.label", label: "Tier Buono — Label", type: "text" },
       { path: "tiers.good.subtitle", label: "Tier Buono — Sub", type: "text" },
-      { path: "tiers.challenging.label", label: "Tier Sfidante — Label", type: "text" },
-      { path: "tiers.challenging.subtitle", label: "Tier Sfidante — Sub", type: "text" },
+      { path: "tiers.fried.label", label: "Sezione Fritte — Label", type: "text" },
+      { path: "tiers.fried.subtitle", label: "Sezione Fritte — Sub", type: "text" },
     ],
   },
   {

@@ -4017,6 +4017,71 @@
     transform: scale(0.95);
   }
 
+  /* FW-20 · D-038: avviso di Crea che chiede solo il forno (OvenFirstNotice). */
+  .oven-first-notice {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--space-3);
+    row-gap: var(--space-1);
+    margin: 0 0 var(--space-4);
+    padding: var(--space-4);
+  }
+
+  .oven-first-notice__icon {
+    grid-row: 1 / span 2;
+    margin-top: var(--space-0-5);
+    color: var(--text-accent);
+  }
+
+  .oven-first-notice__title,
+  .oven-first-notice__body {
+    margin: 0;
+  }
+
+  .oven-first-notice__body {
+    color: var(--text-muted);
+  }
+
+  .oven-first-notice__actions {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-2);
+  }
+
+  .oven-first-notice__cta {
+    gap: var(--space-1);
+    min-height: var(--space-11);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+  }
+
+  .oven-first-notice__dismiss,
+  .oven-first-notice__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--space-11);
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .oven-first-notice__link {
+    color: var(--text-accent);
+  }
+
+  .oven-first-notice__dismiss:hover,
+  .oven-first-notice__link:hover {
+    text-decoration: underline;
+  }
+
   /* ── Override / CMS banners ── */
   .home-banner {
     position: sticky;

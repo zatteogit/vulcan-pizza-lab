@@ -326,8 +326,13 @@ export const JA_LOCALE: CmsContent = {
     title_line2: "次の一枚。",
     subtitle:
       "食べたい時間を選んでください。",
+    /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
+    onboardingEyebrow: "はじめてですか？",
+    onboardingBody:
+      "おすすめはこのオーブンを前提にしています：{oven}、{temp}。違う場合は選んでください。レシピを最も大きく変える要素です。",
+    onboardingCta: "オーブンを選ぶ",
     onboardingProfileCta: "キッチンをまとめて設定",
-    onboardingDismiss: "了解",
+    onboardingDismiss: "このままでいい",
   },
   steps: {
     context: {
@@ -346,7 +351,7 @@ export const JA_LOCALE: CmsContent = {
       number: "03 \u2014 \u30B9\u30BF\u30A4\u30EB",
       title: "\u30B9\u30BF\u30A4\u30EB\u3092\u9078\u3076",
       subtitle:
-        "上の条件に基づく提案です。",
+        "あなたのキッチンと時間に合わせた提案です。",
     },
   },
   sections: {
@@ -501,9 +506,10 @@ export const JA_LOCALE: CmsContent = {
       label: "条件あり",
       subtitle: "変更点と必要な道具を確認してください",
     },
-    challenging: {
-      label: "\u30C1\u30E3\u30EC\u30F3\u30B8\u30F3\u30B0",
-      subtitle: "\u52C7\u6C17\u3042\u308B\u4EBA\u3078",
+    /* FW-20 · D-032: le fritte in una sezione a parte dei consigli. */
+    fried: {
+      label: "鍋で揚げるピッツァ",
+      subtitle: "オーブン不要：生地を油で揚げる",
     },
     not_feasible: {
       label: "この条件では作れない",
