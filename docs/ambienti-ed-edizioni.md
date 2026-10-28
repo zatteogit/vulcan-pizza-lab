@@ -83,7 +83,7 @@ La generalista si pubblica come prima: `npm run deploy:test` in test, il workflo
 
 ## 4. Passi una tantum
 
-### Già fatti (28/10/2026, dal connettore Cloudflare)
+### Già fatti (28/10/2026, da Claude con il connettore Cloudflare)
 
 - D1 `vulcan-test` creato con giurisdizione UE (`f5c0620f-440b-4256-aced-2564c7cb5e87`),
   con lo schema di `schema.sql` caricato. L'ID è in `wrangler.toml`.
@@ -94,32 +94,44 @@ La generalista si pubblica come prima: `npm run deploy:test` in test, il workflo
   contro gli errori di configurazione, non l'autenticazione: quella la fa Access.
   Se pubblichi prima di aver configurato Access, i Worker restano chiusi invece di
   essere pubblici.
+- **Zero Trust attivo**: team `zatteo.cloudflareaccess.com`, accesso con codice via email
+  (One-time PIN).
+- **Policy riutilizzabili**, entrambe con sessione di 24 h:
+  - «Vulcan · team (test e demo)»: oggi solo `zatteo@gmail.com`;
+  - «Vulcan · partner Effeuno»: oggi solo `zatteo@gmail.com`. Le email di Effeuno si
+    aggiungono qui (Zero Trust → Access → Policies), senza toccare il codice.
+- **Applicazioni Access per hostname**, che proteggono l'indirizzo anche prima che il
+  Worker esista:
+
+  | Applicazione | Hostname | Policy |
+  |---|---|---|
+  | Vulcan · test generalista | `vulcan-test.zatteo.workers.dev` | team |
+  | Vulcan · demo Fornace Aurora | `vulcan-demo-forno-test.zatteo.workers.dev` | team |
+  | Vulcan · demo Effeuno | `vulcan-effeuno-test.zatteo.workers.dev` | partner Effeuno |
+
+  Una nuova edizione vuole la sua applicazione (`vulcan-<id>-test.zatteo.workers.dev`)
+  prima del primo deploy. Senza, la sicura del Worker risponde 403.
 
 ### Da fare (Matteo), in quest'ordine
 
-1. **Attiva Zero Trust**: dashboard Cloudflare → Zero Trust, scegli il nome del team e
-   il piano Free. Via API non si può fare: oggi l'account risponde «Access is not enabled».
-2. **Applicazioni Access** (Zero Trust → Access → Applications → Self-hosted), una per
-   Worker di test, ciascuna con la sua policy «Allow» e l'accesso con One-time PIN:
-   - `vulcan-test.zatteo.workers.dev`: tu e i tester;
-   - `vulcan-demo-forno-test.zatteo.workers.dev`: tu e chi deve vedere la demo;
-   - `vulcan-effeuno-test.zatteo.workers.dev`: tu e le email di Effeuno.
-3. **Repository privato** `zatteogit/vulcan-editions`. Da questa sessione GitHub non
-   permette di crearlo. Crealo privato e carica il contenuto di `.editions-private/`
-   (`README.md` ed `editions/effeuno.json`). Poi crea un fine-grained token con
-   «Contents: Read-only» solo su quel repository e salvalo in `vulcan-pizza-lab` →
-   Settings → Secrets → Actions come `VULCAN_EDITIONS_TOKEN`.
-4. **Token Cloudflare per GitHub**: Cloudflare → My Profile → API Tokens → modello
+GitHub non permette a Claude di creare repository né di impostare segreti o ambienti.
+
+1. **Repository privato** `zatteogit/vulcan-editions`: crealo privato e carica il
+   contenuto di `.editions-private/` (`README.md` ed `editions/effeuno.json`). Poi crea
+   un fine-grained token con «Contents: Read-only» solo su quel repository e salvalo in
+   `vulcan-pizza-lab` → Settings → Secrets → Actions come `VULCAN_EDITIONS_TOKEN`.
+2. **Token Cloudflare per GitHub**: Cloudflare → My Profile → API Tokens → modello
    «Edit Cloudflare Workers», limitato a questo account. In `vulcan-pizza-lab` →
-   Settings → Secrets → Actions aggiungi `CLOUDFLARE_API_TOKEN`. Da quel momento
-   ogni merge su `main` pubblica in test.
-5. **Ambiente `production`** su GitHub: Settings → Environments → `production`, con
+   Settings → Secrets → Actions aggiungi `CLOUDFLARE_API_TOKEN`. Da quel momento ogni
+   merge su `main` pubblica in test. Al primo deploy verifica da una finestra in
+   incognito che i tre indirizzi chiedano il codice via email.
+3. **Ambiente `production`** su GitHub: Settings → Environments → `production`, con
    «Required reviewers» (tu). Fai girare `deploy-production` una volta con lo sha di
    `main` e `edition = vulcan`.
-6. **Spegni il deploy automatico** di Workers Builds su `vulcan-pizza-lab` (oggi
-   pubblica `main` in produzione a ogni merge). Dalla dashboard: Workers →
-   vulcan-pizza-lab → Settings → Builds. Oppure chiedilo a Claude, che può farlo dal
-   connettore Cloudflare. Va fatto solo dopo il passo 5, altrimenti la produzione resta
+4. **Spegni il deploy automatico** di Workers Builds su `vulcan-pizza-lab` (oggi
+   pubblica `main` in produzione a ogni merge). Chiedilo a Claude, che può farlo dal
+   connettore Cloudflare, oppure dalla dashboard: Workers → vulcan-pizza-lab →
+   Settings → Builds. Va fatto solo dopo il passo 3, altrimenti la produzione resta
    senza una strada per uscire.
 
 ## 5. Cosa non fa (ancora)
