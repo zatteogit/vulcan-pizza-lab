@@ -51,7 +51,6 @@ export function RecipeSectionTabs({
   const collapse = useTransform(morph, value => Math.min(1, Math.max(0, value)));
   const detailOpacity = useTransform(collapse, value => Math.max(0, 1 - value * 1.7));
   const morphStyle = { "--section-tabs-collapse": collapse, "--section-tabs-detail-opacity": detailOpacity } as MotionStyle;
-  const fadeStyle = { "--section-tabs-collapse": collapse } as MotionStyle;
   const pressing = useRef(false);
   const target = useRef({ compact, reducedMotion });
   useEffect(() => {
@@ -110,7 +109,6 @@ export function RecipeSectionTabs({
   if (navbar) {
     return (
       <>
-        <motion.div className="section-tabs-fade" data-keyboard-open={keyboardOpen || undefined} style={fadeStyle} />
         <motion.div
           className={`section-tabs-dock${compact ? " section-tabs-dock--compact" : ""}`}
           style={morphStyle}

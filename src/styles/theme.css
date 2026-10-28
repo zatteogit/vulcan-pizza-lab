@@ -3959,6 +3959,8 @@
 
   /* ── Root & skip link ── */
   .home-page {
+    /* Contiene il bagliore di sfondo (.fire-glow, assoluto). */
+    position: relative;
     min-height: var(--dimension-viewport-height-full);
     background: var(--container-page);
     color: var(--text-default);
@@ -16434,25 +16436,9 @@
   /* ═══ COMPONENT: recipe-section-tabs (section-tabs) ═══ */
 
   /* Scrim di fondo mobile dietro il dock flottante (navbar variant + ricerca). */
-  .section-tabs-fade {
-    position: fixed;
-    bottom: 0;
-    inset-inline: 0;
-    z-index: 40;
-    pointer-events: none;
-    height: calc(var(--space-28) * (1 - var(--section-tabs-collapse, 0)) + var(--space-20) * var(--section-tabs-collapse, 0) + env(safe-area-inset-bottom, var(--space-0)));
-    background: linear-gradient(to top,
-        var(--container-page) 0%,
-        var(--container-page) 46%,
-        color-mix(in srgb, var(--container-page) 88%, transparent) 72%,
-        transparent 100%);
-  }
-
-  @media (min-width: 768px) {
-    .section-tabs-fade {
-      display: none;
-    }
-  }
+  /* Niente velina fissa a tutta larghezza sotto il dock delle sezioni: su
+     Safari 26 faceva comparire una fascia piena dietro la barra degli
+     indirizzi. La capsula ha già il suo fondo. */
 
   /* Dock flottante mobile delle sezioni della ricetta, fisso in fondo. */
   .section-tabs-dock {
@@ -16707,8 +16693,7 @@
     z-index: 20;
   }
 
-  .section-tabs-dock[data-keyboard-open="true"],
-  .section-tabs-fade[data-keyboard-open="true"] {
+  .section-tabs-dock[data-keyboard-open="true"] {
     visibility: hidden;
   }
 
@@ -16720,8 +16705,7 @@
   }
 
   @media (min-width: 768px) and (max-width: 1023px) and (max-height: 500px) and (pointer: coarse) {
-    .section-tabs-dock,
-    .section-tabs-fade {
+    .section-tabs-dock {
       display: block;
     }
   }
@@ -17528,9 +17512,14 @@
     opacity: var(--blob-satellite-opacity);
   }
 
+  /* Il bagliore sta in cima alla pagina e scorre con lei, alto una
+     finestra: un livello fisso a tutta pagina faceva dipingere a Safari 26
+     una fascia piena dietro barra di stato e barra degli indirizzi, al posto
+     della trasparenza (fixed a tutta larghezza vicino ai bordi). */
   .fire-glow {
-    position: fixed;
-    inset: 0;
+    position: absolute;
+    inset: 0 0 auto;
+    height: var(--dimension-viewport-height-full);
     z-index: 0;
     overflow: hidden;
     pointer-events: none;
