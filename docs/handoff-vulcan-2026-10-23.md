@@ -152,7 +152,7 @@ Fase 2:
 1. ~~**`meal_deadline`** (M-1)~~: confermato il 23/10 (D-010).
 2. ~~**Arrotondamento degli slot** (M-2)~~: quarto d'ora per difetto, deciso il 23/10 (D-011).
 3. ~~Quanto della fase 1 prima della fase 2~~: deciso il 23/10, tutta la fase 1 prima.
-4. **Primo tipo di partner da simulare:** (a, consigliata) mulino, perché catalogo farine e dati tecnici sono il cuore del motore; (b) produttore di forni.
+4. ~~**Primo tipo di partner da simulare**~~: produttore di forni, deciso il 28/10 (D-054). Demo «Fornace Aurora» (marchio inventato) ed edizione Effeuno (privata); vedi `docs/ambienti-ed-edizioni.md`.
 5. **Nome:** resta Vulcan finché non arriva un parere sul marchio. Non rinominare senza decisione: il marchio grafico è una «V».
 
 ## 6bis. Avanzamento
@@ -162,6 +162,7 @@ Fase 2:
 | 23–24/10/2026 | M-1 (confermato), M-2, M-3, M-4, M-5, M-9, M-10, P-1, P-2 | ramo `claude/bold-brahmagupta-s484he`; dettaglio in `docs/motore-correzioni-2026-10-22.md` |
 | 24/10/2026 | I18N-1, U-1, U-2, M-11 | stesso ramo; vedi sotto |
 | 24/10/2026 | P-4 (pronto), M-6, M-8, C-4, I18N-2, C-5, P-3, P-5 (budget e font) | stesso ramo; vedi sotto |
+| 28/10/2026 | B-1 (prima versione: edizioni in build), B-6 (demo forno; Effeuno privata), produzione con approvazione | `docs/ambienti-ed-edizioni.md`, D-051…D-054 |
 
 Emerse nel lavoro, da pianificare in fase 1:
 

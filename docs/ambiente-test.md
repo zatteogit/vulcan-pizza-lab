@@ -18,6 +18,11 @@ Senza i segreti Cloudflare il workflow si ferma con un avviso e non fallisce.
 
 ## Passi una tantum sull'account Cloudflare (Matteo)
 
+> Aggiornamento del 28/10/2026: il D1 di test esiste già, l'`account_id` è in
+> `wrangler.toml` e il segreto `CLOUDFLARE_ACCOUNT_ID` non serve più. L'elenco
+> aggiornato è il §4 di `docs/ambienti-ed-edizioni.md`; i passi qui sotto restano
+> come riferimento.
+
 1. **D1 di test in UE**
    `npx wrangler d1 create vulcan-test --jurisdiction eu`
    Copia l'`database_id` restituito in `wrangler.toml` al posto di
@@ -36,20 +41,9 @@ Senza i segreti Cloudflare il workflow si ferma con un avviso e non fallisce.
 5. **Verifica**: `curl -sI https://vulcan-test.<account>.workers.dev/ | grep -i x-robots-tag`
    deve rispondere `noindex, nofollow` (dietro Access serve il cookie di sessione).
 
-## Produzione con approvazione (passo successivo)
+## Produzione con approvazione ed edizioni
 
-Oggi la produzione si pubblica da sola a ogni push su `main` (Workers Builds,
-integrazione Git di Cloudflare). Per avere «approvazione → produzione dello
-stesso commit»:
-
-1. In GitHub → Settings → Environments crea `production` con «Required
-   reviewers» (tu).
-2. Aggiungi un workflow `deploy-production` con `workflow_dispatch`, input
-   `sha`, `environment: production`, che fa checkout di quello `sha`, `npm ci`,
-   `npm run build` e `npx wrangler deploy`.
-3. Solo dopo, in Cloudflare → Workers → vulcan-pizza-lab → Settings → Builds,
-   spegni il deploy automatico del ramo di produzione (le anteprime delle PR
-   possono restare).
-
-Il passo 3 cambia come esce la produzione: va fatto da te, quando test e
-approvazione hanno girato almeno una volta.
+Fatto il 28/10/2026 (D-053): il workflow `deploy-production` pubblica solo con la tua
+approvazione e lo stesso sha già passato da `main`. Le edizioni dedicate hanno un
+Worker di test ciascuna (`vulcan-<id>-test`). Passi una tantum e procedura in
+`docs/ambienti-ed-edizioni.md`.

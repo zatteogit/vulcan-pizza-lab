@@ -4,6 +4,7 @@ import fs from "fs";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { fillBrandPlaceholders } from "./src/app/config/brand";
+import { resolveEditionFile } from "./scripts/edition-path.mjs";
 
 /* Nome del prodotto in index.html e public/site.webmanifest: i file sorgente
    contengono %BRAND_NAME% / %BRAND_FULL_NAME% e il plugin li riempie da
@@ -155,6 +156,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Edizione della build (VULCAN_EDITION): docs/ambienti-ed-edizioni.md.
+      "@vulcan/edition": resolveEditionFile(),
     },
   },
 

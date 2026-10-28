@@ -31,6 +31,8 @@
     "deploy": "npm run build && wrangler deploy",
     "build:test": "VITE_ENABLE_TOOLS=1 vite build && npm run check:glass",
     "deploy:test": "npm run build:test && wrangler deploy --env test",
+    "deploy:edition": "node scripts/deploy-edition.mjs",
+    "editions:list": "node scripts/list-editions.mjs",
     "test": "vitest run",
     "quality:check": "npm run typecheck && npm test && npm run lint",
     "quality:full": "npm run quality:check && npm run build && npm run visual:check",

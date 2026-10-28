@@ -1,4 +1,5 @@
 import type { OvenType } from "../domain/pizza-engine";
+import { EDITION, type Edition } from "../config/edition";
 
 /* ═══ D-048 — Forni da pizza per marca e modello ═══
  * Dati da docs/ricerca/forni-fonti-2026-10-24.md (pagine dei produttori lette
@@ -30,7 +31,8 @@ export interface OvenModel {
   source: "V" | "P";
 }
 
-export const OVEN_MODELS: OvenModel[] = [
+/** Catalogo completo della generalista. */
+export const ALL_OVEN_MODELS: OvenModel[] = [
   // Ooni
   { id: "ooni-koda-12", brand: "Ooni", model: "Koda 12", fuel: "gas", ovenType: "gas_pizza", maxTempC: 500, pizzaCm: 30, source: "V" },
   { id: "ooni-koda-16", brand: "Ooni", model: "Koda 16", fuel: "gas", ovenType: "gas_pizza", maxTempC: 500, pizzaCm: 40, source: "V" },
@@ -80,6 +82,22 @@ export const OVEN_MODELS: OvenModel[] = [
   { id: "bertello-simulfire-12", brand: "Bertello", model: "SimulFIRE 12″", fuel: "gas", ovenType: "gas_pizza", maxTempC: 480, pizzaCm: 30, source: "V" },
   { id: "bertello-simulfire-grande", brand: "Bertello", model: "SimulFIRE Grande 16″", fuel: "gas", ovenType: "gas_pizza", maxTempC: 480, pizzaCm: 40, source: "V" },
 ];
+
+/** Catalogo di un'edizione: modelli in più e filtro per prefisso d'id. */
+export function editionOvenModels(edition: Edition, base: readonly OvenModel[] = ALL_OVEN_MODELS): OvenModel[] {
+  const extra: OvenModel[] = edition.ovens?.extra ?? [];
+  const merged = [...base.filter((model) => !extra.some((own) => own.id === model.id)), ...extra];
+  const only = edition.ovens?.only;
+  return only ? merged.filter((model) => only.some((prefix) => model.id.startsWith(prefix))) : merged;
+}
+
+/** Catalogo dell'edizione di questa build (la generalista: tutti). */
+export const OVEN_MODELS: OvenModel[] = editionOvenModels(EDITION);
+
+/** Forno preimpostato dall'edizione, se esiste nel suo catalogo. */
+export const EDITION_DEFAULT_OVEN: OvenModel | undefined = EDITION.ovens?.default
+  ? OVEN_MODELS.find((model) => model.id === EDITION.ovens?.default)
+  : undefined;
 
 const normalize = (text: string) =>
   text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();

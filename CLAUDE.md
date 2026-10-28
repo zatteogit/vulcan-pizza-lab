@@ -163,6 +163,18 @@ Edit `src/app/routes.ts`:
 - **`src/styles/theme.css`** — Design tokens source of truth (enforced via `npm run check:tokens`).
 - **`vite.config.ts`** — Build settings, dev server configuration, and rollup manual chunking logic.
 
+## Editions & environments
+
+One `main`, several **editions** (D-051): the generalist and partner/demo versions
+are JSON files (`editions/<id>.json` public; real brands in the private repo
+`vulcan-editions`, checked out to `.editions-private/`). `VULCAN_EDITION=<id>`
+picks one at build time through the `@vulcan/edition` alias
+(`scripts/edition-path.mjs`, `src/app/config/edition.ts`). Never branch per
+client and never `if (edition.id === …)` in code: add a field to the schema.
+Environments: dev (`npm run dev`), test (`vulcan-test` + `vulcan-<id>-test`,
+auto on merge), production (only via the `deploy-production` workflow, with
+approval). Full procedure: `docs/ambienti-ed-edizioni.md`.
+
 ## Notes
 
 - **No ESLint/Prettier**: Use TypeScript (`npm run verify`) to catch errors.

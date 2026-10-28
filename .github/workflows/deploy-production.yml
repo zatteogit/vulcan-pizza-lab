@@ -1,0 +1,64 @@
+name: deploy-production
+
+# Produzione con approvazione (decisione del 28/10/2026, docs/ambienti-ed-edizioni.md):
+# si lancia a mano con lo sha già passato da main (e quindi dal test) e l'edizione;
+# l'ambiente GitHub «production» chiede l'approvazione di Matteo prima di partire.
+
+on:
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: "Commit di main da pubblicare (lo stesso già in test)"
+        required: true
+        type: string
+      edition:
+        description: "Edizione: vulcan (generalista) o l'id di un'edizione partner"
+        required: true
+        default: vulcan
+        type: string
+
+concurrency:
+  group: deploy-production-${{ inputs.edition }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          VULCAN_EDITIONS_TOKEN: ${{ secrets.VULCAN_EDITIONS_TOKEN }}
+      EDITION: ${{ inputs.edition }}
+      SHA: ${{ inputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.sha }}
+          fetch-depth: 0
+      - name: Il commit è su main?
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor "$SHA" origin/main || { echo "::error::$SHA non è su main: in produzione va solo ciò che è passato dal test."; exit 1; }
+      - name: Edizioni private
+        if: inputs.edition != 'vulcan' && env.VULCAN_EDITIONS_TOKEN != ''
+        uses: actions/checkout@v4
+        with:
+          repository: zatteogit/vulcan-editions
+          token: ${{ secrets.VULCAN_EDITIONS_TOKEN }}
+          path: .editions-private
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      - name: Generalista → vulcan-pizza-lab
+        if: inputs.edition == 'vulcan'
+        run: |
+          npm run build
+          npx wrangler deploy
+      - name: Edizione → vulcan-${{ inputs.edition }}
+        if: inputs.edition != 'vulcan'
+        run: |
+          if [ -d .editions-private/editions ]; then export VULCAN_EDITIONS_DIR=.editions-private/editions; fi
+          node scripts/deploy-edition.mjs "$EDITION" production

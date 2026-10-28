@@ -1,5 +1,6 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
+  "edition.partner": "{0} 向け",
   "recipe.share.title": "レシピを共有",
   "recipe.share.link": "レシピのリンク",
   "recipe.share.native": "アプリで共有",

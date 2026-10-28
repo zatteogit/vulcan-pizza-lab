@@ -9,6 +9,8 @@
 #   (D1 already created: id below. Binding travels in this file — no dashboard.)
 #   Deploy: `npx wrangler deploy` (or the project's connected Workers build).
 name = "vulcan-pizza-lab"
+# Account Cloudflare (non è un segreto): basta il token API nella CI.
+account_id = "ea8b6efff9e61cb1427a489488354518"
 # D-049: il Worker include il motore per il server MCP (/mcp); lo costruisce
 # scripts/build-worker.mjs (le immagini dei condimenti restano fuori) e
 # wrangler carica il file prodotto senza ri-impacchettarlo.
@@ -57,6 +59,8 @@ run_worker_first = true
 
 [env.test.vars]
 DEPLOY_ENV = "test"
+# Fail-closed: senza Cloudflare Access davanti il Worker risponde 403.
+REQUIRE_ACCESS = "1"
 # Le [vars] non si ereditano negli ambienti: stesse di produzione.
 GOOGLE_CLIENT_ID = "216267907893-r6f22fhk3bg9u6v7jttukmocbobfg5m1.apps.googleusercontent.com"
 ADMIN_EMAIL_SHA256 = "48d1cbb1b746c94b78a7c7c149d5500d0bc1117c948bd6730554c8c16954763f"
@@ -66,5 +70,24 @@ TESTER_EMAIL_SHA256 = ""
 [[env.test.d1_databases]]
 binding = "DB"
 database_name = "vulcan-test"
-# Da `npx wrangler d1 create vulcan-test --jurisdiction eu` (docs/ambiente-test.md).
-database_id = "SOSTITUIRE_CON_ID_D1_DI_TEST"
+# Creato il 28/10/2026 con giurisdizione UE, schema.sql già caricato.
+database_id = "f5c0620f-440b-4256-aced-2564c7cb5e87"
+
+# ── Edizioni dedicate (docs/ambienti-ed-edizioni.md) ────────────────────────
+# Un Worker per edizione e per ambiente, stesso codice di main:
+#   npm run deploy:edition -- <id> test        → vulcan-<id>-test
+#   npm run deploy:edition -- <id> production  → vulcan-<id>
+# Il nome arriva da --name; NOINDEX=1 da --var per le edizioni noindex.
+# Niente D1: accesso con Google e strumenti non esistono nelle edizioni.
+[env.edition]
+name = "vulcan-edition"
+
+[env.edition.assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+# Il Worker gira prima degli asset: X-Robots-Tag anche su index.html.
+run_worker_first = true
+
+[env.edition.vars]
+DEPLOY_ENV = "edition"

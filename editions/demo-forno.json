@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "id": "demo-forno",
+  "kind": "demo",
+  "indexing": "noindex",
+  "partner": {
+    "name": "Fornace Aurora",
+    "invented": true
+  },
+  "ovens": {
+    "only": ["aurora-"],
+    "default": "aurora-e1",
+    "extra": [
+      { "id": "aurora-e1", "brand": "Fornace Aurora", "model": "E1 (demo)", "fuel": "electric", "ovenType": "electric_high", "maxTempC": 450, "pizzaCm": 33, "source": "P" },
+      { "id": "aurora-e2-duo", "brand": "Fornace Aurora", "model": "E2 Duo (demo)", "fuel": "electric", "ovenType": "electric_high", "maxTempC": 500, "pizzaCm": 34, "source": "P" },
+      { "id": "aurora-g1", "brand": "Fornace Aurora", "model": "G1 (demo)", "fuel": "gas", "ovenType": "gas_pizza", "maxTempC": 500, "pizzaCm": 40, "source": "P" }
+    ]
+  }
+}
