@@ -1218,6 +1218,7 @@ export const PT_LOCALE: CmsContent = {
     mixerHand: "Sova manual poss\u00EDvel",
     turnsSingle: "Girar {n} vez(es) para cozimento uniforme.",
     turnsNone: "N\u00E3o girar durante o cozimento.",
+    bakeAdaptedNerd: "Estimativa do motor para o seu forno ({temp}): {minM}\u2013{maxM} min por fornada. Referência do estilo: {refMin}\u2013{refMax} s a {refTemp}.",
   },
   styleDescriptions: {
     napoletana_stg:

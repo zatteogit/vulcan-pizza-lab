@@ -1222,6 +1222,7 @@ export const ES_LOCALE: CmsContent = {
     turnsSingle:
       "Rotar {n} vez/veces para cocci\u00F3n uniforme.",
     turnsNone: "No girar durante la cocci\u00F3n.",
+    bakeAdaptedNerd: "Estimación del motor para tu horno ({temp}): {minM}\u2013{maxM} min por horneado. Referencia del estilo: {refMin}\u2013{refMax} s a {refTemp}.",
   },
   styleDescriptions: {
     napoletana_stg:

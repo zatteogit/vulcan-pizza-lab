@@ -35,11 +35,33 @@ import {
 } from "../../data/topping-library";
 
 /* ═══ PARAMETRIC CONTEXT TIPS ═══ */
+/** Forno e cottura della ricetta generata. I dati parametrici descrivono la
+ *  cottura di riferimento dello stile (es. 60–90 s a 485 °C): fuori da quel
+ *  regime il consiglio usa la stima del motore, non il riferimento (audit
+ *  28/10/2026, S09-A-01). */
+export interface ParametricTipContext {
+  /** Temperatura del forno usata dal motore, °C. */
+  ovenTempC: number;
+  /** Secondi di una cottura nel forno dell'utente (GeneratedRecipe.cook_time_sec). */
+  cookSec: number;
+  /** Temperatura minima del regime di riferimento dello stile, °C. */
+  referenceMinTempC: number;
+  /** Temperature già formattate nell'unità dell'utente. */
+  ovenTempLabel: string;
+  referenceTempLabel: string;
+}
+
+/** Il forno dell'utente non raggiunge il regime di riferimento dello stile. */
+export function bakesBelowReference(ctx: ParametricTipContext | undefined): ctx is ParametricTipContext {
+  return !!ctx && ctx.ovenTempC < ctx.referenceMinTempC;
+}
+
 export function getParametricTip(
   stepId: string,
   styleId: string,
   isNerd: boolean,
   pt: CmsContent["parametricTips"],
+  ctx?: ParametricTipContext,
 ): string | null {
   switch (stepId) {
     case "mix": {
@@ -48,9 +70,12 @@ export function getParametricTip(
       const mixer = eq.mixerRequired
         ? (eq.mixerType === "planetaria" ? pt.mixerPlanetaria : eq.mixerType)
         : pt.mixerHand;
+      // L'attrezzatura dello stile (forno, teglia, pala) non riguarda l'impasto:
+      // nel passo Impasto diceva «Forno a legna/gas >430°C» anche a chi ha il
+      // forno di casa (audit 28/10/2026, S09-A-01).
       return isNerd
         ? t(pt.mixNerd, { mixer, time: eq.mixingTime_min, note: eq.note })
-        : t(pt.mixBeginner, { mixer, time: eq.mixingTime_min, equipment: eq.specialEquipment.length > 0 ? eq.specialEquipment[0] : "" });
+        : t(pt.mixBeginner, { mixer, time: eq.mixingTime_min, equipment: "" }).trim();
     }
     case "bulk": {
       const fold = getFoldingByStyle(styleId);
@@ -89,6 +114,24 @@ export function getParametricTip(
     case "bake": {
       const bt = getBakingTimeByStyle(styleId);
       if (!bt) return null;
+      if (bakesBelowReference(ctx)) {
+        // Forno sotto il regime di riferimento: tempo dalla stima del motore
+        // (±15 %), una rotazione a metà cottura; il riferimento dello stile
+        // resta visibile solo come confronto, per chi vuole approfondire.
+        const minM = Math.max(1, Math.floor((ctx.cookSec * 0.85) / 60));
+        const maxM = Math.max(minM + 1, Math.ceil((ctx.cookSec * 1.15) / 60));
+        if (isNerd) {
+          return t(pt.bakeAdaptedNerd, {
+            temp: ctx.ovenTempLabel,
+            minM,
+            maxM,
+            refMin: bt.minSeconds,
+            refMax: bt.maxSeconds,
+            refTemp: ctx.referenceTempLabel,
+          });
+        }
+        return t(pt.bakeBeginner, { minM, maxM, turnsNote: t(pt.turnsSingle, { n: 1, turn: "volta" }) });
+      }
       const minM = Math.floor(bt.minSeconds / 60);
       const maxM = Math.ceil(bt.maxSeconds / 60);
       const turnsNote = bt.turns > 0

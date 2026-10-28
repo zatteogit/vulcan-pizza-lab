@@ -1,6 +1,10 @@
 /** Catalogo UI portoghese (pt-BR): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_PT: Record<string, string> = {
   "edition.partner": "para {0}",
+  "recipe.slots.noneFeasibleTitle": "Não dá tempo para este momento",
+  "recipe.slots.noneFeasibleBody": "Com a sua cozinha nenhum estilo cabe no tempo: fermentação, abertura e pré-aquecimento levam mais. O primeiro momento possível é {0}.",
+  "recipe.slots.noneFeasibleNoSlot": "Com a sua cozinha nenhum estilo é viável, nem sem limite de tempo. Confira o forno e os equipamentos em “Sua cozinha”.",
+  "recipe.slots.chooseSlot": "Escolher {0}",
   "recipe.share.title": "Partilhar receita",
   "recipe.share.link": "Ligação da receita",
   "recipe.share.native": "Partilhar com uma app",

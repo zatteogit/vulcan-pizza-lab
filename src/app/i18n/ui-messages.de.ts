@@ -1,6 +1,10 @@
 /** Catalogo UI tedesco (de-DE): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_DE: Record<string, string> = {
   "edition.partner": "für {0}",
+  "recipe.slots.noneFeasibleTitle": "Für diesen Zeitpunkt reicht die Zeit nicht",
+  "recipe.slots.noneFeasibleBody": "Mit deiner Küche passt kein Stil in die Zeit: Gare, Formen und Vorheizen dauern länger. Der früheste mögliche Zeitpunkt ist {0}.",
+  "recipe.slots.noneFeasibleNoSlot": "Mit deiner Küche ist kein Stil machbar, auch ohne Zeitlimit nicht. Prüfe Ofen und Ausstattung unter „Deine Küche“.",
+  "recipe.slots.chooseSlot": "{0} wählen",
   "recipe.share.title": "Rezept teilen",
   "recipe.share.link": "Rezeptlink",
   "recipe.share.native": "Mit einer App teilen",

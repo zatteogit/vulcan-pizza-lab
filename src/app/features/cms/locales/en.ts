@@ -1409,6 +1409,7 @@ export const EN_LOCALE: CmsContent = {
     mixerHand: "Hand mixing possible",
     turnsSingle: "Rotate {n} time(s) for even baking.",
     turnsNone: "Do not rotate during baking.",
+    bakeAdaptedNerd: "Engine estimate for your oven ({temp}): {minM}\u2013{maxM} min per bake. Style reference: {refMin}\u2013{refMax} s at {refTemp}.",
   },
   styleDescriptions: {
     napoletana_stg:

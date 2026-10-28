@@ -16041,6 +16041,31 @@
     }
   }
 
+  /* Audit 28/10/2026 (S05-A-01): nessuno stile fattibile nel momento scelto. */
+  .recommended-rescue {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+    padding: var(--space-4);
+    border-inline-start: var(--space-1) solid var(--text-warning);
+  }
+
+  .recommended-rescue__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  .recommended-rescue__body { margin: 0; }
+
+  .recommended-rescue__action {
+    align-self: flex-start;
+    min-height: var(--space-11);
+    padding: var(--space-2) var(--space-5);
+  }
+
   .recommended-styles__search-group {
     display: flex;
     flex-direction: column;

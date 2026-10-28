@@ -661,6 +661,10 @@ export function HomePage() {
     return customMealSlot(new Date(selectedTimeMeta.targetAt), new Date(selectedTimeMeta.selectedAt));
   }, [selectedTimeSlot, selectedTimeMeta]);
 
+  /* Audit 28/10/2026 (S05-A-01): se nel momento scelto nessuno stile è
+     fattibile, Scopri propone il primo momento che ne ha almeno uno. */
+  const rescueTimeSlots = useMemo(() => [...generateTimeSlots(), NO_PREFERENCE_SLOT], []);
+
   const handleTimeSlotChange = useCallback((slot: TimeSlot) => {
     const selectedAt = Date.now();
     setSelectedTimeSlot(slot.id);
@@ -1313,6 +1317,8 @@ export function HomePage() {
                   constraints={engineConstraints}
                   selectedStyle={selectedStyle}
                   onSelectStyle={applySelectStyle}
+                  timeSlots={rescueTimeSlots}
+                  onSelectTimeSlot={handleTimeSlotChange}
                 />
               </div>
             </div>

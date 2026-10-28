@@ -1,6 +1,10 @@
 /** Catalogo UI giapponese (ja-JP): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_JA: Record<string, string> = {
   "edition.partner": "{0} 向け",
+  "recipe.slots.noneFeasibleTitle": "この時間には間に合いません",
+  "recipe.slots.noneFeasibleBody": "あなたのキッチンでは、どのスタイルも時間内に収まりません。発酵・成形・予熱にもっと時間がかかります。最も早く可能なのは{0}です。",
+  "recipe.slots.noneFeasibleNoSlot": "あなたのキッチンでは、時間の制限がなくても可能なスタイルがありません。「あなたのキッチン」でオーブンと道具を確認してください。",
+  "recipe.slots.chooseSlot": "{0}を選ぶ",
   "recipe.share.title": "レシピを共有",
   "recipe.share.link": "レシピのリンク",
   "recipe.share.native": "アプリで共有",

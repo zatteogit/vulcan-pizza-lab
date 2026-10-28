@@ -22,6 +22,7 @@ import {
   fmtDuration,
   formatCompVal,
   getParametricTip,
+  type ParametricTipContext,
   localizeStep,
   engineMessage,
 } from "./recipe-output-format";
@@ -64,6 +65,13 @@ export function ProcedureTimeline({
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
   const filled = recipe.timeline.some(step => resolveStepVisual(step) === "fill_internal");
+  const tipContext: ParametricTipContext = {
+    ovenTempC: recipe.oven_temp_c,
+    cookSec: recipe.cook_time_sec,
+    referenceMinTempC: recipe.style.baking.temp_c_range[0],
+    ovenTempLabel: fmt.celsius(recipe.oven_temp_c),
+    referenceTempLabel: fmt.celsius(recipe.style.baking.temp_c_ideal),
+  };
   return (
     <>
       {/* ── Procedure / Timeline with inline tips ── */}
@@ -140,7 +148,7 @@ export function ProcedureTimeline({
                   ? localizedStep.tip.nerd
                   : localizedStep.tip.beginner
                 : null;
-              const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips);
+              const parametricTip = getParametricTip(step.id, recipe.style.id, isNerd, cms.parametricTips, tipContext);
               const trouble = getStepTroubleshooting(step, { unleavened: !!recipe.style.dough.unleavened, filled });
               const stepFooter = <>
                 {step.duration_minutes > 0 && (

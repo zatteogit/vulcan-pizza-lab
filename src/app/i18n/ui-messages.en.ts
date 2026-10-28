@@ -1,6 +1,10 @@
 /** Catalogo UI inglese (en-GB): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_EN: Record<string, string> = {
   "edition.partner": "for {0}",
+  "recipe.slots.noneFeasibleTitle": "There isn't enough time for this moment",
+  "recipe.slots.noneFeasibleBody": "With your kitchen no style fits in time: rising, shaping and preheating take longer. The first possible moment is {0}.",
+  "recipe.slots.noneFeasibleNoSlot": "With your kitchen no style is feasible, not even without a time limit. Check your oven and equipment in “Your kitchen”.",
+  "recipe.slots.chooseSlot": "Choose {0}",
   "recipe.share.title": "Share recipe",
   "recipe.share.link": "Recipe link",
   "recipe.share.native": "Share with an app",

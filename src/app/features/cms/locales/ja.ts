@@ -1269,6 +1269,7 @@ export const JA_LOCALE: CmsContent = {
       "\u5747\u4E00\u306A\u713C\u304D\u306E\u305F\u3081{n}\u56DE\u56DE\u8EE2\u3002",
     turnsNone:
       "\u713C\u304D\u4E2D\u306F\u56DE\u8EE2\u3057\u306A\u3044\u3002",
+    bakeAdaptedNerd: "あなたのオーブン（{temp}）でのエンジンの推定：1回の焼成あたり {minM}\u2013{maxM} 分。スタイルの基準：{refTemp} で {refMin}\u2013{refMax} 秒。",
   },
   styleDescriptions: {
     napoletana_stg:
