@@ -124,42 +124,29 @@ export function getParametricTip(
     }
     case "bake": {
       const bt = getBakingTimeByStyle(styleId);
-      if (!bt || ctx?.frying) return null;
-      if (ctx) {
-        // FW-07 (S09-A-01): con la ricetta calcolata il tempo è sempre la
-        // stima del motore per il forno dell'utente (±20 %, è una stima), e
-        // la rotazione segue il tipo di forno; il riferimento dello stile
-        // resta visibile solo come confronto, per chi vuole approfondire.
-        const minM = Math.max(1, Math.floor((ctx.cookSec * 0.8) / 60));
-        const maxM = Math.max(minM + 1, Math.ceil((ctx.cookSec * 1.2) / 60));
-        if (isNerd) {
-          return t(pt.bakeAdaptedNerd, {
-            temp: ctx.ovenTempLabel,
-            minM,
-            maxM,
-            refMin: bt.minSeconds,
-            refMax: bt.maxSeconds,
-            refTemp: ctx.referenceTempLabel,
-          });
-        }
-        const turnsNote = bt.turns === 0
-          ? pt.turnsNone
-          : ctx.ovenType && FREQUENT_TURN_OVENS.includes(ctx.ovenType) ? pt.turnsFrequent : pt.turnsHalfway;
-        return t(pt.bakeBeginner, { minM, maxM, turnsNote });
+      // FW-07 (S09-A-01): senza la ricetta calcolata non si sa in che forno
+      // si cuoce, e i tempi di riferimento dello stile (BAKING_TIME_DB) non
+      // diventano mai un consiglio: nessun consiglio.
+      if (!bt || !ctx || ctx.frying) return null;
+      // Il tempo è la stima del motore per il forno dell'utente (±20 %, è
+      // una stima) e la rotazione segue il tipo di forno; il riferimento
+      // dello stile resta visibile solo come confronto, in modalità Nerd.
+      const minM = Math.max(1, Math.floor((ctx.cookSec * 0.8) / 60));
+      const maxM = Math.max(minM + 1, Math.ceil((ctx.cookSec * 1.2) / 60));
+      if (isNerd) {
+        return t(pt.bakeAdaptedNerd, {
+          temp: ctx.ovenTempLabel,
+          minM,
+          maxM,
+          refMin: bt.minSeconds,
+          refMax: bt.maxSeconds,
+          refTemp: ctx.referenceTempLabel,
+        });
       }
-      const minM = Math.floor(bt.minSeconds / 60);
-      const maxM = Math.ceil(bt.maxSeconds / 60);
-      const turnsNote = bt.turns > 0
-        ? t(pt.turnsSingle, {
-            n: bt.turns,
-            // Plurale italiano (volta / volte); negli altri locale il placeholder
-            // resta letterale finché non viene migrato all'i18n con plurali.
-            turn: bt.turns === 1 ? "volta" : "volte",
-          })
-        : pt.turnsNone;
-      return isNerd
-        ? t(pt.bakeNerd, { idealSec: bt.idealSeconds, minM, maxM, turns: bt.turns, note: bt.note })
-        : t(pt.bakeBeginner, { minM, maxM, turnsNote });
+      const turnsNote = bt.turns === 0
+        ? pt.turnsNone
+        : ctx.ovenType && FREQUENT_TURN_OVENS.includes(ctx.ovenType) ? pt.turnsFrequent : pt.turnsHalfway;
+      return t(pt.bakeBeginner, { minM, maxM, turnsNote });
     }
     default:
       return null;

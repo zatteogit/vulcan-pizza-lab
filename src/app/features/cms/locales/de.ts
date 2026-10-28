@@ -1200,12 +1200,8 @@ export const DE_LOCALE: CmsContent = {
       "Einschnitt: {type} \u00B7 Tiefe {depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd:
       "Belag-Reihenfolge: {order} \u00B7 So\u00DFe {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
-    bakeNerd:
-      "Ideales Backen: {idealSec}s (Bereich {minM}\u2013{maxM} Min.) \u00B7 {turns} Drehungen \u00B7 {note}",
     mixerPlanetaria: "K\u00FCchenmaschine empfohlen",
     mixerHand: "Handkneten m\u00F6glich",
-    turnsSingle:
-      "{n}-mal drehen f\u00FCr gleichm\u00E4\u00DFiges Backen.",
     turnsNone: "W\u00E4hrend des Backens nicht drehen.",
     bakeAdaptedNerd: "Schätzung der Engine für deinen Ofen ({temp}): {minM}\u2013{maxM} Min. pro Backvorgang. Referenz des Stils: {refMin}\u2013{refMax} s bei {refTemp}.",
     // FW-07

@@ -1212,11 +1212,8 @@ export const PT_LOCALE: CmsContent = {
       "Cortes: {type} \u00B7 profundidade {depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd:
       "Ordem cobertura: {order} \u00B7 molho {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
-    bakeNerd:
-      "Cozimento ideal: {idealSec}s (faixa {minM}\u2013{maxM} min) \u00B7 {turns} rota\u00E7\u00F5es \u00B7 {note}",
     mixerPlanetaria: "Batedeira planet\u00E1ria recomendada",
     mixerHand: "Sova manual poss\u00EDvel",
-    turnsSingle: "Girar {n} vez(es) para cozimento uniforme.",
     turnsNone: "N\u00E3o girar durante o cozimento.",
     bakeAdaptedNerd: "Estimativa do motor para o seu forno ({temp}): {minM}\u2013{maxM} min por fornada. Referência do estilo: {refMin}\u2013{refMax} s a {refTemp}.",
     // FW-07

@@ -1288,11 +1288,9 @@ export interface CmsContent {
     bulkNerd: string;
     shapeNerd: string;
     topNerd: string;
-    bakeNerd: string;
     // Dynamic fragments
     mixerPlanetaria: string;
     mixerHand: string;
-    turnsSingle: string;
     turnsNone: string;
     /** Cottura fuori dal regime di riferimento dello stile: stima del motore. */
     bakeAdaptedNerd: string;
@@ -2426,11 +2424,9 @@ export const CMS_DEFAULTS: CmsContent = {
     bulkNerd: "Pieghe: {count}\u00D7 {type} ogni {interval} min \u00B7 {note}",
     shapeNerd: "Scoring: {type} \u00B7 profondit\u00E0 {depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd: "Ordine condimento: {order} \u00B7 salsa {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
-    bakeNerd: "Cottura ideale: {idealSec}s (range {minM}\u2013{maxM} min) \u00B7 {turns} rotazioni \u00B7 {note}",
     // Dynamic fragments
     mixerPlanetaria: "Planetaria consigliata",
     mixerHand: "Impasto a mano possibile",
-    turnsSingle: "Ruota {n} {turn} per cottura uniforme.",
     turnsNone: "Non girare durante la cottura.",
     bakeAdaptedNerd: "Stima del motore per il tuo forno ({temp}): {minM}\u2013{maxM} min per cottura. Riferimento dello stile: {refMin}\u2013{refMax} s a {refTemp}.",
     // FW-07
@@ -3750,11 +3746,9 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "parametricTips.bulkNerd", label: "Bulk — Nerd", type: "textarea", description: "Template: {count}, {type}, {interval}, {note}" },
       { path: "parametricTips.shapeNerd", label: "Shape — Nerd", type: "textarea", description: "Template: {type}, {depth}, {timing}, {note}" },
       { path: "parametricTips.topNerd", label: "Top — Nerd", type: "textarea", description: "Template: {order}, {saucePos}, {cheeseType}, {cheesePos}, {note}" },
-      { path: "parametricTips.bakeNerd", label: "Bake — Nerd", type: "textarea", description: "Template: {idealSec}, {minM}, {maxM}, {turns}, {note}" },
       // Dynamic fragments
       { path: "parametricTips.mixerPlanetaria", label: "Frammento: Planetaria", type: "text" },
       { path: "parametricTips.mixerHand", label: "Frammento: A mano", type: "text" },
-      { path: "parametricTips.turnsSingle", label: "Frammento: Ruota", type: "text", description: "Template: {n}" },
       { path: "parametricTips.turnsNone", label: "Frammento: Non girare", type: "text" },
       { path: "parametricTips.bakeAdaptedNerd", label: "Bake — Nerd, forno diverso dal riferimento", type: "textarea", description: "Template: {temp}, {minM}, {maxM}, {refMin}, {refMax}, {refTemp}" },
       { path: "parametricTips.turnsHalfway", label: "Frammento: girala a metà (forno di casa)", type: "text" },

@@ -1382,7 +1382,7 @@ export function ProfilePage() {
 
   const currentHeat = isHeatProfileCompatible(equipment.oven_heat_profile ?? "static_top_bottom", ovenType)
     ? (equipment.oven_heat_profile ?? "static_top_bottom")
-    : heatProfiles[0]?.id;
+    : undefined; // quella salvata non vale per questo forno: il motore usa il testo del tipo
   const setOvenHeatProfile = useCallback((id: OvenHeatProfile) => {
     updateEquipment((prev) => ({ ...prev, oven_heat_profile: id }));
   }, [updateEquipment]);

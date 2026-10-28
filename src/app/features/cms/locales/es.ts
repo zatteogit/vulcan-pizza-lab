@@ -1215,12 +1215,8 @@ export const ES_LOCALE: CmsContent = {
       "Gre\u00F1ado: {type} \u00B7 profundidad {depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd:
       "Orden ingredientes: {order} \u00B7 salsa {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
-    bakeNerd:
-      "Cocci\u00F3n ideal: {idealSec}s (rango {minM}\u2013{maxM} min) \u00B7 {turns} rotaciones \u00B7 {note}",
     mixerPlanetaria: "Amasadora recomendada",
     mixerHand: "Amasado a mano posible",
-    turnsSingle:
-      "Rotar {n} vez/veces para cocci\u00F3n uniforme.",
     turnsNone: "No girar durante la cocci\u00F3n.",
     bakeAdaptedNerd: "Estimación del motor para tu horno ({temp}): {minM}\u2013{maxM} min por horneado. Referencia del estilo: {refMin}\u2013{refMax} s a {refTemp}.",
     // FW-07

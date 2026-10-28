@@ -1402,11 +1402,8 @@ export const EN_LOCALE: CmsContent = {
       "Scoring: {type} \u00B7 depth {depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd:
       "Topping order: {order} \u00B7 sauce {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
-    bakeNerd:
-      "Ideal bake: {idealSec}s (range {minM}\u2013{maxM} min) \u00B7 {turns} rotations \u00B7 {note}",
     mixerPlanetaria: "Stand mixer recommended",
     mixerHand: "Hand mixing possible",
-    turnsSingle: "Rotate {n} time(s) for even baking.",
     turnsNone: "Do not rotate during baking.",
     bakeAdaptedNerd: "Engine estimate for your oven ({temp}): {minM}\u2013{maxM} min per bake. Style reference: {refMin}\u2013{refMax} s at {refTemp}.",
     // FW-07

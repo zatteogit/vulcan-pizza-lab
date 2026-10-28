@@ -88,11 +88,11 @@ describe("getParametricTip: cottura nel forno dell'utente (audit 28/10/2026, S09
     expect(tip).toContain("60–90 s a 485 °C");
   });
 
-  it("forno a legna: tempo del motore e rotazioni frequenti; senza ricetta, il riferimento", () => {
+  it("forno a legna: tempo del motore e rotazioni frequenti; senza ricetta, nessun consiglio", () => {
     const tip = getParametricTip("bake", "napoletana_stg", false, pt, wood)!;
     expect(tip).toContain("1–2 min");
     expect(tip).toContain(pt.turnsFrequent);
-    expect(getParametricTip("bake", "napoletana_stg", false, pt)).toContain("1–2 min");
+    expect(getParametricTip("bake", "napoletana_stg", false, pt)).toBeNull();
   });
 
   it("forno elettrico ad alta temperatura: una volta a metà, come il passo (non «Ruota 3 volte»)", () => {

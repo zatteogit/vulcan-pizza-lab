@@ -1218,11 +1218,8 @@ export const FR_LOCALE: CmsContent = {
       "Grignes\u00A0: {type} \u00B7 profondeur {depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd:
       "Ordre garniture\u00A0: {order} \u00B7 sauce {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
-    bakeNerd:
-      "Cuisson id\u00E9ale\u00A0: {idealSec}s (plage {minM}\u2013{maxM} min) \u00B7 {turns} rotations \u00B7 {note}",
     mixerPlanetaria: "Robot p\u00E2tissier recommand\u00E9",
     mixerHand: "P\u00E9trissage \u00E0 la main possible",
-    turnsSingle: "Tourner {n} fois pour une cuisson uniforme.",
     turnsNone: "Ne pas tourner pendant la cuisson.",
     bakeAdaptedNerd: "Estimation du moteur pour ton four ({temp}) : {minM}\u2013{maxM} min par cuisson. Référence du style : {refMin}\u2013{refMax} s à {refTemp}.",
     // FW-07

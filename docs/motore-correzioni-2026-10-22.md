@@ -544,3 +544,39 @@ Dalla verifica di GPT sul server MCP, approvato da Matteo.
   `meal_deadline` il messaggio `gen.timeBelowStyleWindowMeal` dice le ore di
   lavorazione, quelle che restano alla lievitazione, il minimo e il totale
   che serve (7 lingue). Senza orario resta il messaggio di prima. Test.
+
+## FW-07 · cucina effettiva unica (audit UX/scienza 28/10/2026)
+
+Un solo oggetto «cucina effettiva» (`src/app/use-cases/effective-kitchen.ts`,
+`resolveEffectiveKitchen`) per profilo, Crea, Personalizza, scheda stile,
+passi e server MCP. Misure sul codice, prima (`dedb1fe`) e dopo.
+
+- **Classifica `recommendStyles`.** P1 (forno di casa 250 °C, livello 1,
+  24 h) e P3 (Effeuno P134H 509 °C, livello 4, spirale, pietra): ordine,
+  punteggi e fasce **invariati** per tutti i 29 stili. Per P3 cambiano solo
+  gli avvisi: New York, Chicago tavern, New Haven e Recco ricevono
+  `gen.ovenTooNarrow` (la pizza da 35–38 cm non entra in una bocca da 34 cm).
+- **Bocca del forno.** *Prima:* `pizzaCm` dei modelli non arrivava al
+  motore. *Dopo:* `oven_max_pizza_cm` (dal modello salvato) e, se il
+  diametro della pizza tonda è maggiore, un avviso esatto (confronto
+  geometrico col dato del produttore): «Il tuo forno accetta pizze fino a
+  {max} cm … stendi il disco a {max} cm al massimo». Nessuna dose cambia.
+- **Distribuzione del calore.** *Prima:* `ovenBakeSetup` guardava il profilo
+  di calore prima del tipo di forno: forno a legna + «grill superiore» dava
+  le istruzioni del grill. *Dopo:* una distribuzione che il tipo di forno
+  non ha (mappa `HEAT_PROFILE_OVENS` in `equipment-data.ts`, scelta di
+  Vulcan) viene ignorata e vale il testo del tipo di forno.
+- **«Al massimo».** *Prima:* focaccia genovese, forno di casa 250 °C:
+  «Cuocere a 230 °C. Forno statico … al massimo». *Dopo:* «… impostato a
+  230 °C, non al massimo» (`timeline.oven.staticShelfSet`/`StoneSet`) quando
+  la cottura sta più di 10 °C sotto la massima del forno; negli altri casi
+  il testo resta quello di prima.
+- **Consigli dei passi.** Il consiglio di cottura usa sempre i secondi di
+  una cottura del passo (con i giri, D-050) ±20 % e la regola delle
+  rotazioni del forno (una volta a metà; spesso con legna, carbone, gas da
+  pizza). Napoletana col forno di casa: «4–8 min» (prima «5–7», ±15 %);
+  teglia romana: un solo tempo, niente più «8–15 min» del riferimento.
+- **Golden e parità MCP:** invariati (`src/app/domain/golden`,
+  `mcp-kitchen-parity.test.ts`). Test nuovi in `effective-kitchen.test.ts`,
+  `recipe-output-format.test.ts`, `use-profile-defaults.test.ts`,
+  `mcp-server.test.ts`.

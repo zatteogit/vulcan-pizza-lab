@@ -1259,13 +1259,9 @@ export const JA_LOCALE: CmsContent = {
       "\u30AF\u30FC\u30D7: {type} \u00B7 \u6DF1\u3055{depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd:
       "\u30C8\u30C3\u30D4\u30F3\u30B0\u9806: {order} \u00B7 \u30BD\u30FC\u30B9{saucePos} \u00B7 {cheeseType}\uFF08{cheesePos}\uFF09\u00B7 {note}",
-    bakeNerd:
-      "\u7406\u60F3\u713C\u304D: {idealSec}\u79D2\uFF08\u7BC4\u56F2{minM}\u2013{maxM}\u5206\uFF09\u00B7 {turns}\u56DE\u8EE2 \u00B7 {note}",
     mixerPlanetaria:
       "\u30B9\u30BF\u30F3\u30C9\u30DF\u30AD\u30B5\u30FC\u63A8\u5968",
     mixerHand: "\u624B\u3054\u306D\u53EF\u80FD",
-    turnsSingle:
-      "\u5747\u4E00\u306A\u713C\u304D\u306E\u305F\u3081{n}\u56DE\u56DE\u8EE2\u3002",
     turnsNone:
       "\u713C\u304D\u4E2D\u306F\u56DE\u8EE2\u3057\u306A\u3044\u3002",
     bakeAdaptedNerd: "あなたのオーブン（{temp}）でのエンジンの推定：1回の焼成あたり {minM}\u2013{maxM} 分。スタイルの基準：{refTemp} で {refMin}\u2013{refMax} 秒。",

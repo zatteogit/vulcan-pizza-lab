@@ -21120,3 +21120,4 @@ html {
 .recipe-oven-model { display: block; color: var(--text-muted); }
 .stat-strip [data-region="edition-oven"] { grid-column: 1 / -1; }
 .stat-strip__cell .recipe-oven-model { overflow-wrap: anywhere; }
+[data-slot="oven-preset"] .needs-oven-model { justify-content: center; text-align: center; }

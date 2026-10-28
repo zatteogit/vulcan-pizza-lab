@@ -428,3 +428,18 @@ secondaria (P, plausibile). Mappature decise in D-048: Ninja Woodfire
 (370 °C, elettrico) come elettrico standard; forni Alfa a gas come gas da
 pizza; G3 Ferrari Delizia e Sage Pizzaiolo (400 °C) come elettrici da pizza.
 Spidocchio e Cuisinart non inseriti (nessun dato del produttore).
+
+**Diametro della pizza (`pizzaCm`, FW-07).** Dal 28/10/2026 il motore lo usa
+(`oven_max_pizza_cm`): se la pizza tonda dello stile è più larga, la ricetta
+avvisa di stenderla al diametro del forno. Il valore è quello che il
+produttore dichiara come «pizza fino a» (pollici convertiti in cm), non il
+diametro della pietra: va ricontrollato modello per modello dove la pagina
+del produttore dà solo la misura della pietra.
+
+**Distribuzione del calore per tipo di forno (`HEAT_PROFILE_OVENS`,
+`equipment-data.ts`, FW-07).** Quali disposizioni di resistenze o bruciatori
+esistono su ciascun tipo di forno (grill superiore e ventilato solo nei forni
+di casa ed elettrici standard, fiamma laterale solo a legna, bruciatore
+dietro o sotto solo a gas). È una **scelta di Vulcan** (mappatura editoriale,
+non una misura): il profilo mostra solo le opzioni valide e il motore ignora
+una combinazione impossibile.
