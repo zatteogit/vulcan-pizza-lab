@@ -314,10 +314,10 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8": "Optimised value. Before: {0}. Now: {1}",
   "features.recipe.recipe-stat-strip.w-value-f64b6332": "W{0}",
   "features.recipe.recipe-stat-strip.idealOven": "ideal {0}",
-  "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "Add to favourites",
+  "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "Save to recipe book",
   "features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success": "Recipe saved to your recipe book!",
   "features.recipe.recipe-view.rimosso-dai-preferiti-toast-info": "Recipe removed from your recipe book.",
-  "features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb": "Remove from favourites",
+  "features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb": "Remove from recipe book",
   "features.recipe.recommended-styles.cerca-uno-stile-57efa702": "Search a style…",
   "features.recipe.recommended-styles.fattibili-f3ba54d3": "Feasible",
   "features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d": "ideal for your oven and level",
@@ -421,7 +421,6 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "pages.profile.grill-superiore-4368292b": "Top grill",
   "pages.profile.k-a2a64040": "k=",
   "pages.profile.la-tua-cucina-c2d87895": "Your kitchen",
-  "pages.profile.max-3c624fea": "Max ",
   "pages.profile.pro-66d0c5e6": "Pro",
   "pages.profile.ricette-salvate-b5c99ac7": "Saved recipes",
   "pages.profile.semi-pro-e857b480": "Semi-Pro",
@@ -443,5 +442,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "recipe.referenceLabel.disciplinare": "{0} official rules",
   "recipe.referenceLabel.inspired": "Inspired by {0}",
   "recipe.referenceLabel.profile": "{0} profile",
-  "pages.explore.primaryFamily": "Main family: {0}"
+  "pages.explore.primaryFamily": "Main family: {0}",
+  "pages.profile.maxTemp": "Max {0}",
+  "pages.profile.skillLevel": "Level {0}"
 };

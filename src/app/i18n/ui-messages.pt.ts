@@ -314,10 +314,10 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8": "Valor otimizado. Antes: {0}. Agora: {1}",
   "features.recipe.recipe-stat-strip.w-value-f64b6332": "W{0}",
   "features.recipe.recipe-stat-strip.idealOven": "ideal {0}",
-  "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "Adicionar aos favoritos",
+  "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "Guardar no livro de receitas",
   "features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success": "Receita salva no livro de receitas!",
   "features.recipe.recipe-view.rimosso-dai-preferiti-toast-info": "Receita removida do livro de receitas.",
-  "features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb": "Remover dos favoritos",
+  "features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb": "Remover do livro de receitas",
   "features.recipe.recommended-styles.cerca-uno-stile-57efa702": "Buscar um estilo…",
   "features.recipe.recommended-styles.fattibili-f3ba54d3": "Viáveis",
   "features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d": "ideais para o seu forno e nível",
@@ -421,7 +421,6 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "pages.profile.grill-superiore-4368292b": "Grill superior",
   "pages.profile.k-a2a64040": "k=",
   "pages.profile.la-tua-cucina-c2d87895": "Sua cozinha",
-  "pages.profile.max-3c624fea": "Máx. ",
   "pages.profile.pro-66d0c5e6": "Pro",
   "pages.profile.ricette-salvate-b5c99ac7": "Receitas salvas",
   "pages.profile.semi-pro-e857b480": "Semi-Pro",
@@ -443,5 +442,7 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "recipe.referenceLabel.disciplinare": "Regulamento {0}",
   "recipe.referenceLabel.inspired": "Inspirada em {0}",
   "recipe.referenceLabel.profile": "Perfil {0}",
-  "pages.explore.primaryFamily": "Família principal: {0}"
+  "pages.explore.primaryFamily": "Família principal: {0}",
+  "pages.profile.maxTemp": "Máx. {0}",
+  "pages.profile.skillLevel": "Nível {0}"
 };

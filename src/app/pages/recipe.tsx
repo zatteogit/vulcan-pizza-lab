@@ -1174,6 +1174,11 @@ function RecipeNotFound({ styleId }: { styleId?: string }) {
   const { cms } = useCms();
   const location = useLocation();
   const exploreBackTo = readExploreBackTo(location.state);
+  /* FW-14 (S01-B-13): stesso schema di titolo delle altre viste («… · Vulcan»),
+     non il «Vulcan Pizza Lab» rimasto dall'index. */
+  useEffect(() => {
+    document.title = `${cms.pages.recipeStyleNotFound} · ${BRAND.name}`;
+  }, [cms.pages.recipeStyleNotFound]);
   return (
     <main id="main-content" className="recipe-page__notfound">
       <motion.div

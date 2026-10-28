@@ -11,7 +11,7 @@ import type {
 } from "../../i18n/domain-contracts";
 
 export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
-  sectionLabel: "Pre-fermento",
+  sectionLabel: "Prefermento",
   tipsLabel: "Consigli",
   showComparison: "Confronta Biga vs Poolish vs Autolisi",
   hideComparison: "Nascondi confronto",
@@ -37,7 +37,7 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
   items: {
     poolish: {
       origin: "Francese",
-      description: "Pre-fermento liquido: farina e acqua in parti uguali con poco lievito, 12–16 h a 20–22 °C.",
+      description: "Prefermento liquido: farina e acqua in parti uguali con poco lievito, 12–16 h a 20–22 °C.",
       hydration: "100% (farina e acqua in parti uguali)",
       consistency: "Liquida, schiumosa",
       fermentationType: "Veloce: con tanta acqua matura in poche ore",
@@ -53,7 +53,7 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
     },
     biga: {
       origin: "Italiano",
-      description: "Pre-fermento asciutto: farina, 44% d'acqua e 1% di lievito, circa 16 h a 18–20 °C.",
+      description: "Prefermento asciutto: farina, 44% d'acqua e 1% di lievito, circa 16 h a 18–20 °C.",
       hydration: "44% (fino al 50% con farine integrali)",
       consistency: "Asciutta, compatta",
       fermentationType: "Lenta: con poca acqua matura in 16–48 h",
@@ -70,7 +70,7 @@ export const PRE_FERMENT_DEFAULTS: CmsPreFerment = {
     },
     autolisi: {
       origin: "Francia (R. Calvel, 1974)",
-      description: "Non è un pre-fermento: farina e acqua riposano senza lievito né sale prima dell'impasto.",
+      description: "Non è un prefermento: farina e acqua riposano senza lievito né sale prima dell'impasto.",
       hydration: "55-75% (tutta l'acqua della ricetta)",
       consistency: "Pastosa",
       fermentationType: "Nessuna (solo attività enzimatica)",
@@ -267,8 +267,8 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
       tip: "Mixa 50:50 con farina W 200 oppure prevedi autolisi lunga",
     },
     flat_long_ferment: {
-      message: "{h}h in frigo senza pre-fermento: possibile sapore piatto",
-      tip: "Aggiungi un pre-fermento (poolish o biga) per complessità aromatica",
+      message: "{h}h in frigo senza prefermento: possibile sapore piatto",
+      tip: "Aggiungi un prefermento (poolish o biga) per complessità aromatica",
     },
   },
 };

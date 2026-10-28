@@ -6,7 +6,7 @@ import type {
 } from "../cms-context";
 
 export const PRE_FERMENT_ES: Partial<CmsPreFerment> = {
-  sectionLabel: "Pre-fermento",
+  sectionLabel: "Prefermento",
   tipsLabel: "Consejos",
   showComparison: "Comparar Biga vs Poolish vs Autólisis",
   hideComparison: "Ocultar comparación",
@@ -388,8 +388,8 @@ export const TROUBLESHOOTING_ES: Partial<CmsTroubleshootingI18n> =
       },
       flat_long_ferment: {
         message:
-          "{h}h en nevera sin pre-fermento: posible sabor plano",
-        tip: "Añade un pre-fermento (poolish o biga) para complejidad aromática",
+          "{h}h en nevera sin prefermento: posible sabor plano",
+        tip: "Añade un prefermento (poolish o biga) para complejidad aromática",
       },
     },
   };

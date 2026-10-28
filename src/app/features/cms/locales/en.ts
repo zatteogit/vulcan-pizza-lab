@@ -386,9 +386,9 @@ export const EN_LOCALE: CmsContent = {
   },
   ovenPresets: {
     coal: { name: "Coal-fired oven", maxTemp: 400, icon: "flame" },
-    home: { name: "Home Oven", maxTemp: 250, icon: "home" },
+    home: { name: "Home oven", maxTemp: 250, icon: "home" },
     electric_standard: {
-      name: "Standard Electric",
+      name: "Standard electric",
       maxTemp: 300,
       icon: "zap",
     },
@@ -398,12 +398,12 @@ export const EN_LOCALE: CmsContent = {
       icon: "flame",
     },
     electric_high: {
-      name: "High-Temp Electric",
+      name: "High-temperature electric",
       maxTemp: 450,
       icon: "thermometer",
     },
     wood: {
-      name: "Wood-Fired Oven",
+      name: "Wood-fired oven",
       maxTemp: 500,
       icon: "flame-kindling",
     },
@@ -590,7 +590,7 @@ export const EN_LOCALE: CmsContent = {
     adaptToKitchen: "Adapt to my kitchen",
     optimizeForMe: "Adapt to my kitchen",
     resetToOriginal: "Back to the original",
-    saveVersion: "Save this version",
+    saveVersion: "Save to recipe book",
     savedVersion: "Saved to your recipe book",
     optimizedForSetup: "Adapted to your kitchen",
     doneBody: "You’ve completed every step of your {style}. Enjoy!",
@@ -710,7 +710,7 @@ export const EN_LOCALE: CmsContent = {
       "{current} is already dialed in for your schedule. Choosing {next} replaces it and its settings are lost.",
     draftReplaceConfirm: "Switch to {next}",
     prefermentSaltNote:
-      "In this recipe, salt goes into the final dough, not the preferment.",
+      "In this recipe, salt goes into the final dough, not the preferment, where it would slow the yeast.",
     learnedFromAttempts: "I learned from your {n} attempts",
     applyCorrections: "Apply the corrections",
     learnInlineTitle: "Learn more: {label}",

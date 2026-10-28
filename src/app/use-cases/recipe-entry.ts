@@ -266,9 +266,9 @@ export function recipeDifferences(from: GeneratedRecipe, to: GeneratedRecipe) {
       fromHours: from.fermentation_hours, toHours: to.fermentation_hours,
       fromTemp: from.fermentation_temp_c, toTemp: to.fermentation_temp_c });
   }
-  if (from.has_pre_ferment !== to.has_pre_ferment) add(to.has_pre_ferment ? "change.prefermentOn" : "change.prefermentOff", to.has_pre_ferment ? "Si aggiunge un pre-fermento" : "Si passa all’impasto diretto");
+  if (from.has_pre_ferment !== to.has_pre_ferment) add(to.has_pre_ferment ? "change.prefermentOn" : "change.prefermentOff", to.has_pre_ferment ? "Si aggiunge un prefermento" : "Si passa all’impasto diretto");
   else if (to.has_pre_ferment && (from.pre_ferment_type !== to.pre_ferment_type || from.pre_ferment_flour_pct !== to.pre_ferment_flour_pct)) {
-    add("change.prefermentDetails", "Pre-fermento: {fromType} {from}% → {toType} {to}%", { fromType: from.pre_ferment_type ?? "", toType: to.pre_ferment_type ?? "", from: from.pre_ferment_flour_pct ?? 0, to: to.pre_ferment_flour_pct ?? 0 });
+    add("change.prefermentDetails", "Prefermento: {fromType} {from}% → {toType} {to}%", { fromType: from.pre_ferment_type ?? "", toType: to.pre_ferment_type ?? "", from: from.pre_ferment_flour_pct ?? 0, to: to.pre_ferment_flour_pct ?? 0 });
   }
   if (from.oven_temp_c !== to.oven_temp_c || from.cook_time_sec !== to.cook_time_sec) add("change.cooking", "Cottura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s", { fromTemp: from.oven_temp_c, toTemp: to.oven_temp_c, fromSeconds: from.cook_time_sec, toSeconds: to.cook_time_sec });
   return changes;

@@ -314,10 +314,10 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8": "Optimierter Wert. Vorher: {0}. Jetzt: {1}",
   "features.recipe.recipe-stat-strip.w-value-f64b6332": "W{0}",
   "features.recipe.recipe-stat-strip.idealOven": "ideal {0}",
-  "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "Zu Favoriten hinzufügen",
+  "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "Im Rezeptbuch speichern",
   "features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success": "Rezept im Rezeptbuch gespeichert!",
   "features.recipe.recipe-view.rimosso-dai-preferiti-toast-info": "Rezept aus dem Rezeptbuch entfernt.",
-  "features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb": "Aus Favoriten entfernen",
+  "features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb": "Aus dem Rezeptbuch entfernen",
   "features.recipe.recommended-styles.cerca-uno-stile-57efa702": "Stil suchen…",
   "features.recipe.recommended-styles.fattibili-f3ba54d3": "Machbar",
   "features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d": "ideal für deinen Ofen und dein Niveau",
@@ -421,7 +421,6 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "pages.profile.grill-superiore-4368292b": "Oberer Grill",
   "pages.profile.k-a2a64040": "k=",
   "pages.profile.la-tua-cucina-c2d87895": "Deine Küche",
-  "pages.profile.max-3c624fea": "Max ",
   "pages.profile.pro-66d0c5e6": "Pro",
   "pages.profile.ricette-salvate-b5c99ac7": "Gespeicherte Rezepte",
   "pages.profile.semi-pro-e857b480": "Semi-Pro",
@@ -443,5 +442,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "recipe.referenceLabel.disciplinare": "Regelwerk {0}",
   "recipe.referenceLabel.inspired": "Inspiriert von {0}",
   "recipe.referenceLabel.profile": "Profil {0}",
-  "pages.explore.primaryFamily": "Hauptfamilie: {0}"
+  "pages.explore.primaryFamily": "Hauptfamilie: {0}",
+  "pages.profile.maxTemp": "Max. {0}",
+  "pages.profile.skillLevel": "Stufe {0}"
 };

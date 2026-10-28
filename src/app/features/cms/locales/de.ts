@@ -1754,7 +1754,7 @@ export const DE_LOCALE: CmsContent = {
     adaptToKitchen: "An meine K\u00FCche anpassen",
     optimizeForMe: "An meine Küche anpassen",
     resetToOriginal: "Zur\u00FCck zum Original",
-    saveVersion: "Diese Version speichern",
+    saveVersion: "Im Rezeptbuch speichern",
     savedVersion: "Im Rezeptbuch gespeichert",
     optimizedForSetup: "An deine Küche angepasst",
     doneBody: "Du hast alle Schritte deiner {style} abgeschlossen. Guten Appetit!",
@@ -1813,7 +1813,7 @@ export const DE_LOCALE: CmsContent = {
       "{current} ist bereits auf deinen Zeitplan abgestimmt. Mit {next} ersetzt du es und die Einstellungen gehen verloren.",
     draftReplaceConfirm: "Zu {next} wechseln",
     prefermentSaltNote:
-      "In diesem Rezept kommt das Salz in den Hauptteig, nicht in den Vorteig.",
+      "In diesem Rezept kommt das Salz in den Hauptteig, nicht in den Vorteig: Dort würde es die Hefe bremsen.",
     learnedFromAttempts: "Ich habe aus deinen {n} Versuchen gelernt",
     applyCorrections: "Korrekturen anwenden",
     learnInlineTitle: "Mehr erfahren: {label}",

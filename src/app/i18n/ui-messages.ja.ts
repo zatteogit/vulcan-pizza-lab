@@ -314,10 +314,10 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "features.recipe.recipe-stat-strip.valore-ottimizzato-prima-value-ora-value-dca62da8": "最適化された値。変更前：{0}。現在：{1}",
   "features.recipe.recipe-stat-strip.w-value-f64b6332": "W{0}",
   "features.recipe.recipe-stat-strip.idealOven": "理想 {0}",
-  "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "お気に入りに追加",
+  "features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86": "レシピ帳に保存",
   "features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success": "レシピ帳に保存しました！",
   "features.recipe.recipe-view.rimosso-dai-preferiti-toast-info": "レシピ帳から削除しました。",
-  "features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb": "お気に入りから削除",
+  "features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb": "レシピ帳から削除",
   "features.recipe.recommended-styles.cerca-uno-stile-57efa702": "スタイルを検索…",
   "features.recipe.recommended-styles.fattibili-f3ba54d3": "作れる",
   "features.recipe.recommended-styles.ideali-con-il-tuo-forno-e-livello-3659f34d": "あなたのオーブンとレベルにぴったり",
@@ -421,7 +421,6 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "pages.profile.grill-superiore-4368292b": "上部グリル",
   "pages.profile.k-a2a64040": "k=",
   "pages.profile.la-tua-cucina-c2d87895": "あなたのキッチン",
-  "pages.profile.max-3c624fea": "最高",
   "pages.profile.pro-66d0c5e6": "プロ",
   "pages.profile.ricette-salvate-b5c99ac7": "保存したレシピ",
   "pages.profile.semi-pro-e857b480": "セミプロ",
@@ -443,5 +442,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "recipe.referenceLabel.disciplinare": "{0} 規定",
   "recipe.referenceLabel.inspired": "{0}に着想を得たレシピ",
   "recipe.referenceLabel.profile": "{0} プロファイル",
-  "pages.explore.primaryFamily": "主な系統：{0}"
+  "pages.explore.primaryFamily": "主な系統：{0}",
+  "pages.profile.maxTemp": "最高 {0}",
+  "pages.profile.skillLevel": "レベル {0}"
 };

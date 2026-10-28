@@ -3120,13 +3120,13 @@ export function optimizeRecipe(
   }
   if (r.has_pre_ferment && !style.requires_pre_ferment) {
     rationale.push(
-      em("opt.prefermentAdded", `Pre-fermento (${r.pre_ferment_type}) aggiunto: più struttura, alveolatura e aroma.`, {
+      em("opt.prefermentAdded", `Prefermento (${r.pre_ferment_type}) aggiunto: più struttura, alveolatura e aroma.`, {
         type: r.pre_ferment_type ?? "",
       }),
     );
   } else if (r.has_pre_ferment) {
     rationale.push(
-      em("opt.preferment", `Pre-fermento (${r.pre_ferment_type}): più struttura, alveolatura e aroma.`, {
+      em("opt.preferment", `Prefermento (${r.pre_ferment_type}): più struttura, alveolatura e aroma.`, {
         type: r.pre_ferment_type ?? "",
       }),
     );
@@ -3418,15 +3418,15 @@ function generateTimeline(
   if (hasPreFerment) {
     steps.push({
       id: "preferment",
-      title: "Pre-Fermento",
+      title: "Prefermento",
       description: `Mescolare ${preFermentType} e far maturare`,
       duration_minutes: Math.round(phases.preferment * 60),
       icon: "beaker",
       timing_label: `${Math.round(phases.preferment)}h prima`,
       tip: {
         beginner:
-          'Il pre-fermento è come un "antipasto" per il lievito. Mescola e lascia riposare coperto.',
-        nerd: "Il pre-fermento produce acidi organici (lattico/acetico) che abbassano il pH a ~4.5, migliorando la rete glutinica e la shelf life.",
+          'Il prefermento è come un "antipasto" per il lievito. Mescola e lascia riposare coperto.',
+        nerd: "Il prefermento produce acidi organici (lattico/acetico) che abbassano il pH a ~4.5, migliorando la rete glutinica e la shelf life.",
       },
     });
   }
@@ -4027,13 +4027,13 @@ export const OVEN_PRESETS: {
 }[] = [
   {
     id: "home",
-    name: "Forno Domestico",
+    name: "Forno di casa",
     maxTemp: 250,
     icon: "home",
   },
   {
     id: "electric_standard",
-    name: "Elettrico Standard",
+    name: "Elettrico standard",
     maxTemp: 300,
     icon: "zap",
   },
@@ -4043,6 +4043,16 @@ export const OVEN_PRESETS: {
     id: "gas",
     name: "Forno a gas a platea",
     maxTemp: 350,
+    icon: "flame",
+  },
+  // FW-14 (S15-B-13): elenco in ordine di temperatura massima.
+  {
+    id: "coal",
+    name: "Forno a carbone",
+    // Valore iniziale dal range di lavoro del modello Apizza, da sostituire
+    // con la temperatura effettiva della propria dotazione; non è un massimo
+    // universale dei forni a carbone. Fonte identità: sallysapizza.com/experience/.
+    maxTemp: 400,
     icon: "flame",
   },
   {
@@ -4060,18 +4070,9 @@ export const OVEN_PRESETS: {
   },
   {
     id: "wood",
-    name: "Forno a Legna",
+    name: "Forno a legna",
     maxTemp: 500,
     icon: "flame-kindling",
-  },
-  {
-    id: "coal",
-    name: "Forno a carbone",
-    // Valore iniziale dal range di lavoro del modello Apizza, da sostituire
-    // con la temperatura effettiva della propria dotazione; non è un massimo
-    // universale dei forni a carbone. Fonte identità: sallysapizza.com/experience/.
-    maxTemp: 400,
-    icon: "flame",
   },
 ];
 

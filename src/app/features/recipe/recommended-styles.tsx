@@ -630,6 +630,7 @@ function StyleCard({
     >
       <motion.button
         onClick={onSelect}
+        aria-haspopup="dialog"
         initial={{ opacity: 0, y: 14 }}
         animate={{
           opacity: 1,

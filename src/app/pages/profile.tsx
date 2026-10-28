@@ -725,7 +725,8 @@ function EquipmentCategory({
 
 /* ═══ FTU ONBOARDING ═══ */
 function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; closeControl: React.ReactNode }) {
-  const { cms } = useCms();
+  const { cms, bcp47 } = useCms();
+  const fmt = createFormatter(cms.ui, bcp47, getPreferredUnitSystem()); // FW-14: «Max 250 °C», non «250°C»
   const p = cms.profile;
   const [step, setStep] = useState(0);
   /* Si parte dal forno già salvato (anche quello preimpostato da un'edizione
@@ -868,7 +869,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                           {cms.ovenPresets[preset.id]?.name ?? preset.name}
                         </div>
                         <div className="type-data-sm profile-ftu__option-meta">
-                          {uiMessage("pages.profile.max-3c624fea")}{preset.maxTemp}°C
+                          {uiMessage("pages.profile.maxTemp", [fmt.celsius(preset.maxTemp)])}
                         </div>
                       </div>
                       {active && (
@@ -1819,7 +1820,7 @@ export function ProfilePage() {
                       transition={motionSpring.crispPanel}
                       className="profile-skill-grid__level"
                     >
-                      LV{skill.level}
+                      {uiMessage("pages.profile.skillLevel", [skill.level])}
                     </motion.span>
                     <span className="type-body-sm profile-skill-grid__name">
                       {cms.skillLevels[String(skill.level)]?.name ?? skill.name}
