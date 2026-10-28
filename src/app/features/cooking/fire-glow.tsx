@@ -1,6 +1,24 @@
 import { useDecorativeMotion } from "../../context/visual-quality-context";
 import { motion } from 'motion/react';
 import { motionDelay,motionDuration,motionEase } from "../../components/ds/motion";
+import { useLayoutEffect, useRef } from "react";
+
+/**
+ * Porta il bagliore al bordo alto del documento: la pagina che lo contiene
+ * comincia sotto la testata della shell, e senza questo la fascia dietro la
+ * barra di stato (iPhone, viewport-fit=cover) restava senza bagliore.
+ * Scrive --fire-glow-offset sull'elemento, senza nuovi render. Misura al
+ * montaggio: la testata cambia solo col cambio di pagina, che rimonta.
+ */
+function useDocumentTopAnchor() {
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const parent = el?.offsetParent;
+    if (el && parent) el.style.setProperty("--fire-glow-offset", `${parent.getBoundingClientRect().top + window.scrollY}px`);
+  }, []);
+  return ref;
+}
 
 /**
  * FireGlow — subtle animated gradient background simulating warm firelight.
@@ -13,6 +31,7 @@ export function FireGlow({ intensity = 0.5, variant = 'warm' }: { intensity?: nu
   const baseOpacity = Math.min(0.35, intensity * 0.4);
 
   const animateDecorations = useDecorativeMotion();
+  const anchorRef = useDocumentTopAnchor();
 
   const glowPrimary = variant === 'neural' ? 'var(--glow-primary-neural)' : 'var(--glow-primary)';
   const glowSecondary = variant === 'neural' ? 'var(--glow-secondary-neural)' : 'var(--glow-secondary)';
@@ -28,14 +47,14 @@ export function FireGlow({ intensity = 0.5, variant = 'warm' }: { intensity?: nu
   // When reduced motion is preferred, render a static warm wash instead
   if (!animateDecorations) {
     return (
-      <div className="fire-glow" style={toneVars}>
+      <div ref={anchorRef} className="fire-glow" style={toneVars}>
         <div className="fire-glow__primary" />
       </div>
     );
   }
 
   return (
-    <div className="fire-glow" style={toneVars}>
+    <div ref={anchorRef} className="fire-glow" style={toneVars}>
       {/* Primary warm ember — top-right drift */}
       <motion.div
         className="fire-glow__primary"
