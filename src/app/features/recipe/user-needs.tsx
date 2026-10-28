@@ -831,6 +831,9 @@ export function UserNeeds({
                 >
                   <div className={compact ? "needs-drawer__stack needs-drawer__stack--compact" : "needs-drawer__stack"}>
                     <p className="pantry-quick__hint">{cms.ui.pantryQuickHint}</p>
+                    {/* Allergeni accanto agli ingredienti, non sotto «esperienza»
+                        (nota di Matteo, 28/10/2026). */}
+                    <AllergenPreferences value={constraints.allergens_avoid??[]} onChange={allergens_avoid=>onConstraintsChange({...constraints,allergens_avoid})}/>
                     {/* Flours */}
                     <div data-slot="flours">
                       <div className="needs-pantry__group-header">
@@ -889,7 +892,6 @@ export function UserNeeds({
                   transition={drawerTransition}
                   className={compact ? "needs-drawer needs-drawer--compact" : "needs-drawer"}
                 >
-                  <AllergenPreferences value={constraints.allergens_avoid??[]} onChange={allergens_avoid=>onConstraintsChange({...constraints,allergens_avoid})}/>
                   <div data-slot="skill">
                     <SectionHeader title={cms.sections.skill.title} subtitle={cms.sections.skill.description} compact={compact} />
                     <div className={compact ? "needs-skill-chips needs-skill-chips--compact" : "needs-skill-chips"}>

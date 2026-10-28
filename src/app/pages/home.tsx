@@ -3,7 +3,7 @@ import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-
 import { recipeDisplayName } from "../domain/recipe-reference";
 import { recipeFromEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { canonicalRecipeEntry, tailoredRecipeEntry, scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
-import { Bookmark, ChevronRight, Heart, SlidersHorizontal, Sparkles, X } from "lucide-react";
+import { Bookmark, ChevronRight, Heart, Sparkles } from "lucide-react";
 import {
 motion,
 useReducedMotion,
@@ -17,7 +17,6 @@ useState,
 } from "react";
 import { Link, useSearchParams } from "react-router";
 import { FireGlow } from "../features/cooking/fire-glow";
-import { useCookSession } from "../features/cooking/cook-session";
 import {
 generateTimeSlots,
 customMealSlot,
@@ -74,7 +73,7 @@ import {
   type RecipeMode,
   useRecipeState,
 } from "../hooks/use-recipe-state";
-import { ConfirmDialog, CtaButton, Heading, IconButton } from "../components/ds/index";
+import { ConfirmDialog, CtaButton, Heading } from "../components/ds/index";
 import {
   motionSpring,
 } from "../components/ds/motion";
@@ -361,61 +360,6 @@ function resolveCreateDraft(
   };
 }
 
-/* ═══ Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le
-   domande del passo 1: una frase sul patto dell'app (su misura + punteggio
-   onesto), dismiss esplicito o automatico appena l'utente avanza. Niente
-   wizard, niente overlay: il flusso Crea È già l'onboarding. ═══ */
-const ONBOARDING_SEEN_KEY = "vulcan_create_context_seen_v2";
-
-/* Un richiamo ai filtri, non un tutorial: un'azione e chiusura persistente. */
-function WelcomeOnboardingCard({
-  eyebrow,
-  body,
-  cta,
-  dismissLabel,
-  onChooseOven,
-  onDismiss,
-  className = "",
-}: {
-  eyebrow: string;
-  body: string;
-  cta: string;
-  dismissLabel: string;
-  onChooseOven: () => void;
-  onDismiss: () => void;
-  className?: string;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={motionSpring.emphasisEnter}
-      className={`create-welcome ${className}`}
-    >
-      <div className="create-welcome__icon" aria-hidden="true">
-        <SlidersHorizontal size={21} />
-      </div>
-      <div className="create-welcome__copy">
-        <p className="create-welcome__title">{eyebrow}</p>
-        <p className="create-welcome__body">{body}</p>
-      </div>
-        <CtaButton
-          type="button"
-          variant="secondary"
-          elevated={false}
-          onClick={onChooseOven}
-          className="create-welcome__cta"
-        >
-          {cta}
-          <ChevronRight size={15} aria-hidden="true" />
-        </CtaButton>
-        <IconButton type="button" variant="ghost" size="sm" onClick={onDismiss} aria-label={dismissLabel} className="create-welcome__close">
-          <X size={17} aria-hidden="true" />
-        </IconButton>
-    </motion.div>
-  );
-}
-
 /** U-10 (F12): focus sul titolo del passo di Crea, senza scorrere la pagina. */
 function focusStep(step: string) {
   const root = document.querySelector<HTMLElement>(`.home-step--${step}`);
@@ -471,36 +415,7 @@ export function HomePage() {
   const [setupPanelOpen, setSetupPanelOpen] = useState(false);
   const [setupNotice, setSetupNotice] = useState<string | null>(null);
   const [nerdMode, setNerdMode] = useState(false);
-  /* Onboarding primo uso: visibile finché non viene congedato — esplicitamente
-     o avanzando nel flusso (chi ha già generato una ricetta non ne ha bisogno). */
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    try {
-      return localStorage.getItem(ONBOARDING_SEEN_KEY) !== "true";
-    } catch {
-      return false;
-    }
-  });
-  const dismissOnboarding = useCallback(() => {
-    setShowOnboarding(false);
-    // U-10 (F12): la card sparisce col focus dentro: lo si porta al passo.
-    requestAnimationFrame(() => focusStep("styles"));
-    try {
-      localStorage.setItem(ONBOARDING_SEEN_KEY, "true");
-    } catch {
-      /* */
-    }
-  }, []);
-  useEffect(() => {
-    if (showOnboarding && currentStep === "result") dismissOnboarding();
-  }, [showOnboarding, currentStep, dismissOnboarding]);
 
-  /* Fix collisione (redesign lug 2026): quando c'è una pizzata attiva il
-     widget flottante occupa la fascia alta — pill Riprendi e onboarding
-     si abbassano per non finirgli sotto. */
-  const { session: activeCookSession } = useCookSession();
-  const topPillOffsetClass = activeCookSession
-    ? "home-onboarding--session-active"
-    : "";
   /* Redesign lug 2026: niente bozze/parcheggi — all'uscita dal result con
      modifiche non salvate si avvisa e basta. */
   const [exitConfirm, setExitConfirm] = useState(false);
@@ -1254,20 +1169,6 @@ export function HomePage() {
           >
             <div className="home-step__container home-step__container--wide">
               <div className="home-step__inner">
-                {showOnboarding && (
-                  <WelcomeOnboardingCard
-                    eyebrow={cms.hero.onboardingEyebrow ?? ""}
-                    body={cms.hero.onboardingBody ?? ""}
-                    cta={cms.hero.onboardingCta ?? ""}
-                    dismissLabel={cms.ui.close}
-                    onChooseOven={() => {
-                      dismissOnboarding();
-                      setStyleSettingsPanel("cucina");
-                    }}
-                    onDismiss={dismissOnboarding}
-                    className={topPillOffsetClass}
-                  />
-                )}
                 <div className="home-step__head">
                   <div className="home-step__needs">
                     <UserNeeds

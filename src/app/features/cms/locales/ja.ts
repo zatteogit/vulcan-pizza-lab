@@ -326,10 +326,6 @@ export const JA_LOCALE: CmsContent = {
     title_line2: "次の一枚。",
     subtitle:
       "食べたい時間を選んでください。",
-    onboardingEyebrow: "あなたに合ったおすすめ",
-    onboardingBody:
-      "上の条件欄で、オーブン、材料、経験を設定してください。",
-    onboardingCta: "設定する",
     onboardingProfileCta: "キッチンをまとめて設定",
     onboardingDismiss: "了解",
   },

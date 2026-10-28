@@ -353,9 +353,6 @@ interface CmsHero {
   subtitle: string;
   /** Onboarding primo uso (audit lug 2026) — card sobria una-tantum sopra le
    *  domande del passo 1. Opzionali: i locale non tradotti cadono sul default. */
-  onboardingEyebrow?: string;
-  onboardingBody?: string;
-  onboardingCta?: string;
   onboardingProfileCta?: string;
   /** D-038: chiude l'avviso del forno senza cambiarlo. */
   onboardingDismiss?: string;
@@ -1614,10 +1611,6 @@ export const CMS_DEFAULTS: CmsContent = {
     title_line1: "La tua",
     title_line2: "prossima pizza.",
     subtitle: "Scegli quando vuoi portarla in tavola.",
-    onboardingEyebrow: "Consigli su misura",
-    onboardingBody:
-      "Imposta forno, ingredienti ed esperienza nei filtri in alto.",
-    onboardingCta: "Personalizza",
     onboardingProfileCta: "Configura tutta la cucina",
     onboardingDismiss: "Ho capito",
   },

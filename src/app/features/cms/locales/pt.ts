@@ -288,9 +288,6 @@ export const PT_LOCALE: CmsContent = {
     title_line2: "próxima pizza.",
     subtitle:
       "Escolha quando quer servir.",
-    onboardingEyebrow: "Conselhos à sua medida",
-    onboardingBody: "Indique o forno, ingredientes e experiência nos filtros acima.",
-    onboardingCta: "Personalizar",
     onboardingProfileCta: "Configure toda a cozinha",
     onboardingDismiss: "Entendido",
   },
