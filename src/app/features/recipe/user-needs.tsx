@@ -30,7 +30,7 @@ Zap
 import { pantryFlourName } from "./pantry-flour-names";
 import { AnimatePresence,motion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring,motionTiming } from "../../components/ds/motion";
-import React,{ useEffect,useMemo,useState } from "react";
+import React,{ useEffect,useMemo,useRef,useState } from "react";
 import { Chip, SelectionMark } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { timeSlotText } from "./time-slot-text";
@@ -404,6 +404,8 @@ interface SettingsSummaryBarProps {
   /** Microcopy sotto i chip. Solo al primo incontro (step 1): allo step
    *  successivo il sottotitolo di pagina dice già la stessa cosa. */
   showHelp?: boolean;
+  /** FW-12: il focus torna qui dopo la scelta del momento. */
+  timeChipRef?: React.Ref<HTMLButtonElement>;
 }
 
 function SettingsSummaryBar({
@@ -416,6 +418,7 @@ function SettingsSummaryBar({
   timeActive = false,
   onChangeTime,
   showHelp = true,
+  timeChipRef,
 }: SettingsSummaryBarProps) {
   /* R10: la chip rappresenta la cucina nel suo insieme, non solo il forno.
      Label "La tua cucina"; il tipo di forno e la temperatura vivono nel drawer. */
@@ -439,24 +442,8 @@ function SettingsSummaryBar({
   return (
     <div className="needs-summary">
     <div className="needs-summary__row">
-      {tabs.map((tab) => {
-        const isActive = activeTab === tab.id;
-        const Icon = tab.icon;
-        return (
-          <button
-            key={tab.id}
-            type="button"
-            aria-expanded={isActive}
-            onClick={() => onTabSelect(isActive ? null : tab.id)}
-            className={isActive ? "needs-summary__tab needs-summary__tab--active" : "needs-summary__tab"}
-          >
-            <Icon size={13} className="needs-summary__tab-icon" />
-            <span data-slot="label">{tab.text}</span>
-          </button>
-        );
-      })}
-
-      {/* Chip "Quando" — "atterra" qui salendo dalle card scelte poco sotto:
+      {/* FW-12 (S05-B-13): primo nel DOM come a schermo, niente order:-1.
+          Chip "Quando" — "atterra" qui salendo dalle card scelte poco sotto:
           ingresso da sotto con overshoot + un pulse di glow una tantum che
           guida l'occhio sul punto in cui la scelta si è posata. */}
       <AnimatePresence>
@@ -479,6 +466,7 @@ function SettingsSummaryBar({
               default: motionSpring.emphaticMark,
               boxShadow: { duration: motionDuration.slow,ease: motionEase.exit,delay: motionDelay.medium },
             }}
+            ref={timeChipRef}
             onClick={onChangeTime}
             aria-pressed={timeActive}
             className={timeActive ? "needs-summary__time-chip needs-summary__time-chip--active" : "needs-summary__time-chip"}
@@ -493,6 +481,23 @@ function SettingsSummaryBar({
           </motion.button>
         )}
       </AnimatePresence>
+
+      {tabs.map((tab) => {
+        const isActive = activeTab === tab.id;
+        const Icon = tab.icon;
+        return (
+          <button
+            key={tab.id}
+            type="button"
+            aria-expanded={isActive}
+            onClick={() => onTabSelect(isActive ? null : tab.id)}
+            className={isActive ? "needs-summary__tab needs-summary__tab--active" : "needs-summary__tab"}
+          >
+            <Icon size={13} className="needs-summary__tab-icon" />
+            <span data-slot="label">{tab.text}</span>
+          </button>
+        );
+      })}
     </div>
 
       {/* VPL-C1: microcopy — spiega a cosa servono questi dati */}
@@ -522,6 +527,16 @@ export function UserNeeds({
 }: UserNeedsProps) {
   const { cms, bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
+  /* FW-12 (S05-B-12): scelto un momento nel pannello compatto, il pannello si
+     chiude e i bottoni spariscono. Il focus torna sul chip «Quando» (non su
+     body) e una regione di stato conferma la scelta. */
+  const timeChipRef = useRef<HTMLButtonElement>(null);
+  const [timeAnnouncement, setTimeAnnouncement] = useState("");
+  const handleCompactSlotPick = (slot: TimeSlot) => {
+    onTimeSlotChange(slot);
+    setTimeAnnouncement(uiMessage("features.recipe.user-needs.time-set"));
+    requestAnimationFrame(() => timeChipRef.current?.focus());
+  };
   const update = (
     key: keyof UserConstraints,
     value: unknown,
@@ -682,7 +697,10 @@ export function UserNeeds({
               timeActive={compact && !hideTimeSlots}
               onChangeTime={onChangeTime}
               showHelp={!compact}
+              timeChipRef={timeChipRef}
             />
+            {/* FW-12 (S05-B-12): conferma della scelta per chi usa lo screen reader. */}
+            <p className="sr-only" role="status">{timeAnnouncement}</p>
 
             <AnimatePresence mode="wait">
               {activeTab === 'cucina' && (
@@ -917,7 +935,7 @@ export function UserNeeds({
                     slots={dynamicSlots}
                     suggestedSlot={suggestedSlot}
                     selectedTimeSlot={selectedTimeSlot}
-                    onTimeSlotChange={onTimeSlotChange}
+                    onTimeSlotChange={handleCompactSlotPick}
                     customTimeSlot={customTimeSlot}
                     cms={cms}
                     compact

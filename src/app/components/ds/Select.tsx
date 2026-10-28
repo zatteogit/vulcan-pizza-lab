@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Check, ChevronDown } from "lucide-react";
 import { Fragment, useEffect, useId, useRef, useState } from "react";
 import { motionSpring } from "./motion";
+import { useEscapeLayer } from "./escape-stack";
 import { uiMessage } from "../../i18n/ui-messages";
 
 interface SelectOption {
@@ -23,6 +24,8 @@ export interface SelectProps {
   value?: string | null;
   onValueChange?: (id: string) => void;
   label?: string;
+  /** Accessible name when the visible label lives outside the trigger. */
+  ariaLabel?: string;
   placeholder?: string;
   disabled?: boolean;
   className?: string;
@@ -33,6 +36,7 @@ export function Select({
   value = null,
   onValueChange,
   label,
+  ariaLabel,
   placeholder = uiMessage("components.ds.select.placeholder"),
   disabled = false,
   className,
@@ -42,6 +46,8 @@ export function Select({
   const ref = useRef<HTMLDivElement>(null);
   const listboxId = useId();
   const selected = options.find((o) => o.id === value) ?? null;
+  /* FW-12: la tendina aperta è uno strato; Esc chiude lei e non il dialog sotto. */
+  useEscapeLayer(open, () => setOpen(false));
 
   const openAtSelection = () => {
     const selectedIndex = options.findIndex((option) => option.id === value);
@@ -110,7 +116,7 @@ export function Select({
         type="button"
         role="combobox"
         aria-haspopup="listbox"
-        aria-label={label ?? placeholder}
+        aria-label={ariaLabel ?? label ?? placeholder}
         aria-expanded={open}
         aria-controls={listboxId}
         aria-activedescendant={open && options[activeIndex]
@@ -142,7 +148,7 @@ export function Select({
           <motion.div
             id={listboxId}
             role="listbox"
-            aria-label={label ?? placeholder}
+            aria-label={ariaLabel ?? label ?? placeholder}
             initial={{ opacity: 0, y: -8, scaleY: 0.95 }}
             animate={{ opacity: 1, y: 4, scaleY: 1 }}
             exit={{ opacity: 0, y: -8, scaleY: 0.95 }}

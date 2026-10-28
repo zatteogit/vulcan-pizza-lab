@@ -556,6 +556,8 @@ export function RecipeOutput({
               setPrintOpen(false);
               window.setTimeout(() => window.print(), 150);
             },
+            /* FW-12 (S08-B-21): niente stampa vuota. */
+            disabled: !printSections.dough && !printSections.steps && !printSections.topping,
           },
           {
             label: uiMessage("features.recipe.print-sheet.cancel"),
@@ -565,6 +567,8 @@ export function RecipeOutput({
         ]}
       >
         <fieldset className="print-options">
+          {/* FW-12 (S08-B-21): il gruppo ha un nome per lo screen reader. */}
+          <legend className="sr-only">{uiMessage("features.recipe.print-sheet.dialogTitle")}</legend>
           <Checkbox
             checked={printSections.dough}
             onCheckedChange={(v) => setPrintSections((p) => ({ ...p, dough: v }))}
@@ -580,6 +584,11 @@ export function RecipeOutput({
             onCheckedChange={(v) => setPrintSections((p) => ({ ...p, topping: v }))}
             label={uiMessage("features.recipe.print-sheet.sectionTopping")}
           />
+          <p className="print-options__empty" role="status">
+            {!printSections.dough && !printSections.steps && !printSections.topping
+              ? uiMessage("features.recipe.print-sheet.noneSelected")
+              : ""}
+          </p>
         </fieldset>
       </ConfirmDialog>
       <PrintSheet

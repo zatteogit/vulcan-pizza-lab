@@ -14,7 +14,7 @@ import { useCallback,useEffect,useMemo,useRef,useState, useId } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
-import { Chip, CtaButton, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
+import { Chip, ConfirmDialog, CtaButton, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
 import {
 createFormatter,
 getPreferredUnitSystem,
@@ -784,6 +784,18 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
     else handleFinish();
   }, [step, lastStep, handleFinish]);
 
+  /* FW-12 (S15-B-08): al cambio di passo il focus va sull'intestazione del
+     passo, così lo screen reader legge la nuova domanda. Non al primo render. */
+  const stepHeaderRef = useRef<HTMLDivElement>(null);
+  const firstStepRender = useRef(true);
+  useEffect(() => {
+    if (firstStepRender.current) {
+      firstStepRender.current = false;
+      return;
+    }
+    stepHeaderRef.current?.focus();
+  }, [step]);
+
   return (
     <main
       id="main-content"
@@ -797,7 +809,15 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
         className="profile-ftu__card"
       >
         {/* Progress dots */}
-        <div className="profile-ftu__dots">
+        <div
+          className="profile-ftu__dots"
+          role="progressbar"
+          aria-label={uiMessage("pages.profile.ftu-progress-label")}
+          aria-valuemin={1}
+          aria-valuemax={steps.length}
+          aria-valuenow={step + 1}
+          aria-valuetext={uiMessage("pages.profile.ftu-step-of", [step + 1, steps.length])}
+        >
           {steps.map((_, i) => (
             <div
               key={i}
@@ -807,7 +827,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
         </div>
 
         {/* Step header */}
-        <div className="profile-ftu__step-header">
+        <div ref={stepHeaderRef} tabIndex={-1} className="profile-ftu__step-header">
           <span className="type-label-compact profile-ftu__step-label">
             {steps[step].num} — {p.ftuWelcome}
           </span>
@@ -1119,90 +1139,35 @@ function LocaleConfirmModal({
   const fromLabel = `${current.flag} ${current.name}`;
   const toLabel = `${target.flag} ${target.name}`;
 
-  /* Close on Escape */
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [onCancel]);
-
-  return createPortal(
-    <div className="profile-locale-modal">
-      {/* Backdrop */}
-      <motion.button
-        type="button"
-        aria-label={srcProfile.localeModalCancel}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onCancel}
-        className="profile-locale-modal__backdrop border-0 p-0"
-      />
-      {/* Card */}
-      <motion.div
-        role="alertdialog"
-        aria-modal="true"
-        aria-label={srcProfile.localeModalTitle}
-        initial={{ opacity: 0, scale: 0.92, y: 12 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.92, y: 12 }}
-        transition={motionSpring.crispSettled}
-        className="profile-locale-modal__card"
-      >
-        <div className="profile-locale-modal__body">
-          <div className="profile-locale-modal__icon">
-            <Globe size={22} className="profile-locale-modal__icon-glyph" />
-          </div>
-          <Heading level="sm">
-            {srcProfile.localeModalTitle}
-          </Heading>
-          {/* Target language echo */}
-          {tgtProfile.localeModalTitle !== srcProfile.localeModalTitle && (
-            <p className="profile-locale-modal__echo">
-              {tgtProfile.localeModalTitle}
-            </p>
-          )}
-          <p className="type-body-sm profile-locale-modal__desc">
-            {(() => {
-              /* Render description with bold from/to names inline */
-              const desc = srcProfile.localeModalDesc;
-              const parts = desc.split("{from}");
-              const before = parts[0];
-              const afterFrom = (parts[1] || "").split("{to}");
-              const middle = afterFrom[0];
-              const after = afterFrom[1] || "";
-              return (
-                <span data-slot="locale-desc">
-                  {before}
-                  <span className="profile-locale-modal__name">{fromLabel}</span>
-                  {middle}
-                  <span className="profile-locale-modal__name">{toLabel}</span>
-                  {after}
-                </span>
-              );
-            })()}
-          </p>
-        </div>
-        <div className="profile-locale-modal__actions">
-          <button
-            onClick={onCancel}
-            className="type-data-base profile-locale-modal__cancel"
-          >
-            {srcProfile.localeModalCancel}
-          </button>
-          <CtaButton
-            onClick={onConfirm}
-            radius="xl"
-            className="profile-locale-modal__confirm"
-          >
-            {tgtProfile.localeModalConfirm}
-          </CtaButton>
-        </div>
-      </motion.div>
-    </div>,
-    document.body,
+  /* FW-12 (S17-B-02): ConfirmDialog del DS — focus su «Annulla», Tab che
+     resta nel dialog, Esc via escape-stack, ritorno del focus al chip. */
+  const desc = srcProfile.localeModalDesc;
+  const [before, rest = ""] = desc.split("{from}");
+  const [middle, after = ""] = rest.split("{to}");
+  return (
+    <ConfirmDialog
+      open
+      onDismiss={onCancel}
+      ariaLabel={srcProfile.localeModalTitle}
+      icon={<Globe size={22} />}
+      title={srcProfile.localeModalTitle}
+      subtitle={tgtProfile.localeModalTitle !== srcProfile.localeModalTitle ? tgtProfile.localeModalTitle : undefined}
+      subtitleLang={target.id}
+      body={
+        <>
+          {before}
+          <strong className="profile-locale-modal__name">{fromLabel}</strong>
+          {middle}
+          <strong className="profile-locale-modal__name" lang={target.id}>{toLabel}</strong>
+          {after}
+        </>
+      }
+      initialFocusAction={1}
+      actions={[
+        { label: <span lang={target.id}>{tgtProfile.localeModalConfirm}</span>, onClick: onConfirm, variant: "cta" },
+        { label: srcProfile.localeModalCancel, onClick: onCancel, variant: "secondary" },
+      ]}
+    />
   );
 }
 
@@ -2239,27 +2204,24 @@ export function ProfilePage() {
               <div className="type-data profile-prefs__label">
                 {p.langLabel}
               </div>
-              <div className="profile-prefs__lang-list">
+              {/* FW-12 (S17-A-10/B-05): gruppo con nome, stato in aria-pressed,
+                  nome nativo con lang, bandiera nascosta allo screen reader. */}
+              <div className="profile-prefs__lang-list" role="group" aria-label={p.langLabel}>
                 {LOCALE_META.filter((l) => l.available).map((locale) => (
-                  <motion.button
+                  <button
                     key={locale.id}
+                    type="button"
+                    aria-pressed={currentLocale.id === locale.id}
                     onClick={() => {
                       if (locale.id !== currentLocale.id) {
                         setPendingLocale(locale);
                       }
                     }}
                     className="profile-prefs__lang-btn"
-                    initial={false}
-                    animate={{
-                      backgroundColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-bg)",
-                      color: currentLocale.id === locale.id ? "var(--chip-text-active)" : "var(--chip-text)",
-                      borderColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-border)",
-                    }}
-                    transition={motionSpring.crispPanel}
                   >
-                    <span data-slot="flag">{locale.flag}</span>
-                    {locale.name}
-                  </motion.button>
+                    <span data-slot="flag" aria-hidden="true">{locale.flag}</span>
+                    <span data-slot="name" lang={locale.id}>{locale.name}</span>
+                  </button>
                 ))}
               </div>
             </div>

@@ -20,7 +20,7 @@ ChevronDown,
 } from "lucide-react";
 import { AnimatePresence,motion,useReducedMotion } from "motion/react";
 import { motionDelay,motionDuration,motionEase,motionSpring } from "../../components/ds/motion";
-import { useCallback,useEffect,useMemo,useState } from "react";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { useCms,type CmsContent } from "../cms/cms-context";
 import { t } from "../cms/i18n";
@@ -32,6 +32,10 @@ useCookSession,
 type CookSessionStep
 } from "./cook-session";
 import { ConfirmDialog, CtaButton } from "../../components/ds/index";
+import { useDialogFocus } from "../../components/ds/use-dialog-focus";
+import type { EscapeLayerHandle } from "../../components/ds/escape-stack";
+import { uiMessage } from "../../i18n/ui-messages";
+import { cookingKeyAction } from "./cooking-keys";
 import { DoughBlob } from "./dough-mascot";
 import { StepIllustration } from "./step-illustrations";
 import { resolveStepVisual } from "./step-visual";
@@ -213,15 +217,34 @@ export function CookingMode() {
     else if (viewIndex > 0) setViewIndex(viewIndex - 1);
   }, [finished, viewIndex]);
 
+  /* FW-12 (S10-A-09/B-02): la vista è un dialog vero. Focus iniziale sul
+     titolo del passo, Tab che resta dentro, Esc via escape-stack (chiude solo
+     lo strato in cima: con «Interrompi?» aperto chiude il dialog, non la
+     vista), ritorno del focus al widget della pizzata. */
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const layerRef = useRef<EscapeLayerHandle | null>(null);
+  const dialogRef = useDialogFocus<HTMLDivElement>({
+    open: true,
+    onClose: closeOverlay,
+    lockScroll: false,
+    initialFocusRef: titleRef,
+    fallbackFocus: () => document.querySelector<HTMLElement>(".cook-widget"),
+    layerRef,
+  });
+
+  /* FW-12 (S10-A-08/B-01): le frecce sfogliano soltanto, mai «Fatto», e
+     tacciono se sopra c'è un altro strato o il focus è in un controllo. */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") goNext();
-      else if (e.key === "ArrowLeft") goPrev();
-      else if (e.key === "Escape") closeOverlay();
+      const action = cookingKeyAction(e, { isTopLayer: layerRef.current?.isTop() ?? false });
+      if (!action) return;
+      e.preventDefault();
+      if (action === "prev") goPrev();
+      else if (!finished && viewIndex < total - 1) setViewIndex(viewIndex + 1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goNext, goPrev, closeOverlay]);
+  }, [goPrev, finished, viewIndex, total]);
 
   const doneCount = useMemo(() => steps.filter((s) => s.done).length, [steps]);
   const progressPct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
@@ -230,6 +253,8 @@ export function CookingMode() {
 
   const overlay = (
     <motion.div
+      ref={dialogRef}
+      tabIndex={-1}
       data-region="overlay"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -308,13 +333,28 @@ export function CookingMode() {
       />
 
       {/* ── Progress ── */}
-      <div className="cooking-mode-progress">
+      <div
+        className="cooking-mode-progress"
+        role="progressbar"
+        aria-label={uiMessage("cooking.a11y.progress-label")}
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-valuenow={finished ? total : doneCount}
+        aria-valuetext={uiMessage("cooking.a11y.progress-value", [finished ? total : doneCount, total])}
+      >
         <motion.div
           animate={{ width: `${finished ? 100 : progressPct}%` }}
           transition={motionSpring.cookingPanel}
           className="cooking-mode-progress__fill"
         />
       </div>
+
+      {/* FW-12 (S10-A-09): annuncio del passo al cambio di vista. */}
+      <p className="sr-only" role="status" aria-live="polite">
+        {finished
+          ? cms.cooking.completed
+          : uiMessage("cooking.a11y.step-announce", [Math.min(viewIndex + 1, total), total, step.title])}
+      </p>
 
       {/* ── Contenuto ── */}
       <div className="cooking-mode-body">
@@ -391,7 +431,7 @@ export function CookingMode() {
                 </div>
 
                 {/* Titolo */}
-                <h2 className="cooking-mode-step__title">
+                <h2 ref={titleRef} tabIndex={-1} className="cooking-mode-step__title">
                   {step.title}
                 </h2>
 

@@ -85,6 +85,7 @@ export function ProcedureHeroControls({
   const comfortTitleId = useId();
   const comfortDescId = useId();
   const nowHelpId = useId();
+  const shiftHintId = useId();
   const [plannedFromNow, setPlannedFromNow] = useState<number | null>(null);
   const fromNowHelp = uiMessage("recipe.schedule.fromNowHelp");
   const feasibleMeals = mealSlots.filter(slot => slot.isFeasible);
@@ -111,6 +112,8 @@ export function ProcedureHeroControls({
         </span>
       </div>
 
+      {/* FW-12 (S09-B-10): la scorciatoia delle frecce, detta allo screen reader. */}
+      <p id={shiftHintId} className="sr-only">{uiMessage("features.recipe.procedure-hero.shift-hint")}</p>
       <div className="procedure-hero__times">
         <div className="procedure-hero__time">
           <div className="procedure-hero__time-label type-data">
@@ -153,6 +156,8 @@ export function ProcedureHeroControls({
                   }
                 }}
                 aria-label={`${ui.startTime} ${fmt.clockTime(startTime)} ${startDayLabel}`}
+                aria-keyshortcuts="ArrowUp ArrowDown"
+                aria-describedby={shiftHintId}
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
@@ -177,6 +182,10 @@ export function ProcedureHeroControls({
             size="sm"
             variant="ghost"
             onClick={() => setEditingTime(true)}
+            /* FW-12 (S09-B-10): stessa azione del valore, che è già nel Tab:
+               la matita resta per il tocco, fuori dall'ordine di tabulazione. */
+            tabIndex={-1}
+            aria-hidden="true"
             className="procedure-hero__edit-time"
             aria-label={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.startTime])}
             title={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.startTime])}
@@ -226,6 +235,8 @@ export function ProcedureHeroControls({
                   }
                 }}
                 aria-label={`${ui.endTime} ${hasFlexiblePhases ? uiMessage("features.recipe.procedure-hero.ca-dfd4ac18") : ""}${fmt.clockTime(endDisplayTime)} ${endDayLabel}`}
+                aria-keyshortcuts="ArrowUp ArrowDown"
+                aria-describedby={shiftHintId}
                 className="procedure-hero__time-display type-numeric"
               >
                 <span className="procedure-hero__time-value">
@@ -251,6 +262,10 @@ export function ProcedureHeroControls({
             size="sm"
             variant="ghost"
             onClick={() => setEditingEndTime(true)}
+            /* FW-12 (S09-B-10): stessa azione del valore, che è già nel Tab:
+               la matita resta per il tocco, fuori dall'ordine di tabulazione. */
+            tabIndex={-1}
+            aria-hidden="true"
             className="procedure-hero__edit-time"
             aria-label={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.endTime])}
             title={uiMessage("features.recipe.procedure-hero.modifica-value-f8c9ece2", [ui.endTime])}

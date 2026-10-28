@@ -9,6 +9,7 @@ import { HelpCircle, BookOpen } from "lucide-react";
 import { useCms } from "../../features/cms/cms-context";
 import { getTermById } from "../../data/glossary-data";
 import { motionSpring } from "../ds/motion";
+import { useEscapeLayer } from "../ds/escape-stack";
 
 interface InfoTipProps {
   children: React.ReactNode;
@@ -65,16 +66,11 @@ export function InfoTip({ children, size = 15, termId }: InfoTipProps) {
       document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // Close on Escape
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", handler);
-    return () =>
-      document.removeEventListener("keydown", handler);
-  }, [open]);
+  // FW-12: Esc closes only the popover (escape stack), not the sheet below.
+  useEscapeLayer(open, () => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  });
 
   return (
     <span className="info-tip">

@@ -10,7 +10,7 @@
  * e glow primario) usata per il dialog pre-cottura.
  */
 import { AnimatePresence, motion } from "motion/react";
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { CtaButton } from "./CtaButton";
 import { Heading } from "./Heading";
 import { motionSpring } from "./motion";
@@ -23,6 +23,8 @@ export interface ConfirmDialogAction {
   onClick: () => void;
   /** cta = verde CtaButton · primary = terracotta pieno · destructive = rosso pieno · secondary = neutro */
   variant?: "cta" | "primary" | "destructive" | "secondary";
+  /** FW-12: azione non disponibile (es. nessuna parte da stampare). */
+  disabled?: boolean;
 }
 
 export interface ConfirmDialogProps {
@@ -44,6 +46,12 @@ export interface ConfirmDialogProps {
   size?: "sm" | "md";
   /** Contenuto fra testo e azioni (es. scelte prima di stampare). */
   children?: ReactNode;
+  /** FW-12: indice dell'azione (non `cta`) che riceve il focus all'apertura, es. «Annulla». */
+  initialFocusAction?: number;
+  /** FW-12: riga sotto il titolo (es. il titolo nella lingua di arrivo). */
+  subtitle?: ReactNode;
+  /** FW-12: attributo `lang` del sottotitolo. */
+  subtitleLang?: string;
 }
 
 export function ConfirmDialog({
@@ -60,13 +68,18 @@ export function ConfirmDialog({
   zIndex = 210,
   size = "sm",
   children,
+  initialFocusAction,
+  subtitle,
+  subtitleLang,
 }: ConfirmDialogProps) {
   const toneVar = tone === "destructive" ? "var(--destructive)" : "var(--primary)";
   const brand = emphasis === "brand";
+  const initialFocusRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useDialogFocus<HTMLDivElement>({
     open,
     onClose: onDismiss,
     lockScroll: position === "fixed",
+    initialFocusRef: initialFocusAction === undefined ? undefined : initialFocusRef,
   });
   return (
     <AnimatePresence>
@@ -106,6 +119,11 @@ export function ConfirmDialog({
               >
                 {title}
               </Heading>
+              {subtitle && (
+                <p className="ds-confirm__subtitle" lang={subtitleLang}>
+                  {subtitle}
+                </p>
+              )}
               <p className={`${brand ? "type-body-lg" : "type-body"} ds-confirm__body`}>
                 {body}
               </p>
@@ -119,6 +137,7 @@ export function ConfirmDialog({
                     <CtaButton
                       key={i}
                       onClick={action.onClick}
+                      disabled={action.disabled}
                       className="ds-confirm__action-cta"
                     >
                       {action.label}
@@ -133,7 +152,10 @@ export function ConfirmDialog({
                 return (
                   <button
                     key={i}
+                    ref={i === initialFocusAction ? initialFocusRef : undefined}
+                    type="button"
                     onClick={action.onClick}
+                    disabled={action.disabled}
                     className={`ds-confirm__action ${actionModifierClass}`}
                   >
                     {action.label}

@@ -172,6 +172,8 @@ export function CondimentChoiceStrip({
         ref={scrollRef}
         onScroll={updateFades}
         className="condiment-strip__rail hide-scrollbar"
+        /* FW-12 (S06-B-21): senza ruolo l'aria-label veniva ignorato. */
+        role="group"
         aria-label={cms.cooking.chooseTopping}
       >
         {railChoices.map(({ recipe }) => {
@@ -257,7 +259,7 @@ export function CondimentChoiceStrip({
             onClick={() => setPickerOpen(true)}
             className="condiment-strip__more type-data"
           >
-            <Utensils size={14} />
+            <Utensils size={14} aria-hidden="true" />
             <span data-region="label">
               {engineMessage(cms, "topping.viewAll", "Vedi tutti")}
             </span>
@@ -301,14 +303,16 @@ export function CondimentChoiceStrip({
                       className="condiment-strip-picker__close"
                       aria-label={cms.ui.close}
                     >
-                      <X size={16} />
+                      <X size={16} aria-hidden="true" />
                     </IconButton>
                   </div>
 
                   <div className="condiment-strip-picker__body">
                     <div className="condiment-strip-picker__search">
-                      <Search size={16} className="condiment-strip-picker__search-icon" />
+                      <Search size={16} aria-hidden="true" className="condiment-strip-picker__search-icon" />
                       <input
+                        type="search"
+                        aria-label={engineMessage(cms, "topping.searchPlaceholder", "Cerca gusto, ingrediente o occasione")}
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
                         placeholder={engineMessage(cms, "topping.searchPlaceholder", "Cerca gusto, ingrediente o occasione")}
@@ -324,7 +328,7 @@ export function CondimentChoiceStrip({
                           className="condiment-strip-picker__search-clear"
                           aria-label={cms.pages.searchClearLabel}
                         >
-                          <X size={14} />
+                          <X size={14} aria-hidden="true" />
                         </IconButton>
                       )}
                     </div>

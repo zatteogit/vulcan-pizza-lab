@@ -1,8 +1,6 @@
 import { engineMsgTexts } from "./engine-msg-text";
-import { Check,ChevronDown,Circle,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
-import { AnimatePresence,motion } from "motion/react";
-import { motionSpring,motionTiming } from "../../components/ds/motion";
-import React,{ useEffect,useMemo,useRef,useState } from "react";
+import { ChevronDown,Circle,Link,RectangleHorizontal,Sparkles,Unlink } from "lucide-react";
+import React,{ useId,useMemo,useRef,useState } from "react";
 import { useCms } from "../cms/cms-context";
 import { createFormatter,t } from "../cms/i18n";
 import { InfoTip } from "../../components/shared/info-tip";
@@ -21,183 +19,9 @@ needsPan,
 optimizeRecipe,
 supportsThickness,
 } from "../../domain/pizza-engine";
-import { SegmentedControl, Stepper, Switch } from "../../components/ds/index";
+import { SegmentedControl, Select, Stepper, Switch } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
 import { flourStrength, type FlourStrength } from "./recipe-output-format";
-
-interface PremiumSelectOption {
-  value: string;
-  label: string;
-  subLabel?: string;
-  icon?: string | React.ReactNode;
-  suggested?: boolean;
-}
-
-interface PremiumSelectGroup {
-  label: string;
-  options: PremiumSelectOption[];
-}
-
-/* ═══ PREMIUM ANIME SELECT COMPONENT ═══ */
-export function PremiumSelect({
-  value,
-  onChange,
-  options,
-  groups,
-  placeholder = "Seleziona...",
-}: {
-  value: string;
-  onChange: (val: string) => void;
-  options?: PremiumSelectOption[];
-  groups?: PremiumSelectGroup[];
-  placeholder?: string;
-}) {
-  const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
-
-  const allOptions = useMemo(() => {
-    const list: PremiumSelectOption[] = [];
-    if (options) list.push(...options);
-    if (groups) {
-      groups.forEach((g) => list.push(...g.options));
-    }
-    return list;
-  }, [options, groups]);
-
-  const activeOption = allOptions.find((o) => o.value === value);
-
-  return (
-    <div ref={containerRef} className="config-select">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className={open ? "config-select__trigger config-select__trigger--open" : "config-select__trigger"}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-      >
-        {activeOption?.icon && (
-          <span className="config-select__icon">
-            {activeOption.icon}
-          </span>
-        )}
-        <div className="config-select__body">
-          <span className="config-select__value">{activeOption?.label || placeholder}</span>
-          {activeOption?.subLabel && (
-            <span className="config-select__sublabel">
-              {activeOption.subLabel}
-            </span>
-          )}
-        </div>
-        <ChevronDown size={16} className="config-select__chevron" />
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: 6, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 6, scale: 0.97 }}
-            transition={motionSpring.configuratorControl}
-            className="config-select__menu"
-            role="listbox"
-          >
-            {options &&
-              options.map((opt) => (
-                <PremiumSelectRow
-                  key={opt.value}
-                  option={opt}
-                  active={value === opt.value}
-                  onClick={() => {
-                    onChange(opt.value);
-                    setOpen(false);
-                  }}
-                />
-              ))}
-            {groups &&
-              groups.map((g, idx) => (
-                <div key={idx} className="config-select__group">
-                  {idx > 0 && (
-                    <div className="config-select__group-divider" />
-                  )}
-                  <div className="config-select__group-label">
-                    {g.label}
-                  </div>
-                  {g.options.map((opt) => (
-                    <PremiumSelectRow
-                      key={opt.value}
-                      option={opt}
-                      active={value === opt.value}
-                      onClick={() => {
-                        onChange(opt.value);
-                        setOpen(false);
-                      }}
-                    />
-                  ))}
-                </div>
-              ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-function PremiumSelectRow({
-  option,
-  active,
-  onClick,
-}: {
-  option: PremiumSelectOption;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <motion.button
-      type="button"
-      onClick={onClick}
-      className={active ? "config-select__row config-select__row--active" : "config-select__row"}
-      whileHover={{
-        backgroundColor: active
-          ? "var(--chip-bg-active)"
-          : "color-mix(in srgb, var(--text-default) 6%, transparent)",
-      }}
-      whileTap={{ scale: 0.985 }}
-      transition={motionTiming.instant}
-      role="option"
-      aria-selected={active}
-    >
-      {option.icon && (
-        <span className="config-select__icon">
-          {option.icon}
-        </span>
-      )}
-      <div className="config-select__body">
-        <span className="config-select__value">{option.label}</span>
-        {option.subLabel && (
-          <span className="config-select__sublabel">
-            {option.subLabel}
-          </span>
-        )}
-      </div>
-      {option.suggested && (
-        <span className="config-select__row-badge">
-          {uiMessage("features.recipe.recipe-configurator.consigliato-f488c665")}</span>
-      )}
-      {active && <Check size={14} className="config-select__row-check" />}
-    </motion.button>
-  );
-}
 
 interface RecipeConfiguratorProps {
   style: PizzaStyle;
@@ -445,6 +269,7 @@ export function RecipeConfigurator({
 
   const { cms, bcp47 } = useCms();
   const cfg = cms.configurator;
+  const preFermentSwitchId = useId();
   const fmt = createFormatter(cms.ui, bcp47);
   /* Temperature di riferimento per i tre regimi di fermentazione (°C),
      formattate secondo il sistema di unità dell'utente. */
@@ -820,12 +645,14 @@ export function RecipeConfigurator({
               {showAdvanced && (
               <div className="config-toggle-row">
                 <div className="config-toggle-row__label-group">
-                  <span className="config-toggle-row__label">
+                  {/* FW-12 (S06-B-12): toccare il testo attiva lo switch. */}
+                  <label htmlFor={preFermentSwitchId} className="config-toggle-row__label">
                     {cfg.preFermentLabel}
-                  </span>
+                  </label>
                   <InfoTip size={14}>{cfg.preFermentTip}</InfoTip>
                 </div>
                 <Switch
+                  id={preFermentSwitchId}
                   checked={usePreFerment}
                   onCheckedChange={onPreFermentChange}
                 />
@@ -1006,9 +833,11 @@ export function RecipeConfigurator({
 
           {/* Oven Selector */}
           <div className="config-field">
-            <PremiumSelect
+            {/* FW-12 (S06-B-11): Select del DS, con etichetta e listbox da tastiera. */}
+            <Select
+              label={uiMessage("features.recipe.recipe-configurator.oven-select-label")}
               value={constraints.oven_type}
-              onChange={(val) => {
+              onValueChange={(val) => {
                 const preset = OVEN_PRESETS.find((p) => p.id === val);
                 if (preset) {
                   handleOvenSelect(preset.id, preset.maxTemp);
@@ -1017,9 +846,9 @@ export function RecipeConfigurator({
               options={OVEN_PRESETS.map((preset) => {
                 const name = cms.ovenPresets[preset.id]?.name ?? preset.name;
                 return {
-                  value: preset.id,
+                  id: preset.id,
                   label: name,
-                  subLabel: `max ${preset.maxTemp}°C`,
+                  desc: uiMessage("features.profile.oven-model-search.upTo", [fmt.celsius(preset.maxTemp)]),
                 };
               })}
             />
@@ -1060,12 +889,13 @@ export function RecipeConfigurator({
                   </div>
 
                   {/* Shape selector dropdown */}
-                  <PremiumSelect
+                  <Select
+                    ariaLabel={cfg.panLabel}
                     value={currentShape}
-                    onChange={(val) => handleShapeChange(val as PanShape)}
+                    onValueChange={(val) => handleShapeChange(val as PanShape)}
                     options={[
-                      { value: "rectangular", label: cfg.panRectangular },
-                      { value: "round", label: cfg.panRound },
+                      { id: "rectangular", label: cfg.panRectangular },
+                      { id: "round", label: cfg.panRound },
                     ]}
                   />
                 </div>
@@ -1390,7 +1220,7 @@ function GradientSlider({
               onBlur={commitDraft}
               onKeyDown={(e) => {
                 if (e.key === "Enter") commitDraft();
-                if (e.key === "Escape") setEditing(false);
+                if (e.key === "Escape") { e.preventDefault(); setEditing(false); }
               }}
               className="config-slider__value-input"
             />

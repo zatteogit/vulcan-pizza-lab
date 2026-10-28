@@ -46,7 +46,9 @@ export function RecipeChanges({ from, to, mode }: { from: GeneratedRecipe; to: G
   return (
     <section className="recipe-comparison" data-recipe-changes={mode}>
       <table className="recipe-comparison__table">
-        <thead><tr><th scope="col"><h4 className="recipe-comparison__title">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</h4></th><th scope="col">{beforeLabel}</th><td aria-hidden="true" /><th scope="col">{afterLabel}</th></tr></thead>
+        {/* FW-12 (S03-B-24): il titolo è la caption della tabella, non un h4 dentro un th. */}
+        <caption className="sr-only">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</caption>
+        <thead><tr><th scope="col"><span className="recipe-comparison__title" aria-hidden="true">{mode === "included" ? cms.ui.recipeAdaptationsIncluded : cms.ui.recipeOptimizationChanges}</span></th><th scope="col">{beforeLabel}</th><td aria-hidden="true" /><th scope="col">{afterLabel}</th></tr></thead>
         <tbody>
           <tr className="recipe-comparison__score">
             <th scope="row"><span data-slot="label"><Gauge size={15} aria-hidden="true" />{cms.ui.recipeScoreLabel}</span></th>

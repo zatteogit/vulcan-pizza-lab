@@ -43,9 +43,12 @@ export function localizedComparisonRows(pf: CmsPreFerment) {
 /* === COMPONENT === */
 interface PreFermentCardProps {
   preFermentType?: string;
+  /** FW-12: livello del titolo della card (h2 nella pagina Prefermenti, h3 dentro una sezione). */
+  headingLevel?: 2 | 3;
 }
 
-export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardProps) {
+export function PreFermentCard({ preFermentType = 'poolish', headingLevel = 3 }: PreFermentCardProps) {
+  const CardHeading = headingLevel === 2 ? "h2" : "h3";
   const [expanded, setExpanded] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
   const { cms } = useCms();
@@ -74,29 +77,34 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
       className="preferment-guide-card"
       data-slot="pre-ferment-card"
     >
-      {/* Header — always visible */}
+      {/* Header — always visible. FW-12 (S14-B-11): il nome è un titolo
+          (pattern accordion APG) e dentro il bottone solo contenuto frasale. */}
+      <CardHeading className="preferment-guide-card__heading">
       <motion.button
+        type="button"
+        aria-expanded={expanded}
         onClick={() => setExpanded(!expanded)}
         className="preferment-guide-card__header"
       >
-        <span className="preferment-guide-card__icon">
+        <span className="preferment-guide-card__icon" aria-hidden="true">
           <Flask size={32} />
         </span>
-        <div className="preferment-guide-card__title-block">
-          <div className="preferment-guide-card__eyebrow-row">
+        <span className="preferment-guide-card__title-block">
+          <span className="preferment-guide-card__eyebrow-row">
             <span className="preferment-guide-card__eyebrow">
               {pf.sectionLabel}
             </span>
-          </div>
-          <div className="preferment-guide-card__name">
+          </span>
+          <span className="preferment-guide-card__name">
             <span className="preferment-guide-card__name-text">{info.name}</span>
             <span className="preferment-guide-card__origin"> — {info.origin}</span>
-          </div>
-        </div>
-        <div className="preferment-guide-card__chevron">
+          </span>
+        </span>
+        <span className="preferment-guide-card__chevron" aria-hidden="true">
           {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </div>
+        </span>
       </motion.button>
+      </CardHeading>
 
       {/* Expanded content */}
       <AnimatePresence>

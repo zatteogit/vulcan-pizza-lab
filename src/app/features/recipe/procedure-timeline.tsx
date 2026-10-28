@@ -119,8 +119,9 @@ export function ProcedureTimeline({
 
         {/* Steps with inline tips */}
         <div className="procedure-timeline-spine">
-          <div className="procedure-timeline-spine__rail" />
-          <div className="procedure-timeline-list">
+          <div className="procedure-timeline-spine__rail" aria-hidden="true" />
+          {/* FW-12 (S09-B-09): elenco ordinato, un titolo h3 per passo. */}
+          <ol className="procedure-timeline-list">
             {procedureTimelineRows(recipe.timeline).map(({ step, phase, ordinal, key }, i) => {
               const isFirst = i === 0;
               const isLast = i === recipe.timeline.length - 1;
@@ -180,7 +181,7 @@ export function ProcedureTimeline({
                 />
               </>;
               return (
-                <motion.div
+                <motion.li
                   key={key}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -221,9 +222,9 @@ export function ProcedureTimeline({
                           : step.timing_label}
                       </span>
                     </div>
-                    <span className="procedure-timeline-step__title">
+                    <h3 className="procedure-timeline-step__title">
                       {phase ? assemblyTitle : localizedStep.title}
-                    </span>
+                    </h3>
                     {phase ? (
                       <div className="procedure-timeline-step__topping">
                         <ToppingSection mode="timeline" recipe={recipe} activeTopping={activeTopping} toppingChoices={toppingChoices} allToppingChoices={allToppingChoices} servingUnit={servingUnit} onSelectTopping={onSelectTopping}>
@@ -242,10 +243,10 @@ export function ProcedureTimeline({
                       </>
                     )}
                   </div>
-                </motion.div>
+                </motion.li>
               );
             })}
-          </div>
+          </ol>
         </div>
       </div>
     </>
