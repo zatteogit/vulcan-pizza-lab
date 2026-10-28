@@ -3,6 +3,7 @@
  * Le chiavi sono stabili: namespace + slug + hash del messaggio.
  */
 export const UI_MESSAGES_IT: Record<string, string> = {
+  "edition.partner": "per {0}",
   "recipe.share.title": "Condividi ricetta",
   "recipe.share.link": "Link della ricetta",
   "recipe.share.native": "Condividi con un’app",

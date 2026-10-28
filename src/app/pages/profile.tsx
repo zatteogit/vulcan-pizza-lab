@@ -728,8 +728,11 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const { cms } = useCms();
   const p = cms.profile;
   const [step, setStep] = useState(0);
-  const [ovenType, setOvenType] = useState<OvenType>("home");
-  const [ovenTemp, setOvenTemp] = useState(250);
+  /* Si parte dal forno già salvato (anche quello preimpostato da un'edizione
+     partner): «Avanti» non deve riportarlo al forno di casa. */
+  const [savedOven] = useState(() => loadJson<{ ovenType?: OvenType; maxTemp?: number; modelId?: string }>(OVEN_STORAGE_KEY));
+  const [ovenType, setOvenType] = useState<OvenType>(savedOven?.ovenType ?? "home");
+  const [ovenTemp, setOvenTemp] = useState(savedOven?.maxTemp ?? 250);
   const [skillLevel, setSkillLevel] = useState<SkillLevel>(1);
   /* Pantry: farine e lieviti per onboarding */
   const [ftuFlours, setFtuFlours] = useState<string[]>([]);
@@ -752,7 +755,9 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
     arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
 
   const handleFinish = useCallback(() => {
-    saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp });
+    // Il modello resta solo se il forno non è cambiato.
+    const keepModel = savedOven?.modelId && savedOven.ovenType === ovenType && savedOven.maxTemp === ovenTemp;
+    saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp, ...(keepModel ? { modelId: savedOven.modelId } : {}) });
     saveJson(SKILL_STORAGE_KEY, skillLevel);
     // Pantry: salviamo solo se valorizzata
     if (ftuFlours.length > 0 || ftuYeasts.length > 0) {
@@ -762,7 +767,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
       localStorage.setItem(PROFILE_COMPLETE_KEY, "true");
     } catch { /* */ }
     onComplete();
-  }, [ovenType, ovenTemp, skillLevel, ftuFlours, ftuYeasts, onComplete]);
+  }, [savedOven, ovenType, ovenTemp, skillLevel, ftuFlours, ftuYeasts, onComplete]);
 
   /* Audit n. 33 / D-038: il percorso si può saltare. Forno e livello restano
      «non scelti» (niente valori di default salvati come se li avessi scelti

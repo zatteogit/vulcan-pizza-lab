@@ -5,6 +5,7 @@
  * wrangler esegue questo script prima di `dev` e `deploy` ([build] in
  * wrangler.toml) e carica il file prodotto così com'è (no_bundle). */
 import { build } from "esbuild";
+import { resolveEditionFile } from "./edition-path.mjs";
 
 const EMPTY = [".webp", ".png", ".jpg", ".jpeg", ".svg", ".gif", ".avif", ".mp4", ".webm", ".csv"];
 
@@ -17,6 +18,8 @@ await build({
   target: "es2022",
   minify: true,
   sourcemap: false,
+  // Stessa edizione dell'app: il server MCP vede lo stesso catalogo.
+  alias: { "@vulcan/edition": resolveEditionFile() },
   loader: Object.fromEntries(EMPTY.map((ext) => [ext, "empty"])),
   logLevel: "warning",
 });

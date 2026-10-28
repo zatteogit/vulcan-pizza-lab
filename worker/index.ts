@@ -40,7 +40,8 @@ interface AssetsBinding {
   fetch(request: Request): Promise<Response>;
 }
 interface Env {
-  DB: D1Database;
+  /** Assente nei Worker delle edizioni (wrangler.toml [env.edition]): niente accesso né strumenti. */
+  DB?: D1Database;
   ASSETS: AssetsBinding;
   /** Optional soft write-gate (x-annotations-key), development only. */
   ANNOTATIONS_KEY?: string;
@@ -50,6 +51,8 @@ interface Env {
   TOOLS_API_ORIGINS?: string;
   /** P-4: "test" on the vulcan-test Worker (wrangler.toml [env.test]). */
   DEPLOY_ENV?: string;
+  /** "1" sui Worker delle edizioni noindex (demo, partner): scripts/deploy-edition.mjs. */
+  NOINDEX?: string;
   /** D-046: OAuth Client ID di Google (pubblico, in wrangler.toml [vars]). */
   GOOGLE_CLIENT_ID?: string;
   /** D-046: impronte SHA-256 delle email per ruolo, separate da virgole. */
@@ -355,6 +358,8 @@ export default {
 
     // D-046: accesso e ruoli. Stessa origine dell'app: niente CORS.
     if (url.pathname.startsWith("/api/auth/")) {
+      // Edizioni senza D1: l'accesso non esiste, come una rotta mancante.
+      if (!env.DB) return notFound();
       await ensureAuthSchema(env.DB);
       const response = await handleAuthRequest(request, {
         store: d1AuthStore(env.DB),
@@ -370,7 +375,7 @@ export default {
 
     if (TOOL_API_PATHS.has(url.pathname)) {
       // Off in production: same answer as a route that does not exist.
-      if (!toolsApiEnabled(env)) return notFound();
+      if (!toolsApiEnabled(env) || !env.DB) return notFound();
       const cors = corsHeaders(request, env);
       if (request.method === "OPTIONS") {
         return new Response(null, { status: 204, headers: withSecurityHeaders(new Headers(cors)) });
@@ -385,10 +390,10 @@ export default {
     // stamping cache headers so hashed assets are immutable and HTML is never
     // cached stale (see withCacheHeaders).
     const response = withCacheHeaders(request, await env.ASSETS.fetch(request));
-    // P-4: the test environment must never be indexed. On vulcan-test the
-    // Worker runs first for every request (run_worker_first), so the header
-    // also covers index.html and the assets.
-    if (env.DEPLOY_ENV === "test") {
+    // P-4: the test environment and the noindex editions must never be
+    // indexed. There the Worker runs first for every request
+    // (run_worker_first), so the header also covers index.html and assets.
+    if (env.DEPLOY_ENV === "test" || env.NOINDEX === "1") {
       const headers = new Headers(response.headers);
       headers.set("X-Robots-Tag", "noindex, nofollow");
       return new Response(response.body, { status: response.status, statusText: response.statusText, headers });

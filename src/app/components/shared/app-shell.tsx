@@ -41,6 +41,7 @@ import { StylesOverrideProvider } from "../../context/styles-override-context";
 import { IconButton } from "../ds/index";
 import { VulcanHero } from "./vulcan-hero";
 import { BRAND } from "../../config/brand";
+import { EDITION } from "../../config/edition";
 import { motionDuration, motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
 import { TOOLS_ENABLED } from "../../config/tools";
@@ -413,10 +414,14 @@ function SidebarRail({
 /* ═══ MARCHIO IN TESTATA — logo nel blob d'impasto + nome (D-040) ═══ */
 function ShellBrand({ onAboutOpen }: { onAboutOpen: () => void }) {
   const { cms } = useCms();
+  // Co-branding delle edizioni dedicate: «Vulcan · per <partner>».
+  const partner = EDITION.partner ? uiMessage("edition.partner", [EDITION.partner.name]) : null;
   return (
-    <IconButton variant="bare" type="button" onClick={onAboutOpen} className="app-shell-brand" aria-label={cms.ui.aboutLabel} aria-haspopup="dialog">
+    <IconButton variant="bare" type="button" onClick={onAboutOpen} className="app-shell-brand"
+      aria-label={partner ? `${cms.ui.aboutLabel} · ${partner}` : cms.ui.aboutLabel} aria-haspopup="dialog">
       <VulcanHero size={42} energy={45} markRatio={0.5} loops={Infinity} />
       <span className="app-shell-brand__name" aria-hidden="true">{BRAND.name}</span>
+      {partner && <span className="app-shell-brand__partner type-data-sm" aria-hidden="true">{partner}</span>}
     </IconButton>
   );
 }

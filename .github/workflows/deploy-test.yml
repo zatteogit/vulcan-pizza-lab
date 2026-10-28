@@ -1,9 +1,11 @@
 name: deploy-test
 
-# P-4: ogni merge su main va sull'ambiente di test (vulcan-test).
-# La produzione resta com'è finché non si sposta qui (docs/ambiente-test.md):
-# l'approvazione del deploy di produzione userà lo stesso commit.
-# Senza i segreti Cloudflare il job si ferma con un avviso, senza fallire.
+# Ogni merge su main va in test, con lo stesso commit (docs/ambienti-ed-edizioni.md):
+#   · generalista → vulcan-test (strumenti accesi, D1 di test);
+#   · ogni edizione dedicata → vulcan-<id>-test (dietro Cloudflare Access).
+# Le edizioni dei marchi reali arrivano dal repository privato zatteogit/vulcan-editions
+# (segreto VULCAN_EDITIONS_TOKEN, sola lettura). Senza segreti i job si fermano con
+# un avviso, senza fallire. La produzione esce solo dal workflow deploy-production.
 
 on:
   push:
@@ -14,12 +16,14 @@ concurrency:
   group: deploy-test
   cancel-in-progress: true
 
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+  VULCAN_EDITIONS_TOKEN: ${{ secrets.VULCAN_EDITIONS_TOKEN }}
+
 jobs:
-  deploy-test:
+  generalist:
     runs-on: ubuntu-latest
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - name: Segreti Cloudflare presenti?
         if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == ''
@@ -41,3 +45,55 @@ jobs:
       - name: Deploy su vulcan-test
         if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
         run: npx wrangler deploy --env test
+
+  list-editions:
+    runs-on: ubuntu-latest
+    outputs:
+      editions: ${{ steps.list.outputs.editions }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Edizioni private (repository vulcan-editions)
+        if: env.VULCAN_EDITIONS_TOKEN != ''
+        uses: actions/checkout@v4
+        with:
+          repository: zatteogit/vulcan-editions
+          token: ${{ secrets.VULCAN_EDITIONS_TOKEN }}
+          path: .editions-private
+      - id: list
+        run: |
+          if [ -d .editions-private/editions ]; then export VULCAN_EDITIONS_DIR=.editions-private/editions; fi
+          echo "editions=$(node scripts/list-editions.mjs)" >> "$GITHUB_OUTPUT"
+
+  editions:
+    needs: [generalist, list-editions]
+    if: needs.list-editions.outputs.editions != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        edition: ${{ fromJSON(needs.list-editions.outputs.editions) }}
+    steps:
+      - name: Segreti Cloudflare presenti?
+        if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == ''
+        run: echo "::notice::Edizione ${{ matrix.edition }} non pubblicata: mancano i segreti Cloudflare."
+      - uses: actions/checkout@v4
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+      - name: Edizioni private
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.VULCAN_EDITIONS_TOKEN != ''
+        uses: actions/checkout@v4
+        with:
+          repository: zatteogit/vulcan-editions
+          token: ${{ secrets.VULCAN_EDITIONS_TOKEN }}
+          path: .editions-private
+      - uses: actions/setup-node@v4
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        with:
+          node-version: 20
+          cache: npm
+      - if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        run: npm ci
+      - name: Deploy su vulcan-${{ matrix.edition }}-test
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        run: |
+          if [ -d .editions-private/editions ]; then export VULCAN_EDITIONS_DIR=.editions-private/editions; fi
+          node scripts/deploy-edition.mjs "${{ matrix.edition }}" test

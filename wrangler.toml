@@ -68,3 +68,22 @@ binding = "DB"
 database_name = "vulcan-test"
 # Da `npx wrangler d1 create vulcan-test --jurisdiction eu` (docs/ambiente-test.md).
 database_id = "SOSTITUIRE_CON_ID_D1_DI_TEST"
+
+# ── Edizioni dedicate (docs/ambienti-ed-edizioni.md) ────────────────────────
+# Un Worker per edizione e per ambiente, stesso codice di main:
+#   npm run deploy:edition -- <id> test        → vulcan-<id>-test
+#   npm run deploy:edition -- <id> production  → vulcan-<id>
+# Il nome arriva da --name; NOINDEX=1 da --var per le edizioni noindex.
+# Niente D1: accesso con Google e strumenti non esistono nelle edizioni.
+[env.edition]
+name = "vulcan-edition"
+
+[env.edition.assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+# Il Worker gira prima degli asset: X-Robots-Tag anche su index.html.
+run_worker_first = true
+
+[env.edition.vars]
+DEPLOY_ENV = "edition"

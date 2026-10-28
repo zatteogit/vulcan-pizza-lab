@@ -24,3 +24,5 @@ ds-bundle/
 
 # Snapshot e log di playwright-cli (artefatti locali)
 .playwright-cli/
+# Checkout del repository privato delle edizioni (CI e sviluppo locale)
+.editions-private/

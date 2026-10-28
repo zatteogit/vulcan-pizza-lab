@@ -1,5 +1,6 @@
 /** Catalogo UI spagnolo (es-ES): traduzione di ui-messages.it.ts. Stesse chiavi, stessi segnaposto. */
 export const UI_MESSAGES_ES: Record<string, string> = {
+  "edition.partner": "para {0}",
   "recipe.share.title": "Compartir receta",
   "recipe.share.link": "Enlace de la receta",
   "recipe.share.native": "Compartir con una app",

@@ -17695,6 +17695,12 @@
     letter-spacing: var(--tracking-tight);
   }
 
+  /* Edizioni dedicate: «per <partner>» accanto al nome (co-branding). */
+  .app-shell-brand__partner {
+    align-self: flex-end;
+    color: var(--text-muted);
+  }
+
   .app-shell-brand .vulcan-hero { isolation: isolate; }
 
   .app-shell-brand .vulcan-hero::before {
