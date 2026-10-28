@@ -105,7 +105,6 @@ export const JA_LOCALE: CmsContent = {
 
     // Actions
     copy: "\u30B3\u30D4\u30FC",
-    copied: "\u30B3\u30D4\u30FC\u3057\u307E\u3057\u305F\uFF01",
     share: "\u5171\u6709",
     back: "\u623B\u308B",
     reset: "\u30EA\u30BB\u30C3\u30C8",
@@ -169,8 +168,6 @@ export const JA_LOCALE: CmsContent = {
     ariaReduceBalls:
       "\u751F\u5730\u7389\u3092\u6E1B\u3089\u3059",
     ariaAddBalls: "\u751F\u5730\u7389\u3092\u5897\u3084\u3059",
-    ariaEarlier: "\u3082\u3063\u3068\u65E9\u304F\u958B\u59CB",
-    ariaLater: "\u3082\u3063\u3068\u9045\u304F\u958B\u59CB",
     // Stat strip
     statHydration: "\u52A0\u6C34\u7387",
     statOven: "\u30AA\u30FC\u30D6\u30F3",
@@ -1696,8 +1693,6 @@ export const JA_LOCALE: CmsContent = {
       "「{id}」が見つかりません。カタログから別のスタイルを選んでください。",
     recipeExploreStyles:
       "\u30B9\u30BF\u30A4\u30EB\u3092\u63A2\u7D22",
-    recipeCopyLinkAria:
-      "\u30EC\u30B7\u30D4\u30EA\u30F3\u30AF\u3092\u30B3\u30D4\u30FC",
     notFoundTitle:
       "\u30DA\u30FC\u30B8\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093",
     notFoundSubtitle:
@@ -1955,11 +1950,6 @@ export const JA_LOCALE: CmsContent = {
     learnInlineTitle: "\u8A73\u3057\u304F\uFF1A{label}",
     tipsCountOne: "{n}件のアドバイス",
     tipsCountMany: "{n}件のアドバイス",
-    glossaryPreferment: "ビガと発酵種",
-    glossaryBulk: "一次発酵（プンタータ）",
-    glossaryProof: "二次発酵（アプレット）",
-    glossaryBake: "メイラード反応",
-    glossaryMix: "加水率",
     servingUnits: {
       panetto: { singular: "\u751F\u5730\u7389", plural: "\u751F\u5730\u7389" },
       teglia: { singular: "\u5929\u677F", plural: "\u5929\u677F" },

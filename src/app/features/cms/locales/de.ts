@@ -94,7 +94,6 @@ export const DE_LOCALE: CmsContent = {
     scoreReferencePending: "Das Abweichungsprofil dieses Stils ist noch nicht geprüft.",
 
     copy: "Kopieren",
-    copied: "Kopiert!",
     share: "Teilen",
     back: "Zur\u00FCck",
     reset: "Zur\u00FCcksetzen",
@@ -147,8 +146,6 @@ export const DE_LOCALE: CmsContent = {
     relativeToBase: "im Vergleich zur Basis",
     ariaReduceBalls: "Teiglinge reduzieren",
     ariaAddBalls: "Teiglinge erh\u00F6hen",
-    ariaEarlier: "Fr\u00FCher starten",
-    ariaLater: "Sp\u00E4ter starten",
     statHydration: "Hydration",
     statOven: "Ofen",
     statRest: "Teigruhe",
@@ -1572,7 +1569,6 @@ export const DE_LOCALE: CmsContent = {
     recipeStyleNotFoundDesc:
       "„{id}“ wurde nicht gefunden. Wähle einen anderen Stil aus dem Katalog.",
     recipeExploreStyles: "Stile entdecken",
-    recipeCopyLinkAria: "Rezeptlink kopieren",
     notFoundTitle: "Seite nicht gefunden",
     notFoundSubtitle:
       "Der Link könnte sich geändert haben. Starte neu unter Entdecken.",
@@ -1819,11 +1815,6 @@ export const DE_LOCALE: CmsContent = {
     learnInlineTitle: "Mehr erfahren: {label}",
     tipsCountOne: "{n} Tipp",
     tipsCountMany: "{n} Tipps",
-    glossaryPreferment: "Biga und Vorteige",
-    glossaryBulk: "Stockgare",
-    glossaryProof: "Stückgare",
-    glossaryBake: "Maillard-Reaktion",
-    glossaryMix: "Hydratation",
     servingUnits: {
       panetto: { singular: "Teigling", plural: "Teiglinge" },
       teglia: { singular: "Blech", plural: "Bleche" },
