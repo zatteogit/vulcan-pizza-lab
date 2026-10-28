@@ -74,7 +74,8 @@ jobs:
     steps:
       - name: Segreti Cloudflare presenti?
         if: env.CLOUDFLARE_API_TOKEN == ''
-        run: echo "::notice::Edizione ${{ matrix.edition }} non pubblicata: manca il segreto CLOUDFLARE_API_TOKEN."
+        run: >-
+          echo "::notice::Edizione ${{ matrix.edition }} non pubblicata: manca il segreto CLOUDFLARE_API_TOKEN."
       - uses: actions/checkout@v4
         if: env.CLOUDFLARE_API_TOKEN != ''
       - name: Edizioni private
