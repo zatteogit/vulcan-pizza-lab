@@ -112,27 +112,26 @@ La generalista si pubblica come prima: `npm run deploy:test` in test, il workflo
   Una nuova edizione vuole la sua applicazione (`vulcan-<id>-test.zatteo.workers.dev`)
   prima del primo deploy. Senza, la sicura del Worker risponde 403.
 
-### Da fare (Matteo), in quest'ordine
+### Completati il 28/10/2026 (sessione Claude + Matteo)
 
-GitHub non permette a Claude di creare repository né di impostare segreti o ambienti.
+I valori dei token li ha maneggiati solo Matteo (generati nelle dashboard e incollati
+nei campi Secret); repository, ambienti, workflow e verifiche sono stati automatizzati.
 
-1. **Repository privato** `zatteogit/vulcan-editions`: crealo privato e carica il
-   contenuto di `.editions-private/` (`README.md` ed `editions/effeuno.json`). Poi crea
-   un fine-grained token con «Contents: Read-only» solo su quel repository e salvalo in
-   `vulcan-pizza-lab` → Settings → Secrets → Actions come `VULCAN_EDITIONS_TOKEN`.
-2. **Token Cloudflare per GitHub**: Cloudflare → My Profile → API Tokens → modello
-   «Edit Cloudflare Workers», limitato a questo account. In `vulcan-pizza-lab` →
-   Settings → Secrets → Actions aggiungi `CLOUDFLARE_API_TOKEN`. Da quel momento ogni
-   merge su `main` pubblica in test. Al primo deploy verifica da una finestra in
-   incognito che i tre indirizzi chiedano il codice via email.
-3. **Ambiente `production`** su GitHub: Settings → Environments → `production`, con
-   «Required reviewers» (tu). Fai girare `deploy-production` una volta con lo sha di
-   `main` e `edition = vulcan`.
-4. **Spegni il deploy automatico** di Workers Builds su `vulcan-pizza-lab` (oggi
-   pubblica `main` in produzione a ogni merge). Chiedilo a Claude, che può farlo dal
-   connettore Cloudflare, oppure dalla dashboard: Workers → vulcan-pizza-lab →
-   Settings → Builds. Va fatto solo dopo il passo 3, altrimenti la produzione resta
-   senza una strada per uscire.
+1. **Repository privato** `zatteogit/vulcan-editions` creato con `README.md` ed
+   `editions/effeuno.json`. PAT fine-grained «Contents: Read-only» sul solo repository,
+   senza scadenza → secret `VULCAN_EDITIONS_TOKEN`.
+2. **Token Cloudflare** dal modello «Edit Cloudflare Workers» + «Account · D1 · Edit»,
+   limitato a questo account, senza scadenza → secret `CLOUDFLARE_API_TOKEN`. Primo
+   `deploy-test` verde con la matrice completa (`demo-forno`, `effeuno`); da una
+   finestra pulita i tre indirizzi chiedono il codice via email e, dopo il login, le
+   testate mostrano «per Effeuno» e «per Fornace Aurora». Nota: i workflow erano
+   arrivati in `main` con YAML invalido, riparati prima di tutto (PR #141).
+3. **Ambiente `production`** con «Required reviewers» = `zatteogit`. Primo
+   `deploy-production` (sha di `main`, `edition = vulcan`) verde con approvazione;
+   la produzione risponde 200 senza pagina Access.
+4. **Workers Builds spento** («Disable builds» su vulcan-pizza-lab, repository ancora
+   connesso): la produzione esce solo da `deploy-production`, ogni merge su `main`
+   pubblica solo in test.
 
 ## 5. Cosa non fa (ancora)
 
