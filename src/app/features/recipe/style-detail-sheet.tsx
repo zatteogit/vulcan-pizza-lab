@@ -12,7 +12,7 @@ import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
 import React, { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import { motionDelay,motionDuration,motionSpring } from "../../components/ds/motion";
-import { Droplets, Flame, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle } from "lucide-react";
+import { Droplets, Wheat, Clock, ChefHat, Sparkles, X, Layers, Ratio, FlaskConical, Eye, EyeOff, Bookmark, AlertTriangle, Info } from "lucide-react";
 import { createPortal } from "react-dom";
 import { ImageWithFallback } from "../../components/media/ImageWithFallback";
 import { IMAGE_SIZES } from "../../components/media/responsive-images";
@@ -122,10 +122,14 @@ export function StyleDetailSheet({
     const texts = engineMsgTexts(rec.reasons, cms, bcp47);
     return texts.map((text, i) => ({ text, dim: reasonDimension(rec.reasons[i].key) }));
   }, [rec, cms, bcp47]);
-  const matchWarnings = React.useMemo(
-    () => engineMsgTexts(rec?.warnings ?? [], cms, bcp47),
-    [rec, cms, bcp47],
-  );
+  /* FW-13 (S03-B-22): «Se hai una teglia/lievito…» è una condizione da
+     verificare, non un rischio: icona Info in tono neutro, il triangolo resta
+     ai veri avvisi. */
+  const matchWarnings = React.useMemo(() => {
+    const warnings = rec?.warnings ?? [];
+    const texts = engineMsgTexts(warnings, cms, bcp47);
+    return texts.map((text, i) => ({ text, condition: warnings[i].key.startsWith("need.check") }));
+  }, [rec, cms, bcp47]);
   const familyName = (cms.families[style.family]?.name ?? PIZZA_FAMILIES[style.family]?.name ?? "");
   const pt = cms.parametricTips;
   const prefersReducedMotion = useReducedMotion();
@@ -156,7 +160,7 @@ export function StyleDetailSheet({
 
   const DATA_PILLS: { icon: typeof Droplets; label: string; value: string }[] = [
     { icon: Droplets, label: pt.pillHydration, value: hRange },
-    { icon: Flame, label: pt.pillFlour, value: wRange },
+    { icon: Wheat, label: pt.pillFlour, value: wRange }, /* FW-13: Flame è il forno */
     { icon: Ratio, label: pt.pillPL, value: plRange },
     { icon: Clock, label: pt.pillFermentation, value: fRange },
     { icon: Layers, label: pt.pillThickness, value: thickness },
@@ -448,10 +452,10 @@ export function StyleDetailSheet({
                   <RecipeVerdictNotice recipe={rec.recipe} constraints={constraints} mealDeadline={constraints.meal_deadline === true} embedded showRecipeBelow={false} />
                 )}
                 {constraints && <RecipeDietaryAlternatives recipe={rec.recipe} constraints={constraints} onSelect={id => onGenerate(id)} />}
-                {matchWarnings.map((text) => (
-                  <div key={text} className="style-detail-match__row" data-warning="true">
+                {matchWarnings.map(({ text, condition }) => (
+                  <div key={text} className="style-detail-match__row" data-warning={condition ? undefined : "true"} data-condition={condition ? "true" : undefined}>
                     <span className="style-detail-match__icon">
-                      <AlertTriangle size={13} aria-hidden="true" />
+                      {condition ? <Info size={13} aria-hidden="true" /> : <AlertTriangle size={13} aria-hidden="true" />}
                     </span>
                     <span className="style-detail-match__text">{text}</span>
                   </div>

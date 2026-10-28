@@ -256,14 +256,16 @@ export function getStepTroubleshooting(
 }
 
 /* === CATEGORY LABELS === */
-export const CATEGORY_LABELS: Record<string, { label: string; emoji: string }> = {
-  dough: { label: 'Impasto', emoji: '🫗' },
-  fermentation: { label: 'Fermentazione', emoji: '🫧' },
-  shaping: { label: 'Stesura', emoji: '🤲' },
-  baking: { label: 'Cottura', emoji: '🔥' },
-  frying: { label: 'Frittura', emoji: '🫕' },
-  solver: { label: 'Algoritmo', emoji: '⚙️' },
-  false_positive: { label: 'Falsi Allarmi', emoji: '✅' },
+/* FW-13 (S13-B-12): niente emoji (letti dallo screen reader, resi diversi fra
+ * piattaforme); le icone Lucide delle categorie vivono nella UI. */
+export const CATEGORY_LABELS: Record<string, { label: string }> = {
+  dough: { label: 'Impasto' },
+  fermentation: { label: 'Fermentazione' },
+  shaping: { label: 'Stesura' },
+  baking: { label: 'Cottura' },
+  frying: { label: 'Frittura' },
+  solver: { label: 'Algoritmo' },
+  false_positive: { label: 'Falsi allarmi' },
 };
 
 /* === i18n: LOCALIZED GETTERS === */

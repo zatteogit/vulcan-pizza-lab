@@ -200,40 +200,13 @@ export function DoughBlob({
    * Neural: glowing fluid gradients (indigo, violet, pink), glassmorphic opacity,
    *         bright white/indigo core, soft glowing satellite.
    * Dough: soft pastels, low opacity, dashed ring, gentle glow. */
+  /* Colori e bordo per variante: classi .dough-mascot--forge/--neural in
+   * theme.css (FW-13). Qui restano solo le opacità, che dipendono dalla variante
+   * e dall'energia. */
   const layer = {
-    glow: isForge
-      ? 'var(--blob-glow-forge)'
-      : isNeural
-        ? 'var(--blob-glow-neural)'
-        : 'var(--blob-glow)',
-    main: isForge
-      ? 'var(--blob-body-forge)'
-      : isNeural
-        ? 'var(--blob-body-neural)'
-        : 'var(--blob-body)',
     mainOpacity: isForge ? 0.28 : isNeural ? 0.35 : 0.16,
-    accent: isForge
-      ? 'var(--blob-accent-forge)'
-      : isNeural
-        ? 'var(--blob-accent-neural)'
-        : 'var(--blob-accent)',
     accentOpacity: isForge ? 0.32 : isNeural ? 0.4 : 0.2,
-    core: isForge
-      ? 'var(--blob-core-forge)'
-      : isNeural
-        ? 'var(--blob-core-neural)'
-        : 'var(--blob-core)',
     coreOpacity: isForge ? 0.25 : isNeural ? 0.3 : 0.14,
-    edge: isForge
-      ? 'var(--blob-edge-forge)'
-      : isNeural
-        ? 'var(--blob-edge-neural)'
-        : 'var(--blob-edge)',
-    satellite: isForge
-      ? 'var(--blob-satellite-forge)'
-      : isNeural
-        ? 'var(--blob-satellite-neural)'
-        : 'var(--blob-satellite)',
     satelliteOpacity: isForge ? 0.5 : isNeural ? 0.75 : 0.35,
   };
 
@@ -249,15 +222,9 @@ export function DoughBlob({
       className={rootClassName}
       style={{
         ['--mascot-size' as any]: `${size}px`,
-        ['--blob-glow' as any]: layer.glow,
-        ['--blob-body' as any]: layer.main,
         ['--blob-body-opacity' as any]: layer.mainOpacity,
-        ['--blob-accent' as any]: layer.accent,
         ['--blob-accent-opacity' as any]: layer.accentOpacity,
-        ['--blob-core' as any]: layer.core,
         ['--blob-core-opacity' as any]: layer.coreOpacity,
-        ['--blob-edge' as any]: layer.edge,
-        ['--blob-satellite' as any]: layer.satellite,
         ['--blob-satellite-opacity' as any]: params.satelliteOpacity * layer.satelliteOpacity,
         ['--static-radius-main' as any]: staticRadius,
         ['--static-radius-accent' as any]: accentRadii[0],

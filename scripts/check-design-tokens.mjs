@@ -235,6 +235,13 @@ const STAGED_TOKENS = new Set([
   /* Terzo step della scala densità: lo consumavano i temi rimossi
      (Minimal, Copertina). Resta in staging come parte della scala T2. */
   "--density-spacious",
+  /* FW-13 (audit UX e scienza, 28/10/2026): contratto dei ruoli di stato,
+     usato dai pacchetti che lo seguono (EvidenceBadge, avvisi, chip). Togliere
+     ciascuno appena ha un consumo. */
+  "--status-neutral-fg",
+  "--status-recommended-bg",
+  "--status-recommended-border",
+  "--status-recommended-icon",
 ]);
 
 /* A differenza del guard in avanti, qui lo showcase È incluso: le sue pagine

@@ -2,7 +2,7 @@ import { useCms } from "../cms/cms-context";
 import { createFormatter } from "../cms/i18n";
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
-import { Clock, Flame, ScanLine, Wheat } from "lucide-react";
+import { Clock, CookingPot, Flame, ScanLine, Wheat } from "lucide-react";
 import { Badge } from "../../components/ds/index";
 import { RecipeMatchIcon } from "./recipe-match-icon";
 import { recipeCardSignals } from "./recipe-card-signals";
@@ -107,7 +107,7 @@ export function StyleMetaChip({ style, cms, recipe, context = "create" }: { styl
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
   const signals = recipe ? recipeCardSignals(recipe, context) : [];
-  const icons = { oven: Flame, time: Clock, pan: Flame, flour: Wheat, check: ScanLine };
+  const icons = { oven: Flame, time: Clock, pan: CookingPot, flour: Wheat, check: ScanLine }; /* FW-13: Flame solo per il forno */
   const duration = recipe
     ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)
     : `${style.dough.fermentation_hours_range[0]}–${style.dough.fermentation_hours_range[1]}h`;

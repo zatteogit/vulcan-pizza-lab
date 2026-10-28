@@ -1369,10 +1369,12 @@ function GradientSlider({
     if (clamped !== value) onChange(clamped);
   };
   const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
+  /* FW-13 (S06-A-23): il valore consigliato non si colora mai come fuori range. */
   const inRange =
-    rangeMin !== undefined && rangeMax !== undefined
+    value === optimalValue ||
+    (rangeMin !== undefined && rangeMax !== undefined
       ? value >= rangeMin && value <= rangeMax
-      : true;
+      : true);
 
   const zoneLeftPct =
     rangeMin !== undefined

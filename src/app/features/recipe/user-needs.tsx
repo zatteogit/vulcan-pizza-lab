@@ -3,7 +3,7 @@ import { migrateEquipment, syncLegacyFlags } from "../../data/equipment-data";
 import { PantryEditor } from "./pantry-editor";
 import { savePantryConstraints } from "../../adapters/browser/pantry-storage";
 import { SupplyPolicyControls } from "./supply-policy-controls";
-import { WoodOvenIcon } from "../../components/shared/wood-oven-icon";
+import { ovenIcon } from "../../components/shared/oven-icons";
 import {
 CalendarDays,
 Check,
@@ -12,10 +12,8 @@ ChevronRight,
 Clock,
 CloudSun,
 CookingPot,
-Flame,
 FlaskConical,
 HelpCircle,
-Home,
 MapPin,
 Minus,
 Moon,
@@ -24,8 +22,7 @@ Plus,
 Sun,Sunset,
 Thermometer,
 Timer,
-Wheat,
-Zap
+Wheat
 } from "lucide-react";
 import { pantryFlourName } from "./pantry-flour-names";
 import { AnimatePresence,motion } from "motion/react";
@@ -99,18 +96,6 @@ const TIME_ICONS: Record<
   day_after_lunch: CalendarDays,
   long_ferment: Timer,
   no_preference: Clock,
-};
-
-const OVEN_ICONS: Record<
-  string,
-  React.ComponentType<any>
-> = {
-  home: Home,
-  electric_standard: Zap,
-  electric_high: Zap,
-  gas: Flame,
-  gas_pizza: Flame,
-  wood: WoodOvenIcon,
 };
 
 /* Dietary filters moved to recommended-styles — data defined there */
@@ -762,7 +747,7 @@ export function UserNeeds({
                       <div className={compact ? "needs-oven-grid needs-oven-grid--compact" : "needs-oven-grid"}>
                         {OVEN_PRESETS.map((preset) => {
                           const active = constraints.oven_type === preset.id;
-                          const Icon = OVEN_ICONS[preset.id] || Thermometer;
+                          const Icon = ovenIcon(preset.id);
                           const cmsOven = cms.ovenPresets[preset.id];
                           const displayName = cmsOven?.name ?? preset.name;
                           return (

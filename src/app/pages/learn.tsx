@@ -116,7 +116,6 @@ export function LearnPage() {
       desc: pg.learnGlossaryDesc,
       illustration: Slice,
       to: "/learn/glossary",
-      color: "var(--primary)",
     },
     {
       id: "troubleshooting",
@@ -124,7 +123,6 @@ export function LearnPage() {
       desc: pg.learnTroubleshootingDesc,
       illustration: OvenIllustration,
       to: "/learn/troubleshooting",
-      color: "var(--tertiary)",
     },
     {
       id: "prefermenti",
@@ -132,7 +130,6 @@ export function LearnPage() {
       desc: pg.learnPreFermentsDesc,
       illustration: Flask,
       to: "/learn/pre-ferments",
-      color: "var(--cta)",
     },
   ];
 
@@ -238,9 +235,10 @@ export function LearnPage() {
         >
           {/* Decorative thin rule — magazine section break */}
           <div className="learn-term__rule" />
-          <div className="learn-term__kicker">
+          {/* FW-13 (S11-A-13): è il titolo della sezione, non un div. */}
+          <h2 className="learn-term__kicker">
             {t(pg.learnTermOfTheDay, { category: glossaryCategoryLabel(term.category, cms.glossary) })}
-          </div>
+          </h2>
 
           <Link to="/learn/glossary" className="learn-term__card">
             <div className="learn-term__body">
@@ -310,7 +308,7 @@ export function LearnPage() {
                   <Link
                     to={section.to + linkSearch}
                     className="learn-resources__card"
-                    style={{ ["--tone" as any]: section.color }}
+                    data-tone={section.id}
                   >
                     <div className="learn-resources__icon">
                       <section.illustration size={52} />

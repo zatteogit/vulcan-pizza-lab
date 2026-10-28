@@ -1648,12 +1648,12 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   ovenPresets: {
     coal: { name: "Forno a carbone", maxTemp: 400, icon: "flame" },
-    home:              { name: "Forno Domestico",    maxTemp: 250, icon: "home" },
-    electric_standard: { name: "Elettrico Standard", maxTemp: 300, icon: "zap" },
+    home:              { name: "Forno domestico",    maxTemp: 250, icon: "home" },
+    electric_standard: { name: "Elettrico standard", maxTemp: 300, icon: "zap" },
     gas:               { name: "Forno a gas a platea", maxTemp: 350, icon: "flame" },
     electric_high:     { name: "Elettrico alta temperatura", maxTemp: 450, icon: "thermometer" },
     gas_pizza:         { name: "Forno a gas da pizza", maxTemp: 500, icon: "flame" },
-    wood:              { name: "Forno a Legna",      maxTemp: 500, icon: "flame-kindling" },
+    wood:              { name: "Forno a legna",      maxTemp: 500, icon: "flame-kindling" },
   },
   skillLevels: {
     "1": { name: "Principiante", description: "Non ho mai impastato" },

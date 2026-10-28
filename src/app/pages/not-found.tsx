@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { Compass } from "lucide-react";
 import { motion } from "motion/react";
 import { Link } from "react-router";
 import { useCms } from "../features/cms/cms-context";
@@ -15,7 +15,7 @@ export function NotFoundPage() {
         transition={motionSpring.pageEnter}
         className="notfound-card"
       >
-        <span className="type-step-num notfound-num">404</span>
+        <span className="type-numeric notfound-num">404</span>
         <Heading level="page" className="notfound-title">
           {cms.pages.notFoundTitle}
         </Heading>
@@ -24,10 +24,10 @@ export function NotFoundPage() {
         </p>
         <CtaButton
           as={Link}
-          to="/"
+          to="/explore"
           className="notfound-cta"
         >
-          <ArrowLeft size={14} />
+          <Compass size={14} aria-hidden="true" />
           {cms.pages.notFoundBack}
         </CtaButton>
       </motion.div>

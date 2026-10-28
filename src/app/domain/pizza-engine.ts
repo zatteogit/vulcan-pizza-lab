@@ -3982,7 +3982,7 @@ function generateTips(
 
   if (constraints.oven_heat_profile === "gas_rear" || constraints.oven_heat_profile === "wood_side_flame") {
     tips.push(
-      "La sorgente di calore e laterale/posteriore: prepara la pala per ruotare spesso la pizza, non aspettare che un lato sia gia scuro.",
+      "La sorgente di calore è laterale/posteriore: prepara la pala per ruotare spesso la pizza, non aspettare che un lato sia già scuro.",
     );
   }
 

@@ -143,21 +143,21 @@ export function PreFermentsPage() {
               title={pg.preFermentsBigaTitle}
               when={pg.preFermentsBigaWhen}
               best={pg.preFermentsBigaBest}
-              color="var(--primary)"
+              tone="biga"
             />
             <DecisionCard
               icon={Droplet}
               title={pg.preFermentsPoolishTitle}
               when={pg.preFermentsPoolishWhen}
               best={pg.preFermentsPoolishBest}
-              color="var(--cta)"
+              tone="poolish"
             />
             <DecisionCard
               icon={Droplets}
               title={pg.preFermentsAutolisiTitle}
               when={pg.preFermentsAutolisiWhen}
               best={pg.preFermentsAutolisiBest}
-              color="var(--tertiary)"
+              tone="autolisi"
             />
           </div>
         </motion.div>
@@ -172,19 +172,16 @@ function DecisionCard({
   title,
   when,
   best,
-  color,
+  tone,
 }: {
   icon: LucideIcon;
   title: string;
   when: string;
   best: string;
-  color: string;
+  tone: "biga" | "poolish" | "autolisi";
 }) {
   return (
-    <div
-      className="preferment-decision"
-      style={{ ["--tone" as any]: color }}
-    >
+    <div className="preferment-decision" data-tone={tone}>
       <div className="preferment-decision__head">
         <span className="preferment-decision__emoji">
           <Icon size={18} aria-hidden="true" />

@@ -47,10 +47,7 @@ export function ActiveCookWidget({
   const activeAccessibleLabel = metrics?.finished
     ? cms.cooking.completed
     : `${actionLabel} ${countdown}`.trim();
-  const actionHeight = compact ? 40 : 44;
   const iconBox = compact ? 24 : 28;
-
-  const rightVal = inline ? 0 : hasProfileButton ? (compact ? 64 : 68) : 16;
 
   const handleClick = () => {
     if (session) {
@@ -67,14 +64,10 @@ export function ActiveCookWidget({
         data-region="widget"
         key={active ? "cook-active-action" : "cook-start-action"}
         type="button"
-        initial={{ opacity: 0, y: -8, scale: 0.98, height: actionHeight, right: rightVal }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          height: actionHeight,
-          right: rightVal,
-        }}
+        /* FW-13 (S01-A-10/B-14): altezza da token (.cook-widget--compact), il
+           posto accanto al profilo da .cook-actions--beside-profile. */
+        initial={{ opacity: 0, y: -8, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -6, scale: 0.98 }}
         whileHover={prefersReducedMotion ? undefined : { scale: 1.018, y: -1 }}
         whileTap={{ scale: 0.96 }}

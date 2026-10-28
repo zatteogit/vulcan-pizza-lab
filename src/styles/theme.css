@@ -517,7 +517,9 @@
   --dimension-fixed-018: 18px;
   --dimension-fixed-022: 22px;
   --dimension-fixed-024: 24px;
+  --dimension-fixed-040: 40px;
   --dimension-fixed-042: 42px;
+  --dimension-fixed-044: 44px;
   --dimension-fixed-046: 46px;
   --dimension-fixed-058: 58px;
   --dimension-fixed-060: 60px;
@@ -954,6 +956,8 @@
   --font-size-cooking-step-title-min: var(--dimension-relative-190);
   /* 30.4px — clamp min titolo fase */
   --font-size-cooking-step-title-max: var(--dimension-relative-280);
+  /* FW-13 (S10-B-16): il countdown della fase domina il corpo del passo. */
+  --cooking-countdown-size: clamp(var(--font-size-7xl), var(--dimension-viewport-width-060), var(--font-size-9xl));
   /* 44.8px — clamp max titolo fase */
   --leading-cooking-step-title: 1.08;
   /* line-height titolo fase (fra tight 1.05 e snug 1.1) */
@@ -988,6 +992,10 @@
   --nav-dock-max-width: var(--dimension-fixed-352);
   --profile-close-size: var(--dimension-fixed-046);
   --nav-dock-target-min: var(--dimension-fixed-046);
+  /* FW-13 (S01-A-10/B-14): misure dei controlli flottanti della shell
+     (profilo, widget pizzata), prima numeri dentro motion.animate. */
+  --shell-action-size: var(--dimension-fixed-044);
+  --shell-action-size-compact: var(--dimension-fixed-040);
   /* larghezza max capsula nav mobile (min con 92vw) */
   /* cap altezza pannello ricerca */
   --drop-shadow-step-accent: drop-shadow(0 1px 2px color-mix(in srgb, var(--shadow-color) 24%, transparent));
@@ -1021,6 +1029,16 @@
   --forge-deep: var(--color-terracotta-600);
   --forge-abyss: var(--color-terracotta-700);
 
+  /* ── FW-13 · Stati: un solo significato per colore ──
+     positivo (va bene) · attenzione (si può fare, con riserva) · bloccante
+     (non si può) · neutro (dato, nessun giudizio) · consigliato (la proposta
+     di Vulcan, identità «su misura»). Mai terracotta/rosso per un esito buono. */
+  --status-positive: var(--cta);
+  --status-caution: var(--tertiary);
+  --status-blocking: var(--destructive);
+  --status-neutral: var(--muted-foreground);
+  --status-recommended: var(--color-sage-800);
+
   /* ── Gradiente PizzaNerd (consumato da explore/badge nerd) ── */
   --gradient-nerd: linear-gradient(135deg,
       var(--accent-nerd) 0%,
@@ -1050,6 +1068,34 @@
   --icon-success: var(--cta);
   --icon-warning: var(--tertiary);
   --icon-error: var(--destructive);
+
+  /* ── B2. FW-13 · Ruoli di stato (fg/bg/border/icon) ──
+     Contrasto misurato (fg sul proprio bg al 12% sopra card, surface-low e
+     surface-container): ≥ 4,5:1 in chiaro e scuro; icone ≥ 3:1.
+     Tabella in docs/design-system-tiers.md §Stati. */
+  --status-positive-fg: var(--status-positive);
+  --status-positive-bg: color-mix(in srgb, var(--status-positive) 12%, transparent);
+  --status-positive-border: color-mix(in srgb, var(--status-positive) 35%, transparent);
+  --status-positive-icon: var(--status-positive);
+  --status-caution-fg: var(--status-caution);
+  --status-caution-bg: color-mix(in srgb, var(--status-caution) 12%, transparent);
+  --status-caution-border: color-mix(in srgb, var(--status-caution) 35%, transparent);
+  --status-caution-icon: var(--status-caution);
+  --status-blocking-fg: var(--status-blocking);
+  --status-blocking-bg: color-mix(in srgb, var(--status-blocking) 12%, transparent);
+  --status-blocking-border: color-mix(in srgb, var(--status-blocking) 35%, transparent);
+  --status-blocking-icon: var(--status-blocking);
+  --status-neutral-fg: var(--status-neutral);
+  --status-neutral-bg: var(--surface-container-low);
+  --status-neutral-border: var(--outline-variant);
+  --status-neutral-icon: var(--status-neutral);
+  --status-recommended-fg: var(--status-recommended);
+  --status-recommended-bg: color-mix(in srgb, var(--status-recommended) 12%, transparent);
+  --status-recommended-border: color-mix(in srgb, var(--status-recommended) 35%, transparent);
+  --status-recommended-icon: var(--status-recommended);
+  /* FW-13 (S13-B-15): pressione di una superficie larga quanto lo schermo:
+     appena percettibile, non una contrazione del 5%. */
+  --press-scale-surface: 0.99;
 
   /* ── C. Container / Surface ── */
   --container-bg: var(--surface-container);
@@ -1196,11 +1242,10 @@
   --config-bg: var(--surface-container);
   --config-border: var(--outline-variant);
   --config-value-color: var(--foreground);
-  --config-value-oor: var(--destructive);
+  --config-value-oor: var(--status-caution-fg);
   --config-divider: var(--outline);
   --recipe-stepper-value-size: var(--type-stepper-value-size);
   --recipe-stepper-value-weight: var(--type-stepper-value-weight);
-  --snackbar-action: var(--inverse-action);
   --snackbar-action-success: var(--inverse-action);
   --snackbar-action-error: var(--inverse-action-error);
   --recipe-section-offset-compact: var(--layout-recipe-offset-compact);
@@ -1503,6 +1548,8 @@
   --cta: var(--color-sage-300);
   --cta-foreground: var(--color-night-1000);
   --cta-shadow: 0 4px 14px rgba(114, 200, 166, 0.18);
+  /* FW-13: «consigliato» in scuro, salvia chiara (≥ 8:1 sul proprio fondo). */
+  --status-recommended: var(--color-sage-200);
 
   /* Time-of-day palette (dark — vivid) */
   --time-tonight: var(--color-tonight-300);
@@ -2437,6 +2484,20 @@
     text-transform: uppercase;
     color: var(--muted-foreground);
     font-weight: var(--weight-semibold);
+  }
+
+  /* FW-13 (S14-A-16/B-17): a 390 px il maiuscolo spaziato spezzava le parole
+     a metà («IDRATAZIO-NE»). Su schermi stretti: frase normale, sillabazione. */
+  @media (max-width: 480px) {
+    .preferment-table__rowlabel {
+      text-transform: none;
+      letter-spacing: normal;
+      hyphens: auto;
+    }
+
+    .preferment-table__td {
+      hyphens: auto;
+    }
   }
 
   .preferment-decisions {
@@ -3470,7 +3531,7 @@
 
   .compat-pill--blocked .compat-pill__icon,
   .compat-pill--blocked .compat-pill__now {
-    color: var(--text-error);
+    color: var(--status-blocking-fg); /* FW-13 */
   }
 
   .compat-pill__now {
@@ -3706,18 +3767,6 @@
     display: block;
   }
 
-  .learn-path__kicker {
-    font-size: var(--font-size-2xs);
-    font-weight: var(--weight-bold);
-    letter-spacing: var(--tracking-extreme);
-    text-transform: uppercase;
-    color: color-mix(in srgb, var(--overlay-text) 90%, transparent);
-    border-bottom: var(--border-w) solid color-mix(in srgb, var(--overlay-text) 25%, transparent);
-    padding-bottom: var(--space-0-75);
-    display: inline-block;
-    margin-bottom: var(--space-2);
-  }
-
   .learn-path__title {
     font-family: var(--font-serif);
     font-size: clamp(var(--font-size-7xl), var(--dimension-viewport-width-060), var(--font-size-9xl));
@@ -3776,6 +3825,7 @@
   }
 
   .learn-term__kicker {
+    font-family: var(--font-sans); /* FW-13: ora è un h2, resta un occhiello */
     font-size: var(--font-size-md);
     letter-spacing: var(--tracking-ultra);
     text-transform: uppercase;
@@ -5124,7 +5174,7 @@
   .profile-ftu__pantry-skip {
     text-align: center;
     color: var(--text-muted);
-    opacity: 0.6;
+    /* FW-13 (S15-B-09): niente opacità sul testo d'aiuto, era 2,7:1. */
   }
 
   /* ── FtuOnboarding step 3 — done ── */
@@ -5183,7 +5233,7 @@
   .profile-ftu__done-footnote {
     color: var(--text-muted);
     text-align: center;
-    opacity: 0.7;
+    /* FW-13 (S15-B-09): niente opacità sul testo d'aiuto, era 3,3:1. */
   }
 
   /* ── FtuOnboarding nav ── */
@@ -6087,85 +6137,10 @@
     gap: var(--gap-xs);
   }
 
-  .profile-prefs__lang-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
-    padding-inline: var(--space-4);
-    padding-block: var(--space-2-5);
-    border-radius: var(--radius-xl);
-    border-width: var(--border-width-thin);
-    border-style: solid;
-    font-size: var(--font-size-md);
-    font-weight: var(--weight-medium);
-    cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  .profile-prefs__lang-btn:active {
-    transform: scale(0.95);
-  }
-
-  /* ── Unit system section ── */
-  .profile-unit-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--gap-xs);
-  }
-
-  @media (min-width: 640px) {
-    .profile-unit-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  .profile-unit-option {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--gap-sm);
-    padding: var(--space-3);
-    border-radius: var(--radius-xl);
-    text-align: left;
-    border-width: var(--border-width-medium);
-    border-style: solid;
-    cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  @media (min-width: 640px) {
-    .profile-unit-option {
-      padding: var(--space-4);
-    }
-  }
-
-  .profile-unit-option:active {
-    transform: scale(0.98);
-  }
-
-  .profile-unit-option__icon {
-    color: var(--text-muted);
-    flex-shrink: 0;
-    margin-top: var(--space-px);
-  }
-
-  .profile-unit-option__icon--active {
-    color: var(--primary);
-  }
-
-  .profile-unit-option__body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .profile-unit-option__label {
-    display: block;
-    font-weight: var(--weight-semibold);
-    color: var(--text-default);
-  }
-
-  .profile-unit-option__desc {
-    display: block;
-    margin-top: var(--space-0-75);
+  /* FW-13 (S17-B-06): Lingua = ds/Chip, Misure = ds/SegmentedControl;
+     sotto, la descrizione dell'opzione scelta. */
+  .profile-unit-desc {
+    margin-top: var(--space-2);
     color: var(--text-muted);
     line-height: var(--leading-normal);
   }
@@ -6922,10 +6897,12 @@
   }
 
   .config-flour-picker__option-sub {
-    display: block;
+    /* FW-13 (S06-A-23): due righe, l'esempio non si taglia a 390 px. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     font-size: var(--font-size-sm);
     color: var(--text-muted);
   }
@@ -6937,7 +6914,8 @@
   }
 
   .config-flour-picker__fit--ideal {
-    color: var(--text-accent);
+    /* FW-13 (S06-A-23/B-18): giudizio positivo, non terracotta. */
+    color: var(--status-positive-fg);
   }
 
   /* ── GradientSlider ── */
@@ -9551,12 +9529,13 @@
     gap: var(--space-1-5);
   }
 
+  /* FW-13 (S07-B-18): forno pronto = positivo, forno da adattare = attenzione. */
   .match-oven--gap {
-    color: var(--text-muted);
+    color: var(--status-caution-fg);
   }
 
   .match-oven--ready {
-    color: var(--text-accent);
+    color: var(--status-positive-fg);
   }
 
   .match-oven__alert-icon {
@@ -9785,7 +9764,8 @@
 
   .recipe-comparison__table td:last-child {
     font-weight: var(--weight-semibold);
-    color: var(--text-accent);
+    /* FW-13 (S07-B-18): la «Proposta» è il su misura (salvia), non l'Originale. */
+    color: var(--status-recommended-fg);
   }
 
   .recipe-comparison__table tbody tr + tr {
@@ -11056,8 +11036,10 @@
     line-height: var(--leading-normal);
     font-weight: var(--weight-semibold);
     flex-shrink: 0;
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
-    color: var(--primary);
+    /* FW-13 (S09-B-16): il tempo totale è un dato, non un avviso. */
+    background: var(--status-neutral-bg);
+    border: var(--border-width-thin) solid var(--status-neutral-border);
+    color: var(--text-default);
   }
 
   .procedure-hero__times {
@@ -14159,16 +14141,17 @@
     height: var(--space-4);
   }
 
+  /* FW-13: severità = ruoli di stato (bloccante / attenzione / neutro). */
   .troubleshooting-severity-icon--critical {
-    color: var(--destructive);
+    color: var(--status-blocking-icon);
   }
 
   .troubleshooting-severity-icon--warning {
-    color: var(--tertiary);
+    color: var(--status-caution-icon);
   }
 
   .troubleshooting-severity-icon--info {
-    color: var(--secondary);
+    color: var(--status-neutral-icon);
   }
 
   /* --- ContextualWarnings (inline in recipe) --- */
@@ -14213,18 +14196,18 @@
   }
 
   .troubleshooting-warnings__item--critical {
-    background: color-mix(in srgb, var(--destructive) 8%, transparent);
-    border-color: color-mix(in srgb, var(--destructive) 20%, transparent);
+    background: var(--status-blocking-bg);
+    border-color: var(--status-blocking-border);
   }
 
   .troubleshooting-warnings__item--warning {
-    background: color-mix(in srgb, var(--tertiary) 8%, transparent);
-    border-color: color-mix(in srgb, var(--tertiary) 20%, transparent);
+    background: var(--status-caution-bg);
+    border-color: var(--status-caution-border);
   }
 
   .troubleshooting-warnings__item--info {
-    background: color-mix(in srgb, var(--secondary) 6%, transparent);
-    border-color: color-mix(in srgb, var(--secondary) 12%, transparent);
+    background: var(--status-neutral-bg);
+    border-color: var(--status-neutral-border);
   }
 
   .troubleshooting-warnings__item-row {
@@ -14333,8 +14316,8 @@
   }
 
   .troubleshooting-guide__title-icon {
-    width: var(--font-size-3xl);
-    height: var(--font-size-3xl);
+    width: var(--space-4-5);
+    height: var(--space-4-5);
     color: var(--primary);
   }
 
@@ -14355,8 +14338,8 @@
   }
 
   .troubleshooting-guide__search-icon {
-    width: var(--font-size-xl);
-    height: var(--font-size-xl);
+    width: var(--space-3-5);
+    height: var(--space-3-5);
     color: var(--muted-foreground);
     flex-shrink: 0;
   }
@@ -14402,7 +14385,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2-5);
-    padding: var(--font-size-xl) var(--space-4);
+    padding: var(--space-3-5) var(--space-4); /* FW-13: spazio, non font-size */
     background: transparent;
     border: none;
     cursor: pointer;
@@ -14411,7 +14394,7 @@
   }
 
   .troubleshooting-card__toggle:active {
-    transform: scale(0.95);
+    transform: scale(var(--press-scale-surface));
   }
 
   .troubleshooting-card__toggle-body {
@@ -15983,12 +15966,12 @@
     line-height: var(--leading-compact);
   }
 
+  /* FW-13 (S03-B-19, D-019): sono istruzioni, non eyebrow. Frase normale
+     a 12 px, niente maiuscolo spaziato. */
   .style-detail-param-row__sub {
-    font-size: var(--font-size-2xs);
+    font-size: var(--font-size-sm);
     color: var(--text-muted);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    line-height: var(--leading-display);
+    line-height: var(--leading-normal);
   }
 
   /* ── Match reasons (VPL-C3) ── */
@@ -16036,7 +16019,12 @@
   }
 
   .style-detail-match__row[data-warning="true"] .style-detail-match__icon {
-    color: var(--text-warning);
+    color: var(--status-caution-icon);
+  }
+
+  /* FW-13 (S03-B-22): condizione da verificare, nessun giudizio. */
+  .style-detail-match__row[data-condition="true"] .style-detail-match__icon {
+    color: var(--status-neutral-icon);
   }
 
   /* ── CTA — Genera ricetta ── */
@@ -16910,7 +16898,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-2xl); /* FW-13: ≥ 14 px anche a 390 px */
     font-weight: var(--weight-semibold);
   }
 
@@ -17140,6 +17128,7 @@
   }
 
   .cooking-mode-step__long-desc {
+    font-size: var(--font-size-2xl); /* FW-13: ≥ 14 px anche a 390 px */
     line-height: var(--leading-reading);
     color: var(--text-muted);
   }
@@ -17162,6 +17151,7 @@
   }
 
   .cooking-mode-step__tip-text {
+    font-size: var(--font-size-2xl); /* FW-13: ≥ 14 px anche a 390 px */
     color: var(--text-default);
   }
 
@@ -17175,8 +17165,9 @@
   }
 
   .cooking-mode-phase--done {
-    background: color-mix(in srgb, var(--recipe-success) 12%, var(--surface-container-low));
-    border-color: color-mix(in srgb, var(--recipe-success) 35%, transparent);
+    /* FW-13: fase finita = positivo. */
+    background: var(--status-positive-bg);
+    border-color: var(--status-positive-border);
   }
 
   .cooking-mode-phase__head {
@@ -17191,7 +17182,7 @@
   }
 
   .cooking-mode-phase--done .cooking-mode-phase__icon {
-    color: var(--recipe-success);
+    color: var(--status-positive-icon);
   }
 
   .cooking-mode-phase__body {
@@ -17200,14 +17191,14 @@
   }
 
   .cooking-mode-phase__value {
-    font-size: var(--font-size-3xl);
+    font-size: var(--cooking-countdown-size);
     font-weight: var(--weight-bold);
     line-height: var(--leading-heading);
     color: var(--text-default);
   }
 
   .cooking-mode-phase--done .cooking-mode-phase__value {
-    color: var(--recipe-success);
+    color: var(--status-positive-fg);
   }
 
   .cooking-mode-phase__meta {
@@ -17223,9 +17214,12 @@
     padding-block: var(--space-1);
     border-radius: var(--radius-full);
     flex-shrink: 0;
-    background: color-mix(in srgb, var(--primary) 12%, transparent);
-    color: var(--snackbar-action);
-    font-size: var(--font-size-sm);
+    /* FW-13 (S10-A-10/B-13): era --snackbar-action (token invertito, 1,5:1).
+       Fondo pieno sopra la fase già tinta: positivo ≥ 6:1 nei due temi. */
+    background: var(--container-card);
+    border: var(--border-width-thin) solid var(--status-positive-border);
+    color: var(--status-positive-fg);
+    font-size: var(--font-size-md);
     font-weight: var(--weight-semibold);
   }
 
@@ -17369,6 +17363,27 @@
 
   .cook-actions[hidden] { display: none; }
 
+  /* FW-13 (S01-A-10/B-14): accanto al profilo, a un passo dal suo bordo. */
+  .cook-actions {
+    transition: right var(--duration-normal) var(--ease-standard);
+  }
+
+  .cook-actions--beside-profile {
+    right: calc(var(--space-4) + var(--shell-action-size) + var(--space-2));
+  }
+
+  .cook-actions--beside-profile.cook-actions--compact {
+    right: calc(var(--space-4) + var(--shell-action-size-compact) + var(--space-2));
+  }
+
+  .cook-widget {
+    height: var(--shell-action-size);
+  }
+
+  .cook-widget--compact {
+    height: var(--shell-action-size-compact);
+  }
+
   .cook-actions__recipe {
     display: flex;
     align-items: center;
@@ -17501,9 +17516,10 @@
   /* ═══ COMPONENT: dough-mascot (DoughBlob) ═══
    * 5-layer expressive blob mascot. Colors/opacities/edge/static-radius are
    * runtime-dynamic (depend on `variant`/`energy`/`size`) and arrive as inline
-   * custom properties from dough-mascot.tsx: --mascot-size, --blob-glow,
-   * --blob-body(-opacity), --blob-accent(-opacity), --blob-core(-opacity),
-   * --blob-edge, --blob-satellite(-opacity), --static-radius-main/-accent/-highlight.
+   * custom properties from dough-mascot.tsx: --mascot-size,
+   * --blob-body-opacity, --blob-accent-opacity, --blob-core-opacity,
+   * --blob-satellite-opacity, --static-radius-main/-accent/-highlight.
+   * Colors are chosen per variant below (--mascot-*), not inline.
    * Layer size RATIOS (0.82/0.58/0.62/0.3/0.28/0.1) and the -20%/-25% glow inset
    * are unitless/percentage — not flagged as hard-written, kept as calc() ratios
    * of --mascot-size (one-off decorative geometry, no scale token fits, same
@@ -17514,17 +17530,45 @@
    * and the non-animated base geometry.
    */
 
+  /* FW-13 (S10-B-19): i layer leggono variabili locali --mascot-*, scelte qui
+     per variante. Prima il TSX scriveva inline `--blob-body: var(--blob-body)`:
+     una variabile che rimanda a se stessa è ciclica, quindi non valida, e la
+     mascotte «dough» restava senza sfondo. */
   .dough-mascot {
     position: relative;
     width: var(--mascot-size);
     height: var(--mascot-size);
+    --mascot-glow: var(--blob-glow);
+    --mascot-body: var(--blob-body);
+    --mascot-accent: var(--blob-accent);
+    --mascot-core: var(--blob-core);
+    --mascot-edge: var(--blob-edge);
+    --mascot-satellite: var(--blob-satellite);
+  }
+
+  .dough-mascot--forge {
+    --mascot-glow: var(--blob-glow-forge);
+    --mascot-body: var(--blob-body-forge);
+    --mascot-accent: var(--blob-accent-forge);
+    --mascot-core: var(--blob-core-forge);
+    --mascot-edge: var(--blob-edge-forge);
+    --mascot-satellite: var(--blob-satellite-forge);
+  }
+
+  .dough-mascot--neural {
+    --mascot-glow: var(--blob-glow-neural);
+    --mascot-body: var(--blob-body-neural);
+    --mascot-accent: var(--blob-accent-neural);
+    --mascot-core: var(--blob-core-neural);
+    --mascot-edge: var(--blob-edge-neural);
+    --mascot-satellite: var(--blob-satellite-neural);
   }
 
   /* Layer 0: ambient glow */
   .dough-mascot__glow {
     position: absolute;
     inset: -20%;
-    background: var(--blob-glow);
+    background: var(--mascot-glow);
     border-radius: var(--radius-full);
     filter: blur(var(--blur-blob-glow));
     pointer-events: none;
@@ -17545,7 +17589,7 @@
     height: calc(var(--mascot-size) * 0.82);
     margin-top: calc(var(--mascot-size) * 0.82 / -2);
     margin-left: calc(var(--mascot-size) * 0.82 / -2);
-    background: var(--blob-body);
+    background: var(--mascot-body);
     opacity: var(--blob-body-opacity);
     border-radius: var(--static-radius-main);
     will-change: border-radius, transform;
@@ -17560,7 +17604,7 @@
     height: calc(var(--mascot-size) * 0.58);
     margin-top: calc(var(--mascot-size) * 0.58 / -2);
     margin-left: calc(var(--mascot-size) * 0.58 / -2);
-    background: var(--blob-accent);
+    background: var(--mascot-accent);
     opacity: var(--blob-accent-opacity);
     border-radius: var(--static-radius-accent);
     will-change: border-radius, transform;
@@ -17583,7 +17627,7 @@
     height: calc(var(--mascot-size) * 0.3);
     margin-top: calc(var(--mascot-size) * 0.3 / -2);
     margin-left: calc(var(--mascot-size) * 0.3 / -2);
-    background: var(--blob-core);
+    background: var(--mascot-core);
     opacity: var(--blob-core-opacity);
     border-radius: var(--static-radius-highlight);
     will-change: border-radius, transform;
@@ -17606,7 +17650,7 @@
     height: calc(var(--mascot-size) * 0.82 + var(--space-1));
     margin-top: calc((var(--mascot-size) * 0.82 + var(--space-1)) / -2);
     margin-left: calc((var(--mascot-size) * 0.82 + var(--space-1)) / -2);
-    border: var(--blob-edge);
+    border: var(--mascot-edge);
     border-radius: var(--static-radius-main);
     will-change: border-radius, transform;
   }
@@ -17616,7 +17660,7 @@
     position: absolute;
     width: calc(var(--mascot-size) * 0.1);
     height: calc(var(--mascot-size) * 0.1);
-    background: var(--blob-satellite);
+    background: var(--mascot-satellite);
     opacity: var(--blob-satellite-opacity);
   }
 
@@ -17775,7 +17819,7 @@
 
   /* Edizioni dedicate: «per <partner>» accanto al nome (co-branding). */
   .app-shell-brand__partner {
-    align-self: flex-end;
+    align-self: baseline; /* FW-13 (S01-A-10): sulla linea di base del nome */
     color: var(--text-muted);
   }
 
@@ -18144,6 +18188,21 @@
 
   .app-shell-profile--scrolled {
     background: var(--glass-fallback-bg, color-mix(in srgb, var(--container-page) 72%, transparent));
+  }
+
+  /* FW-13 (S01-A-10/B-14): misura e raggio del profilo da token, non da
+     motion.animate; cambiano con lo scroll per transizione CSS. */
+  .app-shell-profile {
+    width: var(--shell-action-size);
+    height: var(--shell-action-size);
+    border-radius: var(--radius-lg);
+    transition: width var(--duration-normal) var(--ease-standard), height var(--duration-normal) var(--ease-standard), border-radius var(--duration-normal) var(--ease-standard), background-color var(--duration-normal) var(--ease-standard);
+  }
+
+  .app-shell-profile--scrolled {
+    width: var(--shell-action-size-compact);
+    height: var(--shell-action-size-compact);
+    border-radius: var(--radius-ml);
   }
 
   .app-shell-profile[aria-current="page"] {
@@ -20462,7 +20521,9 @@
 
   /* ═══ DS COMPONENT: not-found.tsx ═══ */
   .notfound-shell {
-    min-height: var(--dimension-viewport-height-full);
+    /* FW-13 (S01-B-14): la shell aggiunge già il padding del dock, niente
+       scroll superfluo. */
+    min-height: calc(100dvh - var(--space-20));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -20476,6 +20537,8 @@
   }
 
   .notfound-num {
+    display: block;
+    font-size: var(--font-size-6-5xl); /* FW-13 (S01-B-14): non è un numero di passo */
     font-weight: var(--weight-bold);
     color: var(--text-accent);
   }
@@ -21068,11 +21131,6 @@ html {
 
 [data-theme="editorial-fire"] [data-page="learn"] .learn-path__copy {
   color: var(--text-muted);
-}
-
-[data-theme="editorial-fire"] [data-page="learn"] .learn-path__kicker {
-  color: var(--primary);
-  border-color: var(--container-border-subtle);
 }
 
 [data-theme="editorial-fire"] [data-page="learn"] .learn-path__cta {
