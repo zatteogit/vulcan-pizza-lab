@@ -970,7 +970,8 @@ function TimeSlotPicker({
       >
         {slots.map((slot) => {
           const active = selectedTimeSlot === slot.id;
-          const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
+          // D-036 (FW-20): «Consigliato» resta visibile anche dopo una scelta.
+          const suggested = slot.id === suggestedSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
           const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);
@@ -1036,7 +1037,8 @@ function TimeSlotPicker({
       <div className={compact ? "needs-slot-grid needs-slot-grid--compact" : "needs-slot-grid"}>
         {slots.map((slot) => {
           const active = selectedTimeSlot === slot.id;
-          const suggested = slot.id === suggestedSlot && !selectedTimeSlot;
+          // D-036 (FW-20): «Consigliato» resta visibile anche dopo una scelta.
+          const suggested = slot.id === suggestedSlot;
           const Icon = TIME_ICONS[slot.id] || Moon;
           const colors = getTimeColors(slot.id);
           const { label: displayLabel, sublabel: displaySublabel } = timeSlotText(slot, cms, bcp47);

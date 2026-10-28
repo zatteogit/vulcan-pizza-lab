@@ -44,9 +44,11 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  19 → FW-01: testi del registro della scienza, thickness factor, prefermenti
  *       senza dati «da verificare» mostrati come fatti, caratteristiche senza
  *       promesse di salute.
+ *  20 → FW-20: avviso del forno in Crea (D-038) e sottotitolo degli stili
+ *       senza «filtri in alto».
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 19;
+export const LOCALE_BUNDLE_REV = 20;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

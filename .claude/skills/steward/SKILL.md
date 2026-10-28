@@ -47,4 +47,5 @@ Il merge in `main` pubblica il Worker di produzione. Si unisce solo con il via d
 
 - Quando serve una decisione di Matteo, chiedila con domande a scelta, l'opzione consigliata per prima.
 - Le decisioni aperte sono elencate nel §6 di `docs/handoff-vulcan-2026-10-23.md`.
+- Una PR che tocca un comportamento legato a una D-0xx la cita nella descrizione; se la rovescia, aggiorna `src/app/domain/decision-guards.test.ts` e registra una nuova D-0xx in `docs/autorialita.md` (FW-20, §7 Manutenzione). Un test di guardia rosso non si «sistema» cambiando il test senza la decisione.
 - Annotazioni del debug overlay: segui la procedura «risolvi i commenti» di `CLAUDE.md`. Segna `resolved: true` con `updatedAt` nuovo; non svuotare il registro.

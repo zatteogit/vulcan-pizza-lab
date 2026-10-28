@@ -45,6 +45,8 @@ import { RecipeSetupPanel } from "../features/recipe/recipe-setup-panel";
 import { RecipeStatStrip } from "../features/recipe/recipe-stat-strip";
 import { RecipeView } from "../features/recipe/recipe-view";
 import { RecommendedStyles,STYLE_PHOTOS } from "../features/recipe/recommended-styles";
+import { OvenFirstNotice } from "../features/recipe/oven-first-notice";
+import { createEntryTime } from "../domain/create-entry";
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { type SettingsTab, UserNeeds } from "../features/recipe/user-needs";
 /* VPL-068: ProgressPill/MobileProgressBar removed — wizard is 3-step flow */
@@ -308,13 +310,16 @@ function resolveCreateDraft(
   profileConstraints: UserConstraints,
   styles: Record<string, PizzaStyle>,
 ): ResolvedCreateDraft {
+  /* D-036 (FW-20): senza bozza si entra col momento consigliato, non con
+     «Nessuna preferenza» (che resta sceglibile nel chip). */
+  const entry = createEntryTime(Date.now());
   const fallback: ResolvedCreateDraft = {
     step: "styles",
     selectedStyle: null,
-    selectedTimeSlot: NO_PREFERENCE_SLOT.id,
-    selectedTimeMeta: null,
+    selectedTimeSlot: entry?.slotId ?? NO_PREFERENCE_SLOT.id,
+    selectedTimeMeta: entry ? { selectedAt: entry.selectedAt, hours: entry.hours, targetAt: entry.targetAt } : null,
     styleSettingsPanel: null,
-    constraints: { ...profileConstraints, available_hours: 0 },
+    constraints: { ...profileConstraints, available_hours: entry?.hours ?? 0 },
     recipeInitial: null,
   };
   const draft = readCreateDraft();
@@ -1208,6 +1213,14 @@ export function HomePage() {
                     </CtaButton>
                   </div>
                 </div>
+                {/* D-038 (FW-20): chiede solo il forno, finché non è scelto. */}
+                {!sourceStyle && (
+                  <OvenFirstNotice
+                    constraints={constraints}
+                    onChooseOven={() => setStyleSettingsPanel("cucina")}
+                    onClosed={() => requestAnimationFrame(() => focusStep("styles"))}
+                  />
+                )}
                 {sourceStyle && (
                   <section className="home-onboarding">
                     <p className="type-label">{tpl(cms.ui.createSourceTitle, {style: sourceStyle.name})}</p>

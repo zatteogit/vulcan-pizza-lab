@@ -292,8 +292,13 @@ export const ES_LOCALE: CmsContent = {
     title_line2: "próxima pizza.",
     subtitle:
       "Elige cuándo quieres servirla.",
+    /* FW-20 · D-038: l'avviso di Crea chiede solo il forno. */
+    onboardingEyebrow: "¿Primera vez aquí?",
+    onboardingBody:
+      "Las sugerencias parten de este horno: {oven}, {temp}. Si el tuyo es distinto, elígelo: es lo que más cambia la receta.",
+    onboardingCta: "Elige tu horno",
     onboardingProfileCta: "Configura toda la cocina",
-    onboardingDismiss: "Entendido",
+    onboardingDismiss: "Así está bien",
   },
   steps: {
     context: {
@@ -309,7 +314,7 @@ export const ES_LOCALE: CmsContent = {
     styles: {
       number: "03 \u2014 Estilo",
       title: "Elige tu estilo",
-      subtitle: "Propuestas según los filtros de arriba.",
+      subtitle: "Propuestas para tu cocina y tu tiempo.",
     },
   },
   sections: {
@@ -456,9 +461,10 @@ export const ES_LOCALE: CmsContent = {
       subtitle: "se cumplen los requisitos de la receta",
     },
     good: { label: "Con condiciones", subtitle: "sigue los cambios y comprueba lo necesario" },
-    challenging: {
-      label: "Desafiantes",
-      subtitle: "para los atrevidos",
+    /* FW-20 · D-032: le fritte in una sezione a parte dei consigli. */
+    fried: {
+      label: "Fritas en olla",
+      subtitle: "sin horno: masa frita en aceite",
     },
     not_feasible: {
       label: "No factibles así",
