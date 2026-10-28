@@ -357,7 +357,10 @@ fra 2 h non fattibile). La foto della tonda è per ora quella della fritta chius
   di cottura professionale (180–300 s, senza fonte).
 - **Petra 3:** il dato `w_declared: false` c'è, ma la UI mostra ancora la W come
   se fosse di scheda. Serve un'etichetta «stima» (stringa CMS in 7 lingue).
-- Lo slot «Nessuna preferenza» vale ancora 24 h fisse.
+- Lo slot «Nessuna preferenza» non vale più 24 h fisse: ha `hours: 0` e
+  `meal_deadline: false` (D-010), quindi lo stile usa i suoi tempi ideali, anche
+  di più giorni. Dal 28/10/2026 (FW-16, S05-A-08) l'etichetta lo dice: «tempi
+  ideali dello stile, anche più giorni».
 - `requires_wood_oven`: deciso con D-020 (avviso, non blocco).
 
 ## C-1 · Condimenti predefiniti che non portavano a nessuna ricetta (24/10/2026)

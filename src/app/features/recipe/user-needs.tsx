@@ -228,10 +228,14 @@ function fallbackWeather(): WeatherData {
   return { city: "", temp: DEFAULT_KITCHEN_TEMP, kitchenTemp: DEFAULT_KITCHEN_TEMP };
 }
 
+/* FW-16 (D-N, S05-B-09): posizione e meteo partono solo da un gesto esplicito
+ * («Stima dal meteo della tua zona»), con i servizi nominati accanto; il
+ * risultato è una proposta che l'utente applica, mai un cambio silenzioso. */
 function useLocationWeather(enabled: boolean) {
   const [data, setData] = useState<WeatherData>(fallbackWeather);
   const [loading, setLoading] = useState(false);
   const [available, setAvailable] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [activated, setActivated] = useState(false);
 
   // Latch the first use: closing/reopening the drawer does not ask again or
@@ -244,6 +248,7 @@ function useLocationWeather(enabled: boolean) {
     if (!activated) return;
     let cancelled = false;
     setLoading(true);
+    setFailed(false);
 
     /* Check for saved location from Profile first */
     let savedLat: number | null = null;
@@ -296,6 +301,7 @@ function useLocationWeather(enabled: boolean) {
         }
       } catch {
         /* Weather API failed — if we have a saved city, still show it */
+        if (!cancelled) setFailed(true);
         if (!cancelled && city) {
           setData({ city, temp: DEFAULT_KITCHEN_TEMP, kitchenTemp: DEFAULT_KITCHEN_TEMP });
         }
@@ -314,18 +320,19 @@ function useLocationWeather(enabled: boolean) {
         },
         () => {
           /* Geolocation denied/unavailable — keep fallback */
-          if (!cancelled) setLoading(false);
+          if (!cancelled) { setLoading(false); setFailed(true); }
         },
         { timeout: 8000, maximumAge: 300000 },
       );
     } else {
       setLoading(false);
+      setFailed(true);
     }
 
     return () => { cancelled = true; };
   }, [activated]);
 
-  return { data, loading, available };
+  return { data, loading, available, failed };
 }
 
 const OVEN_STORAGE_KEY = "vulcan_oven_pref";
@@ -560,7 +567,8 @@ export function UserNeeds({
   const activeTab =
     controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
   const setActiveTab = onActiveTabChange ?? setInternalActiveTab;
-  const weather = useLocationWeather(activeTab === "cucina");
+  const [weatherRequested, setWeatherRequested] = useState(false);
+  const weather = useLocationWeather(weatherRequested);
 
   const [kitchenTempManual, setKitchenTempManual] =
     useState(false);
@@ -568,10 +576,9 @@ export function UserNeeds({
     constraints.kitchen_temp_c ?? weather.data?.kitchenTemp ?? DEFAULT_KITCHEN_TEMP,
   );
 
-  useEffect(() => {
-    if (weather.available && !kitchenTempManual)
-      setKitchenTemp(weather.data.kitchenTemp);
-  }, [weather.data, weather.available, kitchenTempManual]);
+  /* FW-16 (D-N): la stima dal meteo si propone, non si applica da sola. */
+  const weatherProposal =
+    weather.available && weather.data.kitchenTemp !== kitchenTemp ? weather.data : null;
 
   useEffect(() => {
     update("kitchen_temp_c", kitchenTemp);
@@ -740,6 +747,36 @@ export function UserNeeds({
                         >
                           <HelpCircle size={16} className={showTempTip ? "needs-kitchen-temp__help-icon needs-kitchen-temp__help-icon--active" : "needs-kitchen-temp__help-icon"} />
                         </button>
+                      </div>
+                      {/* FW-16 (D-N): meteo solo su richiesta, con i servizi nominati. */}
+                      <div className="needs-weather-request" data-region="weather-request">
+                        {!weatherRequested ? (
+                          <button
+                            type="button"
+                            className="needs-weather-request__action"
+                            onClick={() => setWeatherRequested(true)}
+                          >
+                            {uiMessage("needs.weather.use")}
+                          </button>
+                        ) : weather.loading ? (
+                          <p className="needs-weather-request__status" role="status">{uiMessage("needs.weather.loading")}</p>
+                        ) : weatherProposal ? (
+                          <p className="needs-weather-request__status" role="status">
+                            {uiMessage("needs.weather.proposal", [fmt.celsius(weatherProposal.kitchenTemp), fmt.celsius(weatherProposal.temp)])}
+                            <button
+                              type="button"
+                              className="needs-weather-request__action"
+                              onClick={() => { setKitchenTempManual(false); setKitchenTemp(weatherProposal.kitchenTemp); }}
+                            >
+                              {uiMessage("needs.weather.apply")}
+                            </button>
+                          </p>
+                        ) : weather.failed ? (
+                          <p className="needs-weather-request__status" role="status">{uiMessage("needs.weather.failed")}</p>
+                        ) : null}
+                        <p className="needs-weather-request__note">
+                          {weatherRequested && weather.available ? uiMessage("needs.weather.estimate") : uiMessage("needs.weather.privacy")}
+                        </p>
                       </div>
                       <AnimatePresence>
                         {showTempTip && (

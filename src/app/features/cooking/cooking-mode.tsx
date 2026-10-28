@@ -1,4 +1,6 @@
 import { KeepScreenAwake } from "./keep-screen-awake";
+import { CookRemindersRow } from "./cook-reminders-row";
+import { RecipeFeedbackForm } from "../recipe/recipe-feedback";
 /* ═══ COOKING MODE — vista della Pizzata attiva (v2, giugno 2026) ═══
  * Ripensata dopo feedback: le fasi durano ore, quindi NON è un wizard da
  * tenere aperto. È la vista full-screen di una sessione persistente
@@ -320,6 +322,7 @@ export function CookingMode() {
       <div className="cooking-mode-body">
         <div className="cooking-mode-body__inner">
           {!finished && <KeepScreenAwake />}
+          {!finished && <CookRemindersRow />}
           <AnimatePresence mode="wait">
             {finished ? (
               <motion.div
@@ -347,6 +350,14 @@ export function CookingMode() {
                 <p className="cooking-mode-finished__body">
                   {t(cms.cooking.doneBody, { style: session.styleName })}
                 </p>
+                {/* FW-16 (D-M, S10-B-07): com'è venuta? Prima di chiudere la pizzata. */}
+                {session.feedback && (
+                  <RecipeFeedbackForm
+                    snapshot={session.feedback.snapshot}
+                    predicted={session.feedback.predicted}
+                    question={cms.feedback.cookedQuestion}
+                  />
+                )}
                 <CtaButton
                   onClick={endSession}
                   className="cooking-mode-finished__cta"

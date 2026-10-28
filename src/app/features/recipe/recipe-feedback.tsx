@@ -5,7 +5,6 @@
 
 import {
 Check,
-Send,
 Sparkles,
 Star,
 ThumbsDown,
@@ -16,23 +15,27 @@ import { motion } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
 import { useCallback,useState } from "react";
 import { useCms } from "../cms/cms-context";
+import { t } from "../cms/i18n";
 import {
 type PredictedScores,
 type RecipeFeedback,
 type RecipeIssueId,
 type RecipeSnapshot,
-RECIPE_ISSUES,
-generateFeedbackId,
-saveFeedback,
+  RECIPE_ISSUES,
+  deriveFeedbackCorrections,
+  generateFeedbackId,
+  loadFeedback,
+  saveFeedback,
 } from "./feedback-store";
-import type { GeneratedRecipe } from "../../domain/pizza-engine";
 
 interface RecipeFeedbackFormProps {
-  recipe: GeneratedRecipe;
-  skillLevel: number;
+  snapshot: RecipeSnapshot;
+  predicted: PredictedScores;
+  /** Domanda iniziale (alla fine della pizzata: «Com'è venuta la pizza?»). */
+  question?: string;
 }
 
-export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormProps) {
+export function RecipeFeedbackForm({ snapshot, predicted, question }: RecipeFeedbackFormProps) {
   const { cms } = useCms();
   const [submitted, setSubmitted] = useState(false);
 
@@ -58,33 +61,6 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
   }, []);
 
   const handleSubmitBasic = useCallback(() => {
-    const snapshot: RecipeSnapshot = {
-      styleId: recipe.style.id,
-      styleName: recipe.style.name,
-      hydration: recipe.hydration_pct,
-      flourW: recipe.flour_w,
-      flourPL: recipe.flour_pl,
-      fermentHours: recipe.fermentation_hours,
-      fermentTemp: recipe.fermentation_temp_c,
-      ovenTemp: recipe.oven_temp_c,
-      ovenType: recipe.style.baking.oven_type_required,
-      yeastType: recipe.yeast_type,
-      yeastPct: recipe.science.yeast_baker_pct,
-      skillLevel: skillLevel as 1 | 2 | 3 | 4,
-      hasPreFerment: recipe.has_pre_ferment,
-      compensationCount: recipe.science.compensations.length,
-      doughBalls: recipe.dough_balls,
-    };
-
-    const predicted: PredictedScores = {
-      authenticity: recipe.scores.authenticity,
-      feasibility: recipe.scores.feasibility,
-      digestibility: recipe.scores.digestibility,
-      sustainability: recipe.scores.sustainability,
-      experimentation: recipe.scores.experimentation,
-      composite: recipe.scores.composite,
-    };
-
     const entry: RecipeFeedback = {
       id: generateFeedbackId(),
       timestamp: new Date().toISOString(),
@@ -106,36 +82,9 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
 
     saveFeedback(entry);
     setSubmitted(true);
-  }, [recipe, skillLevel, success]);
+  }, [snapshot, predicted, success]);
 
   const handleSubmit = useCallback(() => {
-    const snapshot: RecipeSnapshot = {
-      styleId: recipe.style.id,
-      styleName: recipe.style.name,
-      hydration: recipe.hydration_pct,
-      flourW: recipe.flour_w,
-      flourPL: recipe.flour_pl,
-      fermentHours: recipe.fermentation_hours,
-      fermentTemp: recipe.fermentation_temp_c,
-      ovenTemp: recipe.oven_temp_c,
-      ovenType: recipe.style.baking.oven_type_required,
-      yeastType: recipe.yeast_type,
-      yeastPct: recipe.science.yeast_baker_pct,
-      skillLevel: skillLevel as 1 | 2 | 3 | 4,
-      hasPreFerment: recipe.has_pre_ferment,
-      compensationCount: recipe.science.compensations.length,
-      doughBalls: recipe.dough_balls,
-    };
-
-    const predicted: PredictedScores = {
-      authenticity: recipe.scores.authenticity,
-      feasibility: recipe.scores.feasibility,
-      digestibility: recipe.scores.digestibility,
-      sustainability: recipe.scores.sustainability,
-      experimentation: recipe.scores.experimentation,
-      composite: recipe.scores.composite,
-    };
-
     const entry: RecipeFeedback = {
       id: generateFeedbackId(),
       timestamp: new Date().toISOString(),
@@ -157,7 +106,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
 
     saveFeedback(entry);
     setSubmitted(true);
-  }, [recipe, skillLevel, success, overall, taste, texture, difficulty, authFelt, digFelt, issues, notes]);
+  }, [snapshot, predicted, success, overall, taste, texture, difficulty, authFelt, digFelt, issues, notes]);
 
   if (submitted) {
     return (
@@ -177,17 +126,11 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
           {cms.feedback.savedBody}
         </span>
 
-        {/* VPL-C11: chiusura di valore — cosa correggerà l'engine la prossima
-            volta, in base ai problemi segnalati (correzioni deduplicate). */}
+        {/* FW-16 (S10-B-08): consigli solo quando le segnalazioni ripetute
+            dello stesso problema li giustificano (deriveFeedbackCorrections),
+            e come cose da provare, non come correzioni automatiche. */}
         {(() => {
-          const corrections = Array.from(
-            new Set(
-              issues.flatMap((id) => {
-                const c = RECIPE_ISSUES.find((i) => i.id === id)?.correction;
-                return c ? [c as string] : [];
-              }),
-            ),
-          );
+          const corrections = deriveFeedbackCorrections(snapshot.styleId, loadFeedback())?.notes ?? [];
           if (corrections.length === 0) return null;
           return (
             <div className="recipe-feedback__corrections">
@@ -216,7 +159,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
       <div className="recipe-feedback recipe-feedback--prompt">
         <div className="recipe-feedback__intro">
           <div className="recipe-feedback__intro-title">
-            {cms.feedback.triedQuestion}
+            {question ?? cms.feedback.triedQuestion}
           </div>
           <div className="recipe-feedback__intro-subtitle type-body">
             {cms.feedback.triedSubtitle}
@@ -350,7 +293,7 @@ export function RecipeFeedbackForm({ recipe, skillLevel }: RecipeFeedbackFormPro
           onClick={handleSubmit}
           disabled={overall === null}
         >
-          <Send className="recipe-feedback__submit-icon" />
+          <Check className="recipe-feedback__submit-icon" aria-hidden="true" />
           {cms.feedback.submit}
         </motion.button>
       </div>
@@ -394,16 +337,21 @@ function StarRating({
   hint?: string;
   required?: boolean;
 }) {
+  const { cms } = useCms();
   return (
     <div className="recipe-feedback__rating">
       <FieldLabel label={label} optional={!required} hint={hint} />
-      <div className="recipe-feedback__star-row">
+      {/* FW-16 (S10-A-12): gruppo di scelta con etichette tradotte. */}
+      <div className="recipe-feedback__star-row" role="radiogroup" aria-label={label}>
         {[1, 2, 3, 4, 5].map((n) => (
           <motion.button
             key={n}
+            type="button"
+            role="radio"
+            aria-checked={value === n}
             className="recipe-feedback__star-btn"
             onClick={() => onChange(value === n ? null : n)}
-            aria-label={`${n} ${n === 1 ? "stella" : "stelle"}`}
+            aria-label={t(cms.feedback.starsLabel, { n })}
           >
             <Star
               className={`recipe-feedback__star-icon${value !== null && n <= value ? " recipe-feedback__star-icon--filled" : ""}`}

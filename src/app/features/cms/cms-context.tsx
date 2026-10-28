@@ -653,8 +653,6 @@ interface CmsProfile {
   toolPeelMetalDesc: string;
   toolPizzaScreen: string;
   toolPizzaScreenDesc: string;
-  toolProofingBoxes: string;
-  toolProofingBoxesDesc: string;
   toolBannetons: string;
   toolBannetonsDesc: string;
   // Special flours
@@ -676,6 +674,24 @@ interface CmsProfile {
   specialFloursOnboarding: string;
   locationRemove: string;
   ftuSkipMessage: string;
+  // FW-16 — effetto delle impostazioni
+  skillEffectSummary: string;
+  skillEffectRule: string;
+  skillEffectHydration: string;
+  skillEffectNoCeiling: string;
+  skillEffectPreFerment: string;
+  skillEffectNoPreFerment: string;
+  skillEffectLine: string;
+  dietCheckedTitle: string;
+  dietReminderTitle: string;
+  dietReminderWhy: string;
+  dietGlutenNote: string;
+  dietGlutenAllergenHint: string;
+  dietLactoseAllergenHint: string;
+  dietAllergenAdd: string;
+  pantryProfileEmpty: string;
+  pantryProfileEdit: string;
+  ftuSourdoughNote: string;
 }
 
 /** Page-level strings for nav, explore, learn, recipe, not-found, search */
@@ -865,6 +881,8 @@ export interface CmsContent {
   timeSlots: Record<string, CmsTimeSlot>;
   ovenPresets: Record<string, CmsOvenPreset>;
   skillLevels: Record<string, CmsSkillLevel>;
+  /** FW-16 — frase «cosa cambia» per ogni impostazione (SettingId). */
+  settingEffects: Record<string, string>;
   families: Record<string, CmsFamily>;
   /** Label for "All families" filter chip */
   allFamiliesLabel: string;
@@ -1155,6 +1173,9 @@ export interface CmsContent {
     issuesLabel: string;
     notesLabel: string;
     submit: string;
+    // FW-16
+    starsLabel: string;
+    cookedQuestion: string;
   };
   yeastLabels: Record<string, string>;
   /** Yeast detail descriptions (secondary line) — keyed by yeast id */
@@ -1494,7 +1515,7 @@ export const CMS_DEFAULTS: CmsContent = {
     slotWeekdayLunch: "{day} a pranzo",
     slotWeekdayDinner: "{day} sera",
     slotNoPreference: "Nessuna preferenza",
-    slotNoPreferenceSub: "ci pensa {brand}",
+    slotNoPreferenceSub: "tempi ideali dello stile, anche più giorni",
     interpretationDisclaimer: "Interpretazione di {brand} da fonti pubbliche: non è la ricetta originale di {who} e non è approvata da {who}.",
     yeastHowToggle: "Come calcoliamo il lievito",
     yeastModelBody: "Si parte da {ref} di lievito fresco sulla farina per {refHours} a {refTemp}. Con {hours} a {temp} il lievito lavora a {speed}× della velocità di riferimento: la dose diventa {pct}.",
@@ -1796,7 +1817,7 @@ export const CMS_DEFAULTS: CmsContent = {
     abortYes: "Sì, interrompi",
     abortNo: "Continua la pizzata",
     minimize: "Riduci — la pizzata continua in background",
-    minimizeHint: "Riduci: la pizzata continua e, con {brand} aperto, ti avvisiamo noi",
+    minimizeHint: "Riduci: la pizzata continua",
     inProgress: "Pizzata in corso",
     done: "Pizza in tavola!",
     finish: "Concludi la pizzata",
@@ -1828,7 +1849,7 @@ export const CMS_DEFAULTS: CmsContent = {
     passivePhaseMeta: "Fase passiva · {duration} · fine {time}",
     activePhaseMeta: "{duration} · fine {time}",
     yourTurn: "tocca a te",
-    passiveCloseHint: "Gli avvisi funzionano finché {brand} resta aperto. Se lo chiudi, potrai riprendere dal punto in cui eri.",
+    passiveCloseHint: "Puoi chiudere questa vista: la pizzata continua. Se chiudi {brand}, riprendi dal punto in cui eri.",
     readyAt: "pronta {eta}",
     widgetStepReadyAt: "{title} · pronta {eta}",
     widgetStepDueIn: "{title} {eta}",
@@ -1957,15 +1978,15 @@ export const CMS_DEFAULTS: CmsContent = {
     inspirationSelected: "Selezionata",
   },
   feedback: {
-    savedTitle: "Feedback salvato — grazie!",
-    savedBody: "I tuoi dati aiutano a calibrare il motore. Puoi analizzarli in DevTools → Engine Lab.",
-    nextTimeTitle: "La prossima volta",
+    savedTitle: "Salvato, grazie!",
+    savedBody: "Resta solo in questo browser: non lo inviamo a nessuno.",
+    nextTimeTitle: "Da provare la prossima volta",
     triedQuestion: "Hai provato questa ricetta?",
-    triedSubtitle: "Il tuo feedback aiuta a calibrare il motore di {brand}.",
+    triedSubtitle: "Dicci com’è andata: lo ricordiamo in questo browser.",
     success: "Riuscita",
     fail: "Non riuscita",
-    detailedPrompt: "Grazie! Ti andrebbe di lasciare un feedback dettagliato?",
-    detailedSubtitle: "Ci aiuterà a calibrare i punteggi di fattibilità e digeribilità per questo stile.",
+    detailedPrompt: "Vuoi aggiungere qualche dettaglio?",
+    detailedSubtitle: "Voti e problemi ti aiutano a ricordare cosa cambiare la prossima volta.",
     detailedTitle: "Feedback dettagliato",
     recipeSuccess: "Ricetta riuscita",
     recipeFail: "Ricetta non riuscita",
@@ -1975,12 +1996,15 @@ export const CMS_DEFAULTS: CmsContent = {
     ratingDifficulty: "Difficoltà",
     ratingDifficultyHint: "1=facile, 5=impossibile",
     ratingAuth: "Quanto sembra autentica",
-    ratingAuthHint: "calibra A-Score",
+    ratingAuthHint: "rispetto allo stile",
     ratingDig: "Quanto è stata digeribile",
-    ratingDigHint: "calibra D-Score",
+    ratingDigHint: "la tua impressione",
     issuesLabel: "Problemi riscontrati",
     notesLabel: "Note",
-    submit: "Invia feedback",
+    submit: "Salva",
+    // FW-16
+    starsLabel: "{n} su 5",
+    cookedQuestion: "Com’è venuta la pizza?",
   },
   yeastLabels: {
     fresh: "Lievito fresco",
@@ -2508,7 +2532,7 @@ export const CMS_DEFAULTS: CmsContent = {
     pantrySubtitle: "Farine e lieviti che hai a disposizione",
     pantryStep: "03 — Dispensa",
     dietTitle: "Preferenze dietetiche",
-    dietSubtitle: "Indica cosa vuoi evitare nella ricetta.",
+    dietSubtitle: "Ti avvisiamo quando una ricetta contiene ciò che eviti.",
     dietStep: "04 — Dieta",
     noDietNote: "Nessuna preferenza dietetica selezionata.",
     prefsTitle: "Lingua e tema",
@@ -2550,9 +2574,9 @@ export const CMS_DEFAULTS: CmsContent = {
     ftuOvenTitle: "Che forno hai?",
     ftuOvenSubtitle: "Il forno definisce gli stili possibili",
     ftuSkillTitle: "Quanta esperienza hai?",
-    ftuSkillSubtitle: "Ti guideremo al livello giusto",
+    ftuSkillSubtitle: "Cambia quanto è facile l’impasto che ti proponiamo. Puoi cambiarlo quando vuoi.",
     ftuPantryTitle: "Cosa hai in dispensa?",
-    ftuPantrySubtitle: "Farine e lieviti disponibili",
+    ftuPantrySubtitle: "Così ti proponiamo ricette con quello che hai già. Se non lo sai, vai avanti.",
     ftuBack: "Indietro",
     ftuNext: "Avanti",
     ftuStart: "Vai a Crea",
@@ -2565,9 +2589,9 @@ export const CMS_DEFAULTS: CmsContent = {
     flourManitoba: "Manitoba",
     flourIntegrale: "Integrale",
     flourSemola: "Semola rimacinata",
-    yeastFresh: "Lievito fresco",
-    yeastDry: "Lievito secco",
-    yeastSourdough: "Lievito madre",
+    yeastFresh: "Lievito di birra fresco",
+    yeastDry: "Lievito di birra secco",
+    yeastSourdough: "Lievito madre (pasta madre)",
     dietGlutenFree: "Senza glutine",
     dietLactoseFree: "Senza lattosio",
     dietVegan: "Vegano",
@@ -2634,8 +2658,6 @@ export const CMS_DEFAULTS: CmsContent = {
     toolPeelMetalDesc: "Per girare e sfornare — sottile e reattiva",
     toolPizzaScreen: "Retina forata",
     toolPizzaScreenDesc: "Alluminio perforato per cottura croccante",
-    toolProofingBoxes: "Cassette per lievitazione",
-    toolProofingBoxesDesc: "Impilabili con coperchio — 30×40 o 40×60 cm",
     toolBannetons: "Cestini lievitazione",
     toolBannetonsDesc: "Per forme tonde, con telo in lino",
     flourFarro: "Farro",
@@ -2654,7 +2676,40 @@ export const CMS_DEFAULTS: CmsContent = {
     ftuDoneProfileNote: "Puoi completare o cambiare le tue preferenze dal Profilo, quando vuoi.",
     specialFloursOnboarding: "Farine speciali (farro, segale, integrali...)",
     locationRemove: "Rimuovi posizione",
-    ftuSkipMessage: "Puoi anche saltare e configurare più tardi.",
+    ftuSkipMessage: "Nessuna scelta? Va bene: premi Avanti.",
+    // FW-16 — effetto delle impostazioni
+    skillEffectSummary: "Cosa cambia per ogni livello",
+    skillEffectRule: "Regola del modello, non legge fisica: il tetto vale sull’acqua che ti proponiamo, sempre dentro l’intervallo dello stile. Gli stili che richiedono un prefermento lo tengono a ogni livello.",
+    skillEffectHydration: "acqua fino al {h}",
+    skillEffectNoCeiling: "nessun tetto all’acqua",
+    skillEffectPreFerment: "anche biga o poolish quando aiutano",
+    skillEffectNoPreFerment: "di solito niente prefermenti",
+    skillEffectLine: "{name}: {hydration}, {preferment}",
+    dietCheckedTitle: "Controlliamo gli ingredienti",
+    dietReminderTitle: "Promemoria: non cambiano la ricetta",
+    dietReminderWhy: "Perché non li misuriamo",
+    dietGlutenNote: "Con «Senza glutine» ogni ricetta risulta non fattibile: {brand} non ha ancora un impasto senza glutine verificato.",
+    dietGlutenAllergenHint: "Se è celiachia o allergia, segna anche «{allergen}» tra gli allergeni: dieta e allergeni sono due controlli diversi.",
+    dietLactoseAllergenHint: "Senza lattosio non vuol dire senza latte: se sei allergico alle proteine del latte, segna anche «{allergen}» tra gli allergeni.",
+    dietAllergenAdd: "Segna «{allergen}»",
+    pantryProfileEmpty: "Nessuna farina o lievito indicato: partiamo da quelli tipici dello stile.",
+    pantryProfileEdit: "Modifica in Crea",
+    ftuSourdoughNote: "Con il lievito madre, nelle lievitazioni lunghe potremo proporti la pasta madre al posto del lievito di birra.",
+  },
+  /** FW-16 — cosa cambia ogni impostazione (use-cases/setting-effects.ts). */
+  settingEffects: {
+    oven: "Cambia la ricetta: decide quali stili sono fattibili, temperatura e tempi di cottura e quanta acqua mettere nell’impasto.",
+    ovenHeat: "Cambia i passi di cottura: preriscaldo, ripiano e rotazioni.",
+    skill: "Cambia la ricetta: decide quanta acqua al massimo ti proponiamo e se ti suggeriamo biga o poolish.",
+    mixer: "Cambia il metodo di impasto: tempi, passaggi e temperatura dell’acqua.",
+    surfaces: "Cambia la cottura: con pietra, acciaio o teglia scegliamo come infornare e quali stili sono fattibili.",
+    tools: "Per ora è un promemoria: non cambia la ricetta.",
+    dietChecked: "Ti avvisiamo, non modifichiamo la ricetta: controlliamo gli ingredienti e, se uno non va, la ricetta risulta non fattibile; quando c’è, ti proponiamo una versione alternativa.",
+    dietReminder: "Il motore non sa misurarli: ti ricordiamo di verificare, ma la ricetta resta uguale.",
+    allergens: "Ti avvisiamo, non modifichiamo la ricetta: segnaliamo gli ingredienti che li contengono, condimenti compresi.",
+    pantry: "Cambia la ricetta: scegliamo il lievito e la forza della farina partendo da quello che hai.",
+    location: "Non cambia la ricetta da sola: in Crea, se lo chiedi, ti proponiamo la temperatura della cucina dal meteo.",
+    pizzaNerd: "Non cambia la ricetta: apre per primi i dettagli tecnici.",
   },
   pages: {
     navCreate: "Crea",
@@ -2713,7 +2768,7 @@ export const CMS_DEFAULTS: CmsContent = {
     exploreFilterFeatured: "In primo piano",
     exploreFilterStyles: "Stili di pizza",
     exploreFilterRecipes: "Ricette iconiche",
-    learnFilterSubtitle: "Guide e spiegazioni sono ora riferite a questo stile.",
+    learnFilterSubtitle: "Le guide qui sotto sono generali e valgono anche per questo stile.",
     learnRemoveFilter: "Rimuovi filtro stile",
     learnOpenGlossary: "Apri il glossario",
     learnPathLabel: "Percorso didattico",

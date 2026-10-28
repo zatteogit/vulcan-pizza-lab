@@ -21,7 +21,7 @@ import { FLEXIBLE_STEP_IDS, useCookSession, type CookSessionStep } from "../cook
 import { resolveStepVisual } from "../cooking/step-visual";
 import type { FlourEntry } from "../../data/flour-database";
 import { GeneratedRecipe, generateTimeSlots, getServingUnit, normalizeDoughBallCount, needsPan, UserConstraints, type PanConfig } from "../../domain/pizza-engine";
-import { RecipeFeedbackForm } from "./recipe-feedback";
+import { feedbackContextFromRecipe } from "./feedback-context";
 import { getRecipesByAuthenticity, getToppingForStyle } from "../../data/topping-library";
 import { ConfirmDialog } from "../../components/ds/index";
 import { motionSpring } from "../../components/ds/motion";
@@ -48,7 +48,6 @@ interface RecipeOutputProps {
   hideContextSummary?: boolean;
   recipeControls?: ReactNode;
   matchSlot?: ReactNode;
-  showFeedback?: boolean;
   selectedToppingConcept?: string | null;
   onSelectTopping?: (conceptId: string) => void;
   onTabChange?: (tab: PagerTabId) => void;
@@ -96,7 +95,6 @@ export function RecipeOutput({
   hideContextSummary = false,
   recipeControls,
   matchSlot,
-  showFeedback = false,
   selectedToppingConcept,
   onSelectTopping,
   onTabChange,
@@ -407,9 +405,9 @@ export function RecipeOutput({
     } else if (conflictingSession) {
       setConfirmReplace(true);
     } else {
-      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps);
+      startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level));
     }
-  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, recipe.verdict.outcome, cookingSteps]);
+  }, [isThisSession, isPersonalized, conflictingSession, openOverlay, startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps]);
 
   React.useEffect(() => {
     const handler = () => handleStartCooking();
@@ -430,8 +428,8 @@ export function RecipeOutput({
     if (recipe.verdict.outcome === "not_feasible") return;
     setConfirmReplace(false);
     setConfirmPersonalize(false);
-    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps);
-  }, [startSession, recipe.style.id, recipe, constraints.oven_type, recipe.verdict.outcome, cookingSteps]);
+    startSession(recipe.style.id, recipeDisplayName(recipe, constraints.oven_type), cookingSteps, feedbackContextFromRecipe(recipe, constraints.skill_level));
+  }, [startSession, recipe.style.id, recipe, constraints.oven_type, constraints.skill_level, recipe.verdict.outcome, cookingSteps]);
 
   const handlePersonalizeBeforeCooking = React.useCallback(() => {
     setConfirmPersonalize(false);
@@ -854,13 +852,8 @@ export function RecipeOutput({
 
       </AnimatePresence>
 
-      {/* ── Feedback form — solo nel tab Ricetta: ripetuto in tutti e tre i
-          tab era rumore (audit fruibilità luglio 2026). ── */}
-      {showFeedback && activeTabView === "ricetta" && (
-        <div className="recipe-output-feedback-wrap">
-          <RecipeFeedbackForm recipe={recipe} skillLevel={constraints.skill_level} />
-        </div>
-      )}
+      {/* FW-16 (D-M): il feedback si chiede alla fine della pizzata
+          (cooking-mode), non più da un form nascosto in fondo alla ricetta. */}
 
     </div>
   );

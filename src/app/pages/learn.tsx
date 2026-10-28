@@ -1,7 +1,8 @@
 /* === LEARN PAGE — ridisegnata (feedback giugno 2026) ===
    Da repository freddo a hub caldo: percorso consigliato per il tuo livello,
    card fotografiche, termine del giorno dal glossario.
-   Deep-link ?style=<id>: pre-filtra contestualmente (invariato). */
+   Deep-link ?style=<id>: mostra solo il banner dello stile; le guide restano
+   generali (FW-16, S11-A-01: nessuna sottopagina filtra per stile). */
 
 import { useMemo } from "react";
 import { t } from "../features/cms/i18n";
@@ -59,7 +60,8 @@ export function LearnPage() {
   const styleParam = searchParams.get("style");
   const activeStyle =
     styleParam && STYLES_DB[styleParam] ? STYLES_DB[styleParam] : null;
-  const linkSearch = activeStyle ? `?style=${activeStyle.id}` : "";
+  /* FW-16 (S11-A-01): le sottopagine non filtrano per stile, quindi il
+     parametro non si propaga e il banner dice che le guide sono generali. */
 
   const skill = loadSkill();
 
@@ -199,7 +201,7 @@ export function LearnPage() {
         >
           <div className="learn-path__label">{pathContextLabel}</div>
           <Link
-            to={theoretical ? `/learn/glossary${linkSearch}` : `/recipe/${path.styleId}?mode=adapted`}
+            to={theoretical ? "/learn/glossary" : `/recipe/${path.styleId}?mode=adapted`}
             className="learn-path__card"
             data-attention="recommended"
           >
@@ -308,7 +310,7 @@ export function LearnPage() {
                   }}
                 >
                   <Link
-                    to={section.to + linkSearch}
+                    to={section.to}
                     className="learn-resources__card"
                     style={{ ["--tone" as any]: section.color }}
                   >
