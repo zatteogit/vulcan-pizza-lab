@@ -115,11 +115,15 @@ function PhaseCountdown({ step, isCurrent }: { step: CookSessionStep; isCurrent:
         </div>
         {phaseDone && isCurrent && (
           <span className="cooking-mode-phase__badge">
-            <BellRing size={12} />
+            <BellRing size={14} aria-hidden="true" />
             {cms.cooking.yourTurn}
           </span>
         )}
       </div>
+      {/* FW-13 (S10-B-13): il cambio di stato si annuncia una volta, non a ogni tick. */}
+      <p role="status" className="sr-only">
+        {phaseDone && isCurrent ? cms.cooking.phaseDone : ""}
+      </p>
       {!notStarted && !phaseDone && (
         <div className="cooking-mode-phase__track">
           <div

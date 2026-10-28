@@ -5,11 +5,14 @@
  *   con `text-transform: uppercase`;
  * - i token da sm a lg hanno un pavimento ≥ 12 px (max(rem, Npx)), così non
  *   scendono sotto con la radice a 14,25 px dei viewport stretti.
+ * - (FW-13) gli elementi di testo corrente (__sub, __desc, __text, __note…)
+ *   non usano `text-transform: uppercase`;
  * Le regole dei temi d'esplorazione ([data-theme]) restano fuori. */
 import { readFileSync } from "node:fs";
 
 const FILES = ["src/styles/theme.css", "src/styles/layout.css"];
 const problems = [];
+const SENTENCE_ELEMENT = /__(sub|desc|description|body|text|note|hint|help|detail|caption)(?![\w-])/;
 
 for (const file of FILES) {
   const css = readFileSync(file, "utf8");
@@ -22,6 +25,14 @@ for (const file of FILES) {
     if (/font-size\s*:[^;]*var\(--font-size-(2xs|xs)\)/.test(body) && !/uppercase/.test(body)) {
       const line = css.slice(0, m.index).split("\n").length;
       problems.push(`${file}:${line} ${selector} — 11 px su testo non maiuscolo (usa --font-size-sm)`);
+    }
+    // FW-13 (S03-B-19): il maiuscolo è per eyebrow ed etichette, non per le
+    // frasi. Gli elementi che portano testo corrente (__sub, __desc, __text,
+    // __note, …) non possono essere maiuscoli: aggirerebbero D-019.
+    const last = selector.split(",").pop().trim();
+    if (/uppercase/.test(body) && SENTENCE_ELEMENT.test(last)) {
+      const line = css.slice(0, m.index).split("\n").length;
+      problems.push(`${file}:${line} ${selector} — frase in maiuscolo (D-019: maiuscolo solo per eyebrow)`);
     }
   }
 }

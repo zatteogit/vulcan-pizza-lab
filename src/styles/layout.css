@@ -237,6 +237,16 @@
 }
 
 
+/* ═══ FW-13 · Toni via data-tone (S11-A-13/B-16, S14-B-19) ═══
+ * Il tono di una card arriva come attributo, non come style={} inline:
+ * qualunque tema può ricomporlo. */
+.learn-resources__card[data-tone="glossary"] { --tone: var(--primary); }
+.learn-resources__card[data-tone="troubleshooting"] { --tone: var(--tertiary); }
+.learn-resources__card[data-tone="prefermenti"] { --tone: var(--cta); }
+.preferment-decision[data-tone="biga"] { --tone: var(--primary); }
+.preferment-decision[data-tone="poolish"] { --tone: var(--cta); }
+.preferment-decision[data-tone="autolisi"] { --tone: var(--tertiary); }
+
 /* ═══ Stampa (D-043, audit totale n. 18) ═══
  * In stampa esce solo la scheda di produzione (print-sheet.tsx, fuori da
  * #root): niente interfaccia, pulsanti o foto. */

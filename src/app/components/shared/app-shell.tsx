@@ -42,7 +42,7 @@ import { IconButton } from "../ds/index";
 import { VulcanHero } from "./vulcan-hero";
 import { BRAND } from "../../config/brand";
 import { EDITION } from "../../config/edition";
-import { motionDuration, motionSpring } from "../ds/motion";
+import { motionSpring } from "../ds/motion";
 import { uiMessage } from "../../i18n/ui-messages";
 import { TOOLS_ENABLED } from "../../config/tools";
 
@@ -432,16 +432,11 @@ function ProfileButton({ active, navState }: { active: boolean; navState: Liquid
   const { cms } = useCms();
   const label = (cms.pages as any)?.navProfile || "Profilo";
   const { scrolled } = navState;
-  const size = scrolled ? 40 : 44;
+  /* FW-13: misura e raggio vivono in CSS (.app-shell-profile--scrolled). */
   return (
     <MotionLink
       to="/profile"
       className={`app-shell-profile${scrolled ? " app-shell-profile--scrolled" : ""}`}
-      animate={{
-        width: size,
-        height: size,
-        borderRadius: scrolled ? "14px" : "16px",
-      }}
       transition={motionSpring.quick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.92 }}
@@ -468,12 +463,13 @@ function CookSessionUI({
   compact: boolean;
 }) {
   const { session, overlayOpen } = useCookSession();
-  const reduceMotion = useReducedMotion();
   return (
     <>
-      <motion.div className="cook-actions" hidden={!showAction || overlayOpen} initial={false}
-        animate={{ right: hasProfileButton ? (compact ? 64 : 68) : 16 }}
-        transition={reduceMotion ? { duration: motionDuration.reduced } : motionSpring.quick}>
+      {/* FW-13: la posizione accanto al profilo è una classe con token. */}
+      <div
+        className={`cook-actions${hasProfileButton ? " cook-actions--beside-profile" : ""}${compact ? " cook-actions--compact" : ""}`}
+        hidden={!showAction || overlayOpen}
+      >
         {showAction && (
         <ActiveCookWidget
           canStartRecipe={canStartRecipe}
@@ -483,7 +479,7 @@ function CookSessionUI({
         />
         )}
         <div id="recipe-floating-actions" className="cook-actions__recipe" />
-      </motion.div>
+      </div>
       <AnimatePresence>
         {overlayOpen && session && (
           <Suspense fallback={null}>
