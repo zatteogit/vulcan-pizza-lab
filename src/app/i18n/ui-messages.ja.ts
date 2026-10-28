@@ -58,7 +58,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "allergen.preferences": "避けるアレルゲン",
   "allergen.unspecified": "未登録",
   "allergen.preferenceHelp": "選択はトッピングを含むレシピ全体に反映されます。",
-  "allergen.title": "アレルゲン",
+  "allergen.title": "レシピのアレルゲン",
   "allergen.noKnown": "製品の表示を確認してください",
   "allergen.optional": "任意",
   "allergen.contains": "レシピに含まれるもの",
@@ -67,6 +67,9 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "allergen.toCheck": "表示の確認が必要な材料",
   "allergen.labelNote": "表示は記載された材料に基づきます。製品の表示と、調理中に他のアレルゲンが混入する可能性も確認してください。",
   "allergen.milkNote": "乳糖不使用の製品にも、乳が含まれる場合があります。",
+  "allergen.scope.dough": "生地のアレルゲン",
+  "allergen.scope.topping": "トッピングのアレルゲン",
+  "allergen.scope.toppingPending": "生地のみ：トッピングは未選択です。",
 
   "recipe.reference.avpn": "AVPN 2024",
   "recipe.reference.outside": "Napoletana STGを参考にしたレシピ · 規定外",

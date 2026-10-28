@@ -1,4 +1,5 @@
 import { RecipeAllergens } from "./recipe-allergens";
+import { recipeAllergenScope } from "../../domain/allergen-scope";
 /* ═══ INGREDIENTS SECTION — tab Ricetta (estratto fase 2, lug 2026) ═══
  * Stepper panetti, lista ingredienti (baker's % in nerd), scorporo
  * pre-fermento, Regola 55 e blocchi scienza PizzaNerd. */
@@ -386,7 +387,7 @@ export function IngredientsSection({
           <span className="ingredients-total__amount">{fmt.grams(recipe.total_dough_g)}</span>
           <span className="ingredients-total__label">{ui.totalDough}</span>
         </div>
-        <RecipeAllergens report={recipe.allergens} scope="recipe" />
+        <RecipeAllergens report={recipe.allergens} scope={recipeAllergenScope(recipe).scope} />
 
         {/* Regola 55: da round 7 vive SOLO come tip della riga Acqua. */}
 

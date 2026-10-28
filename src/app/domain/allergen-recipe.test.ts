@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { STYLES_DB, generateRecipe, type UserConstraints } from "./pizza-engine";
 import { handleMcpMessage } from "../agent/mcp-server";
 import { recipeCardSignals, recipePresentationState } from "../features/recipe/recipe-card-signals";
+import { recipeAllergenScope } from "./allergen-scope";
+import { allergenSummary, allergensForSection } from "../features/recipe/allergen-copy";
 const kitchen:UserConstraints={oven_type:"wood",oven_max_temp_c:485,available_hours:0,meal_deadline:false,dough_balls:4,skill_level:4,has_mixer:true,has_baking_pan:true,has_pizza_stone:true,has_pizza_steel:false,pantry_flours:[],pantry_yeasts:[],dietary_filters:[]};
 function call(args:Record<string,unknown>,name="generate_recipe"){const res=handleMcpMessage({jsonrpc:"2.0",id:1,method:"tools/call",params:{name,arguments:args}});if(!res||!("result"in res))throw Error("no result");return res.result as any;}
 describe("allergens across the actual recipe and MCP",()=>{
@@ -68,5 +70,32 @@ describe("allergens across the actual recipe and MCP",()=>{
   const args={...kitchen,style_id:"napoletana_stg",topping_id:"margherita",allergens_avoid:["milk"]};
   const r=call(args).structuredContent,rec=call({...args,include_not_feasible:true,limit:1},"recommend_styles").structuredContent.styles[0];
   expect(rec.allergens).toEqual(r.allergens);expect(rec.outcome).toBe("not_feasible");
+ });
+});
+
+// FW-18 — the summary in the style sheet and in the Ricetta tab covers the whole recipe.
+describe("recipeAllergenScope",()=>{
+ it("Pizza fritta: the filling's milk is part of the full-recipe summary",()=>{
+  const r=generateRecipe(STYLES_DB.pizza_fritta,kitchen);
+  const scoped=recipeAllergenScope(r);
+  expect(scoped.scope).toBe("full");
+  expect(scoped.report.contains.map(g=>g.id)).toEqual(["gluten","milk"]);
+  expect(scoped.report.contains.find(g=>g.id==="milk")!.sources.every(s=>s.section==="topping")).toBe(true);
+  expect(scoped.report.unverified).toContainEqual(expect.objectContaining({ingredient:"Olio per frittura",section:"cooking"}));
+  expect(allergenSummary(scoped.report)[0]).toBe("Cereali con glutine · Latte");
+ });
+ it("Margherita: the mozzarella's milk is in the full summary, not only in the topping tab",()=>{
+  const r=generateRecipe({...STYLES_DB.napoletana_stg,default_topping_ref:"margherita_napoletana_avpn"},kitchen);
+  const scoped=recipeAllergenScope(r);
+  expect(scoped.scope).toBe("full");
+  expect(scoped.report.contains.map(g=>g.id)).toEqual(["gluten","milk"]);
+  expect(allergensForSection(scoped.report,"recipe").contains.map(g=>g.id)).toEqual(["gluten"]);
+ });
+ it("without a resolvable topping the scope says dough only",()=>{
+  const r=generateRecipe({...STYLES_DB.napoletana_stg,default_topping_ref:undefined},kitchen);
+  const scoped=recipeAllergenScope(r);
+  expect(scoped.scope).toBe("dough");
+  expect(scoped.report.contains.map(g=>g.id)).toEqual(["gluten"]);
+  expect(recipeAllergenScope({...r,style:{...r.style,default_topping_ref:"non_esiste"}}).scope).toBe("dough");
  });
 });
