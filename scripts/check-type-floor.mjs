@@ -7,8 +7,11 @@
  *   scendono sotto con la radice a 14,25 px dei viewport stretti.
  * - (FW-13) gli elementi di testo corrente (__sub, __desc, __text, __note…)
  *   non usano `text-transform: uppercase`;
+ * - (FW-13) i ruoli --status-*-fg hanno contrasto ≥ 4,5:1 sul proprio fondo e
+ *   sulle superfici, in chiaro e in scuro (scripts/status-contrast.mjs);
  * Le regole dei temi d'esplorazione ([data-theme]) restano fuori. */
 import { readFileSync } from "node:fs";
+import { statusContrastProblems } from "./status-contrast.mjs";
 
 const FILES = ["src/styles/theme.css", "src/styles/layout.css"];
 const problems = [];
@@ -48,8 +51,10 @@ for (const [token, min] of [["2xs", 11], ["xs", 11], ["sm", 12], ["base", 12], [
   if (px === null || px < min) problems.push(`--font-size-${token}: pavimento ${px ?? "assente"} px, serve max(…, ≥${min}px)`);
 }
 
+problems.push(...statusContrastProblems(theme));
+
 if (problems.length) {
   console.error(`✗ check:type-floor — ${problems.length} problemi:\n  ${problems.join("\n  ")}`);
   process.exit(1);
 }
-console.log("✓ check:type-floor — testo ≥ 12 px, 11 px solo maiuscolo");
+console.log("✓ check:type-floor — testo ≥ 12 px, 11 px solo maiuscolo, stati AA");

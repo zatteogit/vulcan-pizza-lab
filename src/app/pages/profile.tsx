@@ -7,14 +7,14 @@ import { normalizeAllergenIds, type AllergenId } from "../data/allergen-data";
 
 import { TOOLS_ENABLED } from "../config/tools";
 import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys";
-import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Egg, Flame, Globe, GraduationCap, Heart, Home, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Thermometer, Timer, Upload, User, WheatOff, X, Zap } from "lucide-react";
-import { WoodOvenIcon } from "../components/shared/wood-oven-icon";
+import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Globe, GraduationCap, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
+import { ovenIcon } from "../components/shared/oven-icons";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
 import { useCallback,useEffect,useMemo,useRef,useState, useId } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
-import { Chip, CtaButton, Heading, IconButton, SegmentedControl, Snackbar } from "../components/ds/index";
+import { Chip, CtaButton, Heading, IconButton, SegmentedControl, Snackbar, Switch } from "../components/ds/index";
 import {
 createFormatter,
 getPreferredUnitSystem,
@@ -167,15 +167,6 @@ function loadString(key: string): string | null {
 }
 
 /* ═══ DATA ═══ */
-const OVEN_ICONS: Record<string, typeof Flame> = {
-  home: Home,
-  electric_standard: Zap,
-  electric_high: Thermometer,
-  gas: Flame,
-  gas_pizza: Flame,
-  wood: WoodOvenIcon,
-};
-
 const OVEN_HEAT_PROFILES: {
   id: OvenHeatProfile;
   label: string;
@@ -231,7 +222,7 @@ const OVEN_HEAT_PROFILES: {
 const DIETARY_OPTIONS = [
   { id: "gluten_free", labelKey: "dietGlutenFree" as const, icon: WheatOff },
   { id: "lactose_free", labelKey: "dietLactoseFree" as const, icon: Milk },
-  { id: "vegan", labelKey: "dietVegan" as const, icon: Egg },
+  { id: "vegan", labelKey: "dietVegan" as const, icon: Leaf }, /* FW-13: l'uovo diceva il contrario */
   { id: "low_fodmap", labelKey: "dietLowFodmap" as const, icon: Beaker },
   { id: "histamine", labelKey: "dietHistamine" as const, icon: Timer },
   { id: "nickel", labelKey: "dietNickel" as const, icon: CircleDot },
@@ -831,7 +822,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step === 0 && (
               <div className="profile-ftu__option-list">
                 {OVEN_PRESETS.map((preset) => {
-                  const Icon = OVEN_ICONS[preset.id] || Flame;
+                  const Icon = ovenIcon(preset.id);
                   const active = ovenType === preset.id;
                   return (
                     <motion.button
@@ -1116,8 +1107,9 @@ function LocaleConfirmModal({
   }, [target.id, tgtBundle]);
   const tgtProfile = tgtBundle?.profile ?? CMS_DEFAULTS.profile;
 
-  const fromLabel = `${current.flag} ${current.name}`;
-  const toLabel = `${target.flag} ${target.name}`;
+  /* FW-13 (S17-B-16): una lingua non è un paese, niente bandiere. */
+  const fromLabel = current.name;
+  const toLabel = target.name;
 
   /* Close on Escape */
   useEffect(() => {
@@ -1647,7 +1639,7 @@ export function ProfilePage() {
           />
           <div className="profile-oven-list">
             {OVEN_PRESETS.map((preset) => {
-              const Icon = OVEN_ICONS[preset.id] || Flame;
+              const Icon = ovenIcon(preset.id);
               const active = ovens.includes(preset.id);
               return (
                 <motion.button
@@ -2240,26 +2232,18 @@ export function ProfilePage() {
                 {p.langLabel}
               </div>
               <div className="profile-prefs__lang-list">
+                {/* FW-13 (S17-B-06/B-16): ds/Chip, nome nella propria lingua, senza bandiera. */}
                 {LOCALE_META.filter((l) => l.available).map((locale) => (
-                  <motion.button
+                  <Chip
                     key={locale.id}
-                    onClick={() => {
+                    label={locale.name}
+                    active={currentLocale.id === locale.id}
+                    onToggle={() => {
                       if (locale.id !== currentLocale.id) {
                         setPendingLocale(locale);
                       }
                     }}
-                    className="profile-prefs__lang-btn"
-                    initial={false}
-                    animate={{
-                      backgroundColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-bg)",
-                      color: currentLocale.id === locale.id ? "var(--chip-text-active)" : "var(--chip-text)",
-                      borderColor: currentLocale.id === locale.id ? "var(--chip-bg-active)" : "var(--chip-border)",
-                    }}
-                    transition={motionSpring.crispPanel}
-                  >
-                    <span data-slot="flag">{locale.flag}</span>
-                    {locale.name}
-                  </motion.button>
+                  />
                 ))}
               </div>
             </div>
@@ -2296,51 +2280,21 @@ export function ProfilePage() {
             <div className="type-data profile-prefs__label">
               {p.unitSystemLabel}
             </div>
-            <div className="profile-unit-grid">
-              {([
-                {
-                  id: "metric" as UnitSystem,
-                  label: p.unitMetric,
-                  desc: p.unitMetricDesc,
-                },
-                {
-                  id: "imperial" as UnitSystem,
-                  label: p.unitImperial,
-                  desc: p.unitImperialDesc,
-                },
-              ]).map((option) => {
-                const active = unitSystem === option.id;
-                return (
-                  <motion.button
-                    key={option.id}
-                    type="button"
-                    onClick={() => setUnitSystem(option.id)}
-                    className="profile-unit-option"
-                    initial={false}
-                    animate={{
-                      backgroundColor: active ? "var(--surface-container)" : "var(--container-bg-low)",
-                      borderColor: active ? "var(--primary)" : "var(--container-border)",
-                    }}
-                    transition={motionSpring.crispPanel}
-                    aria-pressed={active}
-                  >
-                    <Thermometer
-                      size={17}
-                      className={`profile-unit-option__icon${active ? " profile-unit-option__icon--active" : ""}`}
-                    />
-                    <span className="profile-unit-option__body">
-                      <span className="type-body-sm profile-unit-option__label">
-                        {option.label}
-                      </span>
-                      <span className="type-data-xs profile-unit-option__desc">
-                        {option.desc}
-                      </span>
-                    </span>
-                    {active && <Check size={15} className="profile-unit-option__check" />}
-                  </motion.button>
-                );
-              })}
-            </div>
+            {/* FW-13 (S17-B-06/B-16): scelta singola con ds/SegmentedControl;
+                la descrizione dell'opzione attiva sta sotto, senza icone ripetute. */}
+            <SegmentedControl
+              ariaLabel={p.unitSystemLabel}
+              tone="brand"
+              value={unitSystem}
+              onValueChange={(value) => setUnitSystem(value)}
+              options={[
+                { value: "metric" as UnitSystem, label: p.unitMetric },
+                { value: "imperial" as UnitSystem, label: p.unitImperial },
+              ]}
+            />
+            <p className="type-data-xs profile-unit-desc" aria-live="polite">
+              {unitSystem === "imperial" ? p.unitImperialDesc : p.unitMetricDesc}
+            </p>
           </div>
         </ProfileSection>
 
@@ -2351,35 +2305,32 @@ export function ProfilePage() {
           stepNum={p.pizzaNerdStep}
           delay={motionDelay.profileSectionFinal}
         >
-          <button
-            type="button"
-            onClick={() => setPizzaNerd((value) => !value)}
+          {/* FW-13 (S17-B-06): ds/Switch al posto del toggle fatto a mano. */}
+          <label
+            htmlFor="profile-pizza-nerd"
             className={`profile-nerd-toggle${pizzaNerd ? " profile-nerd-toggle--active" : ""}`}
-            aria-pressed={pizzaNerd}
           >
             <span
               className={`profile-nerd-toggle__icon${pizzaNerd ? " profile-nerd-toggle__icon--active" : ""}`}
             >
-              <Beaker size={17} />
+              <Beaker size={17} aria-hidden="true" />
             </span>
             <span className="profile-nerd-toggle__body">
-              <span className="profile-nerd-toggle__title">
+              <span className="profile-nerd-toggle__title" id="profile-pizza-nerd-title">
                 {p.pizzaNerdCardTitle}
               </span>
-              <span className="profile-nerd-toggle__desc">
+              <span className="profile-nerd-toggle__desc" id="profile-pizza-nerd-desc">
                 {p.pizzaNerdCardDesc}
               </span>
             </span>
-            <span
-              className={`profile-nerd-toggle__track${pizzaNerd ? " profile-nerd-toggle__track--active" : ""}`}
-            >
-              <motion.span
-                className="profile-nerd-toggle__thumb"
-                animate={{ left: pizzaNerd ? 22 : 4 }}
-                transition={motionSpring.crispSettled}
-              />
-            </span>
-          </button>
+            <Switch
+              id="profile-pizza-nerd"
+              checked={pizzaNerd}
+              onCheckedChange={setPizzaNerd}
+              aria-labelledby="profile-pizza-nerd-title"
+              aria-describedby="profile-pizza-nerd-desc"
+            />
+          </label>
         </ProfileSection>
 
         {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}

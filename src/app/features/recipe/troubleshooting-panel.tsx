@@ -5,11 +5,17 @@
 import {
 AlertTriangle,
 ChevronDown,ChevronUp,
+Cog,
+Droplet,
+Flame,
 FlaskConical,
+Hand,
 Info,
 Lightbulb,
+Microscope,
 Search,
 ShieldCheck,
+Wheat,
 Wrench,
 XCircle,
 X,
@@ -30,6 +36,17 @@ getLocalizedIssue,
 ISSUES_DB
 } from "../../data/troubleshooting-data";
 import { uiMessage } from "../../i18n/ui-messages";
+
+/* === FW-13 (S13-B-12): icone delle categorie, sul modello del glossario === */
+const TROUBLESHOOTING_CATEGORY_ICONS: Record<string, LucideIcon> = {
+  dough: Wheat,
+  fermentation: Microscope,
+  shaping: Hand,
+  baking: Flame,
+  frying: Droplet,
+  solver: Cog,
+  false_positive: ShieldCheck,
+};
 
 /* === SEVERITY ICON MAP === */
 const SeverityIcon = ({ severity }: { severity: string }) => {
@@ -169,11 +186,15 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
     return () => window.clearTimeout(timer);
   }, [initialIssueId, contextIssueIds]);
 
-  const categories = Object.entries(CATEGORY_LABELS);
 
   const sourceIssues = contextIssueIds
     ? contextIssueIds.flatMap(id => { const issue = ISSUES_DB.find(item => item.id === id); return issue ? [issue] : []; })
     : ISSUES_DB;
+  /* FW-13: conteggio per categoria come nel glossario; le categorie vuote non
+     compaiono (un chip «0» non porta da nessuna parte). */
+  const categories = Object.keys(CATEGORY_LABELS)
+    .map((key) => [key, sourceIssues.filter((issue) => issue.category === key).length] as const)
+    .filter(([, count]) => count > 0);
   const filtered = sourceIssues.map(issue => getLocalizedIssue(issue, cms)).filter((issue) => {
     if (activeCategory && issue.category !== activeCategory) return false;
     if (searchQuery.trim()) {
@@ -223,7 +244,8 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
           <FilterChip
             active={!activeCategory}
             onClick={() => setActiveCategory(null)}
-            radius="md"
+            radius="xl"
+            count={sourceIssues.length}
             variants={{
               hidden: { opacity: 0, y: 8, scale: 0.95 },
               visible: { opacity: 1, y: 0, scale: 1 },
@@ -231,22 +253,26 @@ export function TroubleshootingGuide({ filterCategory, initialIssueId, contextIs
             transition={motionSpring.crispDisclosure}
           >
             {uiMessage("features.recipe.troubleshooting-panel.tutti-d4ef129b")}</FilterChip>
-          {categories.map(([key, { emoji }]) => (
+          {categories.map(([key, count]) => {
+            const Icon = TROUBLESHOOTING_CATEGORY_ICONS[key] ?? Info;
+            return (
             <FilterChip
               key={key}
               active={activeCategory === key}
-              onClick={() => setActiveCategory(activeCategory === key ? null : key)}
-              size="sm"
-              radius="lg"
+              onClick={() => setActiveCategory(key)}
+              radius="xl"
+              count={count}
               variants={{
                 hidden: { opacity: 0, y: 8, scale: 0.95 },
                 visible: { opacity: 1, y: 0, scale: 1 },
               }}
               transition={motionSpring.crispDisclosure}
             >
-              {emoji} {getLocalizedCategoryLabel(key, cms)}
+              <Icon size={14} aria-hidden="true" className="glossary-chip__icon" />
+              {getLocalizedCategoryLabel(key, cms)}
             </FilterChip>
-          ))}
+            );
+          })}
         </motion.div>
 
       </>}

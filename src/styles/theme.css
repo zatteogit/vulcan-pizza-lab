@@ -1088,6 +1088,9 @@
   --status-recommended-bg: color-mix(in srgb, var(--status-recommended) 12%, transparent);
   --status-recommended-border: color-mix(in srgb, var(--status-recommended) 35%, transparent);
   --status-recommended-icon: var(--status-recommended);
+  /* FW-13 (S13-B-15): pressione di una superficie larga quanto lo schermo:
+     appena percettibile, non una contrazione del 5%. */
+  --press-scale-surface: 0.99;
 
   /* ── C. Container / Surface ── */
   --container-bg: var(--surface-container);
@@ -1227,7 +1230,6 @@
   --config-divider: var(--outline);
   --recipe-stepper-value-size: var(--type-stepper-value-size);
   --recipe-stepper-value-weight: var(--type-stepper-value-weight);
-  --snackbar-action: var(--inverse-action);
   --snackbar-action-success: var(--inverse-action);
   --snackbar-action-error: var(--inverse-action-error);
   --recipe-section-offset-compact: var(--layout-recipe-offset-compact);
@@ -2468,6 +2470,20 @@
     font-weight: var(--weight-semibold);
   }
 
+  /* FW-13 (S14-A-16/B-17): a 390 px il maiuscolo spaziato spezzava le parole
+     a metà («IDRATAZIO-NE»). Su schermi stretti: frase normale, sillabazione. */
+  @media (max-width: 480px) {
+    .preferment-table__rowlabel {
+      text-transform: none;
+      letter-spacing: normal;
+      hyphens: auto;
+    }
+
+    .preferment-table__td {
+      hyphens: auto;
+    }
+  }
+
   .preferment-decisions {
     margin-top: var(--space-8);
   }
@@ -3472,7 +3488,7 @@
 
   .compat-pill--blocked .compat-pill__icon,
   .compat-pill--blocked .compat-pill__now {
-    color: var(--text-error);
+    color: var(--status-blocking-fg); /* FW-13 */
   }
 
   .compat-pill__now {
@@ -3766,6 +3782,7 @@
   }
 
   .learn-term__kicker {
+    font-family: var(--font-sans); /* FW-13: ora è un h2, resta un occhiello */
     font-size: var(--font-size-md);
     letter-spacing: var(--tracking-ultra);
     text-transform: uppercase;
@@ -6119,92 +6136,12 @@
     gap: var(--gap-xs);
   }
 
-  .profile-prefs__lang-btn {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
-    padding-inline: var(--space-4);
-    padding-block: var(--space-2-5);
-    border-radius: var(--radius-xl);
-    border-width: var(--border-width-thin);
-    border-style: solid;
-    font-size: var(--font-size-md);
-    font-weight: var(--weight-medium);
-    cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  .profile-prefs__lang-btn:active {
-    transform: scale(0.95);
-  }
-
-  /* ── Unit system section ── */
-  .profile-unit-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--gap-xs);
-  }
-
-  @media (min-width: 640px) {
-    .profile-unit-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  .profile-unit-option {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--gap-sm);
-    padding: var(--space-3);
-    border-radius: var(--radius-xl);
-    text-align: left;
-    border-width: var(--border-width-medium);
-    border-style: solid;
-    cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  @media (min-width: 640px) {
-    .profile-unit-option {
-      padding: var(--space-4);
-    }
-  }
-
-  .profile-unit-option:active {
-    transform: scale(0.98);
-  }
-
-  .profile-unit-option__icon {
-    color: var(--text-muted);
-    flex-shrink: 0;
-    margin-top: var(--space-px);
-  }
-
-  .profile-unit-option__icon--active {
-    color: var(--primary);
-  }
-
-  .profile-unit-option__body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .profile-unit-option__label {
-    display: block;
-    font-weight: var(--weight-semibold);
-    color: var(--text-default);
-  }
-
-  .profile-unit-option__desc {
-    display: block;
-    margin-top: var(--space-0-75);
+  /* FW-13 (S17-B-06): Lingua = ds/Chip, Misure = ds/SegmentedControl;
+     sotto, la descrizione dell'opzione scelta. */
+  .profile-unit-desc {
+    margin-top: var(--space-2);
     color: var(--text-muted);
     line-height: var(--leading-normal);
-  }
-
-  .profile-unit-option__check {
-    color: var(--primary);
-    flex-shrink: 0;
   }
 
   /* ── PizzaNerd toggle ── */
@@ -6221,11 +6158,6 @@
     border: var(--border-width-thin) solid var(--container-border);
     color: var(--text-default);
     cursor: pointer;
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  .profile-nerd-toggle:active {
-    transform: scale(0.99);
   }
 
   .profile-nerd-toggle--active {
@@ -6268,29 +6200,6 @@
     font-size: var(--font-size-md);
     line-height: var(--leading-normal);
     margin-top: var(--space-0-5);
-  }
-
-  .profile-nerd-toggle__track {
-    position: relative;
-    border-radius: var(--radius-full);
-    flex-shrink: 0;
-    width: var(--space-11);
-    height: var(--space-6-5);
-    background: var(--container-border);
-  }
-
-  .profile-nerd-toggle__track--active {
-    background: var(--primary);
-  }
-
-  .profile-nerd-toggle__thumb {
-    position: absolute;
-    top: var(--space-1);
-    border-radius: var(--radius-full);
-    width: var(--space-4-5);
-    height: var(--space-4-5);
-    background: var(--container-bg);
-    box-shadow: var(--switch-thumb-shadow);
   }
 
   /* ── Footer: reset + dev mode ── */
@@ -14154,16 +14063,17 @@
     height: var(--space-4);
   }
 
+  /* FW-13: severità = ruoli di stato (bloccante / attenzione / neutro). */
   .troubleshooting-severity-icon--critical {
-    color: var(--destructive);
+    color: var(--status-blocking-icon);
   }
 
   .troubleshooting-severity-icon--warning {
-    color: var(--tertiary);
+    color: var(--status-caution-icon);
   }
 
   .troubleshooting-severity-icon--info {
-    color: var(--secondary);
+    color: var(--status-neutral-icon);
   }
 
   /* --- ContextualWarnings (inline in recipe) --- */
@@ -14208,18 +14118,18 @@
   }
 
   .troubleshooting-warnings__item--critical {
-    background: color-mix(in srgb, var(--destructive) 8%, transparent);
-    border-color: color-mix(in srgb, var(--destructive) 20%, transparent);
+    background: var(--status-blocking-bg);
+    border-color: var(--status-blocking-border);
   }
 
   .troubleshooting-warnings__item--warning {
-    background: color-mix(in srgb, var(--tertiary) 8%, transparent);
-    border-color: color-mix(in srgb, var(--tertiary) 20%, transparent);
+    background: var(--status-caution-bg);
+    border-color: var(--status-caution-border);
   }
 
   .troubleshooting-warnings__item--info {
-    background: color-mix(in srgb, var(--secondary) 6%, transparent);
-    border-color: color-mix(in srgb, var(--secondary) 12%, transparent);
+    background: var(--status-neutral-bg);
+    border-color: var(--status-neutral-border);
   }
 
   .troubleshooting-warnings__item-row {
@@ -14328,8 +14238,8 @@
   }
 
   .troubleshooting-guide__title-icon {
-    width: var(--font-size-3xl);
-    height: var(--font-size-3xl);
+    width: var(--space-4-5);
+    height: var(--space-4-5);
     color: var(--primary);
   }
 
@@ -14350,8 +14260,8 @@
   }
 
   .troubleshooting-guide__search-icon {
-    width: var(--font-size-xl);
-    height: var(--font-size-xl);
+    width: var(--space-3-5);
+    height: var(--space-3-5);
     color: var(--muted-foreground);
     flex-shrink: 0;
   }
@@ -14397,7 +14307,7 @@
     display: flex;
     align-items: center;
     gap: var(--space-2-5);
-    padding: var(--font-size-xl) var(--space-4);
+    padding: var(--space-3-5) var(--space-4); /* FW-13: spazio, non font-size */
     background: transparent;
     border: none;
     cursor: pointer;
@@ -14406,7 +14316,7 @@
   }
 
   .troubleshooting-card__toggle:active {
-    transform: scale(0.95);
+    transform: scale(var(--press-scale-surface));
   }
 
   .troubleshooting-card__toggle-body {
@@ -15968,7 +15878,12 @@
   }
 
   .style-detail-match__row[data-warning="true"] .style-detail-match__icon {
-    color: var(--text-warning);
+    color: var(--status-caution-icon);
+  }
+
+  /* FW-13 (S03-B-22): condizione da verificare, nessun giudizio. */
+  .style-detail-match__row[data-condition="true"] .style-detail-match__icon {
+    color: var(--status-neutral-icon);
   }
 
   /* ── CTA — Genera ricetta ── */
@@ -17109,8 +17024,9 @@
   }
 
   .cooking-mode-phase--done {
-    background: color-mix(in srgb, var(--recipe-success) 12%, var(--surface-container-low));
-    border-color: color-mix(in srgb, var(--recipe-success) 35%, transparent);
+    /* FW-13: fase finita = positivo. */
+    background: var(--status-positive-bg);
+    border-color: var(--status-positive-border);
   }
 
   .cooking-mode-phase__head {
@@ -17125,7 +17041,7 @@
   }
 
   .cooking-mode-phase--done .cooking-mode-phase__icon {
-    color: var(--recipe-success);
+    color: var(--status-positive-icon);
   }
 
   .cooking-mode-phase__body {
@@ -17141,7 +17057,7 @@
   }
 
   .cooking-mode-phase--done .cooking-mode-phase__value {
-    color: var(--recipe-success);
+    color: var(--status-positive-fg);
   }
 
   .cooking-mode-phase__meta {

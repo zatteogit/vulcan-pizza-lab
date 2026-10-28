@@ -106,7 +106,7 @@ export const TROUBLESHOOTING_I18N_DEFAULTS: TroubleshootingMessages = {
     shaping: "Stesura",
     baking: "Cottura",
     solver: "Algoritmo",
-    false_positive: "Falsi Allarmi",
+    false_positive: "Falsi allarmi",
   },
   issues: {
     ...Object.fromEntries(ISSUES_DB.filter(issue => issue.category === "frying").map(({ id, symptom, cause, testRapido, fixImmediate, prevention }) => [id, { symptom, cause, testRapido, fixImmediate, prevention }])),

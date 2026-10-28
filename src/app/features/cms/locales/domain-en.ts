@@ -142,7 +142,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       shaping: "Shaping",
       baking: "Baking",
       solver: "Algorithm",
-      false_positive: "False Alarms",
+      false_positive: "False alarms",
     },
     issues: {
       FR01: {
