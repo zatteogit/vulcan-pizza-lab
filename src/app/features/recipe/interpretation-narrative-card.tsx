@@ -96,7 +96,7 @@ export function InterpretationSwitcher({
       {/* "Vedi tutte" resta SEMPRE in vista (fuori dallo scroller delle chip). */}
       <div className="interpretation-picker">
         <span className="interpretation-switcher__label">
-          {uiMessage("features.recipe.interpretation-narrative-card.versione-96d474e8")}</span>
+          {cms.misc.inspirationLabel ?? uiMessage("features.recipe.interpretation-narrative-card.versione-96d474e8")}</span>
         <div className="interpretation-switcher">
           <div
             ref={scrollRef}

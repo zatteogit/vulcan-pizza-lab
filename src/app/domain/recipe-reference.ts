@@ -30,3 +30,32 @@ export function stgDepartures(recipe: GeneratedRecipe, oven?: OvenType): StgDepa
 export function recipeDisplayName(recipe: GeneratedRecipe, oven?: OvenType): string {
   return stgDepartures(recipe, oven).length ? "Napoletana" : recipe.style.name;
 }
+
+/* ═══ FW-14 · Delta dal riferimento (S07-A-04, S07-B-01) ═══
+ * I «Prima → Ora» della tabella parametri si calcolano dalla ricetta di
+ * riferimento effettivamente generata (preset attivo), mai dal centro degli
+ * intervalli dello stile. Solo i parametri mostrati nella tabella. */
+export type ReferenceParam = "hydration" | "flourW" | "fermentation";
+export interface ReferenceDelta {
+  param: ReferenceParam;
+  reference: { value: number; tempC?: number };
+  current: { value: number; tempC?: number };
+}
+
+export function compareToReference(recipe: GeneratedRecipe, reference: GeneratedRecipe): ReferenceDelta[] {
+  const deltas: ReferenceDelta[] = [];
+  // Idratazione mostrata con un decimale al massimo: sotto non è una modifica.
+  if (Math.abs(recipe.hydration_pct - reference.hydration_pct) >= 0.05) {
+    deltas.push({ param: "hydration", reference: { value: reference.hydration_pct }, current: { value: recipe.hydration_pct } });
+  }
+  if (Math.round(recipe.flour_w) !== Math.round(reference.flour_w)) {
+    deltas.push({ param: "flourW", reference: { value: reference.flour_w }, current: { value: recipe.flour_w } });
+  }
+  if (Math.abs(recipe.fermentation_hours - reference.fermentation_hours) >= 0.05
+    || recipe.fermentation_temp_c !== reference.fermentation_temp_c) {
+    deltas.push({ param: "fermentation",
+      reference: { value: reference.fermentation_hours, tempC: reference.fermentation_temp_c },
+      current: { value: recipe.fermentation_hours, tempC: recipe.fermentation_temp_c } });
+  }
+  return deltas;
+}

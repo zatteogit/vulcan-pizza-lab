@@ -130,6 +130,7 @@ const INTERPRETATION_LIBRARY: Record<string, Interpretation> = {
     },
     type: "disciplinare",
     organization: "Consorzio Focaccia di Recco IGP",
+    short_name: "IGP", // FW-14: chip ed eyebrow «Disciplinare IGP»
     location: "Recco, Liguria",
     // C-4: registrata IGP con reg. UE 2015/39 del 13/01/2015 (era 2012). Farina
     // dal disciplinare (CCIAA Genova 2024, art. 5): W > 300, P/L ≥ 0,50 (era

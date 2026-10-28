@@ -1,5 +1,6 @@
 import { SaveRecipeDialog, useRecipeSave } from "../features/recipe/save-recipe-dialog";
-import { recipeDisplayName } from "../domain/recipe-reference";
+import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
+import { referenceEyebrow } from "../features/recipe/reference-label";
 import { buildGeneratedRecipe, recipeFromEntry, canonicalRecipeEntry, recipePresetState, optimizeSelectedRecipe, isRecipePresetModified } from "../use-cases/recipe-entry";
 import { scoreWeightsFromCms } from "../features/recipe/kitchen-compatibility";
 /* === RECIPE PAGE — VPL-058 + VPL-064 ===
@@ -39,6 +40,7 @@ defaultPanShape,
 getDefaultDoughBalls,
 MAX_DOUGH_BALLS,
 thermalViability,
+isFriedStyle,
 type EngineMsg,
 type GeneratedRecipe,
 type OvenType,
@@ -695,6 +697,13 @@ function RecipeContent({
     customFermentTemp === lastOptimization.params.fermentation_temp_c &&
     usePreFerment === lastOptimization.params.use_pre_ferment;
 
+  /* FW-14: la ricetta di riferimento (preset attivo) sugli stessi vincoli della
+     ricetta mostrata: i «Prima → Ora» della tabella partono da qui. */
+  const referenceRecipe = useMemo(
+    () => recipeFromEntry(originalEntry, effectiveConstraints),
+    [originalEntry, effectiveConstraints],
+  );
+
   // F2 (parità con Crea): "Vulcan ha imparato dai tuoi tentativi" anche su Scopri.
   const feedbackCorrection = useMemo(
     () => deriveFeedbackCorrections(style.id, loadFeedback()),
@@ -829,12 +838,22 @@ function RecipeContent({
   };
   const saveFlow = useRecipeSave({ personalized: isDirty || Boolean(resolvedRecipeName), saved: Boolean(savedEntry), onCommit: handleCommitRecipe });
   const handleToggleSaveRecipe = () => saveFlow.requestSave();
+  /* FW-14 (S07-A-05): l'eyebrow dice da dove parte la ricetta, non sempre
+     «Originale»: riferimento, disciplinare, «Ispirata a…», sul tuo forno. */
+  const shownRecipe = recipe ?? matchRecipe;
   const recipeTabLabel =
     recipeMode === "lab"
       ? cmsMessage(cms, "recipeMode.lab", "Laboratorio")
-      : isDirty || resolvedRecipeName
-        ? cms.ui.scoreBasisTailored
-        : cms.ui.scoreBasisOriginal;
+      : referenceEyebrow({
+          styleId: style.id,
+          tailored: isDirty || Boolean(resolvedRecipeName),
+          tailoredLabel: cms.ui.scoreBasisTailored,
+          interpretation: originInterpretation ?? null,
+          version: activeVersion,
+          versionLabel: activeVersion ? cmsMessage(cms, `version.label.${activeVersion.label}`, activeVersion.label) : undefined,
+          adaptedToOven: stgDepartures(shownRecipe, effectiveConstraints.oven_type).length > 0
+            || (!isFriedStyle(style) && shownRecipe.oven_temp_c < style.baking.temp_c_range[0]),
+        });
 
   /* Photo */
   const photo =
@@ -945,6 +964,8 @@ function RecipeContent({
             <RecipeStatStrip
               recipe={recipe}
               isPersonalized={isDirty}
+              reference={referenceRecipe}
+              optimized={isOptimized}
             />
             {/* Il dialog Personalizza: si apre dal pulsante sulla match card
                 (niente trigger proprio — nota Matteo lug 2026). */}
@@ -1123,7 +1144,7 @@ function RecipeContent({
         body={tpl(
           cms.cooking.unsavedBody ??
             "Se esci ora, la tua versione di {style} andrà persa. Vuoi salvarla nel ricettario?",
-          { style: style.name },
+          { style: recipeDisplayName(recipe ?? matchRecipe, effectiveConstraints.oven_type) },
         )}
         actions={[
           {

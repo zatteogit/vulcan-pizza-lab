@@ -12789,6 +12789,20 @@
     }
   }
 
+  /* FW-14 (S07-A-04): su mobile il valore di riferimento non sparisce (prima
+     restava solo la stellina): va su una riga sua sopra il valore attuale. */
+  @media (max-width: 479px) {
+    .stat-strip__value--changed {
+      flex-wrap: wrap;
+      row-gap: 0;
+    }
+
+    .stat-strip__value-prev {
+      display: inline;
+      flex-basis: 100%;
+    }
+  }
+
   /* ═══ ONDATA 3 — COMPONENT: interpretation-narrative-card (PREFIX: interpretation) ═══ */
   /* ═══ interpretation-narrative-card.tsx — InterpretationSwitcher (chip riga
      "Ispirazione") + modale d'approfondimento + InterpretationNarrativeCard.
