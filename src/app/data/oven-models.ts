@@ -27,8 +27,9 @@ export interface OvenModel {
   maxTempC: number;
   /** Diametro massimo della pizza, cm (se dichiarato). */
   pizzaCm?: number;
-  /** V: temperatura letta sul sito del produttore; P: fonte secondaria. */
-  source: "V" | "P";
+  /** V: temperatura letta sul sito del produttore; P: fonte secondaria;
+   *  demo: dato inventato di un'edizione dimostrativa (FW-01, S18-B-07). */
+  source: "V" | "P" | "demo";
 }
 
 /** Catalogo completo della generalista. */

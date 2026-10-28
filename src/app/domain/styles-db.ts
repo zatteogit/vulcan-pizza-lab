@@ -151,7 +151,7 @@ export const STYLES_DB: Record<string, PizzaStyle> = {
       'Cornicione 3-4cm "canotto"',
       "Alveolatura estrema",
       "Maturazione 24-72h",
-      "Digeribilità alta",
+      "Mollica aperta e leggera",
     ],
     hydration_category: "high",
     emoji: "🎈",

@@ -180,7 +180,8 @@ export const ISSUES_DB: TroubleshootingIssue[] = [
   {
     id: 'P14', category: 'false_positive',
     symptom: 'Macchie leopardate sul cornicione (leopard spotting)',
-    cause: 'Contatto con volta forno >500°C — reazione di Maillard localizzata',
+    // FW-01 (S04-A-05, D-F): non è il contatto con la volta né la sola Maillard.
+    cause: 'Bolle sottili del cornicione che si scuriscono col calore molto forte del forno (imbrunimento e bruciatura localizzati)',
     testRapido: 'Le macchie sono amare al gusto?',
     fixImmediate: 'NON e un problema! E la caratteristica desiderata della pizza napoletana',
     prevention: 'Se troppo marcate: ruota pizza ogni 20s durante cottura',

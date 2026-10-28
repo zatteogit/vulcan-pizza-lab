@@ -111,7 +111,7 @@ const SURFACE_OPTIONS: SurfaceOption[] = [
   {
     id: "cordierite_stone",
     label: "Pietra cordierite",
-    description: "1.5 cm, compromesso massa/velocità — Effeuno, Ooni",
+    description: "1.5 cm, compromesso massa/velocità — forni da pizza elettrici e a gas",
     emoji: "🪨",
     conductivity: 1.5,
     heatClass: "medium",

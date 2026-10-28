@@ -7,6 +7,7 @@ import {
   PRE_FERMENT_PT,
   TROUBLESHOOTING_PT,
   GLOSSARY_TERMS_PT,
+  SCIENCE_PT,
 } from "./domain-pt";
 
 /** Portuguese locale bundle */
@@ -612,7 +613,7 @@ export const PT_LOCALE: CmsContent = {
   },
   flourDetails: {
     "00": "Cl\u00E1ssica, vers\u00E1til",
-    "0": "For\u00E7a m\u00E9dia",
+    "0": "Um pouco menos refinada que a 00",
     manitoba: "Alta for\u00E7a, longa matura\u00E7\u00E3o",
     integrale: "Mais fibra e sabor",
     semola: "Crocante, cor dourada",
@@ -914,6 +915,8 @@ export const PT_LOCALE: CmsContent = {
     "topping.auth.experimental": "A testar",
     "topping.auth.taboo": "Não recomendado",
     "recipeSetup.dough": "Massa",
+    // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
+    "recipeSetup.profileHint": "Escolha uma versão de partida ou uma inspiração de autor: os valores continuam editáveis.",
     "recipeSetup.styleBase": "estilo base",
     "recipeSetup.temp.fridge": "geladeira",
     "recipeSetup.temp.cool": "fresco",
@@ -1266,7 +1269,7 @@ export const PT_LOCALE: CmsContent = {
     napoletana_stg:
       "Borda 1-2cm inchada|Centro 3-4mm fino|Crosta leopardo|Cozimento 60-90s",
     napoletana_canotto:
-      'Borda 3-4cm "canotto"|Alveolagem extrema|Matura\u00E7\u00E3o 24-72h|Alta digestibilidade',
+      'Borda 3-4cm "canotto"|Alveolagem extrema|Matura\u00E7\u00E3o 24-72h|Miolo aberto e leve',
     teglia_romana:
       "Altura 2-3cm|Hidratação conforme a versão|Sem sovar + dobras|Miolo nuvem",
     tonda_romana:
@@ -1481,7 +1484,7 @@ export const PT_LOCALE: CmsContent = {
       "3 cm, alta massa térmica — forno a lenha e prosumer",
     surfaceCordierite: "Pedra de cordierita",
     surfaceCordieriteDesc:
-      "1.5 cm, compromisso massa/velocidade — Effeuno, Ooni",
+      "1.5 cm, compromisso massa/velocidade — fornos de pizza elétricos e a gás",
     surfaceSteel: "Placa de aço",
     surfaceSteelDesc:
       "5-10 mm, transferência ultra-rápida — base crocante em segundos",
@@ -1913,4 +1916,5 @@ export const PT_LOCALE: CmsContent = {
   preFerment: PRE_FERMENT_PT as any,
   troubleshootingI18n: TROUBLESHOOTING_PT as any,
   glossaryTerms: GLOSSARY_TERMS_PT as any,
+  science: SCIENCE_PT,
 };

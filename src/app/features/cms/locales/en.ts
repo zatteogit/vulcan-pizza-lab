@@ -7,6 +7,7 @@ import {
   PRE_FERMENT_EN,
   TROUBLESHOOTING_EN,
   GLOSSARY_TERMS_EN,
+  SCIENCE_EN,
 } from "./domain-en";
 
 /**
@@ -816,7 +817,7 @@ export const EN_LOCALE: CmsContent = {
   },
   flourDetails: {
     "00": "Classic, versatile",
-    "0": "Medium strength",
+    "0": "Slightly less refined than 00",
     manitoba: "High strength, long maturation",
     integrale: "More fiber and flavor",
     semola: "Crunchiness, golden color",
@@ -1101,6 +1102,8 @@ export const EN_LOCALE: CmsContent = {
     "topping.auth.experimental": "Worth trying",
     "topping.auth.taboo": "Not recommended",
     "recipeSetup.dough": "Dough",
+    // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
+    "recipeSetup.profileHint": "Choose a starting version or an author's inspiration: the values stay editable.",
     "recipeSetup.styleBase": "base style",
     "recipeSetup.temp.fridge": "fridge",
     "recipeSetup.temp.cool": "cool room",
@@ -1456,7 +1459,7 @@ export const EN_LOCALE: CmsContent = {
     napoletana_stg:
       "Cornicione 1-2cm puffy|Centre 3-4mm thin|Leopard-spotted crust|Bake 60-90s",
     napoletana_canotto:
-      'Cornicione 3-4cm "canotto"|Extreme alveolation|24-72h maturation|High digestibility',
+      'Cornicione 3-4cm "canotto"|Extreme alveolation|24-72h maturation|Open, light crumb',
     teglia_romana:
       "Height 2-3cm|Hydration varies by version|No-knead + folds|Cloud crumb",
     tonda_romana:
@@ -1670,7 +1673,7 @@ export const EN_LOCALE: CmsContent = {
       "3 cm, high thermal mass — wood & prosumer ovens",
     surfaceCordierite: "Cordierite stone",
     surfaceCordieriteDesc:
-      "1.5 cm, mass/speed compromise — Effeuno, Ooni",
+      "1.5 cm, mass/speed compromise — electric and gas pizza ovens",
     surfaceSteel: "Steel plate",
     surfaceSteelDesc:
       "5-10 mm, ultra-fast transfer — crispy base in seconds",
@@ -1903,4 +1906,5 @@ export const EN_LOCALE: CmsContent = {
   preFerment: PRE_FERMENT_EN as any,
   troubleshootingI18n: TROUBLESHOOTING_EN as any,
   glossaryTerms: GLOSSARY_TERMS_EN as any,
+  science: SCIENCE_EN,
 };

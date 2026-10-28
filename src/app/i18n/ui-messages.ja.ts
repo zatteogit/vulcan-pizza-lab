@@ -366,7 +366,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "features.recipe.user-needs.lievito-madre-180392fb": "天然酵母",
   "features.recipe.user-needs.lievito-secco-0043f8c5": "ドライイースト",
   "features.recipe.user-needs.manitoba-c1a38647": "マニトバ",
-  "features.recipe.user-needs.media-forza-1dea8ed0": "中程度の強度",
+  "features.recipe.user-needs.media-forza-1dea8ed0": "00より少し精製度が低い",
   "features.recipe.user-needs.piu-fibra-e-sapore-e0f02324": "食物繊維と風味が豊か",
   "features.recipe.user-needs.pratico-lunga-conservazione-8c39549a": "便利で長期保存可能",
   "features.recipe.user-needs.proteica-sapore-deciso-6623765b": "高タンパク、しっかりした風味",
@@ -419,9 +419,8 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "pages.profile.fiamma-viva-di-lato-gestione-come-forno-a--d630082c": "横に直火：薪窯のように扱います。",
   "pages.profile.gas-sotto-011dc103": "下にガス",
   "pages.profile.grill-superiore-4368292b": "上部グリル",
-  "pages.profile.k-a2a64040": "k=",
   "pages.profile.la-tua-cucina-c2d87895": "あなたのキッチン",
-  "pages.profile.max-3c624fea": "最高",
+  "pages.profile.max-3c624fea": "最高約",
   "pages.profile.pro-66d0c5e6": "プロ",
   "pages.profile.ricette-salvate-b5c99ac7": "保存したレシピ",
   "pages.profile.semi-pro-e857b480": "セミプロ",
@@ -435,5 +434,7 @@ export const UI_MESSAGES_JA: Record<string, string> = {
   "pages.recipe.applyCorrections": "補正を適用",
   "pages.recipe.defaultTopping": "トッピング",
   "pages.recipe.ingredientsUpdated": "{0}：材料を更新しました",
-  "shared.unsavedChanges": "未保存の変更"
+  "shared.unsavedChanges": "未保存の変更",
+  "pages.profile.surfaceConductivity": "≈ {0} W/(m·K)",
+  "pages.profile.surfaceNoContact": "接触面なし"
 };

@@ -7,6 +7,7 @@ import {
   PRE_FERMENT_ES,
   TROUBLESHOOTING_ES,
   GLOSSARY_TERMS_ES,
+  SCIENCE_ES,
 } from "./domain-es";
 
 /** Spanish locale bundle */
@@ -615,7 +616,7 @@ export const ES_LOCALE: CmsContent = {
   },
   flourDetails: {
     "00": "Cl\u00E1sica, vers\u00E1til",
-    "0": "Fuerza media",
+    "0": "Algo menos refinada que la 00",
     manitoba: "Alta fuerza, larga maduraci\u00F3n",
     integrale: "M\u00E1s fibra y sabor",
     semola: "Crujiente, color dorado",
@@ -914,6 +915,8 @@ export const ES_LOCALE: CmsContent = {
     "topping.auth.experimental": "Por probar",
     "topping.auth.taboo": "No recomendado",
     "recipeSetup.dough": "Masa",
+    // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
+    "recipeSetup.profileHint": "Elige una versión de partida o una inspiración de autor: los valores siguen siendo editables.",
     "recipeSetup.styleBase": "estilo base",
     "recipeSetup.temp.fridge": "nevera",
     "recipeSetup.temp.cool": "fresco",
@@ -1270,7 +1273,7 @@ export const ES_LOCALE: CmsContent = {
     napoletana_stg:
       "Cornisa 1-2cm hinchada|Centro 3-4mm fino|Corteza leopardo|Cocci\u00F3n 60-90s",
     napoletana_canotto:
-      'Cornisa 3-4cm "canotto"|Alveolado extremo|Maduraci\u00F3n 24-72h|Alta digestibilidad',
+      'Cornisa 3-4cm "canotto"|Alveolado extremo|Maduraci\u00F3n 24-72h|Miga abierta y ligera',
     teglia_romana:
       "Altura 2-3cm|Hidratación según la versión|Sin amasado + pliegues|Miga nube",
     tonda_romana:
@@ -1486,7 +1489,7 @@ export const ES_LOCALE: CmsContent = {
       "3 cm, alta masa térmica — horno de leña y prosumer",
     surfaceCordierite: "Piedra de cordierita",
     surfaceCordieriteDesc:
-      "1.5 cm, compromiso masa/velocidad — Effeuno, Ooni",
+      "1.5 cm, compromiso masa/velocidad — hornos de pizza eléctricos y de gas",
     surfaceSteel: "Placa de acero",
     surfaceSteelDesc:
       "5-10 mm, transferencia ultra-rápida — base crujiente en segundos",
@@ -1916,4 +1919,5 @@ export const ES_LOCALE: CmsContent = {
   preFerment: PRE_FERMENT_ES as any,
   troubleshootingI18n: TROUBLESHOOTING_ES as any,
   glossaryTerms: GLOSSARY_TERMS_ES as any,
+  science: SCIENCE_ES,
 };

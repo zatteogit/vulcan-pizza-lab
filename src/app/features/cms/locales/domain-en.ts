@@ -3,6 +3,7 @@ import type {
   CmsPreFerment,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
+  CmsScience,
 } from "../cms-context";
 
 export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
@@ -26,12 +27,10 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
     "Temperature",
     "Flavour",
     "Extensibility",
-    "Crumb structure",
-    "Complexity",
   ],
   items: {
     poolish: {
-      origin: "French",
+      origin: "Poland, then France",
       description:
         "Liquid pre-ferment: equal parts flour and water with a little yeast, 12–16 h at 20–22 °C.",
       hydration: "100% (equal parts flour and water)",
@@ -40,8 +39,8 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
         "Fast: with so much water it matures in a few hours",
       flavor: "Slightly tangy, nutty notes",
       crustResult:
-        "Light, deeply golden, pronounced leopard spotting",
-      extensibility: "High \u2014 easy to stretch",
+        "Thin and golden; colour and spotting depend on oven and temperature",
+      extensibility: "High (estimate): easy to stretch",
       idealStyles:
         "Roman teglia, NY Style, Contemporary Neapolitan, Focaccia",
       tips: [
@@ -51,15 +50,15 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
       ],
     },
     biga: {
-      origin: "Italian",
+      origin: "Italy",
       description:
         "Stiff pre-ferment: flour, 44% water and 1% yeast, about 16 h at 18–20 °C.",
       hydration: "44% (up to 50% with wholegrain flours)",
       consistency: "Dry, compact",
       fermentationType: "Slow: with little water it matures in 16–48 h",
       flavor: "Aromatic, floral",
-      crustResult: "Crispy, crumbly, fine crumb",
-      extensibility: "Low \u2014 needs rest after portioning",
+      crustResult: "Crisp; the structure depends on hydration and shaping",
+      extensibility: "Depends on flour and hydration (to be verified)",
       idealStyles:
         "Pinsa, Pizza al taglio, Pala romana, Bread",
       tips: [
@@ -70,10 +69,10 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
       ],
     },
     autolisi: {
-      origin: "France (R. Calvel, 1974)",
+      origin: "R. Calvel, France 1974",
       description:
         "Not a pre-ferment: flour and water rest without yeast or salt before mixing.",
-      hydration: "55-75% (all recipe water)",
+      hydration: "The recipe's own (some water is often held back)",
       consistency: "Pasty",
       fermentationType: "None (enzymatic activity only)",
       flavor: "Neutral \u2014 does not alter flavour",
@@ -91,7 +90,7 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
     hydration: {
       biga: "44%",
       poolish: "100%",
-      autolisi: "55-75%",
+      autolisi: "= recipe",
     },
     yeast: {
       biga: "1%",
@@ -114,19 +113,9 @@ export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
       autolisi: "Neutral",
     },
     extensibility: {
-      biga: "Low",
-      poolish: "High",
+      biga: "Variable",
+      poolish: "High (estimate)",
       autolisi: "High",
-    },
-    alveolatura: {
-      biga: "Fine",
-      poolish: "Large",
-      autolisi: "Large",
-    },
-    complexity: {
-      biga: "Medium",
-      poolish: "Low",
-      autolisi: "Very low",
     },
   },
 };
@@ -281,7 +270,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
         symptom:
           "Leopard spots on the crust (leopard spotting)",
         cause:
-          "Contact with oven vault >500\u00B0C \u2014 localised Maillard reaction",
+          "Thin bubbles on the rim darkening under very strong oven heat (localised browning and charring)",
         testRapido: "Do the spots taste bitter?",
         fixImmediate:
           "NOT a problem! It\u2019s the desired characteristic of Neapolitan pizza",
@@ -727,7 +716,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
       definition:
         "Dough quantity per unit of surface area: the grams of dough for each cm² of pizza.",
       whyImportant:
-        "Determines baking time, crispness and caloric density. Original {brand} Project metric.",
+        "A metric common in North American dough calculators (in oz/in²; 1 oz/in² ≈ 4.39 g/cm²). {brand} expresses it in g/cm² to size the dough balls; together with the oven it guides baking time and crispness.",
       ranges: [
         { label: "Neapolitan", value: "0.30\u20130.36", note: "6-7 mm" },
         { label: "Roman tonda", value: "0.20\u20130.25", note: "4-5 mm" },
@@ -784,5 +773,175 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         "A model estimate based on time, temperature, yeast and preferments. It does not measure personal digestibility or calculate FODMAP content.",
       ranges: [{"label":"85-100","value":"High index"},{"label":"70-84","value":"Medium-high index"},{"label":"50-69","value":"Medium index"},{"label":"<50","value":"Low index"}],
     },
+  },
+};
+/* FW-01 — Science registry: note and assumption texts (keys as in SCIENCE_I18N_DEFAULTS). */
+export const SCIENCE_EN: CmsScience = {
+  notes: {
+    "yeast-dose": {
+      title: "Yeast amount",
+      l1: "It is an estimate: more hours and more warmth need less yeast.",
+      l2: "We start from a reference amount consistent with the Neapolitan regulations and adjust it for your hours and your temperature. Real yeast, flour and kitchens can shift the timing: watch the dough more than the clock.",
+    },
+    "q10-fermentation": {
+      title: "Temperature and rising speed",
+      l1: "Warmer means faster rising, colder means slower. The factor is an estimate.",
+      l2: "The model uses a stepwise speed factor relative to a reference temperature. At room temperature it agrees with yeast studies; in the cool and in the fridge it has no source and can be far off: check the dough.",
+    },
+    "equivalent-hours": {
+      title: "Equivalent hours",
+      l1: "Your hours translated into the hours needed at the reference temperature.",
+      l2: "We multiply the hours by the speed at your temperature and by a method factor (pre-ferment, fridge). That is why «hours × speed» alone does not add up.",
+    },
+    "kitchen-temp-default": {
+      title: "Kitchen temperature",
+      l1: "If you do not enter it, we use a standard value.",
+      l2: "Kitchen temperature changes rising times and water temperature. The standard value is an assumption: if your kitchen is warmer or colder, enter it and the recipe adapts.",
+    },
+    "proof-split": {
+      title: "Final proof length",
+      l1: "When the style does not state it, the final proof is a fixed share of the total hours.",
+      l2: "It is a model assumption, not a rule of the method. If your kitchen is warmer than expected the dough is ready sooner: check it.",
+    },
+    "sourdough-starter-dose": {
+      title: "Sourdough starter amount",
+      l1: "The starter amount is a rule of thumb that depends only on the hours.",
+      l2: "It ignores temperature and how strong your starter is. The starter's flour and water are not counted in the hydration shown: the real dough is slightly wetter.",
+    },
+    "pre-ferment": {
+      title: "Biga and poolish",
+      l1: "Hydration, hours and temperatures come from consistent trade sources.",
+      l2: "Biga is a stiff pre-ferment that matures slowly in the cool; poolish is liquid and matures faster. Crust and crumb depend mostly on oven, hydration and shaping, not on the pre-ferment alone.",
+    },
+    autolysis: {
+      title: "Autolysis",
+      l1: "Flour and water rest without yeast or salt before mixing.",
+      l2: "It is not a pre-ferment: nothing ferments. It hydrates the flour and makes the dough easier to work (R. Calvel, 1974).",
+    },
+    "water-temp-rule": {
+      title: "Water temperature",
+      l1: "An exact calculation that starts from a few assumptions about your kitchen.",
+      l2: "Kitchen, flour, water and mixer heat add up to three times the dough temperature you want. The arithmetic is exact; kitchen and flour are estimates unless you measure them, and mixer heat is a typical value.",
+    },
+    "water-activity": {
+      title: "Water activity (Aw)",
+      l1: "An estimated index, not a measurement.",
+      l2: "We compute it with a simple formula from hydration, salt and sugar. It helps compare recipes, not tell how long the pizza keeps: a real value needs an instrument.",
+    },
+    "dough-indices": {
+      title: "Dough indices",
+      l1: "Gluten network and proteolysis are model indices, not measurements.",
+      l2: "They combine flour strength, hydration and hours with weights chosen by {brand}. They help compare two recipes; they are not lab values.",
+    },
+    "salt-range": {
+      title: "Salt range",
+      l1: "The salt markers are a {brand} choice, not a sourced range.",
+      l2: "For Napoletana STG the regulation gives a precise range; for other styles we show a narrow band around the recipe value.",
+    },
+    "stg-salt-timing": {
+      title: "Salt in Napoletana STG",
+      l1: "The regulation dissolves the salt in the water before adding the flour.",
+      l2: "This is the order in the EU STG regulation. Other methods add salt later: for this style we follow the regulation.",
+    },
+    "flour-w-by-grade": {
+      title: "Flour type and strength",
+      l1: "00, 0, 1 and wholemeal say how refined the flour is, not how strong.",
+      l2: "Strength (W) varies from bag to bag even within one type. If the bag does not state it, the model uses an estimate for the type: for a real value check the miller's data sheet.",
+    },
+    "flour-pl-estimate": {
+      title: "Estimated P/L",
+      l1: "If you do not enter P/L, we estimate it from flour strength.",
+      l2: "It is an approximate relation, kept within the style's range. The real value is on the flour's data sheet.",
+    },
+    "stg-flour-w": {
+      title: "Flour strength in the STG",
+      l1: "We use the AVPN range, narrower than the STG regulation's.",
+      l2: "The EU STG regulation allows weaker and stronger flours; the AVPN rules narrow the range. It is a {brand} choice: both sources are listed.",
+    },
+    "oven-max-temp": {
+      title: "Oven maximum temperature",
+      l1: "It is the temperature stated for your model.",
+      l2: "Almost no maker says whether it is air or stone temperature. When the figure comes from a retailer or a review we flag it; demo ovens have made-up data.",
+    },
+    "oven-preset-max-temp": {
+      title: "Typical temperature of the oven type",
+      l1: "A typical value: correct it with your oven's.",
+      l2: "For some oven types we have no maker's data sheet or standard. If you know your oven, enter its temperature: the recipe adapts.",
+    },
+    "stg-oven-temp": {
+      title: "Napoletana STG oven",
+      l1: "The two sources give the same temperature for different surfaces.",
+      l2: "The STG regulation refers it to the oven floor, the AVPN rules to the dome. Neither reaches the top of the range the engine uses: that value is still to be verified.",
+    },
+    "style-min-oven-temp": {
+      title: "Style minimum temperature",
+      l1: "For many styles the minimum is a model choice, without a source.",
+      l2: "Below the minimum the recipe is not feasible or less faithful. Where a regulation exists we follow it; otherwise the threshold is still to be verified.",
+    },
+    "bake-time-home-preheat": {
+      title: "Home oven preheating",
+      l1: "The preheating time is a model assumption.",
+      l2: "Stone and steel heat up more slowly than air: put them in the cold oven, switch on and, if you can, measure the surface before baking.",
+    },
+    "surface-conductivity": {
+      title: "Surface conductivity",
+      l1: "How quickly the surface passes heat to the pizza.",
+      l2: "It is the material's typical thermal conductivity, in W/(m·K): metals come from engineering tables, stone and firebrick are values still to be verified. The rack has no contact surface.",
+    },
+    "baking-energy": {
+      title: "Baking energy",
+      l1: "An order of magnitude, not a measurement.",
+      l2: "We multiply the baking time by a typical power chosen from the oven temperature, the same for wood, gas and electric. Preheating is not included.",
+    },
+    "thickness-factor": {
+      title: "Thickness factor",
+      l1: "Grams of dough for each cm² of pizza.",
+      l2: "It is a metric common in North American dough calculators, in ounces per square inch; {brand} expresses it in g/cm² to size the dough balls.",
+    },
+    "score-weights": {
+      title: "Score weights",
+      l1: "The weights of the dimensions are a {brand} choice.",
+      l2: "They say how much each dimension counts in the final number. They do not come from a measurement: they are an app rule, the same for everyone.",
+    },
+    "non-feasible-ceiling": {
+      title: "Ceiling for unfeasible recipes",
+      l1: "A recipe you cannot make stays in the low band: it is an app rule.",
+      l2: "This way an unfeasible recipe never beats one you can make, even if the other dimensions are high.",
+    },
+    "authenticity-fuel-cap": {
+      title: "Authenticity ceiling for the fuel",
+      l1: "Without the oven the style calls for, authenticity has a ceiling: it is a {brand} choice.",
+      l2: "When a style requires wood or coal, another oven can bake well but does not follow the method. The ceiling is an editorial boundary, not a measure of quality.",
+    },
+    digestibility: {
+      title: "Digestibility index",
+      l1: "A model index about the process, not a health promise.",
+      l2: "It considers maturation hours and temperatures. It does not measure how a person digests a pizza and does not certify suitability for a diet.",
+    },
+    "troubleshooting-thresholds": {
+      title: "Troubleshooting thresholds",
+      l1: "The numeric thresholds in troubleshooting are indicative.",
+      l2: "They are rules of thumb without a published source and they ignore the style: a pan dough, for example, is much wetter than a Neapolitan. Use them as a hint, not a diagnosis.",
+    },
+  },
+  assumptions: {
+    "constant-ferment-temp": "The temperature stays constant for the whole phase.",
+    "time-exponent-no-source": "The hours correction uses an exponent chosen by the model, without a source.",
+    "kitchen-temp-standard": "If you do not enter the kitchen temperature, we use a standard value.",
+    "q10-cold-no-source": "In the cool and in the fridge the speed factor has no source: the error can be large.",
+    "proof-share-default": "Without guidance from the style, the final proof is a fixed share of the hours.",
+    "starter-steps-by-hours": "The starter amount steps down with the hours, ignoring temperature.",
+    "starter-not-in-hydration": "The starter's flour and water are not counted in the hydration.",
+    "flour-at-kitchen-temp": "The flour is at kitchen temperature.",
+    "mixer-friction-values": "Mixer heat is a typical value still to be verified; by hand it is zero.",
+    "coefficients-not-measured": "The formula's coefficients are chosen by the model, not measured.",
+    "grade-is-not-strength": "Flour type indicates refinement, not strength: W by type is an estimate.",
+    "oven-temp-surface-unspecified": "We do not know whether the stated temperature is air or stone.",
+    "style-min-temp-no-source": "The style's minimum temperature has no written source.",
+    "preheat-home-minutes": "Preheating time depends only on oven temperature, not on the surface.",
+    "rack-no-contact": "The rack has no contact surface: the base bakes by radiation and air.",
+    "oven-power-steps": "A typical power for each temperature band, the same for every fuel.",
+    "no-health-claim": "No health claim: the index does not measure how a person digests.",
+    "thresholds-rules-of-thumb": "The thresholds are general rules of thumb, not tuned to the style.",
   },
 };

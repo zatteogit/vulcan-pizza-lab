@@ -40,6 +40,17 @@ immediatamente utilizzabili.
   dichiarate. Un conteggio di «gruppi» non aiuta la scelta.
 - Le istruzioni del procedimento valgono per la ricetta generata. Evitare di
   trasformarle in regole universali per tutti i metodi.
+- **Statuto di un'affermazione** (D-A, FW-01): **Esatto** (definizione o
+  aritmetica), **Stima** (modello empirico con incertezza), **Ipotesi**
+  (assunzione del modello, come la cucina a temperatura standard), **Scelta di
+  Vulcan** (convenzione di prodotto, come i pesi del punteggio). L'etichetta
+  compare nel «Perché?» (livello 3, e al 2 quando serve), mai come rumore al
+  livello 1. Una stima non mostra più decimali di quelli che regge; un dato «da
+  verificare» non compare al livello 1 come fatto. Lo statuto di ogni
+  affermazione sta nel registro `src/app/data/science-notes.ts`, non nel testo.
+- Nessuna caratteristica di stile, chip o descrizione breve promette
+  digeribilità o idoneità dietetica: se serve, se ne parla al livello 2 con la
+  nota che dice cosa il modello non misura.
 
 ## Contenuti e traduzioni
 

@@ -7,6 +7,7 @@ import {
   PRE_FERMENT_FR,
   TROUBLESHOOTING_FR,
   GLOSSARY_TERMS_FR,
+  SCIENCE_FR,
 } from "./domain-fr";
 
 /** French locale bundle */
@@ -612,7 +613,7 @@ export const FR_LOCALE: CmsContent = {
   },
   flourDetails: {
     "00": "Classique, polyvalente",
-    "0": "Force moyenne",
+    "0": "Un peu moins raffinée que la 00",
     manitoba: "Haute force, longue maturation",
     integrale: "Plus de fibres et de go\u00FBt",
     semola: "Croustillant, couleur dor\u00E9e",
@@ -913,6 +914,8 @@ export const FR_LOCALE: CmsContent = {
     "topping.auth.experimental": "À essayer",
     "topping.auth.taboo": "Déconseillé",
     "recipeSetup.dough": "Pâte",
+    // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
+    "recipeSetup.profileHint": "Choisissez une version de départ ou une inspiration d'auteur : les valeurs restent modifiables.",
     "recipeSetup.styleBase": "style de base",
     "recipeSetup.temp.fridge": "frigo",
     "recipeSetup.temp.cool": "frais",
@@ -1272,7 +1275,7 @@ export const FR_LOCALE: CmsContent = {
     napoletana_stg:
       "Corniche 1-2cm gonfl\u00E9e|Centre 3-4mm fin|Cro\u00FBte l\u00E9opard|Cuisson 60-90s",
     napoletana_canotto:
-      "Corniche 3-4cm \u00AB canotto \u00BB|Alv\u00E9olage extr\u00EAme|Maturation 24-72h|Haute digestibilit\u00E9",
+      "Corniche 3-4cm \u00AB canotto \u00BB|Alv\u00E9olage extr\u00EAme|Maturation 24-72h|Mie aérée et légère",
     teglia_romana:
       "Hauteur 2-3cm|Hydratation selon la version|Sans p\u00E9trissage + pliages|Mie nuage",
     tonda_romana:
@@ -1489,7 +1492,7 @@ export const FR_LOCALE: CmsContent = {
       "3 cm, haute masse thermique — four à bois et prosumer",
     surfaceCordierite: "Pierre en cordiérite",
     surfaceCordieriteDesc:
-      "1.5 cm, compromis masse/vitesse — Effeuno, Ooni",
+      "1.5 cm, compromis masse/vitesse — fours à pizza électriques et à gaz",
     surfaceSteel: "Plaque en acier",
     surfaceSteelDesc:
       "5-10 mm, transfert ultra-rapide — fond croustillant en secondes",
@@ -1922,4 +1925,5 @@ export const FR_LOCALE: CmsContent = {
   preFerment: PRE_FERMENT_FR as any,
   troubleshootingI18n: TROUBLESHOOTING_FR as any,
   glossaryTerms: GLOSSARY_TERMS_FR as any,
+  science: SCIENCE_FR,
 };

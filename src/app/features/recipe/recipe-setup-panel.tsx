@@ -35,6 +35,13 @@ import { RecipeMatchIcon } from "./recipe-match-icon";
 import { matchTone } from "./recipe-match-card";
 import type { StyleVersion } from "../../data/style-versions";
 import { uiMessage } from "../../i18n/ui-messages";
+import { getScienceNote } from "../../data/science-notes";
+import { roundForEvidence } from "../../domain/science/evidence";
+
+/* FW-01 (S06-A-06/B-08): Aw e fattore Q10 sono stime, non misure: non più
+ * decimali di quelli che la nota del registro consente. */
+const AW_NOTE = getScienceNote("water-activity");
+const Q10_NOTE = getScienceNote("q10-fermentation");
 
 function cmsMessage(cms: CmsContent, key: string, fallback: string): string {
   return cms.engineMessages?.[key] ?? fallback;
@@ -351,7 +358,7 @@ export function RecipeSetupPanel({
                 {cmsMessage(
                   cms,
                   "recipeSetup.profileHint",
-                  "Scegli un preset bilanciato dai nostri pizzaioli o un'interpretazione d'autore per configurare l'impasto.",
+                  "Scegli una versione di partenza o un'ispirazione d'autore: i valori restano modificabili.",
                 )}
               </span>
             </div>
@@ -472,14 +479,14 @@ export function RecipeSetupPanel({
                       formatTemperatureCopy(cms.ui.nerdQ10, fmt),
                       { refTemp: fmt.celsius(18) },
                     )}
-                    value={`${recipe.science.q10_factor}×`}
+                    value={`${fmt.number(roundForEvidence(recipe.science.q10_factor, Q10_NOTE))}×`}
                     index={3}
                   />
                   <SpecCell
                     small
                     science
                     label={cms.ui.nerdAw}
-                    value={`${recipe.science.water_activity}`}
+                    value={fmt.number(roundForEvidence(recipe.science.water_activity, AW_NOTE), { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     index={4}
                   />
                 </div>

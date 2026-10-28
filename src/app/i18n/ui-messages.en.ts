@@ -366,7 +366,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "features.recipe.user-needs.lievito-madre-180392fb": "Sourdough starter",
   "features.recipe.user-needs.lievito-secco-0043f8c5": "Dry yeast",
   "features.recipe.user-needs.manitoba-c1a38647": "Manitoba",
-  "features.recipe.user-needs.media-forza-1dea8ed0": "Medium strength",
+  "features.recipe.user-needs.media-forza-1dea8ed0": "Slightly less refined than 00",
   "features.recipe.user-needs.piu-fibra-e-sapore-e0f02324": "More fibre and flavour",
   "features.recipe.user-needs.pratico-lunga-conservazione-8c39549a": "Convenient, long shelf life",
   "features.recipe.user-needs.proteica-sapore-deciso-6623765b": "High-protein, bold flavour",
@@ -419,9 +419,8 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "pages.profile.fiamma-viva-di-lato-gestione-come-forno-a--d630082c": "Live flame at the side, handle it like a wood-fired oven.",
   "pages.profile.gas-sotto-011dc103": "Gas below",
   "pages.profile.grill-superiore-4368292b": "Top grill",
-  "pages.profile.k-a2a64040": "k=",
   "pages.profile.la-tua-cucina-c2d87895": "Your kitchen",
-  "pages.profile.max-3c624fea": "Max ",
+  "pages.profile.max-3c624fea": "up to ~",
   "pages.profile.pro-66d0c5e6": "Pro",
   "pages.profile.ricette-salvate-b5c99ac7": "Saved recipes",
   "pages.profile.semi-pro-e857b480": "Semi-Pro",
@@ -435,5 +434,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "pages.recipe.applyCorrections": "Apply the corrections",
   "pages.recipe.defaultTopping": "Topping",
   "pages.recipe.ingredientsUpdated": "{0}: ingredients updated",
-  "shared.unsavedChanges": "Unsaved changes"
+  "shared.unsavedChanges": "Unsaved changes",
+  "pages.profile.surfaceConductivity": "≈ {0} W/(m·K)",
+  "pages.profile.surfaceNoContact": "no contact"
 };

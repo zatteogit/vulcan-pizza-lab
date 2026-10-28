@@ -366,7 +366,7 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "features.recipe.user-needs.lievito-madre-180392fb": "Levain natural",
   "features.recipe.user-needs.lievito-secco-0043f8c5": "Fermento seco",
   "features.recipe.user-needs.manitoba-c1a38647": "Manitoba",
-  "features.recipe.user-needs.media-forza-1dea8ed0": "Força média",
+  "features.recipe.user-needs.media-forza-1dea8ed0": "Um pouco menos refinada que a 00",
   "features.recipe.user-needs.piu-fibra-e-sapore-e0f02324": "Mais fibra e sabor",
   "features.recipe.user-needs.pratico-lunga-conservazione-8c39549a": "Prático, longa conservação",
   "features.recipe.user-needs.proteica-sapore-deciso-6623765b": "Proteica, sabor marcante",
@@ -419,9 +419,8 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "pages.profile.fiamma-viva-di-lato-gestione-come-forno-a--d630082c": "Chama viva na lateral, manejo como num forno a lenha.",
   "pages.profile.gas-sotto-011dc103": "Gás embaixo",
   "pages.profile.grill-superiore-4368292b": "Grill superior",
-  "pages.profile.k-a2a64040": "k=",
   "pages.profile.la-tua-cucina-c2d87895": "Sua cozinha",
-  "pages.profile.max-3c624fea": "Máx. ",
+  "pages.profile.max-3c624fea": "até ~",
   "pages.profile.pro-66d0c5e6": "Pro",
   "pages.profile.ricette-salvate-b5c99ac7": "Receitas salvas",
   "pages.profile.semi-pro-e857b480": "Semi-Pro",
@@ -435,5 +434,7 @@ export const UI_MESSAGES_PT: Record<string, string> = {
   "pages.recipe.applyCorrections": "Aplicar as correções",
   "pages.recipe.defaultTopping": "Cobertura",
   "pages.recipe.ingredientsUpdated": "{0}: ingredientes atualizados",
-  "shared.unsavedChanges": "Altereções não salvas"
+  "shared.unsavedChanges": "Altereções não salvas",
+  "pages.profile.surfaceConductivity": "≈ {0} W/(m·K)",
+  "pages.profile.surfaceNoContact": "sem contato"
 };

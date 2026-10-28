@@ -24,6 +24,26 @@ Nelle note, **Fatto** è ciò che la fonte dice; **Lettura** è un'interpretazio
 Le fonti sono citate come «ente o autore, anno». Riferimenti completi, URL e data
 d'accesso sono in fondo.
 
+## Il registro nel codice (FW-01, 28/10/2026)
+
+Questo documento resta la **ricerca**: fonti lette, note «Fatto / Lettura /
+Ipotesi», proposte. Il **registro operativo** che l'app legge è nel codice:
+
+| Che cosa | Dove | Contenuto |
+|---|---|---|
+| Tipi | `src/app/domain/science/types.ts` | `EvidenceKind` (esatto, stima, ipotesi, scelta di Vulcan), `SourceStatus` (verified, plausible, unverified, wrong = V, P, D, errato), `ScienceNote`, `SourceRef` |
+| Fonti | `src/app/data/science-sources.ts` | Id stabili (`masaf-stg-2010`, `avpn-2024`, `salvado-2011`…) trascritti dai §Riferimenti qui sotto, da `docs/ricerca/prefermenti-fonti-2026-10-24.md` e da `docs/ricerca/forni-fonti-2026-10-24.md`, con stato e data di lettura |
+| Note | `src/app/data/science-notes.ts` | Una nota per affermazione: statuto, formula, variabili, ipotesi, fonti, incertezza, costante del motore descritta, voce di glossario |
+| Testi | CMS, `science.notes.<id>.{title,l1,l2}` e `science.assumptions.<id>` | Titolo, «In breve», «Perché» e testo delle ipotesi, in 7 lingue |
+| Precisione | `roundForEvidence` in `src/app/domain/science/evidence.ts` | Una stima non mostra più decimali di `uncertainty.displayDecimals` (Aw a 2, fattore Q10 a 1) |
+| Guardia | `src/app/domain/science/science-registry.test.ts` | Ogni nota ha una fonte esistente oppure è ipotesi o scelta di Vulcan; nessuna fonte «errata» citata; ogni stima dichiara l'incertezza; testi in tutte le lingue; nessuna promessa di salute nelle caratteristiche degli stili |
+
+Regola: ogni nuova affermazione tecnica entra **prima** nel registro (nota +
+fonte, oppure statuto «ipotesi» o «scelta di Vulcan»), **poi** nell'interfaccia.
+Quando una ricerca cambia lo stato di un valore, si aggiornano insieme questo
+documento e lo `status` della fonte nel registro. Le note descrivono ciò che il
+motore fa oggi: correggere un modello è un lavoro separato, con misure prima e dopo.
+
 ---
 
 ## 1. Stili (`src/app/domain/styles-db.ts`)
@@ -185,6 +205,16 @@ automatico. Su quattro farine contraddice sia le schede sia `flour-database.ts`.
 | `dallagiovanna_manitoba` | 360–400 | 1365 | non trovato | da verificare | |
 | `00`, `0`, `manitoba`, `integrale`, `semola` | 170–220, 220–260, 340–380, 200–260, 220–280 | 1352–1356 | Categorie generiche, non c'è un produttore | da verificare | |
 
+**Tipo e forza (audit del 28/10/2026, S05-A-04).** In Italia 00, 0, 1, 2 e
+integrale indicano il grado di abburattamento (ceneri), non la forza: una 00 da
+pizza può avere W 260–280 (Mulino Caputo 2025, «Pizzeria») e l'AVPN ammette 00 e
+0 con W 250–320 (AVPN 2024). Le W per tipo sono quindi **stime** del modello.
+Dal 28/10/2026 (FW-01) la dispensa non mostra più la W sulle chip generiche (00,
+0, 1, integrale, semola) e dice che il tipo indica la raffinazione; la W compare
+solo se l'utente la dichiara. Il motore continua a usare `FLOUR_W_RANGES` per le
+farine non dichiarate (nota `flour-w-by-grade` del registro). La norma citata
+dall'audit (D.P.R. 187/2001) va riletta prima di citarla come verificata.
+
 Nota sul codice, non sui dati: due chiavi di `FLOUR_W_RANGES` (`caputo_pizzeria_blu`,
 `dallagiovanna_manitoba`) non coincidono con gli `id` di `flour-database.ts`
 (`caputo_pizzeria`, `dallagiovanna_manitoba_oro`). Non ho controllato da dove vengono
@@ -204,6 +234,7 @@ gli id della dispensa: va visto se la ricerca `FLOUR_W_RANGES[id]` trova queste 
 | `gas_pizza` («Forno a gas da pizza», dal 24/10) | 500 °C | `OVEN_PRESETS` | Ooni 2026: il Koda 16 «può raggiungere i 500 °C» | **verificato** (per i portatili) | D-021. |
 | `electric_high` | 450 °C | 3446 | Pagina ufficiale Effeuno P134H senza dati di temperatura | **da verificare** | |
 | `wood` | 500 °C | 3452 | UE 2010: platea circa 485 °C. AVPN 2024: cupola circa 485 °C | **plausibile** | |
+| `coal` | 400 °C | `OVEN_PRESETS` | Valore iniziale dal range di lavoro del modello Apizza (commento nel codice) | **da verificare** | Non è un massimo dei forni a carbone. Dal 28/10/2026 (FW-01) i forni generici mostrano «fino a ~» invece di «Max»: sono valori tipici, da correggere con quello del proprio forno. |
 
 ### 3.2 Superfici di cottura (`equipment-data.ts`, `SURFACE_OPTIONS`, righe 103–163)
 
@@ -214,6 +245,7 @@ gli id della dispensa: va visto se la ricerca `FLOUR_W_RANGES[id]` trova queste 
 | `cast_iron` | 52 | 152 | Engineering ToolBox: ghisa 52 (20 °C) | **verificato** |
 | `cordierite_stone` | 1,5 | 116 | Nessuna fonte | **da verificare** |
 | `refractory_brick` | 1,0 | 107 | Nessuna fonte | **da verificare** |
+| `oven_rack` (griglia) | 0 | 161 | — | **errato** come conducibilità: la griglia non ha una superficie di contatto. Dal 28/10/2026 (FW-01) l'interfaccia mostra «nessun contatto» invece di «k=0», e le altre superfici con l'unità W/(m·K) |
 
 ### 3.3 Impastatrici (`MIXER_OPTIONS`, righe 22–64)
 
@@ -345,6 +377,50 @@ non affermazioni su persone.
 
 ---
 
+## 6. Indici del modello, prefermenti, problemi e glossario (audit del 28/10/2026)
+
+Affermazioni che l'audit UX/scienza ha trovato senza fonte o mostrate come fatti.
+Ognuna ha una nota nel registro (colonna «Nota»); qui lo stato e cosa è cambiato.
+
+| Dato | Codice | Nota del registro | Stato | Cosa è cambiato (FW-01) |
+|---|---|---|---|---|
+| Attività dell'acqua: 0,96 + (H − 55) × 0,0005 − sale × 0,006 − zucchero × 0,004 | `ScientificLayer.water_activity` | `water-activity` | **da verificare** (coefficienti senza fonte) | Mostrata con 2 decimali, non 3, e dichiarata stima |
+| Fattore di velocità Q10 sotto i 18 °C | `fermentationSpeedRatio` | `q10-fermentation` | vedi §4 | Mostrato con 1 decimale |
+| Rete glutinica, proteolisi, amido degradato | `ScientificLayer` | `dough-indices` | **da verificare** (indici del modello) | Statuto «scelta di Vulcan» |
+| P/L stimato dalla W: 0,30 + (W − 150) × 0,0015 | `estimatePL` | `flour-pl-estimate` | **da verificare** | Nessuno: va detto in UI quando è stimato |
+| Energia di cottura: 2, 3 o 8 kW secondo la temperatura | `baking_energy_kj` | `baking-energy` | **da verificare** (8 kW anche per un elettrico da ~2 kW) | Statuto «ipotesi» |
+| Lievito madre: 15/18/20 % secondo le ore; farina e acqua della madre fuori dall'idratazione | `generateRecipe` | `sourdough-starter-dose` | **da verificare** | Nessuno (cambio del motore da misurare) |
+| Biga: tutto il lievito nella biga, circa 0,2 % sulla sua farina per 16 h | `computePreFermentSplit` | `pre-ferment` | **da verificare** contro la ricerca prefermenti (1 % a 18–20 °C) | Nessuno |
+| Appretto al 40 % delle ore quando lo stile non lo dichiara | `fermentationPhases` | `proof-split` | **da verificare**: contraddice `parametric-databases` (teglia 2–4 h) | Statuto «ipotesi» |
+| Preriscaldo del forno di casa: 30 min sotto i 300 °C | `generateTimeline` | `bake-time-home-preheat` | **da verificare**: per la pietra domestica si citano spesso 45–60 min, senza fonte letta | Statuto «ipotesi» |
+| Forno della STG fino a 500 °C | `styles-db` | `stg-oven-temp` | **plausibile** il 485, **da verificare** il 500 (vedi §1.1) | Nota con le due superfici (platea UE, cupola AVPN) |
+| New York: minimo 270 °C | `styles-db` | `style-min-oven-temp` | **da verificare** | Nessuno; le ricette domestiche di riferimento citano 260–290 °C |
+| W della STG 250–320 (AVPN) invece di 220–380 (UE) | `styles-db` | `stg-flour-w` | **verificato** (scelta) | Statuto «scelta di Vulcan» con le due fonti |
+| Tacche del sale: valore ± 0,3 | `recipe-configurator` | `salt-range` | **scelta di Vulcan** senza fonte; la STG ha 2,8–3,1 % (§1.1) | Statuto dichiarato |
+| Thickness factor «metrica originale del progetto» | glossario | `thickness-factor` | **errato**: è una metrica dei calcolatori nordamericani, in oz/in² (1 oz/in² ≈ 4,39 g/cm²) | Testo corretto in 7 lingue; tolta la «densità calorica». Fonte (Lehmann, PMQ) **da rileggere** |
+| Prefermenti: poolish «leopard spotting marcato», biga «alveolatura fine», righe alveolatura e complessità | guida prefermenti | `pre-ferment` | **errato** (le macchie dipendono dal forno) e **da verificare** (stato D nella ricerca) | Tolte le due righe; crosta riscritta; estensibilità marcata «stima» o «da verificare»; autolisi con l'acqua della ricetta; origini in un solo formato (poolish: Polonia, poi Francia) |
+| Canotto: «Digeribilità alta» | `styles-db` `key_characteristics` | `digestibility` | **affermazione sulla salute**, vietata al livello 1 | Sostituita con «Mollica aperta e leggera» in 7 lingue, con test di guardia |
+| Forni della demo con fonte «P» | `editions/demo-forno.json` | `oven-max-temp` | **errato**: dati inventati | `source: "demo"` obbligatorio per un marchio inventato (`edition.ts`) |
+| Soglie dei problemi (idratazione > 70 %, P/L > 0,8, > 500 °C…) | `troubleshooting-data.ts` («Notion pagina 11») | `troubleshooting-thresholds` | **da verificare** | Nessuno: soglie relative allo stile in FW-05 |
+| Focaccia genovese: fossette e salamoia prima di tutto l'appretto | `topping-library` (`insert_at: before_proof`) | — | **plausibile** come ordine, **da verificare** la durata (§1.6) | Nessuno: servono una fonte scritta con autore prima di dividere l'appretto |
+
+### Lista di verifica (decisione D-F)
+
+I valori «da verificare» restano nel motore ma non compaiono al livello 1 come
+fatti: nel «Perché?» hanno lo statuto «stima» o «ipotesi». Da chiudere, in ordine
+di impatto:
+
+1. Coefficienti dell'Aw, degli indici del modello e del P/L stimato: fonte o rimozione dalla griglia «Scienza».
+2. Lievito madre: idratazione della madre e dose per ore e temperatura.
+3. Dose di lievito della biga rispetto alla sua farina (ricerca prefermenti: 1 % per 16 h a 18–20 °C).
+4. Appretto quando lo stile non lo dichiara (teglia: 2–4 h a 22 °C nei dati dell'app).
+5. Preriscaldo della pietra nel forno di casa.
+6. Temperature minime degli stili senza disciplinare (New York 270 °C per primo).
+7. Soglie di Problemi e soluzioni.
+8. Thickness factor (Lehmann, PMQ) e formula alveografica W = 6,54 × S (norma ISO): rileggere le fonti prima di scriverle in app.
+9. D.P.R. 187/2001 per la definizione dei tipi di farina.
+10. Focaccia genovese: fonte scritta sull'ordine fra ditatura, salamoia e lievitazione finale.
+
 ## Valori da correggere
 
 Sono proposte: la decisione spetta a Matteo. Per la pinsa vale D-013.
@@ -428,3 +504,9 @@ secondaria (P, plausibile). Mappature decise in D-048: Ninja Woodfire
 (370 °C, elettrico) come elettrico standard; forni Alfa a gas come gas da
 pizza; G3 Ferrari Delizia e Sage Pizzaiolo (400 °C) come elettrici da pizza.
 Spidocchio e Cuisinart non inseriti (nessun dato del produttore).
+
+Dal 28/10/2026 (FW-01, S18-B-07) i forni di un marchio inventato (edizioni
+dimostrative, `partner.invented: true`) hanno `source: "demo"`: lo schema
+dell'edizione rifiuta "V" o "P" per dati inventati, e rifiuta "demo" per un
+partner reale. Nel registro lo stato è `OVEN_MODEL_SOURCE_STATUS` in
+`src/app/data/science-notes.ts`.

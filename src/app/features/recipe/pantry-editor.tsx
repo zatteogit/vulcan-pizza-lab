@@ -35,7 +35,8 @@ export function PantryEditor({ constraints, onChange, onClose, flourOptions }: {
   // Stable keys come from the engine's source ingredients, never translated copy.
   const doughNames = ["Sale", "Zucchero", "Olio EVO", "Burro", "Strutto", "Acqua"];
   const flourItems: Item[] = [
-    ...flourOptions.map(f => ({ ...f, flour: true, detail: f.w })),
+    // FW-01: le farine generiche non hanno più una W stimata: si mostra la descrizione.
+    ...flourOptions.map(f => ({ ...f, flour: true, detail: f.w || f.detail })),
     ...FLOURS_DB.filter(f => !flourOptions.some(option => option.id === f.id)).map(f => ({
       id: f.id, name: f.name, producer: f.producer, flour: true,
       detail: t(f.w_declared === false ? ui.pantryWEstimate : ui.pantryWValue, {w:f.w}),
