@@ -366,7 +366,7 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "features.recipe.user-needs.lievito-madre-180392fb": "Levain naturel",
   "features.recipe.user-needs.lievito-secco-0043f8c5": "Levure sèche",
   "features.recipe.user-needs.manitoba-c1a38647": "Manitoba",
-  "features.recipe.user-needs.media-forza-1dea8ed0": "Force moyenne",
+  "features.recipe.user-needs.media-forza-1dea8ed0": "Un peu moins raffinée que la 00",
   "features.recipe.user-needs.piu-fibra-e-sapore-e0f02324": "Plus de fibres et de goût",
   "features.recipe.user-needs.pratico-lunga-conservazione-8c39549a": "Pratique, longue conservation",
   "features.recipe.user-needs.proteica-sapore-deciso-6623765b": "Riche en protéines, goût prononcé",
@@ -419,9 +419,8 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "pages.profile.fiamma-viva-di-lato-gestione-come-forno-a--d630082c": "Flamme vive sur le côté, à gérer comme un four à bois.",
   "pages.profile.gas-sotto-011dc103": "Gaz dessous",
   "pages.profile.grill-superiore-4368292b": "Grill supérieur",
-  "pages.profile.k-a2a64040": "k=",
   "pages.profile.la-tua-cucina-c2d87895": "Votre cuisine",
-  "pages.profile.max-3c624fea": "Max ",
+  "pages.profile.max-3c624fea": "jusqu'à ~",
   "pages.profile.pro-66d0c5e6": "Pro",
   "pages.profile.ricette-salvate-b5c99ac7": "Recettes enregistrées",
   "pages.profile.semi-pro-e857b480": "Semi-Pro",
@@ -435,5 +434,7 @@ export const UI_MESSAGES_FR: Record<string, string> = {
   "pages.recipe.applyCorrections": "Appliquer les corrections",
   "pages.recipe.defaultTopping": "Garniture",
   "pages.recipe.ingredientsUpdated": "{0} : ingrédients mis à jour",
-  "shared.unsavedChanges": "Modifications non enregistrées"
+  "shared.unsavedChanges": "Modifications non enregistrées",
+  "pages.profile.surfaceConductivity": "≈ {0} W/(m·K)",
+  "pages.profile.surfaceNoContact": "sans contact"
 };

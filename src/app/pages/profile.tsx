@@ -1961,7 +1961,10 @@ export function ProfilePage() {
                             {surface.label}
                           </span>
                           <span className={`type-data profile-equip-option__k-badge${heatModifier}`}>
-                            {uiMessage("pages.profile.k-a2a64040")}{surface.conductivity}
+                            {/* FW-01 (S16-A-08): unità esplicita; la griglia non ha superficie di contatto. */}
+                            {surface.conductivity > 0
+                              ? uiMessage("pages.profile.surfaceConductivity", [fmt.number(surface.conductivity)])
+                              : uiMessage("pages.profile.surfaceNoContact")}
                           </span>
                         </div>
                         <div className="type-data-xs profile-equip-option__desc">

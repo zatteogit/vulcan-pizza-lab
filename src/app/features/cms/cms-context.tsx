@@ -16,6 +16,7 @@ import {
   PRE_FERMENT_DEFAULTS,
   TROUBLESHOOTING_I18N_DEFAULTS,
   GLOSSARY_TERMS_DEFAULTS,
+  SCIENCE_I18N_DEFAULTS,
 } from "./domain-i18n-defaults";
 import { STYLE_PHOTOS } from "../../data/style-photos";
 import type {
@@ -432,6 +433,21 @@ export interface CmsTimelineStep {
 }
 
 /* ═══ DOMAIN DATA i18n INTERFACES ═══ */
+
+/* FW-01 — Registro della scienza: testi delle note (src/app/data/science-notes.ts).
+ * title = nome della nota; l1 = «In breve», una frase; l2 = «Perché», parole
+ * semplici. Statuto, formula, fonti e incertezza sono dati, non testo. */
+export interface CmsScienceNoteText {
+  title: string;
+  l1: string;
+  l2: string;
+}
+
+export interface CmsScience {
+  notes: Record<string, CmsScienceNoteText>;
+  /** Testi delle ipotesi del modello (ScienceNote.assumptionIds). */
+  assumptions: Record<string, string>;
+}
 
 /** Pre-ferment guide — UI labels + per-item content */
 export interface CmsPreFerment {
@@ -1320,6 +1336,8 @@ export interface CmsContent {
   troubleshootingI18n: CmsTroubleshootingI18n;
   /** Glossary term content i18n */
   glossaryTerms: CmsGlossaryTerms;
+  /** FW-01 — testi del registro della scienza (note e ipotesi). */
+  science: CmsScience;
 }
 
 // ═══ DEFAULTS ═══
@@ -2001,7 +2019,7 @@ export const CMS_DEFAULTS: CmsContent = {
   },
   flourDetails: {
     "00": "Classica, versatile",
-    "0": "Media forza",
+    "0": "Un po' meno raffinata della 00",
     manitoba: "Alta forza, lunga maturazione",
     integrale: "Più fibra e sapore",
     semola: "Croccantezza, colore dorato",
@@ -2210,6 +2228,8 @@ export const CMS_DEFAULTS: CmsContent = {
     "topping.auth.experimental": "Da provare",
     "topping.auth.taboo": "Sconsigliato",
     "recipeSetup.dough": "Impasto",
+    // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
+    "recipeSetup.profileHint": "Scegli una versione di partenza o un'ispirazione d'autore: i valori restano modificabili.",
     "recipeSetup.styleBase": "stile base",
     "recipeSetup.temp.fridge": "frigo",
     "recipeSetup.temp.cool": "fresco",
@@ -2599,7 +2619,7 @@ export const CMS_DEFAULTS: CmsContent = {
     surfaceRefractory: "Biscotto refrattario",
     surfaceRefractoryDesc: "3 cm, alta massa termica — forno a legna e prosumer",
     surfaceCordierite: "Pietra cordierite",
-    surfaceCordieriteDesc: "1.5 cm, compromesso massa/velocità — Effeuno, Ooni",
+    surfaceCordieriteDesc: "1.5 cm, compromesso massa/velocità — forni da pizza elettrici e a gas",
     surfaceSteel: "Piastra in acciaio",
     surfaceSteelDesc: "5-10 mm, trasferimento rapidissimo — base croccante in secondi",
     surfaceAluminum: "Teglia in alluminio",
@@ -2797,6 +2817,7 @@ export const CMS_DEFAULTS: CmsContent = {
   preFerment: PRE_FERMENT_DEFAULTS,
   troubleshootingI18n: TROUBLESHOOTING_I18N_DEFAULTS,
   glossaryTerms: GLOSSARY_TERMS_DEFAULTS,
+  science: SCIENCE_I18N_DEFAULTS,
 };
 
 // ═══ DEEP MERGE / GET / SET UTILITIES ═══

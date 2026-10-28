@@ -32,6 +32,13 @@ import {
   yeastPracticalHint,
 } from "./recipe-output-format";
 import { uiMessage } from "../../i18n/ui-messages";
+import { getScienceNote } from "../../data/science-notes";
+import { roundForEvidence } from "../../domain/science/evidence";
+
+/* FW-01 (S06-A-06/B-08): Aw e fattore Q10 sono stime, non misure: non più
+ * decimali di quelli che la nota del registro consente. */
+const AW_NOTE = getScienceNote("water-activity");
+const Q10_NOTE = getScienceNote("q10-fermentation");
 
 interface IngredientsSectionProps {
   recipe: GeneratedRecipe;
@@ -403,8 +410,8 @@ export function IngredientsSection({
                 {[
                   { l: `${cms.scienceLabels.yeastBaker} (baker's %)`, v: fmt.percent(recipe.science.yeast_baker_pct) },
                   { l: `${cms.scienceLabels.effectiveHours} @${fmt.celsius(18)}`, v: `${recipe.science.effective_hours_18c}h` },
-                  { l: `${cms.scienceLabels.q10Factor} vs ${fmt.celsius(18)}`, v: `${recipe.science.q10_factor}×` },
-                  { l: cms.scienceLabels.waterActivity, v: `${recipe.science.water_activity}` },
+                  { l: `${cms.scienceLabels.q10Factor} vs ${fmt.celsius(18)}`, v: `${fmt.number(roundForEvidence(recipe.science.q10_factor, Q10_NOTE))}×` },
+                  { l: cms.scienceLabels.waterActivity, v: fmt.number(roundForEvidence(recipe.science.water_activity, AW_NOTE), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
                   { l: cms.scienceLabels.glutenNetwork, v: `${recipe.science.gluten_network}/100` },
                   { l: cms.scienceLabels.proteolysis, v: `${recipe.science.proteolysis_index}/100` },
                   { l: cms.scienceLabels.desiredDoughTemp, v: fmt.celsius(recipe.science.desired_dough_temp_c) },

@@ -126,23 +126,26 @@ interface FlourOption {
   shortName?: string;
 }
 
+/* FW-01 (S05-A-04/B-07): il tipo (00, 0, 1, integrale, semola) è il grado di
+ * raffinazione, non la forza: niente W sulle chip generiche (era una stima
+ * mostrata come dato). La W compare solo se l'utente la dichiara. */
 const FLOUR_OPTIONS_GENERIC: FlourOption[] = [
   {
     id: "00",
     get name() { return pantryFlourName("00"); },
-    w: "W170–220",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.classica-versatile-21c9cc66"); },
   },
   {
     id: "0",
     get name() { return pantryFlourName("0"); },
-    w: "W220–260",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.media-forza-1dea8ed0"); },
   },
   {
     id: "tipo_1",
     get name() { return pantryFlourName("tipo_1"); },
-    w: "W220–280",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.rustica-profumo-di-cereale-766e58ac"); },
   },
   {
@@ -154,13 +157,13 @@ const FLOUR_OPTIONS_GENERIC: FlourOption[] = [
   {
     id: "integrale",
     get name() { return pantryFlourName("integrale"); },
-    w: "W200–260",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.piu-fibra-e-sapore-e0f02324"); },
   },
   {
     id: "semola",
     get name() { return pantryFlourName("semola"); },
-    w: "W220–280",
+    w: "",
     get detail() { return uiMessage("features.recipe.user-needs.croccantezza-colore-dorato-0119e353"); },
   },
 ];
@@ -841,6 +844,7 @@ export function UserNeeds({
                         <span className="needs-pantry__group-title">{cms.ui.pantryFlours}</span>
                       </div>
                       <FlourChipGrid options={FLOUR_OPTIONS_GENERIC.map(option=>constraints.pantry_flour_details?.[option.id]?.w ? {...option,w:`W${constraints.pantry_flour_details[option.id].w}`} : option)} activeFlours={constraints.pantry_flours} recentFlours={recentFlours} onToggle={toggleFlour} cms={cms} />
+                      <p className="pantry-quick__hint">{cms.science.notes["flour-w-by-grade"]?.l1}</p>
 
                     </div>
                     {/* Yeasts */}
@@ -1205,9 +1209,11 @@ function FlourChip({
           {flour.producer}
         </span>
       )}
-      <span className="type-numeric needs-flour-chip__w">
-        {flour.w}
-      </span>
+      {flour.w && (
+        <span className="type-numeric needs-flour-chip__w">
+          {flour.w}
+        </span>
+      )}
     </motion.button>
   );
 }

@@ -3,6 +3,7 @@ import type {
   CmsPreFerment,
   CmsTroubleshootingI18n,
   CmsGlossaryTerms,
+  CmsScience,
 } from "../cms-context";
 
 export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
@@ -26,12 +27,10 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
     "Température",
     "Saveur",
     "Extensibilité",
-    "Alvéolage",
-    "Complexité",
   ],
   items: {
     poolish: {
-      origin: "Fran\u00E7ais",
+      origin: "Pologne, puis France",
       description:
         "Préferment liquide : farine et eau à parts égales avec peu de levure, 12–16 h à 20–22 °C.",
       hydration: "100 % (farine et eau à parts égales)",
@@ -40,9 +39,9 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
         "Rapide : avec autant d'eau, il mûrit en quelques heures",
       flavor: "Légèrement acidulé, notes de noisette",
       crustResult:
-        "L\u00E9g\u00E8re, dor\u00E9e intense, leopard spotting marqu\u00E9",
+        "Fine et dorée ; couleur et taches dépendent du four et de la température",
       extensibility:
-        "\u00C9lev\u00E9e \u2014 \u00E9tirage facile",
+        "Élevée (estimation) : facile à étaler",
       idealStyles:
         "Teglia Romana, NY Style, Napolitaine contemporaine, Focaccia",
       tips: [
@@ -52,16 +51,16 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
       ],
     },
     biga: {
-      origin: "Italien",
+      origin: "Italie",
       description:
         "Préferment ferme : farine, 44 % d'eau et 1 % de levure, environ 16 h à 18–20 °C.",
       hydration: "44 % (jusqu'à 50 % avec des farines complètes)",
       consistency: "S\u00E8che, compacte",
       fermentationType: "Lente : avec peu d'eau, elle mûrit en 16–48 h",
       flavor: "Aromatique, florale",
-      crustResult: "Croustillante, friable, alv\u00E9olage fin",
+      crustResult: "Croustillante ; la structure dépend de l'hydratation et du façonnage",
       extensibility:
-        "Faible \u2014 n\u00E9cessite repos apr\u00E8s boulage",
+        "Dépend de la farine et de l'hydratation (à vérifier)",
       idealStyles:
         "Pinsa, Pizza al taglio, Pala romana, Pain",
       tips: [
@@ -72,10 +71,10 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
       ],
     },
     autolisi: {
-      origin: "France (R. Calvel, 1974)",
+      origin: "R. Calvel, France 1974",
       description:
         "Ce n'est pas un préferment : farine et eau reposent sans levure ni sel avant le pétrissage.",
-      hydration: "55-75% (toute l'eau de la recette)",
+      hydration: "Celle de la recette (on garde souvent un peu d'eau de côté)",
       consistency: "P\u00E2teuse",
       fermentationType:
         "Aucune (activit\u00E9 enzymatique uniquement)",
@@ -95,7 +94,7 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
     hydration: {
       biga: "44 %",
       poolish: "100%",
-      autolisi: "55-75%",
+      autolisi: "= recette",
     },
     yeast: {
       biga: "1 %",
@@ -118,19 +117,9 @@ export const PRE_FERMENT_FR: Partial<CmsPreFerment> = {
       autolisi: "Neutre",
     },
     extensibility: {
-      biga: "Faible",
-      poolish: "\u00C9lev\u00E9e",
+      biga: "Variable",
+      poolish: "Élevée (estimation)",
       autolisi: "\u00C9lev\u00E9e",
-    },
-    alveolatura: {
-      biga: "Fin",
-      poolish: "Large",
-      autolisi: "Large",
-    },
-    complexity: {
-      biga: "Moyenne",
-      poolish: "Faible",
-      autolisi: "Tr\u00E8s faible",
     },
   },
 };
@@ -295,7 +284,7 @@ export const TROUBLESHOOTING_FR: Partial<CmsTroubleshootingI18n> =
       P14: {
         symptom: "Taches l\u00E9opard sur la corniche",
         cause:
-          "Contact avec vo\u00FBte du four >500\u00B0C \u2014 r\u00E9action de Maillard localis\u00E9e",
+          "Fines bulles de la corniche qui foncent sous la très forte chaleur du four (brunissement et carbonisation localisés)",
         testRapido: "Les taches ont-elles un go\u00FBt amer ?",
         fixImmediate:
           "PAS un probl\u00E8me ! C'est la caract\u00E9ristique recherch\u00E9e de la pizza napolitaine",
@@ -618,7 +607,7 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
     thickness_factor: {
       name: "Thickness Factor (TF)",
       definition: "Quantité de pâte par unité de surface : les grammes de pâte pour chaque cm² de pizza.",
-      whyImportant: "D\u00E9termine le temps de cuisson, le croustillant et la densit\u00E9 calorique. M\u00E9trique originale du Projet {brand}.",
+      whyImportant: "Une mesure répandue dans les calculateurs de pâte nord-américains (en oz/in² ; 1 oz/in² ≈ 4,39 g/cm²). {brand} l'exprime en g/cm² pour dimensionner les pâtons ; avec le four, elle oriente le temps de cuisson et le croustillant.",
       ranges: [
         { label: "Napolitaine", value: "0.30\u20130.36", note: "6-7 mm" },
         { label: "Romaine ronde", value: "0.20\u20130.25", note: "4-5 mm" },
@@ -668,5 +657,175 @@ export const GLOSSARY_TERMS_FR: Partial<CmsGlossaryTerms> = {
       definition: "Estimation du modèle selon le temps, la température, la levure et les préferments. Elle ne mesure pas la digestibilité individuelle et ne calcule pas les FODMAP.",
       ranges: [{"label":"85-100","value":"Indice élevé"},{"label":"70-84","value":"Indice moyen-élevé"},{"label":"50-69","value":"Indice moyen"},{"label":"<50","value":"Indice faible"}],
     },
+  },
+};
+/* FW-01 — Registre scientifique : textes des notes et des hypothèses (clés comme SCIENCE_I18N_DEFAULTS). */
+export const SCIENCE_FR: CmsScience = {
+  notes: {
+    "yeast-dose": {
+      title: "Dose de levure",
+      l1: "C'est une estimation : plus d'heures et plus de chaleur demandent moins de levure.",
+      l2: "Nous partons d'une dose de référence cohérente avec les cahiers des charges napolitains et l'ajustons à vos heures et à votre température. La levure, la farine et la cuisine réelles peuvent décaler les temps : regardez la pâte plus que l'horloge.",
+    },
+    "q10-fermentation": {
+      title: "Température et vitesse de pousse",
+      l1: "Plus chaud, la pousse est plus rapide ; plus froid, plus lente. Le facteur est une estimation.",
+      l2: "Le modèle utilise un facteur de vitesse par paliers par rapport à une température de référence. À température ambiante, il concorde avec les études sur la levure ; au frais et au réfrigérateur, il n'a pas de source et peut beaucoup se tromper : surveillez la pâte.",
+    },
+    "equivalent-hours": {
+      title: "Heures équivalentes",
+      l1: "Vos heures traduites en heures nécessaires à la température de référence.",
+      l2: "Nous multiplions les heures par la vitesse à votre température et par un facteur de méthode (préferment, réfrigérateur). C'est pourquoi « heures × vitesse » seul ne tombe pas juste.",
+    },
+    "kitchen-temp-default": {
+      title: "Température de la cuisine",
+      l1: "Si vous ne l'indiquez pas, nous utilisons une valeur standard.",
+      l2: "La température de la cuisine change les temps de pousse et la température de l'eau. La valeur standard est une hypothèse : si votre cuisine est plus chaude ou plus froide, indiquez-le et la recette s'adapte.",
+    },
+    "proof-split": {
+      title: "Durée de l'apprêt",
+      l1: "Quand le style ne l'indique pas, l'apprêt est une part fixe des heures totales.",
+      l2: "C'est une hypothèse du modèle, pas une règle de la méthode. Si la cuisine est plus chaude que prévu, la pâte est prête plus tôt : vérifiez-la.",
+    },
+    "sourdough-starter-dose": {
+      title: "Dose de levain",
+      l1: "La dose de levain est une règle empirique qui ne dépend que des heures.",
+      l2: "Elle ne tient compte ni de la température ni de la force de votre levain. La farine et l'eau du levain ne sont pas comptées dans l'hydratation affichée : la pâte réelle est un peu plus hydratée.",
+    },
+    "pre-ferment": {
+      title: "Biga et poolish",
+      l1: "Hydratation, heures et températures viennent de sources professionnelles concordantes.",
+      l2: "La biga est un préferment ferme qui mûrit lentement au frais ; le poolish est liquide et mûrit plus vite. La croûte et la mie dépendent surtout du four, de l'hydratation et du façonnage, pas du seul préferment.",
+    },
+    autolysis: {
+      title: "Autolyse",
+      l1: "La farine et l'eau reposent sans levure ni sel avant le pétrissage.",
+      l2: "Ce n'est pas un préferment : rien ne fermente. La farine s'hydrate et la pâte devient plus facile à travailler (R. Calvel, 1974).",
+    },
+    "water-temp-rule": {
+      title: "Température de l'eau",
+      l1: "Un calcul exact, qui part de quelques hypothèses sur votre cuisine.",
+      l2: "Cuisine, farine, eau et chauffe du pétrin font trois fois la température de pâte voulue. L'arithmétique est exacte ; cuisine et farine sont des estimations si vous ne les mesurez pas, et la chauffe du pétrin est une valeur type.",
+    },
+    "water-activity": {
+      title: "Activité de l'eau (aw)",
+      l1: "Un indice estimé, pas une mesure.",
+      l2: "Nous le calculons avec une formule simple à partir de l'hydratation, du sel et du sucre. Il sert à comparer des recettes, pas à dire combien de temps la pizza se conserve : une vraie valeur demande un instrument.",
+    },
+    "dough-indices": {
+      title: "Indices de la pâte",
+      l1: "Réseau de gluten et protéolyse sont des indices du modèle, pas des mesures.",
+      l2: "Ils combinent force de la farine, hydratation et heures avec des poids choisis par {brand}. Ils servent à comparer deux recettes, ce ne sont pas des valeurs de laboratoire.",
+    },
+    "salt-range": {
+      title: "Plage du sel",
+      l1: "Les repères du sel sont un choix de {brand}, pas une plage issue d'une source.",
+      l2: "Pour la Napoletana STG, le cahier des charges donne une plage précise ; pour les autres styles, nous montrons une bande étroite autour de la valeur de la recette.",
+    },
+    "stg-salt-timing": {
+      title: "Le sel dans la Napoletana STG",
+      l1: "Le cahier des charges dissout le sel dans l'eau avant d'ajouter la farine.",
+      l2: "C'est l'ordre du règlement UE de la STG. D'autres méthodes ajoutent le sel plus tard : pour ce style, nous suivons le cahier des charges.",
+    },
+    "flour-w-by-grade": {
+      title: "Type de farine et force",
+      l1: "00, 0, 1 et complète disent à quel point la farine est raffinée, pas sa force.",
+      l2: "La force (W) varie d'un sac à l'autre, même pour un même type. Si le sac ne l'indique pas, le modèle utilise une estimation par type : pour une vraie valeur, consultez la fiche du meunier.",
+    },
+    "flour-pl-estimate": {
+      title: "P/L estimé",
+      l1: "Si vous n'indiquez pas le P/L, nous l'estimons à partir de la force de la farine.",
+      l2: "C'est une relation approchée, limitée à la plage du style. La vraie valeur figure sur la fiche technique de la farine.",
+    },
+    "stg-flour-w": {
+      title: "Force de la farine dans la STG",
+      l1: "Nous utilisons la fourchette de l'AVPN, plus étroite que celle du cahier des charges STG.",
+      l2: "Le règlement UE de la STG admet des farines plus faibles et plus fortes ; le règlement de l'AVPN resserre la plage. C'est un choix de {brand} : les deux sources sont indiquées.",
+    },
+    "oven-max-temp": {
+      title: "Température maximale du four",
+      l1: "C'est la température déclarée pour votre modèle.",
+      l2: "Presque aucun fabricant ne dit s'il s'agit de l'air ou de la pierre. Quand la donnée vient d'un revendeur ou d'un test, nous le signalons ; les fours des démos ont des données inventées.",
+    },
+    "oven-preset-max-temp": {
+      title: "Température type du type de four",
+      l1: "Une valeur type : corrigez-la avec celle de votre four.",
+      l2: "Pour certains types de four, nous n'avons ni fiche de fabricant ni norme. Si vous connaissez votre four, indiquez sa température : la recette s'adapte.",
+    },
+    "stg-oven-temp": {
+      title: "Four de la Napoletana STG",
+      l1: "Les deux sources donnent la même température pour des surfaces différentes.",
+      l2: "Le cahier des charges STG la rapporte à la sole, celui de l'AVPN à la voûte. Aucune n'atteint le haut de la plage utilisée par le moteur : cette valeur reste à vérifier.",
+    },
+    "style-min-oven-temp": {
+      title: "Température minimale du style",
+      l1: "Pour beaucoup de styles, le minimum est un choix du modèle, sans source.",
+      l2: "Sous le minimum, la recette n'est pas faisable ou moins fidèle. Là où un cahier des charges existe, nous le suivons ; sinon, le seuil reste à vérifier.",
+    },
+    "bake-time-home-preheat": {
+      title: "Préchauffage du four domestique",
+      l1: "La durée du préchauffage est une hypothèse du modèle.",
+      l2: "La pierre et l'acier chauffent plus lentement que l'air : mettez-les dans le four froid, allumez et, si possible, mesurez la surface avant d'enfourner.",
+    },
+    "surface-conductivity": {
+      title: "Conductivité de la surface",
+      l1: "La vitesse à laquelle la surface transmet la chaleur à la pizza.",
+      l2: "C'est la conductivité thermique typique du matériau, en W/(m·K) : les métaux viennent de tables techniques, la pierre et le réfractaire restent à vérifier. La grille n'a pas de surface de contact.",
+    },
+    "baking-energy": {
+      title: "Énergie de cuisson",
+      l1: "Un ordre de grandeur, pas une mesure.",
+      l2: "Nous multiplions le temps de cuisson par une puissance type choisie selon la température du four, la même pour le bois, le gaz et l'électrique. Le préchauffage n'est pas compté.",
+    },
+    "thickness-factor": {
+      title: "Thickness factor",
+      l1: "Grammes de pâte par cm² de pizza.",
+      l2: "C'est une mesure répandue dans les calculateurs de pâte nord-américains, en onces par pouce carré ; {brand} l'exprime en g/cm² pour dimensionner les pâtons.",
+    },
+    "score-weights": {
+      title: "Poids du score",
+      l1: "Les poids des dimensions sont un choix de {brand}.",
+      l2: "Ils disent combien compte chaque dimension dans le chiffre final. Ils ne viennent pas d'une mesure : c'est une règle de l'app, la même pour tous.",
+    },
+    "non-feasible-ceiling": {
+      title: "Plafond des recettes non faisables",
+      l1: "Une recette que vous ne pouvez pas faire reste dans la zone basse : c'est une règle de l'app.",
+      l2: "Ainsi, une recette non réalisable ne dépasse jamais une recette faisable, même si les autres dimensions sont élevées.",
+    },
+    "authenticity-fuel-cap": {
+      title: "Plafond d'authenticité lié au combustible",
+      l1: "Sans le four prévu par le style, l'authenticité a un plafond : c'est un choix de {brand}.",
+      l2: "Quand un style exige le bois ou le charbon, un autre four peut bien cuire mais ne suit pas la méthode. Le plafond est une limite éditoriale, pas une mesure de qualité.",
+    },
+    digestibility: {
+      title: "Indice de digestibilité",
+      l1: "Un indice du modèle sur le procédé, pas une promesse de santé.",
+      l2: "Il tient compte des heures et des températures de maturation. Il ne mesure pas comment une personne digère une pizza et n'atteste pas l'adéquation à un régime.",
+    },
+    "troubleshooting-thresholds": {
+      title: "Seuils des problèmes",
+      l1: "Les seuils chiffrés des problèmes sont indicatifs.",
+      l2: "Ce sont des règles empiriques sans source publiée, qui ne tiennent pas compte du style : une pâte en plaque, par exemple, est bien plus hydratée qu'une napolitaine. Utilisez-les comme piste, pas comme diagnostic.",
+    },
+  },
+  assumptions: {
+    "constant-ferment-temp": "La température reste constante pendant toute la phase.",
+    "time-exponent-no-source": "La correction selon les heures utilise un exposant choisi par le modèle, sans source.",
+    "kitchen-temp-standard": "Si vous n'indiquez pas la température de la cuisine, nous utilisons une valeur standard.",
+    "q10-cold-no-source": "Au frais et au réfrigérateur, le facteur de vitesse n'a pas de source : l'erreur peut être grande.",
+    "proof-share-default": "Sans indication du style, l'apprêt est une part fixe des heures.",
+    "starter-steps-by-hours": "La dose de levain baisse par paliers avec les heures, sans tenir compte de la température.",
+    "starter-not-in-hydration": "La farine et l'eau du levain ne sont pas comptées dans l'hydratation.",
+    "flour-at-kitchen-temp": "La farine est à la température de la cuisine.",
+    "mixer-friction-values": "La chauffe du pétrin est une valeur type à vérifier ; à la main, elle est nulle.",
+    "coefficients-not-measured": "Les coefficients de la formule sont choisis par le modèle, non mesurés.",
+    "grade-is-not-strength": "Le type de farine indique le raffinage, pas la force : le W par type est une estimation.",
+    "oven-temp-surface-unspecified": "Nous ne savons pas si la température déclarée est celle de l'air ou de la pierre.",
+    "style-min-temp-no-source": "La température minimale du style n'a pas de source écrite.",
+    "preheat-home-minutes": "La durée du préchauffage dépend seulement de la température du four, pas de la surface.",
+    "rack-no-contact": "La grille n'a pas de surface de contact : la base cuit par rayonnement et par l'air.",
+    "oven-power-steps": "Une puissance type par tranche de température, la même pour chaque combustible.",
+    "no-health-claim": "Aucune allégation de santé : l'indice ne mesure pas la digestion d'une personne.",
+    "thresholds-rules-of-thumb": "Les seuils sont des règles empiriques générales, non ajustées au style.",
   },
 };

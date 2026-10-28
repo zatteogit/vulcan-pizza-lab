@@ -366,7 +366,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "features.recipe.user-needs.lievito-madre-180392fb": "Sauerteig",
   "features.recipe.user-needs.lievito-secco-0043f8c5": "Trockenhefe",
   "features.recipe.user-needs.manitoba-c1a38647": "Manitoba",
-  "features.recipe.user-needs.media-forza-1dea8ed0": "Mittlere Stärke",
+  "features.recipe.user-needs.media-forza-1dea8ed0": "Etwas weniger fein ausgemahlen als 00",
   "features.recipe.user-needs.piu-fibra-e-sapore-e0f02324": "Mehr Ballaststoffe und Geschmack",
   "features.recipe.user-needs.pratico-lunga-conservazione-8c39549a": "Praktisch, lange haltbar",
   "features.recipe.user-needs.proteica-sapore-deciso-6623765b": "Proteinreich, kräftiger Geschmack",
@@ -419,9 +419,8 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "pages.profile.fiamma-viva-di-lato-gestione-come-forno-a--d630082c": "Offene Flamme an der Seite, Handhabung wie beim Holzofen.",
   "pages.profile.gas-sotto-011dc103": "Gas unten",
   "pages.profile.grill-superiore-4368292b": "Oberer Grill",
-  "pages.profile.k-a2a64040": "k=",
   "pages.profile.la-tua-cucina-c2d87895": "Deine Küche",
-  "pages.profile.max-3c624fea": "Max ",
+  "pages.profile.max-3c624fea": "bis ~",
   "pages.profile.pro-66d0c5e6": "Pro",
   "pages.profile.ricette-salvate-b5c99ac7": "Gespeicherte Rezepte",
   "pages.profile.semi-pro-e857b480": "Semi-Pro",
@@ -435,5 +434,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "pages.recipe.applyCorrections": "Korrekturen anwenden",
   "pages.recipe.defaultTopping": "Belag",
   "pages.recipe.ingredientsUpdated": "{0}: Zutaten aktualisiert",
-  "shared.unsavedChanges": "Ungespeicherte Änderungen"
+  "shared.unsavedChanges": "Ungespeicherte Änderungen",
+  "pages.profile.surfaceConductivity": "≈ {0} W/(m·K)",
+  "pages.profile.surfaceNoContact": "kein Kontakt"
 };

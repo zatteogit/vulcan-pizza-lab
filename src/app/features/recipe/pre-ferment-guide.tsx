@@ -28,7 +28,9 @@ export function preFermentName(id: PreFermentId): string {
       : uiMessage("features.recipe.pre-ferment-guide.autolisi-c4e938cc");
 }
 
-const COMP_KEYS = ['hydration','yeast','duration','temperature','flavor','extensibility','alveolatura','complexity'] as const;
+// FW-01 (S14-A-03): alveolatura e complessità tolte, erano dati «da verificare» (D)
+// mostrati come fatti; crosta e alveolatura dipendono da forno, idratazione e stesura.
+const COMP_KEYS = ['hydration','yeast','duration','temperature','flavor','extensibility'] as const;
 
 /** Righe del confronto nella lingua attiva. */
 export function localizedComparisonRows(pf: CmsPreFerment) {

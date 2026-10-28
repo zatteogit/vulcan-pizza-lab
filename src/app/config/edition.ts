@@ -28,7 +28,8 @@ export interface EditionOvenModel {
   ovenType: "wood" | "coal" | "electric_high" | "electric_standard" | "gas" | "gas_pizza" | "home";
   maxTempC: number;
   pizzaCm?: number;
-  source: "V" | "P";
+  /** V produttore, P fonte secondaria, demo = dato inventato (FW-01, S18-B-07). */
+  source: "V" | "P" | "demo";
 }
 
 export interface Edition {
@@ -61,7 +62,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function validateOven(value: unknown, at: string): EditionOvenModel {
+function validateOven(value: unknown, at: string, invented: boolean): EditionOvenModel {
   if (!isRecord(value)) fail(`${at} non è un oggetto`);
   const { id, brand, model, fuel, ovenType, maxTempC, pizzaCm, source } = value;
   if (typeof id !== "string" || !ID.test(id)) fail(`${at}.id non valido`);
@@ -71,7 +72,10 @@ function validateOven(value: unknown, at: string): EditionOvenModel {
   if (typeof ovenType !== "string" || !OVEN_TYPES.has(ovenType)) fail(`${at}.ovenType non valido`);
   if (typeof maxTempC !== "number" || maxTempC < 150 || maxTempC > 600) fail(`${at}.maxTempC fuori scala (150–600 °C)`);
   if (pizzaCm !== undefined && (typeof pizzaCm !== "number" || pizzaCm < 15 || pizzaCm > 80)) fail(`${at}.pizzaCm fuori scala`);
-  if (source !== "V" && source !== "P") fail(`${at}.source deve essere "V" o "P"`);
+  if (source !== "V" && source !== "P" && source !== "demo") fail(`${at}.source deve essere "V", "P" o "demo"`);
+  // FW-01 (S18-B-07): un marchio inventato ha dati inventati, non «fonte secondaria».
+  if (invented && source !== "demo") fail(`${at}.source: i forni di un marchio inventato hanno source "demo"`);
+  if (!invented && source === "demo") fail(`${at}.source "demo" solo per un marchio inventato`);
   return value as unknown as EditionOvenModel;
 }
 
@@ -96,7 +100,8 @@ export function parseEdition(value: unknown): Edition {
     if (!isRecord(ovens)) fail("ovens non è un oggetto");
     if (ovens.extra !== undefined) {
       if (!Array.isArray(ovens.extra)) fail("ovens.extra non è un elenco");
-      ovens.extra.forEach((oven, index) => validateOven(oven, `ovens.extra[${index}]`));
+      const invented = isRecord(value.partner) && value.partner.invented === true;
+      ovens.extra.forEach((oven, index) => validateOven(oven, `ovens.extra[${index}]`, invented));
     }
     if (ovens.only !== undefined && (!Array.isArray(ovens.only) || ovens.only.length === 0 ||
       !ovens.only.every(prefix => typeof prefix === "string" && prefix.length > 0))) fail("ovens.only: elenco di prefissi non vuoto");

@@ -7,6 +7,7 @@ import {
   PRE_FERMENT_JA,
   TROUBLESHOOTING_JA,
   GLOSSARY_TERMS_JA,
+  SCIENCE_JA,
 } from "./domain-ja";
 
 /**
@@ -666,7 +667,7 @@ export const JA_LOCALE: CmsContent = {
   },
   flourDetails: {
     "00": "\u5B9A\u756A\u3001\u4E07\u80FD",
-    "0": "\u4E2D\u7A0B\u5EA6\u306E\u5F37\u5EA6",
+    "0": "00より少し精製度が低い",
     manitoba:
       "\u9AD8\u5F37\u5EA6\u3001\u9577\u6642\u9593\u719F\u6210",
     integrale:
@@ -951,6 +952,8 @@ export const JA_LOCALE: CmsContent = {
     "topping.auth.experimental": "\u8A66\u3059\u4FA1\u5024\u3042\u308A",
     "topping.auth.taboo": "\u975E\u63A8\u5968",
     "recipeSetup.dough": "\u751F\u5730",
+    // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
+    "recipeSetup.profileHint": "出発点のバージョンか、作り手のインスピレーションを選んでください。数値はあとから変更できます。",
     "recipeSetup.styleBase": "\u57FA\u672C\u30B9\u30BF\u30A4\u30EB",
     "recipeSetup.temp.fridge": "\u51B7\u8535",
     "recipeSetup.temp.cool": "\u6DBC\u3057\u3044\u5834\u6240",
@@ -1316,7 +1319,7 @@ export const JA_LOCALE: CmsContent = {
     napoletana_stg:
       "\u30B3\u30EB\u30CB\u30C1\u30E7\u30FC\u30CD1-2cm\u81A8\u3089\u307F|\u4E2D\u5FC33-4mm\u8584|\u8C79\u67C4\u30AF\u30E9\u30B9\u30C8|\u713C\u304D60-90\u79D2",
     napoletana_canotto:
-      "\u30B3\u30EB\u30CB\u30C1\u30E7\u30FC\u30CD3-4cm\u300C\u30AB\u30CC\u30C3\u30C8\u300D|\u6975\u9650\u6C17\u6CE1|\u719F\u621024-72h|\u9AD8\u6D88\u5316\u6027",
+      "\u30B3\u30EB\u30CB\u30C1\u30E7\u30FC\u30CD3-4cm\u300C\u30AB\u30CC\u30C3\u30C8\u300D|\u6975\u9650\u6C17\u6CE1|\u719F\u621024-72h|軽く気泡の多いクラム",
     teglia_romana:
       "\u9AD8\u30552-3cm|製法により加水率が異なります|\u6298\u308A\u305F\u305F\u307F\u306E\u307F|\u96F2\u30AF\u30E9\u30E0",
     tonda_romana:
@@ -1577,7 +1580,7 @@ export const JA_LOCALE: CmsContent = {
     surfaceCordierite:
       "\u30B3\u30FC\u30C7\u30A3\u30A8\u30E9\u30A4\u30C8\u77F3",
     surfaceCordieriteDesc:
-      "1.5 cm\u3001\u84C4\u71B1/\u901F\u5EA6\u306E\u30D0\u30E9\u30F3\u30B9 — Effeuno, Ooni",
+      "1.5 cm\u3001\u84C4\u71B1/\u901F\u5EA6\u306E\u30D0\u30E9\u30F3\u30B9 — 電気・ガスのピザ窯",
     surfaceSteel:
       "\u30B9\u30C1\u30FC\u30EB\u30D7\u30EC\u30FC\u30C8",
     surfaceSteelDesc:
@@ -2028,4 +2031,5 @@ export const JA_LOCALE: CmsContent = {
   preFerment: PRE_FERMENT_JA as any,
   troubleshootingI18n: TROUBLESHOOTING_JA as any,
   glossaryTerms: GLOSSARY_TERMS_JA as any,
+  science: SCIENCE_JA,
 };

@@ -7,6 +7,7 @@ import {
   PRE_FERMENT_DE,
   TROUBLESHOOTING_DE,
   GLOSSARY_TERMS_DE,
+  SCIENCE_DE,
 } from "./domain-de";
 
 /** German locale bundle */
@@ -602,7 +603,7 @@ export const DE_LOCALE: CmsContent = {
   },
   flourDetails: {
     "00": "Klassisch, vielseitig",
-    "0": "Mittlere St\u00E4rke",
+    "0": "Etwas weniger fein ausgemahlen als 00",
     manitoba: "Hohe St\u00E4rke, lange Reifung",
     integrale: "Mehr Ballaststoffe und Geschmack",
     semola: "Knusprigkeit, goldene Farbe",
@@ -899,6 +900,8 @@ export const DE_LOCALE: CmsContent = {
     "topping.auth.experimental": "Ausprobieren",
     "topping.auth.taboo": "Nicht empfohlen",
     "recipeSetup.dough": "Teig",
+    // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
+    "recipeSetup.profileHint": "Wähle eine Ausgangsversion oder eine Inspiration eines Pizzaiolo: Die Werte bleiben änderbar.",
     "recipeSetup.styleBase": "Basisstil",
     "recipeSetup.temp.fridge": "Kühlschrank",
     "recipeSetup.temp.cool": "kühl",
@@ -1255,7 +1258,7 @@ export const DE_LOCALE: CmsContent = {
     napoletana_stg:
       "Rand 1-2cm aufgeblasen|Mitte 3-4mm d\u00FCnn|Leopardenkruste|Backzeit 60-90s",
     napoletana_canotto:
-      'Rand 3-4cm "Canotto"|Extreme Porung|Reifung 24-72h|Hohe Verdaulichkeit',
+      'Rand 3-4cm "Canotto"|Extreme Porung|Reifung 24-72h|Offene, leichte Krume',
     teglia_romana:
       "H\u00F6he 2-3cm|Hydration je nach Variante|Ohne Kneten + Falten|Wolkenkrume",
     tonda_romana:
@@ -1469,7 +1472,7 @@ export const DE_LOCALE: CmsContent = {
       "3 cm, hohe thermische Masse — Holz- und Prosumer-Öfen",
     surfaceCordierite: "Cordieritstein",
     surfaceCordieriteDesc:
-      "1.5 cm, Masse/Geschwindigkeits-Kompromiss — Effeuno, Ooni",
+      "1.5 cm, Masse/Geschwindigkeits-Kompromiss — Elektro- und Gas-Pizzaöfen",
     surfaceSteel: "Stahlplatte",
     surfaceSteelDesc:
       "5-10 mm, ultraschneller Transfer — knusprige Basis in Sekunden",
@@ -1893,4 +1896,5 @@ export const DE_LOCALE: CmsContent = {
   preFerment: PRE_FERMENT_DE as any,
   troubleshootingI18n: TROUBLESHOOTING_DE as any,
   glossaryTerms: GLOSSARY_TERMS_DE as any,
+  science: SCIENCE_DE,
 };
