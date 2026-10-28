@@ -10,7 +10,6 @@ export const PRE_FERMENT_JA: Partial<CmsPreFerment> = {
   tipsLabel: "\u30A2\u30C9\u30D0\u30A4\u30B9",
   showComparison:
     "\u30D3\u30AC vs \u30DD\u30FC\u30EA\u30C3\u30B7\u30E5 vs \u30AA\u30FC\u30C8\u30EA\u30FC\u30BA\u3092\u6BD4\u8F03",
-  hideComparison: "\u6BD4\u8F03\u3092\u975E\u8868\u793A",
   paramHydration: "\u52A0\u6C34\u7387",
   paramDuration: "\u6642\u9593",
   paramTemperature: "\u6E29\u5EA6",

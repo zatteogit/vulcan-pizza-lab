@@ -9,7 +9,6 @@ export const PRE_FERMENT_DE: Partial<CmsPreFerment> = {
   sectionLabel: "Vorteig",
   tipsLabel: "Tipps",
   showComparison: "Biga vs Poolish vs Autolyse vergleichen",
-  hideComparison: "Vergleich ausblenden",
   paramHydration: "Hydratation",
   paramDuration: "Dauer",
   paramTemperature: "Temperatur",

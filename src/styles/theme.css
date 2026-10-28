@@ -1110,6 +1110,17 @@
   --switch-track-h: var(--control-track-height);
   /* 18.4px — altezza track Switch (Radix Root) */
 
+  /* ── D2. Disclosure (FW-03) — ds/Disclosure, l'unico «mostra di più» in pagina ── */
+  --disclosure-gap: var(--control-content-gap);
+  --disclosure-border: var(--outline-variant);
+  --disclosure-bg: transparent;
+  --disclosure-bg-hover: var(--surface-container-low);
+  --disclosure-text: var(--text-default);
+  --disclosure-meta: var(--text-muted);
+  --disclosure-chevron: var(--icon-muted);
+  --disclosure-weight: var(--type-button-weight);
+  --disclosure-focus: var(--primary);
+
   /* ── E. CTA Button ── */
   --cta-btn-bg: var(--grad-sage);
   --cta-btn-text: var(--cta-foreground);
@@ -2738,6 +2749,33 @@
 
   .glossary-card__reveal {
     overflow: hidden;
+  }
+
+  /* FW-03: card del glossario con ds/Disclosure + heading (S12-A-18/B-10) */
+  .glossary-group__title { margin: 0; }
+
+  .glossary-card .ds-disclosure__trigger.glossary-card__toggle {
+    align-items: flex-start;
+    gap: var(--gap-sm);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3-5);
+    font-size: inherit;
+    font-weight: var(--weight-regular);
+  }
+
+  .glossary-card__toggle .ds-disclosure__summary {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+  }
+
+  .glossary-card__toggle .ds-disclosure__chevron {
+    margin-top: var(--space-1);
+    color: var(--text-muted);
+  }
+
+  .glossary-card__content {
+    display: block;
   }
 
   .glossary-card__body {
@@ -4864,35 +4902,23 @@
     transform: scale(0.99);
   }
 
-  .profile-equip-cat__body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .profile-equip-cat__step-row {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
-  }
-
-  .profile-equip-cat__step {
-    font-size: var(--font-size-2xs);
-    letter-spacing: var(--tracking-ultra);
-    text-transform: uppercase;
-    font-weight: var(--weight-semibold);
-    color: var(--text-muted);
-  }
-
-  .profile-equip-cat__step--selected {
-    color: var(--primary);
+  /* FW-03: ds/Disclosure; titolo e riepilogo su due righe, senza eyebrow */
+  .profile-equip-cat .ds-disclosure__trigger.profile-equip-cat__trigger {
+    gap: var(--gap-sm);
+    padding-inline: var(--space-4);
+    padding-block: var(--space-3-5);
+    font-size: inherit;
+    font-weight: var(--weight-regular);
   }
 
   .profile-equip-cat__title {
+    display: block;
     font-weight: var(--weight-medium);
     color: var(--text-default);
   }
 
   .profile-equip-cat__summary {
+    display: block;
     color: var(--text-muted);
     margin-top: var(--space-px);
     opacity: 1;
@@ -4901,14 +4927,6 @@
   .profile-equip-cat__summary--selected {
     color: var(--text-default);
     opacity: 1;
-  }
-
-  .profile-equip-cat__chevron {
-    flex-shrink: 0;
-  }
-
-  .profile-equip-cat__chevron-icon {
-    color: var(--icon-muted);
   }
 
   .profile-equip-cat__panel {
@@ -5551,37 +5569,16 @@
     accent-color: var(--primary);
   }
 
+  /* FW-03: ds/Disclosure (card) al posto del <details> */
   .profile-oven-heat {
     margin-top: var(--space-5);
-    border: var(--border-width-thin) solid var(--container-border-subtle);
-    border-radius: var(--radius-xl);
+    --disclosure-border: var(--container-border-subtle);
   }
 
-  .profile-oven-heat__head {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: var(--space-1) var(--space-3);
-    min-height: var(--dimension-fixed-046);
-    padding: var(--space-3);
-    cursor: pointer;
-    list-style: none;
-    border-radius: inherit;
-  }
-
-  .profile-oven-heat__head::-webkit-details-marker { display: none; }
-  .profile-oven-heat__head > svg { grid-column: 2; grid-row: 1 / span 2; }
-  .profile-oven-heat[open] .profile-oven-heat__head > svg { transform: rotate(180deg); }
-  .profile-oven-heat__current { grid-column: 1; color: var(--text-muted); font-size: var(--font-size-sm); }
-
-  .profile-oven-heat__label {
-    color: var(--text-default);
-    font-weight: var(--weight-semibold);
-  }
+  .profile-oven-heat .ds-disclosure__meta { font-size: var(--font-size-sm); }
 
   .profile-oven-heat__hint {
     color: var(--text-muted);
-    padding-inline: var(--space-3);
     margin-block-end: var(--space-3);
   }
 
@@ -5589,7 +5586,6 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--gap-xs);
-    padding: 0 var(--space-3) var(--space-3);
   }
 
   @media (max-width: 520px) {
@@ -9241,9 +9237,10 @@
   .recipe-allergens__body > .recipe-allergens__note { margin-block-start: 0; }
   .recipe-allergens__chevron--open { transform: rotate(180deg); }
   .allergen-preferences { margin-block: var(--space-4); }
-  .allergen-preferences summary { cursor: pointer; min-height: var(--allergen-target-min); font-weight: var(--weight-semibold); }
-  .allergen-preferences summary span { display: block; color: var(--text-muted); font-size: var(--font-size-sm); font-weight: var(--weight-regular); margin-block-start: var(--space-1); }
-  .allergen-preferences p { color: var(--text-muted); font-size: var(--font-size-sm); margin-block: var(--space-3); }
+  /* FW-03: ds/Disclosure al posto del <details> col triangolo del browser */
+  .allergen-preferences .ds-disclosure__trigger { min-height: var(--allergen-target-min); }
+  .allergen-preferences .ds-disclosure__meta { font-size: var(--font-size-sm); overflow-wrap: anywhere; text-align: end; flex-shrink: 1; }
+  .allergen-preferences p { color: var(--text-muted); font-size: var(--font-size-sm); margin-block: 0 var(--space-3); }
   .allergen-preferences__choices { display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .allergen-preferences__choices .ds-chip { min-height: var(--allergen-target-min); }
 
@@ -9697,6 +9694,10 @@
     font-size: var(--font-size-md);
     font-weight: var(--weight-semibold);
     color: var(--text-default);
+    /* FW-03: ora è la <caption> della tabella */
+    caption-side: top;
+    text-align: start;
+    padding-block-end: var(--space-2);
   }
 
   .recipe-comparison__table {
@@ -10420,12 +10421,18 @@
     padding: 0;
     cursor: pointer;
     color: var(--text-muted);
-    opacity: 0.5;
+    /* FW-03 (S08-B-11): opacità piena (contrasto ≥ 3:1) e area di tocco ≥ 24 px */
+    opacity: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--space-6);
+    min-height: var(--space-6);
     line-height: var(--leading-none);
   }
 
   .ingredients-rule55-toggle--active {
-    opacity: 0.85;
+    color: var(--text-accent);
   }
 
   .ingredients-rule55-toggle:active {
@@ -12128,8 +12135,14 @@
     min-height: var(--space-9);
   }
 
-  .step-details__trouble-link--indented {
-    margin-left: var(--space-4);
+  /* FW-03 (S09-B-12): disclosure in linea con chevron, link a foglio con freccia */
+  .step-details__glossary-chevron {
+    flex-shrink: 0;
+    transition: transform var(--duration-normal) var(--ease-standard);
+  }
+
+  .step-details__glossary-toggle[aria-expanded="true"] .step-details__glossary-chevron {
+    transform: rotate(180deg);
   }
 
   .step-details > .step-details__trouble-link { margin-top: 0; }
@@ -14408,6 +14421,31 @@
     overflow: hidden;
   }
 
+  /* FW-03: card dei problemi con ds/Disclosure + heading (S13-B-11) */
+  .troubleshooting-card .ds-disclosure__trigger.troubleshooting-card__toggle {
+    gap: var(--space-2-5);
+    padding: var(--font-size-xl) var(--space-4);
+    font-size: inherit;
+    font-weight: var(--weight-regular);
+  }
+
+  .troubleshooting-card__toggle .ds-disclosure__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2-5);
+  }
+
+  .troubleshooting-card__toggle-body,
+  .troubleshooting-card__symptom {
+    display: block;
+  }
+
+  .troubleshooting-card__toggle .ds-disclosure__chevron {
+    width: var(--space-4);
+    height: var(--space-4);
+    color: var(--muted-foreground);
+  }
+
   .troubleshooting-card__detail-body {
     padding: var(--space-0) var(--space-4) var(--space-4);
     padding-top: var(--space-3);
@@ -14611,6 +14649,44 @@
 
   .preferment-guide-card__compare-toggle:active {
     transform: scale(0.95);
+  }
+
+  /* FW-03: card e confronto con ds/Disclosure (aria-expanded, heading).
+     Il summary vive in un <button>: niente div, solo span resi a blocchi. */
+  .preferment-guide-card .ds-disclosure__trigger.preferment-guide-card__header {
+    padding-block: var(--toggle-padding-block);
+    padding-inline: var(--space-6);
+    font-weight: var(--weight-regular);
+    font-size: inherit;
+  }
+
+  .preferment-guide-card__header .ds-disclosure__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3-5);
+  }
+
+  .preferment-guide-card__title-block,
+  .preferment-guide-card__name {
+    display: block;
+  }
+
+  .preferment-guide-card__disclosure > .ds-disclosure__panel {
+    padding: 0;
+  }
+
+  .preferment-guide-card .ds-disclosure__trigger.preferment-guide-card__compare-toggle {
+    width: 100%;
+    min-height: var(--space-11);
+    justify-content: center;
+    padding-inline: var(--space-3);
+    font-size: var(--font-size-md);
+    font-weight: var(--weight-regular);
+    color: var(--primary);
+  }
+
+  .preferment-guide-card__compare-toggle .ds-disclosure__summary {
+    flex: 0 1 auto;
   }
 
   .preferment-guide-card__compare-panel {
@@ -15338,7 +15414,7 @@
   }
 
   .pantry-editor__flour-details,
-  .pantry-editor__policies[open] {
+  .pantry-editor__policies .ds-disclosure__panel:not([hidden]) {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
@@ -15366,10 +15442,10 @@
     border-top: var(--border-width-thin) solid var(--container-border-subtle);
   }
 
-  .pantry-editor__policies summary {
-    cursor: pointer;
+  /* FW-03: ds/Disclosure (inline) al posto del <details> col triangolo */
+  .pantry-editor__policies .ds-disclosure__trigger {
     color: var(--text-accent);
-    font-weight: var(--weight-semibold);
+    font-size: var(--font-size-sm);
   }
 
   .pantry-editor__saved {
@@ -18640,6 +18716,20 @@
     line-height: var(--leading-body);
   }
 
+  /* FW-03: InfoTip v2 — dalla definizione breve alla voce del glossario */
+  .info-tip__glossary-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    align-self: flex-start;
+    min-height: var(--space-8);
+    color: var(--text-accent);
+    font-size: var(--font-size-sm);
+    font-weight: var(--weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: var(--space-1);
+  }
+
   /* ── image-fallback ── */
   /* ═══ COMPONENT: ImageWithFallback (image-fallback) ═══ */
 
@@ -19199,6 +19289,83 @@
 
   .ds-switch__thumb[data-state="checked"] {
     transform: translateX(calc(100% - var(--border-width-strong)));
+  }
+
+  /* ═══ DS COMPONENT: Disclosure (FW-03) ═══ */
+  .ds-disclosure {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .ds-disclosure__heading {
+    margin: 0;
+    font: inherit;
+  }
+
+  .ds-disclosure__trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--disclosure-gap);
+    width: 100%;
+    min-height: var(--space-11);
+    padding: 0;
+    border: none;
+    background: var(--disclosure-bg);
+    color: var(--disclosure-text);
+    font: inherit;
+    font-size: var(--font-size-md);
+    font-weight: var(--disclosure-weight);
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .ds-disclosure__trigger:focus-visible {
+    outline: var(--border-width-thick) solid var(--disclosure-focus);
+    outline-offset: var(--space-0-5);
+  }
+
+  .ds-disclosure__summary {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  .ds-disclosure__meta {
+    flex-shrink: 0;
+    color: var(--disclosure-meta);
+    font-weight: var(--weight-regular);
+  }
+
+  .ds-disclosure__chevron {
+    flex-shrink: 0;
+    color: var(--disclosure-chevron);
+    transition: transform var(--duration-normal) var(--ease-standard);
+  }
+
+  .ds-disclosure__trigger[aria-expanded="true"] .ds-disclosure__chevron {
+    transform: rotate(180deg);
+  }
+
+  .ds-disclosure--card {
+    border: var(--border-width-thin) solid var(--disclosure-border);
+    border-radius: var(--radius-xl);
+  }
+
+  .ds-disclosure--card .ds-disclosure__trigger {
+    padding: var(--space-2) var(--space-3-5);
+    border-radius: var(--radius-xl);
+  }
+
+  .ds-disclosure--card .ds-disclosure__trigger:hover {
+    background: var(--disclosure-bg-hover);
+  }
+
+  .ds-disclosure--card .ds-disclosure__panel {
+    padding: 0 var(--space-3-5) var(--space-3-5);
+  }
+
+  .ds-disclosure--inline .ds-disclosure__panel {
+    padding-block-start: var(--space-2);
   }
 
   /* ═══ DS COMPONENT: SegmentedControl ═══ */
@@ -21015,7 +21182,8 @@ html {
   font-weight: var(--weight-semibold);
   margin-block-end: var(--space-1);
 }
-.recipe-reference-note summary { cursor: pointer; }
+/* FW-03: ds/Disclosure al posto del <details> (bersaglio da 19 px → 44 px) */
+.recipe-reference-note .ds-disclosure__trigger { font-size: var(--font-size-sm); color: var(--text-default); }
 .recipe-reference-note ul { padding-inline-start: var(--space-5); margin-block: var(--space-2); }
 .recipe-reference-note a { text-decoration: underline; text-underline-offset: var(--space-1); }
 

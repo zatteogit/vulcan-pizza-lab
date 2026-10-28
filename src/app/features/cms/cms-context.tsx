@@ -438,7 +438,6 @@ export interface CmsPreFerment {
   sectionLabel: string;
   tipsLabel: string;
   showComparison: string;
-  hideComparison: string;
   paramHydration: string;
   paramDuration: string;
   paramTemperature: string;

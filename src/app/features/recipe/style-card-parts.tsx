@@ -20,7 +20,9 @@ import { uiMessage } from "../../i18n/ui-messages";
 
 /** The original is heart + score. A tailored proposal shows its actual
  * starting score, then the resulting score, even when the two are equal. */
-export function CompatibilityPill({ now, original, blocked, labelled = false, className }: { now: number; original?: number; blocked?: boolean; labelled?: boolean; className?: string }) {
+/** FW-03 (S03-A-12): `context="detail"` when the pill already sits in the
+ * detail sheet, so the tip never asks to «open the detail» the user is in. */
+export function CompatibilityPill({ now, original, blocked, labelled = false, className, context = "card" }: { now: number; original?: number; blocked?: boolean; labelled?: boolean; className?: string; context?: "card" | "detail" }) {
   const { cms } = useCms();
   const [open, setOpen] = useState(false);
   const pinned = useRef(false);
@@ -93,7 +95,7 @@ export function CompatibilityPill({ now, original, blocked, labelled = false, cl
       <div className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisOriginal}</span><strong>{original ?? now}/100</strong></div>
       <p className="score-tip__description">{cms.ui.scoreTipOriginal}</p>
       {original !== undefined && <><div className="score-tip__row"><span className="score-tip__label">{cms.ui.scoreBasisTailored}</span><strong>{now}/100</strong></div><p className="score-tip__description">{cms.ui.scoreTipTailored}</p></>}
-      <p className="score-tip__note">{blocked ? cms.ui.scoreTipBlocked : cms.ui.scoreTipGlobal}</p>
+      <p className="score-tip__note">{blocked && context === "card" ? cms.ui.scoreTipBlocked : cms.ui.scoreTipGlobal}</p>
     </div>, document.body)}
     </>
   );

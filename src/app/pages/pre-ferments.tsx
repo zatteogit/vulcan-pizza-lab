@@ -75,7 +75,7 @@ export function PreFermentsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ ...motionSpring.standard,delay: i * motionDelay.recipeReveal }}
             >
-              <PreFermentCard preFermentType={id} />
+              <PreFermentCard preFermentType={id} showComparison={false} headingLevel={2} />
             </motion.div>
           ))}
         </div>

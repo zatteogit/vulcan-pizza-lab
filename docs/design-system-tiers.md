@@ -61,6 +61,16 @@ template T6 e monta le implementazioni di produzione.
    accessibile, label e descrizioni fanno parte dello stesso requisito.
 9. I valori framework isolati sono ammessi solo se esatti, file-specifici e
    coperti da fixture. Non esistono baseline numeriche di debito DS.
+10. Tre soli contenitori per «mostrare di più» (FW-03, audit UX 28/10/2026):
+    `ds/Disclosure` in pagina (pulsante con `aria-expanded`/`aria-controls`,
+    chevron, heading opzionale, varianti `card` e `inline`, token
+    `--disclosure-*`), `InfoTip` per la definizione breve di un termine (nome
+    accessibile «Definizione: …», link alla voce del glossario, Esc chiude solo
+    il popover) e il foglio «Perché?» (FW-02). Vietati `<details>` fuori da
+    `components/ds/` e `title=` su elementi non interattivi come unica
+    spiegazione: li blocca `npm run semantics:check` (regole `native-details`
+    e `title-only-explanation`, debito `title=` congelato per file in
+    `TITLE_ONLY_BASELINE`, che può solo scendere).
 
 ## Motion
 

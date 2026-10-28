@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Plus, Search, X } from "lucide-react";
-import { Dialog, IconButton, SegmentedControl, Switch } from "../../components/ds/index";
+import { Dialog, Disclosure, IconButton, SegmentedControl, Switch } from "../../components/ds/index";
 import { FLOURS_DB } from "../../data/flour-database";
 import { TOPPING_LIBRARY } from "../../data/topping-library";
 import { normalizePantryFlourDetails, pantryIngredientId, type PantryFlourDetails } from "../../domain/pantry-ingredients";
@@ -79,10 +79,10 @@ export function PantryEditor({ constraints, onChange, onClose, flourOptions }: {
         options={[{value:"flour",label:ui.pantryFlours},{value:"dough",label:ui.pantryDough},{value:"topping",label:ui.pantryToppings}]} fullWidth size="sm" />
       <div className="pantry-editor__search"><Search size={16} aria-hidden="true"/><input className="pantry-editor__input" type="search" value={query} onChange={event=>{setQuery(event.target.value);setLimit(20);}} placeholder={ui.pantrySearch} aria-label={ui.pantrySearch}/></div>
       <div className="pantry-editor__scroll">
-        <details className="pantry-editor__policies"><summary>{ui.pantryPolicies}</summary>
+        <Disclosure className="pantry-editor__policies" variant="inline" summary={ui.pantryPolicies}>
           <SupplyPolicyControls kind="flour" constraints={constraints} onChange={onChange} flourOptions={flourItems.map(item=>({id:item.id,label:item.name}))}/>
           <label className="pantry-editor__complete"><span data-slot="label">{ui.pantryToppingsComplete}</span><Switch checked={constraints.pantry_ingredients_complete===true} onCheckedChange={value=>save({pantry_ingredients_complete:value})}/></label>
-        </details>
+        </Disclosure>
         {tab === "flour" && <button type="button" className="pantry-editor__add" onClick={()=>{
           const id=`custom:${crypto.randomUUID()}`;
           save({pantry_flour_details:{...constraints.pantry_flour_details,[id]:{name:ui.pantryMyFlour}},pantry_flours:[...constraints.pantry_flours,id]});

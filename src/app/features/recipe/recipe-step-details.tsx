@@ -1,6 +1,6 @@
 /* ═══ STEP DETAILS — "come si fa" collassabile + learn-inline (estratto lug 2026) ═══ */
 
-import { ChevronRight, FlaskConical, LifeBuoy, Lightbulb } from "lucide-react";
+import { ChevronDown, ChevronRight, FlaskConical, LifeBuoy, Lightbulb } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import { motionDuration, motionSpring } from "../../components/ds/motion";
 import { useId, useState } from "react";
@@ -72,12 +72,12 @@ export function StepDetails({
       onClick={() => setTroubleOpen(true)}
       aria-haspopup="dialog"
       aria-expanded={troubleOpen}
-      className={hasDetails && glossaryTerm
-        ? "step-details__trouble-link step-details__trouble-link--indented type-data"
-        : "step-details__trouble-link type-data"}
+      className="step-details__trouble-link type-data"
     >
       <LifeBuoy size={13} aria-hidden="true" className="step-details__trouble-link-icon" />
       {troubleLabel}
+      {/* FW-03 (S09-B-12): apre un foglio, quindi freccia; un solo rientro */}
+      <ChevronRight size={14} aria-hidden="true" className="step-details__trouble-link-icon" />
     </button>
   ) : null;
 
@@ -151,6 +151,8 @@ export function StepDetails({
               aria-controls={glossaryOpen ? glossaryId : undefined}
             >
               {t(cms.cooking.learnInlineTitle, { label: glossaryTerm.name })}
+              {/* FW-03 (S09-B-12): si apre sul posto, quindi chevron come «Come si fa» */}
+              <ChevronDown size={14} aria-hidden="true" className="step-details__glossary-chevron" />
             </button>
             {glossaryOpen && (
               <motion.div

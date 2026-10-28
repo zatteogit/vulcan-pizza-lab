@@ -91,9 +91,17 @@ export function StyleDetailSheet({
      deve scorrere. Prima si bloccava il body, ma la pagina scorre su <html>:
      ora il blocco condiviso dei dialoghi (html.ds-dialog-open). Da 640 px la
      scheda è una card centrata, non un foglio largo quanto lo schermo. */
-  const [isWide] = React.useState(
+  const [isWide, setIsWide] = React.useState(
     () => typeof window !== "undefined" && window.matchMedia("(min-width: 640px)").matches,
   );
+  /* FW-03 (S03-B-17): il layout segue rotazione e ridimensionamento, non
+     solo il montaggio; l'uscita animata la gestisce AnimatePresence in home. */
+  React.useEffect(() => {
+    const mql = window.matchMedia("(min-width: 640px)");
+    const onChange = () => setIsWide(mql.matches);
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
   const panelRef = useDialogFocus<HTMLDivElement>({ open: true, onClose: onDismiss });
 
   const rec = React.useMemo(() => {
@@ -260,7 +268,7 @@ export function StyleDetailSheet({
                   <span className="style-detail-title__dot">
                     ·
                   </span>
-                  <CompatibilityPill now={kitchenNow ?? 0} original={originalRecipe?.scores.composite} labelled
+                  <CompatibilityPill context="detail" now={kitchenNow ?? 0} original={originalRecipe?.scores.composite} labelled
                     blocked={rec.recipe.verdict.outcome === "not_feasible"} className="style-detail-title__match" />
                 </>
               )}

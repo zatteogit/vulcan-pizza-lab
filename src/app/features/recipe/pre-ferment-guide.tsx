@@ -4,11 +4,11 @@
 /* i18n: all user-facing strings resolved via useCms().preFerment */
 
 import { Lightbulb } from "lucide-react";
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useMemo } from 'react';
+import { motion } from 'motion/react';
 import { motionSpring } from "../../components/ds/motion";
-import { Surface } from "../../components/ds/index";
-import { ChevronDown, ChevronUp, Clock, Droplets, Thermometer } from 'lucide-react';
+import { Disclosure, Surface } from "../../components/ds/index";
+import { Clock, Droplets, Thermometer } from 'lucide-react';
 import { useCms, type CmsPreFerment } from "../cms/cms-context";
 import { Flask } from "../cooking/step-illustrations";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -43,11 +43,13 @@ export function localizedComparisonRows(pf: CmsPreFerment) {
 /* === COMPONENT === */
 interface PreFermentCardProps {
   preFermentType?: string;
+  /** FW-03 (S14-A-10): false dove la tabella di confronto è già in pagina. */
+  showComparison?: boolean;
+  /** FW-03 (S14-A-11): livello dell'heading che avvolge il pulsante della card. */
+  headingLevel?: 2 | 3 | 4;
 }
 
-export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardProps) {
-  const [expanded, setExpanded] = useState(false);
-  const [showComparison, setShowComparison] = useState(false);
+export function PreFermentCard({ preFermentType = 'poolish', showComparison = true, headingLevel }: PreFermentCardProps) {
   const { cms } = useCms();
   const pf = cms.preFerment;
   const id: PreFermentId = (PRE_FERMENT_IDS as readonly string[]).includes(preFermentType)
@@ -74,40 +76,31 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
       className="preferment-guide-card"
       data-slot="pre-ferment-card"
     >
-      {/* Header — always visible */}
-      <motion.button
-        onClick={() => setExpanded(!expanded)}
-        className="preferment-guide-card__header"
-      >
-        <span className="preferment-guide-card__icon">
-          <Flask size={32} />
-        </span>
-        <div className="preferment-guide-card__title-block">
-          <div className="preferment-guide-card__eyebrow-row">
-            <span className="preferment-guide-card__eyebrow">
-              {pf.sectionLabel}
+      {/* FW-03: ds/Disclosure (aria-expanded, aria-controls, heading) al posto
+          del motion.button senza stato; il nome non contiene più emoji. */}
+      <Disclosure
+        variant="inline"
+        headingLevel={headingLevel}
+        id={`pf-card-${id}`}
+        className="preferment-guide-card__disclosure"
+        triggerClassName="preferment-guide-card__header"
+        summary={<>
+          <span className="preferment-guide-card__icon">
+            <Flask size={32} />
+          </span>
+          <span className="preferment-guide-card__title-block">
+            <span className="preferment-guide-card__eyebrow-row">
+              <span className="preferment-guide-card__eyebrow">
+                {pf.sectionLabel}
+              </span>
             </span>
-          </div>
-          <div className="preferment-guide-card__name">
-            <span className="preferment-guide-card__name-text">{info.name}</span>
-            <span className="preferment-guide-card__origin"> — {info.origin}</span>
-          </div>
-        </div>
-        <div className="preferment-guide-card__chevron">
-          {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-        </div>
-      </motion.button>
-
-      {/* Expanded content */}
-      <AnimatePresence>
-        {expanded && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={motionSpring.standard}
-            className="preferment-guide-card__body"
-          >
+            <span className="preferment-guide-card__name">
+              <span className="preferment-guide-card__name-text">{info.name}</span>
+              <span className="preferment-guide-card__origin"> — {info.origin}</span>
+            </span>
+          </span>
+        </>}
+      >
             <div className="preferment-guide-card__content">
               {/* Description */}
               <p className="preferment-guide-card__description">
@@ -145,28 +138,19 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
                 </ul>
               </div>
 
-              {/* Comparison toggle */}
-              <motion.button
-                onClick={() => setShowComparison(!showComparison)}
-                className="preferment-guide-card__compare-toggle"
-              >
-                {showComparison ? pf.hideComparison : pf.showComparison}
-              </motion.button>
-
-              <AnimatePresence>
-                {showComparison && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={motionSpring.standard}
-                    className="preferment-guide-card__compare-panel"
-                  >
+              {/* Confronto: solo dove la tabella non è già in pagina (S14-A-10) */}
+              {showComparison && (
+                <Disclosure
+                  variant="inline"
+                  className="preferment-guide-card__compare"
+                  triggerClassName="preferment-guide-card__compare-toggle"
+                  summary={pf.showComparison}
+                >
                     <div className="preferment-guide-card__table-wrap">
                       <table className="preferment-guide-card__table">
                         <thead>
                           <tr>
-                            <th className="preferment-guide-card__th"> </th>
+                            <td className="preferment-guide-card__th" />
                             <th className="preferment-guide-card__th preferment-guide-card__th--biga">{uiMessage("features.recipe.pre-ferment-guide.biga-4e43b430")}</th>
                             <th className="preferment-guide-card__th preferment-guide-card__th--poolish">{uiMessage("features.recipe.pre-ferment-guide.poolish-40fc939a")}</th>
                             <th className="preferment-guide-card__th preferment-guide-card__th--autolisi">{uiMessage("features.recipe.pre-ferment-guide.autolisi-c4e938cc")}</th>
@@ -192,13 +176,10 @@ export function PreFermentCard({ preFermentType = 'poolish' }: PreFermentCardPro
                         </tbody>
                       </table>
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                </Disclosure>
+              )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </Disclosure>
     </Surface>
   );
 }
