@@ -12,6 +12,7 @@ import { useCms } from "../../features/cms/cms-context";
 import { getTermById } from "../../data/glossary-data";
 import { uiMessage } from "../../i18n/ui-messages";
 import { motionSpring } from "../ds/motion";
+import { useEscapeLayer } from "../ds/escape-stack";
 
 interface InfoTipProps {
   children: React.ReactNode;
@@ -99,21 +100,11 @@ export function InfoTip({ children, size = 15, termId, label }: InfoTipProps) {
       document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // Escape closes only the popover: capture on window runs before the
-  // dialog/sheet listener on document, and stops it from also closing.
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      e.stopPropagation();
-      e.preventDefault();
-      setOpen(false);
-      triggerRef.current?.focus({ preventScroll: true });
-    };
-    window.addEventListener("keydown", handler, true);
-    return () =>
-      window.removeEventListener("keydown", handler, true);
-  }, [open]);
+  // FW-12: Esc closes only the popover (escape stack), not the sheet below.
+  useEscapeLayer(open, () => {
+    setOpen(false);
+    triggerRef.current?.focus({ preventScroll: true });
+  });
 
   return (
     <span className="info-tip">

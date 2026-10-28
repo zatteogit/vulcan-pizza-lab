@@ -167,5 +167,42 @@ Legenda colonne: **ID**, **Criterio WCAG**, **Pagina / componente**, **Problema*
 - **Solo Chromium.** Safari e Firefox non sono stati testati. Il rendering di `outline: auto` (F10) e gli annunci di `role=alert` al mount (F23) cambiano tra browser.
 - **Zoom emulato** riducendo il viewport, non con lo zoom reale del browser. La “grandezza testo” di iOS (Dynamic Type) non è stata testata.
 - **Solo touch target misurati.** Gesti e trascinamenti (2.5.1, 2.5.2) non sono stati esercitati. Il carosello condimenti e i bottoni −/+ del tempo hanno alternative a tap.
-- **Fuori perimetro:** modalità cottura attiva (`cooking-mode`), `/learn/*` oltre al Glossario, CMS e tool di sviluppo.
+- **Fuori perimetro:** modalità cottura attiva (`cooking-mode`, poi coperta da FW-12, § 6), `/learn/*` oltre al Glossario, CMS e tool di sviluppo.
 - **Codice in movimento:** un altro agente sta modificando il codice in parallelo. Righe e selettori citati si riferiscono allo stato del 24/10/2026 e vanno ricontrollati prima della correzione.
+
+---
+
+## 6. Regole per overlay, focus e base (FW-12, 28/10/2026)
+
+Correzioni dell'audit UX/scienza del 28/10/2026 (`docs/audit-ux-scienza-2026-10-28.md`, pacchetto FW-12). Valgono per ogni componente nuovo.
+
+### 6.1 Strati ed Esc
+
+- **Un solo registro degli strati:** `src/app/components/ds/escape-stack.ts`. Popover (`InfoTip`), tendine (`ds/Select`, ricerca forno), dialog e sheet (`ds/Dialog`, `ds/BottomSheet`, `ds/ModalSheet`, `ds/ConfirmDialog`, tutti tramite `use-dialog-focus`), la ricerca aperta e la modalità cottura si registrano quando si aprono (`useEscapeLayer(open, onClose)` o `pushEscapeLayer`).
+- **Esc chiude solo lo strato in cima.** Con il «?» aperto dentro Personalizza, Esc chiude il «?» e lo sheet resta; con «Interrompere la pizzata?» aperto, Esc chiude il dialog e la vista resta.
+- Un campo che usa Esc per sé (per esempio l'input del valore di uno slider) chiama `preventDefault()`: lo stack non lo tocca.
+- Nessun nuovo `addEventListener("keydown")` per Esc nei componenti: si passa dallo stack.
+- **Le scorciatoie globali di uno strato si sospendono se sopra c'è un altro strato.** Le frecce della modalità cottura (`features/cooking/cooking-keys.ts`) sfogliano i passi solo se la vista è in cima, se il tasto non è già stato consumato e se il focus non è in un campo, uno switch, uno slider, una tablist o un dialog di conferma. Le frecce non segnano mai un passo come fatto: «Fatto» resta un gesto esplicito.
+
+### 6.2 Dialog e focus
+
+- Ogni overlay modale usa `useDialogFocus`: focus iniziale (primo controllo, oppure `initialFocusRef`), Tab che resta nel modale in cima, ritorno del focus a chi l'ha aperto, oppure a `fallbackFocus` se quel controllo non è più nel DOM o era nascosto.
+- La **modalità cottura** è un dialog vero: il focus va sul titolo del passo, Tab resta nella vista, alla chiusura torna al widget della pizzata. Il cambio di passo è annunciato («Passo {n} di {totale}: {titolo}», `cooking.a11y.step-announce`); la barra è un `progressbar` con valore e testo.
+- Il dialog di **cambio lingua** è un `ds/ConfirmDialog` (focus su «Annulla», sottotitolo con `lang` della lingua di arrivo).
+- Dopo una scelta che smonta i controlli, il focus va su un punto sensato, mai su `body`: chip «Quando» dopo la scelta del momento (con una regione di stato), campo della ricerca forno dopo la scelta del modello, intestazione del passo nell'onboarding.
+- Le select usano `ds/Select` (combobox con listbox da tastiera ed etichetta). La ricerca del forno segue il pattern ARIA combobox: la lista non è una live region; lo stato annuncia solo il numero di risultati e la conferma.
+
+### 6.3 Base
+
+- **Titolo del documento** anche sulla 404 (`handle: { notFound: true }` sulla route `*`, letto da `RouteTitle`).
+- **Movimento:** il logo nella testata e nella barra laterale fa un solo ciclo e si ferma (WCAG 2.2.2); il loop resta solo nel dialog Informazioni, aperto di proposito.
+- **Scorciatoia di ricerca:** il nome accessibile è «Cerca»; la scorciatoia sta in `aria-keyshortcuts` e nel tooltip solo con puntatore fine, con il tasto della piattaforma (⌘K su Apple, Ctrl+K/Strg+K altrove). Sul touch, «Cerca» della tastiera chiude la tastiera e lascia la lista.
+- **Campi di testo ≥ 16 px** su mobile (`max(var(--font-size-*), var(--dimension-fixed-016))`): Safari iOS non ingrandisce la pagina al focus.
+- **Bersagli:** almeno 24 px (WCAG 2.5.8); chip e suggerimenti della ricerca, chip famiglia e «Vedi tutte» di Scopri, X del campo di ricerca a 44 px di area di tocco. Il testo «Pre-fermento» è l'etichetta del suo switch.
+- **Ordine:** ordine visivo = ordine del DOM (niente `order: -1`); il segnalibro della ricetta e il widget della pizzata vengono prima di `<main>`, come a schermo.
+- **Titoli senza salti:** gruppi di Scopri h2 e card h3; passi del Procedimento come `<ol>` con titolo h3; nomi dei prefermenti come titolo (h2 nella pagina, h3 in ricetta) che avvolge il bottone; pannello stile con titolo h2 e sezioni h3; titolo della tabella dei cambi come `<caption>`; «Account» h2; kicker «Termine del giorno» h2.
+- **Stato a parole, non solo a colori:** severità di Problemi e soluzioni con badge testuale (Grave, Attenzione, Informazione), icona `aria-hidden`; chip lingua con `aria-pressed`, nome nativo con `lang`, bandiera nascosta allo screen reader.
+- **Nomi accessibili:** card ricetta di Scopri e card di Impara con `aria-labelledby` sul titolo (poi contesto, autore, badge) invece dell'intero contenuto incollato; gruppo dei condimenti con ruolo e ricerca con etichetta; gruppo di stampa con `legend` e «Stampa» disattivato se non c'è nulla da stampare.
+- **Ricerca aperta:** i risultati sono il landmark `main` (la pagina è nascosta) e la barra laterale non segna più la tab come attiva.
+
+Test: `src/app/components/ds/escape-stack.test.ts`, `src/app/features/cooking/cooking-keys.test.ts` (scorciatoie e contratto del focus della modalità cottura). Verifica manuale con Playwright a 390 e 1280 px, chiaro e scuro, il 28/10/2026: Tab resta nel dialog lingua (6/6) e nella modalità cottura (10/10); con «Interrompere?» aperto, freccia destra non cambia i passi fatti ed Esc chiude solo il dialog; alla chiusura il focus torna al widget; la 404 ha titolo «Pagina non trovata · Vulcan». La modalità cottura non è più fuori perimetro (§ 5.2).

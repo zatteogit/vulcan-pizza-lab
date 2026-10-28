@@ -114,6 +114,20 @@ function isFamilyFilter(value: string | null): value is FamilyId | "all" {
 }
 
 
+/* FW-12 (S02-A-14): ordine del nome accessibile delle card ricetta. */
+function cardLabelIds(
+  baseId: string,
+  text: { context?: string | null; author?: string | null },
+  hasBadge: boolean,
+): string {
+  return [
+    `${baseId}-title`,
+    text.context ? `${baseId}-context` : null,
+    text.author ? `${baseId}-author` : null,
+    hasBadge ? `${baseId}-badge` : null,
+  ].filter(Boolean).join(" ");
+}
+
 /* ── Componente Editoriale per la Ricetta in Primo Piano ── */
 function FeaturedRecipeCard({
   recipe: rawRecipe,
@@ -136,6 +150,10 @@ function FeaturedRecipeCard({
   const cardText = signatureCardText(recipe, styleName);
   const acronymHelpId = useId();
   const acronymHelp = getAcronymTooltip(recipe.authenticity_badge, cardText.context);
+  /* FW-12 (S02-A-14): il nome del link parte dal titolo, poi contesto,
+     autore e badge, separati (aria-labelledby unisce con spazi). */
+  const nameId = useId();
+  const labelledBy = cardLabelIds(nameId, cardText, !!recipe.authenticity_badge);
 
   const linkTo = signatureRecipeLink(recipe);
 
@@ -143,7 +161,8 @@ function FeaturedRecipeCard({
     <article className="explore-feature-shell">
     <Link
       to={linkTo}
-      aria-describedby={acronymHelp ? acronymHelpId : undefined}
+      aria-labelledby={labelledBy}
+      aria-describedby={acronymHelp ? `${nameId}-desc ${acronymHelpId}` : `${nameId}-desc`}
       state={{ exploreBackTo }}
       data-region="feature"
       onMouseEnter={() => setHovered(true)}
@@ -154,14 +173,14 @@ function FeaturedRecipeCard({
       <div className="explore-feature__media">
         <ImageWithFallback
           src={photo}
-          alt={recipe.name}
+          alt=""
           className="explore-feature__image"
           priority
           sizes={IMAGE_SIZES.feature}
         />
         {/* Badge autenticità posizionato sull'immagine */}
         {recipe.authenticity_badge && (
-          <div className="explore-feature__badge">
+          <div id={`${nameId}-badge`} className="explore-feature__badge">
             {signatureBadgeText(recipe.authenticity_badge, cms)}
           </div>
         )}
@@ -171,16 +190,16 @@ function FeaturedRecipeCard({
       <div className="explore-feature__body">
         <div className="explore-feature__head">
           {acronymHelp && <span hidden id={acronymHelpId}>{acronymHelp}</span>}
-          {cardText.context && <span className="explore-feature__eyebrow">
+          {cardText.context && <span id={`${nameId}-context`} className="explore-feature__eyebrow">
             {cardText.context}
           </span>}
-          <h2 className="explore-feature__title">
+          <h2 id={`${nameId}-title`} className="explore-feature__title">
             {cardText.title}
           </h2>
-          <p className="explore-feature__desc">
+          <p id={`${nameId}-desc`} className="explore-feature__desc">
             {recipe.description}
           </p>
-          {cardText.author && <p className="explore-feature__desc">{uiMessage("pages.explore.recipeBy", [cardText.author])}</p>}
+          {cardText.author && <p id={`${nameId}-author`} className="explore-feature__desc">{uiMessage("pages.explore.recipeBy", [cardText.author])}</p>}
         </div>
 
         <div className="explore-feature__cta">
@@ -526,9 +545,10 @@ export function ExplorePage() {
                       return (
                         <div key={familyId} className="explore-family-group">
                           <div className="explore-family-group__head">
-                            <h3 className="explore-family-group__title">
+                            {/* FW-12 (S02-B-11): gruppo h2, card h3 (prima h1 → h3). */}
+                            <h2 className="explore-family-group__title">
                               {cmsFam?.name || fam?.name}
-                            </h3>
+                            </h2>
                             <span className="type-data explore-family-group__count">
                               ({familyStyles.length})
                             </span>
@@ -559,6 +579,11 @@ export function ExplorePage() {
                     </div>
                   ) : (
                     /* Griglia piatta filtrata */
+                    <>
+                    {/* FW-12 (S02-B-11): titolo h2 della famiglia per chi naviga per titoli. */}
+                    <h2 className="sr-only">
+                      {cms.families[activeFamily as FamilyId]?.name || PIZZA_FAMILIES[activeFamily as FamilyId]?.name}
+                    </h2>
                     <div data-region="collection" className="explore-grid">
                       {filteredStyles.map((style, i) => (
                         <StyleCatalogCard
@@ -572,6 +597,7 @@ export function ExplorePage() {
                         />
                       ))}
                     </div>
+                    </>
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -625,6 +651,9 @@ function SignatureRecipeCard({
   const cardText = signatureCardText(recipe, styleName);
   const acronymHelpId = useId();
   const acronymHelp = getAcronymTooltip(recipe.authenticity_badge, cardText.context);
+  /* FW-12 (S02-A-14): vedi FeaturedRecipeCard. */
+  const nameId = useId();
+  const labelledBy = cardLabelIds(nameId, cardText, !!recipe.authenticity_badge);
 
   const linkTo = signatureRecipeLink(recipe);
 
@@ -644,13 +673,14 @@ function SignatureRecipeCard({
           variant="container"
           to={linkTo}
           state={{ exploreBackTo }}
+          aria-labelledby={labelledBy}
           aria-describedby={acronymHelp ? acronymHelpId : undefined}
           className={`explore-card${isNerd ? " explore-card--nerd" : ""}`}
         >
           <figure className="explore-card__media">
           <ImageWithFallback
             src={photo}
-            alt={recipe.name}
+            alt=""
             className="explore-card__image"
             loading="lazy"
             sizes={IMAGE_SIZES.card}
@@ -662,19 +692,19 @@ function SignatureRecipeCard({
             {/* Badge autenticità: nella didascalia, l'angolo in alto è della
                 compatibilità con la tua cucina (FW-10). */}
             {recipe.authenticity_badge && (
-              <div className="explore-card__badge explore-card__badge--auth">
+              <div id={`${nameId}-badge`} className="explore-card__badge explore-card__badge--auth">
                 {signatureBadgeText(recipe.authenticity_badge, cms)}
               </div>
             )}
-            {cardText.context && <div className="explore-card__eyebrow">
+            {cardText.context && <div id={`${nameId}-context`} className="explore-card__eyebrow">
               {cardText.context}
             </div>}
-            <h3 className="explore-card__title explore-card__title--recipe">
+            <h3 id={`${nameId}-title`} className="explore-card__title explore-card__title--recipe">
               {cardText.title}
             </h3>
             {/* Sprint 12 — autore/locale dell'interpretazione (se mappata). */}
             {cardText.author && (
-              <div className="explore-card__author">
+              <div id={`${nameId}-author`} className="explore-card__author">
                 {uiMessage("pages.explore.recipeBy", [cardText.author])}
               </div>
             )}

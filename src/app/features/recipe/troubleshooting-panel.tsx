@@ -49,11 +49,19 @@ const TROUBLESHOOTING_CATEGORY_ICONS: Record<string, LucideIcon> = {
 };
 
 /* === SEVERITY ICON MAP === */
+/* FW-12 (S13-A-15/B-10): l'icona è decorativa; la severità si dice a parole
+   (badge visibile nella card, testo per lo screen reader negli avvisi). */
 const SeverityIcon = ({ severity }: { severity: string }) => {
-  if (severity === 'critical') return <XCircle className="troubleshooting-severity-icon troubleshooting-severity-icon--critical" />;
-  if (severity === 'warning') return <AlertTriangle className="troubleshooting-severity-icon troubleshooting-severity-icon--warning" />;
-  return <Info className="troubleshooting-severity-icon troubleshooting-severity-icon--info" />;
+  if (severity === 'critical') return <XCircle aria-hidden="true" className="troubleshooting-severity-icon troubleshooting-severity-icon--critical" />;
+  if (severity === 'warning') return <AlertTriangle aria-hidden="true" className="troubleshooting-severity-icon troubleshooting-severity-icon--warning" />;
+  return <Info aria-hidden="true" className="troubleshooting-severity-icon troubleshooting-severity-icon--info" />;
 };
+
+function severityLabel(severity: string): string {
+  if (severity === 'critical') return uiMessage("features.recipe.troubleshooting-panel.severity-critical");
+  if (severity === 'warning') return uiMessage("features.recipe.troubleshooting-panel.severity-warning");
+  return uiMessage("features.recipe.troubleshooting-panel.severity-info");
+}
 
 /* Classe modifier per severità della card avviso (costruita in JS, non nel JSX:
    evita literal className dinamici — vedi CSS per le 3 varianti). */
@@ -124,6 +132,7 @@ export function ContextualWarnings(props: ContextualWarningsProps) {
               </div>
               <div className="troubleshooting-warnings__item-body">
                 <div className="troubleshooting-warnings__item-message">
+                  <span className="sr-only">{severityLabel(w.severity)}: </span>
                   {w.message}
                 </div>
                 <div className="troubleshooting-warnings__item-tip">
@@ -382,6 +391,10 @@ function IssueCard({
           <SeverityIcon severity={issue.severity} />
           <span className="troubleshooting-card__toggle-body">
             <span className="troubleshooting-card__meta-row">
+              {/* FW-12 (S13-A-15/B-10): la severità anche a parole. */}
+              <span className="troubleshooting-card__severity" data-severity={issue.severity}>
+                {severityLabel(issue.severity)}
+              </span>
               <span className="troubleshooting-card__badge">
                 {catLabel}
               </span>

@@ -297,9 +297,9 @@ export function StyleDetailSheet({
               )}
 
               {/* Title */}
-              <h3 id={`style-detail-title-${style.id}`} className="style-detail-title__heading">
+              <h2 id={`style-detail-title-${style.id}`} className="style-detail-title__heading">
                 {displayName}
-              </h3>
+              </h2>
             </div>
           </div>
 
@@ -345,9 +345,10 @@ export function StyleDetailSheet({
                 {/* ── Author variants — compatible methods ── */}
                 {compatVariants.length > 0 && (
                   <div className="style-detail-techniques">
-                    <span className="style-detail-techniques__label">
+                    {/* FW-12 (S03-B-24): sezioni h3 sotto il titolo h2 del pannello. */}
+                    <h3 className="style-detail-techniques__label">
                       {pt.sheetTechniquesLabel}
-                    </span>
+                    </h3>
                     <div className="style-detail-techniques__list">
                       {compatVariants.map((v) => {
                         /* Etichetta autore: maestro/pizzeria/ente, + firma tecnica. */
@@ -403,9 +404,9 @@ export function StyleDetailSheet({
                     }}
                     className="style-detail-params"
                   >
-                    <span className="style-detail-params__label">
+                    <h3 className="style-detail-params__label">
                       {pt.sheetSectionTitle}
-                    </span>
+                    </h3>
                     <div className="style-detail-params__box">
                       {params.ovenTemp && (
                         <ParamRow

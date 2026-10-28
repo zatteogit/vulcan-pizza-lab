@@ -4,7 +4,7 @@
    Deep-link ?style=<id>: mostra solo il banner dello stile; le guide restano
    generali (FW-16, S11-A-01: nessuna sottopagina filtra per stile). */
 
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import { t } from "../features/cms/i18n";
 import { motion } from "motion/react";
 import {
@@ -56,6 +56,9 @@ export function LearnPage() {
   const { cms, bcp47 } = useCms();
   const { constraints } = useProfileDefaults();
   const pg = cms.pages;
+  /* FW-12 (S11-B-14): i link card hanno come nome il titolo e come
+     descrizione il testo, non l'intero contenuto della card. */
+  const cardIds = useId();
   const [searchParams, setSearchParams] = useSearchParams();
   const styleParam = searchParams.get("style");
   const activeStyle =
@@ -201,6 +204,8 @@ export function LearnPage() {
             to={theoretical ? "/learn/glossary" : `/recipe/${path.styleId}?mode=adapted`}
             className="learn-path__card"
             data-attention="recommended"
+            aria-labelledby={`${cardIds}-path-title`}
+            aria-describedby={`${cardIds}-path-copy`}
           >
             {/* Hand-drawn illustration — rising dough for the learning path */}
             <div className="learn-path__illustration">
@@ -209,8 +214,8 @@ export function LearnPage() {
 
             <div className="learn-path__content">
               <div className="learn-path__body">
-                <h2 className="learn-path__title">{path.title}</h2>
-                <p className="learn-path__copy">{path.copy}</p>
+                <h2 id={`${cardIds}-path-title`} className="learn-path__title">{path.title}</h2>
+                <p id={`${cardIds}-path-copy`} className="learn-path__copy">{path.copy}</p>
               </div>
 
               <div className="learn-path__cta-row">
@@ -236,19 +241,26 @@ export function LearnPage() {
           className="learn-term"
         >
           {/* Decorative thin rule — magazine section break */}
-          <div className="learn-term__rule" />
-          {/* FW-13 (S11-A-13): è il titolo della sezione, non un div. */}
+          <div className="learn-term__rule" aria-hidden="true" />
+          {/* FW-13 (S11-A-13) e FW-12 (S11-B-14): il kicker è il titolo h2 della
+              sezione, così il termine (h3) non finisce sotto la card del percorso. */}
           <h2 className="learn-term__kicker">
             {t(pg.learnTermOfTheDay, { category: glossaryCategoryLabel(term.category, cms.glossary) })}
           </h2>
 
-          <Link to="/learn/glossary" className="learn-term__card">
+          <Link
+            to="/learn/glossary"
+            className="learn-term__card"
+            aria-labelledby={`${cardIds}-term-name`}
+            aria-describedby={`${cardIds}-term-def`}
+          >
             <div className="learn-term__body">
               <div className="learn-term__icon">
                 <Bowl size={52} />
               </div>
               <div className="learn-term__content">
                 <h3
+                  id={`${cardIds}-term-name`}
                   className={
                     /* Audit lug 2026: i termini lunghi ("P/L (Rapporto
                        Tenacità/Estensibilità)") a 8xl traboccano dalla card su
@@ -268,7 +280,7 @@ export function LearnPage() {
                     </span>
                   )}
                 </h3>
-                <p className="learn-term__definition">{term.definition}</p>
+                <p id={`${cardIds}-term-def`} className="learn-term__definition">{term.definition}</p>
               </div>
             </div>
             <footer className="learn-term__footer">

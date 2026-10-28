@@ -112,6 +112,8 @@ export const router = createBrowserRouter([
       /* ═══ CATCH-ALL ═══ */
       {
         path: "*",
+        /* FW-12 (S01-A-08): RouteTitle mette «Pagina non trovata» nel titolo. */
+        handle: { notFound: true },
         lazy: async () => ({ Component: (await import("./pages/not-found")).NotFoundPage }),
       },
     ],

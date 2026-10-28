@@ -170,6 +170,12 @@ export function SearchResultsView({
   keyHandlerRef.current = (event) => {
     if (event.key === "Enter" && first) {
       event.preventDefault();
+      /* FW-12 (S04-B-11): su touch il tasto «Cerca» della tastiera vuol dire
+         «mostra i risultati»: chiude la tastiera e lascia la lista. */
+      if (typeof window !== "undefined" && window.matchMedia?.("(pointer: coarse)").matches) {
+        (event.target as HTMLElement | null)?.blur?.();
+        return;
+      }
       onSelect(first.link);
     } else if (event.key === "ArrowDown" && first) {
       event.preventDefault();
@@ -192,7 +198,9 @@ export function SearchResultsView({
   const enter = reduceMotion ? undefined : { opacity: 0, y: 8 };
 
   return (
-    <section id={SEARCH_RESULTS_ID} className="search-page" data-region="page" aria-labelledby="search-page-title">
+    /* FW-12 (S04-B-18): mentre la ricerca è aperta la pagina (con il suo
+       <main>) è nascosta, quindi i risultati sono il landmark main. */
+    <main id={SEARCH_RESULTS_ID} className="search-page" data-region="page" aria-labelledby="search-page-title">
       <Heading level="xl" id="search-page-title" className="search-page__heading">
         {cms.pages.navSearch}
       </Heading>
@@ -332,6 +340,6 @@ export function SearchResultsView({
           </ul>
         </section>
       )}
-    </section>
+    </main>
   );
 }
