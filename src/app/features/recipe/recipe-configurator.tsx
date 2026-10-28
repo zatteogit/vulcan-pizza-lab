@@ -562,7 +562,14 @@ export function RecipeConfigurator({
     cfg,
   );
 
-  const suggestedTemp = adaptiveHints.fermentTemp?.suggestedTemp;
+  /* FW-14 (S06-B-02): una sola fonte per la raccomandazione. Il badge
+     «Consigliato» segue l'ottimo del motore (lo stesso del triangolo sugli
+     slider), non l'euristica dei suggerimenti: prima diceva «Fresco» mentre
+     la ricetta ottimizzata sceglieva 22 °C. */
+  const optimumTemp = optimum?.fermentation_temp_c;
+  const suggestedTemp: "fridge" | "cool" | "ambient" | undefined = optimumTemp === undefined
+    ? adaptiveHints.fermentTemp?.suggestedTemp
+    : optimumTemp <= 6 ? "fridge" : optimumTemp <= 16 ? "cool" : "ambient";
 
   const changedAdvanced = [
     !smartLink,
@@ -1344,10 +1351,14 @@ function GradientSlider({
     if (clamped !== value) onChange(clamped);
   };
   const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
+  /* FW-14 (S06-B-02): il valore consigliato dal motore non si colora come
+     «fuori range» anche quando l'ottimo esce dalla forbice dello stile. */
+  const atOptimum = optimalValue !== undefined && Math.abs(value - optimalValue) < step;
   const inRange =
-    rangeMin !== undefined && rangeMax !== undefined
+    atOptimum ||
+    (rangeMin !== undefined && rangeMax !== undefined
       ? value >= rangeMin && value <= rangeMax
-      : true;
+      : true);
 
   const zoneLeftPct =
     rangeMin !== undefined
