@@ -544,6 +544,11 @@
   --dimension-viewport-height-70: 70vh;
   --dimension-viewport-height-85: 85vh;
   --dimension-viewport-height-full: 100vh;
+  /* Corsa massima del bagliore che segue lo scorrimento (.fire-glow):
+     1 px di traslazione per 1 px di scorrimento fino a questa soglia. */
+  --fire-glow-follow-range: 100000px;
+  /* Sovrascritta da fire-glow.tsx con la distanza misurata. */
+  --fire-glow-offset: 0px;
   --dimension-viewport-width-018: 1.8vw;
   --dimension-viewport-width-020: 2vw;
   --dimension-viewport-width-0265: 2.65vw;
@@ -17518,11 +17523,29 @@
      della trasparenza (fixed a tutta larghezza vicino ai bordi). */
   .fire-glow {
     position: absolute;
-    inset: 0 0 auto;
+    /* --fire-glow-offset (fire-glow.tsx): distanza della pagina dal bordo alto
+       del documento, così il bagliore parte da sopra la testata. */
+    inset: calc(-1 * var(--fire-glow-offset)) 0 auto;
     height: var(--dimension-viewport-height-full);
     z-index: 0;
     overflow: hidden;
     pointer-events: none;
+  }
+
+  /* Dove ci sono le animazioni legate allo scorrimento (Safari 26, Chrome,
+     Edge) il bagliore segue lo scorrimento pixel per pixel: sembra fisso, ma
+     resta assoluto e Safari non dipinge la fascia. Altrove scorre via. */
+  @supports (animation-timeline: scroll()) {
+    .fire-glow {
+      animation: fire-glow-follow linear both;
+      animation-timeline: scroll(root block);
+      animation-range: var(--space-0) var(--fire-glow-follow-range);
+    }
+  }
+
+  @keyframes fire-glow-follow {
+    from { transform: translateY(var(--space-0)); }
+    to { transform: translateY(var(--fire-glow-follow-range)); }
   }
 
   .fire-glow__primary {

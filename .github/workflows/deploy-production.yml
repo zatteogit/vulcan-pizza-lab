@@ -31,6 +31,14 @@ jobs:
       EDITION: ${{ inputs.edition }}
       SHA: ${{ inputs.sha }}
     steps:
+      # actions/checkout accetta solo lo sha completo: con uno abbreviato
+      # fallisce con «branch or tag … could not be found».
+      - name: Lo sha è completo?
+        run: |
+          if ! [[ "$SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Serve lo sha completo di 40 caratteri (git rev-parse <sha>), non «$SHA»."
+            exit 1
+          fi
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.sha }}
