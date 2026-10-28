@@ -61,7 +61,7 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "allergen.preferences": "Allergeni da evitare",
   "allergen.unspecified": "Non indicati",
   "allergen.preferenceHelp": "La scelta vale per tutta la ricetta, anche per i condimenti.",
-  "allergen.title": "Allergeni",
+  "allergen.title": "Allergeni della ricetta",
   "allergen.noKnown": "Da verificare sulle etichette",
   "allergen.optional": "facoltativo",
   "allergen.contains": "Nella ricetta",
@@ -70,6 +70,9 @@ export const UI_MESSAGES_IT: Record<string, string> = {
   "allergen.toCheck": "Etichette da controllare",
   "allergen.labelNote": "L’elenco si basa sugli ingredienti indicati. Controlla anche le etichette e le possibili contaminazioni in cucina.",
   "allergen.milkNote": "Anche i prodotti senza lattosio possono contenere latte.",
+  "allergen.scope.dough": "Allergeni dell’impasto",
+  "allergen.scope.topping": "Allergeni del condimento",
+  "allergen.scope.toppingPending": "Solo impasto: il condimento non è ancora scelto.",
 
   "recipe.reference.avpn": "AVPN 2024",
   "recipe.reference.outside": "Ispirata alla Napoletana STG · fuori disciplinare",

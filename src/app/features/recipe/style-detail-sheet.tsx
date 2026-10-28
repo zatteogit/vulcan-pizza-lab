@@ -1,5 +1,6 @@
 import { useDecorativeMotion } from "../../context/visual-quality-context";
 import { RecipeAllergens } from "./recipe-allergens";
+import { recipeAllergenScope } from "../../domain/allergen-scope";
 import { RecipeReferenceNote } from "./recipe-reference-note";
 import { recipeDisplayName, stgDepartures } from "../../domain/recipe-reference";
 import { CompatibilityPill } from "./style-card-parts";
@@ -468,7 +469,7 @@ export function StyleDetailSheet({
             </div>
           )}
 
-          {rec && <RecipeAllergens report={rec.recipe.allergens} scope="recipe" />}
+          {rec && <RecipeAllergens report={rec.recipe.allergens} scope={recipeAllergenScope(rec.recipe).scope} />}
           {rec && originalRecipe && (
             <RecipeChanges from={originalRecipe} to={rec.recipe} mode="included" />
           )}

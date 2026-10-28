@@ -58,7 +58,7 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "allergen.preferences": "Allergens to avoid",
   "allergen.unspecified": "Not provided",
   "allergen.preferenceHelp": "Your choices apply to the whole recipe, including toppings.",
-  "allergen.title": "Allergens",
+  "allergen.title": "Allergens in the recipe",
   "allergen.noKnown": "Check the product labels",
   "allergen.optional": "optional",
   "allergen.contains": "In the recipe",
@@ -67,6 +67,9 @@ export const UI_MESSAGES_EN: Record<string, string> = {
   "allergen.toCheck": "Labels to check",
   "allergen.labelNote": "This list is based on the listed ingredients. Check product labels and possible cross-contact in your kitchen too.",
   "allergen.milkNote": "Lactose-free products can still contain milk.",
+  "allergen.scope.dough": "Allergens in the dough",
+  "allergen.scope.topping": "Allergens in the topping",
+  "allergen.scope.toppingPending": "Dough only: no topping chosen yet.",
 
   "recipe.reference.avpn": "AVPN 2024",
   "recipe.reference.outside": "Inspired by Napoletana STG · outside the specification",
