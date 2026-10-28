@@ -46,9 +46,11 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *       promesse di salute.
  *  20 → FW-20: avviso del forno in Crea (D-038) e sottotitolo degli stili
  *       senza «filtri in alto».
+ *  21 → FW-16: effetto delle impostazioni, diete, feedback e promemoria onesti
+ *       (e lessico controllato di FW-14).
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 20;
+export const LOCALE_BUNDLE_REV = 21;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

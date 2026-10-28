@@ -395,6 +395,8 @@ export function HomePage() {
   if (initialCreateDraftRef.current === null) {
     const draft = resolveCreateDraft(profileDefaults.constraints, effectiveStyles);
     initialCreateDraftRef.current = sourceStyle ? { ...draft, step: "styles", selectedStyle: null, recipeInitial: null, recipeName: undefined, constraints: { ...draft.constraints, oven_max_temp_c: draft.constraints.oven_capacity_temp_c ?? draft.constraints.oven_max_temp_c } } : draft;
+    /* FW-16 (S16-A-14): «Modifica in Crea» dal Profilo apre il pannello Dispensa. */
+    if (entrySearch.get("panel") === "pantry") initialCreateDraftRef.current = { ...initialCreateDraftRef.current, step: "styles", styleSettingsPanel: "pantry" };
   }
   const initialCreateDraft = initialCreateDraftRef.current;
   const [recipeName, setRecipeName] = useState<string | undefined>(initialCreateDraft.recipeName);

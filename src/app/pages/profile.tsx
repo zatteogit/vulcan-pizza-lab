@@ -1,4 +1,3 @@
-import { AllergenPreferences } from "../features/recipe/allergen-preferences";
 import { normalizeAllergenIds, type AllergenId } from "../data/allergen-data";
 /* === PROFILE PAGE — VPL-057 ===
    Setup utente: forno, skill, pantry, dieta, lingua, dark mode.
@@ -70,6 +69,10 @@ import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion
 import { uiMessage } from "../i18n/ui-messages";
 import { AccountPanel } from "../features/account/account-panel";
 import { OvenModelSearch } from "../features/profile/oven-model-search";
+import { SettingEffectNote } from "../features/profile/setting-effect-note";
+import { SkillEffectDetails } from "../features/profile/skill-effect-details";
+import { DietPreferences } from "../features/profile/diet-preferences";
+import { PantrySummary } from "../features/profile/pantry-summary";
 import { encodePan } from "../features/recipe/pan-url";
 import { writePreFermentChoice } from "../features/recipe/pre-ferment-url";
 import { BRAND } from "../config/brand";
@@ -798,6 +801,9 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             exit={{ opacity: 0, x: -20 }}
             transition={motionSpring.standard}
           >
+            {step === 0 && <SettingEffectNote settingId="oven" />}
+            {step === 1 && <SettingEffectNote settingId="skill" />}
+            {step === 2 && <SettingEffectNote settingId="pantry" />}
             {step === 0 && (
               <div className="profile-ftu__option-list">
                 {OVEN_PRESETS.map((preset) => {
@@ -904,6 +910,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                     </motion.button>
                   );
                 })}
+                <SkillEffectDetails />
               </div>
               {/* FW-08 (S15-A-02/B-02): cosa cambia scegliendo il livello. */}
               <SkillLevelEffect level={skillLevel} />
@@ -971,6 +978,11 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                     ))}
                   </div>
                 </div>
+                {ftuYeasts.includes("sourdough") && (
+                  <p className="type-data-sm profile-ftu__pantry-note" role="status">
+                    {p.ftuSourdoughNote}
+                  </p>
+                )}
                 {ftuFlours.length === 0 && ftuYeasts.length === 0 && (
                   <p className="type-data-sm profile-ftu__pantry-skip">
                     {p.ftuSkipMessage}
@@ -1355,6 +1367,7 @@ export function ProfilePage() {
   const [locationResults, setLocationResults] = useState<GeoSearchResult[]>([]);
   const [locationSearching, setLocationSearching] = useState(false);
   const [locationDetecting, setLocationDetecting] = useState(false);
+  const [locationError, setLocationError] = useState(false);
 
   /* Location search via Nominatim */
   const searchLocation = useCallback(async (query: string) => {
@@ -1394,7 +1407,8 @@ export function ProfilePage() {
   }, []);
 
   const detectCurrentLocation = useCallback(() => {
-    if (!("geolocation" in navigator)) return;
+    setLocationError(false);
+    if (!("geolocation" in navigator)) { setLocationError(true); return; }
     setLocationDetecting(true);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
@@ -1414,7 +1428,7 @@ export function ProfilePage() {
         saveJson(LOCATION_STORAGE_KEY, loc);
         setLocationDetecting(false);
       },
-      () => { setLocationDetecting(false); },
+      () => { setLocationDetecting(false); setLocationError(true); },
       { timeout: 8000, maximumAge: 300000 },
     );
   }, []);
@@ -1596,6 +1610,7 @@ export function ProfilePage() {
           stepNum={p.ovenStep}
           delay={motionDelay.short}
         >
+          <SettingEffectNote settingId="oven" />
           <OvenModelSearch
             selectedId={ovenModelId}
             formatTemp={(c) => fmt.celsius(c)}
@@ -1703,9 +1718,7 @@ export function ProfilePage() {
             summary={uiMessage("pages.profile.distribuzione-del-calore-bfa0da90")}
             meta={OVEN_HEAT_PROFILES.find(profile => profile.id === (equipment.oven_heat_profile ?? "static_top_bottom"))?.label}
           >
-            <p className="type-data-xs profile-oven-heat__hint">
-              {uiMessage("pages.profile.cambia-preriscaldo-ripiano-e-rotazioni-8f2fcd03")}
-            </p>
+            <SettingEffectNote settingId="ovenHeat" className="type-data-xs profile-oven-heat__hint" />
             <div className="profile-oven-heat__grid">
               {OVEN_HEAT_PROFILES.map((profile) => {
                 const active = (equipment.oven_heat_profile ?? "static_top_bottom") === profile.id;
@@ -1753,6 +1766,7 @@ export function ProfilePage() {
           stepNum={p.skillStep}
           delay={motionDelay.medium}
         >
+          <SettingEffectNote settingId="skill" />
           <div className="profile-skill-grid">
             {SKILL_LEVELS.map((skill) => {
               const active = skillLevel === skill.level;
@@ -1804,12 +1818,22 @@ export function ProfilePage() {
             })}
           </div>
           {/* FW-08 (S15-A-02, S16-B-14, S17-A-07/B-13): cosa cambia il livello
-              e, subito accanto, «Mostra i dettagli tecnici» (D-C). */}
+              e, subito accanto, «Mostra i dettagli tecnici» (D-C). FW-16: il
+              dettaglio per tutti i livelli resta richiudibile. */}
           <SkillLevelEffect level={skillLevel} />
+          <SkillEffectDetails />
           <DetailLevelSetting />
         </ProfileSection>
 
-        {/* Dispensa rimossa dal profilo — gestita nel wizard Crea */}
+        {/* FW-16 (S16-A-14): la dispensa si modifica in Crea, ma qui si vede e si raggiunge. */}
+        <ProfileSection
+          title={p.pantryTitle}
+          subtitle={p.pantrySubtitle}
+          delay={motionDelay.medium}
+        >
+          <SettingEffectNote settingId="pantry" />
+          <PantrySummary />
+        </ProfileSection>
 
         {/* ── ATTREZZATURA AVANZATA ── */}
         <ProfileSection
@@ -1829,6 +1853,7 @@ export function ProfilePage() {
                 : p.equipSummaryNone}
               hasSelection={mixers.length > 0}
             >
+              <SettingEffectNote settingId="mixer" />
               <div className="profile-equip-option-list">
                 {localMixers.map((mixer) => {
                   const active = mixers.includes(mixer.id);
@@ -1893,6 +1918,7 @@ export function ProfilePage() {
                 : p.equipSummaryNone}
               hasSelection={equipment.surfaces.length > 0}
             >
+              <SettingEffectNote settingId="surfaces" />
               <div className="profile-equip-option-list">
                 {localSurfaces.map((surface) => {
                   const active = equipment.surfaces.includes(surface.id);
@@ -1960,6 +1986,7 @@ export function ProfilePage() {
                 : p.equipSummaryNone}
               hasSelection={equipment.tools.length > 0}
             >
+              <SettingEffectNote settingId="tools" />
               <div className="profile-equip-tools">
                 {(Object.keys(localToolCats) as ToolCategory[]).map((catId) => {
                   const cat = localToolCats[catId];
@@ -2024,32 +2051,16 @@ export function ProfilePage() {
           stepNum={p.dietStep}
           delay={motionDelay.profileSection}
         >
-          <div className="profile-diet-chips">
-            {DIETARY_OPTIONS.map((d) => {
+          <DietPreferences
+            options={DIETARY_OPTIONS.map((d) => {
               const Icon = d.icon;
-              return (
-                <Chip
-                  key={d.id}
-                  label={(p as any)[d.labelKey] || d.labelKey}
-                  active={dietary.includes(d.id)}
-                  onToggle={() => toggleDietary(d.id)}
-                  icon={<Icon size={14} />}
-                />
-              );
+              return { id: d.id, label: p[d.labelKey] || d.labelKey, icon: <Icon size={14} /> };
             })}
-          </div>
-          {/* FW-10 (S16-A-03): «Senza glutine» blocca le ricette con farina di
-              frumento; lo diciamo dove si sceglie, con il perché. */}
-          {dietary.includes("gluten_free") && (
-            <div className="profile-diet-note" role="status">
-              <p className="type-body-sm">{uiMessage("profile.dietGlutenNote")}</p>
-              <details className="profile-diet-note__why">
-                <summary className="type-body-sm">{uiMessage("profile.dietGlutenWhy")}</summary>
-                <p className="type-body-sm">{cms.engineMessages["diet.noValidatedMethod"]}</p>
-              </details>
-            </div>
-          )}
-          <AllergenPreferences value={allergens} onChange={setAllergens}/>
+            dietary={dietary}
+            onToggleDiet={toggleDietary}
+            allergens={allergens}
+            onAllergensChange={setAllergens}
+          />
           {dietary.length === 0 && allergens.length === 0 && (
             <p className="type-data-sm profile-diet-empty">
               {p.noDietNote}
@@ -2064,6 +2075,7 @@ export function ProfilePage() {
           stepNum={p.locationStep}
           delay={motionDelay.profileSectionStep}
         >
+          <SettingEffectNote settingId="location" />
           <div className="profile-location">
             {/* Current saved location */}
             {savedLocation && (
@@ -2184,12 +2196,22 @@ export function ProfilePage() {
               {p.locationAuto}
             </motion.button>
 
+            {/* FW-16 (S16-A-18): l'errore si vede, i servizi esterni hanno un nome. */}
+            {locationError && (
+              <p className="type-data-sm profile-location__error" role="status">
+                {uiMessage("profile.location.detectFailed")}
+              </p>
+            )}
+
             {/* Hint when no location */}
             {!savedLocation && (
               <p className="type-data-sm profile-location__hint">
                 {p.locationNone}
               </p>
             )}
+            <p className="type-data-xs profile-location__privacy">
+              {uiMessage("profile.location.privacy")}
+            </p>
           </div>
         </ProfileSection>
           </div>
@@ -2198,8 +2220,6 @@ export function ProfilePage() {
         {/* ── LINGUA & TEMA ── */}
         {profileTab === "app" && (
           <div role="tabpanel" id="profile-panel-app" aria-labelledby="profile-tab-app" tabIndex={0}>
-        {/* D-046 / D-047: accesso, ruolo riconosciuto, demo */}
-        <AccountPanel locale={bcp47} />
         <ProfileSection
           title={p.prefsTitle}
           subtitle={p.prefsSubtitle}
@@ -2278,6 +2298,10 @@ export function ProfilePage() {
             </p>
           </div>
         </ProfileSection>
+
+        {/* D-046 / D-047: accesso, ruolo riconosciuto, demo. FW-16 (S17-A-02):
+            dopo le preferenze, e solo se c'è un'azione possibile. */}
+        <AccountPanel locale={bcp47} />
 
         {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}
         <div className="profile-page__footer">

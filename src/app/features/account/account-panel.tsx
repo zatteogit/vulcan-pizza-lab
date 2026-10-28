@@ -145,16 +145,24 @@ export function AccountPanel({ locale }: { locale: string }) {
     );
   }
 
+  /* FW-16 (S17-A-02): senza Google né demo il riquadro non ha azioni, quindi
+     non si mostra; il testo dice solo quello che c'è davvero. */
+  if (!clientId && !config?.demo) return null;
+
   return (
     <section className="account-panel" aria-labelledby="account-panel-title">
       <h3 id="account-panel-title" className="account-panel__title">
         {uiMessage("features.account.account-panel.signInTitle")}
       </h3>
-      <p className="account-panel__note">{uiMessage("features.account.account-panel.signInBody")}</p>
-      {clientId ? (
+      <p className="account-panel__note">
+        {clientId && config?.demo
+          ? uiMessage("features.account.account-panel.signInBody")
+          : clientId
+            ? uiMessage("features.account.account-panel.signInBodyGoogle")
+            : uiMessage("features.account.account-panel.signInBodyDemo")}
+      </p>
+      {clientId && (
         <div ref={googleButtonRef} className="account-panel__google" data-region="google-button" />
-      ) : (
-        <p className="account-panel__note">{uiMessage("features.account.account-panel.googleOff")}</p>
       )}
       {config?.demo && (
         <CtaButton

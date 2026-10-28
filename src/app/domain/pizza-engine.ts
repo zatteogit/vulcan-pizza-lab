@@ -2846,14 +2846,17 @@ function _hydrationCeilingForSkill(skill: SkillLevel): number {
   }
 }
 
-/** FW-08 (S15-A-02): il tetto d'idratazione che l'ottimizzatore applica al
- *  livello, per i testi che spiegano cosa cambia scegliendolo. `null` = nessun
- *  tetto oltre ai limiti dello stile (esperto). Stessi valori del motore: la
- *  copy non scrive numeri propri. È una scelta di Vulcan, non una misura. */
+/** FW-16 — tetto d'idratazione finale che l'ottimizzatore propone per livello
+ *  (regola del modello, non legge fisica); null = nessun tetto (Esperto).
+ *  Esposto per i testi «Cosa cambia» del Profilo: i numeri non si scrivono nel copy. */
 export function hydrationCeilingForSkill(skill: SkillLevel): number | null {
   const ceiling = _hydrationCeilingForSkill(skill);
   return ceiling >= 200 ? null : ceiling;
 }
+
+/** FW-16 — livello minimo da cui l'ottimizzatore propone biga o poolish negli
+ *  stili che li ammettono (gli stili che li richiedono li tengono a ogni livello). */
+export const PRE_FERMENT_MIN_SKILL: SkillLevel = 2;
 
 /** ENG-4 — ore di fermentazione massime che stanno nella finestra fino al
  *  pasto, tolto l'overhead fisso della timeline (stesso calcolo del clamp di
@@ -2986,7 +2989,7 @@ export function optimizeRecipe(
   const allowsPreferment = /biga|poolish/.test(effStyle.dough.process_type);
   let prefCands: boolean[];
   if (effStyle.requires_pre_ferment) prefCands = [true];
-  else if (allowsPreferment && constraints.skill_level >= 2) prefCands = [false, true];
+  else if (allowsPreferment && constraints.skill_level >= PRE_FERMENT_MIN_SKILL) prefCands = [false, true];
   else prefCands = [false];
 
   // ── Pesi obiettivo: default = pesi di scoring, così l'ottimo = composite mostrato ──

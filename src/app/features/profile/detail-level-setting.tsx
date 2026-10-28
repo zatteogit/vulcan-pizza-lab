@@ -8,6 +8,7 @@ import { Beaker } from "lucide-react";
 import { Switch } from "../../components/ds/index";
 import { useDetailLevel } from "../../hooks/use-detail-level";
 import { uiMessage } from "../../i18n/ui-messages";
+import { SettingEffectNote } from "./setting-effect-note";
 
 export function DetailLevelSetting() {
   const { level, setLevel } = useDetailLevel();
@@ -29,6 +30,8 @@ export function DetailLevelSetting() {
           onCheckedChange={(on) => setLevel(on ? "technical" : "essential")}
         />
       </header>
+      {/* FW-16: la riga «cosa cambia» comune a tutte le impostazioni. */}
+      <SettingEffectNote settingId="pizzaNerd" />
       <p id={descId} className="type-data-xs detail-level-setting__desc">
         {uiMessage("detailLevel.settingDesc")}
       </p>

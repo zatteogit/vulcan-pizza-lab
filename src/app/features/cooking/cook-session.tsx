@@ -21,6 +21,8 @@ import React, {
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { t } from "../cms/i18n";
 import type { StepVisual } from "./step-visual";
+import { showReminder, truncateAtWord } from "../../adapters/browser/cook-reminders";
+import type { PredictedScores, RecipeSnapshot } from "../../domain/recipe-feedback";
 
 const STORAGE_KEY = "vulcan_cook_session";
 type CookingCopy = CmsContent["cooking"];
@@ -56,6 +58,13 @@ export interface CookSessionStep {
   done: boolean;
 }
 
+/** FW-16 (D-M, S10-B-07): parametri della ricetta cucinata, per chiedere
+ *  com'è venuta alla fine della pizzata. */
+export interface CookFeedbackContext {
+  snapshot: RecipeSnapshot;
+  predicted: PredictedScores;
+}
+
 interface CookSession {
   styleName: string;
   styleId: string;
@@ -63,6 +72,7 @@ interface CookSession {
   steps: CookSessionStep[];
   /** id step per cui è già stata mostrata una notifica */
   notified: string[];
+  feedback?: CookFeedbackContext;
 }
 
 function loadSession(): CookSession | null {
@@ -109,6 +119,7 @@ interface CookSessionCtx {
     styleId: string,
     styleName: string,
     steps: Omit<CookSessionStep, "done">[],
+    feedback?: CookFeedbackContext,
   ) => void;
   endSession: () => void;
   setStepDone: (index: number, done: boolean) => void;
@@ -129,26 +140,9 @@ export function useCookSession(): CookSessionCtx {
   return ctx;
 }
 
-/** Richiede il permesso notifiche senza bloccare (best effort). */
-function requestNotificationPermission() {
-  try {
-    if ("Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission().catch(() => {});
-    }
-  } catch {
-    /* niente notifiche: il widget resta la fonte primaria */
-  }
-}
-
-function notify(title: string, body: string) {
-  try {
-    if ("Notification" in window && Notification.permission === "granted") {
-      new Notification(title, { body, icon: "/favicon.ico", tag: "vulcan-cook" });
-    }
-  } catch {
-    /* ignora */
-  }
-}
+/* FW-16 (S10-B-03): il permesso non si chiede più da solo all'avvio: lo
+ * chiede la riga «Promemoria» della modalità cucina, con un gesto dell'utente
+ * (adapters/browser/cook-reminders.ts). */
 
 export function CookSessionProvider({ children }: { children: React.ReactNode }) {
   const { cms } = useCms();
@@ -161,17 +155,17 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
   }, []);
 
   const startSession = useCallback(
-    (styleId: string, styleName: string, steps: Omit<CookSessionStep, "done">[]) => {
+    (styleId: string, styleName: string, steps: Omit<CookSessionStep, "done">[], feedback?: CookFeedbackContext) => {
       const s: CookSession = {
         styleId,
         styleName,
         createdAt: Date.now(),
         steps: steps.map((st) => ({ ...st, done: false })),
         notified: [],
+        ...(feedback ? { feedback } : {}),
       };
       persist(s);
       setOverlayOpen(true);
-      requestNotificationPermission();
     },
     [persist],
   );
@@ -237,11 +231,10 @@ export function CookSessionProvider({ children }: { children: React.ReactNode })
               title: nextStep ? nextStep.title : cms.cooking.continueAction,
             })
           : t(cms.cooking.notificationDueTitle, { title: step.title });
-        const description = (step.flexible && nextStep
+        const description = truncateAtWord(step.flexible && nextStep
           ? nextStep.description
-          : step.description
-        ).slice(0, 90);
-        notify(
+          : step.description, 90);
+        void showReminder(
           title,
           t(cms.cooking.notificationBody, {
             style: session.styleName,
