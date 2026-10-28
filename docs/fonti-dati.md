@@ -343,6 +343,35 @@ quello di Bagheria; la Cacio e pepe legata a Franco Pepe senza una fonte, ora
 senza ispirazione). Restano **plausibili**: sono descrizioni di piatti comuni,
 non affermazioni su persone.
 
+### 5.1 Riferimento di ogni stile (FW-14, D-B, 28/10/2026)
+
+Il «Riferimento» di uno stile è scritto nei dati (`STYLE_REFERENCES` in
+`src/app/data/style-versions.ts`), non più dedotto dalla versione più difficile.
+Dove c'è un disciplinare è lui; per gli altri stili la regola precedente resta
+**provvisoria, da confermare da Matteo stile per stile**, con un vincolo nuovo
+(test in `recipe-entry.test.ts`): idratazione, W e ore del riferimento cadono
+negli intervalli che la scheda dello stile mostra. Gli stili senza versioni
+usano il centro degli intervalli, come prima.
+
+| Stile | Riferimento | Base | Prima | Perché è cambiato |
+|---|---|---|---|---|
+| `napoletana_stg` | `avpn_disciplinare` | disciplinare | uguale | — |
+| `focaccia_recco` | `igp_recco` | disciplinare | uguale | — |
+| `teglia_romana` | `apiter_teglia` (80 %, W 320, 36 h) | disciplinare | `teglia_alta` (88 %, 48 h) | 88 % fuori dalla forbice 75–85 %; c'è il disciplinare APITER |
+| `napoletana_canotto` | `canotto_martucci` (72 %, 48 h) | da confermare | `canotto_estremo` (78 %, 72 h) | 78 % fuori da 65–75 % |
+| `chicago_deep` | `chicago_tradizionale` (52 %, 18 h) | da confermare | `chicago_pro` (54 %) | 54 % fuori da 48–52 % |
+| `sfincione` | `sfincione_casalingo` (67 %, W 270, 8 h) | da confermare | `sfincione_tradizionale` (W 290) | W 290 fuori da 240–280 |
+| `pizza_spaccata` | `spaccata_tradizionale` (80 %, 24 h) | da confermare | `spaccata_bonci` (85 %) | 85 % fuori da 72–80 % |
+| `focaccia_genovese` | centro degli intervalli (59 %, W 260, 12 h) | da confermare | `focaccia_moderna` (70 %, W 240) | nessuna versione cade negli intervalli dello stile (55–62 %): o si correggono le versioni o gli intervalli |
+| `padellino_torino` | centro degli intervalli (63 %, W 240, 33 h) | da confermare | `padellino_torinese` (72 %, W 300) | come sopra (60–65 %, W 220–260) |
+| `tonda_romana`, `pinsa_romana`, `new_york`, `detroit`, `pala_romana`, `grandma_style`, `pizza_baciata`, `trancio_milanese`, `chicago_tavern` | versione già scelta prima | da confermare | uguale | — |
+
+Effetto sulle ricette canoniche (P1 forno di casa 250 °C; P3 elettrico 509 °C):
+cambiano solo gli stili della tabella sopra marcati come cambiati (voto P1/P3
+prima → dopo: canotto 37/97 → 37/94, teglia 89/93 → 87/91, chicago 88 → 87,
+genovese 85 → 90, padellino 91 → 90, spaccata 39/93 → 39/89). La classifica di
+`recommendStyles` per P1 e P3 non cambia: usa le ricette su misura.
+
 ---
 
 ## Valori da correggere

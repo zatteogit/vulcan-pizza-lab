@@ -1,6 +1,6 @@
 import { getImpasto, mergeImpastoIntoDough } from "../data/impasto-library";
-import { getInterpretationById, getInterpretationsForStyle, type Interpretation } from "../data/interpretation-library";
-import { getVersions, type StyleVersion } from "../data/style-versions";
+import { getInterpretationById, type Interpretation } from "../data/interpretation-library";
+import { getStyleReference, getVersionById, type StyleVersion } from "../data/style-versions";
 import { resolveTopping, getToppingForStyle } from "../data/topping-library";
 import { defaultFermentTempC, defaultPanShape, generateRecipe, optimizeRecipe,
   type GeneratedRecipe, type GenerateRecipeOptions, type PanConfig, type PizzaStyle,
@@ -56,25 +56,22 @@ function blendAtW(blend: PizzaStyle["dough"]["flour_blend"], w: number) {
   return blend?.map(c => ({ ...c, ...(wheat.length === 1 && c.w !== undefined && c.pct > 0 ? { w } : {}) }));
 }
 
-/** Versione «canonica» di uno stile: la più esperta, a parità la più lunga. */
+/** Versione di riferimento dello stile (FW-14, D-B): dichiarata nei dati
+ * (style-versions.ts, STYLE_REFERENCES), mai dedotta dalla difficoltà.
+ * null = disciplinare o centro degli intervalli dello stile. */
 export function getCanonicalVersion(styleId: string): StyleVersion | null {
-  const versions = getVersions(styleId);
-  if (versions.length === 0) return null;
-  return versions.reduce((best, version) => {
-    if (version.skill_hint !== best.skill_hint) {
-      return version.skill_hint > best.skill_hint ? version : best;
-    }
-    return version.params.fermentation_hours > best.params.fermentation_hours ? version : best;
-  }, versions[0]);
+  const id = getStyleReference(styleId).referenceVersionId;
+  return id ? getVersionById(id) : null;
 }
 
 export function defaultPL(style: PizzaStyle): number {
   return Math.round(((style.dough.flour_pl_range[0] + style.dough.flour_pl_range[1]) / 2) * 100) / 100;
 }
 
-/** La variante legata a doppio filo allo stile (disciplinari AVPN/IGP/APITER). */
+/** Il disciplinare di riferimento dello stile (STG/AVPN, IGP, APITER), dai dati. */
 export function canonicalInterpretation(style: PizzaStyle): Interpretation | null {
-  return getInterpretationsForStyle(style.id).find((it) => it.verified_canonical) ?? null;
+  const id = getStyleReference(style.id).referenceInterpretationId;
+  return id ? getInterpretationById(id) ?? null : null;
 }
 
 /** La ricetta originale sulla cucina dell'utente, con gli stessi parametri
