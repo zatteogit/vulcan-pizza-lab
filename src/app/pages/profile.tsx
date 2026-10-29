@@ -46,7 +46,7 @@ compatibleHeatProfiles,
 isHeatProfileCompatible,
 } from "../data/equipment-data";
 import { OVEN_MODELS, type OvenModel } from "../data/oven-models";
-import { nextSavedOven, type SavedOvenPref } from "../use-cases/effective-kitchen";
+import { nextSavedOven, profileOvenType, type SavedOvenPref } from "../use-cases/effective-kitchen";
 import { hasChosenSkill } from "../hooks/use-profile-defaults";
 
 /* FW-07 (S16-A-02): la scala del profilo arriva al forno più caldo del catalogo. */
@@ -1204,33 +1204,27 @@ export function ProfilePage() {
   /* Locale confirmation modal */
   const [pendingLocale, setPendingLocale] = useState<LocaleMeta | null>(null);
 
+  /* FW-07: il forno del profilo è quello della cucina effettiva
+   * (`vulcan_oven_pref`, scritto anche da Crea); `vulcan_ovens` e il vecchio
+   * `vulcan_oven` valgono solo come ripiego. */
   const [ovens, setOvens] = useState<string[]>(() => {
+    let legacyList: unknown;
+    let legacyOven: string | null = null;
     try {
       const saved = localStorage.getItem("vulcan_ovens");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-      const legacyOven = localStorage.getItem("vulcan_oven");
-      if (legacyOven) {
-        localStorage.removeItem("vulcan_oven");
-        const val = [legacyOven];
-        localStorage.setItem("vulcan_ovens", JSON.stringify(val));
-        return val;
-      }
-      const savedPref = localStorage.getItem(OVEN_STORAGE_KEY);
-      if (savedPref) {
-        const parsed = JSON.parse(savedPref);
-        if (parsed?.ovenType) {
-          const val = [parsed.ovenType];
-          localStorage.setItem("vulcan_ovens", JSON.stringify(val));
-          return val;
-        }
-      }
-    } catch (e) {
+      legacyList = saved ? JSON.parse(saved) : undefined;
+      legacyOven = localStorage.getItem("vulcan_oven");
+      if (legacyOven) localStorage.removeItem("vulcan_oven");
+    } catch {
       // ignore
     }
-    return ["home"];
+    const val = [profileOvenType(loadJson<SavedOvenPref>(OVEN_STORAGE_KEY), legacyList, legacyOven)];
+    try {
+      localStorage.setItem("vulcan_ovens", JSON.stringify(val));
+    } catch {
+      // ignore
+    }
+    return val;
   });
 
   const ovenType = ovens[0] as OvenType;

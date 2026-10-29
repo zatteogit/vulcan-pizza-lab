@@ -1168,6 +1168,8 @@ export const EN_LOCALE: CmsContent = {
     "timeline.oven.staticShelf": "Conventional oven (top + bottom heat) on max, shelf in a medium-high position. For the rim: last 60-90s under the grill (top element only, on max), keeping a close eye on it.",
     "timeline.oven.staticStoneSet": "Conventional oven (top + bottom heat) set to {temp}, not on max; stone/steel already hot on a medium-high shelf.",
     "timeline.oven.staticShelfSet": "Conventional oven (top + bottom heat) set to {temp}, not on max; shelf in a medium-high position.",
+    "timeline.oven.electricHighSet": "High-temperature electric oven set to {temp}, not on full power; stone thoroughly preheated. Turn the pizza halfway through baking to brown the rim all the way round.",
+    "timeline.oven.gasSet": "Gas oven set to {temp}, not on full flame; stone on the shelf for heat from below; turn the pizza halfway through for even baking.",
     "timeline.mix.title": "Mixing",
     "timeline.divide.title": "Dividing",
     "timeline.divide.multiPiece": "Divide each portion into {pieces} equal pieces. Shape into a ball or disc.",

@@ -983,6 +983,8 @@ export const FR_LOCALE: CmsContent = {
     "timeline.oven.staticShelf": "Four en chaleur statique (résistance haut + bas) au maximum, grille en position mi-haute. Pour le bord : dernières 60-90s sous le gril (résistance du haut seule au maximum), sans le quitter des yeux.",
     "timeline.oven.staticStoneSet": "Four en chaleur statique (résistance haut + bas) réglé à {temp}, pas au maximum ; pierre/acier déjà chauds en position mi-haute.",
     "timeline.oven.staticShelfSet": "Four en chaleur statique (résistance haut + bas) réglé à {temp}, pas au maximum ; grille en position mi-haute.",
+    "timeline.oven.electricHighSet": "Four électrique haute température réglé à {temp}, pas à puissance maximale ; pierre bien préchauffée. Tournez la pizza à mi-cuisson pour dorer le bord tout autour.",
+    "timeline.oven.gasSet": "Four à gaz réglé à {temp}, pas à flamme maximale ; pierre sur la grille pour la chaleur par le bas ; tournez la pizza à mi-cuisson pour une cuisson homogène.",
     "timeline.mix.title": "Pétrissage",
     "timeline.divide.title": "Division",
     "timeline.divide.multiPiece": "Divisez chaque portion en {pieces} morceaux égaux. Formez une boule ou un disque.",

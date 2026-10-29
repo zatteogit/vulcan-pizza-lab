@@ -51,6 +51,8 @@ export const METHOD_MESSAGES_IT: Record<string, string> = {
   // FW-07 (S10-A-22): cottura sotto la massima del forno.
   "timeline.oven.staticStoneSet": "Forno statico (resistenza sopra + sotto) impostato a {temp}, non al massimo; pietra/acciaio già caldi sul ripiano medio-alto.",
   "timeline.oven.staticShelfSet": "Forno statico (resistenza sopra + sotto) impostato a {temp}, non al massimo; ripiano medio-alto.",
+  "timeline.oven.electricHighSet": "Forno elettrico ad alta temperatura impostato a {temp}, non alla massima potenza; pietra ben preriscaldata. Gira la pizza a metà cottura per dorare i bordi tutt'intorno.",
+  "timeline.oven.gasSet": "Forno a gas impostato a {temp}, non a fiamma massima; pietra sul ripiano per il calore dal basso; ruota la pizza a metà per uniformare.",
   "timeline.divide.unequalDiscs": "Dividere ogni unità in due porzioni: 60% per la base e 40% per la copertura. Formare due dischi.",
   "timeline.shape.foldedLayers": "Stendere una sfoglia sottilissima e ripiegare {folds} volte a libro, distribuendo la farcitura tra le pieghe.",
   "timeline.stack.desc": "Spennellare il primo disco con olio EVO; adagiare sopra il secondo disco e sigillare leggermente i bordi.",

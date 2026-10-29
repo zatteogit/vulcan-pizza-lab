@@ -139,3 +139,16 @@ export function nextSavedOven(prev: SavedOvenPref | null | undefined, type: Oven
   }
   return { ovenType: type, maxTemp };
 }
+
+/** Tipo di forno da mostrare nel profilo. `vulcan_oven_pref` (scritto da Crea
+ *  e dal profilo, letto dal resolver) ha la precedenza sulla vecchia lista
+ *  `vulcan_ovens`, che scrive solo il profilo: così Crea e Profilo mostrano lo
+ *  stesso forno anche dopo una scelta fatta in Crea. */
+export function profileOvenType(pref: SavedOvenPref | null | undefined, legacyOvens?: unknown, legacyOven?: string | null): OvenType {
+  const known = (value: unknown): value is OvenType => OVEN_PRESETS.some((preset) => preset.id === value);
+  if (known(pref?.ovenType)) return pref.ovenType;
+  const listed = Array.isArray(legacyOvens) ? legacyOvens[0] : undefined;
+  if (known(listed)) return listed;
+  if (known(legacyOven)) return legacyOven;
+  return "home";
+}

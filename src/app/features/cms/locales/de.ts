@@ -966,6 +966,8 @@ export const DE_LOCALE: CmsContent = {
     "timeline.oven.staticShelf": "Ober-/Unterhitze auf Maximum, Rost auf mittlerer bis oberer Schiene. Für den Rand: die letzten 60-90s unter den Grill (nur Oberhitze auf Maximum) und dabei nicht aus den Augen lassen.",
     "timeline.oven.staticStoneSet": "Ober-/Unterhitze auf {temp} eingestellt, nicht auf Maximum; Stein/Stahl bereits heiß auf mittlerer bis oberer Schiene.",
     "timeline.oven.staticShelfSet": "Ober-/Unterhitze auf {temp} eingestellt, nicht auf Maximum; Rost auf mittlerer bis oberer Schiene.",
+    "timeline.oven.electricHighSet": "Elektro-Hochtemperaturofen auf {temp} eingestellt, nicht auf volle Leistung; Stein gut vorgeheizt. Dreh die Pizza nach der Hälfte der Backzeit, damit der Rand rundum bräunt.",
+    "timeline.oven.gasSet": "Gasofen auf {temp} eingestellt, nicht auf volle Flamme; Stein auf dem Rost für Hitze von unten; dreh die Pizza nach der Hälfte, damit sie gleichmäßig backt.",
     "timeline.mix.title": "Kneten",
     "timeline.divide.title": "Teilen",
     "timeline.divide.multiPiece": "Teile jede Portion in {pieces} gleich große Stücke. Forme jeweils eine Kugel oder Scheibe.",
