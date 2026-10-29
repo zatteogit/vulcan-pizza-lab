@@ -94,6 +94,12 @@ export function nextInOrder<T>(order: readonly T[], trigger: T, excluded: (item:
   return order.slice(index + 1).find((item) => !excluded(item)) ?? null;
 }
 
+/** Vero se il focus è andato fuori dal termine e dal suo popover (si chiude). */
+export function focusLeftTip(target: Node | null, parts: readonly (Node | null)[]): boolean {
+  if (!target) return false;
+  return !parts.some((part) => part?.contains(target));
+}
+
 export const FOCUSABLE_SELECTOR = [
   "a[href]",
   "button:not([disabled])",

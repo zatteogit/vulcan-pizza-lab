@@ -20,6 +20,7 @@ import {
   FOCUSABLE_SELECTOR,
   fixedFrameFor,
   fixedPopoverAnchor,
+  focusLeftTip,
   nextInOrder,
   popoverHost,
 } from "./info-tip-layer";
@@ -132,6 +133,18 @@ export function InfoTip({ children, size = 15, termId, label, triggerLabel }: In
       window.removeEventListener("scroll", close, true);
       window.removeEventListener("resize", close);
     };
+  }, [open, triggerLabel]);
+
+  /* FW-04 (revisione): se il focus esce dal termine e dal suo popover (Maiusc+Tab
+     dal termine, un clic altrove), il popover si chiude: prima restava aperto
+     staccato dal focus, ed Esc riportava il focus indietro sul termine. */
+  useEffect(() => {
+    if (!open || !triggerLabel) return;
+    const onFocusIn = (event: FocusEvent) => {
+      if (focusLeftTip(event.target as Node | null, [triggerRef.current, popoverRef.current])) setOpen(false);
+    };
+    document.addEventListener("focusin", onFocusIn);
+    return () => document.removeEventListener("focusin", onFocusIn);
   }, [open, triggerLabel]);
 
   // Close on click outside

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { establishesFixedContext, fixedPopoverAnchor, nextInOrder } from "./info-tip-layer";
+import { establishesFixedContext, fixedPopoverAnchor, focusLeftTip, nextInOrder } from "./info-tip-layer";
 
 const viewport = { width: 390, height: 844 };
 const none = { transform: "none", perspective: "none", filter: "none", backdropFilter: "none", willChange: "auto", contain: "none", containerType: "normal" };
@@ -47,5 +47,17 @@ describe("Tab out of the TermLink popover (FW-04)", () => {
     expect(nextInOrder(order, "term", (item) => item === "glossary-link")).toBe("next");
     expect(nextInOrder(order, "next", () => false)).toBeNull();
     expect(nextInOrder(order, "missing", () => false)).toBeNull();
+  });
+});
+
+describe("TermLink popover and focus (FW-04, revisione)", () => {
+  const node = (children: unknown[] = []) => ({ contains: (n: unknown) => n === node || children.includes(n) }) as unknown as Node;
+  it("closes when focus goes before the term (Shift+Tab) or anywhere else", () => {
+    const link = {} as Node;
+    const trigger = node();
+    const popover = node([link]);
+    expect(focusLeftTip(link, [trigger, popover])).toBe(false);
+    expect(focusLeftTip({} as Node, [trigger, popover])).toBe(true);
+    expect(focusLeftTip(null, [trigger, popover])).toBe(false);
   });
 });
