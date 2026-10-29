@@ -45,7 +45,7 @@ describe("gruppi di Crea con la dispensa sconosciuta", () => {
     const onlyChecks = withCheck.filter((rec) => rec.verdict.adaptations.every((msg) => msg.key.startsWith("need.check")));
     expect(onlyChecks.length).toBeGreaterThan(0);
     for (const rec of onlyChecks) {
-      expect(recipeCardSignals(rec.recipe, "create").map((s) => s.message.key), rec.style.id).toContain("need.checkExclusions");
+      expect(recipeCardSignals(rec.recipe, "create").map((s) => s.message.key), rec.style.id).toContain("card.exclusionsCheck");
     }
   });
 

@@ -590,7 +590,7 @@ export const UI_MESSAGES_DE: Record<string, string> = {
   "topping.flavor.light": "Leicht",
   "profile.unitImperialSmallNote": "Hefe, Salz und andere Mengen unter {0} bleiben in Gramm: In Unzen lassen sie sich nicht genau abwiegen.",
   "format.onDay": "{0} {1}",
-  "style.meta.durationTotal": "≈ {0} insgesamt",
+  "style.meta.durationTotal": "≈ {0} gesamt",
   "style.meta.durationAriaReference": "Gesamtzeit des Referenzrezepts, vom Kneten bis zum Backen: {0}",
   "style.meta.durationAriaTailored": "Gesamtzeit des angepassten Rezepts, vom Kneten bis zum Backen: {0}",
   "style.meta.durationFermentation": "Gärung {0}",

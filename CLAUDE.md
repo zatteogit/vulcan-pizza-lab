@@ -64,6 +64,7 @@ All pages are **lazy-loaded** via React Router's `lazy()` for code-splitting.
   - `ds/` — Tier 4 reusable design system tokens (CtaButton, Badge)
   - `design-system/`, `foundations/` — Design token interactive showcase pages
   - `media/` — Media wrappers (`ImageWithFallback.tsx`)
+- **`agent/`** — Server MCP for agents (`mcp-*.ts`, D-049, `/mcp`) and voice (`voice/`, D-061): Siri at `/api/voice` (`src/server/voice/`) and the Alexa skill at `/alexa` (`src/server/alexa/`, package in `alexa/`), both built on the MCP tools — see `docs/voce-siri-alexa.md`
 - **`features/`** — Feature-specific component groups
   - `recipe/` — Recipe creation UI (`recipe-configurator.tsx`, `recipe-output.tsx`, `recipe-view.tsx`)
   - `cooking/` — Active cook dashboard (`cooking-mode.tsx`, `active-cook-widget.tsx`, `dough-mascot.tsx`)

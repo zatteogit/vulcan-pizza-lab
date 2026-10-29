@@ -134,8 +134,11 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", id }: { 
   const fmt = createFormatter(cms.ui, bcp47);
   const signals = recipe ? recipeCardSignals(recipe, context) : [];
   const icons = { oven: Flame, time: Clock, pan: CookingPot, flour: Wheat, check: ScanLine, water: Droplets }; /* FW-13: Flame solo per il forno */
+  // Pill su una riga: è una durata approssimata («≈»), quindi dalle 10 ore
+  // in su all'ora intera («≈ 22 h in tutto»), sotto alla mezz'ora.
+  const totalHours = recipe ? recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 60 : 0;
   const duration = recipe
-    ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)
+    ? fmt.durationShort(totalHours >= 10 ? Math.round(totalHours) : Math.round(totalHours * 2) / 2)
     : formatRange(style.dough.fermentation_hours_range[0], style.dough.fermentation_hours_range[1], bcp47, { unit: "hour" });
   return (
     <div id={id} className="style-signals" data-region="meta">

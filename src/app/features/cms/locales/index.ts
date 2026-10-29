@@ -73,9 +73,11 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  33 → integrazione ondata 2: FW-04 + D-062/D-063 (nota «ranking-tiebreak»,
  *       tetto del combustibile solo sotto il minimo) e unione dei due tagli
  *       dei testi che nessuna pagina legge.
+ *  35 → (main) pill delle card su una riga: copy corti (card.*,
+ *       diet.cardConflict, allergen.cardTrace/cardOptional) e card.exclusionsCheck.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 34;
+export const LOCALE_BUNDLE_REV = 35;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

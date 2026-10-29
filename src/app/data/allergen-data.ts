@@ -141,9 +141,9 @@ export const ALLERGEN_MESSAGES_IT:Record<string,string>={
   "allergen.change": "Scegli un’alternativa prima di prepararla.",
   "allergen.labels": "Considera anche le possibili contaminazioni durante la preparazione.",
   "allergen.cardConflict": "Contiene {allergen}",
-  "allergen.cardTrace": "Possibili tracce di {allergen}",
-  "allergen.cardOptional": "Evita le aggiunte con {allergen}",
-  "allergen.cardCheck": "Controlla le etichette",
+  "allergen.cardTrace": "Tracce di {allergen}",
+  "allergen.cardOptional": "Ometti: {allergen}",
+  "allergen.cardCheck": "Leggi le etichette",
 };
 export function allergenWarnings(report:RecipeAllergens):DietaryWarning[]{
   const warnings:DietaryWarning[]=[];
