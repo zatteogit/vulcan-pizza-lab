@@ -251,6 +251,35 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
       name: "Lingui\u00E7a",
       description: "Lingui\u00E7a com erva-doce em pedacinhos, colocada crua sobre o molho e a mussarela: a cobertura mais comum nas pizzarias de Chicago.",
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine: {
+      name: "Salsicha e batata frita",
+      description: "Tomate, mozzarella, salsicha e batata frita colocada ao sair do forno. Em muitas pizzarias se chama «Americana».",
+    },
+    prosciutto_cotto: {
+      name: "Presunto cozido",
+      description: "Tomate, mozzarella e presunto cozido. Simples, sem cogumelos.",
+    },
+    funghi: {
+      name: "Cogumelos",
+      description: "Tomate, mozzarella e champignons salteados antes na frigideira, para não molharem a pizza.",
+    },
+    napoli: {
+      name: "Napoli",
+      description: "Tomate, mozzarella, anchovas e orégano. Em Roma se chama «Napoli», em Nápoles «Romana»; alcaparras e azeitonas só em algumas variantes.",
+    },
+    parmigiana: {
+      name: "Parmigiana",
+      description: "Tomate, berinjela frita, mozzarella ou provola, parmesão e manjericão: a parmigiana de berinjela em cima da pizza.",
+    },
+    norma: {
+      name: "Norma",
+      description: "Tomate, berinjela frita e manjericão, com ricota salgada ralada depois do forno, como a massa alla Norma de Catânia.",
+    },
+    bufalina: {
+      name: "Bufalina",
+      description: "Tomate, Mozzarella di bufala campana e manjericão. A búfala solta muito soro: precisa ser escorrida e, nos fornos lentos, colocada ao sair do forno.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2228,6 +2257,263 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
         },
       },
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine_classica: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Salsicha de porco (carne suína, água, sal, especiarias)",
+          notes: "em rodelas; confira o rótulo: algumas contêm leite ou glúten",
+        },
+        "3": {
+          name: "Batata frita (batata, óleo de girassol, sal)",
+          notes: "frita pouco antes, colocada depois do forno",
+        },
+      },
+    },
+    prosciutto_cotto_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados esmagados à mão (tomate, suco de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Presunto cozido fatiado (carne suína, sal, aromas)",
+        },
+        "3": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
+    prosciutto_cotto_romana: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Presunto cozido fatiado (carne suína, sal, aromas)",
+        },
+        "3": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
+    funghi_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados esmagados à mão (tomate, suco de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Cogumelos champignon salteados",
+          notes: "peso cru",
+        },
+        "3": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
+    funghi_romana: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Cogumelos champignon salteados",
+          notes: "peso cru",
+        },
+        "3": {
+          name: "Alho e salsinha",
+          notes: "para saltear os cogumelos",
+        },
+        "4": {
+          name: "Azeite extravirgem",
+          notes: "para os cogumelos e para regar",
+        },
+      },
+    },
+    napoli_romana: {
+      variant_name: "à romana",
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Filés de anchova em óleo (anchovas, azeite de oliva, sal)",
+        },
+        "3": {
+          name: "Orégano seco",
+        },
+        "4": {
+          name: "Alcaparras dessalgadas",
+        },
+        "5": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
+    napoli_napoletana: {
+      variant_name: "«Romana» em Nápoles",
+      ingredients: {
+        "0": {
+          name: "Tomates pelados esmagados à mão (tomate, suco de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Filés de anchova em óleo (anchovas, azeite de oliva, sal)",
+        },
+        "3": {
+          name: "Orégano seco",
+        },
+        "4": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
+    parmigiana_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados esmagados à mão (tomate, suco de tomate)",
+        },
+        "1": {
+          name: "Provola defumada",
+          notes: "em fatias, escorrida",
+        },
+        "2": {
+          name: "Berinjela frita (berinjela, óleo de girassol, sal)",
+          notes: "peso depois de fritar",
+        },
+        "3": {
+          name: "Parmigiano Reggiano ralado",
+        },
+        "4": {
+          name: "Manjericão fresco",
+          notes: "folhas",
+        },
+      },
+    },
+    parmigiana_romana: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Berinjela frita (berinjela, óleo de girassol, sal)",
+          notes: "peso depois de fritar",
+        },
+        "3": {
+          name: "Parmigiano Reggiano ralado",
+        },
+        "4": {
+          name: "Manjericão fresco",
+          notes: "folhas, depois do forno",
+        },
+      },
+    },
+    norma_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados esmagados à mão (tomate, suco de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Berinjela frita em cubinhos (berinjela, óleo de girassol, sal)",
+          notes: "peso depois de fritar",
+        },
+        "3": {
+          name: "Ricota salgada ralada",
+          notes: "depois do forno; nem parmesão nem ricota fresca",
+        },
+        "4": {
+          name: "Manjericão fresco",
+          notes: "folhas, depois do forno",
+        },
+      },
+    },
+    norma_romana: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Berinjela frita em cubinhos (berinjela, óleo de girassol, sal)",
+          notes: "peso depois de fritar",
+        },
+        "3": {
+          name: "Ricota salgada ralada",
+          notes: "depois do forno",
+        },
+        "4": {
+          name: "Manjericão fresco",
+          notes: "folhas, depois do forno",
+        },
+      },
+    },
+    bufalina_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados San Marzano esmagados à mão (tomate, suco de tomate)",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "em pedaços, escorrida por pelo menos uma hora",
+        },
+        "2": {
+          name: "Manjericão fresco",
+          notes: "folhas",
+        },
+        "3": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
+    bufalina_romana: {
+      variant_name: "búfala ao sair do forno",
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "em pedaços, depois do forno",
+        },
+        "2": {
+          name: "Manjericão fresco",
+          notes: "folhas, depois do forno",
+        },
+        "3": {
+          name: "Azeite extravirgem",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2801,6 +3087,121 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
     mortazza_split_fill: {
       title: "Abrir e rechear a Baciata",
       description: "Separe as duas camadas assadas, usando uma faca de serra ao longo da borda se necessário. Distribua mortadela e pistache picado na camada inferior; acrescente stracciatella apenas se escolhida. Feche e sirva sem levar novamente ao forno."
+    },
+    // D-065 — condimenti quotidiani
+    friggere_patatine_wurstel: {
+      title: "Fritar as batatas",
+      description: "Frite as batatas a 170-175 °C até dourarem, ou prepare as congeladas como indica a embalagem. Escorra em papel e salgue.",
+      tip_beginner: "Prepare as batatas enquanto a pizza assa: elas precisam estar quentes e crocantes quando você tirar a pizza do forno.",
+      tip_nerd: "No forno, a batata já frita perde água e crocância, e a mozzarella a amolece: colocada ao sair do forno, continua crocante.",
+    },
+    spread_wurstel_patatine: {
+      title: "Tomate, mozzarella e salsicha",
+      description: "Espalhe a passata, distribua o fior di latte e as rodelas de salsicha. As batatas não vão ao forno.",
+    },
+    finish_wurstel_patatine: {
+      title: "Batatas ao sair do forno",
+      description: "Assim que sair do forno, distribua as batatas fritas quentes sobre a pizza.",
+    },
+    spread_prosciutto_cotto_nap: {
+      title: "Cobertura Presunto cozido",
+      description: "Pelados esmagados e fior di latte. Distribua as fatias de presunto cozido rasgadas à mão e um fio de azeite.",
+    },
+    spread_prosciutto_cotto_rom: {
+      title: "Cobertura Presunto cozido",
+      description: "Passata e fior di latte. O presunto cozido vai sobre a mozzarella; nos assamentos longos do forno doméstico, coloque-o nos últimos 3-4 minutos, para não ressecar.",
+      tip_beginner: "Se depois de 10 minutos de forno o presunto já estiver enrolado e escuro, da próxima vez coloque-o no fim do assamento.",
+      tip_nerd: "O presunto cozido já vem cozido e tem pouca água livre: depois de 6-8 minutos a 250 °C ele desidrata e as bordas caramelizam até amargar.",
+    },
+    saltare_champignon_funghi_nap: {
+      title: "Saltear os champignons",
+      description: "Fatie os champignons e salteie por 5-6 minutos na frigideira com um fio de azeite até soltarem a água. Salgue no fim e deixe amornar.",
+    },
+    spread_funghi_nap: {
+      title: "Cobertura Cogumelos",
+      description: "Pelados esmagados e fior di latte. Distribua os champignons salteados e um fio de azeite.",
+    },
+    saltare_champignon_funghi_rom: {
+      title: "Saltear os champignons",
+      description: "Fatie os champignons. Aqueça o azeite com o alho com casca e salteie os cogumelos por 8-10 minutos em fogo alto até soltarem a água e dourarem. Sal e salsinha no fim.",
+      tip_beginner: "Cozinhe antes: crus, eles soltam água na pizza e a base fica molhada.",
+      tip_nerd: "Os champignons têm cerca de 92 % de água: na frigideira perdem cerca da metade, e a base não recebe essa água no forno.",
+    },
+    spread_funghi_rom: {
+      title: "Cobertura Cogumelos",
+      description: "Passata e fior di latte. Distribua os champignons salteados em temperatura ambiente e um fio de azeite.",
+    },
+    spread_napoli_rom: {
+      title: "Cobertura Napoli",
+      description: "Passata e fior di latte. Distribua os filés de anchova, o orégano e, se usar, as alcaparras. Um fio de azeite.",
+      tip_beginner: "As anchovas já são salgadas: nada de sal na passata.",
+      tip_nerd: "Os filés em óleo têm cerca de 15 % de sal sobre o próprio peso: 15 g acrescentam em torno de 2 g de sal à pizza.",
+    },
+    spread_napoli_nap: {
+      title: "Cobertura com anchovas",
+      description: "Pelados esmagados e fior di latte. Distribua os filés de anchova e o orégano. Um fio de azeite.",
+    },
+    friggere_melanzane_parmigiana: {
+      title: "Fritar as berinjelas",
+      description: "Corte as berinjelas em fatias de 5 mm. Se forem amargas, salgue e deixe 30 minutos num escorredor, depois seque. Frite a 170 °C por 2-3 minutos de cada lado até dourarem e escorra em papel.",
+      tip_beginner: "Dá para fritar também no dia anterior e guardar na geladeira: tire-as uma hora antes.",
+      tip_nerd: "A berinjela absorve óleo como uma esponja até a superfície selar: óleo bem quente e poucas fatias por vez, para a temperatura não despencar.",
+    },
+    spread_parmigiana_nap: {
+      title: "Cobertura Parmigiana",
+      description: "Pelados, depois a provola. Sobreponha as berinjelas fritas, polvilhe com parmesão e acrescente o manjericão ao sair do forno.",
+    },
+    friggere_melanzane_parmigiana_rom: {
+      title: "Fritar as berinjelas",
+      description: "Corte as berinjelas em fatias de 5 mm, salgue se forem amargas e seque. Frite a 170 °C por 2-3 minutos de cada lado e escorra em papel.",
+    },
+    spread_parmigiana_rom: {
+      title: "Cobertura Parmigiana",
+      description: "Passata e fior di latte, depois as berinjelas fritas e o parmesão. Manjericão ao sair do forno.",
+    },
+    friggere_melanzane_norma: {
+      title: "Fritar a berinjela em cubinhos",
+      description: "Corte as berinjelas em cubinhos de 1,5 cm, salgue se forem amargas e seque. Frite a 170 °C até dourarem e escorra em papel.",
+    },
+    spread_norma_nap: {
+      title: "Tomate, fior di latte e berinjela",
+      description: "Pelados esmagados, fior di latte e cubinhos de berinjela frita.",
+    },
+    finish_norma_nap: {
+      title: "Ricota salgada e manjericão",
+      description: "Assim que sair do forno, rale a ricota salgada por cima e acrescente o manjericão.",
+      tip_beginner: "A ricota salgada vai crua: no forno ela derrete e perde o sabor marcante.",
+      tip_nerd: "É uma ricota prensada e curada, com pouca água e muito sal: ralada sobre a pizza quente, fica em flocos e não derrete como a mozzarella.",
+    },
+    friggere_melanzane_norma_rom: {
+      title: "Fritar a berinjela em cubinhos",
+      description: "Corte as berinjelas em cubinhos de 1,5 cm, salgue se forem amargas e seque. Frite a 170 °C até dourarem e escorra em papel.",
+    },
+    spread_norma_rom: {
+      title: "Tomate, fior di latte e berinjela",
+      description: "Passata, fior di latte e cubinhos de berinjela frita.",
+    },
+    finish_norma_rom: {
+      title: "Ricota salgada e manjericão",
+      description: "Assim que sair do forno, rale a ricota salgada por cima e acrescente o manjericão.",
+    },
+    sgocciolare_bufala_nap: {
+      title: "Escorrer a búfala",
+      description: "Corte a mozzarella de búfala em pedaços e deixe num escorredor na geladeira por pelo menos uma hora, para perder o soro.",
+    },
+    spread_bufalina_nap: {
+      title: "Cobertura Bufalina",
+      description: "Pelados esmagados, búfala escorrida em pedaços, manjericão e um fio de azeite. Em forno a partir de 430 °C, a búfala pode assar sobre a pizza: bastam 60-90 segundos.",
+    },
+    spread_bufalina_rom: {
+      title: "Só tomate no forno",
+      description: "Espalhe a passata com um fio de azeite. A búfala não vai ao forno.",
+    },
+    finish_bufalina_rom: {
+      title: "Búfala e manjericão ao sair do forno",
+      description: "Assim que sair do forno, distribua a búfala em pedaços e o manjericão.",
+      tip_beginner: "Nos assamentos longos, a búfala no forno fica borrachuda e solta um lago de soro: colocada depois, continua macia.",
+      tip_nerd: "A búfala tem mais água e mais gordura que o fior di latte: depois de alguns minutos de calor, a coalhada se contrai e expele o soro, que molha a base.",
     },
   },
 };
