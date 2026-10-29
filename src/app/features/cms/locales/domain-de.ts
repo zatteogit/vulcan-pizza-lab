@@ -717,6 +717,12 @@ export const SCIENCE_DE: CmsScience = {
       l1: "Das Regelwerk löst das Salz im Wasser, bevor das Mehl dazukommt.",
       l2: "So steht es in der EU-Verordnung zur STG. Andere Methoden geben das Salz später dazu: Bei diesem Stil folgen wir dem Regelwerk.",
     },
+    /* FW-02 */
+    "stg-reference": {
+      title: "Rezept und Spezifikation",
+      l1: "Wir vergleichen einige Werte des Rezepts mit der Spezifikation der Napoletana STG.",
+      l2: "Die Spezifikation (EU-Verordnung 97/2010) legt Mehl, Gare, Teiglingsgewicht und Backen fest. Liegt ein Wert außerhalb ihrer Bereiche, ist das Rezept „inspiriert von der STG“ und die Abweichung steht hier. Die Punktzahl bescheinigt keine Konformität.",
+    },
     "flour-w-by-grade": {
       title: "Mehltyp und Stärke",
       l1: "00, 0, 1 und Vollkorn sagen, wie fein das Mehl ausgemahlen ist, nicht wie stark es ist.",
@@ -817,5 +823,7 @@ export const SCIENCE_DE: CmsScience = {
     "oven-power-steps": "Eine typische Leistung je Temperaturbereich, gleich für jeden Brennstoff.",
     "no-health-claim": "Keine Gesundheitsaussage: Der Index misst nicht, wie ein Mensch verdaut.",
     "thresholds-rules-of-thumb": "Die Schwellen sind allgemeine Faustregeln, nicht auf den Stil abgestimmt.",
+    /* FW-02 */
+    "stg-partial-check": "Wir vergleichen nur einige Werte: Herkunft der Zutaten, Teigtemperatur und Ausführung werden nicht geprüft.",
   },
 };

@@ -28,7 +28,9 @@ SubSectionLabel,
 import { toShowcaseCssValue } from "./showcase-style";
 import { showcaseTransition } from "./showcase-motion";
 import { showcaseMessage } from "../../i18n/showcase-messages";
-import { CtaButton, IconButton } from "../ds/index";
+import { CtaButton, EvidenceBadge, IconButton } from "../ds/index";
+import { WhyButton } from "../../features/science/why-button";
+import { evidenceLabel } from "../../features/science/science-sheet";
 
 /* ═══════════════════════════════════════════════════════════
    P01 — SELECTION PATTERN
@@ -1505,6 +1507,70 @@ function ResultTemplateSpec() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   FW-02 — «PERCHÉ?»: scienza a richiesta
+   WhyButton + ScienceSheet (L1 In breve → L2 Perché → L3 Come lo
+   calcoliamo) + EvidenceBadge. Demo dal vivo sulle note vere del registro.
+   ═══════════════════════════════════════════════════════════ */
+
+const EVIDENCE_KINDS = ["exact", "estimate", "assumption", "editorial"] as const;
+
+function WhyPatternSpec() {
+  return (
+    <div className="flex flex-col gap-8">
+      <SectionHeader
+        title={showcaseMessage("components.design-system.patterns-templates.fw02-why-title")}
+        description={showcaseMessage("components.design-system.patterns-templates.fw02-why-description")}
+      />
+      <SectionTabs
+        tabs={[
+          {
+            id: "specifiche",
+            label: showcaseMessage("components.design-system.patterns-templates.specifiche-057caf2f"),
+            content: (
+              <div className="flex flex-col gap-6">
+                <SubSectionLabel label={showcaseMessage("components.design-system.patterns-templates.fw02-why-button")} />
+                <div className="flex flex-wrap items-center gap-4">
+                  <WhyButton noteId="yeast-dose" />
+                  <WhyButton noteId="stg-reference" label={showcaseMessage("components.design-system.patterns-templates.fw02-why-custom-label")} />
+                  <WhyButton noteId="score-weights" initialLevel={3} />
+                </div>
+                <SubSectionLabel label={showcaseMessage("components.design-system.patterns-templates.fw02-evidence")} />
+                <div className="flex flex-wrap items-center gap-3">
+                  {EVIDENCE_KINDS.map((kind) => (
+                    <EvidenceBadge key={kind} kind={kind} label={evidenceLabel(kind)} />
+                  ))}
+                  {EVIDENCE_KINDS.map((kind) => (
+                    <EvidenceBadge key={`${kind}-sm`} kind={kind} label={evidenceLabel(kind)} size="sm" />
+                  ))}
+                </div>
+              </div>
+            ),
+          },
+          {
+            id: "linee-guida",
+            label: showcaseMessage("components.design-system.patterns-templates.linee-guida-b43417d1"),
+            content: (
+              <LineeGuida
+                fai={[
+                  showcaseMessage("components.design-system.patterns-templates.fw02-do-1"),
+                  showcaseMessage("components.design-system.patterns-templates.fw02-do-2"),
+                  showcaseMessage("components.design-system.patterns-templates.fw02-do-3"),
+                ]}
+                nonFare={[
+                  showcaseMessage("components.design-system.patterns-templates.fw02-dont-1"),
+                  showcaseMessage("components.design-system.patterns-templates.fw02-dont-2"),
+                  showcaseMessage("components.design-system.patterns-templates.fw02-dont-3"),
+                ]}
+              />
+            ),
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════
    ENTRIES REGISTRY
    ═══════════════════════════════════════════════════════════ */
 
@@ -1512,6 +1578,7 @@ export const ENTRIES: SectionEntry[] = [
   { id: "pat-selection", label: showcaseMessage("components.design-system.patterns-templates.selection-pattern-55446e4b"), group: "p", Component: SelectionPatternSpec },
   { id: "pat-editorial", label: showcaseMessage("components.design-system.patterns-templates.editorial-section-426f2b6e"), group: "p", Component: EditorialSectionSpec },
   { id: "pat-disclosure", label: showcaseMessage("components.design-system.patterns-templates.progressive-disclosure-45ee64c0"), group: "p", Component: ProgressiveDisclosureSpec },
+  { id: "pat-why", label: showcaseMessage("components.design-system.patterns-templates.fw02-why-title"), group: "p", Component: WhyPatternSpec },
   { id: "pat-floating-cta", label: showcaseMessage("components.design-system.patterns-templates.floating-cta-12498c41"), group: "p", Component: FloatingCTASpec },
   { id: "pat-coachmark", label: showcaseMessage("components.design-system.patterns-templates.coachmark-tooltip-b89cc629"), group: "p", Component: CoachmarkTooltipSpec },
   { id: "pat-sticky", label: showcaseMessage("components.design-system.patterns-templates.sticky-context-4be53874"), group: "p", Component: StickyContextSpec },

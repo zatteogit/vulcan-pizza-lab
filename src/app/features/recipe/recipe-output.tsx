@@ -119,9 +119,6 @@ export function RecipeOutput({
      avviarne una nuova sovrascrive timer e progresso di quella attiva. */
   const [confirmReplace, setConfirmReplace] = useState(false);
   const [confirmPersonalize, setConfirmPersonalize] = useState(false);
-  /* Audit motore 2026-05: spiegazione Regola 55 espandibile per mobile (su
-     desktop c'è già il tooltip via title, ma su touch non è raggiungibile). */
-  const [showRule55Tip, setShowRule55Tip] = useState(false);
 
   const { cms, bcp47 } = useCms();
   const [calendarReference, setCalendarReference] = useState(() => new Date());
@@ -142,7 +139,9 @@ export function RecipeOutput({
    * tre temperature: 3 × impasto obiettivo − attrito), non una somma fissa a 55. */
   const ddt = recipe.science.desired_dough_temp_c;
   const friction = recipe.science.friction_factor;
-  const rule55Description = t(cms.cooking.rule55Description, {
+  /* FW-02 (S08-B-12): impastando a mano non c'è il calore dell'impastatrice
+   * da sottrarre: niente «impastatrice (0 °C)» a chi non ce l'ha. */
+  const rule55Description = t(friction > 0 ? cms.cooking.rule55Description : cms.cooking.rule55DescriptionHand, {
     sum: fmt.celsius(ddt * 3 - friction),
     ddt: fmt.celsius(ddt),
     friction: fmt.celsiusDelta(friction),
@@ -776,8 +775,6 @@ export function RecipeOutput({
             saveYeastSpeedFactor(factor);
             onConstraintsChange({ ...constraints, yeast_speed_factor: factor });
           }}
-          showRule55Tip={showRule55Tip}
-          setShowRule55Tip={setShowRule55Tip}
           rule55Description={rule55Description}
         />
       </div>

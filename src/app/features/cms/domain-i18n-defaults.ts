@@ -597,6 +597,12 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
       l1: "Il disciplinare scioglie il sale nell'acqua prima di aggiungere la farina.",
       l2: "È l'ordine del Regolamento UE della STG. Altri metodi aggiungono il sale più tardi: per questo stile seguiamo il disciplinare.",
     },
+    /* FW-02 */
+    "stg-reference": {
+      title: "Ricetta e disciplinare",
+      l1: "Confrontiamo alcuni valori della ricetta con il disciplinare della Napoletana STG.",
+      l2: "Il disciplinare (Regolamento UE 97/2010) fissa la farina, la lievitazione, il peso del panetto e la cottura. Se un valore esce dai suoi intervalli, la ricetta è «ispirata alla STG» e la differenza è elencata qui. Il punteggio non certifica la conformità.",
+    },
     "flour-w-by-grade": {
       title: "Tipo di farina e forza",
       l1: "00, 0, 1 e integrale dicono quanto è raffinata la farina, non quanto è forte.",
@@ -697,5 +703,7 @@ export const SCIENCE_I18N_DEFAULTS: CmsScience = {
     "oven-power-steps": "Una potenza tipica per fascia di temperatura, uguale per ogni combustibile.",
     "no-health-claim": "Nessuna affermazione sulla salute: l'indice non misura la digestione di una persona.",
     "thresholds-rules-of-thumb": "Le soglie sono regole pratiche generali, non tarate sullo stile.",
+    /* FW-02 */
+    "stg-partial-check": "Confrontiamo solo alcuni valori: provenienza degli ingredienti, temperatura dell'impasto ed esecuzione non sono verificate.",
   },
 };

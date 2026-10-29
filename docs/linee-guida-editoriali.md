@@ -81,6 +81,7 @@ lo aggiunge qui e, se è tecnico, al glossario.
 | **Stili di pizza** | La sezione e il filtro degli stili in Scopri; un solo verbo per «vedi tutto» («Vedi tutti/tutte») | Scopri | «Stili tradizionali», «Esplora tutti» |
 | **Tradizioni regionali** | Famiglia degli stili storici non napoletani né romani (D-G, da confermare stile per stile) | Scopri, Crea, MCP | «Contemporanea» per focacce e pizze storiche |
 | **Genera ricetta** | La CTA del pannello stile, su ogni breakpoint | pannello stile | «Crea» (è il nome della tab) |
+| **Perché?** | Il pulsante (icona + testo) che apre la scienza di un valore: `WhyButton` → `ScienceSheet` (FW-02). Livelli fissi **In breve** · **Perché** · **Come lo calcoliamo** (chiuso), più **In questa ricetta** per i numeri della ricetta. Con un'etichetta propria (titolo della nota, «Ricetta e disciplinare») resta lo stesso pulsante | ovunque un valore deriva da una stima, un'ipotesi o una scelta | «?» decorativi, `title=` come spiegazione, «Approfondisci» per aprire la scienza, popover «perché» fatti a mano |
 - FW-11. In inglese si scrive **autolyse** (non «autolysis») e **preferment**
   senza trattino, come nella fonte King Arthur. I nomi propri dei luoghi
   d'origine usano l'esonimo della lingua (Napoli → Naples, Neapel, Nápoles):

@@ -167,6 +167,15 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     kind: "exact",
     sourceIds: ["masaf-stg-2010"],
   },
+  /* FW-02: «Ricetta e disciplinare» della Napoletana STG. Il confronto con gli
+   * intervalli del disciplinare è aritmetica; non è una verifica di conformità. */
+  {
+    id: "stg-reference",
+    kind: "exact",
+    assumptionIds: ["stg-partial-check"],
+    sourceIds: ["masaf-stg-2010"],
+    engineRef: "stgDepartures",
+  },
 
   /* ── Farina ── */
   {
@@ -231,7 +240,7 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     id: "stg-oven-temp",
     kind: "estimate",
     sourceIds: ["masaf-stg-2010", "avpn-2024"],
-    uncertainty: { range: [430, 485], displayDecimals: 0 },
+    uncertainty: { range: [430, 485], unitKey: "celsius", displayDecimals: 0 },
     engineRef: "STYLES_DB.napoletana_stg.baking.temp_c_range",
   },
   {

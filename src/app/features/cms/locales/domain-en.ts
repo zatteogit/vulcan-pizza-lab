@@ -842,6 +842,12 @@ export const SCIENCE_EN: CmsScience = {
       l1: "The regulation dissolves the salt in the water before adding the flour.",
       l2: "This is the order in the EU STG regulation. Other methods add salt later: for this style we follow the regulation.",
     },
+    /* FW-02 */
+    "stg-reference": {
+      title: "Recipe and specification",
+      l1: "We compare some of the recipe's values with the Napoletana STG specification.",
+      l2: "The specification (EU Regulation 97/2010) sets the flour, the rise, the dough ball weight and the bake. If a value falls outside its ranges, the recipe is “inspired by the STG” and the difference is listed here. The score does not certify compliance.",
+    },
     "flour-w-by-grade": {
       title: "Flour type and strength",
       l1: "00, 0, 1 and wholemeal say how refined the flour is, not how strong.",
@@ -942,5 +948,7 @@ export const SCIENCE_EN: CmsScience = {
     "oven-power-steps": "A typical power for each temperature band, the same for every fuel.",
     "no-health-claim": "No health claim: the index does not measure how a person digests.",
     "thresholds-rules-of-thumb": "The thresholds are general rules of thumb, not tuned to the style.",
+    /* FW-02 */
+    "stg-partial-check": "We compare only some values: ingredient origin, dough temperature and technique are not checked.",
   },
 };

@@ -4,13 +4,11 @@ import { recipeAllergenScope } from "../../domain/allergen-scope";
  * Stepper panetti, lista ingredienti (baker's % in nerd), scorporo
  * pre-fermento, Regola 55 e blocchi scienza PizzaNerd. */
 
-import { HelpCircle, Printer } from "lucide-react";
-import { motion } from "motion/react";
-import { motionSpring } from "../../components/ds/motion";
-import type { Dispatch, SetStateAction } from "react";
+import { Printer } from "lucide-react";
 import { useState } from "react";
 import { FlourBudget } from "./flour-budget";
 import { YeastExplainer } from "./yeast-explainer";
+import { WhyButton } from "../science/why-button";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { CtaButton, Stepper } from "../../components/ds/index";
@@ -52,8 +50,6 @@ interface IngredientsSectionProps {
   updateBalls: (n: number) => number;
   /** M-11: correzione personale della lievitazione. */
   onYeastSpeedChange?: (factor: number) => void;
-  showRule55Tip: boolean;
-  setShowRule55Tip: Dispatch<SetStateAction<boolean>>;
   rule55Description: string;
 }
 
@@ -66,8 +62,6 @@ export function IngredientsSection({
   panSizeLabel,
   updateBalls,
   onYeastSpeedChange,
-  showRule55Tip,
-  setShowRule55Tip,
   rule55Description,
 }: IngredientsSectionProps) {
   const { cms, bcp47 } = useCms();
@@ -234,25 +228,42 @@ export function IngredientsSection({
             name={ui.water}
             detail={
               <>
-                {fmt.percent(recipe.hydration_pct)}
+                {/* FW-02 (S08-B-12): i due numeri dicono che cosa sono. */}
                 {recipe.water_temp_c != null
-                  ? ` · ${fmt.celsius(recipe.water_temp_c)}`
-                  : ""}
+                  ? uiMessage("recipe.ingredients.waterDetail", [
+                      fmt.percent(recipe.hydration_pct),
+                      fmt.celsius(recipe.water_temp_c),
+                    ])
+                  : uiMessage("recipe.ingredients.hydrationDetail", [fmt.percent(recipe.hydration_pct)])}
                 {recipe.water_temp_c != null && (
-                  /* Round 7 (nota Matteo): la Regola 55 vive SOLO come tip
-                     della riga Acqua — la temperatura è già nel dettaglio. */
-                  <button
-                    onClick={() => setShowRule55Tip((v) => !v)}
-                    className={`ingredients-rule55-toggle${showRule55Tip ? " ingredients-rule55-toggle--active" : ""}`}
-                    aria-label={
-                      showRule55Tip
-                        ? cms.cooking.rule55AriaClose
-                        : cms.cooking.rule55AriaOpen
-                    }
-                    aria-expanded={showRule55Tip}
-                  >
-                    <HelpCircle size={13} />
-                  </button>
+                  /* Round 7 (nota Matteo): la Regola 55 vive SOLO nella riga
+                     Acqua. FW-02: il «?» diventa il «Perché?» della nota
+                     water-temp-rule, con i numeri di questa ricetta. */
+                  <>
+                    {" "}
+                    <WhyButton noteId="water-temp-rule">
+                      {!waterTempLimit && (
+                        <p>
+                          {recipe.water_temp_c < 5
+                            ? t(cms.engineMessages["tip.waterTempCold"], {
+                                temp: fmt.celsius(recipe.water_temp_c),
+                              })
+                            : t(cms.engineMessages["tip.waterTempNormal"], {
+                                temp: fmt.celsius(recipe.water_temp_c),
+                                ddt: fmt.celsius(recipe.science.desired_dough_temp_c),
+                              })}
+                        </p>
+                      )}
+                      <p>{rule55Description}</p>
+                      {recipe.science.friction_factor > 0 && (
+                        <p>
+                          {t(cms.engineMessages["tip.frictionNote"], {
+                            friction: fmt.celsiusDelta(recipe.science.friction_factor),
+                          })}
+                        </p>
+                      )}
+                    </WhyButton>
+                  </>
                 )}
               </>
             }
@@ -273,38 +284,6 @@ export function IngredientsSection({
               )}
             </p>
           )}
-          {recipe.water_temp_c != null && showRule55Tip && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={motionSpring.balanced}
-              className="ingredients-rule55-tip"
-            >
-              {!waterTempLimit && (
-              <div className="type-body ingredients-rule55-tip__text">
-                {recipe.water_temp_c < 5
-                  ? t(cms.engineMessages["tip.waterTempCold"], {
-                      temp: fmt.celsius(recipe.water_temp_c),
-                    })
-                  : t(cms.engineMessages["tip.waterTempNormal"], {
-                      temp: fmt.celsius(recipe.water_temp_c),
-                      ddt: fmt.celsius(recipe.science.desired_dough_temp_c),
-                    })}
-              </div>
-              )}
-              <div className="type-body ingredients-rule55-tip__desc">
-                {rule55Description}
-              </div>
-              {recipe.science.friction_factor > 0 && (
-                <div className="type-data ingredients-rule55-tip__friction">
-                  {t(cms.engineMessages["tip.frictionNote"], {
-                    friction: fmt.celsiusDelta(recipe.science.friction_factor),
-                  })}
-                </div>
-              )}
-            </motion.div>
-          )}
           {/* Audit lug 2026 (nerd): baker's % accanto ai grammi — il linguaggio
               con cui si confrontano le ricette. Easy resta pulito. */}
           <IngRow
@@ -315,17 +294,23 @@ export function IngredientsSection({
           {recipe.yeast_g > 0 && (
             <IngRow
               name={cms.yeastLabels[recipe.yeast_type] || YEAST_LABELS[recipe.yeast_type] || recipe.yeast_type}
-              detail={[
-                yeastPracticalHint(recipe.yeast_g, recipe.yeast_type, cms),
-                isNerd ? bakerPct(recipe.yeast_g, 2) : null,
-              ]
-                .filter(Boolean)
-                .join(" · ")}
+              detail={
+                <>
+                  {[
+                    yeastPracticalHint(recipe.yeast_g, recipe.yeast_type, cms),
+                    isNerd ? bakerPct(recipe.yeast_g, 2) : null,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+                  {/* FW-02 (S08-A-20): il «Perché?» della dose sta nella riga del
+                      lievito, non fra il lievito e l'olio. */}
+                  {onYeastSpeedChange && (
+                    <> <YeastExplainer recipe={recipe} onSpeedFactorChange={onYeastSpeedChange} /></>
+                  )}
+                </>
+              }
               amount={fmt.grams(recipe.yeast_g)}
             />
-          )}
-          {recipe.yeast_g > 0 && onYeastSpeedChange && (
-            <YeastExplainer recipe={recipe} onSpeedFactorChange={onYeastSpeedChange} />
           )}
           {recipe.fat_g > 0 && (
             <IngRow

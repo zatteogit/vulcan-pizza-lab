@@ -720,6 +720,12 @@ export const SCIENCE_PT: CmsScience = {
       l1: "O regulamento dissolve o sal na água antes de adicionar a farinha.",
       l2: "É a ordem do Regulamento UE da STG. Outros métodos adicionam o sal mais tarde: para este estilo seguimos o regulamento.",
     },
+    /* FW-02 */
+    "stg-reference": {
+      title: "Receita e especificação",
+      l1: "Comparamos alguns valores da receita com a especificação da Napoletana STG.",
+      l2: "A especificação (Regulamento UE 97/2010) fixa a farinha, a fermentação, o peso da bola de massa e a cozedura. Se um valor sair dos seus intervalos, a receita é «inspirada na STG» e a diferença aparece aqui. A pontuação não certifica a conformidade.",
+    },
     "flour-w-by-grade": {
       title: "Tipo de farinha e força",
       l1: "00, 0, 1 e integral dizem quão refinada é a farinha, não quão forte.",
@@ -820,5 +826,7 @@ export const SCIENCE_PT: CmsScience = {
     "oven-power-steps": "Uma potência típica por faixa de temperatura, igual para todo combustível.",
     "no-health-claim": "Nenhuma alegação de saúde: o índice não mede a digestão de uma pessoa.",
     "thresholds-rules-of-thumb": "Os limites são regras práticas gerais, não ajustadas ao estilo.",
+    /* FW-02 */
+    "stg-partial-check": "Comparamos só alguns valores: a origem dos ingredientes, a temperatura da massa e a execução não são verificadas.",
   },
 };

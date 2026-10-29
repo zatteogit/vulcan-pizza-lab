@@ -230,7 +230,6 @@ export const DE_LOCALE: CmsContent = {
     slotNoPreference: "Keine Vorgabe",
     slotNoPreferenceSub: "ideale Zeiten des Stils, auch mehrere Tage",
     interpretationDisclaimer: "Interpretation von {brand} aus öffentlichen Quellen: nicht das Originalrezept von {who} und nicht von {who} freigegeben.",
-    yeastHowToggle: "So berechnen wir die Hefe",
     yeastModelBody: "Ausgangspunkt sind {ref} Frischhefe auf das Mehl für {refHours} bei {refTemp}. Mit {hours} bei {temp} arbeitet die Hefe mit {speed}× der Referenzgeschwindigkeit, die Menge wird {pct}.",
     yeastDryNote: "Mit Trockenhefe ist die Menge ein Drittel der Frischhefe.",
     yeastTempModelNote: "Wie sich die Geschwindigkeit mit der Temperatur ändert (Q10-Faktor 2, 1,6 unter 10 °C), ist eine Schätzung des Modells, die Versuche bestätigen müssen.",
@@ -1877,8 +1876,7 @@ export const DE_LOCALE: CmsContent = {
     totalDuration: "{duration} gesamt",
     finalDoughStageTitle: "Hauptteig",
     rule55Title: "Wassertemperatur",
-    rule55AriaOpen: "Wie die Wassertemperatur berechnet wird",
-    rule55AriaClose: "Erkl\u00E4rung ausblenden",
+    rule55DescriptionHand: "Raum, Mehl und Wasser sollten zusammen etwa {sum} ergeben: dreimal die gewünschte Teigtemperatur ({ddt}). Beim Kneten von Hand gibt es keine Wärme der Knetmaschine abzuziehen. Deshalb ändert sich das Wasser mit der Temperatur deiner Küche.",
     rule55Description:
       "Raum, Mehl und Wasser sollten zusammen etwa {sum} ergeben: dreimal die gew\u00FCnschte Teigtemperatur ({ddt}) minus die W\u00E4rme der Knetmaschine ({friction}). Deshalb \u00E4ndert sich das Wasser mit der Temperatur deiner K\u00FCche.",
     stepDetailsShow: "So geht es",

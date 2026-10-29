@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { uiMessage } from "../../i18n/ui-messages";
+import { WhyButton } from "../science/why-button";
 
 interface RecipeStatStripProps {
   recipe: GeneratedRecipe;
@@ -142,6 +143,7 @@ export function SpecCell({
   small = false,
   science = false,
   optimized = true,
+  whyNoteId,
 }: {
   label: string;
   value: string;
@@ -151,6 +153,8 @@ export function SpecCell({
   science?: boolean;
   /** FW-14: «ottimizzato» solo per le scelte dell'ottimizzatore. */
   optimized?: boolean;
+  /** FW-02 (S06-B-07): nota del registro che spiega il valore («Perché?»). */
+  whyNoteId?: string;
 }) {
   const parts = splitStatValue(value);
   const pair = changed ? [changed.canonical, value] : [];
@@ -246,6 +250,7 @@ export function SpecCell({
           </span>
         </motion.div>
       </AnimatePresence>
+      {whyNoteId && <WhyButton noteId={whyNoteId} className="stat-strip__why" />}
     </motion.div>
   );
 }

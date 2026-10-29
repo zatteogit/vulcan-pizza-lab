@@ -191,7 +191,6 @@ export interface CmsUiStrings {
   /** C-5: le interpretazioni d'autore non sono ricette firmate. */
   interpretationDisclaimer: string;
   /** M-11: lievito trasparente e correzione personale. */
-  yeastHowToggle: string;
   yeastModelBody: string;
   yeastDryNote: string;
   yeastTempModelNote: string;
@@ -1058,8 +1057,8 @@ export interface CmsContent {
     totalDuration: string;
     finalDoughStageTitle: string;
     rule55Title: string;
-    rule55AriaOpen: string;
-    rule55AriaClose: string;
+    /** FW-02: variante senza impastatrice (attrito zero). */
+    rule55DescriptionHand: string;
     rule55Description: string;
     stepDetailsShow: string;
     stepDetailsHide: string;
@@ -1548,7 +1547,6 @@ export const CMS_DEFAULTS: CmsContent = {
     slotNoPreference: "Nessuna preferenza",
     slotNoPreferenceSub: "tempi ideali dello stile, anche più giorni",
     interpretationDisclaimer: "Interpretazione di {brand} da fonti pubbliche: non è la ricetta originale di {who} e non è approvata da {who}.",
-    yeastHowToggle: "Come calcoliamo il lievito",
     yeastModelBody: "Si parte da {ref} di lievito fresco sulla farina per {refHours} a {refTemp}. Con {hours} a {temp} il lievito lavora a {speed}× della velocità di riferimento: la dose diventa {pct}.",
     yeastDryNote: "Con il lievito secco la dose è un terzo del fresco.",
     yeastTempModelNote: "Come cambia la velocità con la temperatura (fattore Q10 di 2, 1,6 sotto i 10 °C) è una stima del modello, da confermare con le prove.",
@@ -1908,8 +1906,7 @@ export const CMS_DEFAULTS: CmsContent = {
     totalDuration: "{duration} totali",
     finalDoughStageTitle: "Impasto finale",
     rule55Title: "Temperatura dell'acqua",
-    rule55AriaOpen: "Come si calcola la temperatura dell'acqua",
-    rule55AriaClose: "Nascondi la spiegazione",
+    rule55DescriptionHand: "Ambiente, farina e acqua devono sommare circa {sum}: tre volte la temperatura d'impasto che vuoi ({ddt}). Impastando a mano non c'è calore dell'impastatrice da togliere. Per questo l'acqua cambia con la temperatura della tua cucina.",
     rule55Description: "Ambiente, farina e acqua devono sommare circa {sum}: tre volte la temperatura d'impasto che vuoi ({ddt}) meno il calore dell'impastatrice ({friction}). Per questo l'acqua cambia con la temperatura della tua cucina.",
     stepDetailsShow: "Come si fa",
     stepDetailsHide: "Nascondi dettagli",
