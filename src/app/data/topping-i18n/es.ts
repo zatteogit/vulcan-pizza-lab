@@ -251,6 +251,35 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
       name: "Salchicha",
       description: "Salchicha al hinojo en trocitos, puesta cruda sobre la salsa y la mozzarella: el ingrediente m\u00E1s com\u00FAn en las pizzer\u00EDas de Chicago.",
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine: {
+      name: "Salchichas y patatas fritas",
+      description: "Tomate, mozzarella, salchichas y patatas fritas añadidas al sacarla del horno. En muchas pizzerías se llama «Americana».",
+    },
+    prosciutto_cotto: {
+      name: "Jamón cocido",
+      description: "Tomate, mozzarella y jamón cocido. Sencilla, sin champiñones.",
+    },
+    funghi: {
+      name: "Champiñones",
+      description: "Tomate, mozzarella y champiñones salteados antes en la sartén, para que no mojen la pizza.",
+    },
+    napoli: {
+      name: "Napoli",
+      description: "Tomate, mozzarella, anchoas y orégano. En Roma se llama «Napoli» y en Nápoles «Romana»; alcaparras y aceitunas solo en algunas variantes.",
+    },
+    parmigiana: {
+      name: "Parmigiana",
+      description: "Tomate, berenjenas fritas, mozzarella o provola, parmesano y albahaca: la parmigiana de berenjenas sobre la pizza.",
+    },
+    norma: {
+      name: "Norma",
+      description: "Tomate, berenjenas fritas y albahaca, con ricotta salata rallada después del horno, como la pasta alla Norma de Catania.",
+    },
+    bufalina: {
+      name: "Bufalina",
+      description: "Tomate, mozzarella di bufala campana y albahaca. La búfala suelta mucho suero: hay que escurrirla y, en hornos lentos, ponerla al sacar la pizza.",
+    },
   },
   recipes: {
     margherita_napoletana_avpn: {
@@ -2228,6 +2257,263 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
         },
       },
     },
+    // D-065 — condimenti quotidiani
+    wurstel_patatine_classica: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Salchichas de cerdo (carne de cerdo, agua, sal, especias)",
+          notes: "en rodajas; revisa la etiqueta: algunas llevan leche o gluten",
+        },
+        "3": {
+          name: "Patatas fritas (patatas, aceite de girasol, sal)",
+          notes: "fritas justo antes, puestas después del horno",
+        },
+      },
+    },
+    prosciutto_cotto_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados aplastados a mano (tomate, jugo de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jamón cocido en lonchas (carne de cerdo, sal, aromas)",
+        },
+        "3": {
+          name: "AOVE",
+        },
+      },
+    },
+    prosciutto_cotto_romana: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Jamón cocido en lonchas (carne de cerdo, sal, aromas)",
+        },
+        "3": {
+          name: "AOVE",
+        },
+      },
+    },
+    funghi_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados aplastados a mano (tomate, jugo de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Champiñones salteados",
+          notes: "peso en crudo",
+        },
+        "3": {
+          name: "AOVE",
+        },
+      },
+    },
+    funghi_romana: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Champiñones salteados",
+          notes: "peso en crudo",
+        },
+        "3": {
+          name: "Ajo y perejil",
+          notes: "para saltear los champiñones",
+        },
+        "4": {
+          name: "AOVE",
+          notes: "para los champiñones y en hilo",
+        },
+      },
+    },
+    napoli_romana: {
+      variant_name: "a la romana",
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Filetes de anchoa en aceite (anchoas, aceite de oliva, sal)",
+        },
+        "3": {
+          name: "Orégano seco",
+        },
+        "4": {
+          name: "Alcaparras desaladas",
+        },
+        "5": {
+          name: "AOVE",
+        },
+      },
+    },
+    napoli_napoletana: {
+      variant_name: "«Romana» en Nápoles",
+      ingredients: {
+        "0": {
+          name: "Tomates pelados aplastados a mano (tomate, jugo de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Filetes de anchoa en aceite (anchoas, aceite de oliva, sal)",
+        },
+        "3": {
+          name: "Orégano seco",
+        },
+        "4": {
+          name: "AOVE",
+        },
+      },
+    },
+    parmigiana_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados aplastados a mano (tomate, jugo de tomate)",
+        },
+        "1": {
+          name: "Provola ahumada",
+          notes: "en lonchas, escurrida",
+        },
+        "2": {
+          name: "Berenjenas fritas (berenjenas, aceite de girasol, sal)",
+          notes: "peso después de freír",
+        },
+        "3": {
+          name: "Parmigiano Reggiano rallado",
+        },
+        "4": {
+          name: "Albahaca fresca",
+          notes: "hojas",
+        },
+      },
+    },
+    parmigiana_romana: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Berenjenas fritas (berenjenas, aceite de girasol, sal)",
+          notes: "peso después de freír",
+        },
+        "3": {
+          name: "Parmigiano Reggiano rallado",
+        },
+        "4": {
+          name: "Albahaca fresca",
+          notes: "hojas, después del horno",
+        },
+      },
+    },
+    norma_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados aplastados a mano (tomate, jugo de tomate)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Berenjenas fritas en dados (berenjenas, aceite de girasol, sal)",
+          notes: "peso después de freír",
+        },
+        "3": {
+          name: "Ricotta salata rallada",
+          notes: "después del horno; ni parmesano ni ricotta fresca",
+        },
+        "4": {
+          name: "Albahaca fresca",
+          notes: "hojas, después del horno",
+        },
+      },
+    },
+    norma_romana: {
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Fior di latte",
+        },
+        "2": {
+          name: "Berenjenas fritas en dados (berenjenas, aceite de girasol, sal)",
+          notes: "peso después de freír",
+        },
+        "3": {
+          name: "Ricotta salata rallada",
+          notes: "después del horno",
+        },
+        "4": {
+          name: "Albahaca fresca",
+          notes: "hojas, después del horno",
+        },
+      },
+    },
+    bufalina_napoletana: {
+      ingredients: {
+        "0": {
+          name: "Tomates pelados San Marzano aplastados a mano (tomate, jugo de tomate)",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "en trozos, escurrida al menos una hora",
+        },
+        "2": {
+          name: "Albahaca fresca",
+          notes: "hojas",
+        },
+        "3": {
+          name: "AOVE",
+        },
+      },
+    },
+    bufalina_romana: {
+      variant_name: "búfala al sacarla del horno",
+      ingredients: {
+        "0": {
+          name: "Passata de tomate (tomate, sal)",
+        },
+        "1": {
+          name: "Mozzarella di bufala campana DOP",
+          notes: "en trozos, después del horno",
+        },
+        "2": {
+          name: "Albahaca fresca",
+          notes: "hojas, después del horno",
+        },
+        "3": {
+          name: "AOVE",
+        },
+      },
+    },
   },
   steps: {
     spread_margherita_avpn: {
@@ -2801,6 +3087,121 @@ export const TOPPING_I18N_ES: ToppingTranslation = {
     mortazza_split_fill: {
       title: "Abrir y rellenar la Baciata",
       description: "Separar las dos capas horneadas, ayudándose con un cuchillo de sierra por el borde. Distribuir mortadela y pistacho picado en la capa inferior; añadir stracciatella solo si se ha elegido. Cerrar y servir sin volver a meter en el horno."
+    },
+    // D-065 — condimenti quotidiani
+    friggere_patatine_wurstel: {
+      title: "Freír las patatas",
+      description: "Fríe las patatas a 170-175 °C hasta que estén doradas, o cocina las congeladas como indica el envase. Escúrrelas sobre papel y sálalas.",
+      tip_beginner: "Prepáralas mientras se hornea la pizza: tienen que estar calientes y crujientes cuando la saques.",
+      tip_nerd: "En el horno, las patatas ya fritas pierden agua y textura crujiente, y la mozzarella las ablanda: añadidas al sacar la pizza, siguen crujientes.",
+    },
+    spread_wurstel_patatine: {
+      title: "Tomate, mozzarella y salchichas",
+      description: "Extiende la passata, reparte el fior di latte y las rodajas de salchicha. Las patatas no van al horno.",
+    },
+    finish_wurstel_patatine: {
+      title: "Patatas al sacarla del horno",
+      description: "Nada más sacarla del horno, reparte las patatas fritas calientes sobre la pizza.",
+    },
+    spread_prosciutto_cotto_nap: {
+      title: "Aliño Jamón cocido",
+      description: "Pelados aplastados y fior di latte. Reparte las lonchas de jamón cocido troceadas a mano y un hilo de aceite.",
+    },
+    spread_prosciutto_cotto_rom: {
+      title: "Aliño Jamón cocido",
+      description: "Passata y fior di latte. El jamón cocido va encima de la mozzarella; en las cocciones largas del horno doméstico, ponlo en los últimos 3-4 minutos para que no se seque.",
+      tip_beginner: "Si tras 10 minutos de horno el jamón ya está rizado y oscuro, la próxima vez ponlo al final de la cocción.",
+      tip_nerd: "El jamón cocido ya está cocinado y tiene poca agua libre: pasados 6-8 minutos a 250 °C se deshidrata y los bordes se caramelizan hasta amargar.",
+    },
+    saltare_champignon_funghi_nap: {
+      title: "Saltear los champiñones",
+      description: "Lamina los champiñones y saltéalos 5-6 minutos en la sartén con un hilo de aceite hasta que suelten el agua. Sala al final y déjalos templar.",
+    },
+    spread_funghi_nap: {
+      title: "Aliño Champiñones",
+      description: "Pelados aplastados y fior di latte. Reparte los champiñones salteados y un hilo de aceite.",
+    },
+    saltare_champignon_funghi_rom: {
+      title: "Saltear los champiñones",
+      description: "Lamina los champiñones. Calienta el aceite con el ajo con piel y saltea los champiñones 8-10 minutos a fuego vivo hasta que suelten el agua y se doren. Sal y perejil al final.",
+      tip_beginner: "Cocínalos antes: crudos sueltan agua sobre la pizza y la base queda mojada.",
+      tip_nerd: "Los champiñones son cerca de un 92 % agua: en la sartén pierden aproximadamente la mitad, y esa agua no llega a la base durante la cocción.",
+    },
+    spread_funghi_rom: {
+      title: "Aliño Champiñones",
+      description: "Passata y fior di latte. Reparte los champiñones salteados a temperatura ambiente y un hilo de aceite.",
+    },
+    spread_napoli_rom: {
+      title: "Aliño Napoli",
+      description: "Passata y fior di latte. Reparte los filetes de anchoa, el orégano y, si las usas, las alcaparras. Un hilo de aceite.",
+      tip_beginner: "Las anchoas ya están saladas: nada de sal en la passata.",
+      tip_nerd: "Los filetes en aceite llevan cerca de un 15 % de sal sobre su peso: 15 g añaden unos 2 g de sal a la pizza.",
+    },
+    spread_napoli_nap: {
+      title: "Aliño con anchoas",
+      description: "Pelados aplastados y fior di latte. Reparte los filetes de anchoa y el orégano. Un hilo de aceite.",
+    },
+    friggere_melanzane_parmigiana: {
+      title: "Freír las berenjenas",
+      description: "Corta las berenjenas en rodajas de 5 mm. Si amargan, sálalas y déjalas 30 minutos en un colador; luego sécalas. Fríelas a 170 °C 2-3 minutos por cada lado hasta que estén doradas y escúrrelas sobre papel.",
+      tip_beginner: "También puedes freírlas el día anterior y guardarlas en la nevera: sácalas una hora antes.",
+      tip_nerd: "La berenjena absorbe aceite como una esponja hasta que la superficie se sella: aceite bien caliente y pocas rodajas cada vez, para que la temperatura no se desplome.",
+    },
+    spread_parmigiana_nap: {
+      title: "Aliño Parmigiana",
+      description: "Los pelados y luego la provola. Superpón las berenjenas fritas, espolvorea parmesano y añade la albahaca al sacarla del horno.",
+    },
+    friggere_melanzane_parmigiana_rom: {
+      title: "Freír las berenjenas",
+      description: "Corta las berenjenas en rodajas de 5 mm, sálalas si amargan y sécalas. Fríelas a 170 °C 2-3 minutos por cada lado y escúrrelas sobre papel.",
+    },
+    spread_parmigiana_rom: {
+      title: "Aliño Parmigiana",
+      description: "Passata y fior di latte, luego las berenjenas fritas y el parmesano. Albahaca al sacarla del horno.",
+    },
+    friggere_melanzane_norma: {
+      title: "Freír las berenjenas en dados",
+      description: "Corta las berenjenas en dados de 1,5 cm, sálalas si amargan y sécalas. Fríelas a 170 °C hasta que estén doradas y escúrrelas sobre papel.",
+    },
+    spread_norma_nap: {
+      title: "Tomate, fior di latte y berenjenas",
+      description: "Pelados aplastados, fior di latte y dados de berenjena frita.",
+    },
+    finish_norma_nap: {
+      title: "Ricotta salata y albahaca",
+      description: "Nada más sacarla del horno, ralla la ricotta salata por encima y añade la albahaca.",
+      tip_beginner: "La ricotta salata va en crudo: en el horno se funde y pierde su sabor intenso.",
+      tip_nerd: "Es una ricotta prensada y curada, con poca agua y muy salada: rallada sobre la pizza caliente queda en copos y no se funde como la mozzarella.",
+    },
+    friggere_melanzane_norma_rom: {
+      title: "Freír las berenjenas en dados",
+      description: "Corta las berenjenas en dados de 1,5 cm, sálalas si amargan y sécalas. Fríelas a 170 °C hasta que estén doradas y escúrrelas sobre papel.",
+    },
+    spread_norma_rom: {
+      title: "Tomate, fior di latte y berenjenas",
+      description: "Passata, fior di latte y dados de berenjena frita.",
+    },
+    finish_norma_rom: {
+      title: "Ricotta salata y albahaca",
+      description: "Nada más sacarla del horno, ralla la ricotta salata por encima y añade la albahaca.",
+    },
+    sgocciolare_bufala_nap: {
+      title: "Escurrir la búfala",
+      description: "Corta la mozzarella di bufala en trozos y déjala en un colador en la nevera al menos una hora, para que suelte el suero.",
+    },
+    spread_bufalina_nap: {
+      title: "Aliño Bufalina",
+      description: "Pelados aplastados, búfala escurrida en trozos, albahaca y un hilo de aceite. En hornos de 430 °C o más, la búfala puede cocerse sobre la pizza: bastan 60-90 segundos.",
+    },
+    spread_bufalina_rom: {
+      title: "Solo tomate en el horno",
+      description: "Extiende la passata con un hilo de aceite. La búfala no va al horno.",
+    },
+    finish_bufalina_rom: {
+      title: "Búfala y albahaca al sacarla del horno",
+      description: "Nada más sacarla del horno, reparte la búfala en trozos y la albahaca.",
+      tip_beginner: "En las cocciones largas, la búfala en el horno se vuelve gomosa y deja un charco de suero: añadida al final, queda tierna.",
+      tip_nerd: "La búfala tiene más agua y más grasa que el fior di latte: tras unos minutos de calor, la cuajada se contrae y expulsa el suero, que moja la base.",
     },
   },
 };
