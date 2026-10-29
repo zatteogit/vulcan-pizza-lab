@@ -61,12 +61,18 @@ const code = js.filter((item) => !isLocale(item.f));
 const locales = js.filter((item) => isLocale(item.f));
 const sum = (list) => list.reduce((total, item) => total + item.size, 0);
 const max = (list) => list.reduce((best, item) => (item.size > best.size ? item : best), { f: "—", size: 0 });
+/* Una lingua può avere più chunk (catalogo e condimenti, D-065): un utente li
+   scarica tutti, quindi per lingua si sommano. */
+const byLanguage = LOCALES.map((code) => {
+  const chunks = locales.filter((item) => basename(item.f).startsWith(`${code}-`));
+  return { f: `${code}: ${chunks.map((item) => basename(item.f)).join(" + ")}`, size: sum(chunks) };
+});
 
 const fmt = (bytes) => (bytes >= MB ? `${(bytes / MB).toFixed(1)} MB` : `${(bytes / KB).toFixed(1)} kB`);
 const checks = [
   ["JS, chunk più grande (gzip)", max(js).size, BUDGET.maxJsChunkGz, max(js).f],
   ["JS senza lingue (gzip)", sum(code), BUDGET.jsWithoutLocalesGz, `${code.length} chunk`],
-  ["JS per utente, con la lingua più pesante (gzip)", sum(code) + max(locales).size, BUDGET.jsPerUserGz, max(locales).f],
+  ["JS per utente, con la lingua più pesante (gzip)", sum(code) + max(byLanguage).size, BUDGET.jsPerUserGz, max(byLanguage).f],
   ["CSS (gzip)", sum(css), BUDGET.cssGz, `${css.length} file`],
   ["Video, il più grande", max(videos).size, BUDGET.maxVideo, max(videos).f],
   ["Video, totale", sum(videos), BUDGET.totalVideo, `${videos.length} file`],
