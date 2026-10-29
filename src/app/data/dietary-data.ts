@@ -34,7 +34,7 @@ export const DIETARY_MESSAGES_IT: Record<string, string> = {
   "diet.histamineUnknown": "Il contenuto di istamina non si determina da tempo e temperatura.",
   "diet.processCheck": "Servono dati su ingredienti, prodotto e porzione: il motore non attesta l’idoneità.",
   "diet.nickelUnknown": "La forza W non misura il contenuto di nichel.",
-  "diet.cardConflict": "Incompatibile con i filtri alimentari"
+  "diet.cardConflict": "Fuori dieta"
 };
 
 const message = (key: string, ingredients?: string[]): EngineMsg => ({

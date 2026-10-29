@@ -50,7 +50,7 @@ describe("card: solo informazioni che aiutano a scegliere", () => {
   });
   it("un ingrediente confermato mancante viene mostrato con la W effettiva", () => {
     const r=withVerdict({conditions:[{kind:"flour",status:"missing",message:{key:"need.flour",fallback:"",params:{w:285}}}]});
-    expect(recipeCardSignals(r)[0].message).toMatchObject({key:"need.flour",params:{w:285}});
+    expect(recipeCardSignals(r)[0].message).toMatchObject({key:"card.flourMissing",params:{w:285}});
   });
   it("mantiene il metodo specifico e limita la card a due condizioni", () => {
     const r=withVerdict({adaptations:[{key:"gen.homeBakingMethod",fallback:""}],conditions:[

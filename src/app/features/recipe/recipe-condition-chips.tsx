@@ -14,9 +14,9 @@ export function RecipeConditionChips({ recipe, id, compact = false }: { recipe: 
   const { cms, bcp47 } = useCms();
   const blocked = recipe.verdict.outcome === "not_feasible";
   const messages: EngineMsg[] = blocked ? recipe.verdict.blockers.map(b => b.kind === "resource_excluded" ? b.message : b.kind === "oven_too_cold"
-    ? { key: "need.blockedOven", fallback: "Forno insufficiente" }
-    : b.kind === "fermentation_temperature" ? { key: "need.blockedMethod", fallback: "Regime non compatibile" }
-    : { key: "need.blockedTime", fallback: "Tempo insufficiente" })
+    ? { key: "need.blockedOven", fallback: "Forno non adatto" }
+    : b.kind === "fermentation_temperature" ? { key: "need.blockedMethod", fallback: "Metodo inadatto" }
+    : { key: "need.blockedTime", fallback: "Poco tempo" })
     // D-060: le verifiche di dispensa non sono condizioni da mostrare.
     : (recipe.verdict.conditions ?? []).filter(c => !(c.status === "unverified" && PANTRY_CHECK_KEYS.has(c.message.key))).map(c => c.kind === "deck" && c.status === "missing"
       ? { key: "need.deck", fallback: "Serve pietra o acciaio" } : c.message);
