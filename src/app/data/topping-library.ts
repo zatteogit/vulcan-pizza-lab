@@ -3490,8 +3490,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "friggere_patatine_wurstel",
-      title: "Friggere le patatine",
-      description: "Friggere le patatine a 170-175 °C finché sono dorate, oppure cuocere quelle surgelate come dice la confezione. Scolarle su carta e salarle.",
+      title: "Friggi le patatine",
+      description: "Friggi le patatine a 170-175 °C finché sono dorate, oppure cuoci quelle surgelate come dice la confezione. Scolale su carta e salale.",
       duration_minutes: 12,
       timing: "just_before_assembly",
       tip: {
@@ -3502,14 +3502,14 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_wurstel_patatine",
       title: "Pomodoro, mozzarella e würstel",
-      description: "Stendere la passata, distribuire il fior di latte e le rondelle di würstel. Le patatine non vanno in forno.",
+      description: "Stendi la passata, distribuisci il fior di latte e le rondelle di würstel. Le patatine non vanno in forno.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
     }, {
       id: "finish_wurstel_patatine",
       title: "Patatine all'uscita",
-      description: "Appena sfornata, distribuire le patatine fritte calde sulla pizza.",
+      description: "Appena sfornata, distribuisci le patatine fritte calde sulla pizza.",
       insert_at: "after_bake",
       duration_minutes: 1,
     }],
@@ -3528,7 +3528,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_prosciutto_cotto_nap",
       title: "Condimento Prosciutto cotto",
-      description: "Pelati schiacciati e fior di latte. Distribuire le fette di prosciutto cotto spezzate a mano e un filo d'olio.",
+      description: "Pelati schiacciati e fior di latte. Distribuisci le fette di prosciutto cotto spezzate a mano e un filo d'olio.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -3570,15 +3570,15 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "saltare_champignon_funghi_nap",
-      title: "Saltare gli champignon",
-      description: "Affettare gli champignon e saltarli 5-6 minuti in padella con un filo d'olio finché perdono l'acqua. Salare a fine cottura e lasciarli intiepidire.",
+      title: "Salta gli champignon",
+      description: "Affetta gli champignon e saltali 5-6 minuti in padella con un filo d'olio finché perdono l'acqua. Sala a fine cottura e lasciali intiepidire.",
       duration_minutes: 8,
       timing: "just_before_assembly",
     }],
     assembly_steps: [{
       id: "spread_funghi_nap",
       title: "Condimento Funghi",
-      description: "Pelati schiacciati e fior di latte. Distribuire gli champignon saltati e un filo d'olio.",
+      description: "Pelati schiacciati e fior di latte. Distribuisci gli champignon saltati e un filo d'olio.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -3597,8 +3597,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "saltare_champignon_funghi_rom",
-      title: "Saltare gli champignon",
-      description: "Affettare gli champignon. Scaldare l'olio con l'aglio in camicia e saltare i funghi 8-10 minuti a fiamma vivace finché perdono l'acqua e dorano. Sale e prezzemolo a fine cottura.",
+      title: "Salta gli champignon",
+      description: "Affetta gli champignon. Scalda l'olio con l'aglio in camicia e salta i funghi 8-10 minuti a fiamma vivace finché perdono l'acqua e dorano. Sale e prezzemolo a fine cottura.",
       duration_minutes: 12,
       timing: "just_before_assembly",
       tip: {
@@ -3609,7 +3609,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_funghi_rom",
       title: "Condimento Funghi",
-      description: "Passata e fior di latte. Distribuire gli champignon saltati a temperatura ambiente e un filo d'olio.",
+      description: "Passata e fior di latte. Distribuisci gli champignon saltati a temperatura ambiente e un filo d'olio.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -3632,7 +3632,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_napoli_rom",
       title: "Condimento Napoli",
-      description: "Passata e fior di latte. Distribuire i filetti di acciuga, l'origano e, se li usi, i capperi. Filo d'olio.",
+      description: "Passata e fior di latte. Distribuisci i filetti di acciuga, l'origano e, se li usi, i capperi. Filo d'olio.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -3657,7 +3657,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_napoli_nap",
       title: "Condimento con alici",
-      description: "Pelati schiacciati e fior di latte. Distribuire i filetti di alici e l'origano. Filo d'olio.",
+      description: "Pelati schiacciati e fior di latte. Distribuisci i filetti di alici e l'origano. Filo d'olio.",
       insert_at: "after_shape",
       duration_minutes: 3,
       replaces_generic: true,
@@ -3677,8 +3677,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "friggere_melanzane_parmigiana",
-      title: "Friggere le melanzane",
-      description: "Tagliare le melanzane a fette di 5 mm. Se sono amare, salarle e lasciarle 30 minuti in uno scolapasta, poi asciugarle. Friggerle a 170 °C 2-3 minuti per lato finché sono dorate e scolarle su carta.",
+      title: "Friggi le melanzane",
+      description: "Taglia le melanzane a fette di 5 mm. Se sono amare, salale e lasciale 30 minuti in uno scolapasta, poi asciugale. Friggile a 170 °C 2-3 minuti per lato finché sono dorate e scolale su carta.",
       duration_minutes: 30,
       timing: "just_before_assembly",
       tip: {
@@ -3689,7 +3689,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_parmigiana_nap",
       title: "Condimento Parmigiana",
-      description: "Pelati, poi la provola. Sovrapporre le melanzane fritte, cospargere di parmigiano e aggiungere il basilico all'uscita.",
+      description: "Pelati, poi la provola. Sovrapponi le melanzane fritte, cospargi di parmigiano e aggiungi il basilico all'uscita.",
       insert_at: "after_shape",
       duration_minutes: 4,
       replaces_generic: true,
@@ -3708,8 +3708,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "friggere_melanzane_parmigiana_rom",
-      title: "Friggere le melanzane",
-      description: "Tagliare le melanzane a fette di 5 mm, salarle se amare e asciugarle. Friggerle a 170 °C 2-3 minuti per lato e scolarle su carta.",
+      title: "Friggi le melanzane",
+      description: "Taglia le melanzane a fette di 5 mm, salale se amare e asciugale. Friggile a 170 °C 2-3 minuti per lato e scolale su carta.",
       duration_minutes: 30,
       timing: "just_before_assembly",
     }],
@@ -3736,8 +3736,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "friggere_melanzane_norma",
-      title: "Friggere le melanzane a cubetti",
-      description: "Tagliare le melanzane a cubetti di 1,5 cm, salarle se amare e asciugarle. Friggerle a 170 °C finché sono dorate e scolarle su carta.",
+      title: "Friggi le melanzane a cubetti",
+      description: "Taglia le melanzane a cubetti di 1,5 cm, salale se amare e asciugale. Friggile a 170 °C finché sono dorate e scolale su carta.",
       duration_minutes: 25,
       timing: "just_before_assembly",
     }],
@@ -3751,7 +3751,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     }, {
       id: "finish_norma_nap",
       title: "Ricotta salata e basilico",
-      description: "Appena sfornata, grattugiare sopra la ricotta salata e aggiungere il basilico.",
+      description: "Appena sfornata, grattugia sopra la ricotta salata e aggiungi il basilico.",
       insert_at: "after_bake",
       duration_minutes: 1,
       tip: {
@@ -3773,8 +3773,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "friggere_melanzane_norma_rom",
-      title: "Friggere le melanzane a cubetti",
-      description: "Tagliare le melanzane a cubetti di 1,5 cm, salarle se amare e asciugarle. Friggerle a 170 °C finché sono dorate e scolarle su carta.",
+      title: "Friggi le melanzane a cubetti",
+      description: "Taglia le melanzane a cubetti di 1,5 cm, salale se amare e asciugale. Friggile a 170 °C finché sono dorate e scolale su carta.",
       duration_minutes: 25,
       timing: "just_before_assembly",
     }],
@@ -3788,7 +3788,7 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     }, {
       id: "finish_norma_rom",
       title: "Ricotta salata e basilico",
-      description: "Appena sfornata, grattugiare sopra la ricotta salata e aggiungere il basilico.",
+      description: "Appena sfornata, grattugia sopra la ricotta salata e aggiungi il basilico.",
       insert_at: "after_bake",
       duration_minutes: 1,
     }],
@@ -3806,8 +3806,8 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     ],
     pre_prep_steps: [{
       id: "sgocciolare_bufala_nap",
-      title: "Sgocciolare la bufala",
-      description: "Tagliare la mozzarella di bufala a pezzi e lasciarla in uno scolapasta in frigo almeno un'ora, così perde il siero.",
+      title: "Sgocciola la bufala",
+      description: "Taglia la mozzarella di bufala a pezzi e lasciala in uno scolapasta in frigo almeno un'ora, così perde il siero.",
       duration_minutes: 60,
       timing: "just_before_assembly",
     }],
@@ -3834,14 +3834,14 @@ export const TOPPING_LIBRARY: Record<string, ToppingRecipe> = {
     assembly_steps: [{
       id: "spread_bufalina_rom",
       title: "Solo pomodoro in forno",
-      description: "Stendere la passata con un filo d'olio. La bufala non va in forno.",
+      description: "Stendi la passata con un filo d'olio. La bufala non va in forno.",
       insert_at: "after_shape",
       duration_minutes: 2,
       replaces_generic: true,
     }, {
       id: "finish_bufalina_rom",
       title: "Bufala e basilico all'uscita",
-      description: "Appena sfornata, distribuire la bufala a pezzi e il basilico.",
+      description: "Appena sfornata, distribuisci la bufala a pezzi e il basilico.",
       insert_at: "after_bake",
       duration_minutes: 2,
       tip: {
