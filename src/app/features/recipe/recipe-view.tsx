@@ -16,7 +16,7 @@ import { recipeDisplayName } from "../../domain/recipe-reference";
  * Il selettore tab (RecipeSectionTabs) qui è finalmente montato: il layer
  * PizzaNerd vive dentro Ricetta/Procedimento quando abilitato dal Profilo. */
 
-import { useEffect, useId, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { localizeToppingRecipe, toppingConcept } from "../../data/topping-i18n/localize";
 import { Link } from "react-router";
@@ -116,6 +116,9 @@ interface RecipeViewProps {
   favorite?: boolean;
   /** Restituisce false se il salvataggio non è riuscito: la pagina lo dice. */
   onToggleFavorite?: () => boolean | void;
+  /** S07-B-09: «Annulla» nello Snackbar dopo la rimozione dal ricettario.
+   *  Restituisce false se la scrittura non è riuscita (la pagina lo dice). */
+  onUndoRemove?: () => boolean;
 }
 
 export function RecipeView({
@@ -154,25 +157,38 @@ export function RecipeView({
   mealTargetAt,
   favorite = false,
   onToggleFavorite,
+  onUndoRemove,
 }: RecipeViewProps) {
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ text: string; undo?: boolean } | null>(null);
+  const [toastPaused, setToastPaused] = useState(false);
   const favoriteFeedbackId = useId();
+  const favoriteAnchorRef = useRef<HTMLDivElement>(null);
 
+  /* S07-B-09: con «Annulla» lo Snackbar resta 8 s e si ferma finché ha il
+     focus o il puntatore sopra (WCAG 2.2.1); il solo messaggio dura 3 s. */
   useEffect(() => {
-    if (!toastMessage) return;
-    const timer = setTimeout(() => setToastMessage(null), 3000);
+    if (!toast || toastPaused) return;
+    const timer = setTimeout(() => setToast(null), toast.undo ? 8000 : 3000);
     return () => clearTimeout(timer);
-  }, [toastMessage]);
+  }, [toast, toastPaused]);
 
   const handleFavoriteClick = () => {
     if (!onToggleFavorite) return;
     if (onToggleFavorite() === false) return;
-    const nextFavorite = !favorite;
-    setToastMessage(
-      nextFavorite
-        ? uiMessage("features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success")
-        : uiMessage("features.recipe.recipe-view.rimosso-dai-preferiti-toast-info")
+    setToastPaused(false);
+    setToast(
+      favorite
+        ? { text: uiMessage("features.recipe.recipe-view.rimosso-dai-preferiti-toast-info"), undo: Boolean(onUndoRemove) }
+        : { text: uiMessage("features.recipe.recipe-view.aggiunto-ai-preferiti-toast-success") }
     );
+  };
+
+  const handleUndoRemove = () => {
+    const ok = onUndoRemove?.() ?? false;
+    setToastPaused(false);
+    setToast(ok ? { text: uiMessage("recipe.save.restored") } : null);
+    // Il pulsante «Annulla» sparisce col focus dentro: lo si riporta sul segnalibro.
+    favoriteAnchorRef.current?.querySelector<HTMLElement>(".recipe-view-favorite")?.focus();
   };
 
   const [actionTarget, setActionTarget] = useState<HTMLElement | null>(null);
@@ -180,23 +196,29 @@ export function RecipeView({
     setActionTarget(document.getElementById("recipe-floating-actions"));
   }, []);
   const favoriteAction = onToggleFavorite && (
-    <div className={`recipe-view-favorite-anchor${!showStickyHeader && !actionTarget ? " recipe-view-favorite-anchor--floating" : ""}`}>
+    <div ref={favoriteAnchorRef} className={`recipe-view-favorite-anchor${!showStickyHeader && !actionTarget ? " recipe-view-favorite-anchor--floating" : ""}`}>
     <IconButton type="button"
       className="recipe-view-favorite"
-      aria-describedby={toastMessage ? favoriteFeedbackId : undefined}
+      aria-describedby={toast ? favoriteFeedbackId : undefined}
       aria-label={favorite ? uiMessage("features.recipe.recipe-view.rimuovi-dai-preferiti-7f61dbbb") : uiMessage("features.recipe.recipe-view.aggiungi-ai-preferiti-b5037a86")}
       aria-pressed={favorite} onClick={handleFavoriteClick} size="lg" variant="bare">
       <Bookmark size={20} fill={favorite ? "currentColor" : "none"} aria-hidden="true" />
     </IconButton>
     <AnimatePresence>
-      {toastMessage && <motion.div
-        className="recipe-view-favorite-feedback"
+      {toast && <motion.div
+        className={`recipe-view-favorite-feedback${toast.undo ? " recipe-view-favorite-feedback--action" : ""}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={motionTiming.feedback}
+        onFocus={() => setToastPaused(true)}
+        onBlur={() => setToastPaused(false)}
+        onMouseEnter={() => setToastPaused(true)}
+        onMouseLeave={() => setToastPaused(false)}
       >
-        <Snackbar message={<span id={favoriteFeedbackId}>{toastMessage}</span>} />
+        <Snackbar message={<span id={favoriteFeedbackId}>{toast.text}</span>}
+          action={toast.undo ? uiMessage("ds.snackbar.undo") : undefined}
+          onAction={toast.undo ? handleUndoRemove : undefined} />
       </motion.div>}
     </AnimatePresence>
     </div>

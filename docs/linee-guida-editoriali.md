@@ -22,6 +22,41 @@ immediatamente utilizzabili.
 - Tenere brevi riepiloghi, card e avvisi. Lasciare le fonti e i dettagli nel
   livello espandibile, conservando i limiti necessari a capire il risultato.
 
+### Voce verbale dei passi (D-G3-01, G3-WP-05)
+
+I passi del Procedimento parlano a chi sta impastando adesso, quindi usano
+l'**imperativo di seconda persona**: «Impasta fino a incordatura», «Dividi in
+panetti», «Cuoci a {temp}», «Accendi ora il forno». Mai l'infinito da
+ricettario («Impastare», «Dividere», «Cuocere»), nemmeno in una sola frase
+dello stesso passo. (Queste linee guida, che parlano a chi scrive, restano
+all'infinito.)
+
+- Vale per descrizione breve e alternativa (`desc`, `descAlt`), «Come si fa»
+  (`longDesc`, `longDescAlt`), consigli (`tipBeginner`, `tipNerd`), testi del
+  motore `timeline.*` e passi del condimento (`assembly_steps`,
+  `pre_prep_steps` della libreria topping), compresi i testi di riserva in
+  italiano del motore.
+- Il divieto usa la negazione dell'imperativo: in italiano «Non salare», «Non
+  aprire il forno».
+- Le descrizioni nominali restano ammesse quando non descrivono un gesto
+  («Lievitazione in massa a {temp}», «Olio a filo»).
+- I titoli dei passi base restano sostantivi («Impasto», «Puntata», «Cottura»).
+  I titoli dei passi del condimento possono essere un sostantivo («Condimento
+  Margherita romana») o un imperativo («Stufa la cipolla»), mai un infinito.
+- Forma per lingua: it imperativo con il tu; en imperativo; de imperativo con
+  il du, come nel resto del catalogo; fr imperativo con il vous; es imperativo
+  con il tú; pt imperativo con você («Divida», «Misture»); ja forma in -ます.
+  In francese l'infinito da ricettario c'era solo nelle descrizioni brevi,
+  mentre i testi del motore erano già all'imperativo: nessuna eccezione.
+- La guardia è `src/app/features/cms/step-voice.test.ts`: controlla la prima
+  parola di ogni frase in italiano (catalogo, libreria topping e passi prodotti
+  dal motore per tutti gli stili, in cucina ideale e di casa) e in fr, es, pt.
+  Le eccezioni stanno in un elenco, ognuna con il suo motivo («Disciplinare» è
+  un sostantivo).
+- Da allineare: le traduzioni dei passi del condimento in
+  `src/app/data/topping-i18n/` (titoli all'infinito in fr, descrizioni
+  all'infinito in es e pt). L'italiano è già allineato e protetto dal test.
+
 ## Termini e significato
 
 - **Scopri** presenta stili, storie e ricette di riferimento. **Crea** aiuta ad

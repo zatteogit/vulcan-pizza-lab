@@ -34,6 +34,7 @@ import { StepDetails } from "./recipe-step-details";
 import { ToppingSection, type ToppingSectionProps } from "./topping-section";
 import { uiMessage } from "../../i18n/ui-messages";
 import { approxStartAt } from "../../use-cases/cook-plan";
+import { assemblyStepBake, assemblyStepDescription, toppingEffectiveCookSec } from "../../domain/step-thresholds";
 
 type Compensation = NonNullable<GeneratedRecipe["science"]>["compensations"][number];
 
@@ -90,7 +91,7 @@ export function ProcedureTimeline({
       {/* ── Procedure / Timeline with inline tips ── */}
       <div data-region="section">
         {recipe.dough_balls > 1 && (
-          <p className="procedure-timeline-step__desc">
+          <p className="procedure-timeline__batch-model type-data-sm">
             {engineMessage(cms, "timeline.batchModel", "")}
           </p>
         )}
@@ -145,11 +146,14 @@ export function ProcedureTimeline({
                 const activeStep = activeTopping.assembly_steps?.filter(s => s.insert_at === phase)[ordinal];
                 
                 if (activeStep) {
+                  /* G3-WP-03: stessa scelta del motore per il condimento attivo. */
+                  const bake = assemblyStepBake(activeStep, toppingEffectiveCookSec(recipe.cook_time_sec, activeTopping));
                   displayStep = {
                     ...step,
                     title: activeStep.title,
-                    description: activeStep.description,
+                    description: assemblyStepDescription(activeStep, bake),
                     tip: activeStep.tip,
+                    bake_length: bake,
                   };
                 }
               }

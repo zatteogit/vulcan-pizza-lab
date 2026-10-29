@@ -834,6 +834,11 @@ export const SCIENCE_ES: CmsScience = {
       l1: "El tiempo entre un horneado y otro es una hipótesis del modelo.",
       l2: "Entre una pizza y otra se saca, se mete y la base recupera la temperatura: el horno de casa con piedra necesita minutos, los hornos de pizza menos y los de leña casi nada. Usamos un valor fijo por tipo de horno, no medido en el tuyo.",
     },
+    "basil-timing": {
+      title: "Cuándo poner la albahaca",
+      l1: "Con cocciones cortas la albahaca va al horno con la pizza; con las largas, después. El umbral es una elección de {brand}.",
+      l2: "Las hojas de albahaca son finas y llenas de agua: en una cocción relámpago siguen verdes, en una larga se secan y se ennegrecen. El umbral entre las dos instrucciones es una convención nuestra, no una medida: el valor está en el «Cómo se hace» del paso del aliño.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "La temperatura se mantiene constante durante toda la fase.",

@@ -840,6 +840,11 @@ export const SCIENCE_PT: CmsScience = {
       l1: "O tempo entre um assamento e outro é uma hipótese do modelo.",
       l2: "Entre uma pizza e outra você tira, coloca e o lastro volta à temperatura: o forno doméstico com pedra precisa de minutos, os fornos de pizza de menos, os de lenha quase nada. Usamos um valor fixo por tipo de forno, não medido no seu.",
     },
+    "basil-timing": {
+      title: "Quando colocar o manjericão",
+      l1: "Em assamentos curtos o manjericão vai ao forno com a pizza; nos longos, depois. O limite é uma escolha da {brand}.",
+      l2: "As folhas de manjericão são finas e cheias de água: num assamento relâmpago continuam verdes, num longo secam e escurecem. O limite entre as duas instruções é uma convenção nossa, não uma medida: o valor está no «Como se faz» do passo da cobertura.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "A temperatura fica constante durante toda a fase.",

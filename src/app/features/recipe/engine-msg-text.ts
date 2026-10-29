@@ -44,6 +44,8 @@ const COOK_SECONDS_PARAMS: Record<string, readonly string[]> = {
   "timeline.bake.rounds": ["sec"],
   /* FW-19 (S09-A-14): recupero del forno fra due cotture. */
   "timeline.bake.recovery": ["sec"],
+  /* G3-WP-03: soglia del basilico nel «Come si fa». */
+  "timeline.topping.basilThreshold": ["sec"],
 };
 /** FW-19: parametri in minuti (intervallo delle pieghe). */
 const MINUTE_PARAMS: Record<string, readonly string[]> = {

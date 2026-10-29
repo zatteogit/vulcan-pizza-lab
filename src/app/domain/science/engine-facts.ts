@@ -31,6 +31,8 @@ import {
   SCORE_BANDS,
 } from "../recipe-score";
 import { computePreFermentSplit, PRE_FERMENT_FLOUR_PCT } from "../pre-ferment-split";
+/* G3-WP-03: soglie con cui il motore sceglie il testo dei passi. */
+export { BASIL_BEFORE_BAKE_MAX_SEC, HIGH_HYDRATION_PCT } from "../step-thresholds";
 export { FLOUR_STRENGTH_SCALE, flourFitForStyle, flourStrength, type FlourStrength } from "../flour-strength";
 
 type Range = readonly [number, number];

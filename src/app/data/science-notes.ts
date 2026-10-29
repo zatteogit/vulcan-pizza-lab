@@ -363,6 +363,13 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     sourceIds: [],
     engineRef: "BAKE_ROUND_RECOVERY_SEC, generateTimeline",
   },
+  {
+    // G3-WP-03 · D-G3-02: basilico prima del forno solo con cotture brevi.
+    id: "basil-timing",
+    kind: "editorial",
+    engineRef: "BASIL_BEFORE_BAKE_MAX_SEC, assemblyStepBake, generateTimeline",
+    sourceIds: [],
+  },
 
   /* ── Problemi e soluzioni ── */
   {

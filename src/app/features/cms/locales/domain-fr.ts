@@ -843,6 +843,11 @@ export const SCIENCE_FR: CmsScience = {
       l1: "Le temps entre deux cuissons est une hypothèse du modèle.",
       l2: "Entre deux pizzas, on défourne, on enfourne et la sole remonte en température : un four domestique avec pierre a besoin de quelques minutes, un four à pizza de moins, un four à bois presque de rien. Nous utilisons une valeur fixe par type de four, non mesurée sur le vôtre.",
     },
+    "basil-timing": {
+      title: "Quand mettre le basilic",
+      l1: "Pour une cuisson courte, le basilic va au four avec la pizza ; pour une cuisson longue, après. Le seuil est un choix de {brand}.",
+      l2: "Les feuilles de basilic sont fines et pleines d'eau : lors d'une cuisson éclair elles restent vertes, lors d'une cuisson longue elles sèchent et noircissent. Le seuil entre les deux consignes est une convention de notre part, pas une mesure : la valeur figure dans le « Comment faire » de l'étape de garniture.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "La température reste constante pendant toute la phase.",

@@ -917,7 +917,6 @@ export interface CmsContent {
     optimizeForMe: string;
     resetToOriginal: string;
     saveVersion: string;
-    savedVersion: string;
     optimizedForSetup: string;
     /** Chiusura pizzata completata ({style} = nome dello stile). */
     doneBody: string;
@@ -1713,7 +1712,6 @@ export const CMS_DEFAULTS: CmsContent = {
     optimizeForMe: "Adatta alla mia cucina",
     resetToOriginal: "Torna al riferimento",
     saveVersion: "Salva nel ricettario",
-    savedVersion: "Salvata nel ricettario",
     optimizedForSetup: "Adattata alla tua cucina",
     doneBody: "Hai completato tutti i passaggi della tua {style}. Buon appetito!",
     tabProcedure: "Procedimento",
@@ -2113,7 +2111,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.fry.title": "Frittura",
     "timeline.fry.desc": "Friggi una pizza alla volta a {temp} per {time}, girandola a metà con una schiumarola. Scolala su carta assorbente.",
     "timeline.fry.tipBeginner": "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
-    "timeline.fry.tipNerd": "Il vapore interno gonfia il disco nei primi secondi; girarla a metà uniforma la crosta e la cottura del ripieno.",
+    "timeline.fry.tipNerd": "Il vapore interno gonfia il disco nei primi secondi; girandola a metà, crosta e ripieno cuociono in modo uniforme.",
     "timeline.mix.title": "Impasto",
     ...METHOD_MESSAGES_IT,
     "timeline.divide.title": "Staglio",
@@ -2123,7 +2121,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "timeline.bakeWhite.title": "Cottura in bianco",
     "timeline.splitFill.title": "Sdoppiamento e farcitura",
     "timeline.bake.title": "Cottura",
-    "timeline.bake.desc": "Cuocere a {temp}.",
+    "timeline.bake.desc": "Cuoci a {temp}.",
     "timeline.bake.rounds": "{n} cotture da {sec}, una alla volta.",
     "timeline.topPost.title": "Farcitura post-cottura",
     "hint.yeastPrecisionScale": "Usa una bilancia da 0,01 g",
@@ -2154,7 +2152,7 @@ export const CMS_DEFAULTS: CmsContent = {
   timelineLabels: {
     preferment: {
       title: "Prefermento",
-      desc: "Mescolare {type} e far maturare",
+      desc: "Mescola {type} e lascia maturare",
       longDesc: "Il poolish \u00E8 farina e acqua in parti uguali con il lievito, fatto maturare prima dell'impasto. Sciogli il lievito nell'acqua, aggiungi la farina e mescola con un cucchiaio: viene una pastella morbida. Copri e lascia maturare {hours} a {prefTemp}. \u00C8 pronto quando la superficie \u00E8 piena di bolle e al centro comincia appena ad abbassarsi; profuma leggermente acidulo.",
       longDescAlt: "La biga \u00E8 un prefermento asciutto: farina e acqua al {prefHydration} circa, con il lievito. Sciogli il lievito nell'acqua, versala sulla farina e mescola pochi secondi, solo finch\u00E9 l'acqua \u00E8 assorbita: devono restare grumi irregolari, non un impasto liscio. Copri e lascia maturare {hours} a {prefTemp}. \u00C8 pronta quando \u00E8 cresciuta, profuma di frutta e dentro \u00E8 piena di filamenti.",
       tipBeginner: "Il prefermento \u00E8 come un \"antipasto\" per il lievito. Mescola e lascia riposare coperto.",
@@ -2162,8 +2160,8 @@ export const CMS_DEFAULTS: CmsContent = {
     },
     mix: {
       title: "Impasto",
-      desc: "Impastare fino a incordatura. Liscio e elastico.",
-      descAlt: "Mescolare gli ingredienti senza impastare. Serie di pieghe.",
+      desc: "Impasta fino a incordatura: liscio ed elastico.",
+      descAlt: "Mescola gli ingredienti senza impastare. Serie di pieghe.",
       longDesc: "Sciogli il lievito nell'acqua, poi versa progressivamente la farina mescolando. Quando la farina \u00E8 incorporata, aggiungi il sale e infine l'olio. Lavora l'impasto (a mano o in planetaria) fino a quando diventa liscio, elastico e si stacca dalle pareti del contenitore: serviranno 10-15 minuti a mano, 6-8 in planetaria. Test del velo: stira un pezzetto di impasto tra le dita \u2014 se diventa traslucido senza rompersi, \u00E8 pronto.",
       tipBeginner: "L'impasto \u00E8 pronto quando \u00E8 liscio e si stacca dalle mani. Se appiccica troppo, aspetta 5 min e riprova.",
       tipNerd: "L'incordatura avviene quando glutenina e gliadina formano ponti disolfuro stabili. Il test del velo verifica la maglia glutinica.",
@@ -2178,7 +2176,7 @@ export const CMS_DEFAULTS: CmsContent = {
     bulk: {
       title: "Puntata",
       desc: "Lievitazione in massa a {temp}",
-      longDesc: "L'impasto riposa in un'unica massa, dentro un contenitore unto d'olio e coperto a contatto con pellicola. È in questa fase che il lievito lavora e sviluppa aroma, struttura e digeribilità. Se lo stile prevede le pieghe, numero e intervallo sono in un passo o in un consiglio a parte. La fermentazione è completa quando il volume è raddoppiato e la superficie è bombata e liscia.",
+      longDesc: "L'impasto riposa in un'unica massa, dentro un contenitore unto d'olio e coperto a contatto con pellicola. È in questa fase che il lievito lavora e sviluppa aroma, struttura e digeribilità. La fermentazione è completa quando il volume è raddoppiato e la superficie è bombata e liscia.",
       tipBeginner: "L'impasto deve raddoppiare di volume. Se fa caldo, controlla più spesso!",
       tipNerd: "A {temp} il modello stima una velocità di fermentazione di {factor}× rispetto a {refTemp}. Non è una misura della riduzione FODMAP o della digeribilità.",
     },
@@ -2192,20 +2190,20 @@ export const CMS_DEFAULTS: CmsContent = {
     // ENG-5: impasto non lievitato (Focaccia di Recco) — riposo, non lievitazione
     rest: {
       title: "Riposo",
-      desc: "Lasciare riposare l'impasto coperto a {temp}",
+      desc: "Lascia riposare l'impasto coperto a {temp}",
       tipBeginner: "Senza lievito l'impasto non cresce: il riposo rilassa il glutine, così la sfoglia si stende sottile senza ritirarsi.",
       tipNerd: "Il riposo completa l'idratazione della farina e rilassa la maglia glutinica: meno ritorno elastico, sfoglia quasi trasparente.",
     },
     divide: {
       title: "Staglio",
-      desc: "Dividere in panetti del peso corretto. Formare pallina.",
+      desc: "Dividi in panetti del peso corretto. Forma le palline.",
       longDesc: "Rovescia l'impasto su un piano leggermente infarinato. Con un tarocco taglia porzioni del peso indicato in questo passo, pesandole su una bilancia (\u00e8 importante per cottura uniforme). Per ogni pezzo, fai la \"pirlatura\": piega i lembi verso il basso al centro, ruota e arrotonda fino a una palla liscia e tesa. Disponi i panetti su una teglia infarinata, ben distanziati, copri con pellicola.",
       tipBeginner: "Usa una bilancia! Taglia con un tarocco e arrotonda ogni pezzo in una palla liscia.",
       tipNerd: "Lo staglio crea tensione superficiale che intrappola CO\u2082 durante l'appretto e definisce la struttura alveolare finale.",
     },
     divide_teglia: {
       title: "Staglio",
-      desc: "Dividere con delicatezza, senza sgonfiare l'impasto.",
+      desc: "Dividi con delicatezza, senza sgonfiare l'impasto.",
       longDesc: "Rovescia l'impasto sul piano ben infarinato (con le alte idratazioni aiutati con la semola). Con un tarocco taglia le porzioni del peso indicato in questo passo, pesandole su una bilancia. Maneggia il meno possibile: per la teglia NON serve la pirlatura stretta della tonda \u2014 ripiega i lembi sotto formando un filone morbido, senza strizzare fuori l'aria. Le bolle costruite in puntata sono la futura alveolatura. Metti ogni pezzo in un contenitore unto e copri.",
       tipBeginner: "Mani delicate! Le bolle nell'impasto sono preziose: piega i lembi sotto, senza schiacciare.",
       tipNerd: "Con idratazione >75% lo staglio aggressivo collassa gli alveoli formati in puntata: tensione minima, degassamento quasi nullo.",
@@ -2226,20 +2224,20 @@ export const CMS_DEFAULTS: CmsContent = {
     },
     shape: {
       title: "Stesura",
-      desc: "Allargare a mano dal centro, preservare il cornicione",
-      descAlt: "Stendere nella teglia oliata con le mani",
+      desc: "Allarga a mano dal centro e preserva il cornicione",
+      descAlt: "Stendi l'impasto nella teglia oliata con le mani",
     },
     shape_thin: {
       title: "Stesura",
-      desc: "Stendere con mattarello, sottilissima",
+      desc: "Stendila con il mattarello, sottilissima",
     },
     top: {
       title: "Farcitura",
-      desc: "Condire la pizza secondo gusto",
+      desc: "Condisci la pizza secondo gusto",
     },
     bake: {
       title: "Cottura",
-      desc: "Cuocere a {temp}",
+      desc: "Cuoci a {temp}",
       longDesc: "Preriscalda il forno alla temperatura massima per 30-45 minuti (a forno freddo non funziona!). Se hai pietra/acciaio refrattario, scaldali bene. Inforna la pizza nel ripiano pi\u00F9 alto/centrale. NON aprire il forno nei primi 5 minuti \u2014 perdi la spinta termica. La pizza \u00E8 pronta quando bordo dorato/leopardato e fondo croccante.",
       tipBeginner: "Il forno deve essere caldissimo. Preriscalda almeno 30 minuti prima.",
       tipNerd: "La reazione di Maillard inizia a ~140\u00B0C e accelera esponenzialmente. A {temp} la caramellizzazione crea ~600 composti aromatici.",

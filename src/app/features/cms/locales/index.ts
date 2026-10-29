@@ -88,9 +88,13 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *  42 → integrazione G2 (ondata 3): nota «linked-params» e la sua formula
  *       (G2-WP-01), sections.when.title (G2-WP-05), tempCool con la parola
  *       e tolti hint*Ferment*, adjustByHand, changeTiming (G2-WP-02).
+ *  43 → integrazione G3 (ondata 3): WP-02 tolto cooking.savedVersion (unico interruttore il
+ *       segnalibro, con «Annulla»); WP-03 timeline.mix.hands.descHighHydration,
+ *       timeline.topping.basilThreshold, tipNerd con {pct}, bulk.longDesc;
+ *       WP-05 passi del procedimento all'imperativo.
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 42;
+export const LOCALE_BUNDLE_REV = 43;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

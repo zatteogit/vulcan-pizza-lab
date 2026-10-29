@@ -29,6 +29,7 @@ import {
 } from "../../domain/pizza-engine";
 import { getRecipesByAuthenticity, scaleToppingAmounts } from "../../data/topping-library";
 import { CondimentChoiceStrip } from "./condiment-choice-strip";
+import { assemblyStepBake, assemblyStepDescription, toppingEffectiveCookSec } from "../../domain/step-thresholds";
 import {
   fmtDuration,
   toppingAmountWithTotal,
@@ -125,7 +126,8 @@ export function ToppingSection({
       })),
       ...(topping.assembly_steps ?? []).map((step) => ({
         title: step.title,
-        body: step.description,
+        /* G3-WP-03: la variante che il motore sceglie per questa cottura. */
+        body: assemblyStepDescription(step, assemblyStepBake(step, toppingEffectiveCookSec(recipe.cook_time_sec, topping))),
       })),
       ...(topping.bake_adjustments
         ? [

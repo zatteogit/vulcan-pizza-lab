@@ -31,6 +31,14 @@ import { roundForDisplay } from "./dose-rounding";
 import { getDietaryWarnings, type DietaryWarning } from "../data/dietary-data";
 import { assessAllergens, allergenWarnings, type AllergenId, type AllergenDeclaration, type RecipeAllergens } from "../data/allergen-data";
 import { flourWText } from "./flour-w-display";
+import {
+  assemblyStepBake,
+  assemblyStepDescription,
+  BASIL_BEFORE_BAKE_MAX_SEC,
+  HIGH_HYDRATION_PCT,
+  toppingEffectiveCookSec,
+  type ToppingBakeLength,
+} from "./step-thresholds";
 
 // ═══ TYPES ═══
 
@@ -560,7 +568,6 @@ export interface GeneratedRecipe {
   pre_ferment_water_temp_c?: number | null;
   scores: RecipeScores;
   timeline: TimelineStep[];
-  tips: string[];
   science: ScientificLayer;
   /** Topping info from parametric database (Audit: topping awareness) */
   topping_info?: {
@@ -664,6 +671,9 @@ export interface TimelineStep {
   };
   /** «oil»/«fry»: passi di frittura (M-6) per gli stili fritti. */
   variant?: "whole_proof" | "during_rest" | "oil" | "fry" | "pan";
+  /** G3-WP-03 (S09-A-13): variante del passo del condimento scelta dal motore
+   *  con la cottura effettiva (basilico prima del forno o appena sfornata). */
+  bake_length?: ToppingBakeLength;
   /** D-050: quante volte si ripete la cottura (una pizza o teglia alla volta);
    *  duration_minutes è già il totale. */
   rounds?: number;
@@ -694,6 +704,14 @@ export function passiveActivityMessage(step: TimelineStep): EngineMsg | null {
       "Quando l'olio è in temperatura, controlla l'impasto: premuto con un dito, il segno torna su lentamente.")
     : em("timeline.preheat.includesProof",
       "Quando il forno è pronto, controlla l'impasto: premuto con un dito, il segno torna su lentamente.");
+}
+
+/** G3-WP-03: la soglia con cui il motore ha scelto il passo del condimento
+ *  (step.bake_length), per il «Come si fa» (nota basil-timing). */
+export function toppingBakeThresholdMsg(): EngineMsg {
+  return em("timeline.topping.basilThreshold", METHOD_MESSAGES_IT["timeline.topping.basilThreshold"], {
+    sec: BASIL_BEFORE_BAKE_MAX_SEC,
+  });
 }
 
 /** Passaggi che sono riposo o fermentazione dell'impasto: la loro somma è uguale
@@ -1269,7 +1287,7 @@ function calculateFeasibilityScore(
   let skillScore = 90;
 
   // Hydration × skill interaction — soglie più alte per Intermedio/Avanzato
-  if (hydration > 75 && skillLevel === 1) {
+  if (hydration > HIGH_HYDRATION_PCT && skillLevel === 1) {
     skillScore = 30;
     warnings.push(
       em("feas.hydrationBeginnerHigh", METHOD_MESSAGES_IT["feas.hydrationBeginnerHigh"]),
@@ -1284,7 +1302,7 @@ function calculateFeasibilityScore(
   }
 
   // W × hydration interaction — Audit Scientifico S3: W alto aiuta idratazione alta
-  if (hydration > 75 && flourW >= 300) {
+  if (hydration > HIGH_HYDRATION_PCT && flourW >= 300) {
     skillScore = Math.min(95, skillScore + 10); // farina forte assorbe bene
   } else if (hydration > 70 && flourW < 220) {
     skillScore = Math.max(20, skillScore - 10); // farina debole + alta H = disastro
@@ -2031,6 +2049,8 @@ export function generateRecipe(
     hours: number,
     tempC: number,
     yeast: "fresh" | "dry" | "sourdough",
+    /** Solo per scegliere il testo dell'impasto a mano: non cambia i tempi. */
+    doughHydration?: number,
   ) =>
     generateTimeline(
       style,
@@ -2044,6 +2064,7 @@ export function generateRecipe(
       yeast,
       preFermentType,
       constraints.dough_balls,
+      doughHydration,
     );
 
   let fermentationHours =
@@ -2299,7 +2320,7 @@ export function generateRecipe(
   };
   // Il globale si finalizza dopo il verdetto operativo, con la politica unica.
   // Timeline finale (topping e attrezzatura risolti sopra, prima del clamp).
-  const timeline = buildTimeline(fermentationHours, fermentationTempC, yeastType);
+  const timeline = buildTimeline(fermentationHours, fermentationTempC, yeastType, hydration);
   // ENG-4: se anche con la fermentazione minima (o con le ore scelte) la timeline
   // non sta nella finestra fino al pasto, lo diciamo: la UI mostra l'avviso.
   const timelineMinutes = timeline.reduce((sum, step) => sum + step.duration_minutes, 0);
@@ -2397,15 +2418,6 @@ export function generateRecipe(
     ],
     claims: [...digestResult.claims, ...sustResult.claims],
   };
-
-  // Generate tips
-  const tips = generateTips(
-    style,
-    hydration,
-    flourW,
-    ovenTemp,
-    constraints,
-  );
 
   // ── Scientific layer — con Q10 variabile a tratti continuo (ENG-2) ──
   const { model: sciQ10Model } = getQ10(yeastType, fermentationTempC);
@@ -2747,7 +2759,6 @@ export function generateRecipe(
     timeline,
     water_temp_c: waterTempC,
     pre_ferment_water_temp_c: preFermentWaterTempC,
-    tips,
     science,
     topping_info: (() => {
       const ti = getToppingByStyle(style.id);
@@ -3271,7 +3282,7 @@ interface KneadGuidance {
   tip: { beginner: EngineMsg; nerd: EngineMsg };
 }
 
-function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
+function mixerKneadGuidance(eq?: EquipmentContext, hydration?: number): KneadGuidance {
   switch (eq?.mixerType) {
     case "spiral":
       return {
@@ -3323,13 +3334,17 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
       };
       }
   }
-  // A mano (default)
+  // A mano (default). G3-WP-03 (S09-A-13): il motore conosce l'idratazione,
+  // quindi dice lui se serve lo slap & fold (niente «se l'idratazione è alta»).
+  const handsKey = hydration != null && hydration > HIGH_HYDRATION_PCT
+    ? "timeline.mix.hands.descHighHydration"
+    : "timeline.mix.hands.desc";
   return {
-        description: em("timeline.mix.hands.desc", METHOD_MESSAGES_IT["timeline.mix.hands.desc"]),
+        description: em(handsKey, METHOD_MESSAGES_IT[handsKey]),
         duration_minutes: 20,
         tip: {
           beginner: em("timeline.mix.hands.tipBeginner", METHOD_MESSAGES_IT["timeline.mix.hands.tipBeginner"]),
-          nerd: em("timeline.mix.hands.tipNerd", METHOD_MESSAGES_IT["timeline.mix.hands.tipNerd"]),
+          nerd: em("timeline.mix.hands.tipNerd", METHOD_MESSAGES_IT["timeline.mix.hands.tipNerd"], { pct: HIGH_HYDRATION_PCT }),
         },
       };
 }
@@ -3410,10 +3425,15 @@ function generateTimeline(
   preFermentType: PreFermentType = preFermentKind(style),
   /** Pizze o teglie da cuocere: una alla volta (D-050). */
   bakeRounds = 1,
+  /** G3-WP-03: idratazione della ricetta, per il testo dell'impasto a mano. */
+  hydration?: number,
 ): TimelineStep[] {
   const steps: TimelineStep[] = [];
   const phases = fermentationPhases(fermentHours, hasPreFerment, preFermentType, style.method_profile);
   const isUnleavened = !!style.dough.unleavened;
+  // Cottura effettiva (cucina effettiva + minuti del condimento): serve già qui
+  // per scegliere il testo dei passi del condimento (G3-WP-03).
+  const effectiveCookSec = toppingEffectiveCookSec(cookTimeSec, topping);
 
   // Helper per iniettare assembly_steps del topping in un certo punto.
   // Restituisce true se uno step "replaces_generic" è già stato iniettato
@@ -3424,14 +3444,17 @@ function generateTimeline(
     topping.assembly_steps
       .filter((s) => s.insert_at === point)
       .forEach((s) => {
+        // G3-WP-03 (S09-A-13, D-G3-02): un solo comando per il basilico.
+        const bake = assemblyStepBake(s, effectiveCookSec);
         steps.push({
           id: s.id,
           title: s.title,
-          description: s.description,
+          description: assemblyStepDescription(s, bake),
           duration_minutes: s.duration_minutes,
           icon: "chef-hat",
           timing_label: `${s.duration_minutes} min`,
           tip: s.tip,
+          ...(bake ? { bake_length: bake } : {}),
         });
         if (s.replaces_generic) replacedGeneric = true;
       });
@@ -3462,7 +3485,7 @@ function generateTimeline(
     steps.push({
       id: "preferment",
       title: "Prefermento",
-      description: `Mescolare ${preFermentType} e far maturare`,
+      description: `Mescola ${preFermentType} e lascia maturare`,
       duration_minutes: Math.round(phases.preferment * 60),
       icon: "beaker",
       timing_label: `${Math.round(phases.preferment)}h prima`,
@@ -3477,7 +3500,7 @@ function generateTimeline(
   const isNoKnead = style.dough.process_type.includes("no_knead");
   // No-knead: l'impastatrice è irrilevante (mescola + pieghe a mano). Altrimenti
   // la descrizione/durata/consigli cambiano col tipo di impastatrice dichiarato.
-  const knead = isNoKnead ? null : mixerKneadGuidance(equipment);
+  const knead = isNoKnead ? null : mixerKneadGuidance(equipment, hydration);
   if (isNoKnead) {
     // No-knead: testi dal CMS (timelineLabels.mix_noknead) nella UI.
     steps.push({
@@ -3486,7 +3509,7 @@ function generateTimeline(
       description:
         // FW-19 (S09-A-07): numero e intervallo delle pieghe stanno nel passo
         // «Pieghe» (FOLDING_DB), non più scritti qui con valori diversi.
-        "Mescolare gli ingredienti senza impastare, fino a sciogliere i grumi. La forza la danno poi le pieghe e il tempo.",
+        "Mescola gli ingredienti senza impastare, fino a sciogliere i grumi. La forza la danno poi le pieghe e il tempo.",
       duration_minutes: 10,
       icon: "hand",
       timing_label: "Inizio",
@@ -3588,7 +3611,7 @@ function generateTimeline(
       id: "bulk",
       title: isUnleavened ? "Riposo" : "Puntata",
       description: isUnleavened
-        ? `Lasciare riposare l'impasto coperto a ${fermentTemp}°C`
+        ? `Lascia riposare l'impasto coperto a ${fermentTemp}°C`
         : `Lievitazione in massa a ${fermentTemp}°C`,
       duration_minutes: bulkMinutes,
       icon: "clock",
@@ -3640,8 +3663,8 @@ function generateTimeline(
     description: isMultiPiece
       ? renderStepIt([divideMessage])
       : isGentleDivide
-        ? "Dividere con delicatezza, senza sgonfiare l'impasto."
-        : "Dividere in panetti del peso corretto. Formare pallina.",
+        ? "Dividi con delicatezza, senza sgonfiare l'impasto."
+        : "Dividi in panetti del peso corretto. Forma le palline.",
     duration_minutes: 15,
     icon: "scissors",
     timing_label: "15 min",
@@ -3683,7 +3706,7 @@ function generateTimeline(
       ...(proofInPan ? { variant: "pan" as const } : {}),
       title: isUnleavened ? "Riposo" : "Appretto",
       description: proofMessage ? renderStepIt([proofMessage]) : isUnleavened
-        ? `Lasciare riposare l'impasto coperto a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
+        ? `Lascia riposare l'impasto coperto a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
         : proofInPan
           ? `Lievitazione finale in teglia a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`
           : `Lievitazione finale a ${Math.max(fermentTemp, PROOF_MIN_TEMP_C)}°C`,
@@ -3869,8 +3892,8 @@ function generateTimeline(
         id: "top",
         title: "Farcitura",
         description: topping?.name
-          ? `Condire con ${topping.name} secondo la ricetta.`
-          : "Condire la pizza secondo gusto",
+          ? `Condisci con ${topping.name} secondo la ricetta.`
+          : "Condisci la pizza secondo gusto",
         duration_minutes: 5,
         icon: "chef-hat",
         timing_label: "5 min",
@@ -3883,7 +3906,6 @@ function generateTimeline(
   // Applica bake_adjustments del topping (es. patate richiedono +5 min)
   const baseTempC = actualOvenTemp ?? style.baking.temp_c_ideal;
   const ovenTempLabel = Math.min(baseTempC, Math.round(baseTempC + (topping?.bake_adjustments?.temperature_delta_c ?? 0)));
-  const effectiveCookSec = cookTimeSec + (topping?.bake_adjustments?.additional_minutes ?? 0) * 60;
   // Nota di cottura del condimento: la UI la traduce dall'id del condimento.
   const toppingBakeNote: EngineMsg[] = topping?.bake_adjustments?.note
     ? [em("topping.bakeNote", topping.bake_adjustments.note, { toppingId: topping.id })]
@@ -3937,7 +3959,7 @@ function generateTimeline(
         timing_label: formatCookTime(effectiveCookSec),
         tip: {
           beginner: "Fai scivolare la pizza nell'olio allontanandola da te e bagnala in superficie con un cucchiaio d'olio caldo: si gonfia in modo uniforme.",
-          nerd: "Il vapore interno gonfia il disco nei primi secondi; girarla a metà uniforma la crosta e la cottura del ripieno.",
+          nerd: "Il vapore interno gonfia il disco nei primi secondi; girandola a metà, crosta e ripieno cuociono in modo uniforme.",
         },
       });
     } else steps.push(
@@ -3949,7 +3971,7 @@ function generateTimeline(
           timing_label: formatCookTime(effectiveCookSec),
         },
         em("timeline.bake.title", "Cottura"),
-        [em("timeline.bake.desc", "Cuocere a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, homeMethod
+        [em("timeline.bake.desc", "Cuoci a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, homeMethod
           ? em("timeline.homeTray.bake", METHOD_MESSAGES_IT["timeline.homeTray.bake"])
           : ovenBakeSetup(equipment, ovenTempLabel)],
         {
@@ -4069,78 +4091,6 @@ export function bakeRoundRecoverySec(ovenType: OvenType | undefined): number {
   return BAKE_ROUND_RECOVERY_SEC[ovenType ?? "home"] ?? BAKE_ROUND_RECOVERY_SEC.home;
 }
 
-function generateTips(
-  style: PizzaStyle,
-  hydration: number,
-  flourW: number,
-  ovenTemp: number,
-  constraints: UserConstraints,
-): string[] {
-  const tips: string[] = [];
-
-  if (hydration > 75) {
-    tips.push(
-      "Con idratazione alta, usare la tecnica delle pieghe (stretch & fold) ogni 30 minuti nelle prime 2 ore.",
-    );
-  }
-
-  if (ovenTemp < style.baking.temp_c_ideal) {
-    tips.push(
-      `Temperatura compensata: preriscaldare il forno almeno 45 minuti. ${constraints.has_pizza_steel ? "L'acciaio per pizza migliorerà la crosta." : constraints.has_pizza_stone ? "La pietra refrattaria aiuterà la cottura." : "Considera una pietra refrattaria o piastra in acciaio."}`,
-    );
-  }
-
-  if (style.crust_type === "leopard_soft") {
-    tips.push(
-      "Per la leopardatura: il forno deve essere ben caldo e la pizza deve toccare direttamente la superficie calda.",
-    );
-  }
-
-  if ((constraints.oven_heat_profile === "gas_rear" || constraints.oven_heat_profile === "wood_side_flame")
-    && isHeatProfileCompatible(constraints.oven_heat_profile, constraints.oven_type)) {
-    tips.push(
-      "La sorgente di calore è laterale/posteriore: prepara la pala per ruotare spesso la pizza, non aspettare che un lato sia già scuro.",
-    );
-  }
-
-  if (style.dough.process_type.includes("no_knead")) {
-    tips.push(
-      "Non impastare! Mescolare con spatola fino a idratare, poi pieghe a intervalli regolari.",
-    );
-  }
-
-  if (flourW > 320) {
-    tips.push(
-      "Con farine forti (W>320), l'impasto richiede più tempo per rilassarsi. Pazienza nella stesura.",
-    );
-  }
-
-  if (style.shape.shape_type === "rectangular") {
-    tips.push(
-      "Oliare bene la teglia. Stendere con le dita partendo dal centro verso i bordi.",
-    );
-  }
-
-  // Topping tip from parametric database (Audit recommendation: topping awareness)
-  const toppingInfo = getToppingByStyle(style.id);
-  if (toppingInfo) {
-    if (toppingInfo.saucePosition === "sopra") {
-      tips.push(
-        `Condimento: ordine invertito per ${style.name}. ${toppingInfo.note}`,
-      );
-    } else if (toppingInfo.cheesePosition === "interno") {
-      tips.push(
-        `Formaggio: ${toppingInfo.cheeseType} — ${toppingInfo.note}`,
-      );
-    } else if (toppingInfo.cheeseType !== "Nessuno" && ovenTemp < 300) {
-      tips.push(
-        `Con forno <300°C e ${toppingInfo.cheeseType}: aggiungere il formaggio negli ultimi 3-5 minuti per evitare bruciature.`,
-      );
-    }
-  }
-
-  return tips;
-}
 
 // ═══ OVEN PRESETS ═══
 

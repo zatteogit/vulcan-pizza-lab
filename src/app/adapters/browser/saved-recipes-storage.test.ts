@@ -74,7 +74,14 @@ describe("ricettario nel browser (U-1)", () => {
   it("annulla dopo l'eliminazione rimette la ricetta", () => {
     const [saved] = saveRecipe(draft(60));
     removeRecipe(saved.id);
-    expect(restoreRecipe(saved).map((r) => r.id)).toEqual([saved.id]);
+    expect(restoreRecipe(saved).recipes.map((r) => r.id)).toEqual([saved.id]);
+  });
+
+  it("annulla con lo storage pieno dice che non è riuscito", () => {
+    const [saved] = saveRecipe(draft(60));
+    removeRecipe(saved.id);
+    storage.failWrites = true;
+    expect(restoreRecipe(saved)).toEqual({ ok: false, recipes: [] });
   });
 
   it("esporta e reimporta in un altro browser senza doppioni", () => {

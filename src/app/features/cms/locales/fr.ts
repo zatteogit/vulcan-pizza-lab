@@ -917,9 +917,11 @@ export const FR_LOCALE: CmsContent = {
     "timeline.mix.generic.desc": "Au pétrin : crochet à vitesse lente ~10 min jusqu'à ce que le réseau de gluten soit formé. Lisse et élastique.",
     "timeline.mix.generic.tipBeginner": "C'est prêt quand la pâte s'enroule autour du crochet et se décolle des parois.",
     "timeline.mix.generic.tipNerd": "Contrôlez la température finale de la pâte (~24°C) : au-delà, le gluten se dégrade.",
-    "timeline.mix.hands.desc": "Pétrissez à la main jusqu'à former le réseau de gluten (~15-20 min) : rabats sur le plan de travail, slap & fold si l'hydratation est élevée.",
+    "timeline.mix.hands.desc": "Pétrissez à la main jusqu'à former le réseau de gluten (~15-20 min), en rabattant la pâte sur le plan de travail.",
+    "timeline.mix.hands.descHighHydration": "Pétrissez à la main jusqu'à former le réseau de gluten (~15-20 min) en slap & fold.",
     "timeline.mix.hands.tipBeginner": "La pâte est prête quand elle est lisse et se détache des mains. Si elle colle trop, attendez 5 min et réessayez.",
-    "timeline.mix.hands.tipNerd": "Le réseau de gluten se forme quand la gluténine et la gliadine créent des ponts disulfures stables. Le test du voile vérifie ce réseau.",
+    "timeline.mix.hands.tipNerd": "Le réseau de gluten se forme quand la gluténine et la gliadine créent des ponts disulfures stables. Le test du voile vérifie ce réseau. Au-delà de {pct} % d'hydratation, on passe au slap & fold.",
+    "timeline.topping.basilThreshold": "Pour une cuisson jusqu'à {sec}, le basilic va au four avec la pizza, sinon après : c'est notre choix, pas une mesure.",
     "timeline.oven.topGrillStone": "Gril/résistance du haut puissante : préchauffez avec la pierre ou l'acier en position mi-haute, puis passez en gril seulement pendant les dernières 45-75s pour colorer le bord.",
     "timeline.oven.topGrillShelf": "Gril/résistance du haut puissante : préchauffez avec la grille en position mi-haute, puis passez en gril seulement pendant les dernières 45-75s pour colorer le bord.",
     "timeline.oven.bottomBoost": "Résistance du bas dominante : enfournez en partie basse pour donner de la poussée à la base, puis montez d'un niveau si le dessus reste pâle.",
@@ -949,9 +951,9 @@ export const FR_LOCALE: CmsContent = {
     "auth.layoutChanged": "Format différent de la référence : cette variante change la structure",
     "auth.directMethod": "La référence utilise une pâte directe : le préferment modifie la méthode",
     "formula.withoutPotato": "Version sans pomme de terre dans la pâte.",
-    "timeline.proof.apiter": "Apprêt en récipient fermé à température ambiante. La durée inclut le préchauffage ; vérifier élasticité et développement.",
-    "timeline.shape.apiter": "Avant d’étaler, vérifier au moins 19°C à cœur. Étirer avec les doigts sur le plan fariné, transférer sur les avant-bras dans la plaque légèrement huilée et répartir jusqu’aux angles.",
-    "timeline.shape.doubleThinSheet": "Étirer à la main deux feuilles très fines, presque transparentes, le dos des mains sous la pâte ; éviter les déchirures.",
+    "timeline.proof.apiter": "Apprêt en récipient fermé à température ambiante. La durée inclut le préchauffage ; vérifiez l'élasticité et le développement.",
+    "timeline.shape.apiter": "Avant d’étaler, vérifiez qu'il fait au moins 19°C à cœur. Étirez avec les doigts sur le plan fariné, transférez sur les avant-bras dans la plaque légèrement huilée et répartissez jusqu’aux angles.",
+    "timeline.shape.doubleThinSheet": "Étirez à la main deux feuilles très fines, presque transparentes, le dos des mains sous la pâte ; évitez les déchirures.",
     "timeline.shape.stacked": "Étalez le premier disque dans la plaque huilée ; gardez le second de côté.",
     "timeline.shape.closedStuffed": "Étalez le disque de base dans la plaque, en gardant le second pour fermer.",
     "timeline.shape.rectangular": "Étalez à la main dans la plaque huilée",
@@ -1023,9 +1025,8 @@ export const FR_LOCALE: CmsContent = {
   timelineLabels: {
     preferment: {
       title: "Pr\u00E9-Ferment",
-      desc: "M\u00E9langer {type} et laisser m\u00FBrir",
-      tipBeginner:
-        'Le pr\u00E9-ferment est comme un "ap\u00E9ritif" pour la levure. M\u00E9langer et laisser reposer couvert.',
+      desc: "Mélangez {type} et laissez mûrir",
+      tipBeginner: "Le pré-ferment est comme un \"apéritif\" pour la levure. Mélangez et laissez reposer à couvert.",
       tipNerd:
         "Le pr\u00E9-ferment produit des acides organiques (lactique/ac\u00E9tique) qui abaissent le pH \u00E0 ~4,5, am\u00E9liorant le r\u00E9seau de gluten.",
       longDesc: "Le poolish, c'est de la farine et de l'eau \u00E0 parts \u00E9gales avec la levure, qu'on laisse m\u00FBrir avant la p\u00E2te. Dissolvez la levure dans l'eau, ajoutez la farine et m\u00E9langez \u00E0 la cuill\u00E8re jusqu'\u00E0 obtenir une p\u00E2te molle. Couvrez et laissez m\u00FBrir {hours} \u00E0 {prefTemp}. Il est pr\u00EAt quand la surface est couverte de bulles et que le centre commence \u00E0 peine \u00E0 retomber ; il sent l\u00E9g\u00E8rement acidul\u00E9.",
@@ -1033,11 +1034,9 @@ export const FR_LOCALE: CmsContent = {
     },
     mix: {
       title: "P\u00E9trissage",
-      desc: "P\u00E9trir jusqu'\u00E0 obtenir une p\u00E2te lisse et \u00E9lastique.",
-      descAlt:
-        "M\u00E9langer les ingr\u00E9dients sans p\u00E9trir. S\u00E9rie de plis.",
-      tipBeginner:
-        "La p\u00E2te est pr\u00EAte quand elle est lisse et se d\u00E9tache des mains. Si trop collante, attendre 5 min et r\u00E9essayer.",
+      desc: "Pétrissez jusqu'à obtenir une pâte lisse et élastique.",
+      descAlt: "Mélangez les ingrédients sans pétrir. Série de plis.",
+      tipBeginner: "La pâte est prête quand elle est lisse et se détache des mains. Si elle colle trop, attendez 5 min et réessayez.",
       tipNerd:
         "Le test du voile confirme le d\u00E9veloppement du gluten : glut\u00E9nine et gliadine forment des ponts disulfures stables.",
       longDesc: "Dissolvez la levure dans l'eau, puis versez progressivement la farine en m\u00E9langeant. Une fois la farine incorpor\u00E9e, ajoutez le sel et enfin l'huile. Travaillez la p\u00E2te (\u00E0 la main ou au robot) jusqu'\u00E0 ce qu'elle soit lisse, \u00E9lastique et se d\u00E9colle des parois du r\u00E9cipient : comptez 10-15 minutes \u00E0 la main, 6-8 au robot. Test du voile : \u00E9tirez un petit morceau de p\u00E2te entre vos doigts \u2014 s'il devient translucide sans se d\u00E9chirer, c'est pr\u00EAt.",
@@ -1045,8 +1044,7 @@ export const FR_LOCALE: CmsContent = {
     mix_noknead: {
       title: "M\u00E9lange",
       desc: "Mélangez sans pétrir jusqu'à dissoudre les grumeaux. Les plis et le temps font le reste.",
-      tipBeginner:
-        "Pas besoin de p\u00E9trir ! M\u00E9langer avec une spatule jusqu'\u00E0 disparition des grumeaux secs.",
+      tipBeginner: "Pas besoin de pétrir ! Mélangez avec une spatule jusqu'à ce qu'il ne reste plus de grumeaux secs.",
       tipNerd:
         "L'autolyse exploite les prot\u00E9inases endog\u00E8nes de la farine pour d\u00E9velopper le gluten sans travail m\u00E9canique.",
       longDesc: "Pas de p\u00E9trin : une spatule ou une main suffit. Versez l'eau dans le r\u00E9cipient, ajoutez la levure dissoute, puis la farine et enfin le sel. M\u00E9langez grossi\u00E8rement jusqu'\u00E0 ce qu'il ne reste plus de grumeaux de farine s\u00E8che (2-3 minutes suffisent). La p\u00E2te sera collante et irr\u00E9guli\u00E8re \u2014 c'est normal. Couvrez et laissez reposer : le gluten se d\u00E9veloppera tout seul avec le temps et les plis suivants.",
@@ -1054,32 +1052,29 @@ export const FR_LOCALE: CmsContent = {
     bulk: {
       title: "Pointage",
       desc: "Fermentation en masse \u00E0 {temp}",
-      tipBeginner:
-        "La p\u00E2te doit doubler de volume. S'il fait chaud, v\u00E9rifier plus souvent !",
+      tipBeginner: "La pâte doit doubler de volume. S'il fait chaud, vérifiez plus souvent !",
       tipNerd:
         "À {temp}, le modèle estime une vitesse de fermentation de {factor}× par rapport à {refTemp}. Cela ne mesure ni la réduction des FODMAP ni la digestibilité.",
-      longDesc: "La pâte repose en une seule masse, dans un récipient huilé et couvert d'un film au contact. C'est pendant cette phase que la levure travaille et développe arôme, structure et digestibilité. Si le style prévoit des plis, leur nombre et leur intervalle figurent dans une étape ou un conseil à part. La fermentation est terminée quand le volume a doublé et que la surface est bombée et lisse.",
+      longDesc: "La pâte repose en une seule masse, dans un récipient huilé et couvert d'un film au contact. C'est pendant cette phase que la levure travaille et développe arôme, structure et digestibilité. La fermentation est terminée quand le volume a doublé et que la surface est bombée et lisse.",
     },
     bulk_cold: {
       title: "Pointage",
       desc: "Fermentation en masse \u00E0 {temp}",
-      tipBeginner:
-        "Au frigo la p\u00E2te monte lentement mais gagne en saveur. Bien couvrir avec un film au contact.",
+      tipBeginner: "Au frigo la pâte monte lentement mais gagne en saveur. Couvrez-la bien avec un film au contact.",
       tipNerd:
         "À {temp}, le modèle estime une vitesse de fermentation de {factor}× par rapport à {refTemp}. Cela ne mesure ni la réduction des FODMAP ni la digestibilité.",
       longDesc: "Placez le récipient avec la pâte au réfrigérateur ({fridgeTemp}). Au frigo, la levure travaille beaucoup plus lentement : il faut bien plus de temps, mais en échange vous gagnez en complexité aromatique, en digestibilité et en réseau de gluten plus développé. Couvrez toujours d'un film au contact pour éviter que la surface ne sèche. Vous pouvez la diviser dès sa sortie du frigo : elle s'acclimate pendant l'apprêt.",
     },
     rest: {
       title: "Repos",
-      desc: "Laisser reposer la pâte couverte à {temp}",
+      desc: "Laissez reposer la pâte couverte à {temp}",
       tipBeginner: "Sans levure, la pâte ne lève pas : le repos détend le gluten, la feuille s'étire finement sans se rétracter.",
       tipNerd: "Le repos complète l'hydratation de la farine et détend le réseau de gluten : moins de rétraction élastique, une feuille presque translucide.",
     },
     divide: {
       title: "Division",
-      desc: "Diviser en p\u00E2tons du poids correct. Former une boule.",
-      tipBeginner:
-        "Utilisez une balance ! Couper avec un coupe-p\u00E2te et arrondir chaque morceau en boule lisse.",
+      desc: "Divisez en pâtons du poids correct. Formez des boules.",
+      tipBeginner: "Utilisez une balance ! Coupez avec un coupe-pâte et arrondissez chaque morceau en boule lisse.",
       tipNerd:
         "La division cr\u00E9e une tension superficielle qui emprisonne le CO\u2082 pendant l'appr\u00EAt.",
       longDesc: "Renversez la p\u00e2te sur un plan l\u00e9g\u00e8rement farin\u00e9. Avec un coupe-p\u00e2te, coupez des portions du poids indiqu\u00e9 dans cette \u00e9tape, en les pesant sur une balance (c'est important pour une cuisson uniforme). Pour chaque morceau, faites le \u00ab boulage \u00bb : rabattez les bords vers le dessous au centre, tournez et arrondissez jusqu'\u00e0 obtenir une boule lisse et tendue. Disposez les p\u00e2tons sur une plaque farin\u00e9e, bien espac\u00e9s, et couvrez de film.",
@@ -1102,30 +1097,28 @@ export const FR_LOCALE: CmsContent = {
     },
     shape: {
       title: "Fa\u00E7onnage",
-      desc: "\u00C9taler \u00E0 la main depuis le centre, pr\u00E9server le bord",
-      descAlt:
-        "\u00C9taler dans le moule huil\u00E9 \u00E0 la main",
+      desc: "Étalez à la main depuis le centre en préservant le bord",
+      descAlt: "Étalez la pâte à la main dans le moule huilé",
     },
     shape_thin: {
       title: "Fa\u00E7onnage",
-      desc: "\u00C9taler au rouleau, ultrafine",
+      desc: "Étalez au rouleau, ultrafine",
     },
     top: {
       title: "Garniture",
-      desc: "Garnir la pizza selon vos go\u00FBts",
+      desc: "Garnissez la pizza selon vos goûts",
     },
     bake: {
       title: "Cuisson",
-      desc: "Cuire \u00E0 {temp}",
-      tipBeginner:
-        "Le four doit \u00EAtre tr\u00E8s chaud. Pr\u00E9chauffer au moins 30 minutes avant.",
+      desc: "Faites cuire à {temp}",
+      tipBeginner: "Le four doit être très chaud. Préchauffez-le au moins 30 minutes avant.",
       tipNerd:
         "La r\u00E9action de Maillard d\u00E9marre \u00E0 ~140\u00B0C et acc\u00E9l\u00E8re exponentiellement. \u00C0 {temp} la caram\u00E9lisation cr\u00E9e ~600 compos\u00E9s aromatiques.",
       longDesc: "Pr\u00E9chauffez le four \u00E0 la temp\u00E9rature maximale pendant 30-45 minutes (\u00E0 four froid, \u00E7a ne marche pas !). Si vous avez une pierre ou un acier, faites-les bien chauffer. Enfournez la pizza sur le niveau haut/central. N'ouvrez PAS le four pendant les 5 premi\u00E8res minutes \u2014 vous perdriez la pouss\u00E9e thermique. La pizza est pr\u00EAte quand le bord est dor\u00E9/l\u00E9opard\u00E9 et le fond croustillant.",
     },
     divide_teglia: {
       title: "Division",
-      desc: "Diviser d\u00E9licatement, sans d\u00E9gazer la p\u00E2te.",
+      desc: "Divisez délicatement, sans dégazer la pâte.",
       longDesc: "Renversez la p\u00e2te sur le plan bien farin\u00e9 (avec les hydratations \u00e9lev\u00e9es, aidez-vous de semoule). Avec un coupe-p\u00e2te, coupez les portions du poids indiqu\u00e9 dans cette \u00e9tape, en les pesant sur une balance. Manipulez le moins possible : pour la plaque, PAS besoin du boulage serr\u00e9 de la pizza ronde \u2014 rabattez les bords dessous pour former un boudin souple, sans chasser l'air. Les bulles form\u00e9es pendant le pointage sont le futur alv\u00e9olage. Placez chaque morceau dans un r\u00e9cipient huil\u00e9 et couvrez.",
       tipBeginner: "Mains d\u00E9licates ! Les bulles dans la p\u00E2te sont pr\u00E9cieuses : rabattez les bords dessous, sans \u00E9craser.",
       tipNerd: "Avec une hydratation >75%, une division agressive fait s'effondrer les alv\u00E9oles form\u00E9es pendant le pointage : tension minimale, d\u00E9gazage quasi nul.",
@@ -1716,7 +1709,6 @@ export const FR_LOCALE: CmsContent = {
     optimizeForMe: "Adapter à ma cuisine",
     resetToOriginal: "Revenir à la référence",
     saveVersion: "Enregistrer dans le carnet",
-    savedVersion: "Enregistr\u00E9e dans le carnet",
     optimizedForSetup: "Adaptée à votre cuisine",
     doneBody: "Vous avez termin\u00E9 toutes les \u00E9tapes de votre {style}. Bon app\u00E9tit !",
     tabProcedure: "M\u00E9thode",

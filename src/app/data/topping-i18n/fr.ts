@@ -2518,9 +2518,10 @@ export const TOPPING_I18N_FR: ToppingTranslation = {
   steps: {
     spread_margherita_avpn: {
       title: "Garniture Margherita Verace",
-      description: "Étalez uniformément les tomates pelées écrasées à la main. Disposez le fior di latte en lanières ou en dés. Un filet d'huile d'olive vierge extra avant le four. Basilic frais avant le four si la cuisson dure quelques minutes ; avec un four domestique, ajoutez-le à la sortie du four.",
+      description: "Étalez uniformément les tomates pelées écrasées à la main, disposez le fior di latte en lanières ou en dés et ajoutez un filet d'huile d'olive vierge extra. Ajoutez le basilic frais à la sortie du four.",
+      description_short_bake: "Étalez uniformément les tomates pelées écrasées à la main, disposez le fior di latte en lanières ou en dés et ajoutez un filet d'huile d'olive vierge extra. Terminez avec le basilic frais avant d'enfourner.",
       tip_beginner: "Cahier des charges AVPN : tomates pelées DOP, mozzarella de Campanie, basilic frais. De l'huile d'olive vierge extra, oui, mais peu.",
-      tip_nerd: "La cuisson éclair de 90s à 450°C préserve le basilic frais (la pizza reste trop peu de temps au four pour l'abîmer). Contrairement aux fours domestiques lents, où il faut l'ajouter après.",
+      tip_nerd: "Avec la cuisson éclair de la napolitaine, le basilic reste trop peu de temps au four pour noircir ; avec une cuisson longue, il sèche et fonce : on l'ajoute donc après.",
     },
     spread_margherita_romana: {
       title: "Garniture Margherita romaine",

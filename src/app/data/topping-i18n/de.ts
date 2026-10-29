@@ -2518,9 +2518,10 @@ export const TOPPING_I18N_DE: ToppingTranslation = {
   steps: {
     spread_margherita_avpn: {
       title: "Belag Margherita Verace",
-      description: "Verteile die von Hand zerdrückten geschälten Tomaten gleichmäßig. Lege den Fior di latte in Streifen oder Würfeln darauf. Ein Faden natives Olivenöl extra vor dem Ofen. Frisches Basilikum vor dem Ofen, wenn das Backen nur ein paar Minuten dauert; im Heimofen direkt nach dem Backen dazugeben.",
+      description: "Verteile die von Hand zerdrückten geschälten Tomaten gleichmäßig, lege den Fior di latte in Streifen oder Würfeln darauf und gib einen Faden natives Olivenöl extra dazu. Das frische Basilikum gibst du direkt nach dem Backen dazu.",
+      description_short_bake: "Verteile die von Hand zerdrückten geschälten Tomaten gleichmäßig, lege den Fior di latte in Streifen oder Würfeln darauf und gib einen Faden natives Olivenöl extra dazu. Leg das frische Basilikum vor dem Backen auf.",
       tip_beginner: "AVPN-Regelwerk: geschälte DOP-Tomaten, Mozzarella aus Kampanien, frisches Basilikum. Natives Olivenöl extra ja, aber sparsam.",
-      tip_nerd: "Das 90s-Blitzbacken bei 450°C schont das frische Basilikum (die Pizza ist zu kurz im Ofen, um es abzubauen). Anders als im langsamen Heimofen, wo es danach dazukommt.",
+      tip_nerd: "Beim Blitzbacken der Neapolitanischen bleibt das Basilikum zu kurz im Ofen, um schwarz zu werden; bei langem Backen trocknet es aus und wird dunkel, deshalb kommt es danach dazu.",
     },
     spread_margherita_romana: {
       title: "Belag Margherita romana",

@@ -917,9 +917,11 @@ export const ES_LOCALE: CmsContent = {
     "timeline.mix.generic.desc": "Con amasadora: gancho a baja velocidad ~10 min hasta desarrollar la malla glutínica. Lisa y elástica.",
     "timeline.mix.generic.tipBeginner": "Está lista cuando la masa se enrolla en el gancho y se despega de las paredes.",
     "timeline.mix.generic.tipNerd": "Controla la temperatura final de la masa (~24°C): por encima, el gluten se degrada.",
-    "timeline.mix.hands.desc": "Amasa a mano hasta desarrollar la malla glutínica (~15-20 min): pliegues sobre la encimera, slap & fold si la hidratación es alta.",
+    "timeline.mix.hands.desc": "Amasa a mano hasta desarrollar la malla glutínica (~15-20 min), con pliegues sobre la encimera.",
+    "timeline.mix.hands.descHighHydration": "Amasa a mano hasta desarrollar la malla glutínica (~15-20 min) con slap & fold.",
     "timeline.mix.hands.tipBeginner": "La masa está lista cuando está lisa y se despega de las manos. Si se pega demasiado, espera 5 min y vuelve a intentarlo.",
-    "timeline.mix.hands.tipNerd": "La malla glutínica se forma cuando la glutenina y la gliadina crean puentes disulfuro estables. La prueba de la membrana comprueba la red de gluten.",
+    "timeline.mix.hands.tipNerd": "La malla glutínica se forma cuando la glutenina y la gliadina crean puentes disulfuro estables. La prueba de la membrana comprueba la red de gluten. Por encima del {pct} % de hidratación se pasa al slap & fold.",
+    "timeline.topping.basilThreshold": "Con cocciones de hasta {sec}, la albahaca va al horno con la pizza; si no, después: es una elección nuestra, no una medida.",
     "timeline.oven.topGrillStone": "Gratinador/resistencia superior potente: precalienta con la piedra o el acero en una altura media-alta y pasa al gratinador solo en los últimos 45-75s para dorar el borde.",
     "timeline.oven.topGrillShelf": "Gratinador/resistencia superior potente: precalienta con la rejilla en una altura media-alta y pasa al gratinador solo en los últimos 45-75s para dorar el borde.",
     "timeline.oven.bottomBoost": "Resistencia inferior dominante: hornea en la parte baja para dar empuje a la base y sube un nivel si la parte de arriba queda pálida.",
@@ -949,9 +951,9 @@ export const ES_LOCALE: CmsContent = {
     "auth.layoutChanged": "Formato distinto de la referencia: la variante cambia la estructura de la receta",
     "auth.directMethod": "La referencia usa una masa directa: el prefermento cambia el método",
     "formula.withoutPotato": "Versión sin patata en la masa.",
-    "timeline.proof.apiter": "Fermentar en un recipiente cerrado a temperatura ambiente. El tiempo incluye el precalentamiento; comprobar elasticidad y desarrollo.",
-    "timeline.shape.apiter": "Antes de estirar, comprobar al menos 19°C en el centro. Estirar con los dedos sobre una superficie enharinada, pasar sobre los antebrazos a la bandeja ligeramente aceitada y extender hasta las esquinas.",
-    "timeline.shape.doubleThinSheet": "Estirar a mano dos láminas finísimas, casi transparentes, con el dorso de las manos debajo; evitar desgarros.",
+    "timeline.proof.apiter": "Deja fermentar en un recipiente cerrado a temperatura ambiente. El tiempo incluye el precalentamiento; comprueba la elasticidad y el desarrollo.",
+    "timeline.shape.apiter": "Antes de estirar, comprueba que el centro esté al menos a 19°C. Estira con los dedos sobre una superficie enharinada, pásala sobre los antebrazos a la bandeja ligeramente aceitada y extiéndela hasta las esquinas.",
+    "timeline.shape.doubleThinSheet": "Estira a mano dos láminas finísimas, casi transparentes, con el dorso de las manos debajo; evita desgarros.",
     "timeline.shape.stacked": "Estira el primer disco en la bandeja aceitada; reserva el segundo.",
     "timeline.shape.closedStuffed": "Estira el disco de base en la bandeja y reserva el segundo para cerrar.",
     "timeline.shape.rectangular": "Estira la masa con las manos en la bandeja aceitada",
@@ -1023,7 +1025,7 @@ export const ES_LOCALE: CmsContent = {
   timelineLabels: {
     preferment: {
       title: "Prefermento",
-      desc: "Mezclar {type} y dejar madurar",
+      desc: "Mezcla {type} y deja madurar",
       tipBeginner:
         'El prefermento es como un "aperitivo" para la levadura. Mezcla y deja reposar tapado.',
       tipNerd:
@@ -1033,9 +1035,8 @@ export const ES_LOCALE: CmsContent = {
     },
     mix: {
       title: "Amasado",
-      desc: "Amasar hasta conseguir la malla glut\u00EDnica. Liso y el\u00E1stico.",
-      descAlt:
-        "Mezclar los ingredientes sin amasar. Serie de pliegues.",
+      desc: "Amasa hasta conseguir la malla glutínica: lisa y elástica.",
+      descAlt: "Mezcla los ingredientes sin amasar. Serie de pliegues.",
       tipBeginner:
         "La masa est\u00E1 lista cuando es lisa y se despega de las manos. Si pega demasiado, espera 5 min y vuelve a intentar.",
       tipNerd:
@@ -1058,7 +1059,7 @@ export const ES_LOCALE: CmsContent = {
         "La masa debe duplicar su volumen. \u00A1Si hace calor, revisa m\u00E1s seguido!",
       tipNerd:
         "A {temp}, el modelo estima una velocidad de fermentación de {factor}× respecto a {refTemp}. No mide la reducción de FODMAP ni la digestibilidad.",
-      longDesc: "La masa reposa en una sola pieza, dentro de un recipiente untado con aceite y cubierta con film en contacto. Es en esta fase cuando la levadura trabaja y desarrolla aroma, estructura y digestibilidad. Si el estilo prevé pliegues, su número y su intervalo están en un paso o un consejo aparte. La fermentación está completa cuando el volumen se ha duplicado y la superficie está abombada y lisa.",
+      longDesc: "La masa reposa en una sola pieza, dentro de un recipiente untado con aceite y cubierta con film en contacto. Es en esta fase cuando la levadura trabaja y desarrolla aroma, estructura y digestibilidad. La fermentación está completa cuando el volumen se ha duplicado y la superficie está abombada y lisa.",
     },
     bulk_cold: {
       title: "Fermentaci\u00F3n en bloque",
@@ -1071,13 +1072,13 @@ export const ES_LOCALE: CmsContent = {
     },
     rest: {
       title: "Reposo",
-      desc: "Dejar reposar la masa tapada a {temp}",
+      desc: "Deja reposar la masa tapada a {temp}",
       tipBeginner: "Sin levadura la masa no crece: el reposo relaja el gluten y la lámina se estira fina sin encogerse.",
       tipNerd: "El reposo completa la hidratación de la harina y relaja la red de gluten: menos retracción elástica, lámina casi transparente.",
     },
     divide: {
       title: "Boleado",
-      desc: "Dividir en bolas del peso correcto. Formar bola.",
+      desc: "Divide en porciones del peso correcto y forma las bolas.",
       tipBeginner:
         "\u00A1Usa una b\u00E1scula! Corta con una rasqueta y redondea cada trozo en una bola lisa.",
       tipNerd:
@@ -1102,20 +1103,20 @@ export const ES_LOCALE: CmsContent = {
     },
     shape: {
       title: "Estirado",
-      desc: "Estirar a mano desde el centro, preservar el borde",
-      descAlt: "Estirar en la bandeja aceitada con las manos",
+      desc: "Estira a mano desde el centro y preserva el borde",
+      descAlt: "Estira la masa con las manos en la bandeja aceitada",
     },
     shape_thin: {
       title: "Estirado",
-      desc: "Estirar con rodillo, ultrafina",
+      desc: "Estira con rodillo, ultrafina",
     },
     top: {
       title: "Cobertura",
-      desc: "Cubrir la pizza al gusto",
+      desc: "Cubre la pizza al gusto",
     },
     bake: {
       title: "Cocci\u00F3n",
-      desc: "Hornear a {temp}",
+      desc: "Hornea a {temp}",
       tipBeginner:
         "El horno debe estar muy caliente. Precalienta al menos 30 minutos antes.",
       tipNerd:
@@ -1124,7 +1125,7 @@ export const ES_LOCALE: CmsContent = {
     },
     divide_teglia: {
       title: "Divisi\u00F3n",
-      desc: "Dividir con delicadeza, sin desgasificar la masa.",
+      desc: "Divide con delicadeza, sin desgasificar la masa.",
       longDesc: "Vuelca la masa sobre la superficie bien enharinada (con hidrataciones altas, ay\u00fadate con s\u00e9mola). Con una rasqueta, corta porciones del peso indicado en este paso y p\u00e9salas en una b\u00e1scula. Manip\u00falala lo menos posible: para la bandeja NO hace falta el boleado apretado de la pizza redonda; dobla los extremos por debajo formando un pan alargado suave, sin expulsar el aire. Las burbujas creadas en la fermentaci\u00f3n en bloque ser\u00e1n el futuro alveolado. Pon cada porci\u00f3n en un recipiente untado y cubre.",
       tipBeginner: "\u00A1Manos delicadas! Las burbujas de la masa son valiosas: dobla los extremos por debajo, sin aplastar.",
       tipNerd: "Con hidrataci\u00F3n >75% una divisi\u00F3n agresiva colapsa los alveolos formados en la fermentaci\u00F3n en bloque: tensi\u00F3n m\u00EDnima, desgasificaci\u00F3n casi nula.",
@@ -1710,7 +1711,6 @@ export const ES_LOCALE: CmsContent = {
     optimizeForMe: "Adaptar a mi cocina",
     resetToOriginal: "Volver a la referencia",
     saveVersion: "Guardar en el recetario",
-    savedVersion: "Guardada en el recetario",
     optimizedForSetup: "Adaptada a tu cocina",
     doneBody: "Has completado todos los pasos de tu {style}. \u00A1Buen provecho!",
     tabProcedure: "Procedimiento",

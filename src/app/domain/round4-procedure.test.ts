@@ -45,7 +45,7 @@ describe("round 4: ingredients and procedural ownership", () => {
       const instructions = r.steps.filter((s: any) => /\b(?:friggere|friggi)\b/i.test(s.description));
       expect(instructions.map((s: any) => s.id)).toEqual(["bake"]);
       const fill = r.steps.find((s: any) => /fill/.test(s.id));
-      expect(fill.description).toMatch(/sigillare/i);
+      expect(fill.description).toMatch(/\bsigilla\b/i);
       expect(r.steps.indexOf(fill)).toBeLessThan(r.steps.findIndex((s: any) => s.id === "bake"));
       expect(r.steps.find((s: any) => s.id === "bake").rounds).toBe(4);
       coherentSchedule(r);
@@ -62,7 +62,7 @@ describe("round 4: ingredients and procedural ownership", () => {
       expect(ids).not.toContain("split_fill");
       expect(ids).not.toContain("mortazza_post_bake");
       expect(ids).not.toContain("bake2");
-      expect(r.steps.filter((s: any) => /separare i due strati/i.test(s.description))).toHaveLength(1);
+      expect(r.steps.filter((s: any) => /separa i due strati/i.test(s.description))).toHaveLength(1);
       const bake = r.steps.find((s: any) => s.id === "bake");
       expect(bake.duration_minutes * 60).toBeGreaterThanOrEqual(r.cook_time_sec * r.dough_balls);
       coherentSchedule(r);
@@ -79,7 +79,7 @@ describe("round 4: ingredients and procedural ownership", () => {
     for (const topping_id of ["bianca_mortazza_romana", "patate_porchetta"]) {
       const r = recipe({ style_id: "pizza_baciata", topping_id });
       expect(r.steps.some((s: any) => s.id === "bake2")).toBe(false);
-      expect(r.steps.filter((s: any) => /separare i due strati/i.test(s.description))).toHaveLength(1);
+      expect(r.steps.filter((s: any) => /separa i due strati/i.test(s.description))).toHaveLength(1);
       coherentSchedule(r);
     }
   });

@@ -1,4 +1,4 @@
-import { passiveActivityMessage } from "../../domain/pizza-engine";
+import { passiveActivityMessage, toppingBakeThresholdMsg } from "../../domain/pizza-engine";
 /* ═══ RECIPE OUTPUT — helper puri (estratti dall'audit lug 2026) ═══
  * Formattazione, clock, ottimizzatore comodità, localizzazione step.
  * Nessun JSX: solo funzioni pure riusate da recipe-output e dalle sue sezioni. */
@@ -409,7 +409,7 @@ function localizeKeyedStep(
     };
   }
   // Passo di un condimento (assembly / pre_prep): si riconosce dall'id.
-  const topping = localizeToppingStepText(step.id, toppingTr);
+  const topping = localizeToppingStepText(step.id, toppingTr, step.bake_length);
   if (topping) {
     return {
       title: topping.title ?? step.title,
@@ -426,7 +426,12 @@ function localizeKeyedStep(
 export function localizeStep(
   step: TimelineStep, recipe: GeneratedRecipe, cms: CmsContent, fmt?: ReturnType<typeof createFormatter>,
 ) {
-  const localized = localizeStepBase(step, recipe, cms, fmt);
+  const base = localizeStepBase(step, recipe, cms, fmt);
+  // G3-WP-03 (S09-A-13): il «Come si fa» dichiara la soglia con cui il motore
+  // ha scelto il passo del condimento (nota basil-timing).
+  const localized = step.bake_length && base.tip
+    ? { ...base, tip: { ...base.tip, nerd: `${base.tip.nerd} ${engineMsgTexts([toppingBakeThresholdMsg()], cms, fmt?.bcp47 ?? "it-IT")[0]}` } }
+    : base;
   const activity = passiveActivityMessage(step);
   if (!activity) return localized;
   const note = engineMsgTexts([activity], cms, fmt?.bcp47 ?? "it-IT")[0];

@@ -840,6 +840,11 @@ export const SCIENCE_DE: CmsScience = {
       l1: "Die Zeit zwischen zwei Backvorgängen ist eine Annahme des Modells.",
       l2: "Zwischen zwei Pizzen wird herausgeholt, eingeschossen und die Backfläche kommt wieder auf Temperatur: Der Haushaltsofen mit Stein braucht Minuten, Pizzaöfen weniger, Holzöfen fast nichts. Wir verwenden einen festen Wert pro Ofentyp, nicht an deinem Ofen gemessen.",
     },
+    "basil-timing": {
+      title: "Wann das Basilikum dazukommt",
+      l1: "Bei kurzen Backzeiten kommt das Basilikum mit der Pizza in den Ofen, bei langen danach. Die Schwelle ist eine Wahl von {brand}.",
+      l2: "Basilikumblätter sind dünn und voller Wasser: Beim Blitzbacken bleiben sie grün, bei langem Backen trocknen sie aus und werden schwarz. Die Schwelle zwischen den beiden Anweisungen ist unsere Konvention, kein Messwert: Der Wert steht im «So geht's» des Belag-Schritts.",
+    },
   },
   assumptions: {
     "constant-ferment-temp": "Die Temperatur bleibt während der ganzen Phase gleich.",

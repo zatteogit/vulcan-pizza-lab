@@ -2518,9 +2518,10 @@ export const TOPPING_I18N_PT: ToppingTranslation = {
   steps: {
     spread_margherita_avpn: {
       title: "Cobertura Margherita Verace",
-      description: "Espalhe os pelados esmagados à mão de forma uniforme. Distribua o fior di latte em tiras ou cubinhos. Um fio de azeite extravirgem antes do forno. Manjericão fresco antes do forno se o assamento dura poucos minutos; no forno doméstico, coloque logo ao tirar do forno.",
+      description: "Espalhe os pelados esmagados à mão de forma uniforme, distribua o fior di latte em tiras ou cubinhos e adicione um fio de azeite extravirgem. O manjericão fresco, coloque logo ao tirar do forno.",
+      description_short_bake: "Espalhe os pelados esmagados à mão de forma uniforme, distribua o fior di latte em tiras ou cubinhos e adicione um fio de azeite extravirgem. Finalize com o manjericão fresco antes de levar ao forno.",
       tip_beginner: "Regulamento AVPN: tomates pelados DOP, mozzarella da Campânia, manjericão fresco. Azeite extravirgem sim, mas pouco.",
-      tip_nerd: "O forno relâmpago de 90s a 450°C preserva o manjericão fresco (a pizza fica pouco tempo lá dentro para degradá-lo). Diferente dos fornos domésticos lentos, onde ele deve entrar depois.",
+      tip_nerd: "No assamento relâmpago da napolitana, o manjericão fica tempo de menos no forno para escurecer; num assamento longo ele seca e escurece, por isso entra depois.",
     },
     spread_margherita_romana: {
       title: "Cobertura Margherita romana",

@@ -4,6 +4,7 @@ import {
   normalizeRecipeName,
   recipeSourceUrl,
   renameSavedRecipeIn,
+  restoreSavedRecipeIn,
   savedRecipeKey,
   formatSavedDate,
   removeSavedRecipeFrom,
@@ -77,5 +78,26 @@ describe("nomi personali delle versioni", () => {
     expect(normalizeRecipeName({unexpected:true})).toBeUndefined();
     expect(normalizeRecipeName("  Mario\nLuigi  ")).toBe("Mario Luigi");
     expect(normalizeRecipeName("x".repeat(100))).toHaveLength(80);
+  });
+});
+
+describe("«Annulla» dopo la rimozione (S07-B-09)", () => {
+  const named: SavedRecipe = { ...base, id: "sr_named", createdAt: 20, name: "Quella di domenica" };
+  const older: SavedRecipe = { ...base, id: "sr_older", createdAt: 10, params: { ...base.params, hydration: 70 } };
+  const newer: SavedRecipe = { ...base, id: "sr_newer", createdAt: 30, params: { ...base.params, hydration: 60 } };
+
+  it("rimette la voce identica: stesso id, stessa data, stesso nome", () => {
+    const removed = removeSavedRecipeFrom([newer, named, older], named.id);
+    const restored = restoreSavedRecipeIn(removed, named);
+    expect(restored.find(recipe => recipe.id === named.id)).toEqual(named);
+  });
+  it("conserva l'ordine del ricettario (più recenti prima)", () => {
+    const restored = restoreSavedRecipeIn(removeSavedRecipeFrom([newer, named, older], named.id), named);
+    expect(restored.map(recipe => recipe.id)).toEqual([newer.id, named.id, older.id]);
+  });
+  it("non crea doppioni se la ricetta è stata risalvata nel frattempo", () => {
+    const resaved: SavedRecipe = { ...named, id: "sr_resaved", createdAt: 40, name: undefined };
+    expect(restoreSavedRecipeIn([resaved, older], named)).toEqual([resaved, older]);
+    expect(restoreSavedRecipeIn([named, older], named)).toEqual([named, older]);
   });
 });

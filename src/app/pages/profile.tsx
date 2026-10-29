@@ -549,7 +549,7 @@ function SavedRecipesSection() {
 
   const handleUndo = () => {
     if (notice?.kind !== "removed") return;
-    setRecipes(restoreRecipe(notice.recipe));
+    setRecipes(restoreRecipe(notice.recipe).recipes);
     closeNotice();
   };
 

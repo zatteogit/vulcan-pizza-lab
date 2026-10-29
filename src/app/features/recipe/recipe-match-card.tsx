@@ -1,11 +1,11 @@
 import { RecipeMatchIcon } from "./recipe-match-icon";
 import { RecipeConditionChips } from "./recipe-condition-chips";
-import { recipePresentationState } from "./recipe-card-signals";
+import { recipeCardSignals, recipePresentationState } from "./recipe-card-signals";
 import { RecipeChanges } from "./recipe-changes";
 import { useEffect, useId, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { motionSpring } from "../../components/ds/motion";
-import { ArrowUpRight, Bookmark, BookmarkCheck, ChevronDown, Droplets, Sparkles, TriangleAlert, WandSparkles } from "lucide-react";
+import { ArrowUpRight, Bookmark, ChevronDown, Droplets, Sparkles, TriangleAlert, WandSparkles } from "lucide-react";
 import type { GeneratedRecipe, RecipeScores, UserConstraints } from "../../domain/pizza-engine";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { summarizeVerdict } from "../../domain/verdict-summary";
@@ -14,6 +14,7 @@ import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { createFormatter, t } from "../cms/i18n";
 import { uiMessage } from "../../i18n/ui-messages";
+import { Heading } from "../../components/ds";
 
 type RecipeMatchMode = "canonical" | "adapted" | "lab";
 
@@ -95,6 +96,14 @@ export function matchTone(score: number, mode: RecipeMatchMode, tones?: MatchTon
   };
 }
 
+/* S07-B-14: frase d'apertura dei dettagli per esito, intera e con la
+   maiuscola (non i sottotitoli dei tier di Scopri). */
+function detailsIntro(state: "blocked" | "check" | "ready"): string {
+  if (state === "blocked") return uiMessage("recipe.matchDetails.intro.notFeasible");
+  if (state === "check") return uiMessage("recipe.matchDetails.intro.conditions");
+  return uiMessage("recipe.matchDetails.intro.ok");
+}
+
 /* Fasce del messaggio-soffitto: mappa letterale tono→modifier (mai template
    dinamico) — stesso pattern di MATCH_ICONS più sotto. */
 const HEADROOM_TONE_CLASS = {
@@ -145,6 +154,7 @@ export function RecipeMatchCard({
   verdictConstraints,
   mealDeadline = false,
   resetKey,
+  initialExpanded = false,
   className = "",
 }: {
   scores: RecipeScores;
@@ -186,6 +196,8 @@ export function RecipeMatchCard({
   /** FW-06 (S07-A-19): cambia quando cambia la ricetta di partenza (versione,
    *  firma): il nuovo numero non è un miglioramento e non mostra il «+Δ». */
   resetKey?: string;
+  /** Dettagli già aperti al primo render (test di render statico). */
+  initialExpanded?: boolean;
   className?: string;
 }) {
   const { cms, bcp47 } = useCms();
@@ -193,7 +205,7 @@ export function RecipeMatchCard({
   /* Audit fruibilità luglio 2026: la card nasce COMPATTA (icona, punteggio,
      tono e azioni). Barre punteggio, stato forno e rationale arrivano a
      richiesta: erano una schermata intera prima degli ingredienti. */
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(initialExpanded);
   const detailsId = useId();
   const detailsLabel = cms.cooking.matchDetails ?? uiMessage("features.recipe.recipe-match-card.dettagli-8f4ce7d9");
   const detailsActionLabel = expanded
@@ -319,6 +331,20 @@ export function RecipeMatchCard({
   const detailAdaptations = (summary?.adaptations ?? []).filter((m) =>
     m !== summary?.skillWarning && m.key !== "feas.ovenSuboptimal" && m.key !== "feas.ovenTooCold");
   const presentationState = verdictRecipe ? recipePresentationState(verdictRecipe) : null;
+  /* S07-A-09: le verifiche di dispensa e attrezzatura («Se hai…») non sono
+     adattamenti: hanno il loro gruppo, senza le voci già dette nei chip. */
+  const conditionKeys = new Set((summary?.conditions ?? []).map((c) => c.message.key));
+  const adaptationTexts = engineMsgTexts(detailAdaptations.filter((m) => !conditionKeys.has(m.key)), cms, bcp47);
+  const chipTexts = new Set(!notFeasible && verdictRecipe ? engineMsgTexts(recipeCardSignals(verdictRecipe).map((s) => s.message), cms, bcp47) : []);
+  const needTexts = [...new Set(engineMsgTexts((summary?.conditions ?? []).map((c) => c.message), cms, bcp47))]
+    .filter((text) => !chipTexts.has(text));
+  const aidTexts = engineMsgTexts(summary?.optionalAids ?? [], cms, bcp47);
+  const showChanges = Boolean(originalRecipe && verdictRecipe && mode !== "canonical");
+  const hasRationale = Boolean(optimizationRationale && optimizationRationale.length > 0);
+  /* «Come l'abbiamo adattata» elenca solo ciò che Vulcan ha cambiato, e solo
+     fuori dal Riferimento; gli avvisi del motore (W, idratazione, esperienza)
+     non sono adattamenti: stanno in «Da tenere d'occhio». */
+  const hasAdapted = mode !== "canonical" && (showChanges || hasRationale);
   const statusLabel = notFeasible ? cms.ui.verdictTitle : presentationState === "check"
       ? engineMsgTexts([{key:"card.toVerify",fallback:"Da verificare"}],cms,bcp47)[0]
       : verdictRecipe ? engineMsgTexts([{key:"card.ready",fallback:"Fattibile"}], cms, bcp47)[0] : tone.title;
@@ -329,7 +355,9 @@ export function RecipeMatchCard({
      Personalizza. Salva e Torna all'originale compaiono SOLO quando la
      ricetta è davvero cambiata (dirty) — e Torna, azione distruttiva, ha
      il peso visivo minore di tutte (testo muto, in coda). */
-  const showSaveAction = dirty && Boolean(onSave);
+  /* S07-B-09: il segnalibro in testata è l'unico interruttore salva/rimuovi;
+     qui solo «Salva» per una versione cambiata e non ancora salvata. */
+  const showSaveAction = dirty && !saved && Boolean(onSave);
 
   return (
     <motion.section
@@ -481,17 +509,14 @@ export function RecipeMatchCard({
                 key="save"
                 type="button"
                 onClick={onSave}
-                aria-pressed={saved}
-                aria-label={saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
-                title={saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 whileTap={{ scale: 0.95 }}
-                className={`match-action-text match-action-text--save${saved ? " match-action-text--save-active" : ""}`}
+                className="match-action-text match-action-text--save"
               >
-                {saved ? <BookmarkCheck size={14} aria-hidden="true" /> : <Bookmark size={14} aria-hidden="true" />}
-                <span data-slot="label">{saved ? cms.cooking.savedVersion : cms.cooking.saveVersion}</span>
+                <Bookmark size={14} aria-hidden="true" />
+                <span data-slot="label">{cms.cooking.saveVersion}</span>
               </motion.button>
             )}
           </AnimatePresence>
@@ -510,11 +535,10 @@ export function RecipeMatchCard({
             className="match-details"
             id={detailsId}
           >
-            {/* Copy emotivo del tono: apre il pannello. */}
+            {/* S07-B-14: una frase intera, non il sottotitolo minuscolo dei tier di Scopri. */}
             <div className="match-details__intro">
               <p className="match-details__body">
-                {presentationState ? cms.tiers[presentationState === "blocked" ? "not_feasible"
-                  : presentationState === "ready" ? "perfect" : "good"].subtitle : tone.body}
+                {presentationState ? detailsIntro(presentationState) : tone.body}
               </p>
             </div>
 
@@ -531,41 +555,56 @@ export function RecipeMatchCard({
               </span>
             </div>
 
+            {/* S07-A-09: gruppi con titolo, solo quelli non vuoti; il punteggio
+                per ultimo (L2/L3). Le cause del blocco restano nel verdetto
+                (FW-10) e con la ricetta bloccata non ci sono «Se hai…». */}
+            {needTexts.length > 0 && (
+              <section className="match-details__group" aria-labelledby={`${detailsId}-needs`}>
+                <Heading level="xs" as="h2" id={`${detailsId}-needs`} className="match-details__title">{uiMessage("recipe.matchDetails.needs")}</Heading>
+                <ul className="recipe-verdict__reasons">{needTexts.map(text => <li key={text} className="type-body-sm">{text}</li>)}</ul>
+              </section>
+            )}
+            {adaptationTexts.length > 0 && (
+              <section className="match-details__group" aria-labelledby={`${detailsId}-watch`}>
+                <Heading level="xs" as="h2" id={`${detailsId}-watch`} className="match-details__title">{uiMessage("recipe.matchDetails.watch")}</Heading>
+                <ul className="recipe-verdict__reasons">{adaptationTexts.map(text => <li key={text} className="type-body-sm">{text}</li>)}</ul>
+              </section>
+            )}
+            {hasAdapted && (
+              <section className="match-details__group" aria-labelledby={`${detailsId}-adapted`}>
+                <Heading level="xs" as="h2" id={`${detailsId}-adapted`} className="match-details__title">{uiMessage("recipe.matchDetails.adapted")}</Heading>
+                {showChanges && originalRecipe && verdictRecipe && <RecipeChanges from={originalRecipe} to={verdictRecipe} mode="included" />}
+                {hasRationale && optimizationRationale && (
+                  <div className="match-rationale">
+                    <p className="match-rationale__head">
+                      <Sparkles size={14} aria-hidden="true" />
+                      <span className="match-rationale__head-label">
+                        {cms.cooking.optimizedForSetup}
+                      </span>
+                    </p>
+                    <ul className="match-rationale__list">
+                      {optimizationRationale.map((reason, i) => (
+                        <li key={i} className="match-rationale__item">
+                          • {reason}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </section>
+            )}
+            {aidTexts.length > 0 && (
+              <section className="match-details__group" aria-labelledby={`${detailsId}-aids`}>
+                <Heading level="xs" as="h2" id={`${detailsId}-aids`} className="match-details__title">{uiMessage("recipe.matchDetails.aids")}</Heading>
+                <ul className="recipe-verdict__reasons">{aidTexts.map(text => <li key={text} className="type-body-sm">{text}</li>)}</ul>
+              </section>
+            )}
             {/* FW-06: il punteggio spiegato una sola volta, come nelle card e nel
-                pannello stile (ScoreExplainer): criteri che contano con il peso,
-                regola del minimo, informazioni a parte, «Come si calcola». */}
-            <ScoreExplainer scores={scores} recipe={verdictRecipe} showLimit={!(showScoreLimit && limitLine)} className="match-score-explainer" />
-
-            {/* FW-10: senza le ripetizioni del blocco e senza «Se hai…» quando
-                la ricetta non si può fare (summarizeVerdict). */}
-            {detailAdaptations.length > 0 && (
-              <ul className="recipe-verdict__reasons">
-                {engineMsgTexts(detailAdaptations, cms, bcp47).map(text => <li key={text} className="type-body-sm">{text}</li>)}
-              </ul>
-            )}
-            {summary && summary.optionalAids.length > 0 && (
-              <ul className="recipe-verdict__reasons">{engineMsgTexts(summary.optionalAids, cms, bcp47).map(text => <li key={text} className="type-body-sm">{text}</li>)}</ul>
-            )}
-            {originalRecipe && verdictRecipe && mode !== "canonical" && (
-              <RecipeChanges from={originalRecipe} to={verdictRecipe} mode="included" />
-            )}
-            {optimizationRationale && optimizationRationale.length > 0 && (
-              <div className="match-rationale">
-                <div className="match-rationale__head">
-                  <Sparkles size={14} />
-                  <span className="match-rationale__head-label">
-                    {cms.cooking.optimizedForSetup}
-                  </span>
-                </div>
-                <ul className="match-rationale__list">
-                  {optimizationRationale.map((reason, i) => (
-                    <li key={i} className="match-rationale__item">
-                      • {reason}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+                pannello stile (ScoreExplainer). */}
+            <section className="match-details__group" aria-labelledby={`${detailsId}-score`}>
+              <Heading level="xs" as="h2" id={`${detailsId}-score`} className="match-details__title">{uiMessage("recipe.matchDetails.score")}</Heading>
+              <ScoreExplainer scores={scores} recipe={verdictRecipe} showLimit={!(showScoreLimit && limitLine)} className="match-score-explainer" />
+            </section>
           </motion.div>
         )}
       </AnimatePresence>
