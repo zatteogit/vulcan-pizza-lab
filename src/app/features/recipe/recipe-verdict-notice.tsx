@@ -10,7 +10,7 @@ import {
 import { summarizeVerdict } from "../../domain/verdict-summary";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
-import { Surface } from "../../components/ds/index";
+import { Disclosure, Surface } from "../../components/ds/index";
 import { engineMsgTexts } from "./engine-msg-text";
 import { uiMessage } from "../../i18n/ui-messages";
 
@@ -132,8 +132,7 @@ export function RecipeVerdictNotice({
         </nav>
       )}
       {(secondaryTexts.length > 0 || details) && (
-        <details className="recipe-verdict__more">
-          <summary className="type-body-sm recipe-verdict__more-summary">{uiMessage("verdict.whyMore")}</summary>
+        <Disclosure variant="inline" className="recipe-verdict__more" summary={uiMessage("verdict.whyMore")}>
           {secondaryTexts.length > 0 && (
             <ul className="recipe-verdict__reasons">
               {secondaryTexts.map((text) => (
@@ -142,7 +141,7 @@ export function RecipeVerdictNotice({
             </ul>
           )}
           {details}
-        </details>
+        </Disclosure>
       )}
       {showRecipeBelow && <p className="type-body recipe-verdict__footnote">{cms.ui.verdictRecipeBelow}</p>}
     </>

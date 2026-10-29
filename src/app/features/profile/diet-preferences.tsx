@@ -3,9 +3,8 @@
  * motore non sa misurare (solo promemoria). Le diete «senza glutine» e
  * «senza lattosio» suggeriscono l'allergene corrispondente senza segnarlo da
  * sole: una dieta non è un'allergia. */
-import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
-import { Chip } from "../../components/ds";
+import { Chip, Disclosure } from "../../components/ds";
 import type { AllergenId } from "../../data/allergen-data";
 import { useCms } from "../cms/cms-context";
 import { t } from "../cms/i18n";
@@ -67,10 +66,9 @@ export function DietPreferences({
         {dietary.includes("gluten_free") && (
           <section className="profile-diet-note" data-tone="caution" role="status">
             <p className="type-body-sm">{uiMessage("profile.dietGlutenNote")}</p>
-            <details className="profile-diet-note__why">
-              <summary className="type-body-sm">{uiMessage("profile.dietGlutenWhy")}</summary>
+            <Disclosure variant="inline" className="profile-diet-note__why" summary={uiMessage("profile.dietGlutenWhy")}>
               <p className="type-body-sm">{cms.engineMessages["diet.noValidatedMethod"]}</p>
-            </details>
+            </Disclosure>
           </section>
         )}
         {allergenHints.map(([diet, allergen]) => {
@@ -93,17 +91,13 @@ export function DietPreferences({
         <h3 id="profile-diet-reminder" className="profile-diet-group__title">{p.dietReminderTitle}</h3>
         <SettingEffectNote settingId="dietReminder" />
         {chips(REMINDER_DIETS)}
-        <details className="setting-effect-details" data-region="setting-effect-details">
-          <summary className="setting-effect-details__summary">
-            {p.dietReminderWhy}
-            <ChevronDown size={16} aria-hidden="true" className="setting-effect-details__chevron" />
-          </summary>
+        <Disclosure variant="card" className="setting-effect-details" summary={p.dietReminderWhy}>
           <ul className="setting-effect-details__list">
             {REMINDER_WHY_KEYS.map((key) => (
               <li key={key} className="setting-effect-details__item">{cms.engineMessages[key]}</li>
             ))}
           </ul>
-        </details>
+        </Disclosure>
       </section>
       <section className="profile-diet-group" data-region="diet-allergens">
         <AllergenPreferences value={allergens} onChange={onAllergensChange} />

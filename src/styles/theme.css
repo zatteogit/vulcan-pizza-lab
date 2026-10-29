@@ -6143,11 +6143,6 @@
     line-height: var(--leading-normal);
   }
 
-  .profile-unit-option__check {
-    color: var(--primary);
-    flex-shrink: 0;
-  }
-
   /* ── FW-08 — «Mostra i dettagli tecnici» (PizzaNerd) e livello ── */
   .detail-level-setting {
     display: flex;
@@ -11653,15 +11648,6 @@
     gap: var(--space-2);
   }
 
-  .recipe-verdict__more-summary {
-    display: flex;
-    align-items: center;
-    min-height: var(--space-11);
-    color: var(--text-muted);
-    font-weight: var(--weight-semibold);
-    cursor: pointer;
-  }
-
   .recipe-verdict__more .recipe-verdict__reasons {
     color: var(--text-muted);
   }
@@ -11741,23 +11727,10 @@
     border-inline-start: var(--space-1) solid var(--text-warning);
   }
 
-  .profile-diet-note__why summary {
-    min-height: var(--space-11);
-    display: flex;
-    align-items: center;
-    color: var(--cta);
-    font-weight: var(--weight-semibold);
-    cursor: pointer;
-  }
-
   .profile-diet-note__why p {
     color: var(--text-muted);
   }
   /* ═══ /FW-10 ═══ */
-
-  .recipe-output-feedback-wrap {
-    margin-top: var(--space-6);
-  }
 
   /* ═══ ONDATA 3 — COMPONENT: recipe-output-bits (PREFIX: bits) ═══ */
   /* ═══ COMPONENT: recipe-output-bits (NerdAuraBlock, IngRow, GlossaryWLink) ═══ */
@@ -21431,10 +21404,7 @@ html {
 .setting-effect { margin-block: 0 var(--space-3); color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
 .setting-effect[data-effect="changesRecipe"] { color: var(--text-default); }
 .setting-effect[data-effect="noEffectYet"] { font-style: italic; }
-.setting-effect-details { margin-block: var(--space-3); border: var(--border-width-thin) solid var(--container-border-subtle); border-radius: var(--radius-lg); background: var(--container-bg-low); }
-.setting-effect-details__summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-height: var(--dimension-fixed-046); padding-inline: var(--space-3); color: var(--text-accent); font-size: var(--font-size-sm); font-weight: var(--weight-semibold); cursor: pointer; list-style: none; }
-.setting-effect-details__summary::-webkit-details-marker { display: none; }
-.setting-effect-details[open] .setting-effect-details__chevron { transform: rotate(180deg); }
+.setting-effect-details { margin-block: var(--space-3); }
 .setting-effect-details__list { margin: 0; padding: 0 var(--space-3) var(--space-2) var(--space-6); color: var(--text-default); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
 .setting-effect-details__item + .setting-effect-details__item { margin-block-start: var(--space-1); }
 .setting-effect-details__rule { margin: 0; padding: 0 var(--space-3) var(--space-3); color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
