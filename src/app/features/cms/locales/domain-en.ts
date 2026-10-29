@@ -802,6 +802,7 @@ export const SCIENCE_EN: CmsScience = {
     "proof-share-default": "Without guidance from the style, the final proof is a fixed share of the hours.",
     "starter-steps-by-hours": "The starter amount steps down with the hours, ignoring temperature.",
     "starter-not-in-hydration": "The starter's flour and water are not counted in the hydration.",
+    "preferment-at-maturation-temp": "With a pre-ferment, the ripe pre-ferment is at the midpoint of its maturation temperature (biga 18–20 °C, poolish 20–22 °C), and mixing it by hand adds no friction heat.",
     "flour-at-kitchen-temp": "The flour is at kitchen temperature.",
     "mixer-friction-values": "Mixer heat is a typical value still to be verified; by hand it is zero.",
     "coefficients-not-measured": "The formula's coefficients are chosen by the model, not measured.",

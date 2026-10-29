@@ -28,6 +28,7 @@ import {
   type ParametricTipContext,
   localizeStep,
   engineMessage,
+  stepQuantities,
 } from "./recipe-output-format";
 import { StepDetails } from "./recipe-step-details";
 import { ToppingSection, type ToppingSectionProps } from "./topping-section";
@@ -254,6 +255,20 @@ export function ProcedureTimeline({
                         <p className="procedure-timeline-step__desc">
                           {localizedStep.description}
                         </p>
+                        {/* FW-17 (S09-A-06): le dosi del passo, dallo stesso modello
+                            per fasi della scheda Ricetta e della modalità cottura. */}
+                        {(() => {
+                          const quantities = stepQuantities(step.id, recipe, cms, fmt, activeTopping);
+                          return quantities.length > 0 ? (
+                            <ul className="type-numeric procedure-timeline-step__quantities">
+                              {quantities.map((q) => (
+                                <li key={q.label}>
+                                  {q.label} <strong>{q.value}</strong>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : null;
+                        })()}
                         {stepFooter}
                       </>
                     )}

@@ -9,7 +9,7 @@ import { ProcedureHeroControls } from "./procedure-hero";
 import { IngredientsSection } from "./ingredients-section";
 import { ProcedureTimeline } from "./procedure-timeline";
 import { addMinutes, countNightActives, localizeStep, stepQuantities, optimizeComfort,
-  defaultMealStart, startForDeadline, readyTimeForDisplay, getServingUnitLabel, toppingSectionLabel } from "./recipe-output-format";
+  defaultMealStart, startForDeadline, readyTimeForDisplay, getServingUnitLabel, toppingSectionLabel, rule55DescriptionText } from "./recipe-output-format";
 import { useCms } from "../cms/cms-context";
 import { RecipeVerdictNotice } from "./recipe-verdict-notice";
 import { PrintSheet, type PrintSections } from "./print-sheet";
@@ -138,15 +138,10 @@ export function RecipeOutput({
   }, [calendarReference]);
   const ui = cms.ui;
   const fmt = createFormatter(ui, bcp47);
-  /* Audit totale n. 4: la spiegazione usa i numeri del motore (metodo delle
-   * tre temperature: 3 × impasto obiettivo − attrito), non una somma fissa a 55. */
-  const ddt = recipe.science.desired_dough_temp_c;
-  const friction = recipe.science.friction_factor;
-  const rule55Description = t(cms.cooking.rule55Description, {
-    sum: fmt.celsius(ddt * 3 - friction),
-    ddt: fmt.celsius(ddt),
-    friction: fmt.celsiusDelta(friction),
-  });
+  /* Audit totale n. 4: la spiegazione usa i numeri del motore (3 × impasto
+   * obiettivo − attrito; con un prefermento 4 ×, FW-17 S08-A-07), non una
+   * somma fissa a 55. */
+  const rule55Description = rule55DescriptionText(recipe, cms, fmt);
 
   /* Label contestuale per il selettore di porzioni ("Panetti" / "Teglie" / ...). */
   const servingUnit = getServingUnit(recipe.style);
@@ -382,7 +377,7 @@ export function RecipeOutput({
           title: loc.title,
           description: loc.description,
           longDesc: loc.longDesc,
-          quantities: stepQuantities(step.id, recipe, cms, fmt),
+          quantities: stepQuantities(step.id, recipe, cms, fmt, activeTopping),
           tip: loc.tip ? (isNerd ? loc.tip.nerd : loc.tip.beginner) : undefined,
           duration_minutes: step.duration_minutes,
           startMs: (stepTimes[i]?.start ?? startTime).getTime(),
@@ -390,7 +385,7 @@ export function RecipeOutput({
           flexible: FLEXIBLE_STEP_IDS.has(step.id),
         };
       }),
-    [recipe, cms, isNerd, stepTimes, startTime],
+    [recipe, cms, isNerd, stepTimes, startTime, activeTopping],
   );
 
   /* Un solo punto di verità per "inizia/riprendi pizzata":
@@ -599,6 +594,7 @@ export function RecipeOutput({
         steps={cookingSteps}
         topping={activeTopping}
         unitLabel={getServingUnitLabel(cms, servingUnit, recipe.dough_balls, true)}
+        unitLabelOne={getServingUnitLabel(cms, servingUnit, 1, cms.locale.id !== "de")}
         readyAt={endDisplayTime}
         readyApproximate={hasFlexiblePhases}
       />

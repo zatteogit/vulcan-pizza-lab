@@ -1060,6 +1060,8 @@ export const PT_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "Divida cada unidade em duas porções: 60% para a base e 40% para a cobertura. Forme dois discos.",
     "timeline.shape.closedStuffedFried": "Abra o disco da base e reserve o segundo para fechar.",
     "timeline.shape.foldedLayers": "Abra uma folha bem fininha e dobre {folds} vezes como um livro, distribuindo o recheio entre as dobras.",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "A biga e o poolish fazem-se com fermento de padeiro: só com fermento natural a receita não os usa, porque o fermento natural já funciona como pré-fermento. Para os usar, adicione fermento de padeiro à sua despensa.",
     "diet.singleBase": "Uma base com toda a massa: cebola por cima, sem segundo disco nem fecho.",
     "topping.geometry": "Área {area} cm² · referência {reference} cm² · quantidades ×{scale}.",
     "auth.layoutChanged": "Formato diferente da referência: esta versão altera a estrutura da receita",
@@ -1197,7 +1199,7 @@ export const PT_LOCALE: CmsContent = {
         "Use uma balan\u00E7a! Corte com um raspador e arredonde cada peda\u00E7o numa bola lisa.",
       tipNerd:
         "A divis\u00E3o cria tens\u00E3o superficial que aprisiona CO\u2082 durante o descanso final.",
-      longDesc: "Vire a massa sobre uma bancada levemente enfarinhada. Com um raspador, corte por\u00E7\u00F5es do peso indicado abaixo em Ingredientes, pesando-as na balan\u00E7a (\u00E9 importante para um cozimento uniforme). Fa\u00E7a o \"boleamento\" de cada peda\u00E7o: dobre as pontas para baixo, rumo ao centro, gire e arredonde at\u00E9 formar uma bola lisa e firme. Disponha as bolas de massa em uma assadeira enfarinhada, bem espa\u00E7adas, e cubra com filme pl\u00E1stico.",
+      longDesc: "Vire a massa sobre uma bancada levemente enfarinhada. Com um raspador, corte por\u00e7\u00f5es do peso indicado neste passo, pesando-as na balan\u00e7a (\u00e9 importante para um cozimento uniforme). Fa\u00e7a o \"boleamento\" de cada peda\u00e7o: dobre as pontas para baixo, rumo ao centro, gire e arredonde at\u00e9 formar uma bola lisa e firme. Disponha as bolas de massa em uma assadeira enfarinhada, bem espa\u00e7adas, e cubra com filme pl\u00e1stico.",
     },
     proof: {
       title: "Descanso final",
@@ -1237,7 +1239,7 @@ export const PT_LOCALE: CmsContent = {
     divide_teglia: {
       title: "Divis\u00E3o",
       desc: "Dividir com delicadeza, sem murchar a massa.",
-      longDesc: "Vire a massa sobre a bancada bem enfarinhada (com hidrata\u00E7\u00F5es altas, ajude-se com s\u00EAmola). Com um raspador, corte as por\u00E7\u00F5es do peso indicado abaixo em Ingredientes, pesando-as na balan\u00E7a. Manuseie o m\u00EDnimo poss\u00EDvel: para a assadeira N\u00C3O \u00E9 preciso o boleamento apertado da pizza redonda \u2014 dobre as pontas por baixo formando um fil\u00E3o macio, sem espremer o ar. As bolhas formadas na fermenta\u00E7\u00E3o em massa s\u00E3o o futuro alveolado. Coloque cada peda\u00E7o em um recipiente untado e cubra.",
+      longDesc: "Vire a massa sobre a bancada bem enfarinhada (com hidrata\u00e7\u00f5es altas, ajude-se com s\u00eamola). Com um raspador, corte as por\u00e7\u00f5es do peso indicado neste passo, pesando-as na balan\u00e7a. Manuseie o m\u00ednimo poss\u00edvel: para a assadeira N\u00c3O \u00e9 preciso o boleamento apertado da pizza redonda \u2014 dobre as pontas por baixo formando um fil\u00e3o macio, sem espremer o ar. As bolhas formadas na fermenta\u00e7\u00e3o em massa s\u00e3o o futuro alveolado. Coloque cada peda\u00e7o em um recipiente untado e cubra.",
       tipBeginner: "M\u00E3os delicadas! As bolhas da massa s\u00E3o preciosas: dobre as pontas por baixo, sem apertar.",
       tipNerd: "Com hidrata\u00E7\u00E3o >75%, uma divis\u00E3o agressiva colapsa os alv\u00E9olos formados na fermenta\u00E7\u00E3o em massa: tens\u00E3o m\u00EDnima, desgaseifica\u00E7\u00E3o quase nula.",
     },
@@ -1940,6 +1942,7 @@ export const PT_LOCALE: CmsContent = {
     rule55AriaOpen: "Como se calcula a temperatura da \u00E1gua",
     rule55AriaClose: "Ocultar a explica\u00E7\u00E3o",
     rule55Description: "Ambiente, farinha e \u00E1gua devem somar cerca de {sum}: tr\u00EAs vezes a temperatura de massa que voc\u00EA quer ({ddt}) menos o calor da amassadeira ({friction}). Por isso a \u00E1gua muda com a temperatura da sua cozinha.",
+    rule55DescriptionPreferment: "Ambiente, farinha, água e {preferment} devem somar cerca de {sum}: quatro vezes a temperatura de massa que você quer ({ddt}) menos o calor da amassadeira ({friction}). O pré-fermento entra a cerca de {prefTemp}, a sua temperatura de maturação (estimativa do modelo). Por isso a água da massa final muda com a temperatura da sua cozinha.",
     stepDetailsShow: "Como fazer",
     stepDetailsHide: "Ocultar detalhes",
     matchDetailsShow: "Detalhes da pontua\u00E7\u00E3o",

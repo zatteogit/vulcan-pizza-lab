@@ -15,6 +15,7 @@ import toppingPlaceholder from "../../../assets/toppings/_placeholder.svg";
 import { IMAGE_SIZES, responsiveImgAttributes } from "../../components/media/responsive-images";
 import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
+import { uiMessage } from "../../i18n/ui-messages";
 import { Badge, Heading, IconButton } from "../../components/ds/index";
 import {
   getToppingThumbnail,
@@ -30,7 +31,7 @@ import { getRecipesByAuthenticity, scaleToppingAmounts } from "../../data/toppin
 import { CondimentChoiceStrip } from "./condiment-choice-strip";
 import {
   fmtDuration,
-  formatToppingAmountForLocale,
+  toppingAmountWithTotal,
   getSectionHeader,
   getServingUnitLabel,
   getToppingIngredientSectionOrder,
@@ -114,9 +115,9 @@ export function ToppingSection({
 
     const activeToppingId = topping.id;
     const multiplier = recipe.dough_balls;
-    const unitName = getServingUnitLabel(cms, servingUnit, 1, true);
+    const unitName = getServingUnitLabel(cms, servingUnit, 1, cms.locale.id !== "de");
     const totalUnitName =
-      getServingUnitLabel(cms, servingUnit, multiplier, true);
+      getServingUnitLabel(cms, servingUnit, multiplier, cms.locale.id !== "de");
     const technicalNotes = [
       ...(topping.pre_prep_steps ?? []).map((step) => ({
         title: step.title,
@@ -323,11 +324,14 @@ export function ToppingSection({
           )}
 
           <p className="topping-panel__details-note type-body">
-            {t(cms.cooking.toppingAmountsNote, {
-              n: multiplier,
-              unit: totalUnitName,
-              perUnit: unitName,
-            })}
+            {/* FW-17 (S08-B-14): con più unità, accanto alla dose c'è il totale. */}
+            {multiplier > 1
+              ? uiMessage("recipe.phases.toppingNoteTotal", [unitName, multiplier, totalUnitName])
+              : t(cms.cooking.toppingAmountsNote, {
+                  n: multiplier,
+                  unit: totalUnitName,
+                  perUnit: unitName,
+                })}
           </p>
         </div>
 
@@ -371,7 +375,7 @@ export function ToppingSection({
                       </div>
                       <div className="topping-panel__grid">
                         {list.map(({ ing, index }) => {
-                          const displayAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
+                          const displayAmount = toppingAmountWithTotal(ing.amount, multiplier, fmt); // FW-17 (S08-B-14)
                           const detailParts: string[] = [];
                           if (ing.notes) detailParts.push(ing.notes);
                           if (ing.optional) detailParts.push(ui.pantryOptional);
@@ -417,7 +421,7 @@ export function ToppingSection({
             return (
               <div className="topping-panel__grid">
                 {topping.ingredients.map((ing, i) => {
-                  const displayAmount = formatToppingAmountForLocale(ing.amount.value, ing.amount.unit, fmt);
+                  const displayAmount = toppingAmountWithTotal(ing.amount, multiplier, fmt); // FW-17 (S08-B-14)
                   const detailParts: string[] = [];
                   if (ing.notes) detailParts.push(ing.notes);
                   if (ing.optional) detailParts.push(ui.pantryOptional);

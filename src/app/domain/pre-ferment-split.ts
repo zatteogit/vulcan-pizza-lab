@@ -41,7 +41,12 @@ export function computePreFermentSplit(args: {
     .includes("poolish");
   const flourPct = args.flourPct ?? PRE_FERMENT_FLOUR_PCT[isPoolish ? "poolish" : "biga"];
   const prefermentFlourG = Math.round(args.flourG * (flourPct / 100));
-  const prefermentWaterG = Math.round(prefermentFlourG * (isPoolish ? 1.0 : 0.44));
+  /* FW-17 (S08-A-03): l'acqua del pre-fermento non supera mai quella della
+     ricetta, così l'impasto finale non riceve acqua negativa. */
+  const prefermentWaterG = Math.min(
+    Math.max(0, args.waterG),
+    Math.round(prefermentFlourG * (isPoolish ? 1.0 : 0.44)),
+  );
   return {
     name: isPoolish ? "Poolish" : "Biga",
     isPoolish,
@@ -52,4 +57,38 @@ export function computePreFermentSplit(args: {
     mainFlourG: args.flourG - prefermentFlourG,
     mainWaterG: args.waterG - prefermentWaterG,
   };
+}
+
+/* ═══ FW-17 — limiti e temperature del pre-fermento ═══ */
+
+/** Temperatura di maturazione del pre-fermento, °C (fonti:
+ *  docs/ricerca/prefermenti-fonti-2026-10-24.md; stessi valori del CMS). */
+export const PRE_FERMENT_TEMP_C = { biga: [18, 20], poolish: [20, 22] } as const;
+
+/** FW-17 (S08-A-07): temperatura con cui il prefermento maturo entra
+ *  nell'impasto finale (ipotesi del modello: punto medio di PRE_FERMENT_TEMP_C). */
+export function preFermentMaturationTempC(type: "biga" | "poolish"): number {
+  const [lo, hi] = PRE_FERMENT_TEMP_C[type];
+  return (lo + hi) / 2;
+}
+
+/** FW-17 (S08-A-07): Regola 55, la somma che le temperature degli ingredienti
+ *  devono raggiungere: senza prefermento cucina + farina + acqua = 3 × DDT −
+ *  attrito; con un prefermento entra un quarto ingrediente, quindi cucina +
+ *  farina + acqua + prefermento = 4 × DDT − attrito. La usano il motore
+ *  (acqua = somma − gli altri termini) e la spiegazione in Ricetta, così il
+ *  numero e la sua spiegazione non divergono. */
+export function rule55Sum(ddt: number, friction: number, hasPreFerment: boolean): number {
+  return (hasPreFerment ? 4 : 3) * ddt - friction;
+}
+
+/** FW-17 (S08-A-03): un poolish è idratato al 100 %, quindi la sua quota di
+ *  farina non può superare l'idratazione della ricetta (altrimenti l'acqua del
+ *  poolish supera quella totale). La biga (44 %) non arriva mai al limite. */
+export function maxPreFermentFlourPct(
+  type: "biga" | "poolish",
+  hydrationPct: number,
+  max: number,
+): number {
+  return type === "poolish" ? Math.min(max, Math.floor(hydrationPct)) : max;
 }

@@ -21865,3 +21865,64 @@ html {
 .stat-strip [data-region="edition-oven"] { grid-column: 1 / -1; }
 .stat-strip__cell .recipe-oven-model { overflow-wrap: anywhere; }
 [data-slot="oven-preset"] .needs-oven-model { justify-content: center; text-align: center; }
+
+/* ═══ FW-17 — Dosi per fase (scorporo, diluizione, passi, stampa) ═══ */
+.ingredients-totals-note {
+  margin: var(--space-3) 0 0;
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.ingredients-dilution { margin-top: var(--space-1); }
+.ingredients-dilution__text {
+  margin: 0 0 var(--space-1-5);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.ingredients-preferment__title {
+  margin: 0;
+  padding-inline: var(--space-5);
+  padding-block: var(--space-2-5);
+  border-bottom: var(--border-width-thin) solid var(--outline-variant);
+  color: var(--text-default);
+  font-weight: var(--weight-semibold);
+}
+h4.ingredients-preferment__label { margin-top: 0; }
+.ingredients-preferment__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.procedure-timeline-step__quantities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-muted);
+  font-size: var(--font-size-xl);
+}
+.procedure-timeline-step__quantities strong { color: var(--text-default); }
+.cooking-mode-step__quantity .cooking-mode-step__quantity-hint {
+  margin-top: var(--space-1);
+  font-size: var(--font-size-base);
+  font-weight: var(--weight-regular);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.config-preferment-sourdough { margin-top: var(--space-1); }
+.config-preferment-sourdough__text {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.print-sheet__split { margin-top: var(--space-3); }
+.print-sheet__caption {
+  caption-side: top;
+  text-align: left;
+  font-weight: var(--weight-bold);
+  padding-bottom: var(--space-1);
+}
+.print-sheet__sub td:first-child { padding-left: var(--space-5); color: var(--text-muted); }
+/* FW-17: la cella del lievito con l'aiuto alla diluizione prende tutta la riga. */
+.cooking-mode-step__quantity:has(.cooking-mode-step__quantity-hint) { grid-column: 1 / -1; }

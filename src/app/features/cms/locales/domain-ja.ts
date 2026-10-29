@@ -779,6 +779,7 @@ export const SCIENCE_JA: CmsScience = {
     "proof-share-default": "スタイルに指定がない場合、最終発酵は時間の一定の割合です。",
     "starter-steps-by-hours": "種の量は温度を考えず、時間に応じて段階的に減ります。",
     "starter-not-in-hydration": "種に含まれる粉と水は加水率に入っていません。",
+    "preferment-at-maturation-temp": "中種がある場合、熟成した中種は熟成温度の中間（ビガ18～20 °C、ポーリッシュ20～22 °C）にあり、手で混ぜるため摩擦熱は加わらないとします。",
     "flour-at-kitchen-temp": "粉はキッチンの温度とします。",
     "mixer-friction-values": "ミキサーの熱は要確認の代表値で、手ごねでは0です。",
     "coefficients-not-measured": "式の係数はモデルが選んだもので、測定値ではありません。",

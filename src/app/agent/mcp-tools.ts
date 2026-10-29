@@ -36,7 +36,8 @@ import { TOPPING_LIBRARY, getToppingForStyle, scaleToppingAmounts } from "../dat
 import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId, pantryIngredientReferences } from "../domain/pantry-ingredients";
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../domain/recipe-score";
-import { computePreFermentSplit } from "../domain/pre-ferment-split";
+import { computePreFermentSplit, PRE_FERMENT_TEMP_C } from "../domain/pre-ferment-split";
+import { buildRecipePhases } from "../domain/recipe-phases";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
 import { GLOSSARY_TERMS, getLocalizedTerm } from "../data/glossary-data";
 import { searchOvenModels } from "../data/oven-models";
@@ -236,10 +237,6 @@ function styleSummary(style: PizzaStyle) {
   };
 }
 
-/** Temperatura di maturazione del pre-fermento, °C (fonti:
- *  docs/ricerca/prefermenti-fonti-2026-10-24.md; stessi valori del CMS). */
-const PRE_FERMENT_TEMP_C = { biga: [18, 20], poolish: [20, 22] } as const;
-
 /** Composizione completa del pre-fermento e dell'impasto finale, come nella
  *  ricetta dell'app (verifica di GPT: con solo tipo e quota non è eseguibile). */
 function preFermentData(recipe: GeneratedRecipe) {
@@ -261,7 +258,12 @@ function preFermentData(recipe: GeneratedRecipe) {
     [`yeast_${recipe.yeast_type}_g`]: recipe.yeast_g,
     maturation_minutes: recipe.timeline.find((step) => step.id === "preferment")?.duration_minutes ?? null,
     maturation_temp_c_range: PRE_FERMENT_TEMP_C[type],
+    // FW-17 (S08-A-07): stima per l'acqua del pre-fermento; water_temp_c della
+    // ricetta è quella dell'impasto finale.
+    water_temp_c: recipe.pre_ferment_water_temp_c ?? null,
     final_dough: {
+      // FW-17: il prefermento maturo entra tutto nell'impasto finale (recipe-phases).
+      pre_ferment_g: buildRecipePhases(recipe).preFerment?.massG ?? null,
       flour_g: split.mainFlourG,
       water_g: split.mainWaterG,
       salt_g: recipe.salt_g,

@@ -704,6 +704,7 @@ export const EN_LOCALE: CmsContent = {
     rule55AriaOpen: "How the water temperature is worked out",
     rule55AriaClose: "Hide the explanation",
     rule55Description: "Room, flour and water should add up to about {sum}: three times the dough temperature you want ({ddt}) minus the heat from the mixer ({friction}). That is why the water changes with the temperature of your kitchen.",
+    rule55DescriptionPreferment: "Room, flour, water and {preferment} should add up to about {sum}: four times the dough temperature you want ({ddt}) minus the heat from the mixer ({friction}). The preferment goes in at about {prefTemp}, its maturation temperature (a model estimate). That is why the final-dough water changes with the temperature of your kitchen.",
     stepDetailsShow: "How to do it",
     stepDetailsHide: "Hide details",
     matchDetailsShow: "Score details",
@@ -1226,6 +1227,8 @@ export const EN_LOCALE: CmsContent = {
     "timeline.divide.unequalDiscs": "Divide each unit into two portions: 60% for the base and 40% for the cover. Shape two discs.",
     "timeline.shape.closedStuffedFried": "Stretch the base disc, keeping the second disc aside to close it.",
     "timeline.shape.foldedLayers": "Roll out a paper-thin sheet and book-fold it {folds} times, spreading the filling between the folds.",
+    // FW-17 (D-P)
+    "preferment.sourdoughInstead": "Biga and poolish are made with baker's yeast: with sourdough starter only, the recipe leaves them out, because the starter already works as a pre-ferment. To use them, add baker's yeast to your pantry.",
     "diet.singleBase": "One base using all the dough: onions on top, without a second disc or sealing.",
     "topping.geometry": "Area {area} cm² · reference {reference} cm² · amounts ×{scale}.",
     "auth.layoutChanged": "Different format from the reference: this variant changes the recipe structure",
@@ -1368,7 +1371,7 @@ export const EN_LOCALE: CmsContent = {
         "Use a scale! Cut with a bench scraper and round each piece into a smooth ball.",
       tipNerd:
         "Dividing creates surface tension that traps CO\u2082 during proofing and defines the final alveolar structure.",
-      longDesc: "Turn the dough out onto a lightly floured surface. Using a bench scraper, cut portions of the weight shown below under Ingredients, weighing them on a scale (it matters for even baking). Ball each piece: fold the edges down and under into the centre, rotate and round it into a smooth, taut ball. Place the dough balls on a floured tray, well spaced, and cover with cling film.",
+      longDesc: "Turn the dough out onto a lightly floured surface. Using a bench scraper, cut portions of the weight shown in this step, weighing them on a scale (it matters for even baking). Ball each piece: fold the edges down and under into the centre, rotate and round it into a smooth, taut ball. Place the dough balls on a floured tray, well spaced, and cover with cling film.",
     },
     proof: {
       title: "Final Proof",
@@ -1411,7 +1414,7 @@ export const EN_LOCALE: CmsContent = {
     divide_teglia: {
       title: "Dividing",
       desc: "Divide gently, without deflating the dough.",
-      longDesc: "Turn the dough out onto a well-floured surface (with high hydrations, use semolina to help). Using a bench scraper, cut portions of the weight shown below under Ingredients, weighing them on a scale. Handle it as little as possible: teglia does NOT need the tight balling of a round pizza \u2014 tuck the edges under to form a soft log, without squeezing out the air. The bubbles built up during bulk fermentation will become the open crumb. Put each piece in an oiled container and cover.",
+      longDesc: "Turn the dough out onto a well-floured surface (with high hydrations, use semolina to help). Using a bench scraper, cut portions of the weight shown in this step, weighing them on a scale. Handle it as little as possible: teglia does NOT need the tight balling of a round pizza \u2014 tuck the edges under to form a soft log, without squeezing out the air. The bubbles built up during bulk fermentation will become the open crumb. Put each piece in an oiled container and cover.",
       tipBeginner: "Gentle hands! The bubbles in the dough are precious: tuck the edges under without pressing down.",
       tipNerd: "With hydration >75%, aggressive dividing collapses the alveoli formed during bulk fermentation: minimal tension, almost no degassing.",
     },

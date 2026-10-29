@@ -444,6 +444,8 @@ export function CookingMode() {
                       <div key={q.label} className="cooking-mode-step__quantity">
                         <dt>{q.label}</dt>
                         <dd className="type-numeric">{q.value}</dd>
+                        {/* FW-17 (S10-A-21, D-O): aiuto per le microdosi. */}
+                        {q.hint && <dd className="type-body cooking-mode-step__quantity-hint">{q.hint}</dd>}
                       </div>
                     ))}
                   </dl>
