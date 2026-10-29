@@ -22,8 +22,8 @@ bloccante da `fonts.css`), rete lenta: `/` 4,3 s (−0,3), `/explore` 3,4 s (−
 | Build | Oggi | Budget (`npm run check:budget`) |
 |---|---|---|
 | Chunk JS più grande (gzip) | 75 kB (React) | 100 kB |
-| JS senza i cataloghi delle lingue (gzip) | 486 kB (29/10/2026, ondata 1 dell'audit) | 500 kB |
-| JS per utente: codice + la lingua più pesante (gzip) | 575 kB (con `ja`, 88 kB) | 600 kB |
+| JS senza i cataloghi delle lingue (gzip) | 497,9 kB (29/10/2026, integrazione dell'ondata 2) | 500 kB |
+| JS per utente: codice + la lingua più pesante (gzip) | 595,9 kB (con `ja`, 98 kB) | 600 kB |
 | JS emesso in tutto, 7 lingue (gzip) | 974 kB in 73 chunk | solo informazione (D-059) |
 | CSS (gzip) | 61 kB (443 kB non compresso) | 75 kB |
 | Video più grande | 0,65 MB (`napoletana_stg.mp4`; era 14,6) | 1 MB |
@@ -67,6 +67,35 @@ italiano, dalle sei lingue e dai campi dell'editor. Il catalogo ja torna a
 97,9 kB; il codice senza lingue resta sopra il limite (vedi la PR di FW-04
 per le misure): servono interventi strutturali (per esempio `LazyMotion`),
 non un altro taglio di testi.
+
+Con D-062 e D-063 il ramo d'integrazione dell'ondata 2 era già a 501,9 kB
+(600,3 per utente). Recuperati 2,8 kB togliendo dal CMS circa 180 testi che
+nessuna pagina legge più (in italiano e nelle sei lingue: vecchi motivi
+`rec.*` del consiglio, etichette del vecchio confronto, del vecchio
+configuratore e della ricetta parcheggiata): 499,9 kB senza lingue, 595,7 kB
+per utente. Il margine resta sottile.
+
+**Integrazione dell'ondata 2 (FW-04 + D-062/D-063, 29/10/2026).** Uniti i due
+rami (i due tagli del CMS si sommano), la build misurava 507,6 kB senza lingue
+e 605,6 kB per utente. Recuperati 9,7 kB senza toccare limiti né script, con
+interventi strutturali e nessun testo in meno:
+
+| Intervento | kB gzip (misurati uno alla volta: non si sommano esattamente) |
+|---|---|
+| `react-router` di produzione in `vite build` (gli `exports` del pacchetto puntano sempre alla build di sviluppo) | −0,7 |
+| Drag/pan di motion svuotati in build (plugin `vulcan-motion-without-drag`; `components/ds/motion-no-drag.test.ts` fallisce se il prodotto torna a usarli). L'unico uso, lo swipe dei pannelli di `RecipeOutput`, era codice morto: il componente si monta solo con `forcedTab`, che spegneva il trascinamento | −3,9 |
+| `ds/Switch` come `<button role="switch">` nativo al posto di `@radix-ui/react-switch` (stesso `data-state`, stessa API) | −2,1 |
+| La scheda dello stile chiede solo le tabelle che mostra: acqua e maturazione di `parametric-databases.ts` (lette solo dagli strumenti di sviluppo) escono dal bundle | −1,1 |
+| `experimentalMinChunkSize` 4000 → 6000 (Dialog, ImageWithFallback e glossary-data si fondono nei chunk che li caricano) | −1,4 |
+| Terser con `ecma: 2020` (il target della build) e senza il ripiego per Safari 10 | −0,2 |
+
+Risultato: **497,9 kB senza lingue, 595,9 kB per utente** (ja 98,0 kB). Prove
+scartate: `passes: 3` di Terser (−0,1 kB), soglie di fusione oltre 6000 (nessun
+guadagno), una sola copia italiana dei messaggi del motore (−0,5 kB per 61
+testi: troppo poco per il cambiamento). Restano candidati per il prossimo
+giro: il router senza data router (`createBrowserRouter` pesa ~28 kB) e i
+campi dei dati che nessuna pagina legge (per esempio prezzi e deviazioni in
+`flour-database.ts`), da decidere con chi cura i dati.
 
 ## Perché l'LCP è lento
 

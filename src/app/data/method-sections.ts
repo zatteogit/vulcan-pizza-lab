@@ -40,6 +40,7 @@ const GROUP_OF_NOTE: Readonly<Record<string, MethodGroupId>> = {
   "score-weights": "score",
   "non-feasible-ceiling": "score",
   "authenticity-fuel-cap": "score",
+  "ranking-tiebreak": "score",
   digestibility: "score",
   "troubleshooting-thresholds": "troubleshooting",
 };

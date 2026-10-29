@@ -152,7 +152,6 @@ export const FR_LOCALE: CmsContent = {
     closeDetails: "Fermer les d\u00E9tails",
     closeInsight: "Fermer",
     modify: "Modifier",
-    disable: "D\u00E9sactiver",
     restore: "Restaurer",
     generate: "G\u00E9n\u00E9rer la recette",
     customizeParams: "Personnaliser les param\u00E8tres",
@@ -323,11 +322,6 @@ export const FR_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title: "Quand voulez-vous de la pizza ?",
-      description:
-        "S\u00E9lectionnez le moment pour calculer les temps de fermentation",
-    },
     skill: {
       title: "Niveau d\u2019exp\u00E9rience",
       description:
@@ -340,10 +334,6 @@ export const FR_LOCALE: CmsContent = {
     pantry: {
       title: "Gardez-manger",
       description: "Farines et levures que vous avez chez vous",
-    },
-    dietary: {
-      title: "Besoins alimentaires",
-      description: "Filtres optionnels",
     },
     equipment: {
       title: "\u00C9quipement",
@@ -508,7 +498,6 @@ export const FR_LOCALE: CmsContent = {
   },
   result: {
     heading: "Voici votre recette",
-    backLabel: "Retour \u00E0 la s\u00E9lection",
   },
   misc: {
     showAllStyles: "Tout afficher",
@@ -716,7 +705,8 @@ export const FR_LOCALE: CmsContent = {
     "auth.wOutOfRange": "W farine hors plage (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} hors plage {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Pas un four à bois : −15 points sur l’axe équipement (35 % de l’authenticité)",
+    "auth.notWoodOven": "Pas un four à bois et sous les {min} °C minimum du style : −15 points sur l’axe équipement (35 % de l’authenticité)",
+    "auth.woodByMethod": "Le style prévoit le four à bois (pour la Napoletana STG, le cahier des charges l’exige) : votre four atteint les {min} °C minimum, c’est donc une information et cela ne retire aucun point",
     "auth.tempVsIdeal":
       "Température {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -808,7 +798,7 @@ export const FR_LOCALE: CmsContent = {
     "change.cooking": "Cuisson : {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "La cuisson au charbon définit la méthode originale : un autre combustible en fait une adaptation",
     /* FW-06 (S07-B-02) */
-    "auth.fuelCap": "Sans le four prévu par le style, l’authenticité s’arrête à {cap}/100 : c’est une règle de l’app, pas une mesure",
+    "auth.fuelCap": "Sans le four prévu par le style, et sous ses {min} °C minimum, l’authenticité s’arrête à {cap}/100 : c’est une règle de l’app, pas une mesure",
     "gen.notCoalOven": "Le style original utilise le charbon : le four choisi modifie la cuisson et le profil aromatique",
     "timeline.oven.coal": "Four à charbon avec sole préchauffée : surveillez le fond et les bords et tournez pour une cuisson uniforme.",
     "rec.ovenIdeal":
@@ -848,12 +838,9 @@ export const FR_LOCALE: CmsContent = {
     "timeline.preheat.descPanWholeProof": "Allumez le four maintenant \u00E0 {temp}{equipmentNote}. Pendant ce temps, la p\u00E2te fait son appr\u00EAt en plaque.",
     "timeline.preheat.descDuringRest": "Allumez le four maintenant à {temp}{equipmentNote}. Pendant ce temps, les pâtons reposent.",
     "tip.waterTemp": "",
-    "hint.yeastDryPinch": "≈ une pincée",
-    "hint.yeastDryQuarterTsp": "≈ ¼ de cuillère à café",
     "hint.yeastDryHalfTsp": "≈ ½ cuillère à café",
     "hint.yeastDryOneTsp": "≈ 1 cuillère à café rase",
     "hint.yeastDryOneHalfTsp": "≈ 1½ cuillère à café",
-    "hint.yeastFreshPinch": "≈ une pincée",
     "hint.yeastFreshWeighable": "≈ {g} g sur la balance de cuisine",
     "topping.auth.canonical": "Réglementaire",
     "topping.auth.natural": "Traditionnelle",
@@ -1134,8 +1121,6 @@ export const FR_LOCALE: CmsContent = {
       tipNerd: "Avec une hydratation >75%, une division agressive fait s'effondrer les alv\u00E9oles form\u00E9es pendant le pointage : tension minimale, d\u00E9gazage quasi nul.",
     },
   },
-  timelineUi: {
-  },
   parametricTips: {
     pillHydration: "Hydratation",
     pillFlour: "Farine",
@@ -1287,23 +1272,14 @@ export const FR_LOCALE: CmsContent = {
   },
   authorNames: {
     bonci_no_knead: "No-Knead Haute Hydratation",
-    martucci_biga_ibrida: "Biga Hybride 50% + Autolyse",
-    martucci_biga_100: "Biga 100% avec Rafra\u00EEchi",
     pepe_sensoriale: "Hydratation Sensorielle",
-    bosco_idrolisi:
-      "M\u00E9thode Hydrolyse (Fermentation Spontan\u00E9e)",
-    capuano_forbici: "M\u00E9thode Ciseaux (Produits laitiers)",
     pepe_sensory_layering: "Cuisson Séparée des Ingrédients",
     bianco_long_ferment: "Fermentation 5 Jours",
     forkish_saturday: "Pizza du Samedi (Fermentation à Froid)",
   },
   authorAuthors: {
     bonci_no_knead: "Gabriele Bonci",
-    martucci_biga_ibrida: "Francesco Martucci",
-    martucci_biga_100: "Francesco Martucci",
     pepe_sensoriale: "Franco Pepe",
-    bosco_idrolisi: "Renato Bosco",
-    capuano_forbici: "Vincenzo Capuano",
     pepe_sensory_layering: "Franco Pepe",
     bianco_long_ferment: "Chris Bianco",
     forkish_saturday: "Ken Forkish",
@@ -1382,7 +1358,6 @@ export const FR_LOCALE: CmsContent = {
     locationAuto: "Détecter la position",
     locationSaved: "Position enregistrée",
     locationNone: "Vous pouvez l’indiquer plus tard ou régler directement la température de la cuisine.",
-    locationSearching: "Recherche...",
     locationNoResults: "Aucun résultat",
     ftuWelcome: "Bienvenue",
     ftuOvenTitle: "Quel four avez-vous ?",
@@ -1434,9 +1409,6 @@ export const FR_LOCALE: CmsContent = {
     mixerFork: "Pétrin à fourche",
     mixerForkDesc:
       "Lent, faible friction — idéal pour haute hydratation",
-    mixerLevelHome: "Maison",
-    mixerLevelSemiPro: "Semi-Pro",
-    mixerLevelPro: "Pro",
     surfaceRefractory: "Brique réfractaire",
     surfaceRefractoryDesc:
       "3 cm, haute masse thermique — four à bois et prosumer",
@@ -1555,7 +1527,6 @@ export const FR_LOCALE: CmsContent = {
       "Identifie le problème et trouve quoi corriger.",
     learnPreFerments: "Biga, poolish et autolyse",
     learnPreFermentsDesc: "Ce qu’ils changent et comment les intégrer à la préparation.",
-    recipeLabel: "Recette",
     recipeBackToStyles: "Styles",
     recipeStyleNotFound: "Style introuvable",
     recipeStyleNotFoundDesc:
@@ -1667,7 +1638,6 @@ export const FR_LOCALE: CmsContent = {
     thicknessThin: "Fine et croustillante",
     thicknessThick: "\u00C9paisse et moelleuse",
     thicknessStandard: "Standard pour ce style",
-    backLabel: "Retour",
     hintHighHydrationNeedsW: "À {h}% d'hydratation, vous avez besoin de farine forte : W recommandé ≥ {w}",
     hintLowWLimitsHydration: "Avec un W de {w}, l'hydratation maximale recommandée est de ~{h}%",
     hintLongFermentUseFridge: "Avec {hours}h de fermentation, utilisez le réfrigérateur ({fridgeTemp}) pour contrôler la pâte",
@@ -1746,7 +1716,6 @@ export const FR_LOCALE: CmsContent = {
     inProgressShort: "En cours",
     reopen: "Rouvrir la fourn\u00E9e en cours",
     completed: "Fourn\u00E9e termin\u00E9e",
-    waitOver: "Attente termin\u00E9e : continuez !",
     dueNow: "C'est l'heure : {title}",
     interrupt: "Interrompre la fourn\u00E9e",
     abortConfirmTitle: "Interrompre la fourn\u00E9e ?",
@@ -1853,7 +1822,7 @@ export const FR_LOCALE: CmsContent = {
     scoreAria: "{label} : {score} sur 100",
     meaning: "Dans quelle mesure la recette est réalisable avec votre cuisine et reste fidèle au style.",
     limitedAuthenticity: "Limité par l’authenticité ({score}/100).",
-    limitedFuel: "Limité par l’authenticité : sans le four prévu par le style, elle s’arrête à {cap}/100.",
+    limitedFuel: "Limité par l’authenticité : sans le four prévu par le style et sous sa température minimale, elle s’arrête à {cap}/100.",
     limitedFeasibility: "Limité par une condition non remplie : selon une règle de l’app, il reste sous {limit}.",
     countedTitle: "Ce qui entre dans le nombre",
     weight: "poids {pct}",
@@ -1863,6 +1832,7 @@ export const FR_LOCALE: CmsContent = {
     ruleFeasibility: "Plafond pour les recettes non réalisables (règle de l’app)",
     ruleResult: "Score : la plus basse des valeurs ci-dessus",
     ceilingEditorial: "Choix de produit : une recette que vous ne pouvez pas réaliser reste sous {limit}, même si les autres valeurs sont élevées.",
+    tieBreak: "Choix de produit : à nombre égal, les listes montrent d’abord le style que votre cuisine couvre avec le plus de marge de four et de temps. Le nombre ne change pas.",
     infoTitle: "Informations à part",
     infoNote: "Elles n’entrent pas dans le nombre : elles disent autre chose de la recette, pas à quel point elle convient à votre cuisine.",
     referencePending: "Le profil d’expérimentation de ce style n’a pas encore été vérifié.",

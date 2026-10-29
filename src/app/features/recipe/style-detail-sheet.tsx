@@ -31,7 +31,13 @@ import {
 } from "../../domain/pizza-engine";
 import { getStyleDeviation, DEVIATION_CATEGORY_LABELS } from "../../domain/deviation-tags";
 import { getInterpretationsForStyle } from "../../data/interpretation-library";
-import { getStyleParametrics } from "../../data/parametric-databases";
+import {
+  getBakingTimeByStyle,
+  getDoughBaseByStyle,
+  getFoldingByStyle,
+  getOvenTempByStyle,
+  getSaltByStyle,
+} from "../../data/parametric-databases";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
@@ -168,7 +174,15 @@ export function StyleDetailSheet({
   /* Audit motore 2026-05: ex getCompatibleVariants (AUTHOR_VARIANTS legacy) →
      ora deriva dalla Interpretation library (unica fonte di verità). */
   const compatVariants = getInterpretationsForStyle(style.id);
-  const params = getStyleParametrics(style.id);
+  /* Budget D-059: solo le tabelle che la scheda mostra. getStyleParametrics
+     portava nel bundle anche acqua e maturazione, che nessuna pagina legge. */
+  const params = {
+    ovenTemp: getOvenTempByStyle(style.id),
+    bakingTime: getBakingTimeByStyle(style.id),
+    doughBase: getDoughBaseByStyle(style.id),
+    salt: getSaltByStyle(style.id),
+    folding: getFoldingByStyle(style.id),
+  };
   // FW-07 (S03-A-02): per le fritte la temperatura è dell'olio, non del forno.
   const frying = params.ovenTemp?.ovenType === "frittura";
   // FW-07: il nome del forno della cucina effettiva (il modello, se è lo stesso tipo).

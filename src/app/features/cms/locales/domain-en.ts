@@ -836,8 +836,13 @@ export const SCIENCE_EN: CmsScience = {
     },
     "authenticity-fuel-cap": {
       title: "Authenticity ceiling for the fuel",
-      l1: "Without the oven the style calls for, authenticity has a ceiling: it is a {brand} choice.",
-      l2: "When a style requires wood or coal, another oven can bake well but does not follow the method. The ceiling is an editorial boundary, not a measure of quality.",
+      l1: "If the oven is not the one the style calls for (wood or coal) and does not reach the style's minimum temperature, authenticity has a ceiling: it is a {brand} choice.",
+      l2: "The ceiling applies only when both the fuel and the heat are missing: an electric or gas oven that reaches the style's minimum temperature has no ceiling. That the style calls for wood or coal (for Napoletana STG the specification says so) stays written in the authenticity details, as information and not as a penalty. The ceiling is an editorial boundary, not a measure of quality.",
+    },
+    "ranking-tiebreak": {
+      title: "Tie-break at equal scores",
+      l1: "At the same number, the style your kitchen covers with more margin comes first: it is a {brand} choice.",
+      l2: "The number does not change: only the order does, and only among styles in the same group with the same score. The margin is the mean of two values between 0 and 1: how far the oven exceeds the style's minimum temperature and how far the hours available exceed the minimum maturation, each in proportion to the minimum (1 means double or more). For fried styles only time counts. It applies in Create, in Explore and for assistants.",
     },
     digestibility: {
       title: "Digestibility index",
@@ -900,6 +905,7 @@ export const SCIENCE_EN: CmsScience = {
     "baking-energy": "E = P × t · P = 2, 3 or 8 kW depending on oven temperature",
     "thickness-factor": "TF = dough ball weight (g) / pizza area (cm²) · 1 oz/in² ≈ 4.39 g/cm²",
     "score-weights": "C = min(weighted mean of A and F; A) · default weights: Authenticity (A) 55%, Ease (F) 45% · not feasible: C ≤ 39",
+    "ranking-tiebreak": "M = mean of min(1; max(0; (T − T_min) / T_min)) and min(1; max(0; (H − H_min) / H_min)) · T oven, H hours available · fried: H only",
   },
   sourceNotes: {
     "internal-db": "the project's internal working database, not public",

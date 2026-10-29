@@ -36,6 +36,7 @@ import { TOPPING_LIBRARY, getToppingForStyle, scaleToppingAmounts } from "../dat
 import { FLOURS_DB } from "../data/flour-database";
 import { pantryIngredientId, pantryIngredientReferences } from "../domain/pantry-ingredients";
 import { DEFAULT_UI_SCORE_WEIGHTS } from "../domain/recipe-score";
+import { compareByCompatibility, kitchenMargin } from "../domain/kitchen-margin";
 import { computePreFermentSplit, PRE_FERMENT_TEMP_C } from "../domain/pre-ferment-split";
 import { buildRecipePhases } from "../domain/recipe-phases";
 import { recipeDisplayName, stgDepartures } from "../domain/recipe-reference";
@@ -462,6 +463,7 @@ export const MCP_TOOLS: McpTool[] = [
       const includeBlocked = optionalBoolean(args,"include_not_feasible") ?? false;
       const includeRecipe = optionalBoolean(args,"include_recipe") ?? false;
       const candidates = onlyStyle ? {[onlyStyle.id]:onlyStyle} : Object.fromEntries(Object.values(STYLES_DB).filter(s=>!s.dough.unleavened || !["biga","poolish"].includes(String(args.pre_ferment))).map(s=>[s.id,s]));
+      const margins = new Map<string, number>();
       const recs = recommendStyles(constraints, candidates, undefined,
         (style,c)=>recipeForInput(style,c,args).recipe)
         .map(rec => ({...rec, dietary_alternatives: dietaryRecipeAlternatives(rec.recipe, constraints,
@@ -474,6 +476,8 @@ export const MCP_TOOLS: McpTool[] = [
           const tunedArgs: Json = {...args,recipe_mode:"adapted"};
           for (const key of ["hydration_pct","flour_w","flour_pl","salt_pct","flour_blend","compensate_hydration","fermentation_hours","fermentation_temp_c","pre_ferment","pre_ferment_flour_pct"]) delete tunedArgs[key];
           const tuned = scoped ? recipeForInput(rec.style,constraints,tunedArgs).recipe : null;
+          const margin = kitchenMargin(rec.style, constraints);
+          margins.set(rec.style.id, margin);
           const best = Math.max(now, tuned ? tuned.verdict.outcome === "not_feasible" ? now : tuned.scores.composite : kitchenCompatibility(rec.style, constraints).best);
           return {
             ...styleSummary(rec.style),
@@ -481,6 +485,9 @@ export const MCP_TOOLS: McpTool[] = [
             reference_name: rec.style.name,
             compatibility: now,
             compatibility_best: best,
+            // D-062: a pari compatibilità, prima chi ha più margine di forno e
+            // tempo oltre il minimo dello stile (0–1); stesso spareggio dell'app.
+            kitchen_margin: Math.round(margin * 100) / 100,
             tier: rec.tier,
             outcome: rec.verdict.outcome,
             blockers: rec.verdict.blockers,
@@ -502,9 +509,10 @@ export const MCP_TOOLS: McpTool[] = [
             warnings: [...rec.warnings.map(msg), ...evaluated.dietary_warnings.map(w=>w.message)],
           };
         })
-        // Per compatibilità con la cucina, il numero che l'agente mostra;
-        // il limite si applica dopo, se no i migliori restano fuori.
-        .sort((a, b) => b.compatibility - a.compatibility)
+        // Per compatibilità con la cucina, il numero che l'agente mostra; a
+        // pari numero più margine prima (D-062, come Crea). Il limite si
+        // applica dopo, se no i migliori restano fuori.
+        .sort((a, b) => compareByCompatibility({ score: a.compatibility, margin: margins.get(a.id) ?? 0 }, { score: b.compatibility, margin: margins.get(b.id) ?? 0 }))
         .slice(0, limit);
       return {
         summary: recs.map((r) => `${r.name}: ${r.compatibility}/100`).join("; "),

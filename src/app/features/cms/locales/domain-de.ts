@@ -806,8 +806,13 @@ export const SCIENCE_DE: CmsScience = {
     },
     "authenticity-fuel-cap": {
       title: "Obergrenze der Authentizität beim Brennstoff",
-      l1: "Ohne den Ofen, den der Stil verlangt, hat die Authentizität eine Obergrenze: eine Wahl von {brand}.",
-      l2: "Verlangt ein Stil Holz oder Kohle, kann ein anderer Ofen gut backen, folgt aber nicht der Methode. Die Grenze ist redaktionell, kein Qualitätsmaß.",
+      l1: "Ist der Ofen nicht der vom Stil verlangte (Holz oder Kohle) und erreicht er die Mindesttemperatur des Stils nicht, hat die Authentizität eine Obergrenze: eine Wahl von {brand}.",
+      l2: "Die Obergrenze gilt nur, wenn Brennstoff und Hitze beide fehlen: Ein Elektro- oder Gasofen, der die Mindesttemperatur des Stils erreicht, hat keine Obergrenze. Dass der Stil Holz oder Kohle vorsieht (bei der Napoletana STG sagt es die Produktspezifikation), steht weiter in den Details der Authentizität, als Information und nicht als Abzug. Die Grenze ist redaktionell, kein Qualitätsmaß.",
+    },
+    "ranking-tiebreak": {
+      title: "Reihenfolge bei gleicher Punktzahl",
+      l1: "Bei gleicher Zahl kommt zuerst der Stil, den deine Küche mit mehr Spielraum abdeckt: eine Wahl von {brand}.",
+      l2: "Die Zahl ändert sich nicht, nur die Reihenfolge, und nur zwischen Stilen derselben Gruppe mit gleicher Punktzahl. Der Spielraum ist das Mittel aus zwei Werten zwischen 0 und 1: wie weit der Ofen die Mindesttemperatur des Stils übertrifft und wie weit die verfügbaren Stunden die Mindestreifezeit übertreffen, jeweils im Verhältnis zum Minimum (1 heißt das Doppelte oder mehr). Bei frittierten Stilen zählt nur die Zeit. Das gilt in Erstellen, in Entdecken und für Assistenten.",
     },
     digestibility: {
       title: "Verdaulichkeitsindex",
@@ -870,6 +875,7 @@ export const SCIENCE_DE: CmsScience = {
     "baking-energy": "E = P × t · P = 2, 3 oder 8 kW je nach Ofentemperatur",
     "thickness-factor": "TF = Teiglinggewicht (g) / Pizzafläche (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
     "score-weights": "C = min(gewichtetes Mittel aus A und F; A) · Standardgewichte: Authentizität (A) 55 %, Einfachheit (F) 45 % · nicht machbar: C ≤ 39",
+    "ranking-tiebreak": "M = Mittel aus min(1; max(0; (T − T_min) / T_min)) und min(1; max(0; (H − H_min) / H_min)) · T Ofen, H verfügbare Stunden · frittiert: nur H",
   },
   sourceNotes: {
     "internal-db": "interne Arbeitsdatenbank des Projekts, nicht öffentlich",

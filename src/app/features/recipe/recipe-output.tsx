@@ -300,20 +300,10 @@ export function RecipeOutput({
     },
     [activeTabView, forcedTab, onTabChange],
   );
-  /* Swipe: trascina il pannello per cambiare sezione */
-  const onPanelDragEnd = React.useCallback(
-    (_: unknown, info: { offset: { x: number }; velocity: { x: number } }) => {
-      if (forcedTab) return;
-      const ids = pagerTabs.map((t) => t.id);
-      const i = ids.indexOf(activeTabView);
-      if ((info.offset.x < -70 || info.velocity.x < -500) && i < ids.length - 1) {
-        switchTab(ids[i + 1]);
-      } else if ((info.offset.x > 70 || info.velocity.x > 500) && i > 0) {
-        switchTab(ids[i - 1]);
-      }
-    },
-    [activeTabView, forcedTab, pagerTabs, switchTab],
-  );
+  /* Budget D-059 (integrazione ondata 2): tolto lo swipe dei pannelli
+     (`drag` di motion). RecipeOutput si monta solo da recipe-view.tsx, sempre
+     con `forcedTab`, e con `forcedTab` il trascinamento era spento: il gesto
+     non poteva mai partire. Le sezioni si cambiano con le schede. */
 
   /* Piano comfort: calcolato in base alla timeline e start time */
   const [comfortToggled, setComfortToggled] = React.useState(false);
@@ -784,10 +774,6 @@ export function RecipeOutput({
         animate="center"
         exit="exit"
         transition={motionSpring.panel}
-        drag={forcedTab ? false : "x"}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.12}
-        onDragEnd={onPanelDragEnd}
         className="recipe-output-panel recipe-output-panel--ricetta"
       >
       <ScrollToTopOnMount />
@@ -833,10 +819,6 @@ export function RecipeOutput({
         animate="center"
         exit="exit"
         transition={motionSpring.panel}
-        drag={forcedTab ? false : "x"}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.12}
-        onDragEnd={onPanelDragEnd}
         className="recipe-output-panel recipe-output-panel--procedura"
       >
       <ScrollToTopOnMount />
@@ -894,10 +876,6 @@ export function RecipeOutput({
         animate="center"
         exit="exit"
         transition={motionSpring.panel}
-        drag={forcedTab ? false : "x"}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.12}
-        onDragEnd={onPanelDragEnd}
         className="recipe-output-panel recipe-output-panel--condimento"
       >
       <ScrollToTopOnMount />

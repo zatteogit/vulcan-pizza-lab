@@ -310,9 +310,22 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     sourceIds: [],
   },
   {
+    // D-063: il tetto vale solo se il forno non arriva al minimo dello stile.
     id: "authenticity-fuel-cap",
     kind: "editorial",
-    engineRef: "calculateAuthenticityScore",
+    engineRef: "calculateAuthenticityScore, AUTHENTICITY_FUEL_CAP",
+    sourceIds: [],
+  },
+  {
+    // D-062: a pari numero mostrato, più margine di forno e tempo prima.
+    id: "ranking-tiebreak",
+    kind: "editorial",
+    formula: "M = ½ × [min(1; max(0; (T − T_min) / T_min)) + min(1; max(0; (H − H_min) / H_min))]",
+    variables: [
+      { symbol: "T", unitKey: "celsius" },
+      { symbol: "H", unitKey: "hours" },
+    ],
+    engineRef: "kitchenMargin, compareByCompatibility",
     sourceIds: [],
   },
   {

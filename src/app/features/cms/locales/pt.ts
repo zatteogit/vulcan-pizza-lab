@@ -150,7 +150,6 @@ export const PT_LOCALE: CmsContent = {
     closeDetails: "Fechar detalhes",
     closeInsight: "Fechar",
     modify: "Editar",
-    disable: "Desativar",
     restore: "Restaurar",
     generate: "Gerar receita",
     customizeParams: "Personalizar par\u00E2metros",
@@ -321,11 +320,6 @@ export const PT_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title: "Quando quer pizza?",
-      description:
-        "Selecione o momento para calcular os tempos de fermenta\u00E7\u00E3o",
-    },
     skill: {
       title: "N\u00EDvel de experi\u00EAncia",
       description:
@@ -338,10 +332,6 @@ export const PT_LOCALE: CmsContent = {
     pantry: {
       title: "Despensa",
       description: "Farinhas e fermentos que tem em casa",
-    },
-    dietary: {
-      title: "Necessidades alimentares",
-      description: "Filtros opcionais",
     },
     equipment: {
       title: "Equipamento",
@@ -506,7 +496,6 @@ export const PT_LOCALE: CmsContent = {
   },
   result: {
     heading: "Aqui est\u00E1 a sua receita",
-    backLabel: "Voltar \u00E0 sele\u00E7\u00E3o",
   },
   misc: {
     showAllStyles: "Mostrar todas",
@@ -715,7 +704,8 @@ export const PT_LOCALE: CmsContent = {
       "W da farinha fora do intervalo (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} fora do intervalo {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Não é forno a lenha: −15 pontos no eixo de equipamento (35% da autenticidade)",
+    "auth.notWoodOven": "Não é forno a lenha e fica abaixo dos {min} °C mínimos do estilo: −15 pontos no eixo de equipamento (35% da autenticidade)",
+    "auth.woodByMethod": "O estilo prevê o forno a lenha (para a Napoletana STG, o caderno de especificações exige): seu forno chega aos {min} °C mínimos, então é uma informação e não tira pontos",
     "auth.tempVsIdeal":
       "Temperatura {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -806,7 +796,7 @@ export const PT_LOCALE: CmsContent = {
     "change.cooking": "Cozedura: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "A cozedura a carvão define o método original: outro combustível constitui uma adaptação",
     /* FW-06 (S07-B-02) */
-    "auth.fuelCap": "Sem o forno que o estilo pede, a autenticidade para em {cap}/100: é uma regra do app, não uma medida",
+    "auth.fuelCap": "Sem o forno que o estilo pede, e abaixo dos seus {min} °C mínimos, a autenticidade para em {cap}/100: é uma regra do app, não uma medida",
     "gen.notCoalOven": "O estilo original usa carvão: o forno escolhido altera a cozedura e o perfil aromático",
     "timeline.oven.coal": "Forno a carvão com base pré-aquecida: verifique o fundo e os bordos e roda para uniformizar a cozedura.",
     "rec.ovenIdeal":
@@ -846,12 +836,9 @@ export const PT_LOCALE: CmsContent = {
     "timeline.preheat.descPanWholeProof": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, a massa faz a fermenta\u00E7\u00E3o final na assadeira.",
     "timeline.preheat.descDuringRest": "Ligue o forno agora a {temp}{equipmentNote}. Enquanto isso, as bolas de massa descansam.",
     "tip.waterTemp": "",
-    "hint.yeastDryPinch": "≈ uma pitada",
-    "hint.yeastDryQuarterTsp": "≈ ¼ de colher de chá",
     "hint.yeastDryHalfTsp": "≈ ½ colher de chá",
     "hint.yeastDryOneTsp": "≈ 1 colher de chá rasa",
     "hint.yeastDryOneHalfTsp": "≈ 1½ colheres de chá",
-    "hint.yeastFreshPinch": "≈ uma pitada",
     "hint.yeastFreshWeighable": "≈ {g} g na balança de cozinha",
     "topping.auth.canonical": "Regulamentar",
     "topping.auth.natural": "Tradicional",
@@ -1128,8 +1115,6 @@ export const PT_LOCALE: CmsContent = {
       tipNerd: "Com hidrata\u00E7\u00E3o >75%, uma divis\u00E3o agressiva colapsa os alv\u00E9olos formados na fermenta\u00E7\u00E3o em massa: tens\u00E3o m\u00EDnima, desgaseifica\u00E7\u00E3o quase nula.",
     },
   },
-  timelineUi: {
-  },
   parametricTips: {
     pillHydration: "Hidrata\u00E7\u00E3o",
     pillFlour: "Farinha",
@@ -1278,13 +1263,7 @@ export const PT_LOCALE: CmsContent = {
   },
   authorNames: {
     bonci_no_knead: "Sem Sova Alta Hidrata\u00E7\u00E3o",
-    martucci_biga_ibrida:
-      "Biga H\u00EDbrida 50% + Aut\u00F3lise",
-    martucci_biga_100: "Biga 100% com Refresco",
     pepe_sensoriale: "Hidrata\u00E7\u00E3o Sensorial",
-    bosco_idrolisi:
-      "M\u00E9todo Hidr\u00F3lise (Fermenta\u00E7\u00E3o Espont\u00E2nea)",
-    capuano_forbici: "M\u00E9todo Tesoura (Laticínios)",
     pepe_sensory_layering:
       "Cozimento Separado dos Ingredientes",
     bianco_long_ferment: "Fermentação 5 Dias",
@@ -1292,11 +1271,7 @@ export const PT_LOCALE: CmsContent = {
   },
   authorAuthors: {
     bonci_no_knead: "Gabriele Bonci",
-    martucci_biga_ibrida: "Francesco Martucci",
-    martucci_biga_100: "Francesco Martucci",
     pepe_sensoriale: "Franco Pepe",
-    bosco_idrolisi: "Renato Bosco",
-    capuano_forbici: "Vincenzo Capuano",
     pepe_sensory_layering: "Franco Pepe",
     bianco_long_ferment: "Chris Bianco",
     forkish_saturday: "Ken Forkish",
@@ -1373,7 +1348,6 @@ export const PT_LOCALE: CmsContent = {
     locationAuto: "Detectar localização",
     locationSaved: "Localização salva",
     locationNone: "Você pode indicá-la mais tarde ou definir diretamente a temperatura da cozinha.",
-    locationSearching: "Procurando...",
     locationNoResults: "Sem resultados",
     ftuWelcome: "Bem-vindo",
     ftuOvenTitle: "Que forno você tem?",
@@ -1424,9 +1398,6 @@ export const PT_LOCALE: CmsContent = {
     mixerFork: "Amassadeira de garfo",
     mixerForkDesc:
       "Lenta, baixa fricção — ideal para alta hidratação",
-    mixerLevelHome: "Casa",
-    mixerLevelSemiPro: "Semi-Pro",
-    mixerLevelPro: "Pro",
     surfaceRefractory: "Tijolo refratário",
     surfaceRefractoryDesc:
       "3 cm, alta massa térmica — forno a lenha e prosumer",
@@ -1547,7 +1518,6 @@ export const PT_LOCALE: CmsContent = {
     learnPreFerments: "Biga, poolish e autólise",
     learnPreFermentsDesc:
       "O que muda e como os integrar na preparação.",
-    recipeLabel: "Receita",
     recipeBackToStyles: "Estilos",
     recipeStyleNotFound: "Estilo n\u00E3o encontrado",
     recipeStyleNotFoundDesc:
@@ -1658,7 +1628,6 @@ export const PT_LOCALE: CmsContent = {
     thicknessThin: "Fina e crocante",
     thicknessThick: "Alta e fofa",
     thicknessStandard: "Padr\u00E3o para este estilo",
-    backLabel: "Voltar",
     hintHighHydrationNeedsW: "Com hidratação a {h}%, você precisa de farinha forte: W recomendado ≥ {w}",
     hintLowWLimitsHydration: "Com W {w}, a hidratação máxima recomendada é de ~{h}%",
     hintLongFermentUseFridge: "Com {hours}h de fermentação, prefira usar a geladeira ({fridgeTemp}) para controlar a massa",
@@ -1737,7 +1706,6 @@ export const PT_LOCALE: CmsContent = {
     inProgressShort: "Em andamento",
     reopen: "Reabrir a fornada em andamento",
     completed: "Fornada conclu\u00EDda",
-    waitOver: "Fim da espera: continue!",
     dueNow: "Chegou a hora: {title}",
     interrupt: "Interromper a fornada",
     abortConfirmTitle: "Interromper a fornada?",
@@ -1844,7 +1812,7 @@ export const PT_LOCALE: CmsContent = {
     scoreAria: "{label}: {score} de 100",
     meaning: "O quanto a receita pode ser feita com a sua cozinha e o quanto continua fiel ao estilo.",
     limitedAuthenticity: "Limitada pela autenticidade ({score}/100).",
-    limitedFuel: "Limitada pela autenticidade: sem o forno que o estilo pede, ela para em {cap}/100.",
+    limitedFuel: "Limitada pela autenticidade: sem o forno que o estilo pede e abaixo da sua temperatura mínima, ela para em {cap}/100.",
     limitedFeasibility: "Limitada por um requisito não atendido: por regra do app, fica abaixo de {limit}.",
     countedTitle: "O que entra no número",
     weight: "peso {pct}",
@@ -1854,6 +1822,7 @@ export const PT_LOCALE: CmsContent = {
     ruleFeasibility: "Teto para receitas inviáveis (regra do app)",
     ruleResult: "Pontuação: o menor dos valores acima",
     ceilingEditorial: "Escolha de produto: uma receita que você não consegue fazer fica abaixo de {limit}, mesmo que os outros valores sejam altos.",
+    tieBreak: "Escolha de produto: com o mesmo número, nas listas vem primeiro o estilo que sua cozinha cobre com mais margem de forno e de tempo. O número não muda.",
     infoTitle: "Informações à parte",
     infoNote: "Não entram no número: dizem outra coisa sobre a receita, não o quanto ela combina com a sua cozinha.",
     referencePending: "O perfil de experimentação deste estilo ainda não foi verificado.",

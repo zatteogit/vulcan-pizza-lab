@@ -1095,9 +1095,17 @@ function calculateAuthenticityScore(
   }
 
   // Equipment axis (35%)
-  if (style.requires_wood_oven && ovenType !== "wood") {
+  // D-063 (Matteo, 29/10/2026): il combustibile pesa solo se il forno non
+  // arriva alla temperatura minima dello stile. Se ci arriva, che lo stile
+  // preveda la legna è un'informazione (livello 2), non una penalità.
+  const styleMinTemp = style.baking.temp_c_range[0];
+  const reachesStyleMin = ovenTemp >= styleMinTemp;
+  if (style.requires_wood_oven && ovenType !== "wood" && reachesStyleMin) {
+    penalties.push(em("auth.woodByMethod", METHOD_MESSAGES_IT["auth.woodByMethod"], { min: styleMinTemp }));
+  }
+  if (style.requires_wood_oven && ovenType !== "wood" && !reachesStyleMin) {
     breakdown.attrezzatura -= 15;
-    penalties.push(em("auth.notWoodOven", "Forno non a legna: −15 punti sull’asse attrezzatura (35% dell’autenticità)"));
+    penalties.push(em("auth.notWoodOven", METHOD_MESSAGES_IT["auth.notWoodOven"], { min: styleMinTemp }));
     const tempRatio = ovenTemp / style.baking.temp_c_ideal;
     const tempPenalty = (1 - tempRatio) * 25;
     if (tempPenalty > 0) {
@@ -1172,20 +1180,23 @@ function calculateAuthenticityScore(
     ),
   );
 
-  // Un combustibile identitario sostituito non può restare «rigorosamente
-  // autentico», anche quando fornisce il calore necessario. 75 è il confine
-  // editoriale di «fedele con adattamenti», non una misura fisica di qualità.
-  if ((style.requires_wood_oven && ovenType !== "wood") ||
-    (style.baking.oven_type_required === "coal" && ovenType !== "coal")) {
+  // Un combustibile identitario sostituito, con un forno che non arriva
+  // nemmeno al minimo dello stile, non può restare «rigorosamente autentico».
+  // 75 è il confine editoriale di «fedele con adattamenti», non una misura
+  // fisica di qualità. D-063 (Matteo, 29/10/2026): se il forno arriva alla
+  // temperatura minima dello stile, il tetto non si applica.
+  const fuelSubstituted = (style.requires_wood_oven && ovenType !== "wood") ||
+    (style.baking.oven_type_required === "coal" && ovenType !== "coal");
+  if (fuelSubstituted && !reachesStyleMin) {
     // FW-06 (S07-B-02): quando il tetto abbassa davvero il valore lo si dice,
     // come regola di Vulcan: «−15» sull'asse attrezzatura non spiega da solo 75.
     if (score > AUTHENTICITY_FUEL_CAP) {
-      penalties.push(em("auth.fuelCap", METHOD_MESSAGES_IT["auth.fuelCap"], { cap: AUTHENTICITY_FUEL_CAP }));
+      penalties.push(em("auth.fuelCap", METHOD_MESSAGES_IT["auth.fuelCap"], { cap: AUTHENTICITY_FUEL_CAP, min: styleMinTemp }));
     }
     score = Math.min(score, AUTHENTICITY_FUEL_CAP);
-    if (style.baking.oven_type_required === "coal") {
-      penalties.push(em("auth.notCoalOven", METHOD_MESSAGES_IT["auth.notCoalOven"]));
-    }
+  }
+  if (fuelSubstituted && style.baking.oven_type_required === "coal") {
+    penalties.push(em("auth.notCoalOven", METHOD_MESSAGES_IT["auth.notCoalOven"]));
   }
 
   // ── Cap di VIABILITÀ TERMICA (Audit role-play giugno 2026, finding "ottimismo") ──

@@ -150,7 +150,6 @@ export const DE_LOCALE: CmsContent = {
     closeDetails: "Details schlie\u00DFen",
     closeInsight: "Schlie\u00DFen",
     modify: "Bearbeiten",
-    disable: "Deaktivieren",
     restore: "Wiederherstellen",
     generate: "Rezept erstellen",
     customizeParams: "Parameter anpassen",
@@ -321,11 +320,6 @@ export const DE_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title: "Wann m\u00F6chtest du Pizza?",
-      description:
-        "W\u00E4hle den Zeitpunkt zur Berechnung der Gehzeiten",
-    },
     skill: {
       title: "Erfahrungsstufe",
       description:
@@ -338,10 +332,6 @@ export const DE_LOCALE: CmsContent = {
     pantry: {
       title: "Vorratskammer",
       description: "Mehle und Hefen, die du zu Hause hast",
-    },
-    dietary: {
-      title: "Ern\u00E4hrungsbed\u00FCrfnisse",
-      description: "Optionale Filter",
     },
     equipment: {
       title: "Ausstattung",
@@ -498,7 +488,6 @@ export const DE_LOCALE: CmsContent = {
   },
   result: {
     heading: "Hier ist dein Rezept",
-    backLabel: "Zur\u00FCck zur Auswahl",
   },
   misc: {
     showAllStyles: "Alle anzeigen",
@@ -707,7 +696,8 @@ export const DE_LOCALE: CmsContent = {
       "Mehl-W außerhalb des Bereichs (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} außerhalb {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Kein Holzofen: −15 Punkte auf der Achse Ausstattung (35 % der Authentizität)",
+    "auth.notWoodOven": "Kein Holzofen und unter den {min} °C Mindesttemperatur des Stils: −15 Punkte auf der Achse Ausstattung (35 % der Authentizität)",
+    "auth.woodByMethod": "Der Stil sieht einen Holzofen vor (bei der Napoletana STG verlangt es die Produktspezifikation): Dein Ofen erreicht die {min} °C Mindesttemperatur, daher ist das eine Information und kostet keine Punkte",
     "auth.tempVsIdeal":
       "Temperatur {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -796,7 +786,7 @@ export const DE_LOCALE: CmsContent = {
     "change.cooking": "Backen: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "Kohlefeuer gehört zur Originalmethode: Ein anderer Brennstoff bedeutet eine Anpassung",
     /* FW-06 (S07-B-02) */
-    "auth.fuelCap": "Ohne den Ofen, den der Stil vorsieht, endet die Authentizität bei {cap}/100: eine Regel der App, keine Messung",
+    "auth.fuelCap": "Ohne den Ofen, den der Stil vorsieht, und unter seinen {min} °C Mindesttemperatur endet die Authentizität bei {cap}/100: eine Regel der App, keine Messung",
     "gen.notCoalOven": "Der Originalstil wird mit Kohle gebacken: Der gewählte Ofen verändert Backweise und Aroma",
     "timeline.oven.coal": "Kohleofen mit vorgeheiztem Backboden: Boden und Rand beobachten und für gleichmäßiges Backen drehen.",
     "rec.ovenIdeal":
@@ -834,12 +824,9 @@ export const DE_LOCALE: CmsContent = {
     "timeline.preheat.descPan": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen beendet der Teig die Gare im Blech.",
     "timeline.preheat.descPanWholeProof": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. W\u00E4hrenddessen macht der Teig die Gare im Blech.",
     "timeline.preheat.descDuringRest": "Schalte den Ofen jetzt auf {temp}{equipmentNote}. Währenddessen ruhen die Teiglinge.",
-    "hint.yeastDryPinch": "≈ eine Messerspitze",
-    "hint.yeastDryQuarterTsp": "≈ ¼ Teelöffel",
     "hint.yeastDryHalfTsp": "≈ ½ Teelöffel",
     "hint.yeastDryOneTsp": "≈ 1 gestrichener Teelöffel",
     "hint.yeastDryOneHalfTsp": "≈ 1½ Teelöffel",
-    "hint.yeastFreshPinch": "≈ eine Messerspitze",
     "hint.yeastFreshWeighable": "≈ {g} g auf der Küchenwaage",
     "topping.auth.canonical": "Nach Regelwerk",
     "topping.auth.natural": "Traditionell",
@@ -1120,8 +1107,6 @@ export const DE_LOCALE: CmsContent = {
       tipNerd: "Bei Hydratation >75% l\u00E4sst aggressives Teilen die in der Stockgare gebildeten Poren kollabieren: minimale Spannung, kaum Entgasung.",
     },
   },
-  timelineUi: {
-  },
   parametricTips: {
     pillHydration: "Hydratation",
     pillFlour: "Mehl",
@@ -1269,22 +1254,14 @@ export const DE_LOCALE: CmsContent = {
   },
   authorNames: {
     bonci_no_knead: "No-Knead Hohe Hydratation",
-    martucci_biga_ibrida: "Hybrid-Biga 50% + Autolyse",
-    martucci_biga_100: "100% Biga mit Auffrischung",
     pepe_sensoriale: "Sensorische Hydratation",
-    bosco_idrolisi: "Hydrolyse-Methode (Spontang\u00E4rung)",
-    capuano_forbici: "Scheren-Methode (Milchprodukte)",
     pepe_sensory_layering: "Getrennte Zutatenzubereitung",
     bianco_long_ferment: "5-Tage-G\u00E4rung",
     forkish_saturday: "Samstags-Pizza (Kaltg\u00E4rung)",
   },
   authorAuthors: {
     bonci_no_knead: "Gabriele Bonci",
-    martucci_biga_ibrida: "Francesco Martucci",
-    martucci_biga_100: "Francesco Martucci",
     pepe_sensoriale: "Franco Pepe",
-    bosco_idrolisi: "Renato Bosco",
-    capuano_forbici: "Vincenzo Capuano",
     pepe_sensory_layering: "Franco Pepe",
     bianco_long_ferment: "Chris Bianco",
     forkish_saturday: "Ken Forkish",
@@ -1360,7 +1337,6 @@ export const DE_LOCALE: CmsContent = {
     locationAuto: "Standort ermitteln",
     locationSaved: "Standort gespeichert",
     locationNone: "Du kannst den Ort später angeben oder die Küchentemperatur direkt einstellen.",
-    locationSearching: "Suche...",
     locationNoResults: "Keine Ergebnisse",
     ftuWelcome: "Willkommen",
     ftuOvenTitle: "Welchen Ofen hast du?",
@@ -1412,9 +1388,6 @@ export const DE_LOCALE: CmsContent = {
     mixerFork: "Gabelkneter",
     mixerForkDesc:
       "Langsam, geringe Reibung — ideal für hohe Hydration",
-    mixerLevelHome: "Heim",
-    mixerLevelSemiPro: "Semi-Pro",
-    mixerLevelPro: "Pro",
     surfaceRefractory: "Schamottestein",
     surfaceRefractoryDesc:
       "3 cm, hohe thermische Masse — Holz- und Prosumer-Öfen",
@@ -1535,7 +1508,6 @@ export const DE_LOCALE: CmsContent = {
     learnPreFerments: "Biga, Poolish und Autolyse",
     learnPreFermentsDesc:
       "Was sie verändern und wie du sie einplanst.",
-    recipeLabel: "Rezept",
     recipeBackToStyles: "Stile",
     recipeStyleNotFound: "Stil nicht gefunden",
     recipeStyleNotFoundDesc:
@@ -1646,7 +1618,6 @@ export const DE_LOCALE: CmsContent = {
     thicknessThin: "D\u00FCnn und knusprig",
     thicknessThick: "Dick und fluffig",
     thicknessStandard: "Standard f\u00FCr diesen Stil",
-    backLabel: "Zurück",
     hintHighHydrationNeedsW: "Bei {h}% Hydratation brauchst du starkes Mehl: empfohlenes W ≥ {w}",
     hintLowWLimitsHydration: "Mit W {w} beträgt die maximal empfohlene Hydratation ~{h}%",
     hintLongFermentUseFridge: "Bei {hours}h Gärung nutze den Kühlschrank ({fridgeTemp}), um den Teig zu kontrollieren",
@@ -1768,7 +1739,6 @@ export const DE_LOCALE: CmsContent = {
     fillingTitle: "F\u00FCllung",
     reopen: "Laufendes Backen wieder \u00F6ffnen",
     completed: "Backen abgeschlossen",
-    waitOver: "Wartezeit vorbei: weiter geht's!",
     dueNow: "Zeit f\u00FCr: {title}",
     interrupt: "Backen abbrechen",
     abortConfirmTitle: "Backen abbrechen?",
@@ -1822,7 +1792,7 @@ export const DE_LOCALE: CmsContent = {
     scoreAria: "{label}: {score} von 100",
     meaning: "Wie gut sich das Rezept mit deiner Küche umsetzen lässt und wie treu es dem Stil bleibt.",
     limitedAuthenticity: "Begrenzt durch die Authentizität ({score}/100).",
-    limitedFuel: "Begrenzt durch die Authentizität: Ohne den Ofen, den der Stil vorsieht, endet sie bei {cap}/100.",
+    limitedFuel: "Begrenzt durch die Authentizität: Ohne den Ofen, den der Stil vorsieht, und unter seiner Mindesttemperatur endet sie bei {cap}/100.",
     limitedFeasibility: "Begrenzt durch eine nicht erfüllte Voraussetzung: Nach App-Regel bleibt der Wert unter {limit}.",
     countedTitle: "Was in die Zahl eingeht",
     weight: "Gewicht {pct}",
@@ -1832,6 +1802,7 @@ export const DE_LOCALE: CmsContent = {
     ruleFeasibility: "Obergrenze für nicht machbare Rezepte (App-Regel)",
     ruleResult: "Wertung: der niedrigste der Werte oben",
     ceilingEditorial: "Produktentscheidung: Ein Rezept, das du nicht umsetzen kannst, bleibt unter {limit}, auch wenn die anderen Werte hoch sind.",
+    tieBreak: "Produktentscheidung: Bei gleicher Zahl steht in den Listen zuerst der Stil, den deine Küche mit mehr Spielraum bei Ofen und Zeit abdeckt. Die Zahl ändert sich nicht.",
     infoTitle: "Zusätzliche Informationen",
     infoNote: "Sie gehen nicht in die Zahl ein: Sie sagen etwas anderes über das Rezept, nicht wie gut es zu deiner Küche passt.",
     referencePending: "Das Experimentierprofil dieses Stils ist noch nicht geprüft.",

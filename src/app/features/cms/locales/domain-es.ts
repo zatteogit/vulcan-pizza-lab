@@ -800,8 +800,13 @@ export const SCIENCE_ES: CmsScience = {
     },
     "authenticity-fuel-cap": {
       title: "Techo de autenticidad por el combustible",
-      l1: "Sin el horno que pide el estilo, la autenticidad tiene un techo: es una elección de {brand}.",
-      l2: "Cuando un estilo exige leña o carbón, otro horno puede cocer bien pero no sigue el método. El techo es un límite editorial, no una medida de calidad.",
+      l1: "Si el horno no es el que pide el estilo (leña o carbón) y no llega a la temperatura mínima del estilo, la autenticidad tiene un techo: es una elección de {brand}.",
+      l2: "El techo solo se aplica cuando faltan a la vez el combustible y el calor: un horno eléctrico o de gas que llega a la temperatura mínima del estilo no tiene techo. Que el estilo prevea leña o carbón (para la Napoletana STG lo dice el pliego de condiciones) sigue escrito en los detalles de la autenticidad, como información y no como penalización. El techo es un límite editorial, no una medida de calidad.",
+    },
+    "ranking-tiebreak": {
+      title: "Desempate con la misma puntuación",
+      l1: "Con el mismo número, va primero el estilo que tu cocina cubre con más margen: es una elección de {brand}.",
+      l2: "El número no cambia: solo cambia el orden, y solo entre estilos del mismo grupo con la misma puntuación. El margen es la media de dos valores entre 0 y 1: cuánto supera el horno la temperatura mínima del estilo y cuánto superan las horas disponibles la maduración mínima, cada uno en proporción al mínimo (1 significa el doble o más). En las fritas solo cuenta el tiempo. Vale en Crear, en Descubrir y para los asistentes.",
     },
     digestibility: {
       title: "Índice de digestibilidad",
@@ -864,6 +869,7 @@ export const SCIENCE_ES: CmsScience = {
     "baking-energy": "E = P × t · P = 2, 3 u 8 kW según la temperatura del horno",
     "thickness-factor": "TF = peso del bollo (g) / área de la pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
     "score-weights": "C = min(media ponderada de A y F; A) · pesos predeterminados: Autenticidad (A) 55 %, Facilidad (F) 45 % · no factible: C ≤ 39",
+    "ranking-tiebreak": "M = media de min(1; max(0; (T − T_min) / T_min)) y min(1; max(0; (H − H_min) / H_min)) · T horno, H horas disponibles · fritas: solo H",
   },
   sourceNotes: {
     "internal-db": "base de datos de trabajo interna del proyecto, no pública",

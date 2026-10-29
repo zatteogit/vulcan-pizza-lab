@@ -178,7 +178,6 @@ export const JA_LOCALE: CmsContent = {
     closeDetails: "\u8A73\u7D30\u3092\u9589\u3058\u308B",
     closeInsight: "\u9589\u3058\u308B",
     modify: "\u7DE8\u96C6",
-    disable: "\u7121\u52B9\u5316",
     restore: "\u5FA9\u5143",
     generate: "\u30EC\u30B7\u30D4\u3092\u4F5C\u6210",
     customizeParams:
@@ -372,12 +371,6 @@ export const JA_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title:
-        "\u3044\u3064\u30D4\u30B6\u3092\u98DF\u3079\u305F\u3044\uFF1F",
-      description:
-        "\u767A\u9175\u6642\u9593\u3092\u8A08\u7B97\u3059\u308B\u305F\u3081\u306B\u30BF\u30A4\u30DF\u30F3\u30B0\u3092\u9078\u629E",
-    },
     skill: {
       title: "\u7D4C\u9A13\u30EC\u30D9\u30EB",
       description:
@@ -391,11 +384,6 @@ export const JA_LOCALE: CmsContent = {
       title: "\u30D1\u30F3\u30C8\u30EA\u30FC",
       description:
         "\u304A\u5BB6\u306B\u3042\u308B\u5C0F\u9EA6\u7C89\u3068\u30A4\u30FC\u30B9\u30C8",
-    },
-    dietary: {
-      title: "\u98DF\u4E8B\u5236\u9650",
-      description:
-        "\u30AA\u30D7\u30B7\u30E7\u30F3\u306E\u30D5\u30A3\u30EB\u30BF\u30FC",
     },
     equipment: {
       title: "\u8A2D\u5099",
@@ -566,7 +554,6 @@ export const JA_LOCALE: CmsContent = {
   result: {
     heading:
       "\u30EC\u30B7\u30D4\u304C\u3067\u304D\u307E\u3057\u305F",
-    backLabel: "\u9078\u629E\u306B\u623B\u308B",
   },
   misc: {
     showAllStyles: "すべて表示",
@@ -784,7 +771,8 @@ export const JA_LOCALE: CmsContent = {
     "auth.wOutOfRange": "小麦粉Wが範囲外 (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl}が範囲{plMin}-{plMax}外 (-{penalty}%)",
-    "auth.notWoodOven": "薪窯ではありません：設備の軸で−15点（忠実度の35%）",
+    "auth.notWoodOven": "薪窯ではなく、スタイルの最低温度{min} °Cにも届きません：設備の軸で−15点（忠実度の35%）",
+    "auth.woodByMethod": "このスタイルは薪窯を前提にしています（ナポレターナSTGでは規定で定められています）。お使いの窯は最低温度{min} °Cに届くため、これは情報であり減点はありません",
     "auth.tempVsIdeal":
       "\u6E29\u5EA6{temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin": "温度が最低値以下 (-{penalty}%)",
@@ -867,7 +855,7 @@ export const JA_LOCALE: CmsContent = {
     "change.cooking": "焼成：{fromTemp}・{fromSeconds} s → {toTemp}・{toSeconds} s",
     "auth.notCoalOven": "元の製法は石炭窯による焼成です。別の燃料を使う場合はアレンジになります",
     /* FW-06 (S07-B-02) */
-    "auth.fuelCap": "スタイルが想定する窯がない場合、忠実度は{cap}/100で止まります。これは測定値ではなく、アプリのルールです",
+    "auth.fuelCap": "スタイルが想定する窯がなく、最低温度{min} °Cにも届かない場合、忠実度は{cap}/100で止まります。これは測定値ではなく、アプリのルールです",
     "gen.notCoalOven": "本来のスタイルは石炭窯を使います。選んだ窯では焼き方と香りが変わります",
     "timeline.oven.coal": "炉床を予熱した石炭窯：底と縁の焼き色を確認し、均一に焼けるよう回転させます。",
     "rec.ovenIdeal":
@@ -905,12 +893,9 @@ export const JA_LOCALE: CmsContent = {
     "timeline.preheat.descPan": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に型の中で生地の最終発酵を仕上げます。",
     "timeline.preheat.descPanWholeProof": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に型の中で生地を最終発酵させます。",
     "timeline.preheat.descDuringRest": "今オーブンを{temp}に予熱してください{equipmentNote}。その間に生地を休ませます。",
-    "hint.yeastDryPinch": "\u2248 \u3054\u304F\u5C11\u91CF",
-    "hint.yeastDryQuarterTsp": "\u2248 \u5C0F\u3055\u3058\u00BC",
     "hint.yeastDryHalfTsp": "\u2248 \u5C0F\u3055\u3058\u00BD",
     "hint.yeastDryOneTsp": "\u2248 \u5C0F\u3055\u30581\uFF08\u3059\u308A\u304D\u308A\uFF09",
     "hint.yeastDryOneHalfTsp": "\u2248 \u5C0F\u3055\u30581\u00BD",
-    "hint.yeastFreshPinch": "\u2248 \u3072\u3068\u3064\u307E\u307F",
     "hint.yeastFreshWeighable": "\u2248 \u30AD\u30C3\u30C1\u30F3\u30B9\u30B1\u30FC\u30EB\u3067\u7D04{g}g",
     "topping.auth.canonical": "\u898F\u5B9A\u306B\u6E96\u62E0",
     "topping.auth.natural": "\u4F1D\u7D71\u7684",
@@ -1193,8 +1178,6 @@ export const JA_LOCALE: CmsContent = {
       tipNerd: "\u52A0\u6C34\u7387>75%\u3067\u306F\u3001\u5F37\u3044\u5206\u5272\u306F\u4E00\u6B21\u767A\u9175\u3067\u3067\u304D\u305F\u6C17\u6CE1\u3092\u3064\u3076\u3057\u307E\u3059\u3002\u5F35\u308A\u306F\u6700\u5C0F\u9650\u306B\u3001\u30AC\u30B9\u629C\u304D\u306F\u307B\u307C\u30BC\u30ED\u306B\u3057\u307E\u3059\u3002",
     },
   },
-  timelineUi: {
-  },
   parametricTips: {
     pillHydration: "\u6C34\u5206\u91CF",
     pillFlour: "\u5C0F\u9EA6\u7C89",
@@ -1352,16 +1335,8 @@ export const JA_LOCALE: CmsContent = {
   authorNames: {
     bonci_no_knead:
       "\u6298\u308A\u305F\u305F\u307F\u9AD8\u6C34\u5206",
-    martucci_biga_ibrida:
-      "\u30CF\u30A4\u30D6\u30EA\u30C3\u30C9\u30D3\u30AC50% + \u30AA\u30FC\u30C8\u30EA\u30FC\u30BA",
-    martucci_biga_100:
-      "\u30D3\u30AC100%\u30EA\u30D5\u30EC\u30C3\u30B7\u30E5\u4ED8\u304D",
     pepe_sensoriale:
       "\u611F\u899A\u7684\u6C34\u5206\u8ABF\u6574",
-    bosco_idrolisi:
-      "\u52A0\u6C34\u5206\u89E3\u6CD5\uFF08\u81EA\u7136\u767A\u9175\uFF09",
-    capuano_forbici:
-      "\u30CF\u30B5\u30DF\u6CD5\uFF08\u4E73\u88FD\u54C1\uFF09",
     pepe_sensory_layering:
       "\u98DF\u6750\u5225\u713C\u304D\u5206\u3051\u6CD5",
     bianco_long_ferment: "5\u65E5\u9593\u767A\u9175",
@@ -1371,16 +1346,8 @@ export const JA_LOCALE: CmsContent = {
   authorAuthors: {
     bonci_no_knead:
       "\u30AC\u30D6\u30EA\u30A8\u30EC\u30FB\u30DC\u30F3\u30C1",
-    martucci_biga_ibrida:
-      "\u30D5\u30E9\u30F3\u30C1\u30A7\u30B9\u30B3\u30FB\u30DE\u30EB\u30C8\u30A5\u30C3\u30C1",
-    martucci_biga_100:
-      "\u30D5\u30E9\u30F3\u30C1\u30A7\u30B9\u30B3\u30FB\u30DE\u30EB\u30C8\u30A5\u30C3\u30C1",
     pepe_sensoriale:
       "\u30D5\u30E9\u30F3\u30B3\u30FB\u30DA\u30DA",
-    bosco_idrolisi:
-      "\u30EC\u30CA\u30FC\u30C8\u30FB\u30DC\u30B9\u30B3",
-    capuano_forbici:
-      "\u30F4\u30A3\u30F3\u30C1\u30A7\u30F3\u30C4\u30A9\u30FB\u30AB\u30D7\u30A2\u30FC\u30CE",
     pepe_sensory_layering:
       "\u30D5\u30E9\u30F3\u30B3\u30FB\u30DA\u30DA",
     bianco_long_ferment:
@@ -1470,7 +1437,6 @@ export const JA_LOCALE: CmsContent = {
     locationAuto: "位置情報を検出",
     locationSaved: "位置情報を保存しました",
     locationNone: "後で登録するか、室温を直接設定できます。",
-    locationSearching: "検索中...",
     locationNoResults: "結果がありません",
     ftuWelcome: "\u3088\u3046\u3053\u305D",
     ftuOvenTitle:
@@ -1538,9 +1504,6 @@ export const JA_LOCALE: CmsContent = {
       "\u30D5\u30A9\u30FC\u30AF\u30DF\u30AD\u30B5\u30FC",
     mixerForkDesc:
       "\u4F4E\u901F\u3001\u4F4E\u6469\u64E6 — \u9AD8\u52A0\u6C34\u306B\u6700\u9069",
-    mixerLevelHome: "\u5BB6\u5EAD",
-    mixerLevelSemiPro: "\u30BB\u30DF\u30D7\u30ED",
-    mixerLevelPro: "\u30D7\u30ED",
     surfaceRefractory: "\u8010\u706B\u30EC\u30F3\u30AC",
     surfaceRefractoryDesc:
       "3 cm\u3001\u9AD8\u84C4\u71B1 — \u85AA\u7AAF\u30FB\u30D7\u30ED\u30B7\u30E5\u30FC\u30DE\u30FC",
@@ -1675,7 +1638,6 @@ export const JA_LOCALE: CmsContent = {
     learnPreFerments: "ビガ・ポーリッシュ・オートリーズ",
     learnPreFermentsDesc:
       "それぞれの違いと、仕込みへの取り入れ方。",
-    recipeLabel: "\u30EC\u30B7\u30D4",
     recipeBackToStyles: "\u30B9\u30BF\u30A4\u30EB",
     recipeStyleNotFound:
       "\u30B9\u30BF\u30A4\u30EB\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093",
@@ -1795,7 +1757,6 @@ export const JA_LOCALE: CmsContent = {
     thicknessThick: "\u3075\u3093\u308F\u308A\u539A\u3081",
     thicknessStandard:
       "\u3053\u306E\u30B9\u30BF\u30A4\u30EB\u306E\u6A19\u6E96",
-    backLabel: "戻る",
     hintHighHydrationNeedsW: "加水率が {h}% の場合、強力粉が必要です：推奨 W ≥ {w}",
     hintLowWLimitsHydration: "W値が {w} の場合、推奨最大加水率は約 {h}% です",
     hintLongFermentUseFridge: "発酵時間が {hours}時間 の場合、生地のコントロールに冷蔵庫（{fridgeTemp}）を使用するのが最適です",
@@ -1919,7 +1880,6 @@ export const JA_LOCALE: CmsContent = {
     fillingTitle: "\u30D5\u30A3\u30EA\u30F3\u30B0",
     reopen: "\u9032\u884C\u4E2D\u306E\u30D4\u30B6\u4F5C\u308A\u3092\u958B\u304F",
     completed: "\u30D4\u30B6\u4F5C\u308A\u5B8C\u4E86",
-    waitOver: "\u5F85\u3061\u6642\u9593\u7D42\u4E86\uFF1A\u7D9A\u3051\u307E\u3057\u3087\u3046\uFF01",
     dueNow: "\u6642\u9593\u3067\u3059\uFF1A{title}",
     interrupt: "\u30D4\u30B6\u4F5C\u308A\u3092\u4E2D\u6B62",
     abortConfirmTitle: "\u30D4\u30B6\u4F5C\u308A\u3092\u4E2D\u6B62\u3057\u307E\u3059\u304B\uFF1F",
@@ -1973,7 +1933,7 @@ export const JA_LOCALE: CmsContent = {
     scoreAria: "{label}：100点中{score}点",
     meaning: "あなたのキッチンでどれだけ作りやすいか、そしてスタイルにどれだけ忠実かを示します。",
     limitedAuthenticity: "忠実度（{score}/100）が上限になっています。",
-    limitedFuel: "忠実度が上限です：スタイルが想定する窯がない場合、{cap}/100で止まります。",
+    limitedFuel: "忠実度が上限です：スタイルが想定する窯がなく最低温度にも届かない場合、{cap}/100で止まります。",
     limitedFeasibility: "満たしていない条件があります：アプリのルールにより{limit}未満にとどまります。",
     countedTitle: "数値に含まれるもの",
     weight: "重み {pct}",
@@ -1983,6 +1943,7 @@ export const JA_LOCALE: CmsContent = {
     ruleFeasibility: "作れないレシピの上限（アプリのルール）",
     ruleResult: "スコア：上の値のうち最も低いもの",
     ceilingEditorial: "製品上の判断です：作れないレシピは、ほかの値が高くても{limit}未満にとどまります。",
+    tieBreak: "製品上の判断です：数値が同じ場合、窯と時間の余裕がより大きいスタイルを一覧の先に表示します。数値自体は変わりません。",
     infoTitle: "参考情報",
     infoNote: "数値には含まれません。レシピについての別の情報で、キッチンとの相性ではありません。",
     referencePending: "このスタイルのアレンジ度のプロファイルはまだ確認中です。",

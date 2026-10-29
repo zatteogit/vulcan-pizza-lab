@@ -160,7 +160,6 @@ export const EN_LOCALE: CmsContent = {
     closeDetails: "Close details",
     closeInsight: "Close insight",
     modify: "Edit",
-    disable: "Disable",
     restore: "Restore",
     generate: "Generate recipe",
     customizeParams: "Customize parameters",
@@ -341,11 +340,6 @@ export const EN_LOCALE: CmsContent = {
     },
   },
   sections: {
-    when: {
-      title: "When do you want pizza?",
-      description:
-        "Select the moment to calculate rising times",
-    },
     skill: {
       title: "Experience level",
       description: "Choose the description that fits you.",
@@ -357,10 +351,6 @@ export const EN_LOCALE: CmsContent = {
     pantry: {
       title: "Pantry",
       description: "Flours and yeasts you have at home",
-    },
-    dietary: {
-      title: "Dietary needs",
-      description: "Optional filters",
     },
     equipment: {
       title: "Equipment",
@@ -521,7 +511,6 @@ export const EN_LOCALE: CmsContent = {
   },
   result: {
     heading: "Here\u2019s your recipe",
-    backLabel: "Back to selection",
   },
   cooking: {
     sectionsAria: "Recipe sections",
@@ -591,7 +580,6 @@ export const EN_LOCALE: CmsContent = {
     inProgressShort: "In progress",
     reopen: "Reopen the active bake",
     completed: "Bake complete",
-    waitOver: "Wait\u2019s over: keep going!",
     dueNow: "Time for: {title}",
     interrupt: "Stop the bake",
     abortConfirmTitle: "Stop the bake?",
@@ -877,7 +865,8 @@ export const EN_LOCALE: CmsContent = {
     "auth.wOutOfRange": "Flour W out of range (-{penalty}%)",
     "auth.plOutOfRange":
       "P/L {pl} out of range {plMin}-{plMax} (-{penalty}%)",
-    "auth.notWoodOven": "Not a wood-fired oven: −15 points on the equipment axis (35% of authenticity)",
+    "auth.notWoodOven": "Not a wood-fired oven and below the style’s {min} °C minimum: −15 points on the equipment axis (35% of authenticity)",
+    "auth.woodByMethod": "The style calls for a wood-fired oven (for Napoletana STG the specification requires it): your oven reaches the {min} °C minimum, so this is information and costs no points",
     "auth.tempVsIdeal":
       "Temperature {temp} vs {ideal} (-{penalty}%)",
     "auth.tempBelowMin":
@@ -967,7 +956,7 @@ export const EN_LOCALE: CmsContent = {
     "change.cooking": "Baking: {fromTemp}, {fromSeconds} s → {toTemp}, {toSeconds} s",
     "auth.notCoalOven": "Coal firing defines the original method: another fuel makes this an adaptation",
     /* FW-06 (S07-B-02) */
-    "auth.fuelCap": "Without the oven the style calls for, authenticity stops at {cap}/100: it is an app rule, not a measurement",
+    "auth.fuelCap": "Without the oven the style calls for, and below its {min} °C minimum, authenticity stops at {cap}/100: it is an app rule, not a measurement",
     "gen.notCoalOven": "The original style uses coal: the selected oven changes the bake and flavour profile",
     "timeline.oven.coal": "Coal-fired oven with a preheated deck: check the base and edges and rotate for even baking.",
     "rec.ovenIdeal":
@@ -1005,12 +994,9 @@ export const EN_LOCALE: CmsContent = {
     "timeline.preheat.descPan": "Turn the oven on now to {temp}{equipmentNote}. The dough finishes its final rise in the pan while it heats.",
     "timeline.preheat.descPanWholeProof": "Turn the oven on now to {temp}{equipmentNote}. The dough does its final rise in the pan while it heats.",
     "timeline.preheat.descDuringRest": "Turn the oven on now to {temp}{equipmentNote}. The dough pieces rest while it heats.",
-    "hint.yeastDryPinch": "≈ a tiny pinch",
-    "hint.yeastDryQuarterTsp": "≈ ¼ teaspoon",
     "hint.yeastDryHalfTsp": "≈ ½ teaspoon",
     "hint.yeastDryOneTsp": "≈ 1 level teaspoon",
     "hint.yeastDryOneHalfTsp": "≈ 1½ teaspoons",
-    "hint.yeastFreshPinch": "≈ a pinch",
     "hint.yeastFreshWeighable": "≈ {g} g on a kitchen scale",
     "topping.auth.canonical": "By the rulebook",
     "topping.auth.natural": "Traditional",
@@ -1291,8 +1277,6 @@ export const EN_LOCALE: CmsContent = {
       tipNerd: "With hydration >75%, aggressive dividing collapses the alveoli formed during bulk fermentation: minimal tension, almost no degassing.",
     },
   },
-  timelineUi: {
-  },
   parametricTips: {
     pillHydration: "Hydration",
     pillFlour: "Flour",
@@ -1440,23 +1424,14 @@ export const EN_LOCALE: CmsContent = {
   },
   authorNames: {
     bonci_no_knead: "No-Knead High Hydration",
-    martucci_biga_ibrida: "Hybrid Biga 50% + Autolyse",
-    martucci_biga_100: "100% Biga with Refresh",
     pepe_sensoriale: "Sensory Hydration",
-    bosco_idrolisi:
-      "Hydrolysis Method (Spontaneous Fermentation)",
-    capuano_forbici: "Scissors Method (Dairy)",
     pepe_sensory_layering: "Separate Ingredient Baking",
     bianco_long_ferment: "5-Day Fermentation",
     forkish_saturday: "Saturday Pizza (Cold Fermentation)",
   },
   authorAuthors: {
     bonci_no_knead: "Gabriele Bonci",
-    martucci_biga_ibrida: "Francesco Martucci",
-    martucci_biga_100: "Francesco Martucci",
     pepe_sensoriale: "Franco Pepe",
-    bosco_idrolisi: "Renato Bosco",
-    capuano_forbici: "Vincenzo Capuano",
     pepe_sensory_layering: "Franco Pepe",
     bianco_long_ferment: "Chris Bianco",
     forkish_saturday: "Ken Forkish",
@@ -1533,7 +1508,6 @@ export const EN_LOCALE: CmsContent = {
     locationAuto: "Detect location",
     locationSaved: "Location saved",
     locationNone: "You can add it later or set your kitchen temperature directly.",
-    locationSearching: "Searching...",
     locationNoResults: "No results",
     ftuWelcome: "Welcome",
     ftuOvenTitle: "What oven do you have?",
@@ -1585,9 +1559,6 @@ export const EN_LOCALE: CmsContent = {
     mixerFork: "Fork mixer",
     mixerForkDesc:
       "Slow, low friction — ideal for high hydration",
-    mixerLevelHome: "Home",
-    mixerLevelSemiPro: "Semi-Pro",
-    mixerLevelPro: "Pro",
     surfaceRefractory: "Refractory brick",
     surfaceRefractoryDesc:
       "3 cm, high thermal mass — wood & prosumer ovens",
@@ -1705,7 +1676,6 @@ export const EN_LOCALE: CmsContent = {
       "Identify the problem and find what to change.",
     learnPreFerments: "Biga, poolish and autolyse",
     learnPreFermentsDesc: "What they change and how to work them into your recipe.",
-    recipeLabel: "Recipe",
     recipeBackToStyles: "Styles",
     recipeStyleNotFound: "Style not found",
     recipeStyleNotFoundDesc:
@@ -1816,7 +1786,6 @@ export const EN_LOCALE: CmsContent = {
     thicknessThin: "Thin and crispy",
     thicknessThick: "Thick and fluffy",
     thicknessStandard: "Standard for this style",
-    backLabel: "Back",
     hintHighHydrationNeedsW:
       "At {h}% hydration, you need strong flour: recommended W ≥ {w}",
     hintLowWLimitsHydration:
@@ -1846,7 +1815,7 @@ export const EN_LOCALE: CmsContent = {
     scoreAria: "{label}: {score} out of 100",
     meaning: "How well the recipe can be made in your kitchen and how faithful it stays to the style.",
     limitedAuthenticity: "Limited by authenticity ({score}/100).",
-    limitedFuel: "Limited by authenticity: without the oven the style calls for, it stops at {cap}/100.",
+    limitedFuel: "Limited by authenticity: without the oven the style calls for and below its minimum temperature, it stops at {cap}/100.",
     limitedFeasibility: "Limited by a requirement that is not met: by app rule it stays below {limit}.",
     countedTitle: "What goes into the number",
     weight: "weight {pct}",
@@ -1856,6 +1825,7 @@ export const EN_LOCALE: CmsContent = {
     ruleFeasibility: "Ceiling for unfeasible recipes (app rule)",
     ruleResult: "Score: the lowest of the values above",
     ceilingEditorial: "Product choice: a recipe you cannot make stays below {limit}, even if the other values are high.",
+    tieBreak: "Product choice: at the same number, lists show first the style your kitchen covers with more margin in oven and time. The number does not change.",
     infoTitle: "Separate information",
     infoNote: "These do not go into the number: they tell you something else about the recipe, not how well it suits your kitchen.",
     referencePending: "The experimentation profile of this style has not been checked yet.",

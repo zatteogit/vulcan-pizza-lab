@@ -806,8 +806,13 @@ export const SCIENCE_PT: CmsScience = {
     },
     "authenticity-fuel-cap": {
       title: "Teto de autenticidade pelo combustível",
-      l1: "Sem o forno que o estilo pede, a autenticidade tem um teto: é uma escolha da {brand}.",
-      l2: "Quando um estilo exige lenha ou carvão, outro forno pode assar bem, mas não segue o método. O teto é um limite editorial, não uma medida de qualidade.",
+      l1: "Se o forno não é o que o estilo pede (lenha ou carvão) e não chega à temperatura mínima do estilo, a autenticidade tem um teto: é uma escolha da {brand}.",
+      l2: "O teto só vale quando faltam ao mesmo tempo o combustível e o calor: um forno elétrico ou a gás que chega à temperatura mínima do estilo não tem teto. Que o estilo preveja lenha ou carvão (para a Napoletana STG, o caderno de especificações diz) continua escrito nos detalhes da autenticidade, como informação e não como penalidade. O teto é um limite editorial, não uma medida de qualidade.",
+    },
+    "ranking-tiebreak": {
+      title: "Desempate com a mesma pontuação",
+      l1: "Com o mesmo número, vem primeiro o estilo que sua cozinha cobre com mais margem: é uma escolha da {brand}.",
+      l2: "O número não muda: muda só a ordem, e só entre estilos do mesmo grupo com a mesma pontuação. A margem é a média de dois valores entre 0 e 1: quanto o forno passa da temperatura mínima do estilo e quanto as horas disponíveis passam da maturação mínima, cada um em proporção ao mínimo (1 quer dizer o dobro ou mais). Nas fritas conta só o tempo. Vale em Criar, em Descobrir e para os assistentes.",
     },
     digestibility: {
       title: "Índice de digestibilidade",
@@ -870,6 +875,7 @@ export const SCIENCE_PT: CmsScience = {
     "baking-energy": "E = P × t · P = 2, 3 ou 8 kW conforme a temperatura do forno",
     "thickness-factor": "TF = peso da bola de massa (g) / área da pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
     "score-weights": "C = min(média ponderada de A e F; A) · pesos padrão: Autenticidade (A) 55 %, Facilidade (F) 45 % · não viável: C ≤ 39",
+    "ranking-tiebreak": "M = média de min(1; max(0; (T − T_min) / T_min)) e min(1; max(0; (H − H_min) / H_min)) · T forno, H horas disponíveis · fritas: só H",
   },
   sourceNotes: {
     "internal-db": "base de dados de trabalho interna do projeto, não pública",
