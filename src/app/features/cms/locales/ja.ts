@@ -1821,7 +1821,7 @@ export const JA_LOCALE: CmsContent = {
     // FW-09
     notFoundSearch: "レシピを検索",
     searchStopwords: "",
-    searchSynonyms: "パン酵母; 生イースト; イースト; サッカロミセス\nセリアック病; グルテンフリー; グルテン\n家庭用オーブン; 家のオーブン; 自宅のオーブン\n膨らまない; 発酵しない\n底が焦げた; 底が黒い\nべたつく; くっつく\nサワードウ; 天然酵母; ルヴァン\n薪窯; 薪",
+    searchSynonyms: "パン酵母; 生イースト; イースト; サッカロミセス\nセリアック病; グルテンフリー\n家庭用オーブン; 家のオーブン; 自宅のオーブン\n膨らまない; 発酵しない\n底が焦げた; 底が黒い\nべたつく; くっつく\nサワードウ; 天然酵母; ルヴァン\n薪窯; 薪",
     searchFlourWheat: "\u8584\u529B\u7C89",
     searchFlourManitoba: "\u30DE\u30CB\u30C8\u30D0",
     searchFlourSemola: "\u30BB\u30E2\u30EA\u30CA",

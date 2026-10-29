@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { recommendStyles, type UserConstraints } from "../domain/pizza-engine";
 import { tailoredRecipeEntry } from "./recipe-entry";
+import { recipeCardSignals } from "../features/recipe/recipe-card-signals";
 import { pantryUnknown, presentationTier } from "./recommendation-groups";
 
 const p1: UserConstraints = { oven_type: "home", oven_max_temp_c: 250, oven_capacity_temp_c: 250, skill_level: 1,
@@ -26,6 +27,31 @@ describe("gruppi di Crea con la dispensa sconosciuta", () => {
       if (rec.verdict.adaptations.some((msg) => !msg.key.startsWith("need.check"))) expect(presentationTier(rec, p3)).toBe("good");
     }
     for (const rec of recommend(p1)) if (rec.tier === "not_feasible") expect(presentationTier(rec, p1)).toBe("not_feasible");
+  });
+
+  /* FW-09 revisione: «need.checkExclusions» è la verifica di un rifiuto
+   * esplicito (excluded_flours), non di una dispensa vuota. Prima, con
+   * excluded_flours=['manitoba'] su P1, 12 stili passavano a «Perfetti per te»
+   * e la card nascondeva la condizione. */
+  it("le farine escluse restano una condizione: niente «Perfetto» e la card lo dice", () => {
+    const excluded: UserConstraints = { ...p1, excluded_flours: ["manitoba"] };
+    expect(pantryUnknown(excluded)).toBe(true);
+    const withCheck = recommend(excluded).filter((rec) => rec.tier === "good" && rec.verdict.adaptations.some((msg) => msg.key === "need.checkExclusions"));
+    expect(withCheck.length).toBeGreaterThan(0);
+    expect(withCheck.map((rec) => rec.style.id)).toContain("focaccia_genovese");
+    for (const rec of withCheck) expect(presentationTier(rec, excluded), rec.style.id).toBe("good");
+    // Gli stili che altrimenti sarebbero «Perfetti»: la card (al massimo due
+    // segnali) deve dire l'unica condizione rimasta.
+    const onlyChecks = withCheck.filter((rec) => rec.verdict.adaptations.every((msg) => msg.key.startsWith("need.check")));
+    expect(onlyChecks.length).toBeGreaterThan(0);
+    for (const rec of onlyChecks) {
+      expect(recipeCardSignals(rec.recipe, "create", { hidePantryChecks: true }).map((s) => s.message.key), rec.style.id).toContain("need.checkExclusions");
+    }
+  });
+
+  it("con la dispensa sconosciuta la card nasconde solo le verifiche di dispensa", () => {
+    const keys = (c: UserConstraints) => recommend(c).flatMap((rec) => recipeCardSignals(rec.recipe, "create", { hidePantryChecks: true }).map((s) => s.message.key));
+    for (const key of keys(p1)) expect(["need.checkFlour", "need.checkYeast", "card.blendCheck"]).not.toContain(key);
   });
 
   it("con la dispensa dichiarata il gruppo è quello del motore", () => {

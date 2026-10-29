@@ -1697,7 +1697,7 @@ export const ES_LOCALE: CmsContent = {
     // FW-09
     notFoundSearch: "Buscar una receta",
     searchStopwords: "el la los las un una unos unas de del y o para con en al mi mis pizza",
-    searchSynonyms: "levadura de panadero; levadura fresca; levadura prensada; saccharomyces; levadura\nceliaquía; celíaco; celíaca; sin gluten; gluten\nhorno de casa; horno doméstico; horno casero\nno sube; no leva; sin levado\nquemada por debajo; base quemada; fondo oscuro\npegajosa; se pega; pegajoso\nmasa madre; levadura madre\nhorno de leña; leña",
+    searchSynonyms: "levadura de panadero; levadura fresca; levadura prensada; saccharomyces; levadura\nceliaquía; celíaco; celíaca; sin gluten\nhorno de casa; horno doméstico; horno casero\nno sube; no leva; sin levado\nquemada por debajo; base quemada; fondo oscuro\npegajosa; se pega; pegajoso\nmasa madre; levadura madre\nhorno de leña; leña",
     searchFlourWheat: "Trigo blando",
     searchFlourManitoba: "Manitoba",
     searchFlourSemola: "S\u00E9mola",

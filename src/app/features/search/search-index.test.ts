@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { SIGNATURE_RECIPES, signatureRecipeLink } from "../../data/signature-recipes";
 import { CMS_DEFAULTS, type CmsContent } from "../cms/cms-context";
+import { FLOURS_DB } from "../../data/flour-database";
+import { DE_LOCALE } from "../cms/locales/de";
 import { EN_LOCALE } from "../cms/locales/en";
+import { ES_LOCALE } from "../cms/locales/es";
+import { FR_LOCALE } from "../cms/locales/fr";
 import { JA_LOCALE } from "../cms/locales/ja";
+import { PT_LOCALE } from "../cms/locales/pt";
 import {
   buildSearchIndex,
   fold,
@@ -164,7 +169,7 @@ describe("ricerca con le parole dell'utente (FW-09)", () => {
   it("sinonimi del CMS: «lievito di birra», «forno di casa», «celiachia», «pinza», «non lievita»", () => {
     expect(find("lievito di birra")).toContain("glossary-yeast");
     expect(find("forno di casa").some((id) => id.startsWith("style-"))).toBe(true);
-    expect(find("celiachia")).toContain("glossary-gluten");
+    expect(find("celiachia")).toContain("flour-mix_gluten_free");
     expect(find("pinza")[0]).toBe("style-pinsa_romana");
     expect(find("non lievita")).toContain("problem-P04");
   });
@@ -172,7 +177,7 @@ describe("ricerca con le parole dell'utente (FW-09)", () => {
   it("anche in inglese, col dizionario della lingua", () => {
     const en = (q: string) => searchIndex(EN, q, LXE).map((r) => r.id);
     expect(en("baker's yeast")).toContain("glossary-yeast");
-    expect(en("coeliac")).toContain("glossary-gluten");
+    expect(en("coeliac")).toContain("flour-mix_gluten_free");
     expect(en("home oven").some((id) => id.startsWith("style-"))).toBe(true);
   });
 
@@ -194,5 +199,46 @@ describe("ricerca con le parole dell'utente (FW-09)", () => {
     expect(filterByQuery(issues, (i) => i.text, "bruciata", LX).map((i) => i.id)).toEqual(["a"]);
     expect(filterByQuery(issues, (i) => i.text, "non lievita", LX).map((i) => i.id)).toEqual(["b"]);
     expect(filterByQuery(issues, (i) => i.text, "cornicoine", LX).map((i) => i.id)).toEqual(["a"]);
+  });
+});
+
+/* FW-09 revisione (S04-A-03), sicurezza alimentare: chi cerca «senza glutine»
+ * o «celiachia» trova solo ciò che è senza glutine. Il gruppo di sinonimi non
+ * contiene la parola generica («glutine», «gluten»…), che riporterebbe il
+ * farro, la spelta e i testi che parlano del glutine. In tutte e 7 le lingue. */
+describe("ricerca senza glutine (sicurezza alimentare)", () => {
+  const GLUTEN_FREE = new Set(FLOURS_DB.filter((f) => f.category === "gluten_free").map((f) => `flour-${f.id}`));
+  const LOCALES: [string, CmsContent, string[]][] = [
+    ["it", CMS_DEFAULTS, ["celiachia", "celiaco", "senza glutine"]],
+    ["en", { ...CMS_DEFAULTS, ...EN_LOCALE } as CmsContent, ["coeliac", "celiac disease", "gluten free", "gluten-free"]],
+    ["de", { ...CMS_DEFAULTS, ...DE_LOCALE } as CmsContent, ["zöliakie", "glutenfrei", "ohne gluten"]],
+    ["fr", { ...CMS_DEFAULTS, ...FR_LOCALE } as CmsContent, ["maladie cœliaque", "coeliaque", "sans gluten"]],
+    ["es", { ...CMS_DEFAULTS, ...ES_LOCALE } as CmsContent, ["celiaquía", "celíaco", "sin gluten"]],
+    ["pt", { ...CMS_DEFAULTS, ...PT_LOCALE } as CmsContent, ["doença celíaca", "celíaco", "sem glúten"]],
+    ["ja", { ...CMS_DEFAULTS, ...JA_LOCALE } as CmsContent, ["セリアック病", "グルテンフリー"]],
+  ];
+
+  for (const [locale, cms, queries] of LOCALES) {
+    const index = buildSearchIndex(cms);
+    const lexicon = searchLexicon(cms.pages);
+
+    it(`${locale}: celiachia e senza glutine trovano solo farine senza glutine`, () => {
+      for (const q of queries) {
+        const found = searchIndex(index, q, lexicon).map((r) => r.id);
+        expect(found, `${locale} «${q}»`).toContain("flour-mix_gluten_free");
+        expect(found.filter((id) => !GLUTEN_FREE.has(id)), `${locale} «${q}»`).toEqual([]);
+      }
+    });
+
+    it(`${locale}: il gruppo della celiachia non contiene la parola generica`, () => {
+      const group = lexicon.synonyms.find((g) => g.includes(fold(queries[queries.length - 1])));
+      expect(group, locale).toBeDefined();
+      for (const generic of ["glutine", "gluten", "グルテン"]) expect(group, locale).not.toContain(generic);
+    });
+  }
+
+  it("la parola generica resta una ricerca a sé: «glutine» trova anche il farro", () => {
+    const LX = searchLexicon(CMS_DEFAULTS.pages);
+    expect(searchIndex(IT, "glutine", LX).map((r) => r.id)).toContain("flour-farro_spelta");
   });
 });

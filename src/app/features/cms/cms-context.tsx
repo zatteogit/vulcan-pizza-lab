@@ -2780,7 +2780,7 @@ export const CMS_DEFAULTS: CmsContent = {
     // FW-09
     notFoundSearch: "Cerca una ricetta",
     searchStopwords: "di da del dello della dei degli delle il lo la i gli le un uno una e ed o per con su in al allo alla ai agli alle nel nello nella mi mia pizza",
-    searchSynonyms: "lievito di birra; saccharomyces; lievito compresso; lievito fresco\nceliachia; celiaco; celiaca; celiaci; senza glutine; glutine\nforno di casa; forno casa; forno domestico; forno casalingo\npinza; pinsa\nnon lievita; nessuna lievitazione; non cresce\nbruciata sotto; bruciato sotto; fondo scuro\nattacca; appiccicoso; appiccica\nacidita; acido; acida\nlievito madre; pasta madre; licoli; criscito\nforno a legna; legna",
+    searchSynonyms: "lievito di birra; saccharomyces; lievito compresso; lievito fresco\nceliachia; celiaco; celiaca; celiaci; senza glutine\nforno di casa; forno casa; forno domestico; forno casalingo\npinza; pinsa\nnon lievita; nessuna lievitazione; non cresce\nbruciata sotto; bruciato sotto; fondo scuro\nattacca; appiccicoso; appiccica\nacidita; acido; acida\nlievito madre; pasta madre; licoli; criscito\nforno a legna; legna",
     searchFlourWheat: "Grano tenero",
     searchFlourManitoba: "Manitoba",
     searchFlourSemola: "Semola",
