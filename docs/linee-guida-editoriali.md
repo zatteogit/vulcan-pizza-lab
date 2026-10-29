@@ -81,6 +81,8 @@ lo aggiunge qui e, se è tecnico, al glossario.
 | **Stili di pizza** | La sezione e il filtro degli stili in Scopri; un solo verbo per «vedi tutto» («Vedi tutti/tutte») | Scopri | «Stili tradizionali», «Esplora tutti» |
 | **Tradizioni regionali** | Famiglia degli stili storici non napoletani né romani (D-G, da confermare stile per stile) | Scopri, Crea, MCP | «Contemporanea» per focacce e pizze storiche |
 | **Genera ricetta** | La CTA del pannello stile, su ogni breakpoint | pannello stile | «Crea» (è il nome della tab) |
+| **Metodo e fonti** | La pagina di Impara generata dal registro della scienza (`/learn/metodo`, FW-15, D-D): come lavora il motore, note con statuto, ipotesi, fonti con stato, limiti, versione | Impara, Informazioni, Profilo, «Perché?» (L3) | «Bibliografia», «Scienza», «Riferimenti» (il glossario non ha fonti) |
+| **Edizione per {partner}** | Il blocco che dichiara per chi è un'edizione e la regola di neutralità del motore (FW-15, D-K); i testi vengono dallo schema dell'edizione | Informazioni, onboarding | «Sponsorizzato da», «in collaborazione con» |
 - FW-11. In inglese si scrive **autolyse** (non «autolysis») e **preferment**
   senza trattino, come nella fonte King Arthur. I nomi propri dei luoghi
   d'origine usano l'esonimo della lingua (Napoli → Naples, Neapel, Nápoles):

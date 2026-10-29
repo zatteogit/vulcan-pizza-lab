@@ -22,12 +22,24 @@ Cosa può cambiare un'edizione oggi (schema 1, `src/app/config/edition.ts`):
 - `ovens.extra`: modelli in più, per esempio i forni inventati di una demo.
 - `ovens.default`: forno preimpostato al primo avvio. Non sovrascrive mai una scelta già salvata.
 - `indexing`: `noindex` è obbligatorio per demo e partner. Il Worker manda `X-Robots-Tag`.
+- FW-15 (D-K) `partner.relationship`: `co-branded` o `demo` (predefinito: `demo` se il
+  marchio è inventato). `partner.neutralityStatement`: `same-engine` (predefinito). Il testo
+  di ogni valore è in 7 lingue (`edition.relationship.*`, `edition.neutrality.*` in
+  `ui-messages.*.ts`); Informazioni e onboarding lo mostrano. Un valore nuovo si aggiunge
+  allo schema e ai cataloghi.
+- FW-15 `feedbackUrl`: canale per i riscontri (`https:` o `mailto:`), mostrato in
+  Informazioni. Assente = nessun canale. Contatti reali solo nelle edizioni private.
+- FW-15 `search.suggestions`: suggerimenti della ricerca, scelti fra `SEARCH_SUGGESTION_IDS`
+  (bisogni e stili, niente marchi né persone). Assente = l'elenco predefinito.
 
 Regole controllate dai test (`src/app/config/edition.test.ts`):
 
 - Nel repository pubblico non ci sono edizioni `partner`.
 - Una demo dichiara `partner.invented: true`.
-- Il forno preimpostato esiste nel catalogo dell'edizione.
+- Il forno preimpostato esiste nel catalogo dell'edizione; `parseEdition` rifiuta un
+  `ovens.default` escluso da `ovens.only` (FW-15, S18-B-09). Per un'edizione privata:
+  `VULCAN_EDITION=<id> npx vitest run src/app/config/edition.test.ts` (il test «la
+  generalista è la build predefinita» lì fallisce per costruzione: gli altri devono passare).
 - La generalista non cambia nulla rispetto a prima.
 
 Quando servirà altro (tema, lingue, funzioni accese, testi legali: B-1 dell'handoff),
@@ -139,5 +151,5 @@ nei campi Secret); repository, ambienti, workflow e verifiche sono stati automat
   schema, quando un partner li chiede (B-1).
 - Embed in iframe con `postMessage` e CSP per dominio (B-2): dopo un pilot firmato.
 - Analytics per edizione (B-5): nessuna.
-- In un'edizione l'onboarding del profilo propone il tipo di forno preimpostato, ma il
-  testo resta quello generico: non dice ancora «il tuo forno <partner>».
+- Risolto da FW-15 (S18-A-05): l'onboarding nomina il forno proposto dall'edizione
+  («Proposto da questa edizione: …») e dice che la marca non cambia i calcoli.

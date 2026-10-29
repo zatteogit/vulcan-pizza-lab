@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { SIGNATURE_RECIPES, signatureRecipeLink } from "../../data/signature-recipes";
 import { CMS_DEFAULTS, type CmsContent } from "../cms/cms-context";
+import { DEFAULT_SEARCH_SUGGESTIONS, SEARCH_SUGGESTION_IDS } from "../../config/edition";
+import { UI_MESSAGES_IT } from "../../i18n/ui-messages.it";
 import { FLOURS_DB } from "../../data/flour-database";
 import { DE_LOCALE } from "../cms/locales/de";
 import { EN_LOCALE } from "../cms/locales/en";
@@ -240,5 +242,35 @@ describe("ricerca senza glutine (sicurezza alimentare)", () => {
   it("la parola generica resta una ricerca a sé: «glutine» trova anche il farro", () => {
     const LX = searchLexicon(CMS_DEFAULTS.pages);
     expect(searchIndex(IT, "glutine", LX).map((r) => r.id)).toContain("flour-farro_spelta");
+  });
+});
+
+/* FW-15 (S04-A-08, S01-A-06): ogni suggerimento che un'edizione può proporre
+   trova qualcosa in ogni lingua, e nessuno è un marchio o una persona. */
+describe("suggerimenti della ricerca", () => {
+  const LOCALES = { en: EN_LOCALE, de: DE_LOCALE, es: ES_LOCALE, fr: FR_LOCALE, pt: PT_LOCALE, ja: JA_LOCALE };
+  const key = (id: string) => `components.shared.search-overlay.suggestion.${id}`;
+
+  it("ogni suggerimento dà risultati in tutte e 7 le lingue", () => {
+    const indexes: [string, CmsContent, Record<string, string>][] = [
+      ["it", CMS_DEFAULTS, UI_MESSAGES_IT],
+      ...Object.entries(LOCALES).map(([lang, bundle]) =>
+        [lang, { ...CMS_DEFAULTS, ...bundle } as CmsContent, bundle.messages ?? {}] as [string, CmsContent, Record<string, string>]),
+    ];
+    for (const [lang, cms, messages] of indexes) {
+      const index = buildSearchIndex(cms);
+      const lexicon = searchLexicon(cms.pages);
+      for (const id of SEARCH_SUGGESTION_IDS) {
+        const text = messages[key(id)];
+        expect(text, `${lang} ${id}`).toBeTruthy();
+        expect(searchIndex(index, text, lexicon).length, `${lang} «${text}»`).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("niente marchi né nomi di persona fra i suggerimenti", () => {
+    expect(SEARCH_SUGGESTION_IDS).not.toContain("caputo");
+    expect(SEARCH_SUGGESTION_IDS).not.toContain("bonci");
+    expect(DEFAULT_SEARCH_SUGGESTIONS.every((id) => SEARCH_SUGGESTION_IDS.includes(id))).toBe(true);
   });
 });

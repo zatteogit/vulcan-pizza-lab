@@ -587,7 +587,7 @@ export const ES_LOCALE: CmsContent = {
     versionsHint: "Cada versión tiene sus propios rangos de referencia. Las marcas muestran los de la versión seleccionada.",
     learnHeroTitle1: "Conoce la masa,",
     learnHeroTitle2: "mejora tu pizza.",
-    learnHeroSubtitle: "Técnicas, ingredientes y cocción: aprende qué observar y cómo intervenir.",
+    learnHeroSubtitle: "Términos, problemas, prefermentos y cómo calculamos: aprende qué observar y cómo intervenir.",
     learnResources: "Recursos",
     kitchenTempLabel: "Temperatura de la cocina",
     kitchenTempDown: "Bajar la temperatura de la cocina",
@@ -1669,7 +1669,7 @@ export const ES_LOCALE: CmsContent = {
       "Entiende la masa, elige las técnicas y aprende a reconocer lo que ocurre.",
     learnGlossary: "Glosario",
     learnGlossaryDesc:
-      "Los términos de la masa, con ejemplos y referencias.",
+      "Los términos de la masa, con fórmulas y valores típicos.",
     learnTroubleshooting: "Problemas y soluciones",
     learnTroubleshootingDesc:
       "Reconoce el problema y descubre qué corregir.",

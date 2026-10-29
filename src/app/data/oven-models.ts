@@ -100,6 +100,24 @@ export const EDITION_DEFAULT_OVEN: OvenModel | undefined = EDITION.ovens?.defaul
   ? OVEN_MODELS.find((model) => model.id === EDITION.ovens?.default)
   : undefined;
 
+/* ═══ FW-15 — Esempi e filtro del catalogo per la ricerca (S18-A-03/B-04, S16-A-11) ═══
+ * Il segnaposto e lo stato vuoto della ricerca nascono dal catalogo attivo:
+ * un'edizione filtrata non propone marchi che poi non trova. */
+
+/** L'edizione mostra solo una parte dei forni (ovens.only). */
+export const OVEN_CATALOG_FILTERED: boolean = Boolean(EDITION.ovens?.only);
+
+/** Marche del catalogo, nell'ordine in cui compaiono. */
+export function ovenCatalogBrands(models: readonly OvenModel[] = OVEN_MODELS): string[] {
+  return [...new Set(models.map((model) => model.brand))];
+}
+
+/** Esempi da cercare: marche diverse se ce ne sono abbastanza, altrimenti i modelli. */
+export function ovenSearchExamples(models: readonly OvenModel[] = OVEN_MODELS, count = 3): string[] {
+  const brands = ovenCatalogBrands(models);
+  return brands.length >= count ? brands.slice(0, count) : models.slice(0, count).map((model) => model.model);
+}
+
 const normalize = (text: string) =>
   text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim();
 

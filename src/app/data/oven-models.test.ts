@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { OVEN_PRESETS } from "../domain/pizza-engine";
-import { OVEN_MODELS, searchOvenModels } from "./oven-models";
+import { OVEN_CATALOG_FILTERED, OVEN_MODELS, editionOvenModels, ovenCatalogBrands, ovenSearchExamples, searchOvenModels } from "./oven-models";
+import { parseEdition } from "../config/edition";
 
 /* D-048: catalogo dei forni da pizza per marca e modello. */
 
@@ -24,5 +25,28 @@ describe("forni per marca e modello", () => {
     expect(searchOvenModels("EFFEUNO").length).toBe(5);
     expect(searchOvenModels("pizzaiolo")[0]?.brand).toBe("Sage / Breville");
     expect(searchOvenModels("")).toEqual([]);
+  });
+});
+
+/* FW-15 (S18-A-03/B-04, S16-A-11): esempi e filtro dal catalogo attivo. */
+describe("esempi della ricerca forni", () => {
+  it("la generalista propone marche diverse, che la ricerca trova", () => {
+    const examples = ovenSearchExamples();
+    expect(examples).toEqual(["Ooni", "Gozney", "Effeuno"]);
+    for (const example of examples) expect(searchOvenModels(example).length).toBeGreaterThan(0);
+    expect(OVEN_CATALOG_FILTERED).toBe(false);
+  });
+
+  it("un catalogo di una sola marca propone i suoi modelli", () => {
+    const demo = parseEdition({
+      schema: 1, id: "prova", kind: "demo", indexing: "noindex", partner: { name: "Forni Prova", invented: true },
+      ovens: { only: ["x-"], extra: [
+        { id: "x-1", brand: "Forni Prova", model: "Uno", fuel: "gas", ovenType: "gas_pizza", maxTempC: 480, source: "demo" },
+        { id: "x-2", brand: "Forni Prova", model: "Due", fuel: "electric", ovenType: "electric_high", maxTempC: 450, source: "demo" },
+      ] },
+    });
+    const catalog = editionOvenModels(demo);
+    expect(ovenCatalogBrands(catalog)).toEqual(["Forni Prova"]);
+    expect(ovenSearchExamples(catalog)).toEqual(["Uno", "Due"]);
   });
 });

@@ -586,7 +586,7 @@ export const FR_LOCALE: CmsContent = {
     versionsHint: "Chaque version a ses plages de référence. Les repères montrent celles de la version sélectionnée.",
     learnHeroTitle1: "Comprenez la pâte,",
     learnHeroTitle2: "améliorez votre pizza.",
-    learnHeroSubtitle: "Techniques, ingrédients et cuisson : apprenez quoi observer et comment agir.",
+    learnHeroSubtitle: "Termes, problèmes, biga et poolish, et notre méthode de calcul : apprenez quoi observer et comment agir.",
     learnResources: "Ressources",
     kitchenTempLabel: "Température de la cuisine",
     kitchenTempDown: "Baisser la température de la cuisine",
@@ -1674,7 +1674,7 @@ export const FR_LOCALE: CmsContent = {
     learnSubtitle:
       "Comprenez la pâte, choisissez vos techniques et apprenez à observer ce qui se passe.",
     learnGlossary: "Glossaire",
-    learnGlossaryDesc: "Les mots de la pâte, expliqués avec des exemples et des repères.",
+    learnGlossaryDesc: "Les mots de la pâte, avec formules et valeurs typiques.",
     learnTroubleshooting: "Probl\u00E8mes et solutions",
     learnTroubleshootingDesc:
       "Identifie le problème et trouve quoi corriger.",

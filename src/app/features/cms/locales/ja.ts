@@ -652,7 +652,7 @@ export const JA_LOCALE: CmsContent = {
     versionsHint: "各バージョンには目安の範囲があります。調整欄の目盛りは、選択中のバージョンの範囲を示します。",
     learnHeroTitle1: "生地を知って、",
     learnHeroTitle2: "ピザをもっとおいしく。",
-    learnHeroSubtitle: "技法、材料、焼き方。変化を見分け、調整する方法を学びましょう。",
+    learnHeroSubtitle: "用語、トラブル、予備発酵、計算の仕組み。変化を見分け、調整する方法を学びましょう。",
     learnResources: "リソース",
     kitchenTempLabel: "キッチンの温度",
     kitchenTempDown: "キッチンの温度を下げる",
@@ -1789,7 +1789,7 @@ export const JA_LOCALE: CmsContent = {
       "生地を知り、技法を選び、変化を見分ける力を身につけましょう。",
     learnGlossary: "\u7528\u8A9E\u96C6",
     learnGlossaryDesc:
-      "生地の用語を、具体例や目安とともに解説します。",
+      "生地の用語を、式や目安の値とともに解説します。",
     learnTroubleshooting:
       "\u554F\u984C\u3068\u89E3\u6C7A\u7B56",
     learnTroubleshootingDesc:

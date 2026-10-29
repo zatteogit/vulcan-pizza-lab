@@ -1,6 +1,7 @@
 import { defineConfig, type Plugin } from "vite";
 import path from "path";
 import fs from "fs";
+import { execFileSync } from "child_process";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { fillBrandPlaceholders } from "./src/app/config/brand";
@@ -151,7 +152,24 @@ function saveAnnotationsPlugin() {
   };
 }
 
+/* FW-15 (S01-B-01): data e commit della build, mostrati in Informazioni e in
+   «Metodo e fonti». Workers Builds espone il commit; altrimenti git, se c'è. */
+function buildInfo(): { date: string; commit: string } {
+  let commit = process.env.WORKERS_CI_COMMIT_SHA?.slice(0, 7) ?? "";
+  if (!commit) {
+    try {
+      commit = execFileSync("git", ["rev-parse", "--short", "HEAD"], { cwd: __dirname, stdio: ["ignore", "pipe", "ignore"] })
+        .toString()
+        .trim();
+    } catch {
+      commit = "";
+    }
+  }
+  return { date: new Date().toISOString().slice(0, 10), commit };
+}
+
 export default defineConfig({
+  define: { __VULCAN_BUILD__: JSON.stringify(buildInfo()) },
   plugins: [react(), tailwindcss(), saveAnnotationsPlugin(), brandPlugin()],
   resolve: {
     alias: {

@@ -243,6 +243,8 @@
 .learn-resources__card[data-tone="glossary"] { --tone: var(--primary); }
 .learn-resources__card[data-tone="troubleshooting"] { --tone: var(--tertiary); }
 .learn-resources__card[data-tone="prefermenti"] { --tone: var(--cta); }
+/* FW-15: «Metodo e fonti» */
+.learn-resources__card[data-tone="method"] { --tone: var(--secondary); }
 .preferment-decision[data-tone="biga"] { --tone: var(--primary); }
 .preferment-decision[data-tone="poolish"] { --tone: var(--cta); }
 .preferment-decision[data-tone="autolisi"] { --tone: var(--tertiary); }

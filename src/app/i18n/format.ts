@@ -263,3 +263,16 @@ export function formatMass(
     maximumFractionDigits: ounces < 1 ? 2 : 1,
   });
 }
+
+/* FW-15 — Data di calendario («24 ottobre 2026») per versione e fonti.
+ *  Accetta una data ISO «YYYY-MM-DD», letta come giorno locale (niente fusi). */
+export function formatCalendarDate(isoDate: string, locale: string): string {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  if (!year || !month || !day) return isoDate;
+  return new Date(year, month - 1, day).toLocaleDateString(locale, { day: "numeric", month: "long", year: "numeric" });
+}
+
+/** FW-15 — Elenco breve («Ooni, Gozney, Effeuno») col separatore della lingua. */
+export function formatShortList(items: readonly string[], locale?: string): string {
+  return items.join(uiMessage("format.listSeparator", [], locale));
+}

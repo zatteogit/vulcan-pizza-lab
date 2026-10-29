@@ -3,6 +3,7 @@ import { useLocation, useMatches } from "react-router";
 import { BRAND } from "../../config/brand";
 import { useCms } from "../../features/cms/cms-context";
 import { CtaButton } from "../ds/index";
+import { uiMessage } from "../../i18n/ui-messages";
 
 /* ═══ U-10 (F15) — titolo della pagina per route ═══
  * Prima `document.title` era sempre il nome del prodotto: schede, cronologia e
@@ -16,6 +17,7 @@ function sectionTitle(pathname: string, pages: ReturnType<typeof useCms>["cms"][
   if (pathname.startsWith("/learn/glossary")) return pages.learnGlossary;
   if (pathname.startsWith("/learn/troubleshooting")) return pages.learnTroubleshooting;
   if (pathname.startsWith("/learn/pre-ferments")) return pages.learnPreFerments;
+  if (pathname.startsWith("/learn/metodo")) return uiMessage("pages.method.title"); // FW-15
   if (pathname.startsWith("/learn")) return pages.navLearn;
   if (pathname.startsWith("/profile")) return pages.navProfile;
   return null;

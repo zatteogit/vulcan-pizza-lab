@@ -9,7 +9,7 @@ import { handleTablistKeyDown, tabIndexFor } from "../components/ds/tablist-keys
 import { Beaker, Bookmark, Bug, Check, ChevronDown, ChevronRight, CircleDot, Compass, Download, Globe, GraduationCap, Heart, Leaf, Link as LinkIcon, Loader2, MapPin, Milk, Monitor, Moon, Navigation, PartyPopper, Pizza, Search, Sparkles, Sun, Timer, Upload, User, WheatOff, X } from "lucide-react";
 import { ovenIcon } from "../components/shared/oven-icons";
 import { AnimatePresence,motion, useReducedMotion } from "motion/react";
-import { useCallback,useEffect,useMemo,useRef,useState } from "react";
+import { Suspense, lazy, useCallback,useEffect,useMemo,useRef,useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { CMS_DEFAULTS, useCms, type CmsContent } from "../features/cms/cms-context";
@@ -45,7 +45,8 @@ syncLegacyFlags,
 compatibleHeatProfiles,
 isHeatProfileCompatible,
 } from "../data/equipment-data";
-import { OVEN_MODELS, type OvenModel } from "../data/oven-models";
+import { OVEN_MODELS, getOvenModel, type OvenModel } from "../data/oven-models";
+import { AboutLinks, neutralityText } from "../components/shared/about-links";
 import { nextSavedOven, profileOvenType, type SavedOvenPref } from "../use-cases/effective-kitchen";
 import { hasChosenSkill } from "../hooks/use-profile-defaults";
 
@@ -88,6 +89,9 @@ import { BRAND } from "../config/brand";
 import { DetailLevelSetting, DetailLevelOffer } from "../features/profile/detail-level-setting";
 import { SkillLevelEffect } from "../features/profile/skill-level-effect";
 import { useDetailLevel } from "../hooks/use-detail-level";
+
+/* FW-15 (S17-A-03/B-17): il dialog Informazioni anche dal tab App. */
+const AboutDialog = lazy(() => import("../components/shared/about-dialog").then((m) => ({ default: m.AboutDialog })));
 
 /* ═══ STORAGE KEYS ═══ */
 const PROFILE_COMPLETE_KEY = "vulcan_profile_complete";
@@ -706,8 +710,12 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const [step, setStep] = useState(0);
   /* Si parte dal forno già salvato (anche quello preimpostato da un'edizione
      partner): «Avanti» non deve riportarlo al forno di casa. */
-  const [savedOven] = useState(() => loadJson<{ ovenType?: OvenType; maxTemp?: number; modelId?: string }>(OVEN_STORAGE_KEY));
+  const [savedOven] = useState(() => loadJson<{ ovenType?: OvenType; maxTemp?: number; modelId?: string; origin?: "edition" }>(OVEN_STORAGE_KEY));
   const [ovenType, setOvenType] = useState<OvenType>(savedOven?.ovenType ?? "home");
+  /* FW-15 (S18-A-05/B-06, S15-A-10): il modello salvato (anche quello proposto
+     dall'edizione) si nomina sulla tessera; se viene dall'edizione lo si dice. */
+  const savedModel = getOvenModel(savedOven?.modelId);
+  const editionOven = savedOven?.origin === "edition" ? savedModel : undefined;
   const [ovenTemp, setOvenTemp] = useState(savedOven?.maxTemp ?? 250);
   /* FW-07 (S15-V-01, S15-A-06): il livello parte da quello salvato e, se non
      c'è, da nessuno: «Avanti» non sceglie «Principiante» al posto tuo. */
@@ -837,6 +845,12 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
             {step === 0 && <SettingEffectNote settingId="oven" />}
             {step === 1 && <SettingEffectNote settingId="skill" />}
             {step === 2 && <SettingEffectNote settingId="pantry" />}
+            {step === 0 && editionOven && ovenType === editionOven.ovenType && (
+              <p className="type-data-sm profile-ftu__edition-oven" role="note">
+                {uiMessage("pages.profile.ftu.editionOven", [`${editionOven.brand} ${editionOven.model}`])}
+                {neutralityText() && <small data-region="neutrality">{neutralityText()}</small>}
+              </p>
+            )}
             {step === 0 && (
               <div className="profile-ftu__option-list">
                 {OVEN_PRESETS.map((preset) => {
@@ -881,6 +895,9 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                         <div className="type-data-sm profile-ftu__option-meta">
                           {uiMessage("pages.profile.maxTemp", [fmt.celsius(active ? ovenTemp : preset.maxTemp)])}
                         </div>
+                        {active && savedModel && savedOven?.ovenType === preset.id && (
+                          <div className="type-data-sm profile-ftu__option-model">{`${savedModel.brand} ${savedModel.model}`}</div>
+                        )}
                       </div>
                       {active && (
                         <motion.div
@@ -1206,6 +1223,7 @@ export function ProfilePage() {
 
   /* Locale confirmation modal */
   const [pendingLocale, setPendingLocale] = useState<LocaleMeta | null>(null);
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   /* FW-07: il forno del profilo è quello della cucina effettiva
    * (`vulcan_oven_pref`, scritto anche da Crea); `vulcan_ovens` e il vecchio
@@ -2289,6 +2307,16 @@ export function ProfilePage() {
         {/* D-046 / D-047: accesso, ruolo riconosciuto, demo. FW-16 (S17-A-02):
             dopo le preferenze, e solo se c'è un'azione possibile. */}
         <AccountPanel locale={bcp47} />
+
+        {/* FW-15 (S17-A-03/B-17): Informazioni — metodo e fonti, dati, versione. */}
+        <ProfileSection
+          title={uiMessage("profile.info.title")}
+          subtitle={uiMessage("profile.info.subtitle")}
+          delay={motionDelay.deliberate}
+        >
+          <AboutLinks locale={bcp47} about={{ label: cms.ui.aboutLabel, onOpen: () => setAboutOpen(true) }} />
+        </ProfileSection>
+        {aboutOpen && <Suspense fallback={null}><AboutDialog onClose={() => setAboutOpen(false)} /></Suspense>}
 
         {/* Reset profile — Audit Sprint 12: chiede conferma prima di resettare */}
         <div className="profile-page__footer">
