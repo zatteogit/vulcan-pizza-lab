@@ -109,7 +109,9 @@ export function formatDuration(
   { seconds = false, days: useDays = false }: { seconds?: boolean; days?: boolean } = {},
 ): string {
   if (seconds && minutes < 1) {
-    return formatUnit(Math.max(0, Math.ceil(minutes * 60)), "second", locale);
+    const secs = Math.max(0, Math.ceil(minutes * 60));
+    /* 59,5 s si arrotonda a «1 min», non a «60 s». */
+    if (secs < 60) return formatUnit(secs, "second", locale);
   }
   const total = Math.max(0, Math.round(minutes));
   const days = useDays ? Math.floor(total / 1440) : 0;
@@ -245,10 +247,13 @@ export function formatMass(
   if (units !== "imperial" || microDose || isMicroDose(grams)) {
     return formatUnit(grams, "gram", locale);
   }
-  const ounces = grams / GRAMS_PER_OUNCE;
+  const rawOunces = grams / GRAMS_PER_OUNCE;
+  /* Si arrotonda al decimo prima di scegliere le libbre: 453 g è «1 lb»,
+   *  non «16 oz», e il resto non arriva mai a «16 oz». */
+  const ounces = Math.abs(rawOunces) < 1 ? rawOunces : Math.round(rawOunces * 10) / 10;
   if (Math.abs(ounces) >= 16) {
     const pounds = Math.trunc(ounces / 16);
-    const remainder = Math.abs(ounces - pounds * 16);
+    const remainder = Math.round(Math.abs(ounces - pounds * 16) * 10) / 10;
     const lb = formatUnit(pounds, "pound", locale);
     return remainder < 0.05
       ? lb
