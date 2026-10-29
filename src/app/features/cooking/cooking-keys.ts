@@ -39,3 +39,17 @@ export function cookingKeyAction(
   if (targetOwnsArrows(event.target)) return null;
   return event.key === "ArrowRight" ? "next" : "prev";
 }
+
+/**
+ * Indice della vista dopo «→» (FW-12). In avanti si sfoglia solo fra i passi
+ * già raggiunti: mai oltre il passo attivo, così la vista non finisce su un
+ * passo futuro dove il bottone principale non fa nulla. A pizzata conclusa
+ * (`allDone`) si sfoglia fino all'ultimo passo.
+ */
+export function nextViewIndex(
+  viewIndex: number,
+  { activeIdx, total, allDone }: { activeIdx: number; total: number; allDone: boolean },
+): number {
+  const limit = allDone ? total - 1 : Math.min(activeIdx, total - 1);
+  return viewIndex < limit ? viewIndex + 1 : viewIndex;
+}

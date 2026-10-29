@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cookingKeyAction, type CookingKeyEventLike } from "./cooking-keys";
+import { cookingKeyAction, nextViewIndex, type CookingKeyEventLike } from "./cooking-keys";
 
 /* Un finto elemento: `closest` risponde come il DOM per i selettori che contano. */
 function target(matches: string | null) {
@@ -42,6 +42,24 @@ describe("cookingKeyAction (FW-12, S10-A-08 / S10-B-01)", () => {
   });
 });
 
+describe("nextViewIndex: «→» non supera il passo attivo (FW-12)", () => {
+  it("sul passo attivo «→» non porta a passi futuri", () => {
+    expect(nextViewIndex(1, { activeIdx: 1, total: 4, allDone: false })).toBe(1);
+    expect(nextViewIndex(0, { activeIdx: 0, total: 4, allDone: false })).toBe(0);
+  });
+
+  it("da un passo già fatto «→» torna avanti fino al passo attivo, non oltre", () => {
+    expect(nextViewIndex(0, { activeIdx: 2, total: 4, allDone: false })).toBe(1);
+    expect(nextViewIndex(1, { activeIdx: 2, total: 4, allDone: false })).toBe(2);
+    expect(nextViewIndex(2, { activeIdx: 2, total: 4, allDone: false })).toBe(2);
+  });
+
+  it("a pizzata conclusa si sfoglia fino all'ultimo passo e lì si ferma", () => {
+    expect(nextViewIndex(1, { activeIdx: 3, total: 4, allDone: true })).toBe(2);
+    expect(nextViewIndex(3, { activeIdx: 3, total: 4, allDone: true })).toBe(3);
+  });
+});
+
 /* Contratto del focus della vista (S10-A-09 / S10-B-02). Senza DOM nei test,
    si verifica che la vista usi il contratto condiviso dei modali. */
 const COOKING_MODE_SOURCE = Object.values(
@@ -66,6 +84,7 @@ describe("modalità cottura: contratto del focus (FW-12)", () => {
     expect(handler.length).toBeGreaterThan(0);
     expect(handler).not.toContain("completeStep");
     expect(handler).not.toContain("goNext");
+    expect(handler).toContain("nextViewIndex(viewIndex, { activeIdx, total, allDone })");
   });
 
   it("annuncia il passo e espone l'avanzamento come progressbar", () => {
