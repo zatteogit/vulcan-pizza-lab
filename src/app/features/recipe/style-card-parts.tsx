@@ -4,7 +4,7 @@ import { createFormatter, t } from "../cms/i18n";
 import { ScoreExplainer, scoreAriaLabel } from "./score-explainer";
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
-import { Clock, CookingPot, Droplets, Flame, ScanLine, Wheat } from "lucide-react";
+import { Clock, Droplets, Flame, ScanLine, Wheat } from "lucide-react";
 import { Badge } from "../../components/ds/index";
 import { RecipeMatchIcon } from "./recipe-match-icon";
 import { recipeCardSignals } from "./recipe-card-signals";
@@ -133,7 +133,9 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", id }: { 
   const { bcp47 } = useCms();
   const fmt = createFormatter(cms.ui, bcp47);
   const signals = recipe ? recipeCardSignals(recipe, context) : [];
-  const icons = { oven: Flame, time: Clock, pan: CookingPot, flour: Wheat, check: ScanLine, water: Droplets }; /* FW-13: Flame solo per il forno */
+  /* Fiamma per il forno e per la teglia (nota di Matteo, 29/10/2026: la teglia
+     è un requisito di cottura, come pietra o acciaio). */
+  const icons = { oven: Flame, time: Clock, pan: Flame, flour: Wheat, check: ScanLine, water: Droplets };
   // Pill su una riga: è una durata approssimata («≈»), quindi dalle 10 ore
   // in su all'ora intera («≈ 22 h in tutto»), sotto alla mezz'ora.
   const totalHours = recipe ? recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 60 : 0;
