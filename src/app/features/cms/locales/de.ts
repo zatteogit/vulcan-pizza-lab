@@ -751,6 +751,7 @@ export const DE_LOCALE: CmsContent = {
     "rec.needsWoodOven": "Das Original nutzt einen Holzofen; mit deinem Ofen ändert sich die Backweise.",
     "rec.ovenAdapted": "Dein Ofen erreicht {temp}: ideale Temperatur {ideal}, angepasste Backzeit",
     "gen.homeBakingMethod": "Backen zu Hause bei {temp} auf einem vorgeheizten umgedrehten Blech; anderes Ergebnis als beim Original bei {ideal}",
+    "gen.ovenTooNarrow": "Dein Ofen fasst Pizzen bis {max} cm (Herstellerangabe), dieses Rezept sieht {diameter} cm vor: zieh den Teig auf höchstens {max} cm aus.",
     "rec.needsDeck": "Diese Methode braucht einen vorgeheizten Stein oder Backstahl, der in deiner Küche nicht angegeben ist",
     "timeline.homeTray.preheat": "Heize den Ofen auf Maximum ({temp}) mit einem umgedrehten Blech vor, bis auch das Blech heiß ist. Lasse den Teig währenddessen fertig ruhen.",
     "timeline.homeTray.bake": "Backe auf dem vorgeheizten umgedrehten Blech. Prüfe Bodenbräunung und Garzustand vor dem Herausnehmen.",
@@ -963,6 +964,8 @@ export const DE_LOCALE: CmsContent = {
     "timeline.oven.gasPizza": "Gas-Pizzaofen: Heize, bis der Stein Temperatur hat (mit einem Infrarotthermometer pr\u00FCfen), dann einschie\u00DFen und die Pizza oft drehen, weil die Flamme an einer Seite sitzt.",
     "timeline.oven.staticStone": "Ober-/Unterhitze auf Maximum, Stein/Stahl schon heiß auf mittlerer bis oberer Schiene. Für den Rand: die letzten 60-90s unter den Grill (nur Oberhitze auf Maximum) und dabei nicht aus den Augen lassen.",
     "timeline.oven.staticShelf": "Ober-/Unterhitze auf Maximum, Rost auf mittlerer bis oberer Schiene. Für den Rand: die letzten 60-90s unter den Grill (nur Oberhitze auf Maximum) und dabei nicht aus den Augen lassen.",
+    "timeline.oven.staticStoneSet": "Ober-/Unterhitze auf {temp} eingestellt, nicht auf Maximum; Stein/Stahl bereits heiß auf mittlerer bis oberer Schiene.",
+    "timeline.oven.staticShelfSet": "Ober-/Unterhitze auf {temp} eingestellt, nicht auf Maximum; Rost auf mittlerer bis oberer Schiene.",
     "timeline.mix.title": "Kneten",
     "timeline.divide.title": "Teilen",
     "timeline.divide.multiPiece": "Teile jede Portion in {pieces} gleich große Stücke. Forme jeweils eine Kugel oder Scheibe.",
@@ -1173,7 +1176,7 @@ export const DE_LOCALE: CmsContent = {
     pillExperimentation: "Experimentell",
     pillLevelBeginner: "Anf\u00E4nger",
     pillLevelExpert: "Experte",
-    sheetSectionTitle: "Backdetails",
+    sheetSectionTitle: "Referenz des Stils",
     sheetOvenLabel: "Idealer Ofen",
     sheetOvenPreheat: "Vorheizen: {min} Min.",
     sheetBakeLabel: "Backzeit",
@@ -1186,7 +1189,7 @@ export const DE_LOCALE: CmsContent = {
     sheetGenerateBtn: "Rezept generieren",
     sheetMatchTitle: "Warum sie zu deiner Küche passt",
     sheetTechniquesLabel: "Kompatible Autortechniken",
-    mixBeginner: "{mixer} (~{time} Min. Kneten). {equipment}",
+    mixBeginner: "{mixer} (~{time} Min. Kneten).",
     bulkBeginner:
       "F\u00FChre {count} Falten ({type}) alle {interval} Minuten durch, um die Struktur aufzubauen.",
     shapeBeginner: "{note}",
@@ -1199,14 +1202,17 @@ export const DE_LOCALE: CmsContent = {
       "Einschnitt: {type} \u00B7 Tiefe {depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd:
       "Belag-Reihenfolge: {order} \u00B7 So\u00DFe {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
-    bakeNerd:
-      "Ideales Backen: {idealSec}s (Bereich {minM}\u2013{maxM} Min.) \u00B7 {turns} Drehungen \u00B7 {note}",
     mixerPlanetaria: "K\u00FCchenmaschine empfohlen",
     mixerHand: "Handkneten m\u00F6glich",
-    turnsSingle:
-      "{n}-mal drehen f\u00FCr gleichm\u00E4\u00DFiges Backen.",
     turnsNone: "W\u00E4hrend des Backens nicht drehen.",
     bakeAdaptedNerd: "Schätzung der Engine für deinen Ofen ({temp}): {minM}\u2013{maxM} Min. pro Backvorgang. Referenz des Stils: {refMin}\u2013{refMax} s bei {refTemp}.",
+    // FW-07
+    turnsHalfway: "Einmal nach der Hälfte der Backzeit drehen.",
+    turnsFrequent: "Oft drehen: Die Hitze kommt vor allem von einer Seite.",
+    sheetYourBakeLabel: "Dein Backen",
+    sheetOilLabel: "Öltemperatur",
+    sheetOilHeat: "Bring das Öl vor dem Frittieren auf Temperatur: Ein Ofen ist nicht nötig.",
+    sheetFryTurn: "Nach der Hälfte der Frittierzeit wenden",
   },
   styleDescriptions: {
     napoletana_stg:

@@ -963,6 +963,7 @@ function RecipeContent({
               isPersonalized={isDirty}
               reference={referenceRecipe}
               optimized={isOptimized}
+              ovenType={effectiveConstraints.oven_type}
             />
             {/* Il dialog Personalizza: si apre dal pulsante sulla match card
                 (niente trigger proprio — nota Matteo lug 2026). */}

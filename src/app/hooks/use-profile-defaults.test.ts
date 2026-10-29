@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { UserConstraints } from "../domain/pizza-engine";
-import { mergeDraftConstraints, profileEquipment } from "./use-profile-defaults";
+import { loadProfileDefaults, mergeDraftConstraints, profileEquipment } from "./use-profile-defaults";
 
 /* Audit n. 11 (C-03): il profilo cambiato deve arrivare alla bozza aperta. */
 
@@ -97,4 +97,32 @@ describe("capacità fisica e temperatura di ricetta", () => {
 it("current allergen avoidance cannot be cleared by a draft",()=>{
  expect(mergeDraftConstraints({...profile,allergens_avoid:["milk"]},{allergens_avoid:[]}).allergens_avoid).toEqual(["milk"]);
  expect(mergeDraftConstraints({...profile,allergens_avoid:[]},{allergens_avoid:["nuts"]}).allergens_avoid).toEqual([]);
+});
+
+describe("loadProfileDefaults: cucina effettiva (FW-07)", () => {
+  afterEach(() => vi.unstubAllGlobals());
+  const stub = (data: Record<string, unknown>) => {
+    const storage = new Map(Object.entries(data).map(([k, v]) => [k, JSON.stringify(v)]));
+    vi.stubGlobal("localStorage", { getItem: (key: string) => storage.get(key) ?? null, setItem: () => {} });
+  };
+
+  it("Effeuno a 509 °C: il motore riceve 509 e la bocca del forno (S05-A-03, S18-A-06)", () => {
+    stub({ vulcan_oven_pref: { ovenType: "electric_high", maxTemp: 509, modelId: "effeuno-p134h" } });
+    const { constraints, kitchen } = loadProfileDefaults();
+    expect(constraints).toMatchObject({ oven_type: "electric_high", oven_max_temp_c: 509, oven_capacity_temp_c: 509, oven_max_pizza_cm: 34 });
+    expect(kitchen.oven.label).toBe("Effeuno P134H 509 PRO");
+  });
+
+  it("il forno preimpostato dall'edizione resta marcato (S18-B-01)", () => {
+    stub({ vulcan_oven_pref: { ovenType: "electric_high", maxTemp: 450, modelId: "ooni-volt-12", origin: "edition" } });
+    expect(loadProfileDefaults().kitchen.oven.fromEdition).toBe(true);
+  });
+
+  it("grill superiore salvato con un forno a legna: non arriva al motore (S16-B-03)", () => {
+    stub({ vulcan_oven_pref: { ovenType: "wood", maxTemp: 485 }, vulcan_equipment: { mixer_type: "spiral", surfaces: [], oven_heat_profile: "top_grill" } });
+    const { constraints } = loadProfileDefaults();
+    expect(constraints.oven_heat_profile).toBeUndefined();
+    expect(constraints.mixer_type).toBe("spiral");
+    expect(constraints.has_mixer).toBe(true);
+  });
 });

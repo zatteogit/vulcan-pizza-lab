@@ -815,6 +815,7 @@ export const JA_LOCALE: CmsContent = {
     "rec.needsWoodOven": "元のスタイルは薪窯を使います。別のオーブンでは焼き方が変わります。",
     "rec.ovenAdapted": "オーブンの最高温度は{temp}、理想温度は{ideal}です。焼成を調整します",
     "gen.homeBakingMethod": "予熱した裏返しの天板で{temp}で焼きます。標準の{ideal}での焼成とは仕上がりが異なります",
+    "gen.ovenTooNarrow": "お使いのオーブンに入るピザは最大{max} cm（メーカー公表値）ですが、このレシピは{diameter} cmです。生地は{max} cm以内に伸ばしてください。",
     "rec.needsDeck": "この焼成には予熱したピザストーンまたはスチールが必要ですが、キッチンに登録されていません",
     "timeline.homeTray.preheat": "裏返しの天板を入れてオーブンを最高温度（{temp}）に予熱し、天板も十分熱くします。その間に生地を休ませます。",
     "timeline.homeTray.bake": "予熱した裏返しの天板で焼きます。取り出す前に底の焼き色と火の通りを確認してください。",
@@ -1014,6 +1015,8 @@ export const JA_LOCALE: CmsContent = {
     "timeline.oven.gasPizza": "\u30AC\u30B9\u5F0F\u30D4\u30B6\u7AAF\uFF1A\u77F3\u304C\u9069\u6E29\u306B\u306A\u308B\u307E\u3067\u4E88\u71B1\u3057\u307E\u3059\uFF08\u8D64\u5916\u7DDA\u6E29\u5EA6\u8A08\u3067\u78BA\u8A8D\uFF09\u3002\u30D4\u30B6\u3092\u5165\u308C\u305F\u3089\u3001\u708E\u304C\u7247\u5074\u306B\u3042\u308B\u306E\u3067\u3053\u307E\u3081\u306B\u56DE\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
     "timeline.oven.staticStone": "上下火のオーブンを最大にし、石/スチールを中段より上で十分に熱しておきます。縁の仕上げ：最後の60-90sはグリル（上火のみ最大）で、目を離さずに焼きます。",
     "timeline.oven.staticShelf": "上下火のオーブンを最大にし、網は中段より上にします。縁の仕上げ：最後の60-90sはグリル（上火のみ最大）で、目を離さずに焼きます。",
+    "timeline.oven.staticStoneSet": "上下火のオーブンを最大ではなく{temp}に設定し、石・鋼板は中段より上で十分に熱しておきます。",
+    "timeline.oven.staticShelfSet": "上下火のオーブンを最大ではなく{temp}に設定し、網は中段より上にします。",
     "timeline.mix.title": "こね",
     "timeline.divide.title": "分割",
     "timeline.divide.multiPiece": "1単位ごとに{pieces}等分にし、丸めるか円盤状にします。",
@@ -1226,7 +1229,7 @@ export const JA_LOCALE: CmsContent = {
     pillExperimentation: "\u5B9F\u9A13\u6027",
     pillLevelBeginner: "\u521D\u5FC3\u8005",
     pillLevelExpert: "\u4E0A\u7D1A\u8005",
-    sheetSectionTitle: "\u713C\u304D\u8A73\u7D30",
+    sheetSectionTitle: "スタイルの基準",
     sheetOvenLabel:
       "\u7406\u60F3\u306E\u30AA\u30FC\u30D6\u30F3",
     sheetOvenPreheat: "\u4E88\u71B1: {min}\u5206",
@@ -1242,7 +1245,7 @@ export const JA_LOCALE: CmsContent = {
     sheetTechniquesLabel:
       "\u5BFE\u5FDC\u3059\u308B\u8457\u540D\u6280\u6CD5",
     mixBeginner:
-      "{mixer}\uFF08\u7D04{time}\u5206\u306E\u6DF7\u305C\uFF09\u3002{equipment}",
+      "{mixer}\uFF08\u7D04{time}\u5206\u306E\u6DF7\u305C\uFF09\u3002",
     bulkBeginner:
       "{interval}\u5206\u3054\u3068\u306B{count}\u56DE\u306E\u6298\u308A\u305F\u305F\u307F\uFF08{type}\uFF09\u3092\u884C\u3044\u3001\u69CB\u9020\u3092\u767A\u9054\u3055\u305B\u307E\u3059\u3002",
     shapeBeginner: "{note}",
@@ -1257,16 +1260,19 @@ export const JA_LOCALE: CmsContent = {
       "\u30AF\u30FC\u30D7: {type} \u00B7 \u6DF1\u3055{depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd:
       "\u30C8\u30C3\u30D4\u30F3\u30B0\u9806: {order} \u00B7 \u30BD\u30FC\u30B9{saucePos} \u00B7 {cheeseType}\uFF08{cheesePos}\uFF09\u00B7 {note}",
-    bakeNerd:
-      "\u7406\u60F3\u713C\u304D: {idealSec}\u79D2\uFF08\u7BC4\u56F2{minM}\u2013{maxM}\u5206\uFF09\u00B7 {turns}\u56DE\u8EE2 \u00B7 {note}",
     mixerPlanetaria:
       "\u30B9\u30BF\u30F3\u30C9\u30DF\u30AD\u30B5\u30FC\u63A8\u5968",
     mixerHand: "\u624B\u3054\u306D\u53EF\u80FD",
-    turnsSingle:
-      "\u5747\u4E00\u306A\u713C\u304D\u306E\u305F\u3081{n}\u56DE\u56DE\u8EE2\u3002",
     turnsNone:
       "\u713C\u304D\u4E2D\u306F\u56DE\u8EE2\u3057\u306A\u3044\u3002",
     bakeAdaptedNerd: "あなたのオーブン（{temp}）でのエンジンの推定：1回の焼成あたり {minM}\u2013{maxM} 分。スタイルの基準：{refTemp} で {refMin}\u2013{refMax} 秒。",
+    // FW-07
+    turnsHalfway: "焼成の途中で一度回します。",
+    turnsFrequent: "こまめに回します。熱は主に片側から来ます。",
+    sheetYourBakeLabel: "あなたの焼成",
+    sheetOilLabel: "油の温度",
+    sheetOilHeat: "揚げる前に油を適温にします。オーブンは不要です。",
+    sheetFryTurn: "揚げ時間の半分で裏返します",
   },
   styleDescriptions: {
     napoletana_stg:

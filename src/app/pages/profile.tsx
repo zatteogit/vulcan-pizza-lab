@@ -41,8 +41,16 @@ getLocalizedSurfaceOptions,
 getLocalizedToolCategories,
 getLocalizedToolOptions,
 migrateEquipment,
-syncLegacyFlags
+syncLegacyFlags,
+compatibleHeatProfiles,
+isHeatProfileCompatible,
 } from "../data/equipment-data";
+import { OVEN_MODELS, type OvenModel } from "../data/oven-models";
+import { nextSavedOven, type SavedOvenPref } from "../use-cases/effective-kitchen";
+import { hasChosenSkill } from "../hooks/use-profile-defaults";
+
+/* FW-07 (S16-A-02): la scala del profilo arriva al forno più caldo del catalogo. */
+const OVEN_SLIDER_MAX = Math.max(500, ...OVEN_MODELS.map((model) => model.maxTempC));
 import type { OvenType,SkillLevel } from "../domain/pizza-engine";
 import {
 OVEN_PRESETS,
@@ -698,7 +706,9 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
   const [savedOven] = useState(() => loadJson<{ ovenType?: OvenType; maxTemp?: number; modelId?: string }>(OVEN_STORAGE_KEY));
   const [ovenType, setOvenType] = useState<OvenType>(savedOven?.ovenType ?? "home");
   const [ovenTemp, setOvenTemp] = useState(savedOven?.maxTemp ?? 250);
-  const [skillLevel, setSkillLevel] = useState<SkillLevel>(1);
+  /* FW-07 (S15-V-01, S15-A-06): il livello parte da quello salvato e, se non
+     c'è, da nessuno: «Avanti» non sceglie «Principiante» al posto tuo. */
+  const [skillLevel, setSkillLevel] = useState<SkillLevel | null>(() => loadJson<SkillLevel>(SKILL_STORAGE_KEY));
   /* FW-08 (S15-B-11, D-C): a chi sceglie Esperto proponiamo «Mostra i
      dettagli tecnici», spento di default; si salva solo alla fine. */
   const { setLevel: setDetailLevel } = useDetailLevel();
@@ -725,10 +735,10 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
     arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
 
   const handleFinish = useCallback(() => {
-    // Il modello resta solo se il forno non è cambiato.
-    const keepModel = savedOven?.modelId && savedOven.ovenType === ovenType && savedOven.maxTemp === ovenTemp;
-    saveJson(OVEN_STORAGE_KEY, { ovenType, maxTemp: ovenTemp, ...(keepModel ? { modelId: savedOven.modelId } : {}) });
-    saveJson(SKILL_STORAGE_KEY, skillLevel);
+    // Il modello resta solo se il forno non è cambiato; confermare il forno
+    // preimpostato dall'edizione lo rende tuo (FW-07, S18-A-01).
+    saveJson(OVEN_STORAGE_KEY, savedOven?.ovenType === ovenType ? nextSavedOven(savedOven, ovenType) : { ovenType, maxTemp: ovenTemp });
+    if (skillLevel !== null) saveJson(SKILL_STORAGE_KEY, skillLevel);
     if (offerTechnical && ftuTechnical) setDetailLevel("technical");
     // Pantry: salviamo solo se valorizzata
     if (ftuFlours.length > 0 || ftuYeasts.length > 0) {
@@ -835,6 +845,8 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                       type="button"
                       aria-pressed={active}
                       onClick={() => {
+                        // FW-07: il forno già attivo non torna alla temperatura del tipo.
+                        if (active) return;
                         setOvenType(preset.id);
                         setOvenTemp(preset.maxTemp);
                       }}
@@ -864,7 +876,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                           {cms.ovenPresets[preset.id]?.name ?? preset.name}
                         </div>
                         <div className="type-data-sm profile-ftu__option-meta">
-                          {uiMessage("pages.profile.maxTemp", [fmt.celsius(preset.maxTemp)])}
+                          {uiMessage("pages.profile.maxTemp", [fmt.celsius(active ? ovenTemp : preset.maxTemp)])}
                         </div>
                       </div>
                       {active && (
@@ -933,7 +945,7 @@ function FtuOnboarding({ onComplete, closeControl }: { onComplete: () => void; c
                 <SkillEffectDetails />
               </div>
               {/* FW-08 (S15-A-02/B-02): cosa cambia scegliendo il livello. */}
-              <SkillLevelEffect level={skillLevel} />
+              {skillLevel !== null && <SkillLevelEffect level={skillLevel} />}
               {offerTechnical && (
                 <DetailLevelOffer checked={ftuTechnical} onCheckedChange={setFtuTechnical} />
               )}
@@ -1180,6 +1192,10 @@ export function ProfilePage() {
     return (
       !PROFILE_TAB_IDS.some(tab => tab === searchParams.get("tab")) &&
       loadString(PROFILE_COMPLETE_KEY) !== "true" &&
+      // FW-07 (S15-V-01): chi ha già scelto livello o forno non rifà il percorso
+      // (il forno preimpostato da un'edizione non conta come scelta).
+      !hasChosenSkill() &&
+      !(loadJson<SavedOvenPref>(OVEN_STORAGE_KEY)?.ovenType && loadJson<SavedOvenPref>(OVEN_STORAGE_KEY)?.origin !== "edition") &&
       loadSavedRecipes().length === 0 &&
       loadFavoriteStyles().length === 0
     );
@@ -1218,6 +1234,8 @@ export function ProfilePage() {
   });
 
   const ovenType = ovens[0] as OvenType;
+  /* FW-07 (S16-B-03): solo le distribuzioni del calore che questo forno ha. */
+  const heatProfiles = OVEN_HEAT_PROFILES.filter((profile) => isHeatProfileCompatible(profile.id, ovenType));
 
   const [ovenTemp, setOvenTemp] = useState(() => {
     const saved = loadJson<{ ovenType: OvenType; maxTemp: number }>(OVEN_STORAGE_KEY);
@@ -1291,15 +1309,10 @@ export function ProfilePage() {
     });
   }, []);
 
+  /* FW-07 (S16-A-01): una scelta sola, «con cosa impasti di solito»: è
+     quella che usano le ricette (mixer_type). */
   const toggleMixer = useCallback((id: string) => {
-    setMixers((prev) => {
-      if (prev.includes(id)) {
-        if (prev.length === 1) return prev;
-        return prev.filter((x) => x !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
+    setMixers((prev) => (prev.length === 1 && prev[0] === id ? prev : [id]));
   }, []);
 
   const toggleSurface = useCallback((id: SurfaceType) => {
@@ -1311,6 +1324,9 @@ export function ProfilePage() {
     });
   }, [updateEquipment]);
 
+  const currentHeat = isHeatProfileCompatible(equipment.oven_heat_profile ?? "static_top_bottom", ovenType)
+    ? (equipment.oven_heat_profile ?? "static_top_bottom")
+    : undefined; // quella salvata non vale per questo forno: il motore usa il testo del tipo
   const setOvenHeatProfile = useCallback((id: OvenHeatProfile) => {
     updateEquipment((prev) => ({ ...prev, oven_heat_profile: id }));
   }, [updateEquipment]);
@@ -1581,36 +1597,35 @@ export function ProfilePage() {
             formatTemp={(c) => fmt.celsius(c)}
             onPick={(model) => {
               setOvenModelId(model.id);
-              setOvens((prev) => [model.ovenType, ...prev.filter((x) => x !== model.ovenType)]);
+              setOvens([model.ovenType]);
               setOvenTemp(model.maxTempC);
             }}
             onClear={() => setOvenModelId(null)}
+            currentTempC={ovenTemp}
+            onRestore={(model: OvenModel) => setOvenTemp(model.maxTempC)}
           />
-          <div className="profile-oven-list">
+          <div className="profile-oven-list" role="radiogroup" aria-label={p.ovenTitle}>
             {OVEN_PRESETS.map((preset) => {
               const Icon = ovenIcon(preset.id);
-              const active = ovens.includes(preset.id);
+              // FW-07 (S16-A-10): un solo forno, quello che usano le ricette.
+              const active = ovenType === preset.id;
               return (
                 <motion.button
                   key={preset.id}
                   layout
                   type="button"
-                  aria-pressed={active}
+                  role="radio"
+                  aria-checked={active}
                   onClick={() => {
-                    // Un tipo scelto a mano non è più il modello cercato.
+                    if (active) return;
+                    // Un altro tipo non è più il modello cercato.
                     setOvenModelId(null);
-                    if (ovens.includes(preset.id)) {
-                      if (ovens.length === 1) return;
-                      const next = ovens.filter((id) => id !== preset.id);
-                      setOvens(next);
-                      // Tipo e temperatura devono cambiare insieme anche quando
-                      // si rimuove il forno principale da una selezione multipla.
-                      if (ovens[0] === preset.id) {
-                        setOvenTemp(OVEN_PRESETS.find((p) => p.id === next[0])?.maxTemp ?? 250);
-                      }
-                    } else {
-                      setOvens([preset.id, ...ovens]);
-                      setOvenTemp(preset.maxTemp);
+                    setOvens([preset.id]);
+                    setOvenTemp(preset.maxTemp);
+                    // FW-07 (S16-B-03): la distribuzione del calore resta solo se il nuovo forno ce l'ha.
+                    const heat = equipment.oven_heat_profile;
+                    if (heat && !isHeatProfileCompatible(heat, preset.id)) {
+                      updateEquipment((prev) => ({ ...prev, oven_heat_profile: compatibleHeatProfiles(preset.id)[0] }));
                     }
                   }}
                   className="profile-oven-list__item"
@@ -1635,7 +1650,7 @@ export function ProfilePage() {
                     </span>
                   </div>
                   <span className="type-data profile-oven-list__temp">
-                    {fmt.celsius(preset.maxTemp)}
+                    {fmt.celsius(active ? ovenTemp : preset.maxTemp)}
                   </span>
                   <AnimatePresence>
                     {active && (
@@ -1665,28 +1680,32 @@ export function ProfilePage() {
                 {fmt.celsius(ovenTemp)}
               </span>
             </div>
+            {/* FW-07 (S16-A-02, S16-B-15): la scala arriva al forno più caldo del
+                catalogo (509, 550 °C) e il lettore di schermo sente l'unità. */}
             <input
               type="range"
               min={180}
-              max={500}
-              step={10}
+              max={OVEN_SLIDER_MAX}
+              step={1}
               value={ovenTemp}
               onChange={(e) => setOvenTemp(Number(e.target.value))}
               className="profile-oven-temp__slider"
               aria-label={p.tempAria}
+              aria-valuetext={fmt.celsius(ovenTemp)}
             />
           </div>
 
+          {heatProfiles.length > 0 && (
           <Disclosure
             className="profile-oven-heat"
             variant="card"
             summary={uiMessage("pages.profile.distribuzione-del-calore-bfa0da90")}
-            meta={OVEN_HEAT_PROFILES.find(profile => profile.id === (equipment.oven_heat_profile ?? "static_top_bottom"))?.label}
+            meta={heatProfiles.find(profile => profile.id === currentHeat)?.label}
           >
             <SettingEffectNote settingId="ovenHeat" className="type-data-xs profile-oven-heat__hint" />
             <div className="profile-oven-heat__grid">
-              {OVEN_HEAT_PROFILES.map((profile) => {
-                const active = (equipment.oven_heat_profile ?? "static_top_bottom") === profile.id;
+              {heatProfiles.map((profile) => {
+                const active = currentHeat === profile.id;
                 const suggested = profile.bestFor.includes(ovenType);
                 return (
                   <motion.button
@@ -1722,6 +1741,7 @@ export function ProfilePage() {
               })}
             </div>
           </Disclosure>
+          )}
         </ProfileSection>
 
         {/* ── SKILL ── */}
@@ -1814,14 +1834,14 @@ export function ProfilePage() {
               expanded={equipExpandedCat === "mixer"}
               onToggle={() => setEquipExpandedCat(equipExpandedCat === "mixer" ? null : "mixer")}
               summary={mixers.length > 0
-                ? mixers.map(id => localMixers.find((m) => m.id === id)?.label ?? "").filter(Boolean).join(", ")
+                ? localMixers.find((m) => m.id === mixers[0])?.label ?? p.equipSummaryNone
                 : p.equipSummaryNone}
               hasSelection={mixers.length > 0}
             >
               <SettingEffectNote settingId="mixer" />
-              <div className="profile-equip-option-list">
+              <div className="profile-equip-option-list" role="radiogroup" aria-label={p.equipMixerTitle}>
                 {localMixers.map((mixer) => {
-                  const active = mixers.includes(mixer.id);
+                  const active = mixers[0] === mixer.id;
                   const levelModifier =
                     mixer.level === "professional"
                       ? " profile-equip-option__badge--pro"
@@ -1832,7 +1852,8 @@ export function ProfilePage() {
                     <motion.button
                       key={mixer.id}
                       type="button"
-                      aria-pressed={active}
+                      role="radio"
+                      aria-checked={active}
                       onClick={() => toggleMixer(mixer.id)}
                       className="profile-equip-option"
                       animate={{

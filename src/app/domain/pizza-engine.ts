@@ -14,6 +14,7 @@ mergeImpastoIntoDough,
 type ImpastoRecipe,
 } from "../data/impasto-library";
 import { getToppingByStyle } from "../data/parametric-databases";
+import { isHeatProfileCompatible } from "../data/equipment-data";
 import {
 getToppingForStyle,
 getRecipesByAuthenticity,
@@ -353,6 +354,9 @@ export interface UserConstraints {
    *  cucina lievita più veloce»). 1 = come il modello; 1,25 = lievita il 25%
    *  più in fretta, quindi serve meno lievito. Limitata a 0,5–2. */
   yeast_speed_factor?: number;
+  /** FW-07 (S18-A-06): diametro massimo della pizza dichiarato dal
+   *  produttore del forno, cm (OvenModel.pizzaCm). Assente = non noto. */
+  oven_max_pizza_cm?: number;
   /** Advanced oven heat profile — resistances/burner layout from profile */
   oven_heat_profile?:
     | "static_top_bottom"
@@ -2059,6 +2063,7 @@ export function generateRecipe(
     ovenType: constraints.oven_type,
     surfaces: constraints.surfaces,
     ovenHeatProfile: constraints.oven_heat_profile,
+    ovenMaxTempC: constraints.oven_max_temp_c,
   };
   const buildTimeline = (
     hours: number,
@@ -2334,6 +2339,14 @@ export function generateRecipe(
     timelineMinutes > constraints.available_hours * 60;
   const neededHours = Math.ceil(timelineMinutes / 6) / 10;
 
+  // FW-07 (S18-A-06): confronto geometrico esatto fra il diametro della pizza
+  // e il diametro massimo dichiarato dal produttore del forno (pizzaCm).
+  const roundPizza = (panConfig?.panShape ?? defaultPanShape(style)) === "round" && style.shape.shape_type !== "oval";
+  const pizzaDiameterCm = roundPizza ? (panConfig?.panDiameter ?? style.shape.diameter_cm) : undefined;
+  const ovenMouthCm = !isFriedStyle(style) && pizzaDiameterCm !== undefined &&
+    constraints.oven_max_pizza_cm !== undefined && pizzaDiameterCm > constraints.oven_max_pizza_cm
+    ? constraints.oven_max_pizza_cm
+    : undefined;
   const prerequisites = kitchenPrerequisites(style, constraints, flourW, yeastType);
   const excludedFlours = excludedRecipeFlours(style, constraints.excluded_flours ?? []);
   if (constraints.excluded_flours?.some(id => ["00", "0", "tipo_1", "manitoba"].includes(id) && !excludedFlours.includes(id))) {
@@ -2361,6 +2374,10 @@ export function generateRecipe(
         : []),
       ...prerequisites.map(condition => condition.message),
       ...(homeMethod ? [em("gen.homeBakingMethod", METHOD_MESSAGES_IT["gen.homeBakingMethod"], { temp: ovenTemp, ideal: style.baking.temp_c_ideal })] : []),
+      // FW-07 (S18-A-06): la bocca del forno dichiarata dal produttore.
+      ...(ovenMouthCm !== undefined
+        ? [em("gen.ovenTooNarrow", METHOD_MESSAGES_IT["gen.ovenTooNarrow"], { max: ovenMouthCm, diameter: pizzaDiameterCm! })]
+        : []),
       // D-020: stesso avviso dei consigli sul forno a legna dello stile.
       ...(style.requires_wood_oven && constraints.oven_type !== "wood"
         ? [
@@ -3216,6 +3233,9 @@ interface EquipmentContext {
   ovenType?: OvenType;
   surfaces?: string[];
   ovenHeatProfile?: UserConstraints["oven_heat_profile"];
+  /** FW-07: massima del forno, per non dire «al massimo» quando la cottura
+   *  chiede una temperatura più bassa (audit 28/10/2026, S10-A-22). */
+  ovenMaxTempC?: number;
 }
 
 /* ═══ I18N-2 — testi dei passi con chiave ═══ */
@@ -3320,25 +3340,28 @@ function mixerKneadGuidance(eq?: EquipmentContext): KneadGuidance {
 }
 
 /** Setup forno specifico per tipo: "a quanto metto le resistenze". */
-function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
+function ovenBakeSetup(eq: EquipmentContext | undefined, bakeTempC?: number): EngineMsg {
   const hasStone = (eq?.surfaces ?? []).some((s) =>
     ["refractory_brick", "cordierite_stone", "steel_plate"].includes(s),
   );
-  if (eq?.ovenHeatProfile === "top_grill") {
+  // FW-07 (S16-B-03): una distribuzione del calore che il tipo di forno non
+  // ha (grill superiore in un forno a legna) non decide più le istruzioni.
+  const heat = eq?.ovenType && !isHeatProfileCompatible(eq.ovenHeatProfile, eq.ovenType) ? undefined : eq?.ovenHeatProfile;
+  if (heat === "top_grill") {
     return hasStone
       ? em("timeline.oven.topGrillStone", METHOD_MESSAGES_IT["timeline.oven.topGrillStone"])
       : em("timeline.oven.topGrillShelf", METHOD_MESSAGES_IT["timeline.oven.topGrillShelf"]);
   }
-  if (eq?.ovenHeatProfile === "bottom_boost") {
+  if (heat === "bottom_boost") {
     return em("timeline.oven.bottomBoost", METHOD_MESSAGES_IT["timeline.oven.bottomBoost"]);
   }
-  if (eq?.ovenHeatProfile === "fan_assisted") {
+  if (heat === "fan_assisted") {
     return em("timeline.oven.fanAssisted", METHOD_MESSAGES_IT["timeline.oven.fanAssisted"]);
   }
-  if (eq?.ovenHeatProfile === "gas_rear") {
+  if (heat === "gas_rear") {
     return em("timeline.oven.gasRear", METHOD_MESSAGES_IT["timeline.oven.gasRear"]);
   }
-  if (eq?.ovenHeatProfile === "wood_side_flame") {
+  if (heat === "wood_side_flame") {
     return em("timeline.oven.woodSideFlame", METHOD_MESSAGES_IT["timeline.oven.woodSideFlame"]);
   }
   switch (eq?.ovenType) {
@@ -3355,6 +3378,13 @@ function ovenBakeSetup(eq: EquipmentContext | undefined): EngineMsg {
     case "home":
     case "electric_standard":
     default:
+      // FW-07 (S10-A-22): «al massimo» solo se la cottura usa davvero la
+      // massima del forno (entro 10 °C); altrimenti si imposta la temperatura.
+      if (bakeTempC !== undefined && eq?.ovenMaxTempC !== undefined && bakeTempC < eq.ovenMaxTempC - 10) {
+        return hasStone
+          ? em("timeline.oven.staticStoneSet", METHOD_MESSAGES_IT["timeline.oven.staticStoneSet"], { temp: bakeTempC })
+          : em("timeline.oven.staticShelfSet", METHOD_MESSAGES_IT["timeline.oven.staticShelfSet"], { temp: bakeTempC });
+      }
       return hasStone
         ? em("timeline.oven.staticStone", METHOD_MESSAGES_IT["timeline.oven.staticStone"])
         : em("timeline.oven.staticShelf", METHOD_MESSAGES_IT["timeline.oven.staticShelf"]);
@@ -3823,7 +3853,7 @@ function generateTimeline(
         [
           em("timeline.bakeWhite.desc", METHOD_MESSAGES_IT["timeline.bakeWhite.desc"], { temp: ovenTempLabel }),
           ...toppingBakeNote,
-          ovenBakeSetup(equipment),
+          ovenBakeSetup(equipment, ovenTempLabel),
         ],
         {
           beginner: em("timeline.bakeWhite.tipBeginner", METHOD_MESSAGES_IT["timeline.bakeWhite.tipBeginner"]),
@@ -3876,7 +3906,7 @@ function generateTimeline(
         em("timeline.bake.title", "Cottura"),
         [em("timeline.bake.desc", "Cuocere a {temp}.", { temp: ovenTempLabel }), ...toppingBakeNote, homeMethod
           ? em("timeline.homeTray.bake", METHOD_MESSAGES_IT["timeline.homeTray.bake"])
-          : ovenBakeSetup(equipment)],
+          : ovenBakeSetup(equipment, ovenTempLabel)],
         {
           beginner: em("timeline.bake.tipBeginner", METHOD_MESSAGES_IT["timeline.bake.tipBeginner"]),
           nerd: em(
@@ -3984,7 +4014,8 @@ function generateTips(
     );
   }
 
-  if (constraints.oven_heat_profile === "gas_rear" || constraints.oven_heat_profile === "wood_side_flame") {
+  if ((constraints.oven_heat_profile === "gas_rear" || constraints.oven_heat_profile === "wood_side_flame")
+    && isHeatProfileCompatible(constraints.oven_heat_profile, constraints.oven_type)) {
     tips.push(
       "La sorgente di calore è laterale/posteriore: prepara la pala per ruotare spesso la pizza, non aspettare che un lato sia già scuro.",
     );

@@ -48,6 +48,9 @@ type TimeSlot,
 type UserConstraints,
 } from "../../domain/pizza-engine";
 import { uiMessage } from "../../i18n/ui-messages";
+import { Link } from "react-router";
+import { getOvenModel } from "../../data/oven-models";
+import { kitchenConstraints, nextSavedOven, resolveEffectiveKitchen, type SavedOvenPref } from "../../use-cases/effective-kitchen";
 
 interface UserNeedsProps {
   constraints: UserConstraints;
@@ -326,10 +329,7 @@ function useLocationWeather(enabled: boolean) {
 }
 
 const OVEN_STORAGE_KEY = "vulcan_oven_pref";
-function loadSavedOven(): {
-  ovenType: OvenType;
-  maxTemp: number;
-} | null {
+function loadSavedOven(): SavedOvenPref | null {
   try {
     const raw = localStorage.getItem(OVEN_STORAGE_KEY);
     if (raw) return JSON.parse(raw);
@@ -338,15 +338,19 @@ function loadSavedOven(): {
   }
   return null;
 }
-function saveOven(ovenType: OvenType, maxTemp: number) {
+/* FW-07 (S05-A-03, S18-A-02): si salva il forno intero (modello compreso),
+ * non solo tipo e temperatura. */
+function saveOven(oven: SavedOvenPref) {
   try {
-    localStorage.setItem(
-      OVEN_STORAGE_KEY,
-      JSON.stringify({ ovenType, maxTemp }),
-    );
+    localStorage.setItem(OVEN_STORAGE_KEY, JSON.stringify(oven));
   } catch {
     /* */
   }
+}
+/** Vincoli del forno dalla cucina effettiva, senza la bocca di un modello tolto. */
+function withOven(constraints: UserConstraints, oven: SavedOvenPref | null): UserConstraints {
+  const { oven_max_pizza_cm: _mouth, ...rest } = constraints;
+  return { ...rest, ...kitchenConstraints(resolveEffectiveKitchen({ oven })) };
 }
 
 /* ═══ INLINE TIP ═══ */
@@ -605,7 +609,9 @@ export function UserNeeds({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kitchenTemp]);
 
-  const [ovenSet, setOvenSet] = useState(false);
+  const [savedOven, setSavedOven] = useState<SavedOvenPref | null>(null);
+  /* FW-07 (S18-B-05): cambiare tipo toglie il modello; si può annullare. */
+  const [ovenUndo, setOvenUndo] = useState<{ prev: SavedOvenPref; label: string } | null>(null);
   const [pantryOpen, setPantryOpen] = useState(false);
   const [recentFlours, setRecentFlours] = useState<string[]>([]);
   const [recentYeasts, setRecentYeasts] = useState<string[]>([]);
@@ -613,32 +619,41 @@ export function UserNeeds({
   useEffect(() => {
     const saved = loadSavedOven();
     const pantry = loadPantry();
-    const updates: Partial<UserConstraints> = {};
-    if (saved) {
-      updates.oven_type = saved.ovenType;
-      updates.oven_max_temp_c = saved.maxTemp;
-      updates.oven_capacity_temp_c = saved.maxTemp;
-      setOvenSet(true);
-    }
+    if (saved) setSavedOven(saved);
     if (pantry) {
       setRecentFlours(pantry.flours);
       setRecentYeasts(pantry.yeasts);
     }
-    if (Object.keys(updates).length > 0)
-      onConstraintsChange({ ...constraints, ...updates });
+    if (saved) onConstraintsChange(withOven(constraints, saved));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleOvenSelect = (id: string, maxTemp: number) => {
-    onConstraintsChange({
-      ...constraints,
-      oven_type: id as OvenType,
-      oven_max_temp_c: maxTemp,
-      oven_capacity_temp_c: maxTemp,
-    });
-    saveOven(id as OvenType, maxTemp);
-    setOvenSet(true);
+  const handleOvenSelect = (id: OvenType) => {
+    const prev = loadSavedOven();
+    const next = nextSavedOven(prev, id);
+    if (prev?.ovenType === id && constraints.oven_type === id) {
+      // Lo stesso forno: un tocco non cambia nulla; conferma solo quello
+      // preimpostato dall'edizione (S05-A-03, S18-A-01).
+      if (prev.origin === "edition") {
+        saveOven(next);
+        setSavedOven(next);
+      }
+      return;
+    }
+    onConstraintsChange(withOven(constraints, next));
+    saveOven(next);
+    setSavedOven(next);
+    const lost = prev?.ovenType !== id ? getOvenModel(prev?.modelId) : undefined;
+    setOvenUndo(prev && lost ? { prev, label: `${lost.brand} ${lost.model}` } : null);
   };
+  const undoOvenChange = () => {
+    if (!ovenUndo) return;
+    onConstraintsChange(withOven(constraints, ovenUndo.prev));
+    saveOven(ovenUndo.prev);
+    setSavedOven(ovenUndo.prev);
+    setOvenUndo(null);
+  };
+  const savedModel = savedOven?.ovenType === constraints.oven_type ? getOvenModel(savedOven.modelId) : undefined;
 
   const toggleFlour = (id: string) => {
     const current = constraints.pantry_flours;
@@ -815,7 +830,28 @@ export function UserNeeds({
 
                     {/* Oven Preset */}
                     <div data-slot="oven-preset">
-                      <SectionHeader title={cms.sections.oven.title} subtitle={ovenSet ? cms.ui.editOven : cms.sections.oven.description} compact={compact} />
+                      <SectionHeader title={cms.sections.oven.title} subtitle={cms.sections.oven.description} compact={compact} />
+                      {/* FW-07: il modello salvato si vede in Crea e si cambia dal profilo. */}
+                      {savedModel && (
+                        <p className="type-data-sm needs-oven-model" data-edition={savedOven?.origin === "edition" ? "true" : undefined}>
+                          <span data-region="oven-model-name">
+                            {savedOven?.origin === "edition"
+                              ? uiMessage("recipe.editionOven.note", [`${savedModel.brand} ${savedModel.model}`, fmt.celsius(constraints.oven_max_temp_c)])
+                              : uiMessage("features.profile.oven-model-search.selected", [`${savedModel.brand} ${savedModel.model}`])}
+                          </span>
+                          <Link to="/profile?tab=setup" className="needs-oven-model__link">
+                            {savedOven?.origin === "edition" ? uiMessage("recipe.editionOven.change") : cms.ui.editOven}
+                          </Link>
+                        </p>
+                      )}
+                      {ovenUndo && (
+                        <p role="status" className="type-data-sm needs-oven-model" data-tone="caution">
+                          <span data-region="oven-model-name">{uiMessage("recipe.oven.changed", [ovenUndo.label])}</span>
+                          <button type="button" className="needs-oven-model__link" onClick={undoOvenChange}>
+                            {cms.ui.cancel}
+                          </button>
+                        </p>
+                      )}
                       <div className={compact ? "needs-oven-grid needs-oven-grid--compact" : "needs-oven-grid"}>
                         {OVEN_PRESETS.map((preset) => {
                           const active = constraints.oven_type === preset.id;
@@ -827,7 +863,7 @@ export function UserNeeds({
                               key={preset.id}
                               type="button"
                               aria-pressed={active}
-                              onClick={() => handleOvenSelect(preset.id, preset.maxTemp)}
+                              onClick={() => handleOvenSelect(preset.id)}
                               className={
                                 active
                                   ? (compact ? "needs-oven-card needs-oven-card--compact needs-oven-card--active" : "needs-oven-card needs-oven-card--active")
@@ -837,7 +873,7 @@ export function UserNeeds({
                               <Icon size={18} className={active ? "needs-oven-card__icon needs-oven-card__icon--active" : "needs-oven-card__icon"} />
                               <div data-slot="body">
                                 <div className="needs-oven-card__name">{displayName}</div>
-                                <div className="type-numeric needs-oven-card__temp">{preset.maxTemp}°C</div>
+                                <div className="type-numeric needs-oven-card__temp">{fmt.celsius(active ? constraints.oven_max_temp_c : preset.maxTemp)}</div>
                               </div>
                             </motion.button>
                           );

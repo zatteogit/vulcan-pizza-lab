@@ -31,6 +31,7 @@ import {
 import { getStyleDeviation, DEVIATION_CATEGORY_LABELS } from "../../domain/deviation-tags";
 import { getInterpretationsForStyle } from "../../data/interpretation-library";
 import { getStyleParametrics } from "../../data/parametric-databases";
+import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { createFormatter, t } from "../cms/i18n";
@@ -163,6 +164,13 @@ export function StyleDetailSheet({
      ora deriva dalla Interpretation library (unica fonte di verità). */
   const compatVariants = getInterpretationsForStyle(style.id);
   const params = getStyleParametrics(style.id);
+  // FW-07 (S03-A-02): per le fritte la temperatura è dell'olio, non del forno.
+  const frying = params.ovenTemp?.ovenType === "frittura";
+  // FW-07: il nome del forno della cucina effettiva (il modello, se è lo stesso tipo).
+  const kitchen = React.useMemo(() => loadEffectiveKitchen(), []);
+  const yourOvenName = constraints && kitchen.oven.modelId && kitchen.oven.type === constraints.oven_type
+    ? kitchen.oven.label
+    : constraints ? (cms.ovenPresets[constraints.oven_type]?.name ?? constraints.oven_type) : "";
 
   /* CMS-backed description & characteristics */
   const cmsDescription = cms.styleDescriptions[style.id] ?? style.description;
@@ -407,19 +415,29 @@ export function StyleDetailSheet({
                     <h3 className="style-detail-params__label">
                       {pt.sheetSectionTitle}
                     </h3>
+                    {/* FW-07 (S03-A-10): prima la cottura che farai tu, poi il riferimento dello stile. */}
+                    {rec && !frying && (
+                      <div className="style-detail-params__box" data-region="your-bake">
+                        <ParamRow
+                          label={pt.sheetYourBakeLabel}
+                          value={`${fmt.celsius(rec.recipe.oven_temp_c)} · ${fmt.cookTime(rec.recipe.cook_time_sec)}`}
+                          sub={yourOvenName}
+                        />
+                      </div>
+                    )}
                     <div className="style-detail-params__box">
                       {params.ovenTemp && (
                         <ParamRow
-                          label={pt.sheetOvenLabel}
+                          label={frying ? pt.sheetOilLabel : pt.sheetOvenLabel}
                           value={`${fmt.celsius(params.ovenTemp.idealTemp_c)} (${fmt.celsius(params.ovenTemp.minTemp_c)}–${fmt.celsius(params.ovenTemp.maxTemp_c)})`}
-                          sub={t(pt.sheetOvenPreheat, { min: params.ovenTemp.preheatingMin })}
+                          sub={frying ? pt.sheetOilHeat : t(pt.sheetOvenPreheat, { min: params.ovenTemp.preheatingMin })}
                         />
                       )}
                       {params.bakingTime && (
                         <ParamRow
                           label={pt.sheetBakeLabel}
                           value={formatBakingTime(params.bakingTime.idealSeconds)}
-                          sub={params.bakingTime.turns > 0 ? t(pt.sheetBakeTurns, { n: params.bakingTime.turns }) : pt.sheetBakeNoTurns}
+                          sub={frying ? pt.sheetFryTurn : params.bakingTime.turns > 0 ? t(pt.sheetBakeTurns, { n: params.bakingTime.turns }) : pt.sheetBakeNoTurns}
                         />
                       )}
                       {params.doughBase && (
@@ -456,9 +474,9 @@ export function StyleDetailSheet({
               <h3 className="style-detail-match__heading">
                 {cms.tiers[rec.tier].label}
               </h3>
-              {constraints && (
+              {constraints && !frying && (
                 <p className="style-detail-match__text">
-                  {cms.ovenPresets[constraints.oven_type]?.name ?? constraints.oven_type}
+                  {yourOvenName}
                   {" · "}{fmt.celsius(constraints.oven_max_temp_c)}
                 </p>
               )}

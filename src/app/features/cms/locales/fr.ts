@@ -763,6 +763,7 @@ export const FR_LOCALE: CmsContent = {
     "rec.needsWoodOven": "L’original utilise un four à bois ; avec votre four, la cuisson change.",
     "rec.ovenAdapted": "Votre four atteint {temp} : température idéale {ideal}, cuisson adaptée",
     "gen.homeBakingMethod": "Cuisson domestique à {temp} sur plaque retournée préchauffée ; résultat différent de la cuisson originale à {ideal}",
+    "gen.ovenTooNarrow": "Votre four accepte des pizzas jusqu'à {max} cm (donnée du fabricant) et cette recette prévoit {diameter} cm : étalez le disque à {max} cm au maximum.",
     "rec.needsDeck": "Cette cuisson nécessite une pierre ou un acier préchauffé, non renseigné dans votre cuisine",
     "timeline.homeTray.preheat": "Préchauffez le four au maximum ({temp}) avec une plaque retournée à l’intérieur, jusqu’à ce qu’elle soit bien chaude. Terminez le repos de la pâte.",
     "timeline.homeTray.bake": "Enfournez sur la plaque retournée préchauffée. Vérifiez la coloration de la base et la cuisson avant de sortir.",
@@ -980,6 +981,8 @@ export const FR_LOCALE: CmsContent = {
     "timeline.oven.gasPizza": "Four \u00E0 pizza au gaz : chauffez jusqu'\u00E0 ce que la pierre soit \u00E0 temp\u00E9rature (mesurez-la au thermom\u00E8tre infrarouge), puis enfournez et tournez souvent la pizza, car la flamme est d'un seul c\u00F4t\u00E9.",
     "timeline.oven.staticStone": "Four en chaleur statique (résistance haut + bas) au maximum, pierre/acier déjà chauds en position mi-haute. Pour le bord : dernières 60-90s sous le gril (résistance du haut seule au maximum), sans le quitter des yeux.",
     "timeline.oven.staticShelf": "Four en chaleur statique (résistance haut + bas) au maximum, grille en position mi-haute. Pour le bord : dernières 60-90s sous le gril (résistance du haut seule au maximum), sans le quitter des yeux.",
+    "timeline.oven.staticStoneSet": "Four en chaleur statique (résistance haut + bas) réglé à {temp}, pas au maximum ; pierre/acier déjà chauds en position mi-haute.",
+    "timeline.oven.staticShelfSet": "Four en chaleur statique (résistance haut + bas) réglé à {temp}, pas au maximum ; grille en position mi-haute.",
     "timeline.mix.title": "Pétrissage",
     "timeline.divide.title": "Division",
     "timeline.divide.multiPiece": "Divisez chaque portion en {pieces} morceaux égaux. Formez une boule ou un disque.",
@@ -1186,7 +1189,7 @@ export const FR_LOCALE: CmsContent = {
     pillExperimentation: "Exp\u00E9rimentation",
     pillLevelBeginner: "D\u00E9butant",
     pillLevelExpert: "Expert",
-    sheetSectionTitle: "D\u00E9tails de cuisson",
+    sheetSectionTitle: "Référence du style",
     sheetOvenLabel: "Four id\u00E9al",
     sheetOvenPreheat: "Pr\u00E9chauffage\u00A0: {min} min",
     sheetBakeLabel: "Temps de cuisson",
@@ -1201,7 +1204,7 @@ export const FR_LOCALE: CmsContent = {
     sheetTechniquesLabel:
       "Techniques d\u2019auteur compatibles",
     mixBeginner:
-      "{mixer} (~{time} min de p\u00E9trissage). {equipment}",
+      "{mixer} (~{time} min de p\u00E9trissage).",
     bulkBeginner:
       "Effectuez {count} pliages ({type}) toutes les {interval} minutes pour d\u00E9velopper la structure.",
     shapeBeginner: "{note}",
@@ -1216,13 +1219,17 @@ export const FR_LOCALE: CmsContent = {
       "Grignes\u00A0: {type} \u00B7 profondeur {depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd:
       "Ordre garniture\u00A0: {order} \u00B7 sauce {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
-    bakeNerd:
-      "Cuisson id\u00E9ale\u00A0: {idealSec}s (plage {minM}\u2013{maxM} min) \u00B7 {turns} rotations \u00B7 {note}",
     mixerPlanetaria: "Robot p\u00E2tissier recommand\u00E9",
     mixerHand: "P\u00E9trissage \u00E0 la main possible",
-    turnsSingle: "Tourner {n} fois pour une cuisson uniforme.",
     turnsNone: "Ne pas tourner pendant la cuisson.",
     bakeAdaptedNerd: "Estimation du moteur pour ton four ({temp}) : {minM}\u2013{maxM} min par cuisson. Référence du style : {refMin}\u2013{refMax} s à {refTemp}.",
+    // FW-07
+    turnsHalfway: "La tourner une fois à mi-cuisson.",
+    turnsFrequent: "La tourner souvent : la chaleur vient surtout d'un côté.",
+    sheetYourBakeLabel: "Votre cuisson",
+    sheetOilLabel: "Température de l'huile",
+    sheetOilHeat: "Porter l'huile à température avant de frire : pas besoin de four.",
+    sheetFryTurn: "La retourner à mi-friture",
   },
   styleDescriptions: {
     napoletana_stg:

@@ -21465,3 +21465,36 @@ html {
 .cooking-reminders__status { grid-column: 1 / -1; margin: 0; color: var(--text-muted); font-size: var(--font-size-sm); line-height: var(--leading-normal); }
 .cooking-reminders[data-status="denied"] .cooking-reminders__status { color: var(--text-warning); }
 .cooking-mode-finished .recipe-feedback { width: 100%; margin-block: var(--space-4); text-align: start; }
+/* ═══ FW-07 — cucina effettiva: modello del forno in Crea, scheda stile, profilo ═══ */
+.needs-oven-model {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+  line-height: var(--leading-normal);
+}
+.needs-oven-model[data-tone="caution"] { color: var(--text-warning); }
+.needs-oven-model [data-region="oven-model-name"] { color: var(--text-default); font-weight: var(--weight-medium); }
+.needs-oven-model__link {
+  min-height: var(--dimension-fixed-046);
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-accent);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  text-decoration: underline;
+  text-underline-offset: var(--space-1);
+  cursor: pointer;
+}
+.style-detail-params [data-region="your-bake"] { margin-bottom: var(--space-2); }
+.recipe-config-oven-hint { margin-top: var(--space-1); color: var(--text-muted); line-height: var(--leading-normal); }
+.oven-model-search__adjusted { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3); color: var(--text-muted); line-height: var(--leading-normal); }
+.recipe-oven-model { display: block; color: var(--text-muted); }
+.stat-strip [data-region="edition-oven"] { grid-column: 1 / -1; }
+.stat-strip__cell .recipe-oven-model { overflow-wrap: anywhere; }
+[data-slot="oven-preset"] .needs-oven-model { justify-content: center; text-align: center; }

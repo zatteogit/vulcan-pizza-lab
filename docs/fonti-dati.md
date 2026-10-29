@@ -550,3 +550,17 @@ dimostrative, `partner.invented: true`) hanno `source: "demo"`: lo schema
 dell'edizione rifiuta "V" o "P" per dati inventati, e rifiuta "demo" per un
 partner reale. Nel registro lo stato è `OVEN_MODEL_SOURCE_STATUS` in
 `src/app/data/science-notes.ts`.
+**Diametro della pizza (`pizzaCm`, FW-07).** Dal 28/10/2026 il motore lo usa
+(`oven_max_pizza_cm`): se la pizza tonda dello stile è più larga, la ricetta
+avvisa di stenderla al diametro del forno. Il valore è quello che il
+produttore dichiara come «pizza fino a» (pollici convertiti in cm), non il
+diametro della pietra: va ricontrollato modello per modello dove la pagina
+del produttore dà solo la misura della pietra.
+
+**Distribuzione del calore per tipo di forno (`HEAT_PROFILE_OVENS`,
+`equipment-data.ts`, FW-07).** Quali disposizioni di resistenze o bruciatori
+esistono su ciascun tipo di forno (grill superiore e ventilato solo nei forni
+di casa ed elettrici standard, fiamma laterale solo a legna, bruciatore
+dietro o sotto solo a gas). È una **scelta di Vulcan** (mappatura editoriale,
+non una misura): il profilo mostra solo le opzioni valide e il motore ignora
+una combinazione impossibile.

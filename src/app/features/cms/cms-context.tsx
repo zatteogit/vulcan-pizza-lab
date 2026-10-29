@@ -1335,14 +1335,19 @@ export interface CmsContent {
     bulkNerd: string;
     shapeNerd: string;
     topNerd: string;
-    bakeNerd: string;
     // Dynamic fragments
     mixerPlanetaria: string;
     mixerHand: string;
-    turnsSingle: string;
     turnsNone: string;
     /** Cottura fuori dal regime di riferimento dello stile: stima del motore. */
     bakeAdaptedNerd: string;
+    // FW-07: rotazione secondo il forno e righe della scheda stile.
+    turnsHalfway: string;
+    turnsFrequent: string;
+    sheetYourBakeLabel: string;
+    sheetOilLabel: string;
+    sheetOilHeat: string;
+    sheetFryTurn: string;
   };
   /** Style descriptions — keyed by style ID */
   styleDescriptions: Record<string, string>;
@@ -2468,7 +2473,7 @@ export const CMS_DEFAULTS: CmsContent = {
     pillLevelBeginner: "Principiante",
     pillLevelExpert: "Esperto",
     // StyleDetailSheet labels
-    sheetSectionTitle: "Dettagli cottura",
+    sheetSectionTitle: "Riferimento dello stile",
     sheetOvenLabel: "Forno ideale",
     sheetOvenPreheat: "Preriscaldamento: {min} min",
     sheetBakeLabel: "Tempo cottura",
@@ -2482,7 +2487,7 @@ export const CMS_DEFAULTS: CmsContent = {
     sheetMatchTitle: "Perché è adatta alla tua cucina",
     sheetTechniquesLabel: "Tecniche d'autore compatibili",
     // Timeline — beginner
-    mixBeginner: "{mixer} (~{time} min di impasto). {equipment}",
+    mixBeginner: "{mixer} (~{time} min di impasto).",
     bulkBeginner: "Esegui {count} pieghe ({type}) ogni {interval} minuti per sviluppare la struttura.",
     shapeBeginner: "{note}",
     topBeginner: "Ordine: {order}. {note}",
@@ -2492,13 +2497,18 @@ export const CMS_DEFAULTS: CmsContent = {
     bulkNerd: "Pieghe: {count}\u00D7 {type} ogni {interval} min \u00B7 {note}",
     shapeNerd: "Scoring: {type} \u00B7 profondit\u00E0 {depth}mm \u00B7 {timing} \u00B7 {note}",
     topNerd: "Ordine condimento: {order} \u00B7 salsa {saucePos} \u00B7 {cheeseType} ({cheesePos}) \u00B7 {note}",
-    bakeNerd: "Cottura ideale: {idealSec}s (range {minM}\u2013{maxM} min) \u00B7 {turns} rotazioni \u00B7 {note}",
     // Dynamic fragments
     mixerPlanetaria: "Planetaria consigliata",
     mixerHand: "Impasto a mano possibile",
-    turnsSingle: "Ruota {n} {turn} per cottura uniforme.",
     turnsNone: "Non girare durante la cottura.",
     bakeAdaptedNerd: "Stima del motore per il tuo forno ({temp}): {minM}\u2013{maxM} min per cottura. Riferimento dello stile: {refMin}\u2013{refMax} s a {refTemp}.",
+    // FW-07
+    turnsHalfway: "Girala una volta a metà cottura.",
+    turnsFrequent: "Ruotala spesso: il calore arriva soprattutto da un lato.",
+    sheetYourBakeLabel: "La tua cottura",
+    sheetOilLabel: "Temperatura dell'olio",
+    sheetOilHeat: "Porta l'olio a temperatura prima di friggere: il forno non serve.",
+    sheetFryTurn: "Girala a metà frittura",
   },
   styleDescriptions: {
     ...Object.fromEntries(Object.entries(STYLES_DB).map(([id, style]) => [id, style.description])),
@@ -3831,7 +3841,7 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "parametricTips.sheetGenerateBtn", label: "Sheet: Genera ricetta", type: "text" },
       { path: "parametricTips.sheetTechniquesLabel", label: "Sheet: Tecniche d'autore", type: "text" },
       // Timeline beginner
-      { path: "parametricTips.mixBeginner", label: "Mix — Beginner", type: "textarea", description: "Template: {mixer}, {time}, {equipment}" },
+      { path: "parametricTips.mixBeginner", label: "Mix — Beginner", type: "textarea", description: "Template: {mixer}, {time}" },
       { path: "parametricTips.bulkBeginner", label: "Bulk — Beginner", type: "textarea", description: "Template: {count}, {type}, {interval}" },
       { path: "parametricTips.shapeBeginner", label: "Shape — Beginner", type: "textarea", description: "Template: {note}" },
       { path: "parametricTips.topBeginner", label: "Top — Beginner", type: "textarea", description: "Template: {order}, {note}" },
@@ -3841,13 +3851,17 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "parametricTips.bulkNerd", label: "Bulk — Nerd", type: "textarea", description: "Template: {count}, {type}, {interval}, {note}" },
       { path: "parametricTips.shapeNerd", label: "Shape — Nerd", type: "textarea", description: "Template: {type}, {depth}, {timing}, {note}" },
       { path: "parametricTips.topNerd", label: "Top — Nerd", type: "textarea", description: "Template: {order}, {saucePos}, {cheeseType}, {cheesePos}, {note}" },
-      { path: "parametricTips.bakeNerd", label: "Bake — Nerd", type: "textarea", description: "Template: {idealSec}, {minM}, {maxM}, {turns}, {note}" },
       // Dynamic fragments
       { path: "parametricTips.mixerPlanetaria", label: "Frammento: Planetaria", type: "text" },
       { path: "parametricTips.mixerHand", label: "Frammento: A mano", type: "text" },
-      { path: "parametricTips.turnsSingle", label: "Frammento: Ruota", type: "text", description: "Template: {n}" },
       { path: "parametricTips.turnsNone", label: "Frammento: Non girare", type: "text" },
       { path: "parametricTips.bakeAdaptedNerd", label: "Bake — Nerd, forno diverso dal riferimento", type: "textarea", description: "Template: {temp}, {minM}, {maxM}, {refMin}, {refMax}, {refTemp}" },
+      { path: "parametricTips.turnsHalfway", label: "Frammento: girala a metà (forno di casa)", type: "text" },
+      { path: "parametricTips.turnsFrequent", label: "Frammento: ruotala spesso (alta temperatura)", type: "text" },
+      { path: "parametricTips.sheetYourBakeLabel", label: "Sheet: La tua cottura", type: "text" },
+      { path: "parametricTips.sheetOilLabel", label: "Sheet: Temperatura dell'olio (fritte)", type: "text" },
+      { path: "parametricTips.sheetOilHeat", label: "Sheet: Olio a temperatura (fritte)", type: "text" },
+      { path: "parametricTips.sheetFryTurn", label: "Sheet: Girala a metà frittura", type: "text" },
     ],
   },
   {
