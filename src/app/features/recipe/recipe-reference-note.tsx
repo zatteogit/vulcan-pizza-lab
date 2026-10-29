@@ -1,5 +1,5 @@
 import type { GeneratedRecipe, OvenType } from "../../domain/pizza-engine";
-import { stgDepartures, type StgDeparture } from "../../domain/recipe-reference";
+import { STG_SPECIFICATION_URL, stgDepartures, type StgDeparture } from "../../domain/recipe-reference";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
 import { uiMessage } from "../../i18n/ui-messages";
@@ -29,7 +29,7 @@ export function RecipeReferenceNote({ recipe, oven }: { recipe: GeneratedRecipe;
         </p>}
         {departures.length > 0 && <ul>{departures.map(key => <li key={key}>{descriptions[key]}</li>)}</ul>}
         <p>{uiMessage("recipe.reference.disclaimer")}</p>
-        <a href="https://www.masaf.gov.it/flex/cm/pages/ServeAttachment.php/L/IT/D/1%252F4%252Fa%252FD.54ec78491c37356fe33f/P/BLOB:ID=24230/E/pdf?mode=download" target="_blank" rel="noreferrer">{uiMessage("recipe.reference.specification")}</a>
+        <a href={STG_SPECIFICATION_URL} target="_blank" rel="noreferrer">{uiMessage("recipe.reference.specification")}</a>
       </Disclosure>
     </aside>
   );

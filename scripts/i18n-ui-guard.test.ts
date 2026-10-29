@@ -41,7 +41,7 @@ try {
   write(
     clean,
     "src/app/i18n/ui-messages.it.ts",
-    'export const UI_MESSAGES_IT: Record<string, string> = {"fixture.clean":"Pronto","fixture.quick":"Rapido"};\n',
+    'export const UI_MESSAGES_IT: Record<string, string> = {"fixture.clean":"Pronto","fixture.quick":"Rapido","fixture.relativeIn":"tra {0}","fixture.atClock":"alle {0}"};\n',
   );
   write(
     clean,
@@ -64,7 +64,20 @@ try {
       '  <span>{uiMessage("fixture.clean")}</span>',
       "  <span>{QUICK_KEYS.map((key) => uiMessage(key))}</span>",
       "</a>;",
+      /* FW-11: un'opzione Intl non è copy. */
+      'export const rangeOptions = { unit: "hour" };',
       'export const enumValue = "static_top_bottom";',
+    ].join("\n"),
+  );
+  /* FW-11: le chiavi lette dal formatter (escluso dalla scansione) sono vive,
+     anche dentro un ternario. */
+  write(
+    clean,
+    "src/app/i18n/format.ts",
+    [
+      'import { uiMessage } from "./ui-messages";',
+      "export const relative = (d: string, exact: boolean) =>",
+      '  [uiMessage("fixture.relativeIn"), uiMessage(exact ? "fixture.atClock" : "fixture.relativeIn")].join(d);',
     ].join("\n"),
   );
   write(
@@ -88,7 +101,7 @@ try {
   assert.deepEqual(cleanResult.violations, []);
   assert.deepEqual(cleanResult.missingCatalogKeys, []);
   assert.deepEqual(cleanResult.orphanCatalogKeys, []);
-  assert.equal(cleanResult.productCatalogKeyCount, 2);
+  assert.equal(cleanResult.productCatalogKeyCount, 4);
   assert.equal(cleanResult.showcaseCatalogKeyCount, 1);
 
   const dirty = fixture();
@@ -112,6 +125,12 @@ try {
       "  </section>",
       ");",
       'export const config = [{ label: "Principiante", description: "Prime esperienze", state: "Selezionato", target: "Contenuto principale", msg: "Operazione completata" }];',
+      /* FW-11: unità e preposizioni cucite a mano nei template literal. */
+      "export const ferment = (h: number) => `${h}h`;",
+      "export const oven = (t: number) => `max ${t}°C`;",
+      "export const eta = (title: string, time: string) => `${title} fra ${time}`;",
+      "export const css = (n: number) => `${n}h-full ${n}%`;",
+      "export const Temp = ({ t }: { t: number }) => <b>{t}°C</b>;",
     ].join("\n"),
   );
   const violations = runI18nGuard(dirty, ["src/app/pages/dirty.tsx"], []).violations;
@@ -132,6 +151,9 @@ try {
   assert(categories.has("jsx-container:principi"));
   assert([...categories].some((category) => category.startsWith("feedback:")));
   assert(categories.has("helper-output:getAcronymTooltip"));
+  const formatViolations = violations.filter((violation) => violation.category.startsWith("format-literal:"));
+  assert.equal(formatViolations.filter((v) => v.category === "format-literal:unit").length, 3);
+  assert.equal(formatViolations.filter((v) => v.category === "format-literal:preposition").length, 1);
 
   const fixable = fixture();
   roots.push(fixable);

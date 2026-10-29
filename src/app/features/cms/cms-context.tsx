@@ -543,7 +543,6 @@ interface CmsProfile {
   noDietNote: string;
   prefsTitle: string;
   prefsSubtitle: string;
-  prefsStep: string;
   langLabel: string;
   themeLabel: string;
   themeLight: string;
@@ -551,7 +550,6 @@ interface CmsProfile {
   themeAuto: string;
   unitTitle: string;
   unitSubtitle: string;
-  unitStep: string;
   unitSystemLabel: string;
   unitMetric: string;
   unitMetricDesc: string;
@@ -879,6 +877,17 @@ export interface CmsContent {
   toppingI18n?: ToppingTranslation;
   /** I18N-5: ispirazioni e ricette iconiche tradotte (assente in italiano, che è la fonte). */
   inspirationI18n?: InspirationTranslation;
+  /** FW-11: esonimi dei luoghi d'origine (Napoli → Naples); assente in
+   *  italiano, che è la lingua dei dati. Chiave: nome italiano in styles-db. */
+  placeNames?: Record<string, string>;
+  /** FW-11 (S03-A-06): etichette dei parametri tecnici per id (sale, pieghe)
+   *  e metodo di stesura per stile; in italiano la stesura viene dai dati. */
+  parametricText?: {
+    saltType?: Record<string, string>;
+    saltTiming?: Record<string, string>;
+    fold?: Record<string, string>;
+    stretch?: Record<string, string>;
+  };
   /** Generic UI strings (buttons, labels, actions) */
   ui: CmsUiStrings;
   /** InlineTip contextual texts */
@@ -1010,22 +1019,6 @@ export interface CmsContent {
     approxPrefix: string;
     dayAfterTomorrow: string;
     dayOffset: string;
-    etaNow: string;
-    etaInMinutes: string;
-    etaInHours: string;
-    etaInHoursMinutes: string;
-    etaInDaysHours: string;
-    compactSeconds: string;
-    compactMinutes: string;
-    compactHours: string;
-    compactHoursMinutes: string;
-    durationMinutes: string;
-    durationHours: string;
-    durationHoursMinutes: string;
-    durationDays: string;
-    durationDaysHours: string;
-    durationDayUnit: string;
-    durationDaysUnit: string;
     stepStartsIn: string;
     phaseRemaining: string;
     passivePhaseMeta: string;
@@ -1315,7 +1308,6 @@ export interface CmsContent {
     sheetOvenLabel: string;
     sheetOvenPreheat: string;
     sheetBakeLabel: string;
-    sheetBakeTurns: string;
     sheetBakeNoTurns: string;
     sheetDoughLabel: string;
     sheetSaltLabel: string;
@@ -1379,6 +1371,12 @@ export interface CmsContent {
 // ═══ DEFAULTS ═══
 
 export const CMS_DEFAULTS: CmsContent = {
+  /* FW-11 (S03-A-06): testi dei parametri tecnici, per id. */
+  parametricText: {
+    saltType: { "fine_sea": "marino fino", "fine": "fino", "kosher": "kosher", "kosher_or_fine": "kosher o fino", "coarse_and_fine": "grosso e fino" },
+    saltTiming: { "with_flour": "con la farina", "after_flour_water": "dopo farina e acqua", "after_flour_water_5min": "dopo farina e acqua (5 min di impasto)", "after_hydration": "dopo l'idratazione", "fine_in_dough_coarse_on_top": "fino nell'impasto, grosso in superficie" },
+    fold: { "stretch_fold": "pieghe stretch & fold", "coil_fold": "pieghe a spirale (coil fold)", "french_fold": "piega alla francese", "slap_fold": "slap & fold" },
+  },
   locale: {
     id: "it",
     name: "Italiano",
@@ -1871,22 +1869,6 @@ export const CMS_DEFAULTS: CmsContent = {
     approxPrefix: "ca. ",
     dayAfterTomorrow: "dopodomani",
     dayOffset: "+{n} giorni",
-    etaNow: "ora",
-    etaInMinutes: "tra {n} min",
-    etaInHours: "tra {h} ore",
-    etaInHoursMinutes: "tra {h}h {m}m",
-    etaInDaysHours: "tra {d}g {h}h",
-    compactSeconds: "{n}\"",
-    compactMinutes: "{n}'",
-    compactHours: "{h}h",
-    compactHoursMinutes: "{h}h{m}",
-    durationMinutes: "{n} min",
-    durationHours: "{h} ore",
-    durationHoursMinutes: "{h}h {m}min",
-    durationDays: "{d} {unit}",
-    durationDaysHours: "{d}g {h}h",
-    durationDayUnit: "giorno",
-    durationDaysUnit: "giorni",
     stepStartsIn: "inizia {eta}",
     phaseRemaining: "mancano {time}",
     passivePhaseMeta: "Fase passiva · {duration} · fine {time}",
@@ -2180,7 +2162,7 @@ export const CMS_DEFAULTS: CmsContent = {
     "need.checkFlour": "Se hai farina W{w}",
     "need.flour": "Serve farina W{w}",
     "need.checkBlend": "Se hai tutte le farine del mix",
-    "need.checkYeast": "Se hai lievito: {yeast}",
+    "need.checkYeast": "Lievito da avere in casa: {yeast}",
     "need.yeast": "Serve lievito: {yeast}",
     "need.invertedTray": "Teglia capovolta",
     "need.withoutCoal": "Cottura senza carbone",
@@ -2477,7 +2459,6 @@ export const CMS_DEFAULTS: CmsContent = {
     sheetOvenLabel: "Forno ideale",
     sheetOvenPreheat: "Preriscaldamento: {min} min",
     sheetBakeLabel: "Tempo cottura",
-    sheetBakeTurns: "{n} rotazione/i",
     sheetBakeNoTurns: "Nessuna rotazione",
     sheetDoughLabel: "Panetto",
     sheetSaltLabel: "Sale",
@@ -2596,7 +2577,6 @@ export const CMS_DEFAULTS: CmsContent = {
     noDietNote: "Nessuna preferenza dietetica selezionata.",
     prefsTitle: "Lingua e tema",
     prefsSubtitle: "Personalizza l'interfaccia",
-    prefsStep: "06 — Preferenze",
     locationTitle: "La tua posizione",
     locationSubtitle: "Serve a stimare la temperatura della cucina.",
     locationStep: "05 — Posizione",
@@ -2613,13 +2593,12 @@ export const CMS_DEFAULTS: CmsContent = {
     themeDark: "Scuro",
     themeAuto: "Automatico",
     unitTitle: "Misure",
-    unitSubtitle: "Scegli come visualizzare temperature, pesi e liquidi",
-    unitStep: "07 — Misure",
+    unitSubtitle: "Scegli come visualizzare temperature, pesi, liquidi e misure della teglia",
     unitSystemLabel: "Sistema di misura",
     unitMetric: "Metrico",
-    unitMetricDesc: "Grammi, millilitri e gradi Celsius",
+    unitMetricDesc: "Grammi, millilitri, centimetri e gradi Celsius",
     unitImperial: "Imperiale / US",
-    unitImperialDesc: "Once, fluid ounces e gradi Fahrenheit",
+    unitImperialDesc: "Once, once liquide, pollici e gradi Fahrenheit",
     resetProfile: "Riconfigura profilo",
     resetConfirmMessage: "Riaprirai la configurazione iniziale. Le nuove scelte sostituiranno le preferenze attuali.",
     devModeOn: "Modalità sviluppo attiva",
@@ -3832,7 +3811,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
       { path: "parametricTips.sheetOvenLabel", label: "Sheet: Forno", type: "text" },
       { path: "parametricTips.sheetOvenPreheat", label: "Sheet: Preriscaldamento", type: "text", description: "Template: {min}" },
       { path: "parametricTips.sheetBakeLabel", label: "Sheet: Tempo cottura", type: "text" },
-      { path: "parametricTips.sheetBakeTurns", label: "Sheet: Rotazioni", type: "text", description: "Template: {n}" },
       { path: "parametricTips.sheetBakeNoTurns", label: "Sheet: Nessuna rotazione", type: "text" },
       { path: "parametricTips.sheetDoughLabel", label: "Sheet: Panetto", type: "text" },
       { path: "parametricTips.sheetSaltLabel", label: "Sheet: Sale", type: "text" },

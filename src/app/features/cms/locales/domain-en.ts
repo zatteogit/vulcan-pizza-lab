@@ -7,9 +7,9 @@ import type {
 } from "../cms-context";
 
 export const PRE_FERMENT_EN: Partial<CmsPreFerment> = {
-  sectionLabel: "Pre-ferment",
+  sectionLabel: "Preferment",
   tipsLabel: "Tips",
-  showComparison: "Compare Biga vs Poolish vs Autolysis",
+  showComparison: "Compare biga, poolish and autolyse",
   paramHydration: "Hydration",
   paramDuration: "Duration",
   paramTemperature: "Temperature",
@@ -347,7 +347,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       high_pl: {
         message:
           "P/L {pl} high: possible overly tenacious dough",
-        tip: "Plan 45min autolysis before adding salt and yeast",
+        tip: "Plan a 45 min autolyse before adding salt and yeast",
       },
       sour_risk: {
         message: "{h}h at {t}\u00B0C: risk of sour flavour",
@@ -369,7 +369,7 @@ export const TROUBLESHOOTING_EN: Partial<CmsTroubleshootingI18n> =
       },
       high_w: {
         message: "W {w} very high: dough difficult to stretch",
-        tip: "Mix 50:50 with W 200 flour or plan a long autolysis",
+        tip: "Mix 50:50 with W 200 flour or plan a long autolyse",
       },
       flat_long_ferment: {
         message:
@@ -619,7 +619,7 @@ export const GLOSSARY_TERMS_EN: Partial<CmsGlossaryTerms> = {
         "Matures quickly and makes the dough extensible. Usually 30–50% of the total flour. Ready when the surface is full of bubbles and the centre starts to sink.",
     },
     autolysis: {
-      name: "Autolysis",
+      name: "Autolyse",
       definition:
         "A rest of flour and water, without yeast or salt, for 20–60 minutes before mixing (R. Calvel, 1974). It is not a pre-ferment.",
       whyImportant:

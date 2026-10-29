@@ -75,6 +75,7 @@ import {
 import { useDarkMode } from "../hooks/use-dark-mode";
 import { motionDelay,motionDuration,motionSpring } from "../components/ds/motion";
 import { uiMessage } from "../i18n/ui-messages";
+import { MICRO_DOSE_GRAMS, formatMass } from "../i18n/format";
 import { AccountPanel } from "../features/account/account-panel";
 import { OvenModelSearch } from "../features/profile/oven-model-search";
 import { SettingEffectNote } from "../features/profile/setting-effect-note";
@@ -520,7 +521,9 @@ function SavedRecipesSection() {
       ) : (
         <ul ref={(el) => { sectionRef.current = el; }} tabIndex={-1} className="profile-saved-recipes">
           {recipes.map((r) => {
-            const styleName = r.styleId === "napoletana_stg" ? (r.params.ovenType && r.params.ovenType !== "wood" ? "Napoletana" : r.styleName) : STYLES_DB[r.styleId]?.name ?? r.styleName;
+            /* FW-11 (S17-A-05): il nome salvato è già quello giusto
+               (recipeDisplayName al salvataggio), niente ramo per stile. */
+            const styleName = r.styleName || STYLES_DB[r.styleId]?.name || "";
             const name = normalizeRecipeName(r.name);
             const displayName = name || styleName;
             const meta = [
@@ -2203,7 +2206,6 @@ export function ProfilePage() {
         <ProfileSection
           title={p.prefsTitle}
           subtitle={p.prefsSubtitle}
-          stepNum={p.prefsStep}
           delay={motionDelay.profileSectionLate}
         >
           <div className="profile-prefs">
@@ -2256,7 +2258,6 @@ export function ProfilePage() {
         <ProfileSection
           title={p.unitTitle}
           subtitle={p.unitSubtitle}
-          stepNum={p.unitStep}
           delay={motionDelay.deliberate}
         >
           <div data-slot="unit-system">
@@ -2277,6 +2278,10 @@ export function ProfilePage() {
             />
             <p className="type-data-xs profile-unit-desc" aria-live="polite">
               {unitSystem === "imperial" ? p.unitImperialDesc : p.unitMetricDesc}
+            </p>
+            {/* FW-11 (S17-A-01, D-J): le microdosi restano in grammi. */}
+            <p className="type-data-xs profile-unit-note">
+              {uiMessage("profile.unitImperialSmallNote", [formatMass(MICRO_DOSE_GRAMS, bcp47)])}
             </p>
           </div>
         </ProfileSection>

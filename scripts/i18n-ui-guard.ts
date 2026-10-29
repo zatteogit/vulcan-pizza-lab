@@ -164,6 +164,26 @@ const DISPLAY_CONTAINERS = new Set([
   "tips",
 ]);
 
+/* ═══ FW-11: formattazione solo da src/app/i18n/format.ts ═══
+ * Il formatter vive in i18n/ (escluso dalla scansione del copy), ma le chiavi
+ * che legge (format.relativeIn, format.atClock…) sono vive: contano come
+ * riferimenti. */
+export const FORMATTER_FILES = ["src/app/i18n/format.ts"] as const;
+
+/** Identificatori di unità Intl («hour», «percent»): opzioni di formattazione,
+ *  non copy. */
+const INTL_UNIT_IDS = new Set([
+  "hour", "minute", "second", "day", "week", "month", "year",
+  "celsius", "fahrenheit", "gram", "kilogram", "ounce", "pound",
+  "percent", "centimeter", "millimeter", "meter", "inch", "liter", "milliliter",
+  "fluid-ounce",
+]);
+
+/** Unità scritte a mano dopo un numero interpolato: «${n}h», «${t}°C», «${g} g». */
+const HAND_UNIT = /^\s?(?:h|min|°\s?[CF]?|g|kg|ml|oz|lb)(?![\p{L}\d_-])/u;
+/** Preposizioni di tempo cucite nel codice: «fra ${», «tra ${». */
+const HAND_PREPOSITION = /(?:^|[\s(])(?:fra|tra)\s$/i;
+
 const FEEDBACK_CALL = /^(?:toast(?:\.[A-Za-z]+)?|alert|confirm|notify|set[A-Za-z]*(?:Error|Message|Msg|Feedback|Notice|Status|Announcement))$/;
 
 const ENTITY: Record<string, string> = {
@@ -499,7 +519,13 @@ function collectSourceCandidates(root: string, sourceFile: SourceFile): Replacem
 
   for (const property of sourceFile.getDescendantsOfKind(SyntaxKind.PropertyAssignment)) {
     const propertyName = property.getName().replace(/^["']|["']$/g, "");
-    if (DISPLAY_PROPERTIES.has(propertyName)) {
+    const initializer = property.getInitializer();
+    const intlUnit =
+      propertyName === "unit" &&
+      initializer !== undefined &&
+      Node.isStringLiteral(initializer) &&
+      INTL_UNIT_IDS.has(initializer.getLiteralValue());
+    if (DISPLAY_PROPERTIES.has(propertyName) && !intlUnit) {
       addExpression(property.getInitializer(), `display-property:${propertyName}`);
     }
     if (DISPLAY_CONTAINERS.has(propertyName)) {
@@ -514,6 +540,53 @@ function collectSourceCandidates(root: string, sourceFile: SourceFile): Replacem
   }
 
   return found;
+}
+
+/** FW-11: template literal che formattano a mano unità o tempi relativi.
+ *  Non si migrano al catalogo: vanno riscritti con i18n/format.ts. */
+export function collectFormatViolations(sourceFile: SourceFile): Array<{
+  line: number;
+  message: string;
+  category: string;
+}> {
+  const found: Array<{ line: number; message: string; category: string }> = [];
+  for (const template of sourceFile.getDescendantsOfKind(SyntaxKind.TemplateExpression)) {
+    const pieces = [
+      template.getHead().getLiteralText(),
+      ...template.getTemplateSpans().map((span) => span.getLiteral().getLiteralText()),
+    ];
+    const unit = pieces.slice(1).some((piece) => HAND_UNIT.test(piece));
+    const preposition = pieces.slice(0, -1).some((piece) => HAND_PREPOSITION.test(piece));
+    if (!unit && !preposition) continue;
+    found.push({
+      line: template.getStartLineNumber(),
+      message: template.getText(),
+      category: unit ? "format-literal:unit" : "format-literal:preposition",
+    });
+  }
+  /* In JSX: `{preset.maxTemp}°C` è la stessa cosa scritta come testo. */
+  for (const text of sourceFile.getDescendantsOfKind(SyntaxKind.JsxText)) {
+    const previous = text.getPreviousSibling();
+    if (!previous || !Node.isJsxExpression(previous)) continue;
+    if (!HAND_UNIT.test(text.getText())) continue;
+    found.push({
+      line: text.getStartLineNumber(),
+      message: `${previous.getText()}${text.getText().trim()}`,
+      category: "format-literal:unit",
+    });
+  }
+  return found;
+}
+
+function formatterReferences(root: string, project: Project): string[] {
+  return FORMATTER_FILES.flatMap((file) => {
+    const source = project.getSourceFile(path.join(root, file));
+    return source
+      ? referencedCatalogKeys(source)
+          .filter((reference) => reference.catalog === "product")
+          .map((reference) => reference.key)
+      : [];
+  });
 }
 
 function sourceModuleTargets(sourceFile: SourceFile): SourceFile[] {
@@ -596,6 +669,13 @@ function referencedCatalogKeys(sourceFile: SourceFile): Array<{
     if (visited.has(expression)) return [];
     visited.add(expression);
     if (Node.isStringLiteral(expression)) return [expression.getLiteralValue()];
+    /* FW-11: `uiMessage(approx ? "format.aroundClock" : "format.atClock")`. */
+    if (Node.isConditionalExpression(expression)) {
+      return [
+        ...literalKeys(expression.getWhenTrue(), visited),
+        ...literalKeys(expression.getWhenFalse(), visited),
+      ];
+    }
     if (Node.isArrayLiteralExpression(expression)) {
       return expression
         .getElements()
@@ -689,7 +769,22 @@ export function runI18nGuard(
     for (const reference of referencedCatalogKeys(source)) {
       (reference.catalog === "showcase" ? showcaseReferenced : productReferenced).add(reference.key);
     }
+    if (fileScopes.has("product") && !isShowcaseFile(absoluteRoot, file)) {
+      const relativeFile = rel(absoluteRoot, file);
+      for (const candidate of collectFormatViolations(source)) {
+        violations.push({
+          key: "",
+          message: candidate.message,
+          file: relativeFile,
+          line: candidate.line,
+          category: candidate.category,
+          scopes: [...fileScopes].sort(),
+          reserved: RESERVED_FILES.has(relativeFile),
+        });
+      }
+    }
   }
+  for (const key of formatterReferences(absoluteRoot, project)) productReferenced.add(key);
 
   violations.sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line);
   /* Read from disk so `--fix` validates the catalog it has just generated,
@@ -852,6 +947,7 @@ export function fixMountedCopy(
       );
     }
   }
+  for (const key of formatterReferences(absoluteRoot, updatedProject)) productReferenced.add(key);
   const liveMessages = Object.fromEntries(
     [...productReferenced]
       .filter((key) => messages[key] !== undefined)

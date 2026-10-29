@@ -757,7 +757,7 @@ export function UserNeeds({
                           <Minus size={14} />
                         </button>
                         <span className="type-numeric needs-kitchen-temp__value">
-                          {kitchenTemp}°C
+                          {fmt.celsius(kitchenTemp)}
                         </span>
                         <button
                           onClick={() => { setKitchenTempManual(true); setKitchenTemp((prev) => Math.min(40, prev + 1)); }}

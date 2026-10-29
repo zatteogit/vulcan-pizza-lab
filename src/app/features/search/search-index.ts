@@ -19,7 +19,9 @@ import {
   type SearchLexicon,
 } from "./text-match";
 import { uiMessage } from "../../i18n/ui-messages";
+import { formatNumber, formatPercent } from "../../i18n/format";
 import type { CmsContent } from "../cms/cms-context";
+import { placeNameLocalizer } from "../cms/i18n";
 import { PRE_FERMENT_IDS, preFermentName } from "../recipe/pre-ferment-guide";
 import { STYLE_PHOTOS } from "../recipe/recommended-styles";
 
@@ -111,7 +113,9 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           link: `/recipe/${style.id}?mode=canonical`,
           photo: STYLE_PHOTOS[style.id],
         },
-        `${familyName} ${style.id.replace(/_/g, " ")} ${formatOrigin(style.origin)} ${cms.styleDescriptions?.[style.id] ?? ""} ${cms.styleChars?.[style.id] ?? ""} ${styleOvenWords(style.id, cms)}`,
+        /* FW-11 (S04-A-14): il nome italiano della famiglia resta indicizzato
+           in ogni lingua, come i nomi propri («napoletana» trova gli stili anche in en). */
+        `${familyName} ${style.id.replace(/_/g, " ")} ${PIZZA_FAMILIES[style.family as keyof typeof PIZZA_FAMILIES]?.name ?? ""} ${formatOrigin(style.origin)} ${formatOrigin(style.origin, placeNameLocalizer(cms))} ${cms.styleDescriptions?.[style.id] ?? ""} ${cms.styleChars?.[style.id] ?? ""} ${styleOvenWords(style.id, cms)}`,
       ),
     );
   }
@@ -172,10 +176,14 @@ export function buildSearchIndex(cms: CmsContent): SearchEntry[] {
           id: `flour-${flour.id}`,
           type: "flour",
           title: flour.name,
+          /* FW-11 (S04-A-06): niente «W0» per le farine senza glutine,
+             decimali e percentuale nella lingua attiva. */
           subtitle: uiMessage("components.shared.search-overlay.value-w-value-value-prot-value-98984423", [
-            flour.producer,
-            flour.w,
-            flour.proteine_pct,
+            flour.producer === "Generico" ? uiMessage("features.search.flourGenericProducer") : flour.producer,
+            flour.w > 0
+              ? uiMessage("format.flourW",[formatNumber(flour.w, cms.locale.id)])
+              : uiMessage("features.search.flourWNotApplicable"),
+            formatPercent(flour.proteine_pct, cms.locale.id),
             catLabel,
           ]),
           link: "/profile",

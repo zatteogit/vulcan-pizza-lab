@@ -411,8 +411,8 @@ export function IngredientsSection({
               <div className="ingredients-science__grid">
                 {[
                   { l: `${cms.scienceLabels.yeastBaker} (baker's %)`, v: fmt.percent(recipe.science.yeast_baker_pct) },
-                  { l: `${cms.scienceLabels.effectiveHours} @${fmt.celsius(18)}`, v: `${recipe.science.effective_hours_18c}h` },
-                  { l: `${cms.scienceLabels.q10Factor} vs ${fmt.celsius(18)}`, v: `${fmt.number(roundForEvidence(recipe.science.q10_factor, Q10_NOTE))}×` },
+                  { l: `${cms.scienceLabels.effectiveHours} @${fmt.celsius(18)}`, v: fmt.durationShort(recipe.science.effective_hours_18c) },
+                  { l: `${cms.scienceLabels.q10Factor} vs ${fmt.celsius(18)}`, v: uiMessage("format.timesFactor", [fmt.number(roundForEvidence(recipe.science.q10_factor, Q10_NOTE))]) },
                   { l: cms.scienceLabels.waterActivity, v: fmt.number(roundForEvidence(recipe.science.water_activity, AW_NOTE), { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
                   { l: cms.scienceLabels.glutenNetwork, v: `${recipe.science.gluten_network}/100` },
                   { l: cms.scienceLabels.proteolysis, v: `${recipe.science.proteolysis_index}/100` },

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { CMS_DEFAULTS, type CmsContent } from "../cms-context";
 import { STYLES_DB } from "../../../domain/styles-db";
+import { getVersions } from "../../../data/style-versions";
+import { getDoughBaseByStyle } from "../../../data/parametric-databases";
 import { EN_LOCALE } from "./en";
 import { DE_LOCALE } from "./de";
 import { ES_LOCALE } from "./es";
@@ -64,6 +66,29 @@ describe("stili nel CMS", () => {
   it("ogni stile ha descrizione e caratteristiche", () => {
     const missing = Object.keys(STYLES_DB).filter(
       (id) => !CMS_DEFAULTS.styleDescriptions[id] || !CMS_DEFAULTS.styleChars[id],
+    );
+    expect(missing).toEqual([]);
+  });
+});
+
+/* ═══ FW-11 — dati di dominio come chiavi, in ogni lingua ═══
+ * Le etichette delle versioni (style-versions.ts) e il metodo di stesura dei
+ * dati parametrici sono testo italiano nei dati: ogni bundle deve tradurli,
+ * altrimenti «Sottile» o «Stesura in teglia con olio» restano in italiano. */
+describe.each(Object.entries(BUNDLES))("FW-11 dati di dominio, bundle %s", (_locale, bundle) => {
+  it("ogni etichetta di versione ha la sua traduzione", () => {
+    const labels = new Set(
+      Object.keys(STYLES_DB).flatMap((id) => getVersions(id).map((version) => version.label)),
+    );
+    const missing = [...labels].filter(
+      (label) => !bundle.engineMessages?.[`version.label.${label}`],
+    );
+    expect(missing).toEqual([]);
+  });
+
+  it("ogni stile con panetto ha il metodo di stesura tradotto", () => {
+    const missing = Object.keys(STYLES_DB).filter(
+      (id) => getDoughBaseByStyle(id) && !bundle.parametricText?.stretch?.[id],
     );
     expect(missing).toEqual([]);
   });

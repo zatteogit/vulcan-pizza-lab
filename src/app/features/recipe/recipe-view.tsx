@@ -52,6 +52,7 @@ import {
   type PanConfig,
 } from "../../domain/pizza-engine";
 import { uiMessage } from "../../i18n/ui-messages";
+import { preFermentName } from "./pre-ferment-guide";
 
 interface RecipeViewBack {
   label: string;
@@ -295,8 +296,9 @@ export function RecipeView({
   }, [selectedToppingConcept, style, toppingChoices, allToppingChoices, cms.cooking.toppingTitle]);
 
   const preFermentText = recipe.has_pre_ferment
-    ? (recipe.pre_ferment_type 
-        ? recipe.pre_ferment_type.charAt(0).toUpperCase() + recipe.pre_ferment_type.slice(1) 
+    ? /* FW-11 (S07-A-18): nome del prefermento dal catalogo, non l'id. */
+      (recipe.pre_ferment_type === "biga" || recipe.pre_ferment_type === "poolish"
+        ? preFermentName(recipe.pre_ferment_type)
         : cms.ui.procedurePreferment)
     : recipe.style.dough.unleavened
       ? cms.ui.procedureUnleavened

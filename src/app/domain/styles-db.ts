@@ -28,13 +28,32 @@ export function styleMatchesFamily(style: PizzaStyle, family: FamilyId): boolean
   return style.family === family || (style.families?.includes(family) ?? false);
 }
 
+/** FW-11 (S02-A-11, S05-A-14): i nomi di luogo sono dati in italiano; chi
+ *  mostra l'origine passa il nome nella lingua attiva (esonimi del CMS). */
+export type PlaceNameLocalizer = (italianName: string) => string;
+const samePlaceName: PlaceNameLocalizer = (name) => name;
+
 /** Compact origin for cards, with provincial context for smaller localities. */
-export function shortOrigin(origin: StyleOrigin): string {
-  return origin.province ? `${origin.city} (${origin.province})` : origin.city;
+export function shortOrigin(
+  origin: StyleOrigin,
+  place: PlaceNameLocalizer = samePlaceName,
+): string {
+  return origin.province
+    ? `${place(origin.city)} (${place(origin.province)})`
+    : place(origin.city);
 }
 /** Origine completa per viste di dettaglio: "Napoli, Campania, Italia". */
-export function formatOrigin(origin: StyleOrigin): string {
-  return [shortOrigin(origin), origin.region, origin.country].filter(Boolean).join(", ");
+export function formatOrigin(
+  origin: StyleOrigin,
+  place: PlaceNameLocalizer = samePlaceName,
+): string {
+  return [
+    shortOrigin(origin, place),
+    origin.region && place(origin.region),
+    origin.country && place(origin.country),
+  ]
+    .filter(Boolean)
+    .join(", ");
 }
 
 export const STYLES_DB: Record<string, PizzaStyle> = {

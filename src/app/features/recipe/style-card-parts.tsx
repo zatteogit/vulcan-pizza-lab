@@ -1,4 +1,5 @@
 import { useCms } from "../cms/cms-context";
+import { formatRange } from "../../i18n/format";
 import { createFormatter } from "../cms/i18n";
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
@@ -110,7 +111,7 @@ export function StyleMetaChip({ style, cms, recipe, context = "create", hidePant
   const icons = { oven: Flame, time: Clock, pan: CookingPot, flour: Wheat, check: ScanLine, water: Droplets }; /* FW-13: Flame solo per il forno */
   const duration = recipe
     ? fmt.durationShort(Math.round(recipe.timeline.reduce((sum, step) => sum + step.duration_minutes, 0) / 30) / 2)
-    : `${style.dough.fermentation_hours_range[0]}–${style.dough.fermentation_hours_range[1]}h`;
+    : formatRange(style.dough.fermentation_hours_range[0], style.dough.fermentation_hours_range[1], bcp47, { unit: "hour" });
   return (
     <div className="style-signals" data-region="meta">
       {signals.map(signal => {

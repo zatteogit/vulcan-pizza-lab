@@ -116,7 +116,7 @@ export function LearnPage() {
     : null;
   const allergenBlocked = preferredBlocker?.kind === "dietary_conflict";
   const path = activeStyle
-    ? { title: activeStyle.name, copy: activeStyle.description, styleId: activeStyle.id }
+    ? { title: activeStyle.name, copy: cms.styleDescriptions?.[activeStyle.id] ?? activeStyle.description, styleId: activeStyle.id }
     : theoretical
       ? { title: engineMsgTexts([{key:"learn.theoryTitle",fallback:"Prima la teoria"}],cms,bcp47)[0], copy: "", styleId: "" }
       : fallbackPath
@@ -126,7 +126,8 @@ export function LearnPage() {
   else if (fallbackPath && blockerReason && practicalStyle && !activeStyle) {
     path.copy = uiMessage("pages.learn.fallbackReason", [blockerReason, practicalStyle.name]);
   }
-  const skillName = SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
+  /* FW-11 (S11-A-08): il nome del livello dal CMS, non il dato italiano del motore. */
+  const skillName = cms.skillLevels[String(skill)]?.name ?? SKILL_LEVELS.find((s) => s.level === skill)?.name ?? "";
   const pathContextLabel = theoretical || fallbackPath
     ? uiMessage("pages.learn.contextProfile")
     : activeStyle

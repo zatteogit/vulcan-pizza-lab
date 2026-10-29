@@ -34,12 +34,13 @@ import { getStyleParametrics } from "../../data/parametric-databases";
 import { loadEffectiveKitchen } from "../../hooks/use-profile-defaults";
 import { useCms } from "../cms/cms-context";
 import { engineMsgTexts } from "./engine-msg-text";
-import { createFormatter, t } from "../cms/i18n";
+import { createFormatter, placeNameLocalizer, t } from "../cms/i18n";
 import { CtaButton, IconButton } from "../../components/ds/index";
 import { useDialogFocus } from "../../components/ds/use-dialog-focus";
 import { isFavoriteStyle, toggleFavoriteStyle } from "../../adapters/browser/saved-recipes-storage";
 import { uiMessage } from "../../i18n/ui-messages";
 import { useDetailLevel } from "../../hooks/use-detail-level";
+import { formatNumber, formatRange, formatSeconds, pluralPick } from "../../i18n/format";
 
 interface StyleDetailSheetProps {
   style: PizzaStyle;
@@ -152,11 +153,13 @@ export function StyleDetailSheet({
   const [showNerd, setShowNerd] = useState(() => detailLevel === "technical");
   const [fav, setFav] = useState(() => isFavoriteStyle(style.id));
 
-  const hRange = `${style.dough.hydration_pct_range[0]}–${style.dough.hydration_pct_range[1]}%`;
-  const wRange = `W ${style.dough.flour_w_range[0]}–${style.dough.flour_w_range[1]}`;
-  const fRange = `${style.dough.fermentation_hours_range[0]}–${style.dough.fermentation_hours_range[1]}h`;
-  const plRange = `${style.dough.flour_pl_range[0]}–${style.dough.flour_pl_range[1]}`;
-  const thickness = `${doughThicknessGPerCm2(style).toFixed(2)} g/cm²`;
+  /* FW-11 (S03-A-17, S03-B-09): numeri, intervalli e unità nella lingua attiva. */
+  const hRange = formatRange(style.dough.hydration_pct_range[0], style.dough.hydration_pct_range[1], bcp47, { unit: "percent" });
+  const wRange = uiMessage("format.flourW", [formatRange(style.dough.flour_w_range[0], style.dough.flour_w_range[1], bcp47)]);
+  const fRange = formatRange(style.dough.fermentation_hours_range[0], style.dough.fermentation_hours_range[1], bcp47, { unit: "hour" });
+  const plRange = formatRange(style.dough.flour_pl_range[0], style.dough.flour_pl_range[1], bcp47, { maximumFractionDigits: 2 });
+  const thickness = uiMessage("format.gramsPerSquareCm", [formatNumber(doughThicknessGPerCm2(style), bcp47, { maximumFractionDigits: 2 })]);
+  const ptext = cms.parametricText;
   const dev = getStyleDeviation(style.id);
   const devCmsLabel = cms.deviationLabels[dev.category] ?? DEVIATION_CATEGORY_LABELS[dev.category].label;
   const devEmoji = DEVIATION_CATEGORY_LABELS[dev.category].emoji;
@@ -291,7 +294,7 @@ export function StyleDetailSheet({
                 ·
               </span>
               <span className="style-detail-title__origin">
-                {formatOrigin(style.origin)}
+                {formatOrigin(style.origin, placeNameLocalizer(cms))}
               </span>
 
               {rec && (
@@ -436,28 +439,35 @@ export function StyleDetailSheet({
                       {params.bakingTime && (
                         <ParamRow
                           label={pt.sheetBakeLabel}
-                          value={formatBakingTime(params.bakingTime.idealSeconds)}
-                          sub={frying ? pt.sheetFryTurn : params.bakingTime.turns > 0 ? t(pt.sheetBakeTurns, { n: params.bakingTime.turns }) : pt.sheetBakeNoTurns}
+                          value={formatSeconds(params.bakingTime.idealSeconds, bcp47)}
+                          sub={frying
+                            ? pt.sheetFryTurn
+                            : params.bakingTime.turns > 0
+                              ? pluralPick(params.bakingTime.turns, bcp47, {
+                                  one: uiMessage("recipe.sheet.rotationsOne", [params.bakingTime.turns]),
+                                  other: uiMessage("recipe.sheet.rotationsOther", [params.bakingTime.turns]),
+                                })
+                              : pt.sheetBakeNoTurns}
                         />
                       )}
                       {params.doughBase && (
                         <ParamRow
                           label={pt.sheetDoughLabel}
                           value={fmt.grams(params.doughBase.ballWeight_g)}
-                          sub={params.doughBase.stretchMethod}
+                          sub={ptext?.stretch?.[style.id] ?? params.doughBase.stretchMethod}
                         />
                       )}
                       {params.salt && (
                         <ParamRow
                           label={pt.sheetSaltLabel}
-                          value={`${fmt.percent(params.salt.saltPct)} ${params.salt.saltType}`}
-                          sub={params.salt.additionTiming}
+                          value={`${fmt.percent(params.salt.saltPct)} ${ptext?.saltType?.[params.salt.saltType] ?? params.salt.saltType}`}
+                          sub={ptext?.saltTiming?.[params.salt.additionTiming] ?? params.salt.additionTiming}
                         />
                       )}
                       {params.folding && params.folding.foldCount > 0 && (
                         <ParamRow
                           label={pt.sheetFoldLabel}
-                          value={`${params.folding.foldCount}× ${params.folding.foldType.replace("_", " ")}`}
+                          value={`${params.folding.foldCount}× ${ptext?.fold?.[params.folding.foldType] ?? params.folding.foldType.replace("_", " ")}`}
                           sub={t(pt.sheetFoldInterval, { min: params.folding.foldInterval_min })}
                         />
                       )}
@@ -536,8 +546,4 @@ function ParamRow({ label, value, sub }: { label: string; value: string; sub: st
   );
 }
 
-function formatBakingTime(seconds: number) {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes}m ${remainingSeconds}s`;
-}
+

@@ -53,8 +53,10 @@ describe('orari e dosi: secondo collaudo',()=>{
   const start=new Date(2026,9,26,9,30);
   expect(displayStepTime('bulk',addMinutes(start,20),start,'it-IT')).toBe('ca. 09:50');
   expect(displayStepTime('shape',addMinutes(start,23),start,'it-IT')).toBe('09:53');
-  expect(fmtDuration(24*60+8)).toBe('1 giorno 8min');
-  expect(fmtDuration(68)).toBe('1h 8min');expect(fmtDuration(1134)).toBe('18h 54min');
+  /* FW-11: un solo formato di durata, anche oltre le 24 h (spazi della lingua). */
+  const plain=(s:string)=>s.replace(/[\u00a0\u202f]/g,' ');
+  expect(plain(fmtDuration(24*60+8))).toBe('24 h 8 min');
+  expect(plain(fmtDuration(68))).toBe('1 h 8 min');expect(plain(fmtDuration(1134))).toBe('18 h 54 min');
  });
  it('pasto 15:30, 368 minuti: inizio 09:22 e fine 15:30, senza arrotondamento tardivo',()=>{
   const meal=new Date(2026,9,26,15,30), now=new Date(2026,9,26,8,0);

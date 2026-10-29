@@ -48,9 +48,11 @@ const LOCALE_LOADERS: Partial<Record<LocaleId, () => Promise<CmsContent>>> = {
  *       senza «filtri in alto».
  *  21 → FW-16: effetto delle impostazioni, diete, feedback e promemoria onesti
  *       (e lessico controllato di FW-14).
+ *  22 → FW-11: testi dei parametri tecnici e luoghi d'origine per lingua;
+ *       FW-07: forno elettrico e a gas «impostato a».
  * Rinominare il prodotto NON richiede un incremento: gli snapshot salvati da
  * questa revisione in poi contengono i token, non il nome. */
-export const LOCALE_BUNDLE_REV = 21;
+export const LOCALE_BUNDLE_REV = 22;
 
 /** True se lo snapshot salvato è di una lingua non italiana e di una revisione
  *  diversa da quella corrente (gli snapshot senza revisione sono precedenti). */

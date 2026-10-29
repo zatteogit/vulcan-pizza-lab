@@ -2,6 +2,7 @@ import { X, GraduationCap } from "lucide-react";
 import type { PizzaStyle } from "../../domain/pizza-engine";
 import { formatOrigin } from "../../domain/pizza-engine";
 import { useCms } from "../cms/cms-context";
+import { placeNameLocalizer } from "../cms/i18n";
 import { ModalSheet } from "../../components/ds/index";
 import { uiMessage } from "../../i18n/ui-messages";
 
@@ -17,6 +18,11 @@ export function RecipeLearningPanel({
   onClose: () => void;
 }) {
   const { cms } = useCms();
+  /* FW-11 (S08-B-08): testi dello stile dal CMS, non i dati italiani grezzi. */
+  const description = cms.styleDescriptions?.[style.id] ?? style.description;
+  const characteristics = cms.styleChars?.[style.id]
+    ? cms.styleChars[style.id].split("|").map((item) => item.trim()).filter(Boolean)
+    : style.key_characteristics;
   return (
     <ModalSheet
       open={open}
@@ -38,7 +44,7 @@ export function RecipeLearningPanel({
                   {style.name}
                 </h2>
                 <p className="learning-panel__subtitle">
-                  {familyName} · {formatOrigin(style.origin)}
+                  {familyName} · {formatOrigin(style.origin, placeNameLocalizer(cms))}
                 </p>
               </div>
               <button
@@ -51,9 +57,9 @@ export function RecipeLearningPanel({
               </button>
             </div>
             <div className="learning-panel__body">
-              <p className="learning-panel__description">{style.description}</p>
+              <p className="learning-panel__description">{description}</p>
               <div className="learning-panel__characteristics">
-                {style.key_characteristics.slice(0, 6).map((characteristic) => (
+                {characteristics.slice(0, 6).map((characteristic) => (
                   <div key={characteristic} className="learning-panel__characteristic">
                     {characteristic}
                   </div>

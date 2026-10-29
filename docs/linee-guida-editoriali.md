@@ -81,6 +81,18 @@ lo aggiunge qui e, se è tecnico, al glossario.
 | **Stili di pizza** | La sezione e il filtro degli stili in Scopri; un solo verbo per «vedi tutto» («Vedi tutti/tutte») | Scopri | «Stili tradizionali», «Esplora tutti» |
 | **Tradizioni regionali** | Famiglia degli stili storici non napoletani né romani (D-G, da confermare stile per stile) | Scopri, Crea, MCP | «Contemporanea» per focacce e pizze storiche |
 | **Genera ricetta** | La CTA del pannello stile, su ogni breakpoint | pannello stile | «Crea» (è il nome della tab) |
+- FW-11. In inglese si scrive **autolyse** (non «autolysis») e **preferment**
+  senza trattino, come nella fonte King Arthur. I nomi propri dei luoghi
+  d'origine usano l'esonimo della lingua (Napoli → Naples, Neapel, Nápoles):
+  la tabella è `placeNames` nel CMS di ogni lingua.
+- FW-11. Numeri, intervalli, durate e orari non si scrivono a mano: passano da
+  `src/app/i18n/format.ts`. Una durata è sempre «9 h 36 min» (anche oltre le
+  24 h, «28 h 48 min»); un intervallo usa il trattino lungo e l'unità una volta
+  («6–14 h»); fra numero e unità c'è lo spazio della lingua («387 g»,
+  «250 °C»). «Tra», «verso le», «ca.» sono chiavi del catalogo, mai codice.
+- FW-11 (D-J). Nel sistema imperiale le dosi sotto i 10 g (lievito, sale,
+  zucchero) restano in grammi: in once a due decimali l'errore arriva al
+  ±50 %. È una scelta di Vulcan, detta all'utente nel Profilo.
 
 ## Contenuti e traduzioni
 
