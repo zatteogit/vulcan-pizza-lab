@@ -85,6 +85,7 @@ export interface CmsUiStrings {
   pantryInvalidValue: string;
   pantryPolicies: string;
   pantryToppingsComplete: string;
+  pantryExcludedSummary: string;
   pantryAutoSaved: string;
   pantryNoResults: string;
   pantryShowMore: string;
@@ -104,9 +105,6 @@ export interface CmsUiStrings {
   restore: string;
   generate: string;
   customizeParams: string;
-  /** Gerarchia azioni (Proposta A, lug 2026): invito testuale Easy che apre
-   *  il dialog Personalizza. Opzionali: fallback sul default. */
-  adjustByHand?: string;
   /** Redesign lug 2026: azione "Personalizza" sulla match card (apre il
    *  dialog parametri; sostituisce la leva "Regola a mano"). Opzionale. */
   personalize?: string;
@@ -186,6 +184,9 @@ export interface CmsUiStrings {
   flourBudgetResult: string;
   flourBudgetTooLittle: string;
   flourBudgetApply: string;
+  flourBudgetCapped: string;
+  flourBudgetInvalid: string;
+  flourBudgetSame: string;
   /** U-2: orario del pasto scelto a mano. */
   slotCustom: string;
   slotCustomInput: string;
@@ -235,17 +236,17 @@ export interface CmsUiStrings {
   createSourceHint: string;
   createSourceAction: string;
   supplyUnknownHint: string;
-  supplyPantryInventory: string;
-  supplyEquipmentInventory: string;
-  supplyPartial: string;
-  supplyComplete: string;
+  supplyMoreOptions: string;
+  supplyPantryComplete: string;
+  supplyEquipmentComplete: string;
+  supplyPantryCompleteEffect: string;
+  supplyEquipmentCompleteEffect: string;
   supplyFlourPurchase: string;
   supplyEquipmentPurchase: string;
   supplyUnspecified: string;
   supplyAllowed: string;
   supplyForbidden: string;
-  supplyExcludedFlours: string;
-  supplyAddExclusion: string;
+  supplyPurchaseEffect: string;
   recipeAdaptationsIncluded: string;
   recipeOptimizationChanges: string;
   recipeCurrentVersion: string;
@@ -810,9 +811,6 @@ interface CmsConfigurator {
   /** Adaptive cross-parameter hints */
   hintHighHydrationNeedsW: string;
   hintLowWLimitsHydration: string;
-  hintLongFermentUseFridge: string;
-  hintShortFermentUseWarm: string;
-  hintMediumFermentUseCool: string;
   hintHighHydrationNeedsTime: string;
   hintLowPLForHighHydration: string;
   hintHighWAllowsMoreHydration: string;
@@ -852,6 +850,8 @@ export interface CmsContent {
     styles: CmsStepHeader;
   };
   sections: {
+    /** S05-A-07: titolo del pannello del tempo («Quando»). */
+    when: { title: string };
     skill: CmsSectionHeader;
     oven: CmsSectionHeader;
     pantry: CmsSectionHeader;
@@ -1023,7 +1023,6 @@ export interface CmsContent {
     showAllStyles: string;
     noTroubleshootingResults: string;
     moreInfo: string;
-    changeTiming: string;
     kitchenTempSubtitle: string;
     techAdjustmentsApplied: string;
     feedbackYes: string;
@@ -1322,8 +1321,8 @@ export const CMS_DEFAULTS: CmsContent = {
     pantrySelectionSummary: "Selezionati: {n} · Esclusi: {excluded}",
     pantryWValue: "W{w}",
     pantryWEstimate: "≈ W{w}",
-    pantryFull: "Dispensa completa",
-    pantryQuickHint: "Seleziona cosa hai. Marche, dettagli ed esclusioni sono nella dispensa completa.",
+    pantryFull: "La tua dispensa",
+    pantryQuickHint: "Seleziona cosa hai. Marche, dettagli ed esclusioni sono in «La tua dispensa».",
     pantryStatusHint: "Indica cosa hai o cosa vuoi escludere. Puoi lasciare il resto da specificare.",
     pantryHave: "Ce l’ho",
     pantryUnspecified: "Non specificato",
@@ -1343,6 +1342,7 @@ export const CMS_DEFAULTS: CmsContent = {
     pantryInvalidValue: "Inserisci un valore positivo valido.",
     pantryPolicies: "Disponibilità e acquisti",
     pantryToppingsComplete: "Ho elencato tutti i condimenti che ho",
+    pantryExcludedSummary: "Escluse: {n}",
     pantryAutoSaved: "Modifiche salvate automaticamente",
     pantryNoResults: "Nessun ingrediente trovato",
     pantryShowMore: "Mostra altri",
@@ -1360,18 +1360,18 @@ export const CMS_DEFAULTS: CmsContent = {
     createSourceHint: "Qui puoi adattare lo stile alla tua cucina e confrontare le modifiche con il riferimento.",
     createSourceAction: "Vedi la proposta su misura",
 
-    supplyUnknownHint: "Una voce non selezionata resta da verificare. Se hai elencato tutto, indica che la lista è completa.",
-    supplyPantryInventory: "Elenco della dispensa",
-    supplyEquipmentInventory: "Elenco della dotazione",
-    supplyPartial: "Lista parziale",
-    supplyComplete: "Ho indicato tutto ciò che ho",
-    supplyFlourPurchase: "Procurare altre farine",
-    supplyEquipmentPurchase: "Procurare altra attrezzatura",
-    supplyUnspecified: "Non specificato",
-    supplyAllowed: "Posso procurarmene",
-    supplyForbidden: "Non voglio procurarmene",
-    supplyExcludedFlours: "Farine che non voglio usare",
-    supplyAddExclusion: "Aggiungi un’esclusione",
+    supplyUnknownHint: "Quello che non segni lo consideriamo “da verificare”, non “mancante”.",
+    supplyMoreOptions: "Altre opzioni",
+    supplyPantryComplete: "Ho segnato tutto quello che ho in dispensa",
+    supplyEquipmentComplete: "Ho segnato tutta l’attrezzatura che ho",
+    supplyPantryCompleteEffect: "Se lo attivi, il lievito che non hai segnato conta come mancante; la farina anche, se delle tue hai indicato la W.",
+    supplyEquipmentCompleteEffect: "Se lo attivi, teglia, pietra o acciaio che non hai segnato contano come mancanti.",
+    supplyFlourPurchase: "Posso comprare le farine che mancano?",
+    supplyEquipmentPurchase: "Posso comprare quello che manca?",
+    supplyUnspecified: "Non ho deciso",
+    supplyAllowed: "Sì",
+    supplyForbidden: "No",
+    supplyPurchaseEffect: "Con «No», se la lista è completa e a uno stile manca qualcosa, lo stile non è fattibile.",
 
     recipeAdaptationsIncluded: "Cosa cambia",
     recipeOptimizationChanges: "Modifiche proposte",
@@ -1393,7 +1393,6 @@ export const CMS_DEFAULTS: CmsContent = {
     restore: "Ripristina",
     generate: "Genera ricetta",
     customizeParams: "Personalizza parametri",
-    adjustByHand: "Regola a mano",
     personalize: "Personalizza",
     changeStyle: "Altro stile",
     // Recipe output
@@ -1468,6 +1467,9 @@ export const CMS_DEFAULTS: CmsContent = {
     flourBudgetResult: "Risultato: {n} {unit} con {used} di farina, avanzo {left}.",
     flourBudgetTooLittle: "Non basta per 1 {unit}: servono almeno {min} di farina.",
     flourBudgetApply: "Usa {n} {unit}",
+    flourBudgetCapped: "Massimo {max} {unit} per ricetta: avanzano {left}.",
+    flourBudgetInvalid: "Inserisci i grammi di farina che hai.",
+    flourBudgetSame: "Corrisponde a quanto già impostato.",
     slotCustom: "Scegli giorno e ora",
     slotCustomInput: "Quando si mangia?",
     slotCustomConfirm: "Usa questo orario",
@@ -1563,6 +1565,7 @@ export const CMS_DEFAULTS: CmsContent = {
     styles: { number: "03 — Stile", title: "Scegli il tuo stile", subtitle: "Proposte calcolate per la tua cucina e il tuo tempo." },
   },
   sections: {
+    when: { title: "Quando vuoi la pizza?" },
     skill: { title: "Livello di esperienza", description: "Scegli la descrizione in cui ti riconosci." },
     oven: { title: "Il tuo forno", description: "Tipo e temperatura massima" },
     pantry: { title: "Dispensa", description: "Farine e lieviti che hai a casa" },
@@ -1811,7 +1814,6 @@ export const CMS_DEFAULTS: CmsContent = {
     showAllStyles: "Mostra tutte",
     noTroubleshootingResults: "Nessun problema trovato per questa ricerca",
     moreInfo: "Più informazioni",
-    changeTiming: "Cambia i tempi",
     kitchenTempSubtitle: "La temperatura influisce sulla velocità di lievitazione",
     techAdjustmentsApplied: "Adattamenti tecnici applicati",
     feedbackYes: "Sì, volentieri",
@@ -2081,7 +2083,10 @@ export const CMS_DEFAULTS: CmsContent = {
     "topping.auth.taboo": "Sconsigliato",
     // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
     "recipeSetup.profileHint": "Scegli una versione di partenza o un'ispirazione d'autore: i valori restano modificabili.",
-    "recipeSetup.styleBase": "stile base",
+    "recipeSetup.versionModified": "modificata",
+    "recipeSetup.resetToReference": "Ripristina i valori di partenza",
+    "recipeSetup.resetDone": "Valori di partenza ripristinati",
+    "recipeSetup.referenceRestored": "Riferimento ripristinato",
     "version.label.Leggerissima": "Leggerissima",
     "version.label.Casalingo": "Casalingo",
     "version.label.Casalinga": "Casalinga",
@@ -2630,7 +2635,7 @@ export const CMS_DEFAULTS: CmsContent = {
     restTip: "Questo impasto non lievita: il riposo serve a rilassare il glutine, così la sfoglia si tira sottile senza strapparsi.",
     fermentTip: "La lievitazione sviluppa i gas; la maturazione modifica la struttura dell’impasto. Tempo e temperatura influenzano entrambe, senza garantire la digeribilità personale.",
     tempFridge: "{fridgeTemp} frigo",
-    tempCool: "{coolTemp}",
+    tempCool: "{coolTemp} fresco",
     tempAmbient: "{ambientTemp} amb.",
     preFermentLabel: "Prefermento",
     preFermentTip: "Biga e poolish sono impasti preparati in anticipo e poi uniti all’impasto finale. Possono cambiare aromi e struttura: segui tempi e dosi del procedimento.",
@@ -2651,9 +2656,6 @@ export const CMS_DEFAULTS: CmsContent = {
     thicknessStandard: "Standard per questo stile",
     hintHighHydrationNeedsW: "Con idratazione al {h}%, servono farine forti: W consigliato ≥ {w}",
     hintLowWLimitsHydration: "Con W {w}, idratazione massima consigliata ~{h}%",
-    hintLongFermentUseFridge: "Con {hours}h di fermentazione, meglio in frigo ({fridgeTemp}) per controllare l'impasto",
-    hintShortFermentUseWarm: "Con solo {hours}h, fermenta a temperatura ambiente ({ambientTemp}) per attivare i lieviti",
-    hintMediumFermentUseCool: "Con {hours}h, temperatura fresca ({coolTemp}) \u00E8 il compromesso ideale tra controllo e attivit\u00E0",
     hintHighHydrationNeedsTime: "Con idratazione al {h}%, consigliata fermentazione ≥ {hours}h",
     hintLowPLForHighHydration: "Con idratazione alta, consigliato P/L ≤ {pl} per estensibilità",
     hintHighWAllowsMoreHydration: "Con W {w}, puoi arrivare fino al {h}% di idratazione",
@@ -3394,7 +3396,6 @@ export const CMS_SECTIONS: CmsSectionDef[] = [
     description: "Titoli e descrizioni delle sotto-sezioni del configuratore",
     fields: [
       { path: "sections.when.title", label: "Quando — Titolo", type: "text" },
-      { path: "sections.when.description", label: "Quando — Descrizione", type: "text" },
       { path: "sections.skill.title", label: "Skill — Titolo", type: "text" },
       { path: "sections.skill.description", label: "Skill — Descrizione", type: "text" },
       { path: "sections.oven.title", label: "Forno — Titolo", type: "text" },

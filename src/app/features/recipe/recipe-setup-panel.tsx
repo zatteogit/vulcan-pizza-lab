@@ -1,12 +1,5 @@
-import {
-  ChevronDown,
-  Sparkles,
-  X,
-  Check,
-  Beaker,
-} from "lucide-react";
+import { X, Check, Beaker } from "lucide-react";
 import { localizeInterpretation } from "../../data/inspiration-i18n/localize";
-import { motion } from "motion/react";
 import {
   useEffect,
   useMemo,
@@ -14,14 +7,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { CtaButton, ModalSheet } from "../../components/ds/index";
+import { Badge, CtaButton, ModalSheet } from "../../components/ds/index";
 import { useCms, type CmsContent } from "../cms/cms-context";
 import { createFormatter, formatTemperatureCopy, t } from "../cms/i18n";
 import { yeastBakerPctText } from "./recipe-output-format";
 import { SpecCell } from "./recipe-stat-strip";
 import { NerdAuraBlock } from "./recipe-output-bits";
 import {
-  getInterpretationById,
   getInterpretationsForStyle,
   type Interpretation,
 } from "../../data/interpretation-library";
@@ -46,8 +38,9 @@ import { roundForEvidence } from "../../domain/science/evidence";
 const AW_NOTE = getScienceNote("water-activity");
 const Q10_NOTE = getScienceNote("q10-fermentation");
 
-function cmsMessage(cms: CmsContent, key: string, fallback: string): string {
-  return cms.engineMessages?.[key] ?? fallback;
+/* I testi recipeSetup.* hanno sempre il default italiano nel CMS: niente doppione qui. */
+function cmsMessage(cms: CmsContent, key: string, fallback?: string): string {
+  return cms.engineMessages?.[key] ?? fallback ?? key;
 }
 
 function localizedVersionLabel(cms: CmsContent, label: string): string {
@@ -101,6 +94,21 @@ interface RecipeSetupPanelProps {
   style: PizzaStyle;
   versions: StyleVersion[];
   activeVersion: StyleVersion | null;
+  /** G2-WP-03 (S06-A-16): la versione di partenza quando nessuna è applicata
+   *  nella sessione (quella del riferimento dello stile), per evidenziarla. */
+  startingVersionId?: string | null;
+  /** …o l'ispirazione di partenza, quando il riferimento è un disciplinare. */
+  startingInterpretationId?: string | null;
+  /** G2-WP-03: i valori si discostano dalla versione o ispirazione di partenza. */
+  isModified?: boolean;
+  /** Revisione G2: quando i valori sono solo l'adattamento di Vulcan alla
+   *  cucina (Crea), il badge lo dice al posto di «modificata». */
+  modifiedLabel?: string;
+  /** Revisione G2: nel Crea il reset porta al riferimento (non al punto di
+   *  partenza adattato alla cucina), e il pulsante lo dice. */
+  resetToOriginal?: boolean;
+  /** G2-WP-03 (S06-B-15): riporta ai valori di partenza senza chiudere il dialog. */
+  onResetToReference?: () => void;
   customHydration: number;
   customFlourW: number;
   customFermentHours: number;
@@ -113,19 +121,7 @@ interface RecipeSetupPanelProps {
   openDefault?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** Apertura "intelligente": adatta in silenzio se canonica, poi apre. */
-  onRequestOpen?: () => void;
-  isCanonical?: boolean;
   scores: RecipeScores;
-  /** Gerarchia azioni (Proposta A, lug 2026): in Easy il trigger diventa una
-   *  minicard discreta — "Ottimizza per me" resta l'unica azione piena. */
-  compact?: boolean;
-  /** Redesign lug 2026: nessun trigger proprio — l'apertura passa dal
-   *  pulsante "Personalizza" della match card; qui resta solo il dialog. */
-  hideTrigger?: boolean;
-  /** Miniriepilogo dei parametri che la StatStrip Easy non mostra
-   *  (es. "Sale 2,6% · W 200 · 22 °C"), calcolato dal chiamante. */
-  advancedSummary?: string;
   /** Round 4 (lug 2026): i dati nerd non vivono più sulla scheda (accordion
    *  della strip rimosso) — se passata, la ricetta alimenta il blocco science
    *  read-only in coda al dialog (lievito, P/L, ore@18°, Q10, Aw). */
@@ -138,6 +134,12 @@ export function RecipeSetupPanel({
   style,
   versions,
   activeVersion,
+  startingVersionId = null,
+  startingInterpretationId = null,
+  isModified = false,
+  modifiedLabel: modifiedLabelProp,
+  resetToOriginal = false,
+  onResetToReference,
   activeInterpretationId,
   onSelectVersion,
   onSelectInterpretation,
@@ -146,12 +148,7 @@ export function RecipeSetupPanel({
   openDefault = false,
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
-  onRequestOpen,
-  isCanonical = false,
   scores,
-  compact = false,
-  hideTrigger = false,
-  advancedSummary,
   recipe = null,
   children,
 }: RecipeSetupPanelProps) {
@@ -198,118 +195,29 @@ export function RecipeSetupPanel({
     () => getInterpretationsForStyle(style.id),
     [style.id],
   );
-  const activeInterpretation = activeInterpretationId
-    ? interpretations.find((item) => item.id === activeInterpretationId) ??
-      getInterpretationById(activeInterpretationId)
-    : null;
 
-  const activeVersionLabel = activeVersion
-    ? localizedVersionLabel(cms, activeVersion.label)
-    : cmsMessage(cms, "recipeSetup.styleBase", "stile base");
-  /* Ridondanza: i numeri (idratazione, W, ore, temperatura) vivono già nelle
-     stat card immediatamente sopra il trigger. Qui solo ciò che la strip non
-     dice: il preset e l'interpretazione attivi. */
-  const summary = [
-    activeVersionLabel,
-    activeInterpretation ? interpretationName(activeInterpretation) : null,
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  const modifiedLabel = modifiedLabelProp ?? cmsMessage(cms, "recipeSetup.versionModified");
+  const modifiedBadge = isModified ? (
+    <>
+      <span className="sr-only">, </span>
+      <Badge tone={modifiedLabelProp ? "muted" : "warning"} size="xs" className="setup-option__badge">{modifiedLabel}</Badge>
+    </>
+  ) : null;
+  const footerRef = useRef<HTMLDivElement>(null);
+  const handleReset = () => {
+    if (!onResetToReference) return;
+    onResetToReference();
+    onNotice(resetToOriginal
+      ? cmsMessage(cms, "recipeSetup.referenceRestored")
+      : cmsMessage(cms, "recipeSetup.resetDone"));
+    // Il pulsante sparisce (non c'è più nulla da ripristinare): il fuoco va a
+    // «Fatto», dentro il dialog, invece di cadere su <body>.
+    requestAnimationFrame(() => footerRef.current?.querySelector<HTMLElement>("[data-slot=done]")?.focus());
+  };
 
-  /* Riepilogo completo dei parametri "sommersi" (sale, W, temperatura,
-     pre-fermento) + preset/interpretazione attivi: è la seconda riga dello
-     spec-sheet Impasto, condivisa da Easy (adv-line) e Nerd (card piena). */
-  const fullSummary = [
-    advancedSummary,
-    activeVersion ? activeVersionLabel : null,
-    activeInterpretation ? interpretationName(activeInterpretation) : null,
-  ]
-    .filter(Boolean)
-    .join(" · ");
-
-  const triggerSubtitle = notice
-    ? notice
-    : isCanonical
-      ? uiMessage("recipe.setup.triggerCanonical")
-      : fullSummary || summary;
-  /* Il titolo del trigger dice già "Personalizza parametri": la pill
-     ripete il verbo breve, non il titolo (duplicava su desktop). */
-  const triggerAction = cms.ui.modify;
-
-  /* Adv-line Easy: notice in tempo reale se presente, altrimenti il riepilogo
-     completo. */
-  const compactSummary = notice ?? fullSummary;
 
   return (
     <section>
-      {hideTrigger ? null : compact ? (
-        /* Adv-line (redesign lug 2026): seconda riga dello spec-sheet, niente
-           scatola — PRIMA i dati (riepilogo dei valori sommersi: sale, W,
-           temperatura, preset), POI la leva "Regola a mano ›" a chiuderla.
-           Solo la leva ha aspetto cliccabile. */
-        <button
-          onClick={() => (onRequestOpen ? onRequestOpen() : setOpen(true))}
-          className="setup-trigger setup-trigger--compact"
-          aria-expanded={open}
-          aria-haspopup="dialog"
-        >
-          {compactSummary && (
-            <motion.span
-              key={compactSummary}
-              initial={{ opacity: 0, y: 3 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={
-                notice
-                  ? "setup-trigger__summary setup-trigger__summary--notice"
-                  : "setup-trigger__summary"
-              }
-            >
-              {compactSummary}
-            </motion.span>
-          )}
-          <span className="setup-trigger__link">
-            {cms.ui.adjustByHand ?? uiMessage("features.recipe.recipe-setup-panel.regola-a-mano-93b9fcba")}
-            <ChevronDown
-              size={13}
-              className="setup-trigger__link-icon"
-              aria-hidden="true"
-            />
-          </span>
-        </button>
-      ) : (
-        <button
-          onClick={() => (onRequestOpen ? onRequestOpen() : setOpen(true))}
-          className="setup-trigger"
-          aria-expanded={open}
-          aria-haspopup="dialog"
-        >
-          <span className="setup-trigger__icon">
-            <Sparkles size={17} />
-          </span>
-          <span className="setup-trigger__text">
-            <span className="setup-trigger__title">
-              {cms.ui.customizeParams}
-            </span>
-            <motion.span
-              key={triggerSubtitle}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={
-                notice
-                  ? "setup-trigger__subtitle setup-trigger__subtitle--notice"
-                  : "setup-trigger__subtitle"
-              }
-            >
-              {triggerSubtitle}
-            </motion.span>
-          </span>
-          <span className="setup-trigger__action">{triggerAction}</span>
-          <span className="setup-trigger__chevron">
-            <ChevronDown size={17} className="setup-trigger__chevron-icon" />
-          </span>
-        </button>
-      )}
-
       <ModalSheet
         open={open}
         onClose={() => setOpen(false)}
@@ -354,11 +262,7 @@ export function RecipeSetupPanel({
                 {uiMessage("recipe.setup.profileLabel")}
               </span>
               <span className="type-body setup-profile__hint">
-                {cmsMessage(
-                  cms,
-                  "recipeSetup.profileHint",
-                  "Scegli una versione di partenza o un'ispirazione d'autore: i valori restano modificabili.",
-                )}
+                {cmsMessage(cms, "recipeSetup.profileHint")}
               </span>
             </div>
             <div className="setup-profile__body">
@@ -368,7 +272,7 @@ export function RecipeSetupPanel({
                 aria-label={uiMessage("recipe.setup.profileLabel")}
               >
                 {versions.map((version) => {
-                  const active = !activeInterpretationId && activeVersion?.id === version.id;
+                  const active = !activeInterpretationId && (activeVersion?.id ?? startingVersionId) === version.id;
                   return (
                     <button
                       key={version.id}
@@ -380,6 +284,7 @@ export function RecipeSetupPanel({
                       <div className="setup-option__text">
                         <span className="setup-option__name">
                           {localizedVersionLabel(cms, version.label)}
+                          {active && modifiedBadge}
                         </span>
                         <span className="setup-option__detail">
                           {fmt.percent(version.params.hydration_pct)} {uiMessage("features.recipe.recipe-setup-panel.idr-w-6f351627")}{version.params.flour_w}
@@ -397,7 +302,7 @@ export function RecipeSetupPanel({
                     {cms.misc.signatureLabel}
                   </div>
                   {interpretations.map((interpretation) => {
-                    const active = activeInterpretationId === interpretation.id;
+                    const active = (activeInterpretationId ?? (activeVersion ? null : startingInterpretationId)) === interpretation.id;
                     return (
                       <button
                         key={interpretation.id}
@@ -409,6 +314,7 @@ export function RecipeSetupPanel({
                         <div className="setup-option__text">
                           <span className="setup-option__name">
                             {interpretationName(interpretation)}
+                            {active && modifiedBadge}
                           </span>
                           {/* D-027: sotto il nome, «Ispirata a…» nella lingua attiva (prima
                               ripeteva l'autore, o «D'autore» anche per APITER). */}
@@ -501,11 +407,24 @@ export function RecipeSetupPanel({
           )}
         </div>
 
-        <div className="setup-footer">
+        <div className="setup-footer" ref={footerRef}>
+          {isModified && onResetToReference && (
+            <CtaButton
+              type="button"
+              variant="secondary"
+              elevated={false}
+              onClick={handleReset}
+              className="setup-footer__cta setup-footer__reset"
+              aria-label={resetToOriginal ? undefined : cmsMessage(cms, "recipeSetup.resetToReference")}
+            >
+              {resetToOriginal ? cms.cooking.resetToOriginal : cms.ui.recipeResetPreset}
+            </CtaButton>
+          )}
           <CtaButton
             type="button"
             onClick={() => setOpen(false)}
             className="setup-footer__cta"
+            data-slot="done"
           >
             {uiMessage("recipe.setup.done")}
           </CtaButton>

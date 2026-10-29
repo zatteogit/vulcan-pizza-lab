@@ -91,8 +91,8 @@ export const EN_LOCALE: CmsContent = {
     pantrySelectionSummary: "Selected: {n} · Excluded: {excluded}",
     pantryWValue: "W{w}",
     pantryWEstimate: "≈ W{w}",
-    pantryFull: "Full pantry",
-    pantryQuickHint: "Select what you have. Brands, details and exclusions are in the full pantry.",
+    pantryFull: "Your pantry",
+    pantryQuickHint: "Select what you have. Brands, details and exclusions are in “Your pantry”.",
     pantryStatusHint: "Mark what you have or want to exclude. Leave the rest unspecified.",
     pantryHave: "I have it",
     pantryUnspecified: "Unspecified",
@@ -112,6 +112,7 @@ export const EN_LOCALE: CmsContent = {
     pantryInvalidValue: "Enter a valid positive value.",
     pantryPolicies: "Availability and purchases",
     pantryToppingsComplete: "I have listed all my topping ingredients",
+    pantryExcludedSummary: "Excluded: {n}",
     pantryAutoSaved: "Changes saved automatically",
     pantryNoResults: "No ingredients found",
     pantryShowMore: "Show more",
@@ -129,18 +130,18 @@ export const EN_LOCALE: CmsContent = {
     createSourceHint: "Adapt this style to your kitchen and compare the changes with the reference.",
     createSourceAction: "View the tailored proposal",
 
-    supplyUnknownHint: "An unselected item still needs checking. If you have listed everything, mark the list as complete.",
-    supplyPantryInventory: "Pantry inventory",
-    supplyEquipmentInventory: "Equipment inventory",
-    supplyPartial: "Partial list",
-    supplyComplete: "I listed everything I have",
-    supplyFlourPurchase: "Obtain other flours",
-    supplyEquipmentPurchase: "Obtain other equipment",
-    supplyUnspecified: "Unspecified",
-    supplyAllowed: "I can obtain more",
-    supplyForbidden: "I do not want to obtain more",
-    supplyExcludedFlours: "Flours I do not want to use",
-    supplyAddExclusion: "Add an exclusion",
+    supplyUnknownHint: "What you don’t mark counts as “to check”, not “missing”.",
+    supplyMoreOptions: "More options",
+    supplyPantryComplete: "I’ve marked everything in my pantry",
+    supplyEquipmentComplete: "I’ve marked all the equipment I have",
+    supplyPantryCompleteEffect: "If on, a yeast you haven’t marked counts as missing; a flour too, if you gave the W of yours.",
+    supplyEquipmentCompleteEffect: "If on, a pan, stone or steel you haven’t marked counts as missing.",
+    supplyFlourPurchase: "Can I buy the flours I’m missing?",
+    supplyEquipmentPurchase: "Can I buy what’s missing?",
+    supplyUnspecified: "Haven’t decided",
+    supplyAllowed: "Yes",
+    supplyForbidden: "No",
+    supplyPurchaseEffect: "With “No”, if your list is complete and a style is missing something, that style isn’t feasible.",
 
     recipeAdaptationsIncluded: "What changes",
     recipeOptimizationChanges: "Proposed changes",
@@ -163,7 +164,6 @@ export const EN_LOCALE: CmsContent = {
     restore: "Restore",
     generate: "Generate recipe",
     customizeParams: "Customize parameters",
-    adjustByHand: "Adjust by hand",
     personalize: "Customize",
     changeStyle: "Change style",
     // Recipe output
@@ -235,6 +235,9 @@ export const EN_LOCALE: CmsContent = {
     flourBudgetResult: "Result: {n} {unit} with {used} of flour, {left} left over.",
     flourBudgetTooLittle: "Not enough for 1 {unit}: you need at least {min} of flour.",
     flourBudgetApply: "Use {n} {unit}",
+    flourBudgetCapped: "Up to {max} {unit} per recipe: {left} left over.",
+    flourBudgetInvalid: "Enter the grams of flour you have.",
+    flourBudgetSame: "Matches what is already set.",
     slotCustom: "Pick a day and time",
     slotCustomInput: "When are you eating?",
     slotCustomConfirm: "Use this time",
@@ -340,6 +343,7 @@ export const EN_LOCALE: CmsContent = {
     },
   },
   sections: {
+    when: { title: "When do you want your pizza?" },
     skill: {
       title: "Experience level",
       description: "Choose the description that fits you.",
@@ -667,7 +671,6 @@ export const EN_LOCALE: CmsContent = {
     showAllStyles: "Show all",
     noTroubleshootingResults: "No issues found for this search",
     moreInfo: "More info",
-    changeTiming: "Change the timing",
     kitchenTempSubtitle: "Temperature affects the rising speed",
     techAdjustmentsApplied: "Technical adjustments applied",
     feedbackYes: "Yes, gladly",
@@ -1009,7 +1012,10 @@ export const EN_LOCALE: CmsContent = {
     "topping.auth.taboo": "Not recommended",
     // FW-01 (S06-A-17): niente paternità non documentata («dai nostri pizzaioli»).
     "recipeSetup.profileHint": "Choose a starting version or an author's inspiration: the values stay editable.",
-    "recipeSetup.styleBase": "base style",
+    "recipeSetup.versionModified": "modified",
+    "recipeSetup.resetToReference": "Restore starting values",
+    "recipeSetup.resetDone": "Starting values restored",
+    "recipeSetup.referenceRestored": "Reference restored",
     "version.label.Leggerissima": "Extra light",
     "version.label.Casalingo": "Home",
     "version.label.Casalinga": "Home",
@@ -1774,7 +1780,7 @@ export const EN_LOCALE: CmsContent = {
     fermentTip:
       "Fermentation produces gas; maturation changes the dough’s structure. Time and temperature affect both, without guaranteeing individual digestibility.",
     tempFridge: "{fridgeTemp} fridge",
-    tempCool: "{coolTemp}",
+    tempCool: "{coolTemp} cool",
     tempAmbient: "{ambientTemp} room",
     preFermentLabel: "Pre-ferment",
     preFermentTip:
@@ -1801,12 +1807,6 @@ export const EN_LOCALE: CmsContent = {
       "At {h}% hydration, you need strong flour: recommended W ≥ {w}",
     hintLowWLimitsHydration:
       "With W {w}, max recommended hydration is ~{h}%",
-    hintLongFermentUseFridge:
-      "With {hours}h fermentation, use the fridge ({fridgeTemp}) to control the dough",
-    hintShortFermentUseWarm:
-      "With only {hours}h, ferment at room temperature ({ambientTemp}) to activate yeast",
-    hintMediumFermentUseCool:
-      "With {hours}h, a cool spot ({coolTemp}) is the ideal compromise between control and activity",
     hintHighHydrationNeedsTime:
       "At {h}% hydration, recommended fermentation ≥ {hours}h",
     hintLowPLForHighHydration:

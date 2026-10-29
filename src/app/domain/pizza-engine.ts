@@ -4330,6 +4330,9 @@ export interface FlourBudgetFit {
   leftover_g: number;
   /** Farina per un panetto: il minimo per farne uno. */
   per_ball_g: number;
+  /** D-043: il tetto di MAX_DOUGH_BALLS ha fermato il conto, ne starebbero
+   *  altri nella farina avanzata. */
+  capped: boolean;
 }
 
 export function doughBallsForFlour(recipe: GeneratedRecipe, flourBudgetG: number): FlourBudgetFit {
@@ -4337,7 +4340,15 @@ export function doughBallsForFlour(recipe: GeneratedRecipe, flourBudgetG: number
   const budget = Number.isFinite(flourBudgetG) ? Math.max(0, flourBudgetG) : 0;
   const balls = perBall > 0 ? Math.min(MAX_DOUGH_BALLS, Math.floor(budget / perBall + 1e-9)) : 0;
   const flour = Math.round(perBall * balls);
-  return { balls, flour_g: flour, leftover_g: Math.max(0, Math.round(budget - flour)), per_ball_g: Math.ceil(perBall) };
+  const leftover = Math.max(0, Math.round(budget - flour));
+  const perBallG = Math.ceil(perBall);
+  return {
+    balls,
+    flour_g: flour,
+    leftover_g: leftover,
+    per_ball_g: perBallG,
+    capped: balls === MAX_DOUGH_BALLS && leftover >= perBallG,
+  };
 }
 
 /* ═══ U-2: orario del pasto scelto a mano («si cena sabato alle 20») ═══ */

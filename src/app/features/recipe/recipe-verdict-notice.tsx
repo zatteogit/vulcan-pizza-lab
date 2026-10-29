@@ -4,14 +4,13 @@ import { AlertTriangle, ChevronRight } from "lucide-react";
 import {
   feasibleAlternativeStyles,
   type GeneratedRecipe,
-  type RecipeBlocker,
   type UserConstraints,
 } from "../../domain/pizza-engine";
 import { summarizeVerdict } from "../../domain/verdict-summary";
-import { useCms, type CmsContent } from "../cms/cms-context";
+import { useCms } from "../cms/cms-context";
 import { createFormatter, t } from "../cms/i18n";
 import { Disclosure, Surface } from "../../components/ds/index";
-import { engineMsgTexts } from "./engine-msg-text";
+import { blockerText } from "./blocker-text";
 import { uiMessage } from "../../i18n/ui-messages";
 
 /* ═══ M-10 — «Così non è fattibile» ═══
@@ -21,43 +20,8 @@ import { uiMessage } from "../../i18n/ui-messages";
  * quella chiesta.
  * FW-10: la causa principale si dice una volta, prima, con il rimedio
  * (summarizeVerdict); le altre cause stanno al livello 2, in «Perché e cosa
- * servirebbe». */
-
-function blockerText(blocker: RecipeBlocker, cms: CmsContent, bcp47: string): string {
-  const fmt = createFormatter(cms.ui, bcp47);
-  switch (blocker.kind) {
-    case "dietary_conflict":
-    case "resource_excluded":
-      return engineMsgTexts([blocker.message], cms, bcp47)[0];
-    case "oven_too_cold":
-      return t(cms.ui.verdictOvenTooCold, {
-        oven: fmt.celsius(blocker.oven_c),
-        min: fmt.celsius(blocker.style_min_c),
-      });
-    case "time_window":
-      return t(cms.ui.verdictTimeWindow, {
-        needed: fmt.durationShort(blocker.needed_h),
-        available: fmt.durationShort(blocker.available_h),
-      });
-    case "fermentation_too_short":
-      return t(cms.ui.verdictFermentationTooShort, {
-        hours: fmt.durationShort(blocker.fermentation_h),
-        min: fmt.durationShort(blocker.style_min_h),
-      });
-    case "fermentation_too_long":
-      return engineMsgTexts([{
-        key: "gen.fermentationTooLong",
-        fallback: "Lievitazione di {hours}: supera il massimo previsto da questa ricetta ({maxHours}). Scegli un metodo verificato per una durata maggiore.",
-        params: { hours: blocker.fermentation_h, maxHours: blocker.style_max_h },
-      }], cms, bcp47)[0];
-    case "fermentation_temperature":
-      return engineMsgTexts([{
-        key: "gen.fermentationTemperature",
-        fallback: "Questo metodo prevede maturazione a {requiredTemp}; è stata impostata a {temp}. Ripristina il regime previsto o scegli un altro metodo verificato.",
-        params: { temp: blocker.actual_c, requiredTemp: blocker.required_c },
-      }], cms, bcp47)[0];
-  }
-}
+ * servirebbe». La frase di ogni causa viene da blocker-text, una sola copia
+ * per avviso, Impara e punteggio. */
 
 export function RecipeVerdictNotice({
   recipe,

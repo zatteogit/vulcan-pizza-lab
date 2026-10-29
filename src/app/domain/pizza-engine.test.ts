@@ -5,6 +5,7 @@ import {
   generateTimeSlots,
   customMealSlot,
   doughBallsForFlour,
+  MAX_DOUGH_BALLS,
   equivalentFermentationHours,
   optimizeRecipe,
   thermalViability,
@@ -247,7 +248,25 @@ describe("doughBallsForFlour (U-2)", () => {
 
   it("sotto il minimo per un panetto restituisce zero panetti", () => {
     const recipe = generateRecipe(STYLES_DB.napoletana_stg, constraints);
-    expect(doughBallsForFlour(recipe, 50)).toMatchObject({ balls: 0, flour_g: 0 });
+    expect(doughBallsForFlour(recipe, 50)).toMatchObject({ balls: 0, flour_g: 0, capped: false });
+  });
+
+  it("D-043: oltre il tetto di 200 lo dice (capped) e l'avanzo resta vero", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, constraints);
+    const fit = doughBallsForFlour(recipe, 100000);
+    expect(fit.balls).toBe(MAX_DOUGH_BALLS);
+    expect(fit.capped).toBe(true);
+    expect(fit.flour_g + fit.leftover_g).toBe(100000);
+    expect(doughBallsForFlour(recipe, 750).capped).toBe(false);
+    // esattamente 200 panetti senza avanzo utile: non è il tetto a fermarli
+    expect(doughBallsForFlour(recipe, fit.flour_g).capped).toBe(false);
+  });
+
+  it("budget nullo, negativo o non numerico: zero panetti, mai il tetto", () => {
+    const recipe = generateRecipe(STYLES_DB.napoletana_stg, constraints);
+    for (const g of [0, -5, Number.NaN]) {
+      expect(doughBallsForFlour(recipe, g)).toMatchObject({ balls: 0, leftover_g: 0, capped: false });
+    }
   });
 });
 

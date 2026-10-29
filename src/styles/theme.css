@@ -772,6 +772,9 @@
   --time-dayafter-soft: var(--color-dayafter-400);
   --time-weekend: var(--color-weekend-500);
   --time-weekend-soft: var(--color-weekend-400);
+  /* S05-A-15: l'orario scelto a mano ha un colore suo, non quello di
+     «Nessuna preferenza» (bianco 5,9:1). */
+  --time-custom: var(--color-water-700);
   /* Testo sopra i colori del momento (U-10, F06): bianco dove regge 4,5:1,
      inchiostro scuro sull'oro del pranzo (il bianco era a 3:1). */
   --time-tonight-on: var(--fixed-photo-text);
@@ -780,6 +783,7 @@
   --time-dayafter-on: var(--fixed-photo-text);
   --time-weekend-on: var(--fixed-photo-text);
   --time-any-on: var(--fixed-photo-text);
+  --time-custom-on: var(--fixed-photo-text);
 
   /* ── CTA (action) ── */
   --cta: var(--color-sage-700);
@@ -1579,6 +1583,7 @@
   --time-dayafter-soft: var(--color-dayafter-200);
   --time-weekend: var(--color-weekend-300);
   --time-weekend-soft: var(--color-weekend-200);
+  --time-custom: var(--color-water-300);
   /* In scuro i colori del momento schiariscono: sotto il bianco scende fino a
      2,2:1, quindi inchiostro scuro tranne che sul blu della sera. */
   --time-tonight-on: var(--fixed-photo-text);
@@ -1587,6 +1592,8 @@
   --time-dayafter-on: var(--color-night-950);
   --time-weekend-on: var(--color-night-950);
   --time-any-on: var(--color-night-950);
+  /* Inchiostro scuro sull'azzurro chiaro: 9,5:1. */
+  --time-custom-on: var(--color-night-950);
 
   --grad-ember: linear-gradient(135deg,
       var(--color-terracotta-300) 0%,
@@ -3609,6 +3616,8 @@
     gap: var(--space-3);
     margin-block: var(--space-3);
   }
+
+  .needs-supply-options { margin-top: var(--space-3); }
 
   .recipe-condition-chips {
     display: flex;
@@ -6887,6 +6896,19 @@
     gap: var(--space-1);
   }
 
+  /* G2-WP-02 (S06-B-16): con il quarto segmento «18 °C (manuale)» a 390 px
+     le etichette vanno a capo invece di tagliarsi. */
+  .config-temp-quick .ds-segmented__item--sm {
+    padding-inline: var(--space-1-5);
+  }
+
+  .config-temp-quick :is(.ds-segmented__label, .ds-segmented__label-text) {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: center;
+  }
+
   .config-temp-option__dot {
     width: var(--space-1-5);
     height: var(--space-1-5);
@@ -6968,6 +6990,51 @@
     color: var(--primary);
   }
 
+  /* G2-WP-01: regola visibile (L1) e riepilogo annullabile del collegamento. */
+  .config-linked {
+    display: grid;
+    gap: var(--gap-xs);
+    margin: calc(-1 * var(--space-2)) 0 var(--space-3);
+    font-size: var(--font-size-md);
+    color: var(--text-muted);
+  }
+
+  .config-linked__help,
+  .config-linked__status {
+    margin: 0;
+  }
+
+  .config-linked__help {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-xs) var(--gap-sm);
+  }
+
+  .config-linked__status:not(:empty) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--gap-xs) var(--gap-sm);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-xl);
+    background: var(--tertiary-container);
+    color: var(--on-tertiary-container);
+  }
+
+  .config-linked__undo {
+    font: inherit;
+    font-weight: var(--weight-semibold);
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    min-height: var(--space-6);
+    text-decoration: underline;
+    text-underline-offset: var(--space-0-5);
+    cursor: pointer;
+  }
+
   .config-legend {
     display: flex;
     align-items: center;
@@ -7026,13 +7093,14 @@
     margin-bottom: var(--space-2);
   }
 
+  /* G2-WP-02 (S06-B-14): quattro scelte su due colonne, testo intero. */
   .config-flour-picker__options {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-2);
   }
 
   .config-flour-picker__option {
-    flex: 1 1 0%;
     border-radius: var(--radius-xl);
     padding-inline: var(--space-2);
     padding-block: var(--space-2-5);
@@ -7064,12 +7132,9 @@
   }
 
   .config-flour-picker__option-sub {
-    /* FW-13 (S06-A-23): due righe, l'esempio non si taglia a 390 px. */
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    overflow: hidden;
+    /* G2-WP-02 (S06-B-14): il sottotitolo va a capo, mai tagliato. */
+    display: block;
+    overflow-wrap: break-word;
     font-size: var(--font-size-sm);
     color: var(--text-muted);
   }
@@ -7122,6 +7187,15 @@
 
   .config-slider__value--oor {
     color: var(--config-value-oor);
+  }
+
+  /* S06-B-22: una parola al posto della cifra (spessore) si legge come
+     etichetta, non nel corpo grande dei numeri. */
+  .config-slider__value--text {
+    font-size: var(--font-size-lg);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-normal);
+    text-align: end;
   }
 
   /* Valore toccabile: si legge come il numero, con una sottolineatura
@@ -7342,22 +7416,39 @@
     background: transparent;
   }
 
+  /* G2-WP-02 (S06-A-03/B-03): ogni numero sotto la sua tacca. Le posizioni
+     sono le stesse delle tacche (--slider-zone-left/right); data-align tiene
+     il testo dentro la traccia ai bordi e separa due tacche vicine. */
   .config-slider__zone-labels {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--space-3);
-    min-height: var(--space-4);
+    position: relative;
+    min-height: var(--space-5);
   }
 
   .config-slider__zone-label {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: clamp(0%, var(--slider-zone-left), 100%);
+    transform: translateX(-50%);
     max-width: 48%;
+    white-space: nowrap;
     color: var(--text-muted);
     font-size: var(--font-size-sm);
   }
 
   .config-slider__zone-label--end {
-    text-align: end;
+    inset-inline-start: clamp(0%, var(--slider-zone-right), 100%);
+  }
+
+  .config-slider__zone-label[data-align="start"] {
+    transform: none;
+  }
+
+  .config-slider__zone-label[data-align="end"] {
+    transform: translateX(-100%);
+  }
+
+  .config-slider__zone-note {
+    color: var(--text-muted);
   }
 
 
@@ -8068,16 +8159,18 @@
     font-weight: var(--weight-semibold);
   }
 
-  .needs-yeast-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--gap-xs);
+  /* G2-WP-04 (S05-B-20): griglia regolare come .needs-oven-grid */
+  .needs-yeast-grid,
+  .needs-flour-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2);
   }
 
-  @media (min-width: 1024px) {
-    .needs-yeast-grid {
-      justify-content: flex-start;
+  @media (min-width: 640px) {
+    .needs-yeast-grid,
+    .needs-flour-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
@@ -8086,6 +8179,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    text-align: start;
     gap: var(--space-0-5);
     padding-inline: var(--space-4);
     padding-block: var(--space-2-5);
@@ -8185,19 +8279,6 @@
   }
 
   /* ── Flour chips (generic + branded) ── */
-  .needs-flour-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--gap-xs);
-  }
-
-  @media (min-width: 1024px) {
-    .needs-flour-grid {
-      justify-content: flex-start;
-    }
-  }
-
   .needs-flour-chip {
     position: relative;
     display: flex;
@@ -8530,15 +8611,6 @@
     opacity: 0.1;
   }
 
-  .needs-slot-grid__ideal-row {
-    position: absolute;
-    top: var(--space-2);
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    z-index: 10;
-  }
 
   .needs-slot-grid__icon-wrap {
     width: var(--space-12);
@@ -8640,26 +8712,8 @@
     right: var(--space-2);
   }
 
-  .needs-slot-grid__badge {
-    padding-inline: var(--space-2);
-    padding-block: var(--space-0-5);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-bold);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-loose);
-    color: var(--needs-time-text);
-  }
 
-  .needs-slot-grid__badge--ideal {
-    background: var(--needs-time-bg);
-    box-shadow: 0 var(--space-0-5) var(--space-2) color-mix(in srgb, var(--needs-time-bg) 45%, transparent);
-  }
 
-  .needs-slot-grid__badge--current {
-    background: color-mix(in srgb, var(--overlay-text) 25%, transparent);
-    border: var(--border-width-thin) solid color-mix(in srgb, var(--overlay-text) 40%, transparent);
-  }
 
 
   /* ── Bare-wrapper fix (semantics ratchet) ── */
@@ -8766,165 +8820,6 @@
   }
 
   /* ═══ COMPONENT: RecipeSetupPanel (setup-*) ═══ */
-
-  /* ── Trigger (full/card variant, default) ── */
-  .setup-trigger {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-sm);
-    width: 100%;
-    padding-inline: var(--space-5);
-    padding-block: var(--space-4);
-    border-radius: var(--radius-2xl);
-    border: var(--border-width-thin) solid var(--container-border);
-    background: var(--container-bg-low);
-    overflow: hidden;
-    color: var(--text-default);
-    text-align: left;
-    cursor: pointer;
-    transition: border-color var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard), background var(--duration-normal) var(--ease-standard);
-  }
-
-  .setup-trigger:hover {
-    border-color: var(--tertiary);
-    box-shadow: var(--shadow-sm);
-    background: color-mix(in srgb, var(--text-default) 2%, var(--container-bg-low));
-  }
-
-  .setup-trigger:active {
-    transform: scale(0.99);
-  }
-
-  .setup-trigger:hover .setup-trigger__icon {
-    transform: scale(1.1);
-  }
-
-  .setup-trigger__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: var(--space-9-5);
-    height: var(--space-9-5);
-    border-radius: var(--radius-xl);
-    background: var(--tertiary-container);
-    color: var(--tertiary);
-    transition: transform var(--duration-normal) var(--ease-standard);
-  }
-
-  .setup-trigger__text {
-    flex: 1 1 0%;
-    min-width: 0;
-  }
-
-  .setup-trigger__title {
-    display: block;
-    font-size: var(--font-size-lg);
-    font-weight: var(--weight-semibold);
-    line-height: var(--leading-tight);
-  }
-
-  .setup-trigger__subtitle {
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-top: var(--space-0-5);
-    font-size: var(--font-size-md);
-    color: var(--text-muted);
-    line-height: var(--leading-normal);
-  }
-
-  .setup-trigger__subtitle--notice {
-    color: var(--text-accent);
-  }
-
-  .setup-trigger__action {
-    display: none;
-    border-radius: var(--radius-full);
-    padding-inline: var(--space-3);
-    padding-block: var(--space-1);
-    color: var(--on-primary-container);
-    background: var(--primary-container);
-    font-size: var(--font-size-md);
-    font-weight: var(--weight-semibold);
-  }
-
-  @media (min-width: 640px) {
-    .setup-trigger__action {
-      display: inline-flex;
-    }
-  }
-
-  .setup-trigger__chevron {
-    display: inline-flex;
-    color: var(--text-muted);
-  }
-
-  .setup-trigger__chevron-icon {
-    transform: rotate(-90deg);
-  }
-
-  /* ── Trigger (compact adv-line modifier) ── */
-  .setup-trigger--compact {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    column-gap: var(--space-2-5);
-    row-gap: var(--space-0-5);
-    width: 100%;
-    padding-inline: var(--space-0-5);
-    padding-block: var(--space-1);
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    overflow: visible;
-    color: inherit;
-    text-align: left;
-    cursor: pointer;
-    transition: transform var(--duration-fast) var(--ease-standard);
-  }
-
-  .setup-trigger--compact:hover {
-    border-color: transparent;
-    box-shadow: none;
-    background: transparent;
-  }
-
-  .setup-trigger--compact:active {
-    transform: scale(0.99);
-  }
-
-  .setup-trigger__summary {
-    min-width: 0;
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-normal);
-    color: var(--text-muted);
-    font-feature-settings: "tnum";
-  }
-
-  .setup-trigger__summary--notice {
-    color: var(--text-accent);
-  }
-
-  .setup-trigger__link {
-    display: inline-flex;
-    align-items: baseline;
-    flex-shrink: 0;
-    gap: var(--space-0-5);
-    white-space: nowrap;
-    font-size: var(--font-size-sm);
-    font-weight: var(--weight-semibold);
-    line-height: var(--leading-normal);
-    color: var(--text-accent);
-    text-decoration: underline;
-    text-underline-offset: var(--space-0-75);
-  }
-
-  .setup-trigger__link-icon {
-    align-self: center;
-    transform: rotate(-90deg);
-  }
 
   /* ── Dialog panel ── */
   .setup-panel {
@@ -9282,6 +9177,27 @@
 
   .setup-footer__cta:active {
     transform: scale(0.98);
+  }
+
+  /* G2-WP-03: «Ripristina» accanto a «Fatto»; su mobile si dividono la riga. */
+  .setup-footer__reset {
+    flex: 1 1 0%;
+  }
+
+  .setup-footer__reset + .setup-footer__cta {
+    flex: 1 1 0%;
+  }
+
+  @media (min-width: 640px) {
+    .setup-footer__reset,
+    .setup-footer__reset + .setup-footer__cta {
+      flex: 0 0 auto;
+    }
+  }
+
+  .setup-option__badge {
+    margin-inline-start: var(--space-2);
+    vertical-align: middle;
   }
 
   /* ═══ COMPONENT: MatchSummary (setup-match__*) ═══ */
@@ -10291,9 +10207,27 @@
     font: inherit;
   }
 
+  .flour-budget__input[aria-invalid="true"] {
+    border-color: var(--destructive);
+  }
+
+  /* Regione live sempre montata, così annuncia ogni nuovo esito. */
+  .flour-budget__feedback {
+    display: grid;
+    gap: var(--space-1);
+  }
+
   .flour-budget__result {
     margin: 0;
     line-height: var(--leading-normal);
+  }
+
+  /* S06-A-24: come FW-09, l'errore non si legge solo dal colore. */
+  .flour-budget__result--invalid {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    color: var(--destructive);
   }
 
   .flour-budget__apply {
@@ -15455,7 +15389,8 @@
 
   .pantry-editor__header,
   .pantry-editor__item-heading,
-  .pantry-editor__complete {
+  .pantry-editor__complete,
+  .supply-policy-controls__switch {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -15551,6 +15486,8 @@
     flex-direction: column;
     gap: var(--space-3);
   }
+
+  .pantry-editor__policies .ds-chip { align-self: flex-start; }
 
   .pantry-editor__numbers {
     display: grid;

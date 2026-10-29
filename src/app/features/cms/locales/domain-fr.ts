@@ -817,6 +817,11 @@ export const SCIENCE_FR: CmsScience = {
       l1: "À nombre égal, le style que votre cuisine couvre avec le plus de marge passe en premier : c'est un choix de {brand}.",
       l2: "Le nombre ne change pas : seul l'ordre change, et seulement entre styles du même groupe ayant le même score. La marge est la moyenne de deux valeurs entre 0 et 1 : de combien le four dépasse la température minimale du style et de combien les heures disponibles dépassent la maturation minimale, chacune en proportion du minimum (1 signifie le double ou plus). Pour les fritures, seul le temps compte. Cela vaut dans Créer, dans Découvrir et pour les assistants.",
     },
+    "linked-params": {
+      title: "Réglages liés",
+      l1: "Une règle de {brand}, pas un modèle physique : les autres valeurs se placent à la même position dans leur plage de style.",
+      l2: "Si vous poussez l'hydratation vers le haut de la plage du style, la force de la farine et les heures de fermentation montent aussi vers le haut des leurs ; le P/L, si vous le modifiez, va dans l'autre sens. La température suit les heures : haut de la plage au réfrigérateur, milieu au frais, bas à température ambiante. Les valeurs restent toujours dans les plages du style. Cela ne dit pas qu'elles sont les meilleures pour votre farine ou votre cuisine : c'est un raccourci pour rester cohérent. Activé d'office à partir du niveau Avancé, il n'agit qu'avec les paramètres avancés ouverts, et chaque changement s'annule avec « Annuler ».",
+    },
     digestibility: {
       title: "Indice de digestibilité",
       l1: "Un indice du modèle sur le procédé, pas une promesse de santé.",
@@ -879,6 +884,7 @@ export const SCIENCE_FR: CmsScience = {
     "thickness-factor": "TF = poids du pâton (g) / surface de la pizza (cm²) · 1 oz/in² ≈ 4,39 g/cm²",
     "score-weights": "C = min(moyenne pondérée de A et F ; A) · poids par défaut : Authenticité (A) 55 %, Facilité (F) 45 % · non réalisable : C ≤ 39",
     "ranking-tiebreak": "M = moyenne de min(1 ; max(0 ; (T − T_min) / T_min)) et min(1 ; max(0 ; (H − H_min) / H_min)) · T four, H heures disponibles · fritures : H seul",
+    "linked-params": "r = (v − v_min) / (v_max − v_min), entre 0 et 1 · x = x_min + r × (x_max − x_min) · v valeur que vous déplacez, x chaque autre valeur, min et max de la plage du style · P/L : 1 − r",
   },
   sourceNotes: {
     "internal-db": "base de travail interne du projet, non publique",

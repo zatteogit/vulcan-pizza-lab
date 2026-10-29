@@ -12,6 +12,7 @@ import {
 import { CMS_DEFAULTS } from "../features/cms/cms-context";
 import { AUTHENTICITY_FUEL_CAP, DEFAULT_UI_SCORE_WEIGHTS, explainScore } from "./recipe-score";
 import { compareByCompatibility, kitchenMargin } from "./kitchen-margin";
+import { defaultSmartLink, linkedActive, propagateLinked } from "../features/recipe/linked-params";
 
 /* Guardie delle decisioni di Matteo (docs/autorialita.md). Una PR le aveva
  * annullate senza registrarne di nuove (audit 28/10/2026, S05-V-01). Chi
@@ -227,5 +228,27 @@ describe("D-063: tetto del combustibile solo sotto il minimo dello stile", () =>
     const recipe = generateRecipe(STYLES_DB.napoletana_stg, { ...electric(480), oven_type: "wood" });
     const keys = recipe.scores.penalties.map((p) => p.key);
     expect(keys.filter((k) => ["auth.woodByMethod", "auth.notWoodOven", "auth.fuelCap"].includes(k))).toEqual([]);
+  });
+});
+
+/* D-G2-1 (Matteo, 29/10/2026, «la via di mezzo»): i «Parametri collegati»
+ * partono accesi solo dal livello Avanzato, agiscono solo con gli avanzati
+ * aperti e non portano mai un valore fuori dall'intervallo dello stile. */
+describe("D-G2-1: parametri collegati solo per chi li vede, mai fuori range", () => {
+  it("acceso di default solo dai livelli 3–4, spento con gli avanzati chiusi", () => {
+    expect([1, 2, 3, 4].map(defaultSmartLink)).toEqual([false, false, true, true]);
+    expect(linkedActive(true, false)).toBe(false);
+  });
+
+  it("idratazione oltre l'intervallo: le ore restano dentro quello dello stile", () => {
+    const d = STYLES_DB.teglia_romana.dough;
+    const out = propagateLinked("hydration", 105, {
+      hydration: d.hydration_pct_range,
+      flourW: d.flour_w_range,
+      flourPL: d.flour_pl_range,
+      fermentHours: d.fermentation_hours_range,
+      includePL: true,
+    });
+    expect(out.fermentHours).toBe(d.fermentation_hours_range[1]);
   });
 });

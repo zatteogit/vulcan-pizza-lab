@@ -329,6 +329,14 @@ export const SCIENCE_NOTES: readonly ScienceNote[] = [
     sourceIds: [],
   },
   {
+    // G2-WP-01 · D-G2-1: regola del configuratore, non un modello fisico.
+    id: "linked-params",
+    kind: "editorial",
+    formula: "r = (v − v₀) / (v₁ − v₀), 0 ≤ r ≤ 1 · x = x₀ + r × (x₁ − x₀)",
+    engineRef: "propagateLinked, mapTo",
+    sourceIds: [],
+  },
+  {
     id: "digestibility",
     kind: "editorial",
     assumptionIds: ["no-health-claim"],

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { generateRecipe, pantryFlourMix, pantryFlourRange, STYLES_DB, type UserConstraints } from "./pizza-engine";
-import { normalizePantryFlourDetails, pantryIngredientId } from "./pantry-ingredients";
+import { EXCLUDABLE_DOUGH_INGREDIENTS, excludableIngredientIds, isAlwaysRequiredIngredient, normalizePantryFlourDetails, pantryIngredientId, pantryToppingIngredients } from "./pantry-ingredients";
+import { TOPPING_LIBRARY } from "../data/topping-library";
 
 const kitchen: UserConstraints = {oven_type:"wood",oven_max_temp_c:450,available_hours:48,skill_level:4,dough_balls:4,
   has_mixer:true,has_pizza_stone:true,has_pizza_steel:true,has_baking_pan:true,pantry_flours:[],pantry_yeasts:[],dietary_filters:[]};
@@ -58,5 +59,27 @@ describe("ingredienti dell'impasto e del condimento", () => {
   });
   it("scarta valori non validi e campi inattesi dai dettagli importati", () => {
     expect(normalizePantryFlourDetails({bag:{name:" Test ",w:Infinity,protein_pct:999,pl:-1,extra:"ignored"}})).toEqual({bag:{name:"Test"}});
+  });
+});
+
+describe("G2-WP-04 · acqua e sale non si escludono", () => {
+  it("le voci escludibili dell'impasto non includono acqua e sale", () => {
+    const ids = EXCLUDABLE_DOUGH_INGREDIENTS.map(pantryIngredientId);
+    expect(ids).not.toContain("acqua");
+    expect(ids).not.toContain("sale");
+  });
+  it("escluderli bloccherebbe ogni stile: per questo i dati vecchi si ripuliscono in lettura", () => {
+    const blocked = generateRecipe(STYLES_DB.napoletana_stg, {...kitchen, excluded_ingredients:["acqua"]});
+    expect(blocked.verdict.blockers?.some(b => b.kind === "resource_excluded")).toBe(true);
+    expect(excludableIngredientIds(["acqua", "Sale fino", "burro"])).toEqual(["burro"]);
+    expect(excludableIngredientIds(undefined)).toBeUndefined();
+  });
+  it("neanche la scheda Condimenti offre acqua o sale da escludere", () => {
+    const allNames = Object.values(TOPPING_LIBRARY).flatMap(recipe => recipe.ingredients.map(i => i.name));
+    expect(allNames.some(isAlwaysRequiredIngredient)).toBe(true);
+    const ids = pantryToppingIngredients(Object.values(TOPPING_LIBRARY)).map(item => item.id);
+    expect(ids).not.toContain("sale");
+    expect(ids).not.toContain("acqua");
+    expect(ids.length).toBeGreaterThan(10);
   });
 });

@@ -18,7 +18,7 @@ import {
 } from "../use-cases/effective-kitchen";
 import { DEFAULT_KITCHEN_TEMP } from "../domain/pizza-engine";
 
-import { normalizePantryFlourDetails, type PantryFlourDetails } from "../domain/pantry-ingredients";
+import { excludableIngredientIds, normalizePantryFlourDetails, type PantryFlourDetails } from "../domain/pantry-ingredients";
 import { loadYeastSpeedFactor } from "../adapters/browser/yeast-speed-storage";
 
 /* ═══ STORAGE KEYS (must match profile.tsx) ═══ */
@@ -71,7 +71,7 @@ export function loadProfileDefaults(): ProfileDefaults {
     if (pantry) {
       pantryFlours = pantry.flours ?? [];
       pantryYeasts = pantry.yeasts ?? [];
-      pantryPolicy = { pantry_inventory_complete: pantry.inventory_complete, allow_flour_purchase: pantry.allow_purchase, excluded_flours: pantry.excluded_flours, pantry_flour_details: normalizePantryFlourDetails(pantry.flour_details), pantry_ingredients: pantry.ingredients, pantry_ingredients_complete: pantry.ingredients_complete, excluded_ingredients: pantry.excluded_ingredients, excluded_yeasts: pantry.excluded_yeasts };
+      pantryPolicy = { pantry_inventory_complete: pantry.inventory_complete, allow_flour_purchase: pantry.allow_purchase, excluded_flours: pantry.excluded_flours, pantry_flour_details: normalizePantryFlourDetails(pantry.flour_details), pantry_ingredients: pantry.ingredients, pantry_ingredients_complete: pantry.ingredients_complete, excluded_ingredients: excludableIngredientIds(pantry.excluded_ingredients), excluded_yeasts: pantry.excluded_yeasts };
     }
   } catch { /* */ }
 

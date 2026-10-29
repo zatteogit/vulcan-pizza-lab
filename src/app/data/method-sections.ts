@@ -27,6 +27,7 @@ const GROUP_OF_NOTE: Readonly<Record<string, MethodGroupId>> = {
   "salt-range": "dough",
   "stg-salt-timing": "dough",
   "thickness-factor": "dough",
+  "linked-params": "dough",
   "flour-w-by-grade": "flour",
   "flour-pl-estimate": "flour",
   "stg-flour-w": "flour",

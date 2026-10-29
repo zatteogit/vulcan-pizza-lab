@@ -972,6 +972,10 @@ function RecipeContent({
                 style={style}
                 versions={styleVersions}
                 activeVersion={activeVersion}
+                startingVersionId={originalEntry.version?.id ?? null}
+                startingInterpretationId={originalEntry.interpretation?.id ?? null}
+                isModified={isDirty}
+                onResetToReference={handleResetToCanonical}
                 customHydration={customHydration}
                 customFlourW={customFlourW}
                 customFermentHours={customFermentHours}
@@ -983,11 +987,8 @@ function RecipeContent({
                 onNotice={setSetupNotice}
                 open={setupPanelOpen}
                 onOpenChange={setSetupPanelOpen}
-                onRequestOpen={handleOpenPersonalization}
-                isCanonical={!isDirty}
                 openDefault={openPersonalizeByDefault}
                 scores={matchRecipe.scores}
-                hideTrigger
                 recipe={recipe}
               >
                 <RecipeConfigurator
