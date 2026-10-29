@@ -4,6 +4,8 @@ import React, {
   useRef,
   useEffect,
   useCallback,
+  useContext,
+  createContext,
 } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { HelpCircle, BookOpen, ArrowRight } from "lucide-react";
@@ -14,6 +16,17 @@ import { getTermById } from "../../data/glossary-data";
 import { uiMessage } from "../../i18n/ui-messages";
 import { motionSpring } from "../ds/motion";
 import { useEscapeLayer } from "../ds/escape-stack";
+import {
+  FOCUSABLE_SELECTOR,
+  fixedFrameFor,
+  fixedPopoverAnchor,
+  nextInOrder,
+  popoverHost,
+} from "./info-tip-layer";
+
+/** FW-04: chiamato prima di aprire la voce del glossario da un livello che
+ * resterebbe sopra la pagina (la vista di cottura lo chiude). */
+export const GlossaryNavigationContext = createContext<(() => void) | null>(null);
 
 interface InfoTipProps {
   /** Testo specifico del campo; facoltativo con `termId` (basta la definizione). */
@@ -38,14 +51,16 @@ function termTitle(name: string, symbol?: string): string {
 /** Link to the full glossary entry; a plain anchor outside a router (DS sync). */
 function GlossaryLink({ termId }: { termId: string }) {
   const inRouter = useInRouterContext();
+  const beforeNavigate = useContext(GlossaryNavigationContext);
+  const onClick = beforeNavigate ? () => beforeNavigate() : undefined;
   const href = `/learn/glossary#${termId}`;
   const content = <>
     {uiMessage("ds.disclosure.openGlossary")}
     <ArrowRight size={12} aria-hidden="true" />
   </>;
   return inRouter
-    ? <Link to={href} className="info-tip__glossary-link">{content}</Link>
-    : <a href={href} className="info-tip__glossary-link">{content}</a>;
+    ? <Link to={href} className="info-tip__glossary-link" onClick={onClick}>{content}</Link>
+    : <a href={href} className="info-tip__glossary-link" onClick={onClick}>{content}</a>;
 }
 
 /**
@@ -66,9 +81,11 @@ export function InfoTip({ children, size = 15, termId, label, triggerLabel }: In
     "below",
   );
   /* FW-04: il TermLink sta dentro testi e card con overflow nascosto; il suo
-     popover va nel body, in posizione fissa calcolata dal trigger e tenuta
-     dentro lo schermo (16 px di margine). */
+     popover esce in posizione fissa calcolata dal trigger e tenuta dentro lo
+     schermo (16 px di margine). Va nel dialog modale che contiene il termine
+     (sopra di esso e dentro il suo Tab), altrimenti nel body. */
   const [anchor, setAnchor] = useState<Record<string, string>>({});
+  const [host, setHost] = useState<HTMLElement | null>(null);
 
   const term = termId ? getTermById(termId, cms) : null;
   /* FW-04: con il termine come trigger il nome accessibile è il testo
@@ -85,14 +102,16 @@ export function InfoTip({ children, size = 15, termId, label, triggerLabel }: In
       if (!open && triggerRef.current) {
         const rect = triggerRef.current.getBoundingClientRect();
         const spaceBelow = window.innerHeight - rect.bottom;
-        const above = spaceBelow < 250;
-        setPlacement(above ? "above" : "below");
+        setPlacement(spaceBelow < 250 ? "above" : "below");
         if (triggerLabel) {
-          const width = Math.min(300, Math.max(240, window.innerWidth * 0.65), window.innerWidth - 32);
-          const left = Math.max(16, Math.min(rect.left + rect.width / 2 - width / 2, window.innerWidth - width - 16));
-          setAnchor(above
-            ? { "--tip-left": `${left}px`, "--tip-bottom": `${window.innerHeight - rect.top + 8}px` }
-            : { "--tip-left": `${left}px`, "--tip-top": `${rect.bottom + 8}px` });
+          const target = popoverHost(triggerRef.current);
+          const fixed = fixedPopoverAnchor(
+            rect,
+            { width: window.innerWidth, height: window.innerHeight },
+            fixedFrameFor(target),
+          );
+          setHost(target);
+          setAnchor(fixed.vars);
         }
       }
       setOpen((o) => !o);
@@ -132,6 +151,28 @@ export function InfoTip({ children, size = 15, termId, label, triggerLabel }: In
     return () =>
       document.removeEventListener("mousedown", handler);
   }, [open]);
+
+  /* FW-04: Tab avanti dall'ultima voce del popover torna al testo, al
+     controllo dopo il termine; Maiusc+Tab dalla prima torna al termine. */
+  const onPopoverKeyDown = (event: React.KeyboardEvent) => {
+    const popover = popoverRef.current;
+    const trigger = triggerRef.current;
+    if (event.key !== "Tab" || !popover || !trigger) return;
+    const items = [...popover.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)];
+    const active = document.activeElement;
+    if (event.shiftKey && active === items[0]) {
+      event.preventDefault();
+      trigger.focus({ preventScroll: true });
+    } else if (!event.shiftKey && active === items[items.length - 1]) {
+      const scope = popoverHost(trigger);
+      const order = [...scope.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)]
+        .filter((el) => el.getClientRects().length > 0);
+      const next = nextInOrder(order, trigger, (el) => popover.contains(el));
+      event.preventDefault();
+      setOpen(false);
+      (next ?? trigger).focus({ preventScroll: true });
+    }
+  };
 
   // FW-12: Esc closes only the popover (escape stack), not the sheet below.
   useEscapeLayer(open, () => {
@@ -182,6 +223,7 @@ export function InfoTip({ children, size = 15, termId, label, triggerLabel }: In
                 : "info-tip__popover--above"
             }${triggerLabel ? " info-tip__popover--fixed" : ""}`}
             style={triggerLabel ? anchor : undefined}
+            onKeyDown={triggerLabel ? onPopoverKeyDown : undefined}
           >
             <div className="info-tip__panel">
               <div className="info-tip__content">
@@ -206,7 +248,7 @@ export function InfoTip({ children, size = 15, termId, label, triggerLabel }: In
           </motion.div>
         )}
       </AnimatePresence>;
-      return triggerLabel && typeof document !== "undefined" ? createPortal(popover, document.body) : popover;
+      return triggerLabel && typeof document !== "undefined" ? createPortal(popover, host ?? document.body) : popover;
       })()}
     </span>
   );

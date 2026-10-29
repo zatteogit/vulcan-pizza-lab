@@ -45,6 +45,7 @@ import { resolveStepVisual } from "./step-visual";
 import { STYLES_DB } from "../../domain/styles-db";
 import { isFriedStyle } from "../../domain/pizza-engine";
 import { GlossaryTermLinks } from "../glossary/term-link";
+import { GlossaryNavigationContext } from "../../components/shared/info-tip";
 import { stepGlossaryTerms } from "../glossary/step-terms";
 
 
@@ -543,7 +544,12 @@ export function CookingMode() {
     </motion.div>
   );
 
-  return createPortal(overlay, document.body);
+  /* FW-04: «Apri nel glossario» chiude la vista (la pizzata continua nel
+     widget), altrimenti la voce si aprirebbe dietro lo schermo intero. */
+  return createPortal(
+    <GlossaryNavigationContext.Provider value={closeOverlay}>{overlay}</GlossaryNavigationContext.Provider>,
+    document.body,
+  );
 }
 
 /* ═══ CELEBRATION BURST — coriandoli one-shot per la pizzata completata ═══
